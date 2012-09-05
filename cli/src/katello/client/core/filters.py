@@ -15,9 +15,9 @@
 #
 
 import os
-from gettext import gettext as _
 
 from katello.client.api.filter import FilterAPI
+from katello.client.cli.base import opt_parser_add_org
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record
 
@@ -36,8 +36,7 @@ class List(FilterAction):
     description = _('list all filters')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                       help=_("organization name (required)"))
+        opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
         validator.require('org')
@@ -59,8 +58,7 @@ class Create(FilterAction):
     description = _('create a filter')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                   help=_("organization name (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                       help=_("filter name (required)"))
         parser.add_option('--description', dest='description',
@@ -85,15 +83,15 @@ class Create(FilterAction):
             _("Could not create filter [ %s ]") % name
         )
 
-    def parse_packages(self, packages):
+    @classmethod
+    def parse_packages(cls, packages):
         return ([] if packages == None else [p.strip() for p in packages.split(',')])
 
 class Delete(FilterAction):
     description = _('delete a filter')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                   help=_("organization name (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                       help=_("filter name (required)"))
 
@@ -112,8 +110,7 @@ class Info(FilterAction):
     description = _('filter info')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                       help=_("organization name (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                      help=_("filter name (required)"))
 
@@ -134,15 +131,15 @@ class Info(FilterAction):
         self.printer.print_item(filter_info)
         return os.EX_OK
 
-    def package_list_as_string(self, package_list):
+    @classmethod
+    def package_list_as_string(cls, package_list):
         return ", ".join(package_list)
 
 class AddPackage(FilterAction):
     description = _('Add a package to filter')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                       help=_("organization name (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                      help=_("filter name (required)"))
         parser.add_option('--package', dest='package_id',
@@ -166,8 +163,7 @@ class RemovePackage(FilterAction):
     description = _('Remove a package from filter')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                       help=_("organization name (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                      help=_("filter name (required)"))
         parser.add_option('--package', dest='package_id',

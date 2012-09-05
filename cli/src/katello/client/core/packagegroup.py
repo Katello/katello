@@ -1,5 +1,4 @@
 import os
-from gettext import gettext as _
 
 from katello.client.api.repo import RepoAPI
 from katello.client.core.base import BaseAction, Command
@@ -62,7 +61,8 @@ class Info(PackageGroupAction):
         if group == None:
             system_exit(os.EX_DATAERR, _("Package group [%s] not found in repo [%s]") % (groupid, repoid))
 
-        group['conditional_package_names'] = [name+": "+required_package  for name, required_package in group['conditional_package_names'].items()]
+        group['conditional_package_names'] = [name+": "+required_package  \
+            for name, required_package in group['conditional_package_names'].items()]
 
         self.printer.set_header(_("Package Group Information"))
         self.printer.add_column('id')

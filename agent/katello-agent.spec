@@ -1,5 +1,5 @@
 Name: katello-agent
-Version: 1.1.0
+Version: 1.1.2
 Release: 1%{?dist}
 Summary: The Katello Agent
 Group:   Development/Languages
@@ -28,7 +28,7 @@ pushd src
 popd
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 mkdir -p %{buildroot}/%{_sysconfdir}/gofer/plugins
 mkdir -p %{buildroot}/%{_prefix}/lib/gofer/plugins
 
@@ -44,6 +44,13 @@ rm -rf %{buildroot}
 %doc LICENSE
 
 %changelog
+* Fri Aug 24 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.2-1
+- 845643 - consistently use rpm macros (msuchy@redhat.com)
+
+* Thu Aug 23 2012 Mike McCune <mmccune@redhat.com> 1.1.1-1
+- buildroot and %%clean section is not needed (msuchy@redhat.com)
+- Bumping package versions for 1.1. (msuchy@redhat.com)
+
 * Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.6-1
 - update copyright years (msuchy@redhat.com)
 - point Source0 to fedorahosted.org where tar.gz are stored (msuchy@redhat.com)

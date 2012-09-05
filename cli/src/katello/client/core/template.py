@@ -16,13 +16,13 @@
 
 import os
 import sys
-from gettext import gettext as _
 from optparse import OptionValueError
 
 from katello.client.api.template import TemplateAPI
+from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, get_abs_path, run_spinner_in_bg, system_exit
-from katello.client.api.utils import get_library, get_environment, get_template, get_product, get_repo
+from katello.client.api.utils import get_library, get_environment, get_template, get_repo
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
 
@@ -35,8 +35,8 @@ class TemplateAction(BaseAction):
         super(TemplateAction, self).__init__()
         self.api = TemplateAPI()
 
-
-    def get_parent_id(self, orgName, envName, parentName):
+    @classmethod
+    def get_parent_id(cls, orgName, envName, parentName):
         parent = get_template(orgName, envName, parentName)
         if parent != None:
             return parent["id"]
@@ -48,16 +48,14 @@ class List(TemplateAction):
     description = _('list all templates')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required if specifying environment)"))
-        parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: dev (default: Library)"))
+        opt_parser_add_org(parser, required=_(" (required if specifying environment)"))
+        opt_parser_add_environment(parser, default=_("Library"))
 
     def check_options(self, validator):
         validator.require('org')
 
     def run(self):
-        envName = self.get_option('env')
+        envName = self.get_option('environment')
         orgName = self.get_option('org')
 
         environment = get_environment(orgName, envName)
@@ -85,10 +83,8 @@ class Info(TemplateAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("template name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
-        parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: dev (default: Library)"))
+        opt_parser_add_org(parser, required=1)
+        opt_parser_add_environment(parser, default=_("Library"))
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
@@ -96,7 +92,7 @@ class Info(TemplateAction):
     def run(self):
         tplName = self.get_option('name')
         orgName = self.get_option('org')
-        envName = self.get_option('env')
+        envName = self.get_option('environment')
 
         template = get_template(orgName, envName, tplName)
 
@@ -126,7 +122,8 @@ class Info(TemplateAction):
         return os.EX_OK
 
 
-    def _build_nvrea(self, package):
+    @classmethod
+    def _build_nvrea(cls, package):
 
         if package['version'] != None and package['release'] != None:
             nvrea = '-'.join((package['package_name'], package['version'], package['release']))
@@ -148,8 +145,7 @@ class Import(TemplateAction):
 
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option("--file", dest="file",
                                help=_("path to the template file (required)"))
         parser.add_option("--description", dest="description",
@@ -169,16 +165,18 @@ class Import(TemplateAction):
 
         try:
             f = self.open_file(tplPath)
-        except:
+        except IOError:
             print _("File %s does not exist" % tplPath)
             return os.EX_IOERR
 
-        response = run_spinner_in_bg(self.api.import_tpl, (env["id"], desc, f), message=_("Importing template, please wait... "))
+        response = run_spinner_in_bg(self.api.import_tpl, (env["id"], desc, f),
+            message=_("Importing template, please wait... "))
         print response
         f.close()
         return os.EX_OK
 
-    def open_file(self, path):
+    @classmethod
+    def open_file(cls, path):
         return open(get_abs_path(path))
 
 # ==============================================================================
@@ -190,42 +188,42 @@ class Export(TemplateAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("template name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
-        parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: dev"))
+        opt_parser_add_org(parser, required=1)
+        opt_parser_add_environment(parser)
         parser.add_option("--file", dest="file",
-                               help=_("path to the template file (required)"))
+            help=_("path to the template file (required)"))
         parser.add_option("--format", dest="format", choices=self.supported_formats,
-                               help=_("format of the export, possible values: %s, default: json") % self.supported_formats)
+            help=_("format of the export, possible values: %s, default: json") % self.supported_formats)
 
 
     def check_options(self, validator):
-        validator.require(('name', 'org', 'file', 'env'))
+        validator.require(('name', 'org', 'file', 'environment'))
 
     def run(self):
         tplName = self.get_option('name')
         orgName = self.get_option('org')
-        envName = self.get_option('env')
-        format  = self.get_option('format') or "json"
+        envName = self.get_option('environment')
+        format_in  = self.get_option('format') or "json"
         tplPath = self.get_option('file')
 
         template = get_template(orgName, envName, tplName)
 
         try:
             f = self.open_file(tplPath)
-        except:
+        except IOError:
             print >> sys.stderr, _("Could not create file %s") % tplPath
             return os.EX_IOERR
 
-        self.api.validate_tpl(template["id"], format)
-        response = run_spinner_in_bg(self.api.export_tpl, (template["id"], format), message=_("Exporting template, please wait... "))
+        self.api.validate_tpl(template["id"], format_in)
+        response = run_spinner_in_bg(self.api.export_tpl, (template["id"], format_in),
+            message=_("Exporting template, please wait... "))
         f.write(response)
         f.close()
         print _("Template was exported successfully to file %s") % tplPath
         return os.EX_OK
 
-    def open_file(self, path):
+    @classmethod
+    def open_file(cls, path):
         return open(get_abs_path(path),"w")
 
 
@@ -240,8 +238,7 @@ class Create(TemplateAction):
                                help=_("template name (required)"))
         parser.add_option('--parent', dest='parent',
                                help=_("name of the parent template"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option("--description", dest="description",
                                help=_("template description"))
 
@@ -278,26 +275,27 @@ class Update(TemplateAction):
 
     def __init__(self):
         self.current_parameter = None
-        self.resetParameters()
+        self._resetParameters()
         super(Update, self).__init__()
+        self.current_product = None
 
-
-    def store_parameter_name(self, option, opt_str, value, parser):
+    # pylint: disable=W0613
+    def _store_parameter_name(self, option, opt_str, value, parser):
         self.current_parameter = u_str(value)
         self.items['add_parameters'][value] = None
 
-    def store_parameter_value(self, option, opt_str, value, parser):
+    def _store_parameter_value(self, option, opt_str, value, parser):
         if self.current_parameter == None:
             raise OptionValueError(_("each %s must be preceeded by %s") % (option, "--add_parameter") )
 
         self.items['add_parameters'][self.current_parameter] = u_str(value)
         self.current_parameter = None
 
-    def store_from_product(self, option, opt_str, value, parser):
+    def _store_from_product(self, option, opt_str, value, parser):
         self.current_product = u_str(value)
         parser.values.from_product = True
 
-    def store_item_with_product(self, option, opt_str, value, parser):
+    def _store_item_with_product(self, option, opt_str, value, parser):
         if parser.values.from_product == None:
             raise OptionValueError(_("%s must be preceded by %s") % (option, "--from_product") )
         self.items[option.dest].append({"name": u_str(value), "product": self.current_product})
@@ -305,7 +303,7 @@ class Update(TemplateAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name', help=_("template name (required)"))
         parser.add_option('--parent', dest='parent', help=_("name of the parent template"))
-        parser.add_option('--org', dest='org', help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--new_name', dest='new_name', help=_("new template name"))
         parser.add_option("--description", dest="description", help=_("template description"))
 
@@ -316,27 +314,36 @@ class Update(TemplateAction):
         parser.add_option('--add_package', dest='add_packages', action="append", help=_("name of the package"))
         parser.add_option('--remove_package', dest='remove_packages', action="append", help=_("name of the package"))
 
-        parser.add_option('--add_parameter', dest='add_parameters', action="callback", callback=self.store_parameter_name, type="string",
-                                help=_("name of the parameter, %s must follow") % "--value")
-        parser.add_option('--value', dest='value', action="callback", callback=self.store_parameter_value, type="string", help=_("value of the parameter"))
-        parser.add_option('--remove_parameter', dest='remove_parameters', action="append", help=_("name of the parameter"))
+        parser.add_option('--add_parameter', dest='add_parameters', action="callback",
+            callback=self._store_parameter_name, type="string",
+            help=_("name of the parameter, %s must follow") % "--value")
+        parser.add_option('--value', dest='value', action="callback", callback=self._store_parameter_value,
+            type="string", help=_("value of the parameter"))
+        parser.add_option('--remove_parameter', dest='remove_parameters', action="append",
+            help=_("name of the parameter"))
 
         parser.add_option('--add_package_group', dest='add_pgs', action="append", help=_("name of the package group"))
-        parser.add_option('--remove_package_group', dest='remove_pgs', action="append", help=_("name of the package group"))
+        parser.add_option('--remove_package_group', dest='remove_pgs', action="append",
+            help=_("name of the package group"))
 
-        parser.add_option('--add_package_group_category', dest='add_pg_categories', action="append", help=_("name of the package group category"))
-        parser.add_option('--remove_package_group_category', dest='remove_pg_categories', action="append", help=_("name of the package group category"))
+        parser.add_option('--add_package_group_category', dest='add_pg_categories', action="append",
+            help=_("name of the package group category"))
+        parser.add_option('--remove_package_group_category', dest='remove_pg_categories', action="append",
+            help=_("name of the package group category"))
 
         parser.add_option('--add_distribution', dest='add_distributions', action="append", help=_("distribution id"))
-        parser.add_option('--remove_distribution', dest='remove_distributions', action="append", help=_("distribution id"))
+        parser.add_option('--remove_distribution', dest='remove_distributions', action="append",
+            help=_("distribution id"))
 
-        parser.add_option('--from_product', dest='from_product', action="callback", callback=self.store_from_product, type="string",
-                                help=_("determines product from which the repositories are picked"))
-        parser.add_option('--add_repository', dest='add_repository', action="callback", callback=self.store_item_with_product, type="string",
-                                help=_("repository to be added to the template"))
-        parser.add_option('--remove_repository', dest='remove_repository', action="callback", callback=self.store_item_with_product, type="string",
-                                help=_("repository to be removed from the template"))
-        self.resetParameters()
+        parser.add_option('--from_product', dest='from_product', action="callback", callback=self._store_from_product,
+            type="string", help=_("determines product from which the repositories are picked"))
+        parser.add_option('--add_repository', dest='add_repository', action="callback",
+            callback=self._store_item_with_product, type="string",
+            help=_("repository to be added to the template"))
+        parser.add_option('--remove_repository', dest='remove_repository', action="callback",
+            callback=self._store_item_with_product, type="string",
+            help=_("repository to be removed from the template"))
+        self._resetParameters()
 
 
     def check_options(self, validator):
@@ -347,7 +354,8 @@ class Update(TemplateAction):
             if v is None:
                 validator.add_option_error(_("missing value for parameter '%s'") % k)
 
-    def resetParameters(self):
+    def _resetParameters(self):
+        # pylint: disable=W0201
         self.items = {}
         self.items['add_parameters'] = {}
         self.items['add_repository'] = []
@@ -356,16 +364,9 @@ class Update(TemplateAction):
     def getContent(self):
         orgName = self.get_option('org')
         items = self.items.copy()
-        self.resetParameters()
+        self._resetParameters()
 
         content = {}
-
-        # bz 799149
-        #content['+products'] = self.get_option('add_products') or []
-        #content['+products'] = self.productNamesToIds(orgName, content['+products'])
-
-        #content['-products'] = self.get_option('remove_products') or []
-        #content['-products'] = self.productNamesToIds(orgName, content['-products'])
 
         content['+packages'] = self.get_option('add_packages') or []
         content['-packages'] = self.get_option('remove_packages') or []
@@ -383,9 +384,9 @@ class Update(TemplateAction):
         content['-distros'] = self.get_option('remove_distributions') or []
 
         content['+repos'] = items['add_repository']
-        content['+repos'] = self.repoNamesToIds(orgName, content['+repos'])
+        content['+repos'] = self._repoNamesToIds(orgName, content['+repos'])
         content['-repos'] = items['remove_repository']
-        content['-repos'] = self.repoNamesToIds(orgName, content['-repos'])
+        content['-repos'] = self._repoNamesToIds(orgName, content['-repos'])
         return content
 
 
@@ -405,25 +406,15 @@ class Update(TemplateAction):
         else:
             parentId = None
 
-        run_spinner_in_bg(self.updateTemplate, [template["id"], newName, desc, parentId], _("Updating the template, please wait... "))
+        run_spinner_in_bg(self.updateTemplate, [template["id"], newName, desc, parentId],
+            _("Updating the template, please wait... "))
         run_spinner_in_bg(self.updateContent,  [template["id"], content], _("Updating the template, please wait... "))
         print _("Successfully updated template [ %s ]") % template['name']
         return os.EX_OK
 
 
-
-    def productNamesToIds(self, orgName, productNames):
-        ids = []
-        for prodName in productNames:
-            p = get_product(orgName, prodName)
-            if p != None:
-                ids.append(p['id'])
-            else:
-                system_exit(os.EX_DATAERR)
-        return ids
-
-
-    def repoNamesToIds(self, orgName, repos):
+    @classmethod
+    def _repoNamesToIds(cls, orgName, repos):
         ids = []
         for rec in repos:
             repo = get_repo(orgName, rec['product'], rec['name'])
@@ -477,10 +468,8 @@ class Delete(TemplateAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("template name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
-        parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: foo.example.com (default: Library)"))
+        opt_parser_add_org(parser, required=1)
+        opt_parser_add_environment(parser)
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
@@ -488,7 +477,7 @@ class Delete(TemplateAction):
     def run(self):
         tplName = self.get_option('name')
         orgName = self.get_option('org')
-        envName = self.get_option('env')
+        envName = self.get_option('environment')
 
         template = get_template(orgName, envName, tplName)
         msg = self.api.delete(template["id"])

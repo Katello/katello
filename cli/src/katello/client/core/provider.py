@@ -15,13 +15,13 @@
 #
 
 import os
-from gettext import gettext as _
-from urlparse import urlparse
 
 from katello.client.api.provider import ProviderAPI
+from katello.client.cli.base import opt_parser_add_org
 from katello.client.server import ServerRequestError
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import test_record, get_abs_path, run_async_task_with_status, run_spinner_in_bg, AsyncTask, format_sync_errors, system_exit
+from katello.client.core.utils import test_record, get_abs_path, run_async_task_with_status, run_spinner_in_bg, \
+    AsyncTask, format_sync_errors, system_exit
 from katello.client.core.repo import format_sync_state, format_sync_time
 from katello.client.core.utils import ProgressBar
 from katello.client.api.utils import get_provider
@@ -42,8 +42,7 @@ class SingleProviderAction(ProviderAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("provider name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
         validator.require('name')
@@ -58,8 +57,7 @@ class List(ProviderAction):
 
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                               help=_("organization name (required)"))
+        opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
         validator.require('org')
@@ -124,13 +122,12 @@ class Update(ProviderAction):
 
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
-                               help=_("provider name (required)"))
+            help=_("provider name (required)"))
         parser.add_option("--description", dest="description",
-                               help=_("provider description"))
+            help=_("provider description"))
         parser.add_option("--url", dest="url", type="url",
-                               help=_("repository url eg: http://download.fedoraproject.org/pub/fedora/linux/releases/"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+            help=_("repository url eg: http://download.fedoraproject.org/pub/fedora/linux/releases/"))
+        opt_parser_add_org(parser, required=1)
 
         if not self._create:
             parser.add_option('--new_name', dest='new_name',
@@ -243,7 +240,8 @@ class Status(SingleProviderAction):
         if task.is_running():
             pkgsTotal = task.total_count()
             pkgsLeft = task.items_left()
-            prov['progress'] = (_("%d%% done (%d of %d packages downloaded)") % (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
+            prov['progress'] = (_("%d%% done (%d of %d packages downloaded)") % \
+                (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
 
         #TODO: last errors?
 
@@ -286,16 +284,19 @@ class ImportManifest(SingleProviderAction):
 
         try:
             f = open(get_abs_path(manifestPath))
-        except:
+        except IOError:
             system_exit(os.EX_IOERR, _("File %s does not exist" % manifestPath))
 
         prov = get_provider(orgName, provName)
 
         try:
-            response = run_spinner_in_bg(self.api.import_manifest, (prov["id"], f, force), message=_("Importing manifest, please wait... "))
+            response = run_spinner_in_bg(self.api.import_manifest, (prov["id"], f, force),
+                message=_("Importing manifest, please wait... "))
         except ServerRequestError, re:
-            if re.args[0] == 400 and "displayMessage" in re.args[1] and re.args[1]["displayMessage"] == "Import is older than existing data":
-                re.args[1]["displayMessage"] = "Import is older then existing data, please try with --force option to import manifest."
+            if re.args[0] == 400 and "displayMessage" in re.args[1] and \
+                re.args[1]["displayMessage"] == "Import is older than existing data":
+                re.args[1]["displayMessage"] = "Import is older then existing data," +\
+                    " please try with --force option to import manifest."
             raise re
         f.close()
         print response

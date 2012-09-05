@@ -13,12 +13,15 @@
 # granted to use or replicate Red Hat trademarks that are incorporated
 # in this software or its documentation.
 
-from gettext import gettext as _
+import fcntl
+import termios
+import struct
+
 from katello.client.utils.encoding import u_str
 
 
 
-class PrinterStrategy:
+class PrinterStrategy(object):
     """
     Strategy of formatting the data and printing them on the output.
     """
@@ -49,7 +52,8 @@ class PrinterStrategy:
         """
         pass
 
-    def _column_has_value(self, column, item):
+    @classmethod
+    def _column_has_value(cls, column, item):
         """
         Tests whether there is any value to print in the column.
         It can be value either from the item or set explicitly
@@ -63,7 +67,8 @@ class PrinterStrategy:
         """
         return (column['attr_name'] in item) or ('value' in column)
 
-    def _get_column_value(self, column, item):
+    @classmethod
+    def _get_column_value(cls, column, item):
         """
         Returns string that should be displayed in the column.
         It's either a given value or attribute of the item. Formatters
@@ -105,7 +110,8 @@ class VerboseStrategy(PrinterStrategy):
             self._print_item(item, columns)
             print
 
-    def _print_header(self, heading):
+    @classmethod
+    def _print_header(cls, heading):
         """
         Print a fancy header to stdout.
 
@@ -140,7 +146,8 @@ class VerboseStrategy(PrinterStrategy):
                 print column['name']+":"
                 print indent_text(value, "    ")
 
-    def _max_label_width(self, columns):
+    @classmethod
+    def _max_label_width(cls, columns):
         """
         Returns maximum width of the column labels.
 
@@ -151,7 +158,8 @@ class VerboseStrategy(PrinterStrategy):
         width = 0
         for column in columns:
             current_width = len(_(column['name']))
-            width = current_width if (current_width > width) else width
+            if (current_width > width):
+                width = current_width
         return width
 
 
@@ -168,6 +176,7 @@ class GrepStrategy(PrinterStrategy):
         :type noheading: boolean
         :param noheading: to suppress headings in the output
         """
+        super(GrepStrategy, self).__init__()
         self.__delim = delimiter if delimiter else ""
 
     def print_items(self, heading, columns, items):
@@ -354,7 +363,8 @@ class Printer:
             self.set_strategy(GrepStrategy())
         self.__printer_strategy.print_items(self.get_header(), self.__filtered_columns(), items)
 
-    def __attr_to_name(self, attr_name):
+    @classmethod
+    def __attr_to_name(cls, attr_name):
         """
         Convert attribute name to display name.
         oraganization_id -> Organization Id
@@ -460,13 +470,10 @@ def get_term_width():
     :rtype: int
     """
     try:
-        import fcntl
-        import termios
-        import struct
-        h, w, hp, wp = struct.unpack('HHHH',
+        w = struct.unpack('HHHH',
             fcntl.ioctl(0, termios.TIOCGWINSZ,
-            struct.pack('HHHH', 0, 0, 0, 0)))
+            struct.pack('HHHH', 0, 0, 0, 0)))[1]
         w = int(w)
-        return 80 if w == 0 else w
-    except:
-        return 80
+    except:  # pylint: disable=W0702
+        w = 80
+    return 80 if w == 0 else w

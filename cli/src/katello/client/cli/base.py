@@ -15,22 +15,55 @@
 
 import os
 import sys
+from logging import root, DEBUG
 from traceback import format_exc
-from gettext import gettext as _
+
 from optparse import OptionGroup, SUPPRESS_HELP
-from katello.client.i18n_optparse import OptionParser, OptionParserExitError
-from katello.client.core.utils import parse_tokens
+from katello.client.i18n_optparse import OptionParserExitError
 from katello.client.utils.encoding import u_str
 from katello.client.core.base import Command
-from katello.client.api.version import VersionAPI
 from katello.client.config import Config
 from katello.client.logutil import getLogger, logfile
 from katello.client import server
 
-from katello.client.server import BasicAuthentication, SSLAuthentication, KerberosAuthentication, NoAuthentication
+from katello.client.server import BasicAuthentication, SSLAuthentication, NoAuthentication
 
 
 _log = getLogger(__name__)
+
+def opt_parser_add_product(parser, required=None):
+    """ Add to the instance of optparse option --product"""
+    if required:
+        required = _(" (required)")
+    else:
+        required = ''
+    parser.add_option('--product', dest='product',
+                      help=_('product name e.g.: "Red Hat Enterprise Linux Server"%s' % required))
+
+
+def opt_parser_add_org(parser, required=None):
+    """ Add to the instance of optparse option --org"""
+    if isinstance(required, basestring):
+        pass # required already contains string
+    elif required:
+        required = _(" (required)")
+    else:
+        required = ''
+    parser.add_option('--org', dest='org',
+                      help=_('name of organization e.g.: ACME_Corporation%s' % required))
+
+def opt_parser_add_environment(parser, required=None, default=''):
+    """ Add to the instance of optparse option --environment"""
+    if isinstance(required, basestring):
+        pass # required already contains string
+    elif required:
+        required = _(" (required)")
+    else:
+        required = ''
+    if default:
+        default = _(" (default: %s)") % default
+    parser.add_option('--environment', dest='environment',
+                      help=_('environment name e.g.: production%s%s' % (required, default)))
 
 class OptionException(Exception):
     """
@@ -43,6 +76,7 @@ class KatelloError(Exception):
     User-friendly exception wrapper (used for stderr output).
     """
     def __init__(self, message, exception):
+        super(KatelloError, self).__init__(message, exception)
         self.message = message
         self.exception = exception
 
@@ -70,6 +104,8 @@ class KatelloCLI(Command):
         """
         parser.add_option("-v", "--version", action="store_true", default=False,
                                 dest="version",  help=_('prints version information'))
+        parser.add_option("-d", "--debug", action="store_true", default=False,
+                                dest="debug",  help=_('send debug information into logs'))
 
         credentials = OptionGroup(parser, _('Katello User Account Credentials'))
         credentials.add_option('-u', '--username', dest='username',
@@ -84,20 +120,20 @@ class KatelloCLI(Command):
 
 
         Config()
-        server = OptionGroup(parser, _('Katello Server Information'))
+        server_opt = OptionGroup(parser, _('Katello Server Information'))
         host = Config.parser.get('server', 'host') or 'localhost.localdomain'
-        server.add_option('--host', dest='host', default=host,
+        server_opt.add_option('--host', dest='host', default=host,
                           help=_('katello server host name (default: %s)') % host)
         port = Config.parser.get('server', 'port') or '443'
-        server.add_option('--port', dest='port', default=port,
+        server_opt.add_option('--port', dest='port', default=port,
                           help=SUPPRESS_HELP)
         scheme = Config.parser.get('server', 'scheme') or 'https'
-        server.add_option('--scheme', dest='scheme', default=scheme,
+        server_opt.add_option('--scheme', dest='scheme', default=scheme,
                           help=SUPPRESS_HELP)
         path = Config.parser.get('server', 'path') or '/katello/api'
-        server.add_option('--path', dest='path', default=path,
+        server_opt.add_option('--path', dest='path', default=path,
                           help=SUPPRESS_HELP)
-        parser.add_option_group(server)
+        parser.add_option_group(server_opt)
 
     def setup_server(self):
         """
@@ -107,9 +143,22 @@ class KatelloCLI(Command):
         port = self.opts.port
         scheme = self.opts.scheme
         path = self.opts.path
-
-        self._server = server.KatelloServer(host, int(port), scheme, path)
+    
+        self._server = server.KatelloServer(host, int(port), scheme, path, self.__server_locale())
         server.set_active_server(self._server)
+
+    @classmethod
+    def __server_locale(cls):
+        """
+        Take system locale and convert it to server locale
+        Eg. en_US -> en-us
+        """
+        import locale
+        loc = locale.getlocale(locale.LC_ALL)[0] or locale.getdefaultlocale()[0]
+        if loc is not None:
+            return loc.lower().replace('_', '-')
+        else:
+            return loc
 
     def setup_credentials(self):
         """
@@ -126,9 +175,9 @@ class KatelloCLI(Command):
         elif None not in (self._certfile, self._keyfile):
             self._server.set_auth_method(SSLAuthentication(self._certfile, self._keyfile))
         else:
-            #self._server.set_auth_method(KerberosAuthentication(self.opts.host))
             self._server.set_auth_method(NoAuthentication())
 
+    # pylint: disable=W0221
     def error(self, exception, errorMsg = None):
         msg = errorMsg if errorMsg else u_str(exception)
         print >> sys.stderr, "error: %s (more in the log file %s)" % (msg, logfile())
@@ -140,6 +189,8 @@ class KatelloCLI(Command):
         self.setup_credentials()
         if self.get_option('version'):
             self.args = ["version"]
+        if self.get_option('debug'):
+            root.setLevel(DEBUG)
 
     def main(self, args, command_name=None, parent_usage=None):
         try:

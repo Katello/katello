@@ -1,14 +1,21 @@
 %div
   %div{:class=>'column_1'}
-    .status_icon{:class => "#{item.pool_derived ? 'yellow' : 'green'}"}
     %div.one-line-ellipsis{:style=>"padding-top: 2px; font-weight: bold;"}
       = item.product_name
 %div
   %div{:class=>'column_2'}
-    - if item.quantity < 0
-      = _("Consumed: Unlimited")
-    - else
-      = _("Consumed: %d of %d") % [item.consumed, item.quantity]
+    %ul
+      %li
+        - if item.quantity < 0
+          = _("Consumed: Unlimited")
+        - else
+          = _("Consumed: %d of %d") % [item.consumed, item.quantity]
+      %li
+        = _("Expires: %s") % item.end_date
   %div{:class=>'column_2'}
-    = _("SLA: %s") % item.support_level
+    %ul
+      %li
+        = _("SLA: %s") % item.support_level
+      %li
+        = item.pool_derived ? _('Virtual Guest') : ''
 .arrow-right

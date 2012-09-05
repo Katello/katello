@@ -314,6 +314,12 @@ describe Api::ActivationKeysController do
       ActivationKey.find(@activation_key.id).system_group_ids.should include(@system_group_2.id)
     end
 
+    it "should throw a 404 is passed in a bad system group id" do
+      ids = [90210]
+      post :add_system_groups, :id => @activation_key.id, :organization_id => @organization.id, :activation_key => { :system_group_ids => ids }
+      response.status.should == 404
+    end
+
   end
 
   describe "remove system groups from an activation key" do
@@ -337,6 +343,13 @@ describe Api::ActivationKeysController do
       delete :remove_system_groups, :id => @activation_key.id, :organization_id => @organization.id, :system => { :system_group_ids => ids }
       @activation_key.system_group_ids.should be_empty
     end
+
+    it "should throw a 404 is passed in a bad system group id" do
+      ids = [90210]
+      delete :remove_system_groups, :id => @activation_key.id, :organization_id => @organization.id, :activation_key => { :system_group_ids => ids }
+      response.status.should == 404
+    end
+
 
   end
 end

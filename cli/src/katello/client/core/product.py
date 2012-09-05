@@ -15,9 +15,10 @@
 #
 
 import os
-from gettext import gettext as _
 import datetime
 
+from katello.client import constants
+from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
 from katello.client.core import repo
 from katello.client.api.product import ProductAPI
 from katello.client.api.repo import RepoAPI
@@ -25,7 +26,8 @@ from katello.client.core.repo import format_sync_state, format_sync_time, ALLOWE
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_environment, get_provider, get_product, get_sync_plan, get_filter
-from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_task_errors
+from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, \
+    AsyncTask, format_task_errors
 from katello.client.core.utils import ProgressBar
 from katello.client.utils import printer
 
@@ -53,13 +55,15 @@ class SingleProductAction(ProductAction):
     def check_options(self, validator):
         self.check_product_select_options(validator)
 
-    def set_product_select_options(self, parser, select_by_env=True):
-        parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com (required)"))
+    @classmethod
+    def set_product_select_options(cls, parser, select_by_env=True):
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name', help=_("product name (required)"))
         if select_by_env:
-            parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Library)"))
+            opt_parser_add_environment(parser, default=_("Library"))
 
-    def check_product_select_options(self, validator):
+    @classmethod
+    def check_product_select_options(cls, validator):
         validator.require(('org', 'name'))
 
 
@@ -113,10 +117,8 @@ class List(ProductAction):
     description = _('list known products')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                       help=_("organization name eg: foo.example.com (required)"))
-        parser.add_option('--environment', dest='env',
-                       help=_('environment name eg: production (default: Library)'))
+        opt_parser_add_org(parser, required=1)
+        opt_parser_add_environment(parser, default=_("Library"))
         parser.add_option('--provider', dest='prov',
                        help=_("provider name, lists provider's product in the Library"))
         parser.add_option('--all', dest='all', action='store_true',
@@ -127,9 +129,9 @@ class List(ProductAction):
 
     def run(self):
         org_name = self.get_option('org')
-        env_name = self.get_option('env')
+        env_name = self.get_option('environment')
         prov_name = self.get_option('prov')
-        all = self.get_option('all')
+        all_opt = self.get_option('all')
 
         self.printer.add_column('id')
         self.printer.add_column('name')
@@ -152,13 +154,10 @@ class List(ProductAction):
             prods = self.api.products_by_env(env['id'])
 
         # hide marketing products by default
-        if not all:
-            def isMarketingProduct(p):
-                try:
-                    return not p["marketing_product"]
-                except:
-                    return True
-            prods = filter(isMarketingProduct, prods)
+        if not all_opt:
+            def isNotMarketingProduct(p):
+                return not (("marketing_product" in p) and (p["marketing_product"]))
+            prods = filter(isNotMarketingProduct, prods)
 
         self.printer.print_items(prods)
         return os.EX_OK
@@ -226,7 +225,8 @@ class Status(SingleProductAction):
         if task.is_running():
             pkgsTotal = task.total_count()
             pkgsLeft = task.items_left()
-            prod['progress'] = ("%d%% done (%d of %d packages downloaded)" % (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
+            prod['progress'] = ("%d%% done (%d of %d packages downloaded)" %
+                (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
 
         #TODO: last errors?
 
@@ -246,27 +246,28 @@ class Status(SingleProductAction):
 # ------------------------------------------------------------------------------
 class Promote(SingleProductAction):
 
-    description = _('promote a product to an environment\n(creates a temporary changeset with the product and promotes it)')
+    description = _('promote a product to an environment\n' +
+        '(creates a temporary changeset with the product and promotes it)')
     select_by_env = True
 
     def check_options(self, validator):
         self.check_product_select_options(validator)
-        validator.require('env')
+        validator.require('environment')
 
     def run(self):
         orgName     = self.get_option('org')
         prodName    = self.get_option('name')
-        envName     = self.get_option('env')
+        envName     = self.get_option('environment')
 
         env = get_environment(orgName, envName)
         prod = get_product(orgName, prodName)
 
         returnCode = os.EX_OK
 
-        cset = self.csapi.create(orgName, env["id"], self.create_cs_name())
+        cset = self.csapi.create(orgName, env["id"], self.create_cs_name(), constants.PROMOTION)
         try:
             self.csapi.add_content(cset["id"], "products", {'product_id': prod['id']})
-            task = self.csapi.promote(cset["id"])
+            task = self.csapi.apply(cset["id"])
             task = AsyncTask(task)
 
             run_spinner_in_bg(wait_for_async_task, [task], message=_("Promoting the product, please wait... "))
@@ -284,7 +285,8 @@ class Promote(SingleProductAction):
 
         return returnCode
 
-    def create_cs_name(self):
+    @classmethod
+    def create_cs_name(cls):
         curTime = datetime.datetime.now()
         return "product_promotion_"+str(curTime)
 
@@ -298,22 +300,22 @@ class Create(ProductAction):
     description = _('create new product to a custom provider')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                               help=_("organization name eg: foo.example.com (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--provider', dest='prov',
-                               help=_("provider name (required)"))
+            help=_("provider name (required)"))
         parser.add_option('--name', dest='name',
-                               help=_("product name (required)"))
+            help=_("product name (required)"))
         parser.add_option("--description", dest="description",
-                               help=_("product description"))
+            help=_("product description"))
         parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES,
-                               help=_("repository url eg: http://download.fedoraproject.org/pub/fedora/linux/releases/"))
+            help=_("repository url eg: http://download.fedoraproject.org/pub/fedora/linux/releases/"))
         parser.add_option("--nodisc", action="store_true", dest="nodiscovery",
-                               help=_("skip repository discovery"))
+            help=_("skip repository discovery"))
         parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
-                               help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
+            help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
         parser.add_option("--gpgkey", dest="gpgkey",
-                               help=_("assign a gpg key; this key will be used for every new repository unless gpgkey or nogpgkey is specified for the repo"))
+            help=_("assign a gpg key; this key will be used for every new repository unless gpgkey or nogpgkey" + \
+                " is specified for the repo"))
 
 
     def check_options(self, validator):

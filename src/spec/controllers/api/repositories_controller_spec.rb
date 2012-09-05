@@ -251,7 +251,7 @@ describe Api::RepositoriesController, :katello => true do
       context "Custom repo" do
         before do
               Repository.should_receive(:find).with("1").and_return(@repo)
-              @repo.stub(:redhat? => false)
+          @repo.stub :redhat? => false, :to_hash => { }
         end
 
         it 'should update values thet migth change' do

@@ -18,6 +18,9 @@ import os
 import ConfigParser
 from pwd import getpwuid
 
+class ConfigFileError(Exception):
+    pass
+
 class Config(object):
     """
     The katello client configuration.
@@ -67,10 +70,10 @@ class Config(object):
         read_config_files = Config.parser.read([Config.PATH, Config.USER, Config.USER_OPTIONS])
 
         if not read_config_files:
-            raise Exception('No config file was found')
+            raise ConfigFileError('No config file was found')
 
         if Config.parser.has_section("DEFAULT"):
-            raise Exception('Default section in configuration is not supported')
+            raise ConfigFileError('Default section in configuration is not supported')
 
     @staticmethod
     def save():

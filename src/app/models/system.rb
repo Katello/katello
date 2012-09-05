@@ -26,6 +26,8 @@ class System < ActiveRecord::Base
   include AsyncOrchestration
   include IndexedModel
 
+  after_rollback :rollback_on_create, :on => :create
+
   index_options :extended_json=>:extended_index_attrs,
                 :json=>{:only=> [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id]},
                 :display_attrs=>[:name, :description, :id, :uuid, :created_at, :lastCheckin, :system_group]
@@ -63,8 +65,8 @@ class System < ActiveRecord::Base
   has_many :system_groups, {:through => :system_system_groups, :before_add => :add_pulp_consumer_group, :before_remove => :remove_pulp_consumer_group}.merge(update_association_indexes)
 
   validates :environment, :presence => true, :non_library_environment => true
+  # multiple systems with a single name are supported
   validates :name, :presence => true, :no_trailing_space => true
-  validates_uniqueness_of :name, :scope => :environment_id
   validates :description, :katello_description_format => true
   validates_length_of :location, :maximum => 255
   validates :sockets, :numericality => { :only_integer => true, :greater_than => 0 }, :allow_blank => true, :allow_nil => true, :on => {:create, :update}
@@ -109,6 +111,36 @@ class System < ActiveRecord::Base
     attribs_to_sub.each do |id|
       self.subscribe id
     end
+  end
+
+  def filtered_pools match_system, match_installed, no_overlap
+    pools = self.available_pools !match_system
+
+    # Only available pool's with a product on the system'
+    if match_installed
+      pools = pools.select do |pool|
+        self.installedProducts.any? do |installedProduct|
+          pool['providedProducts'].any? do |providedProduct|
+            installedProduct['productId'] == providedProduct['productId']
+          end
+        end
+      end
+    end
+
+    # None of the available pool's products overlap a consumed pool's products
+    if no_overlap
+      pools = pools.select do |pool|
+        pool['providedProducts'].all? do |providedProduct|
+          self.consumed_entitlements.all? do |consumedEntitlement|
+            consumedEntitlement.providedProducts.all? do |consumedProduct|
+              consumedProduct.cp_id != providedProduct['productId']
+            end
+          end
+        end
+      end
+    end
+
+    return pools
   end
 
   def install_packages packages
@@ -219,6 +251,14 @@ class System < ActiveRecord::Base
      :system_group=>self.system_groups.collect{|g| g.name},
      :system_group_ids=>self.system_group_ids
     }
+  end
+
+  # A rollback occurred while attempting to create the system; therefore, perform necessary cleanup.
+  def rollback_on_create
+    # remove the system from elasticsearch
+    system_id = "id:#{self.id}"
+    Tire::Configuration.client.delete "#{Tire::Configuration.url}/katello_system/_query?q=#{system_id}"
+    Tire.index('katello_system').refresh
   end
 
   private

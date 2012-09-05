@@ -27,6 +27,16 @@ Config.USER_DIR = os.path.join(getpwuid(os.getuid())[5], '.headpin')
 Config.USER = os.path.expanduser(os.path.join(Config.USER_DIR, Config.FILE))
 Config.USER_OPTIONS = os.path.expanduser(os.path.join(Config.USER_DIR, 'client-options.conf'))
 
+# Change encoding of output streams when no encoding is forced via $PYTHONIOENCODING
+# or setting in lib/python{version}/site-packages
+from katello.client.utils.encoding import fix_io_encoding
+fix_io_encoding()
+
+# Set correct locale
+from katello.client.i18n import configure_i18n
+configure_i18n()
+
+
 from katello.client.cli.admin import AdminCLI
 from katello.client.shell import KatelloShell
 from katello.client.core import (

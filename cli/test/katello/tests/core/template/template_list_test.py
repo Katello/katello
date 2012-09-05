@@ -34,7 +34,7 @@ class TemplateListTest(CLIActionTestCase):
 
     OPTIONS = {
         'org': ORG['name'],
-        'env': ENV['name'],
+        'environment': ENV['name'],
     }
 
     def setUp(self):

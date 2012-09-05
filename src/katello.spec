@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.1.6
+Version:        1.1.9
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -104,7 +104,7 @@ BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
-BuildRequires:  converge-ui-devel >= 0.8.3
+BuildRequires:  converge-ui-devel >= 1.0
 
 # we require this to be able to build api-docs
 BuildRequires:       rubygem(rails) >= 3.0.10
@@ -238,30 +238,37 @@ if [ -d branding ] ; then
   cp -r branding/* .
 fi
 
-#compile SASS files
-echo Compiling SASS files...
-compass compile
+%if ! 0%{?fastbuild:1}
+    #compile SASS files
+    echo Compiling SASS files...
+    compass compile
 
-#generate Rails JS/CSS/... assets
-echo Generating Rails assets...
-LC_ALL="en_US.UTF-8" jammit --config config/assets.yml -f
+    #generate Rails JS/CSS/... assets
+    echo Generating Rails assets...
+    LC_ALL="en_US.UTF-8" jammit --config config/assets.yml -f
 
-
-#create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
-echo Generating gettext files...
-ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")'
+    #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
+    echo Generating gettext files...
+    ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")'
+%endif
 
 #man pages
 a2x -d manpage -f manpage man/katello-service.8.asciidoc
 
 #api docs
-echo Generating API docs
-rm -f Gemfile.lock
-cp Gemfile Gemfile.old
-echo 'gem "redcarpet"' >> Gemfile
-rake apipie:static RAILS_ENV=apipie --trace
-rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=apipie --trace
-mv Gemfile.old Gemfile
+%if 0%{?fastbuild:1}
+    # make empty directories when doing fast build
+    mkdir -p %{buildroot}%{homedir}/public/apipie-cache
+    mkdir -p doc/apidoc
+%else
+    echo Generating API docs
+    rm -f Gemfile.lock
+    cp Gemfile Gemfile.old
+    echo 'gem "redcarpet"' >> Gemfile
+    rake apipie:static RAILS_ENV=apipie --trace
+    rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=apipie --trace
+    mv Gemfile.old Gemfile
+%endif
 
 %install
 #prepare dir structure
@@ -407,6 +414,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/public
 %exclude %{homedir}/public/apipie-cache
 %{homedir}/script
+%exclude %{homedir}/script/service-wait
 %{homedir}/spec
 %{homedir}/tmp
 %{homedir}/vendor
@@ -437,6 +445,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/log
 %{homedir}/db/schema.rb
 %{homedir}/lib/util
+%{homedir}/script/service-wait
 
 %defattr(-, katello, katello)
 %attr(750, katello, katello) %{_localstatedir}/log/%{name}
@@ -528,6 +537,67 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Aug 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.9-1
+- Do not insert spaces before changesets description (pajkycz@gmail.com)
+- 847858-actkeypool - fixed spec test failure (thomasmckay@redhat.com)
+- Updating converge-ui (jomara@redhat.com)
+- 847858 - only remove act keys when resource not found error
+  (thomasmckay@redhat.com)
+- 847115 - Extend scroll bug on content tab, with > 50 subscriptions only the
+  first 50 will populate. (pajkycz@gmail.com)
+- Added some unit to test the perm fixes (paji@redhat.com)
+- 843462 - system group search indexing should not include pulp content
+  (bbuckingham@redhat.com)
+- Added permissions for content delete (paji@redhat.com)
+- 841857 - fixing LDAP logins in katello mode (jomara@redhat.com)
+- 842569 - system groups - fix for TypeError on status of errata install
+  (bbuckingham@redhat.com)
+- 811556 - Displaced 'save' button while editing the changeset description
+  under "changeset history" tab (pajkycz@gmail.com)
+
+* Wed Aug 29 2012 Ivan Necas <inecas@redhat.com> 1.1.8-1
+- subsfilter - reset the cycle of table row colors to avoid having first row of
+  bottom table having same shading as the table header (ie. always start with
+  light color row) (thomasmckay@redhat.com)
+- subsfilter - removed second spinner when updating filtered subscriptions
+  (thomasmckay@redhat.com)
+- Available subscriptions on systems page now allow filtering matching what is
+  available in subscription-manager-gui (thomasmckay@redhat.com)
+- Content Search - Adds new data fields "data_type" and "value" to make testing
+  easier. (ehelms@redhat.com)
+- cdn-var-substitutor - isolate the logic to separate class (inecas@redhat.com)
+- 845613 - fix display of subscription status and rows (thomasmckay@redhat.com)
+- 845668 - removing console.log usage from js, which cause FF3.6 failures
+  (bbuckingham@redhat.com)
+- Moved service-wait link target to katello-common (mbacovsk@redhat.com)
+- 846321: Support creating permissions for all tags from the API and the cli
+  (bkearney@redhat.com)
+- 845995: Add local and server side checks for passing in bad group names and
+  ids (bkearney@redhat.com)
+- content-deletion - update content tree after product deletion
+  (bbuckingham@redhat.com)
+- 846251: Do not specify the attribute name for uniqueness validation
+  (bkearney@redhat.com)
+- content-deletion - update so that clicking on undefined changeset category
+  doesnothing (bbuckingham@redhat.com)
+- 844806 - katello incorrectly prevents products with the same name in an
+  organization (adprice@redhat.com)
+- 844806 - katello incorrectly prevents products with the same name in an
+  organization (adprice@redhat.com)
+- 849224 - thin now listens only on localhost (lzap+git@redhat.com)
+- katello - remove lists of rescue Exception usage (pchalupa@redhat.com)
+- katello - remove 'rescue Exception' (pchalupa@redhat.com)
+
+* Thu Aug 23 2012 Mike McCune <mmccune@redhat.com> 1.1.7-1
+- 846251: Do not specify the attribute name for uniqueness validation
+  (bkearney@redhat.com)
+- 850745 - secret_token is not generated properly (CVE-2012-3503)
+  (lzap+git@redhat.com)
+- katello-all - installs foreman as well (inecas@redhat.com)
+- 805127 - require candlepin-selinux (msuchy@redhat.com)
+- fix build errors (msuchy@redhat.com)
+- fix build errors on F17 (msuchy@redhat.com)
+
 * Tue Aug 21 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.6-1
 - remove Gemfile.lock after all packages are installed (msuchy@redhat.com)
 - content deletion - unit test fix (mmccune@redhat.com)

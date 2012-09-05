@@ -15,7 +15,6 @@
 #
 
 import os
-from gettext import gettext as _
 
 from katello.client.api.user import UserAPI
 from katello.client.api.user_role import UserRoleAPI
@@ -63,7 +62,8 @@ class Create(UserAction):
         parser.add_option('--username', dest='username', help=_("user name (required)"))
         parser.add_option('--password', dest='password', help=_("initial password (required)"))
         parser.add_option('--email', dest='email', help=_("email (required)"))
-        parser.add_option("--disabled", dest="disabled", type="bool", help=_("disabled account (default is 'false')"), default=False)
+        parser.add_option("--disabled", dest="disabled", type="bool",
+            help=_("disabled account (default is 'false')"), default=False)
         parser.add_option('--default_organization', dest='default_organization',
                                help=_("user's default organization name"))
         parser.add_option('--default_environment', dest='default_environment',
@@ -297,13 +297,14 @@ class Report(UserAction):
     description = _('user report')
 
     def setup_parser(self, parser):
-        parser.add_option('--format', dest='format', help=_("report format (possible values: 'html', 'text' (default), 'csv', 'pdf')"))
+        parser.add_option('--format', dest='format',
+            help=_("report format (possible values: 'html', 'text' (default), 'csv', 'pdf')"))
 
     def run(self):
-        format = self.get_option('format')
-        report = self.api.report(convert_to_mime_type(format, 'text'))
+        format_in = self.get_option('format')
+        report = self.api.report(convert_to_mime_type(format_in, 'text'))
 
-        if format == 'pdf':
+        if format_in == 'pdf':
             save_report(report[0], attachment_file_name(report[1], 'katello_users_report.pdf'))
         else:
             print report[0]

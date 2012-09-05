@@ -16,7 +16,6 @@
 
 import os
 import sys
-from gettext import gettext as _
 
 from katello.client.api.activation_key import ActivationKeyAPI
 from katello.client.api.template import TemplateAPI
@@ -25,7 +24,7 @@ from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record
 from katello.client.utils import printer
 from katello.client.api.utils import get_environment, get_organization
-from katello.client.cli.base import OptionException
+from katello.client.cli.base import OptionException, opt_parser_add_org, opt_parser_add_environment
 
 class ActivationKeyAction(BaseAction):
 
@@ -33,7 +32,8 @@ class ActivationKeyAction(BaseAction):
         super(ActivationKeyAction, self).__init__()
         self.api = ActivationKeyAPI()
 
-    def get_template_id(self, environmentId, templateName):
+    @classmethod
+    def get_template_id(cls, environmentId, templateName):
         if templateName != None:
             template_api = TemplateAPI()
             template = template_api.template_by_name(environmentId, templateName)
@@ -50,19 +50,18 @@ class List(ActivationKeyAction):
     description = _('list all activation keys')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
-        parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: dev (default: Library)"))
+        opt_parser_add_org(parser, required=1)
+        opt_parser_add_environment(parser, default=_("Library"))
 
     def check_options(self, validator):
         validator.require('org')
 
     def run(self):
-        envName = self.get_option('env')
+        envName = self.get_option('environment')
         orgName = self.get_option('org')
 
-        keys = self.get_keys_for_organization(orgName) if envName == None else self.get_keys_for_environment(orgName, envName)
+        keys = self.get_keys_for_organization(orgName) \
+            if envName == None else self.get_keys_for_environment(orgName, envName)
 
         if not keys:
             if envName == None:
@@ -73,7 +72,7 @@ class List(ActivationKeyAction):
             return os.EX_OK
 
         for k in keys:
-            if k['usage_limit'] is None:
+            if k['usage_limit'] is None or k['usage_limit'] == -1:
                 k['usage'] = str(k['usage_count'])
             else:
                 k['usage'] = str(k['usage_count']) + '/' + str(k['usage_limit'])
@@ -104,8 +103,7 @@ class Info(ActivationKeyAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("activation key name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
@@ -143,27 +141,32 @@ class Create(ActivationKeyAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("activation key name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
-        parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: dev (required)"))
+        opt_parser_add_org(parser, required=1)
+        opt_parser_add_environment(parser, required=1)
         parser.add_option('--description', dest='description',
                                help=_("activation key description"))
         parser.add_option('--template', dest='template',
                                help=_("template name eg: servers"))
-        parser.add_option('--limit', dest='usage_limit',
+        parser.add_option('--limit', dest='usage_limit', type="int",
                                help=_("usage limit (unlimited by default)"))
 
     def check_options(self, validator):
-        validator.require(('name', 'org', 'env'))
+        validator.require(('name', 'org', 'environment'))
 
     def run(self):
         orgName = self.get_option('org')
-        envName = self.get_option('env')
+        envName = self.get_option('environment')
         keyName = self.get_option('name')
         keyDescription = self.get_option('description')
         templateName = self.get_option('template')
-        usageLimit = self.get_option('usage_limit', -1)
+        usageLimit = self.get_option('usage_limit')
+
+        if usageLimit is None:
+            usageLimit = -1
+        else:
+            if int(usageLimit) <= 0:
+                print >> sys.stderr, _("Usage limit [ %s ] must be higher than one") % usageLimit
+                return os.EX_DATAERR
 
         environment = get_environment(orgName, envName)
 
@@ -188,10 +191,9 @@ class Update(ActivationKeyAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("activation key name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--environment', dest='env',
-                               help=_("new environment name eg: dev"))
+                               help=_("new environment name e.g.: dev"))
         parser.add_option('--new_name', dest='new_name',
                               help=_("new template name"))
         parser.add_option('--description', dest='description',
@@ -237,7 +239,8 @@ class Update(ActivationKeyAction):
         except OptionException:
             print >> sys.stderr, _("Could not find template [ %s ]") % (templateName)
             return os.EX_DATAERR
-        key = self.api.update(key['id'], environment['id'] if environment != None else None, newKeyName, keyDescription, templateId, usageLimit)
+        key = self.api.update(key['id'], environment['id'] if environment != None else None,
+            newKeyName, keyDescription, templateId, usageLimit)
 
         for poolid in add_poolids:
             self.api.add_pool(key['id'], poolid)
@@ -258,8 +261,7 @@ class Delete(ActivationKeyAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("activation key name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
@@ -287,8 +289,7 @@ class AddSystemGroup(ActivationKeyAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("activation key name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--system_group', dest='system_group_name',
                               help=_("system group name (required)"))
 
@@ -309,7 +310,8 @@ class AddSystemGroup(ActivationKeyAction):
 
         system_group = SystemGroupAPI().system_groups(org_name, { 'name' : system_group_name})
 
-        if system_group is None:
+        if system_group is None or len(system_group) == 0:
+            print >> sys.stderr, _("Could not find system group [ %s ]") % system_group_name
             return os.EX_DATAERR
         else:
             system_group = system_group[0]
@@ -330,8 +332,7 @@ class RemoveSystemGroup(ActivationKeyAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("activation key name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--system_group', dest='system_group_name',
                               help=_("system group name (required)"))
 
@@ -352,8 +353,8 @@ class RemoveSystemGroup(ActivationKeyAction):
 
         system_group = SystemGroupAPI().system_groups(org_name, { 'name' : system_group_name})
 
-        if system_group is None:
-            return os.EX_DATAERR
+        if system_group is None or len(system_group) == 0:
+            print >> sys.stderr, _("Could not find system group [ %s ]") % system_group_name
         else:
             system_group = system_group[0]
 

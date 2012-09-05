@@ -15,7 +15,6 @@
 #
 
 import os
-from gettext import gettext as _
 
 from katello.client.api.organization import OrganizationAPI
 from katello.client.api.product import ProductAPI
@@ -231,13 +230,15 @@ class ShowSubscriptions(OrganizationAction):
     def sla(self, pool):
         return {'sla': self.extract_sla_from_product(self.productApi.show(self.get_option('name'), pool['productId']))}
 
-    def convert_timestamp(self, timestamp_field):
+    @classmethod
+    def convert_timestamp(cls, timestamp_field):
         offset = int(timestamp_field[-5:])
         delta = timedelta(hours = offset / 100)
         t = datetime.strptime(timestamp_field[:-9], "%Y-%m-%dT%H:%M:%S") - delta
         return datetime.strftime(t, "%Y/%m/%d %H:%M:%S")
 
-    def extract_sla_from_product(self, p):
+    @classmethod
+    def extract_sla_from_product(cls, p):
         sla_attr = [attr.get("value", "") for attr in p["attributes"] if attr.get("name", "") == "sla"]
         return sla_attr[0] if len(sla_attr) > 0 else ""
 

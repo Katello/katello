@@ -16,9 +16,9 @@
 
 import os
 import sys
-from gettext import gettext as _
 
 from katello.client.api.gpg_key import GpgKeyAPI
+from katello.client.cli.base import opt_parser_add_org
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, get_abs_path
 from katello.client.utils import printer
@@ -32,10 +32,10 @@ class GpgKeyAction(BaseAction):
         self.api = GpgKeyAPI()
 
     def read_content(self, use_prompt):
-        file = self.get_option('file')
+        gpgkey_file = self.get_option('file')
 
-        if file:
-            with open(get_abs_path(file), "r") as f:
+        if gpgkey_file:
+            with open(get_abs_path(gpgkey_file), "r") as f:
                 content = f.read()
         elif use_prompt:
             print _("Enter content of the GPG key (finish input with CTRL+D):")
@@ -44,10 +44,7 @@ class GpgKeyAction(BaseAction):
             content = None
         return content
 
-    def get_key_id(self):
-        orgName = self.get_option('org')
-        keyName = self.get_option('name')
-
+    def get_key_id(self, orgName, keyName):
         keys = self.api.gpg_keys_by_organization(orgName, keyName)
         if len(keys) == 0:
             return
@@ -61,8 +58,7 @@ class List(GpgKeyAction):
     description = _('list all GPG keys')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
         validator.require('org')
@@ -91,22 +87,23 @@ class Info(GpgKeyAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("GPG key name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
 
     def run(self):
         keyName = self.get_option('name')
-        key_id = self.get_key_id()
+        orgName = self.get_option('org')
+        key_id = self.get_key_id(orgName, keyName)
         if not key_id:
             print >> sys.stderr, _("Could not find GPG key [ %s ]") % keyName
             return os.EX_DATAERR
 
         key = self.api.gpg_key(key_id)
         key["products"] = "[ "+ ", ".join([product["name"] for product in key["products"]]) +" ]"
-        key["repos"] = "[ "+ ", ".join([repo["product"]["name"] + " - " + repo["name"] for repo in key["repositories"]]) +" ]"
+        key["repos"] = "[ %s ]" % (
+            ", ".join(["%s - %s" % (repo["product"]["name"], repo["name"]) for repo in key["repositories"]]))
         key["content"] = "\n" + key["content"]
 
         self.printer.add_column('id')
@@ -127,8 +124,7 @@ class Create(GpgKeyAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("GPG key name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--file', dest='file',
                                help=_("file with public GPG key, if not\
                                  specified, standard input will be used"))
@@ -141,8 +137,8 @@ class Create(GpgKeyAction):
         keyName = self.get_option('name')
         try:
             content = self.read_content(True)
-        except IOError as (c,m):
-            print m
+        except IOError, e:
+            print e[1]
             return os.EX_DATAERR
 
         key = self.api.create(orgName, keyName, content)
@@ -159,8 +155,7 @@ class Update(GpgKeyAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("GPG key name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--new_name', dest='new_name',
                               help=_("new template name"))
         parser.add_option('--file', dest='file',
@@ -179,11 +174,11 @@ class Update(GpgKeyAction):
 
         try:
             content = self.read_content(self.get_option('new_content'))
-        except IOError as (c,m):
-            print m
+        except IOError, e:
+            print e[1]
             return os.EX_DATAERR
 
-        key_id = self.get_key_id()
+        key_id = self.get_key_id(orgName, keyName)
         if not key_id:
             print >> sys.stderr, _("Could not find GPG key [ %s ]") % keyName
             return os.EX_DATAERR
@@ -202,16 +197,16 @@ class Delete(GpgKeyAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("GPG key name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
 
     def run(self):
         keyName = self.get_option('name')
+        orgName = self.get_option('org')
 
-        key_id = self.get_key_id()
+        key_id = self.get_key_id(orgName, keyName)
         if not key_id:
             print >> sys.stderr, _("Could not find GPG key [ %s ]") % keyName
             return os.EX_DATAERR

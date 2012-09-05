@@ -409,9 +409,9 @@ module Glue::Pulp::Repos
 
     def set_repos
       content_urls = self.productContent.map { |pc| pc.content.contentUrl }
-      cdn_var_substitutor = Resources::CDN::CdnVarSubstitutor.new(self.provider[:repository_url],
+      cdn_var_substitutor = Resources::CDN::CdnResource.new(self.provider[:repository_url],
                                                        :ssl_client_cert => OpenSSL::X509::Certificate.new(self.certificate),
-                                                       :ssl_client_key => OpenSSL::PKey::RSA.new(self.key))
+                                                       :ssl_client_key => OpenSSL::PKey::RSA.new(self.key)).substitutor
       cdn_var_substitutor.precalculate(content_urls)
 
       self.productContent.collect do |pc|

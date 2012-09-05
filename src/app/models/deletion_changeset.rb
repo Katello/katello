@@ -78,7 +78,7 @@ class DeletionChangeset < Changeset
       Notify.success message, :request_type => "changesets___delete"
     end
 
-  rescue Exception => e
+  rescue => e
     self.state = Changeset::FAILED
     self.save!
     Rails.logger.error(e)

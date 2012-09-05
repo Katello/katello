@@ -14,12 +14,11 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
-from katello.client.utils.encoding import u_str
 
 class AdminAPI(KatelloAPI):
     """
     Various administrative actions
     """
-    def crl_regen(self, query={}):
+    def crl_regen(self, query=None):
         path = "/api/crls/"
         return self.server.GET(path, query)[1]

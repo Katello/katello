@@ -15,18 +15,21 @@
 
 from katello.client.api.base import KatelloAPI
 from katello.client.utils.encoding import u_str
+from katello.client.core.utils import update_dict_unless_none
 
+# pylint: disable=R0904
 class SystemAPI(KatelloAPI):
     """
     Connection class to access environment calls
     """
-    def register(self, name, org, environment_id, activation_keys, cp_type, release=None, sla=None, facts={}):
+    def register(self, name, org, environment_id, activation_keys, cp_type, release=None, sla=None, facts=None):
         if environment_id is not None:
             path = "/api/environments/%s/systems" % environment_id
         else:
             path = "/api/organizations/%s/systems" % org
         facts_with_defaults = { "distribution.name": "Unknown", "cpu.cpu_socket(s)": "1" }
-        facts_with_defaults.update(facts)
+        if facts is not None:
+            facts_with_defaults.update(facts)
         sysdata = {
             "name": name,
             "cp_type": cp_type,
@@ -56,9 +59,15 @@ class SystemAPI(KatelloAPI):
         path = "/api/systems/%s/subscriptions" % system_id
         return self.server.GET(path)[1]
 
-    def available_pools(self, system_id):
+    def available_pools(self, system_id, match_system=False, match_installed=False, no_overlap=False):
+        params = {}
+        update_dict_unless_none(params, "match_system", match_system)
+        update_dict_unless_none(params, "match_installed", match_installed)
+        update_dict_unless_none(params, "no_overlap", no_overlap)
+
         path = "/api/systems/%s/pools" % system_id
-        return self.server.GET(path)[1]
+
+        return self.server.GET(path, params)[1]
 
     def unsubscribe(self, system_id, entitlement):
         path = "/api/systems/%s/subscriptions/%s" % (system_id, entitlement)
@@ -76,10 +85,13 @@ class SystemAPI(KatelloAPI):
         path = "/api/systems/%s" % system_id
         return self.server.GET(path)[1]
 
-    def tasks(self, org_name, environment_id, system_name):
+    def tasks(self, org_name, environment_id, system_name = None, system_uuid = None):
         params = {}
-        self.update_dict(params, "environment_id", environment_id)
-        self.update_dict(params, "system_name", system_name)
+        update_dict_unless_none(params, "environment_id", environment_id)
+        if system_name:
+            update_dict_unless_none(params, "system_name", system_name)
+        if system_uuid:
+            update_dict_unless_none(params, "system_uuid", system_uuid)
 
         path = "/api/organizations/%s/systems/tasks" % org_name
         return self.server.GET(path, params)[1]
@@ -96,7 +108,7 @@ class SystemAPI(KatelloAPI):
         path = "/api/environments/%s/releases" % env_id
         return self.server.GET(path)[1]
 
-    def update(self, system_id, params = {}):
+    def update(self, system_id, params = None):
         path = "/api/systems/%s" % system_id
         return self.server.PUT(path, params)[1]
 
@@ -120,11 +132,11 @@ class SystemAPI(KatelloAPI):
         path = "/api/systems/%s/packages" % system_id
         return self.server.DELETE(path, {"groups": packages})[1]
 
-    def systems_by_org(self, orgId, query = {}):
+    def systems_by_org(self, orgId, query = None):
         path = "/api/organizations/%s/systems" % orgId
         return self.server.GET(path, query)[1]
 
-    def systems_by_env(self, org_name, environment_id, query = {}):
+    def systems_by_env(self, environment_id, query = None):
         path = "/api/environments/%s/systems" % environment_id
         return self.server.GET(path, query)[1]
 
@@ -132,14 +144,14 @@ class SystemAPI(KatelloAPI):
         path = "/api/systems/%s/errata" % system_id
         return self.server.GET(path)[1]
 
-    def report_by_org(self, orgId, format):
+    def report_by_org(self, orgId, format_in):
         path = "/api/organizations/%s/systems/report" % orgId
-        to_return = self.server.GET(path, custom_headers={"Accept": format})
+        to_return = self.server.GET(path, custom_headers={"Accept": format_in})
         return (to_return[1], to_return[2])
 
-    def report_by_env(self, env_id, format):
+    def report_by_env(self, env_id, format_in):
         path = "/api/environments/%s/systems/report" % env_id
-        to_return = self.server.GET(path, custom_headers={"Accept": format})
+        to_return = self.server.GET(path, custom_headers={"Accept": format_in})
         return (to_return[1], to_return[2])
 
     def add_system_groups(self, system_id, system_group_ids):

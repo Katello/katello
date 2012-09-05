@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.1.2
+Version:       1.1.3
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
@@ -51,6 +51,12 @@ cp -Rp cli_tests/ cli-system-test helpers *zip RPM-GPG-KEY* $RPM_BUILD_ROOT%{hom
 
 
 %changelog
+* Thu Aug 23 2012 Mike McCune <mmccune@redhat.com> 1.1.3-1
+- Changeset#remove_package! fix (pajkycz@gmail.com)
+- Merge pull request #436 from omaciel/userlocale (mmccune@gmail.com)
+- Allow user to update his/her own localevia cli. Also, output the default
+  locale when using the info parameter. (ogmaciel@gnome.org)
+
 * Sat Aug 11 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.2-1
 - fix system tests for rhsm re-subscribe (inecas@redhat.com)
 - 840531 - remove nvre tests from system tests (inecas@redhat.com)

@@ -19,7 +19,7 @@ Summary:       Client package for managing a katello-headpin installation
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.1.0
+Version:       1.1.1
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
@@ -53,6 +53,10 @@ install -pm 0644 etc/client.conf $RPM_BUILD_ROOT%{_sysconfdir}/%{base_name}/clie
 
 
 %changelog
+* Thu Aug 23 2012 Mike McCune <mmccune@redhat.com> 1.1.1-1
+- buildroot and %%clean section is not needed (msuchy@redhat.com)
+- Bumping package versions for 1.1. (msuchy@redhat.com)
+
 * Tue Jul 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.0.1-1
 - bump up version to 1.0 (msuchy@redhat.com)
 - update copyright years (msuchy@redhat.com)

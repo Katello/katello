@@ -14,8 +14,8 @@
 # in this software or its documentation.
 import os
 import sys
-from gettext import gettext as _
 
+from katello.client.cli.base import opt_parser_add_org
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_system_group
@@ -44,8 +44,7 @@ class List(SystemGroupAction):
     description = _('list system groups within an organization')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                       help=_("organization name eg: foo.example.com (required)"))
+        opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
         validator.require(('org',))
@@ -71,8 +70,7 @@ class Create(SystemGroupAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("system group name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--max_systems', dest='max_systems',
                                help=_("maximum number of systems in this group"))
         parser.add_option('--description', dest='description',
@@ -106,8 +104,7 @@ class Copy(SystemGroupAction):
                                help=_("original system group name.  source of the copy (required)"))
         parser.add_option('--new_name', dest='new_name',
                                help=_("new system group name.  destination of the copy (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--description', dest='description',
                                help=_("system group description for new group"))
         parser.add_option('--max_systems', dest='max_systems',
@@ -138,8 +135,7 @@ class Info(SystemGroupAction):
     description = _('display a system group within an organization')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                       help=_("organization name eg: foo.example.com (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                        help=_("system group name (required)"))
 
@@ -170,8 +166,7 @@ class History(SystemGroupAction):
     description = _('display the list of jobs for the specified system group.')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                       help=_("organization name eg: foo.example.com (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                        help=_("system group name (required)"))
 
@@ -209,8 +204,7 @@ class HistoryTasks(SystemGroupAction):
     description = _('display job information including individual system tasks')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                       help=_("organization name eg: foo.example.com (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                        help=_("system group name (required)"))
         parser.add_option('--job_id', dest='job_id',
@@ -252,8 +246,7 @@ class Update(SystemGroupAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("system group name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--new_name', dest='new_name',
                               help=_("new system group name"))
         parser.add_option('--max_systems', dest='max_systems',
@@ -290,8 +283,7 @@ class Delete(SystemGroupAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("system group name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--delete_systems', dest='delete_systems', action='store_true',
                                default=False, help=_("delete the systems along with the system group (optional)"))
 
@@ -318,8 +310,7 @@ class Systems(SystemGroupAction):
     description = _('display the systems in a system group')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                       help=_("organization name eg: foo.example.com (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                        help=_("system group name (required)"))
 
@@ -337,7 +328,8 @@ class Systems(SystemGroupAction):
         if systems is None:
             return os.EX_DATAERR
 
-        self.printer.set_header(_("Systems within System Group [ %s ] For Org [ %s ]") % (system_group["name"], org_name))
+        self.printer.set_header(_("Systems within System Group [ %s ] For Org [ %s ]") %
+            (system_group["name"], org_name))
         self.printer.add_column('id')
         self.printer.add_column('name')
         self.printer.print_items(systems)
@@ -352,8 +344,7 @@ class AddSystems(SystemGroupAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("system group name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--system_uuids', dest='system_uuids', type="list",
                               help=_("comma separated list of system uuids (required)"))
 
@@ -383,8 +374,7 @@ class RemoveSystems(SystemGroupAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("system group name (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--system_uuids', dest='system_uuids', type="list",
                               help=_("comma separated list of system uuids (required)"))
 
@@ -411,22 +401,22 @@ class Packages(SystemGroupAction):
     description = _('manipulate the installed packages for systems in a system group')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                       help=_("organization name eg: foo.example.com (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
-                       help=_("system group name (required)"))
+            help=_("system group name (required)"))
         parser.add_option('--install', dest='install', type="list",
-                       help=_("packages to be installed remotely on the systems, package names are separated with comma"))
+            help=_("packages to be installed remotely on the systems, package names are separated with comma"))
         parser.add_option('--remove', dest='remove', type="list",
-                       help=_("packages to be removed remotely from the systems, package names are separated with comma"))
+            help=_("packages to be removed remotely from the systems, package names are separated with comma"))
         parser.add_option('--update', dest='update', type="list",
-                       help=_("packages to be updated on the systems, use --all to update all packages, package names are separated with comma"))
+            help=_("packages to be updated on the systems, use --all to update all packages, " + \
+                "package names are separated with comma"))
         parser.add_option('--install_groups', dest='install_groups', type="list",
-                       help=_("package groups to be installed remotely on the systems, group names are separated with comma"))
+            help=_("package groups to be installed remotely on the systems, group names are separated with comma"))
         parser.add_option('--remove_groups', dest='remove_groups', type="list",
-                       help=_("package groups to be removed remotely from the systems, group names are separated with comma"))
+            help=_("package groups to be removed remotely from the systems, group names are separated with comma"))
         parser.add_option('--update_groups', dest='update_groups', type="list",
-                       help=_("package groups to be updated remotely on the systems, group names are separated with comma"))
+            help=_("package groups to be updated remotely on the systems, group names are separated with comma"))
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
@@ -469,8 +459,8 @@ class Packages(SystemGroupAction):
             job = self.api.update_package_groups(org_name, system_group_id, update_groups)
 
         if job:
-            id = job["id"]
-            print (_("Performing remote action [ %s ]... ") % id)
+            job_id = job["id"]
+            print (_("Performing remote action [ %s ]... ") % job_id)
             job = SystemGroupAsyncJob(org_name, system_group_id, job)
             run_spinner_in_bg(wait_for_async_job, [job])
             if job.succeeded():
@@ -489,12 +479,11 @@ class Errata(SystemGroupAction):
     description = _('install errata on systems in a system group')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                       help=_("organization name eg: foo.example.com (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
-                       help=_("system group name (required)"))
+            help=_("system group name (required)"))
         parser.add_option('--install', dest='install', type="list",
-                       help=_("errata to be installed remotely on the systems, errata IDs separated with comma (required)"))
+            help=_("errata to be installed remotely on the systems, errata IDs separated with comma (required)"))
 
     def check_options(self, validator):
         validator.require(('name', 'org', 'install'))
@@ -513,8 +502,8 @@ class Errata(SystemGroupAction):
             job = self.api.install_errata(org_name, system_group_id, install)
 
         if job:
-            id = job["id"]
-            print (_("Performing remote action [ %s ]... ") % id)
+            job_id = job["id"]
+            print (_("Performing remote action [ %s ]... ") % job_id)
             job = SystemGroupAsyncJob(org_name, system_group_id, job)
             run_spinner_in_bg(wait_for_async_job, [job])
             if job.succeeded():

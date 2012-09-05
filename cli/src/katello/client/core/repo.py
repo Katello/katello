@@ -16,14 +16,15 @@
 
 import os
 import urlparse
-from gettext import gettext as _
 
 from katello.client import constants
+from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.utils import format_date
 from katello.client.api.repo import RepoAPI
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_environment, get_product, get_repo, get_filter
-from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_sync_errors
+from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, \
+    wait_for_async_task, AsyncTask, format_sync_errors
 from katello.client.core.utils import ProgressBar
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
@@ -58,7 +59,8 @@ class RepoAction(BaseAction):
         super(RepoAction, self).__init__()
         self.api = RepoAPI()
 
-    def get_groupid_param(self, repo, param_name):
+    @classmethod
+    def get_groupid_param(cls, repo, param_name):
         param_name += ":"
         for gid in repo['groupid']:
             if gid.find(param_name) >= 0:
@@ -75,15 +77,17 @@ class SingleRepoAction(RepoAction):
     def check_options(self, validator):
         self.check_repo_select_options(validator)
 
-    def set_repo_select_options(self, parser, select_by_env=True):
+    @classmethod
+    def set_repo_select_options(cls, parser, select_by_env=True):
         parser.add_option('--id', dest='id', help=_("repository id"))
         parser.add_option('--name', dest='name', help=_("repository name"))
-        parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com"))
-        parser.add_option('--product', dest='product', help=_("product name eg: fedora-14"))
+        opt_parser_add_org(parser)
+        opt_parser_add_product(parser)
         if select_by_env:
-            parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Library)"))
+            opt_parser_add_environment(parser, default=_("Library"))
 
-    def check_repo_select_options(self, validator):
+    @classmethod
+    def check_repo_select_options(cls, validator):
         if not validator.exists('id'):
             validator.require(('name', 'org', 'product'))
 
@@ -93,7 +97,7 @@ class SingleRepoAction(RepoAction):
         orgName  = self.get_option('org')
         prodName = self.get_option('product')
         if self.select_by_env:
-            envName = self.get_option('env')
+            envName = self.get_option('environment')
         else:
             envName = None
 
@@ -114,32 +118,30 @@ class Create(RepoAction):
     description = _('create a repository at a specified URL')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                               help=_("organization name eg: foo.example.com (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
-                               help=_("repository name to assign (required)"))
+            help=_("repository name to assign (required)"))
         parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES, 
-                               help=_("url path to the repository (required)"))
-        parser.add_option('--product', dest='prod',
-                               help=_("product name (required)"))
+            help=_("url path to the repository (required)"))
+        opt_parser_add_product(parser, required=1)
         parser.add_option('--gpgkey', dest='gpgkey',
-                               help=_("GPG key to be assigned to the repository; by default, the product's GPG key will be used."))
+            help=_("GPG key to be assigned to the repository; by default, the product's GPG key will be used."))
         parser.add_option('--nogpgkey', action='store_true',
-                               help=_("Don't assign a GPG key to the repository."))
+            help=_("Don't assign a GPG key to the repository."))
 
     def check_options(self, validator):
-        validator.require(('name', 'org', 'prod', 'url'))
+        validator.require(('name', 'org', 'product', 'url'))
 
     def run(self):
         name     = self.get_option('name')
         url      = self.get_option('url')
-        prodName = self.get_option('prod')
+        prodName = self.get_option('product')
         orgName  = self.get_option('org')
         gpgkey   = self.get_option('gpgkey')
         nogpgkey   = self.get_option('nogpgkey')
 
-        prod = get_product(orgName, prodName)
-        self.api.create(orgName, prod["id"], name, url, gpgkey, nogpgkey)
+        product = get_product(orgName, prodName)
+        self.api.create(orgName, product["id"], name, url, gpgkey, nogpgkey)
         print _("Successfully created repository [ %s ]") % name
 
         return os.EX_OK
@@ -149,42 +151,37 @@ class Discovery(RepoAction):
     description = _('discovery repositories contained within a URL')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                               help=_("organization name eg: foo.example.com (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
-                               help=_("repository name prefix to add to all the discovered repositories (required)"))
+            help=_("repository name prefix to add to all the discovered repositories (required)"))
         parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES, 
-                               help=_("root url to perform discovery of repositories eg: http://porkchop.devel.redhat.com/ (required)"))
+            help=_("root url to perform discovery of repositories eg: http://porkchop.devel.redhat.com/ (required)"))
         parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
-                               help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
-        parser.add_option('--product', dest='prod',
-                               help=_("product name (required)"))
+            help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
+        opt_parser_add_product(parser, required=1)
 
     def check_options(self, validator):
-        validator.require(('name', 'org', 'prod', 'url'))
+        validator.require(('name', 'org', 'product', 'url'))
 
     def run(self):
         name     = self.get_option('name')
         url      = self.get_option('url')
         assumeyes = self.get_option('assumeyes')
-        prodName = self.get_option('prod')
+        prodName = self.get_option('product')
         orgName  = self.get_option('org')
 
         repourls = self.discover_repositories(orgName, url)
         self.printer.set_header(_("Repository Urls discovered @ [%s]" % url))
         selectedurls = self.select_repositories(repourls, assumeyes)
 
-        prod = get_product(orgName, prodName)
-        self.create_repositories(orgName, prod["id"], name, selectedurls)
+        product = get_product(orgName, prodName)
+        self.create_repositories(orgName, product["id"], name, selectedurls)
 
         return os.EX_OK
 
     def discover_repositories(self, org_name, url):
         print(_("Discovering repository urls, this could take some time..."))
-        try:
-            task = self.api.repo_discovery(org_name, url, 'yum')
-        except Exception,e:
-            system_exit(os.EX_DATAERR, _("Error: %s" % e))
+        task = self.api.repo_discovery(org_name, url, 'yum')
 
         discoveryResult = run_spinner_in_bg(wait_for_async_task, [task])
         repourls = discoveryResult[0]['result'] or []
@@ -195,7 +192,7 @@ class Discovery(RepoAction):
         return repourls
 
 
-    def select_repositories(self, repourls, assumeyes, raw_input = raw_input):
+    def select_repositories(self, repourls, assumeyes, our_raw_input = raw_input):
         selection = Selection()
         if not assumeyes:
             proceed = ''
@@ -204,7 +201,8 @@ class Discovery(RepoAction):
             while proceed.strip().lower() not in  ['q', 'y']:
                 if not proceed.strip().lower() == 'h':
                     self.__print_urls(repourls, selection)
-                proceed = raw_input(_("\nSelect urls for which candidate repos should be created; use `y` to confirm (h for help):"))
+                proceed = our_raw_input(
+                    _("\nSelect urls for which candidate repos should be created; use `y` to confirm (h for help):"))
                 select_val = proceed.strip().lower()
                 if select_val == 'h':
                     print select_range_str
@@ -243,10 +241,12 @@ class Discovery(RepoAction):
 
             print _("Successfully created repository [ %s ]") % repoName
 
-    def repository_name(self, name, parsedUrlPath):
+    @classmethod
+    def repository_name(cls, name, parsedUrlPath):
         return "%s%s" % (name, parsedUrlPath.replace("/", "_"))
 
-    def __print_urls(self, repourls, selectedurls):
+    @classmethod
+    def __print_urls(cls, repourls, selectedurls):
         for index, url in enumerate(repourls):
             if url in selectedurls:
                 print "(+)  [%s] %-5s" % (index+1, url)
@@ -274,7 +274,8 @@ class Status(SingleRepoAction):
         if task.is_running():
             pkgsTotal = task.total_count()
             pkgsLeft = task.items_left()
-            repo['progress'] = ("%d%% done (%d of %d packages downloaded)" % (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
+            repo['progress'] = ("%d%% done (%d of %d packages downloaded)" % (
+                task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
 
         repo['last_errors'] = format_sync_errors(task)
 
@@ -307,7 +308,8 @@ class Info(SingleRepoAction):
         self.printer.add_column('arch', show_with=printer.VerboseStrategy)
         self.printer.add_column('url', show_with=printer.VerboseStrategy)
         self.printer.add_column('last_sync', show_with=printer.VerboseStrategy, formatter=format_sync_time)
-        self.printer.add_column('sync_state', name=_("Progress"), show_with=printer.VerboseStrategy, formatter=format_sync_state)
+        self.printer.add_column('sync_state', name=_("Progress"),
+            show_with=printer.VerboseStrategy, formatter=format_sync_state)
         self.printer.add_column('gpg_key_name', name=_("GPG key"), show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Information About Repo %s") % repo['id'])
@@ -323,9 +325,9 @@ class Update(SingleRepoAction):
     def setup_parser(self, parser):
         super(Update, self).setup_parser(parser)
         parser.add_option('--gpgkey', dest='gpgkey',
-                               help=_("GPG key to be assigned to the repository; by default, the product's GPG key will be used."))
+            help=_("GPG key to be assigned to the repository; by default, the product's GPG key will be used."))
         parser.add_option('--nogpgkey', action='store_true',
-                               help=_("Don't assign a GPG key to the repository."))
+            help=_("Don't assign a GPG key to the repository."))
 
     def run(self):
         repo = self.get_repo(True)
@@ -400,12 +402,9 @@ class List(RepoAction):
     description = _('list repos within an organization')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-            help=_("organization name eg: ACME_Corporation (required)"))
-        parser.add_option('--environment', dest='env',
-            help=_("environment name eg: production (default: Library)"))
-        parser.add_option('--product', dest='product',
-            help=_("product name eg: fedora-14"))
+        opt_parser_add_org(parser, required=1)
+        opt_parser_add_environment(parser, default=_("Library"))
+        opt_parser_add_product(parser)
         parser.add_option('--include_disabled', action="store_true", dest='disabled',
             help=_("list also disabled repositories"))
 
@@ -414,7 +413,7 @@ class List(RepoAction):
 
     def run(self):
         orgName = self.get_option('org')
-        envName = self.get_option('env')
+        envName = self.get_option('environment')
         prodName = self.get_option('product')
         listDisabled = self.has_option('disabled')
 

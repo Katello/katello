@@ -15,9 +15,6 @@
 # in this software or its documentation.
 #
 
-import sys
-import codecs
-
 from katello.client.core import (
   activation_key,
   environment,
@@ -50,6 +47,7 @@ from katello.client.core import (
 )
 
 def setup_admin(katello_cmd):
+    # pylint: disable=R0914,R0915
     akey_cmd = activation_key.ActivationKey()
     akey_cmd.add_command('create', activation_key.Create())
     akey_cmd.add_command('info', activation_key.Info())
@@ -150,7 +148,7 @@ def setup_admin(katello_cmd):
     package_group_cmd.add_command('info', packagegroup.Info())
     package_group_cmd.add_command('category_list', packagegroup.CategoryList())
     package_group_cmd.add_command('category_info', packagegroup.CategoryInfo())
-    katello_cmd.add_command('package_group',package_group_cmd)
+    katello_cmd.add_command('package_group', package_group_cmd)
 
     dist_cmd = distribution.Distribution()
     dist_cmd.add_command('info', distribution.Info())
