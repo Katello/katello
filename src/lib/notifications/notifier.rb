@@ -15,10 +15,19 @@ module Notifications
   class Notifier
     include Rails.application.routes.url_helpers
 
-    attr_reader :controller
+    attr_reader :controller, :default_options
 
-    def initialize(controller = nil)
-      @controller = controller
+    def initialize(controller = nil, options = { })
+      @controller      = controller
+      @default_options = { :level        => :success,
+                           :asynchronous => !controller,
+                           :persist      => true,
+                           :global       => false,
+                           :details      => nil,
+                           :request_type => (controller.send :requested_action if controller),
+                           :send_as      => 'notices',
+                           :user         => nil,
+                           :organization => nil }.merge(options)
     end
 
     # generates error-notice based on invalid record, it's displayed as list, not persisted by default
@@ -138,12 +147,13 @@ module Notifications
     end
 
     def persist!(notices, viewed, options)
-      Notice.create!(:text         => notices.join('<br />'),
+      Notice.create! :text         => notices.join('<br />'),
                      :details      => options[:details],
                      :level        => options[:level],
                      :global       => options[:global],
                      :request_type => options[:request_type],
-                     :user_notices => [UserNotice.new(:user => options[:user], :viewed => viewed)])
+                     :organization => options[:organization],
+                     :user_notices => [UserNotice.new(:user => options[:user], :viewed => viewed)]
     end
 
     LEVELS          = [:message, :success, :warning, :error]
@@ -151,15 +161,6 @@ module Notifications
     SEND_AS_OPTIONS = %w(notices validation_errors)
 
     def process_options(options)
-      default_options = { :level        => :success,
-                          :asynchronous => !controller,
-                          :persist      => true,
-                          :global       => false,
-                          :details      => nil,
-                          :request_type => (controller.send :requested_action if controller),
-                          :send_as      => 'notices',
-                          :user         => nil }
-
       options        = default_options.merge options
       options[:user] ||= User.current
 

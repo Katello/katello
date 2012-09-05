@@ -30,25 +30,23 @@ class NoticesController < ApplicationController
   end
 
   def show
-    #currently doesn't handle pagination
-    @notices = render_panel_direct(Notice, {}, params[:search], 0, [sort_column, sort_direction],
-          {:filter=>{:user_ids=>[current_user.id]}, :skip_render=>true, :page_size=>100})
+    # TODO search by organization
+    # currently doesn't handle pagination
+    @notices = render_panel_direct(Notice, { }, params[:search], 0, [sort_column, sort_direction],
+                                   { :filter      => { :user_ids => [current_user.id] },
+                                     #:organization_id => [current_organization.id] },
+                                     :skip_render => true,
+                                     :page_size   => 100 })
     retain_search_history
   end
 
   def get_new
-    # obtain the list of notices that user has not yet seen.
-    new_notices = Notice.select("notices.id, text, level, request_type").where("user_notices.user_id = ? AND user_notices.viewed = ?", current_user, false).joins(:user_notices)
-
-    # flag these notices as viewed for the user.  this will ensure the user is only notified once.
-    new_notices.each do |notice|
-      user_notice = current_user.user_notices.where(:notice_id => notice.id).first
-      user_notice.viewed = true
-      user_notice.save!
-    end
+    new_notices = current_user.pop_notices current_organization
 
     respond_to do |format|
-      format.json { render :json => {:new_notices => new_notices, :unread_count => current_user.user_notices.length} }
+      format.json { render :json => { :new_notices  => new_notices,
+                                      :unread_count => Notice.for_user(current_user).
+                                          for_org(current_organization).count } }
     end
   end
 
@@ -59,18 +57,9 @@ class NoticesController < ApplicationController
     render :text => escape_html(notice.details)
   end
 
-  def dismiss
-    notice = Notice.find(params[:id])
-
-    notice.users.delete(current_user)
-    notice.destroy unless notice.users.any?
-
-    render :json => "ok"
-  end
-
   def destroy_all
     # destroy all notices for the user
-    for notice in current_user.notices
+    Notice.for_user(current_user).for_org(current_organization).read.each do |notice|
       notice.users.delete(current_user)
       notice.destroy unless notice.users.any?
     end
@@ -82,7 +71,7 @@ class NoticesController < ApplicationController
   def sort_column
     Notice.column_names.include?(params[:sort]) ? params[:sort] : "created_at"
   end
-  
+
   def sort_direction
     %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
   end

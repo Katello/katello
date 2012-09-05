@@ -15,8 +15,9 @@ class Notice < ActiveRecord::Base
   include IndexedModel
 
 
-  index_options :extended_json=>:extended_index_attrs,
-                :json=>{:only=>[:text, :created_at, :details, :level]}
+  index_options :extended_json => :extended_index_attrs,
+                :json          => { :only => [:text, :created_at, :details, :level] },
+                :display_attrs => [:text, :details, :level, :organization]
 
   mapping do
     indexes :level_sort, :type => 'string', :index => :not_analyzed
@@ -24,9 +25,9 @@ class Notice < ActiveRecord::Base
   end
 
 
-  has_many :notice_statuses
   has_many :user_notices
   has_many :users, :through => :user_notices
+  belongs_to :organization
 
   TYPES = [:message, :warning, :success, :error]
 
@@ -42,6 +43,24 @@ class Notice < ActiveRecord::Base
 
   scope :readable, lambda { |user| joins(:users).where('users.id' => user) }
 
+  def self.for_org(organization = nil)
+    if organization
+      where("notices.organization_id = :org_id OR notices.organization_id IS NULL", :org_id => organization.id)
+    else
+      scoped
+    end
+  end
+
+  def self.for_user(user)
+    includes(:user_notices).where(:user_notices => { :user_id => user.id })
+  end
+
+  def self.viewed(viewed)
+    includes(:user_notices).where(:user_notices => { :viewed => viewed })
+  end
+
+  scope :read, lambda { viewed true }
+  scope :unread, lambda { viewed false }
 
   def to_s
     "#{level}: #{text}"
@@ -60,7 +79,9 @@ class Notice < ActiveRecord::Base
   private
 
   def extended_index_attrs
-    {:level_sort=>level.to_s.downcase, :user_ids=>self.users.collect{|u| u.id}}
+    { :level_sort   => level.to_s.downcase,
+      :user_ids     => self.users.collect { |u| u.id },
+      :organization => organization.try(:name) }
   end
 
   def add_to_all_users
