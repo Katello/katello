@@ -72,11 +72,14 @@ describe Api::PermissionsController do
 
   describe "create permission" do
     let(:perm_name) { 'permission_y' }
+    let(:all_tags_perm_name) { 'all_tags_permission' }
     let(:perm_desc) { 'permission_y description' }
     let(:resource_type) { 'environments' }
     let(:perm_params) { {:organization_id=>@org.cp_key, :name => perm_name, :description => perm_desc, 'type' => resource_type, 'verbs' => [], 'tags' => [], :role_id => role_id} }
+    let(:all_tags_perm_params) { {:organization_id=>@org.cp_key, :name => all_tags_perm_name , :description => perm_desc, 'type' => resource_type, 'all_tags' => "True", 'tags' => [], :role_id => role_id} }
     let(:action) { :create }
     let(:req) { post :create, perm_params }
+    let(:all_tags_req) { post :create, all_tags_perm_params }
     let(:authorized_user) { user_with_create_permissions }
     let(:unauthorized_user) { user_without_create_permissions }
     it_should_behave_like "protected action"
@@ -102,6 +105,24 @@ describe Api::PermissionsController do
         Permission.should_receive(:create!).with(hash_including(expected_params))
         req
     end
+
+    it 'should create a permission for all tags' do
+      @resource_type = ResourceType.new(:name => resource_type)
+      ResourceType.should_receive(:find_or_create_by_name).with(resource_type).and_return(@resource_type)
+
+      expected_params = {
+          :name => all_tags_perm_name,
+          :description => perm_desc,
+          :role => @role,
+          :resource_type => @resource_type,
+          :organization=>@org,
+          :all_tags => true
+      }
+
+      Permission.should_receive(:create!).with(hash_including(expected_params))
+      all_tags_req
+    end
+
     describe "with invalid params" do
       it_should_behave_like "bad request"  do
         let(:req) do

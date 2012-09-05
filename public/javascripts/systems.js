@@ -67,7 +67,6 @@ $(document).ready(function() {
     $('#unsubscribe').live('ajax:complete', function(evt, data, status, xhr){
         var id = $('.left').find('.active');
         var url = id.attr('data-ajax_url');
-        url = url.substring(0, url.length - 5);  // Strip off trailing '/edit'
         KT.panel.list.refresh(id.attr('id'), url);
         $(this).find('input[type="submit"]').removeAttr('disabled');
     }).live('ajax:before', function(){
@@ -77,7 +76,6 @@ $(document).ready(function() {
     $('#subscribe').live('ajax:complete', function(evt, data, status, xhr){
         var id = $('.left').find('.active');
         var url = id.attr('data-ajax_url');
-        url = url.substring(0, url.length - 5);  // Strip off trailing '/edit'
         KT.panel.list.refresh(id.attr('id'), url);
         $(this).find('input[type="submit"]').removeAttr('disabled');
     }).live('ajax:before', function(){
@@ -519,20 +517,27 @@ KT.subs = (function() {
     },
 
     matchsystemSetup = function(){
-      $('#matchsystem').unbind("click");
-      $('#matchsystem').change(function(e){
-        $('#matchsystem_form').ajaxSubmit({
-          data: { value: $(this).is(":checked") },  // Checkboxes in forms aren't included when false
-          dataType: 'html',
-          success: function(data) {
-            notices.checkNotices();
-            $('#subscriptions > a').click();
-          }, error: function(e) {
-            notices.checkNotices();
-            $('#subscriptions > a').click();
-          }
+      $('#subscription_filters').chosen().change(function(e) {
+          var children = $(this).children();
+          $('#available_section').addClass('hidden');
+          $('#available_spinner').removeClass('hidden');
+          $.each(children, function(i, item) {
+             $.ajax({
+                 url: $('#matchsystem_form')[0].action + "?preference=" + item.value,
+                 data: { value: item.selected },
+                 type: 'PUT',
+                 success: function(data) {
+                     if (i == children.length-1) {
+                       $('#subscriptions > a').click();  // Refresh page
+                     }
+                 }, error: function(e) {
+                     if (i == children.length-1) {
+                       $('#subscriptions > a').click();  // Refresh page
+                     }
+                 }
+             });
+          });
         });
-      });
     };
     
     return {

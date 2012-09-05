@@ -139,7 +139,7 @@ class UsersController < ApplicationController
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @user["name"]
       render :json => { :no_match => true }
     end
-  rescue ActiveRecord::RecordNotSaved => error
+  rescue ActiveRecord::RecordNotSaved, ActiveRecord::RecordInvalid => error
     notify.exception error
     #transaction, if something goes wrong with the creation of the permission, we will need to delete the user
     @user.destroy unless @user.new_record?
@@ -149,19 +149,17 @@ class UsersController < ApplicationController
   def update
     params[:user].delete :username
 
-    if @user.update_attributes(params[:user])
-      notify.success _("User updated successfully.")
-      attr = params[:user].first.last if params[:user].first
-      attr ||= ""
+    @user.update_attributes!(params[:user])
 
-      if not search_validate(User, user.id, params[:search])
-        notify.message _("'%s' no longer matches the current search criteria.") % @user["name"]
-      end
+    notify.success _("User updated successfully.")
+    attr = params[:user].first.last if params[:user].first
+    attr ||= ""
 
-      render :text => attr and return
+    if not search_validate(User, user.id, params[:search])
+      notify.message _("'%s' no longer matches the current search criteria.") % @user["name"]
     end
-    notify.invalid_record @user
-    render :text => @user.errors, :status => :ok
+
+    render :text => attr
   end
 
   def update_locale
@@ -243,13 +241,10 @@ class UsersController < ApplicationController
     notify.success _("User environment updated successfully.")
 
     if @organization && @environment
-      render :json => { :org => @organization.name, :env => @environment.name } and return
+      render :json => { :org => @organization.name, :env => @environment.name }
+    else
+      render :json => { :org => _("No default set for this user."), :env => _("No default set for this user.") }
     end
-    render :json => { :org => _("No default set for this user."), :env => _("No default set for this user.") } and return
-
-  rescue ActiveRecord::RecordNotSaved => error
-    notify.exception error
-    render :text => error.message, :status => 400
   end
 
   def update_roles
@@ -272,19 +267,11 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    @id = params[:id]
-    #remove the user
-    @user.destroy
-    if @user.destroyed?
+    if @user.destroy
       notify.success _("User '%s' was deleted.") % @user[:username]
       #render and do the removal in one swoop!
-      render :partial => "common/list_remove", :locals => { :id => @id, :name => controller_display_name } and return
+      render :partial => "common/list_remove", :locals => { :id => params[:id], :name => controller_display_name }
     end
-    notify.invalid_record @user
-    render :text => @user.errors, :status => :ok
-  rescue Exception => error
-    notify.exception error
-    render :json => @user.errors, :status => :bad_request
   end
 
   def clear_helptips

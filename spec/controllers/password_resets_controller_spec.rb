@@ -113,7 +113,7 @@ describe PasswordResetsController do
     before (:each) do
       @params = {:email => @testuser_email}
 
-      User.stub!(:where).and_return([@testuser])
+      User.stub!(:find_all_by_email).and_return([@testuser])
       UserMailer.stub!(:send_logins)
     end
 

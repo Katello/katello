@@ -108,7 +108,7 @@ module Glue
       return true if (errors.empty? && q.failed.empty?)
       raise Errors::OrchestrationException.new("Errors occured during orchestration #{errors.inspect}\n Queue Failed - #{q.failed.inspect}" )
     rescue => e
-      logger.info "Rolling back due to a problem: #{q.failed}\n#{e.inspect} \n#{e.backtrace.join('\n')}"
+      logger.error "Rolling back due to a problem: #{q.failed}\n#{e.inspect} \n#{e.backtrace.join('\n')}"
       # handle errors
       # we try to undo all completed operations and trigger a DB rollback
       (q.completed + q.running).sort.reverse_each do |task|
