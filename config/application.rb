@@ -82,12 +82,16 @@ module Src
 
     config.after_initialize do
       require 'monkeys/fix_string_interpolate'
+      require "string"
     end
+
 
     # set actions to profile (eg. %w(user_sessions#new))
     # profiles will be stored in tmp/profiles/
     config.do_profiles = []
 
+    # if paranoia is set to true even children of Exception will be rescued
+    config.exception_paranoia = false
   end
 end
 

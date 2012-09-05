@@ -345,7 +345,7 @@ Src::Application.routes.draw do
   end
   match '/organizations/:id/edit' => 'organizations#update', :via => :put
 
-  resources :changesets, :only => [:update, :index, :show, :create, :new, :edit, :show, :destroy, :auto_complete_search] do
+  resources :changesets, :only => [:update, :index, :show, :create, :new, :edit, :destroy] do
     member do
       put :name
       get :dependencies
@@ -535,7 +535,7 @@ Src::Application.routes.draw do
       resources :sync_plans
       resources :tasks, :only => [:index]
       resources :providers, :only => [:index]
-      resources :systems, :only => [:index] do
+      resources :systems, :only => [:index, :create] do
         get :report, :on => :collection
 
         collection do

@@ -18,7 +18,7 @@ class SystemGroup < ActiveRecord::Base
   include IndexedModel
 
   index_options :extended_json=>:extended_index_attrs,
-                :json=>{},
+                :json=>{:only=>[:id, :organization_id, :name, :description, :max_systems]},
                 :display_attrs=>[:name, :description, :system]
 
   mapping do
@@ -53,8 +53,8 @@ class SystemGroup < ActiveRecord::Base
   validates :pulp_id, :presence => true
   validates :name, :presence => true, :katello_name_format => true
   validates_presence_of :organization_id, :message => N_("Organization cannot be blank.")
-  validates_uniqueness_of :name, :scope => :organization_id, :message => N_("Name must be unique within one organization")
-  validates_uniqueness_of :pulp_id, :message=> N_("Pulp identifier must be unique.")
+  validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
+  validates_uniqueness_of :pulp_id, :message=> N_("must be unique.")
 
   UNLIMITED_SYSTEMS = -1
   validates_numericality_of :max_systems, :only_integer => true, :greater_than_or_equal_to => -1, :message => N_("must be a positive integer value.")
@@ -75,6 +75,8 @@ class SystemGroup < ActiveRecord::Base
   before_validation(:on=>:create) do
     self.pulp_id ||= "#{self.organization.cp_key}-#{self.name}-#{SecureRandom.hex(4)}"
   end
+
+  default_scope :order => 'name ASC'
 
   scope :readable, lambda { |org|
     items(org, READ_PERM_VERBS)

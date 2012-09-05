@@ -56,7 +56,6 @@ describe NoticesController do
                     :user_notices=>[UserNotice.new(:user => @user)])
       get :details, :id=>21
       response.should_not be_success
-      response.should render_template("notification")
     end 
   end
 

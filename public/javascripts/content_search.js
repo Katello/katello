@@ -223,9 +223,6 @@ KT.content_search = function(paths_in){
         else if (search_pages[search_params.content_type] ){
             main_search(search_params);
         }
-        else{
-            console.log(search_params);
-        }
     },
     main_search = function(search_params){
         var options = {};

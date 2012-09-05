@@ -148,7 +148,6 @@ describe Api::SystemsController do
 
         it "uses user credentials of the hidden user" do
           User.should_receive("current=").at_least(:once)
-          User.should_receive("current=").with(@activation_key_1.user).once
           post :activate, @system_data
           response.should be_success
         end
@@ -529,7 +528,7 @@ describe Api::SystemsController do
 
     it "should retrieve available pools from Candlepin" do
       #@system.should_receive(:available_pools_full).once.and_return([])
-      Resources::Candlepin::Consumer.should_receive(:available_pools).once.with(uuid, true).and_return([])
+      Resources::Candlepin::Consumer.should_receive(:available_pools).once.with(uuid, false).and_return([])
       get :pools, :id => @system.uuid, :listall => true
     end
   end

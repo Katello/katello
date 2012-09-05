@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2012 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -10,12 +10,19 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class Api::ErrorsController < Api::ApiController
+require 'spec_helper'
 
-  skip_before_filter :require_user
-  skip_before_filter :authorize
 
-  def render_404
-    render :json => {:displayMessage => _("Resource not found on the server"), :errors => [_("Not found")] }, :status => 404
+describe String do
+  it "should translate true strings" do
+    %w(True T t true Yes yes Y y 1).all? { |v| v.to_bool.should be_true }
+  end
+
+  it "should translate false strings" do
+    %w(False F f false No no n N 0).all? { |v| v.to_bool.should be_false }
+  end
+
+  it "should rase an exception for unknown strings" do
+    lambda {"JarjarBinks".to_bool()}.should raise_exception
   end
 end

@@ -22,13 +22,11 @@ class ChangesetsController < ApplicationController
 
   after_filter :update_editors, :only => [:update]
 
-  #around_filter :catch_exceptions
-
   def rules
     read_perm = lambda{@environment.changesets_readable?}
     manage_perm = lambda{@environment.changesets_manageable?}
     update_perm =  lambda {@environment.changesets_manageable? && update_artifacts_valid?}
-    apply_perm = lambda{@environment.changesets_promotable?}
+    apply_perm = lambda{ (@changeset.promotion? && @environment.changesets_promotable?) || (@changeset.deletion? && @environment.changesets_deletable?)}
     {
       :index => read_perm,
       :items => read_perm,
@@ -105,33 +103,26 @@ class ChangesetsController < ApplicationController
   end
 
   def create
-    begin
-      if params[:changeset][:action_type].blank? or 
-         params[:changeset][:action_type] == Changeset::PROMOTION
-        env_id = @next_environment.id
-        type = Changeset::PROMOTION
-      else
-        env_id = @environment.id
-        type = Changeset::DELETION
-      end
-      @changeset = Changeset.create_for(type, :name => params[:changeset][:name], 
-                                        :description => params[:changeset][:description],
-                                        :environment_id => env_id)
-
-      notify.success _("Promotion Changeset '%s' was created.") % @changeset["name"]
-      bc = {}
-      add_crumb_node!(bc, changeset_bc_id(@changeset), '', @changeset.name, ['changesets'],
-                      {:client_render => true}, {:is_new=>true})
-      render :json => {
-        'breadcrumb' => bc,
-        'id' => @changeset.id,
-        'changeset' => simplify_changeset(@changeset)
-      }
-    rescue Exception => error
-      Rails.logger.error error.to_s
-      notify.exception error
-      render :json=>error, :status=>:bad_request
+    if params[:changeset][:action_type].blank? or
+       params[:changeset][:action_type] == Changeset::PROMOTION
+      env_id = @next_environment.id
+      type = Changeset::PROMOTION
+    else
+      env_id = @environment.id
+      type = Changeset::DELETION
     end
+    @changeset = Changeset.create_for(type, :name => params[:changeset][:name],
+                                      :description => params[:changeset][:description],
+                                      :environment_id => env_id)
+
+    notify.success _("Promotion Changeset '%s' was created.") % @changeset["name"]
+    bc = {}
+    add_crumb_node!(bc, changeset_bc_id(@changeset), '', @changeset.name, ['changesets'],
+                    {:client_render => true}, {:is_new=>true})
+    render :json => {
+      'breadcrumb' => bc,
+      'id' => @changeset.id,
+      'changeset' => simplify_changeset(@changeset)    }
   end
 
   def update
@@ -256,7 +247,7 @@ class ChangesetsController < ApplicationController
       ChangesetUser.destroy_all(:changeset_id => @changeset.id)
     end
     render :json=>to_ret
-  rescue Exception => e
+  rescue => e
     notify.exception _("Failed to apply changeset."), e
     render :text=>e.to_s, :status=>500
   end
@@ -264,7 +255,8 @@ class ChangesetsController < ApplicationController
   def status
     progress = @changeset.task_status.progress
     state = @changeset.state
-    to_ret = {'id' => 'changeset_' + @changeset.id.to_s, 'state' => state, 'progress' => progress.to_i}
+    to_ret = {'id' => 'changeset_' + @changeset.id.to_s, 'state' => state, 'progress' => progress.to_i,
+              'product_ids' => @changeset.product_ids}
     render :json=>to_ret
   end
 
@@ -293,13 +285,7 @@ class ChangesetsController < ApplicationController
   end
 
   def find_changeset
-    begin
-      @changeset = Changeset.find(params[:id])
-    rescue Exception => error
-      notify.exception error
-      execute_after_filters
-      render :text=>error.to_s, :status=>:bad_request
-    end
+    @changeset = Changeset.find(params[:id])
   end
 
   def setup_options

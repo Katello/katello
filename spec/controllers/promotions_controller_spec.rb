@@ -171,7 +171,74 @@ describe "rules" do
       end
       it_should_behave_like "protected action"
     end
-    
+
+
+    describe 'examining locals' do
+      describe "apply" do
+        shared_examples_for "promotion page perm checks" do
+          it "test action" do
+            login_user(:user => authorized_user, :mock => false, :superuser => false)
+            get 'show', {:id => env.name}
+            on_show
+          end
+        end
+
+        describe "read contents" do
+          let(:env) {@env1}
+          let(:authorized_user) do
+            user_with_permissions { |u| u.can(:read_contents, :environments, @env1.id, @organization) }
+          end
+          let(:on_show) {
+            response.should be_success
+            assigns[:locals_hash]["read_contents"].should == true
+            assigns[:locals_hash]["read_promotion_changesets"].should == false
+            assigns[:locals_hash]["read_deletion_changesets"].should == false
+            assigns[:locals_hash]["manage_promotion_changesets"].should == false
+            assigns[:locals_hash]["manage_deletion_changesets"].should  == false
+            assigns[:locals_hash]["apply_promotion_changesets"].should == false
+            assigns[:locals_hash]["apply_deletion_changesets"].should == false
+          }
+          it_should_behave_like "promotion page perm checks"
+        end
+
+        describe "user with promotion perms" do
+          let(:env) {@env1}
+          let(:authorized_user) do
+            user_with_permissions { |u| u.can(:promote_changesets, :environments, @env2.id, @organization) }
+          end
+          let(:on_show) {
+            response.should be_success
+            assigns[:locals_hash]["read_contents"].should be_false
+            assigns[:locals_hash]["read_promotion_changesets"].should be_true
+            assigns[:locals_hash]["read_deletion_changesets"].should be_false
+            assigns[:locals_hash]["manage_promotion_changesets"].should be_false
+            assigns[:locals_hash]["manage_deletion_changesets"].should be_false
+            assigns[:locals_hash]["apply_promotion_changesets"].should be_true
+            assigns[:locals_hash]["apply_deletion_changesets"].should be_false
+          }
+          #it_should_behave_like "promotion page perm checks"
+        end
+        describe "user with deletion perms" do
+          let(:env) {@env2}
+          let(:authorized_user) do
+            user_with_permissions { |u| u.can(:delete_changesets, :environments, @env2.id, @organization) }
+          end
+          let(:on_show) {
+            response.should be_success
+            assigns[:locals_hash]["read_contents"].should be_false
+            assigns[:locals_hash]["read_promotion_changesets"].should be_false
+            assigns[:locals_hash]["read_deletion_changesets"].should be_true
+            assigns[:locals_hash]["manage_promotion_changesets"].should be_false
+            assigns[:locals_hash]["manage_deletion_changesets"].should be_false
+            assigns[:locals_hash]["apply_promotion_changesets"].should be_false
+            assigns[:locals_hash]["apply_deletion_changesets"].should be_true
+          }
+          it_should_behave_like "promotion page perm checks"
+        end
+
+      end
+    end
+
 
 end
 

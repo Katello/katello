@@ -163,8 +163,13 @@ class User < ActiveRecord::Base
 
   # an ldap user still needs a katello model
   def self.create_ldap_user!(username)
+    # Some parts of user creation require a current user, but this method
+    # will never be called in that way
+    User.current ||= User.first
     # user gets a dummy password and email
-    User.create!(:username => username)
+    u = User.create!(:username => username)
+    User.current = u
+    u
   end
 
   # Returns true if for a given verbs, resource_type org combination
@@ -484,6 +489,24 @@ class User < ActiveRecord::Base
   def subscriptions_match_system_preference= flag
     self.preferences[:user] = { } unless self.preferences.has_key? :user
     self.preferences[:user][:subscriptions_match_system] = flag
+  end
+
+  def subscriptions_match_installed_preference
+    self.preferences[:user][:subscriptions_match_installed] rescue false
+  end
+
+  def subscriptions_match_installed_preference= flag
+    self.preferences[:user] = { } unless self.preferences.has_key? :user
+    self.preferences[:user][:subscriptions_match_installed] = flag
+  end
+
+  def subscriptions_no_overlap_preference
+    self.preferences[:user][:subscriptions_no_overlap] rescue false
+  end
+
+  def subscriptions_no_overlap_preference= flag
+    self.preferences[:user] = { } unless self.preferences.has_key? :user
+    self.preferences[:user][:subscriptions_no_overlap] = flag
   end
 
   def as_json(options)

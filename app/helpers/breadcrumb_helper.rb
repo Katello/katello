@@ -65,7 +65,7 @@ module ChangesetBreadcrumbs
       add_crumb_node!(bc, repos_cs_bc_id(cs, product), "",  _("Repositories"),
                       ['changesets', changeset_bc_id(cs), product_cs_bc_id(cs, product)], {:client_render => true, :product_id => product.id})
 
-      #repos
+      #dependencies
       add_crumb_node!(bc, deps_cs_bc_id(cs, product), "",  _("Dependencies"),
                       ['changesets', changeset_bc_id(cs), product_cs_bc_id(cs, product)], {:client_render => true})
 
@@ -136,15 +136,18 @@ module ContentBreadcrumbs
          filter[:label], [content_crumb_id, errata_crumb_id], {:scrollable=>true, :searchable => true})
    end
 
-   add_crumb_node!(bc, products_crumb_id, products_promotion_path(@environment.name),
-       _('Products'), [content_crumb_id], {:cache=>true,
-                                           :content=>render(:partial=>"products", :locals=>{:products=>@products, :changeset=>@changeset})},
-                                          {:total_size=>@products.length})
+   # build the crumb that contains the list of products
+   product_info = {}
+   @products.each do |prod|
+     product_info[prod.id] = render(:partial=>"product", :locals=>{:product=>prod})
+   end
+   add_crumb_node!(bc, products_crumb_id, products_promotion_path(@environment.name), _('Products'),
+       [content_crumb_id], {:client_render => true}, product_info.merge({:total_size => @products.length}))
 
    add_crumb_node!(bc, templates_crumb_id, system_templates_promotion_path(@environment.name),
                             _("System Templates"), [content_crumb_id])
 
-   for prod in @products
+   @products.each do |prod|
      product_id = product_bc_id(prod)
      errata_id = errata_bc_id(prod)
      errata_filters = errata_bc_filters(@environment.name, prod)

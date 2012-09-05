@@ -44,8 +44,6 @@ module Errors
 
   class UsageLimitExhaustedException < StandardError; end
 
-  class CurrentOrganizationNotFoundException < ActiveRecord::RecordNotFound; end
-
   class UnsupportedActionException < StandardError
     attr_reader :action, :receiver
 

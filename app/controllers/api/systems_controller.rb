@@ -136,7 +136,7 @@ class Api::SystemsController < Api::ApiController
 
   def index
     # expected parameters
-    expected_params = params.slice('name')
+    expected_params = params.slice(:name, :uuid)
 
     systems = (@environment.nil?) ? @organization.systems : @environment.systems
     systems = systems.all_by_pool(params['pool_id']) if params['pool_id']
@@ -155,8 +155,13 @@ class Api::SystemsController < Api::ApiController
   end
 
   def pools
-    listall = (params.has_key?(:listall) ? true : false)
-    render :json => { :pools => @system.available_pools_full(listall) }
+    match_system = (params.has_key? :match_system) ? params[:match_system].to_bool : false
+    match_installed = (params.has_key? :match_installed) ? params[:match_installed].to_bool : false
+    no_overlap = (params.has_key? :no_overlap) ? params[:no_overlap].to_bool : false
+
+    cp_pools = @system.filtered_pools(match_system, match_installed, no_overlap)
+
+    render :json => { :pools => cp_pools }
   end
 
   def releases
@@ -234,6 +239,8 @@ class Api::SystemsController < Api::ApiController
     end
     if params[:system_name]
       query = query.where(:"systems.name" => params[:system_name])
+    elsif params[:system_uuid]
+      query = query.where(:"systems.uuid" => params[:system_uuid])
     end
 
     task_ids = query.select('task_statuses.id')
