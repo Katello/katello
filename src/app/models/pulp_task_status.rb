@@ -76,6 +76,7 @@ class PulpTaskStatus < TaskStatus
 
     self.dump_state(pulp_task, task_status)
     task_status.after_refresh
+    task_status
   end
 
   protected
