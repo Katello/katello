@@ -36,6 +36,12 @@ class Resources::ForemanModel
     end
   end
 
+  def self.create!(params)
+    new_resource =  new(params)
+    new_resource.save!
+    new_resource
+  end
+
 
   include ActiveModel::Validations
 
@@ -116,10 +122,10 @@ class Resources::ForemanModel
     @persisted
   end
 
-  def persist!
+  def mark_as_persisted
     @persisted = true
   end
-  private :persist!
+  private :mark_as_persisted
 
   def save
     return false unless valid?
@@ -148,6 +154,11 @@ class Resources::ForemanModel
     return resource.update(id, as_json(json_update_options), self.class.foreman_header)
   end
 
+  def update_attributes!(attrs)
+    self.attributes = attrs
+    save!
+  end
+
   def save!
     save or raise Invalid.new(self)
   end
@@ -168,7 +179,7 @@ class Resources::ForemanModel
 
   def self.find!(id)
     new(clean_attribute_hash(resource.show(id, nil, foreman_header).first[resource_name])).tap do |o|
-      o.send :persist!
+      o.send :mark_as_persisted
     end
   rescue RestClient::ResourceNotFound => e
     raise NotFound.new(self, id)
@@ -183,7 +194,7 @@ class Resources::ForemanModel
   def self.all(params = nil)
     resource.index(params, foreman_header).first.map do |data|
       new(clean_attribute_hash(data[resource_name])).tap do |o|
-        o.send :persist!
+        o.send :mark_as_persisted
       end
     end
   end

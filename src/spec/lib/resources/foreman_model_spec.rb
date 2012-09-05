@@ -24,7 +24,7 @@ describe Resources::ForemanModel do
   subject { klass }
 
   it "should have attribute :id" do
-    expect(subject.attributes).to match_array([:id])
+    subject.attributes.should =~ [:id]
   end
 
   describe 'instance' do
@@ -44,7 +44,7 @@ describe Resources::ForemanModel do
     end
 
     describe 'when persisted' do
-      before { subject.send :persist! }
+      before { subject.send :mark_as_persisted }
 
       it { should be_persisted }
       it 'should update' do
@@ -81,7 +81,7 @@ describe Resources::ForemanModel do
     end
 
     it "should have attributes :id, :name" do
-      expect(subject.attributes).to match_array([:id, :name])
+      subject.attributes.should =~ [:id, :name]
     end
 
     describe '.find!' do
@@ -179,7 +179,7 @@ describe Resources::ForemanModel do
           before do
             subject.id   = 3
             subject.name = 'Invisible man'
-            subject.send :persist!
+            subject.send :mark_as_persisted
             resource.
                 should_receive(:update).
                 any_number_of_times.

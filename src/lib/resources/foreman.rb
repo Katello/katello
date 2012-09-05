@@ -24,6 +24,7 @@ module Resources
     User            = ForemanApi::Resources::User.new options
     Domain          = ForemanApi::Resources::Domain.new options
     ConfigTemplate  = ForemanApi::Resources::ConfigTemplate.new options
+    Environment     = ForemanApi::Resources::Environment.new options
 
   end
 end
