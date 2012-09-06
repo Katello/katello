@@ -43,8 +43,8 @@ sed -i "s|^baseurl\s*=.*|baseurl=$BASEURL|g" $CFG
 
 # restart goferd if it is installed and running
 [ -f /etc/init.d/goferd ] && \
-  /etc/init.d/goferd status >/dev/null && \
-  /etc/init.d/goferd restart >/dev/null 2&>1
+  service goferd status >/dev/null && \
+  service goferd restart >/dev/null 2&>1
 
 exit 0
 
