@@ -148,7 +148,6 @@ module Glue::Pulp::Repos
       end
 
       save!
-      debugger
       async_tasks
     end
 

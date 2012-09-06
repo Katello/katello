@@ -22,7 +22,7 @@ class PulpSyncProgress
 
       details =  ht.null_safe_get(progress_attrs, nil, ['progress','yum_importer', 'content'] )    ||
             ht.null_safe_get(progress_attrs, nil, ['details','packages', 'sync_report'] )
-      #debugger
+
       @total_size  = ht.null_safe_get(details, 0, ['size_total'])
       @size_left   = ht.null_safe_get(details, 0, ['size_left'])
       @total_count = ht.null_safe_get(details, 0, ['items_total'])
