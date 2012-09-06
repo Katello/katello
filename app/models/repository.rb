@@ -249,10 +249,11 @@ class Repository < ActiveRecord::Base
   end
 
   def create_clone to_env
+    library = self.environment.library? ? self : self.library_instance
     raise _("Cannot clone repository from #{self.environment.name} to #{to_env.name}.  They are not sequential.") if to_env.prior != self.environment
+    raise _("Repository has already been promoted to #{to_env}") if Repository.where(:library_instance_id=>library.id).in_environment(to_env).count > 0
 
     key = EnvironmentProduct.find_or_create(to_env, self.product)
-    library = self.environment.library? ? self : self.library_instance
     clone = Repository.new(:environment_product => key,
                            :cp_label => self.cp_label,
                            :library_instance=>library,
@@ -266,7 +267,7 @@ class Repository < ActiveRecord::Base
     clone.pulp_id = clone.clone_id(to_env)
     clone.relative_path = Glue::Pulp::Repos.clone_repo_path(self, to_env)
     clone.save!
-    self.clone_contents(clone)
+    self.clone_contents(clone) #return clone task
   end
 
   def clone_contents to_repo
@@ -321,7 +322,7 @@ class Repository < ActiveRecord::Base
     else
       repo = self.library_instance
     end
-    Repository.where("library_instance_id=%s or id=%s"  % [repo.id, repo.id] )
+    Repository.where("library_instance_id=%s or repositories.id=%s"  % [repo.id, repo.id] )
   end
 
 

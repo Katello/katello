@@ -88,19 +88,6 @@ class Changeset < ActiveRecord::Base
     to_ret.uniq
   end
 
-  def calc_dependencies
-    all_dependencies = []
-    not_included_products.each do |product|
-      dependencies     = calc_dependencies_for_product product
-      all_dependencies += build_dependencies(product, dependencies)
-    end
-    all_dependencies
-  end
-
-  def calc_and_save_dependencies
-    self.dependencies = self.calc_dependencies
-    self.save()
-  end
 
   # returns list of virtual permission tags for the current user
   def self.list_tags
@@ -172,14 +159,13 @@ class Changeset < ActiveRecord::Base
     environment.prior.products.include? product or
         raise Errors::ChangesetContentException.new(
                   "Package's product not found within environment you want to promote from.")
-
     package_data = find_package_data(product, name_or_nvre) or
         raise Errors::ChangesetContentException.new(
                   _("Package '%s' was not found in the source environment.") % name_or_nvre)
 
     nvrea = Katello::PackageUtils::build_nvrea(package_data, false)
     self.packages << package =
-        ChangesetPackage.create!(:package_id => package_data["id"], :display_name => nvrea,
+        ChangesetPackage.create!(:package_id => package_data["_id"], :display_name => nvrea,
                                  :product_id => product.id, :changeset => self, :nvrea => nvrea)
     save!
     return package
@@ -290,12 +276,8 @@ class Changeset < ActiveRecord::Base
     end
   end
 
-
   def promote_content(notify = false)
     update_progress! '0'
-    self.calc_and_save_dependencies
-
-    update_progress! '10'
 
     from_env = self.environment.prior
     to_env   = self.environment
@@ -524,90 +506,12 @@ class Changeset < ActiveRecord::Base
   end
 
 
-  def errata_for_dep_calc product
-    cs_errata = ChangesetErratum.where({ :changeset_id => self.id, :product_id => product.id })
-    cs_errata.collect do |err|
-      Glue::Pulp::Errata.find(err.errata_id)
-    end
-  end
-
-
-  def packages_for_dep_calc product
-    packages = []
-
-    cs_pacakges = ChangesetPackage.where({ :changeset_id => self.id, :product_id => product.id })
-    packages    += cs_pacakges.collect do |pack|
-      Glue::Pulp::Package.find(pack.package_id)
-    end
-
-    packages += errata_for_dep_calc(product).collect do |err|
-      err.included_packages
-    end.flatten(1)
-
-    packages
-  end
-
-
-  def calc_dependencies_for_product product
-    from_env = self.environment.prior
-    to_env   = self.environment
-
-    package_names = packages_for_dep_calc(product).map { |p| p.name }.uniq
-    return { } if package_names.empty?
-
-    from_repos = not_included_repos(product, from_env)
-    to_repos   = product.repos(to_env)
-
-    dependencies = calc_dependencies_for_packages package_names, from_repos, to_repos
-    dependencies
-  end
-
-  def calc_dependencies_for_packages package_names, from_repos, to_repos
-    all_deps   = []
-    deps       = []
-    to_resolve = package_names
-    while not to_resolve.empty?
-      all_deps += deps
-
-      deps = get_promotable_dependencies_for_packages to_resolve, from_repos, to_repos
-      deps = Katello::PackageUtils::filter_latest_packages_by_name deps
-
-      to_resolve = deps.map { |d| d['provides'] }.flatten(1).uniq -
-          all_deps.map { |d| d['provides'] }.flatten(1) -
-          package_names
-    end
-    all_deps
-  end
-
-  def get_promotable_dependencies_for_packages package_names, from_repos, to_repos
-    from_repo_ids     = from_repos.map { |r| r.pulp_id }
-    @next_env_pkg_ids ||= package_ids(to_repos)
-
-    resolved_deps = Resources::Pulp::Package.dep_solve(package_names, from_repo_ids)['resolved']
-    resolved_deps = resolved_deps.values.flatten(1)
-    resolved_deps = resolved_deps.reject { |dep| not @next_env_pkg_ids.index(dep['id']).nil? }
-    resolved_deps
-  end
-
   def package_ids repos
     pkg_ids = []
     repos.each do |repo|
       pkg_ids += repo.packages.collect { |pkg| pkg.id }
     end
     pkg_ids
-  end
-
-  def build_dependencies product, dependencies
-    new_dependencies = []
-
-    dependencies.each do |dep|
-      new_dependencies << ChangesetDependency.new(:package_id    => dep['id'],
-                                                  :display_name  => dep['filename'],
-                                                  :product_id    => product.id,
-                                                  :dependency_of => '???',
-                                                  :changeset     => self)
-    end
-    new_dependencies
   end
 
   def find_repo repo_id, product_cpid

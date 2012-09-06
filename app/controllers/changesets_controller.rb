@@ -86,10 +86,6 @@ class ChangesetsController < ApplicationController
 
   def dependencies
     to_ret = {}
-    @changeset.calc_dependencies.each do |dependency|
-      to_ret[dependency.product_id] ||= []
-      to_ret[dependency.product_id] << {:name=>dependency.display_name, :dep_of=>dependency.dependency_of}
-    end
 
     render :json=>to_ret
   end
