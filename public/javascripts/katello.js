@@ -299,7 +299,7 @@ KT.common = (function() {
                           orgboxapi.reinitialise();
                         },
                         error: function(data) {
-                          orgboxapi.getContentPane().html("<p>User is not allowed to access any Organizations.</p>");
+                          orgboxapi.getContentPane().html('<div class="spinner" style="margin-top:3px"></div>');
                           orgboxapi.reinitialise();
                         }
                     });
@@ -322,7 +322,7 @@ KT.common = (function() {
               });
             }
             $('.favorite').live('click', function(e) {
-                KT.org_page.checkboxChanged($('#default_org'));
+                KT.orgswitcher.checkboxChanged($(this).parent().find('.default_org'));
             });
         },
         orgBoxRefresh : function (){
@@ -413,15 +413,20 @@ KT.common = (function() {
 
 KT.orgswitcher = (function($) {
     var checkboxChanged = function(checkbox) {
-      var name = checkbox.attr("name");
-      var options = {};
-
-      /*      var url = checkbox.attr("data-url");*/
-      var selected_org_id = checkbox.attr("value");
+      var this_checkbox = $(checkbox);
+      var this_favorite = this_checkbox.parent().find('.favorite');
+      var this_spinner = this_checkbox.parent().find('.fav_spinner');
+      var name = this_checkbox.attr("name");
+      var options = { user_id : $('#user_id').data("user_id")};
+      //extract the URL for the preference change
+      /* var url = checkbox.attr("data-url"); */
+      var selected_org_id = this_checkbox.attr("value");
       var url = KT.routes.environments_partial_organization_path(selected_org_id);
-      $('.favorite').hide();
+
+      //hide the favorite icon temporarily while the ajax operation occurs
+      this_favorite.hide();
       //show the spinner while waiting
-      $('#spinner_default_org').removeClass('hidden').show();
+      this_spinner.removeClass('hidden').show();
       $.ajax({
           type: "GET",
           url: url,
@@ -429,14 +434,15 @@ KT.orgswitcher = (function($) {
           cache: false,
           success: function(data, textStatus, jqXHR){
             //hide spinner
-            $('#spinner_default_org').addClass('hidden').hide();
-            $('.favorite').show();
+            this_spinner.addClass('hidden').hide();
+            this_checkbox.attr("checked", true);
+            this_favorite.show();
           },
           error: function(data, textStatus, jqXHR){
             //hide the spinner and show the favorite is not selected
-            $('#spinner_default_org').addClass('hidden').hide();
-            checkbox.attr("checked", false);
-            $('.favorite').show();
+            this_spinner.addClass('hidden').hide();
+            this_checkbox.attr("checked", false);
+            this_favorite.show();
           }
       });
       return false;

@@ -22,7 +22,7 @@
       - if current_organization && !current_organization.name.nil? && Organization.any_readable?
         %a#manage_orgs{:href=>organizations_path()}
           .gears_icon
-          %span{:class=>"fl"}
+          %span{:class=>"fl clearfix"}
             #{_("Manage Organizations")}
 
 / orgbox Ends Here
