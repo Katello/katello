@@ -17,7 +17,7 @@
   - if current_user
     = link_to current_user.user_notices.length, notices_path, :id => "unread_notices", :title => _("System Notifications"), :class => "header-widget"
     = render_admin_menu
-    = link_to current_user.username, "#{users_path(:id => current_user, :only => true)}#panel=user_#{current_user.id}", :class => "header-widget"
+    = link_to current_user.username, "#{users_path(:id => current_user, :only => true)}#panel=user_#{current_user.id}", :class => "header-widget", :id=>"user_id", "data-user_id"=>current_user.id
 = content_for(:extra_header) do
   - if current_user
     = render :partial => '/layouts/org'

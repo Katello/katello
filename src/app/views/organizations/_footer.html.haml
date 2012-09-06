@@ -1,5 +1,5 @@
-= check_box_tag "default_org", @organization.id, current_user.default_org == @organization, {:class=>"default_org", "data-url"=>environments_partial_organization_path(@organization.id)}
-%label{:for=>"default_org", :class=>"label_default_org clickable", :id=>"label_default_org"}
+= check_box_tag "org_#{@organization.id}", @organization.id, current_user.default_org == @organization, {:class=>"default_org", "data-url"=>environments_partial_organization_path(@organization.id)}
+%label{:for=>"org_#{@organization.id}", :class=>"label_default_org clickable", :id=>"label_org_#{@organization.id}"}
   #{@org_label}
   %span.favorite.favorites_icon-grey.sprite.clickable
   = image_tag( "embed/icons/spinner.gif", :class=>"hidden fr", :id=>"spinner_default_org", :style=>"margin-right:3px;")
