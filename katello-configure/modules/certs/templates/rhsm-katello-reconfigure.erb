@@ -18,7 +18,6 @@
 
 KATELLO_SERVER=<%= has_variable?("fqdn") ? fqdn : hostname %>
 PORT=443
-PREFIX=/<%= scope.lookupvar("katello::params::deployment_url") %>/api
 <% if scope.lookupvar("katello::params::deployment") == 'katello' %>
 BASEURL=https://$KATELLO_SERVER/pulp/repos
 <% else %>
@@ -36,7 +35,6 @@ test -f $CFG_BACKUP || cp $CFG $CFG_BACKUP
 
 # configure rhsm
 sed -i "s/^hostname\s*=.*/hostname = $KATELLO_SERVER/g" $CFG
-sed -i "s|^prefix\s*=.*|prefix = $PREFIX|g" $CFG
 sed -i "s/^port\s*=.*/port = $PORT/g" $CFG
 sed -i 's/^repo_ca_cert\s*=.*/repo_ca_cert = %%(ca_cert_dir)scandlepin-local.pem/g' $CFG
 sed -i "s|^baseurl\s*=.*|baseurl=$BASEURL|g" $CFG
