@@ -74,8 +74,7 @@ start() {
         # delete Gemfile.lock (it will be regenerated)
         rm -f $KATELLO_DATA_DIR/Gemfile.lock
         # start jobs
-        rm -f /var/log/katello/jobs-startup.log
-        su katello -s /bin/bash -c "bundle exec script/delayed_job $KATELLO_JOB_PARAMS -m -n $KATELLO_JOB_WORKERS start >/var/log/katello/jobs-startup.log 2>&1"
+        su katello -s /bin/bash -c "bundle exec script/delayed_job $KATELLO_JOB_PARAMS -m -n $KATELLO_JOB_WORKERS start >>/var/log/katello/jobs-startup.log 2>&1"
         RETVAL=$?
         if [ $RETVAL = 0 ]; then
             echo_success
