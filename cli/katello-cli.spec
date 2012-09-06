@@ -21,7 +21,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.1.5
+Version:       1.1.6
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 Requires:      %{base_name}-cli-common
@@ -142,6 +142,161 @@ cp -ap test/katello %{buildroot}%{homedir}/tests/%{name}/unit-tests
 make -C po clean
 
 %changelog
+* Thu Sep 06 2012 Ivan Necas <inecas@redhat.com> 1.1.6-1
+- 835591 - usage limit is properly displayed in the list (lzap+git@redhat.com)
+- make pylint happy on el6 (msuchy@redhat.com)
+- cli - introducing %%{fastbuild} rpm macro use (lzap+git@redhat.com)
+- 835591 - usage limit must be higher than 0 (lzap+git@redhat.com)
+- cli - pull request review (lzap+git@redhat.com)
+- cli refactoring - removing unused code (lzap+git@redhat.com)
+- cli refactoring - update_dict_unless_none (lzap+git@redhat.com)
+- cli - pull request review (lzap+git@redhat.com)
+- fail to build if code contains pylint errors or warnings (msuchy@redhat.com)
+- returning back docstring (msuchy@redhat.com)
+- code cleanup - class Bytes is not used (msuchy@redhat.com)
+- cli - removing unused global variable (lzap+git@redhat.com)
+- 853995 - error handling for non-existing systems (lzap+git@redhat.com)
+- since AsyncJob is instance of AsyncTask, there is no need for
+  wait_for_async_job and we can use wait_for_async_task instead
+  (msuchy@redhat.com)
+- make _task attribute of instance instead of attribute of class
+  (msuchy@redhat.com)
+- Simplify AsyncJob by inheriting from AsyncTask (msuchy@redhat.com)
+- create __str__() for AsyncJob (msuchy@redhat.com)
+- cli - introducing debug log level env variable (lzap+git@redhat.com)
+- 851142 - CLI: changeset update shows strange error (pajkycz@gmail.com)
+- C0301: 26,0: Line too long (131/120) C0301:390,0: Line too long (135/120)
+  (msuchy@redhat.com)
+- removing reference to class that was removed (mmccune@redhat.com)
+- removing reference to class that was removed (mmccune@redhat.com)
+- waive W0221:177,4:KatelloCLI.error: Arguments number differs from overridden
+  method (msuchy@redhat.com)
+- waive R0904: 20,0:SystemGroupAPI: Too many public methods (21/20)
+  (msuchy@redhat.com)
+- waive R0904: 18,0:RepoAPI: Too many public methods (21/20 (msuchy@redhat.com)
+- waive R0904: 19,0:SystemAPI: Too many public methods (29/20)
+  (msuchy@redhat.com)
+- waive W0702:478,4:get_term_width: No exception type(s) specified
+  (msuchy@redhat.com)
+- W0221:483,4:KatelloServer.PUT: Arguments number differs from overridden
+  method (msuchy@redhat.com)
+- W0221:480,4:KatelloServer.POST: Arguments number differs from overridden
+  method (msuchy@redhat.com)
+- W0221:474,4:KatelloServer.GET: Arguments number differs from overridden
+  method (msuchy@redhat.com)
+- W0702:364,8:KatelloServer._process_response: No exception type(s) specified
+  (msuchy@redhat.com)
+- waive R0904: 39,0:OptionParser: Too many public methods (39/20)
+  (msuchy@redhat.com)
+- W1201: 51,12:KatelloShell.history_file: Specify string format arguments as
+  logging function parameters (msuchy@redhat.com)
+- R0904: 30,0:KatelloShell: Too many public methods (21/20) (msuchy@redhat.com)
+- W0201:279,12:Cmd.complete: Attribute 'completion_matches' defined outside
+  __init__ (msuchy@redhat.com)
+- W0703:186,15:Discovery.discover_repositories: Catching too general exception
+  Exception (msuchy@redhat.com)
+- R0904:170,0:ListAvailableVerbs: Too many public methods (22/20)
+  (msuchy@redhat.com)
+- R0904:183,0:UpdateContent: Too many public methods (21/20 (msuchy@redhat.com)
+- W0611: 25,0: Unused import get_product (msuchy@redhat.com)
+- R0904:272,0:Update: Too many public methods (26/20) (msuchy@redhat.com)
+- remove false statement (msuchy@redhat.com)
+- R0201: 35,4:EnvironmentAction.get_prior_id: Method could be a function
+  (msuchy@redhat.com)
+- W0622:503,12:Errata.run: Redefining built-in 'id' (msuchy@redhat.com)
+- W0622:460,12:Packages.run: Redefining built-in 'id' (msuchy@redhat.com)
+- C0301:331,0: Line too long (122/120) C0301:407,0: Line too long (122/120)
+  C0301:409,0: Line too long (122/120) C0301:411,0: Line too long (145/120)
+  C0301:413,0: Line too long (126/120) C0301:415,0: Line too long (126/120)
+  C0301:417,0: Line too long (124/120) C0301:484,0: Line too long (124/120)
+  (msuchy@redhat.com)
+- R0201:233,4:ShowSubscriptions.convert_timestamp: Method could be a function
+  R0201:239,4:ShowSubscriptions.extract_sla_from_product: Method could be a
+  function (msuchy@redhat.com)
+- R0201: 53,4:DateTimeFormatter.local_timezone: Method could be a function
+  (msuchy@redhat.com)
+- W0621: 42,35:DateTimeFormatter.build_datetime: Redefining name 'time' from
+  outer scope (line 18) (msuchy@redhat.com)
+- W0621: 39,28:DateTimeFormatter.contains_zone: Redefining name 'time' from
+  outer scope (line 18) (msuchy@redhat.com)
+- W0621: 36,25:DateTimeFormatter.date_valid: Redefining name 'time' from outer
+  scope (line 18) (msuchy@redhat.com)
+- W0621: 33,25:DateTimeFormatter.time_valid: Redefining name 'time' from outer
+  scope (line 18) (msuchy@redhat.com)
+- W0232: 24,0:DateTimeFormatter: Class has no __init__ method
+  (msuchy@redhat.com)
+- R0201: 35,4:ActivationKeyAction.get_template_id: Method could be a function
+  (msuchy@redhat.com)
+- C0301: 62,0: Line too long (126/120) C0301:233,0: Line too long (144/120)
+  (msuchy@redhat.com)
+- waive Method could be a function (msuchy@redhat.com)
+- waive unused arguments (msuchy@redhat.com)
+- W0702:387,12:BaseAction.main: No exception type(s) specified
+  (msuchy@redhat.com)
+- R0201:342,4:BaseAction.load_saved_options: Method could be a function
+  (msuchy@redhat.com)
+- W0702:278,8:Command._extract_command: No exception type(s) specified
+  (msuchy@redhat.com)
+- R0201:257,4:Command.__build_command_usage_lines: Method could be a function
+  (msuchy@redhat.com)
+- R0201:214,4:Action.__process_option_errors: Method could be a function
+  (msuchy@redhat.com)
+- waive unused arguments (msuchy@redhat.com)
+- C0301:333,0: Line too long (179/120) C0301:335,0: Line too long (172/120)
+  (msuchy@redhat.com)
+- W0611: 19,0: Unused import Command (msuchy@redhat.com)
+- simplify code (msuchy@redhat.com)
+- R0201: 86,4:Status.__sortedStatuses: Method could be a function R0201:
+  93,4:Status.__buildOverallStatusDetail: Method could be a function R0201:
+  99,4:Status.__buildServiceStatusDetail: Method could be a function
+  (msuchy@redhat.com)
+- waive W0612: 70,12:Status.__returnCode: Unused variable 'serviceName'
+  (msuchy@redhat.com)
+- R0201: 39,4:SyncPlanAction.parse_datetime: Method could be a function
+  (msuchy@redhat.com)
+- C0301:115,0: Line too long (127/120) C0301:118,0: Line too long (147/120)
+  C0301:150,0: Line too long (127/120) (msuchy@redhat.com)
+- R0201:289,4:Promote.create_cs_name: Method could be a function
+  (msuchy@redhat.com)
+- rename isMarketingProduct to isNotMarketingProduct to avoid confusion of
+  future generations (msuchy@redhat.com)
+- W0702:159,16:List.run.isMarketingProduct: No exception type(s) specified
+  (msuchy@redhat.com)
+- W0622:132,8:List.run: Redefining built-in 'all' (msuchy@redhat.com)
+- R0201: 58,4:SingleProductAction.set_product_select_options: Method could be a
+  function R0201: 64,4:SingleProductAction.check_product_select_options: Method
+  could be a function (msuchy@redhat.com)
+- C0301: 29,0: Line too long (135/120) C0301:228,0: Line too long (134/120)
+  C0301:248,0: Line too long (124/120) C0301:308,0: Line too long (121/120)
+  C0301:312,0: Line too long (128/120) C0301:314,0: Line too long (158/120)
+  (msuchy@redhat.com)
+- W0201:354,8:Update.resetParameters: Attribute 'items' defined outside
+  __init__ (msuchy@redhat.com)
+- W0201:291,8:Update.store_from_product: Attribute 'current_product' defined
+  outside __init__ (msuchy@redhat.com)
+- R0201:418,4:Update.productNamesToIds: Method could be a function
+  R0201:429,4:Update.repoNamesToIds: Method could be a function
+  (msuchy@redhat.com)
+- waive unused arguments (msuchy@redhat.com)
+- R0201:223,4:Export.open_file: Method could be a function (msuchy@redhat.com)
+- W0702:211,8:Export.run: No exception type(s) specified (msuchy@redhat.com)
+- W0622:204,8:Export.run: Redefining built-in 'format' (msuchy@redhat.com)
+- R0201:177,4:Import.open_file: Method could be a function (msuchy@redhat.com)
+- W0702:167,8:Import.run: No exception type(s) specified (msuchy@redhat.com)
+- R0201:125,4:Info._build_nvrea: Method could be a function (msuchy@redhat.com)
+- R0201: 39,4:TemplateAction.get_parent_id: Method could be a function
+  (msuchy@redhat.com)
+- C0301:171,0: Line too long (129/120) C0301:193,0: Line too long (123/120)
+  C0301:215,0: Line too long (133/120) C0301:311,0: Line too long (137/120)
+  C0301:313,0: Line too long (155/120) C0301:314,0: Line too long (123/120)
+  C0301:317,0: Line too long (124/120) C0301:319,0: Line too long (146/120)
+  C0301:320,0: Line too long (152/120) C0301:323,0: Line too long (123/120)
+  C0301:325,0: Line too long (132/120) C0301:327,0: Line too long (141/120)
+  C0301:329,0: Line too long (147/120) C0301:400,0: Line too long (134/120)
+  (msuchy@redhat.com)
+- correctly use pylint: disable (msuchy@redhat.com)
+- 746765 - systems can be referenced by uuid (lzap+git@redhat.com)
+
 * Fri Aug 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.5-1
 - code style fixes (msuchy@redhat.com)
 - 847858 - only remove act keys when resource not found error
