@@ -75,6 +75,15 @@ class SystemGroupPackagesController < ApplicationController
                         :group_id           => @group.id,
                         :job                => job,
                         :include_tr_shading => false }
+  rescue Errors::SystemGroupEmptyException => e
+    if !params[:packages].blank?
+      notify.error _("Install of Packages '%s' scheduled for System Group '%s' failed.  Reason: %s") %
+                   [params[:packages], @group.name, e.message]
+    elsif !params[:groups].blank?
+      notify.error _("Install of Package Groups '%s' scheduled for System Group '%s' failed.  Reason: %s") %
+                   [params[:groups], @group.name, e.message]
+    end
+    render :text => '' and return
   end
 
   def remove
@@ -106,6 +115,15 @@ class SystemGroupPackagesController < ApplicationController
     render :partial => 'system_groups/packages/items', :locals => {:editable => @group.systems_editable?,
                                                                    :group_id => @group.id, :job => job,
                                                                    :include_tr_shading => false}
+  rescue Errors::SystemGroupEmptyException => e
+    if !params[:packages].blank?
+      notify.error _("Uninstall of Packages '%s' scheduled for System Group '%s' failed.  Reason: %s") %
+                   [params[:packages], @group.name, e.message]
+    elsif !params[:groups].blank?
+      notify.error _("Uninstall of Package Groups '%s' scheduled for System Group '%s' failed.  Reason: %s") %
+                   [params[:groups], @group.name, e.message]
+    end
+    render :text => '' and return
   end
 
   def update
@@ -138,6 +156,16 @@ class SystemGroupPackagesController < ApplicationController
                          :group_id           => @group.id,
                          :job                => job,
                          :include_tr_shading => false }
+
+  rescue Errors::SystemGroupEmptyException => e
+    if !params[:packages].blank?
+      notify.error _("Update of Packages '%s' scheduled for System Group '%s' failed.  Reason: %s") %
+                   [params[:packages], @group.name, e.message]
+    elsif !params[:groups].blank?
+      notify.error _("Update of Package Groups '%s' scheduled for System Group '%s' failed.  Reason: %s") %
+                   [params[:groups], @group.name, e.message]
+    end
+    render :text => '' and return
   end
 
   def status
