@@ -17,15 +17,13 @@ module Glue::Foreman::User
       before_save :save_foreman_orchestration
       before_destroy :destroy_foreman_orchestration
 
-      after_save do |user|
-        raise 'user has to have foreman_id' unless user.foreman_id
-      end
+      after_save :foreman_consistency_check
     end
   end
 
   module InstanceMethods
     def foreman_user
-      @foreman ||= ::Foreman::User.find foreman_id
+      @foreman_user ||= ::Foreman::User.find foreman_id
     end
 
     alias_method :foreman, :foreman_user
@@ -47,10 +45,10 @@ module Glue::Foreman::User
     end
 
     def create_foreman_user
-      foreman_user = ::Foreman::User.new :login    => username,
-                                         :mail     => email,
-                                         :admin    => true,
-                                         :password => password
+      @foreman_user = ::Foreman::User.new :login    => username,
+                                          :mail     => email,
+                                          :admin    => true,
+                                          :password => password
       foreman_user.save!
       self.foreman_id = foreman_user.id
     end
@@ -62,7 +60,13 @@ module Glue::Foreman::User
     end
 
     def destroy_foreman_user
-      ::Foreman::User.delete(foreman_id)
+      self.foreman_user.destroy!
+    end
+
+    private
+
+    def foreman_consistency_check
+      raise 'user has to have foreman_id' unless self.foreman_id
     end
 
   end
