@@ -90,30 +90,29 @@ module Resources
 
         # Get all the Repositories known by Pulp
         def all
-          response = get(package_path, self.default_headers).body
+          search({})
+        end
+
+        def find(id)
+          result = search("filters"=> {"_id"=> {"$in"=> [id]}})
+          result.first.with_indifferent_access if result.first
+        end
+
+        def search(criteria)
+          data = {
+              :criteria=>criteria
+          }
+          response = post(package_path, JSON.generate(data), self.default_headers).body
           JSON.parse(response)
         end
 
-        def find id
-          response = get(package_path + id + "/", self.default_headers).body
-          JSON.parse(response)
-        rescue JSON::ParserError => e
-          nil
-        end
-
-        def search name, regex=false
-          path = '/pulp/api/services/search/packages/'
-          response = post(path, {:name=>name, :regex=>regex}.to_json, self.default_headers)
-          JSON.parse(response)
-        end
-
-        def name_search name
+        def name_search(name)
           pkgs = search("^" + name, true)
           pkgs.collect{|pkg| pkg["name"]}
         end
 
         def package_path
-          "/pulp/api/packages/"
+          PulpResource.prefix + '/content/units/rpm/search/'
         end
 
         def dep_solve pkgnames, repoids
@@ -189,11 +188,11 @@ module Resources
 
     #distributors should supply  id & config methods
     class Distributor
-      attr_accessor 'auto_publish', 'unique_id'
+      attr_accessor 'auto_publish', 'id'
 
       def initialize params={}
         @auto_publish = false
-        @unique_id = SecureRandom.hex(10)
+        id = SecureRandom.hex(10)
         params.each{|k,v| self.send("#{k.to_s}=",v)}
       end
     end
@@ -213,7 +212,7 @@ module Resources
         super(params)
       end
 
-      def id
+      def type_id
         'yum_distributor'
       end
 
@@ -267,19 +266,44 @@ module Resources
           "/pulp/api/v2/repositories/#{(repo_id + '/') if repo_id}"
         end
 
-
         # {:id, :display_name},  importer=nil,distributors=[]
         def create attrs, importer=nil, distributors=[]
           attrs.merge!({:importer_type_id=>importer.id, :importer_config=>importer.config}) if importer
-          attrs.merge!({:distributors=>distributors.collect{|d| [d.id, d.config, d.auto_publish, d.unique_id] }}) if !distributors.empty?
+          attrs.merge!({:distributors=>distributors.collect{|d| [d.type_id, d.config, d.auto_publish, d.id] }}) if !distributors.empty?
           body = post(Repository.repository_path, JSON.generate(attrs), self.default_headers).body
           JSON.parse(body).with_indifferent_access
         end
 
-        def unit_copy src_repo_id, dest_repo_id
+        def unit_copy src_repo_id, dest_repo_id, type_id=nil, filters=nil, override=nil
           body = {:source_repo_id=>src_repo_id}
+          body[:criteria] = {}
+          body[:criteria][:filters]=filters if filters
+          body[:criteria][:type_ids] = [type_id] if type_id
+          body[:override_config] = override if override
           response = post(self.repository_path(dest_repo_id) + '/actions/associate/', JSON.generate(body), self.default_headers)
           JSON.parse(response).with_indifferent_access
+        end
+
+        def package_copy src_repo_id, dest_repo_id, package_ids=[]
+          filters = {
+              #:unit=>
+              'association' => {'unit_id' => {'$in' => package_ids }}
+          }
+          unit_copy src_repo_id, dest_repo_id, 'rpm', filters, {:resolve_dependencies=> true}
+        end
+
+        def errata_copy src_repo_id, dest_repo_id, errata_ids=[]
+          filters = {
+              'association' => {'unit_id' => {'$in' => errata_ids }}
+          }
+          unit_copy src_repo_id, dest_repo_id, 'errata', filters, {:resolve_dependencies=> true}
+        end
+
+        def distribution_copy src_repo_id, dest_repo_id, dist_id
+          filters = {
+              'association' => {'unit_id' => {'$in' => dist_id }}
+          }
+          unit_copy src_repo_id, dest_repo_id, 'distribution', filters, {:resolve_dependencies=> true}
         end
 
         # :id, :name
@@ -370,33 +394,30 @@ module Resources
         end
 
         def packages repo_id
-          data = { :criteria => {
-                    :type_ids=>['rpm'],
-                    :sort => {
-                        :unit => [ ['name', 'ascending'], ['version', 'descending'] ]
-                    }
-                   }
-                  }
-          response = post(repository_path(repo_id) + 'search/units/', JSON.generate(data), self.default_headers)
-          body = response.body
-          JSON.parse(body)
+          criteria = {:type_ids=>['rpm'],
+                  :sort => {
+                      :unit => [ ['name', 'ascending'], ['version', 'descending'] ]
+                  }}
+          package_unit_search(repo_id, criteria)
         end
 
-        def packages_by_name repo_id, name
-          response = get(repository_path  + repo_id + "/packages/?name=^" + name + "$", self.default_headers)
-          body = response.body
-          JSON.parse(body)
-        end
+        def packages_by_nvre(repo_id, name, version=nil, release=nil, epoch=nil)
+          and_condition = []
+          and_condition << {:name=>name} if name
+          and_condition << {:version=>version} if version
+          and_condition << {:release=>release} if release
+          and_condition << {:epoch=>epoch} if epoch
 
-        def packages_by_nvre repo_id, name, version, release, epoch
-          #TODO: switch to https://fedorahosted.org/pulp/wiki/UGREST-Repositories#GetPackageByNVREA after bug 790909 gets fixed in Pulp
-          path = repository_path + repo_id + "/packages/?name=^" + name +"$"
-          path += "&release=" + release if not release.nil?
-          path += "&version=" + version if not version.nil?
-          path += "&epoch=" + epoch if not epoch.nil?
-          response = get(path, self.default_headers)
-          body = response.body
-          JSON.parse(body)
+          criteria = {:type_ids=>['rpm'],
+                  :filters => {
+                      :unit => {
+                        "$and" => and_condition
+                      }
+                  },
+                  :sort => {
+                      :unit => [ ['name', 'ascending'], ['version', 'descending'] ]
+                  }}
+          package_unit_search(repo_id, criteria)
         end
 
         def errata(repo_id, filter = {})
@@ -408,8 +429,7 @@ module Resources
                    }
                   }
           response = post(repository_path(repo_id) + 'search/units/', JSON.generate(data), self.default_headers)
-          body = response.body
-          JSON.parse(body)
+          JSON.parse(response.body).collect{|i| i.with_indifferent_access}
         end
 
         def distributions(repo_id)
@@ -428,30 +448,26 @@ module Resources
           response.body
         end
 
+        def publish repo_id
+          data = {
+              :id=>find(repo_id)['distributors'].first()['id']
+          }
+          response = post(repository_path(repo_id) + "actions/publish/", JSON.generate(data), self.default_headers)
+          JSON.parse(response.body).with_indifferent_access
+        end
+
         def generate_metadata repo_id
           response = post(repository_path + repo_id + "/generate_metadata/", {}, self.default_headers)
           JSON.parse(response.body).with_indifferent_access
         end
 
         private
-        def get_repo_search_query groupids=nil, search_params = {}
-          search_query = ""
 
-          if not groupids.nil?
-            search_query = "?_intersect=groupid&" + groupids.collect do |gid|
-              "groupid="+gid
-            end.join("&")
-          end
-
-          if not search_params.empty?
-            if search_query.length == 0
-              search_query = "?" + search_params.to_query
-            else
-              search_query += "&" + search_params.to_query
-            end
-          end
-
-          search_query
+        def package_unit_search repo_id, criteria,
+          data = { :criteria => criteria }
+          response = post(repository_path(repo_id) + 'search/units/', JSON.generate(data), self.default_headers)
+          body = response.body
+          JSON.parse(body).collect{|e| e['metadata'].with_indifferent_access}
         end
       end
     end

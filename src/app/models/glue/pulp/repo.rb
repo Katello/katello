@@ -310,7 +310,7 @@ module Glue::Pulp::Repo
   end
 
   def find_packages_by_name name
-    Resources::Pulp::Repository.packages_by_name self.pulp_id, name
+    Resources::Pulp::Repository.packages_by_nvre self.pulp_id, name
   end
 
   def find_packages_by_nvre name, version, release, epoch
@@ -318,7 +318,7 @@ module Glue::Pulp::Repo
   end
 
   def find_latest_packages_by_name name
-    Katello::PackageUtils.find_latest_packages(Resources::Pulp::Repository.packages_by_name(self.pulp_id, name))
+    Katello::PackageUtils.find_latest_packages(Resources::Pulp::Repository.packages_by_nvre(self.pulp_id, name))
   end
 
   def has_erratum? id
@@ -371,11 +371,13 @@ module Glue::Pulp::Repo
   end
 
   def add_packages pkg_id_list
-    Resources::Pulp::Repository.add_packages self.pulp_id,  pkg_id_list
+    previous = self.environmental_instances.in_environment(self.environment.prior).first
+    Resources::Pulp::Repository.package_copy previous.pulp_id, self.pulp_id,  pkg_id_list
   end
 
   def add_errata errata_id_list
-    Resources::Pulp::Repository.add_errata self.pulp_id,  errata_id_list
+    previous = self.environmental_instances.in_environment(self.environment.prior).first
+    Resources::Pulp::Repository.errata_copy previous.pulp_id, self.pulp_id,  errata_id_list
   end
 
   def add_distribution distribution_id
@@ -446,7 +448,7 @@ module Glue::Pulp::Repo
   end
 
   def generate_metadata
-    ::Resources::Pulp::Repository.generate_metadata(self.pulp_id)
+    ::Resources::Pulp::Repository.publish(self.pulp_id)
   end
 
   # Convert array of Repo objects to Ruby Hash in the form of repo.id => repo_object for fast searches.
@@ -492,7 +494,6 @@ module Glue::Pulp::Repo
   protected
 
   def _get_most_recent_sync_status()
-    #debugger
     begin
       history = Resources::Pulp::Repository.sync_status(pulp_id)
 

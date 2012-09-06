@@ -14,12 +14,17 @@ require "util/search"
 require 'util/package_util'
 
 class Glue::Pulp::Package < Glue::Pulp::SimplePackage
-  attr_accessor :id, :download_url, :checksum, :license, :group, :filename, :requires,  :provides, :description, :size, :buildhost, :repoids
+  attr_accessor :_id, :download_url, :checksum, :license, :group, :filename, :requires,  :provides, :description, :size, :buildhost, :repoids
+  alias_method 'id=', '_id='
+  alias_method 'id', '_id'
 
   def self.find id
     package_attrs = Resources::Pulp::Package.find(id)
-    Glue::Pulp::Package.new(package_attrs) if not package_attrs.nil?
+    return if package_attrs.nil?
+    Glue::Pulp::Package.new(package_attrs) if package_attrs
   end
+
+
 
   def self.index_settings
     {
