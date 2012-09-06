@@ -14,7 +14,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        1.1.7
+Version:        1.1.8
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -105,6 +105,10 @@ cp -Rp upgrade-scripts/* %{buildroot}%{homedir}/upgrade-scripts
 
 
 %changelog
+* Thu Sep 06 2012 Ivan Necas <inecas@redhat.com> 1.1.8-1
+- fastbuild - adding macro for all spec files (lzap+git@redhat.com)
+- foreman-configure - fix ordering issue in puppet module (inecas@redhat.com)
+
 * Fri Aug 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.7-1
 - rename puppet/ to katello-configure/ (msuchy@redhat.com)
 
