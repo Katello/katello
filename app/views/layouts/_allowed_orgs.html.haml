@@ -1,13 +1,15 @@
 - for org in user.allowed_organizations
   - if current_organization && org.name == current_organization.name
     .row.clickable.selected
-      %span.favorite.favorites_icon-grey.sprite{:title=>_("Make this your default organization."), :id=>"org[#{org.id}]"}
+      = check_box_tag "org_#{org.id}", org.id, current_user.default_org == org, {:class=>"default_org", "data-url"=>environments_partial_organization_path(org.id)}
+      %span.favorite.favorites_icon-grey.sprite{:title=>_("Make this your default organization."), :id=>"favorite_#{org.id}"}
         #{_("Make this your default organization.")}
-      = image_tag( "embed/icons/spinner.gif", :class=>"hidden fl", :id=>"spinner_default_org", :style=>"margin-right:3px;")
+      = image_tag( "embed/icons/spinner.gif", :class=>"hidden fl fav_spinner", :style=>"margin: 5px 0 0 5px")
       = link_to current_organization.name, set_org_user_session_path(:org_id=>org.id), :method=>"POST", :class=>"selected", :title=>_("Current Organization")
   - else
     .row.clickable
-      %span.favorite.favorites_icon-grey.sprite{:title=>_("Make this your default organization."), :id=>"org[#{org.id}]"}
+      = check_box_tag "org_#{org.id}", org.id, current_user.default_org == org, {:class=>"default_org", "data-url"=>environments_partial_organization_path(org.id)}
+      %span.favorite.favorites_icon-grey.sprite{:title=>_("Make this your default organization."), :id=>"favorite_#{org.id}"}
         #{_("Make this your default organization.")}
-      = image_tag( "embed/icons/spinner.gif", :class=>"hidden fl", :id=>"spinner_default_org", :style=>"margin-right:3px;")
+      = image_tag( "embed/icons/spinner.gif", :class=>"hidden fl fav_spinner", :style=>"margin: 5px 0 0 5px")
       = link_to org.name, set_org_user_session_path(:org_id=>org.id), :method=>"POST", :title=>org.name

@@ -225,7 +225,7 @@ class UsersController < ApplicationController
     default_environment_id = params['env_id'].try(:[], 'env_id').try(:to_i)
 
     if @user.default_environment.try(:id) == default_environment_id
-      err_msg = N_("The default you supplied was the same as the old default.")
+      err_msg = N_("The system registration default you supplied was the same as the old system registration default.")
       notify.error err_msg
       render(:text => err_msg, :status => 400) and return
     end
@@ -238,12 +238,12 @@ class UsersController < ApplicationController
 
     @organization             = @environment.try :organization
 
-    notify.success _("User environment updated successfully.")
+    notify.success _("User System Registration Environment updated successfully.")
 
     if @organization && @environment
       render :json => { :org => @organization.name, :env => @environment.name }
     else
-      render :json => { :org => _("No default set for this user."), :env => _("No default set for this user.") }
+      render :json => { :org => _("No system registration default set for this user."), :env => _("No system registration default set for this user.") }
     end
   end
 
