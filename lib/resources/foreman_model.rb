@@ -166,6 +166,10 @@ class Resources::ForemanModel
     self.class.delete id
   end
 
+  def destroy!
+    self.class.delete! id
+  end
+
   def self.find!(id)
     new(clean_attribute_hash(resource.show(id, nil, foreman_header).first[resource_name])).tap do |o|
       o.send :persist!
