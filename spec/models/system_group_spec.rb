@@ -251,5 +251,30 @@ describe SystemGroup do
 
   end
 
+  context "actions" do
+    it "should raise exception on package install, if no systems in group" do
+      lambda{ @group.install_packages("pkg1")}.should raise_exception(Errors::SystemGroupEmptyException)
+    end
+
+    it "should raise exception on package update, if no systems in group" do
+      lambda{ @group.update_packages("pkg1")}.should raise_exception(Errors::SystemGroupEmptyException)
+    end
+
+    it "should raise exception on package remove, if no systems in group" do
+      lambda{ @group.uninstall_packages("pkg1")}.should raise_exception(Errors::SystemGroupEmptyException)
+    end
+
+    it "should raise exception on package group install, if no systems in group" do
+      lambda{ @group.install_package_groups("grp1")}.should raise_exception(Errors::SystemGroupEmptyException)
+    end
+
+    it "should raise exception on package group remove, if no systems in group" do
+      lambda{ @group.uninstall_package_groups("grp1")}.should raise_exception(Errors::SystemGroupEmptyException)
+    end
+
+    it "should raise exception on errata install, if no systems in group" do
+      lambda{ @group.install_errata("errata1")}.should raise_exception(Errors::SystemGroupEmptyException)
+    end
+  end
 
 end
