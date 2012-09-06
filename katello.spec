@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.1.9
+Version:        1.1.10
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -531,6 +531,33 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Sep 06 2012 Ivan Necas <inecas@redhat.com> 1.1.10-1
+- 852631 - system group - update model to raise exception when no groups exist
+  (bbuckingham@redhat.com)
+- 854573, 852167 - Fixes missing icons issue which also resolves an alignment
+  issue on the content search page. (ehelms@redhat.com)
+- linkback - make app prefix link helper (thomasmckay@redhat.com)
+- workaround for bz 854263 (msuchy@redhat.com)
+- 758651 - check if thin port is free before starting thin (msuchy@redhat.com)
+- Merge pull request #543 from bbuckingham/fork-841289 (lzap@redhat.com)
+- 853056 - system register without environment is working again
+  (lzap+git@redhat.com)
+- 853056 - improve 404 generic error message (lzap+git@redhat.com)
+- job without task should not exists, this is error (msuchy@redhat.com)
+- 851142 - CLI: changeset update shows strange error (pajkycz@gmail.com)
+- fix for BZ 821345 (dmitri@redhat.com)
+- link back to source of manifest in import history (thomasmckay@redhat.com)
+- Updating Converge-UI (mbacovsk@redhat.com)
+- 746765 - systems can be referenced by uuid (lzap+git@redhat.com)
+- 746765 - removing system unique name constraint (lzap+git@redhat.com)
+- 831664 - Repository sync failures not displaying detailed error in Notices
+  (pchalupa@redhat.com)
+- 841289 - perform cleanup on failed registration with activation key
+  (bbuckingham@redhat.com)
+- katello - disable bundler patch by default, fix broken condition
+  (pchalupa@redhat.com)
+- katello - add bundler patch to prefer rpm-gems (pchalupa@redhat.com)
+
 * Fri Aug 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.9-1
 - Do not insert spaces before changesets description (pajkycz@gmail.com)
 - 847858-actkeypool - fixed spec test failure (thomasmckay@redhat.com)
