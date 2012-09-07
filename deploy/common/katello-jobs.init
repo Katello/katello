@@ -91,7 +91,7 @@ status() {
            RETVAL=$( print_higher $RC $RETVAL )
            SECONDVAL=$( print_lower $RC $RETVAL )
            echo -n "delayed_job_monitor $i is "
-           status_of_one $KATELLO_PID_DIR/delayed_job_monitor.$i.pid
+           status_of_one $KATELLO_PID_DIR/delayed_job.${i}_monitor.pid
            RC=$?
            RETVAL=$( print_higher $RC $RETVAL )
            SECONDVAL=$( print_lower $RC $RETVAL )
@@ -172,9 +172,9 @@ stop() {
             fi
         else
             for i in $( seq 0 $(($KATELLO_JOB_WORKERS - 1)) ); do
-                if [ -f $KATELLO_PID_DIR/delayed_job_monitor.$i.pid ]; then
+                if [ -f $KATELLO_PID_DIR/delayed_job.${i}_monitor.pid ]; then
                     echo -n $"Stopping delayed_job_monitor $i: "
-                    killproc -p $KATELLO_PID_DIR/delayed_job_monitor.$i.pid
+                    killproc -p $KATELLO_PID_DIR/delayed_job.${i}_monitor.pid
                     echo
                 fi
                 if [ -f $KATELLO_PID_DIR/delayed_job.$i.pid ]; then
