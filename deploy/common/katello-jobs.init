@@ -21,33 +21,88 @@ KATELLO_DATA_DIR=${KATELLO_DATA_DIR:-/var/lib/katello}
 KATELLO_ENV=${KATELLO_ENV:-production}
 KATELLO_JOB_WORKERS=${KATELLO_JOB_WORKERS:-1}
 KATELLO_JOB_PARAMS=${KATELLO_JOB_PARAMS:--p katello}
-KATELLO_PID=$KATELLO_HOME/tmp/pids/delayed_job*monitor.pid
-KATELLO_PIDS_ALL=$KATELLO_HOME/tmp/pids/delayed_job*.pid
+KATELLO_PID_DIR=$KATELLO_HOME/tmp/pids
+KATELLO_PID=$KATELLO_PID_DIR/delayed_job*monitor.pid
+KATELLO_PIDS_ALL=$KATELLO_PID_DIR/delayed_job*.pid
 export RAILS_ENV=$KATELLO_ENV
 export KATELLO_LOGGING=${KATELLO_LOGGING:-warn}
 export KATELLO_LOGGING_SQL=${KATELLO_LOGGING_SQL:-warn}
 KATELLO_PREFIX=${KATELLO_PREFIX:-/katello}
 export RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX
 
-status() {
-    #check if pid file exists
-    pidfile=`ls ${KATELLO_PID} 2>/dev/null | head -n1`
-    if [ -f "$pidfile" ]; then
-        pid=`cat "$pidfile"`
+print_higher() {
+    if [ 0$1 -gt 0$2 ]; then
+        echo $1
+    else
+        echo $2
+    fi
+}
+
+print_lower() {
+    if [ 0$1 -gt 0$2 ]; then
+        echo $2
+    else
+        echo $1
+    fi
+}
+
+status_of_one() {
+    PID_FILE="$1"
+    if [ -f "$PID_FILE" ]; then
+        # set $pid
+        __pids_var_run NOT_USED $PID_FILE
+        RC=$?
+        if [ -n "$pid" -o 0$RC -gt 0 ]; then
+            RETVAL=2 # Program is dead and pid file exists
+        fi
         #check if proces with pid from the file is running
-        if `ps -p $pid > /dev/null`; then
-            echo "$prog is running."
+        if checkpid $pid; then
+            echo "running."
             RETVAL=0
         else
-            echo "$prog is not running."
+            echo "not running."
             RETVAL=1
         fi
     else
-        echo "$prog is not running."
+        echo "not running."
         RETVAL=3
     fi
-
     return $RETVAL
+}
+
+status() {
+    if [ 0$KATELLO_JOB_WORKERS -eq 1 ]; then
+       echo -n "delayed_job is "
+       status_of_one $KATELLO_PID_DIR/delayed_job.pid
+       RETVAL=$?
+       SECONDVAL=$?
+       echo -n "delayed_job_monitor is "
+       status_of_one $KATELLO_PID_DIR/delayed_job_monitor.pid
+       RC=$?
+       RETVAL=$( print_higher $RC $RETVAL )
+       SECONDVAL=$( print_lower $RC $RETVAL )
+    else
+       RETVAL=0
+       SECONDVAL=0
+       for i in $( seq 0 $(($KATELLO_JOB_WORKERS - 1)) ); do
+           echo -n "delayed_job $i is "
+           status_of_one $KATELLO_PID_DIR/delayed_job.$i.pid
+           RC=$?
+           RETVAL=$( print_higher $RC $RETVAL )
+           SECONDVAL=$( print_lower $RC $RETVAL )
+           echo -n "delayed_job_monitor $i is "
+           status_of_one $KATELLO_PID_DIR/delayed_job_monitor.$i.pid
+           RC=$?
+           RETVAL=$( print_higher $RC $RETVAL )
+           SECONDVAL=$( print_lower $RC $RETVAL )
+       done
+    fi
+    if [  0$SECONDVAL -eq 0  -a  0$RETVAL -gt 0 ]; then
+       # some is running, some not
+       return 10
+    else
+       return $RETVAL
+    fi
 }
 
 status_q() {
@@ -64,10 +119,16 @@ start() {
     fi
 
     echo -n $"Starting $prog: "
-    if status_q; then
+    status_q
+    STATUS=$?
+    if [ 0$STATUS -eq 0 ]; then
         echo -n $"$prog is already running. "
         RETVAL=0
         echo_success
+    elif [ 0$STATUS -eq 10 ]; then
+        echo -n $"Some processes of $prog is already running. Some not. Please stop $prog first."
+        RETVAL=10
+        echo_failure
     else
         # rails expects you to run from the root of the app
         pushd ${KATELLO_HOME} >/dev/null
@@ -91,7 +152,9 @@ start() {
 stop() {
 
     echo -n $"Stopping $prog: "
-    if status_q; then
+    status_q 
+    STATUS=$?
+    if [ 0$STATUS -eq 0 -o 0$STATUS -eq 10 ]; then
         # rails expects you to run from the root of the app
         pushd ${KATELLO_HOME} >/dev/null
         # delete Gemfile.lock (it will be regenerated)
@@ -119,7 +182,9 @@ restart() {
 }
 
 condstop() {
-    if status_q; then
+    status_q
+    STATUS=$?
+    if [ 0$STATUS -eq 0 -o 0$STATUS -eq 10 ]; then
         stop
     else
         RETVAL=0
@@ -127,7 +192,9 @@ condstop() {
 }
 
 condrestart() {
-    if status_q; then
+    status_q
+    STATUS=$?
+    if [ 0$STATUS -eq 0 -o 0$STATUS -eq 10 ]; then
         restart
     else
         RETVAL=0
