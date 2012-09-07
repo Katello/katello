@@ -129,7 +129,7 @@ describe SystemsController do
     let(:uuid) { '1234' }
 
     before (:each) do
-      login_user
+      @user = login_user
       set_default_locale
 
       @organization = setup_system_creation
@@ -217,6 +217,69 @@ describe SystemsController do
           @system2 = System.create!(:name=>"verbose2", :environment => @environment2, :cp_type=>"system", :facts => {"Test1"=>1 , "verbose_facts" => "Test facts"})
           get :environments, :env_id => @environment2.id
           response.should be_success
+        end
+
+        describe 'listing products' do
+
+          let(:products_count) { 7 }
+
+          before (:each) do
+            @system.installedProducts = []
+            product = {"productId"=>"155", "version"=>nil, "id"=>"ff8080813990a0eb0139a0be9225006a",
+                "updated"=>"2012-09-07T12:40:07.461+0000", "arch"=>nil, "status"=>nil, "created"=>"2012-09-07T12:40:07.461+0000",
+                "startDate"=>nil, "endDate"=>nil}
+            products_count.times do |i|
+              prod = HashWithIndifferentAccess.new(product)
+              prod['productName'] = "NUMBER #{i}"
+              @system.installedProducts << prod
+            end
+
+            System.stub(:find).and_return(@system)
+            User.stub(:current_user).and_return(@user)
+          end
+
+          [2, 3, 4, 5].each do |page_size|
+
+            it "should show only first page" do
+              @user.stub(:page_size).and_return(page_size)
+
+              get :products, :id => @system.id
+              response.should be_success
+              assigns(:products_count).should == products_count
+              assigns(:products).size.should == page_size
+
+              page_size.times do |i|
+                assigns(:products)[i]['productName'].should == "NUMBER #{i}"
+              end
+              assigns(:offset).should == page_size
+            end
+
+            it "should provide more products on demand" do
+              @user.stub(:page_size).and_return(page_size)
+
+              # how many request should be created
+              requests = (products_count/page_size + (products_count%page_size == 0 ? 0 : 1)) - 1
+
+              # each request check if it returns correct products
+              (1..requests).each do |i|
+                get :more_products, :id => @system.id, :offset => page_size*i
+                response.should be_success
+                if page_size*i+page_size > products_count
+                  assigns(:products).size.should < page_size
+                else
+                  assigns(:products).size.should == page_size
+                end
+                assigns(:products).size.times do |j|
+                  assigns(:products)[j]['productName'].should == "NUMBER #{j+page_size*i}"
+                end
+                assigns(:offset).should == page_size*(i+1)
+              end
+
+              get :more_products, :id => @system.id, :offset => page_size*(requests+1)
+              response.should be_success
+              assigns(:products).size.should == 0
+            end
+          end
         end
       end
     end
