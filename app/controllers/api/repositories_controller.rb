@@ -108,11 +108,11 @@ class Api::RepositoriesController < Api::ApiController
 
     User.current = User.hidden.first
 
-    args = ActiveSupport::JSON.decode(request.body.read).with_indifferent_access
-    repo = Repository.where(:pulp_id =>args[:repo_id]).first
-    raise _("Could not find repository #{repo.name}") if repo.nil?
+    repo_id = params['payload']['repo_id']
+    repo = Repository.where(:pulp_id =>repo_id).first
+    raise _("Could not find repository #{repo_id}") if repo.nil?
     Rails.logger.info("Sync_complete called for #{repo.name}, running after_sync.")
-    repo.async(:organization=>repo.environment.organization).after_sync(args[:task_id])
+    repo.async(:organization=>repo.environment.organization).after_sync(params[:task_id])
     render :text=>""
   end
 
