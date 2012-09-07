@@ -86,7 +86,7 @@ class UserSessionsController < ApplicationController
       orgs = current_user.allowed_organizations
       default_org = current_user.default_org
       user_default_org = nil
-      if default_org && default_org != "nil"
+      if default_org && !default_org.nil?
         user_default_org = (Organization.find(default_org))
       end
 
