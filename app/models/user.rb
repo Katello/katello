@@ -479,9 +479,9 @@ class User < ActiveRecord::Base
   def default_org
     org_id = self.preferences[:user][:default_org] rescue nil
     if org_id && !org_id.nil? && org_id != "nil"
-      org = Organization.find(org_id)
+      org = Organization.find_by_id(org_id)
       org if org.readable?
-      return org
+      return org.id
     else
       return nil
     end
@@ -492,8 +492,8 @@ class User < ActiveRecord::Base
   def default_org= org_id
     self.preferences[:user] = { } unless self.preferences.has_key? :user
     if !org_id.nil? && org_id != "nil"
-      organization = Organization.find(org_id)
-      self.preferences[:user][:default_org] = organization
+      organization = Organization.find_by_id(org_id)
+      self.preferences[:user][:default_org] = organization.id
     else
       self.preferences[:user][:default_org] = nil
     end
