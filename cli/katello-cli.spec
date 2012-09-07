@@ -27,7 +27,7 @@ Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.
 Requires:      %{base_name}-cli-common
 BuildArch:     noarch
 BuildRequires: spacewalk-pylint
-
+Obsoletes:     katello-headpin-cli < 1.0.1-1
 
 %description
 Provides a client package for managing application life-cycle for 
@@ -105,6 +105,7 @@ install -pm 0644 src/%{base_name}/client/core/*.py %{buildroot}%{python_sitelib}
 install -pm 0644 src/%{base_name}/client/utils/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/utils/
 install -d -m 0755 %{buildroot}%{_mandir}/man1
 install -m 0644 man/%{base_name}.man1 %{buildroot}%{_mandir}/man1/%{base_name}.1
+install -m 0644 man/headpin.1 %{buildroot}%{_mandir}/man1/headpin.1
 install -m 0644 man/%{base_name}-debug-certificates.man1 %{buildroot}%{_mandir}/man1/%{base_name}-debug-certificates.1
 
 # install locale files
@@ -122,12 +123,18 @@ mkdir -p %{buildroot}%{homedir}/tests/%{name}/unit-tests
 sed -i -e 's|\.\./src/katello|%{python_sitelib}/%{base_name}|g' test/katello/__init__.py
 cp -ap test/katello %{buildroot}%{homedir}/tests/%{name}/unit-tests
 
+pushd %{buildroot}%{_bindir}
+ln -svf %{_bindir}/%{base_name} headpin
+popd
+
 %files
 %attr(755,root,root) %{_bindir}/%{base_name}
+%attr(755,root,root) %{_bindir}/headpin
 %attr(755,root,root) %{_bindir}/%{base_name}-debug-certificates
 %config(noreplace) %{_sysconfdir}/%{base_name}/client.conf
 %doc README LICENSE
 %{_mandir}/man1/%{base_name}.1*
+%{_mandir}/man1/headpin.1*
 %{_mandir}/man1/%{base_name}-debug-certificates.1*
 
 %files common -f %{name}.lang
