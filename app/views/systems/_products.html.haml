@@ -9,15 +9,13 @@
       %thead
         %th
           %a#products_sort{"data-sort"=>"asc", :class=>"ascending"}
-            #{_("Product")}
+            #{_("Product")} (#{products_count})
       %tbody
-        -products.each do |p|
-          %tr
-            %td{:class=>"product"}
-              .status_icon{:class => "#{@system.product_compliance_color p['productId']}"}
-              #{p['productName']}
-    %a#products_more{"data-scroll_url"=>url_for(more_products_system_path()), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("More...")}
-    #list-spinner
-      = image_tag("embed/icons/spinner.gif", :class=>"ajax_scroll")
+        = render :partial => 'more_products', :locals => {:products => products}
+
+    - if products.length == current_user.page_size
+      %a#products_more{"data-scroll_url"=>url_for(more_products_system_path()), "data-page_size"=>current_user.page_size, "data-offset"=>offset, "data-products_count"=>products_count, :class=>"fl"} #{_("More...")}
+      #list-spinner
+        = image_tag("embed/icons/spinner.gif", :class=>"ajax_scroll")
   - else
     %p There are no products to display.
