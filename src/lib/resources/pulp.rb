@@ -129,14 +129,26 @@ module Resources
 
       class << self
         def find(errata_id)
-          response = get(errata_path + errata_id + "/", self.default_headers)
-          JSON.parse(response.body).with_indifferent_access
-        rescue JSON::ParserError => e
-          nil
+          result = search({
+            :filters => {
+                "id"=> {
+                    "$in"=> [errata_id]
+                }
+            }
+          })
+          result.first
+        end
+
+        def search filter
+          data = {
+              :criteria => filter
+          }
+          response = post(errata_path, JSON.generate(data), self.default_headers)
+          JSON.parse(response.body).collect{|e| e.with_indifferent_access}
         end
 
         def errata_path
-          "/pulp/api/errata/"
+          PulpResource.prefix + '/content/units/erratum/search/'
         end
 
         def filter(filter)
@@ -219,7 +231,7 @@ module Resources
       def config
         to_ret = self.as_json
         to_ret.delete('auto_publish')
-        to_ret.delete('unique_id')
+        to_ret.delete('id')
         to_ret
       end
     end
@@ -294,14 +306,18 @@ module Resources
 
         def errata_copy src_repo_id, dest_repo_id, errata_ids=[]
           filters = {
-              'association' => {'unit_id' => {'$in' => errata_ids }}
+              :unit => {
+                    :id=>{
+                        '$in' => errata_ids
+                    }
+                }
           }
-          unit_copy src_repo_id, dest_repo_id, 'errata', filters, {:resolve_dependencies=> true}
+          unit_copy src_repo_id, dest_repo_id, 'erratum', filters, {:resolve_dependencies=> true}
         end
 
         def distribution_copy src_repo_id, dest_repo_id, dist_id
           filters = {
-              'association' => {'unit_id' => {'$in' => dist_id }}
+              'id' => {'$in' => dist_id }
           }
           unit_copy src_repo_id, dest_repo_id, 'distribution', filters, {:resolve_dependencies=> true}
         end
@@ -422,14 +438,14 @@ module Resources
 
         def errata(repo_id, filter = {})
           data = { :criteria => {
-                    :type_ids=>['errata'],
+                    :type_ids=>['erratum'],
                     :sort => {
-                        :unit => [ ['id', 'ascending'] ]
+                        :unit => [ ['title', 'ascending'] ]
                     }
                    }
                   }
           response = post(repository_path(repo_id) + 'search/units/', JSON.generate(data), self.default_headers)
-          JSON.parse(response.body).collect{|i| i.with_indifferent_access}
+          JSON.parse(response.body).collect{|i| i['metadata'].with_indifferent_access}
         end
 
         def distributions(repo_id)
