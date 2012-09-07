@@ -163,7 +163,7 @@ class Repository < ActiveRecord::Base
   def sync_complete task
     notify = task.parameters.try(:[], :options).try(:[], :notify)
     user = task.user
-    if task.state == 'finished'
+    if task.state == TaskStatus::Status::FINISHED
       Notify.success _("Repository '%s' finished syncing successfully.") % [self.name],
                      :user => user if user && notify
     elsif task.state == 'error'
