@@ -102,7 +102,18 @@ class OrganizationsController < ApplicationController
   end
 
   def edit
-    @org_label = _("Make this my default organization.")
+    @org_label = ""
+    default_org = current_user.default_org
+    if default_org && !default_org.nil?
+      user_default_org = (Organization.find(default_org))
+      if user_default_org == @organization
+        @org_label = _("This is your default organization.")
+      else
+        @org_label = _("Make this my default organization.")
+      end
+    else
+      @org_label = _("Make this my default organization.")
+    end
     @env_choices =  @organization.environments.collect {|p| [ p.name, p.name ]}
     render :partial=>"edit", :layout => "tupane_layout", :locals=>{:organization=>@organization, :editable=>@organization.editable?, :name => controller_display_name, :org_label=>@org_label}
   end

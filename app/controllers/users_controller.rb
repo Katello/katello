@@ -302,12 +302,13 @@ class UsersController < ApplicationController
   #method for saving the user's default org
   def setup_default_org
     org = params[:org]
-    if !org.nil? && org != "nil"
+    if org && !org.nil?
       current_user.default_org = org
-      default_org = current_user.default_org
+      default_org = Organization.find_by_id(current_user.default_org)
       notify.success _("Default Organization: '%s' saved.") % default_org.name
     else
-      notify.success _("Default Organization no longer exists.")
+      current_user.default_org = nil
+      notify.success _("Default Organization no longer selected.")
     end
     render :text => :ok and return
   end

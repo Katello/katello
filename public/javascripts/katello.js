@@ -414,23 +414,33 @@ KT.common = (function() {
 KT.orgswitcher = (function($) {
     var checkboxChanged = function(checkbox) {
       var this_checkbox = $(checkbox);
+      this_checkbox.attr("disabled", "disabled");
+      //var for all favorite icons to clear them
+      var all_favorites = $('.favorite');
+      //current favorite
       var this_favorite = this_checkbox.parent().find('.favorite');
       var this_spinner = this_checkbox.parent().find('.fav_spinner');
       var name = this_checkbox.attr("name");
+
       //extract the URL for the preference change
-      var url = checkbox.attr("data-url");
+      var url = checkbox.data("url");
+
       var selected_org_id = this_checkbox.attr("value");
       var checked = this_checkbox.attr("checked");
       var options = {};
+
       if (checked){
-        options = {org : "nil", user_id : $('#user_id').data("user_id")};
+        options = {user_id : $('#user_id').data("user_id")};
       } else {
         options = {org : selected_org_id, user_id : $('#user_id').data("user_id")};
       }
+
       //hide the favorite icon temporarily while the ajax operation occurs
       this_favorite.hide();
+
       //show the spinner while waiting
       this_spinner.removeClass('hidden').show();
+
       $.ajax({
           type: "PUT",
           url: url,
@@ -442,20 +452,32 @@ KT.orgswitcher = (function($) {
             if(checked){
               this_checkbox.attr("checked", false);
               this_favorite.addClass("favorites_icon-grey");
+              this_favorite.removeClass("favorites_icon-black");
+              this_favorite.attr("title", i18n.make_default_org);
+              if(this_favorite.parent().find('label').length){
+                this_favorite.parent().find('label').html(i18n.make_default_org);
+              }
             } else {
               this_checkbox.attr("checked", true);
-              $('.favorite').removeClass("favorites_icon-black");
+              all_favorites.removeClass("favorites_icon-black");
+              all_favorites.attr("title", i18n.make_default_org);
               $('.favorite').addClass("favorites_icon-grey");
-              this_favorite.removeClass("favorites_icon-grey");
-              this_favorite.addClass("favorites_icon-black");
+              this_favorite.removeClass("favorites_icon-grey").addClass("favorites_icon-black");
+              this_favorite.attr("title", i18n.current_default_org);
+              if(this_favorite.parent().find('label').length){
+                this_favorite.parent().find('label').html(i18n.current_default_org);
+              }
             }
             this_favorite.show();
+
+            this_checkbox.removeAttr("disabled");
           },
           error: function(data, textStatus, jqXHR){
             //hide the spinner and show the favorite is not selected
             this_spinner.addClass('hidden').hide();
             this_checkbox.attr("checked", false);
             this_favorite.show();
+            this_checkbox.removeAttr("disabled");
           }
       });
       return false;

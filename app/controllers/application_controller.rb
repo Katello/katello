@@ -187,7 +187,7 @@ class ApplicationController < ActionController::Base
       #user logged in
 
       #redirect to originally requested page
-      if session[:original_uri] != nil && !(session[:original_uri].include? "logout")
+      if !session[:original_uri].nil? && !(session[:original_uri].include? "logout")
         redirect_to session[:original_uri]
         session[:original_uri] = nil
       end
