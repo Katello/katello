@@ -1,3 +1,5 @@
+require 'rails'
+
 if ::Rails.env != "test"
   # This configuration file works with both the Compass command line tool and within Rails.
   require 'ninesixty'
