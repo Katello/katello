@@ -94,6 +94,20 @@ $switcherformwidth: 165px !default;
       white-space: normal;
       margin-top: 1px;
       margin-bottom: 1px;
+      .favorites_icon-black {
+        $opacity: 100;
+        /* IE 8 */
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=$opacity * 100)" !important;
+        /* Netscape */
+        -moz-opacity: $opacity !important;
+        /* Safari 1.x */
+        -khtml-opacity: $opacity !important;
+        /* Good browsers */
+        opacity: $opacity !important;
+      }
+      .fav_spinner {
+        margin: 5px 0 0 5px;
+      }
       a {
         width: $switcherformwidth - 31;
         height: 18px;
