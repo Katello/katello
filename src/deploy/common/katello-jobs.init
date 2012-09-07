@@ -187,9 +187,9 @@ stop() {
         popd >/dev/null
         RETVAL=0
     else
-        echo -n $"$prog was not running. "
         RETVAL=0
-        echo_success
+        echo -n "Stopping $prog: "
+        echo_failure
         echo
     fi
 
