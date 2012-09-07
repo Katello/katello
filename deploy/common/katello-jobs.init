@@ -70,7 +70,7 @@ status_of_one() {
     return $RETVAL
 }
 
-status() {
+kstatus() {
     if [ 0$KATELLO_JOB_WORKERS -eq 1 ]; then
        echo -n "delayed_job is "
        status_of_one $KATELLO_PID_DIR/delayed_job.pid
@@ -106,7 +106,7 @@ status() {
 }
 
 status_q() {
-    status &> /dev/null
+    kstatus &> /dev/null
     return $?
 }
 
@@ -238,7 +238,7 @@ case "$1" in
         condstop
         ;;
     status)
-        status
+        kstatus
         ;;
     *)
         echo "Usage: {start|stop|restart|condrestart|condstop|status}"
