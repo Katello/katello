@@ -76,3 +76,5 @@ if Provider.count == 0
       :provider_type => Provider::REDHAT
   })
 end
+
+Repository.ensure_sync_notification

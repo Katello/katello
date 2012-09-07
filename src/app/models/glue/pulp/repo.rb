@@ -33,6 +33,22 @@ module Glue::Pulp::Repo
                       pulp_repo_facts
                   end
                 }
+
+      def self.ensure_sync_notification
+        url = AppConfig.post_sync_url
+        type = Resources::Pulp::EventNotifier::EventTypes::REPO_SYNC_COMPLETE
+        notifs = Resources::Pulp::EventNotifier.list()
+
+        #delete any similar tasks with the wrong url (in case it changed)
+        notifs.select{|n| n['event_types'] == [type] && n['notifier_config']['url'] != url}.each do |e|
+          Resources::Pulp::EventNotifier.destroy(e['id'])
+        end
+
+        #only create a notifier if one doesn't exist with the correct url
+        exists = notifs.select{|n| n['event_types'] == [type] && n['notifier_config']['url'] == url}
+        Resources::Pulp::EventNotifier.create_rest_notifier(url, [type]) if exists.empty?
+      end
+
     end
   end
 
