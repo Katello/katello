@@ -132,7 +132,7 @@ module Glue::Pulp::Repo
     end
 
     distributors = [Resources::Pulp::YumDistributor.new(self.relative_path, true, false,
-      {:protected=>true, :generate_metadata=>false, :unique_id=>self.pulp_id,
+      {:protected=>true, :generate_metadata=>false, :id=>self.pulp_id,
       :auto_publish=>!self.environment.library?})]
 
     Resources::Pulp::Repository.create({
