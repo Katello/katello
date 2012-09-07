@@ -234,6 +234,7 @@ Src::Application.routes.draw do
       put :update_roles
       put :update_locale
       put :update_preference
+      put :setup_default_org
       get :edit_environment
       put :update_environment
     end

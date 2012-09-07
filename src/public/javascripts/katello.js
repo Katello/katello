@@ -417,25 +417,38 @@ KT.orgswitcher = (function($) {
       var this_favorite = this_checkbox.parent().find('.favorite');
       var this_spinner = this_checkbox.parent().find('.fav_spinner');
       var name = this_checkbox.attr("name");
-      var options = { user_id : $('#user_id').data("user_id")};
       //extract the URL for the preference change
-      /* var url = checkbox.attr("data-url"); */
+      var url = checkbox.attr("data-url");
       var selected_org_id = this_checkbox.attr("value");
-      var url = KT.routes.environments_partial_organization_path(selected_org_id);
-
+      var checked = this_checkbox.attr("checked");
+      var options = {};
+      if (checked){
+        options = {org : "nil", user_id : $('#user_id').data("user_id")};
+      } else {
+        options = {org : selected_org_id, user_id : $('#user_id').data("user_id")};
+      }
       //hide the favorite icon temporarily while the ajax operation occurs
       this_favorite.hide();
       //show the spinner while waiting
       this_spinner.removeClass('hidden').show();
       $.ajax({
-          type: "GET",
+          type: "PUT",
           url: url,
           data: options,
           cache: false,
           success: function(data, textStatus, jqXHR){
             //hide spinner
             this_spinner.addClass('hidden').hide();
-            this_checkbox.attr("checked", true);
+            if(checked){
+              this_checkbox.attr("checked", false);
+              this_favorite.addClass("favorites_icon-grey");
+            } else {
+              this_checkbox.attr("checked", true);
+              $('.favorite').removeClass("favorites_icon-black");
+              $('.favorite').addClass("favorites_icon-grey");
+              this_favorite.removeClass("favorites_icon-grey");
+              this_favorite.addClass("favorites_icon-black");
+            }
             this_favorite.show();
           },
           error: function(data, textStatus, jqXHR){

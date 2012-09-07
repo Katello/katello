@@ -16,6 +16,14 @@
   Date: 9/6/12
   Time: 6:47 PM
 
-%label{:for=>"org_#{@organization.id}", :class=>"label_default_org clickable", :id=>"label_org_#{@organization.id}"}
-  #{@org_label}
-= render :partial=>"common/fav", :locals => {:org=>@organization, :current_user=>current_user}
+
+= check_box_tag "org_#{org.id}", org.id, current_user.default_org == org, {:class=>"default_org", "data-url"=>setup_default_org_user_path(current_user.id)}
+
+- if current_user.default_org == org
+  %span.favorite.favorites_icon-black.sprite{:title=>_("This is your default organization."), :id=>"favorite_#{org.id}"}
+    #{_("This is your default organization.")}
+- else
+  %span.favorite.favorites_icon-grey.sprite{:title=>_("Make this your default organization."), :id=>"favorite_#{org.id}"}
+    #{_("Make this your default organization.")}
+
+= image_tag( "embed/icons/spinner.gif", :class=>"hidden fl fav_spinner")
