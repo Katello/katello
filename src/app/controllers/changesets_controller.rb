@@ -64,7 +64,7 @@ class ChangesetsController < ApplicationController
   end
 
   def edit
-    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:editable=>@environment.changesets_manageable?, :name=>controller_display_name}
+    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:editable=>false, :name=>controller_display_name}
   end
 
   #list item
