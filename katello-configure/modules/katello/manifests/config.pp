@@ -198,15 +198,4 @@ class katello::config {
     default : {}
   }
   
-  # symlink katello binary to headpin if in headpin mode
-  case $katello::params::deployment {
-    'headpin': { 
-      file { "/usr/bin/headpin":
-        ensure => link,
-        target => "/usr/bin/katello",
-        require => File["/usr/bin/katello"]
-      }
-    }
-    default : {}
-  }
 }

@@ -28,6 +28,7 @@ Requires:      %{base_name}-cli-common
 BuildArch:     noarch
 BuildRequires: spacewalk-pylint
 Obsoletes:     katello-headpin-cli < 1.0.1-1
+Provides:      katello-headpin-cli = 1.0.1
 
 %description
 Provides a client package for managing application life-cycle for 
