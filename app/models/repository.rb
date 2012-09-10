@@ -82,6 +82,8 @@ class Repository < ActiveRecord::Base
     filters.count > 0 || product.filters.count > 0
   end
 
+  default_scope :order => 'name ASC'
+
   scope :enabled, where(:enabled => true)
   scope :in_product, lambda{|p|  joins(:environment_product).where("environment_products.product_id" => p.id)}
 
