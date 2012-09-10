@@ -26,7 +26,6 @@ class TestPulpRoles < MiniTest::Unit::TestCase
   end
 
   def teardown
-    @resource.remove(@role_name, @username)
     VCR.use_cassette('pulp_user') do
       Resources::Pulp::User.destroy("integration_test_user")
     end
@@ -46,6 +45,7 @@ class TestPulpRoles < MiniTest::Unit::TestCase
   def test_add
     response = @resource.add(@role_name, @username)
     assert response
+    @resource.remove(@role_name, @username)
   end
 
   def test_remove

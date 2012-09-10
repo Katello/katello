@@ -34,6 +34,7 @@ class TestPulpTask < MiniTest::Unit::TestCase
   include TestPulpTaskBase
 
   def self.before_suite
+    RepositoryHelper.cassette_name = "task"
     RepositoryHelper.create_and_sync_repo
   end
 

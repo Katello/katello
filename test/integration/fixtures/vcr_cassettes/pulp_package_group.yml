@@ -1,5 +1,4 @@
 --- 
-recorded_with: VCR 2.2.4
 http_interactions: 
 - request: 
     method: get
@@ -7,34 +6,35 @@ http_interactions:
     body: 
       string: ""
     headers: 
-      Pulp-User: 
-      - admin
-      Accept-Language: 
-      - en
-      Accept-Encoding: 
-      - gzip, deflate
-      Accept: 
-      - application/json
       Content-Type: 
       - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="3DJquWVu3axVmtZxtLcyaryNJKb5pWIay5jCbPyRq7Y", oauth_signature="N77gfCZtLnJOy5EubMxyy9EF7is%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1346290678", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="Rerjb956yPyAHd4CVMEclpzVXXMSKX1jpE8hOHGijE", oauth_signature="IzsPUT8ytVxI%2FV6mTk2Z9fxNQCI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1347301982", oauth_version="1.0"
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Date: 
-      - Thu, 30 Aug 2012 01:37:58 GMT
-      Connection: 
-      - close
       Content-Type: 
       - application/json
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Connection: 
+      - close
       Content-Length: 
       - "832"
+      Date: 
+      - Mon, 10 Sep 2012 18:33:02 GMT
     body: 
       string: "{\"mammal\": {\"mandatory_package_names\": [\"elephant,giraffe,cheetah,lion,monkey,penguin,squirrel,walrus\", \"penguin\"], \"description\": \"\", \"repo_defined\": true, \"default\": true, \"display_order\": 1024, \"immutable\": true, \"user_visible\": true, \"translated_name\": {}, \"translated_description\": {}, \"conditional_package_names\": {}, \"default_package_names\": [], \"optional_package_names\": [], \"langonly\": null, \"_id\": \"mammal\", \"id\": \"mammal\", \"name\": \"mammal\"}, \"bird\": {\"mandatory_package_names\": [\"penguin\"], \"description\": \"\", \"repo_defined\": true, \"default\": true, \"display_order\": 1024, \"immutable\": true, \"user_visible\": true, \"translated_name\": {}, \"translated_description\": {}, \"conditional_package_names\": {}, \"default_package_names\": [], \"optional_package_names\": [], \"langonly\": null, \"_id\": \"bird\", \"id\": \"bird\", \"name\": \"bird\"}}"
     http_version: 
-  recorded_at: Thu, 30 Aug 2012 01:37:58 GMT
+  recorded_at: Mon, 10 Sep 2012 18:33:02 GMT
+recorded_with: VCR 2.2.4

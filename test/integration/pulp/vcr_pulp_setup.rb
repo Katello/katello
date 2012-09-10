@@ -19,11 +19,12 @@ require 'active_support/core_ext/class/inheritable_attributes'
 require 'active_support/core_ext/hash/indifferent_access'
 require 'active_support/core_ext/object/to_param'
 require 'active_support/core_ext/object/to_query'
-require 'lib/http_resource'
 require 'restclient'
 require 'rails'
-require 'lib/resource_permissions'
 require 'json'
+
+require './lib/http_resource'
+require './lib/resource_permissions'
 
 katello_config = YAML.load_file('/etc/katello/katello.yml') rescue nil
 if katello_config.nil?

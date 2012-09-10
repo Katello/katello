@@ -1,5 +1,4 @@
 --- 
-recorded_with: VCR 2.2.4
 http_interactions: 
 - request: 
     method: get
@@ -7,34 +6,35 @@ http_interactions:
     body: 
       string: ""
     headers: 
-      Pulp-User: 
-      - admin
-      Accept-Language: 
-      - en
-      Accept-Encoding: 
-      - gzip, deflate
-      Accept: 
-      - application/json
       Content-Type: 
       - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept-Language: 
+      - en
+      Accept: 
+      - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="3w87v703j9kZVOhvLUkRy5w9rlFmv4q039MiARsVbs", oauth_signature="j5LS2pfAp1TIenIb96y%2Bt67bBU8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1346290687", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="rCx6uGbeiwdsH600FgIs8BEmg8j6y54UmwoAHKHGq78", oauth_signature="0QrBDz%2BfkZ14nje%2Fpt7PIEMIuDk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1347302000", oauth_version="1.0"
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Date: 
-      - Thu, 30 Aug 2012 01:38:07 GMT
-      Connection: 
-      - close
       Content-Type: 
       - application/json
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Connection: 
+      - close
       Content-Length: 
       - "357"
+      Date: 
+      - Mon, 10 Sep 2012 18:33:20 GMT
     body: 
       string: "[{\"_id\": \"12a0fbdc-900e-4f79-83ac-159cf430696a\", \"name\": null, \"roles\": [\"super-users\"], \"_ns\": \"users\", \"login\": \"admin\", \"id\": \"12a0fbdc-900e-4f79-83ac-159cf430696a\"}, {\"_id\": \"5faf5a42-4fdb-4e77-b35a-d206ee98c49a\", \"name\": \"hidden-kCz1Kt\", \"roles\": [\"super-users\"], \"_ns\": \"users\", \"login\": \"hidden-kCz1Kt\", \"id\": \"5faf5a42-4fdb-4e77-b35a-d206ee98c49a\"}]"
     http_version: 
-  recorded_at: Thu, 30 Aug 2012 01:38:07 GMT
+  recorded_at: Mon, 10 Sep 2012 18:33:21 GMT
+recorded_with: VCR 2.2.4
