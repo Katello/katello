@@ -14,15 +14,25 @@ require 'minitest/autorun'
 require 'test/integration/pulp/vcr_pulp_setup'
 
 
-class TestPulpUser < MiniTest::Unit::TestCase
+module TestPulpUserBase
+
   def setup
-    VCR.insert_cassette('pulp_user')
-    @username = "admin"
     @resource = Resources::Pulp::User
+    VCR.insert_cassette('pulp_user')
   end
 
   def teardown
     VCR.eject_cassette
+  end
+
+end
+
+class TestPulpUser < MiniTest::Unit::TestCase
+  include TestPulpUserBase
+
+  def setup
+    @username = "admin"
+    super
   end
 
   def test_path_without_username
@@ -41,14 +51,41 @@ class TestPulpUser < MiniTest::Unit::TestCase
     assert(@username, response["login"])
   end
 
+end
+
+
+class TestPulpUserCreate < MiniTest::Unit::TestCase
+  include TestPulpUserBase
+
+  def setup
+    @username = "integration_test_user"
+    super
+  end
+
+  def teardown
+    super
+    @resource.destroy("integration_test_user")
+  rescue Exception => e
+  end
+
   def test_create
     response = @resource.create(:login => "integration_test_user", :name => "integration_test_user", :password => "integration_test_password")
     assert response.length > 0
     @resource.destroy("integration_test_user")
   end
+end
+
+
+class TestPulpUserDestroy < MiniTest::Unit::TestCase
+  include TestPulpUserBase
+
+  def setup
+    super
+    @username = "integration_test_user"
+    @resource.create(:login => "integration_test_user", :name => "integration_test_user", :password => "integration_test_password")
+  end
 
   def test_destroy
-    @resource.create(:login => "integration_test_user", :name => "integration_test_user", :password => "integration_test_password")
     response = @resource.destroy("integration_test_user")
     assert response == 200
   end
