@@ -19,7 +19,7 @@
     %h5.fl
       #{_("Display")}
     %span
-      = select_tag "display_errata_type", '<option value="All">All Errata</option><option>Bug</option><option>Enhancement</option><option>Security</option>'.html_safe
+      = select_tag "display_errata_type", '<option value="All">All Errata</option><option value="BugFix">Bug Fix</option><option>Enhancement</option><option>Security</option>'.html_safe
     -#
       %span
         = radio_button_tag "errata_state_radio", "outstanding", true
