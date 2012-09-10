@@ -266,6 +266,10 @@ module Resources
           self.post(path, {:import => File.new(path_to_file, 'rb')}, self.default_headers.except('content-type'))
         end
 
+        def destroy_imports organization_name
+          self.delete(join_path(path(organization_name), 'imports'), self.default_headers)
+        end
+
         def imports organization_name
           imports_json = self.get(join_path(path(organization_name), 'imports'), self.default_headers)
           JSON.parse(imports_json).collect {|s| s.with_indifferent_access}

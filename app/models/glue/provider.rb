@@ -167,6 +167,20 @@ module Glue::Provider
       Resources::Candlepin::Owner.import self.organization.cp_key, zip_file_path, options
     end
 
+    def del_owner_import
+      # This method will delete a manifest that has been imported.  Since it is not possible
+      # to delete the changes associated with a specific manifest, we only support deleting
+      # the import, if there has only been 1 manifest import completed.  It should be noted
+      # that this will destroy all subscriptions associated with the import.
+      imports = self.owner_imports
+      if imports.length == 1
+        Rails.logger.debug "Deleting import for provider: #{name}"
+        Resources::Candlepin::Owner.destroy_imports self.organization.cp_key
+      else
+        Rails.logger.debug "Unable to delete import for provider: #{name}. Reason: a successful import was previously completed."
+      end
+    end
+
     def owner_imports
       Resources::Candlepin::Owner.imports self.organization.cp_key
     end
@@ -175,7 +189,8 @@ module Glue::Provider
       begin
         Rails.logger.debug "Importing manifest for provider #{name}"
         pre_queue.create(:name     => "import manifest #{zip_file_path} for owner: #{self.organization.name}",
-                         :priority => 3, :action => [self, :owner_import, zip_file_path, options])
+                         :priority => 3, :action => [self, :owner_import, zip_file_path, options],
+                         :action_rollback => [self, :del_owner_import])
         pre_queue.create(:name     => "import of products in manifest #{zip_file_path}",
                          :priority => 5, :action => [self, :import_products_from_cp])
         self.save!
