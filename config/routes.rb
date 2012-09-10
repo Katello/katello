@@ -535,6 +535,7 @@ Src::Application.routes.draw do
       resources :sync_plans
       resources :tasks, :only => [:index]
       resources :providers, :only => [:index]
+      match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
       resources :systems, :only => [:index, :create] do
         get :report, :on => :collection
 
@@ -542,7 +543,6 @@ Src::Application.routes.draw do
           get :tasks
         end
       end
-      match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
       resources :activation_keys, :only => [:index] do
         member do
           post :system_groups, :action => :add_system_groups
