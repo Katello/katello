@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.1.3
+Version:       1.1.4
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
@@ -51,6 +51,15 @@ cp -Rp cli_tests/ cli-system-test helpers *zip RPM-GPG-KEY* $RPM_BUILD_ROOT%{hom
 
 
 %changelog
+* Thu Sep 06 2012 Ivan Necas <inecas@redhat.com> 1.1.4-1
+- system test - solving rhsm ordering issue (lzap+git@redhat.com)
+- system test - better random generation (lzap+git@redhat.com)
+- fix un-determinism in rhsm system test (inecas@redhat.com)
+- system tests - PoolId has been renamed to Id (lzap+git@redhat.com)
+- system tests - do not run sudo when running as root (lzap+git@redhat.com)
+- 746765 - systems can be referenced by uuid (lzap+git@redhat.com)
+- cli tests - removing excessive logging (lzap+git@redhat.com)
+
 * Thu Aug 23 2012 Mike McCune <mmccune@redhat.com> 1.1.3-1
 - Changeset#remove_package! fix (pajkycz@gmail.com)
 - Merge pull request #436 from omaciel/userlocale (mmccune@gmail.com)

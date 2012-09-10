@@ -14,6 +14,7 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
+from katello.client.core.utils import update_dict_unless_none
 
 class ActivationKeyAPI(KatelloAPI):
 
@@ -44,11 +45,11 @@ class ActivationKeyAPI(KatelloAPI):
 
     def update(self, orgId, keyId, environmentId, name, description, templateId, usage_limit):
         keyData = {}
-        keyData = self.update_dict(keyData, "environment_id", environmentId)
-        keyData = self.update_dict(keyData, "name", name)
-        keyData = self.update_dict(keyData, "description", description)
-        keyData = self.update_dict(keyData, "system_template_id", templateId)
-        keyData = self.update_dict(keyData, "usage_limit", usage_limit)
+        keyData = update_dict_unless_none(keyData, "environment_id", environmentId)
+        keyData = update_dict_unless_none(keyData, "name", name)
+        keyData = update_dict_unless_none(keyData, "description", description)
+        keyData = update_dict_unless_none(keyData, "system_template_id", templateId)
+        keyData = update_dict_unless_none(keyData, "usage_limit", usage_limit)
 
         path = "/api/organizations/%s/activation_keys/%s/" % (orgId, keyId)
 

@@ -20,6 +20,7 @@ module Glue::Candlepin::Consumer
     base.class_eval do
       before_save :save_candlepin_orchestration
       before_destroy :destroy_candlepin_orchestration
+      after_rollback :rollback_on_candlepin_create, :on => :create
 
       lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds, :installedProducts, :autoheal, :releaseVer, :serviceLevel,
         :initializer => lambda {
@@ -175,7 +176,7 @@ module Glue::Candlepin::Consumer
     end
 
     def to_json
-      super(:methods => [:href, :facts, :idCert, :owner, :autoheal, :release])
+      super(:methods => [:href, :facts, :idCert, :owner, :autoheal, :release, :releaseVer])
     end
 
     def convert_from_cp_fields(cp_json)
@@ -200,6 +201,11 @@ module Glue::Candlepin::Consumer
 
     def destroy_candlepin_orchestration
       pre_queue.create(:name => "delete candlepin consumer: #{self.name}", :priority => 3, :action => [self, :del_candlepin_consumer])
+    end
+
+    # A rollback occurred while attempting to create the consumer; therefore, perform necessary cleanup.
+    def rollback_on_candlepin_create
+      del_candlepin_consumer
     end
 
     def hostname

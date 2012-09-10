@@ -26,4 +26,8 @@ class UserNotice < ActiveRecord::Base
     false
   end
 
+  def read!
+    update_attributes! :viewed => true
+  end
+
 end

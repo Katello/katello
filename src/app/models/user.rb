@@ -52,14 +52,6 @@ class User < ActiveRecord::Base
   validates :email, :presence => true, :if => :not_ldap_mode?
   validates :default_locale, :inclusion => {:in => AppConfig.available_locales, :allow_nil => true, :message => _("must be one of %s") % AppConfig.available_locales.join(', ')}
 
-  # check if the role does not already exist for new username
-  validates_each :username do |model, attr, value|
-    if model.new_record? and Role.find_by_name(value)
-      model.errors.add(:username, "role with the same name '#{value}' already exists")
-    end
-  end
-
-
   # validate the password length before hashing
   validates_each :password do |model, attr, value|
     if AppConfig.warden != 'ldap'
@@ -103,10 +95,13 @@ class User < ActiveRecord::Base
   before_save do |u|
     if u.new_record? and u.own_role.nil?
       # create the own_role where the name will be a string consisting of username and 20 random chars
-      r = Role.create!(:name => "#{u.username}_#{Password.generate_random_string(20)}", :self_role => true)
+      begin
+        role_name = "#{u.username}_#{Password.generate_random_string(20)}"
+      end while Role.exists?(:name => role_name)
+
+      r = Role.create!(:name => role_name, :self_role => true)
       u.roles << r unless u.roles.include? r
       u.own_role = r
-      #      u.save!
     end
   end
 
@@ -324,10 +319,13 @@ class User < ActiveRecord::Base
   end
 
   #Remove up to 5 un-viewed notices
-  def pop_notices
-    to_ret = user_notices.where(:viewed => false).limit(5)
-    to_ret.each { |item| item.update_attributes!(:viewed => true) }
-    to_ret.collect { |notice| { :text => notice.notice.text, :level => notice.notice.level } }
+  def pop_notices(organization = nil, count = 5)
+    notices = Notice.for_user(self).for_org(organization).unread.limit(count == :all ? nil : count)
+    notices.each { |notice| notice.user_notices.each(&:read!) }
+
+    return notices.map do |notice|
+      { :text => notice.text, :level => notice.level }
+    end
   end
 
   def enable_helptip(key)

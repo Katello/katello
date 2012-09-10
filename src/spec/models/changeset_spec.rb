@@ -389,7 +389,7 @@ describe Changeset, :katello => true do
         @tpl1.repositories          = [@repo]
         @changeset.system_templates = [@tpl1]
         @environment.stub(:products).and_return([])
-        lambda { @changeset.apply }.should raise_error(RuntimeError, /does not belong to any promoted product/)
+        lambda { @changeset.apply }.should raise_error(RuntimeError, /if you wish to promote repository/)
       end
 
       it "should promote products" do
