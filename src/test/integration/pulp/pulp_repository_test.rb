@@ -212,7 +212,7 @@ class TestPulpRepositorySync < MiniTest::Unit::TestCase
 
   def test_sync_repo
     response = @resource.sync(RepositoryHelper.repo_id)
-    RepositoryHelper.set_task(response)
+    RepositoryHelper.task = response
     assert response.length > 0
     assert response["method_name"] == "_sync"
   end
@@ -222,12 +222,12 @@ class TestPulpRepositorySync < MiniTest::Unit::TestCase
     response = @resource.sync_status(RepositoryHelper.repo_id)
     assert response.length > 0
     assert response.first['id'] == RepositoryHelper.task['id']
-    RepositoryHelper.set_task(response)
+    RepositoryHelper.task = response 
   end
 
   def test_generate_metadata
     response = @resource.generate_metadata(RepositoryHelper.repo_id)
-    RepositoryHelper.set_task(response)
+    RepositoryHelper.task = response
     assert response.length > 0
     assert response["method_name"] == "_generate_metadata"
   end
@@ -255,7 +255,7 @@ class TestPulpRepositoryClone < MiniTest::Unit::TestCase
     from_repo = OpenStruct.new({ :pulp_id => RepositoryHelper.repo_id })
     to_repo = OpenStruct.new({ :pulp_id => @clone_name, :name => @clone_name })
     response = @resource.clone_repo(from_repo, to_repo)
-    RepositoryHelper.set_task(response)
+    RepositoryHelper.task = response
     assert response.length > 0
     assert response["args"].include?(@clone_name)
   end

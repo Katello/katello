@@ -18,6 +18,7 @@ module RepositoryHelper
   @repo_url = "file://#{File.expand_path(File.dirname(__FILE__))}".gsub("pulp/helpers", "fixtures/repositories/zoo5")
   @repo_id = "integration_test_id"
   @repo_name = @repo_id
+  @cassette_name = "repository"
   @repo_resource = Resources::Pulp::Repository
   @task_resource = Resources::Pulp::Task
 
@@ -41,12 +42,20 @@ module RepositoryHelper
     @repo_resource
   end
 
-  def self.set_task(task)
+  def self.task=(task)
     @task = task
   end
 
   def self.task
     @task
+  end
+
+  def self.cassette_name
+    @cassette_name
+  end
+
+  def self.cassette_name=(name)
+    @cassette_name = name
   end
 
   def self.create_and_sync_repo
@@ -58,7 +67,7 @@ module RepositoryHelper
   def self.create_repo
     repo = nil
     
-    VCR.use_cassette('pulp_repository_helper') do
+    VCR.use_cassette("pulp_#{cassette_name}_helper") do
       repo = @repo_resource.find(@repo_id)
     end
 
@@ -66,7 +75,7 @@ module RepositoryHelper
       destroy_repo
     end
 
-    VCR.use_cassette('pulp_repository_helper') do
+    VCR.use_cassette("pulp_#{cassette_name}_helper") do
       repo = @repo_resource.create(:id => @repo_id, :name=> @repo_name, :arch => 'noarch', :feed => @repo_url)
     end
 
@@ -76,7 +85,7 @@ module RepositoryHelper
   end
 
   def self.sync_repo
-    VCR.use_cassette('pulp_repository_helper') do
+    VCR.use_cassette("pulp_#{cassette_name}_helper") do
       @task = @repo_resource.sync(@repo_name)
 
       @task = @task_resource.cancel(@task["id"])
@@ -92,7 +101,7 @@ module RepositoryHelper
   def self.destroy_repo(id=@repo_id)
     p "Destroying Repository."
 
-    VCR.use_cassette('pulp_repository_helper') do
+    VCR.use_cassette("pulp_#{cassette_name}_helper") do
       if @task
         while !(['finished', 'error', 'timed_out', 'canceled', 'reset'].include?(@task['state'])) do
           @task = @task_resource.find([@task["id"]]).first

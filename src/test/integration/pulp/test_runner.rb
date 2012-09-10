@@ -12,7 +12,7 @@
 require 'rubygems'
 require 'minitest/unit'
 require 'minitest/autorun'
-require 'test/integration/pulp/vcr_pulp_setup'
+require './test/integration/pulp/vcr_pulp_setup'
 
 
 class PulpMiniTestRunner
