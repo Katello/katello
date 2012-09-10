@@ -197,4 +197,5 @@ class katello::config {
     }
     default : {}
   }
+  
 }
