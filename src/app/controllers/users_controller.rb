@@ -305,6 +305,7 @@ class UsersController < ApplicationController
     if org && !org.nil?
       current_user.default_org = org
       default_org = Organization.find_by_id(current_user.default_org)
+      current_user.save!
       notify.success _("Default Organization: '%s' saved.") % default_org.name
     else
       current_user.default_org = nil
