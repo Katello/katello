@@ -6,9 +6,11 @@ class AddLabelsToRepository < ActiveRecord::Migration
         execute "update repositories set label = '#{repo.name}' where id= #{repo.id}"
       end
     end
+    add_index(:repositories, [:label, :environment_product_id], :unique => true)
   end
 
   def self.down
+    remove_index(:repositories, :column =>[:label, :environment_product_id])
     change_table(:repositories) { |t| t.remove :label}
   end
 end
