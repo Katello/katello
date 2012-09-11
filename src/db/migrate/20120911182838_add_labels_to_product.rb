@@ -5,6 +5,7 @@ class AddLabelsToProduct < ActiveRecord::Migration
       Product.all.each do |prod|
         execute "update products set label = '#{prod.name}' where id= #{prod.id}"
       end
+      t.change(:label, :string, :null => false)
     end
   end
 
