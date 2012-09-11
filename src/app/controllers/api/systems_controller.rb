@@ -11,6 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Api::SystemsController < Api::ApiController
+  include CustomInfosMethods
+
   respond_to :json
 
   before_filter :verify_presence_of_organization_or_environment, :only => [:create, :index, :activate]
@@ -21,7 +23,9 @@ class Api::SystemsController < Api::ApiController
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
                                         :upload_package_profile, :errata, :package_profile, :subscribe,
                                         :unsubscribe, :subscriptions, :pools, :enabled_repos, :releases,
-                                        :add_system_groups, :remove_system_groups]
+                                        :add_system_groups, :remove_system_groups, :create_system_custom_infos,
+                                        :index_system_custom_infos, :show_system_custom_infos,
+                                        :update_system_custom_infos, :destroy_system_custom_infos]
   before_filter :find_task, :only => [:task_show]
   before_filter :authorize, :except => :activate
 
@@ -63,7 +67,12 @@ class Api::SystemsController < Api::ApiController
       :task_show => read_system,
       :enabled_repos => consumer_only,
       :add_system_groups => edit_system,
-      :remove_system_groups => edit_system
+      :remove_system_groups => edit_system,
+      :create_system_custom_infos => edit_system,
+      :index_system_custom_infos => read_system,
+      :show_system_custom_infos => read_system,
+      :update_system_custom_infos => edit_system,
+      :destroy_system_custom_infos => edit_system
     }
   end
 
@@ -300,6 +309,26 @@ class Api::SystemsController < Api::ApiController
     render :json => @system.to_json
   end
 
+  def create_system_custom_infos
+    render :json => create_custom_info(@system, params).to_json
+  end
+
+  def index_system_custom_infos
+    render :json => index_custom_info(@system).to_json
+  end
+
+  def show_system_custom_infos
+    render :json => show_custom_info(@system, params).to_json
+  end
+
+  def update_system_custom_infos
+    render :json => update_custom_info(@system, params).to_json
+  end
+
+  def destroy_system_custom_infos
+    render :json => destroy_custom_info(@system, params)
+  end
+
   protected
 
   def find_organization
@@ -360,10 +389,11 @@ class Api::SystemsController < Api::ApiController
   end
 
   def find_system
-    @system = System.first(:conditions => { :uuid => params[:id] })
+    system_id = params[:id] || params[:system_id]
+    @system = System.first(:conditions => { :uuid => system_id })
     if @system.nil?
-      Resources::Candlepin::Consumer.get params[:id] # check with candlepin if system is Gone, raises RestClient::Gone
-      raise HttpErrors::NotFound, _("Couldn't find system '#{params[:id]}'")
+      Resources::Candlepin::Consumer.get system_id # check with candlepin if system is Gone, raises RestClient::Gone
+      raise HttpErrors::NotFound, _("Couldn't find system '#{system_id}'")
     end
     @system
   end

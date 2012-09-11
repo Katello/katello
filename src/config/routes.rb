@@ -449,6 +449,16 @@ Src::Application.routes.draw do
         end
       end
       resource :packages, :action => [:create, :update, :destroy], :controller => :system_packages
+
+      resource :custom_infos , :controller => :systems do
+        match '/', :action => :create_system_custom_infos, :via => :post
+        match '/', :action => :index_system_custom_infos, :via => :get
+        match '/:keyname', :action => :show_system_custom_infos, :via => :get
+        match '/:keyname/:current_value', :action => :update_system_custom_infos, :via => :put
+        match '/:keyname/:value', :action => :destroy_system_custom_infos, :via => :delete
+        match '/:keyname', :action => :destroy_system_custom_infos, :via => :delete
+        match '/', :action => :destroy_system_custom_infos, :via => :delete
+      end
     end
 
     resources :providers, :except => [:index] do
