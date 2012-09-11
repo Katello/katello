@@ -1,4 +1,4 @@
-= javascript :edit_helpers, :repository_edit
+= javascript :edit_helpers
 
 = javascript do
   :plain
@@ -18,7 +18,7 @@
       #{_("Remove Repository")}
     %span.hidden-text.hidden
       .la.content-tipsy
-        = _("Before removing this repository from the product, it must first be deleted from the following environments using a deletion changeset: ") + cloned_in_environments.to_s
+        = _("Before removing this repository from the product, it must first be deleted from the following environments using a deletion changeset: ") + cloned_in_environments.join(', ')
 
 
 = content_for :subcontent do
