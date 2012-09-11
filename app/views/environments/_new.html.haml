@@ -12,6 +12,7 @@
   = kt_form_for KTEnvironment.new, :url => organization_environments_path(@organization.cp_key), :remote=>true, :html => {:id=>"new_subpanel"} do |form|
 
     = form.text_field :name, :label => _("Name")
+    = form.text_field :label, :label => _("Label")
 
     = form.text_area :description, :size => "40x5", :label => _("Description")
 

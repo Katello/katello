@@ -19,6 +19,10 @@
       = form.field :envname, :label => _("Name") do
         = text_field_tag 'environment[name]', nil, :tabindex => form.tabindex, :size => 30
 
+      = form.field :envlabel, :label => _("Label") do
+        = text_field_tag 'environment[name]', nil, :tabindex => form.tabindex, :size => 30
+
+
       = form.field :envdescription, :label => _("Description") do
         = text_area_tag 'environment[description]', nil, :tabindex => form.tabindex, :size => "40x5"
 
