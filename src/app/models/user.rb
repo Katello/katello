@@ -479,6 +479,29 @@ class User < ActiveRecord::Base
     self.preferences[:user][:locale] = locale
   end
 
+  def default_org
+    org_id = self.preferences[:user][:default_org] rescue nil
+    if org_id && !org_id.nil? && org_id != "nil"
+      org = Organization.find_by_id(org_id)
+      return org.id if allowed_organizations.include?org
+    else
+      return nil
+    end
+
+  end
+
+  #set the default org if it's an actual org_id
+  def default_org= org_id
+    self.preferences[:user] = { } unless self.preferences.has_key? :user
+    if !org_id.nil? && org_id != "nil"
+      organization = Organization.find_by_id(org_id)
+      self.preferences[:user][:default_org] = organization.id
+    else
+      self.preferences[:user][:default_org] = nil
+    end
+  end
+
+
   def subscriptions_match_system_preference
     self.preferences[:user][:subscriptions_match_system] rescue false
   end
