@@ -21,6 +21,7 @@ test_success "system releases uuid" system releases --uuid="$UUID" --org="$TEST_
 test_success "system list" system list --org="$TEST_ORG"
 
 test_success "system group create" system_group create --name $SYS_GROUP_NAME --org="$TEST_ORG"
+test_failure "system add fake to group" system_group add_systems --system_uuids "dont_exist" --name "$SYS_GROUP_NAME" --org "$TEST_ORG"
 test_success "system add group" system add_to_groups --name $SYSTEM_NAME_ADMIN --system_groups $SYS_GROUP_NAME --org="$TEST_ORG"
 test_success "system remove group" system remove_from_groups --name $SYSTEM_NAME_ADMIN --system_groups $SYS_GROUP_NAME --org="$TEST_ORG"
 test_success "system add group uuid" system add_to_groups --uuid $UUID --system_groups $SYS_GROUP_NAME --org="$TEST_ORG"

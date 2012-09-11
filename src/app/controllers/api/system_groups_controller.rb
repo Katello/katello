@@ -213,7 +213,9 @@ class Api::SystemGroupsController < Api::ApiController
   end
 
   def system_uuids_to_ids  ids
-    System.where(:uuid=>ids).collect{|s| s.id}
+    system_ids = System.where(:uuid=>ids).collect{|s| s.id}
+    raise Errors::NotFound.new(_("Systems [%s] not found.") % ids.join(',')) if system_ids.blank?
+    system_ids
   end
 
 end
