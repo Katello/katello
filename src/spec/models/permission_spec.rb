@@ -112,7 +112,7 @@ describe Permission do
   context "global org tests" do
     before do
       disable_org_orchestration
-      @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
+      @organization = Organization.create!(:name=>'test_organization', :label=> 'test_organization', :cp_key => 'test_organization')
       add_test_type(:bar_resource_type, [:foo_verb])
     end
     describe "allow all resources  globally" do
@@ -201,7 +201,7 @@ describe Permission do
   context "non global org tests" do
     before do
       disable_org_orchestration
-      @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
+      @organization = Organization.create!(:name=>'test_organization', :label=> 'test_organization', :cp_key => 'test_organization')
       add_test_type :bar_resource_type, ["foo_verb"]
     end
     describe "allow all resources orgwise" do
@@ -274,7 +274,7 @@ describe Permission do
   context "org_id_create" do
     before do
       disable_org_orchestration
-      @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
+      @organization = Organization.create!(:name=>'test_organization', :label=> 'test_organization', :cp_key => 'test_organization')
       @res_type_name = "TestResourceType"
       @res_type = ResourceType.find_or_create_by_name(@res_type_name)
       @magic_perm = Permission.create!(:name => 'test1000', :role => @some_role, :all_verbs => true,
@@ -288,7 +288,7 @@ describe Permission do
   context "all_tag tests" do
     before do
       disable_org_orchestration
-      @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
+      @organization = Organization.create!(:name=>'test_organization', :label=> 'test_organization', :cp_key => 'test_organization')
       @role = Role.find_or_create_by_name(:name => 'another_Role')
     end
 

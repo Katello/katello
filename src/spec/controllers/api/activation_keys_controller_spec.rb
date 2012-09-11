@@ -30,6 +30,7 @@ describe Api::ActivationKeysController do
     @organization = Organization.create! do |o|
       o.id = 1234
       o.name = "org-1234"
+      o.label = "org-1234"
       o.cp_key = "org-1234"
     end
 

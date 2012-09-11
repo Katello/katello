@@ -23,7 +23,7 @@ describe SystemTemplate, :katello => true do
     disable_product_orchestration
     disable_repo_orchestration
 
-    @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
+    @organization = Organization.create!(:name=>'test_organization', :label=> 'test_organization', :cp_key => 'test_organization')
     @environment = KTEnvironment.create!(:name => 'env_1', :prior => @organization.library.id, :organization => @organization)
     @provider     = @organization.redhat_provider
 

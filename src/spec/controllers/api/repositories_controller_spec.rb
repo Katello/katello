@@ -142,7 +142,7 @@ describe Api::RepositoriesController, :katello => true do
       disable_org_orchestration
       disable_product_orchestration
 
-      @organization = Organization.create!(:name => ProductTestData::ORG_ID, :cp_key => 'admin-org-37070')
+      @organization = Organization.create!(:name=>ProductTestData::ORG_ID, :label=> ProductTestData::ORG_ID, :cp_key => 'admin-org-37070')
       @provider     = @organization.redhat_provider
       @product = Product.new({:name => "product for repo test"})
       @product.provider = @provider
