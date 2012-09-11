@@ -60,7 +60,10 @@ class UserSessionsController < ApplicationController
       self.current_organization = org
     end
     if self.current_organization == org
-      redirect_to dashboard_index_url
+      respond_to do |format|
+        format.html {redirect_to dashboard_index_path}
+        format.js { render :js => "CUI.Login.Actions.redirecter('#{dashboard_index_url}')" }
+      end
     end
   end
 
@@ -79,12 +82,34 @@ class UserSessionsController < ApplicationController
       User.current = current_user
       # set ldap roles
       current_user.set_ldap_roles if AppConfig.ldap_roles
-      # notice the user
-      notify.success _("Login Successful")
+
+      orgs = current_user.allowed_organizations
+      default_org = current_user.default_org
+      user_default_org = nil
+      if default_org && !default_org.nil?
+        user_default_org = (Organization.find(default_org))
+      end
+
       if current_organization.nil?
-        render :partial => "/user_sessions/interstitial.js.haml"
+        if orgs.length == 1
+          params[:org_id] = orgs[0].id
+          # notice the user
+          notify.success _("Login Successful")
+          set_org
+        elsif !user_default_org.nil? && orgs.include?(user_default_org)
+          params[:org_id] = default_org
+          # notice the user
+          notify.success _("Login Successful, logging into '%s' ") % user_default_org.name
+          set_org
+        else
+          # notice the user, please choose an org
+          notify.success _("Login Successful, please choose an Organization")
+          render :partial =>"/user_sessions/interstitial.js.haml", :locals=> {:num_orgs => orgs.length, :redir_path => dashboard_index_path}
+        end
       else
-        redirect_to dashboard_index_url
+        # notice the user, please choose an org
+        notify.success _("Login Successful, please choose an Organization")
+        render :partial =>"/user_sessions/interstitial.js.haml", :locals=> {:num_orgs => orgs.length, :redir_path => dashboard_index_path}
       end
     end
   end
