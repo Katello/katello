@@ -146,8 +146,8 @@ describe ChangesetsController, :katello => true do
       response.should_not be_success
     end
 
-    it 'should cause an exception if no environment id is present' do
-      controller.should notify.exception
+    it 'should cause an error notification if no environment id is present' do
+      controller.should notify.error
       post 'create', {:changeset => { :name => 'Test/Changeset 4.5'}}
       response.should_not be_success
     end
