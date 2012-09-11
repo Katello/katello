@@ -46,7 +46,11 @@ class RepositoriesController < ApplicationController
   end
 
   def edit
-    render :partial => "edit", :layout => "tupane_layout", :locals=>{:editable=>@product.editable?}
+    render :partial => "edit", :layout => "tupane_layout",
+           :locals=>{
+               :editable=> (@product.editable? and not @repository.promoted?),
+               :cloned_in_environments => @repository.product.environments.select {|env| @repository.is_cloned_in?(env)}.map(&:name)
+           }
   end
 
   def create
@@ -87,10 +91,8 @@ class RepositoriesController < ApplicationController
   end
 
   def destroy
-    r = Repository.find(@repository[:id])
-    name = r.name
-    @product.delete_repo_by_id(@repository[:id])
-    notify.success _("Repository '%s' removed.") % name
+    @repository.destroy
+    notify.success _("Repository '%s' removed.") % @repository.name
     render :partial => "common/post_delete_close_subpanel", :locals => {:path=>products_repos_provider_path(@provider.id)}
   end
 
