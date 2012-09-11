@@ -26,6 +26,8 @@ class System < ActiveRecord::Base
   include AsyncOrchestration
   include IndexedModel
 
+  after_rollback :rollback_on_create, :on => :create
+
   index_options :extended_json=>:extended_index_attrs,
                 :json=>{:only=> [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id]},
                 :display_attrs=>[:name, :description, :id, :uuid, :created_at, :lastCheckin, :system_group]
@@ -54,7 +56,7 @@ class System < ActiveRecord::Base
   belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :systems
   belongs_to :system_template
 
-  has_many :task_statuses, :as => :task_owner
+  has_many :task_statuses, :as => :task_owner, :dependent => :destroy
 
   has_many :system_activation_keys, :dependent => :destroy
   has_many :activation_keys, :through => :system_activation_keys
@@ -63,8 +65,8 @@ class System < ActiveRecord::Base
   has_many :system_groups, {:through => :system_system_groups, :before_add => :add_pulp_consumer_group, :before_remove => :remove_pulp_consumer_group}.merge(update_association_indexes)
 
   validates :environment, :presence => true, :non_library_environment => true
+  # multiple systems with a single name are supported
   validates :name, :presence => true, :no_trailing_space => true
-  validates_uniqueness_of :name, :scope => :environment_id
   validates :description, :katello_description_format => true
   validates_length_of :location, :maximum => 255
   validates :sockets, :numericality => { :only_integer => true, :greater_than => 0 }, :allow_blank => true, :allow_nil => true, :on => {:create, :update}
@@ -249,6 +251,14 @@ class System < ActiveRecord::Base
      :system_group=>self.system_groups.collect{|g| g.name},
      :system_group_ids=>self.system_group_ids
     }
+  end
+
+  # A rollback occurred while attempting to create the system; therefore, perform necessary cleanup.
+  def rollback_on_create
+    # remove the system from elasticsearch
+    system_id = "id:#{self.id}"
+    Tire::Configuration.client.delete "#{Tire::Configuration.url}/katello_system/_query?q=#{system_id}"
+    Tire.index('katello_system').refresh
   end
 
   private

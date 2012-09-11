@@ -607,5 +607,9 @@ class ApplicationController < ActionController::Base
     end
     input
   end
+
+  def default_notify_options
+    { :organization => current_organization }
+  end
 end
 

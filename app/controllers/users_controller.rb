@@ -257,7 +257,7 @@ class UsersController < ApplicationController
     if  @user.update_attributes(params[:user])
       notify.success _("User updated successfully.")
 
-      if not search_validate(User, user.id, params[:search])
+      if not search_validate(User, @user.id, params[:search])
         notify.message _("'%s' no longer matches the current search criteria.") % @user["name"]
       end
 
@@ -341,5 +341,10 @@ class UsersController < ApplicationController
   def controller_display_name
     return 'user'
   end
+
+  def default_notify_options
+    super.merge :organization => nil
+  end
+
 
 end

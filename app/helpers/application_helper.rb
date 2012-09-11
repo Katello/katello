@@ -182,10 +182,6 @@ module ApplicationHelper
     proc.call(:environment=> env, :next_environment=>next_env, :organization=>org)
   end
 
-  def get_new_notices
-    {:new_notices=>current_user.pop_notices}
-  end
-
   # auto_tab_index: this method may be used to simplify adding a tabindex to UI forms.
   def auto_tab_index
     @current_index ||= 0
