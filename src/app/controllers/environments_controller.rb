@@ -40,7 +40,7 @@ class EnvironmentsController < ApplicationController
 
   def param_rules
     {
-      :create => {:kt_environment => [:name, :description, :prior]},
+      :create => {:kt_environment => [:name, :label, :description, :prior]},
       :update => {:kt_environment  => [:name, :description, :prior]}
     }
   end
@@ -72,6 +72,7 @@ class EnvironmentsController < ApplicationController
     env_params = {:name => params[:kt_environment][:name],
               :description => params[:kt_environment][:description],
               :prior => params[:kt_environment][:prior],
+              :label => params[:kt_environment][:label],
               :organization_id => @organization.id}
     @environment = KTEnvironment.new env_params
     @environment.save!

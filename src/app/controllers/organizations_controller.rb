@@ -79,7 +79,7 @@ class OrganizationsController < ApplicationController
     @organization.save!
 
     if env_params[:envname].present?
-      @new_env = KTEnvironment.new(:name => env_params[:name], :description => env_params[:description])
+      @new_env = KTEnvironment.new(:name => env_params[:name], :label => env_params[:label], :description => env_params[:description])
       @new_env.organization = @organization
       @new_env.prior = @organization.library
       @new_env.save!

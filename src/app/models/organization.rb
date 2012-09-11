@@ -83,7 +83,7 @@ class Organization < ActiveRecord::Base
   end
 
   def create_library
-    self.library = KTEnvironment.new(:name => "Library", :library => true, :organization => self)
+    self.library = KTEnvironment.new(:name => "Library",:label => "Library",  :library => true, :organization => self)
   end
 
   def create_redhat_provider

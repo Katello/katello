@@ -13,7 +13,7 @@
 class KatelloLabelFormatValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     if value
-      record.errors[attribute] << N_("cannot contain non ascii characters") unless value =~ /^\w+$/
+      record.errors[attribute] << N_("cannot contain non ascii characters") unless value =~ /^[a-zA-Z0-9_-]+$/
       NoTrailingSpaceValidator.validate_trailing_space(record, attribute, value)
       KatelloLabelFormatValidator.validate_length(record, attribute, value)
     else
