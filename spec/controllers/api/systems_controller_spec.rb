@@ -59,7 +59,7 @@ describe Api::SystemsController do
     Resources::Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Resources::Pulp::Consumer.stub!(:update).and_return(true)
 
-    @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
+    @organization = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
     @environment_1 = KTEnvironment.create!(:name => 'test_1', :prior => @organization.library.id, :organization => @organization)
 
     @system_group_1 = SystemGroup.create!(:name => 'System Group 1', :organization_id => @organization.id )

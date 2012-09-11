@@ -18,7 +18,7 @@ describe KTEnvironment do
     before do
       disable_product_orchestration
       disable_org_orchestration
-      @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
+      @organization = Organization.create!(:name=>'test_organization', :label=> 'test_organization', :cp_key => 'test_organization')
       @env_name =  'test_environment'
       @environment = KTEnvironment.create!({:name => @env_name, :organization => @organization, :prior => @organization.library})
     end
@@ -79,7 +79,7 @@ describe KTEnvironment do
 
       @env_name =  'test_environment'
 
-      @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
+      @organization = Organization.create!(:name=>'test_organization', :label=> 'test_organization', :cp_key => 'test_organization')
       @provider = @organization.redhat_provider
 
       @first_product = Product.new(:name =>"prod1", :cp_id => '12345', :provider => @provider, :environments => [@organization.library])

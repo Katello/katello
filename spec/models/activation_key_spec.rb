@@ -24,7 +24,7 @@ describe ActivationKey do
     disable_consumer_group_orchestration
     disable_product_orchestration
 
-    @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
+    @organization = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
     @environment_1 = KTEnvironment.create!(:name => 'dev', :prior => @organization.library.id, :organization => @organization)
     @environment_2 = KTEnvironment.create!(:name => 'test', :prior => @environment_1.id, :organization => @organization)
     @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @environment_1) if AppConfig.katello?
@@ -66,7 +66,7 @@ describe ActivationKey do
     end
 
     it "should be invalid if environment in another org is specified" do
-      org_2 = Organization.create!(:name => 'test_org2', :cp_key => 'test_org2')
+      org_2 = Organization.create!(:name=>'test_org2', :label=> 'test_org2', :cp_key => 'test_org2')
       env_1_org2 = KTEnvironment.create!(:name => 'dev', :prior => org_2.library.id, :organization => org_2)
       @akey.name = 'invalid key'
       @akey.organization=@organization

@@ -23,6 +23,7 @@ describe Api::SyncPlansController do
 
     @organization = Organization.create! do |o|
       o.name = "org-1234"
+      o.label = "org-1234"
       o.cp_key = "org-1234"
     end
   end
