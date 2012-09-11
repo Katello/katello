@@ -57,8 +57,9 @@ $(document).ready(function() {
         $(".multiselect").multiselect({"dividerLocation":0.5, "sortable":false});
 
         var org_selector = $('#org_id_org_id');
-        org_selector.change(function(event) {
+        org_selector.live('change', function(event) {
             var refill = $('#env_box');
+            var spinner = $('#org_spinner');
             var selected_org_id = org_selector.val();
 
             if(!selected_org_id) {
@@ -72,7 +73,8 @@ $(document).ready(function() {
                 if (env_select.ajax_params !== undefined) {
                     params = env_select.ajax_params;
                 }
-
+                spinner.show();
+                refill.html('');
                 $.ajax({
                     type: "GET",
                     url: url,
@@ -82,8 +84,14 @@ $(document).ready(function() {
                         // On successful update, update the original env id and disable save button
                         env_select.init();
                         env_select.env_changed_callback(env_select.get_selected_env());
+                        spinner.hide();
                     }
                 });
+            }
+        }).live('keypress', function(e) {
+            var keyCode = e.keyCode || e.which;
+            if (keyCode == 38 || keyCode == 40) { // if up or down key is pressed
+               $(this).change(); // trigger the change event
             }
         });
 
