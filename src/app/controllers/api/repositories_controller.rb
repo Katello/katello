@@ -91,7 +91,7 @@ class Api::RepositoriesController < Api::ApiController
     # TODO: these should really be done as validations, but the orchestration engine currently converts them into OrchestrationExceptions
     #
     raise HttpErrors::BadRequest, _("Repositories can be deleted only in Library environment.") if not @repository.environment.library?
-    raise HttpErrors::BadRequest, _("Repository cannot be deleted since it has already been promoted. Please demote repository before deleting it.") if not @repository.promoted?
+    raise HttpErrors::BadRequest, _("Repository cannot be deleted since it has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it.") if not @repository.promoted?
 
     @repository.destroy
     render :text => _("Deleted repository '#{params[:id]}'"), :status => 200
