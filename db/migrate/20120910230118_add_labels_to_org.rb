@@ -5,6 +5,7 @@ class AddLabelsToOrg < ActiveRecord::Migration
       Organization.all.each do |org|
         execute "update organizations set label = '#{org.cp_key}' where id= #{org.id}"
       end
+      t.change(:label, :string, :null => false)
     end
     add_index(:organizations, [:label], :unique => true)
   end

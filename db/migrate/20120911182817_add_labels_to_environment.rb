@@ -5,12 +5,13 @@ class AddLabelsToEnvironment < ActiveRecord::Migration
       KTEnvironment.all.each do |env|
         execute "update environments set label = '#{env.name}' where id= #{env.id}"
       end
+      t.change(:label, :string, :null => false)
     end
     add_index(:environments, [:label, :organization_id], :unique => true)
   end
 
   def self.down
-    #remove_index(:environments, :column =>[:label, :organization_id])
+    remove_index(:environments, :column =>[:label, :organization_id])
     change_table(:environments) { |t| t.remove :label}
   end
 end
