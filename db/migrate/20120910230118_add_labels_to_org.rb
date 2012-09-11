@@ -6,9 +6,11 @@ class AddLabelsToOrg < ActiveRecord::Migration
         execute "update organizations set label = '#{org.cp_key}' where id= #{org.id}"
       end
     end
+    add_index(:organizations, [:label], :unique => true)
   end
 
   def self.down
+    remove_index(:organizations, :column => [:label])
     change_table(:organizations) { |t| t.remove :label}
   end
 
