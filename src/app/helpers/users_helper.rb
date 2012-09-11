@@ -29,14 +29,12 @@ module UsersHelper
     if optional
       selected = org_id
       prompt = nil
-      choices.unshift [_('No Default Organization'), nil]
+      choices.unshift [_('Select Organization'), nil]
     else
       selected = org_id || current_organization.id
       prompt = _('Select Organization')
     end
-    select(:org_id, "org_id", choices,
-           {:prompt => prompt, :id=>"org_field",
-           :selected => selected})
+    select(:org_id, "org_id", choices, {:prompt => prompt, :id=>"org_field", :selected => selected}, {:class=>"one-line-ellipsis", :style=>"width: 300px; max-width: 300px"})
   end
 
   def locale_select(locale=nil)
