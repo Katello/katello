@@ -10,7 +10,7 @@ describe Changeset, :katello => true do
       disable_user_orchestration
 
       User.current  = User.find_or_create_by_username(:username => 'admin', :password => 'admin12345')
-      @organization = Organization.create!(:name => 'candyroom', :cp_key => 'test_organization')
+      @organization = Organization.create!(:name=>'candyroom', :label=> 'candyroom', :cp_key => 'test_organization')
       @environment  = KTEnvironment.create!(:name         => 'julia', :prior => @organization.library,
                                             :organization => @organization)
       @changeset    = PromotionChangeset.create!(:environment => @environment, :name => "foo-changeset")

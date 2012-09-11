@@ -30,7 +30,7 @@ describe Api::PermissionsController do
 
   before (:each) do
     disable_org_orchestration
-    @org = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
+    @org = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
     @role = Role.new(:name => "test_role", :description=> "role description")
     @perm = Permission.new(:name => "permission_x", :description => "permission description", :role => @role)
     Role.stub(:find).with(role_id).and_return(@role)

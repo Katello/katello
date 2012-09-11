@@ -24,7 +24,7 @@ describe SystemGroup do
   before(:each) do
     disable_org_orchestration
     disable_consumer_group_orchestration
-    @org = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
+    @org = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
 
     @group = SystemGroup.create!(:name=>"TestSystemGroup", :organization=>@org)
 
@@ -51,7 +51,7 @@ describe SystemGroup do
     end
 
     it "should allow systems groups with the same name to be creatd in different orgs" do
-      @org2 = Organization.create!(:name => 'test_org2', :cp_key => 'test_org2')
+      @org2 = Organization.create!(:name=>'test_org2', :label=> 'test_org2', :cp_key => 'test_org2')
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
       grp2 = SystemGroup.create(:name=>"TestGroup", :organization=>@org2)
       grp2.new_record?.should == false

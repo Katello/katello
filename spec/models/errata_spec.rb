@@ -18,7 +18,7 @@ describe Glue::Pulp::Errata, :katello => true do
   before (:each) do
     disable_errata_orchestration
     disable_org_orchestration
-    @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
+    @organization = Organization.create!(:name=>'test_organization', :label=> 'test_organization', :cp_key => 'test_organization')
     @library = @organization.library
 
     @repo = Repository.new(:pulp_id => "repo-123")
