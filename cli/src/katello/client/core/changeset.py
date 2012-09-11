@@ -21,7 +21,8 @@ from katello.client import constants
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import test_record, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask, format_task_errors
+from katello.client.core.utils import test_record, run_spinner_in_bg, format_date, wait_for_async_task, \
+    AsyncTask, format_task_errors
 from katello.client.api.utils import get_environment, get_changeset, get_template, get_repo, get_product
 from katello.client.utils import printer
 from katello.client.utils.encoding import u_str
@@ -55,12 +56,13 @@ class List(ChangesetAction):
 
         self.printer.add_column('id')
         self.printer.add_column('name')
-        self.printer.add_column('type')
+        self.printer.add_column('action_type')
         self.printer.add_column('updated_at', formatter=format_date)
         self.printer.add_column('state')
         self.printer.add_column('environment_id')
         self.printer.add_column('environment_name')
-        if verbose: self.printer.add_column('description', multiline=True)
+        if verbose:
+            self.printer.add_column('description', multiline=True)
 
         self.printer.set_header(_("Changeset List"))
         self.printer.print_items(changesets)
@@ -81,7 +83,8 @@ class Info(ChangesetAction):
     def check_options(self, validator):
         validator.require(('org', 'name', 'environment'))
 
-    def format_item_list(self, key, items):
+    @classmethod
+    def format_item_list(cls, key, items):
         return "\n".join([i[key] for i in items])
 
     def get_dependencies(self, cset_id):
@@ -191,10 +194,10 @@ class UpdateContent(ChangesetAction):
             return patch
 
     class PatchItemBuilder(object):
-        def __init__(self, org_name, env_name, type):
+        def __init__(self, org_name, env_name, type_in):
             self.org_name = org_name
             self.env_name = env_name
-            self.type = type
+            self.type = type_in
             # Use current env if we are doing a deletion otherwise use the prior
             if self.type == 'deletion':
                 self.env_name = get_environment(org_name, env_name)['name']
@@ -299,19 +302,21 @@ class UpdateContent(ChangesetAction):
     def __init__(self):
         self.current_product = None
         super(UpdateContent, self).__init__()
+        self.items = {}
 
 
-    def store_from_product(self, option, opt_str, value, parser):
+    # pylint: disable=W0613
+    def _store_from_product(self, option, opt_str, value, parser):
         self.current_product = u_str(value)
         parser.values.from_product = True
 
-    def store_item_with_product(self, option, opt_str, value, parser):
+    def _store_item_with_product(self, option, opt_str, value, parser):
         if parser.values.from_product == None:
             raise OptionValueError(_("%s must be preceded by %s") % (option, "--from_product"))
 
         self.items[option.dest].append({"name": u_str(value), "product": self.current_product})
 
-    def store_item(self, option, opt_str, value, parser):
+    def _store_item(self, option, opt_str, value, parser):
         self.items[option.dest].append({"name": u_str(value)})
 
     def setup_parser(self, parser):
@@ -324,27 +329,27 @@ class UpdateContent(ChangesetAction):
         parser.add_option('--new_name', dest='new_name',
                                help=_("new changeset name"))
         parser.add_option('--add_product', dest='add_product', type="string",
-                               action="callback", callback=self.store_item,
+                               action="callback", callback=self._store_item,
                                help=_("product to add to the changeset"))
         parser.add_option('--remove_product', dest='remove_product', type="string",
-                               action="callback", callback=self.store_item,
+                               action="callback", callback=self._store_item,
                                help=_("product to remove from the changeset"))
         parser.add_option('--add_template', dest='add_template', type="string",
-                               action="callback", callback=self.store_item,
+                               action="callback", callback=self._store_item,
                                help=_("name of a template to be added to the changeset"))
         parser.add_option('--remove_template', dest='remove_template', type="string",
-                               action="callback", callback=self.store_item,
+                               action="callback", callback=self._store_item,
                                help=_("name of a template to be removed from the changeset"))
         parser.add_option('--from_product', dest='from_product',
-                               action="callback", callback=self.store_from_product, type="string",
+                               action="callback", callback=self._store_from_product, type="string",
                                help=_("determines product from which the packages/errata/repositories are picked"))
 
         for ct in self.productDependentContent:
             parser.add_option('--add_' + ct, dest='add_' + ct,
-                                   action="callback", callback=self.store_item_with_product, type="string",
+                                   action="callback", callback=self._store_item_with_product, type="string",
                                    help=_(ct + " to add to the changeset"))
             parser.add_option('--remove_' + ct, dest='remove_' + ct,
-                                   action="callback", callback=self.store_item_with_product, type="string",
+                                   action="callback", callback=self._store_item_with_product, type="string",
                                    help=_(ct + " to remove from the changeset"))
         self.reset_items()
 
@@ -373,7 +378,8 @@ class UpdateContent(ChangesetAction):
 
         self.update(cset["id"], csNewName, csDescription)
         addPatch = self.PatchBuilder.build_patch('add', self.AddPatchItemBuilder(orgName, envName, csType), items)
-        removePatch = self.PatchBuilder.build_patch('remove', self.RemovePatchItemBuilder(orgName, envName, csType), items)
+        removePatch = self.PatchBuilder.build_patch('remove',
+            self.RemovePatchItemBuilder(orgName, envName, csType), items)
         self.update_content(cset["id"], addPatch, self.api.add_content)
         self.update_content(cset["id"], removePatch, self.api.remove_content)
 
@@ -385,6 +391,7 @@ class UpdateContent(ChangesetAction):
         self.api.update(csId, newName, description)
 
 
+    # pylint: disable=R0201
     def update_content(self, csId, patch, updateMethod):
         for contentType, items in patch.iteritems():
             for i in items:

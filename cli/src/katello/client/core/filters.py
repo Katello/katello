@@ -83,7 +83,8 @@ class Create(FilterAction):
             _("Could not create filter [ %s ]") % name
         )
 
-    def parse_packages(self, packages):
+    @classmethod
+    def parse_packages(cls, packages):
         return ([] if packages == None else [p.strip() for p in packages.split(',')])
 
 class Delete(FilterAction):
@@ -130,7 +131,8 @@ class Info(FilterAction):
         self.printer.print_item(filter_info)
         return os.EX_OK
 
-    def package_list_as_string(self, package_list):
+    @classmethod
+    def package_list_as_string(cls, package_list):
         return ", ".join(package_list)
 
 class AddPackage(FilterAction):

@@ -32,7 +32,8 @@ class ActivationKeyAction(BaseAction):
         super(ActivationKeyAction, self).__init__()
         self.api = ActivationKeyAPI()
 
-    def get_template_id(self, environmentId, templateName):
+    @classmethod
+    def get_template_id(cls, environmentId, templateName):
         if templateName != None:
             template_api = TemplateAPI()
             template = template_api.template_by_name(environmentId, templateName)
@@ -59,7 +60,8 @@ class List(ActivationKeyAction):
         envName = self.get_option('environment')
         orgName = self.get_option('org')
 
-        keys = self.get_keys_for_organization(orgName) if envName == None else self.get_keys_for_environment(orgName, envName)
+        keys = self.get_keys_for_organization(orgName) \
+            if envName == None else self.get_keys_for_environment(orgName, envName)
 
         if not keys:
             if envName == None:
@@ -70,7 +72,7 @@ class List(ActivationKeyAction):
             return os.EX_OK
 
         for k in keys:
-            if k['usage_limit'] is None:
+            if k['usage_limit'] is None or k['usage_limit'] == -1:
                 k['usage'] = str(k['usage_count'])
             else:
                 k['usage'] = str(k['usage_count']) + '/' + str(k['usage_limit'])
@@ -145,7 +147,7 @@ class Create(ActivationKeyAction):
                                help=_("activation key description"))
         parser.add_option('--template', dest='template',
                                help=_("template name eg: servers"))
-        parser.add_option('--limit', dest='usage_limit',
+        parser.add_option('--limit', dest='usage_limit', type="int",
                                help=_("usage limit (unlimited by default)"))
 
     def check_options(self, validator):
@@ -157,7 +159,14 @@ class Create(ActivationKeyAction):
         keyName = self.get_option('name')
         keyDescription = self.get_option('description')
         templateName = self.get_option('template')
-        usageLimit = self.get_option('usage_limit', -1)
+        usageLimit = self.get_option('usage_limit')
+
+        if usageLimit is None:
+            usageLimit = -1
+        else:
+            if int(usageLimit) <= 0:
+                print >> sys.stderr, _("Usage limit [ %s ] must be higher than one") % usageLimit
+                return os.EX_DATAERR
 
         environment = get_environment(orgName, envName)
 
@@ -230,7 +239,8 @@ class Update(ActivationKeyAction):
         except OptionException:
             print >> sys.stderr, _("Could not find template [ %s ]") % (templateName)
             return os.EX_DATAERR
-        key = self.api.update(key['id'], environment['id'] if environment != None else None, newKeyName, keyDescription, templateId, usageLimit)
+        key = self.api.update(key['id'], environment['id'] if environment != None else None,
+            newKeyName, keyDescription, templateId, usageLimit)
 
         for poolid in add_poolids:
             self.api.add_pool(key['id'], poolid)

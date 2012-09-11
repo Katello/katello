@@ -15,6 +15,7 @@
 
 import os
 import sys
+from logging import root, DEBUG
 from traceback import format_exc
 
 from optparse import OptionGroup, SUPPRESS_HELP
@@ -103,6 +104,8 @@ class KatelloCLI(Command):
         """
         parser.add_option("-v", "--version", action="store_true", default=False,
                                 dest="version",  help=_('prints version information'))
+        parser.add_option("-d", "--debug", action="store_true", default=False,
+                                dest="debug",  help=_('send debug information into logs'))
 
         credentials = OptionGroup(parser, _('Katello User Account Credentials'))
         credentials.add_option('-u', '--username', dest='username',
@@ -144,7 +147,8 @@ class KatelloCLI(Command):
         self._server = server.KatelloServer(host, int(port), scheme, path, self.__server_locale())
         server.set_active_server(self._server)
 
-    def __server_locale(self):
+    @classmethod
+    def __server_locale(cls):
         """
         Take system locale and convert it to server locale
         Eg. en_US -> en-us
@@ -173,6 +177,7 @@ class KatelloCLI(Command):
         else:
             self._server.set_auth_method(NoAuthentication())
 
+    # pylint: disable=W0221
     def error(self, exception, errorMsg = None):
         msg = errorMsg if errorMsg else u_str(exception)
         print >> sys.stderr, "error: %s (more in the log file %s)" % (msg, logfile())
@@ -184,6 +189,8 @@ class KatelloCLI(Command):
         self.setup_credentials()
         if self.get_option('version'):
             self.args = ["version"]
+        if self.get_option('debug'):
+            root.setLevel(DEBUG)
 
     def main(self, args, command_name=None, parent_usage=None):
         try:

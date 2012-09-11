@@ -146,8 +146,8 @@ describe ChangesetsController, :katello => true do
       response.should_not be_success
     end
 
-    it 'should cause an exception if no environment id is present' do
-      controller.should notify.exception
+    it 'should cause an error notification if no environment id is present' do
+      controller.should notify.error
       post 'create', {:changeset => { :name => 'Test/Changeset 4.5'}}
       response.should_not be_success
     end
@@ -267,12 +267,35 @@ describe ChangesetsController, :katello => true do
         user_with_permissions { |u| u.can(:promote_changesets, :environments, @env2.id, @organization) }
       end
       let(:unauthorized_user) do
+        user_with_permissions { |u| u.can(:delete_changesets, :environments, @env2.id, @organization) }
         user_with_permissions { |u| u.can(:read_changesets, :environments, @env2.id, @organization) }
         user_with_permissions { |u| u.can(:manage_changesets, :environments, @env2.id, @organization) }
       end
 
       it_should_behave_like "protected action"
     end
+
+
+    describe "POST Deletion apply" do
+      before do
+        @cs2 = DeletionChangeset.create(:name=>"FOO2", :environment=>@env2, :state=>"review")
+      end
+      let(:action) {:apply}
+      let(:req) do
+        post 'apply', :id=>@cs2.id
+      end
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:delete_changesets, :environments, @env2.id, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_with_permissions { |u| u.can(:promote_changesets, :environments, @env2.id, @organization) }
+        user_with_permissions { |u| u.can(:read_changesets, :environments, @env2.id, @organization) }
+        user_with_permissions { |u| u.can(:manage_changesets, :environments, @env2.id, @organization) }
+      end
+
+      it_should_behave_like "protected action"
+    end
+
   end
 
 end

@@ -611,7 +611,7 @@ var promotion_page = (function($){
                     $('#review_changeset > span').html(i18n.cancel_review);
                     $('#review_changeset').attr('original-title', i18n.cancel_review_title);
 
-                    if (permissions.apply_changesets) {
+                    if ((current_changeset.type() === "promotion" && permissions.apply_promotion_changesets) || (current_changeset.type() !== "promotion" && permissions.apply_deletion_changesets) ) {
                         $('#promote_changeset').removeClass("disabled");
                     }
                     else {

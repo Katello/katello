@@ -19,14 +19,17 @@ class Api::ChangesetsController < Api::ApiController
   def rules
     read_perm    = lambda { @environment.changesets_readable? }
     manage_perm  = lambda { @environment.changesets_manageable? }
-    promote_perm = lambda { @environment.changesets_promotable? }
+    promote_perm = lambda { @changeset.promotion? && @environment.changesets_promotable? }
+
+    apply_perm = lambda{ (@changeset.promotion? && @environment.changesets_promotable?) || (@changeset.deletion? && @environment.changesets_deletable?)}
+
     { :index        => read_perm,
       :show         => read_perm,
       :dependencies => read_perm,
       :create       => manage_perm,
       :update       => manage_perm,
       :promote      => promote_perm,
-      :apply        => promote_perm,
+      :apply        => apply_perm,
       :destroy      => manage_perm,
     }
   end
@@ -38,7 +41,7 @@ class Api::ChangesetsController < Api::ApiController
   def index
     changesets = Changeset.select("changesets.*, environments.name AS environment_name").
         joins(:environment).where(params.slice(:name, :environment_id))
-    render :json => changesets.to_json
+    render :json => changesets
   end
 
   api :GET, "/changesets/:id", "Show a changeset"

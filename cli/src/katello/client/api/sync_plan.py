@@ -15,6 +15,7 @@
 
 from katello.client.api.base import KatelloAPI
 from katello.client.utils.encoding import u_str
+from katello.client.core.utils import update_dict_unless_none
 
 class SyncPlanAPI(KatelloAPI):
     """
@@ -32,10 +33,10 @@ class SyncPlanAPI(KatelloAPI):
 
     def update(self, org_id, plan_id, name, sync_date, interval, description):
         data = {}
-        data = self.update_dict(data, "name", name)
-        data = self.update_dict(data, "description", description)
-        data = self.update_dict(data, "interval", interval)
-        data = self.update_dict(data, "sync_date", sync_date)
+        data = update_dict_unless_none(data, "name", name)
+        data = update_dict_unless_none(data, "description", description)
+        data = update_dict_unless_none(data, "interval", interval)
+        data = update_dict_unless_none(data, "sync_date", sync_date)
 
         path = "/api/organizations/%s/sync_plans/%s" % (u_str(org_id), u_str(plan_id))
         return self.server.PUT(path, {"sync_plan": data})[1]

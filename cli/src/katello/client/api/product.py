@@ -15,6 +15,7 @@
 
 from katello.client.api.base import KatelloAPI
 from katello.client.utils.encoding import u_str
+from katello.client.core.utils import update_dict_unless_none
 
 class ProductAPI(KatelloAPI):
     """
@@ -56,9 +57,9 @@ class ProductAPI(KatelloAPI):
 
     def update(self, orgName, prodId, description, gpgkey, nogpgkey, gpgkey_recursive):
         product = {}
-        self.update_dict(product, "description", description)
-        self.update_dict(product, "gpg_key_name", gpgkey)
-        self.update_dict(product, "recursive", gpgkey_recursive)
+        update_dict_unless_none(product, "description", description)
+        update_dict_unless_none(product, "gpg_key_name", gpgkey)
+        update_dict_unless_none(product, "recursive", gpgkey_recursive)
         if nogpgkey:
             product["gpg_key_name"] = ""
 

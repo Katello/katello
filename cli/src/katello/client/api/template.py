@@ -15,6 +15,7 @@
 
 from katello.client.api.base import KatelloAPI
 from katello.client.utils.encoding import u_str
+from katello.client.core.utils import update_dict_unless_none
 
 try:
     import json
@@ -77,7 +78,7 @@ class TemplateAPI(KatelloAPI):
             "name": name,
             "description": description
         }
-        tplData = self.update_dict(tplData, "parent_id", parentId)
+        tplData = update_dict_unless_none(tplData, "parent_id", parentId)
         tplData = {
             "template": tplData,
             "environment_id": envId
@@ -90,9 +91,9 @@ class TemplateAPI(KatelloAPI):
     def update(self, tplId, newName, description, parentId):
 
         tplData = {}
-        tplData = self.update_dict(tplData, "name", newName)
-        tplData = self.update_dict(tplData, "description", description)
-        tplData = self.update_dict(tplData, "parent_id", parentId)
+        tplData = update_dict_unless_none(tplData, "name", newName)
+        tplData = update_dict_unless_none(tplData, "description", description)
+        tplData = update_dict_unless_none(tplData, "parent_id", parentId)
 
         tplData = {
             "template": tplData

@@ -677,16 +677,16 @@ KT.comparison_grid.controls = function(grid) {
 
                     show(id, false, rows);
 
-                    parent_row_header.find('.down_arrow-icon-black').hide()
-                    parent_row_header.find('.right_arrow-icon-black').show();
+                    parent_row_header.find('.down_arrow_icon-black').hide()
+                    parent_row_header.find('.right_arrow_icon-black').show();
                 },
                 expand = function(id, rows){
                     var parent_row_header = $('#row_header_' + KT.common.escapeId(id));
 
                     show(id, true, rows);
 
-                    parent_row_header.find('.down_arrow-icon-black').show();
-                    parent_row_header.find('.right_arrow-icon-black').hide();
+                    parent_row_header.find('.down_arrow_icon-black').show();
+                    parent_row_header.find('.right_arrow_icon-black').hide();
                 };
 
             return {
@@ -809,7 +809,7 @@ KT.comparison_grid.templates = (function(i18n) {
                 if( data['display'] !== undefined ){
                     display = '<div class="grid_cell_data one-line-ellipsis">' + data['display'] + '</div>';
                 } else {
-                    display = '<i class="dot-icon-black" />';
+                    display = '<i class="dot_icon-black" />';
                 }
             } else {
                  display = "<i>--</i>";
@@ -967,9 +967,9 @@ KT.comparison_grid.templates = (function(i18n) {
             var html;
 
             if( options['open'] ){
-                html = '<i class="down_arrow-icon-black"/><i class="right_arrow-icon-black" style="display:none;"/>';
+                html = '<i class="down_arrow_icon-black"/><i class="right_arrow_icon-black" style="display:none;"/>';
             } else {
-                html = '<i class="down_arrow-icon-black" style="display:none;" /><i class="right_arrow-icon-black" />';
+                html = '<i class="down_arrow_icon-black" style="display:none;" /><i class="right_arrow_icon-black" />';
             }
 
             return html;
@@ -982,7 +982,7 @@ KT.comparison_grid.templates = (function(i18n) {
                 
             html.append('<i class="fl spinner invisible" />');
             html.append('<a class="load_row_link fl" href="" >' + i18n.show_more.replace('%P', load_size) + '</a>');
-            html.append('<i class="down_arrow-icon-black"/>');
+            html.append('<i class="down_arrow_icon-black"/>');
             html.append($('<span/>').html(i18n.counts.replace('%C', current).replace('%T', total)));
 
             return html;

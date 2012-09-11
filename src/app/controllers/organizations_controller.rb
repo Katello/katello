@@ -221,4 +221,10 @@ class OrganizationsController < ApplicationController
     return 'organization'
   end
 
+  private
+
+  def default_notify_options
+    super.merge :organization => nil
+  end
+
 end

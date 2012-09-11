@@ -13,7 +13,7 @@ repo_id=$1
 dir=$2
 
 #create the repository
-pulp-admin auth login --username admin --password admin
+pulp-admin auth login --username admin --password $(grep '^default_password' /etc/pulp/pulp.conf | awk '{print $2}')
 pulp-admin repo create --id $repo_id
 
 packages_dir=$3
@@ -33,7 +33,7 @@ pulp-admin content upload -r $repo_id --nosig -v $packages_dir/*rpm
 ./create_repogroups.sh $repo_id $dir/grouplist.txt
 
 #create errata
-./batch_create_errata.sh $repo_id $dir/errata.txt $packages_dir
+./batch_create_errata.sh $repo_id $dir/errata.txt $packages_dir/
 
 #TODO: upload additional files
 

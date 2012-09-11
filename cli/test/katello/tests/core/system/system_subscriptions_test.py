@@ -35,7 +35,7 @@ class SystemSubscriptionsTest(CLIActionTestCase):
         self.mock_printer()
         self.mock(self.action.api, 'systems_by_org', [{'uuid':self.SYS_ID}])
         self.mock(self.action.api, 'subscriptions', {'entitlements':[]})
-        self.mock(self.action.api, 'available_pools', ('', ''))
+        self.mock(self.action.api, 'available_pools', ('', '', '', ''))
         self.mock(self.module, 'get_system', {'uuid':self.SYS_ID})
 
     def test_it_calls_subscriptions_api(self):
@@ -49,4 +49,4 @@ class SystemSubscriptionsTest(CLIActionTestCase):
         self.mock_options({'name': self.SYS_NAME})
         self.mock_options({'available': True})
         self.run_action()
-        self.action.api.available_pools.assert_called_once_with(self.SYS_ID)
+        self.action.api.available_pools.assert_called_once_with(self.SYS_ID, None, None, None)

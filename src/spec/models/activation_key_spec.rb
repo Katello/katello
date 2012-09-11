@@ -144,6 +144,9 @@ describe ActivationKey do
 
 
   describe "pools in a activation key" do
+    before(:each) do
+      Resources::Candlepin::Pool.stub(:find).and_return(true)
+    end
 
     it "should map 2way pool to keys" do
       s = ::Pool.create!(:cp_id  => 'abc123')

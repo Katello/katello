@@ -15,6 +15,7 @@
 
 from katello.client.api.base import KatelloAPI
 from katello.client.utils.encoding import u_str
+from katello.client.core.utils import update_dict_unless_none
 
 class UserRoleAPI(KatelloAPI):
     """
@@ -49,20 +50,20 @@ class UserRoleAPI(KatelloAPI):
 
     def update(self, role_id, name, desc):
         data = {}
-        data = self.update_dict(data, "name", name)
-        data = self.update_dict(data, "description", desc)
+        data = update_dict_unless_none(data, "name", name)
+        data = update_dict_unless_none(data, "description", desc)
         path = "/api/roles/%s" % u_str(role_id)
         return self.server.PUT(path, {"role": data})[1]
 
     def available_verbs(self, orgName):
         data = {}
-        data = self.update_dict(data, "organization_id", orgName)
+        data = update_dict_unless_none(data, "organization_id", orgName)
         path = "/api/roles/available_verbs/"
         return self.server.GET(path, data)[1]
 
     def add_ldap_group(self, role_id, group_name):
         data = {}
-        data = self.update_dict(data, "name", group_name)
+        data = update_dict_unless_none(data, "name", group_name)
         path = "/api/roles/%s/ldap_groups/" % u_str(role_id)
         return self.server.POST(path, data)[1]
 

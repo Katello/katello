@@ -38,7 +38,7 @@ active_server = None
 
 def set_active_server(server):
     global active_server
-    assert isinstance(server, Server)
+    assert isinstance(server, KatelloServer)
     active_server = server
 
 # authentication strategies ---------------------------------------------------
@@ -147,25 +147,20 @@ class ServerRequestError(Exception):
     pass
 
 
-class Bytes(str):
+class KatelloServer(object):
     """
-    Binary (non-json) PUT/POST request body wrapper.
-    """
-    pass
+    Katello server connection class.
 
-
-class Server(object):
-    """
-    Base server class.
     @ivar host: host name of the katello server
     @ivar port: port the katello server is listening on (443)
     @ivar protocol: protocol the katello server is using (http, https)
     @ivar path_prefix: mount point of the katello api (/katello/api)
     @ivar headers: dictionary of http headers to send in requests
-    """
+    """  
     auth_method = NoAuthentication()
 
-    def __init__(self, host, port=80, protocol='http', path_prefix=''):
+    #---------------------------------------------------------------------------
+    def __init__(self, host, port=443, protocol='https', path_prefix='/katello/api', accept_lang=None):
         assert protocol in ('http', 'https')
 
         self.host = host
@@ -173,90 +168,6 @@ class Server(object):
         self.protocol = protocol
         self.path_prefix = path_prefix
         self.headers = {}
-
-    # credentials setters -----------------------------------------------------
-    def set_auth_method(self, auth_method):
-        self.auth_method = auth_method
-
-    # request methods ---------------------------------------------------------
-    # pylint: disable=C0103
-    def DELETE(self, path, body=None):
-        """
-        Send a DELETE request to the katello server.
-        @type path: str
-        @param path: path of the resource to delete
-        @rtype: (int, dict or None or str)
-        @return: tuple of the http response status and the response body
-        @raise ServerRequestError: if the request fails
-        """
-        raise NotImplementedError('base server class method called')
-
-    def GET(self, path, queries=()):
-        """
-        Send a GET request to the katello server.
-        @type path: str
-        @param path: path of the resource to get
-        @type queries: dict or iterable of tuple pairs
-        @param queries: dictionary of iterable of key, value pairs to send as
-                        query parameters in the request
-        @rtype: (int, dict or None or str)
-        @return: tuple of the http response status and the response body
-        @raise ServerRequestError: if the request fails
-        """
-        raise NotImplementedError('base server class method called')
-
-    def HEAD(self, path):
-        """
-        Send a HEAD request to the katello server.
-        @type path: str
-        @param path: path of the resource to check
-        @rtype: (int, dict or None or str)
-        @return: tuple of the http response status and the response body
-        @raise ServerRequestError: if the request fails
-        """
-        raise NotImplementedError('base server class method called')
-
-    def POST(self, path, body=None, multipart=False):
-        """
-        Send a POST request to the katello server.
-        @type path: str
-        @param path: path of the resource to post to
-        @type body: dict or None
-        @param body: (optional) dictionary for json encoding of post parameters
-        @type multipart: boolean
-        @param multipart: set True for multipart posts
-        @rtype: (int, dict or None or str)
-        @return: tuple of the http response status and the response body
-        @raise ServerRequestError: if the request fails
-        """
-        raise NotImplementedError('base server class method called')
-
-    def PUT(self, path, body, multipart=False):
-        """
-        Send a PUT request to the katello server.
-        @type path: str
-        @param path: path of the resource to put
-        @type body: dict
-        @param body: dictionary for json encoding of resource
-        @type multipart: boolean
-        @param multipart: set True for multipart puts
-        @rtype: (int, dict or None or str)
-        @return: tuple of the http response status and the response body
-        @raise ServerRequestError: if the request fails
-        """
-        raise NotImplementedError('base server class method called')
-
-
-# katello server class -----------------------------------------------------------
-
-class KatelloServer(Server):
-    """
-    Katello server connection class.
-    """
-
-    #---------------------------------------------------------------------------
-    def __init__(self, host, port=443, protocol='https', path_prefix='/katello/api', accept_lang=None):
-        super(KatelloServer, self).__init__(host, port, protocol, path_prefix)
 
         default_headers = {'Accept': 'application/json',
                            'content-type': 'application/json',
@@ -267,6 +178,10 @@ class KatelloServer(Server):
             self.headers.update( { 'Accept-Language': accept_lang } )
 
         self._log = getLogger('katello')
+
+    # credentials setters -----------------------------------------------------
+    def set_auth_method(self, auth_method):
+        self.auth_method = auth_method
 
     # protected server connection methods -------------------------------------
 
@@ -322,7 +237,10 @@ class KatelloServer(Server):
         self.headers['content-length'] = str(len(body) if body else 0)
         self._set_auth_headers()
 
-        self._log.debug('sending %s request to %s' % (method, url))
+        if body:
+            self._log.debug("sending %s request to %s\n%s" % (method, url, body))
+        else:
+            self._log.debug("sending empty %s request to %s" % (method, url))
 
         connection.request(method, url, body=body, headers=dict(self.headers.items() + custom_headers.items()))
         return self._process_response(connection.getresponse())
@@ -343,14 +261,13 @@ class KatelloServer(Server):
 
         if multipart:
             content_type, body = self._encode_multipart_formdata(body)
-        elif not isinstance(body, (type(None), Bytes, file)):
+        elif not isinstance(body, (type(None), file)):
             body = json.dumps(body)
 
         return (content_type, body)
 
 
-    @classmethod
-    def _process_response(cls, response):
+    def _process_response(self, response):
         """
         Try to parse the response
         @type response: HTTPResponse
@@ -361,12 +278,17 @@ class KatelloServer(Server):
         response_body = response.read()
         try:
             response_body = json.loads(response_body, encoding='utf-8')
-        except:
+        except ValueError:
             content_type = response.getheader('content-type')
             if content_type and (content_type.startswith('text/') or content_type.startswith('application/json')):
                 response_body = u_str(response_body)
             else:
                 pass
+
+        if response_body:
+            self._log.debug("processing response %s\n%s" % (response.status, str(response_body)))
+        else:
+            self._log.debug("processing empty response %s" % (response.status))
 
         if response.status >= 300:
             # if the server has responded with a python traceback
@@ -469,16 +391,73 @@ class KatelloServer(Server):
     # request methods ---------------------------------------------------------
     # pylint: disable=C0103
     def DELETE(self, path, body=None):
+        """
+        Send a DELETE request to the katello server.
+        @type path: str
+        @param path: path of the resource to delete
+        @rtype: (int, dict or None or str)
+        @return: tuple of the http response status and the response body
+        @raise ServerRequestError: if the request fails
+        """
         return self._request('DELETE', path, body=body)
 
     def GET(self, path, queries=None, custom_headers=None):
+        """
+        Send a GET request to the katello server.
+        @type path: str
+        @param path: path of the resource to get
+        @type queries: dict or iterable of tuple pairs
+        @param queries: dictionary of iterable of key, value pairs to send as
+                        query parameters in the request
+        @type custom_headers: dict or iterable of tuple pairs
+        @param custom_headers: custom headers
+        @rtype: (int, dict or None or str)
+        @return: tuple of the http response status and the response body
+        @raise ServerRequestError: if the request fails
+        """
         return self._request('GET', path, queries, custom_headers=custom_headers)
 
     def HEAD(self, path):
+        """
+        Send a HEAD request to the katello server.
+        @type path: str
+        @param path: path of the resource to check
+        @rtype: (int, dict or None or str)
+        @return: tuple of the http response status and the response body
+        @raise ServerRequestError: if the request fails
+        """
         return self._request('HEAD', path)
 
     def POST(self, path, body=None, multipart=False, custom_headers=None):
+        """
+        Send a POST request to the katello server.
+        @type path: str
+        @param path: path of the resource to post to
+        @type body: dict or None
+        @param body: (optional) dictionary for json encoding of post parameters
+        @type multipart: boolean
+        @param multipart: set True for multipart posts
+        @type custom_headers: dict or iterable of tuple pairs
+        @param custom_headers: custom headers
+        @rtype: (int, dict or None or str)
+        @return: tuple of the http response status and the response body
+        @raise ServerRequestError: if the request fails
+        """
         return self._request('POST', path, body=body, multipart=multipart, custom_headers=custom_headers)
 
     def PUT(self, path, body, multipart=False, custom_headers=None):
+        """
+        Send a PUT request to the katello server.
+        @type path: str
+        @param path: path of the resource to put
+        @type body: dict
+        @param body: dictionary for json encoding of resource
+        @type multipart: boolean
+        @param multipart: set True for multipart puts
+        @type custom_headers: dict or iterable of tuple pairs
+        @param custom_headers: custom headers
+        @rtype: (int, dict or None or str)
+        @return: tuple of the http response status and the response body
+        @raise ServerRequestError: if the request fails
+        """
         return self._request('PUT', path, body=body, multipart=multipart, custom_headers=custom_headers)
