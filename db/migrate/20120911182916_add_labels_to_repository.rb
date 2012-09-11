@@ -5,6 +5,7 @@ class AddLabelsToRepository < ActiveRecord::Migration
       Repository.all.each do |repo|
         execute "update repositories set label = '#{repo.name}' where id= #{repo.id}"
       end
+      t.change(:label, :string, :null => false)
     end
     add_index(:repositories, [:label, :environment_product_id], :unique => true)
   end
