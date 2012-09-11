@@ -59,13 +59,21 @@
         - if @statuses
           %tbody
             - @statuses[0..2].each do |status|
-              %tr{:class => cycle(nil, 'alt')}
+              - cycle_class = cycle(nil, 'alt')
+              %tr{:class => cycle_class}
                 %td{:style => "width: 70%;"}
                   %span.icon_wrap.fl
                     %span.fl{:class => (status["status"] == "FAILURE" ? "failure_icon" : "success_icon")}
                   = status["statusMessage"]
                 %td
                   = _("%s ago") % time_ago_in_words(status["created"])
+              - if status['webAppPrefix']
+                %tr{:class => cycle_class}
+                  %td{:colspan => 2}
+                    &nbsp; &nbsp; &nbsp;
+                    = _('Manifest from ') % status['webAppPrefix']
+                    = subscriptions_manifest_link_helper status
+
           - if @statuses.length > 3
             %tr{:class => cycle(nil, 'alt')}
               %td.panel_link{:style => "width: 70%;"}

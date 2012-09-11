@@ -118,4 +118,9 @@ class UserSessionsController < ApplicationController
   def return_401
     head :status => 401 and return false
   end
+
+  def default_notify_options
+    { :organization => nil }
+  end
+
 end

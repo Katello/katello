@@ -26,7 +26,7 @@ class ChangesetsController < ApplicationController
     read_perm = lambda{@environment.changesets_readable?}
     manage_perm = lambda{@environment.changesets_manageable?}
     update_perm =  lambda {@environment.changesets_manageable? && update_artifacts_valid?}
-    apply_perm = lambda{@environment.changesets_promotable?}
+    apply_perm = lambda{ (@changeset.promotion? && @environment.changesets_promotable?) || (@changeset.deletion? && @environment.changesets_deletable?)}
     {
       :index => read_perm,
       :items => read_perm,
@@ -105,8 +105,14 @@ class ChangesetsController < ApplicationController
   def create
     if params[:changeset][:action_type].blank? or
        params[:changeset][:action_type] == Changeset::PROMOTION
-      env_id = @next_environment.id
-      type = Changeset::PROMOTION
+
+      if @next_environment.blank?
+        notify.error _("Please create at least one environment.")
+        render :nothing => true, :status => :not_acceptable and return
+      else
+        env_id = @next_environment.id
+        type = Changeset::PROMOTION
+      end
     else
       env_id = @environment.id
       type = Changeset::DELETION

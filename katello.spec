@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.1.8
+Version:        1.1.10
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -76,6 +76,7 @@ Requires:       rubygem(tire) >= 0.3.0
 Requires:       rubygem(tire) < 0.4
 Requires:       rubygem(ldap_fluff)
 Requires:       rubygem(apipie-rails)
+Requires:       lsof
 
 %if 0%{?rhel} == 6
 Requires:       redhat-logos >= 60.0.14
@@ -104,7 +105,7 @@ BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
-BuildRequires:  converge-ui-devel >= 0.8.3
+BuildRequires:  converge-ui-devel >= 1.0.1
 
 # we require this to be able to build api-docs
 BuildRequires:       rubygem(rails) >= 3.0.10
@@ -153,6 +154,9 @@ Requires:       candlepin-selinux
 # the following backend engine deps are required by <katello-configure>
 Requires:       mongodb mongodb-server
 Requires:       qpid-cpp-server qpid-cpp-client qpid-cpp-client-ssl qpid-cpp-server-ssl
+%if 0%{?fedora}
+Requires:       /etc/rc.d/init.d/qpidd
+%endif
 Requires:       foreman foreman-postgresql
 # </katello-configure>
 
@@ -237,30 +241,37 @@ if [ -d branding ] ; then
   cp -r branding/* .
 fi
 
-#compile SASS files
-echo Compiling SASS files...
-compass compile
+%if ! 0%{?fastbuild:1}
+    #compile SASS files
+    echo Compiling SASS files...
+    compass compile
 
-#generate Rails JS/CSS/... assets
-echo Generating Rails assets...
-LC_ALL="en_US.UTF-8" jammit --config config/assets.yml -f
+    #generate Rails JS/CSS/... assets
+    echo Generating Rails assets...
+    LC_ALL="en_US.UTF-8" jammit --config config/assets.yml -f
 
-
-#create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
-echo Generating gettext files...
-ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")'
+    #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
+    echo Generating gettext files...
+    ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")'
+%endif
 
 #man pages
 a2x -d manpage -f manpage man/katello-service.8.asciidoc
 
 #api docs
-echo Generating API docs
-rm -f Gemfile.lock
-cp Gemfile Gemfile.old
-echo 'gem "redcarpet"' >> Gemfile
-rake apipie:static RAILS_ENV=apipie --trace
-rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=apipie --trace
-mv Gemfile.old Gemfile
+%if 0%{?fastbuild:1}
+    # make empty directories when doing fast build
+    mkdir -p %{buildroot}%{homedir}/public/apipie-cache
+    mkdir -p doc/apidoc
+%else
+    echo Generating API docs
+    rm -f Gemfile.lock
+    cp Gemfile Gemfile.old
+    echo 'gem "redcarpet"' >> Gemfile
+    rake apipie:static RAILS_ENV=apipie --trace
+    rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=apipie --trace
+    mv Gemfile.old Gemfile
+%endif
 
 %install
 #prepare dir structure
@@ -520,6 +531,51 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Sep 06 2012 Ivan Necas <inecas@redhat.com> 1.1.10-1
+- 852631 - system group - update model to raise exception when no groups exist
+  (bbuckingham@redhat.com)
+- 854573, 852167 - Fixes missing icons issue which also resolves an alignment
+  issue on the content search page. (ehelms@redhat.com)
+- linkback - make app prefix link helper (thomasmckay@redhat.com)
+- workaround for bz 854263 (msuchy@redhat.com)
+- 758651 - check if thin port is free before starting thin (msuchy@redhat.com)
+- Merge pull request #543 from bbuckingham/fork-841289 (lzap@redhat.com)
+- 853056 - system register without environment is working again
+  (lzap+git@redhat.com)
+- 853056 - improve 404 generic error message (lzap+git@redhat.com)
+- job without task should not exists, this is error (msuchy@redhat.com)
+- 851142 - CLI: changeset update shows strange error (pajkycz@gmail.com)
+- fix for BZ 821345 (dmitri@redhat.com)
+- link back to source of manifest in import history (thomasmckay@redhat.com)
+- Updating Converge-UI (mbacovsk@redhat.com)
+- 746765 - systems can be referenced by uuid (lzap+git@redhat.com)
+- 746765 - removing system unique name constraint (lzap+git@redhat.com)
+- 831664 - Repository sync failures not displaying detailed error in Notices
+  (pchalupa@redhat.com)
+- 841289 - perform cleanup on failed registration with activation key
+  (bbuckingham@redhat.com)
+- katello - disable bundler patch by default, fix broken condition
+  (pchalupa@redhat.com)
+- katello - add bundler patch to prefer rpm-gems (pchalupa@redhat.com)
+
+* Fri Aug 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.9-1
+- Do not insert spaces before changesets description (pajkycz@gmail.com)
+- 847858-actkeypool - fixed spec test failure (thomasmckay@redhat.com)
+- Updating converge-ui (jomara@redhat.com)
+- 847858 - only remove act keys when resource not found error
+  (thomasmckay@redhat.com)
+- 847115 - Extend scroll bug on content tab, with > 50 subscriptions only the
+  first 50 will populate. (pajkycz@gmail.com)
+- Added some unit to test the perm fixes (paji@redhat.com)
+- 843462 - system group search indexing should not include pulp content
+  (bbuckingham@redhat.com)
+- Added permissions for content delete (paji@redhat.com)
+- 841857 - fixing LDAP logins in katello mode (jomara@redhat.com)
+- 842569 - system groups - fix for TypeError on status of errata install
+  (bbuckingham@redhat.com)
+- 811556 - Displaced 'save' button while editing the changeset description
+  under "changeset history" tab (pajkycz@gmail.com)
+
 * Wed Aug 29 2012 Ivan Necas <inecas@redhat.com> 1.1.8-1
 - subsfilter - reset the cycle of table row colors to avoid having first row of
   bottom table having same shading as the table header (ie. always start with

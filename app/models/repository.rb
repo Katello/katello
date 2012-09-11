@@ -82,6 +82,8 @@ class Repository < ActiveRecord::Base
     filters.count > 0 || product.filters.count > 0
   end
 
+  default_scope :order => 'name ASC'
+
   scope :enabled, where(:enabled => true)
   scope :in_product, lambda{|p|  joins(:environment_product).where("environment_products.product_id" => p.id)}
 
@@ -153,21 +155,22 @@ class Repository < ActiveRecord::Base
     notify = task.parameters.try(:[], :options).try(:[], :notify)
     user = task.user
     if task.state == 'finished'
-      Notify.success _("Repository '%s' finished syncing successfully.") % [self.name],
-                     :user => user if user && notify
-    elsif task.state == 'error'
-
-      details = ''
-      log_details = []
-      if(!task.progress.error_details.nil? and !task.progress.error_details.empty?)
-        task.progress.error_details.each do |error|
-          log_details << error
-          details += error[:error].to_s + "\n"
-        end
+      if user && notify
+        Notify.success _("Repository '%s' finished syncing successfully.") % [self.name],
+                       :user => user, :organization => self.organization
       end
-      Rails.logger.error("*** Sync error: " +  log_details.to_json)
-      Notify.error _("There were errors syncing repository '%s'. See notices page for more details.") % self.name,
-                   :details => details, :user => user if user && notify
+    elsif task.state == 'error'
+      details = if task.progress.error_details.present?
+                  task.progress.error_details
+                else
+                  task.result[:errors].flatten
+                end
+
+      Rails.logger.error("*** Sync error: " +  details.to_json)
+      if user && notify
+        Notify.error _("There were errors syncing repository '%s'. See notices page for more details.") % self.name,
+                     :details => details.map(&:chomp).join("\n"), :user => user, :organization => self.organization
+      end
     end
   end
 
