@@ -52,7 +52,7 @@ class OrganizationsController < ApplicationController
 
   def param_rules
     {
-      :create => {:organization => [:name, :description], :environment => [:name, :description]},
+      :create => {:organization => [:name, :description, :label], :environment => [:name, :description, :label]},
       :update => {:organization  => [:description]}
     }
   end
@@ -75,11 +75,11 @@ class OrganizationsController < ApplicationController
   def create
     org_params    = params[:organization]
     env_params    = params[:environment]
-    @organization = Organization.new(:name => org_params[:name], :description => org_params[:description])
+    @organization = Organization.new(:name => org_params[:name], :label => org_params[:label], :description => org_params[:description])
     @organization.save!
 
     if env_params[:envname].present?
-      @new_env = KTEnvironment.new(:name => env_params[:name], :description => env_params[:description])
+      @new_env = KTEnvironment.new(:name => env_params[:name], :label => env_params[:label], :description => env_params[:description])
       @new_env.organization = @organization
       @new_env.prior = @organization.library
       @new_env.save!
