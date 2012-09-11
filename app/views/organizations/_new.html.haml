@@ -9,7 +9,7 @@
     = kt_form_for Organization.new do |form|
 
       = form.text_field :name, :label => _("Name")
-
+      = form.text_field :label, :label => _("Label")
       = form.text_area :description, :label => _("Description"), :size => "40x5"
 
       %fieldset

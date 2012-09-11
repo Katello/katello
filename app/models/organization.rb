@@ -27,10 +27,8 @@ class Organization < ActiveRecord::Base
   mapping do
     indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_sort, :type => 'string', :index => :not_analyzed
+    indexes :label, :type => 'string', :index => :not_analyzed
   end
-
-
-
 
   has_many :activation_keys, :dependent => :destroy
   has_many :providers, :dependent => :destroy
@@ -50,6 +48,7 @@ class Organization < ActiveRecord::Base
   before_create :create_library
   before_create :create_redhat_provider
   validates :name, :uniqueness => true, :presence => true, :katello_name_format => true
+  validates :label, :uniqueness => true, :presence => true, :katello_label_format => true
   validates :description, :katello_description_format => true
 
   if AppConfig.use_cp
