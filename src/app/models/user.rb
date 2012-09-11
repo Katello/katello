@@ -480,8 +480,7 @@ class User < ActiveRecord::Base
     org_id = self.preferences[:user][:default_org] rescue nil
     if org_id && !org_id.nil? && org_id != "nil"
       org = Organization.find_by_id(org_id)
-      org if allowed_organizations.include?org
-      return org.id
+      return org.id if allowed_organizations.include?org
     else
       return nil
     end
