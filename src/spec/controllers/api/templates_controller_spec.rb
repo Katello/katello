@@ -20,7 +20,7 @@ describe Api::TemplatesController, :katello => true do
   TEMPLATE_NAME = "template"
 
   before(:each) do
-    @organization = Organization.new(:name => 'organization', :label=>"organization", :cp_key => 'organization')
+    @organization = Organization.new(:name => 'organization', :label=>"organization")
     @organization.id = 1
 
     @environment = KTEnvironment.new(:name=>'environment', :label=> 'environment', :library => false)

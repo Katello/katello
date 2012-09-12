@@ -164,7 +164,7 @@ class Api::UsersController < Api::ApiController
   def list_owners
     orgs = @user.allowed_organizations
     # rhsm expects owner (Candlepin format)
-    render :json => orgs.map { |o| { :key => o.cp_key, :displayName => o.name } }
+    render :json => orgs.map { |o| { :key => o.label, :displayName => o.name } }
   end
 
   private

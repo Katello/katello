@@ -46,7 +46,7 @@ describe Api::TemplatesContentController do
   let(:distribution_id) { 1 }
 
   before(:each) do
-    @organization = Organization.new(:name => 'organization', :cp_key => 'organization')
+    @organization = Organization.new(:name => 'organization', :label => 'organization')
     @organization.id = 1
 
     @environment = KTEnvironment.new(:name=>'environment', :label=> 'environment', :library => false)

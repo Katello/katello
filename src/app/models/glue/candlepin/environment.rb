@@ -26,7 +26,7 @@ module Glue::Candlepin::Environment
   module InstanceMethods
     def set_environment
       Rails.logger.info _("Creating an environment in candlepin: %s") % name
-      Resources::Candlepin::Environment.create(self.organization.cp_key, id, name.gsub(/[^-\w]/,"_"), description)
+      Resources::Candlepin::Environment.create(self.organization.label, id, name.gsub(/[^-\w]/,"_"), description)
     rescue => e
       Rails.logger.error _("Failed to create candlepin environment %s") % "#{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e

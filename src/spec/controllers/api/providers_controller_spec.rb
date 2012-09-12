@@ -77,7 +77,7 @@ describe Api::ProvidersController, :katello => true do
   describe "create a provider" do
 
     let(:action) { :create }
-    let(:req) { post 'create', { :provider => to_create, :organization_id => @organization.cp_key } }
+    let(:req) { post 'create', { :provider => to_create, :organization_id => @organization.label } }
     let(:authorized_user) { user_with_write_permissions }
     let(:unauthorized_user) { user_without_write_permissions }
     it_should_behave_like "protected action"
@@ -88,7 +88,7 @@ describe Api::ProvidersController, :katello => true do
     end
     it_should_behave_like "bad request"  do
       let(:req) do
-        bad_req = {:organization_id => @organization.cp_key,
+        bad_req = {:organization_id => @organization.label,
                    :provider =>
                       {:bad_foo => "mwahahaha",
                        :name => "Provider Key",

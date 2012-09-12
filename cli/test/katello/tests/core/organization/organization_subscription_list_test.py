@@ -47,7 +47,7 @@ class SubscriptionsListTest(CLIActionTestCase):
 
     def test_it_finds_all_pools_for_organization(self):
         self.run_action()
-        self.action.api.pools.assert_called_once_with(organization_data.ORGS[0]["cp_key"])
+        self.action.api.pools.assert_called_once_with(organization_data.ORGS[0]["label"])
 
     def test_extract_sla_from_product(self):
         self.assertEqual(product_data.SLA_VALUE, self.action.extract_sla_from_product(product_data.PRODUCTS[0]))

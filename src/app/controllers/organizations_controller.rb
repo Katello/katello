@@ -89,7 +89,7 @@ class OrganizationsController < ApplicationController
 
     if search_validate(Organization, @organization.id, params[:search])
       notify.success _("Click on 'Add Environment' to create the first environment") if @new_env.nil?
-      render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"cp_key", :columns=>['name'], :name=>controller_display_name}
+      render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"label", :columns=>['name'], :name=>controller_display_name}
     else
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @organization["name"]
       render :json => { :no_match => true }
@@ -142,7 +142,7 @@ class OrganizationsController < ApplicationController
       render :text=>found_errors[1], :status=>:bad_request and return
     end
 
-    id = @organization.cp_key
+    id = @organization.label
     OrganizationDestroyer.destroy @organization, :notify => true
     notify.success _("Organization '%s' has been scheduled for background deletion.") % @organization.name
     render :partial => "common/list_remove", :locals => {:id=> id, :name=> controller_display_name}
@@ -186,7 +186,7 @@ class OrganizationsController < ApplicationController
   protected
 
   def find_organization
-    @organization = Organization.find_by_cp_key(params[:id].to_s)
+    @organization = Organization.find_by_label(params[:id].to_s)
     if @organization.blank?
       message = _("Couldn't find organization with ID=%s") % params[:id]
       notify.error message
@@ -206,7 +206,7 @@ class OrganizationsController < ApplicationController
                :create => _('Organization'),
                :create_label => _('+ New Organization'),
                :name => controller_display_name,
-               :accessor => :cp_key,
+               :accessor => :label,
                :ajax_load  => true,
                :ajax_scroll => items_organizations_path(),
                :enable_create => Organization.creatable?,
