@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.1.11
+Version:        1.1.12
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -531,6 +531,27 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Sep 12 2012 Ivan Necas <inecas@redhat.com> 1.1.12-1
+- subsfilter - Correctly update UI when subscription checkboxes toggled
+  (thomasmckay@redhat.com)
+- Org switcher "tipsy" fix and IE8 final fixes. (jrist@redhat.com)
+- 853229 - blank sync plan date gives incorrect error (jsherril@redhat.com)
+- Let errata types options be selectable (mbacovsk@redhat.com)
+- APIDOC - templates, templates_content (pajkycz@gmail.com)
+- APIDOC - providers, subscriptions (pajkycz@gmail.com)
+- 856303 - fencing system permission checks (jomara@redhat.com)
+- 854697 - manifest import - if first import fails, rollback (unimport it)
+  (bbuckingham@redhat.com)
+- 809259 - activation key - cli permissions changes (continued)
+  (bbuckingham@redhat.com)
+- 809259 - activation key - cli permissions changes (bbuckingham@redhat.com)
+- Fixed #842271 - filtering the "bugfix" errata in CLI doesn't work
+  (mbacovsk@redhat.com)
+- Initial commit on updated indexing appropriate stuff (paji@redhat.com)
+- 843064 - Content Search - Products: Not required unless searching for
+  Products itself, it's misleading when searching for Repos, Packages and
+  Errata (pajkycz@gmail.com)
+
 * Wed Sep 12 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.11-1
 - 856220 - adding time to puppet log (lzap+git@redhat.com)
 - Fix for removing user's default org. (jrist@redhat.com)
