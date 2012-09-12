@@ -19,7 +19,7 @@ module Glue::Pulp::Repo
       before_save :save_repo_orchestration
       before_destroy :destroy_repo_orchestration
 
-      has_and_belongs_to_many :filters, :uniq => true, :before_add => :add_filters_orchestration, :before_remove => :remove_filters_orchestration
+      has_and_belongs_to_many :filters, :uniq => true
 
       lazy_accessor :pulp_repo_facts,
                     :initializer => lambda {
@@ -101,38 +101,6 @@ module Glue::Pulp::Repo
   TYPE_YUM = "yum"
   TYPE_LOCAL = "local"
 
-
-  def add_filters_orchestration(added_filter)
-    return true if not self.environment.library?
-
-    self.clones.each do |repo|
-      pre_queue.create(
-        :name => "add filter '#{added_filter.pulp_id}' to repo: #{repo.id}",
-        :priority => 2,
-        :action => [repo, :set_filters, [added_filter.pulp_id]]
-      )
-    end
-
-    @orchestration_for = :add_filter
-    on_save
-  end
-
-  def remove_filters_orchestration(removed_filter)
-    return true if not self.environment.library?
-
-    self.clones.each do |repo|
-      repo = Repository.find_by_pulp_id(clone_id)
-
-      pre_queue.create(
-        :name => "remove filter '#{removed_filter.pulp_id}' from repo: #{repo.id}",
-        :priority => 2,
-        :action => [repo, :del_filters, [removed_filter.pulp_id]]
-      )
-    end
-
-    @orchestration_for = :remove_filter
-    on_save
-  end
 
   def create_pulp_repo
 
@@ -387,8 +355,12 @@ module Glue::Pulp::Repo
   end
 
   def add_packages pkg_id_list
+    blacklist = []
+    self.applicable_filters.each{|f| blacklist += f.package_list}
+
     previous = self.environmental_instances.in_environment(self.environment.prior).first
-    Resources::Pulp::Repository.package_copy previous.pulp_id, self.pulp_id,  pkg_id_list
+
+    Resources::Pulp::Repository.package_copy previous.pulp_id, self.pulp_id,  pkg_id_list, blacklist
   end
 
   def add_errata errata_id_list
@@ -453,14 +425,6 @@ module Glue::Pulp::Repo
     if not self.content_id.nil?
       Glue::Candlepin::Content.new(::Resources::Candlepin::Content.get(self.content_id))
     end
-  end
-
-  def set_filters filter_ids
-    ::Resources::Pulp::Repository.add_filters self.pulp_id, filter_ids
-  end
-
-  def del_filters filter_ids
-    ::Resources::Pulp::Repository.remove_filters self.pulp_id, filter_ids
   end
 
   def generate_metadata

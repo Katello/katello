@@ -296,10 +296,12 @@ module Resources
           JSON.parse(response).with_indifferent_access
         end
 
-        def package_copy src_repo_id, dest_repo_id, package_ids=[]
+        def package_copy src_repo_id, dest_repo_id, package_ids=[], name_blacklist=[]
           filters = {
-              #:unit=>
-              'association' => {'unit_id' => {'$in' => package_ids }}
+            'association' => {'unit_id' => {'$in' => package_ids }},
+            'unit' => {
+                'name' => {'$not' => {'$in' => name_blacklist} }
+            }
           }
           unit_copy src_repo_id, dest_repo_id, 'rpm', filters, {:resolve_dependencies=> true}
         end
@@ -454,16 +456,6 @@ module Resources
           JSON.parse(body)
         end
 
-        def add_filters repo_id, filter_ids
-          response =  post(repository_path + repo_id + "/add_filters/", {:filters => filter_ids}.to_json, self.default_headers)
-          response.body
-        end
-
-        def remove_filters repo_id, filter_ids
-          response =  post(repository_path + repo_id + "/remove_filters/", {:filters => filter_ids}.to_json, self.default_headers)
-          response.body
-        end
-
         def publish repo_id
           data = {
               :id=>find(repo_id)['distributors'].first()['id']
@@ -472,10 +464,6 @@ module Resources
           JSON.parse(response.body).with_indifferent_access
         end
 
-        def generate_metadata repo_id
-          response = post(repository_path + repo_id + "/generate_metadata/", {}, self.default_headers)
-          JSON.parse(response.body).with_indifferent_access
-        end
 
         private
 
@@ -844,39 +832,6 @@ module Resources
 
     end
   end
-
-    class Filter < PulpResource
-      class << self
-        def create attrs
-          response = self.post path, attrs.to_json, self.default_headers
-          JSON.parse(response.body).with_indifferent_access
-        end
-
-        def destroy id
-          self.delete(path(id), self.default_headers).code.to_i
-        end
-
-        def find id
-          response = self.get path(id), self.default_headers
-          JSON.parse(response.body).with_indifferent_access
-        end
-
-        def add_packages id, packages
-          response = self.post path(id) + "add_packages/", {:packages => packages}.to_json, self.default_headers
-          return response.body
-        end
-
-        def remove_packages id, packages
-          response = self.post path(id) + "remove_packages/", {:packages => packages}.to_json, self.default_headers
-          return response.body
-        end
-
-        def path(id=nil)
-          filters = self.path_with_prefix("/filters/")
-          id.nil? ? filters : filters + "#{id}/"
-        end
-      end
-    end
 
   end
 end
