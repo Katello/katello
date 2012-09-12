@@ -333,7 +333,7 @@ class ActivationKeysController < ApplicationController
 
     all_pools = {}
 
-    cp_pools = Resources::Candlepin::Owner.pools current_organization.cp_key
+    cp_pools = Resources::Candlepin::Owner.pools current_organization.label
     if cp_pools
       # Pool objects
       pools = cp_pools.collect{|cp_pool| ::Pool.find_pool(cp_pool['id'], cp_pool)}

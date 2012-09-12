@@ -123,7 +123,7 @@ class Api::ActivationKeysController < Api::ApiController
   def find_organization
     return unless params.has_key?(:organization_id)
 
-    @organization = Organization.first(:conditions => {:cp_key => params[:organization_id].tr(' ', '_')})
+    @organization = Organization.first(:conditions => {:label => params[:organization_id].tr(' ', '_')})
     raise HttpErrors::NotFound, _("Couldn't find organization '#{params[:organization_id]}'") if @organization.nil?
     @organization
   end

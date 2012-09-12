@@ -19,19 +19,19 @@ describe Organization do
     Resources::Candlepin::Owner.stub!(:create_user).and_return(true)
     Resources::Candlepin::Owner.should_receive(:create).at_least(:once).and_return({})
     disable_env_orchestration
-    @organization = Organization.create(:name => 'test_organization', :label=>'test_organization', :cp_key => 'test_organization')
+    @organization = Organization.create(:name => 'test_organization', :label=>'test_organization')
   end
 
   context "organization validation" do
-    specify { Organization.new(:name => 'name', :label=>"label", :cp_key => 'org').should be_valid }
-    specify { Organization.new(:name => 'name', :label=>"label",:cp_key => 'with_underscore').should be_valid }
-    specify { Organization.new(:name => 'name', :label=>"label",:cp_key => 'With_Capital_letter').should be_valid }
-    specify { Organization.new(:name => 'name', :label=>"label",:cp_key => 'with_number').should be_valid }
-    specify { Organization.new(:name => 'name', :label=>"label",:cp_key => 'with\'space').should_not be_valid }
-    # creates cp_key from name
-    specify { Organization.new(:name => 'without cp_key', :label=>"label").should be_valid }
-    specify { Organization.new(:cp_key => 'without_name', :label=>"label").should_not be_valid }
-    specify { Organization.new(:cp_key => 'without_name', :label=>"label foo").should_not be_valid }
+    specify { Organization.new(:name => 'name', :label => 'org').should be_valid }
+    specify { Organization.new(:name => 'name', :label => 'with_underscore').should be_valid }
+    specify { Organization.new(:name => 'name', :label => 'With_Capital_letter').should be_valid }
+    specify { Organization.new(:name => 'name', :label => 'with_number').should be_valid }
+    specify { Organization.new(:name => 'name', :label => 'with\'space').should_not be_valid }
+    # creates :label from name
+    specify { Organization.new(:name => 'without label').should be_valid }
+    specify { Organization.new(:label => 'without_name').should_not be_valid }
+    specify { Organization.new(:label => 'without_name').should_not be_valid }
   end
 
   context "create an organization" do
@@ -94,7 +94,7 @@ describe Organization do
     it "can delete the org and env of a different org exist" do
       env_name = "prod"
       
-      @org2 = Organization.create!(:name=>"foobar", :label=> "foobar", :cp_key => 'foobar')
+      @org2 = Organization.create!(:name=>"foobar", :label=> "foobar")
 
       @env1 = KTEnvironment.new(:name=>env_name, :label=> env_name, :organization => @organization, :prior => @organization.library)
       @organization.environments << @env1

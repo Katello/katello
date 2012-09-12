@@ -29,7 +29,7 @@ describe Glue::Pulp::Repo, :katello => true do
     disable_org_orchestration
     disable_product_orchestration
 
-    @organization = Organization.create!(:name=>ProductTestData::ORG_ID, :label=> ProductTestData::ORG_ID, :cp_key => 'admin-org-37070')
+    @organization = Organization.create!(:name=>ProductTestData::ORG_ID, :label => 'admin-org-37070')
 
     @provider = Provider.create(to_create_custom) do |p|
       p.organization = @organization

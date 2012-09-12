@@ -56,7 +56,7 @@ describe OrganizationsController do
       before do
         @organization.stub!(:update_attributes!).and_return(OrgControllerTest::ORGANIZATION[:organization])
         @organization.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:organization][:name])
-        Organization.stub!(:find_by_cp_key).and_return(@organization)
+        Organization.stub!(:find_by_label).and_return(@organization)
       end
       let(:action) {:update}
       let(:req) do
@@ -101,7 +101,7 @@ describe OrganizationsController do
         response.should_not redirect_to(:action => 'new')
         response.should be_success
         assigns[:organization].name.should == "multi word organization"
-        assigns[:organization].cp_key.should == "multi_word_organization"
+        assigns[:organization].label.should == "multi_word_organization"
       end
 
       it 'should generate a success notice' do
@@ -161,7 +161,7 @@ describe OrganizationsController do
         @controller.stub!(:render).and_return("") #fix for not finding partial
         @org = new_test_org
         @org.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:name])
-        Organization.stub!(:find_by_cp_key).and_return(@org)
+        Organization.stub!(:find_by_label).and_return(@org)
         new_test_org
       end
 
@@ -191,7 +191,7 @@ describe OrganizationsController do
     describe "with exceptions thrown" do
       before (:each) do
         new_test_org
-        Organization.stub!(:find_by_cp_key).and_return(@organization)
+        Organization.stub!(:find_by_label).and_return(@organization)
       end
       it "should generate an errors notice" do
         controller.should notify.error
@@ -204,7 +204,7 @@ describe OrganizationsController do
       before (:each) do
         @organization = new_test_org
         @organization.stub!(:destroy).and_raise(StandardError)
-        Organization.stub!(:find_by_cp_key).and_return(@organization)
+        Organization.stub!(:find_by_label).and_return(@organization)
       end
       
       it "should generate an error notice" do
@@ -228,7 +228,7 @@ describe OrganizationsController do
         @organization = new_test_org
         @organization.stub!(:update_attributes!).and_return(OrgControllerTest::ORGANIZATION[:organization])
         @organization.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:organization][:name])
-        Organization.stub!(:find_by_cp_key).and_return(@organization)
+        Organization.stub!(:find_by_label).and_return(@organization)
       end
       
       it "should call katello org update api" do
@@ -253,7 +253,7 @@ describe OrganizationsController do
       end
       it_should_behave_like "bad request"  do
         let(:req) do
-          bad_req = {:id => @organization.cp_key, :organization => {:desc =>"grand" }}
+          bad_req = {:id => @organization.label, :organization => {:desc =>"grand" }}
           put :update, bad_req
         end
       end
@@ -263,7 +263,7 @@ describe OrganizationsController do
       before(:each) do
         @organization = new_test_org
         @organization.stub!(:update).and_raise(StandardError)
-        Organization.stub!(:find_by_cp_key).and_return(@organization)
+        Organization.stub!(:find_by_label).and_return(@organization)
       end
       
       it "should generate an error notice" do

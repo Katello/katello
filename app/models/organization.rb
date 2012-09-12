@@ -52,17 +52,17 @@ class Organization < ActiveRecord::Base
   validates :description, :katello_description_format => true
 
   if AppConfig.use_cp
-    before_validation :create_cp_key, :on => :create
-    validate :unique_cp_key
+    before_validation :create_label, :on => :create
+    validate :unique_label
 
-    def create_cp_key
-      self.cp_key = self.name.tr(' ', '_') if self.cp_key.blank? && self.name.present?
+    def create_label
+      self.label = self.name.tr(' ', '_') if self.label.blank? && self.name.present?
     end
 
-    def unique_cp_key
+    def unique_label
       # org is being deleted
-      if Organization.find_by_cp_key(self.cp_key).nil? && Organization.unscoped.find_by_cp_key(self.cp_key)
-        errors.add(:organization, _(" '%s' already exists and either has been scheduled for deletion or failed deletion.") % self.cp_key)
+      if Organization.find_by_label(self.label).nil? && Organization.unscoped.find_by_label(self.label)
+        errors.add(:organization, _(" '%s' already exists and either has been scheduled for deletion or failed deletion.") % self.label)
       end
     end
   end

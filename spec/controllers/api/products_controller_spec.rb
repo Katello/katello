@@ -96,7 +96,7 @@ describe Api::ProductsController, :katello => true do
     end
 
     let(:action) { :update }
-    let(:req) { put 'update', :id => @product.cp_id, :organization_id => @organization.cp_key, :product => {:gpg_key_name => gpg_key.name, :description => "another description" } }
+    let(:req) { put 'update', :id => @product.cp_id, :organization_id => @organization.label, :product => {:gpg_key_name => gpg_key.name, :description => "another description" } }
     let(:authorized_user) { user_with_update_permissions }
     let(:unauthorized_user) { user_without_update_permissions }
     it_should_behave_like "protected action"
@@ -104,7 +104,7 @@ describe Api::ProductsController, :katello => true do
      it_should_behave_like "bad request" do
       let(:req) do
         bad_req = {:id => @product.cp_id,
-                   :organization_id => @organization.cp_key,
+                   :organization_id => @organization.label,
                    :product => {:bad_param => "100",
                                 :gpg_key_name => gpg_key.name,
                                 :description => "another description" }
@@ -125,7 +125,7 @@ describe Api::ProductsController, :katello => true do
 
       it "should reset repos' GPGs, if updating recursive" do
         @product.should_receive(:reset_repo_gpgs!)
-        put 'update', :id => @product.cp_id, :organization_id => @organization.cp_key, :product => {:gpg_key_name => gpg_key.name, :description => "another description", :recursive => true }
+        put 'update', :id => @product.cp_id, :organization_id => @organization.label, :product => {:gpg_key_name => gpg_key.name, :description => "another description", :recursive => true }
       end
     end
 
@@ -147,7 +147,7 @@ describe Api::ProductsController, :katello => true do
   context "show all @products in an environment" do
 
     let(:action) { :index }
-    let(:req) { get 'index', :organization_id => @organization.cp_key }
+    let(:req) { get 'index', :organization_id => @organization.label }
     let(:authorized_user) { user_with_read_permissions }
     let(:unauthorized_user) { user_without_read_permissions }
     it_should_behave_like "protected action"
@@ -159,22 +159,22 @@ describe Api::ProductsController, :katello => true do
     end
 
     it "should find organization" do
-      Organization.should_receive(:first).once.with({:conditions => {:cp_key => @organization.cp_key}}).and_return(@organization)
-      get 'index', :organization_id => @organization.cp_key
+      Organization.should_receive(:first).once.with({:conditions => {:label => @organization.label}}).and_return(@organization)
+      get 'index', :organization_id => @organization.label
     end
 
     it "should find environment" do
       KTEnvironment.should_receive(:find_by_id).once.with(@environment.id).and_return([@environment])
-      get 'index', :organization_id => @organization.cp_key, :environment_id => @environment.id
+      get 'index', :organization_id => @organization.label, :environment_id => @environment.id
     end
 
     it "should respond with success" do
-      get 'index', :organization_id => @organization.cp_key, :environment_id => @environment.id
+      get 'index', :organization_id => @organization.label, :environment_id => @environment.id
       response.should be_success
     end
 
     it "should respond return product json" do
-      get 'index', :organization_id => @organization.cp_key, :environment_id => @environment.id
+      get 'index', :organization_id => @organization.label, :environment_id => @environment.id
       response.body.should == @dumb_prod.to_json
     end
   end
@@ -187,22 +187,22 @@ describe Api::ProductsController, :katello => true do
     end
 
     it "should find organization" do
-      Organization.should_receive(:first).once.with({:conditions => {:cp_key => @organization.cp_key}}).and_return(@organization)
-      get 'index', :organization_id => @organization.cp_key
+      Organization.should_receive(:first).once.with({:conditions => {:label => @organization.label}}).and_return(@organization)
+      get 'index', :organization_id => @organization.label
     end
 
     it "should find library" do
       @organization.should_receive(:library).once.and_return(@organization.library)
-      get 'index', :organization_id => @organization.cp_key
+      get 'index', :organization_id => @organization.label
     end
 
     it "should respond with success" do
-      get 'index', :organization_id => @organization.cp_key, :environment_id => @environment.id
+      get 'index', :organization_id => @organization.label, :environment_id => @environment.id
       response.should be_success
     end
 
     it "should respond return product json" do
-      get 'index', :organization_id => @organization.cp_key, :environment_id => @environment.id
+      get 'index', :organization_id => @organization.label, :environment_id => @environment.id
       response.body.should == @dumb_prod.to_json
     end
   end
@@ -210,7 +210,7 @@ describe Api::ProductsController, :katello => true do
   context "show repositories for a product in an environment" do
     let(:action) { :repositories }
     let(:req) {
-      get 'repositories', :organization_id => @organization.cp_key, :environment_id => @organization.library.id, :id => @product.id
+      get 'repositories', :organization_id => @organization.label, :environment_id => @organization.library.id, :id => @product.id
     }
     let(:authorized_user) { user_with_read_permissions }
     let(:unauthorized_user) { user_without_read_permissions }
@@ -218,25 +218,25 @@ describe Api::ProductsController, :katello => true do
 
     it "should find environment" do
       KTEnvironment.should_receive(:find_by_id).once.with(@environment.id).and_return([@environment])
-      get 'repositories', :organization_id => @organization.cp_key, :environment_id => @environment.id, :id => @product.id
+      get 'repositories', :organization_id => @organization.label, :environment_id => @environment.id, :id => @product.id
     end
 
     it "should find product" do
       Product.should_receive(:find_by_cp_id).once.with(@product.id.to_s).and_return(@products[0])
-      get 'repositories', :organization_id => @organization.cp_key, :environment_id => @environment.id, :id => @product.id
+      get 'repositories', :organization_id => @organization.label, :environment_id => @environment.id, :id => @product.id
     end
 
     it "should retrieve all repositories for the product" do
       @product.stub!(:readable?).and_return(true)
       Product.stub!(:all_readable).and_return(@products)
       @product.should_receive(:repos).once.with(@environment, nil).and_return({})
-      get 'repositories', :organization_id => @organization.cp_key, :environment_id => @environment.id, :id => @product.id
+      get 'repositories', :organization_id => @organization.label, :environment_id => @environment.id, :id => @product.id
     end
 
     it "should return json of product repositories" do
       @product.stub!(:readable?).and_return(true)
       @repositories.stub!(:where).and_return(@repositories)
-      get 'repositories', :organization_id => @organization.cp_key, :environment_id => @environment.id, :id => @product.id
+      get 'repositories', :organization_id => @organization.label, :environment_id => @environment.id, :id => @product.id
       response.body.should == @repositories.to_json
     end
   end
