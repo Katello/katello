@@ -381,7 +381,7 @@ module Glue::Pulp::Repos
       Repository.destroy_all(:id=>repo_id)
     end
 
-    def add_repo(name, url, repo_type, gpg = nil)
+    def add_repo(label, name, url, repo_type, gpg = nil)
       check_for_repo_conflicts(name)
       key = EnvironmentProduct.find_or_create(self.organization.library, self)
       repo = Repository.create!(:environment_product => key, :pulp_id => repo_id(name),
@@ -389,6 +389,7 @@ module Glue::Pulp::Repos
           :relative_path => Glue::Pulp::Repos.custom_repo_path(self.library, self, name),
           :arch => arch,
           :name => name,
+          :label=>label,
           :feed => url,
           :content_type => repo_type,
           :gpg_key => gpg

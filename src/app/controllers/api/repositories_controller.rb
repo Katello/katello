@@ -63,7 +63,7 @@ class Api::RepositoriesController < Api::ApiController
     elsif params[:gpg_key_name].nil?
       gpg = @product.gpg_key
     end
-    content = @product.add_repo(params[:name], params[:url], 'yum', gpg)
+    content = @product.add_repo(params[:label], params[:name], params[:url], 'yum', gpg)
     render :json => content
   end
 
