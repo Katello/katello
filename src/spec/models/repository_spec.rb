@@ -24,7 +24,7 @@ describe Repository, :katello => true do
     disable_product_orchestration
     disable_user_orchestration
     suffix = rand(10**8).to_s
-    @organization = Organization.create!(:name => "test_organization#{suffix}", :cp_key => "test_organization#{suffix}")
+    @organization = Organization.create!(:name=>"test_organization#{suffix}", :label=> "test_organization#{suffix}", :cp_key => "test_organization#{suffix}")
 
     User.current = superadmin
     @product = Product.new({:name => "prod"})

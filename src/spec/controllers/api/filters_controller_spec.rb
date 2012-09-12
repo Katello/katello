@@ -30,7 +30,7 @@ describe Api::FiltersController, :katello => true do
     disable_filter_orchestration
     disable_product_orchestration
 
-    @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
+    @organization = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
     @filter = Filter.create!(:name => pulp_id, :description => description, :package_list => package_list, :organization => @organization)
     @product = MemoStruct.new(:filters => [], :id => 1000)
   end

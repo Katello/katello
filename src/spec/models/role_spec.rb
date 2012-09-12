@@ -21,7 +21,7 @@ describe Role do
   end
 
  context "test read only" do
-   let(:organization) {Organization.create!(:name => "test_org", :cp_key =>"my_key")}
+   let(:organization) {Organization.create!(:name=>"test_org", :label=> "test_org", :cp_key =>"my_key")}
    let(:role) { Role.make_readonly_role("name", organization)}
    let(:global_role) { Role.make_readonly_role("global-name")}
    let(:user) {
@@ -52,7 +52,7 @@ describe Role do
    end
 
    context "Check the envs" do
-     let(:environment){KTEnvironment.create!(:name =>"my_env", :organization => organization, :prior => organization.library)}
+     let(:environment){KTEnvironment.create!(:name=>"my_env", :label=> "my_env", :organization => organization, :prior => organization.library)}
      KTEnvironment.read_verbs.each do |verb|
        specify{user.allowed_to?(verb, :environments,environment.id,organization).should be_true}
        specify{user.allowed_to?(verb, :environments).should be_false}
@@ -66,7 +66,7 @@ describe Role do
  context "read ldap roles" do
    before { AppConfig.ldap_roles = true }
    after { AppConfig.ldap_roles = false }
-   let(:organization) {Organization.create!(:name => "test_org", :cp_key =>"my_key")}
+   let(:organization) {Organization.create!(:name=>"test_org", :label=> "test_org", :cp_key =>"my_key")}
    let(:role) { Role.make_readonly_role("name", organization)}
    let(:ldap_role) { Role.make_readonly_role("ldap_role", organization)}
    context "setting roles on login" do

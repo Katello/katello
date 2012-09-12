@@ -59,8 +59,8 @@ describe Api::SystemsController do
     Resources::Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Resources::Pulp::Consumer.stub!(:update).and_return(true)
 
-    @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-    @environment_1 = KTEnvironment.create!(:name => 'test_1', :prior => @organization.library.id, :organization => @organization)
+    @organization = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
+    @environment_1 = KTEnvironment.create!(:name=>'test_1', :label=> 'test_1', :prior => @organization.library.id, :organization => @organization)
 
     @system_group_1 = SystemGroup.create!(:name => 'System Group 1', :organization_id => @organization.id )
     @system_group_2 = SystemGroup.create!(:name => 'System Group 2', :description => "fake description", :organization => @organization)
@@ -98,7 +98,7 @@ describe Api::SystemsController do
 
     context "in organization with multiple environments" do
       before(:each) do
-        @environment_2 = KTEnvironment.new(:name => 'test_2', :prior => @environment_1, :organization => @organization)
+        @environment_2 = KTEnvironment.new(:name=>'test_2', :label=> 'test_2', :prior => @environment_1, :organization => @organization)
         @environment_2.save!
       end
 
@@ -232,7 +232,7 @@ describe Api::SystemsController do
     let(:uuid_3) {"ghi"}
 
     before(:each) do
-      @environment_2 = KTEnvironment.new(:name => 'test_2', :prior => @environment_1, :organization => @organization)
+      @environment_2 = KTEnvironment.new(:name=>'test_2', :label=> 'test_2', :prior => @environment_1, :organization => @organization)
       @environment_2.save!
 
       @system_1 = create_system(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid_1)
@@ -364,7 +364,7 @@ describe Api::SystemsController do
   describe "update a system" do
     before(:each) do
       @sys = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid, :description => "fake description")
-      @environment_2 = KTEnvironment.create!(:name => 'test_2', :prior => @organization.library.id, :organization => @organization)
+      @environment_2 = KTEnvironment.create!(:name=>'test_2', :label=> 'test_2', :prior => @organization.library.id, :organization => @organization)
       Resources::Candlepin::Consumer.stub!(:get).and_return({:uuid => uuid})
       System.stub!(:first).and_return(@sys)
     end

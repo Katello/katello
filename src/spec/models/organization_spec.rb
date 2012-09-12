@@ -19,22 +19,24 @@ describe Organization do
     Resources::Candlepin::Owner.stub!(:create_user).and_return(true)
     Resources::Candlepin::Owner.should_receive(:create).at_least(:once).and_return({})
     disable_env_orchestration
-    @organization = Organization.create(:name => 'test_organization', :cp_key => 'test_organization')
+    @organization = Organization.create(:name => 'test_organization', :label=>'test_organization', :cp_key => 'test_organization')
   end
 
   context "organization validation" do
-    specify { Organization.new(:name => 'name', :cp_key => 'org').should be_valid }
-    specify { Organization.new(:name => 'name', :cp_key => 'with_underscore').should be_valid }
-    specify { Organization.new(:name => 'name', :cp_key => 'With_Capital_letter').should be_valid }
-    specify { Organization.new(:name => 'name', :cp_key => 'with_number').should be_valid }
-    specify { Organization.new(:name => 'name', :cp_key => 'with\'space').should_not be_valid }
+    specify { Organization.new(:name => 'name', :label=>"label", :cp_key => 'org').should be_valid }
+    specify { Organization.new(:name => 'name', :label=>"label",:cp_key => 'with_underscore').should be_valid }
+    specify { Organization.new(:name => 'name', :label=>"label",:cp_key => 'With_Capital_letter').should be_valid }
+    specify { Organization.new(:name => 'name', :label=>"label",:cp_key => 'with_number').should be_valid }
+    specify { Organization.new(:name => 'name', :label=>"label",:cp_key => 'with\'space').should_not be_valid }
     # creates cp_key from name
-    specify { Organization.new(:name => 'without cp_key').should be_valid }
-    specify { Organization.new(:cp_key => 'without_name').should_not be_valid }
+    specify { Organization.new(:name => 'without cp_key', :label=>"label").should be_valid }
+    specify { Organization.new(:cp_key => 'without_name', :label=>"label").should_not be_valid }
+    specify { Organization.new(:cp_key => 'without_name', :label=>"label foo").should_not be_valid }
   end
 
   context "create an organization" do
     specify {@organization.name.should == 'test_organization'}
+    specify {@organization.label.should == 'test_organization'}
     specify {@organization.library.should_not be_nil}
     specify {@organization.redhat_provider.should_not be_nil}
     specify {@organization.environments.should be_empty}
@@ -42,9 +44,12 @@ describe Organization do
     specify {Organization.where(:name => @organization.name).first.should == @organization}
     
     it "should complain on duplicate name" do
-      lambda{organization.create(:name => @organization.name)}.should raise_error
+      lambda{Organization.create!(:name => @organization.name, :label => @organization.name + "foo")}.should raise_error
     end
-    
+    it "should complain on duplicate label" do
+      lambda{Organization.create!(:name => @organization.name + "foo", :label =>@organization.name)}.should raise_error
+    end
+
   end
 
   context "update an organization" do
@@ -74,7 +79,7 @@ describe Organization do
       org_id = @organization.id
       
       env_name = "prod"      
-      @env = KTEnvironment.new(:name => env_name, :library => false, :prior => @organization.library)
+      @env = KTEnvironment.new(:name=>env_name, :label=> env_name, :library => false, :prior => @organization.library)
       @organization.environments << @env
       @env.save!
       
@@ -89,13 +94,13 @@ describe Organization do
     it "can delete the org and env of a different org exist" do
       env_name = "prod"
       
-      @org2 = Organization.create!(:name => "foobar", :cp_key => 'foobar')
+      @org2 = Organization.create!(:name=>"foobar", :label=> "foobar", :cp_key => 'foobar')
 
-      @env1 = KTEnvironment.new(:name => env_name, :organization => @organization, :prior => @organization.library)
+      @env1 = KTEnvironment.new(:name=>env_name, :label=> env_name, :organization => @organization, :prior => @organization.library)
       @organization.environments << @env1
       @env1.save!    
       
-      @env2 = KTEnvironment.new(:name => env_name, :organization => @org2, :prior => @organization.library)
+      @env2 = KTEnvironment.new(:name=>env_name, :label=> env_name, :organization => @org2, :prior => @organization.library)
       @org2.environments << @env2
       @env2.save!
       
@@ -108,9 +113,9 @@ describe Organization do
     end
 
     it "can delete an org where there is a full environment path" do
-       dev = KTEnvironment.create!(:name => "Dev", :organization => @organization, :prior => @organization.library)
-       qa = KTEnvironment.create!(:name => "QA", :organization => @organization, :prior => dev)
-       prod =  KTEnvironment.create!(:name => "prod", :organization => @organization, :prior => qa)
+       dev = KTEnvironment.create!(:name=>"Dev", :label=> "Dev", :organization => @organization, :prior => @organization.library)
+       qa = KTEnvironment.create!(:name=>"QA", :label=> "QA", :organization => @organization, :prior => dev)
+       prod =  KTEnvironment.create!(:name=>"prod", :label=> "prod", :organization => @organization, :prior => qa)
        @organization = @organization.reload
        @organization.destroy
        lambda{Organization.find(@organization.id)}.should raise_error(ActiveRecord::RecordNotFound)

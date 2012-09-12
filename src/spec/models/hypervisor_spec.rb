@@ -7,8 +7,8 @@ describe Hypervisor do
   before do
     disable_org_orchestration
 
-    @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-    @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.library.id, :organization => @organization)
+    @organization = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
+    @environment = KTEnvironment.create!(:name=>'test', :label=> 'test', :prior => @organization.library.id, :organization => @organization)
 
     Organization.stub!(:first).and_return(@organization)
   end

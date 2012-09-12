@@ -68,7 +68,7 @@ describe EnvironmentsController do
       login_user
       set_default_locale
       new_test_org
-      @environment = KTEnvironment.create!(:name => "boo", :organization=> @organization, :prior => @organization.library)
+      @environment = KTEnvironment.create!(:name=>"boo", :label=> "boo", :organization=> @organization, :prior => @organization.library)
     end
     it_should_behave_like "bad request"  do
       let(:req) do
@@ -134,9 +134,9 @@ describe EnvironmentsController do
 
 
         it "should create new environment" do
-          KTEnvironment.should_receive(:new).with({:name => 'production',
+          KTEnvironment.should_receive(:new).with({:name => 'production',:label=>"boo",
                 :prior => @org.library, :description => nil, :organization_id => @org.id}).and_return(@new_env)
-          post :create, :organization_id => @org.cp_key, :kt_environment => {:name => 'production', :prior => @org.library}
+          post :create, :organization_id => @org.cp_key, :kt_environment => {:name => 'production', :label=>"boo", :prior => @org.library}
         end
 
         it "should save new environment" do
