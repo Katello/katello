@@ -92,6 +92,9 @@ class SyncPlansController < ApplicationController
 
   #convert date, time from UI to object
   def convert_date_time(date, time)
+    raise _("Start Date and Time can't be blank") if (date.nil? or date.blank?) or (time.nil? or time.blank?)
+
+    # TODO: can't assume the client is in the same timezone as the server
     sync_event = date + ' ' + time + ' '  + DateTime.now.zone
     DateTime.strptime(sync_event, "%m/%d/%Y %I:%M %P %:z")
   end
