@@ -173,13 +173,13 @@ describe Api::RepositoriesController, :katello => true do
         Product.should_receive(:find_by_cp_id).with('product_1').and_return(@product)
         @product.should_receive(:add_repo).and_return({})
 
-        post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
+        post 'create', :name => 'repo_1', :label => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
       end
 
       context 'there is already a repo for the product with the same name' do
         it "should notify about conflict" do
           @product.stub(:add_repo).and_return { raise Errors::ConflictException }
-          post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
+          post 'create', :name => 'repo_1', :label => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
           response.code.should == '409'
         end
       end
@@ -194,34 +194,34 @@ describe Api::RepositoriesController, :katello => true do
 
         context "we dont provide gpg_key_name key" do
           it "should use the product's key" do
-            @product.should_receive(:add_repo).with do |name, url, type, gpg|
+            @product.should_receive(:add_repo).with do |label ,name, url, type, gpg|
               gpg == product_gpg
             end.and_return({})
-            post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
+            post 'create', :name => 'repo_1', :label => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
           end
         end
 
         context "we provide another gpg_key_name key" do
           it "should use provided key" do
-            @product.should_receive(:add_repo).with do |name, url, type, gpg|
+            @product.should_receive(:add_repo).with do |label, name, url, type, gpg|
               gpg == repo_gpg
             end.and_return({})
-            post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label, :gpg_key_name => repo_gpg.name
+            post 'create', :name => 'repo_1', :label => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label, :gpg_key_name => repo_gpg.name
           end
         end
 
         context "we provide empty gpg_key_name key" do
           it "should use no gpg key" do
-            @product.should_receive(:add_repo).with do |name, url, type, gpg|
+            @product.should_receive(:add_repo).with do |label, name, url, type, gpg|
               gpg == nil
             end.and_return({})
-            post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label, :gpg_key_name => ""
+            post 'create', :name => 'repo_1', :label => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label, :gpg_key_name => ""
           end
         end
 
         context "the url is empty" do
           let(:req) do
-            post 'create', :name => 'repo_1', :url => '', :product_id => 'product_1', :organization_id => @organization.label, :gpg_key_name => ""
+            post 'create', :name => 'repo_1', :label => 'repo_1', :url => '', :product_id => 'product_1', :organization_id => @organization.label, :gpg_key_name => ""
           end
           it_should_behave_like "bad request"
         end

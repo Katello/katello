@@ -189,11 +189,12 @@ describe Product, :katello => true do
       context "when there is a repo with the same name for the product" do
         before do
           @repo_name = "repo"
-          @p.add_repo(@repo_name, "http://test/repo","yum" )
+          @repo_label = "repo"
+          @p.add_repo(@repo_label, @repo_name, "http://test/repo","yum" )
         end
 
         it "should raise conflict error" do
-          lambda { @p.add_repo("repo", "http://test/repo","yum") }.should raise_error(Errors::ConflictException)
+          lambda { @p.add_repo(@repo_label, @repo_name, "http://test/repo","yum") }.should raise_error(Errors::ConflictException)
         end
       end
     end
