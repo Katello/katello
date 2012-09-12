@@ -25,8 +25,8 @@ describe Api::SystemGroupsController do
     disable_org_orchestration
     disable_consumer_group_orchestration
 
-    @org = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-    @environment = KTEnvironment.create!(:name => 'test_1', :prior => @org.library.id, :organization => @org)
+    @org = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
+    @environment = KTEnvironment.create!(:name=>'test_1', :label=> 'test_1', :prior => @org.library.id, :organization => @org)
 
     setup_system_creation
 
@@ -138,7 +138,7 @@ describe Api::SystemGroupsController do
        end
 
        it "should allow two groups with the same name in different orgs" do
-         @org2 = Organization.create!(:name => 'test_org2', :cp_key => 'test_org2')
+         @org2 = Organization.create!(:name=>'test_org2', :label=> 'test_org2', :cp_key => 'test_org2')
          #setup_current_organization(@org2)
          post :create, :organization_id=>@org2.cp_key, :system_group=>{:name=>@group.name, :description=>@group.description}
          response.should be_success
@@ -195,7 +195,7 @@ describe Api::SystemGroupsController do
        end
 
        it "should not let you copy one group to a different org" do
-         @org2 = Organization.create!(:name => 'test_org2', :cp_key => 'test_org2')
+         @org2 = Organization.create!(:name=>'test_org2', :label=> 'test_org2', :cp_key => 'test_org2')
          post :copy, :organization_id=>@org2.cp_key,  :id=>@group.id, :system_group=>{:new_name=>"foo2", :description=>"describe"}
          response.should_not be_success
          SystemGroup.where(:name=>"foo2").count.should == 0

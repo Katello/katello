@@ -154,7 +154,7 @@ describe Api::SyncController, :katello => true do
 
     describe "start a sync" do
       before(:each) do
-        #@organization = Organization.create!(:name => "organization", :cp_key => "123")
+        #@organization = Organization.create!(:name=>"organization", :label=> "organization", :cp_key => "123")
         
         Resources::Pulp::Repository.stub(:sync).with("1").and_return(async_task_1)
         Resources::Pulp::Repository.stub(:sync).with("2").and_return(async_task_2)
@@ -195,7 +195,7 @@ describe Api::SyncController, :katello => true do
 
     describe "cancel a sync" do
       before(:each) do
-        @organization = Organization.create!(:name => "organization", :cp_key => "123")
+        @organization = Organization.create!(:name=>"organization", :label=> "organization", :cp_key => "123")
 
         @syncable = mock('syncable')
         @syncable.stub!(:id)
@@ -228,7 +228,7 @@ describe Api::SyncController, :katello => true do
 
     describe "get status of last sync" do
       before(:each) do
-        @organization = Organization.create!(:name => "organization", :cp_key => "123")
+        @organization = Organization.create!(:name=>"organization", :label=> "organization", :cp_key => "123")
 
         @syncable = mock()
         @syncable.stub!(:latest_sync_statuses).once.and_return([async_task_1, async_task_2])

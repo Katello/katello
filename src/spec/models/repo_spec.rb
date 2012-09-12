@@ -29,7 +29,7 @@ describe Glue::Pulp::Repo, :katello => true do
     disable_org_orchestration
     disable_product_orchestration
 
-    @organization = Organization.create!(:name => ProductTestData::ORG_ID, :cp_key => 'admin-org-37070')
+    @organization = Organization.create!(:name=>ProductTestData::ORG_ID, :label=> ProductTestData::ORG_ID, :cp_key => 'admin-org-37070')
 
     @provider = Provider.create(to_create_custom) do |p|
       p.organization = @organization
@@ -326,7 +326,7 @@ describe Glue::Pulp::Repo, :katello => true do
 
   describe "Cloned repo id" do
     before do
-      @to_env = KTEnvironment.create!(:name=>"Prod", :organization => @organization, :prior => @organization.library)
+      @to_env = KTEnvironment.create!(:name=>"Prod", :label=> "Prod", :organization => @organization, :prior => @organization.library)
     end
     it "should be composed from various attributes to be uniqe" do
       cloned_repo_id = @repo.clone_id(@to_env)
@@ -341,7 +341,7 @@ describe Glue::Pulp::Repo, :katello => true do
       Resources::Pulp::Repository.stub(:packages).and_return([])
       Resources::Pulp::Repository.stub(:errata).and_return([])
 
-      @to_env = KTEnvironment.create!(:organization =>@organization, :name=>"Prod", :prior=>@organization.library)
+      @to_env = KTEnvironment.create!(:organization =>@organization, :name=>"Prod",:label=>"Prod", :prior=>@organization.library)
       @from_env = @to_env.prior
 
       ep = EnvironmentProduct.find_or_create(@to_env, @product1)

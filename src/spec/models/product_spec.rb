@@ -24,7 +24,7 @@ describe Product, :katello => true do
   before(:each) do
     disable_org_orchestration
 
-    @organization = Organization.create!(:name => ProductTestData::ORG_ID, :cp_key => 'admin-org-37070')
+    @organization = Organization.create!(:name=>ProductTestData::ORG_ID, :label=> ProductTestData::ORG_ID, :cp_key => 'admin-org-37070')
     @provider     = @organization.redhat_provider
     @cdn_mock = Resources::CDN::CdnResource.new("https://cdn.redhat.com", {:ssl_client_cert => "456",:ssl_ca_file => "fake-ca.pem", :ssl_client_key => "123"})
     @substitutor_mock = Util::CdnVarSubstitutor.new(@cdn_mock)
@@ -317,8 +317,8 @@ describe Product, :katello => true do
       disable_repo_orchestration
       disable_filter_orchestration
 
-      @environment1 = KTEnvironment.create!(:name => 'dev', :library => false, :prior => @organization.library, :organization => @organization)
-      @environment2 = KTEnvironment.create!(:name => 'prod', :library => false, :prior => @environment1, :organization => @organization)
+      @environment1 = KTEnvironment.create!(:name=>'dev', :label=> 'dev', :library => false, :prior => @organization.library, :organization => @organization)
+      @environment2 = KTEnvironment.create!(:name=>'prod', :label=> 'prod', :library => false, :prior => @environment1, :organization => @organization)
 
       @filter1 = Filter.create!(:name => FILTER1_ID, :package_list => PACKAGE_LIST_1, :organization => @organization)
       @filter2 = Filter.create!(:name => FILTER2_ID, :package_list => PACKAGE_LIST_2, :organization => @organization)
@@ -492,7 +492,7 @@ describe Product, :katello => true do
         Resources::Pulp::Repository.stub(:packages).and_return([])
         Resources::Pulp::Repository.stub(:errata).and_return([])
 
-        @env = KTEnvironment.create!(:name => "new_repo", :organization =>@organization, :prior=>@organization.library)
+        @env = KTEnvironment.create!(:name=>"new_repo", :label=> "new_repo", :organization =>@organization, :prior=>@organization.library)
         @new_repo = promote(@repo, @env)
         @new_repo.stub(:content).and_return(OpenStruct.new(:id=>"adsf", :gpgUrl=>'http://foo'))
         @repo.stub(:content).and_return(OpenStruct.new(:id=>"adsf", :gpgUrl=>''))

@@ -44,8 +44,8 @@ describe System do
   before(:each) do
     disable_org_orchestration
 
-    @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-    @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.library.id, :organization => @organization)
+    @organization = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
+    @environment = KTEnvironment.create!(:name=>'test', :label=> 'test', :prior => @organization.library.id, :organization => @organization)
     @organization.reload #reload to get environment info
     Organization.stub!(:first).and_return(@organization)
 
@@ -256,7 +256,7 @@ describe System do
     before do
       disable_product_orchestration
       @product = Product.create!(:name =>"prod1", :cp_id => '12345', :provider => @organization.redhat_provider, :environments => [@organization.library])
-      @environment = KTEnvironment.create!({:name => "Dev", :prior => @organization.library, :organization => @organization}) do |e|
+      @environment = KTEnvironment.create!({:name=>"Dev", :label=> "Dev", :prior => @organization.library, :organization => @organization}) do |e|
         e.products << @product
       end
       if AppConfig.katello?

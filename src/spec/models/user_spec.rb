@@ -58,7 +58,7 @@ describe User do
 
     it "have a default org" do
       disable_org_orchestration
-      @org = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
+      @org = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
       @user.default_org = @org
       @user.save!
       @user.default_org.should == @org
@@ -66,8 +66,8 @@ describe User do
 
     it "have permission for two orgs" do
       disable_org_orchestration
-      org = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
-      moreorg = Organization.create!(:name => 'another_test_organization', :cp_key => 'another_test_organization')
+      org = Organization.create!(:name=>'test_organization', :label=> 'test_organization', :cp_key => 'test_organization')
+      moreorg = Organization.create!(:name=>'another_test_organization', :label=> 'another_test_organization', :cp_key => 'another_test_organization')
       allow(@user.own_role, [:read], :providers, nil, org)
       allow(@user.own_role,[:read], :providers, nil, moreorg)
       @user.allowed_organizations.size.should == 2
@@ -78,8 +78,8 @@ describe User do
 
     it "be able to set default_environment" do
       disable_org_orchestration
-      @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-      @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.library.id,
+      @organization = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
+      @environment = KTEnvironment.create!(:name=>'test', :label=> 'test', :prior => @organization.library.id,
                                            :organization => @organization)
 
       @user.default_environment = @environment
@@ -109,7 +109,7 @@ describe User do
 
     it "have a default org" do
       disable_org_orchestration
-      @org = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
+      @org = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
       @user.default_org = @org
       @user.save!
       @user.default_org.should == @org
@@ -117,8 +117,8 @@ describe User do
 
     it "have permission for two orgs" do
       disable_org_orchestration
-      org = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
-      moreorg = Organization.create!(:name => 'another_test_organization', :cp_key => 'another_test_organization')
+      org = Organization.create!(:name=>'test_organization', :label=> 'test_organization', :cp_key => 'test_organization')
+      moreorg = Organization.create!(:name=>'another_test_organization', :label=> 'another_test_organization', :cp_key => 'another_test_organization')
       allow(@user.own_role, [:read], :providers, nil, org)
       allow(@user.own_role,[:read], :providers, nil, moreorg)
       @user.allowed_organizations.size.should == 2
@@ -129,8 +129,8 @@ describe User do
 
     it "be able to set default_environment" do
       disable_org_orchestration
-      @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-      @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.library.id,
+      @organization = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
+      @environment = KTEnvironment.create!(:name=>'test', :label=> 'test', :prior => @organization.library.id,
                                            :organization => @organization)
 
       @user.default_environment = @environment
@@ -140,8 +140,8 @@ describe User do
 
     it "be able to find users by default environment" do
       disable_org_orchestration
-      @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-      @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.library.id,
+      @organization = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
+      @environment = KTEnvironment.create!(:name=>'test', :label=> 'test', :prior => @organization.library.id,
                                            :organization => @organization)
 
       @user.default_environment = @environment
@@ -150,8 +150,8 @@ describe User do
 
     it "should unset default env after environment gets deleted" do
       disable_org_orchestration
-      @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-      @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.library.id,
+      @organization = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
+      @environment = KTEnvironment.create!(:name=>'test', :label=> 'test', :prior => @organization.library.id,
                                            :organization => @organization)
 
       @user.default_environment = @environment

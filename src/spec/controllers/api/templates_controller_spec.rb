@@ -20,14 +20,14 @@ describe Api::TemplatesController, :katello => true do
   TEMPLATE_NAME = "template"
 
   before(:each) do
-    @organization = Organization.new(:name => 'organization', :cp_key => 'organization')
+    @organization = Organization.new(:name => 'organization', :label=>"organization", :cp_key => 'organization')
     @organization.id = 1
 
-    @environment = KTEnvironment.new(:name => 'environment', :library => false)
+    @environment = KTEnvironment.new(:name=>'environment', :label=> 'environment', :library => false)
     @environment.id = 1
-    @environment2 = KTEnvironment.new(:name => 'environment2')
+    @environment2 = KTEnvironment.new(:name=>'environment2', :label => 'environment2')
     @environment2.id = 3
-    @library = KTEnvironment.new(:name => 'Library', :library => true)
+    @library = KTEnvironment.new(:name => 'Library', :library => true, :label => 'library')
     @library.id = 2
     KTEnvironment.stub(:find).with(@library.id).and_return(@library)
     KTEnvironment.stub(:find).with(@environment.id).and_return(@environment)
