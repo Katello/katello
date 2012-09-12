@@ -26,7 +26,7 @@ describe Api::SystemGroupsController do
     disable_consumer_group_orchestration
 
     @org = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
-    @environment = KTEnvironment.create!(:name => 'test_1', :prior => @org.library.id, :organization => @org)
+    @environment = KTEnvironment.create!(:name=>'test_1', :label=> 'test_1', :prior => @org.library.id, :organization => @org)
 
     setup_system_creation
 
