@@ -54,14 +54,15 @@ class Api::FiltersController < Api::ApiController
   def create
     @filter = Filter.create!(:name => params[:name],
       :organization => @organization,
-      :description => params[:description],
-      :package_list => params[:package_list]
+      :description => params[:description]
     )
+    params[:package_list].uniq.each{|i| @filter.add_package(i)}
+    @filter.save!
     render :json => @filter.to_json
   end
 
   def update
-    @filter.package_list = params[:packages] unless params[:packages].nil?
+    @filter.reconcile_packages!(params[:packages]) unless params[:packages].nil?
     @filter.save!
 
     render :json => @filter.to_json

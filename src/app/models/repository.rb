@@ -336,6 +336,16 @@ class Repository < ActiveRecord::Base
     results.empty? ? 0 : results.total
   end
 
+  #Filters that should be applied for content coming into this repository.
+  def applicable_filters
+    previous = self.environmental_instances.in_environment(self.environment.prior).first
+    if previous && previous.environment.prior.nil?  #if previous exists and is library
+      previous.filters + self.product.filters
+    else
+      []
+    end
+  end
+
   private
 
   def refresh_content

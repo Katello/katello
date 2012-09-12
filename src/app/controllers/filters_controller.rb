@@ -194,15 +194,16 @@ class FiltersController < ApplicationController
 
   def add_packages
     pkgs = params[:packages]
-    @filter.package_list += (pkgs)
-    @filter.package_list.uniq!
+    pkgs -= @filter.package_list
+    pkgs.uniq!
+    pkgs.each{|pkg| @filter.add_package(pkg)}
     @filter.save!
-    render :json=>pkgs
+    render :json=> pkgs
   end
 
   def remove_packages
-    pkgs = params[:packages]
-    @filter.package_list -= pkgs
+    pkg_in = params[:packages]
+    pkg_in.each{|pkg| @filter.remove_package(pkg) }
     @filter.save!
     render :text=>""
   end
