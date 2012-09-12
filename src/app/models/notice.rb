@@ -39,6 +39,7 @@ class Notice < ActiveRecord::Base
   validates_length_of :request_type, :maximum => 255
 
   before_validation :set_default_notice_level
+  before_validation :trim_text
   before_save :add_to_all_users
 
   scope :readable, lambda { |user| joins(:users).where('users.id' => user) }
@@ -92,5 +93,9 @@ class Notice < ActiveRecord::Base
 
   def set_default_notice_level
     self.level ||= TYPES.first
+  end
+
+  def trim_text
+    self.text = "#{self.text[0, 1020]} ..." if self.text.size > 1024
   end
 end
