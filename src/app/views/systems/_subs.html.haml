@@ -25,7 +25,7 @@
                 %td{:style => "padding-top:9px;"}
                 %td{:style => "padding-top:9px;", :colspan => '6'}
                   - if editable
-                    %span.fl= check_box_tag "system[#{entitlement.entitlementId}]", value="#{entitlement.entitlementId}", false
+                    %span.fl= check_box_tag "subscription[#{entitlement.entitlementId}]", value="#{entitlement.entitlementId}", false
                   &nbsp;
                   = subscriptions_pool_link_helper(entitlement.poolName, entitlement.poolId, entitlement.provider_id, current_organization)
               %tr{:id => "#{entitlement.entitlementId}-row2", :class => cycle_class}
@@ -94,7 +94,7 @@
                   %td{:style => "padding-top:9px;"}
                   %td{:style => "padding-top:9px;", :colspan => '6'}
                     - if editable
-                      %span.fl= check_box_tag "system[#{sub.cp_id}]", false
+                      %span.fl= check_box_tag "subscription[#{sub.cp_id}]", false
                     &nbsp;
                     = subscriptions_pool_link_helper(sub.product_name, sub.cp_id, sub.provider_id, current_organization)
                 %tr{:id => "#{sub.cp_id}-row2", :class => cycle_class}
@@ -112,7 +112,7 @@
                       - if sub.quantity < 0
                         = _("Unlimited")
                       -else
-                        %div{:class=>"ui-nonspinner-label"} 0 of #{sub.quantity - sub.consumed}
+                        %div{:id=>"spinner_label_#{sub.cp_id}", :class=>"ui-nonspinner-label"} 0 of #{sub.quantity - sub.consumed}
                       = hidden_field_tag "spinner[#{sub.cp_id}]", 0, :class => "ui-nonspinner"
                   %td{:style => "padding-top:9px;"} #{format_time sub.start_date}
                   %td{:style => "padding-top:9px;"} #{format_time sub.end_date}
