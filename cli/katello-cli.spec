@@ -21,7 +21,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.1.6
+Version:       1.1.7
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 Requires:      %{base_name}-cli-common
@@ -150,6 +150,14 @@ popd
 make -C po clean
 
 %changelog
+* Wed Sep 12 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.7-1
+- Fixing provides/obsoletes bug (jomara@redhat.com)
+- Removing extra configure code for headpin bin; adding provides to cli script
+  for headpin (jomara@redhat.com)
+- Fencing headpin CLI into katello cli. CLI will now load appropriate functions
+  based on client.conf configuration. Katello cli now ships with headpin
+  symlink (jomara@redhat.com)
+
 * Thu Sep 06 2012 Ivan Necas <inecas@redhat.com> 1.1.6-1
 - 835591 - usage limit is properly displayed in the list (lzap+git@redhat.com)
 - make pylint happy on el6 (msuchy@redhat.com)
