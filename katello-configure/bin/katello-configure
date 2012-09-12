@@ -511,7 +511,8 @@ begin
 		processing_logfile = nil
 		t = nil
 		while line = f.gets do
-      puppet_logfile.syswrite(line.gsub(/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/, ''))
+      time = Time.now.strftime("%y%m%d-%H:%M:%S ")
+      puppet_logfile.syswrite(time + line.gsub(/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/, ''))
       puts "Got " + line if ENV['KATELLO_CONFIGURE_DEBUG']
       if nobars
         if line =~ /debug:/

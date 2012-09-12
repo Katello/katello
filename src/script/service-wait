@@ -56,7 +56,8 @@ after_start() {
   case "$SERVICE" in
     tomcat6|tomcat7)
       # RHBZ 789288 - wait until data port is avaiable
-      /usr/bin/wget --timeout=1 --tries=$WAIT_MAX --retry-connrefused -qO- --no-check-certificate $TOMCAT_TEST_URL
+      /usr/bin/wget --timeout=1 --tries=$WAIT_MAX --retry-connrefused -qO- --no-check-certificate $TOMCAT_TEST_URL >/dev/null
+      sleep $ADDITIONAL_SLEEP
       ;;
     mongod)
       # RHBZ 824405 - wait until service is avaiable
@@ -71,6 +72,7 @@ after_start() {
       # and create lock and pid files if they does not exist
       [ -f "/var/lock/subsys/postgresql" ] || touch "/var/lock/subsys/postgresql"
       [ -f "/var/run/postmaster.${POSTGRES_PORT}.pid" ] || head -n 1 "$POSTGRES_DATA/postmaster.pid" > "/var/run/postmaster.${POSTGRES_PORT}.pid"
+      sleep $ADDITIONAL_SLEEP
       ;;
   esac
 }
