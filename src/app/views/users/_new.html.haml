@@ -21,18 +21,21 @@
       = form.text_field :username, :label => _("Username:")
 
       - if !@ldap
+        = form.text_field :email, :label => _("Email Address:"), :type => :email
         = form.text_field :password, :label => _("Password:"), :type => :password, :id => :password_field
         = form.text_field :password, :label => _("Confirm:"), :type => :password, :id => :confirm_field
-        .grid_5.la.prefix_2
+        .grid_7.la.prefix_2
           #password_conflict
-        = form.text_field :email, :label => _("Email Address:"), :type => :email
 
-      = form.field :org, :label => _("Default Organization:") do
+      %h5
+        #{_("System Registration Defaults")}
+      = form.field :org, :label => _("Organization:") do
         = organization_select
 
       .promotion_paths
         = hidden_field_tag 'user[environment_id]', @environment.id unless @environment.nil?
         = form.field :environment, :label => _("Environment:") do
+          = image_tag( "embed/icons/spinner.gif", :id=>"org_spinner", :class=>"hidden fl")
           - if @environment.nil?
             #env_box
               -if @organization.nil?

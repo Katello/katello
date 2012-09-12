@@ -19,7 +19,7 @@ class UsersController < ApplicationController
 
   before_filter :setup_options, :only => [:items, :index]
   before_filter :find_user, :only => [:items, :index, :edit, :edit_environment, :update_environment, :update_preference,
-                                      :update, :update_roles, :update_locale, :clear_helptips, :destroy]
+                                      :update, :update_roles, :update_locale, :clear_helptips, :setup_default_org, :destroy]
   before_filter :authorize
   skip_before_filter :require_org
 
@@ -64,6 +64,7 @@ class UsersController < ApplicationController
       :destroy              => delete_test,
       :enable_helptip       => user_helptip,
       :disable_helptip      => user_helptip,
+      :setup_default_org    => edit_test
     }
   end
 
@@ -225,7 +226,7 @@ class UsersController < ApplicationController
     default_environment_id = params['env_id'].try(:[], 'env_id').try(:to_i)
 
     if @user.default_environment.try(:id) == default_environment_id
-      err_msg = N_("The default you supplied was the same as the old default.")
+      err_msg = N_("The system registration default you supplied was the same as the old system registration default.")
       notify.error err_msg
       render(:text => err_msg, :status => 400) and return
     end
@@ -238,12 +239,12 @@ class UsersController < ApplicationController
 
     @organization             = @environment.try :organization
 
-    notify.success _("User environment updated successfully.")
+    notify.success _("User System Registration Environment updated successfully.")
 
     if @organization && @environment
       render :json => { :org => @organization.name, :env => @environment.name }
     else
-      render :json => { :org => _("No default set for this user."), :env => _("No default set for this user.") }
+      render :json => { :org => _("No system registration default set for this user."), :env => _("No system registration default set for this user.") }
     end
   end
 
@@ -256,7 +257,7 @@ class UsersController < ApplicationController
     if  @user.update_attributes(params[:user])
       notify.success _("User updated successfully.")
 
-      if not search_validate(User, user.id, params[:search])
+      if not search_validate(User, @user.id, params[:search])
         notify.message _("'%s' no longer matches the current search criteria.") % @user["name"]
       end
 
@@ -296,6 +297,22 @@ class UsersController < ApplicationController
 
   def ldap_enabled?
     AppConfig.warden == 'ldap'
+  end
+
+  #method for saving the user's default org
+  def setup_default_org
+    org = params[:org]
+    if org && !org.nil?
+      current_user.default_org = org
+      default_org = Organization.find_by_id(current_user.default_org)
+      current_user.save!
+      notify.success _("Default Organization: '%s' saved.") % default_org.name
+    else
+      current_user.default_org = nil
+      current_user.save!
+      notify.success _("Default Organization no longer selected.")
+    end
+    render :text => :ok and return
   end
 
   private

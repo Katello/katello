@@ -174,8 +174,8 @@ class katello::config {
     creates => "/var/lib/katello/db_seed_done",
     before  => Class["katello::service"],
     require => $katello::params::deployment ? {
-                'katello' => [ Exec["katello_migrate_db"], File["${katello::params::log_base}"] ],
-                'headpin' => [ Exec["katello_migrate_db"], File["${katello::params::log_base}"] ],
+                'katello' => [ Exec["katello_migrate_db"], Class["candlepin::service"], Class["pulp::service"], File["${katello::params::log_base}"] ],
+                'headpin' => [ Exec["katello_migrate_db"], Class["candlepin::service"], Class["thumbslug::service"], File["${katello::params::log_base}"] ],
                 default => [],
     },
   }
@@ -197,4 +197,5 @@ class katello::config {
     }
     default : {}
   }
+  
 }
