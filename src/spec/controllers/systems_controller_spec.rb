@@ -363,7 +363,7 @@ describe SystemsController do
 
       describe "listing/viewing" do
         it "retrieves the system groups to display" do
-          SystemGroup.should_receive(:where).with(:organization_id => @organization)
+          SystemGroup.should_receive(:where).with(:organization_id => @organization).and_return([@group1, @group2])
           get :system_groups, :id => @system.id
         end
 
