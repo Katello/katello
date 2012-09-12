@@ -274,8 +274,8 @@ module Glue::Pulp::Repo
   end
 
   def destroy_repo_orchestration
-    pre_queue.create(:name => "remove product content : #{self.name}", :priority => 1, :action => [self, :del_content])
-    pre_queue.create(:name => "delete pulp repo : #{self.name}",       :priority => 2, :action => [self, :destroy_repo])
+    pre_queue.create(:name => "remove product content : #{self.name}", :priority => 2, :action => [self, :del_content])
+    pre_queue.create(:name => "delete pulp repo : #{self.name}",       :priority => 3, :action => [self, :destroy_repo])
   end
 
   def get_params
