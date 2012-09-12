@@ -165,7 +165,7 @@ describe SystemGroupsController do
         SystemGroup.where(:description=>"describe").first.should be_nil
       end
       it "should allow two groups with the same name in different orgs" do
-        @org2 = Organization.create!(:name => 'test_org2', :cp_key => 'test_org')
+        @org2 = Organization.create!(:name => 'test_org2', :cp_key => 'test_org2')
         setup_current_organization(@org2)
         post :create, :system_group=>{:name=>@group.name, :description=>@group.description}
         response.should be_success
