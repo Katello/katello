@@ -190,7 +190,7 @@ module Resources
           ids = "id=#{repo_ids.join('&id=')}"
           response = get(repository_path  + "/?#{ids}", self.default_headers)
           body = response.body
-          JSON.parse(body).with_indifferent_access
+          JSON.parse(body)
         rescue RestClient::ResourceNotFound => e
           return nil if !yell_on_404
           raise e
@@ -229,7 +229,7 @@ module Resources
         # :id, :name, :arch, :groupid, :feed
         def update repo_id, attrs
           body = put(Repository.repository_path + repo_id +"/", JSON.generate(attrs), self.default_headers).body
-          find repo_id
+          JSON.parse(body).with_indifferent_access
         end
 
         # specific call to just update the sync schedule for a repo
@@ -421,37 +421,42 @@ module Resources
           JSON.parse(response.body)
         end
 
-        def install_packages consumer_id, package_names
+        def install_packages consumer_id, package_names, scheduled_time=nil
           url = consumer_path(consumer_id) + "installpackages/"
           attrs = {:packagenames => package_names}
+          attrs[:scheduled_time] = scheduled_time if scheduled_time
           response = self.post(url, attrs.to_json, self.default_headers)
           JSON.parse(response.body).with_indifferent_access
         end
 
-        def uninstall_packages consumer_id, package_names
+        def uninstall_packages consumer_id, package_names, scheduled_time=nil
           url = consumer_path(consumer_id) + "uninstallpackages/"
           attrs = {:packagenames => package_names}
+          attrs[:scheduled_time] = scheduled_time if scheduled_time
           response = self.post(url, attrs.to_json, self.default_headers)
           JSON.parse(response.body).with_indifferent_access
         end
 
-        def update_packages consumer_id, package_names
+        def update_packages consumer_id, package_names, scheduled_time=nil
           url = consumer_path(consumer_id) + "updatepackages/"
           attrs = {:packagenames => package_names}
+          attrs[:scheduled_time] = scheduled_time if scheduled_time
           response = self.post(url, attrs.to_json, self.default_headers)
           JSON.parse(response.body).with_indifferent_access
         end
 
-        def install_package_groups consumer_id, package_groups
+        def install_package_groups consumer_id, package_groups, scheduled_time=nil
           url = consumer_path(consumer_id) + "installpackagegroups/"
           attrs = {:groupids => package_groups}
+          attrs[:scheduled_time] = scheduled_time if scheduled_time
           response = self.post(url, attrs.to_json, self.default_headers)
           JSON.parse(response.body).with_indifferent_access
         end
 
-        def uninstall_package_groups consumer_id, package_groups
+        def uninstall_package_groups consumer_id, package_groups, scheduled_time=nil
           url = consumer_path(consumer_id) + "uninstallpackagegroups/"
           attrs = {:groupids => package_groups}
+          attrs[:scheduled_time] = scheduled_time if scheduled_time
           response = self.post(url, attrs.to_json, self.default_headers)
           JSON.parse(response.body).with_indifferent_access
         end
@@ -481,9 +486,10 @@ module Resources
           JSON.parse(response.body)
         end
 
-        def install_errata consumer_id, errata_ids
+        def install_errata consumer_id, errata_ids, scheduled_time=nil
           url = consumer_path(consumer_id) + "installerrata/"
           attrs = { :errataids => errata_ids }
+          attrs[:scheduled_time] = scheduled_time if scheduled_time
           response = self.post(url, attrs.to_json, self.default_headers)
           JSON.parse(response.body).with_indifferent_access
         end
@@ -632,44 +638,50 @@ module Resources
         self.post "#{path(id)}delete_consumer/", consumer_id.to_json, self.default_headers
       end
 
-      def install_packages id, package_names
+      def install_packages id, package_names, scheduled_time=nil
         url = path(id) + "installpackages/"
         attrs = {:packagenames => package_names}
+        attrs[:scheduled_time] = scheduled_time if scheduled_time
         response = self.post(url, attrs.to_json, self.default_headers)
         JSON.parse(response.body).with_indifferent_access
       end
 
-      def uninstall_packages id, package_names
+      def uninstall_packages id, package_names, scheduled_time=nil
         url = path(id) + "uninstallpackages/"
         attrs = {:packagenames => package_names}
+        attrs[:scheduled_time] = scheduled_time if scheduled_time
         response = self.post(url, attrs.to_json, self.default_headers)
         JSON.parse(response.body).with_indifferent_access
       end
 
-      def update_packages id, package_names
+      def update_packages id, package_names, scheduled_time=nil
         url = path(id) + "updatepackages/"
         attrs = {:packagenames => package_names}
+        attrs[:scheduled_time] = scheduled_time if scheduled_time
         response = self.post(url, attrs.to_json, self.default_headers)
         JSON.parse(response.body).with_indifferent_access
       end
 
-      def install_package_groups id, package_groups
+      def install_package_groups id, package_groups, scheduled_time=nil
         url = path(id) + "installpackagegroups/"
         attrs = {:grpids => package_groups}
+        attrs[:scheduled_time] = scheduled_time if scheduled_time
         response = self.post(url, attrs.to_json, self.default_headers)
         JSON.parse(response.body).with_indifferent_access
       end
 
-      def uninstall_package_groups id, package_groups
+      def uninstall_package_groups id, package_groups, scheduled_time=nil
         url = path(id) + "uninstallpackagegroups/"
         attrs = {:grpids => package_groups}
+        attrs[:scheduled_time] = scheduled_time if scheduled_time
         response = self.post(url, attrs.to_json, self.default_headers)
         JSON.parse(response.body).with_indifferent_access
       end
 
-      def install_errata id, errata_ids
+      def install_errata id, errata_ids, scheduled_time=nil
         url = path(id) + "installerrata/"
         attrs = { :errataids => errata_ids }
+        attrs[:scheduled_time] = scheduled_time if scheduled_time
         response = self.post(url, attrs.to_json, self.default_headers)
         JSON.parse(response.body).with_indifferent_access
       end

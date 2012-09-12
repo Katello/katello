@@ -345,9 +345,6 @@ rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
 
-#remove development tasks
-rm %{buildroot}%{homedir}/lib/tasks/test.rake
-
 #branding
 if [ -d branding ] ; then
   ln -svf %{_datadir}/icons/hicolor/24x24/apps/system-logo-icon.png %{buildroot}%{homedir}/public/images/rh-logo.png
@@ -361,6 +358,8 @@ rm %{buildroot}%{homedir}/lib/tasks/yard.rake
 rm %{buildroot}%{homedir}/lib/tasks/hudson.rake
 rm %{buildroot}%{homedir}/lib/tasks/jsroutes.rake
 rm %{buildroot}%{homedir}/lib/tasks/jshint.rake
+rm %{buildroot}%{homedir}/lib/tasks/test.rake
+rm %{buildroot}%{homedir}/script/pulp_integration_tests
 
 #correct permissions
 find %{buildroot}%{homedir} -type d -print0 | xargs -0 chmod 755
