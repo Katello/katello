@@ -21,7 +21,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.1.7
+Version:       1.1.8
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 Requires:      %{base_name}-cli-common
@@ -150,6 +150,13 @@ popd
 make -C po clean
 
 %changelog
+* Wed Sep 12 2012 Ivan Necas <inecas@redhat.com> 1.1.8-1
+- 837000 - [RFE] when updating sync plan by CLI, it resets the interval.
+  (pajkycz@gmail.com)
+- 809259 - activation key - cli permissions changes (continued)
+  (bbuckingham@redhat.com)
+- 809259 - activation key - cli permissions changes (bbuckingham@redhat.com)
+
 * Wed Sep 12 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.7-1
 - Fixing provides/obsoletes bug (jomara@redhat.com)
 - Removing extra configure code for headpin bin; adding provides to cli script
