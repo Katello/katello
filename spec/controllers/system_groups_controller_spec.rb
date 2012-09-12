@@ -29,7 +29,7 @@ describe SystemGroupsController do
 
       controller.stub(:search_validate).and_return(true)
       @org = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
-      @environment = KTEnvironment.create!(:name=>"DEV", :prior=>@org.library, :organization=>@org)
+      @environment = KTEnvironment.create!(:name=>"DEV", :label=> "DEV", :prior=>@org.library, :organization=>@org)
       @org = @org.reload
       setup_current_organization(@org)
       setup_system_creation

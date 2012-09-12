@@ -28,7 +28,7 @@ describe SystemGroupPackagesController, :katello => true do
       disable_consumer_group_orchestration
 
       @org = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
-      @environment = KTEnvironment.create!(:name=>"DEV", :prior=>@org.library, :organization=>@org)
+      @environment = KTEnvironment.create!(:name=>"DEV", :label=> "DEV", :prior=>@org.library, :organization=>@org)
 
       Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Resources::Candlepin::Consumer.stub!(:update).and_return(true)

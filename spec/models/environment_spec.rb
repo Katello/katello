@@ -20,7 +20,7 @@ describe KTEnvironment do
       disable_org_orchestration
       @organization = Organization.create!(:name=>'test_organization', :label=> 'test_organization', :cp_key => 'test_organization')
       @env_name =  'test_environment'
-      @environment = KTEnvironment.create!({:name => @env_name, :organization => @organization, :prior => @organization.library})
+      @environment = KTEnvironment.create!({:name=>@env_name, :label=> @env_name, :organization => @organization, :prior => @organization.library})
     end
     describe "check on operations" do
 
@@ -87,7 +87,7 @@ describe KTEnvironment do
       @third_product = Product.new(:name =>"prod3", :cp_id => '45678', :provider => @provider, :environments => [@organization.library])
       @fourth_product = Product.new(:name =>"prod4", :cp_id => '32683', :provider => @provider, :environments => [@organization.library])
 
-      @environment = KTEnvironment.new({:name => @env_name, :prior => @organization.library}) do |e|
+      @environment = KTEnvironment.new({:name=>@env_name, :label=> @env_name, :prior => @organization.library}) do |e|
         e.products << @first_product
         e.products << @third_product
       end
@@ -111,8 +111,7 @@ describe KTEnvironment do
     specify { @environment.products.should include @third_product }
 
     context "prior environment can be set" do
-      before { @new_env = KTEnvironment.create!({
-          :name => @environment.name + '-prior',
+      before { @new_env = KTEnvironment.create!({:name=>@environment.name + '-prior', :label=> @environment.name + '-prior',
           :prior => @environment.id,
           :organization => @organization
       })}
@@ -140,7 +139,7 @@ describe KTEnvironment do
     context "available products" do
 
       before(:each) do
-        @prior_env = KTEnvironment.new({:name => @env_name + '-prior', :prior => @environment.id}) do |e|
+        @prior_env = KTEnvironment.new({:name=>@env_name + '-prior', :label=> @env_name + '-prior', :prior => @environment.id}) do |e|
           e.products << @first_product
           e.products << @second_product
           e.products << @third_product
@@ -190,8 +189,8 @@ describe KTEnvironment do
 
     context "environment path" do
       before(:each) do
-        @env1 = KTEnvironment.new({:name => @env_name + '-succ1'})
-        @env2 = KTEnvironment.new({:name => @env_name + '-succ2'})
+        @env1 = KTEnvironment.new({:name => @env_name + '-succ1', :label=>'env-succ1'})
+        @env2 = KTEnvironment.new({:name => @env_name + '-succ2',:label=>'env-succ2'})
         @organization.environments << @env1
         @organization.environments << @env2
         @env1.prior = @environment.id
@@ -207,27 +206,27 @@ describe KTEnvironment do
 
     context "Test priors" do
       before(:each) do
-        @e1 = KTEnvironment.create!({:name => @env_name + '-succ1',
+        @e1 = KTEnvironment.create!({:name=>@env_name + '-succ1', :label=> @env_name + '-succ1',
                   :organization => @organization, :prior => @environment})
-        @e2 = KTEnvironment.create!({:name => @env_name + '-succ2',
+        @e2 = KTEnvironment.create!({:name=>@env_name + '-succ2', :label=> @env_name + '-succ2',
                   :organization => @organization, :prior => @e1})
 
         @organization.environments << @e1
         @organization.environments << @e2
       end
 
-      specify{ lambda {KTEnvironment.create!({:name => @env_name + '-succ3',
+      specify{ lambda {KTEnvironment.create!({:name=>@env_name + '-succ3', :label=> @env_name + '-succ3',
                 :organization => @organization, :prior => @e1})}.should raise_error(ActiveRecord::RecordInvalid)}
 
     end
 
     context "libraries" do
       it "should be the only KTEnvironment that can have multiple priors" do
-        @env1 = KTEnvironment.new({:name => @env_name + '1',
+        @env1 = KTEnvironment.new({:name=>@env_name + '1', :label=> @env_name + '1',
                   :organization => @organization, :prior => @organization.library})
-        @env2 = KTEnvironment.new({:name => @env_name + '2',
+        @env2 = KTEnvironment.new({:name=>@env_name + '2', :label=> @env_name + '2',
                   :organization => @organization, :prior => @organization.library})
-        @env3 = KTEnvironment.new({:name => @env_name + '3',
+        @env3 = KTEnvironment.new({:name=>@env_name + '3', :label=> @env_name + '3',
                   :organization => @organization, :prior => @organization.library})
 
         @env1.should be_valid

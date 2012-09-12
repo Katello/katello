@@ -198,7 +198,7 @@ describe Api::ActivationKeysController do
   context "pools in an activation key" do
 
     before(:each) do
-      @environment = KTEnvironment.create!(:organization => @organization, :name => "Dev", :prior => @organization.library)
+      @environment = KTEnvironment.create!(:organization => @organization, :name => "Dev", :label=>"Dev", :prior => @organization.library)
       @activation_key = ActivationKey.create!(:name => 'activation key', :organization => @organization, :environment => @environment)
       @pool_in_activation_key = ::Pool.create!(:cp_id => "pool-123")
       @pool_not_in_activation_key = ::Pool.create!(:cp_id => "pool-456")
@@ -295,7 +295,7 @@ describe Api::ActivationKeysController do
 
   describe "add system groups to an activation key" do
     before(:each) do
-      @environment = KTEnvironment.create!(:name => 'test_1', :prior => @organization.library.id, :organization => @organization)
+      @environment = KTEnvironment.create!(:name=>'test_1', :label=> 'test_1', :prior => @organization.library.id, :organization => @organization)
       @activation_key = ActivationKey.create!(:name => 'activation key', :environment => @environment, :organization => @organization)
       @system_group_1 = SystemGroup.create!(:name => 'System Group 1', :organization_id => @organization.id )
       @system_group_2 = SystemGroup.create!(:name => 'System Group 2', :description => "fake description", :organization => @organization)
@@ -325,7 +325,7 @@ describe Api::ActivationKeysController do
 
   describe "remove system groups from an activation key" do
     before(:each) do
-      @environment = KTEnvironment.create!(:name => 'test_1', :prior => @organization.library.id, :organization => @organization)
+      @environment = KTEnvironment.create!(:name=>'test_1', :label=> 'test_1', :prior => @organization.library.id, :organization => @organization)
       @activation_key = ActivationKey.create!(:name => 'activation key', :environment => @environment, :organization => @organization)
       @system_group_1 = SystemGroup.create!(:name => 'System Group 1', :organization_id => @organization.id )
       @system_group_2 = SystemGroup.create!(:name => 'System Group 2', :description => "fake description", :organization => @organization)

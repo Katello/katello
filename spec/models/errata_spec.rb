@@ -23,7 +23,7 @@ describe Glue::Pulp::Errata, :katello => true do
 
     @repo = Repository.new(:pulp_id => "repo-123")
     @repo2 = Repository.new(:pulp_id => "repo-456")
-    @env = KTEnvironment.create!(:name => "Dev", :prior => @organization.library, :organization_id => @organization.id)
+    @env = KTEnvironment.create!(:name=>"Dev", :label=> "Dev", :prior => @organization.library, :organization_id => @organization.id)
   end
   
   context "Find errata" do

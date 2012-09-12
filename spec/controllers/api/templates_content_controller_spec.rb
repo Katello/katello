@@ -49,10 +49,10 @@ describe Api::TemplatesContentController do
     @organization = Organization.new(:name => 'organization', :cp_key => 'organization')
     @organization.id = 1
 
-    @environment = KTEnvironment.new(:name => 'environment', :library => false)
+    @environment = KTEnvironment.new(:name=>'environment', :label=> 'environment', :library => false)
     @environment.id = 1
     @environment.stub(:library?).and_return(false)
-    @library = KTEnvironment.new(:name => 'Library', :library => true)
+    @library = KTEnvironment.new(:name=>'Library', :label=> 'Library', :library => true)
     @library.id = 2
     @library.stub(:library?).and_return(true)
 

@@ -79,7 +79,7 @@ describe User do
     it "be able to set default_environment" do
       disable_org_orchestration
       @organization = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
-      @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.library.id,
+      @environment = KTEnvironment.create!(:name=>'test', :label=> 'test', :prior => @organization.library.id,
                                            :organization => @organization)
 
       @user.default_environment = @environment
@@ -130,7 +130,7 @@ describe User do
     it "be able to set default_environment" do
       disable_org_orchestration
       @organization = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
-      @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.library.id,
+      @environment = KTEnvironment.create!(:name=>'test', :label=> 'test', :prior => @organization.library.id,
                                            :organization => @organization)
 
       @user.default_environment = @environment
@@ -141,7 +141,7 @@ describe User do
     it "be able to find users by default environment" do
       disable_org_orchestration
       @organization = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
-      @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.library.id,
+      @environment = KTEnvironment.create!(:name=>'test', :label=> 'test', :prior => @organization.library.id,
                                            :organization => @organization)
 
       @user.default_environment = @environment
@@ -151,7 +151,7 @@ describe User do
     it "should unset default env after environment gets deleted" do
       disable_org_orchestration
       @organization = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
-      @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.library.id,
+      @environment = KTEnvironment.create!(:name=>'test', :label=> 'test', :prior => @organization.library.id,
                                            :organization => @organization)
 
       @user.default_environment = @environment
