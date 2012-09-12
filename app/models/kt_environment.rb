@@ -298,7 +298,9 @@ class KTEnvironment < ActiveRecord::Base
 
   def any_operation_readable?
     return false if !AppConfig.katello?
-    User.allowed_to?(self.class.list_verbs.keys, :environments, self.id, self.organization) || self.organization.systems_readable?
+    User.allowed_to?(self.class.list_verbs.keys, :environments, self.id, self.organization) ||
+        self.organization.systems_readable? || self.organization.any_systems_registerable? ||
+        ActivationKey.readable?(self.organization)
   end
 
   def changesets_promotable?
