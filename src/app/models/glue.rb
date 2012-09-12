@@ -106,7 +106,7 @@ module Glue
 
       # if we have no failures - we are done
       return true if (errors.empty? && q.failed.empty?)
-      raise Errors::OrchestrationException.new("Errors occured during orchestration #{errors.inspect}\n Queue Failed - #{q.failed.inspect}" )
+      raise Errors::OrchestrationException.new("Errors occurred during orchestration #{errors.inspect}\n Queue Failed - #{q.failed.inspect}" )
     rescue => e
       logger.error "Rolling back due to a problem: #{q.failed}\n#{e.inspect} \n#{e.backtrace.join('\n')}"
       # handle errors
@@ -114,7 +114,7 @@ module Glue
       (q.completed + q.running).sort.reverse_each do |task|
         begin
           task.status = "rollbacked"
-          execute({:action => task.action, :rollback => true})
+          execute({:action => task.action, :action_rollback => task.action_rollback, :rollback => true})
         rescue => rollback_exception
           # if the operation failed, we can just report upon it
           logger.error "Failed to perform rollback on #{task.name} - #{rollback_exception.inspect}\n  #{rollback_exception.backtrace.join('\n')}"
@@ -128,18 +128,26 @@ module Glue
     def execute opts = {}
       obj, met, *args = opts[:action]
       rollback = opts[:rollback] || false
-      # at the moment, rollback are expected to replace set with del in the method name
+
+      # at the moment, the rollback method invoked will be based upon:
+      #   1. the :action_rollback specified when the action was queued --or--
+      #   2. by replacing set with del in the method name
       if rollback
-        met = met.to_s
-        case met
-        when /set/
-          met.gsub!("set","del")
-        when /del/
-          met.gsub!("del","set")
+        if !opts[:action_rollback].nil?
+          # user specified a rollback method when queuing the action
+          obj, met, *args = opts[:action_rollback]
         else
-          raise "Dont know how to rollback #{met}"
+          met = met.to_s
+          case met
+          when /set/
+            met.gsub!("set","del")
+          when /del/
+            met.gsub!("del","set")
+          else
+            raise "Dont know how to rollback #{met}"
+          end
+          met = met.to_sym
         end
-        met = met.to_sym
       end
       if obj.respond_to?(met)
         return args.empty? ? obj.send(met) : obj.send(met, *args)

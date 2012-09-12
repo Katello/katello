@@ -11,13 +11,14 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Task
-  attr_reader :name, :status, :priority, :action, :timestamp
+  attr_reader :name, :status, :priority, :action, :action_rollback, :timestamp
 
   def initialize opts
     @name      = opts[:name]
     @status    = opts[:status]
     @priority  = opts[:priority] || 0
     @action    = opts[:action]
+    @action_rollback = opts[:action_rollback]
     update_ts
   end
 
