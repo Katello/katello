@@ -234,6 +234,7 @@ Src::Application.routes.draw do
       put :update_roles
       put :update_locale
       put :update_preference
+      put :setup_default_org
       get :edit_environment
       put :update_environment
     end
@@ -535,6 +536,7 @@ Src::Application.routes.draw do
       resources :sync_plans
       resources :tasks, :only => [:index]
       resources :providers, :only => [:index]
+      match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
       resources :systems, :only => [:index, :create] do
         get :report, :on => :collection
 
@@ -542,7 +544,6 @@ Src::Application.routes.draw do
           get :tasks
         end
       end
-      match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
       resources :activation_keys, :only => [:index, :create, :destroy, :show, :update] do
         member do
           post :system_groups, :action => :add_system_groups

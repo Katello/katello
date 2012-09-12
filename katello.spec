@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.1.10
+Version:        1.1.11
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -531,6 +531,76 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Sep 12 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.11-1
+- 856220 - adding time to puppet log (lzap+git@redhat.com)
+- Fix for removing user's default org. (jrist@redhat.com)
+- Fix for initial suggestion from @parthaa with new suggestion.
+  (jrist@redhat.com)
+- removed referebce to package autocomplete widget from content search page
+  (dmitri@redhat.com)
+- fix for BZ 843059: removed autocomplete on packages (dmitri@redhat.com)
+- BZ 835875: a couple of small fixes based on pull comments (dmitri@redhat.com)
+- Updating some permissions stuff and the save based on comments in the Pull
+  Request. (jrist@redhat.com)
+- preserve enviroment variable, especiall RAILS_ENV (msuchy@redhat.com)
+- 856220 - improving service-wait wrapper script (lzap+git@redhat.com)
+- Test fix for changeset creation without env (pajkycz@gmail.com)
+- fixes for BZ 835875: no longer possible to delete a repository if it's been
+  promoted. (dmitri@redhat.com)
+- 853056 - fix regression for registering with activation keys
+  (inecas@redhat.com)
+- fix dependecies on Fedora17+ (msuchy@redhat.com)
+- 852320 - undefined method `library?' for nil:NilClass (NoMethodError) when
+  creating a changeset without an environment (pajkycz@gmail.com)
+- 839575 - [CLI] Adding a system to system group using incorrect uuid should
+  raise an error instead of success (pajkycz@gmail.com)
+- Fixing the org serialization, tipsifying, some suggested tweaks.
+  (jrist@redhat.com)
+- 754738 - do not override variables in other procedures (msuchy@redhat.com)
+- 754738 - do not override status() from /etc/rc.d/init.d/functions
+  (msuchy@redhat.com)
+- 754738 - fix name of monitor pid file (msuchy@redhat.com)
+- 754738 - if program is already running, print failure, but return 0
+  (msuchy@redhat.com)
+- 754738 - if we fail in stopping delayed_jobs, kill it. One by one.
+  (msuchy@redhat.com)
+- 75473 - correctly solve status for all processes of delayed_jobs
+  (msuchy@redhat.com)
+- 754738 - log even output of service stop (msuchy@redhat.com)
+- use runuser instead of su (msuchy@redhat.com)
+- 75473 - do not delete nor truncate log (msuchy@redhat.com)
+- 754738 - properly return when katello is not configured (msuchy@redhat.com)
+- 854278 - After adding certain objects to katello one will see a warning, ''
+  did not meet the current search criteria and is not being shown
+  (komidore64@gmail.com)
+- 786226 - List of product repositories not sorted alphabetically
+  (pajkycz@gmail.com)
+- 852460 - System Groups left pane list does not use ellipsis
+  (pajkycz@gmail.com)
+- 855184 - Using --add_package gives undefined method `empty?' for nil:NilClass
+  error (pajkycz@gmail.com)
+- Final org switcher and interstitial changes for default organization.
+  (jrist@redhat.com)
+- Changes to accomodate the System Registration Defaults (jrist@redhat.com)
+- 840735 - headpin create environment returned error :There was an error
+  retrieving that row:Not Found (komidore64@gmail.com)
+- 841121 -  Long description returns PG error (pajkycz@gmail.com)
+- 811136 - Rendering error in production.log while editing the org's
+  description (pajkycz@gmail.com)
+- 841121 - Long description while creating system group returns PG error
+  (pajkycz@gmail.com)
+- Truncate Notice text to max 1024 characters. (pajkycz@gmail.com)
+- 841300 - Zoom out on 2-Pane page causes rendering error (pajkycz@gmail.com)
+- 843529 - cleanup task_statuses and job_tasks on system deletion
+  (bbuckingham@redhat.com)
+- Updates ConvergeUI to the latest. (ehelms@redhat.com)
+- gather up all packages for katello-debug (mmccune@redhat.com)
+- Stupid default setting for user set_org (jrist@redhat.com)
+- Minor accidental fix for extra char. (jrist@redhat.com)
+- Initial workings of new default org stuff. (jrist@redhat.com)
+- 834013 - return releaseVer as part of consumer json (thomasmckay@redhat.com)
+- 846719 - Removes footer links entirely. (ehelms@redhat.com)
+
 * Thu Sep 06 2012 Ivan Necas <inecas@redhat.com> 1.1.10-1
 - 852631 - system group - update model to raise exception when no groups exist
   (bbuckingham@redhat.com)
