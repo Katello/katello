@@ -46,7 +46,7 @@ describe Api::RepositoriesController, :katello => true do
     describe "for create" do
       let(:action) {:create}
       let(:req) do
-        post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.cp_key
+        post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
       end
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:update, :providers, @provider.id, @organization) }
@@ -142,7 +142,7 @@ describe Api::RepositoriesController, :katello => true do
       disable_org_orchestration
       disable_product_orchestration
 
-      @organization = Organization.create!(:name=>ProductTestData::ORG_ID, :label=> ProductTestData::ORG_ID, :cp_key => 'admin-org-37070')
+      @organization = Organization.create!(:name=>ProductTestData::ORG_ID, :label=> ProductTestData::ORG_ID, :label => 'admin-org-37070')
       @provider     = @organization.redhat_provider
       @product = Product.new({:name => "product for repo test"})
       @product.provider = @provider
@@ -173,13 +173,13 @@ describe Api::RepositoriesController, :katello => true do
         Product.should_receive(:find_by_cp_id).with('product_1').and_return(@product)
         @product.should_receive(:add_repo).and_return({})
 
-        post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.cp_key
+        post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
       end
 
       context 'there is already a repo for the product with the same name' do
         it "should notify about conflict" do
           @product.stub(:add_repo).and_return { raise Errors::ConflictException }
-          post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.cp_key
+          post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
           response.code.should == '409'
         end
       end
@@ -197,7 +197,7 @@ describe Api::RepositoriesController, :katello => true do
             @product.should_receive(:add_repo).with do |name, url, type, gpg|
               gpg == product_gpg
             end.and_return({})
-            post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.cp_key
+            post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
           end
         end
 
@@ -206,7 +206,7 @@ describe Api::RepositoriesController, :katello => true do
             @product.should_receive(:add_repo).with do |name, url, type, gpg|
               gpg == repo_gpg
             end.and_return({})
-            post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.cp_key, :gpg_key_name => repo_gpg.name
+            post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label, :gpg_key_name => repo_gpg.name
           end
         end
 
@@ -215,13 +215,13 @@ describe Api::RepositoriesController, :katello => true do
             @product.should_receive(:add_repo).with do |name, url, type, gpg|
               gpg == nil
             end.and_return({})
-            post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.cp_key, :gpg_key_name => ""
+            post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label, :gpg_key_name => ""
           end
         end
 
         context "the url is empty" do
           let(:req) do
-            post 'create', :name => 'repo_1', :url => '', :product_id => 'product_1', :organization_id => @organization.cp_key, :gpg_key_name => ""
+            post 'create', :name => 'repo_1', :url => '', :product_id => 'product_1', :organization_id => @organization.label, :gpg_key_name => ""
           end
           it_should_behave_like "bad request"
         end
@@ -277,7 +277,7 @@ describe Api::RepositoriesController, :katello => true do
         url  = "http://url.org"
         type = "yum"
 
-        post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.cp_key
+        post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
       end
 
       context 'there is already a repo for the product with the same name' do
@@ -287,7 +287,7 @@ describe Api::RepositoriesController, :katello => true do
         end
 
         it "should notify about conflict" do
-          post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.cp_key
+          post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
           response.code.should == '409'
         end
       end

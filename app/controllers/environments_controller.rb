@@ -107,7 +107,7 @@ class EnvironmentsController < ApplicationController
   def destroy
     @environment.destroy
     notify.success _("Environment '%s' was deleted.") % @environment.name
-    render :partial => "common/post_delete_close_subpanel", :locals => {:path=>edit_organization_path(@organization.cp_key)}
+    render :partial => "common/post_delete_close_subpanel", :locals => {:path=>edit_organization_path(@organization.label)}
   end
 
   # GET /environments/1/system_templates
@@ -127,7 +127,7 @@ class EnvironmentsController < ApplicationController
 
   def find_organization
     org_id = params[:organization_id] || params[:org_id]
-    @organization = Organization.first(:conditions => {:cp_key => org_id})
+    @organization = Organization.first(:conditions => {:label => org_id})
     notify.error _("Couldn't find organization '%d'") % org_id if @organization.nil?
   end
 

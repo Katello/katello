@@ -65,7 +65,7 @@ describe PulpTaskStatus do
     context "refreshing TaskStatus with latest from pulp" do
       before(:each) do
         disable_org_orchestration
-        @organization = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
+        @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
         @t = PulpTaskStatus.using_pulp_task(pulp_task_without_error) do |t|
           t.organization = @organization
           t.user = new_user

@@ -37,7 +37,7 @@ describe Provider do
   before(:each) do
     disable_org_orchestration
     disable_product_orchestration
-    @organization = Organization.new(:name =>"org10020",:label =>"org10020", :cp_key => 'org10020')
+    @organization = Organization.new(:name =>"org10020",:label =>"org10020")
     @organization.save!
     @organization.redhat_provider.delete
     @organization = Organization.last
@@ -68,7 +68,7 @@ describe Provider do
   context "import manifest via RED HAT provider" do
     before(:each) do
       disable_org_orchestration
-      @organization = Organization.create!(:name=>"org10021", :label=> "org10021", :cp_key => "org10021_key")
+      @organization = Organization.create!(:name=>"org10021", :label=> "org10021_key")
       @provider = @organization.redhat_provider
     end
 
@@ -204,7 +204,7 @@ describe Provider do
       disable_org_orchestration
       disable_product_orchestration
       disable_cdn
-      @organization = Organization.create!(:name=>"org10026", :label=> "org10026", :cp_key => "org10026_key")
+      @organization = Organization.create!(:name=>"org10026", :label=> "org10026_key")
       @provider = @organization.redhat_provider
 
       @product_without_change = create_product_with_content("product-without-change", ["1.0", "1.1"])
