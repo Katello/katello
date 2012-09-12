@@ -11,7 +11,7 @@ describe Changeset, :katello => true do
 
       User.current  = User.find_or_create_by_username(:username => 'admin', :password => 'admin12345')
       @organization = Organization.create!(:name=>'candyroom', :label=> 'candyroom', :cp_key => 'test_organization')
-      @environment  = KTEnvironment.create!(:name         => 'julia', :prior => @organization.library,
+      @environment  = KTEnvironment.create!(:name=>'julia', :label=> 'julia', :prior => @organization.library,
                                             :organization => @organization)
       @changeset    = PromotionChangeset.create!(:environment => @environment, :name => "foo-changeset")
     end

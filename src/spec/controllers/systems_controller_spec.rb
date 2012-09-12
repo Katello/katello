@@ -23,7 +23,7 @@ describe SystemsController do
     let(:uuid) { '1234' }
     before (:each) do
       setup_system_creation
-      @environment = KTEnvironment.new(:name => 'test', :prior => @organization.library.id, :organization => @organization)
+      @environment = KTEnvironment.new(:name=>'test', :label=> 'test', :prior => @organization.library.id, :organization => @organization)
       @environment.save!
       Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Resources::Candlepin::Consumer.stub!(:update).and_return(true)
@@ -63,7 +63,7 @@ describe SystemsController do
         describe "GET index multiple orgs with #{perm} on #{resource}" do
           before do
             new_test_org
-            @environment = KTEnvironment.new(:name => 'test2', :prior => @organization.library.id, :organization => @organization)
+            @environment = KTEnvironment.new(:name=>'test2', :label=> 'test2', :prior => @organization.library.id, :organization => @organization)
             @system2 = System.create!(:name=>"bar2", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
           end
           let(:action) {:items}
@@ -133,12 +133,12 @@ describe SystemsController do
       set_default_locale
 
       @organization = setup_system_creation
-      @environment = KTEnvironment.new(:name => 'test', :prior => @organization.library.id, :organization => @organization)
+      @environment = KTEnvironment.new(:name=>'test', :label=> 'test', :prior => @organization.library.id, :organization => @organization)
       @environment.save!
 
-      @env1 = KTEnvironment.new(:name => 'env1', :prior => @organization.library.id, :organization => @organization)
+      @env1 = KTEnvironment.new(:name=>'env1', :label=> 'env1', :prior => @organization.library.id, :organization => @organization)
       @env1.save!
-      @env2 = KTEnvironment.new(:name => 'env2', :prior => @env1.id, :organization => @organization)
+      @env2 = KTEnvironment.new(:name=>'env2', :label=> 'env2', :prior => @env1.id, :organization => @organization)
       @env2.save!
 
       controller.stub(:search_validate).and_return(false)
@@ -212,7 +212,7 @@ describe SystemsController do
         end
 
         it "should show systems by env" do
-          @environment2 = KTEnvironment.new(:name => 'testenv', :prior => @organization.library.id, :organization => @organization)
+          @environment2 = KTEnvironment.new(:name=>'testenv', :label=> 'testenv', :prior => @organization.library.id, :organization => @organization)
           @environment2.save!
           @system2 = System.create!(:name=>"verbose2", :environment => @environment2, :cp_type=>"system", :facts => {"Test1"=>1 , "verbose_facts" => "Test facts"})
           get :environments, :env_id => @environment2.id
