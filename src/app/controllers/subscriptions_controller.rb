@@ -76,7 +76,7 @@ class SubscriptionsController < ApplicationController
     #       becomes a specific issue, re-indexing will not be performed constantly.
     if search.nil?
       # Raw candlepin pools
-      cp_pools = Resources::Candlepin::Owner.pools(current_organization.cp_key)
+      cp_pools = Resources::Candlepin::Owner.pools(current_organization.label)
       if cp_pools
         # Pool objects
         pools = cp_pools.collect{|cp_pool| ::Pool.find_pool(cp_pool['id'], cp_pool)}
@@ -103,7 +103,7 @@ class SubscriptionsController < ApplicationController
       render_panel_items(subscriptions, @panel_options, nil, offset.to_s)
     else
       # Limit subscriptions to current org and Red Hat provider
-      filters = {:org=>current_organization.cp_key, :provider_id=>current_organization.redhat_provider.id}
+      filters = {:org=>current_organization.label, :provider_id=>current_organization.redhat_provider.id}
       search_results = ::Pool.search(search, offset, current_user.page_size, filters)
       render_panel_results(search_results, search_results.total, @panel_options)
     end

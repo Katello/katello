@@ -207,7 +207,7 @@ class ShowSubscriptions(OrganizationAction):
     def run(self):
         name = self.get_option('name')
         org = self.api.organization(name)
-        pools = self.api.pools(org["cp_key"])
+        pools = self.api.pools(org["label"])
 
         updated_pool_info = [self.displayable_pool(pool) for pool in pools]
 

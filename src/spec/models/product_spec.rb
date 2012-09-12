@@ -24,7 +24,7 @@ describe Product, :katello => true do
   before(:each) do
     disable_org_orchestration
 
-    @organization = Organization.create!(:name=>ProductTestData::ORG_ID, :label=> ProductTestData::ORG_ID, :cp_key => 'admin-org-37070')
+    @organization = Organization.create!(:name=>ProductTestData::ORG_ID, :label => 'admin-org-37070')
     @provider     = @organization.redhat_provider
     @cdn_mock = Resources::CDN::CdnResource.new("https://cdn.redhat.com", {:ssl_client_cert => "456",:ssl_ca_file => "fake-ca.pem", :ssl_client_key => "123"})
     @substitutor_mock = Util::CdnVarSubstitutor.new(@cdn_mock)

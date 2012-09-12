@@ -90,7 +90,7 @@ class List(ActivationKeyAction):
 
     def get_keys_for_organization(self, orgName):
         organization = get_organization(orgName)
-        return self.api.activation_keys_by_organization(organization['cp_key'])
+        return self.api.activation_keys_by_organization(organization['label'])
 
     def get_keys_for_environment(self, orgName, envName):
         environment = get_environment(orgName, envName)
@@ -114,7 +114,7 @@ class Info(ActivationKeyAction):
 
         organization = get_organization(orgName)
 
-        keys = self.api.activation_keys_by_organization(organization['cp_key'], keyName)
+        keys = self.api.activation_keys_by_organization(organization['label'], keyName)
         if len(keys) == 0:
             print >> sys.stderr, _("Could not find activation key [ %s ]") % keyName
             return os.EX_DATAERR
@@ -229,7 +229,7 @@ class Update(ActivationKeyAction):
         else:
             environment = None
 
-        keys = self.api.activation_keys_by_organization(organization['cp_key'], keyName)
+        keys = self.api.activation_keys_by_organization(organization['label'], keyName)
         if len(keys) == 0:
             return os.EX_DATAERR
         key = keys[0]
@@ -272,7 +272,7 @@ class Delete(ActivationKeyAction):
 
         organization = get_organization(orgName)
 
-        keys = self.api.activation_keys_by_organization(organization['cp_key'], keyName)
+        keys = self.api.activation_keys_by_organization(organization['label'], keyName)
         if len(keys) == 0:
             #TODO: not found?
             return os.EX_DATAERR

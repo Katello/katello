@@ -59,7 +59,7 @@ describe Api::SystemsController do
     Resources::Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Resources::Pulp::Consumer.stub!(:update).and_return(true)
 
-    @organization = Organization.create!(:name=>'test_org', :label=> 'test_org', :cp_key => 'test_org')
+    @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
     @environment_1 = KTEnvironment.create!(:name=>'test_1', :label=> 'test_1', :prior => @organization.library.id, :organization => @organization)
 
     @system_group_1 = SystemGroup.create!(:name => 'System Group 1', :organization_id => @organization.id )
@@ -108,7 +108,7 @@ describe Api::SystemsController do
       end
 
       it "fails if no environment_id was specified" do
-        post :create, :organization_id => @organization.cp_key
+        post :create, :organization_id => @organization.label
         response.code.should == "400"
       end
     end
@@ -135,7 +135,7 @@ describe Api::SystemsController do
           :environment => @environment_1,
           :cp_type => "system",
           :sockets => 2,
-          :organization_id => @organization.cp_key,
+          :organization_id => @organization.label,
           :activation_keys => "#{@activation_key_1.name},#{@activation_key_2.name}"
         }
       end
@@ -177,7 +177,7 @@ describe Api::SystemsController do
 
       context "and they are not in the system" do
         it "set the environment according the activation keys" do
-          post :activate, :organization_id => @organization.cp_key, :activation_keys => "notInSystem"
+          post :activate, :organization_id => @organization.label, :activation_keys => "notInSystem"
           response.code.should == "404"
         end
       end
@@ -242,7 +242,7 @@ describe Api::SystemsController do
     end
 
     let(:action) { :index }
-    let(:req) { get :index, :owner => @organization.cp_key }
+    let(:req) { get :index, :owner => @organization.label }
     let(:authorized_user) { user_with_read_permissions }
     let(:unauthorized_user) { user_without_read_permissions }
     it_should_behave_like "protected action"
@@ -254,12 +254,12 @@ describe Api::SystemsController do
     end
 
     it "should show all systems in the organization" do
-      get :index, :organization_id => @organization.cp_key
+      get :index, :organization_id => @organization.label
       response.body.should == [@system_1, @system_2].to_json
     end
 
     it "should show all systems for the owner" do
-      get :index, :owner => @organization.cp_key
+      get :index, :owner => @organization.label
       response.body.should == [@system_1, @system_2].to_json
     end
 
@@ -285,7 +285,7 @@ describe Api::SystemsController do
       end
 
       it "should show all systems in the organization that are subscribed to a pool" do
-        get :index, :organization_id => @organization.cp_key, :pool_id => pool_id
+        get :index, :organization_id => @organization.label, :pool_id => pool_id
         returned_uuids = JSON.parse(response.body).map{|sys| sys["uuid"]}
         expected_uuids = [@system_1.uuid, @system_3.uuid]
 
@@ -376,21 +376,21 @@ describe Api::SystemsController do
     it_should_behave_like "protected action"
 
     it "should change the name" do
-      Resources::Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, @sys.description).and_return(true) if AppConfig.katello?
+      Resources::Pulp::Consumer.should_receive(:update).once.with(@organization.label, uuid, @sys.description).and_return(true) if AppConfig.katello?
       put :update, :id => uuid, :name => "foo_name"
       response.body.should == @sys.to_json
       response.should be_success
     end
 
     it "should change the description" do
-      Resources::Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, "redkin is awesome.").and_return(true) if AppConfig.katello?
+      Resources::Pulp::Consumer.should_receive(:update).once.with(@organization.label, uuid, "redkin is awesome.").and_return(true) if AppConfig.katello?
       put :update, :id => uuid, :description => "redkin is awesome."
       response.body.should == @sys.to_json
       response.should be_success
     end
 
     it "should change the location" do
-      Resources::Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, @sys.description).and_return(true) if AppConfig.katello?
+      Resources::Pulp::Consumer.should_receive(:update).once.with(@organization.label, uuid, @sys.description).and_return(true) if AppConfig.katello?
       put :update, :id => uuid, :location => "never-neverland"
       response.body.should == @sys.to_json
       response.should be_success
