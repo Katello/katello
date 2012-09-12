@@ -31,7 +31,6 @@ describe Api::ActivationKeysController do
       o.id = 1234
       o.name = "org-1234"
       o.label = "org-1234"
-      o.cp_key = "org-1234"
     end
 
     @environment = KTEnvironment.new(:organization => @organization)
@@ -82,7 +81,7 @@ describe Api::ActivationKeysController do
     it_should_behave_like "protected action"
 
     it "should retrieve organization" do
-      Organization.should_receive(:first).once.with(hash_including(:conditions => {:cp_key => '1234'})).and_return(@organization)
+      Organization.should_receive(:first).once.with(hash_including(:conditions => {:label => '1234'})).and_return(@organization)
       get :index, :organization_id => '1234'
     end
 

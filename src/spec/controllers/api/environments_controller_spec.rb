@@ -17,7 +17,7 @@ describe Api::EnvironmentsController do
   include AuthorizationHelperMethods
 
   before(:each) do
-    @org         = Organization.new(:cp_key => "1", :label=>"foo")
+    @org         = Organization.new(:label=>"1")
     @environment = KTEnvironment.new
     @environment.organization = @org
     Organization.stub!(:first).and_return(@org)
