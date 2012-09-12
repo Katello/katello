@@ -11,8 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Filter < ActiveRecord::Base
-  include Glue::Pulp::Filter if AppConfig.katello?
-  include Glue
   include Authorization
   include IndexedModel
 
@@ -35,10 +33,30 @@ class Filter < ActiveRecord::Base
   has_and_belongs_to_many :products, :uniq => true
   has_and_belongs_to_many :repositories, :uniq => true
 
+  has_many :packages, :class_name=>"FilterPackage", :inverse_of=>:filter
+
   before_validation(:on=>:create) do
     self.pulp_id ||= "#{self.organization.cp_key}-#{self.name}-#{SecureRandom.hex(4)}"
   end
 
+  def add_package name
+    self.packages <<  FilterPackage.new(:name=>name, :filter=>self)
+  end
+
+  def remove_package name
+    self.packages.delete(self.packages.where(:name=>name).first)
+    self.packages
+  end
+
+  def reconcile_packages! name_list
+    pkgs = self.package_list
+    (name_list - pkgs).each{|n| self.add_package(n)}
+    (pkgs - name_list).each{|n| self.remove_package(n)}
+  end
+
+  def package_list
+    self.packages.pluck(:name)
+  end
 
   READ_PERM_VERBS = [:read, :create, :delete]
   UPDATE_PERM_VERBS = [:create, :update]
@@ -106,16 +124,14 @@ class Filter < ActiveRecord::Base
 
 
   def as_json(options)
-    options.nil? ?
-        super(:methods => [:name], :exclude => :pulp_id) :
-        super(options.merge(:methods => [:name], :exclude => :pulp_id) {|k, v1, v2| [v1, v2].flatten })
+    to_ret = options.nil? ?
+        super(:methods => [:name, :package_list], :exclude => :pulp_id) :
+        super(options.merge(:methods => [:name, :package_list], :exclude => :pulp_id) {|k, v1, v2| [v1, v2].flatten })
   end
 
   def extended_index_attrs
     {:name_sort=>name.downcase, :name=>name, :packages=>self.package_list, :products=>self.products.collect{|p| p.name}}
   end
-
-
 end
 
 

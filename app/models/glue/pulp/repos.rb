@@ -20,7 +20,7 @@ module Glue::Pulp::Repos
       before_save :save_repos_orchestration
       before_destroy :destroy_repos_orchestration
 
-      has_and_belongs_to_many :filters, :uniq => true, :before_add => :add_filters_orchestration, :before_remove => :remove_filters_orchestration
+      has_and_belongs_to_many :filters, :uniq => true
 
       # required for GPG key url generation
       include Rails.application.routes.url_helpers
@@ -456,34 +456,6 @@ module Glue::Pulp::Repos
 
     def destroy_repos_orchestration
       pre_queue.create(:name => "delete pulp repositories for product: #{self.name}", :priority => 6, :action => [self, :del_repos])
-    end
-
-    def add_filters_orchestration(added_filter)
-      return true unless environments.size > 1 and promoted_to?(library.successor)
-
-      self.repos(library.successor).each do |r|
-        pre_queue.create(
-            :name => "add filter '#{added_filter.pulp_id}' to repo: #{r.id}",
-            :priority => 5,
-            :action => [self, :set_filter, r, added_filter.pulp_id])
-      end
-
-      @orchestration_for = :add_filter
-      on_save
-    end
-
-    def remove_filters_orchestration(removed_filter)
-      return true unless environments.size > 1 and promoted_to?(library.successor)
-
-      self.repos(library.successor).each do |r|
-        pre_queue.create(
-            :name => "remove filter '#{removed_filter.pulp_id}' from repo: #{r.id}",
-            :priority => 5,
-            :action => [self, :del_filter, r, removed_filter.pulp_id])
-      end
-
-      @orchestration_for = :remove_filter
-      on_save
     end
 
     protected
