@@ -304,31 +304,27 @@ module Resources
           JSON.parse(response).with_indifferent_access
         end
 
-        def package_copy src_repo_id, dest_repo_id, package_ids=[], name_blacklist=[]
+        def package_copy src_repo_id, dest_repo_id, package_ids=nil, name_blacklist=[]
           filters = {
-            'association' => {'unit_id' => {'$in' => package_ids }},
             'unit' => {
                 'name' => {'$not' => {'$in' => name_blacklist} }
             }
           }
+
+          filters['association'] = {'unit_id' => {'$in' => package_ids }} if package_ids
+
           unit_copy src_repo_id, dest_repo_id, 'rpm', filters, {:resolve_dependencies=> true}
         end
 
-        def errata_copy src_repo_id, dest_repo_id, errata_ids=[]
-          filters = {
-              :unit => {
-                    :id=>{
-                        '$in' => errata_ids
-                    }
-                }
-          }
+        def errata_copy src_repo_id, dest_repo_id, errata_ids=nil
+          filters = {}
+          filters[:unit] = { :id=>{ '$in' => errata_ids } } if errata_ids
           unit_copy src_repo_id, dest_repo_id, 'erratum', filters, {:resolve_dependencies=> true}
         end
 
-        def distribution_copy src_repo_id, dest_repo_id, dist_id
-          filters = {
-              'id' => {'$in' => dist_id }
-          }
+        def distribution_copy src_repo_id, dest_repo_id, dist_id=nil
+          filters = {}
+          filters['id'] = {'$in' => dist_id } if dist_id
           unit_copy src_repo_id, dest_repo_id, 'distribution', filters, {:resolve_dependencies=> true}
         end
 
