@@ -134,13 +134,13 @@ module Glue::Pulp::Repo
 
     if self.is_cloned_in?(to_env)
       #repo is already cloned, so lets just re-sync it from its parent
-      return self.get_clone(to_env).sync
+      return [self.get_clone(to_env).sync]
     else
-      clone_event = self.create_clone(to_env)
+      clone_events = self.create_clone(to_env)
       #TODO ensure that clone content is indexed
       #clone.index_packages
       #clone.index_errata
-      return clone_event
+      return clone_events
     end
   end
 
