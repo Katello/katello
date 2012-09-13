@@ -56,7 +56,7 @@ describe Provider do
       })
       @provider.save!
 
-      @product = Product.create!({:cp_id => "product_id", :name=> "prod", :productContent => [], :provider => @provider, :environments => [@organization.library]})
+      @product = Product.create!({:cp_id => "product_id",:label=>"prod", :name=> "prod", :productContent => [], :provider => @provider, :environments => [@organization.library]})
     end
 
     specify { @product.should_not be_nil }
@@ -122,14 +122,14 @@ describe Provider do
         before do
           Glue::Candlepin::Product.stub(:import_from_cp => [], :import_marketing_from_cp => true)
 
-          @rh_product = Product.create!({:cp_id => "rh_product_id", :name=> "rh_product", :productContent => [], :provider => @provider, :environments => [@organization.library]})
+          @rh_product = Product.create!({:label=>"prod",:cp_id => "rh_product_id", :name=> "rh_product", :productContent => [], :provider => @provider, :environments => [@organization.library]})
           @custom_provider = Provider.create!({
             :name => 'test_provider',
             :repository_url => 'https://something.net',
             :provider_type => Provider::CUSTOM,
             :organization => @organization
           })
-          @custom_product = Product.create!({:cp_id => "custom_product_id", :name=> "custom_product", :productContent => [], :provider => @custom_provider, :environments => [@organization.library]})
+          @custom_product = Product.create!({:cp_id => "custom_product_id",:label=> "prod", :name=> "custom_product", :productContent => [], :provider => @custom_provider, :environments => [@organization.library]})
         end
 
         it "should be removed from the Katello products"  do
@@ -167,7 +167,7 @@ describe Provider do
     end
 
     def create_product_with_content(product_name, releases)
-      product = @provider.products.create!(:name => product_name, :cp_id => product_name.hash) do |product|
+      product = @provider.products.create!(:name => product_name, :label => "#{product_name.hash}", :cp_id => product_name.hash) do |product|
         product.environments << @organization.library
       end
 
@@ -240,8 +240,8 @@ describe Provider do
         p.organization = @organization
       end
 
-      @product1 = Product.create!({:cp_id => "product1_id", :name=> "product1", :productContent => [], :provider => @provider, :environments => [@organization.library]})
-      @product2 = Product.create!({:cp_id => "product2_id", :name=> "product2", :productContent => [], :provider => @provider, :environments => [@organization.library]})
+      @product1 = Product.create!({:cp_id => "product1_id",:label => "prod1", :name=> "product1", :productContent => [], :provider => @provider, :environments => [@organization.library]})
+      @product2 = Product.create!({:cp_id => "product2_id", :label=> "prod2", :name=> "product2", :productContent => [], :provider => @provider, :environments => [@organization.library]})
     end
 
     it "should create sync for all it's products" do

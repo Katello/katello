@@ -32,8 +32,8 @@ describe SystemTemplate, :katello => true do
 
     @tpl1 = SystemTemplate.create!(:name => "template_1", :description => "template_1 description", :environment => @organization.library)
 
-    @prod1 = Product.create!(:cp_id => "123456", :name => "prod1", :environments => [@organization.library], :provider => @provider)
-    @prod2 = Product.create!(:cp_id => "789123", :name => "prod2", :environments => [@organization.library], :provider => @provider)
+    @prod1 = Product.create!(:cp_id => "123456", :label => "123456", :name => "prod1", :environments => [@organization.library], :provider => @provider)
+    @prod2 = Product.create!(:cp_id => "789123", :label=> "789123", :name => "prod2", :environments => [@organization.library], :provider => @provider)
 
     @organization.library.products << @prod1
     @organization.library.products << @prod2

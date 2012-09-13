@@ -257,7 +257,7 @@ describe Api::SyncController, :katello => true do
       Organization.stub!(:first).and_return(@organization)
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
       Provider.stub!(:find).and_return(@provider)
-      @product = Product.new({:name => "prod"})
+      @product = Product.new({:name=>"prod", :label=> "prod"})
       @product.provider = @provider
       @product.environments << @organization.library
       @product.stub(:arch).and_return('noarch')
