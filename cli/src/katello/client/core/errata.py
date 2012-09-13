@@ -20,13 +20,11 @@ from gettext import gettext as _
 from katello.client.api.errata import ErrataAPI
 from katello.client.api.system import SystemAPI
 from katello.client.api.system_group import SystemGroupAPI
-from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_repo, get_environment, get_product, get_system_group
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
 
-Config()
 
 # base package action --------------------------------------------------------
 

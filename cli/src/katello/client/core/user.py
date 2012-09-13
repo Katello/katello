@@ -20,11 +20,9 @@ from gettext import gettext as _
 from katello.client.api.user import UserAPI
 from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.utils import get_user, get_environment
-from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, convert_to_mime_type, attachment_file_name, save_report
 
-Config()
 
 # base user action -----------------------------------------------------
 

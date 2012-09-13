@@ -18,11 +18,9 @@ import os
 from gettext import gettext as _
 
 from katello.client.api.filter import FilterAPI
-from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record
 
-Config()
 
 # -----------------------------------------------------------------
 

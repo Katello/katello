@@ -18,12 +18,10 @@ import os
 from gettext import gettext as _
 
 from katello.client.api.environment import EnvironmentAPI
-from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record
 from katello.client.api.utils import get_environment
 
-Config()
 
 # base environment action --------------------------------------------------------
 

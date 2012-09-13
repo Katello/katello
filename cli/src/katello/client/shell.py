@@ -32,7 +32,6 @@ from katello.client.config import Config
 from katello.client.core.base import Command, CommandContainer
 from katello.client.core.utils import parse_tokens
 
-Config()
 
 class KatelloShell(Cmd):
 

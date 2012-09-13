@@ -33,7 +33,6 @@ from katello.client.server import ServerRequestError
 from copy import copy
 from optparse import Option, OptionValueError
 
-Config()
 _log = getLogger(__name__)
 
 # base command class ----------------------------------------------------------
@@ -328,6 +327,7 @@ class BaseAction(Action):
         return Printer(strategy)
 
     def __print_strategy(self):
+        Config()
         if (self.has_option('grep') or (Config.parser.has_option('interface', 'force_grep_friendly') and Config.parser.get('interface', 'force_grep_friendly').lower() == 'true')):
             return GrepStrategy(delimiter=self.get_option('delimiter'))
         elif (self.has_option('verbose') or (Config.parser.has_option('interface', 'force_verbose') and Config.parser.get('interface', 'force_verbose').lower() == 'true')):
@@ -336,6 +336,7 @@ class BaseAction(Action):
             return None
 
     def load_saved_options(self, parser):
+        Config()
         if not Config.parser.has_section('options'):
             return
         for opt_name, opt_value in Config.parser.items('options'):

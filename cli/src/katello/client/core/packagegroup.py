@@ -2,11 +2,8 @@ import os
 from gettext import gettext as _
 
 from katello.client.api.repo import RepoAPI
-from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import system_exit
-
-Config()
 
 
 class PackageGroupAction(BaseAction):

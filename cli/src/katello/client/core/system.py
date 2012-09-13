@@ -22,7 +22,6 @@ from katello.client.api.environment import EnvironmentAPI
 from katello.client.api.task_status import SystemTaskStatusAPI
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_environment, get_system
-from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, convert_to_mime_type, attachment_file_name, save_report
 from katello.client.utils.printer import VerboseStrategy
@@ -31,7 +30,6 @@ from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
 from katello.client.server import ServerRequestError
 
-Config()
 
 # base system action --------------------------------------------------------
 

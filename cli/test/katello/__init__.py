@@ -1,2 +1,2 @@
 
-__path__.append('../../src/katello')
+__path__.append('../src/katello')
