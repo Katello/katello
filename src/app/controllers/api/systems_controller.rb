@@ -151,7 +151,7 @@ DESC
   end
 
   api :POST, "/consumers/:id", "Regenerate consumer identity"
-  param :id, String, "UUID of the consumer"
+  param :id, String, :desc => "UUID of the consumer"
   desc <<-DESC
 Schedules the consumer identity certificate regeneration
 DESC
@@ -299,8 +299,8 @@ DESC
   end
 
   api :GET, "/organizations/:organization_id/systems/tasks", "List async tasks for the system"
-  param :system_name, String, "Name of the system"
-  param :system_uuid, String, "UUID of the system"
+  param :system_name, String, :desc => "Name of the system"
+  param :system_uuid, String, :desc => "UUID of the system"
   def tasks
     query = TaskStatus.joins(:system).where(:"task_statuses.organization_id" => @organization.id)
     if @environment
