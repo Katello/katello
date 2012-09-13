@@ -27,7 +27,7 @@ describe Api::RepositoriesController, :katello => true do
       Organization.stub!(:first).and_return(@organization)
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
       Provider.stub!(:find).and_return(@provider)
-      @product = Product.new({:name => "prod"})
+      @product = Product.new({:name=>"prod", :label=> "prod"})
 
       @product.provider = @provider
       @product.environments << @organization.library
@@ -144,7 +144,7 @@ describe Api::RepositoriesController, :katello => true do
 
       @organization = Organization.create!(:name=>ProductTestData::ORG_ID, :label=> ProductTestData::ORG_ID, :label => 'admin-org-37070')
       @provider     = @organization.redhat_provider
-      @product = Product.new({:name => "product for repo test"})
+      @product = Product.new({:name=>"product for repo test", :label=> "product_for_repo_test"})
       @product.provider = @provider
       @product.environments << @organization.library
       @product.stub(:arch).and_return('noarch')

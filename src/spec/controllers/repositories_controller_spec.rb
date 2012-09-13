@@ -16,7 +16,7 @@ describe RepositoriesController, :katello => true do
       @organization = new_test_org
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
       Provider.stub!(:find).and_return(@provider)
-      @product = Product.new({:name => "prod"})
+      @product = Product.new({:name=>"prod", :label=> "prod"})
 
       @product.provider = @provider
       @product.environments << @organization.library
