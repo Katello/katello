@@ -84,10 +84,9 @@ class UserSessionsController < ApplicationController
       current_user.set_ldap_roles if AppConfig.ldap_roles
 
       orgs = current_user.allowed_organizations
-      default_org = current_user.default_org
       user_default_org = nil
-      if default_org && !default_org.nil?
-        user_default_org = (Organization.find(default_org))
+      if current_user.default_org && !current_user.default_org.nil?
+        user_default_org = current_user.default_org
       end
 
       if current_organization.nil?
@@ -97,7 +96,7 @@ class UserSessionsController < ApplicationController
           notify.success _("Login Successful")
           set_org
         elsif !user_default_org.nil? && orgs.include?(user_default_org)
-          params[:org_id] = default_org
+          params[:org_id] = user_default_org.id
           # notice the user
           notify.success _("Login Successful, logging into '%s' ") % user_default_org.name
           set_org
