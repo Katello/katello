@@ -74,7 +74,7 @@ module ProductTestData
   
   PRODUCT_WITH_CONTENT = HashWithIndifferentAccess.new({
     :name => ProductTestData::PRODUCT_NAME,
-    :label, => "dream",
+    :label => "dream",
     :id => ProductTestData::PRODUCT_ID,
     :multiplier => 1,
     :productContent => [

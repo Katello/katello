@@ -37,13 +37,13 @@ describe Glue::Pulp::Repo, :katello => true do
 
     
 
-    @product1 = Product.create!({:cp_id => "product1_id", :name=> "product1", :productContent => [], :provider => @provider, :environments => [@organization.library]})
+    @product1 = Product.create!({:cp_id => "product1_id",:label=>"prod1",  :name=> "product1", :productContent => [], :provider => @provider, :environments => [@organization.library]})
     ep = EnvironmentProduct.find_or_create(@organization.library, @product1)
     RepoTestData::REPO_PROPERTIES.merge!(:environment_product => ep)
 
     @repo = Repository.create!(RepoTestData::REPO_PROPERTIES)
 
-    @rh_product =  Product.create!({:cp_id => "rh_product1_id", :name=> "rh_product1", :productContent => [], 
+    @rh_product =  Product.create!({:cp_id => "rh_product1_id", :label =>"rh_prod1", :name=> "rh_product1", :productContent => [], 
                                     :provider => @organization.redhat_provider, :environments => [@organization.library]})
     ep2 = EnvironmentProduct.find_or_create(@organization.library, @rh_product)
     @rh_repo = Repository.create!(:name=>"red hat repo", :environment_product=>ep2, :pulp_id=>"redhat_pulp_id", :uri=>"http://redhat.com/cdn/content")

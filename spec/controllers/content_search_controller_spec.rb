@@ -28,7 +28,7 @@ describe ContentSearchController do
       @env2 = KTEnvironment.create!(:name=>"env2", :label=> "env2", :organization => @organization, :prior => @env1)
       @provider = Provider.create!(:name => "provider", :provider_type => Provider::CUSTOM,
                                    :organization => @organization, :repository_url => "https://something.url/stuff")
-      @product = Product.new({:name => "prod"})
+      @product = Product.new({:name=>"prod", :label=> "prod"})
 
 
       @product.provider = @provider
