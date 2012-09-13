@@ -83,8 +83,10 @@ class Api::EnvironmentsController < Api::ApiController
   def index
     query_params[:organization_id] = @organization.id
     environments = KTEnvironment.where query_params
-    environments.delete_if do |env|
-      !env.any_operation_readable?
+    unless @organization.readable?
+      environments.delete_if do |env|
+        !env.any_operation_readable?
+      end
     end
     render :json => (environments).to_json
   end

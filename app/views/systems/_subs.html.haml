@@ -5,7 +5,7 @@
     = form_tag system_path(@system), :id=>"autoheal_form", :method=>"put", :remote=>true do
       #{_("System Current Subscription(s)")}
   = form_tag update_subscriptions_system_path, :id=>"unsubscribe", :method=>"post", :remote=>true do
-    -#= hidden_field_tag "commit", "unsubscribe"
+    = hidden_field_tag "subscribe_action", "unsubscribe"
     .tree
       %table#unsubscribeTable
         %thead
@@ -58,6 +58,7 @@
   = form_tag update_preference_user_path(current_user), :id=>"matchsystem_form", :method=>"put", :remote=>false do
     = select_tag 'subscription_filters', subscription_filters.html_safe, :prompt => _("Filters"), :multiple => true, "data-placeholder" => _("Subscription Filter Options")
   = form_tag update_subscriptions_system_path, :id=>"subscribe", :method=>"post", :remote=>true do
+    = hidden_field_tag "subscribe_action", "subscribe"
     %div.hidden#available_spinner
       %table
         %thead
