@@ -94,8 +94,13 @@ module Resources
         end
 
         def find(id)
-          result = search("filters"=> {"_id"=> {"$in"=> [id]}})
+          result = find_all(id)
           result.first.with_indifferent_access if result.first
+        end
+
+        def find_all(ids)
+          result = search(:filters => {'_id'=> {'$in'=> ids}})
+          result.collect{|p| p.with_indifferent_access}
         end
 
         def search(criteria)
@@ -120,23 +125,26 @@ module Resources
           response = post(path, JSON.generate({:pkgnames=>pkgnames, :repoids=>repoids}),  self.default_headers)
           JSON.parse(response)
         end
-
-
       end
     end
 
     class Errata < PulpResource
 
       class << self
-        def find(errata_id)
-          result = search({
-            :filters => {
-                "id"=> {
-                    "$in"=> [errata_id]
-                }
-            }
-          })
-          result.first
+
+        def find(id)
+           result = find_all(id)
+           result.first.with_indifferent_access if result.first
+         end
+
+        def find_all(ids)
+          result = search(:filters=> {:id=> {'$in'=> ids}})
+          result.collect{|p| p.with_indifferent_access}
+        end
+
+        def find_all_by_unit_ids(ids)
+          result = search(:filters=> {:_id=> {'$in'=> ids}})
+          result.collect{|p| p.with_indifferent_access}
         end
 
         def search filter
@@ -366,18 +374,6 @@ module Resources
           end
         end
 
-        def add_packages repo_id, pkg_id_list
-          body = post(Repository.repository_path + repo_id +"/add_package/", {:packageid=>pkg_id_list}.to_json, self.default_headers).body
-        end
-
-        def add_errata repo_id, errata_id_list
-          body = post(Repository.repository_path + repo_id +"/add_errata/", {:errataid=>errata_id_list}.to_json, self.default_headers).body
-        end
-
-        def add_distribution repo_id, distribution_id
-          body = post(Repository.repository_path + repo_id +"/add_distribution/", {:distributionid=>distribution_id}.to_json, self.default_headers).body
-        end
-
         def sync (repo_id, data = {})
           data[:max_speed] ||= AppConfig.pulp.sync_KBlimit if AppConfig.pulp.sync_KBlimit # set bandwidth limit
           data[:num_threads] ||= AppConfig.pulp.sync_threads if AppConfig.pulp.sync_threads # set threads per sync
@@ -411,12 +407,12 @@ module Resources
           self.delete(path, self.default_headers).code.to_i
         end
 
-        def packages repo_id
+        def package_ids repo_id
           criteria = {:type_ids=>['rpm'],
                   :sort => {
                       :unit => [ ['name', 'ascending'], ['version', 'descending'] ]
                   }}
-          package_unit_search(repo_id, criteria)
+          package_unit_search(repo_id, criteria, false).collect{|p| p['unit_id']}
         end
 
         def packages_by_nvre(repo_id, name, version=nil, release=nil, epoch=nil)
@@ -435,10 +431,10 @@ module Resources
                   :sort => {
                       :unit => [ ['name', 'ascending'], ['version', 'descending'] ]
                   }}
-          package_unit_search(repo_id, criteria)
+          package_unit_search(repo_id, criteria, true).collect{|p| p['metadata'].with_indifferent_access}
         end
 
-        def errata(repo_id, filter = {})
+        def errata_ids(repo_id, filter = {})
           data = { :criteria => {
                     :type_ids=>['erratum'],
                     :sort => {
@@ -447,7 +443,7 @@ module Resources
                    }
                   }
           response = post(repository_path(repo_id) + 'search/units/', JSON.generate(data), self.default_headers)
-          JSON.parse(response.body).collect{|i| i['metadata'].with_indifferent_access}
+          JSON.parse(response.body).collect{|i| i['unit_id']}
         end
 
         def distributions(repo_id)
@@ -473,11 +469,11 @@ module Resources
 
         private
 
-        def package_unit_search repo_id, criteria,
+        def package_unit_search repo_id, criteria, include_meta
           data = { :criteria => criteria }
           response = post(repository_path(repo_id) + 'search/units/', JSON.generate(data), self.default_headers)
           body = response.body
-          JSON.parse(body).collect{|e| e['metadata'].with_indifferent_access}
+          JSON.parse(body)
         end
       end
     end
