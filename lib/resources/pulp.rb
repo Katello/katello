@@ -451,9 +451,15 @@ module Resources
         end
 
         def distributions(repo_id)
-          response = get(repository_path + repo_id + "/distribution/", self.default_headers)
-          body = response.body
-          JSON.parse(body)
+          data = { :criteria => {
+                    :type_ids=>['distribution'],
+                    :sort => {
+                        :unit => [ ['id', 'ascending'] ]
+                    }
+                   }
+                  }
+          response = post(repository_path(repo_id) + 'search/units/', JSON.generate(data), self.default_headers)
+          JSON.parse(response.body).collect{|i| i['metadata'].with_indifferent_access}
         end
 
         def publish repo_id
