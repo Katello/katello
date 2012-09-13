@@ -202,7 +202,10 @@ module Glue::Pulp::Repo
 
   def packages
     if @repo_packages.nil?
-      self.packages = Resources::Pulp::Repository.packages(self.pulp_id)
+      #we fetch ids and then fetch packages by id, because repo packages
+      #  does not contain all the info we need (bz 854260)
+      pkg_ids = Resources::Pulp::Repository.package_ids(self.pulp_id)
+      self.packages = Resources::Pulp::Package.find_all(pkg_ids)
     end
     @repo_packages
   end
@@ -216,7 +219,8 @@ module Glue::Pulp::Repo
 
   def errata
     if @repo_errata.nil?
-       self.errata = Resources::Pulp::Repository.errata(self.pulp_id)
+      e_ids = Resources::Pulp::Repository.errata_ids(self.pulp_id)
+      self.errata = Resources::Pulp::Errata.find_all_by_unit_ids(e_ids)
     end
     @repo_errata
   end
