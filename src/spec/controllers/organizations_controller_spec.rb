@@ -101,7 +101,7 @@ describe OrganizationsController do
         response.should_not redirect_to(:action => 'new')
         response.should be_success
         assigns[:organization].name.should == "multi word organization"
-        assigns[:organization].label.should == "multi_word_organization"
+        assigns[:organization].label.should == "multi-word-organization"
       end
 
       it 'should generate a success notice' do

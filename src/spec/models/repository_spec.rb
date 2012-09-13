@@ -27,7 +27,7 @@ describe Repository, :katello => true do
     @organization = Organization.create!(:name=>"test_organization#{suffix}", :label=> "test_organization#{suffix}")
 
     User.current = superadmin
-    @product = Product.new({:name => "prod"})
+    @product = Product.new({:name=>"prod", :label=> "prod"})
     @product.provider = @organization.redhat_provider
     @product.environments << @organization.library
     @product.stub(:arch).and_return('noarch')

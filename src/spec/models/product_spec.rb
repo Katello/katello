@@ -92,6 +92,7 @@ describe Product, :katello => true do
       Resources::Candlepin::Product.stub!(:get).and_return([ProductTestData::SIMPLE_PRODUCT.merge(:attributes => [])])
       Resources::Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
       @p = Product.create!({
+        :label => "Zanzibar#{rand 10**6}",
         :name => ProductTestData::PRODUCT_NAME,
         :id => ProductTestData::PRODUCT_ID,
         :productContent => [],
@@ -141,15 +142,15 @@ describe Product, :katello => true do
       disable_product_orchestration
     end
 
-    specify { Product.new(:name => 'contains /', :environments => [@organization.library], :provider => @provider).should_not be_valid }
-    specify { Product.new(:name => 'contains #', :environments => [@organization.library], :provider => @provider).should_not be_valid }
-    specify { Product.new(:name => 'contains space', :environments => [@organization.library], :provider => @provider).should be_valid }
+    specify { Product.new(:label=> "goo", :name => 'contains /', :environments => [@organization.library], :provider => @provider).should_not be_valid }
+    specify { Product.new(:label=>"boo", :name => 'contains #', :environments => [@organization.library], :provider => @provider).should_not be_valid }
+    specify { Product.new(:label=> "shoo", :name => 'contains space', :environments => [@organization.library], :provider => @provider).should be_valid }
+    specify { Product.new(:label => "bar foo", :name=> "foo", :environments => [@organization.library], :provider => @provider).should_not be_valid}
 
     it "should be successful when creating a product with a duplicate name in one organization" do
       @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
 
-      Product.new({
-        :name => @p.name,
+      Product.new({:name=>@p.name, :label=> @p.name,
         :id => @p.cp_id,
         :productContent => @p.productContent,
         :provider => @p.provider,
@@ -189,11 +190,12 @@ describe Product, :katello => true do
       context "when there is a repo with the same name for the product" do
         before do
           @repo_name = "repo"
-          @p.add_repo(@repo_name, "http://test/repo","yum" )
+          @repo_label = "repo"
+          @p.add_repo(@repo_label, @repo_name, "http://test/repo","yum" )
         end
 
         it "should raise conflict error" do
-          lambda { @p.add_repo("repo", "http://test/repo","yum") }.should raise_error(Errors::ConflictException)
+          lambda { @p.add_repo(@repo_label, @repo_name, "http://test/repo","yum") }.should raise_error(Errors::ConflictException)
         end
       end
     end
@@ -413,7 +415,7 @@ describe Product, :katello => true do
       disable_repo_orchestration
 
       User.current = superadmin
-      @product = Product.new({:name => "prod"})
+      @product = Product.new({:name=>"prod", :label=> "prod"})
       @product.provider = @organization.redhat_provider
       @product.environments << @organization.library
       @product.stub(:arch).and_return('noarch')
@@ -459,7 +461,7 @@ describe Product, :katello => true do
       @gpg = GpgKey.create!(:name =>"GPG", :organization=>@organization, :content=>"bar")
       @provider = Provider.create!({:organization =>@organization, :name => 'provider' + suffix,
                               :repository_url => "https://something.url", :provider_type => Provider::CUSTOM})
-      @product = Product.new({:name => "prod#{suffix}"})
+      @product = Product.new({:name=>"prod#{suffix}", :label=> "prod#{suffix}"})
       @product.provider = @provider
       @product.environments << @organization.library
       @product.stub(:arch).and_return('noarch')

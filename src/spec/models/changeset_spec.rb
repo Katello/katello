@@ -53,7 +53,7 @@ describe Changeset, :katello => true do
         @provider      = Provider.create!(:name         => "provider", :provider_type => Provider::CUSTOM,
                                           :organization => @organization, :repository_url => "https://something.url/stuff")
         @repo          = mock(:repo, :find_packages_by_name => [])
-        @prod          = Product.new({ :name => "prod" })
+        @prod          = Product.new({:name=>"prod" , :label=> "prod" })
         @prod.provider = @provider
         @prod.environments << @organization.library
         @prod.stub(:arch).and_return('noarch')
@@ -95,7 +95,7 @@ describe Changeset, :katello => true do
         @provider = Provider.create!(:name         => "provider", :provider_type => Provider::CUSTOM,
                                      :organization => @organization, :repository_url => "https://something.url/stuff")
 
-        @prod = Product.new({ :name => "prod" })
+        @prod = Product.new({:name=>"prod" , :label=> "prod" })
 
         @prod.provider = @provider
         @prod.environments << @organization.library
@@ -245,7 +245,7 @@ describe Changeset, :katello => true do
       before(:each) do
         @provider = Provider.create!(:name => "provider", :provider_type => Provider::CUSTOM, :organization => @organization, :repository_url => "https://something.url/stuff")
 
-        @prod          = Product.new({ :name => "prod", :cp_id => "prod" })
+        @prod          = Product.new({:name=>"prod", :label=> "prod", :cp_id => "prod" })
         @prod.provider = @provider
         @prod.environments << @organization.library
         @prod.environments << @environment
@@ -319,7 +319,7 @@ describe Changeset, :katello => true do
         @provider = Provider.create!(:name         => "provider", :provider_type => Provider::CUSTOM,
                                      :organization => @organization, :repository_url => "https://something.url/stuff")
 
-        @prod          = Product.new({ :name => "prod" })
+        @prod          = Product.new({:name=>"prod" , :label=> "prod" })
         @prod.provider = @provider
         @prod.environments << @organization.library
         @prod.stub(:arch).and_return('noarch')
