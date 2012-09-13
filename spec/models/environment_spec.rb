@@ -82,10 +82,10 @@ describe KTEnvironment do
       @organization = Organization.create!(:name=>'test_organization', :label=> 'test_organization')
       @provider = @organization.redhat_provider
 
-      @first_product = Product.new(:name =>"prod1", :cp_id => '12345', :provider => @provider, :environments => [@organization.library])
-      @second_product = Product.new(:name =>"prod2", :cp_id => '67890', :provider => @provider, :environments => [@organization.library])
-      @third_product = Product.new(:name =>"prod3", :cp_id => '45678', :provider => @provider, :environments => [@organization.library])
-      @fourth_product = Product.new(:name =>"prod4", :cp_id => '32683', :provider => @provider, :environments => [@organization.library])
+      @first_product = Product.new(:name =>"prod1", :label=>"prod1", :cp_id => '12345', :provider => @provider, :environments => [@organization.library])
+      @second_product = Product.new(:name =>"prod2", :label=> "prod2", :cp_id => '67890', :provider => @provider, :environments => [@organization.library])
+      @third_product = Product.new(:name =>"prod3", :label=> "prrod3",:cp_id => '45678', :provider => @provider, :environments => [@organization.library])
+      @fourth_product = Product.new(:name =>"prod4", :label => "prod4", :cp_id => '32683', :provider => @provider, :environments => [@organization.library])
 
       @environment = KTEnvironment.new({:name=>@env_name, :label=> @env_name, :prior => @organization.library}) do |e|
         e.products << @first_product
