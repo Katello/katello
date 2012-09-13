@@ -244,8 +244,8 @@ class SystemsController < ApplicationController
   def update_subscriptions
     if params.has_key? :subscription
       params[:subscription].keys.each do |pool|
-        @system.subscribe pool, params[:spinner][pool] if params[:commit].downcase == "subscribe"
-        @system.unsubscribe pool if params[:commit].downcase == "unsubscribe"
+        @system.subscribe pool, params[:spinner][pool] if params[:subscribe_action].downcase == "subscribe"
+        @system.unsubscribe pool if params[:subscribe_action].downcase == "unsubscribe"
       end
     end
     consumed_entitlements = @system.consumed_entitlements
