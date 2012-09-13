@@ -68,7 +68,7 @@ class Api::ProvidersController < Api::ApiController
   param :provider, Hash, :required => true do
     param :name, String, :desc => "Provider name", :required => true
     param :description, String, :desc => "Provider description"
-    param :provider_type, Provider::TYPES, :required => true
+    param :provider_type, ["Red Hat", "Custom"], :required => true
     param :repository_url, String, :desc => "Repository URL"
   end
   def create
@@ -83,7 +83,7 @@ class Api::ProvidersController < Api::ApiController
   param :provider, Hash, :required => true do
     param :name, String, :desc => "Provider name", :required => true
     param :description, String, :desc => "Provider description"
-    param :provider_type, Provider::TYPES, :required => true
+    param :provider_type, ["Red Hat", "Custom"], :required => true
     param :repository_url, String, :desc => "Repository URL"
   end
   def update
