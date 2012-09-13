@@ -271,7 +271,12 @@ class Repository < ActiveRecord::Base
   end
 
   def clone_contents to_repo
-    Resources::Pulp::Repository.unit_copy(self.pulp_id, to_repo.pulp_id)
+    filtered = to_repo.applicable_filters.collect{|f| f.package_list}.flatten
+    events = []
+    events << Resources::Pulp::Repository.package_copy(self.pulp_id, to_repo.pulp_id, nil, filtered)
+    events << Resources::Pulp::Repository.errata_copy(self.pulp_id, to_repo.pulp_id)
+    events << Resources::Pulp::Repository.distribution_copy(self.pulp_id, to_repo.pulp_id)
+    events
   end
 
   def clones
