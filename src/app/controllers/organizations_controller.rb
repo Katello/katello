@@ -103,9 +103,8 @@ class OrganizationsController < ApplicationController
 
   def edit
     @org_label = ""
-    default_org = current_user.default_org
-    if default_org && !default_org.nil?
-      user_default_org = (Organization.find(default_org))
+    user_default_org = current_user.default_org
+    if user_default_org && !user_default_org.nil?
       if user_default_org == @organization
         @org_label = _("This is your default organization.")
       else
