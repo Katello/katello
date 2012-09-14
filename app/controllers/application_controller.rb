@@ -15,6 +15,7 @@ require 'util/search'
 require 'cgi'
 require 'base64'
 
+
 class ApplicationController < ActionController::Base
   layout 'katello'
   include Notifications::ControllerHelper
@@ -24,7 +25,7 @@ class ApplicationController < ActionController::Base
   helper "converge-ui/translation"
   helper_method :current_organization
   before_filter :set_locale
-  before_filter :require_user,:require_org
+  before_filter :require_user, :require_org
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
   after_filter :flash_to_headers
