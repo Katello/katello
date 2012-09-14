@@ -231,6 +231,8 @@ Documentation files for katello API.
 
 #copy converge-ui
 cp -R /usr/share/converge-ui-devel/* ./vendor/converge-ui
+rm ./public/fonts
+mv ./vendor/converge-ui/fonts ./public/fonts
 
 #configure Bundler
 rm -f Gemfile.lock
