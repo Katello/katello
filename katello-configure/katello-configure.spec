@@ -93,6 +93,7 @@ install -m 0644 man/katello-upgrade.man1 %{buildroot}%{_mandir}/man1/katello-upg
 install -m 0644 man/katello-passwd.man1 %{buildroot}%{_mandir}/man1/katello-passwd.1
 install -d -m 0755 %{buildroot}%{homedir}/upgrade-scripts
 cp -Rp upgrade-scripts/* %{buildroot}%{homedir}/upgrade-scripts
+chmod +x -R %{buildroot}%{homedir}/upgrade-scripts/*
 
 %files
 %{homedir}/
