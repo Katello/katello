@@ -76,7 +76,8 @@ class certs::config {
   file { "/usr/share/tomcat6/conf/keystore":
     ensure => link,
     target => $certs::params::katello_keystore,
-    require => File[$certs::params::katello_keystore]
+    require => File[$certs::params::katello_keystore],
+    before  => Service["tomcat6"],
   }
 
   $candlepin_key_pair_name = "katello-${candlepin_cert_name}-key-pair"
