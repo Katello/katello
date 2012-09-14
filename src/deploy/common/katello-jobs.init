@@ -243,6 +243,7 @@ case "$1" in
         ;;
     status)
         kstatus
+        RETVAL=$?
         ;;
     *)
         echo "Usage: {start|stop|restart|condrestart|condstop|status}"
