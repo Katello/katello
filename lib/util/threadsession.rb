@@ -50,12 +50,20 @@ module Katello
           def self.set_pulp_config(username)
             if username
               uri = URI.parse(AppConfig.pulp.url)
+              RestClient.log =
+                Object.new.tap do |proxy|
+                  def proxy.<<(message)
+                    Rails.logger.debug message
+                  end
+                end
+
               Runcible::Base.config = { 
                 :url      => "#{uri.scheme}://#{uri.host}",
                 :api_path => uri.path,
                 :user     => username,
                 :oauth    => {:oauth_secret => AppConfig.pulp.oauth_secret,
-                              :oauth_key    => AppConfig.pulp.oauth_key }
+                              :oauth_key    => AppConfig.pulp.oauth_key },
+                :logger   => RestClient.log
               }
             end
           end
