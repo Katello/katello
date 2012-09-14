@@ -12,6 +12,16 @@
 require 'util/errata'
 
 class Api::SystemGroupErrataController < Api::ApiController
+
+  resource_description do
+    description <<-DOC
+      methods for handling erratas on system group level
+    DOC
+
+    param :organization_id, :identifier, :desc => "oranization identifier", :required => true
+    param :system_group_id, :identifier, :desc => "system_group identifier", :required => true
+  end
+
   respond_to :json
 
   before_filter :find_group, :only => [:index, :create]
@@ -27,13 +37,15 @@ class Api::SystemGroupErrataController < Api::ApiController
     }
   end
 
-  # get the list of errata associated with the group
+  api :GET, "/organizations/:organization_id/system_groups/:system_group_id/errata", "Get list of errata associated with the group"
+  param :type, ['bugfix', 'enhancement', 'security'], :desc => "Filter errata by type", :required => false
   def index
     errata = get_errata(params[:type])
     render :json => errata
   end
 
-  # install errata remotely
+  api :POST, "/organizations/:organization_id/system_groups/:system_group_id/errata", "Install errata remotely"
+  param :errata_ids, Array, :desc => "List of errata ids to install", :required => true
   def create
     if params[:errata_ids]
       job = @group.install_errata(params[:errata_ids])
