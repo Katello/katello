@@ -267,6 +267,7 @@ describe System do
       @releases = %w[6.1 6.2 6Server]
       @releases.each do |release|
         Repository.create!(:name => "Repo #{release}",
+                          :label => "Repo#{release.gsub(".", "_")}",
                           :pulp_id => "repo #{release}",
                           :enabled => true,
                           :environment_product_id => env_product.id,
@@ -275,6 +276,7 @@ describe System do
                           :cp_label => "repo")
       end
       Repository.create!(:name => "Repo without releases",
+                         :label => "Repo_without_releases",
                          :pulp_id => "repo_without_release",
                          :enabled => true,
                          :environment_product_id => env_product.id,

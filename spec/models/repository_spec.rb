@@ -33,7 +33,8 @@ describe Repository, :katello => true do
     @product.stub(:arch).and_return('noarch')
     @product.save!
     @ep = EnvironmentProduct.find_or_create(@organization.library, @product)
-    @repo = Repository.create!(:environment_product => @ep, :name => "testrepo",:pulp_id=>"1010", :enabled => true)
+    @repo = Repository.create!(:environment_product => @ep, :name => "testrepo", :label => "testrepo_label",
+                               :pulp_id=>"1010", :enabled => true)
   end
 
 
@@ -42,7 +43,8 @@ describe Repository, :katello => true do
     let(:another_gpg_key) { @organization.gpg_keys.create!(:name => "Gpg key 2", :content => "another key") }
     subject do
       repo = Repository.create!(:environment_product => @ep, :pulp_id => "pulp-id-#{rand 10**6}",
-                                :name=>"newname#{rand 10**6}", :url => "http://fedorahosted org", :gpg_key_id => gpg_key.id)
+                                :name=>"newname#{rand 10**6}", :label=>"newlabel#{rand 10**6}",
+                                :url => "http://fedorahosted org", :gpg_key_id => gpg_key.id)
 
       prod = repo.product
       repo.stub(:product).and_return(prod)

@@ -265,9 +265,9 @@ describe Api::SyncController, :katello => true do
       Product.stub!(:find).and_return(@product)
       Product.stub!(:find_by_cp_id).and_return(@product)
       ep = EnvironmentProduct.find_or_create(@organization.library, @product)
-      @repository = Repository.create!(:environment_product => ep, :name=> "repo_1", :pulp_id=>"1")
+      @repository = Repository.create!(:environment_product => ep, :name=> "repo_1", :label=> "repo_1_label", :pulp_id=>"1")
       Repository.stub(:find).and_return(@repository)
-      @repository2 = Repository.create!(:environment_product => ep, :name=> "repo_2", :pulp_id=>"2")
+      @repository2 = Repository.create!(:environment_product => ep, :name=> "repo_2", :label=> "repo_2_label", :pulp_id=>"2")
       Repository.stub(:find).and_return(@repository)
   end
 
