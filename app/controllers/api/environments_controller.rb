@@ -82,7 +82,18 @@ class Api::EnvironmentsController < Api::ApiController
   param :name, :identifier, :desc => "filter only environments with this identifier"
   def index
     query_params[:organization_id] = @organization.id
-     environments = KTEnvironment.where query_params
+    environments = KTEnvironment.where query_params
+
+    # The following is a workaround to handle the fact that rhsm currently requests the
+    # environment using the 'name' parameter; however, the value is actually the environment label.
+    if environments.empty?
+      if query_params.has_key?(:name)
+        query_params[:label] = query_params[:name]
+        query_params.delete(:name)
+      end
+      environments = KTEnvironment.where query_params
+    end
+
      unless @organization.readable? || @organization.any_systems_registerable?
        environments.delete_if do |env|
          !env.any_operation_readable?
