@@ -35,8 +35,6 @@ describe Glue::Pulp::Repo, :katello => true do
       p.organization = @organization
     end
 
-    
-
     @product1 = Product.create!({:cp_id => "product1_id",:label=>"prod1",  :name=> "product1", :productContent => [], :provider => @provider, :environments => [@organization.library]})
     ep = EnvironmentProduct.find_or_create(@organization.library, @product1)
     RepoTestData::REPO_PROPERTIES.merge!(:environment_product => ep)
@@ -46,7 +44,7 @@ describe Glue::Pulp::Repo, :katello => true do
     @rh_product =  Product.create!({:cp_id => "rh_product1_id", :label =>"rh_prod1", :name=> "rh_product1", :productContent => [], 
                                     :provider => @organization.redhat_provider, :environments => [@organization.library]})
     ep2 = EnvironmentProduct.find_or_create(@organization.library, @rh_product)
-    @rh_repo = Repository.create!(:name=>"red hat repo", :environment_product=>ep2, :pulp_id=>"redhat_pulp_id", :uri=>"http://redhat.com/cdn/content")
+    @rh_repo = Repository.create!(:name=>"red hat repo", :label=>"red_hat_repo", :environment_product=>ep2, :pulp_id=>"redhat_pulp_id", :uri=>"http://redhat.com/cdn/content")
 
   end
 
@@ -54,7 +52,7 @@ describe Glue::Pulp::Repo, :katello => true do
     it "should create the repo with correct properties" do
       Resources::Pulp::Repository.should_receive(:create).with do |props|
         props[:id].should == RepoTestData::REPO_PROPERTIES[:pulp_id]
-        props[:name].should == RepoTestData::REPO_PROPERTIES[:name]
+        props[:name].should == RepoTestData::REPO_PROPERTIES[:label]
         props[:groupid].should == RepoTestData::REPO_PROPERTIES[:groupid]
         props[:arch].should == RepoTestData::REPO_PROPERTIES[:arch]
         props[:feed].should == RepoTestData::REPO_PROPERTIES[:feed]
@@ -330,7 +328,7 @@ describe Glue::Pulp::Repo, :katello => true do
     end
     it "should be composed from various attributes to be uniqe" do
       cloned_repo_id = @repo.clone_id(@to_env)
-      cloned_repo_id.should == "#{@repo.organization.name}-#{@to_env.name}-#{@repo.product.name}-repo"
+      cloned_repo_id.should == "#{@repo.organization.label}-#{@to_env.label}-#{@repo.product.label}-#{@repo.label}"
     end
 
   end
