@@ -38,6 +38,7 @@ describe ContentSearchController do
       ep_library = EnvironmentProduct.find_or_create(@organization.library, @product)
       @repo_library= Repository.create!(:environment_product => ep_library,
                                        :name=> "repo",
+                                       :label=> "repo_label",
                                        :relative_path => "#{@organization.name}/Library/prod/repo",
                                        :pulp_id=>"2",
                                        :enabled => true)

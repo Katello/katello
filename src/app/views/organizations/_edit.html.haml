@@ -17,8 +17,13 @@
 = content_for :content do
   %input#panel_element_id{:name => @organization.id, :type => "hidden", :value => @organization.label, "data-ajax_url"=>edit_organization_path(@organization.label)}
 
+  %fieldset
+    .grid_2.ra
+      %label #{_("Label")}:
+    .grid_4.la.multiline #{@organization.label}
+
   %fieldset.clearfix
-    .grid_2.la
+    .grid_2.ra
       %label #{_("Description")}:
     .grid_4.la{:style => "word-wrap: break-word;", 'name' => 'organization[description]', :class=> editable_class(editable), 'data-url'=>edit_organization_path(@organization.label)} #{@organization[:description]}
 
