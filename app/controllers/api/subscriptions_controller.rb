@@ -54,7 +54,7 @@ class Api::SubscriptionsController < Api::ApiController
   param :id, :number, :desc => "Entitlement id"
   def destroy
     expected_params = params.with_indifferent_access.slice(:id)
-    raise HttpErrors::BadRequest, _("Please provide entitlement id") if expected_params.count != 1
+    raise HttpErrors::BadRequest, _("Please provide entitlement ID") if expected_params.count != 1
     @system.unsubscribe(expected_params[:id])
     render :json => @system.to_json
   end
@@ -69,7 +69,7 @@ class Api::SubscriptionsController < Api::ApiController
   param :serial_id, String, :desc => "Subscription serial id"
   def destroy_by_serial
     expected_params = params.with_indifferent_access.slice(:serial_id)
-    raise HttpErrors::BadRequest, _("Please provide serial id") if expected_params.count != 1
+    raise HttpErrors::BadRequest, _("Please provide serial ID") if expected_params.count != 1
     @system.unsubscribe_by_serial(expected_params[:serial_id])
     render :json => @system.to_json
   end
