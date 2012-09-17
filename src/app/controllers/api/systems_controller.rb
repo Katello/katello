@@ -145,7 +145,7 @@ DESC
   # TODO: Unreachable - remove
   def unsubscribe
     expected_params = params.with_indifferent_access.slice(:pool)
-    raise HttpErrors::BadRequest, _("Please provide pool id") if expected_params.count != 1
+    raise HttpErrors::BadRequest, _("Please provide pool ID") if expected_params.count != 1
     @system.unsubscribe(expected_params[:serial_id])
     render :json => @system.to_json
   end

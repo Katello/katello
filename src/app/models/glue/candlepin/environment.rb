@@ -33,7 +33,7 @@ module Glue::Candlepin::Environment
     end
 
     def del_environment
-      Rails.logger.info _("Deleteing environment in candlepin: %s") % name
+      Rails.logger.info _("Deleting environment in candlepin: %s") % name
       Resources::Candlepin::Environment.destroy(id)
     rescue => e
       Rails.logger.error _("Failed to delete candlepin environment %s") % "#{name}: #{e}, #{e.backtrace.join("\n")}"
