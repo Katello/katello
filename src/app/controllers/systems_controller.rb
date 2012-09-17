@@ -242,19 +242,18 @@ class SystemsController < ApplicationController
   end
 
   def update_subscriptions
-    if params.has_key? :system
-      params[:system].keys.each do |pool|
-        @system.subscribe pool, params[:spinner][pool] if params[:commit].downcase == "subscribe"
-        @system.unsubscribe pool if params[:commit].downcase == "unsubscribe"
+    if params.has_key? :subscription
+      params[:subscription].keys.each do |pool|
+        @system.subscribe pool, params[:spinner][pool] if params[:subscribe_action].downcase == "subscribe"
+        @system.unsubscribe pool if params[:subscribe_action].downcase == "unsubscribe"
       end
-      consumed_entitlements = @system.consumed_entitlements
-      avail_pools = @system.available_pools_full
-      render :partial=>"subs_update", :locals=>{:system=>@system, :avail_subs => avail_pools,
-                                                  :consumed_subs => consumed_entitlements,
-                                                  :editable=>@system.editable?}
-      notify.success _("System subscriptions updated.")
-
     end
+    consumed_entitlements = @system.consumed_entitlements
+    avail_pools = @system.available_pools_full
+    render :partial=>"subs_update", :locals=>{:system=>@system, :avail_subs => avail_pools,
+                                              :consumed_subs => consumed_entitlements,
+                                              :editable=>@system.editable?}
+    notify.success _("System subscriptions updated.")
   end
 
   def products

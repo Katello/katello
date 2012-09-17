@@ -1,15 +1,2 @@
-%p.copyright
-  #{_("Copyright &copy; ") + (Time.now).year.to_s + _(" Red Hat, Inc.") }
-%ul
-  %li
-    %a{ "href" => "#" }
-      #{_("Disclaimer")}
-  %li
-    %a{ "href" => "#" }
-      #{_("Terms of Use")}
-  %li
-    %a{ "href" => "http://webchat.freenode.net?channels=#katello", "target" => "_blank"}
-      #{_("Support")}
-
 .ca.light_text.versioning
   #{_("%s Version: %s") % [AppConfig.app_name, AppConfig.katello_version]}

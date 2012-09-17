@@ -10,6 +10,11 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Api::SystemPackagesController < Api::ApiController
+
+  resource_description do
+    param :system_id, :identifier, :desc => "system identifier", :required => true
+  end
+
   respond_to :json
 
   before_filter :find_system, :only => [:create, :update, :destroy]
@@ -28,6 +33,9 @@ class Api::SystemPackagesController < Api::ApiController
   end
 
   # install packages remotely
+  api :POST, "/systems/:system_id/packages", "Install packages remotely"
+  param :groups, Array, :desc => "list of groups names"
+  param :packages, Array, :desc => "list of packages names"
   def create
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
@@ -43,6 +51,8 @@ class Api::SystemPackagesController < Api::ApiController
   end
 
   # update packages remotely
+  api :PUT, "/systems/:system_id/packages", "Update packages remotely"
+  param :packages, Array, :desc => "list of packages names"
   def update
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
@@ -52,6 +62,9 @@ class Api::SystemPackagesController < Api::ApiController
   end
 
   # uninstall packages remotely
+  api :DELETE, "/systems/:system_id/packages", "Uninstall packages remotely"
+  param :groups, Array, :desc => "list of groups names"
+  param :packages, Array, :desc => "list of packages names"
   def destroy
     if params[:packages]
       packages = validate_package_list_format(params[:packages])

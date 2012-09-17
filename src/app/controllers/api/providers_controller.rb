@@ -12,6 +12,10 @@
 
 class Api::ProvidersController < Api::ApiController
 
+  resource_description do
+    description "Custom Content Repositories and Red Hat repositories management."
+  end
+
   before_filter :find_organization, :only => [:index, :create]
   before_filter :find_provider, :only => [:show, :update, :destroy, :products, :import_products, :refresh_products, :import_manifest, :product_create]
   before_filter :authorize
@@ -45,15 +49,28 @@ class Api::ProvidersController < Api::ApiController
     }
   end
 
+  api :GET, "/organizations/:organization_id/providers", "List providers"
+  param :organization_id, :identifier, :desc => "Organization identifier", :required => true
+  param :name, String, :desc => "Filter providers by name"
   def index
     query_params.delete(:organization_id)
     render :json => (Provider.readable(@organization).where query_params).to_json
   end
 
+  api :GET, "/providers/:id", "Show a provider"
+  param :id, :number, :desc => "Provider numeric identifier", :required => true
   def show
     render :json => @provider.to_json
   end
 
+  api :POST, "/providers", "Create a provider"
+  param :organization_id, :identifier, :desc => "Organization identifier", :required => true
+  param :provider, Hash, :required => true do
+    param :name, String, :desc => "Provider name", :required => true
+    param :description, String, :desc => "Provider description"
+    param :provider_type, ["Red Hat", "Custom"], :required => true
+    param :repository_url, String, :desc => "Repository URL"
+  end
   def create
     provider = Provider.create!(params[:provider]) do |p|
       p.organization = @organization
@@ -61,11 +78,21 @@ class Api::ProvidersController < Api::ApiController
     render :json => provider.to_json and return
   end
 
+  api :PUT, "/providers/:id", "Update a provider"
+  param :id, :number, :desc => "Provider numeric identifier", :required => true
+  param :provider, Hash, :required => true do
+    param :name, String, :desc => "Provider name", :required => true
+    param :description, String, :desc => "Provider description"
+    param :provider_type, ["Red Hat", "Custom"], :required => true
+    param :repository_url, String, :desc => "Repository URL"
+  end
   def update
     @provider.update_attributes!(params[:provider])
     render :json => @provider.to_json and return
   end
 
+  api :DELETE, "/providers/:id", "Destroy a provider"
+  param :id, :number, :desc => "Provider numeric identifier", :required => true
   def destroy
     @provider.destroy
     if @provider.destroyed?
@@ -75,10 +102,16 @@ class Api::ProvidersController < Api::ApiController
     end
   end
 
+  api :GET, "/providers/:id/products", "List of provider's products"
+  param :id, :number, :desc => "Provider numeric identifier", :required => true
   def products
     render :json => @provider.products.all_readable(@provider.organization).select("products.*, providers.name AS provider_name").joins(:provider).to_json
   end
 
+  api :POST, "/providers/:id/import_manifest", "Import manifest for Red Hat provider"
+  param :id, :number, :desc => "Provider numeric identifier", :required => true
+  param :import, File, :desc => "Manifest file"
+  param :force, :bool, :desc => "Force import"
   def import_manifest
     if @provider.yum_repo?
       raise HttpErrors::BadRequest, _("It is not allowed to import manifest for a custom provider.")
@@ -95,6 +128,8 @@ class Api::ProvidersController < Api::ApiController
     render :text => "Manifest imported", :status => 200
   end
 
+  api :POST, "/providers/:id/refresh_products", "Refresh products for Red Hat provider"
+  param :id, :number, :desc => "Provider numeric identifier", :required => true
   def refresh_products
     raise HttpErrors::BadRequest, _("It is not allowed to refresh products for custom provider.") unless @provider.redhat_provider?
 
@@ -102,6 +137,9 @@ class Api::ProvidersController < Api::ApiController
     render :text => _("Products refreshed from CDN"), :status => 200
   end
 
+  api :POST, "/providers/:id/import_products", "Import products"
+  param :id, :number, :desc => "Provider numeric identifier", :required => true
+  param :products, Array, :desc => "Array of products to import", :required => true
   def import_products
     results = params[:products].collect do |p|
       to_create = Product.new(p) do |product|
@@ -113,6 +151,13 @@ class Api::ProvidersController < Api::ApiController
     render :json => results.to_json
   end
 
+  api :POST, "/providers/:id/product_create", "Create a new product in custom provider"
+  param :id, :number, :desc => "Provider numeric identifier", :required => true
+  param :product, Hash, :required => true do
+    param :name, String, :desc => "Product name", :required => true
+    param :description, String, :desc => "Product description"
+    param :gpg_key_name, String, :desc => "GPG key name"
+  end
   def product_create
     raise HttpErrors::BadRequest, _("It is not allowed to create products in Red Hat provider.") if @provider.redhat_provider?
 

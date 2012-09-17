@@ -309,6 +309,7 @@ class UsersController < ApplicationController
       notify.success _("Default Organization: '%s' saved.") % default_org.name
     else
       current_user.default_org = nil
+      current_user.save!
       notify.success _("Default Organization no longer selected.")
     end
     render :text => :ok and return

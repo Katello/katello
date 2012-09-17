@@ -544,10 +544,13 @@ Src::Application.routes.draw do
           get :tasks
         end
       end
-      resources :activation_keys, :only => [:index] do
+      resources :activation_keys, :only => [:index, :create, :destroy, :show, :update] do
         member do
           post :system_groups, :action => :add_system_groups
           delete :system_groups, :action => :remove_system_groups
+
+          post :pools, :action => :add_pool
+          delete "pools/:poolid", :action => :remove_pool
         end
       end
       resources :repositories, :only => [] do

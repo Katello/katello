@@ -14,7 +14,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        1.1.8
+Version:        1.1.9
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -93,6 +93,7 @@ install -m 0644 man/katello-upgrade.man1 %{buildroot}%{_mandir}/man1/katello-upg
 install -m 0644 man/katello-passwd.man1 %{buildroot}%{_mandir}/man1/katello-passwd.1
 install -d -m 0755 %{buildroot}%{homedir}/upgrade-scripts
 cp -Rp upgrade-scripts/* %{buildroot}%{homedir}/upgrade-scripts
+chmod +x -R %{buildroot}%{homedir}/upgrade-scripts/*
 
 %files
 %{homedir}/
@@ -105,6 +106,17 @@ cp -Rp upgrade-scripts/* %{buildroot}%{homedir}/upgrade-scripts
 
 
 %changelog
+* Wed Sep 12 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.9-1
+- 856220 - adding time to puppet log (lzap+git@redhat.com)
+- Removing extra configure code for headpin bin; adding provides to cli script
+  for headpin (jomara@redhat.com)
+- Fencing headpin CLI into katello cli. CLI will now load appropriate functions
+  based on client.conf configuration. Katello cli now ships with headpin
+  symlink (jomara@redhat.com)
+- it is better to use "service" as it runs in predictable environment
+  (msuchy@redhat.com)
+- 819593 - RHSM now use /subscription as ultimate location (msuchy@redhat.com)
+
 * Thu Sep 06 2012 Ivan Necas <inecas@redhat.com> 1.1.8-1
 - fastbuild - adding macro for all spec files (lzap+git@redhat.com)
 - foreman-configure - fix ordering issue in puppet module (inecas@redhat.com)
