@@ -10,6 +10,3 @@ do
   boolean -m --on httpd_tmp_exec
 _EOF
 done
-
-# TODO this should go to extra script (and should be called from SPEC too)
-/sbin/restorecon -rvvi /var/lib/katello /var/log/katello /usr/share/katello /etc/katello /usr/sbin/katello-*

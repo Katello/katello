@@ -64,7 +64,7 @@ class Create(FilterAction):
         parser.add_option('--description', dest='description',
                     help=_("description"))
         parser.add_option('--packages', dest='packages',
-                    help=_("comma-separated list of package names/nvres"))
+                    help=_("comma-separated list of package names/NVREAs"))
 
 
     def check_options(self, validator):
@@ -143,7 +143,7 @@ class AddPackage(FilterAction):
         parser.add_option('--name', dest='name',
                      help=_("filter name (required)"))
         parser.add_option('--package', dest='package_id',
-                       help=_("package id (required)"))
+                       help=_("package ID (required)"))
 
     def check_options(self, validator):
         validator.require(('org', 'name', 'package_id'))
@@ -167,7 +167,7 @@ class RemovePackage(FilterAction):
         parser.add_option('--name', dest='name',
                      help=_("filter name (required)"))
         parser.add_option('--package', dest='package_id',
-                       help=_("package id (required)"))
+                       help=_("package ID (required)"))
 
     def check_options(self, validator):
         validator.require(('org', 'name', 'package_id'))

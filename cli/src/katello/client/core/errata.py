@@ -43,7 +43,7 @@ class List(ErrataAction):
 
     def setup_parser(self, parser):
         parser.add_option('--repo_id', dest='repo_id',
-                      help=_("repository id"))
+                      help=_("repository ID"))
         parser.add_option('--repo', dest='repo',
                       help=_("repository name"))
         opt_parser_add_org(parser)
@@ -163,9 +163,9 @@ class Info(ErrataAction):
 
     def setup_parser(self, parser):
         parser.add_option('--id', dest='id',
-                               help=_("errata id, string value (required)"))
+                               help=_("errata ID, string value (required)"))
         parser.add_option('--repo_id', dest='repo_id',
-                      help=_("repository id"))
+                      help=_("repository ID"))
         parser.add_option('--repo', dest='repo',
                       help=_("repository name"))
         opt_parser_add_org(parser)
