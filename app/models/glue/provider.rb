@@ -231,7 +231,7 @@ module Glue::Provider
     end
 
     def import_products_from_cp
-      product_in_katello_ids = self.organization.library.products.all(:select => "cp_id").map(&:cp_id)
+      product_in_katello_ids = self.organization.providers.redhat.first.products.pluck("cp_id")
       products_in_candlepin_ids = []
       Util::CdnVarSubstitutor.with_cache do
         marketing_to_enginnering_product_ids_mapping.each do |marketing_product_id, engineering_product_ids|
