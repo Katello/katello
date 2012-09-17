@@ -30,13 +30,13 @@ from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
 
 
-ALLOWED_REPO_URL_SCHEMES = ("http", "https", "ftp", "file") 
+ALLOWED_REPO_URL_SCHEMES = ("http", "https", "ftp", "file")
 
 SYNC_STATES = { 'waiting':     _("Waiting"),
                 'running':     _("Running"),
                 'error':       _("Error"),
                 'finished':    _("Finished"),
-                'cancelled':   _("Cancelled"),
+                'cancelled':   _("Canceled"),
                 'canceled':    _("Canceled"),
                 'timed_out':   _("Timed out"),
                 'not_synced':  _("Not synced") }
@@ -79,7 +79,7 @@ class SingleRepoAction(RepoAction):
 
     @classmethod
     def set_repo_select_options(cls, parser, select_by_env=True):
-        parser.add_option('--id', dest='id', help=_("repository id"))
+        parser.add_option('--id', dest='id', help=_("repository ID"))
         parser.add_option('--name', dest='name', help=_("repository name"))
         opt_parser_add_org(parser)
         opt_parser_add_product(parser)
@@ -121,7 +121,7 @@ class Create(RepoAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
             help=_("repository name to assign (required)"))
-        parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES, 
+        parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES,
             help=_("url path to the repository (required)"))
         opt_parser_add_product(parser, required=1)
         parser.add_option('--gpgkey', dest='gpgkey',
@@ -154,7 +154,7 @@ class Discovery(RepoAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
             help=_("repository name prefix to add to all the discovered repositories (required)"))
-        parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES, 
+        parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES,
             help=_("root url to perform discovery of repositories eg: http://porkchop.devel.redhat.com/ (required)"))
         parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
             help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
@@ -354,7 +354,7 @@ class Sync(SingleRepoAction):
             print _("Repo [ %s ] synced" % repo['name'])
             return os.EX_OK
         elif task.cancelled():
-            print _("Repo [ %s ] synchronization cancelled" % repo['name'])
+            print _("Repo [ %s ] synchronization canceled" % repo['name'])
             return os.EX_OK
         else:
             print _("Repo [ %s ] failed to sync: %s" % (repo['name'], format_sync_errors(task)) )

@@ -17,7 +17,7 @@ class List(PackageGroupAction):
 
     def setup_parser(self, parser):
         parser.add_option("--repo_id", dest="repo_id",
-                        help=_("repository id, string value (required)"))
+                        help=_("repository ID, string value (required)"))
 
     def check_options(self, validator):
         validator.require('repo_id')
@@ -46,9 +46,9 @@ class Info(PackageGroupAction):
 
     def setup_parser(self, parser):
         parser.add_option("--repo_id", dest="repo_id",
-                        help=_("repository id, string value (required)"))
+                        help=_("repository ID, string value (required)"))
         parser.add_option("--id", dest="id",
-                        help=_("package group id, string value (required)"))
+                        help=_("package group ID, string value (required)"))
 
     def check_options(self, validator):
         validator.require(('repo_id', 'id'))
@@ -82,7 +82,7 @@ class CategoryList(PackageGroupAction):
 
     def setup_parser(self, parser):
         parser.add_option("--repo_id", dest="repo_id",
-                        help=_("repository id, string value (required)"))
+                        help=_("repository ID, string value (required)"))
 
     def check_options(self, validator):
         validator.require('repo_id')
@@ -110,9 +110,9 @@ class CategoryInfo(PackageGroupAction):
 
     def setup_parser(self, parser):
         parser.add_option("--repo_id", dest="repo_id",
-                        help=_("repository id, string value (required)"))
+                        help=_("repository ID, string value (required)"))
         parser.add_option("--id", dest="id",
-                        help=_("package group category id, string value (required)"))
+                        help=_("package group category ID, string value (required)"))
 
     def check_options(self, validator):
         validator.require(('repo_id', 'id'))
