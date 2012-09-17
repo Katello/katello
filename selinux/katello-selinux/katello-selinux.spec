@@ -63,8 +63,8 @@ do
 done
 
 # Build man pages
-/usr/bin/pod2man --name=katello-selinux-enable -c "Katello Reference" --section=1 --release=%{version} katello-selinux-enable.pod katello-selinux-enable.man1
-
+/usr/bin/pod2man --name=katello-selinux-enable -c "Katello Reference" --section=8 --release=%{version} katello-selinux-enable.pod katello-selinux-enable.man8
+/usr/bin/pod2man --name=katello-selinux-relabel -c "Katello Reference" --section=8 --release=%{version} katello-selinux-relabel.pod katello-selinux-relabel.man8
 
 %install
 # Install SELinux policy modules
@@ -88,8 +88,9 @@ install -d %{buildroot}%{_sbindir}
 install -p -m 755 %{name}-enable %{buildroot}%{_sbindir}/%{name}-enable
 
 # Install man pages
-install -d -m 0755 %{buildroot}%{_mandir}/man1
-install -m 0644 katello-selinux-enable.man1 %{buildroot}%{_mandir}/man1/katello-selinux-enable.1
+install -d -m 0755 %{buildroot}%{_mandir}/man8
+install -m 0644 katello-selinux-enable.man8 %{buildroot}%{_mandir}/man8/katello-selinux-enable.8
+install -m 0644 katello-selinux-relabel.man8 %{buildroot}%{_mandir}/man8/katello-selinux-relabel.8
 
 # Install secure (extra protected) directory
 install -d %{buildroot}%{_sysconfdir}/katello/secure
@@ -101,7 +102,7 @@ fi
 
 %posttrans
 if /usr/sbin/selinuxenabled ; then
-  /sbin/restorecon -rvvi /var/lib/katello /var/log/katello /usr/share/katello /etc/katello /usr/sbin/katello-*
+  %{_sbindir}/%{name}-relabel
 fi
 
 %postun
@@ -114,13 +115,11 @@ if [ $1 -eq 0 ]; then
     done
 fi
 
-/sbin/restorecon -rvvi /var/lib/katello /var/log/katello /usr/share/katello /etc/katello /usr/sbin/katello-*
-
 %files
 %doc %{modulename}.fc %{modulename}.if %{modulename}.te
 %attr(0600,root,root) %{_datadir}/selinux/*/%{modulename}.pp.bz2
 %{_datadir}/selinux/devel/include/%{moduletype}/%{modulename}.if
-%{_mandir}/man1/katello-selinux-enable.1*
+%{_mandir}/man8/*
 %attr(0755,root,root) %{_sbindir}/%{name}-enable
 %{_sysconfdir}/katello/secure
 
