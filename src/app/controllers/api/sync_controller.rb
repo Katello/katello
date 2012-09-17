@@ -40,7 +40,7 @@ class Api::SyncController < Api::ApiController
   def cancel
     if @obj.sync_state.to_s == PulpSyncStatus::Status::RUNNING.to_s
       @obj.cancel_sync
-      render :text => "Cancelled synchronization of #{@sync_of}: #{@obj.id}", :status => 200
+      render :text => "Canceled synchronization of #{@sync_of}: #{@obj.id}", :status => 200
     else
       render :text => "No synchronization of the #{@sync_of} is currently running", :status => 200
     end
