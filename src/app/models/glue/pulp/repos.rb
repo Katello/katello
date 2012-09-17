@@ -151,6 +151,15 @@ module Glue::Pulp::Repos
       async_tasks
     end
 
+    def delete_from_env from_env
+      @orchestration_for = :delete
+      delete_repos(repos(from_env))
+      if from_env.products.include? self
+        self.environments.delete(from_env)
+      end
+      save!
+    end
+
     def package_groups env, search_args = {}
       groups = []
       self.repos(env).each do |repo|
@@ -336,10 +345,6 @@ module Glue::Pulp::Repos
       url
     end
 
-    def delete_repo_by_id(repo_id)
-      Repository.destroy_all(:id=>repo_id)
-    end
-
     def add_repo(name, url, repo_type, gpg = nil)
       #TODO use orchestration for this, what if pulp repo creation fails (need to delete content)
       check_for_repo_conflicts(name)
@@ -467,6 +472,9 @@ module Glue::Pulp::Repos
       async_tasks.flatten(1)
     end
 
+    def delete_repos repos
+      repos.each{|repo| repo.destroy}
+    end
 
     def set_filter repo, filter_id
       repo.set_filters [filter_id]
