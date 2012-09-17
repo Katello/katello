@@ -331,9 +331,9 @@ class Update(TemplateAction):
         parser.add_option('--remove_package_group_category', dest='remove_pg_categories', action="append",
             help=_("name of the package group category"))
 
-        parser.add_option('--add_distribution', dest='add_distributions', action="append", help=_("distribution id"))
+        parser.add_option('--add_distribution', dest='add_distributions', action="append", help=_("distribution ID"))
         parser.add_option('--remove_distribution', dest='remove_distributions', action="append",
-            help=_("distribution id"))
+            help=_("distribution ID"))
 
         parser.add_option('--from_product', dest='from_product', action="callback", callback=self._store_from_product,
             type="string", help=_("determines product from which the repositories are picked"))

@@ -41,7 +41,7 @@ class List(DistributionAction):
 
     def setup_parser(self, parser):
         parser.add_option('--repo_id', dest='repo_id',
-                      help=_("repository id"))
+                      help=_("repository ID"))
         parser.add_option('--repo', dest='repo',
                       help=_("repository name"))
         opt_parser_add_org(parser)
@@ -84,9 +84,9 @@ class Info(DistributionAction):
     def setup_parser(self, parser):
         # always provide --id option for create, even on registered clients
         parser.add_option('--repo_id', dest='repo_id',
-                      help=_("repository id (required)"))
+                      help=_("repository ID (required)"))
         parser.add_option('--id', dest='id',
-                               help=_("distribution id eg: ks-rh-noarch (required)"))
+                               help=_("distribution ID eg: ks-rh-noarch (required)"))
 
     def check_options(self, validator):
         validator.require(('repo_id', 'id'))

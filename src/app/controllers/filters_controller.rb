@@ -169,7 +169,7 @@ class FiltersController < ApplicationController
     @filter.save!
 
 
-    notify.success _("Sucessfully updated '%s' package filter.") % @filter.name
+    notify.success _("Successfully updated '%s' package filter.") % @filter.name
     render :text=>''
   end
 
