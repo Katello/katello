@@ -31,6 +31,12 @@ fi
 
 . /etc/init.d/functions
 
+if [ -x "/usr/sbin/service-wait" ]; then
+  SERVICE_CMD="/usr/sbin/service-wait"
+else
+  SERVICE_CMD="/sbin/service"
+fi
+
 forward_services() {
     ACTION="$1"
 
@@ -38,21 +44,8 @@ forward_services() {
     E_STAT=0
     for service in $SERVICES; do
 	if [ -e /etc/init.d/$service -o -e /lib/systemd/system/$service.service ]; then
-	    /sbin/service $service $ACTION
+	    $SERVICE_CMD $service $ACTION
             E_STAT=$?
-            if [ "$service" == "$TOMCAT" \
-                -a "$ACTION" == "start" \
-                -a "$WAIT_FOR_TOMCAT" == "1" ] ; then
-                if /usr/sbin/lsof /proc > /dev/null ; then
-                    echo "Waiting for tomcat to be ready ..."
-                    while [ -f "/var/run/$TOMCAT.pid" ] ; do
-                        /usr/sbin/lsof -t -i TCP:8009 -p $(cat /var/run/$TOMCAT.pid) > /dev/null && break
-                        sleep 1
-                    done
-                else
-                    echo "No lsof found, not waiting for tomcat."
-                fi
-            fi
 	fi
         if [ $E_STAT -ne 0 ]; then
             RET=$E_STAT
@@ -68,7 +61,7 @@ reverse_services() {
     E_STAT=0
     for service in $(echo $SERVICES | tac -s" "); do
 	if [ -e /etc/init.d/$service -o -e /lib/systemd/system/$service.service ]; then
-	    /sbin/service $service $ACTION
+	    $SERVICE_CMD $service $ACTION
             E_STAT=$?
 	fi
         if [ $E_STAT -ne 0 ]; then
@@ -157,7 +150,6 @@ if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
 
 eval set -- "$OPTS"
 
-WAIT_FOR_TOMCAT=1
 while true ; do
     case "$1" in
         -e|--exclude)
@@ -169,9 +161,6 @@ while true ; do
         -l|--level)
             LEVEL="--level $2"
             shift
-            ;;
-        -T|--no-wait-for-tomcat)
-            WAIT_FOR_TOMCAT=0
             ;;
         --)
             shift
