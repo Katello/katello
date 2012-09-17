@@ -21,7 +21,7 @@ class Api::SyncController < Api::ApiController
   def rules
     list_test = lambda{ Provider.any_readable?(@obj.organization) }
     sync_test = lambda { @obj.organization.syncable? }
-    
+
     { :index => list_test,
       :create => sync_test,
       :cancel => sync_test
@@ -40,12 +40,12 @@ class Api::SyncController < Api::ApiController
   def cancel
     if @obj.sync_state.to_s == PulpSyncStatus::Status::RUNNING.to_s
       @obj.cancel_sync
-      render :text => "Canceled synchronization of #{@sync_of}: #{@obj.id}", :status => 200
+      render :text => _("Canceled synchronization of %s: %s") % [@sync_of, @obj.id], :status => 200
     else
-      render :text => "No synchronization of the #{@sync_of} is currently running", :status => 200
+      render :text => _("No synchronization of the %s is currently running") % @sync_of, :status => 200
     end
   end
-  
+
   # used in unit tests
   def find_object
     if params.key?(:provider_id)
