@@ -158,12 +158,6 @@ module Resources
         def errata_path
           PulpResource.prefix + '/content/units/erratum/search/'
         end
-
-        def filter(filter)
-          path = "#{errata_path}?#{filter.to_param}"
-          response = get(path, self.default_headers)
-          JSON.parse(response.body).map(&:with_indifferent_access)
-        end
       end
     end
 
