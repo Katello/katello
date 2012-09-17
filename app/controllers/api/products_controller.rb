@@ -142,7 +142,7 @@ class Api::ProductsController < Api::ApiController
 
   def verify_presence_of_organization_or_environment
     return if @organization || @environment
-    raise HttpErrors::BadRequest, _("Either organization id or environment id needs to be specified")
+    raise HttpErrors::BadRequest, _("Either organization ID or environment ID needs to be specified")
   end
 
 end

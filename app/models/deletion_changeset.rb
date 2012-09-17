@@ -18,7 +18,7 @@ class DeletionChangeset < Changeset
     options = { :async => true, :notify => false }.merge options
 
     self.state == Changeset::REVIEW or
-        raise _("Cannot delete the changset '%s' because it is not in the review phase.") % self.name
+        raise _("Cannot delete the changeset '%s' because it is not in the review phase.") % self.name
 
     #check for other changesets promoting
     if self.environment.promoting_to?
