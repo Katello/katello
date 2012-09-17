@@ -11,6 +11,12 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Api::SubscriptionsController < Api::ApiController
+
+  resource_description do
+    description "Systems subscriptions management."
+    param :system_id, :identifier, :desc => "System uuid", :required => true
+  end
+
   respond_to :json
 
   before_filter :find_system, :only => [:create, :index, :destroy, :destroy_all, :destroy_by_serial]
@@ -29,10 +35,14 @@ class Api::SubscriptionsController < Api::ApiController
     }
   end
 
+  api :GET, "/systems/:system_id/subscriptions", "List subscriptions"
   def index
     render :json => { :entitlements => @system.consumed_entitlements }
   end
 
+  api :POST, "/systems/:system_id/subscriptions", "Create a subscription"
+  param :pool, String, :desc => "Subscription Pool uuid", :required => true
+  param :quantity, :number, :desc => "Number of subscription to use", :required => true
   def create
     expected_params = params.with_indifferent_access.slice(:pool, :quantity)
     raise HttpErrors::BadRequest, _("Please provide pool and quantity") if expected_params.count != 2
@@ -40,6 +50,8 @@ class Api::SubscriptionsController < Api::ApiController
     render :json => @system.to_json
   end
 
+  api :DELETE, "/systems/:system_id/subscriptions/:id", "Delete a subscription"
+  param :id, :number, :desc => "Entitlement id"
   def destroy
     expected_params = params.with_indifferent_access.slice(:id)
     raise HttpErrors::BadRequest, _("Please provide entitlement id") if expected_params.count != 1
@@ -47,11 +59,14 @@ class Api::SubscriptionsController < Api::ApiController
     render :json => @system.to_json
   end
 
+  api :DELETE, "/systems/:system_id/subscriptions", "Delete all system subscriptions"
   def destroy_all
     @system.unsubscribe_all
     render :json => @system.to_json
   end
 
+  api :DELETE, "/systems/:system_id/subscriptions/serials/:serial_id", "Delete a subscription by serial id"
+  param :serial_id, String, :desc => "Subscription serial id"
   def destroy_by_serial
     expected_params = params.with_indifferent_access.slice(:serial_id)
     raise HttpErrors::BadRequest, _("Please provide serial id") if expected_params.count != 1

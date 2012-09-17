@@ -94,11 +94,12 @@ class Api::EnvironmentsController < Api::ApiController
       environments = KTEnvironment.where query_params
     end
 
-     unless @organization.readable? || @organization.any_systems_registerable?
-       environments.delete_if do |env|
-         !env.any_operation_readable?
-       end
-     end
+    unless @organization.readable?
+      environments.delete_if do |env|
+        !env.any_operation_readable?
+      end
+    end
+
     render :json => (environments).to_json
   end
 
@@ -116,7 +117,7 @@ class Api::EnvironmentsController < Api::ApiController
     param :name, :identifier, :desc => "name of the environment (identifier)"
     param :prior, :identifier, :desc => <<-DESC
 identifier of an environment that is prior the new environment in the chain, it has to be
-either library or an envrionment at the end of the chain
+either library or an environment at the end of the chain
     DESC
   end
   def create

@@ -215,24 +215,58 @@ $switcherformwidth: 165px !default;
 
 //* ugly IE8 specific hacks for the border to look decent/*/
 @media \0screen {
-  //org switcher modifications
-  #switcherContainer {
-    border: 1px solid #ccc;
-    &.active {
-      border-left: 1px solid #ccc;
-      border-right: 1px solid #ccc;
-      border-top: 1px solid #ccc;
-      border-bottom: 0 none;
+  .card {
+    //org switcher modifications
+    #switcherContainer {
+      border: 1px solid #ccc;
+      &.active {
+        border-left: 1px solid #ccc;
+        border-right: 1px solid #ccc;
+        border-top: 1px solid #ccc;
+        border-bottom: 0 none;
+      }
+      #switcherForm {
+        border-left: 1px solid #ccc;
+        border-right: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+        margin-left: -1px;
+        margin-top: -2px;
+      }
+      #switcherBox {
+          top: 0;
+      }
     }
-    #switcherForm {
-      border-left: 1px solid #ccc;
-      border-right: 1px solid #ccc;
-      border-bottom: 1px solid #ccc;
-      margin-left: -1px;
-      margin-top: -2px;
+  }
+  #nav-container {
+    //org switcher modifications
+    #switcherContainer {
+      width: $switcherformwidth - 7;
+      border: 1px solid #ccc;
+      background-color: $white_color;
+      margin-right: 3px;
+      &.active {
+        border-left: 1px solid #ccc;
+        border-right: 1px solid #ccc;
+        border-top: 1px solid #ccc;
+        border-bottom: 0 none;
+      }
+      #switcherButton {
+        margin: -1px 0 0 0;
+        background-color: $white_color !important;
+        padding-top: 2px;
+        padding-left: 8px;
+      }
+      #switcherForm {
+        border-left: 1px solid #ccc;
+        border-right: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+        margin-top: 30px;
+        background-color: $white_color;
+        width: $switcherformwidth;
+      }
+      #switcherBox {
+          top: 0;
+      }
     }
-    #switcherBox {
-        top: 0;
-	}
   }
 }
