@@ -121,15 +121,17 @@ describe Provider do
 
         before do
           Glue::Candlepin::Product.stub(:import_from_cp => [], :import_marketing_from_cp => true)
-
-          @rh_product = Product.create!({:label=>"prod",:cp_id => "rh_product_id", :name=> "rh_product", :productContent => [], :provider => @provider, :environments => [@organization.library]})
+          Resources::Candlepin::Product.stub!(:destroy).and_return(true)
+          @rh_product = Product.create!({:label=>"prod",:name=> "rh_product", :productContent => [], :provider => @provider, :environments => [@organization.library]})
           @custom_provider = Provider.create!({
             :name => 'test_provider',
             :repository_url => 'https://something.net',
             :provider_type => Provider::CUSTOM,
             :organization => @organization
           })
-          @custom_product = Product.create!({:cp_id => "custom_product_id",:label=> "prod", :name=> "custom_product", :productContent => [], :provider => @custom_provider, :environments => [@organization.library]})
+          # cp_id gets set based on Product.create in Candlepin so we need a stub to return something besides 1
+          Resources::Candlepin::Product.stub!(:create).and_return({:id => 2})
+          @custom_product = Product.create!({:label=> "custom-prod",:name=> "custom_product", :productContent => [], :provider => @custom_provider, :environments => [@organization.library]})
         end
 
         it "should be removed from the Katello products"  do
