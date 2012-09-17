@@ -16,7 +16,7 @@ class Api::ActivationKeysController < Api::ApiController
   before_filter :verify_presence_of_organization_or_environment, :only => [:index]
   before_filter :find_environment, :only => [:index, :create]
   before_filter :find_optional_organization, :only => [:index, :update, :destroy, :add_system_groups, :remove_system_groups]
-  before_filter :find_activation_key, :only => [:show, :update, :destroy, :add_pool, :remove_pool, 
+  before_filter :find_activation_key, :only => [:show, :update, :destroy, :add_pool, :remove_pool,
                                                 :add_system_groups, :remove_system_groups]
   before_filter :find_pool, :only => [:add_pool, :remove_pool]
   before_filter :find_system_groups, :only => [:add_system_groups, :remove_system_groups]
@@ -155,6 +155,6 @@ class Api::ActivationKeysController < Api::ApiController
 
   def verify_presence_of_organization_or_environment
     return if params.has_key?(:organization_id) or params.has_key?(:environment_id)
-    raise HttpErrors::BadRequest, _("Either organization id or environment id needs to be specified")
+    raise HttpErrors::BadRequest, _("Either organization ID or environment ID needs to be specified")
   end
 end

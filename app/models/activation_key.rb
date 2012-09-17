@@ -62,7 +62,7 @@ class ActivationKey < ActiveRecord::Base
 
   def environment_exists
     if environment.nil?
-      errors.add(:environment, _("id: %s doesn't exist ") % environment_id)
+      errors.add(:environment, _("ID: %s doesn't exist ") % environment_id)
     elsif environment.organization != self.organization
       errors.add(:environment, _("name: %s doesn't exist ") % environment.name)
     end

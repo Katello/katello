@@ -19,7 +19,7 @@ class PromotionChangeset < Changeset
     options = { :async => true, :notify => false }.merge options
 
     self.state == Changeset::REVIEW or
-        raise _("Cannot promote the changset '%s' because it is not in the review phase.") % self.name
+        raise _("Cannot promote the changeset '%s' because it is not in the review phase.") % self.name
 
     #check for other changesets promoting
     if self.environment.promoting_to?
@@ -237,7 +237,7 @@ class PromotionChangeset < Changeset
     products += self.system_templates.map { |tpl| tpl.products_to_be_promoted }.flatten(1)
     return products.uniq
   end
-  
+
   def calc_dependencies
     all_dependencies = []
     not_included_products.each do |product|
