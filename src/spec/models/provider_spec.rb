@@ -176,9 +176,11 @@ describe Provider do
         releases.each do |release|
           version = Resources::CDN::Utils.parse_version(release)
           repo_name = "#{product_content.content.name} #{release}"
+          repo_label = repo_name.gsub(/[^-\w]/,"_")
           Repository.create!(:environment_product => EnvironmentProduct.find_or_create(product.organization.library, product),
                              :cp_label => product_content.content.label,
                              :name => repo_name,
+                             :label => repo_label,
                              :pulp_id => product.repo_id(repo_name),
                              :major => version[:major],
                              :minor => version[:minor])
