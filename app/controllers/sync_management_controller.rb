@@ -21,7 +21,7 @@ class SyncManagementController < ApplicationController
                      PulpSyncStatus::Status::FINISHED => _("Sync complete."),
                      PulpSyncStatus::Status::ERROR => _("Error syncing!"),
                      PulpSyncStatus::Status::RUNNING => _("Running."),
-                     PulpSyncStatus::Status::CANCELED => _("Cancelled."),
+                     PulpSyncStatus::Status::CANCELED => _("Canceled."),
                      PulpSyncStatus::Status::NOT_SYNCED => ""}
 
 
