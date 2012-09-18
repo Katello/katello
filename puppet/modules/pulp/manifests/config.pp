@@ -7,8 +7,8 @@ class pulp::config {
       group => "apache",
       mode => 0755,
       before => Class["pulp::service"];
-    "/etc/pulp/pulp.conf":
-      content => template("pulp/etc/pulp/pulp.conf.erb"),
+    "/etc/pulp/server.conf":
+      content => template("pulp/etc/pulp/server.conf.erb"),
       require => File["/var/lib/pulp/packages"],
       owner   =>"apache",
       mode    =>"600",
@@ -55,7 +55,7 @@ class pulp::config {
     require     => [
       File["${katello::params::configure_log_base}"],
       Class["mongodb::service"],
-      File["/etc/pulp/pulp.conf"],
+      File["/etc/pulp/server.conf"],
       ],
   }
 
