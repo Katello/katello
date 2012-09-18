@@ -27,12 +27,13 @@ module Glue::Pulp::Repo
                         Resources::Pulp::Repository.find(pulp_id)
                       end
                     }
-      lazy_accessor :feed, :feed_cert, :feed_key, :feed_ca, :importers, :distributors,
+      lazy_accessor :importers, :distributors,
                 :initializer => lambda {
                   if pulp_id
                       pulp_repo_facts
                   end
                 }
+      attr_accessor :feed, :feed_cert, :feed_key, :feed_ca
 
       def self.ensure_sync_notification
         url = AppConfig.post_sync_url
