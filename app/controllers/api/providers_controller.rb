@@ -118,7 +118,7 @@ class Api::ProvidersController < Api::ApiController
 
     product_params = params[:product]
     gpg  = GpgKey.readable(@provider.organization).find_by_name!(product_params[:gpg_key_name]) unless product_params[:gpg_key_name].blank?
-    prod = @provider.add_custom_product(product_params[:label], product_params[:name], product_params[:description], product_params[:url], gpg)
+    prod = @provider.add_custom_product(labelize_params(product_params), product_params[:name], product_params[:description], product_params[:url], gpg)
     render :json => prod
   end
 

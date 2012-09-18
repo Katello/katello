@@ -45,12 +45,45 @@ describe Api::OrganizationsController do
     let(:unauthorized_user) { user_without_create_permissions }
     it_should_behave_like "protected action"
 
-    it 'should call kalpana create organization api' do
+    it 'should call katello create organization api' do
       Organization.should_receive(:create!).once.with(:name => 'test org', :description => 'description', :label => 'test_org').and_return(@org)
+      Organization.first(:conditions => {:label => 'test_org'}).should_not be_nil
       req
     end
   end
-  
+
+  describe "create a org with missing label from POST and name converted to label" do
+
+    let(:action) {:create}
+    let(:req) { post 'create', :name => 'test org with spaces', :description => 'description' }
+    let(:authorized_user) { user_with_create_permissions }
+    let(:unauthorized_user) { user_without_create_permissions }
+    it_should_behave_like "protected action"
+
+    it 'should call katello create organization api' do
+      Organization.should_receive(:create!).once.with(:name => 'test org with spaces', :description => 'description',
+                                                      :label => 'test_org_with_spaces').and_return(@org)
+      Organization.first(:conditions => {:label => 'test_org_with_spaces'}).should_not be_nil
+      req
+    end
+  end
+
+  describe "create a org with label not equal to the name" do
+
+    let(:action) {:create}
+    let(:req) { post 'create', :name => 'test org', :description => 'description', :label => "some_other_label" }
+    let(:authorized_user) { user_with_create_permissions }
+    let(:unauthorized_user) { user_without_create_permissions }
+    it_should_behave_like "protected action"
+
+    it 'should call katello create organization api' do
+      Organization.should_receive(:create!).once.with(:name => 'test org', :description => 'description',
+                                                      :label => 'some_other_label').and_return(@org)
+      Organization.first(:conditions => {:label => 'some_other_label'}).should_not be_nil
+      req
+    end
+  end
+
   describe "get a listing of organizations" do
 
     let(:action) {:index}
