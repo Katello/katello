@@ -4,8 +4,8 @@ module Puppet::Parser::Functions
   # processes. The main motivation for this is to reuse this function
   # to calculate number of processes for both Katello and Foreman.
   newfunction(:katello_process_count, :type => :rvalue) do |args|
-    resources_portion = args.first || 1
     begin
+      resources_portion = args.first.to_f || 1.0
       cpu_count = lookupvar('::processorcount').to_i
       consumes = 230_000_000 # for each thin process
       reserve = 2_000_000_000 # for the OS and backend engines
@@ -42,6 +42,7 @@ module Puppet::Parser::Functions
       no_processes.to_s
     rescue Exception => e
       # when anything goes wrong return a decent constant
+      notice("Error when calculating: #{e.message}, using 2")
       '2'
     end
   end

@@ -26,8 +26,8 @@ class ActivationKeyAPI(KatelloAPI):
         path = "/api/environments/%s/activation_keys/" % envId
         return self.server.GET(path)[1]
 
-    def activation_key(self, keyId):
-        path = "/api/activation_keys/%s/" % keyId
+    def activation_key(self, orgId, keyId):
+        path = "/api/organizations/%s/activation_keys/%s/" % (orgId, keyId)
         return self.server.GET(path)[1]
 
     def create(self, envId, name, description, usage_limit = -1, templateId=None):
@@ -43,7 +43,7 @@ class ActivationKeyAPI(KatelloAPI):
         path = "/api/environments/%s/activation_keys/" % envId
         return self.server.POST(path, {'activation_key': keyData})[1]
 
-    def update(self, keyId, environmentId, name, description, templateId, usage_limit):
+    def update(self, orgId, keyId, environmentId, name, description, templateId, usage_limit):
         keyData = {}
         keyData = update_dict_unless_none(keyData, "environment_id", environmentId)
         keyData = update_dict_unless_none(keyData, "name", name)
@@ -51,20 +51,21 @@ class ActivationKeyAPI(KatelloAPI):
         keyData = update_dict_unless_none(keyData, "system_template_id", templateId)
         keyData = update_dict_unless_none(keyData, "usage_limit", usage_limit)
 
-        path = "/api/activation_keys/%s/" % keyId
+        path = "/api/organizations/%s/activation_keys/%s/" % (orgId, keyId)
+
         return self.server.PUT(path, {'activation_key': keyData})[1]
 
-    def add_pool(self, keyId, poolid):
-        path = "/api/activation_keys/%s/pools" % keyId
+    def add_pool(self, orgId, keyId, poolid):
+        path = "/api/organizations/%s/activation_keys/%s/pools" % (orgId, keyId)
         attrs = { "poolid": poolid }
         return self.server.POST(path, attrs)[1]
 
-    def remove_pool(self, keyId, poolid):
-        path = "/api/activation_keys/%s/pools/%s" % (keyId, poolid)
+    def remove_pool(self, orgId, keyId, poolid):
+        path = "/api/organizations/%s/activation_keys/%s/pools/%s" % (orgId, keyId, poolid)
         return self.server.DELETE(path)[1]
 
-    def delete(self, keyId):
-        path = "/api/activation_keys/%s/" % keyId
+    def delete(self, orgId, keyId):
+        path = "/api/organizations/%s/activation_keys/%s/" % (orgId, keyId)
         return self.server.DELETE(path)[1]
 
     def add_system_group(self, org_name, activation_key_id, system_group_id):

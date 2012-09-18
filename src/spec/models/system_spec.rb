@@ -499,8 +499,54 @@ describe System do
       @system.editable?.should == false
       @system.deletable?.should == true
     end
+
   end
 
+  describe "a user with random system permissions in headpin mode" do
+    before (:each) do
+      @system.save!
+      AppConfig.stub!(:katello?).and_return(false)
+    end
+
+    it "should be deletable" do
+      User.current =  user_with_permissions { |u| u.can(:delete_systems, :organizations, nil, @organization) }
+      System.readable(@organization).should include(@system)
+      System.any_readable?(@organization).should == true
+      System.registerable?(@environment, @organization).should == false
+      System.registerable?(nil, @organization).should == false
+      System.any_deletable?(@environment, @organization).should == true
+      System.any_deletable?(nil, @organization).should == true
+      @system.readable?.should == true
+      @system.editable?.should == false
+      @system.deletable?.should == true
+    end
+
+    it "should be editable" do
+      User.current =  user_with_permissions { |u| u.can(:update_systems, :organizations, nil, @organization) }
+      System.readable(@organization).should include(@system)
+      System.any_readable?(@organization).should == true
+      System.registerable?(@environment, @organization).should == false
+      System.registerable?(nil, @organization).should == false
+      System.any_deletable?(@environment, @organization).should == false
+      System.any_deletable?(nil, @organization).should == false
+      @system.readable?.should == true
+      @system.editable?.should == true
+      @system.deletable?.should == false
+    end
+
+    it "should be registerable" do
+      User.current =  user_with_permissions { |u| u.can(:register_systems, :organizations, nil, @organization) }
+      System.readable(@organization).should include(@system)
+      System.any_readable?(@organization).should == true
+      System.registerable?(@environment, @organization).should == true
+      System.registerable?(nil, @organization).should == true
+      System.any_deletable?(@environment, @organization).should == false
+      System.any_deletable?(nil, @organization).should == false
+      @system.readable?.should == true
+      @system.editable?.should == false
+      @system.deletable?.should == false
+    end
+  end
 
   describe "a user with organization system perms " do
     before :each do

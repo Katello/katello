@@ -19,4 +19,8 @@ class certs::params {
   $nss_db_password_file = katello_config_value('nss_db_password_file')
   $nss_db_dir = katello_config_value('nss_db_dir')
   $ssl_pk12_password_file = katello_config_value('ssl_pk12_password_file')
+
+  # main keystore location
+  $katello_pki_dir = "/etc/pki/katello"
+  $katello_keystore = "$katello_pki_dir/keystore"
 }

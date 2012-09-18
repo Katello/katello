@@ -201,7 +201,7 @@ class Sync(SingleProviderAction):
             print _("Provider [ %s ] failed to sync: %s" % (providerName, errors))
             return os.EX_DATAERR
         elif task.cancelled():
-            print _("Provider [ %s ] synchronization cancelled" % providerName)
+            print _("Provider [ %s ] synchronization canceled" % providerName)
             return os.EX_DATAERR
 
         print _("Provider [ %s ] synchronized" % providerName)

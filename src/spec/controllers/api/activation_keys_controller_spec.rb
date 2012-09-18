@@ -301,14 +301,14 @@ describe Api::ActivationKeysController do
     end
 
     let(:action) { :add_system_groups }
-    let(:req) { post :add_system_groups, :id => @activation_key.id, :organization_id => @organization.id }
+    let(:req) { post :add_system_groups, :id => @activation_key.id, :organization_id => @organization.label }
     let(:authorized_user) { user_with_manage_permissions }
     let(:unauthorized_user) { user_without_manage_permissions }
     it_should_behave_like "protected action"
 
     it "should update the system groups attached to the activation key" do
       ids = [@system_group_1.id, @system_group_2.id]
-      post :add_system_groups, :id => @activation_key.id, :organization_id => @organization.id, :activation_key => { :system_group_ids => ids }
+      post :add_system_groups, :id => @activation_key.id, :organization_id => @organization.label, :activation_key => { :system_group_ids => ids }
       response.should be_success
       ActivationKey.find(@activation_key.id).system_group_ids.should include(@system_group_1.id)
       ActivationKey.find(@activation_key.id).system_group_ids.should include(@system_group_2.id)
@@ -333,23 +333,21 @@ describe Api::ActivationKeysController do
     end
 
     let(:action) { :remove_system_groups }
-    let(:req) { delete :remove_system_groups, :id => @activation_key.id, :organization_id => @organization.id }
+    let(:req) { delete :remove_system_groups, :id => @activation_key.id, :organization_id => @organization.label }
     let(:authorized_user) { user_with_manage_permissions }
     let(:unauthorized_user) { user_without_manage_permissions }
     it_should_behave_like "protected action"
 
     it "should update the system groups the system is in" do
       ids = [@system_group_1.id, @system_group_2.id]
-      delete :remove_system_groups, :id => @activation_key.id, :organization_id => @organization.id, :system => { :system_group_ids => ids }
+      delete :remove_system_groups, :id => @activation_key.id, :organization_id => @organization.label, :system => { :system_group_ids => ids }
       @activation_key.system_group_ids.should be_empty
     end
 
     it "should throw a 404 is passed in a bad system group id" do
       ids = [90210]
-      delete :remove_system_groups, :id => @activation_key.id, :organization_id => @organization.id, :activation_key => { :system_group_ids => ids }
+      delete :remove_system_groups, :id => @activation_key.id, :organization_id => @organization.label, :activation_key => { :system_group_ids => ids }
       response.status.should == 404
     end
-
-
   end
 end

@@ -20,7 +20,8 @@ describe OrganizationsController do
 
   module OrgControllerTest
     ORG_ID = 1
-    ORGANIZATION = {:organization => {:name => "organization_name", :label => "organization_name",:description => "organization_description"}, :environment => {:description=>"foo", :name => "organization_env"}}
+    ORGANIZATION = {:organization => {:name => "organization_name", :label => "organization_name",:description => "organization_description"},
+                    :environment => {:description=>"foo", :label => "foo",:name => "organization_env"}}
     ORGANIZATION_UPDATE = {:description => "organization_description"}
   end
 
@@ -97,7 +98,7 @@ describe OrganizationsController do
 
       it 'should create organization and account for spaces' do
         post 'create', {:organization => {:name => "multi word organization",:label=> "multi-word-organization",
-          :description => "spaced out organization"}, :environment => {:name => "first-env"}}
+          :description => "spaced out organization"}, :environment => {:name => "first-env", :label => "first-env"}}
         response.should_not redirect_to(:action => 'new')
         response.should be_success
         assigns[:organization].name.should == "multi word organization"
@@ -105,7 +106,7 @@ describe OrganizationsController do
       end
 
       it 'should generate a success notice' do
-        controller.should notify(:success, :success)
+        controller.should notify(:success)
         post 'create', OrgControllerTest::ORGANIZATION
         response.should be_success
       end      
