@@ -39,7 +39,7 @@ class ActivationKey < ActiveRecord::Base
 
   after_find :validate_pools
 
-  validates :name, :presence => true, :katello_name_format => true, :length => { :maximum => 255 }
+  validates :name, :presence => true, :katello_name_format => true
   validates_uniqueness_of :name, :scope => :organization_id
   validates :description, :katello_description_format => true
   validates :environment, :presence => true
@@ -62,7 +62,7 @@ class ActivationKey < ActiveRecord::Base
 
   def environment_exists
     if environment.nil?
-      errors.add(:environment, _("id: %s doesn't exist ") % environment_id)
+      errors.add(:environment, _("ID: %s doesn't exist ") % environment_id)
     elsif environment.organization != self.organization
       errors.add(:environment, _("name: %s doesn't exist ") % environment.name)
     end
@@ -169,13 +169,13 @@ class ActivationKey < ActiveRecord::Base
           i = i + 1
         end
       end
-    rescue Exception => e
+    rescue => e
       Rails.logger.error "Autosubscribtion failed, rolling back: #{already_subscribed.inspect}"
       already_subscribed.each do |entitlement_id|
         begin
           Rails.logger.debug "Rolling back: #{entitlement_id}"
           entitlements_array = system.unsubscribe entitlement_id
-        rescue Exception => re
+        rescue => re
           Rails.logger.fatal "Rollback failed, skipping: #{re.message}"
         end
       end
@@ -228,14 +228,14 @@ class ActivationKey < ActiveRecord::Base
 
   private
 
+  # Fetch each of the pools from candlepin, removing any that no longer
+  # exist (eg. from loss of a Virtual Guest pool)
   def validate_pools
     obsolete_pools = []
     self.pools.each do |pool|
       begin
-        # This will hit candlepin; if it fails that means the
-        # pool is no longer accessible.
-        pool.product_name
-      rescue
+        Resources::Candlepin::Pool.find(pool.cp_id)
+      rescue RestClient::ResourceNotFound => e
         obsolete_pools << pool
       end
     end

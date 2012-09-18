@@ -1,4 +1,4 @@
-if Rails.env = 'development'
+if Rails.env.development?
   begin
     require "jshintrb/jshinttask"
 

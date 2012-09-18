@@ -19,7 +19,7 @@ class UsersController < ApplicationController
 
   before_filter :setup_options, :only => [:items, :index]
   before_filter :find_user, :only => [:items, :index, :edit, :edit_environment, :update_environment, :update_preference,
-                                      :update, :update_roles, :update_locale, :clear_helptips, :destroy]
+                                      :update, :update_roles, :update_locale, :clear_helptips, :setup_default_org, :destroy]
   before_filter :authorize
   skip_before_filter :require_org
 
@@ -64,6 +64,7 @@ class UsersController < ApplicationController
       :destroy              => delete_test,
       :enable_helptip       => user_helptip,
       :disable_helptip      => user_helptip,
+      :setup_default_org    => edit_test
     }
   end
 
@@ -132,14 +133,14 @@ class UsersController < ApplicationController
     end
 
     notify.success @user.username + _(" created successfully.")
-    if search_validate(User, @user.id, params[:search])
+    if search_validate(User, @user.id, params[:search], :username)
       render :partial => "common/list_item",
              :locals  => { :item => @user, :accessor => "id", :columns => ["username"], :name => controller_display_name }
     else
-      notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @user["name"]
+      notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @user.username
       render :json => { :no_match => true }
     end
-  rescue ActiveRecord::RecordNotSaved => error
+  rescue ActiveRecord::RecordNotSaved, ActiveRecord::RecordInvalid => error
     notify.exception error
     #transaction, if something goes wrong with the creation of the permission, we will need to delete the user
     @user.destroy unless @user.new_record?
@@ -149,19 +150,17 @@ class UsersController < ApplicationController
   def update
     params[:user].delete :username
 
-    if @user.update_attributes(params[:user])
-      notify.success _("User updated successfully.")
-      attr = params[:user].first.last if params[:user].first
-      attr ||= ""
+    @user.update_attributes!(params[:user])
 
-      if not search_validate(User, user.id, params[:search])
-        notify.message _("'%s' no longer matches the current search criteria.") % @user["name"]
-      end
+    notify.success _("User updated successfully.")
+    attr = params[:user].first.last if params[:user].first
+    attr ||= ""
 
-      render :text => attr and return
+    if not search_validate(User, user.id, params[:search], :username)
+      notify.message _("'%s' no longer matches the current search criteria.") % @user.username
     end
-    notify.invalid_record @user
-    render :text => @user.errors, :status => :ok
+
+    render :text => attr
   end
 
   def update_locale
@@ -227,7 +226,7 @@ class UsersController < ApplicationController
     default_environment_id = params['env_id'].try(:[], 'env_id').try(:to_i)
 
     if @user.default_environment.try(:id) == default_environment_id
-      err_msg = N_("The default you supplied was the same as the old default.")
+      err_msg = N_("The system registration default you supplied was the same as the old system registration default.")
       notify.error err_msg
       render(:text => err_msg, :status => 400) and return
     end
@@ -240,16 +239,13 @@ class UsersController < ApplicationController
 
     @organization             = @environment.try :organization
 
-    notify.success _("User environment updated successfully.")
+    notify.success _("User System Registration Environment updated successfully.")
 
     if @organization && @environment
-      render :json => { :org => @organization.name, :env => @environment.name } and return
+      render :json => { :org => @organization.name, :env => @environment.name }
+    else
+      render :json => { :org => _("No system registration default set for this user."), :env => _("No system registration default set for this user.") }
     end
-    render :json => { :org => _("No default set for this user."), :env => _("No default set for this user.") } and return
-
-  rescue ActiveRecord::RecordNotSaved => error
-    notify.exception error
-    render :text => error.message, :status => 400
   end
 
   def update_roles
@@ -261,8 +257,8 @@ class UsersController < ApplicationController
     if  @user.update_attributes(params[:user])
       notify.success _("User updated successfully.")
 
-      if not search_validate(User, user.id, params[:search])
-        notify.message _("'%s' no longer matches the current search criteria.") % @user["name"]
+      if not search_validate(User, @user.id, params[:search], :username)
+        notify.message _("'%s' no longer matches the current search criteria.") % @user.username
       end
 
       render :nothing => true and return
@@ -272,19 +268,11 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    @id = params[:id]
-    #remove the user
-    @user.destroy
-    if @user.destroyed?
+    if @user.destroy
       notify.success _("User '%s' was deleted.") % @user[:username]
       #render and do the removal in one swoop!
-      render :partial => "common/list_remove", :locals => { :id => @id, :name => controller_display_name } and return
+      render :partial => "common/list_remove", :locals => { :id => params[:id], :name => controller_display_name }
     end
-    notify.invalid_record @user
-    render :text => @user.errors, :status => :ok
-  rescue Exception => error
-    notify.exception error
-    render :json => @user.errors, :status => :bad_request
   end
 
   def clear_helptips
@@ -309,6 +297,22 @@ class UsersController < ApplicationController
 
   def ldap_enabled?
     AppConfig.warden == 'ldap'
+  end
+
+  #method for saving the user's default org
+  def setup_default_org
+    org = params[:org]
+    if org && !org.nil?
+      current_user.default_org = org
+      default_org = Organization.find_by_id(current_user.default_org)
+      current_user.save!
+      notify.success _("Default Organization: '%s' saved.") % default_org.name
+    else
+      current_user.default_org = nil
+      current_user.save!
+      notify.success _("Default Organization no longer selected.")
+    end
+    render :text => :ok and return
   end
 
   private
@@ -338,5 +342,10 @@ class UsersController < ApplicationController
   def controller_display_name
     return 'user'
   end
+
+  def default_notify_options
+    super.merge :organization => nil
+  end
+
 
 end

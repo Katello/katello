@@ -14,6 +14,11 @@ require 'rest_client'
 
 class Api::TemplatesContentController < Api::ApiController
 
+  resource_description do
+    param :template_id, :number, :desc => "template numeric identifier", :required => true
+    description "Provides interface to the template content."
+  end
+
   before_filter :find_template
 
   before_filter :authorize
@@ -51,72 +56,97 @@ class Api::TemplatesContentController < Api::ApiController
   #  render :text => _("Removed product '#{params[:id]}'"), :status => 200
   #end
 
+  api :POST, "/templates/:template_id/packages", "Add a package"
+  param :name, :identifier, :desc => "package identifier", :required => true
   def add_package
     @template.add_package(params[:name])
     @template.save!
     render :text => _("Added package '#{params[:name]}'"), :status => 200
   end
 
+  api :DELETE, "/templates/:template_id/packages/:id", "Remove a package"
+  param :id, :identifier, :desc => "package identifier", :required => true
   def remove_package
     @template.remove_package(params[:id])
     @template.save!
     render :text => _("Removed package '#{params[:id]}'"), :status => 200
   end
 
+  api :POST, "/templates/:template_id/parameters", "Set parameter value"
+  param :name, :identifier, :desc => "parameter identifier", :required => true
+  param :value, String, :desc => "parameter value", :required => true
   def add_parameter
     @template.set_parameter(params[:name], params[:value])
     @template.save!
     render :text => _("Parameter '#{params[:name]}': '#{params[:value]}' was set"), :status => 200
   end
 
+  api :DELETE, "/templates/:template_id/parameters/:id", "Remove parameter"
+  param :id, :identifier, :desc => "parameter identifier", :required => true
   def remove_parameter
     @template.remove_parameter(params[:id])
     @template.save!
     render :text => _("Removed parameter '#{params[:id]}'"), :status => 200
   end
 
+  api :POST, "/templates/:template_id/package_groups", "Add package group"
+  param :name, :identifier, :desc => "package group identifier", :required => true
   def add_package_group
     @template.add_package_group(params[:name])
     @template.save!
     render :text => _("Added package group '#{params[:name]}'")
   end
 
+  api :DELETE, "/templates/:template_id/package_groups/:id", "Remove package group"
+  param :id, :identifier, :desc => "package group identifier", :required => true
   def remove_package_group
     @template.remove_package_group(params[:id])
     @template.save!
     render :text => _("Removed package group '#{params[:id]}'")
   end
 
+  api :POST, "/templates/:template_id/package_group_categories", "Add package group category"
+  param :name, :identifier, :desc => "package group category identifier", :required => true
   def add_package_group_category
     @template.add_pg_category(params[:name])
     @template.save!
     render :text => _("Added package group category '#{params[:name]}'")
   end
 
+  api :DELETE, "/templates/:template_id/package_group_categories/:id", "Remove package group category"
+  param :id, :identifier, :desc => "package group category identifier", :required => true
   def remove_package_group_category
     @template.remove_pg_category(params[:id])
     @template.save!
     render :text => _("Removed package group category '#{params[:id]}'")
   end
 
+  api :POST, "/templates/:template_id/distributions", "Add distribution"
+  param :id, :identifier, :desc => "distribution identifier", :required => true
   def add_distribution
     @template.add_distribution(params[:id])
     @template.save!
     render :text => _("Added distribution '#{params[:id]}'")
   end
 
+  api :DELETE, "/templates/:template_id/distributions/:id", "Remove distribution"
+  param :id, :identifier, :desc => "distribution identifier", :required => true
   def remove_distribution
     @template.remove_distribution(params[:id])
     @template.save!
     render :text => _("Removed distribution '#{params[:id]}'")
   end
 
+  api :POST, "/templates/:template_id/repositories", "Add repository"
+  param :id, :number, :desc => "repository numeric identifier", :required => true
   def add_repo
     @template.add_repo(params[:id])
     @template.save!
     render :text => _("Added repository '#{params[:id]}'"), :status => 200
   end
 
+  api :DELETE, "/templates/:template_id/repositories/:id", "Remove repository"
+  param :id, :number, :desc => "repository numeric identifier", :required => true
   def remove_repo
     @template.remove_repo(params[:id])
     @template.save!

@@ -256,6 +256,22 @@ var sliding_tree = function(tree_id, options) {
                 signal_panel();
             }
         },
+        reset_tree = function(new_breadcrumb) {
+            // reset the current tree using a different breadcrumb.
+            // this essentially allows us to use the same sliding tree w/ multiple sets of tree content
+            settings.breadcrumb = new_breadcrumb;
+            settings.current_tab = undefined;
+            if ($.bbq.getState(settings.bbq_tag)) {
+                // if the bbq tag already exists, remove it, triggering hash_change
+                $.bbq.removeState(settings.bbq_tag);
+            } else {
+                // otherwise, render the content to the default tab
+                render_content(settings.default_tab);
+            }
+
+            $.bbq.removeState(settings.bbq_tag);
+            render_content(settings.default_tab);
+        },
         signal_panel = function(){
             KT.panel.search_started();
         },
@@ -384,11 +400,10 @@ var sliding_tree = function(tree_id, options) {
         rerender_breadcrumb	: function() {
             reset_breadcrumb($.bbq.getState(settings.bbq_tag));
         },
+        reset_tree         : reset_tree,
         enableSearch       : enable_search
     };
 };
-
-
 
 KT.sliding_tree.list = function(parent, bcs, sliding_tree){
 

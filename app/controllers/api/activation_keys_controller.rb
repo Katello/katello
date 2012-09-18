@@ -15,14 +15,18 @@ class Api::ActivationKeysController < Api::ApiController
 
   before_filter :verify_presence_of_organization_or_environment, :only => [:index]
   before_filter :find_environment, :only => [:index, :create]
-  before_filter :find_organization, :only => [:index]
-  before_filter :find_activation_key, :only => [:show, :update, :destroy, :add_pool, :remove_pool, 
+  before_filter :find_optional_organization, :only => [:index, :update, :destroy, :add_system_groups, :remove_system_groups]
+  before_filter :find_activation_key, :only => [:show, :update, :destroy, :add_pool, :remove_pool,
                                                 :add_system_groups, :remove_system_groups]
   before_filter :find_pool, :only => [:add_pool, :remove_pool]
+  before_filter :find_system_groups, :only => [:add_system_groups, :remove_system_groups]
+  before_filter :authorize
 
   def rules
-    read_test = lambda{ActivationKey.readable?(@organization)}
-    manage_test = lambda{ActivationKey.manageable?(@organization)}
+    read_test = lambda{ActivationKey.readable?(@organization) ||
+                        (ActivationKey.readable?(@environment.organization) unless @environment.nil?)}
+    manage_test = lambda{ActivationKey.manageable?(@organization) ||
+                         (ActivationKey.manageable?(@environment.organization) unless @environment.nil?)}
     {
       :index => read_test,
       :show => read_test,
@@ -43,7 +47,10 @@ class Api::ActivationKeysController < Api::ApiController
     }
   end
 
-
+  api :GET, "/activation_keys", "List activation keys"
+  api :GET, "/environments/:environment_id/activation_keys", "List activation keys"
+  api :GET, "/organizations/:organization_id/activation_keys", "List activation keys"
+  param :name, :identifier, :desc => "lists by activation key name"
   def index
     query_params[:organization_id] = @organization.id unless @organization.nil?
     query_params[:environment_id] = @environment.id unless @environment.nil?
@@ -51,10 +58,17 @@ class Api::ActivationKeysController < Api::ApiController
     render :json => ActivationKey.where(query_params)
   end
 
+  api :GET, "/activation_keys/:id", "Show an activation key"
   def show
     render :json => @activation_key
   end
 
+  api :POST, "/activation_keys", "Create an activation key"
+  api :POST, "/environments/:environment_id/activation_keys", "Create an activation key"
+  param :activation_key, Hash do
+    param :name, :identifier, :desc => "activation key identifier (alphanum characters, space, - and _)"
+    param :description, String, :allow_nil => true
+  end
   def create
     created = ActivationKey.create!(params[:activation_key]) do |ak|
       ak.environment = @environment
@@ -64,16 +78,19 @@ class Api::ActivationKeysController < Api::ApiController
     render :json => created
   end
 
+  api :PUT, "/activation_keys/:id", "Update an activation key"
   def update
     @activation_key.update_attributes!(params[:activation_key])
     render :json => ActivationKey.find(@activation_key.id)
   end
 
+  api :POST, "/activation_keys/:id/pools", "Create an entitlement pool within an activation key"
   def add_pool
     @activation_key.key_pools.create(:pool => @pool) unless @activation_key.pools.include?(@pool)
     render :json => @activation_key
   end
 
+  api :DELETE, "/activation_keys/:id/pools/:poolid", "Delete an entitlement pool within an activation key"
   def remove_pool
     unless @activation_key.pools.include?(@pool)
       raise HttpErrors::NotFound, _("Couldn't find pool '%s' in activation_key '%s'") % [@pool.cp_id, @activation_key.name]
@@ -82,11 +99,13 @@ class Api::ActivationKeysController < Api::ApiController
     render :json => @activation_key
   end
 
+  api :DELETE, "/activation_keys/:id", "Destroy an activation key"
   def destroy
     @activation_key.destroy
    render :text => _("Deleted activation key '#{params[:id]}'"), :status => 204
   end
 
+  api :POST, "/organizations/:organization_id/activation_keys/:id/system_groups"
   def add_system_groups
     ids = params[:activation_key][:system_group_ids]
     @activation_key.system_group_ids = (@activation_key.system_group_ids + ids).uniq
@@ -94,6 +113,7 @@ class Api::ActivationKeysController < Api::ApiController
     render :json => @activation_key.to_json
   end
 
+  api :DELETE, "/organizations/:organization_id/activation_keys/:id/system_groups"
   def remove_system_groups
     ids = params[:activation_key][:system_group_ids]
     @activation_key.system_group_ids = (@activation_key.system_group_ids - ids).uniq
@@ -101,14 +121,7 @@ class Api::ActivationKeysController < Api::ApiController
     render :json => @activation_key.to_json
   end
 
-
-  def find_organization
-    return unless params.has_key?(:organization_id)
-
-    @organization = Organization.first(:conditions => {:cp_key => params[:organization_id].tr(' ', '_')})
-    raise HttpErrors::NotFound, _("Couldn't find organization '#{params[:organization_id]}'") if @organization.nil?
-    @organization
-  end
+  private
 
   def find_environment
     return unless params.has_key?(:environment_id)
@@ -128,8 +141,20 @@ class Api::ActivationKeysController < Api::ApiController
     @pool = ::Pool.find_by_organization_and_id(@activation_key.organization, params[:poolid])
   end
 
+  def find_system_groups
+    ids = params[:activation_key][:system_group_ids] if params[:activation_key]
+    @system_groups = []
+    if ids
+      for group_id in ids
+        group = SystemGroup.find(group_id)
+        raise HttpErrors::NotFound, _("Couldn't find system group '#{group_id}'") if group.nil?
+        @system_groups << group
+      end
+    end
+  end
+
   def verify_presence_of_organization_or_environment
     return if params.has_key?(:organization_id) or params.has_key?(:environment_id)
-    raise HttpErrors::BadRequest, _("Either organization id or environment id needs to be specified")
+    raise HttpErrors::BadRequest, _("Either organization ID or environment ID needs to be specified")
   end
 end

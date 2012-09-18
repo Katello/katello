@@ -30,13 +30,15 @@ describe Api::ChangesetsController, :katello => true do
     @environment_2 = KTEnvironment.create!(:name => 'test_2', :prior => @environment, :organization => @organization)
     KTEnvironment.stub(:find).and_return(@environment)
 
-    @changeset = mock(Changeset)
+    @changeset = mock(PromotionChangeset)
     @changeset.stub(:environment).and_return(@environment)
     @changeset.stub(:environment=)
     @changeset.stub(:state=)
     @changeset.stub(:save!)
     @changeset.stub(:async).and_return(@changeset)
     @changeset.stub(:promote)
+    @changeset.stub(:promotion?).and_return(true)
+    @changeset.stub(:deletion?).and_return(false)
     @changeset.stub(:to_json => "") # to avoid memory leaking
     Changeset.stub(:find).and_return(@changeset)
 
@@ -65,9 +67,12 @@ describe Api::ChangesetsController, :katello => true do
   let(:user_with_promote_permissions) do
     user_with_permissions { |u| u.can([:promote_changesets],:environments, @environment.id, @organization) }
   end
-  let(:user_without_promote_permissions) do
+  let(:user_without_apply_permissions) do
     user_without_permissions
     # user_with_permissions { |u| u.can([:manage_changesets],:environments, @environment.id, @organization) }
+  end
+  let(:user_with_delete_permissions) do
+    user_with_permissions { |u| u.can([:delete_changesets],:environments, @environment.id, @organization) }
   end
 
   describe "index" do
@@ -93,7 +98,7 @@ describe Api::ChangesetsController, :katello => true do
     let(:unauthorized_user) { user_without_read_permissions }
     it_should_behave_like "protected action"
 
-    it "should call Changeset.first" do
+    it "should call PromotionChangeset.first" do
       Changeset.should_receive(:find).with(CSET_ID).and_return(@changeset)
       req
     end
@@ -103,13 +108,13 @@ describe Api::ChangesetsController, :katello => true do
   describe "create" do
 
     let(:action) {:create }
-    let(:req) { post :create, :changeset => {'name' => 'XXX'}, :organization_id => "1", :environment_id => 1 }
+    let(:req) { post :create, :changeset => {'name' => 'XXX', :type => "PROMOTION"}, :organization_id => "1", :environment_id => 1 }
     let(:authorized_user) { user_with_manage_permissions }
     let(:unauthorized_user) { user_without_manage_permissions }
     it_should_behave_like "protected action"
 
     it "should call new and save!" do
-      Changeset.should_receive(:new).and_return(@changeset)
+      PromotionChangeset.should_receive(:new).and_return(@changeset)
       @changeset.should_receive(:save!)
 
       req
@@ -133,15 +138,32 @@ describe Api::ChangesetsController, :katello => true do
   end
 
   describe "promote" do
-
-    let(:action) {:promote }
-    let(:req) { post :promote, :id => CSET_ID, :organization_id => "1", :environment_id => 1 }
+    let(:action) {:apply }
+    let(:req) { post :apply, :id => CSET_ID, :organization_id => "1", :environment_id => 1 }
     let(:authorized_user) { user_with_promote_permissions }
-    let(:unauthorized_user) { user_without_promote_permissions }
+    let(:unauthorized_user) { user_without_apply_permissions }
     it_should_behave_like "protected action"
 
-    it "should call Changeset.promote asynchronously" do
-      @changeset.should_receive(:promote).once.with(:async => true)
+    it "should call PromotionChangeset.promote asynchronously" do
+      @changeset.should_receive(:apply).once.with(:async => true)
+      req
+    end
+  end
+
+
+  describe "delete cs" do
+    before do
+      @changeset.stub(:promotion?).and_return(false)
+      @changeset.stub(:deletion?).and_return(true)
+    end
+    let(:action) {:apply }
+    let(:req) { post :apply, :id => CSET_ID, :organization_id => "1", :environment_id => 1 }
+    let(:authorized_user) { user_with_delete_permissions }
+    let(:unauthorized_user) { user_without_apply_permissions }
+    it_should_behave_like "protected action"
+
+    it "should call PromotionChangeset.promote asynchronously" do
+      @changeset.should_receive(:apply).once.with(:async => true)
       req
     end
   end

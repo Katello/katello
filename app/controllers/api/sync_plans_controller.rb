@@ -12,6 +12,15 @@
 
 class Api::SyncPlansController < Api::ApiController
 
+  resource_description do
+    description <<-DOC
+      Synchronization plans are used to configure the scheduled 
+      synchronization of the repository with the upstream.
+    DOC
+
+    param :organization_id, :identifier, :desc => "oranization identifier", :required => true
+  end
+
   before_filter :find_organization
   before_filter :find_plan, :only => [:update, :show, :destroy]
   before_filter :authorize
@@ -36,15 +45,29 @@ class Api::SyncPlansController < Api::ApiController
     }
   end
 
+  api :GET, "/organizations/:organization_id/sync_plans", "List sync plans"
+  param :name, String, :desc => "filter by name"
+  param :sync_date, String, :desc => "filter by sync date"
+  param :interval, ['none', 'hourly', 'daily', 'weekly'], :desc => "filter by interval"
   def index
     query_params.delete :organization_id
     render :json => @organization.sync_plans.where(query_params).to_json
   end
 
+  api :GET, "/organizations/:organization_id/sync_plans/:id", "Show a sync plan"
+  param :id, :number, :desc => "sync plan numeric identifier", :required => true
   def show
     render :json => @plan.to_json
   end
 
+
+  api :POST, "/organizations/:organization_id/sync_plans", "Create a sync plan"
+  param :sync_plan, Hash, :required => true do
+    param :description, :undef, :desc => "sync plan description"
+    param :interval, ['none', 'hourly', 'daily', 'weekly'], :desc => "how often synchronization should run"
+    param :name, String, :desc => "sync plan name", :required => true
+    param :sync_date, String, :desc => "start datetime of synchronization"
+  end
   def create
     sync_date = params[:sync_plan][:sync_date]
     if not sync_date.kind_of? Time
@@ -55,6 +78,14 @@ class Api::SyncPlansController < Api::ApiController
     render :json => SyncPlan.create!(params[:sync_plan]).to_json
   end
 
+  api :PUT, "/organizations/:organization_id/sync_plans/:id", "Update a sync plan"
+  param :id, :number, :desc => "sync plan numeric identifier", :required => true
+  param :sync_plan, Hash, :required => true do
+    param :description, :undef, :desc => "sync plan description"
+    param :interval, ['none', 'hourly', 'daily', 'weekly'], :desc => "how often synchronization should run"
+    param :name, String, :desc => "sync plan name", :required => true
+    param :sync_date, String, :desc => "start datetime of synchronization"
+  end
   def update
     sync_date = params[:sync_plan][:sync_date]
     if not sync_date.nil? and not sync_date.kind_of? Time
@@ -67,6 +98,8 @@ class Api::SyncPlansController < Api::ApiController
     render :json => @plan
   end
 
+  api :DELETE, "/organizations/:organization_id/sync_plans/:id", "Destroy a sync plan"
+  param :id, :number, :desc => "sync plan numeric identifier"
   def destroy
     @plan.destroy
     render :text => _("Deleted sync plan '#{params[:id]}'"), :status => 200

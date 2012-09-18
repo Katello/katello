@@ -299,7 +299,7 @@ KT.common = (function() {
                           orgboxapi.reinitialise();
                         },
                         error: function(data) {
-                          orgboxapi.getContentPane().html("<p>User is not allowed to access any Organizations.</p>");
+                          orgboxapi.getContentPane().html('<div class="spinner" style="margin-top:3px"></div>');
                           orgboxapi.reinitialise();
                         }
                     });
@@ -315,6 +315,15 @@ KT.common = (function() {
                     box.fadeOut('fast');
                 }
             });
+            if ($('#switcherContainer').length >0){
+              $('#orgbox a').live('click', function(){
+                 $(document).mouseup();
+                 $('#switcherContainer').html('<div class="spinner" style="margin-top:3px"></div>');
+              });
+            }
+            $('.favorite').live('click', function(e) {
+                KT.orgswitcher.checkboxChanged($(this).parent().find('.default_org'));
+            });
         },
         orgBoxRefresh : function (){
           var orgbox = $('#orgbox');
@@ -328,10 +337,10 @@ KT.common = (function() {
             });
             $('#orgfilter_input').live('change, keyup', function(){
                 if ($.trim($(this).val()).length >= 2) {
-                    $("#orgbox a:not(:contains('" + $(this).val() + "'))").filter(':not').fadeOut('fast');
-                    $("#orgbox a:contains('" + $(this).val() + "')").filter(':hidden').fadeIn('fast');
+                    $("#orgbox .row:not(:contains('" + $(this).val() + "'))").filter(':not').fadeOut('fast');
+                    $("#orgbox .row:contains('" + $(this).val() + "')").filter(':hidden').fadeIn('fast');
                 } else {
-                    $("#orgbox a").fadeIn('fast');
+                    $("#orgbox .row").fadeIn('fast');
                 }
             });
             $('#orgfilter_input').val("").change();
@@ -400,8 +409,83 @@ KT.common = (function() {
             );
         }
     };
-})();
+})(jQuery);
 
+KT.orgswitcher = (function($) {
+    var checkboxChanged = function(checkbox) {
+      var this_checkbox = $(checkbox);
+      this_checkbox.attr("disabled", "disabled");
+      //var for all favorite icons to clear them
+      var all_favorites = $('.favorite');
+      //current favorite
+      var this_favorite = this_checkbox.parent().find('.favorite');
+      var this_spinner = this_checkbox.parent().find('.fav_spinner');
+      var name = this_checkbox.attr("name");
+
+      //extract the URL for the preference change
+      var url = checkbox.data("url");
+
+      var selected_org_id = this_checkbox.attr("value");
+      var checked = this_checkbox.attr("checked");
+      var options = {};
+
+      if (checked){
+        options = {user_id : $('#user_id').data("user_id")};
+      } else {
+        options = {org : selected_org_id, user_id : $('#user_id').data("user_id")};
+      }
+
+      //hide the favorite icon temporarily while the ajax operation occurs
+      this_favorite.hide();
+
+      //show the spinner while waiting
+      this_spinner.removeClass('hidden').show();
+
+      $.ajax({
+          type: "PUT",
+          url: url,
+          data: options,
+          cache: false,
+          success: function(data, textStatus, jqXHR){
+            //hide spinner
+            this_spinner.addClass('hidden').hide();
+            if(checked){
+              this_checkbox.attr("checked", false);
+              this_favorite.addClass("favorites_icon-grey");
+              this_favorite.removeClass("favorites_icon-black");
+              this_favorite.attr("title", i18n.make_default_org);
+              if(this_favorite.parent().find('label').length){
+                this_favorite.parent().find('label').html(i18n.make_default_org);
+              }
+            } else {
+              this_checkbox.attr("checked", true);
+              all_favorites.removeClass("favorites_icon-black");
+              all_favorites.attr("title", i18n.make_default_org);
+              $('.favorite').addClass("favorites_icon-grey");
+              this_favorite.removeClass("favorites_icon-grey").addClass("favorites_icon-black");
+              this_favorite.attr("title", i18n.current_default_org);
+              if(this_favorite.parent().find('label').length){
+                this_favorite.parent().find('label').html(i18n.current_default_org);
+              }
+            }
+            this_favorite.show();
+
+            this_checkbox.removeAttr("disabled");
+          },
+          error: function(data, textStatus, jqXHR){
+            //hide the spinner and show the favorite is not selected
+            this_spinner.addClass('hidden').hide();
+            this_checkbox.attr("checked", false);
+            this_favorite.show();
+            this_checkbox.removeAttr("disabled");
+          }
+      });
+      return false;
+    };
+    return {
+        checkboxChanged: checkboxChanged
+    };
+}(jQuery));
 
 var client_common = {
     create: function(data, url, on_success, on_error) {

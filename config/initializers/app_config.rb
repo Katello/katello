@@ -53,11 +53,12 @@ module ApplicationConfiguration
       end
       exit_code = $?
       if exit_code != 0
-        hash = `git rev-parse --short HEAD`
-        version = "git hash (" + hash.chop + ")"
+        hash = `git rev-parse --short HEAD 2>/dev/null`
         exit_code = $?
         if exit_code != 0
           version = "Unknown"
+        else
+          version = "git hash (" + hash.chop + ")"
         end
       end
       @ostruct.katello_version = version

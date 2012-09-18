@@ -35,7 +35,7 @@ class SystemTemplate < ActiveRecord::Base
   validates_uniqueness_of :name, :scope => :environment_id
   validates_length_of :name, :maximum => 255
   validates_with ParentTemplateValidator
-  validates_length_of :description, :maximum => 255
+  validates :description, :katello_description_format => true
   validates_length_of :parameters_json, :maximum => 255
 
   belongs_to :parent, :class_name => "SystemTemplate"
@@ -346,9 +346,8 @@ class SystemTemplate < ActiveRecord::Base
 
 
   def promote from_env, to_env
-    #TODO: promote parent templates recursively
-    self.parent.promote(from_env, to_env) unless self.parent.nil?
-
+    # TODO: add logic to promote parent templates
+    # when that feature arrives
     promote_products from_env, to_env
     promote_repos    from_env, to_env
     promote_packages from_env, to_env
@@ -356,6 +355,15 @@ class SystemTemplate < ActiveRecord::Base
 
     []
   end
+
+
+def remove from_env
+    remove_template from_env
+    # TODO: add logic to deal with removal of parent templates
+    # when that feature arrives
+    []
+end
+
 
 
   def get_clones
@@ -426,6 +434,11 @@ class SystemTemplate < ActiveRecord::Base
       changesets =  Changeset.joins(:system_templates).where("system_templates.id"=>self.id)
       Changeset.index_import(changesets) if !changesets.empty?
     end
+  end
+
+  def remove_template from_env
+    tpl_copy = from_env.system_templates.find_by_name(self.name)
+    tpl_copy.delete if tpl_copy
   end
 
   def promote_template from_env, to_env

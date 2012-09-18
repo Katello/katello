@@ -113,6 +113,7 @@ KT.menu = (function(){
 
       li.hoverIntent(
           function(){
+            $(document).mouseup();
             ul.addClass("third_level").slideDown('fast');
           },
           function(){

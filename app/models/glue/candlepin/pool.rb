@@ -20,7 +20,7 @@ module Glue::Candlepin::Pool
     base.class_eval do
       lazy_accessor :pool_derived, :product_name, :consumed, :quantity, :support_level, :support_type,
         :start_date, :end_date, :attrs, :owner, :product_id, :account_number, :contract_number,
-        :source_pool_id, :host_id, :virt_only, :virt_limit, :multi_entitlement,
+        :source_pool_id, :host_id, :virt_only, :virt_limit, :multi_entitlement, :stacking_id,
         :arch, :sockets, :description, :product_family, :variant, :provided_products,
         :initializer => lambda {
           json = Resources::Candlepin::Pool.find(cp_id)
@@ -96,6 +96,7 @@ module Glue::Candlepin::Pool
       @product_family = ""
       @variant = ""
       @multi_entitlement = false
+      @stacking_id = ""
       attrs['productAttributes'].each do |attr|
         case attr['name']
           when 'virt_limit'
@@ -116,6 +117,8 @@ module Glue::Candlepin::Pool
             @variant = attr['value']
           when 'multi-entitlement'
             @multi_entitlement = (attr['value'] == 'true' || attr['value'] == 'yes') ? true : false
+          when 'stacking_id'
+            @stacking_id = attr['value']
         end
       end if attrs['productAttributes']
     end

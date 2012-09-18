@@ -42,6 +42,7 @@ class SyncPlan < ActiveRecord::Base
   validates_inclusion_of :interval,
     :in => TYPES,
     :allow_blank => false
+  validates :description, :katello_description_format => true
 
   scope :readable, lambda { |org| ::Provider.any_readable?(org)? where(:organization_id => org.id ) : where("0 = 1") }
 

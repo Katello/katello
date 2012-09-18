@@ -41,29 +41,50 @@ class Api::RolesController < Api::ApiController
      }
   end
 
+  api :GET, "/roles", "List roles"
+  api :GET, "/users/:user_id/roles", "List roles assigned to a user"
+  param :name, :undef
   def index
     render :json => (Role.readable.non_self.where query_params).to_json
   end
 
+  api :GET, "/roles/:id", "Show a role"
+  api :GET, "/users/:user_id/roles/:id", "Show a role"
   def show
     render :json => @role
   end
 
+  api :POST, "/roles", "Create a role"
+  api :POST, "/users/:user_id/roles", "Create a role"
+  param :role, Hash do
+    param :description, String, :allow_nil => true
+    param :name, String, :required => true
+  end
   def create
     render :json => Role.create!(params[:role]).to_json
   end
 
+  api :PUT, "/roles/:id", "Update a role"
+  api :PUT, "/users/:user_id/roles/:id", "Update a role"
+  param :role, Hash do
+    param :description, String, :allow_nil => true
+    param :name, String
+  end
   def update
     @role.update_attributes!(params[:role])
     @role.save!
     render :json => @role
   end
 
+  api :DELETE, "/roles/:id", "Destroy a role"
+  api :DELETE, "/users/:user_id/roles/:id", "Destroy a role"
   def destroy
     @role.destroy
     render :text => _("Deleted role '#{params[:id]}'"), :status => 200
   end
 
+  api :GET, "/roles/available_verbs", "List all available verbs that can be set to roles"
+  param :organization_id, :identifier, :desc => "With this option specified the listed tags are scoped to the organization."
   def available_verbs
     details= {}
 
@@ -74,6 +95,7 @@ class Api::RolesController < Api::ApiController
       details[type][:verbs] = Verb.verbs_for(type, false).collect {|name, display_name| VirtualTag.new(name, display_name)}
       details[type][:verbs].sort! {|a,b| a.display_name <=> b.display_name}
       details[type][:tags] = Tag.tags_for(type, orgId).collect { |t| VirtualTag.new(t.name, t.display_name) }
+      details[type][:no_tag_verbs] = Verb.no_tag_verbs(type)
       details[type][:global] = value["global"]
       details[type][:name] = value["name"]
     end
@@ -81,6 +103,7 @@ class Api::RolesController < Api::ApiController
     render :json => details
   end
 
+  private
 
   def find_role
     @role = Role.find(params[:id])
