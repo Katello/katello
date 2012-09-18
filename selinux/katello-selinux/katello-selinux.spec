@@ -11,7 +11,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-%define selinux_variants targeted simple mls
+%define selinux_variants targeted
 %define selinux_policyver %(sed -e 's,.*selinux-policy-\\([^/]*\\)/.*,\\1,' /usr/share/selinux/devel/policyhelp 2> /dev/null)
 %define POLICYCOREUTILSVER 1.33.12-1
 
