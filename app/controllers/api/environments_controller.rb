@@ -66,11 +66,9 @@ class Api::EnvironmentsController < Api::ApiController
 
 
   def param_rules
-    manage_match =  {:environment =>  ["name", "description", "prior" ]}
-
     {
-      :create =>manage_match,
-      :update => manage_match,
+      :create => {:environment =>  ["name", "label", "description", "prior" ]},
+      :update => {:environment =>  ["name", "description", "prior" ]},
       :index => [:name, :library, :id, :organization_id]
     }
   end
@@ -120,7 +118,9 @@ either library or an envrionment at the end of the chain
     DESC
   end
   def create
-    environment = KTEnvironment.new(params[:environment])
+    environment_params = params[:environment]
+    environment_params[:label] = labelize_params(environment_params)
+    environment = KTEnvironment.new(environment_params)
     @organization.environments << environment
     raise ActiveRecord::RecordInvalid.new(environment) unless environment.valid?
     @organization.save!

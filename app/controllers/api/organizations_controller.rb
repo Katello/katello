@@ -37,7 +37,7 @@ class Api::OrganizationsController < Api::ApiController
   end
   def param_rules
     {
-      :create => [:name, :description],
+      :create => [:name, :label, :description],
       :update => {:organization  => [:name, :description]}
     }
   end
@@ -58,9 +58,11 @@ class Api::OrganizationsController < Api::ApiController
 
   api :POST, "/organizations", "Create an organization"
   param :name, String, :desc => "name for the organization"
+  param :label, String, :desc => "ASCII label to identify the organization"
   param :description, String, :desc => "description"
   def create
-    render :json => Organization.create!(:name => params[:name], :description => params[:description], :label => params[:name].tr(' ', '_')).to_json
+    label = labelize_params(params)
+    render :json => Organization.create!(:name => params[:name], :description => params[:description], :label => label).to_json
   end
 
   api :PUT, "/organizations/:id", "Update an organization"
