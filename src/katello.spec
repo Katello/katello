@@ -117,7 +117,7 @@ Requires:       %{name}-configure
 Requires:       %{name}-cli
 Requires:       postgresql-server
 Requires:       postgresql
-Requires:       pulp
+Requires:       pulp-rpm-server
 Requires:       candlepin-tomcat6
 # the following backend engine deps are required by <katello-configure>
 Requires:       mongodb mongodb-server
