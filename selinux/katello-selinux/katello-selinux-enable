@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Install SELinux policy modules in one transaction
-for selinuxvariant in targeted simple mls
+for selinuxvariant in targeted
 do
   /usr/sbin/semodule -s ${selinuxvariant} -l >/dev/null 2>&1 && \
   /usr/sbin/semanage -S $selinuxvariant -i - << _EOF
