@@ -133,11 +133,11 @@ class UsersController < ApplicationController
     end
 
     notify.success @user.username + _(" created successfully.")
-    if search_validate(User, @user.id, params[:search])
+    if search_validate(User, @user.id, params[:search], :username)
       render :partial => "common/list_item",
              :locals  => { :item => @user, :accessor => "id", :columns => ["username"], :name => controller_display_name }
     else
-      notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @user["name"]
+      notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @user.username
       render :json => { :no_match => true }
     end
   rescue ActiveRecord::RecordNotSaved, ActiveRecord::RecordInvalid => error
@@ -156,8 +156,8 @@ class UsersController < ApplicationController
     attr = params[:user].first.last if params[:user].first
     attr ||= ""
 
-    if not search_validate(User, user.id, params[:search])
-      notify.message _("'%s' no longer matches the current search criteria.") % @user["name"]
+    if not search_validate(User, user.id, params[:search], :username)
+      notify.message _("'%s' no longer matches the current search criteria.") % @user.username
     end
 
     render :text => attr
@@ -257,8 +257,8 @@ class UsersController < ApplicationController
     if  @user.update_attributes(params[:user])
       notify.success _("User updated successfully.")
 
-      if not search_validate(User, @user.id, params[:search])
-        notify.message _("'%s' no longer matches the current search criteria.") % @user["name"]
+      if not search_validate(User, @user.id, params[:search], :username)
+        notify.message _("'%s' no longer matches the current search criteria.") % @user.username
       end
 
       render :nothing => true and return
