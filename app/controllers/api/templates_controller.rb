@@ -14,6 +14,14 @@ require 'rest_client'
 
 class Api::TemplatesController < Api::ApiController
 
+  resource_description do
+    description <<-DOC
+      System templates allow to group content (products, repositories, packages)
+      and handle them in changesets as a unit. They also provide an export consumable
+      by different systems (such as Aeolus Conductor to generate system images).
+    DOC
+  end
+
   before_filter :find_environment, :only => [:create, :import, :index]
   before_filter :find_template, :only => [:show, :update, :destroy, :promote, :export, :validate]
 
@@ -44,15 +52,27 @@ class Api::TemplatesController < Api::ApiController
     }
   end
 
+  api :GET, "/environments/:environment_id/templates", "List system templates for given environment."
+  param :environment_id, :number, :desc => "environment numeric identifier", :required => true
+  param :name, :identifier, :desc => "system template identifier"
   def index
     tpls = @environment.system_templates.where(params.slice(:name))
     render :json => tpls.to_json
   end
 
+  api :GET, "/templates/:id", "Show a template"
+  param :id, :number, :desc => "system template numeric identifier", :required => true
   def show
     render :json => @template.to_json
   end
 
+  api :POST, "/templates", "Create a template"
+  param :environment_id, :number, :desc => "environment numeric identifier", :required => true
+  param :template, Hash do
+    param :description, String, :desc => "template description"
+    param :name, :identifier, :desc => "new template name", :required => true
+    param :parent_id, :number, :desc => "parent template numeric identifier"
+  end
   def create
     raise HttpErrors::BadRequest, _("New templates can be created only in a Library environment") if not @environment.library?
 
@@ -63,6 +83,12 @@ class Api::TemplatesController < Api::ApiController
     render :json => @template.to_json
   end
 
+  api :PUT, "/templates/:id", "Update a template"
+  param :id, :number, :desc => "template numeric identifier", :required => true
+  param :template, Hash do
+    param :description, String, :desc => "template new description"
+    param :name, :identifier, :desc => "template new name"
+  end
   def update
     raise HttpErrors::BadRequest, _("Templates can be updated only in a Library environment") if not @template.environment.library?
 
@@ -79,11 +105,21 @@ class Api::TemplatesController < Api::ApiController
     render :json => @template
   end
 
+  api :DELETE, "/templates/:id", "Destroy a template"
+  param :id, :number, :desc => "template numeric identifier", :required => true
   def destroy
     @template.destroy
     render :text => _("Deleted system template '#{@template.name}'"), :status => 200
   end
 
+  api :POST, "/templates/import", "Import a template"
+  param :environment_id, :number, :desc => "environment numeric identifier", :required => true
+  param :template_file, File, :desc => "template file to import", :required => true
+  param :template, Hash do
+    param :description, String, :desc => "template description"
+    param :name, :identifier, :desc => "new template name", :required => true
+    param :parent_id, :number, :desc => "parent template numeric identifier"
+  end
   def import
     raise HttpErrors::BadRequest, _("New templates can be imported only into a Library environment") if not @environment.library?
 
@@ -102,6 +138,8 @@ class Api::TemplatesController < Api::ApiController
     render :text => _("Template imported"), :status => 200
   end
 
+  api :GET, "/templates/:id/validate", "Validate a template TDL"
+  param :id, :number, :desc => "template numeric identifier", :required => true
   def validate
     raise HttpErrors::BadRequest, _("Cannot validate templates for the Library environment.") if @template.environment.library?
 
@@ -111,6 +149,8 @@ class Api::TemplatesController < Api::ApiController
     end
   end
 
+  api :GET, "/templates/:id/export", "Export template as TDL or JSON"
+  param :id, :number, :desc => "template numeric identifier", :required => true
   def export
     raise HttpErrors::BadRequest, _("Cannot export templates for the Library environment.") if @template.environment.library?
 

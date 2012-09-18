@@ -75,7 +75,7 @@ class System < ActiveRecord::Base
   scope :by_env, lambda { |env| where('environment_id = ?', env) unless env.nil?}
   scope :completer_scope, lambda { |options| readable(options[:organization_id])}
 
-  
+
   class << self
     def architectures
       { 'i386' => 'x86', 'ia64' => 'Itanium', 'x86_64' => 'x86_64', 'ppc' => 'PowerPC',
@@ -209,19 +209,31 @@ class System < ActiveRecord::Base
         where_clause += "system_system_groups.system_group_id in (#{SystemGroup.systems_readable(org).select(:id).to_sql})"
         joins("left outer join system_system_groups on systems.id =
                                     system_system_groups.system_id").where(where_clause)
-      end    
+      end
   end
 
   def readable?
-    environment.systems_readable? || !SystemGroup.systems_readable(self.organization).where(:id=>self.system_group_ids).empty?
+    sg_readable = false
+    if AppConfig.katello?
+      sg_readable = !SystemGroup.systems_readable(self.organization).where(:id=>self.system_group_ids).empty?
+    end
+    environment.systems_readable? || sg_readable
   end
 
   def editable?
-    environment.systems_editable?  || !SystemGroup.systems_editable(self.organization).where(:id=>self.system_group_ids).empty?
+    sg_editable = false
+    if AppConfig.katello?
+      sg_editable = !SystemGroup.systems_editable(self.organization).where(:id=>self.system_group_ids).empty?
+    end
+    environment.systems_editable? || sg_editable
   end
 
   def deletable?
-    environment.systems_deletable? || !SystemGroup.systems_deletable(self.organization).where(:id=>self.system_group_ids).empty?
+    sg_deletable = false
+    if AppConfig.katello?
+      sg_deletable = !SystemGroup.systems_deletable(self.organization).where(:id=>self.system_group_ids).empty?
+    end
+    environment.systems_deletable? || sg_deletable
   end
 
   #TODO these two functions are somewhat poorly written and need to be redone
