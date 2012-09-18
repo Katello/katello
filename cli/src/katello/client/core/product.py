@@ -186,7 +186,7 @@ class Sync(SingleProductAction):
             print _("Product [ %s ] failed to sync: %s" % (prodName, errors))
             return os.EX_DATAERR
         elif task.cancelled():
-            print _("Product [ %s ] synchronization cancelled" % prodName)
+            print _("Product [ %s ] synchronization canceled" % prodName)
             return os.EX_DATAERR
 
         print _("Product [ %s ] synchronized" % prodName)

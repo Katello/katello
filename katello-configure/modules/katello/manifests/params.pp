@@ -62,17 +62,19 @@ class katello::params {
   $use_foreman     = true
   $install_foreman = false
   $foreman_start_port         = "5500"
-  $foreman_thin_process_count = katello_process_count(0.5)
+  $foreman_thin_process_count = katello_process_count(0.4)
 
   # apache settings
   $thin_start_port = "5000"
   $thin_log        = "$log_base/thin-log.log"
   if $use_foreman {
-    $process_count   = katello_process_count(0.5)
+    $process_count   = katello_process_count(0.6)
   } else {
     $process_count   = katello_process_count(1)
   }
 
+  # sysconfig settings
+  $job_workers = katello_config_value('job_workers')
 
   # LDAP settings
   $ldap_server = katello_config_value('ldap_server')

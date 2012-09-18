@@ -23,7 +23,7 @@ from katello.client.api.system_group import SystemGroupAPI
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record
 from katello.client.utils import printer
-from katello.client.api.utils import get_environment, get_organization
+from katello.client.api.utils import get_environment
 from katello.client.cli.base import OptionException, opt_parser_add_org, opt_parser_add_environment
 
 class ActivationKeyAction(BaseAction):
@@ -89,8 +89,7 @@ class List(ActivationKeyAction):
         return os.EX_OK
 
     def get_keys_for_organization(self, orgName):
-        organization = get_organization(orgName)
-        return self.api.activation_keys_by_organization(organization['label'])
+        return self.api.activation_keys_by_organization(orgName)
 
     def get_keys_for_environment(self, orgName, envName):
         environment = get_environment(orgName, envName)
@@ -112,9 +111,8 @@ class Info(ActivationKeyAction):
         orgName = self.get_option('org')
         keyName = self.get_option('name')
 
-        organization = get_organization(orgName)
+        keys = self.api.activation_keys_by_organization(orgName, keyName)
 
-        keys = self.api.activation_keys_by_organization(organization['label'], keyName)
         if len(keys) == 0:
             print >> sys.stderr, _("Could not find activation key [ %s ]") % keyName
             return os.EX_DATAERR
@@ -222,14 +220,12 @@ class Update(ActivationKeyAction):
         add_poolids = self.get_option('add_poolid') or []
         remove_poolids = self.get_option('remove_poolid') or []
 
-        organization = get_organization(orgName)
-
         if envName != None:
             environment = get_environment(orgName, envName)
         else:
             environment = None
 
-        keys = self.api.activation_keys_by_organization(organization['label'], keyName)
+        keys = self.api.activation_keys_by_organization(orgName, keyName)
         if len(keys) == 0:
             return os.EX_DATAERR
         key = keys[0]
@@ -239,13 +235,14 @@ class Update(ActivationKeyAction):
         except OptionException:
             print >> sys.stderr, _("Could not find template [ %s ]") % (templateName)
             return os.EX_DATAERR
-        key = self.api.update(key['id'], environment['id'] if environment != None else None,
+
+        key = self.api.update(orgName, key['id'], environment['id'] if environment != None else None,
             newKeyName, keyDescription, templateId, usageLimit)
 
         for poolid in add_poolids:
-            self.api.add_pool(key['id'], poolid)
+            self.api.add_pool(orgName, key['id'], poolid)
         for poolid in remove_poolids:
-            self.api.remove_pool(key['id'], poolid)
+            self.api.remove_pool(orgName, key['id'], poolid)
 
         if key != None:
             print _("Successfully updated activation key [ %s ]") % key['name']
@@ -270,14 +267,12 @@ class Delete(ActivationKeyAction):
         orgName = self.get_option('org')
         keyName = self.get_option('name')
 
-        organization = get_organization(orgName)
-
-        keys = self.api.activation_keys_by_organization(organization['label'], keyName)
+        keys = self.api.activation_keys_by_organization(orgName, keyName)
         if len(keys) == 0:
             #TODO: not found?
             return os.EX_DATAERR
 
-        self.api.delete(keys[0]['id'])
+        self.api.delete(orgName, keys[0]['id'])
         print _("Successfully deleted activation key [ %s ]") % keyName
         return os.EX_OK
 

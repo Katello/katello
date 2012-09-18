@@ -61,6 +61,7 @@ describe User do
       @org = Organization.create!(:name=>'test_org', :label=> 'test_org')
       @user.default_org = @org
       @user.save!
+      @user.stub!(:allowed_organizations).and_return([@org])
       @user.default_org.should == @org
     end
 
@@ -112,6 +113,7 @@ describe User do
       @org = Organization.create!(:name=>'test_org', :label=> 'test_org')
       @user.default_org = @org
       @user.save!
+      allow(@user.own_role, [:read], :providers, nil, @org)
       @user.default_org.should == @org
     end
 
