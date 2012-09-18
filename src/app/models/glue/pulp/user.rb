@@ -15,7 +15,7 @@ module Glue::Pulp::User
     base.send :include, InstanceMethods
     base.send :include, LazyAccessor
     base.class_eval do
-      lazy_accessor :login, :name, :initializer => lambda { Resources::Pulp::User.find(self.username) }
+      lazy_accessor :login, :name, :initializer => lambda { Runcible::Resources::User.retrieve(self.username) }
 
       before_save :save_pulp_orchestration
       before_destroy :destroy_pulp_orchestration
@@ -35,7 +35,7 @@ module Glue::Pulp::User
     end
 
     def set_pulp_user
-      Resources::Pulp::User.create(:login => self.username, :name => self.username, :password => Password.generate_random_string(16))
+      Runcible::Resources::User.create(self.username, {:name => self.username, :password => Password.generate_random_string(16)})
     rescue RestClient::ExceptionWithResponse => e
       if e.http_code == 409
         Rails.logger.info "pulp user #{self.username}: already exists. continuing"
@@ -50,19 +50,19 @@ module Glue::Pulp::User
     end
 
     def set_super_user_role
-      Resources::Pulp::Roles.add "super-users", self.username
+      Resources::Resources::Roles.add "super-users", self.username
       true #assume everything is ok unless there was an exception thrown
     end
 
     def del_pulp_user
-      Resources::Pulp::User.destroy(self.username)
+      Runcible::Resources::User.delete(self.username)
     rescue => e
       Rails.logger.error "Failed to delete pulp user #{self.username}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
     def del_super_admin_role
-      Resources::Pulp::Roles.remove "super-users", self.username
+      Runcible::Resources::Role.remove("super-users", self.username)
       true #assume everything is ok unless there was an exception thrown
     end
 

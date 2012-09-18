@@ -38,6 +38,11 @@ gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 gem 'ruport', '>=1.6.3'
 gem 'acts_as_reportable', '>=1.1.1'
 
+gem "apipie-rails"
+
+# Pulp API bindings
+gem "runcible", :path => "../../runcible"
+
 # Use unicorn as the web server
 # gem 'unicorn'
 
