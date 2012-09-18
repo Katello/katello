@@ -40,7 +40,7 @@ module Katello
 
     def get_pulp_filter_type type
       filter_type = type.downcase
-      if filter_type == "bug"
+      if filter_type == "bugfix"
         return Glue::Pulp::Errata::BUGZILLA
       elsif filter_type == "enhancement"
         return Glue::Pulp::Errata::ENHANCEMENT

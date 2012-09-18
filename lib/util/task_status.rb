@@ -28,7 +28,7 @@ module Katello
                 :waiting => [N_('Installing Package...'), N_('installing package...'), N_('installing packages...')],
                 :finished => [N_('Package Install Complete'), N_('%s package installed'), N_('%s (%s other packages) installed')],
                 :error=> [N_('Package Install Failed'), N_('%s package install failed'), N_('%s (%s other packages) install failed')],
-                :cancelled => [N_('Package Install Cancelled'), N_('%s package install cancelled'), N_('%s (%s other packages) install cancelled')],
+                :cancelled => [N_('Package Install Canceled'), N_('%s package install canceled'), N_('%s (%s other packages) install canceled')],
                 :timed_out =>[N_('Package Install Timed Out'), N_('%s package install timed out'), N_('%s (%s other packages) install timed out')],
             },
            :user_message => _('Package Install scheduled by %s')
@@ -42,7 +42,7 @@ module Katello
                 :waiting => [N_('Updating Package...'), N_('updating package...'), N_('updating packages...')],
                 :finished =>[N_('Package Update Complete'), N_('%s package updated'), N_('%s (%s other packages) updated')],
                 :error => [N_('Package Update Failed'), N_('%s package update failed'), N_('%s (%s other packages) update failed')],
-                :cancelled =>[N_('Package Update Cancelled'), N_('%s package update cancelled'), N_('%s (%s other packages) update cancelled')],
+                :cancelled =>[N_('Package Update Canceled'), N_('%s package update canceled'), N_('%s (%s other packages) update canceled')],
                 :timed_out =>[N_('Package Update Timed Out'), N_('%s package update timed out'), N_('%s (%s other packages) update timed out')],
             },
             :user_message => _('Package Update scheduled by %s')
@@ -55,7 +55,7 @@ module Katello
                 :waiting => [N_('Removing Package...'), N_('removing package...'), N_('removing packages...')],
                 :finished => [N_('Package Remove Complete'), N_('%s package removed'), N_('%s (%s other packages) removed')],
                 :error => [N_('Package Remove Failed'), N_('%s package remove failed'), N_('%s (%s other packages) remove failed')],
-                :cancelled => [N_('Package Remove Cancelled'), N_('%s package remove cancelled'), N_('%s (%s other packages) remove cancelled')],
+                :cancelled => [N_('Package Remove Canceled'), N_('%s package remove canceled'), N_('%s (%s other packages) remove canceled')],
                 :timed_out => [N_('Package Remove Timed Out'), N_('%s package remove timed out'), N_('%s (%s other packages) remove timed out')],
             },
             :user_message => _('Package Remove scheduled by %s')
@@ -69,7 +69,7 @@ module Katello
                 :waiting => [N_('Installing Package Group...'), N_('installing package group...'), N_('installing package groups...')],
                 :finished => [N_('Package Group Install Complete'), N_('%s package group installed'), N_('%s (%s other package groups) installed')],
                 :error=> [N_('Package Group Install Failed'), N_('%s package group install failed'), N_('%s (%s other package groups) install failed')],
-                :cancelled => [N_('Package Group Install Cancelled'), N_('%s package group install cancelled'), N_('%s (%s other package groups) install cancelled')],
+                :cancelled => [N_('Package Group Install Canceled'), N_('%s package group install canceled'), N_('%s (%s other package groups) install canceled')],
                 :timed_out =>[N_('Package Group Install Timed Out'), N_('%s package group install timed out'), N_('%s (%s other package groups) install timed out')],
             },
             :user_message => _('Package Group Install scheduled by %s')
@@ -82,7 +82,7 @@ module Katello
                 :waiting => [N_('updating package group...'), N_('updating package group...'), N_('updating package groups...')],
                 :finished =>[N_('package group update complete'), N_('%s package group updated'), N_('%s (%s other package groups) updated')],
                 :error => [N_('package group update failed'), N_('%s package group update failed'), N_('%s (%s other package groups) update failed')],
-                :cancelled =>[N_('package group update cancelled'), N_('%s package group update cancelled'), N_('%s (%s other package groups) update cancelled')],
+                :cancelled =>[N_('package group update canceled'), N_('%s package group update canceled'), N_('%s (%s other package groups) update canceled')],
                 :timed_out =>[N_('package group update timed out'), N_('%s package group update timed out'), N_('%s (%s other package groups) update timed out')],
 
             },
@@ -96,7 +96,7 @@ module Katello
                 :waiting => [N_('Removing Package Group...'), N_('removing package group...'), N_('removing package groups...')],
                 :finished => [N_('Package Group Remove Complete'), N_('%s package group removed'), N_('%s (%s other package groups) removed')],
                 :error => [N_('Package Group Remove Failed'), N_('%s package group remove failed'), N_('%s (%s other package groups) remove failed')],
-                :cancelled => [N_('Package Group Remove Cancelled'), N_('%s package group remove cancelled'), N_('%s (%s other package groups) remove cancelled')],
+                :cancelled => [N_('Package Group Remove Canceled'), N_('%s package group remove canceled'), N_('%s (%s other package groups) remove canceled')],
                 :timed_out => [N_('Package Group Remove Timed Out'), N_('%s package group remove timed out'), N_('%s (%s other package groups) remove timed out')],
 
             },
@@ -110,7 +110,7 @@ module Katello
                 :waiting => [N_('Installing Erratum...'), N_('installing erratum...'), N_('installing errata...')],
                 :finished => [N_('Erratum Install Complete'), N_('%s erratum installed'), N_('%s (%s other errata) installed')],
                 :error=> [N_('Erratum Install Failed'), N_('%s erratum install failed'), N_('%s (%s other errata) install failed')],
-                :cancelled => [N_('Erratum Install Cancelled'), N_('%s erratum install cancelled'), N_('%s (%s other errata) install cancelled')],
+                :cancelled => [N_('Erratum Install Canceled'), N_('%s erratum install canceled'), N_('%s (%s other errata) install canceled')],
                 :timed_out =>[N_('Erratum Install Timed Out'), N_('%s erratum install timed out'), N_('%s (%s other errata) install timed out')],
             },
            :user_message => _('Errata Install scheduled by %s')
