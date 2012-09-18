@@ -32,11 +32,7 @@ fi
 
 . /etc/init.d/functions
 
-if [ -x "/usr/sbin/service-wait" ]; then
-  SERVICE_CMD="/usr/sbin/service-wait"
-else
-  SERVICE_CMD="/sbin/service"
-fi
+SERVICE_CMD="/usr/sbin/service-wait"
 
 forward_services() {
   ACTION="$1"
