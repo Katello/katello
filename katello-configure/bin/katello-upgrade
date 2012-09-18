@@ -300,10 +300,9 @@ class UpgradeProcess
   end
 
   def stop_services
-    service = 'katello-service'
-    puts "We will stop all katello services using #{service} stop."
+    puts "We will stop all katello services."
     if confirm("PROCEED?")
-      if !stop(service)
+      if ! system('/usr/bin/katello-service', 'stop')
         puts "There was an issue stopping your services. Please resolve this manually"
         puts "and try again"
         exit_with :general_error
@@ -409,13 +408,6 @@ end
 # test if given service is stopped
 def is_stopped? (service)
   return !system('/sbin/service %s status 2>/dev/null >/dev/null' % service)
-end
-
-# system appears to return TRUE in some cases even when the
-# system call fails. non catastrophic errors, such as the service
-# already being off
-def stop(service)
-  return system('/sbin/service %s stop' % service)
 end
 
 # Parse and return script options
