@@ -333,26 +333,16 @@ module Resources
               "importers/yum_importer/sync_schedules/#{(schedule_id + '/') if schedule_id}"
         end
 
-<<<<<<< HEAD
+
         def schedules(repo_id)
           body = get(Repository.schedule_path(repo_id), self.default_headers)
           JSON.parse(body)
-=======
+        end
+
         def update_publish(repo_id, publish=true)
           body = post(Repository.repository_path + repo_id +"/update_publish/", JSON.generate(:state => publish), self.default_headers).body
         end
 
-        def delete_schedule(repo_id)
-          body = self.delete(Repository.repository_path + repo_id +"/schedules/sync/", self.default_headers).body
->>>>>>> 85a6f2c19631fb0a867415831357385018ce54e1
-        end
-        #repo_package_tuples = list of package repo tuples in the format [[[package_name, checksum],[repo_id]]....]
-        def add_repo_packages repo_package_tuples
-          associate_path = "/pulp/api/services/associate/packages/"
-          body = post(associate_path, {:package_info=>repo_package_tuples}.to_json, self.default_headers).body
-        end
-
-<<<<<<< HEAD
         def create_or_update_schedule(repo_id, schedule)
           schedules = Repository.schedules(repo_id)
           if schedules.empty?
@@ -377,29 +367,6 @@ module Resources
           if !schedules.empty?
             body = self.delete(Repository.schedule_path(repo_id) +"/importers/yum_importer/sync_schedules/", self.default_headers).body
           end
-=======
-        #repo_package_tuples = list of package repo tuples in the format [[[package_name, checksum],[repo_id]]....]
-        def delete_repo_packages repo_package_tuples
-          dissociate_path = "/pulp/api/services/disassociate/packages/"
-          body = post(dissociate_path, {:package_info=>repo_package_tuples}.to_json, self.default_headers).body
-        end
-
-
-        def add_errata repo_id, errata_id_list
-          add_delete_content("add_errata", :errataid, repo_id, errata_id_list)
-        end
-
-        def delete_errata repo_id, errata_id_list
-          add_delete_content("delete_errata", :errataid, repo_id, errata_id_list)
-        end
-
-        def add_distribution repo_id, distro_id_list
-          add_delete_content("add_distribution", :distributionid, repo_id, distro_id_list)
-        end
-
-        def delete_distribution repo_id, distro_id_list
-          add_delete_content("remove_distribution", :distributionid, repo_id, distro_id_list)
->>>>>>> 85a6f2c19631fb0a867415831357385018ce54e1
         end
 
         def sync (repo_id, data = {})
@@ -503,11 +470,6 @@ module Resources
           body = response.body
           JSON.parse(body)
         end
-
-        def add_delete_content content_action, param_key, repo_id, content_id_list
-          body = post(Repository.repository_path + repo_id +"/#{content_action}/", {param_key=>content_id_list}.to_json, self.default_headers).body
-        end
-
       end
     end
 
