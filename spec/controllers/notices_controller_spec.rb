@@ -56,14 +56,15 @@ describe NoticesController do
                     :user_notices=>[UserNotice.new(:user => @user)])
       get :details, :id=>21
       response.should_not be_success
-      response.should render_template("notification")
     end 
   end
 
   describe "deleting notices" do
     before (:each) do
       controller.stub!(:render)
-      10.times{|a| Notice.create!(:text=>"bar#{a}", :level=>:success, :user_notices=>[UserNotice.new(:user => @user)])}
+      10.times { |a| Notice.create!(:text => "bar#{a}",
+                                    :level => :success,
+                                    :user_notices => [UserNotice.new(:user => @user, :viewed => true)]) }
     end
 
     it 'should allow all notices to be destroyed for a single user' do

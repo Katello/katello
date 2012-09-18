@@ -34,25 +34,43 @@ class Api::PermissionsController < Api::ApiController
   end
   def param_rules
      {
-       :create => [:name, :description, :role_id, :organization_id, :verbs, :tags, :type,:type ]
+       :create => [:name, :description, :role_id, :organization_id, :verbs, :tags, :type, :all_tags ]
      }
   end
 
+
+  api :GET, "/roles/:role_id/permissions", "List permissions for a role"
+  param :name, String, :desc => "filter by name"
+  param :description, String, :desc => "filter by description"
+  param :all_verbs, :bool, :desc => "filter by all_verbs flag"
+  param :all_tags, :bool, :desc => "filter by all_flags flag"
   def index
     render :json => @role.permissions.where(query_params).to_json()
   end
 
+  api :GET, "/roles/:role_id/permissions/:id", "Show a permission"
   def show
     render :json => @permission.to_json()
   end
 
+
+  api :POST, "/roles/:role_id/permissions", "Create a roles permission"
+  param :description, String, :allow_nil => true
+  param :name, String, :required => true
+  param :organization_id, :identifier
+  param :tags, Array, :desc => "array of tag ids"
+  param :type, String, :desc => "name of a resource or 'all'", :required => true
+  param :verbs, Array, :desc => "array of permission verbs"
+  param :all_tags, :bool, :desc => "True if the permission should use all tags"
   def create
     new_params = {
       :name => params[:name],
       :description => params[:description],
       :role => @role,
-      :organization => @organization
+      :organization => @organization,
+      :all_tags => (params[:all_tags].to_bool if params[:all_tags])
     }
+
     new_params[:verb_values] = params[:verbs] || []
     new_params[:tag_values] = params[:tags] || []
 
@@ -67,6 +85,8 @@ class Api::PermissionsController < Api::ApiController
     render :json => @permission.to_json()
   end
 
+
+  api :DELETE, "/roles/:role_id/permissions/:id", "Destroy a roles permission"
   def destroy
     @permission.destroy
     render :text => _("Deleted permission '#{params[:id]}'"), :status => 200

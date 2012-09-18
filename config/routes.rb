@@ -1,5 +1,7 @@
 Src::Application.routes.draw do
 
+  apipie
+
   resources :system_groups do
     collection do
       get :items
@@ -232,6 +234,7 @@ Src::Application.routes.draw do
       put :update_roles
       put :update_locale
       put :update_preference
+      put :setup_default_org
       get :edit_environment
       put :update_environment
     end
@@ -343,13 +346,13 @@ Src::Application.routes.draw do
   end
   match '/organizations/:id/edit' => 'organizations#update', :via => :put
 
-  resources :changesets, :only => [:update, :index, :show, :create, :new, :edit, :show, :destroy, :auto_complete_search] do
+  resources :changesets, :only => [:update, :index, :show, :create, :new, :edit, :destroy] do
     member do
       put :name
       get :dependencies
-      post :promote
+      post :apply
+      get :status
       get :object
-      get :promotion_progress
     end
     collection do
       get :auto_complete_search
@@ -533,18 +536,21 @@ Src::Application.routes.draw do
       resources :sync_plans
       resources :tasks, :only => [:index]
       resources :providers, :only => [:index]
-      resources :systems, :only => [:index] do
+      match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
+      resources :systems, :only => [:index, :create] do
         get :report, :on => :collection
 
         collection do
           get :tasks
         end
       end
-      match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
-      resources :activation_keys, :only => [:index] do
+      resources :activation_keys, :only => [:index, :create, :destroy, :show, :update] do
         member do
           post :system_groups, :action => :add_system_groups
           delete :system_groups, :action => :remove_system_groups
+
+          post :pools, :action => :add_pool
+          delete "pools/:poolid", :action => :remove_pool
         end
       end
       resources :repositories, :only => [] do
@@ -558,6 +564,7 @@ Src::Application.routes.draw do
 
     resources :changesets, :only => [:show, :update, :destroy] do
       post :promote, :on => :member, :action => :promote
+      post :apply, :on => :member, :action => :apply
       get :dependencies, :on => :member, :action => :dependencies
       resources :products, :controller => :changesets_content do
         post   :index, :on => :collection, :action => :add_product
@@ -643,7 +650,7 @@ Src::Application.routes.draw do
     resources :users do
       get :report, :on => :collection
       get :sync_ldap_roles, :on => :collection
-      resources :roles, :controller => :users do
+      resources :roles, :controller => :users, :only =>[] do
        post   :index, :on => :collection, :action => :add_role
        delete :destroy, :on => :member, :action => :remove_role
        get    :index, :on => :collection, :action => :list_roles

@@ -26,6 +26,8 @@ class System < ActiveRecord::Base
   include AsyncOrchestration
   include IndexedModel
 
+  after_rollback :rollback_on_create, :on => :create
+
   index_options :extended_json=>:extended_index_attrs,
                 :json=>{:only=> [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id]},
                 :display_attrs=>[:name, :description, :id, :uuid, :created_at, :lastCheckin, :system_group]
@@ -54,7 +56,7 @@ class System < ActiveRecord::Base
   belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :systems
   belongs_to :system_template
 
-  has_many :task_statuses, :as => :task_owner
+  has_many :task_statuses, :as => :task_owner, :dependent => :destroy
 
   has_many :system_activation_keys, :dependent => :destroy
   has_many :activation_keys, :through => :system_activation_keys
@@ -63,8 +65,8 @@ class System < ActiveRecord::Base
   has_many :system_groups, {:through => :system_system_groups, :before_add => :add_pulp_consumer_group, :before_remove => :remove_pulp_consumer_group}.merge(update_association_indexes)
 
   validates :environment, :presence => true, :non_library_environment => true
+  # multiple systems with a single name are supported
   validates :name, :presence => true, :no_trailing_space => true
-  validates_uniqueness_of :name, :scope => :environment_id
   validates :description, :katello_description_format => true
   validates_length_of :location, :maximum => 255
   validates :sockets, :numericality => { :only_integer => true, :greater_than => 0 }, :allow_blank => true, :allow_nil => true, :on => {:create, :update}
@@ -73,7 +75,7 @@ class System < ActiveRecord::Base
   scope :by_env, lambda { |env| where('environment_id = ?', env) unless env.nil?}
   scope :completer_scope, lambda { |options| readable(options[:organization_id])}
 
-  
+
   class << self
     def architectures
       { 'i386' => 'x86', 'ia64' => 'Itanium', 'x86_64' => 'x86_64', 'ppc' => 'PowerPC',
@@ -109,6 +111,36 @@ class System < ActiveRecord::Base
     attribs_to_sub.each do |id|
       self.subscribe id
     end
+  end
+
+  def filtered_pools match_system, match_installed, no_overlap
+    pools = self.available_pools !match_system
+
+    # Only available pool's with a product on the system'
+    if match_installed
+      pools = pools.select do |pool|
+        self.installedProducts.any? do |installedProduct|
+          pool['providedProducts'].any? do |providedProduct|
+            installedProduct['productId'] == providedProduct['productId']
+          end
+        end
+      end
+    end
+
+    # None of the available pool's products overlap a consumed pool's products
+    if no_overlap
+      pools = pools.select do |pool|
+        pool['providedProducts'].all? do |providedProduct|
+          self.consumed_entitlements.all? do |consumedEntitlement|
+            consumedEntitlement.providedProducts.all? do |consumedProduct|
+              consumedProduct.cp_id != providedProduct['productId']
+            end
+          end
+        end
+      end
+    end
+
+    return pools
   end
 
   def install_packages packages
@@ -177,19 +209,31 @@ class System < ActiveRecord::Base
         where_clause += "system_system_groups.system_group_id in (#{SystemGroup.systems_readable(org).select(:id).to_sql})"
         joins("left outer join system_system_groups on systems.id =
                                     system_system_groups.system_id").where(where_clause)
-      end    
+      end
   end
 
   def readable?
-    environment.systems_readable? || !SystemGroup.systems_readable(self.organization).where(:id=>self.system_group_ids).empty?
+    sg_readable = false
+    if AppConfig.katello?
+      sg_readable = !SystemGroup.systems_readable(self.organization).where(:id=>self.system_group_ids).empty?
+    end
+    environment.systems_readable? || sg_readable
   end
 
   def editable?
-    environment.systems_editable?  || !SystemGroup.systems_editable(self.organization).where(:id=>self.system_group_ids).empty?
+    sg_editable = false
+    if AppConfig.katello?
+      sg_editable = !SystemGroup.systems_editable(self.organization).where(:id=>self.system_group_ids).empty?
+    end
+    environment.systems_editable? || sg_editable
   end
 
   def deletable?
-    environment.systems_deletable? || !SystemGroup.systems_deletable(self.organization).where(:id=>self.system_group_ids).empty?
+    sg_deletable = false
+    if AppConfig.katello?
+      sg_deletable = !SystemGroup.systems_deletable(self.organization).where(:id=>self.system_group_ids).empty?
+    end
+    environment.systems_deletable? || sg_deletable
   end
 
   #TODO these two functions are somewhat poorly written and need to be redone
@@ -219,6 +263,14 @@ class System < ActiveRecord::Base
      :system_group=>self.system_groups.collect{|g| g.name},
      :system_group_ids=>self.system_group_ids
     }
+  end
+
+  # A rollback occurred while attempting to create the system; therefore, perform necessary cleanup.
+  def rollback_on_create
+    # remove the system from elasticsearch
+    system_id = "id:#{self.id}"
+    Tire::Configuration.client.delete "#{Tire::Configuration.url}/katello_system/_query?q=#{system_id}"
+    Tire.index('katello_system').refresh
   end
 
   private

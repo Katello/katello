@@ -16,6 +16,7 @@ describe User do
 
   include OrchestrationHelper
   include AuthorizationHelperMethods
+  include OrganizationHelperMethods
 
   USERNAME = "testuser"
   PASSWORD = "password1234"
@@ -55,6 +56,15 @@ describe User do
       @user.own_role.should_not be_nil
     end
 
+    it "have a default org" do
+      disable_org_orchestration
+      @org = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
+      @user.default_org = @org
+      @user.save!
+      @user.stub!(:allowed_organizations).and_return([@org])
+      @user.default_org.should == @org
+    end
+
     it "have permission for two orgs" do
       disable_org_orchestration
       org = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
@@ -84,6 +94,8 @@ describe User do
       disable_user_orchestration
       AppConfig.warden = 'database'
       @user = User.create!(to_create_simple)
+      current_user = @user
+      User.stub(:current).and_return(current_user)
     end
 
     it "be able to create" do
@@ -94,6 +106,15 @@ describe User do
     it "have its own role" do
       #pending "implement own_role functionality"
       @user.own_role.should_not be_nil
+    end
+
+    it "have a default org" do
+      disable_org_orchestration
+      @org = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
+      @user.default_org = @org
+      @user.save!
+      allow(@user.own_role, [:read], :providers, nil, @org)
+      @user.default_org.should == @org
     end
 
     it "have permission for two orgs" do

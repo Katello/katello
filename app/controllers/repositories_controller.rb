@@ -46,66 +46,53 @@ class RepositoriesController < ApplicationController
   end
 
   def edit
-    render :partial => "edit", :layout => "tupane_layout", :locals=>{:editable=>@product.editable?}
+    render :partial => "edit", :layout => "tupane_layout",
+           :locals=>{
+               :editable=> (@product.editable? and not @repository.promoted?),
+               :cloned_in_environments => @repository.product.environments.select {|env| @repository.is_cloned_in?(env)}.map(&:name)
+           }
   end
 
   def create
-    begin
-      repo_params = params[:repo]
-      raise _('Invalid Url') if !kurl_valid?(repo_params[:feed])
-      gpg = GpgKey.readable(current_organization).find(repo_params[:gpg_key]) if repo_params[:gpg_key] and repo_params[:gpg_key] != ""
-      # Bundle these into one call, perhaps move to Provider
-      # Also fix the hard coded yum
-      @product.add_repo(repo_params[:name], repo_params[:feed], 'yum', gpg)
-      @product.save
+    repo_params = params[:repo]
+    raise URI::InvalidURIError.new _('Invalid Url') if !kurl_valid?(repo_params[:feed])
+    gpg = GpgKey.readable(current_organization).find(repo_params[:gpg_key]) if repo_params[:gpg_key] and repo_params[:gpg_key] != ""
+    # Bundle these into one call, perhaps move to Provider
+    # Also fix the hard coded yum
+    @product.add_repo(repo_params[:name], repo_params[:feed], 'yum', gpg)
+    @product.save!
 
-      notify.success _("Repository '%s' created.") % repo_params[:name]
-      render :nothing => true
-
-    rescue Exception => error
-      log_exception error
-      notify.exception error
-      render :text=> error.to_s, :status=>:bad_request and return
-    end
+    notify.success _("Repository '%s' created.") % repo_params[:name]
+    render :nothing => true
+  rescue Errors::ConflictException, URI::InvalidURIError => e
+    notify.error e.message
+    execute_after_filters
+    render :nothing => true, :status => :bad_request
   end
 
   def update_gpg_key
-    begin
-      if params[:gpg_key] != ""
-        gpg = GpgKey.readable(current_organization).find(params[:gpg_key])
-        result = gpg.id.to_s
-      else
-        gpg = nil
-        result = ""
-      end
-      @repository.gpg_key = gpg
-      @repository.save!
-      notify.success _("Repository '%s' updated.") % @repository.name
-    rescue Exception => error
-      log_exception error
-      notify.exception error
-      render :text=> error.to_s, :status=>:bad_request and return
+    if params[:gpg_key] != ""
+      gpg = GpgKey.readable(current_organization).find(params[:gpg_key])
+      result = gpg.id.to_s
+    else
+      gpg = nil
+      result = ""
     end
+    @repository.gpg_key = gpg
+    @repository.save!
+    notify.success _("Repository '%s' updated.") % @repository.name
     render :text => escape_html(result)
   end
 
   def enable_repo
-    begin
-      @repository.enabled = params[:repo] == "1"
-      @repository.save!
-      render :json => @repository.id
-    rescue Exception => error
-      log_exception error
-      notify.exception error
-      render :text=> error.to_s, :status=>:bad_request and return
-    end
+    @repository.enabled = params[:repo] == "1"
+    @repository.save!
+    render :json => @repository.id
   end
 
   def destroy
-    r = Repository.find(@repository[:id])
-    name = r.name
-    @product.delete_repo_by_id(@repository[:id])
-    notify.success _("Repository '%s' removed.") % name
+    @repository.destroy
+    notify.success _("Repository '%s' removed.") % @repository.name
     render :partial => "common/post_delete_close_subpanel", :locals => {:path=>products_repos_provider_path(@provider.id)}
   end
 
@@ -132,35 +119,14 @@ class RepositoriesController < ApplicationController
   protected
 
   def find_provider
-    begin
-      @provider = Provider.find(params[:provider_id])
-    rescue Exception => error
-      log_exception error
-      notify.exception error
-      execute_after_filters
-      render :text => error, :status => :bad_request
-    end
+    @provider = Provider.find(params[:provider_id])
   end
 
   def find_product
-    begin
-      @product = Product.find(params[:product_id])
-    rescue Exception => error
-      log_exception error
-      notify.exception error
-      execute_after_filters
-      render :text => error, :status => :bad_request
-    end
+    @product = Product.find(params[:product_id])
   end
 
   def find_repository
-    begin
-      @repository = Repository.find(params[:id])
-    rescue Exception => error
-      log_exception error
-      notify.error _("Couldn't find repository with ID=%s") % params[:id]
-      execute_after_filters
-      render :text => error, :status => :bad_request
-    end
+    @repository = Repository.find(params[:id])
   end
 end

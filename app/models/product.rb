@@ -16,14 +16,6 @@ class LibraryPresenceValidator < ActiveModel::EachValidator
   end
 end
 
-class ProductNameUniquenessValidator < ActiveModel::Validator
-  def validate(record)
-    name_duplicate_ids = Product.select("products.id").joins(:provider).where("products.name" => record.name, "providers.organization_id" => record.organization.id).all.map {|p| p.id}
-    name_duplicate_ids = name_duplicate_ids - [record.id]
-    record.errors[:base] << N_("Products within an organization must have unique name.") if name_duplicate_ids.count > 0
-  end
-end
-
 class Product < ActiveRecord::Base
   include Glue::Candlepin::Product if AppConfig.use_cp
   include Glue::Pulp::Repos if AppConfig.katello?
@@ -46,8 +38,6 @@ class Product < ActiveRecord::Base
   def extended_index_attrs
     {:name_sort => name.downcase}
   end
-
-  validates_with ProductNameUniquenessValidator
 
   has_many :environments, :class_name => "KTEnvironment", :uniq => true , :through => :environment_products  do
     def <<(*items)

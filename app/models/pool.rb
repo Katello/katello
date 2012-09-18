@@ -52,7 +52,9 @@ class Pool < ActiveRecord::Base
       "quantity"  => @quantity,
       "pool_derived" => @pool_derived,
       "derived"   => @pool_derived,
-      "provider_id"=> provider_id
+      "provider_id"=> provider_id,
+      "stacking_id" => @stacking_id,
+      "multi_entitlement" => @multi_entitlement
     }
   end
 
@@ -74,7 +76,9 @@ class Pool < ActiveRecord::Base
           :consumed     => {:type=>'long'},
           :pool_derived => {:type=>'boolean', :index=>:not_analyzed},
           :derived      => {:type=>'boolean'},
-          :provider_id  => {:type=>'long', :index=>:not_analyzed}
+          :provider_id  => {:type=>'long', :index=>:not_analyzed},
+          :stacking_id  => {:type=>'string'},
+          :multi_entitlement => {:type=>'boolean'}
         }
       }
     }

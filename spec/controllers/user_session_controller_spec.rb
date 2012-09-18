@@ -18,13 +18,14 @@ describe UserSessionsController do
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
   include OrchestrationHelper
+  include LoginHelperMethods
   
     before(:each) do
       set_default_locale
     end
 
   describe "select organization" do
-    
+
     before(:each) do
       disable_user_orchestration
 
@@ -32,26 +33,24 @@ describe UserSessionsController do
       @user.username = "shaggy"
       @user.password = "norville"
       @user.email = 'shaggy@somewhere.com'
-      @user.save 
+      @user.save
 
-      controller.stub!(:current_user).and_return(@user)
-    end    
-    
-    it "should have valid org selected" do 
+      login_user :mock => false, :user => @user
+    end
+
+    it "should have valid org selected" do
       org = new_test_org
       allow(@user.own_role, [:read], :providers, nil, org)
-      User.current = @user
-      post :set_org, {:org_id => org.id } 
+      post :set_org, {:org_id => org.id }
       response.should redirect_to(dashboard_index_url)
     end
 
-    it "should not have valid org selected" do 
+    it "should not have valid org selected" do
       controller.should notify.error
       org = new_test_org
-      User.current = @user
-      post :set_org, {:org_id => org.id } 
+      post :set_org, {:org_id => org.id }
     end
-    
-  end  
+
+  end
   
 end

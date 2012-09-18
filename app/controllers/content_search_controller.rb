@@ -36,18 +36,7 @@ class ContentSearchController < ApplicationController
   end
 
   def index
-    render :index, :locals=>{:environments=>my_environments}
-  end
-
-  def my_environments
-    paths = current_organization.promotion_paths
-    library = {:id=>current_organization.library.id, :name=>current_organization.library.name, :select=>current_organization.library.contents_readable?}
-    to_ret = []
-    paths.each do |path|
-      path = path.collect{|e| {:id=>e.id, :name=>e.name, :select=>e.contents_readable?} }
-      to_ret << [library] + path if path.any?{|e| e[:select]}
-    end
-    to_ret
+    render :index, :locals=>{:environments=>environment_paths(library_path_element("contents_readable?"), environment_path_element("contents_readable?"))}
   end
 
   def products
@@ -68,61 +57,54 @@ class ContentSearchController < ApplicationController
   end
 
   def repos
-    repo_ids = process_params :repos
-    product_ids = param_product_ids
+    repo_ids      = process_params :repos
+    product_ids   = param_product_ids
 
-    if repo_ids.is_a? Array #repos were auto_completed
-        repos = Repository.enabled.libraries_content_readable(current_organization).where(:id=>repo_ids)
-    elsif repo_ids #repos were searched
-      readable = Repository.enabled.libraries_content_readable(current_organization).pluck(:id)
-      repos = repo_search(repo_ids, readable)
-    elsif !product_ids.empty? #products were autocompleted
-        repos = []
-        Product.readable(current_organization).where(:id=>product_ids).each do |p|
-          repos = repos + Repository.enabled.libraries_content_readable(current_organization).in_product(p)
-        end
-    else #get all
-        repos = Repository.enabled.libraries_content_readable(current_organization)
-    end
+    repos = collect_repos(repo_ids, product_ids)
 
     envs = process_env_ids
-    if params[:mode] == 'shared'
-      repos = repos.select do |r|
-        repo_envs = r.environmental_instances.collect{|r| r.environment}
-        (envs - repo_envs).empty?
-      end
-    elsif params[:mode] == 'unique'
-      repos = repos.select do |r|
-        repo_envs = r.environmental_instances.collect{|r| r.environment}
-        !(envs - repo_envs ).empty?
+    mode = process_search_mode
+
+    unless mode == :all
+      repos = repos.select do |repo|
+        repo_envs = repo.environmental_instances.collect(&:environment)
+        cmp = (envs - repo_envs ).empty?
+        mode == :shared ? cmp : !cmp
       end
     end
 
-    products = repos.collect{|r| r.product}.uniq
+    products = repos.collect(&:product).uniq
     render :json=>{:rows=>(product_rows(products) + repo_rows(repos)), :name=>_('Repositories')}
   end
 
   def packages
-    repo_ids_in = process_params :repos
-    product_ids_in = param_product_ids
-    package_ids_in = process_params :packages
+    repo_ids      = process_params :repos
+    product_ids   = param_product_ids
+    package_ids   = process_params :packages
 
-    product_repo_map = extract_repo_ids(product_ids_in, repo_ids_in)
+    repos = collect_repos(repo_ids, product_ids)
+    product_repo_map = map_repos_to_product(repos)
+
     rows = []
-    product_repo_map.each{|p_id, repo_ids| rows = rows + (spanned_product_content(p_id, repo_ids, 'package', package_ids_in,  process_search_mode, process_env_ids) || [])}
-    render :json=>{:rows=>rows, :name=>_('Packages')}
+    product_repo_map.each do |p_id, product_repo_ids|
+      rows.concat spanned_product_content(p_id, product_repo_ids, 'package', package_ids)
+    end
+    render :json => {:rows => rows, :name => _('Packages')}
   end
 
   def errata
-    repo_ids_in = process_params :repos
-    product_ids_in = param_product_ids
-    package_ids_in = process_params :errata
+    repo_ids      = process_params :repos
+    product_ids   = param_product_ids
+    errata_ids    = process_params :errata
 
-    product_repo_map = extract_repo_ids(product_ids_in, repo_ids_in)
+    repos = collect_repos(repo_ids, product_ids)
+    product_repo_map = map_repos_to_product(repos)
+
     rows = []
-    product_repo_map.each{|p_id, repo_ids| rows = rows + (spanned_product_content(p_id, repo_ids, 'errata', package_ids_in,  process_search_mode, process_env_ids) || [])}
-    render :json=>{:rows=>rows, :name=>_('Errata')}
-
+    product_repo_map.each do |p_id, product_repo_ids|
+      rows.concat spanned_product_content(p_id, product_repo_ids, 'errata', errata_ids)
+    end
+    render :json => {:rows => rows, :name => _('Errata')}
   end
 
   #similar to :packages, but only returns package rows with an offset for a specific repo
@@ -149,7 +131,7 @@ class ContentSearchController < ApplicationController
     packages = Glue::Pulp::Package.search('', offset, current_user.page_size, [@repo.pulp_id])
     rows = packages.collect do |pack|
       {:name => display = package_display(pack),
-        :id => pack.id, :cols => {:description => {:display => pack.description}}}
+        :id => pack.id, :cols => {:description => {:display => pack.description}}, :data_type => "package", :value => pack.nvrea}
     end
 
     if packages.total > current_user.page_size
@@ -162,10 +144,11 @@ class ContentSearchController < ApplicationController
     offset = params[:offset] || 0
     errata = Glue::Pulp::Errata.search('', offset, current_user.page_size, :repoids => [@repo.pulp_id])
     rows = errata.collect do |e|
-      {:name => errata_display(e), :id => e.id, :cols => {:title => {:display => e[:title]},
-                                             :type => {:display => e[:type]},
-                                             :severity => {:display => e[:severity]}
-                                            }
+      {:name => errata_display(e), :id => e.id, :data_type => "errata", :value => e.id,
+          :cols => {:title => {:display => e[:title]},
+                    :type => {:display => e[:type]},
+                    :severity => {:display => e[:severity]}
+          }
       }
     end
     if errata.total > current_user.page_size
@@ -255,7 +238,8 @@ class ContentSearchController < ApplicationController
         Repository.where(:pulp_id=>all_repos).each do |r|
           cols[r.environment.id] = {:hover => repo_hover_html(r)} if env_ids.include?(r.environment_id)
         end
-        {:id=>"repo_#{repo.id}", :comparable=>true, :parent_id=>"product_#{repo.product.id}", :name=>repo.name, :cols=>cols}
+        {:id=>"repo_#{repo.id}", :comparable=>true, :parent_id=>"product_#{repo.product.id}", 
+        :name=>repo.name, :cols=>cols, :data_type => "repo", :value => repo.name}
     end
   end
 
@@ -270,7 +254,7 @@ class ContentSearchController < ApplicationController
       p.environments.collect do |env|
         cols[env.id] = {:hover => product_hover_html(p, env)} if env_ids.include?(env.id)
       end
-       {:id=>"product_#{p.id}", :name=>p.name, :cols=>cols}
+       {:id=>"product_#{p.id}", :name=>p.name, :cols=>cols, :data_type => "product", :value => p.name}
     end
   end
 
@@ -305,7 +289,7 @@ class ContentSearchController < ApplicationController
   # given a search object as params, return the search for a particular type
   #  this could either be a search string, or array of ids
 
-  def process_params type
+  def process_params(type)
     ids = params[type][:autocomplete].collect{|p|p["id"]} if params[type] && params[type][:autocomplete]
     search = params[type][:search] if params[type] && params[type][:search]
     if search && !search.empty?
@@ -317,45 +301,40 @@ class ContentSearchController < ApplicationController
     end
   end
 
-  def repo_search term, readable_list
-    Repository.search :load=>true do
-      query {string term, {:default_field=>'name'}}
-      filter "and", [
-          {:terms => {:id => readable_list}},
-          {:terms => {:enabled => [true]}}
-      ]
+  def repo_search(term, readable_list, product_ids = nil)
+    conditions = [{:terms => {:id => readable_list}},
+                  {:terms => {:enabled => [true]}}]
+    conditions << {:terms => {:product_id => product_ids}} unless product_ids.blank?
+
+    Repository.search(:load => true) do
+      query {string term, {:default_field => 'name'}} unless term.blank?
+      filter "and", conditions
     end
   end
 
-
-  #Given a product_search, and a repo_search, return a
-  # product_id =>  [repo_ids]   hash
-  def extract_repo_ids product_ids, repo_search_params
-    repo_ids = []
-
-    if repo_search_params.is_a? Array
-      repo_ids = repo_search_params
-    elsif repo_search_params
-      readable = Repository.libraries_content_readable(current_organization).pluck(:id)
-      repo_ids = repo_search(repo_search_params, readable).collect{|r| r.id}
-    else
-      if !product_ids.empty?
-        products = Product.readable(current_organization).where(:id=>product_ids)
-      else
-        products = Product.readable(current_organization)
-      end
-      products.each do |p|
-        repo_ids = repo_ids + Repository.enabled.libraries_content_readable(current_organization).in_product(p).pluck(:id)
-      end
+  def collect_repos(repo_ids, product_ids)
+    # is this neccessary?
+    unless product_ids.blank?
+      product_ids = Product.readable(current_organization).where(:id => product_ids).pluck(:id)
     end
 
-    product_repo_map = {}
-
-    Repository.where(:id=>repo_ids).each do |r|
-      product_repo_map[r.product.id] ||= []
-      product_repo_map[r.product.id] << r.id
+    # repos were searched by string
+    unless repo_ids.is_a? Array
+      search_string = repo_ids
+      repo_ids      = Repository.enabled.libraries_content_readable(current_organization).pluck(:id)
     end
-    product_repo_map
+
+    repo_search(search_string, repo_ids, product_ids)
+  end
+
+  # Given a repos, and a repo_search, return a
+  # product_id => [repo_ids] hash
+  def map_repos_to_product(repos)
+    repos.inject({}) do |map, repo|
+      map[repo.product.id] ||= []
+      map[repo.product.id] << repo.id
+      map
+    end
   end
 
   def metadata_row(total_count, current_count, data, unique_id, parent_id=nil)
@@ -368,20 +347,22 @@ class ContentSearchController < ApplicationController
     to_ret
   end
 
-  def spanned_product_content product_id, repo_ids, content_type, search_obj, search_mode = :all, environments = []
+  def spanned_product_content(product_id, repo_ids, content_type, search_obj, search_mode = nil, environments = nil)
     rows = []
     product = Product.find(product_id)
     content_rows = []
     product_envs = {}
     product_envs.default = 0
     accessible_env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
+    search_mode ||= process_search_mode
+    environments ||= process_env_ids
 
     repo_ids.each do |repo_id|
       repo = Repository.find(repo_id)
       repo_span = spanned_repo_content(repo, content_type,  search_obj, 0, search_mode, environments)
       if repo_span
         rows << {:name=>repo.name, :cols=>repo_span[:repo_cols], :id=>"repo_#{repo.id}", 
-                 :parent_id=>"product_#{product_id}"}
+                 :parent_id=>"product_#{product_id}", :data_type => "repo", :value => repo.name}
         repo_span[:repo_cols].values.each do |span|
           product_envs[span[:id]] += span[:display]
         end
@@ -395,9 +376,9 @@ class ContentSearchController < ApplicationController
     cols = {}
     product_envs.each{|env_id, count| cols[env_id] = {:id=>env_id, :display=>count} if accessible_env_ids.include?(env_id)}
     if rows.empty?
-      return nil
+      []
     else
-      return [{:name=>product.name, :id=>"product_#{product_id}", :cols=>cols}] + rows + content_rows
+      [{:name=>product.name, :id=>"product_#{product_id}", :cols=>cols, :data_type => "product", :value => product.name }] + rows + content_rows
     end
   end
 
@@ -485,15 +466,17 @@ class ContentSearchController < ApplicationController
   # spanned_repos  all other instances of repos across all environments
   def spanning_content_rows(content_list, id_prefix, parent_repo, spanned_repos)
     env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
-    to_ret = [] 
-    for item in content_list:
+    to_ret = []
+    content_list.each do |item|
       if id_prefix == 'package'
         display = package_display(item)
+        value = item.nvrea
       else
         display = errata_display(item)
+        value = item.id
       end
       row = {:id=>"repo_#{parent_repo.id}_#{id_prefix}_#{item.id}", :parent_id=>"repo_#{parent_repo.id}", :cols=>{},
-             :name=>display}
+             :name=>display, :data_type => id_prefix, :value => value}
       spanned_repos.each do |repo|
         if item.repoids.include? repo.pulp_id
             row[:cols][repo.environment_id] = {:id=>repo.environment_id} if env_ids.include?(repo.environment_id)

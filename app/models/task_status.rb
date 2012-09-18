@@ -36,6 +36,11 @@ class TaskStatus < ActiveRecord::Base
   # adding belongs_to :system allows us to perform joins with the owning system, if there is one
   belongs_to :system, :foreign_key => :task_owner_id, :class_name => "System"
 
+  # a task may be optionally associated with a job, but it is not required
+  # an example scenario would be a job that is created by performing an action on a system group
+  has_one :job_task, :dependent => :destroy
+  has_one :job, :through => :job_task
+
   before_save :setup_task_type
 
   before_save do |status|
@@ -54,8 +59,8 @@ class TaskStatus < ActiveRecord::Base
         else
           Rails.logger.debug "Task #{status.task_type} (#{status.id}) #{status.state}" if status.id
         end
-      rescue Exception => e
-          Rails.logger.debug "Unable to report status change" # minor error
+      rescue => e
+        Rails.logger.debug "Unable to report status change" # minor error
       end
     end
   end
@@ -256,17 +261,21 @@ class TaskStatus < ActiveRecord::Base
   def success_description
     ret = ""
     task_type = self.task_type.to_s
-    result = self.result
+
+    # if pulp returns an array response, that indicates that nothing
+    # was actually changed on the consumer, so set the result to {}
+    result = self.result.is_a?(Array) ? {} : self.result
+
     if task_type =~ /^package_group/
       action = task_type.include?("remove") ? :removed : :installed
       ret << packages_change_description(result, action)
     elsif self.task_type.to_s == "package_remove"
       ret << packages_change_description(result, :removed)
     else
-      if result[:installed]
+      if task_type.include?("install")
         ret << packages_change_description(result[:installed], :installed)
       end
-      if result[:updated]
+      if task_type.include?("update")
         ret << packages_change_description(result[:updated], :updated)
       end
     end
@@ -349,7 +358,7 @@ class TaskStatus < ActiveRecord::Base
 
   def packages_change_description(data, action)
     ret = ""
-    packages = (data[:resolved] + data[:deps])
+    packages = data.nil? ? [] : (data[:resolved] + data[:deps])
     if packages.empty?
       case action
       when :updated

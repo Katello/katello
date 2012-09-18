@@ -10,6 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+
 class RepoDisablementValidator < ActiveModel::Validator
   def validate(record)
     if record.redhat? && record.enabled_changed? && (!record.enabled?) && record.promoted?
@@ -94,6 +95,8 @@ class Repository < ActiveRecord::Base
     filters.count > 0 || product.filters.count > 0
   end
 
+  default_scope :order => 'name ASC'
+
   scope :enabled, where(:enabled => true)
 
   scope :readable, lambda { |env|
@@ -164,21 +167,22 @@ class Repository < ActiveRecord::Base
     notify = task.parameters.try(:[], :options).try(:[], :notify)
     user = task.user
     if task.state == TaskStatus::Status::FINISHED
-      Notify.success _("Repository '%s' finished syncing successfully.") % [self.name],
-                     :user => user if user && notify
-    elsif task.state == 'error'
-
-      details = ''
-      log_details = []
-      if(!task.progress.error_details.nil? and !task.progress.error_details.empty?)
-        task.progress.error_details.each do |error|
-          log_details << error
-          details += error[:error].to_s + "\n"
-        end
+      if user && notify
+        Notify.success _("Repository '%s' finished syncing successfully.") % [self.name],
+                       :user => user, :organization => self.organization
       end
-      Rails.logger.error("*** Sync error: " +  log_details.to_json)
-      Notify.error _("There were errors syncing repository '%s'. See notices page for more details.") % self.name,
-                   :details => details, :user => user if user && notify
+    elsif task.state == 'error'
+      details = if task.progress.error_details.present?
+                  task.progress.error_details
+                else
+                  task.result[:errors].flatten
+                end
+
+      Rails.logger.error("*** Sync error: " +  details.to_json)
+      if user && notify
+        Notify.error _("There were errors syncing repository '%s'. See notices page for more details.") % self.name,
+                     :details => details.map(&:chomp).join("\n"), :user => user, :organization => self.organization
+      end
     end
   end
 
@@ -369,5 +373,4 @@ class Repository < ActiveRecord::Base
         self.product.refresh_content(self) if self.content.gpgUrl != ''
     end
   end
-
 end

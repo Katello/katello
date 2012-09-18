@@ -67,7 +67,6 @@ $(document).ready(function() {
     $('#unsubscribe').live('ajax:complete', function(evt, data, status, xhr){
         var id = $('.left').find('.active');
         var url = id.attr('data-ajax_url');
-        url = url.substring(0, url.length - 5);  // Strip off trailing '/edit'
         KT.panel.list.refresh(id.attr('id'), url);
         $(this).find('input[type="submit"]').removeAttr('disabled');
     }).live('ajax:before', function(){
@@ -77,7 +76,6 @@ $(document).ready(function() {
     $('#subscribe').live('ajax:complete', function(evt, data, status, xhr){
         var id = $('.left').find('.active');
         var url = id.attr('data-ajax_url');
-        url = url.substring(0, url.length - 5);  // Strip off trailing '/edit'
         KT.panel.list.refresh(id.attr('id'), url);
         $(this).find('input[type="submit"]').removeAttr('disabled');
     }).live('ajax:before', function(){
@@ -440,65 +438,92 @@ KT.subs = (function() {
        reset_env_select();
     },
     reset_env_select = function() {
-    	if (window.env_select !== undefined) {
-	        $('#path-expanded').hide();
-	        env_select.reset_hover();
-	        env_select.recalc_scroll();
+        if (window.env_select !== undefined) {
+            $('#path-expanded').hide();
+            env_select.reset_hover();
+            env_select.recalc_scroll();
        }
     },
+    _checked = 0,  // scoped variable to hold number of checkboxes
+    updateSubButtons = function() {
+        var subbutton = $('#sub_submit'),
+            fakesubbutton = $('#fake_sub_submit');
+
+        if(_checked > 0 && !subbutton.is(":visible")){
+            fakesubbutton.fadeOut("fast", function(){subbutton.fadeIn()});
+        } else if (_checked === 0 && subbutton.is(":visible")) {
+            subbutton.fadeOut("fast", function(){fakesubbutton.fadeIn()});
+        }
+    },
     subSetup = function(){
-        var subform = $('#subscribe');
-        var subbutton = $('#sub_submit');
-        var fakesubbutton = $('#fake_sub_submit');
-        var subcheckboxes = $('#subscribe input[type="checkbox"]');
-        var total = subcheckboxes.length;
-        var checked = 0;
-        var spinner;
-        var of_string;
+        var subcheckboxes = $('#subscribe input[type="checkbox"]'),
+            subbutton = $('#sub_submit');
+
+        _checked = 0;
         subbutton.hide();
 
         subcheckboxes.each(function(){
             $(this).change(function(){
-                if($(this).is(":checked")){
-                    checked++;
-                    spinner = $(this).parent().parent().parent().find(".ui-spinner");
-                    if(spinner.length > 0){
-                        if(spinner.spinner("value") == "0") {
-                            spinner.spinner("increment");
+                var id = $(this).attr("id").substring("subscription_".length),
+                    spinner,
+                    direction,
+                    value,
+                    of_string;
+
+                if($(this).is(":checked")) {
+                    _checked++;
+                    direction = "increment";
+                    value = 1;
+                } else {
+                    _checked--;
+                    direction = "decrement";
+                    value = 0;
+                }
+                spinner = $("#spinner_" + id);
+                if(spinner.length > 0) {
+                    if (spinner.attr("class") === "ui-spinner") {
+                        if((spinner.spinner("value") === 0 && direction === "increment") ||
+                           (spinner.spinner("value") !== 0 && direction === "decrement")) {
+                            spinner.spinner(direction);
                         }
-                    }else{
-                        $(this).parent().parent().parent().find(".ui-nonspinner").val(1);
-                        spinner = $(this).parent().parent().parent().find(".ui-nonspinner-label")[0];
-                        if(spinner) {
-                            of_string = "1" + spinner.innerHTML.substr(1);
-                            spinner.innerHTML = of_string;
+                    } else if (spinner.attr("class") === "ui-nonspinner") {
+                        spinner.val(value);
+                        spinner = $("#spinner_label_" + id);
+                        if (spinner.length > 0) {
+                            of_string = value + spinner[0].innerHTML.substr(1);
+                            spinner[0].innerHTML = of_string;
                         }
                     }
-                    if(!(subbutton.is(":visible"))){
-                        fakesubbutton.fadeOut("fast", function(){subbutton.fadeIn()});
-                    }
-                }else{
-                    checked--;
-                    spinner = $(this).parent().parent().parent().find(".ui-spinner");
-                    if(spinner.length > 0){
-                        spinner.spinner("value", 0);
-                    }else{
-                        $(this).parent().parent().parent().find(".ui-nonspinner").val(0);
-                        spinner = $(this).parent().parent().parent().find(".ui-nonspinner-label")[0];
-                        if(spinner) {
-                            of_string = "0" + spinner.innerHTML.substr(1);
-                            spinner.innerHTML = of_string;
-                        }
-                    }
-                    if((subbutton.is(":visible")) && checked == 0){
-                        subbutton.fadeOut("fast", function(){fakesubbutton.fadeIn()});
-                    }
+                    updateSubButtons();
                 }
             });
         });
     },
     spinnerSetup = function(){
         setTimeout("$('.ui-spinner').spinner()",1000);
+        $('.ui-spinner').each(function() {
+            $(this).change(function(e) {
+                var id = $(this).attr("id").substring("spinner_".length),
+                    checkbox = $("#subscription_" + id)[0],
+                    val = e.currentTarget.value,
+                    check = (val != 0);
+
+                if (checkbox.checked != check) {
+                    checkbox.checked = check;
+                    if (check) {
+                        _checked++;
+                    } else {
+                        _checked--;
+                    }
+                    updateSubButtons();
+                }
+            });
+            $(this).keypress(function(e) {
+               if (e.which == 13) {
+                   $(this).trigger("change");
+               }
+            });
+        });
     },
     autohealSetup = function(){
         var checkboxes = $('#autoheal');
@@ -519,20 +544,27 @@ KT.subs = (function() {
     },
 
     matchsystemSetup = function(){
-      $('#matchsystem').unbind("click");
-      $('#matchsystem').change(function(e){
-        $('#matchsystem_form').ajaxSubmit({
-          data: { value: $(this).is(":checked") },  // Checkboxes in forms aren't included when false
-          dataType: 'html',
-          success: function(data) {
-            notices.checkNotices();
-            $('#subscriptions > a').click();
-          }, error: function(e) {
-            notices.checkNotices();
-            $('#subscriptions > a').click();
-          }
+      $('#subscription_filters').chosen().change(function(e) {
+          var children = $(this).children();
+          $('#available_section').addClass('hidden');
+          $('#available_spinner').removeClass('hidden');
+          $.each(children, function(i, item) {
+             $.ajax({
+                 url: $('#matchsystem_form')[0].action + "?preference=" + item.value,
+                 data: { value: item.selected },
+                 type: 'PUT',
+                 success: function(data) {
+                     if (i == children.length-1) {
+                       $('#subscriptions > a').click();  // Refresh page
+                     }
+                 }, error: function(e) {
+                     if (i == children.length-1) {
+                       $('#subscriptions > a').click();  // Refresh page
+                     }
+                 }
+             });
+          });
         });
-      });
     };
     
     return {

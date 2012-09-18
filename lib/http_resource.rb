@@ -13,7 +13,7 @@
 require 'oauth'
 require 'cgi'
 
-class RestClientException < RuntimeError
+class RestClientException < StandardError
   attr_reader :service_code, :code
   def initialize params
     super params[:message]
@@ -22,10 +22,7 @@ class RestClientException < RuntimeError
   end
 end
 
-class RemoteServerException < RuntimeError
-end
-
-class NetworkException < RuntimeError
+class NetworkException < StandardError
 end
 
 class HttpResource
@@ -63,7 +60,7 @@ class HttpResource
         parsed = JSON.parse resp.body
         message = parsed["displayMessage"] if parsed["displayMessage"]
         service_code = parsed["code"] if parsed["code"]
-      rescue Exception => error
+      rescue => error
         Rails.logger.error "Error parsing the body: " << error.backtrace.join("\n")
         if ["404", "500", "502", "503", "504"].member? resp.code.to_s
           Rails.logger.error "Remote server status code " << resp.code.to_s
@@ -86,7 +83,7 @@ class HttpResource
                end
       end
       Rails.logger.debug "Body: #{payload_to_print.to_json}"
-    rescue Exception => e
+    rescue => e
       Rails.logger.debug "Unable to print debug information"
     end
 

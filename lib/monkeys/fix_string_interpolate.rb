@@ -1,6 +1,12 @@
-class String
-  if RUBY_VERSION < "1.9"
-    # RHBZ 830713 - fix for encapsulating ')' for #_.
+if defined? String::INTERPOLATION_PATTERN and defined? String::INTERPOLATION_PATTERN_WITH_ESCAPE
+  class String
+
+    # see https://bugzilla.redhat.com/show_bug.cgi?id=830713
+    #
+    # related files:
+    #   i18n-0.5.0/lib/i18n/core_ext/string/interpolate.rb:86
+    #   fast_gettext-0.6.4/lib/fast_gettext/vendor/string.rb:18
+
     def _fast_gettext_old_format_m(args)
       if args.kind_of?(Hash)
         dup.gsub(INTERPOLATION_PATTERN_WITH_ESCAPE) do |match|
@@ -21,5 +27,4 @@ class String
       end
     end
   end
-  # TODO - get this working for 1.9+
 end

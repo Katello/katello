@@ -61,11 +61,14 @@ class SystemGroupErrataController < ApplicationController
     errata_ids = params[:errata_ids]
     job = @group.install_errata(errata_ids)
     
-    notify.success _("Errata scheduled for install.")
+    notify.success _("Install of Errata '%s' scheduled for System Group '%s'.") % [params[:errata_ids], @group.name]
     render :text => job.id
-  rescue Exception => error
-    errors error
-    render :text => error, :status => :bad_request
+
+  rescue Errors::SystemGroupEmptyException => e
+    notify.error _("Install of Errata '%s' scheduled for System Group '%s' failed.  Reason: %s") %
+                 [params[:errata_ids], @group.name, e.message]
+
+    render :text => '' and return
   end
 
   def status

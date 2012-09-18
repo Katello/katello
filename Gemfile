@@ -1,4 +1,9 @@
-#source "http://rubygems.org"
+# set environment variable BUNDLER_ENABLE_RPM_PREFERRING to 'true' to enable bundler patch
+# if enabled bundler prefers rpm-gems even if they are older version then gems in gem-repo
+if ENV['BUNDLER_ENABLE_RPM_PREFERRING'] == 'true'
+  require File.join(File.dirname(__FILE__), 'lib', 'bundler_patch_rpm-gems_preferred')
+end
+
 source 'http://repos.fedorapeople.org/repos/katello/gems/'
 
 # When adding new version requirement check out EPEL6 repository first
@@ -31,9 +36,6 @@ gem 'simple-navigation', '>= 3.3.4'
 gem 'gettext_i18n_rails'
 gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
-
 # reports
 gem 'ruport', '>=1.6.3'
 gem 'acts_as_reportable', '>=1.1.1'
@@ -64,7 +66,12 @@ gem "runcible", :path => "../../runcible"
 
 group :test, :development do
   # To use debugger
-  gem 'ruby-debug'
+  gem 'redcarpet'
+  if RUBY_VERSION >= "1.9.1"
+    gem 'ruby-debug19'
+  else
+    gem 'ruby-debug'
+  end
   gem 'ZenTest', '>= 4.4.0'
   gem 'rspec-rails', '>= 2.0.0'
   gem 'autotest-rails', '>= 4.1.0'
@@ -103,4 +110,10 @@ group :development do
   # profiler
   gem 'newrelic_rpm'
   gem 'logical-insight'
+end
+
+group :test do
+  gem 'vcr'
+  gem 'webmock'
+  gem 'minitest'
 end

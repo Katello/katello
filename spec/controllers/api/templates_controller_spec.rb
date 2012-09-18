@@ -30,6 +30,7 @@ describe Api::TemplatesController, :katello => true do
     @library = KTEnvironment.new(:name => 'Library', :library => true)
     @library.id = 2
     KTEnvironment.stub(:find).with(@library.id).and_return(@library)
+    KTEnvironment.stub(:find).with(@environment.id).and_return(@environment)
     KTEnvironment.stub(:find).with(@environment2.id).and_return(@environment2)
 
     @organization.library = @library

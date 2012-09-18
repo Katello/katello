@@ -42,9 +42,13 @@ module Errors
 
   class ConflictException < StandardError; end
 
-  class UsageLimitExhaustedException < StandardError; end
+  class SystemGroupEmptyException < StandardError
+    def message
+      _("System group is empty.")
+    end
+  end
 
-  class CurrentOrganizationNotFoundException < ActiveRecord::RecordNotFound; end
+  class UsageLimitExhaustedException < StandardError; end
 
   class UnsupportedActionException < StandardError
     attr_reader :action, :receiver

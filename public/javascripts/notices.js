@@ -112,6 +112,15 @@ var notices = (function() {
         },
         start: function () {
             var url = $('#get_notices_url').attr('data-url');
+
+            // do not wait for PeriodUpdater, check new notices immediately
+            $.ajax({
+                type:"GET",
+                url:url,
+                cache:false,
+                success:notices.addNotices
+            });
+
             var pu = $.PeriodicalUpdater(url, {
                 method: 'get',
                 type: 'json',
