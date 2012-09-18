@@ -73,6 +73,8 @@ class katello::params {
     $process_count   = katello_process_count(1)
   }
 
+  # sysconfig settings
+  $job_workers = katello_config_value('job_workers')
 
   # LDAP settings
   $ldap_server = katello_config_value('ldap_server')
