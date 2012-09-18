@@ -51,7 +51,7 @@ class List(SystemAction):
         opt_parser_add_org(parser, required=1)
         opt_parser_add_environment(parser)
         parser.add_option('--pool', dest='pool_id',
-                       help=_("pool id to filter systems by subscriptions"))
+                       help=_("pool ID to filter systems by subscriptions"))
 
     def check_options(self, validator):
         validator.require('org')
@@ -278,7 +278,7 @@ class TasksList(SystemAction):
         for t in tasks:
             t['result'] = "\n" + t['result_description']
 
-        self.printer.add_column('uuid', name=_("Task id"))
+        self.printer.add_column('uuid', name=_("Task ID"))
         self.printer.add_column('system_name', name=_("System"))
         self.printer.add_column('description', name=_("Action"))
         self.printer.add_column('created_at', name=_("Started"),
@@ -589,7 +589,7 @@ class Subscriptions(SystemAction):
 
             self.printer.set_header(_("Current Subscriptions for System [ %s ]") % name)
             self.printer.add_column('entitlementId')
-            self.printer.add_column('serialIds', name=_('Serial Id'))
+            self.printer.add_column('serialIds', name=_('Serial ID'))
             self.printer.add_column('poolName')
             self.printer.add_column('expires')
             self.printer.add_column('consumed')
@@ -627,7 +627,7 @@ class Subscriptions(SystemAction):
             self.printer.add_column('consumed')
             self.printer.add_column('quantity')
             self.printer.add_column('sockets')
-            self.printer.add_column('attr_stacking_id', name=_('Stacking Id'))
+            self.printer.add_column('attr_stacking_id', name=_('Stacking ID'))
             self.printer.add_column('attr_multi-entitlement', name=_('Multi-entitlement'))
             self.printer.add_column('providedProductsFormatted', name=_('Provided products'))
             self.printer.print_items(available_pools())
@@ -645,9 +645,9 @@ class Unsubscribe(SystemAction):
         parser.add_option('--uuid', dest='uuid',
                 help=constants.OPT_HELP_SYSTEM_UUID)
         parser.add_option('--entitlement', dest='entitlement',
-            help=_("entitlement id to unsubscribe from (either entitlement or serial or all is required)"))
+            help=_("entitlement ID to unsubscribe from (either entitlement or serial or all is required)"))
         parser.add_option('--serial', dest='serial',
-            help=_("serial id of a certificate to unsubscribe from (either entitlement or serial or all is required)"))
+            help=_("serial ID of a certificate to unsubscribe from (either entitlement or serial or all is required)"))
         parser.add_option('--all', dest='all', action="store_true", default=None,
             help=_("unsubscribe from all currently subscribed certificates (either entitlement or serial or all is"
                 + " required)"))
@@ -738,7 +738,7 @@ class Update(SystemAction):
         if new_environment_name:
             new_environment = get_environment(org_name, new_environment_name)
             updates['environment_id'] = new_environment['id']
-            
+
         response = self.api.update(system['uuid'], updates)
 
         test_record(response,

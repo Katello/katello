@@ -286,7 +286,7 @@ class KatelloServer(object):
                 pass
 
         if response_body:
-            self._log.debug("processing response %s\n%s" % (response.status, str(response_body)))
+            self._log.debug("processing response %s\n%s" % (response.status, u_str(response_body)))
         else:
             self._log.debug("processing empty response %s" % (response.status))
 

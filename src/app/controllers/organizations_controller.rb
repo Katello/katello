@@ -78,7 +78,7 @@ class OrganizationsController < ApplicationController
     @organization = Organization.new(:name => org_params[:name], :label => org_params[:label], :description => org_params[:description])
     @organization.save!
 
-    if env_params[:envname].present?
+    if env_params[:name].present?
       @new_env = KTEnvironment.new(:name => env_params[:name], :label => env_params[:label], :description => env_params[:description])
       @new_env.organization = @organization
       @new_env.prior = @organization.library
@@ -103,9 +103,8 @@ class OrganizationsController < ApplicationController
 
   def edit
     @org_label = ""
-    default_org = current_user.default_org
-    if default_org && !default_org.nil?
-      user_default_org = (Organization.find(default_org))
+    user_default_org = current_user.default_org
+    if user_default_org && !user_default_org.nil?
       if user_default_org == @organization
         @org_label = _("This is your default organization.")
       else
@@ -188,7 +187,7 @@ class OrganizationsController < ApplicationController
   def find_organization
     @organization = Organization.find_by_label(params[:id].to_s)
     if @organization.blank?
-      message = _("Couldn't find organization with ID=%s") % params[:id]
+      message = _("Couldn't find organization with ID %s") % params[:id]
       notify.error message
       execute_after_filters
       render :text => message, :status => :not_found and return false
