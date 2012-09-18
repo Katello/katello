@@ -445,7 +445,7 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
     && chmod 600 $TOKEN && chown katello:katello $TOKEN)
 
 %posttrans common
-rm -f %{datadir}/Gemfile.lock 2>/dev/null
+rm -f %{datadir}/Gemfile.lock 2>/dev/null || :
 /sbin/service %{name} condrestart >/dev/null 2>&1 || :
 
 %files
