@@ -51,7 +51,7 @@ module Glue::Pulp::User
     end
 
     def set_super_user_role
-      Resources::Resources::Roles.add "super-users", self.username
+      Runcible::Resources::Role.add "super-users", self.username
       true #assume everything is ok unless there was an exception thrown
     end
 
