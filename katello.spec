@@ -222,6 +222,78 @@ Requires:        %{name}-common
 %description api-docs
 Documentation files for katello API.
 
+%package devel-all
+Summary:         Katello devel support (all subpackages)
+BuildArch:       noarch
+Requires:        %{name}-devel = %{version}-%{release}
+Requires:        %{name}-devel-profiling = %{version}-%{release}
+Requires:        %{name}-devel-test = %{version}-%{release}
+Requires:        %{name}-devel-jshintrb = %{version}-%{release}
+
+%description devel-all
+Meta package to install all %{name}-devel-* subpackages.
+
+%package devel
+Summary:         Katello devel support
+BuildArch:       noarch
+Requires:        %{name} = %{version}-%{release}
+Requires:        rubygem(redcarpet)
+%if 0%{?fedora} > 16
+Requires: rubygem(ruby-debug19)
+%else
+Requires: rubygem(ruby-debug)
+%endif
+Requires:        rubygem(ZenTest) >= 4.4.0
+Requires:        rubygem(rspec-rails) >= 2.0.0
+Requires:        rubygem(autotest-rails) >= 4.1.0
+Requires:        rubygem(rcov) >= 0.9.9
+Requires:        rubygem(webrat) >= 0.7.3
+Requires:        rubygem(nokogiri) >= 0.9.9
+Requires:        rubygem(yard) >= 0.5.3
+Requires:        rubygem(ci_reporter) >= 1.6.3
+Requires:        rubygem(gettext) >= 1.9.3
+Requires:        rubygem(ruby_parser)
+Requires:        rubygem(js-routes)
+Requires:        rubygem(newrelic_rpm)
+Requires:        rubygem(logical-insight)
+
+%description devel
+Rake tasks and dependecies for Katello developers
+
+%package devel-profiling
+Summary:         Katello devel support (profiling)
+BuildArch:       noarch
+Requires:        %{name} = %{version}-%{release}
+Requires:        rubygem(ruby-prof)
+
+%description devel-profiling
+Rake tasks and dependecies for Katello developers, which enables
+profiling.
+
+%package devel-jshintrb
+Summary:         Katello devel support (unit test and syntax checking)
+BuildArch:       noarch
+Requires:        %{name} = %{version}-%{release}
+Requires:        rubygem(newrelic_rpm)
+Requires:        rubygem(logical-insight)
+
+%description devel-jshintrb
+Rake tasks and dependecies for Katello developers, which enables
+syntax checking and is need for unit testing.
+
+%package devel-test
+Summary:         Katello devel support (testing)
+BuildArch:       noarch
+Requires:        %{name} = %{version}-%{release}
+Requires:        %{name}-devel = %{version}-%{release}
+Requires:        rubygem(vcr)
+Requires:        rubygem(webmock)
+Requires:        rubygem(minitest)
+
+%description devel-test
+Rake tasks and dependecies for Katello developers, which enables
+testing.
+
 %prep
 %setup -q
 
@@ -352,15 +424,6 @@ if [ -d branding ] ; then
   rm -rf %{buildroot}%{homedir}/branding
 fi
 
-#remove development tasks
-rm %{buildroot}%{homedir}/lib/tasks/rcov.rake
-rm %{buildroot}%{homedir}/lib/tasks/yard.rake
-rm %{buildroot}%{homedir}/lib/tasks/hudson.rake
-rm %{buildroot}%{homedir}/lib/tasks/jsroutes.rake
-rm %{buildroot}%{homedir}/lib/tasks/jshint.rake
-rm %{buildroot}%{homedir}/lib/tasks/test.rake
-rm %{buildroot}%{homedir}/script/pulp_integration_tests
-
 #correct permissions
 find %{buildroot}%{homedir} -type d -print0 | xargs -0 chmod 755
 find %{buildroot}%{homedir} -type f -print0 | xargs -0 chmod 644
@@ -409,6 +472,13 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/lib/notifications
 %{homedir}/lib/resources/cdn.rb
 %{homedir}/lib/tasks
+%exclude %{homedir}/lib/tasks/rcov.rake
+%exclude %{homedir}/lib/tasks/yard.rake
+%exclude %{homedir}/lib/tasks/hudson.rake
+%exclude %{homedir}/lib/tasks/jsroutes.rake
+%exclude %{homedir}/lib/tasks/jshint.rake
+%exclude %{homedir}/lib/tasks/test.rake
+%exclude %{homedir}/script/pulp_integration_tests
 %{homedir}/locale
 %{homedir}/public
 %exclude %{homedir}/public/apipie-cache
@@ -420,9 +490,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/.bundle
 %{homedir}/config.ru
 %{homedir}/Gemfile
-%{homedir}/Gemfile.lock
 %ghost %attr(0644,katello,katello) %{_sharedstatedir}/%{name}/Gemfile.lock
-%{homedir}/Rakefile
 %config(noreplace) %{_sysconfdir}/%{name}/service-list
 %{_mandir}/man8/katello-service.8*
 
@@ -505,7 +573,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/.bundle
 %{homedir}/config.ru
 %{homedir}/Gemfile
-%{homedir}/Gemfile.lock
+%ghost %{homedir}/Gemfile.lock
 %{homedir}/Rakefile
 
 %files headpin-all
@@ -513,6 +581,24 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %files api-docs
 %doc doc/apidoc*
 %{homedir}/public/apipie-cache
+
+%files devel-all
+
+%files devel
+%{homedir}/lib/tasks/rcov.rake
+%{homedir}/lib/tasks/yard.rake
+%{homedir}/lib/tasks/hudson.rake
+%{homedir}/lib/tasks/jsroutes.rake
+%{homedir}/Rakefile
+
+%files devel-profiling
+
+%files devel-jshintrb
+%{homedir}/lib/tasks/jshint.rake
+
+%files devel-test
+%{homedir}/lib/tasks/test.rake
+%{homedir}/script/pulp_integration_tests
 
 %pre common
 # Add the "katello" user and group

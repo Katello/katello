@@ -106,7 +106,7 @@ describe OrganizationsController do
       end
 
       it 'should generate a success notice' do
-        controller.should notify(:success, :success)
+        controller.should notify(:success)
         post 'create', OrgControllerTest::ORGANIZATION
         response.should be_success
       end      
