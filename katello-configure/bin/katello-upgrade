@@ -302,7 +302,7 @@ class UpgradeProcess
   def stop_services
     puts "We will stop all katello services."
     if confirm("PROCEED?")
-      if ! system('/usr/bin/katello-service stop')
+      if ! system('/usr/bin/katello-service', 'stop')
         puts "There was an issue stopping your services. Please resolve this manually"
         puts "and try again"
         exit_with :general_error
