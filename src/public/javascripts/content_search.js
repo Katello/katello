@@ -16,7 +16,7 @@
 $(document).ready(function() {
 
     KT.widgets = {repos:{id:"repos_selector", autocomplete:'repo_autocomplete_list', search:'repo_search'},
-                  packages:{id:"packages_selector", autocomplete:'package_autocomplete_list', search:'package_search'},
+                  packages:{id:"packages_selector", search:'package_search'},
                   products:{id:"products_selector", autocomplete:'product_autocomplete_list'},
                   errata:{id:"errata_selector", search:'errata_search'}};
 
@@ -222,9 +222,6 @@ KT.content_search = function(paths_in){
         }
         else if (search_pages[search_params.content_type] ){
             main_search(search_params);
-        }
-        else{
-            console.log(search_params);
         }
     },
     main_search = function(search_params){

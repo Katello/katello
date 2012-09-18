@@ -23,7 +23,7 @@
  *      select_mode (none)     -  selection mode ('single', 'none', 'multi')
  *      link_first (true)      -  if select_mode is not none, all the first nodes
  *                                in the path are 'linked' so checking one checks all
- *      button_text (none)     - if set, a button is rendered with the specified text,
+ *      submit_button_text (none)     - if set, a button is rendered with the specified text,
  *                                 clicking the button generates a message
  *      submit_event (path_#{name})    - if button exists, clicking it will trigger this event
  *                                       if no button and not inline, hovering out will trigger this event
@@ -43,16 +43,19 @@ KT.path_select = function(div_id, name, environments, options_in){
             paths_id = "path_select_" + name;
             options.library_select = default_opt(options_in.library_select, true);
             options.inline = default_opt(options_in.inline, false);
+            options.activate_on_click = default_opt(options_in.activate_on_click, false);
             options.select_mode = default_opt(options_in.select_mode, 'none');
 
-            options.button_text = default_opt(options_in.button_text, undefined);
-            options.submit_event = default_opt(options_in.submit_event, ('paths_' + name));
+            options.submit_button_text = default_opt(options_in.submit_button_text, undefined);
+            options.cancel_button_text = default_opt(options_in.cancel_button_text, undefined);
+            options.submit_event = default_opt(options_in.submit_event, ('submit_paths_' + name));
+            options.cancel_event = default_opt(options_in.cancel_event, ('cancel_paths_' + name));
             options.select_event = default_opt(options_in.select_event, ('selected_cell_' + name));
             options.link_first = default_opt(options_in.link_first, true);
             options.expand = default_opt(options_in.expand, true);
             options.footer = default_opt(options_in.footer, false);
 
-            $(div).append(KT.path_select_template.selector(environments, paths_id, options.button_text, options.footer));
+            $(div).append(KT.path_select_template.selector(environments, paths_id, options.submit_button_text, options.cancel_button_text, options.footer));
             path_selector = $("#" + paths_id);
             path_selector.find('.node_select').not(':checked').hide();
 
@@ -60,9 +63,8 @@ KT.path_select = function(div_id, name, environments, options_in){
                 setup_input_actions();
             }
 
-            if(options.button_text){
-                path_selector.find('form').submit(function(e){
-                    e.preventDefault();
+            if(options.submit_button_text){
+                path_selector.find('.KT_path_select_submit_button').click(function(e){
                     if(!options.inline) {
                         path_selector.hide();
                     }
@@ -70,16 +72,32 @@ KT.path_select = function(div_id, name, environments, options_in){
                 });
             }
 
+            if(options.cancel_button_text){
+                path_selector.find('.KT_path_select_cancel_button').click(function(e){
+                    clear_selected();
+                    if(!options.inline) {
+                        path_selector.hide();
+                    }
+                    $(document).trigger(options.cancel_event);
+                    return false;
+                });
+            }
+
             if(!options.inline){
                 path_selector.addClass("hover_selector");
 
                 path_selector.hide();
-                div.hoverIntent({
-                            over:function(){ path_selector.show(); },
-                            timeout:500,
-                            interval: 200,
-                            out:hover_out
-                        });
+
+                if(options.activate_on_click)  {
+                    div.click(function(e) { path_selector.show(); });
+                } else {
+                    div.hoverIntent({
+                        over:function(){ path_selector.show(); },
+                        timeout:500,
+                        interval: 200,
+                        out:hover_out
+                    });
+                }
             }
             scroll_obj = KT.env_select_scroll({});
             recalc_scroll();
@@ -226,10 +244,14 @@ KT.path_select = function(div_id, name, environments, options_in){
         get_submit_event = function(){
             return options.submit_event;
         },
+        get_cancel_event = function(){
+            return options.cancel_event;
+        },
         get_select_event = function(){
             return options.select_event;
         },
         clear_selected = function(){
+            path_selector.find('input:disabled').removeAttr('disabled');
             unselect_nodes(path_selector.find('input:checked').hide());
         },
         select = function(id, next_id){
@@ -251,17 +273,22 @@ KT.path_select = function(div_id, name, environments, options_in){
         get_select_event : get_select_event,
         clear_selected: clear_selected,
         select:select,
-        reposition_left: reposition_left
+        reposition_left: reposition_left,
+        paths_id: paths_id,
+        hide: function() {path_selector.hide();}
     };
 };
 
 
 KT.path_select_template = {
-    selector : function(paths, div_id, button_text, footer){
+    selector : function(paths, div_id, submit_button_text, cancel_button_text, footer){
         var html = '<div id="' + div_id + '" class="path_selector"><form>';
         html += KT.path_select_template.paths(paths);
-        if(button_text){
-            html += KT.path_select_template.button(button_text);
+        if(submit_button_text){
+            html += KT.path_select_template.button("KT_path_select_submit_button", submit_button_text);
+        }
+        if(cancel_button_text){
+            html += KT.path_select_template.button("KT_path_select_cancel_button", cancel_button_text);
         }
         html += '</form>'
         
@@ -272,8 +299,8 @@ KT.path_select_template = {
         html += '</div>';
         return html;
     },
-    button : function(text){
-        return '<input type="submit" class="button" value="' + text + '">';
+    button : function(clazz, text){
+        return '<input type="button" class="button ' + clazz +'" value="' + text + '">';
     },
     paths : function(paths){
         var html ='';

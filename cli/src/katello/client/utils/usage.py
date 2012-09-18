@@ -20,9 +20,13 @@ import os
 from katello.client.config import Config
 Config.PATH = os.path.join(os.path.dirname(__file__), "../../../../etc/client.conf")
 
+if __name__ == "__main__":
+    # Set correct locale
+    from katello.client.i18n import configure_i18n
+    configure_i18n()
+
 from katello.client.main import setup_admin
 from katello.client.core.base import CommandContainer
-
 
 class UsageGenerator:
     def __init__(self):
@@ -31,7 +35,8 @@ class UsageGenerator:
     def collector(self):
         return self.__collector
 
-    def _print_subcommands_for(self, cmd):
+    @classmethod
+    def _print_subcommands_for(cls, cmd):
         if not isinstance(cmd, CommandContainer):
             return
         for subcommand_name in iter(sorted(cmd.get_command_names())):
@@ -53,7 +58,6 @@ class UsageGenerator:
         print "  Possible commands:"
         self._print_subcommands_for(self.__collector)
         self._process_subcommands_for(self.__collector, "katello")
-
 
 if __name__ == "__main__":
     usage_gen = UsageGenerator()

@@ -27,4 +27,17 @@ module SubscriptionsHelper
   def subscriptions_activation_key_link_helper key
     link_to key.name, root_path + "activation_keys#panel=activation_key_#{key.id}"
   end
+
+  def subscriptions_manifest_link_helper status
+    if !status['webAppPrefix'].start_with? 'http'
+      url = "http://#{status['webAppPrefix']}"
+    else
+      url = status['webAppPrefix']
+    end
+
+    url += '/' if !url.end_with? '/'
+    url += status['upstreamId']
+
+    link_to status['webAppPrefix'], url, :target => '_blank'
+  end
 end

@@ -15,6 +15,7 @@
 
 from katello.client.api.base import KatelloAPI
 from katello.client.utils.encoding import u_str
+from katello.client.core.utils import update_dict_unless_none
 
 try:
     import json
@@ -58,14 +59,14 @@ class TemplateAPI(KatelloAPI):
         path = "/api/templates/import"
         return self.server.POST(path, tplData, multipart=True)[1]
 
-    def validate_tpl(self, tplId, format):
-        custom_headers = {'Accept': TemplateAPI.format_content_type[format]}
+    def validate_tpl(self, tplId, format_in):
+        custom_headers = {'Accept': TemplateAPI.format_content_type[format_in]}
         path = "/api/templates/%s/validate" % tplId
         response = self.server.GET(path, custom_headers=custom_headers)[1]
         return response
 
-    def export_tpl(self, tplId, format):
-        custom_headers = {'Accept': TemplateAPI.format_content_type[format]}
+    def export_tpl(self, tplId, format_in):
+        custom_headers = {'Accept': TemplateAPI.format_content_type[format_in]}
         path = "/api/templates/%s/export" % tplId
         response = self.server.GET(path, custom_headers=custom_headers)[1]
         if isinstance(response, dict):
@@ -77,7 +78,7 @@ class TemplateAPI(KatelloAPI):
             "name": name,
             "description": description
         }
-        tplData = self.update_dict(tplData, "parent_id", parentId)
+        tplData = update_dict_unless_none(tplData, "parent_id", parentId)
         tplData = {
             "template": tplData,
             "environment_id": envId
@@ -90,9 +91,9 @@ class TemplateAPI(KatelloAPI):
     def update(self, tplId, newName, description, parentId):
 
         tplData = {}
-        tplData = self.update_dict(tplData, "name", newName)
-        tplData = self.update_dict(tplData, "description", description)
-        tplData = self.update_dict(tplData, "parent_id", parentId)
+        tplData = update_dict_unless_none(tplData, "name", newName)
+        tplData = update_dict_unless_none(tplData, "description", description)
+        tplData = update_dict_unless_none(tplData, "parent_id", parentId)
 
         tplData = {
             "template": tplData

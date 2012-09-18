@@ -42,19 +42,30 @@ class Api::UsersController < Api::ApiController
   end
 
   def param_rules
-    { :create => [:username, :password, :email, :disabled, :default_environment_id],
-      :update => { :user => [:password, :email, :disabled, :default_environment_id] }
+    { :create => [:username, :password, :email, :disabled, :default_environment_id, :default_locale],
+      :update => { :user => [:password, :email, :disabled, :default_environment_id, :default_locale] }
     }
   end
 
+  api :GET, "/users", "List users"
+  param :email, String, :desc => "filter by email"
+  param :disabled, :bool, :desc => "filter by disabled flag"
+  param :username, String, :desc => "filter by username"
   def index
     render :json => (User.readable.where query_params).to_json
   end
 
+  api :GET, "/users/:id", "Show a user"
   def show
     render :json => @user
   end
 
+  api :POST, "/users", "Create an user"
+  param :disabled, :bool
+  param :email, String, :required => true
+  param :password, String, :required => true
+  param :username, String, :required => true
+  param :default_environment_id, Integer
   def create
     # warning - request already contains "username" and "password" (logged user)
     user = User.create!(:username => params[:username],
@@ -63,35 +74,60 @@ class Api::UsersController < Api::ApiController
                         :disabled => params[:disabled])
 
     user.default_environment = KTEnvironment.find(params[:default_environment_id]) if params[:default_environment_id]
+
+    if !params[:default_locale].blank?
+        if AppConfig.available_locales.include? params[:default_locale]
+            user.default_locale = params[:default_locale]
+            user.save!
+        end
+    end
+
     render :json => user.to_json
   end
 
+  api :PUT, "/users/:id", "Update an user"
+  param :disabled, :bool
+  param :email, String
+  param :password, String
+  param :default_environment_id, Integer
   def update
     user_params = params[:user].reject { |k, _| k == 'default_environment_id' }
+
     @user.update_attributes!(user_params)
     @user.default_environment = if params[:user][:default_environment_id]
                                   KTEnvironment.find(params[:user][:default_environment_id])
                                 else
                                   nil
                                 end
+
+    if !params[:default_locale].blank?
+        user.default_locale = params[:default_locale]
+        user.save!
+    end
+
     render :json => @user.to_json
   end
 
+  api :DELETE, "/users/:id", "Destroy an user"
   def destroy
     @user.destroy
     render :text => _("Deleted user '#{params[:id]}'"), :status => 200
   end
 
+  api :GET, "/users/:user_id/roles", "List roles assigned to a user"
   def list_roles
     @user.set_ldap_roles if AppConfig.ldap_roles
     render :json => @user.roles.non_self.to_json
   end
 
+  api :GET, "/users/sync_ldap_roles", "Synchronises roles for all users with LDAP groups"
   def sync_ldap_roles
     User.all.each { |user| user.set_ldap_roles }
     render :text => _("Roles for all users were synchronised with LDAP groups"), :status => 200
-  end 
+  end
 
+  api :POST, "/users/:user_id/roles", "Assign a role to a user"
+  param :role_id, Integer
   def add_role
     role = Role.find(params[:role_id])
     @user.roles << role
@@ -99,6 +135,7 @@ class Api::UsersController < Api::ApiController
     render :text => _("User '#{@user.username}' assigned to role '#{role.name}'"), :status => 200
   end
 
+  api :DELETE, "/users/:user_id/roles/:id", "Remove user's role"
   def remove_role
     role = Role.find(params[:id])
     @user.roles.delete(role)
@@ -107,6 +144,8 @@ class Api::UsersController < Api::ApiController
 
   end
 
+  api :GET, "/users/report", "Reports all users in the system in a format according to 'Accept' headers.
+  Supported formats are plain text, html, csv, pdf"
   def report
     users_report = User.report_table(:all,
                                      :only    => [:username, :created_at, :updated_at],

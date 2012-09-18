@@ -78,10 +78,6 @@ class SystemGroupsController < ApplicationController
         format.json {render :json => @group}
       end
     end
-
-  rescue Exception=> e
-    notify.exception e
-    render :text=>e, :status=>500
   end
 
   def copy
@@ -99,10 +95,6 @@ class SystemGroupsController < ApplicationController
                        [new_group.name, @group.name]
 
     render :partial => "system_groups/list_group", :locals=>{:item=>new_group, :accessor=>"id", :name=>controller_display_name}
-
-  rescue Exception=> e
-    notify.exception e
-    render :text=>e, :status=>500
   end
 
   def edit
@@ -138,18 +130,12 @@ class SystemGroupsController < ApplicationController
     end
 
     render :text=>to_ret
-  rescue Exception=>e
-    notify.exception e
-    render :text=>e, :status=>500
   end
 
   def destroy
     @group.destroy
     notify.success _("System Group %s deleted.") % @group.name
     render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
-  rescue Exception => e
-    notify.exception e
-    render :text=>e, :status=>500
   end
 
   def destroy_systems
@@ -165,10 +151,6 @@ class SystemGroupsController < ApplicationController
                    :details => system_names.join("\n")
 
     render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
-
-  rescue Exception => e
-    notify.exception e
-    render :text=>e, :status=>500
   end
 
   def items

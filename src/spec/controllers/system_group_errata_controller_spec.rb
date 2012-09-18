@@ -84,12 +84,12 @@ describe SystemGroupErrataController, :katello => true do
 
         describe 'with a filter type' do
           it "should be successful" do
-            get :items, :system_group_id => @group.id, :offset => 5, :filter_type => 'Bug'
+            get :items, :system_group_id => @group.id, :offset => 5, :filter_type => 'BugFix'
             response.should be_success
           end
 
           it "should render errata items" do
-            get :items, :system_group_id => @group.id, :offset => 5, :filter_type => 'Bug'
+            get :items, :system_group_id => @group.id, :offset => 5, :filter_type => 'BugFix'
             response.should render_template("items")
           end
         end

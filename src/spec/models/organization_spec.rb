@@ -28,7 +28,8 @@ describe Organization do
     specify { Organization.new(:name => 'name', :cp_key => 'With_Capital_letter').should be_valid }
     specify { Organization.new(:name => 'name', :cp_key => 'with_number').should be_valid }
     specify { Organization.new(:name => 'name', :cp_key => 'with\'space').should_not be_valid }
-    specify { Organization.new(:name => 'without cp_key').should_not be_valid }
+    # creates cp_key from name
+    specify { Organization.new(:name => 'without cp_key').should be_valid }
     specify { Organization.new(:cp_key => 'without_name').should_not be_valid }
   end
 

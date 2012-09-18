@@ -1,22 +1,15 @@
+# -*- coding: utf-8 -*-
 #
-# Licensed under the GNU General Public License Version 3
+# Copyright (c) 2011 Red Hat, Inc.
 #
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-#
-# Copyright 2010 Aron Parsons <aron@redhat.com>
-#
+# This software is licensed to you under the GNU Lesser General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (LGPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of LGPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/lgpl-2.0.txt.
 
 # NOTE: the 'self' variable is an instance of SpacewalkShell
 
@@ -27,8 +20,9 @@ import readline
 import re
 import sys
 from cmd import Cmd
+import ConfigParser
 
-from katello.client.config import Config
+from katello.client.config import Config, ConfigFileError
 from katello.client.core.base import Command, CommandContainer
 from katello.client.core.utils import parse_tokens
 
@@ -46,6 +40,7 @@ class KatelloShell(Cmd):
     # do nothing on an empty line
     emptyline = lambda self: None
 
+    # pylint: disable=R0201
     @property
     def history_file(self):
         conf_dir = Config.USER_DIR
@@ -53,15 +48,18 @@ class KatelloShell(Cmd):
             if not os.path.isdir(conf_dir):
                 os.mkdir(conf_dir, 0700)
         except OSError:
-            logging.error('Could not create directory %s' % conf_dir)
+            logging.error('Could not create directory %s', conf_dir)
         return os.path.join(conf_dir, 'history')
 
 
     def __init__(self, admin_cli):
+        self.completion_matches = None
+        Cmd.__init__(self)
         self.admin_cli = admin_cli
         try:
+            Config()
             self.prompt = Config.parser.get('shell', 'prompt') + ' '
-        except:
+        except (ConfigFileError, ConfigParser.Error):
             self.prompt = 'katello> '
 
         try:
@@ -72,7 +70,7 @@ class KatelloShell(Cmd):
 
             if (Config.parser.get('shell', 'nohistory').lower() != 'true'):
                 self.__init_history()
-        except Exception:
+        except ConfigParser.Error:
             pass
         self.__init_commands()
 
@@ -100,8 +98,9 @@ class KatelloShell(Cmd):
         setattr(self, "do_eof", self.do_exit)
 
 
+    # pylint: disable=W0613
     def do_exit(self, args):
-        self.remove_last_history_item()
+        self.__remove_last_history_item()
         sys.exit(0)
 
 
@@ -141,24 +140,24 @@ class KatelloShell(Cmd):
 
         # remove the '!*' line from the history
         if new_line:
-            self.replace_last_history_item(new_line)
+            self.__replace_last_history_item(new_line)
             print new_line
             return new_line
         return line
 
-
-    def __history_try_repeat_nth(self, n):
+    @classmethod
+    def __history_try_repeat_nth(cls, n):
         try:
             n = int(n)
             if n < 0:
                 n = readline.get_current_history_length()+n
             return readline.get_history_item(n)
-        except:
-            logging.warning('%sth command from history not found' % n)
+        except IOError:
+            logging.warning('Could not read history file')
             return ''
 
-
-    def __history_try_search(self, text):
+    @classmethod
+    def __history_try_search(cls, text):
         history_range = range(readline.get_current_history_length(), 1, -1)
         for i in history_range:
             item = readline.get_history_item(i)
@@ -185,7 +184,8 @@ class KatelloShell(Cmd):
         return [a for a in completions if a.startswith(text)]
 
 
-    def __get_possible_completions(self, cmd, with_params=False):
+    @classmethod
+    def __get_possible_completions(cls, cmd, with_params=False):
         """
         Return all possible subcommands and options that can be used to complete
         strings after a command cmd.
@@ -229,12 +229,13 @@ class KatelloShell(Cmd):
             return None
 
 
-    def remove_last_history_item(self):
+    @classmethod
+    def __remove_last_history_item(cls):
         last = readline.get_current_history_length() - 1
         if last >= 0:
             readline.remove_history_item(last)
 
 
-    def replace_last_history_item(self, replace_with):
-        self.remove_last_history_item()
+    def __replace_last_history_item(self, replace_with):
+        self.__remove_last_history_item()
         readline.add_history(replace_with)

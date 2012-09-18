@@ -15,16 +15,21 @@
 
 from katello.client.api.base import KatelloAPI
 from katello.client.utils.encoding import u_str
+from katello.client.core.utils import update_dict_unless_none
 
 class UserAPI(KatelloAPI):
     """
     Connection class to access User Data
     """
-    def create(self, name, pw, email, disabled, default_environment):
+    def create(self, name, pw, email, disabled, default_environment, default_locale=None):
         userdata = {"username": name,
                     "password": pw,
                     "email": email,
                     "disabled": disabled}
+
+        if default_locale is not None:
+            userdata["default_locale"] = default_locale
+
         if default_environment is not None:
             userdata.update(default_environment_id=default_environment['id'])
 
@@ -35,21 +40,24 @@ class UserAPI(KatelloAPI):
         path = "/api/users/%s" % u_str(user_id)
         return self.server.DELETE(path)[1]
 
-    def update(self, user_id, pw, email, disabled, default_environment):
+    def update(self, user_id, pw, email, disabled, default_environment, default_locale=None):
         userdata = {}
-        userdata = self.update_dict(userdata, "password", pw)
-        userdata = self.update_dict(userdata, "email", email)
-        userdata = self.update_dict(userdata, "disabled", disabled)
+        userdata = update_dict_unless_none(userdata, "password", pw)
+        userdata = update_dict_unless_none(userdata, "email", email)
+        userdata = update_dict_unless_none(userdata, "disabled", disabled)
 
         if default_environment is None:
             userdata.update(default_environment_id=None)                        # pylint: disable=E1101
         elif default_environment is not False:
             userdata.update(default_environment_id=default_environment['id'])   # pylint: disable=E1101
 
+        if default_locale is not None:
+            userdata = update_dict_unless_none(userdata, "default_locale", default_locale)
+
         path = "/api/users/%s" % u_str(user_id)
         return self.server.PUT(path, {"user": userdata})[1]
 
-    def users(self, query={}):
+    def users(self, query=None):
         path = "/api/users/"
         users = self.server.GET(path, query)[1]
         return users
@@ -84,6 +92,6 @@ class UserAPI(KatelloAPI):
         path = "/api/users/%s/roles/" % u_str(user_id)
         return self.server.GET(path)[1]
 
-    def report(self, format):
-        to_return = self.server.GET("/api/users/report", custom_headers={"Accept": format})
+    def report(self, format_in):
+        to_return = self.server.GET("/api/users/report", custom_headers={"Accept": format_in})
         return (to_return[1], to_return[2])

@@ -24,7 +24,7 @@ class Changeset < ActiveRecord::Base
 
   include IndexedModel
   index_options :extended_json => :extended_index_attrs,
-                :display_attrs => [:name, :description, :package, :errata, :product, :repo, :system_template, :user]
+                :display_attrs => [:name, :description, :package, :errata, :product, :repo, :system_template, :user, :type]
 
   mapping do
     indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
@@ -35,9 +35,15 @@ class Changeset < ActiveRecord::Base
   REVIEW    = 'review'
   PROMOTED  = 'promoted'
   PROMOTING = 'promoting'
+  DELETING = 'deleting'
+  DELETED  = 'deleted'
   FAILED    = 'failed'
-  STATES    = [NEW, REVIEW, PROMOTING, PROMOTED, FAILED]
+  STATES    = [NEW, REVIEW, PROMOTING, PROMOTED, FAILED, DELETING, DELETED]
 
+
+  PROMOTION = 'promotion'
+  DELETION  = 'deletion'
+  TYPES     = [PROMOTION, DELETION]
 
   validates_inclusion_of :state,
                          :in          => STATES,
@@ -62,7 +68,6 @@ class Changeset < ActiveRecord::Base
   belongs_to :task_status
 
   before_save :uniquify_artifacts
-
   def key_for item
     "changeset_#{id}_#{item}"
   end
@@ -94,118 +99,98 @@ class Changeset < ActiveRecord::Base
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
-  def promote(options = { })
-    options = { :async => true, :notify => false }.merge options
+  def action_type
+    return PROMOTION if PromotionChangeset === self
+    DELETION
+  end
 
-    self.state == Changeset::REVIEW or
-        raise _("Cannot promote the changset '%s' because it is not in the review phase.") % self.name
+  def deletion?
+    self.class == DeletionChangeset
+  end
 
-    #check for other changesets promoting
-    if self.environment.promoting_to?
-      raise _("Cannot promote the changeset '%s' while another changeset (%s) is being promoted.") %
-                [self.name, self.environment.promoting.first.name]
-    end
+  def promotion?
+    self.class == PromotionChangeset
+  end
 
-    # check that solitare repos in the changeset and its templates
-    # will have its associated product in the env as well after promotion
-    repos_to_be_promoted.each do |repo|
-      if not self.environment.products.to_a.include? repo.product and not products_to_be_promoted.include? repo.product
-        raise _("Cannot promote the changset '%s' because the repo '%s' does not belong to any promoted product.") %
-                  [self.name, repo.name]
-      end
-    end
-
-    validate_content! self.errata
-    validate_content! self.packages
-    validate_content! self.distributions
-
-    self.state = Changeset::PROMOTING
-    self.save!
-
-    if options[:async]
-      task             = self.async(:organization => self.environment.organization).promote_content(options[:notify])
-      self.task_status = task
-      self.save!
-      self.task_status
+  def self.create_for( acct_type, options)
+    if PROMOTION == acct_type
+      PromotionChangeset.create!(options)
     else
-      self.task_status = nil
-      self.save!
-      promote_content(options[:notify])
+      DeletionChangeset.create!(options)
     end
   end
 
   def add_product! product
-    product.repos(self.environment.prior).empty? and
-        raise _("Product '%s' hasn't any repositories") % product.name
 
-    environment.prior.products.include? product or
-        raise Errors::ChangesetContentException.new("Product not found within environment you want to promote from.")
+     env_to_verify_on_add_content.products.include? product or
+         raise Errors::ChangesetContentException.new("Product not found within environment you want to promote from.")
 
-    self.products << product
-    save!
-    return product
-  end
+     self.products << product
+     save!
+     product
+   end
 
-  def add_template! template
-    environment.prior.system_templates.include? template or
-        raise Errors::ChangesetContentException.new("Template not found within environment you want to promote from.")
+   def add_template! template
+     env_to_verify_on_add_content.system_templates.include? template or
+         raise Errors::ChangesetContentException.new("Template not found within environment you want to promote from.")
 
-    self.system_templates << template # updates foreign key immediately
-    save!
-    return template
-  end
+     self.system_templates << template # updates foreign key immediately
+     save!
+     return template
+   end
 
-  def add_package! name_or_nvre, product
-    environment.prior.products.include? product or
-        raise Errors::ChangesetContentException.new(
-                  "Package's product not found within environment you want to promote from.")
-    package_data = find_package_data(product, name_or_nvre) or
-        raise Errors::ChangesetContentException.new(
-                  _("Package '%s' was not found in the source environment.") % name_or_nvre)
+   def add_package! name_or_nvre, product
+     env_to_verify_on_add_content.products.include? product or
+         raise Errors::ChangesetContentException.new(
+                   "Package's product not found within environment you want to promote from.")
 
-    nvrea = Katello::PackageUtils::build_nvrea(package_data, false)
-    self.packages << package =
-        ChangesetPackage.create!(:package_id => package_data["_id"], :display_name => nvrea,
-                                 :product_id => product.id, :changeset => self, :nvrea => nvrea)
-    save!
-    return package
-  end
+     package_data = find_package_data(product, name_or_nvre) or
+         raise Errors::ChangesetContentException.new(
+                   _("Package '%s' was not found in the source environment.") % name_or_nvre)
 
-  def add_erratum! erratum_id, product
-    product.has_erratum?(environment.prior, erratum_id) or
-        raise Errors::ChangesetContentException.new(
-                  "Erratum not found within this environment you want to promote from.")
+     nvrea = Katello::PackageUtils::build_nvrea(package_data, false)
+     self.packages << package =
+         ChangesetPackage.create!(:package_id => package_data["id"], :display_name => nvrea,
+                                  :product_id => product.id, :changeset => self, :nvrea => nvrea)
+     save!
+     return package
+   end
 
-    self.errata << erratum =
-        ChangesetErratum.create!(:errata_id  => erratum_id, :display_name => erratum_id,
-                                 :product_id => product.id, :changeset => self)
-    save!
-    return erratum
-  end
+   def add_erratum! erratum_id, product
+     product.has_erratum?(env_to_verify_on_add_content, erratum_id) or
+         raise Errors::ChangesetContentException.new(
+                   "Erratum not found within this environment you want to promote from.")
 
-  def add_repository! repository
-    environment.prior.repositories.include? repository or
-        raise Errors::ChangesetContentException.new(
-                  "Repository not found within this environment you want to promote from.")
+     self.errata << erratum =
+         ChangesetErratum.create!(:errata_id  => erratum_id, :display_name => erratum_id,
+                                  :product_id => product.id, :changeset => self)
+     save!
+     return erratum
+   end
 
-    self.repos << repository
-    save!
-    return repository
-  end
+   def add_repository! repository
+     env_to_verify_on_add_content.repositories.include? repository or
+         raise Errors::ChangesetContentException.new(
+                   "Repository not found within this environment you want to promote from.")
 
-  def add_distribution! distribution_id, product
-    environment.prior.repositories.any? { |repo| repo.has_distribution? distribution_id } or
-        raise Errors::ChangesetContentException.new(
-                  "Distribution not found within this environment you want to promote from.")
+     self.repos << repository
+     save!
+     return repository
+   end
 
-    self.distributions << distro =
-        ChangesetDistribution.create!(:distribution_id => distribution_id,
-                                      :display_name    => distribution_id,
-                                      :product_id      => product.id,
-                                      :changeset       => self)
-    save!
-    return distro
-  end
+   def add_distribution! distribution_id, product
+     env_to_verify_on_add_content.repositories.any? { |repo| repo.has_distribution? distribution_id } or
+         raise Errors::ChangesetContentException.new(
+                   "Distribution not found within this environment you want to promote from.")
+
+     distro = ChangesetDistribution.create!(:distribution_id => distribution_id,
+                                       :display_name    => distribution_id,
+                                       :product_id      => product.id,
+                                       :changeset       => self)
+     self.distributions << distro
+     save!
+     distro
+   end
 
   def remove_product! product
     deleted = self.products.delete(product)
@@ -219,8 +204,8 @@ class Changeset < ActiveRecord::Base
     return deleted
   end
 
-  def remove_package! package_data, product
-    deleted = ChangesetPackage.destroy_all(:package_id => package_data[:id], :changeset_id => self.id,
+  def remove_package! nvrea, product
+    deleted = ChangesetPackage.destroy_all(:nvrea => nvrea, :changeset_id => self.id,
                                            :product_id => product.id)
     save!
     return deleted
@@ -246,7 +231,15 @@ class Changeset < ActiveRecord::Base
     return deleted
   end
 
-  private
+  def as_json(options = nil)
+    options ||= {}
+    super(options.merge({
+          :methods => [:action_type]
+          })
+       )
+  end
+
+  protected 
 
   def validate_content! elements
     elements.each { |e| raise ActiveRecord::RecordInvalid.new(e) if not e.valid? }
@@ -254,193 +247,33 @@ class Changeset < ActiveRecord::Base
 
   def find_package_data(product, name_or_nvre)
     package_data = Katello::PackageUtils.parse_nvrea_nvre(name_or_nvre)
-    
+
     if package_data
-      packs = product.find_packages_by_nvre(self.environment.prior,
+      packs = product.find_packages_by_nvre(env_to_verify_on_add_content,
                                              package_data[:name], package_data[:version],
                                              package_data[:release], package_data[:epoch])
     end
 
-    if packs.empty? || !package_data
+    if packs.blank? || !package_data
        packs = Katello::PackageUtils::find_latest_packages(
-                  product.find_packages_by_name(self.environment.prior, name_or_nvre))
+                  product.find_packages_by_name(env_to_verify_on_add_content, name_or_nvre))
     end
 
-    packs.first.with_indifferent_access
+    packs.first.try(:with_indifferent_access)
+  end
+
+  def env_to_verify_on_add_content
+    if promotion?
+      self.environment.prior
+    else
+      self.environment
+    end
   end
 
   def update_progress! percent
     if self.task_status
       self.task_status.progress = percent
       self.task_status.save!
-    end
-  end
-
-  def promote_content(notify = false)
-    update_progress! '0'
-
-    from_env = self.environment.prior
-    to_env   = self.environment
-
-    PulpTaskStatus::wait_for_tasks promote_products(from_env, to_env)
-    update_progress! '30'
-    PulpTaskStatus::wait_for_tasks promote_templates(from_env, to_env)
-    update_progress! '50'
-    PulpTaskStatus::wait_for_tasks promote_repos(from_env, to_env)
-    update_progress! '70'
-    to_env.update_cp_content
-    update_progress! '80'
-    promote_packages from_env, to_env
-    update_progress! '90'
-    promote_errata from_env, to_env
-    update_progress! '95'
-    promote_distributions from_env, to_env
-    update_progress! '100'
-
-    PulpTaskStatus::wait_for_tasks generate_metadata from_env, to_env
-
-    self.promotion_date = Time.now
-    self.state          = Changeset::PROMOTED
-    self.save!
-
-    index_repo_content to_env
-
-    if notify
-      message = _("Successfully promoted changeset '%s'.") % self.name
-      Notify.message message, :request_type => "changesets___promote"
-    end
-
-  rescue Exception => e
-    self.state = Changeset::FAILED
-    self.save!
-    Rails.logger.error(e)
-    Rails.logger.error(e.backtrace.join("\n"))
-    if notify
-      Notify.exception _("Failed to promote changeset '%s'. Check notices for more details") % self.name, e,
-                   :request_type => "changesets___promote"
-    end
-    index_repo_content to_env
-    raise e
-  end
-
-
-  def promote_templates from_env, to_env
-    async_tasks = self.system_templates.collect do |tpl|
-      tpl.promote from_env, to_env
-    end
-    async_tasks.flatten(1)
-  end
-
-
-  def promote_products from_env, to_env
-    async_tasks = self.products.collect do |product|
-      product.promote from_env, to_env
-    end
-    async_tasks.flatten(1)
-  end
-
-
-  def promote_repos from_env, to_env
-    async_tasks = []
-    self.repos.each do |repo|
-      product = repo.product
-      next if (products.uniq! or []).include? product
-
-      async_tasks << repo.promote(from_env, to_env)
-    end
-    async_tasks.flatten(1)
-  end
-
-  def not_included_packages
-    self.packages.delete_if do |pack|
-      (products.uniq! or []).include? pack.product
-    end
-  end
-
-  def not_included_errata
-    self.errata.delete_if do |err|
-      (products.uniq! or []).include? err.product
-    end
-  end
-
-
-  def promote_packages from_env, to_env
-    #repo->list of pkg_ids
-    pkgs_promote = { }
-
-    (not_included_packages + dependencies).each do |pkg|
-      product = pkg.product
-
-      product.repos(from_env).each do |repo|
-        if repo.is_cloned_in? to_env
-          clone = repo.get_clone to_env
-
-          if (repo.has_package? pkg.package_id) and (!clone.has_package? pkg.package_id)
-            pkgs_promote[clone] ||= []
-            pkgs_promote[clone] << pkg.package_id
-          end
-        end
-      end
-    end
-
-    pkgs_promote.each_pair do |repo, pkgs|
-      repo.add_packages(pkgs)
-      Glue::Pulp::Package.index_packages(pkgs)
-    end
-  end
-
-
-  def promote_errata from_env, to_env
-    #repo->list of errata_ids
-    errata_promote = { }
-
-    not_included_errata.each do |err|
-      product = err.product
-
-      product.repos(from_env).each do |repo|
-        if repo.is_cloned_in? to_env
-          clone             = repo.get_clone to_env
-          affecting_filters = (repo.filters + repo.product.filters).uniq
-
-          if repo.has_erratum? err.errata_id and !clone.has_erratum? err.errata_id and
-              !err.blocked_by_filters? affecting_filters
-            errata_promote[clone] ||= []
-            errata_promote[clone] << err.errata_id
-          end
-        end
-      end
-    end
-
-    errata_promote.each_pair do |repo, errata|
-      repo.add_errata(errata)
-      Glue::Pulp::Errata.index_errata(errata)
-    end
-  end
-
-
-  def promote_distributions from_env, to_env
-    #repo->list of distribution_ids
-    distribution_promote = { }
-
-    for distro in self.distributions
-      product = distro.product
-
-      #skip distributions that have already been promoted with the products
-      next if (products.uniq! or []).include? product
-
-      product.repos(from_env).each do |repo|
-        clone = repo.get_clone to_env
-        next if clone.nil?
-
-        if repo.has_distribution? distro.distribution_id and
-            !clone.has_distribution? distro.distribution_id
-          distribution_promote[clone] = distro.distribution_id
-        end
-      end
-    end
-
-    distribution_promote.each_pair do |repo, distro|
-      repo.add_distribution(distro)
     end
   end
 
@@ -465,13 +298,6 @@ class Changeset < ActiveRecord::Base
         clone.index_errata
       end
     end
-  end
-
-  def generate_metadata from_env, to_env
-    async_tasks = affected_repos.collect do |repo|
-      repo.get_clone(to_env).generate_metadata
-    end
-    async_tasks
   end
 
   def uniquify_artifacts
@@ -505,36 +331,41 @@ class Changeset < ActiveRecord::Base
     product_repos = product.repos(environment) - self.repos
   end
 
-
   def package_ids repos
     pkg_ids = []
     repos.each do |repo|
       pkg_ids += repo.packages.collect { |pkg| pkg.id }
+
     end
-    pkg_ids
   end
 
-  def find_repo repo_id, product_cpid
-    product = find_product_by_cpid(product_cpid)
-    product.repos(self.environment.prior).where("repositories.id" => repo_id).first
+  def not_included_packages
+    self.packages.delete_if do |pack|
+      (products.uniq! or []).include? pack.product
+    end
   end
 
-  def affected_repos
-    repos = []
-    repos += self.packages.collect { |e| e.promotable_repositories }.flatten(1)
-    repos += self.errata.collect { |p| p.promotable_repositories }.flatten(1)
-    repos += self.distributions.collect { |d| d.promotable_repositories }.flatten(1)
+  def not_included_errata
+    self.errata.delete_if do |err|
+      (products.uniq! or []).include? err.product
+    end
+  end
 
-    repos.uniq
+  def not_included_distribution
+    self.distributions.delete_if do |distro|
+      (products.uniq! or []).include? distro.product
+    end
   end
 
   def extended_index_attrs
+    type      = self.type == "PromotionChangeset" ? Changeset::PROMOTION : Changeset::DELETION
     pkgs      = self.packages.collect { |pkg| pkg.display_name }
     errata    = self.errata.collect { |err| err.display_name }
     products  = self.products.collect { |prod| prod.name }
     repos     = self.repos.collect { |repo| repo.name }
     templates = self.system_templates.collect { |t| t.name }
     { :name_sort       => self.name.downcase,
+      :type            => type,
       :package         => pkgs,
       :errata          => errata,
       :product         => products,
@@ -544,17 +375,5 @@ class Changeset < ActiveRecord::Base
     }
   end
 
-  def repos_to_be_promoted
-    repos = self.repos || []
-    repos += self.system_templates.map { |tpl| tpl.repos_to_be_promoted }.flatten(1)
-    return repos.uniq
-  end
-
-  def products_to_be_promoted
-    products = self.products || []
-    products += self.system_templates.map { |tpl| tpl.products_to_be_promoted }.flatten(1)
-    return products.uniq
-  end
-
-
 end
+

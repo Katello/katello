@@ -16,7 +16,6 @@
 #
 
 import os
-from gettext import gettext as _
 
 from katello.client.api.admin import AdminAPI
 from katello.client.core.base import BaseAction, Command

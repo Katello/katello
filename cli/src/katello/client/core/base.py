@@ -15,7 +15,6 @@
 
 import os
 import sys
-from gettext import gettext as _
 from katello.client.i18n_optparse import OptionParser, OptionParserExitError
 from M2Crypto import SSL
 from socket import error as SocketError
@@ -45,6 +44,8 @@ _log = getLogger(__name__)
 # They contain the mapping and lists of Commands and Actions for
 # everything the CLI can do.
 
+class CommandException(Exception):
+    pass
 
 class CommandContainer(object):
     """
@@ -80,12 +81,12 @@ class CommandContainer(object):
 
     def get_command(self, name):
         """
-        :raises Exception: if the command was not found
+        :raises CommandException: if the command was not found
         :return: command or action registered under the given name
         """
         if name in self.__subcommands:
             return self.__subcommands[name]
-        raise Exception("Command not found")
+        raise CommandException("Command not found")
 
 
 
@@ -120,7 +121,7 @@ class Action(object):
         """
         return "Usage: "+self._get_usage_line(command_name, parent_usage)
 
-
+    # pylint: disable=R0201
     @property
     def description(self):
         """
@@ -139,7 +140,8 @@ class Action(object):
         parser.set_usage(self.usage(command_name, parent_usage))
         return parser
 
-    def create_validator(self, parser, opts, args):
+    @classmethod
+    def create_validator(cls, parser, opts, args):
         """
         :rtype: OptionValidator
         """
@@ -169,6 +171,7 @@ class Action(object):
         """
         return (not self.get_option(opt) is None)
 
+    # pylint: disable=W0613
     def setup_parser(self, parser):
         """
         Add custom options to the parser
@@ -182,7 +185,6 @@ class Action(object):
         Action's functionality
         
         :note: override this method to implement the actoin's functionality
-        :raise NotImplementedError: if this method is not overridden
         """
         pass
 
@@ -212,7 +214,8 @@ class Action(object):
         self.check_options(validator)
         self.__process_option_errors(parser, validator.opt_errors)
 
-    def __process_option_errors(self, parser, errors):
+    @classmethod
+    def __process_option_errors(cls, parser, errors):
         if len(errors) == 1:
             parser.error(errors[0])
         elif len(errors) > 0:
@@ -255,7 +258,8 @@ class Command(CommandContainer, Action):
             lines += self.__build_command_usage_lines(name, self.get_command(name))
         return '\n'.join(lines)
 
-    def __build_command_usage_lines(self, name, command):
+    @classmethod
+    def __build_command_usage_lines(cls, name, command):
         lines = []
         desc_lines = command.description.split("\n")
 
@@ -276,7 +280,7 @@ class Command(CommandContainer, Action):
         try:
             command = self.get_command(args[0])
             return command
-        except:
+        except CommandException:
             parser.error(_('invalid action: please see --help'))
             return None
 
@@ -321,21 +325,27 @@ class BaseAction(Action):
         parser.add_option('-d', dest='delimiter',
                         default="",
                         help=_("column delimiter in grep friendly output, works only with option -g"))
+        parser.add_option('--noheading', dest='noheading',
+                        action="store_true", default=False,
+                        help=_("Suppress any heading output. Useful if grepping the output."))
         return parser
 
     def create_printer(self, strategy):
-        return Printer(strategy)
+        return Printer(strategy, noheading=self.get_option('noheading'))
 
     def __print_strategy(self):
         Config()
-        if (self.has_option('grep') or (Config.parser.has_option('interface', 'force_grep_friendly') and Config.parser.get('interface', 'force_grep_friendly').lower() == 'true')):
+        if (self.has_option('grep') or (Config.parser.has_option('interface', 'force_grep_friendly') \
+            and Config.parser.get('interface', 'force_grep_friendly').lower() == 'true')):
             return GrepStrategy(delimiter=self.get_option('delimiter'))
-        elif (self.has_option('verbose') or (Config.parser.has_option('interface', 'force_verbose') and Config.parser.get('interface', 'force_verbose').lower() == 'true')):
+        elif (self.has_option('verbose') or (Config.parser.has_option('interface', 'force_verbose') \
+            and Config.parser.get('interface', 'force_verbose').lower() == 'true')):
             return VerboseStrategy()
         else:
             return None
 
-    def load_saved_options(self, parser):
+    @classmethod
+    def load_saved_options(cls, parser):
         Config()
         if not Config.parser.has_section('options'):
             return
@@ -352,7 +362,7 @@ class BaseAction(Action):
 
         self.printer = self.create_printer(self.__print_strategy())
 
-
+    # pylint: disable=R0911
     def main(self, args, command_name=None, parent_usage=None):
         """
         Main execution of the action
@@ -378,9 +388,11 @@ class BaseAction(Action):
             try:
                 if "displayMessage" in re.args[1]:
                     msg = re.args[1]["displayMessage"]
-                else:
+                elif "errors" in re.args[1]:
                     msg = ", ".join(re.args[1]["errors"])
-            except:
+                else:
+                    msg = str(re.args[1])
+            except IndexError:
                 msg = re.args[1]
             if re.args[0] == 401:
                 msg = _("Invalid credentials or unable to authenticate")
@@ -424,7 +436,7 @@ class BaseAction(Action):
 # optparse type extenstions --------------------------------------------------
 
 
-
+# pylint: disable=W0613
 def check_bool(option, opt, value):
     if value.lower() in ["true","false"]:
         return (value.lower() == "true")

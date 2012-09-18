@@ -21,7 +21,7 @@ class Api::ApiController < ActionController::Base
   before_filter :require_user
   before_filter :add_candlepin_version_header
 
-  rescue_from Exception, :with => proc { |e| render_exception(500, e) } # catch-all
+  rescue_from StandardError, :with => proc { |e| render_exception(500, e) } # catch-all
   rescue_from HttpErrors::WrappedError, :with => proc { |e| render_wrapped_exception(500, e) }
 
   rescue_from RestClient::ExceptionWithResponse, :with => :exception_with_response
@@ -84,7 +84,7 @@ class Api::ApiController < ActionController::Base
     return @query_params
   end
 
-
+  private
 
   def find_organization
     raise HttpErrors::NotFound, _("organization_id required but not specified.") if params[:organization_id].nil?
@@ -99,9 +99,7 @@ class Api::ApiController < ActionController::Base
     end
   end
 
-  private
-
-   def verify_ldap
+  def verify_ldap
     u = current_user
     u.verify_ldap_roles if (AppConfig.ldap_roles && u != nil)
   end

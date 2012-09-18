@@ -57,6 +57,27 @@ module Glue::Pulp::Repo
     [organization_name, env_name, product_name, repo_name].compact.join("-").gsub(/[^-\w]/,"_")
   end
 
+  #repo_pkgs = a map with {repo => [package objects to be removed]}
+  def self.delete_repo_packages repo_pkgs
+    Resources::Pulp::Repository.delete_repo_packages(make_pkg_tuples(repo_pkgs))
+  end
+
+  #repo_pkgs = a map with {repo => [package objects to be added]}
+  def self.add_repo_packages repo_pkgs
+    Resources::Pulp::Repository.add_repo_packages(make_pkg_tuples(repo_pkgs))
+  end
+
+  def self.make_pkg_tuples repo_pkgs
+    package_tuples = []
+    repo_pkgs.each do |repo, pkgs|
+      pkgs.each do |pack|
+        package_tuples << [[pack.filename,pack.checksum.to_hash.values.first],[repo.pulp_id]]
+      end
+    end
+    package_tuples
+  end
+
+
   module InstanceMethods
     def save_repo_orchestration
       case orchestration_for
@@ -134,8 +155,7 @@ module Glue::Pulp::Repo
     filters_to_clone = self.filter_pulp_ids_to_promote from_env, to_env
 
     if self.is_cloned_in?(to_env)
-      #repo is already cloned, so lets just re-sync it from its parent
-      return [self.get_clone(to_env).sync]
+      return clone.sync
     else
       clone_events = self.create_clone(to_env)
       #TODO ensure that clone content is indexed
@@ -159,6 +179,26 @@ module Glue::Pulp::Repo
     found = repos_map[self.pulp_id]
     prepopulate(found) if found
     !found.nil?
+  end
+
+  def enable_repo
+    if !self.enabled
+      # publish and enable the repo
+      repo = self.readonly? ? Repository.find(self.id) : self
+      Resources::Pulp::Repository.update_publish(repo.pulp_id, true)
+      repo.enabled = true
+      repo.save!
+    end
+  end
+
+  def disable_repo
+    if self.enabled
+      # unpublish and disable the repo
+      repo = self.readonly? ? Repository.find(self.id) : self
+      Resources::Pulp::Repository.update_publish(repo.pulp_id, false)
+      repo.enabled = false
+      repo.save!
+    end
   end
 
   def destroy_repo
@@ -193,8 +233,8 @@ module Glue::Pulp::Repo
   end
 
   def destroy_repo_orchestration
-    pre_queue.create(:name => "remove product content : #{self.name}", :priority => 1, :action => [self, :del_content])
-    pre_queue.create(:name => "delete pulp repo : #{self.name}",       :priority => 2, :action => [self, :destroy_repo])
+    pre_queue.create(:name => "remove product content : #{self.name}", :priority => 2, :action => [self, :del_content])
+    pre_queue.create(:name => "delete pulp repo : #{self.name}",       :priority => 3, :action => [self, :destroy_repo])
   end
 
   def get_params
@@ -375,6 +415,14 @@ module Glue::Pulp::Repo
 
   def add_distribution distribution_id
     Resources::Pulp::Repository.add_distribution self.pulp_id,  distribution_id
+  end
+
+  def delete_errata errata_id_list
+    Resources::Pulp::Repository.delete_errata self.pulp_id,  errata_id_list
+  end
+
+  def delete_distribution distribution_id
+    Resources::Pulp::Repository.delete_distribution self.pulp_id,  distribution_id
   end
 
   def cancel_sync

@@ -14,20 +14,44 @@
 # in this software or its documentation.
 
 import collections
+import codecs
+import sys
 
 
-def u_str(value, encoding='utf-8'):
+def encode_stream(stream, encoding='utf-8'):
+    """
+    Wrap a file stream with writer that uses the specified encoding.
+    """
+    if isinstance(stream, file):
+        return codecs.getwriter(encoding)(stream)
+    else:
+        return stream
+
+
+def fix_io_encoding():
+    """
+    Force utf-8 if no encoding is set for output streams.
+    This can happen when the command is executed in a subshell.
+    We use utf-8 as all our server-side data are utf-8 encoded.
+    """
+    if sys.stdout.encoding == None:
+        sys.stdout = encode_stream(sys.stdout)
+    if sys.stderr.encoding == None:
+        sys.stderr = encode_stream(sys.stderr)
+
+
+def u_str(value):
     """
     Casts value to unicode string.
     """
     if not isinstance(value, basestring):
         value = str(value)
     if not isinstance(value, unicode):
-        value = unicode(value, encoding)
+        value = unicode(value, 'utf-8')
     return value
 
 
-def u_obj(data, encoding='utf-8'):
+def u_obj(data):
     """
     Casts all strings in object 'data' to unicode.
     """

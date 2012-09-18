@@ -22,13 +22,11 @@ class ChangesetsController < ApplicationController
 
   after_filter :update_editors, :only => [:update]
 
-  #around_filter :catch_exceptions
-
   def rules
     read_perm = lambda{@environment.changesets_readable?}
     manage_perm = lambda{@environment.changesets_manageable?}
     update_perm =  lambda {@environment.changesets_manageable? && update_artifacts_valid?}
-    promote_perm = lambda{@environment.changesets_promotable?}
+    apply_perm = lambda{ (@changeset.promotion? && @environment.changesets_promotable?) || (@changeset.deletion? && @environment.changesets_deletable?)}
     {
       :index => read_perm,
       :items => read_perm,
@@ -43,8 +41,8 @@ class ChangesetsController < ApplicationController
       :dependencies => read_perm,
       :object => read_perm,
       :auto_complete_search => read_perm,
-      :promote => promote_perm,
-      :promotion_progress => read_perm
+      :apply => apply_perm,
+      :status => read_perm
     }
   end
 
@@ -62,7 +60,7 @@ class ChangesetsController < ApplicationController
   #extended scroll for changeset_history
   def items
     render_panel_direct(Changeset, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
-        {:default_field => :name, :filter=>[{:environment_id=>[@environment.id]}, {:state=>[Changeset::PROMOTED]}]})
+        {:default_field => :name, :filter=>[{:environment_id=>[@environment.id]}, {:state=>[Changeset::PROMOTED, Changeset::DELETED]}]})
   end
 
   def edit
@@ -78,14 +76,22 @@ class ChangesetsController < ApplicationController
     'contents'
   end
 
-
-
   ####
   # Promotion methods
   ####
 
   def dependencies
     to_ret = {}
+<<<<<<< HEAD
+=======
+
+    if @changeset.promotion?
+      @changeset.calc_dependencies.each do |dependency|
+        to_ret[dependency.product_id] ||= []
+        to_ret[dependency.product_id] << {:name=>dependency.display_name, :dep_of=>dependency.dependency_of}
+      end
+    end
+>>>>>>> 85a6f2c19631fb0a867415831357385018ce54e1
 
     render :json=>to_ret
   end
@@ -95,28 +101,37 @@ class ChangesetsController < ApplicationController
   end
 
   def new
+    @changeset = Changeset.new
     render :partial=>"new", :layout => "tupane_layout"
   end
 
   def create
-    begin
-      @changeset = Changeset.create!(:name=>params[:changeset][:name],
-                                     :description => params[:changeset][:description],
-                                     :environment_id=>@environment.id)
-      notify.success _("Promotion Changeset '%s' was created.") % @changeset["name"]
-      bc = {}
-      add_crumb_node!(bc, changeset_bc_id(@changeset), '', @changeset.name, ['changesets'],
-                      {:client_render => true}, {:is_new=>true})
-      render :json => {
-        'breadcrumb' => bc,
-        'id' => @changeset.id,
-        'changeset' => simplify_changeset(@changeset)
-      }
-    rescue Exception => error
-      Rails.logger.error error.to_s
-      notify.exception error
-      render :json=>error, :status=>:bad_request
+    if params[:changeset][:action_type].blank? or
+       params[:changeset][:action_type] == Changeset::PROMOTION
+
+      if @next_environment.blank?
+        notify.error _("Please create at least one environment.")
+        render :nothing => true, :status => :not_acceptable and return
+      else
+        env_id = @next_environment.id
+        type = Changeset::PROMOTION
+      end
+    else
+      env_id = @environment.id
+      type = Changeset::DELETION
     end
+    @changeset = Changeset.create_for(type, :name => params[:changeset][:name],
+                                      :description => params[:changeset][:description],
+                                      :environment_id => env_id)
+
+    notify.success _("Promotion Changeset '%s' was created.") % @changeset["name"]
+    bc = {}
+    add_crumb_node!(bc, changeset_bc_id(@changeset), '', @changeset.name, ['changesets'],
+                    {:client_render => true}, {:is_new=>true})
+    render :json => {
+      'breadcrumb' => bc,
+      'id' => @changeset.id,
+      'changeset' => simplify_changeset(@changeset)    }
   end
 
   def update
@@ -179,7 +194,7 @@ class ChangesetsController < ApplicationController
           when "package"
             product = Product.find pid
             @changeset.add_package! name, product if adding
-            @changeset.remove_package! name, product if !adding
+            @changeset.remove_package! id, product if !adding
 
           when "repo"
             @changeset.add_repository! Repository.find(id) if adding
@@ -210,7 +225,7 @@ class ChangesetsController < ApplicationController
     render :text=>""
   end
 
-  def promote
+  def apply
     messages = {}
     if !params[:confirm] && @environment.prior.library?
       syncing = []
@@ -231,24 +246,28 @@ class ChangesetsController < ApplicationController
     if  !messages.empty?
       to_ret[:warnings] = render_to_string(:partial=>'warning', :locals=>messages)
     else
-      @changeset.promote :notify => true, :async => true
+      @changeset.apply :notify => true, :async => true
+      if @changeset.promotion?
+        notify.success _("Started content promotion to %s environment using '%s'") % [@environment.name, @changeset.name]
+      else
+        notify.success _("Started content deletion from %s environment using '%s'") % [@environment.name, @changeset.name]
+      end
       # remove user edit tracking for this changeset
       ChangesetUser.destroy_all(:changeset_id => @changeset.id)
-      notify.success _("Started promotion of '%s' to %s environment") % [@changeset.name, @environment.name]
     end
     render :json=>to_ret
-  rescue Exception => e
-    notify.exception "Failed to promote.", e
+  rescue => e
+    notify.exception _("Failed to apply changeset."), e
     render :text=>e.to_s, :status=>500
   end
 
-  def promotion_progress
+  def status
     progress = @changeset.task_status.progress
     state = @changeset.state
-    to_ret = {'id' => 'changeset_' + @changeset.id.to_s, 'state' => state, 'progress' => progress.to_i}
+    to_ret = {'id' => 'changeset_' + @changeset.id.to_s, 'state' => state, 'progress' => progress.to_i,
+              'product_ids' => @changeset.product_ids}
     render :json=>to_ret
   end
-
 
   private
 
@@ -262,6 +281,10 @@ class ChangesetsController < ApplicationController
       list = KTEnvironment.changesets_readable(current_organization).where(:library=>false)
       @environment ||= list.first || current_organization.library
     end
+
+    if params[:next_env_id]
+      @next_environment = KTEnvironment.find(params[:next_env_id])
+    end
   end
 
   def update_editors
@@ -271,13 +294,7 @@ class ChangesetsController < ApplicationController
   end
 
   def find_changeset
-    begin
-      @changeset = Changeset.find(params[:id])
-    rescue Exception => error
-      notify.exception error
-      execute_after_filters
-      render :text=>error.to_s, :status=>:bad_request
-    end
+    @changeset = Changeset.find(params[:id])
   end
 
   def setup_options
@@ -303,8 +320,10 @@ class ChangesetsController < ApplicationController
   #produce a simple datastructure of a changeset for the browser
   def simplify_changeset cs
 
-    to_ret = {:id=>cs.id.to_s, :name=>cs.name, :description=>cs.description, :timestamp =>cs.updated_at.to_i.to_s,
-              :system_templates => {},:products=>{}, :is_new => cs.state == Changeset::NEW, :state => cs.state}
+    to_ret = {:id=>cs.id.to_s, :name=>cs.name, :type=>cs.action_type, :description=>cs.description,
+              :timestamp =>cs.updated_at.to_i.to_s, :system_templates => {},:products=>{},
+              :is_new => cs.state == Changeset::NEW, :state => cs.state}
+
     cs.system_templates.each do |temp|
       to_ret[:system_templates][temp.id] = {:id=> temp.id, :name=>temp.name}
     end

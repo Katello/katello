@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [[ $EUID -ne 0 ]]; then
+  export SUDO="sudo"
+else
+  export SUDO=""
+fi
+
 header "Basic environment setup"
 
 #testing ping

@@ -42,6 +42,7 @@ describe ContentSearchController do
                                        :pulp_id=>"2",
                                        :enabled => true)
       @repo = promote(@repo_library, @env1)
+      Repository.stub(:search).and_return([@repo])
     end
     after do
       reset_search

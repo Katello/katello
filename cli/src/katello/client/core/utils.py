@@ -53,7 +53,13 @@ def test_record(rec, success_msg, failure_msg):
     else:
         system_exit(os.EX_DATAERR, failure_msg)
 
-
+def update_dict_unless_none(d, key, value):
+    """
+    Update value for key in dictionary only if the value is not None.
+    """
+    if value != None:
+        d[key] = value
+    return d
 
 class SystemExitRequest(Exception):
     """
@@ -201,13 +207,14 @@ class Spinner(threading.Thread):
         sys.stdout.write(' '*l)
         sys.stdout.write('\033['+ str(l) +'D')
 
-    def _putChar(self, char):
-        sys.stdout.write('[')
-        sys.stdout.write(char)
-        sys.stdout.write(']')
+
+    @classmethod
+    def _putChar(cls, char):
+        sys.stdout.write('[%s]' % char)
         sys.stdout.flush()
 
-    def _resetCaret(self):
+    @classmethod
+    def _resetCaret(cls):
         #move the caret one character back
         sys.stdout.write('\033[3D')
         sys.stdout.flush()
@@ -231,13 +238,15 @@ class Spinner(threading.Thread):
     def stop(self):
         self._stopevent.set()
 
-class ProgressBar():
+class ProgressBar(object):
 
-    def updateProgress(self, progress):
-        sys.stdout.write("\rProgress: [{0:50s}] {1:.1f}%".format('#' * int(progress * 50), progress * 100))
+    @classmethod
+    def updateProgress(cls, progress_in):
+        sys.stdout.write("\rProgress: [{0:50s}] {1:.1f}%".format('#' * int(progress_in * 50), progress_in * 100))
         sys.stdout.flush()
 
-    def done(self):
+    @classmethod
+    def done(cls):
         sys.stdout.write("\r{0:60s}\r".format(' '*70))
 
 
@@ -281,15 +290,14 @@ def run_spinner_in_bg(function, arguments=(), message=""):
 # 'uuid': '52456711-cd67-11e0-af50-f0def13c24e5'}
 class AsyncTask():
 
-    _tasks = []
-
     def __init__(self, task):
         if not isinstance(task, list):
             self._tasks = [task]
         else:
             self._tasks = task
 
-    def status_api(self):
+    @classmethod
+    def status_api(cls):
         return TaskStatusAPI()
 
     def update(self):
@@ -341,7 +349,8 @@ class AsyncTask():
         return self._get_progress_sum('items_left')
 
     def progress_errors(self):
-        return [err for task in self._tasks if 'error_details' in task['progress'] for err in task['progress']['error_details']]
+        return [err for task in self._tasks if 'error_details' in task['progress'] \
+            for err in task['progress']['error_details']]
 
     def errors(self):
         return [task["result"]["errors"] for task in self._tasks if isinstance(task["result"], dict)]
@@ -349,7 +358,8 @@ class AsyncTask():
     def _get_progress_sum(self, name):
         return sum([t['progress'][name] for t in self._tasks])
 
-    def _subtask_is_running(self, task):
+    @classmethod
+    def _subtask_is_running(cls, task):
         return task['state'] not in ('finished', 'error', 'timed out', 'canceled', 'not_synced')
 
     def is_multiple(self):
@@ -360,6 +370,9 @@ class AsyncTask():
 
     def get_subtasks(self):
         return [AsyncTask(t) for t in self._tasks]
+
+    def __str__(self):
+        return object.__str__(self) + ' ' + str(self._tasks)
 
 # Envelope around system task status structure. Besides the standard AsyncTask
 # it has description and result_description specified
@@ -428,45 +441,23 @@ def progress(left, total):
 #   'state', 'running',
 #   'status_message: 'Installing package...',
 #   'finish_time': ''}
-class AsyncJob():
+class AsyncJob(AsyncTask):
 
-    _jobs = []
-
-    def __init__(self, job):
-        if not isinstance(job, list):
-            self._jobs = [job]
-        else:
-            self._jobs = job
-
-    def status_api(self):
+    @classmethod
+    def status_api(cls):
         # In the future, this could be used for a generic JobStatusAPI; however, for now the only
         # thing using the job APIs is System Groups.
         # return JobStatusAPI()
         return SystemGroupJobStatusAPI()
 
     def update(self):
-        self._jobs = [self.status_api().status(j['id']) for j in self._jobs]
-
-    def is_running(self):
-        return (len(filter(self._subtask_is_running, self._jobs)) > 0)
-
-    def finished(self):
-        return not self.is_running()
-
-    def failed(self):
-        return (len(filter(lambda j: j['state'] in ('error', 'timed out'), self._jobs)) > 0)
-
-    def cancelled(self):
-        return (len(filter(lambda j: j['state'] in ('cancelled', 'canceled'), self._jobs)) > 0)
+        self._tasks = [self.status_api().status(j['id']) for j in self._tasks]
 
     def succeeded(self):
         return not (self.failed() or self.cancelled())
 
-    def _subtask_is_running(self, job):
-        return job['state'] not in ('finished', 'error', 'timed out', 'canceled', 'not_synced')
-
-    def get_hashes(self):
-        return self._jobs
+    def __str__(self):
+        return object.__str__(self) + ' ' + str(self._tasks)
 
 # SystemGroup representation for a job
 class SystemGroupAsyncJob(AsyncJob):
@@ -479,18 +470,9 @@ class SystemGroupAsyncJob(AsyncJob):
         return SystemGroupJobStatusAPI(self.__org_id, self.__system_group_id)
 
     def get_status_message(self):
-        return ", ".join([job["status_message"] for job in self._jobs])
+        return ", ".join([job["status_message"] for job in self._tasks])
 
-def wait_for_async_job(job):
-    if not isinstance(job, AsyncJob):
-        job = AsyncJob(job)
-
-    while job.is_running():
-        time.sleep(1)
-        job.update()
-    return job.get_hashes()
-
-def convert_to_mime_type(type, default=None):
+def convert_to_mime_type(type_in, default=None):
     availableMimeTypes = {
         'text': 'text/plain',
         'csv':  'text/csv',
@@ -498,7 +480,7 @@ def convert_to_mime_type(type, default=None):
         'pdf':  'application/pdf'
     }
 
-    return availableMimeTypes.get(type, availableMimeTypes.get(default))
+    return availableMimeTypes.get(type_in, availableMimeTypes.get(default))
 
 def attachment_file_name(headers, default):
     contentDisposition = filter(lambda h: h[0].lower() == 'content-disposition', headers)

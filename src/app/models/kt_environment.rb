@@ -82,6 +82,10 @@ class KTEnvironment < ActiveRecord::Base
 
   has_many :systems, :inverse_of => :environment, :dependent => :destroy,  :foreign_key => :environment_id
   has_many :working_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"], :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
+
+  has_many :working_deletion_changesets, :conditions => ["state != '#{Changeset::DELETED}'"], :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"DeletionChangeset", :dependent => :destroy, :inverse_of => :environment
+  has_many :working_promotion_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"], :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"PromotionChangeset", :dependent => :destroy, :inverse_of => :environment
+
   has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED}, :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
 
   scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
@@ -259,7 +263,7 @@ class KTEnvironment < ActiveRecord::Base
   end
 
   #Permissions
-  scope :changesets_readable, lambda {|org| authorized_items(org, [:promote_changesets, :manage_changesets, :read_changesets])}
+  scope :changesets_readable, lambda {|org| authorized_items(org, [:delete_changesets, :promote_changesets, :manage_changesets, :read_changesets])}
   scope :content_readable, lambda {|org| authorized_items(org, [:read_contents])}
   scope :systems_readable, lambda{|org|
     if  org.systems_readable?
@@ -294,7 +298,9 @@ class KTEnvironment < ActiveRecord::Base
 
   def any_operation_readable?
     return false if !AppConfig.katello?
-    User.allowed_to?(self.class.list_verbs.keys, :environments, self.id, self.organization) || self.organization.systems_readable?
+    User.allowed_to?(self.class.list_verbs.keys, :environments, self.id, self.organization) ||
+        self.organization.systems_readable? || self.organization.any_systems_registerable? ||
+        ActivationKey.readable?(self.organization)
   end
 
   def changesets_promotable?
@@ -303,7 +309,13 @@ class KTEnvironment < ActiveRecord::Base
                               self.organization)
   end
 
-  CHANGE_SETS_READABLE = [:manage_changesets, :read_changesets, :promote_changesets]
+  def changesets_deletable?
+    return false if !AppConfig.katello?
+    User.allowed_to?([:delete_changesets], :environments, self.id,
+                              self.organization)
+  end
+
+  CHANGE_SETS_READABLE = [:manage_changesets, :read_changesets, :promote_changesets, :delete_changesets]
   def changesets_readable?
     return false if !AppConfig.katello?
     User.allowed_to?(CHANGE_SETS_READABLE, :environments,
@@ -365,7 +377,8 @@ class KTEnvironment < ActiveRecord::Base
       :delete_systems => _("Remove Systems in Environment"),
       :read_changesets => _("Read Changesets in Environment"),
       :manage_changesets => _("Administer Changesets in Environment"),
-      :promote_changesets => _("Promote Changesets in Environment")
+      :promote_changesets => _("Promote Content to Environment"),
+      :delete_changesets => _("Delete Content from Environment")
       }.with_indifferent_access
     else
       {
@@ -403,7 +416,8 @@ class KTEnvironment < ActiveRecord::Base
     users = User.find_by_default_environment(self.id)
     users.each do |u|
       u.default_environment = nil
-      Notify.message _("Your default environment has been removed. Please choose another one."), {:user => u}
+      Notify.message _("Your default environment has been removed. Please choose another one."),
+                     :user => u, :organization => self.organization
     end
   end
 

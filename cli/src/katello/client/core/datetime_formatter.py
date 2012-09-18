@@ -16,13 +16,12 @@
 
 import re
 import time
-from gettext import gettext as _
 
 
 class DateTimeFormatException(Exception):
     pass
 
-class DateTimeFormatter():
+class DateTimeFormatter(object):
 
     time_re = "([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]"
     timezone_re = "[+-][0-9]{2}:[0-9]{2}|Z"
@@ -31,27 +30,28 @@ class DateTimeFormatter():
     day_re = "(0[1-9]|[1-2][0-9]|3[0-1])"
     date_re = "%s-%s-%s" % (year_re, month_re, day_re)
 
-    def time_valid(self, time):
-        return re.compile("^%s(%s)?$" % (self.time_re, self.timezone_re)).match(time) != None
+    def time_valid(self, time_in):
+        return re.compile("^%s(%s)?$" % (self.time_re, self.timezone_re)).match(time_in) != None
 
-    def date_valid(self, time):
-        return re.compile("^%s$" % self.date_re).match(time) != None
+    def date_valid(self, time_in):
+        return re.compile("^%s$" % self.date_re).match(time_in) != None
 
-    def contains_zone(self, time):
-        return re.compile(".*%s$" % self.timezone_re).match(time) != None
+    def contains_zone(self, time_in):
+        return re.compile(".*%s$" % self.timezone_re).match(time_in) != None
 
-    def build_datetime(self, date, time):
-        if not self.time_valid(time):
+    def build_datetime(self, date, time_in):
+        if not self.time_valid(time_in):
             raise DateTimeFormatException(_("Time format is invalid. Required: HH:MM:SS[+HH:MM]"))
         if not self.date_valid(date):
             raise DateTimeFormatException(_("Date format is invalid. Required: YYYY-MM-DD"))
 
-        if self.contains_zone(time):
-            return date+"T"+time
+        if self.contains_zone(time_in):
+            return date+"T"+time_in
         else:
-            return date+"T"+time+self.local_timezone()
+            return date+"T"+time_in+self.local_timezone()
 
-    def local_timezone(self):
+    @classmethod
+    def local_timezone(cls):
         t = time.time()
         loc_time = time.localtime(t)
         utc_time = time.gmtime(t)

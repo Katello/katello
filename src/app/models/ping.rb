@@ -89,7 +89,7 @@ class Ping
         yield
         result[:result] = 'ok'
         result[:duration_ms] = ((Time.new - start) * 1000).round.to_s
-      rescue Exception => e
+      rescue => e
         Rails.logger.warn(e.backtrace ? [e.message, e.backtrace].join("\n") : e.message)
         result[:result] = 'fail'
         result[:message] = e.message

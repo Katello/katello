@@ -23,14 +23,10 @@ class KatelloAPI(object):
     @ivar server: L{Server} instance
     """
 
+    def __init__(self):
+        pass
+
+    # pylint: disable=R0201
     @property
     def server(self):
         return server.active_server
-
-    def update_dict(self, d, key, value):
-        """
-        Update value for key in fictionary only if the value is not None.
-        """
-        if value != None:
-            d[key] = value
-        return d

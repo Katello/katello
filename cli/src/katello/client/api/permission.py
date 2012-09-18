@@ -20,19 +20,24 @@ class PermissionAPI(KatelloAPI):
     """
     Connection class to access Permissions
     """
-    def create(self, roleId, name, description, type, verbs, tagIds, orgId = None):
+    def create(self, roleId, name, description, type_in, verbs, tagIds, orgId = None, all_tags = False):
         data = {
             "name": name,
             "description": description,
-            "type": type,
+            "type": type_in,
             "verbs": verbs,
-            "tags": tagIds,
             "organization_id": orgId
         }
+
+        if all_tags:
+            data["all_tags"] = "True"
+        else:
+            data["tags"] = tagIds
+
         path = "/api/roles/%s/permissions/" % u_str(roleId)
         return self.server.POST(path, data)[1]
 
-    def permissions(self, roleId, query={}):
+    def permissions(self, roleId, query=None):
         path = "/api/roles/%s/permissions/" % u_str(roleId)
         return self.server.GET(path, query)[1]
 

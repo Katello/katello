@@ -1,5 +1,4 @@
 import os
-from gettext import gettext as _
 
 from katello.client.api.repo import RepoAPI
 from katello.client.core.base import BaseAction, Command
@@ -18,7 +17,7 @@ class List(PackageGroupAction):
 
     def setup_parser(self, parser):
         parser.add_option("--repo_id", dest="repo_id",
-                        help=_("repository id, string value (required)"))
+                        help=_("repository ID, string value (required)"))
 
     def check_options(self, validator):
         validator.require('repo_id')
@@ -47,9 +46,9 @@ class Info(PackageGroupAction):
 
     def setup_parser(self, parser):
         parser.add_option("--repo_id", dest="repo_id",
-                        help=_("repository id, string value (required)"))
+                        help=_("repository ID, string value (required)"))
         parser.add_option("--id", dest="id",
-                        help=_("package group id, string value (required)"))
+                        help=_("package group ID, string value (required)"))
 
     def check_options(self, validator):
         validator.require(('repo_id', 'id'))
@@ -62,7 +61,8 @@ class Info(PackageGroupAction):
         if group == None:
             system_exit(os.EX_DATAERR, _("Package group [%s] not found in repo [%s]") % (groupid, repoid))
 
-        group['conditional_package_names'] = [name+": "+required_package  for name, required_package in group['conditional_package_names'].items()]
+        group['conditional_package_names'] = [name+": "+required_package  \
+            for name, required_package in group['conditional_package_names'].items()]
 
         self.printer.set_header(_("Package Group Information"))
         self.printer.add_column('id')
@@ -82,7 +82,7 @@ class CategoryList(PackageGroupAction):
 
     def setup_parser(self, parser):
         parser.add_option("--repo_id", dest="repo_id",
-                        help=_("repository id, string value (required)"))
+                        help=_("repository ID, string value (required)"))
 
     def check_options(self, validator):
         validator.require('repo_id')
@@ -110,9 +110,9 @@ class CategoryInfo(PackageGroupAction):
 
     def setup_parser(self, parser):
         parser.add_option("--repo_id", dest="repo_id",
-                        help=_("repository id, string value (required)"))
+                        help=_("repository ID, string value (required)"))
         parser.add_option("--id", dest="id",
-                        help=_("package group category id, string value (required)"))
+                        help=_("package group category ID, string value (required)"))
 
     def check_options(self, validator):
         validator.require(('repo_id', 'id'))

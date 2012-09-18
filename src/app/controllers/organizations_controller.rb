@@ -73,43 +73,19 @@ class OrganizationsController < ApplicationController
   end
 
   def create
-    begin
-      org_params = params[:organization]
-      env_params = params[:environment]
-      cp_key = org_params[:name].tr(' ', '_')
-      # org is being deleted
-      if Organization.find_by_cp_key(cp_key).nil? && Organization.unscoped.find_by_cp_key(cp_key)
-        msg = _("Organization '%s' already exists and either has been scheduled for deletion or failed deletion.") % org_params[:name]
-        raise msg
-      end
+    org_params    = params[:organization]
+    env_params    = params[:environment]
+    @organization = Organization.new(:name => org_params[:name], :description => org_params[:description])
+    @organization.save!
 
-      if env_params[:name] && env_params[:name] != ''
-        @new_env = KTEnvironment.new(:name => env_params[:name], :description => env_params[:description])
-      else
-        @new_env = nil
-      end
-
-      org_created = false
-      @organization = Organization.new(:name => org_params[:name], :description => org_params[:description], :cp_key => cp_key)
-      @organization.save!
-      org_created = true
-
-      if @new_env
-        @new_env.organization = @organization
-        @new_env.prior = @organization.library
-        @new_env.save!
-      end
-      notify.success _("Organization '%s' was created.") % @organization["name"]
-    rescue Exception => error
-      notify.exception error
-      Rails.logger.error error.backtrace.join("\n")
-      #rollback creation of the org if the org creation passed but the environment was not created
-      if @organization && @organization.id #it is saved to the db
-        @organization.destroy
-      end
-
-      render :text=> error.to_s, :status=>:bad_request and return
+    if env_params[:name].present?
+      @new_env = KTEnvironment.new(:name => env_params[:name], :description => env_params[:description])
+      @new_env.organization = @organization
+      @new_env.prior = @organization.library
+      @new_env.save!
     end
+
+    notify.success _("Organization '%s' was created.") % @organization["name"]
 
     if search_validate(Organization, @organization.id, params[:search])
       notify.success _("Click on 'Add Environment' to create the first environment") if @new_env.nil?
@@ -118,37 +94,44 @@ class OrganizationsController < ApplicationController
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @organization["name"]
       render :json => { :no_match => true }
     end
+
+  ensure
+    if @organization && @organization.persisted? && @new_env && @new_env.new_record?
+      @organization.destroy
+    end
   end
 
   def edit
+    @org_label = ""
+    user_default_org = current_user.default_org
+    if user_default_org && !user_default_org.nil?
+      if user_default_org == @organization
+        @org_label = _("This is your default organization.")
+      else
+        @org_label = _("Make this my default organization.")
+      end
+    else
+      @org_label = _("Make this my default organization.")
+    end
     @env_choices =  @organization.environments.collect {|p| [ p.name, p.name ]}
-    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:organization=>@organization, :editable=>@organization.editable?, :name => controller_display_name}
+    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:organization=>@organization, :editable=>@organization.editable?, :name => controller_display_name, :org_label=>@org_label}
   end
 
   def update
     result = ""
-    begin
-      if params[:organization].try :[], :description
-        result = params[:organization][:description] = params[:organization][:description].gsub("\n",'')
-      end
-
-      @organization.update_attributes!(params[:organization])
-      notify.success _("Organization '%s' was updated.") % @organization["name"]
-
-      if not search_validate(Organization, @organization.id, params[:search])
-        notify.message _("'%s' no longer matches the current search criteria.") % @organization["name"],
-                       :asynchronous => false
-      end
-
-      render :text => escape_html(result)
-
-    rescue Exception => error
-      notify.exception error
-
-      respond_to do |format|
-        format.js { render :partial => "common/notification", :status => :bad_request, :content_type => 'text/html' and return}
-      end
+    if params[:organization].try :[], :description
+      result = params[:organization][:description] = params[:organization][:description].gsub("\n",'')
     end
+
+    @organization.update_attributes!(:description => params[:organization][:description])
+    notify.success _("Organization '%s' was updated.") % @organization["name"]
+
+    if not search_validate(Organization, @organization.id, params[:search])
+      notify.message _("'%s' no longer matches the current search criteria.") % @organization["name"],
+                     :asynchronous => false
+    end
+
+    render :text => escape_html(result)
   end
 
   def destroy
@@ -162,9 +145,6 @@ class OrganizationsController < ApplicationController
     OrganizationDestroyer.destroy @organization, :notify => true
     notify.success _("Organization '%s' has been scheduled for background deletion.") % @organization.name
     render :partial => "common/list_remove", :locals => {:id=> id, :name=> controller_display_name}
-  rescue Exception => error
-    notify.exception error
-    render :text=> error.to_s, :status=>:bad_request and return
   end
 
   def environments_partial
@@ -202,28 +182,20 @@ class OrganizationsController < ApplicationController
       :type => "application/text"
   end
 
-
-
   protected
 
   def find_organization
-    @organization = Organization.first(:conditions => { :cp_key => params[:id].to_s }) or begin
-      message = _("Couldn't find organization with ID=%s") % params[:id]
+    @organization = Organization.find_by_cp_key(params[:id].to_s)
+    if @organization.blank?
+      message = _("Couldn't find organization with ID %s") % params[:id]
       notify.error message
       execute_after_filters
-      render :text => message, :status => :bad_request
+      render :text => message, :status => :not_found and return false
     end
   end
 
   def find_organization_by_id
-    begin
-      @organization = Organization.find(params[:id])
-      raise if @organization.nil?
-    rescue Exception => error
-      notify.error _("Couldn't find organization with ID=%s") % params[:id]
-      execute_after_filters
-      render :text => error, :status => :bad_request
-    end
+    @organization = Organization.find(params[:id])
   end
 
   def setup_options
@@ -246,6 +218,12 @@ class OrganizationsController < ApplicationController
 
   def controller_display_name
     return 'organization'
+  end
+
+  private
+
+  def default_notify_options
+    super.merge :organization => nil
   end
 
 end

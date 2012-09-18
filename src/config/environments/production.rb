@@ -12,7 +12,7 @@ Src::Application.configure do
   config.action_controller.perform_caching = true
 
   # Specifies the header that your server uses for sending files
-  config.action_dispatch.x_sendfile_header = "X-Sendfile"
+  # config.action_dispatch.x_sendfile_header = "X-Sendfile"
 
   # For nginx:
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect'
@@ -56,4 +56,8 @@ Src::Application.configure do
 
   # Do not update compass SASS files in production (we precompile them)
   Sass::Plugin.options[:never_update] = true
+
+  # if paranoia is set to true even children of Exception will be rescued
+  # set it true in production
+  config.exception_paranoia = true
 end

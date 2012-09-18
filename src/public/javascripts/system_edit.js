@@ -44,4 +44,43 @@ $(document).ready(function() {
         $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
     });
 
+    path_select = KT.path_select('environment_path_selector', 'edit_select_system_environment', KT.available_environments,
+        {select_mode:'single', submit_button_text: i18n.save, cancel_button_text: i18n.cancel, activate_on_click: true});
+
+    $(document).bind(path_select.get_submit_event(), function(event, environments) {
+        var selected_env_ids = KT.utils.values(path_select.get_selected())
+        if (selected_env_ids.length < 1) {
+            return;
+        }
+
+        var selector_element = $('#environment_path_selector');
+        selector_element.find(".KT_path_select_submit_button").attr('disabled', 'disabled');
+
+        var request = $.ajax({
+            url: selector_element.attr('data-url'),
+            type: 'PUT',
+            data: {'system[environment_id]': selected_env_ids[0]['id'], authenticity_token: AUTH_TOKEN}
+        });
+
+        request.done(function(msg) {
+            selector_element.find('span:first').text(selected_env_ids[0]['name']);
+
+            panel_element = $('input[data-ajax_url="' + selector_element.attr('data-url') + '"]');
+            KT.panel.list.refresh(panel_element.attr('value'), panel_element.attr('data-ajax_url'));
+
+            path_select.hide();
+            selector_element.find(".KT_path_select_submit_button").removeAttr('disabled');
+
+            path_select.clear_selected();
+            notices.checkNotices();
+        });
+
+        request.fail(function(jqXHR, textStatus) {
+            path_select.hide();
+            selector_element.find(".KT_path_select_submit_button").removeAttr('disabled');
+
+            path_select.clear_selected();
+            notices.checkNotices();
+        });
+    });
 });

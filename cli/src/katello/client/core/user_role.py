@@ -15,7 +15,6 @@
 #
 
 import os
-from gettext import gettext as _
 
 from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.permission import PermissionAPI
@@ -60,7 +59,7 @@ class Create(UserRoleAction):
     description = _('create user role')
 
     def setup_parser(self, parser):
-        parser.add_option('--name', dest='name',help=_("role name (required)"))
+        parser.add_option('--name', dest='name', help=_("role name (required)"))
         parser.add_option('--description', dest='desc', help=_("role description"))
 
     def check_options(self, validator):
@@ -85,12 +84,14 @@ class Info(UserRoleAction):
 
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name', help=_("user role name (required)"))
-        parser.add_option('--permission_details', dest='perm_details', action='store_true', help=_("print details about each of role's permissions"))
+        parser.add_option('--permission_details', dest='perm_details', action='store_true',
+            help=_("print details about each of role's permissions"))
 
     def check_options(self, validator):
         validator.require('name')
 
-    def getPermissions(self, roleId):
+    @classmethod
+    def getPermissions(cls, roleId):
         permApi = PermissionAPI()
         return permApi.permissions(roleId)
 
@@ -98,13 +99,13 @@ class Info(UserRoleAction):
         ldap_groups = self.api.ldap_groups(roleId)
         return [lg['ldap_group'] for lg in ldap_groups]
 
-
-    def formatPermission(self, p, details=True):
+    @classmethod
+    def formatPermission(cls, p, details=True):
         if details:
             verbs = ', '.join([v['verb'] for v in p['verbs']])
             tags  = ', '.join([t['formatted']['display_name'] for t in p['tags']])
-            type  = p['resource_type']['name']
-            return _("%s\n\tfor: %s\n\tverbs: %s\n\ton: %s") % (p['name'], type, verbs, tags)
+            type_in  = p['resource_type']['name']
+            return _("%s\n\tfor: %s\n\tverbs: %s\n\ton: %s") % (p['name'], type_in, verbs, tags)
         else:
             return p['name']
 
@@ -196,7 +197,7 @@ class AddLdapGroup(UserRoleAction):
 
         role = self.get_role(name)
 
-        user = self.api.add_ldap_group(role['id'], group_name)
+        self.api.add_ldap_group(role['id'], group_name)
         print _("Successfully added LDAP group [ %s ] to the user role [ %s ]") % (group_name, name)
         return os.EX_OK
 
@@ -219,7 +220,7 @@ class RemoveLdapGroup(UserRoleAction):
 
         role = self.get_role(name)
 
-        user = self.api.remove_ldap_group(role['id'], group_name)
+        self.api.remove_ldap_group(role['id'], group_name)
         print _("Successfully removed LDAP group [ %s ] from the user role [ %s ]") % (group_name, name)
         return os.EX_OK
 

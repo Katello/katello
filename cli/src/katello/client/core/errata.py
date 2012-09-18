@@ -15,11 +15,11 @@
 #
 
 import os
-from gettext import gettext as _
 
 from katello.client.api.errata import ErrataAPI
 from katello.client.api.system import SystemAPI
 from katello.client.api.system_group import SystemGroupAPI
+from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_repo, get_environment, get_product, get_system_group
 from katello.client.utils.encoding import u_str
@@ -43,16 +43,12 @@ class List(ErrataAction):
 
     def setup_parser(self, parser):
         parser.add_option('--repo_id', dest='repo_id',
-                      help=_("repository id"))
+                      help=_("repository ID"))
         parser.add_option('--repo', dest='repo',
                       help=_("repository name"))
-        parser.add_option('--org', dest='org',
-                      help=_("organization name eg: foo.example.com"))
-        parser.add_option('--environment', dest='env',
-                      help=_("environment name eg: production (default: Library)"))
-        parser.add_option('--product', dest='product',
-                      help=_("product name eg: fedora-14"))
-
+        opt_parser_add_org(parser)
+        opt_parser_add_environment(parser, default=_("Library"))
+        opt_parser_add_product(parser)
 
         parser.add_option('--type', dest='type',
                       help=_("filter errata by type eg: enhancements"))
@@ -69,7 +65,7 @@ class List(ErrataAction):
         repo_id   = self.get_option('repo_id')
         repo_name = self.get_option('repo')
         org_name  = self.get_option('org')
-        env_name  = self.get_option('env')
+        env_name  = self.get_option('environment')
         env_id, prod_id = None, None
         prod_name = self.get_option('product')
 
@@ -89,7 +85,8 @@ class List(ErrataAction):
                     prod_id = product["id"]
 
 
-        errata = self.api.errata_filter(repo_id=repo_id, environment_id=env_id, type=self.get_option('type'), severity=self.get_option('severity'),prod_id=prod_id)
+        errata = self.api.errata_filter(repo_id=repo_id, environment_id=env_id, type_in=self.get_option('type'),
+            severity=self.get_option('severity'), prod_id=prod_id)
 
         self.printer.set_header(_("Errata List"))
         self.printer.print_items(errata)
@@ -99,8 +96,7 @@ class SystemErrata(ErrataAction):
     description = _("list errata for a system")
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                       help=_("organization name (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                                    help=_("system name (required)"))
 
@@ -130,7 +126,7 @@ class SystemGroupErrata(ErrataAction):
     description = _("list errata for a system group")
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org', help=_("organization name (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name', help=_("system group name (required)"))
         parser.add_option('--type', dest='type', help=_("filter errata by type eg: bug, enhancement or security"))
 
@@ -142,12 +138,12 @@ class SystemGroupErrata(ErrataAction):
 
         org_name = self.get_option('org')
         group_name = self.get_option('name')
-        type = self.get_option('type')
+        type_in = self.get_option('type')
 
         system_group = get_system_group(org_name, group_name)
         system_group_id = system_group['id']
 
-        errata = systemGroupApi.errata(org_name, system_group_id, type=type)
+        errata = systemGroupApi.errata(org_name, system_group_id, type_in=type_in)
 
         self.printer.add_column('id')
         self.printer.add_column('title')
@@ -167,17 +163,14 @@ class Info(ErrataAction):
 
     def setup_parser(self, parser):
         parser.add_option('--id', dest='id',
-                               help=_("errata id, string value (required)"))
+                               help=_("errata ID, string value (required)"))
         parser.add_option('--repo_id', dest='repo_id',
-                      help=_("repository id"))
+                      help=_("repository ID"))
         parser.add_option('--repo', dest='repo',
                       help=_("repository name"))
-        parser.add_option('--org', dest='org',
-                      help=_("organization name eg: foo.example.com"))
-        parser.add_option('--environment', dest='env',
-                      help=_("environment name eg: production (default: Library)"))
-        parser.add_option('--product', dest='product',
-                      help=_("product name eg: fedora-14"))
+        opt_parser_add_org(parser)
+        opt_parser_add_environment(parser, default=_("Library"))
+        opt_parser_add_product(parser)
 
     def check_options(self, validator):
         validator.require('id')
@@ -189,7 +182,7 @@ class Info(ErrataAction):
         repoId   = self.get_option('repo_id')
         repoName = self.get_option('repo')
         orgName  = self.get_option('org')
-        envName  = self.get_option('env')
+        envName  = self.get_option('environment')
         prodName = self.get_option('product')
 
         if not repoId:

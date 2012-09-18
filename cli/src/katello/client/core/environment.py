@@ -15,9 +15,9 @@
 #
 
 import os
-from gettext import gettext as _
 
 from katello.client.api.environment import EnvironmentAPI
+from katello.client.cli.base import opt_parser_add_org
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record
 from katello.client.api.utils import get_environment
@@ -31,8 +31,8 @@ class EnvironmentAction(BaseAction):
         super(EnvironmentAction, self).__init__()
         self.api = EnvironmentAPI()
 
-
-    def get_prior_id(self, orgName, priorName):
+    @classmethod
+    def get_prior_id(cls, orgName, priorName):
         prior = get_environment(orgName, priorName)
         return prior["id"]
 
@@ -43,8 +43,7 @@ class List(EnvironmentAction):
     description = _('list known environments')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                       help=_("organization name eg: foo.example.com (required)"))
+        opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
         validator.require('org')
@@ -70,8 +69,7 @@ class Info(EnvironmentAction):
     description = _('list a specific environment')
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org',
-                       help=_("organization name eg: foo.example.com (required)"))
+        opt_parser_add_org(parser)
         parser.add_option('--name', dest='name',
                        help=_("environment name eg: foo.example.com (required)"))
 
@@ -103,8 +101,7 @@ class Create(EnvironmentAction):
     def setup_parser(self, parser):
         parser.add_option("--description", dest="description",
                                help=_("environment description eg: foo's environment"))
-        parser.add_option('--org', dest='org',
-                               help=_("organization name eg: foo.example.com (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                                help=_("environment name (required)"))
         parser.add_option('--prior', dest='prior',
@@ -120,7 +117,6 @@ class Create(EnvironmentAction):
         description = self.get_option('description')
         orgName     = self.get_option('org')
         priorName   = self.get_option('prior')
-        env         = self.get_option('env')
 
         priorId = self.get_prior_id(orgName, priorName)
 
@@ -140,8 +136,7 @@ class Update(EnvironmentAction):
     def setup_parser(self, parser):
         parser.add_option("--description", dest="description",
                                help=_("environment description eg: foo's environment"))
-        parser.add_option('--org', dest='org',
-                               help=_("organization name eg: foo.example.com (required)"))
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--prior', dest='prior',
                                help=_("name of prior environment"))
         parser.add_option('--name', dest='name',
@@ -177,8 +172,7 @@ class Delete(EnvironmentAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
                                help=_("environment name eg: foo.example.com (required)"))
-        parser.add_option('--org', dest='org',
-                               help=_("organization name eg: foo.example.com (required)"))
+        opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
         validator.require(('name', 'org'))

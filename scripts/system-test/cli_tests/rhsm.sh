@@ -20,7 +20,7 @@ sm_present() {
 }
 
 grab_pool_with_rhsm() {
-  sudo subscription-manager list --available --all | sed 's/Pool Id/PoolId/g' | grep PoolId | head -n1 | awk '{print $2}'
+  $SUDO subscription-manager list --available --all | grep '^Pool Id' | head -n1 | awk '{print $3}'
 }
 
 grab_pool_with_katello() {
@@ -46,50 +46,52 @@ if sm_present; then
     check_delayed_jobs_running
     test_success "changeset promote" changeset promote --org="$RHSM_ORG" --environment="$RHSM_ENV" --name="$CS1_NAME"
     
-    test_own_cmd_success "rhsm show organizations" sudo subscription-manager orgs --username="$USER" --password="$PASSWORD"
-    test_own_cmd_success "rhsm show environments" sudo subscription-manager environments --username="$USER" --password="$PASSWORD" --org="$RHSM_ORG"
-    test_own_cmd_success "rhsm registration with org" sudo subscription-manager register --username="$USER" --password="$PASSWORD" \
+    test_own_cmd_success "rhsm show organizations" $SUDO subscription-manager orgs --username="$USER" --password="$PASSWORD"
+    test_own_cmd_success "rhsm show environments" $SUDO subscription-manager environments --username="$USER" --password="$PASSWORD" --org="$RHSM_ORG"
+    test_own_cmd_success "rhsm registration with org" $SUDO subscription-manager register --username="$USER" --password="$PASSWORD" \
       --org="$RHSM_ORG" --name="$HOST" --force
-    test_own_cmd_success "rhsm show identity" sudo subscription-manager identity
-    test_own_cmd_success "rhsm registration with org/env" sudo subscription-manager register --username="$USER" --password="$PASSWORD" \
+    test_own_cmd_success "rhsm show identity" $SUDO subscription-manager identity
+    test_own_cmd_success "rhsm registration with org/env" $SUDO subscription-manager register --username="$USER" --password="$PASSWORD" \
       --org="$RHSM_ORG" --environment="$RHSM_ENV" --name="$HOST" --force
-    test_own_cmd_success "rhsm regenerate identity" sudo subscription-manager identity --regenerate
-    test_own_cmd_success "rhsm registration with one ak" sudo subscription-manager register \
+    test_own_cmd_success "rhsm regenerate identity" $SUDO subscription-manager identity --regenerate
+    test_own_cmd_success "rhsm registration with one ak" $SUDO subscription-manager register \
       --org="$RHSM_ORG" --activationkey="$RHSM_AK1" --name="$HOST" --force
-    test_own_cmd_success "rhsm force regenerate identity" sudo subscription-manager identity --regenerate --force --username="$USER" --password="$PASSWORD"
-    test_own_cmd_success "rhsm registration with two aks" sudo subscription-manager register \
+    test_own_cmd_success "rhsm force regenerate identity" $SUDO subscription-manager identity --regenerate --force --username="$USER" --password="$PASSWORD"
+    test_own_cmd_success "rhsm registration with two aks" $SUDO subscription-manager register \
       --org="$RHSM_ORG" --activationkey="$RHSM_AK1,$RHSM_AK2" --name="$HOST" --force
     # we expect we have installed a product and can't auto subscribe
-    test_own_cmd_exit_code 1 "rhsm auto subscribe" sudo subscription-manager subscribe --auto
-    test_own_cmd_success "rhsm list all" sudo subscription-manager list --available --all
+    test_own_cmd_exit_code 1 "rhsm auto subscribe" $SUDO subscription-manager subscribe --auto
+    test_own_cmd_success "rhsm list all" $SUDO subscription-manager list --available --all
     POOLID=$(grab_pool_with_rhsm)
-    test_own_cmd_success "rhsm subscribe to pool" sudo subscription-manager subscribe --pool "$POOLID"
-    test_own_cmd_success "rhsm list" sudo subscription-manager list
-    test_own_cmd_success "rhsm list available" sudo subscription-manager list --available
-    test_own_cmd_success "rhsm list consumed" sudo subscription-manager list --consumed
-    test_own_cmd_success "rhsm list ondate" sudo subscription-manager list --ondate=2011-09-15 --available
-    test_own_cmd_success "rhsm list repos" sudo subscription-manager repos --list
-    test_own_cmd_success "rhsm list service levels" sudo subscription-manager service-level --list
-    test_own_cmd_success "rhsm refresh" sudo subscription-manager refresh
-    SERIAL=$(sudo subscription-manager list --consumed | sed 's/Serial Number/SerialNumber/g' | /usr/bin/perl -ne 'print if /$RHSM_ZPROD/../^Serial/' | grep SerialNumber | head -n1 | awk '{print $2}') # grab first serial
-    test_own_cmd_success "rhsm unsubscribe to serial" sudo subscription-manager unsubscribe --serial="$SERIAL"
-    test_own_cmd_success "rhsm subscribe to pool" sudo subscription-manager subscribe --pool "$POOLID" # again
-    test_own_cmd_success "rhsm unsubscribe all" sudo subscription-manager unsubscribe --all
-    test_own_cmd_success "rhsm facts update" sudo subscription-manager facts --update
-    test_own_cmd_success "rhsm unregister" sudo subscription-manager unregister
+    test_own_cmd_success "rhsm subscribe to pool" $SUDO subscription-manager subscribe --pool "$POOLID"
+    test_own_cmd_success "rhsm list" $SUDO subscription-manager list
+    test_own_cmd_success "rhsm list available" $SUDO subscription-manager list --available
+    test_own_cmd_success "rhsm list consumed" $SUDO subscription-manager list --consumed
+    test_own_cmd_success "rhsm list ondate" $SUDO subscription-manager list --ondate=2011-09-15 --available
+    test_own_cmd_success "rhsm list repos" $SUDO subscription-manager repos --list
+    test_own_cmd_success "rhsm list service levels" $SUDO subscription-manager service-level --list
+    test_own_cmd_success "rhsm refresh" $SUDO subscription-manager refresh
+    test_own_cmd_success "rhsm unsubscribe all" $SUDO subscription-manager unsubscribe --all
+    test_own_cmd_success "rhsm subscribe to pool" $SUDO subscription-manager subscribe --pool "$POOLID" # again
+    SERIAL=$($SUDO subscription-manager list --consumed | sed 's/Serial Number/SerialNumber/g' | /usr/bin/perl -ne "print if /$RHSM_ZPROD/../^Serial/" | grep SerialNumber | head -n1 | awk '{print $2}') # grab first serial
+    test_own_cmd_success "rhsm unsubscribe to serial" $SUDO subscription-manager unsubscribe --serial="$SERIAL"
+    test_own_cmd_success "rhsm subscribe to pool" $SUDO subscription-manager subscribe --pool "$POOLID" # again
+    test_own_cmd_success "rhsm unsubscribe all" $SUDO subscription-manager unsubscribe --all
+    test_own_cmd_success "rhsm facts update" $SUDO subscription-manager facts --update
+    test_own_cmd_success "rhsm unregister" $SUDO subscription-manager unregister
 
     # testing auto-unsubscribe
-    test_own_cmd_success "rhsm registration with org" sudo subscription-manager register --username="$USER" \
+    test_own_cmd_success "rhsm registration with org" $SUDO subscription-manager register --username="$USER" \
         --password="$PASSWORD" --org="$RHSM_ORG" --force
-    name1=$(sudo subscription-manager identity | grep -o -E "^name:.*")
+    name1=$($SUDO subscription-manager identity | grep -o -E "^name:.*")
     name=${name1:6} # grab name
     test_success "system unregister in katello" system unregister --name="$name" --org="$RHSM_ORG"
 
     # ignore output from service restart: we don't care it says stopping failed
     # as long as the exit code is 0
-    function restart_rhsmcertd { sudo service rhsmcertd restart &>/dev/null; }
+    function restart_rhsmcertd { $SUDO service rhsmcertd restart &>/dev/null; }
     test_own_cmd_success "restart rhsmcrtd" restart_rhsmcertd
-    test_own_cmd_failure "system is not registered" sudo subscription-manager identity
+    test_own_cmd_failure "system is not registered" $SUDO subscription-manager identity
 
     # should cascade and delete everything
     test_success "org delete for rhsm" org delete --name="$RHSM_ORG"

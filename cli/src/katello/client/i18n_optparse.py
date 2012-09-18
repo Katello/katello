@@ -25,8 +25,6 @@ http://bugs.python.org/issue4319
 """
 
 import sys
-import gettext
-_ = gettext.gettext
 
 from optparse import OptionParser as _OptionParser
 
@@ -38,40 +36,44 @@ class OptionParserExitError(Exception):
     pass
 
 
+# pylint: disable=R0904
 class OptionParser(_OptionParser):
 
     # These are a bunch of strings that are marked for translation in optparse,
     # but not actually translated anywhere. Mark them for translation here,
     # so we get it picked up. for local translation, and then optparse will
     # use them.
+    @classmethod
+    def __no_op(cls):
+        _("Usage: %s\n")
+        _("Usage")
+        _("%prog [options]")
+        _("Options")
 
-    _("Usage: %s\n")
-    _("Usage")
-    _("%prog [options]")
-    _("Options")
+        # stuff for option value sanity checking
+        _("no such option: %s")
+        _("ambiguous option: %s (%s?)")
+        _("%s option requires an argument")
+        _("%s option requires %d arguments")
+        _("%s option does not take a value")
+        _("integer")
+        _("long integer")
+        _("floating-point")
+        _("complex")
+        _("option %s: invalid %s value: %r")
+        _("option %s: invalid choice: %r (choose from %s)")
 
-    # stuff for option value sanity checking
-    _("no such option: %s")
-    _("ambiguous option: %s (%s?)")
-    _("%s option requires an argument")
-    _("%s option requires %d arguments")
-    _("%s option does not take a value")
-    _("integer")
-    _("long integer")
-    _("floating-point")
-    _("complex")
-    _("option %s: invalid %s value: %r")
-    _("option %s: invalid choice: %r (choose from %s)")
-
-    # default options
-    _("show this help message and exit")
-    _("show program's version number and exit")
+        # default options
+        _("show this help message and exit")
+        _("show program's version number and exit")
 
     displayed_help = False
 
-    def print_help(self):
+    def print_help(self, out_file=None):
+        if out_file is None:
+            out_file = sys.stdout
         self.displayed_help = True
-        sys.stdout.write(self.format_help())
+        out_file.write(self.format_help())
 
 
     def exit(self, status=0, msg=None):
@@ -91,10 +93,10 @@ class OptionParser(_OptionParser):
         if isinstance(errorMsg, list):
             self.print_usage(sys.stderr)
 
-            i=0
+            i = 0
             while (i<len(errorMsg)):
                 errorMsg[i] = str(i+1) +") "+ errorMsg[i] +"\n"
-                i+=1
+                i += 1
             msgs = ''.join(errorMsg)
 
             self.exit(2, "%s: errors:\n%s" % (self.get_prog_name(), msgs))

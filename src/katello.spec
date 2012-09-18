@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.1.4
+Version:        1.1.12
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -64,7 +64,6 @@ Requires:       rubygem(simple-navigation) >= 3.3.4
 Requires:       rubygem(pg)
 Requires:       rubygem(delayed_job) >= 2.1.4
 Requires:       rubygem(acts_as_reportable) >= 1.1.1
-Requires:       rubygem(pdf-writer) >= 1.1.8
 Requires:       rubygem(ruport) >= 1.6.3
 Requires:       rubygem(daemons) >= 1.1.4
 Requires:       rubygem(uuidtools)
@@ -75,6 +74,8 @@ Requires:       rubygem(chunky_png)
 Requires:       rubygem(tire) >= 0.3.0
 Requires:       rubygem(tire) < 0.4
 Requires:       rubygem(ldap_fluff)
+Requires:       rubygem(apipie-rails)
+Requires:       lsof
 
 %if 0%{?rhel} == 6
 Requires:       redhat-logos >= 60.0.14
@@ -103,7 +104,35 @@ BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
-BuildRequires:  converge-ui-devel >= 0.8.3
+BuildRequires:  converge-ui-devel >= 1.0.1
+
+# we require this to be able to build api-docs
+BuildRequires:       rubygem(rails) >= 3.0.10
+BuildRequires:       rubygem(haml) >= 3.1.2
+BuildRequires:       rubygem(haml-rails)
+BuildRequires:       rubygem(json)
+BuildRequires:       rubygem(rest-client)
+BuildRequires:       rubygem(rails_warden)
+BuildRequires:       rubygem(net-ldap)
+BuildRequires:       rubygem(oauth)
+BuildRequires:       rubygem(i18n_data) >= 0.2.6
+BuildRequires:       rubygem(gettext_i18n_rails)
+BuildRequires:       rubygem(simple-navigation) >= 3.3.4
+BuildRequires:       rubygem(pg)
+BuildRequires:       rubygem(delayed_job) >= 2.1.4
+BuildRequires:       rubygem(acts_as_reportable) >= 1.1.1
+BuildRequires:       rubygem(ruport) >= 1.6.3
+BuildRequires:       rubygem(daemons) >= 1.1.4
+BuildRequires:       rubygem(uuidtools)
+BuildRequires:       rubygem(thin)
+BuildRequires:       rubygem(sass)
+BuildRequires:       rubygem(tire) >= 0.3.0
+BuildRequires:       rubygem(tire) < 0.4
+BuildRequires:       rubygem(ldap_fluff)
+BuildRequires:       rubygem(apipie-rails)
+BuildRequires:       rubygem(redcarpet)
+
+
 
 %description common
 Common bits for all Katello instances
@@ -119,9 +148,14 @@ Requires:       postgresql-server
 Requires:       postgresql
 Requires:       pulp-rpm-server
 Requires:       candlepin-tomcat6
+Requires:       candlepin-selinux
 # the following backend engine deps are required by <katello-configure>
 Requires:       mongodb mongodb-server
 Requires:       qpid-cpp-server qpid-cpp-client qpid-cpp-client-ssl qpid-cpp-server-ssl
+%if 0%{?fedora}
+Requires:       /etc/rc.d/init.d/qpidd
+%endif
+Requires:       foreman foreman-postgresql
 # </katello-configure>
 
 
@@ -173,11 +207,92 @@ Requires:       postgresql-server
 Requires:       postgresql
 Requires:       candlepin-tomcat6
 Requires:       thumbslug
+Requires:       thumbslug-selinux
 
 %description headpin-all
 This is the Katello-headpin meta-package.  If you want to install Headpin and all
 of its dependencies on a single machine, you should install this package
 and then run katello-configure to configure everything.
+
+%package api-docs
+Summary:         Documentation files for katello API
+BuildArch:       noarch
+Requires:        %{name}-common
+
+%description api-docs
+Documentation files for katello API.
+
+%package devel-all
+Summary:         Katello devel support (all subpackages)
+BuildArch:       noarch
+Requires:        %{name}-devel = %{version}-%{release}
+Requires:        %{name}-devel-profiling = %{version}-%{release}
+Requires:        %{name}-devel-test = %{version}-%{release}
+Requires:        %{name}-devel-jshintrb = %{version}-%{release}
+
+%description devel-all
+Meta package to install all %{name}-devel-* subpackages.
+
+%package devel
+Summary:         Katello devel support
+BuildArch:       noarch
+Requires:        %{name} = %{version}-%{release}
+Requires:        rubygem(redcarpet)
+%if 0%{?fedora} > 16
+Requires: rubygem(ruby-debug19)
+%else
+Requires: rubygem(ruby-debug)
+%endif
+Requires:        rubygem(ZenTest) >= 4.4.0
+Requires:        rubygem(rspec-rails) >= 2.0.0
+Requires:        rubygem(autotest-rails) >= 4.1.0
+Requires:        rubygem(rcov) >= 0.9.9
+Requires:        rubygem(webrat) >= 0.7.3
+Requires:        rubygem(nokogiri) >= 0.9.9
+Requires:        rubygem(yard) >= 0.5.3
+Requires:        rubygem(ci_reporter) >= 1.6.3
+Requires:        rubygem(gettext) >= 1.9.3
+Requires:        rubygem(ruby_parser)
+Requires:        rubygem(js-routes)
+Requires:        rubygem(newrelic_rpm)
+Requires:        rubygem(logical-insight)
+
+%description devel
+Rake tasks and dependecies for Katello developers
+
+%package devel-profiling
+Summary:         Katello devel support (profiling)
+BuildArch:       noarch
+Requires:        %{name} = %{version}-%{release}
+Requires:        rubygem(ruby-prof)
+
+%description devel-profiling
+Rake tasks and dependecies for Katello developers, which enables
+profiling.
+
+%package devel-jshintrb
+Summary:         Katello devel support (unit test and syntax checking)
+BuildArch:       noarch
+Requires:        %{name} = %{version}-%{release}
+Requires:        rubygem(newrelic_rpm)
+Requires:        rubygem(logical-insight)
+
+%description devel-jshintrb
+Rake tasks and dependecies for Katello developers, which enables
+syntax checking and is need for unit testing.
+
+%package devel-test
+Summary:         Katello devel support (testing)
+BuildArch:       noarch
+Requires:        %{name} = %{version}-%{release}
+Requires:        %{name}-devel = %{version}-%{release}
+Requires:        rubygem(vcr)
+Requires:        rubygem(webmock)
+Requires:        rubygem(minitest)
+
+%description devel-test
+Rake tasks and dependecies for Katello developers, which enables
+testing.
 
 %prep
 %setup -q
@@ -186,6 +301,8 @@ and then run katello-configure to configure everything.
 
 #copy converge-ui
 cp -R /usr/share/converge-ui-devel/* ./vendor/converge-ui
+rm ./public/fonts
+mv ./vendor/converge-ui/fonts ./public/fonts
 
 #configure Bundler
 rm -f Gemfile.lock
@@ -196,21 +313,37 @@ if [ -d branding ] ; then
   cp -r branding/* .
 fi
 
-#compile SASS files
-echo Compiling SASS files...
-compass compile
+%if ! 0%{?fastbuild:1}
+    #compile SASS files
+    echo Compiling SASS files...
+    compass compile
 
-#generate Rails JS/CSS/... assets
-echo Generating Rails assets...
-LC_ALL="en_US.UTF-8" jammit --config config/assets.yml -f
+    #generate Rails JS/CSS/... assets
+    echo Generating Rails assets...
+    LC_ALL="en_US.UTF-8" jammit --config config/assets.yml -f
 
-
-#create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
-echo Generating gettext files...
-ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")'
+    #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
+    echo Generating gettext files...
+    ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")'
+%endif
 
 #man pages
 a2x -d manpage -f manpage man/katello-service.8.asciidoc
+
+#api docs
+%if 0%{?fastbuild:1}
+    # make empty directories when doing fast build
+    mkdir -p %{buildroot}%{homedir}/public/apipie-cache
+    mkdir -p doc/apidoc
+%else
+    echo Generating API docs
+    rm -f Gemfile.lock
+    cp Gemfile Gemfile.old
+    echo 'gem "redcarpet"' >> Gemfile
+    rake apipie:static RAILS_ENV=apipie --trace
+    rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=apipie --trace
+    mv Gemfile.old Gemfile
+%endif
 
 %install
 #prepare dir structure
@@ -284,22 +417,12 @@ rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
 
-#remove development tasks
-rm %{buildroot}%{homedir}/lib/tasks/test.rake
-
 #branding
 if [ -d branding ] ; then
   ln -svf %{_datadir}/icons/hicolor/24x24/apps/system-logo-icon.png %{buildroot}%{homedir}/public/images/rh-logo.png
   ln -svf %{_sysconfdir}/favicon.png %{buildroot}%{homedir}/public/images/favicon.png
   rm -rf %{buildroot}%{homedir}/branding
 fi
-
-#remove development tasks
-rm %{buildroot}%{homedir}/lib/tasks/rcov.rake
-rm %{buildroot}%{homedir}/lib/tasks/yard.rake
-rm %{buildroot}%{homedir}/lib/tasks/hudson.rake
-rm %{buildroot}%{homedir}/lib/tasks/jsroutes.rake
-rm %{buildroot}%{homedir}/lib/tasks/jshint.rake
 
 #correct permissions
 find %{buildroot}%{homedir} -type d -print0 | xargs -0 chmod 755
@@ -315,20 +438,20 @@ install -m 644 man/katello-service.8 %{buildroot}/%{_mandir}/man8
 /sbin/chkconfig --add %{name}
 /sbin/chkconfig --add %{name}-jobs
 
-%postun common
-#update config/initializers/secret_token.rb with new key
-NEWKEY=$(</dev/urandom tr -dc A-Za-z0-9 | head -c128)
-sed -i "s/^Src::Application.config.secret_token = '.*'/Src::Application.config.secret_token = '$NEWKEY'/" \
-    %{homedir}/config/initializers/secret_token.rb
+#Generate secret token if the file does not exist
+#(this must be called both for installation and upgrade)
+TOKEN=/etc/katello/secret_token
+test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN \
+    && chmod 600 $TOKEN && chown katello:katello $TOKEN)
 
-if [ "$1" -ge "1" ] ; then
-    /sbin/service %{name} condrestart >/dev/null 2>&1 || :
-fi
+%posttrans common
+rm -f %{datadir}/Gemfile.lock 2>/dev/null
+/sbin/service %{name} condrestart >/dev/null 2>&1 || :
 
 %files
 %attr(600, katello, katello)
 %{_bindir}/katello-*
-%{_sbindir}/service-wait
+%ghost %attr(600, katello, katello) %{_sysconfdir}/%{name}/secret_token
 %{homedir}/app/controllers
 %{homedir}/app/helpers
 %{homedir}/app/mailers
@@ -349,22 +472,31 @@ fi
 %{homedir}/lib/notifications
 %{homedir}/lib/resources/cdn.rb
 %{homedir}/lib/tasks
+%exclude %{homedir}/lib/tasks/rcov.rake
+%exclude %{homedir}/lib/tasks/yard.rake
+%exclude %{homedir}/lib/tasks/hudson.rake
+%exclude %{homedir}/lib/tasks/jsroutes.rake
+%exclude %{homedir}/lib/tasks/jshint.rake
+%exclude %{homedir}/lib/tasks/test.rake
+%exclude %{homedir}/script/pulp_integration_tests
 %{homedir}/locale
 %{homedir}/public
+%exclude %{homedir}/public/apipie-cache
 %{homedir}/script
+%exclude %{homedir}/script/service-wait
 %{homedir}/spec
 %{homedir}/tmp
 %{homedir}/vendor
 %{homedir}/.bundle
 %{homedir}/config.ru
 %{homedir}/Gemfile
-%{homedir}/Gemfile.lock
-%{homedir}/Rakefile
+%ghost %attr(0644,katello,katello) %{_sharedstatedir}/%{name}/Gemfile.lock
 %config(noreplace) %{_sysconfdir}/%{name}/service-list
 %{_mandir}/man8/katello-service.8*
 
 %files common
-%doc README LICENSE doc/
+%doc README LICENSE
+%{_sbindir}/service-wait
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 %config(noreplace) %{_sysconfdir}/%{name}/thin.yml
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
@@ -380,6 +512,7 @@ fi
 %{homedir}/log
 %{homedir}/db/schema.rb
 %{homedir}/lib/util
+%{homedir}/script/service-wait
 
 %defattr(-, katello, katello)
 %attr(750, katello, katello) %{_localstatedir}/log/%{name}
@@ -432,6 +565,7 @@ fi
 %{homedir}/lib/glue/queue.rb
 %{homedir}/locale
 %{homedir}/public
+%exclude %{homedir}/public/apipie-cache
 %{homedir}/script
 %{homedir}/spec
 %{homedir}/tmp
@@ -439,10 +573,32 @@ fi
 %{homedir}/.bundle
 %{homedir}/config.ru
 %{homedir}/Gemfile
-%{homedir}/Gemfile.lock
+%ghost %{homedir}/Gemfile.lock
 %{homedir}/Rakefile
 
 %files headpin-all
+
+%files api-docs
+%doc doc/apidoc*
+%{homedir}/public/apipie-cache
+
+%files devel-all
+
+%files devel
+%{homedir}/lib/tasks/rcov.rake
+%{homedir}/lib/tasks/yard.rake
+%{homedir}/lib/tasks/hudson.rake
+%{homedir}/lib/tasks/jsroutes.rake
+%{homedir}/Rakefile
+
+%files devel-profiling
+
+%files devel-jshintrb
+%{homedir}/lib/tasks/jshint.rake
+
+%files devel-test
+%{homedir}/lib/tasks/test.rake
+%{homedir}/script/pulp_integration_tests
 
 %pre common
 # Add the "katello" user and group
@@ -460,6 +616,367 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Sep 12 2012 Ivan Necas <inecas@redhat.com> 1.1.12-1
+- subsfilter - Correctly update UI when subscription checkboxes toggled
+  (thomasmckay@redhat.com)
+- Org switcher "tipsy" fix and IE8 final fixes. (jrist@redhat.com)
+- 853229 - blank sync plan date gives incorrect error (jsherril@redhat.com)
+- Let errata types options be selectable (mbacovsk@redhat.com)
+- APIDOC - templates, templates_content (pajkycz@gmail.com)
+- APIDOC - providers, subscriptions (pajkycz@gmail.com)
+- 856303 - fencing system permission checks (jomara@redhat.com)
+- 854697 - manifest import - if first import fails, rollback (unimport it)
+  (bbuckingham@redhat.com)
+- 809259 - activation key - cli permissions changes (continued)
+  (bbuckingham@redhat.com)
+- 809259 - activation key - cli permissions changes (bbuckingham@redhat.com)
+- Fixed #842271 - filtering the "bugfix" errata in CLI doesn't work
+  (mbacovsk@redhat.com)
+- Initial commit on updated indexing appropriate stuff (paji@redhat.com)
+- 843064 - Content Search - Products: Not required unless searching for
+  Products itself, it's misleading when searching for Repos, Packages and
+  Errata (pajkycz@gmail.com)
+
+* Wed Sep 12 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.11-1
+- 856220 - adding time to puppet log (lzap+git@redhat.com)
+- Fix for removing user's default org. (jrist@redhat.com)
+- Fix for initial suggestion from @parthaa with new suggestion.
+  (jrist@redhat.com)
+- removed referebce to package autocomplete widget from content search page
+  (dmitri@redhat.com)
+- fix for BZ 843059: removed autocomplete on packages (dmitri@redhat.com)
+- BZ 835875: a couple of small fixes based on pull comments (dmitri@redhat.com)
+- Updating some permissions stuff and the save based on comments in the Pull
+  Request. (jrist@redhat.com)
+- preserve enviroment variable, especiall RAILS_ENV (msuchy@redhat.com)
+- 856220 - improving service-wait wrapper script (lzap+git@redhat.com)
+- Test fix for changeset creation without env (pajkycz@gmail.com)
+- fixes for BZ 835875: no longer possible to delete a repository if it's been
+  promoted. (dmitri@redhat.com)
+- 853056 - fix regression for registering with activation keys
+  (inecas@redhat.com)
+- fix dependecies on Fedora17+ (msuchy@redhat.com)
+- 852320 - undefined method `library?' for nil:NilClass (NoMethodError) when
+  creating a changeset without an environment (pajkycz@gmail.com)
+- 839575 - [CLI] Adding a system to system group using incorrect uuid should
+  raise an error instead of success (pajkycz@gmail.com)
+- Fixing the org serialization, tipsifying, some suggested tweaks.
+  (jrist@redhat.com)
+- 754738 - do not override variables in other procedures (msuchy@redhat.com)
+- 754738 - do not override status() from /etc/rc.d/init.d/functions
+  (msuchy@redhat.com)
+- 754738 - fix name of monitor pid file (msuchy@redhat.com)
+- 754738 - if program is already running, print failure, but return 0
+  (msuchy@redhat.com)
+- 754738 - if we fail in stopping delayed_jobs, kill it. One by one.
+  (msuchy@redhat.com)
+- 75473 - correctly solve status for all processes of delayed_jobs
+  (msuchy@redhat.com)
+- 754738 - log even output of service stop (msuchy@redhat.com)
+- use runuser instead of su (msuchy@redhat.com)
+- 75473 - do not delete nor truncate log (msuchy@redhat.com)
+- 754738 - properly return when katello is not configured (msuchy@redhat.com)
+- 854278 - After adding certain objects to katello one will see a warning, ''
+  did not meet the current search criteria and is not being shown
+  (komidore64@gmail.com)
+- 786226 - List of product repositories not sorted alphabetically
+  (pajkycz@gmail.com)
+- 852460 - System Groups left pane list does not use ellipsis
+  (pajkycz@gmail.com)
+- 855184 - Using --add_package gives undefined method `empty?' for nil:NilClass
+  error (pajkycz@gmail.com)
+- Final org switcher and interstitial changes for default organization.
+  (jrist@redhat.com)
+- Changes to accomodate the System Registration Defaults (jrist@redhat.com)
+- 840735 - headpin create environment returned error :There was an error
+  retrieving that row:Not Found (komidore64@gmail.com)
+- 841121 -  Long description returns PG error (pajkycz@gmail.com)
+- 811136 - Rendering error in production.log while editing the org's
+  description (pajkycz@gmail.com)
+- 841121 - Long description while creating system group returns PG error
+  (pajkycz@gmail.com)
+- Truncate Notice text to max 1024 characters. (pajkycz@gmail.com)
+- 841300 - Zoom out on 2-Pane page causes rendering error (pajkycz@gmail.com)
+- 843529 - cleanup task_statuses and job_tasks on system deletion
+  (bbuckingham@redhat.com)
+- Updates ConvergeUI to the latest. (ehelms@redhat.com)
+- gather up all packages for katello-debug (mmccune@redhat.com)
+- Stupid default setting for user set_org (jrist@redhat.com)
+- Minor accidental fix for extra char. (jrist@redhat.com)
+- Initial workings of new default org stuff. (jrist@redhat.com)
+- 834013 - return releaseVer as part of consumer json (thomasmckay@redhat.com)
+- 846719 - Removes footer links entirely. (ehelms@redhat.com)
+
+* Thu Sep 06 2012 Ivan Necas <inecas@redhat.com> 1.1.10-1
+- 852631 - system group - update model to raise exception when no groups exist
+  (bbuckingham@redhat.com)
+- 854573, 852167 - Fixes missing icons issue which also resolves an alignment
+  issue on the content search page. (ehelms@redhat.com)
+- linkback - make app prefix link helper (thomasmckay@redhat.com)
+- workaround for bz 854263 (msuchy@redhat.com)
+- 758651 - check if thin port is free before starting thin (msuchy@redhat.com)
+- Merge pull request #543 from bbuckingham/fork-841289 (lzap@redhat.com)
+- 853056 - system register without environment is working again
+  (lzap+git@redhat.com)
+- 853056 - improve 404 generic error message (lzap+git@redhat.com)
+- job without task should not exists, this is error (msuchy@redhat.com)
+- 851142 - CLI: changeset update shows strange error (pajkycz@gmail.com)
+- fix for BZ 821345 (dmitri@redhat.com)
+- link back to source of manifest in import history (thomasmckay@redhat.com)
+- Updating Converge-UI (mbacovsk@redhat.com)
+- 746765 - systems can be referenced by uuid (lzap+git@redhat.com)
+- 746765 - removing system unique name constraint (lzap+git@redhat.com)
+- 831664 - Repository sync failures not displaying detailed error in Notices
+  (pchalupa@redhat.com)
+- 841289 - perform cleanup on failed registration with activation key
+  (bbuckingham@redhat.com)
+- katello - disable bundler patch by default, fix broken condition
+  (pchalupa@redhat.com)
+- katello - add bundler patch to prefer rpm-gems (pchalupa@redhat.com)
+
+* Fri Aug 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.9-1
+- Do not insert spaces before changesets description (pajkycz@gmail.com)
+- 847858-actkeypool - fixed spec test failure (thomasmckay@redhat.com)
+- Updating converge-ui (jomara@redhat.com)
+- 847858 - only remove act keys when resource not found error
+  (thomasmckay@redhat.com)
+- 847115 - Extend scroll bug on content tab, with > 50 subscriptions only the
+  first 50 will populate. (pajkycz@gmail.com)
+- Added some unit to test the perm fixes (paji@redhat.com)
+- 843462 - system group search indexing should not include pulp content
+  (bbuckingham@redhat.com)
+- Added permissions for content delete (paji@redhat.com)
+- 841857 - fixing LDAP logins in katello mode (jomara@redhat.com)
+- 842569 - system groups - fix for TypeError on status of errata install
+  (bbuckingham@redhat.com)
+- 811556 - Displaced 'save' button while editing the changeset description
+  under "changeset history" tab (pajkycz@gmail.com)
+
+* Wed Aug 29 2012 Ivan Necas <inecas@redhat.com> 1.1.8-1
+- subsfilter - reset the cycle of table row colors to avoid having first row of
+  bottom table having same shading as the table header (ie. always start with
+  light color row) (thomasmckay@redhat.com)
+- subsfilter - removed second spinner when updating filtered subscriptions
+  (thomasmckay@redhat.com)
+- Available subscriptions on systems page now allow filtering matching what is
+  available in subscription-manager-gui (thomasmckay@redhat.com)
+- Content Search - Adds new data fields "data_type" and "value" to make testing
+  easier. (ehelms@redhat.com)
+- cdn-var-substitutor - isolate the logic to separate class (inecas@redhat.com)
+- 845613 - fix display of subscription status and rows (thomasmckay@redhat.com)
+- 845668 - removing console.log usage from js, which cause FF3.6 failures
+  (bbuckingham@redhat.com)
+- Moved service-wait link target to katello-common (mbacovsk@redhat.com)
+- 846321: Support creating permissions for all tags from the API and the cli
+  (bkearney@redhat.com)
+- 845995: Add local and server side checks for passing in bad group names and
+  ids (bkearney@redhat.com)
+- content-deletion - update content tree after product deletion
+  (bbuckingham@redhat.com)
+- 846251: Do not specify the attribute name for uniqueness validation
+  (bkearney@redhat.com)
+- content-deletion - update so that clicking on undefined changeset category
+  doesnothing (bbuckingham@redhat.com)
+- 844806 - katello incorrectly prevents products with the same name in an
+  organization (adprice@redhat.com)
+- 844806 - katello incorrectly prevents products with the same name in an
+  organization (adprice@redhat.com)
+- 849224 - thin now listens only on localhost (lzap+git@redhat.com)
+- katello - remove lists of rescue Exception usage (pchalupa@redhat.com)
+- katello - remove 'rescue Exception' (pchalupa@redhat.com)
+
+* Thu Aug 23 2012 Mike McCune <mmccune@redhat.com> 1.1.7-1
+- 846251: Do not specify the attribute name for uniqueness validation
+  (bkearney@redhat.com)
+- 850745 - secret_token is not generated properly (CVE-2012-3503)
+  (lzap+git@redhat.com)
+- katello-all - installs foreman as well (inecas@redhat.com)
+- 805127 - require candlepin-selinux (msuchy@redhat.com)
+- fix build errors (msuchy@redhat.com)
+- fix build errors on F17 (msuchy@redhat.com)
+
+* Tue Aug 21 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.6-1
+- remove Gemfile.lock after all packages are installed (msuchy@redhat.com)
+- content deletion - unit test fix (mmccune@redhat.com)
+- content-deletion - update product deletion to allow for re-promotion
+  (bbuckingham@redhat.com)
+- content-deletion - cleanup a few ui text strings (bbuckingham@redhat.com)
+- Changeset#remove_package! fix (pajkycz@gmail.com)
+- changesets content api test fix (pajkycz@gmail.com)
+- apidoc - removed duplicite api doc entry (mbacovsk@redhat.com)
+- converge-ui - accidentally downgraded during previous merge... :(
+  (bbuckingham@redhat.com)
+- Real. Fix. (Thx mmccne) for the user_sessions_controller (jrist@redhat.com)
+- Fix for user_sessions_controller.rb spec test failure. (jrist@redhat.com)
+- content deletion - putting commented code back in (mmccune@redhat.com)
+- content deletion - adding support for product deletion (mmccune@redhat.com)
+- content deletion - adding support for product deletion (mmccune@redhat.com)
+- Removed misleading/unused code in the deletion_changesets (paji@redhat.com)
+- api docs - fix loading environment in build phase (inecas@redhat.com)
+- api docs - show trace when API docs build fails (inecas@redhat.com)
+- Fix 1.9 compatibility issue in the ContentSearchController
+  (inecas@redhat.com)
+- api docs - fix wrong syntax for param description (inecas@redhat.com)
+- api docs - fix building for f17 - ruby 1.8 vs. 1.9 difference
+  (inecas@redhat.com)
+- Commented out unused parent template logic (paji@redhat.com)
+- content-deletion - fix issue w/ deletion tree not loading on last env
+  (bbuckingham@redhat.com)
+- changesets - fix notice type on successful promotion/deletion
+  (bbuckingham@redhat.com)
+- Added system template deletion feature (paji@redhat.com)
+- apidoc - docs for role_ldap_groups_controller (mbacovsk@redhat.com)
+- api docs - don't require redcarpet if cache is turned on (inecas@redhat.com)
+- content-deletion - convert action titles to tipsy for consistency
+  (bbuckingham@redhat.com)
+- content-deletion - update helptip to include both deletion and promotion
+  (bbuckingham@redhat.com)
+- content-deletion - add a tipsy to the 'Added' item in content tree
+  (bbuckingham@redhat.com)
+- content-deletion - add custom confirms for changeset deletion
+  (bbuckingham@redhat.com)
+- content-deletion - add title attribute to the changeset action bar
+  (bbuckingham@redhat.com)
+- content-deletion - update the content tree to use 'Added (Undo)' vs 'Remove'
+  (bbuckingham@redhat.com)
+- content-deletion - update the content tree to use 'Added (Undo)' vs 'Remove'
+  (bbuckingham@redhat.com)
+- changing message to "Insufficient Subscriptions are Attached to This System"
+  (adprice@redhat.com)
+- 845611 - Subscriptions are not current message is confusing for system with
+  insufficient subscriptions (adprice@redhat.com)
+- content-deletion - remove the changeset type from the sliding tree listing
+  (bbuckingham@redhat.com)
+- content-deletion - load changeset sliding tree based on changeset hash
+  (bbuckingham@redhat.com)
+- Quick fix to a bug introduced in the package deletion and promotion
+  (paji@redhat.com)
+- 843904 - Systems page: user will see System Group and Errata elements along
+  with install button and other. (adprice@redhat.com)
+- content-deletion - fix some references to accessing current chgset breadcrumb
+  (bbuckingham@redhat.com)
+- changesets - fix the locked icon image on changeset list
+  (bbuckingham@redhat.com)
+- content-deletion - initial chgs to support 2 changeset trees
+  (deletion/promotion) (bbuckingham@redhat.com)
+- Validation of locale during update handled by model. (ogmaciel@gnome.org)
+- Allow user to update his/her own localevia cli. Also, output the default
+  locale when using the info parameter. (ogmaciel@gnome.org)
+- Added --default_locale to CLI for user creation. (ogmaciel@gnome.org)
+- Fixed more spec tests (paji@redhat.com)
+- Fixed broken spec tests that occured after master merge (paji@redhat.com)
+- Removed unused methods in the pulp and reporb (paji@redhat.com)
+- Moved the add+remove repo packages method to orchestration layer
+  (paji@redhat.com)
+- content-deletion - add a promotion/deletion banner to the changeset tree
+  (bbuckingham@redhat.com)
+- Speeded up package deletion and promotion by using a differnt call in pulp
+- Revert "update converge ui" (mmccune@redhat.com)
+- update converge ui (mmccune@redhat.com)
+- content deletion - taking out unecessary fields from the JSON
+  (mmccune@redhat.com)
+- Updating the converge-ui version (paji@redhat.com)
+- content-deletion - update repo deletion to disable or remove based on env
+  (bbuckingham@redhat.com)
+- content-deletion - updates to handle last env in path
+  (bbuckingham@redhat.com)
+- Fixes for some of API issues (pajkycz@gmail.com)
+- content deletion - proper deletion support in the CLI (mmccune@redhat.com)
+- content-deletion - minor changes to changeset history
+  (bbuckingham@redhat.com)
+- content-deletion - add changeset type to changeset listing (changesets pg)
+  (bbuckingham@redhat.com)
+- content-deletion - update specs to account for the promote vs apply name
+  change (bbuckingham@redhat.com)
+- content-deletion - change cs promote status text to apply (to be generic)
+  (bbuckingham@redhat.com)
+- content-deletion - update cs create to default to promotion
+  (bbuckingham@redhat.com)
+- content-deletion - add backend support for deleting repos
+  (bbuckingham@redhat.com)
+- content-deletion - add backend support for deleting distributions
+  (bbuckingham@redhat.com)
+- content-deletion - add backend support for deleting errata
+  (bbuckingham@redhat.com)
+- Adding a missing 'deleted' state to indicate succesfu completion of delete
+  (paji@redhat.com)
+- Made the promotion UI use the 'apply' method generated by the model
+  (paji@redhat.com)
+- Added methods to generate repo metadata when packages are deleted
+  (paji@redhat.com)
+- Made the delete packages call use packages object (paji@redhat.com)
+- Made the deletion changeset more bare bones . Trying to just get package
+  delete workign at this point (paji@redhat.com)
+- content deletion - adding back in the CLI promote and apply
+  (mmccune@redhat.com)
+- content-deletion - update how changesets are listed when page loaded
+  (bbuckingham@redhat.com)
+- content-deletion - skip dependency resolution for deletion changesets
+  (bbuckingham@redhat.com)
+- content-deletion - first mods to integrate js w/ controller (apply/status)
+  (bbuckingham@redhat.com)
+- Added the deleting state (paji@redhat.com)
+- Fixed a compile glitch (paji@redhat.com)
+- content-deletion - fix promotion... accidental regression for env handling
+  (bbuckingham@redhat.com)
+- content-deletion - minor changes to allow creation of changeset in UI
+  (bbuckingham@redhat.com)
+- INitial work on remove packages (paji@redhat.com)
+- Fixed some unit tests. (paji@redhat.com)
+- fixed a typo (paji@redhat.com)
+- Adding a new changeset model for Content Deletion (paji@redhat.com)
+- content-deletion - set the ui action button to promote/delete based on cs
+  type (bbuckingham@redhat.com)
+- content-deletion - update navigation for changesets (bbuckingham@redhat.com)
+- content-deletion - only allow promotion changesets when in Library
+  (bbuckingham@redhat.com)
+- content-deletion - fix specs broken on previous commit
+  (bbuckingham@redhat.com)
+- content-deletion - associate proper env with changeset upon creation
+  (bbuckingham@redhat.com)
+- content-deletion - fix broken spec (bbuckingham@redhat.com)
+- content-deletion - changeset history - show changeset type
+  (bbuckingham@redhat.com)
+- content-deletion - show cs type on promotions cs edit details pane
+  (bbuckingham@redhat.com)
+- content-deletion - initial ui chgs for add/remove to deletion changeset
+  (bbuckingham@redhat.com)
+- promotions - bug - promoted repo can be promoted over and over
+  (bbuckingham@redhat.com)
+- promotions - fix bugs with removing packages from a changeset
+  (bbuckingham@redhat.com)
+- content-deletion - remove 'promotion' from several display text items
+  (bbuckingham@redhat.com)
+- content-deletion - update ui to support defining an action type on changeset
+  (bbuckingham@redhat.com)
+- Forgot to undo one part (paji@redhat.com)
+- Made some modifications on the initial model based on comments
+  (paji@redhat.com)
+- Added action type to  changeset to accomadate content deletion
+  (paji@redhat.com)
+
+* Thu Aug 16 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.5-1
+- Icon fix for content search: selector_icon-black
+- Switching oauth warden strategy to use request.headers
+- Converge-UI update for spinner fadeOut.
+- 838115 - Spinner fixes and org selection updates.
+- 841228, 844414 - Fix for logging in and not having an org.
+- Revert "fixed a small typo."
+- api docs - documentation of API
+- 830713 - fix monkey patch for ruby 1.9
+- removed an extraneous logging to js console
+- modified updating of system's environment on system edit page to piggyback on
+  jeditable events.
+- support for updating of system information screen-wide on system edit
+- save button in path_selector is now being disabled after clicking
+- various changes per code review
+- Support for editing of system environment via web ui
+- Org interstitial and switcher cleanup. 843853 and 841686 were fixed.
+- fixed a small typo.
+- Fix overriding the Rails.env in jshint.rake
+- 815802 - Description on package filter does not save properly
+- move service-wait to katello-common
+
 * Tue Aug 07 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.4-1
 - 842858 - Fixes path issue to locked icon when viewing available changesets on
   the promotion page. (ehelms@redhat.com)

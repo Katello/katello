@@ -69,17 +69,40 @@ class Api::SystemsController < Api::ApiController
 
   # this method is called from katello cli client and it does not work with activation keys
   # for activation keys there is method activate (see custom routes)
+  api :POST, "/environments/:environment_id/consumers", "Register a system in environment (compatibility reason)"
+  api :POST, "/environments/:environment_id/systems", "Register a system in environment"
+  param :facts, Hash, :desc => "Key-value hash of system-specific facts"
+  param :installedProducts, Array, :desc => "List of products installed on the system"
+  param :name, String, :desc => "Name of the system", :required => true
+  param :type, String, :desc => "Type of the system, it should always be 'system'", :required => true
+  param :serviceLevel, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT"
   def create
     system = System.create!(params.merge({:environment => @environment, :serviceLevel => params[:service_level]}))
     render :json => system.to_json
   end
 
+  api :POST, "/hypervisors", "Update the hypervisors information for environment"
+  desc <<DESC
+Takes a hash representing the mapping: host system having geust systems, e.g.:
+
+    { "host-uuid": ["guest-uuid-1", "guest-uuid-2'] }
+
+See virt-who tool for more details.
+DESC
   def hypervisors_update
     cp_response, hypervisors = System.register_hypervisors(@environment, params.except(:controller, :action))
     render :json => cp_response
   end
 
   # used for registering with activation keys
+  api :POST, "/consumers", "Register a system with activation key (compatibility)"
+  api :POST, "/organizations/:organization_id/systems", "Register a system with activation key"
+  param :activation_keys, String, :required => true
+  param :facts, Hash, :desc => "Key-value hash of system-specific facts"
+  param :installedProducts, Array, :desc => "List of products installed on the system"
+  param :name, String, :desc => "Name of the system", :required => true
+  param :type, String, :desc => "Type of the system, it should always be 'system'", :required => true
+  param :serviceLevel, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT"
   def activate
     # Activation keys are userless by definition so use the internal generic user
     # Set it before calling find_activation_keys to allow communication with candlepin
@@ -106,10 +129,12 @@ class Api::SystemsController < Api::ApiController
     end
   end
 
+  # TODO: Unreachable - remove
   def subscriptions
     render :json => @system.entitlements
   end
 
+  # TODO: Unreachable - remove
   def subscribe
     expected_params = params.with_indifferent_access.slice(:pool, :quantity)
     raise HttpErrors::BadRequest, _("Please provide pool and quantity") if expected_params.count != 2
@@ -117,26 +142,45 @@ class Api::SystemsController < Api::ApiController
     render :json => @system.to_json
   end
 
+  # TODO: Unreachable - remove
   def unsubscribe
     expected_params = params.with_indifferent_access.slice(:pool)
-    raise HttpErrors::BadRequest, _("Please provide pool id") if expected_params.count != 1
+    raise HttpErrors::BadRequest, _("Please provide pool ID") if expected_params.count != 1
     @system.unsubscribe(expected_params[:serial_id])
     render :json => @system.to_json
   end
 
+  api :POST, "/consumers/:id", "Regenerate consumer identity"
+  param :id, String, :desc => "UUID of the consumer"
+  desc <<-DESC
+Schedules the consumer identity certificate regeneration
+DESC
   def regenerate_identity_certificates
     @system.regenerate_identity_certificates
     render :json => @system.to_json
   end
 
+  api :PUT, "/consumers/:id", "Update system information (compatibility)"
+  api :PUT, "/systems/:id", "Update system information"
+  param :facts, Hash, :desc => "Key-value hash of system-specific facts"
+  param :installedProducts, Array, :desc => "List of products installed on the system"
+  param :name, String, :desc => "Name of the system"
+  param :serviceLevel, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT"
+  param :releaseVer, String, :desc => "Release of the os. The $releasever variable in repo url will be replaced with this value"
+  param :location, String, :desc => "Physical of the system"
   def update
     @system.update_attributes!(params.slice(:name, :description, :location, :facts, :guestIds, :installedProducts, :releaseVer, :serviceLevel, :environment_id))
     render :json => @system.to_json
   end
 
+  api :GET, "/environments/:environment_id/consumers", "List systems (compatibilty)"
+  api :GET, "/environments/:environment_id/systems", "List systems in environment"
+  api :GET, "/organizations/:organization_id/systems", "List systems in organization"
+  param :name, String, :desc => "Filter systems by name"
+  param :pool_id, String, :desc => "Filter systems by subscribed pool"
   def index
     # expected parameters
-    expected_params = params.slice('name')
+    expected_params = params.slice(:name, :uuid)
 
     systems = (@environment.nil?) ? @organization.systems : @environment.systems
     systems = systems.all_by_pool(params['pool_id']) if params['pool_id']
@@ -145,32 +189,57 @@ class Api::SystemsController < Api::ApiController
     render :json => systems.to_json
   end
 
+  api :GET, "/consumers/:id", "Show a system (compatibility)"
+  api :GET, "/systems/:id", "Show a system"
+  param :id, String, :desc => "UUID of the system", :required => true
   def show
     render :json => @system.to_json
   end
 
+  api :DELETE, "/consumers/:id", "Unregister a system (compatibility)"
+  api :DELETE, "/systems/:id", "Unregister a system"
+  param :id, String, :desc => "UUID of the system", :required => true
   def destroy
     @system.destroy
     render :text => _("Deleted system '#{params[:id]}'"), :status => 204
   end
 
+  api :GET, "/systems/:id/pools", "List pools a system is subscribed to"
+  param :id, String, :desc => "UUID of the system", :required => true
   def pools
-    listall = (params.has_key?(:listall) ? true : false)
-    render :json => { :pools => @system.available_pools_full(listall) }
+    match_system = (params.has_key? :match_system) ? params[:match_system].to_bool : false
+    match_installed = (params.has_key? :match_installed) ? params[:match_installed].to_bool : false
+    no_overlap = (params.has_key? :no_overlap) ? params[:no_overlap].to_bool : false
+
+    cp_pools = @system.filtered_pools(match_system, match_installed, no_overlap)
+
+    render :json => { :pools => cp_pools }
   end
 
+  api :GET, "/systems/:id/releases", "Show releases available for the system"
+  param :id, String, :desc => "UUID of the system", :required => true
+  desc <<-DESC
+A hint for choosing the right value for the releaseVer param
+DESC
   def releases
     render :json => { :releases => @system.available_releases }
   end
 
+  api :GET, "/systems/:id/packages", "List packages installed on the system"
+  param :id, String, :desc => "UUID of the system", :required => true
   def package_profile
     render :json => @system.package_profile.sort {|a,b| a["name"].downcase <=> b["name"].downcase}.to_json
   end
 
+  api :GET, "/systems/:id/errata", "List errata available for the system"
+  param :id, String, :desc => "UUID of the system", :required => true
   def errata
     render :json => Resources::Pulp::Consumer.errata(@system.uuid)
   end
 
+  api :PUT, "/consumers/:id/packages", "Update installed packages"
+  api :PUT, "/consumers/:id/profile", "Update installed packages"
+  param :id, String, :desc => "UUID of the system", :required => true
   def upload_package_profile
     if AppConfig.katello?
       raise HttpErrors::BadRequest, _("No package profile received for #{@system.name}") unless params.has_key?(:_json)
@@ -179,6 +248,8 @@ class Api::SystemsController < Api::ApiController
     render :json => @system.to_json
   end
 
+  api :GET, "/environments/:environment_id/systems/report", "Get system reports for the environment"
+  api :GET, "/organizations/:organization_id/systems/report", "Get system reports for the organization"
   def report
     data = @environment.nil? ? @organization.systems.readable(@organization) : @environment.systems.readable(@organization)
 
@@ -227,6 +298,9 @@ class Api::SystemsController < Api::ApiController
     end
   end
 
+  api :GET, "/organizations/:organization_id/systems/tasks", "List async tasks for the system"
+  param :system_name, String, :desc => "Name of the system"
+  param :system_uuid, String, :desc => "UUID of the system"
   def tasks
     query = TaskStatus.joins(:system).where(:"task_statuses.organization_id" => @organization.id)
     if @environment
@@ -234,6 +308,8 @@ class Api::SystemsController < Api::ApiController
     end
     if params[:system_name]
       query = query.where(:"systems.name" => params[:system_name])
+    elsif params[:system_uuid]
+      query = query.where(:"systems.uuid" => params[:system_uuid])
     end
 
     task_ids = query.select('task_statuses.id')
@@ -243,11 +319,18 @@ class Api::SystemsController < Api::ApiController
     render :json => @tasks.to_json
   end
 
+  api :GET, "/systems/tasks/:id", "Show details of the async task"
+  param :id, String, :desc => "UUID of the task", :required => true
   def task_show
     @task.refresh
     render :json => @task.to_json
   end
 
+  api :PUT, "/systems/:id/enabled_repos", "Update the information about enabled repositories"
+  desc <<-DESC
+Used by katello-agent to keep the information about enabled repositories up to date.
+This information is then used for computing the errata available for the system.
+DESC
   def enabled_repos
     repos = params['enabled_repos'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " enabled_repos")
     update_labels = repos['repos'].collect{ |r| r['repositoryid']} rescue raise(HttpErrors::BadRequest, _("Unable to parse repositories: #{$!}"))
@@ -279,6 +362,10 @@ class Api::SystemsController < Api::ApiController
     render :json => result.to_json
   end
 
+  api :POST, "/systems/:id/system_groups", "Add a system to groups"
+  param :system, Hash, :required => true do
+    param :system_group_ids, Array, :desc => "List of group ids to add the system to", :required => true
+  end
   def add_system_groups
     ids = params[:system][:system_group_ids]
     @system.system_group_ids = (@system.system_group_ids + ids).uniq
@@ -286,6 +373,10 @@ class Api::SystemsController < Api::ApiController
     render :json => @system.to_json
   end
 
+  api :DELETE, "/systems/:id/system_groups", "Remove a system from groups"
+  param :system, Hash, :required => true do
+    param :system_group_ids, Array, :desc => "List of group ids to add the system to", :required => true
+  end
   def remove_system_groups
     ids = params[:system][:system_group_ids]
     @system.system_group_ids = (@system.system_group_ids - ids).uniq

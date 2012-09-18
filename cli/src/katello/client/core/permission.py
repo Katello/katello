@@ -15,11 +15,11 @@
 #
 
 import os
-from gettext import gettext as _
 
 from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.permission import PermissionAPI
 from katello.client.api.utils import get_role, get_permission
+from katello.client.cli.base import opt_parser_add_org
 from katello.client.core.utils import system_exit, test_record
 from katello.client.utils.printer import GrepStrategy, VerboseStrategy
 from katello.client.core.base import BaseAction, Command
@@ -53,16 +53,20 @@ class Create(PermissionAction):
     description = _('create a permission for a user role')
 
     def setup_parser(self, parser):
-        parser.add_option('--user_role', dest='user_role',help=_("role name (required)"))
-        parser.add_option('--name', dest='name',help=_("permission name (required)"))
+        parser.add_option('--user_role', dest='user_role', help=_("role name (required)"))
+        parser.add_option('--name', dest='name', help=_("permission name (required)"))
         parser.add_option('--description', dest='desc', help=_("permission description"))
-        parser.add_option('--org', dest='org', help=_("organization name"))
+        opt_parser_add_org(parser)
         parser.add_option('--scope', dest='scope', help=_("scope of the permisson (required)"))
         parser.add_option('--verbs', dest='verbs', type="list", help=_("verbs for the permission"), default="")
         parser.add_option('--tags', dest='tags', type="list", help=_("tags for the permission"), default="")
+        parser.add_option('--all_tags', action="store_true", dest='all_tags',
+            help=_("use to set all tags"), default=False)
 
     def check_options(self, validator):
         validator.require(('user_role', 'name', 'scope'))
+        if (self.get_option('all_tags')) and (len(self.get_option('tags')) > 0):
+            system_exit(os.EX_DATAERR, _("Can not specify a set of tags and use --all_tags"))
 
     def tag_name_to_id_map(self, org_name, scope):
         permissions = self.getAvailablePermissions(org_name, scope)
@@ -91,12 +95,13 @@ class Create(PermissionAction):
         scope = self.get_option('scope')
         verbs = self.get_option('verbs')
         tags = self.get_option('tags')
+        all_tags = self.get_option('all_tags')
 
         tag_ids = self.tags_to_ids(tags, org_name, scope)
 
         role = get_role(role_name)
 
-        permission = self.api.create(role['id'], name, desc, scope, verbs, tag_ids, org_name)
+        permission = self.api.create(role['id'], name, desc, scope, verbs, tag_ids, org_name, all_tags)
         test_record(permission,
             _("Successfully created permission [ %s ] for user role [ %s ]") % (name, role['name']),
             _("Could not create permission [ %s ]") % name
@@ -108,8 +113,8 @@ class Delete(PermissionAction):
     description = _('delete a permission')
 
     def setup_parser(self, parser):
-        parser.add_option('--user_role', dest='user_role',help=_("role name (required)"))
-        parser.add_option('--name', dest='name',help=_("permission name (required)"))
+        parser.add_option('--user_role', dest='user_role', help=_("role name (required)"))
+        parser.add_option('--name', dest='name', help=_("permission name (required)"))
 
     def check_options(self, validator):
         validator.require(('user_role', 'name'))
@@ -131,15 +136,17 @@ class List(PermissionAction):
     description = _('list permissions for a user role')
 
     def setup_parser(self, parser):
-        parser.add_option('--user_role', dest='user_role',help=_("role name (required)"))
+        parser.add_option('--user_role', dest='user_role', help=_("role name (required)"))
 
     def check_options(self, validator):
         validator.require('user_role')
 
-    def format_verbs(self, verbs):
+    @classmethod
+    def format_verbs(cls, verbs):
         return [v['verb'] for v in verbs]
 
-    def format_tags(self, tags):
+    @classmethod
+    def format_tags(cls, tags):
         return [t['formatted']['display_name'] for t in tags]
 
     def run(self):
@@ -166,7 +173,7 @@ class ListAvailableVerbs(PermissionAction):
     grep_mode = False
 
     def setup_parser(self, parser):
-        parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com,\nlists organization specific verbs"))
+        opt_parser_add_org(parser)
         parser.add_option('--scope', dest='scope', help=_("filter listed results by scope"))
 
     def run(self):
@@ -212,18 +219,19 @@ class ListAvailableVerbs(PermissionAction):
         else:
             return lines
 
-    def formatVerb(self, verb):
+    def _formatVerb(self, verb):
         if self.grep_mode:
             return verb["name"]
         else:
             return ("%-20s (%s)" % (verb["name"], verb["display_name"]))
 
-    def formatTag(self, tag):
+    @classmethod
+    def _formatTag(cls, tag):
         return tag["display_name"]
 
-    def formatScope(self, scopeName, scopeData):
-        verbs = [self.formatVerb(v) for v in scopeData["verbs"]]
-        tags  = [self.formatTag(t) for t in scopeData["tags"]]
+    def _formatScope(self, scopeName, scopeData):
+        verbs = [self._formatVerb(v) for v in scopeData["verbs"]]
+        tags  = [self._formatTag(t) for t in scopeData["tags"]]
 
         item = {}
         item['scope'] = scopeName
@@ -236,7 +244,7 @@ class ListAvailableVerbs(PermissionAction):
         for scopeName in sorted(permissions.keys()):
             scopeData = permissions[scopeName]
             if listGlobal or not scopeData["global"]:
-                data.append(self.formatScope(scopeName, scopeData))
+                data.append(self._formatScope(scopeName, scopeData))
         return data
 
 

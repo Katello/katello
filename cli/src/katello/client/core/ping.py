@@ -14,10 +14,9 @@
 # in this software or its documentation.
 #
 
-from gettext import gettext as _
 
 from katello.client.api.ping import PingAPI
-from katello.client.core.base import BaseAction, Command
+from katello.client.core.base import BaseAction
 
 
 # base ping action --------------------------------------------------------
@@ -68,6 +67,7 @@ class Status(PingAction):
             return 0
 
         code = 0
+        # pylint: disable=W0612
         for serviceName, serviceStatus in self.__sortedStatuses(status, reverse=True):
             if serviceStatus['result'] != 'ok':
                 code += 1
@@ -84,20 +84,19 @@ class Status(PingAction):
         return statusList
 
 
-    def __sortedStatuses(self, status, reverse = False):
+    @classmethod
+    def __sortedStatuses(cls, status, reverse = False):
         for serviceName in sorted(status["status"].keys(), reverse=reverse):
             serviceStatus = status["status"][serviceName]
 
             yield (serviceName, serviceStatus)
 
+    @classmethod
+    def __buildOverallStatusDetail(cls, status):
+        return {'status': status["result"]}
 
-    def __buildOverallStatusDetail(self, status):
-        detail = {}
-        detail['status']  = status["result"]
-        return detail
-
-
-    def __buildServiceStatusDetail(self, serviceName, serviceStatus):
+    @classmethod
+    def __buildServiceStatusDetail(cls, serviceName, serviceStatus):
         detail = serviceStatus
         detail['service'] = serviceName
 

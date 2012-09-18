@@ -26,7 +26,7 @@ $(document).ready(function () {
         panelLeft = $(this).width();
         $('.block').not('#new').width(panelLeft - 17);
         apanel.width(940 - panelLeft);
-        $('.right').width(898 - panelLeft);
+        $('.right').width(885 - panelLeft);
         if (apanel.hasClass('opened')) {
             apanel.css({
                 "left": (panelLeft)
@@ -294,17 +294,17 @@ KT.panel = (function ($) {
                     handleScroll($('#panel-frame'));
 
                     thisPanel.css({
-                        "z-index": "200"
+                        "z-index": "0"
                     });
                     thisPanel.parent().css({
-                        "z-index": "20"
+                        "z-index": "0"
                     });
                     thisPanel.animate({
                         left: (panelLeft) + "px",
                         opacity: 1
                     }, 200, function () {
                         $(this).css({
-                            "z-index": "200"
+                            "z-index": "0"
                         });
                     }).removeClass('closed').addClass('opened').attr('data-id', activeBlockId);
                     activeBlock.addClass('active');
@@ -318,10 +318,10 @@ KT.panel = (function ($) {
                     // Keep the thisPanel open if they click another block
                     // remove previous classes besides opened
                     thisPanel.css({
-                        "z-index": "200"
+                        "z-index": "0"
                     });
                     thisPanel.parent().css({
-                        "z-index": "20"
+                        "z-index": "0"
                     });
                     thisPanel.addClass('opened').attr('data-id', activeBlockId);
                     $("#" + previousBlockId).removeClass('active');
@@ -419,7 +419,13 @@ KT.panel = (function ($) {
             paneljQ.height(height);
 
             if (paneljQ.length > 0) {
-                paneljQ.data('jsp').reinitialise();
+                // A corner-case in automation perhaps, but this can be reached where the 'jsp' data is
+                // not present. Fencing to avoid javascript error being thrown which results in
+                // jQuery.active not being properly decremented to zero (thus blocking test suite).
+                // https://bugzilla.redhat.com/show_bug.cgi?id=858193
+                if (paneljQ.data('jsp') !== undefined) {
+                    paneljQ.data('jsp').reinitialise();
+                }
             }
         },
         closePanel = function (jPanel) {
@@ -490,10 +496,10 @@ KT.panel = (function ($) {
                 opacity: 1
             }, 200, function () {
                 $(this).css({
-                    "z-index": "204"
+                    "z-index": "0"
                 });
                 $(this).parent().css({
-                    "z-index": "2"
+                    "z-index": "0"
                 });
                 $(this).removeClass('closed').addClass('opened');
             });

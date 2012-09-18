@@ -43,7 +43,7 @@ class RepoStatusTest(CLIActionTestCase):
         'name': REPO['name'],
         'product': PROD_NAME,
         'org': ORG_NAME,
-        'env': ENV_NAME,
+        'environment': ENV_NAME,
     }
 
     repo = None
