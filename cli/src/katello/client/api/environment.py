@@ -49,8 +49,9 @@ class EnvironmentAPI(KatelloAPI):
             return None
 
 
-    def create(self, orgId, name, description, priorId):
+    def create(self, orgId, name, label, description, priorId):
         envdata = {"name": name}
+        envdata = update_dict_unless_none(envdata, "label", label)
         envdata = update_dict_unless_none(envdata, "description", description)
         envdata = update_dict_unless_none(envdata, "prior", priorId)
 

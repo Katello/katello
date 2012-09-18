@@ -121,6 +121,8 @@ class Create(RepoAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
             help=_("repository name to assign (required)"))
+        parser.add_option('--label', dest='label',
+                               help=_("repo label, ASCII identifier for the repository with no spaces eg: custom-repo1"))
         parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES, 
             help=_("url path to the repository (required)"))
         opt_parser_add_product(parser, required=1)
@@ -134,6 +136,7 @@ class Create(RepoAction):
 
     def run(self):
         name     = self.get_option('name')
+        label    = self.get_option('label')
         url      = self.get_option('url')
         prodName = self.get_option('product')
         orgName  = self.get_option('org')
@@ -141,7 +144,7 @@ class Create(RepoAction):
         nogpgkey   = self.get_option('nogpgkey')
 
         product = get_product(orgName, prodName)
-        self.api.create(orgName, product["id"], name, url, gpgkey, nogpgkey)
+        self.api.create(orgName, product["id"], name, label, url, gpgkey, nogpgkey)
         print _("Successfully created repository [ %s ]") % name
 
         return os.EX_OK
@@ -154,6 +157,8 @@ class Discovery(RepoAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
             help=_("repository name prefix to add to all the discovered repositories (required)"))
+        parser.add_option('--label', dest='label',
+                               help=_("repo label, ASCII identifier to add to all discovered repositories.  (will be generated if not specified)"))
         parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES, 
             help=_("root url to perform discovery of repositories eg: http://porkchop.devel.redhat.com/ (required)"))
         parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
@@ -165,6 +170,7 @@ class Discovery(RepoAction):
 
     def run(self):
         name     = self.get_option('name')
+        label    = self.get_option('label')
         url      = self.get_option('url')
         assumeyes = self.get_option('assumeyes')
         prodName = self.get_option('product')
@@ -175,7 +181,7 @@ class Discovery(RepoAction):
         selectedurls = self.select_repositories(repourls, assumeyes)
 
         product = get_product(orgName, prodName)
-        self.create_repositories(orgName, product["id"], name, selectedurls)
+        self.create_repositories(orgName, product["id"], name, label, selectedurls)
 
         return os.EX_OK
 
@@ -233,17 +239,23 @@ class Discovery(RepoAction):
 
         return selection
 
-    def create_repositories(self, orgName, productid, name, selectedurls):
+    def create_repositories(self, orgName, productid, name, label, selectedurls):
         for repourl in selectedurls:
             parsedUrl = urlparse.urlparse(repourl)
             repoName = self.repository_name(name, parsedUrl.path) # pylint: disable=E1101
-            self.api.create(orgName, productid, repoName, repourl, None, None)
-
+            repoLabel = None
+            if label:
+                repoLabel = self.repository_name(label, parsedUrl.path) # pylint: disable=E1101
+            self.api.create(orgName, productid, repoName, repoLabel, repourl, None, None)
             print _("Successfully created repository [ %s ]") % repoName
 
     @classmethod
     def repository_name(cls, name, parsedUrlPath):
         return "%s%s" % (name, parsedUrlPath.replace("/", "_"))
+
+    @classmethod
+    def repository_label(cls, label, parsedUrlPath):
+        return "%s%s" % (label, parsedUrlPath.replace("/", "_"))
 
     @classmethod
     def __print_urls(cls, repourls, selectedurls):
@@ -419,6 +431,7 @@ class List(RepoAction):
 
         self.printer.add_column('id')
         self.printer.add_column('name')
+        self.printer.add_column('label')
         self.printer.add_column('package_count')
         self.printer.add_column('last_sync', formatter=format_sync_time)
 

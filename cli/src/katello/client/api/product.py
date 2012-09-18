@@ -44,9 +44,10 @@ class ProductAPI(KatelloAPI):
         else:
             return None
 
-    def create(self, provId, name, description, gpgkey):
+    def create(self, provId, name, label, description, gpgkey):
         product = {
             "name": name,
+            "label": label,
             "description": description,
             "gpg_key_name": gpgkey
         }

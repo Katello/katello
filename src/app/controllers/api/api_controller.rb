@@ -200,6 +200,25 @@ class Api::ApiController < ActionController::Base
      request.headers['User-Agent'].to_s =~ /^katello-cli/
   end
 
+  # Get the :label value from the params hash if it exists
+  # otherwise use the :name value and convert to ASCII
+  def labelize_params(params)
+    label = params[:label]
+    if params[:label].blank?
+      # Convert name to label
+      label = convert_str_to_label(params[:name])
+    end
+    label
+  end
+
+  # Convert a string into an ASCII restricted label with spaces converted to underscore, eg:
+  # "Some string with spaces" => "Some_string_with_spaces"
+  def convert_str_to_label(original)
+    spaces_to_underscores = original.tr(' ', '_')
+    # URLEncode the string to go from UTF8 -> ASSCII
+    URI::encode(spaces_to_underscores)
+  end
+
   protected
 
   if AppConfig.debug_rest
