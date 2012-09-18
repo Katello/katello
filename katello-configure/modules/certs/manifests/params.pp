@@ -23,4 +23,6 @@ class certs::params {
   # main keystore location
   $katello_pki_dir = "/etc/pki/katello"
   $katello_keystore = "$katello_pki_dir/keystore"
+
+  $candlepin_certs_dir = "/etc/candlepin/certs"
 }
