@@ -82,16 +82,6 @@ class EnvironmentsController < ApplicationController
     render :nothing => true
   end
 
-  # 'default_label' is an action that is used to  allow the UI to retrieve
-  # a default generated label based upon the name provided.
-  def default_label
-    if params[:name]
-      render :text => Katello::ModelUtils::labelize(params[:name])
-    else
-      render :nothing => true
-    end
-  end
-
   # PUT /environments/1
   def update
     priorUpdated = !params[:kt_environment][:prior].nil?
