@@ -59,7 +59,8 @@ class ProvidersController < ApplicationController
   def products_repos
     @products = @provider.products
     render :partial => "products_repos", :layout => "tupane_layout", :locals => {:provider => @provider,
-                                         :providers => @providers, :products => @products, :editable=>@provider.editable?}
+                                         :providers => @providers, :products => @products, :editable=>@provider.editable?,
+                                         :repositories_cloned_in_envrs=>repositories_cloned_in_envrs}
   end
 
   def import_progress
@@ -98,6 +99,7 @@ class ProvidersController < ApplicationController
 
   def edit
     render :partial => "edit", :layout => "tupane_layout", :locals => {:provider => @provider, :editable=>@provider.editable?,
+                                                                       :repositories_cloned_in_envrs=>repositories_cloned_in_envrs,
                                                                        :name=>controller_display_name}
   end
 
@@ -181,6 +183,12 @@ class ProvidersController < ApplicationController
 
   def search_filter
     @filter = {:organization_id => current_organization}
+  end
+
+  def repositories_cloned_in_envrs
+#    repositories = Repository.joins(:environment_product => [:product, :environment]).where("products.provider_id" => @provider.id, "environments.library" => true)
+    cloned_repositories = @provider.repositories.select {|r| r.promoted? }
+    cloned_repositories.collect {|r| [r.name, r.product.environments.select {|env| r.is_cloned_in?(env)}.map(&:name)] }
   end
 
 =begin
