@@ -9,8 +9,25 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+require 'util/model_util'
 
 module Katello
+
+  module LabelFromName
+    def self.included(base)
+      base.class_eval do
+        before_validation :setup_label_from_name
+      end
+    end
+
+    def setup_label_from_name
+      unless label
+        label = Katello::ModelUtils::labelize(name)
+      end
+    end
+  end
+
+
   module ModelUtils
 
     # hardcoded model names (uses kp_ prefix)
@@ -28,7 +45,14 @@ module Katello
     end
 
     def self.labelize name
-      name.gsub(".", "-").gsub(" ", "_").gsub(/[^a-z0-9\-_]/i,"")
+      unless name.ascii_only?
+        name = UUIDTools::UUID.random_create.to_s
+      else
+        name.gsub(/[^a-z0-9\-_]/i,"_")
+      end
+
+
     end
   end
+
 end
