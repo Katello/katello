@@ -36,7 +36,9 @@ KT.products = (function(){
             var spinner = $('#list-spinner');
             var dataScrollURL = more.attr("data-scroll_url");
 
-            var offset = parseInt(more.attr("data-offset"), 10) + parseInt(more.attr("data-page_size"), 10);
+            var offset = parseInt(more.attr("data-offset"), 10);
+            var page_size = parseInt(more.attr("data-page_size"), 10);
+            var products_count = parseInt(more.attr("data-products_count"), 0);
             dataScrollURL = dataScrollURL + "?offset=" + offset + "&order="+ $('#products_sort').attr("data-sort") +"&";
             spinner.fadeIn();
             $.ajax({
@@ -49,7 +51,8 @@ KT.products = (function(){
                     list.append(data);
                     $('#filter').keyup();
                     $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
-                    if (data.length == 0) {
+                    offset = offset + page_size;
+                    if (data.length == 0 || offset >= products_count) {
                         more.hide(); // Hide more button, but still use it to hold data
                     }
                     more.attr("data-offset", offset);
