@@ -33,8 +33,8 @@ describe Api::CustomInfoController do
 
     Resources::Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
 
-    @org = Organization.create!(:name => "test_org", :cp_key => "test_org")
-    @env1 = KTEnvironment.create!(:name => "test_env", :prior => @org.library.id, :organization => @org)
+    @org = Organization.create!(:name => "test_org", :label => "test_org")
+    @env1 = KTEnvironment.create!(:name => "test_env", :label => "test_env", :prior => @org.library.id, :organization => @org)
 
     @system = System.create!(:name => "test_sys", :cp_type => "system", :environment => @env1, :facts => facts)
   end

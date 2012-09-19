@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2012 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -23,8 +23,8 @@ describe CustomInfo do
   before(:each) do
     disable_org_orchestration
 
-    @organization = Organization.create!(:name => "test_org", :cp_key => "test_org")
-    @environment = KTEnvironment.create!(:name => "test_env", :prior => @organization.library.id, :organization => @organization)
+    @organization = Organization.create!(:name => "test_org", :label => "test_org")
+    @environment = KTEnvironment.create!(:name => "test_env", :label => "test_env", :prior => @organization.library.id, :organization => @organization)
 
     Organization.stub!(:first).and_return(@organization)
 
