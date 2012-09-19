@@ -14,7 +14,7 @@ class ProductsController < ApplicationController
   respond_to :html, :js
 
   before_filter :find_product, :only => [:edit, :update, :destroy]
-  before_filter :find_provider, :only => [:new, :create, :edit, :update, :destroy]
+  before_filter :find_provider, :only => [:new, :create, :default_label, :edit, :update, :destroy]
   before_filter :authorize
 
   def rules
@@ -25,6 +25,7 @@ class ProductsController < ApplicationController
     {
       :new => edit_test,
       :create => edit_test,
+      :default_label => edit_test,
       :edit =>read_test,
       :update => edit_test,
       :destroy => edit_test,
@@ -51,6 +52,16 @@ class ProductsController < ApplicationController
 
     notify.success _("Product '%s' created.") % product_params[:name]
     render :nothing => true
+  end
+
+  # 'default_label' is an action that is used to  allow the UI to retrieve
+  # a default generated label based upon the name provided.
+  def default_label
+    if params[:name]
+      render :text => Katello::ModelUtils::labelize(params[:name])
+    else
+      render :nothing => true
+    end
   end
 
   def update
