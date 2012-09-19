@@ -492,6 +492,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/Gemfile
 %ghost %attr(0644,katello,katello) %{_sharedstatedir}/%{name}/Gemfile.lock
 %config(noreplace) %{_sysconfdir}/%{name}/service-list
+%{homedir}/Rakefile
 %{_mandir}/man8/katello-service.8*
 
 %files common
@@ -589,7 +590,6 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/lib/tasks/yard.rake
 %{homedir}/lib/tasks/hudson.rake
 %{homedir}/lib/tasks/jsroutes.rake
-%{homedir}/Rakefile
 
 %files devel-profiling
 
