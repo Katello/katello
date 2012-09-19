@@ -36,4 +36,12 @@ describe Katello::ModelUtils do
     Tag.tags_for("providers", @o1.id).size.should be(2)
   end
 
+  context "labelize tests" do
+    specify {Katello::ModelUtils::labelize("sweet home alabama").should == "sweet_home_alabama"}
+    specify {Katello::ModelUtils::labelize("sweet-home+alabama").should == "sweet-home_alabama"}
+    specify {Katello::ModelUtils::labelize("sweet home 谷歌地球").should_not  =~ /sweet*/}
+    specify {Katello::ModelUtils::labelize("sweet home 谷歌地球").should  =~ /^[a-zA-Z0-9\-_]+$/}
+  end
+
+
 end
