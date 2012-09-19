@@ -86,6 +86,7 @@ install -p -m 644 %{modulename}.if \
 # Install %{name}-enable which will be called in %posttrans
 install -d %{buildroot}%{_sbindir}
 install -p -m 755 %{name}-enable %{buildroot}%{_sbindir}/%{name}-enable
+install -p -m 755 %{name}-relabel %{buildroot}%{_sbindir}/%{name}-relabel
 
 # Install man pages
 install -d -m 0755 %{buildroot}%{_mandir}/man8
@@ -121,6 +122,7 @@ fi
 %{_datadir}/selinux/devel/include/%{moduletype}/%{modulename}.if
 %{_mandir}/man8/*
 %attr(0755,root,root) %{_sbindir}/%{name}-enable
+%attr(0755,root,root) %{_sbindir}/%{name}-relabel
 %{_sysconfdir}/katello/secure
 
 %changelog
