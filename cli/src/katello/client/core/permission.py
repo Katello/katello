@@ -252,4 +252,4 @@ class ListAvailableVerbs(PermissionAction):
 
 class Permission(Command):
 
-    description = _('permission pecific actions in the katello server')
+    description = _('permission specific actions in the katello server')
