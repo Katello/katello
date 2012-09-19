@@ -15,7 +15,7 @@ class EnvironmentsController < ApplicationController
   require 'rubygems'
   require 'active_support/json'
 
-  before_filter :find_organization, :only => [:show, :edit, :update, :destroy, :index, :new, :create, :system_templates, :products]
+  before_filter :find_organization, :only => [:show, :edit, :update, :destroy, :index, :new, :create, :default_label, :system_templates, :products]
   before_filter :authorize
   before_filter :find_environment, :only => [:show, :edit, :update, :destroy, :system_templates, :products]
 
@@ -31,6 +31,7 @@ class EnvironmentsController < ApplicationController
       :new => manage_rule,
       :edit => view_rule,
       :create => manage_rule,
+      :default_label => manage_rule,
       :update => manage_rule,
       :destroy => manage_rule,
       :system_templates => view_akey_rule,
@@ -79,6 +80,16 @@ class EnvironmentsController < ApplicationController
     notify.success _("Environment '%s' was created.") % @environment.name
     #this render just means return a 200 success
     render :nothing => true
+  end
+
+  # 'default_label' is an action that is used to  allow the UI to retrieve
+  # a default generated label based upon the name provided.
+  def default_label
+    if params[:name]
+      render :text => Katello::ModelUtils::labelize(params[:name])
+    else
+      render :nothing => true
+    end
   end
 
   # PUT /environments/1

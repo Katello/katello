@@ -41,6 +41,7 @@ class OrganizationsController < ApplicationController
       :auto_complete_search => index_test,
       :new => create_test,
       :create => create_test,
+      :default_label => create_test,
       :edit => read_test,
       :update => edit_test,
       :destroy => delete_test,
@@ -98,6 +99,16 @@ class OrganizationsController < ApplicationController
   ensure
     if @organization && @organization.persisted? && @new_env && @new_env.new_record?
       @organization.destroy
+    end
+  end
+
+  # 'default_label' is an action that is used to  allow the UI to retrieve
+  # a default generated label based upon the name provided.
+  def default_label
+    if params[:name]
+      render :text => Katello::ModelUtils::labelize(params[:name])
+    else
+      render :nothing => true
     end
   end
 

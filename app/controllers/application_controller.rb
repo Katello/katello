@@ -12,6 +12,7 @@
 
 require 'util/threadsession'
 require 'util/search'
+require 'util/model_util'
 require 'cgi'
 require 'base64'
 
