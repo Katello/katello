@@ -37,10 +37,10 @@ describe Api::ChangesetsContentController, :katello => true do
   let(:distribution_id) { 4 }
 
   before(:each) do
-    @library    = KTEnvironment.new(:name => 'Library', :library => true)
+    @library    = KTEnvironment.new(:name=>'Library', :label=> 'Library', :library => true)
     @library.id = 2
     @library.stub(:library?).and_return(true)
-    @environment    = KTEnvironment.new(:name => 'environment', :library => false)
+    @environment    = KTEnvironment.new(:name=>'environment', :label=> 'environment', :library => false)
     @environment.id = 1
     @environment.stub(:library?).and_return(false)
     @environment.stub(:prior).and_return(@library)

@@ -85,7 +85,7 @@ module Glue::Pulp::Consumer
 
     def set_pulp_consumer
       Rails.logger.debug "Creating a consumer in pulp: #{self.name}"
-      return Resources::Pulp::Consumer.create(self.organization.cp_key, self.uuid, self.description)
+      return Resources::Pulp::Consumer.create(self.organization.label, self.uuid, self.description)
     rescue => e
       Rails.logger.error "Failed to create pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -95,7 +95,7 @@ module Glue::Pulp::Consumer
       return true if @changed_attributes.empty?
 
       Rails.logger.debug "Updating consumer in pulp: #{@old.name}"
-      Resources::Pulp::Consumer.update(self.organization.cp_key, self.uuid, self.description)
+      Resources::Pulp::Consumer.update(self.organization.label, self.uuid, self.description)
     rescue => e
       Rails.logger.error "Failed to update pulp consumer #{@old.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e

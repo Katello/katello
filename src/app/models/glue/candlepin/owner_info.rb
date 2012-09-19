@@ -15,7 +15,7 @@ class Glue::Candlepin::OwnerInfo
 
 
   def initialize(organization)
-      @info = Resources::Candlepin::OwnerInfo.find(organization.cp_key)
+      @info = Resources::Candlepin::OwnerInfo.find(organization.label)
   end
 
 

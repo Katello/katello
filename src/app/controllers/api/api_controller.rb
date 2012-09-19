@@ -93,7 +93,7 @@ class Api::ApiController < ActionController::Base
 
   def find_optional_organization
     if params[:organization_id]
-      @organization = Organization.first(:conditions => {:cp_key => params[:organization_id].to_s.tr(' ', '_')})
+      @organization = Organization.first(:conditions => {:label => params[:organization_id].to_s.tr(' ', '_')})
       raise HttpErrors::NotFound, _("Couldn't find organization '#{params[:organization_id]}'") if @organization.nil?
       @organization
     end
@@ -198,6 +198,25 @@ class Api::ApiController < ActionController::Base
 
   def request_from_katello_cli?
      request.headers['User-Agent'].to_s =~ /^katello-cli/
+  end
+
+  # Get the :label value from the params hash if it exists
+  # otherwise use the :name value and convert to ASCII
+  def labelize_params(params)
+    label = params[:label]
+    if params[:label].blank?
+      # Convert name to label
+      label = convert_str_to_label(params[:name])
+    end
+    label
+  end
+
+  # Convert a string into an ASCII restricted label with spaces converted to underscore, eg:
+  # "Some string with spaces" => "Some_string_with_spaces"
+  def convert_str_to_label(original)
+    spaces_to_underscores = original.tr(' ', '_')
+    # URLEncode the string to go from UTF8 -> ASSCII
+    URI::encode(spaces_to_underscores)
   end
 
   protected

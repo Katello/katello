@@ -31,6 +31,7 @@ class Product < ActiveRecord::Base
   mapping do
     indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_sort, :type => 'string', :index => :not_analyzed
+    indexes :label, :type => 'string', :index => :not_analyzed
     indexes :description, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_autocomplete, :type=>'string', :analyzer=>'autcomplete_name_analyzer'
   end
@@ -55,6 +56,7 @@ class Product < ActiveRecord::Base
   validates :description, :katello_description_format => true
   validates :environments, :library_presence => true
   validates :name, :presence => true, :katello_name_format => true
+  validates :label, :presence => true, :katello_label_format => true
 
   scope :with_repos_only, lambda { |env|
     with_repos(env, false)

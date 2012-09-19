@@ -17,7 +17,7 @@ describe Api::UebercertsController do
   include AuthorizationHelperMethods
   OWNER_KEY = "some_org"
 
-  let(:org) { Organization.new(:cp_key => OWNER_KEY) }
+  let(:org) { Organization.new(:label => OWNER_KEY) }
   before(:each) do
     login_user
     Organization.stub!(:first).and_return(org)
