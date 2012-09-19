@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'util/threadsession'
+require 'util/model_util'
 
 class Api::ApiController < ActionController::Base
   include ActionController::HttpAuthentication::Basic
@@ -206,17 +207,9 @@ class Api::ApiController < ActionController::Base
     label = params[:label]
     if params[:label].blank?
       # Convert name to label
-      label = convert_str_to_label(params[:name])
+      label = Katello::ModelUtils::labelize(params[:name])
     end
     label
-  end
-
-  # Convert a string into an ASCII restricted label with spaces converted to underscore, eg:
-  # "Some string with spaces" => "Some_string_with_spaces"
-  def convert_str_to_label(original)
-    spaces_to_underscores = original.tr(' ', '_')
-    # URLEncode the string to go from UTF8 -> ASSCII
-    URI::encode(spaces_to_underscores)
   end
 
   protected
