@@ -264,13 +264,16 @@ class SystemsController < ApplicationController
       return
     end
 
-    products , offset = first_objects @system.installedProducts.sort {|a,b| a['productName'].downcase <=> b['productName'].downcase}
-    render :partial=>"products", :layout => "tupane_layout", :locals=>{:system=>@system, :products => products, :offset => offset}
+    @products_count = @system.installedProducts.size
+    @products, @offset = first_objects @system.installedProducts.sort {|a,b| a['productName'].downcase <=> b['productName'].downcase}
+    render :partial=>"products", :layout=>"tupane_layout", :locals=>{
+        :system=>@system, :products=>@products,:offset=>@offset, :products_count=>@products_count}
   end
 
   def more_products
-    products, offset = more_objects @system.installedProducts.sort {|a,b| a['productName'].downcase <=> b['productName'].downcase}
-    render :partial=>"more_products", :locals=>{:system=>@system, :products => products, :offset=> offset}
+    # offset is computed in javascript but this one is used in tests
+    @products, @offset = more_objects @system.installedProducts.sort {|a,b| a['productName'].downcase <=> b['productName'].downcase}
+    render :partial=>"more_products", :locals=>{:system=>@system, :products=>@products}
   end
 
   def edit
@@ -751,7 +754,7 @@ class SystemsController < ApplicationController
       next_objects = []
     end
 
-    return next_objects, offset
+    return next_objects, offset+size
   end
 
 end
