@@ -71,16 +71,6 @@ class RepositoriesController < ApplicationController
     render :nothing => true, :status => :bad_request
   end
 
-  # 'default_label' is an action that is used to  allow the UI to retrieve
-  # a default generated label based upon the name provided.
-  def default_label
-    if params[:name]
-      render :text => Katello::ModelUtils::labelize(params[:name])
-    else
-      render :nothing => true
-    end
-  end
-
   def update_gpg_key
     if params[:gpg_key] != ""
       gpg = GpgKey.readable(current_organization).find(params[:gpg_key])

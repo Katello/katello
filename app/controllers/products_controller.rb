@@ -54,16 +54,6 @@ class ProductsController < ApplicationController
     render :nothing => true
   end
 
-  # 'default_label' is an action that is used to  allow the UI to retrieve
-  # a default generated label based upon the name provided.
-  def default_label
-    if params[:name]
-      render :text => Katello::ModelUtils::labelize(params[:name])
-    else
-      render :nothing => true
-    end
-  end
-
   def update
     result = params[:product].values.first
     @product.name = params[:product][:name] if params[:product][:name]
