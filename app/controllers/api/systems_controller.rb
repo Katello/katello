@@ -390,7 +390,7 @@ DESC
     return unless (params.has_key?(:organization_id) or params.has_key?(:owner))
 
     id = (params[:organization_id] || params[:owner]).tr(' ', '_')
-    @organization = Organization.first(:conditions => {:cp_key => id})
+    @organization = Organization.first(:conditions => {:label => id})
     raise HttpErrors::NotFound, _("Couldn't find organization '#{id}'") if @organization.nil?
     @organization
   end

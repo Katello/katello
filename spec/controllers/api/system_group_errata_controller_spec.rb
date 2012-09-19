@@ -34,7 +34,7 @@ describe Api::SystemGroupErrataController, :katello => true do
     disable_consumer_group_orchestration
     setup_system_creation
 
-    @environment = KTEnvironment.create!(:name=>"DEV", :prior=>@organization.library, :organization=>@organization)
+    @environment = KTEnvironment.create!(:name=>"DEV", :label=> "DEV", :prior=>@organization.library, :organization=>@organization)
     @system = System.create!(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
 
     @group = SystemGroup.new(:name=>"test_group", :organization=>@organization, :max_systems => 5)

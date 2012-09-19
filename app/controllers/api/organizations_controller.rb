@@ -37,14 +37,14 @@ class Api::OrganizationsController < Api::ApiController
   end
   def param_rules
     {
-      :create => [:name, :description],
+      :create => [:name, :label, :description],
       :update => {:organization  => [:name, :description]}
     }
   end
 
   api :GET, "/organizations", "List organizations"
   param :name, String, :desc => "name for filtering"
-  param :cp_key, String, :desc => "cp_key for filtering"
+  param :label, String, :desc => "label for filtering"
   param :description, String, :desc => "description"
   def index
     render :json => (Organization.readable.where query_params).to_json
@@ -58,9 +58,11 @@ class Api::OrganizationsController < Api::ApiController
 
   api :POST, "/organizations", "Create an organization"
   param :name, String, :desc => "name for the organization"
+  param :label, String, :desc => "ASCII label to identify the organization"
   param :description, String, :desc => "description"
   def create
-    render :json => Organization.create!(:name => params[:name], :description => params[:description], :cp_key => params[:name].tr(' ', '_')).to_json
+    label = labelize_params(params)
+    render :json => Organization.create!(:name => params[:name], :description => params[:description], :label => label).to_json
   end
 
   api :PUT, "/organizations/:id", "Update an organization"
@@ -80,7 +82,7 @@ class Api::OrganizationsController < Api::ApiController
   private
 
   def find_organization
-    @organization = Organization.first(:conditions => {:cp_key => params[:id].tr(' ', '_')})
+    @organization = Organization.first(:conditions => {:label => params[:id].tr(' ', '_')})
     raise HttpErrors::NotFound, _("Couldn't find organization '#{params[:id]}'") if @organization.nil?
     @organization
   end
