@@ -104,7 +104,6 @@ class Info(SystemAction):
         validator.mutually_exclude('environment', 'uuid')
 
     def run(self):
-        import epdb; epdb.set_trace()
         org_name = self.get_option('org')
         env_name = self.get_option('environment')
         sys_name = self.get_option('name')
@@ -768,7 +767,6 @@ class Report(SystemAction):
         validator.require('org')
 
     def run(self):
-        #import epdb; epdb.set_trace()
         orgId = self.get_option('org')
         envName = self.get_option('environment')
         format_in = self.get_option('format')

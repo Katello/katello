@@ -187,7 +187,7 @@ def get_system(org_name, sys_name, env_name=None, sys_uuid=None):
     if sys_uuid:
         systems = system_api.systems_by_org(org_name, {'uuid': sys_uuid})
         if systems is None:
-            raise ApiDataError(_("Could not find System [ %s ] in Org [ %s ]") % (sys_uuid, org_name))
+            raise ApiDataError(_("Could not find System [ %s ] in Org [ %s ]") % (sys_name, org_name))
         elif len(systems) != 1:
             raise ApiDataError(_("Found ambiguous Systems [ %s ] in Org [ %s ]") % (sys_uuid, org_name))
     elif env_name is None:
