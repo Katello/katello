@@ -30,7 +30,7 @@ describe Api::FiltersController, :katello => true do
     disable_filter_orchestration
     disable_product_orchestration
 
-    @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
+    @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
     @filter = Filter.create!(:name => pulp_id, :description => description, :package_list => package_list, :organization => @organization)
     @product = MemoStruct.new(:filters => [], :id => 1000)
   end
@@ -41,7 +41,7 @@ describe Api::FiltersController, :katello => true do
     end
 
     it "should find organization" do
-      post :create, :organization_id => @organization.cp_key, :name => pulp_id, :description => description, :package_list => package_list
+      post :create, :organization_id => @organization.label, :name => pulp_id, :description => description, :package_list => package_list
       assigns(:organization).should == @organization
     end
 
@@ -52,12 +52,12 @@ describe Api::FiltersController, :katello => true do
           :description => description,
           :package_list => package_list)).and_return({})
 
-      post :create, :organization_id => @organization.cp_key, :name => pulp_id, :description => description, :package_list => package_list
+      post :create, :organization_id => @organization.label, :name => pulp_id, :description => description, :package_list => package_list
     end
 
     it_should_behave_like "bad request"  do
       let(:req) do
-        post :create, :bad_foo => "ss", :organization_id => @organization.cp_key, :name => pulp_id, :description => description, :package_list => package_list
+        post :create, :bad_foo => "ss", :organization_id => @organization.label, :name => pulp_id, :description => description, :package_list => package_list
       end
     end
 
@@ -65,26 +65,26 @@ describe Api::FiltersController, :katello => true do
 
   context "list filters" do
     it "should find organization" do
-      get :index, :organization_id => @organization.cp_key
+      get :index, :organization_id => @organization.label
       assigns(:organization).should == @organization
     end
   end
 
   context "show filter" do
     it "should find filter" do
-      get :show, :organization_id => @organization.cp_key, :id => @filter.name
+      get :show, :organization_id => @organization.label, :id => @filter.name
       assigns(:filter).should == @filter
     end
   end
 
   context "delete filter" do
     it "should find filter" do
-      delete :destroy, :organization_id => @organization.cp_key, :id => @filter.name
+      delete :destroy, :organization_id => @organization.label, :id => @filter.name
       assigns(:filter).should == @filter
     end
 
     it "should delete filter" do
-      delete :destroy, :organization_id => @organization.cp_key, :id => @filter.name
+      delete :destroy, :organization_id => @organization.label, :id => @filter.name
       Filter.where(:id => @filter.id).should be_empty
     end
   end
@@ -97,16 +97,16 @@ describe Api::FiltersController, :katello => true do
 
     it "should find product" do
       Product.should_receive(:find_by_cp_id).once.with(product_id).and_return(@product)
-      put :update_product_filters, :organization_id => @organization.cp_key, :product_id => product_id, :filters => []
+      put :update_product_filters, :organization_id => @organization.label, :product_id => product_id, :filters => []
     end
 
     it "should find filters" do
       Filter.should_receive(:where).once.with(hash_including(:name => [@filter.name], :organization_id => @organization.id))
-      put :update_product_filters, :organization_id => @organization.cp_key, :product_id => product_id, :filters => [@filter.name]
+      put :update_product_filters, :organization_id => @organization.label, :product_id => product_id, :filters => [@filter.name]
     end
 
     it "should add new filter" do
-      put :update_product_filters, :organization_id => @organization.cp_key, :product_id => product_id, :filters => [@filter.name]
+      put :update_product_filters, :organization_id => @organization.label, :product_id => product_id, :filters => [@filter.name]
       assigns(:product).filters.size.should == 1
       assigns(:product).filters.should include(@filter)
     end

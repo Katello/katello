@@ -14,7 +14,7 @@ module Katello
   module ModelUtils
 
     # hardcoded model names (uses kp_ prefix)
-    @@table_to_model_hash = { 
+    @@table_to_model_hash = {
       "kt_environment" => KTEnvironment
     }
 
@@ -25,6 +25,10 @@ module Katello
     rescue NameError => e
       # constantize throws NameError
       return nil
+    end
+
+    def self.labelize name
+      name.gsub(".", "-").gsub(" ", "_").gsub(/[^a-z0-9\-_]/i,"")
     end
   end
 end

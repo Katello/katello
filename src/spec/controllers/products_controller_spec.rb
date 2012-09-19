@@ -95,7 +95,7 @@ describe ProductsController, :katello => true do
     context "when creating a product" do
       before do
         @prod_name = "booyeah"
-        post :create, :provider_id => @provider.id, :product => {:name=> @prod_name, :gpg_key => @gpg.id.to_s}
+        post :create, :provider_id => @provider.id, :product => {:name=> @prod_name, :gpg_key => @gpg.id.to_s, :label=>"boo"}
       end
       specify {response.should be_success}
       subject{Product.find_by_name(@prod_name)}
@@ -108,7 +108,7 @@ describe ProductsController, :katello => true do
 
     context "when updating a product" do
       before do
-        @product = Product.new({:name => "prod"})
+        @product = Product.new({:name=>"prod", :label=> "prod"})
         @product.provider = @provider
         @product.environments << @organization.library
         @product.stub(:arch).and_return('noarch')

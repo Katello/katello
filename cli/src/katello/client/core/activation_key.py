@@ -112,6 +112,7 @@ class Info(ActivationKeyAction):
         keyName = self.get_option('name')
 
         keys = self.api.activation_keys_by_organization(orgName, keyName)
+
         if len(keys) == 0:
             print >> sys.stderr, _("Could not find activation key [ %s ]") % keyName
             return os.EX_DATAERR

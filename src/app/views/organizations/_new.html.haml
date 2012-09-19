@@ -9,7 +9,7 @@
     = kt_form_for Organization.new do |form|
 
       = form.text_field :name, :label => _("Name")
-
+      = form.text_field :label, :label => _("Label")
       = form.text_area :description, :label => _("Description"), :size => "40x5"
 
       %fieldset
@@ -18,6 +18,10 @@
 
       = form.field :envname, :label => _("Name") do
         = text_field_tag 'environment[name]', nil, :tabindex => form.tabindex, :size => 30
+
+      = form.field :envlabel, :label => _("Label") do
+        = text_field_tag 'environment[name]', nil, :tabindex => form.tabindex, :size => 30
+
 
       = form.field :envdescription, :label => _("Description") do
         = text_area_tag 'environment[description]', nil, :tabindex => form.tabindex, :size => "40x5"

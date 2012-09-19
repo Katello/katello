@@ -64,7 +64,7 @@ describe Api::SyncController, :katello => true do
     describe "for product index" do
       let(:action) {:index}
       let(:req) do
-        get :index, :product_id => product_id, :organization_id => @organization.cp_key
+        get :index, :product_id => product_id, :organization_id => @organization.label
       end
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:read, :providers, nil, @organization) }
@@ -132,7 +132,7 @@ describe Api::SyncController, :katello => true do
 
       it "should find product if :product_id is specified" do
         stub_product_with_repo
-        controller.stub!(:params).and_return({:organization_id => @organization.cp_key, :product_id => @product.id })
+        controller.stub!(:params).and_return({:organization_id => @organization.label, :product_id => @product.id })
 
         controller.find_object.should == @product
       end
@@ -154,7 +154,7 @@ describe Api::SyncController, :katello => true do
 
     describe "start a sync" do
       before(:each) do
-        #@organization = Organization.create!(:name => "organization", :cp_key => "123")
+        #@organization = Organization.create!(:name=>"organization", :label=> "123")
         
         Resources::Pulp::Repository.stub(:sync).with("1").and_return(async_task_1)
         Resources::Pulp::Repository.stub(:sync).with("2").and_return(async_task_2)
@@ -195,7 +195,7 @@ describe Api::SyncController, :katello => true do
 
     describe "cancel a sync" do
       before(:each) do
-        @organization = Organization.create!(:name => "organization", :cp_key => "123")
+        @organization = Organization.create!(:name=>"organization", :label=> "123")
 
         @syncable = mock('syncable')
         @syncable.stub!(:id)
@@ -228,7 +228,7 @@ describe Api::SyncController, :katello => true do
 
     describe "get status of last sync" do
       before(:each) do
-        @organization = Organization.create!(:name => "organization", :cp_key => "123")
+        @organization = Organization.create!(:name=>"organization", :label => "123")
 
         @syncable = mock()
         @syncable.stub!(:latest_sync_statuses).once.and_return([async_task_1, async_task_2])
@@ -257,7 +257,7 @@ describe Api::SyncController, :katello => true do
       Organization.stub!(:first).and_return(@organization)
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
       Provider.stub!(:find).and_return(@provider)
-      @product = Product.new({:name => "prod"})
+      @product = Product.new({:name=>"prod", :label=> "prod"})
       @product.provider = @provider
       @product.environments << @organization.library
       @product.stub(:arch).and_return('noarch')
@@ -265,9 +265,9 @@ describe Api::SyncController, :katello => true do
       Product.stub!(:find).and_return(@product)
       Product.stub!(:find_by_cp_id).and_return(@product)
       ep = EnvironmentProduct.find_or_create(@organization.library, @product)
-      @repository = Repository.create!(:environment_product => ep, :name=> "repo_1", :pulp_id=>"1")
+      @repository = Repository.create!(:environment_product => ep, :name=> "repo_1", :label=> "repo_1_label", :pulp_id=>"1")
       Repository.stub(:find).and_return(@repository)
-      @repository2 = Repository.create!(:environment_product => ep, :name=> "repo_2", :pulp_id=>"2")
+      @repository2 = Repository.create!(:environment_product => ep, :name=> "repo_2", :label=> "repo_2_label", :pulp_id=>"2")
       Repository.stub(:find).and_return(@repository)
   end
 

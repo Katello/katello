@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'openssl'
+require 'util/model_util'
 
 module Glue::Pulp::Repos
 
@@ -38,13 +39,13 @@ module Glue::Pulp::Repos
     if for_cp
       "/#{content_path}"
     else
-      "#{org}/#{environment.name.gsub(/[^-\w]/,"_")}/#{content_path}"
+      "#{org}/#{environment.label}/#{content_path}"
     end
   end
 
   def self.repo_path_from_content_path(environment, content_path)
     content_path = content_path.sub(/^\//, "")
-    path_prefix = [environment.organization.name, environment.name].map {|x| x.gsub(/[^-\w]/,"_") }.join("/")
+    path_prefix = [environment.organization.label, environment.label].join("/")
     "#{path_prefix}/#{content_path}"
   end
 
@@ -53,7 +54,7 @@ module Glue::Pulp::Repos
     new_content = Glue::Candlepin::ProductContent.new({
       :content => {
         :name => repo.name,
-        :contentUrl => Glue::Pulp::Repos.custom_content_path(self, repo.name),
+        :contentUrl => Glue::Pulp::Repos.custom_content_path(self, repo.label),
         :gpgUrl => yum_gpg_key_url(repo),
         :type => "yum",
         :label => custom_content_label(repo),
@@ -83,24 +84,24 @@ module Glue::Pulp::Repos
 
   # repo path for custom product repos (RH repo paths are derived from
   # content url)
-  def self.custom_repo_path(environment, product, name)
-    prefix = [environment.organization.name,environment.name].map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
-    prefix + custom_content_path(product, name)
+  def self.custom_repo_path(environment, product, repo_label)
+    prefix = [environment.organization.label,environment.label].map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
+    prefix + custom_content_path(product, repo_label)
   end
 
-  def self.custom_content_path(product, name)
+  def self.custom_content_path(product, repo_label)
     parts = []
     # We generate repo path only for custom product content. We add this
     # constant string to avoid collisions with RH content. RH content url
     # begins usually with something like "/content/dist/rhel/...".
     # There we prefix custom content/repo url with "/custom/..."
     parts << "custom"
-    parts += [product.name,name]
+    parts += [product.label, repo_label]
     "/" + parts.map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
   end
 
   def custom_content_label(repo)
-    "#{self.organization.name} #{self.name} #{repo.name}".gsub(/\s/,"_")
+    "#{self.organization.label} #{self.label} #{repo.label}".gsub(/\s/,"_")
   end
 
   def self.clone_repo_path_for_cp(repo)
@@ -272,7 +273,7 @@ module Glue::Pulp::Repos
     end
 
     def sync
-      Rails.logger.debug "Syncing product #{name}"
+      Rails.logger.debug "Syncing product #{self.label}"
       self.repos(library).collect do |r|
         r.sync
       end.flatten
@@ -357,15 +358,15 @@ module Glue::Pulp::Repos
     end
 
     def cancel_sync
-      Rails.logger.info "Canceling synchronization of product #{name}"
+      Rails.logger.info "Canceling synchronization of product #{self.label}"
       for r in repos(library)
         r.cancel_sync
       end
     end
 
-    def repo_id(content_name, env_name = nil)
-      return content_name if content_name.include?(self.organization.name) && content_name.include?(self.name.to_s)
-      Glue::Pulp::Repo.repo_id(self.name.to_s, content_name.to_s, env_name, self.organization.name)
+    def repo_id(content_name, env_label = nil)
+      return content_name if content_name.include?(self.organization.label) && content_name.include?(self.label.to_s)
+      Glue::Pulp::Repo.repo_id(self.label.to_s, content_name.to_s, env_label, self.organization.label)
     end
 
     def repo_url(content_url)
@@ -381,14 +382,15 @@ module Glue::Pulp::Repos
       Repository.destroy_all(:id=>repo_id)
     end
 
-    def add_repo(name, url, repo_type, gpg = nil)
+    def add_repo(label, name, url, repo_type, gpg = nil)
       check_for_repo_conflicts(name)
       key = EnvironmentProduct.find_or_create(self.organization.library, self)
-      repo = Repository.create!(:environment_product => key, :pulp_id => repo_id(name),
+      repo = Repository.create!(:environment_product => key, :pulp_id => repo_id(label),
           :groupid => Glue::Pulp::Repos.groupid(self, self.library),
-          :relative_path => Glue::Pulp::Repos.custom_repo_path(self.library, self, name),
+          :relative_path => Glue::Pulp::Repos.custom_repo_path(self.library, self, label),
           :arch => arch,
           :name => name,
+          :label => label,
           :feed => url,
           :content_type => repo_type,
           :gpg_key => gpg
@@ -433,6 +435,7 @@ module Glue::Pulp::Repos
                                         :minor => version[:minor],
                                         :relative_path => Glue::Pulp::Repos.repo_path_from_content_path(self.library, path),
                                         :name => repo_name,
+                                        :label => Katello::ModelUtils::labelize(repo_name),
                                         :feed => feed_url,
                                         :feed_ca => ca,
                                         :feed_cert => self.certificate,
@@ -460,13 +463,13 @@ module Glue::Pulp::Repos
 
       deleted_content.each do |pc|
         Rails.logger.debug "deleting repository #{pc.content.label}"
-        Repository.destroy_all(:pulp_id => repo_id(pc.content.name))
+        Repository.destroy_all(:pulp_id => repo_id(pc.content.label))
       end
 
       added_content.each do |pc|
-        if !(self.environments.map(&:name).any? {|name| pc.content.name.include?(name)}) || pc.content.name.include?('Library')
-          Rails.logger.debug "creating repository #{repo_id(pc.content.name)}"
-          self.add_repo(pc.content.name, repo_url(pc.content.contentUrl), pc.content.type)
+        if !(self.environments.map(&:label).any? {|label| pc.content.label.include?(label)}) || pc.content.label.include?('Library')
+          Rails.logger.debug "creating repository #{repo_id(pc.content.label)}"
+          self.add_repo(pc.content.label, repo_url(pc.content.contentUrl), pc.content.type)
         else
           raise "New content was added to environment other than Library. Please use promotion instead."
         end
@@ -491,7 +494,7 @@ module Glue::Pulp::Repos
 
     def del_repos
       #destroy all repos in all environments
-      Rails.logger.debug "deleting all repositories in product #{name}"
+      Rails.logger.debug "deleting all repositories in product #{self.label}"
       self.environment_products.destroy_all
       true
     end
@@ -501,17 +504,17 @@ module Glue::Pulp::Repos
         when :create
           # no repositories are added when a product is created
         when :import_from_cp
-          pre_queue.create(:name => "create pulp repositories for product: #{self.name}",      :priority => 1, :action => [self, :set_repos])
+          pre_queue.create(:name => "create pulp repositories for product: #{self.label}",      :priority => 1, :action => [self, :set_repos])
         when :update
           #called when sync schedule changed, repo added, repo deleted
-          pre_queue.create(:name => "setting up pulp sync schedule for product: #{self.name}", :priority => 2, :action => [self, :setup_sync_schedule])
+          pre_queue.create(:name => "setting up pulp sync schedule for product: #{self.label}", :priority => 2, :action => [self, :setup_sync_schedule])
         when :promote
           # do nothing, as repos have already been promoted (see promote_repos method)
       end
     end
 
     def destroy_repos_orchestration
-      pre_queue.create(:name => "delete pulp repositories for product: #{self.name}", :priority => 6, :action => [self, :del_repos])
+      pre_queue.create(:name => "delete pulp repositories for product: #{self.label}", :priority => 6, :action => [self, :del_repos])
     end
 
     def add_filters_orchestration(added_filter)
@@ -580,7 +583,7 @@ module Glue::Pulp::Repos
       is_dupe =  Repository.joins(:environment_product).where( :name=> repo_name,
               "environment_products.product_id" => self.id, "environment_products.environment_id"=> self.library.id).count > 0
       if is_dupe
-        raise Errors::ConflictException.new(_("There is already a repo with the name [ %s ] for product [ %s ]") % [repo_name, self.name])
+        raise Errors::ConflictException.new(_("There is already a repo with the name [ %s ] for product [ %s ]") % [repo_name, self.label])
       end
     end
 
