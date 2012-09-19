@@ -1,4 +1,4 @@
-#
+#o
 # Copyright 2011 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
@@ -24,9 +24,9 @@ describe ActivationKey do
     disable_consumer_group_orchestration
     disable_product_orchestration
 
-    @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-    @environment_1 = KTEnvironment.create!(:name => 'dev', :prior => @organization.library.id, :organization => @organization)
-    @environment_2 = KTEnvironment.create!(:name => 'test', :prior => @environment_1.id, :organization => @organization)
+    @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
+    @environment_1 = KTEnvironment.create!(:name=>'dev', :label=> 'dev', :prior => @organization.library.id, :organization => @organization)
+    @environment_2 = KTEnvironment.create!(:name=>'test', :label=> 'test', :prior => @environment_1.id, :organization => @organization)
     @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @environment_1) if AppConfig.katello?
     @system_template_2 = SystemTemplate.create!(:name => 'template2', :environment => @environment_1) if AppConfig.katello?
     @system_template_env2 = SystemTemplate.create!(:name => 'template3', :environment => @environment_2) if AppConfig.katello?
@@ -66,8 +66,8 @@ describe ActivationKey do
     end
 
     it "should be invalid if environment in another org is specified" do
-      org_2 = Organization.create!(:name => 'test_org2', :cp_key => 'test_org2')
-      env_1_org2 = KTEnvironment.create!(:name => 'dev', :prior => org_2.library.id, :organization => org_2)
+      org_2 = Organization.create!(:name=>'test_org2', :label=> 'test_org2')
+      env_1_org2 = KTEnvironment.create!(:name=>'dev', :label=> 'dev', :prior => org_2.library.id, :organization => org_2)
       @akey.name = 'invalid key'
       @akey.organization=@organization
       @akey.environment = env_1_org2
@@ -229,7 +229,7 @@ describe ActivationKey do
       @system.should_receive(:sockets).and_return(sockets)
       dates.each do |k,v|
         unless Product.find_by_cp_id(v[:productId])
-          product = @organization.redhat_provider.products.create!(:cp_id => v[:productId], :name => "Blah Server OS #{v[:productId]}") do |p|
+          product = @organization.redhat_provider.products.create!(:label =>"blah", :cp_id => v[:productId], :name => "Blah Server OS #{v[:productId]}") do |p|
             p.environments = [@organization.library,
                               @environment_1,
                               @environment_2]

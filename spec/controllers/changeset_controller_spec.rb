@@ -21,8 +21,8 @@ describe ChangesetsController, :katello => true do
   module CSControllerTest
 
     ENV_NAME = "environment_name"
-    ENVIRONMENT = {:name => ENV_NAME, :description => nil}
-    NEXT_ENVIRONMENT = {:name => "next_env_name", :description => nil}
+    ENVIRONMENT = {:name => ENV_NAME, :label=>"env_label", :description => nil}
+    NEXT_ENVIRONMENT = {:name => "next_env_name", :label => "next_env_name", :description => nil}
     CHANGESET = {:id=>1, :promotion_date=>Time.now, :name=>"oldname"}
 
   end
@@ -213,8 +213,8 @@ describe ChangesetsController, :katello => true do
     before (:each) do
       @organization = new_test_org
       @env1 = @organization.library
-      @env2 = KTEnvironment.create!(:name=>"FOO", :prior => @env1, :organization=>@organization)
-      @env3 = KTEnvironment.create!(:name=>"FOO2", :prior => @env2, :organization=>@organization)
+      @env2 = KTEnvironment.create!(:name=>"FOO", :label=> "FOO", :prior => @env1, :organization=>@organization)
+      @env3 = KTEnvironment.create!(:name=>"FOO2", :label=> "FOO2", :prior => @env2, :organization=>@organization)
       @cs = PromotionChangeset.create!(:name=>"FOO", :environment=>@env3, :state=>"promoted")
     end
 

@@ -45,7 +45,7 @@ describe PromotionsController, :katello => true do
     end
 
     it "should be successful on the library and a next environment" do
-      @env2 = KTEnvironment.new(:organization=>@org, :library=>false, :name=>"otherenv", :prior=>@org.library)
+      @env2 = KTEnvironment.new(:organization=>@org, :label=> "otherenv", :library=>false, :name=>"otherenv", :prior=>@org.library)
       @env2.save!
       get 'show', :id=>@env.name
       response.should be_success
@@ -55,7 +55,7 @@ describe PromotionsController, :katello => true do
     end
 
     it "should be successful on the next environment with no changeset" do
-      @env2 = KTEnvironment.new(:organization=>@org, :library=>false, :name=>"otherenv", :prior=>@org.library)
+      @env2 = KTEnvironment.new(:organization=>@org,:label=> "otherenv", :library=>false, :name=>"otherenv", :prior=>@org.library)
       @env2.save!
       get 'show', :id=>@env2.name
       response.should be_success
@@ -133,8 +133,8 @@ describe "rules" do
     before (:each) do
       @organization = new_test_org
       @env1 = @organization.library
-      @env2 = KTEnvironment.create!(:name=>"FOO", :prior => @env1, :organization=>@organization)
-      @env3 = KTEnvironment.create!(:name=>"FOO2", :prior => @env2, :organization=>@organization)
+      @env2 = KTEnvironment.create!(:name=>"FOO", :label=> "FOO", :prior => @env1, :organization=>@organization)
+      @env3 = KTEnvironment.create!(:name=>"FOO2", :label=> "FOO2", :prior => @env2, :organization=>@organization)
       Glue::Pulp::Repos.stub!(:prepopulate!).and_return([])
     end
 

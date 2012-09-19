@@ -7,7 +7,7 @@
   = kt_form_for [@provider, Product.new], :remote => true, :html => {:id => "new_subpanel"} do |form|
 
     = form.text_field :name, :label => _("Name")
-
+    = form.text_field :label, :label => _("Label")
     = form.text_area :description, :label => _("Description"), :size => "40x5"
 
     = form.field :gpg_key, :label => _("GPG Key") do

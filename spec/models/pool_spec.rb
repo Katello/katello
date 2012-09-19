@@ -32,7 +32,7 @@ describe ::Pool do
 
   def create_org_from_cp_owner(cp_owner)
     disable_org_orchestration
-    @organization = Organization.create!(:name => cp_owner[:displayName], :cp_key => cp_owner[:key])
+    @organization = Organization.create!(:name=>cp_owner[:displayName], :label=> "pool_org", :label => cp_owner[:key])
   end
 
 end

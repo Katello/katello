@@ -27,6 +27,7 @@ module ProductTestData
 
   SIMPLE_PRODUCT = {
     :name => ProductTestData::PRODUCT_NAME,
+    :label => "product-foo",
     :id => ProductTestData::PRODUCT_ID,
     :cp_id => 1,
     :productContent => [],
@@ -36,6 +37,7 @@ module ProductTestData
 
   SIMPLE_PRODUCT_WITH_INVALID_NAME = HashWithIndifferentAccess.new({
     :name => 'This name is invalid',
+    :label => "foo",
     :id => ProductTestData::PRODUCT_ID,
     :multiplier => 1,
     :productContent => [],
@@ -44,6 +46,7 @@ module ProductTestData
   
   PRODUCT_WITH_ATTRS = HashWithIndifferentAccess.new({
     :name => ProductTestData::PRODUCT_NAME,
+    :label => "foo",
     :id => ProductTestData::PRODUCT_ID,
     :multiplier => 1,
     :productContent => [],
@@ -71,6 +74,7 @@ module ProductTestData
   
   PRODUCT_WITH_CONTENT = HashWithIndifferentAccess.new({
     :name => ProductTestData::PRODUCT_NAME,
+    :label => "dream",
     :id => ProductTestData::PRODUCT_ID,
     :multiplier => 1,
     :productContent => [
@@ -97,6 +101,7 @@ module ProductTestData
 
   PRODUCT_WITH_CP_CONTENT = HashWithIndifferentAccess.new({
     :name => ProductTestData::PRODUCT_NAME,
+    :label =>"dreamer",
     :id => ProductTestData::PRODUCT_ID,
     :multiplier => 1,
     :productContent => [ {
