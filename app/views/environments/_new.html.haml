@@ -11,11 +11,11 @@
     &nbsp;
   = kt_form_for KTEnvironment.new, :url => organization_environments_path(@organization.label), :remote=>true, :html => {:id=>"new_subpanel"} do |form|
 
-    = form.text_field :name, :label => _("Name")
-    = form.text_field :label, :label => _("Label")
+    = form.text_field :name, :label => _("Name"), :class => :name_input
+    = form.text_field :label, :label => _("Label"), :class => :label_input, 'data-url' => default_label_organization_environments_path(@organization.label)
 
     = form.text_area :description, :size => "40x5", :label => _("Description")
 
     = form.select :prior, options_for_select(@env_labels, @selected), :label => _("Prior Environment")
 
-    = form.submit _("Create"), :disable_with => _("Creating..."), :class => 'subpanel_create'
+    = form.submit _("Create"), :disable_with => _("Creating..."), :class => 'subpanel_create create_button'
