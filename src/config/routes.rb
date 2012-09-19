@@ -276,7 +276,10 @@ Src::Application.routes.draw do
   resources :providers do
     get 'auto_complete_search', :on => :collection
     resources :products do
+      get :default_label, :on => :collection
+
       resources :repositories, :only => [:new, :create, :edit, :destroy] do
+        get :default_label, :on => :collection
         member do
           put :update_gpg_key, :as => :update_repo_gpg_key
         end
@@ -331,6 +334,7 @@ Src::Application.routes.draw do
     collection do
       get :auto_complete_search
       get :items
+      get :default_label
     end
     member do
       get :environments_partial
@@ -338,6 +342,7 @@ Src::Application.routes.draw do
       get :download_debug_certificate
     end
     resources :environments do
+      get :default_label, :on => :collection
       member do
         get :system_templates
         get :products

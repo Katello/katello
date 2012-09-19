@@ -8,8 +8,8 @@
   .grid_8#new_organization123
     = kt_form_for Organization.new do |form|
 
-      = form.text_field :name, :label => _("Name")
-      = form.text_field :label, :label => _("Label")
+      = form.text_field :name, :label => _("Name"), :class => :name_input
+      = form.text_field :label, :label => _("Label"), :class => :label_input, 'data-url' => default_label_organizations_path()
       = form.text_area :description, :label => _("Description"), :size => "40x5"
 
       %fieldset
@@ -17,10 +17,10 @@
           %label #{_("Initial Application Life Cycle Management Environment")}:
 
       = form.field :envname, :label => _("Name") do
-        = text_field_tag 'environment[name]', nil, :tabindex => form.tabindex, :size => 30
+        = text_field_tag 'environment[name]', nil, :tabindex => form.tabindex, :size => 30, :class => :name_input
 
       = form.field :envlabel, :label => _("Label") do
-        = text_field_tag 'environment[name]', nil, :tabindex => form.tabindex, :size => 30
+        = text_field_tag 'environment[label]', nil, :tabindex => form.tabindex, :size => 30, :class => :label_input
 
 
       = form.field :envdescription, :label => _("Description") do
@@ -30,4 +30,4 @@
         .grid_7.la
           %label= _("Note: This will be set as your initial default environment.")
 
-      = form.submit _("Save")
+      = form.submit _("Save"), :class => :create_button
