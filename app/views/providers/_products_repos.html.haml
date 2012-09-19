@@ -3,9 +3,7 @@
 = content_for :title do
   #{@provider.name}
 
-= content_for :remove_item do
-  - if @provider.deletable?
-    = link_to _("Remove Provider"), {:action => "destroy", :controller => "providers"}, :method => :delete, :confirm => _('Are you sure you want to delete this provider?'), :class => "remove_item", :remote=>true
+= render :partial => 'remove_item', :locals => { :repositories_cloned_in_envrs => repositories_cloned_in_envrs }
 
 = content_for :navigation do
   = render_menu(1..2, custom_provider_navigation)
