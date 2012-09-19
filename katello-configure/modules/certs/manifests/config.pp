@@ -110,8 +110,6 @@ class certs::config {
   $candlepin_consumer_summary = "Subscription-manager consumer certificate for Katello instance ${fqdn}"
   $candlepin_consumer_description = "Consumer certificate and post installation script that configures rhsm."
 
-  $candlepin_certs_dir = "/etc/candlepin/certs"
-
   exec { "generate-candlepin-consumer-certificate":
     cwd       => "${katello_www_pub_dir}",
     command   => "gen-rpm.sh --name '${candlepin_consumer_name}' --version 1.0 --release 1 --packager None --vendor None --group 'Applications/System' --summary '${candlepin_consumer_summary}' --description '${candlepin_consumer_description}' --post ${ssl_build_path}/rhsm-katello-reconfigure /etc/rhsm/ca/candlepin-local.pem:666=${ssl_build_path}/$candlepin_cert_name.crt 2>>${katello::params::configure_log_base}/certificates.log && /sbin/restorecon ./*rpm",
@@ -136,7 +134,7 @@ class certs::config {
     before => Class["apache2::service"]
   }
 
-  file { ["$candlepin_certs_dir/candlepin-ca.key"]:
+  file { ["$certs::params::candlepin_certs_dir/candlepin-ca.key"]:
     owner => "root",
     group => "katello",
     mode => 640,
@@ -145,7 +143,7 @@ class certs::config {
   }
 
 
-  file { ["$candlepin_certs_dir/candlepin-ca.crt"]:
+  file { ["$certs::params::candlepin_certs_dir/candlepin-ca.crt"]:
     owner => "root",
     group => "katello",
     mode => 644,
@@ -154,13 +152,13 @@ class certs::config {
   }
 
 
-  file { "${candlepin_certs_dir}/candlepin-upstream-ca.crt":
+  file { "${certs::params::candlepin_certs_dir}/candlepin-upstream-ca.crt":
     ensure => link,
     owner => "root",
     group => "katello",
     mode => 644,
-    target => "${candlepin_certs_dir}/candlepin-ca.crt",
-    require => File["${candlepin_certs_dir}/candlepin-ca.crt"]
+    target => "${certs::params::candlepin_certs_dir}/candlepin-ca.crt",
+    require => File["${certs::params::candlepin_certs_dir}/candlepin-ca.crt"]
   }
 
 
