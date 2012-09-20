@@ -309,7 +309,7 @@ KT.common = (function() {
                 return false;
             });
             $(document).mouseup(function(switcher) {
-                if(!($(switcher.target).parent('#switcherContainer').length > 0)) {
+                if(!($(switcher.target).parents('#switcherContainer').length > 0)) {
                     button.removeClass('active');
                     container.removeClass('active');
                     box.fadeOut('fast');
