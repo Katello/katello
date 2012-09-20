@@ -16,19 +16,21 @@
       .grid_2.ra
         = label :repo, :name, _("Name")
       .grid_5.la
-        = text_field :repo, :name, :id=>"repo_name_field", :tabindex => auto_tab_index
+        = text_field :repo, :name, :class=>:name_input, :tabindex => auto_tab_index
 
     %fieldset.clearfix
       .grid_2.ra
         = label :repo, :label, _("Label")
       .grid_5.la
-        = text_field :repo, :label, :id=>"repo_label_field", :tabindex => auto_tab_index
+        = text_field :repo, :label, :class=>:label_input, :tabindex => auto_tab_index, 'data-url' => default_label_provider_product_repositories_path(@provider.id, @product.id)
+        = image_tag "embed/icons/spinner.gif", :class => 'label_spinner hidden'
 
     %fieldset.clearfix
       .grid_2.ra
         = label :repo, :feed, _("URL")
       .grid_5.la
         = text_field :repo, :feed, :id=>"repo_url_field", :tabindex => auto_tab_index
+
     %fieldset.clearfix
       .grid_2.ra
         = label :repo, :gpg_key, _("GPG Key")
@@ -37,5 +39,6 @@
           = select_tag 'repo[gpg_key]', options_from_collection_for_select(gpg_keys, "id", "name", :selected => (@product.gpg_key.id if @product.gpg_key )), :include_blank => true, :tabindex => auto_tab_index
         - else
           #{_("None defined for this Organization.")}
+
     .grid_5.prefix_2
-      = submit_tag _("Create"), :class => 'fr subpanel_create', :tabindex => auto_tab_index, :disable_with => _("Creating...")
+      = submit_tag _("Create"), :class => 'fr subpanel_create create_button', :tabindex => auto_tab_index, :disable_with => _("Creating...")
