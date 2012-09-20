@@ -106,7 +106,8 @@ class Create(EnvironmentAction):
         parser.add_option('--name', dest='name',
                                help=_("environment name (required)"))
         parser.add_option('--label', dest='label',
-                               help=_("environment label, ASCII identifier for the environment with no spaces eg: Dev_One (will be generated if not specified)"))
+                               help=_("environment label, ASCII identifier for the environment " + 
+                                      "with no spaces eg: Dev_One (will be generated if not specified)"))
         parser.add_option('--prior', dest='prior',
                                help=_("name of prior environment (required)"))
 
