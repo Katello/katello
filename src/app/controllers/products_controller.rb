@@ -14,7 +14,7 @@ class ProductsController < ApplicationController
   respond_to :html, :js
 
   before_filter :find_product, :only => [:edit, :update, :destroy]
-  before_filter :find_provider, :only => [:new, :create, :edit, :update, :destroy]
+  before_filter :find_provider, :only => [:new, :create, :default_label, :edit, :update, :destroy]
   before_filter :authorize
 
   def rules
@@ -25,6 +25,7 @@ class ProductsController < ApplicationController
     {
       :new => edit_test,
       :create => edit_test,
+      :default_label => edit_test,
       :edit =>read_test,
       :update => edit_test,
       :destroy => edit_test,

@@ -41,6 +41,7 @@ class OrganizationsController < ApplicationController
       :auto_complete_search => index_test,
       :new => create_test,
       :create => create_test,
+      :default_label => create_test,
       :edit => read_test,
       :update => edit_test,
       :destroy => delete_test,

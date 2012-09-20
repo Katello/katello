@@ -1,9 +1,10 @@
+require 'util/model_util'
 class AddLabelsToEnvironment < ActiveRecord::Migration
   def self.up
     change_table(:environments) do |t|
       t.column :label, :string, :bulk => true
       KTEnvironment.all.each do |env|
-        execute "update environments set label = '#{env.name}' where id= #{env.id}"
+        execute "update environments set label = '#{Katello::ModelUtils::labelize(env.name)}' where id= #{env.id}"
       end
       t.change(:label, :string, :null => false)
     end
