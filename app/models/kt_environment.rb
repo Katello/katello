@@ -10,6 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'util/model_util'
+
 class SelfReferenceEnvironmentValidator < ActiveModel::Validator
   def validate(record)
     record.errors[:base] << _("Environment cannot be in its own promotion path") if record.priors.select(:id).include? record.id
@@ -60,7 +62,7 @@ class KTEnvironment < ActiveRecord::Base
   include Glue::Candlepin::Environment if AppConfig.use_cp
   include Glue if AppConfig.use_cp
   set_table_name "environments"
-
+  include Katello::LabelFromName
   acts_as_reportable
 
   belongs_to :organization, :inverse_of => :environments
@@ -105,7 +107,6 @@ class KTEnvironment < ActiveRecord::Base
   after_save :update_related_index
   after_destroy :delete_related_index
   after_destroy :unset_users_with_default
-
    ERROR_CLASS_NAME = "Environment"
 
 
