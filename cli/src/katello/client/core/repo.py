@@ -123,7 +123,8 @@ class Create(RepoAction):
             help=_("repository name to assign (required)"))
 
         parser.add_option('--label', dest='label',
-                               help=_("repo label, ASCII identifier for the repository with no spaces eg: custom-repo1"))
+                               help=_("repo label, ASCII identifier for the " +
+                                      "repository with no spaces eg: custom-repo1"))
         parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES,
             help=_("url path to the repository (required)"))
         opt_parser_add_product(parser, required=1)
@@ -159,7 +160,8 @@ class Discovery(RepoAction):
         parser.add_option('--name', dest='name',
             help=_("repository name prefix to add to all the discovered repositories (required)"))
         parser.add_option('--label', dest='label',
-                               help=_("repo label, ASCII identifier to add to all discovered repositories.  (will be generated if not specified)"))
+                               help=_("repo label, ASCII identifier to add to " + 
+                                "all discovered repositories.  (will be generated if not specified)"))
         parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES,
             help=_("root url to perform discovery of repositories eg: http://porkchop.devel.redhat.com/ (required)"))
         parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
@@ -253,10 +255,6 @@ class Discovery(RepoAction):
     @classmethod
     def repository_name(cls, name, parsedUrlPath):
         return "%s%s" % (name, parsedUrlPath.replace("/", "_"))
-
-    @classmethod
-    def repository_label(cls, label, parsedUrlPath):
-        return "%s%s" % (label, parsedUrlPath.replace("/", "_"))
 
     @classmethod
     def __print_urls(cls, repourls, selectedurls):

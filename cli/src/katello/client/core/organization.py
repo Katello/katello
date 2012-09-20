@@ -63,7 +63,8 @@ class Create(OrganizationAction):
         parser.add_option('--name', dest='name',
                                help=_("organization name eg: ACME Corporation (required)"))
         parser.add_option('--label', dest='label',
-                               help=_("organization label, ASCII identifier for the Organization with no spaces eg: ACME_Corporation (will be generated if not specified)"))
+                               help=_("organization label, ASCII identifier for the Organization " +
+                                      "with no spaces eg: ACME_Corporation (will be generated if not specified)"))
         parser.add_option("--description", dest="description",
                                help=_("consumer description eg: foo's organization"))
 

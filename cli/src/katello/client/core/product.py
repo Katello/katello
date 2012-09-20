@@ -307,7 +307,8 @@ class Create(ProductAction):
         parser.add_option('--name', dest='name',
             help=_("product name (required)"))
         parser.add_option('--label', dest='label',
-                               help=_("product label, ASCII identifier for the product with no spaces eg: ACME_Product. (will be generated if not specified)"))
+                               help=_("product label, ASCII identifier for the product with no" + 
+                                      " spaces eg: ACME_Product. (will be generated if not specified)"))
         parser.add_option("--description", dest="description",
             help=_("product description"))
         parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES,
@@ -335,10 +336,12 @@ class Create(ProductAction):
         nodiscovery = self.get_option('nodiscovery')
         gpgkey      = self.get_option('gpgkey')
 
-        return self.create_product_with_repos(provName, orgName, name, label, description, url, assumeyes, nodiscovery, gpgkey)
+        return self.create_product_with_repos(provName, orgName, name, label, 
+                                              description, url, assumeyes, nodiscovery, gpgkey)
 
 
-    def create_product_with_repos(self, provName, orgName, name, label, description, url, assumeyes, nodiscovery, gpgkey):
+    def create_product_with_repos(self, provName, orgName, name, label, description, 
+                                  url, assumeyes, nodiscovery, gpgkey):
         prov = get_provider(orgName, provName)
 
         prod = self.api.create(prov["id"], name, label, description, gpgkey)
