@@ -65,7 +65,7 @@ describe SystemGroupEventsController do
 
       describe 'show' do
         before (:each) do
-          controller.stub!(:jobs).and_return([@job])
+          @group.stub_chain(:jobs, :where, :first).and_return(@job)
         end
 
         it "should render the show partial" do
