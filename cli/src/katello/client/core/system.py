@@ -121,7 +121,7 @@ class Info(SystemAction):
 
         custom_info_api = CustomInfoAPI()
         custom_info = custom_info_api.get_custom_info("system", system['id'])
-        system['custom_info'] = "[ " + ", ".join(["%s: %s" % (k, "[ " + ", ".join([i for i in custom_info[k]]) + " ]") for k in custom_info.keys()]) + " ]"
+        system['custom_info'] = "[ %s ]" % ", ".join(["%s: [ %s ]" % (k, ", ".join(custom_info[k])) for k in custom_info.keys()])
 
         system["activation_keys"] = "[ "+ ", ".join([ak["name"] for ak in system["activation_key"]]) +" ]"
         if 'host' in system:
