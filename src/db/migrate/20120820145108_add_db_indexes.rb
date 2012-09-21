@@ -16,7 +16,6 @@ class AddDbIndexes < ActiveRecord::Migration
     add_index  :changesets_products, :product_id
     add_index  :help_tips, :user_id
     add_index  :users, :own_role_id
-    add_index  :systems, :environment_id
     add_index  :user_notices, :user_id
     add_index  :user_notices, :notice_id
     add_index  :changeset_errata, :changeset_id
@@ -100,7 +99,6 @@ class AddDbIndexes < ActiveRecord::Migration
     remove_index :changesets_products, :column=>:product_id
     remove_index :help_tips, :column=>:user_id
     remove_index :users, :column=>:own_role_id
-    remove_index :systems, :column=>:environment_id
     remove_index :user_notices, :column=>:user_id
     remove_index :user_notices, :column=>:notice_id
     remove_index :changeset_errata, :column=>:changeset_id
