@@ -140,7 +140,7 @@ class Api::ActivationKeysController < Api::ApiController
 
   def find_activation_key
     @activation_key = ActivationKey.find(params[:id])
-    raise HttpErrors::NotFound, _("Couldn't find activation_key '#{params[:id]}'") if @activation_key.nil?
+    raise HttpErrors::NotFound, _("Couldn't find activation key '%s'") % params[:id] if @activation_key.nil?
     @activation_key
   end
 
