@@ -209,7 +209,7 @@ class Api::SystemGroupsController < Api::ApiController
 
   def find_group
     @group = SystemGroup.where(:id=>params[:id]).first
-    raise HttpErrors::NotFound, _("Couldn't find system group '#{params[:id]}'") if @group.nil?
+    raise HttpErrors::NotFound, _("Couldn't find system group '%s'") % params[:id] if @group.nil?
   end
 
   def system_uuids_to_ids  ids
