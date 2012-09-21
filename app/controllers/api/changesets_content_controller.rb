@@ -140,7 +140,7 @@ class Api::ChangesetsContentController < Api::ApiController
 
   def find_changeset!
     @changeset = Changeset.find_by_id(params[:changeset_id]) or
-        raise HttpErrors::NotFound, _("Couldn't find changeset '#{params[:changeset_id]}'")
+        raise HttpErrors::NotFound, _("Couldn't find changeset '%s'") % params[:changeset_id]
   end
 
   def render_after_removal(removed_objects, options = { })
