@@ -99,7 +99,7 @@ class Api::ChangesetsContentController < Api::ApiController
   def remove_repo
     repository = Repository.find(params[:id])
     render_after_removal @changeset.remove_repository!(repository),
-                         :success   => _("Removed repository'#{params[:id]}'"),
+                         :success   => _("Removed repository '%s'") % params[:id],
                          :not_found => _("Repository '#{params[:id]}' not found in the changeset")
   end
 

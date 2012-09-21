@@ -150,7 +150,7 @@ class Api::TemplatesContentController < Api::ApiController
   def remove_repo
     @template.remove_repo(params[:id])
     @template.save!
-    render :text => _("Removed repository '#{params[:id]}'"), :status => 200
+    render :text => _("Removed repository '%s'") % params[:id], :status => 200
   end
 
   private
