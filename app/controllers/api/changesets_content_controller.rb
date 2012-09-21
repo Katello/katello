@@ -125,7 +125,7 @@ class Api::ChangesetsContentController < Api::ApiController
   def add_distribution
     product = Product.find_by_cp_id!(params[:product_id])
     @changeset.add_distribution!(params[:distribution_id], product)
-    render :text => _("Added distribution '#{params[:distribution_id]}'")
+    render :text => _("Added distribution '%s'") % params[:distribution_id]
   end
 
   api :DELETE, "/changesets/:changeset_id/distributions/:id", "Remove a distribution from a changeset"
