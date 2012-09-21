@@ -92,7 +92,7 @@ class Api::ChangesetsContentController < Api::ApiController
   def add_repo
     repository = Repository.find(params[:repository_id])
     @changeset.add_repository!(repository)
-    render :text => _("Added repository '#{repository.name}'"), :status => 200
+    render :text => _("Added repository '%s'") % repository.name, :status => 200
   end
 
   api :DELETE, "/changesets/:changeset_id/repositories/:id", "Remove a repository from a changeset"
