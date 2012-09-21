@@ -38,7 +38,7 @@ $(document).ready(function() {
     onNodeShow: function(){$.sparkline_display_visible()}
   });
 
-    // Auto-subscribe with service level used in systems/_subscriptions.html.haml
+    // Auto-heal with service level used in systems/_subscriptions.html.haml
     $('.edit_select_system_servicelevel').each(function(){
         var common_settings = {
                 method          :  'PUT',
@@ -46,7 +46,7 @@ $(document).ready(function() {
                 submit          :  i18n.save,
                 indicator       :  i18n.saving,
                 tooltip         :  i18n.clickToEdit,
-                placeholder     :  i18n.systemSelectAutosubscribe,
+                placeholder     :  i18n.systemSelectAutoheal,
                 submitdata      :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
                 onerror         :  function(settings, original, xhr) {
                     original.reset();
