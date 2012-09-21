@@ -170,7 +170,7 @@ class Api::TemplatesController < Api::ApiController
 
   def find_template
     @template = SystemTemplate.find(params[:id])
-    raise HttpErrors::NotFound, _("Couldn't find template '#{params[:id]}'") if @template.nil?
+    raise HttpErrors::NotFound, _("Couldn't find template '%s'") % params[:id] if @template.nil?
     @template
   end
 end
