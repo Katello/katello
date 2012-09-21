@@ -126,7 +126,7 @@ class Api::TemplatesContentController < Api::ApiController
   def add_distribution
     @template.add_distribution(params[:id])
     @template.save!
-    render :text => _("Added distribution '#{params[:id]}'")
+    render :text => _("Added distribution '%s'") % params[:id]
   end
 
   api :DELETE, "/templates/:template_id/distributions/:id", "Remove distribution"
