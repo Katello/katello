@@ -126,7 +126,7 @@ class Api::ProductsController < Api::ApiController
 
   def find_product
     @product = @organization.products.find_by_cp_id(params[:id].to_s)
-    raise HttpErrors::NotFound, _("Couldn't find product with id '#{params[:id]}'") if @product.nil?
+    raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:id] if @product.nil?
   end
 
   def find_environment
