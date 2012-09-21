@@ -142,7 +142,7 @@ class Api::TemplatesContentController < Api::ApiController
   def add_repo
     @template.add_repo(params[:id])
     @template.save!
-    render :text => _("Added repository '#{params[:id]}'"), :status => 200
+    render :text => _("Added repository '%s'") % params[:id], :status => 200
   end
 
   api :DELETE, "/templates/:template_id/repositories/:id", "Remove repository"
