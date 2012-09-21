@@ -9,7 +9,6 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-require 'util/model_util'
 
 module Katello
 
@@ -32,13 +31,13 @@ module Katello
 
     # hardcoded model names (uses kp_ prefix)
     @@table_to_model_hash = {
-      "kt_environment" => KTEnvironment
+      "kt_environment" => "KTEnvironment"
     }
 
     # convert Rails Model name to Class or nil when no such table name exists
     def self.table_to_class name
-      return @@table_to_model_hash[name] if @@table_to_model_hash.key? name
-      name.classify.constantize
+      class_name = @@table_to_model_hash[name] || name.classify
+      class_name.constantize
     rescue NameError => e
       # constantize throws NameError
       return nil
