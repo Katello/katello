@@ -21,6 +21,7 @@ class mongodb::config {
     require => File["/var/lib/mongodb/journal"],
     # after mongo has started it renames prealloc.0 to j._0
     creates => "/var/lib/mongodb/journal/j._0",
-    before  => Class["mongodb::service"]
+    before  => Class["mongodb::service"],
+    timeout => 0
   }
 }

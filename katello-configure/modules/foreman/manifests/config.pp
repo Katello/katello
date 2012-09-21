@@ -74,8 +74,9 @@ class foreman::config {
     cwd         => $foreman::app_root,
     environment => "RAILS_ENV=${foreman::environment}",
     command     => "/usr/bin/env rake db:migrate --trace --verbose > ${foreman::configure_log_base}/foreman-db-migrate.log 2>&1 && touch /var/lib/katello/foreman_db_migrate_done",
-    creates => "/var/lib/katello/foreman_db_migrate_done",
-    require => [ Postgres::Createdb[$foreman::db_name],
+    creates     => "/var/lib/katello/foreman_db_migrate_done",
+    timeout     => 0,
+    require     => [ Postgres::Createdb[$foreman::db_name],
                  File["${foreman::config_dir}/settings.yaml"],
                  File["${foreman::config_dir}/database.yml"]];
   }
