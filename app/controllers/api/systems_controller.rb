@@ -449,7 +449,7 @@ DESC
     @system = System.first(:conditions => { :uuid => params[:id] })
     if @system.nil?
       Resources::Candlepin::Consumer.get params[:id] # check with candlepin if system is Gone, raises RestClient::Gone
-      raise HttpErrors::NotFound, _("Couldn't find system '#{params[:id]}'")
+      raise HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:id]
     end
     @system
   end
