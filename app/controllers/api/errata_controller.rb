@@ -62,7 +62,7 @@ class Api::ErrataController < Api::ApiController
       raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
     elsif params.has_key?(:repoid)
       @repo = Repository.find(params[:repoid])
-      raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:repoid]}'") if @repo.nil?
+      raise HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repoid] if @repo.nil?
       @environment = @repo.environment
     end
     @environment
@@ -70,7 +70,7 @@ class Api::ErrataController < Api::ApiController
 
   def find_repository
     @repo = Repository.find(params[:repository_id])
-    raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:repository_id]}'") if @repo.nil?
+    raise HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repo.nil?
     @repo
   end
 

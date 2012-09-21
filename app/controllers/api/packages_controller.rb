@@ -51,7 +51,7 @@ class Api::PackagesController < Api::ApiController
 
   def find_repository
     @repo = Repository.find(params[:repository_id])
-    raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:repository_id]}'") if @repo.nil?
+    raise HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repo.nil?
     @repo
   end
 
