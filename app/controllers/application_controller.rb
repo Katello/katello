@@ -58,12 +58,15 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved  do |e|
+    User.current = current_user
     notify.exception e
+
     execute_after_filters
     respond_to do |f|
       f.html { render :text => e.to_s, :layout => !request.xhr?, :status => :unprocessable_entity }
       f.json { render :json => e.record.errors, :status => :unprocessable_entity }
     end
+    User.current = nil
   end
 
   rescue_from ActiveRecord::RecordNotFound do |e|
