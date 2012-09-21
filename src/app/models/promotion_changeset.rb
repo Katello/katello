@@ -32,7 +32,7 @@ class PromotionChangeset < Changeset
     repos_to_be_promoted.each do |repo|
       if not self.environment.products.to_a.include? repo.product and not products_to_be_promoted.include? repo.product
         raise _("Please add '%s' product to the changeset '%s' if you wish to promote repository '%s' with it.") %
-                  [repo.product, self.name, repo.name]
+                  [repo.product.name, self.name, repo.name]
       end
     end
 
