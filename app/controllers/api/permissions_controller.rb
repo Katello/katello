@@ -96,7 +96,7 @@ class Api::PermissionsController < Api::ApiController
 
   def find_role
     @role = Role.find(params[:role_id])
-    raise HttpErrors::NotFound, _("Couldn't find user role '#{params[:role_id]}'") if @role.nil?
+    raise HttpErrors::NotFound, _("Couldn't find user role '%s'") % params[:role_id] if @role.nil?
     @role
   end
 
