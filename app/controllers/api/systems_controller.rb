@@ -459,7 +459,7 @@ DESC
       ak_names = ak_names.split(",")
       activation_keys = ak_names.map do |ak_name|
         activation_key = @organization.activation_keys.find_by_name(ak_name)
-        raise HttpErrors::NotFound, _("Couldn't find activation key '#{ak_name}'") unless activation_key
+        raise HttpErrors::NotFound, _("Couldn't find activation key '%s'") % ak_name unless activation_key
         activation_key
       end
     else
