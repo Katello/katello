@@ -128,7 +128,7 @@ module Glue::Pulp::Repo
 
     #if we are in library, no need for an distributor, but need to sync
     if self.environment.library?
-      importer = Resources::Pulp::YumImporter.new(:ssl_ca_cert=>self.feed_ca,
+      importer = Runcible::Extensions::YumImporter.new(:ssl_ca_cert=>self.feed_ca,
             :ssl_client_cert=>self.feed_cert,
             :ssl_client_key=>self.feed_key,
             :feed_url=>self.feed)
@@ -137,16 +137,14 @@ module Glue::Pulp::Repo
       importer = Resources::Pulp::YumImporter.new
     end
 
-    distributors = [Resources::Pulp::YumDistributor.new(self.relative_path, true, false,
+    distributors = [Runcible::Extensions::YumDistributor.new(self.relative_path, true, false,
       {:protected=>true, :generate_metadata=>false, :id=>self.pulp_id,
       :auto_publish=>!self.environment.library?})]
 
-    Resources::Pulp::Repository.create({
-        :id => self.pulp_id,
-        :display_name => self.name},
+    Runcible::Extensions::Repository.create_with_importer_and_distributors(self.pulp_id,
         importer,
-        distributors
-    )
+        distributors,
+        {:display_name=>self.name})
   end
 
 
