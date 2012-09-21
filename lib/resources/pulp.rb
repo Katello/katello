@@ -176,68 +176,6 @@ module Resources
     end
 
 
-    #Importers should supply  id & config methods
-    class Importer
-      def initialize params={}
-        params.each{|k,v| self.send("#{k.to_s}=",v)}
-      end
-    end
-
-    class YumImporter < Importer
-      #https://github.com/pulp/pulp/blob/master/rpm-support/plugins/importers/yum_importer/importer.py
-      attr_accessor 'feed_url', 'ssl_verify', 'ssl_ca_cert', 'ssl_client_cert', 'ssl_client_key',
-                        'proxy_url', 'proxy_port', 'proxy_pass', 'proxy_user',
-                        'max_speed', 'verify_size', 'verify_checksum', 'num_threads',
-                        'newest', 'remove_old', 'num_old_packages', 'purge_orphaned', 'skip', 'checksum_type',
-                        'num_retries', 'retry_delay'
-
-      def id
-         'yum_importer'
-      end
-
-      def config
-          self.as_json
-      end
-    end
-
-    #distributors should supply  id & config methods
-    class Distributor
-      attr_accessor 'auto_publish', 'id'
-
-      def initialize params={}
-        @auto_publish = false
-        id = SecureRandom.hex(10)
-        params.each{|k,v| self.send("#{k.to_s}=",v)}
-      end
-    end
-
-    class YumDistributor < Distributor
-      #required
-      attr_accessor "relative_url", "http", "https"
-      #optional
-      attr_accessor "protected", "auth_cert", "auth_ca",
-                    "https_ca", "gpgkey", "generate_metadata",
-                    "checksum_type", "skip", "https_publish_dir", "http_publish_dir"
-
-      def initialize relative_url, http, https, params={}
-        @relative_url=relative_url
-        @http = http
-        @https = https
-        super(params)
-      end
-
-      def type_id
-        'yum_distributor'
-      end
-
-      def config
-        to_ret = self.as_json
-        to_ret.delete('auto_publish')
-        to_ret.delete('id')
-        to_ret
-      end
-    end
-
     class Repository < PulpResource
       class << self
 
