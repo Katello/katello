@@ -195,6 +195,6 @@ EOS
 
   def find_product
     @product = @organization.products.find_by_cp_id params[:product_id]
-    raise HttpErrors::NotFound, _("Couldn't find product with id '#{params[:product_id]}'") if @product.nil?
+    raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:product_id] if @product.nil?
   end
 end
