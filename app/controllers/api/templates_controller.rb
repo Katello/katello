@@ -164,7 +164,7 @@ class Api::TemplatesController < Api::ApiController
 
   def find_environment
     @environment = KTEnvironment.find(params[:environment_id])
-    raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:environment_id]}'") if @environment.nil?
+    raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
     @environment
   end
 
