@@ -137,7 +137,7 @@ EOS
 
     args = ActiveSupport::JSON.decode(request.body.read).with_indifferent_access
     repo = Repository.where(:pulp_id =>args[:repo_id]).first
-    raise _("Could not find repository #{repo.name}") if repo.nil?
+    raise _("Couldn't find repository '%s'") % repo.name if repo.nil?
     Rails.logger.info("Sync_complete called for #{repo.name}, running after_sync.")
     repo.async(:organization=>repo.environment.organization).after_sync(args[:task_id])
     render :text=>""
@@ -189,7 +189,7 @@ EOS
 
   def find_repository
     @repository = Repository.find(params[:id])
-    raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:id]}'") if @repository.nil?
+    raise HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:id] if @repository.nil?
     @repository
   end
 

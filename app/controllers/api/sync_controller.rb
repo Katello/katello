@@ -101,7 +101,7 @@ class Api::SyncController < Api::ApiController
 
   def find_repository
     @repository = Repository.find(params[:repository_id])
-    raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:repository_id]}'") if @repository.nil?
+    raise HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repository.nil?
     @repository
   end
 
