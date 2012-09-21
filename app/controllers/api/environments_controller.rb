@@ -173,7 +173,7 @@ either library or an environment at the end of the chain
 
   def find_environment
     @environment = KTEnvironment.find(params[:id])
-    raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:id]}'") if @environment.nil?
+    raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:id] if @environment.nil?
     @organization = @environment.organization
     @environment
   end
