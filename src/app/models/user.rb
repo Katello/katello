@@ -15,8 +15,8 @@ require 'util/threadsession'
 require 'util/password'
 
 class User < ActiveRecord::Base
-  include Glue::Pulp::User if AppConfig.katello?
-  include Glue if AppConfig.use_cp
+  include Glue::Pulp::User if AppConfig.use_pulp
+  include Glue if AppConfig.use_cp || AppConfig.use_pulp
   include AsyncOrchestration
   include IndexedModel
 
@@ -92,7 +92,7 @@ class User < ActiveRecord::Base
   end
 
   # create own role for new user
-  before_save do |u|
+  before_create do |u|
     if u.new_record? and u.own_role.nil?
       # create the own_role where the name will be a string consisting of username and 20 random chars
       begin
@@ -109,10 +109,13 @@ class User < ActiveRecord::Base
   # THIS CHECK MUST BE THE FIRST before_destroy
   # check if this is not the last superuser
   before_destroy do |u|
-    if u.id == User.current.id
-      u.errors.add(:base, _("Cannot delete currently logged user"))
-      false
+    if !User.current.nil?
+      if u.id == User.current.id
+        u.errors.add(:base, _("Cannot delete currently logged user"))
+        false
+      end
     end
+
     unless u.can_be_deleted?
       u.errors.add(:base, "cannot delete last admin user")
       false
@@ -122,9 +125,11 @@ class User < ActiveRecord::Base
 
   # destroy own role for user
   before_destroy do |u|
-    u.own_role.destroy
-    unless u.own_role.destroyed?
-      Rails.logger.error error.to_s
+    if !u.own_role.nil?
+      u.own_role.destroy
+      unless u.own_role.destroyed?
+        Rails.logger.error error.to_s
+      end
     end
     u.roles.clear
   end
@@ -142,6 +147,7 @@ class User < ActiveRecord::Base
     # check if not disabled
     return nil if u.disabled
     # check if hash is valid
+    debugger
     return nil unless Password.check(password, u.password)
     u
   end

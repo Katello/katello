@@ -78,16 +78,10 @@ class TestGluePulpUser < MiniTest::Unit::TestCase
     end
   end
 
-  def test_initialize
+  def test_prune_pulp_only_attributes
     attributes = @user.attributes.merge({:backend_attribute_only => "This is a backend only attribute"})
     attributes = @user.prune_pulp_only_attributes(attributes)
     assert !attributes.has_key?(:backend_attribute_only)
-  end
-
-  def test_lazy_accessor
-    login = @user.login
-    debugger
-    assert login == "test_username"
   end
 
 end
