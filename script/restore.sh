@@ -3,12 +3,7 @@ BDIR=$(readlink -f "$1")
 cd $BDIR
 
 #shut everything down
-service katello stop
-service katello-jobs stop
-service pulp-server stop
-service tomcat6 stop
-service postgresql stop
-service elasticsearch stop
+katello-service stop
 
 #extract files
 tar --selinux -xzvf config_files.tar.gz -C /
@@ -30,9 +25,5 @@ echo 'db.dropDatabase();' | mongo pulp_database
 
 mongorestore --host localhost mongo_dump/pulp_database/
 
-service postgresql start
-service tomcat6 start
-service pulp-server start
-service elasticsearch start
-service katello-jobs start
-service katello start
+# Restart services
+katello-service start
