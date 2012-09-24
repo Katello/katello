@@ -251,6 +251,13 @@ class ActivationKeysController < ApplicationController
   end
 
   def destroy
+    if @activation_key.system_activation_keys.length > 0
+      notify.error _("Cannot delete this activation key. Assure no systems are
+                     dependent on this key and try again.")
+      render :nothing => true
+      return
+    end
+
     if @activation_key.destroy
       notify.success _("Activation key '#{@activation_key[:name]}' was deleted.")
       #render and do the removal in one swoop!
