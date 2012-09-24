@@ -319,7 +319,7 @@ class AddSystemGroup(BaseSystemGroup):
 
     def run(self):
         org_name, activation_key, system_group = self._fetch_org_key_group()
-        if (not activation_key) and (not activation_key) and (not system_group):
+        if (not activation_key) and (not system_group):
             return os.EX_DATAERR
 
         activation_key = self.api.add_system_group(org_name, activation_key["id"], system_group['id'])
@@ -338,7 +338,7 @@ class RemoveSystemGroup(BaseSystemGroup):
 
     def run(self):
         org_name, activation_key, system_group = self._fetch_org_key_group()
-        if (not activation_key) and (not activation_key) and (not system_group):
+        if (not activation_key) and (not system_group):
             return os.EX_DATAERR
 
         activation_key = self.api.remove_system_group(org_name, activation_key["id"], system_group['id'])
