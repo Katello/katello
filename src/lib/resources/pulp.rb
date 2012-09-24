@@ -241,29 +241,7 @@ module Resources
           JSON.parse(response.body).select{|i| i['tags'].include?("pulp:action:sync")}.first.with_indifferent_access
         end
 
-        def sync_history repo_id
-          begin
-            #
-            body = get(repository_path(repo_id) + '/history/sync/', self.default_headers).body
-            JSON.parse(body).collect{|i| i.with_indifferent_access}
-          rescue RestClient::ResourceNotFound => error
-            # Return nothing if there is a 404 which indicates there
-            # is no sync status for this repo.  Not an error.
-            return
-          end
-        end
 
-        def sync_status(repo_id)
-          response = Task.all(["pulp:repository:#{repo_id}", "pulp:action:sync"])
-          return response
-        end
-
-
-        def destroy repo_id
-          raise ArgumentError, "repository id has to be specified" unless repo_id
-          path = Repository.repository_path + repo_id +"/"
-          self.delete(path, self.default_headers).code.to_i
-        end
 
         def package_ids repo_id
           criteria = {:type_ids=>['rpm'],
