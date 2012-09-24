@@ -140,8 +140,10 @@ class VerboseStrategy(PrinterStrategy):
 
             if not column.get('multiline', False):
                 col_width = self._max_label_width(columns)
-                print ("{0:<" + u_str(col_width + 1) + "} {1}").format(u_str(column['name'])+":", u_str(value))
-                # +1 to account for the : after the column name
+                if type(value) != type([]):
+                    value = [value]
+                for v in value:
+                    print ("{0:<" + u_str(col_width) + "} : {1}").format(u_str(column['name']), u_str(v))
             else:
                 print column['name']+":"
                 print indent_text(value, "    ")
@@ -328,7 +330,7 @@ class Printer:
     def add_column(self, attr_name, name = None, **kwargs):
         """
         Add column of data thet will be displayed
-        
+
         :type attr_name: string
         :param attr_name: key to data hash
         :type name: string
