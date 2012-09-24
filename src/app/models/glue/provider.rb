@@ -176,7 +176,7 @@ module Glue::Provider
       imports = self.owner_imports
       if imports.length == 1
         Rails.logger.debug "Deleting import for provider: #{name}"
-        Resources::Candlepin::Owner.destroy_imports self.organization.cp_key
+        Resources::Candlepin::Owner.destroy_imports self.organization.label
       else
         Rails.logger.debug "Unable to delete import for provider: #{name}. Reason: a successful import was previously completed."
       end
