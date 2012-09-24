@@ -16,12 +16,19 @@ module SystemsHelper
     render :partial=>"systems/list_systems",  
             :locals=>{:accessor=>options[:accessor], :columns=>options[:columns], :collection=>options[:collection], :name=>options[:name]}
   end
-  
+
   def get_checkin(system)
     if system.checkinTime
       return  format_time(system.checkinTime)
     end
-    _("Never checked in.")
+    _("Never checked in")
+  end
+
+  def get_registered(system)
+    if system.createdTime
+      return  format_time(system.createdTime)
+    end
+    _("Unknown registration date")
   end
 
   def get_uptime

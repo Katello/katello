@@ -294,6 +294,12 @@ module Glue::Candlepin::Consumer
       end
     end
 
+    def createdTime
+      if created
+        convert_time(created)
+      end
+    end
+
     def convert_time(item)
       Time.parse(item)
     end
