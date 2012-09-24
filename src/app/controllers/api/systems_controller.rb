@@ -256,17 +256,18 @@ DESC
     data = data.flatten.map do |r|
       r.reportable_data(
         :only => [:uuid, :name, :location, :created_at, :updated_at],
-        :methods => [ :environment, :organization, :compliance_color, :compliant_until]
+        :methods => [ :environment, :organization, :compliance_color, :compliant_until, :custom_info]
       )
     end.flatten!
 
     system_report = Ruport::Data::Table.new(
       :data => data,
-      :column_names => ["name", "uuid", "location", "environment", "organization", "created_at", "updated_at", "compliance_color", "compliant_until"],
+      :column_names => ["name", "uuid", "location", "environment", "organization", "created_at", "updated_at", "compliance_color", "compliant_until", "custom_info"],
       :record_class => Ruport::Data::Record,
       :transforms => lambda {|r|
         r.organization = r.organization.name
         r.environment = r.environment.name
+        r.custom_info = r.custom_info.collect { |i| "#{i['keyname']}: #{i['value']}" }.join(", ")
       })
 
     system_report.rename_column("environment.name", "environment")
@@ -274,6 +275,7 @@ DESC
     system_report.rename_column("updated_at", "updated")
     system_report.rename_column("compliance_color", "compliance")
     system_report.rename_column("compliant_until", "compliant until")
+    system_report.rename_column("custom_info", "custom info")
 
     pdf_options = {:table_format => {
       :heading_font_size => 10,
