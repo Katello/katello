@@ -230,8 +230,10 @@ class GrepStrategy(PrinterStrategy):
         for column in columns:
             width = column_widths.get(column['attr_name'], 0)
 
-            self._print(column['name'].ljust(width))
-            self._print(self.__delim)
+            if self.__delim:
+                self._print(column['name'] + self.__delim)
+            else:
+                self._print(column['name'].ljust(width))
         print
         print_line()
 
@@ -252,8 +254,10 @@ class GrepStrategy(PrinterStrategy):
 
             #skip missing attributes
             if not self._column_has_value(column, item):
-                self._print(" " * width)
-                self._print(self.__delim)
+                if self.__delim:
+                    self._print(" " * width)
+                else:
+                    self._print(self.__delim)
                 continue
             value = self._get_column_value(column, item)
 
@@ -261,8 +265,10 @@ class GrepStrategy(PrinterStrategy):
                 value = text_to_line(value)
             value = u_str(value)
 
-            self._print('%s%s' % (value, ' '*(width-unicode_len((value)))))
-            self._print(self.__delim)
+            if self.__delim:
+                self._print('%s' % (value) + self.__delim)
+            else:
+                self._print('%s%s' % (value, ' '*(width-unicode_len((value)))))
 
     def _column_width(self, items, column):
         """
