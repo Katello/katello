@@ -202,7 +202,7 @@ module Glue::Pulp::Repo
   def destroy_repo
     self.update_packages_index
     self.update_errata_index
-    Resources::Pulp::Repository.destroy(self.pulp_id)
+    Runcible::Resources::Repository.delete(self.pulp_id)
     true
   end
 
@@ -554,13 +554,13 @@ module Glue::Pulp::Repo
 
   def _get_most_recent_sync_status()
     begin
-      history = Resources::Pulp::Repository.sync_status(pulp_id)
+      history = Runcible::Resources::Repository.sync_status(pulp_id)
 
       if history.nil? or history.empty?
-        history = Resources::Pulp::Repository.sync_history(pulp_id)
+        history = Rucible::Resources::Repository.sync_history(pulp_id)
       end
     rescue Exception=>e
-        history = Resources::Pulp::Repository.sync_history(pulp_id)
+        history = Runcible::Resources::Repository.sync_history(pulp_id)
     end
 
     if history.nil? or history.empty?
