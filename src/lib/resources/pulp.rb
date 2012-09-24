@@ -192,17 +192,10 @@ module Resources
         end
 
 
-        # :id, :name
-        def update repo_id, attrs
-          body = put(Repository.repository_path + repo_id +"/", JSON.generate(attrs), self.default_headers).body
-          JSON.parse(body).with_indifferent_access
-        end
-
         def schedule_path repo_id, schedule_id=nil
           Repository.repository_path(repo_id) +
               "importers/yum_importer/sync_schedules/#{(schedule_id + '/') if schedule_id}"
         end
-
 
         def schedules(repo_id)
           body = get(Repository.schedule_path(repo_id), self.default_headers)
@@ -485,32 +478,6 @@ module Resources
           response = self.get(query_url, self.default_headers)
           body = response.body
           JSON.parse(body).collect{|k| k.with_indifferent_access}
-        end
-
-        def find_single id
-          body = self.get(path(id), self.default_headers).body
-          JSON.parse(body).with_indifferent_access
-        end
-
-        def all tags=[]
-          if tags.empty?
-            args = ''
-          else
-            args = "/?tag=#{tags[0]}"
-            tags[1..-1].each{|t| args += "&tag=#{t}"}
-          end
-          body = self.get(path + args, self.default_headers).body
-          JSON.parse(body).collect{|k| k.with_indifferent_access}
-        end
-
-        def cancel uuid
-          task = Task.find_single(uuid)
-          self.delete(task['_href'], self.default_headers) if task
-        end
-
-        def destroy uuid
-          response = self.delete(path(uuid), self.default_headers)
-          JSON.parse(response.body).with_indifferent_access
         end
 
         def path uuid=nil

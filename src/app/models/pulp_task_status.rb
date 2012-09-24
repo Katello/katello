@@ -72,7 +72,7 @@ class PulpTaskStatus < TaskStatus
   end
 
   def self.refresh task_status
-    pulp_task = Resources::Pulp::Task.find_single(task_status.uuid)
+    pulp_task = Runcible::Resources::Task.poll(task_status.uuid)
 
     self.dump_state(pulp_task, task_status)
     task_status.after_refresh

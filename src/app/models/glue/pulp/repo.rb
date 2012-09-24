@@ -318,11 +318,7 @@ module Glue::Pulp::Repo
 
 
   def set_sync_schedule schedule
-    if self.sync_state == "waiting"
-        Resources::Pulp::Task.destroy(self.sync_status.uuid)
-    end
-
-    if schedule
+     if schedule
         Resources::Pulp::Repository.create_or_update_schedule(self.pulp_id, schedule)
     else
         Resources::Pulp::Repository.delete_schedule(self.pulp_id)
@@ -367,14 +363,14 @@ module Glue::Pulp::Repo
   end
 
   def after_sync pulp_task_id
-    pulp_tasks =  Resources::Pulp::Task.find([pulp_task_id])
+    pulp_task =  Runcible::Resources::Task.poll(pulp_task_id)
 
-    if pulp_tasks.empty?
+    if pulp_task.nil?
       Rails.logger.error("Sync_complete called for #{pulp_task_id}, but no task found.")
       return
     end
 
-    task = PulpTaskStatus.using_pulp_task(pulp_tasks.first)
+    task = PulpTaskStatus.using_pulp_task(pulp_task)
     task.user ||= User.current
     task.organization ||= self.environment.organization
     task.save!
@@ -459,7 +455,7 @@ module Glue::Pulp::Repo
     Rails.logger.info "Cancelling synchronization of repository #{self.pulp_id}"
     history = self.sync_status
     return if history.nil? || history.state == ::PulpSyncStatus::Status::NOT_SYNCED
-    Resources::Pulp::Task.cancel(history.uuid)
+    Runcible::Resources::Task.cancel(history.uuid)
   end
 
   def sync_finish
