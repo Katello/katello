@@ -13,9 +13,12 @@
 # granted to use or replicate Red Hat trademarks that are incorporated
 # in this software or its documentation.
 
+import codecs
 import fcntl
 import termios
 import struct
+import sys
+import unicodedata
 
 from katello.client.utils.encoding import u_str
 
@@ -25,6 +28,10 @@ class PrinterStrategy(object):
     """
     Strategy of formatting the data and printing them on the output.
     """
+
+    def __init__(self):
+        super(PrinterStrategy, self).__init__()
+        self.out = codecs.getwriter('utf-8')(sys.stdout)
 
     def print_item(self, heading, columns, item):
         """
@@ -90,6 +97,12 @@ class PrinterStrategy(object):
             value = item_format_func(item)
         return value
 
+    def _println(self, text=''):
+        self._print(text + "\n")
+
+    def _print(self, text=''):
+        self.out.write(text)
+
 
 class VerboseStrategy(PrinterStrategy):
 
@@ -119,7 +132,7 @@ class VerboseStrategy(PrinterStrategy):
         :param heading: headers to be displayed
         """
         print_line()
-        print center_text(heading)
+        self._println(center_text(heading))
         print_line()
 
     def _print_item(self, item, columns):
@@ -143,10 +156,10 @@ class VerboseStrategy(PrinterStrategy):
                 if type(value) != type([]):
                     value = [value]
                 for v in value:
-                    print ("{0:<" + u_str(col_width) + "} : {1}").format(u_str(column['name']), u_str(v))
+                    self._println(("{0:<" + u_str(col_width) + "} : {1}").format(u_str(column['name']), u_str(v)))
             else:
-                print column['name']+":"
-                print indent_text(value, "    ")
+                self._println(column['name']+":")
+                self._println(indent_text(value, "    "))
 
     @classmethod
     def _max_label_width(cls, columns):
@@ -159,7 +172,7 @@ class VerboseStrategy(PrinterStrategy):
         """
         width = 0
         for column in columns:
-            current_width = len(_(column['name']))
+            current_width = unicode_len(_(column['name']))
             if (current_width > width):
                 width = current_width
         return width
@@ -211,15 +224,15 @@ class GrepStrategy(PrinterStrategy):
         :param column_widths: dictionary that holds maximal widths of columns {attr_name -> width}
         """
         print_line()
-        print center_text(heading)
+        self._println(center_text(heading))
 
-        print
-        print self.__delim,
+        self._println
+        self._print(self.__delim)
         for column in columns:
             width = column_widths.get(column['attr_name'], 0)
 
-            print column['name'].ljust(width),
-            print self.__delim,
+            self._print(column['name'].ljust(width))
+            self._print(self.__delim)
         print
         print_line()
 
@@ -234,23 +247,24 @@ class GrepStrategy(PrinterStrategy):
         :type column_widths:
         :param column_widths:
         """
-        print self.__delim,
+        self._print(self.__delim)
         for column in columns:
             #get defined width
             width = column_widths.get(column['attr_name'], 0)
 
             #skip missing attributes
             if not self._column_has_value(column, item):
-                print " " * width,
-                print self.__delim,
+                self._print(" " * width)
+                self._print(self.__delim)
                 continue
             value = self._get_column_value(column, item)
 
             if column.get('multiline', False):
                 value = text_to_line(value)
+            value = u_str(value)
 
-            print u_str(value).ljust(width),
-            print self.__delim,
+            self._print('%s%s' % (value, ' '*(width-unicode_len((value)))))
+            self._print(self.__delim)
 
     def _column_width(self, items, column):
         """
@@ -263,10 +277,11 @@ class GrepStrategy(PrinterStrategy):
         :param column: column definition
         :rtype: int
         """
-        width = len(column['name'])+1
+        width = unicode_len(column['name'])+1
         for column_value in [u_str(self._get_column_value(column, item)) for item in items]:
-            if width <= len(column_value):
-                width = len(column_value)+1
+            new_width = unicode_len(column_value)
+            if width <= new_width:
+                width = new_width+1
         return width
 
     def _calc_column_widths(self, items, columns):
@@ -444,8 +459,9 @@ def center_text(text, width = None):
         width = get_term_width()
     centered = []
     for line in text.split("\n"):
-        if len(line) < width:
-            padding = ((width - len(line)) / 2) - 1
+        len_line = unicode_len(line)
+        if len_line < width:
+            padding = ((width - len_line) / 2) - 1
         else:
             padding = 0
         centered.append(' ' * padding + line)
@@ -462,7 +478,7 @@ def print_line(width = None):
     """
     if not width:
         width = get_term_width()
-    print '-'*width
+    print('-'*width)
 
 
 def get_term_width():
@@ -479,3 +495,7 @@ def get_term_width():
     except:  # pylint: disable=W0702
         w = 80
     return 80 if w == 0 else w
+
+def unicode_len(text):
+    """ return byte lenght of unicode character """
+    return sum(1+(unicodedata.east_asian_width(c) in "WF") for c in text)
