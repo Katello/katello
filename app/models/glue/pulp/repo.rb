@@ -24,7 +24,7 @@ module Glue::Pulp::Repo
       lazy_accessor :pulp_repo_facts,
                     :initializer => lambda {
                       if pulp_id
-                        Resources::Pulp::Repository.find(pulp_id)
+                        Runcible::Resources::Repository.retrieve(pulp_id)
                       end
                     }
       lazy_accessor :importers, :distributors,
@@ -134,7 +134,7 @@ module Glue::Pulp::Repo
             :feed_url=>self.feed)
     else
       #if not in library, no need for sync info, but we need a distributor
-      importer = Resources::Pulp::YumImporter.new
+      importer = Runcible::Extensions::YumImporter.new
     end
 
     distributors = [Runcible::Extensions::YumDistributor.new(self.relative_path, true, false,
@@ -384,6 +384,37 @@ module Glue::Pulp::Repo
     self.index_errata
   end
 
+  def create_clone to_env
+    library = self.environment.library? ? self : self.library_instance
+    raise _("Cannot clone repository from #{self.environment.name} to #{to_env.name}.  They are not sequential.") if to_env.prior != self.environment
+    raise _("Repository has already been promoted to #{to_env}") if Repository.where(:library_instance_id=>library.id).in_environment(to_env).count > 0
+
+    key = EnvironmentProduct.find_or_create(to_env, self.product)
+    clone = Repository.new(:environment_product => key,
+                           :cp_label => self.cp_label,
+                           :library_instance=>library,
+                           :name=>self.name,
+                           :arch=>self.arch,
+                           :major=>self.major,
+                           :minor=>self.minor,
+                           :enable=>self.enabled,
+                           :content_id=>self.content_id
+                           )
+    clone.pulp_id = clone.clone_id(to_env)
+    clone.relative_path = Glue::Pulp::Repos.clone_repo_path(self, to_env)
+    clone.save!
+    self.clone_contents(clone) #return clone task
+  end
+
+  def clone_contents to_repo
+    filtered = to_repo.applicable_filters.collect{|f| f.package_list}.flatten
+    events = []
+    events << Runcible::Extensions::Repository.rpm_copy(self.pulp_id, to_repo.pulp_id,
+                                          {:name_blacklist=>filtered})
+    events << Runcible::Extensions::Repository.errata_copy(self.pulp_id, to_repo.pulp_id)
+    events << Runcible::Extensions::Repository.distribution_copy(self.pulp_id, to_repo.pulp_id)
+    events       
+  end
 
   def sync_start
     status = self.sync_status
@@ -402,17 +433,18 @@ module Glue::Pulp::Repo
     self.applicable_filters.each{|f| blacklist += f.package_list}
 
     previous = self.environmental_instances.in_environment(self.environment.prior).first
-
-    Resources::Pulp::Repository.package_copy previous.pulp_id, self.pulp_id,  pkg_id_list, blacklist
+    Runcible::Extensions::Repository.rpm_copy(previous.pulp_id, self.pulp_id,
+                                              {:package_ids=>pkg_id_list, :name_blacklist=>blacklist})
   end
 
   def add_errata errata_id_list
     previous = self.environmental_instances.in_environment(self.environment.prior).first
-    Resources::Pulp::Repository.errata_copy previous.pulp_id, self.pulp_id,  errata_id_list
+    Runcible::Extensions::Repository.errata_copy(previous.pulp_id, self.pulp_id, {:errata_ids=>errata_id_list})
   end
 
   def add_distribution distribution_id
-    Resources::Pulp::Repository.add_distribution self.pulp_id,  distribution_id
+    previous = self.environmental_instances.in_environment(self.environment.prior).first
+    Runcible::Extensions::Repository.distribution_copy(previous.pulp_id, self.pulp_id, {:errata_ids=>[distribution_id]})
   end
 
   def delete_errata errata_id_list
