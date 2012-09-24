@@ -227,7 +227,6 @@ class GrepStrategy(PrinterStrategy):
         self._println(center_text(heading))
 
         self._println
-        self._print(self.__delim)
         for column in columns:
             width = column_widths.get(column['attr_name'], 0)
 
@@ -247,7 +246,6 @@ class GrepStrategy(PrinterStrategy):
         :type column_widths:
         :param column_widths:
         """
-        self._print(self.__delim)
         for column in columns:
             #get defined width
             width = column_widths.get(column['attr_name'], 0)
