@@ -182,7 +182,10 @@ class SystemsController < ApplicationController
       end
       filter :terms, filters
     end
-    render :json=>systems.map{|s| {:label=>s.name, :value=>s.name, :id=>s.id}}
+    render :json=>systems.map{|s|
+      label = _("%s (Registered: %s)") % [s.name, convert_time(format_time(Time.parse(s.created_at)))]
+      {:label=>label, :value=>s.name, :id=>s.id}
+    }
   end
 
 
@@ -648,7 +651,7 @@ class SystemsController < ApplicationController
     @panel_options = {
       :title => _('Systems'),
       :col => ["name_sort", "lastCheckin"],
-      :titles => [_("Name"), _("Last Checked In")],
+      :titles => [_("Name"), _("Registered / Last Checked In")],
       :custom_rows => true,
       :enable_create => AppConfig.katello? && System.registerable?(@environment, current_organization),
       :create => _("System"),
