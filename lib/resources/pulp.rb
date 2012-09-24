@@ -179,33 +179,6 @@ module Resources
     class Repository < PulpResource
       class << self
 
-        def find repo_id, yell_on_404 = false
-          response = get(repository_path  + repo_id + "/?details=true", self.default_headers)
-          body = response.body
-          JSON.parse(body).with_indifferent_access
-        rescue RestClient::ResourceNotFound => e
-          return nil if !yell_on_404
-          raise e
-        end
-
-        def find_all repo_ids
-          filter = {"criteria" => {
-                      "filters"=> {"id"=> {"$in"=> repo_ids}}
-                   }
-                }
-          response = post(repository_path  + "/search/", JSON.generate(filter) , self.default_headers)
-          body = response.body
-          JSON.parse(body).collect{|i| i.with_indifferent_access}
-        end
-
-        # Get all the Repositories known by Pulp
-        # currently filtering against only one groupid is supported in PULP
-        def all
-          response = get(self.repository_path + "/?details=true" , self.default_headers)
-          JSON.parse(response.body)
-        rescue RestClient::ResourceNotFound => e
-          raise e
-        end
 
         def start_discovery url, type
           response = post("/pulp/api/services/discovery/repo/", JSON.generate(:url => url, :type => type), self.default_headers)
@@ -218,47 +191,6 @@ module Resources
           "/pulp/api/v2/repositories/#{(repo_id + '/') if repo_id}"
         end
 
-        # {:id, :display_name},  importer=nil,distributors=[]
-        def create attrs, importer=nil, distributors=[]
-          attrs.merge!({:importer_type_id=>importer.id, :importer_config=>importer.config}) if importer
-          attrs.merge!({:distributors=>distributors.collect{|d| [d.type_id, d.config, d.auto_publish, d.id] }}) if !distributors.empty?
-          body = post(Repository.repository_path, JSON.generate(attrs), self.default_headers).body
-          JSON.parse(body).with_indifferent_access
-        end
-
-        def unit_copy src_repo_id, dest_repo_id, type_id=nil, filters=nil, override=nil
-          body = {:source_repo_id=>src_repo_id}
-          body[:criteria] = {}
-          body[:criteria][:filters]=filters if filters
-          body[:criteria][:type_ids] = [type_id] if type_id
-          body[:override_config] = override if override
-          response = post(self.repository_path(dest_repo_id) + '/actions/associate/', JSON.generate(body), self.default_headers)
-          JSON.parse(response).with_indifferent_access
-        end
-
-        def package_copy src_repo_id, dest_repo_id, package_ids=nil, name_blacklist=[]
-          filters = {
-            'unit' => {
-                'name' => {'$not' => {'$in' => name_blacklist} }
-            }
-          }
-
-          filters['association'] = {'unit_id' => {'$in' => package_ids }} if package_ids
-
-          unit_copy src_repo_id, dest_repo_id, 'rpm', filters, {:resolve_dependencies=> true}
-        end
-
-        def errata_copy src_repo_id, dest_repo_id, errata_ids=nil
-          filters = {}
-          filters[:unit] = { :id=>{ '$in' => errata_ids } } if errata_ids
-          unit_copy src_repo_id, dest_repo_id, 'erratum', filters, {:resolve_dependencies=> true}
-        end
-
-        def distribution_copy src_repo_id, dest_repo_id, dist_id=nil
-          filters = {}
-          filters['id'] = {'$in' => dist_id } if dist_id
-          unit_copy src_repo_id, dest_repo_id, 'distribution', filters, {:resolve_dependencies=> true}
-        end
 
         # :id, :name
         def update repo_id, attrs
