@@ -159,9 +159,6 @@ Requires:       candlepin-selinux
 # the following backend engine deps are required by <katello-configure>
 Requires:       mongodb mongodb-server
 Requires:       qpid-cpp-server qpid-cpp-client qpid-cpp-client-ssl qpid-cpp-server-ssl
-%if 0%{?fedora}
-Requires:       /etc/rc.d/init.d/qpidd
-%endif
 Requires:       foreman foreman-postgresql
 # </katello-configure>
 
