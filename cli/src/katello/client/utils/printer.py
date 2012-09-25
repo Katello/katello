@@ -225,7 +225,7 @@ class GrepStrategy(PrinterStrategy):
         print_line()
         self._println(center_text(heading))
 
-        self._println
+        self._println()
         for column in columns:
             width = column_widths.get(column['attr_name'], 0)
 
