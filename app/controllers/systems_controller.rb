@@ -283,17 +283,17 @@ class SystemsController < ApplicationController
     begin
       releases = @system.available_releases
     rescue => e
-      # Don't pepper user with notices if there is an error fetching release
-      # versions, but do log them
+      releases_error = e.to_str
       Rails.logger.error e.to_str
-      releases ||= []
     end
+    releases ||= []
+    releases_error ||= nil
 
-    render :partial => "edit", :layout => "tupane_layout",
-           :locals => { :system       => @system, :editable => @system.editable?,
-                        :releases     => releases, :name => controller_display_name,
-                        :environments =>
-                            environment_paths(library_path_element, environment_path_element("systems_readable?")) }
+    # Stuff into var for use in spec tests
+    @locals_hash = { :system => @system, :editable => @system.editable?,
+                    :releases => releases, :releases_error => releases_error, :name => controller_display_name,
+                    :environments => environment_paths(library_path_element, environment_path_element("systems_readable?")) }
+    render :partial => "edit", :layout => "tupane_layout", :locals => @locals_hash
   end
 
   def update
