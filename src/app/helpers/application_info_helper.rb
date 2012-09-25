@@ -20,4 +20,7 @@ module ApplicationInfoHelper
     link_to _("the CloudForms Documentation"), url
   end
 
+  def can_read_system_info?
+    current_user.present? && Organization.any_readable?
+  end
 end
