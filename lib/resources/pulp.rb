@@ -242,58 +242,6 @@ module Resources
         end
 
 
-
-        def package_ids repo_id
-          criteria = {:type_ids=>['rpm'],
-                  :sort => {
-                      :unit => [ ['name', 'ascending'], ['version', 'descending'] ]
-                  }}
-          package_unit_search(repo_id, criteria, false).collect{|p| p['unit_id']}
-        end
-
-        def packages_by_nvre(repo_id, name, version=nil, release=nil, epoch=nil)
-          and_condition = []
-          and_condition << {:name=>name} if name
-          and_condition << {:version=>version} if version
-          and_condition << {:release=>release} if release
-          and_condition << {:epoch=>epoch} if epoch
-
-          criteria = {:type_ids=>['rpm'],
-                  :filters => {
-                      :unit => {
-                        "$and" => and_condition
-                      }
-                  },
-                  :sort => {
-                      :unit => [ ['name', 'ascending'], ['version', 'descending'] ]
-                  }}
-          package_unit_search(repo_id, criteria, true).collect{|p| p['metadata'].with_indifferent_access}
-        end
-
-        def errata_ids(repo_id, filter = {})
-          data = { :criteria => {
-                    :type_ids=>['erratum'],
-                    :sort => {
-                        :unit => [ ['title', 'ascending'] ]
-                    }
-                   }
-                  }
-          response = post(repository_path(repo_id) + 'search/units/', JSON.generate(data), self.default_headers)
-          JSON.parse(response.body).collect{|i| i['unit_id']}
-        end
-
-        def distributions(repo_id)
-          data = { :criteria => {
-                    :type_ids=>['distribution'],
-                    :sort => {
-                        :unit => [ ['id', 'ascending'] ]
-                    }
-                   }
-                  }
-          response = post(repository_path(repo_id) + 'search/units/', JSON.generate(data), self.default_headers)
-          JSON.parse(response.body).collect{|i| i['metadata'].with_indifferent_access}
-        end
-
         def publish repo_id
           data = {
               :id=>find(repo_id)['distributors'].first()['id']
@@ -303,14 +251,6 @@ module Resources
         end
 
 
-        private
-
-        def package_unit_search repo_id, criteria, include_meta
-          data = { :criteria => criteria }
-          response = post(repository_path(repo_id) + 'search/units/', JSON.generate(data), self.default_headers)
-          body = response.body
-          JSON.parse(body)
-        end
       end
     end
 
@@ -448,22 +388,6 @@ module Resources
       end
     end
 
-    class Task < PulpResource
-      class << self
-        def find uuids
-          ids = "id=#{uuids.join('&id=')}"
-          query_url = path  + "?state=archived&state=current&#{ids}"
-          response = self.get(query_url, self.default_headers)
-          body = response.body
-          JSON.parse(body).collect{|k| k.with_indifferent_access}
-        end
-
-        def path uuid=nil
-          uuid.nil? ? "/pulp/api/v2/tasks/" : "/pulp/api/v2/tasks/#{uuid}/"
-        end
-
-      end
-    end
 
     class PackageGroup < PulpResource
       class << self
