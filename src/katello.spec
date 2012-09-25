@@ -81,6 +81,13 @@ Requires:       lsof
 Requires:       redhat-logos >= 60.0.14
 %endif
 
+%if 0%{?rhel} == 6 || 0%{?fedora} < 17
+Requires: ruby(abi) = 1.8
+%else
+Requires: ruby(abi) = 1.9.1
+%endif
+Requires: ruby
+
 # <workaround> for 714167 - undeclared dependencies (regin & multimap)
 # TODO - uncomment the statement once we push patched actionpack to our EL6 repo
 #%if 0%{?fedora} && 0%{?fedora} <= 15
