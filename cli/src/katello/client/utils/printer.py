@@ -123,8 +123,7 @@ class VerboseStrategy(PrinterStrategy):
             self._print_item(item, columns)
             print
 
-    @classmethod
-    def _print_header(cls, heading):
+    def _print_header(self, heading):
         """
         Print a fancy header to stdout.
 
