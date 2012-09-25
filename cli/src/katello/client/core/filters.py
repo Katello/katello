@@ -87,6 +87,29 @@ class Create(FilterAction):
     def parse_packages(cls, packages):
         return ([] if packages == None else [p.strip() for p in packages.split(',')])
 
+class Update(FilterAction):
+  description = _('update a filter')
+
+  def setup_parser(self, parser):
+    opt_parser_add_org(parser, required=1)
+    parser.add_option('--name', dest='name',
+                help=_("filter existing name (required)"))
+    parser.add_option('--new-name', dest='new_name',
+                help=_("filter new name"))
+
+  def check_options(self, validator):
+    validator.require(('org', 'name', "new_name"))
+
+  def run(self):
+    org = self.get_option('org')
+    name = self.get_option('name')
+    new_name = self.get_option('new_name')
+
+    filter = self.api.update(org, name, new_name)
+
+    print _("Successfully updated filter [ %s ]") % filter["name"]
+    return os.EX_OK
+
 class Delete(FilterAction):
     description = _('delete a filter')
 
