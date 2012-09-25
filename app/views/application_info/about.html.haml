@@ -6,7 +6,7 @@
 
   .grid_9
 
-    - if current_user && Organization.any_readable?
+    - if can_read_system_info?
       .dash
         .dashhead
           %h4= _("System Status")
@@ -45,7 +45,7 @@
               %td= param
               %td= val
 
-    - if current_user && Organization.any_readable?
+    - if can_read_system_info?
       .dash.packages
         .dashhead
           %h4 Installed Packages
