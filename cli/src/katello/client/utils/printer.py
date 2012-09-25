@@ -123,8 +123,7 @@ class VerboseStrategy(PrinterStrategy):
             self._print_item(item, columns)
             print
 
-    @classmethod
-    def _print_header(cls, heading):
+    def _print_header(self, heading):
         """
         Print a fancy header to stdout.
 
@@ -226,7 +225,7 @@ class GrepStrategy(PrinterStrategy):
         print_line()
         self._println(center_text(heading))
 
-        self._println
+        self._println()
         for column in columns:
             width = column_widths.get(column['attr_name'], 0)
 

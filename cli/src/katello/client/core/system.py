@@ -121,7 +121,8 @@ class Info(SystemAction):
 
         custom_info_api = CustomInfoAPI()
         custom_info = custom_info_api.get_custom_info("system", system['id'])
-        system['custom_info'] = "[ %s ]" % ", ".join(["%s: [ %s ]" % (k, ", ".join(custom_info[k])) for k in custom_info.keys()])
+        system['custom_info'] = "[ %s ]" % ", ".join(["%s: [ %s ]" % (k, ", ".join(custom_info[k])) \
+            for k in custom_info.keys()])
 
         system["activation_keys"] = "[ "+ ", ".join([ak["name"] for ak in system["activation_key"]]) +" ]"
         if 'host' in system:
@@ -968,7 +969,8 @@ class ViewCustomInfo(SystemAction):
         elif env_name is None:
             self.printer.set_header(_("Custom Information For System [ %s ] in Org [ %s ]") % (sys_name, org_name))
         else:
-            self.printer.set_header(_("Custom Information For System [ %s ] in Environment [ %s ] in Org [ %s ]") % (sys_name, env_name, org_name))
+            self.printer.set_header(_("Custom Information For System [ %s ] in Environment [ %s ] in Org [ %s ]") % \
+                (sys_name, env_name, org_name))
         self.printer.print_item(custom_info)
 
 
