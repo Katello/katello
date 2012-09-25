@@ -41,16 +41,17 @@ class SystemAction(BaseAction):
         super(SystemAction, self).__init__()
         self.api = SystemAPI()
 
+    def setup_parser(self, parser):
+        opt_parser_add_org(parser, required=1)
+        opt_parser_add_environment(parser)
 
 # system actions ------------------------------------------------------------
 
 class List(SystemAction):
-
     description = _('list systems within an organization')
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser, required=1)
-        opt_parser_add_environment(parser)
+        super(List, self).setup_parser(parser)
         parser.add_option('--pool', dest='pool_id',
                        help=_("pool ID to filter systems by subscriptions"))
 
@@ -86,16 +87,14 @@ class List(SystemAction):
         return os.EX_OK
 
 class Info(SystemAction):
-
     description = _('display a system within an organization')
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser, required=1)
+        super(Info, self).setup_parser(parser)
         parser.add_option('--name', dest='name',
                        help=_("system name (required)"))
         parser.add_option('--uuid', dest='uuid',
                        help=constants.OPT_HELP_SYSTEM_UUID)
-        opt_parser_add_environment(parser)
 
     def check_options(self, validator):
         validator.require('org')
@@ -152,16 +151,14 @@ class Info(SystemAction):
         return os.EX_OK
 
 class InstalledPackages(SystemAction):
-
     description = _('display and manipulate with the installed packages of a system')
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser, required=1)
+        super(InstalledPackages, self).setup_parser(parser)
         parser.add_option('--name', dest='name',
             help=_("system name (required)"))
         parser.add_option('--uuid', dest='uuid',
                 help=constants.OPT_HELP_SYSTEM_UUID)
-        opt_parser_add_environment(parser)
         parser.add_option('--install', dest='install', type="list",
             help=_("packages to be installed remotely on the system, package names are separated with comma"))
         parser.add_option('--remove', dest='remove', type="list",
@@ -254,16 +251,14 @@ class InstalledPackages(SystemAction):
 
 
 class TasksList(SystemAction):
-
     description = _('display status of remote tasks')
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser, required=1)
+        super(TasksList, self).setup_parser(parser)
         parser.add_option('--name', dest='name',
                        help=_("system name"))
         parser.add_option('--uuid', dest='uuid',
                        help=constants.OPT_HELP_SYSTEM_UUID)
-        opt_parser_add_environment(parser)
 
     def check_options(self, validator):
         validator.require('org')
@@ -300,7 +295,6 @@ class TasksList(SystemAction):
         return os.EX_OK
 
 class TaskInfo(SystemAction):
-
     description = _('display status of remote task')
 
     def setup_parser(self, parser):
@@ -330,16 +324,14 @@ class TaskInfo(SystemAction):
 
 
 class Releases(SystemAction):
-
     description = _('list releases available for the system')
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser, required=1)
+        super(Releases, self).setup_parser(parser)
         parser.add_option('--name', dest='name',
                        help=_("system name (if not specified, list all releases in the environment)"))
         parser.add_option('--uuid', dest='uuid',
                        help=constants.OPT_HELP_SYSTEM_UUID)
-        opt_parser_add_environment(parser)
 
     def check_options(self, validator):
         validator.require('org')
@@ -371,16 +363,14 @@ class Releases(SystemAction):
         return os.EX_OK
 
 class Facts(SystemAction):
-
     description = _('display a the hardware facts of a system')
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser, required=1)
+        super(Facts, self).setup_parser(parser)
         parser.add_option('--name', dest='name',
                        help=_("system name (required)"))
         parser.add_option('--uuid', dest='uuid',
                        help=constants.OPT_HELP_SYSTEM_UUID)
-        opt_parser_add_environment(parser)
 
     def check_options(self, validator):
         validator.require('org')
@@ -414,13 +404,11 @@ class Facts(SystemAction):
         return os.EX_OK
 
 class Register(SystemAction):
-
     description = _('register a system')
 
     def setup_parser(self, parser):
+        super(Register, self).setup_parser(parser)
         parser.add_option('--name', dest='name', help=_("system name (required)"))
-        opt_parser_add_org(parser, required=1)
-        opt_parser_add_environment(parser)
         parser.add_option('--servicelevel', dest='sla', help=_("service level agreement"))
         parser.add_option('--activationkey', dest='activationkey',
             help=_("activation key, more keys are separated with comma e.g. --activationkey=key1,key2"))
@@ -452,7 +440,6 @@ class Register(SystemAction):
         )
 
 class RemoveDeletion(SystemAction):
-
     description = _("remove a deletion record for hypervisor")
 
     def setup_parser(self, parser):
@@ -470,16 +457,14 @@ class RemoveDeletion(SystemAction):
 
 
 class Unregister(SystemAction):
-
     description = _('unregister a system')
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser, required=1)
+        super(Unregister, self).setup_parser(parser)
         parser.add_option('--name', dest='name',
                                help=_("system name (required)"))
         parser.add_option('--uuid', dest='uuid',
                                help=constants.OPT_HELP_SYSTEM_UUID)
-        opt_parser_add_environment(parser)
 
     def check_options(self, validator):
         validator.require('org')
@@ -507,7 +492,6 @@ class Unregister(SystemAction):
         return os.EX_OK
 
 class Subscribe(SystemAction):
-
     description = _('subscribe a system to certificate')
 
     def setup_parser(self, parser):
@@ -540,7 +524,6 @@ class Subscribe(SystemAction):
         return os.EX_OK
 
 class Subscriptions(SystemAction):
-
     description = _('list subscriptions for a system')
 
     def setup_parser(self, parser):
@@ -642,7 +625,6 @@ class Subscriptions(SystemAction):
         return os.EX_OK
 
 class Unsubscribe(SystemAction):
-
     description = _('unsubscribe a system from certificate')
 
     def setup_parser(self, parser):
@@ -687,16 +669,14 @@ class Unsubscribe(SystemAction):
         return os.EX_OK
 
 class Update(SystemAction):
-
     description = _('update a system')
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser, required=1)
+        super(Update, self).setup_parser(parser)
         parser.add_option('--name', dest='name',
                        help=_('system name (required)'))
         parser.add_option('--uuid', dest='uuid',
                        help=constants.OPT_HELP_SYSTEM_UUID)
-        opt_parser_add_environment(parser)
         parser.add_option('--new_name', dest='new_name',
                        help=_('a new name for the system'))
         parser.add_option('--new_environment', dest='new_environment',
@@ -755,7 +735,6 @@ class Update(SystemAction):
 
 
 class Report(SystemAction):
-
     description = _('systems report')
 
     def setup_parser(self, parser):
@@ -787,7 +766,6 @@ class Report(SystemAction):
 
 
 class AddSystemGroups(SystemAction):
-
     description = _('add system groups to a system')
 
     def setup_parser(self, parser):
@@ -840,7 +818,6 @@ class AddSystemGroups(SystemAction):
 
 
 class RemoveSystemGroups(SystemAction):
-
     description = _('remove system groups to a system')
 
     def setup_parser(self, parser):
@@ -891,24 +868,31 @@ class RemoveSystemGroups(SystemAction):
         else:
             return os.EX_DATAERR
 
-
-class AddCustomInfo(SystemAction):
-
-    description = _('add custom infomation to a system')
+class BaseCustomInfo(SystemAction):
+    """ Base class for all *CustomInfo classes with common code """
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser, required=1)
-        opt_parser_add_environment(parser)
+        super(BaseCustomInfo, self).setup_parser(parser)
         parser.add_option('--name', dest='name', help=_("System name (required)"))
         parser.add_option('--uuid', dest='uuid', help=constants.OPT_HELP_SYSTEM_UUID)
         parser.add_option('--keyname', dest='keyname', help=_("name to identify the custom info (required)"))
-        parser.add_option('--value', dest='value', help=_("the custom info (required)"))
 
     def check_options(self, validator):
-        validator.require(('org', 'keyname', 'value'))
+        validator.require('org')
         validator.require_at_least_one_of(('name', 'uuid'))
         validator.mutually_exclude('name', 'uuid')
         validator.mutually_exclude('environment', 'uuid')
+
+class AddCustomInfo(SystemAction):
+    description = _('add custom infomation to a system')
+
+    def setup_parser(self, parser):
+        super(AddCustomInfo, self).setup_parser(parser)
+        parser.add_option('--value', dest='value', help=_("the custom info (required)"))
+
+    def check_options(self, validator):
+        super(AddCustomInfo, self).check_options(validator)
+        validator.require(('org', 'keyname', 'value'))
 
     def run(self):
         org_name = self.get_option('org')
@@ -934,19 +918,6 @@ class AddCustomInfo(SystemAction):
 class ViewCustomInfo(SystemAction):
 
     description = _('view custom info attached to a system')
-
-    def setup_parser(self, parser):
-        opt_parser_add_org(parser, required=1)
-        opt_parser_add_environment(parser)
-        parser.add_option('--name', dest='name', help=_("System name (required)"))
-        parser.add_option('--uuid', dest='uuid', help=constants.OPT_HELP_SYSTEM_UUID)
-        parser.add_option('--keyname', dest='keyname', help=_("name of the custom info"))
-
-    def check_options(self, validator):
-        validator.require('org')
-        validator.require_at_least_one_of(('name', 'uuid'))
-        validator.mutually_exclude('name', 'uuid')
-        validator.mutually_exclude('environment', 'uuid')
 
     def run(self):
         org_name = self.get_option('org')
@@ -975,22 +946,15 @@ class ViewCustomInfo(SystemAction):
 
 
 class UpdateCustomInfo(SystemAction):
-
     description = _("update custom info for a system")
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser, required=1)
-        opt_parser_add_environment(parser)
-        parser.add_option('--name', dest='name', help=_("System name (required)"))
-        parser.add_option('--uuid', dest='uuid', help=constants.OPT_HELP_SYSTEM_UUID)
-        parser.add_option('--keyname', dest='keyname', help=_("name of the custom info"))
+        super(UpdateCustomInfo, self).setup_parser(parser)
         parser.add_option('--current-value', dest='current-value', help=_("old value to update"))
         parser.add_option('--new-value', dest='new-value', help=_("replacement value"))
 
     def check_options(self, validator):
         validator.require(('org', 'keyname', 'current-value', 'new-value'))
-        validator.require_at_least_one_of(('name', 'uuid'))
-        validator.mutually_exclude('name', 'uuid')
         validator.mutually_exclude('environment', 'uuid')
 
     def run(self):
@@ -1017,22 +981,11 @@ class UpdateCustomInfo(SystemAction):
 
 
 class RemoveCustomInfo(SystemAction):
-
     description = _("remove custom info from a system")
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser, required=1)
-        opt_parser_add_environment(parser)
-        parser.add_option('--name', dest='name', help=_("System name (required)"))
-        parser.add_option('--uuid', dest='uuid', help=constants.OPT_HELP_SYSTEM_UUID)
-        parser.add_option('--keyname', dest='keyname', help=_("name of the custom info"))
+        super(RemoveCustomInfo, self).setup_parser(parser)
         parser.add_option('--value', dest='value', help=_("value of the custom info"))
-
-    def check_options(self, validator):
-        validator.require('org')
-        validator.require_at_least_one_of(('name', 'uuid'))
-        validator.mutually_exclude('name', 'uuid')
-        validator.mutually_exclude('environment', 'uuid')
 
     def run(self):
         org_name = self.get_option('org')
@@ -1057,5 +1010,4 @@ class RemoveCustomInfo(SystemAction):
 
 
 class System(Command):
-
     description = _('system specific actions in the katello server')
