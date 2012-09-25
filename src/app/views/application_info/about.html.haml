@@ -1,0 +1,54 @@
+
+=javascript :scroll_pane, :dashboard
+
+.about-information
+  %h2.about-header= _("About")
+
+  .grid_9
+
+    - if current_user && Organization.any_readable?
+      .dash
+        .dashhead
+          %h4= _("System Status")
+        .widget.scroll-pane
+          %table.about-info
+            %tr.header
+              %th
+              %th= _("Component")
+              %th= _("Status")
+              %th= _("Message")
+            - @ping[:status].sort.each do |component, status|
+              %tr
+                %td= component_status_icon(status[:result])
+                %th= component
+                %td= status[:result].upcase
+                %td= status[:message]
+
+    .dash
+      .dashhead
+        %h4= _("Support")
+      .widget
+        %p= ((_("To submit a new bug please visit %s.")) % redhat_bugzilla_link).html_safe
+
+  .grid_7
+
+    .dash
+      .dashhead
+        %h4= _("System Information")
+      .widget.scroll-pane
+        %table.about-info
+          %tr.header
+            %th= _("Parameter")
+            %th= _("Value")
+          - @system_info.sort.each do |param, val|
+            %tr
+              %td= param
+              %td= val
+
+    - if current_user && Organization.any_readable?
+      .dash.packages
+        .dashhead
+          %h4 Installed Packages
+        .widget.scroll-pane
+          - @packages.each do |package|
+            .package= package
