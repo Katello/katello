@@ -543,6 +543,8 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %files all
 
 %files headpin
+%attr(600, katello, katello)
+%{_bindir}/katello-*
 %{homedir}/app/controllers
 %{homedir}/app/helpers
 %{homedir}/app/mailers
