@@ -10,6 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'util/model_util'
+
 class SelfReferenceEnvironmentValidator < ActiveModel::Validator
   def validate(record)
     record.errors[:base] << _("Environment cannot be in its own promotion path") if record.priors.select(:id).include? record.id
@@ -60,7 +62,7 @@ class KTEnvironment < ActiveRecord::Base
   include Glue::Candlepin::Environment if AppConfig.use_cp
   include Glue if AppConfig.use_cp
   set_table_name "environments"
-
+  include Katello::LabelFromName
   acts_as_reportable
 
   belongs_to :organization, :inverse_of => :environments
@@ -91,8 +93,11 @@ class KTEnvironment < ActiveRecord::Base
   scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
 
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
+  validates_uniqueness_of :label, :scope => :organization_id, :message => N_("must be unique within one organization")
   validates_presence_of :organization
   validates :name, :presence => true, :katello_name_format => true
+  validates :label, :presence => true, :katello_label_format => true
+
   validates :description, :katello_description_format => true
   validates_with PriorValidator
   validates_with PathDescendentsValidator
@@ -102,7 +107,6 @@ class KTEnvironment < ActiveRecord::Base
   after_save :update_related_index
   after_destroy :delete_related_index
   after_destroy :unset_users_with_default
-
    ERROR_CLASS_NAME = "Environment"
 
 
@@ -298,7 +302,9 @@ class KTEnvironment < ActiveRecord::Base
 
   def any_operation_readable?
     return false if !AppConfig.katello?
-    User.allowed_to?(self.class.list_verbs.keys, :environments, self.id, self.organization) || self.organization.systems_readable?
+    User.allowed_to?(self.class.list_verbs.keys, :environments, self.id, self.organization) ||
+        self.organization.systems_readable? || self.organization.any_systems_registerable? ||
+        ActivationKey.readable?(self.organization)
   end
 
   def changesets_promotable?
@@ -414,7 +420,8 @@ class KTEnvironment < ActiveRecord::Base
     users = User.find_by_default_environment(self.id)
     users.each do |u|
       u.default_environment = nil
-      Notify.message _("Your default environment has been removed. Please choose another one."), {:user => u}
+      Notify.message _("Your default environment has been removed. Please choose another one."),
+                     :user => u, :organization => self.organization
     end
   end
 

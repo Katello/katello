@@ -12,6 +12,18 @@
 
 class Api::SyncController < Api::ApiController
 
+  resource_description do
+    description <<-DOC
+      methods for handeling repositories synchronisation. Repositories can be selecteted
+      individualy by id, by product or by provider 
+    DOC
+
+    param :organization_id, :identifier, :desc => "oranization identifier", :required => true
+    param :product_id, :identifier, :desc => "product identifier", :required => true
+    param :provider_id, :identifier, :desc => "provider identifier", :required => true
+    param :repository_id, :identifier, :desc => "repository identifier", :required => true
+  end
+
   before_filter :find_object, :only => [:index, :create, :cancel]
   before_filter :ensure_library, :only => [:create]
   respond_to :json
@@ -21,31 +33,40 @@ class Api::SyncController < Api::ApiController
   def rules
     list_test = lambda{ Provider.any_readable?(@obj.organization) }
     sync_test = lambda { @obj.organization.syncable? }
-    
+
     { :index => list_test,
       :create => sync_test,
       :cancel => sync_test
     }
   end
 
+  api :GET, "/providers/:provider_id/sync",  "Get status of repo synchronisation for given provider"
+  api :GET, "/organizations/:organization_id/products/:product_id/sync", "Get status of repo synchronisation for given product"
+  api :GET, "/repositories/:repository_id/sync", "Get status of synchronisation for given repository"
   def index
     render :json => @obj.sync_status
   end
 
+  api :POST, "/providers/:provider_id/sync", "Synchronize all provider's repositories"
+  api :POST, "organizations/:organization_id/products/:product_id/sync", "Synchronise all repositories for given product"
+  api :POST, "/repositories/:repository_id/sync", "Synchronise repository"
   def create
     to_return = @obj.sync
     render :json => to_return, :status => 202
   end
 
+  api :DELETE, "/providers/:provider_id/sync", "Cancel running synchronisation for given provider"
+  api :DELETE, "/organizations/:organization_id/products/:product_id/sync", "Cancel running synchronisations for given product"
+  api :DELETE, "/repositories/:repository_id/sync", "Cancel running synchronisation"
   def cancel
     if @obj.sync_state.to_s == PulpSyncStatus::Status::RUNNING.to_s
       @obj.cancel_sync
-      render :text => "Cancelled synchronization of #{@sync_of}: #{@obj.id}", :status => 200
+      render :text => _("Canceled synchronization of %s: %s") % [@sync_of, @obj.id], :status => 200
     else
-      render :text => "No synchronization of the #{@sync_of} is currently running", :status => 200
+      render :text => _("No synchronization of the %s is currently running") % @sync_of, :status => 200
     end
   end
-  
+
   # used in unit tests
   def find_object
     if params.key?(:provider_id)

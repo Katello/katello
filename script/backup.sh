@@ -14,7 +14,6 @@ tar --selinux -czvf config_files.tar.gz \
 /etc/elasticsearch \
 /etc/candlepin \
 /etc/pulp \
-/etc/gofer \
 /etc/grinder \
 /etc/pki/katello \
 /etc/pki/pulp \

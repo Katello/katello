@@ -16,7 +16,7 @@
 $(document).ready(function() {
 
     KT.widgets = {repos:{id:"repos_selector", autocomplete:'repo_autocomplete_list', search:'repo_search'},
-                  packages:{id:"packages_selector", autocomplete:'package_autocomplete_list', search:'package_search'},
+                  packages:{id:"packages_selector", search:'package_search'},
                   products:{id:"products_selector", autocomplete:'product_autocomplete_list'},
                   errata:{id:"errata_selector", search:'errata_search'}};
 
@@ -529,7 +529,7 @@ KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
         var list = ac_container.find('ul');
         list.find('.all').hide();
         if (ac_container.find('li[data-id=' + id + ']').length === 0){
-            list.prepend('<li data-name="'+ name + '" data-id="' + id + '"><i class="remove x-icon-black clickable"/><span>' + name + '</span></li>');
+            list.prepend('<li data-name="'+ name + '" data-id="' + id + '"><i class="remove x_icon-black clickable"/><span>' + name + '</span></li>');
         }
 
     },

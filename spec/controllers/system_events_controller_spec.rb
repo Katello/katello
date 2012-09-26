@@ -24,7 +24,7 @@ describe SystemEventsController do
       login_user(:mock => false)
       set_default_locale
       @organization = setup_system_creation
-      @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.library.id, :organization => @organization)
+      @environment = KTEnvironment.create!(:name=>'test', :label=> 'test', :prior => @organization.library.id, :organization => @organization)
 
       Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Resources::Candlepin::Consumer.stub!(:update).and_return(true)

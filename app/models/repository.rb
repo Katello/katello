@@ -9,7 +9,7 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-
+require "util/model_util"
 
 class RepoDisablementValidator < ActiveModel::Validator
   def validate(record)
@@ -26,13 +26,14 @@ class Repository < ActiveRecord::Base
   include Authorization
   include AsyncOrchestration
   include IndexedModel
-
+  include Katello::LabelFromName
   index_options :extended_json=>:extended_index_attrs,
                 :json=>{:except=>[:pulp_repo_facts, :groupid, :feed_cert, :environment_product_id]}
 
   mapping do
     indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_sort, :type => 'string', :index => :not_analyzed
+    indexes :labels, :type => 'string', :index => :not_analyzed
   end
 
 
@@ -43,6 +44,7 @@ class Repository < ActiveRecord::Base
   has_and_belongs_to_many :changesets
   validates :pulp_id, :presence => true, :uniqueness => true
   validates :name, :presence => true
+  validates :label, :presence => true,:katello_label_format => true
   validates :enabled, :repo_disablement => true, :on => [:update]
   belongs_to :gpg_key, :inverse_of => :repositories
   belongs_to :library_instance, :class_name=>"Repository"
@@ -81,6 +83,8 @@ class Repository < ActiveRecord::Base
     return false unless environment.library?
     filters.count > 0 || product.filters.count > 0
   end
+
+  default_scope :order => 'name ASC'
 
   scope :enabled, where(:enabled => true)
   scope :in_product, lambda{|p|  joins(:environment_product).where("environment_products.product_id" => p.id)}
@@ -153,8 +157,10 @@ class Repository < ActiveRecord::Base
     notify = task.parameters.try(:[], :options).try(:[], :notify)
     user = task.user
     if task.state == 'finished'
-      Notify.success _("Repository '%s' finished syncing successfully.") % [self.name],
-                     :user => user if user && notify
+      if user && notify
+        Notify.success _("Repository '%s' finished syncing successfully.") % [self.name],
+                       :user => user, :organization => self.organization
+      end
     elsif task.state == 'error'
       details = if task.progress.error_details.present?
                   task.progress.error_details
@@ -163,8 +169,10 @@ class Repository < ActiveRecord::Base
                 end
 
       Rails.logger.error("*** Sync error: " +  details.to_json)
-      Notify.error _("There were errors syncing repository '%s'. See notices page for more details.") % self.name,
-                   :details => details.map(&:chomp).join("\n"), :user => user if user && notify
+      if user && notify
+        Notify.error _("There were errors syncing repository '%s'. See notices page for more details.") % self.name,
+                     :details => details.map(&:chomp).join("\n"), :user => user, :organization => self.organization
+      end
     end
   end
 

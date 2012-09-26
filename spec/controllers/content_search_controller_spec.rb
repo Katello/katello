@@ -24,11 +24,11 @@ describe ContentSearchController do
 
       @organization = new_test_org #controller.current_organization
       controller.stub!(:current_organization).and_return(@organization)
-      @env1 = KTEnvironment.create!(:name => "env1", :organization => @organization, :prior => @organization.library)
-      @env2 = KTEnvironment.create!(:name => "env2", :organization => @organization, :prior => @env1)
+      @env1 = KTEnvironment.create!(:name=>"env1", :label=> "env1", :organization => @organization, :prior => @organization.library)
+      @env2 = KTEnvironment.create!(:name=>"env2", :label=> "env2", :organization => @organization, :prior => @env1)
       @provider = Provider.create!(:name => "provider", :provider_type => Provider::CUSTOM,
                                    :organization => @organization, :repository_url => "https://something.url/stuff")
-      @product = Product.new({:name => "prod"})
+      @product = Product.new({:name=>"prod", :label=> "prod"})
 
 
       @product.provider = @provider
@@ -38,10 +38,12 @@ describe ContentSearchController do
       ep_library = EnvironmentProduct.find_or_create(@organization.library, @product)
       @repo_library= Repository.create!(:environment_product => ep_library,
                                        :name=> "repo",
+                                       :label=> "repo_label",
                                        :relative_path => "#{@organization.name}/Library/prod/repo",
                                        :pulp_id=>"2",
                                        :enabled => true)
       @repo = promote(@repo_library, @env1)
+      Repository.stub(:search).and_return([@repo])
     end
     after do
       reset_search
