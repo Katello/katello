@@ -19,6 +19,9 @@ $(document).ready(function() {
     KT.panel.set_expand_cb(function() {
         env_scroll.bind(undefined);
         KT.object.label.initialize();
+        if ($('#organization_edit').length > 0) {
+            notices.checkNotices();
+        }
     });
 
    $('.environment_link').live('click', function() {

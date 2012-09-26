@@ -74,12 +74,19 @@ class OrganizationsController < ApplicationController
   end
 
   def create
-    org_params    = params[:organization]
-    env_params    = params[:environment]
+    org_label_assigned = ""
+    org_params = params[:organization]
+    org_params[:label], org_label_assigned = generate_label(org_params[:name], _('organization')) if org_params[:label].blank?
     @organization = Organization.new(:name => org_params[:name], :label => org_params[:label], :description => org_params[:description])
     @organization.save!
 
+    env_label_assigned = ""
+    env_params = params[:environment]
     if env_params[:name].present?
+      if env_params[:label].blank?
+        env_params[:label], env_label_assigned = generate_label(env_params[:name], _('environment')) if env_params[:label].blank?
+      end
+
       @new_env = KTEnvironment.new(:name => env_params[:name], :label => env_params[:label], :description => env_params[:description])
       @new_env.organization = @organization
       @new_env.prior = @organization.library
@@ -87,9 +94,14 @@ class OrganizationsController < ApplicationController
     end
 
     notify.success _("Organization '%s' was created.") % @organization["name"]
+    notify.message org_label_assigned unless org_label_assigned.blank?
 
     if search_validate(Organization, @organization.id, params[:search])
-      notify.success _("Click on 'Add Environment' to create the first environment") if @new_env.nil?
+      if @new_env.nil?
+        notify.message _("Click on 'Add Environment' to create the first environment")
+      else
+        notify.message env_label_assigned unless env_label_assigned.blank?
+      end
       render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"label", :columns=>['name'], :name=>controller_display_name}
     else
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @organization["name"]

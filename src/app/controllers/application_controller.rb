@@ -118,6 +118,17 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # Generate a label using the name provided, returning the label and a string with text that may be
+  # sent to the user (e.g. via a notice).
+  def generate_label object_name, object_type
+    # user didn't provide a label, so generate one using the name
+    label = Katello::ModelUtils::labelize(object_name)
+    label_assigned_text = _("A label was not provided during %s creation; therefore, a label of '%s' was " +
+                            "automatically assigned. If you would like a different label, please delete the " +
+                            "%s and recreate it with the desired label.") % [object_type, label, object_type]
+    return label, label_assigned_text
+  end
+
   def flash_to_headers
     return if @_response.nil? or @_response.response_code == 302
     return if flash.blank?
