@@ -60,6 +60,7 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved  do |e|
     User.current = current_user
     notify.exception e
+    log_exception e, :info
 
     execute_after_filters
     respond_to do |f|
@@ -612,15 +613,8 @@ class ApplicationController < ActionController::Base
   end
 
 
-  def log_exception exception
-    if exception
-      logger.error exception.to_s
-      logger.error exception.message
-      logger.error "#{exception.inspect}"
-      exception.backtrace.each { |line|
-      logger.error line
-      }
-    end
+  def log_exception exception, level = :error
+    logger.send level, "#{exception} (#{exception.class})\n#{exception.backtrace.join("\n")}" if exception
   end
 
   # Parse the input provided and return the value of displayMessage. If displayMessage is not available, return "".
