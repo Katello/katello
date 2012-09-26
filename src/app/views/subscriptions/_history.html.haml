@@ -19,7 +19,7 @@
             %tr{:class => cycle_class}
               %td{:style => "width: 70%;"}
                 %span.icon_wrap.fl
-                  %span.fl{:class => (status["status"] == "FAILURE" ? "failure_icon" : "success_icon")}
+                  %span.fl{:class => (status["status"] == "FAILURE" ? "shield_icon-black" : "check_icon-black")}
                 = status["statusMessage"]
               %td
                 = _("%s ago") % time_ago_in_words(status["created"])
