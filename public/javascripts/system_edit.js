@@ -44,6 +44,25 @@ $(document).ready(function() {
         $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
     });
 
+    $('.edit_select_system_releasever_message').each(function(){
+        var element = $(this),
+            settings = {
+                type            :  'textarea',
+                name            :  element.attr('name'),
+                data            :  element.data('message'),
+                rows            :  8,
+                cols            :  36,
+                submit          :  false,
+                onsuccess       :  function(result, status, xhr){
+                    notices.checkNotices();
+                },
+                onerror         :  function(result, status, xhr){
+                    notices.checkNotices();
+                }
+            };
+        $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
+    });
+
     path_select = KT.path_select('environment_path_selector', 'edit_select_system_environment', KT.available_environments,
         {select_mode:'single', submit_button_text: i18n.save, cancel_button_text: i18n.cancel, activate_on_click: true});
 
