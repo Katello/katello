@@ -19,7 +19,7 @@ class PromotionChangeset < Changeset
     options = { :async => true, :notify => false }.merge options
 
     self.state == Changeset::REVIEW or
-        raise _("Cannot promote the changset '%s' because it is not in the review phase.") % self.name
+        raise _("Cannot promote the changeset '%s' because it is not in the review phase.") % self.name
 
     #check for other changesets promoting
     if self.environment.promoting_to?
@@ -32,7 +32,7 @@ class PromotionChangeset < Changeset
     repos_to_be_promoted.each do |repo|
       if not self.environment.products.to_a.include? repo.product and not products_to_be_promoted.include? repo.product
         raise _("Please add '%s' product to the changeset '%s' if you wish to promote repository '%s' with it.") %
-                  [repo.product, self.name, repo.name]
+                  [repo.product.name, self.name, repo.name]
       end
     end
 
@@ -89,7 +89,7 @@ class PromotionChangeset < Changeset
 
     if notify
       message = _("Successfully promoted changeset '%s'.") % self.name
-      Notify.success message, :request_type => "changesets___promote"
+      Notify.success message, :request_type => "changesets___promote", :organization => self.environment.organization
     end
 
   rescue => e
@@ -99,7 +99,7 @@ class PromotionChangeset < Changeset
     Rails.logger.error(e.backtrace.join("\n"))
     if notify
       Notify.exception _("Failed to promote changeset '%s'. Check notices for more details") % self.name, e,
-                   :request_type => "changesets___promote"
+                   :request_type => "changesets___promote", :organization => self.environment.organization
     end
     index_repo_content to_env
     raise e
@@ -237,7 +237,7 @@ class PromotionChangeset < Changeset
     products += self.system_templates.map { |tpl| tpl.products_to_be_promoted }.flatten(1)
     return products.uniq
   end
-  
+
   def calc_dependencies
     all_dependencies = []
     not_included_products.each do |product|

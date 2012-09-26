@@ -41,6 +41,7 @@ class OrganizationsController < ApplicationController
       :auto_complete_search => index_test,
       :new => create_test,
       :create => create_test,
+      :default_label => create_test,
       :edit => read_test,
       :update => edit_test,
       :destroy => delete_test,
@@ -52,7 +53,7 @@ class OrganizationsController < ApplicationController
 
   def param_rules
     {
-      :create => {:organization => [:name, :description], :environment => [:name, :description]},
+      :create => {:organization => [:name, :description, :label], :environment => [:name, :description, :label]},
       :update => {:organization  => [:description]}
     }
   end
@@ -75,11 +76,11 @@ class OrganizationsController < ApplicationController
   def create
     org_params    = params[:organization]
     env_params    = params[:environment]
-    @organization = Organization.new(:name => org_params[:name], :description => org_params[:description])
+    @organization = Organization.new(:name => org_params[:name], :label => org_params[:label], :description => org_params[:description])
     @organization.save!
 
-    if env_params[:envname].present?
-      @new_env = KTEnvironment.new(:name => env_params[:name], :description => env_params[:description])
+    if env_params[:name].present?
+      @new_env = KTEnvironment.new(:name => env_params[:name], :label => env_params[:label], :description => env_params[:description])
       @new_env.organization = @organization
       @new_env.prior = @organization.library
       @new_env.save!
@@ -89,7 +90,7 @@ class OrganizationsController < ApplicationController
 
     if search_validate(Organization, @organization.id, params[:search])
       notify.success _("Click on 'Add Environment' to create the first environment") if @new_env.nil?
-      render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"cp_key", :columns=>['name'], :name=>controller_display_name}
+      render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"label", :columns=>['name'], :name=>controller_display_name}
     else
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @organization["name"]
       render :json => { :no_match => true }
@@ -102,8 +103,19 @@ class OrganizationsController < ApplicationController
   end
 
   def edit
+    @org_label = ""
+    user_default_org = current_user.default_org
+    if user_default_org && !user_default_org.nil?
+      if user_default_org == @organization
+        @org_label = _("This is your default organization.")
+      else
+        @org_label = _("Make this my default organization.")
+      end
+    else
+      @org_label = _("Make this my default organization.")
+    end
     @env_choices =  @organization.environments.collect {|p| [ p.name, p.name ]}
-    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:organization=>@organization, :editable=>@organization.editable?, :name => controller_display_name}
+    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:organization=>@organization, :editable=>@organization.editable?, :name => controller_display_name, :org_label=>@org_label}
   end
 
   def update
@@ -130,7 +142,7 @@ class OrganizationsController < ApplicationController
       render :text=>found_errors[1], :status=>:bad_request and return
     end
 
-    id = @organization.cp_key
+    id = @organization.label
     OrganizationDestroyer.destroy @organization, :notify => true
     notify.success _("Organization '%s' has been scheduled for background deletion.") % @organization.name
     render :partial => "common/list_remove", :locals => {:id=> id, :name=> controller_display_name}
@@ -174,9 +186,9 @@ class OrganizationsController < ApplicationController
   protected
 
   def find_organization
-    @organization = Organization.find_by_cp_key(params[:id].to_s)
+    @organization = Organization.find_by_label(params[:id].to_s)
     if @organization.blank?
-      message = _("Couldn't find organization with ID=%s") % params[:id]
+      message = _("Couldn't find organization with ID %s") % params[:id]
       notify.error message
       execute_after_filters
       render :text => message, :status => :not_found and return false
@@ -194,7 +206,7 @@ class OrganizationsController < ApplicationController
                :create => _('Organization'),
                :create_label => _('+ New Organization'),
                :name => controller_display_name,
-               :accessor => :cp_key,
+               :accessor => :label,
                :ajax_load  => true,
                :ajax_scroll => items_organizations_path(),
                :enable_create => Organization.creatable?,
@@ -207,6 +219,12 @@ class OrganizationsController < ApplicationController
 
   def controller_display_name
     return 'organization'
+  end
+
+  private
+
+  def default_notify_options
+    super.merge :organization => nil
   end
 
 end

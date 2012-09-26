@@ -18,7 +18,7 @@ class DeletionChangeset < Changeset
     options = { :async => true, :notify => false }.merge options
 
     self.state == Changeset::REVIEW or
-        raise _("Cannot delete the changset '%s' because it is not in the review phase.") % self.name
+        raise _("Cannot delete the changeset '%s' because it is not in the review phase.") % self.name
 
     #check for other changesets promoting
     if self.environment.promoting_to?
@@ -75,7 +75,7 @@ class DeletionChangeset < Changeset
 
     if notify
       message = _("Successfully deleted changeset '%s'.") % self.name
-      Notify.success message, :request_type => "changesets___delete"
+      Notify.success message, :request_type => "changesets___delete", :organization => self.environment.organization
     end
 
   rescue => e
@@ -85,7 +85,7 @@ class DeletionChangeset < Changeset
     Rails.logger.error(e.backtrace.join("\n"))
     if notify
       Notify.exception _("Failed to delete changeset '%s'. Check notices for more details") % self.name, e,
-                   :request_type => "changesets___delete"
+                   :request_type => "changesets___delete", :organization => self.environment.organization
     end
     index_repo_content from_env
     raise e

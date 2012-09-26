@@ -182,10 +182,6 @@ module ApplicationHelper
     proc.call(:environment=> env, :next_environment=>next_env, :organization=>org)
   end
 
-  def get_new_notices
-    {:new_notices=>current_user.pop_notices}
-  end
-
   # auto_tab_index: this method may be used to simplify adding a tabindex to UI forms.
   def auto_tab_index
     @current_index ||= 0
@@ -212,14 +208,14 @@ module ApplicationHelper
   #returns a proc to generate a url for the env_selector
   def url_templates_proc
     lambda{|args|
-      system_templates_organization_environment_path(args[:organization].cp_key, args[:environment].id)
+      system_templates_organization_environment_path(args[:organization].label, args[:environment].id)
     }
   end
 
   #returns a proc to generate a url for the env_selector
   def url_products_proc
     lambda{|args|
-      products_organization_environment_path(args[:organization].cp_key, args[:environment].id)
+      products_organization_environment_path(args[:organization].label, args[:environment].id)
     }
   end
 

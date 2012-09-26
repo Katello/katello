@@ -29,24 +29,22 @@ describe Glue::Pulp::Repo, :katello => true do
     disable_org_orchestration
     disable_product_orchestration
 
-    @organization = Organization.create!(:name => ProductTestData::ORG_ID, :cp_key => 'admin-org-37070')
+    @organization = Organization.create!(:name=>ProductTestData::ORG_ID, :label => 'admin-org-37070')
 
     @provider = Provider.create(to_create_custom) do |p|
       p.organization = @organization
     end
 
-    
-
-    @product1 = Product.create!({:cp_id => "product1_id", :name=> "product1", :productContent => [], :provider => @provider, :environments => [@organization.library]})
+    @product1 = Product.create!({:cp_id => "product1_id",:label=>"prod1",  :name=> "product1", :productContent => [], :provider => @provider, :environments => [@organization.library]})
     ep = EnvironmentProduct.find_or_create(@organization.library, @product1)
     RepoTestData::REPO_PROPERTIES.merge!(:environment_product => ep)
 
     @repo = Repository.create!(RepoTestData::REPO_PROPERTIES)
 
-    @rh_product =  Product.create!({:cp_id => "rh_product1_id", :name=> "rh_product1", :productContent => [], 
+    @rh_product =  Product.create!({:cp_id => "rh_product1_id", :label =>"rh_prod1", :name=> "rh_product1", :productContent => [], 
                                     :provider => @organization.redhat_provider, :environments => [@organization.library]})
     ep2 = EnvironmentProduct.find_or_create(@organization.library, @rh_product)
-    @rh_repo = Repository.create!(:name=>"red hat repo", :environment_product=>ep2, :pulp_id=>"redhat_pulp_id", :uri=>"http://redhat.com/cdn/content")
+    @rh_repo = Repository.create!(:name=>"red hat repo", :label=>"red_hat_repo", :environment_product=>ep2, :pulp_id=>"redhat_pulp_id", :uri=>"http://redhat.com/cdn/content")
 
   end
 
@@ -54,7 +52,7 @@ describe Glue::Pulp::Repo, :katello => true do
     it "should create the repo with correct properties" do
       Resources::Pulp::Repository.should_receive(:create).with do |props|
         props[:id].should == RepoTestData::REPO_PROPERTIES[:pulp_id]
-        props[:name].should == RepoTestData::REPO_PROPERTIES[:name]
+        props[:name].should == RepoTestData::REPO_PROPERTIES[:label]
         props[:groupid].should == RepoTestData::REPO_PROPERTIES[:groupid]
         props[:arch].should == RepoTestData::REPO_PROPERTIES[:arch]
         props[:feed].should == RepoTestData::REPO_PROPERTIES[:feed]
@@ -326,11 +324,11 @@ describe Glue::Pulp::Repo, :katello => true do
 
   describe "Cloned repo id" do
     before do
-      @to_env = KTEnvironment.create!(:name=>"Prod", :organization => @organization, :prior => @organization.library)
+      @to_env = KTEnvironment.create!(:name=>"Prod", :label=> "Prod", :organization => @organization, :prior => @organization.library)
     end
     it "should be composed from various attributes to be uniqe" do
       cloned_repo_id = @repo.clone_id(@to_env)
-      cloned_repo_id.should == "#{@repo.organization.name}-#{@to_env.name}-#{@repo.product.name}-repo"
+      cloned_repo_id.should == "#{@repo.organization.label}-#{@to_env.label}-#{@repo.product.label}-#{@repo.label}"
     end
 
   end
@@ -341,7 +339,7 @@ describe Glue::Pulp::Repo, :katello => true do
       Resources::Pulp::Repository.stub(:packages).and_return([])
       Resources::Pulp::Repository.stub(:errata).and_return([])
 
-      @to_env = KTEnvironment.create!(:organization =>@organization, :name=>"Prod", :prior=>@organization.library)
+      @to_env = KTEnvironment.create!(:organization =>@organization, :name=>"Prod",:label=>"Prod", :prior=>@organization.library)
       @from_env = @to_env.prior
 
       ep = EnvironmentProduct.find_or_create(@to_env, @product1)

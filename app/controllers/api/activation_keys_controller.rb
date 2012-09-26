@@ -15,15 +15,18 @@ class Api::ActivationKeysController < Api::ApiController
 
   before_filter :verify_presence_of_organization_or_environment, :only => [:index]
   before_filter :find_environment, :only => [:index, :create]
-  before_filter :find_organization, :only => [:index]
-  before_filter :find_activation_key, :only => [:show, :update, :destroy, :add_pool, :remove_pool, 
+  before_filter :find_optional_organization, :only => [:index, :update, :destroy, :add_system_groups, :remove_system_groups]
+  before_filter :find_activation_key, :only => [:show, :update, :destroy, :add_pool, :remove_pool,
                                                 :add_system_groups, :remove_system_groups]
   before_filter :find_pool, :only => [:add_pool, :remove_pool]
   before_filter :find_system_groups, :only => [:add_system_groups, :remove_system_groups]
+  before_filter :authorize
 
   def rules
-    read_test = lambda{ActivationKey.readable?(@organization)}
-    manage_test = lambda{ActivationKey.manageable?(@organization)}
+    read_test = lambda{ActivationKey.readable?(@organization) ||
+                        (ActivationKey.readable?(@environment.organization) unless @environment.nil?)}
+    manage_test = lambda{ActivationKey.manageable?(@organization) ||
+                         (ActivationKey.manageable?(@environment.organization) unless @environment.nil?)}
     {
       :index => read_test,
       :show => read_test,
@@ -119,11 +122,10 @@ class Api::ActivationKeysController < Api::ApiController
   end
 
   private
-
   def find_organization
     return unless params.has_key?(:organization_id)
 
-    @organization = Organization.first(:conditions => {:cp_key => params[:organization_id].tr(' ', '_')})
+    @organization = Organization.first(:conditions => {:label => params[:organization_id].tr(' ', '_')})
     raise HttpErrors::NotFound, _("Couldn't find organization '#{params[:organization_id]}'") if @organization.nil?
     @organization
   end
@@ -160,6 +162,6 @@ class Api::ActivationKeysController < Api::ApiController
 
   def verify_presence_of_organization_or_environment
     return if params.has_key?(:organization_id) or params.has_key?(:environment_id)
-    raise HttpErrors::BadRequest, _("Either organization id or environment id needs to be specified")
+    raise HttpErrors::BadRequest, _("Either organization ID or environment ID needs to be specified")
   end
 end

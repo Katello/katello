@@ -26,7 +26,7 @@ describe SystemErrataController, :katello => true do
       set_default_locale
 
       @organization = setup_system_creation
-      @environment = KTEnvironment.new(:name => 'test', :prior => @organization.library.id, :organization => @organization)
+      @environment = KTEnvironment.new(:name=>'test', :label=> 'test', :prior => @organization.library.id, :organization => @organization)
       @environment.save!
 
       controller.stub!(:errors)
@@ -88,12 +88,12 @@ describe SystemErrataController, :katello => true do
         
         describe 'with a filter type' do
           it "should be successful" do
-            get :items, :system_id => @system.id, :offset => 5, :filter_type => 'Bug'
+            get :items, :system_id => @system.id, :offset => 5, :filter_type => 'BugFix'
             response.should be_success
           end
           
           it "should render errata items" do
-            get :items, :system_id => @system.id, :offset => 5, :filter_type => 'Bug'
+            get :items, :system_id => @system.id, :offset => 5, :filter_type => 'BugFix'
             response.should render_template("items")
           end
         end  

@@ -124,12 +124,13 @@ module Glue::Provider
       end
     end
 
-    def add_custom_product(name, description, url, gpg = nil)
+    def add_custom_product(label, name, description, url, gpg = nil)
       # URL isn't used yet until we can do custom repo discovery in pulp
       begin
         Rails.logger.debug "Creating custom product #{name} for provider: #{self.name}"
         product = Product.new({
             :name => name,
+            :label => label,
             :description => description,
             :multiplier => 1
         })
@@ -164,18 +165,33 @@ module Glue::Provider
     end
 
     def owner_import zip_file_path, options
-      Resources::Candlepin::Owner.import self.organization.cp_key, zip_file_path, options
+      Resources::Candlepin::Owner.import self.organization.label, zip_file_path, options
+    end
+
+    def del_owner_import
+      # This method will delete a manifest that has been imported.  Since it is not possible
+      # to delete the changes associated with a specific manifest, we only support deleting
+      # the import, if there has only been 1 manifest import completed.  It should be noted
+      # that this will destroy all subscriptions associated with the import.
+      imports = self.owner_imports
+      if imports.length == 1
+        Rails.logger.debug "Deleting import for provider: #{name}"
+        Resources::Candlepin::Owner.destroy_imports self.organization.label
+      else
+        Rails.logger.debug "Unable to delete import for provider: #{name}. Reason: a successful import was previously completed."
+      end
     end
 
     def owner_imports
-      Resources::Candlepin::Owner.imports self.organization.cp_key
+      Resources::Candlepin::Owner.imports self.organization.label
     end
 
     def queue_import_manifest zip_file_path, options
       begin
         Rails.logger.debug "Importing manifest for provider #{name}"
         pre_queue.create(:name     => "import manifest #{zip_file_path} for owner: #{self.organization.name}",
-                         :priority => 3, :action => [self, :owner_import, zip_file_path, options])
+                         :priority => 3, :action => [self, :owner_import, zip_file_path, options],
+                         :action_rollback => [self, :del_owner_import])
         pre_queue.create(:name     => "import of products in manifest #{zip_file_path}",
                          :priority => 5, :action => [self, :import_products_from_cp])
         self.save!
@@ -188,7 +204,9 @@ module Glue::Provider
                     else
                       _("Subscription manifest uploaded successfully for provider '%s'.")
                     end
-          Notify.success message % self.name, :request_type => 'providers__update_redhat_provider'
+          Notify.success message % self.name,
+                         :request_type => 'providers__update_redhat_provider',
+                         :organization => self.organization
         end
       rescue => error
         if error.respond_to?(:response)
@@ -202,7 +220,8 @@ module Glue::Provider
 
         if options[:notify]
           Notify.exception import_error_message(display_message), error,
-                           :request_type => 'providers__update_redhat_provider'
+                           :request_type => 'providers__update_redhat_provider',
+                           :organization => self.organization
         end
 
         Rails.logger.error "error uploading subscriptions."
@@ -213,7 +232,7 @@ module Glue::Provider
     end
 
     def import_products_from_cp
-      product_in_katello_ids = self.organization.library.products.all(:select => "cp_id").map(&:cp_id)
+      product_in_katello_ids = self.organization.providers.redhat.first.products.pluck("cp_id")
       products_in_candlepin_ids = []
       Util::CdnVarSubstitutor.with_cache do
         marketing_to_enginnering_product_ids_mapping.each do |marketing_product_id, engineering_product_ids|
@@ -270,7 +289,7 @@ module Glue::Provider
     # model)
     def marketing_to_enginnering_product_ids_mapping
       mapping = {}
-      pools = Resources::Candlepin::Owner.pools self.organization.cp_key
+      pools = Resources::Candlepin::Owner.pools self.organization.label
       pools.each do |pool|
         mapping[pool[:productId]] ||= []
         if pool[:providedProducts]

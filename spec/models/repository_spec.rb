@@ -24,16 +24,17 @@ describe Repository, :katello => true do
     disable_product_orchestration
     disable_user_orchestration
     suffix = rand(10**8).to_s
-    @organization = Organization.create!(:name => "test_organization#{suffix}", :cp_key => "test_organization#{suffix}")
+    @organization = Organization.create!(:name=>"test_organization#{suffix}", :label=> "test_organization#{suffix}")
 
     User.current = superadmin
-    @product = Product.new({:name => "prod"})
+    @product = Product.new({:name=>"prod", :label=> "prod"})
     @product.provider = @organization.redhat_provider
     @product.environments << @organization.library
     @product.stub(:arch).and_return('noarch')
     @product.save!
     @ep = EnvironmentProduct.find_or_create(@organization.library, @product)
-    @repo = Repository.create!(:environment_product => @ep, :name => "testrepo",:pulp_id=>"1010", :enabled => true)
+    @repo = Repository.create!(:environment_product => @ep, :name => "testrepo", :label => "testrepo_label",
+                               :pulp_id=>"1010", :enabled => true)
   end
 
 
@@ -42,7 +43,8 @@ describe Repository, :katello => true do
     let(:another_gpg_key) { @organization.gpg_keys.create!(:name => "Gpg key 2", :content => "another key") }
     subject do
       repo = Repository.create!(:environment_product => @ep, :pulp_id => "pulp-id-#{rand 10**6}",
-                                :name=>"newname#{rand 10**6}", :url => "http://fedorahosted org", :gpg_key_id => gpg_key.id)
+                                :name=>"newname#{rand 10**6}", :label=>"newlabel#{rand 10**6}",
+                                :url => "http://fedorahosted org", :gpg_key_id => gpg_key.id)
 
       prod = repo.product
       repo.stub(:product).and_return(prod)

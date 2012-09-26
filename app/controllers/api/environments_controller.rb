@@ -66,11 +66,9 @@ class Api::EnvironmentsController < Api::ApiController
 
 
   def param_rules
-    manage_match =  {:environment =>  ["name", "description", "prior" ]}
-
     {
-      :create =>manage_match,
-      :update => manage_match,
+      :create => {:environment =>  ["name", "label", "description", "prior" ]},
+      :update => {:environment =>  ["name", "description", "prior" ]},
       :index => [:name, :library, :id, :organization_id]
     }
   end
@@ -82,12 +80,24 @@ class Api::EnvironmentsController < Api::ApiController
   param :name, :identifier, :desc => "filter only environments with this identifier"
   def index
     query_params[:organization_id] = @organization.id
-     environments = KTEnvironment.where query_params
-     unless @organization.readable? || @organization.any_systems_registerable?
-       environments.delete_if do |env|
-         !env.any_operation_readable?
-       end
-     end
+    environments = KTEnvironment.where query_params
+
+    # The following is a workaround to handle the fact that rhsm currently requests the
+    # environment using the 'name' parameter; however, the value is actually the environment label.
+    if environments.empty?
+      if query_params.has_key?(:name)
+        query_params[:label] = query_params[:name]
+        query_params.delete(:name)
+      end
+      environments = KTEnvironment.where query_params
+    end
+
+    unless @organization.readable?
+      environments.delete_if do |env|
+        !env.any_operation_readable?
+      end
+    end
+
     render :json => (environments).to_json
   end
 
@@ -105,11 +115,13 @@ class Api::EnvironmentsController < Api::ApiController
     param :name, :identifier, :desc => "name of the environment (identifier)"
     param :prior, :identifier, :desc => <<-DESC
 identifier of an environment that is prior the new environment in the chain, it has to be
-either library or an envrionment at the end of the chain
+either library or an environment at the end of the chain
     DESC
   end
   def create
-    environment = KTEnvironment.new(params[:environment])
+    environment_params = params[:environment]
+    environment_params[:label] = labelize_params(environment_params)
+    environment = KTEnvironment.new(environment_params)
     @organization.environments << environment
     raise ActiveRecord::RecordInvalid.new(environment) unless environment.valid?
     @organization.save!

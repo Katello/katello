@@ -224,7 +224,7 @@ describe SystemTemplatesController, :katello => true do
 
       describe "with template not in library" do
         before(:each) do
-          @other_env = KTEnvironment.create!(:name=>"devel123", :prior=> @organization.library, :organization=>@organization)
+          @other_env = KTEnvironment.create!(:name=>"devel123", :label=> "devel123", :prior=> @organization.library, :organization=>@organization)
           @system_template_3 = SystemTemplate.create!(:name => 'template1', :environment => @other_env)
 
         end

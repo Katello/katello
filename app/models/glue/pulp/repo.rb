@@ -39,8 +39,8 @@ module Glue::Pulp::Repo
     end
   end
 
-  def self.repo_id product_name, repo_name, env_name, organization_name
-    [organization_name, env_name, product_name, repo_name].compact.join("-").gsub(/[^-\w]/,"_")
+  def self.repo_id product_label, repo_label, env_label, organization_label
+    [organization_label, env_label, product_label, repo_label].compact.join("-").gsub(/[^-\w]/,"_")
   end
 
   #repo_pkgs = a map with {repo => [package objects to be removed]}
@@ -146,7 +146,7 @@ module Glue::Pulp::Repo
     }
     Resources::Pulp::Repository.create({
         :id => self.pulp_id,
-        :name => self.name,
+        :name => self.label,
         :relative_path => self.relative_path,
         :arch => self.arch,
         :feed => self.feed,
@@ -205,6 +205,7 @@ module Glue::Pulp::Repo
       self.relative_path = Glue::Pulp::Repos.clone_repo_path(clone_from, environment_product.environment)
       self.arch = clone_from.arch
       self.name = clone_from.name
+      self.label = clone_from.label
       self.feed = clone_from.feed
       self.major = clone_from.major
       self.minor = clone_from.minor
@@ -274,8 +275,8 @@ module Glue::Pulp::Repo
   end
 
   def destroy_repo_orchestration
-    pre_queue.create(:name => "remove product content : #{self.name}", :priority => 1, :action => [self, :del_content])
-    pre_queue.create(:name => "delete pulp repo : #{self.name}",       :priority => 2, :action => [self, :destroy_repo])
+    pre_queue.create(:name => "remove product content : #{self.name}", :priority => 2, :action => [self, :del_content])
+    pre_queue.create(:name => "delete pulp repo : #{self.name}",       :priority => 3, :action => [self, :destroy_repo])
   end
 
   def get_params
@@ -352,7 +353,7 @@ module Glue::Pulp::Repo
   end
 
   def clone_id(env)
-    Glue::Pulp::Repo.repo_id(self.product.name, self.name, env.name,env.organization.name)
+    Glue::Pulp::Repo.repo_id(self.product.label, self.label, env.label, env.organization.label)
   end
 
   #is the repo cloned in the specified environment

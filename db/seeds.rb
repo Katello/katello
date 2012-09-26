@@ -12,6 +12,7 @@ first_user_name = Util::Puppet.config_value("user_name") || 'admin'
 first_user_password = Util::Puppet.config_value("user_pass") || 'admin'
 first_user_email= Util::Puppet.config_value("user_email") || 'root@localhost'
 first_org_name = Util::Puppet.config_value("org_name") || 'ACME_Corporation'
+first_org_label = Util::Puppet.config_value("org_label") || 'ACME_Corporation'
 
 AppConfig.use_cp = false if ENV['NO_CP']
 AppConfig.use_pulp = false if ENV['NO_PULP']
@@ -55,9 +56,9 @@ end
 raise "Unable to create hidden user: #{format_errors hidden_user}" if hidden_user.nil? or hidden_user.errors.size > 0
 
 first_org_desc = first_org_name + " Organization"
-first_org_cp_key = first_org_name.gsub(' ', '_')
+first_org_label = first_org_name.gsub(' ', '_')
 # create the default org = "admin" if none exist
-first_org = Organization.find_or_create_by_name(:name => first_org_name, :description => first_org_desc, :cp_key => first_org_cp_key)
+first_org = Organization.find_or_create_by_name(:name => first_org_name, :label => first_org_label, :description => first_org_desc, :label => first_org_label)
 raise "Unable to create first org: #{format_errors first_org}" if first_org and first_org.errors.size > 0
 raise "Are you sure you cleared candlepin?! Unable to create first org!" if first_org.environments.nil?
 

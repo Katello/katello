@@ -150,7 +150,7 @@ output = `katello-debug-certificates >> #{File.join(target_dir, "certificates")}
 output = `find /root/ssl-build -ls | sort -k 11 > #{File.join(target_dir, "ssl_build_dir")}`
 
 # Below are custom system calls to get more info
-ouput = `rpm -qa | egrep "katello|candlepin|pulp|thumbslug|qpid" >> #{File.join(target_dir, "packages")}`
+output = `rpm -qa >> #{File.join(target_dir, "packages")}`
 
 
 if (options[:archive])

@@ -30,7 +30,7 @@ describe Api::ActivationKeysController do
     @organization = Organization.create! do |o|
       o.id = 1234
       o.name = "org-1234"
-      o.cp_key = "org-1234"
+      o.label = "org-1234"
     end
 
     @environment = KTEnvironment.new(:organization => @organization)
@@ -81,7 +81,7 @@ describe Api::ActivationKeysController do
     it_should_behave_like "protected action"
 
     it "should retrieve organization" do
-      Organization.should_receive(:first).once.with(hash_including(:conditions => {:cp_key => '1234'})).and_return(@organization)
+      Organization.should_receive(:first).once.with(hash_including(:conditions => {:label => '1234'})).and_return(@organization)
       get :index, :organization_id => '1234'
     end
 
@@ -197,7 +197,7 @@ describe Api::ActivationKeysController do
   context "pools in an activation key" do
 
     before(:each) do
-      @environment = KTEnvironment.create!(:organization => @organization, :name => "Dev", :prior => @organization.library)
+      @environment = KTEnvironment.create!(:organization => @organization, :name => "Dev", :label=>"Dev", :prior => @organization.library)
       @activation_key = ActivationKey.create!(:name => 'activation key', :organization => @organization, :environment => @environment)
       @pool_in_activation_key = ::Pool.create!(:cp_id => "pool-123")
       @pool_not_in_activation_key = ::Pool.create!(:cp_id => "pool-456")
@@ -294,21 +294,21 @@ describe Api::ActivationKeysController do
 
   describe "add system groups to an activation key" do
     before(:each) do
-      @environment = KTEnvironment.create!(:name => 'test_1', :prior => @organization.library.id, :organization => @organization)
+      @environment = KTEnvironment.create!(:name=>'test_1', :label=> 'test_1', :prior => @organization.library.id, :organization => @organization)
       @activation_key = ActivationKey.create!(:name => 'activation key', :environment => @environment, :organization => @organization)
       @system_group_1 = SystemGroup.create!(:name => 'System Group 1', :organization_id => @organization.id )
       @system_group_2 = SystemGroup.create!(:name => 'System Group 2', :description => "fake description", :organization => @organization)
     end
 
     let(:action) { :add_system_groups }
-    let(:req) { post :add_system_groups, :id => @activation_key.id, :organization_id => @organization.id }
+    let(:req) { post :add_system_groups, :id => @activation_key.id, :organization_id => @organization.label }
     let(:authorized_user) { user_with_manage_permissions }
     let(:unauthorized_user) { user_without_manage_permissions }
     it_should_behave_like "protected action"
 
     it "should update the system groups attached to the activation key" do
       ids = [@system_group_1.id, @system_group_2.id]
-      post :add_system_groups, :id => @activation_key.id, :organization_id => @organization.id, :activation_key => { :system_group_ids => ids }
+      post :add_system_groups, :id => @activation_key.id, :organization_id => @organization.label, :activation_key => { :system_group_ids => ids }
       response.should be_success
       ActivationKey.find(@activation_key.id).system_group_ids.should include(@system_group_1.id)
       ActivationKey.find(@activation_key.id).system_group_ids.should include(@system_group_2.id)
@@ -324,7 +324,7 @@ describe Api::ActivationKeysController do
 
   describe "remove system groups from an activation key" do
     before(:each) do
-      @environment = KTEnvironment.create!(:name => 'test_1', :prior => @organization.library.id, :organization => @organization)
+      @environment = KTEnvironment.create!(:name=>'test_1', :label=> 'test_1', :prior => @organization.library.id, :organization => @organization)
       @activation_key = ActivationKey.create!(:name => 'activation key', :environment => @environment, :organization => @organization)
       @system_group_1 = SystemGroup.create!(:name => 'System Group 1', :organization_id => @organization.id )
       @system_group_2 = SystemGroup.create!(:name => 'System Group 2', :description => "fake description", :organization => @organization)
@@ -333,23 +333,21 @@ describe Api::ActivationKeysController do
     end
 
     let(:action) { :remove_system_groups }
-    let(:req) { delete :remove_system_groups, :id => @activation_key.id, :organization_id => @organization.id }
+    let(:req) { delete :remove_system_groups, :id => @activation_key.id, :organization_id => @organization.label }
     let(:authorized_user) { user_with_manage_permissions }
     let(:unauthorized_user) { user_without_manage_permissions }
     it_should_behave_like "protected action"
 
     it "should update the system groups the system is in" do
       ids = [@system_group_1.id, @system_group_2.id]
-      delete :remove_system_groups, :id => @activation_key.id, :organization_id => @organization.id, :system => { :system_group_ids => ids }
+      delete :remove_system_groups, :id => @activation_key.id, :organization_id => @organization.label, :system => { :system_group_ids => ids }
       @activation_key.system_group_ids.should be_empty
     end
 
     it "should throw a 404 is passed in a bad system group id" do
       ids = [90210]
-      delete :remove_system_groups, :id => @activation_key.id, :organization_id => @organization.id, :activation_key => { :system_group_ids => ids }
+      delete :remove_system_groups, :id => @activation_key.id, :organization_id => @organization.label, :activation_key => { :system_group_ids => ids }
       response.status.should == 404
     end
-
-
   end
 end

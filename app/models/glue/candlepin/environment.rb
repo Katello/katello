@@ -25,30 +25,30 @@ module Glue::Candlepin::Environment
 
   module InstanceMethods
     def set_environment
-      Rails.logger.info _("Creating an environment in candlepin: %s") % name
-      Resources::Candlepin::Environment.create(self.organization.cp_key, id, name.gsub(/[^-\w]/,"_"), description)
+      Rails.logger.info _("Creating an environment in candlepin: %s") % label
+      Resources::Candlepin::Environment.create(self.organization.label, id, label, description)
     rescue => e
-      Rails.logger.error _("Failed to create candlepin environment %s") % "#{name}: #{e}, #{e.backtrace.join("\n")}"
+      Rails.logger.error _("Failed to create candlepin environment %s") % "#{label}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
     def del_environment
-      Rails.logger.info _("Deleteing environment in candlepin: %s") % name
+      Rails.logger.info _("Deleting environment in candlepin: %s") % label
       Resources::Candlepin::Environment.destroy(id)
     rescue => e
-      Rails.logger.error _("Failed to delete candlepin environment %s") % "#{name}: #{e}, #{e.backtrace.join("\n")}"
+      Rails.logger.error _("Failed to delete candlepin environment %s") % "#{label}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
     def save_environment_orchestration
       case self.orchestration_for
         when :create
-          post_queue.create(:name => "candlepin environment for organization: #{self.name}", :priority => 3, :action => [self, :set_environment])
+          post_queue.create(:name => "candlepin environment for organization: #{self.label}", :priority => 3, :action => [self, :set_environment])
       end
     end
 
     def destroy_environment_orchestration
-      post_queue.create(:name => "candlepin environment for organization: #{self.name}", :priority => 4, :action => [self, :del_environment])
+      post_queue.create(:name => "candlepin environment for organization: #{self.label}", :priority => 4, :action => [self, :del_environment])
     end
 
     def update_cp_content
