@@ -119,6 +119,7 @@ Src::Application.routes.draw do
     collection do
       get :items
       post :upload
+      post :delete_manifest
       get :history
       get :history_items
     end
@@ -465,6 +466,7 @@ Src::Application.routes.draw do
       member do
         post :import_products
         post :import_manifest
+        post :delete_manifest
         post :refresh_products
         post :product_create
         get :products
