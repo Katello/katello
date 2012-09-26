@@ -28,16 +28,19 @@ module SubscriptionsHelper
     link_to key.name, root_path + "activation_keys#panel=activation_key_#{key.id}"
   end
 
-  def subscriptions_manifest_link_helper status
-    if !status['webAppPrefix'].start_with? 'http'
-      url = "http://#{status['webAppPrefix']}"
+  def subscriptions_manifest_link_helper status, label=nil
+    if status['webAppPrefix']
+      if !status['webAppPrefix'].start_with? 'http'
+        url = "http://#{status['webAppPrefix']}"
+      else
+        url = status['webAppPrefix']
+      end
+
+      url += '/' if !url.end_with? '/'
+      url += status['upstreamId']
+      link_to (label.nil? ? url : label), url, :target => '_blank'
     else
-      url = status['webAppPrefix']
+      label.nil? ? status['upstreamId'] : label
     end
-
-    url += '/' if !url.end_with? '/'
-    url += status['upstreamId']
-
-    link_to status['webAppPrefix'], url, :target => '_blank'
   end
 end

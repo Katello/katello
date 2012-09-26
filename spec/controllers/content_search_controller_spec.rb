@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ContentSearchController do
+describe ContentSearchController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
   include OrganizationHelperMethods

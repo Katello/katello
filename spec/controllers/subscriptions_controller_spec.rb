@@ -37,8 +37,8 @@ describe SubscriptionsController do
 
     describe "before a manifest is imported" do
       before (:each) do
-        # No import history from candlepin means no manifest upload ever attempted, and no async tasks
-        Resources::Candlepin::Owner.stub!(:imports).and_return([])
+        # No upstreamUuid in owner details means no manifest is loaded, and no async tasks
+        Resources::Candlepin::Owner.stub!(:find).and_return({})
         Provider.stub!(:task_status).and_return(nil)
       end
 
@@ -67,18 +67,18 @@ describe SubscriptionsController do
 
     describe "after the most recent manifest import failed" do
       before (:each) do
-        # No import history from candlepin means no manifest upload ever attempted, and no async tasks
-        #Resources::Candlepin::Owner.stub!(:get).and_return('[{"updated" : "2012-05-29T14:52:45.648+0000", "status" : "SUCCESS"}, {"updated" : "2012-05-30T14:45:13.522+0000", "status" : "FAILURE"}]')
+        # No upstreamUuid in owner details means no manifest is loaded, and no async tasks
+        Resources::Candlepin::Owner.stub!(:find).and_return({})
         candlepin_owner_imports :manifest_upload_failure
         Provider.stub!(:task_status).and_return(nil)
       end
 
-      it "should not open new panel for user with update permissions" do
+      it "should open new panel for user with update permissions" do
         login_user({:user=>@update_user})
         get :index
         response.should be_success
         response.should render_template("index")
-        assigns[:panel_options][:initial_state].should_not == {"panel" => :new}
+        assigns[:panel_options][:initial_state].should == {"panel" => :new}
       end
     end
   end

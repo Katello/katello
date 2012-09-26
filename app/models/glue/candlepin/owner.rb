@@ -108,6 +108,10 @@ module Glue::Candlepin::Owner
       Glue::Candlepin::OwnerInfo.new(self)
     end
 
+    def owner_details
+      Resources::Candlepin::Owner.find self.label
+    end
+
     def pools consumer_uuid = nil
       if consumer_uuid
         pools = Resources::Candlepin::Owner.pools self.label, { :consumer => consumer_uuid }
