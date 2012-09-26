@@ -105,7 +105,8 @@ class SubscriptionsController < ApplicationController
       # Limit subscriptions to current org and Red Hat provider
       filters = {:org=>current_organization.label, :provider_id=>current_organization.redhat_provider.id}
       search_results = ::Pool.search(search, offset, current_user.page_size, filters)
-      render_panel_results(search_results, search_results.total, @panel_options)
+      results_total = search_results.empty? ? 0 : search_results.total
+      render_panel_results(search_results, results_total, @panel_options)
     end
   end
 
