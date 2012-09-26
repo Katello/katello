@@ -233,7 +233,7 @@ class SystemTemplatesController < ApplicationController
     render :text=>""
   rescue Errors::TemplateValidationException => e
     notify.exception e
-    render :nothig => true, :status => :bad_request
+    render :nothing => true, :status => :bad_request
   end
 
   def download
