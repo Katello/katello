@@ -191,45 +191,8 @@ module Resources
           "/pulp/api/v2/repositories/#{(repo_id + '/') if repo_id}"
         end
 
-
-        def schedule_path repo_id, schedule_id=nil
-          Repository.repository_path(repo_id) +
-              "importers/yum_importer/sync_schedules/#{(schedule_id + '/') if schedule_id}"
-        end
-
-        def schedules(repo_id)
-          body = get(Repository.schedule_path(repo_id), self.default_headers)
-          JSON.parse(body)
-        end
-
         def update_publish(repo_id, publish=true)
           body = post(Repository.repository_path + repo_id +"/update_publish/", JSON.generate(:state => publish), self.default_headers).body
-        end
-
-        def create_or_update_schedule(repo_id, schedule)
-          schedules = Repository.schedules(repo_id)
-          if schedules.empty?
-            Repository.create_schedule(repo_id, schedule)
-          else
-            #just update the 1st since we only support 1
-            Repository.update_schedule(repo_id, schedules[0]['_id'], schedule)
-          end
-        end
-
-        def create_schedule(repo_id, schedule)
-          body = post(Repository.schedule_path(repo_id), JSON.generate(:schedule => schedule), self.default_headers).body
-        end
-
-        # specific call to just update the sync schedule for a repo
-        def update_schedule(repo_id, schedule_id, schedule)
-          body = put(Repository.schedule_path(repo_id, schedule_id), JSON.generate(:schedule => schedule), self.default_headers).body
-        end
-
-        def delete_schedule(repo_id)
-          schedules = Repository.schedules(repo_id)
-          if !schedules.empty?
-            body = self.delete(Repository.schedule_path(repo_id) +"/importers/yum_importer/sync_schedules/", self.default_headers).body
-          end
         end
 
         def sync (repo_id, data = {})
