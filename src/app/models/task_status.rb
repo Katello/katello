@@ -36,6 +36,11 @@ class TaskStatus < ActiveRecord::Base
   # adding belongs_to :system allows us to perform joins with the owning system, if there is one
   belongs_to :system, :foreign_key => :task_owner_id, :class_name => "System"
 
+  # a task may be optionally associated with a job, but it is not required
+  # an example scenario would be a job that is created by performing an action on a system group
+  has_one :job_task, :dependent => :destroy
+  has_one :job, :through => :job_task
+
   before_save :setup_task_type
 
   before_save do |status|
@@ -59,6 +64,8 @@ class TaskStatus < ActiveRecord::Base
       end
     end
   end
+
+  after_destroy :destroy_job
 
   index_options :json=>{:only=> [:parameters, :result, :organization_id, :start_time, :finish_time, :task_owner_id, :task_owner_type ]},
                 :extended_json=>:extended_index_attrs
@@ -348,6 +355,20 @@ class TaskStatus < ActiveRecord::Base
   def setup_task_type
     unless self.task_type
       self.task_type = self.class().name
+    end
+  end
+
+  # If the task is associated with a job and this is the last task associated with
+  # the job, destroy the job.
+  def destroy_job
+    # is this task associated with a job?
+    job_id = self.job_task.job_id unless self.job_task.nil?
+    if job_id
+      job = Job.find(job_id)
+      # is this the last task associated with the job?
+      if job and job.task_statuses.length == 0
+        job.destroy
+      end
     end
   end
 

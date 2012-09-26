@@ -21,8 +21,9 @@ class OrganizationAPI(KatelloAPI):
     """
     Connection class to access Organization Data
     """
-    def create(self, name, description):
+    def create(self, name, label, description):
         orgdata = {"name": name,
+                   "label": label,
                    "description": description}
         path = "/api/organizations/"
         return self.server.POST(path, orgdata)[1]

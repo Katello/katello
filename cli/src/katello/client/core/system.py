@@ -20,6 +20,7 @@ from katello.client import constants
 from katello.client.api.system import SystemAPI
 from katello.client.api.task_status import SystemTaskStatusAPI
 from katello.client.api.system_group import SystemGroupAPI
+from katello.client.api.custom_info import CustomInfoAPI
 from katello.client.api.utils import get_environment, get_system
 from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
@@ -40,18 +41,19 @@ class SystemAction(BaseAction):
         super(SystemAction, self).__init__()
         self.api = SystemAPI()
 
+    def setup_parser(self, parser):
+        opt_parser_add_org(parser, required=1)
+        opt_parser_add_environment(parser)
 
 # system actions ------------------------------------------------------------
 
 class List(SystemAction):
-
     description = _('list systems within an organization')
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser, required=1)
-        opt_parser_add_environment(parser)
+        super(List, self).setup_parser(parser)
         parser.add_option('--pool', dest='pool_id',
-                       help=_("pool id to filter systems by subscriptions"))
+                       help=_("pool ID to filter systems by subscriptions"))
 
     def check_options(self, validator):
         validator.require('org')
@@ -85,16 +87,14 @@ class List(SystemAction):
         return os.EX_OK
 
 class Info(SystemAction):
-
     description = _('display a system within an organization')
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser, required=1)
+        super(Info, self).setup_parser(parser)
         parser.add_option('--name', dest='name',
                        help=_("system name (required)"))
         parser.add_option('--uuid', dest='uuid',
                        help=constants.OPT_HELP_SYSTEM_UUID)
-        opt_parser_add_environment(parser)
 
     def check_options(self, validator):
         validator.require('org')
@@ -118,6 +118,11 @@ class Info(SystemAction):
         # get system details
         system = get_system(org_name, sys_name, env_name, sys_uuid)
 
+        custom_info_api = CustomInfoAPI()
+        custom_info = custom_info_api.get_custom_info("system", system['id'])
+        system['custom_info'] = "[ %s ]" % ", ".join(["%s: [ %s ]" % (k, ", ".join(custom_info[k])) \
+            for k in custom_info.keys()])
+
         system["activation_keys"] = "[ "+ ", ".join([ak["name"] for ak in system["activation_key"]]) +" ]"
         if 'host' in system:
             system['host'] = system['host']['name']
@@ -139,22 +144,21 @@ class Info(SystemAction):
         self.printer.add_column('guests', show_with=printer.VerboseStrategy)
         if "template" in system:
             self.printer.add_column('template', show_with=printer.VerboseStrategy, value=system["template"]["name"])
+        self.printer.add_column('custom_info', multiline=True, show_with=printer.VerboseStrategy)
 
         self.printer.print_item(system)
 
         return os.EX_OK
 
 class InstalledPackages(SystemAction):
-
     description = _('display and manipulate with the installed packages of a system')
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser, required=1)
+        super(InstalledPackages, self).setup_parser(parser)
         parser.add_option('--name', dest='name',
             help=_("system name (required)"))
         parser.add_option('--uuid', dest='uuid',
                 help=constants.OPT_HELP_SYSTEM_UUID)
-        opt_parser_add_environment(parser)
         parser.add_option('--install', dest='install', type="list",
             help=_("packages to be installed remotely on the system, package names are separated with comma"))
         parser.add_option('--remove', dest='remove', type="list",
@@ -247,16 +251,14 @@ class InstalledPackages(SystemAction):
 
 
 class TasksList(SystemAction):
-
     description = _('display status of remote tasks')
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser, required=1)
+        super(TasksList, self).setup_parser(parser)
         parser.add_option('--name', dest='name',
                        help=_("system name"))
         parser.add_option('--uuid', dest='uuid',
                        help=constants.OPT_HELP_SYSTEM_UUID)
-        opt_parser_add_environment(parser)
 
     def check_options(self, validator):
         validator.require('org')
@@ -278,7 +280,7 @@ class TasksList(SystemAction):
         for t in tasks:
             t['result'] = "\n" + t['result_description']
 
-        self.printer.add_column('uuid', name=_("Task id"))
+        self.printer.add_column('uuid', name=_("Task ID"))
         self.printer.add_column('system_name', name=_("System"))
         self.printer.add_column('description', name=_("Action"))
         self.printer.add_column('created_at', name=_("Started"),
@@ -293,7 +295,6 @@ class TasksList(SystemAction):
         return os.EX_OK
 
 class TaskInfo(SystemAction):
-
     description = _('display status of remote task')
 
     def setup_parser(self, parser):
@@ -323,16 +324,14 @@ class TaskInfo(SystemAction):
 
 
 class Releases(SystemAction):
-
     description = _('list releases available for the system')
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser, required=1)
+        super(Releases, self).setup_parser(parser)
         parser.add_option('--name', dest='name',
                        help=_("system name (if not specified, list all releases in the environment)"))
         parser.add_option('--uuid', dest='uuid',
                        help=constants.OPT_HELP_SYSTEM_UUID)
-        opt_parser_add_environment(parser)
 
     def check_options(self, validator):
         validator.require('org')
@@ -364,16 +363,14 @@ class Releases(SystemAction):
         return os.EX_OK
 
 class Facts(SystemAction):
-
     description = _('display a the hardware facts of a system')
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser, required=1)
+        super(Facts, self).setup_parser(parser)
         parser.add_option('--name', dest='name',
                        help=_("system name (required)"))
         parser.add_option('--uuid', dest='uuid',
                        help=constants.OPT_HELP_SYSTEM_UUID)
-        opt_parser_add_environment(parser)
 
     def check_options(self, validator):
         validator.require('org')
@@ -391,7 +388,7 @@ class Facts(SystemAction):
             self.printer.set_header(_("System Facts For System [ %s ] in Org [ %s ]") %
                 (sys_name if sys_name else sys_uuid, org_name))
         else:
-            self.printer.set_header(_("System Facts For System [ %s ] in Environment [ %s]  in Org [ %s ]") %
+            self.printer.set_header(_("System Facts For System [ %s ] in Environment [ %s ] in Org [ %s ]") %
                 (sys_name, env_name, org_name))
 
         system = get_system(org_name, sys_name, env_name, sys_uuid)
@@ -407,13 +404,11 @@ class Facts(SystemAction):
         return os.EX_OK
 
 class Register(SystemAction):
-
     description = _('register a system')
 
     def setup_parser(self, parser):
+        super(Register, self).setup_parser(parser)
         parser.add_option('--name', dest='name', help=_("system name (required)"))
-        opt_parser_add_org(parser, required=1)
-        opt_parser_add_environment(parser)
         parser.add_option('--servicelevel', dest='sla', help=_("service level agreement"))
         parser.add_option('--activationkey', dest='activationkey',
             help=_("activation key, more keys are separated with comma e.g. --activationkey=key1,key2"))
@@ -445,7 +440,6 @@ class Register(SystemAction):
         )
 
 class RemoveDeletion(SystemAction):
-
     description = _("remove a deletion record for hypervisor")
 
     def setup_parser(self, parser):
@@ -463,16 +457,14 @@ class RemoveDeletion(SystemAction):
 
 
 class Unregister(SystemAction):
-
     description = _('unregister a system')
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser, required=1)
+        super(Unregister, self).setup_parser(parser)
         parser.add_option('--name', dest='name',
                                help=_("system name (required)"))
         parser.add_option('--uuid', dest='uuid',
                                help=constants.OPT_HELP_SYSTEM_UUID)
-        opt_parser_add_environment(parser)
 
     def check_options(self, validator):
         validator.require('org')
@@ -500,7 +492,6 @@ class Unregister(SystemAction):
         return os.EX_OK
 
 class Subscribe(SystemAction):
-
     description = _('subscribe a system to certificate')
 
     def setup_parser(self, parser):
@@ -533,7 +524,6 @@ class Subscribe(SystemAction):
         return os.EX_OK
 
 class Subscriptions(SystemAction):
-
     description = _('list subscriptions for a system')
 
     def setup_parser(self, parser):
@@ -589,7 +579,7 @@ class Subscriptions(SystemAction):
 
             self.printer.set_header(_("Current Subscriptions for System [ %s ]") % name)
             self.printer.add_column('entitlementId')
-            self.printer.add_column('serialIds', name=_('Serial Id'))
+            self.printer.add_column('serialIds', name=_('Serial ID'))
             self.printer.add_column('poolName')
             self.printer.add_column('expires')
             self.printer.add_column('consumed')
@@ -627,7 +617,7 @@ class Subscriptions(SystemAction):
             self.printer.add_column('consumed')
             self.printer.add_column('quantity')
             self.printer.add_column('sockets')
-            self.printer.add_column('attr_stacking_id', name=_('Stacking Id'))
+            self.printer.add_column('attr_stacking_id', name=_('Stacking ID'))
             self.printer.add_column('attr_multi-entitlement', name=_('Multi-entitlement'))
             self.printer.add_column('providedProductsFormatted', name=_('Provided products'))
             self.printer.print_items(available_pools())
@@ -635,7 +625,6 @@ class Subscriptions(SystemAction):
         return os.EX_OK
 
 class Unsubscribe(SystemAction):
-
     description = _('unsubscribe a system from certificate')
 
     def setup_parser(self, parser):
@@ -645,9 +634,9 @@ class Unsubscribe(SystemAction):
         parser.add_option('--uuid', dest='uuid',
                 help=constants.OPT_HELP_SYSTEM_UUID)
         parser.add_option('--entitlement', dest='entitlement',
-            help=_("entitlement id to unsubscribe from (either entitlement or serial or all is required)"))
+            help=_("entitlement ID to unsubscribe from (either entitlement or serial or all is required)"))
         parser.add_option('--serial', dest='serial',
-            help=_("serial id of a certificate to unsubscribe from (either entitlement or serial or all is required)"))
+            help=_("serial ID of a certificate to unsubscribe from (either entitlement or serial or all is required)"))
         parser.add_option('--all', dest='all', action="store_true", default=None,
             help=_("unsubscribe from all currently subscribed certificates (either entitlement or serial or all is"
                 + " required)"))
@@ -680,16 +669,14 @@ class Unsubscribe(SystemAction):
         return os.EX_OK
 
 class Update(SystemAction):
-
     description = _('update a system')
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser, required=1)
+        super(Update, self).setup_parser(parser)
         parser.add_option('--name', dest='name',
                        help=_('system name (required)'))
         parser.add_option('--uuid', dest='uuid',
                        help=constants.OPT_HELP_SYSTEM_UUID)
-        opt_parser_add_environment(parser)
         parser.add_option('--new_name', dest='new_name',
                        help=_('a new name for the system'))
         parser.add_option('--new_environment', dest='new_environment',
@@ -738,7 +725,7 @@ class Update(SystemAction):
         if new_environment_name:
             new_environment = get_environment(org_name, new_environment_name)
             updates['environment_id'] = new_environment['id']
-            
+
         response = self.api.update(system['uuid'], updates)
 
         test_record(response,
@@ -748,7 +735,6 @@ class Update(SystemAction):
 
 
 class Report(SystemAction):
-
     description = _('systems report')
 
     def setup_parser(self, parser):
@@ -780,7 +766,6 @@ class Report(SystemAction):
 
 
 class AddSystemGroups(SystemAction):
-
     description = _('add system groups to a system')
 
     def setup_parser(self, parser):
@@ -833,7 +818,6 @@ class AddSystemGroups(SystemAction):
 
 
 class RemoveSystemGroups(SystemAction):
-
     description = _('remove system groups to a system')
 
     def setup_parser(self, parser):
@@ -884,8 +868,5 @@ class RemoveSystemGroups(SystemAction):
         else:
             return os.EX_DATAERR
 
-
-
 class System(Command):
-
     description = _('system specific actions in the katello server')

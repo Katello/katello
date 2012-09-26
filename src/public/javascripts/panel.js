@@ -26,7 +26,7 @@ $(document).ready(function () {
         panelLeft = $(this).width();
         $('.block').not('#new').width(panelLeft - 17);
         apanel.width(940 - panelLeft);
-        $('.right').width(898 - panelLeft);
+        $('.right').width(885 - panelLeft);
         if (apanel.hasClass('opened')) {
             apanel.css({
                 "left": (panelLeft)
@@ -419,7 +419,13 @@ KT.panel = (function ($) {
             paneljQ.height(height);
 
             if (paneljQ.length > 0) {
-                paneljQ.data('jsp').reinitialise();
+                // A corner-case in automation perhaps, but this can be reached where the 'jsp' data is
+                // not present. Fencing to avoid javascript error being thrown which results in
+                // jQuery.active not being properly decremented to zero (thus blocking test suite).
+                // https://bugzilla.redhat.com/show_bug.cgi?id=858193
+                if (paneljQ.data('jsp') !== undefined) {
+                    paneljQ.data('jsp').reinitialise();
+                }
             }
         },
         closePanel = function (jPanel) {

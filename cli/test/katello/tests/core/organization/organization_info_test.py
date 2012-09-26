@@ -43,7 +43,7 @@ class OrgInfoTest(CLIActionTestCase):
 
     def test_finds_org(self):
         self.run_action()
-        self.action.api.organization.assert_called_once_with(self.ORG['cp_key'])
+        self.action.api.organization.assert_called_once_with(self.ORG['label'])
 
     def test_returns_ok(self):
         self.run_action(os.EX_OK)

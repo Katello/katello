@@ -44,8 +44,8 @@ describe System do
   before(:each) do
     disable_org_orchestration
 
-    @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-    @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.library.id, :organization => @organization)
+    @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
+    @environment = KTEnvironment.create!(:name=>'test', :label=> 'test', :prior => @organization.library.id, :organization => @organization)
     @organization.reload #reload to get environment info
     Organization.stub!(:first).and_return(@organization)
 
@@ -74,7 +74,7 @@ describe System do
 
   it "registers system in candlepin and pulp on create" do
     Resources::Candlepin::Consumer.should_receive(:create).once.with(@environment.id, @organization.name, system_name, cp_type, facts, installed_products, nil, nil, nil).and_return({:uuid => uuid, :owner => {:key => uuid}})
-    Resources::Pulp::Consumer.should_receive(:create).once.with(@organization.cp_key, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}}) if AppConfig.katello?
+    Resources::Pulp::Consumer.should_receive(:create).once.with(@organization.label, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}}) if AppConfig.katello?
     @system.save!
   end
 
@@ -255,8 +255,8 @@ describe System do
   describe "available releases" do
     before do
       disable_product_orchestration
-      @product = Product.create!(:name =>"prod1", :cp_id => '12345', :provider => @organization.redhat_provider, :environments => [@organization.library])
-      @environment = KTEnvironment.create!({:name => "Dev", :prior => @organization.library, :organization => @organization}) do |e|
+      @product = Product.create!(:name=>"prod1", :label=> "prod1", :cp_id => '12345', :provider => @organization.redhat_provider, :environments => [@organization.library])
+      @environment = KTEnvironment.create!({:name=>"Dev", :label=> "Dev", :prior => @organization.library, :organization => @organization}) do |e|
         e.products << @product
       end
       if AppConfig.katello?
@@ -267,6 +267,7 @@ describe System do
       @releases = %w[6.1 6.2 6Server]
       @releases.each do |release|
         Repository.create!(:name => "Repo #{release}",
+                          :label => "Repo#{release.gsub(".", "_")}",
                           :pulp_id => "repo #{release}",
                           :enabled => true,
                           :environment_product_id => env_product.id,
@@ -275,6 +276,7 @@ describe System do
                           :cp_label => "repo")
       end
       Repository.create!(:name => "Repo without releases",
+                         :label => "Repo_without_releases",
                          :pulp_id => "repo_without_release",
                          :enabled => true,
                          :environment_product_id => env_product.id,
@@ -497,8 +499,54 @@ describe System do
       @system.editable?.should == false
       @system.deletable?.should == true
     end
+
   end
 
+  describe "a user with random system permissions in headpin mode" do
+    before (:each) do
+      @system.save!
+      AppConfig.stub!(:katello?).and_return(false)
+    end
+
+    it "should be deletable" do
+      User.current =  user_with_permissions { |u| u.can(:delete_systems, :organizations, nil, @organization) }
+      System.readable(@organization).should include(@system)
+      System.any_readable?(@organization).should == true
+      System.registerable?(@environment, @organization).should == false
+      System.registerable?(nil, @organization).should == false
+      System.any_deletable?(@environment, @organization).should == true
+      System.any_deletable?(nil, @organization).should == true
+      @system.readable?.should == true
+      @system.editable?.should == false
+      @system.deletable?.should == true
+    end
+
+    it "should be editable" do
+      User.current =  user_with_permissions { |u| u.can(:update_systems, :organizations, nil, @organization) }
+      System.readable(@organization).should include(@system)
+      System.any_readable?(@organization).should == true
+      System.registerable?(@environment, @organization).should == false
+      System.registerable?(nil, @organization).should == false
+      System.any_deletable?(@environment, @organization).should == false
+      System.any_deletable?(nil, @organization).should == false
+      @system.readable?.should == true
+      @system.editable?.should == true
+      @system.deletable?.should == false
+    end
+
+    it "should be registerable" do
+      User.current =  user_with_permissions { |u| u.can(:register_systems, :organizations, nil, @organization) }
+      System.readable(@organization).should include(@system)
+      System.any_readable?(@organization).should == true
+      System.registerable?(@environment, @organization).should == true
+      System.registerable?(nil, @organization).should == true
+      System.any_deletable?(@environment, @organization).should == false
+      System.any_deletable?(nil, @organization).should == false
+      @system.readable?.should == true
+      @system.editable?.should == false
+      @system.deletable?.should == false
+    end
+  end
 
   describe "a user with organization system perms " do
     before :each do

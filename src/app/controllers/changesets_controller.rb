@@ -105,8 +105,14 @@ class ChangesetsController < ApplicationController
   def create
     if params[:changeset][:action_type].blank? or
        params[:changeset][:action_type] == Changeset::PROMOTION
-      env_id = @next_environment.id
-      type = Changeset::PROMOTION
+
+      if @next_environment.blank?
+        notify.error _("Please create at least one environment.")
+        render :nothing => true, :status => :not_acceptable and return
+      else
+        env_id = @next_environment.id
+        type = Changeset::PROMOTION
+      end
     else
       env_id = @environment.id
       type = Changeset::DELETION

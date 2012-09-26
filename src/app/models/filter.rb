@@ -37,7 +37,7 @@ class Filter < ActiveRecord::Base
   has_and_belongs_to_many :repositories, :uniq => true
 
   before_validation(:on=>:create) do
-    self.pulp_id ||= "#{self.organization.cp_key}-#{self.name}-#{SecureRandom.hex(4)}"
+    self.pulp_id ||= "#{self.organization.label}-#{self.name}-#{SecureRandom.hex(4)}"
   end
 
 

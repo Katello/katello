@@ -20,13 +20,9 @@ KT.panel.list.registerPage('gpg_keys', {
 });
 
 $(document).ready(function(){
-	$('#upload_gpg_key').live('click', function(event){
-		KT.gpg_key.upload();
-	});
-
 	$('#upload_new_gpg_key').live('submit', function(e){
-    e.preventDefault();
-    KT.gpg_key.upload();
+        e.preventDefault();
+        KT.gpg_key.upload();
 	});
 	
 	$('#update_upload_gpg_key').live('click', function(event){
@@ -128,7 +124,6 @@ KT.gpg_key = (function($){
 				} else {
 					KT.panel.list.createSuccess(data);
 				}
-				
 				enable_buttons();
 			},
 			error	: function(){
@@ -147,9 +142,11 @@ KT.gpg_key = (function($){
 			type 	: 'POST',
 			iframe	: true,
 			success	: function(data, status, xhr){
-                if( !data.match(/notices/) ){
+	        if( $(data).get(0) && $(data).get(0).tagName === 'PRE' ){
+                    notices.displayNotice('success', $(data).html());
+                } else {
                     $('#gpg_key_content').html(data);
-                    $('#upload_gpg_key').val('');		
+                    $('#upload_gpg_key').val('');
                 }
                 notices.checkNotices();
                 $('#update_upload_gpg_key').removeAttr('disabled');

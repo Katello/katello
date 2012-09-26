@@ -86,7 +86,7 @@ module Glue::Candlepin::Consumer
     def set_candlepin_consumer
       Rails.logger.debug "Creating a consumer in candlepin: #{name}"
       consumer_json = Resources::Candlepin::Consumer.create(self.environment_id,
-                                                 self.organization.cp_key,
+                                                 self.organization.label,
                                                  self.name, self.cp_type,
                                                  self.facts,
                                                  self.installedProducts,
@@ -176,7 +176,7 @@ module Glue::Candlepin::Consumer
     end
 
     def to_json
-      super(:methods => [:href, :facts, :idCert, :owner, :autoheal, :release])
+      super(:methods => [:href, :facts, :idCert, :owner, :autoheal, :release, :releaseVer])
     end
 
     def convert_from_cp_fields(cp_json)
@@ -291,6 +291,12 @@ module Glue::Candlepin::Consumer
     def checkinTime
       if lastCheckin
         convert_time(lastCheckin)
+      end
+    end
+
+    def createdTime
+      if created
+        convert_time(created)
       end
     end
 

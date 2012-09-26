@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'util/threadsession'
+require 'util/model_util'
 
 class Api::ApiController < ActionController::Base
   include ActionController::HttpAuthentication::Basic
@@ -95,7 +96,7 @@ class Api::ApiController < ActionController::Base
 
   def find_optional_organization
     if params[:organization_id]
-      @organization = Organization.first(:conditions => {:cp_key => params[:organization_id].to_s.tr(' ', '_')})
+      @organization = Organization.first(:conditions => {:label => params[:organization_id].to_s.tr(' ', '_')})
       raise HttpErrors::NotFound, _("Couldn't find organization '#{params[:organization_id]}'") if @organization.nil?
       @organization
     end
@@ -209,6 +210,17 @@ class Api::ApiController < ActionController::Base
 
   def request_from_katello_cli?
      request.headers['User-Agent'].to_s =~ /^katello-cli/
+  end
+
+  # Get the :label value from the params hash if it exists
+  # otherwise use the :name value and convert to ASCII
+  def labelize_params(params)
+    label = params[:label]
+    if params[:label].blank?
+      # Convert name to label
+      label = Katello::ModelUtils::labelize(params[:name])
+    end
+    label
   end
 
   protected

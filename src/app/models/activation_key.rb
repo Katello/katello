@@ -32,7 +32,7 @@ class ActivationKey < ActiveRecord::Base
   has_many :key_system_groups, :dependent => :destroy
   has_many :system_groups, :through => :key_system_groups
 
-  has_many :system_activation_keys, :dependent => :restrict
+  has_many :system_activation_keys, :dependent => :destroy
   has_many :systems, :through => :system_activation_keys
 
   scope :readable, lambda {|org| ActivationKey.readable?(org) ? where(:organization_id=>org.id) : where("0 = 1")}
@@ -62,7 +62,7 @@ class ActivationKey < ActiveRecord::Base
 
   def environment_exists
     if environment.nil?
-      errors.add(:environment, _("id: %s doesn't exist ") % environment_id)
+      errors.add(:environment, _("ID: %s doesn't exist ") % environment_id)
     elsif environment.organization != self.organization
       errors.add(:environment, _("name: %s doesn't exist ") % environment.name)
     end

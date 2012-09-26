@@ -87,7 +87,7 @@ class Api::ChangesetsContentController < Api::ApiController
                          :not_found => _("Erratum '#{params[:id]}' not found in the changeset")
   end
 
-  api :POST, "/changesets/:changeset_id/repositories", "Add a repository to a changset"
+  api :POST, "/changesets/:changeset_id/repositories", "Add a repository to a changeset"
   param :repository_id, :number, :desc => "The id of the repository to add"
   def add_repo
     repository = Repository.find(params[:repository_id])

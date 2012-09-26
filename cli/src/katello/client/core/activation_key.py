@@ -23,7 +23,7 @@ from katello.client.api.system_group import SystemGroupAPI
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record
 from katello.client.utils import printer
-from katello.client.api.utils import get_environment, get_organization
+from katello.client.api.utils import get_environment
 from katello.client.cli.base import OptionException, opt_parser_add_org, opt_parser_add_environment
 
 class ActivationKeyAction(BaseAction):
@@ -89,8 +89,7 @@ class List(ActivationKeyAction):
         return os.EX_OK
 
     def get_keys_for_organization(self, orgName):
-        organization = get_organization(orgName)
-        return self.api.activation_keys_by_organization(organization['cp_key'])
+        return self.api.activation_keys_by_organization(orgName)
 
     def get_keys_for_environment(self, orgName, envName):
         environment = get_environment(orgName, envName)
@@ -112,9 +111,8 @@ class Info(ActivationKeyAction):
         orgName = self.get_option('org')
         keyName = self.get_option('name')
 
-        organization = get_organization(orgName)
+        keys = self.api.activation_keys_by_organization(orgName, keyName)
 
-        keys = self.api.activation_keys_by_organization(organization['cp_key'], keyName)
         if len(keys) == 0:
             print >> sys.stderr, _("Could not find activation key [ %s ]") % keyName
             return os.EX_DATAERR
@@ -222,14 +220,12 @@ class Update(ActivationKeyAction):
         add_poolids = self.get_option('add_poolid') or []
         remove_poolids = self.get_option('remove_poolid') or []
 
-        organization = get_organization(orgName)
-
         if envName != None:
             environment = get_environment(orgName, envName)
         else:
             environment = None
 
-        keys = self.api.activation_keys_by_organization(organization['cp_key'], keyName)
+        keys = self.api.activation_keys_by_organization(orgName, keyName)
         if len(keys) == 0:
             return os.EX_DATAERR
         key = keys[0]
@@ -239,13 +235,14 @@ class Update(ActivationKeyAction):
         except OptionException:
             print >> sys.stderr, _("Could not find template [ %s ]") % (templateName)
             return os.EX_DATAERR
-        key = self.api.update(key['id'], environment['id'] if environment != None else None,
+
+        key = self.api.update(orgName, key['id'], environment['id'] if environment != None else None,
             newKeyName, keyDescription, templateId, usageLimit)
 
         for poolid in add_poolids:
-            self.api.add_pool(key['id'], poolid)
+            self.api.add_pool(orgName, key['id'], poolid)
         for poolid in remove_poolids:
-            self.api.remove_pool(key['id'], poolid)
+            self.api.remove_pool(orgName, key['id'], poolid)
 
         if key != None:
             print _("Successfully updated activation key [ %s ]") % key['name']
@@ -270,100 +267,88 @@ class Delete(ActivationKeyAction):
         orgName = self.get_option('org')
         keyName = self.get_option('name')
 
-        organization = get_organization(orgName)
-
-        keys = self.api.activation_keys_by_organization(organization['cp_key'], keyName)
+        keys = self.api.activation_keys_by_organization(orgName, keyName)
         if len(keys) == 0:
             #TODO: not found?
             return os.EX_DATAERR
 
-        self.api.delete(keys[0]['id'])
+        self.api.delete(orgName, keys[0]['id'])
         print _("Successfully deleted activation key [ %s ]") % keyName
         return os.EX_OK
 
 
-class AddSystemGroup(ActivationKeyAction):
+class BaseSystemGroup(ActivationKeyAction):
+    """ Base class for AddSystemGroup and RemoveSystemGroup """
+
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name',
+                               help=_("activation key name (required)"))
+        opt_parser_add_org(parser, required=1)
+        parser.add_option('--system_group', dest='system_group_name',
+                              help=_("system group name (required)"))
+
+    def check_options(self, validator):
+        validator.require(('org', 'name', 'system_group_name'))
+
+    def _fetch_org_key_group(self):
+        """ return array (org_name, activation_key, system_group) based on command line options """
+        org_name = self.get_option('org')
+        name = self.get_option('name')
+        system_group_name = self.get_option('system_group_name')
+
+        activation_key = self.api.activation_keys_by_organization(org_name, name)
+
+        if activation_key:
+            activation_key = activation_key[0]
+        else:
+            print >> sys.stderr, _("Could not find activation key [ %s ]") % name
+            return None, None, None
+
+        system_group = SystemGroupAPI().system_groups(org_name, { 'name' : system_group_name})
+
+        if system_group:
+            system_group = system_group[0]
+        else:
+            print >> sys.stderr, _("Could not find system group [ %s ]") % system_group_name
+            return None, None, None
+
+        return org_name, activation_key, system_group
+
+class AddSystemGroup(BaseSystemGroup):
 
     description = _('add system group to an activation key')
 
-    def setup_parser(self, parser):
-        parser.add_option('--name', dest='name',
-                               help=_("activation key name (required)"))
-        opt_parser_add_org(parser, required=1)
-        parser.add_option('--system_group', dest='system_group_name',
-                              help=_("system group name (required)"))
-
-    def check_options(self, validator):
-        validator.require(('org', 'name', 'system_group_name'))
-
     def run(self):
-        org_name = self.get_option('org')
-        name = self.get_option('name')
-        system_group_name = self.get_option('system_group_name')
-
-        activation_key = self.api.activation_keys_by_organization(org_name, name)
-
-        if activation_key is None:
+        org_name, activation_key, system_group = self._fetch_org_key_group()
+        if (not activation_key) and (not system_group):
             return os.EX_DATAERR
-        else:
-            activation_key = activation_key[0]
-
-        system_group = SystemGroupAPI().system_groups(org_name, { 'name' : system_group_name})
-
-        if system_group is None or len(system_group) == 0:
-            print >> sys.stderr, _("Could not find system group [ %s ]") % system_group_name
-            return os.EX_DATAERR
-        else:
-            system_group = system_group[0]
 
         activation_key = self.api.add_system_group(org_name, activation_key["id"], system_group['id'])
 
-        if activation_key != None:
+        if activation_key:
             print _("Successfully added system group to activation key [ %s ]") % activation_key['name']
             return os.EX_OK
         else:
+            print >> sys.stderr, _("Unknown error occurred.")
             return os.EX_DATAERR
 
 
-class RemoveSystemGroup(ActivationKeyAction):
+class RemoveSystemGroup(BaseSystemGroup):
 
     description = _('remove system groups to a system')
 
-    def setup_parser(self, parser):
-        parser.add_option('--name', dest='name',
-                               help=_("activation key name (required)"))
-        opt_parser_add_org(parser, required=1)
-        parser.add_option('--system_group', dest='system_group_name',
-                              help=_("system group name (required)"))
-
-    def check_options(self, validator):
-        validator.require(('org', 'name', 'system_group_name'))
-
     def run(self):
-        org_name = self.get_option('org')
-        name = self.get_option('name')
-        system_group_name = self.get_option('system_group_name')
-
-        activation_key = self.api.activation_keys_by_organization(org_name, name)
-
-        if activation_key is None:
+        org_name, activation_key, system_group = self._fetch_org_key_group()
+        if (not activation_key) and (not system_group):
             return os.EX_DATAERR
-        else:
-            activation_key = activation_key[0]
-
-        system_group = SystemGroupAPI().system_groups(org_name, { 'name' : system_group_name})
-
-        if system_group is None or len(system_group) == 0:
-            print >> sys.stderr, _("Could not find system group [ %s ]") % system_group_name
-        else:
-            system_group = system_group[0]
 
         activation_key = self.api.remove_system_group(org_name, activation_key["id"], system_group['id'])
 
-        if activation_key != None:
+        if activation_key:
             print _("Successfully removed system group from activation key [ %s ]") % activation_key['name']
             return os.EX_OK
         else:
+            print >> sys.stderr, _("Unknown error occurred.")
             return os.EX_DATAERR
 
 

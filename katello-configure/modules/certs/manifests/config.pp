@@ -51,10 +51,7 @@ class certs::config {
     mode   => 755,
   }
 
-  $katello_pki_dir = "/etc/pki/katello"
-  $katello_keystore = "$katello_pki_dir/keystore"
-
-  file { $katello_pki_dir:
+  file { $certs::params::katello_pki_dir:
     owner => "root",
     group => "katello",
     mode => 750,
@@ -62,14 +59,14 @@ class certs::config {
   }
 
   exec { "generate-ssl-keystore":
-    command   => "openssl pkcs12 -export -in /etc/candlepin/certs/candlepin-ca.crt -inkey /etc/candlepin/certs/candlepin-ca.key -out ${katello_keystore} -name tomcat -CAfile ${candlepin_pub_cert} -caname root -password \"file:${certs::params::keystore_password_file}\" 2>>${katello::params::configure_log_base}/certificates.log",
+    command   => "openssl pkcs12 -export -in /etc/candlepin/certs/candlepin-ca.crt -inkey /etc/candlepin/certs/candlepin-ca.key -out ${certs::params::katello_keystore} -name tomcat -CAfile ${candlepin_pub_cert} -caname root -password \"file:${certs::params::keystore_password_file}\" 2>>${katello::params::configure_log_base}/certificates.log",
     path      => "/usr/bin",
-    creates   => $katello_keystore,
+    creates   => $certs::params::katello_keystore,
     notify    => Service["tomcat6"],
-    require   => [File[$katello_pki_dir], Exec["deploy-candlepin-certificate-to-cp"], File["${katello::params::configure_log_base}"]]
+    require   => [File[$certs::params::katello_pki_dir], Exec["deploy-candlepin-certificate-to-cp"], File["${katello::params::configure_log_base}"]]
   }
 
-  file { $katello_keystore:
+  file { $certs::params::katello_keystore:
     owner => "root",
     group => "katello",
     mode => 640,
@@ -78,8 +75,9 @@ class certs::config {
 
   file { "/usr/share/tomcat6/conf/keystore":
     ensure => link,
-    target => $katello_keystore,
-    require => File[$katello_keystore]
+    target => $certs::params::katello_keystore,
+    require => File[$certs::params::katello_keystore],
+    before  => Service["tomcat6"],
   }
 
   $candlepin_key_pair_name = "katello-${candlepin_cert_name}-key-pair"
@@ -112,8 +110,6 @@ class certs::config {
   $candlepin_consumer_summary = "Subscription-manager consumer certificate for Katello instance ${fqdn}"
   $candlepin_consumer_description = "Consumer certificate and post installation script that configures rhsm."
 
-  $candlepin_certs_dir = "/etc/candlepin/certs"
-
   exec { "generate-candlepin-consumer-certificate":
     cwd       => "${katello_www_pub_dir}",
     command   => "gen-rpm.sh --name '${candlepin_consumer_name}' --version 1.0 --release 1 --packager None --vendor None --group 'Applications/System' --summary '${candlepin_consumer_summary}' --description '${candlepin_consumer_description}' --post ${ssl_build_path}/rhsm-katello-reconfigure /etc/rhsm/ca/candlepin-local.pem:666=${ssl_build_path}/$candlepin_cert_name.crt 2>>${katello::params::configure_log_base}/certificates.log && /sbin/restorecon ./*rpm",
@@ -138,7 +134,7 @@ class certs::config {
     before => Class["apache2::service"]
   }
 
-  file { ["$candlepin_certs_dir/candlepin-ca.key"]:
+  file { ["$certs::params::candlepin_certs_dir/candlepin-ca.key"]:
     owner => "root",
     group => "katello",
     mode => 640,
@@ -147,7 +143,7 @@ class certs::config {
   }
 
 
-  file { ["$candlepin_certs_dir/candlepin-ca.crt"]:
+  file { ["$certs::params::candlepin_certs_dir/candlepin-ca.crt"]:
     owner => "root",
     group => "katello",
     mode => 644,
@@ -156,13 +152,13 @@ class certs::config {
   }
 
 
-  file { "${candlepin_certs_dir}/candlepin-upstream-ca.crt":
+  file { "${certs::params::candlepin_certs_dir}/candlepin-upstream-ca.crt":
     ensure => link,
     owner => "root",
     group => "katello",
     mode => 644,
-    target => "${candlepin_certs_dir}/candlepin-ca.crt",
-    require => File["${candlepin_certs_dir}/candlepin-ca.crt"]
+    target => "${certs::params::candlepin_certs_dir}/candlepin-ca.crt",
+    require => File["${certs::params::candlepin_certs_dir}/candlepin-ca.crt"]
   }
 
 
@@ -186,7 +182,7 @@ class certs::config {
         require => Exec["generate-ssl-qpid-broker-certificate"],
       }
 
-      $nss_db_dir = "$katello_pki_dir/nssdb/"
+      $nss_db_dir = "$certs::params::katello_pki_dir/nssdb/"
 
       exec { "generate-nss-password":
         command => "openssl rand -base64 24 > ${certs::params::nss_db_password_file}",

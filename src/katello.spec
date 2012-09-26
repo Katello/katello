@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.1.9
+Version:        1.1.12
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -64,7 +64,6 @@ Requires:       rubygem(simple-navigation) >= 3.3.4
 Requires:       rubygem(pg)
 Requires:       rubygem(delayed_job) >= 2.1.4
 Requires:       rubygem(acts_as_reportable) >= 1.1.1
-Requires:       rubygem(pdf-writer) >= 1.1.8
 Requires:       rubygem(ruport) >= 1.6.3
 Requires:       rubygem(daemons) >= 1.1.4
 Requires:       rubygem(uuidtools)
@@ -76,10 +75,18 @@ Requires:       rubygem(tire) >= 0.3.0
 Requires:       rubygem(tire) < 0.4
 Requires:       rubygem(ldap_fluff)
 Requires:       rubygem(apipie-rails)
+Requires:       lsof
 
 %if 0%{?rhel} == 6
 Requires:       redhat-logos >= 60.0.14
 %endif
+
+%if 0%{?rhel} == 6 || 0%{?fedora} < 17
+Requires: ruby(abi) = 1.8
+%else
+Requires: ruby(abi) = 1.9.1
+%endif
+Requires: ruby
 
 # <workaround> for 714167 - undeclared dependencies (regin & multimap)
 # TODO - uncomment the statement once we push patched actionpack to our EL6 repo
@@ -104,7 +111,7 @@ BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
-BuildRequires:  converge-ui-devel >= 1.0
+BuildRequires:  converge-ui-devel >= 1.0.1
 
 # we require this to be able to build api-docs
 BuildRequires:       rubygem(rails) >= 3.0.10
@@ -121,7 +128,6 @@ BuildRequires:       rubygem(simple-navigation) >= 3.3.4
 BuildRequires:       rubygem(pg)
 BuildRequires:       rubygem(delayed_job) >= 2.1.4
 BuildRequires:       rubygem(acts_as_reportable) >= 1.1.1
-BuildRequires:       rubygem(pdf-writer) >= 1.1.8
 BuildRequires:       rubygem(ruport) >= 1.6.3
 BuildRequires:       rubygem(daemons) >= 1.1.4
 BuildRequires:       rubygem(uuidtools)
@@ -221,6 +227,78 @@ Requires:        %{name}-common
 %description api-docs
 Documentation files for katello API.
 
+%package devel-all
+Summary:         Katello devel support (all subpackages)
+BuildArch:       noarch
+Requires:        %{name}-devel = %{version}-%{release}
+Requires:        %{name}-devel-profiling = %{version}-%{release}
+Requires:        %{name}-devel-test = %{version}-%{release}
+Requires:        %{name}-devel-jshintrb = %{version}-%{release}
+
+%description devel-all
+Meta package to install all %{name}-devel-* subpackages.
+
+%package devel
+Summary:         Katello devel support
+BuildArch:       noarch
+Requires:        %{name} = %{version}-%{release}
+Requires:        rubygem(redcarpet)
+%if 0%{?fedora} > 16
+Requires: rubygem(ruby-debug19)
+%else
+Requires: rubygem(ruby-debug)
+%endif
+Requires:        rubygem(ZenTest) >= 4.4.0
+Requires:        rubygem(rspec-rails) >= 2.0.0
+Requires:        rubygem(autotest-rails) >= 4.1.0
+Requires:        rubygem(rcov) >= 0.9.9
+Requires:        rubygem(webrat) >= 0.7.3
+Requires:        rubygem(nokogiri) >= 0.9.9
+Requires:        rubygem(yard) >= 0.5.3
+Requires:        rubygem(ci_reporter) >= 1.6.3
+Requires:        rubygem(gettext) >= 1.9.3
+Requires:        rubygem(ruby_parser)
+Requires:        rubygem(js-routes)
+Requires:        rubygem(newrelic_rpm)
+Requires:        rubygem(logical-insight)
+
+%description devel
+Rake tasks and dependecies for Katello developers
+
+%package devel-profiling
+Summary:         Katello devel support (profiling)
+BuildArch:       noarch
+Requires:        %{name} = %{version}-%{release}
+Requires:        rubygem(ruby-prof)
+
+%description devel-profiling
+Rake tasks and dependecies for Katello developers, which enables
+profiling.
+
+%package devel-jshintrb
+Summary:         Katello devel support (unit test and syntax checking)
+BuildArch:       noarch
+Requires:        %{name} = %{version}-%{release}
+Requires:        rubygem(newrelic_rpm)
+Requires:        rubygem(logical-insight)
+
+%description devel-jshintrb
+Rake tasks and dependecies for Katello developers, which enables
+syntax checking and is need for unit testing.
+
+%package devel-test
+Summary:         Katello devel support (testing)
+BuildArch:       noarch
+Requires:        %{name} = %{version}-%{release}
+Requires:        %{name}-devel = %{version}-%{release}
+Requires:        rubygem(vcr)
+Requires:        rubygem(webmock)
+Requires:        rubygem(minitest)
+
+%description devel-test
+Rake tasks and dependecies for Katello developers, which enables
+testing.
+
 %prep
 %setup -q
 
@@ -228,6 +306,8 @@ Documentation files for katello API.
 
 #copy converge-ui
 cp -R /usr/share/converge-ui-devel/* ./vendor/converge-ui
+rm ./public/fonts
+mv ./vendor/converge-ui/fonts ./public/fonts
 
 #configure Bundler
 rm -f Gemfile.lock
@@ -342,22 +422,12 @@ rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
 
-#remove development tasks
-rm %{buildroot}%{homedir}/lib/tasks/test.rake
-
 #branding
 if [ -d branding ] ; then
   ln -svf %{_datadir}/icons/hicolor/24x24/apps/system-logo-icon.png %{buildroot}%{homedir}/public/images/rh-logo.png
   ln -svf %{_sysconfdir}/favicon.png %{buildroot}%{homedir}/public/images/favicon.png
   rm -rf %{buildroot}%{homedir}/branding
 fi
-
-#remove development tasks
-rm %{buildroot}%{homedir}/lib/tasks/rcov.rake
-rm %{buildroot}%{homedir}/lib/tasks/yard.rake
-rm %{buildroot}%{homedir}/lib/tasks/hudson.rake
-rm %{buildroot}%{homedir}/lib/tasks/jsroutes.rake
-rm %{buildroot}%{homedir}/lib/tasks/jshint.rake
 
 #correct permissions
 find %{buildroot}%{homedir} -type d -print0 | xargs -0 chmod 755
@@ -410,6 +480,13 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/lib/notifications
 %{homedir}/lib/resources/cdn.rb
 %{homedir}/lib/tasks
+%exclude %{homedir}/lib/tasks/rcov.rake
+%exclude %{homedir}/lib/tasks/yard.rake
+%exclude %{homedir}/lib/tasks/hudson.rake
+%exclude %{homedir}/lib/tasks/jsroutes.rake
+%exclude %{homedir}/lib/tasks/jshint.rake
+%exclude %{homedir}/lib/tasks/test.rake
+%exclude %{homedir}/script/pulp_integration_tests
 %{homedir}/locale
 %{homedir}/public
 %exclude %{homedir}/public/apipie-cache
@@ -421,10 +498,9 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/.bundle
 %{homedir}/config.ru
 %{homedir}/Gemfile
-%{homedir}/Gemfile.lock
 %ghost %attr(0644,katello,katello) %{_sharedstatedir}/%{name}/Gemfile.lock
-%{homedir}/Rakefile
 %config(noreplace) %{_sysconfdir}/%{name}/service-list
+%{homedir}/Rakefile
 %{_mandir}/man8/katello-service.8*
 
 %files common
@@ -512,7 +588,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/.bundle
 %{homedir}/config.ru
 %{homedir}/Gemfile
-%{homedir}/Gemfile.lock
+%ghost %{homedir}/Gemfile.lock
 %{homedir}/Rakefile
 
 %files headpin-all
@@ -520,6 +596,23 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %files api-docs
 %doc doc/apidoc*
 %{homedir}/public/apipie-cache
+
+%files devel-all
+
+%files devel
+%{homedir}/lib/tasks/rcov.rake
+%{homedir}/lib/tasks/yard.rake
+%{homedir}/lib/tasks/hudson.rake
+%{homedir}/lib/tasks/jsroutes.rake
+
+%files devel-profiling
+
+%files devel-jshintrb
+%{homedir}/lib/tasks/jshint.rake
+
+%files devel-test
+%{homedir}/lib/tasks/test.rake
+%{homedir}/script/pulp_integration_tests
 
 %pre common
 # Add the "katello" user and group
@@ -537,6 +630,124 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Sep 12 2012 Ivan Necas <inecas@redhat.com> 1.1.12-1
+- subsfilter - Correctly update UI when subscription checkboxes toggled
+  (thomasmckay@redhat.com)
+- Org switcher "tipsy" fix and IE8 final fixes. (jrist@redhat.com)
+- 853229 - blank sync plan date gives incorrect error (jsherril@redhat.com)
+- Let errata types options be selectable (mbacovsk@redhat.com)
+- APIDOC - templates, templates_content (pajkycz@gmail.com)
+- APIDOC - providers, subscriptions (pajkycz@gmail.com)
+- 856303 - fencing system permission checks (jomara@redhat.com)
+- 854697 - manifest import - if first import fails, rollback (unimport it)
+  (bbuckingham@redhat.com)
+- 809259 - activation key - cli permissions changes (continued)
+  (bbuckingham@redhat.com)
+- 809259 - activation key - cli permissions changes (bbuckingham@redhat.com)
+- Fixed #842271 - filtering the "bugfix" errata in CLI doesn't work
+  (mbacovsk@redhat.com)
+- Initial commit on updated indexing appropriate stuff (paji@redhat.com)
+- 843064 - Content Search - Products: Not required unless searching for
+  Products itself, it's misleading when searching for Repos, Packages and
+  Errata (pajkycz@gmail.com)
+
+* Wed Sep 12 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.11-1
+- 856220 - adding time to puppet log (lzap+git@redhat.com)
+- Fix for removing user's default org. (jrist@redhat.com)
+- Fix for initial suggestion from @parthaa with new suggestion.
+  (jrist@redhat.com)
+- removed referebce to package autocomplete widget from content search page
+  (dmitri@redhat.com)
+- fix for BZ 843059: removed autocomplete on packages (dmitri@redhat.com)
+- BZ 835875: a couple of small fixes based on pull comments (dmitri@redhat.com)
+- Updating some permissions stuff and the save based on comments in the Pull
+  Request. (jrist@redhat.com)
+- preserve enviroment variable, especiall RAILS_ENV (msuchy@redhat.com)
+- 856220 - improving service-wait wrapper script (lzap+git@redhat.com)
+- Test fix for changeset creation without env (pajkycz@gmail.com)
+- fixes for BZ 835875: no longer possible to delete a repository if it's been
+  promoted. (dmitri@redhat.com)
+- 853056 - fix regression for registering with activation keys
+  (inecas@redhat.com)
+- fix dependecies on Fedora17+ (msuchy@redhat.com)
+- 852320 - undefined method `library?' for nil:NilClass (NoMethodError) when
+  creating a changeset without an environment (pajkycz@gmail.com)
+- 839575 - [CLI] Adding a system to system group using incorrect uuid should
+  raise an error instead of success (pajkycz@gmail.com)
+- Fixing the org serialization, tipsifying, some suggested tweaks.
+  (jrist@redhat.com)
+- 754738 - do not override variables in other procedures (msuchy@redhat.com)
+- 754738 - do not override status() from /etc/rc.d/init.d/functions
+  (msuchy@redhat.com)
+- 754738 - fix name of monitor pid file (msuchy@redhat.com)
+- 754738 - if program is already running, print failure, but return 0
+  (msuchy@redhat.com)
+- 754738 - if we fail in stopping delayed_jobs, kill it. One by one.
+  (msuchy@redhat.com)
+- 75473 - correctly solve status for all processes of delayed_jobs
+  (msuchy@redhat.com)
+- 754738 - log even output of service stop (msuchy@redhat.com)
+- use runuser instead of su (msuchy@redhat.com)
+- 75473 - do not delete nor truncate log (msuchy@redhat.com)
+- 754738 - properly return when katello is not configured (msuchy@redhat.com)
+- 854278 - After adding certain objects to katello one will see a warning, ''
+  did not meet the current search criteria and is not being shown
+  (komidore64@gmail.com)
+- 786226 - List of product repositories not sorted alphabetically
+  (pajkycz@gmail.com)
+- 852460 - System Groups left pane list does not use ellipsis
+  (pajkycz@gmail.com)
+- 855184 - Using --add_package gives undefined method `empty?' for nil:NilClass
+  error (pajkycz@gmail.com)
+- Final org switcher and interstitial changes for default organization.
+  (jrist@redhat.com)
+- Changes to accomodate the System Registration Defaults (jrist@redhat.com)
+- 840735 - headpin create environment returned error :There was an error
+  retrieving that row:Not Found (komidore64@gmail.com)
+- 841121 -  Long description returns PG error (pajkycz@gmail.com)
+- 811136 - Rendering error in production.log while editing the org's
+  description (pajkycz@gmail.com)
+- 841121 - Long description while creating system group returns PG error
+  (pajkycz@gmail.com)
+- Truncate Notice text to max 1024 characters. (pajkycz@gmail.com)
+- 841300 - Zoom out on 2-Pane page causes rendering error (pajkycz@gmail.com)
+- 843529 - cleanup task_statuses and job_tasks on system deletion
+  (bbuckingham@redhat.com)
+- Updates ConvergeUI to the latest. (ehelms@redhat.com)
+- gather up all packages for katello-debug (mmccune@redhat.com)
+- Stupid default setting for user set_org (jrist@redhat.com)
+- Minor accidental fix for extra char. (jrist@redhat.com)
+- Initial workings of new default org stuff. (jrist@redhat.com)
+- 834013 - return releaseVer as part of consumer json (thomasmckay@redhat.com)
+- 846719 - Removes footer links entirely. (ehelms@redhat.com)
+
+* Thu Sep 06 2012 Ivan Necas <inecas@redhat.com> 1.1.10-1
+- 852631 - system group - update model to raise exception when no groups exist
+  (bbuckingham@redhat.com)
+- 854573, 852167 - Fixes missing icons issue which also resolves an alignment
+  issue on the content search page. (ehelms@redhat.com)
+- linkback - make app prefix link helper (thomasmckay@redhat.com)
+- workaround for bz 854263 (msuchy@redhat.com)
+- 758651 - check if thin port is free before starting thin (msuchy@redhat.com)
+- Merge pull request #543 from bbuckingham/fork-841289 (lzap@redhat.com)
+- 853056 - system register without environment is working again
+  (lzap+git@redhat.com)
+- 853056 - improve 404 generic error message (lzap+git@redhat.com)
+- job without task should not exists, this is error (msuchy@redhat.com)
+- 851142 - CLI: changeset update shows strange error (pajkycz@gmail.com)
+- fix for BZ 821345 (dmitri@redhat.com)
+- link back to source of manifest in import history (thomasmckay@redhat.com)
+- Updating Converge-UI (mbacovsk@redhat.com)
+- 746765 - systems can be referenced by uuid (lzap+git@redhat.com)
+- 746765 - removing system unique name constraint (lzap+git@redhat.com)
+- 831664 - Repository sync failures not displaying detailed error in Notices
+  (pchalupa@redhat.com)
+- 841289 - perform cleanup on failed registration with activation key
+  (bbuckingham@redhat.com)
+- katello - disable bundler patch by default, fix broken condition
+  (pchalupa@redhat.com)
+- katello - add bundler patch to prefer rpm-gems (pchalupa@redhat.com)
+
 * Fri Aug 31 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.9-1
 - Do not insert spaces before changesets description (pajkycz@gmail.com)
 - 847858-actkeypool - fixed spec test failure (thomasmckay@redhat.com)

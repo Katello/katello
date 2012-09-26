@@ -51,8 +51,8 @@ class MethodDocGenerator(object):
 
 class Param(object):
 
-    def __init__(self, json):
-        self.json = json
+    def __init__(self, json_str):
+        self.json = json_str
 
     def name(self):
         return self.json['name']
@@ -80,8 +80,8 @@ class Method(object):
 
     PATH_PARAM_RE = r":([^/]+)"
 
-    def __init__(self, json, resource_name=""):
-        self.json = json
+    def __init__(self, json_str, resource_name=""):
+        self.json = json_str
         self.__resource_name = resource_name
 
     def __json_url(self):
@@ -142,7 +142,8 @@ class Method(object):
             params = params[0].inner_params()
         return params
 
-    def __can_unnest(self, params):
+    @classmethod
+    def __can_unnest(cls, params):
         return (len(params) == 1 and params[0].expected_type() == 'hash')
 
     def param_nest(self):
@@ -160,8 +161,8 @@ class Method(object):
 
 class Resource(object):
 
-    def __init__(self, json):
-        self.json = json
+    def __init__(self, json_str):
+        self.json = json_str
         self.inflector = Inflector(English)
 
     def get_method(self, name):
@@ -219,12 +220,12 @@ def generate():
     parser.add_option("-r", "--resource")
     parser.add_option("-m", "--method")
     parser.add_option("-i", "--input", help="input file with json apipie documentation export")
-    opts, args = parser.parse_args(sys.argv[1:])
+    opts, dummy = parser.parse_args(sys.argv[1:])
 
     j = load_json(getattr(opts, 'input'))
     try:
         resource_json = j['docs']['resources'][getattr(opts, 'resource')]
-    except KeyError, e:
+    except KeyError:
         print >> sys.stderr, "Invalid resource. Choose one of: "+ ", ".join(j['docs']['resources'].keys())
         exit(1)
     resource = Resource(resource_json)
@@ -236,8 +237,10 @@ def generate():
     elif getattr(opts, 'action'):
         method_name =  getattr(opts, 'method')
         if not resource.has_method(method_name):
-           print >> sys.stderr, "Invalid method. Choose one of: "+ ", ".join([m['name'] for m in resource.json.get('methods', [])])
-           exit(1)
+            print >> sys.stderr, \
+                "Invalid method. Choose one of: " + \
+                ", ".join([m['name'] for m in resource.json.get('methods', [])])
+            exit(1)
         generate_action(resource, getattr(opts, 'method'))
     elif getattr(opts, 'main'):
         generate_main(resource)

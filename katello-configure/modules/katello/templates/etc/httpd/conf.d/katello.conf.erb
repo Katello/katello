@@ -64,6 +64,15 @@ NameVirtualHost *:443
     ErrorDocument 500 '{"displayMessage": "Internal error, contact administrator", "errors": ["Internal error, contact administrator"], "status": "500" }'
     ErrorDocument 503 '{"displayMessage": "Service unavailable or restarting, try later", "errors": ["Service unavailable or restarting, try later"], "status": "503" }'
   </Location>
+
+  <Location /subscription>
+    RequestHeader set SSL_CLIENT_CERT "%{SSL_CLIENT_CERT}s"
+    SSLVerifyClient optional
+    SSLRenegBufferSize 16777216
+    SSLVerifyDepth 2
+    ProxyPass balancer://thinservers/api
+    ProxyPassReverse balancer://thinservers/api
+  </Location>
 </VirtualHost>
 
 NameVirtualHost *:80

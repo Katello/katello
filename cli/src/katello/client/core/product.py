@@ -135,6 +135,7 @@ class List(ProductAction):
 
         self.printer.add_column('id')
         self.printer.add_column('name')
+        self.printer.add_column('label')
         self.printer.add_column('provider_id')
         self.printer.add_column('provider_name')
         self.printer.add_column('sync_plan_name')
@@ -185,7 +186,7 @@ class Sync(SingleProductAction):
             print _("Product [ %s ] failed to sync: %s" % (prodName, errors))
             return os.EX_DATAERR
         elif task.cancelled():
-            print _("Product [ %s ] synchronization cancelled" % prodName)
+            print _("Product [ %s ] synchronization canceled" % prodName)
             return os.EX_DATAERR
 
         print _("Product [ %s ] synchronized" % prodName)
@@ -305,6 +306,9 @@ class Create(ProductAction):
             help=_("provider name (required)"))
         parser.add_option('--name', dest='name',
             help=_("product name (required)"))
+        parser.add_option('--label', dest='label',
+                               help=_("product label, ASCII identifier for the product with no" + 
+                                      " spaces eg: ACME_Product. (will be generated if not specified)"))
         parser.add_option("--description", dest="description",
             help=_("product description"))
         parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES,
@@ -325,19 +329,22 @@ class Create(ProductAction):
         provName    = self.get_option('prov')
         orgName     = self.get_option('org')
         name        = self.get_option('name')
+        label       = self.get_option('label')
         description = self.get_option('description')
         url         = self.get_option('url')
         assumeyes   = self.get_option('assumeyes')
         nodiscovery = self.get_option('nodiscovery')
         gpgkey      = self.get_option('gpgkey')
 
-        return self.create_product_with_repos(provName, orgName, name, description, url, assumeyes, nodiscovery, gpgkey)
+        return self.create_product_with_repos(provName, orgName, name, label, 
+                                              description, url, assumeyes, nodiscovery, gpgkey)
 
 
-    def create_product_with_repos(self, provName, orgName, name, description, url, assumeyes, nodiscovery, gpgkey):
+    def create_product_with_repos(self, provName, orgName, name, label, description, 
+                                  url, assumeyes, nodiscovery, gpgkey):
         prov = get_provider(orgName, provName)
 
-        prod = self.api.create(prov["id"], name, description, gpgkey)
+        prod = self.api.create(prov["id"], name, label, description, gpgkey)
         print _("Successfully created product [ %s ]") % name
 
         if url == None:
@@ -347,7 +354,7 @@ class Create(ProductAction):
             repourls = self.discoverRepos.discover_repositories(orgName, url)
             self.printer.set_header(_("Repository Urls discovered @ [%s]" % url))
             selectedurls = self.discoverRepos.select_repositories(repourls, assumeyes)
-            self.discoverRepos.create_repositories(orgName, prod["id"], prod["name"], selectedurls)
+            self.discoverRepos.create_repositories(orgName, prod["id"], prod["name"], prod["label"], selectedurls)
 
         return os.EX_OK
 

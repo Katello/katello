@@ -98,4 +98,10 @@ class PasswordResetsController < ApplicationController
     redirect_to root_url
     execute_after_filters
   end
+
+  private
+
+  def default_notify_options
+    super.merge :organization => nil
+  end
 end

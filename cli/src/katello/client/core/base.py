@@ -404,8 +404,10 @@ class BaseAction(Action):
             try:
                 if "displayMessage" in re.args[1]:
                     msg = re.args[1]["displayMessage"]
-                else:
+                elif "errors" in re.args[1]:
                     msg = ", ".join(re.args[1]["errors"])
+                else:
+                    msg = str(re.args[1])
             except IndexError:
                 msg = re.args[1]
             if re.args[0] == 401:

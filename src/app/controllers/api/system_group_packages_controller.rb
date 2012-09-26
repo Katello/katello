@@ -10,6 +10,15 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Api::SystemGroupPackagesController < Api::ApiController
+  resource_description do
+    description <<-DOC
+      methods for handling packages on system group level
+    DOC
+
+    param :organization_id, :identifier, :desc => "oranization identifier", :required => true
+    param :system_group_id, :identifier, :desc => "system_group identifier", :required => true
+  end
+
   respond_to :json
 
   before_filter :find_group, :only => [:create, :update, :destroy]
@@ -26,7 +35,9 @@ class Api::SystemGroupPackagesController < Api::ApiController
     }
   end
 
-  # install packages remotely
+  api :POST, "/organizations/:organization_id/system_groups/:system_group_id/packages", "Install packages remotely"
+  param :packages, Array, :desc => "List of package names to install", :required => false
+  param :groups, Array, :desc => "List of package group names to install", :required => false
   def create
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
@@ -41,7 +52,9 @@ class Api::SystemGroupPackagesController < Api::ApiController
     end
   end
 
-  # update packages remotely
+  api :PUT, "/organizations/:organization_id/system_groups/:system_group_id/packages", "Update packages remotely"
+  param :packages, Array, :desc => "List of package names to install", :required => false
+  param :groups, Array, :desc => "List of package group names to install", :required => false
   def update
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
@@ -56,7 +69,9 @@ class Api::SystemGroupPackagesController < Api::ApiController
     end
   end
 
-  # uninstall packages remotely
+  api :DELETE, "/organizations/:organization_id/system_groups/:system_group_id/packages", "Uninstall packages remotely"
+  param :packages, Array, :desc => "List of package names to install", :required => false
+  param :groups, Array, :desc => "List of package group names to install", :required => false
   def destroy
     if params[:packages]
       packages = validate_package_list_format(params[:packages])

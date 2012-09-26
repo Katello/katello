@@ -67,7 +67,11 @@ gem "apipie-rails"
 group :test, :development do
   # To use debugger
   gem 'redcarpet'
-  gem 'ruby-debug'
+  if RUBY_VERSION >= "1.9.1"
+    gem 'ruby-debug19'
+  else
+    gem 'ruby-debug'
+  end
   gem 'ZenTest', '>= 4.4.0'
   gem 'rspec-rails', '>= 2.0.0'
   gem 'autotest-rails', '>= 4.1.0'
@@ -106,4 +110,10 @@ group :development do
   # profiler
   gem 'newrelic_rpm'
   gem 'logical-insight'
+end
+
+group :test do
+  gem 'vcr'
+  gem 'webmock'
+  gem 'minitest'
 end

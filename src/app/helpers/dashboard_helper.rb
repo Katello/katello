@@ -20,16 +20,12 @@ module DashboardHelper
     render :partial=>"ajax_entry", :locals=>{:name=>name, :url=>url, :class_wrap=>class_wrapper, :identifier=>identifier, :dropbutton=>dropbutton, :quantity=>quantity}
   end
 
-  def user_notices num=quantity
-    trim_length = 45
-    current_user.notices.order("created_at DESC").limit(num).collect{|note|
-      if note.text.length > trim_length + 3
-        text = note.text[0..trim_length] + '...'
-      else
-        text =note.text
-      end
-      {:text=>text, :level=>note.level, :date=>note.created_at}
-    }
+  def user_notices(num = quantity, options = {})
+    truncate = options[:truncate] || 45
+
+    Notice.for_user(current_user).for_org(current_organization).order("created_at DESC").limit(num).map do |notice|
+      { :text => notice.text.truncate(truncate), :level => notice.level, :date => notice.created_at }
+    end
   end
 
   def promotions num=quantity
@@ -57,7 +53,7 @@ module DashboardHelper
       _("Failed")
     else
       _("Pending")
-    end        
+    end
   end
 
   def systems_list num=quantity
@@ -83,7 +79,7 @@ module DashboardHelper
         synced_products << prod
       end
     }
-    
+
     syncing_products.sort{|a,b|
       a.sync_status.start_time <=> b.sync_status.start_time
     }

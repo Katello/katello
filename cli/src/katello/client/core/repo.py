@@ -30,13 +30,13 @@ from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
 
 
-ALLOWED_REPO_URL_SCHEMES = ("http", "https", "ftp", "file") 
+ALLOWED_REPO_URL_SCHEMES = ("http", "https", "ftp", "file")
 
 SYNC_STATES = { 'waiting':     _("Waiting"),
                 'running':     _("Running"),
                 'error':       _("Error"),
                 'finished':    _("Finished"),
-                'cancelled':   _("Cancelled"),
+                'cancelled':   _("Canceled"),
                 'canceled':    _("Canceled"),
                 'timed_out':   _("Timed out"),
                 'not_synced':  _("Not synced") }
@@ -79,7 +79,7 @@ class SingleRepoAction(RepoAction):
 
     @classmethod
     def set_repo_select_options(cls, parser, select_by_env=True):
-        parser.add_option('--id', dest='id', help=_("repository id"))
+        parser.add_option('--id', dest='id', help=_("repository ID"))
         parser.add_option('--name', dest='name', help=_("repository name"))
         opt_parser_add_org(parser)
         opt_parser_add_product(parser)
@@ -121,7 +121,11 @@ class Create(RepoAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
             help=_("repository name to assign (required)"))
-        parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES, 
+
+        parser.add_option('--label', dest='label',
+                               help=_("repo label, ASCII identifier for the " +
+                                      "repository with no spaces eg: custom-repo1"))
+        parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES,
             help=_("url path to the repository (required)"))
         opt_parser_add_product(parser, required=1)
         parser.add_option('--gpgkey', dest='gpgkey',
@@ -134,6 +138,7 @@ class Create(RepoAction):
 
     def run(self):
         name     = self.get_option('name')
+        label    = self.get_option('label')
         url      = self.get_option('url')
         prodName = self.get_option('product')
         orgName  = self.get_option('org')
@@ -141,7 +146,7 @@ class Create(RepoAction):
         nogpgkey   = self.get_option('nogpgkey')
 
         product = get_product(orgName, prodName)
-        self.api.create(orgName, product["id"], name, url, gpgkey, nogpgkey)
+        self.api.create(orgName, product["id"], name, label, url, gpgkey, nogpgkey)
         print _("Successfully created repository [ %s ]") % name
 
         return os.EX_OK
@@ -154,7 +159,10 @@ class Discovery(RepoAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
             help=_("repository name prefix to add to all the discovered repositories (required)"))
-        parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES, 
+        parser.add_option('--label', dest='label',
+                               help=_("repo label, ASCII identifier to add to " + 
+                                "all discovered repositories.  (will be generated if not specified)"))
+        parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES,
             help=_("root url to perform discovery of repositories eg: http://porkchop.devel.redhat.com/ (required)"))
         parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
             help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
@@ -165,6 +173,7 @@ class Discovery(RepoAction):
 
     def run(self):
         name     = self.get_option('name')
+        label    = self.get_option('label')
         url      = self.get_option('url')
         assumeyes = self.get_option('assumeyes')
         prodName = self.get_option('product')
@@ -175,7 +184,7 @@ class Discovery(RepoAction):
         selectedurls = self.select_repositories(repourls, assumeyes)
 
         product = get_product(orgName, prodName)
-        self.create_repositories(orgName, product["id"], name, selectedurls)
+        self.create_repositories(orgName, product["id"], name, label, selectedurls)
 
         return os.EX_OK
 
@@ -233,12 +242,14 @@ class Discovery(RepoAction):
 
         return selection
 
-    def create_repositories(self, orgName, productid, name, selectedurls):
+    def create_repositories(self, orgName, productid, name, label, selectedurls):
         for repourl in selectedurls:
             parsedUrl = urlparse.urlparse(repourl)
             repoName = self.repository_name(name, parsedUrl.path) # pylint: disable=E1101
-            self.api.create(orgName, productid, repoName, repourl, None, None)
-
+            repoLabel = None
+            if label:
+                repoLabel = self.repository_name(label, parsedUrl.path) # pylint: disable=E1101
+            self.api.create(orgName, productid, repoName, repoLabel, repourl, None, None)
             print _("Successfully created repository [ %s ]") % repoName
 
     @classmethod
@@ -354,7 +365,7 @@ class Sync(SingleRepoAction):
             print _("Repo [ %s ] synced" % repo['name'])
             return os.EX_OK
         elif task.cancelled():
-            print _("Repo [ %s ] synchronization cancelled" % repo['name'])
+            print _("Repo [ %s ] synchronization canceled" % repo['name'])
             return os.EX_OK
         else:
             print _("Repo [ %s ] failed to sync: %s" % (repo['name'], format_sync_errors(task)) )
@@ -419,6 +430,7 @@ class List(RepoAction):
 
         self.printer.add_column('id')
         self.printer.add_column('name')
+        self.printer.add_column('label')
         self.printer.add_column('package_count')
         self.printer.add_column('last_sync', formatter=format_sync_time)
 

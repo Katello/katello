@@ -102,7 +102,7 @@ class Job < ActiveRecord::Base
     first_task = self.task_statuses.first
     #check for first task
     if first_task.nil?
-      return {:id=>self.id}
+      return {:id=>self.id, :state=>'error', :status_message=>'No tasks in job.'}
     else
       #since this is a collection of tasks, where
       # the type and parameters will all be the same

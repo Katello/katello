@@ -27,8 +27,8 @@ describe SystemGroupEventsController do
       disable_org_orchestration
       disable_consumer_group_orchestration
 
-      @org = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-      @environment = KTEnvironment.create!(:name=>"DEV", :prior=>@org.library, :organization=>@org)
+      @org = Organization.create!(:name=>'test_org', :label=> 'test_org')
+      @environment = KTEnvironment.create!(:name=>"DEV", :label=> "DEV", :prior=>@org.library, :organization=>@org)
 
       Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Resources::Candlepin::Consumer.stub!(:update).and_return(true)
@@ -65,7 +65,7 @@ describe SystemGroupEventsController do
 
       describe 'show' do
         before (:each) do
-          controller.stub!(:jobs).and_return([@job])
+          @group.stub_chain(:jobs, :where, :first).and_return(@job)
         end
 
         it "should render the show partial" do
