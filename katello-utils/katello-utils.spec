@@ -12,7 +12,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 Name:           katello-utils
-Version:        1.1.0
+Version:        1.1.1
 Release:        1%{?dist}
 Summary:        Additional tools for Katello
 
@@ -65,5 +65,8 @@ install -m 0644 man/katello-disconnected.man1 %{buildroot}%{_mandir}/man1/katell
 
 
 %changelog
+* Wed Sep 26 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.1-1
+- new package built with tito
+
 * Wed Sep 26 2012 Lukas Zapletal <lzap+rpm[@]redhat.com> - 1.1.0-1
 - Initial version
