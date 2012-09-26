@@ -333,7 +333,7 @@ describe SystemsController do
     describe 'bulk deleting a system' do
       before (:each) do
         @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
-        System.stub(:find).and_return @system
+        System.stub(:find).and_return [@system]
       end
       it "should delete the system" do
         @system.should_receive(:destroy)
