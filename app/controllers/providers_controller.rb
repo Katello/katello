@@ -186,7 +186,6 @@ class ProvidersController < ApplicationController
   end
 
   def repositories_cloned_in_envrs
-#    repositories = Repository.joins(:environment_product => [:product, :environment]).where("products.provider_id" => @provider.id, "environments.library" => true)
     cloned_repositories = @provider.repositories.select {|r| r.promoted? }
     cloned_repositories.collect {|r| [r.name, r.product.environments.select {|env| r.is_cloned_in?(env)}.map(&:name)] }
   end
