@@ -698,9 +698,7 @@ class SystemsController < ApplicationController
   # to filter readable systems that can be
   # passed to search
   def readable_filters
-    filters = {:environment_id=>KTEnvironment.systems_readable(current_organization).collect{|item| item.id}}
-    filters[:system_group_ids] = SystemGroup.systems_readable(current_organization).collect{|item| item.id} if AppConfig.katello?
-    filters
+    {:environment_id=>KTEnvironment.systems_readable(current_organization).collect{|item| item.id}}
   end
 
   def search_filter
