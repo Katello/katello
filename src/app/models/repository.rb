@@ -21,11 +21,12 @@ end
 
 
 class Repository < ActiveRecord::Base
-  include Glue::Pulp::Repo if (AppConfig.use_cp and AppConfig.use_pulp)
-  include Glue if AppConfig.use_cp
+  include Glue::Pulp::Repo if AppConfig.use_pulp
+  include Glue if AppConfig.use_cp || AppConfig.use_pulp
   include Authorization
   include AsyncOrchestration
   include IndexedModel
+  include Rails.application.routes.url_helpers #required for GPG key url generation
 
   index_options :extended_json=>:extended_index_attrs,
                 :json=>{:except=>[:pulp_repo_facts, :groupid, :feed_cert, :environment_product_id]}
@@ -35,17 +36,19 @@ class Repository < ActiveRecord::Base
     indexes :name_sort, :type => 'string', :index => :not_analyzed
   end
 
-
   after_save :update_related_index
   before_save :refresh_content
 
   belongs_to :environment_product, :inverse_of => :repositories
-  has_and_belongs_to_many :changesets
-  validates :pulp_id, :presence => true, :uniqueness => true
-  validates :name, :presence => true
-  validates :enabled, :repo_disablement => true, :on => [:update]
   belongs_to :gpg_key, :inverse_of => :repositories
   belongs_to :library_instance, :class_name=>"Repository"
+  has_and_belongs_to_many :changesets
+  
+  validates :environment_product, :presence => true
+  validates :pulp_id, :presence => true, :uniqueness => true
+  validates :name, :presence => true
+  validates :content_id, :presence => true
+  validates :enabled, :repo_disablement => true, :on => [:update]
 
   def self.in_product(product)
     joins(:environment_product).where(:environment_products => { :product_id => product })
@@ -74,12 +77,6 @@ class Repository < ActiveRecord::Base
       host += ":" + AppConfig.port.to_s unless AppConfig.port.blank? || AppConfig.port.to_s == "443"
       gpg_key_content_api_repository_url(self, :host => host + ENV['RAILS_RELATIVE_URL_ROOT'].to_s, :protocol => 'https')
     end
-  end
-
-  #temporary major version
-  def major_version
-    return nil if release.nil?
-    release.to_i
   end
 
   def redhat?
@@ -335,7 +332,6 @@ class Repository < ActiveRecord::Base
     end
     Repository.where("library_instance_id=%s or repositories.id=%s"  % [repo.id, repo.id] )
   end
-
 
   def errata_count
     results = Glue::Pulp::Errata.search('', 0, 1, :repoids => [self.pulp_id])

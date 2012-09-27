@@ -61,10 +61,9 @@ class UserCreateTest < MiniTest::Rails::ActiveSupport::TestCase
 end
 
 
-class UserTest < MiniTest::Rails::ActiveSupport::TestCase
+class UserInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
   include TestUserBase
-  self.use_instantiated_fixtures = false
-  fixtures :users, :roles, :permissions, :resource_types, :roles_users
+  fixtures :roles, :permissions, :resource_types, :roles_users, :users
 
   def setup
     super
@@ -92,10 +91,9 @@ class UserTest < MiniTest::Rails::ActiveSupport::TestCase
 end
 
 
-class UserTest < MiniTest::Rails::ActiveSupport::TestCase
+class UserClassTest < MiniTest::Rails::ActiveSupport::TestCase
   include TestUserBase
-  self.use_instantiated_fixtures = false
-  fixtures :users, :roles, :permissions, :resource_types, :roles_users
+  fixtures :roles, :permissions, :resource_types, :users, :roles_users
 
   def test_authenticate
     assert User.authenticate!(users(:alfred).username, users(:alfred).username)

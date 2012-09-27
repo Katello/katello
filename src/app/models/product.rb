@@ -18,8 +18,8 @@ end
 
 class Product < ActiveRecord::Base
   include Glue::Candlepin::Product if AppConfig.use_cp
-  include Glue::Pulp::Repos if AppConfig.katello?
-  include Glue if AppConfig.use_cp
+  include Glue::Pulp::Repos if AppConfig.use_pulp
+  include Glue if AppConfig.use_cp || AppConfig.use_pulp
   include Authorization
   include AsyncOrchestration
   include IndexedModel
