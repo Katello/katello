@@ -565,6 +565,8 @@ Src::Application.routes.draw do
       resources :filters, :only => [:index, :create, :destroy, :show, :update]
 
       resources :gpg_keys, :only => [:index, :create]
+
+      resources :system_info_keys, :only => [:create, :index, :destroy], :controller => :organization_system_info_keys
     end
 
     resources :changesets, :only => [:show, :update, :destroy] do
