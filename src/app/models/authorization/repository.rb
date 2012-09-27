@@ -15,14 +15,6 @@ module Authorization::Repository
   def self.included(base)
     base.class_eval do
 
-      def self.in_product(product)
-        joins(:environment_product).where(:environment_products => { :product_id => product })
-      end
-
-      def self.in_environment(env)
-        joins(:environment_product).where(:environment_products => { :environment_id => env })
-      end
-
       def self.readable(env)
         prod_ids = ::Product.readable(env.organization).collect{|p| p.id}
         if env.contents_readable?

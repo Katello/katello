@@ -21,23 +21,13 @@ end
 
 
 class Repository < ActiveRecord::Base
-  include Glue::Pulp::Repo if AppConfig.use_pulp
   include Glue if AppConfig.use_cp || AppConfig.use_pulp
-  include Authorization
+  include Glue::Pulp::Repo if AppConfig.use_pulp
+  include Glue::ElasticSearch::Repository if AppConfig.use_elasticsearch
   include Authorization::Repository
   include AsyncOrchestration
-  include IndexedModel
   include Rails.application.routes.url_helpers #required for GPG key url generation
-
-  index_options :extended_json=>:extended_index_attrs,
-                :json=>{:except=>[:pulp_repo_facts, :groupid, :feed_cert, :environment_product_id]}
-
-  mapping do
-    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :name_sort, :type => 'string', :index => :not_analyzed
-  end
-
-  after_save :update_related_index
+      
   before_save :refresh_content
 
   belongs_to :environment_product, :inverse_of => :repositories
@@ -66,6 +56,11 @@ class Repository < ActiveRecord::Base
     self.environment.organization
   end
 
+  def self.in_environment(env)
+    joins(:environment_product).where(:environment_products => { :environment_id => env })
+  end
+
+
   def yum_gpg_key_url
     # if the repo has a gpg key return a url to access it
     if (self.gpg_key && self.gpg_key.content.present?)
@@ -86,15 +81,6 @@ class Repository < ActiveRecord::Base
   def has_filters?
     return false unless environment.library?
     filters.count > 0 || product.filters.count > 0
-  end
-
-  def extended_index_attrs
-    {:environment=>self.environment.name, :environment_id=>self.environment.id, :clone_ids=>self.clones.pluck(:pulp_id),
-     :product=>self.product.name, :product_id=> self.product.id, :name_sort=>self.name }
-  end
-
-  def update_related_index
-    self.product.provider.update_index if self.product.provider.respond_to? :update_index
   end
 
   def sync_complete task
@@ -118,74 +104,6 @@ class Repository < ActiveRecord::Base
                      :details => details.map(&:chomp).join("\n"), :user => user, :organization => self.organization
       end
     end
-  end
-
-  def index_packages
-    pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
-    Tire.index Glue::Pulp::Package.index do
-      create :settings => Glue::Pulp::Package.index_settings, :mappings => Glue::Pulp::Package.index_mapping
-      import pkgs
-    end if !pkgs.empty?
-  end
-
-  def update_packages_index
-    return #TODO remove when BZ 854260 is fixed
-    # for each of the packages in the repo, unassociate the repo from the package
-    pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
-    pulp_id = self.pulp_id
-
-    Tire.index Glue::Pulp::Package.index do
-      create :settings => Glue::Pulp::Package.index_settings, :mappings => Glue::Pulp::Package.index_mapping
-
-      import pkgs do |documents|
-        documents.each do |document|
-          if document["repoids"].length > 1
-            # if there is more than 1 repo associated w/ the pkg, remove this repo
-            document["repoids"].delete(pulp_id)
-          end
-        end
-      end
-
-    end if !pkgs.empty?
-
-    # now, for any package that only had this repo asscociated with it, remove the package from the index
-    repoids = "repoids:#{pulp_id}"
-    Tire::Configuration.client.delete "#{Tire::Configuration.url}/katello_package/_query?q=#{repoids}"
-    Tire.index('katello_package').refresh
-  end
-
-  def index_errata
-    errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
-    Tire.index Glue::Pulp::Errata.index do
-      create :settings => Glue::Pulp::Errata.index_settings, :mappings => Glue::Pulp::Errata.index_mapping
-      import errata
-    end if !errata.empty?
-  end
-
-  def update_errata_index
-    return #TODO remove when BZ 854260 is fixed
-    # for each of the errata in the repo, unassociate the repo from the errata
-    errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
-    pulp_id = self.pulp_id
-
-    Tire.index Glue::Pulp::Errata.index do
-      create :settings => Glue::Pulp::Errata.index_settings, :mappings => Glue::Pulp::Errata.index_mapping
-
-      import errata do |documents|
-        documents.each do |document|
-          if document["repoids"].length > 1
-            # if there is more than 1 repo associated w/ the errata, remove this repo
-            document["repoids"].delete(pulp_id)
-          end
-        end
-      end
-
-    end if !errata.empty?
-
-    # now, for any errata that only had this repo asscociated with it, remove the errata from the index
-    repoids = "repoids:#{pulp_id}"
-    Tire::Configuration.client.delete "#{Tire::Configuration.url}/katello_errata/_query?q=#{repoids}"
-    Tire.index('katello_errata').refresh
   end
 
   def create_clone to_env
