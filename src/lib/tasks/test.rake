@@ -44,14 +44,26 @@ namespace :minitest do
 end
 
 namespace :minitest do
-  ['models'].each do |task|
+  ['models'].each do |test_type|
+    if ENV['test']
+      Rake::Task["minitest:models"].clear
+      Rake::Task["db:test:prepare"].clear
+      MiniTest::Rails::Tasks::SubTestTask.new(test_type => 'test:prepare') do |t|
+        t.libs.push 'test'
+        t.pattern = "test/#{test_type}/#{ENV['test']}_test.rb"
+      end   
+    end
+  end
+=begin
+  task 'models:authorization' do |task|
     if ENV['test']
       Rake::Task["db:test:prepare"].clear
       Rake::Task["minitest:models"].clear
       MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
         t.libs.push 'test'
-        t.pattern = "test/#{task}/#{ENV['test']}_test.rb"
+        t.pattern = "test/models/authorization/#{ENV['test']}_authorization_test.rb"
       end   
     end
   end
+=end
 end

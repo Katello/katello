@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'minitest_helper'
+require 'test/models/authorization/repository_authorization_test'
 
 
 module RepositoryTestBase
@@ -94,45 +95,6 @@ class RepositoryInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def test_has_filters?
     assert !@fedora_17.has_filters?
-  end
-
-end
-
-
-class RepositoryPermissionTest < MiniTest::Rails::ActiveSupport::TestCase
-  include RepositoryTestBase
-
-  def setup
-    super
-    User.current = users(:admin)
-  end
-
-  def test_readable
-    assert Repository.readable(@library)
-  end
-
-  def test_libraries_content_readable
-    assert Repository.libraries_content_readable(@acme_corporation)
-  end
-
-  def test_content_readable
-    assert Repository.content_readable(@acme_corporation)
-  end
-
-  def test_readable_for_product
-    assert Repository.readable_for_product(@library, @fedora)
-  end
-
-  def test_editable_in_library
-    assert Repository.editable_in_library(@acme_corporation)
-  end
-
-  def test_readable_in_org
-    assert Repository.readable_in_org(@acme_corporation)
-  end
-
-  def test_any_readable_in_org?
-    assert Repository.any_readable_in_org?(@acme_corporation)
   end
 
 end
