@@ -24,6 +24,7 @@ class Repository < ActiveRecord::Base
   include Glue::Pulp::Repo if AppConfig.use_pulp
   include Glue if AppConfig.use_cp || AppConfig.use_pulp
   include Authorization
+  include Authorization::Repository
   include AsyncOrchestration
   include IndexedModel
   include Rails.application.routes.url_helpers #required for GPG key url generation
@@ -50,13 +51,8 @@ class Repository < ActiveRecord::Base
   validates :content_id, :presence => true
   validates :enabled, :repo_disablement => true, :on => [:update]
 
-  def self.in_product(product)
-    joins(:environment_product).where(:environment_products => { :product_id => product })
-  end
-
-  def self.in_environment(env)
-    joins(:environment_product).where(:environment_products => { :environment_id => env })
-  end
+  default_scope :order => 'name ASC'
+  scope :enabled, where(:enabled => true)
 
   def product
     self.environment_product.product
@@ -91,65 +87,6 @@ class Repository < ActiveRecord::Base
     return false unless environment.library?
     filters.count > 0 || product.filters.count > 0
   end
-
-  default_scope :order => 'name ASC'
-
-  scope :enabled, where(:enabled => true)
-
-  scope :readable, lambda { |env|
-    prod_ids = ::Product.readable(env.organization).collect{|p| p.id}
-    if env.contents_readable?
-      joins(:environment_product).where("environment_products.environment_id" => env.id)
-    else
-      #none readable
-      where("1=0")
-    end
-  }
-
-  #NOTE:  this scope returns all library instances of repositories that have content readable
-  scope :libraries_content_readable, lambda {|org|
-    repos = Repository.enabled.content_readable(org)
-    lib_ids = []
-    repos.each{|r|  lib_ids << (r.library_instance_id || r.id)}
-    where(:id=>lib_ids)
-  }
-
-  scope :content_readable, lambda{|org|
-    prod_ids = ::Product.readable(org).collect{|p| p.id}
-    env_ids = KTEnvironment.content_readable(org)
-    joins(:environment_product).where("environment_products.product_id" => prod_ids).
-        where("environment_products.environment_id"=>env_ids)
-  }
-
-  scope :readable_for_product, lambda{|env, prod|
-    if env.contents_readable?
-      joins(:environment_product).where("environment_products.environment_id" => env.id).where(
-                                'environment_products.product_id'=>prod.id)
-    else
-      #none readable
-      where("1=0")
-    end
-  }
-
-  scope :editable_in_library, lambda {|org|
-    joins(:environment_product).
-        where("environment_products.environment_id" => org.library.id).
-        where("environment_products.product_id in (#{Product.editable(org).select("products.id").to_sql})")
-  }
-
-  scope :readable_in_org, lambda {|org, *skip_library|
-    if (skip_library.empty? || skip_library.first.nil?)
-      # 'skip library' not included, so retrieve repos in library in the result
-      joins(:environment_product).where("environment_products.environment_id" =>  KTEnvironment.content_readable(org))
-    else
-      joins(:environment_product).where("environment_products.environment_id" =>  KTEnvironment.content_readable(org).where(:library => false))
-    end
-  }
-
-  def self.any_readable_in_org? org, skip_library = false
-    KTEnvironment.any_contents_readable? org, skip_library
-  end
-
 
   def extended_index_attrs
     {:environment=>self.environment.name, :environment_id=>self.environment.id, :clone_ids=>self.clones.pluck(:pulp_id),
