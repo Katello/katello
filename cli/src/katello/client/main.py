@@ -276,6 +276,7 @@ def setup_admin(katello_cmd):
     if mode == 'katello':
         filter_cmd = filters.Filter()
         filter_cmd.add_command('create', filters.Create())
+        filter_cmd.add_command('update', filters.Update())
         filter_cmd.add_command('list', filters.List())
         filter_cmd.add_command('info', filters.Info())
         filter_cmd.add_command('delete', filters.Delete())
