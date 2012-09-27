@@ -92,7 +92,7 @@ group :test, :development do
   gem "js-routes", :require => 'js_routes'
  
   gem 'minitest-rails'
-  gem 'mocha' 
+  gem 'minitest_tu_shim'
 end
 
 group :profiling do

@@ -147,7 +147,6 @@ class User < ActiveRecord::Base
     # check if not disabled
     return nil if u.disabled
     # check if hash is valid
-    debugger
     return nil unless Password.check(password, u.password)
     u
   end

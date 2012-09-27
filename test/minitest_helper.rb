@@ -13,7 +13,7 @@ def configure_vcr
 
   #def configure_vcr(record_mode=:all)
   VCR.configure do |c|
-    c.cassette_library_dir = 'test/fixtures/vcr_cassettes'
+    c.cassette_library_dir = 'test/vcr_cassettes'
     c.hook_into :webmock
     c.default_cassette_options = { :record => :all } #record_mode } #forcing all requests to Pulp currently
   end
