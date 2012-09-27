@@ -24,6 +24,7 @@ Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}
 Requires:       coreutils
 BuildRequires:  /usr/bin/pod2man
 BuildRequires:  findutils
+BuildRequires:  ruby
 Requires:       rubygem-json
 Requires:       unzip
 
