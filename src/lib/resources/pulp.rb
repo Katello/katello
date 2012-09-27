@@ -300,6 +300,17 @@ module Resources
           return parsed
         end
 
+        def export(repo_id, target_dir, overwrite = false)
+          path = Repository.repository_path + repo_id + "/export/"
+          body = {
+            :target_location => target_dir,
+            :overwrite => overwrite
+          }
+          response = post(path, body.to_json, self.default_headers)
+          body = response.body
+          JSON.parse(body)
+        end
+
         def destroy repo_id
           raise ArgumentError, "repository id has to be specified" unless repo_id
           path = Repository.repository_path + repo_id +"/"
