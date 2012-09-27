@@ -191,9 +191,6 @@ module Resources
           "/pulp/api/v2/repositories/#{(repo_id + '/') if repo_id}"
         end
 
-        def update_publish(repo_id, publish=true)
-          body = post(Repository.repository_path + repo_id +"/update_publish/", JSON.generate(:state => publish), self.default_headers).body
-        end
 
         def sync (repo_id, data = {})
           data[:max_speed] ||= AppConfig.pulp.sync_KBlimit if AppConfig.pulp.sync_KBlimit # set bandwidth limit
@@ -202,15 +199,6 @@ module Resources
           response = post(path, JSON.generate(data), self.default_headers)
           #TODO Properly use both the sync and publish tasks
           JSON.parse(response.body).select{|i| i['tags'].include?("pulp:action:sync")}.first.with_indifferent_access
-        end
-
-
-        def publish repo_id
-          data = {
-              :id=>find(repo_id)['distributors'].first()['id']
-          }
-          response = post(repository_path(repo_id) + "actions/publish/", JSON.generate(data), self.default_headers)
-          JSON.parse(response.body).with_indifferent_access
         end
 
 
