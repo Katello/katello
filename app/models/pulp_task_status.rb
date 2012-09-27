@@ -59,10 +59,12 @@ class PulpTaskStatus < TaskStatus
   end
 
   def self.dump_state(pulp_status, task_status)
+    pulp_status[:state] = Status::FINISHED.to_s if pulp_status[:state] == Status::UNARCHIVED_FINISH.to_s
+
     task_status.attributes = {
       :uuid => pulp_status[:task_id],
       :state => pulp_status[:state] || pulp_status[:result],
-      :start_time => pulp_status[:started],
+      :start_time => pulp_status[:started] || pulp_status[:started],
       :finish_time => pulp_status[:completed],
       :progress => pulp_status,
       :result => pulp_status[:result].nil? ? {:errors => [pulp_status[:exception], pulp_status[:traceback]]} : pulp_status[:result]
