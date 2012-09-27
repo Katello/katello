@@ -598,7 +598,6 @@ Src::Application.routes.draw do
 
     end
 
-    #resources :puppetclasses, :only => [:index]
     resources :ping, :only => [:index]
 
     resources :repositories, :only => [:show, :create, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
@@ -712,6 +711,20 @@ Src::Application.routes.draw do
       # pulp proxy --------------
     match '/consumers/:id/profile/' => 'systems#upload_package_profile', :via => :put
     match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
+
+      # foreman proxy --------------
+    if AppConfig.use_foreman
+      resources :architectures, :except => [:new, :edit]
+      constraints(:id => /[^\/]+/) do
+        resources :domains, :except => [:new, :edit]
+      end
+      resources :config_templates, :except => [:new, :edit] do
+        collection do
+          get :revision
+          get :build_pxe_default
+        end
+      end
+    end
 
     # development / debugging support
     if Rails.env == "development"
