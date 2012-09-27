@@ -288,6 +288,10 @@ KT.common = (function() {
                       //the horizontalDragMaxWidth kills the horizontal scroll bar
                       // (on purpose, since we have ellipsis...)
                       orgbox.jScrollPane({ hideFocus: true, horizontalDragMaxWidth: 0 });
+                      orgbox.bind('jsp-initialised', function(event, isScrollable) {
+                          $('#orgfilter_input').focus();
+                        }
+                      );
                       orgboxapi = orgbox.data('jsp');
                     }
                     $.ajax({
@@ -301,6 +305,9 @@ KT.common = (function() {
                         error: function(data) {
                           orgboxapi.getContentPane().html('<div class="spinner" style="margin-top:3px"></div>');
                           orgboxapi.reinitialise();
+                        },
+                        complete: function() {
+                          orgbox.trigger('jsp-initialised');
                         }
                     });
                 }
