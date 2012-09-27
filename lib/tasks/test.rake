@@ -54,16 +54,4 @@ namespace :minitest do
       end   
     end
   end
-=begin
-  task 'models:authorization' do |task|
-    if ENV['test']
-      Rake::Task["db:test:prepare"].clear
-      Rake::Task["minitest:models"].clear
-      MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
-        t.libs.push 'test'
-        t.pattern = "test/models/authorization/#{ENV['test']}_authorization_test.rb"
-      end   
-    end
-  end
-=end
 end
