@@ -62,11 +62,6 @@ module Glue::Pulp::Repo
     Resources::Pulp::Repository.delete_repo_packages(make_pkg_tuples(repo_pkgs))
   end
 
-  #repo_pkgs = a map with {repo => [package objects to be added]}
-  def self.add_repo_packages repo_pkgs
-    Resources::Pulp::Repository.add_repo_packages(make_pkg_tuples(repo_pkgs))
-  end
-
   def self.make_pkg_tuples repo_pkgs
     package_tuples = []
     repo_pkgs.each do |repo, pkgs|
@@ -76,7 +71,6 @@ module Glue::Pulp::Repo
     end
     package_tuples
   end
-
 
   module InstanceMethods
     def save_repo_orchestration
@@ -120,10 +114,6 @@ module Glue::Pulp::Repo
     pulp_repo_facts.merge(as_json).merge(:sync_state=> sync_state)
   end
 
-  TYPE_YUM = "yum"
-  TYPE_LOCAL = "local"
-
-
   def create_pulp_repo
 
     #if we are in library, no need for an distributor, but need to sync
@@ -152,7 +142,6 @@ module Glue::Pulp::Repo
   end
 
   def promote from_env, to_env
-    filters_to_clone = self.filter_pulp_ids_to_promote from_env, to_env
 
     if self.is_cloned_in?(to_env)
       return clone.sync
@@ -163,16 +152,6 @@ module Glue::Pulp::Repo
       #clone.index_errata
       return clone_events
     end
-  end
-
-  def filter_pulp_ids_to_promote from_env, to_env
-    if from_env.library?
-      filters_to_clone = self.filters + self.product.filters
-      filters_to_clone = filters_to_clone.uniq.collect {|f| f.pulp_id}
-    else
-      filters_to_clone = []
-    end
-    filters_to_clone
   end
 
   def populate_from repos_map
@@ -215,10 +194,6 @@ module Glue::Pulp::Repo
   def destroy_repo_orchestration
     pre_queue.create(:name => "remove product content : #{self.name}", :priority => 2, :action => [self, :del_content])
     pre_queue.create(:name => "delete pulp repo : #{self.name}",       :priority => 3, :action => [self, :destroy_repo])
-  end
-
-  def get_params
-    return @params.clone
   end
 
   def packages
@@ -316,15 +291,15 @@ module Glue::Pulp::Repo
   end
 
   def find_packages_by_name name
-    Resources::Pulp::Repository.packages_by_nvre self.pulp_id, name
+    Runcible::Extensions::Repository.packages_by_nvre self.pulp_id, name
   end
 
   def find_packages_by_nvre name, version, release, epoch
-    Resources::Pulp::Repository.packages_by_nvre self.pulp_id, name, version, release, epoch
+    Runcible::Extensions::Repository.packages_by_nvre self.pulp_id, name, version, release, epoch
   end
 
   def find_latest_packages_by_name name
-    Katello::PackageUtils.find_latest_packages(Resources::Pulp::Repository.packages_by_nvre(self.pulp_id, name))
+    Katello::PackageUtils.find_latest_packages(Runcible::Extensions::Repository.packages_by_nvre(self.pulp_id, name))
   end
 
   def has_erratum? id
@@ -335,7 +310,12 @@ module Glue::Pulp::Repo
   end
 
   def sync(options = { })
-    pulp_task = Resources::Pulp::Repository.sync(self.pulp_id)
+    sync_options= {}
+    sync_options[:max_speed] ||= AppConfig.pulp.sync_KBlimit if AppConfig.pulp.sync_KBlimit # set bandwidth limit
+    sync_options[:num_threads] ||= AppConfig.pulp.sync_threads if AppConfig.pulp.sync_threads # set threads per sync
+    pulp_tasks = Runcible::Resources::Repository.sync(self.pulp_id, sync_options)
+    pulp_task = pulp_tasks.select{|i| i['tags'].include?("pulp:action:sync")}.first.with_indifferent_access
+
     task      = PulpSyncStatus.using_pulp_task(pulp_task) do |t|
       t.organization         = self.environment.organization
       t.parameters ||= {}
@@ -537,7 +517,7 @@ module Glue::Pulp::Repo
 
   def _get_most_recent_sync_status()
     begin
-      history = Runcible::Resources::Repository.sync_status(pulp_id)
+      history = Runcible::Extensions::Repository.sync_status(pulp_id)
 
       if history.nil? or history.empty?
         history = Rucible::Resources::Repository.sync_history(pulp_id)
