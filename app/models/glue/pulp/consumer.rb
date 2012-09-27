@@ -19,9 +19,9 @@ module Glue::Pulp::Consumer
       before_destroy :destroy_pulp_orchestration
       after_rollback :rollback_on_pulp_create, :on => :create
 
-      lazy_accessor :pulp_facts, :initializer => lambda { Resources::Pulp::Consumer.find(uuid) }
-      lazy_accessor :package_profile, :initializer => lambda { Resources::Pulp::Consumer.installed_packages(uuid) }
-      lazy_accessor :simple_packages, :initializer => lambda { Resources::Pulp::Consumer.installed_packages(uuid).
+      lazy_accessor :pulp_facts, :initializer => lambda { Runcible::Resources::Consumer.retrieve(uuid) }
+      lazy_accessor :package_profile, :initializer => lambda { Runcible::Resources::Consumer.profile(uuid, 'rpm') }
+      lazy_accessor :simple_packages, :initializer => lambda { Runcible::Resources::Consumer.profile(uuid, 'rpm').
                                                               collect{|pack| Glue::Pulp::SimplePackage.new(pack)} }
       lazy_accessor :errata, :initializer => lambda { Resources::Pulp::Consumer.errata(uuid).
                                                               collect{|errata| Glue::Pulp::Errata.new(errata)} }
@@ -67,7 +67,7 @@ module Glue::Pulp::Consumer
 
     def del_pulp_consumer
       Rails.logger.debug "Deleting consumer in pulp: #{self.name}"
-      Resources::Pulp::Consumer.destroy(self.uuid)
+      Runcible::Resources::Consumer.delete(self.uuid)
     rescue => e
       Rails.logger.error "Failed to delete pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -85,7 +85,7 @@ module Glue::Pulp::Consumer
 
     def set_pulp_consumer
       Rails.logger.debug "Creating a consumer in pulp: #{self.name}"
-      return Resources::Pulp::Consumer.create(self.organization.cp_key, self.uuid, self.description)
+      return Runcible::Resources::Consumer.create(self.uuid, {:display_name => self.name})
     rescue => e
       Rails.logger.error "Failed to create pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -95,7 +95,7 @@ module Glue::Pulp::Consumer
       return true if @changed_attributes.empty?
 
       Rails.logger.debug "Updating consumer in pulp: #{@old.name}"
-      Resources::Pulp::Consumer.update(self.organization.cp_key, self.uuid, self.description)
+      Runcible::Resources::Consumer.update(self.uuid, {"delta" => {:display_name => self.name}})
     rescue => e
       Rails.logger.error "Failed to update pulp consumer #{@old.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -103,7 +103,7 @@ module Glue::Pulp::Consumer
     
     def upload_package_profile profile
       Rails.logger.debug "Uploading package profile for consumer #{self.name}"
-      Resources::Pulp::Consumer.upload_package_profile(self.uuid, profile)
+      Runcible::Resources::Consumer.upload_profile(self.uuid, 'rpm', profile)
     rescue => e
       Rails.logger.error "Failed to upload package profile to pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e  
