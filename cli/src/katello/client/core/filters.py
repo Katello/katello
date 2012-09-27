@@ -105,9 +105,9 @@ class Update(FilterAction):
         name = self.get_option('name')
         new_name = self.get_option('new_name')
 
-        filter = self.api.update(org, name, new_name)
+        filt = self.api.update(org, name, new_name)
 
-        print _("Successfully updated filter [ %s ]") % filter["name"]
+        print _("Successfully updated filter [ %s ]") % filt["name"]
         return os.EX_OK
 
 class Delete(FilterAction):
