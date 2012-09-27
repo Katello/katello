@@ -137,9 +137,7 @@ module Glue::Pulp::Repo
       importer = Runcible::Extensions::YumImporter.new
     end
 
-    distributors = [Runcible::Extensions::YumDistributor.new(self.relative_path, true, false,
-      {:protected=>true, :generate_metadata=>false, :id=>self.pulp_id,
-      :auto_publish=>!self.environment.library?})]
+    distributors = self.enabled? ? [generate_distributor] : []
 
     Runcible::Extensions::Repository.create_with_importer_and_distributors(self.pulp_id,
         importer,
@@ -147,7 +145,11 @@ module Glue::Pulp::Repo
         {:display_name=>self.name})
   end
 
-
+  def generate_distributor
+    Runcible::Extensions::YumDistributor.new(self.relative_path, true, false,
+          {:protected=>true, :generate_metadata=>false, :id=>self.pulp_id,
+          :auto_publish=>!self.environment.library?})
+  end
 
   def promote from_env, to_env
     filters_to_clone = self.filter_pulp_ids_to_promote from_env, to_env
@@ -177,26 +179,6 @@ module Glue::Pulp::Repo
     found = repos_map[self.pulp_id]
     prepopulate(found) if found
     !found.nil?
-  end
-
-  def enable_repo
-    if !self.enabled
-      # publish and enable the repo
-      repo = self.readonly? ? Repository.find(self.id) : self
-      Resources::Pulp::Repository.update_publish(repo.pulp_id, true)
-      repo.enabled = true
-      repo.save!
-    end
-  end
-
-  def disable_repo
-    if self.enabled
-      # unpublish and disable the repo
-      repo = self.readonly? ? Repository.find(self.id) : self
-      Resources::Pulp::Repository.update_publish(repo.pulp_id, false)
-      repo.enabled = false
-      repo.save!
-    end
   end
 
   def destroy_repo
@@ -508,7 +490,7 @@ module Glue::Pulp::Repo
   end
 
   def generate_metadata
-    ::Resources::Pulp::Repository.publish(self.pulp_id)
+    Runcible::Extensions::Repository.publish(self.pulp_id)
   end
 
   # Convert array of Repo objects to Ruby Hash in the form of repo.id => repo_object for fast searches.
