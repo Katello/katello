@@ -501,4 +501,4 @@ def get_term_width():
 
 def unicode_len(text):
     """ return byte lenght of unicode character """
-    return sum(1+(unicodedata.east_asian_width(c) in "WF") for c in text)
+    return sum(1+(unicodedata.east_asian_width(c) in "WF") for c in u_str(text))
