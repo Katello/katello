@@ -86,7 +86,6 @@ group :test, :development do
   gem 'ruby_parser'
 
   #needed to generate routes in javascript
-  
   gem "js-routes", :require => 'js_routes'
 end
 
