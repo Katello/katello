@@ -31,6 +31,12 @@ class FilterAPI(KatelloAPI):
         path = "/api/organizations/%s/filters" % u_str(org)
         return self.server.POST(path, data)[1]
 
+    def update(self, org, filter_id, new_name):
+        data = {"name": new_name}
+        path = "/api/organizations/%s/filters/%s" % (u_str(org),
+            u_str(filter_id))
+        return self.server.PUT(path, data)[1]
+
     def delete(self, org, name):
         path = "/api/organizations/%s/filters/%s" % (u_str(org), u_str(name))
         return self.server.DELETE(path)[1]

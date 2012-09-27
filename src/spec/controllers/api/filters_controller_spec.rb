@@ -91,6 +91,19 @@ describe Api::FiltersController, :katello => true do
 
   context "update filter" do
     before(:each) do
+      Filter.stub!(:where).and_return([@filter])
+    end
+
+    it "should update the filter name" do
+      new_name = "no_lambdas"
+      put :update, :organization_id => @organization.label,
+        :id => @filter.name, :name => new_name
+      @filter.reload.name.should eql(new_name)
+    end
+  end
+
+  context "update product filters" do
+    before(:each) do
       Product.stub!(:find_by_cp_id).and_return(@product)
       Filter.stub!(:where).and_return([@filter])
     end
