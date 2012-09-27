@@ -260,6 +260,7 @@ Requires:        rubygem(ruby_parser)
 Requires:        rubygem(js-routes)
 Requires:        rubygem(newrelic_rpm)
 Requires:        rubygem(logical-insight)
+Requires:        rubygem(rails-dev-boost)
 
 %description devel
 Rake tasks and dependecies for Katello developers

@@ -86,7 +86,7 @@ group :test, :development do
   gem 'ruby_parser'
 
   #needed to generate routes in javascript
-  gem 'rails-dev-boost', :require => 'rails_development_boost'
+  
   gem "js-routes", :require => 'js_routes'
 end
 
@@ -108,6 +108,10 @@ group :development do
   # profiler
   gem 'newrelic_rpm'
   gem 'logical-insight'
+end
+
+group :devboost do
+  gem 'rails-dev-boost', :require => 'rails_development_boost'
 end
 
 group :test do
