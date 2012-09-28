@@ -731,7 +731,9 @@ Src::Application.routes.draw do
   # end '/api' namespace
   end
 
+  match 'about', :to => "application_info#about", :as => "about"
 
   #Last route in routes.rb - throws routing error for everything not handled
   match '*a', :to => 'errors#routing'
+
 end
