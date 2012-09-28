@@ -17,6 +17,9 @@ $(document).ready(function() {
 
     KT.panel.set_expand_cb(function() {
         KT.object.label.initialize();
+        if ($('#providers').length > 0) {
+            notices.checkNotices();
+        }
     });
 
   $("#redhatSubscriptionTable").treeTable({
