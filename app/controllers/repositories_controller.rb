@@ -56,6 +56,8 @@ class RepositoriesController < ApplicationController
 
   def create
     repo_params = params[:repo]
+    repo_params[:label], label_assigned = generate_label(repo_params[:name], _('repository')) if repo_params[:label].blank?
+
     raise URI::InvalidURIError.new _('Invalid Url') if !kurl_valid?(repo_params[:feed])
     gpg = GpgKey.readable(current_organization).find(repo_params[:gpg_key]) if repo_params[:gpg_key] and repo_params[:gpg_key] != ""
     # Bundle these into one call, perhaps move to Provider
@@ -64,6 +66,8 @@ class RepositoriesController < ApplicationController
     @product.save!
 
     notify.success _("Repository '%s' created.") % repo_params[:name]
+    notify.message label_assigned unless label_assigned.blank?
+
     render :nothing => true
   rescue Errors::ConflictException, URI::InvalidURIError => e
     notify.error e.message
