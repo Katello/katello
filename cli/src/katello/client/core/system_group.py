@@ -16,12 +16,13 @@ import os
 import sys
 
 from katello.client.cli.base import opt_parser_add_org
-from katello.client.core.base import BaseAction, Command
+from katello.client.core.base import BaseAction, Command, ImportAction
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_system_group
 from katello.client.core.utils import test_record
 from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemGroupAsyncJob
 from katello.client.utils.printer import batch_add_columns
+from katello.client.server import ServerRequestError
 
 
 # base system group action --------------------------------------------------------
@@ -300,6 +301,43 @@ class Delete(SystemGroupAction):
             return os.EX_OK
         else:
             return os.EX_DATAERR
+
+# ------------------------------------------------------------------------------
+class ImportSystemGroups(ImportAction):
+
+    description = _('import a set of system groups into the katello server')
+
+    def __init__(self):
+        super(ImportSystemGroups, self).__init__()
+        self.api = SystemGroupAPI()
+
+    def _output_filename(self):
+        return "system_groups"
+
+    def _do_import(self):
+        for row in self.import_file:
+            name = row['name']
+            system_group = None
+            try:
+                system_group = self.api.system_group_by_name(row['org_name'], name)
+            except ServerRequestError, e:
+                if e.return_code == 404:
+                    pass
+                else:
+                    raise e
+            try:
+                if system_group:
+                    self.api.update(row['org_name'], system_group['id'],
+                        row['name'], row['description'], row['max_systems'])
+                    self._add_stat("system groups updated")
+                else:
+                    self.api.create(row['org_name'], row['name'], row['description'],
+                        row['max_systems'])
+                    self._add_stat("system groups created")
+            except ServerRequestError, e:
+                self._add_error("Skipping system group %s with exception: %s" % (name, e))
+            except Exception, e:
+                self._add_error("Skipping system group %s with exception: %s" % (name, e))
 
 
 class Systems(SystemGroupAction):

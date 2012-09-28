@@ -590,3 +590,12 @@ def slice_dict(orig_dict, *key_list, **kw_args):
         return dict((key, orig_dict[key]) for key in key_list if key in orig_dict)
     else:
         return dict((key, orig_dict[key]) for key in key_list if key in orig_dict and orig_dict[key] is not None)
+
+def to_array(item):
+    return_item = item
+    if isinstance(return_item, basestring):
+        if len(return_item) > 0:
+            return_item = return_item.split(",")
+        else:
+            return_item = []
+    return return_item

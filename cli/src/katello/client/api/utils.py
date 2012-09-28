@@ -58,7 +58,7 @@ def get_organization(orgName):
     return org
 
 
-def get_environment(orgName, envName=None):
+def get_environment(orgName, envName=None, raiseError=True):
     environment_api = EnvironmentAPI()
 
     if envName == None:
@@ -67,7 +67,7 @@ def get_environment(orgName, envName=None):
     else:
         env = environment_api.environment_by_name(orgName, envName)
 
-    if env == None:
+    if (env == None) and raiseError:
         raise ApiDataError(_("Could not find environment [ %s ] within organization [ %s ]") %
             (envName, orgName))
     return env
