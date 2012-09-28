@@ -17,24 +17,28 @@ KT.object = KT.object || {};
 // name and upon completion, we want to retrieve a 'default' label from
 // the server generated off of that name.
 KT.object.label = (function(){
-    var create_button,
-        initial_name_value,
+    var initial_name_value,
+        retrieve_label = true,
 
         initialize = function(){
+            initial_name_value = "";
+            retrieve_label = true;
+
             if ($(".label_input").length === 0){
                 return;
             }
-            create_button = $(".create_button");
 
             disable_inputs(undefined);
 
-            $('.name_input').bind('focusout', function(){
+            $('.create_button').mousedown(function() {retrieve_label = false;});
+
+            $('.name_input').focusout(function(event){
                 var name_input = $(this),
                     name = name_input.val(),
                     label = $(this).closest('fieldset').next('fieldset'),
                     label_input = label.find('input.label_input');
 
-                if ((name.length > 0) && (name !== initial_name_value)) {
+                if ((retrieve_label === true) && (name.length > 0) && (name !== initial_name_value)) {
                     // user changed the name so go fetch the label from the server
                     show_label(label, false);
 
@@ -82,7 +86,6 @@ KT.object.label = (function(){
             // disable the label input associated with the current name
             current_name_input.closest('fieldset').next('fieldset').find('input.label_input').attr("disabled", "disabled");
         }
-        create_button.attr("disabled", "disabled");
     },
     enable_inputs = function(current_name_input) {
         if (current_name_input === undefined) {
@@ -92,7 +95,6 @@ KT.object.label = (function(){
             // enable the label input associated with the current name
             current_name_input.closest('fieldset').next('fieldset').find('input.label_input').removeAttr("disabled");
         }
-        create_button.removeAttr("disabled");
     };
 
     return {
