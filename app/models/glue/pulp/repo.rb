@@ -24,7 +24,7 @@ module Glue::Pulp::Repo
       lazy_accessor :pulp_repo_facts,
                     :initializer => lambda {
                       if pulp_id
-                        Runcible::Resources::Repository.retrieve(pulp_id)
+                        Runcible::Extensions::Repository.retrieve(pulp_id)
                       end
                     }
       lazy_accessor :importers, :distributors,
@@ -163,7 +163,7 @@ module Glue::Pulp::Repo
   def destroy_repo
     self.update_packages_index
     self.update_errata_index
-    Runcible::Resources::Repository.delete(self.pulp_id)
+    Runcible::Extensions::Repository.delete(self.pulp_id)
     true
   end
 
@@ -313,7 +313,7 @@ module Glue::Pulp::Repo
     sync_options= {}
     sync_options[:max_speed] ||= AppConfig.pulp.sync_KBlimit if AppConfig.pulp.sync_KBlimit # set bandwidth limit
     sync_options[:num_threads] ||= AppConfig.pulp.sync_threads if AppConfig.pulp.sync_threads # set threads per sync
-    pulp_tasks = Runcible::Resources::Repository.sync(self.pulp_id, sync_options)
+    pulp_tasks = Runcible::Extensions::Repository.sync(self.pulp_id, sync_options)
     pulp_task = pulp_tasks.select{|i| i['tags'].include?("pulp:action:sync")}.first.with_indifferent_access
 
     task      = PulpSyncStatus.using_pulp_task(pulp_task) do |t|
@@ -520,10 +520,10 @@ module Glue::Pulp::Repo
       history = Runcible::Extensions::Repository.sync_status(pulp_id)
 
       if history.nil? or history.empty?
-        history = Rucible::Resources::Repository.sync_history(pulp_id)
+        history = Extensionss::Repository.sync_history(pulp_id)
       end
     rescue Exception=>e
-        history = Runcible::Resources::Repository.sync_history(pulp_id)
+        history = Runcible::Extensions::Repository.sync_history(pulp_id)
     end
 
     if history.nil? or history.empty?
