@@ -40,7 +40,7 @@ test_success "changeset create" changeset create --org="$MANIFEST_ORG" --environ
 test_success "changeset add product" changeset update  --org="$MANIFEST_ORG" --environment="$MANIFEST_ENV" --name="$CS1_NAME" --add_product="$MANIFEST_EPROD"
 check_delayed_jobs_running
 test_success "changeset promote" changeset promote --org="$MANIFEST_ORG" --environment="$MANIFEST_ENV" --name="$CS1_NAME"
-POOLID=$($CMD org subscriptions --name "$MANIFEST_ORG" -g -d ";" | grep "$MANIFEST_PROD_CP" | awk -F ' *; *' '{print $4}') # grab a pool for CP
+POOLID=$($CMD org subscriptions --name "$MANIFEST_ORG" -g -d ";" --noheading | grep "$MANIFEST_PROD_CP" | awk -F ';' '{print $3}') # grab a pool for CP
 
 test_success "system register with SLA" system register --name="$HOST" --org="$MANIFEST_ORG" --environment="$MANIFEST_ENV" --servicelevel="$SLA"
 test_success "system update SLA" system update --name="$HOST" --org="$MANIFEST_ORG" --servicelevel="$SLA"
