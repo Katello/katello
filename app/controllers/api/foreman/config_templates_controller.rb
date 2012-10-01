@@ -10,20 +10,25 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class Api::ConfigTemplatesController < Api::ApiController
+class Api::Foreman::ConfigTemplatesController < Api::Foreman::SimpleCrudController
 
-  skip_before_filter :authorize # TODO
+  def rules
+    superadmin_test = lambda { current_user.has_superadmin_role? }
+    super.merge :revision => superadmin_test, :build_pxe_default => superadmin_test
+  end
+
+  self.foreman_model = ::Foreman::ConfigTemplate
 
   api :GET, "/config_templates/", "List templates"
   param :search, String, :desc => "filter results"
   param :order, String, :desc => "sort results"
   def index
-    render :json => Foreman::ConfigTemplate.all(params.slice('order', 'search'))
+    super params.slice('order', 'search')
   end
 
   api :GET, "/config_templates/:id", "Show template details"
   def show
-    render :json => Foreman::ConfigTemplate.find!(params[:id])
+    super
   end
 
   api :POST, "/config_templates/", "Create a template"
@@ -36,10 +41,7 @@ class Api::ConfigTemplatesController < Api::ApiController
     param 'template_combinations_attributes', Array, :desc => "Array of template combinations (hostgroup_id, environment_id)"
   end
   def create
-    resource = Foreman::ConfigTemplate.new(params[:config_template])
-    if resource.save!
-      render :json => resource
-    end
+    super
   end
 
   api :PUT, "/config_templates/:id", "Update a template"
@@ -52,28 +54,22 @@ class Api::ConfigTemplatesController < Api::ApiController
     param 'template_combinations_attributes', Array, :desc => "Array of template combinations (hostgroup_id, environment_id)"
   end
   def update
-    resource = Foreman::ConfigTemplate.find!(params[:id])
-    resource.attributes = params[:config_template]
-    if resource.save!
-      render :json => resource
-    end
+    super
   end
 
   api :DELETE, "/config_templates/:id", "Delete a template"
   def destroy
-    if Foreman::ConfigTemplate.delete!(params[:id])
-      render :nothing => true
-    end
+    super
   end
 
   api :GET, "/config_templates/revision"
   param :version, String, :desc => "template version"
   def revision
-    render :json => Foreman::ConfigTemplate.revision(params[:version])
+    render :json => foreman_model.revision(params[:version])
   end
 
   api :GET, "/config_templates/build_pxe_default", "Change the default PXE menu on all configured TFTP servers"
   def build_pxe_default
-    render :json => Foreman::ConfigTemplate.build_pxe_default
+    render :json => foreman_model.build_pxe_default
   end
 end
