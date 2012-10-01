@@ -1,4 +1,4 @@
-class Resources::ForemanModel < Resource::AbstractModel
+class Resources::ForemanModel < Resources::AbstractModel
 
   def self.resource
     super or Resources::Foreman.const_get to_s.demodulize
@@ -11,6 +11,7 @@ class Resources::ForemanModel < Resource::AbstractModel
   end
 
   def self.header
+    raise 'current user is not set' unless (user = get_current_user)
     super.merge :foreman_user => user.username
   end
 
