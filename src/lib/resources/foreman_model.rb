@@ -21,6 +21,10 @@ class Resources::ForemanModel < Resources::AbstractModel
     hash[resource_name]['errors']
   end
 
+  def self.parse_attributes(data)
+    data[resource_name]
+  end
+
 end
 
 

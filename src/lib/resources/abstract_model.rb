@@ -83,6 +83,10 @@ class Resources::AbstractModel
     raise NotImplementedError
   end
 
+  def self.parse_attributes(data)
+    raise NotImplementedError
+  end
+
   public
 
 
@@ -171,8 +175,8 @@ class Resources::AbstractModel
   end
 
   def self.find!(id)
-    attributes = resource.show(id, nil, header).first[resource_name]
-    new(clean_attribute_hash(attributes)).tap do |o|
+    data, _ = resource.show(id, nil, header)
+    new(clean_attribute_hash(parse_attributes(data))).tap do |o|
       o.send :set_as_persisted
     end
   rescue RestClient::ResourceNotFound => e
@@ -186,8 +190,9 @@ class Resources::AbstractModel
   end
 
   def self.all(params = nil)
-    resource.index(params, header).first.map do |data|
-      new(clean_attribute_hash(data[resource_name])).tap do |o|
+    items, _ = resource.index(params, header)
+    items.map do |item|
+      new(clean_attribute_hash(parse_attributes(item))).tap do |o|
         o.send :set_as_persisted
       end
     end
