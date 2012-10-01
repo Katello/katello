@@ -23,6 +23,7 @@ class TaskStatus < ActiveRecord::Base
     RUNNING = :running
     ERROR = :failed
     FINISHED = :success
+    UNARCHIVED_FINISH = :finished
     CANCELED = :canceled
     TIMED_OUT = :timed_out
   end
@@ -328,8 +329,8 @@ class TaskStatus < ActiveRecord::Base
 
   def self.refresh(ids)
     unless ids.nil? || ids.empty?
-      uuids = TaskStatus.select(:uuid).where(:id => ids).collect{|t| t.uuid}
-      ret = Resources::Pulp::Task.find(uuids)
+      uuids = TaskStatus.where(:id=>ids).pluck(:uuid)
+      ret = Runcible::Resources::Task.poll_all(uuids)
       ret.each do |pulp_task|
         PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by_uuid(pulp_task["id"]))
       end
