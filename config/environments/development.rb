@@ -27,5 +27,6 @@ Src::Application.configure do
   config.autoload_paths += %W(#{Rails.root}/../../runcible/lib)
 
   ActiveSupport::Dependencies.explicitly_unloadable_constants << "::Runcible::Resources"
+  ActiveSupport::Dependencies.explicitly_unloadable_constants << "::Runcible::Extensions"
 
 end
