@@ -93,7 +93,7 @@ class Api::ApiController < ActionController::Base
 
   def find_optional_organization
     if params[:organization_id]
-      @organization = Organization.first(:conditions => {:label => params[:organization_id].to_s.tr(' ', '_')})
+      @organization = Organization.first(:conditions => {:name => params[:organization_id]})
       raise HttpErrors::NotFound, _("Couldn't find organization '#{params[:organization_id]}'") if @organization.nil?
       @organization
     end
