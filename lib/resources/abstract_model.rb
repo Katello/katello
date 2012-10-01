@@ -171,7 +171,8 @@ class Resources::AbstractModel
   end
 
   def self.find!(id)
-    new(clean_attribute_hash(resource.show(id, nil, header).first[resource_name])).tap do |o|
+    attributes = resource.show(id, nil, header).first[resource_name]
+    new(clean_attribute_hash(attributes)).tap do |o|
       o.send :set_as_persisted
     end
   rescue RestClient::ResourceNotFound => e
