@@ -44,7 +44,7 @@ describe Resources::ForemanModel do
     end
 
     describe 'when persisted' do
-      before { subject.send :persist! }
+      before { subject.send :set_as_persisted }
 
       it { should be_persisted }
       it 'should update' do
@@ -88,7 +88,7 @@ describe Resources::ForemanModel do
       before do
         resource.
             should_receive(:show).
-            with(3, nil, klass.foreman_header).
+            with(3, nil, klass.header).
             and_return [{ 'a_child_klass' => { 'name' => subject.name, 'id' => 3, 'other' => 'data' } },
                         mock('response')]
       end
@@ -106,7 +106,7 @@ describe Resources::ForemanModel do
       before do
         resource.
             should_receive(:index).
-            with(params, klass.foreman_header).
+            with(params, klass.header).
             and_return [[{ 'a_child_klass' => { 'name' => subject.name, 'id' => 3, 'other' => 'data' } },
                          { 'a_child_klass' => { 'name' => subject.name, 'id' => 3, 'other' => 'data' } }],
                         mock('response')]
@@ -159,7 +159,7 @@ describe Resources::ForemanModel do
                 should_receive(:create).
                 any_number_of_times.
                 with({ 'a_child_klass' => { 'name' => subject.name, :id_name => subject.id_name } },
-                     klass.foreman_header).
+                     klass.header).
                 and_return [{ 'a_child_klass' => { 'name' => subject.name, 'id' => 3 } }, mock('response')]
           end
 
@@ -179,12 +179,12 @@ describe Resources::ForemanModel do
           before do
             subject.id   = 3
             subject.name = 'Invisible man'
-            subject.send :persist!
+            subject.send :set_as_persisted
             resource.
                 should_receive(:update).
                 any_number_of_times.
                 with(3, { 'a_child_klass' => { 'name' => subject.name, :id_name => subject.id_name } },
-                     klass.foreman_header).
+                     klass.header).
                 and_return [{ 'a_child_klass' => { 'name' => subject.name, 'id' => 3 } }, mock('response')]
           end
 
@@ -205,7 +205,7 @@ describe Resources::ForemanModel do
             before do
               resource.
                   should_receive(:destroy).
-                  with(3, nil, klass.foreman_header).
+                  with(3, nil, klass.header).
                   and_return [{ 'a_child_klass' => { 'name' => subject.name, 'id' => 3 } }, mock('response')]
             end
 
