@@ -62,16 +62,17 @@ class katello::params {
   $use_foreman     = true
   $install_foreman = false
   $foreman_start_port         = "5500"
-  $foreman_thin_process_count = katello_process_count(0.4)
+  $foreman_thin_process_count = katello_config_value('foreman_web_workers', katello_process_count(0.4))
 
   # apache settings
   $thin_start_port = "5000"
   $thin_log        = "$log_base/thin-log.log"
   if $use_foreman {
-    $process_count   = katello_process_count(0.6)
+    $default_process_count   = katello_process_count(0.6)
   } else {
-    $process_count   = katello_process_count(1)
+    $default_process_count   = katello_process_count(1)
   }
+  $process_count = katello_config_value('katello_web_workers', $default_process_count)
 
   # sysconfig settings
   $job_workers = katello_config_value('job_workers')

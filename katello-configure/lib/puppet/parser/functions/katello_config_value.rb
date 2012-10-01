@@ -6,6 +6,6 @@ end
 
 module Puppet::Parser::Functions
   newfunction(:katello_config_value, :type => :rvalue) do |args|
-    return Util::Puppet::config_value(args[0])
+    return Util::Puppet::config_value(args[0]) || args[1]
   end
 end
