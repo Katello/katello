@@ -64,7 +64,6 @@ module Glue::Pulp::Repos
     })
     new_content.create
     add_content new_content
-    repo.environmental_instances.each { |e| e.environment.update_cp_content }
     new_content.content
   end
 
