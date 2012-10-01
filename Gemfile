@@ -42,8 +42,14 @@ gem 'acts_as_reportable', '>=1.1.1'
 
 gem "apipie-rails"
 
+
 # Pulp API bindings
-gem "runcible", :path => "../../runcible"
+lib_path = "../../runcible"
+if File.exist?(lib_path)
+  gem 'runcible', :path => lib_path
+else
+  gem 'runcible'
+end
 
 # Use unicorn as the web server
 # gem 'unicorn'

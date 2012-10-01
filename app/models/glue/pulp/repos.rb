@@ -103,7 +103,7 @@ module Glue::Pulp::Repos
 
 
   def self.prepopulate! products, environment, repos=[]
-    items = Resources::Pulp::Repository.find_all(Repository.in_environment(environment).pluck(:pulp_id))
+    items = Runcible::Extensions::Repository.search_by_repository_ids(Repository.in_environment(environment).pluck(:pulp_id))
     full_repos = {}
     items.each {|item| full_repos[item["id"]] = item }
 
