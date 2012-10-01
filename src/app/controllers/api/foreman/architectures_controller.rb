@@ -10,58 +10,48 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class Api::ArchitecturesController < Api::ApiController
+class Api::Foreman::ArchitecturesController < Api::Foreman::SimpleCrudController
 
-  skip_before_filter :authorize # TODO
-
-  resource_description do 
+  resource_description do
     description <<-DOC
       The Architectures API is available only if support for Foreman is installed.
     DOC
   end
 
+  self.foreman_model = ::Foreman::Architecture
 
   api :GET, "/architectures", "Get list of architectures available in Foreman"
   def index
-    render :json => Foreman::Architecture.all
+    super
   end
 
   api :GET, "/architectures/:id", "Show an architecture"
   param :id, String, "architecture name"
   def show
-    render :json => Foreman::Architecture.find!(params[:id])
+    super
   end
 
   api :POST, "/architecture", "Create new architecture in Foreman"
-  param :architecture, Hash, :desc => "architecture info" do 
+  param :architecture, Hash, :desc => "architecture info" do
     param :name, String, "architecture name"
   end
   def create
-    resource = Foreman::Architecture.new(params[:architecture])
-    if resource.save!
-      render :json => resource
-    end
+    super
   end
 
   api :PUT, "/architectures/:id", "Update an architecture record in Foreman"
   param :id, String, "architecture name"
-  param :architecture, Hash, :desc => "architecture info" do 
+  param :architecture, Hash, :desc => "architecture info" do
     param :name, String, "architecture name"
   end
   def update
-    resource = Foreman::Architecture.find!(params[:id])
-    resource.attributes = params[:architecture]
-    if resource.save!
-      render :json => resource
-    end
+    super
   end
 
   api :DELETE, "/architectures/:id", "Remove an architecture from Foreman"
   param :id, String, "architecture name"
   def destroy
-    if Foreman::Architecture.delete!(params[:id])
-      render :nothing => true
-    end
+    super
   end
 end
 
