@@ -4,6 +4,6 @@ module Puppet::Parser::Functions
   newfunction(:katello_pulp_url, :type => :rvalue) do |args|
     host = lookupvar("::fqdn")
     host = "localhost" if host.nil? || host.empty?
-    "https://#{host}/pulp/api"
+    "https://#{host}/pulp/api/v2/"
   end
 end

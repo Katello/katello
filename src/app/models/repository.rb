@@ -254,37 +254,6 @@ class Repository < ActiveRecord::Base
     Tire.index('katello_errata').refresh
   end
 
-  def create_clone to_env
-    library = self.environment.library? ? self : self.library_instance
-    raise _("Cannot clone repository from #{self.environment.name} to #{to_env.name}.  They are not sequential.") if to_env.prior != self.environment
-    raise _("Repository has already been promoted to #{to_env}") if Repository.where(:library_instance_id=>library.id).in_environment(to_env).count > 0
-
-    key = EnvironmentProduct.find_or_create(to_env, self.product)
-    clone = Repository.new(:environment_product => key,
-                           :cp_label => self.cp_label,
-                           :library_instance=>library,
-                           :name=>self.name,
-                           :arch=>self.arch,
-                           :major=>self.major,
-                           :minor=>self.minor,
-                           :enable=>self.enabled,
-                           :content_id=>self.content_id
-                           )
-    clone.pulp_id = clone.clone_id(to_env)
-    clone.relative_path = Glue::Pulp::Repos.clone_repo_path(self, to_env)
-    clone.save!
-    self.clone_contents(clone) #return clone task
-  end
-
-  def clone_contents to_repo
-    filtered = to_repo.applicable_filters.collect{|f| f.package_list}.flatten
-    events = []
-    events << Resources::Pulp::Repository.package_copy(self.pulp_id, to_repo.pulp_id, nil, filtered)
-    events << Resources::Pulp::Repository.errata_copy(self.pulp_id, to_repo.pulp_id)
-    events << Resources::Pulp::Repository.distribution_copy(self.pulp_id, to_repo.pulp_id)
-    events
-  end
-
   def clones
     lib_id = self.library_instance_id || self.id
     Repository.in_environment(self.environment.successors).where(:library_instance_id=>lib_id)
