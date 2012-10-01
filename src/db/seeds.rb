@@ -34,13 +34,20 @@ reader_role.update_attributes(:locked => true)
 # create the super admin if none exist - it must be created before any statement in the seed.rb script
 User.current = user_admin = User.find_by_username('admin')
 unless user_admin
-  user_admin = User.new(
-  :roles => [ superadmin_role ],
-  :username => first_user_name,
-  :password => first_user_password,
-  :email => first_user_email)
+  user_admin   = User.new(
+      :roles    => [superadmin_role],
+      :username => first_user_name,
+      :password => first_user_password,
+      :email    => first_user_email)
   User.current = user_admin
-  user_admin.save!
+  if AppConfig.use_foreman
+    foreman_admin_user    =
+        ::Foreman::User.all.find { |u| u.login == 'admin' } || raise('could not find foreman-admin-user')
+    user_admin.foreman_id = foreman_admin_user.id
+    user_admin.disable_foreman_orchestration { |admin| admin.save! }
+  else
+    user_admin.save!
+  end
 end
 raise "Unable to create admin user: #{format_errors user_admin}" if user_admin.nil? or user_admin.errors.size > 0
 
@@ -49,7 +56,7 @@ unless hidden_user = User.hidden.first
     :roles => [],
     :username => "hidden-#{Password.generate_random_string(6)}",
     :password => Password.generate_random_string(25),
-    :email => Password.generate_random_string(10),
+    :email => "#{Password.generate_random_string(10)}@localhost",
     :hidden=>true)
   hidden_user.save!
 end
