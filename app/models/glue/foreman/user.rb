@@ -29,6 +29,7 @@ module Glue::Foreman::User
     alias_method :foreman, :foreman_user
 
     def save_foreman_orchestration
+      return if foreman_orchestration_disabled?
       case orchestration_for
         when :create
           pre_queue.create :name   => "create foreman user: #{username}", :priority => 3,
@@ -40,17 +41,18 @@ module Glue::Foreman::User
     end
 
     def destroy_foreman_orchestration
+      return if foreman_orchestration_disabled?
       pre_queue.create(:name   => "destroy foreman user: #{username}", :priority => 3,
                        :action => [self, :destroy_foreman_user])
     end
 
     def create_foreman_user
-      @foreman_user = ::Foreman::User.new :login    => username,
-                                          :mail     => email,
-                                          :admin    => true,
-                                          :password => password
+      foreman_user = ::Foreman::User.new :login    => username,
+                                         :mail     => email,
+                                         :admin    => true,
+                                         :password => password
       foreman_user.save!
-      self.foreman_id = foreman_user.id
+      self.foreman_user = foreman_user
     end
 
     def update_foreman_user
@@ -63,10 +65,27 @@ module Glue::Foreman::User
       self.foreman_user.destroy!
     end
 
+    # @private
+    def disable_foreman_orchestration(&block)
+      @foreman_orchestration_disabled = true
+      block.call self
+    ensure
+      @foreman_orchestration_disabled = false
+    end
+
     private
 
+    def foreman_orchestration_disabled?
+      @foreman_orchestration_disabled
+    end
+
     def foreman_consistency_check
-      raise 'user has to have foreman_id' unless self.foreman_id
+      raise 'user has to have foreman_id' unless foreman_orchestration_disabled? || self.foreman_id
+    end
+
+    def foreman_user=(foreman_user)
+      @foreman_user   = foreman_user
+      self.foreman_id = foreman_user.id
     end
 
   end
