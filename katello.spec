@@ -425,7 +425,7 @@ rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
 #branding
 if [ -d branding ] ; then
   ln -svf %{_datadir}/icons/hicolor/24x24/apps/system-logo-icon.png %{buildroot}%{homedir}/public/images/rh-logo.png
-  ln -svf %{_sysconfdir}/favicon.png %{buildroot}%{homedir}/public/images/favicon.png
+  ln -svf %{_sysconfdir}/favicon.png %{buildroot}%{homedir}/public/images/embed/favicon.png
   rm -rf %{buildroot}%{homedir}/branding
 fi
 
