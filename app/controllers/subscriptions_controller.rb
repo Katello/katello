@@ -157,7 +157,7 @@ class SubscriptionsController < ApplicationController
     rescue => error
       @statuses = []
       display_message = parse_display_message(error.response)
-      error_text = _("Unable to retrieve subscription history for provider '%{name}." % {:name => @provider.name})
+      error_text = _("Unable to retrieve subscription history for provider '%{name}'." % {:name => @provider.name})
       error_text += _("%{newline}Reason: %{reason}" % {:reason => display_message, :newline => "<br />"}) unless display_message.blank?
       notify.exception error_text, error, :asynchronous => true
       Rails.logger.error "Error fetching subscription history from Candlepin"
