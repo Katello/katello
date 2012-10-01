@@ -16,20 +16,22 @@
     %p
       = @errata.issued
 
-  .item-container
-    %label.fl.ra
-      =_("References:")
-    %p
-      = @errata.references[0] ? @errata.references[0][:href] : ''
+  - if @errata.references[0]
+    .item-container
+      %label.fl.ra
+        =_("References:")
+      %p
+        = @errata.references[0][:href]
 
-  .item-container
-    %label.fl.ra
-      = _("Description:")
-    - @errata.description.split("\n\n").each do |p|
-      %p
-        = p
-      %p
-        &nbsp;
+  - if @errata.description
+    .item-container
+      %label.fl.ra
+        = _("Description:")
+      - @errata.description.split("\n\n").each do |p|
+        %p
+          = p
+        %p
+          &nbsp;
 
   .item-container
     %label.fl.ra
