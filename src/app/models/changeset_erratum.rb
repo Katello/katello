@@ -78,7 +78,7 @@ class ChangesetErratum < ActiveRecord::Base
 
   private
   def erratum_pacakges
-    Glue::Pulp::Errata::find(self.errata_id).pkglist.map { |list| list["packages"] }.flatten(1).uniq
+    Errata::find(self.errata_id).pkglist.map { |list| list["packages"] }.flatten(1).uniq
   end
 
 end
