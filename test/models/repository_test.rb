@@ -19,9 +19,10 @@ module RepositoryTestBase
     base.class_eval do
       set_fixture_class :environments => KTEnvironment
       self.use_instantiated_fixtures = false
-      fixtures :organizations, :environments, :providers, :products, :repositories
-      fixtures :roles, :permissions, :resource_types, :users, :roles_users
-      fixtures :environment_products, :gpg_keys
+      fixtures :all
+      #fixtures :organizations, :environments, :providers, :products, :repositories
+      #fixtures :roles, :permissions, :resource_types, :users, :roles_users
+      #fixtures :environment_products, :gpg_keys, :filters
     end
   end
 
@@ -31,14 +32,17 @@ module RepositoryTestBase
     AppConfig.use_elasticsearch = false
 
     Object.send(:remove_const, 'Repository')
+    Object.send(:remove_const, 'Package')
     load 'app/models/repository.rb'
+    load 'app/models/package.rb'
 
-    @fedora_17        = Repository.find(repositories(:fedora_17).id)
-    @fedora_17_dev    = Repository.find(repositories(:fedora_17_dev).id)
-    @fedora           = Product.find(products(:fedora).id)
-    @library          = KTEnvironment.find(environments(:library).id)
-    @dev              = KTEnvironment.find(environments(:dev).id)
-    @acme_corporation = Organization.find(organizations(:acme_corporation).id)
+    @fedora_17          = Repository.find(repositories(:fedora_17).id)
+    @fedora_17_dev      = Repository.find(repositories(:fedora_17_dev).id)
+    @fedora             = Product.find(products(:fedora).id)
+    @library            = KTEnvironment.find(environments(:library).id)
+    @dev                = KTEnvironment.find(environments(:dev).id)
+    @acme_corporation   = Organization.find(organizations(:acme_corporation).id)
+    @unassigned_gpg_key = GpgKey.find(gpg_keys(:unassigned_gpg_key).id)
   end
 
 end
@@ -95,10 +99,6 @@ class RepositoryInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
     assert !@fedora_17.has_filters?
   end
 
-  def test_synx_complete
-    assert false
-  end
-
   def test_clones
     assert @fedora_17.clones == [@fedora_17_dev]
   end
@@ -116,7 +116,8 @@ class RepositoryInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_gpg_key_name
-    assert false
+    @fedora_17.gpg_key_name = @unassigned_gpg_key.name
+    assert @fedora_17.gpg_key == @unassigned_gpg_key
   end
 
   def test_as_json
@@ -124,15 +125,8 @@ class RepositoryInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_environmental_instances
-    assert @fedora_17.environmental_instances.include?([@fedora_17, @fedora_17_dev])
-  end
-
-  def test_errata_count
-    assert @fedora_17.errata_count
-  end
-
-  def test_package_count
-    assert @fedora_17.package_count
+    assert @fedora_17.environmental_instances.include? @fedora_17
+    assert @fedora_17.environmental_instances.include? @fedora_17_dev
   end
 
   def test_applicable_filters

@@ -36,9 +36,17 @@ end
 
 namespace :minitest do
   ['glue'].each do |task|
-    MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
-      t.libs.push 'test'
-      t.pattern = "test/#{task}/**/*_test.rb"
+    if ENV['test']
+      Rake::Task["db:test:prepare"].clear
+      MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
+        t.libs.push 'test'
+        t.pattern = "test/#{task}/#{ENV['test']}_test.rb"
+      end   
+    else
+      MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
+        t.libs.push 'test'
+        t.pattern = "test/#{task}/**/*_test.rb"
+      end
     end   
   end
 end
