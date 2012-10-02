@@ -20,7 +20,7 @@ describe SystemTemplate do
   before :each do
     disable_org_orchestration
 
-    @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
+    @organization = Organization.create!(:name=>'test_organization', :label=> 'test_organization')
     @tpl = SystemTemplate.create!(:name => "template_1", :environment => @organization.library)
   end
 

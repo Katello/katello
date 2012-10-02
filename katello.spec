@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.1.12
+Version:        1.1.13
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -81,6 +81,13 @@ Requires:       lsof
 %if 0%{?rhel} == 6
 Requires:       redhat-logos >= 60.0.14
 %endif
+
+%if 0%{?rhel} == 6 || 0%{?fedora} < 17
+Requires: ruby(abi) = 1.8
+%else
+Requires: ruby(abi) = 1.9.1
+%endif
+Requires: ruby
 
 # <workaround> for 714167 - undeclared dependencies (regin & multimap)
 # TODO - uncomment the statement once we push patched actionpack to our EL6 repo
@@ -153,9 +160,6 @@ Requires:       candlepin-selinux
 # the following backend engine deps are required by <katello-configure>
 Requires:       mongodb mongodb-server
 Requires:       qpid-cpp-server qpid-cpp-client qpid-cpp-client-ssl qpid-cpp-server-ssl
-%if 0%{?fedora}
-Requires:       /etc/rc.d/init.d/qpidd
-%endif
 Requires:       foreman foreman-postgresql
 # </katello-configure>
 
@@ -257,6 +261,7 @@ Requires:        rubygem(ruby_parser)
 Requires:        rubygem(js-routes)
 Requires:        rubygem(newrelic_rpm)
 Requires:        rubygem(logical-insight)
+Requires:        rubygem(rails-dev-boost)
 
 %description devel
 Rake tasks and dependecies for Katello developers
@@ -421,7 +426,7 @@ rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
 #branding
 if [ -d branding ] ; then
   ln -svf %{_datadir}/icons/hicolor/24x24/apps/system-logo-icon.png %{buildroot}%{homedir}/public/images/rh-logo.png
-  ln -svf %{_sysconfdir}/favicon.png %{buildroot}%{homedir}/public/images/favicon.png
+  ln -svf %{_sysconfdir}/favicon.png %{buildroot}%{homedir}/public/images/embed/favicon.png
   rm -rf %{buildroot}%{homedir}/branding
 fi
 
@@ -493,6 +498,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/Gemfile
 %ghost %attr(0644,katello,katello) %{_sharedstatedir}/%{name}/Gemfile.lock
 %config(noreplace) %{_sysconfdir}/%{name}/service-list
+%{homedir}/Rakefile
 %{_mandir}/man8/katello-service.8*
 
 %files common
@@ -539,6 +545,8 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %files all
 
 %files headpin
+%attr(600, katello, katello)
+%{_bindir}/katello-*
 %{homedir}/app/controllers
 %{homedir}/app/helpers
 %{homedir}/app/mailers
@@ -590,7 +598,6 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/lib/tasks/yard.rake
 %{homedir}/lib/tasks/hudson.rake
 %{homedir}/lib/tasks/jsroutes.rake
-%{homedir}/Rakefile
 
 %files devel-profiling
 
@@ -617,6 +624,180 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Sep 27 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.13-1
+- 858360 - Making katello-upgrade START services after upgrade is complete
+  (jomara@redhat.com)
+- 859604 - Fixed search results total bug (davidd@scimedsolutions.com)
+- 859784 - Missing template error (davidd@scimedsolutions.com)
+- 857576 - Added api filter update test (davidd@scimedsolutions.com)
+- fix for BZ 857031: notifications are being shown now when a system gets added
+  to/removed from a group (dmitri@redhat.com)
+- 857576 - Package filter name can be edited by cli
+  (davidd@scimedsolutions.com)
+- fixed an inadvertent spec test change (thomasmckay@redhat.com)
+- fix for BZ 860702: show systems belonging to system groups and those not in
+  any on 'Systems' screen (dmitri@redhat.com)
+- introducing katello-utils with katello-disconnected script
+  (lzap+git@redhat.com)
+- 860421 - Not verifying ldap roles for auth-less API calls (jomara@redhat.com)
+- release-version - display message when no available release version choices
+  or an error occurred fetching them (thomasmckay@redhat.com)
+- Revert "workaround for bz 854263" (msuchy@redhat.com)
+- requires ruby(abi) and ruby (the command) (msuchy@redhat.com)
+- 858802 - Allowing associated keys to be deleted (davidd@scimedsolutions.com)
+- altering custom info index and shortening the name (komidore64@gmail.com)
+- remove forgotten conflict indicators (msuchy@redhat.com)
+- 858011, 854697 - object-labels - needed to use org label on del_owners (vs
+  cp_key) (bbuckingham@redhat.com)
+- fixing ko .po file (msuchy@redhat.com)
+- fix plurals form in pt_BR (msuchy@redhat.com)
+- fixing es .po file (msuchy@redhat.com)
+- fixing es .po file (msuchy@redhat.com)
+- fix pt_BR .po file (msuchy@redhat.com)
+- Take advantage of the new katello-service script to stop/start all required
+  services. (ogmaciel@gnome.org)
+- Removed goferd from backup script as it is never installed in the server,
+  only in the clients that subscribe to it. (ogmaciel@gnome.org)
+- 857842 - get all the packages, fixes earlier syntax error
+  (mmccune@redhat.com)
+- BZ 821345: product name now appears instead of a '#' (dmitri@redhat.com)
+- 857895 - adding "registered date" to system lists to help distinguish between
+  same-named systems (thomasmckay@redhat.com)
+- build-fix - don't use model classes on require time (inecas@redhat.com)
+- 858678 - removing extra systems index (lzap+git@redhat.com)
+- refresh translations string for katello (msuchy@redhat.com)
+- making a method in the custom_info_controller private (komidore64@gmail.com)
+- BZ 858682: fixed status messages on syncs that didn't fail (yet) but didn't
+  complete successfully either (dmitri@redhat.com)
+- 829437 - fix error notification in GPG file upload form (inecas@redhat.com)
+- 842838 - fixing x icon not showing up on content search (jsherril@redhat.com)
+- 857539 - Clicking the "contract" arrow in the org selector on the main UI
+  does not contract the picker (pajkycz@gmail.com)
+- Javascript error if selecting Org in Changeset history detail page
+  (pajkycz@gmail.com)
+- 857720 - Javascript error if selecting Org in Providers page
+  (pajkycz@gmail.com)
+- 857499 - Fix for user with no orgs or perms. (jrist@redhat.com)
+- Update the env, prod migrations to use labelize (paji@redhat.com)
+- Fixed the labelize call to deal with i18n characters (paji@redhat.com)
+- fixing spec tests for custom_info (komidore64@gmail.com)
+- 843529 - minor update per pull request comment - use if/else vs unless
+  (bbuckingham@redhat.com)
+- CustomInfo for Systems (komidore64@gmail.com)
+- object labels - moving the default_label action to the application controller
+  (bbuckingham@redhat.com)
+- object labels - update ui for setting label values based upon server query
+  (bbuckingham@redhat.com)
+- object labels - by default, assign label by 'labelizing' the object name
+  (bbuckingham@redhat.com)
+- 854801-autoheal - word change (thomasmckay@redhat.com)
+- Prevent resubmission on the interstitial screen (davidd@scimedsolutions.com)
+- converge-ui - updating hash (bbuckingham@redhat.com)
+- Rakefile could not be in -devel package as katello-configure call db:migrate
+  and seed_with_logging rake tasks (msuchy@redhat.com)
+- fixed an issue when it was impossible to remove a repository that had no
+  promoted content (dmitri@redhat.com)
+- 759122 - system software tab More... button displaying when no more
+  (pajkycz@gmail.com)
+- object-labels - adding CLI and API calls to support object labeling
+  (mmccune@redhat.com)
+- 858193-automation - fencing javascript error point (thomasmckay@redhat.com)
+- 854278 - fixing search validation calls to appropriately search for user
+  names (jomara@redhat.com)
+- Fixed organization rspec test (davidd@scimedsolutions.com)
+- 843529 - fix spec test on system group events (bbuckingham@redhat.com)
+- 843529 - system group tasks - better way for handling nil job
+  (bbuckingham@redhat.com)
+- return back Gemfile (msuchy@redhat.com)
+- katello-service - now hard-depends on katello-wait (lzap+git@redhat.com)
+- 843529 - system group tasks - handling when systems are removed
+  (bbuckingham@redhat.com)
+- Fixed some broken unit tests (paji@redhat.com)
+- Revert "regenerating localization strings for rails app"
+  (komidore64@gmail.com)
+- Fixed provider_spec.rb tests (davidd@scimedsolutions.com)
+- regenerating localization strings for rails app (komidore64@gmail.com)
+- add two strings to localization (komidore64@gmail.com)
+- 857727 - issue where uploading key left UI in bad state (jsherril@redhat.com)
+- katello-service - reformatting mixed tabs and spaces (lzap+git@redhat.com)
+- katello-service - make use of service-wait (lzap+git@redhat.com)
+- 820634 - Katello String Updates (komidore64@gmail.com)
+- apidoc - added API documentation filters, sync (bz#852388)
+  (mbacovsk@redhat.com)
+- Fixed package listing generation in katello-debug (bz#857842)
+  (mbacovsk@redhat.com)
+- do not require rubygem-pdf-writer (msuchy@redhat.com)
+- create new subpackages -devel-all and -devel-* (msuchy@redhat.com)
+- update katello localization strings (msuchy@redhat.com)
+- object labels - spec changes for the additions of label to repository..etc
+  (bbuckingham@redhat.com)
+- object labels - update env controller to support retrieving env by label
+  (bbuckingham@redhat.com)
+- object labels - update to use product and repo label (bbuckingham@redhat.com)
+- object labels - update activation key edit helptip to reflect use of label
+  (bbuckingham@redhat.com)
+- object labels - add read-only label to edit panes for org, env, prod, repo
+  (bbuckingham@redhat.com)
+- object labels - update to use environment label for candlepin environments
+  (bbuckingham@redhat.com)
+- 852912 - fixing subscribe/unsubscribe for non-english locale 857550 - fixing
+  environment loading on clean installs (jomara@redhat.com)
+- 852119 - Fixed default environment bug (davidd@scimedsolutions.com)
+- headpin needs RAILS_RELATIVE_URL_ROOT variable (msuchy@redhat.com)
+- Fixing user spec tests that were breaking (davidd@scimedsolutions.com)
+- katello-jobs - fix status exit code (inecas@redhat.com)
+- apidoc - added docs for system groups (#852388) (mbacovsk@redhat.com)
+- Fix rpm update from version without converge-ui (inecas@redhat.com)
+- main code expect that RETVAL is set after kstatus() finish
+  (msuchy@redhat.com)
+- apidoc - systems_controller fix ruby 1.9 compatibility (inecas@redhat.com)
+- 855406 - pass correctly environment variables which ruby needs
+  (msuchy@redhat.com)
+- apidoc - Sync Plans, Tasks, System Packages (pajkycz@gmail.com)
+- apidoc - fix rake apipie:static when postgresql not running
+  (inecas@redhat.com)
+- Fixed all the product related tests (paji@redhat.com)
+- Partial commit on product create (paji@redhat.com)
+- Misc unit test fixes (paji@redhat.com)
+- Fixed unit tests related to system groups (paji@redhat.com)
+- object-label - organization - rename column cp_key to label
+  (bbucking@dhcp231-20.rdu.redhat.com)
+- Added code to create product and repos with labels (paji@redhat.com)
+- apidoc - systems controller (inecas@redhat.com)
+- Fixed all KTEnvironment.create unit tests to take the label (paji@redhat.com)
+- Fixed all organizatio.create related unit tests (paji@redhat.com)
+- Improved the message in the katello label validator (paji@redhat.com)
+- Made the label columns non null (paji@redhat.com)
+- Added indexes to the migration script to enforce uniqueness constraints
+  (paji@redhat.com)
+- Added code to get the initial org + env create working in the UI
+  (paji@redhat.com)
+- Initial commit to setup the models and migrations for object-labels
+  (paji@redhat.com)
+- PulpIntegrationTests - Updates for tests that were having incosistent run
+  times between live and recorded data versions. (ehelms@redhat.com)
+- PulpIntegrationTests - Adds removal of pulp integration tests test runner
+  script from spec. (ehelms@redhat.com)
+- PulpIntegrationTests - Adds require for rails gem. (ehelms@redhat.com)
+- PulpIntegrationTests - Removes unused rake task and reference to rake task
+  from spec. (ehelms@redhat.com)
+- PulpIntegrationTests - Updates to fix errors between running live tests and
+  running tests against recorded data. (ehelms@redhat.com)
+- PulpIntegrationTests - Adds tests for uncovered actions and updates for a
+  successful test suite beginning to end. (ehelms@redhat.com)
+- PulpIntegrationTests - A ton of re-factoring and added test cases.
+  (ehelms@redhat.com)
+- PulpIntegrationTests - Adds Consumer tests and a local repository for usage
+  in testing. (ehelms@redhat.com)
+- PulpIntegrationTests - Adds a number of tests for filters, packages, package
+  groups, tasks, and errata. (ehelms@redhat.com)
+- PulpIntegrationTests - Updates to repository tests. (ehelms@redhat.com)
+- PulpIntegrationTests - Slew of repository related tests. (ehelms@redhat.com)
+- PulpIntegrationTests - Adds integration tests for pulp users.
+  (ehelms@redhat.com)
+- PulpIntegrationTests - Initial integration test setup using VCR and minitest
+  to test basic Pulp Ping. (ehelms@redhat.com)
+
 * Wed Sep 12 2012 Ivan Necas <inecas@redhat.com> 1.1.12-1
 - subsfilter - Correctly update UI when subscription checkboxes toggled
   (thomasmckay@redhat.com)

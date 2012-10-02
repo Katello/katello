@@ -40,7 +40,7 @@ Src::Application.routes.draw do
   end
 
   resources :content_search do
-      collection do 
+      collection do
         post :errata
         post :products
         post :packages
@@ -276,7 +276,10 @@ Src::Application.routes.draw do
   resources :providers do
     get 'auto_complete_search', :on => :collection
     resources :products do
+      get :default_label, :on => :collection
+
       resources :repositories, :only => [:new, :create, :edit, :destroy] do
+        get :default_label, :on => :collection
         member do
           put :update_gpg_key, :as => :update_repo_gpg_key
         end
@@ -331,6 +334,7 @@ Src::Application.routes.draw do
     collection do
       get :auto_complete_search
       get :items
+      get :default_label
     end
     member do
       get :environments_partial
@@ -338,6 +342,7 @@ Src::Application.routes.draw do
       get :download_debug_certificate
     end
     resources :environments do
+      get :default_label, :on => :collection
       member do
         get :system_templates
         get :products
@@ -376,7 +381,7 @@ Src::Application.routes.draw do
       get :items
     end
     resources :ldap_groups, :only => [] do
-      member do 
+      member do
 		delete "destroy" => "roles#destroy_ldap_group", :as => "destroy"
       end
       collection do
@@ -667,7 +672,7 @@ Src::Application.routes.draw do
     resources :crls, :only => [:index]
 
     match "/status"  => "ping#status", :via => :get
-    match "/version"  => "ping#version", :via => :get 
+    match "/version"  => "ping#version", :via => :get
     # some paths conflicts with rhsm
     scope 'katello' do
 
@@ -713,11 +718,22 @@ Src::Application.routes.draw do
       get 'status/memory'
     end
 
+    # custom information
+    match '/custom_info/:informable_type/:informable_id' => 'custom_info#create', :via => :post
+    match '/custom_info/:informable_type/:informable_id' => 'custom_info#index', :via => :get
+    match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#show', :via => :get
+    match '/custom_info/:informable_type/:informable_id/:keyname/:current_value' => 'custom_info#update', :via => :put
+    match '/custom_info/:informable_type/:informable_id/:keyname/:value' => 'custom_info#destroy', :via => :delete
+    match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#destroy', :via => :delete
+    match '/custom_info/:informable_type/:informable_id' => 'custom_info#destroy', :via => :delete
+
     match '*a', :to => 'errors#render_404'
   # end '/api' namespace
   end
 
+  match 'about', :to => "application_info#about", :as => "about"
 
   #Last route in routes.rb - throws routing error for everything not handled
   match '*a', :to => 'errors#routing'
+
 end

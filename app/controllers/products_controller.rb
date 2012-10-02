@@ -14,7 +14,7 @@ class ProductsController < ApplicationController
   respond_to :html, :js
 
   before_filter :find_product, :only => [:edit, :update, :destroy]
-  before_filter :find_provider, :only => [:new, :create, :edit, :update, :destroy]
+  before_filter :find_provider, :only => [:new, :create, :default_label, :edit, :update, :destroy]
   before_filter :authorize
 
   def rules
@@ -25,6 +25,7 @@ class ProductsController < ApplicationController
     {
       :new => edit_test,
       :create => edit_test,
+      :default_label => edit_test,
       :edit =>read_test,
       :update => edit_test,
       :destroy => edit_test,
@@ -46,10 +47,14 @@ class ProductsController < ApplicationController
 
   def create
     product_params = params[:product]
+    product_params[:label], label_assigned = generate_label(product_params[:name], _('product')) if product_params[:label].blank?
+
     gpg = GpgKey.readable(current_organization).find(product_params[:gpg_key]) if product_params[:gpg_key] and product_params[:gpg_key] != ""
-    @provider.add_custom_product(product_params[:name], product_params[:description], product_params[:url], gpg)
+    @provider.add_custom_product(product_params[:label], product_params[:name], product_params[:description], product_params[:url], gpg)
 
     notify.success _("Product '%s' created.") % product_params[:name]
+    notify.message label_assigned unless label_assigned.blank?
+
     render :nothing => true
   end
 

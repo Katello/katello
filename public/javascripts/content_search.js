@@ -529,7 +529,7 @@ KT.widget.finder_box = function(container_id, search_id, autocomplete_id){
         var list = ac_container.find('ul');
         list.find('.all').hide();
         if (ac_container.find('li[data-id=' + id + ']').length === 0){
-            list.prepend('<li data-name="'+ name + '" data-id="' + id + '"><i class="remove x-icon-black clickable"/><span>' + name + '</span></li>');
+            list.prepend('<li data-name="'+ name + '" data-id="' + id + '"><i class="remove x_icon-black clickable"/><span>' + name + '</span></li>');
         }
 
     },
