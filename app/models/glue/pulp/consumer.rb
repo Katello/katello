@@ -21,8 +21,8 @@ module Glue::Pulp::Consumer
 
       lazy_accessor :pulp_facts, :initializer => lambda { Runcible::Resources::Consumer.retrieve(uuid) }
       lazy_accessor :package_profile, :initializer => lambda { Runcible::Resources::Consumer.profile(uuid, 'rpm') }
-      lazy_accessor :simple_packages, :initializer => lambda { Runcible::Resources::Consumer.profile(uuid, 'rpm').
-                                                              collect{|pack| Glue::Pulp::SimplePackage.new(pack)} }
+      lazy_accessor :simple_packages, :initializer => lambda { Runcible::Resources::Consumer.profile(uuid, 'rpm')["profile"].
+                                                              collect{|package| Glue::Pulp::SimplePackage.new(package)} }
       lazy_accessor :errata, :initializer => lambda { Resources::Pulp::Consumer.errata(uuid).
                                                               collect{|errata| Glue::Pulp::Errata.new(errata)} }
       lazy_accessor :repoids, :initializer => lambda { Resources::Pulp::Consumer.repoids(uuid).keys }
