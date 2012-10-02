@@ -42,7 +42,7 @@ module LoginHelperMethods
     if org.nil?
       @mock_org = mock(Organization)
       @mock_org.stub!(:name).and_return("admin_one")
-      @mock_org.stub!(:cp_key).and_return("admin_one")
+      @mock_org.stub!(:label).and_return("admin_one")
       org = @mock_org
     end
 

@@ -1,9 +1,9 @@
 %div{:id => "system_#{item.id}"}
   %div{:class => 'column_2'}
+    .product
+      .status_icon{:class => "#{item.send('compliance_color')}"}
     %ul
       %li
-        .product
-          .status_icon{:class => "#{item.send('compliance_color')}"}
         %div.one-line-ellipsis#heading_title
           %span#name
             = item.send('name')
@@ -11,12 +11,14 @@
         = _('Env: ')
         %span#environment
           = system_environment_name item
+      %li.one-line-ellipsis
+        = _('OS: ')
+        %span#environment
+          = item.send('distribution_name')
   %div{:class => 'column_2'}
     %ul
       %li
-        = get_checkin(item)
+        = get_registered(item)
       %li
-        = _('OS: ')
-        %span#distribution_name
-          = item.send('distribution_name')
+        = get_checkin(item)
 .arrow-right

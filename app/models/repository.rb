@@ -9,7 +9,7 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-
+require "util/model_util"
 
 class RepoDisablementValidator < ActiveModel::Validator
   def validate(record)
@@ -27,7 +27,8 @@ class Repository < ActiveRecord::Base
   include Authorization::Repository
   include AsyncOrchestration
   include Rails.application.routes.url_helpers #required for GPG key url generation
-      
+  include Katello::LabelFromName
+
   before_save :refresh_content
 
   belongs_to :environment_product, :inverse_of => :repositories
@@ -39,6 +40,7 @@ class Repository < ActiveRecord::Base
   validates :pulp_id, :presence => true, :uniqueness => true
   validates :name, :presence => true
   #validates :content_id, :presence => true #add back after fixing add_repo orchestration
+  validates :label, :presence => true,:katello_label_format => true
   validates :enabled, :repo_disablement => true, :on => [:update]
 
   default_scope :order => 'name ASC'
