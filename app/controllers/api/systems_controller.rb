@@ -277,26 +277,31 @@ DESC
     system_report.rename_column("compliant_until", "compliant until")
     system_report.rename_column("custom_info", "custom info")
 
-    pdf_options = {:table_format => {
-      :heading_font_size => 10,
-      :font_size => 8,
-      :column_options => {
-        "width" => 50,
-        "name" => {"width" => 100},
-        "uuid" => {"width" => 100},
-        "location" => {"width" => 50},
-        "environment" => {"width" => 40},
-        "organization" => {"width" => 75},
-        "created" => {"width" => 60},
-        "updated" => {"width" => 60}
-       }
-    }}
+    pdf_options = { :pdf_format => {
+                      :page_layout => :portrait,
+                      :page_size => "LETTER",
+                      :left_margin => 5 
+                      },
+                    :table_format => {
+                      :width => 585,
+                      :cell_style => { :size => 8},
+                      :row_colors => ["FFFFFF","F0F0F0"], 
+                      :column_widths => {
+                        0 => 100,
+                        1 => 100,
+                        2 => 50,
+                        3 => 40,
+                        4 => 75,
+                        5 => 60,
+                        6 => 60}
+                      }                    
+                  }
 
     respond_to do |format|
       format.html { render :text => system_report.as(:html), :type => :html and return }
       format.text { render :text => system_report.as(:text, :ignore_table_width => true) }
       format.csv { render :text => system_report.as(:csv) }
-      format.pdf { send_data(system_report.as(:pdf, pdf_options), :filename => "katello_systems_report.pdf", :type => "application/pdf") }
+      format.pdf { send_data(system_report.as(:prawn_pdf, pdf_options), :filename => "katello_systems_report.pdf", :type => "application/pdf") }
     end
   end
 
