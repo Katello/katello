@@ -120,7 +120,11 @@ group :development do
   gem 'newrelic_rpm'
   gem 'logical-insight'
 end
- 
+
+group :devboost do
+  gem 'rails-dev-boost', :require => 'rails_development_boost'
+end
+
 group :test do
   gem 'vcr'
   gem 'webmock'

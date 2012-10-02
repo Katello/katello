@@ -182,7 +182,10 @@ class SystemsController < ApplicationController
       end
       filter :terms, filters
     end
-    render :json=>systems.map{|s| {:label=>s.name, :value=>s.name, :id=>s.id}}
+    render :json=>systems.map{|s|
+      label = _("%s (Registered: %s)") % [s.name, convert_time(format_time(Time.parse(s.created_at)))]
+      {:label=>label, :value=>s.name, :id=>s.id}
+    }
   end
 
 
@@ -264,30 +267,33 @@ class SystemsController < ApplicationController
       return
     end
 
-    products , offset = first_objects @system.installedProducts.sort {|a,b| a['productName'].downcase <=> b['productName'].downcase}
-    render :partial=>"products", :layout => "tupane_layout", :locals=>{:system=>@system, :products => products, :offset => offset}
+    @products_count = @system.installedProducts.size
+    @products, @offset = first_objects @system.installedProducts.sort {|a,b| a['productName'].downcase <=> b['productName'].downcase}
+    render :partial=>"products", :layout=>"tupane_layout", :locals=>{
+        :system=>@system, :products=>@products,:offset=>@offset, :products_count=>@products_count}
   end
 
   def more_products
-    products, offset = more_objects @system.installedProducts.sort {|a,b| a['productName'].downcase <=> b['productName'].downcase}
-    render :partial=>"more_products", :locals=>{:system=>@system, :products => products, :offset=> offset}
+    # offset is computed in javascript but this one is used in tests
+    @products, @offset = more_objects @system.installedProducts.sort {|a,b| a['productName'].downcase <=> b['productName'].downcase}
+    render :partial=>"more_products", :locals=>{:system=>@system, :products=>@products}
   end
 
   def edit
     begin
       releases = @system.available_releases
     rescue => e
-      # Don't pepper user with notices if there is an error fetching release
-      # versions, but do log them
+      releases_error = e.to_str
       Rails.logger.error e.to_str
-      releases ||= []
     end
+    releases ||= []
+    releases_error ||= nil
 
-    render :partial => "edit", :layout => "tupane_layout",
-           :locals => { :system       => @system, :editable => @system.editable?,
-                        :releases     => releases, :name => controller_display_name,
-                        :environments =>
-                            environment_paths(library_path_element, environment_path_element("systems_readable?")) }
+    # Stuff into var for use in spec tests
+    @locals_hash = { :system => @system, :editable => @system.editable?,
+                    :releases => releases, :releases_error => releases_error, :name => controller_display_name,
+                    :environments => environment_paths(library_path_element, environment_path_element("systems_readable?")) }
+    render :partial => "edit", :layout => "tupane_layout", :locals => @locals_hash
   end
 
   def update
@@ -645,7 +651,7 @@ class SystemsController < ApplicationController
     @panel_options = {
       :title => _('Systems'),
       :col => ["name_sort", "lastCheckin"],
-      :titles => [_("Name"), _("Last Checked In")],
+      :titles => [_("Name"), _("Registered / Last Checked In")],
       :custom_rows => true,
       :enable_create => AppConfig.katello? && System.registerable?(@environment, current_organization),
       :create => _("System"),
@@ -692,9 +698,7 @@ class SystemsController < ApplicationController
   # to filter readable systems that can be
   # passed to search
   def readable_filters
-    filters = {:environment_id=>KTEnvironment.systems_readable(current_organization).collect{|item| item.id}}
-    filters[:system_group_ids] = SystemGroup.systems_readable(current_organization).collect{|item| item.id} if AppConfig.katello?
-    filters
+    {:environment_id=>KTEnvironment.systems_readable(current_organization).collect{|item| item.id}}
   end
 
   def search_filter
@@ -751,7 +755,7 @@ class SystemsController < ApplicationController
       next_objects = []
     end
 
-    return next_objects, offset
+    return next_objects, offset+size
   end
 
 end

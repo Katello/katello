@@ -45,12 +45,45 @@ describe Api::OrganizationsController do
     let(:unauthorized_user) { user_without_create_permissions }
     it_should_behave_like "protected action"
 
-    it 'should call kalpana create organization api' do
-      Organization.should_receive(:create!).once.with(:name => 'test org', :description => 'description', :cp_key => 'test_org').and_return(@org)
+    it 'should call katello create organization api' do
+      Organization.should_receive(:create!).once.with(:name => 'test org', :description => 'description', :label => 'test_org').and_return(@org)
+      Organization.first(:conditions => {:label => 'test_org'}).should_not be_nil
       req
     end
   end
-  
+
+  describe "create a org with missing label from POST and name converted to label" do
+
+    let(:action) {:create}
+    let(:req) { post 'create', :name => 'test org with spaces', :description => 'description' }
+    let(:authorized_user) { user_with_create_permissions }
+    let(:unauthorized_user) { user_without_create_permissions }
+    it_should_behave_like "protected action"
+
+    it 'should call katello create organization api' do
+      Organization.should_receive(:create!).once.with(:name => 'test org with spaces', :description => 'description',
+                                                      :label => 'test_org_with_spaces').and_return(@org)
+      Organization.first(:conditions => {:label => 'test_org_with_spaces'}).should_not be_nil
+      req
+    end
+  end
+
+  describe "create a org with label not equal to the name" do
+
+    let(:action) {:create}
+    let(:req) { post 'create', :name => 'test org', :description => 'description', :label => "some_other_label" }
+    let(:authorized_user) { user_with_create_permissions }
+    let(:unauthorized_user) { user_without_create_permissions }
+    it_should_behave_like "protected action"
+
+    it 'should call katello create organization api' do
+      Organization.should_receive(:create!).once.with(:name => 'test org', :description => 'description',
+                                                      :label => 'some_other_label').and_return(@org)
+      Organization.first(:conditions => {:label => 'some_other_label'}).should_not be_nil
+      req
+    end
+  end
+
   describe "get a listing of organizations" do
 
     let(:action) {:index}
@@ -65,7 +98,7 @@ describe Api::OrganizationsController do
       req
     end 
   end
-  
+
   describe "show a organization" do
 
     let(:action) {:show }
@@ -75,14 +108,14 @@ describe Api::OrganizationsController do
     it_should_behave_like "protected action"
 
     it 'should call katello organization find api' do
-      Organization.should_receive(:first).once.with(:conditions => {:cp_key => "spec"})
+      Organization.should_receive(:first).once.with(:conditions => {:name => "spec"})
       req
     end
   end
 
   describe "show a organization" do
     it 'should call katello organization find api and account for spaces in search name' do
-      Organization.should_receive(:first).once.with(:conditions => {:cp_key => "show_org_with_spaces"})
+      Organization.should_receive(:first).once.with(:conditions => {:name => "show org with spaces"})
       get 'show', :id => "show org with spaces"
     end
   end
@@ -96,7 +129,7 @@ describe Api::OrganizationsController do
     it_should_behave_like "protected action"
 
    it 'should call organization destroy method' do
-      Organization.should_receive(:first).once.with(:conditions => {:cp_key => "spec"}).and_return(@org)
+      Organization.should_receive(:first).once.with(:conditions => {:name => "spec"}).and_return(@org)
       OrganizationDestroyer.should_receive(:destroy).with(@org).once
       req
     end
@@ -104,7 +137,7 @@ describe Api::OrganizationsController do
 
   describe "delete a organization" do
     it 'should call organization destroy method while accounting for spaces in search name' do
-      Organization.should_receive(:first).once.with(:conditions => {:cp_key => "delete_org_with_spaces"}).and_return(@org)
+      Organization.should_receive(:first).once.with(:conditions => {:name => "delete org with spaces"}).and_return(@org)
       OrganizationDestroyer.should_receive(:destroy).with(@org).once
       delete 'destroy', :id => "delete org with spaces"
     end
@@ -119,7 +152,7 @@ describe Api::OrganizationsController do
     it_should_behave_like "protected action"
 
     it 'should call org update_attributes' do
-      Organization.should_receive(:first).once.with(:conditions => {:cp_key => "spec"}).and_return(@org)
+      Organization.should_receive(:first).once.with(:conditions => {:name => "spec"}).and_return(@org)
       @org.should_receive(:update_attributes!).once
       put 'update', :id => "spec", :organization=>{:description=>"bah"}
     end
@@ -127,7 +160,7 @@ describe Api::OrganizationsController do
 
   describe "update a organization" do
     it 'should call org update_attributes while accounting for spaces in the search name' do
-      Organization.should_receive(:first).once.with(:conditions => {:cp_key => "update_org_with_spaces"}).and_return(@org)
+      Organization.should_receive(:first).once.with(:conditions => {:name => "update org with spaces"}).and_return(@org)
       @org.should_receive(:update_attributes!).once
       put 'update', :id => "update org with spaces", :organization=>{:description=>"bah"}
     end

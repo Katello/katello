@@ -95,6 +95,12 @@ class Ping
         result[:message] = e.message
       end
     end
+
+    # get package information for katello and its components
+    def packages
+      packages = `rpm -qa | egrep "katello|candlepin|pulp|thumbslug|qpid"`
+      packages.split("\n").sort
+    end
   end
 end
 
