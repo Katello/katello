@@ -252,7 +252,7 @@ class ActivationKeysController < ApplicationController
 
   def destroy
     if @activation_key.destroy
-      notify.success _("Activation key '#{@activation_key[:name]}' was deleted.")
+      notify.success _("Activation key '%s' was deleted.") % @activation_key[:name]
       #render and do the removal in one swoop!
       render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
     end

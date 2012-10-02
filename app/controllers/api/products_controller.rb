@@ -87,7 +87,7 @@ class Api::ProductsController < Api::ApiController
   param :id, :number, :desc => "product numeric identifier"
   def destroy
     @product.destroy
-    render :text => _("Deleted product '#{params[:id]}'"), :status => 200
+    render :text => _("Deleted product '%s'") % params[:id], :status => 200
   end
 
   api :GET, "/environments/:environment_id/products/:id/repositories"

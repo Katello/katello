@@ -159,7 +159,7 @@ class Api::SystemGroupsController < Api::ApiController
   def copy
     if @organization.id != @group.organization.id
       raise HttpErrors::BadRequest, 
-        _("Can't copy System Groups to a different org: '#{@organization.id}' != '#{@group.organization.id}'")
+        _("Can't copy System Groups to a different org: '%{org1}' != '%{org2}'") % {:org1 => @organization.id, :org2 => @group.organization.id}
     end
     grp_param = params[:system_group]
     new_group = SystemGroup.new
@@ -189,7 +189,7 @@ class Api::SystemGroupsController < Api::ApiController
   param :id, :identifier, :desc => "Id of the system group", :required => true
   def destroy
     @group.destroy
-    render :text => _("Deleted system group '#{params[:id]}'"), :status => 200
+    render :text => _("Deleted system group '%s'") % params[:id], :status => 200
   end
 
   def destroy_systems

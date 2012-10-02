@@ -89,7 +89,7 @@ class Api::PermissionsController < Api::ApiController
   api :DELETE, "/roles/:role_id/permissions/:id", "Destroy a roles permission"
   def destroy
     @permission.destroy
-    render :text => _("Deleted permission '#{params[:id]}'"), :status => 200
+    render :text => _("Deleted permission '%s'") % params[:id], :status => 200
   end
 
   private
@@ -102,7 +102,7 @@ class Api::PermissionsController < Api::ApiController
 
   def find_permission
     @permission = Permission.find(params[:id])
-    raise HttpErrors::NotFound, _("Couldn't find permissions '#{params[:id]}'") if @permission.nil?
+    raise HttpErrors::NotFound, _("Couldn't find permissions '%s'") % params[:id] if @permission.nil?
     @permission
   end
 end

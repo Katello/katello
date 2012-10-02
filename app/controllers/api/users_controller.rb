@@ -111,7 +111,7 @@ class Api::UsersController < Api::ApiController
   api :DELETE, "/users/:id", "Destroy an user"
   def destroy
     @user.destroy
-    render :text => _("Deleted user '#{params[:id]}'"), :status => 200
+    render :text => _("Deleted user '%s'") % params[:id], :status => 200
   end
 
   api :GET, "/users/:user_id/roles", "List roles assigned to a user"
@@ -132,7 +132,7 @@ class Api::UsersController < Api::ApiController
     role = Role.find(params[:role_id])
     @user.roles << role
     @user.save!
-    render :text => _("User '#{@user.username}' assigned to role '#{role.name}'"), :status => 200
+    render :text => _("User '%{username}' assigned to role '%{rolename}'") % {:username => @user.username, :rolename => role.name}, :status => 200
   end
 
   api :DELETE, "/users/:user_id/roles/:id", "Remove user's role"
@@ -140,7 +140,7 @@ class Api::UsersController < Api::ApiController
     role = Role.find(params[:id])
     @user.roles.delete(role)
     @user.save!
-    render :text => _("User '#{@user.username}' unassigned from role '#{role.name}'"), :status => 200
+    render :text => _("User '%{username}' unassigned from role '%{rolename}'") % {:username => @user.username, :rolename => role.name}, :status => 200
 
   end
 
