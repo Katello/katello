@@ -15,4 +15,3 @@ end
 task :default => [:spec]
 
 Src::Application.load_tasks
-
