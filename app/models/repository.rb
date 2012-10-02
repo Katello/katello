@@ -9,7 +9,7 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-
+require "util/model_util"
 
 class RepoDisablementValidator < ActiveModel::Validator
   def validate(record)
@@ -26,13 +26,14 @@ class Repository < ActiveRecord::Base
   include Authorization
   include AsyncOrchestration
   include IndexedModel
-
+  include Katello::LabelFromName
   index_options :extended_json=>:extended_index_attrs,
                 :json=>{:except=>[:pulp_repo_facts, :groupid, :feed_cert, :environment_product_id]}
 
   mapping do
     indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_sort, :type => 'string', :index => :not_analyzed
+    indexes :labels, :type => 'string', :index => :not_analyzed
   end
 
 
@@ -43,6 +44,7 @@ class Repository < ActiveRecord::Base
   has_and_belongs_to_many :changesets
   validates :pulp_id, :presence => true, :uniqueness => true
   validates :name, :presence => true
+  validates :label, :presence => true,:katello_label_format => true
   validates :enabled, :repo_disablement => true, :on => [:update]
   belongs_to :gpg_key, :inverse_of => :repositories
   belongs_to :library_instance, :class_name=>"Repository"

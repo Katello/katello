@@ -53,8 +53,8 @@ module Glue::Pulp::Repo
     end
   end
 
-  def self.repo_id product_name, repo_name, env_name, organization_name
-    [organization_name, env_name, product_name, repo_name].compact.join("-").gsub(/[^-\w]/,"_")
+  def self.repo_id product_label, repo_label, env_label, organization_label
+    [organization_label, env_label, product_label, repo_label].compact.join("-").gsub(/[^-\w]/,"_")
   end
 
   #repo_pkgs = a map with {repo => [package objects to be removed]}
@@ -270,7 +270,7 @@ module Glue::Pulp::Repo
   end
 
   def clone_id(env)
-    Glue::Pulp::Repo.repo_id(self.product.name, self.name, env.name,env.organization.name)
+    Glue::Pulp::Repo.repo_id(self.product.label, self.label, env.label, env.organization.label)
   end
 
 

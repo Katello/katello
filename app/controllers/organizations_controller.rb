@@ -41,6 +41,7 @@ class OrganizationsController < ApplicationController
       :auto_complete_search => index_test,
       :new => create_test,
       :create => create_test,
+      :default_label => create_test,
       :edit => read_test,
       :update => edit_test,
       :destroy => delete_test,
@@ -52,7 +53,7 @@ class OrganizationsController < ApplicationController
 
   def param_rules
     {
-      :create => {:organization => [:name, :description], :environment => [:name, :description]},
+      :create => {:organization => [:name, :description, :label], :environment => [:name, :description, :label]},
       :update => {:organization  => [:description]}
     }
   end
@@ -73,23 +74,35 @@ class OrganizationsController < ApplicationController
   end
 
   def create
-    org_params    = params[:organization]
-    env_params    = params[:environment]
-    @organization = Organization.new(:name => org_params[:name], :description => org_params[:description])
+    org_label_assigned = ""
+    org_params = params[:organization]
+    org_params[:label], org_label_assigned = generate_label(org_params[:name], _('organization')) if org_params[:label].blank?
+    @organization = Organization.new(:name => org_params[:name], :label => org_params[:label], :description => org_params[:description])
     @organization.save!
 
+    env_label_assigned = ""
+    env_params = params[:environment]
     if env_params[:name].present?
-      @new_env = KTEnvironment.new(:name => env_params[:name], :description => env_params[:description])
+      if env_params[:label].blank?
+        env_params[:label], env_label_assigned = generate_label(env_params[:name], _('environment')) if env_params[:label].blank?
+      end
+
+      @new_env = KTEnvironment.new(:name => env_params[:name], :label => env_params[:label], :description => env_params[:description])
       @new_env.organization = @organization
       @new_env.prior = @organization.library
       @new_env.save!
     end
 
     notify.success _("Organization '%s' was created.") % @organization["name"]
+    notify.message org_label_assigned unless org_label_assigned.blank?
 
     if search_validate(Organization, @organization.id, params[:search])
-      notify.success _("Click on 'Add Environment' to create the first environment") if @new_env.nil?
-      render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"cp_key", :columns=>['name'], :name=>controller_display_name}
+      if @new_env.nil?
+        notify.message _("Click on 'Add Environment' to create the first environment")
+      else
+        notify.message env_label_assigned unless env_label_assigned.blank?
+      end
+      render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"label", :columns=>['name'], :name=>controller_display_name}
     else
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @organization["name"]
       render :json => { :no_match => true }
@@ -141,7 +154,7 @@ class OrganizationsController < ApplicationController
       render :text=>found_errors[1], :status=>:bad_request and return
     end
 
-    id = @organization.cp_key
+    id = @organization.label
     OrganizationDestroyer.destroy @organization, :notify => true
     notify.success _("Organization '%s' has been scheduled for background deletion.") % @organization.name
     render :partial => "common/list_remove", :locals => {:id=> id, :name=> controller_display_name}
@@ -185,7 +198,7 @@ class OrganizationsController < ApplicationController
   protected
 
   def find_organization
-    @organization = Organization.find_by_cp_key(params[:id].to_s)
+    @organization = Organization.find_by_label(params[:id].to_s)
     if @organization.blank?
       message = _("Couldn't find organization with ID %s") % params[:id]
       notify.error message
@@ -205,7 +218,7 @@ class OrganizationsController < ApplicationController
                :create => _('Organization'),
                :create_label => _('+ New Organization'),
                :name => controller_display_name,
-               :accessor => :cp_key,
+               :accessor => :label,
                :ajax_load  => true,
                :ajax_scroll => items_organizations_path(),
                :enable_create => Organization.creatable?,

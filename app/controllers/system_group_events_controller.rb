@@ -36,7 +36,12 @@ class SystemGroupEventsController < ApplicationController
 
   def show
     job = @group.jobs.where("#{Job.table_name}.id" => params[:id]).first
-    render :partial=>'system_groups/events/show', :layout => 'tupane_layout', :locals=>{:group => @group, :job =>job}
+    if job.nil?
+      render :nothing => true
+    else
+      render :partial=>'system_groups/events/show', :layout => 'tupane_layout',
+             :locals=>{:group => @group, :job =>job}
+    end
   end
 
   def status

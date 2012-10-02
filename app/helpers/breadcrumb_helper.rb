@@ -107,7 +107,7 @@ end
   
 module ContentBreadcrumbs
   def details_path product_id=nil
-    promotion_details_path(@organization.cp_key, @environment.name, :product_id=>product_id)
+    promotion_details_path(@organization.label, @environment.name, :product_id=>product_id)
   end
 
   #  Generates a json structure of the breadcrumb, consisting of a hash map of:
