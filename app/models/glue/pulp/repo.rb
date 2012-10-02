@@ -36,18 +36,19 @@ module Glue::Pulp::Repo
       attr_accessor :feed, :feed_cert, :feed_key, :feed_ca
 
       def self.ensure_sync_notification
+        resource =  Runcible::Resources::EventNotifier
         url = AppConfig.post_sync_url
-        type = Resources::Pulp::EventNotifier::EventTypes::REPO_SYNC_COMPLETE
-        notifs = Resources::Pulp::EventNotifier.list()
+        type = resource::EventTypes::REPO_SYNC_COMPLETE
+        notifs = resource.list()
 
         #delete any similar tasks with the wrong url (in case it changed)
         notifs.select{|n| n['event_types'] == [type] && n['notifier_config']['url'] != url}.each do |e|
-          Resources::Pulp::EventNotifier.destroy(e['id'])
+          resource.destroy(e['id'])
         end
 
         #only create a notifier if one doesn't exist with the correct url
         exists = notifs.select{|n| n['event_types'] == [type] && n['notifier_config']['url'] == url}
-        Resources::Pulp::EventNotifier.create_rest_notifier(url, [type]) if exists.empty?
+        resource.create(resource::NotifierTypes::REST_API, {:url=>url}, [type]) if exists.empty?
       end
 
     end

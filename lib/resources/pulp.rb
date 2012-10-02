@@ -447,48 +447,5 @@ module Resources
     end
   end
 
-  class EventNotifier < PulpResource
-
-    class EventTypes
-      REPO_SYNC_COMPLETE = 'repo-sync-finished'
-      REPO_SYNC_START = 'repo-sync-started'
-      REPO_PUBLISH_COMPLETE = 'repo-publish-finished'
-      REPO_PUBLISH_START = 'repo-publish-started'
-    end
-
-    class << self
-
-      def create notifier_type, notifier_config, event_types
-        data = {
-            :notifier_type_id=> notifier_type,
-            :notifier_config=>notifier_config,
-            :event_types=>event_types
-        }
-        response = post(event_path, JSON.generate(data), self.default_headers)
-        JSON.parse(response.body)
-      end
-
-      def create_rest_notifier url, event_types
-        create('rest-api', {:url=>url}, event_types)
-      end
-
-      def destroy id
-        response = delete(event_path(id), self.default_headers)
-        true
-      end
-
-      def list
-        response = get(event_path, self.default_headers)
-        JSON.parse(response.body).collect{|i| i.with_indifferent_access}
-      end
-
-      def event_path(id=nil)
-        id = id.nil? ? '' : "#{id}/"
-        self.path_with_prefix("/events/") + id
-      end
-
-    end
-  end
-
   end
 end
