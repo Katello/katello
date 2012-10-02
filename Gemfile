@@ -80,7 +80,7 @@ group :test, :development do
   end
   gem 'ZenTest', '>= 4.4.0'
   gem 'rspec-rails', '>= 2.0.0'
-  gem 'autotest-rails', '>= 4.1.0'
+  #gem 'autotest-rails', '>= 4.1.0'
   gem 'rcov', '>= 0.9.9'
 
   gem 'webrat', '>=0.7.3'
@@ -96,6 +96,9 @@ group :test, :development do
 
   #needed to generate routes in javascript
   gem "js-routes", :require => 'js_routes'
+ 
+  gem 'minitest-rails'
+  gem 'mocha' 
 end
 
 group :profiling do
@@ -125,5 +128,4 @@ end
 group :test do
   gem 'vcr'
   gem 'webmock'
-  gem 'minitest'
 end
