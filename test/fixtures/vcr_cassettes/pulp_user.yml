@@ -1,0 +1,73 @@
+--- 
+recorded_with: VCR 2.2.5
+http_interactions: 
+- request: 
+    method: post
+    uri: https://knifeparty.localdomain/pulp/api/v2/users/
+    body: 
+      string: "{\"name\":\"test_username\",\"password\":\"ttYtXpYkfBacudSs\",\"login\":\"test_username\"}"
+    headers: 
+      Content-Type: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Accept: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="2hQtrwO79S8DKPb8Xr7I1WPwdXg4Me63LuarTh7DKhM", oauth_signature="8NLr%2BAorUB6XY78VPiW0AbpLoWA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1348079325", oauth_version="1.0"
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Length: 
+      - "78"
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Location: 
+      - test_username
+      Date: 
+      - Wed, 19 Sep 2012 18:28:45 GMT
+      Content-Length: 
+      - "205"
+    body: 
+      string: "{\"_id\": {\"$oid\": \"505a0edddc79210422000024\"}, \"name\": \"test_username\", \"roles\": [], \"_ns\": \"users\", \"login\": \"test_username\", \"id\": \"505a0edddc79210422000024\", \"_href\": \"/pulp/api/v2/users/test_username/\"}"
+    http_version: 
+  recorded_at: Wed, 19 Sep 2012 18:28:46 GMT
+- request: 
+    method: delete
+    uri: https://knifeparty.localdomain/pulp/api/v2/users/test_username/
+    body: 
+      string: ""
+    headers: 
+      Content-Type: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Accept: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="izway7zdy7XCU34R69B3zh08XGyGbZzMMzgldy84", oauth_signature="iLZU3%2F1Eeh1YzqaUFqfrVYv1Atg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1348079326", oauth_version="1.0"
+      Accept-Encoding: 
+      - gzip, deflate
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Date: 
+      - Wed, 19 Sep 2012 18:28:46 GMT
+      Content-Length: 
+      - "4"
+    body: 
+      string: "null"
+    http_version: 
+  recorded_at: Wed, 19 Sep 2012 18:28:46 GMT
