@@ -353,6 +353,7 @@ module Glue::Pulp::Repo
     clone = Repository.new(:environment_product => key,
                            :cp_label => self.cp_label,
                            :library_instance=>library,
+                           :label=>self.label,
                            :name=>self.name,
                            :arch=>self.arch,
                            :major=>self.major,
@@ -471,7 +472,7 @@ module Glue::Pulp::Repo
   end
 
   def generate_metadata
-    Runcible::Extensions::Repository.publish(self.pulp_id)
+    Runcible::Extensions::Repository.publish_all(self.pulp_id)
   end
 
   # Convert array of Repo objects to Ruby Hash in the form of repo.id => repo_object for fast searches.
