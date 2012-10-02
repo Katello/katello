@@ -43,6 +43,7 @@ module RepositoryTestBase
     @dev                = KTEnvironment.find(environments(:dev).id)
     @acme_corporation   = Organization.find(organizations(:acme_corporation).id)
     @unassigned_gpg_key = GpgKey.find(gpg_keys(:unassigned_gpg_key).id)
+    @fedora_filter      = Filter.find(filters(:fedora_filter).id)
   end
 
 end
@@ -91,6 +92,14 @@ class RepositoryInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
     assert @fedora_17.custom?
   end
 
+  def test_in_environment
+    assert Repository.in_environment(@library).include?(@fedora_17)
+  end
+
+  def test_in_product
+    assert Repository.in_product(@fedora).include?(@fedora_17)
+  end
+
   def test_yum_gpg_key_url
     assert !@fedora_17.yum_gpg_key_url.nil?
   end
@@ -130,7 +139,7 @@ class RepositoryInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_applicable_filters
-    assert @fedora_17.applicable_filters == []
+    assert @fedora_17_dev.applicable_filters.include?(@fedora_filter)
   end
 
 end
