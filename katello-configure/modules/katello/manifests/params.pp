@@ -59,7 +59,7 @@ class katello::params {
   $ssl_certificate_ca_file  = $ssl_certificate_file
 
   # Foreman settings
-  $use_foreman     = true
+  $use_foreman     = false
   $install_foreman = false
   $foreman_start_port         = "5500"
   $foreman_thin_process_count = katello_process_count(0.4)
