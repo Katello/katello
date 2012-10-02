@@ -5,7 +5,12 @@ rescue LoadError
 end
 
 module Puppet::Parser::Functions
+  # param1: variable name
+  # param2: default value (when variable is set to NONE or missing)
   newfunction(:katello_config_value, :type => :rvalue) do |args|
-    return Util::Puppet::config_value(args[0]) || args[1]
+    val = Util::Puppet::config_value(args[0])
+    # treat NONE as nil only when default value is provided
+    val = nil if args[1] and val == 'NONE'
+    return val || args[1]
   end
 end
