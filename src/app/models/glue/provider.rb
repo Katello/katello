@@ -124,12 +124,13 @@ module Glue::Provider
       end
     end
 
-    def add_custom_product(name, description, url, gpg = nil)
+    def add_custom_product(label, name, description, url, gpg = nil)
       # URL isn't used yet until we can do custom repo discovery in pulp
       begin
         Rails.logger.debug "Creating custom product #{name} for provider: #{self.name}"
         product = Product.new({
             :name => name,
+            :label => label,
             :description => description,
             :multiplier => 1
         })
@@ -164,7 +165,7 @@ module Glue::Provider
     end
 
     def owner_import zip_file_path, options
-      Resources::Candlepin::Owner.import self.organization.cp_key, zip_file_path, options
+      Resources::Candlepin::Owner.import self.organization.label, zip_file_path, options
     end
 
     def del_owner_import
@@ -175,14 +176,14 @@ module Glue::Provider
       imports = self.owner_imports
       if imports.length == 1
         Rails.logger.debug "Deleting import for provider: #{name}"
-        Resources::Candlepin::Owner.destroy_imports self.organization.cp_key
+        Resources::Candlepin::Owner.destroy_imports self.organization.label
       else
         Rails.logger.debug "Unable to delete import for provider: #{name}. Reason: a successful import was previously completed."
       end
     end
 
     def owner_imports
-      Resources::Candlepin::Owner.imports self.organization.cp_key
+      Resources::Candlepin::Owner.imports self.organization.label
     end
 
     def queue_import_manifest zip_file_path, options
@@ -288,7 +289,7 @@ module Glue::Provider
     # model)
     def marketing_to_enginnering_product_ids_mapping
       mapping = {}
-      pools = Resources::Candlepin::Owner.pools self.organization.cp_key
+      pools = Resources::Candlepin::Owner.pools self.organization.label
       pools.each do |pool|
         mapping[pool[:productId]] ||= []
         if pool[:providedProducts]

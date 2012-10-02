@@ -6,7 +6,7 @@ define sqlexec($username, $passfile, $database, $sql, $sqlcheck = "NONE", $logfi
       default => "PGPASSFILE=${passfile}"
     },
     path        => $path,
-    timeout     => 600,
+    timeout     => 0,
     unless => $sqlcheck? {
         "NONE" => undef,
         default => "psql -U $username $database -c $sqlcheck",

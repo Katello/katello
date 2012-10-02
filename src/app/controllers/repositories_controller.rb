@@ -16,8 +16,8 @@ class RepositoriesController < ApplicationController
 
   respond_to :html, :js
 
-  before_filter :find_provider, :only => [:new, :create, :edit, :destroy, :update_gpg_key]
-  before_filter :find_product, :only => [:new, :create, :edit, :destroy, :update_gpg_key]
+  before_filter :find_provider, :only => [:new, :create, :default_label, :edit, :destroy, :update_gpg_key]
+  before_filter :find_product, :only => [:new, :create, :default_label, :edit, :destroy, :update_gpg_key]
   before_filter :authorize
   before_filter :find_repository, :only => [:edit, :destroy, :enable_repo, :update_gpg_key]
 
@@ -29,6 +29,7 @@ class RepositoriesController < ApplicationController
     {
       :new => edit_test,
       :create => edit_test,
+      :default_label => edit_test,
       :edit => read_test,
       :update_gpg_key => edit_test,
       :destroy => edit_test,
@@ -55,14 +56,18 @@ class RepositoriesController < ApplicationController
 
   def create
     repo_params = params[:repo]
+    repo_params[:label], label_assigned = generate_label(repo_params[:name], _('repository')) if repo_params[:label].blank?
+
     raise URI::InvalidURIError.new _('Invalid Url') if !kurl_valid?(repo_params[:feed])
     gpg = GpgKey.readable(current_organization).find(repo_params[:gpg_key]) if repo_params[:gpg_key] and repo_params[:gpg_key] != ""
     # Bundle these into one call, perhaps move to Provider
     # Also fix the hard coded yum
-    @product.add_repo(repo_params[:name], repo_params[:feed], 'yum', gpg)
+    @product.add_repo(repo_params[:label],repo_params[:name], repo_params[:feed], 'yum', gpg)
     @product.save!
 
     notify.success _("Repository '%s' created.") % repo_params[:name]
+    notify.message label_assigned unless label_assigned.blank?
+
     render :nothing => true
   rescue Errors::ConflictException, URI::InvalidURIError => e
     notify.error e.message

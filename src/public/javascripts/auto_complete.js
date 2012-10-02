@@ -119,7 +119,27 @@ KT.auto_complete_box = function(params) {
 
     if (!settings.comma_separated_input) {
         input.autocomplete({
-            source: settings.values,
+            source: function (request, response) {
+                $.ajax({
+                    url: settings.values,
+                    data: request,
+                    dataType: 'json',
+                    success: function (data) {
+                        response(data);
+                        KT.utils.each(data, function(item){
+                            if(request.term === item.value ||
+                               request.term === item.label)
+                            {
+                                get_selected_input().val(item.id);
+                                add_btn.removeAttr("disabled");
+                            }
+                        });
+                    },
+                    error: function () {
+                        response([]);
+                    }
+                });
+            },
             search: function(){
                 get_selected_input().val('');
                 if(settings.require_select){

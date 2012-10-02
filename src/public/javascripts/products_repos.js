@@ -24,10 +24,10 @@ $(document).ready(function() {
     toggle_form(form);
   });
 
-  $('.clickable').click(function(){
-    $(this).parent().parent().parent().find('ul').slideToggle();
+  $('#products_repos .clickable').click(function(){
+    $(this).parents('ul').find('ul').slideToggle();
 
-    var arrow = $(this).parent().find('a').find('img');
+    var arrow = $(this);
     if(arrow.attr("src").indexOf("collapsed") === -1){
       arrow.attr("src", KT.common.rootURL() + "images/embed/icons/expander-collapsed.png");
     } else {

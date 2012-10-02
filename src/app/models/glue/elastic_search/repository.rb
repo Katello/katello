@@ -22,6 +22,7 @@ module Glue::ElasticSearch::Repository
       mapping do
         indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
         indexes :name_sort, :type => 'string', :index => :not_analyzed
+        indexes :labels, :type => 'string', :index => :not_analyzed
       end
 
       after_save :update_related_index
