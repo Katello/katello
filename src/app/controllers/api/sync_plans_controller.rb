@@ -102,12 +102,12 @@ class Api::SyncPlansController < Api::ApiController
   param :id, :number, :desc => "sync plan numeric identifier"
   def destroy
     @plan.destroy
-    render :text => _("Deleted sync plan '#{params[:id]}'"), :status => 200
+    render :text => _("Deleted sync plan '%s'") % params[:id], :status => 200
   end
 
   def find_plan
     @plan = @organization.sync_plans.where(:id => params[:id]).first
-    raise HttpErrors::NotFound, _("Couldn't find sync plan '#{params[:id]}' in organization '#{params[:organization_id]}'") if @plan.nil?
+    raise HttpErrors::NotFound, _("Couldn't find sync plan '%{plan}' in organization '%{org}'") % {:plan => params[:id], :org => params[:organization_id]} if @plan.nil?
     @plan
   end
 

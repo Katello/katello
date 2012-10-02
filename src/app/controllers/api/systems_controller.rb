@@ -201,7 +201,7 @@ DESC
   param :id, String, :desc => "UUID of the system", :required => true
   def destroy
     @system.destroy
-    render :text => _("Deleted system '#{params[:id]}'"), :status => 204
+    render :text => _("Deleted system '%s'") % params[:id], :status => 204
   end
 
   api :GET, "/systems/:id/pools", "List pools a system is subscribed to"
@@ -242,7 +242,7 @@ DESC
   param :id, String, :desc => "UUID of the system", :required => true
   def upload_package_profile
     if AppConfig.katello?
-      raise HttpErrors::BadRequest, _("No package profile received for #{@system.name}") unless params.has_key?(:_json)
+      raise HttpErrors::BadRequest, _("No package profile received for %s") % @system.name unless params.has_key?(:_json)
       @system.upload_package_profile(params[:_json])
     end
     render :json => @system.to_json
@@ -335,14 +335,14 @@ This information is then used for computing the errata available for the system.
 DESC
   def enabled_repos
     repos = params['enabled_repos'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " enabled_repos")
-    update_labels = repos['repos'].collect{ |r| r['repositoryid']} rescue raise(HttpErrors::BadRequest, _("Unable to parse repositories: #{$!}"))
+    update_labels = repos['repos'].collect{ |r| r['repositoryid']} rescue raise(HttpErrors::BadRequest, _("Unable to parse repositories: %s") % $!)
 
     update_ids = []
     unknown_labels = []
     update_labels.each do |label|
       repo = @system.environment.repositories.find_by_cp_label label
       if repo.nil?
-        logger.warn(_("Unknown repository label") + ": #{label}")
+        logger.warn(_("Unknown repository label: %s") % label)
         unknown_labels << label
       else
         update_ids << repo.pulp_id
@@ -399,7 +399,7 @@ DESC
 
   def find_only_environment
     if !@environment && @organization && !params.has_key?(:environment_id)
-      raise HttpErrors::BadRequest, _("Organization #{@organization.name} has 'Library' environment only. Please create an environment for system registration.") if @organization.environments.empty?
+      raise HttpErrors::BadRequest, _("Organization %s has 'Library' environment only. Please create an environment for system registration.") % @organization.name if @organization.environments.empty?
 
       # Some subscription-managers will call /users/$user/owners to retrieve the orgs that a user belongs to.
       # Then, If there is just one org, that will be passed to the POST /api/consumers as the owner. To handle
@@ -410,7 +410,7 @@ DESC
         if current_user.default_environment && current_user.default_environment.organization == @organization
           @environment = current_user.default_environment
         else
-          raise HttpErrors::BadRequest, _("Organization #{@organization.name} has more than one environment. Please specify target environment for system registration.")
+          raise HttpErrors::BadRequest, _("Organization %s has more than one environment. Please specify target environment for system registration.") % @organization.name
         end
       else
         @environment = @organization.environments.first and return
@@ -441,7 +441,7 @@ DESC
     if @environment
       @organization = @environment.organization
     else
-      raise HttpErrors::NotFound, _("You have not set a default organization and environment on the user #{current_user.username}.")
+      raise HttpErrors::NotFound, _("You have not set a default organization and environment on the user %s.") % current_user.username
     end
   end
 

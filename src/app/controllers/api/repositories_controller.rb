@@ -94,7 +94,7 @@ class Api::RepositoriesController < Api::ApiController
     raise HttpErrors::BadRequest, _("Repository cannot be deleted since it has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it.") if @repository.promoted?
 
     @repository.destroy
-    render :text => _("Deleted repository '#{params[:id]}'"), :status => 200
+    render :text => _("Deleted repository '%s'") % params[:id], :status => 200
   end
 
   api :POST, "/repositories/:id/enable", "Enable or disable a repository"
@@ -107,9 +107,9 @@ class Api::RepositoriesController < Api::ApiController
     @repository.save!
 
     if @repository.enabled?
-      render :text => _("Repository '#{@repository.name}' enabled."), :status => 200
+      render :text => _("Repository '%s' enabled.") % @repository.name, :status => 200
     else
-      render :text => _("Repository '#{@repository.name}' disabled."), :status => 200
+      render :text => _("Repository '%s' disabled.") % @repository.name, :status => 200
     end
   end
 

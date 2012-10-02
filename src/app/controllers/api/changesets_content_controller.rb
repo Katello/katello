@@ -39,7 +39,7 @@ class Api::ChangesetsContentController < Api::ApiController
   def add_product
     product = Product.find_by_cp_id!(params[:product_id])
     @changeset.add_product! product
-    render :text => _("Added product '#{product.name}'"), :status => 200
+    render :text => _("Added product '%s'") % product.name, :status => 200
   end
 
   api :DELETE, "/changesets/:changeset_id/products/:id", "Removes a product from a changeset"
@@ -47,8 +47,8 @@ class Api::ChangesetsContentController < Api::ApiController
   def remove_product
     product = Product.find_by_cp_id!(params[:id])
     render_after_removal @changeset.remove_product!(product),
-                         :success   => _("Removed product '#{params[:id]}'"),
-                         :not_found => _("Product #{params[:id]} not found in the changeset.")
+                         :success   => _("Removed product '%s'") % params[:id],
+                         :not_found => _("Product %s not found in the changeset.") % params[:id]
   end
 
   api :POST, "/changesets/:changeset_id/packages", "Add a package to a changeset"
@@ -57,7 +57,7 @@ class Api::ChangesetsContentController < Api::ApiController
   def add_package
     product = Product.find_by_cp_id!(params[:product_id])
     @changeset.add_package!(params[:name], product)
-    render :text => _("Added package '#{params[:name]}'"), :status => 200
+    render :text => _("Added package '%s'") % params[:name], :status => 200
   end
 
   api :DELETE, "/changesets/:changeset_id/packages/:id", "Remove a package from a changeset"
@@ -65,8 +65,8 @@ class Api::ChangesetsContentController < Api::ApiController
   def remove_package
     product = Product.find_by_cp_id!(params[:product_id])
     render_after_removal @changeset.remove_package!(params[:id], product),
-                         :success   => _("Removed package '#{params[:id]}'"),
-                         :not_found => _("Package '#{params[:id]}' not found in the changeset")
+                         :success   => _("Removed package '%s'") % params[:id],
+                         :not_found => _("Package '%s' not found in the changeset") % params[:id]
   end
 
   api :POST, "/changesets/:changeset_id/errata", "Add an errata to a changeset"
@@ -75,7 +75,7 @@ class Api::ChangesetsContentController < Api::ApiController
   def add_erratum
     product = Product.find_by_cp_id!(params[:product_id])
     @changeset.add_erratum!(params[:erratum_id], product)
-    render :text => _("Added erratum '#{params[:erratum_id]}'"), :status => 200
+    render :text => _("Added erratum '%s'") % params[:erratum_id], :status => 200
   end
 
   api :DELETE, "/changesets/:changeset_id/errata/:id", "Remove an errata from a changeset"
@@ -83,8 +83,8 @@ class Api::ChangesetsContentController < Api::ApiController
   def remove_erratum
     product = Product.find_by_cp_id!(params[:product_id])
     render_after_removal @changeset.remove_erratum!(params[:id], product),
-                         :success   => _("Removed erratum '#{params[:id]}'"),
-                         :not_found => _("Erratum '#{params[:id]}' not found in the changeset")
+                         :success   => _("Removed erratum '%s'") % params[:id],
+                         :not_found => _("Erratum '%s' not found in the changeset") % params[:id]
   end
 
   api :POST, "/changesets/:changeset_id/repositories", "Add a repository to a changeset"
@@ -100,7 +100,7 @@ class Api::ChangesetsContentController < Api::ApiController
     repository = Repository.find(params[:id])
     render_after_removal @changeset.remove_repository!(repository),
                          :success   => _("Removed repository '%s'") % params[:id],
-                         :not_found => _("Repository '#{params[:id]}' not found in the changeset")
+                         :not_found => _("Repository '%s' not found in the changeset") % params[:id]
   end
 
   api :POST, "/changesets/:changeset_id/templates", "Add a template to a changeset"
@@ -108,15 +108,15 @@ class Api::ChangesetsContentController < Api::ApiController
   def add_template
     template = SystemTemplate.find(params[:template_id])
     @changeset.add_template!(template)
-    render :text => _("Added template '#{template.name}'"), :status => 200
+    render :text => _("Added template '%s'") % template.name, :status => 200
   end
 
   api :DELETE, "/changesets/:changeset_id/templates/:id", "Remove a template from a changeset"
   def remove_template
     template = SystemTemplate.find(params[:id])
     render_after_removal @changeset.remove_template!(template),
-                         :success   => _("Removed template '#{params[:id]}'"),
-                         :not_found => _("Template '#{params[:id]}' not found in the changeset")
+                         :success   => _("Removed template '%s'") % params[:id],
+                         :not_found => _("Template '%s' not found in the changeset") % params[:id]
   end
 
   api :POST, "/changesets/:changeset_id/distributions", "Add a distribution to a changeset"
@@ -132,8 +132,8 @@ class Api::ChangesetsContentController < Api::ApiController
   def remove_distribution
     product = Product.find_by_cp_id!(params[:product_id])
     render_after_removal @changeset.remove_distribution!(params[:id], product),
-                         :success   => _("Removed distribution '#{params[:id]}'"),
-                         :not_found => _("Distribution '#{params[:id]}' not found in the changeset")
+                         :success   => _("Removed distribution '%s'") % params[:id],
+                         :not_found => _("Distribution '%s' not found in the changeset") % params[:id]
   end
 
   private

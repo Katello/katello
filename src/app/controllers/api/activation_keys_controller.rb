@@ -102,7 +102,7 @@ class Api::ActivationKeysController < Api::ApiController
   api :DELETE, "/activation_keys/:id", "Destroy an activation key"
   def destroy
     @activation_key.destroy
-   render :text => _("Deleted activation key '#{params[:id]}'"), :status => 204
+   render :text => _("Deleted activation key '%s'") % params[:id], :status => 204
   end
 
   api :POST, "/organizations/:organization_id/activation_keys/:id/system_groups"
