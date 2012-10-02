@@ -13,7 +13,7 @@
 require 'minitest_helper'
 
 
-module TestGluePulpUserBase
+module GluePulpUserTestBase
 
   def setup
     configure_vcr
@@ -43,8 +43,8 @@ module TestGluePulpUserBase
 end
 
 
-class TestGluePulpUser < MiniTest::Unit::TestCase
-  include TestGluePulpUserBase
+class GluePulpTestUser < MiniTest::Unit::TestCase
+  include GluePulpUserTestBase
 
   def test_set_pulp_user
     assert @user.set_pulp_user

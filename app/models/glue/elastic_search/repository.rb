@@ -104,5 +104,15 @@ module Glue::ElasticSearch::Repository
       Tire.index('katello_errata').refresh
     end
 
+    def errata_count
+      results = Errata.search('', 0, 1, :repoids => [self.pulp_id])
+      results.empty? ? 0 : results.total
+    end
+
+    def package_count
+      results = Package.search('', 0, 1, :repoids => [self.pulp_id])
+      results.empty? ? 0 : results.total
+    end
+
   end
 end
