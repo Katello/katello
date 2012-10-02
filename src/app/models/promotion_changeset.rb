@@ -157,7 +157,7 @@ class PromotionChangeset < Changeset
       repo.add_packages(pkgs)
       pkg_ids += pkgs
     end
-    #Glue::Pulp::Package.index_packages(pkg_ids)
+    #Package.index_packages(pkg_ids)
   end
 
 
@@ -254,7 +254,7 @@ class PromotionChangeset < Changeset
   def errata_for_dep_calc product
     cs_errata = ChangesetErratum.where({ :changeset_id => self.id, :product_id => product.id })
     cs_errata.collect do |err|
-      Glue::Pulp::Errata.find(err.errata_id)
+      Errata.find(err.errata_id)
     end
   end
 
@@ -264,7 +264,7 @@ class PromotionChangeset < Changeset
 
     cs_pacakges = ChangesetPackage.where({ :changeset_id => self.id, :product_id => product.id })
     packages    += cs_pacakges.collect do |pack|
-      Glue::Pulp::Package.find(pack.package_id)
+      Package.find(pack.package_id)
     end
 
     packages += errata_for_dep_calc(product).collect do |err|

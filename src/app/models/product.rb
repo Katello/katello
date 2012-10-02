@@ -19,8 +19,8 @@ end
 
 class Product < ActiveRecord::Base
   include Glue::Candlepin::Product if AppConfig.use_cp
-  include Glue::Pulp::Repos if AppConfig.katello?
-  include Glue if AppConfig.use_cp
+  include Glue::Pulp::Repos if AppConfig.use_pulp
+  include Glue if AppConfig.use_cp || AppConfig.use_pulp
   include Authorization
   include AsyncOrchestration
   include IndexedModel
@@ -158,13 +158,13 @@ class Product < ActiveRecord::Base
 
   def total_package_count env
     repoids = self.repos(env).collect{|r| r.pulp_id}
-    result = Glue::Pulp::Package.search('*', 0, 1, repoids)
+    result = Package.search('*', 0, 1, repoids)
     result.length > 0 ? result.total : 0
   end
 
   def total_errata_count env
     repo_ids = self.repos(env).collect{|r| r.pulp_id}
-    results = Glue::Pulp::Errata.search('', 0, 1, :repoids => repo_ids)
+    results = Errata.search('', 0, 1, :repoids => repo_ids)
     results.empty? ? 0 : results.total
   end
 

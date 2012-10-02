@@ -22,9 +22,6 @@ module Glue::Pulp::Repos
       before_destroy :destroy_repos_orchestration
 
       has_and_belongs_to_many :filters, :uniq => true
-
-      # required for GPG key url generation
-      include Rails.application.routes.url_helpers
     end
   end
 

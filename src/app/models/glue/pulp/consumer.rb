@@ -24,7 +24,7 @@ module Glue::Pulp::Consumer
       lazy_accessor :simple_packages, :initializer => lambda { Resources::Pulp::Consumer.installed_packages(uuid).
                                                               collect{|pack| Glue::Pulp::SimplePackage.new(pack)} }
       lazy_accessor :errata, :initializer => lambda { Resources::Pulp::Consumer.errata(uuid).
-                                                              collect{|errata| Glue::Pulp::Errata.new(errata)} }
+                                                              collect{|errata| Errata.new(errata)} }
       lazy_accessor :repoids, :initializer => lambda { Resources::Pulp::Consumer.repoids(uuid).keys }
     end
   end
