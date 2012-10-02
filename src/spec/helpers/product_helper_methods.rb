@@ -19,7 +19,7 @@ module ProductHelperMethods
     @provider = Provider.create!({:organization => org, :name => 'provider' + suffix, :repository_url => "https://something.url", :provider_type => Provider::CUSTOM})
     @p = Product.create!(ProductTestData::SIMPLE_PRODUCT.merge({:name=>'product' + suffix, :environments => [env], :provider => @provider}))
     env_product = EnvironmentProduct.find_or_create(env, @p)
-    repo = Repository.create!(:environment_product => env_product, :name=>"FOOREPO" + suffix, :pulp_id=>"anid" + suffix)
+    repo = Repository.create!(:environment_product => env_product, :name=>"FOOREPO" + suffix, :label=>"FOOREPO" + suffix, :pulp_id=>"anid" + suffix)
     pkg = Glue::Pulp::Package.new(:name=>"Pkg" + suffix, :id=>"234" + suffix)
     repo.stub(:packages).and_return([pkg])
 

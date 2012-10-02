@@ -21,12 +21,17 @@
               .error_icon.fl
                 &nbsp;
               #{_("Error")}
-            - else
+            - elsif product.sync_status.state == PulpSyncStatus::FINISHED
               .check_icon.fl
                 &nbsp;
               #{_("Success")}
+            - elsif product.sync_status.state == PulpSyncStatus::CANCELED
+              #{_("Cancelled")}
+            - elsif product.sync_status.state == PulpSyncStatus::WAITING
+              #{_("Waiting")}
+            - elsif product.sync_status.state == PulpSyncStatus::RUNNING
+              #{_("Running")}
+            - else
+              #{product.sync_status.state}
           .col_3
             #{format_time product.sync_status.finish_time}
-
-
-

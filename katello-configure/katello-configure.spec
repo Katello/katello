@@ -14,7 +14,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        1.1.9
+Version:        1.1.10
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -32,6 +32,7 @@ Requires:       openssl
 Requires:       policycoreutils-python
 Requires:       initscripts
 Requires:       rubygem(bundler)
+Requires:       rubygem(rake)
 BuildRequires:  /usr/bin/pod2man /usr/bin/erb
 BuildRequires:  findutils puppet >= 2.6.6
 
@@ -106,6 +107,23 @@ chmod +x -R %{buildroot}%{homedir}/upgrade-scripts/*
 
 
 %changelog
+* Thu Sep 27 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.10-1
+- 858360 - Making katello-upgrade START services after upgrade is complete
+  (jomara@redhat.com)
+- 859407 - puppet timeout set to 0 for some steps (lzap+git@redhat.com)
+- Rakefile could not be in -devel package as katello-configure call db:migrate
+  and seed_with_logging rake tasks (msuchy@redhat.com)
+- 858277 - tomcat6 service dependency (lzap+git@redhat.com)
+- 857913 - katello-upgrade system call improvement (lzap+git@redhat.com)
+- 858038 - optimizing memory division (lzap+git@redhat.com)
+- 858038 - thin process calculator fix (lzap+git@redhat.com)
+- 858013 - katello job workers configure option (lzap+git@redhat.com)
+- 857913 - katello-upgrade auto-stop now working (lzap+git@redhat.com)
+- 856220 - tomcat6 now requires keystore symlink (lzap+git@redhat.com)
+- 856220 - refactoring katello_keystore variable (lzap+git@redhat.com)
+- removing example upgrade scripts (lzap+git@redhat.com)
+- 856220 - mongodb now configured with journal (lzap+git@redhat.com)
+
 * Wed Sep 12 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.9-1
 - 856220 - adding time to puppet log (lzap+git@redhat.com)
 - Removing extra configure code for headpin bin; adding provides to cli script

@@ -21,7 +21,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.1.8
+Version:       1.1.9
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 Requires:      %{base_name}-cli-common
@@ -150,6 +150,48 @@ popd
 make -C po clean
 
 %changelog
+* Thu Sep 27 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.9-1
+- convert string to unicode (msuchy@redhat.com)
+- 857576 - Added update filter test (davidd@scimedsolutions.com)
+- 857576 - Package filter name can be edited by cli
+  (davidd@scimedsolutions.com)
+- move custom notes to separate file (msuchy@redhat.com)
+- remove duplicate code (msuchy@redhat.com)
+- W0104:228,8:GrepStrategy._print_header: Statement seems to have no effect
+  (msuchy@redhat.com)
+- W0212:135,8:VerboseStrategy._print_header: Access to a protected member
+  _println of a client class E0602:135,8:VerboseStrategy._print_header:
+  Undefined variable 'self' (msuchy@redhat.com)
+- C0301:124,0: Line too long (129/120) C0301:971,0: Line too long (147/120)
+  (msuchy@redhat.com)
+- if using delimiter, then do not print padding spaces (msuchy@redhat.com)
+- do not print first delimiter (msuchy@redhat.com)
+- 801560 - correctly calculate length of asian characters (msuchy@redhat.com)
+- 845995 - fixing typo (msuchy@redhat.com)
+- refresh translations string for katello-cli (msuchy@redhat.com)
+- some small python changes (komidore64@gmail.com)
+- adding uuid arguments to system's custom info actions in the cli
+  (komidore64@gmail.com)
+- 858011 - pylint fixes (mmccune@redhat.com)
+- removing a couple missed debugger statements (komidore64@gmail.com)
+- CustomInfo for Systems (komidore64@gmail.com)
+- object labels - fix cli tests broken during addition of object labels
+  (bbuckingham@redhat.com)
+- 797297 - fix typo (msuchy@redhat.com)
+- 845995 - write error is systemgroup does not exist (msuchy@redhat.com)
+- object-labels - adding CLI and API calls to support object labeling
+  (mmccune@redhat.com)
+- 836575 - fix encoding errors when reporting failure messages in CLI
+  (inecas@redhat.com)
+- Revert "regenerating localization strings for cli" (komidore64@gmail.com)
+- regenerating localization strings for cli (komidore64@gmail.com)
+- 820634 - Katello String Updates (komidore64@gmail.com)
+- handle exception when katello server is down (msuchy@redhat.com)
+- update cli source strings of localization (msuchy@redhat.com)
+- object-label - organization - rename column cp_key to label
+  (bbucking@dhcp231-20.rdu.redhat.com)
+- cli - remove unused import (inecas@redhat.com)
+
 * Wed Sep 12 2012 Ivan Necas <inecas@redhat.com> 1.1.8-1
 - 837000 - [RFE] when updating sync plan by CLI, it resets the interval.
   (pajkycz@gmail.com)

@@ -100,6 +100,10 @@ class UserSessionsController < ApplicationController
           # notice the user
           notify.success _("Login Successful, logging into '%s' ") % user_default_org.name
           set_org
+        elsif orgs.length < 1
+          # notice the user, please choose an org
+          notify.success _("Login Successful, please contact administrator to get permission to access an organization.")
+          render :partial =>"/user_sessions/interstitial.js.haml", :locals=> {:num_orgs => orgs.length, :redir_path => dashboard_index_path}
         else
           # notice the user, please choose an org
           notify.success _("Login Successful, please choose an Organization")

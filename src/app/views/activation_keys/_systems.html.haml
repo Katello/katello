@@ -15,10 +15,11 @@
         %tr.no_sort
           %th= _('Name')
           %th= _('OS')
+          %th= _('Registered')
           %th= _('Last Checked In')
       %tbody
         %tr#empty_row{:class=>(:hidden if !@systems.blank?)}
-          %td{:colspan => 3}
+          %td{:colspan => 4}
             = _("This activation key is not currently associated with a System.")
 
         = render :partial => 'system', :collection => @systems

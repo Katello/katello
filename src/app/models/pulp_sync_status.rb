@@ -40,6 +40,7 @@ class PulpSyncStatus < PulpTaskStatus
   ERROR = "failed"
   RUNNING = "running"
   WAITING = "waiting"
+  CANCELED = "canceled"
 
   class Status < ::TaskStatus::Status
     NOT_SYNCED = :not_synced

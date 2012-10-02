@@ -6,7 +6,7 @@ ORGS = [
     "created_at": "2011-08-23T08:10:52Z",
     "updated_at": "2011-08-23T08:10:52Z",
     "id": 1,
-    "cp_key": "ACME_Corporation",
+    "label": "ACME_Corporation",
     "description": "ACME Corporation Organization"
   }
 ]

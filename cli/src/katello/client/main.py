@@ -34,6 +34,7 @@ from katello.client.core import (
   package,
   errata,
   system,
+  system_custom_info,
   sync_plan,
   shell_command,
   template,
@@ -127,7 +128,7 @@ def setup_admin(katello_cmd):
         prod_cmd.add_command('set_plan', product.SetSyncPlan())
         prod_cmd.add_command('remove_plan', product.RemoveSyncPlan())
     katello_cmd.add_command('product', prod_cmd)
-    
+
     # these could be set in the same block but are separated
     # for clarity
     if mode == 'katello':
@@ -190,12 +191,16 @@ def setup_admin(katello_cmd):
     system_cmd.add_command('report', system.Report())
     system_cmd.add_command('releases', system.Releases())
     system_cmd.add_command('remove_deletion', system.RemoveDeletion())
-    if mode == 'katello': 
+    if mode == 'katello':
         system_cmd.add_command('tasks', system.TasksList())
         system_cmd.add_command('task', system.TaskInfo())
         system_cmd.add_command('packages', system.InstalledPackages())
         system_cmd.add_command('add_to_groups', system.AddSystemGroups())
         system_cmd.add_command('remove_from_groups', system.RemoveSystemGroups())
+    system_cmd.add_command('add_custom_info', system_custom_info.AddCustomInfo())
+    system_cmd.add_command('view_custom_info', system_custom_info.ViewCustomInfo())
+    system_cmd.add_command('update_custom_info', system_custom_info.UpdateCustomInfo())
+    system_cmd.add_command('remove_custom_info', system_custom_info.RemoveCustomInfo())
     katello_cmd.add_command('system', system_cmd)
 
     if mode == 'katello':
@@ -271,6 +276,7 @@ def setup_admin(katello_cmd):
     if mode == 'katello':
         filter_cmd = filters.Filter()
         filter_cmd.add_command('create', filters.Create())
+        filter_cmd.add_command('update', filters.Update())
         filter_cmd.add_command('list', filters.List())
         filter_cmd.add_command('info', filters.Info())
         filter_cmd.add_command('delete', filters.Delete())
