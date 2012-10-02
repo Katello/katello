@@ -1,10 +1,12 @@
 #!/bin/bash
 
-#name: Update Pulp
+#name: Update Pulp MongoDB database
 #apply: katello
 #description:
 #Actions that need to be taken to upgrade Pulp subsystem
 
-# TODO
+/usr/sbin/service-wait mongod start
+/bin/sleep 10s
+/usr/bin/pulp-migrate
 
 exit 0
