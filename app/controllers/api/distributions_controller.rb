@@ -46,7 +46,7 @@ class Api::DistributionsController < Api::ApiController
   end
 
   def check_distribution
-    raise HttpErrors::NotFound, _("Distribution '#{params[:id]}' not found within the repository") unless @repo.has_distribution? params[:id]
+    raise HttpErrors::NotFound, _("Distribution '%s' not found within the repository") % params[:id]  unless @repo.has_distribution? params[:id]
   end
 
 end

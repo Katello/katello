@@ -57,9 +57,9 @@ class Api::PackagesController < Api::ApiController
 
   def find_package
     @package = Resources::Pulp::Package.find(params[:id])
-    raise HttpErrors::NotFound, _("Package with id '#{params[:id]}' not found") if @package.nil?
+    raise HttpErrors::NotFound, _("Package with id '%s' not found") % params[:id] if @package.nil?
     # and check ownership of it
-    raise HttpErrors::NotFound, _("Package '#{params[:id]}' not found within the repository") unless @package['repoids'].include? @repo.pulp_id
+    raise HttpErrors::NotFound, _("Package '%s' not found within the repository") % params[:id]  unless @package['repoids'].include? @repo.pulp_id
     @package
   end
 end

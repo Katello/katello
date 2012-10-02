@@ -98,7 +98,7 @@ class Api::FiltersController < Api::ApiController
   param :id, :identifier, :desc => "filter identifier", :required => true
   def destroy
     @filter.destroy
-    render :text => _("Deleted filter '#{params[:id]}'"), :status => 200
+    render :text => _("Deleted filter '%s'") % params[:id], :status => 200
   end
 
   api :GET, "/organizations/:organization_id/products/:product_id/filters", "List package filters for product"
@@ -168,13 +168,13 @@ class Api::FiltersController < Api::ApiController
 
   def find_filter
     @filter = Filter.first(:conditions => {:name => params[:id], :organization_id => @organization.id})
-    raise HttpErrors::NotFound, _("Couldn't find filter '#{params[:id]}'") if @filter.nil?
+    raise HttpErrors::NotFound, _("Couldn't find filter '%s'") % params[:id]  if @filter.nil?
     @filter
   end
 
   def find_filters
     @filters = Filter.where(:name => params[:filters], :organization_id => @organization.id)
-    raise HttpErrors::NotFound, _("Couldn't one of the filters in '#{params[:product_id]}'") if @filters.any? {|f| f.nil?}
+    raise HttpErrors::NotFound, _("Couldn't one of the filters in '%s'") % params[:product_id] if @filters.any? {|f| f.nil?}
     @filters
   end
 
