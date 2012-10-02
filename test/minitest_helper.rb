@@ -5,6 +5,8 @@ require 'minitest/autorun'
 require 'minitest/rails'
 
 class MiniTest::Rails::ActiveSupport::TestCase
+  self.use_transactional_fixtures = true
+
   #fixtures :users
 end
 

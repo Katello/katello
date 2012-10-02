@@ -129,12 +129,12 @@ class DeletionChangeset < Changeset
 
     pkgs_delete.each_pair do |repo, pkgs|
       pkg_ids.concat(pkgs)
-      pkgs_delete[repo] = Glue::Pulp::Package.id_search(pkgs)
+      pkgs_delete[repo] = Package.id_search(pkgs)
     end
 
     if pkgs_delete.length > 0
       Glue::Pulp::Repo.delete_repo_packages(pkgs_delete)
-      Glue::Pulp::Package.index_packages(pkg_ids)
+      Package.index_packages(pkg_ids)
     end
   end
 
@@ -155,7 +155,7 @@ class DeletionChangeset < Changeset
 
     errata_delete.each_pair do |repo, errata|
        repo.delete_errata(errata)
-       Glue::Pulp::Errata.index_errata(errata)
+       Errata.index_errata(errata)
     end
   end
 

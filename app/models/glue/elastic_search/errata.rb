@@ -76,7 +76,7 @@ module Glue::ElasticSearch::Errata
         filter_for_errata[:repo_ids] = repos.collect{|r| r.pulp_id} if !repos.empty?
 
         first = self.search('', 0, 1, filter_for_errata)
-        self.search('', 0, first.total, filter_for_errata).collect{|e| Glue::Pulp::Errata.new(e.as_json)}
+        self.search('', 0, first.total, filter_for_errata).collect{|e| Errata.new(e.as_json)}
       end
 
       def self.repos_for_filter(filter)
@@ -139,8 +139,8 @@ module Glue::ElasticSearch::Errata
           erratum.as_json.merge(erratum.index_options)
         }
 
-        Tire.index Glue::Pulp::Errata.index do
-          create :settings => Glue::Pulp::Errata.index_settings, :mappings => Glue::Pulp::Errata.index_mapping
+        Tire.index Errata.index do
+          create :settings => Errata.index_settings, :mappings => Errata.index_mapping
           import errata
         end if !errata.empty?
       end

@@ -154,8 +154,8 @@ module Glue::ElasticSearch::Package
           pkg = self.find(pkg_id)
           pkg.as_json.merge(pkg.index_options)
         }
-        Tire.index Glue::Pulp::Package.index do
-          create :settings => Glue::Pulp::Package.index_settings, :mappings => Glue::Pulp::Package.index_mapping
+        Tire.index Package.index do
+          create :settings => Package.index_settings, :mappings => Package.index_mapping
           import pkgs
         end if !pkgs.empty?
       end

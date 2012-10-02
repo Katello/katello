@@ -208,7 +208,7 @@ module Glue::Pulp::Repo
 
   def packages=attrs
     @repo_packages = attrs.collect do |package|
-        Glue::Pulp::Package.new(package)
+      Package.new(package)
     end
     @repo_packages
   end
@@ -223,7 +223,7 @@ module Glue::Pulp::Repo
 
   def errata=attrs
     @repo_errata = attrs.collect do |erratum|
-        Glue::Pulp::Errata.new(erratum)
+      Errata.new(erratum)
     end
     @repo_errata
   end
