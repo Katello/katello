@@ -169,6 +169,7 @@ describe Changeset, :katello => true do
         before(:each) do
           @prod.environments << @environment
           @repo.stub(:is_cloned_in?).and_return(false)
+          I18n.locale = :en
         end
 
         it "should fail on add package" do
@@ -194,6 +195,7 @@ describe Changeset, :katello => true do
           @prod.environments << @environment
           @repo.stub(:is_cloned_in?).and_return(true)
           @repo.stub(:last_sync).and_return("2011-11-11 11:11")
+          I18n.locale = :en
         end
 
         it "should add product" do
