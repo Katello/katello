@@ -38,8 +38,8 @@ module Glue::ElasticSearch::Repository
 
     def index_packages
       pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
-      Tire.index Glue::Pulp::Package.index do
-        create :settings => Glue::Pulp::Package.index_settings, :mappings => Glue::Pulp::Package.index_mapping
+      Tire.index Package.index do
+        create :settings => Package.index_settings, :mappings => Package.index_mapping
         import pkgs
       end if !pkgs.empty?
     end
@@ -50,8 +50,8 @@ module Glue::ElasticSearch::Repository
       pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
       pulp_id = self.pulp_id
 
-      Tire.index Glue::Pulp::Package.index do
-        create :settings => Glue::Pulp::Package.index_settings, :mappings => Glue::Pulp::Package.index_mapping
+      Tire.index Package.index do
+        create :settings => Package.index_settings, :mappings => Package.index_mapping
 
         import pkgs do |documents|
           documents.each do |document|
@@ -72,8 +72,8 @@ module Glue::ElasticSearch::Repository
 
     def index_errata
       errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
-      Tire.index Glue::Pulp::Errata.index do
-        create :settings => Glue::Pulp::Errata.index_settings, :mappings => Glue::Pulp::Errata.index_mapping
+      Tire.index Errata.index do
+        create :settings => Errata.index_settings, :mappings => Errata.index_mapping
         import errata
       end if !errata.empty?
     end
@@ -84,8 +84,8 @@ module Glue::ElasticSearch::Repository
       errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
       pulp_id = self.pulp_id
 
-      Tire.index Glue::Pulp::Errata.index do
-        create :settings => Glue::Pulp::Errata.index_settings, :mappings => Glue::Pulp::Errata.index_mapping
+      Tire.index Errata.index do
+        create :settings => Errata.index_settings, :mappings => Errata.index_mapping
 
         import errata do |documents|
           documents.each do |document|

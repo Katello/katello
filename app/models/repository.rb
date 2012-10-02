@@ -21,8 +21,8 @@ end
 
 
 class Repository < ActiveRecord::Base
-  include Glue if AppConfig.use_cp || AppConfig.use_pulp
   include Glue::Pulp::Repo if AppConfig.use_pulp
+  include Glue if AppConfig.use_cp || AppConfig.use_pulp
   include Glue::ElasticSearch::Repository if AppConfig.use_elasticsearch
   include Authorization::Repository
   include AsyncOrchestration
@@ -38,7 +38,7 @@ class Repository < ActiveRecord::Base
   validates :environment_product, :presence => true
   validates :pulp_id, :presence => true, :uniqueness => true
   validates :name, :presence => true
-  validates :content_id, :presence => true
+  #validates :content_id, :presence => true #add back after fixing add_repo orchestration
   validates :enabled, :repo_disablement => true, :on => [:update]
 
   default_scope :order => 'name ASC'
@@ -60,6 +60,9 @@ class Repository < ActiveRecord::Base
     joins(:environment_product).where(:environment_products => { :environment_id => env })
   end
 
+  def self.in_product(product)
+    joins(:environment_product).where("environment_products.product_id" => product.id)
+  end
 
   def yum_gpg_key_url
     # if the repo has a gpg key return a url to access it

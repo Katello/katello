@@ -35,7 +35,7 @@ module Glue::Pulp::Errata
 
       def self.find(id)
         erratum_attrs = Resources::Pulp::Errata.find(id)
-        Glue::Pulp::Errata.new(erratum_attrs) if not erratum_attrs.nil?
+        Errata.new(erratum_attrs) if not erratum_attrs.nil?
       end
 
       def included_packages
@@ -43,7 +43,7 @@ module Glue::Pulp::Errata
 
         self.pkglist.each do |pack_list|
           packages += pack_list['packages'].collect do |err_pack|
-            Glue::Pulp::Package.new(err_pack)
+            Package.new(err_pack)
           end
         end
 

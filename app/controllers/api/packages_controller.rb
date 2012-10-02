@@ -36,7 +36,7 @@ class Api::PackagesController < Api::ApiController
   param :repository_id, :number, :desc => "environment numeric identifier"
   param :search, String, :desc => "search expression"
   def search
-    packages = Glue::Pulp::Package.search(params[:search], 0, 0, [@repo.pulp_id])
+    packages = Package.search(params[:search], 0, 0, [@repo.pulp_id])
     render :json => packages.to_a
   end
 
