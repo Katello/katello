@@ -24,14 +24,14 @@ describe SystemGroup do
   before(:each) do
     disable_org_orchestration
     disable_consumer_group_orchestration
-    @org = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
+    @org = Organization.create!(:name=>'test_org', :label=> 'test_org')
 
     @group = SystemGroup.create!(:name=>"TestSystemGroup", :organization=>@org)
 
     setup_system_creation
     Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
-    @environment = KTEnvironment.create!(:name=>"DEV", :prior=>@org.library, :organization=>@org)
+    @environment = KTEnvironment.create!(:name=>"DEV", :label=> "DEV", :prior=>@org.library, :organization=>@org)
     @system = System.create!(:name=>"bar1", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
   end
 
@@ -51,7 +51,7 @@ describe SystemGroup do
     end
 
     it "should allow systems groups with the same name to be creatd in different orgs" do
-      @org2 = Organization.create!(:name => 'test_org2', :cp_key => 'test_org2')
+      @org2 = Organization.create!(:name=>'test_org2', :label=> 'test_org2')
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
       grp2 = SystemGroup.create(:name=>"TestGroup", :organization=>@org2)
       grp2.new_record?.should == false
@@ -117,7 +117,7 @@ describe SystemGroup do
 
   context "changing environments" do
     before :each do
-      @environment2 = KTEnvironment.create!(:name=>"DEV2", :prior=>@org.library, :organization=>@org)
+      @environment2 = KTEnvironment.create!(:name=>"DEV2", :label=> "DEV2", :prior=>@org.library, :organization=>@org)
       @akey = ActivationKey.create!(:name => "somekey", :description => 'adesc', :organization => @org,
                                         :environment => @environment)
     end
@@ -175,7 +175,7 @@ describe SystemGroup do
 
   context "systems should respect environments" do
     before :each do
-      @environment2 = KTEnvironment.create!(:name=>"DEV2", :prior=>@org.library, :organization=>@org)
+      @environment2 = KTEnvironment.create!(:name=>"DEV2", :label=> "DEV2", :prior=>@org.library, :organization=>@org)
     end
 
     it "should allow any system to be added to a group without environments" do
@@ -203,7 +203,7 @@ describe SystemGroup do
 
   context "environments should respect systems" do
     before :each do
-      @environment2 = KTEnvironment.create!(:name=>"DEV2", :prior=>@org.library, :organization=>@org)
+      @environment2 = KTEnvironment.create!(:name=>"DEV2", :label=> "DEV2", :prior=>@org.library, :organization=>@org)
       @group.systems = [@system]
       @group.save!
     end

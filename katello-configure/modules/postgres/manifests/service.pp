@@ -14,6 +14,7 @@ class postgres::service {
     require => [Class["postgres::config"]],
   }
 
+  # TODO - get rid of this - waiting was implemented in service-wait now
   # wait 30 seconds for postgresql daemon to accept connections and execute SQL commands or timeout when not running
   exec { "wait-for-postgresql":
     environment => "PGCONNECT_TIMEOUT=5",

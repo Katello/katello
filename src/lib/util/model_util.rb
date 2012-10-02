@@ -11,20 +11,47 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Katello
+
+  module LabelFromName
+    def self.included(base)
+      base.class_eval do
+        before_validation :setup_label_from_name
+      end
+    end
+
+    def setup_label_from_name
+      unless label
+        label = Katello::ModelUtils::labelize(name)
+      end
+    end
+  end
+
+
   module ModelUtils
 
     # hardcoded model names (uses kp_ prefix)
-    @@table_to_model_hash = { 
-      "kt_environment" => KTEnvironment
+    @@table_to_model_hash = {
+      "kt_environment" => "KTEnvironment"
     }
 
     # convert Rails Model name to Class or nil when no such table name exists
     def self.table_to_class name
-      return @@table_to_model_hash[name] if @@table_to_model_hash.key? name
-      name.classify.constantize
+      class_name = @@table_to_model_hash[name] || name.classify
+      class_name.constantize
     rescue NameError => e
       # constantize throws NameError
       return nil
     end
+
+    def self.labelize name
+      unless name.ascii_only?
+        name = UUIDTools::UUID.random_create.to_s
+      else
+        name.gsub(/[^a-z0-9\-_]/i,"_")
+      end
+
+
+    end
   end
+
 end
