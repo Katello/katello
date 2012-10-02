@@ -366,49 +366,7 @@ module Resources
       end
     end
 
-    class User < PulpResource
-      class << self
-        def create attrs
-          response = self.post path, attrs.to_json, self.default_headers
-          JSON.parse(response.body).with_indifferent_access
-        end
 
-        def destroy login
-          self.delete(path(login), self.default_headers).code.to_i
-        end
-
-        def find login
-          response = self.get path(login), self.default_headers
-          JSON.parse(response.body).with_indifferent_access
-        end
-
-        def path(login=nil)
-          users = self.path_with_prefix("/users/")
-          login.nil? ? users : users + "#{login}/"
-        end
-      end
-    end
-
-    class Roles < PulpResource
-      class << self
-        def add role_name, username
-          #/pulp/api/v2/roles/<role_id>/users/
-          added = self.post(path(role_name) + "/users/", {:login => username}.to_json, self.default_headers)
-          added.body == "true"
-        end
-
-        def remove role_name, username
-          #/pulp/api/v2/roles/<role_id>/users/<user_login>
-          removed = self.delete(path(role_name) + "/users/#{username}/",  self.default_headers)
-          removed.body == "true"
-        end
-
-        def path(role_name=nil)
-          roles = self.path_with_prefix("/roles/")
-          roles += "#{role_name}/" if role_name
-        end
-      end
-    end
 
   class ConsumerGroup < PulpResource
     class << self
