@@ -314,6 +314,32 @@ class RemoveDefaultSystemInfo(OrganizationAction):
         else:
             print _("Could not remove default custom info key [ %s ] for Org ")
 
+# ------------------------------------------------------------------------------
+
+class ApplyDefaultSystemInfo(OrganizationAction):
+
+    description = _("apply default custom info keynames to all existing systems")
+
+    def __init__(self):
+        super(ApplyDefaultSystemInfo, self).__init__()
+        self.system_info_keys_api = OrganizationSystemInfoKeysAPI()
+
+    def setup_parser(self, parser):
+        parser.add_option("--name", dest='name', help=_("organization name eg: foo.example.com (required)"))
+
+    def check_options(self, validator):
+        validator.require('name')
+
+    def run(self):
+        org_name = self.get_option('name')
+
+        response = self.system_info_keys_api.apply(org_name)
+
+        if response:
+            print _("Successfully applied default custom info keys to [ %d ] systems in Org [ %s ]") % (len(response), org_name)
+        else:
+            print _("Could not apply default custom info keys to systems in Org [ %s ]") % org_name
+
 # organization command ------------------------------------------------------------
 
 class Organization(Command):

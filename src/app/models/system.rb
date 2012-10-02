@@ -74,7 +74,7 @@ class System < ActiveRecord::Base
   validates :sockets, :numericality => { :only_integer => true, :greater_than => 0 }, :allow_blank => true, :allow_nil => true, :on => {:create, :update}
   before_create  :fill_defaults
 
-  after_create :default_custom_info_keys
+  after_create :init_default_custom_info_keys
 
   scope :by_env, lambda { |env| where('environment_id = ?', env) unless env.nil?}
   scope :completer_scope, lambda { |options| readable(options[:organization_id])}
@@ -195,9 +195,9 @@ class System < ActiveRecord::Base
     json
   end
 
-  def default_custom_info_keys
+  def init_default_custom_info_keys
     self.organization.system_info_keys.each do |k|
-      self.custom_info.create!(:keyname => k, :value => "")
+      self.custom_info.create!(:keyname => k, :value => "_")
     end
   end
 

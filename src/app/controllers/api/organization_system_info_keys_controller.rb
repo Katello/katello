@@ -21,11 +21,13 @@ class Api::OrganizationSystemInfoKeysController < Api::ApiController
     index_test = lambda{@organization.readable?}
     create_test = lambda{@organization.editable?}
     delete_test = lambda{@organization.editable?}
+    apply_test = lambda{@organization.editable?}
 
     {
       :index =>  index_test,
       :create => create_test,
-      :destroy => delete_test
+      :destroy => delete_test,
+      :apply_to_all => apply_test
     }
   end
 
@@ -41,10 +43,28 @@ class Api::OrganizationSystemInfoKeysController < Api::ApiController
   end
 
   def destroy
-    raise HttpErrors::BadRequest, _("A keyname must be provided") if params[:id].nil?
-    @organization.system_info_keys.delete(params[:id])
+    raise HttpErrors::BadRequest, _("A keyname must be provided") if params[:keyname].nil?
+    @organization.system_info_keys.delete(params[:keyname])
     @organization.save!
     render :json => @organization.system_info_keys.to_json
+  end
+
+  # apply default system custom info to all existing systems
+  def apply_to_all
+    to_apply = []
+    @organization.system_info_keys.each do |k|
+      to_apply << {:keyname => k, :value => "_"}
+    end
+    affected = []
+    @organization.systems.each do |s|
+      to_apply.each do |a|
+        if s.custom_info.where(:keyname => a[:keyname]).empty?
+          s.custom_info.create!(a)
+          affected << s
+        end
+      end
+    end
+    render :json => affected.collect {|s| s[:name]}.uniq.to_json
   end
 
   private

@@ -33,3 +33,6 @@ class OrganizationSystemInfoKeysAPI(KatelloAPI):
         path = "/api/organizations/%s/system_info_keys/%s" % (u_str(org_name), u_str(keyname))
         return self.server.DELETE(path)[1]
 
+    def apply(self, org_name):
+        path = "/api/organizations/%s/system_info_keys/apply" % u_str(org_name)
+        return self.server.GET(path)[1]
