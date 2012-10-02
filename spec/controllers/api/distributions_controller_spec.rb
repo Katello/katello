@@ -27,7 +27,7 @@ describe Api::DistributionsController, :katello => true do
                                  :provider_type => Provider::CUSTOM,
                                  :organization => @organization,
                                  :repository_url => "https://localhost")
-    @product = Product.create!(:name => "prod",
+    @product = Product.create!(:name=>"prod", :label=> "prod",
                                :provider => @provider,
                                :environments => [@organization.library])
     @product.stub(:repos).and_return([@repository])
@@ -35,6 +35,7 @@ describe Api::DistributionsController, :katello => true do
     ep_library = EnvironmentProduct.find_or_create(@organization.library, @product)
     @repo = Repository.create!(:environment_product => ep_library,
                                :name=> "repo",
+                               :label=> "repo_label",
                                :relative_path => "#{@organization.name}/Library/prod/repo",
                                :pulp_id=> "1",
                                :enabled => true)

@@ -27,10 +27,8 @@ class Organization < ActiveRecord::Base
   mapping do
     indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_sort, :type => 'string', :index => :not_analyzed
+    indexes :label, :type => 'string', :index => :not_analyzed
   end
-
-
-
 
   has_many :activation_keys, :dependent => :destroy
   has_many :providers, :dependent => :destroy
@@ -50,20 +48,21 @@ class Organization < ActiveRecord::Base
   before_create :create_library
   before_create :create_redhat_provider
   validates :name, :uniqueness => true, :presence => true, :katello_name_format => true
+  validates :label, :uniqueness => true, :presence => true, :katello_label_format => true
   validates :description, :katello_description_format => true
 
   if AppConfig.use_cp
-    before_validation :create_cp_key, :on => :create
-    validate :unique_cp_key
+    before_validation :create_label, :on => :create
+    validate :unique_label
 
-    def create_cp_key
-      self.cp_key = self.name.tr(' ', '_') if self.cp_key.blank? && self.name.present?
+    def create_label
+      self.label = self.name.tr(' ', '_') if self.label.blank? && self.name.present?
     end
 
-    def unique_cp_key
+    def unique_label
       # org is being deleted
-      if Organization.find_by_cp_key(self.cp_key).nil? && Organization.unscoped.find_by_cp_key(self.cp_key)
-        errors.add(:organization, _(" '%s' already exists and either has been scheduled for deletion or failed deletion.") % self.cp_key)
+      if Organization.find_by_label(self.label).nil? && Organization.unscoped.find_by_label(self.label)
+        errors.add(:organization, _(" '%s' already exists and either has been scheduled for deletion or failed deletion.") % self.label)
       end
     end
   end
@@ -84,7 +83,7 @@ class Organization < ActiveRecord::Base
   end
 
   def create_library
-    self.library = KTEnvironment.new(:name => "Library", :library => true, :organization => self)
+    self.library = KTEnvironment.new(:name => "Library",:label => "Library",  :library => true, :organization => self)
   end
 
   def create_redhat_provider

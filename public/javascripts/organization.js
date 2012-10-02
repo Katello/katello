@@ -18,12 +18,14 @@ $(document).ready(function() {
     var env_scroll = KT.env_select_scroll({});
     KT.panel.set_expand_cb(function() {
         env_scroll.bind(undefined);
+        KT.object.label.initialize();
+        if ($('#organization_edit').length > 0) {
+            notices.checkNotices();
+        }
     });
-
 
    $('.environment_link').live('click', function() {
         $(this).siblings().show();
-
    });
 
   $('#debug_cert').live('click',function(){

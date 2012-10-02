@@ -64,6 +64,8 @@ class System < ActiveRecord::Base
   has_many :system_system_groups, :dependent => :destroy
   has_many :system_groups, {:through => :system_system_groups, :before_add => :add_pulp_consumer_group, :before_remove => :remove_pulp_consumer_group}.merge(update_association_indexes)
 
+  has_many :custom_info, :as => :informable, :dependent => :destroy
+
   validates :environment, :presence => true, :non_library_environment => true
   # multiple systems with a single name are supported
   validates :name, :presence => true, :no_trailing_space => true
@@ -74,7 +76,6 @@ class System < ActiveRecord::Base
 
   scope :by_env, lambda { |env| where('environment_id = ?', env) unless env.nil?}
   scope :completer_scope, lambda { |options| readable(options[:organization_id])}
-
 
   class << self
     def architectures
@@ -102,11 +103,10 @@ class System < ActiveRecord::Base
 
   def consumed_pool_ids=attributes
     attribs_to_unsub = consumed_pool_ids - attributes
-   
     attribs_to_unsub.each do |id|
       self.unsubscribe id
     end
-    
+
     attribs_to_sub = attributes - consumed_pool_ids
     attribs_to_sub.each do |id|
       self.subscribe id

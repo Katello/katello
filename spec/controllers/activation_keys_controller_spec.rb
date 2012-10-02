@@ -33,8 +33,8 @@ describe ActivationKeysController do
     controller.stub(:search_validate).and_return(true)
     Resources::Candlepin::Pool.stub(:find).and_return(true)
     @organization = new_test_org
-    @environment_1 = KTEnvironment.create!(:name => 'dev', :prior => @organization.library.id, :organization => @organization)
-    @environment_2 = KTEnvironment.create!(:name => 'prod', :prior => @environment_1.id, :organization => @organization)
+    @environment_1 = KTEnvironment.create!(:name=>'dev', :label=> 'dev', :prior => @organization.library.id, :organization => @organization)
+    @environment_2 = KTEnvironment.create!(:name=>'prod', :label=> 'prod', :prior => @environment_1.id, :organization => @organization)
     @system_template_1 = AppConfig.katello? ? SystemTemplate.create!(:name => 'template1', :environment => @environment_1) : nil
     @system_template_2 = AppConfig.katello? ? SystemTemplate.create!(:name => 'template2', :environment => @environment_1) : nil
     @a_key = ActivationKey.create!(:name => "another test key", :organization => @organization, :environment => @environment_1)

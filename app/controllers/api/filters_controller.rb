@@ -77,9 +77,11 @@ class Api::FiltersController < Api::ApiController
   api :PUT, "/organizations/:organization_id/filters/:id", "Update package filter for an organization"
   param :organization_id, :identifier, :desc => "oranization identifier", :required => true
   param :id, :identifier, :desc => "filter identifier", :required => true
+  param :name, String, :desc => "filter's new name", :required => false
   param :packages, Array, :desc => "Updated list of the packages to filter", :required => true
   def update
     @filter.reconcile_packages!(params[:packages]) unless params[:packages].nil?
+    @filter.name = params[:name] unless params[:name].blank?
     @filter.save!
 
     render :json => @filter.to_json

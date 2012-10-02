@@ -10,8 +10,8 @@ describe Changeset, :katello => true do
       disable_user_orchestration
 
       User.current  = User.find_or_create_by_username(:username => 'admin', :password => 'admin12345')
-      @organization = Organization.create!(:name => 'candyroom', :cp_key => 'test_organization')
-      @environment  = KTEnvironment.create!(:name         => 'julia', :prior => @organization.library,
+      @organization = Organization.create!(:name=>'candyroom', :label => 'test_organization')
+      @environment  = KTEnvironment.create!(:name=>'julia', :label=> 'julia', :prior => @organization.library,
                                             :organization => @organization)
       @changeset    = PromotionChangeset.create!(:environment => @environment, :name => "foo-changeset")
     end
@@ -53,7 +53,7 @@ describe Changeset, :katello => true do
         @provider      = Provider.create!(:name         => "provider", :provider_type => Provider::CUSTOM,
                                           :organization => @organization, :repository_url => "https://something.url/stuff")
         @repo          = mock(:repo, :find_packages_by_name => [])
-        @prod          = Product.new({ :name => "prod" })
+        @prod          = Product.new({:name=>"prod" , :label=> "prod" })
         @prod.provider = @provider
         @prod.environments << @organization.library
         @prod.stub(:arch).and_return('noarch')
@@ -95,7 +95,7 @@ describe Changeset, :katello => true do
         @provider = Provider.create!(:name         => "provider", :provider_type => Provider::CUSTOM,
                                      :organization => @organization, :repository_url => "https://something.url/stuff")
 
-        @prod = Product.new({ :name => "prod" })
+        @prod = Product.new({:name=>"prod" , :label=> "prod" })
 
         @prod.provider = @provider
         @prod.environments << @organization.library
@@ -116,7 +116,7 @@ describe Changeset, :katello => true do
         }.with_indifferent_access
         @err          = mock('Err', { :id => 'err', :name => 'err' })
 
-        @repo         = Repository.create!(:environment_product => ep, :name => "repo", :pulp_id => "1")
+        @repo         = Repository.create!(:environment_product => ep, :name => "repo", :label => "repo_label", :pulp_id => "1")
         @distribution = mock('Distribution', { :id => 'some-distro-id' })
         @repo.stub(:distributions).and_return([@distribution])
         @repo.stub_chain(:distributions, :index).and_return([@distribution])
@@ -245,7 +245,7 @@ describe Changeset, :katello => true do
       before(:each) do
         @provider = Provider.create!(:name => "provider", :provider_type => Provider::CUSTOM, :organization => @organization, :repository_url => "https://something.url/stuff")
 
-        @prod          = Product.new({ :name => "prod", :cp_id => "prod" })
+        @prod          = Product.new({:name=>"prod", :label=> "prod", :cp_id => "prod" })
         @prod.provider = @provider
         @prod.environments << @organization.library
         @prod.environments << @environment
@@ -261,7 +261,7 @@ describe Changeset, :katello => true do
         @pack         = { :id => 1, :name => @pack_name }.with_indifferent_access
         @err          = mock('Err', { :id => 'err', :name => 'err' })
 
-        @repo = Repository.create!(:environment_product => ep, :name => "repo", :pulp_id => "1")
+        @repo = Repository.create!(:environment_product => ep, :name => "repo", :label => "repo_label", :pulp_id => "1")
 
         @distribution = mock('Distribution', { :id => 'some-distro-id' })
         @repo.stub(:distributions).and_return([@distribution])
@@ -319,7 +319,7 @@ describe Changeset, :katello => true do
         @provider = Provider.create!(:name         => "provider", :provider_type => Provider::CUSTOM,
                                      :organization => @organization, :repository_url => "https://something.url/stuff")
 
-        @prod          = Product.new({ :name => "prod" })
+        @prod          = Product.new({:name=>"prod" , :label=> "prod" })
         @prod.provider = @provider
         @prod.environments << @organization.library
         @prod.stub(:arch).and_return('noarch')
@@ -331,7 +331,7 @@ describe Changeset, :katello => true do
         @err          = mock('Err', { :id => 'err', :name => 'err' })
         @distribution = mock('Distribution', { :id => 'some-distro-id' })
         ep            = EnvironmentProduct.find_or_create(@organization.library, @prod)
-        @repo         = Repository.create!(:environment_product => ep, :name => 'repo', :pulp_id => "1")
+        @repo         = Repository.create!(:environment_product => ep, :name => 'repo', :label => 'repo_label', :pulp_id => "1")
         @repo.stub_chain(:distributions, :index).and_return([@distribution])
         @repo.stub(:distributions).and_return([@distribution])
         @repo.stub(:packages).and_return([@pack])
