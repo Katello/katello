@@ -188,16 +188,6 @@ class Repository < ActiveRecord::Base
     Repository.where("library_instance_id=%s or repositories.id=%s"  % [repo.id, repo.id] )
   end
 
-  def errata_count
-    results = Glue::Pulp::Errata.search('', 0, 1, :repoids => [self.pulp_id])
-    results.empty? ? 0 : results.total
-  end
-
-  def package_count
-    results = Glue::Pulp::Package.search('', 0, 1, :repoids => [self.pulp_id])
-    results.empty? ? 0 : results.total
-  end
-
   #Filters that should be applied for content coming into this repository.
   def applicable_filters
     previous = self.environmental_instances.in_environment(self.environment.prior).first
