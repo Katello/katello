@@ -25,6 +25,6 @@ class foreman::params {
   $thin_ip            = "0.0.0.0"
   $thin_start_port    = "5500"
   $thin_log           = "/var/log/foreman/thin-log.log"
-  $thin_process_count = 2
+  $thin_process_count = katello_config_value('foreman_web_workers', katello_process_count(0.4))
   $deployment_url     = "foreman"
 }
