@@ -89,6 +89,7 @@ class ContentSearchController < ApplicationController
     product_repo_map.each do |p_id, product_repo_ids|
       rows.concat spanned_product_content(p_id, product_repo_ids, 'package', package_ids)
     end
+
     render :json => {:rows => rows, :name => _('Packages')}
   end
 
@@ -128,7 +129,7 @@ class ContentSearchController < ApplicationController
 
   def repo_packages
     offset = params[:offset] || 0
-    packages = Glue::Pulp::Package.search('', offset, current_user.page_size, [@repo.pulp_id])
+    packages = Package.search('', offset, current_user.page_size, [@repo.pulp_id])
     rows = packages.collect do |pack|
       {:name => display = package_display(pack),
         :id => pack.id, :cols => {:description => {:display => pack.description}}, :data_type => "package", :value => pack.nvrea}
@@ -142,7 +143,7 @@ class ContentSearchController < ApplicationController
 
   def repo_errata
     offset = params[:offset] || 0
-    errata = Glue::Pulp::Errata.search('', offset, current_user.page_size, :repoids => [@repo.pulp_id])
+    errata = Errata.search('', offset, current_user.page_size, :repoids => [@repo.pulp_id])
     rows = errata.collect do |e|
       {:name => errata_display(e), :id => e.id, :data_type => "errata", :value => e.id,
           :cols => {:title => {:display => e[:title]},
@@ -176,9 +177,9 @@ class ContentSearchController < ApplicationController
       repo_map[r.pulp_id] = r
     end
     if is_package
-      packages = Glue::Pulp::Package.search('', params[:offset], current_user.page_size, repo_map.keys, [:nvrea_sort, "ASC"], process_search_mode())
+      packages = Package.search('', params[:offset], current_user.page_size, repo_map.keys, [:nvrea_sort, "ASC"], process_search_mode())
     else
-      packages = Glue::Pulp::Errata.search('', params[:offset], current_user.page_size, :repoids =>  repo_map.keys, :search_mode => process_search_mode)
+      packages = Errata.search('', params[:offset], current_user.page_size, :repoids =>  repo_map.keys, :search_mode => process_search_mode)
     end
     rows = packages.collect do |pack|
       cols = {}
@@ -405,7 +406,7 @@ class ContentSearchController < ApplicationController
     end
     to_ret = {}
     content_attribute = content_type.to_sym == :package ? 'nvrea' : 'id'
-    content_class = content_type.to_sym == :package ? Glue::Pulp::Package : Glue::Pulp::Errata
+    content_class = content_type.to_sym == :package ? Package : Errata
     content = multi_repo_content_search(content_class, content_search_obj, spanning_repos, offset, content_attribute, search_mode)
 
     return nil if content.total == 0

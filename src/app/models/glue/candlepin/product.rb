@@ -10,6 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'util/model_util'
+
 module Glue::Candlepin::Product
 
   def self.included(base)
@@ -42,7 +44,7 @@ module Glue::Candlepin::Product
       productContent_attrs = []
     end
 
-    attrs = attrs.merge('name' => validate_name(attrs['name']))
+    attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Katello::ModelUtils::labelize(attrs['name']))
 
     product = Product.new(attrs, &block)
     product.orchestration_for = :import_from_cp_ar_setup
@@ -58,7 +60,7 @@ module Glue::Candlepin::Product
   end
 
   def self.import_marketing_from_cp(attrs, engineering_product_ids, &block)
-    attrs = attrs.merge('name' => validate_name(attrs['name']))
+    attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Katello::ModelUtils::labelize(attrs['name']))
 
     product = MarketingProduct.new(attrs, &block)
     product.orchestration_for = :import_from_cp_ar_setup
@@ -231,7 +233,7 @@ module Glue::Candlepin::Product
       # we create unlimited subscriptions only for generic yum providers
       if self.provider and self.provider.yum_repo?
         Rails.logger.debug "Creating unlimited subscription for product #{name} in candlepin"
-        Resources::Candlepin::Product.create_unlimited_subscription self.organization.cp_key, self.cp_id
+        Resources::Candlepin::Product.create_unlimited_subscription self.organization.label, self.cp_id
       end
       true
     rescue => e
@@ -248,7 +250,7 @@ module Glue::Candlepin::Product
 
     def del_pools
       Rails.logger.debug "Deleting pools for product #{name} in candlepin"
-      Resources::Candlepin::Product.pools(organization.cp_key, self.cp_id).each do |pool|
+      Resources::Candlepin::Product.pools(organization.label, self.cp_id).each do |pool|
         ::Pool.find_all_by_cp_id(pool['id']).each(&:destroy)
         Resources::Candlepin::Pool.destroy(pool['id'])
       end
@@ -260,7 +262,7 @@ module Glue::Candlepin::Product
 
     def del_subscriptions
       Rails.logger.debug "Deleting subscriptions for product #{name} in candlepin"
-      job = Resources::Candlepin::Product.delete_subscriptions self.organization.cp_key, self.cp_id
+      job = Resources::Candlepin::Product.delete_subscriptions self.organization.label, self.cp_id
       wait_for_job(job) if job
       true
     rescue => e

@@ -66,6 +66,8 @@ class TaskStatus < ActiveRecord::Base
     end
   end
 
+  after_destroy :destroy_job
+
   index_options :json=>{:only=> [:parameters, :result, :organization_id, :start_time, :finish_time, :task_owner_id, :task_owner_type ]},
                 :extended_json=>:extended_index_attrs
 
@@ -354,6 +356,20 @@ class TaskStatus < ActiveRecord::Base
   def setup_task_type
     unless self.task_type
       self.task_type = self.class().name
+    end
+  end
+
+  # If the task is associated with a job and this is the last task associated with
+  # the job, destroy the job.
+  def destroy_job
+    # is this task associated with a job?
+    job_id = self.job_task.job_id unless self.job_task.nil?
+    if job_id
+      job = Job.find(job_id)
+      # is this the last task associated with the job?
+      if job and job.task_statuses.length == 0
+        job.destroy
+      end
     end
   end
 

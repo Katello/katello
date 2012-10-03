@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.1.5
+Version:       1.1.6
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
@@ -51,6 +51,9 @@ cp -Rp cli_tests/ cli-system-test helpers *zip RPM-GPG-KEY* $RPM_BUILD_ROOT%{hom
 
 
 %changelog
+* Thu Sep 27 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.6-1
+- demote repo before promotion (msuchy@redhat.com)
+
 * Wed Sep 12 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.5-1
 - 839575 - [CLI] Adding a system to system group using incorrect uuid should
   raise an error instead of success (pajkycz@gmail.com)

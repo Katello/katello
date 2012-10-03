@@ -29,10 +29,11 @@ class pulp::config {
 
   if $pulp::params::reset_cache == 'YES' {
     exec {"reset_pulp_cache":
-      command     => "rm -rf /var/lib/pulp/packages/*",
-      path        => "/sbin:/bin:/usr/bin",
-      before      => Exec["migrate_pulp_db"],
-      require     => [
+      command => "rm -rf /var/lib/pulp/packages/*",
+      path    => "/sbin:/bin:/usr/bin",
+      before  => Exec["migrate_pulp_db"],
+      timeout => 0,
+      require => [
         File["/var/lib/pulp/packages"],
         ],
     }
@@ -43,6 +44,7 @@ class pulp::config {
       command     => "rm -f /var/lib/pulp/init.flag; service httpd stop; rm -f /var/lib/mongodb/pulp_database*; rm -rf /var/lib/pulp/{distributions,published,repos}/*; test 1 -eq 1",
       path        => "/sbin:/bin:/usr/bin",
       before      => Exec["migrate_pulp_db"],
+      timeout     => 0,
     }
   }
 
@@ -52,6 +54,7 @@ class pulp::config {
     path        => "/bin:/usr/bin",
     before      => [ Class["pulp::service"], Exec["reload-apache2"], Class["apache2::service"] ],
     notify      => Exec["reload-apache2"],
+    timeout     => 0,
     require     => [
       File["${katello::params::configure_log_base}"],
       Class["mongodb::service"],

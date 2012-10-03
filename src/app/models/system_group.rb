@@ -74,7 +74,7 @@ class SystemGroup < ActiveRecord::Base
   belongs_to :organization
 
   before_validation(:on=>:create) do
-    self.pulp_id ||= "#{self.organization.cp_key}-#{self.name}-#{SecureRandom.hex(4)}"
+    self.pulp_id ||= "#{self.organization.label}-#{self.name}-#{SecureRandom.hex(4)}"
   end
 
   default_scope :order => 'name ASC'
@@ -240,13 +240,13 @@ class SystemGroup < ActiveRecord::Base
       group.systems.each do |system|
         system.errata.each do |erratum|
           case erratum.type
-            when Glue::Pulp::Errata::SECURITY
+            when Errata::SECURITY
               # there is a critical errata, so stop searching...
               group_state = :critical
               break
 
-            when Glue::Pulp::Errata::BUGZILLA
-            when Glue::Pulp::Errata::ENHANCEMENT
+            when Errata::BUGZILLA
+            when Errata::ENHANCEMENT
               # set state to warning, but continue searching...
               group_state = :warning
           end

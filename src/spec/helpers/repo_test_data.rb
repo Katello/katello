@@ -12,6 +12,7 @@
 
 module RepoTestData
   REPO_NAME = 'repo'
+  REPO_LABEL = 'repo_label'
 
   REPO_ID = 'repository_id'
   CLONED_REPO_ID = 'cloned_repository_id'
@@ -26,6 +27,7 @@ module RepoTestData
   REPO_PROPERTIES = {
     :pulp_id => REPO_ID,
     :name => REPO_NAME,
+    :label => REPO_LABEL,
     :arch => 'architecture',
     :relative_path => "ACME_Corporation/Library/zoo/base",
     :uri =>  "https://localhost/pulp/repos/ACME_Corporation/Library/zoo/base",
@@ -43,6 +45,7 @@ module RepoTestData
   CLONED_PROPERTIES = {
     :pulp_id => CLONED_REPO_ID,
     :name => REPO_NAME,
+    :label => REPO_LABEL,
     :arch => 'architecture',
     :relative_path => "ACME_Corporation/Dev/zoo/base",
     :uri =>  "https://localhost/pulp/repos/ACME_Corporation/Dev/zoo/base",

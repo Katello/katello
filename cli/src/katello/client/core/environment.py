@@ -55,6 +55,7 @@ class List(EnvironmentAction):
 
         self.printer.add_column('id')
         self.printer.add_column('name')
+        self.printer.add_column('label')
         self.printer.add_column('description', multiline=True)
         self.printer.add_column('organization', _('Org'))
         self.printer.add_column('prior', _('Prior Environment'))
@@ -104,6 +105,9 @@ class Create(EnvironmentAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                                help=_("environment name (required)"))
+        parser.add_option('--label', dest='label',
+                               help=_("environment label, ASCII identifier for the environment " + 
+                                      "with no spaces eg: Dev_One (will be generated if not specified)"))
         parser.add_option('--prior', dest='prior',
                                help=_("name of prior environment (required)"))
 
@@ -114,13 +118,14 @@ class Create(EnvironmentAction):
 
     def run(self):
         name        = self.get_option('name')
+        label        = self.get_option('label')
         description = self.get_option('description')
         orgName     = self.get_option('org')
         priorName   = self.get_option('prior')
 
         priorId = self.get_prior_id(orgName, priorName)
 
-        env = self.api.create(orgName, name, description, priorId)
+        env = self.api.create(orgName, name, label, description, priorId)
         test_record(env,
             _("Successfully created environment [ %s ]") % name,
             _("Could not create environment [ %s ]") % name

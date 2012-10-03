@@ -45,6 +45,7 @@ class List(OrganizationAction):
 
         self.printer.add_column('id')
         self.printer.add_column('name')
+        self.printer.add_column('label')
         self.printer.add_column('description', multiline=True)
 
         self.printer.set_header(_("Organization List"))
@@ -60,7 +61,10 @@ class Create(OrganizationAction):
     def setup_parser(self, parser):
         # always provide --id option for create, even on registered clients
         parser.add_option('--name', dest='name',
-                               help=_("organization name eg: foo.example.com (required)"))
+                               help=_("organization name eg: ACME Corporation (required)"))
+        parser.add_option('--label', dest='label',
+                               help=_("organization label, ASCII identifier for the Organization " +
+                                      "with no spaces eg: ACME_Corporation (will be generated if not specified)"))
         parser.add_option("--description", dest="description",
                                help=_("consumer description eg: foo's organization"))
 
@@ -69,9 +73,10 @@ class Create(OrganizationAction):
 
     def run(self):
         name        = self.get_option('name')
+        label       = self.get_option('label')
         description = self.get_option('description')
 
-        org = self.api.create(name, description)
+        org = self.api.create(name, label, description)
         test_record(org,
             _("Successfully created org [ %s ]") % name,
             _("Could not create org [ %s ]") % name
@@ -207,7 +212,7 @@ class ShowSubscriptions(OrganizationAction):
     def run(self):
         name = self.get_option('name')
         org = self.api.organization(name)
-        pools = self.api.pools(org["cp_key"])
+        pools = self.api.pools(org["label"])
 
         updated_pool_info = [self.displayable_pool(pool) for pool in pools]
 

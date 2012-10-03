@@ -12,7 +12,8 @@ class candlepin::service {
       Class["candlepin::config"],
       Class["postgres::service"],
       File[$certs::params::katello_keystore],
-      File["/usr/share/tomcat6/conf/keystore"]
+      File["/usr/share/tomcat6/conf/keystore"],
+      File["${certs::params::candlepin_certs_dir}/candlepin-upstream-ca.crt"]
     ]
   }
 
@@ -21,6 +22,7 @@ class candlepin::service {
     command => "/usr/bin/wget --timeout=30 --tries=5 --retry-connrefused -qO- http://localhost:8080/candlepin/admin/init >${katello::params::configure_log_base}/cpinit.log 2>&1 && touch /var/lib/katello/cpinit_done",
     require => [ Service["tomcat6"], File["${katello::params::configure_log_base}"] ],
     creates => "/var/lib/katello/cpinit_done",
-    before  => Class["apache2::service"]
+    before  => Class["apache2::service"],
+    timeout => 0
   }
 }

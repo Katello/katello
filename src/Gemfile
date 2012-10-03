@@ -98,7 +98,7 @@ group :test, :development do
   gem "js-routes", :require => 'js_routes'
  
   gem 'minitest-rails'
-  gem 'mocha' 
+  gem 'minitest_tu_shim'
 end
 
 group :profiling do
@@ -120,7 +120,11 @@ group :development do
   gem 'newrelic_rpm'
   gem 'logical-insight'
 end
- 
+
+group :devboost do
+  gem 'rails-dev-boost', :require => 'rails_development_boost'
+end
+
 group :test do
   gem 'vcr'
   gem 'webmock'
