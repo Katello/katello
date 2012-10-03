@@ -20,12 +20,12 @@ module Glue::Candlepin::Owner
       before_save :save_owner_orchestration
       before_destroy :destroy_owner_orchestration
 
-      validates :cp_key,
+      validates :label,
           :presence => true,
           :format => { :with => /^[\w-]*$/ }
 
-      lazy_accessor :events, :initializer => lambda { Resources::Candlepin::Owner.events(cp_key) }
-      lazy_accessor :service_levels, :initializer => lambda { Resources::Candlepin::Owner.service_levels(cp_key) }
+      lazy_accessor :events, :initializer => lambda { Resources::Candlepin::Owner.events(label) }
+      lazy_accessor :service_levels, :initializer => lambda { Resources::Candlepin::Owner.service_levels(label) }
       lazy_accessor :debug_cert, :initializer => lambda { load_debug_cert}
     end
   end
@@ -40,7 +40,7 @@ module Glue::Candlepin::Owner
 
     def set_owner
       Rails.logger.debug _("Creating an owner in candlepin: %s") % name
-      Resources::Candlepin::Owner.create(cp_key, name)
+      Resources::Candlepin::Owner.create(label, name)
     rescue => e
       Rails.logger.error _("Failed to create candlepin owner %s") % "#{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -48,7 +48,7 @@ module Glue::Candlepin::Owner
 
     def del_owner
       Rails.logger.debug _("Deleting owner in candlepin: %s") % name
-      Resources::Candlepin::Owner.destroy(cp_key)
+      Resources::Candlepin::Owner.destroy(label)
     rescue => e
       Rails.logger.error _("Failed to delete candlepin owner %s") % "#{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -110,20 +110,20 @@ module Glue::Candlepin::Owner
 
     def pools consumer_uuid = nil
       if consumer_uuid
-        pools = Resources::Candlepin::Owner.pools self.cp_key, { :consumer => consumer_uuid }
+        pools = Resources::Candlepin::Owner.pools self.label, { :consumer => consumer_uuid }
       else
-        pools = Resources::Candlepin::Owner.pools self.cp_key
+        pools = Resources::Candlepin::Owner.pools self.label
       end
       pools.collect { |p| ::Pool.new p }
     end
 
     def generate_debug_cert
-      Resources::Candlepin::Owner.generate_ueber_cert(cp_key)
+      Resources::Candlepin::Owner.generate_ueber_cert(label)
     end
 
     def load_debug_cert
       begin
-        return Resources::Candlepin::Owner.get_ueber_cert(cp_key)
+        return Resources::Candlepin::Owner.get_ueber_cert(label)
       rescue RestClient::ResourceNotFound =>  e
         return generate_debug_cert
       end

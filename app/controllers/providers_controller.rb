@@ -59,7 +59,8 @@ class ProvidersController < ApplicationController
   def products_repos
     @products = @provider.products
     render :partial => "products_repos", :layout => "tupane_layout", :locals => {:provider => @provider,
-                                         :providers => @providers, :products => @products, :editable=>@provider.editable?}
+                                         :providers => @providers, :products => @products, :editable=>@provider.editable?,
+                                         :repositories_cloned_in_envrs=>repositories_cloned_in_envrs}
   end
 
   def import_progress
@@ -98,6 +99,7 @@ class ProvidersController < ApplicationController
 
   def edit
     render :partial => "edit", :layout => "tupane_layout", :locals => {:provider => @provider, :editable=>@provider.editable?,
+                                                                       :repositories_cloned_in_envrs=>repositories_cloned_in_envrs,
                                                                        :name=>controller_display_name}
   end
 
@@ -183,10 +185,15 @@ class ProvidersController < ApplicationController
     @filter = {:organization_id => current_organization}
   end
 
+  def repositories_cloned_in_envrs
+    cloned_repositories = @provider.repositories.select {|r| r.promoted? }
+    cloned_repositories.collect {|r| [r.name, r.product.environments.select {|env| r.is_cloned_in?(env)}.map(&:name)] }
+  end
+
 =begin
   def find_subscriptions
     @provider = current_organization.redhat_provider
-    cp_pools = Candlepin::Owner.pools current_organization.cp_key
+    cp_pools = Candlepin::Owner.pools current_organization.label
     subscriptions = Pool.index_pools cp_pools
 
     @grouped_subscriptions = []
@@ -215,7 +222,7 @@ class ProvidersController < ApplicationController
     # TODO: See subscriptions_controller#reformat_subscriptions for a better(?) OpenStruct implementation
 
     @provider = current_organization.redhat_provider
-    all_subs = Resources::Candlepin::Owner.pools @provider.organization.cp_key
+    all_subs = Resources::Candlepin::Owner.pools @provider.organization.label
     # We default to none imported until we can properly poll Candlepin for status of the import
     @grouped_subscriptions = {}
     all_subs.each do |sub|

@@ -28,8 +28,8 @@ describe SystemGroupsController do
       disable_consumer_group_orchestration
 
       controller.stub(:search_validate).and_return(true)
-      @org = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-      @environment = KTEnvironment.create!(:name=>"DEV", :prior=>@org.library, :organization=>@org)
+      @org = Organization.create!(:name=>'test_org', :label=> 'test_org')
+      @environment = KTEnvironment.create!(:name=>"DEV", :label=> "DEV", :prior=>@org.library, :organization=>@org)
       @org = @org.reload
       setup_current_organization(@org)
       setup_system_creation
@@ -165,7 +165,7 @@ describe SystemGroupsController do
         SystemGroup.where(:description=>"describe").first.should be_nil
       end
       it "should allow two groups with the same name in different orgs" do
-        @org2 = Organization.create!(:name => 'test_org2', :cp_key => 'test_org2')
+        @org2 = Organization.create!(:name=>'test_org2', :label=> 'test_org2')
         setup_current_organization(@org2)
         post :create, :system_group=>{:name=>@group.name, :description=>@group.description}
         response.should be_success

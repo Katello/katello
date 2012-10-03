@@ -398,7 +398,7 @@ class ChangesetsController < ApplicationController
   end
 
   def update_errata_valid? id
-    errata = Glue::Pulp::Errata.find(id)
+    errata = Errata.find(id)
     
     errata.repoids.each{ |repoid|
       repo = Repository.where(:pulp_id => repoid)[0]

@@ -30,7 +30,7 @@ describe Api::PermissionsController do
 
   before (:each) do
     disable_org_orchestration
-    @org = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
+    @org = Organization.create!(:name=>'test_org', :label=> 'test_org')
     @role = Role.new(:name => "test_role", :description=> "role description")
     @perm = Permission.new(:name => "permission_x", :description => "permission description", :role => @role)
     Role.stub(:find).with(role_id).and_return(@role)
@@ -75,8 +75,8 @@ describe Api::PermissionsController do
     let(:all_tags_perm_name) { 'all_tags_permission' }
     let(:perm_desc) { 'permission_y description' }
     let(:resource_type) { 'environments' }
-    let(:perm_params) { {:organization_id=>@org.cp_key, :name => perm_name, :description => perm_desc, 'type' => resource_type, 'verbs' => [], 'tags' => [], :role_id => role_id} }
-    let(:all_tags_perm_params) { {:organization_id=>@org.cp_key, :name => all_tags_perm_name , :description => perm_desc, 'type' => resource_type, 'all_tags' => "True", 'tags' => [], :role_id => role_id} }
+    let(:perm_params) { {:organization_id=>@org.label, :name => perm_name, :description => perm_desc, 'type' => resource_type, 'verbs' => [], 'tags' => [], :role_id => role_id} }
+    let(:all_tags_perm_params) { {:organization_id=>@org.label, :name => all_tags_perm_name , :description => perm_desc, 'type' => resource_type, 'all_tags' => "True", 'tags' => [], :role_id => role_id} }
     let(:action) { :create }
     let(:req) { post :create, perm_params }
     let(:all_tags_req) { post :create, all_tags_perm_params }

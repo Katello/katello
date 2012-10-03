@@ -94,6 +94,11 @@ class Api::ProvidersController < Api::ApiController
   api :DELETE, "/providers/:id", "Destroy a provider"
   param :id, :number, :desc => "Provider numeric identifier", :required => true
   def destroy
+    #
+    # TODO: these should really be done as validations, but the orchestration engine currently converts them into OrchestrationExceptions
+    #
+    raise HttpErrors::BadRequest, _("Provider cannot be deleted since one of its products or repositories has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it.") if @provider.repositories.any? {|r| r.promoted? }
+
     @provider.destroy
     if @provider.destroyed?
       render :text => _("Deleted provider [ %s ]") % @provider.name , :status => 200
@@ -163,7 +168,7 @@ class Api::ProvidersController < Api::ApiController
 
     product_params = params[:product]
     gpg  = GpgKey.readable(@provider.organization).find_by_name!(product_params[:gpg_key_name]) unless product_params[:gpg_key_name].blank?
-    prod = @provider.add_custom_product(product_params[:name], product_params[:description], product_params[:url], gpg)
+    prod = @provider.add_custom_product(labelize_params(product_params), product_params[:name], product_params[:description], product_params[:url], gpg)
     render :json => prod
   end
 

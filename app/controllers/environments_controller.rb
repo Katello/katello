@@ -15,7 +15,7 @@ class EnvironmentsController < ApplicationController
   require 'rubygems'
   require 'active_support/json'
 
-  before_filter :find_organization, :only => [:show, :edit, :update, :destroy, :index, :new, :create, :system_templates, :products]
+  before_filter :find_organization, :only => [:show, :edit, :update, :destroy, :index, :new, :create, :default_label, :system_templates, :products]
   before_filter :authorize
   before_filter :find_environment, :only => [:show, :edit, :update, :destroy, :system_templates, :products]
 
@@ -31,6 +31,7 @@ class EnvironmentsController < ApplicationController
       :new => manage_rule,
       :edit => view_rule,
       :create => manage_rule,
+      :default_label => manage_rule,
       :update => manage_rule,
       :destroy => manage_rule,
       :system_templates => view_akey_rule,
@@ -40,7 +41,7 @@ class EnvironmentsController < ApplicationController
 
   def param_rules
     {
-      :create => {:kt_environment => [:name, :description, :prior]},
+      :create => {:kt_environment => [:name, :label, :description, :prior]},
       :update => {:kt_environment  => [:name, :description, :prior]}
     }
   end
@@ -72,10 +73,17 @@ class EnvironmentsController < ApplicationController
     env_params = {:name => params[:kt_environment][:name],
               :description => params[:kt_environment][:description],
               :prior => params[:kt_environment][:prior],
+              :label => params[:kt_environment][:label],
               :organization_id => @organization.id}
+
+    env_params[:label], label_assigned = generate_label(env_params[:name], _('environment')) if env_params[:label].blank?
+
     @environment = KTEnvironment.new env_params
     @environment.save!
+
     notify.success _("Environment '%s' was created.") % @environment.name
+    notify.message label_assigned unless label_assigned.blank?
+
     #this render just means return a 200 success
     render :nothing => true
   end
@@ -106,7 +114,7 @@ class EnvironmentsController < ApplicationController
   def destroy
     @environment.destroy
     notify.success _("Environment '%s' was deleted.") % @environment.name
-    render :partial => "common/post_delete_close_subpanel", :locals => {:path=>edit_organization_path(@organization.cp_key)}
+    render :partial => "common/post_delete_close_subpanel", :locals => {:path=>edit_organization_path(@organization.label)}
   end
 
   # GET /environments/1/system_templates
@@ -126,7 +134,7 @@ class EnvironmentsController < ApplicationController
 
   def find_organization
     org_id = params[:organization_id] || params[:org_id]
-    @organization = Organization.first(:conditions => {:cp_key => org_id})
+    @organization = Organization.first(:conditions => {:label => org_id})
     notify.error _("Couldn't find organization '%d'") % org_id if @organization.nil?
   end
 

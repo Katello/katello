@@ -34,18 +34,32 @@ rescue LoadError
   # rspec not present, skipping this definition
 end
 
-Rake::TaskManager.class_eval do
-  def remove_task(task_name)
-    @tasks.delete(task_name.to_s)
+namespace :minitest do
+  ['glue'].each do |task|
+    if ENV['test']
+      Rake::Task["db:test:prepare"].clear
+      MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
+        t.libs.push 'test'
+        t.pattern = "test/#{task}/#{ENV['test']}_test.rb"
+      end   
+    else
+      MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
+        t.libs.push 'test'
+        t.pattern = "test/#{task}/**/*_test.rb"
+      end
+    end   
   end
 end
 
-Rake.application.remove_task 'db:test:prepare'
-
-namespace :db do
-  namespace :test do 
-    task :prepare do |t|
-      # rewrite the task to not do anything you don't want
+namespace :minitest do
+  ['models'].each do |test_type|
+    if ENV['test']
+      Rake::Task["minitest:models"].clear
+      Rake::Task["db:test:prepare"].clear
+      MiniTest::Rails::Tasks::SubTestTask.new(test_type => 'test:prepare') do |t|
+        t.libs.push 'test'
+        t.pattern = "test/#{test_type}/#{ENV['test']}_test.rb"
+      end   
     end
   end
 end

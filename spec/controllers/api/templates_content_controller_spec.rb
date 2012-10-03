@@ -46,13 +46,13 @@ describe Api::TemplatesContentController do
   let(:distribution_id) { 1 }
 
   before(:each) do
-    @organization = Organization.new(:name => 'organization', :cp_key => 'organization')
+    @organization = Organization.new(:name => 'organization', :label => 'organization')
     @organization.id = 1
 
-    @environment = KTEnvironment.new(:name => 'environment', :library => false)
+    @environment = KTEnvironment.new(:name=>'environment', :label=> 'environment', :library => false)
     @environment.id = 1
     @environment.stub(:library?).and_return(false)
-    @library = KTEnvironment.new(:name => 'Library', :library => true)
+    @library = KTEnvironment.new(:name=>'Library', :label=> 'Library', :library => true)
     @library.id = 2
     @library.stub(:library?).and_return(true)
 

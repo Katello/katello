@@ -36,25 +36,26 @@ module Glue::Pulp::Repo
       attr_accessor :feed, :feed_cert, :feed_key, :feed_ca
 
       def self.ensure_sync_notification
+        resource =  Runcible::Resources::EventNotifier
         url = AppConfig.post_sync_url
-        type = Resources::Pulp::EventNotifier::EventTypes::REPO_SYNC_COMPLETE
-        notifs = Resources::Pulp::EventNotifier.list()
+        type = resource::EventTypes::REPO_SYNC_COMPLETE
+        notifs = resource.list()
 
         #delete any similar tasks with the wrong url (in case it changed)
         notifs.select{|n| n['event_types'] == [type] && n['notifier_config']['url'] != url}.each do |e|
-          Resources::Pulp::EventNotifier.destroy(e['id'])
+          resource.destroy(e['id'])
         end
 
         #only create a notifier if one doesn't exist with the correct url
         exists = notifs.select{|n| n['event_types'] == [type] && n['notifier_config']['url'] == url}
-        Resources::Pulp::EventNotifier.create_rest_notifier(url, [type]) if exists.empty?
+        resource.create(resource::NotifierTypes::REST_API, {:url=>url}, [type]) if exists.empty?
       end
 
     end
   end
 
-  def self.repo_id product_name, repo_name, env_name, organization_name
-    [organization_name, env_name, product_name, repo_name].compact.join("-").gsub(/[^-\w]/,"_")
+  def self.repo_id product_label, repo_label, env_label, organization_label
+    [organization_label, env_label, product_label, repo_label].compact.join("-").gsub(/[^-\w]/,"_")
   end
 
   #repo_pkgs = a map with {repo => [package objects to be removed]}
@@ -208,7 +209,7 @@ module Glue::Pulp::Repo
 
   def packages=attrs
     @repo_packages = attrs.collect do |package|
-        Glue::Pulp::Package.new(package)
+      Package.new(package)
     end
     @repo_packages
   end
@@ -223,7 +224,7 @@ module Glue::Pulp::Repo
 
   def errata=attrs
     @repo_errata = attrs.collect do |erratum|
-        Glue::Pulp::Errata.new(erratum)
+      Errata.new(erratum)
     end
     @repo_errata
   end
@@ -270,7 +271,7 @@ module Glue::Pulp::Repo
   end
 
   def clone_id(env)
-    Glue::Pulp::Repo.repo_id(self.product.name, self.name, env.name,env.organization.name)
+    Glue::Pulp::Repo.repo_id(self.product.label, self.label, env.label, env.organization.label)
   end
 
 
@@ -352,6 +353,7 @@ module Glue::Pulp::Repo
     clone = Repository.new(:environment_product => key,
                            :cp_label => self.cp_label,
                            :library_instance=>library,
+                           :label=>self.label,
                            :name=>self.name,
                            :arch=>self.arch,
                            :major=>self.major,
@@ -470,7 +472,7 @@ module Glue::Pulp::Repo
   end
 
   def generate_metadata
-    Runcible::Extensions::Repository.publish(self.pulp_id)
+    Runcible::Extensions::Repository.publish_all(self.pulp_id)
   end
 
   # Convert array of Repo objects to Ruby Hash in the form of repo.id => repo_object for fast searches.

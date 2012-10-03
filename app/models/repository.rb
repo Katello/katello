@@ -9,7 +9,7 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-
+require "util/model_util"
 
 class RepoDisablementValidator < ActiveModel::Validator
   def validate(record)
@@ -21,39 +21,30 @@ end
 
 
 class Repository < ActiveRecord::Base
-  include Glue::Pulp::Repo if (AppConfig.use_cp and AppConfig.use_pulp)
-  include Glue if AppConfig.use_cp
-  include Authorization
+  include Glue::Pulp::Repo if AppConfig.use_pulp
+  include Glue if AppConfig.use_cp || AppConfig.use_pulp
+  include Glue::ElasticSearch::Repository if AppConfig.use_elasticsearch
+  include Authorization::Repository
   include AsyncOrchestration
-  include IndexedModel
+  include Rails.application.routes.url_helpers #required for GPG key url generation
+  include Katello::LabelFromName
 
-  index_options :extended_json=>:extended_index_attrs,
-                :json=>{:except=>[:pulp_repo_facts, :groupid, :feed_cert, :environment_product_id]}
-
-  mapping do
-    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :name_sort, :type => 'string', :index => :not_analyzed
-  end
-
-
-  after_save :update_related_index
   before_save :refresh_content
 
   belongs_to :environment_product, :inverse_of => :repositories
-  has_and_belongs_to_many :changesets
-  validates :pulp_id, :presence => true, :uniqueness => true
-  validates :name, :presence => true
-  validates :enabled, :repo_disablement => true, :on => [:update]
   belongs_to :gpg_key, :inverse_of => :repositories
   belongs_to :library_instance, :class_name=>"Repository"
+  has_and_belongs_to_many :changesets
+  
+  validates :environment_product, :presence => true
+  validates :pulp_id, :presence => true, :uniqueness => true
+  validates :name, :presence => true
+  #validates :content_id, :presence => true #add back after fixing add_repo orchestration
+  validates :label, :presence => true,:katello_label_format => true
+  validates :enabled, :repo_disablement => true, :on => [:update]
 
-  def self.in_product(product)
-    joins(:environment_product).where(:environment_products => { :product_id => product })
-  end
-
-  def self.in_environment(env)
-    joins(:environment_product).where(:environment_products => { :environment_id => env })
-  end
+  default_scope :order => 'name ASC'
+  scope :enabled, where(:enabled => true)
 
   def product
     self.environment_product.product
@@ -67,6 +58,14 @@ class Repository < ActiveRecord::Base
     self.environment.organization
   end
 
+  def self.in_environment(env)
+    joins(:environment_product).where(:environment_products => { :environment_id => env })
+  end
+
+  def self.in_product(product)
+    joins(:environment_product).where("environment_products.product_id" => product.id)
+  end
+
   def yum_gpg_key_url
     # if the repo has a gpg key return a url to access it
     if (self.gpg_key && self.gpg_key.content.present?)
@@ -74,12 +73,6 @@ class Repository < ActiveRecord::Base
       host += ":" + AppConfig.port.to_s unless AppConfig.port.blank? || AppConfig.port.to_s == "443"
       gpg_key_content_api_repository_url(self, :host => host + ENV['RAILS_RELATIVE_URL_ROOT'].to_s, :protocol => 'https')
     end
-  end
-
-  #temporary major version
-  def major_version
-    return nil if release.nil?
-    release.to_i
   end
 
   def redhat?
@@ -93,74 +86,6 @@ class Repository < ActiveRecord::Base
   def has_filters?
     return false unless environment.library?
     filters.count > 0 || product.filters.count > 0
-  end
-
-  default_scope :order => 'name ASC'
-
-  scope :enabled, where(:enabled => true)
-
-  scope :readable, lambda { |env|
-    prod_ids = ::Product.readable(env.organization).collect{|p| p.id}
-    if env.contents_readable?
-      joins(:environment_product).where("environment_products.environment_id" => env.id)
-    else
-      #none readable
-      where("1=0")
-    end
-  }
-
-  #NOTE:  this scope returns all library instances of repositories that have content readable
-  scope :libraries_content_readable, lambda {|org|
-    repos = Repository.enabled.content_readable(org)
-    lib_ids = []
-    repos.each{|r|  lib_ids << (r.library_instance_id || r.id)}
-    where(:id=>lib_ids)
-  }
-
-  scope :content_readable, lambda{|org|
-    prod_ids = ::Product.readable(org).collect{|p| p.id}
-    env_ids = KTEnvironment.content_readable(org)
-    joins(:environment_product).where("environment_products.product_id" => prod_ids).
-        where("environment_products.environment_id"=>env_ids)
-  }
-
-  scope :readable_for_product, lambda{|env, prod|
-    if env.contents_readable?
-      joins(:environment_product).where("environment_products.environment_id" => env.id).where(
-                                'environment_products.product_id'=>prod.id)
-    else
-      #none readable
-      where("1=0")
-    end
-  }
-
-  scope :editable_in_library, lambda {|org|
-    joins(:environment_product).
-        where("environment_products.environment_id" => org.library.id).
-        where("environment_products.product_id in (#{Product.editable(org).select("products.id").to_sql})")
-  }
-
-  scope :readable_in_org, lambda {|org, *skip_library|
-    if (skip_library.empty? || skip_library.first.nil?)
-      # 'skip library' not included, so retrieve repos in library in the result
-      joins(:environment_product).where("environment_products.environment_id" =>  KTEnvironment.content_readable(org))
-    else
-      joins(:environment_product).where("environment_products.environment_id" =>  KTEnvironment.content_readable(org).where(:library => false))
-    end
-  }
-
-  def self.any_readable_in_org? org, skip_library = false
-    KTEnvironment.any_contents_readable? org, skip_library
-  end
-
-
-  def extended_index_attrs
-    {:environment=>self.environment.name, :environment_id=>self.environment.id, :clone_ids=>self.clones.pluck(:pulp_id),
-     :product=>self.product.name, :product_id=> self.product.id, :name_sort=>self.name }
-  end
-
-  def update_related_index
-    self.product.provider.update_index if self.product.provider.respond_to? :update_index
   end
 
   def sync_complete task
@@ -184,74 +109,6 @@ class Repository < ActiveRecord::Base
                      :details => details.map(&:chomp).join("\n"), :user => user, :organization => self.organization
       end
     end
-  end
-
-  def index_packages
-    pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
-    Tire.index Glue::Pulp::Package.index do
-      create :settings => Glue::Pulp::Package.index_settings, :mappings => Glue::Pulp::Package.index_mapping
-      import pkgs
-    end if !pkgs.empty?
-  end
-
-  def update_packages_index
-    return #TODO remove when BZ 854260 is fixed
-    # for each of the packages in the repo, unassociate the repo from the package
-    pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
-    pulp_id = self.pulp_id
-
-    Tire.index Glue::Pulp::Package.index do
-      create :settings => Glue::Pulp::Package.index_settings, :mappings => Glue::Pulp::Package.index_mapping
-
-      import pkgs do |documents|
-        documents.each do |document|
-          if document["repoids"].length > 1
-            # if there is more than 1 repo associated w/ the pkg, remove this repo
-            document["repoids"].delete(pulp_id)
-          end
-        end
-      end
-
-    end if !pkgs.empty?
-
-    # now, for any package that only had this repo asscociated with it, remove the package from the index
-    repoids = "repoids:#{pulp_id}"
-    Tire::Configuration.client.delete "#{Tire::Configuration.url}/katello_package/_query?q=#{repoids}"
-    Tire.index('katello_package').refresh
-  end
-
-  def index_errata
-    errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
-    Tire.index Glue::Pulp::Errata.index do
-      create :settings => Glue::Pulp::Errata.index_settings, :mappings => Glue::Pulp::Errata.index_mapping
-      import errata
-    end if !errata.empty?
-  end
-
-  def update_errata_index
-    return #TODO remove when BZ 854260 is fixed
-    # for each of the errata in the repo, unassociate the repo from the errata
-    errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
-    pulp_id = self.pulp_id
-
-    Tire.index Glue::Pulp::Errata.index do
-      create :settings => Glue::Pulp::Errata.index_settings, :mappings => Glue::Pulp::Errata.index_mapping
-
-      import errata do |documents|
-        documents.each do |document|
-          if document["repoids"].length > 1
-            # if there is more than 1 repo associated w/ the errata, remove this repo
-            document["repoids"].delete(pulp_id)
-          end
-        end
-      end
-
-    end if !errata.empty?
-
-    # now, for any errata that only had this repo asscociated with it, remove the errata from the index
-    repoids = "repoids:#{pulp_id}"
-    Tire::Configuration.client.delete "#{Tire::Configuration.url}/katello_errata/_query?q=#{repoids}"
-    Tire.index('katello_errata').refresh
   end
 
   def clones
@@ -303,17 +160,6 @@ class Repository < ActiveRecord::Base
       repo = self.library_instance
     end
     Repository.where("library_instance_id=%s or repositories.id=%s"  % [repo.id, repo.id] )
-  end
-
-
-  def errata_count
-    results = Glue::Pulp::Errata.search('', 0, 1, :repoids => [self.pulp_id])
-    results.empty? ? 0 : results.total
-  end
-
-  def package_count
-    results = Glue::Pulp::Package.search('', 0, 1, :repoids => [self.pulp_id])
-    results.empty? ? 0 : results.total
   end
 
   #Filters that should be applied for content coming into this repository.

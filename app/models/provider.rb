@@ -231,6 +231,10 @@ class Provider < ActiveRecord::Base
     releases.uniq.sort
   end
 
+  def repositories
+    Repository.joins(:environment_product => :product).where("products.provider_id" => self.id)
+  end
+
   def import_task
     return task_status
   end

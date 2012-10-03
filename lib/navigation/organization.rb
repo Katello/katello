@@ -42,13 +42,13 @@ module Navigation
       [
         { :key => :details,
           :name =>_("Details"),
-          :url => lambda{edit_organization_path(@organization.cp_key)},
+          :url => lambda{edit_organization_path(@organization.label)},
           :if => lambda{@organization},
           :options => {:class=>"panel_link"}
         },
         { :key => :history,
           :name =>_("History"),
-          :url => lambda{events_organization_path(@organization.cp_key)},
+          :url => lambda{events_organization_path(@organization.label)},
           :if => lambda{@organization},
           :options => {:class=>"panel_link"}
         }
