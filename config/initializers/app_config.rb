@@ -40,6 +40,7 @@ module ApplicationConfiguration
       # candlepin and pulp are turned on by default
       @ostruct.use_cp = true unless @ostruct.respond_to?(:use_cp)
       @ostruct.use_pulp = true unless @ostruct.respond_to?(:use_pulp)
+      @ostruct.use_elasticsearch = true unless @ostruct.respond_to?(:use_elasticsearch)
 
       #configuration is created after environment initializers, so lets override them here
       Rails.logger.level = LOG_LEVELS.index(@ostruct.log_level) if LOG_LEVELS.include?(@ostruct.log_level)

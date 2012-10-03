@@ -6,7 +6,7 @@ describe SyncPlan, :katello => true do
   describe "SyncPlan should" do
     before(:each) do
       disable_org_orchestration
-      @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
+      @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
       @plan = SyncPlan.create!({:name => 'Norman Rockwell', :organization_id => @organization, :sync_date => DateTime.now, :interval => 'daily'})
     end
 
@@ -62,7 +62,7 @@ describe SyncPlan, :katello => true do
     it "reassign sync_plan to its products after update" do
       disable_product_orchestration
 
-      organization = Organization.create!(:name => ProductTestData::ORG_ID, :cp_key => 'admin-org-37070')
+      organization = Organization.create!(:name=>ProductTestData::ORG_ID, :label => 'admin-org-37070')
       @plan.products.create! ProductTestData::SIMPLE_PRODUCT.merge(
                                  :provider => organization.redhat_provider, :environments => [organization.library])
       @plan.save!

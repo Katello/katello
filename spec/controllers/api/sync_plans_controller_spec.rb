@@ -23,12 +23,12 @@ describe Api::SyncPlansController do
 
     @organization = Organization.create! do |o|
       o.name = "org-1234"
-      o.cp_key = "org-1234"
+      o.label = "org-1234"
     end
   end
   describe "create" do
       let(:request_params) {
-                {:organization_id => @organization.cp_key,
+                {:organization_id => @organization.label,
                    :sync_plan =>
                       {:name => "Foo",
                        :description => "This is the key string",
@@ -59,7 +59,7 @@ describe Api::SyncPlansController do
                                         :interval => "daily", :organization => @organization)}
     let(:request_params) {
                 { :id => sync_plan.id,
-                  :organization_id => @organization.cp_key,
+                  :organization_id => @organization.label,
                    :sync_plan =>
                       {:name => sync_plan.name + "--Altered",
                        :description =>  "#{sync_plan.description} --Altered",

@@ -16,12 +16,19 @@ module SystemsHelper
     render :partial=>"systems/list_systems",  
             :locals=>{:accessor=>options[:accessor], :columns=>options[:columns], :collection=>options[:collection], :name=>options[:name]}
   end
-  
+
   def get_checkin(system)
     if system.checkinTime
       return  format_time(system.checkinTime)
     end
-    _("Never checked in.")
+    _("Never checked in")
+  end
+
+  def get_registered(system)
+    if system.createdTime
+      return  format_time(system.createdTime)
+    end
+    _("Unknown registration date")
   end
 
   def get_uptime
@@ -46,11 +53,11 @@ module SystemsHelper
   
   def errata_type_class errata
     case errata.e_type
-      when  Glue::Pulp::Errata::SECURITY
+      when  Errata::SECURITY
         return "security_icon"
-      when  Glue::Pulp::Errata::ENHANCEMENT
+      when  Errata::ENHANCEMENT
         return "enhancement_icon"
-      when  Glue::Pulp::Errata::BUGZILLA
+      when  Errata::BUGZILLA
         return "bugzilla_icon"
     end
   end
@@ -80,7 +87,7 @@ module SystemsHelper
   end
 
   def system_servicelevel system
-    _("Auto-subscribe %s, %s") % [
+    _("Auto-heal %s, %s") % [
         system.autoheal ? _("On") : _("Off"),
         system.serviceLevel == '' ? _("No Service Level Preference") : (_("Service Level %s") % system.serviceLevel)
     ]
@@ -89,12 +96,12 @@ module SystemsHelper
   def system_servicelevel_edit system
     levels = {}
     system.organization.service_levels.each { |level|
-      levels["1#{level}"] = _("Auto-subscribe On, Service Level %s") % level
-      levels["0#{level}"] = _("Auto-subscribe Off, Service Level %s") % level
+      levels["1#{level}"] = _("Auto-heal On, Service Level %s") % level
+      levels["0#{level}"] = _("Auto-heal Off, Service Level %s") % level
     }
 
-    levels['1'] = _("Auto-subscribe On, No Service Level Preference")
-    levels['0'] = _("Auto-subscribe Off, No Service Level Preference")
+    levels['1'] = _("Auto-heal On, No Service Level Preference")
+    levels['0'] = _("Auto-heal Off, No Service Level Preference")
 
     levels["selected"] = system_servicelevel(system)
 

@@ -37,7 +37,7 @@ describe Provider do
   before(:each) do
     disable_org_orchestration
     disable_product_orchestration
-    @organization = Organization.new(:name =>"org10020", :cp_key => 'org10020')
+    @organization = Organization.new(:name =>"org10020",:label =>"org10020")
     @organization.save!
     @organization.redhat_provider.delete
     @organization = Organization.last
@@ -56,7 +56,7 @@ describe Provider do
       })
       @provider.save!
 
-      @product = Product.create!({:cp_id => "product_id", :name=> "prod", :productContent => [], :provider => @provider, :environments => [@organization.library]})
+      @product = Product.create!({:cp_id => "product_id",:label=>"prod", :name=> "prod", :productContent => [], :provider => @provider, :environments => [@organization.library]})
     end
 
     specify { @product.should_not be_nil }
@@ -68,7 +68,7 @@ describe Provider do
   context "import manifest via RED HAT provider" do
     before(:each) do
       disable_org_orchestration
-      @organization = Organization.create!(:name =>"org10021", :cp_key => "org10021_key")
+      @organization = Organization.create!(:name=>"org10021", :label=> "org10021_key")
       @provider = @organization.redhat_provider
     end
 
@@ -122,8 +122,7 @@ describe Provider do
         before do
           Glue::Candlepin::Product.stub(:import_from_cp => [], :import_marketing_from_cp => true)
           Resources::Candlepin::Product.stub!(:destroy).and_return(true)
-
-          @rh_product = Product.create!({:name=> "rh_product", :productContent => [], :provider => @provider, :environments => [@organization.library]})
+          @rh_product = Product.create!({:label=>"prod",:name=> "rh_product", :productContent => [], :provider => @provider, :environments => [@organization.library]})
           @custom_provider = Provider.create!({
             :name => 'test_provider',
             :repository_url => 'https://something.net',
@@ -132,7 +131,7 @@ describe Provider do
           })
           # cp_id gets set based on Product.create in Candlepin so we need a stub to return something besides 1
           Resources::Candlepin::Product.stub!(:create).and_return({:id => 2})
-          @custom_product = Product.create!({:name=> "custom_product", :productContent => [], :provider => @custom_provider, :environments => [@organization.library]})
+          @custom_product = Product.create!({:label=> "custom-prod",:name=> "custom_product", :productContent => [], :provider => @custom_provider, :environments => [@organization.library]})
         end
 
         it "should be removed from the Katello products"  do
@@ -170,7 +169,7 @@ describe Provider do
     end
 
     def create_product_with_content(product_name, releases)
-      product = @provider.products.create!(:name => product_name, :cp_id => product_name.hash) do |product|
+      product = @provider.products.create!(:name => product_name, :label => "#{product_name.hash}", :cp_id => product_name.hash) do |product|
         product.environments << @organization.library
       end
 
@@ -179,9 +178,11 @@ describe Provider do
         releases.each do |release|
           version = Resources::CDN::Utils.parse_version(release)
           repo_name = "#{product_content.content.name} #{release}"
+          repo_label = repo_name.gsub(/[^-\w]/,"_")
           Repository.create!(:environment_product => EnvironmentProduct.find_or_create(product.organization.library, product),
                              :cp_label => product_content.content.label,
                              :name => repo_name,
+                             :label => repo_label,
                              :pulp_id => product.repo_id(repo_name),
                              :major => version[:major],
                              :minor => version[:minor])
@@ -207,7 +208,7 @@ describe Provider do
       disable_org_orchestration
       disable_product_orchestration
       disable_cdn
-      @organization = Organization.create!(:name =>"org10026", :cp_key => "org10026_key")
+      @organization = Organization.create!(:name=>"org10026", :label=> "org10026_key")
       @provider = @organization.redhat_provider
 
       @product_without_change = create_product_with_content("product-without-change", ["1.0", "1.1"])
@@ -243,8 +244,8 @@ describe Provider do
         p.organization = @organization
       end
 
-      @product1 = Product.create!({:cp_id => "product1_id", :name=> "product1", :productContent => [], :provider => @provider, :environments => [@organization.library]})
-      @product2 = Product.create!({:cp_id => "product2_id", :name=> "product2", :productContent => [], :provider => @provider, :environments => [@organization.library]})
+      @product1 = Product.create!({:cp_id => "product1_id",:label => "prod1", :name=> "product1", :productContent => [], :provider => @provider, :environments => [@organization.library]})
+      @product2 = Product.create!({:cp_id => "product2_id", :label=> "prod2", :name=> "product2", :productContent => [], :provider => @provider, :environments => [@organization.library]})
     end
 
     it "should create sync for all it's products" do

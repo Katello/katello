@@ -16,7 +16,7 @@ $(document).ready(function() {
 
     $('#accordion').accordion({});
 
-    $(".clickable").click(function(){
+    $("#changeset_history_tabs .clickable").click(function(){
 
         $(this).parents(".content_group").children(".cs_content").slideToggle();
     

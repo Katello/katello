@@ -9,6 +9,7 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+require "util/model_util"
 
 class LibraryPresenceValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
@@ -18,11 +19,12 @@ end
 
 class Product < ActiveRecord::Base
   include Glue::Candlepin::Product if AppConfig.use_cp
-  include Glue::Pulp::Repos if AppConfig.katello?
-  include Glue if AppConfig.use_cp
+  include Glue::Pulp::Repos if AppConfig.use_pulp
+  include Glue if AppConfig.use_cp || AppConfig.use_pulp
   include Authorization
   include AsyncOrchestration
   include IndexedModel
+  include Katello::LabelFromName
 
   index_options :extended_json=>:extended_index_attrs,
                   :json=>{:only => [:name, :description]},
@@ -31,6 +33,7 @@ class Product < ActiveRecord::Base
   mapping do
     indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_sort, :type => 'string', :index => :not_analyzed
+    indexes :label, :type => 'string', :index => :not_analyzed
     indexes :description, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_autocomplete, :type=>'string', :analyzer=>'autcomplete_name_analyzer'
   end
@@ -55,6 +58,7 @@ class Product < ActiveRecord::Base
   validates :description, :katello_description_format => true
   validates :environments, :library_presence => true
   validates :name, :presence => true, :katello_name_format => true
+  validates :label, :presence => true, :katello_label_format => true
 
   scope :with_repos_only, lambda { |env|
     with_repos(env, false)
@@ -154,13 +158,13 @@ class Product < ActiveRecord::Base
 
   def total_package_count env
     repoids = self.repos(env).collect{|r| r.pulp_id}
-    result = Glue::Pulp::Package.search('*', 0, 1, repoids)
+    result = Package.search('*', 0, 1, repoids)
     result.length > 0 ? result.total : 0
   end
 
   def total_errata_count env
     repo_ids = self.repos(env).collect{|r| r.pulp_id}
-    results = Glue::Pulp::Errata.search('', 0, 1, :repoids => repo_ids)
+    results = Errata.search('', 0, 1, :repoids => repo_ids)
     results.empty? ? 0 : results.total
   end
 

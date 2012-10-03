@@ -29,17 +29,17 @@ describe EnvironmentsController do
     EMPTY_ENVIRONMENT = {:name => "", :description => "", :prior => nil, :display_name => ''}
     
     ORG_ID = 1
-    ORGANIZATION = {:id => 1, :name => "organization_name", :description => "organization_description", :cp_key=>"foo"}
+    ORGANIZATION = {:id => 1, :name => "organization_name", :description => "organization_description", :label=>"foo"}
   end
 
   describe "rules" do
     before (:each) do
       new_test_org
-      Organization.stub!(:first).with(:conditions => {:cp_key=>@organization.cp_key}).and_return(@organization)
+      Organization.stub!(:first).with(:conditions => {:label=>@organization.label}).and_return(@organization)
     end
     describe "GET new" do
       let(:action) {:new}
-      let(:req) { get :new, :organization_id => @organization.cp_key}
+      let(:req) { get :new, :organization_id => @organization.label}
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:update, :organizations,nil, @organization) }
       end
@@ -51,7 +51,7 @@ describe EnvironmentsController do
 
     describe "post create" do
       let(:action) {:create}
-      let(:req) { post :create, :organization_id => @organization.cp_key,
+      let(:req) { post :create, :organization_id => @organization.label,
                               :name => 'production', :prior => @organization.library}
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:update, :organizations,nil, @organization) }
@@ -68,12 +68,12 @@ describe EnvironmentsController do
       login_user
       set_default_locale
       new_test_org
-      @environment = KTEnvironment.create!(:name => "boo", :organization=> @organization, :prior => @organization.library)
+      @environment = KTEnvironment.create!(:name=>"boo", :label=> "boo", :organization=> @organization, :prior => @organization.library)
     end
     it_should_behave_like "bad request"  do
       let(:req) do
 
-        bad_req = {:env_id => @environment.id, :org_id => @organization.cp_key,
+        bad_req = {:env_id => @environment.id, :org_id => @organization.label,
                     :kt_environment => { :name => 'production', :prior => @organization.library}
           }
         bad_req[:kt_environment][:bad_foo] = "mwahaha"
@@ -100,7 +100,7 @@ describe EnvironmentsController do
       @org.environments.stub!(:first).with(:conditions => {:name => @env.name}).and_return(@env)
       @org.stub!(:library).and_return(@library)
 
-      Organization.stub!(:first).with(:conditions => {:cp_key=>@org.cp_key}).and_return(@org)
+      Organization.stub!(:first).with(:conditions => {:label=>@org.label}).and_return(@org)
       KTEnvironment.stub!(:find).and_return(@env)
     end
 
@@ -111,14 +111,14 @@ describe EnvironmentsController do
 
       it "assigns a new environment as @environment" do
         KTEnvironment.should_receive(:new).and_return(@new_env)
-        get :new, :organization_id => @org.cp_key
+        get :new, :organization_id => @org.label
         assigns(:environment).should_not be_nil
       end
     end
 
     describe "GET edit" do
       it "assigns the requested environment as @environment" do
-        get :edit, :id => @env.id, :organization_id => @org.cp_key
+        get :edit, :id => @env.id, :organization_id => @org.label
         assigns(:environment).should == @env
       end
     end
@@ -134,23 +134,23 @@ describe EnvironmentsController do
 
 
         it "should create new environment" do
-          KTEnvironment.should_receive(:new).with({:name => 'production',
+          KTEnvironment.should_receive(:new).with({:name => 'production',:label=>"boo",
                 :prior => @org.library, :description => nil, :organization_id => @org.id}).and_return(@new_env)
-          post :create, :organization_id => @org.cp_key, :kt_environment => {:name => 'production', :prior => @org.library}
+          post :create, :organization_id => @org.label, :kt_environment => {:name => 'production', :label=>"boo", :prior => @org.library}
         end
 
         it "should save new environment" do
           @new_env.should_receive(:save!).and_return(true)
-          post :create, :organization_id => @org.cp_key, :kt_environment => {:name => 'production', :prior => @org.library}
+          post :create, :organization_id => @org.label, :kt_environment => {:name => 'production', :prior => @org.library}
         end
 
         it "assigns a newly created environment as @environment" do
-          post :create, :organization_id => @org.cp_key, :kt_environment => {:name => 'production', :prior => @org.library}
+          post :create, :organization_id => @org.label, :kt_environment => {:name => 'production', :prior => @org.library}
           assigns(:environment).should_not be_nil
         end
 
         it "redirects to the created environment" do
-          post :create, :organization_id => @org.cp_key, :kt_environment => {:name => 'production', :prior => @org.library}
+          post :create, :organization_id => @org.label, :kt_environment => {:name => 'production', :prior => @org.library}
           env = assigns(:environment)
           response.should be_success
         end
@@ -164,7 +164,7 @@ describe EnvironmentsController do
       end
         it_should_behave_like "bad request"  do
           let(:req) do
-            bad_req = {:organization_id => @organization.cp_key, :kt_environment => {:name => 'production', :prior => @organization.library}}
+            bad_req = {:organization_id => @organization.label, :kt_environment => {:name => 'production', :prior => @organization.library}}
             bad_req[:kt_environment][:bad_foo] = "mwahaha"
             post :create, bad_req
           end
@@ -181,16 +181,16 @@ describe EnvironmentsController do
 
         it "should call katello environment update api" do
           @env.should_receive(:update_attributes).and_return(EnvControllerTest::UPDATED_ENVIRONMENT)
-          put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
+          put 'update', :env_id => @env.id, :org_id => @org.label, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
         end
 
         it "should generate a success notice" do
           controller.should notify.success
-          put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
+          put 'update', :env_id => @env.id, :org_id => @org.label, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
         end
 
         it "should not redirect from edit view" do
-          put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
+          put 'update', :env_id => @env.id, :org_id => @org.label, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
           response.should_not be_redirect
         end
       end
@@ -206,11 +206,11 @@ describe EnvironmentsController do
 
         it "should generate an error notice" do
           controller.should notify.exception
-          put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
+          put 'update', :env_id => @env.id, :org_id => @org.label, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
         end
 
         it "should not redirect from edit view" do
-          put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
+          put 'update', :env_id => @env.id, :org_id => @org.label, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
           response.should_not be_redirect
         end
       end
@@ -222,11 +222,11 @@ describe EnvironmentsController do
 
       it "destroys the requested environment" do
         @env.should_receive(:destroy)
-        delete :destroy, :id => @env.id, :organization_id => @org.cp_key
+        delete :destroy, :id => @env.id, :organization_id => @org.label
       end
 
       it "redirects to the environments list" do
-        delete :destroy, :id => @env.id, :organization_id => @org.cp_key
+        delete :destroy, :id => @env.id, :organization_id => @org.label
       end
     end
   end
