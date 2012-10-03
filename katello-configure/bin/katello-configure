@@ -30,7 +30,8 @@ ERROR_CODES = {
 }
 
 # Terminate script with error code from ERROR_CODES hash
-def exit_with(code = :unknown)
+def exit_with(code = :unknown, message = nil)
+  $stderr.puts message unless message.nil?
   code = ERROR_CODES[code.to_sym] || ERROR_CODES[:unknown]
   exit code
 end
@@ -419,6 +420,7 @@ def check_hostname
   Socket.gethostbyname hostname
   Socket.gethostbyname 'localhost'
 	$stderr.puts "WARNING: FQDN is not set!" unless hostname.index '.'
+  exit_with :hostname_error, "Invalid hostname, check hostname and DNS" if `hostname -A`.strip == ''
 rescue SocketError => e
   puts "Error"
 	$stderr.puts "Unable to resolve '#{hostname}' or 'localhost'. Check your DNS and /etc/hosts settings."
