@@ -20,7 +20,7 @@ KT.panel.set_expand_cb(function(){
     KT.system_groups_pane.register_multiselect();
 });
 
-KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distribution.name:", "distribution.version:", "network.hostname:", "network.ipaddr:", "...Any System Fact"]);
+KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distribution.name:", "distribution.version:", "network.hostname:", "network.ipaddr:"]);
 
 (function(){
     var options = { create : 'new_system' };
