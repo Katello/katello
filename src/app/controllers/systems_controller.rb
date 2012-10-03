@@ -127,6 +127,8 @@ class SystemsController < ApplicationController
       end
     end
 
+  rescue ActiveRecord::RecordInvalid => error
+    raise error # handle error by ApplicationController's rescue_from
   rescue => error
     display_message = if error.respond_to?('response') && error.response.include?('displayMessage')
                          JSON.parse(error.response)['displayMessage']
