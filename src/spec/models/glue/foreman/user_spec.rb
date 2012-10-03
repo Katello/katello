@@ -16,6 +16,7 @@ describe Glue::Foreman::User do
 
   before do
     disable_user_orchestration :keep_foreman => true
+    ::Foreman::User.stub(:new).and_return(foreman_user)
   end
 
   let(:foreman_user) { mock('foreman_user', :save! => true, :id => 1) }
