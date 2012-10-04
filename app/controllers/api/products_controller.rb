@@ -87,7 +87,7 @@ class Api::ProductsController < Api::ApiController
   param :id, :number, :desc => "product numeric identifier"
   def destroy
     @product.destroy
-    render :text => _("Deleted product '#{params[:id]}'"), :status => 200
+    render :text => _("Deleted product '%s'") % params[:id], :status => 200
   end
 
   api :GET, "/environments/:environment_id/products/:id/repositories"
@@ -126,7 +126,7 @@ class Api::ProductsController < Api::ApiController
 
   def find_product
     @product = @organization.products.find_by_cp_id(params[:id].to_s)
-    raise HttpErrors::NotFound, _("Couldn't find product with id '#{params[:id]}'") if @product.nil?
+    raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:id] if @product.nil?
   end
 
   def find_environment
