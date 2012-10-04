@@ -148,6 +148,7 @@ class Product < ActiveRecord::Base
     end
   end
 
+  # TODO: this should be a part of product update orchestration
   def reset_repo_gpgs!
     self.environment_products.each do |ep|
       ep.repositories.each do |repo|
