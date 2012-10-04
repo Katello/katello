@@ -263,7 +263,7 @@ class System < ActiveRecord::Base
      :name_sort=>name.downcase, :name_autocomplete=>self.name,
      :system_group=>self.system_groups.collect{|g| g.name},
      :system_group_ids=>self.system_group_ids,
-     :installed_products=>self.installedProducts.collect{|p| p[:productName]}
+     :installed_products=>self.collect_installed_product_names
     }
   end
 
@@ -291,6 +291,15 @@ class System < ActiveRecord::Base
     def fill_defaults
       self.description = _("Initial Registration Params") unless self.description
       self.location = _("None") unless self.location
+    end
+
+    def collect_installed_product_names
+      installed_products = self.installedProducts
+      names = []
+      if installed_products != nil
+        names = installed_products.collect{ |p| p[:productName] }
+      end
+      names
     end
 
 end
