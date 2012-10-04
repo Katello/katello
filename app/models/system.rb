@@ -263,7 +263,7 @@ class System < ActiveRecord::Base
      :name_sort=>name.downcase, :name_autocomplete=>self.name,
      :system_group=>self.system_groups.collect{|g| g.name},
      :system_group_ids=>self.system_group_ids,
-     :installed_products=>self.collect_installed_product_names
+     :installed_products=>collect_installed_product_names
     }
   end
 
