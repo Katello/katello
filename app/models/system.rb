@@ -294,7 +294,7 @@ class System < ActiveRecord::Base
     end
 
     def collect_installed_product_names
-      self.installed_products ? self.installed_products.map{ |p| p[:productName] } : []
+      self.installedProducts ? self.installedProducts.map{ |p| p[:productName] } : []
     end
 
 end
