@@ -358,6 +358,7 @@ var promotion_page = (function($){
                 promotion_page.set_current_changeset_breadcrumb(deletion_changeset_breadcrumb);
                 promotion_page.get_changeset_tree().reset_tree(deletion_changeset_breadcrumb);
             }
+            promotion_page.update_new_changeset_url(type);
         },
         init_changeset_list = function(){
             var changeset, id;
@@ -746,8 +747,13 @@ var promotion_page = (function($){
                }
             });
             return true;
+        },
+        update_new_changeset_url = function(type) {
+            new_changeset_link = $('a.fr.block');
+            base_url = new_changeset_link.attr('base-ajax_url');
+            new_changeset_link.attr('data-ajax_url', base_url + '&changeset_type=' + type);
         };
-        
+
     return {
         subtypes:               subtypes,
         activate_changeset_tree: activate_changeset_tree,
@@ -775,7 +781,8 @@ var promotion_page = (function($){
         show_conflict_details:  show_conflict_details,
         add_dependencies:       add_dependencies,
         remove_dependencies:    remove_dependencies,
-        init_changeset_list:    init_changeset_list
+        init_changeset_list:    init_changeset_list,
+        update_new_changeset_url: update_new_changeset_url
     };
 }(jQuery));
 
