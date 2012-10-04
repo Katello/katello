@@ -76,7 +76,7 @@ class Api::GpgKeysController < Api::ApiController
   param :id, :number, :desc => "gpg key numeric identifier"
   def destroy
     @gpg_key.destroy
-    render :text => _("Deleted GPG key '#{params[:id]}'"), :status => 204
+    render :text => _("Deleted GPG key '%s'") % params[:id], :status => 204
   end
 
   api :GET, "/gpg_keys/:id/content"
@@ -96,7 +96,7 @@ EOS
   def find_gpg_key
     @gpg_key = GpgKey.find(params[:id])
   rescue ActiveRecord::RecordNotFound => e
-    raise HttpErrors::NotFound, _("Couldn't find GPG key '#{params[:id]}'")
+    raise HttpErrors::NotFound, _("Couldn't find GPG key '%s'") % params[:id]
   end
 
 end
