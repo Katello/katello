@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2012 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -11,11 +11,68 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 
+module Glue::Candlepin::Content
+  def self.included(base)
+    base.send :include, InstanceMethods
 
-class Glue::Candlepin::Content
-  attr_accessor :name, :id, :type, :label, :vendor, :contentUrl, :gpgUrl
-  def initialize(params = {})
-    params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
+    base.class_eval do
+      before_save :save_content_orchestration
+      before_destroy :destroy_content_orchestration
+    end
   end
-end
 
+  module InstanceMethods
+    def destroy_content_orchestration
+      pre_queue.create(:name => "remove content : #{self.name}", :priority => 2, :action => [self, :del_content])
+    end
+
+    def save_content_orchestration
+      return if self.new_record?  #don't try to refresh on create
+      pre_queue.create(:name => "update content : #{self.name}", :priority => 2, :action => [self, :update_content])
+    end
+
+    def del_content
+      return true unless self.content_id
+      if other_repos_with_same_product_and_content.empty?
+        self.product.remove_content_by_id self.content_id
+        if other_repos_with_same_content.empty? && !self.product.provider.redhat_provider?
+          Resources::Candlepin::Content.destroy(self.content_id)
+        end
+      end
+
+      true
+    end
+
+    def content
+      return @content unless @content.nil?
+      unless self.content_id.nil?
+        @content = ::Candlepin::Content.find(self.content_id)
+      end
+      @content
+    end
+
+    def update_content
+      #if the gpg key was enabled
+      #we only update the content if the content is actually not set properly
+      #this means we don't recreate the environment for the same repo in
+      #each environment.   We do the same for it being disabled, we check
+      #to make sure it is not enabled in the contnet before refreshing
+      if should_update_content?
+        self.content.update({
+          :name => self.name,
+          :contentUrl => Glue::Pulp::Repos.custom_content_path(self.product, label),
+          :gpgUrl => yum_gpg_key_url,
+          :label => custom_content_label
+        })
+      else
+        true # required, or orchestration engine will think that update failed.
+      end
+    end
+
+    def should_update_content?
+      (self.gpg_key_id_was == nil && self.gpg_key_id != nil && self.content.gpgUrl == '') ||
+          (self.gpg_key_id_was != nil && self.gpg_key_id == nil && self.content.gpgUrl != '')
+    end
+  end
+
+end
