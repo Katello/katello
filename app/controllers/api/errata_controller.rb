@@ -59,10 +59,10 @@ class Api::ErrataController < Api::ApiController
   def find_environment
     if params.has_key?(:environment_id)
       @environment = KTEnvironment.find(params[:environment_id])
-      raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:environment_id]}'") if @environment.nil?
+      raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
     elsif params.has_key?(:repoid)
       @repo = Repository.find(params[:repoid])
-      raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:repoid]}'") if @repo.nil?
+      raise HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repoid] if @repo.nil?
       @environment = @repo.environment
     end
     @environment
@@ -70,15 +70,15 @@ class Api::ErrataController < Api::ApiController
 
   def find_repository
     @repo = Repository.find(params[:repository_id])
-    raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:repository_id]}'") if @repo.nil?
+    raise HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repo.nil?
     @repo
   end
 
   def find_erratum
     @erratum = Glue::Pulp::Errata.find(params[:id])
-    raise HttpErrors::NotFound, _("Erratum with id '#{params[:id]}' not found") if @erratum.nil?
+    raise HttpErrors::NotFound, _("Erratum with id '%s' not found") % params[:id] if @erratum.nil?
     # and check ownership of it
-    raise HttpErrors::NotFound, _("Erratum '#{params[:id]}' not found within the repository") unless @erratum.repoids.include? @repo.pulp_id
+    raise HttpErrors::NotFound, _("Erratum '%s' not found within the repository") % params[:id] unless @erratum.repoids.include? @repo.pulp_id
     @erratum
   end
 end
