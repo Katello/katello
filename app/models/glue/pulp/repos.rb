@@ -135,19 +135,17 @@ module Glue::Pulp::Repos
     "content:#{content_id}"
   end
 
-  def self.prepopulate! products, environment, repos=[]
+  def self.prepopulate!(products, environment, repos = [])
     items = Resources::Pulp::Repository.all(["env:#{environment.id}"])
     full_repos = {}
-    items.each {|item| full_repos[item["id"]] = item }
+    items.each { |item| full_repos[item["id"]] = item }
 
-    products.each{|prod|
-      prod.repos(environment, true).each{|repo|
+    products.each do |prod|
+      prod.repos(environment, true).each do |repo|
         repo.populate_from(full_repos)
-      }
-    }
-    repos.each{|repo|
-      repo.populate_from(full_repos)
-    }
+      end
+    end
+    repos.each { |repo| repo.populate_from(full_repos) }
   end
 
   module InstanceMethods
@@ -156,20 +154,21 @@ module Glue::Pulp::Repos
       return self.repos(library).empty?
     end
 
-    def repos env, include_disabled = false
-      @repo_cache = {} if @repo_cache.nil?
-      #cache repos so we can cache lazy_accessors
-      if @repo_cache[env.id].nil?
-        @repo_cache[env.id] = Repository.joins(:environment_product).where(
-            "environment_products.product_id" => self.id, "environment_products.environment_id"=> env)
-      end
-      if include_disabled
-        return @repo_cache[env.id]
-      end
+    def repos(env, include_disabled = false)
+      # cache repos so we can cache lazy_accessors
+      @repo_cache ||= {}
 
-      # we only want the enabled repos to be visible
-      # This serves as a white list for redhat repos
-      @repo_cache[env.id].where(:enabled => true)
+      @repo_cache[env.id] ||= Repository.joins(:environment_product).where(
+          "environment_products.product_id" => self.id,
+          "environment_products.environment_id" => env)
+
+      if include_disabled
+        @repo_cache[env.id]
+      else
+        # we only want the enabled repos to be visible
+        # This serves as a white list for redhat repos
+        @repo_cache[env.id].where(:enabled => true)
+      end
     end
 
     def promote from_env, to_env
