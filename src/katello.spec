@@ -261,6 +261,9 @@ Requires:        rubygem(js-routes)
 Requires:        rubygem(newrelic_rpm)
 Requires:        rubygem(logical-insight)
 Requires:        rubygem(rails-dev-boost)
+Requires:        rubygem(minitest)
+Requires:        rubygem(minitest-rails)
+Requires:        rubygem(minitest_tu_shim)
 
 %description devel
 Rake tasks and dependecies for Katello developers
