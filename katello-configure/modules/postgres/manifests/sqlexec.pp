@@ -11,7 +11,7 @@ define sqlexec($username, $passfile, $database, $sql, $sqlcheck = "NONE", $logfi
         "NONE" => undef,
         default => "psql -U $username $database -c $sqlcheck",
     },
-    require     => Exec["wait-for-postgresql"],
+    require     => Class["postgres::service"],
     refreshonly => $refreshonly,
   }
 }

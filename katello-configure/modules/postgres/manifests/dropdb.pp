@@ -5,7 +5,7 @@ define postgres::dropdb($logfile, $refreshonly = false) {
     passfile    => $postgres::params::password_file,
     database    => "postgres",
     sql         => "DROP DATABASE $name;",
-    require     => Exec["wait-for-postgresql"],
+    require     => Class["postgres::service"],
     logfile     => $logfile,
     refreshonly => $refreshonly,
   }
