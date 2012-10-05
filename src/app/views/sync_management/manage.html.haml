@@ -4,7 +4,7 @@
   :plain
     localize({
       "cancel": '#{escape_javascript(_('Cancel'))}',
-      "cancelled": '#{escape_javascript(_("Sync Canceled"))}',
+      "cancelled": '#{escape_javascript(_("Sync Cancelled"))}',
       "error": '#{escape_javascript(_('Error'))}',
       "complete": '#{escape_javascript(_('Sync complete.'))}'
     });
@@ -19,3 +19,7 @@
 
 #main.grid_16
   = render 'products'
+
+  %h2.clear= _("Sync Plans")
+
+  = render 'sync_plans'
