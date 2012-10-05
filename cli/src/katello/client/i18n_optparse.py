@@ -73,7 +73,7 @@ class OptionParser(_OptionParser):
         if out_file is None:
             out_file = sys.stdout
         self.displayed_help = True
-        out_file.write(self.format_help())
+        out_file.write(self.format_help().encode('utf-8'))
 
 
     def exit(self, status=0, msg=None):
