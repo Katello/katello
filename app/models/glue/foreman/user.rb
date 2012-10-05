@@ -23,6 +23,7 @@ module Glue::Foreman::User
 
   module InstanceMethods
     def foreman_user
+      return nil unless foreman_id
       @foreman_user ||= ::Foreman::User.find foreman_id
     end
 
@@ -56,9 +57,17 @@ module Glue::Foreman::User
     end
 
     def update_foreman_user
-      foreman_user            = self.foreman_user
-      foreman_user.attributes = { :mail => email, :password => password }
-      foreman_user.save!
+      # get user by id or find a user by login in foreman
+      foreman_user = self.foreman_user ||
+          (self.foreman_user = ::Foreman::User.all(:search => "login = #{username}").first)
+
+      # if there is no user, create one
+      unless foreman_user
+        create_foreman_user
+      else
+        foreman_user.attributes = { :mail => email, :password => password }
+        foreman_user.save!
+      end
     end
 
     def destroy_foreman_user
@@ -85,7 +94,7 @@ module Glue::Foreman::User
 
     def foreman_user=(foreman_user)
       @foreman_user   = foreman_user
-      self.foreman_id = foreman_user.id
+      self.foreman_id = foreman_user.try :id
     end
 
   end
