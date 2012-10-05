@@ -283,11 +283,11 @@ class Repository < ActiveRecord::Base
 
     #if the gpg key was enabled
     #we only update the content if the content is actually not set properly
-    #this means we don't recreate the environment for the same repo in 
+    #this means we don't recreate the environment for the same repo in
     #each environment.   We do the same for it being disabled, we check
     #to make sure it is not enabled in the contnet before refreshing
-    if (self.gpg_key_id_was == nil && self.gpg_key_id != nil) 
-        self.product.refresh_content(self) if self.content.gpgUrl == ''
+    if (self.gpg_key_id_was == nil && self.gpg_key_id != nil)
+        self.product.refresh_content(self) if (self.content.gpgUrl.nil? || self.content.gpgUrl == '')
     elsif (self.gpg_key_id_was != nil && self.gpg_key_id == nil)
         self.product.refresh_content(self) if self.content.gpgUrl != ''
     end
