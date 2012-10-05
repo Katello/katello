@@ -11,6 +11,8 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
+var noticeArray = new Array();
+
 var notices = (function() {
     return {
         setup_notices: function(pollingTimeOut) {
@@ -43,6 +45,14 @@ var notices = (function() {
 
                     return notices_list;
                 };
+
+            var noticeObj = new Object();
+            noticeObj.time = (new Date()).valueOf();
+            noticeObj.level = level;
+            noticeObj.notices = noticesParsed['notices'];
+            noticeObj.validationErrors = noticesParsed['validation_errors'];
+            noticeObj.requestType = requestType;
+            noticeArray.push(noticeObj);
 
             if (level === 'success') {
                 notices.clearPreviousFailures(requestType);
