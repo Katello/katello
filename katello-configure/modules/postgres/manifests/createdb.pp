@@ -1,12 +1,8 @@
 # Create a Postgres db
 define postgres::createdb($owner, $logfile) {
-  sqlexec{ "createdb-$name":
-    username => $postgres::params::user,
-    passfile => $postgres::params::password_file,
-    database => "postgres",
-    sql => "CREATE DATABASE $name WITH OWNER = $owner ENCODING = 'UTF8';",
-    sqlcheck => "\"SELECT datname FROM pg_database WHERE datname ='$name'\" | grep $name",
+  exec{ "createdb-$name":
+    path     => "/bin:/usr/bin",
+    command  => "su - postgres -c \"psql -a postgres -c \\\"SELECT datname FROM pg_database WHERE datname = '${name}'\\\" | grep ${name} || ( createdb --owner=$owner --encoding=UTF8 '$name' )\" >> $logfile 2>&1",
     require  => Class["postgres::service"],
-    logfile  => $logfile,
   }
 }

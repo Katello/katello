@@ -8,7 +8,6 @@ class candlepin::config {
 
   postgres::createuser { $candlepin::params::db_user:
     passwd => $candlepin::params::db_pass,
-    roles  => "CREATEDB",
     logfile  => "${katello::params::configure_log_base}/create-postgresql-candlepin-user.log",
     require => [ File["${katello::params::configure_log_base}"] ],
   }

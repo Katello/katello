@@ -16,7 +16,6 @@ class foreman::config {
 
   postgres::createuser { $foreman::db_user:
     passwd  => $foreman::db_pass,
-    roles => "CREATEDB",
     logfile => "${foreman::configure_log_base}/create-postgresql-foreman-user.log",
     require => [ File["${foreman::configure_log_base}"] ],
   }
