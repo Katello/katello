@@ -485,7 +485,7 @@ class Unregister(SystemAction):
             if e[0] == 404:
                 return os.EX_DATAERR
             else:
-                raise e
+                raise
 
         self.api.unregister(system['uuid'])
         print _("Successfully unregistered System [ %s ]") % name

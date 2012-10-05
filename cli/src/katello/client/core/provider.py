@@ -15,6 +15,7 @@
 #
 
 import os
+import sys
 
 from katello.client.api.provider import ProviderAPI
 from katello.client.cli.base import opt_parser_add_org
@@ -297,7 +298,7 @@ class ImportManifest(SingleProviderAction):
                 re.args[1]["displayMessage"] == "Import is older than existing data":
                 re.args[1]["displayMessage"] = "Import is older then existing data," +\
                     " please try with --force option to import manifest."
-            raise re
+            raise re, None, sys.exc_info()[2]
         f.close()
         print response
         return os.EX_OK
