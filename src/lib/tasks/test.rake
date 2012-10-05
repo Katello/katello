@@ -34,9 +34,22 @@ rescue LoadError
   # rspec not present, skipping this definition
 end
 
+if ENV['method']
+  if not ENV['method'].starts_with?('test_')
+    ENV['method'] = "test_#{ENV['method']}"
+  end
+
+  if ENV['TESTOPTS']
+    ENV['TESTOPTS'] += "--name=#{ENV['method']}"
+  else
+    ENV['TESTOPTS'] = "--name=#{ENV['method']}"
+  end
+end
+
 namespace :minitest do
   ['glue'].each do |task|
     if ENV['test']
+      Rake::Task["minitest:glue"].clear
       Rake::Task["db:test:prepare"].clear
       MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
         t.libs.push 'test'
