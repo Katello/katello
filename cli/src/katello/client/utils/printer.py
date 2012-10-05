@@ -31,7 +31,7 @@ class PrinterStrategy(object):
 
     def __init__(self):
         super(PrinterStrategy, self).__init__()
-        self.out = codecs.getwriter('utf-8')(sys.stdout)
+        self.out = sys.stdout
 
     def print_item(self, heading, columns, item):
         """
