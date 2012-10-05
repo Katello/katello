@@ -197,7 +197,7 @@ class System < ActiveRecord::Base
 
   def init_default_custom_info_keys
     self.organization.system_info_keys.each do |k|
-      self.custom_info.create!(:keyname => k, :value => "_")
+      self.custom_info.create!(:keyname => k, :value => " ")
     end
   end
 

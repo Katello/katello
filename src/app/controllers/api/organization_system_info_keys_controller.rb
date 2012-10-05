@@ -27,7 +27,7 @@ class Api::OrganizationSystemInfoKeysController < Api::ApiController
       :index =>  index_test,
       :create => create_test,
       :destroy => delete_test,
-      :apply_to_all => apply_test
+      :apply_to_all_systems => apply_test
     }
   end
 
@@ -50,21 +50,13 @@ class Api::OrganizationSystemInfoKeysController < Api::ApiController
   end
 
   # apply default system custom info to all existing systems
-  def apply_to_all
+  def apply_to_all_systems
     to_apply = []
     @organization.system_info_keys.each do |k|
-      to_apply << {:keyname => k, :value => "_"}
+      to_apply << {:keyname => k, :value => " "}
     end
-    affected = []
-    @organization.systems.each do |s|
-      to_apply.each do |a|
-        if s.custom_info.where(:keyname => a[:keyname]).empty?
-          s.custom_info.create!(a)
-          affected << s
-        end
-      end
-    end
-    render :json => affected.collect {|s| s[:name]}.uniq.to_json
+    systems = CustomInfo.apply_to_set(@organization.systems, to_apply)
+    render :json => systems.collect {|s| s[:name]}.to_json
   end
 
   private

@@ -567,7 +567,7 @@ Src::Application.routes.draw do
       resources :gpg_keys, :only => [:index, :create]
 
       resources :system_info_keys, :only => [:create, :index], :controller => :organization_system_info_keys do
-        get :apply, :on => :collection, :action => :apply_to_all
+        get :apply, :on => :collection, :action => :apply_to_all_systems
       end
       match '/system_info_keys/:keyname' => 'organization_system_info_keys#destroy', :via => :delete
     end

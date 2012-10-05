@@ -100,7 +100,7 @@ describe Api::OrganizationSystemInfoKeysController do
       @org.system_info_keys << "test_key"
       @org.save!
 
-      get :apply_to_all, :organization_id => @org.label
+      get :apply_to_all_systems, :organization_id => @org.label
       response.code.should == "200"
 
       @org.systems.each do |s|
