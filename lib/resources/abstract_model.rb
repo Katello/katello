@@ -144,12 +144,13 @@ class Resources::AbstractModel
   def create
     data, response = resource.create as_json(json_create_options), self.class.header
     self.id        = data[resource_name]['id']
-    @persisted     = true
+    set_as_persisted
     return data, response
   end
 
   def update
-    return resource.update(id, as_json(json_update_options), self.class.header)
+    return resource.update({ 'id' => id }.merge(as_json(json_update_options)),
+                           self.class.header)
   end
 
   def save!
@@ -175,7 +176,7 @@ class Resources::AbstractModel
   end
 
   def self.find!(id)
-    data, _ = resource.show(id, nil, header)
+    data, _ = resource.show({ 'id' => id }, header)
     new(clean_attribute_hash(parse_attributes(data))).tap do |o|
       o.send :set_as_persisted
     end
@@ -199,7 +200,7 @@ class Resources::AbstractModel
   end
 
   def self.delete!(id)
-    resource.destroy(id, nil, header)
+    resource.destroy({ 'id' => id }, header)
     true
   rescue RestClient::ResourceNotFound => e
     raise NotFound.new(self, id)
