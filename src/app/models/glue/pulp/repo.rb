@@ -58,21 +58,6 @@ module Glue::Pulp::Repo
     [organization_label, env_label, product_label, repo_label].compact.join("-").gsub(/[^-\w]/,"_")
   end
 
-  #repo_pkgs = a map with {repo => [package objects to be removed]}
-  def self.delete_repo_packages repo_pkgs
-    Resources::Pulp::Repository.delete_repo_packages(make_pkg_tuples(repo_pkgs))
-  end
-
-  def self.make_pkg_tuples repo_pkgs
-    package_tuples = []
-    repo_pkgs.each do |repo, pkgs|
-      pkgs.each do |pack|
-        package_tuples << [[pack.filename,pack.checksum.to_hash.values.first],[repo.pulp_id]]
-      end
-    end
-    package_tuples
-  end
-
   module InstanceMethods
     def save_repo_orchestration
       case orchestration_for
@@ -178,19 +163,19 @@ module Glue::Pulp::Repo
       true
     end
 
-    def destroy_repo_orchestration
-      pre_queue.create(:name => "remove product content : #{self.name}", :priority => 2, :action => [self, :del_content])
-      pre_queue.create(:name => "delete pulp repo : #{self.name}",       :priority => 3, :action => [self, :destroy_repo])
-    end
-
     def packages
       if @repo_packages.nil?
         #we fetch ids and then fetch packages by id, because repo packages
         #  does not contain all the info we need (bz 854260)
         pkg_ids = Runcible::Extensions::Repository.package_ids(self.pulp_id)
-        self.packages = Resources::Pulp::Package.find_all(pkg_ids)
+        self.packages = Runcible::Extensions::Rpm.find_all(pkg_ids)
       end
       @repo_packages
+    end
+
+    def destroy_repo_orchestration
+      pre_queue.create(:name => "remove product content : #{self.name}", :priority => 2, :action => [self, :del_content])
+      pre_queue.create(:name => "delete pulp repo : #{self.name}",       :priority => 3, :action => [self, :destroy_repo])
     end
 
     def packages=attrs
@@ -203,7 +188,7 @@ module Glue::Pulp::Repo
     def errata
       if @repo_errata.nil?
         e_ids = Runcible::Extensions::Repository.errata_ids(self.pulp_id)
-        self.errata = Resources::Pulp::Errata.find_all_by_unit_ids(e_ids)
+        self.errata = Runcible::Extensions::Errata.find_all_by_unit_ids(e_ids)
       end
       @repo_errata
     end
@@ -222,7 +207,6 @@ module Glue::Pulp::Repo
       @repo_distributions
     end
 
-
     def distributions=attrs
       @repo_distributions = attrs.collect do |dist|
           Glue::Pulp::Distribution.new(dist)
@@ -230,15 +214,8 @@ module Glue::Pulp::Repo
       @repo_distributions
     end
 
-    def has_distribution? id
-      self.distributions.each {|distro|
-        return true if distro.id == id
-      }
-      return false
-    end
-
     def package_groups search_args = {}
-      groups = ::Resources::Pulp::PackageGroup.all self.pulp_id
+      groups = Runcible::Extensions::PackageGroup.all self.pulp_id
       unless search_args.empty?
         groups.delete_if do |group_id, group_attrs|
           search_args.any?{ |attr,value| group_attrs[attr] != value }
@@ -248,13 +225,20 @@ module Glue::Pulp::Repo
     end
 
     def package_group_categories search_args = {}
-      categories = ::Resources::Pulp::PackageGroupCategory.all self.pulp_id
+      categories = Runcible::Extensions::PackageCategory.all self.pulp_id
       unless search_args.empty?
         categories.delete_if do |category_id, category_attrs|
           search_args.any?{ |attr,value| category_attrs[attr] != value }
         end
       end
       categories.values
+    end
+
+    def has_distribution? id
+      self.distributions.each {|distro|
+        return true if distro.id == id
+      }
+      return false
     end
 
     def clone_id(env)
@@ -392,12 +376,16 @@ module Glue::Pulp::Repo
       Runcible::Extensions::Repository.distribution_copy(previous.pulp_id, self.pulp_id, {:errata_ids=>[distribution_id]})
     end
 
+    def delete_packages package_id_list
+      Runcible::Extensions::Repository.rpm_remove self.pulp_id,  package_id_list
+    end
+
     def delete_errata errata_id_list
-      Resources::Pulp::Repository.delete_errata self.pulp_id,  errata_id_list
+      Runcible::Extensions::Repository.errata_remove self.pulp_id,  errata_id_list
     end
 
     def delete_distribution distribution_id
-      Resources::Pulp::Repository.delete_distribution self.pulp_id,  distribution_id
+      Runcible::Extensions::Repository.delete_distribution self.pulp_id,  distribution_id
     end
 
     def cancel_sync
