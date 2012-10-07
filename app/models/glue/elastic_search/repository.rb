@@ -26,6 +26,7 @@ module Glue::ElasticSearch::Repository
       end
 
       after_save :update_related_index
+      before_destroy :update_packages_index, :update_errata_index
     end
 
     def extended_index_attrs
