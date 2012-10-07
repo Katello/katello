@@ -106,6 +106,10 @@ class RepositoryInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
     assert @fedora_17.other_repos_with_same_product_and_content.include?(@fedora_17_dev)
   end
 
+  def test_environment_id
+    assert @fedora_17.environment_id == @library.id
+  end
+
   def test_yum_gpg_key_url
     assert !@fedora_17.yum_gpg_key_url.nil?
   end
