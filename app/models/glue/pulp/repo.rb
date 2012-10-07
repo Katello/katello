@@ -137,8 +137,8 @@ module Glue::Pulp::Repo
   end
 
   def generate_distributor
-    Runcible::Extensions::YumDistributor.new(self.relative_path, true, false,
-          {:protected=>true, :generate_metadata=>false, :id=>self.pulp_id,
+    Runcible::Extensions::YumDistributor.new(self.relative_path, false, true,
+      {:protected=>true, :generate_metadata=>true, :id=>self.pulp_id,
           :auto_publish=>!self.environment.library?})
   end
 
@@ -209,7 +209,7 @@ module Glue::Pulp::Repo
 
   def packages=attrs
     @repo_packages = attrs.collect do |package|
-      Package.new(package)
+      ::Package.new(package)
     end
     @repo_packages
   end
@@ -224,7 +224,7 @@ module Glue::Pulp::Repo
 
   def errata=attrs
     @repo_errata = attrs.collect do |erratum|
-      Errata.new(erratum)
+      ::Errata.new(erratum)
     end
     @repo_errata
   end
@@ -353,6 +353,7 @@ module Glue::Pulp::Repo
     clone = Repository.new(:environment_product => key,
                            :cp_label => self.cp_label,
                            :library_instance=>library,
+                           :label=>self.label,
                            :name=>self.name,
                            :arch=>self.arch,
                            :major=>self.major,
@@ -471,7 +472,7 @@ module Glue::Pulp::Repo
   end
 
   def generate_metadata
-    Runcible::Extensions::Repository.publish(self.pulp_id)
+    Runcible::Extensions::Repository.publish_all(self.pulp_id)
   end
 
   # Convert array of Repo objects to Ruby Hash in the form of repo.id => repo_object for fast searches.
