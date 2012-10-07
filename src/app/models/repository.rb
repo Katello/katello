@@ -78,6 +78,10 @@ class Repository < ActiveRecord::Base
     list
   end
 
+  def environment_id
+    self.environment.id
+  end
+
   def yum_gpg_key_url
     # if the repo has a gpg key return a url to access it
     if (self.gpg_key && self.gpg_key.content.present?)
