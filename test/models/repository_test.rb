@@ -20,9 +20,6 @@ module RepositoryTestBase
       set_fixture_class :environments => KTEnvironment
       self.use_instantiated_fixtures = false
       fixtures :all
-      #fixtures :organizations, :environments, :providers, :products, :repositories
-      #fixtures :roles, :permissions, :resource_types, :users, :roles_users
-      #fixtures :environment_products, :gpg_keys, :filters
     end
   end
 
@@ -55,7 +52,8 @@ class RepositoryCreateTest < MiniTest::Rails::ActiveSupport::TestCase
   def setup
     super
     @repo = Repository.new(:name => 'repository_test_name', :pulp_id => 'This is not a feal pulp ID', 
-                          :environment_product_id => environment_products(:library_fedora).id, :content_id => 'FakeContentID')
+                          :environment_product_id => environment_products(:library_fedora).id, :content_id => 'FakeContentID',
+                          :label => "repository_test_name_label")
   end
 
   def teardown
@@ -98,6 +96,14 @@ class RepositoryInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def test_in_product
     assert Repository.in_product(@fedora).include?(@fedora_17)
+  end
+
+  def test_other_repos_with_same_content
+    assert @fedora_17.other_repos_with_same_content.include?(@fedora_17_dev)
+  end
+
+  def test_other_repos_with_same_product_and_content
+    assert @fedora_17.other_repos_with_same_product_and_content.include?(@fedora_17_dev)
   end
 
   def test_yum_gpg_key_url

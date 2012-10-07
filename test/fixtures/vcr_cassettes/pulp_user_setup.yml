@@ -1,0 +1,114 @@
+--- 
+recorded_with: VCR 2.2.5
+http_interactions: 
+- request: 
+    method: delete
+    uri: https://knifeparty.localdomain/pulp/api/v2/users/
+    body: 
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="AkbEw2DtV6Z2DtbVL0DJv8z7QVmmxXDOvQeB5pFVs", oauth_signature="oGB5yRbgkNK9UD%2BSHSMrv%2FKGTEM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1349358576", oauth_version="1.0"
+  response: 
+    status: 
+      code: 405
+      message: Method Not Allowed
+    headers: 
+      Content-Encoding: 
+      - gzip
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "24"
+      Vary: 
+      - Accept-Encoding
+      Content-Type: 
+      - text/html; charset=UTF-8
+      Allow: 
+      - GET, POST
+      Date: 
+      - Thu, 04 Oct 2012 13:49:36 GMT
+    body: 
+      string: !binary |
+        H4sIAAAAAAAAA/PLz0sFAPGvot8EAAAA
+
+    http_version: 
+  recorded_at: Thu, 04 Oct 2012 13:49:36 GMT
+- request: 
+    method: post
+    uri: https://knifeparty.localdomain/pulp/api/v2/users/
+    body: 
+      string: "{\"login\":\"test_username\",\"name\":\"test_username\",\"password\":\"LplFHiXJugma9456\"}"
+    headers: 
+      Accept: 
+      - application/json
+      Content-Length: 
+      - "78"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="K1IFYHbSOl86rsnUHlRtDMnFk1kzhFOli0F51RkPoPE", oauth_signature="tfbulkNH1QBisHUn4QMPG%2FtYlO8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1349358576", oauth_version="1.0"
+  response: 
+    status: 
+      code: 409
+      message: Conflict
+    headers: 
+      Content-Encoding: 
+      - utf-8
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "207"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Thu, 04 Oct 2012 13:49:36 GMT
+    body: 
+      string: "{\"http_request_method\": \"POST\", \"exception\": null, \"error_message\": \"Duplicate resource: test_username\", \"_href\": \"/pulp/api/v2/users/\", \"http_status\": 409, \"resource_id\": \"test_username\", \"traceback\": null}"
+    http_version: 
+  recorded_at: Thu, 04 Oct 2012 13:49:36 GMT
+- request: 
+    method: delete
+    uri: https://knifeparty.localdomain/pulp/api/v2/users/test_username/
+    body: 
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="igqt4M3c61Nbrkb6LXplCRiJ8McXOCUnbygGMXPec", oauth_signature="nQpw4gIFaXv2DHeaUgzDRY4nruA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1349358577", oauth_version="1.0"
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "4"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Thu, 04 Oct 2012 13:49:37 GMT
+    body: 
+      string: "null"
+    http_version: 
+  recorded_at: Thu, 04 Oct 2012 13:49:37 GMT
