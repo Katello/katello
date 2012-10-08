@@ -2,12 +2,11 @@
 
 SRV="sudo /sbin/service"
 
+KATELLO_PREFIX="/katello"
+
 if [ -f /etc/sysconfig/katello ]; then
   # load configuration values
   . /etc/sysconfig/katello
-else
-  echo "Katello does not seem to be installed on this machine" 1>&2
-  exit 1
 fi
 
 # default configuration values (should be the same as in our sysv init script)
