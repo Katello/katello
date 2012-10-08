@@ -72,5 +72,13 @@ module PromotionsHelper
     escape_javascript(filters.to_json)
   end
 
+  def show_new_button?(manage_promotion, manage_deletion)
+    if @environment.library?
+      manage_promotion && @next_environment
+    else
+      manage_deletion || (manage_promotion && @next_environment)
+    end
+  end
+
 end
 
