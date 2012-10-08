@@ -1,3 +1,5 @@
+require 'set'
+
 class CustomInfo < ActiveRecord::Base
   acts_as_reportable
 
@@ -14,14 +16,19 @@ class CustomInfo < ActiveRecord::Base
   # Returns a list of the objects that had at least one custom info added to them.
   def self.apply_to_set(list_of_objects, custom_info_list)
     affected = []
-    list_of_objects.each do |o|
-      custom_info_list.each do |a|
-        if o.custom_info.where(:keyname => a[:keyname]).empty?
-          o.custom_info.create!(a)
-          affected << o
-        end
+
+    list_of_objects.each do |obj|
+      temp_infos = custom_info_list
+
+      to_apply = custom_info_list.collect {|c| c[:keyname]} - obj.custom_info.collect {|c| c[:keyname]}
+
+      temp_infos.select {|c| to_apply.include?(c[:keyname])}.each do |info|
+        obj.custom_info.create!(info)
+        affected << obj
       end
+
     end
+
     return affected.uniq
   end
 end
