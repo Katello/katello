@@ -18,21 +18,18 @@ module RepositoryTestBase
   def self.included(base)
     base.class_eval do
       set_fixture_class :environments => KTEnvironment
-      self.use_instantiated_fixtures = false
+      use_instantiated_fixtures = false
       fixtures :all
+
+      def self.before_suite
+        services  = ['Candlepin', 'Pulp', 'ElasticSearch']
+        models    = ['Repository', 'Package']
+        disable_glue_layers(services, models)
+      end
     end
   end
 
   def setup
-    AppConfig.use_cp = false
-    AppConfig.use_pulp = false
-    AppConfig.use_elasticsearch = false
-
-    Object.send(:remove_const, 'Repository')
-    Object.send(:remove_const, 'Package')
-    load 'app/models/repository.rb'
-    load 'app/models/package.rb'
-
     @fedora_17          = Repository.find(repositories(:fedora_17).id)
     @fedora_17_dev      = Repository.find(repositories(:fedora_17_dev).id)
     @fedora             = Product.find(products(:fedora).id)
