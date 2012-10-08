@@ -230,6 +230,8 @@ module Glue::Candlepin::Consumer
       interface_set = []
       interfaces.uniq.each do |interface|
         addr = facts["net.interface.#{interface}.ipv4_address"]
+        # older subman versions report .ipaddr
+        addr ||= facts["net.interface.#{interface}.ipaddr"]
         interface_set << { :name => interface, :addr => addr } if addr != nil
       end
       interface_set
