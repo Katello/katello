@@ -67,19 +67,16 @@ module Glue::Pulp::Repos
     new_content.content
   end
 
-  # removes content for a repo and recreates it with any changes
-  #   then sets the content_id in pulp for each repository that needs updating
   def refresh_content(repo)
-    old_content = repo.content
-    old_content_repos = Resources::Pulp::Repository.all(Glue::Pulp::Repos.content_groupid(old_content))
-    remove_content_by_id(repo.content.id)
-    Resources::Candlepin::Content.destroy(repo.content.id)
-    new_content = create_content(repo)
-    old_content_repos.each do |r|
-      Resources::Pulp::Repository.update(r['id'].to_s,
-                  :addgrp => Glue::Pulp::Repos.content_groupid(new_content),
-                  :rmgrp => Glue::Pulp::Repos.content_groupid(old_content))
-    end
+    Resources::Candlepin::Content.update(
+        :id => repo.content_id,
+        :name => repo.name,
+        :contentUrl => Glue::Pulp::Repos.custom_content_path(self, repo.label),
+        :gpgUrl => yum_gpg_key_url(repo),
+        :type => "yum",
+        :label => custom_content_label(repo),
+        :vendor => Provider::CUSTOM
+    )
   end
 
   # repo path for custom product repos (RH repo paths are derived from
