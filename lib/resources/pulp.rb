@@ -88,20 +88,7 @@ module Resources
 
       class << self
 
-        # Get all the Repositories known by Pulp
-        def all
-          search({})
-        end
 
-        def find(id)
-          result = find_all(id)
-          result.first.with_indifferent_access if result.first
-        end
-
-        def find_all(ids)
-          result = search(:filters => {'_id'=> {'$in'=> ids}})
-          result.collect{|p| p.with_indifferent_access}
-        end
 
         def search(criteria)
           data = {
@@ -128,52 +115,7 @@ module Resources
       end
     end
 
-    class Errata < PulpResource
 
-      class << self
-
-        def find(id)
-           result = find_all(id)
-           result.first.with_indifferent_access if result.first
-         end
-
-        def find_all(ids)
-          result = search(:filters=> {:id=> {'$in'=> ids}})
-          result.collect{|p| p.with_indifferent_access}
-        end
-
-        def find_all_by_unit_ids(ids)
-          result = search(:filters=> {:_id=> {'$in'=> ids}})
-          result.collect{|p| p.with_indifferent_access}
-        end
-
-        def search filter
-          data = {
-              :criteria => filter
-          }
-          response = post(errata_path, JSON.generate(data), self.default_headers)
-          JSON.parse(response.body).collect{|e| e.with_indifferent_access}
-        end
-
-        def errata_path
-          PulpResource.prefix + '/content/units/erratum/search/'
-        end
-      end
-    end
-
-    class Distribution < PulpResource
-
-      class << self
-        def find dist_id
-          response = get(dist_path + dist_id + "/", self.default_headers)
-          JSON.parse(response.body).with_indifferent_access
-        end
-
-        def dist_path
-          "/pulp/api/distributions/"
-        end
-      end
-    end
 
 
     class Repository < PulpResource
@@ -338,34 +280,6 @@ module Resources
         end
       end
     end
-
-
-    class PackageGroup < PulpResource
-      class << self
-        def all repo_id
-          response = get path(repo_id), self.default_headers
-          JSON.parse(response.body).with_indifferent_access
-        end
-
-        def path repo_id
-          self.path_with_prefix("/repositories/#{repo_id}/packagegroups/")
-        end
-      end
-    end
-
-    class PackageGroupCategory < PulpResource
-      class << self
-        def all repo_id
-          response = get path(repo_id), self.default_headers
-          JSON.parse(response.body).with_indifferent_access
-        end
-
-        def path repo_id
-          self.path_with_prefix("/repositories/#{repo_id}/packagegroupcategories/")
-        end
-      end
-    end
-
 
 
   class ConsumerGroup < PulpResource
