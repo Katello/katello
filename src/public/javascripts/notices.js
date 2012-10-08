@@ -11,7 +11,19 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-var noticeArray = new Array();
+var noticeArray = [];
+
+function storeNotice(event, noticeObj) {
+    var maxAge = 60000;
+    var curTime = (new Date()).valueOf();
+    // Discard notices older than maxAge
+    for (idx=noticeArray.length-1; idx>=0; --idx) {
+        if (curTime - noticeArray[idx].time > maxAge) {
+            noticeArray.splice(idx, 1);
+        }
+    }
+    noticeArray.push(noticeObj);
+}
 
 var notices = (function() {
     return {
@@ -20,6 +32,8 @@ var notices = (function() {
             pollingTimeOut = 45000;
           }
           
+          $("body").bind("notice", storeNotice);
+
           notices.checkTimeout = pollingTimeOut;
           //start continual checking for new notifications
           notices.start();
@@ -46,13 +60,13 @@ var notices = (function() {
                     return notices_list;
                 };
 
-            var noticeObj = new Object();
+            var noticeObj = {};
             noticeObj.time = (new Date()).valueOf();
             noticeObj.level = level;
             noticeObj.notices = noticesParsed['notices'];
             noticeObj.validationErrors = noticesParsed['validation_errors'];
             noticeObj.requestType = requestType;
-            noticeArray.push(noticeObj);
+            $("body").trigger("notice", noticeObj);
 
             if (level === 'success') {
                 notices.clearPreviousFailures(requestType);
