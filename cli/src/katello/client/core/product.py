@@ -280,9 +280,9 @@ class Promote(SingleProductAction):
                 print _("Product [ %s ] promotion failed: %s" % (prodName, format_task_errors(task.errors())) )
                 returnCode = os.EX_DATAERR
 
-        except Exception as e:
+        except Exception:
             #exception message is printed from action's main method
-            raise e
+            raise
 
         return returnCode
 

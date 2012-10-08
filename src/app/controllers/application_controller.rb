@@ -461,7 +461,7 @@ class ApplicationController < ActionController::Base
     @items = []
 
     begin
-      results = obj_class.search :load=>load do
+      results = obj_class.search :load=>false do
         query do
           if all_rows
             all
@@ -480,7 +480,18 @@ class ApplicationController < ActionController::Base
         size page_size if page_size > 0
         from start
       end
-      @items = results
+
+      if load
+        @items = obj_class.where(:id=>results.collect{|r| r.id})
+        #set total since @items will be just an array
+        panel_options[:total_count] = results.empty? ? 0 : results.total
+        if @items.length != results.length
+          Rails.logger.error("Failed to retrieve all #{obj_class} search results " +
+                                 "(#{@items.length}/#{results.length} found.)")
+        end
+      else
+        @items = results
+      end
 
       #get total count
       total = obj_class.search do
@@ -500,7 +511,6 @@ class ApplicationController < ActionController::Base
 
       total_count = 0
       panel_options[:total_results] = 0
-
     end
 
     render_panel_results(@items, total_count, panel_options) if !skip_render
