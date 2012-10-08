@@ -15,7 +15,6 @@
 #
 
 import os
-from gettext import gettext as _
 
 from katello.client.api.config_template import ConfigTemplateAPI
 from katello.client.config import Config

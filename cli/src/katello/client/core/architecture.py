@@ -15,7 +15,6 @@
 #
 
 import os
-from gettext import gettext as _
 
 from katello.client.api.architecture import ArchitectureAPI
 from katello.client.config import Config
