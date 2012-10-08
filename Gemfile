@@ -39,7 +39,7 @@ gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 # reports
 gem 'ruport' #, :path => "/var/ruport"
 #gem 'ruport', '>=1.6.3'
-#gem "prawn", "~> 0.12.0"
+gem "prawn"
 gem 'acts_as_reportable', '>=1.1.1'
 
 gem "apipie-rails"
