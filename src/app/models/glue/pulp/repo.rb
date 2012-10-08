@@ -202,7 +202,7 @@ module Glue::Pulp::Repo
       #we fetch ids and then fetch packages by id, because repo packages
       #  does not contain all the info we need (bz 854260)
       pkg_ids = Runcible::Extensions::Repository.package_ids(self.pulp_id)
-      self.packages = Resources::Pulp::Package.find_all(pkg_ids)
+      self.packages = Runcible::Extensions::Rpm.find_all(pkg_ids)
     end
     @repo_packages
   end
@@ -217,7 +217,7 @@ module Glue::Pulp::Repo
   def errata
     if @repo_errata.nil?
       e_ids = Runcible::Extensions::Repository.errata_ids(self.pulp_id)
-      self.errata = Resources::Pulp::Errata.find_all_by_unit_ids(e_ids)
+      self.errata = Runcible::Extensions::Errata.find_all_by_unit_ids(e_ids)
     end
     @repo_errata
   end
@@ -251,7 +251,7 @@ module Glue::Pulp::Repo
   end
 
   def package_groups search_args = {}
-    groups = ::Resources::Pulp::PackageGroup.all self.pulp_id
+    groups = Runcible::Extensions::PackageGroup.all self.pulp_id
     unless search_args.empty?
       groups.delete_if do |group_id, group_attrs|
         search_args.any?{ |attr,value| group_attrs[attr] != value }
@@ -261,7 +261,7 @@ module Glue::Pulp::Repo
   end
 
   def package_group_categories search_args = {}
-    categories = ::Resources::Pulp::PackageGroupCategory.all self.pulp_id
+    categories = Runcible::Extensions::PackageCategory.all self.pulp_id
     unless search_args.empty?
       categories.delete_if do |category_id, category_attrs|
         search_args.any?{ |attr,value| category_attrs[attr] != value }
