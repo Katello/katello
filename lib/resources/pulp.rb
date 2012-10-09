@@ -69,35 +69,15 @@ module Resources
       end
     end
 
-    class PulpPing < PulpResource
-      class << self
-        def ping
-          # For now we have to query repositories because there is no
-          # URL that is available in Pulp that returns something small
-          # but requires authentication.  Please do not change this to
-          # /pulp/api/services/status/ because that path does *not* require
-          # auth and will not accurately report if Katello can talk
-          # to Pulp using OAuth.
-          response = get('/pulp/api/v2/users/', self.default_headers).body
-          JSON.parse(response)
-        end
-      end
-    end
-
-
 
     class Repository < PulpResource
       class << self
-
-
         def start_discovery url, type
           response = post("/pulp/api/services/discovery/repo/", JSON.generate(:url => url, :type => type), self.default_headers)
           return JSON.parse(response.body).with_indifferent_access if response.code == 202
           Rails.logger.error("Failed to start repository discovery. HTTP status: #{response.code}. #{response.body}")
           raise RuntimeError, "#{response.code}, failed to start repository discovery: #{response.body}"
         end
-
-
       end
     end
 
