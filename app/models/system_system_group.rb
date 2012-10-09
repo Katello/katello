@@ -32,7 +32,7 @@ class SystemSystemGroup < ActiveRecord::Base
   def validate_system_environments
     envs = system_group.environments
     if !envs.empty? && !envs.include?(system.environment)
-      errors.add :base, _("System's environment not compatible with the group #{system_group.name}.'")
+      errors.add :base, _("System's environment not compatible with the group '%s'.") % system_group.name
     end
   end
 

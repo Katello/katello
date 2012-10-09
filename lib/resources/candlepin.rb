@@ -425,6 +425,11 @@ module Resources
           self.delete(path(id), self.default_headers).code.to_i
         end
 
+        def update(attrs)
+          updated = self.put(path(attrs[:id] || attrs['id']), JSON.generate(attrs), self.default_headers).body
+          JSON.parse(updated).with_indifferent_access
+        end
+
         def path(id=nil)
           "/candlepin/content/#{id}"
         end

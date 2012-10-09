@@ -99,7 +99,7 @@ class ChangesetsController < ApplicationController
 
   def new
     @changeset = Changeset.new
-    render :partial=>"new", :layout => "tupane_layout"
+    render :partial=>"new", :layout => "tupane_layout", :locals => {:changeset_type => params[:changeset_type]}
   end
 
   def create

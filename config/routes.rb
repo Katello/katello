@@ -96,6 +96,7 @@ Src::Application.routes.draw do
   get  "sync_schedules/index"
   post "sync_schedules/apply"
 
+  get "sync_management/manage"
   get "sync_management/index"
   post "sync_management/sync"
   get  "sync_management/sync_status"
@@ -681,35 +682,30 @@ Src::Application.routes.draw do
 
     end
 
-    # support for rhsm --------------------------------------------------------
+    # subscription-manager support
     match '/consumers' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
     match '/hypervisors' => 'systems#hypervisors_update', :via => :post
     resources :consumers, :controller => 'systems'
     match '/owners/:organization_id/environments' => 'environments#index', :via => :get
-    match '/owners/:organization_id/pools' => 'candlepin_proxies#get', :via => :get
-    match '/owners/:organization_id/servicelevels' => 'candlepin_proxies#get', :via => :get
+    match '/owners/:organization_id/pools' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_pools_path
+    match '/owners/:organization_id/servicelevels' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_servicelevels_path
     match '/environments/:environment_id/consumers' => 'systems#index', :via => :get
     match '/environments/:environment_id/consumers' => 'systems#create', :via => :post
     match '/consumers/:id' => 'systems#regenerate_identity_certificates', :via => :post
     match '/users/:username/owners' => 'users#list_owners', :via => :get
-
-    # proxies -------------------
-      # candlepin proxy ---------
-    match '/consumers/:id/certificates' => 'candlepin_proxies#get', :via => :get
-    match '/consumers/:id/release' => 'candlepin_proxies#get', :via => :get
-    match '/consumers/:id/certificates/serials' => 'candlepin_proxies#get', :via => :get
-    match '/consumers/:id/entitlements' => 'candlepin_proxies#get', :via => :get
-    match '/consumers/:id/entitlements' => 'candlepin_proxies#post', :via => :post
-    match '/consumers/:id/entitlements' => 'candlepin_proxies#delete', :via => :delete
-    match '/consumers/:id/entitlements/dry-run' => 'candlepin_proxies#get', :via => :get
-    match '/consumers/:id/owner' => 'candlepin_proxies#get', :via => :get
-    match '/consumers/:consumer_id/certificates/:id' => 'candlepin_proxies#delete', :via => :delete
-    match '/consumers/:id/deletionrecord' => 'candlepin_proxies#delete', :via => :delete
-    match '/pools' => 'candlepin_proxies#get', :via => :get
-    match '/entitlements/:id' => 'candlepin_proxies#get', :via => :get
-    match '/subscriptions' => 'candlepin_proxies#post', :via => :post
-
-      # pulp proxy --------------
+    match '/consumers/:id/certificates' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_certificates_path
+    match '/consumers/:id/release' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_releases_path
+    match '/consumers/:id/certificates/serials' => 'candlepin_proxies#get', :via => :get, :as => :proxy_certificate_serials_path
+    match '/consumers/:id/entitlements' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_entitlements_path
+    match '/consumers/:id/entitlements' => 'candlepin_proxies#post', :via => :post, :as => :proxy_consumer_entitlements_post_path
+    match '/consumers/:id/entitlements' => 'candlepin_proxies#delete', :via => :delete, :as => :proxy_consumer_entitlements_delete_path
+    match '/consumers/:id/entitlements/dry-run' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_dryrun_path
+    match '/consumers/:id/owner' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_owners_path
+    match '/consumers/:consumer_id/certificates/:id' => 'candlepin_proxies#delete', :via => :delete, :as => :proxy_consumer_certificates_delete_path
+    match '/consumers/:id/deletionrecord' => 'candlepin_proxies#delete', :via => :delete, :as => :proxy_consumer_deletionrecord_delete_path
+    match '/pools' => 'candlepin_proxies#get', :via => :get, :as => :proxy_pools_path
+    match '/entitlements/:id' => 'candlepin_proxies#get', :via => :get, :as => :proxy_entitlements_path
+    match '/subscriptions' => 'candlepin_proxies#post', :via => :post, :as => :proxy_subscriptions_post_path
     match '/consumers/:id/profile/' => 'systems#upload_package_profile', :via => :put
     match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
 
