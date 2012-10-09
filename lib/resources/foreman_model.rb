@@ -22,7 +22,8 @@ class Resources::ForemanModel < Resources::AbstractModel
   end
 
   def self.parse_attributes(data)
-    data[resource_name]
+    data[resource_name] or
+        raise ResponseParsingError, data
   end
 
 end
