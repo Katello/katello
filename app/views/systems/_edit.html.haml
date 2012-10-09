@@ -64,8 +64,19 @@
       %fieldset
         .grid_2.ra.fieldset
           = label :releaseVer, :releaseVer, _("Release Version")
-        .grid_5.la{'name' => 'system[releaseVer]', 'class' => ("editable edit_select_system_releasever" if editable), 'data-url' => system_path(system.id), 'data-options' => system_releasevers_edit(system, releases)}
-          = system.release
+        - if !releases_error.nil?
+          .grid_5.la{'name' => 'system[releaseVer]', 'class' => ("editable edit_select_system_releasever_message error_message" if editable), 'data-url'=>system_path(system.id), 'data-message'=>releases_error}
+            = system.release == "" ? _("System Default") : system.release
+        - elsif releases == []
+          - if AppConfig.katello?
+            - none_message = ("No alternate release version choices are available. These choices are based upon the repositories that have been enabled and promoted to this system's environment.")
+          - else
+            - none_message = _("No alternate release version choices are available. These choices are based upon the Red Hat manifest imported and the content available in the CDN.")
+          .grid_5.la{'name' => 'system[releaseVer]', 'class' => ("editable edit_select_system_releasever_message" if editable), 'data-url'=>system_path(system.id), 'data-message'=>none_message}
+            = system.release == "" ? _("System Default") : system.release
+        - else
+          .grid_5.la{'name' => 'system[releaseVer]', 'class' => ("editable edit_select_system_releasever" if editable), 'data-url' => system_path(system.id), 'data-options' => system_releasevers_edit(system, releases)}
+            = system.release
       %fieldset
         .grid_2.ra.fieldset
           = label :arch, :arch, _("Arch")

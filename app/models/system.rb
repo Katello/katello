@@ -30,7 +30,7 @@ class System < ActiveRecord::Base
 
   index_options :extended_json=>:extended_index_attrs,
                 :json=>{:only=> [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id]},
-                :display_attrs=>[:name, :description, :id, :uuid, :created_at, :lastCheckin, :system_group]
+                :display_attrs=>[:name, :description, :id, :uuid, :created_at, :lastCheckin, :system_group, :installed_products]
 
   mapping   :dynamic_templates =>[{"fact_string" => {
                           :path_match => "facts.*",
@@ -44,6 +44,7 @@ class System < ActiveRecord::Base
     indexes :name_sort, :type => 'string', :index => :not_analyzed
     indexes :lastCheckin, :type=>'date'
     indexes :name_autocomplete, :type=>'string', :analyzer=>'autcomplete_name_analyzer'
+    indexes :installed_products, :type=>'string', :analyzer=>:kt_name_analyzer
     indexes :facts, :path=>"just_name" do
     end
 
@@ -261,7 +262,8 @@ class System < ActiveRecord::Base
     {:facts=>self.facts, :organization_id=>self.organization.id,
      :name_sort=>name.downcase, :name_autocomplete=>self.name,
      :system_group=>self.system_groups.collect{|g| g.name},
-     :system_group_ids=>self.system_group_ids
+     :system_group_ids=>self.system_group_ids,
+     :installed_products=>collect_installed_product_names
     }
   end
 
@@ -289,6 +291,10 @@ class System < ActiveRecord::Base
     def fill_defaults
       self.description = _("Initial Registration Params") unless self.description
       self.location = _("None") unless self.location
+    end
+
+    def collect_installed_product_names
+      self.installedProducts ? self.installedProducts.map{ |p| p[:productName] } : []
     end
 
 end
