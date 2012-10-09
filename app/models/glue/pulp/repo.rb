@@ -402,7 +402,7 @@ module Glue::Pulp::Repo
   end
 
   def delete_distribution distribution_id
-    Resources::Pulp::Repository.delete_distribution self.pulp_id,  distribution_id
+    Runcible::Extensions::Repository.delete_distribution self.pulp_id,  distribution_id
   end
 
   def cancel_sync
