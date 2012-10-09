@@ -27,7 +27,7 @@ module Glue::Pulp::Package
       end
 
       def self.find id
-        package_attrs = Resources::Pulp::Package.find(id)
+        package_attrs = Runcible::Extensions::Rpm.find(id)
         return if package_attrs.nil?
         Package.new(package_attrs) if package_attrs
       end

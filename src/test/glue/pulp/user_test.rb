@@ -34,7 +34,9 @@ module GluePulpUserTestBase
   end
 
   def teardown
-    @user.del_pulp_user
+    VCR.use_cassette('pulp_user_setup') do
+      @user.del_pulp_user
+    end
   rescue => e
   ensure
     VCR.eject_cassette
@@ -43,40 +45,54 @@ module GluePulpUserTestBase
 end
 
 
-class GluePulpTestUser < MiniTest::Unit::TestCase
+class GluePulpUserCreateTest < MiniTest::Unit::TestCase
   include GluePulpUserTestBase
 
   def test_set_pulp_user
     assert @user.set_pulp_user
   end
 
-  def test_set_pulp_user_raises_exception
-    @user.username = nil
-    assert_raises RestClient::InternalServerError do 
+  def test_del_pulp_user
+    VCR.use_cassette('pulp_user_exception_raised') do
+      assert_raises RestClient::ResourceNotFound do 
+        @user.del_pulp_user
+      end
+    end
+  end
+
+end
+
+
+class GluePulpUserTest < MiniTest::Unit::TestCase
+  include GluePulpUserTestBase
+
+  def setup
+    super
+    VCR.use_cassette('pulp_user_setup') do
       @user.set_pulp_user
     end
   end
 
+  def test_set_pulp_user_raises_exception
+    @user.username = nil
+    VCR.use_cassette('pulp_user_exception_raised') do
+      assert_raises RestClient::InternalServerError do 
+        @user.set_pulp_user
+      end
+    end
+  end
+
   def test_set_super_user_role
-    @user.set_pulp_user
     assert @user.set_super_user_role
   end
 
   def test_del_super_admin_role
-    @user.set_pulp_user
     @user.set_super_user_role
     assert @user.del_super_admin_role
   end
   
   def test_del_pulp_user
-    @user.set_pulp_user
     assert @user.del_pulp_user
-  end
-
-  def test_del_pulp_user
-    assert_raises RestClient::ResourceNotFound do 
-      @user.del_pulp_user
-    end
   end
 
   def test_prune_pulp_only_attributes
