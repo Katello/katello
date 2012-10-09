@@ -188,6 +188,8 @@ class SystemsController < ApplicationController
       label = _("%s (Registered: %s)") % [s.name, convert_time(format_time(Time.parse(s.created_at)))]
       {:label=>label, :value=>s.name, :id=>s.id}
     }
+  rescue Tire::Search::SearchRequestFailed => e
+    render :json=>Support.array_with_total
   end
 
 
