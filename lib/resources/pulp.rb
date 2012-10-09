@@ -84,38 +84,6 @@ module Resources
       end
     end
 
-    class Package < PulpResource
-
-      class << self
-
-
-
-        def search(criteria)
-          data = {
-              :criteria=>criteria
-          }
-          response = post(package_path, JSON.generate(data), self.default_headers).body
-          JSON.parse(response)
-        end
-
-        def name_search(name)
-          pkgs = search("^" + name, true)
-          pkgs.collect{|pkg| pkg["name"]}
-        end
-
-        def package_path
-          PulpResource.prefix + '/content/units/rpm/search/'
-        end
-
-        def dep_solve pkgnames, repoids
-          path = "/pulp/api/services/dependencies/"
-          response = post(path, JSON.generate({:pkgnames=>pkgnames, :repoids=>repoids}),  self.default_headers)
-          JSON.parse(response)
-        end
-      end
-    end
-
-
 
 
     class Repository < PulpResource
@@ -127,20 +95,6 @@ module Resources
           return JSON.parse(response.body).with_indifferent_access if response.code == 202
           Rails.logger.error("Failed to start repository discovery. HTTP status: #{response.code}. #{response.body}")
           raise RuntimeError, "#{response.code}, failed to start repository discovery: #{response.body}"
-        end
-
-        def repository_path repo_id=nil
-          "/pulp/api/v2/repositories/#{(repo_id + '/') if repo_id}"
-        end
-
-
-        def sync (repo_id, data = {})
-          data[:max_speed] ||= AppConfig.pulp.sync_KBlimit if AppConfig.pulp.sync_KBlimit # set bandwidth limit
-          data[:num_threads] ||= AppConfig.pulp.sync_threads if AppConfig.pulp.sync_threads # set threads per sync
-          path = Repository.repository_path + repo_id + "/actions/sync/"
-          response = post(path, JSON.generate(data), self.default_headers)
-          #TODO Properly use both the sync and publish tasks
-          JSON.parse(response.body).select{|i| i['tags'].include?("pulp:action:sync")}.first.with_indifferent_access
         end
 
 
