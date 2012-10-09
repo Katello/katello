@@ -22,6 +22,12 @@ class Resources::AbstractModel
     end
   end
 
+  class ResponseParsingError < Error
+    def initialize(data)
+      super "parsing of response chunk failed: #{data.inspect}"
+    end
+  end
+
 
   class_attribute :_attributes, :instance_reader => false, :instance_writer => false
 
@@ -83,6 +89,7 @@ class Resources::AbstractModel
     raise NotImplementedError
   end
 
+  # @return array of parsed attributes
   def self.parse_attributes(data)
     raise NotImplementedError
   end
