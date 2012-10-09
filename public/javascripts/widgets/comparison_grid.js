@@ -809,7 +809,7 @@ KT.comparison_grid.templates = (function(i18n) {
                 if( data['display'] !== undefined ){
                     display = '<div class="grid_cell_data one-line-ellipsis">' + data['display'] + '</div>';
                 } else {
-                    display = '<i class="dot_icon-black" />';
+                    display = $('<i/>', { 'class' : "dot_icon-black" });
                 }
             } else {
                  display = "<i>--</i>";
@@ -886,15 +886,19 @@ KT.comparison_grid.templates = (function(i18n) {
                 html.attr('data-collapsed', "false");
             }
 
+            var temp_html = $('<div/>');
+            
+            temp_html.append(html);
+
             if( has_children ){
                 if( row_level !== 2 ){
-                    html = html.after($('<ul/>', { 'id' : 'child_list_' + id }));
+                    temp_html.append($('<ul/>', { 'id' : 'child_list_' + id }));
                 } else {
-                    html = html.after($('<ul/>', { 'id' : 'child_list_' + id, 'class' : 'hidden' }));
+                    temp_html.append($('<ul/>', { 'id' : 'child_list_' + id, 'class' : 'hidden' }));
                 }   
             }
 
-            return html;
+            return temp_html.html();
         },
         row_header = function(id, name, row_level, has_children, parent_id) {
             var html = $('<li/>', { 
@@ -932,20 +936,26 @@ KT.comparison_grid.templates = (function(i18n) {
                     html.append($('<span/>').html(name));
                 }
             }
+            
+            var temp_html = $('<div/>');
 
             if( has_children ){
                 if( row_level === 2 ){
                     html.prepend(collapse_arrow({ open : false }));
                     html.attr('data-collapsed', "true");
-                    html = html.after($('<ul/>', { 'id' : 'child_header_list_' + id, 'class' : 'hidden' }));
+                    temp_html.append(html);
+                    temp_html.append($('<ul/>', { 'id' : 'child_header_list_' + id, 'class' : 'hidden' }));
                 } else {
                     html.prepend(collapse_arrow({ open : true }));
                     html.attr('data-collapsed', "false");
-                    html = html.after($('<ul/>', { 'id' : 'child_header_list_' + id }));
+                    temp_html.append(html);
+                    temp_html.append($('<ul/>', { 'id' : 'child_header_list_' + id }));
                 }   
+            } else {
+                temp_html.append(html);
             }
     
-            return html;
+            return temp_html.html();
         },
         column_header = function(id, to_display, span) {
             var html = $('<li/>', {

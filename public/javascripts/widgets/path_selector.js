@@ -108,10 +108,18 @@ KT.path_select = function(div_id, name, environments, options_in){
             if(options.inline){
                 return false;
             }
+            //This is a hack for IE, sadly
+            
+            path_selector.css('visibility', 'hidden');
+            path_selector.show();
+
             selector_width = path_selector.outerWidth();
             pos = div.outerWidth()  - selector_width - 1;
 
             path_selector.css('left', pos + 'px');
+
+            path_selector.hide();
+            path_selector.css('visibility', 'visible');
         },
         hover_out = function(){
             path_selector.hide();
