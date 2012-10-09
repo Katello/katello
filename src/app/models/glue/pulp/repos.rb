@@ -579,7 +579,7 @@ module Glue::Pulp::Repos
       is_dupe =  Repository.joins(:environment_product).where( :name=> repo_name,
               "environment_products.product_id" => self.id, "environment_products.environment_id"=> self.library.id).count > 0
       if is_dupe
-        raise Errors::ConflictException.new(_("There is already a repo with the name [ %s ] for product [ %s ]") % [repo_name, self.label])
+        raise Errors::ConflictException.new(_("There is already a repo with the name [ %{repo} ] for product [ %{product} ]") % {:repo => repo_name, :product => self.label})
       end
     end
 

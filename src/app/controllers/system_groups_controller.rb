@@ -91,8 +91,7 @@ class SystemGroupsController < ApplicationController
     new_group.systems = @group.systems
     new_group.save!
 
-    notify.success _("System Group %s created successfully as a copy of system group %s.") %
-                       [new_group.name, @group.name]
+    notify.success _("System Group %{new_group} created successfully as a copy of system group %{group}.") % {:new_group => new_group.name, :group => @group.name}
 
     render :partial => "system_groups/list_group", :locals=>{:item=>new_group, :accessor=>"id", :name=>controller_display_name}
   end
@@ -147,7 +146,7 @@ class SystemGroupsController < ApplicationController
     end
     @group.destroy
 
-    notify.success _("Deleted System Group %s and it's %s systems.") % [@group.name, system_names.length.to_s],
+    notify.success _("Deleted System Group %{group} and it's %{count} systems.") % {:group => @group.name, :count => system_names.length.to_s},
                    :details => system_names.join("\n")
 
     render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}

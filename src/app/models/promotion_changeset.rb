@@ -23,16 +23,14 @@ class PromotionChangeset < Changeset
 
     #check for other changesets promoting
     if self.environment.promoting_to?
-      raise _("Cannot promote the changeset '%s' while another changeset (%s) is being promoted.") %
-                [self.name, self.environment.promoting.first.name]
+      raise _("Cannot promote the changeset '%{changeset}' while another changeset (%{another_changeset}) is being promoted.") % {:changeset => self.name, :another_changeset => self.environment.promoting.first.name}
     end
 
     # check that solitare repos in the changeset and its templates
     # will have its associated product in the env as well after promotion
     repos_to_be_promoted.each do |repo|
       if not self.environment.products.to_a.include? repo.product and not products_to_be_promoted.include? repo.product
-        raise _("Please add '%s' product to the changeset '%s' if you wish to promote repository '%s' with it.") %
-                  [repo.product.name, self.name, repo.name]
+        raise _("Please add '%{product}' product to the changeset '%{changeset}' if you wish to promote repository '%{repo}' with it.") % {:product => repo.product.name, :changeset => self.name, :repo => repo.name}
       end
     end
 

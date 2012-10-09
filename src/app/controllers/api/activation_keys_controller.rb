@@ -93,7 +93,7 @@ class Api::ActivationKeysController < Api::ApiController
   api :DELETE, "/activation_keys/:id/pools/:poolid", "Delete an entitlement pool within an activation key"
   def remove_pool
     unless @activation_key.pools.include?(@pool)
-      raise HttpErrors::NotFound, _("Couldn't find pool '%s' in activation_key '%s'") % [@pool.cp_id, @activation_key.name]
+      raise HttpErrors::NotFound, _("Couldn't find pool '%{pool}' in activation_key '%{ak}'") % {:pool => @pool.cp_id, :ak => @activation_key.name}
     end
     @activation_key.pools.delete(@pool)
     render :json => @activation_key
