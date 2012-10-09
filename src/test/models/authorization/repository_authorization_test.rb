@@ -13,7 +13,7 @@
 require 'models/repository_test'
 
 
-class RepositoryAuthorizationTest < MiniTest::Rails::ActiveSupport::TestCase
+class RepositoryAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCase
   include RepositoryTestBase
 
   def setup
@@ -22,27 +22,27 @@ class RepositoryAuthorizationTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_readable
-    assert Repository.readable(@library)
+    assert !Repository.readable(@library).empty?
   end
 
   def test_libraries_content_readable
-    assert Repository.libraries_content_readable(@acme_corporation)
+    assert !Repository.libraries_content_readable(@acme_corporation).empty?
   end
 
   def test_content_readable
-    assert Repository.content_readable(@acme_corporation)
+    assert !Repository.content_readable(@acme_corporation).empty?
   end
 
   def test_readable_for_product
-    assert Repository.readable_for_product(@library, @fedora)
+    assert !Repository.readable_for_product(@library, @fedora).empty?
   end
 
   def test_editable_in_library
-    assert Repository.editable_in_library(@acme_corporation)
+    assert !Repository.editable_in_library(@acme_corporation).empty?
   end
 
   def test_readable_in_org
-    assert Repository.readable_in_org(@acme_corporation)
+    assert !Repository.readable_in_org(@acme_corporation).empty?
   end
 
   def test_any_readable_in_org?
@@ -50,3 +50,44 @@ class RepositoryAuthorizationTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
 end
+
+
+class RepositoryAuthorizationNonAuthUserTest < MiniTest::Rails::ActiveSupport::TestCase
+  include RepositoryTestBase
+
+  def setup
+    super
+    User.current = users(:alfred)
+  end
+
+  def test_readable
+    assert Repository.readable(@library).empty?
+  end
+
+  def test_libraries_content_readable
+    assert Repository.libraries_content_readable(@acme_corporation).empty?
+  end
+
+  def test_content_readable
+    assert Repository.content_readable(@acme_corporation).empty?
+  end
+
+  def test_readable_for_product
+    assert Repository.readable_for_product(@library, @fedora).empty?
+  end
+
+  def test_editable_in_library
+    assert Repository.editable_in_library(@acme_corporation).empty?
+  end
+
+  def test_readable_in_org
+    assert Repository.readable_in_org(@acme_corporation).empty?
+  end
+
+  def test_any_readable_in_org?
+    assert !Repository.any_readable_in_org?(@acme_corporation)
+  end
+
+end
+
+
