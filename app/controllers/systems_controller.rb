@@ -127,6 +127,8 @@ class SystemsController < ApplicationController
       end
     end
 
+  rescue ActiveRecord::RecordInvalid => error
+    raise error # handle error by ApplicationController's rescue_from
   rescue => error
     display_message = if error.respond_to?('response') && error.response.include?('displayMessage')
                          JSON.parse(error.response)['displayMessage']
@@ -575,8 +577,8 @@ class SystemsController < ApplicationController
   def system_groups
     # retrieve the available groups that aren't currently assigned to the system and that haven't reached their max
     @system_groups = SystemGroup.where(:organization_id=>current_organization).
-        joins(:system_system_groups).
         select("system_groups.id, system_groups.name").
+        joins("LEFT OUTER JOIN system_system_groups ON system_system_groups.system_group_id = system_groups.id").
         group("system_groups.id, system_groups.name, system_groups.max_systems having count(system_system_groups.system_id) < system_groups.max_systems or system_groups.max_systems = -1").
         order(:name) - @system.system_groups
 

@@ -80,7 +80,7 @@ class Api::RolesController < Api::ApiController
   api :DELETE, "/users/:user_id/roles/:id", "Destroy a role"
   def destroy
     @role.destroy
-    render :text => _("Deleted role '#{params[:id]}'"), :status => 200
+    render :text => _("Deleted role '%s'") % params[:id], :status => 200
   end
 
   api :GET, "/roles/available_verbs", "List all available verbs that can be set to roles"
@@ -107,7 +107,7 @@ class Api::RolesController < Api::ApiController
 
   def find_role
     @role = Role.find(params[:id])
-    raise HttpErrors::NotFound, _("Couldn't find user role '#{params[:id]}'") if @role.nil?
+    raise HttpErrors::NotFound, _("Couldn't find user role '%s'") % params[:id] if @role.nil?
     @role
   end
 

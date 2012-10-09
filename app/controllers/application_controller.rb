@@ -60,6 +60,7 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved  do |e|
     User.current = current_user
     notify.exception e
+    log_exception e, :info
 
     execute_after_filters
     respond_to do |f|
@@ -460,7 +461,7 @@ class ApplicationController < ActionController::Base
     @items = []
 
     begin
-      results = obj_class.search :load=>load do
+      results = obj_class.search :load=>false do
         query do
           if all_rows
             all
@@ -479,7 +480,18 @@ class ApplicationController < ActionController::Base
         size page_size if page_size > 0
         from start
       end
-      @items = results
+
+      if load
+        @items = obj_class.where(:id=>results.collect{|r| r.id})
+        #set total since @items will be just an array
+        panel_options[:total_count] = results.empty? ? 0 : results.total
+        if @items.length != results.length
+          Rails.logger.error("Failed to retrieve all #{obj_class} search results " +
+                                 "(#{@items.length}/#{results.length} found.)")
+        end
+      else
+        @items = results
+      end
 
       #get total count
       total = obj_class.search do
@@ -499,7 +511,6 @@ class ApplicationController < ActionController::Base
 
       total_count = 0
       panel_options[:total_results] = 0
-
     end
 
     render_panel_results(@items, total_count, panel_options) if !skip_render
@@ -612,15 +623,8 @@ class ApplicationController < ActionController::Base
   end
 
 
-  def log_exception exception
-    if exception
-      logger.error exception.to_s
-      logger.error exception.message
-      logger.error "#{exception.inspect}"
-      exception.backtrace.each { |line|
-      logger.error line
-      }
-    end
+  def log_exception exception, level = :error
+    logger.send level, "#{exception} (#{exception.class})\n#{exception.backtrace.join("\n")}" if exception
   end
 
   # Parse the input provided and return the value of displayMessage. If displayMessage is not available, return "".

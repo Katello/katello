@@ -81,7 +81,7 @@ describe Api::ActivationKeysController do
     it_should_behave_like "protected action"
 
     it "should retrieve organization" do
-      Organization.should_receive(:first).once.with(hash_including(:conditions => {:label => '1234'})).and_return(@organization)
+      Organization.should_receive(:first).once.with(hash_including(:conditions => {:name => '1234'})).and_return(@organization)
       get :index, :organization_id => '1234'
     end
 
@@ -316,7 +316,7 @@ describe Api::ActivationKeysController do
 
     it "should throw a 404 is passed in a bad system group id" do
       ids = [90210]
-      post :add_system_groups, :id => @activation_key.id, :organization_id => @organization.id, :activation_key => { :system_group_ids => ids }
+      post :add_system_groups, :id => @activation_key.id, :organization_id => @organization.id.to_s, :activation_key => { :system_group_ids => ids }
       response.status.should == 404
     end
 

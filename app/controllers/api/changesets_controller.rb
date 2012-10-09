@@ -79,7 +79,7 @@ class Api::ChangesetsController < Api::ApiController
     elsif params[:changeset][:type] == 'DELETION'
       @changeset = DeletionChangeset.new(params[:changeset])
     else
-      raise HttpErrors::ApiError, _("Unknown changeset type, must be PROMOTION or DELETION: #{csType}")
+      raise HttpErrors::ApiError, _("Unknown changeset type, must be PROMOTION or DELETION: %s") % csType
     end
 
     @changeset.environment = @environment
@@ -107,14 +107,14 @@ class Api::ChangesetsController < Api::ApiController
   api :DELETE, "/changesets/:id", "Destroy a changeset"
   def destroy
     @changeset.destroy
-    render :text => _("Deleted changeset '#{params[:id]}'"), :status => 200
+    render :text => _("Deleted changeset '%s'") % params[:id], :status => 200
   end
 
   private
 
   def find_changeset
     @changeset = Changeset.find(params[:id])
-    raise HttpErrors::NotFound, _("Couldn't find changeset '#{params[:id]}'") if @changeset.nil?
+    raise HttpErrors::NotFound, _("Couldn't find changeset '%s'") % params[:id] if @changeset.nil?
     @environment = @changeset.environment
     @changeset
   end
@@ -124,7 +124,7 @@ class Api::ChangesetsController < Api::ApiController
       @environment = @changeset.environment
     elsif params[:environment_id]
       @environment = KTEnvironment.find(params[:environment_id])
-      raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:environment_id]}'") if @environment.nil?
+      raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
       @environment
     end
   end
