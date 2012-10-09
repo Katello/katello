@@ -34,7 +34,7 @@ module Glue::Pulp::Errata
       end
 
       def self.find(id)
-        erratum_attrs = Resources::Pulp::Errata.find(id)
+        erratum_attrs = Runcible::Extensions::Errata.find(id)
         Errata.new(erratum_attrs) if not erratum_attrs.nil?
       end
 
