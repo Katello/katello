@@ -1,0 +1,16 @@
+= javascript do
+  :plain
+    $(document).ready(function() {
+        $('.remove_item.disabled').tipsy({ fade:true, gravity:'s', delayIn:500, html:true, className:'content-tipsy', title:function() { return $('.hidden-text.hidden').html();} });
+    });
+
+
+= content_for :remove_item do
+  - if (@provider.deletable? and repositories_cloned_in_envrs.empty?)
+    = link_to _("Remove Provider"), {:action => "destroy", :controller => "providers"}, :method => :delete, :confirm => _('Are you sure you want to delete this provider?'), :class => "remove_item", :remote=>true
+  - if (not repositories_cloned_in_envrs.empty?)
+    .remove_item.disabled
+      #{_("Remove Provider")}
+    %span.hidden-text.hidden
+      .la.content-tipsy
+        = _("Before removing this provider, all promoted repositories must first be deleted from their respective environments using a deletion changeset: ") + repositories_cloned_in_envrs.collect {|i| "#{i[0]} in: #{i[1].join(', ')}" }.join("; ")

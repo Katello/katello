@@ -46,6 +46,7 @@ class candlepin::config {
       path    => "/sbin:/bin:/usr/bin",
       before  => Exec["cpdb"],
       notify  => Postgres::Dropdb["$candlepin::params::db_name"],
+      timeout => 0
     }
     postgres::dropdb {$candlepin::params::db_name:
       logfile => "${katello::params::configure_log_base}/drop-postgresql-candlepin-database.log",
@@ -67,7 +68,8 @@ class candlepin::config {
       File["/etc/candlepin/candlepin.conf"]
     ],
     creates => "/var/lib/katello/cpdb_done",
-    before  => Class["apache2::service"]
+    before  => Class["apache2::service"],
+    timeout => 0
   }
 
 }

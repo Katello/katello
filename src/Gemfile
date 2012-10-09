@@ -111,6 +111,10 @@ group :development do
   gem 'logical-insight'
 end
 
+group :devboost do
+  gem 'rails-dev-boost', :require => 'rails_development_boost'
+end
+
 group :test do
   gem 'vcr'
   gem 'webmock'

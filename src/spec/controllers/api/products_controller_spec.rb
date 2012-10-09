@@ -160,7 +160,7 @@ describe Api::ProductsController, :katello => true do
     end
 
     it "should find organization" do
-      Organization.should_receive(:first).once.with({:conditions => {:label => @organization.label}}).and_return(@organization)
+      Organization.should_receive(:first).once.with({:conditions => {:name => @organization.name}}).and_return(@organization)
       get 'index', :organization_id => @organization.label
     end
 
@@ -188,7 +188,7 @@ describe Api::ProductsController, :katello => true do
     end
 
     it "should find organization" do
-      Organization.should_receive(:first).once.with({:conditions => {:label => @organization.label}}).and_return(@organization)
+      Organization.should_receive(:first).once.with({:conditions => {:name => @organization.name}}).and_return(@organization)
       get 'index', :organization_id => @organization.label
     end
 

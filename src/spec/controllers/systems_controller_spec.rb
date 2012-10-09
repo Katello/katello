@@ -765,6 +765,36 @@ describe SystemsController do
 
     end
 
+    describe "get/set system details" do
+      before (:each) do
+        @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts => { "test" => "test" }, :serviceLevel => nil)
+        System.stub(:find).and_return(@system)
+      end
+
+      it "should get release version choices" do
+        @system.stub(:available_releases).and_return(["5Server", "6Server"])
+        get :edit, :id => @system.id
+        response.should render_template(:edit)
+        assigns[:locals_hash][:releases].should == ["5Server", "6Server"]
+        assigns[:locals_hash][:releases_error].should == nil
+      end
+
+      it "should get empty release version choices" do
+        @system.stub(:available_releases).and_return([])
+        get :edit, :id => @system.id
+        response.should render_template(:edit)
+        assigns[:locals_hash][:releases].should == []
+        assigns[:locals_hash][:releases_error].should == nil
+      end
+
+      it "should get release version error" do
+        @system.stub(:available_releases).and_raise("some error")
+        get :edit, :id => @system.id
+        response.should render_template(:edit)
+        assigns[:locals_hash][:releases].should == []
+        assigns[:locals_hash][:releases_error].should == "some error"
+      end
+    end
   end
 
 end

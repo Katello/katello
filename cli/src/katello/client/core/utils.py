@@ -180,7 +180,7 @@ def parse_tokens(tokenstring):
             tokens.append(tok)
         return tokens
     except Exception, e:
-        raise KatelloError("Unable to parse options", e)
+        raise KatelloError("Unable to parse options", e), None, sys.exc_info()[2]
 
 
 def get_abs_path(path):

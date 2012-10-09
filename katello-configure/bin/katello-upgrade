@@ -23,7 +23,8 @@ BACKEND_SERVICES = ['katello', 'katello-jobs', 'tomcat6', 'pulp-server', 'thumbs
 STDOUT_NAME = "stdout"
 
 # Terminate script with error code from ERROR_CODES hash
-def exit_with(code = :unknown)
+def exit_with(code = :unknown, message = nil)
+  $stderr.puts message unless message.nil?
   code = ERROR_CODES[code.to_sym] || ERROR_CODES[:unknown]
   exit code
 end
@@ -260,6 +261,7 @@ class UpgradeProcess
 
     if @step_count == 0
       print_nothing_to_do
+      ensure_services_are_on
       exit_with :success
     end
 
@@ -271,6 +273,7 @@ class UpgradeProcess
     if finished_step_count < @step_count
       exit_with :general_error
     else
+      ensure_services_are_on
       exit_with :success
     end
   end
@@ -292,10 +295,21 @@ class UpgradeProcess
       else
         puts "This script can be run in auto-stop mode with the -a / --auto-stop option to"
         puts "disable services automatically."
-        puts "You may always use `service katello-service stop` to stop all the services"
+        puts "You may always use `katello-service stop` to stop all the services"
         puts ""
-        exit_service_stop
+        exit_with :general_error
       end
+    end
+  end
+
+  def ensure_services_are_on
+    if @options[:auto_stop]
+      start_services
+    else
+      puts "Now that Katello has been upgraded, please run `katello-service start"
+      puts "to re-enable all of your services"
+      puts "In the future, you can run this script with the -a / --auto-stop option to"
+      puts "automatically stop & start your services"
     end
   end
 
@@ -308,13 +322,21 @@ class UpgradeProcess
         exit_with :general_error
       end
     else
-      exit_service_stop
+      exit_with :general_error, "Exiting. Please stop your services and try again"
     end
   end
 
-  def exit_service_stop
-    puts "Exiting. Please stop your services and try again"
-    exit_with :general_error
+  def start_services
+    puts "We will now start all katello services."
+    if confirm("PROCEED?")
+      if ! system('/usr/bin/katello-service', 'start')
+        puts "There was an issue starting your services. Please resolve this manually"
+        puts "and try again"
+        exit_with :general_error
+      end
+    else
+      puts "Exiting. Your Katello installation is upgraded, but please manually start your services"
+    end
   end
 
   def print_line(char="=", repeats=LINE_LEN)

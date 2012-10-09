@@ -20,6 +20,7 @@ class Api::ApiController < ActionController::Base
   respond_to :json
   before_filter :set_locale
   before_filter :require_user
+  before_filter :verify_ldap
   before_filter :add_candlepin_version_header
 
   rescue_from StandardError, :with => proc { |e| render_exception(500, e) } # catch-all
@@ -44,8 +45,6 @@ class Api::ApiController < ActionController::Base
   # support for session (thread-local) variables must be the last filter in this class
   include Katello::ThreadSession::Controller
   include AuthorizationRules
-
-  before_filter :verify_ldap
 
   def set_locale
     hal = request.env['HTTP_ACCEPT_LANGUAGE']
@@ -96,15 +95,17 @@ class Api::ApiController < ActionController::Base
 
   def find_optional_organization
     if params[:organization_id]
-      @organization = Organization.first(:conditions => {:label => params[:organization_id].to_s.tr(' ', '_')})
-      raise HttpErrors::NotFound, _("Couldn't find organization '#{params[:organization_id]}'") if @organization.nil?
+      @organization = Organization.first(:conditions => {:name => params[:organization_id]})
+      raise HttpErrors::NotFound, _("Couldn't find organization '%s'") % params[:organization_id] if @organization.nil?
       @organization
     end
   end
 
   def verify_ldap
-    u = current_user
-    u.verify_ldap_roles if (AppConfig.ldap_roles && u != nil)
+    if !request.authorization.blank?
+      u = current_user
+      u.verify_ldap_roles if (AppConfig.ldap_roles && u != nil)
+    end
   end
 
   def require_user

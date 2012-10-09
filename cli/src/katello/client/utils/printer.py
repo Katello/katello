@@ -13,7 +13,6 @@
 # granted to use or replicate Red Hat trademarks that are incorporated
 # in this software or its documentation.
 
-import codecs
 import fcntl
 import termios
 import struct
@@ -31,7 +30,7 @@ class PrinterStrategy(object):
 
     def __init__(self):
         super(PrinterStrategy, self).__init__()
-        self.out = codecs.getwriter('utf-8')(sys.stdout)
+        self.out = sys.stdout
 
     def print_item(self, heading, columns, item):
         """
@@ -501,4 +500,4 @@ def get_term_width():
 
 def unicode_len(text):
     """ return byte lenght of unicode character """
-    return sum(1+(unicodedata.east_asian_width(c) in "WF") for c in text)
+    return sum(1+(unicodedata.east_asian_width(c) in "WF") for c in u_str(text))

@@ -127,6 +127,8 @@ class SystemsController < ApplicationController
       end
     end
 
+  rescue ActiveRecord::RecordInvalid => error
+    raise error # handle error by ApplicationController's rescue_from
   rescue => error
     display_message = if error.respond_to?('response') && error.response.include?('displayMessage')
                          JSON.parse(error.response)['displayMessage']
@@ -283,17 +285,17 @@ class SystemsController < ApplicationController
     begin
       releases = @system.available_releases
     rescue => e
-      # Don't pepper user with notices if there is an error fetching release
-      # versions, but do log them
+      releases_error = e.to_str
       Rails.logger.error e.to_str
-      releases ||= []
     end
+    releases ||= []
+    releases_error ||= nil
 
-    render :partial => "edit", :layout => "tupane_layout",
-           :locals => { :system       => @system, :editable => @system.editable?,
-                        :releases     => releases, :name => controller_display_name,
-                        :environments =>
-                            environment_paths(library_path_element, environment_path_element("systems_readable?")) }
+    # Stuff into var for use in spec tests
+    @locals_hash = { :system => @system, :editable => @system.editable?,
+                    :releases => releases, :releases_error => releases_error, :name => controller_display_name,
+                    :environments => environment_paths(library_path_element, environment_path_element("systems_readable?")) }
+    render :partial => "edit", :layout => "tupane_layout", :locals => @locals_hash
   end
 
   def update
@@ -575,8 +577,8 @@ class SystemsController < ApplicationController
   def system_groups
     # retrieve the available groups that aren't currently assigned to the system and that haven't reached their max
     @system_groups = SystemGroup.where(:organization_id=>current_organization).
-        joins(:system_system_groups).
         select("system_groups.id, system_groups.name").
+        joins("LEFT OUTER JOIN system_system_groups ON system_system_groups.system_group_id = system_groups.id").
         group("system_groups.id, system_groups.name, system_groups.max_systems having count(system_system_groups.system_id) < system_groups.max_systems or system_groups.max_systems = -1").
         order(:name) - @system.system_groups
 
@@ -698,9 +700,7 @@ class SystemsController < ApplicationController
   # to filter readable systems that can be
   # passed to search
   def readable_filters
-    filters = {:environment_id=>KTEnvironment.systems_readable(current_organization).collect{|item| item.id}}
-    filters[:system_group_ids] = SystemGroup.systems_readable(current_organization).collect{|item| item.id} if AppConfig.katello?
-    filters
+    {:environment_id=>KTEnvironment.systems_readable(current_organization).collect{|item| item.id}}
   end
 
   def search_filter
