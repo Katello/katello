@@ -75,9 +75,15 @@ class EnvironmentsController < ApplicationController
               :prior => params[:kt_environment][:prior],
               :label => params[:kt_environment][:label],
               :organization_id => @organization.id}
+
+    env_params[:label], label_assigned = generate_label(env_params[:name], _('environment')) if env_params[:label].blank?
+
     @environment = KTEnvironment.new env_params
     @environment.save!
+
     notify.success _("Environment '%s' was created.") % @environment.name
+    notify.message label_assigned unless label_assigned.blank?
+
     #this render just means return a 200 success
     render :nothing => true
   end
@@ -129,7 +135,7 @@ class EnvironmentsController < ApplicationController
   def find_organization
     org_id = params[:organization_id] || params[:org_id]
     @organization = Organization.first(:conditions => {:label => org_id})
-    notify.error _("Couldn't find organization '%d'") % org_id if @organization.nil?
+    notify.error _("Couldn't find organization '%s'") % org_id if @organization.nil?
   end
 
   def find_environment

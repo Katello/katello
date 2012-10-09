@@ -189,6 +189,9 @@ class SystemGroupsController < ApplicationController
     @group.system_ids = (@group.system_ids + systems.collect{|s| s.id}).uniq
     @group.save!
     system_joins = @group.system_system_groups.where(:system_id=>ids)
+
+    notify.success _("Successfully added system[s] to group '%s'.") % @group.name
+
     render :partial=>'system_item', :collection=>system_joins, :as=>:system,
            :locals=>{:editable=>@group.editable?}
   end
@@ -197,6 +200,9 @@ class SystemGroupsController < ApplicationController
     systems = System.readable(current_organization).where(:id=>params[:system_ids]).collect{|s| s.id}
     @group.system_ids = (@group.system_ids - systems).uniq
     @group.save!
+
+    notify.success _("Successfully removed system[s] from group '%s'.") % @group.name
+
     render :text=>''
   end
 

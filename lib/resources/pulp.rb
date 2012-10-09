@@ -53,7 +53,7 @@ module Resources
       def self.default_headers
         {'accept' => 'application/json',
          'accept-language' => I18n.locale,
-         'content-type' => 'application/json'}.merge(::User.pulp_oauth_header)
+         'content-type' => 'application/json; charset=utf-8'}.merge(::User.pulp_oauth_header)
       end
 
       # some old Pulp API need text/plain content type
@@ -298,6 +298,17 @@ module Resources
           response = get(path, self.default_headers)
           parsed = JSON.parse(response.body)
           return parsed
+        end
+
+        def export(repo_id, target_dir, overwrite = false)
+          path = Repository.repository_path + repo_id + "/export/"
+          body = {
+            :target_location => target_dir,
+            :overwrite => overwrite
+          }
+          response = post(path, body.to_json, self.default_headers)
+          body = response.body
+          JSON.parse(body)
         end
 
         def destroy repo_id

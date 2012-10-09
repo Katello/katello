@@ -26,7 +26,7 @@ describe SyncManagementController, :katello => true do
     set_default_locale
   end
 
-  describe "GET 'index'" do
+  context "Environment is set" do
     before (:each) do
       Resources::Pulp::Repository.stub(:all).and_return([])
       setup_current_organization
@@ -34,16 +34,22 @@ describe SyncManagementController, :katello => true do
       @mock_org.stub!(:library).and_return(@library)
       @library.stub!(:products).and_return(OpenStruct.new(:readable => [], :syncable=>[]))
       Provider.stub!(:any_readable?).and_return(true)
-      
     end
 
+    describe "GET 'index'" do
+      it "should be successful" do
+        get 'index'
+        response.should be_success
+      end
+    end
 
-    it "should be successful" do
-      get 'index'
-      response.should be_success
+    describe "GET 'manage'" do
+      it "should be successful" do
+        get 'manage'
+        response.should be_success
+      end
     end
   end
-
 
   describe "rules" do
     before (:each) do

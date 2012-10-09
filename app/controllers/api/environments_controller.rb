@@ -147,10 +147,10 @@ either library or an environment at the end of the chain
   def destroy
     if @environment.confirm_last_env
       @environment.destroy
-      render :text => _("Deleted environment '#{params[:id]}'"), :status => 200
+      render :text => _("Deleted environment '%s'") % params[:id], :status => 200
     else
       raise HttpErrors::BadRequest,
-            _("Environment #{@environment.name} has a successor. Only the last environment on a path can be deleted.")
+            _("Environment %s has a successor. Only the last environment on a path can be deleted.") % @environment.name
     end
   end
 
@@ -173,7 +173,7 @@ either library or an environment at the end of the chain
 
   def find_environment
     @environment = KTEnvironment.find(params[:id])
-    raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:id]}'") if @environment.nil?
+    raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:id] if @environment.nil?
     @organization = @environment.organization
     @environment
   end
