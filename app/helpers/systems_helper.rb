@@ -87,9 +87,9 @@ module SystemsHelper
   end
 
   def system_servicelevel system
-    _("Auto-heal %s, %s") % [
-        system.autoheal ? _("On") : _("Off"),
-        system.serviceLevel == '' ? _("No Service Level Preference") : (_("Service Level %s") % system.serviceLevel)
+    _("Auto-heal %{val}, %{sla}") % [
+      {:val => system.autoheal ? _("On") : _("Off"),
+       :sla => ( system.serviceLevel == '' ? _("No Service Level Preference") : (_("Service Level %s") % system.serviceLevel))}
     ]
   end
 

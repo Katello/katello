@@ -1,5 +1,5 @@
 .ca.light_text.versioning
   - if current_user
-    #{link_to (_("%s Version: %s") % [AppConfig.app_name, AppConfig.katello_version]), about_path}
+    #{link_to (_("%{app_name} Version: %{version}") % {:app_name => AppConfig.app_name, :version => AppConfig.katello_version}), about_path}
   - else
-    #{_("%s Version: %s") % [AppConfig.app_name, AppConfig.katello_version]}
+    #{_("%{app_name} Version: %{version}") % {:app_name => AppConfig.app_name, :version => AppConfig.katello_version}}

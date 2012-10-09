@@ -26,7 +26,7 @@ module Errors
     end
 
     def self.generate_message broken_params, params
-      _("Wrong/Invalid parameters sent for %s/%s.\n Wrong Parameters: \n%s\n Parameters Received:\n %s ") % [params[:controller],params[:action], broken_params.inspect, params.inspect]
+      _("Wrong/Invalid parameters sent for %{controller}/%{action}.\n Wrong Parameters: \n%{params}\n Parameters Received:\n %{all_params} ") % {:controller => params[:controller], :action => params[:action], :params => broken_params.inspect, :all_params => params.inspect}
     end
   end
 
