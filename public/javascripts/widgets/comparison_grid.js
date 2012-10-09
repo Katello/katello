@@ -444,7 +444,7 @@ KT.comparison_grid.models.rows = function(){
                             'parent_id' : parent_id, 'comparable' : comparable, 
                             'data_type' : data_type, 'value' : value };
 
-                parent = get_parent(id);
+                var parent = get_parent(id);
 
                 if( parent['child_ids'] === undefined ){
                     parent['child_ids'] = [id];
