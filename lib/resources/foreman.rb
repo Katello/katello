@@ -12,10 +12,16 @@
 
 module Resources
   module Foreman
-    config  = AppConfig.foreman
-    options = { :base_url => config.url,
-                :oauth    => { :consumer_key    => config.oauth_key,
-                               :consumer_secret => config.oauth_secret } }
+
+    def self.options
+      @options ||= begin
+        config = AppConfig.foreman
+        { :base_url           => config.url,
+          :enable_validations => false,
+          :oauth              => { :consumer_key    => config.oauth_key,
+                                   :consumer_secret => config.oauth_secret } }
+      end
+    end
 
     Architecture    = ForemanApi::Resources::Architecture.new options
     Bookmark        = ForemanApi::Resources::Bookmark.new options
