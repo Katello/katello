@@ -125,17 +125,14 @@ class DeletionChangeset < Changeset
         end
       end
     end
-    pkg_ids = []
+    total_pkg_ids = []
 
-    pkgs_delete.each_pair do |repo, pkgs|
-      pkg_ids.concat(pkgs)
-      pkgs_delete[repo] = Package.id_search(pkgs)
+    pkgs_delete.each_pair do |repo, pkg_ids|
+      total_pkg_ids  += pkg_ids
+      repo.delete_packages(pkg_ids)
     end
 
-    if pkgs_delete.length > 0
-      Glue::Pulp::Repo.delete_repo_packages(pkgs_delete)
-      Package.index_packages(pkg_ids)
-    end
+    Package.index_packages(total_pkg_ids)
   end
 
 

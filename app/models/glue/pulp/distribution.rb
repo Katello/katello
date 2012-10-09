@@ -23,7 +23,7 @@ class Glue::Pulp::Distribution
   end
 
   def self.find id
-    Glue::Pulp::Distribution.new(Resources::Pulp::Distribution.find(id))
+    Glue::Pulp::Distribution.new(Runcible::Extensions::Distribution.find(id))
   end
   
 end
