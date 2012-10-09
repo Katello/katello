@@ -22,8 +22,7 @@ gem 'net-ldap'
 gem 'oauth'
 gem 'ldap_fluff'
 
-#gem 'foreman_api', '>= 0.0.1'
-gem 'foreman_api', :git => "git://github.com/mbacovsky/foreman_api.git"
+gem 'foreman_api', '>= 0.0.7'
 
 gem 'delayed_job', '~> 2.1.4'
 gem 'daemons', '>= 1.1.4'
@@ -43,7 +42,7 @@ gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 gem 'ruport', '>=1.6.3'
 gem 'acts_as_reportable', '>=1.1.1'
 
-gem "apipie-rails"
+gem "apipie-rails", '>= 0.0.12'
 
 # Use unicorn as the web server
 # gem 'unicorn'
