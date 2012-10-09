@@ -36,11 +36,12 @@ end
 class PulpSyncStatus < PulpTaskStatus
   use_index_of TaskStatus
   
-  FINISHED = "finished"
-  ERROR = "failed"
-  RUNNING = "running"
-  WAITING = "waiting"
-  CANCELED = "canceled"
+  SUCCESS   = "success"
+  FINISHED  = "finished"
+  ERROR     = "failed"
+  RUNNING   = "running"
+  WAITING   = "waiting"
+  CANCELED  = "canceled"
 
   class Status < ::TaskStatus::Status
     NOT_SYNCED = :not_synced

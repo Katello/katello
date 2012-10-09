@@ -1,0 +1,141 @@
+--- 
+recorded_with: VCR 2.2.5
+http_interactions: 
+- request: 
+    method: post
+    uri: https://knifeparty.localdomain/pulp/api/v2/users/
+    body: 
+      string: "{\"login\":\"test_username\",\"name\":\"test_username\",\"password\":\"qcY5myKfR6ekEDY3\"}"
+    headers: 
+      Accept: 
+      - application/json
+      Content-Length: 
+      - "78"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="LAfPTVonBL7KXSC6bMWnE6Oirmp44m10slcPJuntg", oauth_signature="jJ84PqXy3cJZJLLGaadmeksd%2FHM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1349358574", oauth_version="1.0"
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Location: 
+      - test_username
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "205"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Thu, 04 Oct 2012 13:49:34 GMT
+    body: 
+      string: "{\"_id\": {\"$oid\": \"506d93eedc79210405000323\"}, \"name\": \"test_username\", \"roles\": [], \"_ns\": \"users\", \"login\": \"test_username\", \"id\": \"506d93eedc79210405000323\", \"_href\": \"/pulp/api/v2/users/test_username/\"}"
+    http_version: 
+  recorded_at: Thu, 04 Oct 2012 13:49:34 GMT
+- request: 
+    method: delete
+    uri: https://knifeparty.localdomain/pulp/api/v2/users/test_username/
+    body: 
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="JnQIAdjOhxip1anWZSUXhwHMo7eLjJF41QfZKC9iGlM", oauth_signature="4sW9%2FI4hleOBDf%2BAlxT8kAF86RU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1349358575", oauth_version="1.0"
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "4"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Thu, 04 Oct 2012 13:49:35 GMT
+    body: 
+      string: "null"
+    http_version: 
+  recorded_at: Thu, 04 Oct 2012 13:49:35 GMT
+- request: 
+    method: post
+    uri: https://knifeparty.localdomain/pulp/api/v2/roles/super-users//users/
+    body: 
+      string: "{\"login\":\"test_username\"}"
+    headers: 
+      Accept: 
+      - application/json
+      Content-Length: 
+      - "25"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="wr0UoYD0eBIHtjkyx4Sd9zXhOQsscjfk9pfygzOIjwE", oauth_signature="%2FTVUFFh2RkMG6L5vJGns0MCYHAA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1349358576", oauth_version="1.0"
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "4"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Thu, 04 Oct 2012 13:49:36 GMT
+    body: 
+      string: "null"
+    http_version: 
+  recorded_at: Thu, 04 Oct 2012 13:49:37 GMT
+- request: 
+    method: delete
+    uri: https://knifeparty.localdomain/pulp/api/v2/roles/super-users//users/test_username/
+    body: 
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="73e7n2bhkFS83L0HFwMwMk1HQbeGHS2p1mcShMG5NRY", oauth_signature="stqWZntPKVCQcPiXPAExFPcEeCQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1349358577", oauth_version="1.0"
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "4"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Thu, 04 Oct 2012 13:49:37 GMT
+    body: 
+      string: "null"
+    http_version: 
+  recorded_at: Thu, 04 Oct 2012 13:49:37 GMT

@@ -1,0 +1,36 @@
+--- 
+http_interactions: 
+- request: 
+    method: delete
+    uri: https://knifeparty.localdomain/pulp/api/v2/repositories/1/
+    body: 
+      string: ""
+    headers: 
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="mGcJsXjHIfghfLRMLHmBdMyRlafeR1SMpPUC5M2FK8", oauth_signature="NhKXlwX9y%2Bh4vx%2BMbUMJ6sTe%2BRQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1349602172", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "4"
+      Date: 
+      - Sun, 07 Oct 2012 09:29:32 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+    body: 
+      string: "null"
+    http_version: 
+  recorded_at: Sun, 07 Oct 2012 09:29:32 GMT
+recorded_with: VCR 2.2.5
