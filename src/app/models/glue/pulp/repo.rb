@@ -58,21 +58,6 @@ module Glue::Pulp::Repo
     [organization_label, env_label, product_label, repo_label].compact.join("-").gsub(/[^-\w]/,"_")
   end
 
-  #repo_pkgs = a map with {repo => [package objects to be removed]}
-  def self.delete_repo_packages repo_pkgs
-    Resources::Pulp::Repository.delete_repo_packages(make_pkg_tuples(repo_pkgs))
-  end
-
-  def self.make_pkg_tuples repo_pkgs
-    package_tuples = []
-    repo_pkgs.each do |repo, pkgs|
-      pkgs.each do |pack|
-        package_tuples << [[pack.filename,pack.checksum.to_hash.values.first],[repo.pulp_id]]
-      end
-    end
-    package_tuples
-  end
-
   module InstanceMethods
     def save_repo_orchestration
       case orchestration_for
@@ -398,6 +383,10 @@ module Glue::Pulp::Repo
                                               {:package_ids=>pkg_id_list, :name_blacklist=>blacklist})
   end
 
+  def delete_packages package_id_list
+    Runcible::Extensions::Repository.rpm_remove self.pulp_id,  package_id_list
+  end
+
   def add_errata errata_id_list
     previous = self.environmental_instances.in_environment(self.environment.prior).first
     Runcible::Extensions::Repository.errata_copy(previous.pulp_id, self.pulp_id, {:errata_ids=>errata_id_list})
@@ -409,7 +398,7 @@ module Glue::Pulp::Repo
   end
 
   def delete_errata errata_id_list
-    Resources::Pulp::Repository.delete_errata self.pulp_id,  errata_id_list
+    Runcible::Extensions::Repository.errata_remove self.pulp_id,  errata_id_list
   end
 
   def delete_distribution distribution_id
