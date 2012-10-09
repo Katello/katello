@@ -76,7 +76,7 @@ class GpgKeysController < ApplicationController
     products = @gpg_key.products
 
     repos_hash = {}
-    @gpg_key.repositories.each do |repo|
+    @gpg_key.repositories.uniq_by(&:label).each do |repo|
       repos_hash[repo.environment_product.product.name] ||= []
       repos_hash[repo.environment_product.product.name] << repo
     end
