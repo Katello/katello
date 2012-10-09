@@ -66,6 +66,22 @@ class Repository < ActiveRecord::Base
     joins(:environment_product).where("environment_products.product_id" => product.id)
   end
 
+  def other_repos_with_same_product_and_content
+    list = Repository.in_product(Product.find(self.product.id)).where(:content_id=>self.content_id).all
+    list.delete(self)
+    list
+  end
+
+  def other_repos_with_same_content
+    list = Repository.where(:content_id=>self.content_id).all
+    list.delete(self)
+    list
+  end
+
+  def environment_id
+    self.environment.id
+  end
+
   def yum_gpg_key_url
     # if the repo has a gpg key return a url to access it
     if (self.gpg_key && self.gpg_key.content.present?)
