@@ -88,7 +88,7 @@ describe Resources::ForemanModel do
       before do
         resource.
             should_receive(:show).
-            with(3, nil, klass.header).
+            with({ 'id' => 3 }, klass.header).
             and_return [{ 'a_child_klass' => { 'name' => subject.name, 'id' => 3, 'other' => 'data' } },
                         mock('response')]
       end
@@ -183,7 +183,7 @@ describe Resources::ForemanModel do
             resource.
                 should_receive(:update).
                 any_number_of_times.
-                with(3, { 'a_child_klass' => { 'name' => subject.name, :id_name => subject.id_name } },
+                with({ 'id' => 3, 'a_child_klass' => { 'name' => subject.name, :id_name => subject.id_name } },
                      klass.header).
                 and_return [{ 'a_child_klass' => { 'name' => subject.name, 'id' => 3 } }, mock('response')]
           end
@@ -205,7 +205,7 @@ describe Resources::ForemanModel do
             before do
               resource.
                   should_receive(:destroy).
-                  with(3, nil, klass.header).
+                  with({ 'id' => 3 }, klass.header).
                   and_return [{ 'a_child_klass' => { 'name' => subject.name, 'id' => 3 } }, mock('response')]
             end
 
