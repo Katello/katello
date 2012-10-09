@@ -98,7 +98,7 @@ class Ping
 
     # get package information for katello and its components
     def packages
-      packages = `rpm -qa | egrep "katello|candlepin|pulp|thumbslug|qpid"`
+      packages = `rpm -qa | egrep "katello|candlepin|pulp|thumbslug|qpid|foreman"`
       packages.split("\n").sort
     end
   end

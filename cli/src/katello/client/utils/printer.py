@@ -13,7 +13,6 @@
 # granted to use or replicate Red Hat trademarks that are incorporated
 # in this software or its documentation.
 
-import codecs
 import fcntl
 import termios
 import struct
@@ -31,7 +30,7 @@ class PrinterStrategy(object):
 
     def __init__(self):
         super(PrinterStrategy, self).__init__()
-        self.out = codecs.getwriter('utf-8')(sys.stdout)
+        self.out = sys.stdout
 
     def print_item(self, heading, columns, item):
         """
