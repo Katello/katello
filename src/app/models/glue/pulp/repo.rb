@@ -209,7 +209,7 @@ module Glue::Pulp::Repo
 
     def distributions=attrs
       @repo_distributions = attrs.collect do |dist|
-          Glue::Pulp::Distribution.new(dist)
+          ::Distribution.new(dist)
       end
       @repo_distributions
     end
