@@ -62,6 +62,7 @@ class RepositoryCreateTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def test_create
     assert @repo.save
+    assert !Repository.where(:id=>@repo.id).empty?
   end
 
 end
