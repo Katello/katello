@@ -9,7 +9,7 @@
         - if item.quantity < 0
           = _("Consumed: Unlimited")
         - else
-          = _("Consumed: %d of %d") % [item.consumed, item.quantity]
+          = _("Consumed: %{consumed} of %{total}") % {:consumed => item.consumed, :total => item.quantity}
       %li
         = _("Expires: %s") % item.end_date
   %div{:class=>'column_2'}
