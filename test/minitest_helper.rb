@@ -22,6 +22,16 @@ def configure_vcr
   end
 end
 
+def disable_glue_layers(services=[], models=[])
+  AppConfig.use_cp = false if services.include?('Candlepin')
+  AppConfig.use_pulp = false if services.include?('Pulp')
+  AppConfig.use_elasticsearch = false if services.include?('ElasticSearch')
+
+  models.each do |model|
+    Object.send(:remove_const, model)
+    load "app/models/#{model.downcase}.rb"
+  end
+end
 
 class CustomMiniTestRunner
   class Unit < MiniTest::Unit

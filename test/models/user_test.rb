@@ -10,20 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
-
-
-module TestUserBase
-
-  def setup
-    AppConfig.use_cp = false
-    AppConfig.use_pulp = false
-
-    Object.send(:remove_const, 'User')
-    load 'app/models/user.rb'
-  end
-
-end
+require 'test/models/user_base'
 
 
 class UserCreateTest < MiniTest::Rails::ActiveSupport::TestCase
@@ -63,29 +50,22 @@ end
 
 class UserInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
   include TestUserBase
-  fixtures :roles, :permissions, :resource_types, :roles_users, :users
-
-  def setup
-    super
-    @user = User.find(users(:alfred))
-  end
 
   def test_destroy
-    @user.destroy
-    assert @user.destroyed?
+    @alfred.destroy
+    assert @alfred.destroyed?
   end
 
   def test_before_destroy_remove_self_role
-    role = @user.own_role
-    @user.destroy
+    role = @alfred.own_role
+    @alfred.destroy
     assert_raises ActiveRecord::RecordNotFound do 
       Role.find(role.id)
     end
   end
 
   def test_before_destroy_not_last_superuser
-    admin = User.find(users(:admin))
-    assert !admin.destroy
+    assert !@admin.destroy
   end
 
 end
@@ -93,14 +73,13 @@ end
 
 class UserClassTest < MiniTest::Rails::ActiveSupport::TestCase
   include TestUserBase
-  fixtures :roles, :permissions, :resource_types, :users, :roles_users
 
   def test_authenticate
-    assert User.authenticate!(users(:alfred).username, users(:alfred).username)
+    assert User.authenticate!(@alfred.username, @alfred.username)
   end
 
   def test_authenticate_fails_with_wrong_password
-    assert_nil User.authenticate!(users(:alfred).username, '')
+    assert_nil User.authenticate!(@alfred.username, '')
   end
 
   def test_authenticate_fails_with_non_user
@@ -108,7 +87,7 @@ class UserClassTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_authenticate_fails_with_disabled_user
-    assert_nil User.authenticate!(users(:disabled_user).username, users(:disabled_user).password)
+    assert_nil User.authenticate!(@disabled_user.username, @disabled_user.password)
   end
 
 end

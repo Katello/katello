@@ -112,15 +112,15 @@ class User < ActiveRecord::Base
     if !User.current.nil?
       if u.id == User.current.id
         u.errors.add(:base, _("Cannot delete currently logged user"))
-        false
+        return false
       end
     end
 
     unless u.can_be_deleted?
       u.errors.add(:base, "cannot delete last admin user")
-      false
+      return false
     end
-    true
+    return true
   end
 
   # destroy own role for user
