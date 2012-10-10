@@ -19,7 +19,7 @@ class RepositoryCreateTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def setup
     super
-    User.current = @admin_user
+    User.current = @admin
     @repo = Repository.new(:name => 'repository_test_name', :pulp_id => 'This is not a feal pulp ID', 
                           :environment_product_id => environment_products(:library_fedora).id, :content_id => 'FakeContentID',
                           :label => "repository_test_name_label")
