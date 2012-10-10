@@ -14,7 +14,7 @@ class CreatePermissions < ActiveRecord::Migration
   def self.down
     remove_index :permissions, :role_id
     remove_index :permissions, :resource_type_id
-    remove_index :permissions, :organization_id, :null =>true
+    remove_index :permissions, :organization_id
     drop_table :permissions
   end
 end
