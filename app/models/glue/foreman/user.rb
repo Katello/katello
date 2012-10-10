@@ -13,11 +13,25 @@
 module Glue::Foreman::User
   def self.included(base)
     base.send :include, InstanceMethods
+    base.send :extend, ClassMethods
     base.class_eval do
       before_save :save_foreman_orchestration
       before_destroy :destroy_foreman_orchestration
 
       after_save :foreman_consistency_check
+    end
+  end
+
+  module ClassMethods
+    # @private
+    def disable_foreman_orchestration!(value)
+      raise ArgumentError unless [true, false].include? value
+      @foreman_orchestration_disabled = value
+    end
+
+    # @private
+    def foreman_orchestration_disabled?
+      !!@foreman_orchestration_disabled
     end
   end
 
@@ -76,17 +90,30 @@ module Glue::Foreman::User
 
     # @private
     def disable_foreman_orchestration(&block)
-      @foreman_orchestration_disabled = true
+      original = @disable_foreman_orchestration
+      disable_foreman_orchestration!
       block.call self
     ensure
-      @foreman_orchestration_disabled = false
+      @disable_foreman_orchestration = original
+    end
+
+    # @private
+    # @param [true, false, nil] value when nil is supplied, self.class.foreman_orchestration_disabled? is used
+    def disable_foreman_orchestration!(value)
+      raise ArgumentError unless [true, false, nil].include? value
+      @foreman_orchestration_disabled = value
+    end
+
+    # @private
+    def foreman_orchestration_disabled?
+      if @foreman_orchestration_disabled.nil?
+        self.class.foreman_orchestration_disabled?
+      else
+        @foreman_orchestration_disabled
+      end
     end
 
     private
-
-    def foreman_orchestration_disabled?
-      @foreman_orchestration_disabled
-    end
 
     def foreman_consistency_check
       raise 'user has to have foreman_id' unless foreman_orchestration_disabled? || self.foreman_id
