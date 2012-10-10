@@ -10,41 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'minitest_helper'
+require 'test/models/repository_base'
 require 'test/models/authorization/repository_authorization_test'
-
-
-module RepositoryTestBase
-  def self.included(base)
-    base.class_eval do
-      set_fixture_class :environments => KTEnvironment
-      self.use_instantiated_fixtures = false
-      fixtures :all
-    end
-  end
-
-  def setup
-    User.current = User.find_by_username!('admin')
-    AppConfig.use_cp = false
-    AppConfig.use_pulp = false
-    AppConfig.use_elasticsearch = false
-
-    Object.send(:remove_const, 'Repository')
-    Object.send(:remove_const, 'Package')
-    load 'app/models/repository.rb'
-    load 'app/models/package.rb'
-
-    @fedora_17          = Repository.find(repositories(:fedora_17).id)
-    @fedora_17_dev      = Repository.find(repositories(:fedora_17_dev).id)
-    @fedora             = Product.find(products(:fedora).id)
-    @library            = KTEnvironment.find(environments(:library).id)
-    @dev                = KTEnvironment.find(environments(:dev).id)
-    @acme_corporation   = Organization.find(organizations(:acme_corporation).id)
-    @unassigned_gpg_key = GpgKey.find(gpg_keys(:unassigned_gpg_key).id)
-    @fedora_filter      = Filter.find(filters(:fedora_filter).id)
-  end
-
-end
 
 
 class RepositoryCreateTest < MiniTest::Rails::ActiveSupport::TestCase
@@ -52,6 +19,7 @@ class RepositoryCreateTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def setup
     super
+    User.current = @admin_user
     @repo = Repository.new(:name => 'repository_test_name', :pulp_id => 'This is not a feal pulp ID', 
                           :environment_product_id => environment_products(:library_fedora).id, :content_id => 'FakeContentID',
                           :label => "repository_test_name_label")
@@ -120,7 +88,7 @@ class RepositoryInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
     assert @fedora_17.has_filters?
   end
 
-  def test_has_filters?
+  def test_does_not_have_filters?
     assert !@fedora_17_dev.has_filters?
   end
 
