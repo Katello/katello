@@ -141,13 +141,10 @@ class SystemPackagesController < ApplicationController
       packages = []
     end
 
-    # TODO: update to use pulp v2 task interface...
-    #package_tasks = @system.tasks.where(:task_type => [:package_install, :package_update, :package_remove],
-    #                                    :state => [:waiting, :running])
-    #group_tasks = @system.tasks.where(:task_type => [:package_group_install, :package_group_remove],
-    #                                  :state => [:waiting, :running])
-    package_tasks = []
-    group_tasks = []
+    package_tasks = @system.tasks.where(:task_type => [:package_install, :package_update, :package_remove],
+                                        :state => [:waiting, :running])
+    group_tasks = @system.tasks.where(:task_type => [:package_group_install, :package_group_remove],
+                                      :state => [:waiting, :running])
 
     render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system => @system, :packages => packages,
                                                                        :total_packages => total_packages,
