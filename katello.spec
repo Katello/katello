@@ -353,6 +353,10 @@ a2x -d manpage -f manpage man/katello-service.8.asciidoc
     mv Gemfile.old Gemfile
 %endif
 
+%check
+
+script/check-gettext.rb -m -i
+
 %install
 #prepare dir structure
 install -d -m0755 %{buildroot}%{homedir}

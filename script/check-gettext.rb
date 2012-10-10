@@ -1,7 +1,6 @@
 #!/usr/bin/ruby
 
 require 'optparse'
-require 'pp'
 
 default_options = {:dir => File.expand_path("../..", __FILE__)}
 
@@ -11,7 +10,14 @@ parser = OptionParser.new do |opts|
   opts.banner = <<DESC
 Find (and possibly fix) malformed gettext strings such as:
 
-_("This is a malformed string with \%s within") % interpolated_variable
+_("This is a malformed string with \#{interpolated_variable} within")
+# should be _("This is a malformed string with %s within") % interpolated_variable
+
+_("This is a malformed string with %s, and another %s") % [var1, var2]
+# should be _("This is a malformed string with %{var1}, and another %{var2}") %
+#              {:var1 => var1, :var2 => var2}
+
+It exits with 0 unless some problems found
 DESC
 
   opts.on("-d", "--dir DIR", "Directory with the source code") do |val|
@@ -22,7 +28,7 @@ DESC
     options[:interpolations] = true
   end
 
-  opts.on("-m", "--multivars", "Find malformed interpolations") do
+  opts.on("-m", "--multivars", "Find strings with more anonymous variables") do
     options[:multivars] = true
   end
 
@@ -41,7 +47,7 @@ dir << '/' unless dir.end_with?('/')
 Dir.glob(File.join(dir, "**", "*")).each do |file|
   next if File.directory?(file)
   next if file.include?("/vendor/converge-ui/") # we skip converge-ui for now
-  next if file == __FILE__ # we don't want to check this file :)
+  next if file.end_with?("script/check-gettext.rb") # we don't check this very file
   relative_file = file.sub(/^#{Regexp.escape(dir)}/, "")
   file_content = File.read(file)
   begin
@@ -80,7 +86,6 @@ Dir.glob(File.join(dir, "**", "*")).each do |file|
         file_content.gsub!(malformed, fixed)
       end
     end
-    File.write(file, file_content) if options[:fix]
   end
 
   if options[:multivars]
@@ -116,9 +121,9 @@ Dir.glob(File.join(dir, "**", "*")).each do |file|
           puts "This script is too dummy to solve this, please fix this manually"
         end
       end
-      File.write(file, file_content)
     end
   end
+  File.write(file, file_content) if options[:fix]
 end
 
 malformed_strings_count = malformed_strings.values.flatten.size
