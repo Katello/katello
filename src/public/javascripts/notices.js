@@ -65,7 +65,7 @@ var notices = (function() {
             } else if( level === "message" ) {
                 options["sticky"] = true;
                 options["fadeSpeed"] = 600;        	
-        	} else {
+            } else {
                 options["sticky"] = false;
                 options["fadeSpeed"] = 600;
             }
@@ -73,6 +73,10 @@ var notices = (function() {
             if( noticesParsed['validation_errors'] !== undefined ){
                 var validation_html = generate_list(noticesParsed['validation_errors']);
                 validation_html = '<span>' + i18n.validation_errors + '</span>' + validation_html;
+                // set the options as this is an error
+                options["type"] = "error";
+                options["sticky"] = true;
+                options["fadeSpeed"] = 600;
                 $.jnotify(validation_html, options);
                 $('.jnotify-message ul').css({'list-style': 'disc',
                               'margin-left': '30px'});    
