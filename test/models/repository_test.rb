@@ -24,6 +24,7 @@ module RepositoryTestBase
   end
 
   def setup
+    User.current = User.find_by_username!('admin')
     AppConfig.use_cp = false
     AppConfig.use_pulp = false
     AppConfig.use_elasticsearch = false
@@ -116,7 +117,11 @@ class RepositoryInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_has_filters?
-    assert !@fedora_17.has_filters?
+    assert @fedora_17.has_filters?
+  end
+
+  def test_has_filters?
+    assert !@fedora_17_dev.has_filters?
   end
 
   def test_clones
