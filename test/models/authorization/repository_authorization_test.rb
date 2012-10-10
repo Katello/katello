@@ -89,5 +89,3 @@ class RepositoryAuthorizationNonAuthUserTest < MiniTest::Rails::ActiveSupport::T
   end
 
 end
-
-
