@@ -57,7 +57,7 @@ class RepositoryAuthorizationNonAuthUserTest < MiniTest::Rails::ActiveSupport::T
 
   def setup
     super
-    User.current = users(:alfred)
+    User.current = users(:no_perms_user)
   end
 
   def test_readable
