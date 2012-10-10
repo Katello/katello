@@ -400,12 +400,15 @@ KT.common = (function() {
 
             if( icon.length > 0 ){
                 background_position = icon.css('background-position');
-                background_position = background_position.split(" ");
 
-                shade_position = (background_position[1] === "0" || background_position[1] === "0px") ? ' -16px' : ' 0';
-                background_position = background_position[0] + shade_position;
+                if( background_position !== undefined ){
+                    background_position = background_position.split(" ");
 
-                icon.css({ 'background-position' : background_position });
+                    shade_position = (background_position[1] === "0" || background_position[1] === "0px") ? ' -16px' : ' 0';
+                    background_position = background_position[0] + shade_position;
+
+                    icon.css({ 'background-position' : background_position });
+                }
             }
         },
         link_hover_setup : function(shade){
