@@ -15,14 +15,15 @@ require 'models/repository_test'
 
 class ActivationKeyAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCase
   include RepositoryTestBase
-  include TestUserBase
+  #include ::TestUserBase
 
   def setup
     super
-    User.current = @admin
+    User.current = User.find(users('admin'))
   end
 
   def test_readable
+    debugger
     assert !ActivationKey.readable(@acme_corporation).empty?
   end
 
@@ -37,9 +38,9 @@ class ActivationKeyAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::Test
 end
 
 
-class ActivationKeyAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCase
+class ActivationKeyAuthorizationNoPermsTest < MiniTest::Rails::ActiveSupport::TestCase
   include RepositoryTestBase
-
+  include ::TestUserBase
 
   def setup
     super
