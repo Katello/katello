@@ -13,7 +13,7 @@ class CreateCustomInfo < ActiveRecord::Migration
   end
 
   def self.down
-    remove_index :custom_info
+    remove_index :custom_info, :name => "index_custom_info_on_inf_type_and_inf_id_and_kn_and_v"
     drop_table :custom_info
   end
 end

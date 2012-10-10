@@ -4,6 +4,6 @@ class AddChangesetPromotionDate < ActiveRecord::Migration
   end
 
   def self.down
-    drop_column :changesets, :promotion_date
+    remove_column :changesets, :promotion_date
   end
 end

@@ -9,6 +9,6 @@ class ChangesetErrata < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :changesets_errata
+    drop_table :changeset_errata
   end
 end
