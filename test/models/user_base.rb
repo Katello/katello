@@ -27,7 +27,7 @@ module TestUserBase
   end
 
   def setup
-    @alfred         = User.find(users(:alfred))
+    @no_perms_user         = User.find(users(:no_perms_user))
     @admin          = User.find(users(:admin))
     @disabled_user  = User.find(users(:disabled_user))
   end
