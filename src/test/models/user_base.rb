@@ -9,23 +9,27 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'rubygems'
-require 'minitest/autorun'
-require 'test/integration/pulp/vcr_pulp_setup'
+require 'minitest_helper'
 
 
-class TestPulpPing < MiniTest::Unit::TestCase
+module TestUserBase
+  def self.included(base)
+    base.class_eval do
+      use_instantiated_fixtures = false
+      fixtures :roles, :permissions, :resource_types, :roles_users, :users
+
+      def self.before_suite
+        services  = ['Candlepin', 'Pulp', 'ElasticSearch']
+        models    = ['User']
+        disable_glue_layers(services, models)
+      end
+    end
+  end
+
   def setup
-    @resource = Resources::Pulp::PulpPing
-    VCR.insert_cassette('pulp_ping')
+    @alfred         = User.find(users(:alfred))
+    @admin          = User.find(users(:admin))
+    @disabled_user  = User.find(users(:disabled_user))
   end
 
-  def teardown
-    VCR.eject_cassette
-  end
-
-  def test_ping
-    response = @resource.ping()
-    assert response.length > 0
-  end
 end
