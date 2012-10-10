@@ -11,7 +11,7 @@ parser = OptionParser.new do |opts|
   opts.banner = <<DESC
 Find (and possibly fix) malformed gettext strings such as:
 
-_("This is a malformed string with \#{interpolated_variable} within")
+_("This is a malformed string with \%s within") % interpolated_variable
 DESC
 
   opts.on("-d", "--dir DIR", "Directory with the source code") do |val|
@@ -41,6 +41,7 @@ dir << '/' unless dir.end_with?('/')
 Dir.glob(File.join(dir, "**", "*")).each do |file|
   next if File.directory?(file)
   next if file.include?("/vendor/converge-ui/") # we skip converge-ui for now
+  next if file == __FILE__ # we don't want to check this file :)
   relative_file = file.sub(/^#{Regexp.escape(dir)}/, "")
   file_content = File.read(file)
   begin
@@ -118,4 +119,12 @@ Dir.glob(File.join(dir, "**", "*")).each do |file|
       File.write(file, file_content)
     end
   end
+end
+
+malformed_strings_count = malformed_strings.values.flatten.size
+if malformed_strings_count == 0
+  exit 0
+else
+  STDERR.puts("Found #{malformed_strings_count} malformed strints")
+  exit 1
 end

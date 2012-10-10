@@ -88,7 +88,7 @@ class Api::SyncController < Api::ApiController
 
   def find_provider
     @provider = Provider.find(params[:provider_id])
-    raise HttpErrors::BadRequest, N_("Couldn't find provider '#{params[:provider_id]}'") if @provider.nil?
+    raise HttpErrors::BadRequest, N_("Couldn't find provider '%s'") % params[:provider_id] if @provider.nil?
     @provider
   end
 
