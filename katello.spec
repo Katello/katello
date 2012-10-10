@@ -74,7 +74,8 @@ Requires:       rubygem(chunky_png)
 Requires:       rubygem(tire) >= 0.3.0
 Requires:       rubygem(tire) < 0.4
 Requires:       rubygem(ldap_fluff)
-Requires:       rubygem(apipie-rails)
+Requires:       rubygem(apipie-rails) >= 0.0.12
+Requires:       rubygem(foreman_api) >= 0.0.7
 Requires:       lsof
 
 %if 0%{?rhel} == 6
@@ -136,7 +137,7 @@ BuildRequires:       rubygem(sass)
 BuildRequires:       rubygem(tire) >= 0.3.0
 BuildRequires:       rubygem(tire) < 0.4
 BuildRequires:       rubygem(ldap_fluff)
-BuildRequires:       rubygem(apipie-rails)
+BuildRequires:       rubygem(apipie-rails) >= 0.0.12
 BuildRequires:       rubygem(redcarpet)
 
 
