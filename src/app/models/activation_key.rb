@@ -11,8 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class ActivationKey < ActiveRecord::Base
-  include Authorization
+
   include IndexedModel
+  include Authorization::ActivationKey
 
   index_options :extended_json=>:extended_json, :display_attrs=>[:name, :description, :environment, :template]
 
@@ -34,8 +35,6 @@ class ActivationKey < ActiveRecord::Base
 
   has_many :system_activation_keys, :dependent => :destroy
   has_many :systems, :through => :system_activation_keys
-
-  scope :readable, lambda {|org| ActivationKey.readable?(org) ? where(:organization_id=>org.id) : where("0 = 1")}
 
   after_find :validate_pools
 
@@ -181,34 +180,6 @@ class ActivationKey < ActiveRecord::Base
       end
       raise e
     end
-  end
-
-  # returns list of virtual permission tags for the current user
-  def self.list_tags organization_id
-    [] #don't list tags for sync plans
-  end
-
-  def self.list_verbs global = false
-    {
-      :read_all => _("Read Activation Keys"),
-      :manage_all => _("Administer Activation Keys")
-    }.with_indifferent_access
-  end
-
-  def self.read_verbs
-    [:read_all]
-  end
-
-  def self.no_tag_verbs
-    ActivationKey.list_verbs.keys
-  end
-
-  def self.readable? org
-    User.allowed_to?([:read_all, :manage_all], :activation_keys, nil, org)
-  end
-
-  def self.manageable? org
-    User.allowed_to?([:manage_all], :activation_keys, nil, org)
   end
 
   def as_json(*args)
