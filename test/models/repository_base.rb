@@ -37,7 +37,7 @@ module RepositoryTestBase
     @acme_corporation   = Organization.find(organizations(:acme_corporation).id)
     @unassigned_gpg_key = GpgKey.find(gpg_keys(:unassigned_gpg_key).id)
     @fedora_filter      = Filter.find(filters(:fedora_filter).id)
-    @admin_user         = User.find(users(:admin))
+    @admin              = User.find(users(:admin))
   end
 
 end
