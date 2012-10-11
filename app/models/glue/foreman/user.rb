@@ -91,7 +91,7 @@ module Glue::Foreman::User
     # @private
     def disable_foreman_orchestration(&block)
       original = @disable_foreman_orchestration
-      disable_foreman_orchestration!
+      disable_foreman_orchestration! true
       block.call self
     ensure
       @disable_foreman_orchestration = original
