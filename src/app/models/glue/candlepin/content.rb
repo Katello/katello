@@ -14,6 +14,8 @@
 module Glue::Candlepin::Content
   def self.included(base)
     base.send :include, InstanceMethods
+    # required for GPG key url generation
+    base.send :include, Rails.application.routes.url_helpers
 
     base.class_eval do
       before_save :save_content_orchestration
@@ -43,6 +45,7 @@ module Glue::Candlepin::Content
       true
     end
 
+    # TODO: UGH. This calls methods from Glue::Pulp::Repo.
     def content
       return @content unless @content.nil?
       unless self.content_id.nil?
@@ -62,7 +65,9 @@ module Glue::Candlepin::Content
           :name => self.name,
           :contentUrl => Glue::Pulp::Repos.custom_content_path(self.product, label),
           :gpgUrl => yum_gpg_key_url,
-          :label => custom_content_label
+          :label => custom_content_label,
+          :type => "yum",
+          :vendor => Provider::CUSTOM
         })
       else
         true # required, or orchestration engine will think that update failed.
@@ -72,6 +77,19 @@ module Glue::Candlepin::Content
     def should_update_content?
       (self.gpg_key_id_was == nil && self.gpg_key_id != nil && self.content.gpgUrl == '') ||
           (self.gpg_key_id_was != nil && self.gpg_key_id == nil && self.content.gpgUrl != '')
+    end
+
+    def yum_gpg_key_url
+      # if the repo has a gpg key return a url to access it
+      if (gpg_key && gpg_key.content.present?)
+        host = AppConfig.host
+        host += ":" + AppConfig.port.to_s unless AppConfig.port.blank? || AppConfig.port.to_s == "443"
+        gpg_key_content_api_repository_url(self, :host => host + ENV['RAILS_RELATIVE_URL_ROOT'].to_s, :protocol => 'https')
+      end
+    end
+
+    def custom_content_label
+      "#{organization.label} #{product.label} #{label}".gsub(/\s/,"_")
     end
   end
 
