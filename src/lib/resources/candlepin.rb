@@ -425,9 +425,8 @@ module Resources
           self.delete(path(id), self.default_headers).code.to_i
         end
 
-        def update(attrs)
-          updated = self.put(path(attrs[:id] || attrs['id']), JSON.generate(attrs), self.default_headers).body
-          JSON.parse(updated).with_indifferent_access
+        def update attrs
+          JSON.parse(self.put(path(attrs[:id] || attrs['id']), JSON.generate(attrs), self.default_headers).body).with_indifferent_access
         end
 
         def path(id=nil)
