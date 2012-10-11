@@ -24,6 +24,7 @@ fi
 CMD="$CMD_NOUSER -u $USER -p $PASSWORD"
 KATELLO_CMD=$CMD
 TEST_DIR=$script_dir'/cli_tests/'
+COLUMNS=$(tput cols)
 
 test_cnt=0
 failed_cnt=0
@@ -182,10 +183,11 @@ function summarize_log() {
 }
 
 function msg_status() {
-    printf "%-40s" "$1"
+    let POS="$COLUMNS - 12"
+    printf "%-${POS}s" "$1"
     printf "[ %s ]" "$2"
     if [ $# -gt 2 ]; then
-        printf "\t%s\n" "$3"
+        printf "\n%s\n" "$3"
     else
         printf "\n"
     fi
@@ -307,9 +309,13 @@ function todo() {
   msg_status "$1" "TODO"
 }
 
+function print_separator() {
+    printf "%${COLUMNS}s\n"|tr ' ' '-'
+}
+
 function summarize() {
 
-    echo "----------------------------------------------"
+    print_separator
     if [ $failed_cnt -eq 0 ]; then
         printf "%s tests, all passed\n" "$test_cnt"
     else
@@ -337,9 +343,9 @@ function require() {
 
 function header() {
     current_suite="$(echo "$1" | sed -e 's/\s/_/g' )"
-    echo "----------------------------------------------"
+    print_separator
     echo "Test suite $1"
-    echo "----------------------------------------------"
+    print_separator
 }
 
 [ $NO_BASE -eq 0 ] && . $TEST_DIR/_base_setup.sh
