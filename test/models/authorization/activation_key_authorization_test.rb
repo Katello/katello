@@ -38,11 +38,10 @@ end
 
 class ActivationKeyAuthorizationNoPermsTest < MiniTest::Rails::ActiveSupport::TestCase
   include RepositoryTestBase
-  include ::TestUserBase
 
   def setup
     super
-    User.current = @no_perms_user
+    User.current = User.find(users('no_perms_user'))
   end
 
   def test_readable
