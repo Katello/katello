@@ -22,9 +22,6 @@ module Glue::Pulp::Repos
       before_destroy :destroy_repos_orchestration
 
       has_and_belongs_to_many :filters, :uniq => true, :before_add => :add_filters_orchestration, :before_remove => :remove_filters_orchestration
-
-      # required for GPG key url generation
-      include Rails.application.routes.url_helpers
     end
   end
 
@@ -51,13 +48,13 @@ module Glue::Pulp::Repos
 
   # create content for custom repo
   def create_content(repo)
-    new_content = Glue::Candlepin::ProductContent.new({
+    new_content = ::Candlepin::ProductContent.new({
       :content => {
         :name => repo.name,
-        :contentUrl => Glue::Pulp::Repos.custom_content_path(self, repo.label),
-        :gpgUrl => yum_gpg_key_url(repo),
+        :contentUrl => Glue::Pulp::Repos.custom_content_path(repo.product, repo.label),
+        :gpgUrl => repo.yum_gpg_key_url,
         :type => "yum",
-        :label => custom_content_label(repo),
+        :label => repo.custom_content_label,
         :vendor => Provider::CUSTOM
       },
       :enabled => true
@@ -65,18 +62,6 @@ module Glue::Pulp::Repos
     new_content.create
     add_content new_content
     new_content.content
-  end
-
-  def refresh_content(repo)
-    Resources::Candlepin::Content.update(
-        :id => repo.content_id,
-        :name => repo.name,
-        :contentUrl => Glue::Pulp::Repos.custom_content_path(self, repo.label),
-        :gpgUrl => yum_gpg_key_url(repo),
-        :type => "yum",
-        :label => custom_content_label(repo),
-        :vendor => Provider::CUSTOM
-    )
   end
 
   # repo path for custom product repos (RH repo paths are derived from
@@ -95,10 +80,6 @@ module Glue::Pulp::Repos
     parts << "custom"
     parts += [product.label, repo_label]
     "/" + parts.map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
-  end
-
-  def custom_content_label(repo)
-    "#{self.organization.label} #{self.label} #{repo.label}".gsub(/\s/,"_")
   end
 
   def self.clone_repo_path_for_cp(repo)
@@ -454,40 +435,6 @@ module Glue::Pulp::Repos
       end
     end
 
-    def update_repos
-      return true unless productContent_changed?
-
-      deleted_content.each do |pc|
-        Rails.logger.debug "deleting repository #{pc.content.label}"
-        Repository.destroy_all(:pulp_id => repo_id(pc.content.label))
-      end
-
-      added_content.each do |pc|
-        if !(self.environments.map(&:label).any? {|label| pc.content.label.include?(label)}) || pc.content.label.include?('Library')
-          Rails.logger.debug "creating repository #{repo_id(pc.content.label)}"
-          self.add_repo(pc.content.label, repo_url(pc.content.contentUrl), pc.content.type)
-        else
-          raise "New content was added to environment other than Library. Please use promotion instead."
-        end
-      end
-
-      #
-      # TODO: candlepin currently doesn't support modification of content
-      #
-      #common_content_ids = (old_content_ids & new_content_ids)
-      #changed_content = self.productContent_change[1].select do |new_pc|
-      #  common_content_ids.include?(new_pc.id) && productContent_change[0].any? do |old_pc|
-      #    old_pc.id == new_pc.id && old_pc.content.contentUrl != new_pc.content.contentUrl
-      #  end
-      #end
-      #
-      #changed_content.each do |pc|
-      #  Resources::Pulp::Repository.update(repo_id(pc.content.name), {
-      #    :feed => repo_url(pc.content.contentUrl)
-      #  })
-      #end
-    end
-
     def del_repos
       #destroy all repos in all environments
       Rails.logger.debug "deleting all repositories in product #{self.label}"
@@ -582,17 +529,5 @@ module Glue::Pulp::Repos
         raise Errors::ConflictException.new(_("There is already a repo with the name [ %s ] for product [ %s ]") % [repo_name, self.label])
       end
     end
-
-    private
-
-    def yum_gpg_key_url(repo)
-      # if the repo has a gpg key return a url to access it
-      if (repo.gpg_key && repo.gpg_key.content.present?)
-        host = AppConfig.host
-        host += ":" + AppConfig.port.to_s unless AppConfig.port.blank? || AppConfig.port.to_s == "443"
-        gpg_key_content_api_repository_url(repo, :host => host + ENV['RAILS_RELATIVE_URL_ROOT'].to_s, :protocol => 'https')
-      end
-    end
-
   end
 end
