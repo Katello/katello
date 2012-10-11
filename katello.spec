@@ -64,7 +64,8 @@ Requires:       rubygem(simple-navigation) >= 3.3.4
 Requires:       rubygem(pg)
 Requires:       rubygem(delayed_job) >= 2.1.4
 Requires:       rubygem(acts_as_reportable) >= 1.1.1
-Requires:       rubygem(ruport) >= 1.6.3
+Requires:       rubygem(ruport) >= 1.7.0
+Requires:       rubygem(prawn)
 Requires:       rubygem(daemons) >= 1.1.4
 Requires:       rubygem(uuidtools)
 Requires:       rubygem(thin)
@@ -128,7 +129,8 @@ BuildRequires:       rubygem(simple-navigation) >= 3.3.4
 BuildRequires:       rubygem(pg)
 BuildRequires:       rubygem(delayed_job) >= 2.1.4
 BuildRequires:       rubygem(acts_as_reportable) >= 1.1.1
-BuildRequires:       rubygem(ruport) >= 1.6.3
+BuildRequires:       rubygem(ruport) >= 1.7.0
+BuildRequires:       rubygem(prawn)
 BuildRequires:       rubygem(daemons) >= 1.1.4
 BuildRequires:       rubygem(uuidtools)
 BuildRequires:       rubygem(thin)
