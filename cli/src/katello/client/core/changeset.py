@@ -214,7 +214,7 @@ class UpdateContent(ChangesetAction):
             return prod['id']
 
         def repo_id(self, options):
-            repo = get_repo(self.org_name, options['product'], options['name'], self.env_name)
+            repo = get_repo(self.org_name, options['product'], None, None, options['name'], self.env_name)
             return repo['id']
 
         def template_id(self, options):

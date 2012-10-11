@@ -59,7 +59,8 @@ class List(ErrataAction):
         if not validator.exists('repo_id'):
             validator.require('org')
         if validator.exists('repo'):
-            validator.require(('org', 'product'))
+            validator.require('org')
+            validator.require_at_least_one_of(('product', 'product_label'))
 
     def run(self):
         repo_id   = self.get_option('repo_id')
@@ -68,6 +69,8 @@ class List(ErrataAction):
         env_name  = self.get_option('environment')
         env_id, prod_id = None, None
         prod_name = self.get_option('product')
+        prod_label = self.get_option('product_label')
+        prod_id = self.get_option('product_id')
 
         self.printer.add_column('id')
         self.printer.add_column('title')
@@ -75,13 +78,13 @@ class List(ErrataAction):
 
         if not repo_id:
             if repo_name:
-                repo = get_repo(org_name, prod_name, repo_name, env_name)
+                repo = get_repo(org_name, prod_name, prod_label, prod_id, repo_name, env_name)
                 repo_id = repo["id"]
             else:
                 env = get_environment(org_name, env_name)
                 env_id = env["id"]
                 if prod_name:
-                    product = get_product(org_name, prod_name)
+                    product = get_product(org_name, prod_name, prod_label, prod_id)
                     prod_id = product["id"]
 
 
@@ -184,9 +187,11 @@ class Info(ErrataAction):
         orgName  = self.get_option('org')
         envName  = self.get_option('environment')
         prodName = self.get_option('product')
+        prodLabel = self.get_option('product_label')
+        prodId   = self.get_option('product_id')
 
         if not repoId:
-            repo = get_repo(orgName, prodName, repoName, envName)
+            repo = get_repo(orgName, prodName, prodLabel, prodId, repoName, envName)
             repoId = repo["id"]
 
         pack = self.api.errata(errId, repoId)

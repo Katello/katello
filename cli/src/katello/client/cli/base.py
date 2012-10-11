@@ -34,11 +34,15 @@ _log = getLogger(__name__)
 def opt_parser_add_product(parser, required=None):
     """ Add to the instance of optparse option --product"""
     if required:
-        required = _(" (required)")
+        required = _(" (require product, product_label or product_id)")
     else:
         required = ''
+
     parser.add_option('--product', dest='product',
                       help=_('product name e.g.: "Red Hat Enterprise Linux Server"%s' % required))
+
+    parser.add_option('--product_label', dest='product_label', help=_('product label e.g.: "Red_Hat_Enterprise_Linux_Server"%s' % required))
+    parser.add_option('--product_id', dest='product_id', help=_('product id e.g.: "12361467"%s' % required))
 
 
 def opt_parser_add_org(parser, required=None):

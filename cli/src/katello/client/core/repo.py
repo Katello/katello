@@ -96,6 +96,9 @@ class SingleRepoAction(RepoAction):
         repoName = self.get_option('name')
         orgName  = self.get_option('org')
         prodName = self.get_option('product')
+        prodLabel = self.get_option('product_label')
+        prodId   = self.get_option('product_id')
+
         if self.select_by_env:
             envName = self.get_option('environment')
         else:
@@ -104,10 +107,9 @@ class SingleRepoAction(RepoAction):
         if repoId:
             repo = self.api.repo(repoId)
         else:
-            repo = get_repo(orgName, prodName, repoName, envName, includeDisabled)
+            repo = get_repo(orgName, prodName, prodLabel, prodId, repoName, envName, includeDisabled)
 
         return repo
-
 
 
 # actions --------------------------------------------------------------------
@@ -134,18 +136,21 @@ class Create(RepoAction):
             help=_("Don't assign a GPG key to the repository."))
 
     def check_options(self, validator):
-        validator.require(('name', 'org', 'product', 'url'))
+        validator.require(('name', 'org', 'url'))
+        validator.require_at_least_one_of(('product', 'product_label', 'product_id'))
 
     def run(self):
         name     = self.get_option('name')
         label    = self.get_option('label')
         url      = self.get_option('url')
         prodName = self.get_option('product')
+        prodLabel = self.get_option('product_label')
+        prodId   = self.get_option('product_id')
         orgName  = self.get_option('org')
         gpgkey   = self.get_option('gpgkey')
         nogpgkey   = self.get_option('nogpgkey')
 
-        product = get_product(orgName, prodName)
+        product = get_product(orgName, prodName, prodLabel)
         self.api.create(orgName, product["id"], name, label, url, gpgkey, nogpgkey)
         print _("Successfully created repository [ %s ]") % name
 
@@ -169,7 +174,8 @@ class Discovery(RepoAction):
         opt_parser_add_product(parser, required=1)
 
     def check_options(self, validator):
-        validator.require(('name', 'org', 'product', 'url'))
+        validator.require(('name', 'org', 'url'))
+        validator.require_at_least_one_of(('product', 'product_label', 'product_id'))
 
     def run(self):
         name     = self.get_option('name')
@@ -177,13 +183,15 @@ class Discovery(RepoAction):
         url      = self.get_option('url')
         assumeyes = self.get_option('assumeyes')
         prodName = self.get_option('product')
+        prodLabel = self.get_option('product_label')
+        prodId   = self.get_option('product_id')
         orgName  = self.get_option('org')
 
         repourls = self.discover_repositories(orgName, url)
         self.printer.set_header(_("Repository Urls discovered @ [%s]" % url))
         selectedurls = self.select_repositories(repourls, assumeyes)
 
-        product = get_product(orgName, prodName)
+        product = get_product(orgName, prodName, prodLabel)
         self.create_repositories(orgName, product["id"], name, label, selectedurls)
 
         return os.EX_OK
@@ -426,6 +434,8 @@ class List(RepoAction):
         orgName = self.get_option('org')
         envName = self.get_option('environment')
         prodName = self.get_option('product')
+        prodLabel = self.get_option('product_label')
+        prodId = self.get_option('product_id')
         listDisabled = self.has_option('disabled')
 
         self.printer.add_column('id')
@@ -436,7 +446,7 @@ class List(RepoAction):
 
         if prodName and envName:
             env  = get_environment(orgName, envName)
-            prod = get_product(orgName, prodName)
+            prod = get_product(orgName, prodName, prodLabel, prodId)
 
             self.printer.set_header(_("Repo List For Org %s Environment %s Product %s") %
                 (orgName, env["name"], prodName))
@@ -444,7 +454,7 @@ class List(RepoAction):
             self.printer.print_items(repos)
 
         elif prodName:
-            prod = get_product(orgName, prodName)
+            prod = get_product(orgName, prodName, prodLabel, prodId)
             self.printer.set_header(_("Repo List for Product %s in Org %s ") %
                 (prodName, orgName))
             repos = self.api.repos_by_product(orgName, prod["id"], listDisabled)
