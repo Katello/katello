@@ -735,10 +735,8 @@ Src::Application.routes.draw do
     match '/custom_info/:informable_type/:informable_id' => 'custom_info#create', :via => :post
     match '/custom_info/:informable_type/:informable_id' => 'custom_info#index', :via => :get
     match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#show', :via => :get
-    match '/custom_info/:informable_type/:informable_id/:keyname/:current_value' => 'custom_info#update', :via => :put
-    match '/custom_info/:informable_type/:informable_id/:keyname/:value' => 'custom_info#destroy', :via => :delete
+    match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#update', :via => :put
     match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#destroy', :via => :delete
-    match '/custom_info/:informable_type/:informable_id' => 'custom_info#destroy', :via => :delete
 
     match '*a', :to => 'errors#render_404'
   # end '/api' namespace
