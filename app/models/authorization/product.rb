@@ -36,16 +36,6 @@ module Authorization::Product
       def self.any_readable?(org)
         ::Provider.any_readable?(org)
       end
-
-
-      #def self.authorized_items org, verbs, resource = :providers
-      #   raise "scope requires an organization" if org.nil?
-      #   if User.allowed_all_tags?(verbs, resource, org)
-      #     joins(:provider).where('providers.organization_id' => org)
-      #   else
-      #     joins(:provider).where("providers.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
-      #   end
-      #end
     end
   end
 
