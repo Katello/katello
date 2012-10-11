@@ -15,7 +15,6 @@ require 'models/repository_test'
 
 class ActivationKeyAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCase
   include RepositoryTestBase
-  #include ::TestUserBase
 
   def setup
     super
@@ -23,7 +22,6 @@ class ActivationKeyAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::Test
   end
 
   def test_readable
-    debugger
     assert !ActivationKey.readable(@acme_corporation).empty?
   end
 
