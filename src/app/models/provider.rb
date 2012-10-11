@@ -14,7 +14,6 @@ class Provider < ActiveRecord::Base
   include Glue::Provider
   include Glue
   include AsyncOrchestration
-  include Authorization
   include KatelloUrlHelper
   include IndexedModel
 

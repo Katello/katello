@@ -21,7 +21,7 @@ class Product < ActiveRecord::Base
   include Glue::Candlepin::Product if AppConfig.use_cp
   include Glue::Pulp::Repos if AppConfig.use_pulp
   include Glue if AppConfig.use_cp || AppConfig.use_pulp
-  include Authorization
+  include Authorization::Product
   include AsyncOrchestration
   include IndexedModel
   include Katello::LabelFromName
@@ -175,33 +175,6 @@ class Product < ActiveRecord::Base
 
   end
 
-  #Permissions
-  scope :all_readable, lambda {|org| ::Provider.readable(org).joins(:provider)}
-  scope :readable, lambda{|org| all_readable(org).with_enabled_repos_only(org.library)}
-  scope :all_editable, lambda {|org| ::Provider.editable(org).joins(:provider)}
-  scope :editable, lambda {|org| all_editable(org).with_enabled_repos_only(org.library)}
-  scope :syncable, lambda {|org| sync_items(org).with_enabled_repos_only(org.library)}
-
-  def self.any_readable?(org)
-    ::Provider.any_readable?(org)
-  end
-
-  def readable?
-    Product.all_readable(self.organization).where(:id => id).count > 0
-  end
-
-  def syncable?
-    Product.syncable(self.organization).where(:id => id).count > 0
-  end
-
-  def editable?
-    Product.all_editable(self.organization).where(:id => id).count > 0
-  end
-
-  def update_related_index
-      self.provider.update_index if self.provider.respond_to? :update_index
-  end
-
   def as_json(*args)
     ret = super
     ret["gpg_key_name"] = gpg_key ? gpg_key.name : ""
@@ -209,23 +182,16 @@ class Product < ActiveRecord::Base
     ret
   end
 
-  protected
-
-  def self.authorized_items org, verbs, resource = :providers
-     raise "scope requires an organization" if org.nil?
-     if User.allowed_all_tags?(verbs, resource, org)
-       joins(:provider).where('providers.organization_id' => org)
-     else
-       joins(:provider).where("providers.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
-     end
+  def update_related_index
+      self.provider.update_index if self.provider.respond_to? :update_index
   end
 
+  protected
 
   def self.sync_items org
     org.syncable? ? (joins(:provider).where('providers.organization_id' => org)) : where("0=1")
   end
 
-  READ_PERM_VERBS = [:read, :create, :update, :delete]
 
   def self.with_repos env, enabled_only
     query = EnvironmentProduct.joins(:repositories).where(
