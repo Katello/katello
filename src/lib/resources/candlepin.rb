@@ -10,6 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'util/data'
+
 module Resources
 
   module Candlepin
@@ -146,7 +148,7 @@ module Resources
 
         def entitlements uuid
           response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'entitlements'), self.default_headers).body
-          JSON.parse(response).collect { |e| e.with_indifferent_access }
+          Util::Data::array_with_indifferent_access JSON.parse(response)
         end
 
         def consume_entitlement uuid, pool, quantity = nil
@@ -172,7 +174,7 @@ module Resources
 
         def guests uuid
           response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'guests'), self.default_headers).body
-          JSON.parse(response).map { |e| e.with_indifferent_access }
+          Util::Data::array_with_indifferent_access JSON.parse(response)
         rescue => e
           return []
         end
@@ -200,7 +202,7 @@ module Resources
         def events uuid
           response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'events'), self.default_headers).body
           unless response.empty?
-            JSON.parse(response).collect {|s| s.with_indifferent_access}
+            Util::Data::array_with_indifferent_access JSON.parse(response)
           else
             return []
           end
@@ -272,7 +274,7 @@ module Resources
 
         def imports organization_name
           imports_json = self.get(join_path(path(organization_name), 'imports'), self.default_headers)
-          JSON.parse(imports_json).collect {|s| s.with_indifferent_access}
+          Util::Data::array_with_indifferent_access JSON.parse(imports_json)
         end
 
         def pools key, filter = {}
@@ -281,12 +283,12 @@ module Resources
           else
             jsonStr = self.get(join_path('candlepin', 'pools') + hash_to_query(filter), self.default_headers).body
           end
-          JSON.parse(jsonStr).collect {|p| p.with_indifferent_access }
+          Util::Data::array_with_indifferent_access JSON.parse(jsonStr)
         end
 
         def statistics key
           jsonStr = self.get(join_path(path(key), 'statistics'), self.default_headers).body
-          JSON.parse(jsonStr).collect {|p| p.with_indifferent_access }
+          Util::Data::array_with_indifferent_access JSON.parse(jsonStr)
         end
 
         def generate_ueber_cert key
@@ -308,7 +310,7 @@ module Resources
 
         def events key
           response = self.get(join_path(path(key), 'events'), self.default_headers).body
-          JSON.parse(response).collect { |e| e.with_indifferent_access }
+          Util::Data::array_with_indifferent_access JSON.parse(response)
         end
 
         def service_levels uuid
@@ -379,7 +381,7 @@ module Resources
       class << self
         def find pool_id
           pool_json = self.get(path(pool_id), self.default_headers).body
-          JSON.parse(pool_json).with_indifferent_access
+          Util::Data::array_with_indifferent_access JSON.parse(pool_json)
         end
 
         def get_for_owner owner_key
@@ -506,7 +508,7 @@ module Resources
           products_json = super(path(id), self.default_headers).body
           products = JSON.parse(products_json)
           products = [products] unless id.nil?
-          products.collect {|p| p.with_indifferent_access }
+          Util::Data::array_with_indifferent_access products
         end
 
 
