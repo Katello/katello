@@ -23,7 +23,7 @@ end
 
 class GpgKey < ActiveRecord::Base
   include IndexedModel
-
+  include Authorization::GpgKey
 
   index_options :extended_json=>:extended_index_attrs,
                 :display_attrs=>[:name, :content]
@@ -44,39 +44,6 @@ class GpgKey < ActiveRecord::Base
   validates_presence_of :organization
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
 
-
-  #Permission items
-  scope :readable, lambda { |org|
-     if org.readable? || org.gpg_keys_manageable? || ::Provider.any_readable?(org)
-        where(:organization_id => org.id)
-     else
-       where("0 = 1")
-     end
-  }
-
-  scope :manageable, lambda { |org|
-     if org.gpg_keys_manageable?
-        where(:organization_id => org.id)
-     else
-       where("0 = 1")
-     end
-  }
-
-  def  readable?
-    GpgKey.any_readable?(organization)
-  end
-
-  def manageable?
-    organization.gpg_keys_manageable?
-  end
-
-  def self.createable? organization
-    organization.gpg_keys_manageable?
-  end
-  
-  def self.any_readable? organization
-    organization.readable? || organization.gpg_keys_manageable? || ::Provider.any_readable?(organization)
-  end
 
   def extended_index_attrs
     {:name_sort=>name.downcase}
