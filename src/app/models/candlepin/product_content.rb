@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2012 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -11,22 +11,20 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 
-
-class Glue::Candlepin::ProductContent
+class Candlepin::ProductContent
   attr_accessor :content, :enabled
+
   def initialize(params = {})
     @enabled = params[:enabled] || params["enabled"]
-    @content = Glue::Candlepin::Content.new(params[:content] || params["content"])
+    @content = ::Candlepin::Content.new(params[:content] || params["content"])
   end
 
   def create
-    created = Resources::Candlepin::Content.create @content
-    @content.id = created[:id]
+    @content.create
   end
 
   def destroy
-    Resources::Candlepin::Content.destroy(@content.id)
+    @content.destroy
   end
-
 end
 
