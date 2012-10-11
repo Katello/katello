@@ -11,7 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Notice < ActiveRecord::Base
-  include Authorization
   include IndexedModel
 
 
@@ -65,16 +64,6 @@ class Notice < ActiveRecord::Base
 
   def to_s
     "#{level}: #{text}"
-  end
-
-  def check_permissions operation
-    logger.debug "CHECKING #{operation}"
-    # anybody can create notices
-    return true if operation == :create
-    if operation == :update or operation == :destroy
-      # TODO: who is a real owner of a notice?
-    end
-    false
   end
 
   private
