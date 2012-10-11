@@ -31,17 +31,11 @@ class CustomInfoAPI(KatelloAPI):
             path = "/api/custom_info/%s/%s" % (informable_type, informable_id)
         return self.server.GET(path)[1]
 
-    def update_custom_info(self, informable_type, informable_id, keyname, current_value, value):
-        data = { 'value': value }
-        path = "/api/custom_info/%s/%s/%s/%s" % (informable_type, informable_id, keyname, current_value)
+    def update_custom_info(self, informable_type, informable_id, keyname, new_value):
+        data = { 'value': new_value }
+        path = "/api/custom_info/%s/%s/%s" % (informable_type, informable_id, keyname)
         return self.server.PUT(path, data)[1]
 
-    def remove_custom_info(self, informable_type, informable_id, keyname = None, value = None):
-        if keyname:
-            if value:
-                path = "/api/custom_info/%s/%s/%s/%s" % (informable_type, informable_id, keyname, value)
-            else:
-                path = "/api/custom_info/%s/%s/%s" % (informable_type, informable_id, keyname)
-        else:
-            path = "/api/custom_info/%s/%s" % (informable_type, informable_id)
+    def remove_custom_info(self, informable_type, informable_id, keyname):
+        path = "/api/custom_info/%s/%s/%s" % (informable_type, informable_id, keyname)
         return self.server.DELETE(path)[1]

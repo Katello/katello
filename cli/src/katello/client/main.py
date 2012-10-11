@@ -201,7 +201,6 @@ def setup_admin(katello_cmd):
         system_cmd.add_command('add_to_groups', system.AddSystemGroups())
         system_cmd.add_command('remove_from_groups', system.RemoveSystemGroups())
     system_cmd.add_command('add_custom_info', system_custom_info.AddCustomInfo())
-    system_cmd.add_command('view_custom_info', system_custom_info.ViewCustomInfo())
     system_cmd.add_command('update_custom_info', system_custom_info.UpdateCustomInfo())
     system_cmd.add_command('remove_custom_info', system_custom_info.RemoveCustomInfo())
     katello_cmd.add_command('system', system_cmd)

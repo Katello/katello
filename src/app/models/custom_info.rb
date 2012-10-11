@@ -18,8 +18,7 @@ class CustomInfo < ActiveRecord::Base
   belongs_to :informable, :polymorphic => true
 
   validates :keyname, :presence => true
-  validates :value, :presence => true
-  validates_uniqueness_of :keyname, :scope => [:value, :informable_type, :informable_id], :message => "already exists for this object"
+  validates_uniqueness_of :keyname, :scope => [:informable_type, :informable_id], :message => "already exists for this object"
 
   validates :informable_id, :presence => true
   validates :informable_type, :presence => true
