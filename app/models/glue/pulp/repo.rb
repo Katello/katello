@@ -251,18 +251,6 @@ module Glue::Pulp::Repo
     true
   end
 
-  def del_content
-    return true unless self.content_id
-    if other_repos_with_same_product_and_content.empty?
-      self.product.remove_content_by_id self.content_id
-      if other_repos_with_same_content.empty? && !self.product.provider.redhat_provider?
-        Resources::Candlepin::Content.destroy(self.content_id)
-      end
-    end
-
-    true
-  end
-
   def other_repos_with_same_product_and_content
     product_group_id = Glue::Pulp::Repos.product_groupid(self.product_id)
     content_group_id = Glue::Pulp::Repos.content_groupid(self.content_id)
@@ -275,8 +263,7 @@ module Glue::Pulp::Repo
   end
 
   def destroy_repo_orchestration
-    pre_queue.create(:name => "remove product content : #{self.name}", :priority => 2, :action => [self, :del_content])
-    pre_queue.create(:name => "delete pulp repo : #{self.name}",       :priority => 3, :action => [self, :destroy_repo])
+    pre_queue.create(:name => "delete pulp repo : #{self.name}", :priority => 3, :action => [self, :destroy_repo])
   end
 
   def get_params
@@ -521,14 +508,9 @@ module Glue::Pulp::Repo
   def content_id
     get_groupid_param 'content'
   end
+
   def organization
     Organization.find(self.organization_id)
-  end
-
-  def content
-    if not self.content_id.nil?
-      Glue::Candlepin::Content.new(::Resources::Candlepin::Content.get(self.content_id))
-    end
   end
 
   def set_filters filter_ids
