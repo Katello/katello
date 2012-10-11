@@ -307,6 +307,9 @@ testing.
 
 %build
 
+#check for malformed gettext strings
+script/check-gettext.rb -m -i
+
 #copy converge-ui
 cp -R /usr/share/converge-ui-devel/* ./vendor/converge-ui
 rm ./public/fonts
@@ -352,10 +355,6 @@ a2x -d manpage -f manpage man/katello-service.8.asciidoc
     rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=apipie --trace
     mv Gemfile.old Gemfile
 %endif
-
-%check
-
-script/check-gettext.rb -m -i
 
 %install
 #prepare dir structure
