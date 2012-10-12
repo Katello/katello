@@ -573,6 +573,9 @@ Src::Application.routes.draw do
         get :apply, :on => :collection, :action => :apply_to_all_systems
       end
       match '/system_info_keys/:keyname' => 'organization_system_info_keys#destroy', :via => :delete
+
+      resources :content_views
+      resources :content_view_definitions
     end
 
     resources :changesets, :only => [:show, :update, :destroy] do

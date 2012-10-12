@@ -96,6 +96,16 @@ def get_product(orgName, prodName=None, prodLabel=None, prodId=None):
     return products[0]
 
 
+def get_content_view(orgName, viewName):
+    cv_api = ContentViewAPI()
+
+    view = cv_api.content_view_by_name(orgName, cvName)
+    if view == None:
+        raise ApiDataError(_("Could not find content view [ %s ] within organization [ %s ]") %
+            (viewName, orgName))
+    return view
+
+
 def get_repo(orgName, prodName, prodLabel, prodId, repoName, envName=None, includeDisabled=False):
     repo_api = RepoAPI()
 
