@@ -29,8 +29,18 @@ class System < ActiveRecord::Base
   after_rollback :rollback_on_create, :on => :create
 
   index_options :extended_json=>:extended_index_attrs,
-                :json=>{:only=> [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id]},
-                :display_attrs=>[:name, :description, :id, :uuid, :created_at, :lastCheckin, :system_group, :installed_products, "custom_info.KEYNAME"]
+                :json=>{:only=> [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id, :memory, :sockets]},
+                :display_attrs => [:name,
+                                   :description,
+                                   :id,
+                                   :uuid,
+                                   :created_at,
+                                   :lastCheckin,
+                                   :system_group,
+                                   :installed_products,
+                                   "custom_info.KEYNAME",
+                                   :ram,
+                                   :sockets]
 
   dynamic_templates = [
       {
@@ -60,6 +70,8 @@ class System < ActiveRecord::Base
     indexes :lastCheckin, :type=>'date'
     indexes :name_autocomplete, :type=>'string', :analyzer=>'autcomplete_name_analyzer'
     indexes :installed_products, :type=>'string', :analyzer=>:kt_name_analyzer
+    indexes :ram, :type => 'integer'
+    indexes :sockets, :type => 'integer'
     indexes :facts, :path=>"just_name" do
     end
     indexes :custom_info, :path => "just_name" do
@@ -290,6 +302,8 @@ class System < ActiveRecord::Base
      :system_group=>self.system_groups.collect{|g| g.name},
      :system_group_ids=>self.system_group_ids,
      :installed_products=>collect_installed_product_names,
+     :ram => self.memory,
+     :sockets => self.sockets,
      :custom_info=>collect_custom_info
     }
   end
