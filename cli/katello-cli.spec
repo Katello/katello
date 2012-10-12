@@ -21,7 +21,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.1.9
+Version:       1.1.10
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 Requires:      %{base_name}-cli-common
@@ -150,6 +150,30 @@ popd
 make -C po clean
 
 %changelog
+* Fri Oct 12 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.10-1
+- Merge pull request #846 from lzap/copyright-update
+- updating copyrights
+- katello-cli-headpin != katello-headpin-cli
+- 864372 - CLI - some keys does not work in "shell"
+- fixing 'ta' translations
+- merge katello.cli translation from CFSE
+- Merge pull request #808 from tstrachota/Bug_845198_locale_cannot_be_switched
+- 845198 - fixed getlocale locale.getlocale was used with wrong parameter.
+  LC_ALL is not allowed. See:
+  http://docs.python.org/library/locale.html#locale.getlocale
+- removing unused import in cli utils printer.py (komidore64@gmail.com)
+- Merge pull request #803 from komidore64/org-list-fail
+- Merge pull request #797 from xsuchy/pull-req-raise
+- 863461 - Headpin Cli automation : Failure to list the org updated with
+  special chars other than ascii chars (komidore64@gmail.com)
+- 858960 - always set the utf-8 writer for stdout and stderr
+- do not mask original error by raise in exception
+- unify string "Couldn't find user role"
+- unify string "Couldn't find user"
+- unify string "Couldn't find template"
+- 857576 - Fixing variable name in filter code
+- 857576 - Fixed package code indentation
+
 * Thu Sep 27 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.9-1
 - convert string to unicode (msuchy@redhat.com)
 - 857576 - Added update filter test (davidd@scimedsolutions.com)
