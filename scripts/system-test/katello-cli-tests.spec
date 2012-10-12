@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.1.6
+Version:       1.1.7
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
@@ -51,6 +51,14 @@ cp -Rp cli_tests/ cli-system-test helpers *zip RPM-GPG-KEY* $RPM_BUILD_ROOT%{hom
 
 
 %changelog
+* Fri Oct 12 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.7-1
+- cli test - adding new test for template deletion
+- cli tests - addressing error when getting POOL_ID
+- cli tests - determine terminal size and use it
+- cli tests - adding -t option to exit on failure
+- Merge pull request #764 from xsuchy/pull-req-cli2
+- fix test according to recent change in printer.py
+
 * Thu Sep 27 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.6-1
 - demote repo before promotion (msuchy@redhat.com)
 
