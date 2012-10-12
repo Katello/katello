@@ -481,7 +481,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/lib/*.rb
 %dir %{homedir}/lib/glue
 %{homedir}/lib/glue/*.rb
-%{homedir}/lib/monkeys/*.rb
+%{homedir}/lib/monkeys
 %{homedir}/lib/navigation
 %{homedir}/lib/notifications
 %{homedir}/lib/resources/cdn.rb
