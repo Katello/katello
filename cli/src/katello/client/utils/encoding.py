@@ -17,6 +17,7 @@ import collections
 import codecs
 import sys
 
+stdout_origin = sys.stdout
 
 def encode_stream(stream, encoding='utf-8'):
     """
