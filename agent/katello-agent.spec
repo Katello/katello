@@ -1,5 +1,5 @@
 Name: katello-agent
-Version: 1.1.2
+Version: 1.1.3
 Release: 1%{?dist}
 Summary: The Katello Agent
 Group:   Development/Languages
@@ -44,6 +44,9 @@ rm -rf %{buildroot}
 %doc LICENSE
 
 %changelog
+* Fri Oct 12 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.3-1
+- 
+
 * Fri Aug 24 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.2-1
 - 845643 - consistently use rpm macros (msuchy@redhat.com)
 
