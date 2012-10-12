@@ -12,7 +12,6 @@
 
 
 class FilterPackage < ActiveRecord::Base
-  include Authorization
 
   belongs_to :filter, :inverse_of => :packages
 

@@ -30,7 +30,6 @@ class ChangesetErratumValidator < ActiveModel::Validator
 end
 
 class ChangesetErratum < ActiveRecord::Base
-  include Authorization
 
   belongs_to :changeset, :inverse_of => :errata
   belongs_to :product

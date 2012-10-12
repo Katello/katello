@@ -11,7 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class LoginCredential < ActiveRecord::Base
-  include Authorization
 
   belongs_to :provider
   validates_presence_of :password

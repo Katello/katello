@@ -34,7 +34,6 @@ class PackageValidator < ActiveModel::Validator
 end
 
 class SystemTemplatePackage < ActiveRecord::Base
-  include Authorization
 
   belongs_to :system_template, :inverse_of => :packages
   validates_with PackageUniquenessValidator
