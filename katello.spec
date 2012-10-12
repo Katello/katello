@@ -479,6 +479,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/db/seeds.rb
 %{homedir}/integration_spec
 %{homedir}/lib/*.rb
+%dir %{homedir}/lib/glue
 %{homedir}/lib/glue/*.rb
 %{homedir}/lib/monkeys/*.rb
 %{homedir}/lib/navigation
