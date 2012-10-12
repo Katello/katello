@@ -91,6 +91,9 @@ class KTEnvironment < ActiveRecord::Base
 
   has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED}, :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
 
+  has_many :environment_content_views, :foreign_key => :environment_id
+  has_many :content_views, :through => :environment_content_views
+
   scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
 
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
