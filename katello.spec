@@ -484,6 +484,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/lib/monkeys
 %{homedir}/lib/navigation
 %{homedir}/lib/notifications
+%dir %{homedir}/lib/resources
 %{homedir}/lib/resources/cdn.rb
 %{homedir}/lib/tasks
 %exclude %{homedir}/lib/tasks/rcov.rake
