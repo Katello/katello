@@ -513,6 +513,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %files common
 %doc README LICENSE
 %{_sbindir}/service-wait
+%dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 %config(noreplace) %{_sysconfdir}/%{name}/thin.yml
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
