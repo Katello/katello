@@ -466,6 +466,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/app/helpers
 %{homedir}/app/mailers
 %{homedir}/app/models/*.rb
+%{homedir}/app/models/candlepin
 %{homedir}/app/stylesheets
 %{homedir}/app/views
 %{homedir}/autotest
