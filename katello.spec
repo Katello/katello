@@ -462,9 +462,11 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %attr(600, katello, katello)
 %{_bindir}/katello-*
 %ghost %attr(600, katello, katello) %{_sysconfdir}/%{name}/secret_token
+%dir %{homedir}/app
 %{homedir}/app/controllers
 %{homedir}/app/helpers
 %{homedir}/app/mailers
+%dir %{homedir}/app/models
 %{homedir}/app/models/*.rb
 %{homedir}/app/models/candlepin
 %{homedir}/app/stylesheets
@@ -477,10 +479,12 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/db/seeds.rb
 %{homedir}/integration_spec
 %{homedir}/lib/*.rb
+%dir %{homedir}/lib/glue
 %{homedir}/lib/glue/*.rb
-%{homedir}/lib/monkeys/*.rb
+%{homedir}/lib/monkeys
 %{homedir}/lib/navigation
 %{homedir}/lib/notifications
+%dir %{homedir}/lib/resources
 %{homedir}/lib/resources/cdn.rb
 %{homedir}/lib/tasks
 %exclude %{homedir}/lib/tasks/rcov.rake
@@ -509,6 +513,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %files common
 %doc README LICENSE
 %{_sbindir}/service-wait
+%dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 %config(noreplace) %{_sysconfdir}/%{name}/thin.yml
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
@@ -522,11 +527,14 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{_initddir}/%{name}-jobs
 %{_sysconfdir}/bash_completion.d/%{name}
 %{homedir}/log
+%dir %{homedir}/db
 %{homedir}/db/schema.rb
+%dir %{homedir}/lib
 %{homedir}/lib/util
 %{homedir}/script/service-wait
 
 %defattr(-, katello, katello)
+%dir %{homedir}
 %attr(750, katello, katello) %{_localstatedir}/log/%{name}
 %{datadir}
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production.log
@@ -552,10 +560,11 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %files headpin
 %attr(600, katello, katello)
 %{_bindir}/katello-*
+%dir %{homedir}/app
 %{homedir}/app/controllers
 %{homedir}/app/helpers
 %{homedir}/app/mailers
-%{homedir}/app/models/
+%{homedir}/app/models
 %exclude %{homedir}/app/models/glue/*
 %{homedir}/app/stylesheets
 %{homedir}/app/views
