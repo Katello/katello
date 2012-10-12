@@ -69,6 +69,7 @@ class Pool < ActiveRecord::Base
           :begin        => {:type=>'date'},
           :end          => {:type=>'date'},
           :sockets      => {:type=>'long'},
+          :ram          => {:type=>'long'},
           :sla          => {:type=>'string'},
           :support_level=> {:type=>'string', :index=>:not_analyzed},
           :org          => {:type=>'string', :index=>:not_analyzed},
