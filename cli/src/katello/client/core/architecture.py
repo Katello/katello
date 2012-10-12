@@ -63,7 +63,7 @@ class Create(ArchitectureAction):
     def run(self):
         arch = self.api.create(self.get_option_dict("name"))
         test_foreman_record(arch, 'architecture',
-            _("Architecture [ %s ] created.") % arch["architecture"]["name"],
+            _("Architecture [ %s ] created.") % self.get_option_dict("name"),
             _("Could not create Architecture [ %s ].") % self.get_option_dict("name")
         )
 
@@ -77,8 +77,7 @@ class Update(ArchitectureAction):
         parser.add_option('--new_name', dest='name', help=_("new name for the architecture"))
 
     def check_options(self, validator):
-        validator.require('old_name')
-        validator.require_one_of(('name',))
+        validator.require(('old_name', 'name'))
 
     def run(self):
         architecture = self.api.update(self.get_option("old_name"), self.get_option_dict("name"))
@@ -102,7 +101,7 @@ class Delete(ArchitectureAction):
     def run(self):
         self.api.destroy(self.get_option("name"))
         print _("Architecture [ %s ] deleted.") % self.get_option("name")
-
+        return os.EX_OK
 
 class Show(ArchitectureAction):
 
@@ -123,7 +122,7 @@ class Show(ArchitectureAction):
 
         self.printer.set_header(_("Architecture"))
         self.printer.print_item(arch)
-
+        return os.EX_OK
 
 
 # architecture command ------------------------------------------------------------
