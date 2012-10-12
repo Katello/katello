@@ -14,7 +14,7 @@ class SystemGroup < ActiveRecord::Base
 
   include Glue::Pulp::ConsumerGroup if (AppConfig.use_pulp)
   include Glue
-  include Authorization
+  include Authorization::SystemGroup
   include IndexedModel
 
   index_options :extended_json=>:extended_index_attrs,
@@ -79,83 +79,6 @@ class SystemGroup < ActiveRecord::Base
 
   default_scope :order => 'name ASC'
 
-  scope :readable, lambda { |org|
-    items(org, READ_PERM_VERBS)
-  }
-  scope :editable, lambda { |org|
-    items(org, [:update])
-  }
-  scope :systems_readable, lambda{|org|
-      SystemGroup.items(org, SYSTEM_READ_PERMS)
-  }
-
-  scope :systems_editable, lambda{|org|
-      SystemGroup.items(org, [:update_systems])
-  }
-
-  scope :systems_deletable, lambda{|org|
-      SystemGroup.items(org, [:delete_systems])
-  }
-
-  def self.creatable? org
-    User.allowed_to?([:create], :system_groups, nil, org)
-  end
-
-  def self.any_readable? org
-    User.allowed_to?(READ_PERM_VERBS, :system_groups, nil, org)
-  end
-
-  def systems_readable?
-    User.allowed_to?(SYSTEM_READ_PERMS, :system_groups, self.id, self.organization)
-  end
-
-  def systems_deletable?
-    User.allowed_to?([:delete_systems], :system_groups, self.id, self.organization)
-  end
-
-  def systems_editable?
-    User.allowed_to?([:update_systems], :system_groups, self.id, self.organization)
-  end
-
-  def readable?
-    User.allowed_to?(READ_PERM_VERBS, :system_groups, self.id, self.organization)
-  end
-
-  def editable?
-    User.allowed_to?([:update, :create], :system_groups, self.id, self.organization)
-  end
-
-  def deletable?
-    User.allowed_to?([:delete, :create], :system_groups, self.id, self.organization)
-  end
-
-  def self.list_tags org_id
-    SystemGroup.select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
-  end
-
-  def self.tags(ids)
-    select('id,name').where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
-  end
-
-  def self.list_verbs  global = false
-    {
-       :create => _("Administer System Groups"),
-       :read => _("Read System Group"),
-       :update => _("Modify System Group details and system membership"),
-       :delete => _("Delete System Group"),
-       :read_systems => _("Read Systems in System Group"),
-       :update_systems => _("Modify Systems in System Group"),
-       :delete_systems => _("Delete Systems in System Group")
-    }.with_indifferent_access
-  end
-
-  def self.read_verbs
-    [:read]
-  end
-
-  def self.no_tag_verbs
-    [:create]
-  end
 
   def install_packages packages
     raise Errors::SystemGroupEmptyException if self.systems.empty?
@@ -300,17 +223,5 @@ class SystemGroup < ActiveRecord::Base
     job
   end
 
-  def self.items org, verbs
-    raise "scope requires an organization" if org.nil?
-    resource = :system_groups
-    if User.allowed_all_tags?(verbs, resource, org)
-       where(:organization_id => org)
-    else
-      where("system_groups.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
-    end
-  end
-
-  READ_PERM_VERBS = SystemGroup.list_verbs.keys
-  SYSTEM_READ_PERMS = [:read_systems, :update_systems, :delete_systems]
 
 end
