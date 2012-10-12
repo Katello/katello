@@ -528,6 +528,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/log
 %dir %{homedir}/db
 %{homedir}/db/schema.rb
+%dir %{homedir}/lib
 %{homedir}/lib/util
 %{homedir}/script/service-wait
 
