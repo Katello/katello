@@ -14,7 +14,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        1.1.10
+Version:        1.1.11
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -107,6 +107,13 @@ chmod +x -R %{buildroot}%{homedir}/upgrade-scripts/*
 
 
 %changelog
+* Fri Oct 12 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.11-1
+- 862441 - correcting error message for upgrade
+- puppet - fixing web workers issue
+- 860709 - pulp-migrate was not executed during upgrade
+- Merge pull request #701 from mbacovsky/858283_workers
+- Added --katello-web-workers and --foreman-web-worker params to installer
+
 * Thu Sep 27 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.10-1
 - 858360 - Making katello-upgrade START services after upgrade is complete
   (jomara@redhat.com)
