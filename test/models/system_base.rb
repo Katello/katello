@@ -22,7 +22,7 @@ module SystemTestBase
 
       def self.before_suite
         services  = ['Candlepin', 'Pulp', 'ElasticSearch']
-        models    = ['Repository', 'Package']
+        models    = ['System', 'SystemGroup']
         disable_glue_layers(services, models)
       end
     end
@@ -33,7 +33,5 @@ module SystemTestBase
     @dev                = KTEnvironment.find(environments(:dev).id)
     @acme_corporation   = Organization.find(organizations(:acme_corporation).id)
     @system             = System.find(systems(:simple_server))
-
   end
-
 end
