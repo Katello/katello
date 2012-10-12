@@ -30,15 +30,30 @@ class System < ActiveRecord::Base
 
   index_options :extended_json=>:extended_index_attrs,
                 :json=>{:only=> [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id]},
-                :display_attrs=>[:name, :description, :id, :uuid, :created_at, :lastCheckin, :system_group, :installed_products]
+                :display_attrs=>[:name, :description, :id, :uuid, :created_at, :lastCheckin, :system_group, :installed_products, "custom_info.KEYNAME"]
 
-  mapping   :dynamic_templates =>[{"fact_string" => {
-                          :path_match => "facts.*",
-                          :mapping => {
-                              :type=>"string",
-                              :analyzer=>"kt_name_analyzer"
-                          }
-                        }} ] do
+  dynamic_templates = [
+      {
+        "fact_string" => {
+          :path_match => "facts.*",
+          :mapping => {
+              :type => "string",
+              :analyzer => "kt_name_analyzer"
+          }
+        }
+      },
+      {
+        "custom_info_string" => {
+          :path_match => "custom_info.*",
+          :mapping => {
+              :type => "string",
+              :analyzer => "kt_name_analyzer"
+          }
+        }
+      }
+  ]
+
+  mapping   :dynamic_templates => dynamic_templates do
     indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :description, :type => 'string', :analyzer => :kt_name_analyzer
     indexes :name_sort, :type => 'string', :index => :not_analyzed
@@ -46,6 +61,8 @@ class System < ActiveRecord::Base
     indexes :name_autocomplete, :type=>'string', :analyzer=>'autcomplete_name_analyzer'
     indexes :installed_products, :type=>'string', :analyzer=>:kt_name_analyzer
     indexes :facts, :path=>"just_name" do
+    end
+    indexes :custom_info, :path => "just_name" do
     end
 
   end
@@ -272,7 +289,8 @@ class System < ActiveRecord::Base
      :name_sort=>name.downcase, :name_autocomplete=>self.name,
      :system_group=>self.system_groups.collect{|g| g.name},
      :system_group_ids=>self.system_group_ids,
-     :installed_products=>collect_installed_product_names
+     :installed_products=>collect_installed_product_names,
+     :custom_info=>collect_custom_info
     }
   end
 
@@ -304,6 +322,12 @@ class System < ActiveRecord::Base
 
     def collect_installed_product_names
       self.installedProducts ? self.installedProducts.map{ |p| p[:productName] } : []
+    end
+
+    def collect_custom_info
+      hash = {}
+      self.custom_info.each{ |c| hash[c.keyname] = c.value} if self.custom_info
+      hash
     end
 
 end
