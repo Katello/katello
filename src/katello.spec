@@ -533,6 +533,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/script/service-wait
 
 %defattr(-, katello, katello)
+%dir %{homedir}
 %attr(750, katello, katello) %{_localstatedir}/log/%{name}
 %{datadir}
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production.log
