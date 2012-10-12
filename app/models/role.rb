@@ -22,7 +22,7 @@ class LockValidator < ActiveModel::Validator
 end
 
 class Role < ActiveRecord::Base
-  include Authorization
+  include Authorization::Role
   include IndexedModel
 
   index_options :extended_json=>:extended_index_attrs,
@@ -154,49 +154,9 @@ class Role < ActiveRecord::Base
     Role.find_by_name('candlepin_role')
   end
 
-
-  #permissions
-  scope :readable, lambda {where("0 = 1")  unless User.allowed_all_tags?(READ_PERM_VERBS, :roles)}
-  def self.creatable?
-    User.allowed_to?([:create], :roles, nil)
-  end
-
-  def self.editable?
-    User.allowed_to?([:update, :create], :roles, nil)
-  end
-
-  def self.deletable?
-    User.allowed_to?([:delete, :create],:roles, nil)
-  end
-
-  def self.any_readable?
-    User.allowed_to?(READ_PERM_VERBS, :roles, nil)
-  end
-
-  def self.readable?
-    Role.any_readable?
-  end
-
   def summary
     perms = permissions.collect{|perm| perm.to_abbrev_text}.join("\n")
     "Role: #{name}\nPermissions:\n#{perms}"
-  end
-
-  def self.list_verbs global = false
-    {
-    :create => _("Administer Roles"),
-    :read => _("Read Roles"),
-    :update => _("Modify Roles"),
-    :delete => _("Delete Roles"),
-    }.with_indifferent_access
-  end
-
-  def self.read_verbs
-    [:read]
-  end
-
-  def self.no_tag_verbs
-    [:create]
   end
 
   # Used when displaying the localized version of locked roles
@@ -231,7 +191,6 @@ class Role < ActiveRecord::Base
   end
 
   private
-  READ_PERM_VERBS = [:read,:update, :create,:delete]
 
   def extended_index_attrs
     {:name_sort=>name.downcase,
