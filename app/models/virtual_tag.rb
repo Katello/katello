@@ -9,13 +9,18 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+#
 
 
-class PermissionTag < ActiveRecord::Base
+# This class is a "fake" model Tag. It is returned by model objects to the
+# view layer to present possible tags which can be assigned to permissions.
+class VirtualTag
+  attr_accessor :name, :display_name
 
-  belongs_to :permission, :inverse_of=>:tags
-
-  def to_s
-    tag_id.to_s
+  def initialize(name, display_name)
+    raise ArgumentError, "Name cannot be nil or empty" if name.nil? or name == ''
+    raise ArgumentError, "Display name cannot be nil or empty" if display_name.nil? or display_name == ''
+    self.name = name
+    self.display_name = display_name
   end
 end
