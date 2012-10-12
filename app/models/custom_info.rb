@@ -23,6 +23,9 @@ class CustomInfo < ActiveRecord::Base
   validates :informable_id, :presence => true
   validates :informable_type, :presence => true
 
+  after_save :reindex_informable
+  after_destroy :reindex_informable
+
   # Apply a set of custom info to a list of objects.
   # Does not apply to a particular object if it already has custom info with the given keyname.
   # Returns a list of the objects that had at least one custom info added to them.
@@ -39,6 +42,10 @@ class CustomInfo < ActiveRecord::Base
     end
 
     return affected.uniq
+  end
+
+  def reindex_informable
+    self.informable.class.index.import([self.informable])
   end
 
 end
