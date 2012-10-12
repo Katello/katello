@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
   include Glue if AppConfig.use_cp || AppConfig.use_pulp
   include AsyncOrchestration
   include IndexedModel
+  include Authorization::User
 
 
   acts_as_reportable
@@ -377,45 +378,6 @@ class User < ActiveRecord::Base
   # is the current user consumer? (rhsm)
   def self.consumer?
     User.current.is_a? CpConsumerUser
-  end
-
-  def self.list_verbs global = false
-    { :create => _("Administer Users"),
-      :read   => _("Read Users"),
-      :update => _("Modify Users"),
-      :delete => _("Delete Users")
-    }.with_indifferent_access
-  end
-
-  def self.read_verbs
-    [:read]
-  end
-
-  def self.no_tag_verbs
-    [:create]
-  end
-
-  READ_PERM_VERBS = [:read, :update, :create, :delete]
-  scope :readable, lambda { User.allowed_all_tags?(READ_PERM_VERBS, :users) ? where(:hidden => false) : where("0 = 1") }
-
-  def self.creatable?
-    User.allowed_to?([:create], :users, nil)
-  end
-
-  def self.any_readable?
-    User.allowed_to?(READ_PERM_VERBS, :users, nil)
-  end
-
-  def readable?
-    User.any_readable? && !hidden
-  end
-
-  def editable?
-    User.allowed_to?([:create, :update], :users, nil) && !hidden
-  end
-
-  def deletable?
-    self.id != User.current.id && User.allowed_to?([:delete], :users, nil)
   end
 
   def send_password_reset
