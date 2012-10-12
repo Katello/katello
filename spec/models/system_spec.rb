@@ -78,6 +78,27 @@ describe System do
     @system.save!
   end
 
+  it "adds custom info if organization has default custom info set" do
+    o = Organization.find(@organization.id)
+    o.system_info_keys << "test_key"
+    o.save!
+    e = KTEnvironment.create!(:name=>'test2', :label=> 'test2', :prior => o.library.id, :organization => o)
+
+    s = System.new(:name => system_name,
+        :environment => e,
+        :cp_type => cp_type,
+        :facts => facts,
+        :description => description,
+        :uuid => uuid,
+        :installedProducts => installed_products,
+        :serviceLevel => nil)
+
+    s.save!
+
+    System.find(s.id).custom_info.size.should == 1
+    System.find(s.id).custom_info.find_by_keyname("test_key").keyname.should == "test_key"
+  end
+
   context "delete system" do
     before(:each) {
       @system.save!
