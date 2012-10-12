@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.1.13
+Version:        1.1.14
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -638,6 +638,158 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Oct 12 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.14-1
+- Merge pull request #845 from xsuchy/pull-req-rpm
+- package katello-common should own /etc/katello
+- package katello-common should own /usr/share/katello
+- package katello-common should own /usr/share/katello/lib
+- package katello should own /usr/share/katello/lib/resources
+- package katello should own /usr/share/katello/lib/monkeys
+- package katello should own /usr/share/katello/app/models/glue
+- package katello (and headpin) should own /usr/share/katello/app/models and
+  /usr/share/katello/app
+- katello-common should own directory /usr/share/katello/db
+- Merge pull request #842 from lzap/new-cli-test
+- fixing - uninitialized constant Candlepin
+- 862753 - fixing typo in template deletion
+- 860952 - do not call with_indifferent_access on Array
+- Merge pull request #836 from witlessbird/content-updates
+- Merge pull request #825 from jhadvig/prawn_integration
+- fix for broken content update call and additional tests
+- A slew of changes around content updates.
+- Merge pull request #830 from daviddavis/859963
+- Merge pull request #832 from komidore64/busted_migration
+  (komidore64@gmail.com)
+- fixed failing db migrations (komidore64@gmail.com)
+- 859963 - Fixed bad css character
+- Fix missing should in gpg controller spec
+- Fixed gpg keys controller rspec
+- Merge pull request #819 from thomasmckay/864362-autocomplete
+- Merge pull request #823 from daviddavis/859329
+- Fixed katello.spec for Ruport
+- Fixed Gemfile for Ruport
+- Merge pull request #826 from jsomara/864654
+- 864654 - katello-headpin-all correction
+- Fix handling of validation_errors in notices.js
+- Merge pull request #821 from knowncitizen/847002
+- Merge pull request #814 from ehelms/bug-847002
+- 847002, 864216 - Fixes content search row rendering issue in IE8, product
+  color row in IE8 and the path selector not being set to the proper location
+  in IE8.
+- 859329 - Fixed errors when editing gpg key
+- Merge pull request #801 from gstoeckel/notices
+- Incorporated code review suggestions.
+- Merge pull request #822 from jsomara/navfence
+- Fencing SYNCHRONIZATION link on admin dropdown in headpin mode
+- 864565 - Removing duplicate repos from gpgkey show
+- 864362-autocomplete - rescue bad searches in auto-complete fields
+- Fixing Ruport depend. on Prawn
+- Fixing Gemfile depend.
+- Fixing Ruport dependencies
+- Prawn gemfile and spec dependencies
+- Prawn integration for PDF generation
+- fixing 'pt_BR' translations
+- merge katello.katello translation from CFSE
+- Merge branch 'master' of github.com:Katello/katello into 847002
+- 847002 - Fixes rendering issue in IE9 for nested content search results.
+- Update to notice storage mechanism for automation testing framework.
+- Merge branch 'master' into notices
+- 847002 - Fix for IE9 Changeset Environment Selector
+- updating to allow use of local var from PR comment
+- switching our schema config names to match production and relaxing reset
+- 825858 - use organizations.label instead of cp_key
+- 859442 - systems - update query for adding system groups to system
+- Merge pull request #799 from mccun934/835586-encoding-fix
+- Merge pull request #805 from witlessbird/824581
+- Merge pull request #646 from Pajk/hide_new_changeset_button
+- Merge pull request #802 from jsomara/859877
+- Merge pull request #804 from jlsherrill/862824
+- Merge pull request #734 from daviddavis/code-format
+- 825858 - implementing proxy permissions
+- 825858 - proxies permissions - removing comments
+- fix for BZ 824581: gpg keys are now being updated
+- 862824 - load search results using where() manually
+- 859877 - ipaddr does not show up for old subman version
+- Merge branch 'master' into notices
+- Added tracking of notices for use in test automation framework.
+- requiring new minitest gems
+- 835586 - force the encoding in the header to be UTF8 so Pulp can decode
+- Merge pull request #560 from Pajk/806383
+- Merge pull request #794 from jsomara/esinstalledproductfix
+- self. calling a private method
+- self.installed_products != self.installedProducts
+- Merge pull request #793 from jsomara/esinstalledproductfix
+- Defensively checking installed product names;
+- Show foreman packages on about page
+- reverting accidental override
+- Merge pull request #767 from witlessbird/852352
+- Merge pull request #772 from xsuchy/pull-req-transdup2
+- Merge pull request #777 from jsomara/installedproducts
+- Merge pull request #785 from jsomara/anysystemfact
+- Merge pull request #748 from pitr-ch/bug/808581-Stack_traces_in_log
+- Removing ANY SYSTEM FACT: from system search list
+- Resetting locale to English before each test
+- Fixed rspec translation missing failures
+- Making systems searchable on installed products
+- Merge pull request #774 from xsuchy/pull-req-fuzzy
+- ignore fuzzy and obsolete translations
+- Fixed broken label rspec tests
+- Make string more translator friendly
+- add missing apostroph
+- unify string "Removed repository"
+- unify string "Couldn't find user role"
+- unify string "Couldn't find user"
+- unify string "Couldn't find template"
+- unify string "Couldn't find system group"
+- unify string "Couldn't find system"
+- unify string "Couldn't find repository"
+- unify string "Couldn't find product with id"
+- unify string "Couldn't find organization"
+- unify string "Couldn't find environment"
+- unify string "Couldn't find changeset"
+- unify string "Couldn't find activation key"
+- unify string "Added repository"
+- unify string "Added distribution"
+- Merge pull request #622 from Pajk/848438
+- Merge pull request #770 from mccun934/803702-org-label-3
+- 803702 - switch back to searching in the API by name and not label
+- 824581 - Fixing bug resulting from bad fix
+- 808581 - Stack traces logged to production.log for user-level validation
+  errors
+- Merge pull request #702 from witlessbird/835875
+- Merge pull request #729 from daviddavis/bz824581
+- Merge pull request #720 from pitr-
+  ch/bug/857230-mouse_over_errata_item_displays_error
+- 860251 - update the location of favicon.png
+- Merge pull request #759 from bbuckingham/fork-859415
+- fix for BZ852352: changeset type is now being pre-selected depending on user
+  selection of 'Deletion from' or 'Promotion to'
+- Merge pull request #738 from daviddavis/about
+- Merge pull request #756 from knowncitizen/859409
+- 767297 - Removed OS information
+- Merge pull request #757 from mccun934/add-dev-boost
+- rails-dev-boost - removing whitespace
+- rails-dev-boost - moving to own group and adding RPM requires
+- BZ 835875: removed a commented-out line of code
+- 859415 - object labels - modify ui to assign a default label, if not
+  specified
+- rails-dev-boost - adding rails-dev-boost gem
+- 859409 - Fix for focus on org switcher drop down.
+- 767297 - Worked on about page and added spec
+- 767297 - Create an about page
+- 824581 - Fixed bug where gpgkey wasn't getting set
+- Fixed code formating issue in migration
+- 857230 - Mouse over errata item displays error in UI Content Search
+- it is now impossible to delete a provider if one (or more) of its
+  repositories or products has been promoted
+- Hide 'new changeset' button when it should not be used
+- 848438 - Content search auto-complete should enable the 'Add' button after
+  typing full content name.
+- List of sync plans added
+- Always use environment when requesting repo
+- 806383 - [RFE] As the SE administrator I want to see all active and scheduled
+  sync tasks for all organizations in one place
+
 * Thu Sep 27 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.13-1
 - 858360 - Making katello-upgrade START services after upgrade is complete
   (jomara@redhat.com)
