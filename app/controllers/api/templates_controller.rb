@@ -109,7 +109,7 @@ class Api::TemplatesController < Api::ApiController
   param :id, :number, :desc => "template numeric identifier", :required => true
   def destroy
     @template.destroy
-    render :text => _("Deleted system template '%s'") % template.name, :status => 200
+    render :text => _("Deleted system template '%s'") % @template.name, :status => 200
   end
 
   api :POST, "/templates/import", "Import a template"
