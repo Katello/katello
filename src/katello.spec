@@ -462,9 +462,11 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %attr(600, katello, katello)
 %{_bindir}/katello-*
 %ghost %attr(600, katello, katello) %{_sysconfdir}/%{name}/secret_token
+%dir %{homedir}/app
 %{homedir}/app/controllers
 %{homedir}/app/helpers
 %{homedir}/app/mailers
+%dir %{homedir}/app/models
 %{homedir}/app/models/*.rb
 %{homedir}/app/models/candlepin
 %{homedir}/app/stylesheets
@@ -553,10 +555,11 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %files headpin
 %attr(600, katello, katello)
 %{_bindir}/katello-*
+%dir %{homedir}/app
 %{homedir}/app/controllers
 %{homedir}/app/helpers
 %{homedir}/app/mailers
-%{homedir}/app/models/
+%{homedir}/app/models
 %exclude %{homedir}/app/models/glue/*
 %{homedir}/app/stylesheets
 %{homedir}/app/views
