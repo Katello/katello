@@ -83,6 +83,14 @@
         .grid_5.la #{System.architectures[system.arch]}
       %fieldset
         .grid_2.ra.fieldset
+          = label :ram, :ram, _("RAM (MB)")
+        .grid_5.la #{system.memory_megabytes}
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :sockets, :sockets, _("Sockets")
+        .grid_5.la #{system.sockets}
+      %fieldset
+        .grid_2.ra.fieldset
           = label :location, :location, _("Location")
         .grid_5.la#system_location{'name' => 'system[location]', :class=>("editable edit_textfield" if editable), 'data-url'=>system_path(system.id)} #{system[:location]}
       %fieldset

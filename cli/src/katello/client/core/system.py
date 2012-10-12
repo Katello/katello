@@ -139,6 +139,8 @@ class Info(SystemAction):
             self.printer.add_column('release', _('OS release'))
         self.printer.add_column('activation_keys', multiline=True, show_with=printer.VerboseStrategy)
         self.printer.add_column('host', show_with=printer.VerboseStrategy)
+        self.printer.add_column('sockets')
+        self.printer.add_column('ram', _("RAM (MB)"))
         self.printer.add_column('serviceLevel', _('Service Level'))
         self.printer.add_column('guests', show_with=printer.VerboseStrategy)
         if "template" in system:
