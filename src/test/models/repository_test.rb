@@ -19,6 +19,7 @@ class RepositoryCreateTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def setup
     super
+    User.current = @admin_user
     @repo = Repository.new(:name => 'repository_test_name', :pulp_id => 'This is not a feal pulp ID', 
                           :environment_product_id => environment_products(:library_fedora).id, :content_id => 'FakeContentID',
                           :label => "repository_test_name_label")
@@ -30,6 +31,7 @@ class RepositoryCreateTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def test_create
     assert @repo.save
+    assert !Repository.where(:id=>@repo.id).empty?
   end
 
 end
@@ -83,7 +85,11 @@ class RepositoryInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_has_filters?
-    assert !@fedora_17.has_filters?
+    assert @fedora_17.has_filters?
+  end
+
+  def test_does_not_have_filters?
+    assert !@fedora_17_dev.has_filters?
   end
 
   def test_clones

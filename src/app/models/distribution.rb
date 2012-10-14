@@ -10,25 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Glue::Pulp::Distribution
 
-  def self.included(base)
-    base.class_eval do
-
-      attr_accessor :id, :description, :files, :family, :variant, :version, :url, :arch
-
-      def initialize(attrs = {})
-        attrs.each_pair do |k,v|
-          if self.class.method_defined? k and not v.nil?
-            instance_variable_set("@#{k}", v)
-          end
-        end
-      end
-
-      def self.find id
-        ::Distribution.new(Runcible::Extensions::Distribution.find(id))
-      end
-    end
-  end
-
+class Distribution
+  include Glue::Pulp::Distribution if AppConfig.use_pulp
 end
