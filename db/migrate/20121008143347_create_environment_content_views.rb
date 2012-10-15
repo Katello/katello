@@ -6,6 +6,8 @@ class CreateEnvironmentContentViews < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :environment_content_views, [:environment_id, :content_view_id],
+      :name => "env_cv_index"
   end
 
   def self.down

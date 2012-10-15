@@ -7,10 +7,8 @@ class Api::ContentViewsControllerTest < MiniTest::Rails::ActionController::TestC
     AppConfig.use_cp = false
     AppConfig.use_pulp = false
 
-    @organization = Organization.create!(:name => "Haskelltronics")
-    @content_view = ContentView.create!(:name => "Database stuffs",
-                                        :organization => @organization
-                                       )
+    @organization = FactoryGirl.create(:org)
+    @content_view = FactoryGirl.create(:content_view)
   end
 
   def tear_down

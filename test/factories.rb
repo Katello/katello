@@ -120,26 +120,4 @@ FactoryGirl.define do
     environment_product
   end
 
-  # CONTENT VIEWS
-
-  factory :content_view_definition do
-    name "Database definition"
-    description "Database content view definition"
-  end
-
-  factory :content_view do
-    name "Database"
-    description "This content view is for database content"
-
-    trait :with_definition do
-      association :content_view_definition,
-        :factory => :content_view_definition
-    end
-
-    factory :content_view_with_definition, :traits => [:with_definition]
-  end
-
-  factory :content_view_from_snapshot, :class => ContentView do
-    
-  end
 end
