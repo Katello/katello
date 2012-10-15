@@ -14,10 +14,7 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
-
-#TODO: extract to utils
-def slice(d, *key_list):
-    return dict((k, d.get(k)) for k in key_list)
+from katello.client.core.utils import slice_dict
 
 class ArchitectureAPI(KatelloAPI):
 
@@ -42,7 +39,7 @@ class ArchitectureAPI(KatelloAPI):
         :type data['name']: string
         """
         path = "/api/architectures/"
-        data = slice(data, 'name')
+        data = slice_dict(data, 'name')
         return self.server.POST(path, {'architecture': data})[1]
 
     def update(self, id, data):
@@ -52,7 +49,7 @@ class ArchitectureAPI(KatelloAPI):
         :type data['name']: string
         """
         path = "/api/architectures/%s/" % (id)
-        data = slice(data, 'name')
+        data = slice_dict(data, 'name')
         return self.server.PUT(path, {'architecture': data})[1]
 
     def destroy(self, id):

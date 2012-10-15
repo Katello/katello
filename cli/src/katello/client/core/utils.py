@@ -83,7 +83,7 @@ def unnest(rec, *path):
 
     @param rec: record to unnest
     @type rec: dict, list or tuple of dicts
-    @param *path: key path in the dictionary 
+    @param *path: key path in the dictionary
     @rtype: dict, list or tupple according to type of rec
     """
     if isinstance(rec, list):
@@ -92,7 +92,7 @@ def unnest(rec, *path):
         return (unnest(item, *path) for item in rec)
     else:
         assert isinstance(rec, dict)
-        return reduce(dict.get, path, rec) 
+        return reduce(dict.get, path, rec)
 
 def unnest_one(rec):
     """
@@ -529,6 +529,7 @@ class SystemGroupAsyncJob(AsyncJob):
         self.__org_id = org_id
         self.__system_group_id = system_group_id
 
+
     def status_api(self):
         return SystemGroupJobStatusAPI(self.__org_id, self.__system_group_id)
 
@@ -548,7 +549,7 @@ def convert_to_mime_type(type_in, default=None):
 def attachment_file_name(headers, default):
     contentDisposition = filter(lambda h: h[0].lower() == 'content-disposition', headers)
 
-    if len(contentDisposition) >  0:
+    if len(contentDisposition) > 0:
         filename = contentDisposition[0][1].split('filename=')
         if len(filename) < 2:
             return default
@@ -562,3 +563,7 @@ def save_report(report, filename):
     f = open(filename, 'w')
     f.write(report)
     f.close()
+
+
+def slice_dict(orig_dict, *key_list):
+    return dict((key, orig_dict[key]) for key in key_list if key in orig_dict)

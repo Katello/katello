@@ -41,7 +41,6 @@ class List(ArchitectureAction):
         archs = self.api.index()
         if archs:
             archs = unnest_one(archs)
-
         self.printer.add_column('id')
         self.printer.add_column('name')
 

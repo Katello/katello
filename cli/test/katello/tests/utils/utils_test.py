@@ -1,7 +1,7 @@
 import unittest
 import os
 
-from katello.client.core.utils import convert_to_mime_type, attachment_file_name
+from katello.client.core.utils import convert_to_mime_type, attachment_file_name, slice_dict
 
 class ConvertToMimeTest(unittest.TestCase):
 
@@ -19,6 +19,7 @@ class ConvertToMimeTest(unittest.TestCase):
 
     def test_default_type(self):
         self.assertEqual('text/plain', convert_to_mime_type('blah', 'text'))
+
 
 class AttachmentFilenameTest(unittest.TestCase):
 
@@ -47,3 +48,42 @@ class AttachmentFilenameTest(unittest.TestCase):
             ('content-type', 'application/pdf'),
             ('cache-control', 'private'),
             ('content-disposition')], self.DEFAULT_FILENAME))
+
+
+class SliceDictTest(unittest.TestCase):
+
+    test_dict = {
+        "A": "a",
+        "B": "b",
+        "C": "c"
+    }
+
+    def test_returns_empty_dict_if_no_keys_specified(self):
+        self.assertEqual(
+            slice_dict(self.test_dict),
+            {}
+        )
+
+    def test_slices_dict(self):
+        self.assertEqual(
+            slice_dict(self.test_dict, "A"),
+            {"A": "a"}
+        )
+
+    def test_slices_dict_with_all_its_original_keys(self):
+        self.assertEqual(
+            slice_dict(self.test_dict, "A", "B", "C"),
+            self.test_dict
+        )
+
+    def test_slices_dict_with_none_of_its_original_keys(self):
+        self.assertEqual(
+            slice_dict(self.test_dict, "D", "E"),
+            {}
+        )
+
+    def test_slices_dict_with_one_of_its_original_keys(self):
+        self.assertEqual(
+            slice_dict(self.test_dict, "A", "D"),
+            {"A": "a"}
+        )

@@ -13,10 +13,7 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
-
-#TODO: extract to utils
-def slice_dict(d, *key_list):
-    return dict((k, d.get(k)) for k in key_list if d.get(k))
+from katello.client.core.utils import slice_dict
 
 class DomainAPI(KatelloAPI):
 
