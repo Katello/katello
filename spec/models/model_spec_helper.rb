@@ -122,17 +122,12 @@ EOKEY
   end
 
   def disable_user_orchestration
-    Resources::Pulp::User.stub!(:create).and_return({})
-    Resources::Pulp::User.stub!(:destroy).and_return(200)
-    Resources::Pulp::Roles.stub!(:add).and_return(true)
-    Resources::Pulp::Roles.stub!(:remove).and_return(true)
+    Runcible::Resources::User.stub!(:create).and_return({})
+    Runcible::Resources::User.stub!(:delete).and_return(200)
+    Runcible::Resources::Role.stub!(:add).and_return(true)
+    Runcible::Resources::Role.stub!(:remove).and_return(true)
   end
 
-  def disable_filter_orchestration
-    Resources::Pulp::Filter.stub!(:create).and_return({})
-    Resources::Pulp::Filter.stub!(:destroy).and_return(200)
-    Resources::Pulp::Filter.stub(:find).and_return({})
-  end
 
   def disable_consumer_group_orchestration
     Resources::Pulp::ConsumerGroup.stub!(:create).and_return({})
@@ -143,16 +138,16 @@ EOKEY
   end
 
   def disable_repo_orchestration
-    Resources::Pulp::Repository.stub(:sync_history).and_return([])
-    Resources::Pulp::Task.stub!(:destroy).and_return({})
+    Runcible::Extensions::Repository.stub(:sync_history).and_return([])
+    Runcible::Resources::Task.stub!(:destroy).and_return({})
 
-    Resources::Pulp::Repository.stub(:packages).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PACKAGES)
-    Resources::Pulp::Repository.stub(:errata).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_ERRATA)
-    Resources::Pulp::Repository.stub(:distributions).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_DISTRIBUTIONS)
-    Resources::Pulp::Repository.stub(:find).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PROPERTIES)
-    Resources::Pulp::Repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
+    Runcible::Extensions::Repository.stub(:packages).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PACKAGES)
+    Runcible::Extensions::Repository.stub(:errata).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_ERRATA)
+    Runcible::Extensions::Repository.stub(:distributions).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_DISTRIBUTIONS)
+    Runcible::Extensions::Repository.stub(:find).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PROPERTIES)
+    Runcible::Extensions::Repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
 
-    Resources::Pulp::Package.stub(:name_search).and_return(RepoTestData::REPO_PACKAGES[0])
+
 
     Repository.instance_eval do
       define_method(:index_packages) {
