@@ -64,15 +64,21 @@
 # or via the -i or -h command line switches.
 #
 
-
-
 # TYPE  DATABASE    USER        CIDR-ADDRESS          METHOD
-<% if scope.lookupvar("postgres::params::password_file") != "NONE" %>
-local   all         all                               password
-host    all         all         127.0.0.1/32          password
-host    all         all         ::1/128               password
-<% else %>
-local   all       all                               trust
-host    all       all         127.0.0.1/32          trust
-host    all       all         ::1/128               trust
-<% end %>
+local <%= scope.lookupvar("katello::params::db_name") %> <%= scope.lookupvar("katello::params::db_user") %> md5
+host  <%= scope.lookupvar("katello::params::db_name") %> <%= scope.lookupvar("katello::params::db_user") %> 127.0.0.1/8 md5
+host  <%= scope.lookupvar("katello::params::db_name") %> <%= scope.lookupvar("katello::params::db_user") %> ::1/128 md5
+
+local <%= scope.lookupvar("candlepin::params::db_name") %> <%= scope.lookupvar("candlepin::params::db_user") %> md5
+host  <%= scope.lookupvar("candlepin::params::db_name") %> <%= scope.lookupvar("candlepin::params::db_user") %> 127.0.0.1/8 md5
+host  <%= scope.lookupvar("candlepin::params::db_name") %> <%= scope.lookupvar("candlepin::params::db_user") %> ::1/128 md5
+
+local <%= scope.lookupvar("foreman::db_name") %> <%= scope.lookupvar("foreman::db_user") %> md5
+host  <%= scope.lookupvar("foreman::db_name") %> <%= scope.lookupvar("foreman::db_user") %> 127.0.0.1/8 md5
+host  <%= scope.lookupvar("foreman::db_name") %> <%= scope.lookupvar("foreman::db_user") %> ::1/128 md5
+
+local all postgres  ident
+
+local   all         all                               md5
+host    all         all         127.0.0.1/32          md5
+host    all         all         ::1/128               md5
