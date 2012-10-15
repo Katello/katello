@@ -19,7 +19,7 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def teardown
-    @content_view_def.destroy
+    @content_view_def.destroy if @content_view_def.persisted?
   end
 
   def test_create
@@ -30,5 +30,13 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     content_view_def = FactoryGirl.build(:content_view_definition, :name => "")
     assert content_view_def.invalid?
     assert content_view_def.errors.has_key?(:name)
+  end
+
+  def test_destroy_with_content_views
+    content_view = FactoryGirl.create(:content_view)
+    definition = FactoryGirl.create(:content_view_definition,
+                                    :content_views => [content_view])
+    assert definition.destroy
+    assert_not_nil ContentView.find_by_id(content_view.id)
   end
 end

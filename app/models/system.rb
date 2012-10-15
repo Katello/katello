@@ -42,6 +42,7 @@ class System < ActiveRecord::Base
   has_many :system_groups, {:through => :system_system_groups, :before_add => :add_pulp_consumer_group, :before_remove => :remove_pulp_consumer_group}.merge(update_association_indexes)
 
   has_many :custom_info, :as => :informable, :dependent => :destroy
+  belongs_to :content_view
 
   validates :environment, :presence => true, :non_library_environment => true
   # multiple systems with a single name are supported
