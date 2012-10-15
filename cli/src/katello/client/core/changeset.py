@@ -188,7 +188,11 @@ class UpdateContent(ChangesetAction):
             patch['packages'] = [itemBuilder.package(i) for i in items[action + "_package"]]
             patch['errata'] = [itemBuilder.erratum(i) for i in items[action + "_erratum"]]
             patch['repositories'] = [itemBuilder.repo(i) for i in items[action + "_repo"]]
-            patch['products'] = [itemBuilder.product(i) for i in items[action + "_product"]]
+
+            patch['products'] = [itemBuilder.product(i) for i in (
+                items[action + "_product"] + items[action + "_product_label"] +
+                items[action + "_product_id"])]
+
             patch['templates'] = [itemBuilder.template(i) for i in items[action + "_template"]]
             patch['distributions'] = [itemBuilder.distro(i) for i in items[action + "_distribution"]]
             return patch
@@ -205,16 +209,37 @@ class UpdateContent(ChangesetAction):
                 self.env_name = get_environment(org_name, env_name)['prior']
 
         def product_id(self, options):
+            prod_name = None
+            prod_label = None
+            prod_id = None
+
             if 'product' in options:
                 prod_name = options['product']
+            elif 'product_label' in options:
+                prod_label = options['product_label']
+            elif 'product_id' in options:
+                prod_id = options['product_id']
             else:
                 prod_name = options['name']
 
-            prod = get_product(self.org_name, prod_name)
+            prod = get_product(self.org_name, prod_name, prod_label, prod_id)
             return prod['id']
 
         def repo_id(self, options):
-            repo = get_repo(self.org_name, options['product'], None, None, options['name'], self.env_name)
+            prod_name = None
+            prod_label = None
+            prod_id = None
+
+            if 'product' in options:
+                prod_name = options['product']
+            elif 'product_label' in options:
+                prod_label = options['product_label']
+            elif 'product_id' in options:
+                prod_id = options['product_id']
+
+            repo = get_repo(self.org_name, prod_name, prod_label, prod_id, options['name'],
+                self.env_name)
+
             return repo['id']
 
         def template_id(self, options):
@@ -295,12 +320,13 @@ class UpdateContent(ChangesetAction):
 
 
     productDependentContent = ['package', 'erratum', 'repo', 'distribution']
-    productIndependentContent = ['product', 'template']
+    productIndependentContent = ['product', 'product_label', 'product_id', 'template']
 
     description = _('updates content of a changeset')
 
     def __init__(self):
         self.current_product = None
+        self.current_product_option = None
         super(UpdateContent, self).__init__()
         self.items = {}
 
@@ -308,16 +334,27 @@ class UpdateContent(ChangesetAction):
     # pylint: disable=W0613
     def _store_from_product(self, option, opt_str, value, parser):
         self.current_product = u_str(value)
+        self.current_product_option = option.dest
         parser.values.from_product = True
 
     def _store_item_with_product(self, option, opt_str, value, parser):
         if parser.values.from_product == None:
             raise OptionValueError(_("%s must be preceded by %s") % (option, "--from_product"))
 
-        self.items[option.dest].append({"name": u_str(value), "product": self.current_product})
+        if self.current_product_option == 'from_product_label':
+            self.items[option.dest].append({"name": u_str(value), "product_label": self.current_product})
+        elif self.current_product_option == 'from_product_id':
+            self.items[option.dest].append({"name": u_str(value), "product_id": self.current_product})
+        else:
+            self.items[option.dest].append({"name": u_str(value), "product": self.current_product})
 
     def _store_item(self, option, opt_str, value, parser):
-        self.items[option.dest].append({"name": u_str(value)})
+	if option.dest == 'add_product_label' or option.dest == 'remove_product_label':
+            self.items[option.dest].append({"product_label": u_str(value)})
+	elif option.dest == 'add_product_id' or option.dest == 'remove_product_id':
+            self.items[option.dest].append({"product_id": u_str(value)})
+        else:
+            self.items[option.dest].append({"name": u_str(value)})
 
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
@@ -328,19 +365,42 @@ class UpdateContent(ChangesetAction):
                                help=_("changeset description"))
         parser.add_option('--new_name', dest='new_name',
                                help=_("new changeset name"))
+
         parser.add_option('--add_product', dest='add_product', type="string",
                                action="callback", callback=self._store_item,
-                               help=_("product to add to the changeset"))
+                               help=_("product to add to the changeset, by name"))
+        parser.add_option('--add_product_label', dest='add_product_label', type="string",
+                               action="callback", callback=self._store_item,
+                               help=_("product to add to the changeset, by label"))
+        parser.add_option('--add_product_id', dest='add_product_id', type="string",
+                               action="callback", callback=self._store_item,
+                               help=_("product to add to the changeset, by id"))
+
+
         parser.add_option('--remove_product', dest='remove_product', type="string",
                                action="callback", callback=self._store_item,
-                               help=_("product to remove from the changeset"))
+                               help=_("product to remove from the changeset, by name"))
+        parser.add_option('--remove_product_label', dest='remove_product_label', type="string",
+                               action="callback", callback=self._store_item,
+                               help=_("product to remove from the changeset, by label"))
+        parser.add_option('--remove_product_id', dest='remove_product_id', type="string",
+                               action="callback", callback=self._store_item,
+                               help=_("product to remove from the changeset, by id"))
+
         parser.add_option('--add_template', dest='add_template', type="string",
                                action="callback", callback=self._store_item,
                                help=_("name of a template to be added to the changeset"))
         parser.add_option('--remove_template', dest='remove_template', type="string",
                                action="callback", callback=self._store_item,
                                help=_("name of a template to be removed from the changeset"))
+
         parser.add_option('--from_product', dest='from_product',
+                               action="callback", callback=self._store_from_product, type="string",
+                               help=_("determines product from which the packages/errata/repositories are picked"))
+        parser.add_option('--from_product_label', dest='from_product_label',
+                               action="callback", callback=self._store_from_product, type="string",
+                               help=_("determines product from which the packages/errata/repositories are picked"))
+        parser.add_option('--from_product_id', dest='from_product_id',
                                action="callback", callback=self._store_from_product, type="string",
                                help=_("determines product from which the packages/errata/repositories are picked"))
 
@@ -377,9 +437,11 @@ class UpdateContent(ChangesetAction):
         csType = cset['action_type']
 
         self.update(cset["id"], csNewName, csDescription)
-        addPatch = self.PatchBuilder.build_patch('add', self.AddPatchItemBuilder(orgName, envName, csType), items)
+        addPatch = self.PatchBuilder.build_patch('add',
+            self.AddPatchItemBuilder(orgName, envName, csType), items)
         removePatch = self.PatchBuilder.build_patch('remove',
             self.RemovePatchItemBuilder(orgName, envName, csType), items)
+
         self.update_content(cset["id"], addPatch, self.api.add_content)
         self.update_content(cset["id"], removePatch, self.api.remove_content)
 
