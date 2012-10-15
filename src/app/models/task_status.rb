@@ -28,7 +28,6 @@ class TaskStatus < ActiveRecord::Base
     TIMED_OUT = :timed_out
   end
   include IndexedModel
-  include Authorization
 
   belongs_to :organization
   belongs_to :user

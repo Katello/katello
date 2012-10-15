@@ -19,7 +19,6 @@ end
 require 'util/package_util'
 
 class Changeset < ActiveRecord::Base
-  include Authorization
   include AsyncOrchestration
 
   include IndexedModel
