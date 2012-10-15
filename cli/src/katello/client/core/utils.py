@@ -65,7 +65,7 @@ def test_foreman_record(rec, key, success_msg, failure_msg):
     @type failure_msg: string
     @param failure_msg: failure message
     """
-    if type(rec)==type(dict()) and key in rec:
+    if type(rec)==dict and key in rec:
         system_exit(os.EX_OK, success_msg)
     else:
         system_exit(os.EX_DATAERR, failure_msg)
@@ -86,12 +86,12 @@ def unnest(rec, *path):
     @param *path: key path in the dictionary 
     @rtype: dict, list or tupple according to type of rec
     """
-    if isinstance(rec, (list)):
+    if isinstance(rec, list):
         return [unnest(item, *path) for item in rec]
-    elif isinstance(rec, (tuple)):
+    elif isinstance(rec, tuple):
         return (unnest(item, *path) for item in rec)
     else:
-        assert isinstance(rec, (dict))
+        assert isinstance(rec, dict)
         return reduce(dict.get, path, rec) 
 
 def unnest_one(rec):
@@ -112,8 +112,8 @@ def unnest_one(rec):
     if isinstance(rec, (list, tuple)):
         return unnest(rec, rec[0].keys()[0])
     else:
-        assert isinstance(rec, (dict))
-        assert rec.keys()
+        assert isinstance(rec, dict)
+        assert len(rec) > 0
         return unnest(rec, rec.keys()[0])
 
 def update_dict_unless_none(d, key, value):

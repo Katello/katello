@@ -16,12 +16,12 @@
 
 import os
 
+from katello.client import constants
 from katello.client.api.architecture import ArchitectureAPI
 from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_foreman_record, unnest_one
 
-Config()
 
 # base architecture action --------------------------------------------------------
 
@@ -55,7 +55,7 @@ class Create(ArchitectureAction):
     description = _('create an architecture')
 
     def setup_parser(self, parser):
-        parser.add_option('--name', dest='name', help=_("name for the architecture (required)"))
+        parser.add_option('--name', dest='name', help=constants.OPT_ARCHITECTURE_NAME)
 
     def check_options(self, validator):
         validator.require('name')
@@ -63,8 +63,8 @@ class Create(ArchitectureAction):
     def run(self):
         arch = self.api.create(self.get_option_dict("name"))
         test_foreman_record(arch, 'architecture',
-            _("Architecture [ %s ] created.") % self.get_option_dict("name"),
-            _("Could not create Architecture [ %s ].") % self.get_option_dict("name")
+            _("Architecture [ %s ] created.") % self.get_option("name"),
+            _("Could not create architecture [ %s ].") % self.get_option("name")
         )
 
 
@@ -73,8 +73,8 @@ class Update(ArchitectureAction):
     description = _('update an architecture')
 
     def setup_parser(self, parser):
-        parser.add_option('--name', dest='old_name', help=_("architecture name"))
-        parser.add_option('--new_name', dest='name', help=_("new name for the architecture"))
+        parser.add_option('--name', dest='old_name', help=constants.OPT_ARCHITECTURE_NAME)
+        parser.add_option('--new_name', dest='name', help=_("new name for the architecture (required)"))
 
     def check_options(self, validator):
         validator.require(('old_name', 'name'))
@@ -108,7 +108,7 @@ class Show(ArchitectureAction):
     description = _('show details about an architecture')
 
     def setup_parser(self, parser):
-        parser.add_option('--name', dest='name', help=_("archutecture name"))
+        parser.add_option('--name', dest='name', help=_("architecture name"))
 
     def check_options(self, validator):
         validator.require('name')

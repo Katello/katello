@@ -21,7 +21,6 @@ from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_foreman_record, unnest_one
 
-Config()
 
 # base config template action --------------------------------------------------------
 

@@ -15,29 +15,31 @@
 
 from katello.client.api.base import KatelloAPI
 
-
+#TODO: extract to utils
 def slice(d, *key_list):
     return dict((k, d.get(k)) for k in key_list)
 
 class ArchitectureAPI(KatelloAPI):
 
-
     def index(self, queries = None):
         """
+        :type queries: dict
+        :param queries: queries for filtering the architectures
         """
         path = "/api/architectures/"
         return self.server.GET(path, queries)[1]
 
     def show(self, id):
         """
+        :type id: string
+        :param id: architecture identifier
         """
-        path = "/api/architectures/%s/" % (id)
+        path = "/api/architectures/%s/" % str(id)
         return self.server.GET(path)[1]
 
     def create(self, data):
         """
-        @type data['name']: string
-        @param data['name']:
+        :type data['name']: string
         """
         path = "/api/architectures/"
         data = slice(data, 'name')
@@ -45,8 +47,9 @@ class ArchitectureAPI(KatelloAPI):
 
     def update(self, id, data):
         """
-        @type data['name']: string
-        @param data['name']:
+        :type id: string
+        :param id: architecture identifier
+        :type data['name']: string
         """
         path = "/api/architectures/%s/" % (id)
         data = slice(data, 'name')
@@ -54,6 +57,8 @@ class ArchitectureAPI(KatelloAPI):
 
     def destroy(self, id):
         """
+        :type id: string
+        :param id: architecture identifier
         """
         path = "/api/architectures/%s/" % (id)
         return self.server.DELETE(path)[1]

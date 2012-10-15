@@ -301,10 +301,6 @@ def setup_admin(katello_cmd):
         admin_cmd.add_command('crl_regen', admin.CrlRegen())
         katello_cmd.add_command('admin', admin_cmd)
 
-    admin_cmd = admin.Admin()
-    admin_cmd.add_command('crl_regen', admin.CrlRegen())
-    katello_cmd.add_command('admin', admin_cmd)
-
     architecture_cmd = architecture.Architecture()
     architecture_cmd.add_command('list', architecture.List())
     architecture_cmd.add_command('info', architecture.Show())
