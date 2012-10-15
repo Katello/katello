@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.1.14
+Version:        1.1.15
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -638,6 +638,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Oct 15 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.15-1
+- Added about link to Administer menu
+
 * Fri Oct 12 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.14-1
 - Merge pull request #845 from xsuchy/pull-req-rpm
 - package katello-common should own /etc/katello
