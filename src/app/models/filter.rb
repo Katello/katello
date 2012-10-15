@@ -25,8 +25,8 @@ class Filter < ActiveRecord::Base
   belongs_to :organization
   has_and_belongs_to_many :products, :uniq => true
   has_and_belongs_to_many :repositories, :uniq => true
-
   has_many :packages, :class_name=>"FilterPackage", :inverse_of=>:filter
+  belongs_to :content_view_definition
 
   before_validation(:on=>:create) do
     self.pulp_id ||= "#{self.organization.label}-#{self.name}-#{SecureRandom.hex(4)}"

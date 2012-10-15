@@ -6,6 +6,7 @@ class CreateContentViewComponents < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :content_view_components, [:component_id, :composite_id]
   end
 
   def self.down

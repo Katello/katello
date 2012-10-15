@@ -5,7 +5,6 @@ require 'minitest/autorun'
 require 'minitest/rails'
 require 'json'
 
-
 class MiniTest::Rails::ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods
 

@@ -1,6 +1,9 @@
 class ContentView < ActiveRecord::Base
   belongs_to :content_view_definition
   belongs_to :organization
+  has_many :environment_defaults, :class_name => "KTEnvironment",
+    :inverse_of => :default_content_view,
+    :foreign_key => :default_content_view_id
 
   has_many :environment_content_views
   has_many :environments, :through => :environment_content_views,

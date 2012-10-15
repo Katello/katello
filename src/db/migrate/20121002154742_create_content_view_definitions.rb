@@ -3,6 +3,7 @@ class CreateContentViewDefinitions < ActiveRecord::Migration
     create_table :content_view_definitions do |t|
       t.string :name
       t.text :description
+      t.references :organization
 
       t.timestamps
     end

@@ -93,6 +93,7 @@ class KTEnvironment < ActiveRecord::Base
 
   has_many :environment_content_views, :foreign_key => :environment_id
   has_many :content_views, :through => :environment_content_views
+  belongs_to :default_content_view, :class_name => "ContentView", :foreign_key => :default_content_view_id
 
   scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
 
