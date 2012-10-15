@@ -11,17 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Filter < ActiveRecord::Base
-  include IndexedModel
+  include Glue::ElasticSearch::Filter if AppConfig.use_elasticsearch
   include Authorization::Filter
 
-  index_options :extended_json=>:extended_index_attrs,
-                :display_attrs=>[:name, :packages, :products],
-                :json=>{:except=>[:pulp_id, :package_list]}
-
-  mapping do
-    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :name_sort, :type => 'string', :index => :not_analyzed
-  end
 
   validates :pulp_id, :presence => true
   validates :name, :katello_name_format => true
@@ -65,9 +57,6 @@ class Filter < ActiveRecord::Base
         super(options.merge(:methods => [:name, :package_list], :exclude => :pulp_id) {|k, v1, v2| [v1, v2].flatten })
   end
 
-  def extended_index_attrs
-    {:name_sort=>name.downcase, :name=>name, :packages=>self.package_list, :products=>self.products.collect{|p| p.name}}
-  end
 end
 
 
