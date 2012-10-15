@@ -29,7 +29,7 @@ def disable_glue_layers(services=[], models=[])
 
   models.each do |model|
     Object.send(:remove_const, model)
-    load "app/models/#{model.downcase}.rb"
+    load "app/models/#{model.underscore}.rb"
   end
 end
 

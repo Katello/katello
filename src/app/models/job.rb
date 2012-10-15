@@ -13,7 +13,6 @@
 class Job < ActiveRecord::Base
   include Glue
   include IndexedModel
-  include Authorization
   include AsyncOrchestration
 
   belongs_to :job_owner, :polymorphic => true

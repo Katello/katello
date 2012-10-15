@@ -52,13 +52,13 @@ class UserInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
   include TestUserBase
 
   def test_destroy
-    @alfred.destroy
-    assert @alfred.destroyed?
+    @no_perms_user.destroy
+    assert @no_perms_user.destroyed?
   end
 
   def test_before_destroy_remove_self_role
-    role = @alfred.own_role
-    @alfred.destroy
+    role = @no_perms_user.own_role
+    @no_perms_user.destroy
     assert_raises ActiveRecord::RecordNotFound do 
       Role.find(role.id)
     end
@@ -75,11 +75,11 @@ class UserClassTest < MiniTest::Rails::ActiveSupport::TestCase
   include TestUserBase
 
   def test_authenticate
-    assert User.authenticate!(@alfred.username, @alfred.username)
+    assert User.authenticate!(@no_perms_user.username, @no_perms_user.username)
   end
 
   def test_authenticate_fails_with_wrong_password
-    assert_nil User.authenticate!(@alfred.username, '')
+    assert_nil User.authenticate!(@no_perms_user.username, '')
   end
 
   def test_authenticate_fails_with_non_user

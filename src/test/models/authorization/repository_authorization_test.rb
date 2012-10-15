@@ -16,9 +16,10 @@ require 'test/models/repository_base'
 class RepositoryAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCase
   include RepositoryTestBase
 
+
   def setup
     super
-    User.current = users(:admin)
+    User.current = User.find(users(:admin))
   end
 
   def test_readable
@@ -57,7 +58,7 @@ class RepositoryAuthorizationNonAuthUserTest < MiniTest::Rails::ActiveSupport::T
 
   def setup
     super
-    User.current = users(:alfred)
+    User.current = User.find(users(:no_perms_user))
   end
 
   def test_readable
