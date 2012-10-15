@@ -26,8 +26,8 @@
 #  ../scripts/test/katello-cli-simple-test.sh
 #
 
-SERVICES_START=(mongod pulp-server postgresql tomcat6)
-SERVICES_STOP=(tomcat6 pulp-server mongod postgresql)
+SERVICES_START=(mongod qpidd httpd postgresql tomcat6)
+SERVICES_STOP=(tomcat6 qpidd httpd mongod postgresql)
 YUM_PARAMS="--disableplugin=subscription-manager,pulp-profile-update,katello"
 
 print_usage()
