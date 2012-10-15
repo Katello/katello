@@ -8,6 +8,9 @@ class CreateContentViews < ActiveRecord::Migration
 
       t.timestamps
     end
+
+    add_index :content_views, :content_view_definition_id
+    add_index :content_views, :organization_id
   end
 
   def self.down
