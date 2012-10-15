@@ -85,7 +85,7 @@ def get_product(orgName, prodName=None, prodLabel=None, prodId=None):
     products = product_api.product_by_name_or_label_or_id(orgName, prodName, prodLabel, prodId)
 
     if len(products) > 1:
-        raise ApiDataError(_("More than 1 product found with name or label provided, recommend using product id."))
+        raise ApiDataError(_("More than 1 product found with the name or label provided, recommend using product id.  The product id may be retrieved using the 'product list' command."))
     elif len(products) == 0:
         raise ApiDataError(_("Could not find product [ %s ] within organization [ %s ]") %
             (prodName, orgName))

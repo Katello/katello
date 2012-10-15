@@ -52,7 +52,9 @@ class Info(PackageAction):
     def check_options(self, validator):
         validator.require('id')
         if not validator.exists('repo_id'):
-            validator.require(('repo', 'org', 'product'))
+            validator.require(('repo', 'org'))
+            validator.require_at_least_one_of(('product', 'product_label', 'product_id'))
+            validator.mutually_exclude('product', 'product_label', 'product_id')
 
     def run(self):
         packId   = self.get_option('id')
@@ -102,7 +104,9 @@ class List(PackageAction):
 
     def check_options(self, validator):
         if not validator.exists('repo_id'):
-            validator.require(('repo', 'org', 'product'))
+            validator.require(('repo', 'org'))
+            validator.require_at_least_one_of(('product', 'product_label', 'product_id'))
+            validator.mutually_exclude('product', 'product_label', 'product_id')
 
     def run(self):
         repoId = self.get_repo_id()

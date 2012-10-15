@@ -60,7 +60,8 @@ class List(ErrataAction):
             validator.require('org')
         if validator.exists('repo'):
             validator.require('org')
-            validator.require_at_least_one_of(('product', 'product_label'))
+            validator.require_at_least_one_of(('product', 'product_label', 'product_id'))
+            validator.mutually_exclude('product', 'product_label', 'product_id')
 
     def run(self):
         repo_id   = self.get_option('repo_id')
@@ -178,7 +179,9 @@ class Info(ErrataAction):
     def check_options(self, validator):
         validator.require('id')
         if not validator.exists('repo_id'):
-            validator.require(('repo', 'org', 'product'))
+            validator.require(('repo', 'org'))
+            validator.require_at_least_one_of(('product', 'product_label', 'product_id'))
+            validator.mutually_exclude('product', 'product_label', 'product_id')
 
     def run(self):
         errId    = self.get_option('id')

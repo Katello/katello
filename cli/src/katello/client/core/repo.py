@@ -89,7 +89,9 @@ class SingleRepoAction(RepoAction):
     @classmethod
     def check_repo_select_options(cls, validator):
         if not validator.exists('id'):
-            validator.require(('name', 'org', 'product'))
+            validator.require(('name', 'org'))
+            validator.require_at_least_one_of(('product', 'product_label', 'product_id'))
+            validator.mutually_exclude('product', 'product_label', 'product_id')
 
     def get_repo(self, includeDisabled=False):
         repoId   = self.get_option('id')
@@ -138,6 +140,7 @@ class Create(RepoAction):
     def check_options(self, validator):
         validator.require(('name', 'org', 'url'))
         validator.require_at_least_one_of(('product', 'product_label', 'product_id'))
+        validator.mutually_exclude('product', 'product_label', 'product_id')
 
     def run(self):
         name     = self.get_option('name')
@@ -176,6 +179,7 @@ class Discovery(RepoAction):
     def check_options(self, validator):
         validator.require(('name', 'org', 'url'))
         validator.require_at_least_one_of(('product', 'product_label', 'product_id'))
+        validator.mutually_exclude('product', 'product_label', 'product_id')
 
     def run(self):
         name     = self.get_option('name')
@@ -429,6 +433,7 @@ class List(RepoAction):
 
     def check_options(self, validator):
         validator.require('org')
+        validator.mutually_exclude('product', 'product_label', 'product_id')
 
     def run(self):
         orgName = self.get_option('org')
@@ -444,7 +449,8 @@ class List(RepoAction):
         self.printer.add_column('package_count')
         self.printer.add_column('last_sync', formatter=format_sync_time)
 
-        if prodName and envName:
+        prodIncluded = prodName or prodLabel or prodId
+        if prodIncluded and envName:
             env  = get_environment(orgName, envName)
             prod = get_product(orgName, prodName, prodLabel, prodId)
 
@@ -453,7 +459,7 @@ class List(RepoAction):
             repos = self.api.repos_by_env_product(env["id"], prod["id"], None, listDisabled)
             self.printer.print_items(repos)
 
-        elif prodName:
+        elif prodIncluded:
             prod = get_product(orgName, prodName, prodLabel, prodId)
             self.printer.set_header(_("Repo List for Product %s in Org %s ") %
                 (prodName, orgName))
