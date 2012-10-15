@@ -16,25 +16,14 @@ require 'util/password'
 
 class User < ActiveRecord::Base
   include Glue::Pulp::User if AppConfig.use_pulp
+  include Glue::ElasticSearch::User if AppConfig.use_elasticsearch
   include Glue if AppConfig.use_cp || AppConfig.use_pulp
   include AsyncOrchestration
-  include IndexedModel
   include Authorization::User
   include Authorization::Enforcement
 
 
   acts_as_reportable
-
-  index_options :extended_json => :extended_index_attrs,
-                :display_attrs => [:username, :email],
-                :json          => { :except => [:password, :password_reset_token,
-                                                :password_reset_sent_at, :helptips_enabled,
-                                                :disabled, :own_role_id, :login] }
-
-  mapping do
-    indexes :username, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :username_sort, :type => 'string', :index => :not_analyzed
-  end
 
   scope :hidden, where(:hidden => true)
   scope :visible, where(:hidden => false)
@@ -464,10 +453,6 @@ class User < ActiveRecord::Base
     return ACTION_TO_VERB[type][verb] if ACTION_TO_VERB[type] and ACTION_TO_VERB[type][verb]
     return DEFAULT_VERBS[verb] if DEFAULT_VERBS[verb]
     verb
-  end
-
-  def extended_index_attrs
-    { :username_sort => username.downcase }
   end
 
   private

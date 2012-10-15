@@ -17,6 +17,11 @@ module Authorization::System
   def self.included(base)
     base.class_eval do
 
+      # returns list of virtual permission tags for the current user
+      def self.list_tags
+        select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
+      end
+
       def self.readable(org)
           raise "scope requires an organization" if org.nil?
           if org.systems_readable?
