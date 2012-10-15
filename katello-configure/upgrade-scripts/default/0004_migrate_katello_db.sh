@@ -11,7 +11,7 @@ KATELLO_HOME=${KATELLO_HOME:-/usr/share/katello}
 KATELLO_ENV=${KATELLO_ENV:-production}
 KATELLO_PREFIX=${KATELLO_PREFIX:-/katello}
 
-SERVICES = ["tomcat6",  "elasticsearch", "pulp-server"]
+SERVICES = ["tomcat6",  "elasticsearch", "qpidd", "mongod"]
 if [ "$KATELLO_PREFIX" = "/headpin" -o "$KATELLO_PREFIX" = "/sam" ]; then
     SERVICES = ["tomcat6",  "elasticsearch"]
 fi
