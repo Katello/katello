@@ -27,7 +27,7 @@ class TaskStatus < ActiveRecord::Base
     CANCELED = :canceled
     TIMED_OUT = :timed_out
   end
-  include IndexedModel
+  include Glue::ElasticSearch::TaskStatus if AppConfig.use_elasticsearch
 
   belongs_to :organization
   belongs_to :user
@@ -67,41 +67,9 @@ class TaskStatus < ActiveRecord::Base
 
   after_destroy :destroy_job
 
-  index_options :json=>{:only=> [:parameters, :result, :organization_id, :start_time, :finish_time, :task_owner_id, :task_owner_type ]},
-                :extended_json=>:extended_index_attrs
 
-  mapping do
-   indexes :start_time, :type=>'date'
-   indexes :finish_time, :type=>'date'
-   indexes :status, :type=>'string', :analyzer => 'snowball'
-  end
 
-  def extended_index_attrs
-    ret = {}
-    ret[:username] = user.username if user
 
-    ret[:status] = state.to_s
-    ret[:status] += " pending" if pending?
-    if state.to_s == "error" || state.to_s == "timed_out"
-      ret[:status] += " fail failure"
-    end
-
-    case state.to_s
-      when "finished"
-        ret[:status] += " completed"
-      when "timed_out"
-        ret[:status] += " timed out"
-    end
-
-    if task_type
-      tt = task_type
-      if (System.class.name == task_owner_type)
-        tt = TaskStatus::TYPES[task_type][:english_name]
-      end
-      ret[:status] +=" #{tt}"
-    end
-    ret
-  end
 
   def initialize(attrs = nil)
     unless attrs.nil?
