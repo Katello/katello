@@ -40,8 +40,8 @@ describe Api::RepositoriesController, :katello => true do
       Repository.stub(:find).and_return(@repository)
       Resources::Pulp::Repository.stub(:start_discovery).and_return({})
       PulpSyncStatus.stub(:using_pulp_task).and_return(task_stub)
-      Resources::Pulp::PackageGroup.stub(:all => {})
-      Resources::Pulp::PackageGroupCategory.stub(:all => {})
+      Runcible::Extensions::PackageGroup.stub(:all => {})
+      Runcible::Extensions::PackageCategory.stub(:all => {})
     end
     describe "for create" do
       let(:action) {:create}
@@ -157,7 +157,7 @@ describe Api::RepositoriesController, :katello => true do
 
     describe "show a repository" do
       it 'should call pulp glue layer' do
-        repo_mock = mock(Glue::Pulp::Repo)
+        repo_mock = mock(Repository)
         Repository.should_receive(:find).with("1").and_return(repo_mock)
         repo_mock.should_receive(:to_hash)
         get 'show', :id => '1'
@@ -230,7 +230,7 @@ describe Api::RepositoriesController, :katello => true do
 
     describe "update a repository" do
       before do
-        @repo = mock(Glue::Pulp::Repo)
+        @repo = mock(Repository)
       end
 
       context "Bad request" do
@@ -296,7 +296,7 @@ describe Api::RepositoriesController, :katello => true do
 
     describe "show a repository" do
       it 'should call pulp glue layer' do
-        repo_mock = mock(Glue::Pulp::Repo)
+        repo_mock = mock(Repository)
         Repository.should_receive(:find).with("1").and_return(repo_mock)
         repo_mock.should_receive(:to_hash)
         get 'show', :id => '1'
@@ -361,10 +361,10 @@ describe Api::RepositoriesController, :katello => true do
       before do
           @repo = Repository.new(:pulp_id=>"123", :id=>"123")
           Repository.stub(:find).and_return(@repo)
-          Resources::Pulp::PackageGroup.stub(:all => {})
+          Runcible::Extensions::PackageGroup.stub(:all => {})
       end
       it "should call Pulp layer" do
-        Resources::Pulp::PackageGroup.should_receive(:all).with("123")
+        Runcible::Extensions::PackageGroup.should_receive(:all).with("123")
         subject
       end
       it { should be_success }
@@ -376,10 +376,10 @@ describe Api::RepositoriesController, :katello => true do
       before do
           @repo = Repository.new(:pulp_id=>"123", :id=>"123")
           Repository.stub(:find).and_return(@repo)
-          Resources::Pulp::PackageGroupCategory.stub(:all => {})
+          Runcible::Extensions::PackageCategory.stub(:all => {})
       end
       it "should call Pulp layer" do
-        Resources::Pulp::PackageGroupCategory.should_receive(:all).with("123")
+        RunciblePackageCategory.should_receive(:all).with("123")
         subject
       end
       it { should be_success }
