@@ -17,7 +17,7 @@ describe "distributions/_filelist.html.haml" do
     view.stub(:render_menu)
     view.stub(:promotion_distribution_navigation).and_return([])
     @filename = "/path/to/file/in/distribution"
-    @distribution = Glue::Pulp::Distribution.new()
+    @distribution = Distribution.new()
     @distribution.stub!(:files).and_return([@filename])
   end
 

@@ -13,7 +13,6 @@ describe FiltersController, :katello => true do
 
       set_default_locale
       login_user
-      disable_filter_orchestration
       disable_product_orchestration
       disable_repo_orchestration
       controller.stub(:search_validate).and_return(true)
