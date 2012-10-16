@@ -12,6 +12,6 @@ class SystemTemplatePackages < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :system_templates_packages
+    drop_table :system_template_packages
   end
 end

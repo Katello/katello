@@ -195,4 +195,8 @@ class System < ActiveRecord::Base
       self.location = _("None") unless self.location
     end
 
+    def collect_installed_product_names
+      self.installedProducts ? self.installedProducts.map{ |p| p[:productName] } : []
+    end
+
 end

@@ -12,7 +12,7 @@
 
 class Api::PulpProxiesController < Api::ProxiesController
 
-  skip_before_filter :authorize # ok - proxy is consumer only
+  # authorization rules are implemented in proxies_controller.rb
 
   def get
     r = Resources::Pulp::Proxy.get(@request_path)

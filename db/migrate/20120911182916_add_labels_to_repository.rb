@@ -1,12 +1,12 @@
 require 'util/model_util'
 class AddLabelsToRepository < ActiveRecord::Migration
   def self.up
-    change_table(:repositories) do
-      |t| t.column :label, :string, :bulk => true
+    change_table(:repositories) do |t| 
+      t.column :label, :string, :bulk => true
       Repository.all.each do |repo|
         execute "update repositories set label = '#{Katello::ModelUtils::labelize(repo.name)}' where id= #{repo.id}"
       end
-      t.change(:label, :string, :null => false)
+      t.change :label, :string, :null => false
     end
     add_index(:repositories, [:label, :environment_product_id], :unique => true)
   end

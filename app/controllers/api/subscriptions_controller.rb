@@ -78,7 +78,7 @@ class Api::SubscriptionsController < Api::ApiController
 
   def find_system
     @system = System.first(:conditions => {:uuid => params[:system_id]})
-    raise HttpErrors::NotFound, _("Couldn't find system '#{params[:system_id]}'") if @system.nil?
+    raise HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:system_id] if @system.nil?
     @system
   end
 

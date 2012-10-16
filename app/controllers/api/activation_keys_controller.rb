@@ -93,7 +93,7 @@ class Api::ActivationKeysController < Api::ApiController
   api :DELETE, "/activation_keys/:id/pools/:poolid", "Delete an entitlement pool within an activation key"
   def remove_pool
     unless @activation_key.pools.include?(@pool)
-      raise HttpErrors::NotFound, _("Couldn't find pool '%s' in activation_key '%s'") % [@pool.cp_id, @activation_key.name]
+      raise HttpErrors::NotFound, _("Couldn't find pool '%{pool}' in activation_key '%{ak}'") % {:pool => @pool.cp_id, :ak => @activation_key.name}
     end
     @activation_key.pools.delete(@pool)
     render :json => @activation_key
@@ -102,7 +102,7 @@ class Api::ActivationKeysController < Api::ApiController
   api :DELETE, "/activation_keys/:id", "Destroy an activation key"
   def destroy
     @activation_key.destroy
-   render :text => _("Deleted activation key '#{params[:id]}'"), :status => 204
+   render :text => _("Deleted activation key '%s'") % params[:id], :status => 204
   end
 
   api :POST, "/organizations/:organization_id/activation_keys/:id/system_groups"
@@ -126,7 +126,7 @@ class Api::ActivationKeysController < Api::ApiController
     return unless params.has_key?(:organization_id)
 
     @organization = Organization.first(:conditions => {:label => params[:organization_id].tr(' ', '_')})
-    raise HttpErrors::NotFound, _("Couldn't find organization '#{params[:organization_id]}'") if @organization.nil?
+    raise HttpErrors::NotFound, _("Couldn't find organization '%s'") % params[:organization_id]  if @organization.nil?
     @organization
   end
 
@@ -134,13 +134,13 @@ class Api::ActivationKeysController < Api::ApiController
     return unless params.has_key?(:environment_id)
 
     @environment = KTEnvironment.find(params[:environment_id])
-    raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:environment_id]}'") if @environment.nil?
+    raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
     @environment
   end
 
   def find_activation_key
     @activation_key = ActivationKey.find(params[:id])
-    raise HttpErrors::NotFound, _("Couldn't find activation_key '#{params[:id]}'") if @activation_key.nil?
+    raise HttpErrors::NotFound, _("Couldn't find activation key '%s'") % params[:id] if @activation_key.nil?
     @activation_key
   end
 
@@ -154,7 +154,7 @@ class Api::ActivationKeysController < Api::ApiController
     if ids
       for group_id in ids
         group = SystemGroup.find(group_id)
-        raise HttpErrors::NotFound, _("Couldn't find system group '#{group_id}'") if group.nil?
+        raise HttpErrors::NotFound, _("Couldn't find system group '%s'") % group_id if group.nil?
         @system_groups << group
       end
     end
