@@ -81,7 +81,6 @@ module Util
                 paths_with_vars[new_substitution] = new_path
               rescue Errors::SecurityViolation => e
                 # Some paths may not be accessible
-                x = e
               end
             end
           else
