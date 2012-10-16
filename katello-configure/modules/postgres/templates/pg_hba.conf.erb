@@ -73,9 +73,11 @@ local <%= scope.lookupvar("candlepin::params::db_name") %> <%= scope.lookupvar("
 host  <%= scope.lookupvar("candlepin::params::db_name") %> <%= scope.lookupvar("candlepin::params::db_user") %> 127.0.0.1/8 md5
 host  <%= scope.lookupvar("candlepin::params::db_name") %> <%= scope.lookupvar("candlepin::params::db_user") %> ::1/128 md5
 
+<% if scope.lookupvar("katello::params::use_foreman") -%>
 local <%= scope.lookupvar("foreman::db_name") %> <%= scope.lookupvar("foreman::db_user") %> md5
 host  <%= scope.lookupvar("foreman::db_name") %> <%= scope.lookupvar("foreman::db_user") %> 127.0.0.1/8 md5
 host  <%= scope.lookupvar("foreman::db_name") %> <%= scope.lookupvar("foreman::db_user") %> ::1/128 md5
+<% end -%>
 
 local all postgres  ident
 
