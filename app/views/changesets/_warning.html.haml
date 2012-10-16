@@ -11,7 +11,7 @@
 %div
   %br
   - if !error.empty?
-    #{_("The following repositories encountered an error on their last sync.  It is highly recommended to fix these errors and resync before promoting.  Ignoring these may result in a broken repository in the #{@environment.name} environment.")}
+    #{_("The following repositories encountered an error on their last sync.  It is highly recommended to fix these errors and resync before promoting.  Ignoring these may result in a broken repository in the %s environment.") % @environment.name}
     %div
       %ul
         - for name in error

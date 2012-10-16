@@ -185,7 +185,7 @@ class SystemsController < ApplicationController
       filter :terms, filters
     end
     render :json=>systems.map{|s|
-      label = _("%s (Registered: %s)") % [s.name, convert_time(format_time(Time.parse(s.created_at)))]
+      label = _("%{name} (Registered: %{time})") % {:name => s.name, :time => convert_time(format_time(Time.parse(s.created_at)))}
       {:label=>label, :value=>s.name, :id=>s.id}
     }
   rescue Tire::Search::SearchRequestFailed => e
