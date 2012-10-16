@@ -197,7 +197,7 @@
           #changeset_users
         - elsif @next_environment
           %h2 #{_("Changesets")}
-          = _("You do not have permissions to view changesets for #{@next_environment.name}. Please contact your administrator to gain access.")
+          = _("You do not have permissions to view changesets for %s. Please contact your administrator to gain access.") % @next_environment.name
         - else
           %h2 #{_("Changesets")}
           = _("An environment does not exist.  If you would like to manage changesets and content, please create a new environment.")
