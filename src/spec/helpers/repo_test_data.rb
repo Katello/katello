@@ -40,6 +40,9 @@ module RepoTestData
     "clone_ids" => [
       CLONED_REPO_ID
     ],
+    "distributors" => [
+       {'config' => {'relative_url'=>"ACME_Corporation/Library/zoo/base"}}
+    ]
   }.with_indifferent_access
 
   CLONED_PROPERTIES = {
@@ -57,6 +60,9 @@ module RepoTestData
     ],
     "clone_ids" => [
     ],
+    "distributors" => [
+       {'config' => {'relative_url'=>"ACME_Corporation/Library/zoo/base"}}
+    ]
   }.with_indifferent_access
 
   REPO_FILTER = {

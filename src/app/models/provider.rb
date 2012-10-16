@@ -16,15 +16,8 @@ class Provider < ActiveRecord::Base
   include Authorization::Provider
   include AsyncOrchestration
   include KatelloUrlHelper
-  include IndexedModel
+  include Glue::ElasticSearch::Provider if AppConfig.use_elasticsearch
 
-  index_options :extended_json=>:extended_index_attrs,
-                :display_attrs=>[:name, :product, :repo, :description]
-
-  mapping do
-    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :name_sort, :type => 'string', :index => :not_analyzed
-  end
 
   REDHAT = 'Red Hat'
   CUSTOM = 'Custom'
@@ -122,23 +115,6 @@ class Provider < ActiveRecord::Base
     end
     hash
   end
-
-  def extended_index_attrs
-    if AppConfig.katello?
-      products = self.products.map{|prod|
-        {:product=>prod.name, :repo=>prod.repos(self.organization.library).collect{|repo| repo.name}}
-      }
-    else
-      products = self.products.map{|prod|
-        {:product=>prod.name}
-      }
-    end
-    {
-      :products=>products,
-      :name_sort=>name.downcase
-    }
-  end
-
 
   # refreshes products' repositories from CDS. If new versions are released on
   # the CDN, this method will provide loading this new versions.

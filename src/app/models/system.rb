@@ -21,35 +21,12 @@ end
 class System < ActiveRecord::Base
   include Glue::Candlepin::Consumer
   include Glue::Pulp::Consumer if AppConfig.katello?
+  include Glue::ElasticSearch::System
   include Glue
   include Authorization::System
   include AsyncOrchestration
-  include IndexedModel
 
   after_rollback :rollback_on_create, :on => :create
-
-  index_options :extended_json=>:extended_index_attrs,
-                :json=>{:only=> [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id]},
-                :display_attrs=>[:name, :description, :id, :uuid, :created_at, :lastCheckin, :system_group]
-
-  mapping   :dynamic_templates =>[{"fact_string" => {
-                          :path_match => "facts.*",
-                          :mapping => {
-                              :type=>"string",
-                              :analyzer=>"kt_name_analyzer"
-                          }
-                        }} ] do
-    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :description, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :name_sort, :type => 'string', :index => :not_analyzed
-    indexes :lastCheckin, :type=>'date'
-    indexes :name_autocomplete, :type=>'string', :analyzer=>'autcomplete_name_analyzer'
-    indexes :facts, :path=>"just_name" do
-    end
-
-  end
-
-  update_related_indexes :system_groups, :name
 
   acts_as_reportable
 
@@ -174,11 +151,6 @@ class System < ActiveRecord::Base
     task_status = save_task_status(pulp_task, :errata_install, :errata_ids, errata_ids)
   end
 
-  # returns list of virtual permission tags for the current user
-  def self.list_tags
-    select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
-  end
-
   def as_json(options)
     json = super(options)
     json['environment'] = environment.as_json unless environment.nil?
@@ -195,14 +167,6 @@ class System < ActiveRecord::Base
 
   def tasks
     TaskStatus.refresh_for_system(self)
-  end
-
-  def extended_index_attrs
-    {:facts=>self.facts, :organization_id=>self.organization.id,
-     :name_sort=>name.downcase, :name_autocomplete=>self.name,
-     :system_group=>self.system_groups.collect{|g| g.name},
-     :system_group_ids=>self.system_group_ids
-    }
   end
 
   # A rollback occurred while attempting to create the system; therefore, perform necessary cleanup.

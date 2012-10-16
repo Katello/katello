@@ -315,7 +315,6 @@ describe Product, :katello => true do
     before(:each) do
       disable_product_orchestration
       disable_repo_orchestration
-      disable_filter_orchestration
 
       @environment1 = KTEnvironment.create!(:name=>'dev', :label=> 'dev', :library => false, :prior => @organization.library, :organization => @organization)
       @environment2 = KTEnvironment.create!(:name=>'prod', :label=> 'prod', :library => false, :prior => @environment1, :organization => @organization)

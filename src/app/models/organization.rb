@@ -16,20 +16,7 @@ class Organization < ActiveRecord::Base
   include Glue if AppConfig.use_cp
 
   include Authorization::Organization
-  include IndexedModel
-
-  index_options :extended_json=>:extended_index_attrs,
-                :json=>{:except=>[:debug_cert, :events]},
-                :display_attrs=>[:name, :description, :environment]
-
-
-
-
-  mapping do
-    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :name_sort, :type => 'string', :index => :not_analyzed
-    indexes :label, :type => 'string', :index => :not_analyzed
-  end
+  include Glue::ElasticSearch::Organization if AppConfig.use_elasticsearch
 
   has_many :activation_keys, :dependent => :destroy
   has_many :providers, :dependent => :destroy
@@ -98,10 +85,6 @@ class Organization < ActiveRecord::Base
     elsif Organization.count == 1:
       [def_error, _("At least one organization must exist.")]
     end
-  end
-
-  def extended_index_attrs
-    {:name_sort=>name.downcase, :environment=>self.environments.collect{|e| e.name}}
   end
 
 end
