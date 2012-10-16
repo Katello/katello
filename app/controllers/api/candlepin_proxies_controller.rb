@@ -12,7 +12,7 @@
 
 class Api::CandlepinProxiesController < Api::ProxiesController
 
-  skip_before_filter :authorize # ok - proxy is consumer only
+  # authorization rules are implemented in proxies_controller.rb
 
   def get
     r = ::Resources::Candlepin::Proxy.get(@request_path)

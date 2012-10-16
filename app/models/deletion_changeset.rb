@@ -22,8 +22,7 @@ class DeletionChangeset < Changeset
 
     #check for other changesets promoting
     if self.environment.promoting_to?
-      raise _("Cannot delete the changeset '%s' while another changeset (%s) is being deleted or promoted.") %
-                [self.name, self.environment.promoting.first.name]
+      raise _("Cannot delete the changeset '%{changeset}' while another changeset (%{another_changeset}) is being deleted or promoted.") % {:changeset => self.name, :another_changeset => self.environment.promoting.first.name}
     end
 
     validate_content! self.errata

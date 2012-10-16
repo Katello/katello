@@ -53,7 +53,7 @@ class Api::CustomInfoController < Api::ApiController
 
   def update
     info_to_update = @informable.custom_info.where(:keyname => params[:keyname], :value => params[:current_value])
-    raise HttpErrors::NotFound, _("Couldn't find Custom Info '%s: %s'") % [params[:keyname], params[:current_value]] if info_to_update.empty?
+    raise HttpErrors::NotFound, _("Couldn't find Custom Info '%{name}: %{value}'") % {:name => params[:keyname], :value => params[:current_value]} if info_to_update.empty?
     info_to_update.first.update_attributes(:value => params[:value])
     render :json => consolidate(@informable.custom_info.where(:keyname => params[:keyname], :value => params[:value])).to_json
   end

@@ -5,9 +5,13 @@
  * <![endif]--> */
 #wrap {display:table;height:100%}
 
-#path-selected {
-  .jbreadcrumb{
-    top: -18px;
+/* IE8 Specific Stuff */
+//* ugly IE8 specific hacks for the border to look decent/*/
+@media \0screen {
+  #path-selected {
+    .jbreadcrumb{
+      top: -18px;
+    }
   }
 }
 

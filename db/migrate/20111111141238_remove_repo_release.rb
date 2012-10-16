@@ -4,5 +4,6 @@ class RemoveRepoRelease < ActiveRecord::Migration
   end
 
   def self.down
+    add_column :repositories, :release, :string, :null=>true
   end
 end

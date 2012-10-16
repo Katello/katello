@@ -82,7 +82,7 @@ module Katello
           def self.as(username, &do_block)
             old_user = current
             self.current = User.find_by_username(username)
-            raise(ArgumentError, "Cannot find user #{username}") if self.current.nil?
+            raise(ArgumentError, "Cannot find user '%s'" % username) if self.current.nil?
             do_block.call
             self.current = old_user
           end

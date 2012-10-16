@@ -38,25 +38,25 @@ module SyncManagementHelper
   end
 
   module RepoMethods
-    def collect_repos products, env, include_disabled = false
+    def collect_repos(products, env, include_disabled = false)
       Glue::Pulp::Repos.prepopulate! products, env,[]
       list = []
-      products.each{|prod|
+      products.each do |prod|
         minors = []
-        release, non_release = collect_minor(prod.repos(current_organization.library, include_disabled))
-        release.each{|minor, minor_repos|
+        release, non_release = collect_minor(prod.repos(env, include_disabled))
+        release.each do |minor, minor_repos|
           arches = []
-          collect_arches(minor_repos).each{|arch, arch_repos|
+          collect_arches(minor_repos).each do |arch, arch_repos|
             arches << {:name=>arch, :id=>arch, :type=>"arch", :children=>[], :repos=>arch_repos}
-          }
+          end
           minors << {:name=>minor, :id=>minor, :type=>"minor", :children=>arches, :repos=>[]}
-        }
+        end
 
-        list << {:name=>prod.name, :id=>prod.id, :type=>"product",  :repos=>non_release, :children=>minors}
-      }
+        list << {:name=>prod.name, :id=>prod.id, :type=>"product",  :repos=>non_release,
+            :children=>minors, :organization=>prod.organization.name}
+      end
       list
     end
-
 
     def collect_minor repos
       minors = {}
