@@ -22,17 +22,8 @@ class ContentValidator < ActiveModel::EachValidator
 end
 
 class GpgKey < ActiveRecord::Base
-  include IndexedModel
+  include Glue::ElasticSearch::GpgKey if AppConfig.use_elasticsearch
   include Authorization::GpgKey
-
-  index_options :extended_json=>:extended_index_attrs,
-                :display_attrs=>[:name, :content]
-
-  mapping do
-    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :name_sort, :type => 'string', :index => :not_analyzed
-  end
-
 
   has_many :repositories, :inverse_of => :gpg_key
   has_many :products, :inverse_of => :gpg_key
@@ -44,10 +35,6 @@ class GpgKey < ActiveRecord::Base
   validates_presence_of :organization
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
 
-
-  def extended_index_attrs
-    {:name_sort=>name.downcase}
-  end
 
   def as_json(options = {})
     options ||= {}

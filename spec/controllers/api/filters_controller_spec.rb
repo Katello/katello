@@ -27,7 +27,6 @@ describe Api::FiltersController, :katello => true do
     login_user
     set_default_locale
     disable_org_orchestration
-    disable_filter_orchestration
     disable_product_orchestration
 
     @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
