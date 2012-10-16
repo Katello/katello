@@ -50,7 +50,7 @@ var notices = (function() {
             noticeObj.notices = noticesParsed['notices'];
             noticeObj.validationErrors = noticesParsed['validation_errors'];
             noticeObj.requestType = requestType;
-            $("body").trigger("notice", noticeObj);
+            $(document).trigger("notice", noticeObj);
 
             if (level === 'success') {
                 notices.clearPreviousFailures(requestType);
@@ -159,7 +159,7 @@ $(document).ready(function() {
     //notices.checkNotices();
 
     notices.noticeArray = [];
-    $("body").bind("notice", notices.storeNotice);
+    $(document).bind("notice", notices.storeNotice);
 
     $(document).ajaxComplete(function(event, xhr, options){
         // look for notices in the response (e.g. sync scenarios)
