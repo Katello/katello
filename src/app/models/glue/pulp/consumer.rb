@@ -19,13 +19,14 @@ module Glue::Pulp::Consumer
       before_destroy :destroy_pulp_orchestration
       after_rollback :rollback_on_pulp_create, :on => :create
 
-      lazy_accessor :pulp_facts, :initializer => lambda { Resources::Pulp::Consumer.find(uuid) }
-      lazy_accessor :package_profile, :initializer => lambda { Resources::Pulp::Consumer.installed_packages(uuid) }
-      lazy_accessor :simple_packages, :initializer => lambda { Resources::Pulp::Consumer.installed_packages(uuid).
-                                                              collect{|pack| Glue::Pulp::SimplePackage.new(pack)} }
+      lazy_accessor :pulp_facts, :initializer => lambda { Runcible::Extensions::Consumer.retrieve(uuid) }
+      lazy_accessor :package_profile, :initializer => lambda { Runcible::Extensions::Consumer.profile(uuid, 'rpm') }
+      lazy_accessor :simple_packages, :initializer => lambda { Runcible::Extensions::Consumer.profile(uuid, 'rpm')["profile"].
+                                                              collect{|package| Glue::Pulp::SimplePackage.new(package)} }
       lazy_accessor :errata, :initializer => lambda { Resources::Pulp::Consumer.errata(uuid).
                                                               collect{|errata| Errata.new(errata)} }
-      lazy_accessor :repoids, :initializer => lambda { Resources::Pulp::Consumer.repoids(uuid).keys }
+      lazy_accessor :repoids, :initializer => lambda { Runcible::Extensions::Consumer.repos(uuid).
+                                                              collect{|repo| repo["repo_id"]} }
     end
   end
 
@@ -43,7 +44,7 @@ module Glue::Pulp::Consumer
       processed_ids = []; error_ids = []
       unbind_ids.each do |repoid|
         begin
-          Resources::Pulp::Consumer.unbind(uuid, repoid)
+          Runcible::Extensions::Consumer.unbind_all(uuid, repoid)
           processed_ids << repoid
         rescue => e
           Rails.logger.error "Failed to unbind repo #{repoid}: #{e}, #{e.backtrace.join("\n")}"
@@ -52,7 +53,7 @@ module Glue::Pulp::Consumer
       end
       bind_ids.each do |repoid|
         begin
-          Resources::Pulp::Consumer.bind(uuid, repoid)
+          Runcible::Extensions::Consumer.bind_all(uuid, repoid)
           processed_ids << repoid
         rescue => e
           Rails.logger.error "Failed to bind repo #{repoid}: #{e}, #{e.backtrace.join("\n")}"
@@ -67,7 +68,7 @@ module Glue::Pulp::Consumer
 
     def del_pulp_consumer
       Rails.logger.debug "Deleting consumer in pulp: #{self.name}"
-      Resources::Pulp::Consumer.destroy(self.uuid)
+      Runcible::Extensions::Consumer.delete(self.uuid)
     rescue => e
       Rails.logger.error "Failed to delete pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -85,7 +86,7 @@ module Glue::Pulp::Consumer
 
     def set_pulp_consumer
       Rails.logger.debug "Creating a consumer in pulp: #{self.name}"
-      return Resources::Pulp::Consumer.create(self.organization.label, self.uuid, self.description)
+      return Runcible::Extensions::Consumer.create(self.uuid, {:display_name => self.name})
     rescue => e
       Rails.logger.error "Failed to create pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -95,7 +96,7 @@ module Glue::Pulp::Consumer
       return true if @changed_attributes.empty?
 
       Rails.logger.debug "Updating consumer in pulp: #{@old.name}"
-      Resources::Pulp::Consumer.update(self.organization.label, self.uuid, self.description)
+      Runcible::Extensions::Consumer.update(self.uuid, {"delta" => {:display_name => self.name}})
     rescue => e
       Rails.logger.error "Failed to update pulp consumer #{@old.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -103,7 +104,7 @@ module Glue::Pulp::Consumer
     
     def upload_package_profile profile
       Rails.logger.debug "Uploading package profile for consumer #{self.name}"
-      Resources::Pulp::Consumer.upload_package_profile(self.uuid, profile)
+      Runcible::Extensions::Consumer.upload_profile(self.uuid, 'rpm', profile)
     rescue => e
       Rails.logger.error "Failed to upload package profile to pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e  
@@ -111,7 +112,7 @@ module Glue::Pulp::Consumer
 
     def install_package packages
       Rails.logger.debug "Scheduling package install for consumer #{self.name}"
-      pulp_task = Resources::Pulp::Consumer.install_packages(self.uuid, packages)
+      pulp_task = Runcible::Extensions::Consumer.install(self.uuid, 'rpm', packages)
     rescue => e
       Rails.logger.error "Failed to schedule package install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -119,7 +120,7 @@ module Glue::Pulp::Consumer
 
     def uninstall_package packages
       Rails.logger.debug "Scheduling package uninstall for consumer #{self.name}"
-      pulp_task = Resources::Pulp::Consumer.uninstall_packages(self.uuid, packages)
+      pulp_task = Runcible::Extensions::Consumer.uninstall(self.uuid, 'rpm', packages)
     rescue => e
       Rails.logger.error "Failed to schedule package uninstall for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -127,7 +128,7 @@ module Glue::Pulp::Consumer
 
     def update_package packages
       Rails.logger.debug "Scheduling package update for consumer #{self.name}"
-      pulp_task = Resources::Pulp::Consumer.update_packages(self.uuid, packages)
+      pulp_task = Runcible::Extensions::Consumer.update(self.uuid, 'rpm', packages)
     rescue => e
       Rails.logger.error "Failed to schedule package update for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -135,7 +136,7 @@ module Glue::Pulp::Consumer
 
     def install_package_group groups
       Rails.logger.debug "Scheduling package group install for consumer #{self.name}"
-      pulp_task = Resources::Pulp::Consumer.install_package_groups(self.uuid, groups)
+      pulp_task = Runcible::Extensions::Consumer.install(self.uuid, 'package_group', groups)
     rescue => e
       Rails.logger.error "Failed to schedule package group install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -143,7 +144,7 @@ module Glue::Pulp::Consumer
 
     def uninstall_package_group groups
       Rails.logger.debug "Scheduling package group uninstall for consumer #{self.name}"
-      pulp_task = Resources::Pulp::Consumer.uninstall_package_groups(self.uuid, groups)
+      pulp_task = Runcible::Extensions::Consumer..uninstall(self.uuid, 'package_group', groups)
     rescue => e
       Rails.logger.error "Failed to schedule package group uninstall for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -151,7 +152,7 @@ module Glue::Pulp::Consumer
 
     def install_consumer_errata errata_ids
       Rails.logger.debug "Scheduling errata install for consumer #{self.name}"
-      pulp_task = Resources::Pulp::Consumer.install_errata(self.uuid, errata_ids)
+      pulp_task = Runcible::Extensions::Consumer.install(self.uuid, 'erratum', errata_ids)
     rescue => e
       Rails.logger.error "Failed to schedule errata install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
