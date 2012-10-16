@@ -381,7 +381,7 @@ module Resources
       class << self
         def find pool_id
           pool_json = self.get(path(pool_id), self.default_headers).body
-          Util::Data::array_with_indifferent_access JSON.parse(pool_json)
+          JSON.parse(pool_json).with_indifferent_access
         end
 
         def get_for_owner owner_key
