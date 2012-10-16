@@ -50,6 +50,11 @@ RSpec.configure do |config|
   config.after :all do
     Warden.test_reset!
   end
+
+  # reset locale to English before each test
+  config.before :each do
+    I18n.locale = :en
+  end
   
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"

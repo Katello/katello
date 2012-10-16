@@ -36,6 +36,7 @@ class Product < ActiveRecord::Base
   has_and_belongs_to_many :changesets
 
   has_many :environment_products, :class_name => "EnvironmentProduct", :dependent => :destroy, :uniq=>true
+  has_and_belongs_to_many :filters, :uniq => true
 
   belongs_to :provider, :inverse_of => :products
   belongs_to :sync_plan, :inverse_of => :products
@@ -128,6 +129,7 @@ class Product < ActiveRecord::Base
     end
   end
 
+  # TODO: this should be a part of product update orchestration
   def reset_repo_gpgs!
     self.environment_products.each do |ep|
       ep.repositories.each do |repo|

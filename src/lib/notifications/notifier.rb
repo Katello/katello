@@ -133,7 +133,7 @@ module Notifications
           if controller
             if options[:details]
               link = NoticesController.helpers.link_to('Click here', controller.notices_url)
-              notices << _("#{link} for more details.")
+              notices << _("%s for more details.") % link
             end
             controller.flash[options[:level]] = { options[:send_as] => notices }.to_json
           end

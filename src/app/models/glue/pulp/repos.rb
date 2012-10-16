@@ -20,8 +20,6 @@ module Glue::Pulp::Repos
     base.class_eval do
       before_save :save_repos_orchestration
       before_destroy :destroy_repos_orchestration
-
-      has_and_belongs_to_many :filters, :uniq => true
     end
   end
 
@@ -42,13 +40,13 @@ module Glue::Pulp::Repos
 
   # create content for custom repo
   def create_content(repo)
-    new_content = Glue::Candlepin::ProductContent.new({
+    new_content = ::Candlepin::ProductContent.new({
       :content => {
         :name => repo.name,
-        :contentUrl => Glue::Pulp::Repos.custom_content_path(self, repo.label),
+        :contentUrl => Glue::Pulp::Repos.custom_content_path(repo.product, repo.label),
         :gpgUrl => repo.yum_gpg_key_url,
         :type => "yum",
-        :label => custom_content_label(repo),
+        :label => repo.custom_content_label,
         :vendor => Provider::CUSTOM
       },
       :enabled => true
@@ -56,20 +54,6 @@ module Glue::Pulp::Repos
     new_content.create
     add_content new_content
     new_content.content
-  end
-
-  # removes content for a repo and recreates it with any changes
-  #   then sets the content_id in pulp for each repository that needs updating
-  def refresh_content(repo)
-    old_content = repo.content
-    old_content_repos = Repository.where(:content_id=>repo.content_id)
-    remove_content_by_id(repo.content_id)
-    Resources::Candlepin::Content.destroy(repo.content_id)
-    new_content = create_content(repo)
-    old_content_repos.each do |r|
-      r.content_id = new_content.id
-      r.save!
-    end
   end
 
   # repo path for custom product repos (RH repo paths are derived from
@@ -90,29 +74,22 @@ module Glue::Pulp::Repos
     "/" + parts.map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
   end
 
-  def custom_content_label(repo)
-    "#{self.organization.label} #{self.label} #{repo.label}".gsub(/\s/,"_")
-  end
-
   def self.clone_repo_path_for_cp(repo)
     self.clone_repo_path(repo, nil, true)
   end
 
 
-
-  def self.prepopulate! products, environment, repos=[]
+  def self.prepopulate!(products, environment, repos = [])
     items = Runcible::Extensions::Repository.search_by_repository_ids(Repository.in_environment(environment).pluck(:pulp_id))
     full_repos = {}
-    items.each {|item| full_repos[item["id"]] = item }
+    items.each { |item| full_repos[item["id"]] = item }
 
-    products.each{|prod|
-      prod.repos(environment, true).each{|repo|
+    products.each do |prod|
+      prod.repos(environment, true).each do |repo|
         repo.populate_from(full_repos)
-      }
-    }
-    repos.each{|repo|
-      repo.populate_from(full_repos)
-    }
+      end
+    end
+    repos.each { |repo| repo.populate_from(full_repos) }
   end
 
   module InstanceMethods
@@ -121,20 +98,21 @@ module Glue::Pulp::Repos
       return self.repos(library).empty?
     end
 
-    def repos env, include_disabled = false
-      @repo_cache = {} if @repo_cache.nil?
-      #cache repos so we can cache lazy_accessors
-      if @repo_cache[env.id].nil?
-        @repo_cache[env.id] = Repository.joins(:environment_product).where(
-            "environment_products.product_id" => self.id, "environment_products.environment_id"=> env)
-      end
-      if include_disabled
-        return @repo_cache[env.id]
-      end
+    def repos(env, include_disabled = false)
+      # cache repos so we can cache lazy_accessors
+      @repo_cache ||= {}
 
-      # we only want the enabled repos to be visible
-      # This serves as a white list for redhat repos
-      @repo_cache[env.id].where(:enabled => true)
+      @repo_cache[env.id] ||= Repository.joins(:environment_product).where(
+          "environment_products.product_id" => self.id,
+          "environment_products.environment_id" => env)
+
+      if include_disabled
+        @repo_cache[env.id]
+      else
+        # we only want the enabled repos to be visible
+        # This serves as a white list for redhat repos
+        @repo_cache[env.id].where(:enabled => true)
+      end
     end
 
     def promote from_env, to_env
@@ -416,24 +394,6 @@ module Glue::Pulp::Repos
               raise e
             end
           end
-        end
-      end
-    end
-
-    def update_repos
-      return true unless productContent_changed?
-
-      deleted_content.each do |pc|
-        Rails.logger.debug "deleting repository #{pc.content.label}"
-        Repository.destroy_all(:pulp_id => repo_id(pc.content.label))
-      end
-
-      added_content.each do |pc|
-        if !(self.environments.map(&:label).any? {|label| pc.content.label.include?(label)}) || pc.content.label.include?('Library')
-          Rails.logger.debug "creating repository #{repo_id(pc.content.label)}"
-          self.add_repo(pc.content.label, repo_url(pc.content.contentUrl), pc.content.type)
-        else
-          raise "New content was added to environment other than Library. Please use promotion instead."
         end
       end
     end

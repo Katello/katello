@@ -1,4 +1,4 @@
-# Copyright (c) 2011 Red Hat, Inc.
+# Copyright (c) 2012 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public License,
 # version 2 (GPLv2). There is NO WARRANTY for this software, express or
@@ -30,7 +30,7 @@ def force_encoding(encoding):
     """
     Force locale to use specific encoding and bind output streams to use it.
     """
-    current_locale = locale.getlocale(locale.LC_ALL)[0] or locale.getdefaultlocale()[0]
+    current_locale = locale.getlocale()[0] or locale.getdefaultlocale()[0]
     if current_locale:
         locale.setlocale(locale.LC_ALL, str(current_locale)+'.'+str(encoding))
     else:

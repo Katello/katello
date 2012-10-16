@@ -12,7 +12,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 Name:           katello-utils
-Version:        1.1.2
+Version:        1.2.0
 Release:        1%{?dist}
 Summary:        Additional tools for Katello
 

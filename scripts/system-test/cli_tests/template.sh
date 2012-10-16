@@ -13,6 +13,7 @@ test_success "template create" template create --name="$TEMPLATE_NAME" --descrip
 
 test_success "template create with parent" template create --name="$TEMPLATE_NAME_2" --description="template 2 description" --parent="$TEMPLATE_NAME" --org="$TEST_ORG"
 test_success "template update" template update --name="$TEMPLATE_NAME_2" --new_name="changed_$TEMPLATE_NAME_2" --description="changed description" --org="$TEST_ORG"
+test_success "template delete" template delete --name="changed_$TEMPLATE_NAME_2" --org="$TEST_ORG"
 
 test_success "template list" template list --org="$TEST_ORG" --environment="Library"
 

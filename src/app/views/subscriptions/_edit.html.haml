@@ -24,12 +24,12 @@
           - if @subscription.quantity < 0
             = _("Unlimited")
           - else
-            = _("%d of %d") % [@subscription.consumed, @subscription.quantity]
+            = _("%{consumed} of %{total}") % {:consumed => @subscription.consumed, :total => @subscription.quantity}
       %fieldset
         .grid_2.ra.fieldset
           =label :date_range, :date_range, _("Starts / Ends")
         .grid_8.la
-          = _("%s / %s") % [format_time(@subscription.start_date), format_time(@subscription.end_date)]
+          = _("%{start_date} / %{end_date}") % {:start_date => format_time(@subscription.start_date), :end_date => format_time(@subscription.end_date)}
       %fieldset
         .grid_2.ra.fieldset
           =label :contract, :contract, _("Contract Number")
