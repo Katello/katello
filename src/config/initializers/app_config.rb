@@ -108,5 +108,5 @@ end
 Time::DATE_FORMATS[:default] = "%Y-%m-%d %H:%M:%S"
 
 unless ::AppConfig.host.present?
-   raise (_("You must specify host in %s for %s to work properly") % ["katello.yml", AppConfig.app_name])
+   raise (_("You must specify host in %{config_file} for %{app_name} to work properly") % {:config_file => "katello.yml", :app_name => AppConfig.app_name})
 end

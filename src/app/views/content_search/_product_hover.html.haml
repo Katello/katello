@@ -2,5 +2,5 @@
 - product ||=  nil
 - env ||= nil
 
-= _("Packages (#{product.total_package_count(env)})")
-= _("Errata (#{product.total_errata_count(env)})")
+= _("Packages (%s)") % product.total_package_count(env)
+= _("Errata (%s)") % product.total_errata_count(env)

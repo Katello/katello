@@ -66,7 +66,7 @@ module Glue::Candlepin::Owner
       self.library = nil
       return true
     rescue => e
-      Rails.logger.error _("Failed to delete all environments for owner %s in candlepin:") % [name, "#{e}, #{e.backtrace.join("\n")}"]
+      Rails.logger.error _("Failed to delete all environments for owner %{org} in candlepin: %{message}") % {:org => name, :message => "#{e}, #{e.backtrace.join("\n")}"}
       raise e
     end
 
@@ -86,7 +86,7 @@ module Glue::Candlepin::Owner
         sys.destroy
       end
     rescue => e
-      Rails.logger.error _("Failed to delete all systems for owner %s in candlepin: %s") % [name, "#{e}, #{e.backtrace.join("\n")}"]
+      Rails.logger.error _("Failed to delete all systems for owner %{org} in candlepin: %{message}") % {:org => name, :message => "#{e}, #{e.backtrace.join("\n")}"}
       raise e
     end
 
