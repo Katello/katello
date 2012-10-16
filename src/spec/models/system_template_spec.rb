@@ -394,7 +394,7 @@ describe SystemTemplate, :katello => true do
     })}
 
     before :each do
-      Resources::Pulp::PackageGroup.stub(:all => RepoTestData.repo_package_groups)
+      Runcible::Extensions::PackageGroup.stub(:all => RepoTestData.repo_package_groups)
       stub_repos([repo])
     end
 
@@ -449,7 +449,7 @@ describe SystemTemplate, :katello => true do
     })}
 
     before :each do
-      Resources::Pulp::PackageGroupCategory.stub(:all => RepoTestData.repo_package_group_categories)
+      Runcible::Extensions::PackageCategory.stub(:all => RepoTestData.repo_package_group_categories)
       stub_repos([repo])
     end
 
@@ -500,7 +500,7 @@ describe SystemTemplate, :katello => true do
     })}
 
     before :each do
-      Resources::Pulp::Repository.stub(:distributions => [RepoTestData.repo_distributions])
+      Repository.stub(:distributions => [RepoTestData.repo_distributions])
       stub_repos([repo])
     end
 
@@ -542,8 +542,8 @@ describe SystemTemplate, :katello => true do
     describe "repositories and distributions", :katello => true do
       before do
         disable_repo_orchestration
-        Resources::Pulp::Repository.stub(:distributions => [RepoTestData.repo_distributions])
-        Resources::Pulp::Distribution.stub(:find => RepoTestData.repo_distributions)
+        Repository.stub(:distributions => [RepoTestData.repo_distributions])
+        Distribution.stub(:find => RepoTestData.repo_distributions)
         stub_repos([Repository.new(RepoTestData::REPO_PROPERTIES)])
         @prod1.stub(:repos => [Repository.new(RepoTestData::REPO_PROPERTIES)])
 

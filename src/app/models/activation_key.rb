@@ -12,15 +12,8 @@
 
 class ActivationKey < ActiveRecord::Base
 
-  include IndexedModel
+  include Glue::ElasticSearch::ActivationKey if AppConfig.use_elasticsearch
   include Authorization::ActivationKey
-
-  index_options :extended_json=>:extended_json, :display_attrs=>[:name, :description, :environment, :template]
-
-  mapping do
-    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :name_sort, :type => 'string', :index => :not_analyzed
-  end
 
   belongs_to :organization
   belongs_to :environment, :class_name => "KTEnvironment"

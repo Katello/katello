@@ -23,15 +23,8 @@ end
 
 class Role < ActiveRecord::Base
   include Authorization::Role
-  include IndexedModel
+  include Glue::ElasticSearch::Role if AppConfig.use_elasticsearch
 
-  index_options :extended_json=>:extended_index_attrs,
-                :display_attrs=>[:name, :permissions, :description]
-
-  mapping do
-    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :name_sort, :type => 'string', :index => :not_analyzed
-  end
 
   acts_as_reportable
 
@@ -191,13 +184,6 @@ class Role < ActiveRecord::Base
   end
 
   private
-
-  def extended_index_attrs
-    {:name_sort=>name.downcase,
-     :permissions=>self.permissions.collect{|p| p.name},
-     :self_role=>(self_role_for_user != nil || self.self_role == true)
-    }
-  end
 
   def super_admin_check user
     if superadmin? && users.length == 1

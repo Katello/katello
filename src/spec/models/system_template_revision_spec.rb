@@ -77,9 +77,9 @@ describe SystemTemplate, :katello => true do
     before :each do
 
       stub_repos([repo])
-      Resources::Pulp::Repository.stub(:packages_by_name => [pack1])
-      Resources::Pulp::PackageGroup.stub(:all => pack_groups.clone)
-      Resources::Pulp::PackageGroupCategory.stub(:all => pack_group_categories.clone)
+      Repository.stub(:packages_by_name => [pack1])
+      PackageGroup.stub(:all => pack_groups.clone)
+      PackageGroupCategory.stub(:all => pack_group_categories.clone)
 
 
 
@@ -90,8 +90,8 @@ describe SystemTemplate, :katello => true do
       @tpl1.add_pg_category("pg_category1")
       @tpl1.save!
 
-      Resources::Pulp::PackageGroup.stub(:all => pack_groups.clone)
-      Resources::Pulp::PackageGroupCategory.stub(:all => pack_group_categories.clone)
+      PackageGroup.stub(:all => pack_groups.clone)
+      PackageGroupCategory.stub(:all => pack_group_categories.clone)
     end
 
 

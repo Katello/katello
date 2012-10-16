@@ -13,22 +13,9 @@
 class SystemGroup < ActiveRecord::Base
 
   include Glue::Pulp::ConsumerGroup if (AppConfig.use_pulp)
+  include Glue::ElasticSearch::SystemGroup
   include Glue
   include Authorization::SystemGroup
-  include IndexedModel
-
-  index_options :extended_json=>:extended_index_attrs,
-                :json=>{:only=>[:id, :organization_id, :name, :description, :max_systems]},
-                :display_attrs=>[:name, :description, :system]
-
-  mapping do
-    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :description, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :name_sort, :type => 'string', :index => :not_analyzed
-    indexes :name_autocomplete, :type=>'string', :analyzer=>'autcomplete_name_analyzer'
-  end
-
-  update_related_indexes :systems, :name
 
   has_many :key_system_groups, :dependent => :destroy
   has_many :activation_keys, :through => :key_system_groups
@@ -119,12 +106,6 @@ class SystemGroup < ActiveRecord::Base
 
   def refreshed_jobs
     Job.refresh_for_owner(self)
-  end
-
-  def extended_index_attrs
-    {:name_sort=>name.downcase, :name_autocomplete=>self.name,
-     :system=>self.systems.collect{|s| s.name}
-    }
   end
 
   def environments

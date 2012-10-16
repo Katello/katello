@@ -20,27 +20,13 @@ end
 class Product < ActiveRecord::Base
   include Glue::Candlepin::Product if AppConfig.use_cp
   include Glue::Pulp::Repos if AppConfig.use_pulp
+  include Glue::ElasticSearch::Product if AppConfig.use_elasticsearch
   include Glue if AppConfig.use_cp || AppConfig.use_pulp
   include Authorization::Product
   include AsyncOrchestration
-  include IndexedModel
+
   include Katello::LabelFromName
 
-  index_options :extended_json=>:extended_index_attrs,
-                  :json=>{:only => [:name, :description]},
-                  :display_attrs=>[:name, :description]
-
-  mapping do
-    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :name_sort, :type => 'string', :index => :not_analyzed
-    indexes :label, :type => 'string', :index => :not_analyzed
-    indexes :description, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :name_autocomplete, :type=>'string', :analyzer=>'autcomplete_name_analyzer'
-  end
-
-  def extended_index_attrs
-    {:name_sort => name.downcase}
-  end
 
   has_many :environments, :class_name => "KTEnvironment", :uniq => true , :through => :environment_products  do
     def <<(*items)
@@ -71,12 +57,6 @@ class Product < ActiveRecord::Base
   scope :engineering, where(:type => "Product")
 
   after_save :update_related_index
-
-  def extended_index_attrs
-    {:name_sort=>name.downcase, :name_autocomplete=>self.name,
-    :organization_id => organization.id
-    }
-  end
 
 
   def initialize(attrs = nil)
