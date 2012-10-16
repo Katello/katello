@@ -165,7 +165,7 @@ class ApplicationController < ActionController::Base
         if current_user.allowed_organizations.include?(o)
           @current_org = o
         else
-          raise ActiveRecord::RecordNotFound.new _("Permission Denied. User '%s' does not have permissions to access organization '%s'.") % [User.current.username, o.name]
+          raise ActiveRecord::RecordNotFound.new _("Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'.") % {:user => User.current.username, :org => o.name}
         end
       end
       return @current_org

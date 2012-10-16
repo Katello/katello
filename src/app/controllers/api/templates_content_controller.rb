@@ -47,13 +47,13 @@ class Api::TemplatesContentController < Api::ApiController
   #def add_product
   #  @template.add_product_by_cpid(params[:id])
   #  @template.save!
-  #  render :text => _("Added product '#{params[:id]}'"), :status => 200
+  #  render :text => _("Added product '%s'") % params[:id], :status => 200
   #end
   #
   #def remove_product
   #  @template.remove_product_by_cpid(params[:id])
   #  @template.save!
-  #  render :text => _("Removed product '#{params[:id]}'"), :status => 200
+  #  render :text => _("Removed product '%s'") % params[:id], :status => 200
   #end
 
   api :POST, "/templates/:template_id/packages", "Add a package"

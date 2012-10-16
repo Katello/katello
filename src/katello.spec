@@ -309,6 +309,9 @@ testing.
 
 %build
 
+#check for malformed gettext strings
+script/check-gettext.rb -m -i
+
 #copy converge-ui
 cp -R /usr/share/converge-ui-devel/* ./vendor/converge-ui
 rm ./public/fonts
