@@ -55,7 +55,7 @@ module Glue::Candlepin::Product
     product.save!
 
   rescue => e
-    Rails.logger.error "Failed to create product #{attrs['name']} for provider #{name}"
+    Rails.logger.error "Failed to create product #{attrs['name']}: #{e}"
     raise e
   end
 
@@ -70,7 +70,7 @@ module Glue::Candlepin::Product
     end
     product
   rescue => e
-    Rails.logger.error "Failed to create product #{attrs['name']} for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
+    Rails.logger.error "Failed to create product #{attrs['name']}: #{e}, #{e.backtrace.join("\n")}"
     raise e
   end
 
