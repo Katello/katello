@@ -65,12 +65,15 @@ describe Api::ChangesetsContentController, :katello => true do
   end
 
   describe "products" do
+    before(:each) do
+      Product.should_receive(:find_by_cp_id).with(product_cp_id).and_return(@product)
+    end
+
     let(:action) { :add_product }
     let(:req) { post :add_product, :changeset_id => changeset_id, :product_id => product_cp_id }
     it_should_behave_like "protected action"
 
     it "should add a product" do
-      Product.should_receive(:find_by_cp_id!).with(product_cp_id).and_return(@product)
       @cs.should_receive(:add_product!).with(@product).and_return(@product)
       req
       response.should be_success
@@ -78,12 +81,15 @@ describe Api::ChangesetsContentController, :katello => true do
   end
 
   describe "products" do
+    before(:each) do
+      Product.should_receive(:find_by_cp_id).with(product_cp_id).and_return(@product)
+    end
+
     let(:action) { :remove_product }
     let(:req) { delete :remove_product, :changeset_id => changeset_id, :id => product_cp_id }
     it_should_behave_like "protected action"
 
     it "should remove a product" do
-      Product.should_receive(:find_by_cp_id!).with(product_cp_id).and_return(@product)
       @cs.should_receive(:remove_product!).with(@product).and_return([true])
       req
       response.should be_success
@@ -91,12 +97,15 @@ describe Api::ChangesetsContentController, :katello => true do
   end
 
   describe "packages" do
+    before(:each) do
+      Product.should_receive(:find_by_cp_id).with(product_cp_id).and_return(@product)
+    end
+
     let(:action) { :add_package }
     let(:req) { post :add_package, :changeset_id => changeset_id, :name => package_name, :product_id => product_cp_id }
     it_should_behave_like "protected action"
 
     it "should add a package" do
-      Product.should_receive(:find_by_cp_id!).with(product_cp_id).and_return(@product)
       @cs.should_receive(:add_package!).with(package_name, @product).and_return({})
       req
       response.should be_success
@@ -104,12 +113,15 @@ describe Api::ChangesetsContentController, :katello => true do
   end
 
   describe "packages" do
+    before(:each) do
+      Product.should_receive(:find_by_cp_id).with(product_cp_id).and_return(@product)
+    end
+
     let(:action) { :remove_package }
     let(:req) { delete :remove_package, :changeset_id => changeset_id, :id => package_name, :product_id => product_cp_id }
     it_should_behave_like "protected action"
 
     it "should remove a package" do
-      Product.should_receive(:find_by_cp_id!).with(product_cp_id).and_return(@product)
       @cs.should_receive(:remove_package!).with(package_name, @product).and_return([true])
       req
       response.should be_success
@@ -117,12 +129,15 @@ describe Api::ChangesetsContentController, :katello => true do
   end
 
   describe "erratum" do
+    before(:each) do
+      Product.should_receive(:find_by_cp_id).with(product_cp_id).and_return(@product)
+    end
+
     let(:action) { :add_erratum }
     let(:req) { post :add_erratum, :changeset_id => changeset_id, :erratum_id => erratum_id, :product_id => product_cp_id }
     it_should_behave_like "protected action"
 
     it "should add an erratum" do
-      Product.should_receive(:find_by_cp_id!).with(product_cp_id).and_return(@product)
       @cs.should_receive(:add_erratum!).with(erratum_id, @product)
       req
       response.should be_success
@@ -130,12 +145,15 @@ describe Api::ChangesetsContentController, :katello => true do
   end
 
   describe "erratum" do
+    before(:each) do
+      Product.should_receive(:find_by_cp_id).with(product_cp_id).and_return(@product)
+    end
+
     let(:action) { :remove_erratum }
     let(:req) { delete :remove_erratum, :changeset_id => changeset_id, :id => erratum_id, :product_id => product_cp_id }
     it_should_behave_like "protected action"
 
     it "should remove an erratum" do
-      Product.should_receive(:find_by_cp_id!).with(product_cp_id).and_return(@product)
       @cs.should_receive(:remove_erratum!).with(erratum_id, @product).and_return([true])
       req
       response.should be_success
@@ -195,12 +213,15 @@ describe Api::ChangesetsContentController, :katello => true do
   end
 
   describe "distributions" do
+    before(:each) do
+      Product.should_receive(:find_by_cp_id).with(product_cp_id).and_return(@product)
+    end
+
     let(:action) { :add_distribution }
     let(:req) { post :add_distribution, :changeset_id => changeset_id, :distribution_id => distribution_id, :product_id => product_cp_id }
     it_should_behave_like "protected action"
 
     it "should add a distribution" do
-      Product.should_receive(:find_by_cp_id!).with(product_cp_id).and_return(@product)
       @cs.should_receive(:add_distribution!).with(distribution_id, @product).and_return(@product)
       req
       response.should be_success
@@ -208,12 +229,15 @@ describe Api::ChangesetsContentController, :katello => true do
   end
 
   describe "distributions" do
+    before(:each) do
+      Product.should_receive(:find_by_cp_id).with(product_cp_id).and_return(@product)
+    end
+
     let(:action) { :remove_distribution }
     let(:req) { delete :remove_distribution, :changeset_id => changeset_id, :id => distribution_id, :product_id => product_cp_id }
     it_should_behave_like "protected action"
 
     it "should remove a distribution" do
-      Product.should_receive(:find_by_cp_id!).with(product_cp_id).and_return(@product)
       @cs.should_receive(:remove_distribution!).with(distribution_id, @product).and_return(@product)
       req
       response.should be_success
