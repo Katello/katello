@@ -69,7 +69,7 @@ describe ContentSearchController do
             post "#{content_type}", params
             response.should be_success
             result = JSON.parse(response.body)
-            result["name"].should == content_type.capitalize
+            result["name"].should == content_type.capitalize.to_s
           end
 
           it "should return some repo_compare_#{content_type}" do

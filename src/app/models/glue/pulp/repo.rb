@@ -23,14 +23,14 @@ module Glue::Pulp::Repo
       has_and_belongs_to_many :filters, :uniq => true, :before_add => :add_filters_orchestration, :before_remove => :remove_filters_orchestration
 
       lazy_accessor :pulp_repo_facts,
-                    :initializer => lambda {
+                    :initializer => lambda {|s|
                       if pulp_id
                         Resources::Pulp::Repository.find(pulp_id)
                       end
                     }
       lazy_accessor :groupid, :arch, :feed, :feed_cert, :feed_key, :feed_ca, :source, :package_count,
                 :clone_ids, :uri_ref, :last_sync, :relative_path, :preserve_metadata, :content_type, :uri,
-                :initializer => lambda {
+                :initializer => lambda {|s|
                   if pulp_id
                       pulp_repo_facts
                   end
