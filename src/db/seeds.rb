@@ -41,8 +41,8 @@ unless user_admin
       :email    => first_user_email)
   User.current = user_admin
   if AppConfig.use_foreman
-    foreman_admin_user    =
-        ::Foreman::User.all.find { |u| u.login == 'admin' } || raise('could not find foreman-admin-user')
+    foreman_admin_user = ::Foreman::User.all(:search => 'login=admin').first or
+        raise 'could not find foreman-admin-user'
     user_admin.foreman_id = foreman_admin_user.id
     user_admin.disable_foreman_orchestration { |admin| admin.save! }
   else
