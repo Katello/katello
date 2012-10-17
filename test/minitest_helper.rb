@@ -55,6 +55,7 @@ class CustomMiniTestRunner
 
     def _run_suite(suite, type)
       begin
+        User.current = nil  #reset User.current
         suite.before_suite if suite.respond_to?(:before_suite)
         super(suite, type)
       ensure

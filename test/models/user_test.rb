@@ -51,6 +51,11 @@ end
 class UserInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
   include TestUserBase
 
+  def setup
+    super
+    User.current = @admin
+  end
+
   def test_destroy
     @no_perms_user.destroy
     assert @no_perms_user.destroyed?
