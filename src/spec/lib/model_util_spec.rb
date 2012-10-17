@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 #
 # Copyright 2011 Red Hat, Inc.
 #

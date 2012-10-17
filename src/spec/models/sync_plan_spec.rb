@@ -43,7 +43,7 @@ describe SyncPlan, :katello => true do
     it "should have proper pulp duration format" do
       @plan.interval = 'weekly'
       @plan.schedule_format.should_not be_nil
-      @plan.schedule_format.should be_any { |m| m =~ /\/P7D$/ }
+      @plan.schedule_format.should =~ /\/P7D$/
     end
 
     it "should properly handle pulp duration of none" do

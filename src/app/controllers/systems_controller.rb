@@ -287,8 +287,8 @@ class SystemsController < ApplicationController
     begin
       releases = @system.available_releases
     rescue => e
-      releases_error = e.to_str
-      Rails.logger.error e.to_str
+      releases_error = e.to_s
+      Rails.logger.error e.to_s
     end
     releases ||= []
     releases_error ||= nil

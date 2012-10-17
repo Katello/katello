@@ -15,7 +15,7 @@ module Glue::Pulp::User
     base.send :include, InstanceMethods
     base.send :include, LazyAccessor
     base.class_eval do
-      lazy_accessor :login, :name, :initializer => lambda { Resources::Pulp::User.find(self.username) }
+      lazy_accessor :login, :name, :initializer => lambda {|s| Resources::Pulp::User.find(self.username) }
 
       before_save :save_pulp_orchestration
       before_destroy :destroy_pulp_orchestration
