@@ -44,7 +44,7 @@ test:
   adapter: postgresql
   username: katello
   password: katello
-  database: katello_test
+  database: katello_test<%= ENV['TEST_ENV_NUMBER'] %>
   host: localhost
   encoding: UTF8
   <%end%>

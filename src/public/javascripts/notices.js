@@ -18,9 +18,6 @@ var notices = (function() {
             pollingTimeOut = 45000;
           }
           
-          notices.noticeArray = [];
-          $("body").bind("notice", notices.storeNotice);
-
           notices.checkTimeout = pollingTimeOut;
           //start continual checking for new notifications
           notices.start();
@@ -53,7 +50,7 @@ var notices = (function() {
             noticeObj.notices = noticesParsed['notices'];
             noticeObj.validationErrors = noticesParsed['validation_errors'];
             noticeObj.requestType = requestType;
-            $("body").trigger("notice", noticeObj);
+            $(document).trigger("notice", noticeObj);
 
             if (level === 'success') {
                 notices.clearPreviousFailures(requestType);
@@ -164,6 +161,9 @@ $(document).ready(function() {
 
     // perform periodic polling of notices (e.g. async scenarios)
     //notices.checkNotices();
+
+    notices.noticeArray = [];
+    $(document).bind("notice", notices.storeNotice);
 
     $(document).ajaxComplete(function(event, xhr, options){
         // look for notices in the response (e.g. sync scenarios)

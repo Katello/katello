@@ -100,6 +100,9 @@ group :test, :development do
  
   gem 'minitest-rails'
   gem 'minitest_tu_shim'
+
+  #parallel_tests to make our specs go faster
+  gem "parallel_tests"
 end
 
 group :profiling do
