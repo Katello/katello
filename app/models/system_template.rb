@@ -49,7 +49,7 @@ class SystemTemplate < ActiveRecord::Base
   has_many :repositories, :through => :system_template_repositories
 
   attr_accessor :host_group
-  lazy_accessor :parameters, :initializer => lambda { init_parameters }, :unless => lambda { false }
+  lazy_accessor :parameters, :initializer => lambda {|s| init_parameters }, :unless => lambda {|s| false }
 
   before_validation :attrs_to_json
   after_initialize :save_content_state

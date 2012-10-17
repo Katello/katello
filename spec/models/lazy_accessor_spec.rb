@@ -20,8 +20,8 @@ class Notice # needed a class with an AR base
 
   attr_writer :run_b_initializer
 
-  lazy_accessor :a, :initializer => lambda { init_a }
-  lazy_accessor :b, :initializer => lambda { init_b }, :unless => lambda { true }
+  lazy_accessor :a, :initializer => lambda {|s| init_a }
+  lazy_accessor :b, :initializer => lambda {|s| init_b }, :unless => lambda {|s| true }
   def init_a
     DEFAULT_VALUE
   end

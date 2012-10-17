@@ -78,7 +78,7 @@ describe PromotionsController, :katello => true do
     end
 
     it "should be successful when requesting packages" do
-      results = ['test']
+      results = [OpenStruct.new(:id => 1)]
       results.stub(:total).and_return(1)
       Glue::Pulp::Package.stub(:search).and_return(results)
       get 'packages', :id=>@env.name, :product_id => @product.id
@@ -88,7 +88,7 @@ describe PromotionsController, :katello => true do
     end
 
     it "should be successful when requesting errata" do
-      results = ['test']
+      results = [OpenStruct.new(:id => 1)]
       results.stub(:total).and_return(1)
       Glue::Pulp::Errata.stub(:search).and_return(results)
       get 'errata', :id=>@env.name, :product_id => @product.id
