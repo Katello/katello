@@ -112,6 +112,7 @@ common:
     url: http://localhost:3001
     oauth_key: katello
     oauth_secret: shhhh
+    random_password: true
 
   cloud_forms:
     oauth_key: cloud_forms
@@ -146,6 +147,8 @@ production:
 # The following configuration values override ones from the common section
 #
 development:
+  foreman:
+    random_password: false
 
 #
 # Test environment configuration

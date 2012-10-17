@@ -19,7 +19,7 @@ module ApplicationConfiguration
 
       config = YAML::load_file(@config_file) || {}
       @hash = config['common'] || {}
-      @hash.update(config[Rails.env] || {})
+      @hash.deep_merge!(config[Rails.env] || {})
 
       # Based upon root url, switch between headpin and katello modes
       if ENV['RAILS_RELATIVE_URL_ROOT'] == '/headpin' || ENV['RAILS_RELATIVE_URL_ROOT'] == '/sam'
