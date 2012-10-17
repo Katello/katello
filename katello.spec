@@ -469,9 +469,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %ghost %attr(600, katello, katello) %{_sysconfdir}/%{name}/secret_token
 %dir %{homedir}/app
 %{homedir}/app/controllers
-%exclude %{homedir}/app/controllers/api/foreman_controller.rb
-%exclude %{homedir}/app/controllers/api/architectures_controller.rb
-%exclude %{homedir}/app/controllers/api/domains_controller.rb
+%exclude %{homedir}/app/controllers/api/foreman
 %{homedir}/app/helpers
 %{homedir}/app/mailers
 %dir %{homedir}/app/models
@@ -494,6 +492,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/lib/notifications
 %dir %{homedir}/lib/resources
 %{homedir}/lib/resources/cdn.rb
+%{homedir}/lib/resources/abstract_model.rb
 %{homedir}/lib/tasks
 %exclude %{homedir}/lib/tasks/rcov.rake
 %exclude %{homedir}/lib/tasks/yard.rake
@@ -563,11 +562,10 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %files glue-foreman
 %{homedir}/lib/resources/foreman.rb
 %{homedir}/lib/resources/foreman_model.rb
+%{homedir}/lib/resources/foreman_model.rb
 %{homedir}/app/models/foreman
 %{homedir}/app/models/glue/foreman
-%{homedir}/app/controllers/api/foreman_controller.rb
-%{homedir}/app/controllers/api/architectures_controller.rb
-%{homedir}/app/controllers/api/domains_controller.rb
+%{homedir}/app/controllers/api/foreman
 
 %files all
 
@@ -580,6 +578,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/app/mailers
 %{homedir}/app/models
 %exclude %{homedir}/app/models/glue/*
+%exclude %{homedir}/app/models/foreman
 %{homedir}/app/stylesheets
 %{homedir}/app/views
 %{homedir}/autotest
@@ -596,7 +595,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/lib/resources
 %exclude %{homedir}/lib/resources/candlepin.rb
 %exclude %{homedir}/lib/resources/pulp.rb
-%exclude %{homedir}/lib/resources/foreman.rb
+%exclude %{homedir}/lib/resources/foreman_model.rb
 %{homedir}/lib/tasks
 %{homedir}/lib/util
 %{homedir}/lib/glue/queue.rb
