@@ -17,7 +17,7 @@ module Glue::Pulp::Filter
     base.send :include, LazyAccessor
 
     base.class_eval do
-      lazy_accessor :description, :package_list, :initializer => lambda { Resources::Pulp::Filter.find(pulp_id) }
+      lazy_accessor :description, :package_list, :initializer => lambda {|s| Resources::Pulp::Filter.find(pulp_id) }
 
       before_save :save_filter_orchestration
       before_destroy :destroy_filter_orchestration

@@ -24,9 +24,9 @@ module Glue::Candlepin::Owner
           :presence => true,
           :format => { :with => /^[\w-]*$/ }
 
-      lazy_accessor :events, :initializer => lambda { Resources::Candlepin::Owner.events(label) }
-      lazy_accessor :service_levels, :initializer => lambda { Resources::Candlepin::Owner.service_levels(label) }
-      lazy_accessor :debug_cert, :initializer => lambda { load_debug_cert}
+      lazy_accessor :events, :initializer => lambda {|s| Resources::Candlepin::Owner.events(label) }
+      lazy_accessor :service_levels, :initializer => lambda {|s| Resources::Candlepin::Owner.service_levels(label) }
+      lazy_accessor :debug_cert, :initializer => lambda {|s| load_debug_cert}
     end
   end
 

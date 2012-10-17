@@ -19,13 +19,13 @@ module Glue::Pulp::Consumer
       before_destroy :destroy_pulp_orchestration
       after_rollback :rollback_on_pulp_create, :on => :create
 
-      lazy_accessor :pulp_facts, :initializer => lambda { Resources::Pulp::Consumer.find(uuid) }
-      lazy_accessor :package_profile, :initializer => lambda { Resources::Pulp::Consumer.installed_packages(uuid) }
-      lazy_accessor :simple_packages, :initializer => lambda { Resources::Pulp::Consumer.installed_packages(uuid).
+      lazy_accessor :pulp_facts, :initializer => lambda {|s| Resources::Pulp::Consumer.find(uuid) }
+      lazy_accessor :package_profile, :initializer => lambda {|s| Resources::Pulp::Consumer.installed_packages(uuid) }
+      lazy_accessor :simple_packages, :initializer => lambda {|s| Resources::Pulp::Consumer.installed_packages(uuid).
                                                               collect{|pack| Glue::Pulp::SimplePackage.new(pack)} }
-      lazy_accessor :errata, :initializer => lambda { Resources::Pulp::Consumer.errata(uuid).
+      lazy_accessor :errata, :initializer => lambda {|s| Resources::Pulp::Consumer.errata(uuid).
                                                               collect{|errata| Glue::Pulp::Errata.new(errata)} }
-      lazy_accessor :repoids, :initializer => lambda { Resources::Pulp::Consumer.repoids(uuid).keys }
+      lazy_accessor :repoids, :initializer => lambda {|s| Resources::Pulp::Consumer.repoids(uuid).keys }
     end
   end
 
