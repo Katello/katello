@@ -51,6 +51,8 @@ module Glue::Candlepin::Environment
       post_queue.create(:name => "candlepin environment for organization: #{self.label}", :priority => 4, :action => [self, :del_environment])
     end
 
+
+    # the name of the method is misleading - it's not update of content, but rather promotion of content to environment
     def update_cp_content
       new_content_ids = all_env_content_ids - saved_env_content_ids
       Resources::Candlepin::Environment.add_content(self.id, new_content_ids)

@@ -6,6 +6,6 @@ class AddChangesetStatus < ActiveRecord::Migration
 
   def self.down
     remove_column :changesets, :state
-    add_column :changesets, :published, :default=>false 
+    add_column :changesets, :published, :boolean, :default=>false
   end
 end
