@@ -37,6 +37,9 @@ describe Api::CustomInfoController do
     @env1 = KTEnvironment.create!(:name => "test_env", :label => "test_env", :prior => @org.library.id, :organization => @org)
 
     @system = System.create!(:name => "test_sys", :cp_type => "system", :environment => @env1, :facts => facts)
+
+    CustomInfo.skip_callback(:save, :after, :reindex_informable)
+    CustomInfo.skip_callback(:destroy, :after, :reindex_informable)
   end
 
   describe "create custom infoz" do
