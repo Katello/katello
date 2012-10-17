@@ -19,7 +19,7 @@ module Glue::Pulp::ConsumerGroup
     base.send :include, LazyAccessor
 
     base.class_eval do
-      lazy_accessor  :consumerids, :initializer => lambda { Resources::Pulp::ConsumerGroup.find(pulp_id) }
+      lazy_accessor  :consumerids, :initializer => lambda {|s| Resources::Pulp::ConsumerGroup.find(pulp_id) }
 
       before_save :save_consumer_group_orch
       before_destroy :destroy_consumer_group_orch

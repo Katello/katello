@@ -53,7 +53,12 @@ module AuthorizationHelperMethods
     if rt.nil?
       verbs_hash = {}.with_indifferent_access
       verbs.each{|verb| verbs_hash[verb.verb] = verb.verb}
-      ResourceType::TYPES[resource_type] = {:model => OpenStruct.new(:list_verbs => verbs_hash)}
+
+      ResourceType::TYPES[resource_type] = { :model =>
+        OpenStruct.new(:verbs_hash => verbs_hash).tap do |os|
+          def os.list_verbs(global=false); verbs_hash; end
+        end
+      }
     else
       model_verbs = rt[:model].list_verbs(true).merge(rt[:model].list_verbs(false))
       verbs_not_in = verbs.collect{|verb| verb.verb unless model_verbs[verb.verb]}.compact
