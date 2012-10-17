@@ -40,6 +40,11 @@ end
 class RepositoryInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
   include RepositoryTestBase
 
+  def setup
+    super
+    User.current = @admin
+  end
+
   def test_product
     assert @fedora == @fedora_17.product
   end
