@@ -23,13 +23,18 @@ def configure_vcr
 end
 
 def disable_glue_layers(services=[], models=[])
+  @@cache ||= {}
   AppConfig.use_cp = false if services.include?('Candlepin')
   AppConfig.use_pulp = false if services.include?('Pulp')
   AppConfig.use_elasticsearch = false if services.include?('ElasticSearch')
 
+  cached_entry = {:cp=>AppConfig.use_cp, :pulp=>AppConfig.use_cp, :es=>AppConfig.use_elasticsearch}
   models.each do |model|
-    Object.send(:remove_const, model)
-    load "app/models/#{model.underscore}.rb"
+    if @@cache[model] != cached_entry
+      Object.send(:remove_const, model)
+      load "app/models/#{model.underscore}.rb"
+      @@cache[model] = cached_entry
+    end
   end
 end
 
