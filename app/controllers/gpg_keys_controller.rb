@@ -76,7 +76,7 @@ class GpgKeysController < ApplicationController
     products = @gpg_key.products
 
     repos_hash = {}
-    @gpg_key.repositories.each do |repo|
+    @gpg_key.repositories.uniq_by(&:label).each do |repo|
       repos_hash[repo.environment_product.product.name] ||= []
       repos_hash[repo.environment_product.product.name] << repo
     end
@@ -132,6 +132,15 @@ class GpgKeysController < ApplicationController
     end
 
     render :text => escape_html(gpg_key_params.values.first)
+  rescue ActiveRecord::RecordInvalid => error
+    # this is needed because of the upload file though iframe
+    # (we need to send json although the request says it wants HTML)
+    unless request.xhr?
+      render :json => { :validation_errors => error.record.errors.full_messages.to_a }, :status => :bad_request
+    else
+      # otherwise we use the default error handing in ApplicationController
+      raise error
+    end
   end
 
   def destroy

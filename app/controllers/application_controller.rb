@@ -165,7 +165,7 @@ class ApplicationController < ActionController::Base
         if current_user.allowed_organizations.include?(o)
           @current_org = o
         else
-          raise ActiveRecord::RecordNotFound.new _("Permission Denied. User '%s' does not have permissions to access organization '%s'.") % [User.current.username, o.name]
+          raise ActiveRecord::RecordNotFound.new _("Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'.") % {:user => User.current.username, :org => o.name}
         end
       end
       return @current_org
@@ -346,7 +346,7 @@ class ApplicationController < ActionController::Base
   def retain_search_history
     # save the request in the user's search history
     unless params[:search].nil? or params[:search].blank?
-      path = @_request.env['REQUEST_PATH']
+      path = URI(@_request.env['HTTP_REFERER']).path
       histories = current_user.search_histories.where(:path => path, :params => params[:search])
       if histories.nil? or histories.empty?
         # user doesn't have this search stored, so save it

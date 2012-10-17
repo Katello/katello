@@ -117,17 +117,15 @@ describe RepositoriesController, :katello => true do
 
     context "Test update gpg" do
       before do
-
-
         @repo = Repository.create!(:environment_product => @ep, :pulp_id => "pulp-id-#{rand 10**6}",
                                  :name=>"newname#{rand 10**6}", :label=>"newname#{rand 10**6}",
                                  :url => "http://fedorahosted org")
 
-        product = @repo.product
+        #product = @repo.product
         Repository.stub(:find).and_return(@repo)
         @repo.stub(:content).and_return(OpenStruct.new(:gpgUrl=>""))
-        product.should_receive(:refresh_content)
-        @repo.stub(:product).and_return(product)
+        @repo.should_receive(:update_content).and_return(Candlepin::Content.new)
+        #@repo.stub(:product).and_return(product)
 
         put :update_gpg_key, { :product_id => @product.id,
                               :provider_id => @product.provider.id,
@@ -138,6 +136,7 @@ describe RepositoriesController, :katello => true do
       specify do
         response.should be_success
       end
+
       subject {Repository.find(@repo.id)}
       it{should_not be_nil}
       its(:gpg_key){should == @gpg}

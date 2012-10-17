@@ -96,7 +96,7 @@ module Glue::Candlepin::Product
     end
 
     def build_productContent(attrs)
-      @productContent = attrs.collect { |pc| Glue::Candlepin::ProductContent.new pc }
+      @productContent = attrs.collect { |pc| ::Candlepin::ProductContent.new pc }
     end
 
     def support_level
@@ -130,7 +130,7 @@ module Glue::Candlepin::Product
 
     def convert_from_cp_fields(cp_json)
       ar_safe_json = cp_json.has_key?(:attributes) ? cp_json.merge(:attrs => cp_json.delete(:attributes)) : cp_json
-      ar_safe_json[:productContent] = ar_safe_json[:productContent].collect { |pc| Glue::Candlepin::ProductContent.new pc }
+      ar_safe_json[:productContent] = ar_safe_json[:productContent].collect { |pc| ::Candlepin::ProductContent.new pc }
       ar_safe_json[:attrs] ||=[]
       ar_safe_json.except('id')
     end

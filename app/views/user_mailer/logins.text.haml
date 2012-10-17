@@ -1,4 +1,4 @@
-#{_("A request has been received by Katello server '%s' to retrieve the logins for email '%s'. The following is a list of those logins:") % [root_url, @email]}
+#{_("A request has been received by Katello server '%{url}' to retrieve the logins for email '%{email}'. The following is a list of those logins:") % {:url => root_url, :email => @email}}
 - @users.each do |user|
   = user.username
 

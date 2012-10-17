@@ -78,7 +78,7 @@ module ProductTestData
     :id => ProductTestData::PRODUCT_ID,
     :multiplier => 1,
     :productContent => [
-         Glue::Candlepin::ProductContent.new(
+         Candlepin::ProductContent.new(
           "content" => {
             "name" => "some-name(33)",
             "id" => "1234999",

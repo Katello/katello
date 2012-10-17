@@ -44,6 +44,14 @@ var notices = (function() {
                     return notices_list;
                 };
 
+            var noticeObj = {};
+            noticeObj.time = (new Date()).valueOf();
+            noticeObj.level = level;
+            noticeObj.notices = noticesParsed['notices'];
+            noticeObj.validationErrors = noticesParsed['validation_errors'];
+            noticeObj.requestType = requestType;
+            $(document).trigger("notice", noticeObj);
+
             if (level === 'success') {
                 notices.clearPreviousFailures(requestType);
             }
@@ -54,7 +62,7 @@ var notices = (function() {
             } else if( level === "message" ) {
                 options["sticky"] = true;
                 options["fadeSpeed"] = 600;        	
-        	} else {
+            } else {
                 options["sticky"] = false;
                 options["fadeSpeed"] = 600;
             }
@@ -62,6 +70,10 @@ var notices = (function() {
             if( noticesParsed['validation_errors'] !== undefined ){
                 var validation_html = generate_list(noticesParsed['validation_errors']);
                 validation_html = '<span>' + i18n.validation_errors + '</span>' + validation_html;
+                // set the options as this is an error
+                options["type"] = "error";
+                options["sticky"] = true;
+                options["fadeSpeed"] = 600;
                 $.jnotify(validation_html, options);
                 $('.jnotify-message ul').css({'list-style': 'disc',
                               'margin-left': '30px'});    
@@ -69,6 +81,18 @@ var notices = (function() {
             if( noticesParsed['notices'] && noticesParsed['notices'].length !== 0 ){
                 $.jnotify(generate_list(noticesParsed['notices']), options);
             }
+        },
+        storeNotice: function(event, noticeObj) {
+            var maxAge = 600000,
+                curTime = (new Date()).valueOf(),
+                idx = notices.noticeArray.length - 1;
+            // Discard notices older than maxAge
+            for (; idx>=0; idx-=1) {
+                if (curTime - notices.noticeArray[idx].time > maxAge) {
+                    notices.noticeArray.splice(idx, 1);
+                }
+            }
+            notices.noticeArray.push(noticeObj);
         },
         addNotices: function(data) {
             if (!data || data.new_notices.length === 0) {
@@ -137,6 +161,9 @@ $(document).ready(function() {
 
     // perform periodic polling of notices (e.g. async scenarios)
     //notices.checkNotices();
+
+    notices.noticeArray = [];
+    $(document).bind("notice", notices.storeNotice);
 
     $(document).ajaxComplete(function(event, xhr, options){
         // look for notices in the response (e.g. sync scenarios)
