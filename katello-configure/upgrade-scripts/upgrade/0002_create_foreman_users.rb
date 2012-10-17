@@ -11,4 +11,14 @@ environment_path = possible_environment_paths.find { |p| File.exist? p } or
 require environment_path
 
 User.current = User.find_by_username 'admin'
-User.find_each { |u| u.save! } # this forces foreman-user creation if he is missing
+User.find_each do |katello_user|
+  unless katello_user.foreman_user
+    if (foreman_user = ::Foreman::User.all(:search => "login=#{katello_user.username}").first)
+      katello_user.send :foreman_user=, foreman_user
+      katello_user.save!
+    else
+      katello_user.create_foreman_user
+    end
+  end
+
+end
