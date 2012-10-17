@@ -88,6 +88,9 @@ group :test, :development do
 
   #needed to generate routes in javascript
   gem "js-routes", :require => 'js_routes'
+
+  #parallel_tests to make our specs go faster
+  gem "parallel_tests"
 end
 
 group :profiling do
