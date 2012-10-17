@@ -143,3 +143,12 @@ seeds: localhost
 [cds]
 # messaging timeout for sync.  <initial>:<duration>
 sync_timeout = 10:7200
+
+[tasking]
+# how many concurent threads run in parallel
+# default is NumCpu-1
+<% if processorcount.to_i <= 1 %>
+concurrency_threshold = 1
+<% else %>
+concurrency_threshold = <%= processorcount.to_i-1 %>
+<% end %>
