@@ -62,10 +62,11 @@ module Glue::Foreman::User
     end
 
     def create_foreman_user
-      foreman_user = ::Foreman::User.new :login    => username,
-                                         :mail     => email,
-                                         :admin    => true,
-                                         :password => password
+      foreman_user = ::Foreman::User.new(
+          :login    => username,
+          :mail     => email,
+          :admin    => true,
+          :password => AppConfig.foreman.random_password ? Password.generate_random_string(25) : password)
       foreman_user.save!
       self.foreman_user = foreman_user
     end
