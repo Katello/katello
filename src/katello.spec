@@ -141,7 +141,7 @@ BuildRequires:       rubygem(tire) < 0.4
 BuildRequires:       rubygem(ldap_fluff)
 BuildRequires:       rubygem(apipie-rails) >= 0.0.12
 BuildRequires:       rubygem(redcarpet)
-
+BuildRequires:       rubygem(foreman_api)
 
 
 %description common
