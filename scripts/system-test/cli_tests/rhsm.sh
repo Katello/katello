@@ -24,7 +24,7 @@ grab_pool_with_rhsm() {
 }
 
 grab_pool_with_katello() {
-    $CMD org subscriptions --name "$RHSM_ORG" -g -d ";" | grep "$RHSM_YPROD" | awk -F ' *; *' '{print $4}'
+    $CMD org subscriptions --name "$RHSM_ORG" -g -d ";" | grep "$RHSM_YPROD" | awk -F ' *; *' '{print $3}'
 }
 
 # testing registration from rhsm
