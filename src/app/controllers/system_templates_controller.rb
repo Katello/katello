@@ -246,8 +246,6 @@ class SystemTemplatesController < ApplicationController
     send_data xml,
       :filename => "#{@template.name}-#{environment.name}-export.xml",
       :type => "application/xml"
-  rescue => e
-    p e.backtrace.join("\n")
   end
 
   def new
