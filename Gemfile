@@ -39,7 +39,8 @@ gem 'gettext_i18n_rails'
 gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 
 # reports
-gem 'ruport', '>=1.6.3'
+gem 'ruport', '>=1.7.0'
+gem 'prawn'
 gem 'acts_as_reportable', '>=1.1.1'
 
 gem "apipie-rails", '>= 0.0.12'
@@ -89,6 +90,9 @@ group :test, :development do
 
   #needed to generate routes in javascript
   gem "js-routes", :require => 'js_routes'
+
+  #parallel_tests to make our specs go faster
+  gem "parallel_tests"
 end
 
 group :profiling do

@@ -182,6 +182,7 @@ describe Product, :katello => true do
       before(:each) do
         Resources::Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
         Resources::Candlepin::Content.stub!(:create).and_return({:id => "123"})
+        Resources::Candlepin::Content.stub!(:update).and_return({:id => "123"})
         Resources::Pulp::Repository.stub!(:update).and_return({:id => "123"})
         @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
       end
@@ -337,6 +338,7 @@ describe Product, :katello => true do
       ))
       @repo.stub!(:is_cloned_in?).and_return(false)
       @repo.stub!(:clone_id).and_return("cloned_repo")
+      @repo.stub!(:update_content).and_return(Candlepin::Content.new)
 
       Glue::Pulp::Repos.stub!(:clone_repo_path).and_return("cloned_path")
 
@@ -426,6 +428,7 @@ describe Product, :katello => true do
       @ep = EnvironmentProduct.find_or_create(@organization.library, @product)
       @repo = Repository.create!(:environment_product => @ep, :name => "testrepo", :label => "testrepo_label", :pulp_id=>"1010")
       @repo.stub(:promoted?).and_return(false)
+      @repo.stub(:update_content).and_return(Candlepin::Content.new)
     end
     context "Test list enabled repos should show redhat repos" do
       before do
@@ -479,16 +482,18 @@ describe Product, :katello => true do
 
       @repo.stub(:product).and_return(@product)
       @repo.stub(:promoted?).and_return(false)
-      @repo.stub(:content).and_return(OpenStruct.new(:id=>"123", :gpgUrl=>""))
+      @repo.stub(:update_content).and_return(Candlepin::Content.new)
       @ep.stub(:repositories).and_return([@repo])
       @product.stub(:environment_products).and_return([@ep])
     end
+
     context "resetting product gpg and asking repos to reset should work" do
       before do
-        @product.should_receive(:refresh_content).once
+        #@product.should_receive(:refresh_content).once
         @product.update_attributes!(:gpg_key => @gpg)
         @product.reset_repo_gpgs!
       end
+
       subject {Repository.find(@repo.id)}
       its(:gpg_key){should == @gpg}
     end
@@ -507,10 +512,12 @@ describe Product, :katello => true do
         @product = Product.find(@product.id)
         @new_repo.stub(:product).and_return(@product)
         @repo.stub(:product).and_return(@product)
+        @repo.stub(:update_content).and_return(Candlepin::Content.new)
+        @new_repo.stub(:update_content).and_return(Candlepin::Content.new)
         @product.stub(:environment_products).and_return([@ep])
         @ep.stub(:repositories).and_return([@repo, @new_repo])
 
-        @product.should_receive(:refresh_content).once
+        #@product.should_receive(:refresh_content).once
 
         @product.update_attributes!(:gpg_key => @gpg)
         @product.reset_repo_gpgs!
@@ -521,10 +528,11 @@ describe Product, :katello => true do
 
     context "resetting product gpg to nil should also nil out repos under it" do
       before do
-        @product.should_receive(:refresh_content).twice
+        #@product.should_receive(:refresh_content).twice
         @product.update_attributes!(:gpg_key => @gpg)
         @product.reset_repo_gpgs!
-        @repo.stub(:content).and_return(OpenStruct.new(:id=>"adsf", :gpgUrl=>'http://moose.com/squirrel'))
+
+        @repo.should_receive(:update_content).and_return(Candlepin::Content.new)
         @product.update_attributes!(:gpg_key => nil)
         @product.reset_repo_gpgs!
       end

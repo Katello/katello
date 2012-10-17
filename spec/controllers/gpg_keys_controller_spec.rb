@@ -324,8 +324,10 @@ describe GpgKeysController, :katello => true do
 
       describe "with invalid params" do
         it "should generate an error notice" do
-          controller.should notify.exception
           put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME_INVALID
+          # checking for bad response since we're not notifying in order to
+          # handle iframe
+          response.code.to_s.should match /^4/
         end
 
         it "should be unsuccessful" do

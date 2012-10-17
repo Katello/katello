@@ -53,8 +53,11 @@ describe Repository, :katello => true do
 
     describe "reassigns gpg key" do
       before do
-        subject.stub(:content).and_return(OpenStruct.new(:gpgUrl=>""))
-        subject.product.should_not_receive(:refresh_content)
+        content = OpenStruct.new(:gpgUrl=>"")
+        subject.stub(:content).and_return(content)
+        content.stub!(:update).and_return(content)
+
+        content.should_not_receive(:update_content)
         subject.update_attributes!(:gpg_key_name => another_gpg_key.name)
       end
 
@@ -63,8 +66,9 @@ describe Repository, :katello => true do
 
     describe "removing gpg key assigment" do
       before do
-        subject.stub(:content).and_return(OpenStruct.new(:gpgUrl=>"http://foo"))
-        subject.product.should_receive(:refresh_content)
+        content = OpenStruct.new(:gpgUrl=>"http://foo")
+        subject.stub(:content).and_return(content)
+        content.stub!(:update).and_return(content)
         subject.update_attributes!(:gpg_key_name => nil)
       end
 

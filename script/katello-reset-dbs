@@ -107,7 +107,9 @@ fi
 
 if [ $DEPLOYMENT = "katello" ] ; then
     echo "Stopping Pulp instance"
-    stop_if_running pulp-server
+    stop_if_running mongod
+    stop_if_running qpidd
+    stop_if_running httpd
 fi
 
 echo "Stopping Candlepin instance"
@@ -136,7 +138,9 @@ sudo cp /etc/tomcat6/server.xml.original /etc/tomcat6/server.xml
 
 if [ $DEPLOYMENT = "katello" ] ; then
     echo "Starting Pulp instance"
-    $SRV pulp-server start
+    $SRV qpidd start
+    $SRV mongod start
+    $SRV httpd start
 fi
 
 echo "Starting Candlepin instance"
