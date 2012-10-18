@@ -12,3 +12,6 @@ rm -rf /var/log/katello/ /var/log/tomcat6/ /var/log/pulp/ /var/log/candlepin/ /v
 
 # pulp cert stuff 
 rm -rf /etc/pki/pulp/ /etc/pki/content/* /etc/pki/katello /root/ssl-build
+
+# client cert rpms
+rm -rf /var/www/html/pub/candlepin-cert*.rpm
