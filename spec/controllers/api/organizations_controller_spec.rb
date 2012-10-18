@@ -96,7 +96,7 @@ describe Api::OrganizationsController do
       Organization.should_receive(:readable).at_least(:once).and_return(Organization)
       Organization.should_receive(:where).once
       req
-    end 
+    end
   end
 
   describe "show a organization" do
