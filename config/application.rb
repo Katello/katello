@@ -9,6 +9,7 @@ require "rails/test_unit/railtie"
 
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
+require 'apipie-rails' # FIXME will be removed after https://github.com/Pajk/apipie-rails/pull/62
 Bundler.require(:default, Rails.env) if defined?(Bundler)
 
 module Src
