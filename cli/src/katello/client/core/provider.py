@@ -296,10 +296,39 @@ class ImportManifest(SingleProviderAction):
         except ServerRequestError, re:
             if re.args[0] == 400 and "displayMessage" in re.args[1] and \
                 re.args[1]["displayMessage"] == "Import is older than existing data":
-                re.args[1]["displayMessage"] = "Import is older then existing data," +\
+                re.args[1]["displayMessage"] = "Import is older than existing data," +\
                     " please try with --force option to import manifest."
             raise re, None, sys.exc_info()[2]
         f.close()
+        print response
+        return os.EX_OK
+
+
+# ==============================================================================
+class DeleteManifest(SingleProviderAction):
+
+    description = _('delete an imported manifest')
+
+
+    def setup_parser(self, parser):
+        super(DeleteManifest, self).setup_parser(parser)
+
+
+    def check_options(self, validator):
+        super(DeleteManifest, self).check_options(validator)
+
+
+    def run(self):
+        provName = self.get_option('name')
+        orgName  = self.get_option('org')
+
+        prov = get_provider(orgName, provName)
+
+        try:
+            response = run_spinner_in_bg(self.api.delete_manifest, [prov["id"]],
+                message=_("Deleting manifest, please wait... "))
+        except ServerRequestError, re:
+            raise re, None, sys.exc_info()[2]
         print response
         return os.EX_OK
 

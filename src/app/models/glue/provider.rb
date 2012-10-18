@@ -36,6 +36,10 @@ module Glue::Provider
       return ret
     end
 
+    def delete_manifest
+      Resources::Candlepin::Owner.destroy_imports self.organization.label
+    end
+
     def sync
       Rails.logger.debug "Syncing provider #{name}"
       self.products.collect do |p|
@@ -242,14 +246,21 @@ module Glue::Provider
           added_eng_products = (engineering_product_ids - product_in_katello_ids).map do |id|
             Resources::Candlepin::Product.get(id)[0]
           end
+          adjusted_eng_products = []
           added_eng_products.each do |product_attrs|
-            Glue::Candlepin::Product.import_from_cp(product_attrs) do |p|
-              p.provider = self
-              p.environments << self.organization.library
+            begin
+              Glue::Candlepin::Product.import_from_cp(product_attrs) do |p|
+                p.provider = self
+                p.environments << self.organization.library
+              end
+              adjusted_eng_products << product_attrs
+            rescue Errors::SecurityViolation => e
+              # Do not add non-accessible products
+              Rails.logger.info e
             end
           end
 
-          product_in_katello_ids.concat(added_eng_products.map{|p| p["id"]})
+          product_in_katello_ids.concat(adjusted_eng_products.map{|p| p["id"]})
 
           unless product_in_katello_ids.include?(marketing_product_id)
             engineering_product_in_katello_ids = self.organization.library.products.where(:cp_id => engineering_product_ids).map(&:id)

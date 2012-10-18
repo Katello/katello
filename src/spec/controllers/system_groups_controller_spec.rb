@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe SystemGroupsController do
+describe SystemGroupsController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
   include OrganizationHelperMethods
