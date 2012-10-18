@@ -13,11 +13,11 @@
 class Foreman::ConfigTemplate < Resources::ForemanModel
 
   attributes :name, :template, :snippet, :audit_comment, :kind, :kind_id,
-    :template_kind_id, :template_combinations, :operatingsystems
+    :template_kind_id, :template_combinations_attributes, :operatingsystem_ids
 
   def json_default_options
     { :only => [:name, :template, :snippet, :audit_comment, :kind, :kind_id,
-                :template_combinations, :operatingsystems] }
+                :template_combinations_attributes, :operatingsystem_ids] }
   end
 
   def json_create_options
