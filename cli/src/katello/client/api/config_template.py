@@ -13,10 +13,7 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
-
-
-def slice_dict(d, *key_list):
-    return dict((k, d.get(k)) for k in key_list if d.get(k))
+from katello.client.core.utils import slice_dict
 
 class ConfigTemplateAPI(KatelloAPI):
 
@@ -25,22 +22,22 @@ class ConfigTemplateAPI(KatelloAPI):
         """
         list config template
 
-        :type  data['search']: string
-        :param data['search']: filter results
+        :type  queries['search']: string
+        :param queries['search']: filter results
 
-        :type  data['order']: string
-        :param data['order']: sort results
+        :type  queries['order']: string
+        :param queries['order']: sort results
         """
         path = "/api/config_templates"
         queries = slice_dict(queries, 'search', 'order')
         return self.server.GET(path, queries)[1]
 
 
-    def show(self, id):
+    def show(self, tpl_id):
         """
         show config template
         """
-        path = "/api/config_templates/%s" % (id)
+        path = "/api/config_templates/%s" % (tpl_id)
         return self.server.GET(path)[1]
 
 
@@ -58,11 +55,14 @@ class ConfigTemplateAPI(KatelloAPI):
         :type  data['audit_comment']: string
         """
         path = "/api/config_templates"
-        data = slice_dict(data, 'name', 'template', 'snippet', 'audit_comment', 'template_kind_id', 'template_combinations_attributes', 'operatingsystem_ids')
+        data = slice_dict(data, \
+            'name', 'template', 'snippet', 'audit_comment', \
+            'template_kind_id', 'template_combinations_attributes', \
+            'operatingsystem_ids')
         return self.server.POST(path, {"config_template": data})[1]
 
 
-    def update(self, id, data):
+    def update(self, tpl_id, data):
         """
         update config template
 
@@ -84,8 +84,11 @@ class ConfigTemplateAPI(KatelloAPI):
         :type  data['operatingsystem_ids']: string
         :param data['operatingsystem_ids']: Array of operating systems ID to associate the template with
         """
-        path = "/api/config_templates/%s" % (id)
-        data = slice_dict(data, 'name', 'template', 'snippet', 'audit_comment', 'template_kind_id', 'template_combinations_attributes', 'operatingsystem_ids')
+        path = "/api/config_templates/%s" % (tpl_id)
+        data = slice_dict(data, \
+            'name', 'template', 'snippet', 'audit_comment', \
+            'template_kind_id', 'template_combinations_attributes', \
+            'operatingsystem_ids')
         return self.server.PUT(path, {"config_template": data})[1]
 
 
@@ -101,11 +104,11 @@ class ConfigTemplateAPI(KatelloAPI):
         return self.server.GET(path, queries)[1]
 
 
-    def destroy(self, id):
+    def destroy(self, tpl_id):
         """
         destroy config template
         """
-        path = "/api/config_templates/%s" % (id)
+        path = "/api/config_templates/%s" % (tpl_id)
         return self.server.DELETE(path)[1]
 
 

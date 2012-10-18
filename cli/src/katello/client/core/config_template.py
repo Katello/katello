@@ -14,10 +14,7 @@
 # in this software or its documentation.
 #
 
-import os
-
 from katello.client.api.config_template import ConfigTemplateAPI
-from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_foreman_record, unnest_one
 
@@ -45,7 +42,7 @@ class List(ConfigTemplateAction):
         pass
 
     def run(self):
-        data = self.get_option_dict('order','search')
+        data = self.get_option_dict('order', 'search')
         configtemplates = self.api.list(data)
         if configtemplates:
             configtemplates = unnest_one(configtemplates)
@@ -111,16 +108,18 @@ class Create(ConfigTemplateAction):
         parser.add_option('--snippet', dest='snippet', help=_("is it snippet?"))
         parser.add_option('--audit_comment', dest='audit_comment', help=_(""))
         parser.add_option('--template_kind_id', dest='template_kind_id', help=_("not relevant for snippet"))
-        parser.add_option('--template_combinations_attributes', dest='template_combinations_attributes', help=_("Array of template combinations (hostgroup_id, environment_id)"))
-        parser.add_option('--operatingsystem_ids', dest='operatingsystem_ids', help=_("Array of operating systems ID to associate the template with"))
+        parser.add_option('--template_combinations_attributes', dest='template_combinations_attributes', 
+            help=_("Array of template combinations (hostgroup_id, environment_id)"))
+        parser.add_option('--operatingsystem_ids', dest='operatingsystem_ids', 
+            help=_("Array of operating systems ID to associate the template with"))
 
     def check_options(self, validator):
         validator.require('name')
         validator.require('template')
 
     def run(self):
-        data = self.get_option_dict('name','template','snippet','audit_comment',
-          'template_kind_id','template_combinations_attributes','operatingsystem_ids')
+        data = self.get_option_dict('name', 'template', 'snippet', 'audit_comment',
+          'template_kind_id', 'template_combinations_attributes', 'operatingsystem_ids')
 
         ctemplate = self.api.create(data)
 
@@ -148,8 +147,8 @@ class Update(ConfigTemplateAction):
 
     def run(self):
         template_id = self.get_option('id')
-        data = self.get_option_dict('name','template','snippet','audit_comment',
-          'template_kind_id','template_combinations_attributes','operatingsystem_ids')
+        data = self.get_option_dict('name', 'template', 'snippet', 'audit_comment',
+          'template_kind_id', 'template_combinations_attributes', 'operatingsystem_ids')
 
         ctemplate = self.api.update(template_id, data)
 
@@ -167,12 +166,11 @@ class Delete(ConfigTemplateAction):
 
     def check_options(self, validator):
         validator.require('id')
-        pass
 
     def run(self):
         template_id = self.get_option('id')
 
-        configtemplate = self.api.destroy(template_id)
+        self.api.destroy(template_id)
         print _('Successfuly deleted Config Template [ %s ]') % template_id
 
 class Build_Pxe_Default(ConfigTemplateAction):
@@ -180,13 +178,13 @@ class Build_Pxe_Default(ConfigTemplateAction):
     description = _('build pxe default')
 
     def setup_parser(self, parser):
-      pass
+        pass
 
     def check_options(self, validator):
         pass
 
     def run(self):
-        configtemplate = self.api.build_pxe_default()
+        self.api.build_pxe_default()
         print _('Success')
 
 # TODO: do we need this? To use it we have to know Audit id and there is no way how to get it

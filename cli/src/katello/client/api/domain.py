@@ -22,22 +22,24 @@ class DomainAPI(KatelloAPI):
         """
         list domain
 
-        :type  data['search']: string
-        :param data['search']: Filter results
+        :type  queries['search']: string
+        :param queries['search']: Filter results
 
-        :type  data['order']: string
-        :param data['order']: Sort results
+        :type  queries['order']: string
+        :param queries['order']: Sort results
         """
         path = "/api/domains"
         queries = slice_dict(queries, 'search', 'order')
         return self.server.GET(path, queries)[1]
 
 
-    def show(self, id):
+    def show(self, domain_id):
         """
         show domain
+
+        :type domain_id: string
         """
-        path = "/api/domains/%s" % (id)
+        path = "/api/domains/%s" % str(domain_id)
         return self.server.GET(path)[1]
 
 
@@ -61,13 +63,15 @@ class DomainAPI(KatelloAPI):
         :param data['domain_parameters_attributes']: Array of parameters (name, value)
         """
         path = "/api/domains"
-        data = slice_dict(data, 'name', 'fullname', 'dns_id') #, 'domain_parameters_attributes'
+        data = slice_dict(data, 'name', 'fullname', 'dns_id')
         return self.server.POST(path, {"domain": data})[1]
 
 
-    def update(self, id, data):
+    def update(self, domain_id, data):
         """
         update domain
+
+        :type  domain_id: string
 
         :type  data['name']: string
         :param data['name']: The full DNS Domain name
@@ -81,14 +85,14 @@ class DomainAPI(KatelloAPI):
         :type  data['domain_parameters_attributes']: string
         :param data['domain_parameters_attributes']: Array of parameters (name, value)
         """
-        path = "/api/domains/%s" % (id)
-        data = slice_dict(data, 'name', 'fullname', 'dns_id') #,'domain_parameters_attributes'
+        path = "/api/domains/%s" % str(domain_id)
+        data = slice_dict(data, 'name', 'fullname', 'dns_id')
         return self.server.PUT(path, {"domain": data})[1]
 
 
-    def destroy(self, id):
+    def destroy(self, domain_id):
         """
         destroy domain
         """
-        path = "/api/domains/%s" % (id)
+        path = "/api/domains/%s" % (domain_id)
         return self.server.DELETE(path)[1]

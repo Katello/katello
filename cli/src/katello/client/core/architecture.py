@@ -18,7 +18,6 @@ import os
 
 from katello.client import constants
 from katello.client.api.architecture import ArchitectureAPI
-from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_foreman_record, unnest_one
 

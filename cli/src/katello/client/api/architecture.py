@@ -26,12 +26,12 @@ class ArchitectureAPI(KatelloAPI):
         path = "/api/architectures/"
         return self.server.GET(path, queries)[1]
 
-    def show(self, id):
+    def show(self, arch_id):
         """
-        :type id: string
-        :param id: architecture identifier
+        :type arch_id: string
+        :param arch_id: architecture identifier
         """
-        path = "/api/architectures/%s/" % str(id)
+        path = "/api/architectures/%s/" % str(arch_id)
         return self.server.GET(path)[1]
 
     def create(self, data):
@@ -42,22 +42,22 @@ class ArchitectureAPI(KatelloAPI):
         data = slice_dict(data, 'name')
         return self.server.POST(path, {'architecture': data})[1]
 
-    def update(self, id, data):
+    def update(self, arch_id, data):
         """
-        :type id: string
-        :param id: architecture identifier
+        :type arch_id: string
+        :param arch_id: architecture identifier
         :type data['name']: string
         """
-        path = "/api/architectures/%s/" % (id)
+        path = "/api/architectures/%s/" % str(arch_id)
         data = slice_dict(data, 'name')
         return self.server.PUT(path, {'architecture': data})[1]
 
-    def destroy(self, id):
+    def destroy(self, arch_id):
         """
-        :type id: string
-        :param id: architecture identifier
+        :type arch_id: string
+        :param arch_id: architecture identifier
         """
-        path = "/api/architectures/%s/" % (id)
+        path = "/api/architectures/%s/" % str(arch_id)
         return self.server.DELETE(path)[1]
 
 

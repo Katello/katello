@@ -14,14 +14,10 @@
 # in this software or its documentation.
 #
 
-import os
-
 from katello.client.api.domain import DomainAPI
-from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_foreman_record, unnest_one
 
-Config()
 
 # base domain action --------------------------------------------------------
 
@@ -69,8 +65,8 @@ class Info(DomainAction):
         validator.require('id')
 
     def run(self):
-        id = self.get_option('id')
-        domain = unnest_one(self.api.show(id))
+        domain_id = self.get_option('id')
+        domain = unnest_one(self.api.show(domain_id))
 
         self.printer.add_column('id')
         self.printer.add_column('name')
@@ -90,13 +86,12 @@ class Create(DomainAction):
         parser.add_option('--name', dest='name', help=_("The full DNS Domain name"))
         parser.add_option('--fullname', dest='fullname', help=_("Full name describing the domain"))
         parser.add_option('--dns_id', dest='dns_id', help=_("DNS Proxy to use within this domain"))
-        # parser.add_option('--domain_parameters_attributes', dest='domain_parameters_attributes', help=_("Array of parameters (name, value)"))
 
     def check_options(self, validator):
         validator.require('name')
 
     def run(self):
-        data = self.get_option_dict('name','fullname','dns_id') #'domain_parameters_attributes'
+        data = self.get_option_dict('name', 'fullname', 'dns_id')
         domain = self.api.create(data)
 
         test_foreman_record(domain, 'domain',
@@ -114,14 +109,13 @@ class Update(DomainAction):
         parser.add_option('--new_name', dest='name', help=_("The full DNS Domain name(required)"))
         parser.add_option('--fullname', dest='fullname', help=_("Full name describing the domain"))
         parser.add_option('--dns_id', dest='dns_id', help=_("DNS Proxy to use within this domain"))
-        # parser.add_option('--domain_parameters_attributes', dest='domain_parameters_attributes', help=_("Array of parameters (name, value)"))
 
     def check_options(self, validator):
         validator.require('id')
 
     def run(self):
         domain_id = self.get_option('id')
-        data = self.get_option_dict('name','fullname','dns_id') #,'domain_parameters_attributes'
+        data = self.get_option_dict('name', 'fullname', 'dns_id')
 
         domain = self.api.update(domain_id, data)
 
@@ -143,7 +137,7 @@ class Delete(DomainAction):
 
     def run(self):
         domain_id = self.get_option('id')
-        status = self.api.destroy(domain_id)
+        self.api.destroy(domain_id)
         print _('Successfuly deleted Domain [ %s ]') % domain_id
 
 
