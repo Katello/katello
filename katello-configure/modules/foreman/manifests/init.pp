@@ -7,6 +7,11 @@ class foreman (
   $group              = $foreman::params::group,
   $environment        = $foreman::params::environment,
 
+  $oauth_active       = $foreman::params::oauth_active,
+  $oauth_consumer_key = $foreman::params::oauth_consumer_key,
+  $oauth_consumer_secret = $foreman::params::oauth_consumer_secret,
+  $oauth_map_users    = $foreman::params::oauth_map_users,
+
   $db_user            = $foreman::params::db_user,
   $db_group           = $foreman::params::db_group,
   $db_pass            = $foreman::params::db_pass,
