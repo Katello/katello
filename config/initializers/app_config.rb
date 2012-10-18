@@ -19,7 +19,7 @@ module ApplicationConfiguration
 
       config = YAML::load_file(@config_file) || {}
       @hash = config['common'] || {}
-      @hash.update(config[Rails.env] || {})
+      @hash.deep_merge!(config[Rails.env] || {})
 
       # Based upon root url, switch between headpin and katello modes
       if ENV['RAILS_RELATIVE_URL_ROOT'] == '/headpin' || ENV['RAILS_RELATIVE_URL_ROOT'] == '/sam'
@@ -40,6 +40,7 @@ module ApplicationConfiguration
       # candlepin and pulp are turned on by default
       @ostruct.use_cp = true unless @ostruct.respond_to?(:use_cp)
       @ostruct.use_pulp = true unless @ostruct.respond_to?(:use_pulp)
+      @ostruct.use_foreman = true unless @ostruct.respond_to?(:use_foreman)
 
       #configuration is created after environment initializers, so lets override them here
       Rails.logger.level = LOG_LEVELS.index(@ostruct.log_level) if LOG_LEVELS.include?(@ostruct.log_level)
