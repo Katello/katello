@@ -124,6 +124,14 @@ def update_dict_unless_none(d, key, value):
         d[key] = value
     return d
 
+# custom info -----------------------------------------------------------------
+def stringify_custom_info(list_custom_info):
+    arr = []
+    for info in list_custom_info:
+        arr.append("%s: %s" % (info["keyname"], info["value"]))
+
+    return "[ %s ]"  % ", ".join(arr)
+
 class SystemExitRequest(Exception):
     """
     Exception to indicate a system exit request. Introduced to
@@ -131,7 +139,6 @@ class SystemExitRequest(Exception):
     [1] a list of error messages.
     """
     pass
-
 
 # system exit -----------------------------------------------------------------
 def system_exit(code, msgs=None):

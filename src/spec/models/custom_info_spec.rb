@@ -46,6 +46,11 @@ describe CustomInfo do
   context "CustomInfo in valid state should be valid" do
     specify { @system.custom_info.new(:keyname => "test", :value => "1234").should be_valid }
     specify { @system.custom_info.new(:keyname => "test", :value => "abcd").should be_valid }
+    specify { @system.custom_info.new(:keyname => "test").should be_valid }
   end
-  #pending "add some examples to (or delete) #{__FILE__}"
+
+  it "should not allow duplicate keynames" do
+    @system.custom_info.create!(:keyname => "test", :value => "1234")
+    @system.custom_info.new(:keyname => "test", :value => "asdf").should_not be_valid
+  end
 end

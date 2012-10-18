@@ -37,11 +37,15 @@ describe Api::CustomInfoController do
     @env1 = KTEnvironment.create!(:name => "test_env", :label => "test_env", :prior => @org.library.id, :organization => @org)
 
     @system = System.create!(:name => "test_sys", :cp_type => "system", :environment => @env1, :facts => facts)
+
+    CustomInfo.skip_callback(:save, :after, :reindex_informable)
+    CustomInfo.skip_callback(:destroy, :after, :reindex_informable)
   end
 
   describe "create custom infoz" do
 
     it "should return 200 with successful create" do
+      System.find(@system.id).custom_info.size.should == 0
       post :create, :informable_id => @system.id, :informable_type => "system", :keyname => "test_key", :value => "test_value"
       response.code.should == "200"
       System.find(@system.id).custom_info.size.should == 1
@@ -134,7 +138,7 @@ describe Api::CustomInfoController do
       System.find(@system.id).custom_info.size.should == 3
       System.find(@system.id).custom_info.where(:keyname => "test_key1", :value => "test_value1").size.should == 1
       System.find(@system.id).custom_info.where(:keyname => "test_key1", :value => "super_test_value1").size.should == 0
-      put :update, :informable_id => @system.id, :informable_type => "system", :keyname => "test_key1", :current_value => "test_value1", :value => "super_test_value1"
+      put :update, :informable_id => @system.id, :informable_type => "system", :keyname => "test_key1", :value => "super_test_value1"
       response.code.should == "200"
       System.find(@system.id).custom_info.where(:keyname => "test_key1", :value => "test_value1").size.should == 0
       System.find(@system.id).custom_info.where(:keyname => "test_key1", :value => "super_test_value1").size.should == 1
@@ -144,7 +148,7 @@ describe Api::CustomInfoController do
     it "should require valid informable type" do
       System.find(@system.id).custom_info.size.should == 3
       System.find(@system.id).custom_info.where(:keyname => "test_key1", :value => "test_value1").size.should == 1
-      put :update, :informable_id => @system.id, :informable_type => "telephone", :keyname => "test_key1", :current_value => "test_value1", :value => "super_test_value1"
+      put :update, :informable_id => @system.id, :informable_type => "telephone", :keyname => "test_key1", :value => "super_test_value1"
       response.code.should == "500"
       System.find(@system.id).custom_info.where(:keyname => "test_key1", :value => "test_value1").size.should == 1
       System.find(@system.id).custom_info.size.should == 3
@@ -153,7 +157,7 @@ describe Api::CustomInfoController do
     it "should require valid informable id" do
       System.find(@system.id).custom_info.where(:keyname => "test_key1", :value => "test_value1").size.should == 1
       System.find(@system.id).custom_info.size.should == 3
-      put :update, :informable_id => (@system.id + 3), :informable_type => "system", :keyname => "test_key1", :current_value => "test_value1", :value => "super_test_value1"
+      put :update, :informable_id => (@system.id + 3), :informable_type => "system", :keyname => "test_key1", :value => "super_test_value1"
       response.code.should == "404"
       System.find(@system.id).custom_info.where(:keyname => "test_key1", :value => "test_value1").size.should == 1
       System.find(@system.id).custom_info.size.should == 3
@@ -161,7 +165,7 @@ describe Api::CustomInfoController do
 
     it "should respond with 404 if custom info cannot be found" do
       System.find(@system.id).custom_info.size.should == 3
-      put :update, :informable_id => @system.id, :informable_type => "system", :keyname => "test_key1", :current_value => "walker texas ranger", :value => "chuck norris"
+      put :update, :informable_id => @system.id, :informable_type => "system", :keyname => "super_test_key1", :value => "chuck norris"
       response.code.should == "404"
       System.find(@system.id).custom_info.size.should == 3
     end
@@ -174,59 +178,36 @@ describe Api::CustomInfoController do
       @system.custom_info.create(:keyname => "test_key2", :value => "test_value2")
       @system.custom_info.create(:keyname => "test_key3", :value => "test_value3")
 
-      @system.custom_info.create(:keyname => "test_key1", :value => "test_value4")
-      @system.custom_info.create(:keyname => "test_key1", :value => "test_value5")
+      @system.custom_info.create(:keyname => "test_key4", :value => "test_value4")
+      @system.custom_info.create(:keyname => "test_key5", :value => "test_value5")
     end
 
-    it "should return 200 with successful deletion of single pair" do
+    it "should return 200 with success" do
       @system.custom_info.size.should == 5
-      @system.custom_info.where(:keyname => "test_key1", :value => "test_value1").size.should == 1
-      delete :destroy, :informable_id => @system.id, :informable_type => "system", :keyname => "test_key1", :value => "test_value1"
-      response.code.should == "200"
-      @system.custom_info.where(:keyname => "test_key1", :value => "test_value1").size.should == 0
+      @system.custom_info.where(:keyname => "test_key1").size.should == 1
+      delete :destroy, :informable_id => @system.id, :informable_type => "system", :keyname => "test_key1"
+      response.code.should == "204"
+      @system.custom_info.where(:keyname => "test_key1").size.should == 0
       @system.custom_info.size.should == 4
     end
 
-    it "should respond 404 if single pair cannot be found for deletion" do
+    it "should respond 404 if keyname cannot be found" do
       @system.custom_info.size.should == 5
-      delete :destroy, :informable_id => @system.id, :informable_type => "system", :keyname => "test_key1", :value => "test_value1337"
+      delete :destroy, :informable_id => @system.id, :informable_type => "system", :keyname => "super_test_key1"
       response.code.should == "404"
       @system.custom_info.size.should == 5
-    end
-
-    it "should response 404 if keyname cannot be found for deletion" do
-      @system.custom_info.size.should == 5
-      delete :destroy, :informable_id => @system.id, :informable_type => "system", :keyname => "tv show"
-      response.code.should == "404"
-      @system.custom_info.size.should == 5
-    end
-
-    it "should return 200 with successful deletion of a keyname" do
-      @system.custom_info.size.should == 5
-      @system.custom_info.where(:keyname => "test_key1").size.should == 3
-      delete :destroy, :informable_id => @system.id, :informable_type => "system", :keyname => "test_key1"
-      response.code.should == "200"
-      @system.custom_info.where(:keyname => "test_key1").size.should == 0
-      @system.custom_info.size.should == 2
-    end
-
-    it "should return 200 with successful deletion of all custom info on informable" do
-      @system.custom_info.size.should == 5
-      delete :destroy, :informable_id => @system.id, :informable_type => "system"
-      response.code.should == "200"
-      @system.custom_info.size.should == 0
     end
 
     it "should require valid informable type" do
       @system.custom_info.size.should == 5
-      delete :destroy, :informable_id => @system.id, :informable_type => "super informed"
+      delete :destroy, :informable_id => @system.id, :informable_type => "super informed", :keyname => "test_key1"
       response.code.should == "500"
       @system.custom_info.size.should == 5
     end
 
     it "should require valid informable id" do
       @system.custom_info.size.should == 5
-      delete :destroy, :informable_id => @system.id + 5, :informable_type => "system"
+      delete :destroy, :informable_id => (@system.id + 5), :informable_type => "system", :keyname => "test_key1"
       response.code.should == "404"
       @system.custom_info.size.should == 5
     end
