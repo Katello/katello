@@ -218,8 +218,13 @@ class Provider < ActiveRecord::Base
                                                            :ssl_client_key => OpenSSL::PKey::RSA.new(product.key)).substitutor
           product.productContent.each do |pc|
             if url_to_releases = pc.content.contentUrl[/^.*\$releasever/]
-              cdn_var_substitutor.substitute_vars(url_to_releases).each do |(substitutions, path)|
-                releases << Resources::CDN::Utils.parse_version(substitutions['releasever'])[:minor]
+              begin
+                cdn_var_substitutor.substitute_vars(url_to_releases).each do |(substitutions, path)|
+                  releases << Resources::CDN::Utils.parse_version(substitutions['releasever'])[:minor]
+                end
+              rescue Errors::SecurityViolation => e
+                # Some products may not be accessible but these should not impact available releases available
+                Rails.logger.info "Skipping unreadable product content: #{e}"
               end
             end
           end
