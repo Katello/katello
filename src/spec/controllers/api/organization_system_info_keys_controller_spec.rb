@@ -100,6 +100,9 @@ describe Api::OrganizationSystemInfoKeysController do
       @org.system_info_keys << "test_key"
       @org.save!
 
+      CustomInfo.skip_callback(:save, :after, :reindex_informable)
+      CustomInfo.skip_callback(:destroy, :after, :reindex_informable)
+
       get :apply_to_all_systems, :organization_id => @org.label
       response.code.should == "200"
 
