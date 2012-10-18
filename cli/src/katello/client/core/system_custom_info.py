@@ -17,14 +17,14 @@
 from katello.client import constants
 from katello.client.api.custom_info import CustomInfoAPI
 from katello.client.api.utils import get_system
-
+from katello.client.core.utils import test_record
 from katello.client.core.system import SystemAction
 
-class BaseCustomInfo(SystemAction):
-    """ Base class for all *CustomInfo classes with common code """
+class BaseSystemCustomInfo(SystemAction):
+    """ Base class for all *CustomInfo classes related to Systems with common code """
 
     def setup_parser(self, parser):
-        super(BaseCustomInfo, self).setup_parser(parser)
+        super(BaseSystemCustomInfo, self).setup_parser(parser)
         parser.add_option('--name', dest='name', help=_("System name (required)"))
         parser.add_option('--uuid', dest='uuid', help=constants.OPT_HELP_SYSTEM_UUID)
         parser.add_option('--keyname', dest='keyname', help=_("name to identify the custom info (required)"))
@@ -35,7 +35,8 @@ class BaseCustomInfo(SystemAction):
         validator.mutually_exclude('name', 'uuid')
         validator.mutually_exclude('environment', 'uuid')
 
-class AddCustomInfo(SystemAction):
+
+class AddCustomInfo(BaseSystemCustomInfo):
     description = _('add custom infomation to a system')
 
     def setup_parser(self, parser):
@@ -62,51 +63,21 @@ class AddCustomInfo(SystemAction):
 
         ident = sys_uuid if sys_uuid else sys_name
 
-        if response[keyname][0] == value:
-            print _("Successfully added Custom Information [ %s : %s ] to System [ %s ]") % (keyname, value, ident)
-        else:
-            print _("Could not add Custom Information [ %s : %s ] to System [ %s ]") % (keyname, value, ident)
-
-class ViewCustomInfo(SystemAction):
-
-    description = _('view custom info attached to a system')
-
-    def run(self):
-        org_name = self.get_option('org')
-        env_name = self.get_option('environment')
-        sys_name = self.get_option('name')
-        sys_uuid = self.get_option('uuid')
-        keyname = self.get_option('keyname')
-
-        system = get_system(org_name, sys_name, env_name, sys_uuid)
-
-        custom_info_api = CustomInfoAPI()
-
-        custom_info = custom_info_api.get_custom_info("system", system['id'], keyname)
-
-        for k in sorted(custom_info.keys()):
-            self.printer.add_column(k, k)
-
-        if sys_uuid:
-            self.printer.set_header(_("Custom Information For System [ %s ]") % sys_uuid)
-        elif env_name is None:
-            self.printer.set_header(_("Custom Information For System [ %s ] in Org [ %s ]") % (sys_name, org_name))
-        else:
-            self.printer.set_header(_("Custom Information For System [ %s ] in Environment [ %s ] in Org [ %s ]") % \
-                (sys_name, env_name, org_name))
-        self.printer.print_item(custom_info)
+        test_record(response,
+            _("Successfully added Custom Information [ %s : %s ] to System [ %s ]") % (keyname, value, ident),
+            _("Could not add Custom Information [ %s : %s ] to System [ %s ]") % (keyname, value, ident)
+        )
 
 
-class UpdateCustomInfo(SystemAction):
+class UpdateCustomInfo(BaseSystemCustomInfo):
     description = _("update custom info for a system")
 
     def setup_parser(self, parser):
         super(UpdateCustomInfo, self).setup_parser(parser)
-        parser.add_option('--current-value', dest='current-value', help=_("old value to update"))
-        parser.add_option('--new-value', dest='new-value', help=_("replacement value"))
+        parser.add_option('--value', dest='value', help=_("replacement value"))
 
     def check_options(self, validator):
-        validator.require(('org', 'keyname', 'current-value', 'new-value'))
+        validator.require(('org', 'keyname', 'value'))
         validator.mutually_exclude('environment', 'uuid')
 
     def run(self):
@@ -115,29 +86,27 @@ class UpdateCustomInfo(SystemAction):
         sys_name = self.get_option('name')
         sys_uuid = self.get_option('uuid')
         keyname = self.get_option('keyname')
-        current_value = self.get_option('current-value')
-        new_value = self.get_option('new-value')
+        new_value = self.get_option('value')
 
         system = get_system(org_name, sys_name, env_name, sys_uuid)
 
         custom_info_api = CustomInfoAPI()
 
-        response = custom_info_api.update_custom_info("system", system['id'], keyname, current_value, new_value)
+        response = custom_info_api.update_custom_info("system", system['id'], keyname, new_value)
 
         ident = sys_uuid if sys_uuid else sys_name
 
-        if response[keyname][0] == new_value:
-            print _("Successfully updated Custom Information for System [ %s ]") % ident
-        else:
-            print _("Could not update Custom Information for System [ %s ]") % ident
+        test_record(response,
+            _("Successfully updated Custom Information [ %s ] for System [ %s ]") % (keyname, ident),
+            _("Could not update Custom Information [ %s ] for System [ %s ]") % (keyname, ident)
+        )
 
 
-class RemoveCustomInfo(SystemAction):
+class RemoveCustomInfo(BaseSystemCustomInfo):
     description = _("remove custom info from a system")
 
     def setup_parser(self, parser):
         super(RemoveCustomInfo, self).setup_parser(parser)
-        parser.add_option('--value', dest='value', help=_("value of the custom info"))
 
     def run(self):
         org_name = self.get_option('org')
@@ -145,17 +114,16 @@ class RemoveCustomInfo(SystemAction):
         sys_name = self.get_option('name')
         sys_uuid = self.get_option('uuid')
         keyname = self.get_option('keyname')
-        value = self.get_option('value')
 
         system = get_system(org_name, sys_name, env_name, sys_uuid)
 
         custom_info_api = CustomInfoAPI()
 
-        response = custom_info_api.remove_custom_info("system", system['id'], keyname, value)
+        response = custom_info_api.remove_custom_info("system", system['id'], keyname)
 
         ident = sys_uuid if sys_uuid else sys_name
 
-        if response:
+        if len(response) == 0:
             print _("Successfully removed Custom Information from System [ %s ]") % ident
         else:
             print _("Could not remove Custom Information from System [ %s ]") % ident

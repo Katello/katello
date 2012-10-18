@@ -25,7 +25,7 @@ from katello.client.api.utils import get_environment, get_system
 from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, convert_to_mime_type, attachment_file_name, save_report, \
-    update_dict_unless_none
+    update_dict_unless_none, stringify_custom_info
 from katello.client.utils.printer import VerboseStrategy
 from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask, format_date
 from katello.client.utils.encoding import u_str
@@ -120,8 +120,7 @@ class Info(SystemAction):
 
         custom_info_api = CustomInfoAPI()
         custom_info = custom_info_api.get_custom_info("system", system['id'])
-        system['custom_info'] = "[ %s ]" % ", ".join(["%s: [ %s ]" % (k, ", ".join(custom_info[k])) \
-            for k in custom_info.keys()])
+        system['custom_info'] = stringify_custom_info(custom_info)
 
         system["activation_keys"] = "[ "+ ", ".join([ak["name"] for ak in system["activation_key"]]) +" ]"
         if 'host' in system:
@@ -133,11 +132,11 @@ class Info(SystemAction):
         self.printer.add_column('ipv4_address')
         self.printer.add_column('uuid')
         self.printer.add_column('location')
-        self.printer.add_column('created_at', 'Registered', formatter=format_date)
-        self.printer.add_column('updated_at', 'Last updated', formatter=format_date)
+        self.printer.add_column('created_at', _('Registered'), formatter=format_date)
+        self.printer.add_column('updated_at', _('Last updated'), formatter=format_date)
         self.printer.add_column('description', multiline=True)
         if 'releaseVer' in system and system['releaseVer']:
-            self.printer.add_column('releaseVer', 'OS release')
+            self.printer.add_column('releaseVer', _('OS release'))
         self.printer.add_column('activation_keys', multiline=True, show_with=printer.VerboseStrategy)
         self.printer.add_column('host', show_with=printer.VerboseStrategy)
         self.printer.add_column('serviceLevel', _('Service Level'))

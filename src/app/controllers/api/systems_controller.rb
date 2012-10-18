@@ -262,12 +262,22 @@ DESC
 
     system_report = Ruport::Data::Table.new(
       :data => data,
-      :column_names => ["name", "uuid", "location", "environment", "organization", "created_at", "updated_at", "compliance_color", "compliant_until", "custom_info"],
+      :column_names => ["name",
+                        "uuid",
+                        "location",
+                        "environment",
+                        "organization",
+                        "created_at",
+                        "updated_at",
+                        "compliance_color",
+                        "compliant_until",
+                        "custom_info"
+                       ],
       :record_class => Ruport::Data::Record,
       :transforms => lambda {|r|
         r.organization = r.organization.name
         r.environment = r.environment.name
-        r.custom_info = r.custom_info.collect { |i| "#{i['keyname']}: #{i['value']}" }.join(", ")
+        r.custom_info = r.custom_info.collect { |i| "%s: %s" % [i.keyname, i.value] }.join(", ")
       })
 
     system_report.rename_column("environment.name", "environment")
@@ -280,12 +290,12 @@ DESC
     pdf_options = { :pdf_format => {
                       :page_layout => :portrait,
                       :page_size => "LETTER",
-                      :left_margin => 5 
+                      :left_margin => 5
                       },
                     :table_format => {
                       :width => 585,
                       :cell_style => { :size => 8},
-                      :row_colors => ["FFFFFF","F0F0F0"], 
+                      :row_colors => ["FFFFFF","F0F0F0"],
                       :column_widths => {
                         0 => 100,
                         1 => 100,
@@ -294,7 +304,7 @@ DESC
                         4 => 75,
                         5 => 60,
                         6 => 60}
-                      }                    
+                      }
                   }
 
     respond_to do |format|
