@@ -29,7 +29,7 @@ class DomainAPI(KatelloAPI):
         :param queries['order']: Sort results
         """
         path = "/api/domains"
-        queries = slice_dict(queries, 'search', 'order')
+        queries = slice_dict(queries, 'search', 'order', allow_none=False)
         return self.server.GET(path, queries)[1]
 
 

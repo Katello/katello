@@ -565,5 +565,8 @@ def save_report(report, filename):
     f.close()
 
 
-def slice_dict(orig_dict, *key_list):
-    return dict((key, orig_dict[key]) for key in key_list if key in orig_dict)
+def slice_dict(orig_dict, *key_list, **kw_args):
+    if kw_args.get('allow_none', True):
+        return dict((key, orig_dict[key]) for key in key_list if key in orig_dict)
+    else:
+        return dict((key, orig_dict[key]) for key in key_list if key in orig_dict and orig_dict[key] is not None)

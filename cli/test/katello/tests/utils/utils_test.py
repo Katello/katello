@@ -55,7 +55,8 @@ class SliceDictTest(unittest.TestCase):
     test_dict = {
         "A": "a",
         "B": "b",
-        "C": "c"
+        "C": "c",
+        "D": None
     }
 
     def test_returns_empty_dict_if_no_keys_specified(self):
@@ -72,18 +73,25 @@ class SliceDictTest(unittest.TestCase):
 
     def test_slices_dict_with_all_its_original_keys(self):
         self.assertEqual(
-            slice_dict(self.test_dict, "A", "B", "C"),
+            slice_dict(self.test_dict, "A", "B", "C", "D"),
             self.test_dict
+        )
+
+    def test_slices_dict_with_all_its_original_keys_and_filtered_nones(self):
+        self.assertEqual(
+            slice_dict(self.test_dict, "A", "B", "C", "D", allow_none=False),
+            {"A": "a", "B": "b", "C": "c"}
         )
 
     def test_slices_dict_with_none_of_its_original_keys(self):
         self.assertEqual(
-            slice_dict(self.test_dict, "D", "E"),
+            slice_dict(self.test_dict, "Y", "Z"),
             {}
         )
 
     def test_slices_dict_with_one_of_its_original_keys(self):
         self.assertEqual(
-            slice_dict(self.test_dict, "A", "D"),
+            slice_dict(self.test_dict, "A", "Z"),
             {"A": "a"}
         )
+
