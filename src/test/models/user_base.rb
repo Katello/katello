@@ -15,19 +15,22 @@ require 'minitest_helper'
 module TestUserBase
   def self.included(base)
     base.class_eval do
-      use_instantiated_fixtures = false
       fixtures :roles, :permissions, :resource_types, :roles_users, :users
+    end
+  
+    base.extend ClassMethods
+  end
 
-      def self.before_suite
-        services  = ['Candlepin', 'Pulp', 'ElasticSearch']
-        models    = ['User']
-        disable_glue_layers(services, models)
-      end
+  module ClassMethods
+    def before_suite
+      services  = ['Candlepin', 'Pulp', 'ElasticSearch']
+      models    = ['User']
+      disable_glue_layers(services, models)
     end
   end
 
   def setup
-    @no_perms_user         = User.find(users(:no_perms_user))
+    @no_perms_user  = User.find(users(:no_perms_user))
     @admin          = User.find(users(:admin))
     @disabled_user  = User.find(users(:disabled_user))
   end
