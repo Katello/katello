@@ -18,5 +18,7 @@ fi
 # Run unit tests
 cd src
 sudo bundle install
-rake db:migrate:reset --trace 
+rake parallel:drop
+rake parallel:create
+rake parallel:prepare
 rake hudson:spec SPEC_OPTS="-p" --trace
