@@ -151,7 +151,8 @@ class Create(RepoAction):
 
         return os.EX_OK
 
-class Discovery(RepoAction):
+class Discovery(RepoAction):  # pylint: disable=R0904
+    #TODO: temporary pylint disable, we need to refactor the class later
 
     description = _('discovery repositories contained within a URL')
 
@@ -160,7 +161,7 @@ class Discovery(RepoAction):
         parser.add_option('--name', dest='name',
             help=_("repository name prefix to add to all the discovered repositories (required)"))
         parser.add_option('--label', dest='label',
-                               help=_("repo label, ASCII identifier to add to " + 
+                               help=_("repo label, ASCII identifier to add to " +
                                 "all discovered repositories.  (will be generated if not specified)"))
         parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES,
             help=_("root url to perform discovery of repositories eg: http://porkchop.devel.redhat.com/ (required)"))
@@ -497,7 +498,8 @@ class ListFilters(SingleRepoAction):
         return os.EX_OK
 
 
-class AddRemoveFilter(SingleRepoAction):
+class AddRemoveFilter(SingleRepoAction):  # pylint: disable=R0904
+    #TODO: temporary pylint disable, we need to refactor the class later
 
     select_by_env = False
     addition = True
