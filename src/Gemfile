@@ -22,6 +22,8 @@ gem 'net-ldap'
 gem 'oauth'
 gem 'ldap_fluff'
 
+gem 'foreman_api', '>= 0.0.7'
+
 gem 'delayed_job', '~> 2.1.4'
 gem 'daemons', '>= 1.1.4'
 gem 'uuidtools'
@@ -41,7 +43,7 @@ gem 'ruport', '>=1.7.0'
 gem 'prawn'
 gem 'acts_as_reportable', '>=1.1.1'
 
-gem "apipie-rails"
+gem "apipie-rails", '>= 0.0.12'
 
 # Use unicorn as the web server
 # gem 'unicorn'

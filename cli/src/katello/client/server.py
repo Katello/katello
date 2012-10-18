@@ -162,7 +162,7 @@ class KatelloServer(object):
     auth_method = NoAuthentication()
 
     #---------------------------------------------------------------------------
-    def __init__(self, host, port=443, protocol='https', path_prefix='/katello/api', accept_lang=None):
+    def __init__(self, host, port=443, protocol='https', path_prefix='', accept_lang=None):
         assert protocol in ('http', 'https')
 
         self.host = host

@@ -43,7 +43,10 @@ from katello.client.core import (
   filters,
   gpg_key,
   system_group,
-  admin
+  admin,
+  architecture,
+  config_template,
+  domain
 )
 
 def setup_admin(katello_cmd):
@@ -299,6 +302,31 @@ def setup_admin(katello_cmd):
         admin_cmd = admin.Admin()
         admin_cmd.add_command('crl_regen', admin.CrlRegen())
         katello_cmd.add_command('admin', admin_cmd)
+
+    architecture_cmd = architecture.Architecture()
+    architecture_cmd.add_command('list', architecture.List())
+    architecture_cmd.add_command('info', architecture.Show())
+    architecture_cmd.add_command('create', architecture.Create())
+    architecture_cmd.add_command('update', architecture.Update())
+    architecture_cmd.add_command('delete', architecture.Delete())
+    katello_cmd.add_command('architecture', architecture_cmd)
+
+    configtemplate_cmd = config_template.ConfigTemplate()
+    configtemplate_cmd.add_command('list', config_template.List())
+    configtemplate_cmd.add_command('info', config_template.Info())
+    configtemplate_cmd.add_command('create', config_template.Create())
+    configtemplate_cmd.add_command('update', config_template.Update())
+    configtemplate_cmd.add_command('delete', config_template.Delete())
+    configtemplate_cmd.add_command('build_pxe_default', config_template.Build_Pxe_Default())
+    katello_cmd.add_command('config_template', configtemplate_cmd)
+
+    domain_cmd = domain.Domain()
+    domain_cmd.add_command('list', domain.List())
+    domain_cmd.add_command('info', domain.Info())
+    domain_cmd.add_command('create', domain.Create())
+    domain_cmd.add_command('update', domain.Update())
+    domain_cmd.add_command('delete', domain.Delete())
+    katello_cmd.add_command('domain', domain_cmd)
 
 def get_katello_mode():
     Config()
