@@ -17,7 +17,7 @@ class Api::ProvidersController < Api::ApiController
   end
 
   before_filter :find_organization, :only => [:index, :create]
-  before_filter :find_provider, :only => [:show, :update, :destroy, :products, :import_products, :refresh_products, :import_manifest, :product_create]
+  before_filter :find_provider, :only => [:show, :update, :destroy, :products, :import_products, :refresh_products, :import_manifest, :delete_manifest, :product_create]
   before_filter :authorize
 
   def rules
@@ -36,6 +36,7 @@ class Api::ProvidersController < Api::ApiController
 
       :products => read_test,
       :import_manifest => edit_test,
+      :delete_manifest => edit_test,
       :import_products => edit_test,
       :refresh_products => edit_test,
       :product_create => edit_test,
@@ -131,6 +132,17 @@ class Api::ProvidersController < Api::ApiController
 
     @provider.import_manifest File.expand_path(temp_file.path), :force => params[:force]
     render :text => "Manifest imported", :status => 200
+  end
+
+  api :POST, "/providers/:id/delete_manifest", "Delete manifest from Red Hat provider"
+  param :id, :number, :desc => "Provider numeric identifier", :required => true
+  def delete_manifest
+    if @provider.yum_repo?
+      raise HttpErrors::BadRequest, _("It is not allowed to delete manifest for a custom provider.")
+    end
+
+    @provider.delete_manifest
+    render :text => "Manifest deleted", :status => 200
   end
 
   api :POST, "/providers/:id/refresh_products", "Refresh products for Red Hat provider"
