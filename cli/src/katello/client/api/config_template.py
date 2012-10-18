@@ -29,7 +29,7 @@ class ConfigTemplateAPI(KatelloAPI):
         :param queries['order']: sort results
         """
         path = "/api/config_templates"
-        queries = slice_dict(queries, 'search', 'order')
+        queries = slice_dict(queries, 'search', 'order', allow_none=False)
         return self.server.GET(path, queries)[1]
 
 
@@ -88,7 +88,7 @@ class ConfigTemplateAPI(KatelloAPI):
         data = slice_dict(data, \
             'name', 'template', 'snippet', 'audit_comment', \
             'template_kind_id', 'template_combinations_attributes', \
-            'operatingsystem_ids')
+            'operatingsystem_ids', allow_none=False)
         return self.server.PUT(path, {"config_template": data})[1]
 
 
