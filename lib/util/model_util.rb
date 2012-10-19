@@ -20,7 +20,7 @@ module Katello
     end
 
     def setup_label_from_name
-      unless label
+      unless label.present?
         label = Katello::ModelUtils::labelize(name)
       end
     end
