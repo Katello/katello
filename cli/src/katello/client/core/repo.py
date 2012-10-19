@@ -153,7 +153,7 @@ class Create(RepoAction):
         gpgkey   = self.get_option('gpgkey')
         nogpgkey   = self.get_option('nogpgkey')
 
-        product = get_product(orgName, prodName, prodLabel)
+        product = get_product(orgName, prodName, prodLabel, prodId)
         self.api.create(orgName, product["id"], name, label, url, gpgkey, nogpgkey)
         print _("Successfully created repository [ %s ]") % name
 
@@ -195,7 +195,7 @@ class Discovery(RepoAction):
         self.printer.set_header(_("Repository Urls discovered @ [%s]" % url))
         selectedurls = self.select_repositories(repourls, assumeyes)
 
-        product = get_product(orgName, prodName, prodLabel)
+        product = get_product(orgName, prodName, prodLabel, prodId)
         self.create_repositories(orgName, product["id"], name, label, selectedurls)
 
         return os.EX_OK
