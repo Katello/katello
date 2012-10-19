@@ -15,6 +15,8 @@ require 'minitest_helper'
 class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def setup
+    models = ["Organization", "KTEnvironment"]
+    disable_glue_layers(["Candlepin", "Pulp"], models)
     @content_view_def = FactoryGirl.build(:content_view_definition)
   end
 
@@ -38,5 +40,13 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
                                     :content_views => [content_view])
     assert definition.destroy
     assert_not_nil ContentView.find_by_id(content_view.id)
+  end
+
+  def test_publish
+    content_view_def = FactoryGirl.create(:content_view_definition)
+    content_view = content_view_def.publish
+    refute_nil content_view
+    refute_empty content_view_def.content_views.reload
+    assert_includes content_view_def.content_views, content_view
   end
 end

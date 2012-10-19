@@ -1,4 +1,20 @@
+#
+# Copyright 2011 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+
+require 'util/model_util.rb'
+
 class ContentView < ActiveRecord::Base
+  include Katello::LabelFromName
+
   belongs_to :content_view_definition
   belongs_to :organization
   has_many :environment_defaults, :class_name => "KTEnvironment",
@@ -18,11 +34,19 @@ class ContentView < ActiveRecord::Base
   has_many :composite_content_views, :through => :content_view_composites,
     :source => :composite
 
-  validates :name, :presence => true
+  validates :label, :uniqueness => {:scope => :organization_id},
+    :presence => true, :katello_label_format => true
+  validates :name, :presence => true, :katello_name_format => true
+  validates :organization_id, :presence => true
 
-  def as_json options = {}
+  def as_json(options = {})
     result = self.attributes
     result['organization'] = self.organization.try(:name)
+
+    environments = (self.environments + [organization.library]).compact
+    result['environments'] = environments.map{|e| e.try(:name)}.join(", ")
+    result['published'] = true
+
     result
   end
 end

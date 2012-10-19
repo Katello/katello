@@ -278,6 +278,13 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
     if mode == 'katello':
         cv_cmd = content_view.ContentView()
         cv_cmd.add_command('list', content_view.List())
+        cv_cmd.add_command('create', content_view.Create())
+        cv_cmd.add_command('info', content_view.Info())
+        cv_cmd.add_command('delete', content_view.Delete())
+        cv_cmd.add_command('update', content_view.Update())
+        cv_cmd.add_command('publish', content_view.Publish())
+        cv_cmd.add_command('add_filter', content_view.AddRemoveFilter(True))
+        cv_cmd.add_command('remove_filter', content_view.AddRemoveFilter(False))
         katello_cmd.add_command('content_view', cv_cmd)
 
     client_cmd = client.Client()

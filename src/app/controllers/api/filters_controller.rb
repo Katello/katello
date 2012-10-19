@@ -21,10 +21,20 @@ class Api::FiltersController < Api::ApiController
   before_filter :find_repository, :only => [:list_repository_filters, :update_repository_filters]
   before_filter :find_organization, :only => [:index, :show, :destroy, :update, :create,
                                               :list_product_filters, :update_product_filters,
-                                              :list_repository_filters, :update_repository_filters]
+                                              :list_repository_filters, :update_repository_filters,
+                                              :list_content_view_definition_filters,
+                                              :update_content_view_definition_filters]
   before_filter :find_filter, :only => [:show, :destroy, :update]
   before_filter :find_product, :only => [:list_product_filters, :update_product_filters]
-  before_filter :find_filters, :only => [:update_product_filters, :update_repository_filters]
+  before_filter :find_content_view_definition, :only => [
+      :list_content_view_definition_filters,
+      :update_content_view_definition_filters
+    ]
+  before_filter :find_filters, :only => [
+      :update_product_filters,
+      :update_repository_filters,
+      :update_content_view_definition_filters
+    ]
   before_filter :authorize
 
   def rules
@@ -43,7 +53,9 @@ class Api::FiltersController < Api::ApiController
       :list_product_filters => index_filters,
       :update_product_filters => create_filter,
       :list_repository_filters => index_filters,
-      :update_repository_filters => create_filter
+      :update_repository_filters => create_filter,
+      :list_content_view_definition_filters => index_filters,
+      :update_content_view_definition_filters => create_filter
     }
   end
 
@@ -114,13 +126,7 @@ class Api::FiltersController < Api::ApiController
   param :product_id, :identifier, :desc => "product identifier", :required => true
   param :filters, Array, :desc => "Updated list of filters", :required => true
   def update_product_filters
-    deleted_filters = @product.filters - @filters
-    added_filters = @filters - @product.filters
-
-    @product.filters -= deleted_filters
-    @product.filters += added_filters
-
-    render :json => @product.filters.to_json
+    update_item_filters(@product, @filters)
   end
 
   api :GET, "/repositories/:repository_id/filters", "Get package filters for repository"
@@ -136,17 +142,38 @@ class Api::FiltersController < Api::ApiController
   param :repository_id, :identifier, :desc => "repository identifier", :required => true
   param :filters, Array, :desc => "Updated list of filters", :required => true
   def update_repository_filters
-    deleted_filters = @repository.filters - @filters
-    added_filters = @filters - @repository.filters
+    update_item_filters(@repository, @filters)
+  end
 
-    @repository.filters -= deleted_filters
-    @repository.filters += added_filters
-    @repository.save!
-
-    render :json => @repository.filters.to_json
+  api :GET, "/content_view_definitions/:content_view_definition_id/filters", 
+    "Get package filters for content_view_definition"
+  param :content_view_definition_id, :identifier, :required => true,
+    :desc => "content_view_definition identifier"
+  def list_content_view_definition_filters
+    render :json => @content_view_definition.filters.to_json
+  end
+    
+  api :PUT, "/content_view_definitions/:content_view_definition_id/filters", 
+    "Update package filters for content_view_definition"
+  param :content_view_definition_id, :identifier, :required => true,
+    :desc => "content_view_definition identifier"
+  param :filters, Array, :desc => "Updated list of filters", :required => true
+  def update_content_view_definition_filters
+    update_item_filters(@content_view_definition, @filters)
   end
 
   private
+
+  def update_item_filters(item, filters)
+    deleted_filters = item.filters - filters
+    added_filters = filters - item.filters
+
+    item.filters -= deleted_filters
+    item.filters += added_filters
+    item.save!
+
+    render :json => item.filters.to_json
+  end
 
   def find_organization
     if not find_optional_organization
@@ -165,6 +192,14 @@ class Api::FiltersController < Api::ApiController
     raise HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repository.nil?
     raise HttpErrors::BadRequest, _("Filters can be stored only in Library repositories.") if not @repository.environment.library?
     @repository
+  end
+
+  def find_content_view_definition
+    id = params[:content_view_definition_id]
+    @content_view_definition = ContentViewDefinition.find(id)
+    if @content_view_definition.nil?
+      raise HttpErrors::NotFound, _("Couldn't find definition '#{id}'")
+    end
   end
 
   def find_filter
