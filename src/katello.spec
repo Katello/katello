@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.1.15
+Version:        1.1.16
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -638,6 +638,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Oct 19 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.16-1
+- 860952 - update Pool::find to not treat response as an array
+
 * Mon Oct 15 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.15-1
 - Added about link to Administer menu
 
