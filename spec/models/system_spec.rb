@@ -79,6 +79,9 @@ describe System do
   end
 
   it "adds custom info if organization has default custom info set" do
+    CustomInfo.skip_callback(:save, :after, :reindex_informable)
+    CustomInfo.skip_callback(:destroy, :after, :reindex_informable)
+
     o = Organization.find(@organization.id)
     o.system_info_keys << "test_key"
     o.save!
