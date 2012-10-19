@@ -59,12 +59,4 @@ class Api::OrganizationSystemInfoKeysController < Api::ApiController
     render :json => systems.collect {|s| s[:name]}.to_json
   end
 
-  private
-
-  def find_organization
-    @organization = Organization.find_by_label(params[:organization_id].tr(' ', '_'))
-    raise HttpErrors::NotFound, _("Couldn't find organization '%s'") % params[:organization_id] if @organization.nil?
-    @organization
-  end
-
 end

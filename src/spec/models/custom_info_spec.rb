@@ -34,6 +34,9 @@ describe CustomInfo do
     Resources::Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
 
     @system = System.create!(:name => "test_system", :environment => @environment, :cp_type => 'system', :facts => {"distribution.name" => "Fedora"})
+
+    CustomInfo.skip_callback(:save, :after, :reindex_informable)
+    CustomInfo.skip_callback(:destroy, :after, :reindex_informable)
   end
 
   context "CustomInfo in invalid state should not be valid" do
