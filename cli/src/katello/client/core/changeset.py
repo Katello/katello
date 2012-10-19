@@ -335,26 +335,31 @@ class UpdateContent(ChangesetAction):
     def _store_from_product(self, option, opt_str, value, parser):
         self.current_product = u_str(value)
         self.current_product_option = option.dest
-        parser.values.from_product = True
+        setattr(parser.values, option.dest, value)
 
     def _store_item_with_product(self, option, opt_str, value, parser):
-        if parser.values.from_product == None:
-            raise OptionValueError(_("%s must be preceded by %s") % (option, "--from_product"))
+        if (parser.values.from_product == None) and \
+           (parser.values.from_product_label == None) and \
+           (parser.values.from_product_id == None):
+            raise OptionValueError(_("%s must be preceded by %s, %s or %s") %
+                  (option, "--from_product", "--from_product_label", "--from_product_id"))
 
         if self.current_product_option == 'from_product_label':
-            self.items[option.dest].append({"name": u_str(value), "product_label": self.current_product})
+            self.items[option.dest].append({"name": u_str(value), "from_product_label": self.current_product})
         elif self.current_product_option == 'from_product_id':
-            self.items[option.dest].append({"name": u_str(value), "product_id": self.current_product})
+            self.items[option.dest].append({"name": u_str(value), "from_product_id": self.current_product})
         else:
-            self.items[option.dest].append({"name": u_str(value), "product": self.current_product})
+            self.items[option.dest].append({"name": u_str(value), "from_product": self.current_product})
 
     def _store_item(self, option, opt_str, value, parser):
-	if option.dest == 'add_product_label' or option.dest == 'remove_product_label':
+        if option.dest == 'add_product_label' or option.dest == 'remove_product_label':
             self.items[option.dest].append({"product_label": u_str(value)})
-	elif option.dest == 'add_product_id' or option.dest == 'remove_product_id':
+        elif option.dest == 'add_product_id' or option.dest == 'remove_product_id':
             self.items[option.dest].append({"product_id": u_str(value)})
         else:
             self.items[option.dest].append({"name": u_str(value)})
+
+        setattr(parser.values, option.dest, value)
 
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
@@ -421,6 +426,9 @@ class UpdateContent(ChangesetAction):
 
     def check_options(self, validator):
         validator.require(('name', 'org', 'environment'))
+        validator.mutually_exclude('add_product', 'add_product_label', 'add_product_id')
+        validator.mutually_exclude('remove_product', 'remove_product_label', 'remove_product_id')
+        validator.mutually_exclude('from_product', 'from_product_label', 'from_product_id')
 
     def run(self):
         #reset stored patch items (neccessary for shell mode)
