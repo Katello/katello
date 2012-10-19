@@ -135,8 +135,8 @@ class Info(SystemAction):
         self.printer.add_column('created_at', _('Registered'), formatter=format_date)
         self.printer.add_column('updated_at', _('Last updated'), formatter=format_date)
         self.printer.add_column('description', multiline=True)
-        if 'releaseVer' in system and system['releaseVer']:
-            self.printer.add_column('releaseVer', _('OS release'))
+        if 'release' in system and system['release']:
+            self.printer.add_column('release', _('OS release'))
         self.printer.add_column('activation_keys', multiline=True, show_with=printer.VerboseStrategy)
         self.printer.add_column('host', show_with=printer.VerboseStrategy)
         self.printer.add_column('serviceLevel', _('Service Level'))
