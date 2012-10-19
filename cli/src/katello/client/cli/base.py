@@ -39,11 +39,11 @@ def opt_parser_add_product(parser, required=None):
         required = ''
 
     parser.add_option('--product', dest='product',
-                      help=_('product name e.g.: "Red Hat Enterprise Linux Server"%s' % required))
+                      help=_('product name e.g.: "Red Hat Enterprise Linux Server"%s') % required)
 
     parser.add_option('--product_label', dest='product_label',
-                      help=_('product label e.g.: "Red_Hat_Enterprise_Linux_Server"%s' % required))
-    parser.add_option('--product_id', dest='product_id', help=_('product id e.g.: "12361467"%s' % required))
+                      help=_('product label e.g.: "Red_Hat_Enterprise_Linux_Server"%s') % required)
+    parser.add_option('--product_id', dest='product_id', help=_('product id e.g.: "12361467"%s') % required)
 
 
 def opt_parser_add_org(parser, required=None):
@@ -55,7 +55,7 @@ def opt_parser_add_org(parser, required=None):
     else:
         required = ''
     parser.add_option('--org', dest='org',
-                      help=_('name of organization e.g.: ACME_Corporation%s' % required))
+                      help=_('name of organization e.g.: ACME_Corporation%s') % required)
 
 def opt_parser_add_environment(parser, required=None, default=''):
     """ Add to the instance of optparse option --environment"""
@@ -68,7 +68,7 @@ def opt_parser_add_environment(parser, required=None, default=''):
     if default:
         default = _(" (default: %s)") % default
     parser.add_option('--environment', dest='environment',
-                      help=_('environment name e.g.: production%s%s' % (required, default)))
+                      help=_('environment name e.g.: production%s%s') % (required, default))
 
 class OptionException(Exception):
     """
