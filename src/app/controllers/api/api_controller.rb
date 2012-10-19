@@ -28,9 +28,11 @@ class Api::ApiController < ActionController::Base
 
   rescue_from RestClient::ExceptionWithResponse, :with => :exception_with_response
   rescue_from ActiveRecord::RecordInvalid, :with => :process_invalid
-  rescue_from Resources::ForemanModel::Invalid, :with => :process_invalid
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
-  rescue_from Resources::ForemanModel::NotFound, :with => :record_not_found
+  if AppConfig.use_foreman
+    rescue_from Resources::ForemanModel::Invalid, :with => :process_invalid
+    rescue_from Resources::ForemanModel::NotFound, :with => :record_not_found
+  end
   rescue_from Errors::NotFound, :with => proc { |e| render_exception(404, e) }
 
   rescue_from HttpErrors::NotFound, :with => proc { |e| render_wrapped_exception(404, e) }
@@ -147,7 +149,7 @@ class Api::ApiController < ActionController::Base
     logger.error exception.class
     logger.debug exception.backtrace.join("\n")
     errors = case exception
-    when Resources::ForemanModel::Invalid
+    when AppConfig.use_foreman && Resources::ForemanModel::Invalid
       exception.resource.errors
     when ActiveRecord::RecordInvalid
       exception.record.errors
