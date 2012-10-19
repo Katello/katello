@@ -208,37 +208,34 @@ class UpdateContent(ChangesetAction):
             else:
                 self.env_name = get_environment(org_name, env_name)['prior']
 
-        def product_id(self, options):
-            prod_name = None
-            prod_label = None
-            prod_id = None
+        @classmethod
+        def product_options(cls, options):
+            product = {'name': None, 'label': None, 'id': None}
 
             if 'product' in options:
-                prod_name = options['product']
+                product['name'] = options['product']
             elif 'product_label' in options:
-                prod_label = options['product_label']
+                product['label'] = options['product_label']
             elif 'product_id' in options:
-                prod_id = options['product_id']
-            else:
-                prod_name = options['name']
+                product['id'] = options['product_id']
 
-            prod = get_product(self.org_name, prod_name, prod_label, prod_id)
+            return product
+
+        def product_id(self, options):
+            prod_opts = self.product_options(options)
+
+            # if the product name/label/id are all none...
+            if (all(opt is None for opt in prod_opts)):
+                prod_opts['name'] = options['name']
+
+            prod = get_product(self.org_name, prod_opts['name'], prod_opts['label'], prod_opts['id'])
+
             return prod['id']
 
         def repo_id(self, options):
-            prod_name = None
-            prod_label = None
-            prod_id = None
-
-            if 'product' in options:
-                prod_name = options['product']
-            elif 'product_label' in options:
-                prod_label = options['product_label']
-            elif 'product_id' in options:
-                prod_id = options['product_id']
-
-            repo = get_repo(self.org_name, prod_name, prod_label, prod_id, options['name'],
-                self.env_name)
+            prod_opts = self.product_options(options)
+            repo = get_repo(self.org_name, prod_opts['name'], prod_opts['label'], prod_opts['id'], 
+                options['name'], self.env_name)
 
             return repo['id']
 
