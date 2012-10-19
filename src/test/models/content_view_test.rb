@@ -14,8 +14,20 @@ require 'minitest_helper'
 
 class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
 
+  def setup
+    models = ["Organization", "KTEnvironment"]
+    disable_glue_layers(["Candlepin", "Pulp"], models)
+  end
+
   def test_create
-    assert ContentView.create(attributes_for(:content_view))
+    assert ContentView.create(FactoryGirl.attributes_for(:content_view))
+  end
+
+  def test_label
+    content_view = FactoryGirl.build(:content_view)
+    content_view.label = ""
+    assert content_view.save
+    assert content_view.label.present?
   end
 
   def test_create_with_content_view_definition
@@ -37,6 +49,14 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     assert content_view.errors.has_key?(:name)
   end
 
+  def test_bad_label
+    content_view = FactoryGirl.build(:content_view)
+    content_view.label = "Bad Label"
+    assert content_view.invalid?
+    assert_equal 1, content_view.errors.length
+    assert content_view.errors.has_key?(:label)
+  end
+
   def test_component_content_views
     content_view = FactoryGirl.create(:content_view_with_definition)
     component = FactoryGirl.create(:content_view)
@@ -55,15 +75,11 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_environment_default_content_view
-    # disable glue layer
-    services  = ['Candlepin', 'Pulp', 'ElasticSearch']
-    models = ["User", "Organization", "KTEnvironment"]
-    disable_glue_layers(services, models)
-
     env = FactoryGirl.create(:environment_with_library)
     content_view = FactoryGirl.create(:content_view)
     env.update_attributes(:default_content_view_id => content_view.id)
-    assert_includes content_view.environment_defaults.reload, env.reload
+    assert_includes content_view.environment_defaults.map(&:id), env.id
+    assert_equal content_view, env.default_content_view
   end
 
 end

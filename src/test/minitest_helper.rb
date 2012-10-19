@@ -15,6 +15,10 @@ class MiniTest::Rails::ActiveSupport::TestCase
   self.set_fixture_class :environments => KTEnvironment
 end
 
+class Minitest::Rails::ActionController::TestCase
+  include Warden::Test::Helpers
+end
+
 def configure_vcr
   require "vcr"
 

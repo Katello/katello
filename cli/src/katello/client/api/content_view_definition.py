@@ -15,6 +15,7 @@
 
 from katello.client.api.base import KatelloAPI
 from katello.client.core.utils import update_dict_unless_none
+from katello.client.utils.encoding import u_str
 
 class ContentViewDefinitionAPI(KatelloAPI):
     """
@@ -22,55 +23,70 @@ class ContentViewDefinitionAPI(KatelloAPI):
     """
     def content_view_definitions_by_org(self, org_id):
         path = "/api/organizations/%s/content_view_definitions" % org_id
-        envs = self.server.GET(path)[1]
-        return envs
+        defs = self.server.GET(path)[1]
+        return defs
 
-
-    def content_view_by_org(self, org_id, env_id):
-        path = "/api/organizations/%s/content_view_definitions/%s" % \
-            (org_id, env_id)
-        env = self.server.GET(path)[1]
-        return env
-
-
-    def content_view_by_name(self, org_id, env_name):
-        path = "/api/organizations/%s/content_view_definitions/" % (org_id)
-        envs = self.server.GET(path, {"name": env_name})[1]
-        if len(envs) > 0:
-            return envs[0]
+    def content_view_definition_by_name(self, org_id, name):
+        path = "/api/organizations/%s/content_view_definitions/" % org_id
+        defs = self.server.GET(path, {"name": name})[1]
+        if len(defs) > 0:
+            return defs[0]
         else:
             return None
 
-    def library_by_org(self, org_id):
-        path = "/api/organizations/%s/content_view_definitions/" % (org_id)
-        envs = self.server.GET(path, {"library": "true"})[1]
-        if len(envs) > 0:
-            return envs[0]
-        else:
-            return None
+    def show(self, org_id, cvd_id):
+        path = "/api/organizations/%s/content_view_definitions/%s" % (org_id,
+                cvd_id)
+        cvd = self.server.GET(path)
+        return cvd
 
-
-    def create(self, org_id, name, description, environment_id):
-        envdata = {"name": name}
-        envdata = update_dict_unless_none(envdata, "description", description)
-        envdata = update_dict_unless_none(envdata, "environment", environment_id)
+    def create(self, org_id, name, description):
+        cvd = {"name": name, "organization_id": org_id}
+        cvd = update_dict_unless_none(cvd, "description", description)
 
         path = "/api/organizations/%s/content_view_definitions/" % org_id
-        return self.server.POST(path, {"content_view": envdata})[1]
+        params = {"content_view_definition": cvd}
+        return self.server.POST(path, params)[1]
 
 
-    def update(self, org_id, cv_id, name, description):
+    def update(self, org_id, cvd_id, name, description):
+        cvd = {"organization_id": org_id, "id": cvd_id}
+        cvd = update_dict_unless_none(cvd, "name", name)
+        cvd = update_dict_unless_none(cvd, "description", description)
 
-        envdata = {}
-        envdata = update_dict_unless_none(envdata, "name", name)
-        envdata = update_dict_unless_none(envdata, "description", description)
-
-        path = "/api/organizations/%s/content_view_definitions/%s" % \
-            (org_id, cv_id)
-        return self.server.PUT(path, {"content_view": envdata})[1]
+        path = "/api/content_view_definitions/%s" % cvd_id
+        return self.server.PUT(path, {"content_view": cvd})[1]
 
 
-    def delete(self, org_id, cv_id):
-        path = "/api/organizations/%s/content_view_definitions/%s" % \
-            (org_id, cv_id)
+    def delete(self, cvd_id):
+        path = "/api/content_view_definitions/%s" % cvd_id
         return self.server.DELETE(path)[1]
+
+    def publish(self, org_id, cvd_id):
+        path = "/api/organizations/%s/content_view_definitions/%s/publish" % \
+            (org_id, cvd_id)
+        return self.server.GET(path)[1]
+
+    def filters(self, org, cvd_id):
+        path = "/api/organizations/%s/content_view_definitions/%s/filters" % \
+                (u_str(org), u_str(cvd_id))
+        data = self.server.GET(path)[1]
+        return data
+
+    def update_filters(self, org, cvd, filters):
+        path = "/api/organizations/%s/content_view_definitions/%s/filters" % \
+                (u_str(org), u_str(cvd))
+        data = self.server.PUT(path, {"filters": filters})[1]
+        return data
+
+    def products(self, org, cvd_id):
+        path = "/api/organizations/%s/content_view_definitions/%s/products" % \
+                (u_str(org), u_str(cvd_id))
+        data = self.server.GET(path)[1]
+        return data
+
+    def repos(self, org, cvd_id):
+        path = "/api/organizations/%s/content_view_definitions/%s/reposistories"\
+                % (u_str(org), u_str(cvd_id))
+        data = self.server.GET(path)[1]
+        return data

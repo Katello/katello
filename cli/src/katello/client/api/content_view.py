@@ -22,50 +22,32 @@ class ContentViewAPI(KatelloAPI):
     """
     def content_views_by_org(self, org_id):
         path = "/api/organizations/%s/content_views" % org_id
-        envs = self.server.GET(path)[1]
-        return envs
+        views = self.server.GET(path)[1]
+        return views
 
 
-    def content_view_by_org(self, org_id, env_id):
-        path = "/api/organizations/%s/content_views/%s" % (org_id, env_id)
-        env = self.server.GET(path)[1]
-        return env
+    def show(self, org_id, view_id):
+        path = "/api/organizations/%s/content_views/%s" % (org_id, view_id)
+        view = self.server.GET(path)[1]
+        return view
 
 
-    def content_view_by_name(self, org_id, env_name):
+    def content_view_by_name(self, org_id, view_name):
         path = "/api/organizations/%s/content_views/" % (org_id)
-        envs = self.server.GET(path, {"name": env_name})[1]
-        if len(envs) > 0:
-            return envs[0]
+        views = self.server.GET(path, {"name": view_name})[1]
+        if len(views) > 0:
+            return views[0]
         else:
             return None
-
-    def library_by_org(self, org_id):
-        path = "/api/organizations/%s/content_views/" % (org_id)
-        envs = self.server.GET(path, {"library": "true"})[1]
-        if len(envs) > 0:
-            return envs[0]
-        else:
-            return None
-
-
-    def create(self, org_id, name, description, environment_id):
-        envdata = {"name": name}
-        envdata = update_dict_unless_none(envdata, "description", description)
-        envdata = update_dict_unless_none(envdata, "environment", environment_id)
-
-        path = "/api/organizations/%s/content_views/" % org_id
-        return self.server.POST(path, {"content_view": envdata})[1]
-
 
     def update(self, org_id, cv_id, name, description):
 
-        envdata = {}
-        envdata = update_dict_unless_none(envdata, "name", name)
-        envdata = update_dict_unless_none(envdata, "description", description)
+        view = {}
+        view = update_dict_unless_none(view, "name", name)
+        view = update_dict_unless_none(view, "description", description)
 
         path = "/api/organizations/%s/content_views/%s" % (org_id, cv_id)
-        return self.server.PUT(path, {"content_view": envdata})[1]
+        return self.server.PUT(path, {"content_view": view})[1]
 
 
     def delete(self, org_id, cv_id):
