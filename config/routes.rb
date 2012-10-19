@@ -518,7 +518,7 @@ Src::Application.routes.draw do
         end
         resources :filters, :only => [] do
           get :index, :on => :collection, :action => :list_product_filters
-          put :index, :on => :collection, :action => :update_product_filters
+          put :index, :on => :collection, :action => :update_item_filters
         end
       end
 
@@ -568,6 +568,7 @@ Src::Application.routes.draw do
       resources :filters, :only => [:index, :create, :destroy, :show, :update]
 
       resources :gpg_keys, :only => [:index, :create]
+<<<<<<< HEAD
 
       resources :system_info_keys, :only => [:create, :index], :controller => :organization_system_info_keys do
         get :apply, :on => :collection, :action => :apply_to_all_systems
@@ -576,6 +577,18 @@ Src::Application.routes.draw do
 
       resources :content_views
       resources :content_view_definitions
+=======
+      resources :content_views, :only => [:index]
+      resources :content_view_definitions do
+        get :publish, :on => :member
+        resources :filters, :only => [] do
+          get :index, :action => :list_content_view_definition_filters,
+            :on => :collection
+          put :index, :action => :update_content_view_definition_filters,
+            :on => :collection
+        end
+      end
+>>>>>>> Content views: Worked on labels and cli
     end
 
     resources :changesets, :only => [:show, :update, :destroy] do

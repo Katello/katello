@@ -1,25 +1,36 @@
 class Api::ContentViewDefinitionsController < Api::ApiController
   respond_to :json
   before_filter :find_organization
-  before_filter :find_definition, :only => [:show, :update, :destroy]
+  before_filter :find_definition, :except => [:index, :create]
 
   def rules
     view_rule = lambda { true }
+    show_rule = lambda { true }
+    publish_rule = lambda { true }
+    index_rule = lambda { true }
     manage_rule = lambda { true }
 
     {
-      :index => view_rule,
-      :create => manage_rule
+      :index => index_rule,
+      :create => manage_rule,
+      :publish => publish_rule,
+      :show => show_rule,
+      :update => manage_rule
     }
   end
 
   api :GET, "/organizations/:organization_id/content_view_definitions",
     "List content view definitions"
   param :organization_id, :identifier, :desc => "organization identifier"
-  param :name, :identifier, :desc => "content view identifier"
+  param :label, :identifier, :desc => "content view identifier"
   def index
-    definitions = @organization.content_view_definitions
-    render :json => definitions.to_json
+    if (label = params[:label])
+      definitions = @organization.content_view_definitions.where(:label => label)
+    else
+      definitions = @organization.content_view_definitions
+    end
+
+    render :json => definitions
   end
 
   api :POST, "/content_view_definitions",
@@ -28,6 +39,7 @@ class Api::ContentViewDefinitionsController < Api::ApiController
   param :content_view_definition, Hash do
     param :name, String, :desc => "Content view definition name",
       :required => true
+    param :label, String, :desc => "Content view identifier"
     param :description, String, :desc => "Definition description"
   end
   def create
@@ -41,13 +53,25 @@ class Api::ContentViewDefinitionsController < Api::ApiController
   api :PUT, "/content_view_definitions/:id", "Update a definition"
   param :id, :number, :desc => "Definition identifer", :required => true
   param :content_view_definition, Hash do
-    param :name, String, :desc => "Content view definition name",
-      :required => true
+    param :name, String, :desc => "Content view definition name"
     param :description, String, :desc => "Definition description"
   end
   def update
     @definition.update_attributes!(params[:content_view_definition])
     render :json => @definition.to_json
+  end
+
+  api :GET, "/content_view_definitions/:id", "Show definition info"
+  param :id, :number, :desc => "Definition identifier", :required => true
+  def show
+    render :json => @definition.to_json
+  end
+
+  api :POST, "/content_view_definitions/:id/publish", "Publish a content view"
+  param :id, :identifier, :desc => "Definition identifier"
+  def publish
+    content_view = @definition.publish
+    render :json => content_view
   end
 
   private
