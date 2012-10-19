@@ -337,7 +337,8 @@ class ApplyDefaultSystemInfo(OrganizationAction):
         response = self.system_info_keys_api.apply(org_name)
 
         if response:
-            print _("Successfully applied default custom info keys to [ %d ] systems in Org [ %s ]") % (len(response), org_name)
+            print _("Successfully applied default custom info keys to [ %d ] systems in Org [ %s ]")\
+                  % (len(response), org_name)
         elif  len(response) == 0:
             print _("No default custom info keys to apply in Org [ %s ]") % org_name
         else:
