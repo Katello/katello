@@ -318,7 +318,7 @@ class Create(ProductAction):
         parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
             help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
         parser.add_option("--gpgkey", dest="gpgkey",
-            help=_("assign a gpg key; this key will be used for every new repository unless gpgkey or nogpgkey" + \
+            help=_("assign a gpg key; this key will be used for every new repository unless gpgkey or nogpgkey"\
                 " is specified for the repo"))
 
 
