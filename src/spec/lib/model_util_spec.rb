@@ -45,5 +45,19 @@ describe Katello::ModelUtils do
     specify {Katello::ModelUtils::labelize("sweet home 谷歌地球").should  =~ /^[a-zA-Z0-9\-_]+$/}
   end
 
+  context "setup_label_from_name" do
+    before(:each) do
+      disable_org_orchestration
+      @product = Product.new(:name => "AOL4")
+      @product.stub(:provider).and_return(mock_model("Provider"))
+      lib = mock_model("KTEnvironment", :library => true)
+      @product.stub(:environments).and_return([lib])
+    end
+
+    it "should populate label before validation" do
+      @product.should be_valid
+      @product.label.should eql("AOL4")
+    end
+  end
 
 end
