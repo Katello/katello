@@ -13,6 +13,7 @@
 class Api::PingController < Api::ApiController
 
   skip_before_filter :authorize # ok - anyone authenticated can ask for status
+  skip_before_filter :require_user
 
   api :GET, "/ping", "Shows status of system and it's subcomponents"
   def index
@@ -21,7 +22,11 @@ class Api::PingController < Api::ApiController
 
   api :GET, "/status", "Shows version information"
   def status
-    render :json => {:version => "katello/#{AppConfig.katello_version}", :result => true}
+    render :json => {:release => AppConfig.app_name,
+        :version => AppConfig.katello_version,
+        :standalone => true,
+        :timeUTC => Time.now().getutc(),
+        :result => true}
   end
 
   api :GET, "/version", "Shows name and version information"
