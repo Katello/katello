@@ -35,6 +35,9 @@ describe Api::OrganizationSystemInfoKeysController do
 
     @org = Organization.create!(:name => "test_org", :label => "test_org")
     @env1 = KTEnvironment.create!(:name => "test_env", :label => "test_env", :prior => @org.library.id, :organization => @org)
+
+    CustomInfo.skip_callback(:save, :after, :reindex_informable)
+    CustomInfo.skip_callback(:destroy, :after, :reindex_informable)
   end
 
   describe "add default custom info to an org" do
@@ -99,9 +102,6 @@ describe Api::OrganizationSystemInfoKeysController do
       end
       @org.system_info_keys << "test_key"
       @org.save!
-
-      CustomInfo.skip_callback(:save, :after, :reindex_informable)
-      CustomInfo.skip_callback(:destroy, :after, :reindex_informable)
 
       get :apply_to_all_systems, :organization_id => @org.label
       response.code.should == "200"
