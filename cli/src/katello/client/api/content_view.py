@@ -32,18 +32,18 @@ class ContentViewAPI(KatelloAPI):
         return view
 
 
-    def content_view_by_name(self, org_id, view_name):
+    def content_view_by_label(self, org_id, view_label):
         path = "/api/organizations/%s/content_views/" % (org_id)
-        views = self.server.GET(path, {"name": view_name})[1]
+        views = self.server.GET(path, {"label": view_label})[1]
         if len(views) > 0:
             return views[0]
         else:
             return None
 
-    def update(self, org_id, cv_id, name, description):
+    def update(self, org_id, cv_id, label, description):
 
         view = {}
-        view = update_dict_unless_none(view, "name", name)
+        view = update_dict_unless_none(view, "label", label)
         view = update_dict_unless_none(view, "description", description)
 
         path = "/api/organizations/%s/content_views/%s" % (org_id, cv_id)

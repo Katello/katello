@@ -26,9 +26,9 @@ class ContentViewDefinitionAPI(KatelloAPI):
         defs = self.server.GET(path)[1]
         return defs
 
-    def content_view_definition_by_name(self, org_id, name):
+    def content_view_definition_by_label(self, org_id, label):
         path = "/api/organizations/%s/content_view_definitions/" % org_id
-        defs = self.server.GET(path, {"name": name})[1]
+        defs = self.server.GET(path, {"label": label})[1]
         if len(defs) > 0:
             return defs[0]
         else:
@@ -40,8 +40,8 @@ class ContentViewDefinitionAPI(KatelloAPI):
         cvd = self.server.GET(path)
         return cvd
 
-    def create(self, org_id, name, description):
-        cvd = {"name": name, "organization_id": org_id}
+    def create(self, org_id, name, label, description):
+        cvd = {"label": label, "organization_id": org_id, "name": name}
         cvd = update_dict_unless_none(cvd, "description", description)
 
         path = "/api/organizations/%s/content_view_definitions/" % org_id
@@ -49,9 +49,9 @@ class ContentViewDefinitionAPI(KatelloAPI):
         return self.server.POST(path, params)[1]
 
 
-    def update(self, org_id, cvd_id, name, description):
+    def update(self, org_id, cvd_id, label, description):
         cvd = {"organization_id": org_id, "id": cvd_id}
-        cvd = update_dict_unless_none(cvd, "name", name)
+        cvd = update_dict_unless_none(cvd, "label", label)
         cvd = update_dict_unless_none(cvd, "description", description)
 
         path = "/api/content_view_definitions/%s" % cvd_id

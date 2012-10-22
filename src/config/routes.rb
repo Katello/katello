@@ -591,6 +591,8 @@ Src::Application.routes.draw do
 >>>>>>> Content views: Worked on labels and cli
     end
 
+    resources :content_view_definitions, :only => [:destroy]
+
     resources :changesets, :only => [:show, :update, :destroy] do
       post :promote, :on => :member, :action => :promote
       post :apply, :on => :member, :action => :apply
