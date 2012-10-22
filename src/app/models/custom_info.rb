@@ -49,7 +49,7 @@ class CustomInfo < ActiveRecord::Base
   end
 
   def to_s
-    "#{self.keyname}: #{self.value.nil? ? "NOT-SPECIFIED" : self.value}"
+    "#{self.keyname}: #{self.value.nil? ? _("NOT-SPECIFIED") : self.value}"
   end
 
 end
