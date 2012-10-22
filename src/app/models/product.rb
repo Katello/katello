@@ -41,7 +41,8 @@ class Product < ActiveRecord::Base
   belongs_to :provider, :inverse_of => :products
   belongs_to :sync_plan, :inverse_of => :products
   belongs_to :gpg_key, :inverse_of => :products
-  belongs_to :content_view_definition
+  has_many :content_view_definition_products
+  has_many :content_view_definitions, :through => :content_view_definition_products
 
   validates :description, :katello_description_format => true
   validates :environments, :library_presence => true
