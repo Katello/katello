@@ -492,10 +492,10 @@ class AddRemoveFilter(SingleProductAction):
     def update_filters(self, org_name, product, filters, filter_name):
         if self.addition:
             filters.append(filter_name)
-            message = _("Added filter [ %s ] to product [ %s ]" % (filter_name, product["name"]))
+            message = _("Added filter [ %s ] to product [ %s ]") % (filter_name, product["name"])
         else:
             filters.remove(filter_name)
-            message = _("Removed filter [ %s ] from product [ %s ]" % (filter_name, product["name"]))
+            message = _("Removed filter [ %s ] from product [ %s ]") % (filter_name, product["name"])
 
         self.api.update_filters(org_name, product['id'], filters)
         print message
