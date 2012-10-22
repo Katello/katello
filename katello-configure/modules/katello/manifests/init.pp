@@ -30,5 +30,7 @@ class katello {
   include elasticsearch
   include katello::config
   include katello::service
-  Class["foreman"] -> Class["katello::config"]
+  if $katello::params::use_foreman {
+    Class["foreman"] -> Class["katello::config"]
+  }
 }
