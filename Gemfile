@@ -4,25 +4,21 @@ if ENV['BUNDLER_ENABLE_RPM_PREFERRING'] == 'true'
   require File.join(File.dirname(__FILE__), 'lib', 'bundler_patch_rpm-gems_preferred')
 end
 
-source 'http://repos.fedorapeople.org/repos/katello/gems/'
-
 # When adding new version requirement check out EPEL6 repository first
 # and use this version if possible. Also check Fedora version (usually higher).
+source 'http://rubygems.org'
+
 gem 'rails', '>= 3.0.10'
 gem 'thin', '>= 1.2.8'
-
 gem 'tire', '>= 0.3.0', '< 0.4'
 gem 'json'
 gem 'rest-client', :require => 'rest_client'
 gem 'jammit'
 gem 'pg'
-# gem 'bson_ext', '>= 1.0.4'
 gem 'rails_warden'
 gem 'net-ldap'
 gem 'oauth'
 gem 'ldap_fluff'
-
-gem 'foreman_api', '>= 0.0.7'
 
 gem 'delayed_job', '~> 2.1.4'
 gem 'daemons', '>= 1.1.4'
@@ -34,16 +30,18 @@ gem 'haml-rails'
 gem 'compass', '>= 0.11.5', '< 0.12'
 gem 'compass-960-plugin', '>= 0.10.4'
 gem 'simple-navigation', '>= 3.3.4'
+
 # Stuff for i18n
 gem 'gettext_i18n_rails'
 gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 
-# reports
-gem 'ruport', '>=1.7.0'
+# Reports
+gem 'ruport', '>=1.7.0', :git => 'https://github.com/ruport/ruport' 
 gem 'prawn'
 gem 'acts_as_reportable', '>=1.1.1'
 
-gem "apipie-rails", '>= 0.0.12'
+# Documentation
+gem "apipie-rails"
 
 # Use unicorn as the web server
 # gem 'unicorn'
@@ -67,15 +65,19 @@ gem "apipie-rails", '>= 0.0.12'
 group :test, :development do
   # To use debugger
   gem 'redcarpet'
-  if RUBY_VERSION >= "1.9.1"
+  if RUBY_VERSION >= "1.9.2"
+    gem 'debugger'
+    gem 'simplecov'
+  elsif RUBY_VERSION == "1.9.1"
     gem 'ruby-debug19'
+    gem 'simplecov'
   else
     gem 'ruby-debug'
+    gem 'rcov', '>= 0.9.9'
   end
   gem 'ZenTest', '>= 4.4.0'
   gem 'rspec-rails', '>= 2.0.0'
   gem 'autotest-rails', '>= 4.1.0'
-  gem 'rcov', '>= 0.9.9'
 
   gem 'webrat', '>=0.7.3'
   gem 'nokogiri', '>= 1.5.0'
