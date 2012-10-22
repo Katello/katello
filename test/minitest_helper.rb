@@ -41,6 +41,7 @@ end
 
 def disable_glue_layers(services=[], models=[])
   @@model_service_cache ||= {}
+  change = false
   AppConfig.use_cp = false if services.include?('Candlepin')
   AppConfig.use_pulp = false if services.include?('Pulp')
   AppConfig.use_elasticsearch = false if services.include?('ElasticSearch')
@@ -51,10 +52,11 @@ def disable_glue_layers(services=[], models=[])
       Object.send(:remove_const, model)
       load "app/models/#{model.underscore}.rb"
       @@model_service_cache[model] = cached_entry
+      change = true
     end
   end
 
-  FactoryGirl.reload
+  FactoryGirl.reload if change
 end
 
 
