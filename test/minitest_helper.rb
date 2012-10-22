@@ -6,8 +6,12 @@ require 'minitest/rails'
 
 
 class MiniTest::Rails::ActiveSupport::TestCase
+  include FactoryGirl::Syntax::Methods
+
   self.use_transactional_fixtures = true
+  self.use_instantiated_fixtures = false
   self.fixture_path = File.expand_path('../fixtures/models', __FILE__)
+  self.set_fixture_class :environments => KTEnvironment
 end
 
 def configure_vcr
@@ -22,9 +26,21 @@ def configure_vcr
   end
 end
 
+def configure_runcible
+  uri = URI.parse(AppConfig.pulp.url)
+  Runcible::Base.config = { 
+    :url      => "#{uri.scheme}://#{uri.host}",
+    :api_path => uri.path,
+    :user     => "admin",
+    :oauth    => {:oauth_secret => AppConfig.pulp.oauth_secret,
+                  :oauth_key    => AppConfig.pulp.oauth_key }
+  }
+
+  Runcible::Base.config[:logger] = 'stdout' if ENV['logging'] == "true"
+end
+
 def disable_glue_layers(services=[], models=[])
   @@model_service_cache ||= {}
-  debugger
   AppConfig.use_cp = false if services.include?('Candlepin')
   AppConfig.use_pulp = false if services.include?('Pulp')
   AppConfig.use_elasticsearch = false if services.include?('ElasticSearch')
@@ -37,6 +53,8 @@ def disable_glue_layers(services=[], models=[])
       @@model_service_cache[model] = cached_entry
     end
   end
+
+  FactoryGirl.reload
 end
 
 
@@ -55,6 +73,12 @@ class CustomMiniTestRunner
 
     def _run_suites(suites, type)
       begin
+        if ENV['suite']
+          suites = suites.select do |suite|
+                     suite.name == ENV['suite']
+                   end
+        end
+
         before_suites
         super(suites, type)
       ensure

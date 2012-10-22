@@ -16,23 +16,20 @@ require 'minitest_helper'
 module GluePulpRepoTestBase
   def self.included(base)
     base.class_eval do
-      set_fixture_class :environments => KTEnvironment
-      use_instantiated_fixtures = false
       fixtures :all
+    end
 
-      def self.before_suite
-        configure_vcr
+    base.extend ClassMethods
+  end
 
-        uri = URI.parse(AppConfig.pulp.url)
-        Runcible::Base.config = { 
-          :url      => "#{uri.scheme}://#{uri.host}",
-          :api_path => uri.path,
-          :user     => "admin",
-          :oauth    => {:oauth_secret => AppConfig.pulp.oauth_secret,
-                        :oauth_key    => AppConfig.pulp.oauth_key },
-          :logger   => RestClient.log
-        }
-      end
+  module ClassMethods
+    def before_suite
+      configure_vcr
+      configure_runcible
+
+      services  = ['Candlepin', 'ElasticSearch']
+      models    = ['Repository', 'Package']
+      disable_glue_layers(services, models)
     end
   end
 

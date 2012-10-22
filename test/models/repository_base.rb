@@ -16,15 +16,17 @@ require 'minitest_helper'
 module RepositoryTestBase
   def self.included(base)
     base.class_eval do
-      set_fixture_class :environments => KTEnvironment
-      use_instantiated_fixtures = false
       fixtures :all
+    end
 
-      def self.before_suite
-        services  = ['Candlepin', 'Pulp', 'ElasticSearch']
-        models    = ['Repository', 'Package']
-        disable_glue_layers(services, models)
-      end
+    base.extend ClassMethods
+  end
+
+  module ClassMethods
+    def before_suite
+      services  = ['Candlepin', 'Pulp', 'ElasticSearch']
+      models    = ['Repository', 'Package']
+      disable_glue_layers(services, models)
     end
   end
 
