@@ -49,13 +49,14 @@ class ContentViewDefinitionAPI(KatelloAPI):
         return self.server.POST(path, params)[1]
 
 
-    def update(self, org_id, cvd_id, label, description):
-        cvd = {"organization_id": org_id, "id": cvd_id}
-        cvd = update_dict_unless_none(cvd, "label", label)
+    def update(self, org, cvd_id, name, description):
+        cvd = {"id": cvd_id}
+        cvd = update_dict_unless_none(cvd, "name", name)
         cvd = update_dict_unless_none(cvd, "description", description)
 
-        path = "/api/content_view_definitions/%s" % cvd_id
-        return self.server.PUT(path, {"content_view": cvd})[1]
+        path = "/api/organizations/%s/content_view_definitions/%s" % \
+                (org, cvd_id)
+        return self.server.PUT(path, {"content_view_definition": cvd})[1]
 
 
     def delete(self, cvd_id):

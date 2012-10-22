@@ -170,7 +170,9 @@ class Update(ContentViewAction):
         org_name     = self.get_option('org')
         def_label    = self.get_option('view')
 
-        cvd = self.def_api.update(org_name, def_label, name, description)
+        cvd = get_cv_definition(org_name, def_label)
+
+        cvd = self.def_api.update(org_name, cvd["id"], name, description)
         print _("Successfully updated content_view [ %s ]") % cvd['name']
         return os.EX_OK
 

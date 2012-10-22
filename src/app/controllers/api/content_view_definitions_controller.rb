@@ -1,6 +1,6 @@
 class Api::ContentViewDefinitionsController < Api::ApiController
   respond_to :json
-  before_filter :find_organization, :except => [:destroy]
+  before_filter :find_organization, :except => [:destroy, :update]
   before_filter :find_definition, :except => [:index, :create]
 
   def rules
@@ -51,8 +51,9 @@ class Api::ContentViewDefinitionsController < Api::ApiController
     render :json => definition.to_json
   end
 
-  api :PUT, "/content_view_definitions/:id", "Update a definition"
+  api :PUT, "/organizations/:org/content_view_definitions/:id", "Update a definition"
   param :id, :number, :desc => "Definition identifer", :required => true
+  param :org, String, :desc => "Organization name", :required => true
   param :content_view_definition, Hash do
     param :name, String, :desc => "Content view definition name"
     param :description, String, :desc => "Definition description"
