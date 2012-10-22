@@ -286,6 +286,10 @@ module Glue::Candlepin::Consumer
       "#{distribution_name} #{distribution_version}"
     end
 
+    def memory
+      facts["dmi.memory.size"]
+    end
+
     def entitlements_valid?
       "true" == facts["system.entitlements_valid"]
     end
