@@ -278,6 +278,7 @@ class Update(TemplateAction):
         self._resetParameters()
         super(Update, self).__init__()
         self.current_product = None
+        self.current_product_option = None
 
     # pylint: disable=W0613
     def _store_parameter_name(self, option, opt_str, value, parser):
@@ -293,12 +294,22 @@ class Update(TemplateAction):
 
     def _store_from_product(self, option, opt_str, value, parser):
         self.current_product = u_str(value)
-        parser.values.from_product = True
+        self.current_product_option = option.dest
+        setattr(parser.values, option.dest, value)
 
     def _store_item_with_product(self, option, opt_str, value, parser):
-        if parser.values.from_product == None:
-            raise OptionValueError(_("%s must be preceded by %s") % (option, "--from_product") )
-        self.items[option.dest].append({"name": u_str(value), "product": self.current_product})
+        if (parser.values.from_product == None) and \
+           (parser.values.from_product_label == None) and \
+           (parser.values.from_product_id == None):
+            raise OptionValueError(_("%s must be preceded by %s, %s or %s") %
+                  (option, "--from_product", "--from_product_label", "--from_product_id"))
+
+        if self.current_product_option == 'from_product_label':
+            self.items[option.dest].append({"name": u_str(value), "from_product_label": self.current_product})
+        elif self.current_product_option == 'from_product_id':
+            self.items[option.dest].append({"name": u_str(value), "from_product_id": self.current_product})
+        else:
+            self.items[option.dest].append({"name": u_str(value), "from_product": self.current_product})
 
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name', help=_("template name (required)"))
@@ -335,8 +346,16 @@ class Update(TemplateAction):
         parser.add_option('--remove_distribution', dest='remove_distributions', action="append",
             help=_("distribution ID"))
 
-        parser.add_option('--from_product', dest='from_product', action="callback", callback=self._store_from_product,
-            type="string", help=_("determines product from which the repositories are picked"))
+        parser.add_option('--from_product', dest='from_product',
+            action="callback", callback=self._store_from_product, type="string",
+            help=_("determines product from which the repositories are picked"))
+        parser.add_option('--from_product_label', dest='from_product_label',
+            action="callback", callback=self._store_from_product, type="string",
+            help=_("determines product from which the repositories are picked"))
+        parser.add_option('--from_product_id', dest='from_product_id',
+            action="callback", callback=self._store_from_product, type="string",
+            help=_("determines product from which the repositories are picked"))
+
         parser.add_option('--add_repository', dest='add_repository', action="callback",
             callback=self._store_item_with_product, type="string",
             help=_("repository to be added to the template"))
@@ -348,6 +367,7 @@ class Update(TemplateAction):
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
+        validator.mutually_exclude('from_product', 'from_product_label', 'from_product_id')
 
         #check for missing values
         for k, v in self.items['add_parameters'].iteritems():
@@ -417,7 +437,18 @@ class Update(TemplateAction):
     def _repoNamesToIds(cls, orgName, repos):
         ids = []
         for rec in repos:
-            repo = get_repo(orgName, rec['product'], rec['name'])
+            prodName = None
+            prodLabel = None
+            prodId = None
+
+            if 'from_product' in rec:
+                prodName = rec['from_product']
+            elif 'from_product_label' in rec:
+                prodLabel = rec['from_product_label']
+            elif 'from_product_id' in rec:
+                prodId = rec['from_product_id']
+
+            repo = get_repo(orgName, prodName, prodLabel, prodId, rec['name'])
             ids.append(repo['id'])
         return ids
 

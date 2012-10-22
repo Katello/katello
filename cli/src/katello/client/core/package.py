@@ -52,7 +52,9 @@ class Info(PackageAction):
     def check_options(self, validator):
         validator.require('id')
         if not validator.exists('repo_id'):
-            validator.require(('repo', 'org', 'product'))
+            validator.require(('repo', 'org'))
+            validator.require_at_least_one_of(('product', 'product_label', 'product_id'))
+            validator.mutually_exclude('product', 'product_label', 'product_id')
 
     def run(self):
         packId   = self.get_option('id')
@@ -61,9 +63,11 @@ class Info(PackageAction):
         orgName  = self.get_option('org')
         envName  = self.get_option('environment')
         prodName = self.get_option('product')
+        prodLabel = self.get_option('product_label')
+        prodId   = self.get_option('product_id')
 
         if not repoId:
-            repo = get_repo(orgName, prodName, repoName, envName)
+            repo = get_repo(orgName, prodName, prodLabel, prodId, repoName, envName)
             repoId = repo["id"]
 
         pack = self.api.package(packId, repoId)
@@ -100,7 +104,9 @@ class List(PackageAction):
 
     def check_options(self, validator):
         if not validator.exists('repo_id'):
-            validator.require(('repo', 'org', 'product'))
+            validator.require(('repo', 'org'))
+            validator.require_at_least_one_of(('product', 'product_label', 'product_id'))
+            validator.mutually_exclude('product', 'product_label', 'product_id')
 
     def run(self):
         repoId = self.get_repo_id()
@@ -120,9 +126,11 @@ class List(PackageAction):
         orgName  = self.get_option('org')
         envName  = self.get_option('environment')
         prodName = self.get_option('product')
+        prodLabel = self.get_option('product_label')
+        prodId   = self.get_option('product_id')
 
         if not repoId:
-            repo = get_repo(orgName, prodName, repoName, envName)
+            repo = get_repo(orgName, prodName, prodLabel, prodId, repoName, envName)
             if repo != None:
                 repoId = repo["id"]
 

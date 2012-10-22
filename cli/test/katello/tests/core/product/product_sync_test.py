@@ -38,9 +38,9 @@ class ProductSyncTest(CLIActionTestCase):
         self.mock(self.module, 'run_async_task_with_status')
 
 
-    def test_finds_the_product(self):
+    def test_finds_the_product_by_name(self):
         self.run_action()
-        self.module.get_product.assert_called_once_with(self.ORG['name'], self.PROD['name'])
+        self.module.get_product.assert_called_once_with(self.ORG['name'], self.PROD['name'], None, None)
 
     def test_returns_with_error_when_no_product_found(self):
         self.mock(self.module, 'get_product').side_effect = ApiDataError()

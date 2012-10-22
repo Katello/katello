@@ -36,13 +36,14 @@ class ProductAPI(KatelloAPI):
         products = self.server.GET(path, {"name": prodName} if prodName != None else {})[1]
         return products
 
-    def product_by_name(self, orgName, prodName):
+    def product_by_name_or_label_or_id(self, orgName, prodName, prodLabel, prodId):
+        params = {}
+        update_dict_unless_none(params, "name", prodName)
+        update_dict_unless_none(params, "label", prodLabel)
+        update_dict_unless_none(params, "cp_id", prodId)
         path = "/api/organizations/%s/products" % u_str(orgName)
-        products = self.server.GET(path, {"name": prodName})[1]
-        if len(products) > 0:
-            return products[0]
-        else:
-            return None
+        products = self.server.GET(path, params)[1]
+        return products
 
     def create(self, provId, name, label, description, gpgkey):
         product = {
