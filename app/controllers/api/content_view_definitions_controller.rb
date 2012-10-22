@@ -1,6 +1,6 @@
 class Api::ContentViewDefinitionsController < Api::ApiController
   respond_to :json
-  before_filter :find_organization
+  before_filter :find_organization, :except => [:destroy]
   before_filter :find_definition, :except => [:index, :create]
 
   def rules
@@ -15,7 +15,8 @@ class Api::ContentViewDefinitionsController < Api::ApiController
       :create => manage_rule,
       :publish => publish_rule,
       :show => show_rule,
-      :update => manage_rule
+      :update => manage_rule,
+      :destroy => manage_rule
     }
   end
 
@@ -67,11 +68,20 @@ class Api::ContentViewDefinitionsController < Api::ApiController
     render :json => @definition.to_json
   end
 
-  api :POST, "/content_view_definitions/:id/publish", "Publish a content view"
-  param :id, :identifier, :desc => "Definition identifier"
+  api :POST, "/organizations/:name/content_view_definitions/:id/publish",
+    "Publish a content view"
+  param :name, String, :desc => "Organization name"
+  param :id, :identifier, :desc => "Definition identifier", :required => true
   def publish
     content_view = @definition.publish
     render :json => content_view
+  end
+
+  api :DELETE, "/content_view_definitions/:id", "Delete a cv definition"
+  param :id, :identifier, :desc => "Definition identifier", :required => true
+  def destroy
+    @definition.destroy
+    render :json => @definition
   end
 
   private
