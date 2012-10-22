@@ -719,6 +719,7 @@ Src::Application.routes.draw do
     if AppConfig.use_foreman
       scope :module => 'foreman' do
         resources :architectures, :except => [:new, :edit]
+        resources :subnets, :except => [:new, :edit]
         constraints(:id => /[^\/]+/) do
           resources :domains, :except => [:new, :edit]
         end
