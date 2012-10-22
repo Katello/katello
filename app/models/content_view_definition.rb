@@ -23,6 +23,8 @@ class ContentViewDefinition < ActiveRecord::Base
     :presence => true, :katello_label_format => true
   validates :name, :presence => true, :katello_name_format => true
   validates :organization, :presence => true
+  has_many :content_view_definition_products
+  has_many :products, :through => :content_view_definition_products
 
   def publish
     ContentView.create!(:name => "#{name} Content View",
