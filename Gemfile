@@ -99,6 +99,7 @@ group :test, :development do
  
   gem 'minitest-rails'
   gem 'minitest_tu_shim'
+  gem 'factory_girl'
 end
 
 group :profiling do

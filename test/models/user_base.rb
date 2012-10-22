@@ -15,13 +15,13 @@ require 'minitest_helper'
 module TestUserBase
   def self.included(base)
     base.extend ClassMethods
+
     base.class_eval do
       set_fixture_class :environments => KTEnvironment
       use_instantiated_fixtures = false
       fixtures :all
     end
   end
-
 
   module ClassMethods
     def before_suite

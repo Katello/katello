@@ -18,7 +18,7 @@ class UserCreateTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def setup
     super
-    @user = User.new(:username => "Bob", :email => "test@test.com", :password => "Villa")
+    @user = @admin
   end
 
   def teardown
