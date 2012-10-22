@@ -148,7 +148,7 @@ sync_timeout = 10:7200
 # how many concurent threads run in parallel
 # default is NumCpu-1
 <% if processorcount.to_i <= 1 %>
-concurrency_threshold = 1
+concurrency_threshold = 2
 <% else %>
-concurrency_threshold = <%= processorcount.to_i-1 %>
+concurrency_threshold = <%= processorcount.to_i + 1 %>
 <% end %>
