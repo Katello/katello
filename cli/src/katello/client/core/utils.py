@@ -21,7 +21,16 @@ import threading
 from xml.utils import iso8601
 from katello.client.api.task_status import TaskStatusAPI, SystemTaskStatusAPI
 from katello.client.api.job import SystemGroupJobStatusAPI
+from katello.client.config import Config
 
+#  mode check -----------------------------------------------------------------
+def get_katello_mode():
+    Config()
+    mode = "katello"
+    path = Config.parser.get('server', 'path') or '/katello/api'
+    if "headpin" in path or "sam" in path:
+        mode = "headpin"
+    return mode
 
 # server output validity ------------------------------------------------------
 def is_valid_record(rec):
