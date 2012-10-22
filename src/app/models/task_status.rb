@@ -301,7 +301,7 @@ class TaskStatus < ActiveRecord::Base
       uuids = TaskStatus.where(:id=>ids).pluck(:uuid)
       ret = Runcible::Resources::Task.poll_all(uuids)
       ret.each do |pulp_task|
-        PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by_uuid(pulp_task["id"]))
+        PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by_uuid(pulp_task[:task_id]))
       end
     end
   end
