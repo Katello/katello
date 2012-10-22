@@ -32,8 +32,6 @@ from katello.client.core.utils import ProgressBar
 from katello.client.utils import printer
 
 
-
-
 # base product action --------------------------------------------------------
 
 class ProductAction(BaseAction):
@@ -58,14 +56,18 @@ class SingleProductAction(ProductAction):
     @classmethod
     def set_product_select_options(cls, parser, select_by_env=True):
         opt_parser_add_org(parser, required=1)
-        parser.add_option('--name', dest='name', help=_("product name (required)"))
+        parser.add_option('--name', dest='name', help=_("product name (require name, label or id)"))
+        parser.add_option('--label', dest='label', help=_("product label (require name, label or id)"))
+        parser.add_option('--id', dest='id', help=_("product id (require name, label or id)"))
+
         if select_by_env:
             opt_parser_add_environment(parser, default=_("Library"))
 
     @classmethod
     def check_product_select_options(cls, validator):
-        validator.require(('org', 'name'))
-
+        validator.require('org')
+        validator.require_at_least_one_of(('name', 'label', 'id'))
+        validator.mutually_exclude('name', 'label', 'id')
 
 # product actions ------------------------------------------------------------
 
@@ -86,9 +88,11 @@ class SetSyncPlan(SingleProductAction):
     def run(self):
         orgName  = self.get_option('org')
         prodName = self.get_option('name')
+        prodLabel = self.get_option('label')
+        prodId   = self.get_option('id')
         planName = self.get_option('plan')
 
-        prod = get_product(orgName, prodName)
+        prod = get_product(orgName, prodName, prodLabel, prodId)
         plan = get_sync_plan(orgName, planName)
 
         msg = self.api.set_sync_plan(orgName, prod['id'], plan['id'])
@@ -105,8 +109,11 @@ class RemoveSyncPlan(SingleProductAction):
     def run(self):
         orgName  = self.get_option('org')
         prodName = self.get_option('name')
+        prodLabel = self.get_option('label')
+        prodId   = self.get_option('id')
 
-        prod = get_product(orgName, prodName)
+
+        prod = get_product(orgName, prodName, prodLabel, prodId)
 
         msg = self.api.remove_sync_plan(orgName, prod['id'])
         print msg
@@ -161,6 +168,7 @@ class List(ProductAction):
             prods = filter(isNotMarketingProduct, prods)
 
         self.printer.print_items(prods)
+
         return os.EX_OK
 
 
@@ -173,8 +181,10 @@ class Sync(SingleProductAction):
     def run(self):
         orgName     = self.get_option('org')
         prodName    = self.get_option('name')
+        prodLabel   = self.get_option('label')
+        prodId      = self.get_option('id')
 
-        prod = get_product(orgName, prodName)
+        prod = get_product(orgName, prodName, prodLabel, prodId)
 
         task = AsyncTask(self.api.sync(orgName, prod["id"]))
         run_async_task_with_status(task, ProgressBar())
@@ -183,13 +193,13 @@ class Sync(SingleProductAction):
             errors = [t["result"]['errors'][0] for t in task.get_hashes() if t['state'] == 'error' and
                                                                              isinstance(t["result"], dict) and
                                                                              "errors" in t["result"]]
-            print _("Product [ %s ] failed to sync: %s" % (prodName, errors))
+            print _("Product [ %s ] failed to sync: %s" % (prod["name"], errors))
             return os.EX_DATAERR
         elif task.cancelled():
-            print _("Product [ %s ] synchronization canceled" % prodName)
+            print _("Product [ %s ] synchronization canceled" % prod["name"])
             return os.EX_DATAERR
 
-        print _("Product [ %s ] synchronized" % prodName)
+        print _("Product [ %s ] synchronized" % prod["name"])
         return os.EX_OK
 
 # ------------------------------------------------------------------------------
@@ -201,8 +211,10 @@ class CancelSync(SingleProductAction):
     def run(self):
         orgName     = self.get_option('org')
         prodName    = self.get_option('name')
+        prodLabel   = self.get_option('label')
+        prodId      = self.get_option('id')
 
-        prod = get_product(orgName, prodName)
+        prod = get_product(orgName, prodName, prodLabel, prodId)
 
         msg = self.api.cancel_sync(orgName, prod["id"])
         print msg
@@ -218,8 +230,10 @@ class Status(SingleProductAction):
     def run(self):
         orgName     = self.get_option('org')
         prodName    = self.get_option('name')
+        prodLabel   = self.get_option('label')
+        prodId      = self.get_option('id')
 
-        prod = get_product(orgName, prodName)
+        prod = get_product(orgName, prodName, prodLabel, prodId)
 
         task = AsyncTask(self.api.last_sync_status(orgName, prod['id']))
 
@@ -258,10 +272,12 @@ class Promote(SingleProductAction):
     def run(self):
         orgName     = self.get_option('org')
         prodName    = self.get_option('name')
+        prodLabel   = self.get_option('label')
+        prodId      = self.get_option('id')
         envName     = self.get_option('environment')
 
         env = get_environment(orgName, envName)
-        prod = get_product(orgName, prodName)
+        prod = get_product(orgName, prodName, prodLabel, prodId)
 
         returnCode = os.EX_OK
 
@@ -274,10 +290,10 @@ class Promote(SingleProductAction):
             run_spinner_in_bg(wait_for_async_task, [task], message=_("Promoting the product, please wait... "))
 
             if task.succeeded():
-                print _("Product [ %s ] promoted to environment [ %s ] " % (prodName, envName))
+                print _("Product [ %s ] promoted to environment [ %s ] " % (prod["name"], envName))
                 returnCode = os.EX_OK
             else:
-                print _("Product [ %s ] promotion failed: %s" % (prodName, format_task_errors(task.errors())) )
+                print _("Product [ %s ] promotion failed: %s" % (prod["name"], format_task_errors(task.errors())) )
                 returnCode = os.EX_DATAERR
 
         except Exception:
@@ -374,22 +390,21 @@ class Update(SingleProductAction):
         parser.add_option('--recursive', action="store_true", dest='recursive',
                               help=_("assign the gpgpkey also to the product's repositories"))
 
-    def check_options(self, validator):
-        self.check_product_select_options(validator)
-
     def run(self):
         orgName     = self.get_option('org')
         prodName    = self.get_option('name')
+        prodLabel   = self.get_option('label')
+        prodId      = self.get_option('id')
 
         description = self.get_option('description')
         gpgkey = self.get_option('gpgkey')
         nogpgkey = self.get_option('nogpgkey')
         gpgkey_recursive = self.get_option('recursive')
 
-        prod = get_product(orgName, prodName)
+        prod = get_product(orgName, prodName, prodLabel, prodId)
 
         prod = self.api.update(orgName, prod["id"], description, gpgkey, nogpgkey, gpgkey_recursive)
-        print _("Successfully updated product [ %s ]") % prodName
+        print _("Successfully updated product [ %s ]") % prod["name"]
         return os.EX_OK
 
 # ------------------------------------------------------------------------------
@@ -401,7 +416,10 @@ class Delete(SingleProductAction):
     def run(self):
         orgName  = self.get_option('org')
         prodName = self.get_option('name')
-        product = get_product(orgName, prodName)
+        prodLabel   = self.get_option('label')
+        prodId      = self.get_option('id')
+
+        product = get_product(orgName, prodName, prodLabel, prodId)
 
         msg = self.api.delete(orgName, product["id"])
         print msg
@@ -416,7 +434,10 @@ class ListFilters(SingleProductAction):
     def run(self):
         orgName     = self.get_option('org')
         prodName    = self.get_option('name')
-        prod = get_product(orgName, prodName)
+        prodLabel   = self.get_option('label')
+        prodId      = self.get_option('id')
+
+        prod = get_product(orgName, prodName, prodLabel, prodId)
 
         filters = self.api.filters(orgName, prod['id'])
         self.printer.add_column('name')
@@ -456,9 +477,11 @@ class AddRemoveFilter(SingleProductAction):
     def run(self):
         org_name     = self.get_option('org')
         prod_name    = self.get_option('name')
+        prod_label   = self.get_option('label')
+        prod_id      = self.get_option('id')
         filter_name  = self.get_option('filter')
 
-        prod = get_product(org_name, prod_name)
+        prod = get_product(org_name, prod_name, prod_label, prod_id)
         get_filter(org_name, filter_name)
 
         filters = self.api.filters(org_name, prod['id'])
@@ -469,10 +492,10 @@ class AddRemoveFilter(SingleProductAction):
     def update_filters(self, org_name, product, filters, filter_name):
         if self.addition:
             filters.append(filter_name)
-            message = _("Added filter [ %s ] to product [ %s ]" % (filter_name, product["name"]))
+            message = _("Added filter [ %s ] to product [ %s ]") % (filter_name, product["name"])
         else:
             filters.remove(filter_name)
-            message = _("Removed filter [ %s ] to product [ %s ]" % (filter_name, product["name"]))
+            message = _("Removed filter [ %s ] from product [ %s ]") % (filter_name, product["name"])
 
         self.api.update_filters(org_name, product['id'], filters)
         print message

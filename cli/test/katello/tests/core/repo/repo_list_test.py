@@ -77,12 +77,12 @@ class RepoListTest(CLIActionTestCase):
     def test_it_finds_product(self):
         self.mock_options(self.OPTIONS_BY_PRODUCT)
         self.run_action()
-        self.module.get_product.assert_called_once_with(self.ORG['name'], self.PROD['name'])
+        self.module.get_product.assert_called_once_with(self.ORG['name'], self.PROD['name'], None, None)
 
     def test_it_finds_product_and_env(self):
         self.mock_options(self.OPTIONS_BY_PRODUCT_ENV)
         self.run_action()
-        self.module.get_product.assert_called_once_with(self.ORG['name'], self.PROD['name'])
+        self.module.get_product.assert_called_once_with(self.ORG['name'], self.PROD['name'], None, None)
         self.module.get_environment.assert_called_once_with(self.ORG['name'], self.ENV['name'])
 
     def test_it_gets_repos_by_org(self):

@@ -31,9 +31,9 @@ class DeleteTest(CLIActionTestCase):
         self.mock(self.action.api, 'delete')
 
 
-    def test_it_finds_the_product(self):
+    def test_it_finds_the_product_by_name(self):
         self.run_action()
-        self.module.get_product.assert_called_once_with(self.ORG['name'], self.PROD['name'])
+        self.module.get_product.assert_called_once_with(self.ORG['name'], self.PROD['name'], None, None)
 
     def test_it_returns_error_when_product_not_found(self):
         self.mock(self.module, 'get_product').side_effect = ApiDataError

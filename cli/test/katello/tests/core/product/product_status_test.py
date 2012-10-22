@@ -41,9 +41,9 @@ class ProductStatusTest(CLIActionTestCase):
     def tearDown(self):
         self.restore_mocks()
 
-    def test_it_finds_the_product(self):
+    def test_it_finds_the_product_by_name(self):
         self.run_action()
-        self.module.get_product.assert_called_once_with(self.ORG['name'], self.PROD['name'])
+        self.module.get_product.assert_called_once_with(self.ORG['name'], self.PROD['name'], None, None)
 
     def test_it_returns_with_error_when_no_product_found(self):
         self.mock(self.module, 'get_product').side_effect = ApiDataError()
