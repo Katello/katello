@@ -53,6 +53,7 @@ class List(ContentViewAction):
 
         self.printer.add_column('id')
         self.printer.add_column('name')
+        self.printer.add_column('label')
         self.printer.add_column('description', multiline=True)
         self.printer.add_column('organization', _('Org'))
         self.printer.add_column('environments', _('Environments'))
@@ -68,20 +69,20 @@ class Publish(ContentViewAction):
 
     def setup_parser(self, parser):
         opt_parser_add_org(parser)
-        parser.add_option('--definition', dest='name',
-                help=_("definition name eg: Database (required)"))
+        parser.add_option('--definition', dest='label',
+                help=_("definition label eg: Database (required)"))
 
     def check_options(self, validator):
-        validator.require(('org', 'name'))
+        validator.require(('org', 'label'))
 
     def run(self):
         org_name = self.get_option('org')
-        name = self.get_option('name')
+        label = self.get_option('label')
 
-        cvd = get_cv_definition(org_name, name)
+        cvd = get_cv_definition(org_name, label)
 
         self.def_api.publish(org_name, cvd["id"])
-        print _("Successfully published content view [ %s ]") % name
+        print _("Successfully published content view [ %s ]") % label
         return os.EX_OK
 
 
@@ -91,20 +92,21 @@ class Info(ContentViewAction):
 
     def setup_parser(self, parser):
         opt_parser_add_org(parser)
-        parser.add_option('--name', dest='name',
-                help=_("content_view name eg: foo.example.com (required)"))
+        parser.add_option('--label', dest='label',
+                help=_("content_view label eg: foo.example.com (required)"))
 
     def check_options(self, validator):
-        validator.require(('org', 'name'))
+        validator.require(('org', 'label'))
 
     def run(self):
         org_name = self.get_option('org')
-        view_name = self.get_option('name')
+        view_label = self.get_option('label')
 
-        view = self.def_api.show(org_name, view_name)
+        view = get_cv_definition(org_name, view_label)
 
         self.printer.add_column('id')
         self.printer.add_column('name')
+        self.printer.add_column('label')
         self.printer.add_column('description', multiline=True)
         self.printer.add_column('organization', _('Org'))
         self.printer.add_column('environments', _('Environments'))
@@ -125,6 +127,8 @@ class Create(ContentViewAction):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--description', dest='description',
                 help=_("definition description"))
+        parser.add_option('--label', dest='label',
+                help=_("definition label"))
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
@@ -134,8 +138,9 @@ class Create(ContentViewAction):
         org_id      = self.get_option('org')
         name        = self.get_option('name')
         description = self.get_option('description')
+        label       = self.get_option('label')
 
-        self.def_api.create(org_id, name, description)
+        self.def_api.create(org_id, name, label, description)
         print _("Successfully created content view definition [ %s ]") % name
         return os.EX_OK
 
@@ -151,7 +156,7 @@ class Update(ContentViewAction):
                 help=_("content view description eg: foo's content view"))
         opt_parser_add_org(parser, required=1)
         parser.add_option('--view', dest='view',
-                help=_("content view name (required)"))
+                help=_("content view label (required)"))
         parser.add_option('--name', dest='name', help=_("content view name"))
 
 
@@ -163,9 +168,9 @@ class Update(ContentViewAction):
         name         = self.get_option('name')
         description  = self.get_option('description')
         org_name     = self.get_option('org')
-        def_name     = self.get_option('view')
+        def_label    = self.get_option('view')
 
-        cvd = self.def_api.update(org_name, def_name, name, description)
+        cvd = self.def_api.update(org_name, def_label, name, description)
         print _("Successfully updated content_view [ %s ]") % cvd['name']
         return os.EX_OK
 
@@ -176,22 +181,22 @@ class Delete(ContentViewAction):
     description = _('delete an content_view')
 
     def setup_parser(self, parser):
-        parser.add_option('--name', dest='name',
-                help=_("content view name eg: foo.example.com (required)"))
+        parser.add_option('--label', dest='label',
+                help=_("content view label eg: foo.example.com (required)"))
         opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
-        validator.require(('name', 'org'))
+        validator.require(('label', 'org'))
 
 
     def run(self):
-        org_name     = self.get_option('org')
-        view_name     = self.get_option('name')
+        org_name   = self.get_option('org')
+        view_label = self.get_option('label')
 
-        view = get_content_view(org_name, view_name)
+        view = get_cv_definition(org_name, view_label)
 
-        self.api.delete(org_name, view["id"])
-        print _("Successfully deleted content view [ %s ]") % view_name
+        self.def_api.delete(view["id"])
+        print _("Successfully deleted definition [ %s ]") % view_label
         return os.EX_OK
 
 class AddRemoveFilter(ContentViewAction):
@@ -212,21 +217,21 @@ class AddRemoveFilter(ContentViewAction):
         self.addition = addition
 
     def setup_parser(self, parser):
-        parser.add_option('--name', dest='name',
-                help=_("content view name eg: Database (required)"))
+        parser.add_option('--label', dest='label',
+                help=_("content view label eg: Database (required)"))
         opt_parser_add_org(parser, required=1)
         parser.add_option('--filter', dest='filter',
                 help=_("filter name (required)"))
 
     def check_options(self, validator):
-        validator.require(('filter', 'org', 'name'))
+        validator.require(('filter', 'org', 'label'))
 
     def run(self):
         org_name     = self.get_option('org')
-        view_name    = self.get_option('name')
+        view_label   = self.get_option('label')
         filter_name  = self.get_option('filter')
 
-        view = get_cv_definition(org_name, view_name)
+        view = get_cv_definition(org_name, view_label)
         get_filter(org_name, filter_name)
 
         filters = self.def_api.filters(org_name, view['id'])
@@ -238,11 +243,11 @@ class AddRemoveFilter(ContentViewAction):
         if self.addition:
             filters.append(filter_name)
             message = _("Added filter [ %s ] to content view [ %s ]" % \
-                    (filter_name, cvd["name"]))
+                    (filter_name, cvd["label"]))
         else:
             filters.remove(filter_name)
             message = _("Removed filter [ %s ] to content view [ %s ]" % \
-                    (filter_name, cvd["name"]))
+                    (filter_name, cvd["label"]))
 
         self.def_api.update_filters(org_name, cvd['id'], filters)
         print message
