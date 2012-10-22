@@ -18,7 +18,7 @@ class UserCreateTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def setup
     super
-    @user = @admin
+    @user = build(:user, :batman)
   end
 
   def teardown
