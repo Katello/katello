@@ -14,6 +14,7 @@ require 'util/model_util.rb'
 
 class ContentViewDefinition < ActiveRecord::Base
   include Katello::LabelFromName
+  include Authorization::ContentViewDefinition
 
   has_many :content_views
   has_many :components, :class_name => "ComponentContentView"
