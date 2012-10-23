@@ -13,8 +13,6 @@
 
 module Glue::ElasticSearch::Environment
   def self.included(base)
-    base.send :include, IndexedModel
-
     base.class_eval do
       after_save :update_related_index
       after_destroy :delete_related_index
@@ -25,7 +23,7 @@ module Glue::ElasticSearch::Environment
     if self.name_changed?
       self.organization.reload #must reload organization, otherwise old name is saved
       self.organization.update_index
-      ActivationKey.index.import(self.activation_keys) if !self.activation_keys.empty?
+      ::ActivationKey.index.import(self.activation_keys) if !self.activation_keys.empty?
     end
   end
 
