@@ -40,17 +40,36 @@ def configure_runcible
 end
 
 def disable_glue_layers(services=[], models=[])
+  @@model_service_cache ||= {}
+  change = false
   AppConfig.use_cp = false if services.include?('Candlepin')
   AppConfig.use_pulp = false if services.include?('Pulp')
   AppConfig.use_elasticsearch = false if services.include?('ElasticSearch')
 
+  cached_entry = {:cp=>AppConfig.use_cp, :pulp=>AppConfig.use_cp, :es=>AppConfig.use_elasticsearch}
   models.each do |model|
-    Object.send(:remove_const, model)
-    load "app/models/#{model.underscore}.rb"
+    if @@model_service_cache[model] != cached_entry
+      Object.send(:remove_const, model)
+      load "app/models/#{model.underscore}.rb"
+      @@model_service_cache[model] = cached_entry
+      change = true
+    end
   end
 
-  FactoryGirl.reload
+  FactoryGirl.reload if change
 end
+
+
+class ResourceTypeBackup
+  @@types_backup = ResourceType::TYPES.clone
+
+  def self.restore
+    ResourceType::TYPES.clear
+    ResourceType::TYPES.merge!(@@types_backup)
+  end
+end
+
+
 
 class CustomMiniTestRunner
   class Unit < MiniTest::Unit
@@ -85,6 +104,7 @@ class CustomMiniTestRunner
         super(suite, type)
       ensure
         suite.after_suite if suite.respond_to?(:after_suite)
+        ResourceTypeBackup.restore
       end
     end
 
