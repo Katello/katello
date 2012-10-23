@@ -285,6 +285,8 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         cv_cmd.add_command('publish', content_view.Publish())
         cv_cmd.add_command('add_filter', content_view.AddRemoveFilter(True))
         cv_cmd.add_command('remove_filter', content_view.AddRemoveFilter(False))
+        cv_cmd.add_command('add_product', content_view.AddRemoveProduct(True))
+        cv_cmd.add_command('remove_product', content_view.AddRemoveProduct(False))
         katello_cmd.add_command('content_view', cv_cmd)
 
     client_cmd = client.Client()
