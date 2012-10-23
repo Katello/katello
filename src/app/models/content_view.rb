@@ -37,6 +37,7 @@ class ContentView < ActiveRecord::Base
   validates :name, :presence => true, :katello_name_format => true
   validates :organization_id, :presence => true
 
+
   def as_json(options = {})
     result = self.attributes
     result['organization'] = self.organization.try(:name)
@@ -47,4 +48,5 @@ class ContentView < ActiveRecord::Base
 
     result
   end
+
 end
