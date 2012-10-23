@@ -13,20 +13,15 @@
 require 'minitest_helper'
 
 
-module GluePulpUserTestBase
-  def self.included(base)
-    base.extend ClassMethods
-  end
+class GluePulpUserTestBase < MiniTest::Rails::ActiveSupport::TestCase
+  extend ActiveRecord::TestFixtures
 
-  module ClassMethods
-    def before_suite
-      configure_vcr
-      configure_runcible
+  def self.before_suite
+    configure_runcible
 
-      services  = ['Candlepin', 'ElasticSearch']
-      models    = ['User']
-      disable_glue_layers(services, models)
-    end
+    services  = ['Candlepin', 'ElasticSearch']
+    models    = ['User']
+    disable_glue_layers(services, models)
   end
 
   def setup
@@ -47,8 +42,7 @@ module GluePulpUserTestBase
 end
 
 
-class GluePulpUserCreateTest < MiniTest::Rails::ActiveSupport::TestCase
-  include GluePulpUserTestBase
+class GluePulpUserCreateTest < GluePulpUserTestBase
 
   def test_set_pulp_user
     assert @user.set_pulp_user
@@ -65,8 +59,7 @@ class GluePulpUserCreateTest < MiniTest::Rails::ActiveSupport::TestCase
 end
 
 
-class GluePulpUserTest < MiniTest::Rails::ActiveSupport::TestCase
-  include GluePulpUserTestBase
+class GluePulpUserTest < GluePulpUserTestBase
 
   def setup
     super
