@@ -55,6 +55,13 @@ class Resources::AbstractModel
     end
   end
 
+  include ActiveModel::Naming
+
+  def self.name
+    # strip namespaces from class name
+    # eg. Foreman::SomeModel -> SomeModel
+    super.split('::')[-1]
+  end
 
   include ActiveModel::Validations
 
@@ -229,6 +236,11 @@ class Resources::AbstractModel
     delete!(id)
   rescue NotFound
     false
+  end
+
+  def to_key
+    key = self.id
+    [key] if key
   end
 
   private
