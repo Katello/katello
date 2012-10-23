@@ -10,11 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class Foreman::Domain < Resources::ForemanModel
+require 'spec_helper'
 
-  attributes :name, :fullname, :dns_id
-
-  def json_default_options
-    { :only => [:name, :fullname, :dns_id] }
-  end
+describe Api::Foreman::ConfigTemplatesController do
+  include LoginHelperMethods
+  before { login_user_api }
+  it_behaves_like 'simple crud controller'
 end

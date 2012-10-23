@@ -238,7 +238,7 @@ class Resources::AbstractModel
   def self.get_current_user
     @current_user_getter.try(:call) or
         User.current or
-        raise 'current user is not set'
+        raise 'could not obtain current user'
   end
 
   def self.header
