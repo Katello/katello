@@ -2,7 +2,7 @@
 if [ -f $1 ]; then
   LIST=$1
 else
-  LIST=$(find . -path $1*_spec*| tr "\\n" " ")
+  LIST=$(find . -name $1*_spec*| tr "\\n" " ")
 fi
 
 echo $LIST
