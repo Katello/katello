@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'test/models/user_base'
-require 'test/auth_helper'
+require 'test/support/auth_support'
 
 
 class UserCreateTest < MiniTest::Rails::ActiveSupport::TestCase
@@ -139,20 +139,20 @@ class UserDefaultEnvTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_set_default_env
-    @user.default_environment = @dev
+    @user.default_environment = @env
     @user.save!
     @user = @user.reload
     assert @user.default_environment == @env
   end
 
   def test_find_by_default_env
-    @user.default_environment = @dev
+    @user.default_environment = @env
     @user.save!
     assert User.find_by_default_environment(@env.id).first == @user
   end
 
   def test_default_env_removed
-    @user.default_environment = @dev
+    @user.default_environment = @env
     @user.save!
     @env.destroy
     assert User.find_by_default_environment(@env.id).empty?
