@@ -48,4 +48,8 @@ class CustomInfo < ActiveRecord::Base
     self.informable.class.index.import([self.informable])
   end
 
+  def to_s
+    "#{self.keyname}: #{self.value.nil? ? _("NOT-SPECIFIED") : self.value}"
+  end
+
 end
