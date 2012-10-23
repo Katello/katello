@@ -41,7 +41,7 @@ gem 'prawn'
 gem 'acts_as_reportable', '>=1.1.1'
 
 # Documentation
-gem "apipie-rails"
+gem "apipie-rails", '>= 0.0.12'
 
 # Use unicorn as the web server
 # gem 'unicorn'
@@ -62,19 +62,18 @@ gem "apipie-rails"
 #   gem 'webrat'
 # end
 
-group :test, :development do
-  # To use debugger
-  gem 'redcarpet'
+group :debugging do
   if RUBY_VERSION >= "1.9.2"
     gem 'debugger'
-    gem 'simplecov'
   elsif RUBY_VERSION == "1.9.1"
     gem 'ruby-debug19'
-    gem 'simplecov'
   else
     gem 'ruby-debug'
-    gem 'rcov', '>= 0.9.9'
   end
+end
+
+group :test, :development do
+  gem 'redcarpet'
   gem 'ZenTest', '>= 4.4.0'
   gem 'rspec-rails', '>= 2.0.0'
   gem 'autotest-rails', '>= 4.1.0'
@@ -82,7 +81,7 @@ group :test, :development do
   gem 'webrat', '>=0.7.3'
   gem 'nokogiri', '>= 1.5.0'
 
-  #needed  for documentation
+  #needed for documentation
   gem 'yard', '>= 0.5.3'
 
   #needed by hudson
@@ -95,6 +94,13 @@ group :test, :development do
 
   #parallel_tests to make our specs go faster
   gem "parallel_tests"
+
+  #coverage
+  if RUBY_VERSION >= "1.9.2"
+    gem 'simplecov'
+  else
+    gem 'rcov', '>= 0.9.9'
+  end
 end
 
 group :profiling do
