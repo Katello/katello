@@ -94,7 +94,6 @@ class CustomMiniTestRunner
         super(suites, type)
       ensure
         after_suites
-        ResourceTypeBackup.restore
       end
     end
 
@@ -105,6 +104,7 @@ class CustomMiniTestRunner
         super(suite, type)
       ensure
         suite.after_suite if suite.respond_to?(:after_suite)
+        ResourceTypeBackup.restore
       end
     end
 
