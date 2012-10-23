@@ -26,7 +26,7 @@ module TestUserBase
   module ClassMethods
     def before_suite
       services  = ['Candlepin', 'Pulp', 'ElasticSearch']
-      models    = ['User']
+      models    = ['User', 'Organization', 'KTEnvironment']
       disable_glue_layers(services, models)
     end
   end
