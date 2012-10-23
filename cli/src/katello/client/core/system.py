@@ -27,7 +27,8 @@ from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, convert_to_mime_type, attachment_file_name, save_report, \
     update_dict_unless_none, stringify_custom_info
 from katello.client.utils.printer import VerboseStrategy
-from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask, format_date, get_katello_mode
+from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask, \
+    format_date, get_katello_mode
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
 from katello.client.server import ServerRequestError
