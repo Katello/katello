@@ -12,13 +12,12 @@
 
 require 'test/models/user_base'
 
-
 class UserCreateTest < MiniTest::Rails::ActiveSupport::TestCase
   include TestUserBase
 
   def setup
     super
-    @user = build(:batman)
+    @user = build(:user, :batman)
   end
 
   def teardown
@@ -72,7 +71,6 @@ class UserInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
   def test_before_destroy_not_last_superuser
     assert !@admin.destroy
   end
-
 end
 
 
@@ -95,4 +93,67 @@ class UserClassTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_nil User.authenticate!(@disabled_user.username, @disabled_user.password)
   end
 
+end
+
+
+class UserLdapTest < MiniTest::Rails::ActiveSupport::TestCase
+  include TestUserBase
+
+  def self.before_suite
+    super
+    AppConfig.warden = 'ldap'
+    @@user = User.create_ldap_user!('testuser')
+  end
+
+  def test_find_created
+    assert User.find_by_username('testuser')
+  end
+
+  def test_no_email
+    assert @@user.email.nil?
+  end
+
+  def test_own_role
+    assert !@@user.own_role.nil?
+  end
+end
+
+
+
+class UserDefaultEnvTest < MiniTest::Rails::ActiveSupport::TestCase
+  include TestUserBase
+
+  def self.before_suite
+    services  = ['Candlepin', 'Pulp', 'ElasticSearch']
+    models    = ['User', 'KTEnvironment', 'Repository', 'System']
+    disable_glue_layers(services, models)
+  end
+
+  def setup
+    super
+    @org = @acme_corporation
+    @env = @dev
+    @user = @admin
+  end
+
+  def test_set_default_env
+    @user.default_environment = @env
+    @user.save!
+    @user = @user.reload
+    assert @user.default_environment == @env
+  end
+
+  def test_find_by_default_env
+    @user.default_environment = @env
+    @user.save!
+    assert User.find_by_default_environment(@env.id).first == @user
+  end
+
+  def test_default_env_removed
+    @user.default_environment = @env
+    @user.save!
+    @env.destroy
+    assert User.find_by_default_environment(@env.id).empty?
+    assert @user.default_environment.nil?
+  end
 end
