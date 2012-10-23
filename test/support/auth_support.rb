@@ -11,11 +11,11 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 
-module AuthorizationHelperMethods
+module AuthorizationSupportMethods
 
 
   def allow(*args)
-    AuthorizationHelperMethods.allow(*args)
+    AuthorizationSupportMethods.allow(*args)
   end
 
   def self.allow role, verbs, resource_type, tags=[], org = nil, options = {}
