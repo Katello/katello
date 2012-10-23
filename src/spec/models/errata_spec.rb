@@ -29,14 +29,14 @@ describe Glue::Pulp::Errata, :katello => true do
   context "Find errata" do
     it "should call pulp find errata api" do
       
-      Resources::Pulp::Errata.should_receive(:find).once.with('1')
-      Glue::Pulp::Errata.find('1')
+      Runcible::Extensions::Errata.should_receive(:find).once.with('1')
+      Errata.find('1')
     end
     
     it "should create new Errata" do
 
-      Glue::Pulp::Errata.should_receive(:new)
-      Glue::Pulp::Errata.find('1')
+      Errata.should_receive(:new)
+      Errata.find('1')
     end
   end
 
@@ -45,19 +45,16 @@ describe Glue::Pulp::Errata, :katello => true do
       products_with_repo = [mock(Product, :repos => [@repo]), mock(Product, :repos => [@repo2])]
       @env.stub(:products => products_with_repo)
       KTEnvironment.stub(:find => @env)
-
       filter = { :type => "security", :environment_id => @env.id }
-      Resources::Pulp::Repository.should_receive(:errata).once.with(@repo.pulp_id, filter.except(:environment_id)).and_return(RepoTestData::REPO_ERRATA[0..0])
-      Resources::Pulp::Repository.should_receive(:errata).once.with(@repo2.pulp_id, filter.except(:environment_id)).and_return(RepoTestData::REPO_ERRATA[1..1])
-
-      Glue::Pulp::Errata.filter(filter).should == RepoTestData::REPO_ERRATA
+      Errata.should_receive(:search).twice.and_return(Support.array_with_total(RepoTestData::REPO_ERRATA))
+      Errata.filter(filter).first.id.should == RepoTestData::REPO_ERRATA.first["_id"]
     end
 
     it "should be able to search all errata of given type and repo" do
       filter = { :type => "security", :repoid => "repo-123" }
-      Resources::Pulp::Repository.should_receive(:errata).once.with(@repo.pulp_id, filter.except(:repoid)).and_return(RepoTestData::REPO_ERRATA[0..0])
       Repository.should_receive(:find).once.with(filter[:repoid]).and_return(@repo)
-      Glue::Pulp::Errata.filter(filter).should == RepoTestData::REPO_ERRATA[0..0]
+      Errata.should_receive(:search).twice.and_return(Support.array_with_total(RepoTestData::REPO_ERRATA[0..0]))
+      Errata.filter(filter).first.id.should == RepoTestData::REPO_ERRATA.first["_id"]
     end
 
     it "should be able to search all errata of given type and product" do
@@ -65,10 +62,8 @@ describe Glue::Pulp::Errata, :katello => true do
       product_with_repo = mock(Product, :repos => [@repo, @repo2])
 
       ::Product.should_receive(:find_by_cp_id!).with("product-123").and_return(product_with_repo)
-      Resources::Pulp::Repository.should_receive(:errata).once.with(@repo.pulp_id, filter.slice(:type)).and_return(RepoTestData::REPO_ERRATA[0..0])
-      Resources::Pulp::Repository.should_receive(:errata).once.with(@repo2.pulp_id, filter.slice(:type)).and_return(RepoTestData::REPO_ERRATA[1..1])
-
-      Glue::Pulp::Errata.filter(filter).should == RepoTestData::REPO_ERRATA
+      Errata.should_receive(:search).twice.and_return(Support.array_with_total(RepoTestData::REPO_ERRATA))
+      Errata.filter(filter).first.id.should == RepoTestData::REPO_ERRATA.first["_id"]
     end
   end
   
@@ -76,5 +71,5 @@ end
 
 
 def disable_errata_orchestration
-  Resources::Pulp::Errata.stub(:find).and_return({})
+  Runcible::Extensions::Errata.stub(:find).and_return({})
 end
