@@ -49,39 +49,6 @@ module AuthorizationHelperMethods
                                               :organization => org, :tag_values => tags))
     role.save!
   end
-
-  class UserPermissionsGenerator
-    def initialize(user)
-      @user = user
-    end
-
-    def can(verb, resource_type, tags = nil, org = nil, options = {} )
-      AuthorizationHelperMethods.allow(@user.own_role, verb, resource_type, tags, org, options)
-    end
-
-  end
-
-  def user_with_permissions
-    disable_user_orchestration
-
-    @users_count ||= 0
-    @users_count += 1
-    user = User.create!(:username => "tmp#{@users_count}", :password => "tmp_password", :email => "tmp#{@users_count}@someserver.com")
-    yield UserPermissionsGenerator.new(user) if block_given?
-    user
-  end
-
-  def user_without_permissions
-    user_with_permissions
-  end
-
-  def superadmin
-    disable_user_orchestration
-    user = user_with_permissions
-    permission = Permission.create!(:role =>user.own_role, :all_types => true, :name => "superadmin")
-    return user
-  end
-
 end
 
 
