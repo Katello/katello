@@ -22,7 +22,7 @@ from katello.client.cli.base import opt_parser_add_org
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record
 from katello.client.api.utils import get_content_view, get_cv_definition, \
-        get_filter
+        get_filter, get_product
 
 # base content_view action --------------------------------------------------------
 
@@ -252,6 +252,59 @@ class AddRemoveFilter(ContentViewAction):
                     (filter_name, cvd["label"]))
 
         self.def_api.update_filters(org_name, cvd['id'], filters)
+        print message
+
+class AddRemoveProduct(ContentViewAction):
+
+    select_by_env = False
+    addition = True
+
+    @property
+    def description(self):
+        if self.addition:
+            return _('add a product to a content view')
+        else:
+            return _('remove a product from a content view')
+
+
+    def __init__(self, addition):
+        super(AddRemoveProduct, self).__init__()
+        self.addition = addition
+
+    def setup_parser(self, parser):
+        parser.add_option('--label', dest='label',
+                help=_("content view label eg: Database (required)"))
+        opt_parser_add_org(parser, required=1)
+        parser.add_option('--product', dest='product',
+                help=_("product label (required)"))
+
+    def check_options(self, validator):
+        validator.require(('product', 'org', 'label'))
+
+    def run(self):
+        org_name       = self.get_option('org')
+        view_label     = self.get_option('label')
+        product_label  = self.get_option('product')
+
+        view = get_cv_definition(org_name, view_label)
+        get_product(org_name, product_label)
+
+        products = self.def_api.products(org_name, view['id'])
+        products = [f['name'] for f in products]
+        self.update_products(org_name, view, products, product_label)
+        return os.EX_OK
+
+    def update_products(self, org_name, cvd, products, product_label):
+        if self.addition:
+            products.append(product_label)
+            message = _("Added product [ %s ] to content view [ %s ]" % \
+                    (product_label, cvd["label"]))
+        else:
+            products.remove(product_label)
+            message = _("Removed product [ %s ] to content view [ %s ]" % \
+                    (product_label, cvd["label"]))
+
+        self.def_api.update_products(org_name, cvd['id'], products)
         print message
 
 # content_view command ------------------------------------------------------------
