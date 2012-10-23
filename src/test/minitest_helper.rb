@@ -60,6 +60,15 @@ def disable_glue_layers(services=[], models=[])
 end
 
 
+class ResourceTypeBackup
+  @@types_backup = ResourceType::TYPES.clone
+
+  def self.restore
+    ResourceType::TYPES.clear
+    ResourceType::TYPES.merge!(@@types_backup)
+  end
+end
+
 
 
 class CustomMiniTestRunner
@@ -85,6 +94,7 @@ class CustomMiniTestRunner
         super(suites, type)
       ensure
         after_suites
+        ResourceTypeBackup.restore
       end
     end
 
