@@ -15,11 +15,9 @@ require 'helpers/system_test_data'
 include OrchestrationHelper
 include SystemHelperMethods
 
-
 describe System do
 
   include AuthorizationHelperMethods
-
 
   let(:facts) { {"distribution.name" => "Fedora"} }
   let(:system_name) { 'testing' }
@@ -61,7 +59,7 @@ describe System do
     Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
-    Resources::Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid})
   end
 
   context "system in invalid state should not be valid" do
@@ -74,7 +72,7 @@ describe System do
 
   it "registers system in candlepin and pulp on create" do
     Resources::Candlepin::Consumer.should_receive(:create).once.with(@environment.id, @organization.name, system_name, cp_type, facts, installed_products, nil, nil, nil).and_return({:uuid => uuid, :owner => {:key => uuid}})
-    Resources::Pulp::Consumer.should_receive(:create).once.with(@organization.label, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}}) if AppConfig.katello?
+    Runcible::Extensions::Consumer.should_receive(:create).once.with(uuid, {:display_name => system_name}).and_return({:id => uuid}) if AppConfig.katello?
     @system.save!
   end
 
@@ -85,7 +83,7 @@ describe System do
 
     it "should delete consumer in candlepin and pulp" do
       Resources::Candlepin::Consumer.should_receive(:destroy).once.with(uuid).and_return(true)
-      Resources::Pulp::Consumer.should_receive(:destroy).once.with(uuid).and_return(true) if AppConfig.katello?
+      Runcible::Extensions::Consumer.should_receive(:delete).once.with(uuid).and_return(true) if AppConfig.katello?
       @system.destroy
     end
   end
@@ -247,7 +245,7 @@ describe System do
 
   context "pulp attributes", :katello => true do
     it "should update package-profile" do
-      Resources::Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
+      Runcible::Extensions::Consumer.should_receive(:upload_profile).once.with(uuid, 'rpm', package_profile).and_return(true)
       @system.upload_package_profile(package_profile)
     end
   end
@@ -255,6 +253,7 @@ describe System do
   describe "available releases" do
     before do
       disable_product_orchestration
+
       @product = Product.create!(:name=>"prod1", :label=> "prod1", :cp_id => '12345', :provider => @organization.redhat_provider, :environments => [@organization.library])
       @environment = KTEnvironment.create!({:name=>"Dev", :label=> "Dev", :prior => @organization.library, :organization => @organization}) do |e|
         e.products << @product
