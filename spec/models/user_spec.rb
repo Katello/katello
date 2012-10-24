@@ -103,6 +103,24 @@ describe User do
       u.should_not be_nil
     end
 
+    it "have ASCII username" do
+      non_ascii = {
+        :username => 'Cuiabá_user1',
+        :password => PASSWORD,
+        :email => EMAIL
+      }
+      utf8 = nil
+      begin
+        utf8 = User.create!(non_ascii)
+      rescue ActiveRecord::RecordInvalid
+      end
+      utf8.should be_nil
+      u = User.find_by_username("Cuiabá_user1")
+      u.should be_nil
+
+    end
+
+
     it "have its own role" do
       #pending "implement own_role functionality"
       @user.own_role.should_not be_nil
