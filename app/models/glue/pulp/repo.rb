@@ -96,6 +96,11 @@ module Glue::Pulp::Repo
       end
     end
 
+    def uri
+      start = AppConfig.pulp.url.gsub("api/v2/", '')  #https://HOSTNAME/pulp/
+      "#{start}repos/#{relative_path}"
+    end
+
     def to_hash
       pulp_repo_facts.merge(as_json).merge(:sync_state=> sync_state)
     end
@@ -215,23 +220,23 @@ module Glue::Pulp::Repo
     end
 
     def package_groups search_args = {}
-      groups = Runcible::Extensions::PackageGroup.all self.pulp_id
+      groups = Runcible::Extensions::Repository.package_groups(self.pulp_id)
       unless search_args.empty?
-        groups.delete_if do |group_id, group_attrs|
+        groups.delete_if do |group_attrs|
           search_args.any?{ |attr,value| group_attrs[attr] != value }
         end
       end
-      groups.values
+      groups
     end
 
     def package_group_categories search_args = {}
-      categories = Runcible::Extensions::PackageCategory.all self.pulp_id
+      categories = Runcible::Extensions::Repository.package_categories(self.pulp_id)
       unless search_args.empty?
-        categories.delete_if do |category_id, category_attrs|
+        categories.delete_if do |category_attrs|
           search_args.any?{ |attr,value| category_attrs[attr] != value }
         end
       end
-      categories.values
+      categories
     end
 
     def has_distribution? id
