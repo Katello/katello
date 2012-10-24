@@ -42,8 +42,10 @@ module RepoTestData
     ],
     "distributors" => [
        {'config' => {'relative_url'=>"ACME_Corporation/Library/zoo/base"}}
+    ],
+    "importers" => [
     ]
-  }.with_indifferent_access
+    }.with_indifferent_access
 
   CLONED_PROPERTIES = {
     :pulp_id => CLONED_REPO_ID,
