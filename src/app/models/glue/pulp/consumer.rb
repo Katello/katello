@@ -96,7 +96,7 @@ module Glue::Pulp::Consumer
       return true if @changed_attributes.empty?
 
       Rails.logger.debug "Updating consumer in pulp: #{@old.name}"
-      Runcible::Extensions::Consumer.update(self.uuid, {"delta" => {:display_name => self.name}})
+      Runcible::Extensions::Consumer.update(self.uuid, :display_name => self.name})
     rescue => e
       Rails.logger.error "Failed to update pulp consumer #{@old.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -120,7 +120,7 @@ module Glue::Pulp::Consumer
 
     def uninstall_package packages
       Rails.logger.debug "Scheduling package uninstall for consumer #{self.name}"
-      pulp_task = Runcible::Extensions::Consumer.uninstall(self.uuid, 'rpm', packages)
+      pulp_task = Runcible::Extensions::Consumer.uninstall_content(self.uuid, 'rpm', packages)
     rescue => e
       Rails.logger.error "Failed to schedule package uninstall for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -128,7 +128,7 @@ module Glue::Pulp::Consumer
 
     def update_package packages
       Rails.logger.debug "Scheduling package update for consumer #{self.name}"
-      pulp_task = Runcible::Extensions::Consumer.update(self.uuid, 'rpm', packages)
+      pulp_task = Runcible::Extensions::Consumer.update_content(self.uuid, 'rpm', packages)
     rescue => e
       Rails.logger.error "Failed to schedule package update for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -136,7 +136,7 @@ module Glue::Pulp::Consumer
 
     def install_package_group groups
       Rails.logger.debug "Scheduling package group install for consumer #{self.name}"
-      pulp_task = Runcible::Extensions::Consumer.install(self.uuid, 'package_group', groups)
+      pulp_task = Runcible::Extensions::Consumer.install_content(self.uuid, 'package_group', groups)
     rescue => e
       Rails.logger.error "Failed to schedule package group install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -144,7 +144,7 @@ module Glue::Pulp::Consumer
 
     def uninstall_package_group groups
       Rails.logger.debug "Scheduling package group uninstall for consumer #{self.name}"
-      pulp_task = Runcible::Extensions::Consumer..uninstall(self.uuid, 'package_group', groups)
+      pulp_task = Runcible::Extensions::Consumer.uninstall_content(self.uuid, 'package_group', groups)
     rescue => e
       Rails.logger.error "Failed to schedule package group uninstall for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -152,7 +152,7 @@ module Glue::Pulp::Consumer
 
     def install_consumer_errata errata_ids
       Rails.logger.debug "Scheduling errata install for consumer #{self.name}"
-      pulp_task = Runcible::Extensions::Consumer.install(self.uuid, 'erratum', errata_ids)
+      pulp_task = Runcible::Extensions::Consumer.install_content(self.uuid, 'erratum', errata_ids)
     rescue => e
       Rails.logger.error "Failed to schedule errata install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
