@@ -85,6 +85,7 @@ class foreman::config {
     creates     => "/var/lib/katello/foreman_db_migrate_done",
     timeout     => 0,
     require     => [ Postgres::Createdb[$foreman::db_name],
+                 File["${foreman::log_base}/production.log"],
                  File["${foreman::config_dir}/settings.yaml"],
                  File["${foreman::config_dir}/database.yml"]];
   } ~>
