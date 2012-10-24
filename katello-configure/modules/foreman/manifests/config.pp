@@ -32,13 +32,22 @@ class foreman::config {
     comment => 'Foreman',
     home    => $foreman::app_root,
   }
-
+  
   file {
     "${foreman::log_base}":
       owner   => $foreman::user,
       group   => $foreman::group,
       mode    => 640,
       recurse => true;
+
+    # create Rails logs in advance to get correct owners and permissions
+    "${foreman::log_base}/production.log":
+      owner   => $foreman::user,
+      group   => $foreman::group,
+      content => "",
+      replace => false,
+      mode    => 640,
+      require => File["${foreman::log_base}"];
 
     "${foreman::config_dir}/settings.yaml":
       content => template('foreman/settings.yaml.erb'),
