@@ -32,6 +32,11 @@ class Resources::AbstractModel
       super("#{resource.class}#{resource.id && " with id '#{resource.id}'"} is invalid:\n" +
                 resource.errors.full_messages.map { |m| "- " + m }.join("\n"))
     end
+
+    def record
+      @resource
+    end
+
   end
 
   class ResponseParsingError < Error
