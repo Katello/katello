@@ -16,6 +16,8 @@ describe Api::ProductsController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
   include ProductHelperMethods
+  include RepositoryHelperMethods
+
   let(:user_with_read_permissions) { user_with_permissions { |u| u.can([:read], :providers, @provider.id, @organization) } }
   let(:user_without_read_permissions) { user_without_permissions }
 
@@ -27,29 +29,20 @@ describe Api::ProductsController, :katello => true do
     disable_product_orchestration
     disable_user_orchestration
 
-    Resources::Pulp::Repository.stub(:packages).and_return([])
-    Resources::Pulp::Repository.stub(:errata).and_return([])
-
     @organization = new_test_org
     @environment = KTEnvironment.create!(:name=>"foo123", :label=> "foo123", :organization => @organization, :prior =>@organization.library)
     @provider = Provider.create!(:name => "provider", :provider_type => Provider::CUSTOM,
                                  :organization => @organization, :repository_url => "https://something.url/stuff")
     @product = Product.new({:name=>"prod", :label=> "prod"})
 
-
     @product.provider = @provider
     @product.environments << @organization.library
     @product.stub(:arch).and_return('noarch')
     @product.save!
     ep_library = EnvironmentProduct.find_or_create(@organization.library, @product)
-    @repo_library= Repository.create!(:environment_product => ep_library,
-                                     :name=> "repo",
-                                     :label=> "repo_label",
-                                     :relative_path => "#{@organization.name}/Library/prod/repo",
-                                     :pulp_id=>"2",
-                                     :enabled => true)
-    @repo = promote(@repo_library, @environment)
+    @repo_library = new_test_repo(ep_library, "repo", "#{@organization.name}/Library/prod/repo")
 
+    @repo = promote(@repo_library, @environment)
 
     @products = [@product]
     @repositories = [@repo]
@@ -62,8 +55,6 @@ describe Api::ProductsController, :katello => true do
     Product.stub!(:select).and_return(@products)
     @product.stub(:repos).and_return(@repositories)
     @product.stub(:sync_state => ::PulpSyncStatus::Status::NOT_SYNCED)
-    Resources::Pulp::Repository.stub(:sync_history => [])
-
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
@@ -71,7 +62,7 @@ describe Api::ProductsController, :katello => true do
 
   describe "show product" do
     before do
-      Resources::Pulp::Repository.stub(:find).and_return(RepoTestData::REPO_PROPERTIES)
+      Runcible::Extensions::Repository.stub(:retrieve).and_return(RepoTestData::REPO_PROPERTIES)
     end
 
     let(:action) { :show }
@@ -85,13 +76,11 @@ describe Api::ProductsController, :katello => true do
     it { should be_success }
   end
 
-
-
   describe "update product" do
     let(:gpg_key) { GpgKey.create!(:name => "Gpg key", :content => "100", :organization => @organization) }
 
     before do
-      Resources::Pulp::Repository.stub(:find).and_return(RepoTestData::REPO_PROPERTIES)
+      Runcible::Extensions::Repository.stub(:retrieve).and_return(RepoTestData::REPO_PROPERTIES)
       Product.stub(:find_by_cp_id).with(@product.cp_id).and_return(@product)
       @product.stub(:update_attributes! => true)
     end
@@ -100,9 +89,10 @@ describe Api::ProductsController, :katello => true do
     let(:req) { put 'update', :id => @product.cp_id, :organization_id => @organization.label, :product => {:gpg_key_name => gpg_key.name, :description => "another description" } }
     let(:authorized_user) { user_with_update_permissions }
     let(:unauthorized_user) { user_without_update_permissions }
+
     it_should_behave_like "protected action"
 
-     it_should_behave_like "bad request" do
+    it_should_behave_like "bad request" do
       let(:req) do
         bad_req = {:id => @product.cp_id,
                    :organization_id => @organization.label,
@@ -112,7 +102,7 @@ describe Api::ProductsController, :katello => true do
         }.with_indifferent_access
         put :update, bad_req
       end
-     end
+    end
 
     context "custom product" do
       subject { req }
@@ -141,7 +131,6 @@ describe Api::ProductsController, :katello => true do
         req
         response.code.should eq("400")
       end
-
     end
   end
 
