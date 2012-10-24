@@ -341,12 +341,13 @@ class UpdateContent(ChangesetAction):
             raise OptionValueError(_("%s must be preceded by %s, %s or %s") %
                   (option, "--from_product", "--from_product_label", "--from_product_id"))
 
-        if self.current_product_option == 'from_product_label':
-            self.items[option.dest].append({"name": u_str(value), "from_product_label": self.current_product})
-        elif self.current_product_option == 'from_product_id':
-            self.items[option.dest].append({"name": u_str(value), "from_product_id": self.current_product})
+        if self.current_product_option == 'product_label':
+            self.items[option.dest].append({"name": u_str(value), "product_label": self.current_product})
+        elif self.current_product_option == 'product_id':
+            self.items[option.dest].append({"name": u_str(value), "product_id": self.current_product})
         else:
-            self.items[option.dest].append({"name": u_str(value), "from_product": self.current_product})
+            self.items[option.dest].append({"name": u_str(value), "product": self.current_product})
+
 
     def _store_item(self, option, opt_str, value, parser):
         if option.dest == 'add_product_label' or option.dest == 'remove_product_label':
