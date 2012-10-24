@@ -1,0 +1,20 @@
+language:
+  - ruby
+
+before_install:
+  - "cd src/"
+
+install:
+  - bundle install --without jshintrb:devboost:profiling:debugging --quiet
+  - sudo apt-get install libssl-dev python m2crypto --quiet
+  - sudo pip install mock nose pyxml kerberos pep8 pylint simplejson --quiet
+
+before_script:
+  - cd ../
+
+script:
+  - ./scripts/ci/pull_request_tests.sh
+
+rvm:
+ - "1.8.7"
+ - "1.9.3"
