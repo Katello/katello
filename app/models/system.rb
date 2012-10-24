@@ -318,11 +318,15 @@ class System < ActiveRecord::Base
 
   private
     def add_pulp_consumer_group record
-      record.add_consumers([self.uuid])
+      if AppConfig.use_pulp
+        record.add_consumers([self.uuid])
+      end
     end
 
     def remove_pulp_consumer_group record
-      record.del_consumers([self.uuid])
+      if AppConfig.use_pulp
+        record.del_consumers([self.uuid])
+      end
     end
 
     def save_task_status pulp_task, task_type, parameters_type, parameters
