@@ -85,7 +85,7 @@ class foreman::config {
                               -k oauth_consumer_key -v '${foreman::oauth_consumer_key}'\
                               -k oauth_consumer_secret -v '${foreman::oauth_consumer_secret}'\
                               -k oauth_map_users -v '${foreman::oauth_map_users}'",
-   user    => "foreman",
+   user    => $foreman::user,
    timeout => 0,
    require => User[$foreman::user],
   }
