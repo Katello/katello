@@ -30,6 +30,7 @@ module RepoTestData
     :label => REPO_LABEL,
     :arch => 'architecture',
     :relative_path => "ACME_Corporation/Library/zoo/base",
+    :content_id=>'123234',
     :uri =>  "https://localhost/pulp/repos/ACME_Corporation/Library/zoo/base",
     :feed => 'url',
     "groupid" => [

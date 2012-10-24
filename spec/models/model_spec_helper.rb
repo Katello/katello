@@ -139,6 +139,7 @@ EOKEY
   end
 
   def disable_repo_orchestration
+    Runcible::Extensions::Repository.stub(:create).and_return({})
     Runcible::Extensions::Repository.stub(:sync_history).and_return([])
     Runcible::Resources::Task.stub!(:destroy).and_return({})
 
