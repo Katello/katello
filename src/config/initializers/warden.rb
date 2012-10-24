@@ -17,7 +17,7 @@ Rails.configuration.middleware.use RailsWarden::Manager do |config|
   # API requests are handled in the :api scope
   config.scope_defaults(
     :api,
-    :strategies   => [:oauth, :sso, :certificate, AppConfig.warden.to_sym],
+    :strategies   => [:oauth, :sso, :certificate, AppConfig.warden.to_sym, :no_credentials],
     :store        => false,
     :action       => 'unauthenticated_api'
   )
@@ -64,13 +64,13 @@ Warden::Strategies.add(:database) do
 end
 
 # authenticate against LDAP
-Warden::Strategies.add(:ldap) do  
+Warden::Strategies.add(:ldap) do
 
   # relevant only when username and password params are set
   def valid?
     (params[:username] && params[:password]) or (params[:auth_username] && params[:auth_password])
   end
-  
+
   def authenticate!
     Rails.logger.debug("Warden is authenticating #{params[:username]} against ldap")
     if params[:auth_username] && params[:auth_password]
@@ -168,3 +168,12 @@ Warden::Strategies.add(:oauth) do
   end
 end
 
+Warden::Strategies.add(:no_credentials) do
+  def valid?
+    true
+  end
+
+  def authenticate!
+    custom! [401, {"WWW-Authenticate" => 'Basic realm="Secure Area"'}, "No Credentials provided"]
+  end
+end
