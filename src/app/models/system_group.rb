@@ -287,15 +287,11 @@ class SystemGroup < ActiveRecord::Base
   end
 
   def add_pulp_consumer_group record
-    if AppConfig.use_pulp
-      self.add_consumers([record.uuid])
-    end
+    self.add_consumers([record.uuid])
   end
 
   def remove_pulp_consumer_group record
-    if AppConfig.use_pulp
-      self.del_consumers([record.uuid])
-    end
+    self.del_consumers([record.uuid])
   end
 
   def save_job pulp_job, job_type, parameters_type, parameters
