@@ -579,7 +579,6 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/app/models
 %exclude %{homedir}/app/models/glue/*
 %exclude %{homedir}/app/models/foreman
-%exclude %{homedir}/app/controllers/api/foreman
 %{homedir}/app/stylesheets
 %{homedir}/app/views
 %{homedir}/autotest
