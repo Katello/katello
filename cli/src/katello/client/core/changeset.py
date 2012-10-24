@@ -225,7 +225,7 @@ class UpdateContent(ChangesetAction):
             prod_opts = self.product_options(options)
 
             # if the product name/label/id are all none...
-            if (all(opt is None for opt in prod_opts)):
+            if (all(opt is None for opt in prod_opts.itervalues())):
                 prod_opts['name'] = options['name']
 
             prod = get_product(self.org_name, prod_opts['name'], prod_opts['label'], prod_opts['id'])
