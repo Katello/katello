@@ -7,108 +7,108 @@ http_interactions:
     body: 
       string: ""
     headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="OXSVBvfwwJK8cdJaSZ3zDO4LRo6oH6U0IviQ8dXwbY", oauth_signature="71LNPTMCY4UPR0rS40qXhoji%2FzI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1350920340", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
       Accept: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="151ciXcmkTvfjT6II8OIr7398aEOKFb9RydRWxwHU", oauth_signature="nBBN%2FnuFzlJpKij464yLYnE5xKQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1350527179", oauth_version="1.0"
-      Pulp-User: 
-      - admin
   response: 
     status: 
       code: 405
       message: Method Not Allowed
     headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Allow: 
-      - GET, POST
-      Content-Encoding: 
-      - gzip
-      Content-Type: 
-      - text/html; charset=UTF-8
       Content-Length: 
       - "24"
-      Date: 
-      - Thu, 18 Oct 2012 02:26:19 GMT
+      Allow: 
+      - GET, POST
       Vary: 
       - Accept-Encoding
+      Content-Type: 
+      - text/html; charset=UTF-8
+      Date: 
+      - Mon, 22 Oct 2012 15:39:00 GMT
+      Content-Encoding: 
+      - gzip
+      Server: 
+      - Apache/2.2.22 (Fedora)
     body: 
       string: !binary |
         H4sIAAAAAAAAA/PLz0sFAPGvot8EAAAA
 
     http_version: 
-  recorded_at: Thu, 18 Oct 2012 02:26:19 GMT
+  recorded_at: Mon, 22 Oct 2012 15:39:00 GMT
 - request: 
     method: post
     uri: https://knifeparty.localdomain/pulp/api/v2/users/
     body: 
-      string: "{\"password\":\"ArNSpwikIPCKDNel\",\"login\":\"batman\",\"name\":\"batman\"}"
+      string: "{\"name\":\"batman\",\"login\":\"batman\",\"password\":\"LC6CH5RpQ6C8Vsch\"}"
     headers: 
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="EYx6CQ0xjV1374PJhCjXfYblIW14PpTflByldDM", oauth_signature="QR1RRleFdqhw5wKVLLlskwXANKM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1350920340", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "64"
+      Content-Type: 
+      - application/json
       Accept: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="UULPCMIsxuBPdQNlGjBbfT3M75qHAJIUvsllpXbpye4", oauth_signature="VuvxI%2FUhzFd%2FGpo3ibaM0pfVonE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1350527179", oauth_version="1.0"
-      Content-Length: 
-      - "64"
-      Pulp-User: 
-      - admin
   response: 
     status: 
       code: 201
       message: Created
     headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Content-Type: 
-      - application/json
       Content-Length: 
       - "184"
-      Date: 
-      - Thu, 18 Oct 2012 02:26:19 GMT
       Location: 
       - batman
+      Content-Type: 
+      - application/json
+      Date: 
+      - Mon, 22 Oct 2012 15:39:00 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
     body: 
-      string: "{\"_id\": {\"$oid\": \"507f68ccdc79210e5700011e\"}, \"name\": \"batman\", \"roles\": [], \"_ns\": \"users\", \"login\": \"batman\", \"id\": \"507f68ccdc79210e5700011e\", \"_href\": \"/pulp/api/v2/users/batman/\"}"
+      string: "{\"_id\": {\"$oid\": \"50856895dc79216add005c5d\"}, \"name\": \"batman\", \"roles\": [], \"_ns\": \"users\", \"login\": \"batman\", \"id\": \"50856895dc79216add005c5d\", \"_href\": \"/pulp/api/v2/users/batman/\"}"
     http_version: 
-  recorded_at: Thu, 18 Oct 2012 02:26:20 GMT
+  recorded_at: Mon, 22 Oct 2012 15:39:01 GMT
 - request: 
     method: delete
     uri: https://knifeparty.localdomain/pulp/api/v2/users/batman/
     body: 
       string: ""
     headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="UnMBh79OodOkn40aapY6CVzpjmo3nJ382pTXPGgeSs", oauth_signature="WLExzEwuohPKjneM5o6j8d3VzVg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1350920341", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
       Accept: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="kj1Hrf8Cx2XE4qQNU18teawm6SemN2aDxHCF1o2n4cA", oauth_signature="ZSgDXoyoGOMxd%2BVKmT6pbgiyGJA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1350527180", oauth_version="1.0"
-      Pulp-User: 
-      - admin
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Content-Type: 
-      - application/json
       Content-Length: 
       - "4"
+      Content-Type: 
+      - application/json
       Date: 
-      - Thu, 18 Oct 2012 02:26:20 GMT
+      - Mon, 22 Oct 2012 15:39:01 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
     body: 
       string: "null"
     http_version: 
-  recorded_at: Thu, 18 Oct 2012 02:26:20 GMT
+  recorded_at: Mon, 22 Oct 2012 15:39:01 GMT
