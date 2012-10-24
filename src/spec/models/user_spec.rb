@@ -22,12 +22,36 @@ describe User do
   PASSWORD = "password1234"
   EMAIL = "testuser@somewhere.com"
 
+  INVALID_USERNAME = (0...260).map{ ('a'..'z').to_a[rand(26)] }.join
+
   let(:to_create_simple) do
     {
       :username => USERNAME,
       :password => PASSWORD,
       :email => EMAIL
     }
+  end
+
+  let(:to_create_invalid_user) do
+    {
+      :username => INVALID_USERNAME,
+      :password => PASSWORD,
+      :email => EMAIL
+    }
+  end
+
+  describe "User shouldn't" do 
+    before(:each) do
+      disable_user_orchestration
+      AppConfig.warden = 'database'
+    end
+
+    it "be able to create" do
+      user = User.new(to_create_invalid_user)
+      user.should_not be_valid
+      user.errors[:username].should include("cannot contain more than 64 characters")
+    end
+
   end
 
   describe "Users in LDAP should" do
