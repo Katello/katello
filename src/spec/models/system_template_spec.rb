@@ -12,9 +12,9 @@
 
 require 'spec_helper'
 require 'helpers/repo_test_data'
-require 'helpers/repo_helper_methods'
 
 include OrchestrationHelper
+include RepositoryHelperMethods
 
 describe SystemTemplate, :katello => true do
 
