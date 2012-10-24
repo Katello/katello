@@ -193,7 +193,7 @@ class SystemTemplate < ActiveRecord::Base
       xm.repositories {
         repos.each do |repoId, repo|
           xm.repository("name" => repo.name) {
-            xm.url repo.uri
+            xm.url repo.feed
             xm.persisted "No"
             xm.clientcert uebercert[:cert] unless uebercert.nil?
             xm.clientkey uebercert[:key] unless uebercert.nil?
