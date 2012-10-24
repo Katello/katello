@@ -12,7 +12,7 @@
 
 require 'minitest_helper'
 
-
+=begin
 module GluePulpPackageTestBase
 
   def setup
@@ -38,7 +38,6 @@ module GluePulpPackageTestBase
 
 end
 
-
 class GluePulpPackageTest < MiniTest::Unit::TestCase
   include GluePulpPackageTestBase
 
@@ -53,3 +52,4 @@ class GluePulpPackageTest < MiniTest::Unit::TestCase
   end
 
 end
+=end

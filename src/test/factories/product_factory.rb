@@ -1,7 +1,5 @@
 FactoryGirl.define do
   factory :product do
-    association   :provider
-    association   :environments
 
     trait :fedora do
       name          "Fedora"
