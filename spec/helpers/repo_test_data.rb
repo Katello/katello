@@ -236,8 +236,7 @@ module RepoTestData
 
   # using methods instead of constants due to immutability
   def self.repo_package_groups
-    {
-      "123" =>
+    [
       {"name" => "katello",
        "conditional_package_names" => {},
        "mandatory_package_names" => [],
@@ -255,12 +254,11 @@ module RepoTestData
        "description" => "Katello related packages",
        "translated_name" => {}
       }
-    }.with_indifferent_access
+    ]
   end
 
   def self.repo_package_group_categories
-    {
-      "development" =>
+    [
       {"name" => "Development",
        "_id" => "development",
        "id" => "development",
@@ -271,7 +269,7 @@ module RepoTestData
        "description" => "",
        "packagegroupids" => ["123"],
        "translated_name" => {}}
-    }.with_indifferent_access
+    ]
   end
 
 

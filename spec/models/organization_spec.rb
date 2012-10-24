@@ -113,13 +113,13 @@ describe Organization do
     end
 
     it "can delete an org where there is a full environment path" do
-       dev = KTEnvironment.create!(:name=>"Dev", :label=> "Dev", :organization => @organization, :prior => @organization.library)
+       dev = KTEnvironment.create!(:name=>"Dev-34343", :label=> "Dev", :organization => @organization, :prior => @organization.library)
        qa = KTEnvironment.create!(:name=>"QA", :label=> "QA", :organization => @organization, :prior => dev)
        prod =  KTEnvironment.create!(:name=>"prod", :label=> "prod", :organization => @organization, :prior => qa)
        @organization = @organization.reload
        @organization.destroy
        lambda{Organization.find(@organization.id)}.should raise_error(ActiveRecord::RecordNotFound)
-       KTEnvironment.where(:name =>'Dev').size.should == 0 
+       KTEnvironment.where(:name =>'Dev-34343').size.should == 0
     end
 
   end
