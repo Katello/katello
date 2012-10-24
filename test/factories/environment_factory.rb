@@ -1,6 +1,13 @@
 FactoryGirl.define do
   factory :k_t_environment do
-    association   :organization
+
+    ignore do
+      stubbed_org = true
+    end
+
+    after_build do |environment|
+      environment.organization = FactoryGirl.build_stubbed(:organization, :acme_corporation) if stubbed_org
+    end
 
     trait :library do
       name          "Library"

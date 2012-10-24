@@ -16,7 +16,6 @@ require 'test/models/repository_base'
 class RepositoryAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCase
   include RepositoryTestBase
 
-
   def setup
     super
     User.current = User.find(users(:admin))
