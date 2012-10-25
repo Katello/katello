@@ -24,6 +24,7 @@ from katello.client.core.utils import test_record, run_spinner_in_bg, wait_for_a
 from katello.client.utils.printer import VerboseStrategy
 from katello.client.utils import printer
 from datetime import timedelta, datetime
+from katello.client.utils.printer import batch_add_columns
 
 
 # base organization action -----------------------------------------------------
@@ -44,9 +45,7 @@ class List(OrganizationAction):
     def run(self):
         orgs = self.api.organizations()
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('label')
+        batch_add_columns(self.printer, 'id', 'name', 'label')
         self.printer.add_column('description', multiline=True)
 
         self.printer.set_header(_("Organization List"))
