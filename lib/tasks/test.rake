@@ -34,6 +34,7 @@ rescue LoadError
   # rspec not present, skipping this definition
 end
 
+
 if ENV['method']
   if not ENV['method'].starts_with?('test_')
     ENV['method'] = "test_#{ENV['method']}"
@@ -46,33 +47,57 @@ if ENV['method']
   end
 end
 
-namespace :minitest do
-  ['glue'].each do |task|
+MINITEST_TASKS  = %w(models helpers controllers glue)
+GLUE_LAYERS     = %w(pulp elasticsearch)
+
+Rake::Task[:minitest].clear
+Rake::Task["db:test:prepare"].clear
+
+desc 'Runs all minitest tests'
+MiniTest::Rails::Tasks::SubTestTask.new(:minitest => 'test:prepare') do |t|
+  t.libs.push 'test'
+  t.pattern = "test/#{task}/**/*_test.rb"
+end
+
+namespace 'minitest' do
+  Rake::Task["db:test:prepare"].clear
+
+  MINITEST_TASKS.each do |task|
     if ENV['test']
-      Rake::Task["minitest:glue"].clear
+      Rake::Task["minitest:models"].clear
       Rake::Task["db:test:prepare"].clear
       MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
         t.libs.push 'test'
         t.pattern = "test/#{task}/#{ENV['test']}_test.rb"
-      end   
+      end
     else
+      desc "Runs the #{task} tests"
+
       MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
         t.libs.push 'test'
         t.pattern = "test/#{task}/**/*_test.rb"
       end
-    end   
-  end
-end
-
-namespace :minitest do
-  ['models'].each do |test_type|
-    if ENV['test']
-      Rake::Task["minitest:models"].clear
-      Rake::Task["db:test:prepare"].clear
-      MiniTest::Rails::Tasks::SubTestTask.new(test_type => 'test:prepare') do |t|
-        t.libs.push 'test'
-        t.pattern = "test/#{test_type}/#{ENV['test']}_test.rb"
-      end   
     end
   end
+
+  namespace :glue do
+
+    GLUE_LAYERS.each do |task|
+      if ENV['test']
+        MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
+          t.libs.push 'test'
+          t.pattern = "test/glue/#{task}/#{ENV['test']}_test.rb"
+        end   
+      else
+        desc "Runs the #{task} glue layer tests"
+
+        MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
+          t.libs.push 'test'
+          t.pattern = "test/glue/#{task}/**/*_test.rb"
+        end
+      end
+    end
+
+  end
+
 end

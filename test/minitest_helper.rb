@@ -3,6 +3,7 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 require 'minitest/autorun'
 require 'minitest/rails'
+require 'json'
 
 
 class MiniTest::Rails::ActiveSupport::TestCase
@@ -10,6 +11,7 @@ class MiniTest::Rails::ActiveSupport::TestCase
 
   self.use_transactional_fixtures = true
   self.use_instantiated_fixtures = false
+  self.pre_loaded_fixtures = true
   self.fixture_path = File.expand_path('../fixtures/models', __FILE__)
   self.set_fixture_class :environments => KTEnvironment
 end
@@ -17,11 +19,20 @@ end
 def configure_vcr
   require "vcr"
 
-  mode = ENV['mode'] ? ENV['mode'] : :all
+  mode = ENV['mode'] ? ENV['mode'] : :none
 
   VCR.configure do |c|
     c.cassette_library_dir = 'test/fixtures/vcr_cassettes'
     c.hook_into :webmock
+
+    begin
+      c.register_request_matcher :body_json do |request_1, request_2|
+        JSON.parse(request_1.body) == JSON.parse(request_2.body)
+      end
+    rescue => e
+      #ignore the warning thrown about this matcher already being resgistered
+    end
+
     c.default_cassette_options = { :record => mode.to_sym } #record_mode } #forcing all requests to Pulp currently
   end
 end
@@ -42,11 +53,12 @@ end
 def disable_glue_layers(services=[], models=[])
   @@model_service_cache ||= {}
   change = false
-  AppConfig.use_cp = false if services.include?('Candlepin')
-  AppConfig.use_pulp = false if services.include?('Pulp')
-  AppConfig.use_elasticsearch = false if services.include?('ElasticSearch')
 
-  cached_entry = {:cp=>AppConfig.use_cp, :pulp=>AppConfig.use_cp, :es=>AppConfig.use_elasticsearch}
+  AppConfig.use_cp            = services.include?('Candlepin') ? false : true
+  AppConfig.use_pulp          = services.include?('Pulp') ? false : true
+  AppConfig.use_elasticsearch = services.include?('ElasticSearch') ? false : true
+
+  cached_entry = {:cp=>AppConfig.use_cp, :pulp=>AppConfig.use_pulp, :es=>AppConfig.use_elasticsearch}
   models.each do |model|
     if @@model_service_cache[model] != cached_entry
       Object.send(:remove_const, model)
@@ -70,12 +82,12 @@ class ResourceTypeBackup
 end
 
 
-
 class CustomMiniTestRunner
   class Unit < MiniTest::Unit
 
     def before_suites
       # code to run before the first test
+      configure_vcr
     end
 
     def after_suites

@@ -172,7 +172,7 @@ module Glue::Pulp::Repo
       if @repo_packages.nil?
         #we fetch ids and then fetch packages by id, because repo packages
         #  does not contain all the info we need (bz 854260)
-        pkg_ids = Runcible::Extensions::Repository.package_ids(self.pulp_id)
+        pkg_ids = Runcible::Extensions::Repository.rpm_ids(self.pulp_id)
         self.packages = Runcible::Extensions::Rpm.find_all(pkg_ids)
       end
       @repo_packages
@@ -390,7 +390,7 @@ module Glue::Pulp::Repo
     end
 
     def delete_distribution distribution_id
-      Runcible::Extensions::Repository.delete_distribution self.pulp_id,  distribution_id
+      Runcible::Extensions::Repository.distribution_remove(self.pulp_id, distribution_id)
     end
 
     def cancel_sync
