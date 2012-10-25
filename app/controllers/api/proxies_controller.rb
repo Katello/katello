@@ -13,7 +13,7 @@
 class Api::ProxiesController < Api::ApiController
   before_filter :proxy_request_path, :proxy_request_body
   before_filter :authorize
- 
+
   def rules
     proxy_test = lambda {
       route, match, params = Rails.application.routes.set.recognize(request)

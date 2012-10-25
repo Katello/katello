@@ -9,6 +9,7 @@ require "active_resource/railtie"
 
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
+require 'apipie-rails' # FIXME will be removed after https://github.com/Pajk/apipie-rails/pull/62
 Bundler.require(:default, Rails.env) if defined?(Bundler)
 
 module Src
@@ -95,5 +96,6 @@ module Src
   end
 end
 
-FastGettext.add_text_domain 'app', :path => 'locale', :type => :po, :ignore_fuzzy => true, :ignore_obsolete => true
+FastGettext.add_text_domain 'app', :path => 'locale', :type => :po,
+                            :ignore_fuzzy => true, :report_warning => false, :ignore_obsolete => true
 FastGettext.default_text_domain = 'app'

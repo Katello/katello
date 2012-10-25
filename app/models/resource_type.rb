@@ -42,6 +42,17 @@ class ResourceTypeNotFound < StandardError
   end
 end
 
+class DefaultModel
+  class << self
+    def list_tags(global=false); []; end
+    def tags_for(global=false); []; end
+    def tags(global=false); []; end
+    def no_tag_verbs(global=false); []; end
+    def list_verbs(global=false); {}; end
+    def tags_for(global=false); []; end
+  end
+end
+
 
 class ResourceType < ActiveRecord::Base
   belongs_to :permission
@@ -74,6 +85,8 @@ class ResourceType < ActiveRecord::Base
     check_type resource_type
 
     model = model_for resource_type
+
+
     possible_verbs = (model.list_verbs(true).keys + model.list_verbs(false).keys).uniq
     verbs = [] if verbs.nil?
     verbs = [verbs] unless Array === verbs
@@ -98,7 +111,7 @@ class ResourceType < ActiveRecord::Base
         :filters => { :model => Filter, :name => _("Filters"), :global => false},
         :users => { :model => User, :name => _("Users"), :global=>true},
         :roles => { :model => Role, :name => _("Roles"), :global=>true},
-        :all => { :model => OpenStruct.new(:list_verbs =>{}, :list_tags=>[], :tags_for =>[], :tags => [], :no_tag_verbs =>[]), :name => _("All"), :global => false}
+        :all => { :model => DefaultModel, :name => _("All"), :global => false}
      }.with_indifferent_access
   else
     TYPES = {
@@ -108,7 +121,7 @@ class ResourceType < ActiveRecord::Base
         :providers => { :model => Provider, :name => _("Providers"), :global=>false},
         :users => { :model => User, :name => _("Users"), :global=>true},
         :roles => { :model => Role, :name => _("Roles"), :global=>true},
-        :all => { :model => OpenStruct.new(:list_verbs =>{}, :list_tags=>[], :tags_for =>[], :tags => [], :no_tag_verbs =>[]), :name => _("All"), :global => false}
+        :all => { :model => DefaultModel, :name => _("All"), :global => false}
     }.with_indifferent_access
   end
 

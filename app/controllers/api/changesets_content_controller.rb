@@ -14,6 +14,8 @@ require 'rest_client'
 
 class Api::ChangesetsContentController < Api::ApiController
 
+  before_filter :find_product, :only => [:add_product, :remove_product, :add_package, :remove_package, :add_erratum,
+                                         :remove_erratum, :add_distribution, :remove_distribution]
   before_filter :find_changeset!
   before_filter :authorize
 
@@ -37,16 +39,14 @@ class Api::ChangesetsContentController < Api::ApiController
   api :POST, "/changesets/:changeset_id/products", "Add a product to a changeset"
   param :product_id, :number, :desc => "The id of the product which should be added"
   def add_product
-    product = Product.find_by_cp_id!(params[:product_id])
-    @changeset.add_product! product
-    render :text => _("Added product '%s'") % product.name, :status => 200
+    @changeset.add_product! @product
+    render :text => _("Added product '%s'") % @product.name, :status => 200
   end
 
   api :DELETE, "/changesets/:changeset_id/products/:id", "Removes a product from a changeset"
   param :content_id, :number, :desc => "The id of the product to remove"
   def remove_product
-    product = Product.find_by_cp_id!(params[:id])
-    render_after_removal @changeset.remove_product!(product),
+    render_after_removal @changeset.remove_product!(@product),
                          :success   => _("Removed product '%s'") % params[:id],
                          :not_found => _("Product %s not found in the changeset.") % params[:id]
   end
@@ -55,16 +55,14 @@ class Api::ChangesetsContentController < Api::ApiController
   param :name, String, :desc => "The nvrea of the package to add"
   param :product_id, :number, :desc => "The id of the product which contains the package"
   def add_package
-    product = Product.find_by_cp_id!(params[:product_id])
-    @changeset.add_package!(params[:name], product)
+    @changeset.add_package!(params[:name], @product)
     render :text => _("Added package '%s'") % params[:name], :status => 200
   end
 
   api :DELETE, "/changesets/:changeset_id/packages/:id", "Remove a package from a changeset"
   param :product_id, :number, :desc => "The id of the product which contains the package"
   def remove_package
-    product = Product.find_by_cp_id!(params[:product_id])
-    render_after_removal @changeset.remove_package!(params[:id], product),
+    render_after_removal @changeset.remove_package!(params[:id], @product),
                          :success   => _("Removed package '%s'") % params[:id],
                          :not_found => _("Package '%s' not found in the changeset") % params[:id]
   end
@@ -73,16 +71,14 @@ class Api::ChangesetsContentController < Api::ApiController
   param :erratum_id, :number, :desc => "The id of the errata to add"
   param :product_id, :number, :desc => "The product which contains the errata"
   def add_erratum
-    product = Product.find_by_cp_id!(params[:product_id])
-    @changeset.add_erratum!(params[:erratum_id], product)
+    @changeset.add_erratum!(params[:erratum_id], @product)
     render :text => _("Added erratum '%s'") % params[:erratum_id], :status => 200
   end
 
   api :DELETE, "/changesets/:changeset_id/errata/:id", "Remove an errata from a changeset"
   param :product_id, :number, :desc => "The product which contains the errata"
   def remove_erratum
-    product = Product.find_by_cp_id!(params[:product_id])
-    render_after_removal @changeset.remove_erratum!(params[:id], product),
+    render_after_removal @changeset.remove_erratum!(params[:id], @product),
                          :success   => _("Removed erratum '%s'") % params[:id],
                          :not_found => _("Erratum '%s' not found in the changeset") % params[:id]
   end
@@ -123,15 +119,13 @@ class Api::ChangesetsContentController < Api::ApiController
   param :distribution_id, :number, :desc => "The id of the distribution to add"
   param :product_id, :number, :desc => "The product which contains the distribution"
   def add_distribution
-    product = Product.find_by_cp_id!(params[:product_id])
-    @changeset.add_distribution!(params[:distribution_id], product)
+    @changeset.add_distribution!(params[:distribution_id], @product)
     render :text => _("Added distribution '%s'") % params[:distribution_id]
   end
 
   api :DELETE, "/changesets/:changeset_id/distributions/:id", "Remove a distribution from a changeset"
   def remove_distribution
-    product = Product.find_by_cp_id!(params[:product_id])
-    render_after_removal @changeset.remove_distribution!(params[:id], product),
+    render_after_removal @changeset.remove_distribution!(params[:id], @product),
                          :success   => _("Removed distribution '%s'") % params[:id],
                          :not_found => _("Distribution '%s' not found in the changeset") % params[:id]
   end
@@ -151,4 +145,14 @@ class Api::ChangesetsContentController < Api::ApiController
            end)
   end
 
+  def find_product
+    product_id = nil
+    if params[:product_id]
+      product_id = params[:product_id]
+    elsif params[:id]
+      product_id = params[:id]
+    end
+    @product = Product.find_by_cp_id(product_id) unless product_id.nil?
+    raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % product_id if @product.nil?
+  end
 end

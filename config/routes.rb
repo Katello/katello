@@ -119,6 +119,7 @@ Src::Application.routes.draw do
     collection do
       get :items
       post :upload
+      post :delete_manifest
       get :history
       get :history_items
     end
@@ -465,6 +466,7 @@ Src::Application.routes.draw do
       member do
         post :import_products
         post :import_manifest
+        post :delete_manifest
         post :refresh_products
         post :product_create
         get :products
@@ -566,6 +568,11 @@ Src::Application.routes.draw do
       resources :filters, :only => [:index, :create, :destroy, :show, :update]
 
       resources :gpg_keys, :only => [:index, :create]
+
+      resources :system_info_keys, :only => [:create, :index], :controller => :organization_system_info_keys do
+        get :apply, :on => :collection, :action => :apply_to_all_systems
+      end
+      match '/system_info_keys/:keyname' => 'organization_system_info_keys#destroy', :via => :delete
     end
 
     resources :changesets, :only => [:show, :update, :destroy] do
@@ -599,7 +606,6 @@ Src::Application.routes.draw do
 
     end
 
-    #resources :puppetclasses, :only => [:index]
     resources :ping, :only => [:index]
 
     resources :repositories, :only => [:show, :create, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
@@ -709,6 +715,22 @@ Src::Application.routes.draw do
     match '/consumers/:id/profile/' => 'systems#upload_package_profile', :via => :put
     match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
 
+      # foreman proxy --------------
+    if AppConfig.use_foreman
+      scope :module => 'foreman' do
+        resources :architectures, :except => [:new, :edit]
+        constraints(:id => /[^\/]+/) do
+          resources :domains, :except => [:new, :edit]
+        end
+        resources :config_templates, :except => [:new, :edit] do
+          collection do
+            get :revision
+            get :build_pxe_default
+          end
+        end
+      end
+    end
+
     # development / debugging support
     if Rails.env == "development"
       get 'status/memory'
@@ -718,10 +740,8 @@ Src::Application.routes.draw do
     match '/custom_info/:informable_type/:informable_id' => 'custom_info#create', :via => :post
     match '/custom_info/:informable_type/:informable_id' => 'custom_info#index', :via => :get
     match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#show', :via => :get
-    match '/custom_info/:informable_type/:informable_id/:keyname/:current_value' => 'custom_info#update', :via => :put
-    match '/custom_info/:informable_type/:informable_id/:keyname/:value' => 'custom_info#destroy', :via => :delete
+    match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#update', :via => :put
     match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#destroy', :via => :delete
-    match '/custom_info/:informable_type/:informable_id' => 'custom_info#destroy', :via => :delete
 
     match '*a', :to => 'errors#render_404'
   # end '/api' namespace

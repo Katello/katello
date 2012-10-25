@@ -69,13 +69,13 @@ $(document).ready(function() {
     var options = { };
     KT.panel.list.registerPage('subscriptions', options);
 
-    $('.edit_provider').live('submit', function(e) {
+    $('#upload_manifest').live('submit', function(e) {
         var ajax_handler;
         var active;
 
         // disable submit to avoid duplicate clicks
-        $('#provider_submit').val(i18n.uploading).attr("disabled", true);
-        $('.edit_provider').attr("disabled", true);
+        $('#upload_form_button').val(i18n.uploading).attr("disabled", true);
+        $('#upload_manifest').attr("disabled", true);
 
         ajax_handler = function(data) {
             // Refresh the "new" panel
@@ -91,4 +91,13 @@ $(document).ready(function() {
             error: ajax_handler
         });
     });
+
+    var delete_manifest_callback = function(evt, data, status, xhr){
+        var active = $('#new');
+        notices.checkNotices();
+        KT.panel.list.refresh_list();
+        KT.panel.panelAjax(active, active.attr("data-ajax_url"), $('#panel'), false);
+    };
+    $('#delete_manifest').live('ajax:success', delete_manifest_callback);
+    $('#delete_manifest').live('ajax:error', delete_manifest_callback);
 });

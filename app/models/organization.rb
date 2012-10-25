@@ -28,6 +28,7 @@ class Organization < ActiveRecord::Base
   has_many :permissions, :dependent => :destroy, :inverse_of => :organization
   has_many :sync_plans, :dependent => :destroy, :inverse_of => :organization
   has_many :system_groups, :dependent => :destroy, :inverse_of => :organization
+  serialize :system_info_keys, Array
 
   attr_accessor :statistics
 
@@ -38,6 +39,8 @@ class Organization < ActiveRecord::Base
   validates :name, :uniqueness => true, :presence => true, :katello_name_format => true
   validates :label, :uniqueness => true, :presence => true, :katello_label_format => true
   validates :description, :katello_description_format => true
+
+  before_save { |o| o.system_info_keys = Array.new unless o.system_info_keys }
 
   if AppConfig.use_cp
     before_validation :create_label, :on => :create
@@ -82,7 +85,7 @@ class Organization < ActiveRecord::Base
     def_error = _("Could not delete organization '%s'.")  % [self.name]
     if (current_org == self)
       [def_error, _("The current organization cannot be deleted. Please switch to a different organization before deleting.")]
-    elsif Organization.count == 1:
+    elsif (Organization.count == 1)
       [def_error, _("At least one organization must exist.")]
     end
   end
