@@ -55,6 +55,8 @@ unless File.exists?(File.join(kt_home, "src", "Gemfile"))
   exit 1
 end
 
+run_command("#{kt_home}/scripts/gemfile-lock-install KT_HOME=#{kt_home}")
+
 unless File.exists?(httpd_kt_conf_file_dev_bak)
   FileUtils.cp(httpd_kt_conf_file, httpd_kt_conf_file_dev_bak)
 end
