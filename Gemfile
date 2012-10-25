@@ -8,14 +8,14 @@ end
 # and use this version if possible. Also check Fedora version (usually higher).
 source 'http://rubygems.org'
 
-gem 'rails', '>= 3.0.10'
+gem 'rails', '~> 3.0.10'
 gem 'thin', '>= 1.2.8'
 gem 'tire', '>= 0.3.0', '< 0.4'
 gem 'json'
 gem 'rest-client', :require => 'rest_client'
-gem 'jammit'
+gem 'jammit', '>= 0.6.5'
 gem 'pg'
-gem 'rails_warden'
+gem 'rails_warden', '>= 0.5.2'
 gem 'net-ldap'
 gem 'oauth'
 gem 'ldap_fluff'
