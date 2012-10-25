@@ -3,41 +3,91 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 require 'minitest/autorun'
 require 'minitest/rails'
+require 'json'
 
 
 class MiniTest::Rails::ActiveSupport::TestCase
+  include FactoryGirl::Syntax::Methods
+
   self.use_transactional_fixtures = true
+  self.use_instantiated_fixtures = false
+  self.pre_loaded_fixtures = true
   self.fixture_path = File.expand_path('../fixtures/models', __FILE__)
+  self.set_fixture_class :environments => KTEnvironment
 end
 
 def configure_vcr
   require "vcr"
 
-  mode = ENV['mode'] ? ENV['mode'] : :all
+  mode = ENV['mode'] ? ENV['mode'] : :none
 
   VCR.configure do |c|
     c.cassette_library_dir = 'test/fixtures/vcr_cassettes'
     c.hook_into :webmock
+
+    begin
+      c.register_request_matcher :body_json do |request_1, request_2|
+        JSON.parse(request_1.body) == JSON.parse(request_2.body)
+      end
+    rescue => e
+      #ignore the warning thrown about this matcher already being resgistered
+    end
+
     c.default_cassette_options = { :record => mode.to_sym } #record_mode } #forcing all requests to Pulp currently
   end
 end
 
-def disable_glue_layers(services=[], models=[])
-  AppConfig.use_cp = false if services.include?('Candlepin')
-  AppConfig.use_pulp = false if services.include?('Pulp')
-  AppConfig.use_elasticsearch = false if services.include?('ElasticSearch')
+def configure_runcible
+  uri = URI.parse(AppConfig.pulp.url)
+  Runcible::Base.config = { 
+    :url      => "#{uri.scheme}://#{uri.host}",
+    :api_path => uri.path,
+    :user     => "admin",
+    :oauth    => {:oauth_secret => AppConfig.pulp.oauth_secret,
+                  :oauth_key    => AppConfig.pulp.oauth_key }
+  }
 
+  Runcible::Base.config[:logger] = 'stdout' if ENV['logging'] == "true"
+end
+
+def disable_glue_layers(services=[], models=[])
+  @@model_service_cache ||= {}
+  change = false
+
+  AppConfig.use_cp            = services.include?('Candlepin') ? false : true
+  AppConfig.use_pulp          = services.include?('Pulp') ? false : true
+  AppConfig.use_elasticsearch = services.include?('ElasticSearch') ? false : true
+
+  cached_entry = {:cp=>AppConfig.use_cp, :pulp=>AppConfig.use_pulp, :es=>AppConfig.use_elasticsearch}
   models.each do |model|
-    Object.send(:remove_const, model)
-    load "app/models/#{model.underscore}.rb"
+    if @@model_service_cache[model] != cached_entry
+      Object.send(:remove_const, model)
+      load "app/models/#{model.underscore}.rb"
+      @@model_service_cache[model] = cached_entry
+      change = true
+    end
+  end
+
+  FactoryGirl.reload if change
+end
+
+
+class ResourceTypeBackup
+  @@types_backup = ResourceType::TYPES.clone
+
+  def self.restore
+    ResourceType::TYPES.clear
+    ResourceType::TYPES.merge!(@@types_backup)
   end
 end
+
 
 class CustomMiniTestRunner
   class Unit < MiniTest::Unit
 
     def before_suites
       # code to run before the first test
+      configure_vcr
     end
 
     def after_suites
@@ -46,6 +96,12 @@ class CustomMiniTestRunner
 
     def _run_suites(suites, type)
       begin
+        if ENV['suite']
+          suites = suites.select do |suite|
+                     suite.name == ENV['suite']
+                   end
+        end
+
         before_suites
         super(suites, type)
       ensure
@@ -55,10 +111,12 @@ class CustomMiniTestRunner
 
     def _run_suite(suite, type)
       begin
+        User.current = nil  #reset User.current
         suite.before_suite if suite.respond_to?(:before_suite)
         super(suite, type)
       ensure
         suite.after_suite if suite.respond_to?(:after_suite)
+        ResourceTypeBackup.restore
       end
     end
 

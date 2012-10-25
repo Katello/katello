@@ -115,7 +115,6 @@ module IndexedModel
   def indexed_attributes
     attrs = self.attributes.keys.collect{|key| key.to_sym}
     attrs += self.lazy_attributes if self.respond_to?(:lazy_attributes)
-
     if self.class.class_index_options[:json]
       options = self.class.class_index_options[:json]
       if options[:only]

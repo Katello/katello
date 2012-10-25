@@ -6,8 +6,10 @@ describe RepositoriesController, :katello => true do
   include LocaleHelperMethods
   include OrganizationHelperMethods
   include ProductHelperMethods
+  include RepositoryHelperMethods
   include OrchestrationHelper
   include AuthorizationHelperMethods
+
   describe "rules" do
     before do
       disable_product_orchestration
@@ -25,6 +27,7 @@ describe RepositoriesController, :katello => true do
       Product.stub!(:find).and_return(@product)
       @repository = MemoStruct.new(:id =>1222)
     end
+
     describe "GET New" do
       let(:action) {:new}
       let(:req) { get :new, :provider_id => @provider.id, :product_id => @product.id}
@@ -40,7 +43,7 @@ describe RepositoriesController, :katello => true do
     describe "GET Edit" do
       before do
         Product.stub!(:find).and_return(@product)
-        Resources::Pulp::Repository.stub!(:find).and_return(@repository)
+        Runcible::Extensions::Repository.stub(:find).and_return(@repository)
       end
       let(:action) {:edit}
       let(:req) { get :edit, :provider_id => @provider.id, :product_id => @product.id, :id => @repository.id}
@@ -53,6 +56,7 @@ describe RepositoriesController, :katello => true do
       it_should_behave_like "protected action"
     end
   end
+
   describe "other-tests" do
     before (:each) do
       login_user
@@ -65,19 +69,18 @@ describe RepositoriesController, :katello => true do
       controller.stub!(:current_organization).and_return(@org)
       Resources::Candlepin::Content.stub(:create => {:id => "123"})
     end
-      let(:invalidrepo) do
-        {
-          :product_id => @product.id,
-          :provider_id => @product.provider.id,
-          :repo => {
-            :name => 'test',
-            :feed => 'www.foo.com'
-          }
+    let(:invalidrepo) do
+      {
+        :product_id => @product.id,
+        :provider_id => @product.provider.id,
+        :repo => {
+          :name => 'test',
+          :feed => 'www.foo.com'
         }
-      end
+      }
+    end
 
     describe "Create a Repo" do
-
       it "should reject invalid urls" do
         controller.should notify.error
         post :create, invalidrepo
@@ -105,11 +108,8 @@ describe RepositoriesController, :katello => true do
 
     context "Test update gpg" do
       before do
-        @repo = Repository.create!(:environment_product => @ep, :pulp_id => "pulp-id-#{rand 10**6}",
-                                 :name=>"newname#{rand 10**6}", :label=>"newname#{rand 10**6}",
-                                 :url => "http://fedorahosted org")
-
-        #product = @repo.product
+        @repo = new_test_repo(@ep, "newname#{rand 10**6}", "http://fedorahosted org")
+        product = @repo.product
         Repository.stub(:find).and_return(@repo)
         @repo.stub(:content).and_return(OpenStruct.new(:gpgUrl=>""))
         @repo.should_receive(:update_content).and_return(Candlepin::Content.new)

@@ -94,7 +94,6 @@ describe KTEnvironment do
       @organization.environments << @environment
       @organization.save!
       @environment.save!
-
       @first_product.save!
       @second_product.save!
       @third_product.save!
@@ -251,8 +250,8 @@ describe KTEnvironment do
       end
 
       def newly_promoted_content(*content_ids)
-        promoted_repos = content_ids.map{|id| mock(:content_id => id) }
-        @environment.stub_chain(:repositories, :enabled).and_return(promoted_repos)
+        promoted_repos = content_ids.map{|id| mock(:content_id => id, :enabled=>true) }
+        @environment.stub_chain(:repositories, :all).and_return(promoted_repos)
       end
     end
   end

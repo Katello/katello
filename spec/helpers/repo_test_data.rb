@@ -30,6 +30,7 @@ module RepoTestData
     :label => REPO_LABEL,
     :arch => 'architecture',
     :relative_path => "ACME_Corporation/Library/zoo/base",
+    :content_id=>'123234',
     :uri =>  "https://localhost/pulp/repos/ACME_Corporation/Library/zoo/base",
     :feed => 'url',
     "groupid" => [
@@ -42,8 +43,10 @@ module RepoTestData
     ],
     "distributors" => [
        {'config' => {'relative_url'=>"ACME_Corporation/Library/zoo/base"}}
+    ],
+    "importers" => [
     ]
-  }.with_indifferent_access
+    }.with_indifferent_access
 
   CLONED_PROPERTIES = {
     :pulp_id => CLONED_REPO_ID,
@@ -234,8 +237,7 @@ module RepoTestData
 
   # using methods instead of constants due to immutability
   def self.repo_package_groups
-    {
-      "123" =>
+    [
       {"name" => "katello",
        "conditional_package_names" => {},
        "mandatory_package_names" => [],
@@ -253,12 +255,11 @@ module RepoTestData
        "description" => "Katello related packages",
        "translated_name" => {}
       }
-    }.with_indifferent_access
+    ]
   end
 
   def self.repo_package_group_categories
-    {
-      "development" =>
+    [
       {"name" => "Development",
        "_id" => "development",
        "id" => "development",
@@ -269,7 +270,7 @@ module RepoTestData
        "description" => "",
        "packagegroupids" => ["123"],
        "translated_name" => {}}
-    }.with_indifferent_access
+    ]
   end
 
 

@@ -162,21 +162,6 @@ class User < ActiveRecord::Base
     u
   end
 
-
-
-  def allowed_organizations
-    #test for all orgs
-    perms = Permission.joins(:role).joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
-        where("roles_users.user_id = ?", self.id).where(:organization_id => nil).count()
-    return Organization.all if perms > 0
-
-    perms = Permission.joins(:role).joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
-        where("roles_users.user_id = ?", self.id).where("organization_id is NOT null")
-    #return the individual organizations
-    perms.collect { |perm| perm.organization }.uniq
-  end
-
-
   def disable_helptip(key)
     return if !self.helptips_enabled? #don't update helptips if user has it disabled
     return if not HelpTip.where(:key => key, :user_id => self.id).empty?

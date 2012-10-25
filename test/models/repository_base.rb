@@ -16,28 +16,30 @@ require 'minitest_helper'
 module RepositoryTestBase
   def self.included(base)
     base.class_eval do
-      set_fixture_class :environments => KTEnvironment
-      use_instantiated_fixtures = false
       fixtures :all
+    end
 
-      def self.before_suite
-        services  = ['Candlepin', 'Pulp', 'ElasticSearch']
-        models    = ['Repository', 'Package']
-        disable_glue_layers(services, models)
-      end
+    base.extend ClassMethods
+  end
+
+  module ClassMethods
+    def before_suite
+      services  = ['Candlepin', 'Pulp', 'ElasticSearch']
+      models    = ['Repository', 'Package']
+      disable_glue_layers(services, models)
     end
   end
 
   def setup
-    @fedora_17          = Repository.find(repositories(:fedora_17).id)
-    @fedora_17_dev      = Repository.find(repositories(:fedora_17_dev).id)
-    @fedora             = Product.find(products(:fedora).id)
-    @library            = KTEnvironment.find(environments(:library).id)
-    @dev                = KTEnvironment.find(environments(:dev).id)
-    @acme_corporation   = Organization.find(organizations(:acme_corporation).id)
-    @unassigned_gpg_key = GpgKey.find(gpg_keys(:unassigned_gpg_key).id)
-    @fedora_filter      = Filter.find(filters(:fedora_filter).id)
-    @admin              = User.find(users(:admin))
+    @fedora_17_x86_64     = Repository.find(repositories(:fedora_17_x86_64).id)
+    @fedora_17_x86_64_dev = Repository.find(repositories(:fedora_17_x86_64_dev).id)
+    @fedora               = Product.find(products(:fedora).id)
+    @library              = KTEnvironment.find(environments(:library).id)
+    @dev                  = KTEnvironment.find(environments(:dev).id)
+    @acme_corporation     = Organization.find(organizations(:acme_corporation).id)
+    @unassigned_gpg_key   = GpgKey.find(gpg_keys(:unassigned_gpg_key).id)
+    @fedora_filter        = Filter.find(filters(:fedora_filter).id)
+    @admin                = User.find(users(:admin))
   end
 
 end
