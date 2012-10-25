@@ -75,8 +75,9 @@ Requires:       rubygem(chunky_png)
 Requires:       rubygem(tire) >= 0.3.0
 Requires:       rubygem(tire) < 0.4
 Requires:       rubygem(ldap_fluff)
-Requires:       rubygem(apipie-rails)
-Requires:       rubygem(runcible)
+Requires:       rubygem(apipie-rails) >= 0.0.12
+Requires:       rubygem(foreman_api) >= 0.0.7
+
 Requires:       lsof
 
 %if 0%{?rhel} == 6
@@ -139,9 +140,9 @@ BuildRequires:       rubygem(sass)
 BuildRequires:       rubygem(tire) >= 0.3.0
 BuildRequires:       rubygem(tire) < 0.4
 BuildRequires:       rubygem(ldap_fluff)
-BuildRequires:       rubygem(apipie-rails)
+BuildRequires:       rubygem(apipie-rails) >= 0.0.12
 BuildRequires:       rubygem(redcarpet)
-
+BuildRequires:       rubygem(foreman_api)
 
 
 %description common
@@ -183,6 +184,7 @@ Katello connection classes for the Pulp backend
 BuildArch:      noarch
 Summary:         Katello connection classes for the Foreman backend
 Requires:        %{name}-common
+Requires:       rubygem(foreman_api)
 
 %description glue-foreman
 Katello connection classes for the Foreman backend
@@ -468,6 +470,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %ghost %attr(600, katello, katello) %{_sysconfdir}/%{name}/secret_token
 %dir %{homedir}/app
 %{homedir}/app/controllers
+%exclude %{homedir}/app/controllers/api/foreman
 %{homedir}/app/helpers
 %{homedir}/app/mailers
 %dir %{homedir}/app/models
@@ -490,6 +493,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/lib/notifications
 %dir %{homedir}/lib/resources
 %{homedir}/lib/resources/cdn.rb
+%{homedir}/lib/resources/abstract_model.rb
 %{homedir}/lib/tasks
 %exclude %{homedir}/lib/tasks/rcov.rake
 %exclude %{homedir}/lib/tasks/yard.rake
@@ -558,6 +562,11 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 
 %files glue-foreman
 %{homedir}/lib/resources/foreman.rb
+%{homedir}/lib/resources/foreman_model.rb
+%{homedir}/lib/resources/foreman_model.rb
+%{homedir}/app/models/foreman
+%{homedir}/app/models/glue/foreman
+%{homedir}/app/controllers/api/foreman
 
 %files all
 
@@ -570,6 +579,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/app/mailers
 %{homedir}/app/models
 %exclude %{homedir}/app/models/glue/*
+%exclude %{homedir}/app/models/foreman
 %{homedir}/app/stylesheets
 %{homedir}/app/views
 %{homedir}/autotest
@@ -586,7 +596,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/lib/resources
 %exclude %{homedir}/lib/resources/candlepin.rb
 %exclude %{homedir}/lib/resources/pulp.rb
-%exclude %{homedir}/lib/resources/foreman.rb
+%exclude %{homedir}/lib/resources/foreman_model.rb
 %{homedir}/lib/tasks
 %{homedir}/lib/util
 %{homedir}/lib/glue/queue.rb

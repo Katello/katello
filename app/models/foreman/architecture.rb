@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2012 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -10,16 +10,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class Api::PuppetclassesController < Api::ApiController
+class Foreman::Architecture < Resources::ForemanModel
 
-  skip_before_filter :authorize # ok - this controller is not used
+  attributes :name
 
-  def index
-    @klasses = Puppetclasses.all
-    respond_to do |format|
-      format.json { render :json => @klasses and return }
-      format.html { redirect_to puppetclasses_path and return }
-    end
+  def json_default_options
+    { :only => :name }
   end
 
 end

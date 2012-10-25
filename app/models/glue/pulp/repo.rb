@@ -22,7 +22,7 @@ module Glue::Pulp::Repo
       has_and_belongs_to_many :filters, :uniq => true
 
       lazy_accessor :pulp_repo_facts,
-                    :initializer => lambda {
+                    :initializer => lambda {|s|
                       if pulp_id
                         Runcible::Extensions::Repository.retrieve(pulp_id)
                       end

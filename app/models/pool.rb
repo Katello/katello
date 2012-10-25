@@ -25,7 +25,6 @@ class Pool < ActiveRecord::Base
     {:cp_id => self.cp_id}
   end
 
-
   # If the pool_json is passed in, then candlepin is not hit again to fetch it. This is for the case where
   # prior to this call the pool was already fetched.
   def self.find_pool(cp_id, pool_json=nil)

@@ -94,8 +94,10 @@ module Resources
           raise RestClient::RequestTimeout
         rescue RestClient::ResourceNotFound
           raise Errors::NotFound.new(_("CDN loading error: %s not found") % File.join(url, path))
-        rescue RestClient::Unauthorized, RestClient::Forbidden
+        rescue RestClient::Unauthorized
           raise Errors::SecurityViolation.new(_("CDN loading error: access denied to %s") % File.join(url, path))
+        rescue RestClient::Forbidden
+          raise Errors::SecurityViolation.new(_("CDN loading error: access forbidden to %s") % File.join(url, path))
         end
       end
 
