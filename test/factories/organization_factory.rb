@@ -7,5 +7,7 @@ FactoryGirl.define do
       label         "acme_corporation_label"
     end
 
+  factory :acme_corporation,  :traits => [:acme_corporation]
+
   end
 end
