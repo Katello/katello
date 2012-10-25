@@ -35,9 +35,8 @@ gem 'simple-navigation', '>= 3.3.4'
 gem 'gettext_i18n_rails'
 gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 
-# Reports
-gem 'ruport', '>=1.7.0', :git => 'https://github.com/ruport/ruport' 
-gem 'prawn'
+# reports
+gem 'ruport', '>=1.6.3'
 gem 'acts_as_reportable', '>=1.1.1'
 
 # Documentation
