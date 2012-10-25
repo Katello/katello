@@ -127,6 +127,8 @@ class SystemsController < ApplicationController
       end
     end
 
+  rescue ActiveRecord::RecordInvalid => error
+    raise error # handle error by ApplicationController's rescue_from
   rescue => error
     display_message = if error.respond_to?('response') && error.response.include?('displayMessage')
                          JSON.parse(error.response)['displayMessage']
@@ -183,9 +185,11 @@ class SystemsController < ApplicationController
       filter :terms, filters
     end
     render :json=>systems.map{|s|
-      label = _("%s (Registered: %s)") % [s.name, convert_time(format_time(Time.parse(s.created_at)))]
+      label = _("%{name} (Registered: %{time})") % {:name => s.name, :time => convert_time(format_time(Time.parse(s.created_at)))}
       {:label=>label, :value=>s.name, :id=>s.id}
     }
+  rescue Tire::Search::SearchRequestFailed => e
+    render :json=>Support.array_with_total
   end
 
 
@@ -283,8 +287,8 @@ class SystemsController < ApplicationController
     begin
       releases = @system.available_releases
     rescue => e
-      releases_error = e.to_str
-      Rails.logger.error e.to_str
+      releases_error = e.to_s
+      Rails.logger.error e.to_s
     end
     releases ||= []
     releases_error ||= nil
@@ -575,8 +579,8 @@ class SystemsController < ApplicationController
   def system_groups
     # retrieve the available groups that aren't currently assigned to the system and that haven't reached their max
     @system_groups = SystemGroup.where(:organization_id=>current_organization).
-        joins(:system_system_groups).
         select("system_groups.id, system_groups.name").
+        joins("LEFT OUTER JOIN system_system_groups ON system_system_groups.system_group_id = system_groups.id").
         group("system_groups.id, system_groups.name, system_groups.max_systems having count(system_system_groups.system_id) < system_groups.max_systems or system_groups.max_systems = -1").
         order(:name) - @system.system_groups
 

@@ -109,7 +109,7 @@ class Api::TemplatesController < Api::ApiController
   param :id, :number, :desc => "template numeric identifier", :required => true
   def destroy
     @template.destroy
-    render :text => _("Deleted system template '#{@template.name}'"), :status => 200
+    render :text => _("Deleted system template '%s'") % @template.name, :status => 200
   end
 
   api :POST, "/templates/import", "Import a template"
@@ -164,13 +164,13 @@ class Api::TemplatesController < Api::ApiController
 
   def find_environment
     @environment = KTEnvironment.find(params[:environment_id])
-    raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:environment_id]}'") if @environment.nil?
+    raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
     @environment
   end
 
   def find_template
     @template = SystemTemplate.find(params[:id])
-    raise HttpErrors::NotFound, _("Couldn't find template '#{params[:id]}'") if @template.nil?
+    raise HttpErrors::NotFound, _("Couldn't find template '%s'") % params[:id] if @template.nil?
     @template
   end
 end

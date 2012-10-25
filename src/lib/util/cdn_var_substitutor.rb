@@ -77,7 +77,11 @@ module Util
 
           if is_substituable path
             for_each_substitute_of_next_var substitutions, path do |new_substitution, new_path|
-              paths_with_vars[new_substitution] = new_path
+              begin
+                paths_with_vars[new_substitution] = new_path
+              rescue Errors::SecurityViolation => e
+                # Some paths may not be accessible
+              end
             end
           else
             prefixes_without_vars[substitutions] = path

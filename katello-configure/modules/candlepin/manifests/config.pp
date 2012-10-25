@@ -8,7 +8,6 @@ class candlepin::config {
 
   postgres::createuser { $candlepin::params::db_user:
     passwd => $candlepin::params::db_pass,
-    roles  => "CREATEDB",
     logfile  => "${katello::params::configure_log_base}/create-postgresql-candlepin-user.log",
     require => [ File["${katello::params::configure_log_base}"] ],
   }
@@ -61,7 +60,8 @@ class candlepin::config {
   }
 
   exec { "cpdb":
-    command => "/usr/share/candlepin/cpdb --create -u ${candlepin::params::db_user} -d ${candlepin::params::db_name} >> ${candlepin::params::cpdb_log} 2>&1 && touch /var/lib/katello/cpdb_done",
+    path    => "/bin:/usr/bin",
+    command => "/usr/share/candlepin/cpdb --create -u '${candlepin::params::db_user}' -d '${candlepin::params::db_name}' -p '${candlepin::params::db_pass}' >> ${candlepin::params::cpdb_log} 2>&1 && touch /var/lib/katello/cpdb_done",
     require => [
       File["${katello::params::configure_log_base}"],
       Postgres::Createuser[$candlepin::params::db_user],

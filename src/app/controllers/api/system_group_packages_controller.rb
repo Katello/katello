@@ -90,7 +90,7 @@ class Api::SystemGroupPackagesController < Api::ApiController
 
   def find_group
     @group = SystemGroup.find(params[:system_group_id])
-    raise HttpErrors::NotFound, _("Couldn't find system group '#{params[:system_group_id]}'") if @group.nil?
+    raise HttpErrors::NotFound, _("Couldn't find system group '%s'") % params[:system_group_id] if @group.nil?
     @group
   end
 

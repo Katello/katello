@@ -13,6 +13,10 @@ class katello {
           thin_start_port    => $katello::params::foreman_start_port,
           thin_process_count => $katello::params::foreman_process_count,
           configure_log_base => $katello::params::configure_log_base,
+          oauth_active       => true,
+          oauth_consumer_key => $katello::params::oauth_key,
+          oauth_consumer_secret => $katello::params::oauth_secret,
+          oauth_map_users   => true,
         }
       }
     }
@@ -26,4 +30,7 @@ class katello {
   include elasticsearch
   include katello::config
   include katello::service
+  if $katello::params::use_foreman {
+    Class["foreman"] -> Class["katello::config"]
+  }
 }

@@ -53,7 +53,7 @@ module Resources
       def self.default_headers
         {'accept' => 'application/json',
          'accept-language' => I18n.locale,
-         'content-type' => 'application/json'}.merge(::User.pulp_oauth_header)
+         'content-type' => 'application/json; charset=utf-8'}.merge(::User.pulp_oauth_header)
       end
 
       # some old Pulp API need text/plain content type

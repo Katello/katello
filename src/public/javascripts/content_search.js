@@ -23,7 +23,7 @@ $(document).ready(function() {
     KT.mapping = {products:['products'], repos:['products', 'repos'], packages:['products', 'repos', 'packages'],
                     errata:['products', 'repos', 'errata']};
 
-    search = KT.content_search(KT.available_environments);
+    var search = KT.content_search(KT.available_environments);
 
     $('#content_selector select').chosen();
 });
@@ -34,6 +34,7 @@ KT.content_search = function(paths_in){
     var browse_box, old_search_params, env_select, paths,
         cache = KT.content_search_cache,
         utils = KT.utils,
+        comparison_grid,
     subgrids = {
         repo_packages:{id:'repo_packages',
                        name:i18n.packages,
@@ -78,7 +79,9 @@ KT.content_search = function(paths_in){
         errata:   {method:"POST", url:KT.routes.errata_items_content_search_index_path(), include_search:true},
         packages: {method:"POST", url:KT.routes.packages_items_content_search_index_path(), include_search:true},
         repo_packages:{method:"GET", url:KT.routes.repo_packages_content_search_index_path(), include_search:false},
-        repo_errata: {method:"GET", url:KT.routes.repo_errata_content_search_index_path(), include_search:false}
+        repo_errata: {method:"GET", url:KT.routes.repo_errata_content_search_index_path(), include_search:false},
+        compare_packages: {method:"GET", url:KT.routes.repo_compare_packages_content_search_index_path(), include_search:false},
+        compare_errata: {method:"GET", url:KT.routes.repo_compare_errata_content_search_index_path(), include_search:false}
     };
 
 
@@ -410,11 +413,12 @@ KT.content_search = function(paths_in){
     };
 
     init();
+
     return {
         change_subgrid_type:change_subgrid_type,
         remove_subgrid: remove_subgrid,
         get_initial_environments: get_initial_environments,
-        get_initial_environment_ids:get_initial_environment_ids
+        get_initial_environment_ids:get_initial_environment_ids,
     }
 };
 

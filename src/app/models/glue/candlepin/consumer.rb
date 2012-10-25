@@ -23,26 +23,26 @@ module Glue::Candlepin::Consumer
       after_rollback :rollback_on_candlepin_create, :on => :create
 
       lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds, :installedProducts, :autoheal, :releaseVer, :serviceLevel,
-        :initializer => lambda {
+        :initializer => lambda {|s|
                           if uuid
                             consumer_json = Resources::Candlepin::Consumer.get(uuid)
                             convert_from_cp_fields(consumer_json)
                           end
                         }
-      lazy_accessor :entitlements, :initializer => lambda { Resources::Candlepin::Consumer.entitlements(uuid) }
-      lazy_accessor :pools, :initializer => lambda { entitlements.collect { |ent| Resources::Candlepin::Pool.find ent["pool"]["id"]} }
-      lazy_accessor :available_pools, :initializer => lambda { Resources::Candlepin::Consumer.available_pools(uuid, false) }
-      lazy_accessor :all_available_pools, :initializer => lambda { Resources::Candlepin::Consumer.available_pools(uuid, true) }
-      lazy_accessor :host, :initializer => lambda {
+      lazy_accessor :entitlements, :initializer => lambda {|s| Resources::Candlepin::Consumer.entitlements(uuid) }
+      lazy_accessor :pools, :initializer => lambda {|s| entitlements.collect { |ent| Resources::Candlepin::Pool.find ent["pool"]["id"]} }
+      lazy_accessor :available_pools, :initializer => lambda {|s| Resources::Candlepin::Consumer.available_pools(uuid, false) }
+      lazy_accessor :all_available_pools, :initializer => lambda {|s| Resources::Candlepin::Consumer.available_pools(uuid, true) }
+      lazy_accessor :host, :initializer => lambda {|s|
         host_attributes = Resources::Candlepin::Consumer.host(self.uuid)
         System.new(host_attributes) if host_attributes
       }
-      lazy_accessor :guests, :initializer => lambda {
+      lazy_accessor :guests, :initializer => lambda {|s|
         guests_attributes = Resources::Candlepin::Consumer.guests(self.uuid)
         guests_attributes.map { |attr| System.new(attr) }
       }
-      lazy_accessor :compliance, :initializer => lambda { Resources::Candlepin::Consumer.compliance(uuid) }
-      lazy_accessor :events, :initializer => lambda { Resources::Candlepin::Consumer.events(uuid) }
+      lazy_accessor :compliance, :initializer => lambda {|s| Resources::Candlepin::Consumer.compliance(uuid) }
+      lazy_accessor :events, :initializer => lambda {|s| Resources::Candlepin::Consumer.events(uuid) }
 
       validate :validate_cp_consumer
     end
@@ -230,6 +230,8 @@ module Glue::Candlepin::Consumer
       interface_set = []
       interfaces.uniq.each do |interface|
         addr = facts["net.interface.#{interface}.ipv4_address"]
+        # older subman versions report .ipaddr
+        addr ||= facts["net.interface.#{interface}.ipaddr"]
         interface_set << { :name => interface, :addr => addr } if addr != nil
       end
       interface_set
@@ -282,6 +284,10 @@ module Glue::Candlepin::Consumer
 
     def distribution
       "#{distribution_name} #{distribution_version}"
+    end
+
+    def memory
+      facts["dmi.memory.size"]
     end
 
     def entitlements_valid?

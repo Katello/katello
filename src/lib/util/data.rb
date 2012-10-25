@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2012 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -10,16 +10,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class Api::PuppetclassesController < Api::ApiController
+module Util
+  module Data
 
-  skip_before_filter :authorize # ok - this controller is not used
-
-  def index
-    @klasses = Puppetclasses.all
-    respond_to do |format|
-      format.json { render :json => @klasses and return }
-      format.html { redirect_to puppetclasses_path and return }
+    def self.array_with_indifferent_access variable
+      variable.map { |x| x.with_indifferent_access }
     end
-  end
 
+  end
 end

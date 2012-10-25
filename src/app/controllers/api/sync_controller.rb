@@ -61,7 +61,7 @@ class Api::SyncController < Api::ApiController
   def cancel
     if @obj.sync_state.to_s == PulpSyncStatus::Status::RUNNING.to_s
       @obj.cancel_sync
-      render :text => _("Canceled synchronization of %s: %s") % [@sync_of, @obj.id], :status => 200
+      render :text => _("Canceled synchronization of %{name}: %{id}") % {:name => @sync_of, :id => @obj.id}, :status => 200
     else
       render :text => _("No synchronization of the %s is currently running") % @sync_of, :status => 200
     end
@@ -88,20 +88,20 @@ class Api::SyncController < Api::ApiController
 
   def find_provider
     @provider = Provider.find(params[:provider_id])
-    raise HttpErrors::BadRequest, N_("Couldn't find provider '#{params[:provider_id]}'") if @provider.nil?
+    raise HttpErrors::BadRequest, N_("Couldn't find provider '%s'") % params[:provider_id] if @provider.nil?
     @provider
   end
 
   def find_product
     find_organization
     @product = @organization.products.find_by_cp_id(params[:product_id])
-    raise HttpErrors::NotFound, _("Couldn't find product with id '#{params[:product_id]}'") if @product.nil?
+    raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:product_id] if @product.nil?
     @product
   end
 
   def find_repository
     @repository = Repository.find(params[:repository_id])
-    raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:repository_id]}'") if @repository.nil?
+    raise HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repository.nil?
     @repository
   end
 

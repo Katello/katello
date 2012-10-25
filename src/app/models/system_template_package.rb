@@ -29,7 +29,7 @@ class PackageValidator < ActiveModel::Validator
       name = record.package_name
     end
 
-    record.errors[:base] <<  _("Package '%s' not found in the %s environment") % [name, env.name] if cnt == 0
+    record.errors[:base] <<  _("Package '%{package}' not found in the %{env} environment") % {:package => name, :env => env.name} if cnt == 0
   end
 end
 

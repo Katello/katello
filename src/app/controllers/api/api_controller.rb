@@ -27,8 +27,10 @@ class Api::ApiController < ActionController::Base
   rescue_from HttpErrors::WrappedError, :with => proc { |e| render_wrapped_exception(500, e) }
 
   rescue_from RestClient::ExceptionWithResponse, :with => :exception_with_response
-  rescue_from ActiveRecord::RecordInvalid, :with => :invalid_record
+  rescue_from ActiveRecord::RecordInvalid, :with => :process_invalid
+  rescue_from Resources::ForemanModel::Invalid, :with => :process_invalid
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+  rescue_from Resources::ForemanModel::NotFound, :with => :record_not_found
   rescue_from Errors::NotFound, :with => proc { |e| render_exception(404, e) }
 
   rescue_from HttpErrors::NotFound, :with => proc { |e| render_wrapped_exception(404, e) }
@@ -94,7 +96,7 @@ class Api::ApiController < ActionController::Base
   def find_optional_organization
     if params[:organization_id]
       @organization = Organization.first(:conditions => {:name => params[:organization_id]})
-      raise HttpErrors::NotFound, _("Couldn't find organization '#{params[:organization_id]}'") if @organization.nil?
+      raise HttpErrors::NotFound, _("Couldn't find organization '%s'") % params[:organization_id] if @organization.nil?
       @organization
     end
   end
@@ -141,10 +143,19 @@ class Api::ApiController < ActionController::Base
     render :text => pp_exception(e) , :status => 403
   end
 
-  def invalid_record(exception)
+  def process_invalid(exception)
     logger.error exception.class
     logger.debug exception.backtrace.join("\n")
-    exception.record.errors.each_pair do |c,e|
+    errors = case exception
+    when Resources::ForemanModel::Invalid
+      exception.resource.errors
+    when ActiveRecord::RecordInvalid
+      exception.record.errors
+    else
+      raise ArgumentError.new("Expected ForemanModel::Invalid or ActiveRecord::RecordInvalid exception.")
+    end
+
+    errors.each_pair do |c,e|
       logger.error "#{c}: #{e}"
     end
 

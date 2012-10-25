@@ -15,7 +15,7 @@
 # in this software or its documentation.
 #
 
-from katello.client.config import Config
+from katello.client.core.utils import get_katello_mode
 
 from katello.client.core import (
   activation_key,
@@ -43,7 +43,10 @@ from katello.client.core import (
   filters,
   gpg_key,
   system_group,
-  admin
+  admin,
+  architecture,
+  config_template,
+  domain
 )
 
 def setup_admin(katello_cmd):
@@ -77,6 +80,9 @@ def setup_admin(katello_cmd):
     org_cmd.add_command('subscriptions', organization.ShowSubscriptions())
     if mode == 'katello':
         org_cmd.add_command('uebercert', organization.GenerateDebugCert())
+    org_cmd.add_command("add_default_system_info", organization.AddDefaultSystemInfo())
+    org_cmd.add_command("remove_default_system_info", organization.RemoveDefaultSystemInfo())
+    org_cmd.add_command("apply_default_system_info", organization.ApplyDefaultSystemInfo())
     katello_cmd.add_command('org', org_cmd)
 
     user_cmd = user.User()
@@ -198,7 +204,6 @@ def setup_admin(katello_cmd):
         system_cmd.add_command('add_to_groups', system.AddSystemGroups())
         system_cmd.add_command('remove_from_groups', system.RemoveSystemGroups())
     system_cmd.add_command('add_custom_info', system_custom_info.AddCustomInfo())
-    system_cmd.add_command('view_custom_info', system_custom_info.ViewCustomInfo())
     system_cmd.add_command('update_custom_info', system_custom_info.UpdateCustomInfo())
     system_cmd.add_command('remove_custom_info', system_custom_info.RemoveCustomInfo())
     katello_cmd.add_command('system', system_cmd)
@@ -246,6 +251,8 @@ def setup_admin(katello_cmd):
     prov_cmd.add_command('info', provider.Info())
     prov_cmd.add_command('list', provider.List())
     prov_cmd.add_command('import_manifest', provider.ImportManifest())
+    if mode == 'headpin':
+        prov_cmd.add_command('delete_manifest', provider.DeleteManifest())
     if mode == 'katello':
         prov_cmd.add_command('create', provider.Update(create=True))
         prov_cmd.add_command('update', provider.Update())
@@ -298,10 +305,27 @@ def setup_admin(katello_cmd):
         admin_cmd.add_command('crl_regen', admin.CrlRegen())
         katello_cmd.add_command('admin', admin_cmd)
 
-def get_katello_mode():
-    Config()
-    mode = "katello"
-    path = Config.parser.get('server', 'path') or '/katello/api'
-    if "headpin" in path or "sam" in path:
-        mode = "headpin"
-    return mode
+    architecture_cmd = architecture.Architecture()
+    architecture_cmd.add_command('list', architecture.List())
+    architecture_cmd.add_command('info', architecture.Show())
+    architecture_cmd.add_command('create', architecture.Create())
+    architecture_cmd.add_command('update', architecture.Update())
+    architecture_cmd.add_command('delete', architecture.Delete())
+    katello_cmd.add_command('architecture', architecture_cmd)
+
+    configtemplate_cmd = config_template.ConfigTemplate()
+    configtemplate_cmd.add_command('list', config_template.List())
+    configtemplate_cmd.add_command('info', config_template.Info())
+    configtemplate_cmd.add_command('create', config_template.Create())
+    configtemplate_cmd.add_command('update', config_template.Update())
+    configtemplate_cmd.add_command('delete', config_template.Delete())
+    configtemplate_cmd.add_command('build_pxe_default', config_template.Build_Pxe_Default())
+    katello_cmd.add_command('config_template', configtemplate_cmd)
+
+    domain_cmd = domain.Domain()
+    domain_cmd.add_command('list', domain.List())
+    domain_cmd.add_command('info', domain.Info())
+    domain_cmd.add_command('create', domain.Create())
+    domain_cmd.add_command('update', domain.Update())
+    domain_cmd.add_command('delete', domain.Delete())
+    katello_cmd.add_command('domain', domain_cmd)

@@ -45,8 +45,8 @@ describe Provider do
 
   context "import_product_from_cp creates product with correct attributes" do
     before(:each) do
-      Glue::Candlepin::ProductContent.stub(:create)
-      Glue::Candlepin::ProductContent.stub(:new)
+      Candlepin::ProductContent.stub(:create)
+      Candlepin::ProductContent.stub(:new)
       Resources::Candlepin::Product.stub!(:create).and_return({:id => "product_id"})
       @provider = Provider.new({
         :name => 'test_provider',
@@ -151,7 +151,7 @@ describe Provider do
   describe "products refresh", :katello => true do
 
     def product_content(name)
-      Glue::Candlepin::ProductContent.new(
+      Candlepin::ProductContent.new(
         "content" => {
         "name" => name,
         "id" => name.hash,

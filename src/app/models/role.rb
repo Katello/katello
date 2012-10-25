@@ -54,7 +54,7 @@ class Role < ActiveRecord::Base
 
   def remove_ldap_group(group_name)
     ldap_group = self.ldap_group_roles.where(:ldap_group => group_name).first
-    raise Errors::NotFound.new(_("LDAP group '%s' associated to role '%s' was not found.") % [group_name, self.name]) unless ldap_group
+    raise Errors::NotFound.new(_("LDAP group '%{group}' associated to role '%{role}' was not found.") % {:group => group_name, :role => self.name}) unless ldap_group
     ldap_group.destroy
     self.users.each { |user| user.set_ldap_roles }
   end
@@ -187,8 +187,7 @@ class Role < ActiveRecord::Base
 
   def super_admin_check user
     if superadmin? && users.length == 1
-      message = _("Cannot dissociate user '%s' from '%s' role. Need at least one user in the '%s' role.") % [user.username,
-                                                                                                              name,name]
+      message = _("Cannot dissociate user '%{user}' from '%{role}' role. Need at least one user in the '%{role}' role.") % {:user => user.username, :role => name}
       errors[:base] << message
       raise  ActiveRecord::RecordInvalid, self
     end

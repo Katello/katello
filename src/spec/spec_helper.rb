@@ -10,6 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+$:.unshift(__FILE__, ".") #add  current path to the classpath
+
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
@@ -50,6 +52,11 @@ RSpec.configure do |config|
 
   config.after :all do
     Warden.test_reset!
+  end
+
+  # reset locale to English before each test
+  config.before :each do
+    I18n.locale = :en
   end
   
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures

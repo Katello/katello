@@ -103,7 +103,7 @@ class ErrataListTest(CLIActionTestCase):
         self.mock_options(self.OPTIONS_BY_ORG_AND_PRODUCT)
         self.run_action()
         self.module.get_environment.assert_called_once_with(self.OPTIONS_BY_ORG_AND_PRODUCT['org'], None)
-        self.module.get_product.assert_called_once_with(self.OPTIONS_BY_ORG_AND_PRODUCT['org'], self.OPTIONS_BY_ORG_AND_PRODUCT['product'])
+        self.module.get_product.assert_called_once_with(self.OPTIONS_BY_ORG_AND_PRODUCT['org'], self.OPTIONS_BY_ORG_AND_PRODUCT['product'], None, None)
         self.action.api.errata_filter.assert_called_once_with(repo_id=None, type_in=None, environment_id=self.ENV['id'], prod_id=self.PRODUCT['id'], severity=None)
 
     def test_it_supports_filtering_by_type(self):

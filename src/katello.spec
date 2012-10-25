@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.1.13
+Version:        1.2.1
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -64,7 +64,8 @@ Requires:       rubygem(simple-navigation) >= 3.3.4
 Requires:       rubygem(pg)
 Requires:       rubygem(delayed_job) >= 2.1.4
 Requires:       rubygem(acts_as_reportable) >= 1.1.1
-Requires:       rubygem(ruport) >= 1.6.3
+Requires:       rubygem(ruport) >= 1.7.0
+Requires:       rubygem(prawn)
 Requires:       rubygem(daemons) >= 1.1.4
 Requires:       rubygem(uuidtools)
 Requires:       rubygem(thin)
@@ -74,8 +75,9 @@ Requires:       rubygem(chunky_png)
 Requires:       rubygem(tire) >= 0.3.0
 Requires:       rubygem(tire) < 0.4
 Requires:       rubygem(ldap_fluff)
-Requires:       rubygem(apipie-rails)
-Requires:       rubygem(runcible)
+Requires:       rubygem(apipie-rails) >= 0.0.12
+Requires:       rubygem(foreman_api) >= 0.0.7
+
 Requires:       lsof
 
 %if 0%{?rhel} == 6
@@ -129,7 +131,8 @@ BuildRequires:       rubygem(simple-navigation) >= 3.3.4
 BuildRequires:       rubygem(pg)
 BuildRequires:       rubygem(delayed_job) >= 2.1.4
 BuildRequires:       rubygem(acts_as_reportable) >= 1.1.1
-BuildRequires:       rubygem(ruport) >= 1.6.3
+BuildRequires:       rubygem(ruport) >= 1.7.0
+BuildRequires:       rubygem(prawn)
 BuildRequires:       rubygem(daemons) >= 1.1.4
 BuildRequires:       rubygem(uuidtools)
 BuildRequires:       rubygem(thin)
@@ -137,9 +140,9 @@ BuildRequires:       rubygem(sass)
 BuildRequires:       rubygem(tire) >= 0.3.0
 BuildRequires:       rubygem(tire) < 0.4
 BuildRequires:       rubygem(ldap_fluff)
-BuildRequires:       rubygem(apipie-rails)
+BuildRequires:       rubygem(apipie-rails) >= 0.0.12
 BuildRequires:       rubygem(redcarpet)
-
+BuildRequires:       rubygem(foreman_api)
 
 
 %description common
@@ -181,6 +184,7 @@ Katello connection classes for the Pulp backend
 BuildArch:      noarch
 Summary:         Katello connection classes for the Foreman backend
 Requires:        %{name}-common
+Requires:       rubygem(foreman_api)
 
 %description glue-foreman
 Katello connection classes for the Foreman backend
@@ -207,7 +211,7 @@ A subscription management only version of Katello.
 Summary:        A meta-package to pull in all components for katello-headpin
 Requires:       katello-headpin
 Requires:       katello-configure
-Requires:       katello-cli-headpin
+Requires:       katello-cli
 Requires:       postgresql-server
 Requires:       postgresql
 Requires:       candlepin-tomcat6
@@ -262,6 +266,9 @@ Requires:        rubygem(js-routes)
 Requires:        rubygem(newrelic_rpm)
 Requires:        rubygem(logical-insight)
 Requires:        rubygem(rails-dev-boost)
+Requires:        rubygem(minitest)
+Requires:        rubygem(minitest-rails)
+Requires:        rubygem(minitest_tu_shim)
 
 %description devel
 Rake tasks and dependecies for Katello developers
@@ -304,6 +311,9 @@ testing.
 %setup -q
 
 %build
+
+#check for malformed gettext strings
+script/check-gettext.rb -m -i
 
 #copy converge-ui
 cp -R /usr/share/converge-ui-devel/* ./vendor/converge-ui
@@ -458,10 +468,14 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %attr(600, katello, katello)
 %{_bindir}/katello-*
 %ghost %attr(600, katello, katello) %{_sysconfdir}/%{name}/secret_token
+%dir %{homedir}/app
 %{homedir}/app/controllers
+%exclude %{homedir}/app/controllers/api/foreman
 %{homedir}/app/helpers
 %{homedir}/app/mailers
+%dir %{homedir}/app/models
 %{homedir}/app/models/*.rb
+%{homedir}/app/models/candlepin
 %{homedir}/app/stylesheets
 %{homedir}/app/views
 %{homedir}/autotest
@@ -472,11 +486,14 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/db/seeds.rb
 %{homedir}/integration_spec
 %{homedir}/lib/*.rb
+%dir %{homedir}/lib/glue
 %{homedir}/lib/glue/*.rb
-%{homedir}/lib/monkeys/*.rb
+%{homedir}/lib/monkeys
 %{homedir}/lib/navigation
 %{homedir}/lib/notifications
+%dir %{homedir}/lib/resources
 %{homedir}/lib/resources/cdn.rb
+%{homedir}/lib/resources/abstract_model.rb
 %{homedir}/lib/tasks
 %exclude %{homedir}/lib/tasks/rcov.rake
 %exclude %{homedir}/lib/tasks/yard.rake
@@ -504,6 +521,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %files common
 %doc README LICENSE
 %{_sbindir}/service-wait
+%dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 %config(noreplace) %{_sysconfdir}/%{name}/thin.yml
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
@@ -517,11 +535,14 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{_initddir}/%{name}-jobs
 %{_sysconfdir}/bash_completion.d/%{name}
 %{homedir}/log
+%dir %{homedir}/db
 %{homedir}/db/schema.rb
+%dir %{homedir}/lib
 %{homedir}/lib/util
 %{homedir}/script/service-wait
 
 %defattr(-, katello, katello)
+%dir %{homedir}
 %attr(750, katello, katello) %{_localstatedir}/log/%{name}
 %{datadir}
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production.log
@@ -541,17 +562,24 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 
 %files glue-foreman
 %{homedir}/lib/resources/foreman.rb
+%{homedir}/lib/resources/foreman_model.rb
+%{homedir}/lib/resources/foreman_model.rb
+%{homedir}/app/models/foreman
+%{homedir}/app/models/glue/foreman
+%{homedir}/app/controllers/api/foreman
 
 %files all
 
 %files headpin
 %attr(600, katello, katello)
 %{_bindir}/katello-*
+%dir %{homedir}/app
 %{homedir}/app/controllers
 %{homedir}/app/helpers
 %{homedir}/app/mailers
-%{homedir}/app/models/
+%{homedir}/app/models
 %exclude %{homedir}/app/models/glue/*
+%exclude %{homedir}/app/models/foreman
 %{homedir}/app/stylesheets
 %{homedir}/app/views
 %{homedir}/autotest
@@ -568,7 +596,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/lib/resources
 %exclude %{homedir}/lib/resources/candlepin.rb
 %exclude %{homedir}/lib/resources/pulp.rb
-%exclude %{homedir}/lib/resources/foreman.rb
+%exclude %{homedir}/lib/resources/foreman_model.rb
 %{homedir}/lib/tasks
 %{homedir}/lib/util
 %{homedir}/lib/glue/queue.rb
@@ -624,6 +652,345 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Oct 17 2012 Ivan Necas <inecas@redhat.com> 1.2.1-1
+- skip symlinks during gettext check (msuchy@redhat.com)
+- Moved trigger from body to document element. (gstoecke@redhat.com)
+- Moved binding of notice display event to document ready callback due to
+  different code path execution during login notifications.
+  (gstoecke@redhat.com)
+- Fixed the moving of the a.cancel_sync element (j.hadvig@gmail.com)
+- adding parallel_tests gem so our unit tests can use multiple CPUs
+  (mmccune@redhat.com)
+- 860952 - update Pool::find to not treat response as an array
+  (bbuckingham@redhat.com)
+- do not call pulp service script, call qpidd and mongodb directly
+  (msuchy@redhat.com)
+  (lzap+git@redhat.com)
+- package katello-common should own /etc/katello (msuchy@redhat.com)
+- package katello-common should own /usr/share/katello (msuchy@redhat.com)
+- package katello-common should own /usr/share/katello/lib (msuchy@redhat.com)
+- package katello should own /usr/share/katello/lib/resources
+  (msuchy@redhat.com)
+- package katello should own /usr/share/katello/lib/monkeys (msuchy@redhat.com)
+- package katello should own /usr/share/katello/app/models/glue
+  (msuchy@redhat.com)
+- package katello (and headpin) should own /usr/share/katello/app/models and
+  /usr/share/katello/app (msuchy@redhat.com)
+- katello-common should own directory /usr/share/katello/db (msuchy@redhat.com)
+- fixing - uninitialized constant Candlepin (lzap+git@redhat.com)
+- 862753 - fixing typo in template deletion (lzap+git@redhat.com)
+- gettext - fix syntax (inecas@redhat.com)
+- 860952 - do not call with_indifferent_access on Array (msuchy@redhat.com)
+  (witlessbird@gmail.com)
+- Added about link to Administer menu (daviddavis@redhat.com)
+- gettext - move the check to the start of RPM build phase (inecas@redhat.com)
+- fix for broken content update call and additional tests (dmitri@redhat.com)
+- A slew of changes around content updates. (dmitri@redhat.com)
+  (komidore64@gmail.com)
+- fixed failing db migrations (komidore64@gmail.com)
+- 859963 - Fixed bad css character (daviddavis@redhat.com)
+- gettext - add a checking script to find if there are note malformed gettext
+  stings (inecas@redhat.com)
+- Fix missing should in gpg controller spec (daviddavis@redhat.com)
+- Fixed gpg keys controller rspec (daviddavis@redhat.com)
+  (thomasmckay@redhat.com)
+- Fixed katello.spec for Ruport (j.hadvig@gmail.com)
+- gettext - get rid of all malformed interpolations in gettext strings
+  (inecas@redhat.com)
+- gettext - use named substitution in gettext with more variables
+  (inecas@redhat.com)
+- Fixed Gemfile for Ruport (j.hadvig@gmail.com)
+- 864654 - katello-headpin-all correction (jomara@redhat.com)
+- Fix handling of validation_errors in notices.js (daviddavis@redhat.com)
+- 847002, 864216 - Fixes content search row rendering issue in IE8, product
+  color row in IE8 and the path selector not being set to the proper location
+  in IE8. (ehelms@redhat.com)
+- 859329 - Fixed errors when editing gpg key (daviddavis@redhat.com)
+- Incorporated code review suggestions. (gstoecke@redhat.com)
+- Fencing SYNCHRONIZATION link on admin dropdown in headpin mode
+  (jomara@redhat.com)
+- 864565 - Removing duplicate repos from gpgkey show (daviddavis@redhat.com)
+- 864362-autocomplete - rescue bad searches in auto-complete fields
+  (thomasmckay@redhat.com)
+- Fixing Ruport depend. on Prawn (jhadvig@redhat.com)
+- Fixing Gemfile depend. (jhadvig@redhat.com)
+- Fixing Ruport dependencies (jhadvig@redhat.com)
+- Prawn gemfile and spec dependencies (jhadvig@redhat.com)
+- Prawn integration for PDF generation (j.hadvig@gmail.com)
+- fixing 'pt_BR' translations (msuchy@redhat.com)
+- merge katello.katello translation from CFSE (msuchy@redhat.com)
+- Merge branch 'master' of github.com:Katello/katello into 847002
+  (jrist@redhat.com)
+- 847002 - Fixes rendering issue in IE9 for nested content search results.
+  (ehelms@redhat.com)
+- Update to notice storage mechanism for automation testing framework.
+  (gstoecke@redhat.com)
+- Merge branch 'master' into notices (gstoecke@redhat.com)
+- 847002 - Fix for IE9 Changeset Environment Selector (jrist@redhat.com)
+- updating to allow use of local var from PR comment (mmccune@redhat.com)
+- switching our schema config names to match production and relaxing reset
+  (mmccune@redhat.com)
+- 825858 - use organizations.label instead of cp_key (inecas@redhat.com)
+- 859442 - systems - update query for adding system groups to system
+  (bbuckingham@redhat.com)
+  (bbuckingham@redhat.com)
+- 825858 - implementing proxy permissions (lzap+git@redhat.com)
+- 825858 - proxies permissions - removing comments (lzap+git@redhat.com)
+- fix for BZ 824581: gpg keys are now being updated (dmitri@redhat.com)
+- 862824 - load search results using where() manually (jsherril@redhat.com)
+- 859877 - ipaddr does not show up for old subman version (jomara@redhat.com)
+- Merge branch 'master' into notices (gstoecke@redhat.com)
+- Added tracking of notices for use in test automation framework.
+  (gstoecke@redhat.com)
+- requiring new minitest gems (jsherril@redhat.com)
+- 835586 - force the encoding in the header to be UTF8 so Pulp can decode
+  (mmccune@redhat.com)
+  (thomasmckay@redhat.com)
+- self. calling a private method (jomara@redhat.com)
+- self.installed_products != self.installedProducts (jomara@redhat.com)
+  (daviddavis@redhat.com)
+- Defensively checking installed product names; (jomara@redhat.com)
+- Show foreman packages on about page (daviddavis@redhat.com)
+- reverting accidental override (msuchy@redhat.com)
+  (thomasmckay@redhat.com)
+  (thomasmckay@redhat.com)
+- Removing ANY SYSTEM FACT: from system search list (jomara@redhat.com)
+- Resetting locale to English before each test (daviddavis@redhat.com)
+- Fixed rspec translation missing failures (daviddavis@redhat.com)
+- Making systems searchable on installed products (jomara@redhat.com)
+- ignore fuzzy and obsolete translations (msuchy@redhat.com)
+- Fixed broken label rspec tests (davidd@scimedsolutions.com)
+- Make string more translator friendly (msuchy@redhat.com)
+- add missing apostroph (msuchy@redhat.com)
+- unify string "Removed repository" (msuchy@redhat.com)
+- unify string "Couldn't find user role" (msuchy@redhat.com)
+- unify string "Couldn't find user" (msuchy@redhat.com)
+- unify string "Couldn't find template" (msuchy@redhat.com)
+- unify string "Couldn't find system group" (msuchy@redhat.com)
+- unify string "Couldn't find system" (msuchy@redhat.com)
+- unify string "Couldn't find repository" (msuchy@redhat.com)
+- unify string "Couldn't find product with id" (msuchy@redhat.com)
+- unify string "Couldn't find organization" (msuchy@redhat.com)
+- unify string "Couldn't find environment" (msuchy@redhat.com)
+- unify string "Couldn't find changeset" (msuchy@redhat.com)
+- unify string "Couldn't find activation key" (msuchy@redhat.com)
+- unify string "Added repository" (msuchy@redhat.com)
+- unify string "Added distribution" (msuchy@redhat.com)
+  (bbuckingham@redhat.com)
+- 803702 - switch back to searching in the API by name and not label
+  (mmccune@redhat.com)
+- 824581 - Fixing bug resulting from bad fix (davidd@scimedsolutions.com)
+- 808581 - Stack traces logged to production.log for user-level validation
+  errors (pchalupa@redhat.com)
+  ch/bug/857230-mouse_over_errata_item_displays_error (kontakt@pitr.ch)
+- 860251 - update the location of favicon.png (inecas@redhat.com)
+- fix for BZ852352: changeset type is now being pre-selected depending on user
+  selection of 'Deletion from' or 'Promotion to' (dmitri@redhat.com)
+- 767297 - Removed OS information (davidd@scimedsolutions.com)
+- rails-dev-boost - removing whitespace (mmccune@redhat.com)
+- rails-dev-boost - moving to own group and adding RPM requires
+  (mmccune@redhat.com)
+- BZ 835875: removed a commented-out line of code (dmitri@redhat.com)
+- 859415 - object labels - modify ui to assign a default label, if not
+  specified (bbuckingham@redhat.com)
+- 858360 - Making katello-upgrade START services after upgrade is complete
+  (jomara@redhat.com)
+- rails-dev-boost - adding rails-dev-boost gem (mmccune@redhat.com)
+- 859409 - Fix for focus on org switcher drop down. (jrist@redhat.com)
+- 859604 - Fixed search results total bug (davidd@scimedsolutions.com)
+- 859784 - Missing template error (davidd@scimedsolutions.com)
+- 857576 - Added api filter update test (davidd@scimedsolutions.com)
+- fix for BZ 857031: notifications are being shown now when a system gets added
+  to/removed from a group (dmitri@redhat.com)
+- 857576 - Package filter name can be edited by cli
+  (davidd@scimedsolutions.com)
+- fixed an inadvertent spec test change (thomasmckay@redhat.com)
+- fix for BZ 860702: show systems belonging to system groups and those not in
+  any on 'Systems' screen (dmitri@redhat.com)
+  (thomasmckay@redhat.com)
+- introducing katello-utils with katello-disconnected script
+  (lzap+git@redhat.com)
+- 767297 - Worked on about page and added spec (davidd@scimedsolutions.com)
+- 860421 - Not verifying ldap roles for auth-less API calls (jomara@redhat.com)
+- 767297 - Create an about page (davidd@scimedsolutions.com)
+- release-version - display message when no available release version choices
+  or an error occurred fetching them (thomasmckay@redhat.com)
+- 824581 - Fixed bug where gpgkey wasn't getting set
+  (davidd@scimedsolutions.com)
+- Fixed code formating issue in migration (davidd@scimedsolutions.com)
+- 832141 - Searching a system via 'By Environments' sub-tab doesn't save the
+  recent search in history (pajkycz@gmail.com)
+- 857230 - Mouse over errata item displays error in UI Content Search
+  (pchalupa@redhat.com)
+- it is now impossible to delete a provider if one (or more) of its
+  repositories or products has been promoted (dmitri@redhat.com)
+- 845041 - UI - Exact Errata search in content search does not return result
+  (pajkycz@gmail.com)
+- Hide 'new changeset' button when it should not be used (pajkycz@gmail.com)
+- 856227 - set the height of the tabel row in the products_table to 32px
+  (j.hadvig@gmail.com)
+- 848438 - Content search auto-complete should enable the 'Add' button after
+  typing full content name. (pajkycz@gmail.com)
+- List of sync plans added (pajkycz@gmail.com)
+- Always use environment when requesting repo (pajkycz@gmail.com)
+- 806383 - [RFE] As the SE administrator I want to see all active and scheduled
+  sync tasks for all organizations in one place (pajkycz@gmail.com)
+
+* Mon Oct 15 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.15-1
+- Added about link to Administer menu
+
+* Fri Oct 12 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.14-1
+- Merge pull request #845 from xsuchy/pull-req-rpm
+- package katello-common should own /etc/katello
+- package katello-common should own /usr/share/katello
+- package katello-common should own /usr/share/katello/lib
+- package katello should own /usr/share/katello/lib/resources
+- package katello should own /usr/share/katello/lib/monkeys
+- package katello should own /usr/share/katello/app/models/glue
+- package katello (and headpin) should own /usr/share/katello/app/models and
+  /usr/share/katello/app
+- katello-common should own directory /usr/share/katello/db
+- Merge pull request #842 from lzap/new-cli-test
+- fixing - uninitialized constant Candlepin
+- 862753 - fixing typo in template deletion
+- 860952 - do not call with_indifferent_access on Array
+- Merge pull request #836 from witlessbird/content-updates
+- Merge pull request #825 from jhadvig/prawn_integration
+- fix for broken content update call and additional tests
+- A slew of changes around content updates.
+- Merge pull request #830 from daviddavis/859963
+- Merge pull request #832 from komidore64/busted_migration
+  (komidore64@gmail.com)
+- fixed failing db migrations (komidore64@gmail.com)
+- 859963 - Fixed bad css character
+- Fix missing should in gpg controller spec
+- Fixed gpg keys controller rspec
+- Merge pull request #819 from thomasmckay/864362-autocomplete
+- Merge pull request #823 from daviddavis/859329
+- Fixed katello.spec for Ruport
+- Fixed Gemfile for Ruport
+- Merge pull request #826 from jsomara/864654
+- 864654 - katello-headpin-all correction
+- Fix handling of validation_errors in notices.js
+- Merge pull request #821 from knowncitizen/847002
+- Merge pull request #814 from ehelms/bug-847002
+- 847002, 864216 - Fixes content search row rendering issue in IE8, product
+  color row in IE8 and the path selector not being set to the proper location
+  in IE8.
+- 859329 - Fixed errors when editing gpg key
+- Merge pull request #801 from gstoeckel/notices
+- Incorporated code review suggestions.
+- Merge pull request #822 from jsomara/navfence
+- Fencing SYNCHRONIZATION link on admin dropdown in headpin mode
+- 864565 - Removing duplicate repos from gpgkey show
+- 864362-autocomplete - rescue bad searches in auto-complete fields
+- Fixing Ruport depend. on Prawn
+- Fixing Gemfile depend.
+- Fixing Ruport dependencies
+- Prawn gemfile and spec dependencies
+- Prawn integration for PDF generation
+- fixing 'pt_BR' translations
+- merge katello.katello translation from CFSE
+- Merge branch 'master' of github.com:Katello/katello into 847002
+- 847002 - Fixes rendering issue in IE9 for nested content search results.
+- Update to notice storage mechanism for automation testing framework.
+- Merge branch 'master' into notices
+- 847002 - Fix for IE9 Changeset Environment Selector
+- updating to allow use of local var from PR comment
+- switching our schema config names to match production and relaxing reset
+- 825858 - use organizations.label instead of cp_key
+- 859442 - systems - update query for adding system groups to system
+- Merge pull request #799 from mccun934/835586-encoding-fix
+- Merge pull request #805 from witlessbird/824581
+- Merge pull request #646 from Pajk/hide_new_changeset_button
+- Merge pull request #802 from jsomara/859877
+- Merge pull request #804 from jlsherrill/862824
+- Merge pull request #734 from daviddavis/code-format
+- 825858 - implementing proxy permissions
+- 825858 - proxies permissions - removing comments
+- fix for BZ 824581: gpg keys are now being updated
+- 862824 - load search results using where() manually
+- 859877 - ipaddr does not show up for old subman version
+- Merge branch 'master' into notices
+- Added tracking of notices for use in test automation framework.
+- requiring new minitest gems
+- 835586 - force the encoding in the header to be UTF8 so Pulp can decode
+- Merge pull request #560 from Pajk/806383
+- Merge pull request #794 from jsomara/esinstalledproductfix
+- self. calling a private method
+- self.installed_products != self.installedProducts
+- Merge pull request #793 from jsomara/esinstalledproductfix
+- Defensively checking installed product names;
+- Show foreman packages on about page
+- reverting accidental override
+- Merge pull request #767 from witlessbird/852352
+- Merge pull request #772 from xsuchy/pull-req-transdup2
+- Merge pull request #777 from jsomara/installedproducts
+- Merge pull request #785 from jsomara/anysystemfact
+- Merge pull request #748 from pitr-ch/bug/808581-Stack_traces_in_log
+- Removing ANY SYSTEM FACT: from system search list
+- Resetting locale to English before each test
+- Fixed rspec translation missing failures
+- Making systems searchable on installed products
+- Merge pull request #774 from xsuchy/pull-req-fuzzy
+- ignore fuzzy and obsolete translations
+- Fixed broken label rspec tests
+- Make string more translator friendly
+- add missing apostroph
+- unify string "Removed repository"
+- unify string "Couldn't find user role"
+- unify string "Couldn't find user"
+- unify string "Couldn't find template"
+- unify string "Couldn't find system group"
+- unify string "Couldn't find system"
+- unify string "Couldn't find repository"
+- unify string "Couldn't find product with id"
+- unify string "Couldn't find organization"
+- unify string "Couldn't find environment"
+- unify string "Couldn't find changeset"
+- unify string "Couldn't find activation key"
+- unify string "Added repository"
+- unify string "Added distribution"
+- Merge pull request #622 from Pajk/848438
+- Merge pull request #770 from mccun934/803702-org-label-3
+- 803702 - switch back to searching in the API by name and not label
+- 824581 - Fixing bug resulting from bad fix
+- 808581 - Stack traces logged to production.log for user-level validation
+  errors
+- Merge pull request #702 from witlessbird/835875
+- Merge pull request #729 from daviddavis/bz824581
+- Merge pull request #720 from pitr-
+  ch/bug/857230-mouse_over_errata_item_displays_error
+- 860251 - update the location of favicon.png
+- Merge pull request #759 from bbuckingham/fork-859415
+- fix for BZ852352: changeset type is now being pre-selected depending on user
+  selection of 'Deletion from' or 'Promotion to'
+- Merge pull request #738 from daviddavis/about
+- Merge pull request #756 from knowncitizen/859409
+- 767297 - Removed OS information
+- Merge pull request #757 from mccun934/add-dev-boost
+- rails-dev-boost - removing whitespace
+- rails-dev-boost - moving to own group and adding RPM requires
+- BZ 835875: removed a commented-out line of code
+- 859415 - object labels - modify ui to assign a default label, if not
+  specified
+- rails-dev-boost - adding rails-dev-boost gem
+- 859409 - Fix for focus on org switcher drop down.
+- 767297 - Worked on about page and added spec
+- 767297 - Create an about page
+- 824581 - Fixed bug where gpgkey wasn't getting set
+- Fixed code formating issue in migration
+- 857230 - Mouse over errata item displays error in UI Content Search
+- it is now impossible to delete a provider if one (or more) of its
+  repositories or products has been promoted
+- Hide 'new changeset' button when it should not be used
+- 848438 - Content search auto-complete should enable the 'Add' button after
+  typing full content name.
+- List of sync plans added
+- Always use environment when requesting repo
+- 806383 - [RFE] As the SE administrator I want to see all active and scheduled
+  sync tasks for all organizations in one place
+
 * Thu Sep 27 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.13-1
 - 858360 - Making katello-upgrade START services after upgrade is complete
   (jomara@redhat.com)

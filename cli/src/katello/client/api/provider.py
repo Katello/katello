@@ -99,6 +99,12 @@ class ProviderAPI(KatelloAPI):
         result = self.server.POST(path, params, multipart=True)[1]
         return result
 
+
+    def delete_manifest(self, provId):
+        path = "/api/providers/%s/delete_manifest" % u_str(provId)
+        return self.server.POST(path, {})[1]
+
+
     def refresh_products(self, provId):
 
         path = "/api/providers/%s/refresh_products" % u_str(provId)

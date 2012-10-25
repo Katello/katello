@@ -9,6 +9,6 @@ class ChangesetPackages < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :changesets_packages
+    drop_table :changeset_packages
   end
 end

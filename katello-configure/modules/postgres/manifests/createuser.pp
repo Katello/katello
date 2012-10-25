@@ -1,12 +1,8 @@
 # Create a Postgres user
-define postgres::createuser($passwd, $roles = "", $logfile) {
-  sqlexec{ "createuser-$name":
-    username => $postgres::params::user,
-    passfile => $postgres::params::password_file,
-    database => "postgres",
-    sql      => "CREATE ROLE ${name} WITH LOGIN PASSWORD '${passwd}' ${roles};",
-    sqlcheck => "\"SELECT usename FROM pg_user WHERE usename = '${name}'\" | grep ${name}",
-    require  => Exec["wait-for-postgresql"],
-    logfile  => $logfile,
+define postgres::createuser($passwd, $logfile) {
+  exec { "createuser-$name":
+    path     => "/bin:/usr/bin",
+    command  => "su - postgres -c \"psql postgres -c \\\"SELECT usename FROM pg_user WHERE usename = '${name}'\\\" | grep ${name} || ( yes '${passwd}' | createuser -P --createdb --no-superuser --no-createrole '${name}'; )\" >> $logfile 2>&1",
+    require  => Class["postgres::service"],
   }
 }

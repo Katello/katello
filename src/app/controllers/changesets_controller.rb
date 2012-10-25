@@ -99,7 +99,7 @@ class ChangesetsController < ApplicationController
 
   def new
     @changeset = Changeset.new
-    render :partial=>"new", :layout => "tupane_layout"
+    render :partial=>"new", :layout => "tupane_layout", :locals => {:changeset_type => params[:changeset_type]}
   end
 
   def create
@@ -245,9 +245,9 @@ class ChangesetsController < ApplicationController
     else
       @changeset.apply :notify => true, :async => true
       if @changeset.promotion?
-        notify.success _("Started content promotion to %s environment using '%s'") % [@environment.name, @changeset.name]
+        notify.success _("Started content promotion to %{env} environment using '%{changeset}'") % {:env => @environment.name, :changeset => @changeset.name}
       else
-        notify.success _("Started content deletion from %s environment using '%s'") % [@environment.name, @changeset.name]
+        notify.success _("Started content deletion from %{env} environment using '%{changeset}'") % {:env => @environment.name, :changeset => @changeset.name}
       end
       # remove user edit tracking for this changeset
       ChangesetUser.destroy_all(:changeset_id => @changeset.id)

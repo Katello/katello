@@ -96,6 +96,7 @@ Src::Application.routes.draw do
   get  "sync_schedules/index"
   post "sync_schedules/apply"
 
+  get "sync_management/manage"
   get "sync_management/index"
   post "sync_management/sync"
   get  "sync_management/sync_status"
@@ -118,6 +119,7 @@ Src::Application.routes.draw do
     collection do
       get :items
       post :upload
+      post :delete_manifest
       get :history
       get :history_items
     end
@@ -464,6 +466,7 @@ Src::Application.routes.draw do
       member do
         post :import_products
         post :import_manifest
+        post :delete_manifest
         post :refresh_products
         post :product_create
         get :products
@@ -565,6 +568,11 @@ Src::Application.routes.draw do
       resources :filters, :only => [:index, :create, :destroy, :show, :update]
 
       resources :gpg_keys, :only => [:index, :create]
+
+      resources :system_info_keys, :only => [:create, :index], :controller => :organization_system_info_keys do
+        get :apply, :on => :collection, :action => :apply_to_all_systems
+      end
+      match '/system_info_keys/:keyname' => 'organization_system_info_keys#destroy', :via => :delete
     end
 
     resources :changesets, :only => [:show, :update, :destroy] do
@@ -598,7 +606,6 @@ Src::Application.routes.draw do
 
     end
 
-    #resources :puppetclasses, :only => [:index]
     resources :ping, :only => [:index]
 
     resources :repositories, :only => [:show, :create, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
@@ -681,37 +688,48 @@ Src::Application.routes.draw do
 
     end
 
-    # support for rhsm --------------------------------------------------------
+    # subscription-manager support
     match '/consumers' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
     match '/hypervisors' => 'systems#hypervisors_update', :via => :post
     resources :consumers, :controller => 'systems'
     match '/owners/:organization_id/environments' => 'environments#index', :via => :get
-    match '/owners/:organization_id/pools' => 'candlepin_proxies#get', :via => :get
-    match '/owners/:organization_id/servicelevels' => 'candlepin_proxies#get', :via => :get
+    match '/owners/:organization_id/pools' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_pools_path
+    match '/owners/:organization_id/servicelevels' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_servicelevels_path
     match '/environments/:environment_id/consumers' => 'systems#index', :via => :get
     match '/environments/:environment_id/consumers' => 'systems#create', :via => :post
     match '/consumers/:id' => 'systems#regenerate_identity_certificates', :via => :post
     match '/users/:username/owners' => 'users#list_owners', :via => :get
-
-    # proxies -------------------
-      # candlepin proxy ---------
-    match '/consumers/:id/certificates' => 'candlepin_proxies#get', :via => :get
-    match '/consumers/:id/release' => 'candlepin_proxies#get', :via => :get
-    match '/consumers/:id/certificates/serials' => 'candlepin_proxies#get', :via => :get
-    match '/consumers/:id/entitlements' => 'candlepin_proxies#get', :via => :get
-    match '/consumers/:id/entitlements' => 'candlepin_proxies#post', :via => :post
-    match '/consumers/:id/entitlements' => 'candlepin_proxies#delete', :via => :delete
-    match '/consumers/:id/entitlements/dry-run' => 'candlepin_proxies#get', :via => :get
-    match '/consumers/:id/owner' => 'candlepin_proxies#get', :via => :get
-    match '/consumers/:consumer_id/certificates/:id' => 'candlepin_proxies#delete', :via => :delete
-    match '/consumers/:id/deletionrecord' => 'candlepin_proxies#delete', :via => :delete
-    match '/pools' => 'candlepin_proxies#get', :via => :get
-    match '/entitlements/:id' => 'candlepin_proxies#get', :via => :get
-    match '/subscriptions' => 'candlepin_proxies#post', :via => :post
-
-      # pulp proxy --------------
+    match '/consumers/:id/certificates' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_certificates_path
+    match '/consumers/:id/release' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_releases_path
+    match '/consumers/:id/certificates/serials' => 'candlepin_proxies#get', :via => :get, :as => :proxy_certificate_serials_path
+    match '/consumers/:id/entitlements' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_entitlements_path
+    match '/consumers/:id/entitlements' => 'candlepin_proxies#post', :via => :post, :as => :proxy_consumer_entitlements_post_path
+    match '/consumers/:id/entitlements' => 'candlepin_proxies#delete', :via => :delete, :as => :proxy_consumer_entitlements_delete_path
+    match '/consumers/:id/entitlements/dry-run' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_dryrun_path
+    match '/consumers/:id/owner' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_owners_path
+    match '/consumers/:consumer_id/certificates/:id' => 'candlepin_proxies#delete', :via => :delete, :as => :proxy_consumer_certificates_delete_path
+    match '/consumers/:id/deletionrecord' => 'candlepin_proxies#delete', :via => :delete, :as => :proxy_consumer_deletionrecord_delete_path
+    match '/pools' => 'candlepin_proxies#get', :via => :get, :as => :proxy_pools_path
+    match '/entitlements/:id' => 'candlepin_proxies#get', :via => :get, :as => :proxy_entitlements_path
+    match '/subscriptions' => 'candlepin_proxies#post', :via => :post, :as => :proxy_subscriptions_post_path
     match '/consumers/:id/profile/' => 'systems#upload_package_profile', :via => :put
     match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
+
+      # foreman proxy --------------
+    if AppConfig.use_foreman
+      scope :module => 'foreman' do
+        resources :architectures, :except => [:new, :edit]
+        constraints(:id => /[^\/]+/) do
+          resources :domains, :except => [:new, :edit]
+        end
+        resources :config_templates, :except => [:new, :edit] do
+          collection do
+            get :revision
+            get :build_pxe_default
+          end
+        end
+      end
+    end
 
     # development / debugging support
     if Rails.env == "development"
@@ -722,10 +740,8 @@ Src::Application.routes.draw do
     match '/custom_info/:informable_type/:informable_id' => 'custom_info#create', :via => :post
     match '/custom_info/:informable_type/:informable_id' => 'custom_info#index', :via => :get
     match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#show', :via => :get
-    match '/custom_info/:informable_type/:informable_id/:keyname/:current_value' => 'custom_info#update', :via => :put
-    match '/custom_info/:informable_type/:informable_id/:keyname/:value' => 'custom_info#destroy', :via => :delete
+    match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#update', :via => :put
     match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#destroy', :via => :delete
-    match '/custom_info/:informable_type/:informable_id' => 'custom_info#destroy', :via => :delete
 
     match '*a', :to => 'errors#render_404'
   # end '/api' namespace

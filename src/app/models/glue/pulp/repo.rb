@@ -22,7 +22,7 @@ module Glue::Pulp::Repo
       has_and_belongs_to_many :filters, :uniq => true
 
       lazy_accessor :pulp_repo_facts,
-                    :initializer => lambda {
+                    :initializer => lambda {|s|
                       if pulp_id
                         Runcible::Extensions::Repository.retrieve(pulp_id)
                       end
@@ -156,17 +156,18 @@ module Glue::Pulp::Repo
       true
     end
 
-    def del_content
-      return true unless self.content_id
-      if other_repos_with_same_product_and_content.empty?
-        self.product.remove_content_by_id self.content_id
-        if other_repos_with_same_content.empty? && !self.product.provider.redhat_provider?
-          Resources::Candlepin::Content.destroy(self.content_id)
-        end
-      end
-
-      true
+    def other_repos_with_same_product_and_content
+      Repository.where(:content_id=>self.content_id).in_product(self.product).pluck(:pulp_id) - [self.pulp_id]
     end
+
+    def other_repos_with_same_content
+      Repository.where(:content_id=>self.content_id).pluck(:pulp_id) - [self.pulp_id]
+    end
+
+    def destroy_repo_orchestration
+      pre_queue.create(:name => "delete pulp repo : #{self.name}",       :priority => 3, :action => [self, :destroy_repo])
+    end
+
 
     def packages
       if @repo_packages.nil?
@@ -176,11 +177,6 @@ module Glue::Pulp::Repo
         self.packages = Runcible::Extensions::Rpm.find_all(pkg_ids)
       end
       @repo_packages
-    end
-
-    def destroy_repo_orchestration
-      pre_queue.create(:name => "remove product content : #{self.name}", :priority => 2, :action => [self, :del_content])
-      pre_queue.create(:name => "delete pulp repo : #{self.name}",       :priority => 3, :action => [self, :destroy_repo])
     end
 
     def packages=attrs
@@ -430,12 +426,6 @@ module Glue::Pulp::Repo
       sync_history_item['state'] == 'success'
     end
 
-    def content
-      if not self.content_id.nil?
-        Glue::Candlepin::Content.new(::Resources::Candlepin::Content.get(self.content_id))
-      end
-    end
-
     def generate_metadata
       Runcible::Extensions::Repository.publish_all(self.pulp_id)
     end
@@ -466,7 +456,6 @@ module Glue::Pulp::Repo
           b['finish_time'] <=> a['finish_time']
         end
       }
-
       return statuses
     end
 

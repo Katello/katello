@@ -1,7 +1,7 @@
 #
 # String constants for the katello CLI
 #
-# Copyright (c) 2010 Red Hat, Inc.
+# Copyright (c) 2012 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public License,
 # version 2 (GPLv2). There is NO WARRANTY for this software, express or
@@ -48,5 +48,6 @@ OPT_HELP_DELETION = _("changeset type deletion: deletes items in changeset from 
 OPT_ERR_PROMOTION_OR_DELETE = _("specify either --promotion or --deletion but not both")
 OPT_ERR_SYSTEM_AMBIGUOUS = _("Ambiguous systems found, please specify with --uuid options")
 OPT_HELP_SYSTEM_UUID = _("system uuid (required)")
+OPT_ARCHITECTURE_NAME = _("architecture name (required)")
 
 

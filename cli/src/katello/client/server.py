@@ -17,9 +17,11 @@ import base64
 import kerberos
 from kerberos import GSSError
 import httplib
+import logging
 import os
 import urllib
 import mimetypes
+import sys
 
 try:
     import json
@@ -160,7 +162,7 @@ class KatelloServer(object):
     auth_method = NoAuthentication()
 
     #---------------------------------------------------------------------------
-    def __init__(self, host, port=443, protocol='https', path_prefix='/katello/api', accept_lang=None):
+    def __init__(self, host, port=443, protocol='https', path_prefix='', accept_lang=None):
         assert protocol in ('http', 'https')
 
         self.host = host
@@ -194,11 +196,11 @@ class KatelloServer(object):
             self.auth_method.set_headers(self.headers)
         except GSSError, e:
             #TODO
-            raise Exception("Missing credentials and unable to authenticate using Kerberos", e)
+            raise Exception("Missing credentials and unable to authenticate using Kerberos", e), None, sys.exc_info()[2]
             #raise KatelloError("Missing credentials and unable to authenticate using Kerberos", e)
         except Exception, e:
             #TODO
-            raise Exception("Invalid credentials or unable to authenticate", e)
+            raise Exception("Invalid credentials or unable to authenticate", e), None, sys.exc_info()[2]
             #raise KatelloError("Invalid credentials or unable to authenticate", e)
 
     # protected request utilities ---------------------------------------------
@@ -285,8 +287,12 @@ class KatelloServer(object):
             else:
                 pass
 
-        if response_body:
-            self._log.debug("processing response %s\n%s" % (response.status, u_str(response_body)))
+        if response_body and self._log.isEnabledFor(logging.DEBUG):
+            content_type = response.getheader('content-type')
+            if content_type and (content_type.startswith('text/') or content_type.startswith('application/json')):
+                self._log.debug("processing response %s\n%s" % (response.status, u_str(response_body)))
+            else:
+                self._log.debug("processing response %s of %s" % (response.status, content_type))
         else:
             self._log.debug("processing empty response %s" % (response.status))
 

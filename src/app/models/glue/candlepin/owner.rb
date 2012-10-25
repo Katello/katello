@@ -24,9 +24,9 @@ module Glue::Candlepin::Owner
           :presence => true,
           :format => { :with => /^[\w-]*$/ }
 
-      lazy_accessor :events, :initializer => lambda { Resources::Candlepin::Owner.events(label) }
-      lazy_accessor :service_levels, :initializer => lambda { Resources::Candlepin::Owner.service_levels(label) }
-      lazy_accessor :debug_cert, :initializer => lambda { load_debug_cert}
+      lazy_accessor :events, :initializer => lambda {|s| Resources::Candlepin::Owner.events(label) }
+      lazy_accessor :service_levels, :initializer => lambda {|s| Resources::Candlepin::Owner.service_levels(label) }
+      lazy_accessor :debug_cert, :initializer => lambda {|s| load_debug_cert}
     end
   end
 
@@ -66,7 +66,7 @@ module Glue::Candlepin::Owner
       self.library = nil
       return true
     rescue => e
-      Rails.logger.error _("Failed to delete all environments for owner %s in candlepin:") % [name, "#{e}, #{e.backtrace.join("\n")}"]
+      Rails.logger.error _("Failed to delete all environments for owner %{org} in candlepin: %{message}") % {:org => name, :message => "#{e}, #{e.backtrace.join("\n")}"}
       raise e
     end
 
@@ -86,7 +86,7 @@ module Glue::Candlepin::Owner
         sys.destroy
       end
     rescue => e
-      Rails.logger.error _("Failed to delete all systems for owner %s in candlepin: %s") % [name, "#{e}, #{e.backtrace.join("\n")}"]
+      Rails.logger.error _("Failed to delete all systems for owner %{org} in candlepin: %{message}") % {:org => name, :message => "#{e}, #{e.backtrace.join("\n")}"}
       raise e
     end
 
@@ -106,6 +106,10 @@ module Glue::Candlepin::Owner
 
     def owner_info
       Glue::Candlepin::OwnerInfo.new(self)
+    end
+
+    def owner_details
+      Resources::Candlepin::Owner.find self.label
     end
 
     def pools consumer_uuid = nil

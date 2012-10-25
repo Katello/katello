@@ -24,19 +24,33 @@ describe SyncManagementController, :katello => true do
     set_default_locale
   end
 
-  describe "GET 'index'" do
+  context "Environment is set" do
     before (:each) do
       Runcible::Extensions::Repository.stub(:search_by_repository_ids).and_return([])
       setup_current_organization
       @library = KTEnvironment.new
       @mock_org.stub!(:library).and_return(@library)
-      @library.stub!(:products).and_return(OpenStruct.new(:readable => [], :syncable=>[]))
+      @library.stub!(:products).and_return(
+          OpenStruct.new.tap do |os|
+            def os.readable(org); []; end
+            def os.syncable(org); []; end
+          end
+      )
       Provider.stub!(:any_readable?).and_return(true)
     end
 
-    it "should be successful" do
-      get 'index'
-      response.should be_success
+    describe "GET 'index'" do
+      it "should be successful" do
+        get 'index'
+        response.should be_success
+      end
+    end
+
+    describe "GET 'manage'" do
+      it "should be successful" do
+        get 'manage'
+        response.should be_success
+      end
     end
   end
 

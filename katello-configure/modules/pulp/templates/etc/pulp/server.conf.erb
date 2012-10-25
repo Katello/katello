@@ -221,7 +221,11 @@ debugging_mode: false
 # sync_weight: (integer) concurrency "weight" of a repository sync task
 
 [tasks]
-concurrency_threshold: 9
+<% if processorcount.to_i <= 1 %>
+concurrency_threshold = 1
+<% else %>
+concurrency_threshold = <%= processorcount.to_i-1 %>
+<% end %>
 dispatch_interval: 0.5
 create_weight: 0
 publish_weight: 1

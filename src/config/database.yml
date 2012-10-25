@@ -26,9 +26,9 @@ development:
 <%=db%>
   <%else%>
   adapter: postgresql
-  username: katello
-  password: katello
-  database: katello
+  username: katellouser
+  password: katelloschema
+  database: katelloschema
   host: localhost
   encoding: UTF8
   <%end%>
@@ -44,7 +44,7 @@ test:
   adapter: postgresql
   username: katello
   password: katello
-  database: katello_test
+  database: katello_test<%= ENV['TEST_ENV_NUMBER'] %>
   host: localhost
   encoding: UTF8
   <%end%>

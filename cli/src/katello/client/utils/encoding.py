@@ -17,6 +17,7 @@ import collections
 import codecs
 import sys
 
+stdout_origin = sys.stdout
 
 def encode_stream(stream, encoding='utf-8'):
     """
@@ -34,10 +35,8 @@ def fix_io_encoding():
     This can happen when the command is executed in a subshell.
     We use utf-8 as all our server-side data are utf-8 encoded.
     """
-    if sys.stdout.encoding == None:
-        sys.stdout = encode_stream(sys.stdout)
-    if sys.stderr.encoding == None:
-        sys.stderr = encode_stream(sys.stderr)
+    sys.stdout = encode_stream(sys.stdout)
+    sys.stderr = encode_stream(sys.stderr)
 
 
 def u_str(value):

@@ -1,4 +1,4 @@
-service mongod stop; service pulp-server stop; service tomcat6 stop; service katello stop; service katello-jobs stop; service elasticsearch stop
+katello-service stop
 kill -9 `ps -aef | grep katello | grep -v $(basename $0) | grep -v grep | awk '{print $2}'`
 kill -9 `ps -aef | grep delayed_job | grep -v grep | awk '{print $2}'`
 
@@ -12,3 +12,6 @@ rm -rf /var/log/katello/ /var/log/tomcat6/ /var/log/pulp/ /var/log/candlepin/ /v
 
 # pulp cert stuff 
 rm -rf /etc/pki/pulp/ /etc/pki/content/* /etc/pki/katello /root/ssl-build
+
+# client cert rpms
+rm -rf /var/www/html/pub/candlepin-cert*.rpm
