@@ -48,7 +48,7 @@ describe Permission do
       :roles => [ @super_admin ])
 
     @admin = User.find_or_create_by_username(
-      :username => 'admin',
+      :username => 'admin-custom',
       :password => "password",
       :email => 'admin@somewhere.com',
       :roles => [ @some_role ])
