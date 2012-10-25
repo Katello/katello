@@ -382,7 +382,7 @@ describe SystemTemplate, :katello => true do
 
   describe "package groups" do
 
-    let(:pg_name) { RepoTestData.repo_package_groups.values[0]["name"] }
+    let(:pg_name) { RepoTestData.repo_package_groups[0]["name"] }
     let(:missing_pg_name) { "missing_pg" }
     let(:repo) {Repository.new({
       :name => 'foo repo',
@@ -394,7 +394,7 @@ describe SystemTemplate, :katello => true do
     })}
 
     before :each do
-      Runcible::Extensions::PackageGroup.stub(:all => RepoTestData.repo_package_groups)
+      Runcible::Extensions::Repository.stub(:package_groups => RepoTestData.repo_package_groups)
       stub_repos([repo])
     end
 
@@ -437,7 +437,7 @@ describe SystemTemplate, :katello => true do
 
 
   describe "package group categories" do
-    let(:pg_category_name) { RepoTestData.repo_package_group_categories.values[0]["name"] }
+    let(:pg_category_name) { RepoTestData.repo_package_group_categories[0]["name"] }
     let(:missing_pg_category_name) { "missing_pgc" }
     let(:repo) {Repository.new({
       :name => 'foo repo',
@@ -449,7 +449,7 @@ describe SystemTemplate, :katello => true do
     })}
 
     before :each do
-      Runcible::Extensions::PackageCategory.stub(:all => RepoTestData.repo_package_group_categories)
+      Runcible::Extensions::Repository.stub(:package_categories => RepoTestData.repo_package_group_categories)
       stub_repos([repo])
     end
 
@@ -500,11 +500,12 @@ describe SystemTemplate, :katello => true do
     })}
 
     before :each do
-      Repository.stub(:distributions => [RepoTestData.repo_distributions])
+      Runcible::Extensions::Repository.stub(:distributions => [RepoTestData.repo_distributions])
       stub_repos([repo])
     end
 
     describe "#add_distribution" do
+
 
       it "should make a record to the database about the assignment" do
         @tpl1.add_distribution(distribution)
@@ -543,7 +544,9 @@ describe SystemTemplate, :katello => true do
       before do
         disable_repo_orchestration
         Repository.stub(:distributions => [RepoTestData.repo_distributions])
-        Distribution.stub(:find => RepoTestData.repo_distributions)
+        Runcible::Extensions::Repository.stub(:distributions).and_return([RepoTestData.repo_distributions])
+        Runcible::Extensions::Distribution.stub(:find_all).and_return([RepoTestData.repo_distributions])
+
         stub_repos([Repository.new(RepoTestData::REPO_PROPERTIES)])
         @prod1.stub(:repos => [Repository.new(RepoTestData::REPO_PROPERTIES)])
 

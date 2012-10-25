@@ -1,5 +1,9 @@
 module ProductHelperMethods
 
+  def self.included(base)
+    base.send :include, RepositoryHelperMethods
+  end
+
   def new_test_product_with_library org
     @library = KTEnvironment.new
     @library.library = true
