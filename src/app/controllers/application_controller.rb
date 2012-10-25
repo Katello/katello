@@ -78,19 +78,19 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from ActionController::RoutingError do |exception|
-    execute_rescue(exception, lambda{render_404})
+    execute_rescue(exception, lambda{|exception| render_404})
   end
 
   rescue_from ActionController::UnknownController do |exception|
-    execute_rescue(exception, lambda{render_404})
+    execute_rescue(exception, lambda{|exception| render_404})
   end
 
   rescue_from ActionController::UnknownAction do |exception|
-    execute_rescue(exception, lambda{render_404})
+    execute_rescue(exception, lambda{|exception| render_404})
   end
 
   rescue_from Errors::SecurityViolation do |exception|
-    execute_rescue(exception, lambda{render_403})
+    execute_rescue(exception, lambda{|exception| render_403})
   end
 
   rescue_from Errors::BadParameters do |exception|

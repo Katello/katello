@@ -146,7 +146,7 @@ class EnvironmentsController < ApplicationController
     @env_labels = (envs_no_successors - [@environment]).collect {|p| [ p.display_name, p.id ]}
     @selected = @environment.prior.nil? ? "" : @environment.prior.id
   end
-  
+
   def envs_no_successors
     envs = [@organization.library]
     envs += @organization.environments.reject {|item| !item.successor.nil?}

@@ -30,7 +30,7 @@ class Api::TasksController < Api::ApiController
         false
       end
     end
-    { 
+    {
       :index => test,
       :show => test,
     }

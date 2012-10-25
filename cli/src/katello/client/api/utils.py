@@ -77,21 +77,30 @@ def get_library(orgName):
     return get_environment(orgName, None)
 
 
-def get_product(orgName, prodName):
+def get_product(orgName, prodName=None, prodLabel=None, prodId=None):
+    """
+    Retrieve product by name, label or id.
+    """
     product_api = ProductAPI()
 
-    prod = product_api.product_by_name(orgName, prodName)
-    if prod == None:
+    products = product_api.product_by_name_or_label_or_id(orgName, prodName, prodLabel, prodId)
+
+    if len(products) > 1:
+        raise ApiDataError(_("More than 1 product found with the name or label provided, "\
+                             "recommend using product id.  The product id may be retrieved "\
+                             "using the 'product list' command."))
+    elif len(products) == 0:
         raise ApiDataError(_("Could not find product [ %s ] within organization [ %s ]") %
             (prodName, orgName))
-    return prod
+
+    return products[0]
 
 
-def get_repo(orgName, prodName, repoName, envName=None, includeDisabled=False):
+def get_repo(orgName, prodName, prodLabel, prodId, repoName, envName=None, includeDisabled=False):
     repo_api = RepoAPI()
 
     env  = get_environment(orgName, envName)
-    prod = get_product(orgName, prodName)
+    prod = get_product(orgName, prodName, prodLabel, prodId)
 
     repos = repo_api.repos_by_env_product(env["id"], prod["id"], repoName, includeDisabled)
     if len(repos) > 0:

@@ -7,7 +7,8 @@ ORGS = [
     "updated_at": "2011-08-23T08:10:52Z",
     "id": 1,
     "label": "ACME_Corporation",
-    "description": "ACME Corporation Organization"
+    "description": "ACME Corporation Organization",
+    "system_info_keys" : ["asset_tag"]
   }
 ]
 

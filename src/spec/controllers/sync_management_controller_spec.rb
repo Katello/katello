@@ -30,7 +30,12 @@ describe SyncManagementController, :katello => true do
       setup_current_organization
       @library = KTEnvironment.new
       @mock_org.stub!(:library).and_return(@library)
-      @library.stub!(:products).and_return(OpenStruct.new(:readable => [], :syncable=>[]))
+      @library.stub!(:products).and_return(
+          OpenStruct.new.tap do |os|
+            def os.readable(org); []; end
+            def os.syncable(org); []; end
+          end
+      )
       Provider.stub!(:any_readable?).and_return(true)
     end
 

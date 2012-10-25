@@ -409,7 +409,7 @@ class Packages(SystemGroupAction):
         parser.add_option('--remove', dest='remove', type="list",
             help=_("packages to be removed remotely from the systems, package names are separated with comma"))
         parser.add_option('--update', dest='update', type="list",
-            help=_("packages to be updated on the systems, use --all to update all packages, " + \
+            help=_("packages to be updated on the systems, use --all to update all packages, "\
                 "package names are separated with comma"))
         parser.add_option('--install_groups', dest='install_groups', type="list",
             help=_("package groups to be installed remotely on the systems, group names are separated with comma"))

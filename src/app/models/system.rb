@@ -48,8 +48,11 @@ class System < ActiveRecord::Base
   validates :name, :presence => true, :no_trailing_space => true
   validates :description, :katello_description_format => true
   validates_length_of :location, :maximum => 255
-  validates :sockets, :numericality => { :only_integer => true, :greater_than => 0 }, :allow_blank => true, :allow_nil => true, :on => {:create, :update}
+  validates :sockets, :numericality => { :only_integer => true, :greater_than => 0 }, :allow_blank => true,
+            :allow_nil => true, :if => ("validation_context == :create || validation_context == :update")
   before_create  :fill_defaults
+
+  after_create :init_default_custom_info_keys
 
   scope :by_env, lambda { |env| where('environment_id = ?', env) unless env.nil?}
   scope :completer_scope, lambda { |options| readable(options[:organization_id])}
@@ -91,7 +94,7 @@ class System < ActiveRecord::Base
   end
 
   def filtered_pools match_system, match_installed, no_overlap
-    pools = self.available_pools !match_system
+    pools = self.available_pools
 
     # Only available pool's with a product on the system'
     if match_installed
@@ -165,6 +168,13 @@ class System < ActiveRecord::Base
     json
   end
 
+  def init_default_custom_info_keys
+    self.organization.system_info_keys.each do |k|
+      self.custom_info.create!(:keyname => k)
+    end
+  end
+
+
   def tasks
     TaskStatus.refresh_for_system(self)
   end
@@ -197,6 +207,12 @@ class System < ActiveRecord::Base
 
     def collect_installed_product_names
       self.installedProducts ? self.installedProducts.map{ |p| p[:productName] } : []
+    end
+
+    def collect_custom_info
+      hash = {}
+      self.custom_info.each{ |c| hash[c.keyname] = c.value} if self.custom_info
+      hash
     end
 
 end

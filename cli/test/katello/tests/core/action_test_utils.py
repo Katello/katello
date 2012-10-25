@@ -8,6 +8,7 @@ import katello.client.core.utils
 from katello.client.core.utils import SystemExitRequest
 from katello.client.api.utils import ApiDataError
 from katello.client.i18n_optparse import OptionParserExitError
+from katello.client.server import ServerRequestError
 
 
 
@@ -103,7 +104,7 @@ class CLIActionTestCase(CLITestCase):
         self.mock(katello.client.core.utils, "Spinner", spinner)
 
     def run_action(self, expected_return_code=None):
-        if expected_return_code:
+        if expected_return_code is not None:
             self.assert_exits_with(expected_return_code)
         else:
             try:
@@ -119,5 +120,7 @@ class CLIActionTestCase(CLITestCase):
             self.assertEqual(ex.args[0], expected_return_code)
         except ApiDataError, ex:
             self.assertEqual(os.EX_DATAERR, expected_return_code)
+        except ServerRequestError, ser:
+            self.assertEqual(ser.args[0], expected_return_code)
         else:
             self.assertEqual(ret_val, expected_return_code)

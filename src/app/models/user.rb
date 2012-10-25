@@ -17,7 +17,9 @@ require 'util/password'
 class User < ActiveRecord::Base
   include Glue::Pulp::User if AppConfig.use_pulp
   include Glue::ElasticSearch::User if AppConfig.use_elasticsearch
-  include Glue if AppConfig.use_cp || AppConfig.use_pulp
+  include Glue::Foreman::User if AppConfig.use_foreman
+  include Glue if AppConfig.use_cp || AppConfig.use_pulp || AppConfig.use_foreman
+
   include AsyncOrchestration
   include Authorization::User
   include Authorization::Enforcement

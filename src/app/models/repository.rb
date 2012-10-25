@@ -43,7 +43,10 @@ class Repository < ActiveRecord::Base
   validates :name, :presence => true
   #validates :content_id, :presence => true #add back after fixing add_repo orchestration
   validates :label, :presence => true,:katello_label_format => true
-  validates :enabled, :repo_disablement => true, :on => [:update]
+
+  validates :enabled, :repo_disablement => true, :on => :update
+  belongs_to :gpg_key, :inverse_of => :repositories
+  belongs_to :library_instance, :class_name=>"Repository"
 
   default_scope :order => 'name ASC'
   scope :enabled, where(:enabled => true)

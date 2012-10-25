@@ -32,13 +32,22 @@ class foreman::config {
     comment => 'Foreman',
     home    => $foreman::app_root,
   }
-
+  
   file {
     "${foreman::log_base}":
       owner   => $foreman::user,
       group   => $foreman::group,
       mode    => 640,
       recurse => true;
+
+    # create Rails logs in advance to get correct owners and permissions
+    "${foreman::log_base}/production.log":
+      owner   => $foreman::user,
+      group   => $foreman::group,
+      content => "",
+      replace => false,
+      mode    => 640,
+      require => File["${foreman::log_base}"];
 
     "${foreman::config_dir}/settings.yaml":
       content => template('foreman/settings.yaml.erb'),
@@ -76,8 +85,19 @@ class foreman::config {
     creates     => "/var/lib/katello/foreman_db_migrate_done",
     timeout     => 0,
     require     => [ Postgres::Createdb[$foreman::db_name],
+                 File["${foreman::log_base}/production.log"],
                  File["${foreman::config_dir}/settings.yaml"],
                  File["${foreman::config_dir}/database.yml"]];
+  } ~>
+
+  exec {"foreman_config":
+   command => "/usr/bin/ruby ${foreman::app_root}/script/foreman-config -k oauth_active -v '${foreman::oauth_active}'\
+                              -k oauth_consumer_key -v '${foreman::oauth_consumer_key}'\
+                              -k oauth_consumer_secret -v '${foreman::oauth_consumer_secret}'\
+                              -k oauth_map_users -v '${foreman::oauth_map_users}'",
+   user    => $foreman::user,
+   timeout => 0,
+   require => User[$foreman::user],
   }
 
 }

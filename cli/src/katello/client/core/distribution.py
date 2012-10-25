@@ -58,13 +58,15 @@ class List(DistributionAction):
         orgName  = self.get_option('org')
         envName  = self.get_option('environment')
         prodName = self.get_option('product')
+        prodLabel = self.get_option('product_label')
+        prodId   = self.get_option('product_id')
 
         self.printer.add_column('id')
         self.printer.add_column('description')
         self.printer.add_column('files', multiline=True, show_with=printer.VerboseStrategy)
 
         if not repoId:
-            repo = get_repo(orgName, prodName, repoName, envName)
+            repo = get_repo(orgName, prodName, prodLabel, prodId, repoName, envName)
             repoId = repo["id"]
 
         self.printer.set_header(_("Distribution List For Repo %s") % repoId)
