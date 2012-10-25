@@ -156,12 +156,15 @@ describe System do
   end
 
   context "persisted system has correct attributes" do
-    before(:each) { @system.save! }
+    before(:each) {
+      @count = System.count
+      @system.save! }
 
-    specify { System.all.size.should == 1 }
-    specify { System.first.name.should == system_name }
-    specify { System.first.uuid.should == uuid }
-    specify { System.first.organization.id.should == @organization.id }
+    specify { System.count.should == @count + 1 }
+    specify { System.find(@system.id).name == system_name }
+    specify { System.find(@system.id).uuid.should == uuid }
+    specify {
+      System.find(@system.id).organization.id.should == @organization.id }
   end
 
   context "cp attributes" do
@@ -253,7 +256,7 @@ describe System do
   describe "available releases" do
     before do
       disable_product_orchestration
-
+      disable_repo_orchestration
       @product = Product.create!(:name=>"prod1", :label=> "prod1", :cp_id => '12345', :provider => @organization.redhat_provider, :environments => [@organization.library])
       @environment = KTEnvironment.create!({:name=>"Dev", :label=> "Dev", :prior => @organization.library, :organization => @organization}) do |e|
         e.products << @product
@@ -272,7 +275,9 @@ describe System do
                           :environment_product_id => env_product.id,
                           :major => "6",
                           :minor => release,
-                          :cp_label => "repo")
+                          :cp_label => "repo",
+                          :relative_path=>'/foo',
+                          :content_id=>'foo')
       end
       Repository.create!(:name => "Repo without releases",
                          :label => "Repo_without_releases",
@@ -281,7 +286,9 @@ describe System do
                          :environment_product_id => env_product.id,
                          :major => nil,
                          :minor => nil,
-                         :cp_label => "repo")
+                         :cp_label => "repo",
+                         :relative_path=>'/foo',
+                         :content_id=>'foo')
       @system.environment = @environment
       @system.save!
     end
