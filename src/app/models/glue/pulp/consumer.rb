@@ -96,7 +96,7 @@ module Glue::Pulp::Consumer
       return true if @changed_attributes.empty?
 
       Rails.logger.debug "Updating consumer in pulp: #{@old.name}"
-      Runcible::Extensions::Consumer.update(self.uuid, :display_name => self.name})
+      Runcible::Extensions::Consumer.update(self.uuid, :display_name => self.name)
     rescue => e
       Rails.logger.error "Failed to update pulp consumer #{@old.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
