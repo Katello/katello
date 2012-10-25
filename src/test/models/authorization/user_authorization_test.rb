@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'models/user_base'
+require 'test/support/auth_support'
 
 
 class UserAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCase
@@ -80,4 +81,23 @@ class UserAuthorizationNoPermsTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
 
+end
+
+class UserOrganizationAccess < MiniTest::Rails::ActiveSupport::TestCase
+  include AuthorizationSupportMethods
+  include TestUserBase
+
+  def setup
+    super
+    @user = @no_perms_user
+    @org = @acme_organization
+    @org2 = FactoryGirl.create(:organization, :label=>"foolabel", :name=>"fooname")
+  end
+
+  def test_access_two_orgs
+    assert @user.allowed_organizations.size == 0
+    allow(@user.own_role, [:read], :providers, nil, @org)
+    allow(@user.own_role,[:read], :providers, nil, @org2)
+    assert @user.allowed_organizations.size == 2
+  end
 end

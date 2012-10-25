@@ -95,9 +95,10 @@ EOKEY
     # pulp orchestration
     Resources::Candlepin::Product.stub!(:certificate).and_return("")
     Resources::Candlepin::Product.stub!(:key).and_return("")
-    Resources::Pulp::Repository.stub!(:create).and_return([])
-    Resources::Pulp::Repository.stub!(:update_schedule).and_return(true)
-    Resources::Pulp::Repository.stub!(:delete_schedule).and_return(true)
+
+    Runcible::Extensions::Repository.stub!(:create_or_update_schedule).and_return(true)
+    Runcible::Extensions::Repository.stub!(:remove_schedules).and_return(true)
+
     Resources::Pulp::Repository.stub!(:all).and_return([])
     Resources::Pulp::Repository.stub!(:update).and_return([])
   end
@@ -138,6 +139,7 @@ EOKEY
   end
 
   def disable_repo_orchestration
+    Runcible::Extensions::Repository.stub(:create).and_return({})
     Runcible::Extensions::Repository.stub(:sync_history).and_return([])
     Runcible::Resources::Task.stub!(:destroy).and_return({})
 
@@ -146,8 +148,6 @@ EOKEY
     Runcible::Extensions::Repository.stub(:distributions).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_DISTRIBUTIONS)
     Runcible::Extensions::Repository.stub(:find).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PROPERTIES)
     Runcible::Extensions::Repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
-
-
 
     Repository.instance_eval do
       define_method(:index_packages) {

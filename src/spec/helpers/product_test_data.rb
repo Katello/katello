@@ -130,8 +130,8 @@ module ProductTestData
     "owner" => {
         "href" => "/owners/ACME_Corporation",
         "id" => "ff808081311ad38001311ad3b5b60001",
-        "key" => "ACME_Corporation",
-        "displayName" => "ACME_Corporation"
+        "key" => "ACME_Corporation_spec",
+        "displayName" => "ACME_Corporation_spec"
     },
     "providedProducts" => [
 
