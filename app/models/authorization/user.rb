@@ -60,4 +60,15 @@ module Authorization::User
     self.id != User.current.id && User.allowed_to?([:delete], :users, nil)
   end
 
+  def allowed_organizations
+    #test for all orgs
+    perms = ::Permission.joins(:role).joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
+        where("roles_users.user_id = ?", self.id).where(:organization_id => nil).count()
+    return ::Organization.all if perms > 0
+
+    perms = ::Permission.joins(:role).joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
+        where("roles_users.user_id = ?", self.id).where("organization_id is NOT null")
+    #return the individual organizations
+    perms.collect { |perm| perm.organization }.uniq
+  end
 end

@@ -103,6 +103,9 @@ group :test, :development do
 
   #parallel_tests to make our specs go faster
   gem "parallel_tests"
+
+  gem 'factory_girl_rails', "~> 1.7.0"
+
 end
 
 group :profiling do

@@ -14,22 +14,33 @@ require 'minitest_helper'
 
 module TestUserBase
   def self.included(base)
-    base.class_eval do
-      use_instantiated_fixtures = false
-      fixtures :roles, :permissions, :resource_types, :roles_users, :users
+    base.extend ClassMethods
 
-      def self.before_suite
-        services  = ['Candlepin', 'Pulp', 'ElasticSearch']
-        models    = ['User']
-        disable_glue_layers(services, models)
-      end
+    base.class_eval do
+      set_fixture_class :environments => KTEnvironment
+      use_instantiated_fixtures = false
+      fixtures :all
+    end
+  end
+
+  module ClassMethods
+    def before_suite
+      services  = ['Candlepin', 'Pulp', 'ElasticSearch']
+      models    = ['User', 'Organization', 'KTEnvironment']
+      disable_glue_layers(services, models)
     end
   end
 
   def setup
-    @no_perms_user         = User.find(users(:no_perms_user))
+    AppConfig.warden = 'database'
+    @no_perms_user  = User.find(users(:no_perms_user))
     @admin          = User.find(users(:admin))
     @disabled_user  = User.find(users(:disabled_user))
+    @acme_corporation   = Organization.find(organizations(:acme_corporation).id)
+    @dev                = KTEnvironment.find(environments(:dev).id)
   end
 
 end
+
+
+

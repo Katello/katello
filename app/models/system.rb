@@ -19,8 +19,8 @@ class NonLibraryEnvironmentValidator < ActiveModel::EachValidator
 end
 
 class System < ActiveRecord::Base
-  include Glue::Candlepin::Consumer
-  include Glue::Pulp::Consumer if AppConfig.katello?
+  include Glue::Candlepin::Consumer if AppConfig.use_cp
+  include Glue::Pulp::Consumer if AppConfig.use_pulp
   include Glue::ElasticSearch::System
   include Glue
   include Authorization::System

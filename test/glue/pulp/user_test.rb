@@ -13,22 +13,19 @@
 require 'minitest_helper'
 
 
-module GluePulpUserTestBase
+class GluePulpUserTestBase < MiniTest::Rails::ActiveSupport::TestCase
+  extend ActiveRecord::TestFixtures
+
+  def self.before_suite
+    configure_runcible
+
+    services  = ['Candlepin', 'ElasticSearch']
+    models    = ['User']
+    disable_glue_layers(services, models)
+  end
 
   def setup
-    configure_vcr
-    uri = URI.parse(AppConfig.pulp.url)
-    Runcible::Base.config = { 
-      :url      => "#{uri.scheme}://#{uri.host}",
-      :api_path => uri.path,
-      :user     => "admin",
-      :oauth    => {:oauth_secret => AppConfig.pulp.oauth_secret,
-                    :oauth_key    => AppConfig.pulp.oauth_key },
-      :logger   => RestClient.log
-    }
-
-    @username = "test_username"
-    @user = User.new(:name => @username, :username => "test_username")
+    @user = build(:user, :batman)
 
     VCR.insert_cassette('glue_pulp_user')
   end
@@ -45,8 +42,7 @@ module GluePulpUserTestBase
 end
 
 
-class GluePulpUserCreateTest < MiniTest::Unit::TestCase
-  include GluePulpUserTestBase
+class GluePulpUserCreateTest < GluePulpUserTestBase
 
   def test_set_pulp_user
     assert @user.set_pulp_user
@@ -63,8 +59,7 @@ class GluePulpUserCreateTest < MiniTest::Unit::TestCase
 end
 
 
-class GluePulpUserTest < MiniTest::Unit::TestCase
-  include GluePulpUserTestBase
+class GluePulpUserTest < GluePulpUserTestBase
 
   def setup
     super

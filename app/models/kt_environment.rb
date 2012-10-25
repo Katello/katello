@@ -59,6 +59,7 @@ end
 
 class KTEnvironment < ActiveRecord::Base
   include Authorization::Environment
+  include Glue::ElasticSearch::Environment if AppConfig.use_elasticsearch
   include Glue::Candlepin::Environment if AppConfig.use_cp
   include Glue if AppConfig.use_cp
   set_table_name "environments"
@@ -104,11 +105,9 @@ class KTEnvironment < ActiveRecord::Base
   validate :constant_name, :on => :update
 
   before_destroy :confirm_last_env
-  after_save :update_related_index
-  after_destroy :delete_related_index
+
   after_destroy :unset_users_with_default
    ERROR_CLASS_NAME = "Environment"
-
 
   def library?
     self.library
@@ -264,18 +263,6 @@ class KTEnvironment < ActiveRecord::Base
     self.products.collect do |prod|
       prod.get_distribution(self, id)
     end.flatten(1)
-  end
-
-  def update_related_index
-    if self.name_changed?
-      self.organization.reload #must reload organization, otherwise old name is saved
-      self.organization.update_index
-      ActivationKey.index.import(self.activation_keys) if !self.activation_keys.empty?
-    end
-  end
-
-  def delete_related_index
-    self.organization.update_index if self.organization
   end
 
   def unset_users_with_default
