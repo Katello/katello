@@ -1,4 +1,4 @@
-# set environment variable BUNDLER_ENABLE_RPM_PREFERRING to 'true' to enable bundler patch
+
 # if enabled bundler prefers rpm-gems even if they are older version then gems in gem-repo
 if ENV['BUNDLER_ENABLE_RPM_PREFERRING'] == 'true'
   require File.join(File.dirname(__FILE__), 'lib', 'bundler_patch_rpm-gems_preferred')
@@ -35,9 +35,10 @@ gem 'simple-navigation', '>= 3.3.4'
 gem 'gettext_i18n_rails'
 gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 
-# Reports
-gem 'ruport', '>=1.7.0', :git => 'https://github.com/ruport/ruport' 
-gem 'prawn'
+# reports
+gem 'ruport' #, :path => "/var/ruport"
+#gem 'ruport', '>=1.6.3'
+gem "prawn"
 gem 'acts_as_reportable', '>=1.1.1'
 
 # Documentation
