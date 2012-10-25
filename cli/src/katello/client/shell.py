@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2011 Red Hat, Inc.
+# Copyright (c) 2012 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU Lesser General Public
 # License as published by the Free Software Foundation; either version
@@ -25,7 +25,7 @@ import ConfigParser
 from katello.client.config import Config, ConfigFileError
 from katello.client.core.base import Command, CommandContainer
 from katello.client.core.utils import parse_tokens
-
+from katello.client.utils.encoding import encode_stream, stdout_origin
 
 class KatelloShell(Cmd):
 
@@ -53,6 +53,13 @@ class KatelloShell(Cmd):
 
 
     def __init__(self, admin_cli):
+        # remove stdout stream encoding while in 'shell' mode, becuase this breaks readline 
+        # (autocompletion and shell history). In 'shell' mode the stdout 
+        # is encoded just for time necessary for command execution see precmd a postcmd
+
+        sys.stdout = stdout_origin
+        self.stdout_with_codec = encode_stream(sys.stdout, "utf-8")
+
         self.completion_matches = None
         Cmd.__init__(self)
         self.admin_cli = admin_cli
@@ -109,6 +116,8 @@ class KatelloShell(Cmd):
 
 
     def precmd(self, line):
+        # turn on wrapper for encoding stdout
+        sys.stdout = self.stdout_with_codec
         # preprocess the line
         line = line.strip()
         line = self.__history_preprocess(line)
@@ -116,6 +125,8 @@ class KatelloShell(Cmd):
 
 
     def postcmd(self, stop, line):
+        # turn off wrapper for encoding stdout
+        sys.stdout = stdout_origin
         # always stay in the command loop (we call sys.exit from exit commands)
         return False
 

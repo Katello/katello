@@ -21,7 +21,16 @@ import threading
 from xml.utils import iso8601
 from katello.client.api.task_status import TaskStatusAPI, SystemTaskStatusAPI
 from katello.client.api.job import SystemGroupJobStatusAPI
+from katello.client.config import Config
 
+#  mode check -----------------------------------------------------------------
+def get_katello_mode():
+    Config()
+    mode = "katello"
+    path = Config.parser.get('server', 'path') or '/katello/api'
+    if "headpin" in path or "sam" in path:
+        mode = "headpin"
+    return mode
 
 # server output validity ------------------------------------------------------
 def is_valid_record(rec):
@@ -53,6 +62,69 @@ def test_record(rec, success_msg, failure_msg):
     else:
         system_exit(os.EX_DATAERR, failure_msg)
 
+def test_foreman_record(rec, key, success_msg, failure_msg):
+    """
+    Test if a foreman record is valid, and exit with a proper return code and a message.
+    @type rec: dictionary
+    @param rec: record returned from server
+    @type key: string
+    @param key: expected record key (eg config_template)
+    @type success_msg: string
+    @param success_msg: success message
+    @type failure_msg: string
+    @param failure_msg: failure message
+    """
+    if type(rec)==dict and key in rec:
+        system_exit(os.EX_OK, success_msg)
+    else:
+        system_exit(os.EX_DATAERR, failure_msg)
+
+
+def unnest(rec, *path):
+    """
+    Unnests inner values in a dictionary according to key path.
+    If the rec is a tuple or a list then unnesting is applied
+    to its items.
+    Eg.
+        >>> example_dict = {'a': {'b': {'c': 'the_value'}}}
+        >>> unnest(example_dict, "a", "b")
+        {'c': 'the_value'}
+
+    @param rec: record to unnest
+    @type rec: dict, list or tuple of dicts
+    @param *path: key path in the dictionary
+    @rtype: dict, list or tupple according to type of rec
+    """
+    if isinstance(rec, list):
+        return [unnest(item, *path) for item in rec]
+    elif isinstance(rec, tuple):
+        return (unnest(item, *path) for item in rec)
+    else:
+        assert isinstance(rec, dict)
+        return reduce(dict.get, path, rec)
+
+def unnest_one(rec):
+    """
+    Unnest one level of a dict. Takes first key returned by .keys()
+    and unnests the value saved in the dict for that key.
+    If the rec is a tuple or a list then unnesting is applied
+    to its items.
+    Eg.
+        >>> example_dict = {'a': {'b': {'c': 'the_value'}}}
+        >>> unnest_one(example_dict)
+        {'b': {'c': 'the_value'}}
+
+    @param rec: record to unnest
+    @type rec: dict, list or tuple of dicts
+    @rtype: dict, list or tupple according to type of rec
+    """
+    if isinstance(rec, (list, tuple)):
+        return unnest(rec, rec[0].keys()[0])
+    else:
+        assert isinstance(rec, dict)
+        assert len(rec) > 0
+        return unnest(rec, rec.keys()[0])
+
 def update_dict_unless_none(d, key, value):
     """
     Update value for key in dictionary only if the value is not None.
@@ -61,6 +133,14 @@ def update_dict_unless_none(d, key, value):
         d[key] = value
     return d
 
+# custom info -----------------------------------------------------------------
+def stringify_custom_info(list_custom_info):
+    arr = []
+    for info in list_custom_info:
+        arr.append("%s: %s" % (info["keyname"], info["value"]))
+
+    return "[ %s ]"  % ", ".join(arr)
+
 class SystemExitRequest(Exception):
     """
     Exception to indicate a system exit request. Introduced to
@@ -68,7 +148,6 @@ class SystemExitRequest(Exception):
     [1] a list of error messages.
     """
     pass
-
 
 # system exit -----------------------------------------------------------------
 def system_exit(code, msgs=None):
@@ -117,7 +196,7 @@ def parse_tokens(tokenstring):
             tokens.append(tok)
         return tokens
     except Exception, e:
-        raise KatelloError("Unable to parse options", e)
+        raise KatelloError("Unable to parse options", e), None, sys.exc_info()[2]
 
 
 def get_abs_path(path):
@@ -466,6 +545,7 @@ class SystemGroupAsyncJob(AsyncJob):
         self.__org_id = org_id
         self.__system_group_id = system_group_id
 
+
     def status_api(self):
         return SystemGroupJobStatusAPI(self.__org_id, self.__system_group_id)
 
@@ -485,7 +565,7 @@ def convert_to_mime_type(type_in, default=None):
 def attachment_file_name(headers, default):
     contentDisposition = filter(lambda h: h[0].lower() == 'content-disposition', headers)
 
-    if len(contentDisposition) >  0:
+    if len(contentDisposition) > 0:
         filename = contentDisposition[0][1].split('filename=')
         if len(filename) < 2:
             return default
@@ -499,3 +579,10 @@ def save_report(report, filename):
     f = open(filename, 'w')
     f.write(report)
     f.close()
+
+
+def slice_dict(orig_dict, *key_list, **kw_args):
+    if kw_args.get('allow_none', True):
+        return dict((key, orig_dict[key]) for key in key_list if key in orig_dict)
+    else:
+        return dict((key, orig_dict[key]) for key in key_list if key in orig_dict and orig_dict[key] is not None)

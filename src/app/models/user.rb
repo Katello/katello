@@ -17,7 +17,9 @@ require 'util/password'
 class User < ActiveRecord::Base
   include Glue::Pulp::User if AppConfig.use_pulp
   include Glue::ElasticSearch::User if AppConfig.use_elasticsearch
-  include Glue if AppConfig.use_cp || AppConfig.use_pulp
+  include Glue::Foreman::User if AppConfig.use_foreman
+  include Glue if AppConfig.use_cp || AppConfig.use_pulp || AppConfig.use_foreman
+
   include AsyncOrchestration
   include Authorization::User
   include Authorization::Enforcement
@@ -479,8 +481,7 @@ class User < ActiveRecord::Base
 
   def super_admin_check role
     if role.superadmin? && role.users.length == 1
-      message = _("Cannot dissociate user '%s' from '%s' role. Need at least one user in the '%s' role.") %
-          [username, role.name, role.name]
+      message = _("Cannot dissociate user '%{username}' from '%{role}' role. Need at least one user in the '%{role}' role.") % {:username => username, :role => role.name}
       errors[:base] << message
       raise ActiveRecord::RecordInvalid, self
     end

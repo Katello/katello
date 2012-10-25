@@ -126,8 +126,8 @@ class Create(GpgKeyAction):
                                help=_("GPG key name (required)"))
         opt_parser_add_org(parser, required=1)
         parser.add_option('--file', dest='file',
-                               help=_("file with public GPG key, if not\
-                                 specified, standard input will be used"))
+                               help=_("file with public GPG key, if not "\
+                                 "specified, standard input will be used"))
 
     def check_options(self, validator):
         validator.require(('name', 'org'))

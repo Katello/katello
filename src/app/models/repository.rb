@@ -21,15 +21,16 @@ end
 
 
 class Repository < ActiveRecord::Base
+
+  include Glue::Candlepin::Content if (AppConfig.use_cp and AppConfig.use_pulp)
   include Glue::Pulp::Repo if AppConfig.use_pulp
   include Glue if AppConfig.use_cp || AppConfig.use_pulp
   include Glue::ElasticSearch::Repository if AppConfig.use_elasticsearch
   include Authorization::Repository
   include AsyncOrchestration
-  include Rails.application.routes.url_helpers #required for GPG key url generation
   include Katello::LabelFromName
 
-  before_save :refresh_content
+
 
   belongs_to :environment_product, :inverse_of => :repositories
   belongs_to :gpg_key, :inverse_of => :repositories
@@ -42,7 +43,10 @@ class Repository < ActiveRecord::Base
   validates :name, :presence => true
   #validates :content_id, :presence => true #add back after fixing add_repo orchestration
   validates :label, :presence => true,:katello_label_format => true
-  validates :enabled, :repo_disablement => true, :on => [:update]
+
+  validates :enabled, :repo_disablement => true, :on => :update
+  belongs_to :gpg_key, :inverse_of => :repositories
+  belongs_to :library_instance, :class_name=>"Repository"
 
   default_scope :order => 'name ASC'
   scope :enabled, where(:enabled => true)
@@ -186,23 +190,6 @@ class Repository < ActiveRecord::Base
       previous.filters + self.product.filters
     else
       []
-    end
-  end
-
-  private
-
-  def refresh_content
-    return if self.new_record?  #don't try to refresh on create
-
-    #if the gpg key was enabled
-    #we only update the content if the content is actually not set properly
-    #this means we don't recreate the environment for the same repo in 
-    #each environment.   We do the same for it being disabled, we check
-    #to make sure it is not enabled in the contnet before refreshing
-    if (self.gpg_key_id_was == nil && self.gpg_key_id != nil) 
-        self.product.refresh_content(self) if self.content.gpgUrl == ''
-    elsif (self.gpg_key_id_was != nil && self.gpg_key_id == nil)
-        self.product.refresh_content(self) if self.content.gpgUrl != ''
     end
   end
 end

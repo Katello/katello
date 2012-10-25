@@ -444,6 +444,10 @@
   upload_subscriptions_path: function(options) {
   return Utils.build_path(1, ["/subscriptions/upload"], arguments)
   },
+// delete_manifest_subscriptions => /subscriptions/delete_manifest(.:format)
+  delete_manifest_subscriptions_path: function(options) {
+  return Utils.build_path(1, ["/subscriptions/delete_manifest"], arguments)
+  },
 // auto_complete_search_changesets => /changesets/auto_complete_search(.:format)
   auto_complete_search_changesets_path: function(options) {
   return Utils.build_path(1, ["/changesets/auto_complete_search"], arguments)

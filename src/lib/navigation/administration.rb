@@ -41,13 +41,16 @@ module Navigation
     end
 
     def menu_administration
-      {:key => :admin,
+      menu = {:key => :admin,
        :name => _("Administer"),
         :url => :sub_level,
-        :items=> [ menu_users, menu_roles, menu_orgs],
+        :items=> [ menu_users, menu_roles, menu_orgs ],
         :options => {:class=>'operations header-widget fl menu_parent', "data-menu"=>"operations"},
         :if => :sub_level
       }
+      menu[:items] << menu_sync_tasks if AppConfig.katello?
+      menu[:items] << menu_about # keep the about as the last item
+      return menu
     end
 
 
@@ -74,6 +77,24 @@ module Navigation
        :name => _("Manage Organizations"),
        :url => organizations_path,
        :if =>lambda {Organization.any_readable?},
+       :options => {:class=>'operations section_level', "data-menu"=>"operations"}
+      }
+    end
+
+    def menu_sync_tasks
+      {:key => :sync_tasks,
+       :name => _("Synchronization"),
+       :url => sync_management_manage_path,
+       :if => lambda {User.current.has_superadmin_role?},
+       :options => {:class=>'operations section_level', "data-menu"=>"operations"}
+      }
+    end
+
+    def menu_about
+      {:key => :about,
+       :name => _("About"),
+       :url => about_path,
+       :if => lambda {Organization.any_readable?},
        :options => {:class=>'operations section_level', "data-menu"=>"operations"}
       }
     end

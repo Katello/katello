@@ -22,6 +22,32 @@ module Glue::ElasticSearch::Pool
         ['name', 'sla', 'start', 'end', 'consumed', 'product', 'account', 'contract', 'virtual']
       end
 
+      def index_options
+        {
+          "_type"     => :pool,
+          "id"        => @cp_id,
+          "name"      => @product_name,
+          "name_sort" => @product_name,
+          "product_name"=> @product_name,
+          "start"     => @start_date,
+          "end"       => @end_date,
+          "product"   => @product_id,
+          "product_id"=> @product_id,
+          "account"   => @account_number,
+          "contract"  => @contract_number,
+          "sla"       => @support_level,
+          "support_level"=> @support_level,
+          "virtual"   => @virt_only,
+          "org"       => @owner["key"],
+          "consumed"  => @consumed,
+          "quantity"  => @quantity,
+          "pool_derived" => @pool_derived,
+          "derived"   => @pool_derived,
+          "provider_id"=> provider_id,
+          "stacking_id" => @stacking_id,
+          "multi_entitlement" => @multi_entitlement
+        }
+      end
 
       def self.index_mapping
         {
@@ -34,6 +60,7 @@ module Glue::ElasticSearch::Pool
               :begin        => {:type=>'date'},
               :end          => {:type=>'date'},
               :sockets      => {:type=>'long'},
+              :ram          => {:type=>'long'},
               :sla          => {:type=>'string'},
               :support_level=> {:type=>'string', :index=>:not_analyzed},
               :org          => {:type=>'string', :index=>:not_analyzed},
@@ -58,16 +85,6 @@ module Glue::ElasticSearch::Pool
                 }
             }
         }
-      end
-
-      def self.index_pools pools
-        json_pools = pools.collect{ |pool|
-          pool.as_json.merge(pool.index_options)
-        }
-        Tire.index self.index do
-          create :settings => ::Pool.index_settings, :mappings => ::Pool.index_mapping
-          import json_pools
-        end if !json_pools.empty?
       end
 
       def self.index

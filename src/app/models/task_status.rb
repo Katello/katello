@@ -141,21 +141,21 @@ class TaskStatus < ActiveRecord::Base
         if p.length == 1
           return p.first
         else
-          return  _("%s (%s other packages)") % [p.first, p.length - 1]
+          return  _("%{package} (%{rest} other packages)") % {:package => p.first, :rest => p.length - 1}
         end
       when :package_group
         p = self.parameters[:groups]
         if p.length == 1
           return p.first
         else
-          return  _("%s (%s other package groups)") % [p.first, p.length - 1]
+          return  _("%{group} (%{rest} other package groups)") % {:group => p.first, :rest => p.length - 1}
         end
       when :errata
         p = self.parameters[:errata_ids]
         if p.length == 1
           return p.first
         else
-          return  _("%s (%s other errata)") % [p.first, p.length - 1]
+          return  _("%{errata} (%{rest} other errata)") % {:errata => p.first, :rest => p.length - 1}
         end
     end
   end

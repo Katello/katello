@@ -19,7 +19,7 @@ require 'ostruct'
 class SubscriptionsController < ApplicationController
 
   before_filter :find_provider
-  before_filter :find_subscription, :except=>[:index, :items, :new, :upload, :history, :history_items]
+  before_filter :find_subscription, :except=>[:index, :items, :new, :upload, :delete_manifest, :history, :history_items]
   before_filter :authorize
   before_filter :setup_options, :only=>[:index, :items]
 
@@ -39,7 +39,8 @@ class SubscriptionsController < ApplicationController
       :history => read_provider_test,
       :history_items=> read_provider_test,
       :new => read_provider_test,
-      :upload => edit_provider_test
+      :upload => edit_provider_test,
+      :delete_manifest => edit_provider_test
     }
   end
 
@@ -50,12 +51,14 @@ class SubscriptionsController < ApplicationController
   end
 
   def index
+
     # If no manifest imported yet or one is currently being imported, open the "new" panel.
     # Originally had intended to open the "new" panel when last import was an error, but this
     # is too restrictive, preventing viewing of previously imported subscriptions.
     if @provider.editable?
-      imports = @provider.owner_imports
-      if imports.length == 0 || (!@provider.task_status.nil? && !@provider.task_status.finish_time)
+      details = current_organization.owner_details
+      if (details['upstreamUuid'].nil? || details['upstreamUuid'] == '' ||
+          (!@provider.task_status.nil? && !@provider.task_status.finish_time))
         @panel_options[:initial_state] = {:panel => :new}
       end
     end
@@ -134,12 +137,20 @@ class SubscriptionsController < ApplicationController
   end
 
   def new
+    @details = current_organization.owner_details
+    @details['upstreamUuid'] = nil if @details['upstreamUuid'] == ''
     begin
       @statuses = @provider.owner_imports
+
+      # The owner details does not currently contain the webAppPrefix, so find it in the import history
+      if @details['upstreamUuid']
+        import_status = @statuses.find {|s| s['webAppPrefix'] && s['upstreamId'] == @details['upstreamUuid']}
+        @details['webAppPrefix'] = import_status['webAppPrefix'] if import_status
+      end
     rescue => error
       # quietly ignore
     end
-    render :partial=>"new", :layout =>"tupane_layout", :locals=>{:provider=>@provider, :statuses=>@statuses, :name => controller_display_name}
+    render :partial=>"new", :layout =>"tupane_layout", :locals=>{:provider=>@provider, :statuses=>@statuses, :details=>@details, :name => controller_display_name}
   end
 
   def history
@@ -157,7 +168,7 @@ class SubscriptionsController < ApplicationController
     rescue => error
       @statuses = []
       display_message = parse_display_message(error.response)
-      error_text = _("Unable to retrieve subscription history for provider '%{name}." % {:name => @provider.name})
+      error_text = _("Unable to retrieve subscription history for provider '%{name}'." % {:name => @provider.name})
       error_text += _("%{newline}Reason: %{reason}" % {:reason => display_message, :newline => "<br />"}) unless display_message.blank?
       notify.exception error_text, error, :asynchronous => true
       Rails.logger.error "Error fetching subscription history from Candlepin"
@@ -170,6 +181,11 @@ class SubscriptionsController < ApplicationController
     render :partial=>"history_items", :layout =>"tupane_layout", :locals=>{:provider=>@provider, :name => controller_display_name, :statuses=>@statuses}
   end
 
+  def delete_manifest
+    @provider.delete_manifest
+
+    render :json=>{}
+  end
 
   def upload
     if !params[:provider].blank? and params[:provider].has_key? :contents
@@ -204,15 +220,6 @@ class SubscriptionsController < ApplicationController
       # user didn't provide a manifest to upload
       notify.error _("Subscription manifest must be specified on upload.")
     end
-
-=begin
-    # "finished" is checked for in the javascript to see if polling for task progress should be done
-    if @provider.import_task.nil?
-      to_ret = {'state' => 'finished'}
-    else
-      to_ret = @provider.import_task.to_json
-    end
-=end
 
     to_ret = {'state' => 'running'}
     render :json=>to_ret

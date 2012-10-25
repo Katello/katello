@@ -10,8 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'spec_helper'
-
-describe CustomInfoHelper do
-  pending "add tests for CustomInfoHelper::consolidate()"
+if AppConfig.use_foreman
+  RSpec.configure do |config|
+    config.before do
+      @_original_disable_foreman_orchestration = User.foreman_orchestration_disabled?
+    end
+    config.after do
+      User.disable_foreman_orchestration! @_original_disable_foreman_orchestration
+    end
+  end
 end

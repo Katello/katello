@@ -21,14 +21,14 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.1.9
+Version:       1.2.1
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 Requires:      %{base_name}-cli-common
 BuildArch:     noarch
 BuildRequires: spacewalk-pylint
-Obsoletes:     katello-headpin-cli < 1.0.1-1
-Provides:      katello-headpin-cli = 1.0.1-1
+Obsoletes:     katello-cli-headpin< 0.0.1-1
+Provides:      katello-cli-headpin= 1.0.1-1
 
 %description
 Provides a client package for managing application life-cycle for 
@@ -150,6 +150,65 @@ popd
 make -C po clean
 
 %changelog
+* Fri Oct 19 2012 Miroslav Suchý <msuchy@redhat.com> 1.2.1-1
+- gettext - fix malformed gettext stings in CLI code (inecas@redhat.com)
+- Fix pylint katello.client.core.organization C0301 (inecas@redhat.com)
+- default custom info for systems by org (komidore64@gmail.com)
+- custom info rework (work it!) (komidore64@gmail.com)
+- fix failing system tests (pchalupa@redhat.com)
+- domains cli - fix for listing without --order or --search
+  (tstrachota@redhat.com)
+- cli - pylint fixes (tstrachota@redhat.com)
+- manifests - Added delete manifest while in headpin mode (not enabled in
+  katello) manifests - fixed 857949
+  https://bugzilla.redhat.com/show_bug.cgi?id=857949 (thomasmckay@redhat.com)
+- architectures - slice_dict extracted to utils (tstrachota@redhat.com)
+- architectures - various cli fixes (tstrachota@redhat.com)
+- architectures - cli unit tests (tomas.str@gmail.com)
+- 866323 - do not print binary files to log (msuchy@redhat.com)
+- Bumping package versions for 1.1. (lzap+git@redhat.com)
+- remove old get ext imports (pchalupa@redhat.com)
+- Architectures API fix (pajkycz@gmail.com)
+- Added test_foreman_record to CLI utils to validate foreman resources
+  (pajkycz@gmail.com)
+- Added system tests for domains, config templates (pajkycz@gmail.com)
+- CLI - rename show->info, destroy->delete (pajkycz@gmail.com)
+- Foreman Config Templates improvements (pajkycz@gmail.com)
+- Config templates CLI - print template kind (pajkycz@gmail.com)
+- Foreman domains added to CLI client (pajkycz@gmail.com)
+- Foreman's Config Templates added to CLI client. (pajkycz@gmail.com)
+- architectures cli - show action renamed to info to keep naming consistency
+  (tomas.str@gmail.com)
+- cli - removed mutable types form default param values in Server class
+  (tstrachota@redhat.com)
+- architectures - CRUD CLI actions (tstrachota@redhat.com)
+- cli - util functions for manipulating dicts and options
+  (tstrachota@redhat.com)
+
+* Fri Oct 12 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.10-1
+- Merge pull request #846 from lzap/copyright-update
+- updating copyrights
+- katello-cli-headpin != katello-headpin-cli
+- 864372 - CLI - some keys does not work in "shell"
+- fixing 'ta' translations
+- merge katello.cli translation from CFSE
+- Merge pull request #808 from tstrachota/Bug_845198_locale_cannot_be_switched
+- 845198 - fixed getlocale locale.getlocale was used with wrong parameter.
+  LC_ALL is not allowed. See:
+  http://docs.python.org/library/locale.html#locale.getlocale
+- removing unused import in cli utils printer.py (komidore64@gmail.com)
+- Merge pull request #803 from komidore64/org-list-fail
+- Merge pull request #797 from xsuchy/pull-req-raise
+- 863461 - Headpin Cli automation : Failure to list the org updated with
+  special chars other than ascii chars (komidore64@gmail.com)
+- 858960 - always set the utf-8 writer for stdout and stderr
+- do not mask original error by raise in exception
+- unify string "Couldn't find user role"
+- unify string "Couldn't find user"
+- unify string "Couldn't find template"
+- 857576 - Fixing variable name in filter code
+- 857576 - Fixed package code indentation
+
 * Thu Sep 27 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.9-1
 - convert string to unicode (msuchy@redhat.com)
 - 857576 - Added update filter test (davidd@scimedsolutions.com)

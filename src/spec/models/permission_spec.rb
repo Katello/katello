@@ -22,8 +22,11 @@ describe Permission do
 
     }
 
-    ResourceType::TYPES[type] = {:model => OpenStruct.new(:no_tag_verbs => [],
-      :list_verbs => verb_hash)}
+    ResourceType::TYPES[type] = {:model =>
+      OpenStruct.new(:no_tag_verbs => [], :verb_hash => verb_hash).tap do |os|
+        def os.list_verbs(global=false); verb_hash; end
+      end
+    }
     
   end
 

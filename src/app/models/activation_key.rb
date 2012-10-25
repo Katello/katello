@@ -79,7 +79,7 @@ class ActivationKey < ActiveRecord::Base
   # sets up system when registering with this activation key - must be executed in a transaction
   def apply_to_system(system)
     if not usage_limit.nil? and usage_limit != -1 and usage_count >= usage_limit
-      raise Errors::UsageLimitExhaustedException, _("Usage limit (%s) exhausted for activation key '%s'") % [usage_limit, name]
+      raise Errors::UsageLimitExhaustedException, _("Usage limit (%{limit}) exhausted for activation key '%{name}'") % {:limit => usage_limit, :name => name}
     end
     system.environment_id = self.environment_id if self.environment_id
     system.system_template_id = self.system_template_id if self.system_template_id
@@ -104,8 +104,7 @@ class ActivationKey < ActiveRecord::Base
       end
     end
     total = result.inject{|sum,x| sum + x }
-    raise _("Not enough entitlements in pools (%d), required: %d, available: %d") %
-              [entitlements.size, amount, total] if amount != total
+    raise _("Not enough entitlements in pools (%{size}), required: %{required}, available: %{available}") % {:size => entitlements.size, :required => amount, :available => total} if amount != total
     result
   end
 

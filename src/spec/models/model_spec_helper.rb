@@ -122,11 +122,13 @@ EOKEY
     Resources::Candlepin::Consumer.stub(:get).and_return({})
   end
 
-  def disable_user_orchestration
+  def disable_user_orchestration(options = { })
     Runcible::Resources::User.stub!(:create).and_return({})
     Runcible::Resources::User.stub!(:delete).and_return(200)
     Runcible::Resources::Role.stub!(:add).and_return(true)
     Runcible::Resources::Role.stub!(:remove).and_return(true)
+
+    User.disable_foreman_orchestration! !options[:keep_foreman] if AppConfig.use_foreman
   end
 
 

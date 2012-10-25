@@ -13,7 +13,6 @@
 # granted to use or replicate Red Hat trademarks that are incorporated
 # in this software or its documentation.
 
-import codecs
 import fcntl
 import termios
 import struct
@@ -31,7 +30,7 @@ class PrinterStrategy(object):
 
     def __init__(self):
         super(PrinterStrategy, self).__init__()
-        self.out = codecs.getwriter('utf-8')(sys.stdout)
+        self.out = sys.stdout
 
     def print_item(self, heading, columns, item):
         """
@@ -152,10 +151,7 @@ class VerboseStrategy(PrinterStrategy):
 
             if not column.get('multiline', False):
                 col_width = self._max_label_width(columns)
-                if type(value) != type([]):
-                    value = [value]
-                for v in value:
-                    self._println(("{0:<" + u_str(col_width) + "} : {1}").format(u_str(column['name']), u_str(v)))
+                print ("{0:<" + u_str(col_width) + "} : {1}").format(u_str(column['name']), u_str(value))
             else:
                 self._println(column['name']+":")
                 self._println(indent_text(value, "    "))

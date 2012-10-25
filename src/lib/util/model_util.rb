@@ -20,8 +20,8 @@ module Katello
     end
 
     def setup_label_from_name
-      unless label
-        label = Katello::ModelUtils::labelize(name)
+      unless label.present?
+        self.label = Katello::ModelUtils::labelize(name)
       end
     end
   end

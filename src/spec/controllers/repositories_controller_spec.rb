@@ -1,3 +1,15 @@
+#
+# Copyright 2012 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+
 require 'spec_helper'
 require 'ruby-debug'
 
@@ -112,8 +124,8 @@ describe RepositoriesController, :katello => true do
         product = @repo.product
         Repository.stub(:find).and_return(@repo)
         @repo.stub(:content).and_return(OpenStruct.new(:gpgUrl=>""))
-        product.should_receive(:refresh_content)
-        @repo.stub(:product).and_return(product)
+        @repo.should_receive(:update_content).and_return(Candlepin::Content.new)
+        #@repo.stub(:product).and_return(product)
 
         put :update_gpg_key, { :product_id => @product.id,
                               :provider_id => @product.provider.id,
@@ -124,6 +136,7 @@ describe RepositoriesController, :katello => true do
       specify do
         response.should be_success
       end
+
       subject {Repository.find(@repo.id)}
       it{should_not be_nil}
       its(:gpg_key){should == @gpg}

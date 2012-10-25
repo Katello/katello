@@ -19,11 +19,12 @@ ERROR_CODES = {
   :unknown => 127,
 }
 
-BACKEND_SERVICES = ['katello', 'katello-jobs', 'tomcat6', 'pulp-server', 'thumbslug', 'httpd', 'elasticsearch']
+BACKEND_SERVICES = ['katello', 'katello-jobs', 'tomcat6', 'qpidd', 'mongod', 'thumbslug', 'httpd', 'elasticsearch']
 STDOUT_NAME = "stdout"
 
 # Terminate script with error code from ERROR_CODES hash
-def exit_with(code = :unknown)
+def exit_with(code = :unknown, message = nil)
+  $stderr.puts message unless message.nil?
   code = ERROR_CODES[code.to_sym] || ERROR_CODES[:unknown]
   exit code
 end
@@ -296,7 +297,7 @@ class UpgradeProcess
         puts "disable services automatically."
         puts "You may always use `katello-service stop` to stop all the services"
         puts ""
-        exit_service_stop
+        exit_with :general_error
       end
     end
   end
@@ -321,7 +322,7 @@ class UpgradeProcess
         exit_with :general_error
       end
     else
-      exit_service_stop
+      exit_with :general_error, "Exiting. Please stop your services and try again"
     end
   end
 
@@ -334,18 +335,8 @@ class UpgradeProcess
         exit_with :general_error
       end
     else
-      exit_service_start
+      puts "Exiting. Your Katello installation is upgraded, but please manually start your services"
     end
-  end
-
-  def exit_service_stop
-    puts "Exiting. Please stop your services and try again"
-    exit_with :general_error
-  end
-
-  def exit_service_stop
-    puts "Exiting. Your Katello installation is upgraded, but please manually start your services"
-    exit_with :general_error
   end
 
   def print_line(char="=", repeats=LINE_LEN)

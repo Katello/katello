@@ -94,7 +94,7 @@ class Api::RepositoriesController < Api::ApiController
     raise HttpErrors::BadRequest, _("Repository cannot be deleted since it has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it.") if @repository.promoted?
 
     @repository.destroy
-    render :text => _("Deleted repository '#{params[:id]}'"), :status => 200
+    render :text => _("Deleted repository '%s'") % params[:id], :status => 200
   end
 
   api :POST, "/repositories/:id/enable", "Enable or disable a repository"
@@ -107,9 +107,9 @@ class Api::RepositoriesController < Api::ApiController
     @repository.save!
 
     if @repository.enabled?
-      render :text => _("Repository '#{@repository.name}' enabled."), :status => 200
+      render :text => _("Repository '%s' enabled.") % @repository.name, :status => 200
     else
-      render :text => _("Repository '#{@repository.name}' disabled."), :status => 200
+      render :text => _("Repository '%s' disabled.") % @repository.name, :status => 200
     end
   end
 
@@ -137,7 +137,7 @@ EOS
 
     repo_id = params['payload']['repo_id']
     repo = Repository.where(:pulp_id =>repo_id).first
-    raise _("Could not find repository #{repo_id}") if repo.nil?
+    raise _("Couldn't find repository '%s'") % repo.name if repo.nil?
     Rails.logger.info("Sync_complete called for #{repo.name}, running after_sync.")
     repo.async(:organization=>repo.environment.organization).after_sync(params[:task_id])
     render :text=>""
@@ -189,12 +189,12 @@ EOS
 
   def find_repository
     @repository = Repository.find(params[:id])
-    raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:id]}'") if @repository.nil?
+    raise HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:id] if @repository.nil?
     @repository
   end
 
   def find_product
     @product = @organization.products.find_by_cp_id params[:product_id]
-    raise HttpErrors::NotFound, _("Couldn't find product with id '#{params[:product_id]}'") if @product.nil?
+    raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:product_id] if @product.nil?
   end
 end

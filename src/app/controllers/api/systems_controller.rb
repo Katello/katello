@@ -201,7 +201,7 @@ DESC
   param :id, String, :desc => "UUID of the system", :required => true
   def destroy
     @system.destroy
-    render :text => _("Deleted system '#{params[:id]}'"), :status => 204
+    render :text => _("Deleted system '%s'") % params[:id], :status => 204
   end
 
   api :GET, "/systems/:id/pools", "List pools a system is subscribed to"
@@ -242,7 +242,7 @@ DESC
   param :id, String, :desc => "UUID of the system", :required => true
   def upload_package_profile
     if AppConfig.katello?
-      raise HttpErrors::BadRequest, _("No package profile received for #{@system.name}") unless params.has_key?(:_json)
+      raise HttpErrors::BadRequest, _("No package profile received for %s") % @system.name unless params.has_key?(:_json)
       @system.upload_package_profile(params[:_json])
     end
     render :json => @system.to_json
@@ -256,47 +256,71 @@ DESC
     data = data.flatten.map do |r|
       r.reportable_data(
         :only => [:uuid, :name, :location, :created_at, :updated_at],
-        :methods => [ :environment, :organization, :compliance_color, :compliant_until, :custom_info]
+        :methods => [:environment, :organization, :compliance_color, :compliant_until, :custom_info]
       )
     end.flatten!
 
     system_report = Ruport::Data::Table.new(
       :data => data,
-      :column_names => ["name", "uuid", "location", "environment", "organization", "created_at", "updated_at", "compliance_color", "compliant_until", "custom_info"],
+      :column_names => ["name",
+                        "uuid",
+                        "location",
+                        "organization",
+                        "environment",
+                        "created_at",
+                        "updated_at",
+                        "compliance_color",
+                        "compliant_until",
+                        "custom_info"
+                       ],
       :record_class => Ruport::Data::Record,
       :transforms => lambda {|r|
         r.organization = r.organization.name
         r.environment = r.environment.name
-        r.custom_info = r.custom_info.collect { |i| "#{i['keyname']}: #{i['value']}" }.join(", ")
-      })
+        r.created_at = r.created_at.to_s
+        r.updated_at = r.updated_at.to_s
+        r.compliant_until = r.compliant_until.to_s
+        r.custom_info = r.custom_info.collect { |info| info.to_s }.join(", ")
+      }
+    )
 
-    system_report.rename_column("environment.name", "environment")
+    pdf_options = { :pdf_format => {
+                      :page_layout => :portrait,
+                      :page_size => "LETTER",
+                      :left_margin => 5
+                      },
+                    :table_format => {
+                      :width => 585,
+                      :cell_style => { :size => 8},
+                      :row_colors => ["FFFFFF","F0F0F0"],
+                      :column_widths => {
+                        0 => 100,
+                        1 => 100,
+                        2 => 50,
+                        3 => 40,
+                        4 => 75,
+                        5 => 60,
+                        6 => 60}
+                      }
+                  }
+
     system_report.rename_column("created_at", "created")
     system_report.rename_column("updated_at", "updated")
     system_report.rename_column("compliance_color", "compliance")
     system_report.rename_column("compliant_until", "compliant until")
     system_report.rename_column("custom_info", "custom info")
 
-    pdf_options = {:table_format => {
-      :heading_font_size => 10,
-      :font_size => 8,
-      :column_options => {
-        "width" => 50,
-        "name" => {"width" => 100},
-        "uuid" => {"width" => 100},
-        "location" => {"width" => 50},
-        "environment" => {"width" => 40},
-        "organization" => {"width" => 75},
-        "created" => {"width" => 60},
-        "updated" => {"width" => 60}
-       }
-    }}
-
     respond_to do |format|
       format.html { render :text => system_report.as(:html), :type => :html and return }
       format.text { render :text => system_report.as(:text, :ignore_table_width => true) }
       format.csv { render :text => system_report.as(:csv) }
-      format.pdf { send_data(system_report.as(:pdf, pdf_options), :filename => "katello_systems_report.pdf", :type => "application/pdf") }
+      format.pdf do
+        send_data(
+          system_report.as(:prawn_pdf, pdf_options),
+          :filename => "%s_systems_report.pdf" % (AppConfig.katello? ? "katello" : "headpin"),
+          :type => "application/pdf"
+        )
+      end
     end
   end
 
@@ -335,14 +359,14 @@ This information is then used for computing the errata available for the system.
 DESC
   def enabled_repos
     repos = params['enabled_repos'] rescue raise(HttpErrors::BadRequest, _("Expected attribute is missing:") + " enabled_repos")
-    update_labels = repos['repos'].collect{ |r| r['repositoryid']} rescue raise(HttpErrors::BadRequest, _("Unable to parse repositories: #{$!}"))
+    update_labels = repos['repos'].collect{ |r| r['repositoryid']} rescue raise(HttpErrors::BadRequest, _("Unable to parse repositories: %s") % $!)
 
     update_ids = []
     unknown_labels = []
     update_labels.each do |label|
       repo = @system.environment.repositories.find_by_cp_label label
       if repo.nil?
-        logger.warn(_("Unknown repository label") + ": #{label}")
+        logger.warn(_("Unknown repository label: %s") % label)
         unknown_labels << label
       else
         update_ids << repo.pulp_id
@@ -393,13 +417,13 @@ DESC
 
     id = (params[:organization_id] || params[:owner]).tr(' ', '_')
     @organization = Organization.first(:conditions => {:label => id})
-    raise HttpErrors::NotFound, _("Couldn't find organization '#{id}'") if @organization.nil?
+    raise HttpErrors::NotFound, _("Couldn't find organization '%s'") % id if @organization.nil?
     @organization
   end
 
   def find_only_environment
     if !@environment && @organization && !params.has_key?(:environment_id)
-      raise HttpErrors::BadRequest, _("Organization #{@organization.name} has 'Library' environment only. Please create an environment for system registration.") if @organization.environments.empty?
+      raise HttpErrors::BadRequest, _("Organization %s has 'Library' environment only. Please create an environment for system registration.") % @organization.name if @organization.environments.empty?
 
       # Some subscription-managers will call /users/$user/owners to retrieve the orgs that a user belongs to.
       # Then, If there is just one org, that will be passed to the POST /api/consumers as the owner. To handle
@@ -410,7 +434,7 @@ DESC
         if current_user.default_environment && current_user.default_environment.organization == @organization
           @environment = current_user.default_environment
         else
-          raise HttpErrors::BadRequest, _("Organization #{@organization.name} has more than one environment. Please specify target environment for system registration.")
+          raise HttpErrors::BadRequest, _("Organization %s has more than one environment. Please specify target environment for system registration.") % @organization.name
         end
       else
         @environment = @organization.environments.first and return
@@ -426,7 +450,7 @@ DESC
     return unless params.has_key?(:environment_id)
 
     @environment = KTEnvironment.find(params[:environment_id])
-    raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:environment_id]}'") if @environment.nil?
+    raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
     @organization = @environment.organization
     @environment
   end
@@ -441,7 +465,7 @@ DESC
     if @environment
       @organization = @environment.organization
     else
-      raise HttpErrors::NotFound, _("You have not set a default organization and environment on the user #{current_user.username}.")
+      raise HttpErrors::NotFound, _("You have not set a default organization and environment on the user %s.") % current_user.username
     end
   end
 
@@ -449,7 +473,7 @@ DESC
     @system = System.first(:conditions => { :uuid => params[:id] })
     if @system.nil?
       Resources::Candlepin::Consumer.get params[:id] # check with candlepin if system is Gone, raises RestClient::Gone
-      raise HttpErrors::NotFound, _("Couldn't find system '#{params[:id]}'")
+      raise HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:id]
     end
     @system
   end
@@ -459,7 +483,7 @@ DESC
       ak_names = ak_names.split(",")
       activation_keys = ak_names.map do |ak_name|
         activation_key = @organization.activation_keys.find_by_name(ak_name)
-        raise HttpErrors::NotFound, _("Couldn't find activation key '#{ak_name}'") unless activation_key
+        raise HttpErrors::NotFound, _("Couldn't find activation key '%s'") % ak_name unless activation_key
         activation_key
       end
     else

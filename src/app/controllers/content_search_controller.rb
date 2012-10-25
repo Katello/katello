@@ -197,7 +197,9 @@ class ContentSearchController < ApplicationController
 
     cols = {}
     sort_repos(@repos).each{|r| cols[r.id] = {:id=>r.id, :content => repo_compare_name_display(r)}}
-    rows += [metadata_row(packages.total, offset.to_i + rows.length, {:repos=>params[:repos]}, 'compare')] if packages.total > current_user.page_size
+    if !packages.empty?
+      rows += [metadata_row(packages.total, offset.to_i + rows.length, {:repos=>params[:repos]}, 'compare')] if packages.total > current_user.page_size
+    end
     render :json => {:rows=>rows, :cols=>cols, :name=>_("Repository Comparison")}
   end
 

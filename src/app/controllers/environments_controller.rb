@@ -135,7 +135,7 @@ class EnvironmentsController < ApplicationController
   def find_organization
     org_id = params[:organization_id] || params[:org_id]
     @organization = Organization.first(:conditions => {:label => org_id})
-    notify.error _("Couldn't find organization '%d'") % org_id if @organization.nil?
+    notify.error _("Couldn't find organization '%s'") % org_id if @organization.nil?
   end
 
   def find_environment
@@ -146,7 +146,7 @@ class EnvironmentsController < ApplicationController
     @env_labels = (envs_no_successors - [@environment]).collect {|p| [ p.display_name, p.id ]}
     @selected = @environment.prior.nil? ? "" : @environment.prior.id
   end
-  
+
   def envs_no_successors
     envs = [@organization.library]
     envs += @organization.environments.reject {|item| !item.successor.nil?}

@@ -66,7 +66,7 @@
             %th
             %th #{_("Subscription")}
             %th #{_("SLA")}
-            %th #{_("Sockets")}
+            %th #{_("Limits")}
             %th #{_("Quantity")}
             %th #{_("Start")}
             %th #{_("End")}
@@ -82,7 +82,7 @@
               %th
               %th #{_("Subscription")}
               %th #{_("SLA")}
-              %th #{_("Sockets")}
+              %th #{_("Limits")}
               %th #{_("Quantity")}
               %th #{_("Start")}
               %th #{_("End")}
@@ -102,7 +102,9 @@
                   %td{:style => "padding-top:9px;"}
                   %td{:style => "padding-top:9px;"}
                   %td{:style => "padding-top:9px;"} #{sub.support_level}
-                  %td{:style => "padding-top:9px;"} #{sub.sockets}
+                  %td{:style => "padding-top:9px;"}
+                    = _("Sockets: %s") % sub.sockets
+                    = _(", RAM: %s") % sub.ram if sub.ram != 0
                   - if sub.multi_entitlement
                     %td
                       = text_field_tag "spinner[#{sub.cp_id}]", nil, :min => 0, :max => (sub.quantity-sub.consumed), :step=>1, :value=>0, :class=>"ui-spinner"
