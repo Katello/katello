@@ -248,6 +248,20 @@ class Resources::AbstractModel
     [key] if key
   end
 
+  def to_param
+    id && id.to_s
+  end
+
+  def update_attributes(attributes)
+    self.attributes = attributes
+    save
+  end
+
+  def update_attributes!(attributes)
+    self.attributes = attributes
+    save!
+  end
+
   private
 
   singleton_class.instance_eval { attr_writer :current_user_getter }
