@@ -97,8 +97,8 @@ module Glue::Pulp::Repo
     end
 
     def uri
-      start = AppConfig.pulp.url.gsub("api/v2/", '')  #https://HOSTNAME/pulp/
-      "#{start}repos/#{relative_path}"
+      uri = URI.parse(AppConfig.pulp.url)
+      "https://#{uri.host}/pulp/repos/#{relative_path}"
     end
 
     def to_hash
