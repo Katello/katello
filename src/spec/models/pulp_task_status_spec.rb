@@ -18,7 +18,7 @@ describe PulpTaskStatus do
   context "proxy TaskStatus for pulp task" do
     let(:pulp_task_without_error) do
       {
-          :id => '123',
+          :task_id => '123',
           :state => 'waiting',
           :start_time => Time.now,
           :finish_time => Time.now,
@@ -28,7 +28,7 @@ describe PulpTaskStatus do
 
     let(:updated_pulp_task) do
       {
-          :id => '123',
+          :task_id => '123',
           :state => 'finished',
           :start_time => Time.now,
           :finish_time => Time.now + 60,
@@ -38,7 +38,7 @@ describe PulpTaskStatus do
 
     let(:pulp_task_with_error) do
       {
-          :id => '123',
+          :task_id => '123',
           :state => 'waiting',
           :start_time => Time.now,
           :finish_time => Time.now,
@@ -50,7 +50,7 @@ describe PulpTaskStatus do
     context "TaskStatus should have correct attributes for a completed task" do
       before { @t = PulpTaskStatus.using_pulp_task(pulp_task_without_error) }
 
-      specify { @t.uuid.should == pulp_task_without_error[:id] }
+      specify { @t.uuid.should == pulp_task_without_error[:task_id] }
       specify { @t.state.should == pulp_task_without_error[:state] }
       specify { @t.start_time.should == pulp_task_without_error[:start_time] }
       specify { @t.finish_time.should == pulp_task_without_error[:finish_time] }
@@ -72,11 +72,11 @@ describe PulpTaskStatus do
         end
         @t.save!
 
-        Resources::Pulp::Task.stub(:find).and_return([updated_pulp_task])
+        Runcible::Resources::Task.stub(:poll).and_return(updated_pulp_task)
       end
 
       it "should fetch data from pulp" do
-        Resources::Pulp::Task.should_receive(:find).once.with([@t.uuid]).and_return([updated_pulp_task])
+        Runcible::Resources::Task.should_receive(:poll).once.with(@t.uuid).and_return(updated_pulp_task)
         @t.refresh
       end
 
