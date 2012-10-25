@@ -76,7 +76,6 @@ Requires:       rubygem(tire) >= 0.3.0
 Requires:       rubygem(tire) < 0.4
 Requires:       rubygem(ldap_fluff)
 Requires:       rubygem(apipie-rails) >= 0.0.12
-Requires:       rubygem(foreman_api) >= 0.0.7
 Requires:       lsof
 
 %if 0%{?rhel} == 6
@@ -183,7 +182,7 @@ Katello connection classes for the Pulp backend
 BuildArch:      noarch
 Summary:         Katello connection classes for the Foreman backend
 Requires:        %{name}-common
-Requires:       rubygem(foreman_api)
+Requires:       rubygem(foreman_api) >= 0.0.7
 
 %description glue-foreman
 Katello connection classes for the Foreman backend
