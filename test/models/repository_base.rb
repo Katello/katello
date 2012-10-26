@@ -24,7 +24,7 @@ module RepositoryTestBase
 
   module ClassMethods
     def before_suite
-      services  = ['Candlepin', 'Pulp', 'ElasticSearch']
+      services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
       models    = ['Repository', 'Package']
       disable_glue_layers(services, models)
     end

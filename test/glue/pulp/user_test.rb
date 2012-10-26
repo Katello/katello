@@ -19,7 +19,7 @@ class GluePulpUserTestBase < MiniTest::Rails::ActiveSupport::TestCase
   def self.before_suite
     configure_runcible
 
-    services  = ['Candlepin', 'ElasticSearch']
+    services  = ['Candlepin', 'ElasticSearch', 'Foreman']
     models    = ['User']
     disable_glue_layers(services, models)
   end
