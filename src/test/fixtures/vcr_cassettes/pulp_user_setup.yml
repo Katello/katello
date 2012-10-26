@@ -1,100 +1,21 @@
 --- 
-recorded_with: VCR 2.2.5
 http_interactions: 
-- request: 
-    method: delete
-    uri: https://knifeparty.localdomain/pulp/api/v2/users/
-    body: 
-      string: ""
-    headers: 
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="OXSVBvfwwJK8cdJaSZ3zDO4LRo6oH6U0IviQ8dXwbY", oauth_signature="71LNPTMCY4UPR0rS40qXhoji%2FzI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1350920340", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      Content-Type: 
-      - application/json
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-  response: 
-    status: 
-      code: 405
-      message: Method Not Allowed
-    headers: 
-      Content-Length: 
-      - "24"
-      Allow: 
-      - GET, POST
-      Vary: 
-      - Accept-Encoding
-      Content-Type: 
-      - text/html; charset=UTF-8
-      Date: 
-      - Mon, 22 Oct 2012 15:39:00 GMT
-      Content-Encoding: 
-      - gzip
-      Server: 
-      - Apache/2.2.22 (Fedora)
-    body: 
-      string: !binary |
-        H4sIAAAAAAAAA/PLz0sFAPGvot8EAAAA
-
-    http_version: 
-  recorded_at: Mon, 22 Oct 2012 15:39:00 GMT
-- request: 
-    method: post
-    uri: https://knifeparty.localdomain/pulp/api/v2/users/
-    body: 
-      string: "{\"name\":\"batman\",\"login\":\"batman\",\"password\":\"LC6CH5RpQ6C8Vsch\"}"
-    headers: 
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="EYx6CQ0xjV1374PJhCjXfYblIW14PpTflByldDM", oauth_signature="QR1RRleFdqhw5wKVLLlskwXANKM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1350920340", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      Content-Length: 
-      - "64"
-      Content-Type: 
-      - application/json
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-  response: 
-    status: 
-      code: 201
-      message: Created
-    headers: 
-      Content-Length: 
-      - "184"
-      Location: 
-      - batman
-      Content-Type: 
-      - application/json
-      Date: 
-      - Mon, 22 Oct 2012 15:39:00 GMT
-      Server: 
-      - Apache/2.2.22 (Fedora)
-    body: 
-      string: "{\"_id\": {\"$oid\": \"50856895dc79216add005c5d\"}, \"name\": \"batman\", \"roles\": [], \"_ns\": \"users\", \"login\": \"batman\", \"id\": \"50856895dc79216add005c5d\", \"_href\": \"/pulp/api/v2/users/batman/\"}"
-    http_version: 
-  recorded_at: Mon, 22 Oct 2012 15:39:01 GMT
 - request: 
     method: delete
     uri: https://knifeparty.localdomain/pulp/api/v2/users/batman/
     body: 
       string: ""
     headers: 
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="UnMBh79OodOkn40aapY6CVzpjmo3nJ382pTXPGgeSs", oauth_signature="WLExzEwuohPKjneM5o6j8d3VzVg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1350920341", oauth_version="1.0"
-      Pulp-User: 
-      - admin
       Content-Type: 
       - application/json
       Accept: 
       - application/json
+      Pulp-User: 
+      - admin
       Accept-Encoding: 
       - gzip, deflate
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="wEE7VqetdktJcoO0AohBHO4uSJGzGFCbG5WBzjc", oauth_signature="VlXUm8otqWf8PcVSuZXxUOofQcc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1351212142", oauth_version="1.0"
   response: 
     status: 
       code: 200
@@ -102,13 +23,92 @@ http_interactions:
     headers: 
       Content-Length: 
       - "4"
+      Date: 
+      - Fri, 26 Oct 2012 00:42:22 GMT
       Content-Type: 
       - application/json
-      Date: 
-      - Mon, 22 Oct 2012 15:39:01 GMT
       Server: 
       - Apache/2.2.22 (Fedora)
     body: 
       string: "null"
     http_version: 
-  recorded_at: Mon, 22 Oct 2012 15:39:01 GMT
+  recorded_at: Fri, 26 Oct 2012 00:42:22 GMT
+- request: 
+    method: post
+    uri: https://knifeparty.localdomain/pulp/api/v2/users/
+    body: 
+      string: "{\"name\":\"batman\",\"password\":\"frIK0nmwvAdfsqde\",\"login\":\"batman\"}"
+    headers: 
+      Content-Length: 
+      - "64"
+      Content-Type: 
+      - application/json
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="wgvO43vtRWOQxYToSYYAZzC3TGb4ewnD4W7tSXB3CQ", oauth_signature="B%2F0FOIMK7d%2BlBYa%2F8CixdzWaZrQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1351212142", oauth_version="1.0"
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Content-Length: 
+      - "184"
+      Date: 
+      - Fri, 26 Oct 2012 00:42:22 GMT
+      Content-Type: 
+      - application/json
+      Location: 
+      - batman
+      Server: 
+      - Apache/2.2.22 (Fedora)
+    body: 
+      string: "{\"_id\": {\"$oid\": \"5089dc6edc792138c900125c\"}, \"name\": \"batman\", \"roles\": [], \"_ns\": \"users\", \"login\": \"batman\", \"id\": \"5089dc6edc792138c900125c\", \"_href\": \"/pulp/api/v2/users/batman/\"}"
+    http_version: 
+  recorded_at: Fri, 26 Oct 2012 00:42:22 GMT
+- request: 
+    method: delete
+    uri: https://knifeparty.localdomain/pulp/api/v2/users/
+    body: 
+      string: ""
+    headers: 
+      Content-Type: 
+      - application/json
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="D35euP8U6tjV5G0RsTD1N2OKgf54aeBalgVlNSNP9Nc", oauth_signature="BgVYaAbhFmaAJK59BqhgJi%2FGBu8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1351212142", oauth_version="1.0"
+  response: 
+    status: 
+      code: 405
+      message: Method Not Allowed
+    headers: 
+      Content-Length: 
+      - "24"
+      Date: 
+      - Fri, 26 Oct 2012 00:42:22 GMT
+      Content-Type: 
+      - text/html; charset=UTF-8
+      Content-Encoding: 
+      - gzip
+      Allow: 
+      - GET, POST
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Vary: 
+      - Accept-Encoding
+    body: 
+      string: !binary |
+        H4sIAAAAAAAAA/PLz0sFAPGvot8EAAAA
+
+    http_version: 
+  recorded_at: Fri, 26 Oct 2012 00:42:22 GMT
+recorded_with: VCR 2.2.5

@@ -23,7 +23,7 @@ class GluePulpRepoTestBase < MiniTest::Rails::ActiveSupport::TestCase
     load_fixtures
     configure_runcible
 
-    services  = ['Candlepin', 'ElasticSearch']
+    services  = ['Candlepin', 'ElasticSearch', 'Foreman']
     models    = ['Repository', 'Package']
     disable_glue_layers(services, models)
 
@@ -48,7 +48,7 @@ class GluePulpRepoTestBase < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def setup
-    VCR.insert_cassette('glue_pulp_repo')
+    VCR.insert_cassette('glue_pulp_repo', :match_requests_on => [:body_json, :path, :params, :method])
   end
 
   def teardown
@@ -117,7 +117,9 @@ class GluePulpRepoTest < GluePulpRepoTestBase
   end
 
   def test_set_sync_schedule
-    assert @fedora_17_x86_64.set_sync_schedule(Time.now.advance(:years => 1).iso8601 << "/P1D")
+    VCR.use_cassette('glue_pulp_repo_sync_schedule', :match_requests_on => [:path, :params, :method]) do
+      assert @fedora_17_x86_64.set_sync_schedule(Time.now.advance(:years => 1).iso8601 << "/P1D")
+    end
   end
 
   def test_cancel_sync
