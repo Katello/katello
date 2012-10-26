@@ -27,13 +27,33 @@ def configure_vcr
 
     begin
       c.register_request_matcher :body_json do |request_1, request_2|
-        JSON.parse(request_1.body) == JSON.parse(request_2.body)
+        begin
+          json_1 = JSON.parse(request_1.body) 
+          json_2 = JSON.parse(request_2.body)
+
+          json_1 == json_2
+        rescue
+          #fallback incase there is a JSON parse error
+          request_1.body == request_2.body
+        end
       end
     rescue => e
       #ignore the warning thrown about this matcher already being resgistered
     end
 
-    c.default_cassette_options = { :record => mode.to_sym } #record_mode } #forcing all requests to Pulp currently
+    begin
+      c.register_request_matcher :params do |request_1, request_2|
+        URI(request_1.uri).query == URI(request_2.uri).query
+      end
+    rescue => e
+      #ignore the warning thrown about this matcher already being resgistered
+    end
+
+    c.default_cassette_options = {
+      :record => mode.to_sym,
+      :match_requests_on => [:method, :path, :params]
+    }
+
   end
 end
 
@@ -56,6 +76,7 @@ def disable_glue_layers(services=[], models=[])
 
   AppConfig.use_cp            = services.include?('Candlepin') ? false : true
   AppConfig.use_pulp          = services.include?('Pulp') ? false : true
+  AppConfig.use_foreman       = services.include?('Foreman') ? false : true
   AppConfig.use_elasticsearch = services.include?('ElasticSearch') ? false : true
 
   cached_entry = {:cp=>AppConfig.use_cp, :pulp=>AppConfig.use_pulp, :es=>AppConfig.use_elasticsearch}

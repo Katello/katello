@@ -1,38 +1,38 @@
 --- 
-recorded_with: VCR 2.2.5
 http_interactions: 
 - request: 
     method: post
     uri: https://knifeparty.localdomain/pulp/api/v2/repositories/1/search/units/
     body: 
-      string: "{\"criteria\":{\"type_ids\":[\"distribution\"],\"sort\":{\"unit\":[[\"id\",\"ascending\"]]}}}"
+      string: "{\"criteria\":{\"sort\":{\"unit\":[[\"id\",\"ascending\"]]},\"type_ids\":[\"distribution\"]}}"
     headers: 
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="HW1yBEQjsmWdokqa8WFmDydmMQt33cXEFMAPQ9HEk", oauth_signature="jjP1gTZTeEa0bmslaNyUbqfE4yk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1350920315", oauth_version="1.0"
-      Pulp-User: 
-      - admin
       Content-Length: 
       - "79"
       Content-Type: 
       - application/json
       Accept: 
       - application/json
+      Pulp-User: 
+      - admin
       Accept-Encoding: 
       - gzip, deflate
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="Tm7A5LbFw32NF3RiPpgywYK2M7p3Tcwa8sdlYe180", oauth_signature="aKMO4WCA%2F9Hq65Wu1OWwjj%2BZVzA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1351212121", oauth_version="1.0"
   response: 
     status: 
       code: 200
       message: OK
     headers: 
       Content-Length: 
-      - "2156"
+      - "2158"
+      Date: 
+      - Fri, 26 Oct 2012 00:42:01 GMT
       Content-Type: 
       - application/json
-      Date: 
-      - Mon, 22 Oct 2012 15:38:35 GMT
       Server: 
       - Apache/2.2.22 (Fedora)
     body: 
-      string: "[{\"updated\": \"2012-10-22T11:38:34\", \"repo_id\": \"1\", \"created\": \"2012-10-22T11:38:34\", \"_ns\": \"repo_content_units\", \"unit_id\": \"d16d6f84-5156-45ca-8de4-ac5c1b886b44\", \"unit_type_id\": \"distribution\", \"owner_type\": \"importer\", \"_id\": {\"$oid\": \"5085687adc79216add005a99\"}, \"id\": \"5085687adc79216add005a99\", \"owner_id\": \"yum_importer\", \"metadata\": {\"files\": [{\"checksumtype\": \"sha256\", \"relativepath\": \"images/test2.img\", \"fileName\": \"test2.img\", \"downloadurl\": \"file:///home/ehelms/workspace/katello/src/test/fixtures/zoo5/images/test2.img\", \"item_type\": \"tree_file\", \"savepath\": \"/var/lib/pulp/working/repos/1/importers/yum_importer/1/images\", \"checksum\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"filename\": \"test2.img\", \"pkgpath\": \"/var/lib/pulp/content/distribution/ks-Test Family-TestVariant-16-x86_64/images\", \"size\": 0}, {\"checksumtype\": \"sha256\", \"relativepath\": \"empty.iso\", \"fileName\": \"empty.iso\", \"downloadurl\": \"file:///home/ehelms/workspace/katello/src/test/fixtures/zoo5/empty.iso\", \"item_type\": \"tree_file\", \"savepath\": \"/var/lib/pulp/working/repos/1/importers/yum_importer/1/\", \"checksum\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"filename\": \"empty.iso\", \"pkgpath\": \"/var/lib/pulp/content/distribution/ks-Test Family-TestVariant-16-x86_64\", \"size\": 0}, {\"checksumtype\": \"sha256\", \"relativepath\": \"images/test1.img\", \"fileName\": \"test1.img\", \"downloadurl\": \"file:///home/ehelms/workspace/katello/src/test/fixtures/zoo5/images/test1.img\", \"item_type\": \"tree_file\", \"savepath\": \"/var/lib/pulp/working/repos/1/importers/yum_importer/1/images\", \"checksum\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"filename\": \"test1.img\", \"pkgpath\": \"/var/lib/pulp/content/distribution/ks-Test Family-TestVariant-16-x86_64/images\", \"size\": 0}], \"_storage_path\": \"/var/lib/pulp/content/distribution/ks-Test Family-TestVariant-16-x86_64\", \"family\": \"Test Family\", \"_ns\": \"units_distribution\", \"variant\": \"TestVariant\", \"version\": \"16\", \"_content_type_id\": \"distribution\", \"_id\": \"d16d6f84-5156-45ca-8de4-ac5c1b886b44\", \"arch\": \"x86_64\", \"id\": \"ks-Test Family-TestVariant-16-x86_64\"}}]"
+      string: "[{\"updated\": \"2012-10-26T04:41:50Z\", \"repo_id\": \"1\", \"created\": \"2012-10-26T04:41:50Z\", \"_ns\": \"repo_content_units\", \"unit_id\": \"d16d6f84-5156-45ca-8de4-ac5c1b886b44\", \"unit_type_id\": \"distribution\", \"owner_type\": \"importer\", \"_id\": {\"$oid\": \"5089dc4edc792138c900108c\"}, \"id\": \"5089dc4edc792138c900108c\", \"owner_id\": \"yum_importer\", \"metadata\": {\"files\": [{\"checksumtype\": \"sha256\", \"relativepath\": \"images/test2.img\", \"fileName\": \"test2.img\", \"downloadurl\": \"file:///home/ehelms/workspace/katello/src/test/fixtures/zoo5/images/test2.img\", \"item_type\": \"tree_file\", \"savepath\": \"/var/lib/pulp/working/repos/1/importers/yum_importer/1/images\", \"checksum\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"filename\": \"test2.img\", \"pkgpath\": \"/var/lib/pulp/content/distribution/ks-Test Family-TestVariant-16-x86_64/images\", \"size\": 0}, {\"checksumtype\": \"sha256\", \"relativepath\": \"empty.iso\", \"fileName\": \"empty.iso\", \"downloadurl\": \"file:///home/ehelms/workspace/katello/src/test/fixtures/zoo5/empty.iso\", \"item_type\": \"tree_file\", \"savepath\": \"/var/lib/pulp/working/repos/1/importers/yum_importer/1/\", \"checksum\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"filename\": \"empty.iso\", \"pkgpath\": \"/var/lib/pulp/content/distribution/ks-Test Family-TestVariant-16-x86_64\", \"size\": 0}, {\"checksumtype\": \"sha256\", \"relativepath\": \"images/test1.img\", \"fileName\": \"test1.img\", \"downloadurl\": \"file:///home/ehelms/workspace/katello/src/test/fixtures/zoo5/images/test1.img\", \"item_type\": \"tree_file\", \"savepath\": \"/var/lib/pulp/working/repos/1/importers/yum_importer/1/images\", \"checksum\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"filename\": \"test1.img\", \"pkgpath\": \"/var/lib/pulp/content/distribution/ks-Test Family-TestVariant-16-x86_64/images\", \"size\": 0}], \"_storage_path\": \"/var/lib/pulp/content/distribution/ks-Test Family-TestVariant-16-x86_64\", \"family\": \"Test Family\", \"_ns\": \"units_distribution\", \"variant\": \"TestVariant\", \"version\": \"16\", \"_content_type_id\": \"distribution\", \"_id\": \"d16d6f84-5156-45ca-8de4-ac5c1b886b44\", \"arch\": \"x86_64\", \"id\": \"ks-Test Family-TestVariant-16-x86_64\"}}]"
     http_version: 
-  recorded_at: Mon, 22 Oct 2012 15:38:35 GMT
+  recorded_at: Fri, 26 Oct 2012 00:42:01 GMT
+recorded_with: VCR 2.2.5
