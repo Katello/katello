@@ -93,13 +93,13 @@ class ContentViewDefinitionAPI(KatelloAPI):
         return data
 
     def repos(self, org, cvd_id):
-        path = "/api/organizations/%s/content_view_definitions/%s/reposistories"\
+        path = "/api/organizations/%s/content_view_definitions/%s/repositories"\
                 % (u_str(org), u_str(cvd_id))
         data = self.server.GET(path)[1]
         return data
 
     def update_repos(self, org, cvd, repos):
-        path = "/api/organizations/%s/content_view_definitions/%s/repos" % \
-                (u_str(org), u_str(cvd))
+        path = "/api/organizations/%s/content_view_definitions/%s/repositories" \
+                % (u_str(org), u_str(cvd))
         data = self.server.PUT(path, {"repos": repos})[1]
         return data

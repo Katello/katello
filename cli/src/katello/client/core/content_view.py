@@ -22,7 +22,7 @@ from katello.client.cli.base import opt_parser_add_org
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record
 from katello.client.api.utils import get_content_view, get_cv_definition, \
-        get_filter, get_product
+        get_filter, get_product, get_repo
 
 # base content_view action --------------------------------------------------------
 
@@ -287,8 +287,6 @@ class AddRemoveProduct(ContentViewAction):
         product_label  = self.get_option('product')
 
         view = get_cv_definition(org_name, view_label)
-        get_product(org_name, product_label)
-
         products = self.def_api.products(org_name, view['id'])
         products = [f['name'] for f in products]
         self.update_products(org_name, view, products, product_label)
@@ -305,6 +303,62 @@ class AddRemoveProduct(ContentViewAction):
                     (product_label, cvd["label"]))
 
         self.def_api.update_products(org_name, cvd['id'], products)
+        print message
+
+class AddRemoveRepo(ContentViewAction):
+
+    select_by_env = False
+    addition = True
+
+    @property
+    def description(self):
+        if self.addition:
+            return _('add a repo to a content view')
+        else:
+            return _('remove a repo from a content view')
+
+
+    def __init__(self, addition):
+        super(AddRemoveRepo, self).__init__()
+        self.addition = addition
+
+    def setup_parser(self, parser):
+        parser.add_option('--label', dest='label',
+                help=_("content view label eg: Database (required)"))
+        opt_parser_add_org(parser, required=1)
+        parser.add_option('--repo', dest='repo',
+                help=_("repository name (required)"))
+        parser.add_option('--product', dest='product',
+                help=_("product label (required)"))
+
+    def check_options(self, validator):
+        validator.require(('repo', 'org', 'label', 'product'))
+
+    def run(self):
+        org_name       = self.get_option('org')
+        view_label     = self.get_option('label')
+        repo_name      = self.get_option('repo')
+        product        = self.get_option('product')
+
+        view = get_cv_definition(org_name, view_label)
+        repo = get_repo(org_name, product, repo_name)
+
+        repos = self.def_api.repos(org_name, view['id'])
+        repos = [f['id'] for f in repos]
+        self.update_repos(org_name, view, repos, repo)
+        return os.EX_OK
+
+    def update_repos(self, org_name, cvd, repos, repo):
+        if self.addition:
+            repos.append(repo["id"])
+            message = _("Added repository [ %s ] to content view [ %s ]" % \
+                    (repo["name"], cvd["label"]))
+        else:
+            repos.remove(repo["id"])
+            message = _("Removed repository [ %s ] to content view [ %s ]" % \
+                    (repo["name"], cvd["label"]))
+
+        self.def_api.update_repos(org_name, cvd['id'], repos)
         print message
 
 # content_view command ------------------------------------------------------------
