@@ -14,7 +14,7 @@ KATELLO_PREFIX=${KATELLO_PREFIX:-/katello}
 if [ "$KATELLO_PREFIX" = "/headpin" -o "$KATELLO_PREFIX" = "/sam" ]; then
     SERVICES=("tomcat6" "elasticsearch")
 else
-    SERVICES=("tomcat6" "elasticsearch" "qpidd" "mongod")
+    SERVICES=("tomcat6" "elasticsearch" "qpidd" "mongod" "httpd")
 fi
 
 for SERVICE in ${SERVICES[@]}; do 
