@@ -593,6 +593,12 @@ Src::Application.routes.draw do
           put :index, :action => :update_content_view_definition_products,
             :on => :collection
         end
+        resources :repositories, :only => [] do
+          get :index, :action => :list_content_view_definition_repositories,
+            :on => :collection
+          put :index, :action => :update_content_view_definition_repositories,
+            :on => :collection
+        end
       end
 >>>>>>> Content views: Worked on labels and cli
     end
