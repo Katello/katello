@@ -17,6 +17,7 @@
 
 # configure config to load it from working directory rather than from /etc
 import os
+import sys
 from katello.client.config import Config
 Config.PATH = os.path.join(os.path.dirname(__file__), "../../../../etc/client.conf")
 
@@ -54,12 +55,12 @@ class UsageGenerator:
             self._print_subcommands_for(subcmd)
             self._process_subcommands_for(subcmd, parent_name+" "+subcommand_name)
 
-    def print_usage(self):
+    def print_usage(self, command="katello"):
         print "  Possible commands:"
         self._print_subcommands_for(self.__collector)
-        self._process_subcommands_for(self.__collector, "katello")
+        self._process_subcommands_for(self.__collector, command)
 
 if __name__ == "__main__":
     usage_gen = UsageGenerator()
-    setup_admin(usage_gen.collector())
-    usage_gen.print_usage()
+    setup_admin(usage_gen.collector(), sys.argv[1])
+    usage_gen.print_usage(sys.argv[1])

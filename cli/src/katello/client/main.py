@@ -49,9 +49,8 @@ from katello.client.core import (
   domain
 )
 
-def setup_admin(katello_cmd):
+def setup_admin(katello_cmd, mode=get_katello_mode()):
     # pylint: disable=R0914,R0915
-    mode = get_katello_mode()
     akey_cmd = activation_key.ActivationKey()
     akey_cmd.add_command('create', activation_key.Create())
     akey_cmd.add_command('info', activation_key.Info())
