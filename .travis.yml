@@ -9,7 +9,9 @@ install:
 
 script:
   - ./scripts/ci/cli_pull_request_tests.sh
-  - bundle install --without jshintrb:devboost:profiling:debugging --quiet
+  - cd src/
+  - bundle install --without jshintrb:devboost:profiling:debugging
+  - cd ../
   - ./scripts/ci/katello_pull_request_tests.sh
 
 rvm:

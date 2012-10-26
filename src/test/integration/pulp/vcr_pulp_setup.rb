@@ -13,7 +13,6 @@ require 'rubygems'
 require 'vcr'
 require 'ostruct'
 require 'yaml'
-require 'ruby-debug'
 
 require 'active_support/core_ext/class/inheritable_attributes'
 require 'active_support/core_ext/hash/indifferent_access'
