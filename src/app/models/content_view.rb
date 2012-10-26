@@ -25,14 +25,9 @@ class ContentView < ActiveRecord::Base
   has_many :environments, :through => :environment_content_views,
     :class_name => "KTEnvironment"
 
-  has_many :content_view_components, :foreign_key => :composite_id
-  has_many :component_content_views, :through => :content_view_components,
-    :source => :component
-
-  has_many :content_view_composites, :class_name => "ContentViewComponent",
-    :inverse_of => :component, :foreign_key => :component_id
-  has_many :composite_content_views, :through => :content_view_composites,
-    :source => :composite
+  has_many :component_content_views
+  has_many :composite_content_view_definitions,
+    :through => :component_content_views, :source => "content_view_definition"
 
   validates :label, :uniqueness => {:scope => :organization_id},
     :presence => true, :katello_label_format => true
