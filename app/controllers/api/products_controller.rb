@@ -132,7 +132,7 @@ class Api::ProductsController < Api::ApiController
   api :GET, "/content_view_definitions/:content_view_definition_id/products", 
     "Get products for content view definition"
   param :content_view_definition_id, :identifier, :required => true,
-    :desc => "content_view_definition identifier"
+    :desc => "content view definition identifier"
   def list_content_view_definition_products
     render :json => @definition.products.to_json
   end
@@ -140,7 +140,7 @@ class Api::ProductsController < Api::ApiController
   api :PUT, "/content_view_definitions/:content_view_definition_id/products",
     "Update products for content view definition"
   param :content_view_definition_id, :identifier, :required => true,
-    :desc => "content_view_definition identifier"
+    :desc => "content view definition identifier"
   param :products, Array, :desc => "Updated list of products", :required => true
   def update_content_view_definition_products
     @products = Product.where(:name => params[:filters],
@@ -161,14 +161,6 @@ class Api::ProductsController < Api::ApiController
   def find_product
     @product = @organization.products.find_by_cp_id(params[:id].to_s)
     raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:id] if @product.nil?
-  end
-
-  def find_content_view_definition
-    cvd_id = params[:content_view_definition_id]
-    @definition = ContentViewDefinition.find_by_id(cvd_id)
-    if @definition.nil?
-      raise HttpErrors::NotFound, _("Couildn't find product with id '#{cvd_id}'")
-    end
   end
 
   def find_environment

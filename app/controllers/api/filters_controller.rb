@@ -150,7 +150,7 @@ class Api::FiltersController < Api::ApiController
   param :content_view_definition_id, :identifier, :required => true,
     :desc => "content_view_definition identifier"
   def list_content_view_definition_filters
-    render :json => @content_view_definition.filters.to_json
+    render :json => @definition.filters.to_json
   end
     
   api :PUT, "/content_view_definitions/:content_view_definition_id/filters", 
@@ -159,7 +159,7 @@ class Api::FiltersController < Api::ApiController
     :desc => "content_view_definition identifier"
   param :filters, Array, :desc => "Updated list of filters", :required => true
   def update_content_view_definition_filters
-    update_item_filters(@content_view_definition, @filters)
+    update_item_filters(@definition, @filters)
   end
 
   private
@@ -192,14 +192,6 @@ class Api::FiltersController < Api::ApiController
     raise HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repository.nil?
     raise HttpErrors::BadRequest, _("Filters can be stored only in Library repositories.") if not @repository.environment.library?
     @repository
-  end
-
-  def find_content_view_definition
-    id = params[:content_view_definition_id]
-    @content_view_definition = ContentViewDefinition.find(id)
-    if @content_view_definition.nil?
-      raise HttpErrors::NotFound, _("Couldn't find definition '#{id}'")
-    end
   end
 
   def find_filter

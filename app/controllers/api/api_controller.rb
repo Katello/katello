@@ -120,6 +120,14 @@ class Api::ApiController < ActionController::Base
     head :status => 500 and return false
   end
 
+  def find_content_view_definition
+    cvd_id = params[:content_view_definition_id]
+    @definition = ContentViewDefinition.find_by_id(cvd_id)
+    if @definition.nil?
+      raise HttpErrors::NotFound, _("Couildn't find product with id '#{cvd_id}'")
+    end
+  end
+
   protected
 
   def exception_with_response(exception)
