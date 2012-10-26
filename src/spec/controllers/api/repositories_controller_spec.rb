@@ -19,6 +19,7 @@ describe Api::RepositoriesController, :katello => true do
   include AuthorizationHelperMethods
   include OrchestrationHelper
   include ProductHelperMethods
+  include RepositoryHelperMethods
   include OrganizationHelperMethods
 
   let(:task_stub) do
@@ -48,13 +49,14 @@ describe Api::RepositoriesController, :katello => true do
       Product.stub!(:find).and_return(@product)
       Product.stub!(:find_by_cp_id).and_return(@product)
       ep = EnvironmentProduct.find_or_create(@organization.library, @product)
-      @repository = Repository.create!(:environment_product => ep, :name=> "repo_1", :label=>"repo_label", :pulp_id=>"1")
+      @repository = new_test_repo(ep, "repo_1", "#{@organization.name}/Library/prod/repo")
       Repository.stub(:find).and_return(@repository)
       Resources::Pulp::Repository.stub(:start_discovery).and_return({})
       PulpSyncStatus.stub(:using_pulp_task).and_return(task_stub)
       Runcible::Extensions::PackageGroup.stub(:all => {})
       Runcible::Extensions::PackageCategory.stub(:all => {})
     end
+
     describe "for create" do
       let(:action) {:create}
       let(:req) do
@@ -68,6 +70,7 @@ describe Api::RepositoriesController, :katello => true do
       end
       it_should_behave_like "protected action"
     end
+
     describe "for show" do
       let(:action) {:show}
       let(:req) { get :show, :id => 1 }
@@ -79,6 +82,7 @@ describe Api::RepositoriesController, :katello => true do
       end
       it_should_behave_like "protected action"
     end
+
     describe "for destroy" do
       let(:action) {:destroy}
       let(:req) { get :destroy, :id => 1 }
@@ -90,6 +94,7 @@ describe Api::RepositoriesController, :katello => true do
       end
       it_should_behave_like "protected action"
     end
+
     describe "for update" do
       let(:action) {:update}
       let(:req) { put :update, :id => 1, :repository =>{:gpg_key_name => "test" }}
@@ -101,6 +106,7 @@ describe Api::RepositoriesController, :katello => true do
       end
       it_should_behave_like "protected action"
     end
+
     describe "for enable" do
       let(:action) {:enable}
       let(:req) { get :enable, :id => 1, :enable => 1 }
@@ -112,6 +118,7 @@ describe Api::RepositoriesController, :katello => true do
       end
       it_should_behave_like "protected action"
     end
+
     describe "for discovery" do
       let(:action) {:discovery}
       let(:req) do
@@ -125,6 +132,7 @@ describe Api::RepositoriesController, :katello => true do
       end
       it_should_behave_like "protected action"
     end
+
     describe "for package_groups" do
       let(:action) {:package_groups}
       let(:req) { get :package_groups, :id => 1 }
@@ -136,6 +144,7 @@ describe Api::RepositoriesController, :katello => true do
       end
       it_should_behave_like "protected action"
     end
+
     describe "for package_group_categories" do
       let(:action) {:package_group_categories}
       let(:req) { get :package_group_categories, :id => 1 }
@@ -257,7 +266,6 @@ describe Api::RepositoriesController, :katello => true do
             put :update, bad_req
           end
         end
-
       end
 
       context "Custom repo" do
@@ -303,7 +311,6 @@ describe Api::RepositoriesController, :katello => true do
           response.code.should == '409'
         end
       end
-
     end
 
     describe "show a repository" do
@@ -325,7 +332,6 @@ describe Api::RepositoriesController, :katello => true do
       end
     end
 
-
     describe "trigger sync complete" do
       before do
         @repo = Repository.new(:pulp_id=>"123", :id=>"123")
@@ -336,8 +342,8 @@ describe Api::RepositoriesController, :katello => true do
       it "should call async task correctly with no forwarded header" do
         @repo.should_receive(:async).and_return(@fake_async)
         @fake_async.should_receive(:after_sync)
-        request.env['RAW_POST_DATA'] = {:task_id=>"123", :repo_id=>"123"}.to_json
-        post :sync_complete, {}
+        params = {:task_id=>"123", :payload => {:repo_id=>"123"}}
+        post :sync_complete, params
         response.should be_success
       end
 
@@ -345,8 +351,8 @@ describe Api::RepositoriesController, :katello => true do
         request.env["HTTP_X_FORWARDED_FOR"] = '127.0.0.1'
         @repo.should_receive(:async).and_return(@fake_async)
         @fake_async.should_receive(:after_sync)
-        request.env['RAW_POST_DATA'] = {:task_id=>"123", :repo_id=>"123"}.to_json
-        post :sync_complete, {}
+        params = {:task_id=>"123", :payload => {:repo_id=>"123"}}
+        post :sync_complete, params
         response.should be_success
       end
 
@@ -354,8 +360,8 @@ describe Api::RepositoriesController, :katello => true do
         request.env["HTTP_X_FORWARDED_FOR"] = '::1'
         @repo.should_receive(:async).and_return(@fake_async)
         @fake_async.should_receive(:after_sync)
-        request.env['RAW_POST_DATA'] = {:task_id=>"123", :repo_id=>"123"}.to_json
-        post :sync_complete, {}
+        params = {:task_id=>"123", :payload => {:repo_id=>"123"}}
+        post :sync_complete, params
         response.should be_success
       end
 
@@ -364,8 +370,6 @@ describe Api::RepositoriesController, :katello => true do
         post :sync_complete, {}
         response.status.should == 403
       end
-
-
     end
 
     describe "get list of repository package groups" do
@@ -391,7 +395,7 @@ describe Api::RepositoriesController, :katello => true do
           Runcible::Extensions::PackageCategory.stub(:all => {})
       end
       it "should call Pulp layer" do
-        RunciblePackageCategory.should_receive(:all).with("123")
+        Runcible::Extensions::PackageCategory.should_receive(:all).with("123")
         subject
       end
       it { should be_success }
