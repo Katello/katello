@@ -55,6 +55,24 @@ unless File.exists?(File.join(kt_home, "src", "Gemfile"))
   exit 1
 end
 
+unless File.exists?(File.join(kt_home, "src", "Gemfile.lock"))
+  os = case `cat /etc/issue`
+       when /Fedora release 17/
+         "f17"
+       when /Fedora release 16/
+         "f16"
+       when /Red Hat Enterprise Linux Server release 6/
+         "rhel6"
+       else
+         ""
+       end
+
+  os += "." unless os.blank? # Gemfile.XXX.lock
+  gemlock = File.join(kt_home, "src", "gemfiles", "Gemfile.#{os}lock")
+  gemlock_dest = File.join(kt_home, "src", "Gemfile.lock")
+  run_command("ln -s #{gemlock} #{gemlock_dest}")
+end
+
 unless File.exists?(httpd_kt_conf_file_dev_bak)
   FileUtils.cp(httpd_kt_conf_file, httpd_kt_conf_file_dev_bak)
 end
