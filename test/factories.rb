@@ -116,8 +116,15 @@ FactoryGirl.define do
 
   factory :repository, :aliases => [:repo] do
     sequence(:name) { |n| "repo#{n}" }
+    sequence(:pulp_id) {|n| "pulp-id-#{n}"}
+    sequence(:content_id) {|n| "content#{n}"}
     enabled true
     environment_product
+  end
+
+  factory :environment_product do
+    product { FactoryGirl.build(:product) }
+    environment { FactoryGirl.build(:environment) }
   end
 
 end
