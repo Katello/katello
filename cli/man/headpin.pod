@@ -1,0 +1,90 @@
+=head1 NAME
+
+headpin - Headpin command line tool
+
+=head1 SYNOPSIS
+
+  headpin [options] command [parameter1] [parameterN] ...
+
+    Options include:
+      [ -h | --help ]
+      [ -v | --version ]
+      [ -d | --debug ]
+      [ -u | --username ]
+      [ -p | --password ]
+      [ --host ]
+
+Commands and parameters are described below.
+
+=head1 DESCRIPTION
+
+The B<headpin> program is an command line application for interaction with a
+Headpin instance. It can be used by Headpin administrators and users to
+execute regular tasks. There is a built-in shell avaiable that can be used
+for scripting purposes.
+
+=head1 COMMANDS
+
+=over 2
+
+
+THE_USAGE
+
+For more information about commands and particular actions please use:
+
+  headpin command action --help
+
+or use our documentation (CLI guide).
+
+=back
+
+=head1 COMMON COMMAND LINE PARAMETERS
+
+=over 4
+
+=item -g
+
+Print items in the format suitable for grepping.
+
+=item -v, --version
+
+Print items in the verbose mode (more details).
+
+=item -d, --debug
+
+Turn on debug log level (messages can be found in the client.log file).
+
+=item -d DELIMITER
+
+Sets selimiter character or string between columns. Only works with -g option.
+
+=item --noheading
+
+Skip initial header (useful with -g).
+
+=item --help, -h
+
+Display short summary of all options.
+
+=back
+
+=head1 ENVIRONMENT VARIABLES
+
+=over 4
+
+=item KATELLO_CLI_LOGLEVEL
+
+If --debug (-d) option is too much and you want to fine tune the logger level,
+use this variable. Default setting is 20, debug setting is 10. For more
+information about how these numbers work see
+http://docs.python.org/library/logging.html.
+
+=back
+
+=head1 VERSION
+
+THE_VERSION
+
+=head1 SEE ALSO
+
+katello-configure(8)
