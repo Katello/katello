@@ -28,6 +28,7 @@ class ContentViewDefinition < ActiveRecord::Base
   validates :organization, :presence => true
   has_many :content_view_definition_products
   has_many :products, :through => :content_view_definition_products
+  has_many :repositories
 
   def publish
     ContentView.create!(:name => "#{name} Content View",
