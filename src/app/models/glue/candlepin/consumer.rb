@@ -287,7 +287,7 @@ module Glue::Candlepin::Consumer
     end
 
     def memory
-      facts["dmi.memory.size"]
+      memory_in_megabytes(facts["dmi.memory.size"])
     end
 
     def entitlements_valid?
@@ -316,6 +316,20 @@ module Glue::Candlepin::Consumer
       else
         self.releaseVer
       end
+    end
+
+    def memory_in_megabytes(mem_str)
+      # convert total memory into megabytes
+      mem,unit = mem_str.split
+      total_mem = mem.to_f
+      case unit
+        when 'B'  then total_mem = 0
+        when 'kB' then total_mem = 0
+        when 'MB' then total_mem *= 1
+        when 'GB' then total_mem *= (1024)
+        when 'TB' then total_mem *= (1024*1024)
+      end
+      total_mem.to_i
     end
 
     def available_pools_full listall=false
