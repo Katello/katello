@@ -194,21 +194,6 @@ describe ChangesetsController, :katello => true do
   end
 
 
-  describe 'getting the dependencies of a changeset' do
-    before (:each) do
-      @changeset = PromotionChangeset.create!(CSControllerTest::CHANGESET)
-
-    end
-
-    it 'should call dependencies on the changeset' do
-      @changeset.should_receive(:calc_dependencies).and_return({})
-      Changeset.stub(:find).and_return(@changeset)
-      get 'dependencies', {:id=>@changeset.id}
-      response.should be_success
-    end
-
-  end
-
   describe "rules" do
     before (:each) do
       @organization = new_test_org
