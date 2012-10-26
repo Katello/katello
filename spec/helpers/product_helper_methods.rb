@@ -53,10 +53,14 @@ module ProductHelperMethods
   def promote repo, environment
     disable_product_orchestration
 
+    lib_instance = repo.library_instance.nil? ? repo : repo.library_instance
+
     ep_to_env = EnvironmentProduct.find_or_create(environment, repo.product)
-    repo_clone = new_test_repo(ep_to_env, repo.name, "#{environment.organization.name}/#{environment.name}/prod/repo")
+    repo_clone = new_test_repo(ep_to_env, repo.name,
+                               "#{environment.organization.name}/#{environment.name}/prod/repo", true, "", lib_instance)
     repo.stub(:create_clone).and_return(repo_clone)
     repo.stub(:clone_contents).and_return([])
+    repo.stub(:sync).and_return([])
 
     repo.stub!(:pulp_repo_facts).and_return({:clone_ids => []})
     Resources::Pulp::Repository.stub!(:clone_repo).and_return({})
