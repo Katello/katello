@@ -338,7 +338,7 @@ module Glue::Pulp::Repos
       repo.cp_label = content.label
       repo.content_id = content.id
       repo.save!
-      if repo.gpg_key
+      if gpg
         repo.gpg_key = gpg
         repo.save!
         repo.update_content
