@@ -143,7 +143,7 @@ class Api::ProductsController < Api::ApiController
     :desc => "content view definition identifier"
   param :products, Array, :desc => "Updated list of products", :required => true
   def update_content_view_definition_products
-    @products = Product.where(:name => params[:filters],
+    @products = Product.where(:cp_id => params[:products],
                               "providers.organization_id" => @organization.id
                              ).joins(:provider)
     deleted_products = @definition.products - @products
