@@ -218,20 +218,6 @@ module Resources
 
   class ConsumerGroup < PulpResource
     class << self
-      def create attrs
-        response = self.post path, attrs.to_json, self.default_headers
-        JSON.parse(response.body).with_indifferent_access
-      end
-
-      def destroy id
-        self.delete(path(id), self.default_headers).code.to_i
-      end
-
-      def find id
-        response = self.get path(id), self.default_headers
-        JSON.parse(response.body).with_indifferent_access
-      end
-
       def add_consumer id, consumer_id
         self.post "#{path(id)}add_consumer/", consumer_id.to_json, self.default_headers
       end
