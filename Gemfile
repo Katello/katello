@@ -20,6 +20,10 @@ gem 'net-ldap'
 gem 'oauth'
 gem 'ldap_fluff'
 
+group :foreman do
+  gem 'foreman_api', '>= 0.0.7'
+end
+
 gem 'delayed_job', '~> 2.1.4'
 gem 'daemons', '>= 1.1.4'
 gem 'uuidtools'
