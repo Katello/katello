@@ -91,6 +91,8 @@ EOKEY
     Resources::Candlepin::Product.stub!(:delete_subscriptions).and_return(nil)
 
     Resources::Candlepin::Content.stub!(:create).and_return(true)
+    Resources::Candlepin::Content.stub!(:update).and_return(true)
+    Resources::Candlepin::Content.stub!(:get).and_return({})
 
     # pulp orchestration
     Resources::Candlepin::Product.stub!(:certificate).and_return("")

@@ -331,14 +331,18 @@ module Glue::Pulp::Repos
           :name => name,
           :label => label,
           :feed => url,
-          :content_type => repo_type,
-          :gpg_key => gpg
+          :content_type => repo_type
       )
       repo.save! if !repo.valid? #force exception if not valid
       content = create_content(repo)
       repo.cp_label = content.label
-      repo.content_id= content.id
+      repo.content_id = content.id
       repo.save!
+      if repo.gpg_key
+        repo.gpg_key = gpg
+        repo.save!
+        repo.update_content
+      end
     end
 
     def setup_sync_schedule
