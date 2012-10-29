@@ -69,7 +69,7 @@ module SystemHelperMethods
 
   def stub_consumer_packages_install(expected_response, refresh_response = nil)
     refresh_response ||= expected_response
-    Runcible::Extensions::Consumer.stub!(:install).and_return(expected_response)
+    Runcible::Extensions::Consumer.stub!(:install_content).and_return(expected_response)
     Runcible::Resources::Task.stub!(:poll).and_return(refresh_response)
   end
 

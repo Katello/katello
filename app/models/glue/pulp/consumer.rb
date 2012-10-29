@@ -112,7 +112,7 @@ module Glue::Pulp::Consumer
 
     def install_package packages
       Rails.logger.debug "Scheduling package install for consumer #{self.name}"
-      pulp_task = Runcible::Extensions::Consumer.install(self.uuid, 'rpm', packages)
+      pulp_task = Runcible::Extensions::Consumer.install_content(self.uuid, 'rpm', packages)
     rescue => e
       Rails.logger.error "Failed to schedule package install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
