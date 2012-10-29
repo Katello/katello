@@ -90,8 +90,8 @@ EOKEY
     Resources::Candlepin::Product.stub!(:pools).and_return([])
     Resources::Candlepin::Product.stub!(:delete_subscriptions).and_return(nil)
 
-    Resources::Candlepin::Content.stub!(:create).and_return(true)
-    Resources::Candlepin::Content.stub!(:update).and_return(true)
+    Resources::Candlepin::Content.stub!(:create).and_return({:id=>'123'})
+    Resources::Candlepin::Content.stub!(:update).and_return({:id=>'123'})
     Resources::Candlepin::Content.stub!(:get).and_return({})
 
     # pulp orchestration

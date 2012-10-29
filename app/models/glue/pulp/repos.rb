@@ -38,23 +38,6 @@ module Glue::Pulp::Repos
     "#{path_prefix}/#{content_path}"
   end
 
-  # create content for custom repo
-  def create_content(repo)
-    new_content = ::Candlepin::ProductContent.new({
-      :content => {
-        :name => repo.name,
-        :contentUrl => Glue::Pulp::Repos.custom_content_path(repo.product, repo.label),
-        :gpgUrl => repo.yum_gpg_key_url,
-        :type => "yum",
-        :label => repo.custom_content_label,
-        :vendor => Provider::CUSTOM
-      },
-      :enabled => true
-    })
-    new_content.create
-    add_content new_content
-    new_content.content
-  end
 
   # repo path for custom product repos (RH repo paths are derived from
   # content url)
@@ -325,24 +308,15 @@ module Glue::Pulp::Repos
       #TODO use orchestration for this, what if pulp repo creation fails (need to delete content)
       check_for_repo_conflicts(name)
       key = EnvironmentProduct.find_or_create(self.organization.library, self)
-      repo = Repository.new(:environment_product => key, :pulp_id => repo_id(name),
+      Repository.create!(:environment_product => key, :pulp_id => repo_id(name),
           :relative_path => Glue::Pulp::Repos.custom_repo_path(self.library, self, label),
           :arch => arch,
           :name => name,
           :label => label,
           :feed => url,
+          :gpg_key => gpg,
           :content_type => repo_type
       )
-      repo.save! if !repo.valid? #force exception if not valid
-      content = create_content(repo)
-      repo.cp_label = content.label
-      repo.content_id = content.id
-      repo.save!
-      if gpg
-        repo.gpg_key = gpg
-        repo.save!
-        repo.update_content
-      end
     end
 
     def setup_sync_schedule
@@ -407,6 +381,11 @@ module Glue::Pulp::Repos
       Rails.logger.debug "deleting all repositories in product #{self.label}"
       self.environment_products.destroy_all
       true
+    end
+
+
+    def custom_repos_create_orchestration
+      pre_queue.create(:name => "create pulp repositories for product: #{self.label}",      :priority => 1, :action => [self, :set_repos])
     end
 
     def save_repos_orchestration
