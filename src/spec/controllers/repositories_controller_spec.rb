@@ -74,6 +74,7 @@ describe RepositoriesController, :katello => true do
       login_user
       set_default_locale
 
+
       @org = new_test_org
       @product = new_test_product(@org, @org.library)
       @gpg = GpgKey.create!(:name => "foo", :organization => @organization, :content => "222")
@@ -102,6 +103,18 @@ describe RepositoriesController, :katello => true do
 
     context "Test gpg create" do
       before do
+        disable_product_orchestration
+        content = { :name => "FOO",
+                    :id=>"12345",
+                    :contentUrl => '/some/path',
+                    :gpgUrl => nil,
+                    :type => "yum",
+                    :label => 'label',
+                    :vendor => Provider::CUSTOM}
+
+        Resources::Candlepin::Content.stub!(:get).and_return(content)
+        Resources::Candlepin::Content.stub!(:create).and_return(content)
+
         @repo_name = "repo-#{rand 10 ** 8}"
         post :create, { :product_id => @product.id,
                         :provider_id => @product.provider.id,
@@ -120,6 +133,7 @@ describe RepositoriesController, :katello => true do
 
     context "Test update gpg" do
       before do
+
         @repo = new_test_repo(@ep, "newname#{rand 10**6}", "http://fedorahosted org")
         product = @repo.product
         Repository.stub(:find).and_return(@repo)
