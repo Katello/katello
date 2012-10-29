@@ -374,7 +374,6 @@ mkdir -p %{buildroot}/%{_mandir}/man8
 
 #copy the application to the target directory
 mkdir .bundle
-mv ./deploy/bundle-config .bundle/config
 cp -R .bundle Gemfile Rakefile app autotest ca config config.ru db integration_spec lib locale public script spec vendor %{buildroot}%{homedir}
 
 #copy configs and other var files (will be all overwriten with symlinks)
@@ -506,7 +505,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/spec
 %{homedir}/tmp
 %{homedir}/vendor
-%{homedir}/.bundle
+%dir %{homedir}/.bundle
 %{homedir}/config.ru
 %{homedir}/Gemfile
 %ghost %attr(0644,katello,katello) %{_sharedstatedir}/%{name}/Gemfile.lock
