@@ -1,0 +1,6 @@
+--- 
+<% if scope.lookupvar("katello::params::deployment") == 'katello' %>
+BUNDLE_WITHOUT: development:test
+<% else %>
+BUNDLE_WITHOUT: development:test:foreman
+<% end %>
