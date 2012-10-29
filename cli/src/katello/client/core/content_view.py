@@ -286,21 +286,23 @@ class AddRemoveProduct(ContentViewAction):
         view_label     = self.get_option('label')
         product_label  = self.get_option('product')
 
-        view = get_cv_definition(org_name, view_label)
+        view    = get_cv_definition(org_name, view_label)
+        product = get_product(org_name, product_label)
+
         products = self.def_api.products(org_name, view['id'])
-        products = [f['name'] for f in products]
-        self.update_products(org_name, view, products, product_label)
+        products = [f['id'] for f in products]
+        self.update_products(org_name, view, products, product)
         return os.EX_OK
 
-    def update_products(self, org_name, cvd, products, product_label):
+    def update_products(self, org_name, cvd, products, product):
         if self.addition:
-            products.append(product_label)
+            products.append(product['id'])
             message = _("Added product [ %s ] to content view [ %s ]" % \
-                    (product_label, cvd["label"]))
+                    (product['label'], cvd["label"]))
         else:
-            products.remove(product_label)
+            products.remove(product['id'])
             message = _("Removed product [ %s ] to content view [ %s ]" % \
-                    (product_label, cvd["label"]))
+                    (product['label'], cvd["label"]))
 
         self.def_api.update_products(org_name, cvd['id'], products)
         print message
