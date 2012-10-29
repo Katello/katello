@@ -377,10 +377,10 @@ describe Api::RepositoriesController, :katello => true do
       before do
           @repo = Repository.new(:pulp_id=>"123", :id=>"123")
           Repository.stub(:find).and_return(@repo)
-          Runcible::Extensions::PackageGroup.stub(:all => {})
+          Runcible::Extensions::Repository.stub(:package_groups)
       end
       it "should call Pulp layer" do
-        Runcible::Extensions::PackageGroup.should_receive(:all).with("123")
+        Runcible::Extensions::Repository.should_receive(:package_groups).with("123")
         subject
       end
       it { should be_success }
@@ -392,10 +392,10 @@ describe Api::RepositoriesController, :katello => true do
       before do
           @repo = Repository.new(:pulp_id=>"123", :id=>"123")
           Repository.stub(:find).and_return(@repo)
-          Runcible::Extensions::PackageCategory.stub(:all => {})
+          Runcible::Extensions::Repository.stub(:package_categories)
       end
       it "should call Pulp layer" do
-        Runcible::Extensions::PackageCategory.should_receive(:all).with("123")
+        Runcible::Extensions::Repository.should_receive(:package_categories).with("123")
         subject
       end
       it { should be_success }
