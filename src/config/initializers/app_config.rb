@@ -2,6 +2,7 @@
 # are not available in all initializers starting with 'a' letter.
 require 'ostruct'
 require 'yaml'
+require "lib/util/boot_util"
 
 module ApplicationConfiguration
 
@@ -22,7 +23,7 @@ module ApplicationConfiguration
       @hash.deep_merge!(config[Rails.env] || {})
 
       # Based upon root url, switch between headpin and katello modes
-      if ENV['RAILS_RELATIVE_URL_ROOT'] == '/headpin' || ENV['RAILS_RELATIVE_URL_ROOT'] == '/sam'
+      if Katello::BootUtil.headpin?
         @hash["app_name"] = 'Headpin'
         @hash["katello?"] = false
       else
