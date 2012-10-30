@@ -7,6 +7,7 @@ module RepositoryHelperMethods
 
   def new_test_repo(env_product, name, path, enabled=true, suffix="", library_instance=nil)
     disable_repo_orchestration
+    disable_product_orchestration
 
     random_id = rand(10**6)
     repo = Repository.new(:environment_product => env_product, :name => name, :label =>  "#{name}-#{random_id}",
