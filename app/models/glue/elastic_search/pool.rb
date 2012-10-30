@@ -76,6 +76,50 @@ module Glue::ElasticSearch::Pool
         }
       end
 
+      def self.index_pools pools
+        json_pools = pools.collect{ |pool|
+          pool.as_json.merge(pool.index_options)
+        }
+        Tire.index self.index do
+          create :settings => ::Pool.index_settings, :mappings => ::Pool.index_mapping
+          import json_pools
+        end if !json_pools.empty?
+      end
+
+      def self.search query, start, page_size, filters={}, sort=[:name_sort, "ASC"]
+        return [] if !Tire.index(self.index).exists?
+
+        all_rows = query.blank? #if blank, get all rows
+
+        search = Tire.search self.index do
+          query do
+            if all_rows
+              all
+            else
+              # No default_field is specified to let search span all indexed fields
+              string query, {}
+            end
+          end
+
+          if page_size > 0
+           size page_size
+           from start
+          end
+
+          if filters.has_key?(:org)
+            filter :term, :org=>filters[:org]
+          end
+          if filters.has_key?(:provider_id)
+            filter :term, :provider_id=>filters[:provider_id]
+          end
+
+          sort { by sort[0], sort[1] } unless !all_rows
+        end
+        return search.results
+      rescue
+        return []
+      end
+
       def self.index_settings
         {
             "index" => {
@@ -92,68 +136,5 @@ module Glue::ElasticSearch::Pool
       end
     end
   end
-
-  def index_options
-    {
-      "_type"     => :pool,
-      "id"        => @cp_id,
-      "name"      => @product_name,
-      "name_sort" => @product_name,
-      "product_name"=> @product_name,
-      "start"     => @start_date,
-      "end"       => @end_date,
-      "product"   => @product_id,
-      "product_id"=> @product_id,
-      "account"   => @account_number,
-      "contract"  => @contract_number,
-      "sla"       => @support_level,
-      "support_level"=> @support_level,
-      "virtual"   => @virt_only,
-      "org"       => @owner["key"],
-      "consumed"  => @consumed,
-      "quantity"  => @quantity,
-      "pool_derived" => @pool_derived,
-      "derived"   => @pool_derived,
-      "provider_id"=> provider_id,
-      "stacking_id" => @stacking_id,
-      "multi_entitlement" => @multi_entitlement
-    }
-  end
-
-
-  def self.search query, start, page_size, filters={}, sort=[:name_sort, "ASC"]
-    return [] if !Tire.index(self.index).exists?
-
-    all_rows = query.blank? #if blank, get all rows
-
-    search = Tire.search self.index do
-      query do
-        if all_rows
-          all
-        else
-          # No default_field is specified to let search span all indexed fields
-          string query, {}
-        end
-      end
-
-      if page_size > 0
-       size page_size
-       from start
-      end
-
-      if filters.has_key?(:org)
-        filter :term, :org=>filters[:org]
-      end
-      if filters.has_key?(:provider_id)
-        filter :term, :provider_id=>filters[:provider_id]
-      end
-
-      sort { by sort[0], sort[1] } unless !all_rows
-    end
-    return search.results
-  rescue
-    return []
-  end
-
 
 end
