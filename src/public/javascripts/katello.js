@@ -270,6 +270,21 @@ KT.common = (function() {
             }
           });
         },
+        provisionMenuSetup : function() {
+            var button = $('#provisionButton');
+            var container = $('#provisionContainer');
+            var box = $('#provisionBox');
+
+            container.hover(function() {
+                box.fadeIn('fast');
+                button.addClass('active');
+                container.addClass('active');
+            }, function(){
+                button.removeClass('active');
+                container.removeClass('active');
+                box.fadeOut('fast');
+            });
+        },
         orgSwitcherSetup : function() {
             //org switcher
             var button = $('#switcherButton');
@@ -546,6 +561,8 @@ $(document).ready(function (){
 
     KT.common.orgSwitcherSetup();
     KT.common.orgFilterSetup();
+
+    KT.common.provisionMenuSetup();
 
 });
 

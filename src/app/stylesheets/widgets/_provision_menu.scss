@@ -1,0 +1,66 @@
+#provisionContainer {
+  height: 100%;
+  margin-right: 5px;
+  margin-top: 2px;
+  float: left;
+
+  #provisionButton {
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    color: $font_color;
+    float: left;
+    margin: 2px 2px 0 8px;
+    text-decoration: none;
+
+    .arrow_icon_menu {
+      height: 11px;
+      width: 13px;
+      background: $arrow_icon;
+      float: right;
+      margin: 4px 12px 0 0;
+    }
+
+    &.active {
+      @include border-bottom-lr-radius(0);
+      .arrow_icon_menu {
+          background: $arrow_icon;
+          background-position: 0 -13px;
+      }
+    }
+  }
+
+  #provisionBox {
+    position: absolute;
+    top: 27px;
+    display: none;
+    z-index: 2000;
+    width: 170px;
+    border: 0 none;
+    @include box-shadow(0px 5px 10px rgba(0, 0, 0, 0.4));
+    margin-top: 8px;
+    background-color: $switcher-top_color;
+    @include border-radius(2px);
+
+   a {
+      cursor: pointer;
+      font-family: $screenfont;
+      text-transform: none;
+      text-decoration: none;
+      font-weight: normal;
+      color: $taboff_color;
+      display: block;
+      padding: 6px 12px;
+
+      &.selected {
+        color: $tabon_color;
+        font-weight: bold;
+        border-bottom: 3px solid $kselected_color;
+        padding-bottom: 3px;
+      }
+
+      &:hover { color: lighten($kselected_color,10%); }
+    }
+  }
+}

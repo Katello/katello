@@ -13,6 +13,7 @@ require 'navigation/content_management'
 require 'navigation/administration'
 require 'navigation/organization'
 require 'navigation/dashboard'
+require 'navigation/provision'
 require 'navigation/systems'
 require 'navigation/main'
 
@@ -24,6 +25,7 @@ module Navigation
     base.send :include, OrganizationMenu
     base.send :include, DashboardMenu
     base.send :include, SystemMenu
+    base.send :include, ProvisionMenu
   end
 
   module MainMenu
@@ -35,6 +37,12 @@ module Navigation
   module AdministrationMenu
     def admin_main
       [ menu_administration ]
+    end
+  end
+
+  module ProvisionMenu
+    def provision_items
+      [ menu_provision ]
     end
   end
 end
