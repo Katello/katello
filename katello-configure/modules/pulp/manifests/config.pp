@@ -49,7 +49,7 @@ class pulp::config {
   }
 
   exec {"migrate_pulp_db":
-    command     => "pulp-migrate >${katello::params::configure_log_base}/pulp_migrate.log 2>&1 && touch /var/lib/pulp/init.flag",
+    command     => "pulp-manage-db >${katello::params::configure_log_base}/pulp_migrate.log 2>&1 && touch /var/lib/pulp/init.flag",
     creates     => "/var/lib/pulp/init.flag",
     path        => "/bin:/usr/bin",
     before      => [ Class["pulp::service"], Exec["reload-apache2"], Class["apache2::service"] ],
