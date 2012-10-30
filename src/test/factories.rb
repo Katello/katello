@@ -132,4 +132,9 @@ FactoryGirl.define do
     state Changeset::NEW
   end
 
+  factory :promotion_changeset do
+    name "promotion changeset"
+    state Changeset::NEW
+  end
+
 end
