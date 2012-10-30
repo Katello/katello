@@ -21,7 +21,8 @@ module Glue::ElasticSearch::Package
           "nvrea_sort" => nvrea.downcase,
           "nvrea" => nvrea,
           "nvrea_autocomplete" => nvrea,
-          "name_autocomplete" => name
+          "name_autocomplete" => name,
+          "repoids" => repository_memberships
         }
       end
 
