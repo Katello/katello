@@ -77,12 +77,6 @@ class katello::config {
       owner   => $katello::params::user,
       group   => $katello::params::group,
       mode    => "600";
-
-    "/usr/share/katello/.bundle/config":
-      content => template("katello/bundle_config.erb"),
-      owner   => "root",
-      group   => "root",
-      mode    => "644";
   }
 
   exec {"httpd-restart":
@@ -112,7 +106,6 @@ class katello::config {
                   File["${katello::params::log_base}/production.log"], 
                   File["${katello::params::log_base}/production_sql.log"], 
                   File["${katello::params::config_dir}/katello.yml"],
-                  File["/usr/share/katello/.bundle/config"],
                   Postgres::Createdb[$katello::params::db_name]
                 ],
                 'headpin' => [
@@ -120,7 +113,6 @@ class katello::config {
                   Class["thumbslug::service"],
                   File["${katello::params::log_base}"],
                   File["${katello::params::config_dir}/katello.yml"],
-                  File["/usr/share/katello/.bundle/config"],
                   Postgres::Createdb[$katello::params::db_name]
                 ],
                 default => [],
