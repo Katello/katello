@@ -83,4 +83,13 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_equal content_view, env.default_content_view
   end
 
+  def test_changesets
+    content_view = FactoryGirl.create(:content_view)
+    environment = FactoryGirl.build_stubbed(:environment)
+    changeset = FactoryGirl.create(:changeset, :environment => environment)
+    content_view.changesets << changeset
+    assert_includes changeset.content_views, content_view
+    assert_equal content_view.changeset_content_views,
+      changeset.changeset_content_views
+  end
 end

@@ -127,4 +127,9 @@ FactoryGirl.define do
     environment { FactoryGirl.build(:environment) }
   end
 
+  factory :changeset do
+    name "changeset"
+    state Changeset::NEW
+  end
+
 end

@@ -29,6 +29,9 @@ class ContentView < ActiveRecord::Base
   has_many :composite_content_view_definitions,
     :through => :component_content_views, :source => "content_view_definition"
 
+  has_many :changeset_content_views
+  has_many :changesets, :through => :changeset_content_views
+
   validates :label, :uniqueness => {:scope => :organization_id},
     :presence => true, :katello_label_format => true
   validates :name, :presence => true, :katello_name_format => true
