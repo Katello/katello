@@ -18,9 +18,12 @@ module Glue::Pulp::Package
   def self.included(base)
     base.class_eval do
 
-      attr_accessor :_id, :download_url, :checksum, :license, :group, :filename, :requires,  :provides, :description, :size, :buildhost, :repoids, :name, :arch
+      attr_accessor :_id, :download_url, :checksum, :license, :group, :filename, :requires,  :provides, :description,
+                    :size, :buildhost, :repository_memberships, :name, :arch
       alias_method 'id=', '_id='
       alias_method 'id', '_id'
+      alias_method 'repoids', 'repository_memberships'
+
 
       def initialize(params = {})
         params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
