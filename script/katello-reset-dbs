@@ -125,7 +125,7 @@ if [ $DEPLOYMENT = "katello" ] ; then
 
     echo "Initializing Pulp database"
     sleep 10s # let mongo initialize
-    sudo /usr/bin/pulp-migrate
+    sudo /usr/bin/pulp-manage-db
 fi
 
 echo "Initializing Candlepin database"
