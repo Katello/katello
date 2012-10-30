@@ -165,9 +165,6 @@ dispatch_interval: 30
 # user_cert_expiration: (integer) number of days a user certificate is valid
 # consumer_cert_expiration: (integer) number of days a consumer certificate is
 #                                     valid
-# oauth_key: (key) string key to enable OAuth style authentication
-# oauth_secret: (secret) string shared secret that can be used for OAuth style
-#                        authentication
 # For more info see: https://fedorahosted.org/pulp/wiki/Authentication
 
 [security]
@@ -177,6 +174,18 @@ cakey:   <%= scope.lookupvar("pulp::params::ssl_certificate_key_file") %>
 ssl_ca_certificate: <%= scope.lookupvar("pulp::params::ssl_certificate_ca_file") %>
 user_cert_expiration: 7
 consumer_cert_expiration: 3650
+
+# OAuth options
+#
+# Uncomment the below section with appropriate values, to use OAuth authentication.
+#
+# enabled: "true" or "false", controls whether OAuth authentication is enabled
+# oauth_key: (key) string key to enable OAuth style authentication
+# oauth_secret: (secret) string shared secret that can be used for OAuth style
+#                        authentication
+
+[oauth]
+enabled: true
 oauth_key: <%= scope.lookupvar("pulp::params::oauth_key") %>
 oauth_secret: <%= scope.lookupvar("pulp::params::oauth_secret") %>
 
