@@ -187,6 +187,16 @@ class Changeset < ActiveRecord::Base
      distro
    end
 
+  def add_content_view!(view)
+    unless env_to_verify_on_add_content.content_views.include?(view)
+      raise Errors::ChangesetContentException.new("Content view not found within environment you want to promote from.")
+    end
+
+    self.content_views << view
+    save!
+    view
+  end
+
   def remove_product! product
     deleted = self.products.delete(product)
     save!
