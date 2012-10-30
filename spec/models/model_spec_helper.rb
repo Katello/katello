@@ -92,7 +92,6 @@ EOKEY
 
     Resources::Candlepin::Content.stub!(:create).and_return({:id=>'123'})
     Resources::Candlepin::Content.stub!(:update).and_return({:id=>'123'})
-    Resources::Candlepin::Content.stub!(:get).and_return({})
 
     # pulp orchestration
     Resources::Candlepin::Product.stub!(:certificate).and_return("")
@@ -152,6 +151,10 @@ EOKEY
     Runcible::Extensions::Repository.stub(:distributions).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_DISTRIBUTIONS)
     Runcible::Extensions::Repository.stub(:find).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PROPERTIES)
     Runcible::Extensions::Repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
+
+    Resources::Candlepin::Content.stub!(:create).and_return({:id=>'123'})
+    Resources::Candlepin::Content.stub!(:update).and_return({:id=>'123'})
+    Resources::Candlepin::Content.stub!(:get).and_return({:id=>'123'})
 
     Repository.instance_eval do
       define_method(:index_packages) {

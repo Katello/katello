@@ -22,9 +22,9 @@ describe Product, :katello => true do
 
   before(:each) do
     disable_org_orchestration
-
+    disable_product_orchestration
     @organization = Organization.create!(:name=>ProductTestData::ORG_ID, :label => 'admin-org-37070')
-    @provider     = @organization.redhat_provider
+    @provider     = Provider.create!(:name=>"customprovider", :organization=>@organization, :provider_type=>Provider::CUSTOM)
     @cdn_mock = Resources::CDN::CdnResource.new("https://cdn.redhat.com", {:ssl_client_cert => "456",:ssl_ca_file => "fake-ca.pem", :ssl_client_key => "123"})
     @substitutor_mock = Util::CdnVarSubstitutor.new(@cdn_mock)
     @substitutor_mock.stub!(:precalculate).and_return do |paths|
@@ -183,7 +183,8 @@ describe Product, :katello => true do
         Resources::Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
         Resources::Candlepin::Content.stub!(:create).and_return({:id => "123"})
         Resources::Candlepin::Content.stub!(:update).and_return({:id => "123"})
-        Resources::Pulp::Repository.stub!(:update).and_return({:id => "123"})
+        Resources::Candlepin::Content.stub!(:get).and_return({:id => "123"})
+
         @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
       end
 
