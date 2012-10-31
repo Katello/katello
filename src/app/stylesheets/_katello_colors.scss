@@ -92,3 +92,22 @@ $login_background_bottom-color: #FFF !default;
 
 $widget-border-color: #C9C9C9;
 $widget-background-color: #F9F8F8;
+
+
+/************************
+* Company Switcher Colors
+*************************/
+$switcher-top_color: #FFF;
+$switcher-bottom_color: rgba(204,204,204,1);
+
+@mixin switcher-button_color{
+  @include background(linear-gradient(top, $switcher-top_color 0%, $switcher-top_color 50%, $switcher-bottom_color 100%));
+}
+
+@mixin switcher-button-active_color {
+  @include background(linear-gradient(top, $switcher-bottom_color 0%, $switcher-top_color 50%, $switcher-top_color 100%));
+}
+
+@mixin switcher-form_color {
+  @include background(linear-gradient(top, $switcher-top_color 0%, $switcher-bottom_color 75%, $switcher-bottom_color 100%));
+}
