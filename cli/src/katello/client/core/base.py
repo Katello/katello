@@ -378,7 +378,7 @@ class BaseAction(Action):
 
         self.printer = self.create_printer(self.__print_strategy())
 
-    # pylint: disable=R0911
+    # pylint: disable=R0911,R0915
     def main(self, args, command_name=None, parent_usage=None):
         """
         Main execution of the action
