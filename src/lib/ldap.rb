@@ -16,7 +16,14 @@ class Ldap
 
   def self.valid_ldap_authentication?(uid, password)
     ldap = LdapFluff.new
-    ldap.authenticate? uid, password
+    if password != nil && !password.empty?
+      ldap.authenticate? uid, password
+    else
+      # some LDAP implementations will automatically authenticate users
+      # with blank passwords. we do not understand this, but we will not
+      # support it
+      return false
+    end
   end
 
   def self.ldap_groups(uid)
