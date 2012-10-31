@@ -404,15 +404,18 @@ class BaseAction(Action):
             try:
                 if "displayMessage" in re.args[1]:
                     msg = re.args[1]["displayMessage"]
+                elif re.args[0] == 401:
+                    msg = _("Invalid credentials or unable to authenticate")
+                elif re.args[0] == 500:
+                    msg = _("Server is returning 500 - try later")
                 elif "errors" in re.args[1]:
                     msg = ", ".join(re.args[1]["errors"])
                 else:
                     msg = str(re.args[1])
             except IndexError:
                 msg = re.args[1]
-            if re.args[0] == 401:
-                msg = _("Invalid credentials or unable to authenticate")
-
+            except:  # pylint: disable=W0702
+                msg = _("Unknown error: ") + str(re)
             self.error(msg)
             return re.args[0]
 
