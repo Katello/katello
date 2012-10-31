@@ -50,4 +50,46 @@ class ChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_includes changeset.content_views, content_view
   end
 
+  def test_invalid_content_view_changeset_apply
+    org          = FactoryGirl.create(:organization)
+    content_view = FactoryGirl.create(:content_view,
+                                      :organization => org)
+    library      = FactoryGirl.create(:library,
+                                      :content_views => [content_view])
+    env          = FactoryGirl.create(:environment,
+                                      :priors => [library],
+                                      :organization => org,
+                                      :content_views => [content_view]
+                                     )
+    changeset    = FactoryGirl.create(:promotion_changeset,
+                                      :environment => env,
+                                      :state => Changeset::REVIEW)
+
+    content_view.update_attribute(:name, "")
+    changeset.add_content_view!(content_view.reload)
+    assert_raises(ActiveRecord::RecordInvalid) do
+      changeset.apply
+    end
+  end
+
+  def test_content_view_changeset_apply
+    org          = FactoryGirl.create(:organization)
+    content_view = FactoryGirl.create(:content_view,
+                                      :organization => org)
+    library      = FactoryGirl.create(:library,
+                                      :content_views => [content_view])
+    env          = FactoryGirl.create(:environment,
+                                      :priors => [library],
+                                      :organization => org,
+                                      :content_views => [content_view]
+                                     )
+
+    #KTEnvironment.any_instance.stubs(:update_cp_content, true).returns(true)
+    changeset    = FactoryGirl.create(:promotion_changeset,
+                                      :environment => env,
+                                      :state => Changeset::REVIEW)
+    assert changeset.add_content_view!(content_view), content_view
+    # assert changeset.apply( :async => false, :notify => false )
+  end
+
 end
