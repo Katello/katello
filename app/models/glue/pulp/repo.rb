@@ -24,7 +24,7 @@ module Glue::Pulp::Repo
       lazy_accessor :pulp_repo_facts,
                     :initializer => lambda {|s|
                       if pulp_id
-                        Runcible::Extensions::Repository.retrieve(pulp_id)
+                        Runcible::Extensions::Repository.retrieve_with_details(pulp_id)
                       end
                     }
       lazy_accessor :importers, :distributors,
