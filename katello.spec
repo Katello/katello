@@ -27,6 +27,7 @@ URL:            http://www.katello.org
 Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
 Requires:        %{name}-common
+Requires:        %{name}-glue-elasticsearch
 Requires:        %{name}-glue-pulp
 Requires:        %{name}-glue-foreman
 Requires:        %{name}-glue-candlepin
@@ -171,6 +172,14 @@ Requires:       foreman foreman-postgresql
 This is the Katello meta-package.  If you want to install Katello and all
 of its dependencies on a single machine, you should install this package
 and then run katello-configure to configure everything.
+
+%package glue-elasticsearch
+BuildArch:      noarch
+Summary:         Katello connection classes for the Elastic Search backend
+Requires:        %{name}-common
+
+%description glue-elasticsearch
+Katello connection classes for the Elastic Search backend
 
 %package glue-pulp
 BuildArch:      noarch
@@ -475,6 +484,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/app/mailers
 %dir %{homedir}/app/models
 %{homedir}/app/models/*.rb
+%{homedir}/app/models/authorization/*.rb
 %{homedir}/app/models/candlepin
 %{homedir}/app/stylesheets
 %{homedir}/app/views
@@ -549,6 +559,9 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_sql.log
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs.log
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs_sql.log
+
+%files glue-elasticsearch
+%{homedir}/app/models/glue/elastic_search
 
 %files glue-pulp
 %{homedir}/app/models/glue/pulp
