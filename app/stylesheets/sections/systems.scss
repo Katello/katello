@@ -135,7 +135,7 @@
       width: 36px;
       float: left;
       @include box-shadow(1px, 1px, 4px, #888);
-      @include border-bottom-r-radius(5px);
+      @include border-radius(0 0 5px 0);
       padding: 0 4px 4px 0;
     }
     .subs_image {
@@ -306,7 +306,7 @@
       margin-right: 30px;
     }
     .stub {
-      @include no-select;
+      @include unselectable;
     }
 }
 #interface_table {
