@@ -41,7 +41,7 @@ describe User do
     }
   end
 
-  describe "User shouldn't" do 
+  describe "User shouldn't" do
     before(:each) do
       disable_user_orchestration
       AppConfig.warden = 'database'
@@ -74,6 +74,10 @@ describe User do
     it 'not have an email' do
       u = User.find_by_username('testuser')
       u.email.should be_nil
+    end
+
+    it 'must not bind with empty password' do
+      Ldap.valid_ldap_authentication?('username', '').should be_false
     end
 
     it "have its own role" do
