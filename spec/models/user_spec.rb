@@ -41,7 +41,7 @@ describe User do
     }
   end
 
-  describe "User shouldn't" do 
+  describe "User shouldn't" do
     before(:each) do
       disable_user_orchestration
       AppConfig.warden = 'database'
@@ -128,7 +128,7 @@ describe User do
       u.should_not be_nil
     end
 
-    it "have ASCII username" do
+    it "have ASCII username", :katello => true do
       non_ascii = {
         :username => 'Cuiabá_user1',
         :password => PASSWORD,
