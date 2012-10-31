@@ -37,6 +37,7 @@ class PromotionChangeset < Changeset
     validate_content! self.errata
     validate_content! self.packages
     validate_content! self.distributions
+    validate_content! self.content_views
 
     self.state = Changeset::PROMOTING
     self.save!
