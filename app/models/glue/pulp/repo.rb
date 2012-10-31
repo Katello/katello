@@ -299,18 +299,20 @@ module Glue::Pulp::Repo
     end
 
     def after_sync pulp_task_id
-      pulp_task =  Runcible::Resources::Task.poll(pulp_task_id)
+      #pulp_task =  Runcible::Resources::Task.poll(pulp_task_id)
 
-      if pulp_task.nil?
-        Rails.logger.error("Sync_complete called for #{pulp_task_id}, but no task found.")
-        return
-      end
-
-      task = PulpTaskStatus.using_pulp_task(pulp_task)
-      task.user ||= User.current
-      task.organization ||= self.environment.organization
-      task.save!
-      self.sync_complete(task)
+      #if pulp_task.nil?
+      #  Rails.logger.error("Sync_complete called for #{pulp_task_id}, but no task found.")
+      #  return
+      #end
+      #
+      #task = PulpTaskStatus.using_pulp_task(pulp_task)
+      #task.user ||= User.current
+      #task.organization ||= self.environment.organization
+      #task.save!
+      #self.sync_complete(task)
+      self.index_packages
+      self.index_errata
     end
 
     def create_clone to_env
