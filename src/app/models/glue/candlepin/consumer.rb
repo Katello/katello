@@ -323,6 +323,7 @@ module Glue::Candlepin::Consumer
 
     def memory_in_megabytes(mem_str)
       # convert total memory into megabytes
+      return 0 if mem_stir.nil?
       mem,unit = mem_str.split
       total_mem = mem.to_f
       case unit
