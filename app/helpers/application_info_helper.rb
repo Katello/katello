@@ -23,8 +23,15 @@ module ApplicationInfoHelper
   end
 
   def redhat_bugzilla_link
-    url = "https://bugzilla.redhat.com/enter_bug.cgi?product=CloudForms%20System%20Engine"
-    link_to (_("the %s Bugzilla") % AppConfig.app_name), url
+    case AppConfig.release_short
+      when 'sam'
+        url = "https://bugzilla.redhat.com/enter_bug.cgi?product=Subscription%20Asset%20Manager"
+      when 'cfse'
+        url = "https://bugzilla.redhat.com/enter_bug.cgi?product=CloudForms%20System%20Engine"
+      else
+        url = "https://bugzilla.redhat.com/enter_bug.cgi?product=Katello"
+    end
+    link_to (_("the %s Bugzilla") % AppConfig.release_name), url
   end
 
   def doc_link

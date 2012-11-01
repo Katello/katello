@@ -20,5 +20,29 @@ module Katello
     def self.katello?
       not headpin?
     end
-  end
+
+    def self.app_root
+      root = ENV['RAILS_RELATIVE_URL_ROOT']
+      if root != nil && !root.empty?
+        return root.split('/')[1]
+      else
+        return 'katello'
+      end
+    end
+
+    def self.release_name
+      case app_root
+        when "cfse"
+          root = "Cloud Forms System Engine"
+        when "sam"
+          root = "Subscription Asset Manager"
+        when "headpin"
+          root = "Headpin"
+        else
+          root = "Katello"
+      end
+      return root
+    end
+
+end
 end
