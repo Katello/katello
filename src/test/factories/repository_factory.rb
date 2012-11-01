@@ -1,5 +1,8 @@
 FactoryGirl.define do
   factory :repository do
+    sequence(:name) { |n| "Repo#{n}" }
+    sequence(:pulp_id)
+    sequence(:content_id)
 
     ignore do
       stubbed = true
