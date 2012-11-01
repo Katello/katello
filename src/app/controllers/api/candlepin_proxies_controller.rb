@@ -17,19 +17,19 @@ class Api::CandlepinProxiesController < Api::ProxiesController
   def get
     r = ::Resources::Candlepin::Proxy.get(@request_path)
     Rails.logger.debug r if AppConfig.debug_cp_proxy
-    render :text => r, :content_type => :json
+    render :json => r
   end
 
   def delete
     r = ::Resources::Candlepin::Proxy.delete(@request_path)
     Rails.logger.debug r if AppConfig.debug_cp_proxy
-    render :text => r, :content_type => :json
+    render :json => r
   end
 
   def post
     r = ::Resources::Candlepin::Proxy.post(@request_path, @request_body)
     Rails.logger.debug r if AppConfig.debug_cp_proxy
-    render :text => r, :content_type => :json
+    render :json => r
   end
-  
+
 end
