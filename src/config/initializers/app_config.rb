@@ -1,4 +1,4 @@
-# Note: Rails 3 loads initializers in alphabetical order therefore configuration objects 
+# Note: Rails 3 loads initializers in alphabetical order therefore configuration objects
 # are not available in all initializers starting with 'a' letter.
 require 'ostruct'
 require 'yaml'
@@ -30,6 +30,8 @@ module ApplicationConfiguration
         @hash["app_name"] = 'Katello'
         @hash["katello?"] = true
       end
+
+      @hash["release_short"] = Katello::BootUtil.app_root
 
       @ostruct = hashes2ostruct(@hash)
 
@@ -105,7 +107,7 @@ end
 # config as open struct
 ::AppConfig = ApplicationConfiguration::Config.instance.to_os
 
-# add a default format for date... without this, rendering a datetime included "UTC" as 
+# add a default format for date... without this, rendering a datetime included "UTC" as
 # of the string
 Time::DATE_FORMATS[:default] = "%Y-%m-%d %H:%M:%S"
 

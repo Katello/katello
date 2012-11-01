@@ -20,5 +20,14 @@ module Katello
     def self.katello?
       not headpin?
     end
+
+    def self.app_root
+      root = ENV['RAILS_RELATIVE_URL_ROOT']
+      if root != nil && !root.empty?
+        return root.split('/')[1]
+      else
+        return 'katello'
+      end
+    end
   end
 end
