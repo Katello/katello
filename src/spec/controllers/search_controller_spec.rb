@@ -75,9 +75,9 @@ describe SearchController do
 
     it "generates an error notification, if exception raised" do
       # stub query used to retrieve favorites to be rendered
-      controller.stub_chain(:current_user, :search_favorites, :where, :order).and_return(@searchFavorites)
+      controller.stub_chain(:current_user, :search_favorites, :where).and_return([])
       # force an exception when creating the favorite
-      controller.stub_chain(:current_user, :search_favorites, :create).and_raise(StandardError)
+      controller.stub_chain(:current_user, :search_favorites, :create!).and_raise(ActiveRecord::RecordInvalid)
 
       controller.should notify.exception
       post :create_favorite, {:favorite => @favoriteText}

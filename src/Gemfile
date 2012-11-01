@@ -4,6 +4,8 @@ if ENV['BUNDLER_ENABLE_RPM_PREFERRING'] == 'true'
   require File.join(File.dirname(__FILE__), 'lib', 'bundler_patch_rpm-gems_preferred')
 end
 
+require './lib/util/boot_util'
+
 # When adding new version requirement check out EPEL6 repository first
 # and use this version if possible. Also check Fedora version (usually higher).
 source 'http://rubygems.org'
@@ -13,12 +15,20 @@ gem 'thin', '>= 1.2.8'
 gem 'tire', '>= 0.3.0', '< 0.4'
 gem 'json'
 gem 'rest-client', :require => 'rest_client'
-gem 'jammit', '>= 0.6.5'
+gem 'jammit', '>= 0.5.4'
 gem 'pg'
 gem 'rails_warden', '>= 0.5.2'
 gem 'net-ldap'
 gem 'oauth'
 gem 'ldap_fluff'
+
+# those groups are only available in the katello mode, otherwise bundler would require
+# them to resolve dependencies (even when groups would be excluded from the list)
+if Katello::BootUtil.katello?
+  group :foreman do
+    gem 'foreman_api', '>= 0.0.7'
+  end
+end
 
 gem 'delayed_job', '~> 2.1.4'
 gem 'daemons', '>= 1.1.4'
@@ -35,9 +45,8 @@ gem 'simple-navigation', '>= 3.3.4'
 gem 'gettext_i18n_rails'
 gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 
-# Reports
-gem 'ruport', '>=1.7.0', :git => 'https://github.com/ruport/ruport' 
-gem 'prawn'
+# reports
+gem 'ruport', '>=1.6.3'
 gem 'acts_as_reportable', '>=1.1.1'
 
 # Documentation

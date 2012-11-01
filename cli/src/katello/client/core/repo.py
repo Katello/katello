@@ -28,6 +28,7 @@ from katello.client.core.utils import system_exit, run_async_task_with_status, r
 from katello.client.core.utils import ProgressBar
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
+from katello.client.utils.printer import batch_add_columns
 
 
 ALLOWED_REPO_URL_SCHEMES = ("http", "https", "ftp", "file")
@@ -326,11 +327,8 @@ class Info(SingleRepoAction):
 
         repo['url'] = repo['source']['url']
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('package_count')
-        self.printer.add_column('arch', show_with=printer.VerboseStrategy)
-        self.printer.add_column('url', show_with=printer.VerboseStrategy)
+        batch_add_columns(self.printer, 'id', 'name', 'package_count')
+        batch_add_columns(self.printer, 'arch', 'url', show_with=printer.VerboseStrategy)
         self.printer.add_column('last_sync', show_with=printer.VerboseStrategy, formatter=format_sync_time)
         self.printer.add_column('sync_state', name=_("Progress"),
             show_with=printer.VerboseStrategy, formatter=format_sync_state)
@@ -444,10 +442,7 @@ class List(RepoAction):
         prodId = self.get_option('product_id')
         listDisabled = self.has_option('disabled')
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('label')
-        self.printer.add_column('package_count')
+        batch_add_columns(self.printer, 'id', 'name', 'label', 'package_count')
         self.printer.add_column('last_sync', formatter=format_sync_time)
 
         prodIncluded = prodName or prodLabel or prodId

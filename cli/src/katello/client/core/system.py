@@ -32,6 +32,7 @@ from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, Sy
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
 from katello.client.server import ServerRequestError
+from katello.client.utils.printer import batch_add_columns
 
 
 # base system action --------------------------------------------------------
@@ -79,9 +80,7 @@ class List(SystemAction):
         else:
             self.printer.set_header(_("Systems List For Environment [ %s ] in Org [ %s ]") % (env_name, org_name))
 
-        self.printer.add_column('name')
-        self.printer.add_column('uuid')
-        self.printer.add_column('ipv4_address')
+        batch_add_columns(self.printer, 'name', 'uuid', 'ipv4_address')
         self.printer.add_column('serviceLevel', _('Service Level'))
 
         self.printer.print_items(systems)
@@ -129,10 +128,8 @@ class Info(SystemAction):
         if 'guests' in system:
             system["guests"] = "[ "+ ", ".join([guest["name"] for guest in system["guests"]]) +" ]"
 
-        self.printer.add_column('name')
-        self.printer.add_column('ipv4_address')
-        self.printer.add_column('uuid')
-        self.printer.add_column('location')
+
+        batch_add_columns(self.printer, 'name', 'ipv4_address', 'uuid', 'location')
         self.printer.add_column('created_at', _('Registered'), formatter=format_date)
         self.printer.add_column('updated_at', _('Last updated'), formatter=format_date)
         self.printer.add_column('description', multiline=True)
@@ -238,14 +235,11 @@ class InstalledPackages(SystemAction):
 
         packages = self.api.packages(system_id)
 
-        self.printer.add_column('name', show_with=printer.VerboseStrategy)
-        self.printer.add_column('vendor', show_with=printer.VerboseStrategy)
-        self.printer.add_column('version', show_with=printer.VerboseStrategy)
-        self.printer.add_column('release', show_with=printer.VerboseStrategy)
-        self.printer.add_column('arch', show_with=printer.VerboseStrategy)
+        batch_add_columns(self.printer, 'name', 'vendor', 'version', 'release', 'arch',
+            show_with=printer.VerboseStrategy)
         self.printer.add_column('name_version_release_arch',
-                    show_with=printer.GrepStrategy,
-                    item_formatter=lambda p: "%s-%s-%s.%s" % (p['name'], p['version'], p['release'], p['arch']))
+            show_with=printer.GrepStrategy,
+            item_formatter=lambda p: "%s-%s-%s.%s" % (p['name'], p['version'], p['release'], p['arch']))
 
         self.printer.print_items(packages)
 
@@ -582,12 +576,7 @@ class Subscriptions(SystemAction):
             self.printer.set_header(_("Current Subscriptions for System [ %s ]") % name)
             self.printer.add_column('entitlementId')
             self.printer.add_column('serialIds', name=_('Serial ID'))
-            self.printer.add_column('poolName')
-            self.printer.add_column('expires')
-            self.printer.add_column('consumed')
-            self.printer.add_column('quantity')
-            self.printer.add_column('sla')
-            self.printer.add_column('contractNumber')
+            batch_add_columns(self.printer, 'poolName', 'expires', 'consumed', 'quantity', 'sla', 'contractNumber')
             self.printer.add_column('providedProductsFormatted', name=_('Provided products'))
             self.printer.print_items(entitlements())
         else:
@@ -613,12 +602,10 @@ class Subscriptions(SystemAction):
                     yield pool_ext
 
             self.printer.set_header(_("Available Subscriptions for System [ %s ]") % name)
+
             self.printer.add_column('id')
             self.printer.add_column('productName', name=_('Name'))
-            self.printer.add_column('endDate')
-            self.printer.add_column('consumed')
-            self.printer.add_column('quantity')
-            self.printer.add_column('sockets')
+            batch_add_columns(self.printer, 'endDate', 'consumed', 'quantity', 'sockets')
             self.printer.add_column('attr_stacking_id', name=_('Stacking ID'))
             self.printer.add_column('attr_multi-entitlement', name=_('Multi-entitlement'))
             self.printer.add_column('providedProductsFormatted', name=_('Provided products'))
