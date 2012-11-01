@@ -21,11 +21,10 @@ end
 
 
 class Repository < ActiveRecord::Base
-
+  include Glue::ElasticSearch::Repository if AppConfig.use_elasticsearch
   include Glue::Candlepin::Content if (AppConfig.use_cp and AppConfig.use_pulp)
   include Glue::Pulp::Repo if AppConfig.use_pulp
   include Glue if AppConfig.use_cp || AppConfig.use_pulp
-  include Glue::ElasticSearch::Repository if AppConfig.use_elasticsearch
   include Authorization::Repository
   include AsyncOrchestration
   include Katello::LabelFromName
