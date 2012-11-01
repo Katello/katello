@@ -16,7 +16,7 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def setup
     models = ["Organization", "KTEnvironment", "User", "Product", "Repository"]
-    disable_glue_layers(["Candlepin", "Pulp"], models)
+    disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
     @content_view_def = FactoryGirl.build(:content_view_definition)
   end
 

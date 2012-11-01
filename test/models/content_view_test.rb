@@ -16,7 +16,9 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def setup
     models = ["Organization", "KTEnvironment"]
-    disable_glue_layers(["Candlepin", "Pulp"], models) end
+    services = ["Candlepin", "Pulp", "ElasticSearch"]
+    disable_glue_layers(services, models)
+  end
 
   def test_create
     assert ContentView.create(FactoryGirl.attributes_for(:content_view))
