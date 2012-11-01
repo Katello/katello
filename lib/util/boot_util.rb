@@ -29,20 +29,5 @@ module Katello
         return 'katello'
       end
     end
-
-    def self.release_name
-      case app_root
-        when "cfse"
-          root = "Cloud Forms System Engine"
-        when "sam"
-          root = "Subscription Asset Manager"
-        when "headpin"
-          root = "Headpin"
-        else
-          root = "Katello"
-      end
-      return root
-    end
-
-end
+  end
 end
