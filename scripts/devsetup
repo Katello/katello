@@ -41,7 +41,7 @@ def run_command(cmd)
 end
 
 def yum_install(*packages)
-  run_command("yum install #{packages.join(" ")}")
+  run_command("yum install -y #{packages.join(" ")}")
 end
 
 yum_install("git")
