@@ -32,7 +32,6 @@ module ApplicationConfiguration
       end
 
       @hash["release_short"] = Katello::BootUtil.app_root
-      @hash["release_name"] = Katello::BootUtil.release_name
 
       @ostruct = hashes2ostruct(@hash)
 

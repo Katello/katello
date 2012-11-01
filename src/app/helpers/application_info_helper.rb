@@ -22,18 +22,8 @@ module ApplicationInfoHelper
     end
   end
 
-  def redhat_bugzilla_link
-    case AppConfig.release_short
-      when 'sam'
-        url = "https://bugzilla.redhat.com/enter_bug.cgi?product=Subscription%20Asset%20Manager"
-      when 'cfse'
-        url = "https://bugzilla.redhat.com/enter_bug.cgi?product=CloudForms%20System%20Engine"
-      else
-        url = "https://bugzilla.redhat.com/enter_bug.cgi?product=Katello"
-    end
-    link_to (_("the %s Bugzilla") % AppConfig.release_name), url
-  end
-
+  # TODO: this is probably not the right docs link
+  # this should point to the katello docs link
   def doc_link
     url = "https://access.redhat.com/knowledge/docs/CloudForms/"
     link_to _("the CloudForms Documentation"), url
