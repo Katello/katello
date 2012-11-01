@@ -244,14 +244,15 @@ BuildArch:       noarch
 Requires:        %{name} = %{version}-%{release}
 Requires:        rubygem(redcarpet)
 %if 0%{?fedora} > 16
-Requires: rubygem(ruby-debug19)
+Requires:        rubygem(ruby-debug19)
+Requires:        rubygem(simplecov)
 %else
-Requires: rubygem(ruby-debug)
+Requires:        rubygem(ruby-debug)
+Requires:        rubygem(rcov) >= 0.9.9
 %endif
 Requires:        rubygem(ZenTest) >= 4.4.0
 Requires:        rubygem(rspec-rails) >= 2.0.0
 Requires:        rubygem(autotest-rails) >= 4.1.0
-Requires:        rubygem(rcov) >= 0.9.9
 Requires:        rubygem(webrat) >= 0.7.3
 Requires:        rubygem(nokogiri) >= 0.9.9
 Requires:        rubygem(yard) >= 0.5.3
