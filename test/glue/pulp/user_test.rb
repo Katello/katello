@@ -59,6 +59,7 @@ class GluePulpUserCreateTest < GluePulpUserTestBase
 end
 
 
+
 class GluePulpUserTest < GluePulpUserTestBase
 
   def setup

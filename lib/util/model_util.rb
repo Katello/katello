@@ -45,12 +45,14 @@ module Katello
 
     def self.labelize name
       unless name.ascii_only?
-        name = UUIDTools::UUID.random_create.to_s
+        name = uuid
       else
         name.gsub(/[^a-z0-9\-_]/i,"_")
       end
+    end
 
-
+    def self.uuid
+      UUIDTools::UUID.random_create.to_s
     end
   end
 
