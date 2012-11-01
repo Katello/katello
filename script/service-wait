@@ -39,9 +39,12 @@ WAIT_MAX=${WAIT_MAX:-30}
 TOMCAT_PORT=${TOMCAT_PORT:-8443}
 TOMCAT_SERV_PORT=${TOMCAT_SERV_PORT:-8005}
 TOMCAT_TEST_URL=${TOMCAT_TEST_URL:-https://localhost:$TOMCAT_PORT/candlepin/status}
+ELASTICSEARCH_PORT=${ELASTICSEARCH_PORT:-9200}
+ELASTICSEARCH_TEST_URL=${ELASTICSEARCH_TEST_URL:-http://localhost:$ELASTICSEARCH_PORT}
 MONGO_PORT=${MONGO_PORT:-27017}
 POSTGRES_PORT=${POSTGRES_PORT:-5432}
 POSTGRES_DATA=${POSTGRES_DATA:-/var/lib/pgsql/data}
+FOREMAN_TEST_URL=${FOREMAN_TEST_URL:-http://localhost:5500/foreman/api}
 
 # for some services we add few extra seconds after start
 ADDITIONAL_SLEEP=5
@@ -57,6 +60,14 @@ after_start() {
     tomcat6|tomcat7)
       # RHBZ 789288 - wait until data port is avaiable
       /usr/bin/wget --timeout=1 --tries=$WAIT_MAX --retry-connrefused -qO- --no-check-certificate $TOMCAT_TEST_URL >/dev/null
+      sleep $ADDITIONAL_SLEEP
+      ;;
+    elasticsearch)
+      /usr/bin/wget --timeout=1 --tries=$WAIT_MAX --retry-connrefused -qO- --no-check-certificate $ELASTICSEARCH_TEST_URL >/dev/null
+      sleep $ADDITIONAL_SLEEP
+      ;;
+    foreman)
+      /usr/bin/wget --timeout=1 --tries=$WAIT_MAX --retry-connrefused -qO- --no-check-certificate $FOREMAN_TEST_URL >/dev/null
       sleep $ADDITIONAL_SLEEP
       ;;
     mongod)
