@@ -14,7 +14,7 @@ class LoginCredential < ActiveRecord::Base
 
   belongs_to :provider
   validates_presence_of :password
-  validates :username, :uniqueness => true, :presence => true, :username => true
+  validates :username, :uniqueness => true, :presence => true
 
   def mask_password
     masked = ""
