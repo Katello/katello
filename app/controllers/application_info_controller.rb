@@ -27,6 +27,8 @@ class ApplicationInfoController < ApplicationController
     if current_user.allowed_to? :read, :organizations
       @system_info.merge!("Environment" => Rails.env,
                           "Directory"   => Rails.root,
+                          "Release"     => AppConfig.release_name,
+                          "Authentication" => AppConfig.warden,
                           "Ruby" => RUBY_VERSION
                          )
     end
