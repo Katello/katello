@@ -30,7 +30,7 @@ module BrandingHelper
   end
 
   def release_name
-    case app_root
+    case AppConfig.release_short
       when "headpin"
         root = "Headpin"
       else
