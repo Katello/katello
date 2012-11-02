@@ -140,11 +140,12 @@ class Changeset < ActiveRecord::Base
          raise Errors::ChangesetContentException.new(
                    _("Package '%s' was not found in the source environment.") % name_or_nvre)
 
-     nvrea = Katello::PackageUtils::build_nvrea(package_data, false)
+     nvrea = package_data.nvrea
      self.packages << package =
-         ChangesetPackage.create!(:package_id => package_data["id"], :display_name => nvrea,
+         ChangesetPackage.create!(:package_id => package_data.id, :display_name => nvrea,
                                   :product_id => product.id, :changeset => self, :nvrea => nvrea)
      save!
+
      return package
    end
 
@@ -251,7 +252,7 @@ class Changeset < ActiveRecord::Base
                   product.find_packages_by_name(env_to_verify_on_add_content, name_or_nvre))
     end
 
-    packs.first.try(:with_indifferent_access)
+    Package.new(packs.first.try(:with_indifferent_access))
   end
 
   def env_to_verify_on_add_content
