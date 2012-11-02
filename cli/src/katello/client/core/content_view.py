@@ -18,11 +18,12 @@ import os
 
 from katello.client.api.content_view import ContentViewAPI
 from katello.client.api.content_view_definition import ContentViewDefinitionAPI
-from katello.client.cli.base import opt_parser_add_org
+from katello.client.cli.base import opt_parser_add_org, \
+        opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record
 from katello.client.api.utils import get_content_view, get_cv_definition, \
-        get_filter, get_product, get_repo
+        get_filter, get_product, get_repo, get_environment
 
 # base content_view action --------------------------------------------------------
 
@@ -41,15 +42,20 @@ class List(ContentViewAction):
 
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
+        opt_parser_add_environment(parser, required=0)
 
     def check_options(self, validator):
         validator.require('org')
 
     def run(self):
         org_name = self.get_option('org')
+        env_name = self.get_option('environment')
 
-        views = self.def_api.content_view_definitions_by_org(org_name)
-        views += self.api.content_views_by_org(org_name)
+        if env_name:
+            env = get_environment(org_name, env_name)
+
+        views = self.def_api.content_view_definitions_by_org(org_name, env)
+        views += self.api.content_views_by_org(org_name, env)
 
         self.printer.add_column('id')
         self.printer.add_column('name')

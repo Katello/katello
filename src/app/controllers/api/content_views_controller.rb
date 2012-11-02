@@ -2,6 +2,7 @@ class Api::ContentViewsController < Api::ApiController
   respond_to :json
   before_filter :find_organization
   before_filter :find_content_view, :except => [:index, :create]
+  before_filter :find_optional_environment, :only => [:index]
 
   def rules
     index_test   = lambda { true }
@@ -25,7 +26,8 @@ class Api::ContentViewsController < Api::ApiController
   param :environment_id, :identifier, :desc => "environment identifier"
   param :name, :identifier, :desc => "content view identifier"
   def index
-    if (@environment = KTEnvironment.find_by_id(params[:environment_id]))
+    debugger
+    if @environment && !@environment.library?
       @content_views = @environment.content_views
     else
       @content_views = @organization.content_views
