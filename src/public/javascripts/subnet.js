@@ -1,4 +1,4 @@
-/**
+        /**
  Copyright 2011 Red Hat, Inc.
 
  This software is licensed to you under the GNU General Public
@@ -12,3 +12,58 @@
  */
 
 KT.panel.list.registerPage('subnets', {create: 'new_subnet'});
+
+
+KT.subnet_page = (function() {
+    var getData = function(fieldNames) {
+        var data = {};
+        $.each(fieldNames, function(i, fieldName){
+            var value = $('#'+fieldName).val();
+            if (value != null)
+                data[fieldName] = value;
+        });
+        return data;
+    },
+    updateSubnet = function() {
+        var button = $(this),
+            url = button.attr("data-url");
+
+        if (button.hasClass("disabled"))
+            return;
+
+        $.ajax({
+            type: "PUT",
+            url: url,
+            data: { "subnet": getData([
+                "domain_ids",
+                "dhcp_id",
+                "tftp_id",
+                "dns_id"])
+            },
+            cache: false
+        });
+    },
+    register = function() {
+        $('#domain_ids').chosen();
+        $('#dhcp_id').chosen();
+        $('#tftp_id').chosen();
+        $('#dns_id').chosen();
+
+        $('#update_subnet').live('click', updateSubnet);
+    };
+
+    return {
+        register: register
+    }
+}());
+
+
+
+$(document).ready(function() {
+
+    KT.panel.set_expand_cb(function(){
+        KT.subnet_page.register();
+    });
+
+
+});
