@@ -59,6 +59,7 @@ end
 
 def configure_runcible
   uri = URI.parse(AppConfig.pulp.url)
+
   Runcible::Base.config = { 
     :url      => "#{uri.scheme}://#{uri.host}",
     :api_path => uri.path,
