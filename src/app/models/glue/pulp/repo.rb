@@ -22,17 +22,22 @@ module Glue::Pulp::Repo
       has_and_belongs_to_many :filters, :uniq => true
 
       lazy_accessor :pulp_repo_facts,
-                    :initializer => lambda {|s|
+                    :initializer => lambda { |s|
                       if pulp_id
-                        Runcible::Extensions::Repository.retrieve(pulp_id)
+                        Runcible::Extensions::Repository.retrieve_with_details(pulp_id)
                       end
                     }
-      lazy_accessor :importers, :distributors,
-                :initializer => lambda {
-                  if pulp_id
-                      pulp_repo_facts
-                  end
-                }
+
+      lazy_accessor :importers,
+                    :initializer => lambda { |s|
+                      pulp_repo_facts["importers"] if pulp_id
+                    }
+
+      lazy_accessor :distributors,
+                    :initializer => lambda { |s|
+                      pulp_repo_facts["distributors"] if pulp_id
+                    }
+
       attr_accessor :feed, :feed_cert, :feed_key, :feed_ca
 
       def self.ensure_sync_notification
@@ -67,7 +72,7 @@ module Glue::Pulp::Repo
     end
 
     def last_sync
-      self.importers.first['last_sync'] if self.importers.first
+      self.importers.first["last_sync"] if self.importers.first
     end
 
     def relative_path
