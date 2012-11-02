@@ -137,8 +137,8 @@ EOKEY
     Runcible::Extensions::ConsumerGroup.stub!(:create).and_return({})
     Runcible::Extensions::ConsumerGroup.stub!(:delete).and_return(200)
     Runcible::Extensions::ConsumerGroup.stub!(:retrieve).and_return({})
-    Resources::Pulp::ConsumerGroup.stub!(:add_consumer).and_return(200)
-    Resources::Pulp::ConsumerGroup.stub!(:delete_consumer).and_return(200)
+    Runcible::Extensions::ConsumerGroup.stub!(:add_consumers_by_id).and_return(200)
+    Runcible::Extensions::ConsumerGroup.stub!(:remove_consumers_by_id).and_return(200)
   end
 
   def disable_repo_orchestration

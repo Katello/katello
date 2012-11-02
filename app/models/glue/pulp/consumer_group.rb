@@ -46,9 +46,7 @@ module Glue::Pulp::ConsumerGroup
 
     def add_consumers id_list
       Rails.logger.debug "adding consumers to pulp consumer group '#{self.pulp_id}'"
-      id_list.each{|consumer|
-        Resources::Pulp::ConsumerGroup.add_consumer(pulp_id, consumer)
-      }
+      Runcible::Extensions::ConsumerGroup.add_consumers_by_id(pulp_id, id_list)
     rescue => e
       Rails.logger.error "Failed to add consumers to pulp consumer group  #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -56,9 +54,7 @@ module Glue::Pulp::ConsumerGroup
 
     def del_consumers id_list
       Rails.logger.debug "removing consumers from pulp consumer group '#{self.pulp_id}'"
-      id_list.each{|consumer|
-        Resources::Pulp::ConsumerGroup.delete_consumer(pulp_id, consumer)
-      }
+      Runcible::Extensions::ConsumerGroup.remove_consumers_by_id(pulp_id, id_list)
     rescue => e
       Rails.logger.error "Failed to remove consumers from consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
