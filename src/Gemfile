@@ -83,7 +83,11 @@ end
 
 group :test, :development do
   gem 'redcarpet'
-  gem 'ZenTest', '>= 4.4.0'
+  if Gem::VERSION <= "1.8"
+    gem 'ZenTest', '~> 4.5.0' # newer version require rubygems >= 1.8
+  else
+    gem 'ZenTest', '>= 4.4.0'
+  end
   gem 'rspec-rails', '>= 2.0.0'
   gem 'autotest-rails', '>= 4.1.0'
 
