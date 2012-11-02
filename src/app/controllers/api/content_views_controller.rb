@@ -55,15 +55,6 @@ class Api::ContentViewsController < Api::ApiController
     render :json => @content_view
   end
 
-  def update
-    @content_view.update_attributes!(params[:content_view])
-    render :json => @content_view
-  end
-
-  def destroy
-    render :json => @content_view
-  end
-
   private
 
     def find_content_view
