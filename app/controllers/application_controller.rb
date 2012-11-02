@@ -130,6 +130,25 @@ class ApplicationController < ActionController::Base
     return label, label_assigned_text
   end
 
+  # Generate a message that may be sent to the user (e.g. via a notice) to inform them that
+  # a label was automatically assigned to the object.
+  def default_label_assigned new_object
+    object_type = new_object.class.name.downcase
+    _("A label was not provided during %s creation; therefore, a label of '%s' was " +
+      "automatically assigned. If you would like a different label, please delete the " +
+      "%s and recreate it with the desired label.") % [object_type, new_object.label, object_type]
+  end
+
+  # Generate a message that may be sent to the user (e.g. via a notice) to inform them that
+  # the label that they provided has been overriden to ensure uniqueness.
+  def label_overridden new_object, requested_label
+    object_type = new_object.class.name.downcase
+    _("The label requested is already used by another %s; therefore, a unique label was " +
+      "assigned.  If you would like a different label, please delete the %s and recreate " +
+      "it with a unique label.  Requested label: %s, Assigned label: %s") %
+      [object_type, object_type, requested_label, new_object.label]
+  end
+
   def flash_to_headers
     return if @_response.nil? or @_response.response_code == 302
     return if flash.blank?
