@@ -20,9 +20,10 @@ class ContentViewAPI(KatelloAPI):
     """
     Connection class to access content_view calls
     """
-    def content_views_by_org(self, org_id):
+    def content_views_by_org(self, org_id, env = None):
         path = "/api/organizations/%s/content_views" % org_id
-        views = self.server.GET(path)[1]
+        params = {"environment_id": env["id"]} if env else {}
+        views = self.server.GET(path, params)[1]
         return views
 
 
