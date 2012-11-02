@@ -218,14 +218,6 @@ module Resources
 
   class ConsumerGroup < PulpResource
     class << self
-      def add_consumer id, consumer_id
-        self.post "#{path(id)}add_consumer/", consumer_id.to_json, self.default_headers
-      end
-
-      def delete_consumer id, consumer_id
-        self.post "#{path(id)}delete_consumer/", consumer_id.to_json, self.default_headers
-      end
-
       def install_packages id, package_names, scheduled_time=nil
         url = path(id) + "installpackages/"
         attrs = {:packagenames => package_names}
