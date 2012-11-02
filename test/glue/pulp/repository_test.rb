@@ -191,7 +191,7 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
   end
 
   def test_generate_metadata
-    assert @@fedora_17_x86_64.generate_metadata
+    assert !@@fedora_17_x86_64.generate_metadata.empty?
   end
 
   def test_sync_status
@@ -326,6 +326,9 @@ class GluePulpRepoRequiresEmptyPromoteTest < GluePulpRepoTestBase
     @@staging = KTEnvironment.find(@loaded_fixtures['environments']['staging']['id'])
 
     VCR.use_cassette('glue_pulp_repo_helper') do
+      #clone_id = @@fedora_17_x86_64.clone_id(@@staging)
+      #Runcible::Resources::Repository.delete(clone_id)
+      #@@fedora_17_x86_64.destroy_repo
       @@fedora_17_x86_64.create_pulp_repo
 
       task_list = @@fedora_17_x86_64.promote(@@library, @@staging)

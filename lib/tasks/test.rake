@@ -50,7 +50,8 @@ end
 MINITEST_TASKS  = %w(models helpers controllers glue)
 GLUE_LAYERS     = %w(pulp elasticsearch)
 
-Rake::Task[:minitest].clear
+Rake::Task["minitest"].clear
+Rake::Task["minitest:models"].clear
 Rake::Task["db:test:prepare"].clear
 
 desc 'Runs all minitest tests'

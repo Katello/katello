@@ -6,68 +6,68 @@ http_interactions:
     body: 
       string: ""
     headers: 
-      Content-Type: 
-      - application/json
       Accept: 
       - application/json
       Pulp-User: 
       - admin
       Accept-Encoding: 
       - gzip, deflate
+      Content-Type: 
+      - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="cEkXIk7l9aEFzHXZwVOkIpBfIroWz0rVCshDxtHY", oauth_signature="XOhBdJxOtSjHVlezlXZ2kpbuIR8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1351212131", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="i2gfsy4N6GfqaaqkZ3N0R9wi4jFewT7BhuWfsUw", oauth_signature="oWd6CPPxnxei9IizWHddYv3QxjU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1351863717", oauth_version="1.0"
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Content-Length: 
-      - "2"
       Date: 
-      - Fri, 26 Oct 2012 00:42:12 GMT
-      Content-Type: 
-      - application/json
+      - Fri, 02 Nov 2012 13:41:57 GMT
       Server: 
       - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Content-Length: 
+      - "2"
     body: 
       string: "[]"
     http_version: 
-  recorded_at: Fri, 26 Oct 2012 00:42:12 GMT
+  recorded_at: Fri, 02 Nov 2012 13:41:57 GMT
 - request: 
     method: post
     uri: https://knifeparty.localdomain/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
     body: 
-      string: "{\"schedule\":\"2013-10-25T20:42:11-04:00/P1D\"}"
+      string: "{\"schedule\":\"2013-11-02T09:41:57-04:00/P1D\"}"
     headers: 
-      Content-Length: 
-      - "44"
-      Content-Type: 
-      - application/json
       Accept: 
       - application/json
       Pulp-User: 
       - admin
       Accept-Encoding: 
       - gzip, deflate
+      Content-Type: 
+      - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="v5V10BBMNrLUxOQTJ8jo0F6AXPSObkGPNiMDO57Acas", oauth_signature="wtH%2F8GrzBRonZPcPPQgTNC21mwY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1351212132", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="0CvBkiGtCN6pfDZokLf75xYs6g4lJyQMuvgKgKAoa0Q", oauth_signature="Bby1okM4IXkP9QTTb2Nfa6XbyM0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1351863717", oauth_version="1.0"
+      Content-Length: 
+      - "44"
   response: 
     status: 
       code: 201
       message: Created
     headers: 
-      Content-Length: 
-      - "393"
       Date: 
-      - Fri, 26 Oct 2012 00:42:12 GMT
-      Content-Type: 
-      - application/json
+      - Fri, 02 Nov 2012 13:41:57 GMT
       Location: 
-      - /pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/5089dc64dc792138c9001177/
+      - /pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/5093cda5dc7921678f000e34/
       Server: 
       - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
+      Content-Length: 
+      - "393"
     body: 
-      string: "{\"next_run\": \"2013-10-26T00:42:11Z\", \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/5089dc64dc792138c9001177/\", \"schedule\": \"2013-10-25T20:42:11-04:00/P1D\", \"override_config\": {}, \"remaining_runs\": null, \"first_run\": \"2013-10-26T00:42:11Z\", \"enabled\": true, \"last_run\": null, \"failure_threshold\": null, \"_id\": \"5089dc64dc792138c9001177\", \"consecutive_failures\": 0}"
+      string: "{\"next_run\": \"2013-11-02T13:41:57Z\", \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/5093cda5dc7921678f000e34/\", \"schedule\": \"2013-11-02T09:41:57-04:00/P1D\", \"override_config\": {}, \"remaining_runs\": null, \"first_run\": \"2013-11-02T13:41:57Z\", \"enabled\": true, \"last_run\": null, \"failure_threshold\": null, \"_id\": \"5093cda5dc7921678f000e34\", \"consecutive_failures\": 0}"
     http_version: 
-  recorded_at: Fri, 26 Oct 2012 00:42:12 GMT
-recorded_with: VCR 2.2.5
+  recorded_at: Fri, 02 Nov 2012 13:41:57 GMT
+recorded_with: VCR 2.3.0
