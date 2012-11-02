@@ -28,6 +28,7 @@ describe Organization do
     specify { Organization.new(:name => 'name', :label => 'With_Capital_letter').should be_valid }
     specify { Organization.new(:name => 'name', :label => 'with_number').should be_valid }
     specify { Organization.new(:name => 'name', :label => 'with\'space').should_not be_valid }
+    specify { Organization.new(:name => 'o', :label => 'o').should be_valid }
     # creates :label from name
     specify { Organization.new(:name => 'without label').should be_valid }
     specify { Organization.new(:label => 'without_name').should_not be_valid }

@@ -17,6 +17,7 @@
 from katello.client.api.domain import DomainAPI
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_foreman_record, unnest_one
+from katello.client.utils.printer import batch_add_columns
 
 
 # base domain action --------------------------------------------------------
@@ -46,10 +47,8 @@ class List(DomainAction):
         if domains:
             domains = unnest_one(domains)
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('fullname')
-        self.printer.add_column('dns_id')
+        batch_add_columns(self.printer,
+            'id', 'name', 'fullname', 'dns_id')
 
         self.printer.set_header(_("Domains"))
         self.printer.print_items(domains)
@@ -68,10 +67,8 @@ class Info(DomainAction):
         domain_id = self.get_option('id')
         domain = unnest_one(self.api.show(domain_id))
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('fullname')
-        self.printer.add_column('dns_id')
+        batch_add_columns(self.printer,
+            'id', 'name', 'fullname', 'dns_id')
 
         self.printer.set_header(_("Domain"))
         self.printer.print_item(domain)

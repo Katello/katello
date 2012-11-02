@@ -36,6 +36,7 @@ class SystemReportTest(CLIActionTestCase):
         self.mock(self.action.api, 'report_by_org', ('', ''))
         self.mock(self.action.api, 'report_by_env', ('', ''))
         self.mock(self.module, 'save_report')
+        self.mock(self.module, 'get_katello_mode', 'katello')
         self.mock(self.module, 'get_environment', self.ENV)
 
 

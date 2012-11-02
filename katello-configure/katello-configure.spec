@@ -82,6 +82,7 @@ install -m 0755 bin/katello-configure %{buildroot}%{_sbindir}
 install -m 0755 bin/katello-upgrade %{buildroot}%{_sbindir}
 install -m 0755 bin/katello-passwd %{buildroot}%{_sbindir}
 install -d -m 0755 %{buildroot}%{homedir}
+install -d -m 0755 %{buildroot}%{homedir}/upgrade-scripts/upgrade
 install -d -m 0755 %{buildroot}%{homedir}/puppet/modules
 cp -Rp modules/* %{buildroot}%{homedir}/puppet/modules
 install -d -m 0755 %{buildroot}%{homedir}/puppet/lib
