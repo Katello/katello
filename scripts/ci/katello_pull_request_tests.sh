@@ -21,5 +21,4 @@ bundle exec rake parallel:spec
 
 echo ""
 echo "********* Minitest Model and Glue Tests ****************"
-bundle exec rake db:test:prepare
 bundle exec rake minitest

@@ -52,10 +52,9 @@ GLUE_LAYERS     = %w(pulp elasticsearch)
 
 Rake::Task["minitest"].clear
 Rake::Task["minitest:models"].clear
-Rake::Task["db:test:prepare"].clear
 
 desc 'Runs all minitest tests'
-MiniTest::Rails::Tasks::SubTestTask.new(:minitest => 'test:prepare') do |t|
+MiniTest::Rails::Tasks::SubTestTask.new(:minitest) do |t|
   t.libs.push 'test'
   t.pattern = "test/#{task}/**/*_test.rb"
 end
