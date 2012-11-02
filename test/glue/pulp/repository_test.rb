@@ -236,14 +236,14 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
   end
 
   def test_distributions
-    VCR.use_cassette('glue_pulp_repo_distributions', :match_requests_on => [:body_json, :uri, :method]) do
+    VCR.use_cassette('glue_pulp_repo_distributions', :match_requests_on => [:body_json, :path, :method]) do
       distributions = @@fedora_17_x86_64.distributions
       assert distributions.select { |distribution| distribution.id == "ks-Test Family-TestVariant-16-x86_64" }.length > 0
     end
   end
 
   def test_has_distribution?
-    VCR.use_cassette('glue_pulp_repo_distributions', :match_requests_on => [:body_json, :uri, :method]) do
+    VCR.use_cassette('glue_pulp_repo_distributions', :match_requests_on => [:body_json, :path, :method]) do
       assert @@fedora_17_x86_64.has_distribution?("ks-Test Family-TestVariant-16-x86_64")
     end
   end
