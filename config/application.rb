@@ -103,11 +103,10 @@ module Src
   end
 end
 
+old_fast_gettext = !defined?(FastGettext::Version) ||
+    FastGettext::Version.split('.').map(&:to_i).zip([0, 6, 8]).any? { |a, b| a < b }
+
 FastGettext.add_text_domain('app', { :path => 'locale', :type => :po, :ignore_fuzzy => true }.
-    update(if FastGettext::Version.split('.').map(&:to_i).zip([0, 6, 8]).any? { |a, b| a >= b } # compare versions
-             { :report_warning => false }
-           else
-             { :ignore_obsolete => true }
-           end))
+    update(old_fast_gettext ? { :ignore_obsolete => true } : { :report_warning => false }))
 
 FastGettext.default_text_domain = 'app'
