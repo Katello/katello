@@ -10,26 +10,24 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module ApplicationInfoHelper
-
-  def component_status_icon(status)
-    if status == "fail"
-      content_tag :span, "", :class => "error_icon"
-    elsif status == "ok"
-      content_tag :span, "", :class => "check_icon"
-    else
-      ""
+# utility functions available during Rails boot time
+module Katello
+  module BootUtil
+    def self.headpin?
+      ENV['RAILS_RELATIVE_URL_ROOT'] == '/headpin' || ENV['RAILS_RELATIVE_URL_ROOT'] == '/sam'
     end
-  end
 
-  # TODO: this is probably not the right docs link
-  # this should point to the katello docs link
-  def doc_link
-    url = "https://access.redhat.com/knowledge/docs/CloudForms/"
-    link_to _("the CloudForms Documentation"), url
-  end
+    def self.katello?
+      not headpin?
+    end
 
-  def can_read_system_info?
-    current_user.present? && Organization.any_readable?
+    def self.app_root
+      root = ENV['RAILS_RELATIVE_URL_ROOT']
+      if root != nil && !root.empty?
+        return root.split('/')[1]
+      else
+        return 'katello'
+      end
+    end
   end
 end

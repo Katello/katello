@@ -15,7 +15,7 @@
       .scroll-pane
         -for element in n_errata
           - errata = errata_hash[element[0]]
-          - systems = element[1]['consumerids']
+          - systems = element[1]['consumer_ids']
           - if !systems.empty?
             .errata
               %div.errata_item

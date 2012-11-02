@@ -79,21 +79,21 @@ describe SystemGroup do
   context "changing consumer ids"  do
     it "should contact pulp if new ids are added" do
       Resources::Pulp::ConsumerGroup.should_receive(:add_consumer).twice
-      grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumerids=>[:a, :b])
-      grp.consumerids = [:a, :b, :c, :d]
+      grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumer_ids=>[:a, :b])
+      grp.consumer_ids = [:a, :b, :c, :d]
       grp.save!
     end
     it "should contact pulp if new ids are removed" do
       Resources::Pulp::ConsumerGroup.should_receive(:delete_consumer).twice
-      grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumerids=>[:a, :b])
-      grp.consumerids = []
+      grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumer_ids=>[:a, :b])
+      grp.consumer_ids = []
       grp.save!
     end
     it "should contact pulp if new ids are added and removed" do
       Resources::Pulp::ConsumerGroup.should_receive(:add_consumer).twice
       Resources::Pulp::ConsumerGroup.should_receive(:delete_consumer).twice
-      grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumerids=>[:a, :b])
-      grp.consumerids = [:c, :d]
+      grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumer_ids=>[:a, :b])
+      grp.consumer_ids = [:c, :d]
       grp.save!
     end
   end
