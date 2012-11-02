@@ -38,7 +38,7 @@ describe SystemGroup do
   context "create should" do
 
     it "should create succesfully with an org" do
-      Resources::Pulp::ConsumerGroup.should_receive(:create).and_return({})
+      Runcible::Extensions::ConsumerGroup.should_receive(:create).and_return({})
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
       grp.pulp_id.should_not == nil
     end
@@ -61,7 +61,7 @@ describe SystemGroup do
 
   context "delete should" do
     it "should delete a group successfully" do
-      Resources::Pulp::ConsumerGroup.should_receive(:destroy).and_return(200)
+      Runcible::Extensions::ConsumerGroup.should_receive(:delete).and_return(200)
       @group.destroy
       SystemGroup.where(:name=>@group.name).count.should == 0
     end
