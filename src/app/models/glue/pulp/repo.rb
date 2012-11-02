@@ -298,7 +298,7 @@ module Glue::Pulp::Repo
       return [task]
     end
 
-    def after_sync pulp_task_id
+    def handle_sync_complete_task(task_id)
       #pulp_task =  Runcible::Resources::Task.poll(pulp_task_id)
 
       #if pulp_task.nil?
@@ -310,9 +310,27 @@ module Glue::Pulp::Repo
       #task.user ||= User.current
       #task.organization ||= self.environment.organization
       #task.save!
-      #self.sync_complete(task)
-      self.index_packages
-      self.index_errata
+
+      notify = task.parameters.try(:[], :options).try(:[], :notify)
+      user = task.user
+      if task.state == TaskStatus::Status::FINISHED
+        if user && notify
+          Notify.success _("Repository '%s' finished syncing successfully.") % [self.name],
+                         :user => user, :organization => self.organization
+        end
+      elsif task.state == 'error'
+        details = if task.progress.error_details.present?
+                    task.progress.error_details
+                  else
+                    task.result[:errors].flatten
+                  end
+
+        Rails.logger.error("*** Sync error: " +  details.to_json)
+        if user && notify
+          Notify.error _("There were errors syncing repository '%s'. See notices page for more details.") % self.name,
+                       :details => details.map(&:chomp).join("\n"), :user => user, :organization => self.organization
+        end
+      end
     end
 
     def create_clone to_env

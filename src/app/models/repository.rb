@@ -107,29 +107,6 @@ class Repository < ActiveRecord::Base
     filters.count > 0 || product.filters.count > 0
   end
 
-  def sync_complete task
-    notify = task.parameters.try(:[], :options).try(:[], :notify)
-    user = task.user
-    if task.state == TaskStatus::Status::FINISHED
-      if user && notify
-        Notify.success _("Repository '%s' finished syncing successfully.") % [self.name],
-                       :user => user, :organization => self.organization
-      end
-    elsif task.state == 'error'
-      details = if task.progress.error_details.present?
-                  task.progress.error_details
-                else
-                  task.result[:errors].flatten
-                end
-
-      Rails.logger.error("*** Sync error: " +  details.to_json)
-      if user && notify
-        Notify.error _("There were errors syncing repository '%s'. See notices page for more details.") % self.name,
-                     :details => details.map(&:chomp).join("\n"), :user => user, :organization => self.organization
-      end
-    end
-  end
-
   def clones
     lib_id = self.library_instance_id || self.id
     Repository.in_environment(self.environment.successors).where(:library_instance_id=>lib_id)
@@ -160,6 +137,12 @@ class Repository < ActiveRecord::Base
     else
       self.gpg_key = GpgKey.readable(organization).find_by_name!(name)
     end
+  end
+
+  def after_sync pulp_task_id
+    #self.handle_sync_complete_task(pulp_task_id)
+    self.index_packages
+    self.index_errata
   end
 
   def as_json(*args)
