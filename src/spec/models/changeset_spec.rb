@@ -122,13 +122,13 @@ describe Changeset, :katello => true do
         @pack_release = "1"
         @pack_arch    = "noarch"
         @pack_nvre    = @pack_name +"-"+ @pack_version +"-"+ @pack_release +"."+ @pack_arch
-        @pack         = {
-            :id      => 1,
+        @pack         = Package.new({
+            :_id      => 1,
             :name    => @pack_name,
             :version => @pack_version,
             :release => @pack_release,
             :arch    => @pack_arch
-        }.with_indifferent_access
+        }.with_indifferent_access)
         @err          = mock('Err', { :id => 'err', :name => 'err' })
 
         @repo = Repository.new(:environment_product => ep, :name => "repo", :label => "repo_label",

@@ -24,7 +24,7 @@ module Glue::Pulp::Repo
       lazy_accessor :pulp_repo_facts,
                     :initializer => lambda {|s|
                       if pulp_id
-                        Runcible::Extensions::Repository.retrieve(pulp_id)
+                        Runcible::Extensions::Repository.retrieve_with_details(pulp_id)
                       end
                     }
       lazy_accessor :importers, :distributors,
@@ -298,19 +298,39 @@ module Glue::Pulp::Repo
       return [task]
     end
 
-    def after_sync pulp_task_id
-      pulp_task =  Runcible::Resources::Task.poll(pulp_task_id)
+    def handle_sync_complete_task(task_id)
+      #pulp_task =  Runcible::Resources::Task.poll(pulp_task_id)
 
-      if pulp_task.nil?
-        Rails.logger.error("Sync_complete called for #{pulp_task_id}, but no task found.")
-        return
+      #if pulp_task.nil?
+      #  Rails.logger.error("Sync_complete called for #{pulp_task_id}, but no task found.")
+      #  return
+      #end
+      #
+      #task = PulpTaskStatus.using_pulp_task(pulp_task)
+      #task.user ||= User.current
+      #task.organization ||= self.environment.organization
+      #task.save!
+
+      notify = task.parameters.try(:[], :options).try(:[], :notify)
+      user = task.user
+      if task.state == TaskStatus::Status::FINISHED
+        if user && notify
+          Notify.success _("Repository '%s' finished syncing successfully.") % [self.name],
+                         :user => user, :organization => self.organization
+        end
+      elsif task.state == 'error'
+        details = if task.progress.error_details.present?
+                    task.progress.error_details
+                  else
+                    task.result[:errors].flatten
+                  end
+
+        Rails.logger.error("*** Sync error: " +  details.to_json)
+        if user && notify
+          Notify.error _("There were errors syncing repository '%s'. See notices page for more details.") % self.name,
+                       :details => details.map(&:chomp).join("\n"), :user => user, :organization => self.organization
+        end
       end
-
-      task = PulpTaskStatus.using_pulp_task(pulp_task)
-      task.user ||= User.current
-      task.organization ||= self.environment.organization
-      task.save!
-      self.sync_complete(task)
     end
 
     def create_clone to_env

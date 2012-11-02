@@ -64,7 +64,7 @@ namespace 'minitest' do
 
   MINITEST_TASKS.each do |task|
     if ENV['test']
-      Rake::Task["minitest:models"].clear
+      #Rake::Task["minitest:models"].clear
       Rake::Task["db:test:prepare"].clear
       MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
         t.libs.push 'test'

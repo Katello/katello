@@ -23,7 +23,11 @@ module Glue::Pulp::Errata
   def self.included(base)
     base.class_eval do
 
-      attr_accessor :id, :title, :description, :version, :release, :type, :status, :updated,  :issued, :from_str, :reboot_suggested, :references, :pkglist, :severity, :repoids
+      attr_accessor :id, :title, :description, :version, :release, :type, :status, :updated,  :issued, :from_str,
+                    :reboot_suggested, :references, :pkglist, :severity, :repository_memberships
+
+      alias_method 'repoids', 'repository_memberships'
+
 
       def initialize(params = {})
         params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
