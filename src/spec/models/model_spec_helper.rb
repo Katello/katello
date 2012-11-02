@@ -120,7 +120,7 @@ EOKEY
   end
 
   def disable_system_orchestration
-    Resources::Candlepin::Consumer.stub(:get).and_return({})
+    Resources::Candlepin::Consumer.stub!(:get).and_return({})
   end
 
   def disable_user_orchestration(options = { })
@@ -134,9 +134,9 @@ EOKEY
 
 
   def disable_consumer_group_orchestration
-    Resources::Pulp::ConsumerGroup.stub!(:create).and_return({})
-    Resources::Pulp::ConsumerGroup.stub!(:destroy).and_return(200)
-    Resources::Pulp::ConsumerGroup.stub(:find).and_return({})
+    Runcible::Extensions::ConsumerGroup.stub!(:create).and_return({})
+    Runcible::Extensions::ConsumerGroup.stub!(:delete).and_return(200)
+    Runcible::Extensions::ConsumerGroup.stub!(:retrieve).and_return({})
     Resources::Pulp::ConsumerGroup.stub!(:add_consumer).and_return(200)
     Resources::Pulp::ConsumerGroup.stub!(:delete_consumer).and_return(200)
   end

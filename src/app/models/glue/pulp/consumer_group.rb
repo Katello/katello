@@ -19,7 +19,7 @@ module Glue::Pulp::ConsumerGroup
     base.send :include, LazyAccessor
 
     base.class_eval do
-      lazy_accessor  :consumer_ids, :initializer => lambda { |s| Runcible::Resources::ConsumerGroup.retrieve(pulp_id) }
+      lazy_accessor  :consumer_ids, :initializer => lambda { |s| Runcible::Extensions::ConsumerGroup.retrieve(pulp_id) }
 
       before_save :save_consumer_group_orch
       before_destroy :destroy_consumer_group_orch
@@ -30,7 +30,7 @@ module Glue::Pulp::ConsumerGroup
 
     def set_pulp_consumer_group
       Rails.logger.debug "creating pulp consumer group '#{self.pulp_id}'"
-      Runcible::Resources::ConsumerGroup.create(self.pulp_id, :description=>self.description, :consumer_ids=>(consumer_ids || []))
+      Runcible::Extensions::ConsumerGroup.create(self.pulp_id, :description=>self.description, :consumer_ids=>(consumer_ids || []))
     rescue => e
       Rails.logger.error "Failed to create pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -38,7 +38,7 @@ module Glue::Pulp::ConsumerGroup
 
     def del_pulp_consumer_group
       Rails.logger.debug "deleting pulp consumer group '#{self.pulp_id}'"
-      Runcible::Resources::ConsumerGroup.delete self.pulp_id
+      Runcible::Extensions::ConsumerGroup.delete self.pulp_id
     rescue => e
       Rails.logger.error "Failed to delete pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
