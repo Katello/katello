@@ -24,8 +24,9 @@ class Api::TemplatesController < Api::ApiController
 
   before_filter :find_environment, :only => [:create, :import, :index]
   before_filter :find_template, :only => [:show, :update, :destroy, :promote, :export, :validate]
-
   before_filter :authorize
+
+  rescue_from Errors::TemplateValidationException, :with => proc { |e| render_exception(400, e) }
 
   def rules
     read_test = lambda{ SystemTemplate.readable?(@template.environment.organization) }
