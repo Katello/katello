@@ -2,6 +2,7 @@ class Api::ContentViewDefinitionsController < Api::ApiController
   respond_to :json
   before_filter :find_organization, :except => [:destroy, :update]
   before_filter :find_definition, :except => [:index, :create]
+  before_filter :find_optional_environment, :only => [:index]
 
   def rules
     view_rule = lambda { true }
@@ -24,11 +25,14 @@ class Api::ContentViewDefinitionsController < Api::ApiController
     "List content view definitions"
   param :organization_id, :identifier, :desc => "organization identifier"
   param :label, :identifier, :desc => "content view identifier"
+  param :environment_id, :identifier, :desc => "environment id for filtering"
   def index
-    if (label = params[:label])
-      definitions = @organization.content_view_definitions.where(:label => label)
+    definitions = if @environment && !@environment.library?
+      [] # no environments contain defs other than library
+    elsif (label = params[:label])
+      @organization.content_view_definitions.where(:label => label)
     else
-      definitions = @organization.content_view_definitions
+      @organization.content_view_definitions
     end
 
     render :json => definitions
