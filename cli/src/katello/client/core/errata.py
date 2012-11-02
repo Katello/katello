@@ -24,6 +24,7 @@ from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_repo, get_environment, get_product, get_system_group
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
+from katello.client.utils.printer import batch_add_columns
 
 
 # base package action --------------------------------------------------------
@@ -117,10 +118,8 @@ class SystemErrata(ErrataAction):
 
         errata = systemApi.errata(systems[0]["uuid"])
 
-        self.printer.add_column('id')
-        self.printer.add_column('title')
-        self.printer.add_column('type')
 
+        batch_add_columns(self.printer, 'id', 'title', 'type')
         self.printer.set_header(_("Errata for system %s in organization %s") % (sys_name, org_name))
         self.printer.print_items(errata)
 
@@ -149,9 +148,7 @@ class SystemGroupErrata(ErrataAction):
 
         errata = systemGroupApi.errata(org_name, system_group_id, type_in=type_in)
 
-        self.printer.add_column('id')
-        self.printer.add_column('title')
-        self.printer.add_column('type')
+        batch_add_columns(self.printer, 'id', 'title', 'type')
         self.printer.add_column('systems', _('# Systems'), formatter=len)
         self.printer.add_column('systems', multiline=True, show_with=printer.VerboseStrategy)
 
@@ -203,16 +200,11 @@ class Info(ErrataAction):
                          for pkg in pack['pkglist']
                          for pinfo in pkg['packages']]
 
-        self.printer.add_column('id')
-        self.printer.add_column('title')
+        batch_add_columns(self.printer, 'id', 'title')
         self.printer.add_column('description', multiline=True)
-        self.printer.add_column('type')
-        self.printer.add_column('issued')
-        self.printer.add_column('updated')
-        self.printer.add_column('version')
-        self.printer.add_column('release')
-        self.printer.add_column('status')
-        self.printer.add_column('reboot_suggested')
+        batch_add_columns(self.printer,
+            'type', 'issued', 'updated', 'version',
+            'release', 'status', 'reboot_suggested')
         self.printer.add_column('affected_packages', multiline=True)
 
         self.printer.set_header(_("Errata Information"))
