@@ -176,6 +176,8 @@ class Product < ActiveRecord::Base
 
   end
 
+  scope :all_in_org, lambda{|org| ::Product.joins(:provider).where('providers.organization_id = ?', org.id)}
+
   #Permissions
   scope :all_readable, lambda {|org| ::Provider.readable(org).joins(:provider)}
   scope :readable, lambda{|org| all_readable(org).with_enabled_repos_only(org.library)}
@@ -202,8 +204,8 @@ class Product < ActiveRecord::Base
   def assign_label
     self.label = Katello::ModelUtils::labelize(self.name) if self.label.blank?
 
-    # if the object label is already being used, append the id to make it unique
-    if (Product.where(:label => self.label).count > 0)
+    # if the object label is already being used in this org, append the id to make it unique
+    if Product.all_in_org(self.organization).where('products.label = ?', self.label).count > 0
       self.label.concat("_" + self.cp_id) unless self.cp_id.blank?
     end
   end
