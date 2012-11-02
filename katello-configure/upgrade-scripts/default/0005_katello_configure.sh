@@ -8,3 +8,6 @@
 # do it twice - in rare cases configuration file changes needs two runs
 katello-configure -b --answer-file=/etc/katello/katello-configure.conf && \
   katello-configure -b --answer-file=/etc/katello/katello-configure.conf
+
+# and restart all services explicitly (this step is required)
+katello-service restart
