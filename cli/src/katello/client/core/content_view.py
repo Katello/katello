@@ -51,8 +51,7 @@ class List(ContentViewAction):
         org_name = self.get_option('org')
         env_name = self.get_option('environment')
 
-        if env_name:
-            env = get_environment(org_name, env_name)
+        env = get_environment(org_name, env_name) if env_name else None
 
         views = self.def_api.content_view_definitions_by_org(org_name, env)
         views += self.api.content_views_by_org(org_name, env)
@@ -207,6 +206,7 @@ class Delete(ContentViewAction):
         print _("Successfully deleted definition [ %s ]") % view_label
         return os.EX_OK
 
+
 class AddRemoveFilter(ContentViewAction):
 
     select_by_env = False
@@ -260,6 +260,7 @@ class AddRemoveFilter(ContentViewAction):
         self.def_api.update_filters(org_name, cvd['id'], filters)
         print message
 
+
 class AddRemoveProduct(ContentViewAction):
 
     select_by_env = False
@@ -312,6 +313,7 @@ class AddRemoveProduct(ContentViewAction):
 
         self.def_api.update_products(org_name, cvd['id'], products)
         print message
+
 
 class AddRemoveRepo(ContentViewAction):
 
@@ -367,6 +369,60 @@ class AddRemoveRepo(ContentViewAction):
                     (repo["name"], cvd["label"]))
 
         self.def_api.update_repos(org_name, cvd['id'], repos)
+        print message
+
+
+class AddRemoveContentView(ContentViewAction):
+
+    select_by_env = False
+    addition = True
+
+    @property
+    def description(self):
+        if self.addition:
+            return _('add a content_view to a content view')
+        else:
+            return _('remove a content_view from a content view')
+
+
+    def __init__(self, addition):
+        super(AddRemoveContentView, self).__init__()
+        self.addition = addition
+
+    def setup_parser(self, parser):
+        parser.add_option('--label', dest='label',
+                help=_("composite label eg: Database (required)"))
+        opt_parser_add_org(parser, required=1)
+        parser.add_option('--content_view', dest='view',
+                help=_("published component label (required)"))
+
+    def check_options(self, validator):
+        validator.require(('label', 'org', 'view'))
+
+    def run(self):
+        org_name           = self.get_option('org')
+        def_label          = self.get_option('label')
+        content_view_label = self.get_option('view')
+
+        cvd = get_cv_definition(org_name, def_label)
+        content_view = get_content_view(org_name, content_view_label)
+
+        content_views = self.def_api.content_views(cvd['id'])
+        content_views = [f['id'] for f in content_views]
+        self.update_content_views(cvd, content_views, content_view)
+        return os.EX_OK
+
+    def update_content_views(self, cvd, content_views, content_view):
+        if self.addition:
+            content_views.append(content_view["id"])
+            message = _("Added content view [ %s ] to content view [ %s ]" % \
+                    (content_view["name"], cvd["label"]))
+        else:
+            content_views.remove(content_view["id"])
+            message = _("Removed content view [ %s ] to content view [ %s ]" % \
+                    (content_view["name"], cvd["label"]))
+
+        self.def_api.update_content_views(cvd['id'], content_views)
         print message
 
 # content_view command ------------------------------------------------------------

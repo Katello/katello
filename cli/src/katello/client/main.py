@@ -290,6 +290,9 @@ def setup_admin(katello_cmd):
         cv_cmd.add_command('remove_product', content_view.AddRemoveProduct(False))
         cv_cmd.add_command('add_repo', content_view.AddRemoveRepo(True))
         cv_cmd.add_command('remove_repo', content_view.AddRemoveRepo(False))
+        cv_cmd.add_command('add_view', content_view.AddRemoveContentView(True))
+        cv_cmd.add_command('remove_view',
+                content_view.AddRemoveContentView(False))
         katello_cmd.add_command('content_view', cv_cmd)
 
     client_cmd = client.Client()
