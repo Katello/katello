@@ -44,7 +44,7 @@ module Glue::Candlepin::Product
       productContent_attrs = []
     end
 
-    attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Katello::ModelUtils::labelize(attrs['name']))
+    attrs = attrs.merge('name' => validate_name(attrs['name']))
 
     product = Product.new(attrs, &block)
     product.orchestration_for = :import_from_cp_ar_setup
@@ -60,7 +60,7 @@ module Glue::Candlepin::Product
   end
 
   def self.import_marketing_from_cp(attrs, engineering_product_ids, &block)
-    attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Katello::ModelUtils::labelize(attrs['name']))
+    attrs = attrs.merge('name' => validate_name(attrs['name']))
 
     product = MarketingProduct.new(attrs, &block)
     product.orchestration_for = :import_from_cp_ar_setup
