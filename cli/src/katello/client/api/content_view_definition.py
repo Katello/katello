@@ -104,3 +104,13 @@ class ContentViewDefinitionAPI(KatelloAPI):
                 % (u_str(org), u_str(cvd))
         data = self.server.PUT(path, {"repos": repos})[1]
         return data
+
+    def content_views(self, cvd_id):
+        path = "/api/content_view_definitions/%s/content_views" % cvd_id
+        data = self.server.GET(path)[1]
+        return data
+
+    def update_content_views(self, cvd_id, views):
+        path = "/api/content_view_definitions/%s/content_views" % cvd_id
+        data = self.server.PUT(path, {"views": views})[1]
+        return data

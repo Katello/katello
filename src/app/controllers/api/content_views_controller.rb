@@ -26,7 +26,6 @@ class Api::ContentViewsController < Api::ApiController
   param :environment_id, :identifier, :desc => "environment identifier"
   param :name, :identifier, :desc => "content view identifier"
   def index
-    debugger
     if @environment && !@environment.library?
       @content_views = @environment.content_views
     else
