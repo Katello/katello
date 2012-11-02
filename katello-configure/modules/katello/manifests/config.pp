@@ -76,7 +76,7 @@ class katello::config {
       content => template("katello/etc/ldap_fluff.yml.erb"),
       owner   => $katello::params::user,
       group   => $katello::params::group,
-      mode    => "600",
+      mode    => "600";
   }
 
   exec {"httpd-restart":
@@ -102,6 +102,7 @@ class katello::config {
                 'katello' => [
                   Class["candlepin::service"], 
                   Class["pulp::service"], 
+                  Class["foreman::service"], 
                   File["${katello::params::log_base}"], 
                   File["${katello::params::log_base}/production.log"], 
                   File["${katello::params::log_base}/production_sql.log"], 
@@ -176,7 +177,7 @@ class katello::config {
     timeout => 0,
     before  => Class["katello::service"],
     require => $katello::params::deployment ? {
-                'katello' => [ Exec["katello_migrate_db"], Class["candlepin::service"], Class["pulp::service"], File["${katello::params::log_base}"] ],
+                'katello' => [ Exec["katello_migrate_db"], Class["candlepin::service"], Class["pulp::service"], Class["foreman::service"], File["${katello::params::log_base}"] ],
                 'headpin' => [ Exec["katello_migrate_db"], Class["candlepin::service"], Class["thumbslug::service"], File["${katello::params::log_base}"] ],
                 default => [],
     },

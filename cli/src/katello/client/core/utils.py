@@ -26,11 +26,11 @@ from katello.client.config import Config
 #  mode check -----------------------------------------------------------------
 def get_katello_mode():
     Config()
-    mode = "katello"
-    path = Config.parser.get('server', 'path') or '/katello/api'
+    path = Config.parser.get('server', 'path') if Config.parser.has_option('server', 'path') else ''
     if "headpin" in path or "sam" in path:
-        mode = "headpin"
-    return mode
+        return "headpin"
+    else:
+        return "katello"
 
 # server output validity ------------------------------------------------------
 def is_valid_record(rec):
@@ -184,7 +184,7 @@ def parse_tokens(tokenstring):
 
     tokens = []
     try:
-        pattern = '--?\w+|=?"[^"]*"|=?\'[^\']*\'|=?[^\s]+'
+        pattern = r'--?\w+|=?"[^"]*"|=?\'[^\']*\'|=?[^\s]+'
 
         for tok in (re.findall(pattern, tokenstring)):
 
