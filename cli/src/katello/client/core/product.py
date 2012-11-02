@@ -356,14 +356,6 @@ class Create(ProductAction):
         prod = self.api.create(prov["id"], name, label, description, gpgkey)
         print _("Successfully created product [ %s ]") % name
 
-        if (label != None) and (label != prod["label"]):
-            print _("Warning! The label requested was already used by another "\
-                    "product; therefore, a unique label was assigned. "\
-                    "If you would like a different label, please delete "\
-                    "the product and recreate it with a unique label. "\
-                    "Requested label: %s, Assigned label: %s") %\
-                    (label, prod["label"])
-
         if url == None:
             return os.EX_OK
 
