@@ -16,8 +16,8 @@ class ContentViewDefinition < ActiveRecord::Base
   include Katello::LabelFromName
 
   has_many :content_views
-  has_many :component_content_views
-  has_many :content_view_components, :through => :component_content_views,
+  has_many :components, :class_name => "ComponentContentView"
+  has_many :component_content_views, :through => :components,
     :source => :content_view, :class_name => "ContentView"
   belongs_to :organization
   has_many :filters

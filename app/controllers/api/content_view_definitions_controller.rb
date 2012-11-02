@@ -1,6 +1,7 @@
 class Api::ContentViewDefinitionsController < Api::ApiController
   respond_to :json
-  before_filter :find_organization, :except => [:destroy, :update]
+  before_filter :find_organization, :except => [:destroy, :update,
+    :content_views, :update_content_views]
   before_filter :find_definition, :except => [:index, :create]
   before_filter :find_optional_environment, :only => [:index]
 
@@ -17,7 +18,9 @@ class Api::ContentViewDefinitionsController < Api::ApiController
       :publish => publish_rule,
       :show => show_rule,
       :update => manage_rule,
-      :destroy => manage_rule
+      :destroy => manage_rule,
+      :content_views => view_rule,
+      :update_content_views => manage_rule
     }
   end
 
@@ -87,6 +90,30 @@ class Api::ContentViewDefinitionsController < Api::ApiController
   def destroy
     @definition.destroy
     render :json => @definition
+  end
+
+  api :PUT, "/content_view_definitions/:id/content_views",
+    "List a definition's content views"
+  param :id, :identifier, :desc => "Definition identifier", :required => true
+  def content_views
+    render :json => @definition.component_content_views
+  end
+
+  api :PUT, "/content_view_definitions/:id/content_views",
+    "Update a definition's content views"
+  param :id, :identifier, :desc => "Definition identifier", :required => true
+  param :views, Array, :desc => "Updated list of view ids", :required => true
+  def update_content_views
+    org_id = @definition.organization.id
+    @content_views = ContentView.where(:id => params[:views])
+    deleted_content_views = @definition.component_content_views - @content_views
+    added_content_views = @content_views - @definition.component_content_views
+
+    @definition.component_content_views -= deleted_content_views
+    @definition.component_content_views += added_content_views
+    @definition.save!
+
+    render :json => @definition.component_content_views
   end
 
   private

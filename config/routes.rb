@@ -598,7 +598,10 @@ Src::Application.routes.draw do
       end
     end
 
-    resources :content_view_definitions, :only => [:destroy]
+    resources :content_view_definitions, :only => [:destroy, :content_views] do
+      get :content_views, :on => :member
+      put :content_views, :on => :member, :action => :update_content_views
+    end
 
     resources :changesets, :only => [:show, :update, :destroy] do
       post :promote, :on => :member, :action => :promote
