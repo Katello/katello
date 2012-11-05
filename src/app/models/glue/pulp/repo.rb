@@ -354,10 +354,10 @@ module Glue::Pulp::Repo
     def sync_start
       status = self.sync_status
       retval = nil
-      if status.nil? or status['progress']['start_time'].nil?
+      if status.nil? or status['progress']['started'].nil?
         retval = nil
       else
-        retval = status['progress']['start_time']
+        retval = status['progress']['started']
         # retval = date.strftime("%H:%M:%S %Y-%m-%d")
       end
       retval
@@ -404,10 +404,10 @@ module Glue::Pulp::Repo
     def sync_finish
       status = self.sync_status
       retval = nil
-      if status.nil? or status['progress']['finish_time'].nil?
+      if status.nil? or status['progress']['completed'].nil?
         retval = nil
       else
-        retval = status['progress']['finish_time']
+        retval = status['progress']['completed']
       end
       retval
     end
