@@ -70,7 +70,7 @@ class Product < ActiveRecord::Base
 
   scope :engineering, where(:type => "Product")
 
-  before_save :assign_label
+  before_save :assign_unique_label
   after_save :update_related_index
 
   def extended_index_attrs
@@ -201,7 +201,7 @@ class Product < ActiveRecord::Base
     Product.all_editable(self.organization).where(:id => id).count > 0
   end
 
-  def assign_label
+  def assign_unique_label
     self.label = Katello::ModelUtils::labelize(self.name) if self.label.blank?
 
     # if the object label is already being used in this org, append the id to make it unique
