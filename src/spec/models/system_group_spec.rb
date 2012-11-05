@@ -78,20 +78,20 @@ describe SystemGroup do
 
   context "changing consumer ids"  do
     it "should contact pulp if new ids are added" do
-      Resources::Pulp::ConsumerGroup.should_receive(:add_consumer).twice
+      Runcible::Extensions::ConsumerGroup.should_receive(:add_consumers_by_id).once
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumer_ids=>[:a, :b])
       grp.consumer_ids = [:a, :b, :c, :d]
       grp.save!
     end
     it "should contact pulp if new ids are removed" do
-      Resources::Pulp::ConsumerGroup.should_receive(:delete_consumer).twice
+      Runcible::Extensions::ConsumerGroup.should_receive(:remove_consumers_by_id).once
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumer_ids=>[:a, :b])
       grp.consumer_ids = []
       grp.save!
     end
     it "should contact pulp if new ids are added and removed" do
-      Resources::Pulp::ConsumerGroup.should_receive(:add_consumer).twice
-      Resources::Pulp::ConsumerGroup.should_receive(:delete_consumer).twice
+      Runcible::Extensions::ConsumerGroup.should_receive(:add_consumers_by_id).once
+      Runcible::Extensions::ConsumerGroup.should_receive(:remove_consumers_by_id).once
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumer_ids=>[:a, :b])
       grp.consumer_ids = [:c, :d]
       grp.save!
@@ -100,14 +100,14 @@ describe SystemGroup do
 
   context "changing systems" do
     it "should call out to pulp when adding" do
-      Resources::Pulp::ConsumerGroup.should_receive(:add_consumer).once
+      Runcible::Extensions::ConsumerGroup.should_receive(:add_consumers_by_id).once
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
       grp.systems << @system
       grp.save!
     end
     it "should call out to pulp when removing" do
-      Resources::Pulp::ConsumerGroup.should_receive(:add_consumer).once
-      Resources::Pulp::ConsumerGroup.should_receive(:delete_consumer).once
+      Runcible::Extensions::ConsumerGroup..should_receive(:add_consumers_by_id).once
+      Runcible::Extensions::ConsumerGroup..should_receive(:remove_consumers_by_id).once
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :systems=>[@system])
       grp.systems = grp.systems - [@system]
       grp.save!
