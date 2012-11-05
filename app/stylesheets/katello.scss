@@ -1,5 +1,5 @@
 @import "compass/reset";
-$primary_color: rgb(0, 112, 143);
+@import "overrides";
 @import "converge-ui/composites/shell";
 @import "converge-ui/composites/content_elements";
 @import "converge-ui/components/helpers";
@@ -1247,7 +1247,7 @@ fieldset {
   left: 352px !important;
 }
 #nav-container {
-  background-color: #006B97;
+  background-color: $kprimary_border_color;
   left: 26% !important;
 }
 header#header {
@@ -1255,7 +1255,7 @@ header#header {
   margin-bottom: 6px;
 
   &:after {
-    border-top: 5px solid #006B97;
+    border-top: 6px solid $kprimary_border_color;
     height: 0;
     bottom: -1px;
   }
