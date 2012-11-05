@@ -12,7 +12,7 @@
 
 module ProductTestData
   ORG_ID = "admin-org-37070"
-  PRODUCT_ID = 37070
+  PRODUCT_ID = '37070'
   PRODUCTS =
     [
       { 'productId' => 'product_1' },
