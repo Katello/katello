@@ -169,7 +169,6 @@ class SystemsController < ApplicationController
     end
     render_panel_direct(System, @panel_options, search, params[:offset], order,
                         {:default_field => :name, :filter=>filters, :load=>true})
-
   end
 
   def auto_complete
