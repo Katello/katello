@@ -35,4 +35,9 @@ module Glue::ElasticSearch::Product
     :organization_id => organization.id
     }
   end
+
+  def update_related_index
+      self.provider.update_index if self.provider.respond_to? :update_index
+  end
+
 end
