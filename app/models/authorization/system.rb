@@ -64,7 +64,7 @@ module Authorization::System
   def readable?
    sg_readable = false
    if AppConfig.katello?
-     sg_readable = !SystemGroup.systems_readable(self.organization).where(:id=>self.system_group_ids).empty?
+     sg_readable = !::SystemGroup.systems_readable(self.organization).where(:id=>self.system_group_ids).empty?
    end
    environment.systems_readable? || sg_readable
   end
@@ -72,7 +72,7 @@ module Authorization::System
   def editable?
    sg_editable = false
    if AppConfig.katello?
-     sg_editable = !SystemGroup.systems_editable(self.organization).where(:id=>self.system_group_ids).empty?
+     sg_editable = !::SystemGroup.systems_editable(self.organization).where(:id=>self.system_group_ids).empty?
    end
    environment.systems_editable? || sg_editable
   end
@@ -80,7 +80,7 @@ module Authorization::System
   def deletable?
    sg_deletable = false
    if AppConfig.katello?
-     sg_deletable = !SystemGroup.systems_deletable(self.organization).where(:id=>self.system_group_ids).empty?
+     sg_deletable = !::SystemGroup.systems_deletable(self.organization).where(:id=>self.system_group_ids).empty?
    end
    environment.systems_deletable? || sg_deletable
   end
