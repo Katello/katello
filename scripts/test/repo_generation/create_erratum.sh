@@ -1,15 +1,16 @@
 #!/bin/bash
 
 
-if [ $# -ne 5 ] && [ $# -ne 6 ]; then
+if [ $# -ne 6 ] && [ $# -ne 7 ]; then
   echo "Script for generating dummy erratum"
   echo "takes 4 params:"
   echo "  1st - pulp id of the repository"
   echo "  2nd - id of the erratum"
   echo "  3rd - type of the erratum (enhancement, bugfix, security)"
-  echo "  4th - title of the erratum"
-  echo "  5th - comma separated list of affected packages"
-  echo "  6th - path to affected packages (optional)"
+  echo "  4th - severity of erratum (critical, important, moderate, low)"
+  echo "  5th - title of the erratum"
+  echo "  6th - comma separated list of affected packages"
+  echo "  7th - path to affected packages (optional)"
   exit
 fi
 
@@ -17,16 +18,17 @@ fi
 repo_id=$1
 erratum_id=$2
 erratum_type=$3
-title=$4
-packages=$5
+erratum_severity=$4
+title=$5
+packages=$6
 issued=`date +"%Y-%m-%d %T"`
 
 get-rpm-attr() {
     rpm -qpi $1 | egrep "^$2" | sed -e 's/[^:]*:\ \([^\ ]*\).*/\1/'
 }
 
-if [ $# -gt 5 ]; then
-    packages_path=$6
+if [ $# -gt 6 ]; then
+    packages_path=$7
 else
     packages_path="./"
 fi
@@ -50,7 +52,7 @@ done
 
 
 pulp-admin errata create --id $erratum_id --title "$title" --version 1 --release 1 \
---type $erratum_type --issued "$issued" --status stable --fromstr "errata@redhat.com" --effected-packages ./erratum.tmp.csv
+--type $erratum_type --severity "$erratum_severity" --issued "$issued" --status stable --fromstr "errata@redhat.com" --effected-packages ./erratum.tmp.csv
 pulp-admin repo add_errata --id $repo_id --errata $erratum_id -y
 
 #rm ./erratum.tmp.csv
