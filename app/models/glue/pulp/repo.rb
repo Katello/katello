@@ -22,17 +22,22 @@ module Glue::Pulp::Repo
       has_and_belongs_to_many :filters, :uniq => true
 
       lazy_accessor :pulp_repo_facts,
-                    :initializer => lambda {|s|
+                    :initializer => lambda { |s|
                       if pulp_id
                         Runcible::Extensions::Repository.retrieve_with_details(pulp_id)
                       end
                     }
-      lazy_accessor :importers, :distributors,
-                :initializer => lambda {
-                  if pulp_id
-                      pulp_repo_facts
-                  end
-                }
+
+      lazy_accessor :importers,
+                    :initializer => lambda { |s|
+                      pulp_repo_facts["importers"] if pulp_id
+                    }
+
+      lazy_accessor :distributors,
+                    :initializer => lambda { |s|
+                      pulp_repo_facts["distributors"] if pulp_id
+                    }
+
       attr_accessor :feed, :feed_cert, :feed_key, :feed_ca
 
       def self.ensure_sync_notification
@@ -67,7 +72,7 @@ module Glue::Pulp::Repo
     end
 
     def last_sync
-      self.importers.first['last_sync'] if self.importers.first
+      self.importers.first["last_sync"] if self.importers.first
     end
 
     def relative_path
@@ -369,10 +374,10 @@ module Glue::Pulp::Repo
     def sync_start
       status = self.sync_status
       retval = nil
-      if status.nil? or status['progress']['start_time'].nil?
+      if status.nil? or status['progress']['started'].nil?
         retval = nil
       else
-        retval = status['progress']['start_time']
+        retval = status['progress']['started']
         # retval = date.strftime("%H:%M:%S %Y-%m-%d")
       end
       retval
@@ -419,10 +424,10 @@ module Glue::Pulp::Repo
     def sync_finish
       status = self.sync_status
       retval = nil
-      if status.nil? or status['progress']['finish_time'].nil?
+      if status.nil? or status['progress']['completed'].nil?
         retval = nil
       else
-        retval = status['progress']['finish_time']
+        retval = status['progress']['completed']
       end
       retval
     end

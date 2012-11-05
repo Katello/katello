@@ -24,6 +24,11 @@ def configure_vcr
   VCR.configure do |c|
     c.cassette_library_dir = 'test/fixtures/vcr_cassettes'
     c.hook_into :webmock
+    c.default_cassette_options = {
+      :record => mode.to_sym,
+      :match_requests_on => [:method, :path, :params],
+      :serialize_with => :syck
+    }
 
     begin
       c.register_request_matcher :body_json do |request_1, request_2|
@@ -49,16 +54,12 @@ def configure_vcr
       #ignore the warning thrown about this matcher already being resgistered
     end
 
-    c.default_cassette_options = {
-      :record => mode.to_sym,
-      :match_requests_on => [:method, :path, :params]
-    }
-
   end
 end
 
 def configure_runcible
   uri = URI.parse(AppConfig.pulp.url)
+
   Runcible::Base.config = { 
     :url      => "#{uri.scheme}://#{uri.host}",
     :api_path => uri.path,
