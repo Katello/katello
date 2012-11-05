@@ -637,6 +637,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/lib/tasks/yard.rake
 %{homedir}/lib/tasks/hudson.rake
 %{homedir}/lib/tasks/jsroutes.rake
+%{homedir}/lib/tasks/test.rake
 
 %files devel-profiling
 
