@@ -34,10 +34,11 @@ type -P subscription-manager >/dev/null || exit
 test -f $CFG_BACKUP || cp $CFG $CFG_BACKUP
 
 # configure rhsm
-sed -i "s/^hostname\s*=.*/hostname = $KATELLO_SERVER/g" $CFG
-sed -i "s/^port\s*=.*/port = $PORT/g" $CFG
-sed -i 's/^repo_ca_cert\s*=.*/repo_ca_cert = %%(ca_cert_dir)scandlepin-local.pem/g' $CFG
-sed -i "s|^baseurl\s*=.*|baseurl=$BASEURL|g" $CFG
+subscription-manager config \
+    --server.hostname="$KATELLO_SERVER" \
+    --server.port=$PORT \
+    --rhsm.repo_ca_cert="%%(ca_cert_dir)scandlepin-local.pem" \
+    --rhsm.baseurl="$BASEURL"
 
 # restart goferd if it is installed and running
 [ -f /etc/init.d/goferd ] && \
