@@ -322,6 +322,9 @@ testing.
 #check for malformed gettext strings
 script/check-gettext.rb -m -i
 
+#temporarily delete test.rake
+rm ./lib/tasks/test.rake
+
 #copy converge-ui
 cp -R /usr/share/converge-ui-devel/* ./vendor/converge-ui
 rm ./public/fonts
@@ -329,7 +332,7 @@ mv ./vendor/converge-ui/fonts ./public/fonts
 
 #configure Bundler
 rm -f Gemfile.lock
-#sed -i '/@@@DEV_ONLY@@@/,$d' Gemfile
+sed -i '/@@@DEV_ONLY@@@/,$d' Gemfile
 
 #pull in branding if present
 if [ -d branding ] ; then
@@ -507,7 +510,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %exclude %{homedir}/lib/tasks/hudson.rake
 %exclude %{homedir}/lib/tasks/jsroutes.rake
 %exclude %{homedir}/lib/tasks/jshint.rake
-%exclude %{homedir}/lib/tasks/test.rake
+#%exclude %{homedir}/lib/tasks/test.rake
 %exclude %{homedir}/script/pulp_integration_tests
 %{homedir}/locale
 %{homedir}/public
@@ -644,7 +647,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/lib/tasks/jshint.rake
 
 %files devel-test
-%{homedir}/lib/tasks/test.rake
+#%{homedir}/lib/tasks/test.rake
 %{homedir}/script/pulp_integration_tests
 
 %pre common
