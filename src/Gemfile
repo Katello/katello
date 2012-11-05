@@ -112,7 +112,9 @@ group :test, :development do
   gem "js-routes", :require => 'js_routes'
  
   gem 'minitest-rails'
-  gem 'minitest_tu_shim'
+  if RUBY_VERSION == "1.8.7"
+    gem 'minitest_tu_shim'
+  end
 
   #parallel_tests to make our specs go faster
   gem "parallel_tests"

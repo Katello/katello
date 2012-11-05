@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cd src/
-echo "\n"
+echo ""
 echo "********* Stylesheet Compilation Test  ***************"
 echo "RUNNING: RAILS_ENV=development bundle exec compass compile"
 RAILS_ENV=development bundle exec compass compile
@@ -18,3 +18,7 @@ psql -c "CREATE DATABASE katello_test OWNER katello;" -U postgres
 bundle exec rake parallel:create VERBOSE=false
 bundle exec rake parallel:migrate VERBOSE=false
 bundle exec rake parallel:spec
+
+echo ""
+echo "********* Minitest Model and Glue Tests ****************"
+bundle exec rake minitest

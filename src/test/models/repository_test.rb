@@ -10,9 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'test/models/repository_base'
-require 'test/models/authorization/repository_authorization_test'
-
+require './test/models/repository_base'
+require './test/models/authorization/repository_authorization_test'
 
 class RepositoryCreateTest < MiniTest::Rails::ActiveSupport::TestCase
   include RepositoryTestBase
