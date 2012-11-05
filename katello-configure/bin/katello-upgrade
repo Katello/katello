@@ -441,10 +441,6 @@ def parse_options
     option_parser = OptionParser.new
     option_parser.banner = "Usage: #{$0} [options]"
 
-    option_parser.on_tail.on('-y', '--assumeyes', 'Assume yes on confirmations') do
-      opts[:assume_yes] = true
-    end
-
     option_parser.on_tail.on('-a', '--autostop', 'Automatically stop services') do
       opts[:auto_stop] = true
     end
