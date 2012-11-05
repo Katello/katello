@@ -55,9 +55,9 @@ class List(ContentViewAction):
         validator.require('org')
 
     def run(self):
-        org_name = self.get_option('org')
-        env_name = self.get_option('environment')
-        published = self.get_option('published')
+        org_name    = self.get_option('org')
+        env_name    = self.get_option('environment')
+        published   = self.get_option('published')
         unpublished = self.get_option('unpublished')
 
         if published and unpublished:
@@ -67,9 +67,9 @@ class List(ContentViewAction):
         env = get_environment(org_name, env_name) if env_name else None
 
         views = []
-        if published == False:
+        if published == False or published == None:
             views += self.def_api.content_view_definitions_by_org(org_name, env)
-        if unpublished == False:
+        if unpublished == False or unpublished == None:
             views += self.api.content_views_by_org(org_name, env)
 
         self.printer.add_column('id')
