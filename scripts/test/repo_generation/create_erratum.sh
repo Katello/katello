@@ -52,7 +52,7 @@ done
 
 
 pulp-admin errata create --id $erratum_id --title "$title" --version 1 --release 1 \
---type $erratum_type --severity $erratum_severity --issued "$issued" --status stable --fromstr "errata@redhat.com" --effected-packages ./erratum.tmp.csv
+--type $erratum_type --severity "$erratum_severity" --issued "$issued" --status stable --fromstr "errata@redhat.com" --effected-packages ./erratum.tmp.csv
 pulp-admin repo add_errata --id $repo_id --errata $erratum_id -y
 
 #rm ./erratum.tmp.csv
