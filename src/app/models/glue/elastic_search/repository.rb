@@ -47,7 +47,6 @@ module Glue::ElasticSearch::Repository
     end
 
     def update_packages_index
-      return #TODO remove when BZ 854260 is fixed
       # for each of the packages in the repo, unassociate the repo from the package
       pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
       pulp_id = self.pulp_id
@@ -81,7 +80,6 @@ module Glue::ElasticSearch::Repository
     end
 
     def update_errata_index
-      return #TODO remove when BZ 854260 is fixed
       # for each of the errata in the repo, unassociate the repo from the errata
       errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
       pulp_id = self.pulp_id

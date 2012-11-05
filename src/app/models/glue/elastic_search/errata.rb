@@ -63,9 +63,9 @@ module Glue::ElasticSearch::Errata
         {
           "_type" => :errata,
           :id_sort => self.id,
-          :id_title => self.id + ' : ' + self.title
-          #TODO enable product_ids when pulpv2 supports repo_ids
-          #:product_ids => self.product_ids
+          :id_title => self.id + ' : ' + self.title,
+          :repoids => self.repository_memberships,
+          :product_ids=>self.product_ids
         }
       end
 
