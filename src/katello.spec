@@ -329,7 +329,7 @@ mv ./vendor/converge-ui/fonts ./public/fonts
 
 #configure Bundler
 rm -f Gemfile.lock
-sed -i '/@@@DEV_ONLY@@@/,$d' Gemfile
+#sed -i '/@@@DEV_ONLY@@@/,$d' Gemfile
 
 #pull in branding if present
 if [ -d branding ] ; then
@@ -637,7 +637,6 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/lib/tasks/yard.rake
 %{homedir}/lib/tasks/hudson.rake
 %{homedir}/lib/tasks/jsroutes.rake
-%{homedir}/lib/tasks/test.rake
 
 %files devel-profiling
 
