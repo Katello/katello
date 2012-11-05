@@ -19,7 +19,7 @@ import os
 from katello.client.api.content_view import ContentViewAPI
 from katello.client.api.content_view_definition import ContentViewDefinitionAPI
 from katello.client.cli.base import opt_parser_add_org, \
-        opt_parser_add_environment
+        opt_parser_add_environment, OptionException
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record
 from katello.client.api.utils import get_content_view, get_cv_definition, \
@@ -42,7 +42,14 @@ class List(ContentViewAction):
 
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
-        opt_parser_add_environment(parser, required=0)
+        opt_parser_add_environment(parser)
+        parser.add_option('--published', dest='published',
+                action="store_true", default=False,
+                help=_("show only published views"))
+        parser.add_option('--unpublished', dest='unpublished',
+                action="store_true", default=False,
+                help=_("show unpublished views only"))
+
 
     def check_options(self, validator):
         validator.require('org')
@@ -50,11 +57,20 @@ class List(ContentViewAction):
     def run(self):
         org_name = self.get_option('org')
         env_name = self.get_option('environment')
+        published = self.get_option('published')
+        unpublished = self.get_option('unpublished')
+
+        if published and unpublished:
+            raise OptionException("Cannot specify both published and " \
+                "unpublished options")
 
         env = get_environment(org_name, env_name) if env_name else None
 
-        views = self.def_api.content_view_definitions_by_org(org_name, env)
-        views += self.api.content_views_by_org(org_name, env)
+        views = []
+        if published == False:
+            views += self.def_api.content_view_definitions_by_org(org_name, env)
+        if unpublished == False:
+            views += self.api.content_views_by_org(org_name, env)
 
         self.printer.add_column('id')
         self.printer.add_column('name')
