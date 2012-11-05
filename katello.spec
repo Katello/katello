@@ -363,8 +363,8 @@ a2x -d manpage -f manpage man/katello-service.8.asciidoc
     rm -f Gemfile.lock
     cp Gemfile Gemfile.old
     echo 'gem "redcarpet"' >> Gemfile
-    rake apipie:static RAILS_ENV=apipie --trace
-    rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=apipie --trace
+    rake apipie:static  --trace
+    rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello  --trace
     mv Gemfile.old Gemfile
 %endif
 
