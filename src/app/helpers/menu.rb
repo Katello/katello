@@ -23,12 +23,19 @@ module Menu
       helper_method :render_main_menu
       helper_method :render_main_sub_menu
       helper_method :render_admin_menu
+      helper_method :render_provision_menu
     end
   end
   def render_menu(level, items = nil, prune = true)
     items ||= menu_main
     prune_menu(items) if prune
     render_navigation(:items=>items, :expand_all=>true, :level => level)
+  end
+
+  def render_provision_menu
+    items ||= provision_items
+    prune_menu(items)
+    render_navigation(:items=>items, :expand_all=>true, :renderer => ProvisionMenuRenderer)
   end
 
   def render_main_menu()

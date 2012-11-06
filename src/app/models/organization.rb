@@ -153,6 +153,14 @@ class Organization < ActiveRecord::Base
     User.allowed_to?([:gpg], :organizations, nil, self)
   end
 
+  def provisioning_readable?
+    User.allowed_to?([:read_provisioning, :manage_provisioning], :organizations, nil, self)
+  end
+
+  def provisioning_manageable?
+    User.allowed_to?([:manage_provisioning], :organizations, nil, self)
+  end
+
   def self.list_verbs global = false
     if AppConfig.katello?
       org_verbs = {
@@ -163,7 +171,9 @@ class Organization < ActiveRecord::Base
         :update_systems => _("Modify Systems"),
         :delete_systems => _("Delete Systems"),
         :sync => _("Sync Products"),
-        :gpg => _("Administer GPG Keys")
+        :gpg => _("Administer GPG Keys"),
+        :manage_provisioning => _("Administer Provisioning Data"),
+        :read_provisioning => _("Read Provisioning Data")
      }
     else
       org_verbs = {
@@ -184,7 +194,7 @@ class Organization < ActiveRecord::Base
   end
 
   def self.read_verbs
-    [:read, :read_systems]
+    [:read, :read_systems, :read_provisioning]
   end
 
 

@@ -11,6 +11,10 @@
   - if not current_user.nil?
     = render_menu(1)
 
+= content_for(:custom_tabs) do
+  - if (not current_user.nil?) && AppConfig.katello? && AppConfig.use_foreman
+    = render_provision_menu
+
 = content_for(:widgets) do
   = hidden_field_tag 'get_notices_url', nil, 'data-url' => notices_get_new_path
   = link_to _("Log Out"), logout_path, :method=>"POST", :class => "header-widget"
