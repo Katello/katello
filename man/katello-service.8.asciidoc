@@ -25,7 +25,11 @@ OPTIONS
 *start*|*stop*|*status*|*reload*|*restart*::
 	Behave exactly as *service* for every Katello service.
 
-*<enable*|*disable*::
+*allstopped*::
+  Using status call it calculates how many services are not stopped. If all the required services
+  are stopped, it returns zero.
+
+*enable*|*disable*::
 	Behave exactly as *chkconfig* on/off for every Katello service.
 
 *list*::
