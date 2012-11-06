@@ -1,11 +1,28 @@
 #!/usr/bin/ruby
 # vim: ts=2:sw=2:et:
+#
+# Copyright © 2012 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public License,
+# version 2 (GPLv2). There is NO WARRANTY for this software, express or
+# implied, including the implied warranties of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. You should have received a copy of GPLv2
+# along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+#
+# Red Hat trademarks are not licensed under GPLv2. No permission is
+# granted to use or replicate Red Hat trademarks that are incorporated
+# in this software or its documentation.
+#
+
+PREFIX = ENV['KATELLO_CONFIGURE_PREFIX'] || '/usr/share/katello/install/puppet'
 
 require 'optparse'
 require 'fcntl'
 require 'fileutils'
 require 'socket'
 require 'tempfile'
+require "#{PREFIX}/lib/util/functions.rb"
 
 $stdout.sync = true
 
@@ -43,6 +60,10 @@ $default_options_errors = ''
 $titles = {}
 $final_options = {}
 $temp_options = {}
+
+def command_exists?(command)
+  ENV['PATH'].split(':').each {|folder| File.executable?("#{folder}/#{command}")}
+end
 
 def detect_terminal_size
   if (ENV['COLUMNS'] =~ /^\d+$/) && (ENV['LINES'] =~ /^\d+$/)
