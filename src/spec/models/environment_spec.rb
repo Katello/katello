@@ -178,6 +178,14 @@ describe KTEnvironment do
         @environment2.errors[:name].should_not be_empty
       end
 
+      it "should be invalid to create two envs with the same name but different cases within one organization" do
+        @environment2 = KTEnvironment.new({:name => @env_name.upcase})
+        @organization.environments << @environment2
+
+        @environment2.should_not be_valid
+        @environment2.errors[:prior].should_not be_empty
+      end
+
       it "should be invalid to create an environment without a prior" do
         @environment2 = KTEnvironment.new({:name => @env_name})
         @organization.environments << @environment2

@@ -92,7 +92,7 @@ class KTEnvironment < ActiveRecord::Base
 
   scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
 
-  validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
+  validates_uniqueness_of :name, :case_sensitive => false, :scope => :organization_id, :message => N_("must be unique within one organization")
   validates_uniqueness_of :label, :scope => :organization_id, :message => N_("must be unique within one organization")
   validates_presence_of :organization
   validates :name, :presence => true, :katello_name_format => true

@@ -47,6 +47,11 @@ describe Organization do
     it "should complain on duplicate name" do
       lambda{Organization.create!(:name => @organization.name, :label => @organization.name + "foo")}.should raise_error
     end
+
+    it "should complain on duplicate name" do
+      lambda{Organization.create!(:name => @organization.name.upcase, :label => @organization.name.upcase)}.should raise_error
+    end
+
     it "should complain on duplicate label" do
       lambda{Organization.create!(:name => @organization.name + "foo", :label =>@organization.name)}.should raise_error
     end
