@@ -41,9 +41,9 @@ class User < ActiveRecord::Base
   has_many :search_histories, :dependent => :destroy
   serialize :preferences, HashWithIndifferentAccess
 
-
-
-  validates :username, :uniqueness => true, :presence => true, :length => {:minimum => 3, :maximum => 128}
+  validates :username, :uniqueness => true,
+            :no_trailing_space => true, :presence => true,
+            :length => {:minimum => 3, :maximum => 128}
   validates :email, :presence => true, :if => :not_ldap_mode?
   validates :default_locale, :inclusion => {:in => AppConfig.available_locales, :allow_nil => true, :message => _("must be one of %s") % AppConfig.available_locales.join(', ')}
 
