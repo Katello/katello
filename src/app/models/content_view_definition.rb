@@ -21,14 +21,15 @@ class ContentViewDefinition < ActiveRecord::Base
     :source => :content_view, :class_name => "ContentView"
   belongs_to :organization
   has_many :filters
+  has_many :content_view_definition_products
+  has_many :products, :through => :content_view_definition_products
+  has_many :repositories
 
   validates :label, :uniqueness => {:scope => :organization_id},
     :presence => true, :katello_label_format => true
   validates :name, :presence => true, :katello_name_format => true
   validates :organization, :presence => true
-  has_many :content_view_definition_products
-  has_many :products, :through => :content_view_definition_products
-  has_many :repositories
+  validate :validate_content
 
   def publish
     ContentView.create!(:name => "#{name} Content View",
@@ -36,6 +37,14 @@ class ContentViewDefinition < ActiveRecord::Base
                         :content_view_definition => self,
                         :organization => organization
                        )
+  end
+
+  def composite?
+    self.component_content_views.any?
+  end
+
+  def has_content?
+    self.products.any? || self.repositories.any? || self.filters.any?
   end
 
   def as_json(options = {})
@@ -46,4 +55,13 @@ class ContentViewDefinition < ActiveRecord::Base
 
     result
   end
+
+  private
+
+    def validate_content
+      if has_content? && composite?
+        errors.add(:base, _("cannot contain filters, products, or repositories if it contains views"))
+      end
+    end
+
 end
