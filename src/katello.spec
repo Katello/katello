@@ -43,6 +43,7 @@ BuildArch:      noarch
 Summary:        Common bits for all Katello instances
 Requires:       httpd
 Requires:       mod_ssl
+Requires:       mod_passenger
 Requires:       openssl
 Requires:       elasticsearch
 Requires:       rubygems
@@ -67,7 +68,6 @@ Requires:       rubygem(acts_as_reportable) >= 1.1.1
 Requires:       rubygem(ruport) >= 1.6.3
 Requires:       rubygem(daemons) >= 1.1.4
 Requires:       rubygem(uuidtools)
-Requires:       rubygem(thin)
 Requires:       rubygem(fssm)
 Requires:       rubygem(sass)
 Requires:       rubygem(chunky_png)
@@ -131,7 +131,6 @@ BuildRequires:       rubygem(acts_as_reportable) >= 1.1.1
 BuildRequires:       rubygem(ruport) >= 1.6.3
 BuildRequires:       rubygem(daemons) >= 1.1.4
 BuildRequires:       rubygem(uuidtools)
-BuildRequires:       rubygem(thin)
 BuildRequires:       rubygem(sass)
 BuildRequires:       rubygem(tire) >= 0.3.0
 BuildRequires:       rubygem(tire) < 0.4
@@ -139,7 +138,6 @@ BuildRequires:       rubygem(ldap_fluff)
 BuildRequires:       rubygem(apipie-rails) >= 0.0.12
 BuildRequires:       rubygem(redcarpet)
 BuildRequires:       rubygem(foreman_api)
-
 
 %description common
 Common bits for all Katello instances
@@ -394,7 +392,6 @@ install -Dp -m0644 %{confdir}/%{name}.completion.sh %{buildroot}%{_sysconfdir}/b
 install -Dp -m0644 %{confdir}/%{name}.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 install -Dp -m0644 %{confdir}/%{name}-jobs.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.httpd.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
-install -Dp -m0644 %{confdir}/thin.yml %{buildroot}%{_sysconfdir}/%{name}/
 install -Dp -m0644 %{confdir}/mapping.yml %{buildroot}%{_sysconfdir}/%{name}/
 
 #overwrite config files with symlinks to /etc/katello
@@ -420,6 +417,11 @@ ln -sv %{homedir}/script/katello-debug %{buildroot}%{_bindir}/katello-debug
 ln -sv %{homedir}/script/katello-generate-passphrase %{buildroot}%{_bindir}/katello-generate-passphrase
 ln -sv %{homedir}/script/katello-service %{buildroot}%{_bindir}/katello-service
 ln -sv %{homedir}/script/service-wait %{buildroot}%{_sbindir}/service-wait
+
+#create symlinks for mod_passenger
+mkdir -p %{buildroot}/var/www/html/
+ln -s %{homedir}/public %{buildroot}/var/www/html/katello
+ln -s %{_datarootdir}/foreman/public %{buildroot}/var/www/html/foreman
 
 #re-configure database to the /var/lib/katello directory
 sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{homedir}/config/database.yml
@@ -458,7 +460,7 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 
 %posttrans common
 rm -f %{datadir}/Gemfile.lock 2>/dev/null
-/sbin/service %{name} condrestart >/dev/null 2>&1 || :
+/sbin/service httpd condrestart >/dev/null 2>&1 || :
 
 %files
 %attr(600, katello, katello)
@@ -477,6 +479,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/autotest
 %{homedir}/ca
 %{homedir}/config
+%attr(-, katello, katello) %{homedir}/config/environment.rb
 %{homedir}/db/migrate/
 %{homedir}/db/products.json
 %{homedir}/db/seeds.rb
@@ -507,20 +510,21 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/tmp
 %{homedir}/vendor
 %dir %{homedir}/.bundle
-%{homedir}/config.ru
+%attr(-, katello, katello) %{homedir}/config.ru
 %{homedir}/Gemfile
 %{homedir}/Gemfile.lock
 %ghost %attr(640, katello, katello) %{datadir}/Gemfile.lock
 %config(noreplace) %{_sysconfdir}/%{name}/service-list
 %{homedir}/Rakefile
 %{_mandir}/man8/katello-service.8*
+/var/www/html/katello
+/var/www/html/foreman
 
 %files common
 %doc README LICENSE
 %{_sbindir}/service-wait
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
-%config(noreplace) %{_sysconfdir}/%{name}/thin.yml
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config %{_sysconfdir}/%{name}/environment.rb
 %config %{_sysconfdir}/logrotate.d/%{name}
@@ -648,6 +652,10 @@ if [ $1 -eq 0 ] ; then
     /sbin/chkconfig --del %{name}-jobs
     /sbin/service %{name} stop >/dev/null 2>&1
     /sbin/chkconfig --del %{name}
+fi
+# if user has thin, stop it, we migrated to mod_passenger
+if [ -e /usr/share/katello/script/thin ]; then
+    service %{name} condstop
 fi
 
 %changelog

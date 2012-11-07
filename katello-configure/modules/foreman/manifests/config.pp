@@ -53,12 +53,6 @@ class foreman::config {
       content => template('foreman/settings.yaml.erb'),
       owner   => $foreman::user;
 
-    "${foreman::config_dir}/thin.yml":
-      content => template("foreman/thin.yml.erb"),
-      owner   => "root",
-      group   => "root",
-      mode    => "644";
-
     "${foreman::config_dir}/database.yml":
       content => template("foreman/database.yml.erb"),
       owner   => $foreman::user,
@@ -70,12 +64,6 @@ class foreman::config {
       owner   => "root",
       group   => "root",
       mode    => "644";
-
-    "/etc/httpd/conf.d/foreman.conf":
-      content => template("foreman/httpd.conf.erb"),
-      owner   => $foreman::user,
-      group   => $foreman::user,
-      mode    => "600";
   }
 
   exec {"foreman_migrate_db":

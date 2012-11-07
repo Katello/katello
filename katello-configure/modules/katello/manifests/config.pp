@@ -39,12 +39,6 @@ class katello::config {
   }
 
   file {
-    "${katello::params::config_dir}/thin.yml":
-      content => template("katello/${katello::params::config_dir}/thin.yml.erb"),
-      owner   => "root",
-      group   => "root",
-      mode    => "644";
-
     "${katello::params::config_dir}/katello.yml":
       content => template("katello/${katello::params::config_dir}/katello.yml.erb"),
       owner   => $katello::params::user,

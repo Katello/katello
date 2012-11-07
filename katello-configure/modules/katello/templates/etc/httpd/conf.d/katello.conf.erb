@@ -22,13 +22,6 @@ NameVirtualHost *:443
   AddOutputFilterByType DEFLATE text/html text/css application/x-javascript application/javascript
   KeepAlive On
   Timeout 5400
-  ProxyTimeout 5400
-
-  <Proxy balancer://thinservers>
-  <%- scope.lookupvar("katello::params::process_count").to_i.times do |i| -%>
-    <%= "BalancerMember http://127.0.0.1:#{scope.lookupvar('katello::params::thin_start_port').to_i + i}/#{scope.lookupvar('katello::params::deployment_url')}" %>
-  <%- end -%>
-  </Proxy>
 
   Alias /<%= scope.lookupvar("katello::params::deployment_url") %>/assets "/usr/share/katello/public/assets"
   Alias /<%= scope.lookupvar("katello::params::deployment_url") %>/images "/usr/share/katello/public/images"
@@ -36,21 +29,34 @@ NameVirtualHost *:443
   Alias /<%= scope.lookupvar("katello::params::deployment_url") %>/javascripts "/usr/share/katello/public/javascripts"
 
   ExpiresActive On
+  RailsAutoDetect off
+  RailsBaseURI /<%= scope.lookupvar("katello::params::deployment_url") %>
+  <Directory "/var/www/html/<%= scope.lookupvar("katello::params::deployment_url") %>">
+    Options -MultiViews
+    AllowOverride all
+  </Directory>
+
+  RailsBaseURI /<%= scope.lookupvar('foreman::deployment_url') %>
+  <Directory "/var/www/html/foreman">
+    Options -MultiViews
+    AllowOverride all
+  </Directory>
+
   <Directory "/usr/share/katello/public/">
     ExpiresDefault "access plus 1 year"
   </Directory>
-
-  ProxyPass /<%= scope.lookupvar("katello::params::deployment_url") %>/assets !
-  ProxyPass /<%= scope.lookupvar("katello::params::deployment_url") %>/images !
-  ProxyPass /<%= scope.lookupvar("katello::params::deployment_url") %>/fonts !
-  ProxyPass /<%= scope.lookupvar("katello::params::deployment_url") %>/javascripts !
-  ProxyPass /<%= scope.lookupvar("katello::params::deployment_url") %> balancer://thinservers
-
-  ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment_url") %> balancer://thinservers
-  ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment_url") %>/assets !
-  ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment_url") %>/images !
-  ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment_url") %>/fonts !
-  ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment_url") %>/javascripts !
+  <Location /<%= scope.lookupvar("katello::params::deployment_url") %>/assets>
+    PassengerEnabled off
+  </Location>
+  <Location /<%= scope.lookupvar("katello::params::deployment_url") %>/images>
+    PassengerEnabled off
+  </Location>
+  <Location /<%= scope.lookupvar("katello::params::deployment_url") %>/fonts>
+    PassengerEnabled off
+  </Location>
+  <Location /<%= scope.lookupvar("katello::params::deployment_url") %>/javascripts>
+    PassengerEnabled off
+  </Location>
 
   <Location /<%= scope.lookupvar("katello::params::deployment_url") %>>
     RequestHeader set SSL_CLIENT_CERT "%{SSL_CLIENT_CERT}s"
@@ -65,14 +71,12 @@ NameVirtualHost *:443
     ErrorDocument 503 '{"displayMessage": "Service unavailable or restarting, try later", "errors": ["Service unavailable or restarting, try later"], "status": "503" }'
   </Location>
 
-  <Location /subscription>
-    RequestHeader set SSL_CLIENT_CERT "%{SSL_CLIENT_CERT}s"
-    SSLVerifyClient optional
-    SSLRenegBufferSize 16777216
-    SSLVerifyDepth 2
-    ProxyPass balancer://thinservers/api
-    ProxyPassReverse balancer://thinservers/api
-  </Location>
+  ProxyPass /subscription https://$RHN_PARENT/katello/api
+  ProxyPassReverse /subscription $PROTO://$RHN_PARENT/katello/api
+#  <Location /subscription>
+#    RewriteEngine On
+#    RewriteRule /<%= scope.lookupvar("katello::params::deployment_url") %>(.*)$ https://%{HTTP_HOST}%{REQUEST_URI}
+#  </Location>
 </VirtualHost>
 
 NameVirtualHost *:80
