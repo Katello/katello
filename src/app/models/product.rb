@@ -57,8 +57,8 @@ class Product < ActiveRecord::Base
 
   scope :engineering, where(:type => "Product")
 
+  before_save :assign_label
   after_save :update_related_index
-
 
   def initialize(attrs = nil)
 
@@ -157,6 +157,17 @@ class Product < ActiveRecord::Base
 
   end
 
+  scope :all_in_org, lambda{|org| ::Product.joins(:provider).where('providers.organization_id = ?', org.id)}
+
+  def assign_label
+    self.label = Katello::ModelUtils::labelize(self.name) if self.label.blank?
+
+    # if the object label is already being used in this org, append the id to make it unique
+    if Product.all_in_org(self.organization).where('products.label = ?', self.label).count > 0
+      self.label.concat("_" + self.cp_id) unless self.cp_id.blank?
+    end
+  end
+
   def as_json(*args)
     ret = super
     ret["gpg_key_name"] = gpg_key ? gpg_key.name : ""
@@ -164,15 +175,7 @@ class Product < ActiveRecord::Base
     ret
   end
 
-  def update_related_index
-      self.provider.update_index if self.provider.respond_to? :update_index
-  end
-
   protected
-
-  def self.sync_items org
-    org.syncable? ? (joins(:provider).where('providers.organization_id' => org)) : where("0=1")
-  end
 
 
   def self.with_repos env, enabled_only
