@@ -36,7 +36,9 @@
               .grid_3.ra.fieldset
                 &nbsp;
               .grid_6.la#delete_button
-                = f.submit _("Remove Subscriptions"), :id => :delete_form_button
+                = f.submit _("Delete Manifest"), :id => :delete_form_button, :confirm => _("Deleting a manifest " + |
+                      "will permanently remove all current subscriptions. All systems consuming these subscriptions " + |
+                      "have them removed. Do you wish to proceed with removing this manifest?") |
     .clear
     - if @provider.editable?
       .grid_10

@@ -32,6 +32,11 @@ class Resources::AbstractModel
       super("#{resource.class}#{resource.id && " with id '#{resource.id}'"} is invalid:\n" +
                 resource.errors.full_messages.map { |m| "- " + m }.join("\n"))
     end
+
+    def record
+      @resource
+    end
+
   end
 
   class ResponseParsingError < Error
@@ -55,6 +60,13 @@ class Resources::AbstractModel
     end
   end
 
+  include ActiveModel::Naming
+
+  def self.name
+    # strip namespaces from class name
+    # eg. Foreman::SomeModel -> SomeModel
+    super.split('::')[-1]
+  end
 
   include ActiveModel::Validations
 
@@ -229,6 +241,25 @@ class Resources::AbstractModel
     delete!(id)
   rescue NotFound
     false
+  end
+
+  def to_key
+    key = self.id
+    [key] if key
+  end
+
+  def to_param
+    id && id.to_s
+  end
+
+  def update_attributes(attributes)
+    self.attributes = attributes
+    save
+  end
+
+  def update_attributes!(attributes)
+    self.attributes = attributes
+    save!
   end
 
   private
