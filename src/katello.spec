@@ -509,7 +509,8 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %dir %{homedir}/.bundle
 %{homedir}/config.ru
 %{homedir}/Gemfile
-%ghost %attr(0644,katello,katello) %{_sharedstatedir}/%{name}/Gemfile.lock
+%{homedir}/Gemfile.lock
+%ghost %attr(640, katello, katello) %{datadir}/Gemfile.lock
 %config(noreplace) %{_sysconfdir}/%{name}/service-list
 %{homedir}/Rakefile
 %{_mandir}/man8/katello-service.8*
@@ -607,7 +608,8 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/.bundle
 %{homedir}/config.ru
 %{homedir}/Gemfile
-%ghost %{homedir}/Gemfile.lock
+%{homedir}/Gemfile.lock
+%ghost %attr(640, katello, katello) %{datadir}/Gemfile.lock
 %{homedir}/Rakefile
 
 %files headpin-all
