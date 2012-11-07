@@ -64,8 +64,7 @@ Requires:       rubygem(simple-navigation) >= 3.3.4
 Requires:       rubygem(pg)
 Requires:       rubygem(delayed_job) >= 2.1.4
 Requires:       rubygem(acts_as_reportable) >= 1.1.1
-Requires:       rubygem(ruport) >= 1.7.0
-Requires:       rubygem(prawn)
+Requires:       rubygem(ruport) >= 1.6.3
 Requires:       rubygem(daemons) >= 1.1.4
 Requires:       rubygem(uuidtools)
 Requires:       rubygem(thin)
@@ -76,7 +75,6 @@ Requires:       rubygem(tire) >= 0.3.0
 Requires:       rubygem(tire) < 0.4
 Requires:       rubygem(ldap_fluff)
 Requires:       rubygem(apipie-rails) >= 0.0.12
-Requires:       rubygem(foreman_api) >= 0.0.7
 Requires:       lsof
 
 %if 0%{?rhel} == 6
@@ -130,8 +128,7 @@ BuildRequires:       rubygem(simple-navigation) >= 3.3.4
 BuildRequires:       rubygem(pg)
 BuildRequires:       rubygem(delayed_job) >= 2.1.4
 BuildRequires:       rubygem(acts_as_reportable) >= 1.1.1
-BuildRequires:       rubygem(ruport) >= 1.7.0
-BuildRequires:       rubygem(prawn)
+BuildRequires:       rubygem(ruport) >= 1.6.3
 BuildRequires:       rubygem(daemons) >= 1.1.4
 BuildRequires:       rubygem(uuidtools)
 BuildRequires:       rubygem(thin)
@@ -183,7 +180,7 @@ Katello connection classes for the Pulp backend
 BuildArch:      noarch
 Summary:         Katello connection classes for the Foreman backend
 Requires:        %{name}-common
-Requires:       rubygem(foreman_api)
+Requires:       rubygem(foreman_api) >= 0.0.7
 
 %description glue-foreman
 Katello connection classes for the Foreman backend
@@ -247,14 +244,15 @@ BuildArch:       noarch
 Requires:        %{name} = %{version}-%{release}
 Requires:        rubygem(redcarpet)
 %if 0%{?fedora} > 16
-Requires: rubygem(ruby-debug19)
+Requires:        rubygem(ruby-debug19)
+Requires:        rubygem(simplecov)
 %else
-Requires: rubygem(ruby-debug)
+Requires:        rubygem(ruby-debug)
+Requires:        rubygem(rcov) >= 0.9.9
 %endif
 Requires:        rubygem(ZenTest) >= 4.4.0
 Requires:        rubygem(rspec-rails) >= 2.0.0
 Requires:        rubygem(autotest-rails) >= 4.1.0
-Requires:        rubygem(rcov) >= 0.9.9
 Requires:        rubygem(webrat) >= 0.7.3
 Requires:        rubygem(nokogiri) >= 0.9.9
 Requires:        rubygem(yard) >= 0.5.3
@@ -377,7 +375,6 @@ mkdir -p %{buildroot}/%{_mandir}/man8
 
 #copy the application to the target directory
 mkdir .bundle
-mv ./deploy/bundle-config .bundle/config
 cp -R .bundle Gemfile Rakefile app autotest ca config config.ru db integration_spec lib locale public script spec vendor %{buildroot}%{homedir}
 
 #copy configs and other var files (will be all overwriten with symlinks)
@@ -509,7 +506,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/spec
 %{homedir}/tmp
 %{homedir}/vendor
-%{homedir}/.bundle
+%dir %{homedir}/.bundle
 %{homedir}/config.ru
 %{homedir}/Gemfile
 %ghost %attr(0644,katello,katello) %{_sharedstatedir}/%{name}/Gemfile.lock

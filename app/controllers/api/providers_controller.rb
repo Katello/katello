@@ -179,6 +179,16 @@ class Api::ProvidersController < Api::ApiController
     raise HttpErrors::BadRequest, _("It is not allowed to create products in Red Hat provider.") if @provider.redhat_provider?
 
     product_params = params[:product]
+
+    # Ideally, the following should be a model validation; however, we want a different behavior
+    # in API vs UI. In the API, if the user gives a label that is already in use, we want to treat
+    # it as an immediate error; however, in the UI we'll override the label value (since the one provided
+    # in the ui could be the result of an initial query to retrieve a default label)
+    if !product_params[:label].blank? &&
+       (Product.all_in_org(@provider.organization).where('products.label = ?', product_params[:label]).count > 0)
+      raise HttpErrors::BadRequest, _("Validation failed: Label has already been taken")
+    end
+
     gpg  = GpgKey.readable(@provider.organization).find_by_name!(product_params[:gpg_key_name]) unless product_params[:gpg_key_name].blank?
     prod = @provider.add_custom_product(labelize_params(product_params), product_params[:name], product_params[:description], product_params[:url], gpg)
     render :json => prod

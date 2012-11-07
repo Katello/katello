@@ -120,7 +120,18 @@ describe Resources::ForemanModel do
       it('should all be persisted') { retrieving_all.should be_all { |o| o.persisted? } }
     end
 
+
+
     describe 'instance' do
+      let(:instance_id) { 3 }
+      let(:instance_name) { 'Invisible man' }
+      let :persisted_instance do
+        persisted = instance.clone
+        persisted.id = instance_id
+        persisted.send :set_as_persisted
+        persisted
+      end
+
       subject { instance }
 
       describe '#resource' do
@@ -138,7 +149,7 @@ describe Resources::ForemanModel do
       end
 
       describe 'with name' do
-        before { subject.attributes = { :id => 3, :name => 'JonDoe' } }
+        before { subject.attributes = { :id => instance_id, :name => instance_name } }
         it { should be_valid }
 
         it "should serialize" do
@@ -146,21 +157,116 @@ describe Resources::ForemanModel do
         end
       end
 
-      describe 'when saving' do
-        before do
-          subject.name = 'JonDoe'
+      describe '.to_key' do
+        describe 'on unsaved instance' do
+          it("should return nil") { subject.to_key.should be_nil }
         end
 
-        let(:saving) { instance.save }
+        describe 'on saved instance' do
+          subject { persisted_instance }
+
+          it("should return array") { subject.to_key.kind_of? Array }
+          it("should return array of length 1") { subject.to_key.length.should == 1 }
+          it("should return id") { subject.to_key[0].should == instance_id }
+        end
+      end
+
+      describe '.to_param' do
+        describe 'on unsaved instance' do
+          it("should return nil") { subject.to_key.should be_nil }
+        end
+
+        describe 'on saved instance' do
+          subject { persisted_instance }
+
+          it("should return string") { subject.to_param.kind_of? String }
+          it("should return string with id") { subject.to_param.should == instance_id.to_s }
+        end
+      end
+
+      describe 'when updating attributes' do
+        let(:new_name) { 'William Blake' }
+        let(:new_valid_attrs) {{ :name => new_name }}
+        let(:new_invalid_attrs) {{ :name => nil }}
+        let(:name_attribute) { instance.attributes.symbolize_keys[:name] }
+
+        before do
+          subject.name = instance_name
+          subject.stub(:save).and_return(true)
+          subject.stub(:save!).and_return(true)
+        end
+
+        describe "with valid values" do
+
+          let(:update) {subject.update_attributes new_valid_attrs}
+          let(:update!) {subject.update_attributes! new_valid_attrs}
+
+          describe '.update_attributes' do
+
+            it "should update_attributes" do
+              update
+              name_attribute.should == new_name
+            end
+
+            it "should save the instance" do
+              instance.should_receive(:save)
+              update
+            end
+
+          end
+
+          describe '.update_attributes!' do
+
+            it "should update_attributes!" do
+              update!
+              name_attribute.should == new_name
+            end
+
+            it "should save the instance" do
+              instance.should_receive(:save!)
+              update!
+            end
+
+          end
+        end
+
+        describe "with invalid values" do
+          let(:update) {subject.update_attributes new_invalid_attrs}
+          let(:update!) {subject.update_attributes! new_invalid_attrs}
+
+          describe '.update_attributes' do
+            it "should not throw exception" do
+              lambda { update }.should_not raise_error
+            end
+          end
+
+          describe '.update_attributes!' do
+            it "should throw exception" do
+              lambda { update! }.should_not raise_error
+            end
+          end
+        end
+
+
+
+      end
+
+      describe 'when saving' do
+
+        before do
+          subject.name = instance_name
+        end
 
         describe 'new one' do
+          let(:saving) { instance.save }
+
           before do
             resource.
                 should_receive(:create).
                 any_number_of_times.
                 with({ 'a_child_klass' => { 'name' => subject.name, :id_name => subject.id_name } },
                      klass.header).
-                and_return [{ 'a_child_klass' => { 'name' => subject.name, 'id' => 3 } }, mock('response')]
+                and_return [{ 'a_child_klass' => { 'name' => subject.name, 'id' => instance_id } }, mock('response')]
           end
 
           describe '#save' do
@@ -172,20 +278,20 @@ describe Resources::ForemanModel do
             saving
             should be_persisted
           end
-          its(:id) { saving; should == 3 }
+          its(:id) { saving; should == instance_id }
         end
 
         describe 'already persisted' do
+          subject { persisted_instance }
+          let(:saving) { persisted_instance.save }
+
           before do
-            subject.id   = 3
-            subject.name = 'Invisible man'
-            subject.send :set_as_persisted
             resource.
                 should_receive(:update).
                 any_number_of_times.
-                with({ 'id' => 3, 'a_child_klass' => { 'name' => subject.name, :id_name => subject.id_name } },
+                with({ 'id' => instance_id, 'a_child_klass' => { 'name' => subject.name, :id_name => subject.id_name } },
                      klass.header).
-                and_return [{ 'a_child_klass' => { 'name' => subject.name, 'id' => 3 } }, mock('response')]
+                and_return [{ 'a_child_klass' => { 'name' => subject.name, 'id' => instance_id } }, mock('response')]
           end
 
           describe '#save' do
@@ -197,16 +303,16 @@ describe Resources::ForemanModel do
             saving
             should be_persisted
           end
-          its(:id) { saving; should == 3 }
+          its(:id) { saving; should == instance_id }
           its(:name) { saving; should == 'Invisible man' }
 
           describe '#destroy' do
-            let(:destroying) { instance.destroy }
+            let(:destroying) { persisted_instance.destroy }
             before do
               resource.
                   should_receive(:destroy).
-                  with({ 'id' => 3 }, klass.header).
-                  and_return [{ 'a_child_klass' => { 'name' => subject.name, 'id' => 3 } }, mock('response')]
+                  with({ 'id' => instance_id }, klass.header).
+                  and_return [{ 'a_child_klass' => { 'name' => subject.name, 'id' => instance_id } }, mock('response')]
             end
 
             it { destroying.should == true }

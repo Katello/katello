@@ -256,7 +256,7 @@ DESC
     data = data.flatten.map do |r|
       r.reportable_data(
         :only => [:uuid, :name, :location, :created_at, :updated_at],
-        :methods => [ :environment, :organization, :compliance_color, :compliant_until, :custom_info]
+        :methods => [:environment, :organization, :compliance_color, :compliant_until, :custom_info]
       )
     end.flatten!
 
@@ -265,8 +265,8 @@ DESC
       :column_names => ["name",
                         "uuid",
                         "location",
-                        "environment",
                         "organization",
+                        "environment",
                         "created_at",
                         "updated_at",
                         "compliance_color",
@@ -277,41 +277,45 @@ DESC
       :transforms => lambda {|r|
         r.organization = r.organization.name
         r.environment = r.environment.name
-        r.custom_info = r.custom_info.collect { |i| "%s: %s" % [i.keyname, i.value] }.join(", ")
-      })
+        r.created_at = r.created_at.to_s
+        r.updated_at = r.updated_at.to_s
+        r.compliant_until = r.compliant_until.to_s
+        r.custom_info = r.custom_info.collect { |info| info.to_s }.join(", ")
+      }
+    )
 
-    system_report.rename_column("environment.name", "environment")
+    pdf_options = {:table_format => {
+      :heading_font_size => 10,
+      :font_size => 8,
+      :column_options => {
+        "width" => 50,
+        "name" => {"width" => 100},
+        "uuid" => {"width" => 100},
+        "location" => {"width" => 50},
+        "environment" => {"width" => 40},
+        "organization" => {"width" => 75},
+        "created" => {"width" => 60},
+        "updated" => {"width" => 60}
+       }
+    }}
+
     system_report.rename_column("created_at", "created")
     system_report.rename_column("updated_at", "updated")
     system_report.rename_column("compliance_color", "compliance")
     system_report.rename_column("compliant_until", "compliant until")
     system_report.rename_column("custom_info", "custom info")
 
-    pdf_options = { :pdf_format => {
-                      :page_layout => :portrait,
-                      :page_size => "LETTER",
-                      :left_margin => 5
-                      },
-                    :table_format => {
-                      :width => 585,
-                      :cell_style => { :size => 8},
-                      :row_colors => ["FFFFFF","F0F0F0"],
-                      :column_widths => {
-                        0 => 100,
-                        1 => 100,
-                        2 => 50,
-                        3 => 40,
-                        4 => 75,
-                        5 => 60,
-                        6 => 60}
-                      }
-                  }
-
     respond_to do |format|
       format.html { render :text => system_report.as(:html), :type => :html and return }
       format.text { render :text => system_report.as(:text, :ignore_table_width => true) }
       format.csv { render :text => system_report.as(:csv) }
-      format.pdf { send_data(system_report.as(:prawn_pdf, pdf_options), :filename => "katello_systems_report.pdf", :type => "application/pdf") }
+      format.pdf do
+        send_data(
+          system_report.as(:pdf, pdf_options),
+          :filename => "%s_systems_report.pdf" % (AppConfig.katello? ? "katello" : "headpin"),
+          :type => "application/pdf"
+        )
+      end
     end
   end
 
