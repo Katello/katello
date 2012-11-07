@@ -340,8 +340,10 @@ module Glue::Pulp::Repo
 
     def create_clone to_env
       library = self.environment.library? ? self : self.library_instance
-      raise _("Cannot clone repository from #{self.environment.name} to #{to_env.name}.  They are not sequential.") if to_env.prior != self.environment
-      raise _("Repository has already been promoted to #{to_env}") if Repository.where(:library_instance_id=>library.id).in_environment(to_env).count > 0
+      raise _("Cannot clone repository from %{from_env} to %{to_env}.  They are not sequential.") %
+                {:from_env=>self.environment.name, :to_env=>to_env.name} if to_env.prior != self.environment
+      raise _("Repository has already been promoted to %{to_env}") %
+                {:to_env=>to_env} if Repository.where(:library_instance_id=>library.id).in_environment(to_env).count > 0
 
       key = EnvironmentProduct.find_or_create(to_env, self.product)
       clone = Repository.new(:environment_product => key,
