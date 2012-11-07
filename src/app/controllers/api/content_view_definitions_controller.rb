@@ -30,7 +30,7 @@ class Api::ContentViewDefinitionsController < Api::ApiController
   param :label, :identifier, :desc => "content view identifier"
   param :environment_id, :identifier, :desc => "environment id for filtering"
   def index
-    definitions = if @environment && !@environment.library?
+    @definitions = if @environment && !@environment.library?
       [] # no environments contain defs other than library
     elsif (label = params[:label])
       @organization.content_view_definitions.where(:label => label)
@@ -38,7 +38,7 @@ class Api::ContentViewDefinitionsController < Api::ApiController
       @organization.content_view_definitions
     end
 
-    render :json => definitions
+    render :json => @definitions
   end
 
   api :POST, "/content_view_definitions",
@@ -92,7 +92,7 @@ class Api::ContentViewDefinitionsController < Api::ApiController
     render :json => @definition
   end
 
-  api :PUT, "/content_view_definitions/:id/content_views",
+  api :GET, "/content_view_definitions/:id/content_views",
     "List a definition's content views"
   param :id, :identifier, :desc => "Definition identifier", :required => true
   def content_views

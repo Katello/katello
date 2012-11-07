@@ -1,7 +1,6 @@
 class Api::ContentViewsController < Api::ApiController
   respond_to :json
   before_filter :find_organization
-  before_filter :find_content_view, :except => [:index, :create]
   before_filter :find_optional_environment, :only => [:index]
 
   def rules
@@ -20,7 +19,6 @@ class Api::ContentViewsController < Api::ApiController
     }
   end
 
-  api :GET, "/environments/:environment_id/content_views", "List content views"
   api :GET, "/organizations/:organization_id/content_views", "List content views"
   param :organization_id, :identifier, :desc => "organization identifier"
   param :environment_id, :identifier, :desc => "environment identifier"
@@ -52,15 +50,6 @@ class Api::ContentViewsController < Api::ApiController
     render :json => @content_view
   end
 
-  def show
-    render :json => @content_view
-  end
-
   private
-
-    def find_content_view
-      @content_view = ContentView.find_by_name(params[:id])
-      raise HttpErrors::NotFound, _("Couldn't find content view '%s'") % params[:id] if @content_view.nil?
-    end
 
 end
