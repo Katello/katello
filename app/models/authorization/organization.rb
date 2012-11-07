@@ -115,11 +115,11 @@ module Authorization::Organization
 
 
   def gpg_keys_manageable?
-    User.allowed_to?([:gpg], :organizations, nil, self)
+    ::User.allowed_to?([:gpg], :organizations, nil, self)
   end
 
   def syncable?
-    User.allowed_to?(SYNC_PERM_VERBS, :organizations, nil, self)
+    ::User.allowed_to?(SYNC_PERM_VERBS, :organizations, nil, self)
   end
 
 end

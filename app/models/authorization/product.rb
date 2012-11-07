@@ -40,6 +40,11 @@ module Authorization::Product
       def self.any_readable?(org)
         ::Provider.any_readable?(org)
       end
+
+      def self.sync_items org
+        org.syncable? ? (joins(:provider).where('providers.organization_id' => org)) : where("0=1")
+      end
+
     end
   end
 
@@ -58,13 +63,3 @@ module Authorization::Product
 
 
 end
-
-
-
-
-
-
-
-
-
-
