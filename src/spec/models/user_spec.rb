@@ -1,3 +1,4 @@
+# encoding: UTF-8
 #
 # Copyright 2011 Red Hat, Inc.
 #
@@ -22,12 +23,36 @@ describe User do
   PASSWORD = "password1234"
   EMAIL = "testuser@somewhere.com"
 
+  INVALID_USERNAME = (0...260).map{ ('a'..'z').to_a[rand(26)] }.join
+
   let(:to_create_simple) do
     {
       :username => USERNAME,
       :password => PASSWORD,
       :email => EMAIL
     }
+  end
+
+  let(:to_create_invalid_user) do
+    {
+      :username => INVALID_USERNAME,
+      :password => PASSWORD,
+      :email => EMAIL
+    }
+  end
+
+  describe "User shouldn't" do
+    before(:each) do
+      disable_user_orchestration
+      AppConfig.warden = 'database'
+    end
+
+    it "be able to create" do
+      user = User.new(to_create_invalid_user)
+      user.should_not be_valid
+      user.errors[:username].should include("cannot contain more than 64 characters")
+    end
+
   end
 
   describe "Users in LDAP should" do
@@ -102,6 +127,24 @@ describe User do
       u = User.find_by_username("testuser")
       u.should_not be_nil
     end
+
+    it "have ASCII username", :katello => true do
+      non_ascii = {
+        :username => 'Cuiabá_user1',
+        :password => PASSWORD,
+        :email => EMAIL
+      }
+      utf8 = nil
+      begin
+        utf8 = User.create!(non_ascii)
+      rescue ActiveRecord::RecordInvalid
+      end
+      utf8.should be_nil
+      u = User.find_by_username("Cuiabá_user1")
+      u.should be_nil
+
+    end
+
 
     it "have its own role" do
       #pending "implement own_role functionality"

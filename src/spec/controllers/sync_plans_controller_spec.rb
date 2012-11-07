@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'spec_helper'
-require 'ruby-debug'
+
 
 describe SyncPlansController, :katello => true do
   include LoginHelperMethods

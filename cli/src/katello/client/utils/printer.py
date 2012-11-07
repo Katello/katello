@@ -19,6 +19,8 @@ import struct
 import sys
 import unicodedata
 
+
+from math import floor
 from katello.client.utils.encoding import u_str
 
 
@@ -28,9 +30,9 @@ class PrinterStrategy(object):
     Strategy of formatting the data and printing them on the output.
     """
 
-    def __init__(self):
+    def __init__(self, output=sys.stdout):
         super(PrinterStrategy, self).__init__()
-        self.out = sys.stdout
+        self._output = output
 
     def print_item(self, heading, columns, item):
         """
@@ -86,7 +88,9 @@ class PrinterStrategy(object):
         :param item: data to get the value from
         :rtype: string
         """
-        value = item.get(column['attr_name'], column.get('value', None))
+        value = item.get(column['attr_name'], None)
+        if value is None:
+            value = column.get('value', None)
         value_format_func = column.get('formatter', column.get('value_formatter', None))
         item_format_func = column.get('item_formatter', None)
 
@@ -100,7 +104,7 @@ class PrinterStrategy(object):
         self._print(text + "\n")
 
     def _print(self, text=''):
-        self.out.write(text)
+        self._output.write(text)
 
 
 class VerboseStrategy(PrinterStrategy):
@@ -120,7 +124,7 @@ class VerboseStrategy(PrinterStrategy):
             self._print_header(heading)
         for item in items:
             self._print_item(item, columns)
-            print
+            self._println()
 
     def _print_header(self, heading):
         """
@@ -129,9 +133,10 @@ class VerboseStrategy(PrinterStrategy):
         :type heading: string or list of strings
         :param heading: headers to be displayed
         """
-        print_line()
+        print_line(output=self._output)
         self._println(center_text(heading))
-        print_line()
+        print_line(output=self._output)
+
 
     def _print_item(self, item, columns):
         """
@@ -142,7 +147,7 @@ class VerboseStrategy(PrinterStrategy):
         :type columns: list of dicts
         :param columns: columns definition
         """
-        print
+        self._println()
         for column in columns:
             if not self._column_has_value(column, item):
                 continue
@@ -151,10 +156,14 @@ class VerboseStrategy(PrinterStrategy):
 
             if not column.get('multiline', False):
                 col_width = self._max_label_width(columns)
-                print ("{0:<" + u_str(col_width) + "} : {1}").format(u_str(column['name']), u_str(value))
+                if not isinstance(value, (list, tuple)):
+                    value = [value]
+                for v in value:
+                    self._println(("{0:<" + u_str(col_width) + "} : {1}").format(u_str(column['name']), u_str(v)))
             else:
-                self._println(column['name']+":")
+                self._println(column['name'] + ":")
                 self._println(indent_text(value, "    "))
+
 
     @classmethod
     def _max_label_width(cls, columns):
@@ -179,14 +188,14 @@ class GrepStrategy(PrinterStrategy):
     String to divide the columns can be set optionally.
     """
 
-    def __init__(self, delimiter=None):
+    def __init__(self, delimiter=None, output=sys.stdout):
         """
         :type delimiter: string
         :param delimiter: delimiter for dividing the grid columns
         :type noheading: boolean
         :param noheading: to suppress headings in the output
         """
-        super(GrepStrategy, self).__init__()
+        super(GrepStrategy, self).__init__(output)
         self.__delim = delimiter if delimiter else ""
 
     def print_items(self, heading, columns, items):
@@ -205,7 +214,7 @@ class GrepStrategy(PrinterStrategy):
             self._print_header(heading, columns, column_widths)
         for item in items:
             self._print_item(item, columns, column_widths)
-            print
+            self._println()
 
     def _print_header(self, heading, columns, column_widths):
         """
@@ -218,7 +227,7 @@ class GrepStrategy(PrinterStrategy):
         :type column_widths: dict
         :param column_widths: dictionary that holds maximal widths of columns {attr_name -> width}
         """
-        print_line()
+        print_line(output=self._output)
         self._println(center_text(heading))
 
         self._println()
@@ -230,7 +239,8 @@ class GrepStrategy(PrinterStrategy):
             else:
                 self._print(column['name'].ljust(width))
         print
-        print_line()
+        print_line(output=self._output)
+
 
     def _print_item(self, item, columns, column_widths):
         """
@@ -265,6 +275,7 @@ class GrepStrategy(PrinterStrategy):
             else:
                 self._print('%s%s' % (value, ' '*(width-unicode_len((value)))))
 
+
     def _column_width(self, items, column):
         """
         Returns maximum width for the column to ensure that all the data
@@ -285,7 +296,7 @@ class GrepStrategy(PrinterStrategy):
 
     def _calc_column_widths(self, items, columns):
         """
-        Counts and retunrs dictionary that holds maximal widths of all columns {attr_name -> width}
+        Counts and returns dictionary that holds maximal widths of all columns {attr_name -> width}
 
         :type items: list of dicts
         :param items: data to be printed
@@ -414,12 +425,12 @@ def indent_text(text, indent="\t"):
     :param indent: value that is added at the beggining of each line of the text
     :rtype: string
     """
-    if not text:
+    if text is None:
         text = u_str(None)
 
-    if isinstance(text, (list)):
+    if isinstance(text, list):
         glue = "\n"+indent
-        return indent+glue.join(text)
+        return indent+glue.join([u_str(l) for l in text])
     else:
         return indent_text(text.split("\n"), indent)
 
@@ -434,16 +445,16 @@ def text_to_line(text, glue=" "):
     :param glue: string used for joining lines of the text
     :rtype: string
     """
-    if not text:
+    if text is None:
         text = u_str(None)
 
-    if isinstance(text, (list)):
+    if isinstance(text, list):
         return glue.join(text)
     else:
         return glue.join(text.split("\n"))
 
 
-def center_text(text, width = None):
+def center_text(text, width=None):
     """
     Centers block of text in given width.
 
@@ -460,14 +471,14 @@ def center_text(text, width = None):
     for line in text.split("\n"):
         len_line = unicode_len(line)
         if len_line < width:
-            padding = ((width - len_line) / 2) - 1
+            padding = int(floor((width - len_line) / 2.0))
         else:
             padding = 0
         centered.append(' ' * padding + line)
     return "\n".join(centered)
 
 
-def print_line(width = None):
+def print_line(width=None, output=sys.stdout):
     """
     Prints line of characters '-' to stdout
 
@@ -477,7 +488,7 @@ def print_line(width = None):
     """
     if not width:
         width = get_term_width()
-    print('-'*width)
+    print >> output, '-'*width
 
 
 def get_term_width():
@@ -495,6 +506,11 @@ def get_term_width():
         w = 80
     return 80 if w == 0 else w
 
+
 def unicode_len(text):
     """ return byte lenght of unicode character """
     return sum(1+(unicodedata.east_asian_width(c) in "WF") for c in u_str(text))
+
+def batch_add_columns(printer, *cols, **kwargs):
+    for c in cols:
+        printer.add_column(c, **kwargs)

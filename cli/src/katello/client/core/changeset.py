@@ -26,6 +26,7 @@ from katello.client.core.utils import test_record, run_spinner_in_bg, format_dat
 from katello.client.api.utils import get_environment, get_changeset, get_template, get_repo, get_product
 from katello.client.utils import printer
 from katello.client.utils.encoding import u_str
+from katello.client.utils.printer import batch_add_columns
 
 
 
@@ -54,13 +55,10 @@ class List(ChangesetAction):
         env = get_environment(orgName, envName)
         changesets = self.api.changesets(orgName, env['id'])
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('action_type')
+
+        batch_add_columns(self.printer, 'id', 'name', 'action_type')
         self.printer.add_column('updated_at', formatter=format_date)
-        self.printer.add_column('state')
-        self.printer.add_column('environment_id')
-        self.printer.add_column('environment_name')
+        batch_add_columns(self.printer, 'state', 'environment_id', 'environment_name')
         if verbose:
             self.printer.add_column('description', multiline=True)
 
@@ -110,20 +108,16 @@ class Info(ChangesetAction):
         if displayDeps:
             cset["dependencies"] = self.get_dependencies(cset["id"])
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('action_type')
+        batch_add_columns(self.printer,
+            'id', 'name', 'action_type')
         self.printer.add_column('description', multiline=True, show_with=printer.VerboseStrategy)
         self.printer.add_column('updated_at', formatter=format_date)
-        self.printer.add_column('state')
-        self.printer.add_column('environment_id')
-        self.printer.add_column('environment_name')
-        self.printer.add_column('errata', multiline=True, show_with=printer.VerboseStrategy)
-        self.printer.add_column('products', multiline=True, show_with=printer.VerboseStrategy)
-        self.printer.add_column('packages', multiline=True, show_with=printer.VerboseStrategy)
-        self.printer.add_column('repositories', multiline=True, show_with=printer.VerboseStrategy)
-        self.printer.add_column('system_templates', multiline=True, show_with=printer.VerboseStrategy)
-        self.printer.add_column('distributions', multiline=True, show_with=printer.VerboseStrategy)
+        batch_add_columns(self.printer,
+            'state', 'environment_id', 'environment_name')
+        batch_add_columns(self.printer,
+            'errata', 'products', 'packages',
+            'repositories', 'system_templates', 'distributions',
+            multiline=True, show_with=printer.VerboseStrategy)
         if displayDeps:
             self.printer.add_column('dependencies', multiline=True, show_with=printer.VerboseStrategy)
 
@@ -225,7 +219,7 @@ class UpdateContent(ChangesetAction):
             prod_opts = self.product_options(options)
 
             # if the product name/label/id are all none...
-            if (all(opt is None for opt in prod_opts)):
+            if (all(opt is None for opt in prod_opts.itervalues())):
                 prod_opts['name'] = options['name']
 
             prod = get_product(self.org_name, prod_opts['name'], prod_opts['label'], prod_opts['id'])
@@ -341,12 +335,13 @@ class UpdateContent(ChangesetAction):
             raise OptionValueError(_("%s must be preceded by %s, %s or %s") %
                   (option, "--from_product", "--from_product_label", "--from_product_id"))
 
-        if self.current_product_option == 'from_product_label':
-            self.items[option.dest].append({"name": u_str(value), "from_product_label": self.current_product})
-        elif self.current_product_option == 'from_product_id':
-            self.items[option.dest].append({"name": u_str(value), "from_product_id": self.current_product})
+        if self.current_product_option == 'product_label':
+            self.items[option.dest].append({"name": u_str(value), "product_label": self.current_product})
+        elif self.current_product_option == 'product_id':
+            self.items[option.dest].append({"name": u_str(value), "product_id": self.current_product})
         else:
-            self.items[option.dest].append({"name": u_str(value), "from_product": self.current_product})
+            self.items[option.dest].append({"name": u_str(value), "product": self.current_product})
+
 
     def _store_item(self, option, opt_str, value, parser):
         if option.dest == 'add_product_label' or option.dest == 'remove_product_label':

@@ -21,7 +21,16 @@ import threading
 from xml.utils import iso8601
 from katello.client.api.task_status import TaskStatusAPI, SystemTaskStatusAPI
 from katello.client.api.job import SystemGroupJobStatusAPI
+from katello.client.config import Config
 
+#  mode check -----------------------------------------------------------------
+def get_katello_mode():
+    Config()
+    path = Config.parser.get('server', 'path') if Config.parser.has_option('server', 'path') else ''
+    if "headpin" in path or "sam" in path:
+        return "headpin"
+    else:
+        return "katello"
 
 # server output validity ------------------------------------------------------
 def is_valid_record(rec):
@@ -175,7 +184,7 @@ def parse_tokens(tokenstring):
 
     tokens = []
     try:
-        pattern = '--?\w+|=?"[^"]*"|=?\'[^\']*\'|=?[^\s]+'
+        pattern = r'--?\w+|=?"[^"]*"|=?\'[^\']*\'|=?[^\s]+'
 
         for tok in (re.findall(pattern, tokenstring)):
 

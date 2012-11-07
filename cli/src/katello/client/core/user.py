@@ -21,6 +21,7 @@ from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.utils import get_user, get_environment
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, convert_to_mime_type, attachment_file_name, save_report
+from katello.client.utils.printer import batch_add_columns
 
 
 # base user action -----------------------------------------------------
@@ -41,12 +42,8 @@ class List(UserAction):
     def run(self):
         users = self.api.users()
 
-        self.printer.add_column('id')
-        self.printer.add_column('username')
-        self.printer.add_column('email')
-        self.printer.add_column('disabled')
-        self.printer.add_column('default_organization')
-        self.printer.add_column('default_environment')
+        batch_add_columns(self.printer, 'id', 'username', 'email', \
+            'disabled', 'default_organization', 'default_environment')
 
         self.printer.set_header(_("User List"))
         self.printer.print_items(users)
@@ -112,14 +109,8 @@ class Info(UserAction):
 
         user = get_user(username)
 
-        self.printer.add_column('id')
-        self.printer.add_column('username')
-        self.printer.add_column('email')
-        self.printer.add_column('disabled')
-        self.printer.add_column('default_organization')
-        self.printer.add_column('default_environment')
-        self.printer.add_column('default_locale')
-
+        batch_add_columns(self.printer, 'id', 'username', 'email', 'disabled', \
+            'default_organization', 'default_environment', 'default_locale')
         self.printer.set_header(_("User Information"))
 
         # Add user locale to user dictionary

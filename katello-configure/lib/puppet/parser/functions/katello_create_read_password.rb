@@ -10,7 +10,7 @@ module Puppet::Parser::Functions
       puts "Generating new random seed in #{filename}"
       randomhash = `openssl rand -base64 24`
       File.open(filename, 'w', 0600) {|f| f.write(randomhash) }
-      randomhash
+      randomhash.chomp
     end
   end
 end

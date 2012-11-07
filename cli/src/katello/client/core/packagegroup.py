@@ -3,6 +3,7 @@ import os
 from katello.client.api.repo import RepoAPI
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import system_exit
+from katello.client.utils.printer import batch_add_columns
 
 
 class PackageGroupAction(BaseAction):
@@ -30,9 +31,7 @@ class List(PackageGroupAction):
                         _("No package groups found in repo [%s]") % (repoid))
         self.printer.set_header(_("Package Group Information"))
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('description')
+        batch_add_columns(self.printer, 'id', 'name', 'description')
 
         self.printer.print_items(groups)
 
@@ -65,13 +64,12 @@ class Info(PackageGroupAction):
             for name, required_package in group['conditional_package_names'].items()]
 
         self.printer.set_header(_("Package Group Information"))
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('description', multiline=True)
-        self.printer.add_column('mandatory_package_names', multiline=True)
-        self.printer.add_column('default_package_names', multiline=True)
-        self.printer.add_column('optional_package_names', multiline=True)
-        self.printer.add_column('conditional_package_names', multiline=True)
+        batch_add_columns(self.printer,
+            'id', 'name')
+        batch_add_columns(self.printer,
+            'description', 'mandatory_package_names', 'default_package_names',
+            'optional_package_names', 'conditional_package_names',
+            multiline=True)
 
         self.printer.print_item(group)
 
@@ -126,9 +124,7 @@ class CategoryInfo(PackageGroupAction):
             system_exit(os.EX_DATAERR, _("Package group category [%s] not found in repo [%s]") % (categoryId, repoid))
 
         self.printer.set_header(_("Package Group Category Information"))
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('packagegroupids')
+        batch_add_columns(self.printer, 'id', 'name', 'packagegroupids')
 
         self.printer.print_item(category)
 

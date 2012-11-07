@@ -15,7 +15,7 @@
 # in this software or its documentation.
 #
 
-from katello.client.config import Config
+from katello.client.core.utils import get_katello_mode
 
 from katello.client.core import (
   activation_key,
@@ -49,9 +49,8 @@ from katello.client.core import (
   domain
 )
 
-def setup_admin(katello_cmd):
+def setup_admin(katello_cmd, mode=get_katello_mode()):
     # pylint: disable=R0914,R0915
-    mode = get_katello_mode()
     akey_cmd = activation_key.ActivationKey()
     akey_cmd.add_command('create', activation_key.Create())
     akey_cmd.add_command('info', activation_key.Info())
@@ -329,11 +328,3 @@ def setup_admin(katello_cmd):
     domain_cmd.add_command('update', domain.Update())
     domain_cmd.add_command('delete', domain.Delete())
     katello_cmd.add_command('domain', domain_cmd)
-
-def get_katello_mode():
-    Config()
-    mode = "katello"
-    path = Config.parser.get('server', 'path') or '/katello/api'
-    if "headpin" in path or "sam" in path:
-        mode = "headpin"
-    return mode
