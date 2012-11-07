@@ -305,8 +305,7 @@ module Glue::Pulp::Repos
     end
 
     def add_repo(label, name, url, repo_type, gpg = nil)
-      #TODO use orchestration for this, what if pulp repo creation fails (need to delete content)
-      check_for_repo_conflicts(name)
+      check_for_repo_conflicts(name, label)
       key = EnvironmentProduct.find_or_create(self.organization.library, self)
       Repository.create!(:environment_product => key, :pulp_id => repo_id(name),
           :relative_path => Glue::Pulp::Repos.custom_repo_path(self.library, self, label),
@@ -427,10 +426,17 @@ module Glue::Pulp::Repos
       repo.del_filters [filter_id]
     end
 
-    def check_for_repo_conflicts(repo_name)
-      is_dupe =  Repository.in_product(self).in_environment(self.library).where(:name=>repo_name).count > 0
+    def check_for_repo_conflicts(repo_name, repo_label)
+      is_dupe =  Repository.joins(:environment_product).where( :name=> repo_name,
+              "environment_products.product_id" => self.id, "environment_products.environment_id"=> self.library.id).count > 0
       if is_dupe
-        raise Errors::ConflictException.new(_("There is already a repo with the name [ %s ] for product [ %s ]") % [repo_name, self.label])
+        raise Errors::ConflictException.new(_("There is already a repo with the name [ %{repo} ] for product [ %{product} ]") % {:repo => repo_name, :product => self.label})      end
+      unless repo_label.blank?
+        is_dupe =  Repository.joins(:environment_product).where( :label=> repo_label,
+               "environment_products.product_id" => self.id, "environment_products.environment_id"=> self.library.id).count > 0
+        if is_dupe
+          raise Errors::ConflictException.new(_("There is already a repo with the label [ %{repo} ] for product [ %{product} ]") % {:repo => repo_label, :product => self.label})
+        end
       end
     end
 
