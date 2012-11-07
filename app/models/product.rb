@@ -177,10 +177,6 @@ class Product < ActiveRecord::Base
 
   protected
 
-  def self.sync_items org
-    org.syncable? ? (joins(:provider).where('providers.organization_id' => org)) : where("0=1")
-  end
-
 
   def self.with_repos env, enabled_only
     query = EnvironmentProduct.joins(:repositories).where(
