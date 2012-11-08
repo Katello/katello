@@ -52,6 +52,15 @@ gem 'acts_as_reportable', '>=1.1.1'
 # Documentation
 gem "apipie-rails", '>= 0.0.12'
 
+
+# Pulp API bindings
+lib_path = "../../runcible"
+if File.exist?(lib_path)
+  gem 'runcible', :path => lib_path
+else
+  gem 'runcible'
+end
+
 # Use unicorn as the web server
 # gem 'unicorn'
 
@@ -85,6 +94,7 @@ group :test, :development do
   gem 'redcarpet'
   gem 'ZenTest', '>= 4.4.0'
   gem 'rspec-rails', '>= 2.0.0'
+
   gem 'autotest-rails', '>= 4.1.0'
 
   gem 'webrat', '>=0.7.3'
@@ -100,9 +110,16 @@ group :test, :development do
 
   #needed to generate routes in javascript
   gem "js-routes", :require => 'js_routes'
+ 
+  gem 'minitest-rails'
+  if RUBY_VERSION == "1.8.7"
+    gem 'minitest_tu_shim'
+  end
 
   #parallel_tests to make our specs go faster
   gem "parallel_tests"
+
+  gem 'factory_girl_rails', "~> 1.7.0"
 
   #coverage
   if RUBY_VERSION >= "1.9.2"
@@ -139,5 +156,4 @@ end
 group :test do
   gem 'vcr'
   gem 'webmock'
-  gem 'minitest'
 end

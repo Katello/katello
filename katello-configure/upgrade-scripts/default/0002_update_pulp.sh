@@ -7,6 +7,6 @@
 
 /usr/sbin/service-wait mongod start
 /bin/sleep 10s
-/usr/bin/pulp-migrate
+/usr/bin/pulp-manage-db
 
 exit 0

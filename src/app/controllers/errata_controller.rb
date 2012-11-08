@@ -44,7 +44,7 @@ class ErrataController < ApplicationController
 
   
   def lookup_errata
-    @errata = Glue::Pulp::Errata.find(params[:id])
+    @errata = Errata.find(params[:id])
   end 
   
 end

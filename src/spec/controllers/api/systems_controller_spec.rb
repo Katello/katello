@@ -56,8 +56,8 @@ describe Api::SystemsController do
     Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
-    Resources::Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-    Resources::Pulp::Consumer.stub!(:update).and_return(true)
+    Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid})
+    Runcible::Extensions::Consumer.stub!(:update).and_return(true)
 
     @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
     @environment_1 = KTEnvironment.create!(:name=>'test_1', :label=> 'test_1', :prior => @organization.library.id, :organization => @organization)
@@ -321,7 +321,7 @@ describe Api::SystemsController do
       it_should_behave_like "protected action"
 
       it "successfully with update permissions" do
-        Resources::Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
+        Runcible::Extensions::Consumer.should_receive(:upload_profile).once.with(uuid, 'rpm', package_profile).and_return(true)
         put :upload_package_profile, :id => uuid, :_json => package_profile
         response.body.should == @sys.to_json
       end
@@ -333,7 +333,7 @@ describe Api::SystemsController do
       it_should_behave_like "protected action"
 
       it "successfully with register permissions" do
-        Resources::Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
+        Runcible::Extensions::Consumer.should_receive(:upload_profile).once.with(uuid, 'rpm', package_profile).and_return(true)
         put :upload_package_profile, :id => uuid, :_json => package_profile
         response.body.should == @sys.to_json
       end
@@ -376,22 +376,8 @@ describe Api::SystemsController do
     it_should_behave_like "protected action"
 
     it "should change the name" do
-      Resources::Pulp::Consumer.should_receive(:update).once.with(@organization.label, uuid, @sys.description).and_return(true) if AppConfig.katello?
+      Runcible::Extensions::Consumer.should_receive(:update).once.with(uuid, {:display_name => "foo_name"}).and_return(true) if AppConfig.katello?
       put :update, :id => uuid, :name => "foo_name"
-      response.body.should == @sys.to_json
-      response.should be_success
-    end
-
-    it "should change the description" do
-      Resources::Pulp::Consumer.should_receive(:update).once.with(@organization.label, uuid, "redkin is awesome.").and_return(true) if AppConfig.katello?
-      put :update, :id => uuid, :description => "redkin is awesome."
-      response.body.should == @sys.to_json
-      response.should be_success
-    end
-
-    it "should change the location" do
-      Resources::Pulp::Consumer.should_receive(:update).once.with(@organization.label, uuid, @sys.description).and_return(true) if AppConfig.katello?
-      put :update, :id => uuid, :location => "never-neverland"
       response.body.should == @sys.to_json
       response.should be_success
     end
@@ -575,44 +561,45 @@ describe Api::SystemsController do
     let(:enabled_repos_empty) { { "repos" => [] } }
 
     it "should not bind any" do
-      Resources::Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({'a' => '', 'b' => ''})
+      Runcible::Extensions::Consumer.should_receive(:repos).with(@system.uuid).once.and_return([{'repo_id' => 'a'}, {'repo_id' => 'b'}])
+
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
       response.status.should == 200
     end
 
     it "should bind one" do
-      Resources::Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({'a' => ''})
-      Resources::Pulp::Consumer.should_receive(:bind).with(@system.uuid, 'b').once
+      Runcible::Extensions::Consumer.should_receive(:repos).with(@system.uuid).once.and_return([{'repo_id' => 'a'}])
+      Runcible::Extensions::Consumer.should_receive(:bind_all).with(@system.uuid, 'b').once
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
       response.status.should == 200
     end
 
     it "should bind two" do
-      Resources::Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({})
-      Resources::Pulp::Consumer.should_receive(:bind).with(@system.uuid, 'a').once
-      Resources::Pulp::Consumer.should_receive(:bind).with(@system.uuid, 'b').once
+      Runcible::Extensions::Consumer.should_receive(:repos).with(@system.uuid).once.and_return({})
+      Runcible::Extensions::Consumer.should_receive(:bind_all).with(@system.uuid, 'a').once
+      Runcible::Extensions::Consumer.should_receive(:bind_all).with(@system.uuid, 'b').once
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
       response.status.should == 200
     end
 
     it "should bind one and unbind one" do
-      Resources::Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({'b' => '', 'c' => ''})
-      Resources::Pulp::Consumer.should_receive(:bind).with(@system.uuid, 'a').once
-      Resources::Pulp::Consumer.should_receive(:unbind).with(@system.uuid, 'c').once
+      Runcible::Extensions::Consumer.should_receive(:repos).with(@system.uuid).once.and_return([{'repo_id' => 'b'}, {'repo_id' => 'c'}])
+      Runcible::Extensions::Consumer.should_receive(:bind_all).with(@system.uuid, 'a').once
+      Runcible::Extensions::Consumer.should_receive(:unbind_all).with(@system.uuid, 'c').once
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
       response.status.should == 200
     end
 
     it "should unbind two" do
-      Resources::Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({'a' => '', 'b' => ''})
-      Resources::Pulp::Consumer.should_receive(:unbind).with(@system.uuid, 'a').once
-      Resources::Pulp::Consumer.should_receive(:unbind).with(@system.uuid, 'b').once
+      Runcible::Extensions::Consumer.should_receive(:repos).with(@system.uuid).once.and_return([{'repo_id' => 'a'}, {'repo_id' => 'b'}])
+      Runcible::Extensions::Consumer.should_receive(:unbind_all).with(@system.uuid, 'a').once
+      Runcible::Extensions::Consumer.should_receive(:unbind_all).with(@system.uuid, 'b').once
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos_empty
       response.status.should == 200
     end
 
     it "should do nothing" do
-      Resources::Pulp::Consumer.should_receive(:repoids).with(@system.uuid).once.and_return({})
+      Runcible::Extensions::Consumer.should_receive(:repos).with(@system.uuid).once.and_return({})
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos_empty
       response.status.should == 200
     end

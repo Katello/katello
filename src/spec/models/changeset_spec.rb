@@ -104,8 +104,11 @@ describe Changeset, :katello => true do
 
     describe "adding content" do
       before(:each) do
+        Runcible::Extensions::Repository.stub(:create).and_return({})
+
         @provider = Provider.create!(:name         => "provider", :provider_type => Provider::CUSTOM,
                                      :organization => @organization, :repository_url => "https://something.url/stuff")
+
 
         @prod = Product.new({:name=>"prod" , :label=> "prod" })
 
@@ -119,16 +122,19 @@ describe Changeset, :katello => true do
         @pack_release = "1"
         @pack_arch    = "noarch"
         @pack_nvre    = @pack_name +"-"+ @pack_version +"-"+ @pack_release +"."+ @pack_arch
-        @pack         = {
-            :id      => 1,
+        @pack         = Package.new({
+            :_id      => 1,
             :name    => @pack_name,
             :version => @pack_version,
             :release => @pack_release,
             :arch    => @pack_arch
-        }.with_indifferent_access
+        }.with_indifferent_access)
         @err          = mock('Err', { :id => 'err', :name => 'err' })
 
-        @repo         = Repository.create!(:environment_product => ep, :name => "repo", :label => "repo_label", :pulp_id => "1")
+        @repo = Repository.new(:environment_product => ep, :name => "repo", :label => "repo_label",
+                                   :pulp_id => "135adsf", :content_id=>'23423', :relative_path=>'/foobar/')
+        @repo.stub(:create_pulp_repo).and_return([])
+        @repo.save!
         @distribution = mock('Distribution', { :id => 'some-distro-id' })
         @repo.stub(:distributions).and_return([@distribution])
         @repo.stub_chain(:distributions, :index).and_return([@distribution])
@@ -273,8 +279,10 @@ describe Changeset, :katello => true do
         @pack         = { :id => 1, :name => @pack_name }.with_indifferent_access
         @err          = mock('Err', { :id => 'err', :name => 'err' })
 
-        @repo = Repository.create!(:environment_product => ep, :name => "repo", :label => "repo_label", :pulp_id => "1")
-
+        @repo = Repository.new(:environment_product => ep, :name => "repo", :label => "repo_label",
+                                   :pulp_id => "1343", :content_id=>'23423', :relative_path=>'/foobar/')
+        @repo.stub(:create_pulp_repo).and_return([])
+        @repo.save!
         @distribution = mock('Distribution', { :id => 'some-distro-id' })
         @repo.stub(:distributions).and_return([@distribution])
         @repo.stub(:packages).and_return([@pack])
@@ -343,7 +351,10 @@ describe Changeset, :katello => true do
         @err          = mock('Err', { :id => 'err', :name => 'err' })
         @distribution = mock('Distribution', { :id => 'some-distro-id' })
         ep            = EnvironmentProduct.find_or_create(@organization.library, @prod)
-        @repo         = Repository.create!(:environment_product => ep, :name => 'repo', :label => 'repo_label', :pulp_id => "1")
+        @repo         = Repository.new(:environment_product => ep, :name => 'repo', :label => 'repo_label',
+                                           :pulp_id => "test_pulp_id", :relative_path=>"/foo/", :content_id=>'aasfd')
+        @repo.stub(:create_pulp_repo).and_return([])
+        @repo.save!
         @repo.stub_chain(:distributions, :index).and_return([@distribution])
         @repo.stub(:distributions).and_return([@distribution])
         @repo.stub(:packages).and_return([@pack])
@@ -382,6 +393,7 @@ describe Changeset, :katello => true do
         @environment.prior.products.stub(:find_by_name).and_return(@prod)
         @changeset.stub(:wait_for_tasks).and_return(nil)
         @changeset.stub(:calc_dependencies).and_return([])
+        @changeset.stub(:affected_repos).and_return([@repo])
 
         @tpl1 = SystemTemplate.create!(:name => "template_1", :environment => @organization.library)
 
@@ -418,8 +430,12 @@ describe Changeset, :katello => true do
         @prod.environments << @environment
         @changeset.state = Changeset::REVIEW
 
+        #is cloned in needs to be false so that it will 'try'
+        #  to clone the repo
         @repo.stub(:is_cloned_in?).and_return(false)
-        @repo.stub(:get_clone).and_return(nil)
+        #get clone needs to return the clone though, so we can
+        #  generate the metadata
+        @repo.stub(:get_clone).and_return(@clone) #
         @changeset.stub(:repos).and_return([@repo])
         @repo.should_receive(:promote).once
         @changeset.should_receive(:index_repo_content).once
@@ -440,11 +456,7 @@ describe Changeset, :katello => true do
             :nvrea      => 'some_nvrea')
         @changeset.state = Changeset::REVIEW
 
-        Resources::Pulp::Package.stub(:dep_solve).and_return({ })
-        Glue::Pulp::Package.should_receive(:id_search).once.with([@pack.id]).and_return([@pack])
-        Glue::Pulp::Repo.should_receive(:add_repo_packages).once.with(@clone => [@pack])
-
-        #@clone.should_receive(:add_packages).once.with([@pack.id])
+        @clone.should_receive(:add_packages).once.with([@pack.id])
         @changeset.apply(:async => false)
       end
 

@@ -15,25 +15,17 @@ require 'util/threadsession'
 require 'util/password'
 
 class User < ActiveRecord::Base
-  include Glue::Pulp::User if AppConfig.katello?
+  include Glue::Pulp::User if AppConfig.use_pulp
+  include Glue::ElasticSearch::User if AppConfig.use_elasticsearch
   include Glue::Foreman::User if AppConfig.use_foreman
-  include Glue if AppConfig.use_cp
+  include Glue if AppConfig.use_cp || AppConfig.use_pulp || AppConfig.use_foreman
+
   include AsyncOrchestration
-  include IndexedModel
+  include Authorization::User
+  include Authorization::Enforcement
 
 
   acts_as_reportable
-
-  index_options :extended_json => :extended_index_attrs,
-                :display_attrs => [:username, :email],
-                :json          => { :except => [:password, :password_reset_token,
-                                                :password_reset_sent_at, :helptips_enabled,
-                                                :disabled, :own_role_id, :login] }
-
-  mapping do
-    indexes :username, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :username_sort, :type => 'string', :index => :not_analyzed
-  end
 
   scope :hidden, where(:hidden => true)
   scope :visible, where(:hidden => false)
@@ -93,7 +85,7 @@ class User < ActiveRecord::Base
   end
 
   # create own role for new user
-  before_save do |u|
+  before_create do |u|
     if u.new_record? and u.own_role.nil?
       # create the own_role where the name will be a string consisting of username and 20 random chars
       begin
@@ -110,22 +102,27 @@ class User < ActiveRecord::Base
   # THIS CHECK MUST BE THE FIRST before_destroy
   # check if this is not the last superuser
   before_destroy do |u|
-    if u.id == User.current.id
-      u.errors.add(:base, _("Cannot delete currently logged user"))
-      false
+    if !User.current.nil?
+      if u.id == User.current.id
+        u.errors.add(:base, _("Cannot delete currently logged user"))
+        return false
+      end
     end
+
     unless u.can_be_deleted?
       u.errors.add(:base, "cannot delete last admin user")
-      false
+      return false
     end
-    true
+    return true
   end
 
   # destroy own role for user
   before_destroy do |u|
-    u.own_role.destroy
-    unless u.own_role.destroyed?
-      Rails.logger.error error.to_s
+    if !u.own_role.nil?
+      u.own_role.destroy
+      unless u.own_role.destroyed?
+        Rails.logger.error error.to_s
+      end
     end
     u.roles.clear
   end
@@ -166,149 +163,6 @@ class User < ActiveRecord::Base
     User.current = u
     u
   end
-
-  # Returns true if for a given verbs, resource_type org combination
-  # the user has access to all the tags
-  # This is used extensively in many of the model permission scope queries.
-  def allowed_all_tags?(verbs, resource_type, org = nil)
-    ResourceType.check resource_type, verbs
-    verbs = [] if verbs.nil?
-    verbs = [verbs] unless verbs.is_a? Array
-    org = Organization.find(org) if Numeric === org
-
-    log_roles(verbs, resource_type, nil, org)
-
-    org_permissions = org_permissions_query(org, resource_type == :organizations)
-    org_permissions = org_permissions.where(:organization_id => nil) if resource_type == :organizations
-
-
-    verbs = verbs.collect { |verb| action_to_verb(verb, resource_type) }
-    no_tag_verbs = ResourceType::TYPES[resource_type][:model].no_tag_verbs.clone rescue []
-    no_tag_verbs ||= []
-    no_tag_verbs.delete_if { |verb| !verbs.member? verb }
-    verbs.delete_if { |verb| no_tag_verbs.member? verb }
-
-    all_tags_clause = ""
-    unless resource_type == :organizations || ResourceType.global_types.include?(resource_type.to_s)
-      all_tags_clause = " AND (permissions.all_tags = :true)"
-    end
-
-    clause_all_resources_or_tags = <<-SQL.split.join(" ")
-        permissions.resource_type_id =
-          (select id from resource_types where resource_types.name = :all) OR
-          (permissions.resource_type_id =
-            (select id from resource_types where resource_types.name = :resource_type) AND
-            (verbs.verb in (:no_tag_verbs) OR
-              (permissions.all_verbs=:true OR verbs.verb in (:verbs) #{all_tags_clause} )))
-    SQL
-    clause_params = { :true => true, :all => "all", :resource_type => resource_type, :verbs => verbs }
-    org_permissions.where(clause_all_resources_or_tags,
-                          { :no_tag_verbs => no_tag_verbs }.merge(clause_params)).count > 0
-  end
-
-  # Class method that has the same functionality as allowed_all_tags? method but operates
-  # on the current logged user. The class attribute User.current must be set!
-  def self.allowed_all_tags?(verb, resource_type = nil, org = nil)
-    u = User.current
-    raise Errors::UserNotSet, "current user is not set" if u.nil? or not u.is_a? User
-    u.allowed_all_tags?(verb, resource_type, org)
-  end
-
-
-  # Return the sql that shows all the allowed tags for a given verb, resource_type, org
-  # combination .
-  # Note: one needs generally check for "allowed_all_tags?" before executing this
-  # Note: This returns the SQL not result of the query
-  #
-  # This method is called by every Model's list method
-  def allowed_tags_sql(verbs=nil, resource_type = nil, org = nil)
-    select_on = "DISTINCT(permission_tags.tag_id)"
-    select_on = "DISTINCT(permissions.organization_id)" if resource_type == :organizations
-
-    allowed_tags_query(verbs, resource_type, org, false).select(select_on).to_sql
-  end
-
-
-  # Class method that has the same functionality as allowed_tags_sql method but operates
-  # on the current logged user. The class attribute User.current must be set!
-  def self.allowed_tags_sql(verb, resource_type = nil, org = nil)
-    ResourceType.check resource_type, verb
-    u = User.current
-    raise Errors::UserNotSet, "current user is not set" if u.nil? or not u.is_a? User
-    u.allowed_tags_sql(verb, resource_type, org)
-  end
-
-
-  # Return true if the user is allowed to do the specified action for a resource type
-  # verb/action can be:
-  # * a parameter-like Hash (eg. :controller => 'projects', :action => 'edit')
-  # * a permission Symbol (eg. :edit_project)
-  #
-  # This method is called by every protected controller.
-  def allowed_to?(verbs, resource_type, tags = nil, org = nil, any_tags = false)
-    tags = [] if tags.nil?
-    tags = [tags] unless tags.is_a? Array
-    if tags.detect { |tag| !(Numeric === tag ||(String === tag && /^\d+$/=== tag.to_s)) }
-      raise ArgumentError, "Tags need to be integers - #{tags} are not."
-    end
-    ResourceType.check resource_type, verbs
-    verbs = [] if verbs.nil?
-    verbs = [verbs] unless verbs.is_a? Array
-    log_roles(verbs, resource_type, tags, org, any_tags)
-
-    return true if allowed_all_tags?(verbs, resource_type, org)
-
-
-    tags_query = allowed_tags_query(verbs, resource_type, org)
-
-    if tags.empty? || resource_type == :organizations
-      to_count = "permissions.id"
-    else
-      to_count = "permission_tags.tag_id"
-    end
-
-    tags_query = tags_query.where("permission_tags.tag_id in (:tags)", :tags => tags) unless tags.empty?
-    count = tags_query.count(to_count, :distinct => true)
-    if tags.empty? || any_tags
-      count > 0
-    else
-      tags.length == count
-    end
-  end
-
-
-  # Class method that has the same functionality as allowed_to? method but operates
-  # on the current logged user. The class attribute User.current must be set!
-  def self.allowed_to?(verb, resource_type, tags = nil, org = nil, any_tags = false)
-    u = User.current
-    raise Errors::UserNotSet, "current user is not set" if u.nil? or not u.is_a? User
-    u.allowed_to?(verb, resource_type, tags, org, any_tags)
-  end
-
-  # Class method with the very same functionality as allowed_to? but throws
-  # SecurityViolation exception leading to the denial page.
-  def self.allowed_to_or_error?(verb, resource_type, tags = nil, org = nil, any_tags = false)
-    u = User.current
-    raise Errors::UserNotSet, "current user is not set" if u.nil? or not u.is_a? User
-    unless u.allowed_to?(verb, resource_type, tags, org, any_tags)
-      msg = "User #{u.username} is not allowed to #{verb} in #{resource_type} using #{tags}"
-      Rails.logger.error msg
-      raise Errors::SecurityViolation, msg
-    end
-  end
-
-  def allowed_organizations
-    #test for all orgs
-    perms = Permission.joins(:role).joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
-        where("roles_users.user_id = ?", self.id).where(:organization_id => nil).count()
-    return Organization.all if perms > 0
-
-    perms = Permission.joins(:role).joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
-        where("roles_users.user_id = ?", self.id).where("organization_id is NOT null")
-    #return the individual organizations
-    perms.collect { |perm| perm.organization }.uniq
-  end
-
 
   def disable_helptip(key)
     return if !self.helptips_enabled? #don't update helptips if user has it disabled
@@ -373,45 +227,6 @@ class User < ActiveRecord::Base
   # is the current user consumer? (rhsm)
   def self.consumer?
     User.current.is_a? CpConsumerUser
-  end
-
-  def self.list_verbs global = false
-    { :create => _("Administer Users"),
-      :read   => _("Read Users"),
-      :update => _("Modify Users"),
-      :delete => _("Delete Users")
-    }.with_indifferent_access
-  end
-
-  def self.read_verbs
-    [:read]
-  end
-
-  def self.no_tag_verbs
-    [:create]
-  end
-
-  READ_PERM_VERBS = [:read, :update, :create, :delete]
-  scope :readable, lambda { User.allowed_all_tags?(READ_PERM_VERBS, :users) ? where(:hidden => false) : where("0 = 1") }
-
-  def self.creatable?
-    User.allowed_to?([:create], :users, nil)
-  end
-
-  def self.any_readable?
-    User.allowed_to?(READ_PERM_VERBS, :users, nil)
-  end
-
-  def readable?
-    User.any_readable? && !hidden
-  end
-
-  def editable?
-    User.allowed_to?([:create, :update], :users, nil) && !hidden
-  end
-
-  def deletable?
-    self.id != User.current.id && User.allowed_to?([:delete], :users, nil)
   end
 
   def send_password_reset
@@ -627,11 +442,6 @@ class User < ActiveRecord::Base
     verb
   end
 
-  def extended_index_attrs
-    { :username_sort => username.downcase }
-  end
-
-
   private
 
   # generate a random token, that is unique within the User table for the column provided
@@ -639,49 +449,6 @@ class User < ActiveRecord::Base
     begin
       self[column] = SecureRandom.hex(32)
     end while User.exists?(column => self[column])
-  end
-
-  def allowed_tags_query(verbs, resource_type, org = nil, allowed_to_check = true)
-    ResourceType.check resource_type, verbs
-    verbs = [] if verbs.nil?
-    verbs = [verbs] unless verbs.is_a? Array
-    log_roles(verbs, resource_type, nil, org)
-    org = Organization.find(org) if Numeric === org
-    org_permissions = org_permissions_query(org, resource_type == :organizations)
-
-    verbs         = verbs.collect { |verb| action_to_verb(verb, resource_type) }
-    clause        = ""
-    clause_params = { :all => "all", :true => true, :resource_type => resource_type, :verbs => verbs }
-
-    unless resource_type == :organizations
-      clause = <<-SQL.split.join(" ")
-                permissions.resource_type_id =
-                  (select id from resource_types where resource_types.name = :resource_type) AND
-                  (permissions.all_verbs=:true OR verbs.verb in (:verbs))
-      SQL
-
-      org_permissions = org_permissions.joins(
-          "left outer join permission_tags on permissions.id = permission_tags.permission_id")
-    else
-      if allowed_to_check
-        org_clause = "permissions.organization_id is null"
-        org_clause = org_clause + " OR permissions.organization_id = :organization_id " if org
-        org_hash = { }
-        org_hash = { :organization_id => org.id } if org
-        org_permissions = org_permissions.where(org_clause, org_hash)
-      else
-        org_permissions = org_permissions.where("permissions.organization_id is not null")
-      end
-
-      clause = <<-SQL.split.join(" ")
-                permissions.resource_type_id =
-                  (select id from resource_types where resource_types.name = :all) OR
-                  (permissions.resource_type_id =
-                    (select id from resource_types where resource_types.name = :resource_type) AND
-                    (permissions.all_verbs=:true OR verbs.verb in (:verbs)))
-      SQL
-    end
-    org_permissions.where(clause, clause_params)
   end
 
 

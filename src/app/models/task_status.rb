@@ -21,13 +21,13 @@ class TaskStatus < ActiveRecord::Base
   class Status
     WAITING = :waiting
     RUNNING = :running
-    ERROR = :error
-    FINISHED = :finished
+    ERROR = :failed
+    FINISHED = :success
+    UNARCHIVED_FINISH = :finished
     CANCELED = :canceled
     TIMED_OUT = :timed_out
   end
-  include IndexedModel
-  include Authorization
+  include Glue::ElasticSearch::TaskStatus if AppConfig.use_elasticsearch
 
   belongs_to :organization
   belongs_to :user
@@ -67,41 +67,9 @@ class TaskStatus < ActiveRecord::Base
 
   after_destroy :destroy_job
 
-  index_options :json=>{:only=> [:parameters, :result, :organization_id, :start_time, :finish_time, :task_owner_id, :task_owner_type ]},
-                :extended_json=>:extended_index_attrs
 
-  mapping do
-   indexes :start_time, :type=>'date'
-   indexes :finish_time, :type=>'date'
-   indexes :status, :type=>'string', :analyzer => 'snowball'
-  end
 
-  def extended_index_attrs
-    ret = {}
-    ret[:username] = user.username if user
 
-    ret[:status] = state.to_s
-    ret[:status] += " pending" if pending?
-    if state.to_s == "error" || state.to_s == "timed_out"
-      ret[:status] += " fail failure"
-    end
-
-    case state.to_s
-      when "finished"
-        ret[:status] += " completed"
-      when "timed_out"
-        ret[:status] += " timed out"
-    end
-
-    if task_type
-      tt = task_type
-      if (System.class.name == task_owner_type)
-        tt = TaskStatus::TYPES[task_type][:english_name]
-      end
-      ret[:status] +=" #{tt}"
-    end
-    ret
-  end
 
   def initialize(attrs = nil)
     unless attrs.nil?
@@ -330,10 +298,10 @@ class TaskStatus < ActiveRecord::Base
 
   def self.refresh(ids)
     unless ids.nil? || ids.empty?
-      uuids = TaskStatus.select(:uuid).where(:id => ids).collect{|t| t.uuid}
-      ret = Resources::Pulp::Task.find(uuids)
+      uuids = TaskStatus.where(:id=>ids).pluck(:uuid)
+      ret = Runcible::Resources::Task.poll_all(uuids)
       ret.each do |pulp_task|
-        PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by_uuid(pulp_task["id"]))
+        PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by_uuid(pulp_task[:task_id]))
       end
     end
   end

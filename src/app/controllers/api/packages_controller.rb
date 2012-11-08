@@ -36,7 +36,7 @@ class Api::PackagesController < Api::ApiController
   param :repository_id, :number, :desc => "environment numeric identifier"
   param :search, String, :desc => "search expression"
   def search
-    packages = Glue::Pulp::Package.search(params[:search], 0, 0, [@repo.pulp_id])
+    packages = Package.search(params[:search], 0, 0, [@repo.pulp_id])
     render :json => packages.to_a
   end
 
@@ -56,10 +56,10 @@ class Api::PackagesController < Api::ApiController
   end
 
   def find_package
-    @package = Resources::Pulp::Package.find(params[:id])
+    @package = Package.find(params[:id])
     raise HttpErrors::NotFound, _("Package with id '%s' not found") % params[:id] if @package.nil?
     # and check ownership of it
-    raise HttpErrors::NotFound, _("Package '%s' not found within the repository") % params[:id]  unless @package['repoids'].include? @repo.pulp_id
+    raise HttpErrors::NotFound, _("Package '%s' not found within the repository") % params[:id]  unless @package.repoids.include? @repo.pulp_id
     @package
   end
 end

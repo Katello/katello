@@ -27,6 +27,7 @@ URL:            http://www.katello.org
 Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
 Requires:        %{name}-common
+Requires:        %{name}-glue-elasticsearch
 Requires:        %{name}-glue-pulp
 Requires:        %{name}-glue-foreman
 Requires:        %{name}-glue-candlepin
@@ -75,6 +76,7 @@ Requires:       rubygem(tire) >= 0.3.0
 Requires:       rubygem(tire) < 0.4
 Requires:       rubygem(ldap_fluff)
 Requires:       rubygem(apipie-rails) >= 0.0.12
+Requires:       rubygem(foreman_api) >= 0.0.7
 Requires:       lsof
 
 %if 0%{?rhel} == 6
@@ -153,7 +155,7 @@ Requires:       %{name}-configure
 Requires:       %{name}-cli
 Requires:       postgresql-server
 Requires:       postgresql
-Requires:       pulp
+Requires:       pulp-rpm-server
 Requires:       candlepin-tomcat6
 Requires:       candlepin-selinux
 # the following backend engine deps are required by <katello-configure>
@@ -167,6 +169,14 @@ Requires:       foreman foreman-postgresql
 This is the Katello meta-package.  If you want to install Katello and all
 of its dependencies on a single machine, you should install this package
 and then run katello-configure to configure everything.
+
+%package glue-elasticsearch
+BuildArch:      noarch
+Summary:         Katello connection classes for the Elastic Search backend
+Requires:        %{name}-common
+
+%description glue-elasticsearch
+Katello connection classes for the Elastic Search backend
 
 %package glue-pulp
 BuildArch:      noarch
@@ -312,6 +322,9 @@ testing.
 #check for malformed gettext strings
 script/check-gettext.rb -m -i
 
+#temporarily delete test.rake
+rm ./lib/tasks/test.rake
+
 #copy converge-ui
 cp -R /usr/share/converge-ui-devel/* ./vendor/converge-ui
 rm ./public/fonts
@@ -353,8 +366,8 @@ a2x -d manpage -f manpage man/katello-service.8.asciidoc
     rm -f Gemfile.lock
     cp Gemfile Gemfile.old
     echo 'gem "redcarpet"' >> Gemfile
-    rake apipie:static RAILS_ENV=apipie --trace
-    rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=apipie --trace
+    rake apipie:static  --trace
+    rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello  --trace
     mv Gemfile.old Gemfile
 %endif
 
@@ -471,6 +484,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/app/mailers
 %dir %{homedir}/app/models
 %{homedir}/app/models/*.rb
+%{homedir}/app/models/authorization/*.rb
 %{homedir}/app/models/candlepin
 %{homedir}/app/stylesheets
 %{homedir}/app/views
@@ -496,7 +510,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %exclude %{homedir}/lib/tasks/hudson.rake
 %exclude %{homedir}/lib/tasks/jsroutes.rake
 %exclude %{homedir}/lib/tasks/jshint.rake
-%exclude %{homedir}/lib/tasks/test.rake
+#%exclude %{homedir}/lib/tasks/test.rake
 %exclude %{homedir}/script/pulp_integration_tests
 %{homedir}/locale
 %{homedir}/public
@@ -546,6 +560,9 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_sql.log
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs.log
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs_sql.log
+
+%files glue-elasticsearch
+%{homedir}/app/models/glue/elastic_search
 
 %files glue-pulp
 %{homedir}/app/models/glue/pulp
@@ -632,7 +649,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/lib/tasks/jshint.rake
 
 %files devel-test
-%{homedir}/lib/tasks/test.rake
+#%{homedir}/lib/tasks/test.rake
 %{homedir}/script/pulp_integration_tests
 
 %pre common

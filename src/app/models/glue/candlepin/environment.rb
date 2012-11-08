@@ -61,7 +61,8 @@ module Glue::Candlepin::Environment
     protected
 
     def all_env_content_ids
-      self.repositories.enabled.reduce(Set.new) do |env_content_ids, repo|
+      #can't use enabled scope due to intermittent issue
+      self.repositories.all.select{|r| r.enabled}.reduce(Set.new) do |env_content_ids, repo|
         env_content_ids << repo.content_id
       end
     end

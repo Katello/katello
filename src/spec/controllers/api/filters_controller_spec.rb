@@ -20,28 +20,27 @@ describe Api::FiltersController, :katello => true do
 
   let(:pulp_id) { "FILTER1" }
   let(:description) { "DESCRIPTION" }
-  let(:package_list) { "package1, package2" }
   let(:product_id) { 1000 }
 
   before (:each) do
     login_user
     set_default_locale
     disable_org_orchestration
-    disable_filter_orchestration
     disable_product_orchestration
 
+    @package_list = ["package1", "package2"]
     @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
-    @filter = Filter.create!(:name => pulp_id, :description => description, :package_list => package_list, :organization => @organization)
+    @filter = Filter.create!(:name => pulp_id, :description => description, :organization => @organization)
     @product = MemoStruct.new(:filters => [], :id => 1000)
   end
 
   context "create filter" do
     before(:each) do
-      Filter.stub!(:create!).and_return({})
+      Filter.stub!(:create!).and_return(@filter)
     end
 
     it "should find organization" do
-      post :create, :organization_id => @organization.label, :name => pulp_id, :description => description, :package_list => package_list
+      post :create, :organization_id => @organization.label, :name => pulp_id, :description => description, :package_list => @package_list
       assigns(:organization).should == @organization
     end
 
@@ -49,15 +48,19 @@ describe Api::FiltersController, :katello => true do
       Filter.should_receive(:create!).once.with(hash_including(
           :name => pulp_id,
           :organization => @organization,
-          :description => description,
-          :package_list => package_list)).and_return({})
+          :description => description)).and_return({})
 
-      post :create, :organization_id => @organization.label, :name => pulp_id, :description => description, :package_list => package_list
+      post :create, :organization_id => @organization.label, :name => pulp_id, :description => description, :package_list => @package_list
+    end
+
+    it "should add packages to the filter" do
+      @filter.should_receive(:add_package).twice
+      post :create, :organization_id => @organization.label, :name => pulp_id, :description => description, :package_list => @package_list
     end
 
     it_should_behave_like "bad request"  do
       let(:req) do
-        post :create, :bad_foo => "ss", :organization_id => @organization.label, :name => pulp_id, :description => description, :package_list => package_list
+        post :create, :bad_foo => "ss", :organization_id => @organization.label, :name => pulp_id, :description => description, :package_list => @package_list
       end
     end
 

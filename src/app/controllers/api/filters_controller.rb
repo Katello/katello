@@ -67,9 +67,10 @@ class Api::FiltersController < Api::ApiController
   def create
     @filter = Filter.create!(:name => params[:name],
       :organization => @organization,
-      :description => params[:description],
-      :package_list => params[:package_list]
+      :description => params[:description]
     )
+    params[:package_list].uniq.each{|i| @filter.add_package(i)}
+    @filter.save!
     render :json => @filter.to_json
   end
 
@@ -79,7 +80,7 @@ class Api::FiltersController < Api::ApiController
   param :name, String, :desc => "filter's new name", :required => false
   param :packages, Array, :desc => "Updated list of the packages to filter", :required => true
   def update
-    @filter.package_list = params[:packages] unless params[:packages].nil?
+    @filter.reconcile_packages!(params[:packages]) unless params[:packages].nil?
     @filter.name = params[:name] unless params[:name].blank?
     @filter.save!
 

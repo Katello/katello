@@ -82,13 +82,13 @@ class ChangesetsController < ApplicationController
 
   def dependencies
     to_ret = {}
+    #if @changeset.promotion?
+    #  @changeset.calc_dependencies.each do |dependency|
+    #    to_ret[dependency.product_id] ||= []
+    #    to_ret[dependency.product_id] << {:name=>dependency.display_name, :dep_of=>dependency.dependency_of}
+    #  end
+    #end
 
-    if @changeset.promotion?
-      @changeset.calc_dependencies.each do |dependency|
-        to_ret[dependency.product_id] ||= []
-        to_ret[dependency.product_id] << {:name=>dependency.display_name, :dep_of=>dependency.dependency_of}
-      end
-    end
 
     render :json=>to_ret
   end
@@ -398,7 +398,7 @@ class ChangesetsController < ApplicationController
   end
 
   def update_errata_valid? id
-    errata = Glue::Pulp::Errata.find(id)
+    errata = Errata.find(id)
     
     errata.repoids.each{ |repoid|
       repo = Repository.where(:pulp_id => repoid)[0]
