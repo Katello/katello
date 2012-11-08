@@ -105,7 +105,7 @@ module Src
 end
 
 old_fast_gettext = !defined?(FastGettext::Version) ||
-    FastGettext::Version.split('.').map(&:to_i).zip([0, 6, 8]).any? { |a, b| a < b }
+    (FastGettext::Version.split('.').map(&:to_i) <=> [0, 6, 8]) == -1 # compare versions x.x.x <= 0.6.7
 
 FastGettext.add_text_domain('app', { :path => 'locale', :type => :po, :ignore_fuzzy => true }.
     update(old_fast_gettext ? { :ignore_obsolete => true } : { :report_warning => false }))
