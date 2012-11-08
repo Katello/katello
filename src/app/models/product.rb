@@ -57,7 +57,7 @@ class Product < ActiveRecord::Base
 
   scope :engineering, where(:type => "Product")
 
-  before_save :assign_label
+  before_save :assign_unique_label
   after_save :update_related_index
 
   def initialize(attrs = nil)
@@ -159,7 +159,7 @@ class Product < ActiveRecord::Base
 
   scope :all_in_org, lambda{|org| ::Product.joins(:provider).where('providers.organization_id = ?', org.id)}
 
-  def assign_label
+  def assign_unique_label
     self.label = Katello::ModelUtils::labelize(self.name) if self.label.blank?
 
     # if the object label is already being used in this org, append the id to make it unique

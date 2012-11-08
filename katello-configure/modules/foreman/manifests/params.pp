@@ -34,4 +34,6 @@ class foreman::params {
   $oauth_consumer_secret = "secret"
   # use header to specify the user to map to the actions performed through oauth
   $oauth_map_users    = true
+
+  $reset_data         = false
 }

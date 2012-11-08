@@ -430,7 +430,7 @@ def indent_text(text, indent="\t"):
 
     if isinstance(text, list):
         glue = "\n"+indent
-        return indent+glue.join([str(l) for l in text])
+        return indent+glue.join([u_str(l) for l in text])
     else:
         return indent_text(text.split("\n"), indent)
 
