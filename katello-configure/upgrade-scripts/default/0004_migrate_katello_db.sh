@@ -23,6 +23,7 @@ done
 
 pushd $KATELLO_HOME >/dev/null
 RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX RAILS_ENV=$KATELLO_ENV rake db:migrate --trace 2>&1
+RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX RAILS_ENV=$KATELLO_ENV rake reindex --trace 2>&1
 ret_code=$?
 popd >/dev/null
 
