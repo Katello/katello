@@ -18,7 +18,15 @@ psql -c "CREATE DATABASE katello_test OWNER katello;" -U postgres
 bundle exec rake parallel:create VERBOSE=false
 bundle exec rake parallel:migrate VERBOSE=false
 bundle exec rake parallel:spec
+if [ $? -ne 0 ]
+then
+  exit 1
+fi
 
 echo ""
 echo "********* Minitest Model and Glue Tests ****************"
 bundle exec rake minitest
+if [ $? -ne 0 ]
+then
+  exit 1
+fi
