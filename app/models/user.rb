@@ -135,7 +135,7 @@ class User < ActiveRecord::Base
 
   before_save :default_systems_reg_permission_check
   before_save :own_role_included_in_roles
-  before_validation :setup_remote_id
+  before_save:setup_remote_id
 
 
 
