@@ -11,10 +11,22 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Foreman::Domain < Resources::ForemanModel
+  include IndexedModel
 
-  attributes :name, :fullname, :dns_id
+  attributes :id, :name, :fullname, :dns_id
+  validates :name, :presence => true
+
+  index_options :display_attrs => [:name, :fullname]
+
+  mapping do
+    indexes :id, :type=>'string', :index => :not_analyzed
+    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
+    indexes :fullname, :type => 'string', :analyzer => :kt_name_analyzer
+  end
+
 
   def json_default_options
-    { :only => [:name, :fullname, :dns_id] }
+    { :only => [:id, :name, :fullname, :dns_id] }
   end
+
 end
