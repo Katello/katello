@@ -58,7 +58,6 @@ class Product < ActiveRecord::Base
   scope :engineering, where(:type => "Product")
 
   before_save :assign_unique_label
-  after_save :update_related_index
 
   def initialize(attrs = nil)
 
