@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :repository do
     sequence(:name) { |n| "Repo#{n}" }
-    sequence(:pulp_id)
+    sequence(:pulp_id) { |n| "pulp-#{n}" }
     sequence(:content_id)
 
     ignore do
