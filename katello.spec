@@ -81,7 +81,7 @@ Requires:       rubygem(tire) < 0.4
 Requires:       rubygem(ldap_fluff)
 Requires:       rubygem(foreman_api) >= 0.0.7
 Requires:       rubygem(anemone)
-Requires:       rubygem(apipie-rails) >= 0.0.13
+Requires:       rubygem(apipie-rails) >= 0.0.16
 Requires:       lsof
 
 %if 0%{?rhel} == 6
@@ -145,7 +145,7 @@ BuildRequires:       rubygem(sass)
 BuildRequires:       rubygem(tire) >= 0.3.0
 BuildRequires:       rubygem(tire) < 0.4
 BuildRequires:       rubygem(ldap_fluff)
-BuildRequires:       rubygem(apipie-rails) >= 0.0.12
+BuildRequires:       rubygem(apipie-rails) >= 0.0.16
 BuildRequires:       rubygem(maruku)
 BuildRequires:       rubygem(foreman_api)
 
@@ -242,12 +242,20 @@ of its dependencies on a single machine, you should install this package
 and then run katello-configure to configure everything.
 
 %package api-docs
-Summary:         Documentation files for katello API
+Summary:         Documentation files for Katello API
 BuildArch:       noarch
 Requires:        %{name}-common
 
 %description api-docs
-Documentation files for katello API.
+Documentation files for Katello API.
+
+%package headpin-api-docs
+Summary:         Documentation files for Headpin API
+BuildArch:       noarch
+Requires:        %{name}-common
+
+%description headpin-api-docs
+Documentation files for Headpin API.
 
 %package devel-all
 Summary:         Katello devel support (all subpackages)
@@ -422,7 +430,12 @@ a2x -d manpage -f manpage man/katello-service.8.asciidoc
     export RAILS_ENV=production
     cp config/katello.template.yml config/katello.yml
     rake apipie:static --trace
-    rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello --trace
+    rake apipie:cache --trace
+
+    # API doc for Headpin mode
+    sed -i 's/app_mode: katello/app_mode: headpin/g' config/katello.yml
+    rake apipie:static OUT=doc/headpin-apidoc --trace
+    rake apipie:cache --trace
     rm config/katello.yml
 %endif
 
@@ -714,6 +727,10 @@ usermod -a -G katello-shared tomcat
 %files api-docs
 %doc doc/apidoc*
 %{homedir}/public/apipie-cache
+
+%files headpin-api-docs
+%doc doc/headpin-apidoc*
+%{homedir}/public/headpin-apipie-cache
 
 %files devel-all
 
