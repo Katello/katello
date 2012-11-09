@@ -114,6 +114,14 @@ describe User do
     end
   end
 
+  it "should allow email address as username", :katello => false do
+    disable_user_orchestration
+    AppConfig.warden = 'database'
+    User.create!(:username => EMAIL, :password => PASSWORD, :email => EMAIL)
+    u = User.find_by_username(EMAIL)
+    u.should_not be_nil
+  end
+
   describe "User should" do
     before(:each) do
       disable_user_orchestration
