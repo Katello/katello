@@ -309,6 +309,10 @@ class Resources::AbstractModel
     save!
   end
 
+  def self.base_class
+    self
+  end
+
   private
 
   singleton_class.instance_eval { attr_writer :current_user_getter }

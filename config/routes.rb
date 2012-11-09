@@ -8,6 +8,12 @@ Src::Application.routes.draw do
     end
   end
 
+  resources :domains do
+    collection do
+      get :items
+    end
+  end
+
   resources :system_groups do
     collection do
       get :items

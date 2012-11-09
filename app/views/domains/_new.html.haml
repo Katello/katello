@@ -1,0 +1,21 @@
+
+= content_for :title do
+  #{_("New Domain")}
+
+= content_for :navigation do
+  / pretty
+
+= content_for :content do
+  .grid_10
+    = kt_form_for ::Foreman::Domain.new, :id => "new_domain" do |form|
+
+      - dns_opts  = Foreman::SmartProxy.dns_proxies.map {|d| [d.name, d.id]}
+
+      = form.text_field :name, :label => _("Name:")
+      = form.text_field :fullname, :label => _("Full Name:"), :value=> ""
+      = form.select :dns_id,
+        dns_opts, {},
+        {:label => _("Dns:"), :id=>:dns_id, :style=>"width: 200px", 'data-placeholder'=>_("Choose a dns...")}
+
+      = form.submit _("Save Domain"), :id => :save_domain
+

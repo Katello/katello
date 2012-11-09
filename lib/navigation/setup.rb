@@ -18,7 +18,7 @@ module Navigation
        :name => _("Setup"),
         :url => :sub_level,
         :options => {:class=>'setup top_level', "data-menu"=>"setup"},
-        :items=> [ menu_subnets ]
+        :items=> [ menu_subnets, menu_domains ]
         # TODO: final order of the setup menu items
         #   Setup
         #   Locations
@@ -36,6 +36,15 @@ module Navigation
        :url => subnets_path,
        :if => lambda{true}, #TODO: check permissions
        :options => {:class=>'setup second_level', "data-menu"=>"subnets"}
+      }
+    end
+
+    def menu_domains
+      {:key => :registered,
+       :name => _("Domains"),
+       :url => domains_path,
+       :if => lambda{true}, #TODO: check permissions
+       :options => {:class=>'setup second_level', "data-menu"=>"domains"}
       }
     end
 
