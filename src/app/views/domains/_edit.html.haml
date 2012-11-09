@@ -1,0 +1,27 @@
+= javascript :edit_helpers
+
+= content_for :title do
+  #{@domain.name}
+
+= content_for :navigation do
+  / pretty
+
+= content_for :remove_item do
+  = link_to _("Remove Domain"), { :controller => "domains", :action => "destroy" }, :confirm => _('Are you sure you want to remove this domain?'), :method => :delete, :class=>"remove_item", :remote=>true
+
+= content_for :content do
+  .grid_10
+    = kt_form_for @domain, :id => "edit_domain", :data_url => domain_path(@domain) do |form|
+
+      - dns_opts  = Foreman::SmartProxy.dns_proxies.map {|d| [d.name, d.id]}
+
+      = form.editable :name, :label => _("Name:")
+      = form.editable :fullname, :label => _("Full Name:")
+      = form.select :dns_id,
+        dns_opts, {},
+        {:label => _("Dns:"), :id=>:dns_id, :style=>"width: 200px", 'data-placeholder'=>_("Choose a dns...")}
+
+      .grid_5.la.prefix_2
+        #update_domain.button{:'data-url'=>domain_path(@domain)}
+          #{_("Save Domain")}
+
