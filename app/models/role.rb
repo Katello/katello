@@ -45,7 +45,7 @@ class Role < ActiveRecord::Base
 
   # scope to facilitate retrieving roles that are 'non-self' roles... group() so that unique roles are returned
   scope :non_self, joins("left outer join users on users.own_role_id = roles.id").where('users.own_role_id'=>nil).order('roles.name')
-  validates :name, :uniqueness => true, :katello_name_format => true, :presence => true
+  validates :name, :uniqueness => true, :no_trailing_space => true, :length => {:maximum => 128, :minimum => 1}, :presence => true
   validates :description, :length => { :maximum => 250 }
   validates_with LockValidator, :on => :update
 
