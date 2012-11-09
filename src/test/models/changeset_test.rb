@@ -16,7 +16,7 @@ class ChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def setup
     models = ["Organization", "KTEnvironment"]
-    disable_glue_layers(["Candlepin", "Pulp"], models)
+    disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
   end
 
   def test_add_content_view_exception

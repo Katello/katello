@@ -20,8 +20,12 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     @content_view_def = FactoryGirl.build(:content_view_definition)
   end
 
-  def teardown
-    @content_view_def.destroy if @content_view_def.persisted?
+  def after_testsn
+    ContentViewDefinition.delete_all
+    ContentView.delete_all
+    Organization.delete_all
+    Product.delete_all
+    Repository.delete_all
   end
 
   def test_create
@@ -52,7 +56,8 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def test_products
     @content_view_def.save!
-    provider = FactoryGirl.build_stubbed(:provider)
+    org = FactoryGirl.create(:organization)
+    provider = FactoryGirl.build_stubbed(:provider, :organization => org)
     product = FactoryGirl.create(:product, :provider => provider)
     @content_view_def.products << product
     assert_includes product.content_view_definitions.reload, @content_view_def
