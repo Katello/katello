@@ -73,10 +73,13 @@ NameVirtualHost *:443
 
   ProxyPass /subscription https://$RHN_PARENT/katello/api
   ProxyPassReverse /subscription $PROTO://$RHN_PARENT/katello/api
-#  <Location /subscription>
-#    RewriteEngine On
-#    RewriteRule /<%= scope.lookupvar("katello::params::deployment_url") %>(.*)$ https://%{HTTP_HOST}%{REQUEST_URI}
-#  </Location>
+  <Location /subscription>
+    RequestHeader set SSL_CLIENT_CERT "%{SSL_CLIENT_CERT}s"
+    SSLVerifyClient optional
+    SSLRenegBufferSize 16777216
+    SSLVerifyDepth 2
+  </Location>
+
 </VirtualHost>
 
 NameVirtualHost *:80
