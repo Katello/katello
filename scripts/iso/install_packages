@@ -13,13 +13,18 @@
 import os
 import subprocess
 import sys
+import tempfile
 
 
 # Runs a command, and exits if the command is not successful.
 # The output is returned.
 def run_command(cmd):
+    stdout = ""
     try:
-        stdout = subprocess.check_output(cmd)
+        with (tempfile.TemporaryFile()) as stdout_file:
+            subprocess.check_call(cmd, stdout=stdout_file)
+            stdout_file.seek(0)
+            stdout = stdout_file.read()
     except (OSError, subprocess.CalledProcessError), e:
         sys.stderr.write("Error while executing command: '%s'\n" % (" ".join(cmd)))
         sys.exit(-1)
