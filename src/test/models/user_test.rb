@@ -45,16 +45,20 @@ class UserCreateTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_i18n_username
-    @user.username="ಬoo@redhat.com"
+    uname = "ಬoo0000"
+    @user.username=uname
     assert @user.save
     assert !@user.remote_id.nil?
     assert @user.errors.empty?
+    assert !User.find_by_username(uname).nil?
   end
 
-  def test_invalid_username
-    @user.username=" ಬoo@redhat.com"
-    assert !@user.save
-    assert @user.errors.has_key?(:username)
+  def test_email_username
+    email = "foo@redhat.com"
+    @user.username=email
+    assert @user.save
+    assert @user.errors.empty?
+    assert !User.find_by_username(email).nil?
   end
 end
 
