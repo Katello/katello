@@ -36,7 +36,8 @@ class ContentViewDefinition < ActiveRecord::Base
     ContentView.create!(:name => "#{name} Content View",
                         :description => "Created from #{name}",
                         :content_view_definition => self,
-                        :organization => organization
+                        :organization => organization,
+                        :environments => [organization.library]
                        )
   end
 
