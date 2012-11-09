@@ -15,8 +15,8 @@ FOREMAN_ENV=<%= scope.lookupvar("foreman::environment") %>
 # if set to 1, init script will do a railsrestart on 'restart' and will refuse
 # 'start' and 'stop' completely and remind the operator that passenger is in
 # use.
-#FOREMAN_USE_PASSENGER=0
+FOREMAN_USE_PASSENGER=1
 
 # set to 1 if you're using thin as a server
-FOREMAN_USE_THIN=1
+FOREMAN_USE_THIN=0
 export RAILS_RELATIVE_URL_ROOT=/foreman
