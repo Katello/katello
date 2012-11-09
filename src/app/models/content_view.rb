@@ -49,4 +49,14 @@ class ContentView < ActiveRecord::Base
     result
   end
 
+  def promote(from_env, to_env)
+    raise "Cannot promote from #{from_env.name}, view does not exist there." if !self.environments.include?(from_env)
+    #remove this when refresh is supported
+    raise "Cannot promote to #{to_env.name}, view already exist there and refreshing not supported." if self.environments.include?(to_env)
+
+    self.environments << to_env
+    self.save!
+    [] #return pulp tasks when we have some
+  end
+
 end

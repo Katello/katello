@@ -13,11 +13,16 @@
 require 'minitest_helper'
 
 class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
+  fixtures :all
 
   def setup
     models = ["Organization", "KTEnvironment"]
     services = ["Candlepin", "Pulp", "ElasticSearch"]
     disable_glue_layers(services, models)
+
+    @library              = KTEnvironment.find(environments(:library).id)
+    @dev                  = KTEnvironment.find(environments(:dev).id)
+    @acme_corporation     = Organization.find(organizations(:acme_corporation).id)
   end
 
   def test_create
@@ -94,4 +99,12 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_equal content_view.changeset_content_views,
       changeset.changeset_content_views
   end
+
+  def test_promote
+    content_view = FactoryGirl.create(:content_view, :environments=>[@library], :organization=>@acme_corporation)
+    content_view.promote(@library, @dev)
+    assert_includes content_view.environments, @dev
+  end
+
+  
 end
