@@ -1,3 +1,5 @@
+require 'util/model_util'
+
 class AddRepositoryLibraryId < ActiveRecord::Migration
   def self.up
       change_table :repositories do |t|
@@ -21,9 +23,10 @@ class AddRepositoryLibraryId < ActiveRecord::Migration
   # introduced label. When this migration is run, the label attribute
   # is not yet present in the database.
   def self.simulate_label(repo, env)
-    [repo, repo.product.target, env, env.organization.target].each do |obj|
+    target = env.organization.target unless env.nil?
+    [repo, repo.product.target, env, target].each do |obj|
       obj.class_eval do
-        def label; name end
+        def label; Katello::ModelUtils::labelize(name) end
         def label=(*args); nil end
       end
     end
