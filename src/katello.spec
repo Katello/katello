@@ -14,6 +14,9 @@
 %global homedir %{_datarootdir}/%{name}
 %global datadir %{_sharedstatedir}/%{name}
 %global confdir deploy/common
+%if 0%{?rhel} == 6
+%global _httpd_contentdir /var/www
+%endif
 
 Name:           katello
 Version:        1.2.1
@@ -419,9 +422,9 @@ ln -sv %{homedir}/script/katello-service %{buildroot}%{_bindir}/katello-service
 ln -sv %{homedir}/script/service-wait %{buildroot}%{_sbindir}/service-wait
 
 #create symlinks for mod_passenger
-mkdir -p %{buildroot}/var/www/html/
-ln -s %{homedir}/public %{buildroot}/var/www/html/katello
-ln -s %{_datarootdir}/foreman/public %{buildroot}/var/www/html/foreman
+mkdir -p %{buildroot}%{_httpd_contentdir}/html/
+ln -s %{homedir}/public %{buildroot}%{_httpd_contentdir}/html/katello
+ln -s %{_datarootdir}/foreman/public %{buildroot}%{_httpd_contentdir}/html/foreman
 
 #re-configure database to the /var/lib/katello directory
 sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{homedir}/config/database.yml
@@ -517,8 +520,8 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %config(noreplace) %{_sysconfdir}/%{name}/service-list
 %{homedir}/Rakefile
 %{_mandir}/man8/katello-service.8*
-/var/www/html/katello
-/var/www/html/foreman
+%{_httpd_contentdir}/html/katello
+%{_httpd_contentdir}/html/foreman
 
 %files common
 %doc README LICENSE
@@ -587,6 +590,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/autotest
 %{homedir}/ca
 %{homedir}/config
+%attr(-, katello, katello) %{homedir}/config/environment.rb
 %{homedir}/db/migrate/
 %{homedir}/db/products.json
 %{homedir}/db/seeds.rb
@@ -610,11 +614,12 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/tmp
 %{homedir}/vendor
 %{homedir}/.bundle
-%{homedir}/config.ru
+%attr(-, katello, katello) %{homedir}/config.ru
 %{homedir}/Gemfile
 %{homedir}/Gemfile.lock
 %ghost %attr(640, katello, katello) %{datadir}/Gemfile.lock
 %{homedir}/Rakefile
+%{_httpd_contentdir}/html/katello
 
 %files headpin-all
 

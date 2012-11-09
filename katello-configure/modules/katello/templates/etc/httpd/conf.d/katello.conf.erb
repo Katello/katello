@@ -36,11 +36,13 @@ NameVirtualHost *:443
     AllowOverride all
   </Directory>
 
+<% if scope.lookupvar("katello::params::use_foreman") %>
   RailsBaseURI /<%= scope.lookupvar('foreman::deployment_url') %>
   <Directory "/var/www/html/foreman">
     Options -MultiViews
     AllowOverride all
   </Directory>
+<% end -%>
 
   <Directory "/usr/share/katello/public/">
     ExpiresDefault "access plus 1 year"
@@ -87,4 +89,7 @@ NameVirtualHost *:80
   RewriteEngine On
   RewriteCond %{HTTPS} off
   RewriteRule /<%= scope.lookupvar("katello::params::deployment_url") %>(.*)$ https://%{HTTP_HOST}%{REQUEST_URI}
+  <% if scope.lookupvar("katello::params::use_foreman") %>
+  RewriteRule /foreman(.*)$ https://%{HTTP_HOST}%{REQUEST_URI}
+  <% end -%>
 </VirtualHost>
