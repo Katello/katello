@@ -27,7 +27,7 @@ class ContentViewDefinitionAPI(KatelloAPI):
         defs = self.server.GET(path, params)[1]
         return defs
 
-    def content_view_definition_by_label(self, org_id, label):
+    def content_view_def_by_label(self, org_id, label):
         path = "/api/organizations/%s/content_view_definitions/" % org_id
         defs = self.server.GET(path, {"label": label})[1]
         if len(defs) > 0:

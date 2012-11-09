@@ -47,8 +47,7 @@ from katello.client.core import (
   architecture,
   config_template,
   domain,
-  content_view,
-  content_view_definition
+  content_view
 )
 
 def setup_admin(katello_cmd, mode=get_katello_mode()):

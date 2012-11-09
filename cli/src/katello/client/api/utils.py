@@ -112,7 +112,7 @@ def get_content_view(org_name, view_label):
 def get_cv_definition(org_name, def_label):
     cvd_api = ContentViewDefinitionAPI()
 
-    cvd = cvd_api.content_view_definition_by_label(org_name, def_label)
+    cvd = cvd_api.content_view_def_by_label(org_name, def_label)
     if cvd == None:
         raise ApiDataError(_("Could not find content view definition [ %s ] \
             within organization [ %s ]") % (def_label, org_name))

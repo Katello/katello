@@ -21,7 +21,6 @@ from katello.client.api.content_view_definition import ContentViewDefinitionAPI
 from katello.client.cli.base import opt_parser_add_org, \
         opt_parser_add_environment, OptionException
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import test_record
 from katello.client.api.utils import get_content_view, get_cv_definition, \
         get_filter, get_product, get_repo, get_environment
 
@@ -367,7 +366,7 @@ class AddRemoveRepo(ContentViewAction):
         product        = self.get_option('product')
 
         view = get_cv_definition(org_name, view_label)
-        repo = get_repo(org_name, product, repo_name)
+        repo = get_repo(org_name, product, repo_name, None, None)
 
         repos = self.def_api.repos(org_name, view['id'])
         repos = [f['id'] for f in repos]
