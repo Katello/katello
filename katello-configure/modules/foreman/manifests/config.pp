@@ -100,4 +100,24 @@ class foreman::config {
    require => User[$foreman::user],
   }
 
+  if $foreman::reset_data == 'YES' {
+   exec {"reset_foreman_db":
+      command => "rm -f /var/lib/katello/foreman_db_migrate_done",
+      path    => "/sbin:/bin:/usr/bin",
+      before  => Exec["foreman_migrate_db"],
+      timeout => 0
+    } ~>
+
+    postgres::dropdb {$foreman::db_name:
+      logfile => "${foreman::configure_log_base}/drop-postgresql-foreman-database.log",
+      require => [ Postgres::Createuser[$foreman::db_user], File["${foreman::configure_log_base}"] ],
+      before  => Exec["foreman_migrate_db"],
+      refreshonly => true,
+      notify  => [
+                  Postgres::Createdb[$foreman::db_name],
+                  Exec["foreman_migrate_db"],
+                  ],
+    }
+  }
+
 }

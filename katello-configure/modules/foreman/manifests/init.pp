@@ -24,7 +24,9 @@ class foreman (
   $thin_start_port    = $foreman::params::thin_start_port,
   $thin_log           = $foreman::params::thin_log,
   $thin_process_count = $foreman::params::thin_process_count,
-  $deployment_url     = $foreman::params::deployment_url
+  $deployment_url     = $foreman::params::deployment_url,
+
+  $reset_data         = $foreman::params::reset_data
   ) inherits foreman::params {
   if $foreman::install {
     class { '::foreman::repos': } ~>
