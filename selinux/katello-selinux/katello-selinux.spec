@@ -36,9 +36,6 @@ BuildArch:      noarch
 %if "%{selinux_policyver}" != ""
 Requires:       selinux-policy >= %{selinux_policyver}
 %endif
-%if 0%{?rhel} == 5
-Requires:       selinux-policy >= 2.4.6-80
-%endif
 Requires(post):   /usr/sbin/semodule, /sbin/restorecon, /usr/sbin/setsebool, /usr/sbin/selinuxenabled, /usr/sbin/semanage
 Requires(post): policycoreutils-python
 Requires(post): selinux-policy-targeted
