@@ -21,6 +21,7 @@ require {
   type passenger_t;
   class tcp_socket listen;
   class dir search;
+  class sock_file write;
 }
 
 ########################################
@@ -105,6 +106,8 @@ httpd_katello_script_read_lib_files(passenger_t)
 httpd_katello_script_read_log(passenger_t)
 httpd_katello_script_search_lib(passenger_t)
 katello_files_read_secetc_files(passenger_t)
+allow httpd_t passenger_tmp_t:sock_file write;
+miscfiles_read_localization(passenger_t)
 
 #allow httpd_t passenger_t:process sigkill;
 #allow httpd_t passenger_tmp_t:dir getattr;
