@@ -15,11 +15,14 @@ require 'minitest_helper'
 class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
   fixtures :all
 
-  def setup
+
+  def self.before_suite
     models = ["Organization", "KTEnvironment"]
     services = ["Candlepin", "Pulp", "ElasticSearch"]
     disable_glue_layers(services, models)
+  end
 
+  def setup
     @library              = KTEnvironment.find(environments(:library).id)
     @dev                  = KTEnvironment.find(environments(:dev).id)
     @acme_corporation     = Organization.find(organizations(:acme_corporation).id)
@@ -106,5 +109,17 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_includes content_view.environments, @dev
   end
 
-  
+  def test_delete
+    content_view = FactoryGirl.build(:content_view, :environments=>[@library, @dev], :organization=>@acme_corporation)
+    content_view.delete(@dev)
+    assert !content_view.environments.include?(@dev)
+  end
+
+  def test_delete_last_env
+    content_view = FactoryGirl.create(:content_view, :environments=>[@library], :organization=>@acme_corporation)
+    content_view.delete(@library)
+    assert ContentView.where(:label=>content_view.label).empty?
+  end
+
+
 end

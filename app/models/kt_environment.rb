@@ -91,8 +91,9 @@ class KTEnvironment < ActiveRecord::Base
 
   has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED}, :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
 
-  has_many :environment_content_views, :foreign_key => :environment_id
-  has_many :content_views, :through => :environment_content_views
+  has_many :environment_content_views, :foreign_key => :environment_id, :inverse_of=>:environment
+  has_many :content_views, :through => :environment_content_views, :inverse_of=>:environments
+
   belongs_to :default_content_view, :class_name => "ContentView", :foreign_key => :default_content_view_id
 
   scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
