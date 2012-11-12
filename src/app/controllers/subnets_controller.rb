@@ -14,15 +14,11 @@
 
 
 class SubnetsController < ApplicationController
-  #include SystemsHelper
 
   before_filter :authorize
 
   before_filter :setup_options, :only => [:index, :items, :new, :create]
   before_filter :find_subnet, :only => [:edit, :update, :destroy]
-
-  # two pane columns and mapping for sortable fields
-  #COLUMNS = {'name' => 'name_sort', 'lastCheckin' => 'lastCheckin'}
 
   def rules
     {
@@ -78,18 +74,7 @@ class SubnetsController < ApplicationController
   end
 
   def items
-    # order = split_order(params[:order])
-    # search = params[:search]
-    # if params[:env_id]
-    #   find_environment
-    #   filters = {:environment_id=>[params[:env_id]]}
-    # else
-    #   filters = readable_filters
-    # end
-    # render_panel_direct(System, @panel_options, search, params[:offset], order,
-    #                     {:default_field => :name, :filter=>filters, :load=>true})
-    #render_panel_direct(::Foreman::Subnet, @panel_options, nil, params[:offset], [:name_sort, 'asc'], {:default_field => :name, :filter=>[]})
-    render_panel_items(::Foreman::Subnet.all, @panel_options, nil, "0")
+    render_panel_direct(::Foreman::Subnet, @panel_options, params[:search], params[:offset], [:name, 'asc'], {:default_field => :name, :filter=>[]})
   end
 
   def setup_options
@@ -103,6 +88,7 @@ class SubnetsController < ApplicationController
       :ajax_load  => true,
       :ajax_scroll => items_subnets_path,
       :enable_create => true,
+      :search_class => ::Foreman::Subnet
     }
 
   end
