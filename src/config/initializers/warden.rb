@@ -161,10 +161,8 @@ Warden::Strategies.add(:oauth) do
   end
 
   def consumer(consumer_key)
-    raise "No consumer #{consumer_key}" unless AppConfigHash.has_key?(consumer_key)
-
-    config_hash = AppConfigHash[consumer_key]
-    OAuth::Consumer.new(config_hash['oauth_key'], config_hash['oauth_secret'])
+    OAuth::Consumer.new Katello.config[consumer_key.to_sym].oauth_key,
+                        Katello.config[consumer_key.to_sym].oauth_secret
   end
 end
 
