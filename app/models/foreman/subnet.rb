@@ -11,14 +11,22 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Foreman::Subnet < Resources::ForemanModel
+  include IndexedModel
 
   attributes :name, :network, :mask, :gateway, :dns_primary,
     :dns_secondary, :from, :to, :vlanid, :domain_ids, :dhcp_id, :tftp_id, :dns_id
+
+  validates :name, :presence => true
 
   def json_default_options
     {}
   end
 
-  validates :name, :presence => true
+  index_options :display_attrs => [:name, :network]
+
+  mapping do
+    indexes :id, :type=>'string', :index => :not_analyzed
+    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
+  end
 
 end
