@@ -4,7 +4,10 @@ if ENV['BUNDLER_ENABLE_RPM_PREFERRING'] == 'true'
   require File.join(File.dirname(__FILE__), 'lib', 'bundler_patch_rpm-gems_preferred')
 end
 
-require './lib/util/boot_util'
+# load Katello configuration
+path = File.expand_path('../lib', __FILE__)
+$LOAD_PATH << path unless $LOAD_PATH.include? path
+require 'katello_config'
 
 # When adding new version requirement check out EPEL6 repository first
 # and use this version if possible. Also check Fedora version (usually higher).
@@ -24,7 +27,7 @@ gem 'ldap_fluff'
 
 # those groups are only available in the katello mode, otherwise bundler would require
 # them to resolve dependencies (even when groups would be excluded from the list)
-if Katello::BootUtil.katello?
+if Katello.early_config.katello?
   group :foreman do
     gem 'foreman_api', '>= 0.0.7'
   end
