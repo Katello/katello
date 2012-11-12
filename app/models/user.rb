@@ -135,9 +135,7 @@ class User < ActiveRecord::Base
 
   before_save :default_systems_reg_permission_check
   before_save :own_role_included_in_roles
-  before_save:setup_remote_id
-
-
+  after_validation :setup_remote_id
 
   def self.authenticate!(username, password)
     u = User.where({ :username => username }).first
@@ -411,6 +409,8 @@ class User < ActiveRecord::Base
         where("tag_id = #{kt_environment_id}")
   end
 
+
+
   protected
 
   def can_be_deleted?
@@ -492,7 +492,6 @@ class User < ActiveRecord::Base
       raise ActiveRecord::RecordInvalid, self
     end
   end
-
 
   def setup_remote_id
     if  self.remote_id.nil?
