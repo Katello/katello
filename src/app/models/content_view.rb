@@ -23,7 +23,8 @@ class ContentView < ActiveRecord::Base
 
   has_many :environment_content_views
   has_many :environments, :through => :environment_content_views,
-    :class_name => "KTEnvironment"
+    :class_name => "KTEnvironment", :inverse_of=>:content_views
+
 
   has_many :component_content_views
   has_many :composite_content_view_definitions,
@@ -57,6 +58,16 @@ class ContentView < ActiveRecord::Base
     self.environments << to_env
     self.save!
     [] #return pulp tasks when we have some
+  end
+
+  def delete(from_env)
+    raise "Cannot delete from #{from_env.name}, view does not exist there." if !self.environments.include?(from_env)
+    self.environments.delete(from_env)
+    if self.environments.empty?
+      self.destroy
+    else
+      self.save!
+    end
   end
 
 end
