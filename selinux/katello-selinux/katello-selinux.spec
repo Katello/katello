@@ -12,7 +12,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 %define selinux_variants targeted
-%define selinux_policyver %(sed -e 's,.*selinux-policy-\\([^/]*\\)/.*,\\1,' /usr/share/selinux/devel/policyhelp 2> /dev/null)
 %define POLICYCOREUTILSVER 1.33.12-1
 
 %define moduletype apps
@@ -33,9 +32,7 @@ BuildRequires:  policycoreutils >= %{POLICYCOREUTILSVER}
 BuildRequires:  /usr/bin/pod2man
 BuildArch:      noarch
 
-%if "%{selinux_policyver}" != ""
-Requires:       selinux-policy >= %{selinux_policyver}
-%endif
+Requires:       selinux-policy >= 3.7.19-179
 Requires(post):   /usr/sbin/semodule, /sbin/restorecon, /usr/sbin/setsebool, /usr/sbin/selinuxenabled, /usr/sbin/semanage
 Requires(post): policycoreutils-python
 Requires(post): selinux-policy-targeted
