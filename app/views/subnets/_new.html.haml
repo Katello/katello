@@ -2,12 +2,9 @@
 = content_for :title do
   #{_("New Subnet")}
 
-= content_for :navigation do
-  / pretty
-
 = content_for :content do
   .grid_10
-    = kt_form_for ::Foreman::Subnet.new, :id => "new_subnet" do |form|
+    = kt_form_for ::Foreman::Subnet.new, :as=>"subnet", :url => subnets_path, :html=>{ :id=>"new_subnet" } do |form|
 
       = form.text_field :name, :label => _("Name:")
       = form.text_field :network, :label => _("Network:"), :value=> ""
@@ -39,8 +36,4 @@
 
       = form.submit _("Save Subnet"), :id => :save_subnet
 
-      %br
-      %br
-      %br
-      %br
-      %br
+      %div{ :style => "min-height: 100px;" }
