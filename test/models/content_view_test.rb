@@ -86,10 +86,12 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_environment_default_content_view
-    env = FactoryGirl.create(:environment_with_library)
+    env = @library
     content_view = FactoryGirl.create(:content_view)
-    env.update_attributes(:default_content_view_id => content_view.id)
-    assert_includes content_view.environment_defaults.map(&:id), env.id
+    env.default_content_view = content_view
+    env.save!
+    content_view = content_view.reload
+    assert content_view.environment_default == env
     assert_equal content_view, env.default_content_view
   end
 
@@ -121,5 +123,15 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     assert ContentView.where(:label=>content_view.label).empty?
   end
 
+  def test_default_scope
+    content_view = FactoryGirl.create(:content_view, :environment_default=>@library, :organization=>@acme_corporation)
+    assert !ContentView.non_default.include?(content_view)
+    assert ContentView.default.include?(content_view)
+  end
 
+  def test_non_default_scope
+    content_view = FactoryGirl.create(:content_view, :environments=>[@library], :organization=>@acme_corporation)
+    assert !ContentView.default.include?(content_view)
+    assert ContentView.non_default.include?(content_view)
+  end
 end
