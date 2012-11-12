@@ -18,6 +18,9 @@ require {
   type httpd_t;
   type setfiles_t;
   type postgresql_t;
+  type passenger_t;
+  class tcp_socket listen;
+  class dir search;
 }
 
 ########################################
@@ -90,6 +93,81 @@ filetrans_pattern(unconfined_t, katello_secetc_dir_t, katello_secetc_file_t, fil
 init_rw_script_tmp_files(httpd_t)
 init_rw_script_tmp_files(postgresql_t)
 init_rw_script_tmp_files(setfiles_t)
+
+## mod_passenger
+allow passenger_t katello_secetc_dir_t:dir search;
+#!!!! This avc can be allowed using the boolean 'allow_ypbind'
+allow passenger_t self:tcp_socket listen;
+corenet_tcp_connect_generic_port(passenger_t)
+corenet_tcp_connect_postgresql_port(passenger_t)
+httpd_katello_script_append_log(passenger_t)
+httpd_katello_script_read_lib_files(passenger_t)
+httpd_katello_script_read_log(passenger_t)
+httpd_katello_script_search_lib(passenger_t)
+katello_files_read_secetc_files(passenger_t)
+
+#allow httpd_t passenger_t:process sigkill;
+#allow httpd_t passenger_tmp_t:dir getattr;
+#allow httpd_t passenger_tmp_t:dir search;
+#allow httpd_t passenger_tmp_t:dir { write add_name };
+#allow httpd_t passenger_tmp_t:file { write create open setattr };
+#allow httpd_t passenger_tmp_t:sock_file write;
+#allow passenger_t alsa_exec_t:file getattr;
+#allow passenger_t dbusd_exec_t:file getattr;
+#allow passenger_t passenger_tmp_t:sock_file { create setattr };
+#allow passenger_t self:capability sys_resource;
+#allow passenger_t passenger_tmp_t:sock_file { getattr unlink };
+#auth_login_entry_type(passenger_t)
+#dmesg_exec(passenger_t)
+#files_getattr_kernel_modules(passenger_t)
+#files_list_kernel_modules(passenger_t)
+#files_search_kernel_modules(passenger_t)
+#hostname_exec(passenger_t)
+#loadkeys_exec(passenger_t)
+#modutils_getattr_module_deps(passenger_t)
+#mount_exec(passenger_t)
+#mta_read_sendmail_bin(passenger_t)
+#netutils_exec_ping(passenger_t)
+#netutils_exec_traceroute(passenger_t)
+#plymouthd_exec_plymouth(passenger_t)
+#rpm_exec(passenger_t)
+#su_exec(passenger_t)
+#udev_exec(passenger_t)
+#term_search_ptys(passenger_t)
+##still mod_passenger
+#allow passenger_t httpd_katello_script_log_t:file { getattr open append };
+#allow passenger_t httpd_katello_script_var_lib_t:dir search;
+#allow passenger_t httpd_katello_script_var_lib_t:file { read getattr open };
+#allow passenger_t katello_secetc_file_t:file { read getattr open };
+#allow passenger_t passenger_tmp_t:sock_file write;
+#corenet_tcp_connect_generic_port(passenger_t)
+#corenet_tcp_connect_postgresql_port(passenger_t)
+#rpm_delete_db(passenger_t)
+#rpm_read_db(passenger_t)
+#allow passenger_t apmd_t:file { read open };
+#allow passenger_t auditd_t:dir { getattr search };
+#allow passenger_t auditd_t:file { read open };
+#allow passenger_t getty_t:dir { getattr search };
+#allow passenger_t getty_t:file { read open };
+#allow passenger_t httpd_katello_script_log_t:dir search;
+#allow passenger_t httpd_t:file { read open };
+#allow passenger_t irqbalance_t:dir { getattr search };
+#allow passenger_t katello_secetc_dir_t:dir search;
+#allow passenger_t rhsmcertd_t:dir { getattr search };
+#allow passenger_t rpcbind_t:dir { getattr search };
+#allow passenger_t rpcbind_t:file { read open };
+##!!!! This avc can be allowed using the boolean 'allow_ypbind'
+#allow passenger_t self:tcp_socket listen;
+#allow passenger_t sshd_t:dir { getattr search };
+#allow passenger_t sshd_t:file { read open };
+#allow passenger_t system_dbusd_t:dir { getattr search };
+#allow passenger_t system_dbusd_t:file { read open };
+#allow passenger_t unconfined_java_t:dir { getattr search };
+#allow passenger_t unconfined_java_t:file { read open };
+#init_read_script_state(passenger_t)
+#init_read_state(passenger_t)
+##logging_admin_syslog(passenger_t)
+#qpidd_admin(passenger_t)
 
 # TODO katello runs unconfined temporarily - uncomment this to allow secure files reading
 #katello_files_read_secetc_files(katello_not_yet_defined_t)
