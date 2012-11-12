@@ -3,15 +3,12 @@
 = content_for :title do
   #{@subnet.name}
 
-= content_for :navigation do
-  / pretty
-
 = content_for :remove_item do
   = link_to _("Remove Subnet"), { :controller => "subnets", :action => "destroy" }, :confirm => _('Are you sure you want to remove this subnet?'), :method => :delete, :class=>"remove_item", :remote=>true
 
 = content_for :content do
   .grid_10
-    = kt_form_for @subnet, :id => "edit_subnet", :data_url => subnet_path(@subnet) do |form|
+    = kt_form_for @subnet, :as=>"subnet", :data_url => subnet_path(@subnet), :url => subnet_path(@subnet), :html=>{ :id=>"edit_subnet" } do |form
 
       = form.editable :name, :label => _("Name:")
       = form.editable :network, :label => _("Network:")
@@ -45,8 +42,4 @@
         #update_subnet.button{:'data-url'=>subnet_path(@subnet)}
           #{_("Save Subnet")}
 
-      %br
-      %br
-      %br
-      %br
-      %br
+      %div{ :style => "min-height: 100px;" }

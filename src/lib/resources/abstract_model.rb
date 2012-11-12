@@ -81,13 +81,6 @@ class Resources::AbstractModel
   define_model_callbacks :create, :update, :save, :destroy
 
   include ActiveModel::Naming
-
-  def self.name
-    # strip namespaces from class name
-    # eg. Foreman::SomeModel -> SomeModel
-    super.split('::')[-1]
-  end
-
   include ActiveModel::Validations
 
   def read_attribute_for_validation(key)
