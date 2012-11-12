@@ -106,8 +106,8 @@ describe SystemGroup do
       grp.save!
     end
     it "should call out to pulp when removing" do
-      Runcible::Extensions::ConsumerGroup..should_receive(:add_consumers_by_id).once
-      Runcible::Extensions::ConsumerGroup..should_receive(:remove_consumers_by_id).once
+      Runcible::Extensions::ConsumerGroup.should_receive(:add_consumers_by_id).once
+      Runcible::Extensions::ConsumerGroup.should_receive(:remove_consumers_by_id).once
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :systems=>[@system])
       grp.systems = grp.systems - [@system]
       grp.save!
