@@ -36,6 +36,9 @@ class Repository < ActiveRecord::Base
   has_and_belongs_to_many :changesets
   has_and_belongs_to_many :filters
   belongs_to :content_view_definition
+  belongs_to :content_view
+
+
 
   validates :environment_product, :presence => true
   validates :pulp_id, :presence => true, :uniqueness => true

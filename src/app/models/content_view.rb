@@ -17,7 +17,7 @@ class ContentView < ActiveRecord::Base
 
   belongs_to :content_view_definition
   belongs_to :organization
-  has_many :environment_defaults, :class_name => "KTEnvironment",
+  has_one :environment_default, :class_name => "KTEnvironment",
     :inverse_of => :default_content_view,
     :foreign_key => :default_content_view_id
 
@@ -30,6 +30,8 @@ class ContentView < ActiveRecord::Base
   has_many :composite_content_view_definitions,
     :through => :component_content_views, :source => "content_view_definition"
 
+  has_many :repositories, :dependent => :destroy
+
   has_many :changeset_content_views
   has_many :changesets, :through => :changeset_content_views
 
@@ -37,6 +39,11 @@ class ContentView < ActiveRecord::Base
     :presence => true, :katello_label_format => true
   validates :name, :presence => true, :katello_name_format => true
   validates :organization_id, :presence => true
+
+  scope :default, joins('left outer join environments on content_views.id = environments.default_content_view_id').
+      where('environments.default_content_view_id is not null')
+  scope :non_default, joins('left outer join environments on content_views.id = environments.default_content_view_id').
+        where('environments.default_content_view_id is null')
 
 
   def as_json(options = {})
@@ -48,6 +55,11 @@ class ContentView < ActiveRecord::Base
     result['published'] = true
 
     result
+  end
+
+  #is this content view a default
+  def default?
+    !self.environment_default.nil?
   end
 
   def promote(from_env, to_env)
@@ -63,6 +75,7 @@ class ContentView < ActiveRecord::Base
   def delete(from_env)
     raise "Cannot delete from #{from_env.name}, view does not exist there." if !self.environments.include?(from_env)
     self.environments.delete(from_env)
+    self.repositories.in_environment(from_env).each{|r| r.destroy}
     if self.environments.empty?
       self.destroy
     else

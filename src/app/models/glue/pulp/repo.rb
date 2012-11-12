@@ -59,8 +59,8 @@ module Glue::Pulp::Repo
     end
   end
 
-  def self.repo_id product_label, repo_label, env_label, organization_label
-    [organization_label, env_label, product_label, repo_label].compact.join("-").gsub(/[^-\w]/,"_")
+  def self.repo_id product_label, repo_label, env_label, organization_label, view_label
+    [organization_label, env_label, view_label, product_label, repo_label].compact.join("-").gsub(/[^-\w]/,"_")
   end
 
   module InstanceMethods
@@ -248,7 +248,8 @@ module Glue::Pulp::Repo
     end
 
     def clone_id(env)
-      Glue::Pulp::Repo.repo_id(self.product.label, self.label, env.label, env.organization.label)
+      Glue::Pulp::Repo.repo_id(self.product.label, self.label, env.label,
+                               env.organization.label, self.content_view.label)
     end
 
 
@@ -339,12 +340,14 @@ module Glue::Pulp::Repo
     end
 
 
-    def create_clone to_env
+    def create_clone to_env, content_view=nil
       library = self.environment.library? ? self : self.library_instance
       raise _("Cannot clone repository from %{from_env} to %{to_env}.  They are not sequential.") %
-                {:from_env=>self.environment.name, :to_env=>to_env.name} if to_env.prior != self.environment
+                {:from_env=>self.environment.name, :to_env=>to_env.name} if to_env.prior != self.environment &&
+                                                                            content_view.default?
       raise _("Repository has already been promoted to %{to_env}") %
-                {:to_env=>to_env} if Repository.where(:library_instance_id=>library.id).in_environment(to_env).count > 0
+                {:to_env=>to_env} if Repository.where(:library_instance_id=>library.id).in_environment(to_env).count > 0 &&
+                                     content_view.default?
 
       key = EnvironmentProduct.find_or_create(to_env, self.product)
       clone = Repository.new(:environment_product => key,
@@ -356,10 +359,11 @@ module Glue::Pulp::Repo
                              :major=>self.major,
                              :minor=>self.minor,
                              :enable=>self.enabled,
-                             :content_id=>self.content_id
+                             :content_id=>self.content_id,
+                             :content_view=>content_view
                              )
       clone.pulp_id = clone.clone_id(to_env)
-      clone.relative_path = Glue::Pulp::Repos.clone_repo_path(self, to_env)
+      clone.relative_path = Glue::Pulp::Repos.clone_repo_path(self, to_env, content_view)
       clone.save!
       return clone
     end

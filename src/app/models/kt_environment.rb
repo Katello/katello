@@ -109,6 +109,7 @@ class KTEnvironment < ActiveRecord::Base
   validates_with PathDescendentsValidator
   validate :constant_name, :on => :update
 
+  before_create :create_default_content_view
   before_destroy :confirm_last_env
 
   after_destroy :unset_users_with_default
@@ -293,6 +294,13 @@ class KTEnvironment < ActiveRecord::Base
       self.repositories.enabled.map(&:minor).compact.uniq.sort
     else
       self.organization.redhat_provider.available_releases
+    end
+  end
+
+  def create_default_content_view
+    if self.default_content_view.nil?
+      self.default_content_view = ContentView.create!(:name=>"Default View for #{self.name}",
+                                                :organization=>self.organization)
     end
   end
 

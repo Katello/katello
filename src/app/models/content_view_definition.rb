@@ -33,12 +33,27 @@ class ContentViewDefinition < ActiveRecord::Base
   validate :validate_content
 
   def publish
-    ContentView.create!(:name => "#{name} Content View",
+    view = ContentView.create!(:name => "#{name} Content View",
                         :description => "Created from #{name}",
                         :content_view_definition => self,
                         :organization => organization,
                         :environments => [organization.library]
                        )
+    generate_repos(view)
+  end
+
+  def generate_repos(view)
+    repos = []
+    tasks = []
+    self.products.each{|prod|
+      prod.repos(self.organization.library).enabled.each{|r| repos << r}
+    }
+    repos += self.repositories
+    repos.uniq!
+    repos.each do |repo|
+      clone = repo.create_clone(self.organization.library, view)
+      tasks << repo.clone_contents(clone)
+    end
   end
 
   def composite?
