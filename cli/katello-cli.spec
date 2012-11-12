@@ -27,7 +27,7 @@ Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.
 Requires:      %{base_name}-cli-common
 BuildArch:     noarch
 BuildRequires: spacewalk-pylint
-Obsoletes:     katello-cli-headpin< 1.0.1-1
+Obsoletes:     katello-cli-headpin
 Provides:      katello-cli-headpin= 1.0.1-1
 
 %description
