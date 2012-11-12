@@ -46,6 +46,21 @@ class Resources::AbstractModel
   end
 
 
+  def update_index
+    if self.destroyed?
+      index.remove self
+    else
+      response = index.store( self, {:percolate => percolator} )
+      self.id ||= response['_id'] if self.respond_to?(:id=)
+      self._index = response['_index'] if self.respond_to?(:_index=)
+      self._type = response['_type'] if self.respond_to?(:_type=)
+      self._version = response['_version'] if self.respond_to?(:_version=)
+      self.matches = response['matches'] if self.respond_to?(:matches=)
+      self
+    end
+  end
+
+
   class_attribute :_attributes, :instance_reader => false, :instance_writer => false
 
   # @param [Array<Symbol>] attrs of attribute names
@@ -59,6 +74,11 @@ class Resources::AbstractModel
       attrs.each { |name| attr_accessor name }
     end
   end
+
+
+  extend ActiveModel::Callbacks
+
+  define_model_callbacks :create, :update, :save, :destroy
 
   include ActiveModel::Naming
 
@@ -126,6 +146,7 @@ class Resources::AbstractModel
   def initialize(attributes = { })
     self.attributes = attributes
     @persisted      = false
+    @destroyed      = false
   end
 
   def attributes=(attributes)
@@ -147,8 +168,12 @@ class Resources::AbstractModel
     self.class.resource
   end
 
+  def new_record?
+    !self.persisted?
+  end
+
   def persisted?
-    @persisted
+    @persisted && !self.destroyed?
   end
 
   def set_as_persisted
@@ -156,13 +181,24 @@ class Resources::AbstractModel
   end
   private :set_as_persisted
 
+  def destroyed?
+    @destroyed
+  end
+
+  def set_as_destroyed
+    @destroyed = true
+  end
+  private :set_as_destroyed
+
   def save
     return false unless valid?
 
-    if persisted?
-      update
-    else
-      create
+    run_callbacks :save do
+      if persisted?
+        update
+      else
+        create
+      end
     end
 
     return true
@@ -173,16 +209,21 @@ class Resources::AbstractModel
   end
 
   def create
-    data, response = resource.create as_json(json_create_options), self.class.header
-    self.id        = data[resource_name]['id']
-    set_as_persisted
-    return data, response
+    run_callbacks :create do
+      data, response = resource.create as_json(json_create_options), self.class.header
+      self.id        = data[resource_name]['id']
+      set_as_persisted
+    end
   end
+  private :create
 
   def update
-    return resource.update({ 'id' => id }.merge(as_json(json_update_options)),
-                           self.class.header)
+    run_callbacks :update do
+      result = resource.update({ 'id' => id }.merge(as_json(json_update_options)),
+                                self.class.header)
+    end
   end
+  private :update
 
   def save!
     save or raise Invalid.new(self)
@@ -199,11 +240,17 @@ class Resources::AbstractModel
   end
 
   def destroy
-    self.class.delete id
+    run_callbacks :destroy do
+      self.class.delete id
+      set_as_destroyed
+    end
   end
 
   def destroy!
-    self.class.delete! id
+    run_callbacks :destroy do
+      self.class.delete! id
+      set_as_destroyed
+    end
   end
 
   def self.find!(id)
