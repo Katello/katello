@@ -38,7 +38,8 @@ unless user_admin
       :roles    => [superadmin_role],
       :username => first_user_name,
       :password => first_user_password,
-      :email    => first_user_email)
+      :email    => first_user_email,
+      :remote_id => first_user_name)
   User.current = user_admin
   if AppConfig.use_foreman
     foreman_admin_user = ::Foreman::User.all(:search => 'login=admin').first or
