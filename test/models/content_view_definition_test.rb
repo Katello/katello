@@ -71,7 +71,7 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
                                             :product => product)
     repo = FactoryGirl.create(:repository, :environment_product => env_product)
     @content_view_def.repositories << repo
-    assert_equal repo.content_view_definition.reload, @content_view_def
+    assert_includes repo.content_view_definitions.reload, @content_view_def
     assert_includes @content_view_def.repositories.reload, repo
   end
 
