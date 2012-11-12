@@ -31,6 +31,7 @@ class Organization < ActiveRecord::Base
   has_many :content_view_definitions
   has_many :content_views
 
+  serialize :system_info_keys, Array
   attr_accessor :statistics
 
   default_scope  where(:task_id=>nil) #ignore organizations that are being deleted
