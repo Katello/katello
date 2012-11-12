@@ -132,3 +132,23 @@ class ContentViewDefinitionAuthorizationReadonlyTest < MiniTest::Rails::ActiveSu
     refute @cvd.deletable?
   end
 end
+
+# random permission
+class ContentViewDefinitionAuthorizationTest < MiniTest::Rails::ActiveSupport::TestCase
+  include ContentViewDefinitionAuthBase, AuthorizationSupportMethods
+
+  def setup
+    super
+    User.current = @no_perms
+  end
+
+  def test_publishable
+    allow User.current.own_role, [:publish], :content_view_definitions
+    assert @cvd.publishable?
+    assert ContentViewDefinition.any_readable?(@org)
+    assert @cvd.readable?
+    refute @cvd.editable?
+    refute @cvd.deletable?
+  end
+
+end
