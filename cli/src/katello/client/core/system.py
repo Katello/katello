@@ -295,7 +295,7 @@ class TaskInfo(SystemAction):
 
     def setup_parser(self, parser):
         parser.add_option('--id', dest='id',
-                       help=_("UUID of the task"))
+                       help=_("UUID of the task (required)"))
 
     def check_options(self, validator):
         validator.require('id')
@@ -404,7 +404,7 @@ class Register(SystemAction):
 
     def setup_parser(self, parser):
         super(Register, self).setup_parser(parser)
-        parser.add_option('--name', dest='name', help=_("system name (required)"))
+        parser.add_option('--name', dest='name', help=_("system name"))
         parser.add_option('--servicelevel', dest='sla', help=_("service level agreement"))
         parser.add_option('--activationkey', dest='activationkey',
             help=_("activation key, more keys are separated with comma e.g. --activationkey=key1,key2"))
@@ -440,7 +440,7 @@ class RemoveDeletion(SystemAction):
 
     def setup_parser(self, parser):
         parser.add_option("--uuid", dest="uuid",
-                       help=_("hypervisor uuid (required"))
+                       help=_("hypervisor uuid (required)"))
 
     def check_options(self, validator):
         validator.require_option('uuid')
@@ -458,7 +458,7 @@ class Unregister(SystemAction):
     def setup_parser(self, parser):
         super(Unregister, self).setup_parser(parser)
         parser.add_option('--name', dest='name',
-                               help=_("system name (required)"))
+                               help=_("system name"))
         parser.add_option('--uuid', dest='uuid',
                                help=constants.OPT_HELP_SYSTEM_UUID)
 
@@ -524,7 +524,7 @@ class Subscriptions(SystemAction):
 
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
-        parser.add_option('--name', dest='name', help=_("system name (required)"))
+        parser.add_option('--name', dest='name', help=_("system name"))
         parser.add_option('--uuid', dest='uuid', help=constants.OPT_HELP_SYSTEM_UUID)
         parser.add_option('--available', dest='available',
                 action="store_true", default=False,
@@ -619,7 +619,7 @@ class Unsubscribe(SystemAction):
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
-            help=_("system name (required)"))
+            help=_("system name"))
         parser.add_option('--uuid', dest='uuid',
                 help=constants.OPT_HELP_SYSTEM_UUID)
         parser.add_option('--entitlement', dest='entitlement',
@@ -663,7 +663,7 @@ class Update(SystemAction):
     def setup_parser(self, parser):
         super(Update, self).setup_parser(parser)
         parser.add_option('--name', dest='name',
-                       help=_('system name (required)'))
+                       help=_('system name'))
         parser.add_option('--uuid', dest='uuid',
                        help=constants.OPT_HELP_SYSTEM_UUID)
         parser.add_option('--new_name', dest='new_name',
