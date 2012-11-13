@@ -16,23 +16,14 @@
       = form.text_field :to, :label => _("To IP:"), :value=> ""
       = form.text_field :vlanid, :label => _("VLAN:"), :value=> ""
 
-      - domain_opts = Foreman::Domain.all.map {|d| [d.name, d.id]}
-      - dhcp_opts = Foreman::SmartProxy.dhcp_proxies.map {|d| [d.name, d.id]}
-      - tftp_opts = Foreman::SmartProxy.tftp_proxies.map {|d| [d.name, d.id]}
-      - dns_opts  = Foreman::SmartProxy.dns_proxies.map {|d| [d.name, d.id]}
-
-      = form.select :domain_ids,
-        domain_opts, {},
-        {:label => _("Domains:"), :multiple => "true", :id=>:domain_ids, 'data-placeholder'=>_("Choose domains..."), :style=>"width: 400px; height: 200px;"}
-      = form.select :dhcp_id,
-        dhcp_opts, {},
-        {:label => _("Dhcp:"), :id=>:dhcp_id, :style=>"width: 200px", 'data-placeholder'=>_("Choose a dhcp...")}
-      = form.select :tftp_id,
-        tftp_opts, {},
-        {:label => _("Tftp:"), :id=>:tftp_id, :style=>"width: 200px", 'data-placeholder'=>_("Choose a tftp...")}
-      = form.select :dns_id,
-        dns_opts, {},
-        {:label => _("Dns:"), :id=>:dns_id, :style=>"width: 200px", 'data-placeholder'=>_("Choose a dns...")}
+      = form.field :domain_ids, :label => _("Domains:") do
+        = domain_select "subnet", "domain_ids"
+      = form.field :dhcp_id, :label => _("Dhcp:") do
+        = dhcp_select "subnet", "dhcp_id"
+      = form.field :tftp_id, :label => _("Tftp:") do
+        = tftp_select "subnet", "tftp_id"
+      = form.field :dns_id, :label => _("Dns:") do
+        = dns_select "subnet", "dns_id"
 
       = form.submit _("Save Subnet"), :id => :save_subnet
 
