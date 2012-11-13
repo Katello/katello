@@ -40,7 +40,8 @@ module Katello
               raise(ArgumentError, "Unable to set current User, expected class '#{self}', got #{o.inspect}")
             end
             remote_id = o.is_a?(User) ? o.remote_id : 'nil'
-            Rails.logger.debug "Setting current user thread-local variable to " + remote_id
+            username = o.is_a?(User) ? o.username : 'nil'
+            Rails.logger.debug "Setting current user thread-local variable to " + username
             Thread.current[:user] = o
 
             set_pulp_config(remote_id) if AppConfig.katello?
