@@ -16,7 +16,7 @@ class Api::PulpProxiesController < Api::ProxiesController
 
   def get
     r = Resources::Pulp::Proxy.get(@request_path)
-    Rails.logger.debug r if AppConfig.debug_pulp_proxy
+    Rails.logger.debug r if Katello.config.debug_pulp_proxy
     render :text => r, :content_type => :json
   end
 
@@ -26,14 +26,14 @@ class Api::PulpProxiesController < Api::ProxiesController
 
   def post
     r = Resources::Pulp::Proxy.post(@request_path, @request_body)
-    Rails.logger.debug r if AppConfig.debug_pulp_proxy
+    Rails.logger.debug r if Katello.config.debug_pulp_proxy
     render :text => r, :content_type => :json
   end
   
   # need to unify POST and PUT from rhsm -> katello -> pulp
   def put
     r = Resources::Pulp::Proxy.put(@request_path + '/', params[:_json])
-    Rails.logger.debug r if AppConfig.debug_pulp_proxy
+    Rails.logger.debug r if Katello.config.debug_pulp_proxy
     render :text => r, :content_type => :json
   end
   

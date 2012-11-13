@@ -114,11 +114,11 @@ module Resources
       end
 
       def load_proxy_settings
-        if AppConfig.cdn_proxy && AppConfig.cdn_proxy.host
-          self.proxy_host = parse_host(AppConfig.cdn_proxy.host)
-          self.proxy_port = AppConfig.cdn_proxy.port
-          self.proxy_user = AppConfig.cdn_proxy.user
-          self.proxy_password = AppConfig.cdn_proxy.password
+        if Katello.config.cdn_proxy && Katello.config.cdn_proxy.host
+          self.proxy_host = parse_host(Katello.config.cdn_proxy.host)
+          self.proxy_port = Katello.config.cdn_proxy.port
+          self.proxy_user = Katello.config.cdn_proxy.user
+          self.proxy_password = Katello.config.cdn_proxy.password
         end
       rescue URI::Error => e
         Rails.logger.error "Could not parse cdn_proxy:"

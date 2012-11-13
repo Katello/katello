@@ -13,7 +13,6 @@
 require 'yaml'
 require 'erb'
 
-
 module Katello
 
 
@@ -290,3 +289,4 @@ end
 path = File.expand_path(File.dirname(__FILE__))
 $LOAD_PATH << path unless $LOAD_PATH.include? path
 require 'app_config'
+

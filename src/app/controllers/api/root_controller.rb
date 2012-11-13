@@ -36,7 +36,7 @@ class Api::RootController < Api::ApiController
                     ]
 
     # filter out katello-only apis from headpin resource list
-    if !AppConfig.katello?
+    if !Katello.config.katello?
       api_root_routes = api_root_routes.select { |api| !katello_only.include?(api[:href]) }
     end
     render :json => api_root_routes
