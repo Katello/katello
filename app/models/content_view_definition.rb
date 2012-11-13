@@ -32,9 +32,10 @@ class ContentViewDefinition < ActiveRecord::Base
   validates :organization, :presence => true
   validate :validate_content
 
-  def publish
-    view = ContentView.create!(:name => "#{name} Content View",
-                        :description => "Created from #{name}",
+  def publish(name, description, label=nil)
+    view = ContentView.create!(:name => name,
+                        :label=>label,
+                        :description => description,
                         :content_view_definition => self,
                         :organization => organization,
                         :environments => [organization.library]

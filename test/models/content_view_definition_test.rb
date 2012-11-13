@@ -54,7 +54,7 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def test_publish
     content_view_def = FactoryGirl.create(:content_view_definition)
-    content_view = content_view_def.publish
+    content_view = content_view_def.publish('test_name', 'test_description', 'test_label')
     refute_nil content_view
     refute_empty content_view_def.content_views.reload
     assert_includes content_view_def.content_views, content_view
