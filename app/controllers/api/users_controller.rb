@@ -76,7 +76,7 @@ class Api::UsersController < Api::ApiController
     user.default_environment = KTEnvironment.find(params[:default_environment_id]) if params[:default_environment_id]
 
     if !params[:default_locale].blank?
-        if AppConfig.available_locales.include? params[:default_locale]
+        if Katello.config.available_locales.include? params[:default_locale]
             user.default_locale = params[:default_locale]
             user.save!
         end
@@ -116,7 +116,7 @@ class Api::UsersController < Api::ApiController
 
   api :GET, "/users/:user_id/roles", "List roles assigned to a user"
   def list_roles
-    @user.set_ldap_roles if AppConfig.ldap_roles
+    @user.set_ldap_roles if Katello.config.ldap_roles
     render :json => @user.roles.non_self.to_json
   end
 

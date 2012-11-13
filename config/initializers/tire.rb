@@ -1,3 +1,3 @@
-Tire::Configuration.url(AppConfig.elastic_url)
+Tire::Configuration.url(Katello.config.elastic_url)
 
-Tire.configure { logger 'log/elasticsearch.log' } if AppConfig.tire_log
+Tire.configure { logger 'log/elasticsearch.log' } if Katello.config.tire_log

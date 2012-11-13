@@ -15,7 +15,7 @@ module Resources
 
     def self.options
       @options ||= begin
-        config = AppConfig.foreman
+        config = Katello.config.foreman
         { :base_url           => config.url,
           :enable_validations => false,
           :oauth              => { :consumer_key    => config.oauth_key,

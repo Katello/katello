@@ -100,7 +100,7 @@ class ResourceType < ActiveRecord::Base
     raise ResourceTypeNotFound.new(resource_type, TYPES.keys) unless TYPES.has_key? resource_type
   end
 
-  if AppConfig.katello?
+  if Katello.config.katello?
     TYPES = {
         :organizations => {:model => Organization, :name => _("Organizations"), :global=>false},
         :system_templates => {:model=>SystemTemplate, :name=>_("System Templates"), :global=>false},

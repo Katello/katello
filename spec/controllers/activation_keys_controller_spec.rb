@@ -35,15 +35,15 @@ describe ActivationKeysController do
     @organization = new_test_org
     @environment_1 = KTEnvironment.create!(:name=>'dev', :label=> 'dev', :prior => @organization.library.id, :organization => @organization)
     @environment_2 = KTEnvironment.create!(:name=>'prod', :label=> 'prod', :prior => @environment_1.id, :organization => @organization)
-    @system_template_1 = AppConfig.katello? ? SystemTemplate.create!(:name => 'template1', :environment => @environment_1) : nil
-    @system_template_2 = AppConfig.katello? ? SystemTemplate.create!(:name => 'template2', :environment => @environment_1) : nil
+    @system_template_1 = Katello.config.katello? ? SystemTemplate.create!(:name => 'template1', :environment => @environment_1) : nil
+    @system_template_2 = Katello.config.katello? ? SystemTemplate.create!(:name => 'template2', :environment => @environment_1) : nil
     @a_key = ActivationKey.create!(:name => "another test key", :organization => @organization, :environment => @environment_1)
     @subscription = ::Pool.create!(:cp_id => "Test Subscription",
                                           :key_pools => [KeyPool.create!(:activation_key => @a_key)])
 
     @akey_params = {:activation_key => { :name => "test key", :description => "this is the test key", :environment_id => @environment_1.id,
-                                         :system_template_id => @system_template_1.id}} if AppConfig.katello?
-    @akey_params = {:activation_key => { :name => "test key", :description => "this is the test key", :environment_id => @environment_1.id}} unless AppConfig.katello?
+                                         :system_template_id => @system_template_1.id}} if Katello.config.katello?
+    @akey_params = {:activation_key => { :name => "test key", :description => "this is the test key", :environment_id => @environment_1.id}} unless Katello.config.katello?
   end
 
 
@@ -156,7 +156,7 @@ describe ActivationKeysController do
         assigns[:activation_key].name.should eq(@akey_params[:activation_key][:name])
         assigns[:activation_key].description.should eq(@akey_params[:activation_key][:description])
         assigns[:activation_key].environment_id.should eq(@akey_params[:activation_key][:environment_id])
-        assigns[:activation_key].system_template_id.should eq(@akey_params[:activation_key][:system_template_id]) unless AppConfig.katello?
+        assigns[:activation_key].system_template_id.should eq(@akey_params[:activation_key][:system_template_id]) unless Katello.config.katello?
       end
 
       it "renders list item partial for 2 pane" do

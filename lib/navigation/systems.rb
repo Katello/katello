@@ -24,7 +24,7 @@ module Navigation
         :options => {:class=>'systems top_level', "data-menu"=>"systems"},
         :items=> [ menu_systems_org_list, menu_systems_environments_list]
       }
-      menu[:items] << menu_system_groups if AppConfig.katello?
+      menu[:items] << menu_system_groups if Katello.config.katello?
       menu
     end
 
@@ -83,7 +83,7 @@ module Navigation
           :url => lambda{system_groups_system_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"panel_link"}
-        } if AppConfig.katello?
+        } if Katello.config.katello?
       menu
     end
 
@@ -124,13 +124,13 @@ module Navigation
           :url => lambda{packages_system_system_packages_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"third_level panel_link"}
-        } if AppConfig.katello?
+        } if Katello.config.katello?
       menu << { :key => :errata,
           :name =>_("Errata"),
           :url => lambda{system_errata_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"third_level panel_link"},
-        } if AppConfig.katello?
+        } if Katello.config.katello?
       menu
     end
 

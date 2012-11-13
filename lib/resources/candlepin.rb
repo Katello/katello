@@ -43,11 +43,11 @@ module Resources
 
     class CandlepinResourcePermissions < ::ResourcePermissions::DefaultResourcePermissions
       # /candlepin by default
-      self.url_prefix = URI.parse(AppConfig.candlepin.url).path
+      self.url_prefix = URI.parse(Katello.config.candlepin.url).path
     end
 
     class CandlepinResource < ::HttpResource
-      cfg = AppConfig.candlepin
+      cfg = Katello.config.candlepin
       url = cfg.url
       self.prefix = URI.parse(url).path
       self.site = url.gsub(self.prefix, "")
@@ -230,7 +230,7 @@ module Resources
         # Set the contentPrefix at creation time so that the client will get
         # content only for the org it has been subscribed to
         def create key, description
-          attrs = {:key => key, :displayName => description, :contentPrefix => (AppConfig.katello? ? "/#{key}/$env" : "")}
+          attrs = {:key => key, :displayName => description, :contentPrefix => (Katello.config.katello? ? "/#{key}/$env" : "")}
           owner_json = self.post(path(), attrs.to_json, self.default_headers).body
           JSON.parse(owner_json).with_indifferent_access
         end

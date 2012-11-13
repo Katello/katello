@@ -27,7 +27,7 @@ module IndexedModel
       if Rails.env.development? || Rails.env.production?
         include Tire::Model::Search
         include Tire::Model::Callbacks
-        index_name AppConfig.elastic_index + '_' +  self.base_class.name.downcase
+        index_name Katello.config.elastic_index + '_' +  self.base_class.name.downcase
 
         #Shared analyzers.  If you need a model-specific analyzer for some reason,
         #  we'll need to refactor this to support that.

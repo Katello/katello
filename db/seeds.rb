@@ -36,7 +36,7 @@ unless user_admin
       :password => first_user_password,
       :email    => first_user_email)
   User.current = user_admin
-  if AppConfig.use_foreman
+  if Katello.config.use_foreman
     foreman_admin_user = ::Foreman::User.all(:search => 'login=admin').first or
         raise 'could not find foreman-admin-user'
     user_admin.foreman_id = foreman_admin_user.id
