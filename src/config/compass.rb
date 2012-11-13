@@ -1,6 +1,6 @@
 require 'rails'
 # load Katello configuration
-path = File.expand_path('../../lib', __FILE__)
+path = File.expand_path('../lib', File.dirname(__FILE__))
 $LOAD_PATH << path unless $LOAD_PATH.include? path
 require 'katello_config'
 
