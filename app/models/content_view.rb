@@ -69,7 +69,12 @@ class ContentView < ActiveRecord::Base
 
     self.environments << to_env
     self.save!
-    [] #return pulp tasks when we have some
+    tasks = []
+    self.repositories.each do |repo|
+      clone = repo.create_clone(to_env, self)
+      tasks << repo.clone_contents(clone)
+    end
+    tasks
   end
 
   def delete(from_env)
