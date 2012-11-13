@@ -123,7 +123,7 @@ group :jshintrb do
   #
   #needed for syntax checking
   gem 'libv8'
-  gem 'therubyracer'
+  gem 'therubyracer', "~> 0.10.2"
   gem 'jshintrb', '0.1.1'
 end
 
