@@ -85,83 +85,6 @@ module Resources
 
       class << self
 
-        def create key, uuid, description = "", key_value_pairs = {}
-          url = consumer_path() + "?owner=#{key}"
-          attrs = {:id => uuid, :description => description, :key_value_pairs => key_value_pairs}
-          response = self.post(url, attrs.to_json, self.default_headers)
-          JSON.parse(response.body).with_indifferent_access
-        end
-
-        def upload_package_profile uuid, package_profile
-          attrs = {:id => uuid, :package_profile => package_profile}
-          response = put(consumer_path(uuid) + "package_profile/", attrs.to_json, self.default_headers)
-          raise RuntimeError, "update failed" unless response
-          return response
-        end
-
-        def update key, uuid, description = ""
-          url = consumer_path(uuid) + "?owner=#{key}"
-          attrs = {:id => uuid, :description => description}
-          response = self.put(url, attrs.to_json, self.default_headers)
-          raise RuntimeError, "update failed" unless response
-          return response
-        end
-
-        def find consumer_id
-          response = get(consumer_path(consumer_id), self.default_headers)
-          JSON.parse(response.body).with_indifferent_access
-        end
-
-        def installed_packages consumer_id
-          response = get(consumer_path(consumer_id) + "package_profile/", self.default_headers)
-          JSON.parse(response.body)
-        end
-
-        def install_packages consumer_id, package_names, scheduled_time=nil
-          url = consumer_path(consumer_id) + "installpackages/"
-          attrs = {:packagenames => package_names}
-          attrs[:scheduled_time] = scheduled_time if scheduled_time
-          response = self.post(url, attrs.to_json, self.default_headers)
-          JSON.parse(response.body).with_indifferent_access
-        end
-
-        def uninstall_packages consumer_id, package_names, scheduled_time=nil
-          url = consumer_path(consumer_id) + "uninstallpackages/"
-          attrs = {:packagenames => package_names}
-          attrs[:scheduled_time] = scheduled_time if scheduled_time
-          response = self.post(url, attrs.to_json, self.default_headers)
-          JSON.parse(response.body).with_indifferent_access
-        end
-
-        def update_packages consumer_id, package_names, scheduled_time=nil
-          url = consumer_path(consumer_id) + "updatepackages/"
-          attrs = {:packagenames => package_names}
-          attrs[:scheduled_time] = scheduled_time if scheduled_time
-          response = self.post(url, attrs.to_json, self.default_headers)
-          JSON.parse(response.body).with_indifferent_access
-        end
-
-        def install_package_groups consumer_id, package_groups, scheduled_time=nil
-          url = consumer_path(consumer_id) + "installpackagegroups/"
-          attrs = {:groupids => package_groups}
-          attrs[:scheduled_time] = scheduled_time if scheduled_time
-          response = self.post(url, attrs.to_json, self.default_headers)
-          JSON.parse(response.body).with_indifferent_access
-        end
-
-        def uninstall_package_groups consumer_id, package_groups, scheduled_time=nil
-          url = consumer_path(consumer_id) + "uninstallpackagegroups/"
-          attrs = {:groupids => package_groups}
-          attrs[:scheduled_time] = scheduled_time if scheduled_time
-          response = self.post(url, attrs.to_json, self.default_headers)
-          JSON.parse(response.body).with_indifferent_access
-        end
-
-        def destroy consumer_id
-          raise ArgumentError, "consumer_id id has to be specified" unless consumer_id
-          self.delete(consumer_path(consumer_id), self.default_headers).code.to_i
-        end
-
         def errata consumer_id
           response = get(consumer_path(consumer_id) + "errata/", self.default_headers)
           JSON.parse(response.body)
@@ -180,33 +103,6 @@ module Resources
           url = consumer_path() + "applicable_errata_in_repos/" + repoids_param
           response = get(url, self.default_headers)
           JSON.parse(response.body)
-        end
-
-        def install_errata consumer_id, errata_ids, scheduled_time=nil
-          url = consumer_path(consumer_id) + "installerrata/"
-          attrs = { :errataids => errata_ids }
-          attrs[:scheduled_time] = scheduled_time if scheduled_time
-          response = self.post(url, attrs.to_json, self.default_headers)
-          JSON.parse(response.body).with_indifferent_access
-        end
-
-        def repoids consumer_id
-          response = get(consumer_path(consumer_id) + "repoids/", self.default_headers)
-          JSON.parse(response.body)
-        end
-
-        def bind uuid, repoid
-          url = consumer_path(uuid) + "bind/"
-          # this is old-style Pulp API call
-          response = self.post(url, '"' + repoid + '"', self.default_headers_text)
-          response.body
-        end
-
-        def unbind uuid, repoid
-          url = consumer_path(uuid) + "unbind/"
-          # this is old-style Pulp API call
-          response = self.post(url, '"' + repoid + '"', self.default_headers_text)
-          response.body
         end
 
         def consumer_path id = nil
