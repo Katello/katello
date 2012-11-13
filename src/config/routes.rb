@@ -518,7 +518,7 @@ Src::Application.routes.draw do
         end
         resources :filters, :only => [] do
           get :index, :on => :collection, :action => :list_product_filters
-          put :index, :on => :collection, :action => :update_item_filters
+          put :index, :on => :collection, :action => :update_product_filters
         end
       end
 
