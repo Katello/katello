@@ -13,11 +13,17 @@
 require 'minitest_helper'
 
 class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
+  fixtures :all
 
-  def setup
+  def self.before_setup
     models = ["Organization", "KTEnvironment", "User", "Product", "Repository"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
+  end
+
+  def setup
     @content_view_def = FactoryGirl.build(:content_view_definition)
+    @repo = Repository.find(repositories(:fedora_17_x86_64).id)
+    @product               = Product.find(products(:fedora).id)
   end
 
   def after_testsn
@@ -56,23 +62,15 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def test_products
     @content_view_def.save!
-    org = FactoryGirl.create(:organization)
-    provider = FactoryGirl.build_stubbed(:provider, :organization => org)
-    product = FactoryGirl.create(:product, :provider => provider)
-    @content_view_def.products << product
-    assert_includes product.content_view_definitions.reload, @content_view_def
+    @content_view_def.products << @product
+    assert_includes @product.content_view_definitions.reload, @content_view_def
   end
 
   def test_repos
     @content_view_def.save!
-    provider = FactoryGirl.build_stubbed(:provider)
-    product = FactoryGirl.build_stubbed(:product, :provider => provider)
-    env_product = FactoryGirl.build_stubbed(:environment_product,
-                                            :product => product)
-    repo = FactoryGirl.create(:repository, :environment_product => env_product)
-    @content_view_def.repositories << repo
-    assert_equal repo.content_view_definition.reload, @content_view_def
-    assert_includes @content_view_def.repositories.reload, repo
+    @content_view_def.repositories << @repo
+    assert_equal @repo.content_view_definition.reload, @content_view_def
+    assert_includes @content_view_def.repositories.reload, @repo
   end
 
   def test_adding_products_to_composite_view

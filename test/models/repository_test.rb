@@ -19,7 +19,8 @@ class RepositoryCreateTest < MiniTest::Rails::ActiveSupport::TestCase
   def setup
     super
     User.current = @admin
-    @repo = build(:repository, :fedora_17_el6, :environment_product => environment_products(:library_fedora))
+    @repo = build(:repository, :fedora_17_el6, :environment_product => environment_products(:library_fedora),
+                                              :content_view=>@library.default_content_view)
   end
 
   def teardown
@@ -126,6 +127,12 @@ class RepositoryInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def test_applicable_filters
     assert @fedora_17_x86_64_dev.applicable_filters.include?(@fedora_filter)
+  end
+
+  def test_create_clone
+    clone = @fedora_17_x86_64.create_clone(@staging, @staging.default_content_view)
+    assert clone.id
+    assert Repository.in_environment(@staging).where(:library_instance_id=>@fedora_17_x86_64.id).count > 0
   end
 
 end

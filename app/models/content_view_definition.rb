@@ -40,6 +40,7 @@ class ContentViewDefinition < ActiveRecord::Base
                         :environments => [organization.library]
                        )
     generate_repos(view)
+    view
   end
 
   def generate_repos(view)
