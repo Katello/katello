@@ -6,7 +6,7 @@ FactoryGirl.define do
   end
 
   factory :content_view do
-    name "Database"
+    sequence(:name) { |n| "Database#{n}" }
     description "This content view is for database content"
     organization
 
