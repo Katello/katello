@@ -78,10 +78,12 @@ class Api::ContentViewDefinitionsController < Api::ApiController
 
   api :POST, "/organizations/:name/content_view_definitions/:id/publish",
     "Publish a content view"
-  param :name, String, :desc => "Organization name"
+  param :name, String, :desc => "Name for the new content view", :required=>true
+  param :label, String, :desc=>"Label for the new content view", :required=>false
+  param :description, String, :desc=>"Description for the new content view", :required=>false
   param :id, :identifier, :desc => "Definition identifier", :required => true
   def publish
-    content_view = @definition.publish
+    content_view = @definition.publish(params[:name], params[:description], params[:label])
     render :json => content_view
   end
 

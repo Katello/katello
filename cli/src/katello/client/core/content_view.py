@@ -89,20 +89,28 @@ class Publish(ContentViewAction):
 
     def setup_parser(self, parser):
         opt_parser_add_org(parser)
-        parser.add_option('--definition', dest='label',
+        parser.add_option('--definition', dest='definition',
                 help=_("definition label eg: Database (required)"))
-
+        parser.add_option('--name', dest='name',
+                help=_("name to give published view (required)"))
+        parser.add_option('--label', dest='label', 
+                help=_("label to give published view"))
+        parser.add_option('--description', dest='description',
+                help=_("label to give published view"))
+        parser.add_option
     def check_options(self, validator):
-        validator.require(('org', 'label'))
+        validator.require(('org', 'name', 'definition'))
 
     def run(self):
         org_name = self.get_option('org')
         label = self.get_option('label')
-
-        cvd = get_cv_definition(org_name, label)
-
-        self.def_api.publish(org_name, cvd["id"])
-        print _("Successfully published content view [ %s ]") % label
+        name = self.get_option('name')
+        def_label = self.get_option('definition')
+        description = self.get_option('description')
+        cvd = get_cv_definition(org_name, def_label)
+        
+        view = self.def_api.publish(org_name, cvd["id"], name, label, description )
+        print _("Successfully published content view [ %s ]") % view['label']
         return os.EX_OK
 
 

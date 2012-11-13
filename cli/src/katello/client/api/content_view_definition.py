@@ -64,10 +64,15 @@ class ContentViewDefinitionAPI(KatelloAPI):
         path = "/api/content_view_definitions/%s" % cvd_id
         return self.server.DELETE(path)[1]
 
-    def publish(self, org_id, cvd_id):
+    def publish(self, org_id, cvd_id, name, label=None, description=None):
         path = "/api/organizations/%s/content_view_definitions/%s/publish" % \
             (org_id, cvd_id)
-        return self.server.GET(path)[1]
+        data = {"name":name}
+        if label:
+            data["label"] = label
+        if description:
+            data["description"] = description
+        return self.server.POST(path, data)[1]
 
     def filters(self, org, cvd_id):
         path = "/api/organizations/%s/content_view_definitions/%s/filters" % \
