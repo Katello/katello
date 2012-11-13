@@ -71,11 +71,6 @@ module Glue::Pulp::Repo
       self.importers.first["last_sync"] if self.importers.first
     end
 
-    def relative_path
-      return @relative_path if @relative_path
-      self.distributors.first['config']['relative_url'] if self.distributors.first
-    end
-
     def initialize(attrs = nil)
       if attrs.nil?
         super
