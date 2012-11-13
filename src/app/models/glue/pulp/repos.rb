@@ -23,18 +23,6 @@ module Glue::Pulp::Repos
     end
   end
 
-  def self.clone_repo_path(repo, environment, content_view, for_cp = false)
-    org, env, content_path = repo.relative_path.split("/",3)
-    if for_cp
-      "/#{content_path}"
-    elsif content_view.default?
-      "#{org}/#{environment.label}/#{content_path}"
-    else
-      "#{org}/#{environment.label}/#{content_view.label}/#{content_path}"
-
-    end
-  end
-
   def self.repo_path_from_content_path(environment, content_path)
     content_path = content_path.sub(/^\//, "")
     path_prefix = [environment.organization.label, environment.label].join("/")
@@ -61,7 +49,7 @@ module Glue::Pulp::Repos
   end
 
   def self.clone_repo_path_for_cp(repo)
-    self.clone_repo_path(repo, nil, nil, true)
+    Repository.clone_repo_path(repo, nil, nil, true)
   end
 
 
@@ -295,7 +283,7 @@ module Glue::Pulp::Repos
 
     def repo_id(content_name, env_label = nil)
       return content_name if content_name.include?(self.organization.label) && content_name.include?(self.label.to_s)
-      Glue::Pulp::Repo.repo_id(self.label.to_s, content_name.to_s, env_label, self.organization.label)
+      Repository.repo_id(self.label.to_s, content_name.to_s, env_label, self.organization.label, nil)
     end
 
     def repo_url(content_url)

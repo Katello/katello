@@ -157,6 +157,60 @@ class Repository < ActiveRecord::Base
     ret
   end
 
+  def self.clone_repo_path(repo, environment, content_view, for_cp = false)
+    org, env, content_path = repo.relative_path.split("/",3)
+    if for_cp
+      "/#{content_path}"
+    elsif content_view.default?
+      "#{org}/#{environment.label}/#{content_path}"
+    else
+      "#{org}/#{environment.label}/#{content_view.label}/#{content_path}"
+    end
+  end
+
+  def self.repo_id product_label, repo_label, env_label, organization_label, view_label
+    [organization_label, env_label, view_label, product_label, repo_label].compact.join("-").gsub(/[^-\w]/,"_")
+  end
+
+  def clone_id(env)
+    Repository.repo_id(self.product.label, self.label, env.label,
+                             env.organization.label, self.content_view.label)
+  end
+
+  def create_clone to_env, content_view
+    library = self.environment.library? ? self : self.library_instance
+
+    if content_view.default?
+      raise _("Cannot clone repository from %{from_env} to %{to_env}.  They are not sequential.") %
+                {:from_env=>self.environment.name, :to_env=>to_env.name} if to_env.prior != self.environment
+      raise _("Repository has already been promoted to %{to_env}") %
+              {:to_env=>to_env} if Repository.where(:library_instance_id=>library.id).in_environment(to_env).count > 0
+    else
+      raise _("Repository has already been cloned to %{cv_name} in environment %{to_env}") %
+                {:to_env=>to_env, :cv_name=>content_view.name} if
+          Repository.where(:library_instance_id=>library.id).in_environment(to_env).where(:content_view_id=>content_view.id).count > 0
+    end
+
+    key = EnvironmentProduct.find_or_create(to_env, self.product)
+    clone = Repository.new(:environment_product => key,
+                           :cp_label => self.cp_label,
+                           :library_instance=>library,
+                           :label=>self.label,
+                           :name=>self.name,
+                           :arch=>self.arch,
+                           :major=>self.major,
+                           :minor=>self.minor,
+                           :enabled=>self.enabled,
+                           :content_id=>self.content_id,
+                           :content_view=>content_view
+                           )
+    clone.pulp_id = clone.clone_id(to_env)
+    clone.relative_path = Repository.clone_repo_path(self, to_env, content_view)
+    clone.save!
+    return clone
+  end
+
+
   # returns other instances of this repo with the same library
   # equivalent of repo
   def environmental_instances
