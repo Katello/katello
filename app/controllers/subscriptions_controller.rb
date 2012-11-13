@@ -234,11 +234,9 @@ class SubscriptionsController < ApplicationController
   end
 
   def create_temp_file(prefix)
-    # default external encoding in Ruby 1.9.3 is UTF-8, while binary files use binary encoding - ASCII-8BIT
+    # default external encoding in Ruby 1.9.3 is UTF-8, need to specify that we are opening a binary file (ASCII-8BIT encoding)
     f = File.new(
-        File.join(find_or_create_temp_dir, "#{prefix}_#{SecureRandom.hex(10)}.zip"),
-        (defined? ::Encoding) ? 'w+:ASCII-8BIT' : 'w+',
-        0600)
+        File.join(find_or_create_temp_dir, "#{prefix}_#{SecureRandom.hex(10)}.zip"), 'wb+', 0600)
 
     yield f if block_given?
     f.path
