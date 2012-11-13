@@ -576,7 +576,7 @@ Src::Application.routes.draw do
 
       resources :content_views, :only => [:index]
       resources :content_view_definitions do
-        get :publish, :on => :member
+        post :publish, :on => :member
         resources :filters, :only => [] do
           get :index, :action => :list_content_view_definition_filters,
             :on => :collection
