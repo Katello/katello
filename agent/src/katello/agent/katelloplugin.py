@@ -13,10 +13,7 @@
 
 """
 The katello agent plugin.
-Configuration:
-[reboot]
-allow=1
-delay=+1
+Provides content management APIs for pulp within the RHSM environment.
 """
 
 import os
