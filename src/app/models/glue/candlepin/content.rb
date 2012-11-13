@@ -63,7 +63,6 @@ module Glue::Candlepin::Content
       true
     end
 
-    # TODO: UGH. This calls methods from Glue::Pulp::Repo.
     def content
       return @content unless @content.nil?
       unless self.content_id.nil?
