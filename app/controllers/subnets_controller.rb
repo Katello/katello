@@ -18,6 +18,7 @@ class SubnetsController < SimpleCRUDController
   list_column :name, :label=>_("Name")
   sort_by :name
 
+  helper :foreman
 
   def rules
     {

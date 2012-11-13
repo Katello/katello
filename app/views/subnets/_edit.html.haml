@@ -8,7 +8,7 @@
 
 = content_for :content do
   .grid_10
-    = kt_form_for @subnet, :as=>"subnet", :data_url => subnet_path(@subnet), :url => subnet_path(@subnet), :html=>{ :id=>"edit_subnet" } do |form
+    = kt_form_for @subnet, :as=>"subnet", :data_url => subnet_path(@subnet), :url => subnet_path(@subnet), :html=>{ :id=>"edit_subnet" } do |form|
 
       = form.editable :name, :label => _("Name:")
       = form.editable :network, :label => _("Network:")
@@ -20,23 +20,14 @@
       = form.editable :to, :label => _("To IP:")
       = form.editable :vlanid, :label => _("VLAN:")
 
-      - domain_opts = Foreman::Domain.all.map {|d| [d.name, d.id]}
-      - dhcp_opts = Foreman::SmartProxy.dhcp_proxies.map {|d| [d.name, d.id]}
-      - tftp_opts = Foreman::SmartProxy.tftp_proxies.map {|d| [d.name, d.id]}
-      - dns_opts  = Foreman::SmartProxy.dns_proxies.map {|d| [d.name, d.id]}
-
-      = form.select :domain_ids,
-        domain_opts, {},
-        {:label => _("Domains:"), :multiple => "true", :id=>:domain_ids, 'data-placeholder'=>_("Choose domains..."), :style=>"width: 400px; height: 200px;"}
-      = form.select :dhcp_id,
-        dhcp_opts, {},
-        {:label => _("Dhcp:"), :id=>:dhcp_id, :style=>"width: 200px", 'data-placeholder'=>_("Choose a dhcp...")}
-      = form.select :tftp_id,
-        tftp_opts, {},
-        {:label => _("Tftp:"), :id=>:tftp_id, :style=>"width: 200px", 'data-placeholder'=>_("Choose a tftp...")}
-      = form.select :dns_id,
-        dns_opts, {},
-        {:label => _("Dns:"), :id=>:dns_id, :style=>"width: 200px", 'data-placeholder'=>_("Choose a dns...")}
+      = form.field :domain_ids, :label => _("Domains:") do
+        = domain_select @subnet, "domain_ids"
+      = form.field :dhcp_id, :label => _("Dhcp:") do
+        = dhcp_select @subnet, "dhcp_id"
+      = form.field :tftp_id, :label => _("Tftp:") do
+        = tftp_select @subnet, "tftp_id"
+      = form.field :dns_id, :label => _("Dns:") do
+        = dns_select @subnet, "dns_id"
 
       .grid_5.la.prefix_2
         #update_subnet.button{:'data-url'=>subnet_path(@subnet)}
