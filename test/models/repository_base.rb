@@ -36,6 +36,7 @@ module RepositoryTestBase
     @fedora               = Product.find(products(:fedora).id)
     @library              = KTEnvironment.find(environments(:library).id)
     @dev                  = KTEnvironment.find(environments(:dev).id)
+    @staging              = KTEnvironment.find(environments(:staging).id)
     @acme_corporation     = Organization.find(organizations(:acme_corporation).id)
     @unassigned_gpg_key   = GpgKey.find(gpg_keys(:unassigned_gpg_key).id)
     @fedora_filter        = Filter.find(filters(:fedora_filter).id)

@@ -71,7 +71,7 @@ class ContentView < ActiveRecord::Base
     self.save!
     tasks = []
     self.repositories.each do |repo|
-      clone = repo.create_clone(to_env, self)
+      clone = repo.create_clone(to_env, self, to_env.default_content_view)
       tasks << repo.clone_contents(clone)
     end
     tasks
