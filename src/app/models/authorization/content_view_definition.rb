@@ -25,13 +25,13 @@ module Authorization::ContentViewDefinition
   module ClassMethods
 
     def tags(ids)
-      select('id,name').where(:id => ids).collect do |m|
+      select('id,name').where(:id => ids).map do |m|
         VirtualTag.new(m.id, m.name)
       end
     end
 
     def list_tags(org_id)
-      custom.select('id,name').where(:organization_id=>org_id).collect do |m|
+      select('id,name').where(:organization_id=>org_id).map do |m|
         VirtualTag.new(m.id, m.name)
       end
     end
@@ -74,7 +74,7 @@ module Authorization::ContentViewDefinition
       raise "scope requires an organization" if org.nil?
       resource = :content_view_definitions
       if User.allowed_all_tags?(verbs, resource, org)
-        where(:organization_id => org)
+        where(:organization_id => org.id)
       else
         where("content_view_definitions.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
       end
