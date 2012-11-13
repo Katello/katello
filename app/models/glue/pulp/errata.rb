@@ -101,7 +101,7 @@ class Glue::Pulp::Errata
   end
 
   def self.index
-    "#{AppConfig.elastic_index}_errata"
+    "#{Katello.config.elastic_index}_errata"
   end
 
   def index_options

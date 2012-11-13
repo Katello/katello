@@ -127,7 +127,7 @@ EOKEY
     Resources::Pulp::Roles.stub!(:add).and_return(true)
     Resources::Pulp::Roles.stub!(:remove).and_return(true)
 
-    User.disable_foreman_orchestration! !options[:keep_foreman] if AppConfig.use_foreman
+    User.disable_foreman_orchestration! !options[:keep_foreman] if Katello.config.use_foreman
   end
 
   def disable_filter_orchestration

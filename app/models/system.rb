@@ -20,7 +20,7 @@ end
 
 class System < ActiveRecord::Base
   include Glue::Candlepin::Consumer
-  include Glue::Pulp::Consumer if AppConfig.katello?
+  include Glue::Pulp::Consumer if Katello.config.katello?
   include Glue
   include Authorization
   include AsyncOrchestration
@@ -253,7 +253,7 @@ class System < ActiveRecord::Base
 
   def readable?
     sg_readable = false
-    if AppConfig.katello?
+    if Katello.config.katello?
       sg_readable = !SystemGroup.systems_readable(self.organization).where(:id=>self.system_group_ids).empty?
     end
     environment.systems_readable? || sg_readable
@@ -261,7 +261,7 @@ class System < ActiveRecord::Base
 
   def editable?
     sg_editable = false
-    if AppConfig.katello?
+    if Katello.config.katello?
       sg_editable = !SystemGroup.systems_editable(self.organization).where(:id=>self.system_group_ids).empty?
     end
     environment.systems_editable? || sg_editable
@@ -269,7 +269,7 @@ class System < ActiveRecord::Base
 
   def deletable?
     sg_deletable = false
-    if AppConfig.katello?
+    if Katello.config.katello?
       sg_deletable = !SystemGroup.systems_deletable(self.organization).where(:id=>self.system_group_ids).empty?
     end
     environment.systems_deletable? || sg_deletable

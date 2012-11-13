@@ -92,7 +92,7 @@ describe Permission do
 
   context "super_admin" do
     it { @god.allowed_to?('create', 'organizations').should be_true }
-    it { @god.allowed_to?('create', 'providers').should be_true if AppConfig.katello? }
+    it { @god.allowed_to?('create', 'providers').should be_true if Katello.config.katello? }
   end
 
   context "some_role" do

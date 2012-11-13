@@ -12,7 +12,7 @@
 
 class SystemGroup < ActiveRecord::Base
 
-  include Glue::Pulp::ConsumerGroup if (AppConfig.use_pulp)
+  include Glue::Pulp::ConsumerGroup if (Katello.config.use_pulp)
   include Glue
   include Authorization
   include IndexedModel

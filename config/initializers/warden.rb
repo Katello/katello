@@ -9,7 +9,7 @@ Rails.configuration.middleware.use RailsWarden::Manager do |config|
   # all UI requests are handled in the default scope
   config.scope_defaults(
     :user,
-    :strategies   => [:sso, AppConfig.warden.to_sym],
+    :strategies   => [:sso, Katello.config.warden.to_sym],
     :store        => true,
     :action       => 'unauthenticated_ui'
   )
@@ -17,7 +17,7 @@ Rails.configuration.middleware.use RailsWarden::Manager do |config|
   # API requests are handled in the :api scope
   config.scope_defaults(
     :api,
-    :strategies   => [:oauth, :sso, :certificate, AppConfig.warden.to_sym, :no_credentials],
+    :strategies   => [:oauth, :sso, :certificate, Katello.config.warden.to_sym, :no_credentials],
     :store        => false,
     :action       => 'unauthenticated_api'
   )

@@ -10,7 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-if AppConfig.use_foreman
+if Katello.config.use_foreman
   RSpec.configure do |config|
     config.before do
       @_original_disable_foreman_orchestration = User.foreman_orchestration_disabled?
