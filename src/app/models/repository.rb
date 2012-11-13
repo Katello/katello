@@ -35,7 +35,8 @@ class Repository < ActiveRecord::Base
   belongs_to :library_instance, :class_name=>"Repository"
   has_and_belongs_to_many :changesets
   has_and_belongs_to_many :filters
-  belongs_to :content_view_definition
+  has_many :content_view_definition_repositories
+  has_many :content_view_definitions, :through => :content_view_definition_repositories
 
   validates :environment_product, :presence => true
   validates :pulp_id, :presence => true, :uniqueness => true
