@@ -6,8 +6,8 @@
 #description:
 #Start the service
 
-if [ -x /lib/systemd/system/tomcat7.service ]; then
-  service-wait tomcat7 start
+if [ -x /etc/init.d/tomcat -o -x /lib/systemd/system/tomcat.service ]; then
+  service-wait tomcat start
   RET=$?
 elif [ -x /etc/init.d/tomcat6 -o -x /lib/systemd/system/tomcat6.service ]; then
   service-wait tomcat6 start
