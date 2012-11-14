@@ -19,12 +19,16 @@ module AsyncOrchestration
       raise ArgumentError, "Please pass in organization to which the sync job belongs to" unless options.has_key?(:organization)
       @organization = options.delete(:organization)
 
+      @task_type = options.delete(:task_type)
+
       @options = options
     end
 
+    # under 1.9.3 ActiveSupport::BasicObject inherits from ::BasicObject, which is outside of standard library namespace.
     def method_missing(method, *args)
-      t = TaskStatus.create!(:uuid => UUIDTools::UUID.random_create.to_s, :user_id=>User.current.id, :organization => @organization, :state => TaskStatus::Status::WAITING)
-      Delayed::Job.enqueue({:payload_object => AsyncOperation.new(t.id, User.current.username, @target, method.to_sym, args)}.merge(@options))
+      t = ::TaskStatus.create!(:uuid => ::UUIDTools::UUID.random_create.to_s, :user_id=>::User.current.id,
+                               :organization => @organization, :state => ::TaskStatus::Status::WAITING, :task_type => @task_type)
+      ::Delayed::Job.enqueue({:payload_object => ::AsyncOperation.new(t.id, ::User.current.username, @target, method.to_sym, args)}.merge(@options))
       t
     end
   end
