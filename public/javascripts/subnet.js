@@ -45,6 +45,18 @@ KT.subnet_page = (function() {
     },
     register = function() {
         $('#domain_ids').chosen();
+
+        // Workaround for a bug in chosen
+        // When a chosen select receives focus() invoked from js code
+        // it ends up in an infinite loop of displaying and hiding the options.
+        // 2pane gives focus to a first enabled visible input on the panel.
+        // Therefore we hide the inner input at the beginning and show it
+        // after first click.
+        $("#domain_ids_chzn :input").hide();
+        $("#domain_ids_chzn").click(function() {
+            $("#domain_ids_chzn :input").show();
+        });
+
         $('#dhcp_id').chosen();
         $('#tftp_id').chosen();
         $('#dns_id').chosen();
