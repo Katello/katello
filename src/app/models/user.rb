@@ -13,6 +13,7 @@
 require 'ldap'
 require 'util/threadsession'
 require 'util/password'
+require 'util/model_util'
 
 class User < ActiveRecord::Base
   include Glue::Pulp::User if AppConfig.use_pulp
@@ -23,7 +24,6 @@ class User < ActiveRecord::Base
   include AsyncOrchestration
   include Authorization::User
   include Authorization::Enforcement
-
 
   acts_as_reportable
 
@@ -41,7 +41,9 @@ class User < ActiveRecord::Base
   has_many :search_histories, :dependent => :destroy
   serialize :preferences, HashWithIndifferentAccess
 
-  validates :username, :uniqueness => true, :presence => true, :username => true
+  validates :username, :uniqueness => true,
+            :no_trailing_space => true, :presence => true,
+            :length => {:minimum => 3, :maximum => 128}
   validates :email, :presence => true, :if => :not_ldap_mode?
   validates :default_locale, :inclusion => {:in => AppConfig.available_locales, :allow_nil => true, :message => _("must be one of %s") % AppConfig.available_locales.join(', ')}
 
@@ -53,6 +55,7 @@ class User < ActiveRecord::Base
       end
     end
   end
+
 
   def not_ldap_mode?
     return AppConfig.warden != 'ldap'
@@ -132,6 +135,7 @@ class User < ActiveRecord::Base
 
   before_save :default_systems_reg_permission_check
   before_save :own_role_included_in_roles
+  after_validation :setup_remote_id
 
   def self.authenticate!(username, password)
     u = User.where({ :username => username }).first
@@ -216,12 +220,12 @@ class User < ActiveRecord::Base
   end
 
   def pulp_oauth_header
-    { 'pulp-user' => self.username }
+    { 'pulp-user' => self.remote_id }
   end
 
   def self.pulp_oauth_header
     raise Errors::UserNotSet, "unauthenticated to call a backend engine" if User.current.nil?
-    { 'pulp-user' => User.current.username }
+    { 'pulp-user' => User.current.remote_id }
   end
 
   # is the current user consumer? (rhsm)
@@ -405,6 +409,8 @@ class User < ActiveRecord::Base
         where("tag_id = #{kt_environment_id}")
   end
 
+
+
   protected
 
   def can_be_deleted?
@@ -484,6 +490,20 @@ class User < ActiveRecord::Base
       message = _("Cannot dissociate user '%{username}' from '%{role}' role. Need at least one user in the '%{role}' role.") % {:username => username, :role => role.name}
       errors[:base] << message
       raise ActiveRecord::RecordInvalid, self
+    end
+  end
+
+  def setup_remote_id
+    if  self.remote_id.nil?
+      self.remote_id = generate_remote_id
+    end
+  end
+
+  def generate_remote_id
+    if self.username.ascii_only?
+      "#{Katello::ModelUtils::labelize(self.username)}-#{SecureRandom.hex(4)}"
+    else
+      Katello::ModelUtils::uuid
     end
   end
 
