@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #name: Start Apache httpd service
-#apply: katello
+#apply: katello headpin
 #run: always
 #description:
 #Start the service

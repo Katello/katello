@@ -37,12 +37,17 @@ end
 
 COLUMNS = detect_terminal_size[0]
 
-# Simple text wrapper for long lines (optparse does not handle long lines correctly)
+# simple text wrapper for long lines (optparse does not handle long lines correctly)
 def word_wrap(text, line_width = COLUMNS, indent = ' ' * 11)
   unstripped = text.split("\n").collect do |line|
     line.length > line_width ? line.strip.gsub(/(.{1,#{line_width}})(\s+|$)/, "#{indent}\\1\n").rstrip : line.strip
   end * "\n"
   unstripped.lstrip # fist line must not be indented
+end
+
+# same behavior as wrap function, but it removes (re-wraps) newlines first
+def word_rewrap(text, line_width, indent)
+  word_wrap(text.gsub(/\n/, ' '), line_width, indent)
 end
 
 def print_horizontal_line

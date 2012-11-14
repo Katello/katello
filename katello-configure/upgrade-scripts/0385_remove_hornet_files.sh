@@ -4,7 +4,7 @@
 #apply: katello headpin
 #run: always
 #description:
-#Certain Candlepin versions can contaion several directories with journal
+#Certain Candlepin versions can contain several directories with journal
 #data of hornetq daemon which needs to be removed.
 
 rm -rf /var/lib/candlepin/hornetq/bindings
