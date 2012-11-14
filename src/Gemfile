@@ -46,7 +46,11 @@ gem 'gettext_i18n_rails'
 gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 
 # Reports
-gem 'ruport', '>=1.7.0', :git => 'git://github.com/ruport/ruport.git'
+if system('rpm -q rubygem-ruport >/dev/null')
+  gem 'ruport' , '>=1.7.0'
+else
+  gem 'ruport' , '>=1.7.0', :git => 'git://github.com/ruport/ruport.git'
+end
 gem 'prawn'
 gem 'acts_as_reportable', '>=1.1.1'
 
