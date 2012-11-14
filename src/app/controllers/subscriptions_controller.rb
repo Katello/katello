@@ -182,9 +182,21 @@ class SubscriptionsController < ApplicationController
   end
 
   def delete_manifest
-    @provider.delete_manifest
+    begin
+      @provider.delete_manifest :async => true, :notify => true
+    rescue Exception => error
+      if error.respond_to?(:response)
+        display_message = ApplicationController.parse_display_message(error.response)
+      elsif error.message
+        display_message = error.message
+      else
+        display_message = ""
+      end
 
-    render :json=>{}
+      Notify.exception @provider.delete_error_message(display_message), error
+    end
+
+    render :json=>{'state' => 'running'}
   end
 
   def upload

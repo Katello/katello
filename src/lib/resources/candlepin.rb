@@ -268,8 +268,18 @@ module Resources
           self.post(path, {:import => File.new(path_to_file, 'rb')}, self.default_headers.except('content-type'))
         end
 
-        def destroy_imports organization_name
-          self.delete(join_path(path(organization_name), 'imports'), self.default_headers)
+        def destroy_imports organization_name, wait_until_complete=false
+          response_json = self.delete(join_path(path(organization_name), 'imports'), self.default_headers)
+          response = JSON.parse(response_json).with_indifferent_access
+          if wait_until_complete && response['state'] == 'CREATED'
+            while response['state'] != nil && response['state'] != 'FINISHED' && response['state'] != 'ERROR'
+              path = join_path('candlepin', response['statusPath'][1..-1])
+              response_json = self.get(path, self.default_headers)
+              response = JSON.parse(response_json).with_indifferent_access
+            end
+          end
+
+          response
         end
 
         def imports organization_name
