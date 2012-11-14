@@ -513,8 +513,8 @@
   return Utils.build_path(1, ["/api/organizations/new"], arguments)
   },
 // import_progress_provider => /providers/:id/import_progress(.:format)
-  import_progress_provider_path: function(_id, options) {
-  return Utils.build_path(2, ["/providers/", "/import_progress"], arguments)
+  manifest_progress_provider_path: function(_id, options) {
+  return Utils.build_path(2, ["/providers/", "/manifest_progress"], arguments)
   },
 // auto_complete_system_groups => /system_groups/auto_complete(.:format)
   auto_complete_system_groups_path: function(options) {
