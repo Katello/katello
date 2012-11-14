@@ -12,8 +12,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 %define selinux_variants targeted
-%define selinux_policyver %(sed -e 's,.*selinux-policy-\\([^/]*\\)/.*,\\1,' /usr/share/selinux/devel/policyhelp 2> /dev/null)
-%define POLICYCOREUTILSVER 1.33.12-1
 
 %define moduletype apps
 %define modulename katello
@@ -29,16 +27,11 @@ URL:            http://www.katello.org
 Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
 BuildRequires:  checkpolicy, selinux-policy-devel, hardlink
-BuildRequires:  policycoreutils >= %{POLICYCOREUTILSVER}
+BuildRequires:  policycoreutils
 BuildRequires:  /usr/bin/pod2man
 BuildArch:      noarch
 
-%if "%{selinux_policyver}" != ""
-Requires:       selinux-policy >= %{selinux_policyver}
-%endif
-%if 0%{?rhel} == 5
-Requires:       selinux-policy >= 2.4.6-80
-%endif
+Requires:       selinux-policy >= 3.7.19-179
 Requires(post):   /usr/sbin/semodule, /sbin/restorecon, /usr/sbin/setsebool, /usr/sbin/selinuxenabled, /usr/sbin/semanage
 Requires(post): policycoreutils-python
 Requires(post): selinux-policy-targeted

@@ -17,3 +17,8 @@ katello                                         --      gen_context(system_u:obj
 
 /etc/katello/secure                                     gen_context(system_u:object_r:katello_secetc_dir_t,s0)
 /etc/katello/secure/passphrase                          gen_context(system_u:object_r:katello_secetc_file_t,s0)
+
+#BZ 848939
+#/usr/lib64/gems/exts/passenger-.*/agents/PassengerLoggingAgent        gen_context(system_u:object_r:passenger_exec_t,s0)
+#/usr/lib64/gems/exts/passenger-.*/agents/PassengerWatchdog            gen_context(system_u:object_r:passenger_exec_t,s0)
+#/usr/lib64/gems/exts/passenger-.*/agents/apache2/PassengerHelperAgent gen_context(system_u:object_r:passenger_exec_t,s0)
