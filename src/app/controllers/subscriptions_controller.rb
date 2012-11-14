@@ -182,23 +182,31 @@ class SubscriptionsController < ApplicationController
   end
 
   def delete_manifest
-    @provider.delete_manifest
+    begin
+      @provider.delete_manifest :async => true, :notify => true
+    rescue Exception => error
+      if error.respond_to?(:response)
+        display_message = ApplicationController.parse_display_message(error.response)
+      elsif error.message
+        display_message = error.message
+      else
+        display_message = ""
+      end
 
-    render :json=>{}
+      Notify.exception @provider.delete_error_message(display_message), error
+    end
+
+    render :json=>{'state' => 'running'}
   end
 
   def upload
     if !params[:provider].blank? and params[:provider].has_key? :contents
       temp_file = nil
       begin
-        dir = "#{Rails.root}/tmp"
-        Dir.mkdir(dir) unless File.directory? dir
-        temp_file = File.new(File.join(dir, "import_#{SecureRandom.hex(10)}.zip"), 'w+', 0600)
-        temp_file.write params[:provider][:contents].read
-        temp_file.close
+        temp_file_path = create_temp_file('import') {|tmp| tmp.write params[:provider][:contents].read }
         # force must be a string value
         force_update = params[:force_import] == "1" ? "true" : "false"
-        @provider.import_manifest File.expand_path(temp_file.path), :force => force_update,
+        @provider.import_manifest File.expand_path(temp_file_path), :force => force_update,
                                   :async => true, :notify => true
       rescue => error
         if error.respond_to?(:response)
@@ -230,6 +238,23 @@ class SubscriptionsController < ApplicationController
   end
 
   private
+
+  def find_or_create_temp_dir
+    dir = "#{Rails.root}/tmp"
+    Dir.mkdir(dir) unless File.directory? dir
+    dir
+  end
+
+  def create_temp_file(prefix)
+    # default external encoding in Ruby 1.9.3 is UTF-8, need to specify that we are opening a binary file (ASCII-8BIT encoding)
+    f = File.new(
+        File.join(find_or_create_temp_dir, "#{prefix}_#{SecureRandom.hex(10)}.zip"), 'wb+', 0600)
+
+    yield f if block_given?
+    f.path
+  ensure
+    f.close unless f.nil?
+  end
 
   def split_order order
     if order

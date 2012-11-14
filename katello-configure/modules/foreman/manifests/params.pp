@@ -27,6 +27,9 @@ class foreman::params {
   $thin_log           = "/var/log/foreman/thin-log.log"
   $thin_process_count = 2
   $deployment_url     = "foreman"
+  
+  # admin's email format has to be <user>@<some>.<domain>
+  $administrator      = "root@localhost.localdoamin"
 
   # should oauth be used?
   $oauth_active       = false
