@@ -24,6 +24,27 @@ class KatelloFormBuilder < ActionView::Helpers::FormBuilder
     base(name, *args, &block)
   end
 
+  def editable(name, options)
+    options.symbolize_keys!
+    options[:editable] = true if options[:editable].nil?
+
+    field_options = {}
+    field_options[:label] = options[:label]
+    field_options[:input_wrapper] = {}
+    field_options[:input_wrapper][:class] = options[:editable] ? "editable edit_panel_element multiline" : "multiline"
+    field_options[:input_wrapper][:tag_options] = {}
+    field_options[:input_wrapper][:tag_options][:name] = "%s[%s]" % [@object_name, name.to_s]
+    field_options[:input_wrapper][:tag_options][:'data-url'] = options[:'data-url'] || options[:data_url] || @options[:data_url]
+
+    base(name, field_options) do
+      if block_given?
+        yield
+      else
+        @object.send(name)
+      end
+    end
+  end
+
   def submit(*args)
     options = args.extract_options!
     options.symbolize_keys!
@@ -68,11 +89,17 @@ class KatelloFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def label_wrapper(options)
-    content_tag(:div, :class => options[:label_wrapper][:class]) { yield }
+    tag_options = options[:label_wrapper][:tag_options] || {}
+    tag_options.merge!({:class => options[:label_wrapper][:class]})
+
+    content_tag(:div, tag_options) { yield }
   end
 
   def input_wrapper(options)
-    content_tag(:div, :class => options[:input_wrapper][:class]) { yield } +
+    tag_options = options[:input_wrapper][:tag_options] || {}
+    tag_options.merge!({:class => options[:input_wrapper][:class]})
+
+    content_tag(:div, tag_options ) { yield } +
     (content_tag(:i, '', :class => 'details-icon', 'data-help' => options[:help]) if options[:help])
   end
 
