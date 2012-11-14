@@ -44,6 +44,22 @@ class UserCreateTest < MiniTest::Rails::ActiveSupport::TestCase
     assert @user.password != "Villa"
   end
 
+  def test_i18n_username
+    uname = "ಬoo0000"
+    @user.username=uname
+    assert @user.save
+    assert !@user.remote_id.nil?
+    assert @user.errors.empty?
+    assert !User.find_by_username(uname).nil?
+  end
+
+  def test_email_username
+    email = "foo@redhat.com"
+    @user.username=email
+    assert @user.save
+    assert @user.errors.empty?
+    assert !User.find_by_username(email).nil?
+  end
 end
 
 

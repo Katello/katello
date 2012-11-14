@@ -11,8 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'models/system_base'
-
-
 class SystemGroupAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCase
   include SystemTestBase
 
