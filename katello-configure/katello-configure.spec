@@ -63,6 +63,9 @@ katello-upgrade which handles upgrades between versions.
     find modules/ -name \*erb | xargs aux/check_erb
 %endif
 
+# README is development (git) only
+rm -f upgrade-scripts/README
+
 #build katello-configure man page
 THE_VERSION=%version perl -000 -ne 'if ($X) { s/^THE_VERSION/$ENV{THE_VERSION}/; s/\s+CLI_OPTIONS/$C/; s/^CLI_OPTIONS_LONG/$X/; print; next } ($t, $l, $v, $d) = /^#\s*(.+?\n)(.+\n)?(\S+)\s*=\s*(.*?)\n+$/s; $l =~ s/^#\s*//gm; $l = $t if not $l; ($o = $v) =~ s/_/-/g; $x .= qq/=item --$o=<\U$v\E>\n\n$l\nThe default value is "$d".\n\n/; $C .= "\n        [ --$o=<\U$v\E> ]"; $X = $x if eof' default-answer-file man/katello-configure.pod \
 	| /usr/bin/pod2man --name=%{name} -c "Katello Reference" --section=1 --release=%{version} - man/katello-configure.man1
@@ -82,7 +85,6 @@ install -m 0755 bin/katello-configure %{buildroot}%{_sbindir}
 install -m 0755 bin/katello-upgrade %{buildroot}%{_sbindir}
 install -m 0755 bin/katello-passwd %{buildroot}%{_sbindir}
 install -d -m 0755 %{buildroot}%{homedir}
-install -d -m 0755 %{buildroot}%{homedir}/upgrade-scripts/upgrade
 install -d -m 0755 %{buildroot}%{homedir}/puppet/modules
 cp -Rp modules/* %{buildroot}%{homedir}/puppet/modules
 install -d -m 0755 %{buildroot}%{homedir}/puppet/lib
