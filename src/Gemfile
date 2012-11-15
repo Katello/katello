@@ -137,7 +137,8 @@ group :development do
   gem 'logical-insight'
 end
 
-group :devboost do
+group :development do
+  # devboost just for dev mode
   gem 'rails-dev-boost', :require => 'rails_development_boost'
 end
 
