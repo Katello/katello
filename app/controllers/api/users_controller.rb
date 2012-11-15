@@ -155,7 +155,7 @@ class Api::UsersController < Api::ApiController
       format.html { render :text => users_report.as(:html), :type => :html and return }
       format.text { render :text => users_report.as(:text, :ignore_table_width => true) }
       format.csv { render :text => users_report.as(:csv) }
-      format.pdf { send_data(users_report.as(:pdf),
+      format.pdf { send_data(users_report.as(:prawn_pdf),
                              :filename => "katello_users_report.pdf", :type => "application/pdf") }
     end
   end

@@ -63,6 +63,8 @@
         .grid_5.la #{system.kernel}
       %fieldset
         .grid_2.ra.fieldset
+          - help_message = _("Setting the release version limits content to this version only, preventing newer packages from being available for installation.")
+          %span.tipsify.details_icon-grey{:title => help_message}
           = label :releaseVer, :releaseVer, _("Release Version")
         - if !releases_error.nil?
           .grid_5.la{'name' => 'system[releaseVer]', 'class' => ("editable edit_select_system_releasever_message error_message" if editable), 'data-url'=>system_path(system.id), 'data-message'=>releases_error}
