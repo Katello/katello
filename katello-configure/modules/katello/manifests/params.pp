@@ -50,7 +50,7 @@ class katello::params {
   $seed_log    = "$configure_log_base/db_seed.log"
 
   # katello upgrade settings
-  $katello_upgrade_scripts_dir  = "/usr/share/katello/install/upgrade-scripts/upgrade/"
+  $katello_upgrade_scripts_dir  = "/usr/share/katello/install/upgrade-scripts"
   $katello_upgrade_history_file = "/var/lib/katello/upgrade-history"
 
   # SSL settings
