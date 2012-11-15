@@ -47,7 +47,9 @@ from katello.client.core import (
   architecture,
   config_template,
   domain,
-  content_view
+  content,
+  content_view,
+  content_view_definition
 )
 
 def setup_admin(katello_cmd, mode=get_katello_mode()):
@@ -275,23 +277,34 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         katello_cmd.add_command('changeset', cset_cmd)
 
     if mode == 'katello':
+        content_cmd = content.Content()
         cv_cmd = content_view.ContentView()
         cv_cmd.add_command('list', content_view.List())
-        cv_cmd.add_command('create', content_view.Create())
-        cv_cmd.add_command('info', content_view.Info())
-        cv_cmd.add_command('delete', content_view.Delete())
-        cv_cmd.add_command('update', content_view.Update())
-        cv_cmd.add_command('publish', content_view.Publish())
-        cv_cmd.add_command('add_filter', content_view.AddRemoveFilter(True))
-        cv_cmd.add_command('remove_filter', content_view.AddRemoveFilter(False))
-        cv_cmd.add_command('add_product', content_view.AddRemoveProduct(True))
-        cv_cmd.add_command('remove_product', content_view.AddRemoveProduct(False))
-        cv_cmd.add_command('add_repo', content_view.AddRemoveRepo(True))
-        cv_cmd.add_command('remove_repo', content_view.AddRemoveRepo(False))
-        cv_cmd.add_command('add_view', content_view.AddRemoveContentView(True))
-        cv_cmd.add_command('remove_view',
-                content_view.AddRemoveContentView(False))
-        katello_cmd.add_command('content_view', cv_cmd)
+        cvd_cmd = content_view_definition.ContentViewDefinition()
+        cvd_cmd.add_command('list', content_view_definition.List())
+        cvd_cmd.add_command('create', content_view_definition.Create())
+        cvd_cmd.add_command('delete', content_view_definition.Delete())
+        cvd_cmd.add_command('update', content_view_definition.Update())
+        cvd_cmd.add_command('publish', content_view_definition.Publish())
+        cvd_cmd.add_command('add_filter',
+                content_view_definition.AddRemoveFilter(True))
+        cvd_cmd.add_command('remove_filter',
+                content_view_definition.AddRemoveFilter(False))
+        cvd_cmd.add_command('add_product',
+                content_view_definition.AddRemoveProduct(True))
+        cvd_cmd.add_command('remove_product',
+                content_view_definition.AddRemoveProduct(False))
+        cvd_cmd.add_command('add_repo',
+                content_view_definition.AddRemoveRepo(True))
+        cvd_cmd.add_command('remove_repo',
+                content_view_definition.AddRemoveRepo(False))
+        cvd_cmd.add_command('add_view',
+                content_view_definition.AddRemoveContentView(True))
+        cvd_cmd.add_command('remove_view',
+                content_view_definition.AddRemoveContentView(False))
+        content_cmd.add_command('view', cv_cmd)
+        content_cmd.add_command('definition', cvd_cmd)
+        katello_cmd.add_command('content', content_cmd)
 
     client_cmd = client.Client()
     client_cmd.add_command('remember', client.Remember())
