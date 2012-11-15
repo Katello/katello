@@ -1,0 +1,63 @@
+This directory contains upgrade scripts. Before writing your first script,
+please read katello-upgrade man page and read this file.
+
+Header
+------
+
+Each script must have executable flag, shebang and header in the following
+format:
+
+  #name: Short name starting with capital
+  #apply: katello headpin
+  #run: always
+  #description:
+  #Multiline description of the step. Please write several sentences
+  #here as users will be presented this before confirming this step.
+
+Apply field must have space separated list of modes in which this script
+applies. Possible values are: "katello" and "headpin".
+
+Run field can be only set to "always" or "once".
+
+ALL FIELDS ARE REQUIRED!
+
+Script content
+--------------
+
+Scripts can be written in Bash, Python or Ruby. Make sure Python scripts
+are not creating pyc/pyo files, use the following shebang:
+
+  #!/usr/bin/python -B
+
+Script MUST return zero value when everything is fine, non-zero value
+otherwise.
+
+Both stdout and stderr are redirected to the log file (and stdout in
+verbose mode). It is recommended to print several messages, but keep the
+output not too much verbose
+
+Multiple use
+------------
+
+ALL scripts MUST be invariant. That means user MUST be able to execute it
+multiple times without breaking things.
+
+Type of scripts
+---------------
+
+Always - script is executed every katello-upgrade run, it can be skipped
+in the interactive mode, but it is executed by default.
+
+Once - script is executed only once, then is "marked" as done and never
+executed again.
+
+Testing
+-------
+
+Always test your upgrade scripts on all supported platforms.
+
+
+This README
+-----------
+
+This README file is NOT distributed, it is only kept in the git.

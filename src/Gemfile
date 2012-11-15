@@ -45,8 +45,13 @@ gem 'simple-navigation', '>= 3.3.4'
 gem 'gettext_i18n_rails'
 gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 
-# reports
-gem 'ruport', '>=1.6.3'
+# Reports
+if system('rpm -q rubygem-ruport >/dev/null')
+  gem 'ruport' , '>=1.7.0'
+else
+  gem 'ruport' , '>=1.7.0', :git => 'git://github.com/ruport/ruport.git'
+end
+gem 'prawn'
 gem 'acts_as_reportable', '>=1.1.1'
 
 # Documentation
@@ -139,7 +144,7 @@ group :jshintrb do
   #
   #needed for syntax checking
   gem 'libv8'
-  gem 'therubyracer'
+  gem 'therubyracer', "~> 0.10.2"
   gem 'jshintrb', '0.1.1'
 end
 
