@@ -527,8 +527,8 @@ module Glue::Pulp::Repo
 
   # Convert array of Repo objects to Ruby Hash in the form of repo.id => repo_object for fast searches.
   #
-  # @param array_to_hash array of Repo objects
-  # @returns Hash structure
+  # @param [Array] array_of_repos array of Repo objects
+  # @return Hash structure
   def self.array_to_hash(array_of_repos)
     Hash[*array_of_repos.collect { |r|
       [r.id, r]
