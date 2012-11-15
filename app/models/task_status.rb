@@ -23,7 +23,6 @@ class TaskStatus < ActiveRecord::Base
     RUNNING = :running
     ERROR = :failed
     FINISHED = :finished
-    UNARCHIVED_FINISH = :finished
     CANCELED = :canceled
     TIMED_OUT = :timed_out
   end
