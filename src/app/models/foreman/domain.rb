@@ -17,6 +17,4 @@ class Foreman::Domain < Resources::ForemanModel
   def json_default_options
     { :only => [:name, :fullname, :dns_id] }
   end
-
-  validates :name, :presence => true
 end

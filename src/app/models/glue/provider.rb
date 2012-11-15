@@ -21,14 +21,14 @@ module Glue::Provider
 
   module InstanceMethods
 
-    def import_manifest zip_file_path, options = { }
+    def import_manifest zip_file_path, options = {}
       options = { :async => false, :notify => false }.merge options
       options.assert_valid_keys(:force, :async, :notify)
 
       self.task_status
 
       ret = if options[:async]
-              self.task_status = async(:organization => self.organization).queue_import_manifest zip_file_path, options
+              self.task_status = async(:organization => self.organization, :task_type => "import manifest").queue_import_manifest zip_file_path, options
               self.save!
             else
               queue_import_manifest zip_file_path, options
@@ -36,8 +36,20 @@ module Glue::Provider
       return ret
     end
 
-    def delete_manifest
-      Resources::Candlepin::Owner.destroy_imports self.organization.label
+    def delete_manifest options = {}
+      options = { :async => false, :notify => false }.merge options
+      options.assert_valid_keys(:async, :notify)
+
+      self.task_status
+
+      ret = if options[:async]
+              self.task_status = async(:organization => self.organization, :task_type => "delete manifest").queue_delete_manifest options
+              Rails.logger.debug("DEBUG ASYNC #{task_status.task_type}")
+              self.save!
+            else
+              exec_delete_manifest
+            end
+      return ret
     end
 
     def sync
@@ -285,6 +297,59 @@ module Glue::Provider
     def import_error_message display_message
       error_texts = [
           _("Subscription manifest upload for provider '%s' failed.") % self.name,
+          (_("Reason: %s") % display_message unless display_message.blank?)
+      ].compact
+      error_texts.join('<br />')
+    end
+
+    def exec_delete_manifest
+      Resources::Candlepin::Owner.destroy_imports self.organization.label, true
+    end
+
+    def rollback_delete_manifest
+      # Nothing to be done until implemented in katello where possible pulp recovery actions should be done(?)
+    end
+
+    def queue_delete_manifest options
+      begin
+        Rails.logger.debug "Deleting manifest for provider #{name}"
+        pre_queue.create(:name     => "delete manifest for owner: #{self.organization.name}",
+                         :priority => 3, :action => [self, :exec_delete_manifest],
+                         :action_rollback => [self, :rollback_delete_manifest])
+        self.save!
+
+        if options[:notify]
+          message = _("Subscription manifest deleted successfully for provider '%s'.")
+          Notify.success message % self.name,
+                         :request_type => 'providers__update_redhat_provider',
+                         :organization => self.organization
+        end
+      rescue Exception => error
+        if error.respond_to?(:response)
+          display_message = error.response # fix add parse displayMessage
+        elsif error.message
+          display_message = error.message
+        else
+          display_message = ""
+        end
+        display_message = ApplicationController.parse_display_message(display_message)
+
+        if options[:notify]
+          Notify.exception import_error_message(display_message), error,
+                           :request_type => 'providers__update_redhat_provider',
+                           :organization => self.organization
+        end
+
+        Rails.logger.error "error uploading subscriptions."
+        Rails.logger.error error
+        Rails.logger.error error.backtrace.join("\n")
+        raise error
+      end
+    end
+
+    def delete_error_message display_message
+      error_texts = [
+          _("Subscription manifest delete for provider '%s' failed.") % self.name,
           (_("Reason: %s") % display_message unless display_message.blank?)
       ].compact
       error_texts.join('<br />')
