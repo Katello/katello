@@ -15,7 +15,7 @@
 #    RSpec::Mocks::MockExpectationError: Mock "syncable" created on:
 #     /.../spec/controllers/api/sync_controller_spec.rb:200 received unexpected message :sync with (no args)
 
-require 'rspec/version'
+require 'rspec/rails/version'
 
 RSpec::Version::STRING =~ /^2\.(\d+)\.\d+$/
 unless (5..10).include? $1.to_i # change if it works for other versions
