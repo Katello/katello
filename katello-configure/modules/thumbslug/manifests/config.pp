@@ -10,4 +10,12 @@ class thumbslug::config {
     require => Class["certs::config"],
     notify  => Service["thumbslug"];
   }
+
+  # copy candlepin cert to thumbslug dir
+  # required as of thumbslug-0.27
+  file { "/etc/thumbslug/client-ca.pem":
+    source => "/etc/candlepin/certs/candlepin-ca.crt",
+    require => [Class["certs::config"]],
+    notify => Service["thumbslug"];
+  }
 }
