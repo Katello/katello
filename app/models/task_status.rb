@@ -22,8 +22,7 @@ class TaskStatus < ActiveRecord::Base
     WAITING = :waiting
     RUNNING = :running
     ERROR = :failed
-    FINISHED = :success
-    UNARCHIVED_FINISH = :finished
+    FINISHED = :finished
     CANCELED = :canceled
     TIMED_OUT = :timed_out
   end
@@ -231,8 +230,8 @@ class TaskStatus < ActiveRecord::Base
 
   def result_description
     case self.state.to_s
-    when "success"
-      # tasks initiated by pulp to the system can have state=success
+    when "finished"
+      # tasks initiated by pulp to the system can have state=finished
       # when the request is fully successful (e.g. all packages installed)
       # as well as if the task is not fully successful (e.g. attempt to
       # install a pkg that does not exist)
