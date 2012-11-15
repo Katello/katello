@@ -17,15 +17,17 @@ module Katello
 
 
   # Katello::Configuration module contains all necessary code for Katello configuration.
-  # Configuration is not dependent on any gem which allows loading configuration very early (even before Rails).
-  # Therefore this configuration can be used anywhere (Gemfile, boot scripts, etc.)
+  # Configuration is not dependent on any gem which allows loading configuration very early
+  # (even before Rails). Therefore this configuration can be used anywhere
+  # (Gemfile, boot scripts, etc.)
   #
   # Configuration access points are methods #config and #early_config, see method documentation.
   # There are shortcuts defined: `Katello.config` and `Katello.early_config`
   #
-  # Configuration is represented with tree-like-structure defined with Configuration::Node. Node has minimal Hash-like
-  # interface. Node is more strict than Hash. Differences:
-  # * If undefined key is accessed an error NoKey is raised (keys with nil values has to be defined explicitly).
+  # Configuration is represented with tree-like-structure defined with Configuration::Node. Node has
+  # minimal Hash-like interface. Node is more strict than Hash. Differences:
+  # * If undefined key is accessed an error NoKey is raised (keys with nil values has to be
+  #   defined explicitly).
   # * Keys can be accessed by methods. `config.host` is equivalent to `config[:host]`
   # * All keys has to be Symbols, otherwise you get an ArgumentError
   #
@@ -40,7 +42,8 @@ module Katello
   #     irb> n[:a] = {'a' => 12}
   #     => {:a=>12}
   #     irb> n
-  #     => #<Katello::Configuration::Node:0x10e2cd2b0 @data={:a=>#<Katello::Configuration::Node:0x10e2bcb40 @data={:a=>12}>}>
+  #     => #<Katello::Configuration::Node:0x10e2cd2b0 @data=
+  #         {:a=>#<Katello::Configuration::Node:0x10e2bcb40 @data={:a=>12}>}>
   #
   #     # accessing a key
   #     irb> n['a']
@@ -52,7 +55,8 @@ module Katello
   #
   #     # sooports deep_merge and #to_hash
   #     irb> n.deep_merge!('a' => {:b => 34})
-  #     => #<Katello::Configuration::Node:0x10e2cd2b0 @data={:a=>#<Katello::Configuration::Node:0x10e2a64d0 @data={:a=>12, :b=>34}>}>
+  #     => #<Katello::Configuration::Node:0x10e2cd2b0 @data=
+  #         {:a=>#<Katello::Configuration::Node:0x10e2a64d0 @data={:a=>12, :b=>34}>}>
   #     irb> n.to_hash
   #     => {:a=>{:a=>12, :b=>34}}
   module Configuration
@@ -85,7 +89,7 @@ module Katello
       def [](key)
         raise ArgumentError, "#{key.inspect} should be a Symbol" unless Symbol === key
         if has_key? key
-          @data[key]
+          @data[key].is_a?(Proc) ? @data[key].call : @data[key]
         else
           raise NoKey, key.to_s
         end
@@ -119,7 +123,11 @@ module Katello
         other_config = convert hash_or_config
         other_config.each do |key, other_value|
           value     = has_key?(key) && self[key]
-          self[key] = Node === value && Node === other_value ? value.deep_merge!(other_value) : other_value
+          self[key] = if Node === value && Node === other_value
+                        value.deep_merge!(other_value)
+                      else
+                        other_value
+                      end
         end
         self
       end
@@ -154,23 +162,77 @@ module Katello
           hash[(key.to_sym rescue key) || key] = convert hash.delete(key)
         end
 
-        hash.keys.all? { |k| Symbol === k or raise ArgumentError, "keys must be Symbols, #{k.inspect} is not" }
+        hash.keys.all? do |k|
+          Symbol === k or raise ArgumentError, "keys must be Symbols, #{k.inspect} is not"
+        end
         hash
       end
     end
 
+    # defines small dsl for validating configuration
+    class Validator
+      attr_reader :config
+
+      # @param [Node] config
+      # @param [true,false] early configuration
+      # @yield block with validations
+      def initialize(config, early, &validations)
+        @config, @early = config, early
+        instance_eval &validations
+      end
+
+      private
+
+      def early?
+        @early
+      end
+
+      # validate sub key
+      # @yield block with validations
+      def validate(key, &block)
+        Validator.new config[key], early?, &block
+      end
+
+      def are_booleans(*keys)
+        keys.each { |key| is_boolean key }
+      end
+
+      def is_boolean(key)
+        has_values key, [true, false]
+      end
+
+      def has_values(key, values, options = { })
+        values << nil if options[:allow_nil]
+        return true if values.include?(config[key])
+        raise ArgumentError,
+              "key #{key} should be one of #{values.inspect}, but was #{config[key].inspect}"
+      end
+
+      def has_keys(*keys)
+        keys.each { |key| has_key key }
+      end
+
+      def has_key(key)
+        unless config.has_key? key.to_sym
+          require 'pp'; pp config;
+          raise "configuration for key #{key.to_sym.inspect} is required"
+        end
+      end
+    end
+
     # processes configuration loading from config_files
-    class Loader
-      attr_reader :config_file_paths, :required_keys
+    class LoaderImpl
+      attr_reader :config_file_paths, :validation
 
       def initialize(options = { })
         @config_file_paths = options[:config_file_paths] || raise(ArgumentError)
-        @required_keys     = options[:required_keys] || raise(ArgumentError)
+        @validation       = options[:validation] || raise(ArgumentError)
       end
 
       # raw config data form katello.yml represented with Node
       def config_data
-        @config_data ||= Node.new YAML::load(ERB.new(File.read(config_file_path)).result)
+        @config_data ||= Node.new(
+            YAML::load(ERB.new(File.read(config_file_path)).result(Object.new.send(:binding))))
       end
 
       # access point for Katello configuration
@@ -178,8 +240,8 @@ module Katello
         @config ||= load environment
       end
 
-      # Configuration without environment applied, use in early stages (before Rails are loaded) like Gemfile
-      # and other scripts
+      # Configuration without environment applied, use in early stages (before Rails are loaded)
+      # like Gemfile and other scripts
       def early_config
         @early_config ||= load
       end
@@ -189,7 +251,9 @@ module Katello
         @database_configs ||= begin
           %w(production development test).inject({ }) do |hash, environment|
             common = config_data.common.database.to_hash
-            hash.update environment => common.merge(config_data[environment.to_sym].database.to_hash).stringify_keys
+            hash.update(
+                environment =>
+                    common.merge(config_data[environment.to_sym].database.to_hash).stringify_keys)
           end
         end
       end
@@ -199,9 +263,8 @@ module Katello
       def load(environment = nil)
         Node.new.tap do |c|
           load_config_file c, environment
-          load_env_variables c
-          load_version c
-          check_required! c
+          post_process c
+          validate c, !environment
         end
       end
 
@@ -214,29 +277,16 @@ module Katello
         config.deep_merge! config_data[environment] if environment
       end
 
-      def load_env_variables(config)
-        config[:url_prefix] = ENV['RAILS_RELATIVE_URL_ROOT'] || ''
-        config[:headpin?]   = %w(/sam /headpin).include?(config.url_prefix)
-        config[:katello?]   = !config.headpin?
-        config[:app_name]   = config.headpin? ? 'Headpin' : 'Katello'
+      def post_process config
+        config[:katello?] = lambda { config.app_mode == 'katello' }
+        config[:headpin?] = lambda { config.app_mode == 'headpin' }
+        config[:app_name] ||= config.katello? ? 'Katello' : 'Headpin'
 
-        config[:use_cp] = false if ENV['NO_CP']
-        config[:use_pulp] = false if ENV['NO_PULP']
-        config[:use_foreman] = false if ENV['NO_FOREMAN']
+        config[:use_cp] = true if config[:use_cp].nil?
+        config[:use_pulp] = config.katello? if config[:use_pulp].nil?
+        config[:use_foreman] = config.katello? if config[:use_foreman].nil?
 
-        log_levels = %w(debug info warn error fatal)
-
-        if log_levels.include? ENV['KATELLO_LOGGING']
-          config[:log_level] = ENV['KATELLO_LOGGING']
-        elsif ENV['KATELLO_LOGGING']
-          warn "unrecognized KATELLO_LOGGING: #{ENV['KATELLO_LOGGING']}"
-        end
-
-        if log_levels.include? ENV['KATELLO_LOGGING']
-          config[:log_level_sql] = ENV['KATELLO_LOGGING_SQL']
-        elsif ENV['KATELLO_LOGGING_SQL']
-          warn "unrecognized KATELLO_LOGGING_SQL: #{ENV['KATELLO_LOGGING']}"
-        end
+        load_version config
       end
 
       def load_version(config)
@@ -250,9 +300,8 @@ module Katello
         config[:katello_version] = version
       end
 
-      def check_required!(config)
-        missing = required_keys.select { |key| not config.has_key? key.to_sym }
-        missing.empty? or raise "configuration for #{missing.join(",")} is required"
+      def validate(config, early = false)
+        Validator.new config, early, &validation
       end
 
       def config_file_path
@@ -261,28 +310,47 @@ module Katello
       end
     end
 
-    root      = File.expand_path(File.join(File.dirname(__FILE__), '..'))
-    TheLoader = Loader.new(
+    root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
+
+    VALIDATION = lambda do
+      has_keys *%w( app_name candlepin notification debug_pulp_proxy debug_rest available_locales
+                    use_cp simple_search_tokens database debug_cp_proxy headpin? host ldap_roles
+                    cloud_forms use_pulp cdn_proxy use_ssl warden katello? url_prefix foreman
+                    search use_foreman password_reset_expiration redhat_repository_url port
+                    elastic_url rest_client_timeout elastic_index allow_roles_logging
+                    katello_version pulp tire_log log_level log_level_sql)
+
+      has_values :app_mode, %w(katello headpin)
+      has_values :url_prefix, %w(/headpin /sam /cfse /katello)
+
+      log_levels = %w(debug info warn error fatal)
+      has_values :log_level, log_levels
+      has_values :log_level_sql, log_levels
+
+      are_booleans :use_cp, :use_foreman, :use_pulp, :use_ssl, :ldap_roles, :debug_rest,
+                   :debug_cp_proxy, :debug_pulp_proxy, :logical_insight
+
+      validate :database do
+        has_keys *%w(adapter host encoding username password database)
+      end unless early?
+    end
+
+    Loader = LoaderImpl.new(
         :config_file_paths => %W(#{root}/config/katello.yml /etc/katello/katello.yml),
-        :required_keys     =>
-            %w( app_name candlepin notification debug_pulp_proxy debug_rest available_locales use_cp
-                simple_search_tokens database debug_cp_proxy headpin? host ldap_roles cloud_forms use_pulp cdn_proxy
-                use_ssl warden katello? url_prefix foreman search use_foreman password_reset_expiration
-                redhat_repository_url port elastic_url rest_client_timeout elastic_index allow_roles_logging
-                katello_version pulp tire_log log_level log_level_sql ))
+        :validation        => VALIDATION)
   end
 
 
   def self.config
-    Configuration::TheLoader.config
+    Configuration::Loader.config
   end
 
   def self.early_config
-    Configuration::TheLoader.early_config
+    Configuration::Loader.early_config
   end
 
   def self.database_configs
-    Configuration::TheLoader.database_configs
+    Configuration::Loader.database_configs
   end
 end
 
