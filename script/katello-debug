@@ -39,6 +39,11 @@ end
 
 # Get the deployment type
 deployment = File.read("/etc/katello/client.conf").split("\n").grep(/^path.+/).first.split("/").last
+if (deployment == "headpin" || deployment == "sam")
+  deployment = "headpin"
+else
+  deployment = "katello"
+end
 puts "detected deployment: \t#{deployment}"
 
 # Define what we want to collect
@@ -68,10 +73,7 @@ KATELLO_HEADPIN = [
 "/etc/katello/mapping.yml",
 "/etc/katello/thin.yml",
 "/etc/katello/katello-configure.conf",
-"/etc/httpd/conf.d/katello.conf"
-]
-
-KATELLO = [
+"/etc/httpd/conf.d/katello.conf",
 "/etc/katello/environment.db"
 ]
 
@@ -105,13 +107,10 @@ EXCLUDES = [
 
 # sources list for katello or headpin deployment
 sources += MISC
-sources += CANDLEPIN
 sources += KATELLO_HEADPIN
-if deployment == 'katello'
-  #sources += KATELLO
-  sources += PULP
-end
 sources += ELASTIC_SEARCH
+sources += CANDLEPIN
+sources += PULP if deployment == 'katello'
 sources += THUMBSLUG if deployment == 'headpin'
 
 
