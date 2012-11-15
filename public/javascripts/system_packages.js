@@ -278,7 +278,7 @@ KT.system_packages = function() {
                             break;
                     }
                     break;
-                case "success":
+                case "finished":
                     switch (action) {
                         case KT.package_action_types.PKG_INSTALL:
                             action_status_col.html(get_status_block(event_id, i18n.adding_package_success));
