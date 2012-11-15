@@ -183,9 +183,10 @@ class katello::config {
     },
   }
 
-  # during first installation we mark all upgrade scripts as executed
+  # during first installation we mark all 'once'  upgrade scripts as executed
   exec {"update_upgrade_history":
-    command => "ls ${katello::params::katello_upgrade_scripts_dir} > ${katello::params::katello_upgrade_history_file}",
+    cwd     => "${katello::params::katello_upgrade_scripts_dir}",
+    command => "grep -E '#.*run:.*once' * | awk -F: '{print \$1}' > ${katello::params::katello_upgrade_history_file}",
     creates => "${katello::params::katello_upgrade_history_file}",
     path    => "/bin",
     before  => Class["katello::service"],
