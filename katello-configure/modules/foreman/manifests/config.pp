@@ -94,10 +94,31 @@ class foreman::config {
    command => "/usr/bin/ruby ${foreman::app_root}/script/foreman-config -k oauth_active -v '${foreman::oauth_active}'\
                               -k oauth_consumer_key -v '${foreman::oauth_consumer_key}'\
                               -k oauth_consumer_secret -v '${foreman::oauth_consumer_secret}'\
-                              -k oauth_map_users -v '${foreman::oauth_map_users}'",
+                              -k oauth_map_users -v '${foreman::oauth_map_users}'\
+                              -k administrator -v '${foreman::administrator}'",
    user    => $foreman::user,
    timeout => 0,
    require => User[$foreman::user],
+  }
+
+  if $foreman::reset_data == 'YES' {
+   exec {"reset_foreman_db":
+      command => "rm -f /var/lib/katello/foreman_db_migrate_done",
+      path    => "/sbin:/bin:/usr/bin",
+      before  => Exec["foreman_migrate_db"],
+      timeout => 0
+    } ~>
+
+    postgres::dropdb {$foreman::db_name:
+      logfile => "${foreman::configure_log_base}/drop-postgresql-foreman-database.log",
+      require => [ Postgres::Createuser[$foreman::db_user], File["${foreman::configure_log_base}"] ],
+      before  => Exec["foreman_migrate_db"],
+      refreshonly => true,
+      notify  => [
+                  Postgres::Createdb[$foreman::db_name],
+                  Exec["foreman_migrate_db"],
+                  ],
+    }
   }
 
 }
