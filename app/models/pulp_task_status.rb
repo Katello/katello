@@ -59,7 +59,10 @@ class PulpTaskStatus < TaskStatus
   end
 
   def self.dump_state(pulp_status, task_status)
-    pulp_status[:state] = Status::FINISHED.to_s if pulp_status[:state] == Status::UNARCHIVED_FINISH.to_s
+    if !pulp_status.has_key?(:state) && pulp_status[:result] == "success"
+      # Note: if pulp_status doesn't contain a state, the status is coming from pulp sync history
+      pulp_status[:state] = Status::FINISHED.to_s
+    end
 
     task_status.attributes = {
       :uuid => pulp_status[:task_id],
