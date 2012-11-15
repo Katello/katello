@@ -22,16 +22,17 @@
 #   minutes that a password reset token will remain valid.
 #
 common:
+  app_mode: <%= %w(/sam /headpin).include?(ENV['RAILS_RELATIVE_URL_ROOT']) ? 'headpin' : 'katello' %>
+  use_cp: <%= ENV['NO_CP'] ? false : nil %>
+  use_pulp: <%= ENV['NO_PULP'] ? false : nil %>
+  use_foreman: <%= ENV['NO_FOREMAN'] ? false : nil %>
+  app_name: # set a name if you want to override default
+
   warden: database
   ldap_roles: false
-  use_cp: true
-  use_pulp: true
-  use_foreman: true
-  debug_rest: false
-  debug_cp_proxy: false
-  debug_pulp_proxy: false
   rest_client_timeout: 30
 
+  url_prefix: <%= ENV['RAILS_RELATIVE_URL_ROOT'] %>
   host: 127.0.0.1
   port: 3000
   use_ssl: false
@@ -149,6 +150,8 @@ common:
     adapter: postgresql
     host: localhost
     encoding: UTF8
+    username: katello
+    password: katello
 
 #
 # Production environment configuration
@@ -156,11 +159,9 @@ common:
 # The following configuration values override ones from the common section
 #
 production:
-  log_level: warn
-  log_level_sql: fatal
+  log_level: <%= ENV['KATELLO_LOGGING'] %>
+  log_level_sql: <%= ENV['KATELLO_LOGGING_SQL'] %>
   database:
-    username: katello
-    password: katello
     database: katello
 
 #
@@ -172,8 +173,6 @@ development:
   foreman:
     random_password: false
   database:
-    username: katello
-    password: katello
     database: katello
 
 #
@@ -183,8 +182,6 @@ development:
 #
 test:
   database:
-   username: katello
-   password: katello
    database: katello-test<%= ENV['TEST_ENV_NUMBER'] %>
 
 # EOF
