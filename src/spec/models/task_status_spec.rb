@@ -37,7 +37,7 @@ describe TaskStatus do
   context "Package installation" do
     let(:task_type) { :package_install }
     let(:parameters) { { :packages => packages } }
-    let(:state) { "success" }
+    let(:state) { "finished" }
 
     its(:description) { should == "Package Install: cheetah, penguin" }
 
@@ -83,7 +83,7 @@ elephant-8.8-1.noarch
   context "Package group installation" do
     let(:task_type) { :package_group_install }
     let(:parameters) { { :groups => package_groups } }
-    let(:state) { "success" }
+    let(:state) { "finished" }
 
     its(:description) { should == "Package Group Install: @mammals, @FTP Server" }
 
@@ -129,7 +129,7 @@ elephant-8.8-1.noarch
   context "Package uninstallation" do
     let(:task_type) { :package_remove }
     let(:parameters) { { :packages => ["elephant"] } }
-    let(:state) { "success" }
+    let(:state) { "finished" }
 
     its(:description) { should == "Package Remove: elephant" }
 
@@ -176,7 +176,7 @@ cheetah-1.26.3-5.noarch
   context "Package group uninstallation" do
     let(:task_type) { :package_group_remove }
     let(:parameters) { { :groups => package_groups } }
-    let(:state) { "success" }
+    let(:state) { "finished" }
 
     its(:description) { should == "Package Group Remove: @mammals, @FTP Server" }
 
@@ -223,7 +223,7 @@ elephant-8.8-1.noarch
   context "Package update" do
     let(:task_type) { :package_update }
     let(:parameters) { { :packages => ["cheetah"] } }
-    let(:state) { "success" }
+    let(:state) { "finished" }
 
     its(:description) { should == "Package Update: cheetah" }
 
