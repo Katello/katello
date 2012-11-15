@@ -17,8 +17,14 @@
 
 require 'rspec/rails/version'
 
-RSpec::Version::STRING =~ /^2\.(\d+)\.\d+$/
-unless (5..10).include? $1.to_i # change if it works for other versions
+version = begin
+  RSpec::Version::STRING =~ /^2\.(\d+)\.\d+$/
+  (5..10).include? $1.to_i
+rescue
+  false
+end
+
+unless version # change if it works for other versions
   warn "monkey eats only a banana! (this monkey needs rspec 2.(5-10))\n#{__FILE__}:#{__LINE__}"
 else
   module RSpec::Mocks
