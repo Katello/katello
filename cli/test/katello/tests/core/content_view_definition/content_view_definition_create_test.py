@@ -5,8 +5,8 @@ import os
 from katello.tests.core.action_test_utils import CLIOptionTestCase, \
         CLIActionTestCase
 
-import katello.client.core.content_view
-from katello.client.core.content_view import Create
+import katello.client.core.content_view_definition
+from katello.client.core.content_view_definition import Create
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
 
