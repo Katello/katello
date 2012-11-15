@@ -451,7 +451,7 @@ module Glue::Pulp::Repo
     end
 
     def successful_sync?(sync_history_item)
-      sync_history_item['state'] == ::PulpTaskStatus::Status::FINISHED
+      sync_history_item['state'] == ::PulpTaskStatus::Status::FINISHED.to_s
     end
 
     def generate_metadata
