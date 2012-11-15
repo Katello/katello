@@ -64,7 +64,8 @@ Requires:       rubygem(simple-navigation) >= 3.3.4
 Requires:       rubygem(pg)
 Requires:       rubygem(delayed_job) >= 2.1.4
 Requires:       rubygem(acts_as_reportable) >= 1.1.1
-Requires:       rubygem(ruport) >= 1.6.3
+Requires:       rubygem(ruport) >= 1.7.0
+Requires:       rubygem(prawn)
 Requires:       rubygem(daemons) >= 1.1.4
 Requires:       rubygem(uuidtools)
 Requires:       rubygem(thin)
@@ -128,7 +129,8 @@ BuildRequires:       rubygem(simple-navigation) >= 3.3.4
 BuildRequires:       rubygem(pg)
 BuildRequires:       rubygem(delayed_job) >= 2.1.4
 BuildRequires:       rubygem(acts_as_reportable) >= 1.1.1
-BuildRequires:       rubygem(ruport) >= 1.6.3
+BuildRequires:       rubygem(ruport) >= 1.7.0
+BuildRequires:       rubygem(prawn)
 BuildRequires:       rubygem(daemons) >= 1.1.4
 BuildRequires:       rubygem(uuidtools)
 BuildRequires:       rubygem(thin)
@@ -509,7 +511,8 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %dir %{homedir}/.bundle
 %{homedir}/config.ru
 %{homedir}/Gemfile
-%ghost %attr(0644,katello,katello) %{_sharedstatedir}/%{name}/Gemfile.lock
+%{homedir}/Gemfile.lock
+%ghost %attr(640, katello, katello) %{datadir}/Gemfile.lock
 %config(noreplace) %{_sysconfdir}/%{name}/service-list
 %{homedir}/Rakefile
 %{_mandir}/man8/katello-service.8*
@@ -607,7 +610,8 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/.bundle
 %{homedir}/config.ru
 %{homedir}/Gemfile
-%ghost %{homedir}/Gemfile.lock
+%{homedir}/Gemfile.lock
+%ghost %attr(640, katello, katello) %{datadir}/Gemfile.lock
 %{homedir}/Rakefile
 
 %files headpin-all

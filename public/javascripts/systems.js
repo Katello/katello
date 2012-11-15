@@ -18,6 +18,8 @@ KT.panel.set_expand_cb(function(){
     });
 
     KT.system_groups_pane.register_multiselect();
+
+    setTimeout("$('#subscription_filters').attr('disabled', false).trigger('liszt:updated');", 500);
 });
 
 KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distribution.name:", "distribution.version:", "network.hostname:", "network.ipaddr:"]);
