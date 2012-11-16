@@ -24,7 +24,7 @@ class SystemAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_readable
-    assert !System.readable(@org).empty?
+    refute_empty System.readable(@org)
   end
 
   def test_registerable?
@@ -66,31 +66,31 @@ class SystemAuthorizationNoPermsTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_readable
-    assert System.readable(@org).empty?
+    assert_empty System.readable(@org)
   end
 
   def test_registerable?
-    assert !System.registerable?(@env, @org)
+    refute System.registerable?(@env, @org)
   end
 
   def test_any_deletable?
-    assert !System.any_deletable?(@env, @org)
+    refute System.any_deletable?(@env, @org)
   end
 
   def test_any_readable?
-    assert !System.any_readable?(@org)
+    refute System.any_readable?(@org)
   end
 
   def test_readable?
-    assert !@sys.readable?
+    refute @sys.readable?
   end
 
   def test_editable?
-    assert !@sys.editable?
+    refute @sys.editable?
   end
 
   def test_deletable?
-    assert !@sys.deletable?
+    refute @sys.deletable?
   end
 
 end
