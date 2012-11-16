@@ -96,7 +96,7 @@ class SystemErrataController < ApplicationController
     filtered_errata_count = errata_list.length
 
     errata_list = errata_list.sort { |a,b|
-      a.id.downcase <=> b.id.downcase
+      a.errata_id.downcase <=> b.errata_id.downcase
     }
 
     errata_list = errata_list[start...finish]
