@@ -14,7 +14,6 @@
 # in this software or its documentation.
 #
 
-import os
 from katello.client.core.base import BaseAction, Command
 
 class ContentAction(BaseAction):
