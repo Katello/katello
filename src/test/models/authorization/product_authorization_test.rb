@@ -24,23 +24,23 @@ class ProductAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_all_readable
-    assert !Product.all_readable(@org).empty?
+    refute_empty Product.all_readable(@org)
   end
 
   def test_readable
-    assert  !Product.readable(@org).empty?
+    refute_empty Product.readable(@org)
   end
 
   def test_all_editable
-    assert  !Product.all_editable(@org).empty?
+    refute_empty Product.all_editable(@org)
   end
 
   def test_editable
-    assert  !Product.editable(@org).empty?
+    refute_empty Product.editable(@org)
   end
 
   def test_syncable
-    assert  !Product.syncable(@org).empty?
+    refute_empty Product.syncable(@org)
   end
 
   def test_any_readable?
@@ -58,6 +58,7 @@ class ProductAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCase
   def test_editable?
     assert @prod.editable?
   end
+
 end
 
 
@@ -74,39 +75,39 @@ class ProductAuthorizationNoPermsTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_all_readable
-    assert Product.all_readable(@org).empty?
+    assert_empty Product.all_readable(@org)
   end
 
   def test_readable
-    assert  Product.readable(@org).empty?
+    assert_empty Product.readable(@org)
   end
 
   def test_all_editable
-    assert  Product.all_editable(@org).empty?
+    assert_empty Product.all_editable(@org)
   end
 
   def test_editable
-    assert  Product.editable(@org).empty?
+    assert_empty Product.editable(@org)
   end
 
   def test_syncable
-    assert  Product.syncable(@org).empty?
+    assert_empty Product.syncable(@org)
   end
 
   def test_any_readable?
-    assert !Product.any_readable?(@org)
+    refute Product.any_readable?(@org)
   end
 
   def test_readable?
-    assert !@prod.readable?
+    refute @prod.readable?
   end
 
   def test_syncable?
-    assert !@prod.syncable?
+    refute @prod.syncable?
   end
 
   def test_editable?
-    assert !@prod.editable?
+    refute @prod.editable?
   end
 
 end
