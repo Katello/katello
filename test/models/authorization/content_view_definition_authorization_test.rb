@@ -26,7 +26,11 @@ module ContentViewDefinitionAuthBase
     @admin       = User.find(users(:admin))
     @no_perms    = User.find(users(:no_perms_user))
     @org         = Organization.find(organizations(:acme_corporation))
-    @cvd        = FactoryGirl.create(:content_view_definition, :organization => @org)
+    @cvd         = FactoryGirl.create(:content_view_definition, :organization => @org)
+  end
+
+  def teardown
+    ContentViewDefinition.delete_all
   end
 
   module ClassMethods
@@ -49,7 +53,7 @@ class ContentViewDefinitionAuthorizationAdminTest < MiniTest::Rails::ActiveSuppo
   def test_readable
     assert ContentViewDefinition.any_readable?(@org)
     assert @cvd.readable?
-    assert_equal 1, ContentViewDefinition.readable(@org).length
+    assert ContentViewDefinition.readable(@org).length > 0
   end
 
   def test_creatable
@@ -57,7 +61,7 @@ class ContentViewDefinitionAuthorizationAdminTest < MiniTest::Rails::ActiveSuppo
   end
 
   def test_editable
-    assert_equal 1, ContentViewDefinition.editable(@org).length
+    assert ContentViewDefinition.editable(@org).length > 0
     assert @cvd.editable?
   end
 
