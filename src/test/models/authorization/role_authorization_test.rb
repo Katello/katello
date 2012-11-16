@@ -22,28 +22,28 @@ class RoleAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_readable
-    assert !Role.readable.empty?
+    refute_empty Role.readable
   end
 
-   def test_creatable?
-     assert Role.creatable?
-   end
+  def test_creatable?
+    assert Role.creatable?
+  end
 
-   def test_editable?
-     assert Role.editable?
-   end
+  def test_editable?
+    assert Role.editable?
+  end
 
-   def test_deletable?
-      assert Role.deletable?
-   end
+  def test_deletable?
+    assert Role.deletable?
+  end
 
-   def test_any_readable?
-     assert Role.any_readable?
-   end
+  def test_any_readable?
+    assert Role.any_readable?
+  end
 
-   def test_readable?
-     assert Role.readable?
-   end
+  def test_readable?
+    assert Role.readable?
+  end
 
 end
 
@@ -61,24 +61,24 @@ class RoleAuthorizationNoPermsTest < MiniTest::Rails::ActiveSupport::TestCase
     assert Role.readable.empty?
   end
 
-   def test_creatable?
-     assert !Role.creatable?
-   end
+  def test_creatable?
+    refute Role.creatable?
+  end
 
-   def test_editable?
-     assert !Role.editable?
-   end
+  def test_editable?
+    refute Role.editable?
+  end
 
-   def test_deletable?
-      assert !Role.deletable?
-   end
+  def test_deletable?
+    refute Role.deletable?
+  end
 
-   def test_any_readable?
-     assert !Role.any_readable?
-   end
+  def test_any_readable?
+    refute Role.any_readable?
+  end
 
-   def test_readable?
-     assert !Role.readable?
-   end
+  def test_readable?
+    refute Role.readable?
+  end
 
 end
