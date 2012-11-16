@@ -59,27 +59,27 @@ class FilterAuthorizationNoPermsTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_creatable?
-    assert !Filter.creatable?(@acme_corporation)
+    refute Filter.creatable?(@acme_corporation)
   end
 
   def test_any_editable?
-    assert !Filter.any_editable?(@acme_corporation)
+    refute Filter.any_editable?(@acme_corporation)
   end
 
   def test_any_readable?
-    assert !Filter.any_editable?(@acme_corporation)
+    refute Filter.any_editable?(@acme_corporation)
   end
 
   def test_readable?
-    assert !@filter.readable?
+    refute @filter.readable?
   end
 
   def test_editable?
-    assert !@filter.editable?
+    refute @filter.editable?
   end
 
   def test_deletable?
-    assert !@filter.deletable?
+    refute @filter.deletable?
   end
 
 end
