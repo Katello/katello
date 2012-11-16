@@ -19,10 +19,9 @@ import os
 from katello.client.api.content_view import ContentViewAPI
 from katello.client.api.content_view_definition import ContentViewDefinitionAPI
 from katello.client.cli.base import opt_parser_add_org, \
-        opt_parser_add_environment, OptionException
+        opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
-from katello.client.api.utils import get_content_view, get_cv_definition, \
-        get_filter, get_product, get_repo, get_environment
+from katello.client.api.utils import get_cv_definition, get_environment
 
 # base content_view action --------------------------------------------------------
 
