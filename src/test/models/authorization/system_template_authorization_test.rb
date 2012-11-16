@@ -53,19 +53,19 @@ class SystemTemplateAuthorizationNoPermsTest < MiniTest::Rails::ActiveSupport::T
   end
 
   def test_any_readable?
-    assert !SystemTemplate.any_readable?(@org)
+    refute SystemTemplate.any_readable?(@org)
   end
 
   def test_readable?
-    assert !SystemTemplate.readable?(@org)
+    refute SystemTemplate.readable?(@org)
   end
 
   def test_manageable?
-    assert !SystemTemplate.manageable?(@org)
+    refute SystemTemplate.manageable?(@org)
   end
 
   def test_readable
-    assert !@template.readable?
+    refute @template.readable?
   end
 
 end
