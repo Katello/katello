@@ -53,6 +53,7 @@ class ContentViewAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCa
   end
 
   def test_readable
+    @view.save!
     assert ContentView.any_readable?(@org)
     assert @view.readable?
     assert_equal 1, ContentView.readable(@org).length
