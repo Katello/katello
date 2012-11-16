@@ -69,7 +69,7 @@ module Navigation
       {:key => :subscriptions,
        :name =>_("Red Hat Subscriptions"),
        :url => subscriptions_path,
-       :if => lambda{current_organization},
+       :if => lambda{current_organization.redhat_provider.readable?},
        :options => {:class=>'content third_level', "data-menu"=>"subscriptions", "data-dropdown"=>"subscriptions"}
       }
     end
