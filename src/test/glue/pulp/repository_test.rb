@@ -27,7 +27,6 @@ class GluePulpRepoTestBase < MiniTest::Rails::ActiveSupport::TestCase
     models    = ['Repository', 'Package']
     disable_glue_layers(services, models)
 
-
     @@admin = User.find(@loaded_fixtures['users']['admin']['id'])
   end
 
@@ -36,7 +35,7 @@ class GluePulpRepoTestBase < MiniTest::Rails::ActiveSupport::TestCase
       task_list.each do |task|
         while !(['finished', 'error', 'timed_out', 'canceled', 'reset', 'success'].include?(task['state'])) do
           task = PulpSyncStatus.pulp_task(Runcible::Resources::Task.poll(task["task_id"]))
-          sleep 0.1 # do not overload backend engines
+          sleep 0.5 # do not overload backend engines
         end
       end
     end
@@ -46,7 +45,7 @@ class GluePulpRepoTestBase < MiniTest::Rails::ActiveSupport::TestCase
     VCR.use_cassette('glue_pulp_repo_tasks', :erb => true, :match_requests_on => [:path, :method]) do
       while !(['finished', 'error', 'timed_out', 'canceled', 'reset', 'success'].include?(task['state'])) do
         task = PulpSyncStatus.pulp_task(Runcible::Resources::Task.poll(task["uuid"]))
-        sleep 0.1 # do not overload backend engines
+        sleep 0.5 # do not overload backend engines
       end
     end
   end
@@ -236,11 +235,15 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
   end
 
   def test_errata
-    refute_empty @@fedora_17_x86_64.errata.select { |errata| errata.id == "RHEA-2010:0002" }
+    VCR.use_cassette('glue_pulp_repo_units', :match_requests_on => [:body_json, :path, :method]) do
+      refute_empty @@fedora_17_x86_64.errata.select { |errata| errata.id == "RHEA-2010:0002" }
+    end
   end
 
   def test_has_erratum?
-    assert @@fedora_17_x86_64.has_erratum?("RHEA-2010:0002")
+    VCR.use_cassette('glue_pulp_repo_units', :match_requests_on => [:body_json, :path, :method]) do
+      assert @@fedora_17_x86_64.has_erratum?("RHEA-2010:0002")
+    end
   end
 
   def test_distributions
@@ -297,7 +300,6 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
   def test_clone_contents
     dev = KTEnvironment.find(environments(:dev).id)
     @@fedora_17_x86_64_dev.relative_path = Glue::Pulp::Repos.clone_repo_path(@@fedora_17_x86_64, dev)
-    @@fedora_17_x86_64_dev.destroy_repo
     @@fedora_17_x86_64_dev.create_pulp_repo
 
     task_list = @@fedora_17_x86_64.clone_contents(@@fedora_17_x86_64_dev)
