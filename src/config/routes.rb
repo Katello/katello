@@ -301,7 +301,7 @@ Src::Application.routes.draw do
     end
     member do
       get :products_repos
-      get :import_progress
+      get :manifest_progress
       get :schedule
     end
   end

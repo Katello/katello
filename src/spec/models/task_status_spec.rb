@@ -42,29 +42,36 @@ describe TaskStatus do
     its(:description) { should == "Package Install: cheetah, penguin" }
 
     context "No packages installed" do
-      let(:result) { { :installed => {:deps => [], :resolved => []} } }
+      let(:result) { { :details => {:rpm => { :status => true, :details => { :deps => [], :resolved => []} } } } }
       its(:result_description) { should == "No new packages installed" }
     end
 
     context "Packages installed" do
       let(:result) do
-        {"installed" =>
-          {"deps"=>
-            [{"qname"=>"elephant-8.8-1.noarch",
-              "repoid"=>"zoo-repo-updates",
-              "name"=>"elephant",
-              "version"=>"8.8",
-              "arch"=>"noarch",
-              "epoch"=>"0",
-              "release"=>"1"}],
-           "resolved"=>
-            [{"qname"=>"cheetah-1.26.3-5.noarch",
-              "repoid"=>"zoo-repo-updates",
-              "name"=>"cheetah",
-              "version"=>"1.26.3",
-              "arch"=>"noarch",
-              "epoch"=>"0",
-              "release"=>"5"}]}}.with_indifferent_access
+        { :details =>
+          { :rpm =>
+            { :status => true,
+              :details =>
+                { "deps"=>
+                     [{"qname"=>"elephant-8.8-1.noarch",
+                       "repoid"=>"zoo-repo-updates",
+                       "name"=>"elephant",
+                       "version"=>"8.8",
+                       "arch"=>"noarch",
+                       "epoch"=>"0",
+                       "release"=>"1"}],
+                  "resolved"=>
+                     [{"qname"=>"cheetah-1.26.3-5.noarch",
+                       "repoid"=>"zoo-repo-updates",
+                       "name"=>"cheetah",
+                       "version"=>"1.26.3",
+                       "arch"=>"noarch",
+                       "epoch"=>"0",
+                       "release"=>"5"}]
+                }
+            }
+          }
+        }.with_indifferent_access
       end
       its(:result_description) { should == <<-EXPECTED_MESSAGE.chomp }
 cheetah-1.26.3-5.noarch
@@ -81,28 +88,36 @@ elephant-8.8-1.noarch
     its(:description) { should == "Package Group Install: @mammals, @FTP Server" }
 
     context "No packages installed" do
-      let(:result) { {:deps => [], :resolved => []} }
+      let(:result) { { :details => {:package_group => { :status => true, :details => { :deps => [], :resolved => []} } } } }
       its(:result_description) { should == "No new packages installed" }
     end
 
     context "Packages installed" do
       let(:result) do
-        {"deps"=>
-         [{"qname"=>"elephant-8.8-1.noarch",
-           "repoid"=>"zoo-repo-updates",
-           "name"=>"elephant",
-           "version"=>"8.8",
-           "arch"=>"noarch",
-           "epoch"=>"0",
-           "release"=>"1"}],
-           "resolved"=>
-         [{"qname"=>"cheetah-1.26.3-5.noarch",
-           "repoid"=>"zoo-repo-updates",
-           "name"=>"cheetah",
-           "version"=>"1.26.3",
-           "arch"=>"noarch",
-           "epoch"=>"0",
-           "release"=>"5"}]}.with_indifferent_access
+        { :details =>
+          { :package_group =>
+            { :status => true,
+              :details =>
+              { "deps"=>
+                    [{"qname"=>"elephant-8.8-1.noarch",
+                      "repoid"=>"zoo-repo-updates",
+                      "name"=>"elephant",
+                      "version"=>"8.8",
+                      "arch"=>"noarch",
+                      "epoch"=>"0",
+                      "release"=>"1"}],
+                "resolved"=>
+                    [{"qname"=>"cheetah-1.26.3-5.noarch",
+                      "repoid"=>"zoo-repo-updates",
+                      "name"=>"cheetah",
+                      "version"=>"1.26.3",
+                      "arch"=>"noarch",
+                      "epoch"=>"0",
+                      "release"=>"5"}]
+              }
+            }
+          }
+        }.with_indifferent_access
       end
       its(:result_description) { should == <<-EXPECTED_MESSAGE.chomp }
 cheetah-1.26.3-5.noarch
@@ -119,29 +134,38 @@ elephant-8.8-1.noarch
     its(:description) { should == "Package Remove: elephant" }
 
     context "No packages removed" do
-      let(:result) { {:deps => [], :resolved => []} }
+      let(:result) { { :details => {:rpm => { :status => true, :details => { :deps => [], :resolved => []} } } } }
       its(:result_description) { should == "No packages removed" }
     end
 
     context "Packages removed" do
       let(:result) do
-         {"deps"=>
-           [{"qname"=>"cheetah-1.26.3-5.noarch",
-            "repoid"=>"installed",
-            "name"=>"cheetah",
-            "version"=>"1.26.3",
-            "arch"=>"noarch",
-            "epoch"=>"0",
-            "release"=>"5"}],
-         "resolved"=>
-          [{"qname"=>"elephant-8.8-1.noarch",
-            "repoid"=>"installed",
-            "name"=>"elephant",
-            "version"=>"8.8",
-            "arch"=>"noarch",
-            "epoch"=>"0",
-            "release"=>"1"}]}.with_indifferent_access
+        { :details =>
+          { :rpm =>
+            { :status => true,
+              :details =>
+              { "deps"=>
+                    [{"qname"=>"cheetah-1.26.3-5.noarch",
+                      "repoid"=>"installed",
+                      "name"=>"cheetah",
+                      "version"=>"1.26.3",
+                      "arch"=>"noarch",
+                      "epoch"=>"0",
+                      "release"=>"5"}],
+                "resolved"=>
+                    [{"qname"=>"elephant-8.8-1.noarch",
+                      "repoid"=>"installed",
+                      "name"=>"elephant",
+                      "version"=>"8.8",
+                      "arch"=>"noarch",
+                      "epoch"=>"0",
+                      "release"=>"1"}]
+              }
+            }
+          }
+        }.with_indifferent_access
       end
+
       its(:result_description) { should == <<-EXPECTED_MESSAGE.chomp }
 elephant-8.8-1.noarch
 cheetah-1.26.3-5.noarch
@@ -157,29 +181,38 @@ cheetah-1.26.3-5.noarch
     its(:description) { should == "Package Group Remove: @mammals, @FTP Server" }
 
     context "No packages removed" do
-      let(:result) { {:deps => [], :resolved => []} }
+      let(:result) { { :details => {:package_group => { :status => true, :details => { :deps => [], :resolved => []} } } } }
       its(:result_description) { should == "No packages removed" }
     end
 
     context "Packages removed" do
       let(:result) do
-        {"deps"=>
-         [{"qname"=>"elephant-8.8-1.noarch",
-           "repoid"=>"zoo-repo-updates",
-           "name"=>"elephant",
-           "version"=>"8.8",
-           "arch"=>"noarch",
-           "epoch"=>"0",
-           "release"=>"1"}],
-           "resolved"=>
-         [{"qname"=>"cheetah-1.26.3-5.noarch",
-           "repoid"=>"zoo-repo-updates",
-           "name"=>"cheetah",
-           "version"=>"1.26.3",
-           "arch"=>"noarch",
-           "epoch"=>"0",
-           "release"=>"5"}]}.with_indifferent_access
+        { :details =>
+          { :package_group =>
+            { :status => true,
+              :details =>
+              { "deps"=>
+                   [{"qname"=>"elephant-8.8-1.noarch",
+                     "repoid"=>"zoo-repo-updates",
+                     "name"=>"elephant",
+                     "version"=>"8.8",
+                     "arch"=>"noarch",
+                     "epoch"=>"0",
+                     "release"=>"1"}],
+                "resolved"=>
+                   [{"qname"=>"cheetah-1.26.3-5.noarch",
+                     "repoid"=>"zoo-repo-updates",
+                     "name"=>"cheetah",
+                     "version"=>"1.26.3",
+                     "arch"=>"noarch",
+                     "epoch"=>"0",
+                     "release"=>"5"}]
+              }
+            }
+          }
+        }.with_indifferent_access
       end
+
       its(:result_description) { should == <<-EXPECTED_MESSAGE.chomp }
 cheetah-1.26.3-5.noarch
 elephant-8.8-1.noarch
@@ -195,36 +228,43 @@ elephant-8.8-1.noarch
     its(:description) { should == "Package Update: cheetah" }
 
     context "No packages updated" do
-      let(:result) { {"updated" => {"deps" => [], "resolved" => []}}.with_indifferent_access }
+      let(:result) { { :details => {:rpm => { :status => true, :details => { :deps => [], :resolved => []} } } } }
       its(:result_description) { should == "No packages updated" }
     end
 
     context "Packages updated" do
       let(:result) do
-        {"updated" => 
-         {"deps"=>
-          [{"qname"=>"elephant-8.8-1.noarch",
-            "repoid"=>"zoo-repo-updates",
-            "name"=>"elephant",
-            "version"=>"8.8",
-            "arch"=>"noarch",
-            "epoch"=>"0",
-            "release"=>"1"}],
-         "resolved"=>
-          [{"qname"=>"cheetah-1.26.3-5.noarch",
-            "repoid"=>"zoo-repo-updates",
-            "name"=>"cheetah",
-            "version"=>"1.26.3",
-            "arch"=>"noarch",
-            "epoch"=>"0",
-            "release"=>"5"}]}}.with_indifferent_access
+        { :details =>
+          { :rpm =>
+            { :status => true,
+              :details =>
+              { "deps"=>
+                    [{"qname"=>"elephant-8.8-1.noarch",
+                      "repoid"=>"zoo-repo-updates",
+                      "name"=>"elephant",
+                      "version"=>"8.8",
+                      "arch"=>"noarch",
+                      "epoch"=>"0",
+                      "release"=>"1"}],
+                "resolved"=>
+                    [{"qname"=>"cheetah-1.26.3-5.noarch",
+                      "repoid"=>"zoo-repo-updates",
+                      "name"=>"cheetah",
+                      "version"=>"1.26.3",
+                      "arch"=>"noarch",
+                      "epoch"=>"0",
+                      "release"=>"5"}]
+              }
+            }
+          }
+        }.with_indifferent_access
       end
+
       its(:result_description) { should == <<-EXPECTED_MESSAGE.chomp }
 cheetah-1.26.3-5.noarch
 elephant-8.8-1.noarch
       EXPECTED_MESSAGE
     end
-
   end
 
   context "Yum error" do
