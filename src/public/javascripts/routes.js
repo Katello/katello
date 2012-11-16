@@ -507,6 +507,9 @@
 // export_api_template => /api/templates/:id/export(.:format)
   export_api_template_path: function(_id, options) {
   return Utils.build_path(2, ["/api/templates/", "/export"], arguments)
+// import_progress_provider => /providers/:id/import_progress(.:format)
+  manifest_progress_provider_path: function(_id, options) {
+  return Utils.build_path(2, ["/providers/", "/manifest_progress"], arguments)
   },
 // operations => /operations(.:format)
   operations_path: function(options) {

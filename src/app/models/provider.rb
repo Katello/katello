@@ -156,7 +156,7 @@ class Provider < ActiveRecord::Base
     Repository.joins(:environment_product => :product).where("products.provider_id" => self.id)
   end
 
-  def import_task
+  def manifest_task
     return task_status
   end
 
