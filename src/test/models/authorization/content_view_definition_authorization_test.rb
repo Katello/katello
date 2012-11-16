@@ -11,7 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'minitest_helper'
-require 'ruby-debug'
 require 'support/auth_support'
 
 module ContentViewDefinitionAuthBase
