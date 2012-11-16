@@ -69,7 +69,7 @@ class GluePulpUserTest < GluePulpUserTestBase
   end
 
   def test_set_pulp_user_raises_exception
-    @user.username = nil
+    @user.remote_id = nil
     VCR.use_cassette('pulp_user_exception_raised') do
       assert_raises RestClient::InternalServerError do 
         @user.set_pulp_user
