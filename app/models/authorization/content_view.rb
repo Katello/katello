@@ -26,7 +26,7 @@ module Authorization::ContentView
     end
 
     def list_tags(org_id)
-      custom.select('id, name').where(:organization_id => org_id).map do |v|
+      select('id, name').where(:organization_id => org_id).map do |v|
         VirtualTag.new(v.id, v.name)
       end
     end
