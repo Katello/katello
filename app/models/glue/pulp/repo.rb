@@ -193,6 +193,8 @@ module Glue::Pulp::Repo
 
     def errata
       if @repo_errata.nil?
+        #we fetch ids and then fetch errata by id, because repo errata
+        #  do not contain all the info we need (bz 854260)
         e_ids = Runcible::Extensions::Repository.errata_ids(self.pulp_id)
         self.errata = Runcible::Extensions::Errata.find_all(e_ids)
       end
