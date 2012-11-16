@@ -11,7 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'minitest_helper'
-require 'ruby-debug'
 require 'support/auth_support'
 
 module ContentViewAuthBase
@@ -54,6 +53,7 @@ class ContentViewAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCa
   end
 
   def test_readable
+    @view.save!
     assert ContentView.any_readable?(@org)
     assert @view.readable?
     assert_equal 1, ContentView.readable(@org).length
