@@ -203,7 +203,7 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
   end
 
   def test_sync_state
-    assert @@fedora_17_x86_64.sync_state == ::PulpSyncStatus::SUCCESS
+    assert @@fedora_17_x86_64.sync_state == ::PulpSyncStatus::FINISHED
   end
 
   def test_successful_sync?
@@ -292,6 +292,7 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
   def test_clone_contents
     dev = KTEnvironment.find(environments(:dev).id)
     @@fedora_17_x86_64_dev.relative_path = Glue::Pulp::Repos.clone_repo_path(@@fedora_17_x86_64, dev)
+    @@fedora_17_x86_64_dev.destroy_repo
     @@fedora_17_x86_64_dev.create_pulp_repo
 
     task_list = @@fedora_17_x86_64.clone_contents(@@fedora_17_x86_64_dev)
