@@ -1,0 +1,311 @@
+--- 
+recorded_with: VCR 2.3.0
+http_interactions: 
+- request: 
+    method: post
+    uri: https://knifeparty.localdomain/pulp/api/v2/repositories/acme_corporation_label-staging_label-fedora_label-fedora_17_x86_64_label/actions/associate/
+    body: 
+      string: "{\"source_repo_id\":\"1\",\"criteria\":{\"type_ids\":[\"rpm\"],\"filters\":{\"unit\":{\"name\":{\"$not\":{\"$in\":[]}}}}}}"
+    headers: 
+      Content-Type: 
+      - application/json
+      Accept: 
+      - application/json
+      Content-Length: 
+      - "102"
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="6fVzirCBbYBcyKdpcv4EWNjhWUK2348aBUd7L43p4", oauth_signature="u5h9ueB%2BgGPYMX%2FDk4X62Iopvdg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353009110", oauth_version="1.0"
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Encoding: 
+      - utf-8
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Content-Length: 
+      - "788"
+      Date: 
+      - Thu, 15 Nov 2012 19:51:50 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
+    body: 
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/e64f64dd-239b-4dd8-8849-ef6a2c4dbb07/\", \"task_id\": \"e64f64dd-239b-4dd8-8849-ef6a2c4dbb07\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": null, \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"waiting\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"e64f64dd-239b-4dd8-8849-ef6a2c4dbb07\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Thu, 15 Nov 2012 19:51:50 GMT
+- request: 
+    method: post
+    uri: https://knifeparty.localdomain/pulp/api/v2/repositories/acme_corporation_label-staging_label-fedora_label-fedora_17_x86_64_label/actions/associate/
+    body: 
+      string: "{\"source_repo_id\":\"1\",\"criteria\":{\"type_ids\":[\"erratum\"],\"filters\":{}}}"
+    headers: 
+      Content-Type: 
+      - application/json
+      Accept: 
+      - application/json
+      Content-Length: 
+      - "71"
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="dqvBEhPIOHulXnrTnzXDrldc6BAxurK7AXJ7Q5eRHs", oauth_signature="sZ9Z0xFmt0dDUxuqB0UkCGZ3jYY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353009110", oauth_version="1.0"
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Encoding: 
+      - utf-8
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Content-Length: 
+      - "788"
+      Date: 
+      - Thu, 15 Nov 2012 19:51:50 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
+    body: 
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/76c1289f-e4e7-46a1-9bbe-3c790c661013/\", \"task_id\": \"76c1289f-e4e7-46a1-9bbe-3c790c661013\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": null, \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"waiting\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"76c1289f-e4e7-46a1-9bbe-3c790c661013\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Thu, 15 Nov 2012 19:51:50 GMT
+- request: 
+    method: post
+    uri: https://knifeparty.localdomain/pulp/api/v2/repositories/acme_corporation_label-staging_label-fedora_label-fedora_17_x86_64_label/actions/associate/
+    body: 
+      string: "{\"source_repo_id\":\"1\",\"criteria\":{\"type_ids\":[\"distribution\"],\"filters\":{}}}"
+    headers: 
+      Content-Type: 
+      - application/json
+      Accept: 
+      - application/json
+      Content-Length: 
+      - "76"
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="2xlrCsmzHHVv78V4FixJZumSqdfklnbEzO5tewqs", oauth_signature="wl3GXzHyiCs3HCY2aq3TN30Jex8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353009110", oauth_version="1.0"
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Encoding: 
+      - utf-8
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Content-Length: 
+      - "788"
+      Date: 
+      - Thu, 15 Nov 2012 19:51:50 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
+    body: 
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/03c41121-2885-46a9-ad75-fb4be068ff08/\", \"task_id\": \"03c41121-2885-46a9-ad75-fb4be068ff08\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": null, \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"waiting\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"03c41121-2885-46a9-ad75-fb4be068ff08\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Thu, 15 Nov 2012 19:51:50 GMT
+- request: 
+    method: delete
+    uri: https://knifeparty.localdomain/pulp/api/v2/repositories/acme_corporation_label-staging_label-fedora_label-fedora_17_x86_64_label/
+    body: 
+      string: ""
+    headers: 
+      Content-Type: 
+      - application/json
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="BcEpSOrJ5OQqvI0xRDpcvONWed4DTsk6d8onsS0", oauth_signature="8vmGU7o54zaj8n9Z%2BqDfi9YU0ao%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353009112", oauth_version="1.0"
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Encoding: 
+      - utf-8
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Content-Length: 
+      - "816"
+      Date: 
+      - Thu, 15 Nov 2012 19:51:52 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
+    body: 
+      string: "[{\"task_group_id\": \"a326bd0d-ef6f-4038-8e13-475b5c07db7b\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/task_groups/a326bd0d-ef6f-4038-8e13-475b5c07db7b/\", \"task_id\": \"f8668756-147d-4277-8515-345ad1a85760\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:action:delete\"], \"reasons\": [], \"start_time\": null, \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:action:delete\"], \"state\": \"waiting\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": \"a326bd0d-ef6f-4038-8e13-475b5c07db7b\", \"call_request_id\": \"f8668756-147d-4277-8515-345ad1a85760\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}]"
+    http_version: 
+  recorded_at: Thu, 15 Nov 2012 19:51:52 GMT
+- request: 
+    method: post
+    uri: https://knifeparty.localdomain/pulp/api/v2/repositories/
+    body: 
+      string: "{\"distributors\":[{\"distributor_type\":\"yum_distributor\",\"distributor_id\":\"1\",\"distributor_config\":{\"http\":false,\"relative_url\":\"/test_path/\",\"protected\":true,\"https\":true},\"auto_publish\":false}],\"importer_type_id\":\"yum_importer\",\"display_name\":\"Fedora 17 x86_64\",\"id\":\"1\",\"importer_config\":{\"ssl_client_cert\":null,\"feed_url\":\"file:///home/ehelms/workspace/katello/src/test/fixtures/zoo5\",\"ssl_ca_cert\":null,\"ssl_client_key\":null}}"
+    headers: 
+      Content-Type: 
+      - application/json
+      Accept: 
+      - application/json
+      Content-Length: 
+      - "429"
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="J9eQuKP1vxHx71BJMR0juA9RQhwj4MYuoJJpDkwggc", oauth_signature="2%2Ft0RAAoAKopiHSHvvkL9VUI53o%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353009112", oauth_version="1.0"
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Content-Length: 
+      - "226"
+      Date: 
+      - Thu, 15 Nov 2012 19:51:52 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Location: 
+      - "1"
+    body: 
+      string: "{\"scratchpad\": {}, \"display_name\": \"Fedora 17 x86_64\", \"description\": null, \"_ns\": \"repos\", \"notes\": {}, \"content_unit_count\": 0, \"_id\": {\"$oid\": \"50a547d8dc792152bc0028a6\"}, \"id\": \"1\", \"_href\": \"/pulp/api/v2/repositories/1/\"}"
+    http_version: 
+  recorded_at: Thu, 15 Nov 2012 19:51:52 GMT
+- request: 
+    method: post
+    uri: https://knifeparty.localdomain/pulp/api/v2/repositories/1/actions/sync/
+    body: 
+      string: "{\"num_threads\":4}"
+    headers: 
+      Content-Type: 
+      - application/json
+      Accept: 
+      - application/json
+      Content-Length: 
+      - "17"
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="sVHAZwiw74MVyl3YkAuJbO5uifI7Q3FoTV1R1Ys", oauth_signature="yF12Kn7trxs%2Fqm3%2BSvqWUU5WXJc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353009112", oauth_version="1.0"
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Encoding: 
+      - utf-8
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Content-Length: 
+      - "670"
+      Date: 
+      - Thu, 15 Nov 2012 19:51:52 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
+    body: 
+      string: "[{\"task_group_id\": \"7ec33947-3dfa-4d4c-a594-71c32266ac3c\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/task_groups/7ec33947-3dfa-4d4c-a594-71c32266ac3c/\", \"task_id\": \"9833011e-3514-4d1a-82d1-829d2dd63df4\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": null, \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"waiting\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": \"7ec33947-3dfa-4d4c-a594-71c32266ac3c\", \"call_request_id\": \"9833011e-3514-4d1a-82d1-829d2dd63df4\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}]"
+    http_version: 
+  recorded_at: Thu, 15 Nov 2012 19:51:52 GMT
+- request: 
+    method: post
+    uri: https://knifeparty.localdomain/pulp/api/v2/repositories/
+    body: 
+      string: "{\"distributors\":[{\"distributor_type\":\"yum_distributor\",\"distributor_id\":\"1\",\"distributor_config\":{\"http\":false,\"relative_url\":\"/test_path/\",\"protected\":true,\"https\":true},\"auto_publish\":false}],\"importer_type_id\":\"yum_importer\",\"display_name\":\"Fedora 17 x86_64\",\"id\":\"1\",\"importer_config\":{\"ssl_client_cert\":null,\"feed_url\":\"file:///home/ehelms/workspace/katello/src/test/fixtures/zoo5\",\"ssl_ca_cert\":null,\"ssl_client_key\":null}}"
+    headers: 
+      Content-Type: 
+      - application/json
+      Accept: 
+      - application/json
+      Content-Length: 
+      - "429"
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="A5x8VW3cN0B5Nlm3JVgHOTuMWY9JvL0XY4qByzv6KU", oauth_signature="vLRKR3K5gtM6NPyUaj4gDEoC0oQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353009122", oauth_version="1.0"
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Content-Length: 
+      - "226"
+      Date: 
+      - Thu, 15 Nov 2012 19:52:02 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Location: 
+      - "1"
+    body: 
+      string: "{\"scratchpad\": {}, \"display_name\": \"Fedora 17 x86_64\", \"description\": null, \"_ns\": \"repos\", \"notes\": {}, \"content_unit_count\": 0, \"_id\": {\"$oid\": \"50a547e2dc792152bc0029aa\"}, \"id\": \"1\", \"_href\": \"/pulp/api/v2/repositories/1/\"}"
+    http_version: 
+  recorded_at: Thu, 15 Nov 2012 19:52:02 GMT
+- request: 
+    method: delete
+    uri: https://knifeparty.localdomain/pulp/api/v2/repositories/1/
+    body: 
+      string: ""
+    headers: 
+      Content-Type: 
+      - application/json
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="8iaZ4Ug5u5Ii4Swla3jKx5nFlUyPBbEeXnWoHRtXs8", oauth_signature="vo6wo7xzw4rcsuWX86sJohbHI4k%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353009125", oauth_version="1.0"
+  response: 
+    status: 
+      code: 202
+      message: Accepted
+    headers: 
+      Content-Encoding: 
+      - utf-8
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Content-Length: 
+      - "674"
+      Date: 
+      - Thu, 15 Nov 2012 19:52:05 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
+    body: 
+      string: "[{\"task_group_id\": \"18df68e6-ae34-4133-b8aa-6a6ffc4f05b7\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/task_groups/18df68e6-ae34-4133-b8aa-6a6ffc4f05b7/\", \"task_id\": \"20394a99-9006-467d-a1cd-aca1919761af\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:delete\"], \"reasons\": [], \"start_time\": null, \"tags\": [\"pulp:repository:1\", \"pulp:action:delete\"], \"state\": \"waiting\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": \"18df68e6-ae34-4133-b8aa-6a6ffc4f05b7\", \"call_request_id\": \"20394a99-9006-467d-a1cd-aca1919761af\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}]"
+    http_version: 
+  recorded_at: Thu, 15 Nov 2012 19:52:05 GMT

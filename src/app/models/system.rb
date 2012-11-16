@@ -19,67 +19,14 @@ class NonLibraryEnvironmentValidator < ActiveModel::EachValidator
 end
 
 class System < ActiveRecord::Base
-  include Glue::Candlepin::Consumer
-  include Glue::Pulp::Consumer if AppConfig.katello?
+  include Glue::Candlepin::Consumer if AppConfig.use_cp
+  include Glue::Pulp::Consumer if AppConfig.use_pulp
+  include Glue::ElasticSearch::System
   include Glue
-  include Authorization
+  include Authorization::System
   include AsyncOrchestration
-  include IndexedModel
 
   after_rollback :rollback_on_create, :on => :create
-
-  index_options :extended_json=>:extended_index_attrs,
-                :json=>{:only=> [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id, :memory, :sockets]},
-                :display_attrs => [:name,
-                                   :description,
-                                   :id,
-                                   :uuid,
-                                   :created_at,
-                                   :lastCheckin,
-                                   :system_group,
-                                   :installed_products,
-                                   "custom_info.KEYNAME",
-                                   :ram,
-                                   :sockets]
-
-  dynamic_templates = [
-      {
-        "fact_string" => {
-          :path_match => "facts.*",
-          :mapping => {
-              :type => "string",
-              :analyzer => "kt_name_analyzer"
-          }
-        }
-      },
-      {
-        "custom_info_string" => {
-          :path_match => "custom_info.*",
-          :mapping => {
-              :type => "string",
-              :analyzer => "kt_name_analyzer"
-          }
-        }
-      }
-  ]
-
-  mapping   :dynamic_templates => dynamic_templates do
-    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :description, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :name_sort, :type => 'string', :index => :not_analyzed
-    indexes :lastCheckin, :type=>'date'
-    indexes :name_autocomplete, :type=>'string', :analyzer=>'autcomplete_name_analyzer'
-    indexes :installed_products, :type=>'string', :analyzer=>:kt_name_analyzer
-    indexes :ram, :type => 'integer'
-    indexes :sockets, :type => 'integer'
-    indexes :facts, :path=>"just_name" do
-    end
-    indexes :custom_info, :path => "just_name" do
-    end
-
-  end
-
-  update_related_indexes :system_groups, :name
 
   acts_as_reportable
 
@@ -207,11 +154,6 @@ class System < ActiveRecord::Base
     task_status = save_task_status(pulp_task, :errata_install, :errata_ids, errata_ids)
   end
 
-  # returns list of virtual permission tags for the current user
-  def self.list_tags
-    select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
-  end
-
   def as_json(options)
     json = super(options)
     json['environment'] = environment.as_json unless environment.nil?
@@ -232,80 +174,9 @@ class System < ActiveRecord::Base
     end
   end
 
-  def self.any_readable? org
-    org.systems_readable? ||
-        KTEnvironment.systems_readable(org).count > 0 ||
-        SystemGroup.systems_readable(org).count > 0
-  end
-
-  def self.readable org
-      raise "scope requires an organization" if org.nil?
-      if org.systems_readable?
-         where(:environment_id => org.environment_ids) #list all systems in an org
-      else #just list for environments the user can access
-        where_clause = "systems.environment_id in (#{KTEnvironment.systems_readable(org).select(:id).to_sql})"
-        where_clause += " or "
-        where_clause += "system_system_groups.system_group_id in (#{SystemGroup.systems_readable(org).select(:id).to_sql})"
-        joins("left outer join system_system_groups on systems.id =
-                                    system_system_groups.system_id").where(where_clause)
-      end
-  end
-
-  def readable?
-    sg_readable = false
-    if AppConfig.katello?
-      sg_readable = !SystemGroup.systems_readable(self.organization).where(:id=>self.system_group_ids).empty?
-    end
-    environment.systems_readable? || sg_readable
-  end
-
-  def editable?
-    sg_editable = false
-    if AppConfig.katello?
-      sg_editable = !SystemGroup.systems_editable(self.organization).where(:id=>self.system_group_ids).empty?
-    end
-    environment.systems_editable? || sg_editable
-  end
-
-  def deletable?
-    sg_deletable = false
-    if AppConfig.katello?
-      sg_deletable = !SystemGroup.systems_deletable(self.organization).where(:id=>self.system_group_ids).empty?
-    end
-    environment.systems_deletable? || sg_deletable
-  end
-
-  #TODO these two functions are somewhat poorly written and need to be redone
-  def self.any_deletable? env, org
-    if env
-      env.systems_deletable? || org.system_groups.any?{|g| g.systems_deletable?}
-    else
-      org.systems_deletable? || org.system_groups.any?{|g| g.systems_deletable?}
-    end
-  end
-
-  def self.registerable? env, org
-    if env
-      env.systems_registerable?
-    else
-      org.systems_registerable?
-    end
-  end
 
   def tasks
     TaskStatus.refresh_for_system(self)
-  end
-
-  def extended_index_attrs
-    {:facts=>self.facts, :organization_id=>self.organization.id,
-     :name_sort=>name.downcase, :name_autocomplete=>self.name,
-     :system_group=>self.system_groups.collect{|g| g.name},
-     :system_group_ids=>self.system_group_ids,
-     :installed_products=>collect_installed_product_names,
-     :ram => self.memory,
-     :sockets => self.sockets,
-     :custom_info=>collect_custom_info
-    }
   end
 
   # A rollback occurred while attempting to create the system; therefore, perform necessary cleanup.

@@ -8,6 +8,7 @@ require "active_resource/railtie"
 require "rails/test_unit/railtie"
 require "./lib/util/boot_util"
 
+
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
 require 'apipie-rails' # FIXME will be removed after https://github.com/Pajk/apipie-rails/pull/62

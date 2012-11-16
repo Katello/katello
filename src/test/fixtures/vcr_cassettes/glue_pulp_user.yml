@@ -1,0 +1,149 @@
+--- 
+recorded_with: VCR 2.3.0
+http_interactions: 
+- request: 
+    method: post
+    uri: https://knifeparty.localdomain/pulp/api/v2/users/
+    body: 
+      string: "{\"name\":\"batman\",\"login\":\"batman\",\"password\":\"GrhyqHj1NsKrG9a9\"}"
+    headers: 
+      Content-Type: 
+      - application/json
+      Accept: 
+      - application/json
+      Content-Length: 
+      - "64"
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="EouFt80F0aiEGb9lsTAuXqlB3qgrCiYc1bRRKarPw5w", oauth_signature="k3tYvQuffvM01DMii3cIZMkBcxQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353009126", oauth_version="1.0"
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Content-Length: 
+      - "184"
+      Date: 
+      - Thu, 15 Nov 2012 19:52:06 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Location: 
+      - batman
+    body: 
+      string: "{\"_id\": {\"$oid\": \"50a547e6dc792152bc002a19\"}, \"name\": \"batman\", \"roles\": [], \"_ns\": \"users\", \"login\": \"batman\", \"id\": \"50a547e6dc792152bc002a19\", \"_href\": \"/pulp/api/v2/users/batman/\"}"
+    http_version: 
+  recorded_at: Thu, 15 Nov 2012 19:52:06 GMT
+- request: 
+    method: delete
+    uri: https://knifeparty.localdomain/pulp/api/v2/users/batman/
+    body: 
+      string: ""
+    headers: 
+      Content-Type: 
+      - application/json
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="32eLLMv6f38Y1ogx3o5JYeUaUZq6pdTPtZBofbL0g", oauth_signature="Y7WtmD5hrNusHDUoqmqEBRgki5k%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353009127", oauth_version="1.0"
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Content-Length: 
+      - "4"
+      Date: 
+      - Thu, 15 Nov 2012 19:52:07 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
+    body: 
+      string: "null"
+    http_version: 
+  recorded_at: Thu, 15 Nov 2012 19:52:07 GMT
+- request: 
+    method: delete
+    uri: https://knifeparty.localdomain/pulp/api/v2/roles/super-users/users/batman/
+    body: 
+      string: ""
+    headers: 
+      Content-Type: 
+      - application/json
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="ULQb5XfiC5o04lSll3TaxLiMIdIdODNz6w3xDHvn5FI", oauth_signature="wX5S2L1c4ZCS%2FEHZTDX4v5rG7qY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353009127", oauth_version="1.0"
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Content-Length: 
+      - "4"
+      Date: 
+      - Thu, 15 Nov 2012 19:52:07 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
+    body: 
+      string: "null"
+    http_version: 
+  recorded_at: Thu, 15 Nov 2012 19:52:07 GMT
+- request: 
+    method: post
+    uri: https://knifeparty.localdomain/pulp/api/v2/roles/super-users/users/
+    body: 
+      string: "{\"login\":\"batman\"}"
+    headers: 
+      Content-Type: 
+      - application/json
+      Accept: 
+      - application/json
+      Content-Length: 
+      - "18"
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="WTbf1EMDDV6Ua12FnwumhBkXLa84cMzI1JJIa3VPeM", oauth_signature="BOLG3Lr8JC7pJ3n3iM011nz0Pi0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353009129", oauth_version="1.0"
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Type: 
+      - application/json
+      Connection: 
+      - close
+      Content-Length: 
+      - "4"
+      Date: 
+      - Thu, 15 Nov 2012 19:52:09 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
+    body: 
+      string: "null"
+    http_version: 
+  recorded_at: Thu, 15 Nov 2012 19:52:09 GMT

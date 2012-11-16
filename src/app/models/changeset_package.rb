@@ -23,7 +23,6 @@ class ChangesetPackageValidator < ActiveModel::Validator
 end
 
 class ChangesetPackage < ActiveRecord::Base
-  include Authorization
 
   belongs_to :changeset, :inverse_of => :packages
   belongs_to :product

@@ -39,8 +39,34 @@ module Katello
             unless (o.nil? || o.is_a?(self) || o.class.name == 'RSpec::Mocks::Mock')
               raise(ArgumentError, "Unable to set current User, expected class '#{self}', got #{o.inspect}")
             end
-            Rails.logger.debug "Setting current user thread-local variable to " + (o.is_a?(User) ? o.username : 'nil')
+            remote_id = o.is_a?(User) ? o.remote_id : 'nil'
+            username = o.is_a?(User) ? o.username : 'nil'
+            Rails.logger.debug "Setting current user thread-local variable to " + username
             Thread.current[:user] = o
+
+            set_pulp_config(remote_id) if AppConfig.katello?
+
+          end
+
+          def self.set_pulp_config(user_id)
+            if user_id
+              uri = URI.parse(AppConfig.pulp.url)
+              RestClient.log =
+                Object.new.tap do |proxy|
+                  def proxy.<<(message)
+                    Rails.logger.debug message
+                  end
+                end
+
+              Runcible::Base.config = { 
+                :url      => "#{uri.scheme}://#{uri.host}",
+                :api_path => uri.path,
+                :user     => user_id,
+                :oauth    => {:oauth_secret => AppConfig.pulp.oauth_secret,
+                              :oauth_key    => AppConfig.pulp.oauth_key },
+                :logger   => RestClient.log
+              }
+            end
           end
 
           # Executes given block on behalf of a different user. Mostly for debuggin purposes since

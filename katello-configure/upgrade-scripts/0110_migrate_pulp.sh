@@ -7,4 +7,4 @@
 #This steps calls pulp-migrate tool to migrate Pulp database schema
 #to the most recent version.
 
-/usr/bin/pulp-migrate
+/usr/bin/pulp-manage-db

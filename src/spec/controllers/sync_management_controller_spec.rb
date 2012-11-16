@@ -19,8 +19,6 @@ describe SyncManagementController, :katello => true do
   include ProductHelperMethods
   include OrchestrationHelper
 
-
-  
   before (:each) do
     login_user
     set_default_locale
@@ -28,7 +26,7 @@ describe SyncManagementController, :katello => true do
 
   context "Environment is set" do
     before (:each) do
-      Resources::Pulp::Repository.stub(:all).and_return([])
+      Runcible::Extensions::Repository.stub(:search_by_repository_ids).and_return([])
       setup_current_organization
       @library = KTEnvironment.new
       @mock_org.stub!(:library).and_return(@library)
@@ -62,26 +60,22 @@ describe SyncManagementController, :katello => true do
       @product = new_test_product @organization, @organization.library
       Provider.stub(:find).and_return @product.provider
       Product.stub(:find).and_return @product
-      
     end
-    describe "GET index" do
 
+    describe "GET index" do
       let(:action) {:index}
       let(:req) { get 'index' }
       let(:authorized_user) do
-        
         user_with_permissions { |u| u.can(:read, :providers, @product.provider.id, @organization) }
       end
       let(:unauthorized_user) do
         user_without_permissions
       end
 
-
       it_should_behave_like "protected action"
     end
 
     describe "sync" do
-
       let(:action) {:sync}
       let(:req) do
         put 'sync', :repoids => [@product.repos(@organization.library).first.id]
@@ -95,8 +89,4 @@ describe SyncManagementController, :katello => true do
       it_should_behave_like "protected action"
     end
   end
-
-
-
-
 end

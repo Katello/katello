@@ -19,17 +19,9 @@ end
 require 'util/package_util'
 
 class Changeset < ActiveRecord::Base
-  include Authorization
   include AsyncOrchestration
+  include Glue::ElasticSearch::Changeset  if AppConfig.use_elasticsearch
 
-  include IndexedModel
-  index_options :extended_json => :extended_index_attrs,
-                :display_attrs => [:name, :description, :package, :errata, :product, :repo, :system_template, :user, :type]
-
-  mapping do
-    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :name_sort, :type => 'string', :index => :not_analyzed
-  end
 
   NEW       = 'new'
   REVIEW    = 'review'
@@ -148,11 +140,12 @@ class Changeset < ActiveRecord::Base
          raise Errors::ChangesetContentException.new(
                    _("Package '%s' was not found in the source environment.") % name_or_nvre)
 
-     nvrea = Katello::PackageUtils::build_nvrea(package_data, false)
+     nvrea = package_data.nvrea
      self.packages << package =
-         ChangesetPackage.create!(:package_id => package_data["id"], :display_name => nvrea,
+         ChangesetPackage.create!(:package_id => package_data.id, :display_name => nvrea,
                                   :product_id => product.id, :changeset => self, :nvrea => nvrea)
      save!
+
      return package
    end
 
@@ -259,7 +252,7 @@ class Changeset < ActiveRecord::Base
                   product.find_packages_by_name(env_to_verify_on_add_content, name_or_nvre))
     end
 
-    packs.first.try(:with_indifferent_access)
+    Package.new(packs.first.try(:with_indifferent_access))
   end
 
   def env_to_verify_on_add_content
@@ -317,12 +310,6 @@ class Changeset < ActiveRecord::Base
     end
   end
 
-  def find_repo repo_id, product_cpid
-    product = find_product_by_cpid(product_cpid)
-    product.repos(self.environment.prior).where("repositories.id" => repo_id).first
-  end
-
-
   def not_included_products
     products_ids = []
     products_ids += self.packages.map { |p| p.product.cp_id }
@@ -337,6 +324,13 @@ class Changeset < ActiveRecord::Base
     product_repos = product.repos(environment) - self.repos
   end
 
+  def package_ids repos
+    pkg_ids = []
+    repos.each do |repo|
+      pkg_ids += repo.packages.collect { |pkg| pkg.id }
+
+    end
+  end
 
   def not_included_packages
     self.packages.delete_if do |pack|
@@ -354,23 +348,6 @@ class Changeset < ActiveRecord::Base
     self.distributions.delete_if do |distro|
       (products.uniq! or []).include? distro.product
     end
-  end
-  def extended_index_attrs
-    type      = self.type == "PromotionChangeset" ? Changeset::PROMOTION : Changeset::DELETION
-    pkgs      = self.packages.collect { |pkg| pkg.display_name }
-    errata    = self.errata.collect { |err| err.display_name }
-    products  = self.products.collect { |prod| prod.name }
-    repos     = self.repos.collect { |repo| repo.name }
-    templates = self.system_templates.collect { |t| t.name }
-    { :name_sort       => self.name.downcase,
-      :type            => type,
-      :package         => pkgs,
-      :errata          => errata,
-      :product         => products,
-      :repo            => repos,
-      :system_template => templates,
-      :user            => self.task_status.nil? ? "" : self.task_status.user.username
-    }
   end
 
 end

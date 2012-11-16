@@ -20,6 +20,7 @@ module Glue::Candlepin::Content
     base.class_eval do
       before_save :save_content_orchestration
       before_destroy :destroy_content_orchestration
+      after_create :rectify_gpg_key_orchestration
     end
   end
 
@@ -29,8 +30,20 @@ module Glue::Candlepin::Content
     end
 
     def save_content_orchestration
-      return if self.new_record?  #don't try to refresh on create
-      pre_queue.create(:name => "update content : #{self.name}", :priority => 2, :action => [self, :update_content])
+      if self.new_record? && !self.product.provider.redhat_provider? && self.environment.library?
+        pre_queue.create(:name => "create content : #{self.name}", :priority => 2, :action => [self, :create_content])
+      elsif !self.new_record? && should_update_content?
+        pre_queue.create(:name => "update content : #{self.name}", :priority => 2, :action => [self, :update_content])
+      end
+    end
+
+    def rectify_gpg_key_orchestration
+      #if we are creating a repo with a gpg key, we have to create the content without the gpg key
+      # and then update the content with the gpg key (since repo needs content created before it is actually saved
+      #  and thus can't create the gpg key url)
+      if self.gpg_key
+        pre_queue.create(:name => "update content : #{self.name}", :priority => 2, :action => [self, :update_content])
+      end
     end
 
     def del_content
@@ -60,18 +73,34 @@ module Glue::Candlepin::Content
       #this means we don't recreate the environment for the same repo in
       #each environment.   We do the same for it being disabled, we check
       #to make sure it is not enabled in the contnet before refreshing
-      if should_update_content?
-        self.content.update({
+      self.content.update({
+        :name => self.name,
+        :contentUrl => Glue::Pulp::Repos.custom_content_path(self.product, label),
+        :gpgUrl => yum_gpg_key_url,
+        :label => custom_content_label,
+        :type => "yum",
+        :vendor => Provider::CUSTOM
+      })
+    end
+
+    def create_content
+      #only used for custom content
+      raise 'Can only create content for custom providers' if self.product.provider.redhat_provider?
+      new_content = ::Candlepin::ProductContent.new({
+        :content => {
           :name => self.name,
-          :contentUrl => Glue::Pulp::Repos.custom_content_path(self.product, label),
-          :gpgUrl => yum_gpg_key_url,
-          :label => custom_content_label,
+          :contentUrl => Glue::Pulp::Repos.custom_content_path(self.product, self.label),
           :type => "yum",
+          :label => self.custom_content_label,
           :vendor => Provider::CUSTOM
-        })
-      else
-        true # required, or orchestration engine will think that update failed.
-      end
+        },
+        :enabled => true
+      })
+      new_content.create
+      self.product.add_content new_content
+      self.content_id = new_content.content.id
+      self.cp_label = new_content.content.label
+      new_content.content
     end
 
     def should_update_content?
