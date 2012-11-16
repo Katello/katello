@@ -126,7 +126,6 @@ class katello::config {
       path    => "/sbin:/bin:/usr/bin",
       before  => Exec["katello_migrate_db"],
       notify  => Postgres::Dropdb["$katello::params::db_name"],
-      timeout => 0
     }
     postgres::dropdb {$katello::params::db_name:
       logfile => "${katello::params::configure_log_base}/drop-postgresql-katello-database.log",
@@ -165,7 +164,6 @@ class katello::config {
     creates => "/var/lib/katello/db_migrate_done",
     before  => Class["katello::service"],
     require => [ Exec["katello_bundler_check"] ],
-    timeout => 0
   }
 
   exec {"katello_seed_db":
@@ -174,7 +172,6 @@ class katello::config {
     environment => ["RAILS_ENV=${katello::params::environment}", "KATELLO_LOGGING=debug"],
     command     => "/usr/bin/env rake seed_with_logging --trace --verbose > ${katello::params::seed_log} 2>&1 && touch /var/lib/katello/db_seed_done",
     creates => "/var/lib/katello/db_seed_done",
-    timeout => 0,
     before  => Class["katello::service"],
     require => $katello::params::deployment ? {
                 'katello' => [ Exec["katello_migrate_db"], Class["candlepin::service"], Class["pulp::service"], Class["foreman::service"], File["${katello::params::log_base}"] ],
