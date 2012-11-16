@@ -1,4 +1,6 @@
 class katello {
+  Exec { logoutput => on_failure, timeout => 0 }
+
   include katello::params
   include certs
   include apache2

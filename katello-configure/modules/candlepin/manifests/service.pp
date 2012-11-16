@@ -23,6 +23,5 @@ class candlepin::service {
     require => [ Service["tomcat6"], File["${katello::params::configure_log_base}"] ],
     creates => "/var/lib/katello/cpinit_done",
     before  => Class["apache2::service"],
-    timeout => 0
   }
 }
