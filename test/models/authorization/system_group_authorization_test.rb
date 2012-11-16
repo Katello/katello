@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'models/system_base'
+
 class SystemGroupAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCase
   include SystemTestBase
 
@@ -21,35 +22,33 @@ class SystemGroupAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCa
     @org = @acme_corporation
   end
 
-
   def test_readable
-     assert !SystemGroup.readable(@org).empty?
-   end
+    refute_empty SystemGroup.readable(@org)
+  end
 
   def test_editable
-   assert !SystemGroup.editable(@org).empty?
+    refute_empty SystemGroup.editable(@org)
   end
 
   def test_systems_readable
-   assert !SystemGroup.systems_readable(@org).empty?
+    refute_empty SystemGroup.systems_readable(@org)
   end
 
   def test_systems_editable
-   assert !SystemGroup.systems_editable(@org).empty?
+    refute_empty SystemGroup.systems_editable(@org)
   end
 
   def test_systems_deletable
-   assert !SystemGroup.systems_deletable(@org).empty?
+    refute_empty SystemGroup.systems_deletable(@org)
   end
 
   def test_creatable?
-  assert SystemGroup.creatable?(@org)
+    assert SystemGroup.creatable?(@org)
   end
 
   def test_any_readable?
-  assert SystemGroup.any_readable?(@org)
+    assert SystemGroup.any_readable?(@org)
   end
-
 
   def test_systems_readable?
     assert @group.systems_readable?
@@ -74,6 +73,7 @@ class SystemGroupAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCa
   def test_deletable?
     assert @group.deletable?
   end
+
 end
 
 
@@ -88,55 +88,55 @@ class SystemGroupAuthorizationNoPermsTest < MiniTest::Rails::ActiveSupport::Test
   end
 
   def test_readable
-     assert SystemGroup.readable(@org).empty?
-   end
+    assert_empty SystemGroup.readable(@org)
+  end
 
   def test_editable
-   assert SystemGroup.editable(@org).empty?
+    assert_empty SystemGroup.editable(@org)
   end
 
   def test_systems_readable
-   assert SystemGroup.systems_readable(@org).empty?
+    assert_empty SystemGroup.systems_readable(@org)
   end
 
   def test_systems_editable
-   assert SystemGroup.systems_editable(@org).empty?
+    assert_empty SystemGroup.systems_editable(@org)
   end
 
   def test_systems_deletable
-   assert SystemGroup.systems_deletable(@org).empty?
+    assert_empty SystemGroup.systems_deletable(@org)
   end
 
   def test_creatable?
-  assert !SystemGroup.creatable?(@org)
+    refute SystemGroup.creatable?(@org)
   end
 
   def test_any_readable?
-  assert !SystemGroup.any_readable?(@org)
+    refute SystemGroup.any_readable?(@org)
   end
 
-
   def test_systems_readable?
-    assert !@group.systems_readable?
+    refute @group.systems_readable?
   end
 
   def test_systems_deletable?
-    assert !@group.systems_deletable?
+    refute @group.systems_deletable?
   end
 
   def test_systems_editable?
-    assert !@group.systems_editable?
+    refute @group.systems_editable?
   end
 
   def test_readable?
-    assert !@group.readable?
+    refute @group.readable?
   end
 
   def test_editable?
-    assert !@group.editable?
+    refute @group.editable?
   end
 
   def test_deletable?
-    assert !@group.deletable?
+    refute @group.deletable?
   end
+
 end
