@@ -407,7 +407,7 @@ class ContentSearchController < ApplicationController
       end
     end
     to_ret = {}
-    content_attribute = content_type.to_sym == :package ? 'nvrea' : 'id'
+    content_attribute = content_type.to_sym == :package ? 'nvrea' : 'errata_id'
     content_class = content_type.to_sym == :package ? Package : Errata
     content = multi_repo_content_search(content_class, content_search_obj, spanning_repos, offset, content_attribute, search_mode)
 
@@ -442,7 +442,7 @@ class ContentSearchController < ApplicationController
         end
       end
       sort { by "#{default_field}_sort", 'asc'}
-      fields [:id, :name, :nvrea, :repoids, :type]
+      fields [:id, :name, :nvrea, :repoids, :type, :errata_id]
       size user.page_size
       from offset
       if  search_obj.is_a? Array

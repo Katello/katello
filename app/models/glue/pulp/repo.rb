@@ -194,7 +194,7 @@ module Glue::Pulp::Repo
     def errata
       if @repo_errata.nil?
         e_ids = Runcible::Extensions::Repository.errata_ids(self.pulp_id)
-        self.errata = Runcible::Extensions::Errata.find_all_by_unit_ids(e_ids)
+        self.errata = Runcible::Extensions::Errata.find_all(e_ids)
       end
       @repo_errata
     end
