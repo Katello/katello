@@ -22,27 +22,27 @@ class RepositoryAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCas
   end
 
   def test_readable
-    assert !Repository.readable(@library).empty?
+    refute_empty Repository.readable(@library)
   end
 
   def test_libraries_content_readable
-    assert !Repository.libraries_content_readable(@acme_corporation).empty?
+    refute_empty Repository.libraries_content_readable(@acme_corporation)
   end
 
   def test_content_readable
-    assert !Repository.content_readable(@acme_corporation).empty?
+    refute_empty Repository.content_readable(@acme_corporation)
   end
 
   def test_readable_for_product
-    assert !Repository.readable_for_product(@library, @fedora).empty?
+    refute_empty Repository.readable_for_product(@library, @fedora)
   end
 
   def test_editable_in_library
-    assert !Repository.editable_in_library(@acme_corporation).empty?
+    refute_empty Repository.editable_in_library(@acme_corporation)
   end
 
   def test_readable_in_org
-    assert !Repository.readable_in_org(@acme_corporation).empty?
+    refute_empty Repository.readable_in_org(@acme_corporation)
   end
 
   def test_any_readable_in_org?
@@ -61,31 +61,31 @@ class RepositoryAuthorizationNonAuthUserTest < MiniTest::Rails::ActiveSupport::T
   end
 
   def test_readable
-    assert Repository.readable(@library).empty?
+    assert_empty Repository.readable(@library)
   end
 
   def test_libraries_content_readable
-    assert Repository.libraries_content_readable(@acme_corporation).empty?
+    assert_empty Repository.libraries_content_readable(@acme_corporation)
   end
 
   def test_content_readable
-    assert Repository.content_readable(@acme_corporation).empty?
+    assert_empty Repository.content_readable(@acme_corporation)
   end
 
   def test_readable_for_product
-    assert Repository.readable_for_product(@library, @fedora).empty?
+    assert_empty Repository.readable_for_product(@library, @fedora)
   end
 
   def test_editable_in_library
-    assert Repository.editable_in_library(@acme_corporation).empty?
+    assert_empty Repository.editable_in_library(@acme_corporation)
   end
 
   def test_readable_in_org
-    assert Repository.readable_in_org(@acme_corporation).empty?
+    assert_empty Repository.readable_in_org(@acme_corporation)
   end
 
   def test_any_readable_in_org?
-    assert !Repository.any_readable_in_org?(@acme_corporation)
+    refute Repository.any_readable_in_org?(@acme_corporation)
   end
 
 end

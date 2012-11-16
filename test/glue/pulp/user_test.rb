@@ -93,7 +93,8 @@ class GluePulpUserTest < GluePulpUserTestBase
   def test_prune_pulp_only_attributes
     attributes = @user.attributes.merge({:backend_attribute_only => "This is a backend only attribute"})
     attributes = @user.prune_pulp_only_attributes(attributes)
-    assert !attributes.has_key?(:backend_attribute_only)
+
+    refute_includes attributes, :backend_attribute_only
   end
 
 end
