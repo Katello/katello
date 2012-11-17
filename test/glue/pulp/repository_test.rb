@@ -236,13 +236,14 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
 
   def test_errata
     VCR.use_cassette('glue_pulp_repo_units', :match_requests_on => [:body_json, :path, :method]) do
-      refute_empty @@fedora_17_x86_64.errata.select { |errata| errata.id == "RHEA-2010:0002" }
+      refute_empty @@fedora_17_x86_64.errata.select { |errata| errata.errata_id == "RHEA-2010:0002" }
     end
   end
 
   def test_has_erratum?
     VCR.use_cassette('glue_pulp_repo_units', :match_requests_on => [:body_json, :path, :method]) do
-      assert @@fedora_17_x86_64.has_erratum?("RHEA-2010:0002")
+      e_id = @@fedora_17_x86_64.errata.first.id
+      assert @@fedora_17_x86_64.has_erratum?(e_id)
     end
   end
 
