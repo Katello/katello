@@ -255,20 +255,6 @@ class Resources::AbstractModel
     end
   end
 
-  def self.delete!(id)
-    resource.destroy({ 'id' => id }, header)
-    true
-  rescue RestClient::ResourceNotFound => e
-    raise NotFound.new(self, id)
-  end
-
-
-  def self.delete(id)
-    delete!(id)
-  rescue NotFound
-    false
-  end
-
   def to_key
     key = self.id
     [key] if key
@@ -293,6 +279,19 @@ class Resources::AbstractModel
   end
 
   private
+
+  def self.delete!(id)
+    resource.destroy({ 'id' => id }, header)
+    true
+  rescue RestClient::ResourceNotFound => e
+    raise NotFound.new(self, id)
+  end
+
+  def self.delete(id)
+    delete!(id)
+  rescue NotFound
+    false
+  end
 
   singleton_class.instance_eval { attr_writer :current_user_getter }
 
