@@ -208,7 +208,7 @@ class OrganizationsController < ApplicationController
   end
 
   def find_organization_by_id
-    @organization = Organization.find(params[:id])
+    @organization = Organization.find(params[:id])    
   end
 
   def setup_options
