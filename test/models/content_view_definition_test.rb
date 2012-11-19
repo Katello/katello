@@ -15,7 +15,7 @@ require 'minitest_helper'
 class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
   fixtures :all
 
-  def self.before_setup
+  def self.before_suite
     models = ["Organization", "KTEnvironment", "User", "Product", "Repository"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
   end
@@ -69,8 +69,9 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
   def test_repos
     @content_view_def.save!
     @content_view_def.repositories << @repo
-    assert_equal @repo.content_view_definition.reload, @content_view_def
-    assert_includes @content_view_def.repositories.reload, @repo
+    @content_view_def = @content_view_def.reload
+    assert_equal @repo.content_view_definitions.first, @content_view_def
+    assert_includes @content_view_def.repositories, @repo
   end
 
   def test_adding_products_to_composite_view

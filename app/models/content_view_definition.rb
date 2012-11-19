@@ -24,7 +24,8 @@ class ContentViewDefinition < ActiveRecord::Base
   has_many :filters
   has_many :content_view_definition_products
   has_many :products, :through => :content_view_definition_products
-  has_many :repositories
+  has_many :content_view_definition_repositories
+  has_many :repositories, :through => :content_view_definition_repositories
 
   validates :label, :uniqueness => {:scope => :organization_id},
     :presence => true, :katello_label_format => true
@@ -37,9 +38,10 @@ class ContentViewDefinition < ActiveRecord::Base
                         :label=>label,
                         :description => description,
                         :content_view_definition => self,
-                        :organization => organization,
-                        :environments => [organization.library]
+                        :organization => organization
                        )
+    version = ContentViewVersion.create!(:version=>1, :content_view=>view,
+                                 :environments => [organization.library])
     generate_repos(view)
     view
   end

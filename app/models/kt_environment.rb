@@ -91,8 +91,9 @@ class KTEnvironment < ActiveRecord::Base
 
   has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED}, :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
 
-  has_many :environment_content_views, :foreign_key => :environment_id, :inverse_of=>:environment
-  has_many :content_views, :through => :environment_content_views, :inverse_of=>:environments
+  has_many :content_view_version_environments, :foreign_key=>:environment_id
+  has_many :content_view_versions, :through=>:content_view_version_environments, :inverse_of=>:environments
+
 
   belongs_to :default_content_view, :class_name => "ContentView", :foreign_key => :default_content_view_id
 
@@ -117,6 +118,14 @@ class KTEnvironment < ActiveRecord::Base
 
   def library?
     self.library
+  end
+
+  def default_view_version
+    self.default_content_view.version(self)
+  end
+
+  def content_views
+    self.content_view_versions.collect{|vv| vv.content_view}
   end
 
   def successor
@@ -300,7 +309,9 @@ class KTEnvironment < ActiveRecord::Base
   def create_default_content_view
     if self.default_content_view.nil?
       self.default_content_view = ContentView.create!(:name=>"Default View for #{self.name}",
-                                                :organization=>self.organization)
+                                                :organization=>self.organization, :default=>true)
+      version = ContentViewVersion.create!(:version=>1, :content_view=>self.default_content_view)
+      self.content_view_versions << version
     end
   end
 
