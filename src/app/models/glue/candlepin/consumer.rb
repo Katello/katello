@@ -102,6 +102,7 @@ module Glue::Candlepin::Consumer
 
     def load_from_cp(consumer_json)
       self.uuid = consumer_json[:uuid]
+      consumer_json[:facts] ||= {'sockets'=>0}
       convert_from_cp_fields(consumer_json).each do |k,v|
         instance_variable_set("@#{k}", v) if respond_to?("#{k}=")
       end
