@@ -443,7 +443,7 @@ class RemoveDeletion(SystemAction):
                        help=_("hypervisor uuid (required)"))
 
     def check_options(self, validator):
-        validator.require_option('uuid')
+        validator.require('uuid')
 
     def run(self):
         uuid = self.get_option('uuid')
