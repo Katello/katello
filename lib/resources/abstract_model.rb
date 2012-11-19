@@ -46,21 +46,6 @@ class Resources::AbstractModel
   end
 
 
-  def update_index
-    if self.destroyed?
-      index.remove self
-    else
-      response = index.store( self, {:percolate => percolator} )
-      self.id ||= response['_id'] if self.respond_to?(:id=)
-      self._index = response['_index'] if self.respond_to?(:_index=)
-      self._type = response['_type'] if self.respond_to?(:_type=)
-      self._version = response['_version'] if self.respond_to?(:_version=)
-      self.matches = response['matches'] if self.respond_to?(:matches=)
-      self
-    end
-  end
-
-
   class_attribute :_attributes, :instance_reader => false, :instance_writer => false
 
   # @param [Array<Symbol>] attrs of attribute names
@@ -276,6 +261,7 @@ class Resources::AbstractModel
   rescue RestClient::ResourceNotFound => e
     raise NotFound.new(self, id)
   end
+
 
   def self.delete(id)
     delete!(id)

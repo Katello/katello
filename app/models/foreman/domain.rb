@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Foreman::Domain < Resources::ForemanModel
-  include IndexedModel
+  include Resources::AbstractModel::IndexedModel
 
   attributes :id, :name, :fullname, :dns_id
   validates :name, :presence => true
