@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Foreman::Subnet < Resources::ForemanModel
-  include IndexedModel
+  include Resources::AbstractModel::IndexedModel
 
   attributes :name, :network, :mask, :gateway, :dns_primary,
     :dns_secondary, :from, :to, :vlanid, :domain_ids, :dhcp_id, :tftp_id, :dns_id
