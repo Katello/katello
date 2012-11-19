@@ -14,6 +14,7 @@ module Glue::Pulp::Consumer
   def self.included(base)
     base.send :include, InstanceMethods
     base.send :include, LazyAccessor
+
     base.class_eval do
       before_save :save_pulp_orchestration
       before_destroy :destroy_pulp_orchestration
@@ -31,17 +32,22 @@ module Glue::Pulp::Consumer
   end
 
   module InstanceMethods
+
     def enable_repos update_ids
       # calculate repoids to bind/unbind
-      bound_ids = repoids
-      intersection = update_ids & bound_ids
-      bind_ids = update_ids - intersection
-      unbind_ids = bound_ids - intersection
+      bound_ids     = repoids
+      intersection  = update_ids & bound_ids
+      bind_ids      = update_ids - intersection
+      unbind_ids    = bound_ids - intersection
+
       Rails.logger.debug "Bound repo ids: #{bound_ids.inspect}"
       Rails.logger.debug "Update repo ids: #{update_ids.inspect}"
       Rails.logger.debug "Repo ids to bind: #{bind_ids.inspect}"
       Rails.logger.debug "Repo ids to unbind: #{unbind_ids.inspect}"
-      processed_ids = []; error_ids = []
+
+      processed_ids = []
+      error_ids     = []
+
       unbind_ids.each do |repoid|
         begin
           Runcible::Extensions::Consumer.unbind_all(uuid, repoid)
@@ -51,6 +57,7 @@ module Glue::Pulp::Consumer
           error_ids << repoid
         end
       end
+
       bind_ids.each do |repoid|
         begin
           Runcible::Extensions::Consumer.bind_all(uuid, repoid)
