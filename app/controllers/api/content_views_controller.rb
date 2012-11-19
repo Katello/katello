@@ -4,18 +4,12 @@ class Api::ContentViewsController < Api::ApiController
   before_filter :find_optional_environment, :only => [:index]
 
   def rules
-    index_test   = lambda { true }
-    create_test  = lambda { true }
-    show_test    = lambda { true }
-    update_test  = lambda { true }
-    destroy_test = lambda { true }
+    index_test   = lambda { ContentView.any_readable?(@organization) }
+    show_test    = lambda { @view.readable? }
 
     {
       :index   => index_test,
-      :create  => create_test,
-      :update  => update_test,
-      :show    => show_test,
-      :destroy => destroy_test
+      :show    => show_test
     }
   end
 
@@ -24,32 +18,28 @@ class Api::ContentViewsController < Api::ApiController
   param :environment_id, :identifier, :desc => "environment identifier"
   param :name, :identifier, :desc => "content view identifier"
   def index
-    if @environment && !@environment.library?
-      @content_views = @environment.content_views
+    if @environment
+      ContentView.readable(@organization).joins(:content_view_environments).
+        where("content_view_environments.environment_id = ?", @environment.id)
     else
-      @content_views = @organization.content_views
+      @content_views = ContentView.readable(@organization)
     end
-    unless params[:name].blank?
-      @content_views = @content_views.where(:name => params[:name])
+    if params[:name].present?
+      @content_views = @content_views.select {|cv| cv.name == params[:name]}
     end
     render :json => @content_views
   end
 
-  api :POST, "/content_views"
-  api :POST, "/organizations/%s/content_views"
-  param :organization_id, :identifier, :required => true
-  param :content_view, Hash, :required => true do
-    param :name, String, :desc => "Content view name", :required => true
-    param :description, String, :desc => "Content view description"
-  end
-  def create
-    @content_view = ContentView.new(params[:content_view]) do |view|
-      view.organization = @organization
-    end
-    @content_view.save!
-    render :json => @content_view
+  api :GET, "/content_views/:id"
+  param :id, :identifier, :desc => "content view id"
+  def show
+    render :json => @view
   end
 
   private
+
+  def find_content_view
+    @view = ContentView.find(params[:id])
+  end
 
 end
