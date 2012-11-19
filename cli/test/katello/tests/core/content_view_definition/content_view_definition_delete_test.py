@@ -5,8 +5,8 @@ import os
 from katello.tests.core.action_test_utils import CLIOptionTestCase,\
         CLIActionTestCase
 
-import katello.client.core.content_view
-from katello.client.core.content_view import Delete
+import katello.client.core.content_view_definition
+from katello.client.core.content_view_definition import Delete
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
 
@@ -36,7 +36,7 @@ class ContentViewDeleteTest(CLIActionTestCase):
 
     def setUp(self):
         self.set_action(Delete())
-        self.set_module(katello.client.core.content_view)
+        self.set_module(katello.client.core.content_view_definition)
         self.mock_printer()
         self.mock_options(self.OPTIONS)
 

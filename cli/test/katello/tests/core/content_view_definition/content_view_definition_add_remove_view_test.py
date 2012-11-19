@@ -6,10 +6,10 @@ from katello.tests.core.action_test_utils import CLIOptionTestCase,\
         CLIActionTestCase
 
 from katello.tests.core.organization import organization_data
-from katello.tests.core.content_view import content_view_data
+from katello.tests.core.content_view_definition import content_view_definition_data
 
-import katello.client.core.content_view
-from katello.client.core.content_view import AddRemoveContentView
+import katello.client.core.content_view_definition
+from katello.client.core.content_view_definition import AddRemoveContentView
 from katello.client.api.utils import ApiDataError
 
 
@@ -36,8 +36,8 @@ class RemoveRequiredCLIOptionsTest(RequiredCLIOptionsTest, CLIOptionTestCase):
 class ContentViewAddRemoveViewTest(object):
 
     ORG = organization_data.ORGS[0]
-    DEF = content_view_data.DEFS[0]
-    VIEWS = content_view_data.VIEWS
+    DEF = content_view_definition_data.DEFS[0]
+    VIEWS = content_view_definition_data.VIEWS
     VIEW = VIEWS[0]
 
     OPTIONS = {
@@ -50,7 +50,7 @@ class ContentViewAddRemoveViewTest(object):
 
     def setUp(self):
         self.set_action(AddRemoveContentView(self.addition))
-        self.set_module(katello.client.core.content_view)
+        self.set_module(katello.client.core.content_view_definition)
         self.mock_printer()
 
         self.mock_options(self.OPTIONS)

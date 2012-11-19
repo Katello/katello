@@ -1,4 +1,4 @@
-class CreateContentViewDefinitionRepos < ActiveRecord::Migration
+class CreateContentViewDefinitionRepositories < ActiveRecord::Migration
   def self.up
     create_table :content_view_definition_repositories do |t|
       t.references :content_view_definition
@@ -7,10 +7,12 @@ class CreateContentViewDefinitionRepos < ActiveRecord::Migration
       t.timestamps
     end
     add_index :content_view_definition_repositories, [:content_view_definition_id,
-      :repository_id], :name => "content_view_def_repo_index"
+      :repository_id], :name => :cvd_repo_index
+    remove_column :repositories, :content_view_definition_id
   end
 
   def self.down
     drop_table :content_view_definition_repositories
+    add_column :repositories, :content_view_definition_id, :integer
   end
 end

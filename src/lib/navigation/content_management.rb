@@ -13,6 +13,7 @@ module Navigation
   module ContentMenu
     def self.included(base)
       base.class_eval do
+        helper_method :content_view_definition_navigation
         helper_method :custom_provider_navigation
         helper_method :activation_keys_navigation
         helper_method :promotion_packages_navigation
@@ -23,6 +24,17 @@ module Navigation
         helper_method :subscriptions_navigation
         helper_method :new_subscription_navigation
       end
+    end
+
+    def content_view_definition_navigation
+      [
+        { :key => :edit_view_definition,
+          :name =>_("Details"),
+          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : edit_content_view_definition_path(@view_definition.id),
+          :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
+          :options => {:class=>"panel_link"}
+        }
+      ]
     end
 
     def custom_provider_navigation
@@ -57,7 +69,7 @@ module Navigation
       {:key => :subscriptions,
        :name =>_("Red Hat Subscriptions"),
        :url => subscriptions_path,
-       :if => lambda{current_organization},
+       :if => lambda{current_organization.redhat_provider.readable?},
        :options => {:class=>'content third_level', "data-menu"=>"subscriptions", "data-dropdown"=>"subscriptions"}
       }
     end
@@ -88,8 +100,10 @@ module Navigation
         :url => :sub_level,
         :options => {:class=>'content top_level', "data-menu"=>"content"},
         :if => lambda{current_organization},
-        :items=> AppConfig.katello? ? [ menu_subscriptions, menu_providers, menu_sync_management, menu_content_search, menu_system_templates, menu_changeset_management] :
-            [ menu_subscriptions, menu_system_templates]
+        :items=> AppConfig.katello? ?
+            [menu_subscriptions, menu_providers, menu_sync_management, menu_content_search,
+             menu_content_view_definitions, menu_system_templates, menu_changeset_management] :
+            [menu_subscriptions, menu_system_templates]
       }
     end
 
@@ -101,7 +115,6 @@ module Navigation
        :options => {:class=>'content second_level menu_parent', "data-menu"=>"content", "data-dropdown"=>"repositories"},
        :items => [menu_custom_providers, menu_redhat_providers, menu_filters, menu_gpg]
       }
-
     end
 
     def menu_redhat_providers
@@ -140,6 +153,14 @@ module Navigation
       }
     end
 
+    def menu_content_view_definitions
+      {:key => :content_view_definitions,
+       :name => _("Views"),
+       :if => lambda{AppConfig.katello? && ContentViewDefinition.any_readable?(current_organization)},
+       :options => {:class=>'content second_level', "data-menu"=>"content"},
+       :url =>content_view_definitions_path,
+      }
+    end
 
     def menu_sync_status
       {:key => :sync_status,
@@ -148,7 +169,6 @@ module Navigation
         :options => {:class=>"third_level", "data-dropdown"=>"sync"}
       }
     end
-
 
     def menu_sync_plan
       {:key => :sync_plans,

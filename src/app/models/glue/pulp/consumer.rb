@@ -19,13 +19,13 @@ module Glue::Pulp::Consumer
       before_destroy :destroy_pulp_orchestration
       after_rollback :rollback_on_pulp_create, :on => :create
 
-      lazy_accessor :pulp_facts, :initializer => lambda { Runcible::Extensions::Consumer.retrieve(uuid) }
-      lazy_accessor :package_profile, :initializer => lambda { Runcible::Extensions::Consumer.profile(uuid, 'rpm') }
-      lazy_accessor :simple_packages, :initializer => lambda { Runcible::Extensions::Consumer.profile(uuid, 'rpm')["profile"].
+      lazy_accessor :pulp_facts, :initializer => lambda {|s| Runcible::Extensions::Consumer.retrieve(uuid) }
+      lazy_accessor :package_profile, :initializer => lambda {|s| Runcible::Extensions::Consumer.profile(uuid, 'rpm') }
+      lazy_accessor :simple_packages, :initializer => lambda {|s| Runcible::Extensions::Consumer.profile(uuid, 'rpm')["profile"].
                                                               collect{|package| Glue::Pulp::SimplePackage.new(package)} }
-      lazy_accessor :errata, :initializer => lambda { Resources::Pulp::Consumer.errata(uuid).
+      lazy_accessor :errata, :initializer => lambda {|s| Resources::Pulp::Consumer.errata(uuid).
                                                               collect{|errata| Errata.new(errata)} }
-      lazy_accessor :repoids, :initializer => lambda { Runcible::Extensions::Consumer.repos(uuid).
+      lazy_accessor :repoids, :initializer => lambda {|s| Runcible::Extensions::Consumer.repos(uuid).
                                                               collect{|repo| repo["repo_id"]} }
     end
   end

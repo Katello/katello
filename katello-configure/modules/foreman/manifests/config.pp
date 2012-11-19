@@ -94,7 +94,8 @@ class foreman::config {
    command => "/usr/bin/ruby ${foreman::app_root}/script/foreman-config -k oauth_active -v '${foreman::oauth_active}'\
                               -k oauth_consumer_key -v '${foreman::oauth_consumer_key}'\
                               -k oauth_consumer_secret -v '${foreman::oauth_consumer_secret}'\
-                              -k oauth_map_users -v '${foreman::oauth_map_users}'",
+                              -k oauth_map_users -v '${foreman::oauth_map_users}'\
+                              -k administrator -v '${foreman::administrator}'",
    user    => $foreman::user,
    timeout => 0,
    require => User[$foreman::user],
