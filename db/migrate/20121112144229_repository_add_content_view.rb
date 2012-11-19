@@ -19,7 +19,6 @@ class RepositoryAddContentView < ActiveRecord::Migration
   end
 
   def self.down
-    remove_column :repositories, :content_view_version_id
     KTEnvironment.all.each do |env|
       env.default_content_view.destroy!
     end

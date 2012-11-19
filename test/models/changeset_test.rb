@@ -78,7 +78,7 @@ class ChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
     changeset    = FactoryGirl.create(:promotion_changeset,
                                       :environment => @dev,
                                       :state => Changeset::REVIEW)
-    assert changeset.add_content_view!(@library_view), @library_view
+    assert_equal changeset.add_content_view!(@library_view), @library_view
     # assert changeset.apply( :async => false, :notify => false )
   end
 
