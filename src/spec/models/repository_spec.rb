@@ -34,8 +34,10 @@ describe Repository, :katello => true do
     @product.stub(:arch).and_return('noarch')
     @product.save!
     @ep = EnvironmentProduct.find_or_create(@organization.library, @product)
-    @repo = Repository.create!(:environment_product => @ep, :name => "testrepo", :label => "testrepo_label",
-                               :pulp_id=>"1010", :enabled => true, :content_id=>"foo", :relative_path=>'/foo/')
+    @repo = Repository.create!(:environment_product => @ep, :name => "testrepo",
+                               :label => "testrepo_label", :pulp_id=>"1010",
+                               :enabled => true, :content_id=>"foo", :relative_path=>'/foo/',
+                               :content_view_version=>@ep.environment.default_view_version)
   end
 
 
@@ -46,7 +48,8 @@ describe Repository, :katello => true do
       repo = Repository.create!(:environment_product => @ep, :pulp_id => "pulp-id-#{rand 10**6}",
                                 :name=>"newname#{rand 10**6}", :label=>"newlabel#{rand 10**6}",
                                 :url => "http://fedorahosted org", :gpg_key_id => gpg_key.id,
-                                :relative_path=>'/foo', :content_id=>'asdf')
+                                :relative_path=>'/foo', :content_id=>'asdf',
+                                :content_view_version=>@ep.environment.default_view_version)
 
       prod = repo.product
       repo.stub(:product).and_return(prod)
