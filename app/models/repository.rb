@@ -181,7 +181,8 @@ class Repository < ActiveRecord::Base
                              env.organization.label, self.content_view.label)
   end
 
-  def create_clone to_env, content_view
+  def create_clone to_env, content_view=nil
+    content_view = to_env.default_content_view if content_view.nil?
     view_version = content_view.version(to_env)
     raise _("View %{view} has not been promoted to %{env}") %
               {:view=>content_view.name, :env=>to_env.name} if view_version.nil?
