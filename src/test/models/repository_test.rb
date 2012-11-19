@@ -130,9 +130,20 @@ class RepositoryInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_create_clone
-    clone = @fedora_17_x86_64.create_clone(@staging, @staging.default_content_view)
+    clone = @fedora_17_x86_64.create_clone(@staging)
     assert clone.id
     assert Repository.in_environment(@staging).where(:library_instance_id=>@fedora_17_x86_64.id).count > 0
   end
+
+  def test_repo_id
+    @fedora             = Product.find(products(:fedora).id)
+    @library            = KTEnvironment.find(environments(:library).id)
+    @acme_corporation   = Organization.find(organizations(:acme_corporation).id)
+
+    repo_id = Repository.repo_id(@fedora.label, @fedora_17_x86_64.label, @library.label,
+                                 @acme_corporation.label, @library.default_content_view.label)
+    assert_equal repo_id, "acme_corporation_label-library_label-library_label-fedora_label-fedora_17_x86_64_label"
+  end
+
 
 end
