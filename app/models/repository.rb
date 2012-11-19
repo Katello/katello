@@ -35,9 +35,10 @@ class Repository < ActiveRecord::Base
   belongs_to :library_instance, :class_name=>"Repository"
   has_and_belongs_to_many :changesets
   has_and_belongs_to_many :filters
-  belongs_to :content_view_definition
-  belongs_to :content_view
 
+  has_many :content_view_definition_repositories
+  has_many :content_view_definitions, :through => :content_view_definition_repositories
+  belongs_to :content_view_version, :inverse_of=>:repositories
 
 
   validates :environment_product, :presence => true
@@ -63,6 +64,10 @@ class Repository < ActiveRecord::Base
 
   def organization
     self.environment.organization
+  end
+
+  def content_view
+    self.content_view_version.content_view
   end
 
   def self.in_environment(env)
@@ -178,6 +183,10 @@ class Repository < ActiveRecord::Base
   end
 
   def create_clone to_env, content_view
+    view_version = content_view.version(to_env)
+    raise _("View %{view} has not been promoted to %{env}") %
+              {:view=>content_view.name, :env=>to_env.name} if view_version.nil?
+
     library = self.environment.library? ? self : self.library_instance
 
     if content_view.default?
@@ -188,7 +197,7 @@ class Repository < ActiveRecord::Base
     else
       raise _("Repository has already been cloned to %{cv_name} in environment %{to_env}") %
                 {:to_env=>to_env, :cv_name=>content_view.name} if
-          Repository.where(:library_instance_id=>library.id).in_environment(to_env).where(:content_view_id=>content_view.id).count > 0
+          content_view.repos(to_env).where(:library_instance_id=>library.id).count > 0
     end
 
     key = EnvironmentProduct.find_or_create(to_env, self.product)
@@ -202,7 +211,7 @@ class Repository < ActiveRecord::Base
                            :minor=>self.minor,
                            :enabled=>self.enabled,
                            :content_id=>self.content_id,
-                           :content_view=>content_view
+                           :content_view_version=>view_version
                            )
     clone.pulp_id = clone.clone_id(to_env)
     clone.relative_path = Repository.clone_repo_path(self, to_env, content_view)
