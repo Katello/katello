@@ -53,7 +53,7 @@ class ContentViewDefinition < ActiveRecord::Base
     self.products.each{|prod|
       prod.repos(self.organization.library).enabled.each{|r| repos << r}
     }
-    repos += self.repositories
+    repos.concat(self.repositories)
     repos.uniq!
     repos.each do |repo|
       clone = repo.create_clone(self.organization.library, view)

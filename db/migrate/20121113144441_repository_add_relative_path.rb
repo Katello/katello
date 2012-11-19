@@ -4,8 +4,8 @@ class RepositoryAddRelativePath < ActiveRecord::Migration
     Repository.reset_column_information
     User.current = User.hidden.first
     Repository.all.each do |repo|
-            repo.relative_path = repo.distributors.first['config']['relative_url']
-            repo.save!
+      repo.relative_path = repo.distributors.first['config']['relative_url']
+      repo.save!
     end
     change_column :repositories, :relative_path, :string, :null => false
   end

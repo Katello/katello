@@ -172,7 +172,7 @@ class Repository < ActiveRecord::Base
     end
   end
 
-  def self.repo_id product_label, repo_label, env_label, organization_label, view_label
+  def self.repo_id(product_label, repo_label, env_label, organization_label, view_label)
     [organization_label, env_label, view_label, product_label, repo_label].compact.join("-").gsub(/[^-\w]/,"_")
   end
 
@@ -181,7 +181,7 @@ class Repository < ActiveRecord::Base
                              env.organization.label, content_view.label)
   end
 
-  def create_clone to_env, content_view=nil
+  def create_clone(to_env, content_view=nil)
     content_view = to_env.default_content_view if content_view.nil?
     view_version = content_view.version(to_env)
     raise _("View %{view} has not been promoted to %{env}") %
