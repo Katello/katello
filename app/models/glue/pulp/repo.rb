@@ -124,7 +124,6 @@ module Glue::Pulp::Repo
     end
 
     def promote from_env, to_env
-
       if self.is_cloned_in?(to_env)
         return clone.sync
       else

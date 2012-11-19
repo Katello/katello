@@ -176,7 +176,7 @@ class Repository < ActiveRecord::Base
     [organization_label, env_label, view_label, product_label, repo_label].compact.join("-").gsub(/[^-\w]/,"_")
   end
 
-  def clone_id(env)
+  def clone_id(env, content_view)
     Repository.repo_id(self.product.label, self.label, env.label,
                              env.organization.label, self.content_view.label)
   end
@@ -213,7 +213,7 @@ class Repository < ActiveRecord::Base
                            :content_id=>self.content_id,
                            :content_view_version=>view_version
                            )
-    clone.pulp_id = clone.clone_id(to_env)
+    clone.pulp_id = clone.clone_id(to_env, content_view)
     clone.relative_path = Repository.clone_repo_path(self, to_env, content_view)
     clone.save!
     return clone
