@@ -73,7 +73,7 @@ class Publish(ContentViewDefinitionAction):
                 help=_("label to give published view"))
         parser.add_option('--description', dest='description',
                 help=_("label to give published view"))
-        parser.add_option
+
     def check_options(self, validator):
         validator.require(('org', 'name', 'definition'))
 
