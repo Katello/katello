@@ -33,7 +33,10 @@ module ProductHelperMethods
     @p = Product.create!(ProductTestData::SIMPLE_PRODUCT.merge({:name=>'product' + suffix, :environments => [env], :provider => @provider}))
     env_product = EnvironmentProduct.find_or_create(env, @p)
 
-    repo = Repository.new(:environment_product => env_product, :name=>"FOOREPO" + suffix, :label=>"FOOREPO" + suffix, :pulp_id=>"anid" + suffix, :content_id=> "1234")
+    repo = Repository.new(:environment_product => env_product, :name=>"FOOREPO" + suffix,
+                          :label=>"FOOREPO" + suffix, :pulp_id=>"anid" + suffix,
+                          :content_id=> "1234", :content_view_version=>env.default_view_version,
+                          :relative_path=>'/foo/')
     repo.stub(:create_pulp_repo).and_return([])
     repo.save!
 
