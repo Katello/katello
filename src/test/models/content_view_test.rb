@@ -90,7 +90,7 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     env.default_content_view = content_view
     env.save!
     content_view = content_view.reload
-    assert content_view.environment_default == env
+    assert_equal content_view.environment_default, env
     assert_equal content_view, env.default_content_view
   end
 
@@ -114,13 +114,13 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
   def test_delete
     view = @library_dev_view
     view.delete(@dev)
-    assert !view.environments.include?(@dev)
+    refute_includes view.environments, @dev
   end
 
   def test_delete_last_env
     view = @library_view
     view.delete(@library)
-    assert ContentView.where(:label=>view.label).empty?
+    assert_empty ContentView.where(:label=>view.label)
   end
 
   def test_default_scope
