@@ -153,7 +153,7 @@ class PromotionChangeset < Changeset
 
     pkgs_promote.each_pair do |repo, pkgs|
       repo.add_packages(pkgs)
-      pkg_ids += pkgs
+      pkg_ids.concat(pkgs)
     end
     Package.index_packages(pkg_ids)
   end
@@ -183,7 +183,7 @@ class PromotionChangeset < Changeset
     errata_ids = []
     errata_promote.each_pair do |repo, errata|
       repo.add_errata(errata)
-      errata_ids += errata
+      errata_ids.concat(errata)
     end
     Errata.index_errata(errata_ids)
   end
