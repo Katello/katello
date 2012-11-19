@@ -297,7 +297,7 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
     assert task_list.length == 3
     self.class.wait_on_tasks(task_list)
 
-    clone_id = @@fedora_17_x86_64.clone_id(@@staging, @@staging.default_content_view)
+    clone_id = @@fedora_17_x86_64.clone_id(staging, staging.default_content_view)
     cloned_repo = Repository.where(:pulp_id => clone_id).first
     cloned_repo.destroy
   end
@@ -328,12 +328,12 @@ class GluePulpRepoRequiresEmptyPromoteTest < GluePulpRepoTestBase
       #Runcible::Resources::Repository.delete(clone_id)
       ##@@fedora_17_x86_64.destroy_repo
       @@fedora_17_x86_64.create_pulp_repo
-
       task_list = @@fedora_17_x86_64.promote(@@library, @@staging)
       wait_on_tasks(task_list)
 
       task = @@fedora_17_x86_64.sync.first
       wait_on_task(task)
+
 
       clone_id = @@fedora_17_x86_64.clone_id(@@staging, @@staging.default_content_view)
       @@cloned_repo = Repository.where(:pulp_id => clone_id).first

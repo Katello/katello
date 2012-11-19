@@ -178,7 +178,7 @@ class Repository < ActiveRecord::Base
 
   def clone_id(env, content_view)
     Repository.repo_id(self.product.label, self.label, env.label,
-                             env.organization.label, self.content_view.label)
+                             env.organization.label, content_view.label)
   end
 
   def create_clone to_env, content_view=nil
