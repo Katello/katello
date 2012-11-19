@@ -218,7 +218,7 @@ KT.system_packages = function() {
                 action_row = $('tr[data-pending-action-id="'+event_id+'"]'),
                 action_status_col = action_row.find('td.package_action_status');
 
-            switch (status["state"]) {
+            switch (status["overall_status"]) {
                 case "waiting":
                 case "running":
                     // do nothing, no change to status needed

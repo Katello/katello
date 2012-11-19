@@ -1,0 +1,85 @@
+#
+# Copyright 2012 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+
+require 'minitest_helper'
+
+class ChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
+  fixtures :all
+
+  def self.before_suite
+    models = ["Organization", "KTEnvironment"]
+    disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
+  end
+
+  def setup
+    @library              = KTEnvironment.find(environments(:library).id)
+    @dev                  = KTEnvironment.find(environments(:dev).id)
+    @acme_corporation     = Organization.find(organizations(:acme_corporation).id)
+    @library_view         = ContentView.find(content_views(:library_view))
+  end
+
+  def test_add_content_view_exception
+    changeset = FactoryGirl.build_stubbed(:promotion_changeset)
+    library   = FactoryGirl.build_stubbed(:library)
+    env       = FactoryGirl.build_stubbed(:environment)
+    view      = FactoryGirl.build_stubbed(:content_view)
+    env.stub(:prior, library) do
+      changeset.environment = env
+
+      assert_empty library.content_views
+      assert_raises(Errors::ChangesetContentException) do
+        changeset.add_content_view!(view)
+      end
+    end
+  end
+
+  def test_content_view_changeset_promotion
+    view = @library_view
+    after_dev    = FactoryGirl.create(:environment, :prior=>@dev)
+    changeset    = FactoryGirl.create(:promotion_changeset,
+                                      :environment => after_dev)
+
+    assert_raises(Errors::ChangesetContentException) do
+      changeset.add_content_view!(view)
+    end
+
+    view.promote(@library, @dev)
+    refute_includes changeset.content_views, view
+
+    changeset.reload
+    view.reload
+    
+    assert changeset.add_content_view!(view)
+    assert_includes changeset.content_views, view
+  end
+
+  def test_invalid_content_view_changeset_apply
+    changeset    = FactoryGirl.create(:promotion_changeset,
+                                      :environment => @dev,
+                                      :state => Changeset::REVIEW)
+
+    @library_view.update_attribute(:name, "")
+    changeset.add_content_view!(@library_view)
+    assert_raises(ActiveRecord::RecordInvalid) do
+      changeset.apply
+    end
+  end
+
+  def test_content_view_changeset_apply
+    changeset    = FactoryGirl.create(:promotion_changeset,
+                                      :environment => @dev,
+                                      :state => Changeset::REVIEW)
+    assert changeset.add_content_view!(@library_view), @library_view
+    # assert changeset.apply( :async => false, :notify => false )
+  end
+
+end

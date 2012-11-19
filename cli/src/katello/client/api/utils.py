@@ -36,6 +36,8 @@ from katello.client.api.permission import PermissionAPI
 from katello.client.api.filter import FilterAPI
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.system import SystemAPI
+from katello.client.api.content_view import ContentViewAPI
+from katello.client.api.content_view_definition import ContentViewDefinitionAPI
 
 
 class ApiDataError(Exception):
@@ -94,6 +96,27 @@ def get_product(orgName, prodName=None, prodLabel=None, prodId=None):
             (prodName, orgName))
 
     return products[0]
+
+
+def get_content_view(org_name, view_label):
+    cv_api = ContentViewAPI()
+
+    view = cv_api.content_view_by_label(org_name, view_label)
+    if view == None:
+        raise ApiDataError(_("Could not find content view [ %s ] within \
+            organization [ %s ]") %
+            (view_label, org_name))
+    return view
+
+
+def get_cv_definition(org_name, def_label):
+    cvd_api = ContentViewDefinitionAPI()
+
+    cvd = cvd_api.content_view_def_by_label(org_name, def_label)
+    if cvd == None:
+        raise ApiDataError(_("Could not find content view definition [ %s ] \
+            within organization [ %s ]") % (def_label, org_name))
+    return cvd
 
 
 def get_repo(orgName, prodName, prodLabel, prodId, repoName, envName=None, includeDisabled=False):

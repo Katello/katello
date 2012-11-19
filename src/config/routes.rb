@@ -54,6 +54,13 @@ Src::Application.routes.draw do
       end
   end
 
+  resources :content_view_definitions do
+    collection do
+      get :default_label
+      get :items
+    end
+  end
+
   resources :activation_keys do
     collection do
       get :auto_complete_search
@@ -573,6 +580,34 @@ Src::Application.routes.draw do
         get :apply, :on => :collection, :action => :apply_to_all_systems
       end
       match '/system_info_keys/:keyname' => 'organization_system_info_keys#destroy', :via => :delete
+
+      resources :content_views, :only => [:index]
+      resources :content_view_definitions do
+        post :publish, :on => :member
+        resources :filters, :only => [] do
+          get :index, :action => :list_content_view_definition_filters,
+            :on => :collection
+          put :index, :action => :update_content_view_definition_filters,
+            :on => :collection
+        end
+        resources :products, :only => [] do
+          get :index, :action => :list_content_view_definition_products,
+            :on => :collection
+          put :index, :action => :update_content_view_definition_products,
+            :on => :collection
+        end
+        resources :repositories, :only => [] do
+          get :index, :action => :list_content_view_definition_repositories,
+            :on => :collection
+          put :index, :action => :update_content_view_definition_repositories,
+            :on => :collection
+        end
+      end
+    end
+
+    resources :content_view_definitions, :only => [:destroy, :content_views] do
+      get :content_views, :on => :member
+      put :content_views, :on => :member, :action => :update_content_views
     end
 
     resources :changesets, :only => [:show, :update, :destroy] do

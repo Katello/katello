@@ -17,19 +17,18 @@ describe FiltersController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
   include ProductHelperMethods
+  include RepositoryHelperMethods
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
   include OrchestrationHelper
   include RepositoriesHelper
-  before(:each) do
 
+  before(:each) do
       set_default_locale
       login_user
-      disable_filter_orchestration
       disable_product_orchestration
       disable_repo_orchestration
       controller.stub(:search_validate).and_return(true)
-
   end
 
   describe "Controller tests" do
@@ -39,13 +38,7 @@ describe FiltersController, :katello => true do
       @env = @organization.library
       @product = new_test_product(@organization, @env)
       ep_library = EnvironmentProduct.find_or_create(@organization.library, @product)
-      @repo = Repository.create!(:environment_product => ep_library,
-                                 :name=> "repo",
-                                 :label => "repo_label",
-                                 :relative_path => "#{@organization.name}/Library/prod/repo",
-                                 :pulp_id=> "1",
-                                 :enabled => true)
-
+      @repo = new_test_repo(ep_library, "repo", "#{@organization.name}/Library/prod/repo")
     end
 
     describe "GET index" do
@@ -98,7 +91,6 @@ describe FiltersController, :katello => true do
       end
     end
 
-
     describe "edit a filter" do
       it "should recieve a valid filter for edit" do
         get :edit, :id=>@filter.id
@@ -137,7 +129,6 @@ describe FiltersController, :katello => true do
         response.should_not be_success
       end
     end
-
 
     describe "update a filter" do
       it "should allow updating of description" do
@@ -183,7 +174,6 @@ describe FiltersController, :katello => true do
         delete :destroy, :id=>-12343
         response.should_not be_success
       end
-
     end
 
     describe "Set products" do
@@ -214,9 +204,7 @@ describe FiltersController, :katello => true do
         post :update_products, :id=>"-1", :products=>[@product.id]
         response.should_not be_success
       end
-      
     end
-
 
     describe "Set Repos" do
       before do
@@ -224,8 +212,6 @@ describe FiltersController, :katello => true do
         Repository.stub(:find).and_return(@repo)
       end
       it "should allow for updating of repos for a valid repo" do
-        @repo.should_receive(:add_filters_orchestration).and_return({})
-        @repo.should_not_receive(:remove_filters_orchestration)
         controller.should notify.success
         post :update_products, :id=>@filter.id, :repos=>{@repo.product.id => @repo.id}
         response.should be_success
@@ -235,7 +221,6 @@ describe FiltersController, :katello => true do
       it "should allow for updating of repos for a empty repos" do
         @filter.repositories << @repo
         @filter.save!
-        @repo.should_receive(:remove_filters_orchestration).and_return({})
         controller.should notify.success
         post :update_products, :id=>@filter.id, :repos=>[]
         response.should be_success
@@ -243,25 +228,17 @@ describe FiltersController, :katello => true do
       end
 
       it "should not allow for updating of repos for an invalid product" do
-        @repo.should_not_receive(:add_filters_orchestration)
-        @repo.should_not_receive(:remove_filters_orchestration)
         post :update_products, :id=>@filter.id, :repos=>{-1 => -1}
         response.should be_success  #invalid products are ignored
         assert Filter.find(@filter.id).repositories.empty?
       end
 
       it "should not allow for updating of repos for an invalid filter" do
-        @repo.should_not_receive(:add_filters_orchestration)
-        @repo.should_not_receive(:remove_filters_orchestration)
         controller.should notify.error
         post :update_products, :id=>"-1", :repos=>{@repo.product.id => @repo.id}
         response.should_not be_success
       end
-
     end
-
-
-
   end
 
   describe "rules" do
@@ -305,8 +282,6 @@ describe FiltersController, :katello => true do
       it_should_behave_like "protected action"
     end
 
-
-
     describe "PUT update" do
       let(:action) {:update}
       let(:req) {put 'update', {:id=> @filter.id}}
@@ -319,7 +294,6 @@ describe FiltersController, :katello => true do
 
       it_should_behave_like "protected action"
     end
-
 
     describe "PUT add_packages" do
       let(:action) {:add_packages}
@@ -346,7 +320,6 @@ describe FiltersController, :katello => true do
 
       it_should_behave_like "protected action"
     end
-
 
     describe "PUT update_products" do
       let(:action) {:update_content}
@@ -385,11 +358,5 @@ describe FiltersController, :katello => true do
       end
       it_should_behave_like "protected action"
     end
-
-
   end
-
-  
-
-
 end

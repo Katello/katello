@@ -83,7 +83,7 @@ class SystemErrataController < ApplicationController
   include Katello::Errata
 
   def get_errata start, finish, filter_type="All", errata_state="outstanding"
-    types = [Glue::Pulp::Errata::SECURITY, Glue::Pulp::Errata::ENHANCEMENT, Glue::Pulp::Errata::BUGZILLA]
+    types = [Errata::SECURITY, Errata::ENHANCEMENT, Errata::BUGZILLA]
     errata_state = errata_state || "outstanding"
     filter_type = filter_type || "All"
 

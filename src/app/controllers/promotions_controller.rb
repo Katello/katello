@@ -79,7 +79,7 @@ class PromotionsController < ApplicationController
 
     search = params[:search]
     offset = params[:offset] || 0
-    @packages = Glue::Pulp::Package.search(search, params[:offset], current_user.page_size, repo_ids)
+    @packages = Package.search(search, params[:offset], current_user.page_size, repo_ids)
     total_count = Product.find(product_id).total_package_count(@environment)
 
     render :text=>"" and return if @packages.empty?
@@ -91,7 +91,8 @@ class PromotionsController < ApplicationController
         repos.each{ |repo|
           if pack.repoids.include? repo.pulp_id
             if repo.is_cloned_in? @next_environment 
-              if pack.repoids.include? repo.clone_id(@next_environment)
+              if pack.repoids.include? repo.clone_id(@next_environment,
+                                                     @next_environment.default_content_view)
                 promoted = promoted && true
               else
                 promotable = true
@@ -161,11 +162,11 @@ class PromotionsController < ApplicationController
     offset = params[:offset] || 0
 
     if search.blank?
-      @errata = Glue::Pulp::Errata.search(search, offset, current_user.page_size, filters)
+      @errata = Errata.search(search, offset, current_user.page_size, filters)
       total_size =  @errata.empty? ? 0 :  @errata.total
     else
-      @errata = Glue::Pulp::Errata.search(search, offset, current_user.page_size, filters, false)
-      all = Glue::Pulp::Errata.search("*", offset, 1, filters, false)
+      @errata = Errata.search(search, offset, current_user.page_size, filters, false)
+      all = Errata.search("*", offset, 1, filters, false)
       total_size = all.empty? ? 0 : all.total
     end
 
@@ -177,7 +178,8 @@ class PromotionsController < ApplicationController
         repos.each{ |repo|
           if erratum.repoids.include? repo.pulp_id
             if repo.is_cloned_in? @next_environment 
-              if erratum.repoids.include? repo.clone_id(@next_environment)
+              if erratum.repoids.include? repo.clone_id(@next_environment,
+                                                        @next_environment.default_content_view)
                 promoted = promoted && true
               else
                 promotable = true

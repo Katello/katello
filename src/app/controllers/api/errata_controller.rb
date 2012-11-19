@@ -46,7 +46,7 @@ class Api::ErrataController < Api::ApiController
     unless filter[:repoid] or filter[:environment_id]
       raise HttpErrors::BadRequest.new(_("Repo ID or environment must be provided"))
     end
-    render :json => Glue::Pulp::Errata.filter(filter)
+    render :json => Errata.filter(filter)
   end
 
   api :GET, "/repositories/:repository_id/errata/:id", "Show an erratum"
@@ -75,7 +75,7 @@ class Api::ErrataController < Api::ApiController
   end
 
   def find_erratum
-    @erratum = Glue::Pulp::Errata.find(params[:id])
+    @erratum = Errata.find(params[:id])
     raise HttpErrors::NotFound, _("Erratum with id '%s' not found") % params[:id] if @erratum.nil?
     # and check ownership of it
     raise HttpErrors::NotFound, _("Erratum '%s' not found within the repository") % params[:id] unless @erratum.repoids.include? @repo.pulp_id

@@ -58,7 +58,8 @@ class PathDescendentsValidator < ActiveModel::Validator
 end
 
 class KTEnvironment < ActiveRecord::Base
-  include Authorization
+  include Authorization::Environment
+  include Glue::ElasticSearch::Environment if AppConfig.use_elasticsearch
   include Glue::Candlepin::Environment if AppConfig.use_cp
   include Glue if AppConfig.use_cp
   set_table_name "environments"
@@ -90,6 +91,12 @@ class KTEnvironment < ActiveRecord::Base
 
   has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED}, :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
 
+  has_many :content_view_version_environments, :foreign_key=>:environment_id
+  has_many :content_view_versions, :through=>:content_view_version_environments, :inverse_of=>:environments
+
+
+  belongs_to :default_content_view, :class_name => "ContentView", :foreign_key => :default_content_view_id
+
   scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
 
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
@@ -103,15 +110,22 @@ class KTEnvironment < ActiveRecord::Base
   validates_with PathDescendentsValidator
   validate :constant_name, :on => :update
 
+  before_create :create_default_content_view
   before_destroy :confirm_last_env
-  after_save :update_related_index
-  after_destroy :delete_related_index
+
   after_destroy :unset_users_with_default
    ERROR_CLASS_NAME = "Environment"
 
-
   def library?
     self.library
+  end
+
+  def default_view_version
+    self.default_content_view.version(self)
+  end
+
+  def content_views
+    self.content_view_versions.collect{|vv| vv.content_view}
   end
 
   def successor
@@ -266,156 +280,6 @@ class KTEnvironment < ActiveRecord::Base
     end.flatten(1)
   end
 
-  #Permissions
-  scope :changesets_readable, lambda {|org| authorized_items(org, [:delete_changesets, :promote_changesets, :manage_changesets, :read_changesets])}
-  scope :content_readable, lambda {|org| authorized_items(org, [:read_contents])}
-  scope :systems_readable, lambda{|org|
-    if  org.systems_readable?
-      where(:organization_id => org)
-    else
-      authorized_items(org, SYSTEMS_READABLE)
-    end
-  }
-  scope :systems_registerable, lambda { |org|
-    if org.systems_registerable?
-      where(:organization_id => org)
-    else
-      authorized_items(org, [:register_systems])
-    end
-  }
-
-  def self.any_viewable_for_promotions? org
-    return false if !AppConfig.katello?
-    User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, org.environment_ids, org, true)
-  end
-
-  def self.any_contents_readable? org, skip_library=false
-    ids = org.environment_ids
-    ids = ids - [org.library.id] if skip_library
-    User.allowed_to?(CONTENTS_READABLE, :environments, ids, org, true)
-  end
-
-  def viewable_for_promotions?
-    return false if !AppConfig.katello?
-    User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, self.id, self.organization)
-  end
-
-  def any_operation_readable?
-    return false if !AppConfig.katello?
-    User.allowed_to?(self.class.list_verbs.keys, :environments, self.id, self.organization) ||
-        self.organization.systems_readable? || self.organization.any_systems_registerable? ||
-        ActivationKey.readable?(self.organization)
-  end
-
-  def changesets_promotable?
-    return false if !AppConfig.katello?
-    User.allowed_to?([:promote_changesets], :environments, self.id,
-                              self.organization)
-  end
-
-  def changesets_deletable?
-    return false if !AppConfig.katello?
-    User.allowed_to?([:delete_changesets], :environments, self.id,
-                              self.organization)
-  end
-
-  CHANGE_SETS_READABLE = [:manage_changesets, :read_changesets, :promote_changesets, :delete_changesets]
-  def changesets_readable?
-    return false if !AppConfig.katello?
-    User.allowed_to?(CHANGE_SETS_READABLE, :environments,
-                              self.id, self.organization)
-  end
-
-  def changesets_manageable?
-    return false if !AppConfig.katello?
-    User.allowed_to?([:manage_changesets], :environments, self.id,
-                              self.organization)
-  end
-
-  CONTENTS_READABLE = [:read_contents]
-  def contents_readable?
-    return false if !AppConfig.katello?
-    User.allowed_to?(CONTENTS_READABLE, :environments, self.id,
-                              self.organization)
-  end
-
-
-  SYSTEMS_READABLE = [:read_systems, :register_systems, :update_systems, :delete_systems]
-  def systems_readable?
-    self.organization.systems_readable? ||
-        User.allowed_to?(SYSTEMS_READABLE, :environments, self.id, self.organization)
-  end
-
-  def systems_editable?
-    User.allowed_to?([:update_systems], :organizations, nil, self.organization) ||
-        User.allowed_to?([:update_systems], :environments, self.id, self.organization)
-  end
-
-  def systems_deletable?
-    User.allowed_to?([:delete_systems], :organizations, nil, self.organization) ||
-        User.allowed_to?([:delete_systems], :environments, self.id, self.organization)
-  end
-
-  def systems_registerable?
-    self.organization.systems_registerable? ||
-        User.allowed_to?([:register_systems], :environments, self.id, self.organization)
-  end
-
-
-  def self.authorized_items org, verbs, resource = :environments
-    raise "scope requires an organization" if org.nil?
-    if User.allowed_all_tags?(verbs, resource, org)
-       where(:organization_id => org)
-    else
-      where("environments.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
-    end
-  end
-
-  def self.list_verbs global = false
-    if AppConfig.katello?
-      {
-      :read_contents => _("Read Environment Contents"),
-      :read_systems => _("Read Systems in Environment"),
-      :register_systems =>_("Register Systems in Environment"),
-      :update_systems => _("Modify Systems in Environment"),
-      :delete_systems => _("Remove Systems in Environment"),
-      :read_changesets => _("Read Changesets in Environment"),
-      :manage_changesets => _("Administer Changesets in Environment"),
-      :promote_changesets => _("Promote Content to Environment"),
-      :delete_changesets => _("Delete Content from Environment")
-      }.with_indifferent_access
-    else
-      {
-      :read_contents => _("Read Environment Contents"),
-      :read_systems => _("Read Systems in Environment"),
-      :register_systems =>_("Register Systems in Environment"),
-      :update_systems => _("Modify Systems in Environment"),
-      :delete_systems => _("Remove Systems in Environment"),
-      }.with_indifferent_access
-    end
-  end
-
-  def self.read_verbs
-    if AppConfig.katello?
-      [:read_contents, :read_changesets, :read_systems]
-    else
-      [:read_contents, :read_systems]
-    end
-  end
-
-
-  def update_related_index
-    if self.name_changed?
-      self.organization.reload #must reload organization, otherwise old name is saved
-      self.organization.update_index
-      ActivationKey.index.import(self.activation_keys) if !self.activation_keys.empty?
-    end
-  end
-
-  def delete_related_index
-    self.organization.update_index if self.organization
-  end
-
   def unset_users_with_default
     users = User.find_by_default_environment(self.id)
     users.each do |u|
@@ -439,6 +303,15 @@ class KTEnvironment < ActiveRecord::Base
       self.repositories.enabled.map(&:minor).compact.uniq.sort
     else
       self.organization.redhat_provider.available_releases
+    end
+  end
+
+  def create_default_content_view
+    if self.default_content_view.nil?
+      self.default_content_view = ContentView.create!(:name=>"Default View for #{self.name}",
+                                                :organization=>self.organization, :default=>true)
+      version = ContentViewVersion.create!(:version=>1, :content_view=>self.default_content_view)
+      self.content_view_versions << version
     end
   end
 

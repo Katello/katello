@@ -1,0 +1,24 @@
+library:
+  name:           Library
+  description:    This is the Library
+  library:        true
+  organization:   acme_corporation
+  label:          library_label
+  default_content_view: library_default
+
+dev:
+  name:           Dev
+  description:    Dev environment.
+  organization:   acme_corporation
+  priors:         library
+  label:          dev_label
+  default_content_view: dev_default
+
+staging:
+  name:           Staging
+  description:    Staging environment.
+  organization:   acme_corporation
+  priors:         library
+  label:          staging_label
+  default_content_view: staging_default
+
