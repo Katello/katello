@@ -20,7 +20,7 @@ class RepositoryCreateTest < MiniTest::Rails::ActiveSupport::TestCase
     super
     User.current = @admin
     @repo = build(:repository, :fedora_17_el6, :environment_product => environment_products(:library_fedora),
-                                              :content_view=>@library.default_content_view)
+                                              :content_view_version=>@library.default_view_version)
   end
 
   def teardown

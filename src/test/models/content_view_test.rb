@@ -26,6 +26,8 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     @library              = KTEnvironment.find(environments(:library).id)
     @dev                  = KTEnvironment.find(environments(:dev).id)
     @acme_corporation     = Organization.find(organizations(:acme_corporation).id)
+    @library_view            = ContentView.find(content_views(:library_view))
+    @library_dev_view            = ContentView.find(content_views(:library_dev_view))
   end
 
   def test_create
@@ -78,11 +80,8 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_content_view_environments
-    env = FactoryGirl.build_stubbed(:environment)
-    content_view = FactoryGirl.create(:content_view)
-    content_view.environments << env
-
-    assert_includes env.content_views.reload, content_view
+    assert_includes @library_view.environments, @library
+    assert_includes @library.content_views, @library_view
   end
 
   def test_environment_default_content_view
@@ -106,32 +105,32 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_promote
-    content_view = FactoryGirl.create(:content_view, :environments=>[@library], :organization=>@acme_corporation)
+    content_view = @library_view
+    refute_includes content_view.environments, @dev
     content_view.promote(@library, @dev)
     assert_includes content_view.environments, @dev
   end
 
   def test_delete
-    content_view = FactoryGirl.build(:content_view, :environments=>[@library, @dev], :organization=>@acme_corporation)
-    content_view.delete(@dev)
-    assert !content_view.environments.include?(@dev)
+    view = @library_dev_view
+    view.delete(@dev)
+    assert !view.environments.include?(@dev)
   end
 
   def test_delete_last_env
-    content_view = FactoryGirl.create(:content_view, :environments=>[@library], :organization=>@acme_corporation)
-    content_view.delete(@library)
-    assert ContentView.where(:label=>content_view.label).empty?
+    view = @library_view
+    view.delete(@library)
+    assert ContentView.where(:label=>view.label).empty?
   end
 
   def test_default_scope
-    content_view = FactoryGirl.create(:content_view, :environment_default=>@library, :organization=>@acme_corporation)
-    assert !ContentView.non_default.include?(content_view)
-    assert ContentView.default.include?(content_view)
+    refute_empty ContentView.default
+    assert_empty ContentView.default.select{|v| !v.default}
+    assert_includes ContentView.default, @library.default_content_view
   end
 
   def test_non_default_scope
-    content_view = FactoryGirl.create(:content_view, :environments=>[@library], :organization=>@acme_corporation)
-    assert !ContentView.default.include?(content_view)
-    assert ContentView.non_default.include?(content_view)
+    refute_empty ContentView.non_default
+    assert_empty ContentView.non_default.select{|v| v.default}
   end
 end
