@@ -13,6 +13,7 @@
 require 'util/model_util.rb'
 
 class ContentViewDefinition < ActiveRecord::Base
+  include Glue::ElasticSearch::ContentViewDefinition if AppConfig.use_elasticsearch
   include Katello::LabelFromName
   include Authorization::ContentViewDefinition
 

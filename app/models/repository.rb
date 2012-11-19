@@ -40,7 +40,6 @@ class Repository < ActiveRecord::Base
   has_many :content_view_definitions, :through => :content_view_definition_repositories
   belongs_to :content_view_version, :inverse_of=>:repositories
 
-
   validates :environment_product, :presence => true
   validates :pulp_id, :presence => true, :uniqueness => true
   validates :name, :presence => true

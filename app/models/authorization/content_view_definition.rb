@@ -1,5 +1,5 @@
 module Authorization::ContentViewDefinition
-  READ_PERM_VERBS = [:read, :create, :update, :delete]
+  READ_PERM_VERBS = [:read, :create, :update, :delete, :publish]
   EDIT_PERM_VERBS = [:create, :update]
 
   def self.included(base)
@@ -11,33 +11,38 @@ module Authorization::ContentViewDefinition
   end
 
   def editable?
-    User.allowed_to?([:update, :create], :content_view_definitions, self.id, self.organization)
+    User.allowed_to?(EDIT_PERM_VERBS, :content_view_definitions, self.id, self.organization)
   end
 
   def deletable?
     User.allowed_to?([:delete, :create], :content_view_definitions, self.id, self.organization)
   end
 
+  def publishable?
+    User.allowed_to?([:publish], :content_view_definitions, self.id, self.organization)
+  end
+
   module ClassMethods
 
     def tags(ids)
-      select('id,name').where(:id => ids).collect do |m|
+      select('id,name').where(:id => ids).map do |m|
         VirtualTag.new(m.id, m.name)
       end
     end
 
     def list_tags(org_id)
-      custom.select('id,name').where(:organization_id=>org_id).collect do |m|
+      select('id,name').where(:organization_id=>org_id).map do |m|
         VirtualTag.new(m.id, m.name)
       end
     end
 
     def list_verbs(global = false)
       {
-        :create => _("Administer Content View Definitions"),
-        :read   => _("Read Content View Definitions"),
-        :update => _("Modify Content View Defintions"),
-        :delete => _("Delete Content View Definitions"),
+        :create  => _("Administer Content View Definitions"),
+        :read    => _("Read Content View Definitions"),
+        :update  => _("Modify Content View Defintions"),
+        :delete  => _("Delete Content View Definitions"),
+        :publish => _("Publish Content View Definitions")
       }.with_indifferent_access
     end
 
@@ -69,7 +74,7 @@ module Authorization::ContentViewDefinition
       raise "scope requires an organization" if org.nil?
       resource = :content_view_definitions
       if User.allowed_all_tags?(verbs, resource, org)
-        where(:organization_id => org)
+        where(:organization_id => org.id)
       else
         where("content_view_definitions.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
       end

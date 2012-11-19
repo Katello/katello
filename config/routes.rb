@@ -54,6 +54,13 @@ Src::Application.routes.draw do
       end
   end
 
+  resources :content_view_definitions do
+    collection do
+      get :default_label
+      get :items
+    end
+  end
+
   resources :activation_keys do
     collection do
       get :auto_complete_search
@@ -294,7 +301,7 @@ Src::Application.routes.draw do
     end
     member do
       get :products_repos
-      get :import_progress
+      get :manifest_progress
       get :schedule
     end
   end

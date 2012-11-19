@@ -10,13 +10,23 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class UsernameValidator < ActiveModel::EachValidator
-  def validate_each(record, attribute, value)
-    if value
-      if AppConfig.katello?
-        record.errors[attribute] << _("cannot contain characters other than ASCII values") unless value.ascii_only?
+
+module Glue::ElasticSearch::ContentViewDefinition
+  def self.included(base)
+    base.send :include, IndexedModel
+
+    base.class_eval do
+      index_options :extended_json => :extended_index_attrs, :display_attrs => [:name, :description]
+
+      mapping do
+        indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
+        indexes :name_sort, :type => 'string', :index => :not_analyzed
       end
-      KatelloNameFormatValidator.validate_length(record, attribute, value, 64, 3)
     end
   end
+
+  def extended_index_attrs
+    {:name_sort => name.downcase}
+  end
+
 end
