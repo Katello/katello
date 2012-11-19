@@ -13,51 +13,48 @@
 require 'minitest_helper'
 require './test/support/repository_support'
 
-
-class GluePulpPackageTestBase < MiniTest::Rails::ActiveSupport::TestCase
+class GluePulpConsumerTestBase < MiniTest::Rails::ActiveSupport::TestCase
   extend  ActiveRecord::TestFixtures
   include RepositorySupport
 
   fixtures :all
-
-  @@package_id = nil
 
   def self.before_suite
     load_fixtures
     configure_runcible
 
     services  = ['Candlepin', 'ElasticSearch', 'Foreman']
-    models    = ['Repository', 'Package']
+    models    = ['System', 'Repository']
     disable_glue_layers(services, models)
 
     User.current = User.find(@loaded_fixtures['users']['admin']['id'])
-    RepositorySupport.create_and_sync_repo(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
+    #RepositorySupport.create_and_sync_repo(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
 
-    VCR.insert_cassette('glue_pulp_package', :match_requests_on => [:path, :params, :method, :body_json])
-    @@package_id = RepositorySupport.repo.packages.first.id
+    VCR.insert_cassette('glue_pulp_consumer', :match_requests_on => [:path, :params, :method, :body_json])
   end
 
   def self.after_suite
-    RepositorySupport.destroy_repo
     VCR.eject_cassette
   end
 
 end
 
 
-class GluePulpPackageTest < GluePulpPackageTestBase
+class GluePulpConsumerTestCreateDestroy < GluePulpConsumerTestBase
 
-  def test_find
-    package = Package.find(@@package_id)
-
-    refute_nil      package
-    assert_kind_of  Package, package
+  def setup
+    super
+    @simple_server = System.find(systems(:simple_server).id)
   end
 
-  def test_nvrea
-    package = Package.find(@@package_id)
+  def test_set_pulp_consumer
+    assert @simple_server.set_pulp_consumer
+    @simple_server.del_pulp_consumer
+  end
 
-    refute_nil package.nvrea
+  def test_del_pulp_consumer
+    @simple_server.set_pulp_consumer
+    assert @simple_server.del_pulp_consumer
   end
 
 end

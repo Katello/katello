@@ -10,25 +10,33 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+
 module Glue::Pulp::Distribution
-
   def self.included(base)
-    base.class_eval do
+    base.send :include, InstanceMethods
 
+    base.class_eval do
       attr_accessor :id, :description, :files, :family, :variant, :version, :url, :arch
 
-      def initialize(attrs = {})
-        attrs.each_pair do |k,v|
-          if self.class.method_defined? k and not v.nil?
-            instance_variable_set("@#{k}", v)
-          end
-        end
-      end
-
-      def self.find id
+      def self.find(id)
         ::Distribution.new(Runcible::Extensions::Distribution.find(id))
       end
     end
   end
 
+  module InstanceMethods
+
+    def initialize(attrs = {})
+      generate_instance_variables(attrs)
+    end
+
+    def generate_instance_variables(attrs)
+      attrs.each_pair do |k,v|
+        if self.class.method_defined? k and not v.nil?
+          instance_variable_set("@#{k}", v)
+        end
+      end
+    end
+
+  end
 end

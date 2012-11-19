@@ -21,7 +21,7 @@ end
 class System < ActiveRecord::Base
   include Glue::Candlepin::Consumer if AppConfig.use_cp
   include Glue::Pulp::Consumer if AppConfig.use_pulp
-  include Glue::ElasticSearch::System
+  include Glue::ElasticSearch::System if AppConfig.use_elasticsearch
   include Glue
   include Authorization::System
   include AsyncOrchestration
