@@ -14,6 +14,7 @@ require 'util/model_util.rb'
 
 class ContentView < ActiveRecord::Base
   include Katello::LabelFromName
+  include Authorization::ContentView
 
   belongs_to :content_view_definition
   belongs_to :organization
