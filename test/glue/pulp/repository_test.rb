@@ -144,15 +144,6 @@ class GluePulpRepoTest < GluePulpRepoTestBase
     assert @fedora_17_x86_64.generate_distributor.is_a? Runcible::Extensions::YumDistributor
   end
 
-  def test_repo_id
-    @fedora             = Product.find(products(:fedora).id)
-    @library            = KTEnvironment.find(environments(:library).id)
-    @acme_corporation   = Organization.find(organizations(:acme_corporation).id)
-
-    repo_id = Glue::Pulp::Repo.repo_id(@fedora.label, @fedora_17_x86_64.label, @library.label, @acme_corporation.label)
-    assert repo_id == "acme_corporation_label-library_label-fedora_label-fedora_17_x86_64_label"
-  end
-
   def test_populate_from
     assert @fedora_17_x86_64.populate_from({ @fedora_17_x86_64.pulp_id => {} })
   end
@@ -291,7 +282,7 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
 
   def test_clone_contents
     dev = KTEnvironment.find(environments(:dev).id)
-    @@fedora_17_x86_64_dev.relative_path = Glue::Pulp::Repos.clone_repo_path(@@fedora_17_x86_64, dev)
+    @@fedora_17_x86_64_dev.relative_path = Repository.clone_repo_path(@@fedora_17_x86_64, dev, dev.default_content_view)
     @@fedora_17_x86_64_dev.destroy_repo
     @@fedora_17_x86_64_dev.create_pulp_repo
 
