@@ -1,60 +1,57 @@
 --- 
+recorded_with: VCR 2.2.5
 http_interactions: 
 - request: 
     method: delete
-    uri: https://knifeparty.localdomain/pulp/api/v2/users/
+    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/users/batman/
     body: 
       string: ""
     headers: 
-      Pulp-User: 
-      - admin
-      Content-Type: 
-      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
       Accept: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="EEN3TojW7tpaNAS064mmgHtTOr8do3DLIdJ4bNVU4", oauth_signature="hd03sj73Zjrh%2Bsp3uRD0CKDtdsU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353032983", oauth_version="1.0"
-      Accept-Encoding: 
-      - gzip, deflate
+      - OAuth oauth_consumer_key="katello", oauth_nonce="SysZPIq5of6F2tNmnZrfefrbvtkD7prXEDWxGlVbnw", oauth_signature="STYUjI4zmCE69A5H5G4yoLktZbE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353123116", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Pulp-User: 
+      - admin
   response: 
     status: 
-      code: 405
-      message: Method Not Allowed
+      code: 200
+      message: OK
     headers: 
-      Transfer-Encoding: 
-      - chunked
       Server: 
       - Apache/2.2.22 (Fedora)
-      Content-Type: 
-      - text/html; charset=UTF-8
-      Allow: 
-      - GET, POST
       Date: 
-      - Fri, 16 Nov 2012 02:29:43 GMT
-      Connection: 
-      - close
-    body: 
-      string: None
-    http_version: 
-  recorded_at: Fri, 16 Nov 2012 02:29:44 GMT
-- request: 
-    method: post
-    uri: https://knifeparty.localdomain/pulp/api/v2/users/
-    body: 
-      string: "{\"password\":\"T1L37pmXMbG2r3iH\",\"login\":\"batman\",\"name\":\"batman\"}"
-    headers: 
-      Pulp-User: 
-      - admin
+      - Sat, 17 Nov 2012 03:31:56 GMT
+      Content-Length: 
+      - "4"
       Content-Type: 
       - application/json
+    body: 
+      string: "null"
+    http_version: 
+  recorded_at: Sat, 17 Nov 2012 03:31:57 GMT
+- request: 
+    method: post
+    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/users/
+    body: 
+      string: "{\"login\":\"batman\",\"password\":\"9N8MXdq5SSHAMkNo\",\"name\":\"batman\"}"
+    headers: 
+      Accept-Encoding: 
+      - gzip, deflate
       Accept: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="269xPYUKAGcWtGLgv49W2pehIdoCQW0QqvHNoPYaYqo", oauth_signature="ruACWlRvOuYoFXAOyTguYrNIxNM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353032985", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="3nvcrte0tgarJKFNmjqTZrFmcsx4k4pQQ6Q2v81o", oauth_signature="TFNeJ6lk3h7uT2Qw1rtEpBMVOKY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353123117", oauth_version="1.0"
       Content-Length: 
       - "64"
-      Accept-Encoding: 
-      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Pulp-User: 
+      - admin
   response: 
     status: 
       code: 201
@@ -64,53 +61,54 @@ http_interactions:
       - Apache/2.2.22 (Fedora)
       Location: 
       - batman
-      Content-Type: 
-      - application/json
       Date: 
-      - Fri, 16 Nov 2012 02:29:45 GMT
-      Connection: 
-      - close
+      - Sat, 17 Nov 2012 03:31:57 GMT
       Content-Length: 
       - "184"
+      Content-Type: 
+      - application/json
     body: 
-      string: "{\"_id\": {\"$oid\": \"50a5a519dc7921666d0024ce\"}, \"name\": \"batman\", \"roles\": [], \"_ns\": \"users\", \"login\": \"batman\", \"id\": \"50a5a519dc7921666d0024ce\", \"_href\": \"/pulp/api/v2/users/batman/\"}"
+      string: "{\"_id\": {\"$oid\": \"50a7052d9c60ed289c002295\"}, \"name\": \"batman\", \"roles\": [], \"_ns\": \"users\", \"login\": \"batman\", \"id\": \"50a7052d9c60ed289c002295\", \"_href\": \"/pulp/api/v2/users/batman/\"}"
     http_version: 
-  recorded_at: Fri, 16 Nov 2012 02:29:45 GMT
+  recorded_at: Sat, 17 Nov 2012 03:31:57 GMT
 - request: 
     method: delete
-    uri: https://knifeparty.localdomain/pulp/api/v2/users/batman/
+    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/users/
     body: 
       string: ""
     headers: 
-      Pulp-User: 
-      - admin
-      Content-Type: 
-      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
       Accept: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="CNL3sNHUnSyXjjXBRLQHZoJd7JjC7FxswyI6GKqIYN0", oauth_signature="ZiQlFKi4%2FX6AMxUz7WpsbyETkl0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353032986", oauth_version="1.0"
-      Accept-Encoding: 
-      - gzip, deflate
-  response: 
-    status: 
-      code: 404
-      message: Not Found
-    headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
+      - OAuth oauth_consumer_key="katello", oauth_nonce="tgO45ySMvBZY3CuYVk4wu1g8ocgaiYjmOwnMM17gM", oauth_signature="7IfXBSEBwz9j39vmpWKHvcG6Y%2Fg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353123117", oauth_version="1.0"
       Content-Type: 
       - application/json
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 405
+      message: Method Not Allowed
+    headers: 
+      Vary: 
+      - Accept-Encoding
+      Server: 
+      - Apache/2.2.22 (Fedora)
       Content-Encoding: 
-      - utf-8
+      - gzip
       Date: 
-      - Fri, 16 Nov 2012 02:29:46 GMT
-      Connection: 
-      - close
+      - Sat, 17 Nov 2012 03:31:57 GMT
       Content-Length: 
-      - "270"
+      - "24"
+      Allow: 
+      - GET, POST
+      Content-Type: 
+      - text/html; charset=UTF-8
     body: 
-      string: "{\"http_request_method\": \"DELETE\", \"exception\": null, \"error_message\": \"Missing resource(s): resource_id=/pulp/api/v2/users/batman/\", \"_href\": \"/pulp/api/v2/users/batman/\", \"http_status\": 404, \"traceback\": null, \"resources\": {\"resource_id\": \"/pulp/api/v2/users/batman/\"}}"
+      string: !binary |
+        H4sIAAAAAAAAA/PLz0sFAPGvot8EAAAA
+
     http_version: 
-  recorded_at: Fri, 16 Nov 2012 02:29:46 GMT
-recorded_with: VCR 2.3.0
+  recorded_at: Sat, 17 Nov 2012 03:31:57 GMT
