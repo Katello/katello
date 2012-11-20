@@ -3,112 +3,112 @@ recorded_with: VCR 2.2.5
 http_interactions: 
 - request: 
     method: delete
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/users/
+    uri: https://localhost/pulp/api/v2/users/
     body: 
       string: ""
     headers: 
-      Accept-Encoding: 
-      - gzip, deflate
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="rrGCUnszixFfRRZ0zXYIOkJm4RZdBeZwAfHD5yXnaY", oauth_signature="P2GYsmCLfEgXr97hdSJtNRtrSZs%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353344283", oauth_version="1.0"
       Pulp-User: 
       - admin
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="rKS3yZyV8w9BwWAS8bd5RycaG14OLNMlygn49jpiKk", oauth_signature="ngsltcq10Mt6tGSjPA6zWVQXPrc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353451588", oauth_version="1.0"
       Content-Type: 
       - application/json
       Accept: 
       - application/json
+      Accept-Encoding: 
+      - gzip, deflate
   response: 
     status: 
       code: 405
       message: Method Not Allowed
     headers: 
-      Content-Length: 
-      - "24"
       Server: 
       - Apache/2.2.22 (Fedora)
-      Vary: 
-      - Accept-Encoding
-      Content-Encoding: 
-      - gzip
+      Content-Length: 
+      - "4"
       Allow: 
       - GET, POST
+      Date: 
+      - Tue, 20 Nov 2012 22:46:28 GMT
       Content-Type: 
       - text/html; charset=UTF-8
-      Date: 
-      - Mon, 19 Nov 2012 16:58:03 GMT
+      Connection: 
+      - close
     body: 
-      string: !binary |
-        H4sIAAAAAAAAA/PLz0sFAPGvot8EAAAA
-
+      string: None
     http_version: 
-  recorded_at: Mon, 19 Nov 2012 16:58:03 GMT
+  recorded_at: Tue, 20 Nov 2012 22:46:28 GMT
 - request: 
     method: post
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/users/
+    uri: https://localhost/pulp/api/v2/users/
     body: 
-      string: "{\"name\":\"batman\",\"login\":\"batman\",\"password\":\"cK0HdFLfcfpHHRgd\"}"
+      string: "{\"password\":\"PsGXlmE1rCwDIUkc\",\"login\":\"batman\",\"name\":\"batman\"}"
     headers: 
-      Content-Length: 
-      - "64"
-      Accept-Encoding: 
-      - gzip, deflate
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="frC6Thy2Fhp11BZ8Gvy8C9STcG1KTdx1lTo12yWwS4", oauth_signature="RsoAEL5%2B15SeepToGBSRrP%2FzQKA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353344283", oauth_version="1.0"
       Pulp-User: 
       - admin
+      Content-Length: 
+      - "64"
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="bU5IuwfUn9I5FThWkLhh94uJEWkQFSFELvYFA7gbaE", oauth_signature="919cAU4qhGlS6YK1P%2B78WSoNTR4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353451588", oauth_version="1.0"
       Content-Type: 
       - application/json
       Accept: 
       - application/json
+      Accept-Encoding: 
+      - gzip, deflate
   response: 
     status: 
       code: 409
       message: Conflict
     headers: 
-      Content-Length: 
-      - "193"
       Server: 
       - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "193"
       Content-Encoding: 
       - utf-8
+      Date: 
+      - Tue, 20 Nov 2012 22:46:28 GMT
       Content-Type: 
       - application/json
-      Date: 
-      - Mon, 19 Nov 2012 16:58:03 GMT
+      Connection: 
+      - close
     body: 
       string: "{\"http_request_method\": \"POST\", \"exception\": null, \"error_message\": \"Duplicate resource: batman\", \"_href\": \"/pulp/api/v2/users/\", \"http_status\": 409, \"resource_id\": \"batman\", \"traceback\": null}"
     http_version: 
-  recorded_at: Mon, 19 Nov 2012 16:58:03 GMT
+  recorded_at: Tue, 20 Nov 2012 22:46:28 GMT
 - request: 
     method: delete
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/users/batman/
+    uri: https://localhost/pulp/api/v2/users/batman/
     body: 
       string: ""
     headers: 
-      Accept-Encoding: 
-      - gzip, deflate
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="3CH1gEHIqPFuHqXlx6suUTd34UAtWjcDOOcApY1zAmU", oauth_signature="81wS3MXkrIjgLgeJ%2ByWsnPF23Tg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353344284", oauth_version="1.0"
       Pulp-User: 
       - admin
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="lSkfx5duYO2Tr1ivjYwwOHQcNOgOvW9GMkjczGXogM", oauth_signature="VhYB1ZubyNEx4vg2ChldIFjW7jU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353451589", oauth_version="1.0"
       Content-Type: 
       - application/json
       Accept: 
       - application/json
+      Accept-Encoding: 
+      - gzip, deflate
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Content-Length: 
-      - "4"
       Server: 
       - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "4"
+      Date: 
+      - Tue, 20 Nov 2012 22:46:29 GMT
       Content-Type: 
       - application/json
-      Date: 
-      - Mon, 19 Nov 2012 16:58:04 GMT
+      Connection: 
+      - close
     body: 
       string: "null"
     http_version: 
-  recorded_at: Mon, 19 Nov 2012 16:58:04 GMT
+  recorded_at: Tue, 20 Nov 2012 22:46:29 GMT
