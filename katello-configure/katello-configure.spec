@@ -31,7 +31,6 @@ Requires:       nss-tools
 Requires:       openssl
 Requires:       policycoreutils-python
 Requires:       initscripts
-Requires:       rubygem(bundler)
 Requires:       rubygem(rake)
 BuildRequires:  /usr/bin/pod2man /usr/bin/erb
 BuildRequires:  findutils puppet >= 2.6.6
