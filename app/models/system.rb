@@ -39,7 +39,15 @@ class System < ActiveRecord::Base
   has_many :activation_keys, :through => :system_activation_keys
 
   has_many :system_system_groups, :dependent => :destroy
-  has_many :system_groups, {:through => :system_system_groups, :before_add => :add_pulp_consumer_group, :before_remove => :remove_pulp_consumer_group}.merge(update_association_indexes)
+  if AppConfig.use_pulp? && AppConfig.use_elasticsearch?
+    has_many :system_groups, {:through => :system_system_groups, :before_add => :add_pulp_consumer_group, :before_remove => :remove_pulp_consumer_group}.merge(update_association_indexes)
+  elsif AppConfig.use_elastic_search? && !AppConfig.use_pulp?
+    has_many :system_groups, {:through => :system_system_groups}.merge(update_association_indexes)
+  elsif !AppConfig.use_elastic_search? && AppConfig.use_pulp?
+    has_many :system_groups, {:through => :system_system_groups, :before_add => :add_pulp_consumer_group, :before_remove => :remove_pulp_consumer_group}
+  else
+    has_many :system_groups, {:through => :system_system_groups}
+  end
 
   has_many :custom_info, :as => :informable, :dependent => :destroy
 

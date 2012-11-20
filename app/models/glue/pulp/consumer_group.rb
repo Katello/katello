@@ -21,8 +21,8 @@ module Glue::Pulp::ConsumerGroup
     base.class_eval do
       lazy_accessor  :consumer_ids, :initializer => lambda { |s| Runcible::Extensions::ConsumerGroup.retrieve(pulp_id) }
 
-      before_save :save_consumer_group_orch
-      before_destroy :destroy_consumer_group_orch
+      before_save     :save_consumer_group_orch
+      before_destroy  :destroy_consumer_group_orch
     end
   end
 
