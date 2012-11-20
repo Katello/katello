@@ -59,12 +59,7 @@ gem "apipie-rails", '>= 0.0.12'
 
 
 # Pulp API bindings
-lib_path = "../../runcible"
-if File.exist?(lib_path)
-  gem 'runcible', :path => lib_path
-else
-  gem 'runcible'
-end
+gem 'runcible', '>= 0.2.0'
 
 # Use unicorn as the web server
 # gem 'unicorn'
