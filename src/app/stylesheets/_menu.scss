@@ -45,7 +45,7 @@ nav {
             a{
               width: $menu_width - 33;
               &:hover {
-                background: lighten($kprimary_color, 45%);
+                background: $kprimary_hover_color;
                 color: lighten($kprimary_color, 10%);
                 border-top: 1px solid lighten($kprimary_color, 10%);
                 border-bottom: 1px solid lighten($kprimary_color, 10%);
@@ -87,7 +87,7 @@ nav {
           li {
             a {
               &.selected {
-                background: lighten($kprimary_color, 45%);
+                background: $kprimary_hover_color;
                 color: lighten($kprimary_color, 10%);
                 border-top: 1px solid lighten($kprimary_color, 10%);
                 border-bottom: 1px solid lighten($kprimary_color, 10%);
@@ -118,7 +118,7 @@ nav {
     &>ul {
       display: inline-block;
       height: 3.5em;
-      background-color: lighten($kselected_color, 65%);
+      background-color: $kprimary_hover_color;
       @include border-radius(5px);
 
       li {
