@@ -24,13 +24,12 @@ class ProviderAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_readable
-    assert !Provider.readable(@org).empty?
+    refute_empty Provider.readable(@org)
   end
 
   def test_editable
-    assert !Provider.editable(@org).empty?
+    refute_empty Provider.editable(@org)
   end
-
 
   def test_creatable?
     assert Provider.creatable?(@org)
@@ -58,7 +57,6 @@ end
 class ProviderAuthorizationNoPermsTest < MiniTest::Rails::ActiveSupport::TestCase
   include RepositoryTestBase
 
-
   def setup
     super
     User.current = User.find(users('no_perms_user'))
@@ -66,33 +64,32 @@ class ProviderAuthorizationNoPermsTest < MiniTest::Rails::ActiveSupport::TestCas
     @org = @acme_corporation
   end
 
-
   def test_readable
-    assert Provider.readable(@org).empty?
+    assert_empty Provider.readable(@org)
   end
 
   def test_editable
-    assert Provider.editable(@org).empty?
+    assert_empty Provider.editable(@org)
   end
 
-
   def test_creatable?
-    assert !Provider.creatable?(@org)
+    refute Provider.creatable?(@org)
   end
 
   def test_any_readable?
-    assert !Provider.any_readable?(@org)
+    refute Provider.any_readable?(@org)
   end
 
   def test_readable?
-    assert !@provider.readable?
+    refute @provider.readable?
   end
 
   def test_editable?
-    assert !@provider.editable?
+    refute @provider.editable?
   end
 
   def test_deletable?
-    assert !@provider.deletable?
+    refute @provider.deletable?
   end
+
 end

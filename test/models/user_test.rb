@@ -31,35 +31,40 @@ class UserCreateTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def test_create_with_short_password
     @user.password = "a"
+
     assert !@user.save
-    assert @user.errors.has_key?(:password)
+    assert_includes @user.errors, :password
   end
 
   def test_before_create_self_role
     @user.save
-    assert !@user.own_role.nil?
+
+    refute_nil @user.own_role
   end
 
   def test_before_save_hash_password
     @user.save
-    assert @user.password != "Villa"
+
+    refute_equal "Villa", @user.password
   end
 
   def test_i18n_username
     uname = "ಬoo0000"
-    @user.username=uname
-    assert @user.save
-    assert !@user.remote_id.nil?
-    assert @user.errors.empty?
-    assert !User.find_by_username(uname).nil?
+    @user.username = uname
+
+    assert        @user.save
+    refute_nil    @user.remote_id
+    assert_empty  @user.errors
+    refute_nil    User.find_by_username(uname)
   end
 
   def test_email_username
     email = "foo@redhat.com"
-    @user.username=email
-    assert @user.save
-    assert @user.errors.empty?
-    assert !User.find_by_username(email).nil?
+    @user.username = email
+
+    assert        @user.save
+    assert_empty  @user.errors
+    refute_nil    User.find_by_username(email)
   end
 end
 
@@ -74,12 +79,14 @@ class UserInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def test_destroy
     @no_perms_user.destroy
+
     assert @no_perms_user.destroyed?
   end
 
   def test_before_destroy_remove_self_role
     role = @no_perms_user.own_role
     @no_perms_user.destroy
+
     assert_raises ActiveRecord::RecordNotFound do 
       Role.find(role.id)
     end
@@ -88,6 +95,7 @@ class UserInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
   def test_before_destroy_not_last_superuser
     assert !@admin.destroy
   end
+
 end
 
 
@@ -95,7 +103,7 @@ class UserClassTest < MiniTest::Rails::ActiveSupport::TestCase
   include TestUserBase
 
   def test_authenticate
-    assert User.authenticate!(@no_perms_user.username, @no_perms_user.username)
+    refute_nil User.authenticate!(@no_perms_user.username, @no_perms_user.username)
   end
 
   def test_authenticate_fails_with_wrong_password
@@ -123,15 +131,15 @@ class UserLdapTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_find_created
-    assert User.find_by_username('testuser')
+    refute_nil User.find_by_username('testuser')
   end
 
   def test_no_email
-    assert @@user.email.nil?
+    assert_nil @@user.email
   end
 
   def test_own_role
-    assert !@@user.own_role.nil?
+    refute_nil @@user.own_role
   end
 end
 
@@ -157,20 +165,24 @@ class UserDefaultEnvTest < MiniTest::Rails::ActiveSupport::TestCase
     @user.default_environment = @env
     @user.save!
     @user = @user.reload
-    assert @user.default_environment == @env
+
+    assert_equal @env,  @user.default_environment
   end
 
   def test_find_by_default_env
     @user.default_environment = @env
     @user.save!
-    assert User.find_by_default_environment(@env.id).first == @user
+
+    assert_includes User.find_by_default_environment(@env.id), @user
   end
 
   def test_default_env_removed
     @user.default_environment = @env
     @user.save!
     @env.destroy
-    assert User.find_by_default_environment(@env.id).empty?
-    assert @user.default_environment.nil?
+
+    assert_empty User.find_by_default_environment(@env.id)
+    assert_nil @user.default_environment
   end
+
 end

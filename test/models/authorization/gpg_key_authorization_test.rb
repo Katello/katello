@@ -23,11 +23,11 @@ class GpgKeyAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_readable
-    assert !GpgKey.readable(@acme_corporation).empty?
+    refute_empty GpgKey.readable(@acme_corporation)
   end
 
   def test_manageable
-    assert !GpgKey.manageable(@acme_corporation).empty?
+    refute_empty GpgKey.manageable(@acme_corporation)
   end
 
   def test_createable?
@@ -58,27 +58,27 @@ class GpgKeyAuthorizationNoPermsTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_readable
-    assert GpgKey.readable(@acme_corporation).empty?
+    assert_empty GpgKey.readable(@acme_corporation)
   end
 
   def test_manageable
-    assert GpgKey.manageable(@acme_corporation).empty?
+    assert_empty GpgKey.manageable(@acme_corporation)
   end
 
   def test_createable?
-    assert !GpgKey.createable?(@acme_corporation)
+    refute GpgKey.createable?(@acme_corporation)
   end
 
   def test_any_readable?
-    assert !GpgKey.any_readable?(@acme_corporation)
+    refute GpgKey.any_readable?(@acme_corporation)
   end
 
   def test_key_readable
-    assert !@key.readable?
+    refute @key.readable?
   end
 
   def test_key_manageable?
-     assert !@key.manageable?
+     refute @key.manageable?
   end
 
 end
