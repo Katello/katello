@@ -164,7 +164,7 @@ describe EnvironmentsController do
       end
         it_should_behave_like "bad request"  do
           let(:req) do
-            bad_req = {:organization_id => @organization.label, :kt_environment => {:name => 'production', :prior => @organization.library}}
+            bad_req = {:organization_id => @organization.label, :kt_environment => {:name => 'production', :prior => @organization.library.id}}
             bad_req[:kt_environment][:bad_foo] = "mwahaha"
             post :create, bad_req
           end

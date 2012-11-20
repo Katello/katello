@@ -64,7 +64,6 @@ class List(ContentViewAction):
         self.printer.print_items(views)
         return os.EX_OK
 
-
 class Info(ContentViewAction):
 
     description = _('list a specific content_view')

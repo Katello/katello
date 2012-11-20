@@ -71,6 +71,8 @@ class PromotionChangeset < Changeset
     update_progress! '70'
     to_env.update_cp_content
     update_progress! '80'
+    PulpTaskStatus::wait_for_tasks promote_views(from_env, to_env)
+    update_progress! '85'
     promote_packages from_env, to_env
     update_progress! '90'
     promote_errata from_env, to_env
@@ -130,6 +132,13 @@ class PromotionChangeset < Changeset
       async_tasks << repo.promote(from_env, to_env)
     end
     async_tasks.flatten(1)
+  end
+
+
+  def promote_views(from_env, to_env)
+    self.content_views.collect do |view|
+      view.promote(from_env, to_env)
+    end.flatten
   end
 
   def promote_packages from_env, to_env

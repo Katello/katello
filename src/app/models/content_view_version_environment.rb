@@ -9,8 +9,20 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-class ContentViewDefinitionRepository < ActiveRecord::Base
 
-  belongs_to :content_view_definition, :inverse_of => :content_view_definition_repositories
-  belongs_to :repository, :inverse_of => :content_view_definition_repositories
+
+
+class ContentViewVersionEnvironment < ActiveRecord::Base
+  belongs_to :environment, :class_name=>'KTEnvironment'
+  belongs_to :content_view_version
+
+  before_create :verify_not_exists
+
+
+  def verify_not_exists
+    if self.content_view_version.environments.include?(self.environment)
+      raise _("Content View %{view} is already in environment %{env}") % {:view=>self.content_view.name, :env=>self.environment.name}
+    end
+  end
+
 end

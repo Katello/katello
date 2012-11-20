@@ -55,6 +55,8 @@ class DeletionChangeset < Changeset
     delete_templates(from_env)
     update_progress! '50'
     delete_repos from_env
+    update_progress! '60'
+    delete_views from_env
     update_progress! '70'
     from_env.update_cp_content
     update_progress! '80'
@@ -64,6 +66,7 @@ class DeletionChangeset < Changeset
     update_progress! '95'
     delete_distributions from_env
     update_progress! '100'
+
 
     PulpTaskStatus::wait_for_tasks generate_metadata
 
@@ -110,6 +113,12 @@ class DeletionChangeset < Changeset
       product = repo.product
       next if (products.uniq! or []).include? product
       repo.destroy
+    end
+  end
+
+  def delete_views from_env
+    self.content_views.each do |view|
+      view.delete(from_env)
     end
   end
 
