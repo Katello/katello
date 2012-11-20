@@ -21,7 +21,8 @@ from katello.client.api.content_view_definition import ContentViewDefinitionAPI
 from katello.client.cli.base import opt_parser_add_org, \
         opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
-from katello.client.api.utils import get_cv_definition, get_environment
+from katello.client.api.utils import get_cv_definition, get_environment, \
+        get_content_view
 
 # base content_view action --------------------------------------------------------
 
@@ -80,13 +81,14 @@ class Info(ContentViewAction):
         org_name = self.get_option('org')
         view_label = self.get_option('label')
 
-        view = get_cv_definition(org_name, view_label)
+        view = get_content_view(org_name, view_label)
 
         self.printer.add_column('id')
         self.printer.add_column('name')
         self.printer.add_column('label')
         self.printer.add_column('description', multiline=True)
         self.printer.add_column('organization', _('Org'))
+        self.printer.add_column('definition')
         self.printer.add_column('environments', _('Environments'))
 
         self.printer.set_header(_("ContentView Info"))
