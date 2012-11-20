@@ -45,6 +45,7 @@ class ContentView < ActiveRecord::Base
   def as_json(options = {})
     result = self.attributes
     result['organization'] = self.organization.try(:name)
+    result['definition']   = self.content_view_definition.try(:label)
 
     environments = (self.environments + [organization.library]).compact
     result['environments'] = environments.map{|e| e.try(:name)}.join(", ")
