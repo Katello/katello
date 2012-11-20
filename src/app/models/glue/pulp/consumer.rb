@@ -26,8 +26,8 @@ module Glue::Pulp::Consumer
                                                               collect{|package| Glue::Pulp::SimplePackage.new(package)} }
       lazy_accessor :errata, :initializer => lambda {|s| Resources::Pulp::Consumer.errata(uuid).
                                                               collect{|errata| Errata.new(errata)} }
-      lazy_accessor :repoids, :initializer => lambda {|s| Runcible::Extensions::Consumer.repos(uuid).
-                                                              collect{|repo| repo["repo_id"]} }
+      lazy_accessor :repoids, :initializer => lambda {|s| Runcible::Extensions::Consumer.retrieve_bindings(uuid).
+                                                              collect{ |repo| repo["repo_id"]} }
     end
   end
 
@@ -67,7 +67,8 @@ module Glue::Pulp::Consumer
           error_ids << repoid
         end
       end
-      [processed_ids, error_ids]
+
+      return [processed_ids, error_ids]
     rescue => e
       Rails.logger.error "Failed to enable repositories: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -102,10 +103,10 @@ module Glue::Pulp::Consumer
     def update_pulp_consumer
       return true if @changed_attributes.empty?
 
-      Rails.logger.debug "Updating consumer in pulp: #{@old.name}"
+      Rails.logger.debug "Updating consumer in pulp: #{self.name}"
       Runcible::Extensions::Consumer.update(self.uuid, :display_name => self.name)
     rescue => e
-      Rails.logger.error "Failed to update pulp consumer #{@old.name}: #{e}, #{e.backtrace.join("\n")}"
+      Rails.logger.error "Failed to update pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
     
