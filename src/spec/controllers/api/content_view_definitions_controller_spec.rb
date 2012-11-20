@@ -67,7 +67,7 @@ describe Api::ContentViewDefinitionsController, :katello => true do
     end
     let(:definition) { @organization.content_view_definitions.last }
     let(:req) { Proc.new { get :publish, :id => definition.id,
-      :organization_id => @organization.id } }
+      :organization_id => @organization.id, :name=>'TestView' } }
     subject { req }
     it { should change(ContentView, :count).by(1) }
   end

@@ -306,7 +306,8 @@ describe System do
                           :minor => release,
                           :cp_label => "repo",
                           :relative_path=>'/foo',
-                          :content_id=>'foo')
+                          :content_id=>'foo',
+                          :content_view_version=>env_product.environment.default_view_version)
       end
       Repository.create!(:name => "Repo without releases",
                          :label => "Repo_without_releases",
@@ -317,7 +318,8 @@ describe System do
                          :minor => nil,
                          :cp_label => "repo",
                          :relative_path=>'/foo',
-                         :content_id=>'foo')
+                         :content_id=>'foo',
+                         :content_view_version=>env_product.environment.default_view_version)
       @system.environment = @environment
       @system.save!
     end

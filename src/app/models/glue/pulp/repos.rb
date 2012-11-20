@@ -353,7 +353,7 @@ module Glue::Pulp::Repos
                                         :content_type => pc.content.type,
                                         :preserve_metadata => true, #preserve repo metadata when importing from cp
                                         :enabled =>false,
-                                        :content_view_version=>env_prod.environment.default_view_version
+                                        :content_view_version=>self.organization.library.default_view_version
                                        )
             end
 
