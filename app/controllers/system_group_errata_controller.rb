@@ -98,9 +98,9 @@ class SystemGroupErrataController < ApplicationController
     @group.systems.each do |system|
       errata = system.errata
       errata.each do |erratum|
-        errata_hash[erratum.id] = erratum
-        errata_system_hash[erratum.id] ||= []
-        errata_system_hash[erratum.id] << system.name
+        errata_hash[erratum.errata_id] = erratum
+        errata_system_hash[erratum.errata_id] ||= []
+        errata_system_hash[erratum.errata_id] << system.name
       end
     end
     errata_list = errata_hash.values
@@ -111,10 +111,7 @@ class SystemGroupErrataController < ApplicationController
     
     filtered_errata_count = errata_list.length
 
-    errata_list = errata_list.sort { |a,b|
-      a.id.downcase <=> b.id.downcase
-    }
-
+    errata_list = errata_list.sort_by{ |a| a.errata_id.downcase}
     errata_list = errata_list[start...finish]
 
     return errata_list, errata_system_hash, total_errata_count, filtered_errata_count
