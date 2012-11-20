@@ -23,7 +23,7 @@ class OrganizationAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestC
   end
 
   def test_class_readable
-    assert !Organization.readable.empty?
+    refute_empty Organization.readable
   end
 
   def def_class_creatable?
@@ -46,11 +46,9 @@ class OrganizationAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestC
     assert @org.readable?
   end
 
-
   def test_environments_manageable?
     assert @org.environments_manageable?
   end
-
 
   def test_systems_readable?
     assert @org.systems_readable?
@@ -68,7 +66,6 @@ class OrganizationAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestC
     assert @org.systems_registerable?
   end
 
-
   def test_gpg_keys_manageable?
     assert @org.gpg_keys_manageable?
   end
@@ -76,7 +73,6 @@ class OrganizationAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestC
   def test_syncable?
     assert @org.syncable?
   end
-
 
 end
 
@@ -91,58 +87,55 @@ class OrganizationAuthorizationNoPermsTest < MiniTest::Rails::ActiveSupport::Tes
   end
 
   def test_class_readable
-    assert Organization.readable.empty?
+    assert_empty Organization.readable
   end
 
   def def_class_creatable?
-    assert !Organization.creatable?
+    refute Organization.creatable?
   end
 
   def test_any_readable?
-    assert !Organization.any_readable?
+    refute Organization.any_readable?
   end
 
   def test_editable?
-    assert !@org.editable?
+    refute @org.editable?
   end
 
   def test_deletable?
-    assert !@org.deletable?
+    refute @org.deletable?
   end
 
   def test_readable?
-    assert !@org.readable?
+    refute @org.readable?
   end
-
 
   def test_environments_manageable?
-    assert !@org.environments_manageable?
+    refute @org.environments_manageable?
   end
 
-
   def test_systems_readable?
-    assert !@org.systems_readable?
+    refute @org.systems_readable?
   end
 
   def test_systems_deletable?
-    assert !@org.systems_deletable?
+    refute @org.systems_deletable?
   end
 
   def test_systems_registerable?
-    assert !@org.systems_registerable?
+    refute @org.systems_registerable?
   end
 
   def test_any_systems_registerable?
-    assert !@org.systems_registerable?
+    refute @org.systems_registerable?
   end
 
-
   def test_gpg_keys_manageable?
-    assert !@org.gpg_keys_manageable?
+    refute @org.gpg_keys_manageable?
   end
 
   def test_syncable?
-    assert !@org.syncable?
+    refute @org.syncable?
   end
 
 end

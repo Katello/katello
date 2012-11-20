@@ -179,8 +179,10 @@ module Glue::Pulp::Repo
 
     def errata
       if @repo_errata.nil?
+        #we fetch ids and then fetch errata by id, because repo errata
+        #  do not contain all the info we need (bz 854260)
         e_ids = Runcible::Extensions::Repository.errata_ids(self.pulp_id)
-        self.errata = Runcible::Extensions::Errata.find_all_by_unit_ids(e_ids)
+        self.errata = Runcible::Extensions::Errata.find_all(e_ids)
       end
       @repo_errata
     end
@@ -258,13 +260,14 @@ module Glue::Pulp::Repo
     end
 
     def find_latest_packages_by_name name
-      Katello::PackageUtils.find_latest_packages(Runcible::Extensions::Repository.packages_by_nvre(self.pulp_id, name))
+      packages = Runcible::Extensions::Repository.packages_by_nvre(self.pulp_id, name)
+      Katello::PackageUtils.find_latest_packages(packages)
     end
 
     def has_erratum? id
-      self.errata.each {|err|
+      self.errata.each do |err|
         return true if err.id == id
-      }
+      end
       return false
     end
 

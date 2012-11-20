@@ -23,13 +23,13 @@ module Glue::Pulp::Errata
   def self.included(base)
     base.class_eval do
 
-      attr_accessor :id, :title, :description, :version, :release, :type, :status, :updated,  :issued, :from_str,
-                    :reboot_suggested, :references, :pkglist, :severity, :repository_memberships
-
-      alias_method 'repoids', 'repository_memberships'
-
+      attr_accessor :id, :errata_id, :title, :description, :version, :release, :type, :status, :updated,  :issued, :from_str,
+                    :reboot_suggested, :references, :pkglist, :severity, :repoids
 
       def initialize(params = {})
+        params['repoids'] = params.delete(:repository_memberships)
+        params['errata_id'] = params['id']
+        params['id'] = params.delete('_id')
         params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
       end
 
@@ -39,6 +39,11 @@ module Glue::Pulp::Errata
 
       def self.find(id)
         erratum_attrs = Runcible::Extensions::Errata.find(id)
+        Errata.new(erratum_attrs) if not erratum_attrs.nil?
+      end
+
+      def self.find_by_errata_id(id)
+        erratum_attrs = Runcible::Extensions::Errata.find_by_errata_id(id)
         Errata.new(erratum_attrs) if not erratum_attrs.nil?
       end
 

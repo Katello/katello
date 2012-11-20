@@ -72,7 +72,7 @@ describe ContentSearchController, :katello => true do
           end
 
           it "should return some #{content_type}" do
-            setup_search(:filter => @expected_filters[mode], :fields =>[:id, :name, :nvrea, :repoids, :type], :results => [])
+            setup_search(:filter => @expected_filters[mode], :fields =>[:id, :name, :nvrea, :repoids, :type, :errata_id], :results => [])
             params = {"mode"=>mode.to_s, "#{content_type}"=>{"search"=>""}, "content_type"=>"#{content_type}", "repos"=>{"search"=>""}}
             post "#{content_type}", params
             response.should be_success
