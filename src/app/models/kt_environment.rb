@@ -91,8 +91,10 @@ class KTEnvironment < ActiveRecord::Base
 
   has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED}, :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
 
-  has_many :environment_content_views, :foreign_key => :environment_id
-  has_many :content_views, :through => :environment_content_views
+  has_many :content_view_version_environments, :foreign_key=>:environment_id
+  has_many :content_view_versions, :through=>:content_view_version_environments, :inverse_of=>:environments
+
+
   belongs_to :default_content_view, :class_name => "ContentView", :foreign_key => :default_content_view_id
 
   scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
@@ -108,6 +110,7 @@ class KTEnvironment < ActiveRecord::Base
   validates_with PathDescendentsValidator
   validate :constant_name, :on => :update
 
+  before_create :create_default_content_view
   before_destroy :confirm_last_env
 
   after_destroy :unset_users_with_default
@@ -115,6 +118,14 @@ class KTEnvironment < ActiveRecord::Base
 
   def library?
     self.library
+  end
+
+  def default_view_version
+    self.default_content_view.version(self)
+  end
+
+  def content_views
+    self.content_view_versions.collect{|vv| vv.content_view}
   end
 
   def successor
@@ -292,6 +303,15 @@ class KTEnvironment < ActiveRecord::Base
       self.repositories.enabled.map(&:minor).compact.uniq.sort
     else
       self.organization.redhat_provider.available_releases
+    end
+  end
+
+  def create_default_content_view
+    if self.default_content_view.nil?
+      self.default_content_view = ContentView.create!(:name=>"Default View for #{self.name}",
+                                                :organization=>self.organization, :default=>true)
+      version = ContentViewVersion.create!(:version=>1, :content_view=>self.default_content_view)
+      self.content_view_versions << version
     end
   end
 

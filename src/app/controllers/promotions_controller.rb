@@ -91,7 +91,8 @@ class PromotionsController < ApplicationController
         repos.each{ |repo|
           if pack.repoids.include? repo.pulp_id
             if repo.is_cloned_in? @next_environment 
-              if pack.repoids.include? repo.clone_id(@next_environment)
+              if pack.repoids.include? repo.clone_id(@next_environment,
+                                                     @next_environment.default_content_view)
                 promoted = promoted && true
               else
                 promotable = true
@@ -177,7 +178,8 @@ class PromotionsController < ApplicationController
         repos.each{ |repo|
           if erratum.repoids.include? repo.pulp_id
             if repo.is_cloned_in? @next_environment 
-              if erratum.repoids.include? repo.clone_id(@next_environment)
+              if erratum.repoids.include? repo.clone_id(@next_environment,
+                                                        @next_environment.default_content_view)
                 promoted = promoted && true
               else
                 promotable = true

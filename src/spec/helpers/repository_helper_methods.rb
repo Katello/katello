@@ -12,7 +12,8 @@ module RepositoryHelperMethods
     random_id = rand(10**6)
     repo = Repository.new(:environment_product => env_product, :name => name, :label =>  "#{name}-#{random_id}",
                           :relative_path => path, :pulp_id => "pulp-id-#{random_id}",
-                          :content_id => "content-id-#{random_id}", :enabled => enabled)
+                          :content_id => "content-id-#{random_id}", :enabled => enabled,
+                          :content_view_version=>env_product.environment.default_view_version)
     repo.library_instance = library_instance if library_instance
     repo.stub(:create_pulp_repo).and_return([])
     repo.save!

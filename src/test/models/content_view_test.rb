@@ -13,11 +13,21 @@
 require 'minitest_helper'
 
 class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
+  fixtures :all
 
-  def setup
+
+  def self.before_suite
     models = ["Organization", "KTEnvironment"]
     services = ["Candlepin", "Pulp", "ElasticSearch"]
     disable_glue_layers(services, models)
+  end
+
+  def setup
+    @library              = KTEnvironment.find(environments(:library).id)
+    @dev                  = KTEnvironment.find(environments(:dev).id)
+    @acme_corporation     = Organization.find(organizations(:acme_corporation).id)
+    @library_view            = ContentView.find(content_views(:library_view))
+    @library_dev_view            = ContentView.find(content_views(:library_dev_view))
   end
 
   def test_create
@@ -70,18 +80,17 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_content_view_environments
-    env = FactoryGirl.build_stubbed(:environment)
-    content_view = FactoryGirl.create(:content_view)
-    content_view.environments << env
-
-    assert_includes env.content_views.reload, content_view
+    assert_includes @library_view.environments, @library
+    assert_includes @library.content_views, @library_view
   end
 
   def test_environment_default_content_view
-    env = FactoryGirl.create(:environment_with_library)
+    env = @library
     content_view = FactoryGirl.create(:content_view)
-    env.update_attributes(:default_content_view_id => content_view.id)
-    assert_includes content_view.environment_defaults.map(&:id), env.id
+    env.default_content_view = content_view
+    env.save!
+    content_view = content_view.reload
+    assert_equal content_view.environment_default, env
     assert_equal content_view, env.default_content_view
   end
 
@@ -93,5 +102,35 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_includes changeset.content_views, content_view
     assert_equal content_view.changeset_content_views,
       changeset.changeset_content_views
+  end
+
+  def test_promote
+    content_view = @library_view
+    refute_includes content_view.environments, @dev
+    content_view.promote(@library, @dev)
+    assert_includes content_view.environments, @dev
+  end
+
+  def test_delete
+    view = @library_dev_view
+    view.delete(@dev)
+    refute_includes view.environments, @dev
+  end
+
+  def test_delete_last_env
+    view = @library_view
+    view.delete(@library)
+    assert_empty ContentView.where(:label=>view.label)
+  end
+
+  def test_default_scope
+    refute_empty ContentView.default
+    assert_empty ContentView.default.select{|v| !v.default}
+    assert_includes ContentView.default, @library.default_content_view
+  end
+
+  def test_non_default_scope
+    refute_empty ContentView.non_default
+    assert_empty ContentView.non_default.select{|v| v.default}
   end
 end

@@ -13,10 +13,18 @@
 require 'minitest_helper'
 
 class ChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
+  fixtures :all
 
-  def setup
+  def self.before_suite
     models = ["Organization", "KTEnvironment"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
+  end
+
+  def setup
+    @library              = KTEnvironment.find(environments(:library).id)
+    @dev                  = KTEnvironment.find(environments(:dev).id)
+    @acme_corporation     = Organization.find(organizations(:acme_corporation).id)
+    @library_view         = ContentView.find(content_views(:library_view))
   end
 
   def test_add_content_view_exception
@@ -35,60 +43,42 @@ class ChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_content_view_changeset_promotion
-    env          = FactoryGirl.create(:environment, :with_library)
-    content_view = FactoryGirl.create(:content_view)
+    view = @library_view
+    after_dev    = FactoryGirl.create(:environment, :prior=>@dev)
     changeset    = FactoryGirl.create(:promotion_changeset,
-                                      :environment => env)
+                                      :environment => after_dev)
 
     assert_raises(Errors::ChangesetContentException) do
-      changeset.add_content_view!(content_view)
+      changeset.add_content_view!(view)
     end
-    env.prior.content_views << content_view
-    refute_includes changeset.content_views, content_view
 
-    assert changeset.add_content_view!(content_view)
-    assert_includes changeset.content_views, content_view
+    view.promote(@library, @dev)
+    refute_includes changeset.content_views, view
+
+    changeset.reload
+    view.reload
+    
+    assert changeset.add_content_view!(view)
+    assert_includes changeset.content_views, view
   end
 
   def test_invalid_content_view_changeset_apply
-    org          = FactoryGirl.create(:organization)
-    content_view = FactoryGirl.create(:content_view,
-                                      :organization => org)
-    library      = FactoryGirl.create(:library,
-                                      :content_views => [content_view])
-    env          = FactoryGirl.create(:environment,
-                                      :priors => [library],
-                                      :organization => org,
-                                      :content_views => [content_view]
-                                     )
     changeset    = FactoryGirl.create(:promotion_changeset,
-                                      :environment => env,
+                                      :environment => @dev,
                                       :state => Changeset::REVIEW)
 
-    content_view.update_attribute(:name, "")
-    changeset.add_content_view!(content_view.reload)
+    @library_view.update_attribute(:name, "")
+    changeset.add_content_view!(@library_view)
     assert_raises(ActiveRecord::RecordInvalid) do
       changeset.apply
     end
   end
 
   def test_content_view_changeset_apply
-    org          = FactoryGirl.create(:organization)
-    content_view = FactoryGirl.create(:content_view,
-                                      :organization => org)
-    library      = FactoryGirl.create(:library,
-                                      :content_views => [content_view])
-    env          = FactoryGirl.create(:environment,
-                                      :priors => [library],
-                                      :organization => org,
-                                      :content_views => [content_view]
-                                     )
-
-    #KTEnvironment.any_instance.stubs(:update_cp_content, true).returns(true)
     changeset    = FactoryGirl.create(:promotion_changeset,
-                                      :environment => env,
+                                      :environment => @dev,
                                       :state => Changeset::REVIEW)
-    assert changeset.add_content_view!(content_view), content_view
+    assert_equal changeset.add_content_view!(@library_view), @library_view
     # assert changeset.apply( :async => false, :notify => false )
   end
 
