@@ -18,3 +18,7 @@ psql -c "CREATE DATABASE katello_test OWNER katello;" -U postgres
 bundle exec rake parallel:create VERBOSE=false
 bundle exec rake parallel:migrate VERBOSE=false
 bundle exec rake parallel:spec
+
+if [ "$(ruby -e 'print RUBY_VERSION > "1.9"')" == "true" ]; then
+  gem install cane && cane
+fi
