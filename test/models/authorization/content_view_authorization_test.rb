@@ -53,10 +53,12 @@ class ContentViewAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCa
   end
 
   def test_readable
+    count =  ContentView.readable(@org).count
     @view.save!
     assert ContentView.any_readable?(@org)
     assert @view.readable?
-    assert_equal 1, ContentView.readable(@org).length
+    assert_includes ContentView.readable(@org), @view
+    assert_equal ContentView.readable(@org).count, count+1
   end
 
   def test_promotable
