@@ -1,0 +1,27 @@
+
+= content_for :title do
+  #{_("New Subnet")}
+
+= content_for :navigation do
+  / pretty
+
+= content_for :content do
+  .grid_10
+    = kt_form_for ::Foreman::Subnet.new, :id => "new_subnet" do |form|
+
+      = form.text_field :name, :label => _("Name:")
+      = form.text_field :network, :label => _("Network:"), :value=> ""
+      = form.text_field :mask, :label => _("Netmask:"), :value=> ""
+      = form.text_field :gateway, :label => _("Gateway:"), :value=> ""
+      = form.text_field :dns_primary, :label => _("Primary DNS:"), :value=> ""
+      = form.text_field :dns_secondary, :label => _("Secondary DNS:"), :value=> ""
+      = form.text_field :from, :label => _("From IP:"), :value=> ""
+      = form.text_field :to, :label => _("To IP:"), :value=> ""
+      = form.text_field :vlanid, :label => _("VLAN:"), :value=> ""
+      /= form.text_field :domain_ids, :label => _(":")
+      /= form.text_field :dhcp, :label => _(":")
+      /= form.text_field :tftp, :label => _(":")
+      /= form.text_field :dns, :label => _(":")
+
+
+      = form.submit _("Save Subnet"), :id => :save_subnet
