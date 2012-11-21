@@ -2,6 +2,12 @@ Src::Application.routes.draw do
 
   apipie
 
+  resources :subnets do
+    collection do
+      get :items
+    end
+  end
+
   resources :system_groups do
     collection do
       get :items
