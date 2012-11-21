@@ -10,11 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'models/repository_base'
+require './test/models/authorization/authorization_base'
 
 
-class ActivationKeyAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCase
-  include RepositoryTestBase
+class ActivationKeyAuthorizationAdminTest < AuthorizationTestBase
 
   def setup
     super
@@ -36,8 +35,7 @@ class ActivationKeyAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::Test
 end
 
 
-class ActivationKeyAuthorizationNoPermsTest < MiniTest::Rails::ActiveSupport::TestCase
-  include RepositoryTestBase
+class ActivationKeyAuthorizationNoPermsTest  < AuthorizationTestBase
 
   def setup
     super
