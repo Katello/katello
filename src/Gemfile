@@ -102,6 +102,7 @@ group :test, :development do
   gem 'ci_reporter', '>= 1.6.3'
   gem 'gettext', '>= 1.9.3', :require => false
   gem 'ruby_parser'
+  gem 'sexp_processor' #dependency of ruby_parser
 
   #needed to generate routes in javascript
   gem "js-routes", :require => 'js_routes'
