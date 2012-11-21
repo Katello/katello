@@ -77,13 +77,21 @@
       if( prefix !== "" ){
         prefix = prefix.match('\/$') ? prefix : ( prefix + '/');
       }
-      
+
       return prefix;
     }
 
   };
 
   window.KT.routes = {
+// items_subnets => /subnets/items(.:format)
+  items_subnets_path: function(options) {
+  return Utils.build_path(1, ["/subnets/items"], arguments)
+  },
+// subnets_path => /subnets(.:format)
+  subnets_path: function(options) {
+  return Utils.build_path(1, ["/subnets"], arguments)
+  },
 // repositories_api_environment_product => /api/environments/:environment_id/products/:id/repositories(.:format)
   repositories_api_environment_product_path: function(_environment_id, _id, options) {
   return Utils.build_path(3, ["/api/environments/", "/products/", "/repositories"], arguments)
@@ -1661,7 +1669,7 @@
   return Utils.build_path(2, ["/promotions/", "/details"], arguments)
   }}
 ;
-  
+
   window.KT.routes.options = {
     prefix: '',
     default_format: '',

@@ -1,0 +1,30 @@
+= javascript :edit_helpers
+
+= content_for :title do
+  #{@subnet.name}
+
+= content_for :navigation do
+  / pretty
+
+= content_for :remove_item do
+  = link_to _("Remove Subnet"), { :controller => "subnets", :action => "destroy" }, :confirm => _('Are you sure you want to remove this subnet?'), :method => :delete, :class=>"remove_item", :remote=>true
+
+= content_for :content do
+  .grid_10
+    = kt_form_for @subnet, :id => "edit_subnet", :data_url => subnet_path(@subnet) do |form|
+
+      = form.editable :name, :label => _("Name:")
+      = form.editable :network, :label => _("Network:")
+      = form.editable :mask, :label => _("Netmask:")
+      = form.editable :gateway, :label => _("Gateway:")
+      = form.editable :dns_primary, :label => _("Primary DNS:")
+      = form.editable :dns_secondary, :label => _("Secondary DNS:")
+      = form.editable :from, :label => _("From IP:")
+      = form.editable :to, :label => _("To IP:")
+      = form.editable :vlanid, :label => _("VLAN:")
+      /= form.text_field :domain_ids, :label => _(":")
+      /= form.text_field :dhcp, :label => _(":")
+      /= form.text_field :tftp, :label => _(":")
+      /= form.text_field :dns, :label => _(":")
+
+      = form.submit _("Save Subnet"), :id => :save_subnet
