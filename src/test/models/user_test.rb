@@ -13,8 +13,7 @@
 
 require './test/models/user_base'
 
-class UserCreateTest < MiniTest::Rails::ActiveSupport::TestCase
-  include TestUserBase
+class UserCreateTest < UserTestBase 
 
   def setup
     super
@@ -69,8 +68,7 @@ class UserCreateTest < MiniTest::Rails::ActiveSupport::TestCase
 end
 
 
-class UserInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
-  include TestUserBase
+class UserInstanceTest < UserTestBase
 
   def setup
     super
@@ -99,8 +97,7 @@ class UserInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
 end
 
 
-class UserClassTest < MiniTest::Rails::ActiveSupport::TestCase
-  include TestUserBase
+class UserClassTest < UserTestBase
 
   def test_authenticate
     refute_nil User.authenticate!(@no_perms_user.username, @no_perms_user.username)
@@ -121,8 +118,7 @@ class UserClassTest < MiniTest::Rails::ActiveSupport::TestCase
 end
 
 
-class UserLdapTest < MiniTest::Rails::ActiveSupport::TestCase
-  include TestUserBase
+class UserLdapTest < UserTestBase
 
   def self.before_suite
     super
@@ -145,8 +141,7 @@ end
 
 
 
-class UserDefaultEnvTest < MiniTest::Rails::ActiveSupport::TestCase
-  include TestUserBase
+class UserDefaultEnvTest < UserTestBase
 
   def self.before_suite
     services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
