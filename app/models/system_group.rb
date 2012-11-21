@@ -13,16 +13,25 @@
 class SystemGroup < ActiveRecord::Base
 
   include Glue::Pulp::ConsumerGroup if (AppConfig.use_pulp)
-  include Glue::ElasticSearch::SystemGroup
-  include Glue
+  include Glue::ElasticSearch::SystemGroup if AppConfig.use_elasticsearch
+  include Glue if AppConfig.use_cp || AppConfig.use_pulp
   include Authorization::SystemGroup
 
   has_many :key_system_groups, :dependent => :destroy
   has_many :activation_keys, :through => :key_system_groups
 
   has_many :system_system_groups, :dependent => :destroy
-  has_many :systems, {:through => :system_system_groups, :before_add => :add_pulp_consumer_group,
+  if AppConfig.use_pulp? && AppConfig.use_elasticsearch?
+    has_many :systems, {:through => :system_system_groups, :before_add => :add_pulp_consumer_group,
            :before_remove => :remove_pulp_consumer_group}.merge(update_association_indexes)
+  elsif AppConfig.use_elastic_search? && !AppConfig.use_pulp?
+    has_many :systems, {:through => :system_system_groups}.merge(update_association_indexes)
+  elsif !AppConfig.use_elastic_search? && AppConfig.use_pulp?
+    has_many :systems, {:through => :system_system_groups, :before_add => :add_pulp_consumer_group,
+           :before_remove => :remove_pulp_consumer_group}
+  else
+    has_many :systems, {:through => :system_system_groups}
+  end
 
   has_many :jobs, :as => :job_owner
 

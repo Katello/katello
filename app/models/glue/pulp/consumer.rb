@@ -16,7 +16,7 @@ module Glue::Pulp::Consumer
     base.send :include, LazyAccessor
 
     base.class_eval do
-      before_save :save_pulp_orchestration
+      before_save    :save_pulp_orchestration
       before_destroy :destroy_pulp_orchestration
       after_rollback :rollback_on_pulp_create, :on => :create
 

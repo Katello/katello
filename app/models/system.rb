@@ -22,11 +22,9 @@ class System < ActiveRecord::Base
   include Glue::Candlepin::Consumer if AppConfig.use_cp
   include Glue::Pulp::Consumer if AppConfig.use_pulp
   include Glue::ElasticSearch::System if AppConfig.use_elasticsearch
-  include Glue
+  include Glue if AppConfig.use_cp || AppConfig.use_pulp
   include Authorization::System
   include AsyncOrchestration
-
-  after_rollback :rollback_on_create, :on => :create
 
   acts_as_reportable
 

@@ -39,5 +39,5 @@ Src::Application.configure do
   Dir.mkdir "#{Rails.root}/log" unless File.directory? "#{Rails.root}/log"
   config.active_record.logger = Logger.new("#{Rails.root}/log/test_sql.log")
 
-Bundler.require(:debugging, Rails.env) if defined?(Bundler)
+  Bundler.require(:debugging, Rails.env) if defined?(Bundler)
 end
