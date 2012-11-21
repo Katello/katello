@@ -290,6 +290,7 @@ Requires:        %{name} = %{version}-%{release}
 Requires:        rubygem(newrelic_rpm)
 Requires:        rubygem(logical-insight)
 Requires:        rubygem(libv8)
+Requires:        rubygem(jshintrb)
 
 %description devel-jshintrb
 Rake tasks and dependecies for Katello developers, which enables
