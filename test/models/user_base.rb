@@ -12,21 +12,18 @@
 require 'minitest_helper'
 
 
-module TestUserBase
-  def self.included(base)
-    base.extend ClassMethods
+class UserTestBase < MiniTest::Rails::ActiveSupport::TestCase
+  extend ActiveRecord::TestFixtures
 
-    base.class_eval do
-      fixtures :all
-    end
-  end
+  fixtures :all
 
-  module ClassMethods
-    def before_suite
-      services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-      models    = ['User', 'System', 'KTEnvironment', 'Repository', 'Organization']
-      disable_glue_layers(services, models)
-    end
+  def self.before_suite
+    load_fixtures
+    configure_runcible
+
+    services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
+    models    = ['User', 'System', 'KTEnvironment', 'Repository', 'Organization']
+    disable_glue_layers(services, models)
   end
 
   def setup
