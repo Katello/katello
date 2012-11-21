@@ -25,7 +25,7 @@ class GluePulpErrataTestBase < MiniTest::Rails::ActiveSupport::TestCase
     configure_runcible
 
     services  = ['Candlepin', 'ElasticSearch', 'Foreman']
-    models    = ['Repository', 'Errata']
+    models    = ['Repository', 'Errata', 'Package']
     disable_glue_layers(services, models)
     
     User.current = User.find(@loaded_fixtures['users']['admin']['id'])

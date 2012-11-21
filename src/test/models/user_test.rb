@@ -149,7 +149,7 @@ class UserDefaultEnvTest < MiniTest::Rails::ActiveSupport::TestCase
   include TestUserBase
 
   def self.before_suite
-    services  = ['Candlepin', 'Pulp', 'ElasticSearch']
+    services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
     models    = ['User', 'KTEnvironment', 'Repository', 'System']
     disable_glue_layers(services, models)
   end
@@ -166,7 +166,7 @@ class UserDefaultEnvTest < MiniTest::Rails::ActiveSupport::TestCase
     @user.save!
     @user = @user.reload
 
-    assert_equal @env,  @user.default_environment
+    assert_equal @env, @user.default_environment
   end
 
   def test_find_by_default_env
@@ -181,8 +181,8 @@ class UserDefaultEnvTest < MiniTest::Rails::ActiveSupport::TestCase
     @user.save!
     @env.destroy
 
-    assert_empty User.find_by_default_environment(@env.id)
-    assert_nil @user.default_environment
+    assert_empty  User.find_by_default_environment(@env.id)
+    assert_nil    @user.default_environment
   end
 
 end

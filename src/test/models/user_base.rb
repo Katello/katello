@@ -17,8 +17,6 @@ module TestUserBase
     base.extend ClassMethods
 
     base.class_eval do
-      set_fixture_class :environments => KTEnvironment
-      use_instantiated_fixtures = false
       fixtures :all
     end
   end
@@ -26,21 +24,18 @@ module TestUserBase
   module ClassMethods
     def before_suite
       services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-      models    = ['User', 'Organization', 'KTEnvironment']
+      models    = ['User', 'System', 'KTEnvironment', 'Repository', 'Organization']
       disable_glue_layers(services, models)
     end
   end
 
   def setup
     AppConfig.warden = 'database'
-    @no_perms_user  = User.find(users(:no_perms_user))
-    @admin          = User.find(users(:admin))
-    @disabled_user  = User.find(users(:disabled_user))
+    @no_perms_user      = User.find(users(:no_perms_user))
+    @admin              = User.find(users(:admin))
+    @disabled_user      = User.find(users(:disabled_user))
     @acme_corporation   = Organization.find(organizations(:acme_corporation).id)
     @dev                = KTEnvironment.find(environments(:dev).id)
   end
 
 end
-
-
-

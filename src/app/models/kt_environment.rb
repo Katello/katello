@@ -61,7 +61,7 @@ class KTEnvironment < ActiveRecord::Base
   include Authorization::Environment
   include Glue::ElasticSearch::Environment if AppConfig.use_elasticsearch
   include Glue::Candlepin::Environment if AppConfig.use_cp
-  include Glue if AppConfig.use_cp
+  include Glue if AppConfig.use_cp || AppConfig.use_pulp
   set_table_name "environments"
   include Katello::LabelFromName
   acts_as_reportable
