@@ -27,7 +27,6 @@ class GluePulpRepoTestBase < MiniTest::Rails::ActiveSupport::TestCase
     models    = ['Repository', 'Package']
     disable_glue_layers(services, models)
 
-
     @@admin = User.find(@loaded_fixtures['users']['admin']['id'])
   end
 
@@ -36,7 +35,7 @@ class GluePulpRepoTestBase < MiniTest::Rails::ActiveSupport::TestCase
       task_list.each do |task|
         while !(['finished', 'error', 'timed_out', 'canceled', 'reset', 'success'].include?(task['state'])) do
           task = PulpSyncStatus.pulp_task(Runcible::Resources::Task.poll(task["task_id"]))
-          sleep 0.1 # do not overload backend engines
+          sleep 0.5 # do not overload backend engines
         end
       end
     end
@@ -46,7 +45,7 @@ class GluePulpRepoTestBase < MiniTest::Rails::ActiveSupport::TestCase
     VCR.use_cassette('glue_pulp_repo_tasks', :erb => true, :match_requests_on => [:path, :method]) do
       while !(['finished', 'error', 'timed_out', 'canceled', 'reset', 'success'].include?(task['state'])) do
         task = PulpSyncStatus.pulp_task(Runcible::Resources::Task.poll(task["uuid"]))
-        sleep 0.1 # do not overload backend engines
+        sleep 0.5 # do not overload backend engines
       end
     end
   end
@@ -114,8 +113,10 @@ class GluePulpRepoTest < GluePulpRepoTestBase
 
   def test_sync
     task_list = @fedora_17_x86_64.sync
-    assert task_list.length > 0
-    assert task_list.first.is_a? PulpSyncStatus
+
+    refute_empty    task_list
+    assert_kind_of  PulpSyncStatus, task_list.first
+    
     @task = task_list.first
     self.class.wait_on_task(@task)
   end
@@ -132,16 +133,17 @@ class GluePulpRepoTest < GluePulpRepoTestBase
   end
 
   def test_relative_path
-    assert @fedora_17_x86_64.relative_path == '/test_path/'
+    assert_equal '/test_path/', @fedora_17_x86_64.relative_path
   end
 
   def test_relative_path=
     @fedora_17_x86_64.relative_path = '/new_path/'
-    assert @fedora_17_x86_64.relative_path != '/test_path/'
+
+    refute_equal '/test_path/', @fedora_17_x86_64.relative_path
   end
 
   def test_generate_distributor
-    assert @fedora_17_x86_64.generate_distributor.is_a? Runcible::Extensions::YumDistributor
+    assert_kind_of Runcible::Extensions::YumDistributor, @fedora_17_x86_64.generate_distributor
   end
 
   def test_populate_from
@@ -183,15 +185,15 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
   end
 
   def test_generate_metadata
-    assert !@@fedora_17_x86_64.generate_metadata.empty?
+    refute_empty @@fedora_17_x86_64.generate_metadata
   end
 
   def test_sync_status
-    assert @@fedora_17_x86_64.sync_status.is_a? PulpSyncStatus
+    assert_kind_of PulpSyncStatus, @@fedora_17_x86_64.sync_status
   end
 
   def test_sync_state
-    assert @@fedora_17_x86_64.sync_state == ::PulpSyncStatus::FINISHED
+    assert_equal ::PulpSyncStatus::FINISHED, @@fedora_17_x86_64.sync_state
   end
 
   def test_successful_sync?
@@ -203,36 +205,41 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
   end
 
   def test_sync_finish
-    assert !@@fedora_17_x86_64.sync_finish.nil?
+    refute_nil @@fedora_17_x86_64.sync_finish
   end
 
   def test_sync_start
-    assert !@@fedora_17_x86_64.sync_start.nil?
+    refute_nil @@fedora_17_x86_64.sync_start
   end
 
   def test_packages
-    assert @@fedora_17_x86_64.packages.select { |package| package.name == 'elephant' }.length > 0
+    refute_empty @@fedora_17_x86_64.packages.select { |package| package.name == 'elephant' }
   end
 
   def test_has_package?
     pkg_id = @@fedora_17_x86_64.packages.first.id
+
     assert @@fedora_17_x86_64.has_package?(pkg_id)
   end
 
   def test_errata
-    skip "Get on Repository errata broken in Pulp"
-    assert @@fedora_17_x86_64.errata.select { |errata| errata.id == "RHEA-2010:0002" }.length > 0
+    VCR.use_cassette('glue_pulp_repo_units', :match_requests_on => [:body_json, :path, :method]) do
+      refute_empty @@fedora_17_x86_64.errata.select { |errata| errata.errata_id == "RHEA-2010:0002" }
+    end
   end
 
   def test_has_erratum?
-    skip "Check if repository has erratum broken in Pulp"
-    assert @@fedora_17_x86_64.has_erratum?("RHEA-2010:0002")
+    VCR.use_cassette('glue_pulp_repo_units', :match_requests_on => [:body_json, :path, :method]) do
+      e_id = @@fedora_17_x86_64.errata.first.id
+      assert @@fedora_17_x86_64.has_erratum?(e_id)
+    end
   end
 
   def test_distributions
     VCR.use_cassette('glue_pulp_repo_units', :match_requests_on => [:body_json, :path, :method]) do
       distributions = @@fedora_17_x86_64.distributions
-      assert distributions.select { |distribution| distribution.id == "ks-Test Family-TestVariant-16-x86_64" }.length > 0
+
+      refute_empty distributions.select { |distribution| distribution.id == "ks-Test Family-TestVariant-16-x86_64" }
     end
   end
 
@@ -243,35 +250,38 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
   end
 
   def test_find_packages_by_name
-    assert @@fedora_17_x86_64.find_packages_by_name('elephant').length > 0
+    refute_empty @@fedora_17_x86_64.find_packages_by_name('elephant')
   end
 
   def test_find_packages_by_nvre
-    assert @@fedora_17_x86_64.find_packages_by_nvre('elephant', '0.3', '0.8', '0').length > 0
+    refute_empty @@fedora_17_x86_64.find_packages_by_nvre('elephant', '0.3', '0.8', '0')
   end
 
   def test_find_latest_packages_by_name
-    assert @@fedora_17_x86_64.find_latest_packages_by_name('elephant').length > 0
+    refute_empty @@fedora_17_x86_64.find_latest_packages_by_name('elephant')
   end
 
   def test_package_groups
     VCR.use_cassette('glue_pulp_repo_units', :match_requests_on => [:body_json, :path, :method]) do
       package_groups = @@fedora_17_x86_64.package_groups
-      assert package_groups.select { |group| group['name'] == 'mammal' }.length > 0
+
+      refute_empty package_groups.select { |group| group['name'] == 'mammal' }
     end
   end
 
   def test_package_group_categories
     VCR.use_cassette('glue_pulp_repo_units', :match_requests_on => [:body_json, :path, :method]) do
       categories = @@fedora_17_x86_64.package_group_categories
-      assert categories.select { |category| category['name'] == 'all' }.length > 0
+
+      refute_empty categories.select { |category| category['name'] == 'all' }
     end
   end
 
   def test_create_clone
     staging = KTEnvironment.find(environments(:staging).id)
     clone = @@fedora_17_x86_64.create_clone(staging)
-    assert clone.is_a? Repository
+
+    assert_kind_of Repository, clone
 
     clone.destroy
     assert_empty Repository.where(:id=>clone.id)
@@ -283,7 +293,7 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
     @@fedora_17_x86_64_dev.create_pulp_repo
 
     task_list = @@fedora_17_x86_64.clone_contents(@@fedora_17_x86_64_dev)
-    assert task_list.length == 3
+    assert_equal 3, task_list.length
 
     self.class.wait_on_tasks(task_list)
     @@fedora_17_x86_64_dev.destroy_repo
@@ -294,7 +304,7 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
     staging = KTEnvironment.find(environments(:staging).id)
 
     task_list = @@fedora_17_x86_64.promote(library, staging)
-    assert task_list.length == 3
+    assert_equal 3, task_list.length
     self.class.wait_on_tasks(task_list)
 
     clone_id = @@fedora_17_x86_64.clone_id(staging, staging.default_content_view)
@@ -350,6 +360,7 @@ class GluePulpRepoRequiresEmptyPromoteTest < GluePulpRepoTestBase
 
   def test_add_packages
     package = @@fedora_17_x86_64.find_packages_by_name('elephant').first
+
     assert @@cloned_repo.add_packages([package['id']])
   end
 
@@ -404,6 +415,7 @@ class GluePulpRepoRequiresSyncAndPromoteTest < GluePulpRepoTestBase
     
   def test_delete_packages
     package = @@fedora_17_x86_64.find_packages_by_name('elephant').first
+
     assert @@cloned_repo.delete_packages([package['id']])
   end
 
