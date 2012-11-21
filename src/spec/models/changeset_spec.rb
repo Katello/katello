@@ -460,6 +460,8 @@ describe Changeset, :katello => true do
         @changeset.state = Changeset::REVIEW
 
         @clone.should_receive(:add_packages).once.with([@pack.id])
+        Package.should_receive(:index_packages)
+
         @changeset.apply(:async => false)
       end
 
@@ -470,6 +472,7 @@ describe Changeset, :katello => true do
         @changeset.state = Changeset::REVIEW
 
         @clone.should_receive(:add_errata).once.with([@err.id])
+        Errata.should_receive(:index_errata)
 
         @changeset.apply(:async => false)
       end

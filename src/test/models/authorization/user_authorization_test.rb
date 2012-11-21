@@ -44,7 +44,7 @@ class UserAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_admin_deletable?
-    assert !User.current.deletable?
+    refute User.current.deletable?
   end
 
 end
@@ -61,23 +61,23 @@ class UserAuthorizationNoPermsTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_creatable?
-    assert !User.creatable?
+    refute User.creatable?
   end
 
   def test_any_readable?
-    assert !User.any_readable?
+    refute User.any_readable?
   end
 
   def test_readable?
-    assert !@user.readable?
+    refute @user.readable?
   end
 
   def test_editable?
-    assert !@user.editable?
+    refute @user.editable?
   end
 
   def test_deletable?
-    assert !@user.deletable?
+    refute @user.deletable?
   end
 
 
@@ -95,9 +95,11 @@ class UserOrganizationAccess < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_access_two_orgs
-    assert @user.allowed_organizations.size == 0
+    assert_equal 0, @user.allowed_organizations.size
+
     allow(@user.own_role, [:read], :providers, nil, @org)
     allow(@user.own_role,[:read], :providers, nil, @org2)
-    assert @user.allowed_organizations.size == 2
+
+    assert_equal 2, @user.allowed_organizations.size
   end
 end

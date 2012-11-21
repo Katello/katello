@@ -22,7 +22,7 @@ class ActivationKeyAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::Test
   end
 
   def test_readable
-    assert !ActivationKey.readable(@acme_corporation).empty?
+    refute_empty ActivationKey.readable(@acme_corporation)
   end
 
   def test_readable?
@@ -45,15 +45,15 @@ class ActivationKeyAuthorizationNoPermsTest < MiniTest::Rails::ActiveSupport::Te
   end
 
   def test_readable
-    assert ActivationKey.readable(@acme_corporation).empty?
+    assert_empty ActivationKey.readable(@acme_corporation)
   end
 
   def test_readable?
-    assert !ActivationKey.readable?(@acme_corporation)
+    refute ActivationKey.readable?(@acme_corporation)
   end
 
   def test_manageable?
-    assert !ActivationKey.manageable?(@acme_corporation)
+    refute ActivationKey.manageable?(@acme_corporation)
   end
 
 end
