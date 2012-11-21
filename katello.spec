@@ -265,6 +265,7 @@ Requires:        rubygem(js-routes)
 Requires:        rubygem(newrelic_rpm)
 Requires:        rubygem(logical-insight)
 Requires:        rubygem(rails-dev-boost)
+Requires:        rubygem(parallel_tests)
 Requires:        rubygem(minitest)
 Requires:        rubygem(minitest-rails)
 Requires:        rubygem(minitest_tu_shim)
@@ -301,6 +302,7 @@ Requires:        %{name}-devel = %{version}-%{release}
 Requires:        rubygem(vcr)
 Requires:        rubygem(webmock)
 Requires:        rubygem(minitest)
+Requires:        rubygem(parallel_tests)
 
 %description devel-test
 Rake tasks and dependecies for Katello developers, which enables
