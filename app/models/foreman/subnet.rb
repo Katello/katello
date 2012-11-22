@@ -22,6 +22,11 @@ class Foreman::Subnet < Resources::ForemanModel
     {}
   end
 
+  def json_create_options
+    not_nil_attrs = attributes.keys.delete_if { |attr| send(attr).nil? }
+    { :only => not_nil_attrs }
+  end
+
   index_options :display_attrs => [:name, :network]
 
   mapping do
