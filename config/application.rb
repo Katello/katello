@@ -18,7 +18,7 @@ if defined?(Bundler)
   Bundler.require(:default, Rails.env)
 
   # require backend engines only if in katello mode
-  Bundler.require(:foreman) if Katello.config.katello?
+  Bundler.require(:foreman) if Katello.early_config.katello?
 end
 
 module Src
