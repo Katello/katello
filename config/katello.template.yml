@@ -1,10 +1,11 @@
-# Katello configuration
 #
 # NOTE: This file is meant as an example. Installations via Puppet will create one properly configured in
 #       /etc/katello/katello.yml
 #
-# :vim:sw=2:ts=2:et:
 
+# Katello configuration
+#
+# :vim:sw=2:ts=2:et:
 #
 # Common configuration
 #
@@ -22,17 +23,17 @@
 #   minutes that a password reset token will remain valid.
 #
 common:
-  app_mode: <%= %w(/sam /headpin).include?(ENV['RAILS_RELATIVE_URL_ROOT']) ? 'headpin' : 'katello' %>
-  use_cp: <%= ENV['NO_CP'] ? false : nil %>
-  use_pulp: <%= ENV['NO_PULP'] ? false : nil %>
-  use_foreman: <%= ENV['NO_FOREMAN'] ? false : nil %>
+  app_mode: katello
+  use_cp: # set to true/false if you want to override default
+  use_pulp: # set to true/false if you want to override default
+  use_foreman: # set to true/false if you want to override default
   app_name: # set a name if you want to override default
 
   warden: database
   ldap_roles: false
   rest_client_timeout: 30
 
-  url_prefix: <%= ENV['RAILS_RELATIVE_URL_ROOT'] %>
+  url_prefix: "/katello"
   host: 127.0.0.1
   port: 3000
   use_ssl: false
@@ -54,6 +55,8 @@ common:
 
   redhat_repository_url: https://cdn.redhat.com
   logical_insight: false
+
+  #Allowed log levels: 'debug', 'info', 'warn', 'error', 'fatal'
   log_level: debug
   log_level_sql: debug
 
@@ -159,8 +162,8 @@ common:
 # The following configuration values override ones from the common section
 #
 production:
-  log_level: <%= ENV['KATELLO_LOGGING'] %>
-  log_level_sql: <%= ENV['KATELLO_LOGGING_SQL'] %>
+  log_level: warn
+  log_level_sql: fatal
   database:
     database: katello
 
@@ -182,6 +185,10 @@ development:
 #
 test:
   database:
-   database: katello-test<%= ENV['TEST_ENV_NUMBER'] %>
+    database: katello-test<%= ENV['TEST_ENV_NUMBER'] %>
+
+
+# Blank configuration for apipie environment
+apipie:
 
 # EOF

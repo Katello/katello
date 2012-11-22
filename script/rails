@@ -21,7 +21,7 @@ require 'katello_config'
 #    make sure to copy candlepin certificates from /etc/candlepin/certs into the same local directory
 #
 
-if Katello.config.use_ssl
+if Katello.early_config.use_ssl
   module Rails
       class Server < ::Rack::Server
           def default_options
