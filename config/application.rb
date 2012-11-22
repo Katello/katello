@@ -10,19 +10,19 @@ require "rails/test_unit/railtie"
 # FIXME will be removed after https://github.com/Pajk/apipie-rails/pull/62
 require 'apipie-rails'
 
+require 'katello_config'
+
+# If you have a Gemfile, require the gems listed there, including any gems
+# you've limited to :test, :development, or :production.
+if defined?(Bundler)
+  Bundler.require(:default, Rails.env)
+
+  # require backend engines only if in katello mode
+  Bundler.require(:foreman) if Katello.config.katello?
+end
+
 module Src
   class Application < Rails::Application
-
-    require 'katello_config'
-
-    # If you have a Gemfile, require the gems listed there, including any gems
-    # you've limited to :test, :development, or :production.
-    if defined?(Bundler)
-      Bundler.require(:default, Rails.env)
-
-      # require backend engines only if in katello/cfse mode
-      Bundler.require(:foreman) if Katello.config.katello?
-    end
 
     # use dabase configuration form katello.yml instead database.yml
     config.class_eval do
