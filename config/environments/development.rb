@@ -23,4 +23,6 @@ Src::Application.configure do
   config.colorize_logging = false
   Dir.mkdir "#{Rails.root}/log" unless File.directory? "#{Rails.root}/log"
   config.active_record.logger = Logger.new("#{Rails.root}/log/development_sql.log")
+
+  Bundler.require(:debugging, Rails.env)
 end
