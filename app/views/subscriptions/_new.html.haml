@@ -27,7 +27,7 @@
       .grid_10
         %fieldset
           .grid_3.ra.fieldset
-            =label :uuid, :uuid, _("Upstream Distributor")
+            =label :uuid, :uuid, _("Upstream Subscription Management Application")
           .grid_6.la.fl
             = subscriptions_manifest_link_helper({'webAppPrefix'=>@details[:webAppPrefix], 'upstreamId'=>@details['upstreamUuid']}, @details['upstreamUuid'])
         - if @provider.editable? && Katello.config.headpin?
