@@ -358,10 +358,12 @@ a2x -d manpage -f manpage man/katello-service.8.asciidoc
     echo Generating API docs
     rm -f Gemfile.lock
     cp Gemfile Gemfile.old
+    cp config/katello.template.yml config/katello.yml
     echo 'gem "redcarpet"' >> Gemfile
     rake apipie:static RAILS_ENV=apipie --trace
     rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=apipie --trace
     mv Gemfile.old Gemfile
+    rm config/katello.yml
 %endif
 
 %install
@@ -384,7 +386,7 @@ mkdir .bundle
 cp -R .bundle Gemfile Rakefile app autotest ca config config.ru db integration_spec lib locale public script spec vendor %{buildroot}%{homedir}
 
 #copy configs and other var files (will be all overwriten with symlinks)
-install -m 600 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
+install -m 600 config/%{name}.template.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
 install -m 644 config/environments/production.rb %{buildroot}%{_sysconfdir}/%{name}/environment.rb
 
 #copy cron scripts to be scheduled daily

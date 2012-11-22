@@ -13,6 +13,11 @@
 require 'yaml'
 require 'erb'
 
+path = File.expand_path(File.dirname(__FILE__))
+$LOAD_PATH << path unless $LOAD_PATH.include? path
+require 'app_config'
+require 'util/password'
+
 module Katello
 
 
@@ -104,6 +109,18 @@ module Katello
         @data.has_key? key
       end
 
+      def present?(*keys)
+        key, rest = keys.first, keys[1..-1]
+        raise ArgumentError, 'supply at least one key' unless key
+        has_key? key and self[key] and if rest.empty?
+                                         true
+                                       elsif Node === self[key]
+                                         self[key].present?(*rest)
+                                       else
+                                         false
+                                       end
+      end
+
       # allows access keys by method call
       # @raise [NoKye] when +key+ is missing
       def method_missing(method, *args, &block)
@@ -120,11 +137,14 @@ module Katello
 
       # does not supports Hashes in Arrays
       def deep_merge!(hash_or_config)
+        return self if hash_or_config.nil?
         other_config = convert hash_or_config
         other_config.each do |key, other_value|
           value     = has_key?(key) && self[key]
           self[key] = if Node === value && Node === other_value
                         value.deep_merge!(other_value)
+                      elsif Node === value && other_value.nil?
+                        self[key]
                       else
                         other_value
                       end
@@ -143,14 +163,14 @@ module Katello
       # converts config like deep structure by finding Hashes deeply and converting them to Config
       def convert(obj)
         case obj
-          when Node
-            obj
-          when Hash
-            Node.new convert_hash obj
-          when Array
-            obj.map { |o| convert o }
-          else
-            obj
+        when Node
+          obj
+        when Hash
+          Node.new convert_hash obj
+        when Array
+          obj.map { |o| convert o }
+        else
+          obj
         end
       end
 
@@ -171,26 +191,26 @@ module Katello
 
     # defines small dsl for validating configuration
     class Validator
-      attr_reader :config
+      attr_reader :config, :environment, :path
 
       # @param [Node] config
-      # @param [true,false] early configuration
+      # @param [nil, Symbol] environment use nil for early or Symbol for environment
       # @yield block with validations
-      def initialize(config, early, &validations)
-        @config, @early = config, early
+      def initialize(config, environment, path = [:root], &validations)
+        @config, @environment, @path = config, environment, path
         instance_eval &validations
       end
 
       private
 
       def early?
-        @early
+        !environment
       end
 
       # validate sub key
       # @yield block with validations
       def validate(key, &block)
-        Validator.new config[key], early?, &block
+        Validator.new config[key] || Node.new, environment, (self.path + [key]), &block
       end
 
       def are_booleans(*keys)
@@ -204,8 +224,7 @@ module Katello
       def has_values(key, values, options = { })
         values << nil if options[:allow_nil]
         return true if values.include?(config[key])
-        raise ArgumentError,
-              "key #{key} should be one of #{values.inspect}, but was #{config[key].inspect}"
+        raise ArgumentError, error_format(key, "should be one of #{values.inspect}, but was #{config[key].inspect}")
       end
 
       def has_keys(*keys)
@@ -214,9 +233,16 @@ module Katello
 
       def has_key(key)
         unless config.has_key? key.to_sym
-          require 'pp'; pp config;
-          raise "configuration for key #{key.to_sym.inspect} is required"
+          raise error_format(key.to_sym, 'is required')
         end
+      end
+
+      private
+
+      def error_format(key, message)
+        key_path = (path + [key]).join('.')
+        env      = environment || 'early'
+        "Key: '#{key_path}' in env '#{env}' #{message}"
       end
     end
 
@@ -226,18 +252,22 @@ module Katello
 
       def initialize(options = { })
         @config_file_paths = options[:config_file_paths] || raise(ArgumentError)
-        @validation       = options[:validation] || raise(ArgumentError)
+        @validation        = options[:validation] || raise(ArgumentError)
       end
 
       # raw config data form katello.yml represented with Node
       def config_data
         @config_data ||= Node.new(
-            YAML::load(ERB.new(File.read(config_file_path)).result(Object.new.send(:binding))))
+            YAML::load(ERB.new(File.read(config_file_path)).result(Object.new.send(:binding)))).tap do |config|
+          config.each do |k, env_config|
+            decrypt_password! env_config.database if env_config && env_config.present?(:database)
+          end
+        end
       end
 
       # access point for Katello configuration
       def config
-        @config ||= load environment
+        @config ||= load(environment)
       end
 
       # Configuration without environment applied, use in early stages (before Rails are loaded)
@@ -251,9 +281,13 @@ module Katello
         @database_configs ||= begin
           %w(production development test).inject({ }) do |hash, environment|
             common = config_data.common.database.to_hash
-            hash.update(
-                environment =>
-                    common.merge(config_data[environment.to_sym].database.to_hash).stringify_keys)
+            if config_data.present?(environment.to_sym, :database)
+              hash.update(
+                  environment =>
+                      common.merge(config_data[environment.to_sym].database.to_hash).stringify_keys)
+            else
+              hash
+            end
           end
         end
       end
@@ -264,7 +298,7 @@ module Katello
         Node.new.tap do |c|
           load_config_file c, environment
           post_process c
-          validate c, !environment
+          validate c, environment
         end
       end
 
@@ -289,6 +323,10 @@ module Katello
         load_version config
       end
 
+      def decrypt_password!(database_config)
+        database_config[:password] = Password.decrypt database_config.password if database_config.present?(:password)
+      end
+
       def load_version(config)
         package = config.katello? ? 'katello-common' : 'katello-headpin'
         version = `rpm -q #{package} --queryformat '%{VERSION}-%{RELEASE}' 2>&1`
@@ -300,8 +338,8 @@ module Katello
         config[:katello_version] = version
       end
 
-      def validate(config, early = false)
-        Validator.new config, early, &validation
+      def validate(config, environment)
+        Validator.new config, environment, &validation
       end
 
       def config_file_path
@@ -330,9 +368,11 @@ module Katello
       are_booleans :use_cp, :use_foreman, :use_pulp, :use_ssl, :ldap_roles, :debug_rest,
                    :debug_cp_proxy, :debug_pulp_proxy, :logical_insight
 
-      validate :database do
-        has_keys *%w(adapter host encoding username password database)
-      end unless early?
+      if !early? && environment != :apipie
+        validate :database do
+          has_keys *%w(adapter host encoding username password database)
+        end
+      end
     end
 
     Loader = LoaderImpl.new(
@@ -354,7 +394,4 @@ module Katello
   end
 end
 
-path = File.expand_path(File.dirname(__FILE__))
-$LOAD_PATH << path unless $LOAD_PATH.include? path
-require 'app_config'
 
