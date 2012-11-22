@@ -105,6 +105,7 @@ group :test, :development do
   gem 'ci_reporter', '>= 1.6.3'
   gem 'gettext', '>= 1.9.3', :require => false
   gem 'ruby_parser'
+  gem 'sexp_processor' #dependency of ruby_parser
 
   #needed to generate routes in javascript
   gem "js-routes", :require => 'js_routes'
@@ -140,7 +141,8 @@ group :development do
   gem 'logical-insight'
 end
 
-group :devboost do
+group :development do
+  # devboost just for dev mode
   gem 'rails-dev-boost', :require => 'rails_development_boost'
 end
 

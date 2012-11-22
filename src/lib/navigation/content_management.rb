@@ -316,7 +316,7 @@ module Navigation
     def activation_keys_navigation
       menu = [
         { :key => :applied_subscriptions,
-          :name =>_("Applied Subscriptions"),
+          :name =>_("Attached Subscriptions"),
           :url => lambda{applied_subscriptions_activation_key_path(@activation_key.id)},
           :if =>lambda{@activation_key},
           :options => {:class=>"panel_link"}
@@ -386,7 +386,7 @@ module Navigation
           :options => {:class=>"panel_link"}
         },
         { :key => :consumers,
-          :name =>_("Consumers"),
+          :name =>_("Units"),
           :url => lambda{consumers_subscription_path(@subscription.cp_id)},
           :if => lambda{@subscription},
           :options => {:class=>"panel_link"}

@@ -21,7 +21,6 @@ class elasticsearch::config {
       command => "rm -rf /var/lib/elasticsearch/*",
       path    => "/sbin:/bin:/usr/bin",
       notify  => Service["elasticsearch"],
-      timeout => 0
     }
   }
 }

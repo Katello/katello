@@ -11,9 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module SystemsHelper
-  
+
   def render_rows(options)
-    render :partial=>"systems/list_systems",  
+    render :partial=>"systems/list_systems",
             :locals=>{:accessor=>options[:accessor], :columns=>options[:columns], :collection=>options[:collection], :name=>options[:name]}
   end
 
@@ -50,7 +50,7 @@ module SystemsHelper
     radio_button("system_type","virtualized", "virtual", :tabindex => 5 ),
     content_tag(:label, _("Virtual"), :for => 'system_type_virtualized_virtual')].join(' ')
   end
-  
+
   def errata_type_class errata
     case errata.e_type
       when  Glue::Pulp::Errata::SECURITY
@@ -87,7 +87,7 @@ module SystemsHelper
   end
 
   def system_servicelevel system
-    _("Auto-heal %{val}, %{sla}") %
+    _("Auto-attach %{val}, %{sla}") %
       {:val => system.autoheal ? _("On") : _("Off"),
        :sla => ( system.serviceLevel == '' ? _("No Service Level Preference") : (_("Service Level %s") % system.serviceLevel))}
   end
@@ -95,12 +95,12 @@ module SystemsHelper
   def system_servicelevel_edit system
     levels = {}
     system.organization.service_levels.each { |level|
-      levels["1#{level}"] = _("Auto-heal On, Service Level %s") % level
-      levels["0#{level}"] = _("Auto-heal Off, Service Level %s") % level
+      levels["1#{level}"] = _("Auto-attach On, Service Level %s") % level
+      levels["0#{level}"] = _("Auto-attach Off, Service Level %s") % level
     }
 
-    levels['1'] = _("Auto-heal On, No Service Level Preference")
-    levels['0'] = _("Auto-heal Off, No Service Level Preference")
+    levels['1'] = _("Auto-attach On, No Service Level Preference")
+    levels['0'] = _("Auto-attach Off, No Service Level Preference")
 
     levels["selected"] = system_servicelevel(system)
 

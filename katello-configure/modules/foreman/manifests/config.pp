@@ -83,7 +83,6 @@ class foreman::config {
     environment => "RAILS_ENV=${foreman::environment}",
     command     => "/usr/bin/env rake db:migrate --trace --verbose > ${foreman::configure_log_base}/foreman-db-migrate.log 2>&1 && touch /var/lib/katello/foreman_db_migrate_done",
     creates     => "/var/lib/katello/foreman_db_migrate_done",
-    timeout     => 0,
     require     => [ Postgres::Createdb[$foreman::db_name],
                  File["${foreman::log_base}/production.log"],
                  File["${foreman::config_dir}/settings.yaml"],
@@ -97,7 +96,6 @@ class foreman::config {
                               -k oauth_map_users -v '${foreman::oauth_map_users}'\
                               -k administrator -v '${foreman::administrator}'",
    user    => $foreman::user,
-   timeout => 0,
    require => User[$foreman::user],
   }
 
@@ -106,7 +104,6 @@ class foreman::config {
       command => "rm -f /var/lib/katello/foreman_db_migrate_done",
       path    => "/sbin:/bin:/usr/bin",
       before  => Exec["foreman_migrate_db"],
-      timeout => 0
     } ~>
 
     postgres::dropdb {$foreman::db_name:
