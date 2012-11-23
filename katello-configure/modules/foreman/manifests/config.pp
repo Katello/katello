@@ -9,6 +9,7 @@ class foreman::config {
   # request which can easily result with a lot of old and unrequired in your
   # database eventually slowing it down.
   cron{'clear_session_table':
+    environment => ["RAILS_ENV=${foreman::environment}", "BUNDLER_EXT_NOSTRICT=1"],
     command => "(cd ${foreman::app_root} && rake db:sessions:clear)",
     minute  => '15',
     hour    => '23',
@@ -80,7 +81,7 @@ class foreman::config {
 
   exec {"foreman_migrate_db":
     cwd         => $foreman::app_root,
-    environment => "RAILS_ENV=${foreman::environment}",
+    environment => ["RAILS_ENV=${foreman::environment}", "BUNDLER_EXT_NOSTRICT=1"],
     command     => "/usr/bin/env rake db:migrate --trace --verbose > ${foreman::configure_log_base}/foreman-db-migrate.log 2>&1 && touch /var/lib/katello/foreman_db_migrate_done",
     creates     => "/var/lib/katello/foreman_db_migrate_done",
     require     => [ Postgres::Createdb[$foreman::db_name],
