@@ -374,7 +374,11 @@ if url_root == 'katello' || url_root == 'cfse'
   end
 end
 
+# set relative url root
 ENV['RAILS_RELATIVE_URL_ROOT'] = "/" + url_root
+
+# we do not want to stop during rake steps
+ENV['BUNDLER_EXT_NOSTRICT'] = 1
 
 # handle ca password separately, because we do not want
 # to store it into the katello-configure.conf

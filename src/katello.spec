@@ -323,9 +323,8 @@ cp -R /usr/share/converge-ui-devel/* ./vendor/converge-ui
 rm ./public/fonts
 mv ./vendor/converge-ui/fonts ./public/fonts
 
-#configure Bundler
-rm -f Gemfile.lock
-sed -i '/@@@DEV_ONLY@@@/,$d' Gemfile
+#use Bundler_ext instead of Bundler
+mv Gemfile Gemfile.in
 
 #pull in branding if present
 if [ -d branding ] ; then
@@ -356,12 +355,8 @@ a2x -d manpage -f manpage man/katello-service.8.asciidoc
     mkdir -p doc/apidoc
 %else
     echo Generating API docs
-    rm -f Gemfile.lock
-    cp Gemfile Gemfile.old
-    echo 'gem "redcarpet"' >> Gemfile
     rake apipie:static RAILS_ENV=apipie --trace
     rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=apipie --trace
-    mv Gemfile.old Gemfile
 %endif
 
 %install
@@ -381,7 +376,7 @@ mkdir -p %{buildroot}/%{_mandir}/man8
 
 #copy the application to the target directory
 mkdir .bundle
-cp -R .bundle Gemfile Rakefile app autotest ca config config.ru db integration_spec lib locale public script spec vendor %{buildroot}%{homedir}
+cp -R .bundle Gemfile.in Rakefile app autotest ca config config.ru db integration_spec lib locale public script spec vendor %{buildroot}%{homedir}
 
 #copy configs and other var files (will be all overwriten with symlinks)
 install -m 600 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
@@ -415,9 +410,6 @@ ln -svf %{datadir}/schema.rb %{buildroot}%{homedir}/db/schema.rb
 #create symlinks for data
 ln -sv %{_localstatedir}/log/%{name} %{buildroot}%{homedir}/log
 ln -sv %{datadir}/tmp %{buildroot}%{homedir}/tmp
-
-#create symlink for Gemfile.lock (it's being regenerated each start)
-ln -svf %{datadir}/Gemfile.lock %{buildroot}%{homedir}/Gemfile.lock
 
 #create symlinks for important scripts
 mkdir -p %{buildroot}%{_bindir}
@@ -463,7 +455,6 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
     && chmod 600 $TOKEN && chown katello:katello $TOKEN)
 
 %posttrans common
-rm -f %{datadir}/Gemfile.lock 2>/dev/null
 /sbin/service %{name} condrestart >/dev/null 2>&1 || :
 
 %files
@@ -514,9 +505,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/vendor
 %dir %{homedir}/.bundle
 %{homedir}/config.ru
-%{homedir}/Gemfile
-%{homedir}/Gemfile.lock
-%ghost %attr(640, katello, katello) %{datadir}/Gemfile.lock
+%{homedir}/Gemfile.in
 %config(noreplace) %{_sysconfdir}/%{name}/service-list
 %{homedir}/Rakefile
 %{_mandir}/man8/katello-service.8*
@@ -613,9 +602,7 @@ rm -f %{datadir}/Gemfile.lock 2>/dev/null
 %{homedir}/vendor
 %{homedir}/.bundle
 %{homedir}/config.ru
-%{homedir}/Gemfile
-%{homedir}/Gemfile.lock
-%ghost %attr(640, katello, katello) %{datadir}/Gemfile.lock
+%{homedir}/Gemfile.in
 %{homedir}/Rakefile
 
 %files headpin-all
