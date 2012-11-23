@@ -32,6 +32,8 @@ Requires:        %{name}-glue-foreman
 Requires:        %{name}-glue-candlepin
 Requires:        %{name}-selinux
 Conflicts:       %{name}-headpin
+Requires:        rubygem(bundler_ext)
+BuildRequires:   rubygem(bundler_ext)
 BuildRequires:   asciidoc
 BuildRequires:   /usr/bin/getopt
 
@@ -201,6 +203,8 @@ BuildArch:      noarch
 Requires:       katello-common
 Requires:       katello-glue-candlepin
 Requires:       katello-selinux
+Requires:       rubygem(bundler_ext)
+BuildRequires:  rubygem(bundler_ext)
 
 %description headpin
 A subscription management only version of Katello.
