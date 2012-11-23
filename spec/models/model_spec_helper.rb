@@ -102,19 +102,20 @@ EOKEY
     Resources::Pulp::Repository.stub!(:update).and_return([])
   end
 
-  def disable_org_orchestration
+  def disable_org_orchestration(options = { })
     Resources::Candlepin::Owner.stub!(:create).and_return({})
     Resources::Candlepin::Owner.stub!(:create_user).and_return(true)
     Resources::Candlepin::Owner.stub!(:destroy)
     Resources::Candlepin::Owner.stub!(:get_ueber_cert).and_return({ :cert => CERT, :key => KEY })
-    disable_env_orchestration # env is orchestrated with org - we disable this as well
+    disable_env_orchestration options # env is orchestrated with org - we disable this as well
   end
 
-  def disable_env_orchestration
+  def disable_env_orchestration(options = { })
     Resources::Candlepin::Environment.stub!(:create).and_return({})
     Resources::Candlepin::Environment.stub!(:destroy).and_return({})
     Resources::Candlepin::Environment.stub!(:find).and_return({:environmentContent => []})
     Resources::Candlepin::Environment.stub!(:add_content).and_return({})
+    KTEnvironment.disable_foreman_orchestration! !options[:keep_foreman] if AppConfig.use_foreman
   end
 
   def disable_system_orchestration
