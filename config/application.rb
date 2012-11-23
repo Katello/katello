@@ -15,7 +15,8 @@ require 'apipie-rails' # FIXME will be removed after https://github.com/Pajk/api
 if File.exist?(File.expand_path('../../Gemfile.in', __FILE__))
   require 'aeolus/ext/bundler_ext'
   puts 'Using gem require instead of bundler'
-  Aeolus::Ext::BundlerExt.system_require(File.expand_path('../../Gemfile.in', __FILE__),:default, Rails.env)
+  # TODO - remove all parameters once https://github.com/aeolus-incubator/bundler_ext/pull/3 is merged
+  Aeolus::Ext::BundlerExt.system_require(File.expand_path('../../Gemfile.in', __FILE__), :default, :foreman, Rails.env)
 else
   ENV['BUNDLE_GEMFILE'] = File.expand_path('../../Gemfile', __FILE__)
   puts 'Using bundler instead of gem require'
