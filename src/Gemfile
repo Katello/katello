@@ -26,7 +26,7 @@ gem 'ldap_fluff'
 # them to resolve dependencies (even when groups would be excluded from the list)
 if Katello::BootUtil.katello?
   group :foreman do
-    gem 'foreman_api', '>= 0.0.7'
+    gem 'foreman_api', '>= 0.0.8'
   end
 end
 
