@@ -60,14 +60,12 @@ class Resources::AbstractModel
     end
   end
 
+
+  extend ActiveModel::Callbacks
+
+  define_model_callbacks :create, :update, :save, :destroy
+
   include ActiveModel::Naming
-
-  def self.name
-    # strip namespaces from class name
-    # eg. Foreman::SomeModel -> SomeModel
-    super.split('::')[-1]
-  end
-
   include ActiveModel::Validations
 
   def read_attribute_for_validation(key)
@@ -126,6 +124,7 @@ class Resources::AbstractModel
   def initialize(attributes = { })
     self.attributes = attributes
     @persisted      = false
+    @destroyed      = false
   end
 
   def attributes=(attributes)
@@ -147,8 +146,12 @@ class Resources::AbstractModel
     self.class.resource
   end
 
+  def new_record?
+    !self.persisted?
+  end
+
   def persisted?
-    @persisted
+    @persisted && !self.destroyed?
   end
 
   def set_as_persisted
@@ -156,13 +159,24 @@ class Resources::AbstractModel
   end
   private :set_as_persisted
 
+  def destroyed?
+    @destroyed
+  end
+
+  def set_as_destroyed
+    @destroyed = true
+  end
+  private :set_as_destroyed
+
   def save
     return false unless valid?
 
-    if persisted?
-      update
-    else
-      create
+    run_callbacks :save do
+      if persisted?
+        update
+      else
+        create
+      end
     end
 
     return true
@@ -173,16 +187,21 @@ class Resources::AbstractModel
   end
 
   def create
-    data, response = resource.create as_json(json_create_options), self.class.header
-    self.id        = data[resource_name]['id']
-    set_as_persisted
-    return data, response
+    run_callbacks :create do
+      data, response = resource.create as_json(json_create_options), self.class.header
+      self.id        = data[resource_name]['id']
+      set_as_persisted
+    end
   end
+  private :create
 
   def update
-    return resource.update({ 'id' => id }.merge(as_json(json_update_options)),
-                           self.class.header)
+    run_callbacks :update do
+      result = resource.update({ 'id' => id }.merge(as_json(json_update_options)),
+                                self.class.header)
+    end
   end
+  private :update
 
   def save!
     save or raise Invalid.new(self)
@@ -199,11 +218,17 @@ class Resources::AbstractModel
   end
 
   def destroy
-    self.class.delete id
+    run_callbacks :destroy do
+      self.class.delete id
+      set_as_destroyed
+    end
   end
 
   def destroy!
-    self.class.delete! id
+    run_callbacks :destroy do
+      self.class.delete! id
+      set_as_destroyed
+    end
   end
 
   def self.find!(id)
@@ -230,19 +255,6 @@ class Resources::AbstractModel
     end
   end
 
-  def self.delete!(id)
-    resource.destroy({ 'id' => id }, header)
-    true
-  rescue RestClient::ResourceNotFound => e
-    raise NotFound.new(self, id)
-  end
-
-  def self.delete(id)
-    delete!(id)
-  rescue NotFound
-    false
-  end
-
   def to_key
     key = self.id
     [key] if key
@@ -262,7 +274,24 @@ class Resources::AbstractModel
     save!
   end
 
+  def self.base_class
+    self
+  end
+
   private
+
+  def self.delete!(id)
+    resource.destroy({ 'id' => id }, header)
+    true
+  rescue RestClient::ResourceNotFound => e
+    raise NotFound.new(self, id)
+  end
+
+  def self.delete(id)
+    delete!(id)
+  rescue NotFound
+    false
+  end
 
   singleton_class.instance_eval { attr_writer :current_user_getter }
 
