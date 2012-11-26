@@ -32,29 +32,32 @@ describe Api::ContentViewDefinitionsController, :katello => true do
       Organization.stub(:first).and_return(@organization)
       @defs = FactoryGirl.build_list(:content_view_definition, 2)
       @defs << FactoryGirl.build(:content_view_definition, :label => "test")
-      @organization.content_view_definitions = @defs
     end
 
     let(:action) { :index }
 
     context "with organization_id" do
-      let(:req) { get action, :organization_id => @organization.name }
-      subject { req }
-      it { should be_success }
-
-      let(:ids) { @defs.map(&:id) }
-      specify { subject and assigns[:definitions].map(&:id).should eql(ids) }
+      it "should assign the organiation's definitions" do
+        ContentViewDefinition.should_receive(:where).
+          with(:organization_id => @organization.id).and_return(@defs)
+        req = get action, :organization_id => @organization.name
+        req.should be_success
+        assigns[:definitions].should eql(@defs)
+      end
     end
 
     context "with label" do
-      let(:req) { get action, :organization_id => @organization.name,
-        :label => @defs.last.label }
-      let(:association) { mock(ActiveRecord::Associations::HasManyAssociation) }
-
       it "should find the matching content view definition" do
-        @organization.stub(:content_view_definitions) { association }
-        association.should_receive(:where).once.with(:label => @defs.last.label)
-        req
+        scope = Object.new
+        scope.should_receive(:where).with(:label => @defs.last.label).
+          and_return([@defs.last])
+
+        ContentViewDefinition.should_receive(:readable).with(@organization).
+          and_return(scope)
+
+        get action, :organization_id => @organization.name,
+          :label => @defs.last.label
+        assigns[:definitions].should eql([@defs.last])
       end
     end
   end
@@ -66,10 +69,14 @@ describe Api::ContentViewDefinitionsController, :katello => true do
         FactoryGirl.build_list(:content_view_definition, 2)
     end
     let(:definition) { @organization.content_view_definitions.last }
-    let(:req) { Proc.new { get :publish, :id => definition.id,
-      :organization_id => @organization.id, :name=>'TestView' } }
-    subject { req }
-    it { should change(ContentView, :count).by(1) }
+
+    it "should create a content view" do
+      cv_count = ContentView.count
+      req = post :publish, :id => definition.id,
+        :organization_id => @organization.id, :name => "TestView"
+      req.should be_success
+      ContentView.count.should eql(cv_count + 1)
+    end
   end
 
   describe "destroy" do
