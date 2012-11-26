@@ -22,17 +22,20 @@ def command_exists?(command)
 end
 
 def detect_terminal_size
-  if (ENV['COLUMNS'] =~ /^\d+$/) && (ENV['LINES'] =~ /^\d+$/)
-    [ENV['COLUMNS'].to_i, ENV['LINES'].to_i]
-  elsif (RUBY_PLATFORM =~ /java/ || (!STDIN.tty? && ENV['TERM'])) && command_exists?('tput')
-    [`tput cols`.to_i, `tput lines`.to_i]
-  elsif STDIN.tty? && command_exists?('stty')
-    `stty size`.scan(/\d+/).map { |s| s.to_i }.reverse
-  else
-    [80, 25]
-  end
+  default_size = [80, 25]
+  term_size = if (ENV['COLUMNS'] =~ /^\d+$/) && (ENV['LINES'] =~ /^\d+$/)
+                [ENV['COLUMNS'].to_i, ENV['LINES'].to_i]
+              elsif (RUBY_PLATFORM =~ /java/ || (!STDIN.tty? && ENV['TERM'])) && command_exists?('tput')
+                [`tput cols`.to_i, `tput lines`.to_i]
+              elsif STDIN.tty? && command_exists?('stty')
+                `stty size`.scan(/\d+/).map { |s| s.to_i }.reverse
+              else
+                default_size
+              end
+  term_size.each_with_index { |val, i| term_size[i] = default_size[i] if val == 0 }
+  term_size
 rescue
-  [80, 25]
+  default_size
 end
 
 COLUMNS = detect_terminal_size[0]

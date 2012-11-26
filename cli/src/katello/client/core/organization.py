@@ -270,7 +270,7 @@ class AddDefaultSystemInfo(OrganizationAction):
 
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name', help=_("organization name eg: foo.example.com (required)"))
-        parser.add_option('--keyname', dest='keyname', help=_("name of the default custom info"))
+        parser.add_option('--keyname', dest='keyname', help=_("name of the default custom info (required)"))
 
     def check_options(self, validator):
         validator.require(('name', 'keyname'))
@@ -298,7 +298,7 @@ class RemoveDefaultSystemInfo(OrganizationAction):
 
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name', help=_("organization name eg: foo.example.com (required)"))
-        parser.add_option('--keyname', dest='keyname', help=_("name of the default custom info"))
+        parser.add_option('--keyname', dest='keyname', help=_("name of the default custom info (required)"))
 
     def check_options(self, validator):
         validator.require(('name', 'keyname'))
