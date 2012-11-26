@@ -91,7 +91,7 @@ class Delete(ArchitectureAction):
     description = _('delete an architecture')
 
     def setup_parser(self, parser):
-        parser.add_option('--name', dest='name', help=_("architecture name"))
+        parser.add_option('--name', dest='name', help=_("architecture name (required)"))
 
     def check_options(self, validator):
         validator.require('name')
@@ -106,7 +106,7 @@ class Show(ArchitectureAction):
     description = _('show details about an architecture')
 
     def setup_parser(self, parser):
-        parser.add_option('--name', dest='name', help=_("architecture name"))
+        parser.add_option('--name', dest='name', help=_("architecture name (required)"))
 
     def check_options(self, validator):
         validator.require('name')
