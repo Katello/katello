@@ -75,9 +75,6 @@ class SingleRepoAction(RepoAction):
     def setup_parser(self, parser):
         self.set_repo_select_options(parser, self.select_by_env)
 
-    def check_options(self, validator):
-        self.check_repo_select_options(validator)
-
     @classmethod
     def set_repo_select_options(cls, parser, select_by_env=True):
         parser.add_option('--id', dest='id', help=_("repository ID"))
@@ -88,7 +85,7 @@ class SingleRepoAction(RepoAction):
             opt_parser_add_environment(parser, default=_("Library"))
 
     @classmethod
-    def check_repo_select_options(cls, validator):
+    def check_options(cls, validator):
         if not validator.exists('id'):
             validator.require(('name', 'org'))
             validator.require_at_least_one_of(('product', 'product_label', 'product_id'))
@@ -531,7 +528,7 @@ class AddRemoveFilter(SingleRepoAction):  # pylint: disable=R0904
         parser.add_option('--filter', dest='filter', help=_("filter name (required)"))
 
     def check_options(self, validator):
-        self.check_repo_select_options(validator)
+        super(AddRemoveFilter, self).check_options(validator)
         validator.require('filter')
 
     def run(self):

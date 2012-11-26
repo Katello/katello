@@ -9,6 +9,8 @@ ProxyTimeout 5400
 </Proxy>
 
 <Location /foreman>
+  SSLRequireSSL
+  RequestHeader set X_FORWARDED_PROTO 'https'
   ProxyPass balancer://foremanthinservers
   ProxyPassReverse balancer://foremanthinservers
 </Location>

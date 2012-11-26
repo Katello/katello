@@ -69,7 +69,7 @@ class Info(EnvironmentAction):
     description = _('list a specific environment')
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser)
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                        help=_("environment name eg: foo.example.com (required)"))
 

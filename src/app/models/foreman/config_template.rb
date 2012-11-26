@@ -29,8 +29,6 @@ class Foreman::ConfigTemplate < Resources::ForemanModel
     json_create_options
   end
 
-  validates :name, :presence => true
-
   def template_kind_id
     @kind_id
   end
@@ -40,10 +38,10 @@ class Foreman::ConfigTemplate < Resources::ForemanModel
   end
 
   def self.revision(audit_id)
-    resource.revision({:version => audit_id}, foreman_header).first
+    resource.revision({:version => audit_id}, header).first
   end
 
   def self.build_pxe_default
-    resource.build_pxe_default(foreman_header).first
+    resource.build_pxe_default(header).first
   end
 end

@@ -13,11 +13,21 @@ require "./lib/util/boot_util"
 # you've limited to :test, :development, or :production.
 require 'apipie-rails' # FIXME will be removed after https://github.com/Pajk/apipie-rails/pull/62
 
-if defined?(Bundler)
-  Bundler.require(:default, Rails.env)
-  
-  # require backend engines only if in katello/cfse mode
-  Bundler.require(:foreman) if Katello::BootUtil.katello?
+if File.exist?(File.expand_path('../../Gemfile.in', __FILE__))
+  require 'aeolus/ext/bundler_ext'
+  puts 'Using gem require instead of bundler'
+  # TODO - remove all parameters once https://github.com/aeolus-incubator/bundler_ext/pull/3 is merged
+  Aeolus::Ext::BundlerExt.system_require(File.expand_path('../../Gemfile.in', __FILE__), :default, :foreman, Rails.env)
+else
+  ENV['BUNDLE_GEMFILE'] = File.expand_path('../../Gemfile', __FILE__)
+  puts 'Using bundler instead of gem require'
+  Bundler.require(:default, Rails.env) if defined?(Bundler)
+  if defined?(Bundler)
+    Bundler.require(:default, Rails.env)
+
+    # require backend engines only if in katello/cfse mode
+    Bundler.require(:foreman) if Katello::BootUtil.katello?
+  end
 end
 
 module Src
