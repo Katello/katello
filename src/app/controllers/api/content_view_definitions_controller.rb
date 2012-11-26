@@ -1,16 +1,16 @@
 class Api::ContentViewDefinitionsController < Api::ApiController
   respond_to :json
+  before_filter :find_definition, :except => [:index, :create]
   before_filter :find_organization, :except => [:destroy, :update,
     :content_views, :update_content_views]
-  before_filter :find_definition, :except => [:index, :create]
   before_filter :find_optional_environment, :only => [:index]
+  before_filter :authorize
 
   def rules
-    view_rule = lambda { true }
-    show_rule = lambda { true }
-    publish_rule = lambda { true }
-    index_rule = lambda { true }
-    manage_rule = lambda { true }
+    index_rule   = lambda { ContentViewDefinition.any_readable?(@organization) }
+    show_rule    = lambda { @definition.readable? }
+    manage_rule  = lambda { @definition.editable? }
+    publish_rule = lambda { @definition.publishable? }
 
     {
       :index => index_rule,
@@ -19,7 +19,7 @@ class Api::ContentViewDefinitionsController < Api::ApiController
       :show => show_rule,
       :update => manage_rule,
       :destroy => manage_rule,
-      :content_views => view_rule,
+      :content_views => show_rule,
       :update_content_views => manage_rule
     }
   end
@@ -30,12 +30,10 @@ class Api::ContentViewDefinitionsController < Api::ApiController
   param :label, :identifier, :desc => "content view identifier"
   param :environment_id, :identifier, :desc => "environment id for filtering"
   def index
-    @definitions = if @environment && !@environment.library?
-      [] # no environments contain defs other than library
-    elsif (label = params[:label])
-      @organization.content_view_definitions.where(:label => label)
+    @definitions = if (label = params[:label]).present?
+      ContentViewDefinition.readable(@organization).where(:label => label)
     else
-      @organization.content_view_definitions
+      ContentViewDefinition.readable(@organization)
     end
 
     render :json => @definitions
