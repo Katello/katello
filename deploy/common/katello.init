@@ -78,8 +78,6 @@ start() {
         echo_success
     else
         cd ${KATELLO_HOME} #rails expects you to run from the root of the app
-        # delete Gemfile.lock (it will be regenerated)
-        rm -f $KATELLO_DATA_DIR/Gemfile.lock
         export HOME=
         RETVAL=0
         for P in $( seq $THIN_PORT $(( $THIN_PORT + $THIN_SERVERS - 1)) ); do
