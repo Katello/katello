@@ -29,4 +29,5 @@ Src::Application.configure do
   ActiveSupport::Dependencies.explicitly_unloadable_constants << "::Runcible::Resources"
   ActiveSupport::Dependencies.explicitly_unloadable_constants << "::Runcible::Extensions"
 
+  Bundler.require(:debugging, Rails.env)
 end

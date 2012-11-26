@@ -104,7 +104,7 @@ class ActivationKey < ActiveRecord::Base
       end
     end
     total = result.inject{|sum,x| sum + x }
-    raise _("Not enough entitlements in pools (%{size}), required: %{required}, available: %{available}") % {:size => entitlements.size, :required => amount, :available => total} if amount != total
+    raise _("Not enough subscriptions in pools (%{size}), required: %{required}, available: %{available}") % {:size => entitlements.size, :required => amount, :available => total} if amount != total
     result
   end
 
@@ -121,7 +121,7 @@ class ActivationKey < ActiveRecord::Base
         quantity = pool.quantity == -1 ? 999_999_999 : pool.quantity
         raise _("Unable to determine quantity for pool %s") % pool.cp_id if quantity.nil?
         left = quantity - pool.consumed
-        raise _("Number of consumed entitlements exceeded quantity for %s") % pool.cp_id if left < 0
+        raise _("Number of attached subscriptions exceeded quantity for %s") % pool.cp_id if left < 0
         products[pool.product_id][pool.cp_id] = [pool.start_date, left]
       end
 
