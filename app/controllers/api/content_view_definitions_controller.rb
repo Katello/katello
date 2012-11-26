@@ -1,9 +1,10 @@
 class Api::ContentViewDefinitionsController < Api::ApiController
   respond_to :json
+  before_filter :find_definition, :except => [:index, :create]
   before_filter :find_organization, :except => [:destroy, :update,
     :content_views, :update_content_views]
-  before_filter :find_definition, :except => [:index, :create]
   before_filter :find_optional_environment, :only => [:index]
+  before_filter :authorize
 
   def rules
     index_rule   = lambda { ContentViewDefinition.any_readable?(@organization) }
