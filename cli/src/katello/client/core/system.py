@@ -295,7 +295,7 @@ class TaskInfo(SystemAction):
 
     def setup_parser(self, parser):
         parser.add_option('--id', dest='id',
-                       help=_("UUID of the task"))
+                       help=_("UUID of the task (required)"))
 
     def check_options(self, validator):
         validator.require('id')
@@ -404,7 +404,7 @@ class Register(SystemAction):
 
     def setup_parser(self, parser):
         super(Register, self).setup_parser(parser)
-        parser.add_option('--name', dest='name', help=_("system name (required)"))
+        parser.add_option('--name', dest='name', help=_("system name"))
         parser.add_option('--servicelevel', dest='sla', help=_("service level agreement"))
         parser.add_option('--activationkey', dest='activationkey',
             help=_("activation key, more keys are separated with comma e.g. --activationkey=key1,key2"))
@@ -440,10 +440,10 @@ class RemoveDeletion(SystemAction):
 
     def setup_parser(self, parser):
         parser.add_option("--uuid", dest="uuid",
-                       help=_("hypervisor uuid (required"))
+                       help=_("hypervisor uuid (required)"))
 
     def check_options(self, validator):
-        validator.require_option('uuid')
+        validator.require('uuid')
 
     def run(self):
         uuid = self.get_option('uuid')
@@ -458,7 +458,7 @@ class Unregister(SystemAction):
     def setup_parser(self, parser):
         super(Unregister, self).setup_parser(parser)
         parser.add_option('--name', dest='name',
-                               help=_("system name (required)"))
+                               help=_("system name"))
         parser.add_option('--uuid', dest='uuid',
                                help=constants.OPT_HELP_SYSTEM_UUID)
 
@@ -488,7 +488,7 @@ class Unregister(SystemAction):
         return os.EX_OK
 
 class Subscribe(SystemAction):
-    description = _('subscribe a system to certificate')
+    description = _('attach a subscription to a system')
 
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
@@ -497,7 +497,7 @@ class Subscribe(SystemAction):
         parser.add_option('--uuid', dest='uuid',
                 help=constants.OPT_HELP_SYSTEM_UUID)
         parser.add_option('--pool', dest='pool',
-                help=_("certificate serial to unsubscribe (required)"))
+                help=_("ID of subscription to attach (required)"))
         parser.add_option('--quantity', dest='quantity',
                 help=_("quantity (default: 1)"))
 
@@ -516,7 +516,7 @@ class Subscribe(SystemAction):
         system = get_system(org, name, sys_uuid = sys_uuid)
 
         self.api.subscribe(system['uuid'], pool, qty)
-        print _("Successfully subscribed System [ %s ]") % name
+        print _("Successfully attached subscription to System [ %s ]") % name
         return os.EX_OK
 
 class Subscriptions(SystemAction):
@@ -524,7 +524,7 @@ class Subscriptions(SystemAction):
 
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
-        parser.add_option('--name', dest='name', help=_("system name (required)"))
+        parser.add_option('--name', dest='name', help=_("system name"))
         parser.add_option('--uuid', dest='uuid', help=constants.OPT_HELP_SYSTEM_UUID)
         parser.add_option('--available', dest='available',
                 action="store_true", default=False,
@@ -574,7 +574,7 @@ class Subscriptions(SystemAction):
                     yield entitlement_ext
 
             self.printer.set_header(_("Current Subscriptions for System [ %s ]") % name)
-            self.printer.add_column('entitlementId')
+            self.printer.add_column('entitlementId', name=_("Subscription ID"))
             self.printer.add_column('serialIds', name=_('Serial ID'))
             batch_add_columns(self.printer, 'poolName', 'expires', 'consumed', 'quantity', 'sla', 'contractNumber')
             self.printer.add_column('providedProductsFormatted', name=_('Provided products'))
@@ -614,20 +614,20 @@ class Subscriptions(SystemAction):
         return os.EX_OK
 
 class Unsubscribe(SystemAction):
-    description = _('unsubscribe a system from certificate')
+    description = _('remove a subscription from a system')
 
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
-            help=_("system name (required)"))
+            help=_("system name"))
         parser.add_option('--uuid', dest='uuid',
                 help=constants.OPT_HELP_SYSTEM_UUID)
         parser.add_option('--entitlement', dest='entitlement',
-            help=_("entitlement ID to unsubscribe from (either entitlement or serial or all is required)"))
+            help=_("ID of subscription to remove (either subscription or serial or all is required)"))
         parser.add_option('--serial', dest='serial',
-            help=_("serial ID of a certificate to unsubscribe from (either entitlement or serial or all is required)"))
+            help=_("serial ID of a certificate to remove from (either subscription or serial or all is required)"))
         parser.add_option('--all', dest='all', action="store_true", default=None,
-            help=_("unsubscribe from all currently subscribed certificates (either entitlement or serial or all is"
+            help=_("remove all currently attached subscriptions from system (either subscription or serial or all is"
                 + " required)"))
 
     def check_options(self, validator):
@@ -653,7 +653,7 @@ class Unsubscribe(SystemAction):
             self.api.unsubscribe_by_serial(uuid, serial)
         elif entitlement: # unsubscribe from entitlement
             self.api.unsubscribe(uuid, entitlement)
-        print _("Successfully unsubscribed System [ %s ]") % name
+        print _("Successfully removed subscription from System [ %s ]") % name
 
         return os.EX_OK
 
@@ -663,7 +663,7 @@ class Update(SystemAction):
     def setup_parser(self, parser):
         super(Update, self).setup_parser(parser)
         parser.add_option('--name', dest='name',
-                       help=_('system name (required)'))
+                       help=_('system name'))
         parser.add_option('--uuid', dest='uuid',
                        help=constants.OPT_HELP_SYSTEM_UUID)
         parser.add_option('--new_name', dest='new_name',

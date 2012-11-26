@@ -49,7 +49,8 @@ from katello.client.core import (
   domain,
   content,
   content_view,
-  content_view_definition
+  content_view_definition,
+  subnet
 )
 
 def setup_admin(katello_cmd, mode=get_katello_mode()):
@@ -337,6 +338,7 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         admin_cmd.add_command('crl_regen', admin.CrlRegen())
         katello_cmd.add_command('admin', admin_cmd)
 
+
     architecture_cmd = architecture.Architecture()
     architecture_cmd.add_command('list', architecture.List())
     architecture_cmd.add_command('info', architecture.Show())
@@ -361,3 +363,14 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
     domain_cmd.add_command('update', domain.Update())
     domain_cmd.add_command('delete', domain.Delete())
     katello_cmd.add_command('domain', domain_cmd)
+
+
+    if mode == 'katello':
+        subnet_cmd = subnet.Subnet()
+        subnet_cmd.add_command('list', subnet.List())
+        subnet_cmd.add_command('info', subnet.Info())
+        subnet_cmd.add_command('create', subnet.Update(create=True))
+        subnet_cmd.add_command('update', subnet.Update(create=False))
+        subnet_cmd.add_command('delete', subnet.Delete())
+        katello_cmd.add_command('subnet', subnet_cmd)
+

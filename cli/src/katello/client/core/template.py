@@ -49,7 +49,7 @@ class List(TemplateAction):
     description = _('list all templates')
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser, required=_(" (required if specifying environment)"))
+        opt_parser_add_org(parser, required=1)
         opt_parser_add_environment(parser, default=_("Library"))
 
     def check_options(self, validator):
@@ -187,7 +187,7 @@ class Export(TemplateAction):
         parser.add_option('--name', dest='name',
                                help=_("template name (required)"))
         opt_parser_add_org(parser, required=1)
-        opt_parser_add_environment(parser)
+        opt_parser_add_environment(parser, required=1)
         parser.add_option("--file", dest="file",
             help=_("path to the template file (required)"))
         parser.add_option("--format", dest="format", choices=self.supported_formats,

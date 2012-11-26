@@ -58,7 +58,7 @@ class Info(ConfigTemplateAction):
     description = _('show information about a config template')
 
     def setup_parser(self, parser):
-        parser.add_option('--name', dest='id', help=_("config template id or name"))
+        parser.add_option('--name', dest='id', help=_("config template id or name (required)"))
 
     def check_options(self, validator):
         validator.require('id')
@@ -130,7 +130,7 @@ class Update(ConfigTemplateAction):
     description = _('update config template')
 
     def setup_parser(self, parser):
-        parser.add_option('--name', dest='id', help=_("template id or name"))
+        parser.add_option('--name', dest='id', help=_("template id or name (required)"))
         parser.add_option('--new_name', dest='name', help=_("template new name"))
         parser.add_option('--template', dest='template', help=_(""))
         parser.add_option('--snippet', dest='snippet', help=_(""))
@@ -159,7 +159,7 @@ class Delete(ConfigTemplateAction):
     description = _('delete config template')
 
     def setup_parser(self, parser):
-        parser.add_option('--name', dest='id', help=_("config template id or name"))
+        parser.add_option('--name', dest='id', help=_("config template id or name (required)"))
 
     def check_options(self, validator):
         validator.require('id')
