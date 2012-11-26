@@ -33,7 +33,7 @@ THIN_PORT=$( awk '/^port:/ {print $2}' < /etc/katello/thin.yml )
 PID_DIR=$( dirname $( echo $KATELLO_PIDS | awk '{print $1}' ) )
 export BUNDLER_EXT_GROUPS
 export BUNDLER_EXT_NOSTRICT
-export BUNDLER_EXT_HOME
+export BUNDLER_EXT_HOME=$KATELLO_HOME
 
 check_privilege() {
     runuser -s /bin/sh ${KATELLO_USER} -c "echo x > /dev/null" 2> /dev/null || RETVAL=4
