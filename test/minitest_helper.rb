@@ -90,7 +90,10 @@ def disable_glue_layers(services=[], models=[])
     end
   end
 
-  FactoryGirl.reload if change
+  if change
+    ActiveSupport::Dependencies::Reference.clear!
+    FactoryGirl.reload
+  end
 end
 
 
