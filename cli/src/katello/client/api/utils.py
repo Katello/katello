@@ -119,7 +119,7 @@ def get_cv_definition(org_name, def_label):
     return cvd
 
 
-def get_repo(orgName, prodName, prodLabel, prodId, repoName, envName=None, includeDisabled=False):
+def get_repo(orgName, repoName, prodName=None, prodLabel=None, prodId=None, envName=None, includeDisabled=False):
     repo_api = RepoAPI()
 
     env  = get_environment(orgName, envName)
