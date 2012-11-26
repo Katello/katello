@@ -21,8 +21,7 @@ from katello.client.api.content_view_definition import ContentViewDefinitionAPI
 from katello.client.cli.base import opt_parser_add_org, \
         opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
-from katello.client.api.utils import get_cv_definition, get_environment, \
-        get_content_view
+from katello.client.api.utils import get_environment, get_content_view
 
 # base content_view action --------------------------------------------------------
 
