@@ -41,12 +41,12 @@ module Glue::Pulp::Errata
 
       def self.find(id)
         erratum_attrs = Runcible::Extensions::Errata.find(id)
-        Errata.new(erratum_attrs) if not erratum_attrs.nil?
+        ::Errata.new(erratum_attrs) if not erratum_attrs.nil?
       end
 
       def self.find_by_errata_id(id)
         erratum_attrs = Runcible::Extensions::Errata.find_by_errata_id(id)
-        Errata.new(erratum_attrs) if not erratum_attrs.nil?
+        ::Errata.new(erratum_attrs) if not erratum_attrs.nil?
       end
 
     end
@@ -63,7 +63,7 @@ module Glue::Pulp::Errata
 
       self.pkglist.each do |pack_list|
         packages += pack_list['packages'].collect do |err_pack|
-          Package.new(err_pack)
+          ::Package.new(err_pack)
         end
       end
 
