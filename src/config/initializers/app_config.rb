@@ -26,6 +26,8 @@ module ApplicationConfiguration
       if Katello::BootUtil.headpin?
         @hash["app_name"] = 'Headpin'
         @hash["katello?"] = false
+        @hash["use_foreman"] = false
+        @hash["use_pulp"] = false
       else
         @hash["app_name"] = 'Katello'
         @hash["katello?"] = true
