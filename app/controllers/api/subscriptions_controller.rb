@@ -54,7 +54,7 @@ class Api::SubscriptionsController < Api::ApiController
   param :id, :number, :desc => "Entitlement id"
   def destroy
     expected_params = params.with_indifferent_access.slice(:id)
-    raise HttpErrors::BadRequest, _("Please provide entitlement ID") if expected_params.count != 1
+    raise HttpErrors::BadRequest, _("Please provide subscription ID") if expected_params.count != 1
     @system.unsubscribe(expected_params[:id])
     render :json => @system.to_json
   end

@@ -77,16 +77,38 @@
       if( prefix !== "" ){
         prefix = prefix.match('\/$') ? prefix : ( prefix + '/');
       }
-      
+
       return prefix;
     }
 
   };
 
   window.KT.routes = {
+<<<<<<< HEAD
 // new_api_repository_package => /api/repositories/:repository_id/packages/new(.:format)
   new_api_repository_package_path: function(_repository_id, options) {
   return Utils.build_path(2, ["/api/repositories/", "/packages/new"], arguments)
+=======
+// items_subnets => /subnets/items(.:format)
+  items_subnets_path: function(options) {
+  return Utils.build_path(1, ["/subnets/items"], arguments)
+  },
+// subnets_path => /subnets(.:format)
+  subnets_path: function(options) {
+  return Utils.build_path(1, ["/subnets"], arguments)
+  },
+// domains_path => /domains(.:format)
+  domains_path: function(options) {
+  return Utils.build_path(1, ["/domains"], arguments)
+  },
+// repositories_api_environment_product => /api/environments/:environment_id/products/:id/repositories(.:format)
+  repositories_api_environment_product_path: function(_environment_id, _id, options) {
+  return Utils.build_path(3, ["/api/environments/", "/products/", "/repositories"], arguments)
+  },
+// content_api_gpg_key => /api/gpg_keys/:id/content(.:format)
+  content_api_gpg_key_path: function(_id, options) {
+  return Utils.build_path(2, ["/api/gpg_keys/", "/content"], arguments)
+>>>>>>> upstream/pulpv2
   },
 // enable_helptip_users => /users/enable_helptip(.:format)
   enable_helptip_users_path: function(options) {
@@ -1737,7 +1759,7 @@
   return Utils.build_path(2, ["/systems/", "/events/items"], arguments)
   }}
 ;
-  
+
   window.KT.routes.options = {
     prefix: '',
     default_format: '',
