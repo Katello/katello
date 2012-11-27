@@ -19,10 +19,11 @@ class Api::ContentViewsController < Api::ApiController
   param :name, :identifier, :desc => "content view identifier"
   def index
     if @environment
-      ContentView.readable(@organization).joins(:content_view_environments).
+      ContentView.non_default.readable(@organization).
+        joins(:content_view_environments).
         where("content_view_environments.environment_id = ?", @environment.id)
     else
-      @content_views = ContentView.readable(@organization)
+      @content_views = ContentView.non_default.readable(@organization)
     end
     if params[:name].present?
       @content_views = @content_views.select {|cv| cv.name == params[:name]}
@@ -39,7 +40,7 @@ class Api::ContentViewsController < Api::ApiController
   private
 
   def find_content_view
-    @view = ContentView.find(params[:id])
+    @view = ContentView.non_default.find(params[:id])
   end
 
 end
