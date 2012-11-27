@@ -55,7 +55,7 @@ gem 'prawn'
 gem 'acts_as_reportable', '>=1.1.1', :require => 'ruport/acts_as_reportable'
 
 # Documentation
-gem "apipie-rails", '>= 0.0.12'
+gem "apipie-rails", '>= 0.0.13'
 
 # In production mode we require only gems from :default group (without any
 # group) via bundler_ext. To require groups bellow, set BUNDLER_EXT_GROUPS
