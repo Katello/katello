@@ -112,8 +112,10 @@ class Info(ContentViewDefinitionAction):
         self.printer.add_column('label')
         self.printer.add_column('description', multiline=True)
         self.printer.add_column('organization', _('Org'))
-        self.printer.add_column('components')
-        self.printer.add_column('content_views', multiline=True)
+        self.printer.add_column('content_views', _('Published Views'), multiline=True)
+        self.printer.add_column('components', _('Component Views'), multiline=True)
+        self.printer.add_column('products', multiline=True)
+        self.printer.add_column('repos', multiline=True)
 
         self.printer.set_header(_("Content View Definition Info"))
         self.printer.print_item(cvd)
