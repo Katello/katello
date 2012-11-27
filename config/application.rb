@@ -10,8 +10,6 @@ require "./lib/util/boot_util"
 
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
-require 'apipie-rails' # FIXME will be removed after https://github.com/Pajk/apipie-rails/pull/62
-
 if File.exist?(File.expand_path('../../Gemfile.in', __FILE__))
   require 'aeolus/ext/bundler_ext'
   puts 'Using gem require instead of bundler'
