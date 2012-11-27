@@ -55,9 +55,6 @@ class PromotionChangeset < Changeset
 
   def promote_content(notify = false)
     update_progress! '0'
-    self.calc_and_save_dependencies
-
-    update_progress! '10'
 
     from_env = self.environment.prior
     to_env   = self.environment
