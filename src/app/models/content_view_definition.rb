@@ -74,7 +74,9 @@ class ContentViewDefinition < ActiveRecord::Base
     result["organization"] = self.organization.try(:name)
     result["content_views"] = self.content_views.map(&:label).join(", ")
     result["components"] = self.component_content_views.map(&:label).join(", ")
-    result["published"] = false
+    result["products"] = products.map(&:name)
+    result["repos"] = repositories.map(&:name)
+    result["filters"] = filters.map(&:name)
 
     result
   end

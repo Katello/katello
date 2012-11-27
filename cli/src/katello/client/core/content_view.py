@@ -58,7 +58,6 @@ class List(ContentViewAction):
         self.printer.add_column('label')
         self.printer.add_column('description', multiline=True)
         self.printer.add_column('organization', _('Org'))
-        self.printer.add_column('environments', _('Environments'))
 
         self.printer.set_header(_("Content View List"))
         self.printer.print_items(views)
@@ -88,7 +87,9 @@ class Info(ContentViewAction):
         self.printer.add_column('description', multiline=True)
         self.printer.add_column('organization', _('Org'))
         self.printer.add_column('definition')
-        self.printer.add_column('environments', _('Environments'))
+        self.printer.add_column('environments', _('Environments'),
+                multiline=True)
+        self.printer.add_column('versions', multiline=True)
 
         self.printer.set_header(_("ContentView Info"))
         self.printer.print_item(view)
