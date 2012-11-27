@@ -113,9 +113,11 @@ group :jshintrb do
   #needed for unit tests
   #
   #needed for syntax checking
-  gem 'libv8'
-  gem 'therubyracer', "~> 0.10.2"
-  gem 'jshintrb', '0.1.1'
+  gem 'therubyracer', ">= 0.11.0"
+    gem 'ref'
+  gem 'jshintrb', '0.2.1'
+    gem 'execjs'
+    gem 'multi_json', '>= 1.3'
 end
 
 group :development do
