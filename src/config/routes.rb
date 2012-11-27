@@ -593,7 +593,7 @@ Src::Application.routes.draw do
       end
       match '/system_info_keys/:keyname' => 'organization_system_info_keys#destroy', :via => :delete
 
-      resources :content_views, :only => [:index]
+      resources :content_views, :only => [:index, :show]
       resources :content_view_definitions do
         post :publish, :on => :member
         resources :filters, :only => [] do
