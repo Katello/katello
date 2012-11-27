@@ -76,7 +76,9 @@ class foreman::config {
       content => template("foreman/httpd.conf.erb"),
       owner   => $foreman::user,
       group   => $foreman::user,
-      mode    => "600";
+      mode    => "600",
+      notify  => Exec["reload-apache2"],
+      before  => Class["apache2::service"];
   }
 
   exec {"foreman_migrate_db":
