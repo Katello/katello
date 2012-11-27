@@ -347,7 +347,7 @@ class AddRemoveRepo(ContentViewDefinitionAction):
         product        = self.get_option('product')
 
         view = get_cv_definition(org_name, view_label)
-        repo = get_repo(org_name, product, repo_name, None, None)
+        repo = get_repo(org_name, repo_name, prodLabel=product)
 
         repos = self.def_api.repos(org_name, view['id'])
         repos = [f['id'] for f in repos]

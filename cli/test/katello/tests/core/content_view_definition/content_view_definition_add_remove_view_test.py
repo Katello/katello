@@ -33,7 +33,7 @@ class RemoveRequiredCLIOptionsTest(RequiredCLIOptionsTest, CLIOptionTestCase):
     action = AddRemoveContentView(False)
 
 
-class ContentViewAddRemoveViewTest(object):
+class ContentDefinitionAddRemoveViewTest(object):
 
     ORG = organization_data.ORGS[0]
     DEF = content_view_definition_data.DEFS[0]
@@ -73,7 +73,7 @@ class ContentViewAddRemoveViewTest(object):
         self.action.def_api.content_views.assert_called_once_with(self.DEF['id'])
 
 
-class ContentViewAddViewTest(ContentViewAddRemoveViewTest, CLIActionTestCase):
+class ContentDefinitionAddViewTest(ContentDefinitionAddRemoveViewTest, CLIActionTestCase):
     addition = True
 
     def test_it_calls_update_api(self):
@@ -82,7 +82,7 @@ class ContentViewAddViewTest(ContentViewAddRemoveViewTest, CLIActionTestCase):
         self.action.def_api.update_content_views.assert_called_once_with(self.DEF['id'], views)
 
 
-class ContentViewRemoveViewTest(ContentViewAddRemoveViewTest, CLIActionTestCase):
+class ContentDefinitionRemoveViewTest(ContentDefinitionAddRemoveViewTest, CLIActionTestCase):
     addition = False
 
     def test_it_calls_update_api(self):
