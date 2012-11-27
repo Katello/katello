@@ -47,8 +47,6 @@ end
 puts "detected deployment: \t#{deployment}"
 
 # Define what we want to collect
-sources = []
-
 MISC = [
 "/var/log/audit/audit.log",
 "/var/log/httpd",
@@ -74,7 +72,7 @@ KATELLO_HEADPIN = [
 "/etc/katello/thin.yml",
 "/etc/katello/katello-configure.conf",
 "/etc/httpd/conf.d/katello.conf",
-"/etc/katello/environment.db"
+"/etc/katello/environment.rb"
 ]
 
 ELASTIC_SEARCH = [
@@ -106,6 +104,7 @@ EXCLUDES = [
 
 
 # sources list for katello or headpin deployment
+sources = []
 sources += MISC
 sources += KATELLO_HEADPIN
 sources += ELASTIC_SEARCH
@@ -179,7 +178,7 @@ if deployment == 'katello'
 end
 
 # Create certificates report
-output = `katello-debug-certificates >> #{File.join(target_dir, "certificates")}`
+output = `katello-debug-certificates --perms >> #{File.join(target_dir, "certificates")}`
 
 # Add list of ssl-build dir
 output = `find /root/ssl-build -ls | sort -k 11 > #{File.join(target_dir, "ssl_build_dir")}`
