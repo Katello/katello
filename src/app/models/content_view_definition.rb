@@ -72,8 +72,11 @@ class ContentViewDefinition < ActiveRecord::Base
   def as_json(options = {})
     result = self.attributes
     result["organization"] = self.organization.try(:name)
-    result["environments"] = self.organization.library.try(:name)
-    result["published"] = false
+    result["content_views"] = self.content_views.map(&:label).join(", ")
+    result["components"] = self.component_content_views.map(&:label).join(", ")
+    result["products"] = products.map(&:name)
+    result["repos"] = repositories.map(&:name)
+    result["filters"] = filters.map(&:name)
 
     result
   end
