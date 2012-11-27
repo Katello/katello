@@ -14,39 +14,43 @@ require 'spec_helper'
 
 describe Glue::Foreman::User do
 
-  before do
-    disable_user_orchestration :keep_foreman => true
-    ::Foreman::User.stub(:new).and_return(foreman_user)
-  end
+  unless AppConfig.use_foreman
+    pending 'foreman is not enabled, skipping'
+  else
 
-  let(:foreman_user) { mock('foreman_user', :save! => true, :id => 1) }
-  let(:user) do
-    User.new(:username => "TestUser", :password => "foobar", :email => "TestUser@somewhere.com").tap do |user|
-      user.stub(:foreman_user).and_return(foreman_user)
-      user.stub(:foreman).and_return(foreman_user)
+    before do
+      disable_user_orchestration :keep_foreman => true
+      ::Foreman::User.stub(:new).and_return(foreman_user)
+    end
+
+    let(:foreman_user) { mock('foreman_user', :save! => true, :id => 1) }
+    let(:user) do
+      User.new(:username => "TestUser", :password => "foobar", :email => "TestUser@somewhere.com").tap do |user|
+        user.stub(:foreman_user).and_return(foreman_user)
+        user.stub(:foreman).and_return(foreman_user)
+      end
+    end
+
+    it "should create foreman user" do
+      foreman_user.should_receive :save!
+      user.save!
+      user.reload.foreman_id.should == foreman_user.id
+    end
+
+    it "should update foreman user" do
+      user.save!
+      user.email = email = 'an_email@example.com'
+      foreman_user.should_receive(:attributes=).with(hash_including(:mail => email))
+      foreman_user.should_receive :save!
+      user.save!
+    end
+
+    it "should destroy foreman user" do
+      user.save!
+      user.reload
+      User.stub(:current).and_return(mock('current user', :id => 15))
+      foreman_user.should_receive(:destroy!).and_return(true)
+      user.destroy.should be_true
     end
   end
-
-  it "should create foreman user" do
-    foreman_user.should_receive :save!
-    user.save!
-    user.reload.foreman_id.should == foreman_user.id
-  end
-
-  it "should update foreman user" do
-    user.save!
-    user.email = email = 'an_email@example.com'
-    foreman_user.should_receive(:attributes=).with(hash_including(:mail => email))
-    foreman_user.should_receive :save!
-    user.save!
-  end
-
-  it "should destroy foreman user" do
-    user.save!
-    user.reload
-    User.stub(:current).and_return(mock('current user', :id => 15))
-    foreman_user.should_receive(:destroy!).and_return(true)
-    user.destroy.should be_true
-  end
-
 end
