@@ -77,7 +77,7 @@ Requires:       rubygem(chunky_png)
 Requires:       rubygem(tire) >= 0.3.0
 Requires:       rubygem(tire) < 0.4
 Requires:       rubygem(ldap_fluff)
-Requires:       rubygem(apipie-rails) >= 0.0.12
+Requires:       rubygem(apipie-rails) >= 0.0.13
 Requires:       lsof
 
 %if 0%{?rhel} == 6
