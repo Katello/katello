@@ -11,10 +11,11 @@ class Api::ContentViewDefinitionsController < Api::ApiController
     show_rule    = lambda { @definition.readable? }
     manage_rule  = lambda { @definition.editable? }
     publish_rule = lambda { @definition.publishable? }
+    create_rule  = lambda { ContentViewDefinition.creatable?(@organization) }
 
     {
       :index => index_rule,
-      :create => manage_rule,
+      :create => create_rule,
       :publish => publish_rule,
       :show => show_rule,
       :update => manage_rule,
