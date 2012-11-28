@@ -172,3 +172,10 @@ def read_options_format(filename)
   file.close
   return mandatory, regex, data_order, error, $titles, docs
 end
+
+def _get_valid_option_value(option, defaults, finals)
+  if finals.include?(option)
+    return finals[option]
+  end
+  return defaults[option]
+end

@@ -36,13 +36,6 @@ $titles = {}
 $final_options = {}
 $temp_options = {}
 
-def _get_valid_option_value(option, defaults, finals)
-	if finals.include?(option)
-		return finals[option]
-	end
-	return defaults[option]
-end
-
 def _is_option_true(option_value)
 	if option_value.nil?
 		return false
