@@ -133,7 +133,7 @@ either library or an environment at the end of the chain
   see "environments#create"
   def update
     if @environment.library?
-      raise HttpErrors::BadRequest, _("Can't update Library environment")
+      raise HttpErrors::BadRequest, _("Can't update the '%s' environment") % "Library"
     else
       @environment.update_attributes!(params[:environment])
       render :json => @environment
