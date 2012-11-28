@@ -124,3 +124,51 @@ def read_answer_file(filename)
   file.close
   return data, data_order, error, $titles, docs
 end
+
+# Reading options format file, that describe what options are required
+# and the allow optin values format described by regular expressions
+# The structure of the answer file is
+#
+# # The short description of the option.
+# option_name is_option_mandatory regular_expression
+#
+def read_options_format(filename)
+  file = File.new(filename, "r")
+  error = ''
+  mandatory = {}
+  regex = {}
+  data_order = []
+  $titles = {}
+  docs = {}
+  title = ''
+  synopsis = ''
+  while (line = file.gets)
+    if line =~ /^\s*#/
+      if title == ''
+        title = line.gsub(/^\s*#\s*/, '').chop
+      else
+        synopsis.concat(line.gsub(/^\s*#\s*/, ''))
+      end
+      next
+    end
+    line = line.gsub(/\s+$/, '')
+    if not line =~ /\S+/
+      title = ''
+      synopsis = ''
+      next
+    end
+    if line =~ /^\s*(\S+)\s+(true|false)\s+(\S*)$/
+      mandatory[$1] = 'true' == $2
+      regex[$1] = $3
+      docs[$1] = synopsis
+      data_order.push $1
+      $titles[$1] = title.gsub(/\.\s*$/, '')
+    else
+      error.concat "Unsupported config line format [#{line}] in file [#{filename}]\n"
+    end
+    title = ''
+    synopsis = ''
+  end
+  file.close
+  return mandatory, regex, data_order, error, $titles, docs
+end
