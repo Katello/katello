@@ -84,8 +84,6 @@ group :test, :development do
   #needed for documentation
   gem 'yard', '>= 0.5.3'
 
-  #needed by hudson
-  gem 'ci_reporter', '>= 1.6.3'
   gem 'gettext', '>= 1.9.3', :require => false
   gem 'ruby_parser'
   gem 'sexp_processor' #dependency of ruby_parser
@@ -102,6 +100,11 @@ group :test, :development do
   else
     gem 'rcov', '>= 0.9.9'
   end
+end
+
+group :ci do
+  #needed by hudson
+  gem 'ci_reporter', '>= 1.6.3'
 end
 
 group :profiling do
