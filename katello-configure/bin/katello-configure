@@ -224,19 +224,6 @@ if show_resulting_answer_file
 	exit
 end
 
-# Prints a warning if FQDN is not set, returns error when
-# localhost or hostname cannot be resolved (/etc/hosts entry is missing).
-def check_hostname
-  hostname = Socket.gethostname
-  Socket.gethostbyname hostname
-  Socket.gethostbyname 'localhost'
-	$stderr.puts "WARNING: FQDN is not set!" unless hostname.index '.'
-rescue SocketError => e
-  puts "Error"
-	$stderr.puts "Unable to resolve '#{hostname}' or 'localhost'. Check your DNS and /etc/hosts settings."
-  exit_with :hostname_error
-end
-
 # check if running as root and change current dir
 unless Process.uid == 0
   $stderr.puts "You must run katello-configure as root"

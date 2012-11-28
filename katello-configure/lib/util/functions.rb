@@ -234,3 +234,16 @@ def _request_option_interactively(title, regex, default_value, non_interactive_v
     puts "Your entry has to match regular expression: /#{regex}/"
   end
 end
+
+# Prints a warning if FQDN is not set, returns error when
+# localhost or hostname cannot be resolved (/etc/hosts entry is missing).
+def check_hostname
+  hostname = Socket.gethostname
+  Socket.gethostbyname hostname
+  Socket.gethostbyname 'localhost'
+  $stderr.puts "WARNING: FQDN is not set!" unless hostname.index '.'
+rescue SocketError => e
+  puts "Error"
+  $stderr.puts "Unable to resolve '#{hostname}' or 'localhost'. Check your DNS and /etc/hosts settings."
+  exit_with :hostname_error
+end
