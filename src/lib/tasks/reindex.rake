@@ -1,8 +1,7 @@
 task :reindex=>["environment", "clear_search_indices"]  do
   User.current = User.first #set a user for orchestration
 
-  ignore_list = ["CpConsumerUser", "PulpSyncStatus", "PulpTaskStatus", "Hypervisor", "Pool"]
-
+  ignore_list = ["CpConsumerUser", "PulpSyncStatus", "PulpTaskStatus", "Hypervisor", "Pool", "System"]
   Dir.glob(RAILS_ROOT + '/app/models/*.rb').each { |file| require file }
   models = ActiveRecord::Base.subclasses.sort{|a,b| a.name <=> b.name}
   models.each{|mod|
@@ -12,12 +11,19 @@ task :reindex=>["environment", "clear_search_indices"]  do
     end
   }
 
+  # As a recovery mechanism for case when candlepin has a deleted system record and katello
+  # retains a reference to it, the exception is caught and the katello side cleaned.
+  print "Re-indexing System\n"
+  System.all.each do |system|
+    begin
+      System.index.import([system])
+    rescue RestClient::Gone => e
+      print "Removing deleted system: #{e}"
+      system.destroy
+    end
+  end
 
   print "Re-indexing Repositories\n"
-
-  #pulp_repos = Resources::Pulp::Repository.all
-  #repos = Repository.all
-  #repos.each{|r| r.populate_from pulp_repos}
 
   Repository.enabled.each{|repo|
     repo.index_packages
@@ -32,5 +38,4 @@ task :reindex=>["environment", "clear_search_indices"]  do
     # Index pools
     ::Pool.index_pools(pools) if pools.length > 0
   end
-
 end

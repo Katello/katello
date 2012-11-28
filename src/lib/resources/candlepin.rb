@@ -132,6 +132,10 @@ module Resources
 
         def destroy uuid
           self.delete(path(uuid), User.cp_oauth_header).code.to_i
+        # Deleting an already-deleted consumer is alright. This situation can arise in the
+        # 'rake rindex' task to recover from out-of-sync databases.
+        rescue RestClient::Gone
+          return true
         end
 
         def available_pools(uuid, listall=false)
