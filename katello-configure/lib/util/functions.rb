@@ -17,6 +17,27 @@
 
 require 'fileutils'
 
+# error codes for exit_with function
+ERROR_CODES = {
+  :success => 0,
+  :general => 1,
+  :default_option_error => 2,
+  :answer_missing => 3,
+  :answer_parsing_error => 4,
+  :answer_unknown_option => 5,
+  :error_executing_puppet => 6,
+  :hostname_error => 7,
+  :not_root => 8,
+  :java_error => 9,
+  :unknown => 127,
+}
+
+# Terminate script with error code from ERROR_CODES hash
+def exit_with(code = :unknown)
+  code = ERROR_CODES[code.to_sym] || ERROR_CODES[:unknown]
+  exit code
+end
+
 def command_exists?(command)
   ENV['PATH'].split(':').each {|folder| File.executable?("#{folder}/#{command}")}
 end
