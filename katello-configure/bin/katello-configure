@@ -36,45 +36,6 @@ $titles = {}
 $final_options = {}
 $temp_options = {}
 
-def _request_option_interactively(title, regex, default_value, non_interactive_value)
-	default_value_ok = default_value.to_s() =~ Regexp.new(regex)
-	if non_interactive_value
-		if default_value.nil? or not default_value_ok
-			$stderr.puts "Option: [#{title}] not correctly specified."
-			exit 7
-		else
-			return default_value
-		end
-	end
-
-	read_password = title.include?("password")
-	while true
-		if read_password
-			while true
-				print "Enter #{title}: "
-				input = _read_password()
-				print "Verify #{title}: "
-				input2 = _read_password()
-				if (input == input2)
-					break
-				end
-				puts "Passwords do not match. Please, try again."
-			end
-		else
-			default_draft = " [ #{default_value} ]" if default_value_ok
-			print "Enter #{title}#{default_draft}: "
-			input = STDIN.gets.strip
-			if input.empty? and default_value_ok
-				input = default_value
-			end
-		end
-		if input.to_s() =~ Regexp.new(regex)
-			return input
-		end
-		puts "Your entry has to match regular expression: /#{regex}/"
-	end
-end
-
 # remove option from $final_options (and order) hashes (and optionally move
 # it to the temporary hash (used for dangerous options)
 def remove_option(name, move_to_temp = false)
