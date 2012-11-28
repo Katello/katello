@@ -1,13 +1,13 @@
 #!/bin/bash
 
 PREFIX='  '
-PERMS=0 
+PERMS=0
 
 function cert_info() {
   CERT=$1
   DESCR=$2
   [[ -n "$DESCR" ]] && echo -e "$DESCR"
-  if [[ -n "$CERT" ]]; then 
+  if [[ -n "$CERT" ]]; then
     SERIAL=$(echo "$CERT" | grep "Serial Number" -A1 | tail -n1 | awk '{print $1}')
     DN=$(echo "$CERT" | grep "Subject:" | sed 's/\s*Subject: //')
     CA=$(echo "$CERT" | grep "CA" | head -n1 | awk '{print $1}')
@@ -25,7 +25,7 @@ function certutils_cert_info() {
   CERT=$1
   DESCR=$2
   [[ -n "$DESCR" ]] && echo -e "$DESCR"
-  if [[ -n "$CERT" ]]; then 
+  if [[ -n "$CERT" ]]; then
     SERIAL=$(echo "$CERT" | grep "Serial Number" -A1 | head -n2 | tail -n1 | awk '{print $1}')
     DN=$(echo "$CERT" | grep "Subject:" | sed 's/\s*Subject: //')
     CA=$(echo "$CERT" | grep "Certificate Basic Constraints" -A1| tail -n1 | sed 's/^\s*Data: //')
@@ -45,20 +45,22 @@ function cert_file_info() {
     CERT=$( openssl x509 -noout -text -in "$CERTFILE" )
     cert_info "$CERT" "$CERTFILE"
     path_perms "$CERTFILE"
-  else 
+  else
     cert_info "" "$CERTFILE"
   fi
 }
 
 function nss_info() {
-  echo "NSS DB - Broker Key"
-  echo -e "$PREFIX$(certutil -d /etc/pki/katello/nssdb -K -f /etc/katello/nss_db_password-file|grep broker)\n"
-  path_perms "/etc/katello/nss_db_password-file"
-  certutils_cert_info "$(certutil -d /etc/pki/katello/nssdb -L -n ca)" 'NSS DB - CA'
-  certutils_cert_info "$(certutil -d /etc/pki/katello/nssdb -L -n broker)" 'NSS DB - Broker'
-  for f in `ls /etc/pki/katello/nssdb/*`; do
-    path_perms "$f"
-  done
+  if [ -d "/etc/pki/katello/nssdb" ]; then
+    echo "NSS DB - Broker Key"
+    echo -e "$PREFIX$(certutil -d /etc/pki/katello/nssdb -K -f /etc/katello/nss_db_password-file|grep broker)\n"
+    path_perms "/etc/katello/nss_db_password-file"
+    certutils_cert_info "$(certutil -d /etc/pki/katello/nssdb -L -n ca)" 'NSS DB - CA'
+    certutils_cert_info "$(certutil -d /etc/pki/katello/nssdb -L -n broker)" 'NSS DB - Broker'
+    for f in $(ls /etc/pki/katello/nssdb/*); do
+      path_perms "$f"
+    done
+  fi
 }
 
 function keystore_info() {
@@ -68,11 +70,13 @@ function keystore_info() {
 function path_perms() {
     if [ $PERMS = 1 ]; then
         CERTPATH=$1
-        while [ "$CERTPATH" != '/' ]; do
-            LSOUT=$(ls -lahd "$CERTPATH")
-            echo "$PREFIX$LSOUT"
-            CERTPATH=$(dirname "$CERTPATH")
-        done 
+        if [ -e "$CERTPATH" ]; then
+            while [ "$CERTPATH" != '/' ]; do
+                LSOUT=$(ls -lahd "$CERTPATH")
+                echo "$PREFIX$LSOUT"
+                CERTPATH=$(dirname "$CERTPATH")
+            done
+        fi
     fi
     echo ""
 }
