@@ -36,13 +36,6 @@ $titles = {}
 $final_options = {}
 $temp_options = {}
 
-def _is_option_true(option_value)
-	if option_value.nil?
-		return false
-	end
-	return (option_value.match(/(true|yes|y|1)$/i) != nil)
-end
-
 def _read_password()
     stty_orig_val = %x( stty -g )
 	system("stty -echo")

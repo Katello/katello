@@ -179,3 +179,10 @@ def _get_valid_option_value(option, defaults, finals)
   end
   return defaults[option]
 end
+
+def _is_option_true(option_value)
+  if option_value.nil?
+    return false
+  end
+  return (option_value.match(/(true|yes|y|1)$/i) != nil)
+end
