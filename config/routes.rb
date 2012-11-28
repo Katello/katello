@@ -74,6 +74,7 @@ Src::Application.routes.draw do
     member do
       get :views
       get :content
+      post :update_content
       get :filter
     end
   end
