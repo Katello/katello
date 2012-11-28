@@ -51,6 +51,10 @@ if system('rpm -q rubygem-ruport >/dev/null')
 else
   gem 'ruport' , '>=1.7.0', :git => 'git://github.com/ruport/ruport.git'
 end
+#not an actual katello dependency, but 
+#Does not pull in  hashery, matches RPM
+gem 'pdf-reader', '<= 1.1.1' 
+
 gem 'prawn'
 gem 'acts_as_reportable', '>=1.1.1', :require => 'ruport/acts_as_reportable'
 
