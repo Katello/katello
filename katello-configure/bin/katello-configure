@@ -57,53 +57,6 @@ $titles = {}
 $final_options = {}
 $temp_options = {}
 
-# Reading answer file, used both for the default answer file
-# and for user files. The structure of the answer file is
-#
-#	# The short description of the option.
-#	# Multiline synopsis of the option
-#	# with more details.
-#	option_name = option_value
-#
-def read_answer_file(filename)
-	file = File.new(filename, "r")
-	error = ''
-	data = {}
-	data_order = []
-	$titles = {}
-	docs = {}
-	title = ''
-	synopsis = ''
-	while (line = file.gets)
-		if line =~ /^\s*#/
-			if title == ''
-				title = line.gsub(/^\s*#\s*/, '').chop
-			else
-				synopsis.concat(line.gsub(/^\s*#\s*/, ''))
-			end
-			next
-		end
-		line = line.gsub(/\s+$/, '')
-		if not line =~ /\S+/
-			title = ''
-			synopsis = ''
-			next
-		end
-		if line =~ /^\s*(\w+)\s*=\s*(.*)/
-			data[$1] = $2
-			docs[$1] = synopsis
-			data_order.push $1
-			$titles[$1] = title.gsub(/\.\s*$/, '')
-		else
-			error.concat "Unsupported config line format [#{line}] in file [#{filename}]\n"
-		end
-		title = ''
-		synopsis = ''
-	end
-	file.close
-	return data, data_order, error, $titles, docs
-end
-
 # Reading options format file, that describe what options are required
 # and the allow optin values format described by regular expressions
 # The structure of the answer file is
