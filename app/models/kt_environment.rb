@@ -123,7 +123,6 @@ class KTEnvironment < ActiveRecord::Base
   end
 
   def display_name
-    return _("Library") if self.library?
     self.name
   end
 
