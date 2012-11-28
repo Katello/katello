@@ -12,8 +12,11 @@
 
 class ContentViewDefinitionsController < ApplicationController
 
+  helper ProductsHelper
+
   before_filter :require_user
-  before_filter :find_content_view_definition, :only => [:show, :edit, :update, :destroy, :views, :content, :filter]
+  before_filter :find_content_view_definition, :only => [:show, :edit, :update, :destroy, :views, :content,
+                                                         :update_content, :filter]
   before_filter :authorize #after find_content_view_definition, since the definition is required for authorization
   before_filter :panel_options, :only => [:index, :items]
 
@@ -41,6 +44,7 @@ class ContentViewDefinitionsController < ApplicationController
 
       :views => read_test,
       :content => read_test,
+      :update_content => manage_test,
       :filter => read_test,
 
       :default_label => manage_test
@@ -122,6 +126,23 @@ class ContentViewDefinitionsController < ApplicationController
     render :partial => "content", :layout => "tupane_layout",
            :locals => {:view_definition => @view_definition, :editable=>@view_definition.editable?,
                        :name=>controller_display_name}
+  end
+
+  def update_content
+    if params[:products]
+      products_ids = params[:products].empty? ? []:Product.readable(current_organization).where(:id => params[:products]).collect{|p| p.id}
+      @view_definition.product_ids = products_ids
+    end
+
+    if params[:repos]
+      repo_ids = params[:repos].empty? ? []:Repository.libraries_content_readable(current_organization).where(:id => params[:repos].values.flatten).collect{|r| r.id}
+      @view_definition.repository_ids = repo_ids
+    end
+
+    @view_definition.save!
+
+    notify.success _("Successfully updated content for content view definition '%s'.") % @view_definition.name
+    render :text=>''
   end
 
   def filter
