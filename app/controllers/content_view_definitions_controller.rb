@@ -13,7 +13,7 @@
 class ContentViewDefinitionsController < ApplicationController
 
   before_filter :require_user
-  before_filter :find_content_view_definition, :only => [:show, :edit, :update, :destroy]
+  before_filter :find_content_view_definition, :only => [:show, :edit, :update, :destroy, :views, :content, :filter]
   before_filter :authorize #after find_content_view_definition, since the definition is required for authorization
   before_filter :panel_options, :only => [:index, :items]
 
@@ -38,6 +38,10 @@ class ContentViewDefinitionsController < ApplicationController
       :update => manage_test,
 
       :destroy => manage_test,
+
+      :views => read_test,
+      :content => read_test,
+      :filter => read_test,
 
       :default_label => manage_test
     }
@@ -108,8 +112,25 @@ class ContentViewDefinitionsController < ApplicationController
     end
   end
 
-  protected
+  def views
+    render :partial => "views", :layout => "tupane_layout",
+           :locals => {:view_definition => @view_definition, :editable => @view_definition.editable?,
+                       :name => controller_display_name}
+  end
 
+  def content
+    render :partial => "content", :layout => "tupane_layout",
+           :locals => {:view_definition => @view_definition, :editable=>@view_definition.editable?,
+                       :name=>controller_display_name}
+  end
+
+  def filter
+    render :partial => "filter", :layout => "tupane_layout",
+           :locals => {:view_definition => @view_definition, :editable => @view_definition.editable?,
+                       :name => controller_display_name}
+  end
+
+  protected
   def find_content_view_definition
     @view_definition = ContentViewDefinition.find(params[:id])
   end
@@ -135,7 +156,6 @@ class ContentViewDefinitionsController < ApplicationController
   end
 
   def search_filter
-    @filter = {:organization_id => current_organization}
+    @view_definition = {:organization_id => current_organization}
   end
-
 end

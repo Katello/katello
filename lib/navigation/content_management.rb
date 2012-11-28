@@ -28,7 +28,25 @@ module Navigation
 
     def content_view_definition_navigation
       [
-        { :key => :edit_view_definition,
+        { :key => :views,
+          :name =>_("Views"),
+          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : views_content_view_definition_path(@view_definition.id),
+          :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
+          :options => {:class=>"panel_link"}
+        },
+        { :key => :content,
+          :name =>_("Content"),
+          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : content_content_view_definition_path(@view_definition.id),
+          :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
+          :options => {:class=>"panel_link"}
+        },
+        { :key => :filter,
+          :name =>_("Filter"),
+          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : filter_content_view_definition_path(@view_definition.id),
+          :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
+          :options => {:class=>"panel_link"}
+        },
+        { :key => :details,
           :name =>_("Details"),
           :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : edit_content_view_definition_path(@view_definition.id),
           :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
