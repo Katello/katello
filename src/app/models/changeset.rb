@@ -239,7 +239,7 @@ class Changeset < ActiveRecord::Base
        )
   end
 
-  protected 
+  protected
 
   def validate_content! elements
     elements.each { |e| raise ActiveRecord::RecordInvalid.new(e) if not e.valid? }

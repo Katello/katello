@@ -15,7 +15,7 @@ class Api::SyncController < Api::ApiController
   resource_description do
     description <<-DOC
       methods for handeling repositories synchronisation. Repositories can be selecteted
-      individualy by id, by product or by provider 
+      individualy by id, by product or by provider
     DOC
 
     param :organization_id, :identifier, :desc => "oranization identifier", :required => true

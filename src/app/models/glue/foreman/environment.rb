@@ -70,6 +70,6 @@ module Glue::Foreman::Environment
     end
   end
 
-  include Glue::ForemanOrchestrationDisablement 
+  include Glue::ForemanOrchestrationDisablement
 
 end

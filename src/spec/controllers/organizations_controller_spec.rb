@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe OrganizationsController do  
+describe OrganizationsController do
   include LoginHelperMethods
   include LocaleHelperMethods
   include OrganizationHelperMethods
@@ -78,8 +78,8 @@ describe OrganizationsController do
     set_default_locale
     controller.stub(:search_validate).and_return(true)
   end
-  
-  describe "create a root org" do        
+
+  describe "create a root org" do
     describe 'with valid parameters' do
       before (:each) do
         # for these tests we need full user
@@ -109,9 +109,9 @@ describe OrganizationsController do
         controller.should notify(:success)
         post 'create', OrgControllerTest::ORGANIZATION
         response.should be_success
-      end      
+      end
     end
-    
+
     describe 'with invalid paramaters' do
       it 'should generate an error notice' do
         controller.should notify.exception
@@ -128,14 +128,14 @@ describe OrganizationsController do
         end
       end
     end
-    
+
   end
-  
+
   describe "get a listing of organizations" do
     before (:each) do
      new_test_org
     end
-    
+
     it 'should call katello organization find api' do
       get :index
       response.should be_success
@@ -151,13 +151,13 @@ describe OrganizationsController do
       response.should be_success
     end
   end
-  
+
 
   describe "delete an organization" do
-    
+
     describe "with no exceptions thrown" do
       before (:each) do
-        
+
         login_user :mock=>false
         @controller.stub!(:render).and_return("") #fix for not finding partial
         @org = new_test_org
@@ -181,7 +181,7 @@ describe OrganizationsController do
         delete 'destroy', :id => @org.id
         response.should be_success
       end
-      
+
       it "should be successful" do
         Organization.stub!(:count).and_return(2)
         delete 'destroy', :id => @org.id
@@ -207,22 +207,22 @@ describe OrganizationsController do
         @organization.stub!(:destroy).and_raise(StandardError)
         Organization.stub!(:find_by_label).and_return(@organization)
       end
-      
+
       it "should generate an error notice" do
         controller.should notify.error
         delete 'destroy', :id =>  OrgControllerTest::ORG_ID
         response.should_not be_success
       end
-      
+
       it "should redirect to show view" do
         delete 'destroy', :id =>  OrgControllerTest::ORG_ID
         response.should_not be_success
-      end      
+      end
     end
   end
-  
+
   describe "update a organization" do
-    
+
     describe "with no exceptions thrown" do
 
       before (:each) do
@@ -231,18 +231,18 @@ describe OrganizationsController do
         @organization.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:organization][:name])
         Organization.stub!(:find_by_label).and_return(@organization)
       end
-      
+
       it "should call katello org update api" do
         @organization.should_receive(:update_attributes!).once
         put 'update', :id => OrgControllerTest::ORG_ID, :organization => OrgControllerTest::ORGANIZATION_UPDATE
         response.should be_success
       end
-      
+
       it "should generate a success notice" do
         controller.should notify.success
         put 'update', :id => OrgControllerTest::ORG_ID, :organization => OrgControllerTest::ORGANIZATION_UPDATE
       end
-      
+
       it "should not redirect from edit view" do
         put 'update', :id => OrgControllerTest::ORG_ID, :organization => OrgControllerTest::ORGANIZATION_UPDATE
         response.should_not be_redirect
@@ -266,12 +266,12 @@ describe OrganizationsController do
         @organization.stub!(:update).and_raise(StandardError)
         Organization.stub!(:find_by_label).and_return(@organization)
       end
-      
+
       it "should generate an error notice" do
         controller.should notify.exception
         put 'update', :id => OrgControllerTest::ORG_ID
       end
-      
+
       it "should not redirect from edit view" do
         put 'update', :id => OrgControllerTest::ORG_ID
         response.should_not be_redirect

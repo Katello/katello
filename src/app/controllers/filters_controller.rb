@@ -63,7 +63,7 @@ class FiltersController < ApplicationController
       @product_hash[prod.id] = {:name=>prod.name, :repos=>repos, :id=>prod.id,
                                 :editable=>editable_products.include?(prod)}
     }
-    
+
     render "index"
   end
 

@@ -103,7 +103,7 @@
 
 
 
-//Div for dep. content 
+//Div for dep. content
 #dialog_content{:style => "word-wrap: break-word;", :title=>"#{_('Package Dependencies')}"}
 
 = help_tip_button
@@ -205,7 +205,7 @@
 
 
     = render :partial=>"common/tupane"
-  
+
     #content_tree.left.sliding_tree
       - if show_new_button?(manage_promotion_changesets, manage_deletion_changesets)
         - next_env = @next_environment.nil? ? "" : "&next_env_id=" + @next_environment.id.to_s

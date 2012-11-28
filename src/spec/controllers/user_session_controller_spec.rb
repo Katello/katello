@@ -13,13 +13,13 @@
 require 'spec_helper'
 
 describe UserSessionsController do
-  
+
   include LocaleHelperMethods
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
   include OrchestrationHelper
   include LoginHelperMethods
-  
+
     before(:each) do
       set_default_locale
     end
@@ -52,5 +52,5 @@ describe UserSessionsController do
     end
 
   end
-  
+
 end

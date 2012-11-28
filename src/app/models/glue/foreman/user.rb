@@ -85,6 +85,6 @@ module Glue::Foreman::User
 
   end
 
-  include Glue::ForemanOrchestrationDisablement 
-  
+  include Glue::ForemanOrchestrationDisablement
+
 end

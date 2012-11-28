@@ -20,7 +20,7 @@ describe SyncManagementController, :katello => true do
   include OrchestrationHelper
 
 
-  
+
   before (:each) do
     login_user
     set_default_locale
@@ -62,14 +62,14 @@ describe SyncManagementController, :katello => true do
       @product = new_test_product @organization, @organization.library
       Provider.stub(:find).and_return @product.provider
       Product.stub(:find).and_return @product
-      
+
     end
     describe "GET index" do
 
       let(:action) {:index}
       let(:req) { get 'index' }
       let(:authorized_user) do
-        
+
         user_with_permissions { |u| u.can(:read, :providers, @product.provider.id, @organization) }
       end
       let(:unauthorized_user) do

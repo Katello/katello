@@ -90,7 +90,7 @@ module Glue::Pulp::Consumer
       Rails.logger.error "Failed to create pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
-    
+
     def update_pulp_consumer
       return true if @changed_attributes.empty?
 
@@ -100,13 +100,13 @@ module Glue::Pulp::Consumer
       Rails.logger.error "Failed to update pulp consumer #{@old.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
-    
+
     def upload_package_profile profile
       Rails.logger.debug "Uploading package profile for consumer #{self.name}"
       Resources::Pulp::Consumer.upload_package_profile(self.uuid, profile)
     rescue => e
       Rails.logger.error "Failed to upload package profile to pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e  
+      raise e
     end
 
     def install_package packages
