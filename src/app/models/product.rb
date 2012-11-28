@@ -13,7 +13,7 @@ require "util/model_util"
 
 class LibraryPresenceValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    record.errors[attribute] << N_("must contain 'Library'") if value.select {|e| e.library}.empty?
+    record.errors[attribute] << N_("must contain '%s'") % "Library" if value.select {|e| e.library}.empty?
   end
 end
 
