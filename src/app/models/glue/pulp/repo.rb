@@ -139,7 +139,7 @@ module Glue::Pulp::Repo
     def promote from_env, to_env
 
       if self.is_cloned_in?(to_env)
-        return clone.sync
+        self.clone_contents(self.get_clone(to_env))
       else
         clone = self.create_clone(to_env)
         clone_events = self.clone_contents(clone) #return clone task
