@@ -36,15 +36,6 @@ $titles = {}
 $final_options = {}
 $temp_options = {}
 
-def _read_password()
-    stty_orig_val = %x( stty -g )
-	system("stty -echo")
-	input = STDIN.gets
-	system("stty #{stty_orig_val}")
-	puts
-	return input
-end
-
 def _request_option_interactively(title, regex, default_value, non_interactive_value)
 	default_value_ok = default_value.to_s() =~ Regexp.new(regex)
 	if non_interactive_value

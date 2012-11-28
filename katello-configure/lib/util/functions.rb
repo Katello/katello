@@ -186,3 +186,12 @@ def _is_option_true(option_value)
   end
   return (option_value.match(/(true|yes|y|1)$/i) != nil)
 end
+
+def _read_password()
+  stty_orig_val = %x( stty -g )
+  system("stty -echo")
+  input = STDIN.gets
+  system("stty #{stty_orig_val}")
+  puts
+  return input
+end
