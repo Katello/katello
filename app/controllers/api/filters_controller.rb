@@ -85,7 +85,7 @@ class Api::FiltersController < Api::ApiController
 
     render :json => @filter.to_json
   end
-  
+
   api :GET, "/organizations/:organization_id/filters/:id", "Show package filter details"
   param :organization_id, :identifier, :desc => "oranization identifier", :required => true
   param :id, :identifier, :desc => "filter identifier", :required => true
@@ -108,7 +108,7 @@ class Api::FiltersController < Api::ApiController
     render :json => @product.filters.to_json
   end
 
-  api :PUT, "/organizations/:organization_id/products/:product_id/filters", "Update package filters for product" 
+  api :PUT, "/organizations/:organization_id/products/:product_id/filters", "Update package filters for product"
   param :organization_id, :identifier, :desc => "oranization identifier", :required => true
   param :product_id, :identifier, :desc => "product identifier", :required => true
   param :filters, Array, :desc => "Updated list of filters", :required => true
@@ -130,7 +130,7 @@ class Api::FiltersController < Api::ApiController
 
     render :json => filters.uniq.to_json
   end
-    
+
   api :PUT, "/repositories/:repository_id/filters", "Update package filters for repository"
   param :repository_id, :identifier, :desc => "repository identifier", :required => true
   param :filters, Array, :desc => "Updated list of filters", :required => true
@@ -162,7 +162,7 @@ class Api::FiltersController < Api::ApiController
   def find_repository
     @repository = Repository.find(params[:repository_id])
     raise HttpErrors::NotFound, _("Couldn't find repository '%s'") % params[:repository_id] if @repository.nil?
-    raise HttpErrors::BadRequest, _("Filters can be stored only in Library repositories.") if not @repository.environment.library?
+    raise HttpErrors::BadRequest, _("Filters can be stored only in the '%s' repositories.") % "Library" if not @repository.environment.library?
     @repository
   end
 
