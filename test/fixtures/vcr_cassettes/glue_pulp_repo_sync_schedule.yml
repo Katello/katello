@@ -1,5 +1,4 @@
 --- 
-recorded_with: VCR 2.2.5
 http_interactions: 
 - request: 
     method: get
@@ -7,67 +6,68 @@ http_interactions:
     body: 
       string: ""
     headers: 
-      Accept-Encoding: 
-      - gzip, deflate
       Accept: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="xV4vlAumGtzOPiv8qKS6fFyHRO0BFpXwuQ4F7tL4o", oauth_signature="xJ5gi4eXW%2FYJI0%2FU1WuzMsJtg4g%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353123110", oauth_version="1.0"
-      Content-Type: 
-      - application/json
+      - OAuth oauth_consumer_key="katello", oauth_nonce="N6hlJ9kkqBIlDrOAFCtOJ8GFAEqG74Qlwqit9EPvg", oauth_signature="K46LfuCk7EbC3%2BuAONH9SEfWOBE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1354126723", oauth_version="1.0"
       Pulp-User: 
       - admin
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
+      Content-Length: 
+      - "2"
       Server: 
       - Apache/2.2.22 (Fedora)
       Date: 
-      - Sat, 17 Nov 2012 03:31:50 GMT
-      Content-Length: 
-      - "2"
+      - Wed, 28 Nov 2012 18:18:43 GMT
       Content-Type: 
       - application/json
     body: 
       string: "[]"
     http_version: 
-  recorded_at: Sat, 17 Nov 2012 03:31:50 GMT
+  recorded_at: Wed, 28 Nov 2012 18:18:43 GMT
 - request: 
     method: post
     uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
     body: 
-      string: "{\"schedule\":\"2013-11-16T22:31:50-05:00/P1D\"}"
+      string: "{\"schedule\":\"2013-11-28T13:18:43-05:00/P1D\"}"
     headers: 
-      Accept-Encoding: 
-      - gzip, deflate
       Accept: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="iQVirZKvEsKmHOSXpgmL9LZNZzvAXh2EShszjcq4", oauth_signature="Fp9vebpObt6vIdl5VToeAY4ki3o%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353123110", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="PxEfAwgkUAQap34voWu8MbALVH0PpCdjFYDmzSpcNs", oauth_signature="1zZltUrDNCkxd%2B5y7Ay1j2fvgZk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1354126723", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Accept-Encoding: 
+      - gzip, deflate
       Content-Length: 
       - "44"
       Content-Type: 
       - application/json
-      Pulp-User: 
-      - admin
   response: 
     status: 
       code: 201
       message: Created
     headers: 
-      Server: 
-      - Apache/2.2.22 (Fedora)
       Location: 
-      - /pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/50a705269c60ed289c0021d2/
-      Date: 
-      - Sat, 17 Nov 2012 03:31:50 GMT
+      - /pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/50b655839c60ed613800299e/
       Content-Length: 
       - "393"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Date: 
+      - Wed, 28 Nov 2012 18:18:43 GMT
       Content-Type: 
       - application/json
     body: 
-      string: "{\"next_run\": \"2013-11-17T03:31:50Z\", \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/50a705269c60ed289c0021d2/\", \"schedule\": \"2013-11-16T22:31:50-05:00/P1D\", \"override_config\": {}, \"remaining_runs\": null, \"first_run\": \"2013-11-17T03:31:50Z\", \"enabled\": true, \"last_run\": null, \"failure_threshold\": null, \"_id\": \"50a705269c60ed289c0021d2\", \"consecutive_failures\": 0}"
+      string: "{\"next_run\": \"2013-11-28T18:18:43Z\", \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/50b655839c60ed613800299e/\", \"schedule\": \"2013-11-28T13:18:43-05:00/P1D\", \"override_config\": {}, \"remaining_runs\": null, \"first_run\": \"2013-11-28T18:18:43Z\", \"enabled\": true, \"last_run\": null, \"failure_threshold\": null, \"_id\": \"50b655839c60ed613800299e\", \"consecutive_failures\": 0}"
     http_version: 
-  recorded_at: Sat, 17 Nov 2012 03:31:50 GMT
+  recorded_at: Wed, 28 Nov 2012 18:18:43 GMT
+recorded_with: VCR 2.3.0
