@@ -20,6 +20,10 @@ class KatelloFormBuilder < ActionView::Helpers::FormBuilder
     end
   end
 
+  def check_box(name, options = {}, checked_value = '1', unchecked_value = '0')
+    base(name, options) { super(name, options, checked_value, unchecked_value) }
+  end
+
   def field(name, *args, &block)
     base(name, *args, &block)
   end

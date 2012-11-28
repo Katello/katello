@@ -439,6 +439,10 @@ Src::Application.routes.draw do
     end
   end
 
+  resources :configuration_templates do
+    get :items, :on => :collection
+  end
+
   namespace :api do
     class RegisterWithActivationKeyContraint
       def matches?(request)

@@ -988,11 +988,22 @@ KT.panel.list = (function () {
 
                     if( validation() ){
                         button.attr("disabled", "disabled");
-                        
                         $(this).ajaxSubmit({
                             url: KT.routes[resource_type + '_path'](),
                             data: data,
                             success: createSuccess,
+                            beforeSubmit: function(arr, $form, options) {
+                                // filter out duplicate *empty* form fields
+                                var formFields = {};
+                                for (i = 0; i < arr.length; i++) {
+                                    if ( formFields[arr[i]['name']] && arr[i]['value'] == '') {
+
+                                        arr.splice(i, 1);
+                                    } else {
+                                        formFields[arr[i]['name']] = i;
+                                    }
+                                }
+                            },
                             error: function (e) {
                                 button.removeAttr('disabled');
                                 notices.checkNotices();
