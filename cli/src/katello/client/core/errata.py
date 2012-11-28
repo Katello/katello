@@ -21,7 +21,8 @@ from katello.client.api.system import SystemAPI
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
-from katello.client.api.utils import get_repo, get_environment, get_product, get_system_group
+from katello.client.api.utils import get_repo, get_environment, get_product, \
+    get_system_group, get_system
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
 from katello.client.utils.printer import batch_add_columns
@@ -114,10 +115,8 @@ class SystemErrata(ErrataAction):
         org_name = self.get_option('org')
         sys_name = self.get_option('name')
 
-        systems = systemApi.systems_by_org(org_name, {'name': sys_name})
-
-        errata = systemApi.errata(systems[0]["uuid"])
-
+        system = get_system(org_name, sys_name)
+        errata = systemApi.errata(system["uuid"])
 
         batch_add_columns(self.printer, 'id', 'title', 'type')
         self.printer.set_header(_("Errata for system %s in organization %s") % (sys_name, org_name))
