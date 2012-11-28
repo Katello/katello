@@ -80,7 +80,10 @@ class List(SystemAction):
         else:
             self.printer.set_header(_("Systems List For Environment [ %s ] in Org [ %s ]") % (env_name, org_name))
 
-        batch_add_columns(self.printer, 'name', 'uuid', 'ipv4_address')
+        batch_add_columns(self.printer, 'name', 'uuid')
+        self.printer.add_column('environment',
+            item_formatter=lambda p: "%s" % (p['environment']['name']))
+
         self.printer.add_column('serviceLevel', _('Service Level'))
 
         self.printer.print_items(systems)
