@@ -130,12 +130,16 @@ class ContentViewDefinitionsController < ApplicationController
 
   def update_content
     if params[:products]
-      products_ids = params[:products].empty? ? []:Product.readable(current_organization).where(:id => params[:products]).collect{|p| p.id}
+      products_ids = params[:products].empty? ? [] : Product.readable(current_organization).
+          where(:id => params[:products]).pluck(:id)
+
       @view_definition.product_ids = products_ids
     end
 
     if params[:repos]
-      repo_ids = params[:repos].empty? ? []:Repository.libraries_content_readable(current_organization).where(:id => params[:repos].values.flatten).collect{|r| r.id}
+      repo_ids = params[:repos].empty? ? [] : Repository.libraries_content_readable(current_organization).
+          where(:id => params[:repos].values.flatten).pluck(:id)
+
       @view_definition.repository_ids = repo_ids
     end
 
