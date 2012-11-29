@@ -127,10 +127,10 @@ Dir.glob(File.join(dir, "**", "*")).each do |file|
   File.write(file, file_content) if options[:fix]
 end
 
-malformed_strings_count = malformed_strings.values.flatten.size
+malformed_strings_count = malformed_strings.values.flatten(1).size
 if malformed_strings_count == 0
   exit 0
 else
-  STDERR.puts("Found #{malformed_strings_count} malformed strints")
+  STDERR.puts("Found #{malformed_strings_count} malformed strings")
   exit 1
 end

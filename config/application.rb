@@ -14,11 +14,21 @@ require 'katello_config'
 
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
-if defined?(Bundler)
-  Bundler.require(:default, Rails.env)
+if File.exist?(File.expand_path('../../Gemfile.in', __FILE__))
+  require 'aeolus/ext/bundler_ext'
+  puts 'Using gem require instead of bundler'
+  # TODO - remove all parameters once https://github.com/aeolus-incubator/bundler_ext/pull/3 is merged
+  Aeolus::Ext::BundlerExt.system_require(File.expand_path('../../Gemfile.in', __FILE__), :default, :foreman, Rails.env)
+else
+  ENV['BUNDLE_GEMFILE'] = File.expand_path('../../Gemfile', __FILE__)
+  puts 'Using bundler instead of gem require'
+  Bundler.require(:default, Rails.env) if defined?(Bundler)
+  if defined?(Bundler)
+    Bundler.require(:default, Rails.env)
 
-  # require backend engines only if in katello mode
-  Bundler.require(:foreman) if Katello.early_config.katello?
+    # require backend engines only if in katello mode
+    Bundler.require(:foreman) if Katello.early_config.katello?
+  end
 end
 
 module Src

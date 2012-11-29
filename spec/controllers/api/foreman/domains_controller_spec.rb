@@ -13,7 +13,11 @@
 require 'spec_helper'
 
 describe Api::Foreman::DomainsController do
-  include LoginHelperMethods
-  before { login_user_api }
-  it_behaves_like 'simple crud controller'
+  if AppConfig.use_foreman
+    include LoginHelperMethods
+    before { login_user_api }
+    it_behaves_like 'simple crud controller'
+  else
+    pending 'foreman is not enabled, skipping'
+  end
 end

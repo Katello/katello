@@ -29,7 +29,7 @@ gem 'ldap_fluff'
 # them to resolve dependencies (even when groups would be excluded from the list)
 if Katello.early_config.katello?
   group :foreman do
-    gem 'foreman_api', '>= 0.0.7'
+    gem 'foreman_api', '>= 0.0.8'
   end
 end
 
@@ -41,7 +41,7 @@ gem 'uuidtools'
 gem 'haml', '>= 3.1.2'
 gem 'haml-rails'
 gem 'compass', '>= 0.11.5', '< 0.12'
-gem 'compass-960-plugin', '>= 0.10.4'
+gem 'compass-960-plugin', '>= 0.10.4', :require=> 'ninesixty'
 gem 'simple-navigation', '>= 3.3.4'
 
 # Stuff for i18n
@@ -54,30 +54,20 @@ if system('rpm -q rubygem-ruport >/dev/null')
 else
   gem 'ruport' , '>=1.7.0', :git => 'git://github.com/ruport/ruport.git'
 end
+#not an actual katello dependency, but 
+#Does not pull in  hashery, matches RPM
+gem 'pdf-reader', '<= 1.1.1' 
+
 gem 'prawn'
-gem 'acts_as_reportable', '>=1.1.1'
+gem 'acts_as_reportable', '>=1.1.1', :require => 'ruport/acts_as_reportable'
 
 # Documentation
-gem "apipie-rails", '>= 0.0.12'
+gem "apipie-rails", '>= 0.0.13'
 
-# Use unicorn as the web server
-# gem 'unicorn'
-
-# @@@DEV_ONLY@@@
-# Everything bellow the line above will NOT be used in production.
-# Do not change the line contents, it's searched by sed during the build phase.
-
-# Bundle the extra gems:
-# gem 'bj'
-# gem 'nokogiri', '>=1.4.1'
-# gem 'aws-s3', :require => 'aws/s3'
-
-# Bundle gems for the local environment. Make sure to
-# put test-only gems in this group so their generators
-# and rake tasks are available in development mode:
-# group :development, :test do
-#   gem 'webrat'
-# end
+# In production mode we require only gems from :default group (without any
+# group) via bundler_ext. To require groups bellow, set BUNDLER_EXT_GROUPS
+# environment variable (in /etc/sysconfig/katello) and install development
+# dependencies with yum install katello-devel-all. Or use bundler.
 
 group :debugging do
   if RUBY_VERSION >= "1.9.2"
@@ -91,7 +81,7 @@ end
 
 group :test, :development do
   gem 'redcarpet'
-  gem 'ZenTest', '>= 4.4.0'
+  gem 'ZenTest', '>= 4.4.0', :require => "autotest"
   gem 'rspec-rails', '>= 2.0.0'
   gem 'autotest-rails', '>= 4.1.0'
 
@@ -101,8 +91,6 @@ group :test, :development do
   #needed for documentation
   gem 'yard', '>= 0.5.3'
 
-  #needed by hudson
-  gem 'ci_reporter', '>= 1.6.3'
   gem 'gettext', '>= 1.9.3', :require => false
   gem 'ruby_parser'
   gem 'sexp_processor' #dependency of ruby_parser
@@ -121,6 +109,11 @@ group :test, :development do
   end
 end
 
+group :ci do
+  #needed by hudson
+  gem 'ci_reporter', '>= 1.6.3'
+end
+
 group :profiling do
   #needed for profiling
   gem 'ruby-prof'
@@ -130,9 +123,11 @@ group :jshintrb do
   #needed for unit tests
   #
   #needed for syntax checking
-  gem 'libv8'
-  gem 'therubyracer', "~> 0.10.2"
-  gem 'jshintrb', '0.1.1'
+  gem 'therubyracer', ">= 0.11.0"
+    gem 'ref'
+  gem 'jshintrb', '0.2.1'
+    gem 'execjs'
+    gem 'multi_json', '>= 1.3'
 end
 
 group :development do

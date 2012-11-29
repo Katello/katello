@@ -43,7 +43,8 @@ class Api::Foreman::SimpleCrudController < Api::ApiController
   end
 
   def destroy
-    if foreman_model.delete!(params[:id])
+    resource = foreman_model.find!(params[:id])
+    if resource.destroy!
       render :nothing => true
     end
   end
