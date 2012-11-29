@@ -29,6 +29,8 @@ module Resources
     OperatingSystem = ForemanApi::Resources::OperatingSystem.new options
     User            = ForemanApi::Resources::User.new options
     Domain          = ForemanApi::Resources::Domain.new options
+    SmartProxy      = ForemanApi::Resources::SmartProxy.new options
+    Subnet          = ForemanApi::Resources::Subnet.new options
     ConfigTemplate  = ForemanApi::Resources::ConfigTemplate.new options
 
   end

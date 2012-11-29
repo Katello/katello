@@ -51,7 +51,8 @@ shared_examples_for "simple crud controller" do
   describe '#destroy' do
     let(:model) { controller.foreman_model.new }
     before do
-      controller.foreman_model.should_receive(:delete!).and_return true
+      model.stub :destroy! => true
+      controller.foreman_model.stub :find! => model
       get :destroy, :id => 1
     end
 

@@ -103,7 +103,7 @@
 
 
 
-//Div for dep. content 
+//Div for dep. content
 #dialog_content{:style => "word-wrap: break-word;", :title=>"#{_('Package Dependencies')}"}
 
 = help_tip_button
@@ -124,7 +124,7 @@
                 'a changeset, click the "Review" button to place the changeset in a ' + |
                 'locked state for review and when ready click the "Delete" button to ' + |
                 'apply it to the current environment.  Note: deletion of content from ' + |
-                'Library is not allowed using a deletion changeset.<BR/><BR/>')) |
+                '%s is not allowed using a deletion changeset.<BR/><BR/>') % "Library") |
 
 .grid_16
   = environment_selector(:url_proc=>breadcrumb_url_proc,  :accessible_envs=>accessible_envs)
@@ -205,7 +205,7 @@
 
 
     = render :partial=>"common/tupane"
-  
+
     #content_tree.left.sliding_tree
       - if show_new_button?(manage_promotion_changesets, manage_deletion_changesets)
         - next_env = @next_environment.nil? ? "" : "&next_env_id=" + @next_environment.id.to_s
