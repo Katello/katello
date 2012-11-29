@@ -19,6 +19,9 @@ module Glue::Pulp::Consumer
       before_save    :save_pulp_orchestration
       before_destroy :destroy_pulp_orchestration
       after_rollback :rollback_on_pulp_create, :on => :create
+  
+      add_system_group_hook     lambda { |system_group| system_group.add_consumer(self) }
+      remove_system_group_hook  lambda { |system_group| system_group.remove_consumer(self) }
 
       lazy_accessor :pulp_facts, :initializer => lambda {|s| Runcible::Extensions::Consumer.retrieve(uuid) }
       lazy_accessor :package_profile, :initializer => lambda {|s| Runcible::Extensions::Consumer.profile(uuid, 'rpm') }
