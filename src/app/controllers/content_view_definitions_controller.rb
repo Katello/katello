@@ -16,7 +16,7 @@ class ContentViewDefinitionsController < ApplicationController
 
   before_filter :require_user
   before_filter :find_content_view_definition, :only => [:show, :edit, :update, :destroy, :views, :content,
-                                                         :update_content, :filter]
+                                                         :update_content, :filter, :publish_setup, :publish]
   before_filter :authorize #after find_content_view_definition, since the definition is required for authorization
   before_filter :panel_options, :only => [:index, :items]
 
@@ -40,9 +40,13 @@ class ContentViewDefinitionsController < ApplicationController
       :edit => read_test,
       :update => manage_test,
 
+      :publish_setup => manage_test,
+      :publish => manage_test,
+
       :destroy => manage_test,
 
       :views => read_test,
+
       :content => read_test,
       :update_content => manage_test,
       :filter => read_test,
@@ -78,7 +82,8 @@ class ContentViewDefinitionsController < ApplicationController
     notify.success _("Content view definition '%s' was created.") % @view_definition['name']
 
     if search_validate(ContentViewDefinition, @view_definition.id, params[:search])
-      render :partial=>"common/list_item", :locals=>{:item=>@view_definition, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
+      render :partial=>"common/list_item", :locals=>{:item=>@view_definition, :initial_action=>:views, :accessor=>"id",
+                                                     :columns=>['name'], :name=>controller_display_name}
     else
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @view_definition["name"]
       render :json => { :no_match => true }
@@ -116,6 +121,24 @@ class ContentViewDefinitionsController < ApplicationController
     end
   end
 
+  def publish_setup
+    # retrieve the form to enable the user to request a publish
+    render :partial => "publish", :layout => "tupane_layout",
+           :locals => {:view_definition => @view_definition, :editable=>@view_definition.editable?,
+                       :name=>controller_display_name}
+  end
+
+  def publish
+    # perform the publish
+    view = @view_definition.publish(params[:content_view][:name], params[:content_view][:description],
+                                    params[:content_view][:label]) if params.has_key?(:content_view)
+
+    notify.success _("Successfully published content view '%{view_name}' from definition '%{definition_name}'.") %
+                       {:view_name => view.name, :definition_name => @view_definition.name}
+
+    render :nothing => true
+  end
+
   def views
     render :partial => "views", :layout => "tupane_layout",
            :locals => {:view_definition => @view_definition, :editable => @view_definition.editable?,
@@ -146,7 +169,7 @@ class ContentViewDefinitionsController < ApplicationController
     @view_definition.save!
 
     notify.success _("Successfully updated content for content view definition '%s'.") % @view_definition.name
-    render :text=>''
+    render :nothing => true
   end
 
   def filter
@@ -171,6 +194,7 @@ class ContentViewDefinitionsController < ApplicationController
       :ajax_load  => true,
       :ajax_scroll => items_content_view_definitions_path(),
       :enable_create => ContentViewDefinition.creatable?(current_organization),
+      :initial_action => :views,
       :search_class => ContentViewDefinition}
   end
 

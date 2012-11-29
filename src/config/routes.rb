@@ -73,6 +73,8 @@ Src::Application.routes.draw do
     end
     member do
       get :views
+      get :publish_setup
+      post :publish
       get :content
       post :update_content
       get :filter
