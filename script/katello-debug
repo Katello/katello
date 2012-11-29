@@ -87,6 +87,15 @@ PULP = [
 "/etc/qpidd.conf"
 ]
 
+FOREMAN = [
+"/var/log/foreman",
+"/etc/foreman/settings.yaml",
+"/etc/foreman/thin.yml",
+"/etc/foreman/email.yaml",
+"/etc/foreman/database.yml",
+"/etc/sysconfig/foreman"
+]
+
 # Exclude these files from the debug
 EXCLUDES = [
 "/etc/tomcat6/keystore",
@@ -110,6 +119,7 @@ sources += KATELLO_HEADPIN
 sources += ELASTIC_SEARCH
 sources += CANDLEPIN
 sources += PULP if deployment == 'katello'
+sources += FOREMAN if deployment == 'katello'
 sources += THUMBSLUG if deployment == 'headpin'
 
 
@@ -159,6 +169,7 @@ end
 if deployment == 'katello'
   output = `sed -i -e 's/^\\(default_password:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/pulp.conf')}`
   output = `sed -i -e 's/^\\(oauth_secret:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/pulp.conf')}`
+  output = `sed -i -e 's/^\\(.*password\\).*$/\\1: **********************/' #{File.join(target_dir, '/etc/foreman/database.yml')}`
 end
 output = `sed -i -e 's/^\\(.*secret\\).*$/\\1 = **********************/' #{File.join(target_dir, '/etc/candlepin/candlepin.conf')}`
 output = `sed -i -e 's/^\\(.*password\\).*$/\\1 = **********************/' #{File.join(target_dir, '/etc/candlepin/candlepin.conf')}`
