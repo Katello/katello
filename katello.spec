@@ -359,8 +359,8 @@ a2x -d manpage -f manpage man/katello-service.8.asciidoc
     mkdir -p doc/apidoc
 %else
     echo Generating API docs
-    rake apipie:static RAILS_ENV=apipie --trace
-    rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=apipie --trace
+    rake apipie:static RAILS_ENV=build --trace
+    rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=build --trace
 %endif
 
 %install
