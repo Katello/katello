@@ -32,10 +32,10 @@ module ProductsHelper
   # record has a 'repositories' relationship.
   def objectify record
     repos = {}
-    record.repositories.each { |repo|
+    record.repositories.each do |repo|
       repos[repo.product.id.to_s] = [] unless repos[repo.product.id.to_s]
       repos[repo.product.id.to_s] <<  repo.id.to_s
-    }
+    end
 
     {
         :id => record.id,
@@ -51,14 +51,14 @@ module ProductsHelper
       editable_products = Product.editable(current_organization)
       products.sort!{|a,b| a.name <=> b.name}
       @product_hash = {}
-      products.each{|prod|
+      products.each do |prod|
         repos = []
         prod.repos(current_organization.library).sort{|a,b| a.name <=> b.name}.each{|repo|
           repos << {:name=>repo.name, :id=>repo.id}
         }
         @product_hash[prod.id] = {:name=>prod.name, :repos=>repos, :id=>prod.id,
                                   :editable=>editable_products.include?(prod)}
-      }
+      end
     end
     @product_hash
   end
