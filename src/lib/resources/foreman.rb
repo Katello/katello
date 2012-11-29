@@ -25,14 +25,13 @@ module Resources
 
     Architecture    = ForemanApi::Resources::Architecture.new options
     Bookmark        = ForemanApi::Resources::Bookmark.new options
-    ConfigTemplate  = ForemanApi::Resources::ConfigTemplate.new options
-    Domain          = ForemanApi::Resources::Domain.new options
-    Environment     = ForemanApi::Resources::Environment.new options
     Home            = ForemanApi::Resources::Home.new options
     OperatingSystem = ForemanApi::Resources::OperatingSystem.new options
+    User            = ForemanApi::Resources::User.new options
+    Domain          = ForemanApi::Resources::Domain.new options
     SmartProxy      = ForemanApi::Resources::SmartProxy.new options
     Subnet          = ForemanApi::Resources::Subnet.new options
-    User            = ForemanApi::Resources::User.new options
+    ConfigTemplate  = ForemanApi::Resources::ConfigTemplate.new options
 
   end
 end
