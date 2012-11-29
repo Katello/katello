@@ -10,4 +10,23 @@
 
 = content_for :content do
 
-  .grid_10#view_definition
+  #content_view_definition_views
+    %table
+      %thead
+        %tr{:style => "background-color: #F5FAFA;"}
+          %td{:colspan => 3, :style => "vertical-align:middle; font-size:130%;"}
+            #{_("Publish new content view from this view definition")}
+          %td
+            %input.fr.button.subpanel_element{:type=>'button', :value=>_("Publish"), 'data-url' => publish_setup_content_view_definition_path(view_definition.id)}
+        %tr
+          %th #{_("Name")}
+          %th #{_("Version")}
+          %th{:colspan => 2} #{_("Published")}
+      %tbody.views
+        - view_definition.content_views.each do |view|
+          - view.versions.each do |view_version|
+            %tr
+              %td #{view.name}
+              %td #{view_version.version}
+              %td #{view_version.created_at}
+              %td
