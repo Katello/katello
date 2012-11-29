@@ -8,6 +8,7 @@ require './lib/util/boot_util'
 
 # When adding new version requirement check out EPEL6 repository first
 # and use this version if possible. Also check Fedora version (usually higher).
+# With a pull request, send also link to our (or Fedora) koji with RPMs.
 source 'http://rubygems.org'
 
 gem 'rails', '~> 3.0.10'
@@ -106,9 +107,19 @@ group :test, :development do
   end
 end
 
-group :ci do
-  #needed by hudson
-  gem 'ci_reporter', '~> 1.7.2'
+group :development do
+  # profiler
+  gem 'newrelic_rpm'
+  gem 'logical-insight'
+
+  # devboost just for dev mode
+  gem 'rails-dev-boost', :require => 'rails_development_boost'
+end
+
+group :test do
+  gem 'vcr'
+  gem 'webmock'
+  gem 'minitest'
 end
 
 group :profiling do
@@ -127,19 +138,9 @@ group :jshintrb do
     gem 'multi_json', '>= 1.3'
 end
 
-group :development do
-  # profiler
-  gem 'newrelic_rpm'
-  gem 'logical-insight'
+# the following groups are not packaged as RPMs and are used only in Bundler mode
+group :ci do
+  #needed by hudson
+  gem 'ci_reporter', '>= 1.6.3'
 end
 
-group :development do
-  # devboost just for dev mode
-  gem 'rails-dev-boost', :require => 'rails_development_boost'
-end
-
-group :test do
-  gem 'vcr'
-  gem 'webmock'
-  gem 'minitest'
-end
