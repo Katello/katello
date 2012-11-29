@@ -26,7 +26,7 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     @product               = Product.find(products(:fedora).id)
   end
 
-  def after_testsn
+  def after_tests
     ContentViewDefinition.delete_all
     ContentView.delete_all
     Organization.delete_all
