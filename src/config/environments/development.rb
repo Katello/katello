@@ -23,9 +23,4 @@ Src::Application.configure do
   config.colorize_logging = false
   Dir.mkdir "#{Rails.root}/log" unless File.directory? "#{Rails.root}/log"
   config.active_record.logger = Logger.new("#{Rails.root}/log/development_sql.log")
-
-  unless File.exist?(File.expand_path('../../../Gemfile.in', __FILE__))
-    # do not require additional things with bundler_ext
-    Bundler.require(:debugging, Rails.env)
-  end
 end

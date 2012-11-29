@@ -14,16 +14,24 @@ if File.exist?(File.expand_path('../../Gemfile.in', __FILE__))
   require 'aeolus/ext/bundler_ext'
   puts 'Using gem require instead of bundler'
   # TODO - remove all parameters once https://github.com/aeolus-incubator/bundler_ext/pull/3 is merged
-  Aeolus::Ext::BundlerExt.system_require(File.expand_path('../../Gemfile.in', __FILE__), :default, :foreman, Rails.env)
+  Aeolus::Ext::BundlerExt.system_require(File.expand_path('../../Gemfile.in', __FILE__), :all)
 else
   ENV['BUNDLE_GEMFILE'] = File.expand_path('../../Gemfile', __FILE__)
   puts 'Using bundler instead of gem require'
-  Bundler.require(:default, Rails.env) if defined?(Bundler)
   if defined?(Bundler)
-    Bundler.require(:default, Rails.env)
-
-    # require backend engines only if in katello/cfse mode
-    Bundler.require(:foreman) if Katello::BootUtil.katello?
+    basic_groups = [:default, (:foreman if Katello::BootUtil.katello?)]
+    Bundler.require *case Rails.env.to_sym
+                     when :production
+                       basic_groups
+                     when :build
+                       basic_groups + [:apipie]
+                     when :development
+                       basic_groups + [:development, :apipie, :development_boost]
+                     when :test
+                       basic_groups + [:development, :test, (:debugging if ENV['TRAVIS'] != 'true')]
+                     else
+                       raise "unknown environment #{Rails.env.to_sym}"
+                     end.compact
   end
 end
 
