@@ -59,6 +59,7 @@ gem "apipie-rails", '>= 0.0.12'
 
 # Pulp API bindings
 gem 'runcible', '>= 0.2.0'
+gem 'hooks'
 
 # In production mode we require only gems from :default group (without any
 # group) via bundler_ext. To require groups bellow, set BUNDLER_EXT_GROUPS

@@ -13,7 +13,6 @@
 require 'spec_helper'
 
 
-
 describe SystemGroup do
 
   include SystemHelperMethods
@@ -24,6 +23,7 @@ describe SystemGroup do
   before(:each) do
     disable_org_orchestration
     disable_consumer_group_orchestration
+
     @org = Organization.create!(:name=>'test_org', :label=> 'test_org')
 
     @group = SystemGroup.create!(:name=>"TestSystemGroup", :organization=>@org)
