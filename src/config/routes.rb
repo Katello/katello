@@ -71,6 +71,12 @@ Src::Application.routes.draw do
       get :default_label
       get :items
     end
+    member do
+      get :views
+      get :content
+      post :update_content
+      get :filter
+    end
   end
 
   resources :activation_keys do
