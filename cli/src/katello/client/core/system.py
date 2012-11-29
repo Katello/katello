@@ -477,9 +477,7 @@ class Unregister(SystemAction):
         env_name = self.get_option('environment')
         sys_uuid = self.get_option('uuid')
 
-        display_name = name
-        if not display_name:
-            display_name = sys_uuid
+        display_name = name or sys_uuid
 
         try:
             system = get_system(org, name, env_name, sys_uuid)
@@ -520,9 +518,7 @@ class Subscribe(SystemAction):
         qty = self.get_option('quantity') or 1
         sys_uuid = self.get_option('uuid')
 
-        display_name = name
-        if not display_name:
-            display_name = sys_uuid
+        display_name = name or sys_uuid
 
         system = get_system(org, name, sys_uuid = sys_uuid)
 
@@ -563,11 +559,9 @@ class Subscriptions(SystemAction):
         match_installed = self.get_option('match_installed')
         no_overlap = self.get_option('no_overlap')
         uuid = self.get_option('uuid')
-        display_name = name
 
-        # set display name based on query type
-        if not display_name:
-            display_name = uuid
+        display_name = name or uuid
+
         if not uuid:
             uuid = get_system(org, name)['uuid']
 
@@ -659,9 +653,8 @@ class Unsubscribe(SystemAction):
         all_entitlements = self.get_option('all')
         uuid = self.get_option('uuid')
 
-        display_name = name
-        if not display_name:
-            display_name = uuid
+        display_name = name or uuid
+
         if not uuid:
             uuid = get_system(org, name)['uuid']
 
