@@ -46,7 +46,7 @@ unless File.exists?(File.join(kt_home, "src", "Gemfile.lock"))
        when /Red Hat Enterprise Linux Server release 6/
          "rhel6"
        else
-         ""
+         RUBY_VERSION >= "1.9" ? "f17" : "f16"
        end
 
   os += "." unless os.length < 1 # Gemfile.XXX.lock
