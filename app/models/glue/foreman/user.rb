@@ -23,6 +23,16 @@ module Glue::Foreman::User
   end
 
   module ClassMethods
+    # @private
+    def disable_foreman_orchestration!(value)
+      raise ArgumentError unless [true, false].include? value
+      @foreman_orchestration_disabled = value
+    end
+
+    # @private
+    def foreman_orchestration_disabled?
+      !!@foreman_orchestration_disabled
+    end
   end
 
   module InstanceMethods
@@ -72,6 +82,31 @@ module Glue::Foreman::User
       self.foreman_user.destroy!
     end
 
+    # @private
+    def disable_foreman_orchestration(&block)
+      original = @disable_foreman_orchestration
+      disable_foreman_orchestration! true
+      block.call self
+    ensure
+      @disable_foreman_orchestration = original
+    end
+
+    # @private
+    # @param [true, false, nil] value when nil is supplied, self.class.foreman_orchestration_disabled? is used
+    def disable_foreman_orchestration!(value)
+      raise ArgumentError unless [true, false, nil].include? value
+      @foreman_orchestration_disabled = value
+    end
+
+    # @private
+    def foreman_orchestration_disabled?
+      if @foreman_orchestration_disabled.nil?
+        self.class.foreman_orchestration_disabled?
+      else
+        @foreman_orchestration_disabled
+      end
+    end
+
     private
 
     def foreman_consistency_check
@@ -84,7 +119,4 @@ module Glue::Foreman::User
     end
 
   end
-
-  include Glue::ForemanOrchestrationDisablement 
-  
 end
