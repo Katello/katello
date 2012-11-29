@@ -27,7 +27,7 @@ describe Permission do
         def os.list_verbs(global=false); verb_hash; end
       end
     }
-    
+
   end
 
 

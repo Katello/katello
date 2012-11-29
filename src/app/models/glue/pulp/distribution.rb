@@ -14,8 +14,8 @@ class Glue::Pulp::Distribution
   attr_accessor :id, :description, :files, :family, :variant, :version, :url, :arch
 
   def initialize(attrs = {})
-    
-    attrs.each_pair do |k,v| 
+
+    attrs.each_pair do |k,v|
       if Glue::Pulp::Distribution.method_defined? k and not v.nil?
         instance_variable_set("@#{k}", v) if Glue::Pulp::Distribution.method_defined? k
       end
@@ -25,5 +25,5 @@ class Glue::Pulp::Distribution
   def self.find id
     Glue::Pulp::Distribution.new(Resources::Pulp::Distribution.find(id))
   end
-  
+
 end

@@ -41,7 +41,7 @@ describe Glue::Pulp::Repo, :katello => true do
 
     @repo = Repository.create!(RepoTestData::REPO_PROPERTIES)
 
-    @rh_product =  Product.create!({:cp_id => "rh_product1_id", :label =>"rh_prod1", :name=> "rh_product1", :productContent => [], 
+    @rh_product =  Product.create!({:cp_id => "rh_product1_id", :label =>"rh_prod1", :name=> "rh_product1", :productContent => [],
                                     :provider => @organization.redhat_provider, :environments => [@organization.library]})
     ep2 = EnvironmentProduct.find_or_create(@organization.library, @rh_product)
     @rh_repo = Repository.create!(:name=>"red hat repo", :label=>"red_hat_repo", :environment_product=>ep2, :pulp_id=>"redhat_pulp_id", :uri=>"http://redhat.com/cdn/content")
@@ -244,15 +244,15 @@ describe Glue::Pulp::Repo, :katello => true do
           "scheduler" => "interval"
         }
       end
-    
+
       it "for a single running status" do
         @repo.sort_sync_status([@running]).should == [@running]
       end
-      
+
       it "for a single scheduled status" do
         @repo.sort_sync_status([@scheduled]).should == [@scheduled]
       end
-      
+
       it "for a single finished status" do
         @repo.sort_sync_status([@finished]).should == [@finished]
       end
@@ -260,11 +260,11 @@ describe Glue::Pulp::Repo, :katello => true do
       it "for a running status and complete status" do
         @repo.sort_sync_status([@finished, @running]).should == [@running, @finished]
       end
-      
+
       it "for a running status and a scheduled status" do
         @repo.sort_sync_status([@scheduled, @running]).should == [@running, @scheduled]
       end
-      
+
       it "for a finished status and a scheduled status" do
         @repo.sort_sync_status([@scheduled, @finished]).should == [@finished, @scheduled]
       end
@@ -272,7 +272,7 @@ describe Glue::Pulp::Repo, :katello => true do
       it "for two finished and a scheduled status" do
         @repo.sort_sync_status([@finished_2, @scheduled, @finished]).should == [@finished_2, @finished, @scheduled]
       end
-      
+
       it "for a finished, running and a scheduled status" do
         @repo.sort_sync_status([@scheduled, @running, @finished]).should == [@running, @finished, @scheduled]
       end

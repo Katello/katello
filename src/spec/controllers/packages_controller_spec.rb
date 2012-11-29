@@ -37,7 +37,7 @@ describe PackagesController do
       end
     end
 
-    describe "get validate name library" do 
+    describe "get validate name library" do
       before (:each) do
         Glue::Pulp::Package.should_receive(:search).once.and_return([{}])
       end
@@ -46,7 +46,7 @@ describe PackagesController do
         get :validate_name_library, :term => "a"
         response.should be_success
       end
-  
+
     end
 
-end 
+end

@@ -201,7 +201,7 @@ elephant-8.8-1.noarch
 
     context "Packages updated" do
       let(:result) do
-        {"updated" => 
+        {"updated" =>
          {"deps"=>
           [{"qname"=>"elephant-8.8-1.noarch",
             "repoid"=>"zoo-repo-updates",

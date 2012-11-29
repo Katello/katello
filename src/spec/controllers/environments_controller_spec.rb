@@ -21,13 +21,13 @@ describe EnvironmentsController do
   module EnvControllerTest
     ENV_NAME = "environment_name"
     NEW_ENV_NAME = "another_environment_name"
-    
+
     ENVIRONMENT = {:id => 2, :name => ENV_NAME, :description => nil, :prior => nil, :path => []}
     LIBRARY = {:id => 1, :name => 'Library', :description => nil, :prior => nil, :path => [],
                :display_name => 'Library'}
     UPDATED_ENVIRONMENT = {:id => 3, :name => NEW_ENV_NAME, :description => nil, :prior => nil, :path => []}
     EMPTY_ENVIRONMENT = {:name => "", :description => "", :prior => nil, :display_name => ''}
-    
+
     ORG_ID = 1
     ORGANIZATION = {:id => 1, :name => "organization_name", :description => "organization_description", :label=>"foo"}
   end

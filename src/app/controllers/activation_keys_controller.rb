@@ -156,8 +156,8 @@ class ActivationKeysController < ApplicationController
       @activation_key.save!
 
       notify.success _("Activation key '%s' was updated.") % @activation_key["name"]
-      render :partial =>'system_group_items', 
-             :locals=>{:system_groups=>@system_groups, 
+      render :partial =>'system_group_items',
+             :locals=>{:system_groups=>@system_groups,
              :editable=>ActivationKey.manageable?(current_organization)}
     end
   end
@@ -269,7 +269,7 @@ class ActivationKeysController < ApplicationController
   end
 
   def panel_options
-    @panel_options = { 
+    @panel_options = {
       :title => _('Activation Keys'),
       :col => ['name'],
       :titles => [_('Name')],

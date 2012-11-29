@@ -32,7 +32,7 @@ describe PromotionsController, :katello => true do
       controller.stub(:current_organization).and_return(@org)
       Glue::Pulp::Repos.stub!(:prepopulate!).and_return([])
       @env = @org.library
-      
+
     end
 
     it "should be successful with library and no next environment" do

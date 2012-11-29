@@ -119,7 +119,7 @@ class TaskStatus < ActiveRecord::Base
   end
 
   def finished?
-    ((self.state != TaskStatus::Status::WAITING.to_s) && (self.state != TaskStatus::Status::RUNNING.to_s)) 
+    ((self.state != TaskStatus::Status::WAITING.to_s) && (self.state != TaskStatus::Status::RUNNING.to_s))
   end
 
   def error?

@@ -59,7 +59,7 @@
         .block_head.clear
           - columns.each_index do |index|
             %div{:class => 'column_' + columns.length.to_s}
-              -if enable_sort 
+              -if enable_sort
                 = sort(columns[index], :as => titles[index])
               -else
                 = titles[index]

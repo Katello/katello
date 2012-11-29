@@ -25,14 +25,14 @@ describe Glue::Pulp::Errata, :katello => true do
     @repo2 = Repository.new(:pulp_id => "repo-456")
     @env = KTEnvironment.create!(:name=>"Dev", :label=> "Dev", :prior => @organization.library, :organization_id => @organization.id)
   end
-  
+
   context "Find errata" do
     it "should call pulp find errata api" do
-      
+
       Resources::Pulp::Errata.should_receive(:find).once.with('1')
       Glue::Pulp::Errata.find('1')
     end
-    
+
     it "should create new Errata" do
 
       Glue::Pulp::Errata.should_receive(:new)
@@ -71,7 +71,7 @@ describe Glue::Pulp::Errata, :katello => true do
       Glue::Pulp::Errata.filter(filter).should == RepoTestData::REPO_ERRATA
     end
   end
-  
+
 end
 
 

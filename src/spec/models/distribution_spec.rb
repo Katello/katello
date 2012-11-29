@@ -17,21 +17,21 @@ describe Glue::Pulp::Distribution do
   before (:each) do
     disable_distribution_orchestration
   end
-  
+
   context "Find distribution" do
     it "should call pulp find distribution api" do
-      
+
       Resources::Pulp::Distribution.should_receive(:find).once.with('1')
       Glue::Pulp::Distribution.find('1')
     end
-    
+
     it "should create new Distribution" do
 
       Glue::Pulp::Distribution.should_receive(:new)
       Glue::Pulp::Distribution.find('1')
     end
   end
-  
+
 end
 
 

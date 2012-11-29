@@ -30,7 +30,7 @@ end
 
 class PulpSyncStatus < PulpTaskStatus
   use_index_of TaskStatus
-  
+
   FINISHED = "finished"
   ERROR = "error"
   RUNNING = "running"
@@ -44,7 +44,7 @@ class PulpSyncStatus < PulpTaskStatus
   def progress
     PulpSyncProgress.new(attributes['progress'])
   end
-  
+
   def after_refresh
     correct_state
   end

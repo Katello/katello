@@ -74,7 +74,7 @@ class GpgKey < ActiveRecord::Base
   def self.createable? organization
     organization.gpg_keys_manageable?
   end
-  
+
   def self.any_readable? organization
     organization.readable? || organization.gpg_keys_manageable? || ::Provider.any_readable?(organization)
   end

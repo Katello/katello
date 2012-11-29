@@ -61,7 +61,7 @@ describe FiltersController, :katello => true do
         controller.stub(:render)
         get :items
         response.should be_success
-        
+
       end
     end
 
@@ -177,7 +177,7 @@ describe FiltersController, :katello => true do
         delete :destroy, :id=>@filter.id
         response.should be_success
       end
-      
+
       it "should not be successful with a valid filter" do
         controller.should notify.error
         delete :destroy, :id=>-12343
@@ -214,7 +214,7 @@ describe FiltersController, :katello => true do
         post :update_products, :id=>"-1", :products=>[@product.id]
         response.should_not be_success
       end
-      
+
     end
 
 
@@ -389,7 +389,7 @@ describe FiltersController, :katello => true do
 
   end
 
-  
+
 
 
 end

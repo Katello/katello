@@ -42,7 +42,7 @@ shared_examples_for "protected action" do
       req
       on_success if defined?(on_success)
 
-      
+
       response.should be_success
 
       if ENV['PERMISSION_COVERAGE'] and defined? authorized_user

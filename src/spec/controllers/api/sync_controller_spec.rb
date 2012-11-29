@@ -155,7 +155,7 @@ describe Api::SyncController, :katello => true do
     describe "start a sync" do
       before(:each) do
         #@organization = Organization.create!(:name=>"organization", :label=> "123")
-        
+
         Resources::Pulp::Repository.stub(:sync).with("1").and_return(async_task_1)
         Resources::Pulp::Repository.stub(:sync).with("2").and_return(async_task_2)
         #@syncable = mock()

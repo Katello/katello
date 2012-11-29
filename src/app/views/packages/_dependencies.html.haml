@@ -4,22 +4,22 @@
 = content_for :navigation do
   = render_menu(1..2, promotion_packages_navigation)
 
-= content_for :content do  
-  -#%h2 
+= content_for :content do
+  -#%h2
     -#= _("Dependencies")*/
-  
+
   .grid_3
     %h4
       = _("Requires")
-  
+
     - @package.requires.each do |item|
       .li
         = item
-      
+
   .grid_3
     %h4
       = _("Provides")
-  
+
     - @package.provides.each do |item|
       .li
         = item

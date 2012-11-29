@@ -61,7 +61,7 @@ class PromotionsController < ApplicationController
       :read_promotion_changesets => (@next_environment && @next_environment.changesets_readable?)? true : false,
       :read_contents => (@environment && @environment.contents_readable?)? true: false
     }
-    
+
     render :show, :locals=>@locals_hash
   end
 
@@ -73,7 +73,7 @@ class PromotionsController < ApplicationController
     product_id = params[:product_id]
     repos = Product.find(product_id).repos(@environment)
     repo_ids = repos.collect{ |repo| repo.pulp_id }
-    
+
     @promotable_packages = []
     @not_promotable = []
 
@@ -90,7 +90,7 @@ class PromotionsController < ApplicationController
         promotable = false
         repos.each{ |repo|
           if pack.repoids.include? repo.pulp_id
-            if repo.is_cloned_in? @next_environment 
+            if repo.is_cloned_in? @next_environment
               if pack.repoids.include? repo.clone_id(@next_environment)
                 promoted = promoted && true
               else
@@ -154,7 +154,7 @@ class PromotionsController < ApplicationController
       repo_ids = repos.collect{ |repo| repo.pulp_id }
       filters[:repoids] = repo_ids
     end
-    
+
     filters = filters.merge(params.slice(:type, :severity).symbolize_keys)
 
     search = params[:search]
@@ -176,7 +176,7 @@ class PromotionsController < ApplicationController
 
         repos.each{ |repo|
           if erratum.repoids.include? repo.pulp_id
-            if repo.is_cloned_in? @next_environment 
+            if repo.is_cloned_in? @next_environment
               if erratum.repoids.include? repo.clone_id(@next_environment)
                 promoted = promoted && true
               else
@@ -239,7 +239,7 @@ class PromotionsController < ApplicationController
 
     render :partial=>"distributions"
   end
-  
+
 
   def system_templates
     # render the list of system_templates
