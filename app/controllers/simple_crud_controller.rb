@@ -140,7 +140,7 @@ class SimpleCRUDController < ApplicationController
   end
 
   def resource_name
-    return self.class.name.underscore.gsub("_controller", "").singularize
+    return self.class.name.demodulize.underscore.gsub("_controller", "").singularize
   end
 
   private
