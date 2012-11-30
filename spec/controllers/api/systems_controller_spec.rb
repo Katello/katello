@@ -287,17 +287,15 @@ describe Api::SystemsController do
       it "should show all systems in the organization that are subscribed to a pool" do
         get :index, :organization_id => @organization.label, :pool_id => pool_id
         returned_uuids = JSON.parse(response.body).map{|sys| sys["uuid"]}
-        expected_uuids = [@system_1.uuid, @system_3.uuid]
 
-        returned_uuids.should == expected_uuids
+        returned_uuids.should include(@system_1.uuid, @system_3.uuid)
       end
 
       it "should show only systems in the environment that are subscribed to a pool" do
         get :index, :environment_id => @environment_2.id, :pool_id => pool_id
         returned_uuids = JSON.parse(response.body).map{|sys| sys["uuid"]}
-        expected_uuids = [@system_3.uuid]
 
-        returned_uuids.should == expected_uuids
+        returned_uuids.should include(@system_3.uuid)
       end
 
     end
