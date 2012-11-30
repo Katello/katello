@@ -138,16 +138,7 @@ if options['answer_file'] != nil
 		exit_with :answer_parsing_error
 	end
 
-	# The user answer file can only use (override) options that
-	# were already defined in the default answer file.
-	need_exit = false
-	$final_options.keys.each do |key|
-		if not $default_options.has_key?(key)
-			$stderr.puts "Unknown option [#{key}] in answer file [#{options['answer_file']}]"
-			need_exit = true
-		end
-	end
-	if need_exit
+  unless check_options_against_default($final_options, $default_options)
 		exit_with :answer_unknown_option
 	end
 end
