@@ -5,8 +5,10 @@ $browse_box-width: 230px;
 $browse_box-height: 500px;
 $browse_box_header-height: 40px;
 $browse_box-margin-top: 25px;
+$browse_box-margin-left: 15px;
+$browse_box-margin-right: 12px;
 
-$comparison_grid-width: 688px;
+$comparison_grid-width: $static_width - $browse_box-width - $browse_box-margin-left - $browse_box-margin-right - 24;
 $comparison_grid_header_h2-height:  45px;
 $comparison_grid_column_header-height:  35px;
 $comparison_grid_header-height: $comparison_grid_header_h2-height + $comparison_grid_column_header-height;
@@ -91,8 +93,8 @@ $grid_cell_hover_link-color:                lighten($primary_color, 40%);
   float: left;
   border: 1px solid $comparison_grid-border-color;
   margin-bottom: 50px;
-  margin-left: 15px;
-  margin-right: 12px;
+  margin-left: $browse_box-margin-left;
+  margin-right: $browse_box-margin-right;
   margin-top: $browse_box-margin-top;
   @include border-radius(3px);
   @include widget-background-color;
@@ -282,7 +284,7 @@ $grid_cell_hover_link-color:                lighten($primary_color, 40%);
         }
 
         &[data-arrow_direction='right'] { 
-          right: 21px;
+          right: 25px;
           border-left: 1px solid $widget-border-color;
           border-right: 1px solid $widget-border-color;
         }
@@ -312,7 +314,7 @@ $grid_cell_hover_link-color:                lighten($primary_color, 40%);
       #column_headers_window {
         position: relative;
         float: left;
-        width: 400px;
+        width: 600px;
         overflow: hidden;
       }
 

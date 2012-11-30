@@ -21,7 +21,7 @@ KT.comparison_grid = function(){
         num_columns_shown = 0,
         grid_row_headers_el,
         grid_content_el,
-        max_visible_columns = 5;
+        max_visible_columns = 6;
 
     var init = function(){
             events = KT.comparison_grid.events(this).init();
