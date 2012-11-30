@@ -419,7 +419,7 @@ Src::Application.routes.draw do
 
   resources :password_resets, :only => [:create, :edit, :update] do
     collection do
-      get :email_logins
+      post :email_logins
     end
   end
 

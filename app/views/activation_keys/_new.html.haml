@@ -2,7 +2,7 @@
   #{_("New Activation Key")}
 
 = content_for :content do
-  .grid_10#new_key
+  .full#new_key
     = kt_form_for ActivationKey.new do |form|
 
       = form.text_field :name, :label =>_("Name")

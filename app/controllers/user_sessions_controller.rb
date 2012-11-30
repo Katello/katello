@@ -31,7 +31,10 @@ class UserSessionsController < ApplicationController
       login_user
     else
       @disable_password_recovery = AppConfig.warden == 'ldap'
-      render "new"
+      respond_to do |f|
+        f.html { render "new" }
+        f.any { user_session_logout_path }
+      end
     end
   end
 
