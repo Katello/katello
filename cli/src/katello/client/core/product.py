@@ -25,7 +25,7 @@ from katello.client.api.repo import RepoAPI
 from katello.client.core.repo import format_sync_state, format_sync_time, ALLOWED_REPO_URL_SCHEMES
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.core.base import BaseAction, Command
-from katello.client.api.utils import get_environment, get_provider, get_product, get_sync_plan, get_filter
+from katello.client.api.utils import get_environment, get_provider, get_product, get_sync_plan
 from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, \
     AsyncTask, format_task_errors
 from katello.client.core.utils import ProgressBar
@@ -417,83 +417,6 @@ class Delete(SingleProductAction):
         msg = self.api.delete(orgName, product["id"])
         print msg
         return os.EX_OK
-
-
-class ListFilters(SingleProductAction):
-
-    description = _('list filters of a product')
-    select_by_env = False
-
-    def run(self):
-        orgName     = self.get_option('org')
-        prodName    = self.get_option('name')
-        prodLabel   = self.get_option('label')
-        prodId      = self.get_option('id')
-
-        prod = get_product(orgName, prodName, prodLabel, prodId)
-
-        filters = self.api.filters(orgName, prod['id'])
-        self.printer.add_column('name')
-        self.printer.add_column('description')
-        self.printer.set_header(_("Product Filters"))
-        self.printer.print_items(filters)
-
-
-        return os.EX_OK
-
-
-class AddRemoveFilter(SingleProductAction):
-
-    select_by_env = False
-    addition = True
-
-    @property
-    def description(self):
-        if self.addition:
-            return _('add a filter to a product')
-        else:
-            return _('remove a filter from a product')
-
-
-    def __init__(self, addition):
-        super(AddRemoveFilter, self).__init__()
-        self.addition = addition
-
-    def setup_parser(self, parser):
-        self.set_product_select_options(parser, False)
-        parser.add_option('--filter', dest='filter', help=_("filter name (required)"))
-
-    def check_options(self, validator):
-        self.check_product_select_options(validator)
-        validator.require('filter')
-
-    def run(self):
-        org_name     = self.get_option('org')
-        prod_name    = self.get_option('name')
-        prod_label   = self.get_option('label')
-        prod_id      = self.get_option('id')
-        filter_name  = self.get_option('filter')
-
-        prod = get_product(org_name, prod_name, prod_label, prod_id)
-        get_filter(org_name, filter_name)
-
-        filters = self.api.filters(org_name, prod['id'])
-        filters = [f['name'] for f in filters]
-        self.update_filters(org_name, prod, filters, filter_name)
-        return os.EX_OK
-
-    def update_filters(self, org_name, product, filters, filter_name):
-        if self.addition:
-            filters.append(filter_name)
-            message = _("Added filter [ %s ] to product [ %s ]") % (filter_name, product["name"])
-        else:
-            filters.remove(filter_name)
-            message = _("Removed filter [ %s ] from product [ %s ]") % (filter_name, product["name"])
-
-        self.api.update_filters(org_name, product['id'], filters)
-        print message
-
-
 
 # product command ------------------------------------------------------------
 
