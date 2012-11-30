@@ -76,7 +76,7 @@ class Ping
 
       # foreman - ping with oauth
       exception_watch(result[:status][:foreman_auth]) do
-        Resources::Foreman::Home.status
+        Resources::Foreman::Home.status({}, Resources::ForemanModel.header)
       end
 
       # katello jobs - TODO we should not spawn processes
