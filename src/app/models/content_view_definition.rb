@@ -50,9 +50,9 @@ class ContentViewDefinition < ActiveRecord::Base
   def generate_repos(view)
     repos = []
     tasks = []
-    self.products.each{|prod|
-      prod.repos(self.organization.library).enabled.each{|r| repos << r}
-    }
+    self.products.each do |prod|
+      prod.repos(organization.library).enabled.original.each { |r| repos << r }
+    end
     repos.concat(self.repositories)
     repos.uniq!
     repos.each do |repo|

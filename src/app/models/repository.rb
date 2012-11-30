@@ -52,6 +52,8 @@ class Repository < ActiveRecord::Base
 
   default_scope :order => 'name ASC'
   scope :enabled, where(:enabled => true)
+  scope :original, where(
+    :content_view_version_id => KTEnvironment.library.map{|l| l.default_view_version.id})
 
   def product
     self.environment_product.product
