@@ -467,6 +467,7 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %ghost %attr(600, katello, katello) %{_sysconfdir}/%{name}/secret_token
 %dir %{homedir}/app
 %{homedir}/app/controllers
+%exclude %{homedir}/app/controllers/foreman
 %exclude %{homedir}/app/controllers/api/foreman
 %{homedir}/app/helpers
 %{homedir}/app/mailers
@@ -563,6 +564,7 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %{homedir}/app/models/foreman
 %{homedir}/app/models/glue/foreman
 %{homedir}/app/controllers/api/foreman
+%{homedir}/app/controllers/foreman
 
 %files all
 
@@ -577,6 +579,7 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %exclude %{homedir}/app/models/glue/*
 %exclude %{homedir}/app/models/foreman
 %exclude %{homedir}/app/controllers/api/foreman
+%exclude %{homedir}/app/controllers/foreman
 %{homedir}/app/stylesheets
 %{homedir}/app/views
 %{homedir}/autotest
