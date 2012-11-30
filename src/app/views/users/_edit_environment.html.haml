@@ -25,7 +25,7 @@
       = label :user, :org, _("Organization:")
     .grid_7.la#org_name
       = @old_env ? @old_env.organization.name : _("No system registration default set for this user.")
-    .grid_2.ra
+    .grid_2.ra.clear
       = label :user, :env, _("Environment:")
     .grid_7.la#env_name
       = @old_env ? @old_env.name : _("No system registration default set for this user.")

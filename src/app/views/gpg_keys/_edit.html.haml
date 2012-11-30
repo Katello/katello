@@ -16,10 +16,10 @@
   %input#panel_element_id{:name => @gpg_key.id, :type => "hidden", :value => "#{name}_#{@gpg_key.id}", "data-ajax_url"=>gpg_key_path(@gpg_key.id)}
 
   %div
-    .grid_10
+    .full
       = help_tip(_("Edit GPG Key enables you to modify the selected GPG Key.  A new key can be copied and pasted in directly."), 'gpg_keys_edit-help') |
 
-    .grid_10
+    .full
       %fieldset
         .grid_1.ra
           %label #{_("Name")}:

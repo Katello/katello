@@ -41,12 +41,18 @@ class NoticesController < ApplicationController
   end
 
   def get_new
-    new_notices = current_user.pop_notices current_organization
+    if current_user
+      new_notices = current_user.pop_notices current_organization
 
-    respond_to do |format|
-      format.json { render :json => { :new_notices  => new_notices,
-                                      :unread_count => Notice.for_user(current_user).
-                                          for_org(current_organization).count } }
+      respond_to do |format|
+        format.json { render :json => { :new_notices  => new_notices,
+                                        :unread_count => Notice.for_user(current_user).
+                                            for_org(current_organization).count } }
+      end
+    else
+      respond_to do |format|
+        format.json { render :js => "window.location = '#{logout_path.to_json}'" }
+      end
     end
   end
 
