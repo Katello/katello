@@ -11,21 +11,21 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 #
 
-PREFIX = ENV['KATELLO_CONFIGURE_PREFIX'] || '/usr/share/katello/install/puppet'
+PREFIX = ENV['KATELLO_CONFIGURE_PREFIX'] || '/usr/share/katello/install'
 
 require 'optparse'
 require 'fcntl'
 require 'fileutils'
 require 'socket'
 require 'tempfile'
-require "#{PREFIX}/lib/util/functions.rb"
+require "#{PREFIX}/puppet/lib/util/functions.rb"
 
 $stdout.sync = true
 
-default_path = '/usr/share/katello/install/default-answer-file'
-options_format_path = '/usr/share/katello/install/options-format-file'
-result_config_path = '/etc/katello/katello-configure.conf'
-puppet_cmd = 'puppet apply --modulepath /usr/share/katello/install/puppet/modules --libdir /usr/share/katello/install/puppet/lib -v -d'
+default_path = "#{PREFIX}/default-answer-file"
+options_format_path = "#{PREFIX}/options-format-file"
+result_config_path = "/etc/katello/katello-configure.conf"
+puppet_cmd = "puppet apply --modulepath #{PREFIX}/puppet/modules --libdir #{PREFIX}/puppet/lib -v -d"
 log_parent_directory = '/var/log/katello'
 
 # main dictionaries
@@ -138,16 +138,7 @@ if options['answer_file'] != nil
 		exit_with :answer_parsing_error
 	end
 
-	# The user answer file can only use (override) options that
-	# were already defined in the default answer file.
-	need_exit = false
-	$final_options.keys.each do |key|
-		if not $default_options.has_key?(key)
-			$stderr.puts "Unknown option [#{key}] in answer file [#{options['answer_file']}]"
-			need_exit = true
-		end
-	end
-	if need_exit
+  unless check_options_against_default($final_options, $default_options)
 		exit_with :answer_unknown_option
 	end
 end
