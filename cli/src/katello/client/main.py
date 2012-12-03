@@ -282,6 +282,7 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         cv_cmd = content_view.ContentView()
         cv_cmd.add_command('list', content_view.List())
         cv_cmd.add_command('info', content_view.Info())
+        cv_cmd.add_command('promote', content_view.Promote())
         cvd_cmd = content_view_definition.ContentViewDefinition()
         cvd_cmd.add_command('list', content_view_definition.List())
         cvd_cmd.add_command('info', content_view_definition.Info())
