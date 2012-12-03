@@ -26,7 +26,7 @@ else
                      when :build
                        basic_groups + [:apipie]
                      when :development
-                       basic_groups + [:development, :apipie, :development_boost]
+                       basic_groups + [:development, :test, :apipie, :development_boost]
                      when :test
                        basic_groups + [:development, :test, (:debugging if ENV['TRAVIS'] != 'true')]
                      else
