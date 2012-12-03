@@ -38,7 +38,7 @@ gem 'simple-navigation', '>= 3.3.4'
 gem 'gettext_i18n_rails'
 gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 
-# Reports - TODO this is hack that needs to be removed once ruport is packaged
+# Reports - TODO this is hack that needs to be removed once ruport is officially released
 if system('rpm -q rubygem-ruport >/dev/null')
   gem 'ruport', '>=1.7.0'
 else
