@@ -46,12 +46,12 @@ class Api::ContentViewsController < Api::ApiController
   api :POST, "/content_views/:id/promote"
   param :id, :identifier, :desc => "content view id"
   param :environment_id, :identifier, :desc => "environment promoting to"
-  param :prior_id, :identifer, :desc => "previous environment",
-    :required => false
   def promote
-    @prior = params[:prior_id] ? KTEnvironment.find(params[:prior_id]) :
-      @environment.prior
-    @view.promote(@prior, @environment)
+    @cs = PromotionChangeset.new(:environment => @environment,
+                                 :state => Changeset::REVIEW,
+                                 :content_views => [@view]
+                                )
+    @cs.apply(:async => false)
     render :json => @view
   end
 
