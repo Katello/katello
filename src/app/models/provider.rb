@@ -22,12 +22,16 @@ class Provider < ActiveRecord::Base
   REDHAT = 'Red Hat'
   CUSTOM = 'Custom'
   TYPES = [REDHAT, CUSTOM]
+
+  serialize :discovered_repos, Array
+
   belongs_to :organization
   belongs_to :task_status
   has_many :products, :inverse_of => :provider
 
   validates :name, :presence => true, :katello_name_format => true
   validates :description, :katello_description_format => true
+
   validates_uniqueness_of :name, :scope => :organization_id
   validates_inclusion_of :provider_type,
     :in => TYPES,
@@ -160,6 +164,19 @@ class Provider < ActiveRecord::Base
     return task_status
   end
 
+  def discover_repos
+    raise _("Cannot discover repos for the Red Hat Provider") if self.redhat_provider?
+    raise _("Discovery URL not set.") if self.discovery_url.blank?
+    self.discovered_repos = []
+    self.save!
+    task = self.async(:organization=>self.organization).start_discovery_task
+  end
+
+  def discovery_url=(value)
+    self.discovered_repos = []
+    write_attribute(:discovery_url, value)
+  end
+
   protected
 
    def sanitize_repository_url
@@ -172,8 +189,19 @@ class Provider < ActiveRecord::Base
      end
    end
 
+  private
 
+  def start_discovery_task
+    provider_id = self.id
+    discover = RepoDiscovery.new(self.discovery_url)
+    discover.run do |url|
 
-
+          provider = ::Provider.find(provider_id)
+          provider.discovered_repos << url
+          provider.save!
+    end
+  ensure
+    ##in case of error
+  end
 end
 
