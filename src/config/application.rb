@@ -20,18 +20,19 @@ else
   puts 'Using bundler instead of gem require'
   if defined?(Bundler)
     basic_groups = [:default, (:foreman if Katello::BootUtil.katello?)]
-    Bundler.require *case Rails.env.to_sym
-                     when :production
-                       basic_groups
-                     when :build
-                       basic_groups + [:apipie]
-                     when :development
-                       basic_groups + [:development, :test, :apipie, :development_boost]
-                     when :test
-                       basic_groups + [:development, :test, (:debugging if ENV['TRAVIS'] != 'true')]
-                     else
-                       raise "unknown environment #{Rails.env.to_sym}"
-                     end.compact
+    groups = case Rails.env.to_sym
+             when :production
+               basic_groups
+             when :build
+               basic_groups + [:apipie]
+             when :development
+               basic_groups + [:development, :apipie, :development_boost]
+             when :test
+               basic_groups + [:development, :test, (:debugging if ENV['TRAVIS'] != 'true')]
+             else
+               raise "unknown environment #{Rails.env.to_sym}"
+             end.compact
+    Bundler.require *groups
   end
 end
 
