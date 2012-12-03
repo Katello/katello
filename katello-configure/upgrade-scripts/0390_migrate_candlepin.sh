@@ -13,7 +13,7 @@ CPDB_USER=$(katello-configure-answer candlepin_db_user)
 CPDB_PASS=$(katello-configure-answer candlepin_db_password)
 
 pushd $CANDLEPIN_HOME >/dev/null
-./cpdb --update 2>&1 --database=$CPDB_NAME --user=$CPDB_USER --password=$CPDB_PASS
+./cpdb --update 2>&1 --database="$CPDB_NAME" --user="$CPDB_USER" --password="$CPDB_PASS"
 ret_code=$?
 popd >/dev/null
 
