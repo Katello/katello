@@ -184,6 +184,7 @@ Katello connection classes for the Pulp backend
 BuildArch:      noarch
 Summary:         Katello connection classes for the Foreman backend
 Requires:        %{name}-common
+# bundler.d/foreman.rb
 Requires:       rubygem(foreman_api) >= 0.0.7
 
 %description glue-foreman
@@ -239,7 +240,9 @@ BuildArch:       noarch
 Requires:        %{name}-devel = %{version}-%{release}
 Requires:        %{name}-devel-profiling = %{version}-%{release}
 Requires:        %{name}-devel-test = %{version}-%{release}
-Requires:        %{name}-devel-jshintrb = %{version}-%{release}
+Requires:        %{name}-devel-checking = %{version}-%{release}
+Requires:        %{name}-devel-coverage = %{version}-%{release}
+Requires:        %{name}-devel-debugging = %{version}-%{release}
 
 %description devel-all
 Meta package to install all %{name}-devel-* subpackages.
@@ -248,31 +251,20 @@ Meta package to install all %{name}-devel-* subpackages.
 Summary:         Katello devel support
 BuildArch:       noarch
 Requires:        %{name} = %{version}-%{release}
-Requires:        rubygem(redcarpet)
-%if 0%{?fedora} > 16
-Requires:        rubygem(ruby-debug19)
-Requires:        rubygem(simplecov)
-%else
-Requires:        rubygem(ruby-debug)
-Requires:        rubygem(rcov) >= 0.9.9
-%endif
-Requires:        rubygem(ZenTest) >= 4.4.0
-Requires:        rubygem(rspec-rails) >= 2.0.0
-Requires:        rubygem(autotest-rails) >= 4.1.0
-Requires:        rubygem(webrat) >= 0.7.3
-Requires:        rubygem(nokogiri) >= 0.9.9
-Requires:        rubygem(yard) >= 0.5.3
+# Gemfile
 Requires:        rubygem(ci_reporter) >= 1.6.3
+# bundler.d/development.rb
+Requires:        rubygem(rspec-rails) >= 2.0.0
+Requires:        rubygem(parallel_tests)
+Requires:        rubygem(yard) >= 0.5.3
+Requires:        rubygem(js-routes)
 Requires:        rubygem(gettext) >= 1.9.3
 Requires:        rubygem(ruby_parser)
-Requires:        rubygem(js-routes)
-Requires:        rubygem(newrelic_rpm)
-Requires:        rubygem(logical-insight)
+Requires:        rubygem(sexp_processor)
+# bundler.d/development_boost.rb
 Requires:        rubygem(rails-dev-boost)
-Requires:        rubygem(parallel_tests)
-Requires:        rubygem(minitest)
-Requires:        rubygem(minitest-rails)
-Requires:        rubygem(minitest_tu_shim)
+# bundler.d/apipie.rb
+Requires:        rubygem(redcarpet)
 
 %description devel
 Rake tasks and dependecies for Katello developers
@@ -281,33 +273,78 @@ Rake tasks and dependecies for Katello developers
 Summary:         Katello devel support (profiling)
 BuildArch:       noarch
 Requires:        %{name} = %{version}-%{release}
+# bundler.d/profiling.rb
 Requires:        rubygem(ruby-prof)
+Requires:        rubygem(logical-insight)
+Requires:        rubygem(newrelic_rpm)
 
 %description devel-profiling
 Rake tasks and dependecies for Katello developers, which enables
 profiling.
 
-%package devel-jshintrb
+%package devel-checking
 Summary:         Katello devel support (unit test and syntax checking)
 BuildArch:       noarch
+Provides:        katello-devel-jshintrb = 1.2.1-1
+Obsoletes:       katello-devel-jshintrb < 1.2.1-1
 Requires:        %{name} = %{version}-%{release}
-Requires:        rubygem(newrelic_rpm)
-Requires:        rubygem(logical-insight)
+# bundler.d/checking.rb
 Requires:        rubygem(therubyracer)
+Requires:        rubygem(ref)
 Requires:        rubygem(jshintrb)
+Requires:        rubygem(execjs)
+Requires:        rubygem(multi_json)
 
-%description devel-jshintrb
+%description devel-checking
 Rake tasks and dependecies for Katello developers, which enables
 syntax checking and is need for unit testing.
+
+%package devel-coverage
+Summary:         Katello devel support (test coverage utils)
+BuildArch:       noarch
+Requires:        %{name} = %{version}-%{release}
+# bundler.d/coverage.rb
+%if 0%{?fedora} > 16
+Requires:        rubygem(simplecov)
+%else
+Requires:        rubygem(rcov) >= 0.9.9
+%endif
+
+%description devel-coverage
+Rake tasks and dependecies for Katello developers, which enables
+code coverage for tests.
+
+%package devel-debugging
+Summary:         Katello devel support (debugging)
+BuildArch:       noarch
+Requires:        %{name} = %{version}-%{release}
+# bundler.d/debugging.rb
+%if 0%{?fedora} > 16
+Requires:        rubygem(ruby-debug19)
+%else
+Requires:        rubygem(ruby-debug)
+%endif
+
+%description devel-debugging
+Rake tasks and dependecies for Katello developers, which enables
+debugging Ruby code.
 
 %package devel-test
 Summary:         Katello devel support (testing)
 BuildArch:       noarch
 Requires:        %{name} = %{version}-%{release}
 Requires:        %{name}-devel = %{version}-%{release}
+# bundler.d/test.rb
+Requires:        rubygem(ZenTest) >= 4.4.0
+Requires:        rubygem(autotest-rails) >= 4.1.0
+Requires:        rubygem(rspec-rails) >= 2.0.0
+Requires:        rubygem(webrat) >= 0.7.3
+Requires:        rubygem(nokogiri) >= 0.9.9
 Requires:        rubygem(vcr)
 Requires:        rubygem(webmock)
 Requires:        rubygem(minitest)
+Requires:        rubygem(minitest-rails)
+Requires:        rubygem(minitest_tu_shim)
 Requires:        rubygem(parallel_tests)
 
 %description devel-test
@@ -359,6 +396,9 @@ a2x -d manpage -f manpage man/katello-service.8.asciidoc
     mkdir -p doc/apidoc
 %else
     echo Generating API docs
+    # by default do not stop on missing dep and only require "build" environment
+    export BUNDLER_EXT_NOSTRICT=1
+    export BUNDLER_EXT_GROUPS="default apipie"
     rake apipie:static RAILS_ENV=build --trace
     rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=build --trace
 %endif
@@ -380,8 +420,7 @@ mkdir -p %{buildroot}/%{_mandir}/man8
 
 #copy the application to the target directory
 mkdir .bundle
-cp -R .bundle Gemfile.in Rakefile app autotest ca config config.ru db integration_spec lib locale public script spec vendor %{buildroot}%{homedir}
-rm -f {buildroot}%{homedir}/script/katello-reset-dbs
+cp -R .bundle Gemfile.in bundler.d Rakefile app autotest ca config config.ru db integration_spec lib locale public script spec vendor %{buildroot}%{homedir}
 
 #copy configs and other var files (will be all overwriten with symlinks)
 install -m 600 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
@@ -521,7 +560,7 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %doc README LICENSE
 %{_sbindir}/service-wait
 %dir %{_sysconfdir}/%{name}
-%config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
+%config(noreplace) %attr(600, katello, katello) %{_sysconfdir}/%{name}/%{name}.yml
 %config(noreplace) %{_sysconfdir}/%{name}/thin.yml
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config %{_sysconfdir}/%{name}/environment.rb
@@ -560,6 +599,7 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %{homedir}/lib/resources/candlepin.rb
 
 %files glue-foreman
+%{homedir}/bundler.d/foreman.rb
 %{homedir}/lib/resources/foreman.rb
 %{homedir}/lib/resources/foreman_model.rb
 %{homedir}/lib/resources/foreman_model.rb
@@ -574,6 +614,7 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %files headpin
 %attr(600, katello, katello)
 %{_bindir}/katello-*
+%{homedir}/bundler.d/apipie.rb
 %dir %{homedir}/app
 %{homedir}/app/controllers
 %{homedir}/app/helpers
@@ -625,19 +666,30 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %files devel-all
 
 %files devel
-%{homedir}/lib/tasks/rcov.rake
+%{homedir}/bundler.d/development.rb
+%{homedir}/bundler.d/development_boost.rb
 %{homedir}/lib/tasks/yard.rake
 %{homedir}/lib/tasks/hudson.rake
 %{homedir}/lib/tasks/jsroutes.rake
 
 %files devel-profiling
-
-%files devel-jshintrb
-%{homedir}/lib/tasks/jshint.rake
+%{homedir}/bundler.d/profiling.rb
 
 %files devel-test
+%{homedir}/bundler.d/test.rb
 %{homedir}/lib/tasks/test.rake
 %{homedir}/script/pulp_integration_tests
+
+%files devel-checking
+%{homedir}/bundler.d/checking.rb
+%{homedir}/lib/tasks/jshint.rake
+
+%files devel-coverage
+%{homedir}/bundler.d/coverage.rb
+%{homedir}/lib/tasks/rcov.rake
+
+%files devel-debugging
+%{homedir}/bundler.d/debugging.rb
 
 %pre common
 # Add the "katello" user and group
