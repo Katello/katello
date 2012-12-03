@@ -118,6 +118,7 @@ module ContentBreadcrumbs
    bc = {}
    content_crumb_id = "content"
    products_crumb_id = "products"
+   content_views_crumb_id = "content_views"
    templates_crumb_id = "templates"
 
    errata_crumb_id = "errata"
@@ -143,6 +144,9 @@ module ContentBreadcrumbs
    end
    add_crumb_node!(bc, products_crumb_id, products_promotion_path(@environment.name), _('Products'),
        [content_crumb_id], {:client_render => true}, product_info.merge({:total_size => @products.length}))
+
+   add_crumb_node!(bc, content_views_crumb_id, content_views_promotion_path(@environment.name), _("Content Views"),
+                  [content_crumb_id])
 
    add_crumb_node!(bc, templates_crumb_id, system_templates_promotion_path(@environment.name),
                             _("System Templates"), [content_crumb_id])
