@@ -197,6 +197,12 @@ class Changeset < ActiveRecord::Base
     view
   end
 
+  def remove_content_view!(view)
+    deleted = self.content_views.delete(view)
+    save!
+    return deleted
+  end
+
   def remove_product! product
     deleted = self.products.delete(product)
     save!
