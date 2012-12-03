@@ -6,7 +6,8 @@
 
     - content_view_versions.each do |view_version|
 
-      %li.no_slide.block
+      %li.no_slide.block{:id => view_version.id, 'data-ajax_url' => organization_environment_content_view_version_path(environment.organization, environment, view_version.id)}
+
         - view = view_version.content_view
         - promoted = next_env_view_version_ids.include?(view_version.id)
 
