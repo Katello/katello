@@ -20,6 +20,9 @@ class ContentViewVersion < ActiveRecord::Base
 
   has_many :repositories, :dependent => :destroy
 
+  scope :default_view, joins(:content_view).where('content_views.default = ?', true)
+  scope :non_default_view, joins(:content_view).where('content_views.default = ?', false)
+
   def repos(env)
     self.repositories.in_environment(env)
   end
