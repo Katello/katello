@@ -353,6 +353,7 @@ Src::Application.routes.draw do
       get :repos
       get :distributions
       get :details
+      get :content_views
     end
 
   end
