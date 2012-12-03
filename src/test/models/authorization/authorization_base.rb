@@ -13,18 +13,23 @@
 require 'minitest_helper'
 
 
-class RepositoryTestBase < MiniTest::Rails::ActiveSupport::TestCase
+class AuthorizationTestBase < MiniTest::Rails::ActiveSupport::TestCase
   extend ActiveRecord::TestFixtures
 
   fixtures :all
 
   def self.before_suite
     services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-    models    = ['Repository', 'Package']
+    models    = ['Repository', 'User', 'KTEnvironment', 'Organization', 'System', 'SystemGroup']
     disable_glue_layers(services, models)
   end
 
   def setup
+    AppConfig.warden = 'database'
+    @no_perms_user      = User.find(users(:no_perms_user))
+    @admin              = User.find(users(:admin))
+    @disabled_user      = User.find(users(:disabled_user))
+
     @fedora_17_x86_64     = Repository.find(repositories(:fedora_17_x86_64).id)
     @fedora_17_x86_64_dev = Repository.find(repositories(:fedora_17_x86_64_dev).id)
     @fedora               = Product.find(products(:fedora).id)
@@ -33,7 +38,8 @@ class RepositoryTestBase < MiniTest::Rails::ActiveSupport::TestCase
     @acme_corporation     = Organization.find(organizations(:acme_corporation).id)
     @unassigned_gpg_key   = GpgKey.find(gpg_keys(:unassigned_gpg_key).id)
     @fedora_filter        = Filter.find(filters(:fedora_filter).id)
-    @admin                = User.find(users(:admin))
+
+    @system             = System.find(systems(:simple_server))
   end
 
 end

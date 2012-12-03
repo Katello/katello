@@ -10,10 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'models/system_base'
+require './test/models/authorization/authorization_base'
 
-class SystemAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCase
-  include SystemTestBase
+
+class SystemAuthorizationAdminTest < AuthorizationTestBase
 
   def setup
     super
@@ -54,8 +54,7 @@ class SystemAuthorizationAdminTest < MiniTest::Rails::ActiveSupport::TestCase
 end
 
 
-class SystemAuthorizationNoPermsTest < MiniTest::Rails::ActiveSupport::TestCase
-  include SystemTestBase
+class SystemAuthorizationNoPermsTest < AuthorizationTestBase
 
   def setup
     super

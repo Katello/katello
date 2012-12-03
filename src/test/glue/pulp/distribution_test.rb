@@ -13,8 +13,7 @@
 require 'minitest_helper'
 require './test/support/repository_support'
 
-
-class GluePulpErrataTestBase < MiniTest::Rails::ActiveSupport::TestCase
+class GluePulpDistributionTestBase < MiniTest::Rails::ActiveSupport::TestCase
   extend  ActiveRecord::TestFixtures
   include RepositorySupport
 
@@ -25,14 +24,13 @@ class GluePulpErrataTestBase < MiniTest::Rails::ActiveSupport::TestCase
     configure_runcible
 
     services  = ['Candlepin', 'ElasticSearch', 'Foreman']
-    models    = ['Repository', 'Errata', 'Package']
+    models    = ['Repository', 'Distribution']
     disable_glue_layers(services, models)
-    
+
     User.current = User.find(@loaded_fixtures['users']['admin']['id'])
     RepositorySupport.create_and_sync_repo(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
 
-    VCR.insert_cassette('glue_pulp_errata', :match_requests_on => [:path, :params, :method, :body_json])
-    @@erratum_id = RepositorySupport.repo.errata.select{ |errata| errata.errata_id == 'RHEA-2010:0002' }.first.id
+    VCR.insert_cassette('glue_pulp_distribution', :match_requests_on => [:path, :params, :method, :body_json])
   end
 
   def self.after_suite
@@ -43,35 +41,13 @@ class GluePulpErrataTestBase < MiniTest::Rails::ActiveSupport::TestCase
 end
 
 
-class GluePulpErrataTest < GluePulpErrataTestBase
+class GluePulpDistributionTest < GluePulpDistributionTestBase
 
   def test_find
-    erratum = Errata.find(@@erratum_id)
+    distribution = Distribution.find("ks-Test Family-TestVariant-16-x86_64")
 
-    refute_nil      erratum
-    assert_kind_of  Errata, erratum
-  end
-
-  def test_errata_by_consumer
-    skip "Re-enable once the Runcible call is created"
-    errata = Errata.errata_by_consumer([RepositorySupport.repo_id])
-    
-    refute_empty errata
-  end
-
-  def test_included_packages
-    erratum   = Errata.find(@@erratum_id)
-    packages  = erratum.included_packages
-
-    refute_empty packages
-    refute_empty packages.select { |package| package.name == "elephant" }
-  end
-
-  def test_product_ids
-    erratum     = Errata.find(@@erratum_id)
-    product_ids = erratum.included_packages
-
-    refute_empty product_ids
+    refute_nil      distribution
+    assert_kind_of  Distribution, distribution
   end
 
 end

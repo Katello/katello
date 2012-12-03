@@ -13,8 +13,7 @@
 require './test/models/repository_base'
 require './test/models/authorization/repository_authorization_test'
 
-class RepositoryCreateTest < MiniTest::Rails::ActiveSupport::TestCase
-  include RepositoryTestBase
+class RepositoryCreateTest < RepositoryTestBase
 
   def setup
     super
@@ -34,8 +33,7 @@ class RepositoryCreateTest < MiniTest::Rails::ActiveSupport::TestCase
 end
 
 
-class RepositoryInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
-  include RepositoryTestBase
+class RepositoryInstanceTest < RepositoryTestBase
 
   def setup
     super

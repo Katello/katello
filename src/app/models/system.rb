@@ -19,14 +19,15 @@ class NonLibraryEnvironmentValidator < ActiveModel::EachValidator
 end
 
 class System < ActiveRecord::Base
+  include Hooks
+  define_hooks :add_system_group_hook, :remove_system_group_hook
+
   include Glue::Candlepin::Consumer if AppConfig.use_cp
   include Glue::Pulp::Consumer if AppConfig.use_pulp
-  include Glue::ElasticSearch::System
-  include Glue
+  include Glue::ElasticSearch::System if AppConfig.use_elasticsearch
+  include Glue if AppConfig.use_cp || AppConfig.use_pulp
   include Authorization::System
   include AsyncOrchestration
-
-  after_rollback :rollback_on_create, :on => :create
 
   acts_as_reportable
 
@@ -34,28 +35,35 @@ class System < ActiveRecord::Base
   belongs_to :system_template
 
   has_many :task_statuses, :as => :task_owner, :dependent => :destroy
-
   has_many :system_activation_keys, :dependent => :destroy
   has_many :activation_keys, :through => :system_activation_keys
-
   has_many :system_system_groups, :dependent => :destroy
-  has_many :system_groups, {:through => :system_system_groups, :before_add => :add_pulp_consumer_group, :before_remove => :remove_pulp_consumer_group}.merge(update_association_indexes)
-
+  has_many :system_groups, {:through      => :system_system_groups,
+                            :after_add    => :add_system_group, 
+                            :after_remove => :remove_system_group
+                           }
   has_many :custom_info, :as => :informable, :dependent => :destroy
 
   validates :environment, :presence => true, :non_library_environment => true
-  # multiple systems with a single name are supported
-  validates :name, :presence => true, :no_trailing_space => true
+  validates :name, :presence => true, :no_trailing_space => true # multiple systems with a single name are supported
   validates :description, :katello_description_format => true
   validates_length_of :location, :maximum => 255
   validates :sockets, :numericality => { :only_integer => true, :greater_than => 0 },
             :allow_nil => true, :if => ("validation_context == :create || validation_context == :update")
-  before_create  :fill_defaults
 
+  before_create  :fill_defaults
   after_create :init_default_custom_info_keys
 
   scope :by_env, lambda { |env| where('environment_id = ?', env) unless env.nil?}
   scope :completer_scope, lambda { |options| readable(options[:organization_id])}
+
+  def add_system_group(system_group)
+    run_hook(:add_system_group_hook, system_group)
+  end
+
+  def remove_system_group(system_group)
+    run_hook(:remove_system_group_hook, system_group)
+  end
 
   class << self
     def architectures
@@ -188,14 +196,6 @@ class System < ActiveRecord::Base
   end
 
   private
-    def add_pulp_consumer_group record
-      record.add_consumers([self.uuid])
-    end
-
-    def remove_pulp_consumer_group record
-      record.del_consumers([self.uuid])
-    end
-
     def save_task_status pulp_task, task_type, parameters_type, parameters
       TaskStatus.make(self, pulp_task, task_type, parameters_type => parameters)
     end
