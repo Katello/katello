@@ -10,6 +10,8 @@ require "rails/test_unit/railtie"
 # FIXME will be removed after https://github.com/Pajk/apipie-rails/pull/62
 require 'apipie-rails'
 
+path = File.expand_path("../lib", File.dirname(__FILE__))
+$LOAD_PATH << path unless $LOAD_PATH.include? path
 require 'katello_config'
 
 # If you have a Gemfile, require the gems listed there, including any gems

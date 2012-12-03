@@ -338,7 +338,9 @@ fi
 %if ! 0%{?fastbuild:1}
     #compile SASS files
     echo Compiling SASS files...
+    cp config/katello.template.yml config/katello.yml
     compass compile
+    rm config/katello.yml
 
     #generate Rails JS/CSS/... assets
     echo Generating Rails assets...
