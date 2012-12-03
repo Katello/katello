@@ -201,20 +201,10 @@ class SystemGroup < ActiveRecord::Base
     end
   end
 
-  def add_pulp_consumer_group record
-    debugger
-    self.add_consumers([record.uuid])
-  end
-
-  def remove_pulp_consumer_group record
-    self.del_consumers([record.uuid])
-  end
-
   def save_job pulp_job, job_type, parameters_type, parameters
     job = Job.create!(:pulp_id => pulp_job[:id], :job_owner => self)
     job.create_tasks(self, pulp_job[:tasks], job_type, parameters_type => parameters)
     job
   end
-
 
 end
