@@ -11,7 +11,7 @@ group :test do
 
   gem 'vcr'
     gem 'webmock'
-  gem 'minitest'
+  gem 'minitest', :require => "hoe/minitest"
 
   # make our specs go faster (also appears in development group)
   gem "parallel_tests"

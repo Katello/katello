@@ -69,5 +69,5 @@ end
 # The following groups are not packaged as RPMs and are used only in Bundler mode
 group :ci do
   # needed by hudson
-  gem 'ci_reporter', '>= 1.6.3'
+  gem 'ci_reporter', '~> 1.7.2', :require => 'ci/reporter/core'
 end
