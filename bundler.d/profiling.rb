@@ -1,5 +1,7 @@
 group :profiling do
-  gem 'ruby-prof'
+  unless defined? JRUBY_VERSION
+    gem 'ruby-prof'
+    gem 'logical-insight'
+  end
   gem 'newrelic_rpm'
-  gem 'logical-insight'
 end
