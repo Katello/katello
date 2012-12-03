@@ -12,16 +12,23 @@ require './lib/util/boot_util'
 source 'http://rubygems.org'
 
 gem 'rails', '~> 3.0.10'
-gem 'thin', '>= 1.2.8'
-gem 'tire', '>= 0.3.0', '< 0.4'
 gem 'json'
 gem 'rest-client', :require => 'rest_client'
 gem 'jammit', '>= 0.5.4'
-gem 'pg'
 gem 'rails_warden', '>= 0.5.2'
 gem 'net-ldap'
 gem 'oauth'
 gem 'ldap_fluff'
+
+if defined? JRUBY_VERSION
+  gem 'jruby-openssl'
+  gem 'activerecord-jdbcpostgresql-adapter', '1.1.3'
+  gem 'tire', '>= 0.3.0'
+else
+  gem 'thin', '>= 1.2.8'
+  gem 'tire', '>= 0.3.0', '< 0.4'
+  gem 'pg'
+end
 
 gem 'delayed_job', '~> 2.1.4'
 gem 'daemons', '>= 1.1.4'
