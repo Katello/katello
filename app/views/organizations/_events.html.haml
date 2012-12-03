@@ -19,7 +19,7 @@
           - entries.each do |entry|
             %tr{:class => cycle(nil, 'alt')}
               %td.column_1
-                = entry['timestamp']
+                = format_time(entry['timestamp'])
               %td
                 = entry['message']
         - else
