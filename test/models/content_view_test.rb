@@ -133,4 +133,12 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     refute_empty ContentView.non_default
     assert_empty ContentView.non_default.select{|v| v.default}
   end
+
+  def test_destroy_content_view_versions
+    content_view = @library_view
+    content_view_version = @library_view.versions.first
+    refute_nil content_view_version
+    assert content_view.destroy
+    assert_nil ContentViewVersion.find_by_id(content_view_version.id)
+  end
 end
