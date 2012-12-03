@@ -19,7 +19,7 @@ class ContentView < ActiveRecord::Base
   belongs_to :content_view_definition
   belongs_to :organization
 
-  has_many :content_view_versions
+  has_many :content_view_versions, :dependent => :destroy
   alias :versions :content_view_versions
 
   has_one :environment_default, :class_name => "KTEnvironment",
