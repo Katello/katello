@@ -173,6 +173,20 @@ def read_options_format(filename)
   return mandatory, regex, data_order, error, $titles, docs
 end
 
+# The user answer file can only use (override) options that
+# were already defined in the default answer file. This function
+# checks that and returns false when there is a problem.
+def check_options_against_default(final_options, default_options)
+	result = true 
+	final_options.keys.each do |key|
+		if not default_options.has_key?(key)
+			$stderr.puts "Unknown option [#{key}] in the answer file"
+			result = false
+		end
+	end
+  result
+end
+
 def _get_valid_option_value(option, defaults, finals)
   if finals.include?(option)
     return finals[option]
