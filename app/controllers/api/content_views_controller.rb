@@ -22,8 +22,7 @@ class Api::ContentViewsController < Api::ApiController
   param :organization_id, :identifier, :desc => "organization identifier"
   param :environment_id, :identifier, :desc => "environment identifier",
     :required => false
-  param :name, :identifier, :desc => "content view identifier",
-    :required => false
+  param :label, String, :desc => "content view label", :required => false
   def index
     if @environment
       ContentView.non_default.readable(@organization).
@@ -32,8 +31,8 @@ class Api::ContentViewsController < Api::ApiController
     else
       @content_views = ContentView.non_default.readable(@organization)
     end
-    if params[:name].present?
-      @content_views = @content_views.select {|cv| cv.name == params[:name]}
+    if params[:label].present?
+      @content_views = @content_views.select {|cv| cv.label == params[:label]}
     end
     render :json => @content_views
   end
