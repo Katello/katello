@@ -10,7 +10,7 @@ Apipie.configure do |config|
   config.use_cache = Rails.env.production?
   config.validate = false
 
-  unless config.use_cache?
+  unless config.use_cache? or defined? JRUBY_VERSION
     config.markup = Apipie::Markup::Markdown.new
   end
 end
