@@ -22,11 +22,14 @@ class PromotionsController < ApplicationController
       to_ret
     }
 
+    content_view_test = lambda{ContentView.any_readable?(@environment.organization)}
+
     prod_test = lambda{
         @environment && @environment.contents_readable? && @product.nil? ? true : @product.provider.readable? }
 
     {
       :show => show_test,
+      :content_views => content_view_test,
       :system_templates => lambda{true},
       :packages => prod_test,
       :repos => prod_test,
@@ -241,7 +244,16 @@ class PromotionsController < ApplicationController
 
     render :partial=>"distributions"
   end
-  
+
+  def content_views
+    # render the list of content views
+    view_versions = @environment.content_view_versions.non_default_view || []
+    next_env_view_version_ids = @next_environment.nil? ? [].to_set :
+                                @next_environment.content_view_versions.non_default_view.pluck(:id).to_set
+
+    render :partial=>"content_views", :locals => {:content_view_versions => view_versions,
+                                                  :next_env_view_version_ids => next_env_view_version_ids}
+  end
 
   def system_templates
     # render the list of system_templates
