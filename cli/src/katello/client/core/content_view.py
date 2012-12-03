@@ -105,8 +105,6 @@ class Promote(ContentViewAction):
         parser.add_option('--label', dest='label',
                 help=_("content view label eg: foo.example.com (required)"))
         opt_parser_add_environment(parser, True)
-        parser.add_option('--prior', dest='prior',
-                help=_("prior environment name e.g.: staging"))
 
     def check_options(self, validator):
         validator.require(('org', 'label', 'environment'))
@@ -115,20 +113,13 @@ class Promote(ContentViewAction):
         org_name = self.get_option('org')
         view_label = self.get_option('label')
         env_name = self.get_option('environment')
-        prior_name = self.get_option('prior')
 
         view = get_content_view(org_name, view_label)
 
         environment = get_environment(org_name, env_name)
         env_id = environment["id"]
 
-        if prior_name:
-            prior = get_environment(org_name, prior_name)
-            prior_id = prior["id"]
-        else:
-            prior_id = None
-
-        self.api.promote(view["id"], env_id, prior_id)
+        self.api.promote(view["id"], env_id)
         print _("Successfully promoted [ %s ] to environment [ %s ]") % \
             (view["name"], environment["name"])
         return os.EX_OK
