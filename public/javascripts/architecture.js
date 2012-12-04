@@ -19,14 +19,14 @@ KT.architecture_page = (function() {
     var updateArchitecture = function() {
         var button = $(this),
             url = button.attr("data-url"),
-            dnsId = $('#dns_id').val(),
+            osIds = $('#operatingsystem_ids').val(),
             architecture_data = {};
 
         if (button.hasClass("disabled"))
             return;
 
-        if (dnsId != null)
-            architecture_data["dns_id"] = dnsId;
+        if (osIds != null)
+            architecture_data["operatingsystem_ids"] = osIds;
 
         $.ajax({
             type: "PUT",
@@ -36,6 +36,7 @@ KT.architecture_page = (function() {
         });
     },
     register = function() {
+        $('#operatingsystem_ids').chosen();
         $('#update_architecture').live('click', updateArchitecture);
     };
 
