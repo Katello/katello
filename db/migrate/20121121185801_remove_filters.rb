@@ -25,4 +25,3 @@ class RemoveFilters < ActiveRecord::Migration
     #permanent action cannot be rolled back
   end
 end
-db/migrate/20120814142911_repository_add_content_id.rb   
