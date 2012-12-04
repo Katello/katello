@@ -31,6 +31,14 @@ class ContentViewVersion < ActiveRecord::Base
     self.repositories.in_environment(env)
   end
 
+  def repos_ordered_by_product(env)
+    # The repository model has a default scope that orders repositories by name;
+    # however, for content views, it is desirable to order the repositories
+    # based on the name of the product the repository is part of.
+    Repository.send(:with_exclusive_scope) {self.repositories.joins(:environment_product => :product).
+        in_environment(env).order('products.name asc')}
+  end
+
   def self.in_environment(env)
     joins(:content_view_version_environments).where('content_view_version_environments.environment_id'=>env.id)
   end

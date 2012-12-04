@@ -1920,6 +1920,14 @@ $(document).ready(function() {
               $('#save_changeset_button').trigger('click');
           });
         }
+        if ($("#content_view_content").length > 0) {
+            $("#content_view_content").treeTable({
+                expandable: true,
+                initialState: "collapsed",
+                clickableNodeNames: true,
+                onNodeShow: function(){$.sparkline_display_visible()}
+            });
+        }
     });
 
     //set function for env selection callback

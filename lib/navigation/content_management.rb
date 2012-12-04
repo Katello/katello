@@ -19,6 +19,7 @@ module Navigation
         helper_method :promotion_packages_navigation
         helper_method :promotion_errata_navigation
         helper_method :promotion_distribution_navigation
+        helper_method :promotion_content_view_navigation
         helper_method :package_filter_navigation
         helper_method :gpg_keys_navigation
         helper_method :subscriptions_navigation
@@ -308,6 +309,23 @@ module Navigation
           :if => lambda{@distribution},
           :options => {:class=>"panel_link"}
         }
+      ]
+    end
+
+    def promotion_content_view_navigation
+      [
+          { :key => :promotion_content_view_content,
+            :name =>_("Content"),
+            :url => lambda{content_organization_environment_content_view_version_path(@view_version.id)},
+            :if => lambda{@view_version},
+            :options => {:class=>"panel_link"}
+          },
+          { :key => :promotion_content_view_details,
+            :name =>_("Details"),
+            :url => lambda{organization_environment_content_view_version_path(@view_version.id)},
+            :if => lambda{@view_version},
+            :options => {:class=>"panel_link"}
+          }
       ]
     end
 
