@@ -17,6 +17,27 @@
 
 require 'fileutils'
 
+# error codes for exit_with function
+ERROR_CODES = {
+  :success => 0,
+  :general => 1,
+  :default_option_error => 2,
+  :answer_missing => 3,
+  :answer_parsing_error => 4,
+  :answer_unknown_option => 5,
+  :error_executing_puppet => 6,
+  :hostname_error => 7,
+  :not_root => 8,
+  :java_error => 9,
+  :unknown => 127,
+}
+
+# Terminate script with error code from ERROR_CODES hash
+def exit_with(code = :unknown)
+  code = ERROR_CODES[code.to_sym] || ERROR_CODES[:unknown]
+  exit code
+end
+
 def command_exists?(command)
   ENV['PATH'].split(':').each {|folder| File.executable?("#{folder}/#{command}")}
 end
@@ -55,4 +76,188 @@ end
 
 def print_horizontal_line
   print '-' * COLUMNS; print "\n"
+end
+
+# Reading answer file, used both for the default answer file
+# and for user files. The structure of the answer file is
+#
+# # The short description of the option.
+# # Multiline synopsis of the option
+# # with more details.
+# option_name = option_value
+#
+def read_answer_file(filename)
+  file = File.new(filename, "r")
+  error = ''
+  data = {}
+  data_order = []
+  $titles = {}
+  docs = {}
+  title = ''
+  synopsis = ''
+  while (line = file.gets)
+    if line =~ /^\s*#/
+      if title == ''
+        title = line.gsub(/^\s*#\s*/, '').chop
+      else
+        synopsis.concat(line.gsub(/^\s*#\s*/, ''))
+      end
+      next
+    end
+    line = line.gsub(/\s+$/, '')
+    if not line =~ /\S+/
+      title = ''
+      synopsis = ''
+      next
+    end
+    if line =~ /^\s*(\w+)\s*=\s*(.*)/
+      data[$1] = $2
+      docs[$1] = synopsis
+      data_order.push $1
+      $titles[$1] = title.gsub(/\.\s*$/, '')
+    else
+      error.concat "Unsupported config line format [#{line}] in file [#{filename}]\n"
+    end
+    title = ''
+    synopsis = ''
+  end
+  file.close
+  return data, data_order, error, $titles, docs
+end
+
+# Reading options format file, that describe what options are required
+# and the allow optin values format described by regular expressions
+# The structure of the answer file is
+#
+# # The short description of the option.
+# option_name is_option_mandatory regular_expression
+#
+def read_options_format(filename)
+  file = File.new(filename, "r")
+  error = ''
+  mandatory = {}
+  regex = {}
+  data_order = []
+  $titles = {}
+  docs = {}
+  title = ''
+  synopsis = ''
+  while (line = file.gets)
+    if line =~ /^\s*#/
+      if title == ''
+        title = line.gsub(/^\s*#\s*/, '').chop
+      else
+        synopsis.concat(line.gsub(/^\s*#\s*/, ''))
+      end
+      next
+    end
+    line = line.gsub(/\s+$/, '')
+    if not line =~ /\S+/
+      title = ''
+      synopsis = ''
+      next
+    end
+    if line =~ /^\s*(\S+)\s+(true|false)\s+(\S*)$/
+      mandatory[$1] = 'true' == $2
+      regex[$1] = $3
+      docs[$1] = synopsis
+      data_order.push $1
+      $titles[$1] = title.gsub(/\.\s*$/, '')
+    else
+      error.concat "Unsupported config line format [#{line}] in file [#{filename}]\n"
+    end
+    title = ''
+    synopsis = ''
+  end
+  file.close
+  return mandatory, regex, data_order, error, $titles, docs
+end
+
+# The user answer file can only use (override) options that
+# were already defined in the default answer file. This function
+# checks that and returns false when there is a problem.
+def check_options_against_default(final_options, default_options)
+	result = true 
+	final_options.keys.each do |key|
+		if not default_options.has_key?(key)
+			$stderr.puts "Unknown option [#{key}] in the answer file"
+			result = false
+		end
+	end
+  result
+end
+
+def _get_valid_option_value(option, defaults, finals)
+  if finals.include?(option)
+    return finals[option]
+  end
+  return defaults[option]
+end
+
+def _is_option_true(option_value)
+  if option_value.nil?
+    return false
+  end
+  return (option_value.match(/(true|yes|y|1)$/i) != nil)
+end
+
+def _read_password()
+  stty_orig_val = %x( stty -g )
+  system("stty -echo")
+  input = STDIN.gets
+  system("stty #{stty_orig_val}")
+  puts
+  return input
+end
+
+def _request_option_interactively(title, regex, default_value, non_interactive_value)
+  default_value_ok = default_value.to_s() =~ Regexp.new(regex)
+  if non_interactive_value
+    if default_value.nil? or not default_value_ok
+      $stderr.puts "Option: [#{title}] not correctly specified."
+      exit 7
+    else
+      return default_value
+    end
+  end
+
+  read_password = title.include?("password")
+  while true
+    if read_password
+      while true
+        print "Enter #{title}: "
+        input = _read_password()
+        print "Verify #{title}: "
+        input2 = _read_password()
+        if (input == input2)
+          break
+        end
+        puts "Passwords do not match. Please, try again."
+      end
+    else
+      default_draft = " [ #{default_value} ]" if default_value_ok
+      print "Enter #{title}#{default_draft}: "
+      input = STDIN.gets.strip
+      if input.empty? and default_value_ok
+        input = default_value
+      end
+    end
+    if input.to_s() =~ Regexp.new(regex)
+      return input
+    end
+    puts "Your entry has to match regular expression: /#{regex}/"
+  end
+end
+
+# Prints a warning if FQDN is not set, returns error when
+# localhost or hostname cannot be resolved (/etc/hosts entry is missing).
+def check_hostname
+  hostname = Socket.gethostname
+  Socket.gethostbyname hostname
+  Socket.gethostbyname 'localhost'
+  $stderr.puts "WARNING: FQDN is not set!" unless hostname.index '.'
+rescue SocketError => e
+  puts "Error"
+  $stderr.puts "Unable to resolve '#{hostname}' or 'localhost'. Check your DNS and /etc/hosts settings."
+  exit_with :hostname_error
 end

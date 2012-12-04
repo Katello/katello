@@ -665,7 +665,7 @@ class SystemsController < ApplicationController
       :list_partial => 'systems/list_systems',
       :ajax_load  => true,
       :ajax_scroll => items_systems_path(),
-      :actions => Katello.config.katello? ? (System.any_deletable?(@environment, current_organization) ? 'actions' : nil) : nil,
+      :actions => System.any_deletable?(@environment, current_organization) ? 'actions' : nil,
       :initial_action => :subscriptions,
       :search_class=>System,
       :disable_create=> current_organization.environments.length == 0 ? _("At least one environment is required to create or register systems in your current organization.") : false
