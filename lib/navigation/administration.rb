@@ -25,13 +25,13 @@ module Navigation
           :if => lambda {@user},
           :options => {:class=>"panel_link"}
         },
-        { :key => :roles,
+        { :key => :user_roles,
           :name =>_("Roles"),
           :url => lambda{edit_role_path(@user.own_role_id)},
           :if => lambda{@user},
           :options => {:class=>"panel_link"}
         },
-        { :key => :details,
+        { :key => :user_details,
           :name =>_("Details"),
           :url => lambda{edit_user_path(@user.id)},
           :if => lambda{@user},

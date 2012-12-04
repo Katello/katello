@@ -472,6 +472,7 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %dir %{homedir}/app
 %{homedir}/app/controllers
 %exclude %{homedir}/app/controllers/api/foreman
+%exclude %{homedir}/app/controllers/foreman
 %{homedir}/app/helpers
 %{homedir}/app/mailers
 %dir %{homedir}/app/models
@@ -479,6 +480,7 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %{homedir}/app/models/candlepin
 %{homedir}/app/stylesheets
 %{homedir}/app/views
+%exclude %{homedir}/app/views/foreman
 %{homedir}/autotest
 %{homedir}/ca
 %{homedir}/config
@@ -567,6 +569,8 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %{homedir}/app/models/foreman
 %{homedir}/app/models/glue/foreman
 %{homedir}/app/controllers/api/foreman
+%{homedir}/app/controllers/foreman
+%{homedir}/app/views/foreman
 
 %files all
 
@@ -581,6 +585,8 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %exclude %{homedir}/app/models/glue/*
 %exclude %{homedir}/app/models/foreman
 %exclude %{homedir}/app/controllers/api/foreman
+%exclude %{homedir}/app/controllers/foreman
+%exclude %{homedir}/app/views/foreman
 %{homedir}/app/stylesheets
 %{homedir}/app/views
 %{homedir}/autotest
