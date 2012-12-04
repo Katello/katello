@@ -207,6 +207,7 @@ $(document).ready(function () {
     //register the default actions for the page's actions partial
     KT.panel.actions.registerDefaultActions();
 
+    $('#list-title h2').tipsy();
 
 });
 
