@@ -7,5 +7,7 @@
     = kt_form_for ::Foreman::Architecture.new, :as=>"architecture", :url=>architectures_path, :html=>{ :id=>"new_architecture" } do |form|
 
       = form.text_field :name, :label => _("Name:")
+      = form.field :operatingsystem_ids, :label => _("Operating systems:") do
+        = os_select "architecture", "operatingsystem_ids"
       = form.submit _("Save Architecture"), :id => :save_architecture
 
