@@ -2,6 +2,22 @@ Src::Application.routes.draw do
 
   apipie
 
+  if AppConfig.use_foreman
+    scope :module => 'foreman' do
+      resources :subnets do
+        collection do
+          get :items
+        end
+      end
+
+      resources :domains do
+        collection do
+          get :items
+        end
+      end
+    end
+  end
+
   resources :system_groups do
     collection do
       get :items
@@ -294,7 +310,7 @@ Src::Application.routes.draw do
     end
     member do
       get :products_repos
-      get :import_progress
+      get :manifest_progress
       get :schedule
     end
   end
@@ -719,6 +735,7 @@ Src::Application.routes.draw do
     if AppConfig.use_foreman
       scope :module => 'foreman' do
         resources :architectures, :except => [:new, :edit]
+        resources :subnets, :except => [:new, :edit]
         constraints(:id => /[^\/]+/) do
           resources :domains, :except => [:new, :edit]
         end

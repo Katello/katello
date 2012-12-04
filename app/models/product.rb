@@ -13,7 +13,7 @@ require "util/model_util"
 
 class LibraryPresenceValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    record.errors[attribute] << N_("must contain 'Library'") if value.select {|e| e.library}.empty?
+    record.errors[attribute] << N_("must contain '%s'") % "Library" if value.select {|e| e.library}.empty?
   end
 end
 
@@ -70,6 +70,7 @@ class Product < ActiveRecord::Base
 
   scope :engineering, where(:type => "Product")
 
+  before_save :assign_unique_label
   after_save :update_related_index
 
   def extended_index_attrs
@@ -77,7 +78,6 @@ class Product < ActiveRecord::Base
     :organization_id => organization.id
     }
   end
-
 
   def initialize(attrs = nil)
 
@@ -176,6 +176,8 @@ class Product < ActiveRecord::Base
 
   end
 
+  scope :all_in_org, lambda{|org| ::Product.joins(:provider).where('providers.organization_id = ?', org.id)}
+
   #Permissions
   scope :all_readable, lambda {|org| ::Provider.readable(org).joins(:provider)}
   scope :readable, lambda{|org| all_readable(org).with_enabled_repos_only(org.library)}
@@ -197,6 +199,15 @@ class Product < ActiveRecord::Base
 
   def editable?
     Product.all_editable(self.organization).where(:id => id).count > 0
+  end
+
+  def assign_unique_label
+    self.label = Katello::ModelUtils::labelize(self.name) if self.label.blank?
+
+    # if the object label is already being used in this org, append the id to make it unique
+    if Product.all_in_org(self.organization).where('products.label = ?', self.label).count > 0
+      self.label.concat("_" + self.cp_id) unless self.cp_id.blank?
+    end
   end
 
   def update_related_index

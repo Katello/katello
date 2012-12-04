@@ -77,7 +77,7 @@ describe Product, :katello => true do
               :name => ProductTestData::PRODUCT_WITH_ATTRS[:name]
           }
 
-          Resources::Candlepin::Product.should_receive(:create).once.with(hash_including(expected_product)).and_return({:id => 1})
+          Resources::Candlepin::Product.should_receive(:create).once.with(hash_including(expected_product)).and_return({:id => '1'})
           product = Product.create!(ProductTestData::PRODUCT_WITH_ATTRS)
           product.organization.should_not be_nil
         end

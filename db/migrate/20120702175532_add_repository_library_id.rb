@@ -1,3 +1,5 @@
+require 'util/model_util'
+
 class AddRepositoryLibraryId < ActiveRecord::Migration
   def self.up
       change_table :repositories do |t|
@@ -17,17 +19,31 @@ class AddRepositoryLibraryId < ActiveRecord::Migration
       end
   end
 
-  def self.process_path lib_repo, initial_env
-    env = initial_env
-    clone = lib_repo.get_clone(initial_env)
-    while clone
-      clone.library_instance_id = lib_repo.id
-      clone.save!
-      env = env.successor
-      clone = env.nil? ? nil : clone.get_clone(env)
+  # Work-around for making the migration work for the code that
+  # introduced label. When this migration is run, the label attribute
+  # is not yet present in the database.
+  def self.simulate_label(repo, env)
+    target = env.organization.target unless env.nil?
+    [repo, repo.product.target, env, target].each do |obj|
+      obj.class_eval do
+        def label; Katello::ModelUtils::labelize(name) end
+        def label=(*args); nil end
+      end
     end
   end
 
+  def self.process_path lib_repo, initial_env
+    env = initial_env
+    simulate_label(lib_repo, initial_env)
+    clone = lib_repo.get_clone(initial_env)
+    while clone
+      env = env.successor
+      simulate_label(clone, env)
+      clone.library_instance_id = lib_repo.id
+      clone.save!
+      clone = env.nil? ? nil : clone.get_clone(env)
+    end
+  end
 
   def self.down
       remove_column :repositories, :library_instance_id

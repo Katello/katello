@@ -37,38 +37,66 @@ if Process.uid != 0
   exit
 end
 
+# Get the deployment type
+deployment = File.read("/etc/katello/client.conf").split("\n").grep(/^path.+/).first.split("/").last
+if (deployment == "headpin" || deployment == "sam")
+  deployment = "headpin"
+else
+  deployment = "katello"
+end
+puts "detected deployment: \t#{deployment}"
+
 # Define what we want to collect
-SOURCES = [
-# All together
+MISC = [
 "/var/log/audit/audit.log",
 "/var/log/httpd",
-"/etc/httpd/conf.d",
-# Candlepin
+"/etc/httpd/conf.d"
+]
+
+CANDLEPIN = [
 "/var/log/tomcat6",
 "/etc/candlepin/candlepin.conf",
-"/etc/tomcat6/server.xml",
-# Thumbslug
+"/etc/tomcat6/server.xml"
+]
+
+THUMBSLUG = [
 "/etc/thumbslug",
-"/var/log/thumbslug",
-# Katello
+"/var/log/thumbslug"
+]
+
+KATELLO_HEADPIN = [
 "/var/log/katello",
 "/etc/katello/client.conf",
 "/etc/katello/katello.yml",
 "/etc/katello/mapping.yml",
 "/etc/katello/thin.yml",
-"/etc/katello/environment.db",
 "/etc/katello/katello-configure.conf",
-"/etc/httpd.d/katello.conf",
-# Elastic Search
+"/etc/httpd/conf.d/katello.conf",
+"/etc/katello/environment.rb"
+]
+
+ELASTIC_SEARCH = [
 "/var/log/elasticsearch",
-"/etc/elasticsearch",
-# Pulp
+"/etc/elasticsearch"
+]
+
+PULP = [
 "/etc/pulp/pulp.conf",
 "/var/log/pulp",
-"/etc/httpd.d/pulp.conf",
+"/etc/httpd/conf.d/pulp.conf",
 "/etc/qpidd.conf"
 ]
 
+FOREMAN = [
+"/var/log/foreman",
+"/etc/foreman/settings.yaml",
+"/etc/foreman/thin.yml",
+"/etc/foreman/email.yaml",
+"/etc/foreman/database.yml",
+"/etc/sysconfig/foreman"
+]
+
+# Exclude these files from the debug
 EXCLUDES = [
 "/etc/tomcat6/keystore",
 "/etc/candlepin/certs/candlepin-ca.key",
@@ -83,6 +111,18 @@ EXCLUDES = [
 "/etc/katello/oauth_token-file"
 ]
 
+
+# sources list for katello or headpin deployment
+sources = []
+sources += MISC
+sources += KATELLO_HEADPIN
+sources += ELASTIC_SEARCH
+sources += CANDLEPIN
+sources += PULP if deployment == 'katello'
+sources += FOREMAN if deployment == 'katello'
+sources += THUMBSLUG if deployment == 'headpin'
+
+
 # Collect the files
 timename =  "katello-debug-#{Time.now.strftime("%Y%m%d%H%M%S")}"
 target_dir = File.join(options[:basedir], timename)
@@ -96,7 +136,7 @@ FileUtils.mkdir_p(target_dir)
 puts("created directory #{target_dir}")
 
 missing_files = Array.new
-SOURCES.each do |source|
+sources.each do |source|
   if File.exists?(source)
     complete_target = File.join(target_dir, File.dirname(source))
     FileUtils.mkdir_p(complete_target)
@@ -108,7 +148,7 @@ SOURCES.each do |source|
   end
 end
 
-# Store misisng filenames to archive if there are any
+# Store missing filenames to archive if there are any
 if not missing_files.empty?
   missing_target = File.join(target_dir, 'missing_files')
   File.open(missing_target, 'w') do |missing|
@@ -126,8 +166,11 @@ EXCLUDES.each do |exclude|
 end
 
 # Remove passwords from config files
-output = `sed -i -e 's/^\\(default_password:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/pulp.conf')}`
-output = `sed -i -e 's/^\\(oauth_secret:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/pulp.conf')}`
+if deployment == 'katello'
+  output = `sed -i -e 's/^\\(default_password:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/pulp.conf')}`
+  output = `sed -i -e 's/^\\(oauth_secret:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/pulp.conf')}`
+  output = `sed -i -e 's/^\\(.*password\\).*$/\\1: **********************/' #{File.join(target_dir, '/etc/foreman/database.yml')}`
+end
 output = `sed -i -e 's/^\\(.*secret\\).*$/\\1 = **********************/' #{File.join(target_dir, '/etc/candlepin/candlepin.conf')}`
 output = `sed -i -e 's/^\\(.*password\\).*$/\\1 = **********************/' #{File.join(target_dir, '/etc/candlepin/candlepin.conf')}`
 output = `sed -i -e 's/^\\(\\s*oauth_secret:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/katello/katello.yml')}`
@@ -140,11 +183,13 @@ output = `find #{File.join(target_dir, '/var/log/katello/katello-configure*')} -
 output = `find #{File.join(target_dir, '/var/log/katello/katello-configure*')} -name "*.log" -type f -exec sed -i -e "s/\\(PASSWORD '\\)[^']*'/\\1*********'/g" {} \\;`
 
 # Pick qpidd messages from syslog
-FileUtils.mkdir_p(File.join(target_dir, '/var/log'))
-output = `cat /var/log/messages|grep qpidd > #{File.join(target_dir, "/var/log/qpidd.log")}`
+if deployment == 'katello'
+  FileUtils.mkdir_p(File.join(target_dir, '/var/log'))
+  output = `cat /var/log/messages|grep qpidd > #{File.join(target_dir, "/var/log/qpidd.log")}`
+end
 
 # Create certificates report
-output = `katello-debug-certificates >> #{File.join(target_dir, "certificates")}`
+output = `katello-debug-certificates --perms >> #{File.join(target_dir, "certificates")}`
 
 # Add list of ssl-build dir
 output = `find /root/ssl-build -ls | sort -k 11 > #{File.join(target_dir, "ssl_build_dir")}`

@@ -24,8 +24,9 @@ class Api::TemplatesController < Api::ApiController
 
   before_filter :find_environment, :only => [:create, :import, :index]
   before_filter :find_template, :only => [:show, :update, :destroy, :promote, :export, :validate]
-
   before_filter :authorize
+
+  rescue_from Errors::TemplateValidationException, :with => proc { |e| render_exception(400, e) }
 
   def rules
     read_test = lambda{ SystemTemplate.readable?(@template.environment.organization) }
@@ -74,7 +75,7 @@ class Api::TemplatesController < Api::ApiController
     param :parent_id, :number, :desc => "parent template numeric identifier"
   end
   def create
-    raise HttpErrors::BadRequest, _("New templates can be created only in a Library environment") if not @environment.library?
+    raise HttpErrors::BadRequest, _("New templates can be created only in the '%s' environment") % "Library" if not @environment.library?
 
     @template = SystemTemplate.new(params[:template])
     @template.environment = @environment
@@ -90,7 +91,7 @@ class Api::TemplatesController < Api::ApiController
     param :name, :identifier, :desc => "template new name"
   end
   def update
-    raise HttpErrors::BadRequest, _("Templates can be updated only in a Library environment") if not @template.environment.library?
+    raise HttpErrors::BadRequest, _("Templates can be updated only in the '%s' environment") % "Library" if not @template.environment.library?
 
     clones = @template.get_clones
     @template.attributes = params[:template].slice(:name, :parent_id, :description)
@@ -121,7 +122,7 @@ class Api::TemplatesController < Api::ApiController
     param :parent_id, :number, :desc => "parent template numeric identifier"
   end
   def import
-    raise HttpErrors::BadRequest, _("New templates can be imported only into a Library environment") if not @environment.library?
+    raise HttpErrors::BadRequest, _("New templates can be imported only into the '%s' environment") % "Library" if not @environment.library?
 
     begin
       temp_file = File.new(File.join("#{Rails.root}/tmp", "template_#{SecureRandom.hex(10)}.json"), 'w+', 0600)
@@ -141,7 +142,7 @@ class Api::TemplatesController < Api::ApiController
   api :GET, "/templates/:id/validate", "Validate a template TDL"
   param :id, :number, :desc => "template numeric identifier", :required => true
   def validate
-    raise HttpErrors::BadRequest, _("Cannot validate templates for the Library environment.") if @template.environment.library?
+    raise HttpErrors::BadRequest, _("Cannot validate templates for the '%s' environment.") % "Library" if @template.environment.library?
 
     respond_to do |format|
       format.tdl { @template.validate_tdl; render :text => 'OK' and return }
@@ -152,7 +153,7 @@ class Api::TemplatesController < Api::ApiController
   api :GET, "/templates/:id/export", "Export template as TDL or JSON"
   param :id, :number, :desc => "template numeric identifier", :required => true
   def export
-    raise HttpErrors::BadRequest, _("Cannot export templates for the Library environment.") if @template.environment.library?
+    raise HttpErrors::BadRequest, _("Cannot export templates for the '%s' environment.") % "Library" if @template.environment.library?
 
     respond_to do |format|
       format.tdl { render(:text => @template.export_as_tdl, :content_type => Mime::TDL) and return }

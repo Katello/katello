@@ -30,7 +30,8 @@ class Ping
           :elasticsearch => {},
           :pulp_auth => {},
           :candlepin_auth => {},
-          :katello_jobs => {}
+          :katello_jobs => {},
+          :foreman_auth => {},
         }}
       else
         result = { :result => 'ok', :status => {
@@ -55,6 +56,7 @@ class Ping
         RestClient.get "#{url}/status"
       end
 
+      # elasticsearch - ping without oauth
       url = AppConfig.elastic_url
       exception_watch(result[:status][:elasticsearch]) do
         RestClient.get "#{url}/_status"
@@ -72,10 +74,15 @@ class Ping
         Resources::Candlepin::CandlepinPing.ping
       end
 
+      # foreman - ping with oauth
+      exception_watch(result[:status][:foreman_auth]) do
+        Resources::Foreman::Home.status({}, Resources::ForemanModel.header)
+      end
+
+      # katello jobs - TODO we should not spawn processes
       exception_watch(result[:status][:katello_jobs]) do
         raise _("katello-jobs service not running") if !system("/sbin/service katello-jobs status")
       end
-
 
       # set overall status result code
       result[:status].each_value { |v| result[:result] = 'fail' if v[:result] != 'ok' }
@@ -98,7 +105,7 @@ class Ping
 
     # get package information for katello and its components
     def packages
-      packages = `rpm -qa | egrep "katello|candlepin|pulp|thumbslug|qpid|foreman"`
+      packages = `rpm -qa | egrep "katello|candlepin|pulp|thumbslug|qpid|foreman|ldap_fluff"`
       packages.split("\n").sort
     end
   end

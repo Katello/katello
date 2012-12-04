@@ -31,9 +31,9 @@
             = image_tag("embed/icons/spinner.gif")
             = get_status_string(t.task_type)
 
--packages.each do |p|
+-packages.each_with_index do |p,index|
 
-  %tr{:class => row_shading + ' package'}
+  %tr{:class => 'package', :style => "#{index < offset ? ' ' : 'display:none;' }" }
     - if editable
       %td.package_select
         = check_box_tag "package[#{p.name}]", "0", false, {:tabindex => auto_tab_index}
@@ -41,5 +41,3 @@
     %td.package_name
       #{p.nvrea}
     %td.package_action_status
-    -#%td
-      -#TODO: installed date

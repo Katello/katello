@@ -31,47 +31,64 @@
           .grid_9.la.fl
             = subscriptions_manifest_link_helper({'webAppPrefix'=>@details[:webAppPrefix], 'upstreamId'=>@details['upstreamUuid']}, @details['upstreamUuid'])
         - if @provider.editable? && !AppConfig.katello?
-          = form_for @provider, :html => {:method => :post, :id => :delete_manifest}, :remote => true, :url => delete_manifest_subscriptions_path do |f|
-            %fieldset
-              .grid_3.ra.fieldset
-                &nbsp;
-              .grid_9.la#delete_button
-                = f.submit _("Remove Subscriptions"), :id => :delete_form_button
+          - if !@provider.manifest_task || @provider.manifest_task.finished?
+            = form_for @provider, :html => {:method => :post, :id => :delete_manifest}, :remote => true, :url => delete_manifest_subscriptions_path do |f|
+              %fieldset
+                .grid_3.ra.fieldset
+                  &nbsp;
+                .grid_6.la#delete_button
+                  = f.submit _("Delete Manifest"), :id => :delete_form_button, :confirm => _("Deleting a manifest " + |
+                        "will permanently remove all current subscriptions. All systems consuming these subscriptions " + |
+                        "have them removed. Do you wish to proceed with removing this manifest?") |
+          - elsif @provider.manifest_task && !@provider.manifest_task.finished? && @provider.manifest_task.task_type == "delete manifest"
+            .grid_10
+              %fieldset
+                .grid_3.ra.fieldset
+                  &nbsp;
+                .grid_6.la
+                  .fl
+                    %div.manifest_progress{:provider_id=>@provider.id}
+                      = image_tag("embed/icons/spinner.gif", {:class=>"fl"})
+                      .fl.manifest_progress_message
+                        = _("Delete in progress (%s)") % @provider.manifest_task.state
     .clear
     - if @provider.editable?
-      .full
-        %h5 #{_("Upload New Manifest")}
-      - if @provider.import_task && !@provider.import_task.finished?
-        .full
-          %fieldset
-            .grid_2.ra.fieldset
-              =label :upload, :upload, _("Manifest File")
-            .grid_8.la
-              .fl
-                %div.import_progress{:provider_id=>@provider.id}
-                  = image_tag("embed/icons/spinner.gif", {:class=>"fl"})
-                  .fl.import_progress_message
-                    = _("Import in progress (%s)") % @provider.import_task.state
-      - else
-        = form_for @provider, :html => {:multipart => true, :method => :post, :id => :upload_manifest}, :remote => true, :url => upload_subscriptions_path do |f|
+      - if @provider.manifest_task && !@provider.manifest_task.finished?
+        - if @provider.manifest_task.task_type == "import manifest"
+          .grid_10
+            %h5 #{_("Upload New Manifest")}
           .full
             %fieldset
               .grid_3.ra.fieldset
                 =label :upload, :upload, _("Manifest File")
-              .grid_9.la
-                = f.file_field :contents
-            %fieldset
-              .grid_3.ra.fieldset
-                &nbsp;
-              .grid_9.la#upload_button
-                = f.submit _("Upload"), :id => :upload_form_button
+              .grid_8.la
+                .fl
+                  %div.manifest_progress{:provider_id=>@provider.id}
+                    = image_tag("embed/icons/spinner.gif", {:class=>"fl"})
+                    .fl.manifest_progress_message
+                      = _("Import in progress (%s)") % @provider.manifest_task.state
+      - else
+        .full
+          %h5 #{_("Upload New Manifest")}
+          = form_for @provider, :html => {:multipart => true, :method => :post, :id => :upload_manifest}, :remote => true, :url => upload_subscriptions_path do |f|
+            .full
+              %fieldset
+                .grid_3.ra.fieldset
+                  =label :upload, :upload, _("Manifest File")
+                .grid_6.la
+                  = f.file_field :contents
+              %fieldset
+                .grid_3.ra.fieldset
+                  &nbsp;
+                .grid_6.la#upload_button
+                  = f.submit _("Upload"), :id => :upload_form_button
 
     .full
-      %h5 #{_("Upload History")}
+      %h5 #{_("Manifest History")}
       %table
         %thead
           %th #{_("Message")}
-          %th #{_("Import Time")}
+          %th #{_("Time")}
         - if @statuses
           %tbody
             - @statuses[0..2].each do |status|

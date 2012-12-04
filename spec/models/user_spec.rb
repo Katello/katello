@@ -1,3 +1,4 @@
+# encoding: UTF-8
 #
 # Copyright 2011 Red Hat, Inc.
 #
@@ -22,12 +23,36 @@ describe User do
   PASSWORD = "password1234"
   EMAIL = "testuser@somewhere.com"
 
+  INVALID_USERNAME = (0...260).map{ ('a'..'z').to_a[rand(26)] }.join
+
   let(:to_create_simple) do
     {
       :username => USERNAME,
       :password => PASSWORD,
       :email => EMAIL
     }
+  end
+
+  let(:to_create_invalid_user) do
+    {
+      :username => INVALID_USERNAME,
+      :password => PASSWORD,
+      :email => EMAIL
+    }
+  end
+
+  describe "User shouldn't" do
+    before(:each) do
+      disable_user_orchestration
+      AppConfig.warden = 'database'
+    end
+
+    it "be able to create" do
+      user = User.new(to_create_invalid_user)
+      user.should_not be_valid
+      user.errors[:username].should include("cannot contain more than 64 characters")
+    end
+
   end
 
   describe "Users in LDAP should" do
@@ -89,6 +114,14 @@ describe User do
     end
   end
 
+  it "should allow email address as username", :katello => false do
+    disable_user_orchestration
+    AppConfig.warden = 'database'
+    User.create!(:username => EMAIL, :password => PASSWORD, :email => EMAIL)
+    u = User.find_by_username(EMAIL)
+    u.should_not be_nil
+  end
+
   describe "User should" do
     before(:each) do
       disable_user_orchestration
@@ -103,7 +136,7 @@ describe User do
       u.should_not be_nil
     end
 
-    it "have ASCII username" do
+    it "have ASCII username", :katello => true do
       non_ascii = {
         :username => 'Cuiabá_user1',
         :password => PASSWORD,

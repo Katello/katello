@@ -90,7 +90,7 @@ class Api::RepositoriesController < Api::ApiController
     #
     # TODO: these should really be done as validations, but the orchestration engine currently converts them into OrchestrationExceptions
     #
-    raise HttpErrors::BadRequest, _("Repositories can be deleted only in Library environment.") if not @repository.environment.library?
+    raise HttpErrors::BadRequest, _("Repositories can be deleted only in the '%s' environment.") % "Library" if not @repository.environment.library?
     raise HttpErrors::BadRequest, _("Repository cannot be deleted since it has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it.") if @repository.promoted?
 
     @repository.destroy
@@ -181,7 +181,7 @@ EOS
   param :id, :identifier, :required => true
   def gpg_key_content
     if @repository.gpg_key && @repository.gpg_key.content.present?
-      render(:text => @repository.gpg_key.content, :layout => false) 
+      render(:text => @repository.gpg_key.content, :layout => false)
     else
       head(404)
     end

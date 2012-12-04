@@ -6,11 +6,26 @@ require "action_controller/railtie"
 require "action_mailer/railtie"
 require "active_resource/railtie"
 require "rails/test_unit/railtie"
+require "./lib/util/boot_util"
 
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
-require 'apipie-rails' # FIXME will be removed after https://github.com/Pajk/apipie-rails/pull/62
-Bundler.require(:default, Rails.env) if defined?(Bundler)
+if File.exist?(File.expand_path('../../Gemfile.in', __FILE__))
+  require 'aeolus/ext/bundler_ext'
+  puts 'Using gem require instead of bundler'
+  # TODO - remove all parameters once https://github.com/aeolus-incubator/bundler_ext/pull/3 is merged
+  Aeolus::Ext::BundlerExt.system_require(File.expand_path('../../Gemfile.in', __FILE__), :default, :foreman, Rails.env)
+else
+  ENV['BUNDLE_GEMFILE'] = File.expand_path('../../Gemfile', __FILE__)
+  puts 'Using bundler instead of gem require'
+  Bundler.require(:default, Rails.env) if defined?(Bundler)
+  if defined?(Bundler)
+    Bundler.require(:default, Rails.env)
+
+    # require backend engines only if in katello/cfse mode
+    Bundler.require(:foreman) if Katello::BootUtil.katello?
+  end
+end
 
 module Src
   class Application < Rails::Application    
@@ -96,6 +111,10 @@ module Src
   end
 end
 
-FastGettext.add_text_domain 'app', :path => 'locale', :type => :po,
-                            :ignore_fuzzy => true, :report_warning => false, :ignore_obsolete => true
+old_fast_gettext = !defined?(FastGettext::Version) ||
+    (FastGettext::Version.split('.').map(&:to_i) <=> [0, 6, 8]) == -1 # compare versions x.x.x <= 0.6.7
+
+FastGettext.add_text_domain('app', { :path => 'locale', :type => :po, :ignore_fuzzy => true }.
+    update(old_fast_gettext ? { :ignore_obsolete => true } : { :report_warning => false }))
+
 FastGettext.default_text_domain = 'app'
