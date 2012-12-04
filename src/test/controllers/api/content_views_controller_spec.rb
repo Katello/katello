@@ -20,31 +20,34 @@ describe Api::ContentViewsController do
     before do
       @content_view = content_views(:library_dev_view)
       @environment = environments(:staging)
+      @dev = environments(:dev)
       login_user(users(:admin))
     end
 
     it "should throw an error if environment_id is nil" do
       post :promote, :id => @content_view.id
-      response.status.wont_equal 200
+      [200, 202].include?(response.status).must_equal false
+    end
+
+    it "should throw an error if id is nil" do
+      req = lambda do
+        post :promote, :environment_id => @environment.id
+      end
+      req.must_raise ActionController::RoutingError
     end
 
     it "should assign a content view" do
       post :promote, :id => @content_view.id, :environment_id => @environment.id
-      response.success?.must_equal true
+      response.status.must_equal 202
       content_view = assigns(:view)
       content_view.wont_be_nil
       content_view.must_equal @content_view
     end
 
-    it "should assign a prior environment" do
+    it "should create a new changeset" do
+      changeset_count = Changeset.count
       post :promote, :id => @content_view.id, :environment_id => @environment.id
-      assigns(:prior).must_equal @environment.prior
-      assigns(:prior).must_equal environments(:library)
-    end
-
-    it "should throw an error if view is already in env" do
-      post :promote, :id => @content_view.id, :environment_id => environments(:dev).id
-      response.status.must_equal 500
+      Changeset.count.must_equal (changeset_count + 1)
     end
 
   end
