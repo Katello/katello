@@ -22,8 +22,8 @@ from katello.client.cli.base import opt_parser_add_org, \
         opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_environment, get_content_view
-from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, \
-        wait_for_async_task, AsyncTask, format_task_errors
+from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, \
+        AsyncTask, format_task_errors
 
 # base content_view action --------------------------------------------------------
 
