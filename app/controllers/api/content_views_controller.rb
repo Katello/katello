@@ -47,12 +47,14 @@ class Api::ContentViewsController < Api::ApiController
   param :id, :identifier, :desc => "content view id"
   param :environment_id, :identifier, :desc => "environment promoting to"
   def promote
-    @cs = PromotionChangeset.new(:environment => @environment,
-                                 :state => Changeset::REVIEW,
-                                 :content_views => [@view]
-                                )
-    @cs.apply(:async => false)
-    render :json => @view
+    cs_name = "#{@view.label}_#{@environment.name}_#{Time.now.to_i}"
+    @cs = PromotionChangeset.create!(:name => cs_name,
+                                     :environment => @environment,
+                                     :state => Changeset::REVIEW,
+                                     :content_views => [@view]
+                                    )
+    task = @cs.apply(:async => true)
+    render :json => task, :status => 202
   end
 
   private
