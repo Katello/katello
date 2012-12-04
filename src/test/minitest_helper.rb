@@ -4,6 +4,7 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'minitest/autorun'
 require 'minitest/rails'
 require 'json'
+require 'support/warden_support'
 
 class MiniTest::Rails::ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods
@@ -15,8 +16,23 @@ class MiniTest::Rails::ActiveSupport::TestCase
   self.set_fixture_class :environments => KTEnvironment
 end
 
+class MiniTest::Rails::Spec
+  include ActiveSupport::Testing::Assertions
+  include Warden::Test::Helpers
+  include WardenSupport
+
+  class << self
+    alias context describe
+  end
+
+  def build_message(*args)
+    args[1].gsub(/\?/, '%s') % args[2..-1]
+  end
+end
+
 class Minitest::Rails::ActionController::TestCase
   include Warden::Test::Helpers
+  include WardenSupport
 end
 
 def configure_vcr
