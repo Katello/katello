@@ -2,15 +2,19 @@ Src::Application.routes.draw do
 
   apipie
 
-  resources :subnets do
-    collection do
-      get :items
-    end
-  end
+  if Katello.config.use_foreman
+    scope :module => 'foreman' do
+      resources :subnets do
+        collection do
+          get :items
+        end
+      end
 
-  resources :domains do
-    collection do
-      get :items
+      resources :domains do
+        collection do
+          get :items
+        end
+      end
     end
   end
 
