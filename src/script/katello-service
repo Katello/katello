@@ -24,8 +24,11 @@ if [ -x /etc/init.d/tomcat6 -o -x /lib/systemd/system/tomcat6.service ]; then
   TOMCAT="tomcat6"
 fi
 
+if [ -x /etc/init.d/foreman -o -x /lib/systemd/system/foreman.service ]; then
+  FOREMAN="foreman"
+fi
 
-SERVICES="$TOMCAT httpd mongod qpidd thumbslug elasticsearch foreman katello katello-jobs"
+SERVICES="$TOMCAT httpd mongod qpidd thumbslug elasticsearch $FOREMAN katello katello-jobs"
 if [ -f /etc/katello/service-list ] ; then
   . /etc/katello/service-list
 fi
