@@ -13,8 +13,9 @@ require 'navigation/content_management'
 require 'navigation/administration'
 require 'navigation/organization'
 require 'navigation/dashboard'
+require 'navigation/setup'
 require 'navigation/systems'
-require 'navigation/main'
+
 
 module Navigation
   def self.included(base)
@@ -24,11 +25,14 @@ module Navigation
     base.send :include, OrganizationMenu
     base.send :include, DashboardMenu
     base.send :include, SystemMenu
+    base.send :include, SetupMenu
   end
 
   module MainMenu
    def menu_main
-    [ menu_dashboard, menu_contents, menu_systems ]
+    menu = [ menu_dashboard, menu_contents, menu_systems ]
+    menu << menu_setup if AppConfig.katello?
+    menu
    end
   end
 

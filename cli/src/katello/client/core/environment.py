@@ -21,6 +21,7 @@ from katello.client.cli.base import opt_parser_add_org
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record
 from katello.client.api.utils import get_environment
+from katello.client.utils.printer import batch_add_columns
 
 
 # base environment action --------------------------------------------------------
@@ -53,9 +54,7 @@ class List(EnvironmentAction):
 
         envs = self.api.environments_by_org(orgName)
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('label')
+        batch_add_columns(self.printer, 'id', 'name', 'label')
         self.printer.add_column('description', multiline=True)
         self.printer.add_column('organization', _('Org'))
         self.printer.add_column('prior', _('Prior Environment'))
@@ -70,7 +69,7 @@ class Info(EnvironmentAction):
     description = _('list a specific environment')
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser)
+        opt_parser_add_org(parser, required=1)
         parser.add_option('--name', dest='name',
                        help=_("environment name eg: foo.example.com (required)"))
 
@@ -106,7 +105,7 @@ class Create(EnvironmentAction):
         parser.add_option('--name', dest='name',
                                help=_("environment name (required)"))
         parser.add_option('--label', dest='label',
-                               help=_("environment label, ASCII identifier for the environment " + 
+                               help=_("environment label, ASCII identifier for the environment " +
                                       "with no spaces eg: Dev_One (will be generated if not specified)"))
         parser.add_option('--prior', dest='prior',
                                help=_("name of prior environment (required)"))

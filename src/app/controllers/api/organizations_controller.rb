@@ -82,7 +82,10 @@ class Api::OrganizationsController < Api::ApiController
   private
 
   def find_organization
+    # Look first based on name, and then based on label.
+    # The latter is to better support subscrption manager.
     @organization = Organization.first(:conditions => {:name => params[:id]})
+    @organization = Organization.first(:conditions => {:label => params[:id]}) if @organization.nil?
     raise HttpErrors::NotFound, _("Couldn't find organization '%s'") % params[:id] if @organization.nil?
     @organization
   end

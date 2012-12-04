@@ -61,7 +61,7 @@ class CommandContainer(object):
 
         :param name: a name undher which the command/action will be registered
         :type name: string
-        :param command: 
+        :param command:
         :type command: Action|Command
         """
         self.__subcommands[name] = command
@@ -93,7 +93,7 @@ class CommandContainer(object):
 class Action(object):
     """
     Class implementing common functionality for CLI commands and actions
-    
+
     :ivar parser: optparse.OptionParser instance
     :ivar takes_options: bool flag that says whether the action has any options
     :ivar opts: options returned from parsing command line
@@ -132,7 +132,7 @@ class Action(object):
     def create_parser(self, command_name=None, parent_usage=None):
         """
         Create an instance of option parser
-        
+
         :rtype: OptionParser
         """
         parser = OptionParser(option_class=KatelloOption)
@@ -151,7 +151,7 @@ class Action(object):
         """
         Get an option from opts or from the config file
         Options from opts take precedence.
-        
+
         :type opt: str
         :param opt: name of option to get
         :return: value of the option or None if the option is no present
@@ -171,16 +171,14 @@ class Action(object):
         @param allowed_keys: strings
         @return: a dictionary with options (opt. destination -> opt. value)
         """
-        if allowed_keys:
-            return dict((key, self.get_option(key)) for key in allowed_keys)
-        else:
-            return dict((key, self.get_option(key)) for key in vars(self.opts).keys())
-
+        if not allowed_keys:
+            allowed_keys = vars(self.opts).keys()
+        return dict((key, self.get_option(key)) for key in allowed_keys if self.get_option(key) is not None)
 
     def has_option(self, opt):
         """
         Check if option is present
-        
+
         :type opt: str
         :param opt: name of option to check
         :return: True if the option was set, otherwise False
@@ -191,7 +189,7 @@ class Action(object):
     def setup_parser(self, parser):
         """
         Add custom options to the parser
-        
+
         :note: this method should be overridden to add per-action options
         """
         self.takes_options = False
@@ -199,7 +197,7 @@ class Action(object):
     def run(self):
         """
         Action's functionality
-        
+
         :note: override this method to implement the actoin's functionality
         """
         pass
@@ -207,7 +205,7 @@ class Action(object):
     def check_options(self, validator):
         """
         Add custom option requirements
-        
+
         :note: this method should be overridden to check for required options
         """
         return
@@ -243,7 +241,7 @@ class Action(object):
         Main execution of the action
         This method setups up the parser, parses the arguments, and calls run()
         in a try/except block, handling RestlibExceptions and general errors
-        
+
         :warning: this method should only be overridden with care
         """
         parser = self.create_parser(command_name, parent_usage)
@@ -261,7 +259,7 @@ class Command(CommandContainer, Action):
     def usage(self, command_name=None, parent_usage=None):
         """
         Usage string.
-        
+
         :rtype: str
         :return: command's usage string
         """
@@ -378,13 +376,13 @@ class BaseAction(Action):
 
         self.printer = self.create_printer(self.__print_strategy())
 
-    # pylint: disable=R0911
+    # pylint: disable=R0911,R0915
     def main(self, args, command_name=None, parent_usage=None):
         """
         Main execution of the action
         This method setups up the parser, parses the arguments, and calls run()
         in a try/except block, handling RestlibExceptions and general errors
-     
+
         :warning: this method should only be overridden with care
         """
         try:
@@ -404,14 +402,20 @@ class BaseAction(Action):
             try:
                 if "displayMessage" in re.args[1]:
                     msg = re.args[1]["displayMessage"]
+                elif re.args[0] == 401:
+                    msg = _("Invalid credentials or unable to authenticate")
+                elif re.args[0] == 500:
+                    msg = _("Server is returning 500 - try later")
                 elif "errors" in re.args[1]:
                     msg = ", ".join(re.args[1]["errors"])
+                elif "message" in re.args[1]:
+                    msg = re.args[1]["message"]
                 else:
                     msg = str(re.args[1])
             except IndexError:
                 msg = re.args[1]
-            if re.args[0] == 401:
-                msg = _("Invalid credentials or unable to authenticate")
+            except:  # pylint: disable=W0702
+                msg = _("Unknown error: ") + str(re)
 
             self.error(msg)
             return re.args[0]
@@ -483,6 +487,24 @@ def check_url(option, opt, value):
         raise OptionValueError(_('option %s: invalid format') % (opt))
     return value
 
+def check_ip(option, opt, value):
+
+    def raise_exception():
+        raise OptionValueError(_('option %s: invalid ip address format') % (opt))
+
+    parts = value.strip().split('.')
+    if len(parts) != 4:
+        raise_exception()
+
+    for s in parts:
+        try:
+            if int(s)<0 or int(s)>255:
+                raise_exception()
+        except ValueError:
+            raise_exception()
+    return value.strip()
+
+
 class KatelloOption(Option):
     """
     Option types allow to check and preprocess values of options.
@@ -495,7 +517,7 @@ class KatelloOption(Option):
 
         :allowed values:    strings "true" and "false" at any case
         :return type:       bool
-        :arguments:         none 
+        :arguments:         none
 
         .. code-block:: python
 
@@ -526,9 +548,16 @@ class KatelloOption(Option):
         :arguments:         - schemes - list of strings, allowed schemes, default is ["http", "https"]
 
         .. code-block:: python
-        
+
             # usage:
             parser.add_option('--feed', dest='feed', type="url", schemes=['https'])
+
+    **ip**
+        Parses ipv4 addresses.
+
+        :allowed values:    ipv4 address
+        :return type:       string
+        :arguments:         none
 
     """
 
@@ -547,6 +576,9 @@ class KatelloOption(Option):
     TYPE_CHECKER["url"] = check_url
     TYPES += ("url", )
     ATTRS += ["schemes", ]
+
+    TYPE_CHECKER["ip"] = check_ip
+    TYPES += ("ip", )
 
     def get_name(self):
         return self.get_opt_string().lstrip('-')

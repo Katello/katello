@@ -24,8 +24,14 @@ class foreman (
   $thin_start_port    = $foreman::params::thin_start_port,
   $thin_log           = $foreman::params::thin_log,
   $thin_process_count = $foreman::params::thin_process_count,
-  $deployment_url     = $foreman::params::deployment_url
+  $deployment_url     = $foreman::params::deployment_url,
+
+  $administrator      = $foreman::params::administrator,
+
+  $reset_data         = $foreman::params::reset_data
   ) inherits foreman::params {
+  Exec { logoutput => on_failure, timeout => 0 }
+
   if $foreman::install {
     class { '::foreman::repos': } ~>
     class { '::foreman::install': } ~>

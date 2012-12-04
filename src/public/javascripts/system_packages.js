@@ -132,49 +132,19 @@ KT.system_packages = function() {
         return action_type;
     },
     morePackages = function() {
-        var list = $('.packages');
-        var spinner = $('#list-spinner');
-        var dataScrollURL = more_button.attr("data-scroll_url");
+        var list = $('table.packages');
+        var currentCount = list.attr('data-packageCount');
+        var newCount = Number(currentCount) + Number(25);
 
-        var offset = parseInt(more_button.attr("data-offset"), 10);
-        dataScrollURL = dataScrollURL + "?offset=" + offset + "&pkg_order="+ sort_button.attr("data-sort") +"&";
-        //console.log(dataScrollURL + ", page_size: " + offset);
-        spinner.fadeIn();
-        $.ajax({
-            type: "GET",
-            url: dataScrollURL,
-            cache: false,
-            success: function(data) {
-                retrievingNewContent = false;
-                spinner.fadeOut();
+        list.find('tbody tr').hide();
+        list.find('tbody tr:lt('+newCount+')').show();
+        list.find('tbody tr:visible').removeClass('alt');
+        list.find('tbody tr:visible:odd').addClass('alt');
 
-                // using the response received, update the tabindexes for the packages and buttons
-                var pkgs_response = $(data);
-                pkgs_response.find('input[type="checkbox"]').each( function(){
-                    $(this).attr('tabindex', ++packages_tabindex);
-                });
-                list.append(pkgs_response);
-                more_button.attr('tabindex', ++packages_tabindex);
-                update_all_button.attr('tabindex', ++packages_tabindex);
-                update_button.attr('tabindex', ++packages_tabindex);
-                remove_button.attr('tabindex', ++packages_tabindex);
+        list.attr('data-packageCount', newCount);
 
-                registerCheckboxEvents();
-                $('#filter').keyup();
-                $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
-                updateLoadedSummary();
-                if (data.length == 0) {
-                    more_button.empty().remove();
-                }else{
-                    offset = offset + parseInt(more_button.attr("data-page_size"), 10);
-                    more_button.attr("data-offset", offset);
-                }
-            },
-            error: function() {
-                spinner.fadeOut();
-                retrievingNewContent = false;
-            }
-        });
+        updateLoadedSummary();
+        registerCheckboxEvents();
     },
     sortOrder = function() {
         var packageSortOrder = sort_button.attr("data-sort");
@@ -208,7 +178,6 @@ KT.system_packages = function() {
                 registerCheckboxEvents();
                 $('#filter').keyup();
                 $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
-                updateLoadedSummary();
                 if (data.length == 0) {
                     more_button.empty().remove();
                 }else{
@@ -444,7 +413,6 @@ KT.system_packages = function() {
                 event.preventDefault();
             }
         });
-
         more_button.bind('click', morePackages);
         more_button.bind('keypress', function(event) {
             if( event.which === 13) {
@@ -727,7 +695,7 @@ KT.system_packages = function() {
         });
     },
     updateLoadedSummary = function() {
-        var total_loaded = $('tr.package').length,
+        var total_loaded = $('tr.package:visible').length,
             message = i18n.x_of_y_packages(total_loaded, total_packages);
         loaded_summary.html(message);
 

@@ -268,8 +268,18 @@ module Resources
           self.post(path, {:import => File.new(path_to_file, 'rb')}, self.default_headers.except('content-type'))
         end
 
-        def destroy_imports organization_name
-          self.delete(join_path(path(organization_name), 'imports'), self.default_headers)
+        def destroy_imports organization_name, wait_until_complete=false
+          response_json = self.delete(join_path(path(organization_name), 'imports'), self.default_headers)
+          response = JSON.parse(response_json).with_indifferent_access
+          if wait_until_complete && response['state'] == 'CREATED'
+            while response['state'] != nil && response['state'] != 'FINISHED' && response['state'] != 'ERROR'
+              path = join_path('candlepin', response['statusPath'][1..-1])
+              response_json = self.get(path, self.default_headers)
+              response = JSON.parse(response_json).with_indifferent_access
+            end
+          end
+
+          response
         end
 
         def imports organization_name
@@ -512,30 +522,26 @@ module Resources
         end
 
 
-        def _certificate_and_key id
-          subscriptions_json = Candlepin::CandlepinResource.get('/candlepin/subscriptions', self.default_headers).body
+        def _certificate_and_key(id, owner)
+          subscriptions_json = Candlepin::CandlepinResource.get("/candlepin/owners/#{owner}/subscriptions", self.default_headers).body
           subscriptions = JSON.parse(subscriptions_json)
 
-          for sub in subscriptions
-            if sub["product"]["id"] == id
-              return sub["certificate"]
-            end
-
-            for provProds in sub["providedProducts"]
-              if provProds["id"] == id
-                return sub["certificate"]
-              end
-            end
+          product_subscription = subscriptions.find do |sub|
+            sub["product"]["id"] == id ||
+              sub["providedProducts"].any? { |provided| provided["id"] == id }
           end
-          nil
+
+          if product_subscription
+            return product_subscription["certificate"]
+          end
         end
 
-        def certificate id
-          self._certificate_and_key(id).try :[], 'cert'
+        def certificate(id, owner)
+          self._certificate_and_key(id, owner).try :[], 'cert'
         end
 
-        def key id
-          self._certificate_and_key(id).try :[], 'key'
+        def key(id, owner)
+          self._certificate_and_key(id, owner).try :[], 'key'
         end
 
         def destroy product_id

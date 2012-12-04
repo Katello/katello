@@ -21,7 +21,7 @@ from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_system_group
 from katello.client.core.utils import test_record
 from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemGroupAsyncJob
-
+from katello.client.utils.printer import batch_add_columns
 
 
 # base system group action --------------------------------------------------------
@@ -109,7 +109,7 @@ class Copy(SystemGroupAction):
                                help=_("system group description for new group"))
         parser.add_option('--max_systems', dest='max_systems',
                                help=_("maximum number of systems in this group"))
-                               
+
 
     def check_options(self, validator):
         validator.require(('name', 'org', 'new_name'))
@@ -120,12 +120,12 @@ class Copy(SystemGroupAction):
         new_name = self.get_option('new_name')
         description = self.get_option('description')
         max_systems = self.get_option('max_systems')
-        
+
         source_system_group = get_system_group(org_name, name)
         new_system_group = self.api.copy(org_name, source_system_group["id"], new_name, description, max_systems)
 
         test_record(new_system_group,
-            _("Successfully copied system group [ %s ] to [ %s ]") % 
+            _("Successfully copied system group [ %s ] to [ %s ]") %
                        (source_system_group['name'], new_system_group['name']),
             _("Could not create system group [ %s ]") % new_name
         )
@@ -232,10 +232,7 @@ class HistoryTasks(SystemGroupAction):
 
         self.printer.add_column('id', name='task id')
         self.printer.add_column('uuid', name='system uuid')
-        self.printer.add_column('state',)
-        self.printer.add_column('progress')
-        self.printer.add_column('start_time')
-        self.printer.add_column('finish_time')
+        batch_add_columns(self.printer, 'state', 'progress', 'start_time', 'finish_time')
         self.printer.print_items(tasks)
 
 

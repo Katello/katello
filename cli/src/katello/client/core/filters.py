@@ -95,7 +95,7 @@ class Update(FilterAction):
         parser.add_option('--name', dest='name',
                 help=_("filter existing name (required)"))
         parser.add_option('--new-name', dest='new_name',
-                help=_("filter new name"))
+                help=_("filter new name (required)"))
 
     def check_options(self, validator):
         validator.require(('org', 'name', "new_name"))

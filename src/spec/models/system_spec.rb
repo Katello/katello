@@ -72,6 +72,11 @@ describe System do
     specify { System.new(:name => system_name, :environment => @organization.library, :cp_type => cp_type, :facts => facts).should_not be_valid }
   end
 
+  context "should not be valid with missing sockets" do
+    before(:each) { @system = System.new, @system_facts = { "cpu.cpu_socket(s)" => '', "distribution.name" => "Fedora" } }
+    specify { System.new(:name => 'name', :environment => @organization.environments.first, :cp_type => cp_type, :facts => @system_facts).should_not be_valid }
+  end
+
   it "registers system in candlepin and pulp on create" do
     Resources::Candlepin::Consumer.should_receive(:create).once.with(@environment.id, @organization.name, system_name, cp_type, facts, installed_products, nil, nil, nil).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Resources::Pulp::Consumer.should_receive(:create).once.with(@organization.label, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}}) if AppConfig.katello?

@@ -16,7 +16,7 @@ class ProvidersController < ApplicationController
 
   before_filter :find_rh_provider, :only => [:redhat_provider]
 
-  before_filter :find_provider, :only => [:products_repos, :show, :edit, :update, :destroy, :import_progress]
+  before_filter :find_provider, :only => [:products_repos, :show, :edit, :update, :destroy, :manifest_progress]
   before_filter :authorize #after find_provider
   before_filter :panel_options, :only => [:index, :items]
   before_filter :search_filter, :only => [:auto_complete_search]
@@ -44,7 +44,7 @@ class ProvidersController < ApplicationController
       :update => edit_test,
       :destroy => delete_test,
       :products_repos => read_test,
-      :import_progress => edit_test,
+      :manifest_progress => edit_test,
 
       :redhat_provider =>read_test,
     }
@@ -63,13 +63,13 @@ class ProvidersController < ApplicationController
                                          :repositories_cloned_in_envrs=>repositories_cloned_in_envrs}
   end
 
-  def import_progress
-    expire_page :action => :import_progress
+  def manifest_progress
+    expire_page :action => :manifest_progress
     # "finished" is checked for in the javascript to see if polling for task progress should be done
-    if @provider.import_task.nil?
+    if @provider.manifest_task.nil?
       to_ret = {'state' => 'finished'}
     else
-      to_ret = @provider.import_task.to_json
+      to_ret = @provider.manifest_task.to_json
     end
 
     # Never cache these results since the user may close and re-open the "new" panel and no status would

@@ -9,6 +9,7 @@ class foreman::config {
   # request which can easily result with a lot of old and unrequired in your
   # database eventually slowing it down.
   cron{'clear_session_table':
+    environment => ["RAILS_ENV=${foreman::environment}", "BUNDLER_EXT_NOSTRICT=1"],
     command => "(cd ${foreman::app_root} && rake db:sessions:clear)",
     minute  => '15',
     hour    => '23',
@@ -75,15 +76,16 @@ class foreman::config {
       content => template("foreman/httpd.conf.erb"),
       owner   => $foreman::user,
       group   => $foreman::user,
-      mode    => "600";
+      mode    => "600",
+      notify  => Exec["reload-apache2"],
+      before  => Class["apache2::service"];
   }
 
   exec {"foreman_migrate_db":
     cwd         => $foreman::app_root,
-    environment => "RAILS_ENV=${foreman::environment}",
+    environment => ["RAILS_ENV=${foreman::environment}", "BUNDLER_EXT_NOSTRICT=1"],
     command     => "/usr/bin/env rake db:migrate --trace --verbose > ${foreman::configure_log_base}/foreman-db-migrate.log 2>&1 && touch /var/lib/katello/foreman_db_migrate_done",
     creates     => "/var/lib/katello/foreman_db_migrate_done",
-    timeout     => 0,
     require     => [ Postgres::Createdb[$foreman::db_name],
                  File["${foreman::log_base}/production.log"],
                  File["${foreman::config_dir}/settings.yaml"],
@@ -94,10 +96,29 @@ class foreman::config {
    command => "/usr/bin/ruby ${foreman::app_root}/script/foreman-config -k oauth_active -v '${foreman::oauth_active}'\
                               -k oauth_consumer_key -v '${foreman::oauth_consumer_key}'\
                               -k oauth_consumer_secret -v '${foreman::oauth_consumer_secret}'\
-                              -k oauth_map_users -v '${foreman::oauth_map_users}'",
+                              -k oauth_map_users -v '${foreman::oauth_map_users}'\
+                              -k administrator -v '${foreman::administrator}'",
    user    => $foreman::user,
-   timeout => 0,
    require => User[$foreman::user],
+  }
+
+  if $foreman::reset_data == 'YES' {
+   exec {"reset_foreman_db":
+      command => "rm -f /var/lib/katello/foreman_db_migrate_done",
+      path    => "/sbin:/bin:/usr/bin",
+      before  => Exec["foreman_migrate_db"],
+    } ~>
+
+    postgres::dropdb {$foreman::db_name:
+      logfile => "${foreman::configure_log_base}/drop-postgresql-foreman-database.log",
+      require => [ Postgres::Createuser[$foreman::db_user], File["${foreman::configure_log_base}"] ],
+      before  => Exec["foreman_migrate_db"],
+      refreshonly => true,
+      notify  => [
+                  Postgres::Createdb[$foreman::db_name],
+                  Exec["foreman_migrate_db"],
+                  ],
+    }
   }
 
 }

@@ -13,7 +13,9 @@
 class UsernameValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     if value
-      record.errors[attribute] << _("cannot contain characters other than ASCII values") unless value.ascii_only?
+      if AppConfig.katello?
+        record.errors[attribute] << _("cannot contain characters other than ASCII values") unless value.ascii_only?
+      end
       KatelloNameFormatValidator.validate_length(record, attribute, value, 64, 3)
     end
   end

@@ -17,6 +17,7 @@
 from katello.client.api.config_template import ConfigTemplateAPI
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_foreman_record, unnest_one
+from katello.client.utils.printer import batch_add_columns
 
 
 # base config template action --------------------------------------------------------
@@ -47,9 +48,7 @@ class List(ConfigTemplateAction):
         if configtemplates:
             configtemplates = unnest_one(configtemplates)
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('snippet')
+        batch_add_columns(self.printer, 'id', 'name', 'snippet')
 
         self.printer.set_header(_("Config Template"))
         self.printer.print_items(configtemplates)
@@ -59,7 +58,7 @@ class Info(ConfigTemplateAction):
     description = _('show information about a config template')
 
     def setup_parser(self, parser):
-        parser.add_option('--name', dest='id', help=_("config template id or name"))
+        parser.add_option('--name', dest='id', help=_("config template id or name (required)"))
 
     def check_options(self, validator):
         validator.require('id')
@@ -68,9 +67,7 @@ class Info(ConfigTemplateAction):
         configtemplate = self.api.show(self.get_option('id'))
         configtemplate = unnest_one(configtemplate)
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('snippet')
+        batch_add_columns(self.printer, 'id', 'name', 'snippet')
 
         if not configtemplate.get('snippet'):
             configtemplate['Template Kind'] = "%s (Id: %d)" % (configtemplate['kind'], configtemplate['kind_id'])
@@ -108,9 +105,9 @@ class Create(ConfigTemplateAction):
         parser.add_option('--snippet', dest='snippet', help=_("is it snippet?"))
         parser.add_option('--audit_comment', dest='audit_comment', help=_(""))
         parser.add_option('--template_kind_id', dest='template_kind_id', help=_("not relevant for snippet"))
-        parser.add_option('--template_combinations_attributes', dest='template_combinations_attributes', 
+        parser.add_option('--template_combinations_attributes', dest='template_combinations_attributes',
             help=_("Array of template combinations (hostgroup_id, environment_id)"))
-        parser.add_option('--operatingsystem_ids', dest='operatingsystem_ids', 
+        parser.add_option('--operatingsystem_ids', dest='operatingsystem_ids',
             help=_("Array of operating systems ID to associate the template with"))
 
     def check_options(self, validator):
@@ -133,7 +130,7 @@ class Update(ConfigTemplateAction):
     description = _('update config template')
 
     def setup_parser(self, parser):
-        parser.add_option('--name', dest='id', help=_("template id or name"))
+        parser.add_option('--name', dest='id', help=_("template id or name (required)"))
         parser.add_option('--new_name', dest='name', help=_("template new name"))
         parser.add_option('--template', dest='template', help=_(""))
         parser.add_option('--snippet', dest='snippet', help=_(""))
@@ -162,7 +159,7 @@ class Delete(ConfigTemplateAction):
     description = _('delete config template')
 
     def setup_parser(self, parser):
-        parser.add_option('--name', dest='id', help=_("config template id or name"))
+        parser.add_option('--name', dest='id', help=_("config template id or name (required)"))
 
     def check_options(self, validator):
         validator.require('id')

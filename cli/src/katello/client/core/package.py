@@ -21,6 +21,7 @@ from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org, 
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_repo
 from katello.client.utils import printer
+from katello.client.utils.printer import batch_add_columns
 
 
 # base package action --------------------------------------------------------
@@ -44,8 +45,8 @@ class Info(PackageAction):
         parser.add_option('--repo_id', dest='repo_id',
                       help=_("repository ID"))
         parser.add_option('--repo', dest='repo',
-                      help=_("repository name"))
-        opt_parser_add_org(parser)
+                      help=_("repository name (required)"))
+        opt_parser_add_org(parser, required=1)
         opt_parser_add_environment(parser, default=_("Library"))
         opt_parser_add_product(parser)
 
@@ -72,17 +73,12 @@ class Info(PackageAction):
 
         pack = self.api.package(packId, repoId)
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('filename')
-        self.printer.add_column('arch')
-        self.printer.add_column('release')
-        self.printer.add_column('version')
-        self.printer.add_column('vendor')
+        batch_add_columns(self.printer,
+            'id', 'name', 'filename', 'arch', 'release', 'version', 'vendor')
         self.printer.add_column('download_url', show_with=printer.VerboseStrategy)
-        self.printer.add_column('description', multiline=True, show_with=printer.VerboseStrategy)
-        self.printer.add_column('provides', multiline=True, show_with=printer.VerboseStrategy)
-        self.printer.add_column('requires', multiline=True, show_with=printer.VerboseStrategy)
+        batch_add_columns(self.printer,
+            'description', 'provides', 'requires',
+            multiline=True, show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Package Information"))
         self.printer.print_item(pack)
@@ -97,8 +93,8 @@ class List(PackageAction):
         parser.add_option('--repo_id', dest='repo_id',
                       help=_("repository ID"))
         parser.add_option('--repo', dest='repo',
-                      help=_("repository name"))
-        opt_parser_add_org(parser)
+                      help=_("repository name (required)"))
+        opt_parser_add_org(parser, required=1)
         opt_parser_add_environment(parser, default=_("Library"))
         opt_parser_add_product(parser)
 
@@ -137,9 +133,8 @@ class List(PackageAction):
         return repoId
 
     def print_packages(self, packages):
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('filename')
+        batch_add_columns(self.printer,
+            'id', 'name', 'filename')
         self.printer.print_items(packages)
 
 

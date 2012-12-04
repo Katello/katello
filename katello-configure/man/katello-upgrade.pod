@@ -5,48 +5,89 @@ katello-upgrade - Katello upgrade tool
 =head1 SYNOPSIS
 
     katello-upgrade
+        [ -a | --autostop ]
+        [ -y | --assumeyes ]
+        [ -n | --dryrun ]
+        [ -q | --quiet ]
+        [ --describe ]
+        [ --trace ]
+        [ --noservicecheck ]
+        [ --norootcheck ]
+        [ --deployment=DEPLOYMENT ]
         [ -h | --help ]
-        [ -d | --dry-run ]
-        [ -s | --skip-defaults ]
-        [ --log=<LOG_FILE> ]
 
 =head1 DESCRIPTION
 
 The B<katello-upgrade> program will upgrade a previously installed version
-of katello to the latest version. It guides a user through the upgrade proces
-allowing him to interrupt it after each upgrade step.
-Upgrade steps are divided into a separate scripts. There are two types of them:
+of katello to the latest version. It guides user through the upgrade proces
+allowing to interrupt the process after each upgrade step.
 
-=over 2
+Upgrade steps are divided into a separate scripts which can be found in
+B</usr/share/katello/install/upgrade-script> directory. There are two types
+of scripts, one groups is executed every katello-upgrade run (always scripts)
+and the other group is executed only once (once group).
 
-=item default scripts - they are executed every time
+Scripts that have been executed are "marked" in the
+B</var/lib/katello/upgrade-history> text file. If you need, for some reason,
+to re-execute already marked script, delete the line in this file.
 
-=item upgrade scripts - executed only once
+It is highly recommended to read B<Upgrade Guide> and B<Release Notes> documents
+before proceeding with the upgrade. Manual steps are rarely necessary before
+running katello-upgrade.
 
-=back
+Before proceeding, it is recommended to use --describe option to see all
+the steps and descriptions ahead of time.
 
-The default scripts can be skipped with the flag -s or --skip-default.
+The katello-upgrade command works in interactive and non-interactive mode.
+In the interactive mode, one can manually execute each step, skip steps and also
+terminate the upgrade process. Non-interactive mode is set via -y option.
+
+All the output is captured in the B</var/log/katello/katello_upgrade.log> file.
 
 =head1 COMMAND LINE PARAMETERS
 
 =over 4
 
+=item --autostop, -a
+
+Stop all the services using B<katello-service stop> command. If any service
+fails during stop action, katello-upgrade terminates and you need to fix this
+manually. All the services are checked using B<katello-service allstopped> command
+before starting the upgrade process
+
 =item --assumeyes, -y
 
-Answer yes to all prompts.
+Work non-interactively.
 
-=item --dry-run, -d
+=item --dryrun, -n
 
 Print the upgrade steps without doing anything.
 
-=item --skip-default, -s
+=item --quiet, -q
 
-Skips the default upgrade steps.
+Do not output anything on the stdout/stderr. Log file is still used.
 
-=item --log=<LOG_FILE>
+=item --describe
 
-Log file for the script output. Defaults to /var/log/katello/katello_upgrade.log.
-Set to 'stdout' to print the output directly on the console.
+Show all steps and descriptions which are planned for execution.
+
+=item --trace
+
+Print stacktrace on error (useful for debugging or reporting errors in katello-upgrade
+itself).
+
+=item --noservicecheck
+
+Do not check if all services are stopped prior upgrade (use with care).
+
+=item --norootcheck
+
+Do not check if executed under root account (do not use, only for debugging purposes).
+
+=item --deployment=DEPLOYMENT
+
+Force deployment (katello or headpin) instead of detecting this from the answer
+file (do not use, only for debugging purposes).
 
 =item --help, -h
 

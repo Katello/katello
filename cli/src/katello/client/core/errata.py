@@ -21,9 +21,11 @@ from katello.client.api.system import SystemAPI
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
-from katello.client.api.utils import get_repo, get_environment, get_product, get_system_group
+from katello.client.api.utils import get_repo, get_environment, get_product, \
+    get_system_group, get_system
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
+from katello.client.utils.printer import batch_add_columns
 
 
 # base package action --------------------------------------------------------
@@ -46,7 +48,7 @@ class List(ErrataAction):
                       help=_("repository ID"))
         parser.add_option('--repo', dest='repo',
                       help=_("repository name"))
-        opt_parser_add_org(parser)
+        opt_parser_add_org(parser, required=1)
         opt_parser_add_environment(parser, default=_("Library"))
         opt_parser_add_product(parser)
 
@@ -113,14 +115,10 @@ class SystemErrata(ErrataAction):
         org_name = self.get_option('org')
         sys_name = self.get_option('name')
 
-        systems = systemApi.systems_by_org(org_name, {'name': sys_name})
+        system = get_system(org_name, sys_name)
+        errata = systemApi.errata(system["uuid"])
 
-        errata = systemApi.errata(systems[0]["uuid"])
-
-        self.printer.add_column('id')
-        self.printer.add_column('title')
-        self.printer.add_column('type')
-
+        batch_add_columns(self.printer, 'id', 'title', 'type')
         self.printer.set_header(_("Errata for system %s in organization %s") % (sys_name, org_name))
         self.printer.print_items(errata)
 
@@ -149,9 +147,7 @@ class SystemGroupErrata(ErrataAction):
 
         errata = systemGroupApi.errata(org_name, system_group_id, type_in=type_in)
 
-        self.printer.add_column('id')
-        self.printer.add_column('title')
-        self.printer.add_column('type')
+        batch_add_columns(self.printer, 'id', 'title', 'type')
         self.printer.add_column('systems', _('# Systems'), formatter=len)
         self.printer.add_column('systems', multiline=True, show_with=printer.VerboseStrategy)
 
@@ -171,8 +167,8 @@ class Info(ErrataAction):
         parser.add_option('--repo_id', dest='repo_id',
                       help=_("repository ID"))
         parser.add_option('--repo', dest='repo',
-                      help=_("repository name"))
-        opt_parser_add_org(parser)
+                      help=_("repository name (required)"))
+        opt_parser_add_org(parser, required=1)
         opt_parser_add_environment(parser, default=_("Library"))
         opt_parser_add_product(parser)
 
@@ -203,16 +199,11 @@ class Info(ErrataAction):
                          for pkg in pack['pkglist']
                          for pinfo in pkg['packages']]
 
-        self.printer.add_column('id')
-        self.printer.add_column('title')
+        batch_add_columns(self.printer, 'id', 'title')
         self.printer.add_column('description', multiline=True)
-        self.printer.add_column('type')
-        self.printer.add_column('issued')
-        self.printer.add_column('updated')
-        self.printer.add_column('version')
-        self.printer.add_column('release')
-        self.printer.add_column('status')
-        self.printer.add_column('reboot_suggested')
+        batch_add_columns(self.printer,
+            'type', 'issued', 'updated', 'version',
+            'release', 'status', 'reboot_suggested')
         self.printer.add_column('affected_packages', multiline=True)
 
         self.printer.set_header(_("Errata Information"))

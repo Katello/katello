@@ -14,7 +14,7 @@
 class NonLibraryEnvironmentValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     return unless value
-    record.errors[attribute] << N_("Cannot register a system with 'Library' environment ") if record.environment != nil && record.environment.library?
+    record.errors[attribute] << N_("Cannot register a system to the '%s' environment") % "Library" if record.environment != nil && record.environment.library?
   end
 end
 
@@ -101,7 +101,7 @@ class System < ActiveRecord::Base
   validates :name, :presence => true, :no_trailing_space => true
   validates :description, :katello_description_format => true
   validates_length_of :location, :maximum => 255
-  validates :sockets, :numericality => { :only_integer => true, :greater_than => 0 }, :allow_blank => true,
+  validates :sockets, :numericality => { :only_integer => true, :greater_than => 0 },
             :allow_nil => true, :if => ("validation_context == :create || validation_context == :update")
   before_create  :fill_defaults
 

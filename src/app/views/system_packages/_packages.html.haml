@@ -41,7 +41,7 @@
       "x_of_y_packages" : function(x,y){ return '#{escape_javascript(_("(Loaded %X of %Y Total)"))}'.replace("%X", x).replace("%Y", y); }
       });
 
-= javascript :filtertable, :system_packages
+= javascript :packages_filtertable, :system_packages
 
 = render :partial => "systems/system_tupane_header_nav"
 
@@ -90,7 +90,7 @@
       &nbsp;
 
     .grid_8
-      = render :partial => "common/filter_table", :locals => {:filter_placeholder => _('Filter on loaded packages...')}
+      = render :partial => "common/filter_table", :locals => {:filter_placeholder => _('Filter on all packages...')}
       = form_tag system_system_packages_path(@system.id), :id => "packages_form", :method => "post", :remote => true do
         %table.filter_table.packages.ajaxScroll{'data-system_id' => @system.id, 'data-total_packages' => total_packages}
           %thead
@@ -101,8 +101,11 @@
             -#%th
               -##{_("Date Added")}
           %tbody
-            = render :partial => 'package_items', :locals => {:editable => editable, :package_tasks => package_tasks,
-                                                              :group_tasks => group_tasks, :packages => packages}
+            = render :partial => 'package_items', :locals => {:editable => editable,
+                                                              :package_tasks => package_tasks,
+                                                              :group_tasks => group_tasks, 
+                                                              :packages => packages,
+                                                              :offset => offset}
 
       #list-spinner
         = image_tag("embed/icons/spinner.gif", :class=>"ajax_scroll")

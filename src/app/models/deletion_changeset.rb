@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 
-
+require 'set'
 class DeletionChangeset < Changeset
   use_index_of Changeset
   def apply(options = { })
@@ -49,6 +49,7 @@ class DeletionChangeset < Changeset
     update_progress! '10'
     from_env = self.environment
 
+    @affected_repos = Set.new
     delete_products(from_env)
     update_progress! '30'
     delete_templates(from_env)
@@ -119,6 +120,7 @@ class DeletionChangeset < Changeset
       product = pkg.product
       product.repos(from_env).each do |repo|
         if (repo.has_package? pkg.package_id)
+          @affected_repos << repo
           pkgs_delete[repo] ||= []
           pkgs_delete[repo] << pkg.package_id
         end
@@ -144,6 +146,7 @@ class DeletionChangeset < Changeset
        product = errata.product
        product.repos(from_env).each do |repo|
          if repo.has_erratum? errata.errata_id
+           @affected_repos << repo
            errata_delete[repo] ||= []
            errata_delete[repo] << errata.errata_id
          end
@@ -165,6 +168,7 @@ class DeletionChangeset < Changeset
       product = distro.product
       product.repos(from_env).each do |repo|
         if repo.has_distribution? distro.distribution_id
+          @affected_repos << repo
           distribution_delete[repo] = distro.distribution_id
         end
       end
@@ -176,11 +180,7 @@ class DeletionChangeset < Changeset
   end
 
   def affected_repos
-    repos = []
-    repos += self.packages.collect { |e| e.repositories }.flatten(1)
-    repos += self.errata.collect { |e| e.repositories }.flatten(1)
-    repos += self.distributions.collect { |d| d.repositories }.flatten(1)
-    repos.uniq
+    @affected_repos
   end
 
   def generate_metadata

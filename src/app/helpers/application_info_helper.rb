@@ -22,11 +22,8 @@ module ApplicationInfoHelper
     end
   end
 
-  def redhat_bugzilla_link
-    url = "https://bugzilla.redhat.com/enter_bug.cgi?product=CloudForms%20System%20Engine"
-    link_to (_("the %s Bugzilla") % AppConfig.app_name), url
-  end
-
+  # TODO: this is probably not the right docs link
+  # this should point to the katello docs link
   def doc_link
     url = "https://access.redhat.com/knowledge/docs/CloudForms/"
     link_to _("the CloudForms Documentation"), url

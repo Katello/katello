@@ -102,6 +102,7 @@ module Glue::Candlepin::Consumer
 
     def load_from_cp(consumer_json)
       self.uuid = consumer_json[:uuid]
+      consumer_json[:facts] ||= {'sockets'=>0}
       convert_from_cp_fields(consumer_json).each do |k,v|
         instance_variable_set("@#{k}", v) if respond_to?("#{k}=")
       end
@@ -287,7 +288,10 @@ module Glue::Candlepin::Consumer
     end
 
     def memory
-      facts["dmi.memory.size"]
+      mem = facts["memory.memtotal"]
+      # dmi.memory.size is on older clients
+      mem ||= facts["dmi.memory.size"]
+      memory_in_megabytes(mem)
     end
 
     def entitlements_valid?
@@ -316,6 +320,23 @@ module Glue::Candlepin::Consumer
       else
         self.releaseVer
       end
+    end
+
+    def memory_in_megabytes(mem_str)
+      # convert total memory into megabytes
+      return 0 if mem_str.nil?
+      mem,unit = mem_str.split
+      total_mem = mem.to_f
+      case unit
+        when 'B'  then total_mem = 0
+        when 'kB' then total_mem = (total_mem / 1024)
+        when 'MB' then total_mem *= 1
+        when 'GB' then total_mem *= (1024)
+        when 'TB' then total_mem *= (1024*1024)
+        # default memtotal is in kB
+        else total_mem = (total_mem / 1024)
+      end
+      total_mem.to_i
     end
 
     def available_pools_full listall=false

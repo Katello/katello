@@ -284,20 +284,25 @@ DESC
       }
     )
 
-    pdf_options = {:table_format => {
-      :heading_font_size => 10,
-      :font_size => 8,
-      :column_options => {
-        "width" => 50,
-        "name" => {"width" => 100},
-        "uuid" => {"width" => 100},
-        "location" => {"width" => 50},
-        "environment" => {"width" => 40},
-        "organization" => {"width" => 75},
-        "created" => {"width" => 60},
-        "updated" => {"width" => 60}
-       }
-    }}
+    pdf_options = { :pdf_format => {
+                      :page_layout => :portrait,
+                      :page_size => "LETTER",
+                      :left_margin => 5
+                      },
+                    :table_format => {
+                      :width => 585,
+                      :cell_style => { :size => 8},
+                      :row_colors => ["FFFFFF","F0F0F0"],
+                      :column_widths => {
+                        0 => 100,
+                        1 => 100,
+                        2 => 50,
+                        3 => 40,
+                        4 => 75,
+                        5 => 60,
+                        6 => 60}
+                      }
+                  }
 
     system_report.rename_column("created_at", "created")
     system_report.rename_column("updated_at", "updated")
@@ -311,7 +316,7 @@ DESC
       format.csv { render :text => system_report.as(:csv) }
       format.pdf do
         send_data(
-          system_report.as(:pdf, pdf_options),
+          system_report.as(:prawn_pdf, pdf_options),
           :filename => "%s_systems_report.pdf" % (AppConfig.katello? ? "katello" : "headpin"),
           :type => "application/pdf"
         )
@@ -418,7 +423,7 @@ DESC
 
   def find_only_environment
     if !@environment && @organization && !params.has_key?(:environment_id)
-      raise HttpErrors::BadRequest, _("Organization %s has 'Library' environment only. Please create an environment for system registration.") % @organization.name if @organization.environments.empty?
+      raise HttpErrors::BadRequest, _("Organization %{org} has the '%{env}' environment only. Please create an environment for system registration.") % {:org => @organization.name, :env => "Library"} if @organization.environments.empty?
 
       # Some subscription-managers will call /users/$user/owners to retrieve the orgs that a user belongs to.
       # Then, If there is just one org, that will be passed to the POST /api/consumers as the owner. To handle

@@ -46,12 +46,12 @@ from katello.client.core import (
   admin,
   architecture,
   config_template,
-  domain
+  domain,
+  subnet
 )
 
-def setup_admin(katello_cmd):
+def setup_admin(katello_cmd, mode=get_katello_mode()):
     # pylint: disable=R0914,R0915
-    mode = get_katello_mode()
     akey_cmd = activation_key.ActivationKey()
     akey_cmd.add_command('create', activation_key.Create())
     akey_cmd.add_command('info', activation_key.Info())
@@ -305,6 +305,7 @@ def setup_admin(katello_cmd):
         admin_cmd.add_command('crl_regen', admin.CrlRegen())
         katello_cmd.add_command('admin', admin_cmd)
 
+
     architecture_cmd = architecture.Architecture()
     architecture_cmd.add_command('list', architecture.List())
     architecture_cmd.add_command('info', architecture.Show())
@@ -329,3 +330,14 @@ def setup_admin(katello_cmd):
     domain_cmd.add_command('update', domain.Update())
     domain_cmd.add_command('delete', domain.Delete())
     katello_cmd.add_command('domain', domain_cmd)
+
+
+    if mode == 'katello':
+        subnet_cmd = subnet.Subnet()
+        subnet_cmd.add_command('list', subnet.List())
+        subnet_cmd.add_command('info', subnet.Info())
+        subnet_cmd.add_command('create', subnet.Update(create=True))
+        subnet_cmd.add_command('update', subnet.Update(create=False))
+        subnet_cmd.add_command('delete', subnet.Delete())
+        katello_cmd.add_command('subnet', subnet_cmd)
+

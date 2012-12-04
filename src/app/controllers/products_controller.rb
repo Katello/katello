@@ -47,13 +47,21 @@ class ProductsController < ApplicationController
 
   def create
     product_params = params[:product]
+    requested_label = String.new(product_params[:label]) unless product_params[:label].blank?
     product_params[:label], label_assigned = generate_label(product_params[:name], _('product')) if product_params[:label].blank?
 
+
     gpg = GpgKey.readable(current_organization).find(product_params[:gpg_key]) if product_params[:gpg_key] and product_params[:gpg_key] != ""
-    @provider.add_custom_product(product_params[:label], product_params[:name], product_params[:description], product_params[:url], gpg)
+    product = @provider.add_custom_product(product_params[:label], product_params[:name],
+                                           product_params[:description], product_params[:url], gpg)
 
     notify.success _("Product '%s' created.") % product_params[:name]
-    notify.message label_assigned unless label_assigned.blank?
+
+    if requested_label.blank?
+      notify.message default_label_assigned(product)
+    elsif requested_label != product.label
+      notify.message label_overridden(product, requested_label)
+    end
 
     render :nothing => true
   end

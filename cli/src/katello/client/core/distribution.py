@@ -22,6 +22,7 @@ from katello.client.api.utils import get_repo
 from katello.client.utils import printer
 from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org, \
     opt_parser_add_environment, opt_parser_add_environment
+from katello.client.utils.printer import batch_add_columns
 
 
 # base action ----------------------------------------------------------------
@@ -43,10 +44,10 @@ class List(DistributionAction):
         parser.add_option('--repo_id', dest='repo_id',
                       help=_("repository ID"))
         parser.add_option('--repo', dest='repo',
-                      help=_("repository name"))
-        opt_parser_add_org(parser)
+                      help=_("repository name (required)"))
+        opt_parser_add_org(parser, required=1)
         opt_parser_add_environment(parser, default=_("Library"))
-        opt_parser_add_product(parser)
+        opt_parser_add_product(parser, required=1)
 
     def check_options(self, validator):
         if not validator.exists('repo_id'):
@@ -99,11 +100,8 @@ class Info(DistributionAction):
 
         data = self.api.distribution(repoId, dist_id)
 
-        self.printer.add_column('id')
-        self.printer.add_column('description')
-        self.printer.add_column('family')
-        self.printer.add_column('variant')
-        self.printer.add_column('version')
+        batch_add_columns(self.printer,
+            'id', 'description', 'family', 'variant', 'version')
         self.printer.add_column('files', multiline=True, show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Distribution Information"))

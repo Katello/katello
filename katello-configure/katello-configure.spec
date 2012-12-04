@@ -31,7 +31,6 @@ Requires:       nss-tools
 Requires:       openssl
 Requires:       policycoreutils-python
 Requires:       initscripts
-Requires:       rubygem(bundler)
 Requires:       rubygem(rake)
 BuildRequires:  /usr/bin/pod2man /usr/bin/erb
 BuildRequires:  findutils puppet >= 2.6.6
@@ -48,7 +47,7 @@ katello-upgrade which handles upgrades between versions.
 %build
 %if ! 0%{?fastbuild:1}
     #check syntax of main configure script and libs
-    ruby -c bin/katello-configure lib/puppet/parser/functions/*rb
+    ruby -c bin/* lib/puppet/parser/functions/*rb
 
     #check syntax for all puppet scripts
     %if 0%{?rhel} || 0%{?fedora} < 17
@@ -63,6 +62,9 @@ katello-upgrade which handles upgrades between versions.
     find modules/ -name \*erb | xargs aux/check_erb
 %endif
 
+# README is development (git) only
+rm -f upgrade-scripts/README
+
 #build katello-configure man page
 THE_VERSION=%version perl -000 -ne 'if ($X) { s/^THE_VERSION/$ENV{THE_VERSION}/; s/\s+CLI_OPTIONS/$C/; s/^CLI_OPTIONS_LONG/$X/; print; next } ($t, $l, $v, $d) = /^#\s*(.+?\n)(.+\n)?(\S+)\s*=\s*(.*?)\n+$/s; $l =~ s/^#\s*//gm; $l = $t if not $l; ($o = $v) =~ s/_/-/g; $x .= qq/=item --$o=<\U$v\E>\n\n$l\nThe default value is "$d".\n\n/; $C .= "\n        [ --$o=<\U$v\E> ]"; $X = $x if eof' default-answer-file man/katello-configure.pod \
 	| /usr/bin/pod2man --name=%{name} -c "Katello Reference" --section=1 --release=%{version} - man/katello-configure.man1
@@ -71,8 +73,12 @@ THE_VERSION=%version perl -000 -ne 'if ($X) { s/^THE_VERSION/$ENV{THE_VERSION}/;
 sed -e 's/THE_VERSION/%version/g' man/katello-upgrade.pod | /usr/bin/pod2man --name=katello-upgrade -c "Katello Reference" --section=1 --release=%{version} - man/katello-upgrade.man1
 
 #build katello-passwd man page
-THE_VERSION=%version sed -i "s/THE_VERSION/$THE_VERSION/g" man/katello-passwd.pod bin/katello-passwd
+sed -i "s/THE_VERSION/%version/g" man/katello-passwd.pod bin/katello-passwd
 /usr/bin/pod2man --name=%{name} -c "Katello Reference" --section=1 --release=%{version} man/katello-passwd.pod man/katello-passwd.man1
+
+#build katello-configure-answer man page
+sed -i "s/THE_VERSION/%version/g" man/katello-configure-answer.pod bin/katello-configure-answer
+/usr/bin/pod2man --name=%{name} -c "Katello Reference" --section=1 --release=%{version} man/katello-configure-answer.pod man/katello-configure-answer.man1
 
 
 %install
@@ -81,6 +87,7 @@ install -d -m 0755 %{buildroot}%{_sbindir}
 install -m 0755 bin/katello-configure %{buildroot}%{_sbindir}
 install -m 0755 bin/katello-upgrade %{buildroot}%{_sbindir}
 install -m 0755 bin/katello-passwd %{buildroot}%{_sbindir}
+install -m 0755 bin/katello-configure-answer %{buildroot}%{_sbindir}
 install -d -m 0755 %{buildroot}%{homedir}
 install -d -m 0755 %{buildroot}%{homedir}/puppet/modules
 cp -Rp modules/* %{buildroot}%{homedir}/puppet/modules
@@ -92,6 +99,7 @@ install -d -m 0755 %{buildroot}%{_mandir}/man1
 install -m 0644 man/katello-configure.man1 %{buildroot}%{_mandir}/man1/katello-configure.1
 install -m 0644 man/katello-upgrade.man1 %{buildroot}%{_mandir}/man1/katello-upgrade.1
 install -m 0644 man/katello-passwd.man1 %{buildroot}%{_mandir}/man1/katello-passwd.1
+install -m 0644 man/katello-configure-answer.man1 %{buildroot}%{_mandir}/man1/katello-configure-answer.1
 install -d -m 0755 %{buildroot}%{homedir}/upgrade-scripts
 cp -Rp upgrade-scripts/* %{buildroot}%{homedir}/upgrade-scripts
 chmod +x -R %{buildroot}%{homedir}/upgrade-scripts/*
@@ -101,9 +109,11 @@ chmod +x -R %{buildroot}%{homedir}/upgrade-scripts/*
 %{_sbindir}/katello-configure
 %{_sbindir}/katello-upgrade
 %{_sbindir}/katello-passwd
+%{_sbindir}/katello-configure-answer
 %{_mandir}/man1/katello-configure.1*
 %{_mandir}/man1/katello-upgrade.1*
 %{_mandir}/man1/katello-passwd.1*
+%{_mandir}/man1/katello-configure-answer.1*
 
 
 %changelog

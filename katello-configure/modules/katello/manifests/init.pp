@@ -1,4 +1,6 @@
 class katello {
+  Exec { logoutput => on_failure, timeout => 0 }
+
   include katello::params
   include certs
   include apache2
@@ -17,6 +19,7 @@ class katello {
           oauth_consumer_key => $katello::params::oauth_key,
           oauth_consumer_secret => $katello::params::oauth_secret,
           oauth_map_users   => true,
+          reset_data        => $katello::params::reset_data,
         }
       }
     }

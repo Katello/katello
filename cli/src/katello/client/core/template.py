@@ -25,6 +25,7 @@ from katello.client.core.utils import test_record, get_abs_path, run_spinner_in_
 from katello.client.api.utils import get_library, get_environment, get_template, get_repo
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
+from katello.client.utils.printer import batch_add_columns
 
 
 
@@ -48,7 +49,7 @@ class List(TemplateAction):
     description = _('list all templates')
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser, required=_(" (required if specifying environment)"))
+        opt_parser_add_org(parser, required=1)
         opt_parser_add_environment(parser, default=_("Library"))
 
     def check_options(self, validator):
@@ -103,20 +104,17 @@ class Info(TemplateAction):
         template["package_groups"] = [p["name"] for p in template["package_groups"]]
         template["package_group_categories"] = [p["name"] for p in template["pg_categories"]]
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
+
+        batch_add_columns(self.printer, 'id', 'name')
         self.printer.add_column('revision', show_with=printer.VerboseStrategy)
         self.printer.add_column('description', multiline=True)
         self.printer.add_column('environment_id')
         self.printer.add_column('parent_id')
-        self.printer.add_column('errata', multiline=True, show_with=printer.VerboseStrategy)
-        self.printer.add_column('products', multiline=True, show_with=printer.VerboseStrategy)
-        self.printer.add_column('repositories', multiline=True, show_with=printer.VerboseStrategy)
-        self.printer.add_column('packages', multiline=True, show_with=printer.VerboseStrategy)
-        self.printer.add_column('parameters', multiline=True, show_with=printer.VerboseStrategy)
-        self.printer.add_column('package_groups', multiline=True, show_with=printer.VerboseStrategy)
-        self.printer.add_column('package_group_categories', multiline=True, show_with=printer.VerboseStrategy)
-
+        batch_add_columns(self.printer, \
+            'errata', 'products', 'repositories', \
+            'packages', 'parameters', 'package_groups', \
+            'package_group_categories', \
+            multiline=True, show_with=printer.VerboseStrategy)
         self.printer.set_header(_("Template Info"))
         self.printer.print_item(template)
         return os.EX_OK
@@ -189,7 +187,7 @@ class Export(TemplateAction):
         parser.add_option('--name', dest='name',
                                help=_("template name (required)"))
         opt_parser_add_org(parser, required=1)
-        opt_parser_add_environment(parser)
+        opt_parser_add_environment(parser, required=1)
         parser.add_option("--file", dest="file",
             help=_("path to the template file (required)"))
         parser.add_option("--format", dest="format", choices=self.supported_formats,

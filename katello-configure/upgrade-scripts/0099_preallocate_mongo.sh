@@ -2,7 +2,12 @@
 
 #name: Preallocate MongoDB journal
 #apply: katello
-#description: Journal is now enabled by default, we need to preallocate the space.
+#run: once
+#description:
+#With Mongo 1.8+ journal is enabled by default and it is necessary to create
+#it manually, otherwise mongod daemon delays with start which can lead to
+#errors during service startup. This step creates the journal only if it
+#is not created yet.
 
 # make sure the directory exists
 mkdir /var/lib/mongodb/journal/ 2>/dev/null
@@ -19,4 +24,3 @@ else
   echo "Journals are already allocated, skipping"
   exit 0
 fi
-

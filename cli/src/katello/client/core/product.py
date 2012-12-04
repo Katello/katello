@@ -30,6 +30,7 @@ from katello.client.core.utils import run_async_task_with_status, run_spinner_in
     AsyncTask, format_task_errors
 from katello.client.core.utils import ProgressBar
 from katello.client.utils import printer
+from katello.client.utils.printer import batch_add_columns
 
 
 # base product action --------------------------------------------------------
@@ -140,12 +141,7 @@ class List(ProductAction):
         prov_name = self.get_option('prov')
         all_opt = self.get_option('all')
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('label')
-        self.printer.add_column('provider_id')
-        self.printer.add_column('provider_name')
-        self.printer.add_column('sync_plan_name')
+        batch_add_columns(self.printer, 'id', 'name', 'label', 'provider_id', 'provider_name', 'sync_plan_name')
         self.printer.add_column('last_sync', formatter=format_sync_time)
         self.printer.add_column('gpg_key_name', name=_("GPG key"))
 
@@ -245,10 +241,7 @@ class Status(SingleProductAction):
 
         #TODO: last errors?
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('provider_id')
-        self.printer.add_column('provider_name')
+        batch_add_columns(self.printer, 'id', 'name', 'provider_id', 'provider_name')
         self.printer.add_column('last_sync', formatter=format_sync_time)
         self.printer.add_column('sync_state', formatter=format_sync_state)
         self.printer.add_column('progress', show_with=printer.VerboseStrategy)
@@ -323,7 +316,7 @@ class Create(ProductAction):
         parser.add_option('--name', dest='name',
             help=_("product name (required)"))
         parser.add_option('--label', dest='label',
-                               help=_("product label, ASCII identifier for the product with no" + 
+                               help=_("product label, ASCII identifier for the product with no" +
                                       " spaces eg: ACME_Product. (will be generated if not specified)"))
         parser.add_option("--description", dest="description",
             help=_("product description"))
@@ -352,11 +345,11 @@ class Create(ProductAction):
         nodiscovery = self.get_option('nodiscovery')
         gpgkey      = self.get_option('gpgkey')
 
-        return self.create_product_with_repos(provName, orgName, name, label, 
+        return self.create_product_with_repos(provName, orgName, name, label,
                                               description, url, assumeyes, nodiscovery, gpgkey)
 
 
-    def create_product_with_repos(self, provName, orgName, name, label, description, 
+    def create_product_with_repos(self, provName, orgName, name, label, description,
                                   url, assumeyes, nodiscovery, gpgkey):
         prov = get_provider(orgName, provName)
 

@@ -103,13 +103,13 @@
 
 
 
-//Div for dep. content 
+//Div for dep. content
 #dialog_content{:style => "word-wrap: break-word;", :title=>"#{_('Package Dependencies')}"}
 
 = help_tip_button
 .grid_16
-  = help_tip(_('Changesets allow you to either promote content to or delete content from ' + |
-                'an environment.<BR/><BR/> ' + |
+  = help_tip((_('Changesets allow you to either promote content to or delete content from ' + |
+                'an environment.<br/><br/> ' + |
                 'For a promotion, you may promote content from one environment to the ' + |
                 'next along a promotion path.  Once you have created a promotion ' + |
                 'changeset, clicking "Add" next to one or more products will add them to ' + |
@@ -117,14 +117,14 @@
                 'you may promote other types of content.  Once you have created a ' + |
                 'changeset, click the "Review" button to place the changeset in a ' + |
                 'locked state for review and when ready click the "Promote" button to ' + |
-                'apply it to the next environment.<BR/><BR/>' + |
+                'apply it to the next environment.<br/><br/>' + |
                 'For a deletion, you may remove content from the current environment. ' + |
                 'Once you have created a deletion changeset, clicking "Add" next to ' + |
                 'content will add that content to the changeset.  Once you have created ' + |
                 'a changeset, click the "Review" button to place the changeset in a ' + |
                 'locked state for review and when ready click the "Delete" button to ' + |
                 'apply it to the current environment.  Note: deletion of content from ' + |
-                'Library is not allowed using a deletion changeset.<BR/><BR/>')) |
+                '%s is not allowed using a deletion changeset.<br/><br/>') % "Library").html_safe) |
 
 .grid_16
   = environment_selector(:url_proc=>breadcrumb_url_proc,  :accessible_envs=>accessible_envs)
@@ -205,7 +205,7 @@
 
 
     = render :partial=>"common/tupane"
-  
+
     #content_tree.left.sliding_tree
       - if show_new_button?(manage_promotion_changesets, manage_deletion_changesets)
         - next_env = @next_environment.nil? ? "" : "&next_env_id=" + @next_environment.id.to_s

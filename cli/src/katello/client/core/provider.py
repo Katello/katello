@@ -309,15 +309,6 @@ class DeleteManifest(SingleProviderAction):
 
     description = _('delete an imported manifest')
 
-
-    def setup_parser(self, parser):
-        super(DeleteManifest, self).setup_parser(parser)
-
-
-    def check_options(self, validator):
-        super(DeleteManifest, self).check_options(validator)
-
-
     def run(self):
         provName = self.get_option('name')
         orgName  = self.get_option('org')

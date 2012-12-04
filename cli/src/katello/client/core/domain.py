@@ -17,6 +17,7 @@
 from katello.client.api.domain import DomainAPI
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_foreman_record, unnest_one
+from katello.client.utils.printer import batch_add_columns
 
 
 # base domain action --------------------------------------------------------
@@ -46,10 +47,8 @@ class List(DomainAction):
         if domains:
             domains = unnest_one(domains)
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('fullname')
-        self.printer.add_column('dns_id')
+        batch_add_columns(self.printer,
+            'id', 'name', 'fullname', 'dns_id')
 
         self.printer.set_header(_("Domains"))
         self.printer.print_items(domains)
@@ -59,7 +58,7 @@ class Info(DomainAction):
     description = _('show information about a domain')
 
     def setup_parser(self, parser):
-        parser.add_option('--name', dest='id', help=_("domain id or name"))
+        parser.add_option('--name', dest='id', help=_("domain id or name (required)"))
 
     def check_options(self, validator):
         validator.require('id')
@@ -68,10 +67,8 @@ class Info(DomainAction):
         domain_id = self.get_option('id')
         domain = unnest_one(self.api.show(domain_id))
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('fullname')
-        self.printer.add_column('dns_id')
+        batch_add_columns(self.printer,
+            'id', 'name', 'fullname', 'dns_id')
 
         self.printer.set_header(_("Domain"))
         self.printer.print_item(domain)
@@ -83,7 +80,7 @@ class Create(DomainAction):
     description = _('create domain')
 
     def setup_parser(self, parser):
-        parser.add_option('--name', dest='name', help=_("The full DNS Domain name"))
+        parser.add_option('--name', dest='name', help=_("The full DNS Domain name (required)"))
         parser.add_option('--fullname', dest='fullname', help=_("Full name describing the domain"))
         parser.add_option('--dns_id', dest='dns_id', help=_("DNS Proxy to use within this domain"))
 
@@ -105,8 +102,8 @@ class Update(DomainAction):
     description = _('update domain')
 
     def setup_parser(self, parser):
-        parser.add_option('--name', dest='id', help=_("Domain id"))
-        parser.add_option('--new_name', dest='name', help=_("The full DNS Domain name(required)"))
+        parser.add_option('--name', dest='id', help=_("Domain id (required)"))
+        parser.add_option('--new_name', dest='name', help=_("The full DNS Domain name"))
         parser.add_option('--fullname', dest='fullname', help=_("Full name describing the domain"))
         parser.add_option('--dns_id', dest='dns_id', help=_("DNS Proxy to use within this domain"))
 
@@ -130,7 +127,7 @@ class Delete(DomainAction):
     description = _('delete domain')
 
     def setup_parser(self, parser):
-        parser.add_option('--name', dest='id', help=_("domain id or name"))
+        parser.add_option('--name', dest='id', help=_("domain id or name (required)"))
 
     def check_options(self, validator):
         validator.require('id')

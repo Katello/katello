@@ -76,7 +76,7 @@ class katello::config {
       content => template("katello/etc/ldap_fluff.yml.erb"),
       owner   => $katello::params::user,
       group   => $katello::params::group,
-      mode    => "600",
+      mode    => "600";
   }
 
   exec {"httpd-restart":
@@ -102,6 +102,7 @@ class katello::config {
                 'katello' => [
                   Class["candlepin::service"], 
                   Class["pulp::service"], 
+                  Class["foreman::service"], 
                   File["${katello::params::log_base}"], 
                   File["${katello::params::log_base}/production.log"], 
                   File["${katello::params::log_base}/production_sql.log"], 
@@ -125,7 +126,6 @@ class katello::config {
       path    => "/sbin:/bin:/usr/bin",
       before  => Exec["katello_migrate_db"],
       notify  => Postgres::Dropdb["$katello::params::db_name"],
-      timeout => 0
     }
     postgres::dropdb {$katello::params::db_name:
       logfile => "${katello::params::configure_log_base}/drop-postgresql-katello-database.log",
@@ -141,50 +141,34 @@ class katello::config {
     }
   }
 
-  exec {"katello_bundler_check":
-    cwd         => $katello::params::katello_dir,
-    user        => "root",
-    path        => "/sbin:/bin:/usr/bin",
-    environment => "RAILS_ENV=${katello::params::environment}",
-    command     => "bundle install --local > ${katello::params::bundler_log} 2>&1",
-    creates     => "${katello::params::bundler_log}",
-    before      => Class["katello::service"],
-    require     => $katello::params::deployment ? {
-        'katello' => [ Exec["katello_db_printenv"], File["${katello::params::log_base}"] ],
-        'headpin' => [ Exec["katello_db_printenv"], File["${katello::params::log_base}"] ],
-        default => [],
-    },
-  }
-
   exec {"katello_migrate_db":
     cwd         => $katello::params::katello_dir,
     user        => "root",
-    environment => "RAILS_ENV=${katello::params::environment}",
+    environment => ["RAILS_ENV=${katello::params::environment}", "BUNDLER_EXT_NOSTRICT=1"],
     command     => "/usr/bin/env rake db:migrate --trace --verbose > ${katello::params::migrate_log} 2>&1 && touch /var/lib/katello/db_migrate_done",
     creates => "/var/lib/katello/db_migrate_done",
     before  => Class["katello::service"],
-    require => [ Exec["katello_bundler_check"] ],
-    timeout => 0
+    require => [ Exec["katello_db_printenv"] ],
   }
 
   exec {"katello_seed_db":
     cwd         => $katello::params::katello_dir,
     user        => "root",
-    environment => ["RAILS_ENV=${katello::params::environment}", "KATELLO_LOGGING=debug"],
+    environment => ["RAILS_ENV=${katello::params::environment}", "KATELLO_LOGGING=debug", "BUNDLER_EXT_NOSTRICT=1"],
     command     => "/usr/bin/env rake seed_with_logging --trace --verbose > ${katello::params::seed_log} 2>&1 && touch /var/lib/katello/db_seed_done",
     creates => "/var/lib/katello/db_seed_done",
-    timeout => 0,
     before  => Class["katello::service"],
     require => $katello::params::deployment ? {
-                'katello' => [ Exec["katello_migrate_db"], Class["candlepin::service"], Class["pulp::service"], File["${katello::params::log_base}"] ],
+                'katello' => [ Exec["katello_migrate_db"], Class["candlepin::service"], Class["pulp::service"], Class["foreman::service"], File["${katello::params::log_base}"] ],
                 'headpin' => [ Exec["katello_migrate_db"], Class["candlepin::service"], Class["thumbslug::service"], File["${katello::params::log_base}"] ],
                 default => [],
     },
   }
 
-  # during first installation we mark all upgrade scripts as executed
+  # during first installation we mark all 'once'  upgrade scripts as executed
   exec {"update_upgrade_history":
-    command => "ls ${katello::params::katello_upgrade_scripts_dir} > ${katello::params::katello_upgrade_history_file}",
+    cwd     => "${katello::params::katello_upgrade_scripts_dir}",
+    command => "grep -E '#.*run:.*once' * | awk -F: '{print \$1}' > ${katello::params::katello_upgrade_history_file}",
     creates => "${katello::params::katello_upgrade_history_file}",
     path    => "/bin",
     before  => Class["katello::service"],

@@ -6,7 +6,7 @@
     });
 
 :ruby
-  sockets_help = _("The number of CPU Sockets or LPARs which this machine uses")
+  sockets_help = _("The number of CPU Sockets or LPARs which this system uses")
 
 
 - if @environment
@@ -21,7 +21,7 @@
           = form.field :arch, :label => _("Architecture:") do
             = architecture_select
 
-          = form.text_field :sockets, :label => _("Number of Sockets or LPARs:"), :help => sockets_help
+          = form.text_field :sockets, :label => _("Number of Sockets or LPARs:"), :help => sockets_help, :value => 1
 
           = form.field :virtual, :label => _("System Type:") do
             = virtual_buttons

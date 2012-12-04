@@ -126,17 +126,16 @@ class SystemPackagesController < ApplicationController
                        :message=>_("Hypervisors do not have packages")}
       return
     end
-
+    
     offset = current_user.page_size
     packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
     total_packages = packages.length
-    if packages.length > 0
+    if total_packages > 0
       if params.has_key? :pkg_order
         if params[:pkg_order].downcase == "desc"
           packages.reverse!
         end
       end
-      packages = packages[0...offset]
     else
       packages = []
     end
@@ -154,38 +153,16 @@ class SystemPackagesController < ApplicationController
   end
 
   def more_packages
-    #grab the current user setting for page size
-    size = current_user.page_size
-    #what packages are available?
     packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
 
-    if packages.length > 0
-      #check for the params offset (start of array chunk)
-      if params.has_key? :offset
-        offset = params[:offset].to_i
-      else
-        offset = current_user.page_size
+    if params.has_key? :pkg_order
+      if params[:pkg_order].downcase == "desc"
+        packages.reverse!
       end
-      if params.has_key? :pkg_order
-        if params[:pkg_order].downcase == "desc"
-          #reverse if order is desc
-          packages.reverse!
-        end
-      end
-      if params.has_key? :reverse
-        packages = packages[0...params[:reverse].to_i]
-      else
-        packages = packages[offset...offset+size]
-      end
-      packages ||= [] # fence for case when offset extended beyond range, etc.
-    else
-      packages = []
     end
 
-    packages = packages ? packages : []
-
     render :partial=>"package_items", :locals=>{:packages => packages, :package_tasks => nil,
-                                                :group_tasks => nil, :offset=> offset, 
+                                                :group_tasks => nil, :offset=> 0, 
                                                 :editable => @system.editable?}
   end
 

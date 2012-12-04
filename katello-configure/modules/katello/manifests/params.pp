@@ -44,13 +44,12 @@ class katello::params {
   $environment = "production"
   $log_base    = "/var/log/katello"
   $configure_log_base = "$log_base/katello-configure"
-  $bundler_log = "$configure_log_base/bundler.log"
   $db_env_log  = "$configure_log_base/db_env.log"
   $migrate_log = "$configure_log_base/db_migrate.log"
   $seed_log    = "$configure_log_base/db_seed.log"
 
   # katello upgrade settings
-  $katello_upgrade_scripts_dir  = "/usr/share/katello/install/upgrade-scripts/upgrade/"
+  $katello_upgrade_scripts_dir  = "/usr/share/katello/install/upgrade-scripts"
   $katello_upgrade_history_file = "/var/lib/katello/upgrade-history"
 
   # SSL settings

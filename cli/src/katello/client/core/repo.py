@@ -28,6 +28,7 @@ from katello.client.core.utils import system_exit, run_async_task_with_status, r
 from katello.client.core.utils import ProgressBar
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
+from katello.client.utils.printer import batch_add_columns
 
 
 ALLOWED_REPO_URL_SCHEMES = ("http", "https", "ftp", "file")
@@ -74,9 +75,6 @@ class SingleRepoAction(RepoAction):
     def setup_parser(self, parser):
         self.set_repo_select_options(parser, self.select_by_env)
 
-    def check_options(self, validator):
-        self.check_repo_select_options(validator)
-
     @classmethod
     def set_repo_select_options(cls, parser, select_by_env=True):
         parser.add_option('--id', dest='id', help=_("repository ID"))
@@ -87,7 +85,7 @@ class SingleRepoAction(RepoAction):
             opt_parser_add_environment(parser, default=_("Library"))
 
     @classmethod
-    def check_repo_select_options(cls, validator):
+    def check_options(cls, validator):
         if not validator.exists('id'):
             validator.require(('name', 'org'))
             validator.require_at_least_one_of(('product', 'product_label', 'product_id'))
@@ -326,11 +324,8 @@ class Info(SingleRepoAction):
 
         repo['url'] = repo['source']['url']
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('package_count')
-        self.printer.add_column('arch', show_with=printer.VerboseStrategy)
-        self.printer.add_column('url', show_with=printer.VerboseStrategy)
+        batch_add_columns(self.printer, 'id', 'name', 'package_count')
+        batch_add_columns(self.printer, 'arch', 'url', show_with=printer.VerboseStrategy)
         self.printer.add_column('last_sync', show_with=printer.VerboseStrategy, formatter=format_sync_time)
         self.printer.add_column('sync_state', name=_("Progress"),
             show_with=printer.VerboseStrategy, formatter=format_sync_state)
@@ -444,10 +439,7 @@ class List(RepoAction):
         prodId = self.get_option('product_id')
         listDisabled = self.has_option('disabled')
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('label')
-        self.printer.add_column('package_count')
+        batch_add_columns(self.printer, 'id', 'name', 'label', 'package_count')
         self.printer.add_column('last_sync', formatter=format_sync_time)
 
         prodIncluded = prodName or prodLabel or prodId
@@ -536,7 +528,7 @@ class AddRemoveFilter(SingleRepoAction):  # pylint: disable=R0904
         parser.add_option('--filter', dest='filter', help=_("filter name (required)"))
 
     def check_options(self, validator):
-        self.check_repo_select_options(validator)
+        super(AddRemoveFilter, self).check_options(validator)
         validator.require('filter')
 
     def run(self):

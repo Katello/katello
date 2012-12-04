@@ -36,6 +36,8 @@ SERVICE_CMD="/usr/sbin/service-wait"
 
 forward_services() {
   ACTION="$1"
+  # when set to true return sum of failed services instead the last status
+  SUM="${2:-false}"
 
   RET=0
   E_STAT=0
@@ -45,7 +47,11 @@ forward_services() {
       E_STAT=$?
     fi
     if [ $E_STAT -ne 0 ]; then
-      RET=$E_STAT
+      if [ "$SUM" == "false" ]; then
+        RET=$E_STAT
+      else
+        RET=$(($RET+1))
+      fi
     fi
   done
   return $RET
@@ -123,6 +129,14 @@ status() {
   return $?
 }
 
+allstopped() {
+  forward_services status "true"
+  RUNNING=$?
+  SERVICES_ARRAY=($SERVICES)
+  SERVICES_COUNT=${#SERVICES_ARRAY[@]}
+  return $((SERVICES_COUNT - RUNNING))
+}
+
 ensure_httpd_down() {
   COUNT=0
   LIMIT=10
@@ -190,6 +204,9 @@ case "$1" in
   status)
     status
     ;;
+  allstopped)
+    allstopped
+    ;;
   restart|reload)
     stop
     sleep 4
@@ -199,7 +216,7 @@ case "$1" in
     start
     ;;
   *)
-    echo "Usage: $(basename $0) {start|stop|status|reload|restart|enable|disable}"
+    echo "Usage: $(basename $0) {start|stop|status|allstopped|reload|restart|enable|disable}"
     exit 1
     ;;
 esac
