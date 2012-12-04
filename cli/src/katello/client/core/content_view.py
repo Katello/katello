@@ -22,6 +22,8 @@ from katello.client.cli.base import opt_parser_add_org, \
         opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_environment, get_content_view
+from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, \
+        AsyncTask, format_task_errors
 
 # base content_view action --------------------------------------------------------
 
@@ -36,7 +38,7 @@ class ContentViewAction(BaseAction):
 
 class List(ContentViewAction):
 
-    description = _('list known content_views')
+    description = _('list known content views')
 
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
@@ -65,12 +67,12 @@ class List(ContentViewAction):
 
 class Info(ContentViewAction):
 
-    description = _('list a specific content_view')
+    description = _('list a specific content view')
 
     def setup_parser(self, parser):
-        opt_parser_add_org(parser)
+        opt_parser_add_org(parser, True)
         parser.add_option('--label', dest='label',
-                help=_("content_view label eg: foo.example.com (required)"))
+                help=_("content view label eg: foo.example.com (required)"))
 
     def check_options(self, validator):
         validator.require(('org', 'label'))
@@ -96,6 +98,49 @@ class Info(ContentViewAction):
         return os.EX_OK
 
 
+class Promote(ContentViewAction):
+
+    description = _('promote a content view into an environment')
+
+    def setup_parser(self, parser):
+        opt_parser_add_org(parser, True)
+        parser.add_option('--label', dest='label',
+                help=_("content view label eg: foo.example.com (required)"))
+        opt_parser_add_environment(parser, True)
+
+    def check_options(self, validator):
+        validator.require(('org', 'label', 'environment'))
+
+    def run(self):
+        org_name = self.get_option('org')
+        view_label = self.get_option('label')
+        env_name = self.get_option('environment')
+
+        view = get_content_view(org_name, view_label)
+
+        environment = get_environment(org_name, env_name)
+        env_id = environment["id"]
+
+        try:
+            task = self.api.promote(view["id"], env_id)
+            task = AsyncTask(task)
+
+            run_spinner_in_bg(wait_for_async_task, [task],
+                    message=_("Promoting content view, please wait..."))
+
+            if task.succeeded():
+                print _("Content view [ %s ] promoted to environment [ %s ]") % \
+                    (view["name"], environment["name"])
+                return_code = os.EX_OK
+            else:
+                print _("View [ %s ] promotion failed: %s" % (view["name"],
+                    format_task_errors(task.errors)))
+                return_code = os.EX_DATAERR
+
+        except Exception:
+            raise
+
+        return return_code
 
 
 # content_view command ------------------------------------------------------------

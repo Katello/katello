@@ -54,3 +54,8 @@ class ContentViewAPI(KatelloAPI):
     def delete(self, org_id, cv_id):
         path = "/api/organizations/%s/content_views/%s" % (org_id, cv_id)
         return self.server.DELETE(path)[1]
+
+    def promote(self, cv_id, env_id):
+        path = "/api/content_views/%s/promote" % cv_id
+        params = {"environment_id": env_id}
+        return self.server.POST(path, params)[1]

@@ -630,6 +630,9 @@ Src::Application.routes.draw do
       get :content_views, :on => :member
       put :content_views, :on => :member, :action => :update_content_views
     end
+    resources :content_views, :only => [:promote, :show] do
+      post :promote, :on => :member
+    end
 
     resources :changesets, :only => [:show, :update, :destroy] do
       post :promote, :on => :member, :action => :promote
