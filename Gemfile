@@ -108,7 +108,7 @@ end
 
 group :ci do
   #needed by hudson
-  gem 'ci_reporter', '>= 1.6.3'
+  gem 'ci_reporter', '~> 1.7.2'
 end
 
 group :profiling do
