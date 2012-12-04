@@ -32,4 +32,11 @@
 #KATELLO_JOB_WORKERS=1
 
 # additional katello-job service options for delayed_jobs
-#KATELLO_JOB_WORKERS=-m -p katello
+#KATELLO_JOB_PARAMS="-m -p katello"
+
+# additional bundler groups to enable (uncomment for development)
+#BUNDLER_EXT_GROUPS="development debugging profiling"
+
+# configuration for bundler_ext
+#BUNDLER_EXT_GROUPS="development debugging test"
+#BUNDLER_EXT_NOSTRICT=1

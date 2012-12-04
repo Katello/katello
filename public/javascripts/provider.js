@@ -22,13 +22,6 @@ $(document).ready(function() {
         }
     });
 
-  $("#redhatSubscriptionTable").treeTable({
-    expandable: true,
-    initialState: "collapsed",
-    clickableNodeNames: true,
-    onNodeShow: function(){$.sparkline_display_visible()}
-  });
-
   $('.repo_create').live('click', function(event) {
     var button = $(this);
     button.addClass("disabled");

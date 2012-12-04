@@ -91,7 +91,7 @@ describe ActivationKey do
   end
 
   describe "should be able to update" do
-    it "name" do 
+    it "name" do
       a = ActivationKey.find_by_name(aname)
       a.should_not be_nil
       new_name = a.name + "N"
@@ -99,15 +99,15 @@ describe ActivationKey do
       b.name.should == new_name
     end
 
-    it "description" do 
+    it "description" do
       a = ActivationKey.find_by_name(aname)
       a.should_not be_nil
       new_description = a.description + "N"
       b = ActivationKey.update(a.id, {:description => new_description})
       b.description.should == new_description
     end
-  
-    it "environment" do 
+
+    it "environment" do
       a = ActivationKey.find_by_name(aname)
       a.should_not be_nil
       b = ActivationKey.update(a.id, {:environment => @environment_2})
@@ -458,7 +458,7 @@ describe ActivationKey do
       let(:sockets) { 2 }
 
       it "consumes the correct entitlement" do
-        lambda { @akey.subscribe_system(@system) }.should raise_error(RuntimeError, /^Not enough entitlements/)
+        lambda { @akey.subscribe_system(@system) }.should raise_error(RuntimeError, /^Not enough subscriptions/)
       end
     end
 
@@ -483,7 +483,7 @@ describe ActivationKey do
       let(:sockets) { 2 }
 
       it "consumes the correct entitlement" do
-        lambda { @akey.subscribe_system(@system) }.should raise_error(RuntimeError, /^Not enough entitlements/)
+        lambda { @akey.subscribe_system(@system) }.should raise_error(RuntimeError, /^Not enough subscriptions/)
       end
     end
 
@@ -534,7 +534,7 @@ describe ActivationKey do
       let(:sockets) { 2 }
 
       it "consumes the correct entitlement" do
-        lambda { @akey.subscribe_system(@system) }.should raise_error(RuntimeError, /^Not enough entitlements/)
+        lambda { @akey.subscribe_system(@system) }.should raise_error(RuntimeError, /^Not enough subscriptions/)
       end
     end
 
@@ -561,7 +561,7 @@ describe ActivationKey do
       it "consumes the correct entitlement" do
         Resources::Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 1", 2).and_return([ { "id" => "ent1" } ])
         Resources::Candlepin::Consumer.should_receive(:remove_entitlement).with(@system.uuid, "ent1")
-        lambda { @akey.subscribe_system(@system) }.should raise_error(RuntimeError, /^Not enough entitlements/)
+        lambda { @akey.subscribe_system(@system) }.should raise_error(RuntimeError, /^Not enough subscriptions/)
       end
     end
 

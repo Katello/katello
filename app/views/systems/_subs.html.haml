@@ -46,17 +46,17 @@
                         = product.name
           - else
             %tr
-              %td{:colspan=>7} #{_("The system is not currently consuming any subscriptions.")}
+              %td{:colspan=>7} #{_("There are currently no subscriptions attached to the system")}
       - if editable && consumed_entitlements.length > 0
         .actions
-          %a{:class=>'dialogbutton button disabled', :id=>"fake_unsub_submit"} #{_('Unsubscribe')}
-          = submit_tag _('Unsubscribe'), :class => 'update_subscriptions submit dialogbutton', :id=>"unsub_submit"
+          %a{:class=>'dialogbutton button disabled', :id=>"fake_unsub_submit"} #{_('Remove')}
+          = submit_tag _('Remove'), :class => 'update_subscriptions submit dialogbutton', :id=>"unsub_submit"
 %br
 %div
   %h5
     #{_("Available Subscriptions")}
   = form_tag update_preference_user_path(current_user), :id=>"matchsystem_form", :method=>"put", :remote=>false do
-    = select_tag 'subscription_filters', subscription_filters.html_safe, :prompt => _("Filters"), :multiple => true, "data-placeholder" => _("Subscription Filter Options")
+    = select_tag 'subscription_filters', subscription_filters.html_safe, :prompt => _("Filters"), :multiple => true, "data-placeholder" => _("Subscription Filter Options"), :disabled => true
   = form_tag update_subscriptions_system_path, :id=>"subscribe", :method=>"post", :remote=>true do
     = hidden_field_tag "subscribe_action", "subscribe"
     %div.hidden#available_spinner
@@ -131,5 +131,5 @@
                 %td{:colspan=>7} #{_("There are no more subscriptions available.")}
         - if editable && avail_subs.length > 0
           .actions
-            = submit_tag _('Subscribe'), :class => 'submit dialogbutton', :id=>"sub_submit"
-            %a{:class=>'dialogbutton button disabled', :id=>"fake_sub_submit"} #{_('Subscribe')}
+            = submit_tag _('Attach'), :class => 'submit dialogbutton', :id=>"sub_submit"
+            %a{:class=>'dialogbutton button disabled', :id=>"fake_sub_submit"} #{_('Attach')}

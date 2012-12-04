@@ -25,7 +25,7 @@
     = hidden_field_tag 'environment_id', @activation_key.environment_id
     .full
       = help_tip((_("Edit Activation Key enables you to modify the selected activation key.  This key may " + |
-                 "be used during system registration.  For example, <BR/><BR/>" + |
+                 "be used during system registration.  For example, <br/><br/>" + |
                  "subscription-manager register --org %s " + |
                  "--activationkey %s") % [h(@activation_key.organization.label), h(@activation_key.name)]).html_safe, 'activation_keys_edit-help') |
 

@@ -92,8 +92,10 @@ class KTEnvironment < ActiveRecord::Base
 
   scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
 
-  validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
-  validates_uniqueness_of :label, :scope => :organization_id, :message => N_("must be unique within one organization")
+  validates :name, :exclusion => { :in => ["Library"], :message => N_(": '%s' is a built-in environment") % "Library" }, :unless => :library?
+  validates :label, :exclusion => { :in => ["Library"], :message => N_(": '%s' is a built-in environment") % "Library" }, :unless => :library?
+  validates_uniqueness_of :name, :scope => :organization_id, :message => N_("of environment must be unique within one organization")
+  validates_uniqueness_of :label, :scope => :organization_id, :message => N_("of environment must be unique within one organization")
   validates_presence_of :organization
   validates :name, :presence => true, :katello_name_format => true
   validates :label, :presence => true, :katello_label_format => true
@@ -120,7 +122,6 @@ class KTEnvironment < ActiveRecord::Base
   end
 
   def display_name
-    return _("Library") if self.library?
     self.name
   end
 

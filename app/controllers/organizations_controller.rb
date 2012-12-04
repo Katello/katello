@@ -29,7 +29,7 @@ class OrganizationsController < ApplicationController
 
     environments_partial_test = lambda do
       if "true" == params[:new]
-        Organization.creatable?
+        User.creatable?
       else
         params[:user_id] &&
             ((current_user.id.to_s ==  params[:user_id].to_s) || current_user.editable?)

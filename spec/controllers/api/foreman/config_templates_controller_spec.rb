@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2012 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -10,22 +10,14 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class LoginCredential < ActiveRecord::Base
-  include Authorization
+require 'spec_helper'
 
-  belongs_to :provider
-  validates_presence_of :password
-  validates :username, :uniqueness => true, :presence => true, :username => true
-
-  def mask_password
-    masked = ""
-    unless self.password.nil?
-      masked = self.password
-
-      # mask the characters of the password to be a black dot
-      # this is used when displaying the password within forms
-      masked.gsub(/./, "&#9679;")
-    end
+describe Api::Foreman::ConfigTemplatesController do
+  if AppConfig.use_foreman
+    include LoginHelperMethods
+    before { login_user_api }
+    it_behaves_like 'simple crud controller'
+  else
+    pending 'foreman is not enabled, skipping'
   end
 end
-

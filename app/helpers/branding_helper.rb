@@ -15,12 +15,27 @@ module BrandingHelper
   def project_name
     AppConfig.app_name
   end
-  
+
   def default_title
     if AppConfig.katello?
       _("Open Source Systems Management")
     else
       _("Open Source Subscription Management")
     end
+  end
+
+  def redhat_bugzilla_link
+    url = "https://bugzilla.redhat.com/enter_bug.cgi?product=Katello"
+    link_to (_("the %s Bugzilla") % release_name), url
+  end
+
+  def release_name
+    case AppConfig.release_short
+      when "headpin"
+        root = "Headpin"
+      else
+        root = "Katello"
+    end
+    return root
   end
 end

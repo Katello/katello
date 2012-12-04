@@ -20,6 +20,10 @@ describe Role do
     disable_org_orchestration
   end
 
+  context "role in valid state should be valid" do
+    specify { Role.new(:name => "a").should be_valid }
+  end
+
  context "test read only" do
    let(:organization) {Organization.create!(:name=>"test_org", :label =>"my_key")}
    let(:role) { Role.make_readonly_role("name", organization)}

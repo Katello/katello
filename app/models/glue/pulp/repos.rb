@@ -360,7 +360,7 @@ module Glue::Pulp::Repos
     end
 
     def add_repo(label, name, url, repo_type, gpg = nil)
-      check_for_repo_conflicts(name)
+      check_for_repo_conflicts(name, label)
       key = EnvironmentProduct.find_or_create(self.organization.library, self)
       repo = Repository.create!(:environment_product => key, :pulp_id => repo_id(label),
           :groupid => Glue::Pulp::Repos.groupid(self, self.library),
@@ -522,11 +522,19 @@ module Glue::Pulp::Repos
       repo.del_filters [filter_id]
     end
 
-    def check_for_repo_conflicts(repo_name)
+    def check_for_repo_conflicts(repo_name, repo_label)
       is_dupe =  Repository.joins(:environment_product).where( :name=> repo_name,
               "environment_products.product_id" => self.id, "environment_products.environment_id"=> self.library.id).count > 0
       if is_dupe
         raise Errors::ConflictException.new(_("There is already a repo with the name [ %{repo} ] for product [ %{product} ]") % {:repo => repo_name, :product => self.label})
+      end
+
+      unless repo_label.blank?
+        is_dupe =  Repository.joins(:environment_product).where( :label=> repo_label,
+               "environment_products.product_id" => self.id, "environment_products.environment_id"=> self.library.id).count > 0
+        if is_dupe
+          raise Errors::ConflictException.new(_("There is already a repo with the label [ %{repo} ] for product [ %{product} ]") % {:repo => repo_label, :product => self.label})
+        end
       end
     end
   end

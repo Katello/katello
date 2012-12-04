@@ -24,6 +24,60 @@ class KatelloFormBuilder < ActionView::Helpers::FormBuilder
     base(name, *args, &block)
   end
 
+  # Support for rendering jquery.jeditable fields.
+  # Instead of writing complete html code for the field and the label
+  # it allows to use 'editable' form helper.
+  #
+  # Usage:
+  #
+  # = kt_form_for @record, :data_url => record_path(@record) do |form|
+  #     = form.editable :name, :label => _("Name:")
+  #
+  # = kt_form_for @record do |form|
+  #     = form.editable :name, :data_url => record_path_1(@record)
+  #     = form.editable :surname, :data_url => record_path_2(@record)
+  #
+  # = kt_form_for @record, :data_url => record_path(@record) do |form|
+  #     = form.editable :name do
+  #         Some custom value
+  #
+  # Options:
+  #   :label    - label text
+  #   :editable - boolean flag, switches possibility to edit the field
+  #   :class    - additional css class
+  #   :help - help string
+  #   :type - editable type, eg. edit_textarea, edit_number. Default is edit_panel_element
+  #   :tag  - options passed directly to the element
+  def editable(name, options)
+    options.symbolize_keys!
+    options[:editable] = true if options[:editable].nil?
+    options[:type] ||= "edit_panel_element"
+
+    tag_options = {}
+    tag_options[:name] = "%s[%s]" % [@object_name, name.to_s]
+    tag_options[:'data-url'] = options[:'data-url'] || options[:data_url] || @options[:data_url]
+    tag_options.update(options[:tag]) if options.key? :tag
+
+    css_class = "%s " % options[:class].to_s
+    css_class += "editable %s" % options[:type].to_s if options[:editable]
+    css_class.strip!
+
+    field_options = {}
+    field_options[:label] = options[:label]
+    field_options[:help] = options[:help]
+    field_options[:input_wrapper] = {}
+    field_options[:input_wrapper][:class] = css_class
+    field_options[:input_wrapper][:tag_options] = tag_options
+
+    base(name, field_options) do
+      if block_given?
+        yield
+      else
+        @object.send(name)
+      end
+    end
+  end
+
   def submit(*args)
     options = args.extract_options!
     options.symbolize_keys!
@@ -68,11 +122,17 @@ class KatelloFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def label_wrapper(options)
-    content_tag(:div, :class => options[:label_wrapper][:class]) { yield }
+    tag_options = options[:label_wrapper][:tag_options] || {}
+    tag_options.merge!({:class => options[:label_wrapper][:class]})
+
+    content_tag(:div, tag_options) { yield }
   end
 
   def input_wrapper(options)
-    content_tag(:div, :class => options[:input_wrapper][:class]) { yield } +
+    tag_options = options[:input_wrapper][:tag_options] || {}
+    tag_options.merge!({:class => options[:input_wrapper][:class]})
+
+    content_tag(:div, tag_options ) { yield } +
     (content_tag(:i, '', :class => 'details-icon', 'data-help' => options[:help]) if options[:help])
   end
 

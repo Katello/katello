@@ -23,10 +23,10 @@ module Glue::Candlepin::Product
         :initializer => lambda {|s| convert_from_cp_fields(Resources::Candlepin::Product.get(cp_id)[0]) }
       # Entitlement Certificate for this product
       lazy_accessor :certificate,
-        :initializer => lambda {|s| Resources::Candlepin::Product.certificate(cp_id) },
+        :initializer => lambda {|s| Resources::Candlepin::Product.certificate(cp_id, self.organization.label) },
         :unless => lambda {|s| cp_id.nil? }
       # Entitlement Key for this product
-      lazy_accessor :key, :initializer => lambda {|s| Resources::Candlepin::Product.key(cp_id) }, :unless => lambda {|s| cp_id.nil? }
+      lazy_accessor :key, :initializer => lambda {|s| Resources::Candlepin::Product.key(cp_id, self.organization.label) }, :unless => lambda {|s| cp_id.nil? }
 
       before_save :save_product_orchestration
       before_destroy :destroy_product_orchestration

@@ -16,7 +16,7 @@ class Api::Foreman::SimpleCrudController < Api::ApiController
     superadmin_test = lambda { current_user.has_superadmin_role? }
     actions         = [:index, :show, :create, :update, :destroy]
 
-    actions.inject({ }) { |hash, action| hash[action] = superadmin_test; hash }
+    actions.inject({ }) { |hash, action| hash.update action => superadmin_test }
   end
 
   def index(request_options = nil)
@@ -43,21 +43,23 @@ class Api::Foreman::SimpleCrudController < Api::ApiController
   end
 
   def destroy
-    if foreman_model.delete!(params[:id])
+    resource = foreman_model.find!(params[:id])
+    if resource.destroy!
       render :nothing => true
     end
   end
 
   singleton_class.send :attr_reader, :foreman_model
 
-  private
-
-  singleton_class.send :attr_writer, :foreman_model
+  # @private
+  attr_writer :foreman_model
 
   def foreman_model
-    self.class.foreman_model or
+    @foreman_model or self.class.foreman_model or
         raise ArgumentError,
               "Please specify foreman model class using 'self.foreman_model = ClassName' in #{self.class} definition."
   end
 
+  private
+  singleton_class.send :attr_writer, :foreman_model
 end

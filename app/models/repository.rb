@@ -164,15 +164,15 @@ class Repository < ActiveRecord::Base
       end
     elsif task.state == 'error'
       details = if task.progress.error_details.present?
-                  task.progress.error_details
+                  task.progress.error_details.map { |error| error[:error].to_s }
                 else
-                  task.result[:errors].flatten
-                end
+                  task.result[:errors].flatten.map(&:chomp)
+                end.join("\n")
 
-      Rails.logger.error("*** Sync error: " +  details.to_json)
+      Rails.logger.error("*** Sync error: " +  details)
       if user && notify
         Notify.error _("There were errors syncing repository '%s'. See notices page for more details.") % self.name,
-                     :details => details.map(&:chomp).join("\n"), :user => user, :organization => self.organization
+                     :details => details, :user => user, :organization => self.organization
       end
     end
   end

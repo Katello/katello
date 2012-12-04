@@ -13,17 +13,17 @@
 */
 
 KT.subscription = (function() {
-    var import_updater
+    var manifest_updater
 
     // Data that is unchanged from previous will come in as ""
     updateStatus = function(data) {
-        if (data !== "" && $('.import_progress_message')) {
-            $(".import_progress_message").html(i18n.import_in_progress(data["state"]));
+        if (data !== "" && $('.manifest_progress_message')) {
+            $(".manifest_progress_message").html(i18n.import_in_progress(data["state"]));
         }
         if (data !== "" && data["state"] !== "running" && data["state"] !== "waiting") {
             notices.checkNotices();
-            if (import_updater) {
-                import_updater.stop();
+            if (manifest_updater) {
+                manifest_updater.stop();
             }
 
             active = $('#new');
@@ -35,14 +35,14 @@ KT.subscription = (function() {
         var timeout = 6000,
             provider_id;
 
-        if (import_updater !== undefined) {
-            import_updater.stop();
+        if (manifest_updater !== undefined) {
+            manifest_updater.stop();
         }
 
-        // When the import progress element is present, start the polling for success
-        provider_id = $('.import_progress').attr("provider_id");
+        // When the manifest progress element is present, start the polling for success
+        provider_id = $('.manifest_progress').attr("provider_id");
         if (provider_id) {
-            import_updater = $.PeriodicalUpdater(KT.common.rootURL()+'providers/'+provider_id+'/import_progress/', {
+            manifest_updater = $.PeriodicalUpdater(KT.common.rootURL()+'providers/'+provider_id+'/manifest_progress/', {
                 method: 'get',
                 type: 'json',
                 cache: false,

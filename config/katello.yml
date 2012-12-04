@@ -22,11 +22,8 @@
 #   minutes that a password reset token will remain valid.
 #
 common:
-  ldap:
-    host: localhost
-    base: ou=People,dc=company,dc=com
-
   warden: database
+  ldap_roles: false
   use_cp: true
   use_pulp: true
   use_foreman: true
