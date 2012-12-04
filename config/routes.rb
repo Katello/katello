@@ -15,6 +15,12 @@ Src::Application.routes.draw do
           get :items
         end
       end
+
+      resources :architectures do
+        collection do
+          get :items
+        end
+      end
     end
   end
 
