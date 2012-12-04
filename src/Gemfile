@@ -120,7 +120,7 @@ group :jshintrb do
   #needed for unit tests
   #
   #needed for syntax checking
-  gem 'therubyracer', ">= 0.11.0beta"
+  gem 'therubyracer', "= 0.11.0beta8" # lock until we get this working on rhel6
     gem 'ref'
   gem 'jshintrb', '0.2.1'
     gem 'execjs'
