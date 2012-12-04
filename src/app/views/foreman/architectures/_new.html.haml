@@ -1,0 +1,11 @@
+
+= content_for :title do
+  #{_("New Architecture")}
+
+= content_for :content do
+  .grid_10
+    = kt_form_for ::Foreman::Architecture.new, :as=>"architecture", :url=>architectures_path, :html=>{ :id=>"new_architecture" } do |form|
+
+      = form.text_field :name, :label => _("Name:")
+      = form.submit _("Save Architecture"), :id => :save_architecture
+
