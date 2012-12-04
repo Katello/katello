@@ -118,8 +118,6 @@ class KTEnvironment < ActiveRecord::Base
   after_destroy :unset_users_with_default
    ERROR_CLASS_NAME = "Environment"
 
-  scope :library, where(:library => true)
-
   def library?
     self.library
   end

@@ -23,6 +23,10 @@ class ContentViewVersion < ActiveRecord::Base
   scope :default_view, joins(:content_view).where('content_views.default = ?', true)
   scope :non_default_view, joins(:content_view).where('content_views.default = ?', false)
 
+  def has_default_content_view?
+    ContentViewVersion.default_view.pluck(:id).include?(self.id)
+  end
+
   def repos(env)
     self.repositories.in_environment(env)
   end
