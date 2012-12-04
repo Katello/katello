@@ -13,43 +13,47 @@
 
 require "minitest_helper"
 
-describe Api::ContentViewsController do
+class Api::ContentViewsControllerTest < MiniTest::Rails::ActionController::TestCase
   fixtures :all
 
-  describe "#promote" do
-    before do
-      @content_view = content_views(:library_dev_view)
-      @environment = environments(:staging)
-      @dev = environments(:dev)
-      login_user(users(:admin))
-    end
+  def setup
+    @content_view = content_views(:library_dev_view)
+    @environment = environments(:staging)
+    @dev = environments(:dev)
+    login_user(users(:admin))
+    models = ["Organization", "KTEnvironment", "Changeset"]
+    services = ["Candlepin", "Pulp", "ElasticSearch"]
+    disable_glue_layers(services, models)
+  end
 
-    it "should throw an error if environment_id is nil" do
-      post :promote, :id => @content_view.id
-      [200, 202].include?(response.status).must_equal false
-    end
+  test "should throw an error if environment_id is nil" do
+    post :promote, :id => @content_view.id
+    assert_response :missing
+  end
 
-    it "should throw an error if id is nil" do
-      req = lambda do
-        post :promote, :environment_id => @environment.id
-      end
-      req.must_raise ActionController::RoutingError
+  test "should throw an error if id is nil" do
+    assert_raises(ActionController::RoutingError) do
+      post :promote, :environment_id => @environment.id
     end
+  end
 
-    it "should assign a content view" do
-      post :promote, :id => @content_view.id, :environment_id => @environment.id
-      response.status.must_equal 202
-      content_view = assigns(:view)
-      content_view.wont_be_nil
-      content_view.must_equal @content_view
-    end
+  test "should assign a content view" do
+    post :promote, :id => @content_view.id, :environment_id => @environment.id
+    assert_response :success
+    content_view = assigns(:view)
+    refute_nil content_view
+    assert_equal @content_view, content_view
+  end
 
-    it "should create a new changeset" do
-      changeset_count = Changeset.count
-      post :promote, :id => @content_view.id, :environment_id => @environment.id
-      Changeset.count.must_equal (changeset_count + 1)
-    end
+  test "should create a new changeset" do
+    changeset_count = Changeset.count
+    post :promote, :id => @content_view.id, :environment_id => @environment.id
+    assert_equal (changeset_count + 1), Changeset.count
+  end
 
+  test "should throw an error if view is already in environment" do
+    post :promote, :id => @content_view.id, :environment_id => @dev.id
+    assert_response 400
   end
 
 end
