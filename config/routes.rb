@@ -377,6 +377,11 @@ Src::Application.routes.draw do
         get :system_templates
         get :products
       end
+      resources :content_view_versions, :only => [:show] do
+        member do
+          get :content
+        end
+      end
     end
   end
   match '/organizations/:id/edit' => 'organizations#update', :via => :put
