@@ -22,6 +22,8 @@ from katello.client.cli.base import opt_parser_add_org, \
         opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_environment, get_content_view
+from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, \
+        wait_for_async_task, AsyncTask, format_task_errors
 
 # base content_view action --------------------------------------------------------
 
@@ -119,10 +121,26 @@ class Promote(ContentViewAction):
         environment = get_environment(org_name, env_name)
         env_id = environment["id"]
 
-        self.api.promote(view["id"], env_id)
-        print _("Successfully promoted [ %s ] to environment [ %s ]") % \
-            (view["name"], environment["name"])
-        return os.EX_OK
+        try:
+            task = self.api.promote(view["id"], env_id)
+            task = AsyncTask(task)
+
+            run_spinner_in_bg(wait_for_async_task, [task],
+                    message=_("Promoting content view, please wait..."))
+
+            if task.succeeded():
+                print _("Content view [ %s ] promoted to environment [ %s ]") % \
+                    (view["name"], environment["name"])
+                return_code = os.EX_OK
+            else:
+                print _("View [ %s ] promotion failed: %s" % (view["name"],
+                    format_task_errors(task.errors)))
+                return_code = os.EX_DATAERR
+
+        except Exception:
+            raise
+
+        return return_code
 
 
 # content_view command ------------------------------------------------------------
