@@ -33,6 +33,7 @@ class UserSessionsController < ApplicationController
       @disable_password_recovery = AppConfig.warden == 'ldap'
       respond_to do |f|
         f.html { render "new" }
+        f.json { render :js => "window.location = '#{user_session_logout_path.to_json}'" }
         f.any { user_session_logout_path }
       end
     end
