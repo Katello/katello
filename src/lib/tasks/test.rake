@@ -83,6 +83,23 @@ namespace 'minitest' do
   namespace :glue do
 
     GLUE_LAYERS.each do |task|
+
+      desc "Finds functions without dedicated tests"
+      task "#{task}:untested" do
+        test_functions  = `grep -r 'def test_' test/glue/#{task} --include=*.rb --no-filename` 
+        lib_functions   = `grep -r 'def self' app/models/glue/#{task} --include=*.rb --no-filename`
+        
+        test_functions  = test_functions.split("\n").map{ |str| str.strip.split("def test_")[1] }.to_set
+        lib_functions   = lib_functions.split("\n").map{ |str| str.strip.split("def ")[1].split("(").first }.to_set
+
+        difference = (lib_functions - test_functions).to_a
+
+        if !difference.empty?
+          puts difference
+          exit 1 
+        end
+      end
+
       if ENV['test']
         MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
           t.libs.push 'test'

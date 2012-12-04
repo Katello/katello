@@ -11,45 +11,53 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'minitest_helper'
+require './test/support/repository_support'
 
-=begin
-module GluePulpPackageTestBase
 
-  def setup
-    configure_vcr
-    uri = URI.parse(AppConfig.pulp.url)
-    Runcible::Base.config = { 
-      :url      => "#{uri.scheme}://#{uri.host}",
-      :api_path => uri.path,
-      :user     => "admin",
-      :oauth    => {:oauth_secret => AppConfig.pulp.oauth_secret,
-                    :oauth_key    => AppConfig.pulp.oauth_key },
-      :logger   => RestClient.log
-    }
+class GluePulpPackageTestBase < MiniTest::Rails::ActiveSupport::TestCase
+  extend  ActiveRecord::TestFixtures
+  include RepositorySupport
 
-    VCR.insert_cassette('glue_pulp_package')
+  fixtures :all
+
+  @@package_id = nil
+
+  def self.before_suite
+    load_fixtures
+    configure_runcible
+
+    services  = ['Candlepin', 'ElasticSearch', 'Foreman']
+    models    = ['Repository', 'Package']
+    disable_glue_layers(services, models)
+
+    User.current = User.find(@loaded_fixtures['users']['admin']['id'])
+    RepositorySupport.create_and_sync_repo(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
+
+    VCR.insert_cassette('glue_pulp_package', :match_requests_on => [:path, :params, :method, :body_json])
+    @@package_id = RepositorySupport.repo.packages.first.id
   end
 
-  def teardown
-  rescue
-  ensure
+  def self.after_suite
+    RepositorySupport.destroy_repo
     VCR.eject_cassette
   end
 
 end
 
-class GluePulpPackageTest < MiniTest::Unit::TestCase
-  include GluePulpPackageTestBase
+
+class GluePulpPackageTest < GluePulpPackageTestBase
 
   def test_find
-    package = Glue::Pulp::Package.find(@package.id)
-    assert package.name == "elephant"
+    package = Package.find(@@package_id)
+
+    refute_nil      package
+    assert_kind_of  Package, package
   end
 
   def test_nvrea
-    package = Glue::Pulp::Package.find(@package.id)
-    assert package.nvrea == "elephant-0.3-0.8.noarch"
+    package = Package.find(@@package_id)
+
+    refute_nil package.nvrea
   end
 
 end
-=end
