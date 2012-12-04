@@ -11,7 +11,8 @@
     = kt_form_for @architecture, :as=>"architecture", :url=>architecture_path(@architecture), :data_url=>architecture_path(@architecture), :html=>{ :id=>"edit_architecture" } do |form|
 
       = form.editable :name, :label => _("Name:")
-
+      = form.field :operatingsystem_ids, :label => _("Operating systems:") do
+        = os_select @architecture, "operatingsystem_ids"
       .grid_5.la.prefix_2
         #update_architecture.button{:'data-url'=>architecture_path(@architecture)}
           #{_("Save Architecture")}
