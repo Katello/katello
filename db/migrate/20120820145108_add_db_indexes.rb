@@ -52,16 +52,10 @@ class AddDbIndexes < ActiveRecord::Migration
     add_index  :changeset_dependencies, :changeset_id
     add_index  :changeset_dependencies, :package_id
     add_index  :changeset_dependencies, :product_id
-    add_index  :filters_products, :filter_id
-    add_index  :filters_products, :product_id
-    add_index  :filters, :pulp_id
-    add_index  :filters, :organization_id
     add_index  :system_template_distributions, :distribution_pulp_id
     add_index  :ldap_group_roles, :role_id
     add_index  :system_template_repositories, :system_template_id
     add_index  :system_template_repositories, :repository_id
-    add_index  :filters_repositories, :filter_id
-    add_index  :filters_repositories, :repository_id
     add_index  :repositories, :pulp_id
     add_index  :repositories, :environment_product_id
     add_index  :repositories, :gpg_key_id
@@ -136,16 +130,10 @@ class AddDbIndexes < ActiveRecord::Migration
     remove_index :changeset_dependencies, :column=>:changeset_id
     remove_index :changeset_dependencies, :column=>:package_id
     remove_index :changeset_dependencies, :column=>:product_id
-    remove_index :filters_products, :column=>:filter_id
-    remove_index :filters_products, :column=>:product_id
-    remove_index :filters, :column=>:pulp_id
-    remove_index :filters, :column=>:organization_id
     remove_index :system_template_distributions, :column=>:distribution_pulp_id
     remove_index :ldap_group_roles, :column=>:role_id
     remove_index :system_template_repositories, :column=>:system_template_id
     remove_index :system_template_repositories, :column=>:repository_id
-    remove_index :filters_repositories, :column=>:filter_id
-    remove_index :filters_repositories, :column=>:repository_id
     remove_index :repositories, :column=>:pulp_id
     remove_index :repositories, :column=>:environment_product_id
     remove_index :repositories, :column=>:gpg_key_id
