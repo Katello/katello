@@ -69,6 +69,16 @@ class ContentView < ActiveRecord::Base
     end
   end
 
+  def promote_via_changeset(env, apply_options = {:async => true},
+                            cs_name = "#{self.name}_#{env.name}_#{Time.now.to_i}")
+    cs = PromotionChangeset.create!(:name => cs_name,
+                                     :environment => @environment,
+                                     :state => Changeset::REVIEW,
+                                     :content_views => [@view]
+                                    )
+    return cs.apply(apply_options)
+  end
+
   def promote(from_env, to_env)
     raise "Cannot promote from #{from_env.name}, view does not exist there." if !self.environments.include?(from_env)
     #remove this when refresh is supported
