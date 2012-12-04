@@ -51,7 +51,8 @@ class ContentViewDefinition < ActiveRecord::Base
     repos = []
     tasks = []
     self.products.each do |prod|
-      prod.repos(organization.library).enabled.original.each { |r| repos << r }
+      prod_repos = prod.repos(organization.library).enabled
+      prod_repos.select{|r| r.in_default_view?}.each{|r| repos << r}
     end
     repos.concat(self.repositories)
     repos.uniq!
