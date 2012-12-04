@@ -11,11 +11,19 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Foreman::Architecture < Resources::ForemanModel
+  include Resources::AbstractModel::IndexedModel
 
   attributes :name
 
   def json_default_options
     { :only => :name }
+  end
+
+  index_options :display_attrs => [:name]
+
+  mapping do
+    indexes :id, :type=>'string', :index => :not_analyzed
+    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
   end
 
 end
