@@ -52,8 +52,6 @@ class Repository < ActiveRecord::Base
 
   default_scope :order => 'name ASC'
   scope :enabled, where(:enabled => true)
-  scope :original, where(
-    :content_view_version_id => KTEnvironment.library.map{|l| l.default_view_version.id})
 
   def product
     self.environment_product.product
@@ -77,6 +75,10 @@ class Repository < ActiveRecord::Base
 
   def self.in_product(product)
     joins(:environment_product).where("environment_products.product_id" => product.id)
+  end
+
+  def in_default_view?
+    content_view_version && content_view_version.has_default_content_view?
   end
 
   def other_repos_with_same_product_and_content
