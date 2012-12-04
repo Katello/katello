@@ -31,7 +31,7 @@ module Navigation
   module MainMenu
    def menu_main
     menu = [ menu_dashboard, menu_contents, menu_systems ]
-    menu << menu_setup if AppConfig.katello?
+    menu << menu_setup if AppConfig.katello? && AppConfig.use_foreman
     menu
    end
   end
