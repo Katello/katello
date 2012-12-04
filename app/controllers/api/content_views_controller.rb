@@ -47,13 +47,7 @@ class Api::ContentViewsController < Api::ApiController
   param :id, :identifier, :desc => "content view id"
   param :environment_id, :identifier, :desc => "environment promoting to"
   def promote
-    cs_name = "#{@view.label}_#{@environment.name}_#{Time.now.to_i}"
-    @cs = PromotionChangeset.create!(:name => cs_name,
-                                     :environment => @environment,
-                                     :state => Changeset::REVIEW,
-                                     :content_views => [@view]
-                                    )
-    task = @cs.apply(:async => true)
+    task = @view.promote_via_changeset(@environment)
     render :json => task, :status => 202
   end
 
