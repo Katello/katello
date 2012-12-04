@@ -180,7 +180,7 @@ class Resources::AbstractModel
     end
 
     return true
-  rescue RestClient::UnprocessableEntity => e
+  rescue RestClient::UnprocessableEntity, RestClient::BadRequest => e
     response = JSON.parse(e.response)
     parse_errors(response).each { |key, val| errors.add key, val }
     return false
