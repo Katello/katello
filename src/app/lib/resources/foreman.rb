@@ -42,6 +42,5 @@ module Resources
     ConfigTemplate  = ForemanApi::Resources::ConfigTemplate.new options, timeout_options
     ComputeResource = ForemanApi::Resources::ComputeResource.new options, timeout_options
     HardwareModel   = ForemanApi::Resources::Model.new options, timeout_options
-
   end
 end

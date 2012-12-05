@@ -11,8 +11,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
-class ConfigurationTemplatesController < SimpleCRUDController
+class Foreman::ConfigurationTemplatesController < SimpleCRUDController
 
   before_filter :handle_template_upload, :only => [:create, :update]
 
