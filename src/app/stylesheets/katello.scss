@@ -1,9 +1,10 @@
 @import "compass/reset";
+@import "overrides";
 @import "converge-ui/composites/shell";
+@import "converge-ui/composites/content_elements";
 @import "converge-ui/components/helpers";
 
 @import "katello_base";
-
 
 @import "grid";
 @import "look";
@@ -59,7 +60,7 @@ hr { color: $border_color; }
 .ca { text-align: center; } /* text align center */
 .fc { display: inline-block; margin: 0 auto; } /* "float", center */
 .multiline{word-wrap: break-word;}
-
+.full { width: 98%; padding: 0 1%;}
 .twocolumn {
   @include column-count(2);
   @include column-gap(10px);
@@ -82,7 +83,7 @@ a {
 
 /* TEXT ENTRIES */
 input, textarea {
-  @include inset-box-shadow(0,1px,1px,rgba(0, 0, 0, 0.2));
+  @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.2) inset);
   border: 1px solid darken($stroke_color,20%);
   background-color: $input-background_color;
   background: $input_background_img;
@@ -175,14 +176,14 @@ input[type='submit'], button, .button {
   vertical-align: bottom;
   background: -moz-linear-gradient(top, #f9f9f9, #f0f0f0, #e5e5e5, #e9e9e9);
   background: -webkit-gradient(linear, left top, left bottom, from(#f9f9f9), color-stop(0.9, #e5e5e5), to(#e9e9e9));
-  @include no-box-shadow;
+  @include box-shadow(none);
   border: 1px solid darken($stroke_color, 20%);
   color: #221e1f;
   cursor: pointer;
   margin: 4px;
   padding: 4px 8px;
   @include border-radius(5px);
-  @include _text-shadow($white_color, 0, 1px, 0);
+  @include text-shadow(0 1px 0 rgba($white_color, 1));
   min-height: 14px;
   
   .nomargin {
@@ -198,7 +199,7 @@ input[type='submit'], button, .button {
   &:active {
     background: -moz-linear-gradient(top, #c2c3c0, #e4e5e4);
     background: -webkit-gradient(linear, left top, left bottom, from(#c2c3c0), to(#e4e5e4));
-    @include no-box-shadow;
+    @include box-shadow(none);
     text-decoration: none;
   }
   &:focus {
@@ -226,7 +227,7 @@ input[type='submit'], button, .button {
 
     &:hover {
       background: transparent;
-      @include no-box-shadow;
+      @include box-shadow(none);
     }
   }
   &.iconbutton {
@@ -248,7 +249,7 @@ table {
   margin: 10px 0 40px; width: 100%;
   font-size: 95%;
   width: 99%;
-  
+
   thead {
     background-color: lighten($stroke_color,25%);
     th {
@@ -470,7 +471,7 @@ fieldset {
     @include box-shadow(0 1px 5px rgba(0, 0, 0, 0.6));
     width: 550px;
     overflow: hidden;
-    background-color: #FFF;
+    background-color: $white_color;
     h2 {
       background-color: $formheadbg_color;
       color: $formheadfg_color;
@@ -707,7 +708,7 @@ fieldset {
           border: none;
           padding: 0;
           &:hover {
-            @include no-box-shadow;
+            @include box-shadow(none);
           }
         }
         input[type="text"] {
@@ -903,7 +904,7 @@ fieldset {
     .pane_action {
       &.separator {
         margin: 0;
-        border-right: 2px solid $font_color;
+        border-right: 2px solid $border_color;
         padding: 1px 10px;
       }
       padding: 1px 10px;
@@ -1032,7 +1033,7 @@ fieldset {
     header { height: 40px;}
     
     #items_count {
-      color: $font_color;
+      color: $text_color;
     }
 }
 
@@ -1247,7 +1248,7 @@ fieldset {
   left: 352px !important;
 }
 #nav-container {
-  background-color: #006B97;
+  background-color: $kprimary_border_color;
   left: 26% !important;
 }
 header#header {
@@ -1255,7 +1256,7 @@ header#header {
   margin-bottom: 6px;
 
   &:after {
-    border-top: 5px solid #006B97;
+    border-top: 6px solid $kprimary_border_color;
     height: 0;
     bottom: -1px;
   }
@@ -1263,4 +1264,13 @@ header#header {
 
 footer a {
   text-decoration: underline;
+}
+
+
+.container_16 {
+  width: $static_width - 20;
+  float: left;
+  .grid_16 {
+    width: $static_width - 20;
+  }
 }
