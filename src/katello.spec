@@ -419,6 +419,9 @@ mkdir -p %{buildroot}/%{_mandir}/man8
 # clean the application directory before installing
 [ -d tmp ] && rm -rf tmp
 
+# remove build gem group
+rm -f bundler.d/build.rb
+
 #copy the application to the target directory
 mkdir .bundle
 cp -R .bundle Gemfile.in bundler.d Rakefile app autotest ca config config.ru db integration_spec lib locale public script spec vendor %{buildroot}%{homedir}
@@ -490,6 +493,7 @@ chmod a+r %{buildroot}%{homedir}/ca/redhat-uep.pem
 install -m 644 man/katello-service.8 %{buildroot}/%{_mandir}/man8
 
 %post common
+
 #Add /etc/rc*.d links for the script
 /sbin/chkconfig --add %{name}
 /sbin/chkconfig --add %{name}-jobs
@@ -560,7 +564,6 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 
 %files common
 %doc README LICENSE
-%{homedir}/bundler.d/build.rb
 %{_sbindir}/service-wait
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %attr(600, katello, katello) %{_sysconfdir}/%{name}/%{name}.yml
