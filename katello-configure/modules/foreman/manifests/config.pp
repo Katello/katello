@@ -94,6 +94,9 @@ class foreman::config {
 
   exec {"foreman_config":
    command => "/usr/bin/ruby ${foreman::app_root}/script/foreman-config -k oauth_active -v '${foreman::oauth_active}'\
+                              -k foreman_url -v '${fqdn}'\
+                              -k token_duration -v '60'\
+                              -k manage_puppetca -v false\
                               -k oauth_consumer_key -v '${foreman::oauth_consumer_key}'\
                               -k oauth_consumer_secret -v '${foreman::oauth_consumer_secret}'\
                               -k oauth_map_users -v '${foreman::oauth_map_users}'\
