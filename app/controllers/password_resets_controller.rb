@@ -43,9 +43,9 @@ class PasswordResetsController < ApplicationController
   def edit
     if @user.password_reset_sent_at < password_reset_expiration.minutes.ago
       notify.warning _("Password reset token has expired for user '%s'.") % @user.username
-      redirect_to new_password_reset_path
+      redirect_to login_path(:card => 'password_reset')
     else
-      render "common/user_session", :layout => "converge-ui/change_password_layout"
+      redirect_to new_user_session_path
     end
   end
 
