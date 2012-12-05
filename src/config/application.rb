@@ -30,10 +30,12 @@ else
   if defined?(Bundler)
     basic_groups = [:default, (:foreman if Katello::BootUtil.katello?)]
     groups = case Rails.env.to_sym
+             when :build
+               basic_groups + [:development, :build]
              when :production
                basic_groups
              when :development
-               basic_groups + [:development, :apipie, :development_boost]
+               basic_groups + [:development, :debugging, :build, :development_boost]
              when :test
                basic_groups + [:development, :test, (:debugging if ENV['TRAVIS'] != 'true')]
              else
