@@ -76,9 +76,7 @@ module Glue::Pulp::Repos
       # cache repos so we can cache lazy_accessors
       @repo_cache ||= {}
 
-      @repo_cache[env.id] ||= Repository.joins(:environment_product).where(
-          "environment_products.product_id" => self.id,
-          "environment_products.environment_id" => env)
+      @repo_cache[env.id] ||= env.default_content_view.repos_in_product(env, self)
 
       if include_disabled
         @repo_cache[env.id]
