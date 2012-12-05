@@ -23,7 +23,8 @@ from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environme
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, run_spinner_in_bg, format_date, wait_for_async_task, \
     AsyncTask, format_task_errors
-from katello.client.api.utils import get_environment, get_changeset, get_template, get_repo, get_product
+from katello.client.api.utils import get_environment, get_changeset, get_template, get_repo, get_product, \
+    get_content_view
 from katello.client.utils import printer
 from katello.client.utils.encoding import u_str
 from katello.client.utils.printer import batch_add_columns
@@ -104,6 +105,7 @@ class Info(ChangesetAction):
         cset["packages"] = self.format_item_list("display_name", cset["packages"])
         cset["repositories"] = self.format_item_list("name", cset["repos"])
         cset["system_templates"] = self.format_item_list("name", cset["system_templates"])
+        cset["content_views"] = self.format_item_list("label", cset["content_views"])
         cset["distributions"] = self.format_item_list("distribution_id", cset["distributions"])
         if displayDeps:
             cset["dependencies"] = self.get_dependencies(cset["id"])
@@ -116,7 +118,7 @@ class Info(ChangesetAction):
             'state', 'environment_id', 'environment_name')
         batch_add_columns(self.printer,
             'errata', 'products', 'packages',
-            'repositories', 'system_templates', 'distributions',
+            'repositories', 'system_templates', 'distributions', 'content_views',
             multiline=True, show_with=printer.VerboseStrategy)
         if displayDeps:
             self.printer.add_column('dependencies', multiline=True, show_with=printer.VerboseStrategy)
@@ -188,6 +190,7 @@ class UpdateContent(ChangesetAction):
                 items[action + "_product_id"])]
 
             patch['templates'] = [itemBuilder.template(i) for i in items[action + "_template"]]
+            patch['content_views'] = [itemBuilder.content_view(i) for i in items[action + "_content_view"]]
             patch['distributions'] = [itemBuilder.distro(i) for i in items[action + "_distribution"]]
             return patch
 
@@ -237,6 +240,9 @@ class UpdateContent(ChangesetAction):
             tpl = get_template(self.org_name, self.env_name, options['name'])
             return tpl['id']
 
+        def content_view_id(self, options):
+            view = get_content_view(self.org_name, options['label'])
+            return view['id']
 
     class AddPatchItemBuilder(PatchItemBuilder):
         def package(self, options):
@@ -265,6 +271,11 @@ class UpdateContent(ChangesetAction):
         def template(self, options):
             return {
                 'template_id': self.template_id(options)
+            }
+
+        def content_view(self, options):
+            return {
+                'content_view_id': self.content_view_id(options)
             }
 
         def distro(self, options):
@@ -303,6 +314,11 @@ class UpdateContent(ChangesetAction):
                 'content_id': self.template_id(options)
             }
 
+        def content_view(self, options):
+            return {
+                'content_id': self.content_view_id(options)
+            }
+
         def distro(self, options):
             return {
                 'content_id': options['name'],
@@ -311,7 +327,8 @@ class UpdateContent(ChangesetAction):
 
 
     productDependentContent = ['package', 'erratum', 'repo', 'distribution']
-    productIndependentContent = ['product', 'product_label', 'product_id', 'template']
+    productIndependentContent = ['product', 'product_label', 'product_id',
+            'template', 'content_view']
 
     description = _('updates content of a changeset')
 
@@ -348,6 +365,8 @@ class UpdateContent(ChangesetAction):
             self.items[option.dest].append({"product_label": u_str(value)})
         elif option.dest == 'add_product_id' or option.dest == 'remove_product_id':
             self.items[option.dest].append({"product_id": u_str(value)})
+        elif option.dest == "add_content_view" or option.dest == "remove_content_view":
+            self.items[option.dest].append({"label": u_str(value)})
         else:
             self.items[option.dest].append({"name": u_str(value)})
 
@@ -390,6 +409,13 @@ class UpdateContent(ChangesetAction):
         parser.add_option('--remove_template', dest='remove_template', type="string",
                                action="callback", callback=self._store_item,
                                help=_("name of a template to be removed from the changeset"))
+
+        parser.add_option('--add_content_view', dest='add_content_view', type="string",
+                               action="callback", callback=self._store_item,
+                               help=_("label of a content view to be added to the changeset"))
+        parser.add_option('--remove_content_view', dest='remove_content_view', type="string",
+                               action="callback", callback=self._store_item,
+                               help=_("label of a content view to be removed from the changeset"))
 
         parser.add_option('--from_product', dest='from_product',
                                action="callback", callback=self._store_from_product, type="string",
