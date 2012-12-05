@@ -95,13 +95,15 @@ var notices = (function() {
             notices.noticeArray.push(noticeObj);
         },
         addNotices: function(data) {
-            if (!data || data.new_notices.length === 0) {
+            var unread_notices = $("#unread_notices");
+            if (!data || data.unread_count.length === 0) {
                 return true;
             }
-
+            unread_notices.data('last', parseInt(unread_notices.text(), 10));
             //if coming from the server may have new count
-            if (data.unread_count) {
-                $("#unread_notices").text(data.unread_count);
+            if (data.unread_count > 0 && data.unread_count > unread_notices.data('last')) {
+                unread_notices.text(data.unread_count).effect("bounce", "fast");
+                unread_notices.data('last', data.unread_count);
             }
 
             $.each(data.new_notices, function(index, notice) {

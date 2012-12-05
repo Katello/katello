@@ -428,14 +428,14 @@ Src::Application.routes.draw do
 
   root :to => "user_sessions#new"
 
-  match '/login' => 'user_sessions#new'
+  match '/login' => 'user_sessions#new', :as=>'login'
   match '/logout' => 'user_sessions#destroy', :via=>:post
   match '/user_session/logout' => 'user_sessions#destroy'
   match '/user_session' => 'user_sessions#show', :via=>:get, :as=>'show_user_session'
 
   resources :password_resets, :only => [:create, :edit, :update] do
     collection do
-      get :email_logins
+      post :email_logins
     end
   end
 
