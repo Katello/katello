@@ -667,6 +667,10 @@ Src::Application.routes.draw do
         post   :index, :on => :collection, :action => :add_template
         delete :destroy, :on => :member, :action => :remove_template
       end
+      resources :content_views, :controller => :changesets_content do
+        post   :index, :on => :collection, :action => :add_content_view
+        delete :destroy, :on => :member, :action => :remove_content_view
+      end
 
     end
 
