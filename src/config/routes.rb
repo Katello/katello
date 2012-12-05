@@ -15,6 +15,10 @@ Src::Application.routes.draw do
           get :items
         end
       end
+
+      resources :configuration_templates do
+        get :items, :on => :collection
+      end
     end
   end
 
@@ -437,10 +441,6 @@ Src::Application.routes.draw do
     collection do
       get :email_logins
     end
-  end
-
-  resources :configuration_templates do
-    get :items, :on => :collection
   end
 
   namespace :api do
