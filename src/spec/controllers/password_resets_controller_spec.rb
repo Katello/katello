@@ -108,7 +108,6 @@ describe PasswordResetsController do
 
     it "successfully renders password reset edit page" do
       get :edit, :id => @testuser_password_reset_token
-      #response.should render_template("user_sessions/new", "layouts/converge-ui/_user_session_layout")
       response.should redirect_to(new_user_session_path)
     end
   end
