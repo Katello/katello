@@ -435,6 +435,7 @@ Src::Application.routes.draw do
 
   resources :password_resets, :only => [:create, :edit, :update] do
     collection do
+      post :create
       post :email_logins
     end
   end
