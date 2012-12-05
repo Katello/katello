@@ -287,6 +287,8 @@ module Glue::Provider
 
       product_to_remove_ids = (product_in_katello_ids - products_in_candlepin_ids).uniq
       product_to_remove_ids.each { |cp_id| Product.find_by_cp_id(cp_id).destroy }
+
+      self.index_subscriptions
       true
     end
 
@@ -304,6 +306,33 @@ module Glue::Provider
 
     def exec_delete_manifest
       Resources::Candlepin::Owner.destroy_imports self.organization.label, true
+      index_subscriptions
+    end
+
+    def index_subscriptions
+      # Raw candlepin pools
+      cp_pools = Resources::Candlepin::Owner.pools(self.organization.label)
+      if cp_pools
+        # Pool objects
+        pools = cp_pools.collect{|cp_pool| ::Pool.find_pool(cp_pool['id'], cp_pool)}
+
+        # Limit subscriptions to just those from Red Hat provider
+        subscriptions = pools.collect do |pool|
+          product = Product.where(:cp_id => pool.product_id, :provider_id => self.organization.redhat_provider.id).first
+          next if product.nil?
+          pool.provider_id = product.provider_id   # Set so it is saved into elastic search
+          pool
+        end.compact
+        subscriptions = [] if subscriptions.nil?
+      else
+        subscriptions = []
+      end
+
+      # Index pools
+      # Note: Only the Red Hat provider subscriptions are being indexed.
+      ::Pool.index_pools(subscriptions, {:org=>self.organization.label, :provider_id=>self.organization.redhat_provider.id})
+
+      subscriptions
     end
 
     def rollback_delete_manifest
