@@ -108,7 +108,7 @@ end
 
 group :ci do
   #needed by hudson
-  gem 'ci_reporter', '>= 1.6.3'
+  gem 'ci_reporter', '~> 1.7.2'
 end
 
 group :profiling do
@@ -120,7 +120,7 @@ group :jshintrb do
   #needed for unit tests
   #
   #needed for syntax checking
-  gem 'therubyracer', ">= 0.11.0beta"
+  gem 'therubyracer', "= 0.11.0beta8" # lock until we get this working on rhel6
     gem 'ref'
   gem 'jshintrb', '0.2.1'
     gem 'execjs'
