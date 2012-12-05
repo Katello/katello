@@ -253,7 +253,7 @@ BuildArch:       noarch
 Requires:        %{name} = %{version}-%{release}
 # Gemfile
 Requires:        rubygem(ci_reporter) >= 1.6.3
-# bdependencies from undler.d/development.rb
+# dependencies from bundler.d/development.rb
 Requires:        rubygem(rspec-rails) >= 2.0.0
 Requires:        rubygem(parallel_tests)
 Requires:        rubygem(yard) >= 0.5.3
@@ -355,6 +355,7 @@ testing.
 %setup -q
 
 %build
+export RAILS_ENV=build
 
 #check for malformed gettext strings
 script/check-gettext.rb -m -i
@@ -399,8 +400,8 @@ a2x -d manpage -f manpage man/katello-service.8.asciidoc
     # by default do not stop on missing dep and only require "build" environment
     export BUNDLER_EXT_NOSTRICT=1
     export BUNDLER_EXT_GROUPS="default apipie"
-    rake apipie:static RAILS_ENV=build --trace
-    rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=build --trace
+    rake apipie:static --trace
+    rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello --trace
 %endif
 
 %install
@@ -559,6 +560,7 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 
 %files common
 %doc README LICENSE
+%{homedir}/bundler.d/build.rb
 %{_sbindir}/service-wait
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %attr(600, katello, katello) %{_sysconfdir}/%{name}/%{name}.yml
@@ -603,7 +605,6 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %{homedir}/bundler.d/foreman.rb
 %{homedir}/lib/resources/foreman.rb
 %{homedir}/lib/resources/foreman_model.rb
-%{homedir}/lib/resources/foreman_model.rb
 %{homedir}/app/models/foreman
 %{homedir}/app/models/glue/foreman
 %{homedir}/app/controllers/api/foreman
@@ -615,7 +616,6 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %files headpin
 %attr(600, katello, katello)
 %{_bindir}/katello-*
-%{homedir}/bundler.d/apipie.rb
 %dir %{homedir}/app
 %{homedir}/app/controllers
 %{homedir}/app/helpers
