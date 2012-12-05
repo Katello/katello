@@ -42,6 +42,6 @@ class Foreman::ConfigTemplate < Resources::ForemanModel
   end
 
   def self.build_pxe_default
-    resource.build_pxe_default(header).first
+    resource.build_pxe_default({}, header).first
   end
 end
