@@ -22,7 +22,7 @@ from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org, 
 from katello.client.core.utils import format_date
 from katello.client.api.repo import RepoAPI
 from katello.client.core.base import BaseAction, Command
-from katello.client.api.utils import get_environment, get_product, get_repo, get_filter
+from katello.client.api.utils import get_environment, get_product, get_repo
 from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, \
     wait_for_async_task, AsyncTask, format_sync_errors
 from katello.client.core.utils import ProgressBar
@@ -480,82 +480,6 @@ class Delete(SingleRepoAction):
         msg = self.api.delete(repo["id"])
         print msg
         return os.EX_OK
-
-
-class ListFilters(SingleRepoAction):
-
-    description = _('list filters of a repository')
-    select_by_env = False
-
-    def setup_parser(self, parser):
-        super(ListFilters, self).setup_parser(parser)
-        parser.add_option('--inherit', dest='inherit', action="store_true", default=False,
-            help=_("prints also filters assigned to repository's product."))
-
-    def run(self):
-        repo = self.get_repo()
-        inherit = self.get_option('inherit')
-
-        filters = self.api.filters(repo['id'], inherit)
-
-        self.printer.add_column('name')
-        self.printer.add_column('description')
-        self.printer.set_header(_("Repository Filters"))
-        self.printer.print_items(filters)
-
-        return os.EX_OK
-
-
-class AddRemoveFilter(SingleRepoAction):  # pylint: disable=R0904
-    #TODO: temporary pylint disable, we need to refactor the class later
-
-    select_by_env = False
-    addition = True
-
-    @property
-    def description(self):
-        if self.addition:
-            return _('add a filter to a repository')
-        else:
-            return _('remove a filter from a repository')
-
-    def __init__(self, addition):
-        super(AddRemoveFilter, self).__init__()
-        self.addition = addition
-
-    def setup_parser(self, parser):
-        self.set_repo_select_options(parser, False)
-        parser.add_option('--filter', dest='filter', help=_("filter name (required)"))
-
-    def check_options(self, validator):
-        super(AddRemoveFilter, self).check_options(validator)
-        validator.require('filter')
-
-    def run(self):
-        filter_name  = self.get_option('filter')
-        org_name     = self.get_option('org')
-
-        repo = self.get_repo()
-
-        get_filter(org_name, filter_name)
-
-        filters = self.api.filters(repo['id'])
-        filters = [f['name'] for f in filters]
-        self.update_filters(repo, filters, filter_name)
-        return os.EX_OK
-
-    def update_filters(self, repo, filters, filter_name):
-        if self.addition:
-            filters.append(filter_name)
-            message = _("Added filter [ %s ] to repository [ %s ]" % (filter_name, repo["name"]))
-        else:
-            filters.remove(filter_name)
-            message = _("Removed filter [ %s ] to repository [ %s ]" % (filter_name, repo["name"]))
-
-        self.api.update_filters(repo['id'], filters)
-        print message
-
-
 
 # command --------------------------------------------------------------------
 

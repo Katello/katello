@@ -418,14 +418,6 @@ module Glue::Pulp::Repos
       repos.each{|repo| repo.destroy}
     end
 
-    def set_filter repo, filter_id
-      repo.set_filters [filter_id]
-    end
-
-    def del_filter repo, filter_id
-      repo.del_filters [filter_id]
-    end
-
     def check_for_repo_conflicts(repo_name, repo_label)
       is_dupe =  Repository.joins(:environment_product).where( :name=> repo_name,
               "environment_products.product_id" => self.id, "environment_products.environment_id"=> self.library.id).count > 0
