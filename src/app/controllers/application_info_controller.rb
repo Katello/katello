@@ -21,13 +21,13 @@ class ApplicationInfoController < ApplicationController
   def about
     @ping = Ping.ping
     @packages = Ping.packages
-    @system_info = {  "Application" => Katello.config.app_name,
-                      "Version"     => Katello.config.katello_version
+    @system_info = {  _("Application") => Katello.config.app_name,
+                      _("Version")     => Katello.config.katello_version
                    }
     if current_user.allowed_to? :read, :organizations
-      @system_info.merge!("Environment" => Rails.env,
-                          "Directory"   => Rails.root,
-                          "Authentication" => Katello.config.warden,
+      @system_info.merge!(_("Environment") => Rails.env,
+                          _("Directory")   => Rails.root,
+                          _("Authentication") => Katello.config.warden,
                           "Ruby" => RUBY_VERSION
                          )
     end

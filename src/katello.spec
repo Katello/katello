@@ -385,6 +385,7 @@ mkdir -p %{buildroot}/%{_mandir}/man8
 #copy the application to the target directory
 mkdir .bundle
 cp -R .bundle Gemfile.in Rakefile app autotest ca config config.ru db integration_spec lib locale public script spec vendor %{buildroot}%{homedir}
+rm -f {buildroot}%{homedir}/script/katello-reset-dbs
 
 #copy configs and other var files (will be all overwriten with symlinks)
 install -m 600 config/%{name}.template.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml

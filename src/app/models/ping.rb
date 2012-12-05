@@ -24,7 +24,7 @@ class Ping
     #
     def ping
       if Katello.config.katello?
-        result = { :result => 'ok', :status => {
+        result = { :result => 'OK', :status => {
           :pulp => {},
           :candlepin => {},
           :elasticsearch => {},
@@ -34,7 +34,7 @@ class Ping
           :foreman_auth => {},
         }}
       else
-        result = { :result => 'ok', :status => {
+        result = { :result => 'OK', :status => {
           :candlepin => {},
           :elasticsearch => {},
           :candlepin_auth => {},
@@ -85,7 +85,7 @@ class Ping
       end
 
       # set overall status result code
-      result[:status].each_value { |v| result[:result] = 'fail' if v[:result] != 'ok' }
+      result[:status].each_value { |v| result[:result] = 'FAIL' if v[:result] != 'OK' }
       result
     end
 
@@ -94,11 +94,11 @@ class Ping
       begin
         start = Time.new
         yield
-        result[:result] = 'ok'
+        result[:result] = 'OK'
         result[:duration_ms] = ((Time.new - start) * 1000).round.to_s
       rescue => e
         Rails.logger.warn(e.backtrace ? [e.message, e.backtrace].join("\n") : e.message)
-        result[:result] = 'fail'
+        result[:result] = 'FAIL'
         result[:message] = e.message
       end
     end
