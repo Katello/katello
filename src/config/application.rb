@@ -11,19 +11,35 @@ require "./lib/util/boot_util"
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
 if File.exist?(File.expand_path('../../Gemfile.in', __FILE__))
+  # In bundler_ext mode we always load all groups except the testing group
+  # which can cause problems mocking objects for production or development envs.
   require 'aeolus/ext/bundler_ext'
-  puts 'Using gem require instead of bundler'
-  # TODO - remove all parameters once https://github.com/aeolus-incubator/bundler_ext/pull/3 is merged
-  Aeolus::Ext::BundlerExt.system_require(File.expand_path('../../Gemfile.in', __FILE__), :default, :foreman, Rails.env)
-else
-  ENV['BUNDLE_GEMFILE'] = File.expand_path('../../Gemfile', __FILE__)
-  puts 'Using bundler instead of gem require'
-  Bundler.require(:default, Rails.env) if defined?(Bundler)
-  if defined?(Bundler)
-    Bundler.require(:default, Rails.env)
+  groups = :all
+  groups = [:defualt, :development, :test] if Rails.env == "test"
+  Aeolus::Ext::BundlerExt.system_require(File.expand_path('../../Gemfile.in', __FILE__), groups)
 
-    # require backend engines only if in katello/cfse mode
-    Bundler.require(:foreman) if Katello::BootUtil.katello?
+  # Webmock rubygem have very strong default setting - it blocks all HTTP connections
+  # after it is required. Therefore we want to turn off this behavior for all environments
+  # except test since with bundler_ext we load ALL groups by default.
+  if defined? WebMock and Rails.env != "test"
+    WebMock.allow_net_connect!(:net_http_connect_on_start => true)
+  end
+else
+  # In Bundler mode we load only specified groups
+  ENV['BUNDLE_GEMFILE'] = File.expand_path('../../Gemfile', __FILE__)
+  if defined?(Bundler)
+    basic_groups = [:default, (:foreman if Katello::BootUtil.katello?)]
+    groups = case Rails.env.to_sym
+             when :production
+               basic_groups
+             when :development
+               basic_groups + [:development, :apipie, :development_boost]
+             when :test
+               basic_groups + [:development, :test, (:debugging if ENV['TRAVIS'] != 'true')]
+             else
+               raise "unknown environment #{Rails.env.to_sym}"
+             end.compact
+    Bundler.require *groups
   end
 end
 
