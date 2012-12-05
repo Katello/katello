@@ -72,10 +72,10 @@ class ContentView < ActiveRecord::Base
   def promote_via_changeset(env, apply_options = {:async => true},
                             cs_name = "#{self.name}_#{env.name}_#{Time.now.to_i}")
     cs = PromotionChangeset.create!(:name => cs_name,
-                                     :environment => @environment,
-                                     :state => Changeset::REVIEW,
-                                     :content_views => [@view]
-                                    )
+                                    :environment => env,
+                                    :state => Changeset::REVIEW,
+                                    :content_views => [self]
+                                   )
     return cs.apply(apply_options)
   end
 
