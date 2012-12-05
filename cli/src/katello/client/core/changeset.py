@@ -241,7 +241,7 @@ class UpdateContent(ChangesetAction):
             return tpl['id']
 
         def content_view_id(self, options):
-            view = get_content_view(self.org_name, options['name'])
+            view = get_content_view(self.org_name, options['label'])
             return view['id']
 
     class AddPatchItemBuilder(PatchItemBuilder):
@@ -365,6 +365,8 @@ class UpdateContent(ChangesetAction):
             self.items[option.dest].append({"product_label": u_str(value)})
         elif option.dest == 'add_product_id' or option.dest == 'remove_product_id':
             self.items[option.dest].append({"product_id": u_str(value)})
+        elif option.dest == "add_content_view" or option.dest == "remove_content_view":
+            self.items[option.dest].append({"label": u_str(value)})
         else:
             self.items[option.dest].append({"name": u_str(value)})
 
