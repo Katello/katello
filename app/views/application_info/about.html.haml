@@ -21,7 +21,7 @@
               %tr
                 %td= component_status_icon(status[:result])
                 %th= component
-                %td= status[:result].upcase
+                %td= status[:result] == 'OK' ? _('OK') : _('FAIL')
                 %td= status[:message]
     .dash
       .dashhead
@@ -48,7 +48,7 @@
     - if can_read_system_info?
       .dash
         .dashhead
-          %h4 Installed Packages
-        .widget.scroll-pane.packages
+          %h4= _("Installed Packages")
+        .widget.scroll-pane
           - @packages.each do |package|
             .package= package

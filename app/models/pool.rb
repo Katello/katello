@@ -107,7 +107,17 @@ class Pool < ActiveRecord::Base
     ::Pool.new(pool_json) if not pool_json.nil?
   end
 
-  def self.index_pools pools
+  def self.index_pools(pools, clear_filters=nil)
+    # Clear previous pools index
+    if !clear_filters.nil?
+      results = self.search nil, 0, 0, clear_filters
+      Tire.index self.index do
+        results.each do |result|
+          remove :pool, result.id
+        end
+      end
+    end
+
     json_pools = pools.collect{ |pool|
       pool.as_json.merge(pool.index_options)
     }
