@@ -51,9 +51,4 @@ class Api::ContentViewsControllerTest < MiniTest::Rails::ActionController::TestC
     assert_equal (changeset_count + 1), Changeset.count
   end
 
-  test "should throw an error if view is already in environment" do
-    post :promote, :id => @content_view.id, :environment_id => @dev.id
-    assert_response 400
-  end
-
 end
