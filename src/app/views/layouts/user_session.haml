@@ -3,7 +3,7 @@
 
 = content_for(:javascripts_block) do
   = include_javascripts :common
-  = include_javascripts :converge_ui
+  = include_javascripts :alchemy
 
 = content_for(:login_logo) do
   = image_tag("embed/logo.png", :alt => _('Katello Logo'))
@@ -32,4 +32,4 @@
 = content_for(:footer) do
   = render :partial => "common/footer"
 
-= render :partial => "layouts/converge-ui/user_session_layout"
+= render :partial => "layouts/alchemy/layouts/user_session_layout"

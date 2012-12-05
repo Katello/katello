@@ -12,7 +12,7 @@
 
 
 = content_for(:content) do
-  = render :partial => "layouts/converge-ui/login_layout",
+  = render :partial => "layouts/alchemy/layouts/login_layout",
            :locals => { :login_form_path_string => user_session_path,
                         :recovery_strings => (_("Forgot %s or %s?") % [link_to(_("Username"), login_path(:card => :username_recovery), :id => "username_link"),
                                                                       link_to(_("Password"), login_path(:card => :password_reset), :id => "password_link")]).html_safe,
