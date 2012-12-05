@@ -184,7 +184,7 @@ Katello connection classes for the Pulp backend
 BuildArch:      noarch
 Summary:         Katello connection classes for the Foreman backend
 Requires:        %{name}-common
-# bundler.d/foreman.rb
+# dependencies from bundler.d/foreman.rb
 Requires:       rubygem(foreman_api) >= 0.0.7
 
 %description glue-foreman
@@ -253,7 +253,7 @@ BuildArch:       noarch
 Requires:        %{name} = %{version}-%{release}
 # Gemfile
 Requires:        rubygem(ci_reporter) >= 1.6.3
-# bundler.d/development.rb
+# bdependencies from undler.d/development.rb
 Requires:        rubygem(rspec-rails) >= 2.0.0
 Requires:        rubygem(parallel_tests)
 Requires:        rubygem(yard) >= 0.5.3
@@ -261,9 +261,9 @@ Requires:        rubygem(js-routes)
 Requires:        rubygem(gettext) >= 1.9.3
 Requires:        rubygem(ruby_parser)
 Requires:        rubygem(sexp_processor)
-# bundler.d/development_boost.rb
+# dependencies from bundler.d/development_boost.rb
 Requires:        rubygem(rails-dev-boost)
-# bundler.d/apipie.rb
+# dependencies from bundler.d/apipie.rb
 Requires:        rubygem(redcarpet)
 
 %description devel
@@ -273,7 +273,7 @@ Rake tasks and dependecies for Katello developers
 Summary:         Katello devel support (profiling)
 BuildArch:       noarch
 Requires:        %{name} = %{version}-%{release}
-# bundler.d/profiling.rb
+# dependencies from bundler.d/profiling.rb
 Requires:        rubygem(ruby-prof)
 Requires:        rubygem(logical-insight)
 Requires:        rubygem(newrelic_rpm)
@@ -288,7 +288,7 @@ BuildArch:       noarch
 Provides:        katello-devel-jshintrb = 1.2.1-1
 Obsoletes:       katello-devel-jshintrb < 1.2.1-1
 Requires:        %{name} = %{version}-%{release}
-# bundler.d/checking.rb
+# dependencies from bundler.d/checking.rb
 Requires:        rubygem(therubyracer)
 Requires:        rubygem(ref)
 Requires:        rubygem(jshintrb)
@@ -303,7 +303,7 @@ syntax checking and is need for unit testing.
 Summary:         Katello devel support (test coverage utils)
 BuildArch:       noarch
 Requires:        %{name} = %{version}-%{release}
-# bundler.d/coverage.rb
+# dependencies from bundler.d/coverage.rb
 %if 0%{?fedora} > 16
 Requires:        rubygem(simplecov)
 %else
@@ -318,7 +318,7 @@ code coverage for tests.
 Summary:         Katello devel support (debugging)
 BuildArch:       noarch
 Requires:        %{name} = %{version}-%{release}
-# bundler.d/debugging.rb
+# dependencies from bundler.d/debugging.rb
 %if 0%{?fedora} > 16
 Requires:        rubygem(ruby-debug19)
 %else
@@ -334,7 +334,7 @@ Summary:         Katello devel support (testing)
 BuildArch:       noarch
 Requires:        %{name} = %{version}-%{release}
 Requires:        %{name}-devel = %{version}-%{release}
-# bundler.d/test.rb
+# dependencies from bundler.d/test.rb
 Requires:        rubygem(ZenTest) >= 4.4.0
 Requires:        rubygem(autotest-rails) >= 4.1.0
 Requires:        rubygem(rspec-rails) >= 2.0.0
@@ -421,6 +421,7 @@ mkdir -p %{buildroot}/%{_mandir}/man8
 #copy the application to the target directory
 mkdir .bundle
 cp -R .bundle Gemfile.in bundler.d Rakefile app autotest ca config config.ru db integration_spec lib locale public script spec vendor %{buildroot}%{homedir}
+rm -f {buildroot}%{homedir}/script/katello-reset-dbs
 
 #copy configs and other var files (will be all overwriten with symlinks)
 install -m 600 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
