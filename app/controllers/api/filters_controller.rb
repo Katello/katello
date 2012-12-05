@@ -174,7 +174,7 @@ class Api::FiltersController < Api::ApiController
 
   def find_filters
     @filters = Filter.where(:name => params[:filters], :organization_id => @organization.id)
-    raise HttpErrors::NotFound, _("Couldn't one of the filters in '%s'") % params[:product_id] if @filters.any? {|f| f.nil?}
+    raise HttpErrors::NotFound, _("Couldn't find one of the filters in '%s'") % params[:product_id] if @filters.any? {|f| f.nil?}
     @filters
   end
 
