@@ -18,7 +18,7 @@
                                                                       link_to(_("Password"), login_path(:card => :password_reset), :id => "password_link")]).html_safe,
                         :login_path_string => login_path,
                         :new_username_recoveries_form_path_string => email_logins_password_resets_path,
-                        :new_password_resets_form_path_string => email_logins_password_resets_path }
+                        :new_password_resets_form_path_string => password_resets_path }
 
 = content_for(:interstitial) do
   .card.slidable#interstitial{:class => ("slid" if params[:card] == "interstitial")}
