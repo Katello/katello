@@ -61,9 +61,6 @@ class Api::ContentViewsController < Api::ApiController
   param :environment_id, :identifier, :desc => "environment promoting to"
   def promote
     task = @view.promote_via_changeset(@environment)
-    if @view.environments.include?(@environment)
-      raise HttpErrors::BadRequest, _("Content view is already in environment %s.") % @environment.name
-    end
     render :json => task, :status => 202
   end
 
