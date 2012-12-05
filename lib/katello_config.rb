@@ -58,7 +58,7 @@ module Katello
   #     irb> n[:not]
   #     Katello::Configuration::Node::NoKey:  missing key 'not' in configuration
   #
-  #     # sooports deep_merge and #to_hash
+  #     # supports deep_merge and #to_hash
   #     irb> n.deep_merge!('a' => {:b => 34})
   #     => #<Katello::Configuration::Node:0x10e2cd2b0 @data=
   #         {:a=>#<Katello::Configuration::Node:0x10e2a64d0 @data={:a=>12, :b=>34}>}>
@@ -350,7 +350,7 @@ module Katello
 
     root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
 
-    VALIDATION = lambda do
+    VALIDATION = lambda do |*_|
       has_keys *%w( app_name candlepin notification debug_pulp_proxy debug_rest available_locales
                     use_cp simple_search_tokens database debug_cp_proxy headpin? host ldap_roles
                     cloud_forms use_pulp cdn_proxy use_ssl warden katello? url_prefix foreman
