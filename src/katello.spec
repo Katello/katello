@@ -114,7 +114,7 @@ BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
-BuildRequires:  converge-ui-devel >= 1.0.1
+BuildRequires:  rubygem(alchemy) >= 1.0.0
 
 # we require this to be able to build api-docs
 BuildRequires:       rubygem(rails) >= 3.0.10
@@ -360,10 +360,9 @@ export RAILS_ENV=build
 #check for malformed gettext strings
 script/check-gettext.rb -m -i
 
-#copy converge-ui
-cp -R /usr/share/converge-ui-devel/* ./vendor/converge-ui
-rm ./public/fonts
-mv ./vendor/converge-ui/fonts ./public/fonts
+#copy alchemy
+ALCHEMY_DIR=$(rpm -ql rubygem-alchemy | grep -o '/.*/vendor' | sed 's/vendor$//' | head -n1)
+cp -R $ALCHEMY_DIR* ./vendor/alchemy
 
 #use Bundler_ext instead of Bundler
 mv Gemfile Gemfile.in
