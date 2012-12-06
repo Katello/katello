@@ -14,7 +14,7 @@
 class Api::ContentViewsController < Api::ApiController
   respond_to :json
   before_filter :find_organization, :except => [:promote]
-  before_filter :find_optional_environment, :only => [:index]
+  before_filter :find_optional_environment, :only => [:index, :show]
   before_filter :find_environment, :only => [:promote]
   before_filter :find_content_view, :only => [:show, :promote]
   before_filter :authorize
@@ -52,8 +52,9 @@ class Api::ContentViewsController < Api::ApiController
 
   api :GET, "/content_views/:id"
   param :id, :identifier, :desc => "content view id"
+  param :environment_id, :identifier, :desc => "environment id", :required => false
   def show
-    render :json => @view
+    render :json => @view.as_json(:environment => @environment)
   end
 
   api :POST, "/content_views/:id/promote"
