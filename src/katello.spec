@@ -15,14 +15,6 @@
 %global datadir %{_sharedstatedir}/%{name}
 %global confdir deploy/common
 
-%if 0%{?rhel} == 6
-%global gem_dir %(ruby -rubygems -e 'puts Gem::dir' 2>/dev/null)
-%endif
-
-%if 0%{?fedora}
-BuildRequires:  rubygems-devel
-%endif
-
 Name:           katello
 Version:        1.2.1
 Release:        1%{?dist}
@@ -122,7 +114,7 @@ BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
-BuildRequires:  rubygem(alchemy) = 1.0.0
+BuildRequires:  rubygem(alchemy) >= 1.0.0
 
 # we require this to be able to build api-docs
 BuildRequires:       rubygem(rails) >= 3.0.10
@@ -369,7 +361,8 @@ export RAILS_ENV=build
 script/check-gettext.rb -m -i
 
 #copy alchemy
-cp -R %{gem_dir}/gems/alchemy-1.0.0/* ./vendor/alchemy
+ALCHEMY_DIR=$(rpm -ql rubygem-alchemy | grep -o '/.*/vendor' | sed 's/vendor$//' | head -n1)
+cp -R $ALCHEMY_DIR* ./vendor/alchemy
 
 #use Bundler_ext instead of Bundler
 mv Gemfile Gemfile.in
