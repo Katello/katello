@@ -25,6 +25,7 @@ class ChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
     @dev                  = KTEnvironment.find(environments(:dev).id)
     @acme_corporation     = Organization.find(organizations(:acme_corporation).id)
     @library_view         = ContentView.find(content_views(:library_view))
+    @library_dev_view     = ContentView.find(content_views(:library_dev_view))
   end
 
   def test_add_content_view_exception
@@ -80,6 +81,58 @@ class ChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
                                       :state => Changeset::REVIEW)
     assert_equal changeset.add_content_view!(@library_view), @library_view
     # assert changeset.apply( :async => false, :notify => false )
+  end
+
+  def test_invalid_content_view_deletion_changeset
+    view         = @library_view
+    changeset    = FactoryGirl.create(:deletion_changeset,
+                                      :environment => @dev)
+
+    assert_raises(Errors::ChangesetContentException) do
+      changeset.add_content_view!(view)
+    end
+    assert_raises(Exception) do
+      view.delete(@dev)
+    end
+    refute_includes changeset.content_views, view
+  end
+
+  def test_content_view_invalid_library_deletion
+    view = @library_dev_view
+
+    assert_raises(Exception) do
+      view.delete(@library)
+    end
+  end
+
+  def test_content_view_changeset_deletion
+    view         = @library_dev_view
+    changeset    = FactoryGirl.create(:deletion_changeset,
+                                      :environment => @dev)
+
+    assert changeset.add_content_view!(view)
+    assert_includes changeset.content_views.reload, view
+    view.delete(@dev)
+    refute_includes @dev.content_views(true), view
+
+    view.delete(@library)
+    assert_nil ContentView.find_by_id(view.id)
+  end
+
+  def test_content_view_re_promote
+    view         = @library_dev_view
+    changeset    = FactoryGirl.create(:deletion_changeset,
+                                      :environment => @dev)
+
+    assert changeset.add_content_view!(view)
+    view.delete(@dev)
+    refute_includes @dev.content_views(true), view
+
+    # re-promote
+    changeset    = FactoryGirl.create(:promotion_changeset,
+                                      :environment => @dev)
+    assert view.promote(@library, @dev)
+    assert_includes @dev.content_views(true), view
   end
 
 end
