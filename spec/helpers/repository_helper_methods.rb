@@ -5,9 +5,9 @@ module RepositoryHelperMethods
     Repository.stub_chain(:joins, :where).and_return(repos)
 
     Product.instance_eval do
-      define_method(:repos) {
+      define_method(:repos) do |env|
         repos
-      }
+      end
     end
   end
 
