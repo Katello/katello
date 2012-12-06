@@ -39,7 +39,7 @@
     #changeset_history_tabs
       .grid_10
         %h2 #{_("Contents:")}
-        -if @changeset.involved_products.empty? && @changeset.system_templates.empty?
+        -if @changeset.involved_products.empty? && @changeset.content_views.empty? && @changeset.system_templates.empty?
           .grid_7.prefix_1
             #{_("This changeset contains no content.")}
         -else
@@ -77,7 +77,10 @@
                     :locals=>{:items=>@changeset.distributions.where(:product_id=>prod.id).collect{|i| i.display_name},
                     :type_string=>_("Distributions")}
 
-
-
-
-
+            - if !@changeset.content_views.empty?
+              %h3
+                %a{:href=>'#'} #{_("Content Views")}
+              #content_views.cs_history_tab
+                %ul
+                  -for view in @changeset.content_views
+                    %li #{view.name}
