@@ -34,7 +34,6 @@ class Repository < ActiveRecord::Base
   belongs_to :gpg_key, :inverse_of => :repositories
   belongs_to :library_instance, :class_name=>"Repository"
   has_and_belongs_to_many :changesets
-  has_and_belongs_to_many :filters
 
   validates :environment_product, :presence => true
   validates :pulp_id, :presence => true, :uniqueness => true
@@ -102,11 +101,6 @@ class Repository < ActiveRecord::Base
     !(redhat?)
   end
 
-  def has_filters?
-    return false unless environment.library?
-    filters.count > 0 || product.filters.count > 0
-  end
-
   def clones
     lib_id = self.library_instance_id || self.id
     Repository.in_environment(self.environment.successors).where(:library_instance_id=>lib_id)
@@ -162,15 +156,5 @@ class Repository < ActiveRecord::Base
       repo = self.library_instance
     end
     Repository.where("library_instance_id=%s or repositories.id=%s"  % [repo.id, repo.id] )
-  end
-
-  #Filters that should be applied for content coming into this repository.
-  def applicable_filters
-    previous = self.environmental_instances.in_environment(self.environment.prior).first
-    if previous && previous.environment.prior.nil?  #if previous exists and is library
-      previous.filters + self.product.filters
-    else
-      []
-    end
   end
 end

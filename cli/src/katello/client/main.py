@@ -40,7 +40,6 @@ from katello.client.core import (
   template,
   changeset,
   client,
-  filters,
   gpg_key,
   system_group,
   admin,
@@ -128,9 +127,6 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         prod_cmd.add_command('cancel_sync', product.CancelSync())
         prod_cmd.add_command('status', product.Status())
         prod_cmd.add_command('promote', product.Promote())
-        prod_cmd.add_command('list_filters', product.ListFilters())
-        prod_cmd.add_command('add_filter', product.AddRemoveFilter(True))
-        prod_cmd.add_command('remove_filter', product.AddRemoveFilter(False))
         prod_cmd.add_command('set_plan', product.SetSyncPlan())
         prod_cmd.add_command('remove_plan', product.RemoveSyncPlan())
     katello_cmd.add_command('product', prod_cmd)
@@ -150,9 +146,6 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         repo_cmd.add_command('cancel_sync', repo.CancelSync())
         repo_cmd.add_command('enable', repo.Enable(True))
         repo_cmd.add_command('disable', repo.Enable(False))
-        repo_cmd.add_command('list_filters', repo.ListFilters())
-        repo_cmd.add_command('add_filter', repo.AddRemoveFilter(True))
-        repo_cmd.add_command('remove_filter', repo.AddRemoveFilter(False))
         katello_cmd.add_command('repo', repo_cmd)
 
     if mode == 'katello':
@@ -279,17 +272,6 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
     client_cmd.add_command('forget', client.Forget())
     client_cmd.add_command('saved_options', client.SavedOptions())
     katello_cmd.add_command('client', client_cmd)
-
-    if mode == 'katello':
-        filter_cmd = filters.Filter()
-        filter_cmd.add_command('create', filters.Create())
-        filter_cmd.add_command('update', filters.Update())
-        filter_cmd.add_command('list', filters.List())
-        filter_cmd.add_command('info', filters.Info())
-        filter_cmd.add_command('delete', filters.Delete())
-        filter_cmd.add_command('add_package', filters.AddPackage())
-        filter_cmd.add_command('remove_package', filters.RemovePackage())
-        katello_cmd.add_command('filter', filter_cmd)
 
     if mode == 'katello':
         gpgkey_cmd = gpg_key.GpgKey()

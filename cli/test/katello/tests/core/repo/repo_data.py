@@ -28,9 +28,6 @@ REPOS = [
     "publish": True,
     "last_sync": None,
     "comps": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_zoo-ACME_Corporation/comps/",
-    "filters": [
-
-    ],
     "sync_schedule": None,
     "files_count": 82,
     "groupid": [
@@ -77,9 +74,6 @@ REPOS = [
     "publish": True,
     "last_sync": None,
     "comps": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_fewupdates-ACME_Corporation/comps/",
-    "filters": [
-
-    ],
     "sync_schedule": None,
     "files_count": 89,
     "groupid": [

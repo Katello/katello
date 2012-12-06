@@ -37,7 +37,6 @@ class AuthorizationTestBase < MiniTest::Rails::ActiveSupport::TestCase
     @dev                  = KTEnvironment.find(environments(:dev).id)
     @acme_corporation     = Organization.find(organizations(:acme_corporation).id)
     @unassigned_gpg_key   = GpgKey.find(gpg_keys(:unassigned_gpg_key).id)
-    @fedora_filter        = Filter.find(filters(:fedora_filter).id)
 
     @system             = System.find(systems(:simple_server))
   end

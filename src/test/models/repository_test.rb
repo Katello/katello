@@ -84,14 +84,6 @@ class RepositoryInstanceTest < RepositoryTestBase
     refute_nil @fedora_17_x86_64.yum_gpg_key_url
   end
 
-  def test_has_filters?
-    assert @fedora_17_x86_64.has_filters?
-  end
-
-  def test_does_not_have_filters?
-    refute @fedora_17_x86_64_dev.has_filters?
-  end
-
   def test_clones
     assert_includes @fedora_17_x86_64.clones, @fedora_17_x86_64_dev
   end
@@ -121,10 +113,6 @@ class RepositoryInstanceTest < RepositoryTestBase
   def test_environmental_instances
     assert_includes @fedora_17_x86_64.environmental_instances, @fedora_17_x86_64
     assert_includes @fedora_17_x86_64.environmental_instances, @fedora_17_x86_64_dev
-  end
-
-  def test_applicable_filters
-    assert_includes @fedora_17_x86_64_dev.applicable_filters, @fedora_filter
   end
 
 end
