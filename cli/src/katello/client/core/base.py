@@ -23,12 +23,15 @@ from urlparse import urlparse
 from katello.client.config import Config
 from katello.client.api.utils import ApiDataError
 from katello.client.core.utils import parse_tokens, SystemExitRequest
+from katello.client.utils.csv_reader import CSVReader
+from katello.client.utils.json_reader import JSONReader
 from katello.client.utils.printer import Printer, GrepStrategy, VerboseStrategy
 from katello.client.utils.option_validator import OptionValidator
 from katello.client.utils.encoding import u_str, u_obj
 from katello.client.logutil import getLogger
 from katello.client.server import ServerRequestError
 
+from collections import defaultdict
 from copy import copy
 from optparse import Option, OptionValueError
 
@@ -450,8 +453,96 @@ class BaseAction(Action):
 
 
 
+# import action class -----------------------------------------------------------
+
+class ImportAction(BaseAction):
+
+    def __init__(self):
+        super(ImportAction, self).__init__()
+        self.stats_file = None
+        self.stats = defaultdict(int)
+        self.errors = []
+        self.notes = []
+        self.import_file = None
+
+    def run(self):
+        self._load_data()
+        self._pre_import()
+        self._setup_output()
+        self._do_import()
+        self._post_import()
+        self._dump_stats()
+
+    def setup_parser(self, parser):
+        parser.add_option('--directory', dest='directory',
+            help=_("Where to store result files If not provided, go to std out."))
+        parser.add_option('--import-file', dest='import-file',
+            help=_("The data file to import"))
+        parser.add_option('--csv', dest='csv',
+                        action="store_true", default=False,
+                        help=_("Use CSV formatted files for input"))
+
+    def check_options(self, validator):
+        validator.require('import-file')
+
+    def _load_data(self):
+        import_filename = self.get_option('import-file')
+        if self.get_option('csv'):
+            self.import_file = CSVReader(import_filename)
+        else:
+            self.import_file = JSONReader(import_filename)
+
+    def _pre_import(self):
+        pass
+
+    def _do_import(self):
+        pass
+
+    def _post_import(self):
+        pass
+
+    def _output_filename(self):
+        pass
+
+    def _setup_output(self):
+        if self.get_option('directory'):
+            # Create the output directory
+            output_dir = self.get_option('directory')
+            if not os.path.exists(output_dir):
+                os.makedirs(output_dir)
+
+            self.stats_file = open(output_dir + "/" + self._output_filename() + "-stats", 'w')
+        else:
+            self.stats_file = sys.stdout
 
 
+    def _add_stat(self, stat_name, stat_count = 1):
+        self.stats[stat_name] += stat_count
+
+    def _add_error(self, string):
+        self._add_stat("errors")
+        self.errors.append(string)
+
+    def _add_note(self, string):
+        self.notes.append(string)
+
+    def _dump_stats(self):
+        self.stats_file.write("Stats\n")
+        self.stats_file.write("-----\n")
+        for stat in self.stats.keys():
+            self.stats_file.write("%s -> %s\n" % (stat, self.stats[stat]))
+
+        if len(self.errors) > 0:
+            self.stats_file.write("\nErrors\n")
+            self.stats_file.write("------\n")
+            for err in self.errors:
+                self.stats_file.write(err + "\n")
+
+        if len(self.notes) > 0:
+            self.stats_file.write("\nNotes\n")
+            self.stats_file.write("-----\n")
+            for note in self.notes:
+                self.stats_file.write(note + "\n")
 
 # optparse type extenstions --------------------------------------------------
 

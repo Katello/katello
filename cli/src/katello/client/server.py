@@ -146,7 +146,11 @@ class ServerRequestError(Exception):
     or a str if we didn't [2] potentially a traceback, if the server response
     was a python error, otherwise it will be None
     """
-    pass
+    def __init__(self, code, message, trace):
+        super(ServerRequestError, self).__init__(code, message, trace)
+        self.return_code = code
+        self.return_message = message
+
 
 
 class KatelloServer(object):
@@ -158,7 +162,7 @@ class KatelloServer(object):
     @ivar protocol: protocol the katello server is using (http, https)
     @ivar path_prefix: mount point of the katello api (/katello/api)
     @ivar headers: dictionary of http headers to send in requests
-    """  
+    """
     auth_method = NoAuthentication()
 
     #---------------------------------------------------------------------------

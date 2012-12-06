@@ -19,8 +19,9 @@ import os
 from katello.client.api.user import UserAPI
 from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.utils import get_user, get_environment
-from katello.client.core.base import BaseAction, Command
+from katello.client.core.base import BaseAction, Command, ImportAction
 from katello.client.core.utils import test_record, convert_to_mime_type, attachment_file_name, save_report
+from katello.client.server import ServerRequestError
 from katello.client.utils.printer import batch_add_columns
 
 
@@ -121,6 +122,43 @@ class Info(UserAction):
 
         self.printer.print_item(user)
         return os.EX_OK
+
+class ImportUsers(ImportAction):
+
+    description = _('import a set of users into the katello server')
+
+    def __init__(self):
+        super(ImportUsers, self).__init__()
+        self.api = UserAPI()
+
+    def _output_filename(self):
+        return "users"
+
+
+    def _do_import(self):
+        for row in self.import_file:
+            username = row['username']
+            disabled = row['disabled']
+            email = row['email']
+            password = row['password']
+
+            try:
+                user = self.api.user_by_name(username)
+
+                if user:
+                    self.api.update(user['id'], password, email, disabled, None, None)
+                    self._add_stat("users updated")
+                else:
+                    self.api.create(username, password, email, disabled, None, None)
+                    self._add_stat("users created")
+
+            except ServerRequestError, e:
+                self._add_error("Skipping user %s with exception: %s" % (username, e))
+                break
+            except Exception, e:
+                self._add_error("Skipping user %s with exception: %s" % (username, e))
+                break
+
 
 # ------------------------------------------------------------------------------
 

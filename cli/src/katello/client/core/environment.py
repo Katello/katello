@@ -18,9 +18,10 @@ import os
 
 from katello.client.api.environment import EnvironmentAPI
 from katello.client.cli.base import opt_parser_add_org
-from katello.client.core.base import BaseAction, Command
+from katello.client.core.base import BaseAction, Command, ImportAction
 from katello.client.core.utils import test_record
 from katello.client.api.utils import get_environment
+from katello.client.server import ServerRequestError
 from katello.client.utils.printer import batch_add_columns
 
 
@@ -91,6 +92,53 @@ class Info(EnvironmentAction):
         self.printer.set_header(_("Environment Info"))
         self.printer.print_item(env)
         return os.EX_OK
+
+class ImportEnvironments(ImportAction):
+
+    description = _('import a set of environments into the katello server')
+
+    def __init__(self):
+        super(ImportEnvironments, self).__init__()
+        self.api = EnvironmentAPI()
+
+    def _output_filename(self):
+        return "environments"
+
+
+    def _do_import(self):
+        for row in self.import_file:
+            name = row['name']
+            label = row['label']
+            description = row['description']
+            priorName = row['prior_name']
+            orgName = row['org_name']
+
+            # Treat an empty String, or the word Library
+            # as the library
+            if (priorName == "" or priorName == "Library"):
+                priorName = None
+
+            try:
+                environment = get_environment(orgName, name, False)
+                prior = get_environment(orgName, priorName, False)
+
+                if (not prior):
+                    self._add_error("Skipping environment %s becuase prior enviornment: %s does not exist"
+                        % (name,priorName))
+                    break
+
+                if environment:
+                    self.api.update(orgName, environment['id'], name, description, prior['id'])
+                    self._add_stat("environments updated")
+                else:
+                    self.api.create(orgName, name, label, description, prior['id'])
+                    self._add_stat("environments created")
+            except ServerRequestError, e:
+                self._add_error("Skipping environment %s with exception: %s" % (name, e))
+                break
+            except Exception, e:
+                self._add_error("Skipping environment %s with exception: %s" % (name, e))
+                break
 
 
 

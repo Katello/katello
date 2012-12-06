@@ -20,11 +20,12 @@ import sys
 from katello.client.api.activation_key import ActivationKeyAPI
 from katello.client.api.template import TemplateAPI
 from katello.client.api.system_group import SystemGroupAPI
-from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import test_record
+from katello.client.core.base import BaseAction, Command, ImportAction
+from katello.client.core.utils import test_record, to_array
 from katello.client.utils import printer
 from katello.client.api.utils import get_environment
 from katello.client.cli.base import OptionException, opt_parser_add_org, opt_parser_add_environment
+from katello.client.server import ServerRequestError
 
 class ActivationKeyAction(BaseAction):
 
@@ -130,6 +131,90 @@ class Info(ActivationKeyAction):
         self.printer.set_header(_("Activation Key Info"))
         self.printer.print_item(keys[0])
         return os.EX_OK
+
+
+# ------------------------------------------------------------------------------
+class ImportActivationKeys(ImportAction):
+
+    description = _('import a set of activation keys into the katello server')
+
+    def __init__(self):
+        super(ImportActivationKeys, self).__init__()
+        self.api = ActivationKeyAPI()
+        self.cached_envs = {}
+        self.cached_groups = {}
+
+    def _output_filename(self):
+        return "activation_keys"
+
+    def _retrieve_environment(self, orgName, envName):
+        key = "%s-%s" % (orgName, envName)
+        env = None
+        if key in self.cached_envs:
+            env = self.cached_envs[key]
+        else:
+            env = get_environment(orgName, envName)
+            self.cached_envs[key] = env
+
+        return env
+
+    def _retrieve_system_group(self, orgName, groupName):
+        key = "%s-%s" % (orgName, groupName)
+        group = None
+        if key in self.cached_groups:
+            group = self.cached_groups[key]
+        else:
+            group = SystemGroupAPI().system_group_by_name(orgName, groupName)
+            self.cached_groups[key] = group
+
+        return group
+
+
+    def _do_import(self):
+        for row in self.import_file:
+            name = row['name']
+            orgName = row['org_name']
+            key = None
+            try:
+                keys = self.api.activation_keys_by_organization(orgName, name)
+                if len(keys) == 1:
+                    key = keys[0]
+                elif len(keys) > 1:
+                    self._add_error("Found multiple keys with name %s" % (name))
+                    break
+            except ServerRequestError, e:
+                if e.return_code == 404:
+                    pass
+                else:
+                    raise e
+
+            try:
+                environment = self._retrieve_environment(orgName, row['environment_name'])
+                templateId = None
+                if len(row['template_id']) > 0:
+                    templateId = ActivationKeyAction.get_template_id(environment['id'], row['template_id'])
+
+                if key:
+                    key = self.api.update(orgName, key['id'], environment['id'], row['name'], row['description'], \
+                        templateId, row['usage_limit'])
+                    self._add_stat("activation keys updated")
+                else:
+                    key = self.api.create(environment['id'], row['name'], row['description'], \
+                        row['usage_limit'], templateId)
+                    self._add_stat("activation keys created")
+
+                for groupName in to_array(row['system_groups']):
+                    group = self._retrieve_system_group(orgName, groupName)
+                    if group == None:
+                        self._add_error("No group name %s found when importing key %s" % (groupName, row['name']))
+                    else:
+                        self.api.add_system_group(orgName, key["id"], group['id'])
+            except ServerRequestError, e:
+                self._add_error("Skipping activation key %s with exception: %s" % (name, e))
+                break
+            except Exception, e:
+                self._add_error("Skipping activation key %s with exception: %s" % (name, e))
+                break
 
 
 class Create(ActivationKeyAction):

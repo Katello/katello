@@ -67,6 +67,16 @@ Unit tests for Katello client.
 For more info see:
 https://fedorahosted.org/katello/wiki/TestingHowto
 
+%package sw-export
+Summary:       Export scripts to pull data from a Spacewalk server
+Group:         Applications/System
+License:       GPLv2
+Requires:      python-okaara
+Requires:      %{name}-common
+
+%description sw-export
+Export scripts to pull data from a Spacewalk server
+
 %prep
 %setup -q
 
@@ -100,8 +110,11 @@ install -d %{buildroot}%{python_sitelib}/%{base_name}/client/api
 install -d %{buildroot}%{python_sitelib}/%{base_name}/client/cli
 install -d %{buildroot}%{python_sitelib}/%{base_name}/client/core
 install -d %{buildroot}%{python_sitelib}/%{base_name}/client/utils
+install -d %{buildroot}%{python_sitelib}/%{base_name}/swexport
+install -d %{buildroot}%{python_sitelib}/%{base_name}/swexport/datatypes
 install -pm 0644 bin/%{base_name} %{buildroot}%{_bindir}/%{base_name}
 install -pm 0644 bin/%{base_name}-debug-certificates %{buildroot}%{_bindir}/%{base_name}-debug-certificates
+install -pm 0644 bin/sw-export %{buildroot}%{_bindir}/sw-export
 install -pm 0644 etc/client.conf %{buildroot}%{_sysconfdir}/%{base_name}/client.conf
 install -pm 0644 src/%{base_name}/*.py %{buildroot}%{python_sitelib}/%{base_name}/
 install -pm 0644 src/%{base_name}/client/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/
@@ -109,6 +122,8 @@ install -pm 0644 src/%{base_name}/client/api/*.py %{buildroot}%{python_sitelib}/
 install -pm 0644 src/%{base_name}/client/cli/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/cli/
 install -pm 0644 src/%{base_name}/client/core/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/core/
 install -pm 0644 src/%{base_name}/client/utils/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/utils/
+install -pm 0644 src/%{base_name}/swexport/*.py %{buildroot}%{python_sitelib}/%{base_name}/swexport/
+install -pm 0644 src/%{base_name}/swexport/datatypes/*.py %{buildroot}%{python_sitelib}/%{base_name}/swexport/datatypes/
 install -d -m 0755 %{buildroot}%{_mandir}/man1
 install -m 0644 man/%{base_name}.man1 %{buildroot}%{_mandir}/man1/%{base_name}.1
 install -m 0644 man/headpin.man1 %{buildroot}%{_mandir}/man1/headpin.1
@@ -145,10 +160,15 @@ popd
 
 %files common -f %{name}.lang
 %dir %{_sysconfdir}/%{base_name}
-%{python_sitelib}/%{base_name}/
+%{python_sitelib}/%{base_name}/client
+%{python_sitelib}/%{base_name}/*.py*
 
 %files unit-tests
 %{homedir}/tests
+
+%files sw-export
+%attr(755,root,root) %{_bindir}/sw-export
+%{python_sitelib}/%{base_name}/swexport
 
 %clean
 # clean locale files

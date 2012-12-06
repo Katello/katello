@@ -1,0 +1,25 @@
+Export tooling to pull data from a Spacewalk server for importing ito candlepin.
+
+To use, do the follownig:
+
+1) Add the current directoy to your PYTHONPATH. Ensure you have okaara installed.
+2) run ./export.py to get the help text.
+3) All commands can be configured with parameters _or_
+4) run ./export.py dump_config to get a sample config file.
+4) Place that file in ~/.katello/export.conf and override to your hearts content.
+
+Examples
+--------
+
+To export all orgs, and enhance them with new names and labels:
+./export.py orgs --server [SATELLITE_URL] --username [USERNAME] --password [PASSWORD] --org-mapping-file=$PWD/sample_mappings/org_mappings.csv
+
+
+Order to import
+---------
+orgs
+environments
+system groups
+activation keys
+systems
+

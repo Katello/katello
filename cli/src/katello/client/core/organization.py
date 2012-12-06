@@ -19,8 +19,9 @@ import os
 from katello.client.api.organization import OrganizationAPI
 from katello.client.api.product import ProductAPI
 from katello.client.api.organization_system_info_keys import OrganizationSystemInfoKeysAPI
-from katello.client.core.base import BaseAction, Command
+from katello.client.core.base import BaseAction, Command, ImportAction
 from katello.client.core.utils import test_record, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_task_errors
+from katello.client.server import ServerRequestError
 from katello.client.utils.printer import VerboseStrategy
 from katello.client.utils import printer
 from datetime import timedelta, datetime
@@ -260,6 +261,7 @@ class ShowSubscriptions(OrganizationAction):
 
 # ------------------------------------------------------------------------------
 
+
 class AddDefaultSystemInfo(OrganizationAction):
 
     description = _("add default custom info keynames for systems")
@@ -342,6 +344,45 @@ class ApplyDefaultSystemInfo(OrganizationAction):
             print _("No default custom info keys to apply in Org [ %s ]") % org_name
         else:
             print _("Could not apply default custom info keys to systems in Org [ %s ]") % org_name
+
+class ImportOrgs(ImportAction):
+
+    description = _('import a set of orgs into the katello server')
+
+    def __init__(self):
+        super(ImportOrgs, self).__init__()
+        self.api = OrganizationAPI()
+
+    def _output_filename(self):
+        return "orgs"
+
+    def _do_import(self):
+        for row in self.import_file:
+            name = row['name']
+            label = row['label']
+            #if len(label) < 2:
+            #    label = name
+
+            org = None
+            try:
+                org = self.api.organization(name)
+            except ServerRequestError, e:
+                if e.return_code == 404:
+                    pass
+                else:
+                    raise e
+            try:
+                if org:
+                    self.api.update(name, row['description'])
+                    self._add_stat("orgs updated")
+                else:
+                    self.api.create(name, label, row['description'])
+                    self._add_stat("orgs created")
+            except ServerRequestError, e:
+                self._add_error("Skipping org %s with exception: %s" % (name, e))
+            except Exception, e:
+                self._add_error("Skipping org %s with exception: %s" % (name, e))
+
 
 # organization command ------------------------------------------------------------
 
