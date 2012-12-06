@@ -21,7 +21,8 @@ from katello.client.api.content_view_definition import ContentViewDefinitionAPI
 from katello.client.cli.base import opt_parser_add_org, \
         opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
-from katello.client.api.utils import get_environment, get_content_view
+from katello.client.api.utils import get_environment, get_content_view, \
+        get_library
 from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, \
         AsyncTask, format_task_errors
 
@@ -73,6 +74,8 @@ class Info(ContentViewAction):
         opt_parser_add_org(parser, True)
         parser.add_option('--label', dest='label',
                 help=_("content view label eg: foo.example.com (required)"))
+        parser.add_option('--env', dest='env',
+                help=_("environment name (default: Library)"))
 
     def check_options(self, validator):
         validator.require(('org', 'label'))
@@ -80,8 +83,17 @@ class Info(ContentViewAction):
     def run(self):
         org_name = self.get_option('org')
         view_label = self.get_option('label')
+        env_name = self.get_option('env')
 
         view = get_content_view(org_name, view_label)
+        if env_name:
+            env = get_environment(org_name, env_name)
+            env_id = env["id"] if env else None
+        else:
+            env = get_library(org_name)
+            env_id = env["id"] if env else None
+
+        view = self.api.show(org_name, view["id"], env_id)
 
         self.printer.add_column('id')
         self.printer.add_column('name')
@@ -92,6 +104,8 @@ class Info(ContentViewAction):
         self.printer.add_column('environments', _('Environments'),
                 multiline=True)
         self.printer.add_column('versions', multiline=True)
+        self.printer.add_column('repositories', _('Repos'),
+                multiline=True)
 
         self.printer.set_header(_("ContentView Info"))
         self.printer.print_item(view)

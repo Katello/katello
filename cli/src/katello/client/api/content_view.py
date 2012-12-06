@@ -27,9 +27,10 @@ class ContentViewAPI(KatelloAPI):
         return views
 
 
-    def show(self, org_id, view_id):
-        path = "/api/organizations/%s/content_views/%s" % (org_id, view_id)
-        view = self.server.GET(path)[1]
+    def show(self, org_name, view_id, environment_id=None):
+        path = "/api/organizations/%s/content_views/%s" % (org_name, view_id)
+        params = {"environment_id": environment_id}
+        view = self.server.GET(path, params)[1]
         return view
 
 
