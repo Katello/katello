@@ -46,7 +46,7 @@ class PromotionsController < ApplicationController
     access_envs = accessible_environments
     setup_environment_selector(current_organization, access_envs)
     @products = @environment.products.readable(current_organization)
-    @products = @products.reject{|p| p.repos(@environment).empty?}.sort{|a,b| a.name <=> b.name}
+    @products = @products.reject{|p| @environment.default_content_view.repos_in_product(@environment, p).empty?}.sort{|a,b| a.name <=> b.name}
     Glue::Pulp::Repos.prepopulate! @products, @environment,[]
 
     @promotion_changesets = @next_environment.working_promotion_changesets if (@next_environment && @next_environment.changesets_readable?)
@@ -74,7 +74,8 @@ class PromotionsController < ApplicationController
 
   def packages
     product_id = params[:product_id]
-    repos = Product.find(product_id).repos(@environment)
+    # retrieve the repos associated with the environment's default content view and the specified product
+    repos = @environment.default_content_view.repos_in_product(@environment, Product.find(product_id))
     repo_ids = repos.collect{ |repo| repo.pulp_id }
     
     @promotable_packages = []
@@ -130,15 +131,17 @@ class PromotionsController < ApplicationController
   def repos
     @next_env_repos = []
     if @next_environment
-      @product.repos(@next_environment).each{|repo|
+      @next_environment.default_content_view.repos_in_product(@next_environment, @product).each do |repo|
         @next_env_repos << repo.pulp_id
-      }
+      end
     end
 
     offset = params[:offset]
     partial = offset.to_i > 0 ? 'promotions/repo_items' : 'repos'
 
-    filters = [{:product_id=>[@product.id]}, {:enabled=>[true]}, {:environment_id=>[@environment.id]}]
+    filters = [{:product_id=>[@product.id]}, {:default_content_view=>[true]}, {:enabled=>[true]},
+               {:environment_id=>[@environment.id]}]
+
     render_panel_direct(Repository, {:list_partial=>partial}, params[:search],
                         offset, [:name_sort, :ASC], {:default_field => :name, :filter=>filters})
   end
@@ -150,11 +153,13 @@ class PromotionsController < ApplicationController
 
     product_id = params[:product_id]
     if product_id
-      repos = Product.find(product_id).repos(@environment)
+      # retrieve the repos associated with the environment's default content view and the specified product
+      repos = @environment.default_content_view.repos_in_product(@environment, Product.find(product_id))
       repo_ids = repos.collect{ |repo| repo.pulp_id }
       filters[:repoids] = repo_ids
     else
-      repos = Repository.joins(:environment_product).where("environment_products.environment_id" => @environment)
+      # retrieve the repos associated with the environment's default content view
+      repos = @environment.default_content_view.repos(@environment)
       repo_ids = repos.collect{ |repo| repo.pulp_id }
       filters[:repoids] = repo_ids
     end
@@ -204,8 +209,6 @@ class PromotionsController < ApplicationController
       @not_promotable = @errata.collect{ |erratum| erratum.id }
     end
 
-
-
     if offset.to_i >  0
       options = {:list_partial =>'promotions/errata_items'}
     else
@@ -220,7 +223,7 @@ class PromotionsController < ApplicationController
 
     @distributions = {}
     unless @product.nil?
-      @product.repos(@environment).each do |repo|
+      @environment.default_content_view.repos_in_product(@environment, @product).each do |repo|
         unless repo.distributions.nil?
           repo.distributions.each{|distro|
             @distributions[distro] = repo
@@ -234,12 +237,12 @@ class PromotionsController < ApplicationController
     @next_env_distros = []
     @next_env_repos = []
     if @next_environment
-      @product.repos(@next_environment).each{|repo|
+      @next_environment.default_content_view.repos_in_product(@next_environment, @product).each do |repo|
         @next_env_repos << repo.pulp_id
         repo.distributions.each{|distro|
           @next_env_distros << distro.id
         }
-      }
+      end
     end
 
     render :partial=>"distributions"
