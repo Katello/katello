@@ -547,7 +547,17 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %exclude %{homedir}/lib/tasks/test.rake
 %exclude %{homedir}/script/pulp_integration_tests
 %{homedir}/locale
-%{homedir}/public
+%{homedir}/public/*.html
+%{homedir}/public/*.txt
+%{homedir}/public/*.ico
+%{homedir}/public/assets
+%{homedir}/public/fonts
+%{homedir}/public/images
+%{homedir}/public/javascripts
+%{homedir}/public/stylesheets
+%{homedir}/public/stylesheets/*.css
+%attr(600, katello, katello) %{homedir}/public/stylesheets/compiled
+%{homedir}/public/stylesheets/images
 %exclude %{homedir}/public/apipie-cache
 %{homedir}/script
 %exclude %{homedir}/script/service-wait
