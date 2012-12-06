@@ -12,8 +12,7 @@
 
 class Api::OrganizationsController < Api::ApiController
 
-  before_filter :find_organization, :only => [:show, :update, :destroy, :products]
-  before_filter :find_organization, :only => [:show, :update, :destroy, :products, :providers]
+  before_filter :find_organization, :only => [:show, :update, :destroy]
 
   respond_to :json
   before_filter :authorize
@@ -24,14 +23,11 @@ class Api::OrganizationsController < Api::ApiController
     read_test = lambda{@organization.readable?}
     edit_test = lambda{@organization.editable?}
     delete_test = lambda{@organization.deletable?}
-    products_test = lambda{Product.any_readable?(@organization)}
-
 
     {:index =>  index_test,
       :show => read_test,
       :create => create_test,
       :update => edit_test,
-      :products => products_test,
       :destroy => delete_test,
     }
   end
