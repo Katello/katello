@@ -71,12 +71,14 @@ class ContentView < ActiveRecord::Base
 
   def promote_via_changeset(env, apply_options = {:async => true},
                             cs_name = "#{self.name}_#{env.name}_#{Time.now.to_i}")
-    cs = PromotionChangeset.create!(:name => cs_name,
-                                    :environment => env,
-                                    :state => Changeset::REVIEW,
-                                    :content_views => [self]
-                                   )
-    return cs.apply(apply_options)
+    ActiveRecord::Base.transaction do
+      cs = PromotionChangeset.create!(:name => cs_name,
+                                      :environment => env,
+                                      :state => Changeset::REVIEW
+                                     )
+      cs.add_content_view!(self)
+      return cs.apply(apply_options)
+    end
   end
 
   def promote(from_env, to_env)
@@ -96,10 +98,19 @@ class ContentView < ActiveRecord::Base
   end
 
   def delete(from_env)
+    if from_env.library? && in_non_library_environment?
+      raise Exception, _("Cannot delete view while it exits in environments")
+    end
     version = self.version(from_env)
-    raise "Cannot delete from #{from_env.name}, view does not exist there." if version.nil?
+    if version.nil?
+      raise Exception, _("Cannot delete from %s, view does not exist there.") % from_env.name
+    end
     version.delete(from_env)
     self.destroy if self.versions.empty?
+  end
+
+  def in_non_library_environment?
+    environments.where(:library => false).length > 0
   end
 
 end
