@@ -3,6 +3,12 @@ module RepositoryHelperMethods
   def stub_repos(repos)
     repos.stub(:where => repos)
     Repository.stub_chain(:joins, :where).and_return(repos)
+
+    Product.instance_eval do
+      define_method(:repos) do |env|
+        repos
+      end
+    end
   end
 
   def new_test_repo(env_product, name, path, enabled=true, suffix="", library_instance=nil)
