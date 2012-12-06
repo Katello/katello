@@ -15,15 +15,16 @@ KT.panel.list.registerPage('configuration_templates', {create: 'new_configuratio
 
 KT.configuration_templates_page = (function() {
     checkboxChanged = function() {
+        $('#configuration_template_template_kind_id option')[0].selected = true;
         var checkbox = $(this);
-        var name = $(this).attr("name");
-        var options = {};
-        options[name] = translateCheckBoxValue(checkbox.attr("checked"));
         var url = checkbox.attr("data-url");
         $.ajax({
             type: "PUT",
             url: url,
-            data: options,
+            data: {
+                'configuration_template[template_kind][id]': '',
+                'configuration_template[snippet]': translateCheckBoxValue(checkbox.attr("checked"))
+            },
             cache: false
         });
         return false;
@@ -44,11 +45,15 @@ KT.configuration_templates_page = (function() {
     };
 
     changeType = function() {
+        $('#configuration_template_snippet').removeAttr('checked');
         var url = $(this).attr("data_url");
         $.ajax({
             type: "PUT",
             url: url,
-            data: {'configuration_template[template_kind][id]': $(this).val()},
+            data: {
+                'configuration_template[template_kind][id]': $(this).val(),
+                'configuration_template[snippet]': 'false'
+            },
             cache: false
         });
         return false;
