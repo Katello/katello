@@ -12,13 +12,12 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 module Navigation
   module SetupMenu
-
     def menu_setup
       menu = {:key => :systems,
        :name => _("Setup"),
         :url => :sub_level,
         :options => {:class=>'setup top_level', "data-menu"=>"setup"},
-        :items=> [ menu_subnets, menu_domains ]
+        :items=> [ menu_subnets, menu_domains, menu_configuration_templates ]
         # TODO: final order of the setup menu items
         #   Setup
         #   Locations
@@ -48,6 +47,13 @@ module Navigation
       }
     end
 
-
+    def menu_configuration_templates
+      {:key => :registered,
+       :name => _("Configuration Templates"),
+       :url => configuration_templates_path,
+       :if => lambda{true}, #TODO: check permissions
+       :options => {:class=>'setup second_level', "data-menu"=>"configuration_templates"}
+      }
+    end
   end
 end

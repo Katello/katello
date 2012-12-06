@@ -1,0 +1,7 @@
+= javascript :edit_helpers
+
+= content_for :title do
+  #{@configuration_template.name}
+
+= content_for :remove_item do
+  = link_to _("Remove Configuration Template"), { :controller => "configuration_templates", :action => "destroy" }, :confirm => _('Are you sure you want to remove this configuration template?'), :method => :delete, :class=>"remove_item", :remote=>true

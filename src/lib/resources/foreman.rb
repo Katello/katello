@@ -26,7 +26,7 @@ module Resources
     Architecture    = ForemanApi::Resources::Architecture.new options
     Bookmark        = ForemanApi::Resources::Bookmark.new options
     Home            = ForemanApi::Resources::Home.new options
-    OperatingSystem = ForemanApi::Resources::OperatingSystem.new options
+    Operatingsystem = ForemanApi::Resources::OperatingSystem.new options
     User            = ForemanApi::Resources::User.new options
     Domain          = ForemanApi::Resources::Domain.new options
     SmartProxy      = ForemanApi::Resources::SmartProxy.new options

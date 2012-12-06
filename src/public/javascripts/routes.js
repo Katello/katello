@@ -96,6 +96,10 @@
   domains_path: function(options) {
   return Utils.build_path(1, ["/domains"], arguments)
   },
+// configuration_templates_path => /configuration_templates(.:format)
+  configuration_templates_path: function(options) {
+      return Utils.build_path(1, ["/configuration_templates"], arguments)
+  },
 // repositories_api_environment_product => /api/environments/:environment_id/products/:id/repositories(.:format)
   repositories_api_environment_product_path: function(_environment_id, _id, options) {
   return Utils.build_path(3, ["/api/environments/", "/products/", "/repositories"], arguments)

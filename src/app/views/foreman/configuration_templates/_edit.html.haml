@@ -1,0 +1,42 @@
+= javascript :edit_helpers
+
+= render :partial => "edit_header"
+
+= content_for :content do
+  .grid_10
+    = kt_form_for @configuration_template, :as=>"configuration_template", :url => configuration_template_path(@configuration_template), :data_url=>configuration_template_path(@configuration_template), :html=>{ :id=>"edit_config_template" } do |form|
+
+      = form.editable :name, :label => _("Name:")
+      = form.check_box :snippet, {:label => _("Snippet:"), 'data-url' => configuration_template_path(@configuration_template)}
+      %fieldset
+        .grid_2.ra
+          %label #{_("Type")}:
+        .grid_5.la
+          = select_tag 'configuration_template[template_kind][id]', options_for_select([['PXLinux', 1], ['gPXE', 2]], (@configuration_template.template_kind.nil? ? nil : @configuration_template.template_kind['id'])), :include_blank => true, :data_url=>configuration_template_path(@configuration_template)
+      = form.editable :template, :label => _("Template Editor:"), :tag => {:id => "configuration_template_text"}, :type => :edit_textarea
+      // "Selecting a file will override the editor and load the file instead"
+      %fieldset
+        .grid_2.ra
+          %label #{_("Upload Template")}:
+        .grid_5.la
+          = file_field_tag 'configuration_template[template]', :id => "configuration_template_file", :tabindex => 4
+      %fieldset
+        .grid_4.push_2.la
+          %input.button{ "type" => "button", :id => :update_upload_template, :disabled => "disabled", "value" => _("Upload") }
+        .grid_4.push_1
+          %input.button{ "type" => "button", :id => :clear_upload_template, :disabled => "disabled", "value" => _("Clear") }
+      %fieldset
+        .grid_2.ra
+          %label #{_("Applicable Operating Systems")}:
+        - ::Foreman::Operatingsystem.all.each do |os|
+          #operatingsystem_ids.grid_5.la
+            %input{ :name => 'configuration_template[operatingsystem_ids][]', :type => 'hidden'}
+            = check_box_tag('configuration_template[operatingsystem_ids][]', os.id, (@configuration_template.operatingsystem_ids.nil? ? false : @configuration_template.operatingsystem_ids.include?(os.id)), 'data-url' => configuration_template_path(@configuration_template))
+            #{os.name}
+
+
+
+
+      = form.editable :audit_comment, :label => _("Audit Comment:")
+
+      %div{ :style => "min-height: 100px;" }
