@@ -65,9 +65,3 @@ gem "apipie-rails", '>= 0.0.13'
 Dir[File.expand_path('bundler.d/*.rb', File.dirname(__FILE__))].each do |bundle|
   self.instance_eval(Bundler.read_file(bundle), bundle)
 end
-
-# The following groups are not packaged as RPMs and are used only in Bundler mode
-group :ci do
-  # needed by hudson
-  gem 'ci_reporter', '~> 1.7.2', :require => 'ci/reporter/core'
-end
