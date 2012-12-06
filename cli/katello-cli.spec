@@ -21,7 +21,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.2.1
+Version:       1.2.2
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 Requires:      %{base_name}-cli-common
@@ -155,6 +155,77 @@ popd
 make -C po clean
 
 %changelog
+* Thu Dec 06 2012 Eric D Helms <ehelms@redhat.com> 1.2.2-1
+- correcting activation key help message for cli (komidore64@gmail.com)
+- Switched to python or (jomara@redhat.com)
+- 879245 - optionally displaying uuid instead of name (jomara@redhat.com)
+- 879561 - Throw exception if system not found (daviddavis@redhat.com)
+- 879320 - removing ipv4 address from system list (jomara@redhat.com)
+- 866972 - katello-debug needs to take headpin into consideration
+  (komidore64@gmail.com)
+- subnet cli - CRUD actions (tomas.str@gmail.com)
+- cli utils - fix in unnest_one (tstrachota@redhat.com)
+- 875609-hypervisor - allow hypervisors to successfully register and list in
+  katello (thomasmckay@redhat.com)
+- 874280 - terminology changes for consistency across subman, candlepin, etc
+  (jomara@redhat.com)
+- Translations - Update .po and POTFILES.in files for katello-cli.
+  (ehelms@redhat.com)
+- Translations - New translations from Transifex for katello-cli.
+  (ehelms@redhat.com)
+- Translations - Download translations from Transifex for katello-cli.
+  (ehelms@redhat.com)
+- simplify code (msuchy@redhat.com)
+- code cleanup (msuchy@redhat.com)
+- 798675 - display "required" if option is required (msuchy@redhat.com)
+- 871622 - correctly set provides and obsoletes (msuchy@redhat.com)
+- Revert "871622 - fixing obsoletes to correctly upgrade from katello-cli-
+  headpin" (msuchy@redhat.com)
+- 871622 - fixing obsoletes to correctly upgrade from katello-cli-headpin
+  (jomara@redhat.com)
+- 863461 - Headpin Cli automation : Failure to list the org updated with
+  special chars other than ascii chars (komidore64@gmail.com)
+- fixing pylint error (lzap+git@redhat.com)
+- 865528 - improving error handling in the cli code (lzap+git@redhat.com)
+- cli - method batch_add_columns applied (tstrachota@redhat.com)
+- cli printer - tests and utils (tstrachota@redhat.com)
+- 871622 - correctly set version in obsolete (msuchy@redhat.com)
+- Pylint - Updates to remove disablement of pylint warnings present in 0.26
+  since pylint 0.25 is what is available in Fedora. (ehelms@redhat.com)
+- Pylint - Fixes a regex and silences the anonmolous backlash warnings from the
+  color declarations in the Spinner. (ehelms@redhat.com)
+- CLI Unittest - Fixes issue where CLI unittests couldn't pass on a clean
+  system by mocking the get_katello_mode call. (ehelms@redhat.com)
+- cli config - fix for missing section in get_katello_mode
+  (tstrachota@redhat.com)
+- Travis - Adds first pass at a Travis configuration. (ericdhelms@gmail.com)
+- 865571 - man page for headpin shows katello context (komidore64@gmail.com)
+- 869575 - CLI - changeset - fix error during add/remove repo/pkg/errata
+  (bbuckingham@redhat.com)
+- 869575 - changeset add_product - correctly handle product request
+  (bbuckingham@redhat.com)
+- forgot to check with pylint (komidore64@gmail.com)
+- 818903 - Name of the pdf generated for headpin system report command should
+  be modified (komidore64@gmail.com)
+- RAM entitlements (jomara@redhat.com)
+- 855267 - fix string issue raised in pull request review
+  (bbuckingham@redhat.com)
+- 855267 - changeset - moving common logic for product opts to a class method
+  (bbuckingham@redhat.com)
+- fixing busted cli tests (komidore64@gmail.com)
+- 855267 - fix few strings based on pull request review
+  (bbuckingham@redhat.com)
+- 855267 - CLI - pylint, template and changeset fixes (bbuckingham@redhat.com)
+- 855267 - fixes for pylint errors (bbuckingham@redhat.com)
+- 859892 - system info contains "u"-s in "OS release" field
+  (komidore64@gmail.com)
+- 855267 - CLI - updates to changesets based on product chgs
+  (bbuckingham@redhat.com)
+- 855267 - CLI - updates to errata/package/repo based on product chgs
+  (bbuckingham@redhat.com)
+- 855267 - CLI add product label and id whereever product name is supported
+  (bbuckingham@redhat.com)
+
 * Fri Oct 19 2012 Miroslav Suchý <msuchy@redhat.com> 1.2.1-1
 - gettext - fix malformed gettext stings in CLI code (inecas@redhat.com)
 - Fix pylint katello.client.core.organization C0301 (inecas@redhat.com)
