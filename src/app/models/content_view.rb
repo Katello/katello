@@ -69,6 +69,15 @@ class ContentView < ActiveRecord::Base
     end
   end
 
+  def repos_in_product(env, product)
+    version = version(env)
+    if version
+      version.repositories.in_environment(env).in_product(product)
+    else
+      []
+    end
+  end
+
   def promote_via_changeset(env, apply_options = {:async => true},
                             cs_name = "#{self.name}_#{env.name}_#{Time.now.to_i}")
     cs = PromotionChangeset.create!(:name => cs_name,
