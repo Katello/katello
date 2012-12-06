@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.2.0
+Version:       1.2.1
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
@@ -51,6 +51,17 @@ cp -Rp cli_tests/ cli-system-test helpers *zip RPM-GPG-KEY* $RPM_BUILD_ROOT%{hom
 
 
 %changelog
+* Thu Dec 06 2012 Eric D Helms <ehelms@redhat.com> 1.2.1-1
+- subnets - system tests (tstrachota@redhat.com)
+- fix rhsm cli system test (msuchy@redhat.com)
+- architectures - various cli fixes (tstrachota@redhat.com)
+- Bumping package versions for 1.1. (lzap+git@redhat.com)
+- Architectures API fix (pajkycz@gmail.com)
+- Added system tests for domains, config templates (pajkycz@gmail.com)
+- architectures cli - show action renamed to info to keep naming consistency
+  (tomas.str@gmail.com)
+- architectures - cli smoke tests (tomas.str@gmail.com)
+
 * Fri Oct 12 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.7-1
 - cli test - adding new test for template deletion
 - cli tests - addressing error when getting POOL_ID
