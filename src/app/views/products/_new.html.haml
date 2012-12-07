@@ -17,6 +17,8 @@
     = form.field :gpg_key, :label => _("GPG Key") do
       - if gpg_keys.present?
         = select_tag 'product[gpg_key]', options_from_collection_for_select(gpg_keys, "id", "name"), :include_blank => true, :tabindex => form.tabindex
+        - help_message = _("GPG Keys are not required.  This field may be left blank.")
+        %span.tipsify.details_icon-grey{:title => help_message}
       - else
         = _("None defined for this Organization.")
 
