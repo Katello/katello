@@ -48,6 +48,9 @@ class ContentView < ActiveRecord::Base
     result['definition']   = self.content_view_definition.try(:name)
     result['environments'] = environments.map{|e| e.try(:name)}.join(", ")
     result['versions'] = versions.map(&:version)
+    if options[:environment].present?
+      result['repositories'] = repos(options[:environment]).map(&:name)
+    end
 
     result
   end
