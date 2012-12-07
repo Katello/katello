@@ -1188,4 +1188,8 @@ $(document).ready(function() {
         }
     };
     $(window).trigger('hashchange');
+
+    $(document).bind('open_panel.tupane', function(){
+        KT.options.action_bar.reset();
+    });
 });
