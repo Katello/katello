@@ -13,7 +13,7 @@
 = render :partial => "system_groups/tupane_header"
 
 = content_for :content do
-  #system_group_systems.grid_9{'data-id'=>@group.id}
+  #system_group_systems.full{'data-id'=>@group.id}
     %input#system_group_id{:name => @group.id, :type => "hidden", :value => "#{name}_#{@group.id}", "data-ajax_url"=>url_for(:action=> 'update')}
     %form#system_form
       -if editable
@@ -47,7 +47,7 @@
 
 
 = content_for :footer do
-  .grid_9
+  .full
     %input#remove_systems.fr.button{:type=>:button, :value=>_("Remove Selected")}
 
 

@@ -2,7 +2,7 @@
 =javascript :scroll_pane, :dashboard
 
 
-.grid_9
+.sixty
   - if current_organization && current_organization.readable?
     = dashboard_entry(_("System Subscription Status"), "subscriptions", false)
   - if Katello.config.katello? && current_organization && Repository.any_readable_in_org?(current_organization, true)
@@ -11,7 +11,7 @@
   - if Katello.config.katello? && current_organization && SystemGroup.any_readable?(current_organization)
     = dashboard_ajax_entry(_("System Group Overview"), "system_groups", system_groups_dashboard_index_path(), "big_widget", true)
 
-.grid_7
+.forty
   - widget_class = Katello.config.katello? ? "small_widget" : "small_widget_headpin"
   = dashboard_ajax_entry(_("Latest Notifications"), "notices", notices_dashboard_index_path(), widget_class, true)
   - if Katello.config.katello?
