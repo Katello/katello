@@ -164,13 +164,13 @@
             .fieldset
               .grid_2.ra
                 %label #{_("Name:")}
-              .grid_4.la.editable.edit_name_text{'name' => 'name'}
+              .grid_4.la.clear.editable.edit_name_text{'name' => 'name'}
               .grid_2.ra
                 %label #{_("Description:")}
-              .grid_4.la.editable.edit_description{'name' => 'description'}
+              .grid_4.la.clear.editable.edit_description{'name' => 'description'}
               .grid_2.ra
                 %label #{_("Type:")}
-              .grid_4.la.edit_type{:style => "padding-top:2px;padding-left:2px;"}
+              .grid_4.la.clear.edit_type{:style => "padding-top:2px;padding-left:2px;"}
 
           #changeset_status
           - if manage_promotion_changesets or manage_deletion_changesets or apply_promotion_changesets or apply_deletion_changesets

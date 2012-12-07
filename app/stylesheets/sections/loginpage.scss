@@ -1,12 +1,11 @@
 @import "compass/reset";
-$login_base-color: #006F8F;
-
-$login_background_top-color: darken(rgba(0, 157, 204, 1), 4%) !default;
-$login_background_bottom-color: darken(rgba(0, 111, 143, 1), 4%) !default;
+@import "overrides";
+$login_background_top_color: lighten($primary_color, 10%) !default;
+$login_background_bottom-color: darken($primary_color, 10%) !default;
 
 $switcherformwidth: 300px;
 
-@import "converge-ui/composites/login";
+@import "alchemy/composites/login";
 @import "widgets/org_switcher";
 @import "widgets/search";
 @import "widgets/scrollpane";

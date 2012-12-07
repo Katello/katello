@@ -5,6 +5,7 @@ Src::Application.configure do
   # every request.  This slows down response time but is perfect for development
   # since you don't have to restart the webserver when you make code changes.
   config.cache_classes = false
+  #config.cache_classes = true
   #switch the above to true if you're demoing.
 
   # Log error messages when you accidentally call methods on nil.
@@ -23,9 +24,4 @@ Src::Application.configure do
   config.colorize_logging = false
   Dir.mkdir "#{Rails.root}/log" unless File.directory? "#{Rails.root}/log"
   config.active_record.logger = Logger.new("#{Rails.root}/log/development_sql.log")
-
-  unless File.exist?(File.expand_path('../../../Gemfile.in', __FILE__))
-    # do not require additional things with bundler_ext
-    Bundler.require(:debugging, Rails.env)
-  end
 end

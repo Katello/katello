@@ -37,15 +37,15 @@ class PasswordResetsController < ApplicationController
     # address provided... this is done on purpose for security
     notify.success _("Email sent to '%s' with password reset instructions.") % params[:email],
                   :persist => false
-    render :text => ""
+    render :partial=>"password_refresh"
   end
 
   def edit
     if @user.password_reset_sent_at < password_reset_expiration.minutes.ago
       notify.warning _("Password reset token has expired for user '%s'.") % @user.username
-      redirect_to new_password_reset_path
+      redirect_to login_path(:card => 'password_reset')
     else
-      render "common/user_session", :layout => "converge-ui/change_password_layout"
+      redirect_to new_user_session_path
     end
   end
 
@@ -75,7 +75,7 @@ class PasswordResetsController < ApplicationController
     # note: we provide a success notice regardless of whether or not there are any users associated with the email
     # address provided... this is done on purpose for security
     notify.success _("Email sent to '%s' with valid login user names.") % params[:email], :persist => false
-    render :text => ""
+    render :partial => "username_refresh"
   end
 
   protected
