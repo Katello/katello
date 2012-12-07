@@ -101,8 +101,10 @@ install -d %{buildroot}%{python_sitelib}/%{base_name}/client/cli
 install -d %{buildroot}%{python_sitelib}/%{base_name}/client/core
 install -d %{buildroot}%{python_sitelib}/%{base_name}/client/utils
 install -pm 0644 bin/%{base_name} %{buildroot}%{_bindir}/%{base_name}
+install -pm 0644 bin/_complete_%{base_name} %{buildroot}%{_bindir}/_complete_%{base_name}
 install -pm 0644 bin/%{base_name}-debug-certificates %{buildroot}%{_bindir}/%{base_name}-debug-certificates
 install -pm 0644 etc/client.conf %{buildroot}%{_sysconfdir}/%{base_name}/client.conf
+install -Dp -m0644 etc/%{base_name}.completion.sh %{buildroot}%{_sysconfdir}/bash_completion.d/%{base_name}
 install -pm 0644 src/%{base_name}/*.py %{buildroot}%{python_sitelib}/%{base_name}/
 install -pm 0644 src/%{base_name}/client/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/
 install -pm 0644 src/%{base_name}/client/api/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/api/
@@ -135,9 +137,11 @@ popd
 
 %files
 %attr(755,root,root) %{_bindir}/%{base_name}
+%attr(755,root,root) %{_bindir}/_complete_%{base_name}
 %attr(755,root,root) %{_bindir}/headpin
 %attr(755,root,root) %{_bindir}/%{base_name}-debug-certificates
 %config(noreplace) %{_sysconfdir}/%{base_name}/client.conf
+%{_sysconfdir}/bash_completion.d/%{base_name}
 %doc README LICENSE
 %{_mandir}/man1/%{base_name}.1*
 %{_mandir}/man1/headpin.1*
