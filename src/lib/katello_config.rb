@@ -368,7 +368,7 @@ module Katello
       are_booleans :use_cp, :use_foreman, :use_pulp, :use_ssl, :ldap_roles, :debug_rest,
                    :debug_cp_proxy, :debug_pulp_proxy, :logical_insight
 
-      if !early? && environment != :apipie
+      if !early? && environment != :build
         validate :database do
           has_keys *%w(adapter host encoding username password database)
         end
