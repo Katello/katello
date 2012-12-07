@@ -429,6 +429,11 @@ class ApplicationController < ActionController::Base
       path = path.collect{ |e| environment_path_element_generator.call(e) }
       to_ret << [library] + path if path.any?{|e| e[:select]}
     end
+    
+    if paths.empty?
+      to_ret << [library]
+    end
+
     to_ret
   end
 
