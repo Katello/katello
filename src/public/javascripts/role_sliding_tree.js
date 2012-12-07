@@ -540,10 +540,12 @@ KT.roles.permissionWidget = function(){
             selected = selected || all_verbs_button.hasClass('selected');
 
             if( !selected ){
+                flow['verbs'].input.find('option').attr('selected', 'selected');
                 flow['verbs'].input.attr('disabled', 'disabled');
                 all_verbs_button.html(i18n.cancel);
                 all_verbs_button.addClass('selected');
             } else {
+                flow['verbs'].input.find('option').removeAttr('selected');
                 flow['verbs'].input.removeAttr('disabled');
                 all_verbs_button.html(i18n.all);
                 all_verbs_button.removeClass('selected');
