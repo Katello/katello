@@ -4,6 +4,7 @@ header "RHSM"
 
 
 RHSM_ORG="org_rhsm_$RAND"
+RHSM_ORG_LABEL="org_rhsm_label_$RAND"
 RHSM_ENV="env_rhsm_$RAND"
 RHSM_AK1=$(nospace "ak1_$RAND")
 RHSM_AK2=$(nospace "ak2_$RAND")
@@ -32,7 +33,7 @@ if sm_present; then
   if grep 'hostname = subscription.rhn.redhat.com' /etc/rhsm/rhsm.conf; then
     skip_test_success "rhsm registration" "Could not test against hosted"
   else
-    test_success "org create for rhsm" org create --name="$RHSM_ORG" --description="org for rhsm"
+    test_success "org create for rhsm" org create --name="$RHSM_ORG" --label="$RHSM_ORG_LABEL" --description="org for rhsm"
     test_success "environment create for rhsm" environment create --org="$RHSM_ORG" --name="$RHSM_ENV" --prior="Library"
     test_success "activation key 1 create" activation_key create --name="$RHSM_AK1" --environment="$RHSM_ENV" --org="$RHSM_ORG"
     test_success "activation key 2 create" activation_key create --name="$RHSM_AK2" --environment="$RHSM_ENV" --org="$RHSM_ORG"
@@ -48,8 +49,11 @@ if sm_present; then
     
     test_own_cmd_success "rhsm show organizations" $SUDO subscription-manager orgs --username="$USER" --password="$PASSWORD"
     test_own_cmd_success "rhsm show environments" $SUDO subscription-manager environments --username="$USER" --password="$PASSWORD" --org="$RHSM_ORG"
-    test_own_cmd_success "rhsm registration with org" $SUDO subscription-manager register --username="$USER" --password="$PASSWORD" \
-      --org="$RHSM_ORG" --name="$HOST" --force
+    test_own_cmd_success "rhsm registration with org label" \
+      $SUDO subscription-manager register --username="$USER" --password="$PASSWORD" --org="$RHSM_ORG_LABEL" --name="$HOST" --force
+    test_own_cmd_success "rhsm unregister" $SUDO subscription-manager unregister
+    test_own_cmd_success "rhsm registration with org name" \
+      $SUDO subscription-manager register --username="$USER" --password="$PASSWORD" --org="$RHSM_ORG" --name="$HOST" --force
     test_own_cmd_success "rhsm show identity" $SUDO subscription-manager identity
     test_own_cmd_success "rhsm registration with org/env" $SUDO subscription-manager register --username="$USER" --password="$PASSWORD" \
       --org="$RHSM_ORG" --environment="$RHSM_ENV" --name="$HOST" --force
