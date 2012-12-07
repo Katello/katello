@@ -639,7 +639,7 @@ KT.comparison_grid.controls = function(grid) {
                     
                 $('#compare_repos_btn').show();
 
-                if( elements.length === 0 ){
+                if( elements.length < 2 ){
                     $('#compare_repos_btn').addClass('disabled');
                 }
             },
@@ -769,7 +769,9 @@ KT.comparison_grid.events = function(grid) {
                 $(document).trigger({ type : 'compare.comparison_grid', selected : selected });
             });
             $('.grid_cell').find('input[type="checkbox"]').live('click', function(){
-                if( !$(this).is(':checked') ){
+                var elements = $('.grid_cell').find('input[type="checkbox"]:checked');
+
+                if( elements.length < 2 ){
                     $('#compare_repos_btn').addClass('disabled');
                 } else {
                     if( $('#compare_repos_btn').hasClass('disabled') ){
