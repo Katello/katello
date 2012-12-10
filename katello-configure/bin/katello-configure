@@ -16,6 +16,8 @@ PREFIX = ENV['KATELLO_CONFIGURE_PREFIX'] || '/usr/share/katello/install'
 require 'optparse'
 require 'fcntl'
 require 'fileutils'
+require 'rubygems'
+require 'ruby-progressbar'
 require 'socket'
 require 'tempfile'
 require "#{PREFIX}/puppet/lib/util/functions.rb"
@@ -44,30 +46,6 @@ def remove_option(name, move_to_temp = false)
     $final_options.delete(name)
     $default_options_order.delete(name)
   end
-end
-
-$expected_progress_width = COLUMNS
-$expected_progress_width -= 20
-$expected_progress_width = 5 if $expected_progress_width < 0
-$previous_progress = 0
-def progress_clear
-	$previous_progress = 0
-end
-def progress_bar(filename, expected_total)
-	current_total = File.size(filename)
-	width = $expected_progress_width * current_total / expected_total
-	width = $expected_progress_width if width > $expected_progress_width
-	while $previous_progress < width - 1 do
-		$previous_progress += 1
-		print '#'
-	end
-end
-def progress_final
-	while $previous_progress < $expected_progress_width do
-		$previous_progress += 1
-		print '#'
-	end
-	$previous_progress = 0
 end
 
 # We first parse the default answer file. The list of options
@@ -285,17 +263,24 @@ FileUtils.cp result_config_path, log_directory
 ENV['KATELLO_ANSWER_FILE'] = result_config_path
 ENV['KATELLO_TEMP_ANSWER_FILE'] = temp_config_path
 
-commands_by_logfiles = {
-	'/var/log/katello/katello-configure/cpsetup.log' => [ 'Candlepin setup', 276 ],
-	'/var/log/katello/katello-configure/db_seed.log' => [ 'Initializing Katello data', 204],
-	'/var/log/katello/katello-configure/db_migrate.log' => [ 'Populating Katello database schema', 29852 ],
-	'/var/log/katello/katello-configure/create-postgresql-candlepin-user.log' => [ 'Creating Candlepin database user', 12 ],
-	'/var/log/katello/katello-configure/create-postgresql-candlepin-database.log' => [ 'Creating Candlepin database', 16 ],
-	'/var/log/katello/katello-configure/create-postgresql-katello-user.log' => [ 'Creating Katello database user', 12 ],
-	'/var/log/katello/katello-configure/create-postgresql-katello-database.log' => [ 'Creating Katello database', 16 ],
+commands_by_logfiles = { # numbers are expected lines in those logs, alas currently not used
+  '/var/log/katello/katello-configure/certificates.log' => ['Creating SSL certificates', 59],
+  '/var/log/katello/katello-configure/cpdb.log' => ['Creating Candlepin database', 222 ],
+  '/var/log/katello/katello-configure/cpinit.log' => [ 'Candlepin setup', 1 ],
+  '/var/log/katello/katello-configure/create-postgresql-candlepin-user.log' => [ 'Creating Candlepin database user', 2 ],
+  '/var/log/katello/katello-configure/create-postgresql-foreman-database.log' => [ 'Creating Foreman database user', 1 ],
+  '/var/log/katello/katello-configure/create-postgresql-foreman-user.log' => [ 'Creating Foreman database user', 2 ],
+  '/var/log/katello/katello-configure/create-postgresql-katello-database.log' => [ 'Creating Katello database', 1 ],
+  '/var/log/katello/katello-configure/create-postgresql-katello-user.log' => [ 'Creating Katello database user', 2 ],
+  '/var/log/katello/katello-configure/db_env.log' => [ 'Logging environment setup', 113],
+  '/var/log/katello/katello-configure/db_migrate.log' => [ 'Populating Katello database schema', 968 ],
+  '/var/log/katello/katello-configure/db_seed.log' => [ 'Initializing Katello data', 10],
+  '/var/log/katello/katello-configure/foreman-db-migrate.log' => [ 'Populating Foreman database schema', 1076 ],
+  '/var/log/katello/katello-configure/pulp_migrate.log' => [ 'Populating Pulp database schema', 2],
 }
 
 puppet_logfile_filename = log_directory + '/main.log'
+puppet_logfile_aprox_size = 1266
 puppet_logfile = IO.open(IO::sysopen(puppet_logfile_filename, Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT))
 puts "The top-level log file is [#{puppet_logfile_filename}]"
 seen_err = false
@@ -306,6 +291,7 @@ begin
 		f.close_write
 		processing_logfile = nil
 		t = nil
+    progress_bar = nobars ? nil : ProgressBar.create(:title => 'Katello configuration', :total => puppet_logfile_aprox_size, :smoothing => 0.6)
 		while line = f.gets do
       time = Time.now.strftime("%y%m%d-%H:%M:%S ")
       puppet_logfile.syswrite(time + line.gsub(/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/, ''))
@@ -317,15 +303,12 @@ begin
           puts line
         end
       else
+        progress_bar.increment
         if processing_logfile != nil
           message = nil
           if line =~ /notice:.*executed successfully/
-            t.kill
-            progress_final()
-            puts " ... OK"
             processing_logfile = nil
           elsif line =~ /err:/
-            t.kill
             puts "\n  Failed, please check [#{processing_logfile}]\n  Report errors using # katello-debug tool."
             processing_logfile = nil
             seen_err = true
@@ -339,20 +322,14 @@ begin
           commands_by_logfiles.keys.each do |logfile|
             if line_rest.index(logfile) != nil
               processing_logfile = logfile
-              puts commands_by_logfiles[logfile][0]
-              progress_clear()
-              t = Thread.new do
-                while true do
-                  sleep 1
-                  progress_bar(logfile, commands_by_logfiles[logfile][1])
-                end
-              end
-              break
+              progress_bar.title = commands_by_logfiles[logfile][0]
             end
           end
         end
       end
 		end
+    progress_bar.finish
+    puts "\n"
 	end
 rescue => e
 	$stderr.puts 'Error: ' + e.message
