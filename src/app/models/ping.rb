@@ -17,6 +17,8 @@ require 'rest_client'
 class Ping
   class << self
 
+    OK_RETURN_CODE = 'ok'
+
     #
     # Calls "status" services in all backend engines.
     #
@@ -24,7 +26,7 @@ class Ping
     #
     def ping
       if AppConfig.katello?
-        result = { :result => 'OK', :status => {
+        result = { :result => OK_RETURN_CODE, :status => {
           :pulp => {},
           :candlepin => {},
           :elasticsearch => {},
@@ -34,7 +36,7 @@ class Ping
           :foreman_auth => {},
         }}
       else
-        result = { :result => 'OK', :status => {
+        result = { :result => OK_RETURN_CODE, :status => {
           :candlepin => {},
           :elasticsearch => {},
           :candlepin_auth => {},
@@ -85,7 +87,7 @@ class Ping
       end
 
       # set overall status result code
-      result[:status].each_value { |v| result[:result] = 'FAIL' if v[:result] != 'OK' }
+      result[:status].each_value { |v| result[:result] = 'FAIL' if v[:result] != OK_RETURN_CODE }
       result
     end
 
@@ -94,7 +96,7 @@ class Ping
       begin
         start = Time.new
         yield
-        result[:result] = 'OK'
+        result[:result] = OK_RETURN_CODE
         result[:duration_ms] = ((Time.new - start) * 1000).round.to_s
       rescue => e
         Rails.logger.warn(e.backtrace ? [e.message, e.backtrace].join("\n") : e.message)
