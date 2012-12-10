@@ -61,6 +61,7 @@ class List(ContentViewAction):
         self.printer.add_column('label')
         self.printer.add_column('description', multiline=True)
         self.printer.add_column('organization', _('Org'))
+        self.printer.add_column('environments', _('Env'), multiline=True)
 
         self.printer.set_header(_("Content View List"))
         self.printer.print_items(views)
@@ -121,6 +122,8 @@ class Promote(ContentViewAction):
         parser.add_option('--label', dest='label',
                 help=_("content view label eg: foo.example.com (required)"))
         opt_parser_add_environment(parser, True)
+        parser.add_option('--async', dest='async', action="store_true",
+                help=_("promote asynchronously (default: false)"))
 
     def check_options(self, validator):
         validator.require(('org', 'label', 'environment'))
@@ -129,6 +132,7 @@ class Promote(ContentViewAction):
         org_name = self.get_option('org')
         view_label = self.get_option('label')
         env_name = self.get_option('environment')
+        async = self.get_option('async')
 
         view = get_content_view(org_name, view_label)
 
@@ -137,19 +141,24 @@ class Promote(ContentViewAction):
 
         try:
             task = self.api.promote(view["id"], env_id)
-            task = AsyncTask(task)
 
-            run_spinner_in_bg(wait_for_async_task, [task],
-                    message=_("Promoting content view, please wait..."))
+            if not async:
+                task = AsyncTask(task)
+                run_spinner_in_bg(wait_for_async_task, [task],
+                        message=_("Promoting content view, please wait..."))
 
-            if task.succeeded():
-                print _("Content view [ %s ] promoted to environment [ %s ]") % \
-                    (view["name"], environment["name"])
-                return_code = os.EX_OK
+                if task.succeeded():
+                    print _("Content view [ %s ] promoted to environment [ %s ]") % \
+                        (view["name"], environment["name"])
+                    return_code = os.EX_OK
+                else:
+                    print _("View [ %s ] promotion failed: %s" % (view["name"],
+                        format_task_errors(task.errors)))
+                    return_code = os.EX_DATAERR
+
             else:
-                print _("View [ %s ] promotion failed: %s" % (view["name"],
-                    format_task_errors(task.errors)))
-                return_code = os.EX_DATAERR
+                print _("Promotion task [ %s ] was successfully created.") % (task["id"])
+                return_code = os.EX_OK
 
         except Exception:
             raise
