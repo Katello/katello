@@ -9,8 +9,8 @@ install:
 
 script:
   - ./scripts/ci/cli_pull_request_tests.sh
+  - ./scripts/gemfile-lock-install
   - cd src/
-  - scripts/gemfile-lock-install
   - bundle install --without jshintrb:devboost:profiling:debugging
   - cd ../
   - ./scripts/ci/katello_pull_request_tests.sh
