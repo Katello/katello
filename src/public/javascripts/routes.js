@@ -100,6 +100,10 @@
   architectures_path: function(options) {
   return Utils.build_path(1, ["/architectures"], arguments)
   },
+// smart_proxies_path => /smart_proxies(.:format)
+  smart_proxies_path: function(options) {
+  return Utils.build_path(1, ["/smart_proxies"], arguments)
+  },
 // repositories_api_environment_product => /api/environments/:environment_id/products/:id/repositories(.:format)
   repositories_api_environment_product_path: function(_environment_id, _id, options) {
   return Utils.build_path(3, ["/api/environments/", "/products/", "/repositories"], arguments)
