@@ -26,6 +26,19 @@ $(document).ready(function() {
                 notices.checkNotices();
             }
         };
+    // callback which fires product update, whether to update also related repositories is decided
+    // by with_all_repos argument
+    var update_product = function(element, result, with_all_repos) {
+            $.ajax({
+                type 	: 'PUT',
+                url		: element.data('url'),
+                data	: { 'product[gpg_all_repos]' : with_all_repos,
+                    'product[gpg_key]' : result },
+                success : function(data){
+                    notices.checkNotices();
+                }
+            });
+        }
 
 
 	$('.edit_select_product_gpg').each(function(){
@@ -34,9 +47,10 @@ $(document).ready(function() {
 	            type            :  'select',
 	            name            :  element.attr('name'),
 	            data   			:  element.data('options'),
-	            onsuccess       :  function(result, status, xhr){
+	            onsubmit        :  function(){
+                    result = element.find('form select[name="product[gpg_key]"]').val();
 	            	var data = element.data('options');
-	            	
+
 	            	data["selected"] = result;
 	            	element.html(data[result]);
 	            	if( result !== "" ){
@@ -44,23 +58,18 @@ $(document).ready(function() {
                             message: i18n.productUpdateKeyConfirm,
                             warning_message: i18n.productUpdateKeyWarning,
                             yes_callback: function(){
-		            			$.ajax({
-		            				type 	: 'PUT',
-		            				url		: element.data('url'),
-		            				data	: { 'product[gpg_all_repos]' : true },
-		            				success : function(data){
-		            					notices.checkNotices();
-		            				}
-		            			});
+                                update_product(element, result, true)
 		            		},
                             no_callback: function(){
-		            			notices.checkNotices();
+                                update_product(element, result, false)
 		            		}
                         });
             		}
 	            }
         	};
-        $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
+        // we ignore default submit function by injecting empty function, all submitting is done
+        // by onsubmit callback
+        $(this).editable(function(){ }, $.extend(common_settings, settings));
   	});
-  
+
 });
