@@ -36,16 +36,19 @@ class Api::ContentViewsController < Api::ApiController
   param :environment_id, :identifier, :desc => "environment identifier",
     :required => false
   param :label, String, :desc => "content view label", :required => false
+  param :name, String, :desc => "content view name", :required => false
+  param :id, :identifier, :desc => "content view id", :required => false
   def index
-    if @environment
-      ContentView.non_default.readable(@organization).
+    query_params.delete(:environment_id)
+    query_params.delete(:organization_id)
+
+    search = ContentView.non_default.where(query_params)
+    @content_views = if @environment
+      search.readable(@organization).
         joins(:content_view_environments).
         where("content_view_environments.environment_id = ?", @environment.id)
     else
-      @content_views = ContentView.non_default.readable(@organization)
-    end
-    if params[:label].present?
-      @content_views = @content_views.select {|cv| cv.label == params[:label]}
+      search.readable(@organization)
     end
     render :json => @content_views
   end
