@@ -127,28 +127,20 @@ describe ProductsController, :katello => true do
         its(:gpg_key) { should == @gpg }
       end
 
-      context "with all repositories" do
-        before do
-          @product.should_receive(:reset_repo_gpgs!).once.and_return([])
-          controller.stub(:find_product) { controller.instance_variable_set(:@product, @product) }
-          put :update, :provider_id => @provider.id, :id => @product.id,
-              :product              => { :gpg_key => @gpg.id.to_s, :gpg_all_repos => "true" }
+      [true, false].each do |v|
+        context "with#{'out' unless v} all repositories" do
+          before do
+            v ?
+                @product.should_receive(:reset_repo_gpgs!).once.and_return([]) :
+                @product.should_not_receive(:reset_repo_gpgs!)
+            controller.stub(:find_product) { controller.instance_variable_set(:@product, @product) }
+            put :update, :provider_id => @provider.id, :id => @product.id,
+                :product              => { :gpg_key => @gpg.id.to_s, :gpg_all_repos => "#{v}" }
+          end
+          specify { response.should be_success }
+          subject { Product.find(@product.id) }
+          its(:gpg_key) { should == @gpg }
         end
-        specify { response.should be_success }
-        subject { Product.find(@product.id) }
-        its(:gpg_key) { should == @gpg }
-      end
-
-      context "without all repositories" do
-        before do
-          @product.should_not_receive(:reset_repo_gpgs!)
-          controller.stub(:find_product) { controller.instance_variable_set(:@product, @product) }
-          put :update, :provider_id => @provider.id, :id => @product.id,
-              :product              => { :gpg_key => @gpg.id.to_s, :gpg_all_repos => "false" }
-        end
-        specify { response.should be_success }
-        subject { Product.find(@product.id) }
-        its(:gpg_key) { should == @gpg }
       end
     end
 
