@@ -44,15 +44,4 @@ describe Api::ContentViewsController, :katello => true do
       eql(org_view_ids) }
   end
 
-  describe "create" do
-    before do
-      Organization.stub(:first).and_return(@organization)
-      @params = FactoryGirl.attributes_for(:content_view)
-    end
-
-    let(:req) { post 'index', :content_view => @params,
-      :organization_id => @organization.id }
-    subject { req }
-    it { should be_success }
-  end
 end
