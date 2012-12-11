@@ -86,7 +86,7 @@ class CommandContainer(object):
         """
         if name in self.__subcommands:
             return self.__subcommands[name]
-        raise CommandException("Command not found")
+        raise CommandException(_("Command not found"))
 
 
 
@@ -109,7 +109,7 @@ class Action(object):
         first_line += " "
         first_line += command_name or ""
         if self.takes_options:
-            first_line += " <options>"
+            first_line += " <{0}>".format(_("options"))
         return first_line
 
     def usage(self, command_name=None, parent_usage=None):
@@ -119,7 +119,7 @@ class Action(object):
         :rtype: str
         :return: command's usage string
         """
-        return "Usage: "+self._get_usage_line(command_name, parent_usage)
+        return _("Usage: ") + self._get_usage_line(command_name, parent_usage)
 
     # pylint: disable=R0201
     @property
@@ -263,11 +263,11 @@ class Command(CommandContainer, Action):
         :rtype: str
         :return: command's usage string
         """
-        first_line = "Usage: "+self._get_usage_line(command_name, parent_usage)
+        first_line = _("Usage: ") + self._get_usage_line(command_name, parent_usage)
         if len(self.get_command_names()) > 0:
-            first_line += " <command>"
+            first_line += " <{0}>".format(_("command"))
 
-        lines = [first_line, 'Supported Commands:']
+        lines = [first_line, _("Supported Commands:")]
         for name in sorted(self.get_command_names()):
             lines += self.__build_command_usage_lines(name, self.get_command(name))
         return '\n'.join(lines)

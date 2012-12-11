@@ -99,7 +99,7 @@ class OptionParser(_OptionParser):
                 i += 1
             msgs = ''.join(errorMsg)
 
-            self.exit(2, "%s: errors:\n%s" % (self.get_prog_name(), msgs))
+            self.exit(2, "%s: %s:\n%s" % (self.get_prog_name(), _("errors"), msgs))
         else:
             _OptionParser.error(self, errorMsg)
 
