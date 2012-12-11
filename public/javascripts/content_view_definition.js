@@ -24,6 +24,19 @@ KT.content_view_definition = (function(){
         if (pane.length === 0) {
             return;
         }
+        $('.refresh_view').bind('click', function(event) {
+            event.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: $(this).data('url'),
+                cache: false,
+                success: function() {
+                },
+                error: function() {
+                }
+            });
+        });
+
         $("#content_views").treeTable({
             expandable: true,
             initialState: "expanded",

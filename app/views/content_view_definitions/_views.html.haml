@@ -34,6 +34,8 @@
           %tr{:id => "view_#{view.id}", :class => cssclass}
             %td{:colspan => 3} #{view.name}
             %td
+              %a.refresh_view.fr{:type => 'button', :href => '#', 'data-url' => refresh_content_view_definition_content_view_path(view_definition.id, view.id)}
+                #{_("Refresh")}
 
           - view.versions.each do |view_version|
             %tr{:class => "child-of-view_#{view.id}" + cssclass}
