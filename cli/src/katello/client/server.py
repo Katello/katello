@@ -158,7 +158,7 @@ class KatelloServer(object):
     @ivar protocol: protocol the katello server is using (http, https)
     @ivar path_prefix: mount point of the katello api (/katello/api)
     @ivar headers: dictionary of http headers to send in requests
-    """  
+    """
     auth_method = NoAuthentication()
 
     #---------------------------------------------------------------------------
@@ -196,11 +196,11 @@ class KatelloServer(object):
             self.auth_method.set_headers(self.headers)
         except GSSError, e:
             #TODO
-            raise Exception("Missing credentials and unable to authenticate using Kerberos", e), None, sys.exc_info()[2]
+            raise Exception(_("Missing credentials and unable to authenticate using Kerberos"), e), None, sys.exc_info()[2]
             #raise KatelloError("Missing credentials and unable to authenticate using Kerberos", e)
         except Exception, e:
             #TODO
-            raise Exception("Invalid credentials or unable to authenticate", e), None, sys.exc_info()[2]
+            raise Exception(_("Invalid credentials or unable to authenticate"), e), None, sys.exc_info()[2]
             #raise KatelloError("Invalid credentials or unable to authenticate", e)
 
     # protected request utilities ---------------------------------------------
