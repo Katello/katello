@@ -32,6 +32,14 @@ AsyncOperation = Struct.new(:status_id, :username, :object, :method_name, :args)
   def perform
     User.current = User.find_by_username(username)
 
+    # Set the locale for this action
+    if User.current && User.current.default_locale
+      I18n.locale = User.current.default_locale
+    else
+      I18n.locale = extract_locale_from_accept_language_header
+    end
+    Rails.logger.debug "Setting locale: #{I18n.locale}"
+
     # If the object provided is a Mailer object, the user wants to send an email; therefore,invoke the method with a
     # deliver; otherwise, invoke the method exactly as provided by the user.  Although this seems a bit odd, this is
     # essentially how the delayed job gem would also send mail, if we were using it directly.
