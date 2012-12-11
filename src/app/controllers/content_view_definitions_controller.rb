@@ -149,7 +149,7 @@ class ContentViewDefinitionsController < ApplicationController
 
   def refresh
     @view.refresh
-    render :nothing => true
+    render :json => @view.to_json
   end
 
   def content

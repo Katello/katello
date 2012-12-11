@@ -30,19 +30,36 @@ KT.content_view_definition = (function(){
                 type: 'POST',
                 url: $(this).data('url'),
                 cache: false,
-                success: function() {
+                success: function(content_view) {
+                    // on success, the updated content view will be provided
+                    replace_versions(content_view['id'], content_view['versions_details']);
                 },
                 error: function() {
                 }
             });
         });
-
         $("#content_views").treeTable({
             expandable: true,
             initialState: "expanded",
             clickableNodeNames: true,
             onNodeShow: function(){$.sparkline_display_visible()}
         });
+    },
+    replace_versions = function(view_id, versions) {
+        // remove the current versions
+        $('.child-of-view_'+view_id).remove();
+
+        // add in the latest versions
+        var html = '';
+        KT.utils.each(versions, function(version, key) {
+            var row = '<tr class="child-of-view_ ' + version + '">';
+            row += '<td style="padding-left: 37px;">' + i18n.environments(version['environments'].join(', ')) + '</td>';
+            row += '<td>' + version['version'] + '</td>';
+            row += '<td>' + version['published'] + '</td>';
+            row += '</tr>';
+            html = html.concat(row);
+        });
+        $('#view_' + view_id).after(html);
     };
     return {
         initialize_views : initialize_views
