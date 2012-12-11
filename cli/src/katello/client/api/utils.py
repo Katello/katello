@@ -109,14 +109,21 @@ def get_content_view(org_name, view_label):
     return view
 
 
-def get_cv_definition(org_name, def_label):
+def get_cv_definition(org_name, def_label=None, def_name=None, def_id=None):
     cvd_api = ContentViewDefinitionAPI()
 
-    cvd = cvd_api.content_view_def_by_label(org_name, def_label)
-    if cvd == None:
-        raise ApiDataError(_("Could not find content view definition [ %s ] \
-            within organization [ %s ]") % (def_label, org_name))
-    return cvd
+    cvds = cvd_api.cvd_by_label_or_name_or_id(org_name, def_label, def_name,
+            def_id)
+
+    if len(cvds) > 1:
+        raise ApiDataError(_("More than 1 definition found with name, " \
+                "recommend using label or id. These may be retrieved using " \
+                "the 'content definition list' command"))
+    elif len(cvds) < 1:
+        raise ApiDataError(_("Could not find content view definition [ %s ]" \
+            " within organization [ %s ]") % ((def_label or def_id or def_name), org_name))
+
+    return cvds[0]
 
 
 def get_repo(orgName, repoName, prodName=None, prodLabel=None, prodId=None, envName=None, includeDisabled=False):
