@@ -48,18 +48,25 @@ class ContentViewDefinition < ActiveRecord::Base
   end
 
   def generate_repos(view)
-    repos = []
     tasks = []
+    repos.each do |repo|
+      clone = repo.create_clone(self.organization.library, view)
+      tasks << repo.clone_contents(clone)
+    end
+  end
+
+  # Retrieve a list of repositories associated with the definition.
+  # This includes all repositories (ie. combining those that are part of products associated with the definition
+  # as well as repositories that are explicitly associated with the definition).
+  def repos
+    repos = []
     self.products.each do |prod|
       prod_repos = prod.repos(organization.library).enabled
       prod_repos.select{|r| r.in_default_view?}.each{|r| repos << r}
     end
     repos.concat(self.repositories)
     repos.uniq!
-    repos.each do |repo|
-      clone = repo.create_clone(self.organization.library, view)
-      tasks << repo.clone_contents(clone)
-    end
+    repos
   end
 
   def composite?
