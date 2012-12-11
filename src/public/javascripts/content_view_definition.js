@@ -15,4 +15,23 @@ KT.panel.list.registerPage('content_view_definitions', { create : 'new_content_v
 
 KT.panel.set_expand_cb(function() {
     KT.object.label.initialize();
+    KT.content_view_definition.initialize_views();
 });
+
+KT.content_view_definition = (function(){
+    var initialize_views = function() {
+        var pane = $("#content_view_definition_views");
+        if (pane.length === 0) {
+            return;
+        }
+        $("#content_views").treeTable({
+            expandable: true,
+            initialState: "expanded",
+            clickableNodeNames: true,
+            onNodeShow: function(){$.sparkline_display_visible()}
+        });
+    };
+    return {
+        initialize_views : initialize_views
+    };
+}());
