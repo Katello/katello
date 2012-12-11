@@ -269,7 +269,7 @@ class AssignRole(UserAction):
 
         role = self.role_api.role_by_name(roleName)
         if role == None:
-            print _("Role [ %s ] not found" % roleName)
+            print _("Role [ %s ] not found") % roleName
             return os.EX_DATAERR
 
         msg = self.update_role(user['id'], role['id'])
