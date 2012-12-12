@@ -188,16 +188,8 @@ ENV['FACTER_fqdn'] = facter_hostname
 puts 'Starting Katello configuration'
 create_answer_file(result_config_path, $final_options, $default_options_order, $titles)
 
-orig_umask = File.umask(077)
 # additional temporary file which is also used (but deleted afterwards)
-temp_config_path = '/dev/null'
-Tempfile.open("katello-configure-temp") do |temp_config|
-  temp_config_path = temp_config.path
-  $temp_options.each_pair do |key, value|
-    temp_config.syswrite("#{key}=#{value}\n")
-  end
-end
-File.umask(orig_umask)
+temp_config_path = create_temp_config_file($temp_options)
 
 now = Time.now.strftime("%Y%m%d-%H%M%S")
 log_directory = log_parent_directory + '/katello-configure-' + now

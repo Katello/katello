@@ -323,3 +323,17 @@ def create_answer_file(result_config_path, final_options, default_options_order,
   result_config.close
   File.umask(orig_umask)
 end
+
+# additional temporary file which is also used (but deleted afterwards)
+def create_temp_config_file(temp_options)
+  orig_umask = File.umask(077)
+  temp_config_path = '/dev/null'
+  Tempfile.open("katello-configure-temp") do |temp_config|
+    temp_config_path = temp_config.path
+    $temp_options.each_pair do |key, value|
+      temp_config.syswrite("#{key}=#{value}\n")
+    end
+  end
+  File.umask(orig_umask)
+  return temp_config_path
+end
