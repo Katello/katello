@@ -32,7 +32,8 @@ class ContentViewDefinitionAction(BaseAction):
         self.api = ContentViewDefinitionAPI()
         self.def_api = ContentViewDefinitionAPI()
 
-    def _add_get_cvd_opts(self, parser):
+    @classmethod
+    def _add_get_cvd_opts(cls, parser):
         parser.add_option('--label', dest='label',
                 help=_("definition label eg: def1"))
         parser.add_option('--id', dest='id',
@@ -40,7 +41,8 @@ class ContentViewDefinitionAction(BaseAction):
         parser.add_option('--name', dest='name',
                 help=_("definition name eg: def1"))
 
-    def _add_get_cvd_opts_check(self, validator):
+    @classmethod
+    def _add_get_cvd_opts_check(cls, validator):
         validator.require_at_least_one_of(('name', 'label', 'id'))
         validator.mutually_exclude('name', 'label', 'id')
 
