@@ -21,7 +21,6 @@ from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.utils import get_user, get_environment
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, convert_to_mime_type, attachment_file_name, save_report
-from katello.client.utils.printer import batch_add_columns
 
 
 # base user action -----------------------------------------------------
@@ -42,8 +41,12 @@ class List(UserAction):
     def run(self):
         users = self.api.users()
 
-        batch_add_columns(self.printer, 'id', 'username', 'email', \
-            'disabled', 'default_organization', 'default_environment')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('username', _("Username"))
+        self.printer.add_column('email', _("Email"))
+        self.printer.add_column('disabled', _("Disabled"))
+        self.printer.add_column('default_organization', _("Default Organization"))
+        self.printer.add_column('default_environment', _("Default Environment"))
 
         self.printer.set_header(_("User List"))
         self.printer.print_items(users)
@@ -109,8 +112,13 @@ class Info(UserAction):
 
         user = get_user(username)
 
-        batch_add_columns(self.printer, 'id', 'username', 'email', 'disabled', \
-            'default_organization', 'default_environment', 'default_locale')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('username', _("Username"))
+        self.printer.add_column('email', _("Email"))
+        self.printer.add_column('disabled', _("Disabled"))
+        self.printer.add_column('default_organization', _("Default Organization"))
+        self.printer.add_column('default_environment', _("Default Environment"))
+        self.printer.add_column('default_locale', _("Default Locale"))
         self.printer.set_header(_("User Information"))
 
         # Add user locale to user dictionary
@@ -216,8 +224,8 @@ class ListRoles(UserAction):
 
         roles = self.api.roles(user['id'])
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
         self.printer.set_header(_("User Role List"))
         self.printer.print_items(roles)
         return os.EX_OK

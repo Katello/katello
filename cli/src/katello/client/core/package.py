@@ -21,7 +21,6 @@ from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org, 
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_repo
 from katello.client.utils import printer
-from katello.client.utils.printer import batch_add_columns
 
 
 # base package action --------------------------------------------------------
@@ -73,12 +72,17 @@ class Info(PackageAction):
 
         pack = self.api.package(packId, repoId)
 
-        batch_add_columns(self.printer,
-            'id', 'name', 'filename', 'arch', 'release', 'version', 'vendor')
-        self.printer.add_column('download_url', show_with=printer.VerboseStrategy)
-        batch_add_columns(self.printer,
-            'description', 'provides', 'requires',
-            multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('filename', _("Filename"))
+        self.printer.add_column('arch', _("Arch"))
+        self.printer.add_column('release', _("Release"))
+        self.printer.add_column('version', _("Version"))
+        self.printer.add_column('vendor', _("Vendor"))
+        self.printer.add_column('download_url', _("Download URL"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('description', _("Description"), multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('provides', _("Provides"), multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('requires', _("Requires"), multiline=True, show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Package Information"))
         self.printer.print_item(pack)
@@ -133,8 +137,9 @@ class List(PackageAction):
         return repoId
 
     def print_packages(self, packages):
-        batch_add_columns(self.printer,
-            'id', 'name', 'filename')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('filename', _("Filename"))
         self.printer.print_items(packages)
 
 

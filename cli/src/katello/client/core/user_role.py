@@ -45,8 +45,8 @@ class List(UserRoleAction):
     def run(self):
         roles = self.api.roles()
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
 
         self.printer.set_header(_("User Role List"))
         self.printer.print_items(roles)
@@ -120,11 +120,11 @@ class Info(UserRoleAction):
         ldap_groups = self.getLdapGroups(role['id'])
         role['ldap_groups'] = ", ".join(ldap_groups)
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('description')
-        self.printer.add_column('permissions', multiline=True)
-        self.printer.add_column('ldap_groups')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('description', _("Description"))
+        self.printer.add_column('permissions', _("Permissions"), multiline=True)
+        self.printer.add_column('ldap_groups', _("LDAP Groups"))
 
         self.printer.set_header(_("User Role Information"))
         self.printer.print_item(role)

@@ -17,7 +17,6 @@
 
 from katello.client.api.ping import PingAPI
 from katello.client.core.base import BaseAction
-from katello.client.utils.printer import batch_add_columns
 
 
 # base ping action --------------------------------------------------------
@@ -41,8 +40,11 @@ class Status(PingAction):
 
         status = self.api.ping()
 
-        batch_add_columns(self.printer,
-            'status', 'service', 'result', 'duration', 'message')
+        self.printer.add_column('status', _("Status"))
+        self.printer.add_column('service', _("Service"))
+        self.printer.add_column('result', _("Result"))
+        self.printer.add_column('duration', _("Duration"))
+        self.printer.add_column('message', _("Message"))
         self.printer.set_header(_("Katello Status"))
 
         statusList = self.__statusToList(status)

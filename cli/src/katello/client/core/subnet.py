@@ -18,7 +18,6 @@
 from katello.client.api.subnet import SubnetAPI
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import unnest_one
-from katello.client.utils.printer import batch_add_columns
 
 
 # base subnet action --------------------------------------------------------
@@ -110,11 +109,12 @@ class List(SubnetAction):
     def run(self):
         subnets = unnest_one(self.api.list())
 
-        batch_add_columns(self.printer, \
-            'name', 'network', 'mask')
-        batch_add_columns(self.printer, \
-            'dhcp', 'tftp', 'dns', \
-            formatter=self.format_smart_proxy)
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('network', _("Network"))
+        self.printer.add_column('mask', _("Mask"))
+        self.printer.add_column('dhcp', _("DHCP"), formatter=self.format_smart_proxy)
+        self.printer.add_column('tftp', _("TFTP"), formatter=self.format_smart_proxy)
+        self.printer.add_column('dns', _("DNS"), formatter=self.format_smart_proxy)
 
         self.printer.set_header(_("Subnets"))
         self.printer.print_items(subnets)
@@ -132,13 +132,19 @@ class Info(SubnetAction):
 
     def run(self):
         subnet = unnest_one(self.api.get(self.get_option("name")))
-        batch_add_columns(self.printer, \
-            'name', 'network', 'mask', 'gateway', \
-            'dns_primary', 'dns_secondary', 'from', 'to', 'vlanid')
-        self.printer.add_column('domain_ids', multiline=True)
-        batch_add_columns(self.printer, \
-            'dhcp', 'tftp', 'dns', \
-            formatter=self.format_smart_proxy)
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('network', _("Network"))
+        self.printer.add_column('mask', _("Mask"))
+        self.printer.add_column('gateway', _("Gateway"))
+        self.printer.add_column('dns_primary', _("Primary DNS"))
+        self.printer.add_column('dns_secondary', _("Secondary DNS"))
+        self.printer.add_column('from', _("From"))
+        self.printer.add_column('to', _("To"))
+        self.printer.add_column('vlanid', _("VLAN ID"))
+        self.printer.add_column('domain_ids', _("Domain IDs"), multiline=True)
+        self.printer.add_column('dhcp', _("DHCP"), formatter=self.format_smart_proxy)
+        self.printer.add_column('tftp', _("TFTP"), formatter=self.format_smart_proxy)
+        self.printer.add_column('dns', _("DNS"), formatter=self.format_smart_proxy)
 
         self.printer.set_header(_("Subnet"))
         self.printer.print_item(subnet)

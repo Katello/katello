@@ -26,7 +26,6 @@ from katello.client.core.utils import test_record, run_spinner_in_bg, format_dat
 from katello.client.api.utils import get_environment, get_changeset, get_template, get_repo, get_product
 from katello.client.utils import printer
 from katello.client.utils.encoding import u_str
-from katello.client.utils.printer import batch_add_columns
 
 
 
@@ -56,11 +55,15 @@ class List(ChangesetAction):
         changesets = self.api.changesets(orgName, env['id'])
 
 
-        batch_add_columns(self.printer, 'id', 'name', 'action_type')
-        self.printer.add_column('updated_at', formatter=format_date)
-        batch_add_columns(self.printer, 'state', 'environment_id', 'environment_name')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('action_type', _("Action Type"))
+        self.printer.add_column('updated_at', _("Last Updated"), formatter=format_date)
+        self.printer.add_column('state', _("State"))
+        self.printer.add_column('environment_id', _("Environment ID"))
+        self.printer.add_column('environment_name', _("Environment Name"))
         if verbose:
-            self.printer.add_column('description', multiline=True)
+            self.printer.add_column('description', _("Description"), multiline=True)
 
         self.printer.set_header(_("Changeset List"))
         self.printer.print_items(changesets)
@@ -108,18 +111,22 @@ class Info(ChangesetAction):
         if displayDeps:
             cset["dependencies"] = self.get_dependencies(cset["id"])
 
-        batch_add_columns(self.printer,
-            'id', 'name', 'action_type')
-        self.printer.add_column('description', multiline=True, show_with=printer.VerboseStrategy)
-        self.printer.add_column('updated_at', formatter=format_date)
-        batch_add_columns(self.printer,
-            'state', 'environment_id', 'environment_name')
-        batch_add_columns(self.printer,
-            'errata', 'products', 'packages',
-            'repositories', 'system_templates', 'distributions',
-            multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('action_type', _("Action Type"))
+        self.printer.add_column('description', _("Description"), multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('updated_at', _("Last Updated"), formatter=format_date)
+        self.printer.add_column('state', _("State"))
+        self.printer.add_column('environment_id', _("Environment ID"))
+        self.printer.add_column('environment_name', _("Environment Name"))
+        self.printer.add_column('errata', _("Errata"), multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('products', _("Products"), multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('packages', _("Packages"), multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('repositories', _("Repositories"), multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('system_templates', _("System Templates"), multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('distributions', _("Distributions"), multiline=True, show_with=printer.VerboseStrategy)
         if displayDeps:
-            self.printer.add_column('dependencies', multiline=True, show_with=printer.VerboseStrategy)
+            self.printer.add_column('dependencies', _("Dependencies"), multiline=True, show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Changeset Info"))
         self.printer.print_item(cset)
@@ -228,7 +235,7 @@ class UpdateContent(ChangesetAction):
 
         def repo_id(self, options):
             prod_opts = self.product_options(options)
-            repo = get_repo(self.org_name, prod_opts['name'], prod_opts['label'], prod_opts['id'], 
+            repo = get_repo(self.org_name, prod_opts['name'], prod_opts['label'], prod_opts['id'],
                 options['name'], self.env_name)
 
             return repo['id']

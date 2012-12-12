@@ -21,7 +21,6 @@ from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_system_group
 from katello.client.core.utils import test_record
 from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemGroupAsyncJob
-from katello.client.utils.printer import batch_add_columns
 
 
 # base system group action --------------------------------------------------------
@@ -57,8 +56,8 @@ class List(SystemGroupAction):
             return os.EX_DATAERR
 
         self.printer.set_header(_("System Groups List For Org [ %s ]") % org_name)
-        self.printer.add_column('id')
-        self.printer.add_column('name')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
         self.printer.print_items(system_groups)
         return os.EX_OK
 
@@ -151,10 +150,10 @@ class Info(SystemGroupAction):
         # get system details
         system_group = get_system_group(org_name, system_group_name)
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('description', multiline=True)
-        self.printer.add_column('total_systems')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('description', _("Description"), multiline=True)
+        self.printer.add_column('total_systems', _("Total Systems"))
 
         self.printer.print_item(system_group)
 
@@ -192,10 +191,10 @@ class History(SystemGroupAction):
             job['parameters'] = params
 
 
-        self.printer.add_column('id')
-        self.printer.add_column('task_type', name='Type')
-        self.printer.add_column('parameters', multiline=True)
-        self.printer.add_column('tasks')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('task_type', _("Type"))
+        self.printer.add_column('parameters', _("Parameters"), multiline=True)
+        self.printer.add_column('tasks', _("Tasks"))
         self.printer.print_items(history)
 
         return os.EX_OK
@@ -230,9 +229,12 @@ class HistoryTasks(SystemGroupAction):
 
         tasks = history['tasks']
 
-        self.printer.add_column('id', name='task id')
-        self.printer.add_column('uuid', name='system uuid')
-        batch_add_columns(self.printer, 'state', 'progress', 'start_time', 'finish_time')
+        self.printer.add_column('id', _("Task ID"))
+        self.printer.add_column('uuid', _("System UUID"))
+        self.printer.add_column('state', _("State"))
+        self.printer.add_column('progress', _("Progress"))
+        self.printer.add_column('start_time', _("Start Time"))
+        self.printer.add_column('finish_time', _("Finish Time"))
         self.printer.print_items(tasks)
 
 
@@ -327,8 +329,8 @@ class Systems(SystemGroupAction):
 
         self.printer.set_header(_("Systems within System Group [ %s ] For Org [ %s ]") %
             (system_group["name"], org_name))
-        self.printer.add_column('id')
-        self.printer.add_column('name')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
         self.printer.print_items(systems)
 
         return os.EX_OK
