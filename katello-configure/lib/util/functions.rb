@@ -299,3 +299,11 @@ def parse_answer_option!(answer_file, final_options, default_options)
     end
   end
 end
+
+def display_resulting_answer_file(default_options_order, final_options)
+  default_options_order.each do |key|
+    if final_options.has_key?(key)
+      puts key + ' = ' + final_options[key]
+    end
+  end
+end

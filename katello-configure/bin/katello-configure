@@ -161,12 +161,8 @@ remove_option!($default_options_order, $final_options, 'reset_data', $temp_optio
 remove_option!($default_options_order, $final_options, 'reset_cache', $temp_options)
 
 if show_resulting_answer_file
-	$default_options_order.each do |key|
-		if $final_options.has_key?(key)
-			puts key + ' = ' + $final_options[key]
-		end
-	end
-	exit
+  display_resulting_answer_file($default_options_order, $final_options)
+  exit
 end
 
 check_root_id('katello-configure')
