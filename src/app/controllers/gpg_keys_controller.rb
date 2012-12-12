@@ -89,14 +89,15 @@ class GpgKeysController < ApplicationController
   def create
     gpg_key_params = params[:gpg_key]
 
-    if params[:gpg_key].has_key?("content_upload") and not params[:gpg_key].has_key?("content")
+    file_uploaded = gpg_key_params.has_key?("content_upload") && !gpg_key_params.has_key?("content")
+    if file_uploaded
       gpg_key_params['content'] = params[:gpg_key][:content_upload].read
       gpg_key_params.delete('content_upload')
     end
 
     @gpg_key = GpgKey.create!( gpg_key_params.merge({ :organization => current_organization }) )
 
-    notify.success _("GPG Key '%s' was created.") % @gpg_key['name']
+    notify.success _("GPG Key '%s' was created.") % @gpg_key['name'], :asynchronous => file_uploaded
 
     if search_validate(GpgKey, @gpg_key.id, params[:search])
       render :partial=>"common/list_item", :locals=>{:item=>@gpg_key, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
@@ -118,14 +119,15 @@ class GpgKeysController < ApplicationController
   def update
     gpg_key_params = params[:gpg_key]
 
-    if params[:gpg_key].has_key?("content_upload") and not params[:gpg_key].has_key?("content")
+    file_uploaded = gpg_key_params.has_key?("content_upload") && !gpg_key_params.has_key?("content")
+    if file_uploaded
       gpg_key_params['content'] = params[:gpg_key][:content_upload].read
       gpg_key_params.delete('content_upload')
     end
 
     @gpg_key.update_attributes!(gpg_key_params)
 
-    notify.success _("GPG Key '%s' was updated.") % @gpg_key["name"]
+    notify.success _("GPG Key '%s' was updated.") % @gpg_key["name"], :asynchronous => file_uploaded
 
     if not search_validate(GpgKey, @gpg_key.id, params[:search])
       notify.message _("'%s' no longer matches the current search criteria.") % @gpg_key["name"], :asynchronous => false
