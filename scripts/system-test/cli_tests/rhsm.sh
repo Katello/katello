@@ -31,7 +31,7 @@ grab_pool_with_katello() {
 # testing registration from rhsm
 if sm_present; then
   if grep 'hostname = subscription.rhn.redhat.com' /etc/rhsm/rhsm.conf; then
-    skip_test_success "rhsm registration" "Could not test against hosted"
+    skip_message "rhsm registration" "Could not test against hosted"
   else
     test_success "org create for rhsm" org create --name="$RHSM_ORG" --label="$RHSM_ORG_LABEL" --description="org for rhsm"
     test_success "environment create for rhsm" environment create --org="$RHSM_ORG" --name="$RHSM_ENV" --prior="Library"
@@ -46,7 +46,7 @@ if sm_present; then
     test_success "changeset add product" changeset update  --org="$RHSM_ORG" --environment="$RHSM_ENV" --name="$CS1_NAME" --add_product="$RHSM_YPROD"
     check_delayed_jobs_running
     test_success "changeset promote" changeset promote --org="$RHSM_ORG" --environment="$RHSM_ENV" --name="$CS1_NAME"
-    
+
     test_own_cmd_success "rhsm show organizations" $SUDO subscription-manager orgs --username="$USER" --password="$PASSWORD"
     test_own_cmd_success "rhsm show environments" $SUDO subscription-manager environments --username="$USER" --password="$PASSWORD" --org="$RHSM_ORG"
     test_own_cmd_success "rhsm registration with org label" \
@@ -101,5 +101,5 @@ if sm_present; then
     test_success "org delete for rhsm" org delete --name="$RHSM_ORG"
   fi
 else
-  skip_test_success "rhsm registration" "subscription-manager command not found"
+  skip_message "rhsm registration" "subscription-manager command not found"
 fi

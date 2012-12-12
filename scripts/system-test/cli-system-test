@@ -307,13 +307,18 @@ function test_own_cmd_exit_code() {
 }
 
 
+function skip_message() {
+    msg_status "$1" "${txtyel}SKIPPED${txtrst}" "Notes: $2"
+}
+
 function skip_test_success() {
     if [ $RUN_DISABLED -eq 1 ]; then
         MSG=$1
         shift
+        shift
         test_success "$MSG" "$@"
     else
-        msg_status "$1" "${txtyel}SKIPPED${txtrst}" "Notes: $2"
+        skip_message "$1" "$2"
     fi
 }
 
@@ -321,9 +326,10 @@ function skip_test_failure() {
     if [ $RUN_DISABLED -eq 1 ]; then
         MSG=$1
         shift
+        shift
         test_failure "$MSG" "$@"
     else
-        msg_status "$1" "${txtyel}SKIPPED${txtrst}" "Notes: $2"
+        skip_message "$1" "$2"
     fi
 }
 
