@@ -28,14 +28,12 @@ class Api::ContentViewDefinitionsController < Api::ApiController
   api :GET, "/organizations/:organization_id/content_view_definitions",
     "List content view definitions"
   param :organization_id, :identifier, :desc => "organization identifier"
-  param :label, :identifier, :desc => "content view identifier"
-  param :environment_id, :identifier, :desc => "environment id for filtering"
+  param :label, String, :desc => "content view label"
+  param :name, String, :desc => "content view name"
+  param :id, :identifier, :desc => "content view id"
   def index
-    @definitions = if (label = params[:label]).present?
-      ContentViewDefinition.readable(@organization).where(:label => label)
-    else
-      ContentViewDefinition.readable(@organization)
-    end
+    query_params.delete(:organization_id)
+    @definitions = ContentViewDefinition.where(query_params).readable(@organization)
 
     render :json => @definitions
   end
