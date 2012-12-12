@@ -93,20 +93,27 @@ def get_product(orgName, prodName=None, prodLabel=None, prodId=None):
                              "using the 'product list' command."))
     elif len(products) == 0:
         raise ApiDataError(_("Could not find product [ %s ] within organization [ %s ]") %
-            (prodName, orgName))
+            ((prodName or prodLabel or prodId), orgName))
 
     return products[0]
 
 
-def get_content_view(org_name, view_label):
+def get_content_view(org_name, view_label=None, view_name=None, view_id=None):
     cv_api = ContentViewAPI()
 
-    view = cv_api.content_view_by_label(org_name, view_label)
-    if view == None:
-        raise ApiDataError(_("Could not find content view [ %s ] within \
-            organization [ %s ]") %
-            (view_label, org_name))
-    return view
+    views = cv_api.views_by_label_name_or_id(org_name, view_label,
+            view_name, view_id)
+
+    if len(views) > 1:
+        raise ApiDataError(_("More than 1 content view with name provided, " \
+                             "recommend using label or id. These may be " \
+                             "retrieved using 'content view list'."))
+
+    elif len(views) == 0:
+        raise ApiDataError(_("Could not find content view [ %s ] within " \
+            "organization [ %s ]") %
+            ((view_label or view_name or view_id), org_name))
+    return views[0]
 
 
 def get_cv_definition(org_name, def_label):

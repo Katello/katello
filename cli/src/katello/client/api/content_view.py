@@ -26,6 +26,15 @@ class ContentViewAPI(KatelloAPI):
         views = self.server.GET(path, params)[1]
         return views
 
+    def views_by_label_name_or_id(self, org_id, label=None, \
+            name=None, vid=None):
+        params = {}
+        update_dict_unless_none(params, "name", name)
+        update_dict_unless_none(params, "label", label)
+        update_dict_unless_none(params, "id", vid)
+        path = "/api/organizations/%s/content_views" % org_id
+        views = self.server.GET(path, params)[1]
+        return views
 
     def show(self, org_name, view_id, environment_id=None):
         path = "/api/organizations/%s/content_views/%s" % (org_name, view_id)
