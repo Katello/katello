@@ -126,8 +126,9 @@ class KTEnvironment < ActiveRecord::Base
     self.default_content_view.version(self)
   end
 
-  def content_views
-    self.content_view_versions.collect{|vv| vv.content_view}
+  def content_views(reload = false)
+    content_view_versions.reload if reload
+    content_view_versions.collect{|vv| vv.content_view}
   end
 
   def successor
