@@ -21,7 +21,7 @@ class ContentViewDefinition < ActiveRecord::Base
   has_many :components, :class_name => "ComponentContentView"
   has_many :component_content_views, :through => :components,
     :source => :content_view, :class_name => "ContentView"
-  belongs_to :organization
+  belongs_to :organization, :inverse_of => :content_view_definitions
   has_many :filters
   has_many :content_view_definition_products
   has_many :products, :through => :content_view_definition_products
