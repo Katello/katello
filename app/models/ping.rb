@@ -18,6 +18,14 @@ class Ping
   class << self
 
     OK_RETURN_CODE = 'ok'
+    PACKAGES = ["katello",
+                "candlepin",
+                "pulp",
+                "thumbslug",
+                "qpid",
+                "ldap_fluff",
+                "elasticsearch",
+                "foreman"]
 
     #
     # Calls "status" services in all backend engines.
@@ -107,7 +115,8 @@ class Ping
 
     # get package information for katello and its components
     def packages
-      packages = `rpm -qa | egrep "katello|candlepin|pulp|thumbslug|qpid|foreman|ldap_fluff"`
+      names = PACKAGES.join("|")
+      packages = `rpm -qa | egrep "#{names}"`
       packages.split("\n").sort
     end
   end
