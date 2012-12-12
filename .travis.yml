@@ -9,6 +9,7 @@ install:
 
 script:
   - ./scripts/ci/cli_pull_request_tests.sh
+  - ./scripts/gemfile-lock-install
   - cd src/
   - bundle install --without jshintrb:devboost:profiling:debugging
   - cd ../
