@@ -20,7 +20,6 @@ from katello.client import constants
 from katello.client.api.architecture import ArchitectureAPI
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_foreman_record, unnest_one
-from katello.client.utils.printer import batch_add_columns
 
 
 # base architecture action --------------------------------------------------------
@@ -41,7 +40,8 @@ class List(ArchitectureAction):
         archs = self.api.index()
         if archs:
             archs = unnest_one(archs)
-        batch_add_columns(self.printer, 'id', 'name')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
 
         self.printer.set_header(_("Architectures List"))
         self.printer.print_items(archs)
@@ -115,7 +115,8 @@ class Show(ArchitectureAction):
         arch = self.api.show(self.get_option('name'))
         arch = unnest_one(arch)
 
-        batch_add_columns(self.printer, 'id', 'name')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
 
         self.printer.set_header(_("Architecture"))
         self.printer.print_item(arch)

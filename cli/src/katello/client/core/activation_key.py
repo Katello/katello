@@ -77,12 +77,12 @@ class List(ActivationKeyAction):
             else:
                 k['usage'] = str(k['usage_count']) + '/' + str(k['usage_limit'])
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('description', multiline=True)
-        self.printer.add_column('usage')
-        self.printer.add_column('environment_id')
-        self.printer.add_column('system_template_id')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('description', _("Description"), multiline=True)
+        self.printer.add_column('usage', _("Usage"))
+        self.printer.add_column('environment_id', _("Environment ID"))
+        self.printer.add_column('system_template_id', _("System Template ID"))
 
         self.printer.set_header(_("Activation Key List"))
         self.printer.print_items(keys)
@@ -119,13 +119,13 @@ class Info(ActivationKeyAction):
         for akey in keys:
             akey["pools"] = "[ "+ ", ".join([pool["cp_id"] for pool in akey["pools"]]) +" ]"
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('description', multiline=True)
-        self.printer.add_column('usage_limit', value_formatter=lambda x: "unlimited" if x == -1 else x)
-        self.printer.add_column('environment_id')
-        self.printer.add_column('system_template_id')
-        self.printer.add_column('pools', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('description', _("Description"), multiline=True)
+        self.printer.add_column('usage_limit', _("Usage Limit"), value_formatter=lambda x: "unlimited" if x == -1 else x)
+        self.printer.add_column('environment_id', _("Environment ID"))
+        self.printer.add_column('system_template_id', _("System Template ID"))
+        self.printer.add_column('pools', _("Pools"), multiline=True, show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Activation Key Info"))
         self.printer.print_item(keys[0])
