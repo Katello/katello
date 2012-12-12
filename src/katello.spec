@@ -292,8 +292,6 @@ Requires:        %{name} = %{version}-%{release}
 Requires:        rubygem(therubyracer)
 Requires:        rubygem(ref)
 Requires:        rubygem(jshintrb)
-Requires:        rubygem(execjs)
-Requires:        rubygem(multi_json)
 
 %description devel-checking
 Rake tasks and dependecies for Katello developers, which enables
