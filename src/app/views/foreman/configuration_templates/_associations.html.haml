@@ -1,0 +1,25 @@
+= javascript :edit_helpers
+
+= render :partial => "edit_header"
+
+= content_for :content do
+  .grid_10
+    = kt_form_for @configuration_template, :as=>"configuration_template", :url => configuration_template_path(@configuration_template), :data_url=>configuration_template_path(@configuration_template), :html=>{ :id=>"edit_config_template" } do |form|
+
+      .grid_2.la
+        %label #{_("Environments")}
+
+      - @configuration_template.template_combinations do |tc|
+        %fieldset
+          .grid_2.la
+            #{tc.environment_id}
+          .grid_5.ra
+            = link_to _("Remove")
+
+      %fieldset
+        .grid_2.ra
+          %label #{_("Available Environments")}:
+        .grid_5.la
+          = select_tag 'configuration_template[template_combinations][environment_id]', options_for_select([['Environment_1', 1], ['environment_2', 2]]), :include_blank => true, :data_url=>configuration_template_path(@configuration_template)
+
+      %div{ :style => "min-height: 100px;" }

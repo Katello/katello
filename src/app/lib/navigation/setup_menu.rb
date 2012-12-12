@@ -12,6 +12,13 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 module Navigation
   module SetupMenu
+
+    def self.included(base)
+      base.class_eval do
+        helper_method :configuration_template_navigation
+      end
+    end
+
     def menu_setup
       menu = {:key => :setup,
        :name => _("Setup"),
@@ -82,6 +89,23 @@ module Navigation
        :if => lambda{true}, #TODO: check permissions
        :options => {:class=>'setup second_level', "data-menu"=>"configuration_templates"}
       }
+    end
+
+    def configuration_template_navigation
+      [
+        { :key => :show_configuration_template,
+          :name =>_("Show"),
+          :url => lambda{configuration_templates_path(@configuration_template)},
+          :if => lambda{true},
+          :options => {:class=>"panel_link"}
+        },
+        { :key => :configuration_template_associations,
+          :name =>_("Associations"),
+          :url => lambda{configuration_templates_path(@configuration_template)},
+          :if => lambda{true},
+          :options => {:class=>"panel_link"}
+        }
+      ]
     end
   end
 end
