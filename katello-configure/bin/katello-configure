@@ -183,11 +183,7 @@ if show_resulting_answer_file
 	exit
 end
 
-# check if running as root and change current dir
-unless Process.uid == 0
-  $stderr.puts "You must run katello-configure as root"
-  exit_with :not_root
-end
+check_root_id('katello-configure')
 
 # we MUST change the current directory to /root because Puppet expects that
 Dir.chdir '/root'

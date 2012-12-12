@@ -272,3 +272,10 @@ def remove_option!(default_options_order, final_options, name, temp_options = ni
     default_options_order.delete(name)
   end
 end
+
+def check_root_id(prog_name = $0)
+  unless Process.uid == 0
+    $stderr.puts "You must run #{prog_name} as root"
+    exit_with :not_root
+  end
+end
