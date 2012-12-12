@@ -40,7 +40,8 @@ class ContentViewVersion < ActiveRecord::Base
   end
 
   def self.in_environment(env)
-    joins(:content_view_version_environments).where('content_view_version_environments.environment_id'=>env)
+    joins(:content_view_version_environments).where('content_view_version_environments.environment_id'=>env).
+        order('content_view_version_environments.environment_id')
   end
 
   def delete(from_env)
