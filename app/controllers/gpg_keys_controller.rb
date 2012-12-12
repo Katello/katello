@@ -107,7 +107,7 @@ class GpgKeysController < ApplicationController
     end
   rescue ActiveRecord::RecordInvalid => error
     # this is needed because of the upload file though iframe
-    # (we need to send json althoug the reguest says it wants HTML)
+    # (we need to send json although the request says it wants HTML)
     unless request.xhr?
       render :json => { :validation_errors => error.record.errors.full_messages.to_a }, :status => :bad_request
     else
