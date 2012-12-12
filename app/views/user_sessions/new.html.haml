@@ -10,19 +10,17 @@
   have received a copy of GPLv2 along with this software; if not, see
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
-= content_for(:content) do
-  = render :partial => "layouts/alchemy/layouts/login_layout", |
-    :locals => { |
-      :login_form_path_string => user_session_path, |
-      :recovery_strings => (_("Forgot %{username} or %{password}?") % { |
-        :username => link_to(_("Username"), login_path(:card => :username_recovery), :id => "username_link"), |
-        :password  => link_to(_("Password"), login_path(:card => :password_reset), :id => "password_link") } ).html_safe, |
-      :login_path_string => login_path, |
-      :new_username_recoveries_form_path_string => email_logins_password_resets_path, |
-      :new_password_resets_form_path_string => password_resets_path }
-
 = content_for(:interstitial) do
   .card.slidable#interstitial{:class => ("slid" if params[:card] == "interstitial")}
     %h2 #{_("Choose an Organization")}
     = render :partial => "/layouts/org"
+
+= content_for(:content) do
+  = render "layouts/alchemy/layouts/login_layout",
+      :login_form_path_string => user_session_path,
+      :recovery_strings => (_("Forgot %{username} or %{password}?") % { :username => link_to(_("Username"),
+        login_path(:card => :username_recovery), :id => "username_link"), :password  => link_to(_("Password"),
+        login_path(:card => :password_reset), :id => "password_link") } ).html_safe,
+      :login_path_string => login_path,
+      :new_username_recoveries_form_path_string => email_logins_password_resets_path,
+      :new_password_resets_form_path_string => password_resets_path
