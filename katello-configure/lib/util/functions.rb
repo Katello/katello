@@ -261,3 +261,14 @@ rescue SocketError => e
   $stderr.puts "Unable to resolve '#{hostname}' or 'localhost'. Check your DNS and /etc/hosts settings."
   exit_with :hostname_error
 end
+
+
+# remove option from $final_options (and order) hashes (and optionally move
+# it to the temporary hash (used for dangerous options)
+def remove_option!(default_options_order, final_options, name, temp_options = nil)
+  if final_options.has_key? name
+    temp_options[name] = $final_options[name] if temp_options
+    final_options.delete(name)
+    default_options_order.delete(name)
+  end
+end

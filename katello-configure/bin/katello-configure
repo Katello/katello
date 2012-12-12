@@ -38,16 +38,6 @@ $titles = {}
 $final_options = {}
 $temp_options = {}
 
-# remove option from $final_options (and order) hashes (and optionally move
-# it to the temporary hash (used for dangerous options)
-def remove_option(name, move_to_temp = false)
-  if $final_options.has_key? name
-    $temp_options[name] = $final_options[name] if move_to_temp
-    $final_options.delete(name)
-    $default_options_order.delete(name)
-  end
-end
-
 # We first parse the default answer file. The list of options
 # found in the default file also determines the command line
 # options that can be specified (that's why we parse the default
@@ -177,12 +167,12 @@ rescue
     $stderr.puts "Failed to write to file [#{ssl_ca_password_file_option}]."
     exit 8
 end
-remove_option('ssl_ca_password')
+remove_option!($default_options_order, $final_options, 'ssl_ca_password')
 
 # reset options are too dangerous - not storing them in the result answer file
 # and moving them to the temporary file which is merged and then deleted
-remove_option('reset_data', true)
-remove_option('reset_cache', true)
+remove_option!($default_options_order, $final_options, 'reset_data', $temp_options)
+remove_option!($default_options_order, $final_options, 'reset_cache', $temp_options)
 
 if show_resulting_answer_file
 	$default_options_order.each do |key|
