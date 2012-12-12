@@ -279,3 +279,23 @@ def check_root_id(prog_name = $0)
     exit_with :not_root
   end
 end
+
+
+# If there was an answer file specified, we parse it.
+def parse_answer_option!(answer_file, final_options, default_options)
+  if answer_file != nil
+    if not File.file?(answer_file)
+      $stderr.puts "Answer file [#{answer_file}] does seem to exist"
+      exit_with :answer_missing
+    end
+    final_options, __unused, error = read_answer_file(answer_file)
+    if error != ''
+      $stderr.puts error
+      exit_with :answer_parsing_error
+    end
+
+    unless check_options_against_default(final_options, default_options)
+      exit_with :answer_unknown_option
+    end
+  end
+end
