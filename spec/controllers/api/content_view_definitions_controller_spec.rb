@@ -30,34 +30,26 @@ describe Api::ContentViewDefinitionsController, :katello => true do
   describe "index" do
     before do
       Organization.stub(:first).and_return(@organization)
-      @defs = FactoryGirl.build_list(:content_view_definition, 2)
-      @defs << FactoryGirl.build(:content_view_definition, :label => "test")
+      @defs = FactoryGirl.create_list(:content_view_definition, 3,
+                                      :organization => @organization)
     end
 
     let(:action) { :index }
 
     context "with organization_id" do
       it "should assign the organiation's definitions" do
-        ContentViewDefinition.should_receive(:where).
-          with(:organization_id => @organization.id).and_return(@defs)
         req = get action, :organization_id => @organization.name
         req.should be_success
-        assigns[:definitions].should eql(@defs)
+        assigns[:definitions].map(&:id).should eql(@defs.map(&:id))
       end
     end
 
     context "with label" do
       it "should find the matching content view definition" do
-        scope = Object.new
-        scope.should_receive(:where).with(:label => @defs.last.label).
-          and_return([@defs.last])
-
-        ContentViewDefinition.should_receive(:readable).with(@organization).
-          and_return(scope)
 
         get action, :organization_id => @organization.name,
           :label => @defs.last.label
-        assigns[:definitions].should eql([@defs.last])
+        assigns[:definitions].map(&:id).should eql([@defs.last.id])
       end
     end
   end
