@@ -19,8 +19,8 @@
   = render :partial => "layouts/alchemy/layouts/login_layout",
       :locals => { :login_form_path_string => user_session_path,
       :recovery_strings => (_("Forgot %{username} or %{password}?") % { :username => link_to(_("Username"),
-      login_path(:card => :username_recovery), :id => "username_link"), :password  => link_to(_("Password"),
-      login_path(:card => :password_reset), :id => "password_link") } ).html_safe,
+        login_path(:card => :username_recovery), :id => "username_link"), :password  => link_to(_("Password"),
+        login_path(:card => :password_reset), :id => "password_link") } ).html_safe,
       :login_path_string => login_path,
       :new_username_recoveries_form_path_string => email_logins_password_resets_path,
       :new_password_resets_form_path_string => password_resets_path }
