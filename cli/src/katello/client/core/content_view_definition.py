@@ -176,7 +176,7 @@ class Update(ContentViewDefinitionAction):
                 help=_("content view description eg: foo's content view"))
         opt_parser_add_org(parser, required=1)
         parser.add_option('--label', dest='label',
-                help=_("content view devfinition label (required)"))
+                help=_("content view definition label (required)"))
         parser.add_option('--name', dest='name', help=_("content view name"))
 
 

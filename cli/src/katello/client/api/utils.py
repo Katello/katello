@@ -120,8 +120,9 @@ def get_cv_definition(org_name, def_label=None, def_name=None, def_id=None):
                 "recommend using label or id. These may be retrieved using " \
                 "the 'content definition list' command"))
     elif len(cvds) < 1:
-        raise ApiDataError(_("Could not find content view definition [ %s ]" \
-            " within organization [ %s ]") % ((def_label or def_id or def_name), org_name))
+        raise ApiDataError(_("Could not find content view definition [ %(a)s ]" \
+                " within organization [ %(b)s ]") %
+                ({"a": (def_label or def_id or def_name), "b": org_name}))
 
     return cvds[0]
 
