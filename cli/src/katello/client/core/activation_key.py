@@ -171,7 +171,7 @@ class Create(ActivationKeyAction):
         try:
             templateId = self.get_template_id(environment['id'], templateName)
         except OptionException:
-            print >> sys.stderr, _("Couldn't find template '%s'") % templateName
+            print >> sys.stderr, _("Couldn't find template [ %s ]") % templateName
             return os.EX_DATAERR
 
         key = self.api.create(environment['id'], keyName, keyDescription, usageLimit, templateId)
@@ -233,7 +233,7 @@ class Update(ActivationKeyAction):
         try:
             templateId = self.get_template_id(key['environment_id'], templateName)
         except OptionException:
-            print >> sys.stderr, _("Couldn't find template '%s'") % (templateName)
+            print >> sys.stderr, _("Couldn't find template [ %s ]") % (templateName)
             return os.EX_DATAERR
 
         key = self.api.update(orgName, key['id'], environment['id'] if environment != None else None,

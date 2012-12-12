@@ -33,7 +33,7 @@ class UserRoleAction(BaseAction):
     def get_role(self, name):
         role = self.api.role_by_name(name)
         if role == None:
-            system_exit(os.EX_DATAERR, _("Cannot find user role '%s'") % name )
+            system_exit(os.EX_DATAERR, _("Cannot find user role [ %s ]") % name )
         return role
 
 # user actions ---------------------------------------------------------
