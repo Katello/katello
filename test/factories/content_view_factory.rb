@@ -1,10 +1,4 @@
 FactoryGirl.define do
-  factory :content_view_definition do
-    name "Database_definition"
-    description "Database content view definition"
-    organization
-  end
-
   factory :content_view do
     sequence(:name) { |n| "Database#{n}" }
     description "This content view is for database content"
