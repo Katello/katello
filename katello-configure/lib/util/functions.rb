@@ -307,3 +307,19 @@ def display_resulting_answer_file(default_options_order, final_options)
     end
   end
 end
+
+def create_answer_file(result_config_path, final_options, default_options_order, titles)
+  orig_umask = File.umask(077)
+  begin
+    File.unlink(result_config_path)
+  rescue
+  end
+  result_config = IO.open(IO::sysopen(result_config_path, Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT))
+  default_options_order.each do |key|
+    if final_options.has_key?(key)
+      result_config.syswrite('# ' + (titles[key] || key) + "\n" + key + ' = ' + final_options[key] + "\n\n")
+    end
+  end
+  result_config.close
+  File.umask(orig_umask)
+end

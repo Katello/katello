@@ -186,19 +186,9 @@ ENV['FACTER_fqdn'] = facter_hostname
 
 # start configuring
 puts 'Starting Katello configuration'
-orig_umask = File.umask(077)
-begin
-	File.unlink(result_config_path)
-rescue
-end
-result_config = IO.open(IO::sysopen(result_config_path, Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT))
-$default_options_order.each do |key|
-	if $final_options.has_key?(key)
-		result_config.syswrite('# ' + ($titles[key] || key) + "\n" + key + ' = ' + $final_options[key] + "\n\n")
-	end
-end
-result_config.close
+create_answer_file(result_config_path, $final_options, $default_options_order, $titles)
 
+orig_umask = File.umask(077)
 # additional temporary file which is also used (but deleted afterwards)
 temp_config_path = '/dev/null'
 Tempfile.open("katello-configure-temp") do |temp_config|
