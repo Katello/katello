@@ -36,7 +36,7 @@ AsyncOperation = Struct.new(:status_id, :username, :object, :method_name, :args)
     if User.current && User.current.default_locale
       I18n.locale = User.current.default_locale
     else
-      I18n.locale = extract_locale_from_accept_language_header
+      I18n.locale = ApplicationController.extract_locale_from_accept_language_header
     end
     Rails.logger.debug "Setting locale: #{I18n.locale}"
 
