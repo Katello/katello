@@ -115,8 +115,10 @@ class Info(TemplateAction):
         self.printer.add_column('repositories', _("Repositories"), multiline=True, show_with=printer.VerboseStrategy)
         self.printer.add_column('packages', _("Packages"), multiline=True, show_with=printer.VerboseStrategy)
         self.printer.add_column('parameters', _("Parameters"), multiline=True, show_with=printer.VerboseStrategy)
-        self.printer.add_columN('package_groups', _("Package Groups"), multiline=True, show_with=printer.VerboseStrategy)
-        self.printer.add_columN('package_groups_categories', _("Package Groups Categories"), multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('package_groups', _("Package Groups"), \
+            multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('package_groups_categories', _("Package Groups Categories"), \
+            multiline=True, show_with=printer.VerboseStrategy)
         self.printer.set_header(_("Template Info"))
         self.printer.print_item(template)
         return os.EX_OK

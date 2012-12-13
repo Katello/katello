@@ -186,7 +186,8 @@ class ListAvailableVerbs(PermissionAction):
         self.printer.add_column("scope", _("Scope"))
         self.printer.add_column("available_verbs", _("Available Verbs"), multiline=True)
         if not listGlobal:
-            self.printer.add_column("available_tags", _("Available Tags"), multiline=True, show_with=printer.VerboseStrategy)
+            self.printer.add_column("available_tags", _("Available Tags"), multiline=True, \
+                show_with=printer.VerboseStrategy)
 
         permissions = self.getAvailablePermissions(orgName, scope)
         display_data = self.formatDisplayData(permissions, listGlobal)

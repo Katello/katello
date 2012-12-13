@@ -158,7 +158,8 @@ class List(ProductAction):
         else:
             env = get_environment(org_name, env_name)
 
-            self.printer.set_header(_("Product List For Organization [ %s ], Environment [ %s ]") % (org_name, env["name"]))
+            self.printer.set_header(_("Product List For Organization [ %s ], Environment [ %s ]") \
+                % (org_name, env["name"]))
             prods = self.api.products_by_env(env['id'])
 
         # hide marketing products by default
