@@ -184,7 +184,7 @@ class Promote(ContentViewAction):
 
 class Refresh(ContentViewAction):
 
-    description = _('regenerate a content view based on its definition')
+    description = _('regenerate a content view based on its definition in Library')
 
     def setup_parser(self, parser):
         opt_parser_add_org(parser, True)
