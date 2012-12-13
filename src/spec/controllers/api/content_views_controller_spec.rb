@@ -21,7 +21,7 @@ describe Api::ContentViewsController, :katello => true do
     disable_product_orchestration
     disable_user_orchestration
 
-    @organization = FactoryGirl.build_stubbed(:organization)
+    @org = FactoryGirl.create(:organization)
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
@@ -29,19 +29,35 @@ describe Api::ContentViewsController, :katello => true do
 
   describe "index" do
     before do
-      Organization.stub(:first).and_return(@organization)
-      @content_views = FactoryGirl.build_list(:content_view, 1)
-      @organization.content_views = @content_views
+      @content_views = FactoryGirl.create_list(:content_view, 4,
+                                               :organization => @org)
     end
 
-    let(:req) { get 'index', :organization_id => @organization.name }
-    let(:org_view_ids) { @organization.content_views.map(&:id) }
+    context "with no filter params" do
+      let(:req) { get 'index', :organization_id => @org.name }
+      let(:org_view_ids) { @org.content_views.map(&:id) }
 
-    subject { req }
-    it { should be_success }
+      subject { req }
+      it { should be_success }
 
-    specify { subject and assigns[:content_views].map(&:id).should
-      eql(org_view_ids) }
+      specify { subject and assigns[:content_views].map(&:id).should
+        eql(org_view_ids) }
+    end
+
+
+    [:id, :name, :label].each do |param|
+
+      context "with filter param #{param}" do
+        let(:view) { @content_views.sample }
+        let(:req)  { get 'index', :organization_id => @org.name, param => view.send(param) }
+
+        subject { req }
+
+        it { should be_success }
+        specify { subject and assigns[:content_views].map(&:id).should eql([view.id]) }
+      end
+
+    end
   end
 
 end
