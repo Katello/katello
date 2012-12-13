@@ -46,10 +46,30 @@ describe Api::ContentViewDefinitionsController, :katello => true do
 
     context "with label" do
       it "should find the matching content view definition" do
-
         get action, :organization_id => @organization.name,
           :label => @defs.last.label
         assigns[:definitions].map(&:id).should eql([@defs.last.id])
+      end
+    end
+
+    context "with id" do
+      it "should find the matching definition" do
+        cvd = @defs.sample
+        get action, :organization_id => @organization.name,
+          :id => cvd.id
+        assigns[:definitions].map(&:id).should eql([cvd.id])
+      end
+    end
+
+    context "with name" do
+      it "should find the matching definitions" do
+        name = "Lotus 1-2-3"
+        defs = FactoryGirl.create_list(:content_view_definition, 2,
+                                       :name => name,
+                                       :organization => @organization)
+        get action, :organization_id => @organization.name, :name => name
+        assigns[:definitions].length.should eql(2)
+        assigns[:definitions].map(&:id).should eql(defs.map(&:id))
       end
     end
   end
