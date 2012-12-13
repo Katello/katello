@@ -81,7 +81,7 @@ class List(SystemAction):
 
         self.printer.add_column('name', _("Name"))
         self.printer.add_column('uuid', _("UUID"))
-        self.printer.add_column('environment', _("Environment")
+        self.printer.add_column('environment', _("Environment"),
             item_formatter=lambda p: "%s" % (p['environment']['name']))
 
         self.printer.add_column('serviceLevel', _("Service Level"))
@@ -141,14 +141,16 @@ class Info(SystemAction):
         self.printer.add_column('description', _("Description"), multiline=True)
         if 'release' in system and system['release']:
             self.printer.add_column('release', _('OS Release'))
-        self.printer.add_column('activation_keys', _("Activation Keys"), multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('activation_keys', _("Activation Keys"), \
+            multiline=True, show_with=printer.VerboseStrategy)
         self.printer.add_column('host', _("Host"), show_with=printer.VerboseStrategy)
         self.printer.add_column('sockets', _("Sockets"))
         self.printer.add_column('ram', _("RAM (MB)"))
         self.printer.add_column('serviceLevel', _("Service Level"))
         self.printer.add_column('guests', _("Guests"), show_with=printer.VerboseStrategy)
         if "template" in system:
-            self.printer.add_column('template', _("Template"), show_with=printer.VerboseStrategy, value=system["template"]["name"])
+            self.printer.add_column('template', _("Template"), show_with=printer.VerboseStrategy, \
+                value=system["template"]["name"])
         self.printer.add_column('custom_info', _("Custom Info"), multiline=True, show_with=printer.VerboseStrategy)
 
         self.printer.print_item(system)
@@ -242,11 +244,11 @@ class InstalledPackages(SystemAction):
         packages = self.api.packages(system_id)
 
         self.printer.add_column('name', _("Name"), show_with=printer.VerboseStrategy)
-        self.printer.add_columN('vendor', _("Vendor"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('vendor', _("Vendor"), show_with=printer.VerboseStrategy)
         self.printer.add_column('version', _("Version"), show_with=printer.VerboseStrategy)
         self.printer.add_column('release', _("Release"), show_with=printer.VerboseStrategy)
         self.printer.add_column('arch', _("Arch"), show_with=printer.VerboseStrategy)
-        self.printer.add_column('name_version_release_arch', _("Name_Version_Release_Arch")
+        self.printer.add_column('name_version_release_arch', _("Name_Version_Release_Arch"),
             show_with=printer.GrepStrategy,
             item_formatter=lambda p: "%s-%s-%s.%s" % (p['name'], p['version'], p['release'], p['arch']))
 

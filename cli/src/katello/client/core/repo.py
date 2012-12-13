@@ -328,7 +328,8 @@ class Info(SingleRepoAction):
         self.printer.add_column('package_count', _("Package Count"))
         self.printer.add_column('arch', _("Arch"), show_with=printer.VerboseStrategy)
         self.printer.add_column('url', _("URL"), show_with=printer.VerboseStrategy)
-        self.printer.add_column('last_sync', _("Last Sync"), show_with=printer.VerboseStrategy, formatter=format_sync_time)
+        self.printer.add_column('last_sync', _("Last Sync"), show_with=printer.VerboseStrategy, \
+            formatter=format_sync_time)
         self.printer.add_column('sync_state', _("Progress"),
             show_with=printer.VerboseStrategy, formatter=format_sync_state)
         self.printer.add_column('gpg_key_name', _("GPG Key"), show_with=printer.VerboseStrategy)

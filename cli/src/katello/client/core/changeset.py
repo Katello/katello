@@ -123,10 +123,12 @@ class Info(ChangesetAction):
         self.printer.add_column('products', _("Products"), multiline=True, show_with=printer.VerboseStrategy)
         self.printer.add_column('packages', _("Packages"), multiline=True, show_with=printer.VerboseStrategy)
         self.printer.add_column('repositories', _("Repositories"), multiline=True, show_with=printer.VerboseStrategy)
-        self.printer.add_column('system_templates', _("System Templates"), multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('system_templates', _("System Templates"), \
+            multiline=True, show_with=printer.VerboseStrategy)
         self.printer.add_column('distributions', _("Distributions"), multiline=True, show_with=printer.VerboseStrategy)
         if displayDeps:
-            self.printer.add_column('dependencies', _("Dependencies"), multiline=True, show_with=printer.VerboseStrategy)
+            self.printer.add_column('dependencies', _("Dependencies"), multiline=True, \
+                show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Changeset Info"))
         self.printer.print_item(cset)

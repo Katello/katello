@@ -110,7 +110,7 @@ class Info(GpgKeyAction):
         self.printer.add_column('name', _("Name"))
         self.printer.add_column('content', _("Content"), show_with=printer.VerboseStrategy)
         self.printer.add_column('products', _("Products"), multiline=True, show_with=printer.VerboseStrategy)
-        self.printer.add_column('repos', _("Repos"), multiline=True, show_with=printer.VerboseStrategy, name=_("Repositories"))
+        self.printer.add_column('repos', _("Repositories"), multiline=True, show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("GPG Key Info"))
         self.printer.print_item(key)
