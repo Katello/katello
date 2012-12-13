@@ -2,8 +2,7 @@
 #
 # Katello Shell
 # Copyright (c) 2012 Red Hat, Inc.
-#
-# This software is licensed to you under the GNU General Public License,
+# # This software is licensed to you under the GNU General Public License,
 # version 2 (GPLv2). There is NO WARRANTY for this software, express or
 # implied, including the implied warranties of MERCHANTABILITY or FITNESS
 # FOR A PARTICULAR PURPOSE. You should have received a copy of GPLv2
@@ -284,6 +283,7 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         cv_cmd.add_command('list', content_view.List())
         cv_cmd.add_command('info', content_view.Info())
         cv_cmd.add_command('promote', content_view.Promote())
+        cv_cmd.add_command('refresh', content_view.Refresh())
         cvd_cmd = content_view_definition.ContentViewDefinition()
         cvd_cmd.add_command('list', content_view_definition.List())
         cvd_cmd.add_command('info', content_view_definition.Info())

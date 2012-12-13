@@ -182,6 +182,37 @@ class Promote(ContentViewAction):
         return return_code
 
 
+class Refresh(ContentViewAction):
+
+    description = _('regenerate a content view based on its definition')
+
+    def setup_parser(self, parser):
+        opt_parser_add_org(parser, True)
+        parser.add_option('--label', dest='label',
+                help=_("content view label eg: foo.example.com"))
+        parser.add_option('--name', dest='name',
+                help=_("content view name eg: foo.example.com"))
+        parser.add_option('--id', dest='id',
+                help=_("content view id eg: 4"))
+
+    def check_options(self, validator):
+        validator.require('org')
+        validator.require_at_least_one_of(('name', 'label', 'id'))
+        validator.mutually_exclude('name', 'label', 'id')
+
+    def run(self):
+        org_name = self.get_option('org')
+        view_label = self.get_option('label')
+        view_id = self.get_option('id')
+        view_name = self.get_option('name')
+
+        view = get_content_view(org_name, view_label, view_name, view_id)
+
+        self.api.refresh(view["id"])
+        print _("Content view [ %s ] was successfully refreshed.") % \
+                (view["name"])
+        return os.EX_OK
+
 # content_view command ------------------------------------------------------------
 
 class ContentView(Command):
