@@ -24,7 +24,7 @@ module Katello
   # Katello::Configuration module contains all necessary code for Katello configuration.
   # Configuration is not dependent on any gem which allows loading configuration very early
   # (even before Rails). Therefore this configuration can be used anywhere
-  # (Gemfile, boot scripts, etc.)
+  # (Gemfile, boot scripts, stand-alone)
   #
   # Configuration access points are methods #config and #early_config, see method documentation.
   # There are shortcuts defined: `Katello.config` and `Katello.early_config`
@@ -196,7 +196,7 @@ module Katello
       # @param [Node] config
       # @param [nil, Symbol] environment use nil for early or Symbol for environment
       # @yield block with validations
-      def initialize(config, environment, path = [:root], &validations)
+      def initialize(config, environment, path = [], &validations)
         @config, @environment, @path = config, environment, path
         instance_eval &validations
       end
@@ -241,8 +241,8 @@ module Katello
 
       def error_format(key, message)
         key_path = (path + [key]).join('.')
-        env      = environment || 'early'
-        "Key: '#{key_path}' in env '#{env}' #{message}"
+        env      = environment ? "'#{environment}' environment" : 'early configuration'
+        "Key: '#{key_path}' in #{env} #{message}"
       end
     end
 
