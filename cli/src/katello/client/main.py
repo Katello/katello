@@ -47,11 +47,17 @@ from katello.client.core import (
   architecture,
   config_template,
   domain,
-  subnet
+  subnet,
+  smart_proxy
 )
 
 def setup_admin(katello_cmd, mode=get_katello_mode()):
-    # pylint: disable=R0914,R0915
+    # pylint: disable=R0912,R0914,R0915
+    # Following pylint warnings are disabled as we break them intentionally:
+    #   R0912: Too many branches
+    #   R0914: Too many local variables
+    #   R0915: Too many statements
+
     akey_cmd = activation_key.ActivationKey()
     akey_cmd.add_command('create', activation_key.Create())
     akey_cmd.add_command('info', activation_key.Info())
@@ -305,32 +311,42 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         admin_cmd.add_command('crl_regen', admin.CrlRegen())
         katello_cmd.add_command('admin', admin_cmd)
 
+    if mode == 'katello':
+        architecture_cmd = architecture.Architecture()
+        architecture_cmd.add_command('list', architecture.List())
+        architecture_cmd.add_command('info', architecture.Show())
+        architecture_cmd.add_command('create', architecture.Create())
+        architecture_cmd.add_command('update', architecture.Update())
+        architecture_cmd.add_command('delete', architecture.Delete())
+        katello_cmd.add_command('architecture', architecture_cmd)
 
-    architecture_cmd = architecture.Architecture()
-    architecture_cmd.add_command('list', architecture.List())
-    architecture_cmd.add_command('info', architecture.Show())
-    architecture_cmd.add_command('create', architecture.Create())
-    architecture_cmd.add_command('update', architecture.Update())
-    architecture_cmd.add_command('delete', architecture.Delete())
-    katello_cmd.add_command('architecture', architecture_cmd)
+    if mode == 'katello':
+        configtemplate_cmd = config_template.ConfigTemplate()
+        configtemplate_cmd.add_command('list', config_template.List())
+        configtemplate_cmd.add_command('info', config_template.Info())
+        configtemplate_cmd.add_command('create', config_template.Create())
+        configtemplate_cmd.add_command('update', config_template.Update())
+        configtemplate_cmd.add_command('delete', config_template.Delete())
+        configtemplate_cmd.add_command('build_pxe_default', config_template.Build_Pxe_Default())
+        katello_cmd.add_command('config_template', configtemplate_cmd)
 
-    configtemplate_cmd = config_template.ConfigTemplate()
-    configtemplate_cmd.add_command('list', config_template.List())
-    configtemplate_cmd.add_command('info', config_template.Info())
-    configtemplate_cmd.add_command('create', config_template.Create())
-    configtemplate_cmd.add_command('update', config_template.Update())
-    configtemplate_cmd.add_command('delete', config_template.Delete())
-    configtemplate_cmd.add_command('build_pxe_default', config_template.Build_Pxe_Default())
-    katello_cmd.add_command('config_template', configtemplate_cmd)
+    if mode == 'katello':
+        domain_cmd = domain.Domain()
+        domain_cmd.add_command('list', domain.List())
+        domain_cmd.add_command('info', domain.Info())
+        domain_cmd.add_command('create', domain.Create())
+        domain_cmd.add_command('update', domain.Update())
+        domain_cmd.add_command('delete', domain.Delete())
+        katello_cmd.add_command('domain', domain_cmd)
 
-    domain_cmd = domain.Domain()
-    domain_cmd.add_command('list', domain.List())
-    domain_cmd.add_command('info', domain.Info())
-    domain_cmd.add_command('create', domain.Create())
-    domain_cmd.add_command('update', domain.Update())
-    domain_cmd.add_command('delete', domain.Delete())
-    katello_cmd.add_command('domain', domain_cmd)
-
+    if mode == 'katello':
+        smart_proxy_cmd = smart_proxy.SmartProxy()
+        smart_proxy_cmd.add_command('list', smart_proxy.List())
+        smart_proxy_cmd.add_command('info', smart_proxy.Info())
+        smart_proxy_cmd.add_command('create', smart_proxy.Create())
+        smart_proxy_cmd.add_command('update', smart_proxy.Update())
+        smart_proxy_cmd.add_command('delete', smart_proxy.Delete())
+        katello_cmd.add_command('smart_proxy', smart_proxy_cmd)
 
     if mode == 'katello':
         subnet_cmd = subnet.Subnet()
