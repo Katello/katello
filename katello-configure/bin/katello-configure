@@ -35,7 +35,6 @@ $default_options = {}
 $default_options_order = []
 $default_options_errors = ''
 $titles = {}
-$final_options = {}
 $temp_options = {}
 
 # We first parse the default answer file. The list of options
@@ -95,7 +94,7 @@ if $default_options_errors != ''
 end
 
 # If there was an answer file specified, we parse it.
-parse_answer_option!(options['answer_file'], $final_options, $default_options)
+$final_options = parse_answer_option(options['answer_file'], $default_options)
 
 # The command line options take precedence over the user
 # answer file values.

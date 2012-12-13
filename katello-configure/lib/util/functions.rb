@@ -282,7 +282,8 @@ end
 
 
 # If there was an answer file specified, we parse it.
-def parse_answer_option!(answer_file, final_options, default_options)
+def parse_answer_option(answer_file, default_options)
+  final_options = {}
   if answer_file != nil
     if not File.file?(answer_file)
       $stderr.puts "Answer file [#{answer_file}] does seem to exist"
@@ -298,6 +299,7 @@ def parse_answer_option!(answer_file, final_options, default_options)
       exit_with :answer_unknown_option
     end
   end
+  return final_options
 end
 
 def display_resulting_answer_file(default_options_order, final_options)
