@@ -10,8 +10,15 @@ Apipie.configure do |config|
   config.use_cache = Rails.env.production?
   config.validate = false
 
-  unless config.use_cache? or defined? JRUBY_VERSION
-    config.markup = Apipie::Markup::Markdown.new
+  unless config.use_cache?
+    require 'maruku'
+    class Katello::MarkdownMaruku
+      def self.to_html(text)
+        Maruku.new(text).to_html
+      end
+    end
+
+    config.markup = Katello::MarkdownMaruku
   end
 end
 

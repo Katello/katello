@@ -141,7 +141,7 @@ BuildRequires:       rubygem(tire) >= 0.3.0
 BuildRequires:       rubygem(tire) < 0.4
 BuildRequires:       rubygem(ldap_fluff)
 BuildRequires:       rubygem(apipie-rails) >= 0.0.12
-BuildRequires:       rubygem(redcarpet)
+BuildRequires:       rubygem(maruku)
 BuildRequires:       rubygem(foreman_api)
 
 
@@ -264,7 +264,7 @@ Requires:        rubygem(sexp_processor)
 # dependencies from bundler.d/development_boost.rb
 Requires:        rubygem(rails-dev-boost)
 # dependencies from bundler.d/apipie.rb
-Requires:        rubygem(redcarpet)
+Requires:        rubygem(maruku)
 
 %description devel
 Rake tasks and dependecies for Katello developers
