@@ -1,3 +1,5 @@
+= javascript :treetable
+
 = content_for :title do
   #{view_definition.name}
 
@@ -11,7 +13,8 @@
 = content_for :content do
 
   #content_view_definition_views
-    %table
+    %table#content_views
+
       %thead
         %tr{:style => "background-color: #F5FAFA;"}
           %td{:colspan => 3, :style => "vertical-align:middle; font-size:130%;"}
@@ -21,12 +24,21 @@
         %tr
           %th #{_("Name")}
           %th #{_("Version")}
-          %th{:colspan => 2} #{_("Published")}
+          %th #{_("Published")}
+          %th
+
       %tbody.views
+        - cssclass = cycle("", "alt")
         - view_definition.content_views.each do |view|
+
+          %tr{:id => "view_#{view.id}", :class => cssclass}
+            %td{:colspan => 3} #{view.name}
+            %td
+              %a.refresh_view.fr{:type => 'button', :href => '#', 'data-url' => refresh_content_view_definition_content_view_path(view_definition.id, view.id)}
+                #{_("Refresh")}
+
           - view.versions.each do |view_version|
-            %tr
-              %td #{view.name}
+            %tr{:class => "child-of-view_#{view.id}" + cssclass}
+              %td #{environments(view_version)}
               %td #{view_version.version}
               %td #{view_version.created_at}
-              %td

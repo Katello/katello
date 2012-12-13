@@ -48,7 +48,15 @@ class ContentView < ActiveRecord::Base
     result['definition']   = self.content_view_definition.try(:name)
     result['environments'] = environments.map{|e| e.try(:name)}.join(", ")
     result['versions'] = versions.map(&:version)
-    if options[:environment].present?
+    result['versions_details'] = versions.map do |v|
+      {
+        :version => v.version,
+        :published => v.created_at.to_s,
+        :environments => v.environments.map{|e| e.name}
+      }
+    end
+
+    if options && options[:environment].present?
       result['repositories'] = repos(options[:environment]).map(&:name)
     end
 
@@ -60,7 +68,7 @@ class ContentView < ActiveRecord::Base
   end
 
   def version(env)
-    self.versions.in_environment(env).first
+    self.versions.in_environment(env).last
   end
 
   def repos(env)
@@ -123,6 +131,47 @@ class ContentView < ActiveRecord::Base
 
   def in_non_library_environment?
     environments.where(:library => false).length > 0
+  end
+
+  # Refresh the content view, creating a new version in the library.  The new version will be returned.
+  def refresh
+    # retrieve the version that is currently in the library
+    library_version = self.version(organization.library)
+
+    # retrieve the 'next' version id to use when refreshing
+    next_version_id = self.versions.maximum(:version) + 1
+
+    # create a new version
+    version = ContentViewVersion.create!(:version => next_version_id, :content_view => self,
+                                         :environments => [organization.library])
+
+    repos = self.content_view_definition.nil? ? [] : self.content_view_definition.repos
+
+    tasks = []
+    repos.each do |repo|
+      library_clone = repo.get_clone(self.organization.library)
+      if library_clone.nil?
+        # this repo doesn't currently exist in the library
+        clone = repo.create_clone(self.organization.library, self)
+        tasks << repo.clone_contents(clone)
+      else
+        # this repos already exists in the library, so update it
+        library_clone = Repository.find(library_clone.id) # reload readonly obj
+        library_clone.content_view_version = version
+        library_clone.save!
+        tasks << library_clone.sync
+      end
+    end
+
+    if library_version.environments.length == 1
+      # the version initially in library was only associated with the library, so destroy it
+      library_version.destroy
+    else
+      # the current version was associated with multiple environments, so only unassociate it from the library
+      library_version.environments.delete(self.organization.library)
+    end
+
+    version
   end
 
 end
