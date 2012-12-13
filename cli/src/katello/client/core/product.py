@@ -30,7 +30,6 @@ from katello.client.core.utils import run_async_task_with_status, run_spinner_in
     AsyncTask, format_task_errors
 from katello.client.core.utils import ProgressBar
 from katello.client.utils import printer
-from katello.client.utils.printer import batch_add_columns
 
 
 # base product action --------------------------------------------------------
@@ -141,20 +140,26 @@ class List(ProductAction):
         prov_name = self.get_option('prov')
         all_opt = self.get_option('all')
 
-        batch_add_columns(self.printer, 'id', 'name', 'label', 'provider_id', 'provider_name', 'sync_plan_name')
-        self.printer.add_column('last_sync', formatter=format_sync_time)
-        self.printer.add_column('gpg_key_name', name=_("GPG key"))
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('label', _("Label"))
+        self.printer.add_column('provider_id', _("Provider ID"))
+        self.printer.add_column('provider_name', _("Provider Name"))
+        self.printer.add_column('sync_plan_name', _("Sync Plan Name"))
+        self.printer.add_column('last_sync', _("Last Sync"), formatter=format_sync_time)
+        self.printer.add_column('gpg_key_name', _("GPG key"))
 
         if prov_name:
             prov = get_provider(org_name, prov_name)
 
-            self.printer.set_header(_("Product List For Provider %s") % (prov_name))
+            self.printer.set_header(_("Product List For Provider [ %s ]") % (prov_name))
             prods = self.api.products_by_provider(prov["id"])
 
         else:
             env = get_environment(org_name, env_name)
 
-            self.printer.set_header(_("Product List For Organization %s, Environment '%s'") % (org_name, env["name"]))
+            self.printer.set_header(_("Product List For Organization [ %s ], Environment [ %s ]") \
+                % (org_name, env["name"]))
             prods = self.api.products_by_env(env['id'])
 
         # hide marketing products by default
@@ -241,10 +246,13 @@ class Status(SingleProductAction):
 
         #TODO: last errors?
 
-        batch_add_columns(self.printer, 'id', 'name', 'provider_id', 'provider_name')
-        self.printer.add_column('last_sync', formatter=format_sync_time)
-        self.printer.add_column('sync_state', formatter=format_sync_state)
-        self.printer.add_column('progress', show_with=printer.VerboseStrategy)
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('provider_id', _("Provider ID"))
+        self.printer.add_column('provider_name', _("Provider Name"))
+        self.printer.add_column('last_sync', _("Last Sync"), formatter=format_sync_time)
+        self.printer.add_column('sync_state', _("Sync State"), formatter=format_sync_state)
+        self.printer.add_column('progress', _("Progress"), show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Product Status"))
         self.printer.print_item(prod)
@@ -361,7 +369,7 @@ class Create(ProductAction):
 
         if not nodiscovery:
             repourls = self.discoverRepos.discover_repositories(orgName, url)
-            self.printer.set_header(_("Repository Urls discovered @ [%s]" % url))
+            self.printer.set_header(_("Repository Urls discovered @ [ %s ]" % url))
             selectedurls = self.discoverRepos.select_repositories(repourls, assumeyes)
             self.discoverRepos.create_repositories(orgName, prod["id"], prod["name"], prod["label"], selectedurls)
 
@@ -433,8 +441,8 @@ class ListFilters(SingleProductAction):
         prod = get_product(orgName, prodName, prodLabel, prodId)
 
         filters = self.api.filters(orgName, prod['id'])
-        self.printer.add_column('name')
-        self.printer.add_column('description')
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('description', _("Description"))
         self.printer.set_header(_("Product Filters"))
         self.printer.print_items(filters)
 

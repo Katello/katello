@@ -3,7 +3,6 @@ import os
 from katello.client.api.repo import RepoAPI
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import system_exit
-from katello.client.utils.printer import batch_add_columns
 
 
 class PackageGroupAction(BaseAction):
@@ -31,7 +30,9 @@ class List(PackageGroupAction):
                         _("No package groups found in repo [%s]") % (repoid))
         self.printer.set_header(_("Package Group Information"))
 
-        batch_add_columns(self.printer, 'id', 'name', 'description')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('description', _("Description"))
 
         self.printer.print_items(groups)
 
@@ -64,12 +65,13 @@ class Info(PackageGroupAction):
             for name, required_package in group['conditional_package_names'].items()]
 
         self.printer.set_header(_("Package Group Information"))
-        batch_add_columns(self.printer,
-            'id', 'name')
-        batch_add_columns(self.printer,
-            'description', 'mandatory_package_names', 'default_package_names',
-            'optional_package_names', 'conditional_package_names',
-            multiline=True)
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('description', _("Description"), multiline=True)
+        self.printer.add_column('mandatory_package_names', _("Mandatory Package Names"), multiline=True)
+        self.printer.add_column('default_package_names', _("Default Package Names"), multiline=True)
+        self.printer.add_column('optional_package_names', _("Optional Package Names"), multiline=True)
+        self.printer.add_column('conditional_package_names', _("Conditional Package Names"), multiline=True)
 
         self.printer.print_item(group)
 
@@ -93,8 +95,8 @@ class CategoryList(PackageGroupAction):
                         _("No package group categories found in repo [%s]") % (repoid))
         self.printer.set_header(_("Package Group Cateogory Information"))
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
 
         self.printer.print_items(groups)
 
@@ -124,7 +126,9 @@ class CategoryInfo(PackageGroupAction):
             system_exit(os.EX_DATAERR, _("Package group category [%s] not found in repo [%s]") % (categoryId, repoid))
 
         self.printer.set_header(_("Package Group Category Information"))
-        batch_add_columns(self.printer, 'id', 'name', 'packagegroupids')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('packagegroupids', _("Package Group IDs"))
 
         self.printer.print_item(category)
 
