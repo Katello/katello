@@ -261,3 +261,81 @@ rescue SocketError => e
   $stderr.puts "Unable to resolve '#{hostname}' or 'localhost'. Check your DNS and /etc/hosts settings."
   exit_with :hostname_error
 end
+
+
+# remove option from $final_options (and order) hashes (and optionally move
+# it to the temporary hash (used for dangerous options)
+def remove_option!(default_options_order, final_options, name, temp_options = nil)
+  if final_options.has_key? name
+    temp_options[name] = $final_options[name] if temp_options
+    final_options.delete(name)
+    default_options_order.delete(name)
+  end
+end
+
+def check_root_id(prog_name = $0)
+  unless Process.uid == 0
+    $stderr.puts "You must run #{prog_name} as root"
+    exit_with :not_root
+  end
+end
+
+
+# If there was an answer file specified, we parse it.
+def parse_answer_option(answer_file, default_options)
+  final_options = {}
+  if answer_file != nil
+    if not File.file?(answer_file)
+      $stderr.puts "Answer file [#{answer_file}] does seem to exist"
+      exit_with :answer_missing
+    end
+    final_options, __unused, error = read_answer_file(answer_file)
+    if error != ''
+      $stderr.puts error
+      exit_with :answer_parsing_error
+    end
+
+    unless check_options_against_default(final_options, default_options)
+      exit_with :answer_unknown_option
+    end
+  end
+  return final_options
+end
+
+def display_resulting_answer_file(default_options_order, final_options)
+  default_options_order.each do |key|
+    if final_options.has_key?(key)
+      puts key + ' = ' + final_options[key]
+    end
+  end
+end
+
+def create_answer_file(result_config_path, final_options, default_options_order, titles)
+  orig_umask = File.umask(077)
+  begin
+    File.unlink(result_config_path)
+  rescue
+  end
+  result_config = IO.open(IO::sysopen(result_config_path, Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT))
+  default_options_order.each do |key|
+    if final_options.has_key?(key)
+      result_config.syswrite('# ' + (titles[key] || key) + "\n" + key + ' = ' + final_options[key] + "\n\n")
+    end
+  end
+  result_config.close
+  File.umask(orig_umask)
+end
+
+# additional temporary file which is also used (but deleted afterwards)
+def create_temp_config_file(temp_options)
+  orig_umask = File.umask(077)
+  temp_config_path = '/dev/null'
+  Tempfile.open("katello-configure-temp") do |temp_config|
+    temp_config_path = temp_config.path
+    $temp_options.each_pair do |key, value|
+      temp_config.syswrite("#{key}=#{value}\n")
+    end
+  end
+  File.umask(orig_umask)
+  return temp_config_path
+end
