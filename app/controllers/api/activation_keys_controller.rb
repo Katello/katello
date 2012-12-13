@@ -66,7 +66,7 @@ class Api::ActivationKeysController < Api::ApiController
   api :POST, "/activation_keys", "Create an activation key"
   api :POST, "/environments/:environment_id/activation_keys", "Create an activation key"
   param :activation_key, Hash do
-    param :name, :identifier, :desc => "activation key identifier (alphanum characters, space, - and _)"
+    param :name, :identifier, :desc => "activation key identifier (alphanum characters, space, _ and -)"
     param :description, String, :allow_nil => true
   end
   def create
