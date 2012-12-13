@@ -38,6 +38,9 @@ KT.content_view_definition = (function(){
                 }
             });
         });
+        initialize_views_treetable();
+    },
+    initialize_views_treetable = function() {
         $("#content_views").treeTable({
             expandable: true,
             initialState: "expanded",
@@ -50,16 +53,18 @@ KT.content_view_definition = (function(){
         $('.child-of-view_'+view_id).remove();
 
         // add in the latest versions
-        var html = '';
+        var html = '', parent = $('#view_' + view_id);
         KT.utils.each(versions, function(version, key) {
-            var row = '<tr class="child-of-view_ ' + version + '">';
+            var row = '<tr class="child-of-view_' + view_id + '">';
             row += '<td style="padding-left: 37px;">' + i18n.environments(version['environments'].join(', ')) + '</td>';
             row += '<td>' + version['version'] + '</td>';
             row += '<td>' + version['published'] + '</td>';
             row += '</tr>';
             html = html.concat(row);
         });
-        $('#view_' + view_id).after(html);
+        parent.removeClass('initialized');
+        parent.after(html);
+        initialize_views_treetable();
     };
     return {
         initialize_views : initialize_views
