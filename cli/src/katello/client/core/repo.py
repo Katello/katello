@@ -197,22 +197,22 @@ class Discovery(RepoAction):  # pylint: disable=R0904
         prodId   = self.get_option('product_id')
         orgName  = self.get_option('org')
 
-        prov = get_provider(orgName, providerName)['id']
-        repourls = self.discover_repositories(orgName, prov, url)
+        prov_id = get_provider(orgName, providerName)['id']
+        repourls = self.discover_repositories(prov_id, url)
         self.printer.set_header(_("Repository Urls discovered @ [%s]" % url))
         selectedurls = self.select_repositories(repourls, assumeyes)
 
-	product = get_product(orgName, prodName, prodLabel, prodId)
+        product = get_product(orgName, prodName, prodLabel, prodId)
         self.create_repositories(orgName, product["id"], name, label, selectedurls)
 
         return os.EX_OK
 
-    def discover_repositories(self, org_name, provider, url):
+    def discover_repositories(self, provider_id, url):
         print(_("Discovering repository urls, this could take some time..."))
-        task = self.provider_api.repo_discovery(provider, url)
+        task = self.provider_api.repo_discovery(provider_id, url)
 
         run_spinner_in_bg(wait_for_async_task, [task])
-        repourls = self.provider_api.provider(provider)['discovered_repos']
+        repourls = self.provider_api.provider(provider_id)['discovered_repos']
 
         if not len(repourls):
             system_exit(os.EX_OK, "No repositories discovered @ url location [%s]" % url)

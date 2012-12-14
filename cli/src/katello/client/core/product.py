@@ -360,7 +360,7 @@ class Create(ProductAction):
             return os.EX_OK
 
         if not nodiscovery:
-            repourls = self.discoverRepos.discover_repositories(orgName, url)
+            repourls = self.discoverRepos.discover_repositories(prov['id'], url)
             self.printer.set_header(_("Repository Urls discovered @ [%s]" % url))
             selectedurls = self.discoverRepos.select_repositories(repourls, assumeyes)
             self.discoverRepos.create_repositories(orgName, prod["id"], prod["name"], prod["label"], selectedurls)
