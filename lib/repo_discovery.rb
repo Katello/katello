@@ -1,4 +1,14 @@
-
+#
+# Copyright 2012 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class RepoDiscovery
 
@@ -67,7 +77,7 @@ class RepoDiscovery
     #Verify:
     # * link's path starts with the base url
     # * link hasn't already been crawled
-    # * link ends with '/' so it should be a
+    # * link ends with '/' so it should be a directory
     # * link doesn't end with '/Packages/', as this increases
     #       processing time and memory usage considerably
     return path.starts_with?(@uri.path) && !@crawled.include?(path) &&
