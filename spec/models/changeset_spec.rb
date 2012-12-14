@@ -60,6 +60,67 @@ describe Changeset, :katello => true do
       json['action_type'].should_not be_nil
     end
 
+    describe "scopes" do
+      before do
+        @promoting = PromotionChangeset.create!(:environment => @environment,
+                                                :name        => "bar-changeset",
+                                                :state       => Changeset::PROMOTING)
+        @deleting  = DeletionChangeset.create!(:environment => @environment,
+                                               :name        => "baz-changeset",
+                                               :state       => Changeset::DELETING)
+      end
+
+      describe ".with_state" do
+        it "should find right changesets" do
+          Changeset.with_state(Changeset::DELETED).should be_empty
+          Changeset.with_state(Changeset::NEW).size.should eql(1)
+          Changeset.with_state(Changeset::PROMOTING).size.should eql(1)
+          Changeset.with_state(Changeset::NEW, Changeset::PROMOTING).size.should eql(2)
+          Changeset.with_state(Changeset::DELETED,
+                               Changeset::NEW,
+                               Changeset::PROMOTING).size.should eql(2)
+        end
+      end
+
+      describe ".started" do
+        subject { Changeset.started }
+        its(:size) { should eql(2) }
+        it { should include(@promoting, @deleting) }
+      end
+
+      describe ".colliding(changeset)" do
+        before do
+          @alpha      = KTEnvironment.create!(:name         => 'alpha', :label => 'alpha',
+                                              :prior        => @environment,
+                                              :organization => @organization)
+          @beta       = KTEnvironment.create!(:name         => 'beta', :label => 'beta',
+                                              :prior        => @organization.library,
+                                              :organization => @organization)
+          @collision = PromotionChangeset.create!(:environment => @alpha,
+                                                   :name        => "collision1")
+          @no_collision = PromotionChangeset.create!(:environment => @beta,
+                                                   :name        => "nocollision1")
+        end
+
+        it 'should detect "identical" collision' do
+          Changeset.colliding(@promoting).should include(@deleting)
+        end
+
+        it 'should detect "following" collision' do
+          Changeset.colliding(@promoting).should include(@collision)
+        end
+
+        it 'should detect "previous" collision' do
+          Changeset.colliding(@collision).should include(@promoting)
+        end
+
+        it 'should ignore other cases' do
+          Changeset.colliding(@promoting).should_not include(@no_collision) # only same start
+          Changeset.colliding(@collision).should_not include(@no_collision) # nothing in common
+        end
+      end
+    end
+
     describe "fail adding content not contained in the prior environment" do
       before do
         @provider      = Provider.create!(:name         => "provider", :provider_type => Provider::CUSTOM,
