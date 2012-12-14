@@ -173,7 +173,7 @@ class Promote(ContentViewAction):
                     return_code = os.EX_DATAERR
 
             else:
-                print _("Promotion task [ %s ] was successfully created.") % (task["id"])
+                print _("Promotion task [ %s ] was successfully created.") % (task["uuid"])
                 return_code = os.EX_OK
 
         except Exception:
