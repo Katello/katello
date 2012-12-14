@@ -35,6 +35,7 @@ from katello.client.core import (
   errata,
   system,
   system_custom_info,
+  task,
   sync_plan,
   shell_command,
   template,
@@ -309,6 +310,11 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         content_cmd.add_command('view', cv_cmd)
         content_cmd.add_command('definition', cvd_cmd)
         katello_cmd.add_command('content', content_cmd)
+
+    if mode == 'katello':
+        task_cmd = task.Task()
+        task_cmd.add_command('status', task.Status())
+        katello_cmd.add_command('task', task_cmd)
 
     client_cmd = client.Client()
     client_cmd.add_command('remember', client.Remember())
