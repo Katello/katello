@@ -139,7 +139,7 @@ end
 
 group :development do
   # devboost just for dev mode
-  gem 'rails-dev-boost'#, :require => 'rails_development_boost'
+  gem 'rails-dev-boost', :require => 'rails_development_boost'
 end
 
 group :test do
