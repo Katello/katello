@@ -66,7 +66,7 @@ class RepoDiscovery
       if dir.ends_with?('/repodata/')
         found_path = Pathname(dir).parent.to_s
         @found << "file://#{found_path}"
-        yield(found_path)
+        yield("file://#{found_path}")
       end
     end
     @found
