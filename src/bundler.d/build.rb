@@ -2,10 +2,8 @@
 # This group file is not distributed as RPM (but used during build or dev phase).
 #
 group :build do
-  unless defined? JRUBY_VERSION
-    # for apipie (it is in default group)
-    gem 'redcarpet'
-  end
+  # for apipie (it is in default group)
+  gem 'maruku'
 end
 
 group :ci do
