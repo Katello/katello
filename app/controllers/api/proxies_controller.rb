@@ -19,6 +19,15 @@ class Api::ProxiesController < Api::ApiController
       route, match, params = Rails.application.routes.set.recognize(request)
       # route names are defined in routes.rb (:as => :name)
       case route.name
+      when :api_proxy_consumer_deletionrecord_delete_path
+        if !User.consumer?
+          @system = System.first(:conditions => {:uuid => params[:id]})
+          if @system.nil?
+            Resources::Candlepin::Consumer.get params[:id] # check with candlepin if system is Gone, raises RestClient::Gone
+            raise HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:id]
+          end
+        end
+        User.consumer? or @system.readable?
       when :api_proxy_owner_pools_path
         find_optional_organization
         if params[:consumer]
@@ -31,7 +40,7 @@ class Api::ProxiesController < Api::ApiController
         (User.consumer? or @organization.readable?)
       when :api_proxy_consumer_certificates_path, :api_proxy_consumer_releases_path, :api_proxy_certificate_serials_path,
            :api_proxy_consumer_entitlements_path, :api_proxy_consumer_entitlements_post_path, :api_proxy_consumer_entitlements_delete_path,
-           :api_proxy_consumer_dryrun_path, :api_proxy_consumer_owners_path, :api_proxy_consumer_deletionrecord_delete_path
+           :api_proxy_consumer_dryrun_path, :api_proxy_consumer_owners_path
         User.consumer? and current_user.uuid == params[:id]
       when :api_proxy_consumer_certificates_delete_path
         User.consumer? and current_user.uuid == params[:consumer_id]
