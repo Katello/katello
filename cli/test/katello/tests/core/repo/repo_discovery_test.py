@@ -46,16 +46,16 @@ class RepoDiscoveryTest(CLIActionTestCase):
         self.restore_mocks()
 
     def test_performs_pulp_repo_discovery(self):
-        self.action.discover_repositories(self.ORG, self.PROVIDER_ID, self.URL)
+        self.action.discover_repositories(self.PROVIDER_ID, self.URL)
         self.action.provider_api.repo_discovery.assert_called_once_with(self.PROVIDER_ID, self.URL)
 
     def test_polls_pulp(self):
-        self.action.discover_repositories(self.ORG, self.PROVIDER, self.URL)
+        self.action.discover_repositories(self.PROVIDER, self.URL)
         self.module.run_spinner_in_bg.assert_called_once_with(self.module.wait_for_async_task, [self.DISCOVERY_TASK])
 
     def test_exit_when_no_repos_were_discovered(self):
         self.module.run_spinner_in_bg.return_value = [self.RESULT]
-        self.action.discover_repositories(self.ORG, self.PROVIDER, self.URL)
+        self.action.discover_repositories(self.PROVIDER, self.URL)
         self.module.system_exit.assert_called_once
 
 
