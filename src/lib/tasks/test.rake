@@ -47,7 +47,7 @@ if ENV['method']
   end
 end
 
-MINITEST_TASKS  = %w(models helpers controllers glue)
+MINITEST_TASKS  = %w(models helpers controllers glue lib)
 GLUE_LAYERS     = %w(pulp elasticsearch)
 
 Rake::Task["minitest"].clear
