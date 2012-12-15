@@ -27,7 +27,7 @@ class FileRepoDiscoveryTest < MiniTest::Rails::ActiveSupport::TestCase
     end
     assert_equal  found, found_final  #validate that final list equals incremental list
     assert_equal 1, found.size
-    assert found.first == base_url + 'zoo5'
+    assert_equal found.first, base_url + 'zoo5'
   end
 
 end
