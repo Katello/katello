@@ -32,7 +32,6 @@ from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, Sy
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
 from katello.client.server import ServerRequestError
-from katello.client.utils.printer import batch_add_columns
 
 
 # base system action --------------------------------------------------------
@@ -80,11 +79,12 @@ class List(SystemAction):
         else:
             self.printer.set_header(_("Systems List For Environment [ %s ] in Org [ %s ]") % (env_name, org_name))
 
-        batch_add_columns(self.printer, 'name', 'uuid')
-        self.printer.add_column('environment',
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('uuid', _("UUID"))
+        self.printer.add_column('environment', _("Environment"),
             item_formatter=lambda p: "%s" % (p['environment']['name']))
 
-        self.printer.add_column('serviceLevel', _('Service Level'))
+        self.printer.add_column('serviceLevel', _("Service Level"))
 
         self.printer.print_items(systems)
         return os.EX_OK
@@ -132,21 +132,26 @@ class Info(SystemAction):
             system["guests"] = "[ "+ ", ".join([guest["name"] for guest in system["guests"]]) +" ]"
 
 
-        batch_add_columns(self.printer, 'name', 'ipv4_address', 'uuid', 'location')
-        self.printer.add_column('created_at', _('Registered'), formatter=format_date)
-        self.printer.add_column('updated_at', _('Last updated'), formatter=format_date)
-        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('ipv4_address', _("IPv4 Address"))
+        self.printer.add_column('uuid', _("UUID"))
+        self.printer.add_column('location', _("Location"))
+        self.printer.add_column('created_at', _("Registered"), formatter=format_date)
+        self.printer.add_column('updated_at', _("Last Updated"), formatter=format_date)
+        self.printer.add_column('description', _("Description"), multiline=True)
         if 'release' in system and system['release']:
-            self.printer.add_column('release', _('OS release'))
-        self.printer.add_column('activation_keys', multiline=True, show_with=printer.VerboseStrategy)
-        self.printer.add_column('host', show_with=printer.VerboseStrategy)
-        self.printer.add_column('sockets')
+            self.printer.add_column('release', _('OS Release'))
+        self.printer.add_column('activation_keys', _("Activation Keys"), \
+            multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('host', _("Host"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('sockets', _("Sockets"))
         self.printer.add_column('ram', _("RAM (MB)"))
-        self.printer.add_column('serviceLevel', _('Service Level'))
-        self.printer.add_column('guests', show_with=printer.VerboseStrategy)
+        self.printer.add_column('serviceLevel', _("Service Level"))
+        self.printer.add_column('guests', _("Guests"), show_with=printer.VerboseStrategy)
         if "template" in system:
-            self.printer.add_column('template', show_with=printer.VerboseStrategy, value=system["template"]["name"])
-        self.printer.add_column('custom_info', multiline=True, show_with=printer.VerboseStrategy)
+            self.printer.add_column('template', _("Template"), show_with=printer.VerboseStrategy, \
+                value=system["template"]["name"])
+        self.printer.add_column('custom_info', _("Custom Info"), multiline=True, show_with=printer.VerboseStrategy)
 
         self.printer.print_item(system)
 
@@ -238,9 +243,12 @@ class InstalledPackages(SystemAction):
 
         packages = self.api.packages(system_id)
 
-        batch_add_columns(self.printer, 'name', 'vendor', 'version', 'release', 'arch',
-            show_with=printer.VerboseStrategy)
-        self.printer.add_column('name_version_release_arch',
+        self.printer.add_column('name', _("Name"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('vendor', _("Vendor"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('version', _("Version"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('release', _("Release"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('arch', _("Arch"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('name_version_release_arch', _("Name_Version_Release_Arch"),
             show_with=printer.GrepStrategy,
             item_formatter=lambda p: "%s-%s-%s.%s" % (p['name'], p['version'], p['release'], p['arch']))
 
@@ -279,15 +287,15 @@ class TasksList(SystemAction):
         for t in tasks:
             t['result'] = "\n" + t['result_description']
 
-        self.printer.add_column('uuid', name=_("Task ID"))
-        self.printer.add_column('system_name', name=_("System"))
-        self.printer.add_column('description', name=_("Action"))
-        self.printer.add_column('created_at', name=_("Started"),
+        self.printer.add_column('uuid', _("Task ID"))
+        self.printer.add_column('system_name', _("System"))
+        self.printer.add_column('description', _("Action"))
+        self.printer.add_column('created_at', _("Started"),
             formatter=format_date, show_with=printer.VerboseStrategy)
-        self.printer.add_column('finish_time', name=_("Finished"), formatter=format_date,
+        self.printer.add_column('finish_time', _("Finished"), formatter=format_date,
             show_with=printer.VerboseStrategy)
-        self.printer.add_column('state', name=_("Status"))
-        self.printer.add_column('result', name=_("Result"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('state', _("Status"))
+        self.printer.add_column('result', _("Result"), show_with=printer.VerboseStrategy)
 
         self.printer.print_items(tasks)
 
@@ -311,12 +319,12 @@ class TaskInfo(SystemAction):
         task = SystemTaskStatusAPI().status(uuid)
         task['result'] = "\n" + task['result_description']
 
-        self.printer.add_column('system_name', name=_("System"))
-        self.printer.add_column('description', name=_("Action"))
-        self.printer.add_column('created_at', name=_("Started"), formatter=format_date)
-        self.printer.add_column('finish_time', name=_("Finished"), formatter=format_date)
-        self.printer.add_column('state', name=_("Status"))
-        self.printer.add_column('result', name=_("Result"))
+        self.printer.add_column('system_name', _("System"))
+        self.printer.add_column('description', _("Action"))
+        self.printer.add_column('created_at', _("Started"), formatter=format_date)
+        self.printer.add_column('finish_time', _("Finished"), formatter=format_date)
+        self.printer.add_column('state', _("Status"))
+        self.printer.add_column('result', _("Result"))
         self.printer.print_item(task)
 
         return os.EX_OK
@@ -356,13 +364,13 @@ class Releases(SystemAction):
         releases = [{"value": r} for r in releases]
 
         self.printer.set_header(_("Available releases"))
-        self.printer.add_column('value')
+        self.printer.add_column('value', _("Value"))
 
         self.printer.print_items(releases)
         return os.EX_OK
 
 class Facts(SystemAction):
-    description = _('display a the hardware facts of a system')
+    description = _('display the hardware facts of a system')
 
     def setup_parser(self, parser):
         super(Facts, self).setup_parser(parser)
@@ -583,10 +591,15 @@ class Subscriptions(SystemAction):
                     yield entitlement_ext
 
             self.printer.set_header(_("Current Subscriptions for System [ %s ]") % display_name)
-            self.printer.add_column('entitlementId', name=_("Subscription ID"))
-            self.printer.add_column('serialIds', name=_('Serial ID'))
-            batch_add_columns(self.printer, 'poolName', 'expires', 'consumed', 'quantity', 'sla', 'contractNumber')
-            self.printer.add_column('providedProductsFormatted', name=_('Provided products'))
+            self.printer.add_column('entitlementId', _("Subscription ID"))
+            self.printer.add_column('serialIds', _('Serial ID'))
+            self.printer.add_column('poolName', _("Pool Name"))
+            self.printer.add_column('expires', _("Expires"))
+            self.printer.add_column('consumed', _("Consumed"))
+            self.printer.add_column('quantity', _("Quantity"))
+            self.printer.add_column('sla', _("SLA"))
+            self.printer.add_column('contractNumber', _("Contract Number"))
+            self.printer.add_column('providedProductsFormatted', _('Provided Products'))
             self.printer.print_items(entitlements())
         else:
             # listing available pools
@@ -612,12 +625,15 @@ class Subscriptions(SystemAction):
 
             self.printer.set_header(_("Available Subscriptions for System [ %s ]") % display_name)
 
-            self.printer.add_column('id')
-            self.printer.add_column('productName', name=_('Name'))
-            batch_add_columns(self.printer, 'endDate', 'consumed', 'quantity', 'sockets')
-            self.printer.add_column('attr_stacking_id', name=_('Stacking ID'))
-            self.printer.add_column('attr_multi-entitlement', name=_('Multi-entitlement'))
-            self.printer.add_column('providedProductsFormatted', name=_('Provided products'))
+            self.printer.add_column('id', _("ID"))
+            self.printer.add_column('productName', _("Name"))
+            self.printer.add_column('endDate', _("End Date"))
+            self.printer.add_column('consumed', _("Consumed"))
+            self.printer.add_column('quantity', _("Quantity"))
+            self.printer.add_column('sockets', _("Sockets"))
+            self.printer.add_column('attr_stacking_id', _("Stacking ID"))
+            self.printer.add_column('attr_multi-entitlement', _("Multi-entitlement"))
+            self.printer.add_column('providedProductsFormatted', _("Provided products"))
             self.printer.print_items(available_pools())
 
         return os.EX_OK

@@ -24,7 +24,6 @@ from katello.client.core.utils import test_record, run_spinner_in_bg, wait_for_a
 from katello.client.utils.printer import VerboseStrategy
 from katello.client.utils import printer
 from datetime import timedelta, datetime
-from katello.client.utils.printer import batch_add_columns
 
 
 # base organization action -----------------------------------------------------
@@ -45,8 +44,10 @@ class List(OrganizationAction):
     def run(self):
         orgs = self.api.organizations()
 
-        batch_add_columns(self.printer, 'id', 'name', 'label')
-        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('label', _("Label"))
+        self.printer.add_column('description', _("Description"), multiline=True)
 
         self.printer.set_header(_("Organization List"))
         self.printer.print_items(orgs)
@@ -104,11 +105,11 @@ class Info(OrganizationAction):
 
         org['system_info_keys'] = "[ %s ]" % ", ".join(org['system_info_keys'])
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('description', multiline=True)
-        self.printer.add_column('service_levels', name=_("Available Service Levels"), multiline=True)
-        self.printer.add_column('system_info_keys', name=_("Default System Info Keys"), multiline=True,
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('description', _("Description"), multiline=True)
+        self.printer.add_column('service_levels', _("Available Service Levels"), multiline=True)
+        self.printer.add_column('system_info_keys', _("Default System Info Keys"), multiline=True,
             show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Organization Information"))
@@ -189,8 +190,8 @@ class GenerateDebugCert(OrganizationAction):
 
         uebercert = self.api.uebercert(name, regenerate)
 
-        self.printer.add_column('key')
-        self.printer.add_column('cert')
+        self.printer.add_column('key', _("Key"))
+        self.printer.add_column('cert', _("Cert"))
         self.printer.set_header(_("Organization Uebercert"))
         self.printer.print_item(uebercert)
 
@@ -224,13 +225,13 @@ class ShowSubscriptions(OrganizationAction):
         if not self.has_option('grep'):
             self.printer.set_strategy(VerboseStrategy())
 
-        self.printer.add_column('productName', name='Subscription')
-        self.printer.add_column('consumed')
-        self.printer.add_column('contractNumber', show_with=printer.VerboseStrategy)
-        self.printer.add_column('sla', show_with=printer.VerboseStrategy)
-        self.printer.add_column('id')
-        self.printer.add_column('startDate', show_with=printer.VerboseStrategy)
-        self.printer.add_column('endDate', show_with=printer.VerboseStrategy)
+        self.printer.add_column('productName', name=_("Subscription"))
+        self.printer.add_column('consumed', _("Consumed"))
+        self.printer.add_column('contractNumber', _("Contract Number"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('sla', _("SLA"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('startDate', _("Start Date"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('endDate', _("End Date"), show_with=printer.VerboseStrategy)
         self.printer.set_header(_("Organization's Subscriptions"))
         self.printer.print_items(updated_pool_info)
 

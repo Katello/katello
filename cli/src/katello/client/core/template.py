@@ -25,7 +25,6 @@ from katello.client.core.utils import test_record, get_abs_path, run_spinner_in_
 from katello.client.api.utils import get_library, get_environment, get_template, get_repo
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
-from katello.client.utils.printer import batch_add_columns
 
 
 
@@ -65,11 +64,11 @@ class List(TemplateAction):
         if not templates:
             print _("No templates found in environment [ %s ]") % environment["name"]
             return os.EX_OK
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('description', multiline=True)
-        self.printer.add_column('environment_id')
-        self.printer.add_column('parent_id')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('description', _("Description"), multiline=True)
+        self.printer.add_column('environment_id', _("Environment ID"))
+        self.printer.add_column('parent_id', _("Parent ID"))
 
         self.printer.set_header(_("Template List"))
         self.printer.print_items(templates)
@@ -105,15 +104,20 @@ class Info(TemplateAction):
         template["package_group_categories"] = [p["name"] for p in template["pg_categories"]]
 
 
-        batch_add_columns(self.printer, 'id', 'name')
-        self.printer.add_column('revision', show_with=printer.VerboseStrategy)
-        self.printer.add_column('description', multiline=True)
-        self.printer.add_column('environment_id')
-        self.printer.add_column('parent_id')
-        batch_add_columns(self.printer, \
-            'errata', 'products', 'repositories', \
-            'packages', 'parameters', 'package_groups', \
-            'package_group_categories', \
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('revision', _("Revision"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('description', _("Description"), multiline=True)
+        self.printer.add_column('environment_id', _("Environment ID"))
+        self.printer.add_column('parent_id', _("Parent ID"))
+        self.printer.add_column('errata', _("Errata"), multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('products', _("Products"), multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('repositories', _("Repositories"), multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('packages', _("Packages"), multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('parameters', _("Parameters"), multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('package_groups', _("Package Groups"), \
+            multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('package_groups_categories', _("Package Groups Categories"), \
             multiline=True, show_with=printer.VerboseStrategy)
         self.printer.set_header(_("Template Info"))
         self.printer.print_item(template)
@@ -164,7 +168,7 @@ class Import(TemplateAction):
         try:
             f = self.open_file(tplPath)
         except IOError:
-            print _("File %s does not exist" % tplPath)
+            print _("File [ %s ] does not exist" % tplPath)
             return os.EX_IOERR
 
         response = run_spinner_in_bg(self.api.import_tpl, (env["id"], desc, f),
@@ -209,7 +213,7 @@ class Export(TemplateAction):
         try:
             f = self.open_file(tplPath)
         except IOError:
-            print >> sys.stderr, _("Could not create file %s") % tplPath
+            print >> sys.stderr, _("Could not create file [ %s ]") % tplPath
             return os.EX_IOERR
 
         self.api.validate_tpl(template["id"], format_in)
@@ -217,7 +221,7 @@ class Export(TemplateAction):
             message=_("Exporting template, please wait... "))
         f.write(response)
         f.close()
-        print _("Template was exported successfully to file %s") % tplPath
+        print _("Template was exported successfully to file [ %s ]") % tplPath
         return os.EX_OK
 
     @classmethod
@@ -370,7 +374,7 @@ class Update(TemplateAction):
         #check for missing values
         for k, v in self.items['add_parameters'].iteritems():
             if v is None:
-                validator.add_option_error(_("missing value for parameter '%s'") % k)
+                validator.add_option_error(_("missing value for parameter [ %s ]") % k)
 
     def _resetParameters(self):
         # pylint: disable=W0201

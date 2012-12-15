@@ -68,12 +68,12 @@ class List(ProviderAction):
 
         provs = self.api.providers_by_org(orgName)
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('provider_type', 'Type')
-        self.printer.add_column('repository_url', 'Url')
-        #self.printer.add_column('organization_id', 'Org Id')
-        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('provider_type', _("Type"))
+        self.printer.add_column('repository_url', _("URL"))
+        #self.printer.add_column('organization_id', _("Org ID"))
+        self.printer.add_column('description', _("Description"), multiline=True)
 
         self.printer.set_header(_("Provider List"))
         self.printer.print_items(provs)
@@ -91,12 +91,12 @@ class Info(SingleProviderAction):
 
         prov = get_provider(orgName, provName)
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('provider_type', 'Type')
-        self.printer.add_column('repository_url', 'Url')
-        self.printer.add_column('organization_id', 'Org Id')
-        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('provider_type', _("Type"))
+        self.printer.add_column('repository_url', _("URL"))
+        self.printer.add_column('organization_id', _("Org ID"))
+        self.printer.add_column('description', _("Description"), multiline=True)
 
         self.printer.set_header(_("Provider Information"))
         self.printer.print_item(prov)
@@ -246,12 +246,12 @@ class Status(SingleProviderAction):
 
         #TODO: last errors?
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
 
-        self.printer.add_column('last_sync', formatter=format_sync_time)
-        self.printer.add_column('sync_state', formatter=format_sync_state)
-        self.printer.add_column('progress', show_with=printer.VerboseStrategy)
+        self.printer.add_column('last_sync', _("Last Sync"), formatter=format_sync_time)
+        self.printer.add_column('sync_state', _("Sync State"), formatter=format_sync_state)
+        self.printer.add_column('progress', _("Progress"), show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Provider Status"))
         self.printer.print_item(prov)
@@ -286,7 +286,7 @@ class ImportManifest(SingleProviderAction):
         try:
             f = open(get_abs_path(manifestPath))
         except IOError:
-            system_exit(os.EX_IOERR, _("File %s does not exist" % manifestPath))
+            system_exit(os.EX_IOERR, _("File %s does not exist") % manifestPath)
 
         prov = get_provider(orgName, provName)
 

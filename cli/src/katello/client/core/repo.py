@@ -28,7 +28,6 @@ from katello.client.core.utils import system_exit, run_async_task_with_status, r
 from katello.client.core.utils import ProgressBar
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
-from katello.client.utils.printer import batch_add_columns
 
 
 ALLOWED_REPO_URL_SCHEMES = ("http", "https", "ftp", "file")
@@ -301,13 +300,13 @@ class Status(SingleRepoAction):
 
         repo['last_errors'] = format_sync_errors(task)
 
-        self.printer.add_column('package_count')
-        self.printer.add_column('last_sync', formatter=format_sync_time)
-        self.printer.add_column('sync_state', formatter=format_sync_state)
+        self.printer.add_column('package_count', _("Package Count"))
+        self.printer.add_column('last_sync', _("Last Sync"), formatter=format_sync_time)
+        self.printer.add_column('sync_state', _("Sync State"), formatter=format_sync_state)
         if 'next_scheduled_sync' in repo:
-            self.printer.add_column('next_scheduled_sync', formatter=format_sync_time)
-        self.printer.add_column('progress', show_with=printer.VerboseStrategy)
-        self.printer.add_column('last_errors', multiline=True, show_with=printer.VerboseStrategy)
+            self.printer.add_column('next_scheduled_sync', _("Next Scheduled Sync"), formatter=format_sync_time)
+        self.printer.add_column('progress', _("Progress"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('last_errors', _("Last Errors"), multiline=True, show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Repository Status"))
         self.printer.print_item(repo)
@@ -324,12 +323,16 @@ class Info(SingleRepoAction):
 
         repo['url'] = repo['source']['url']
 
-        batch_add_columns(self.printer, 'id', 'name', 'package_count')
-        batch_add_columns(self.printer, 'arch', 'url', show_with=printer.VerboseStrategy)
-        self.printer.add_column('last_sync', show_with=printer.VerboseStrategy, formatter=format_sync_time)
-        self.printer.add_column('sync_state', name=_("Progress"),
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('package_count', _("Package Count"))
+        self.printer.add_column('arch', _("Arch"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('url', _("URL"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('last_sync', _("Last Sync"), show_with=printer.VerboseStrategy, \
+            formatter=format_sync_time)
+        self.printer.add_column('sync_state', _("Progress"),
             show_with=printer.VerboseStrategy, formatter=format_sync_state)
-        self.printer.add_column('gpg_key_name', name=_("GPG key"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('gpg_key_name', _("GPG Key"), show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Information About Repo %s") % repo['id'])
 
@@ -439,8 +442,11 @@ class List(RepoAction):
         prodId = self.get_option('product_id')
         listDisabled = self.has_option('disabled')
 
-        batch_add_columns(self.printer, 'id', 'name', 'label', 'package_count')
-        self.printer.add_column('last_sync', formatter=format_sync_time)
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('label', _("Label"))
+        self.printer.add_column('package_count', _("Package Count"))
+        self.printer.add_column('last_sync', _("Last Sync"), formatter=format_sync_time)
 
         prodIncluded = prodName or prodLabel or prodId
         if prodIncluded and envName:
@@ -498,8 +504,8 @@ class ListFilters(SingleRepoAction):
 
         filters = self.api.filters(repo['id'], inherit)
 
-        self.printer.add_column('name')
-        self.printer.add_column('description')
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('description', _("Description"))
         self.printer.set_header(_("Repository Filters"))
         self.printer.print_items(filters)
 

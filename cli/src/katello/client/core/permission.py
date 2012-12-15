@@ -156,11 +156,11 @@ class List(PermissionAction):
 
         permissions = self.api.permissions(role['id'])
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('scope', item_formatter=lambda perm: perm['resource_type']['name'])
-        self.printer.add_column('verbs', multiline=True, formatter=self.format_verbs)
-        self.printer.add_column('tags', multiline=True, formatter=self.format_tags)
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('scope', _("Scope"), item_formatter=lambda perm: perm['resource_type']['name'])
+        self.printer.add_column('verbs', _("Verbs"), multiline=True, formatter=self.format_verbs)
+        self.printer.add_column('tags', _("Tags"), multiline=True, formatter=self.format_tags)
 
         self.printer.set_header(_("Permission List"))
         self.printer.print_items(permissions)
@@ -183,10 +183,11 @@ class ListAvailableVerbs(PermissionAction):
 
         self.set_output_mode()
 
-        self.printer.add_column("scope")
-        self.printer.add_column("available_verbs", multiline=True)
+        self.printer.add_column("scope", _("Scope"))
+        self.printer.add_column("available_verbs", _("Available Verbs"), multiline=True)
         if not listGlobal:
-            self.printer.add_column("available_tags", multiline=True, show_with=printer.VerboseStrategy)
+            self.printer.add_column("available_tags", _("Available Tags"), multiline=True, \
+                show_with=printer.VerboseStrategy)
 
         permissions = self.getAvailablePermissions(orgName, scope)
         display_data = self.formatDisplayData(permissions, listGlobal)
