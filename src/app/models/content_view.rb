@@ -33,6 +33,7 @@ class ContentView < ActiveRecord::Base
 
   has_many :changeset_content_views
   has_many :changesets, :through => :changeset_content_views
+  has_many :activation_keys
 
   validates :label, :uniqueness => {:scope => :organization_id},
     :presence => true, :katello_label_format => true
