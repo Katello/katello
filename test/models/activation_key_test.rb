@@ -29,6 +29,11 @@ class ActivationKeyTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_includes @dev_view.activation_keys, @dev_key
   end
 
+  test "does not need a content view" do
+    assert_nil @dev_key.content_view
+    assert @dev_key.save
+  end
+
   test "content view must be in environment" do
     @dev_key.content_view = @lib_view
     refute @dev_key.save
