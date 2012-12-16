@@ -466,6 +466,7 @@ Src::Application.routes.draw do
         post :refresh_products
         post :product_create
         get :products
+        post :discovery
       end
     end
 
@@ -554,7 +555,6 @@ Src::Application.routes.draw do
         end
       end
       resources :repositories, :only => [] do
-        post :discovery, :on => :collection
       end
       resource :uebercert, :only => [:show]
 
