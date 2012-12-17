@@ -12,12 +12,12 @@
 
 = content_for :content do
 
-  #content_view_definition_views
+  #content_view_definition_views{'data-status_url' => status_content_view_definition_path(view_definition.id)}
     %table#content_views
 
       %thead
         %tr{:style => "background-color: #F5FAFA;"}
-          %td{:colspan => 3, :style => "vertical-align:middle; font-size:130%;"}
+          %td{:colspan => 4, :style => "vertical-align:middle; font-size:130%;"}
             #{_("Publish new content view from this view definition")}
           %td
             %input.fr.button.subpanel_element{:type=>'button', :value=>_("Publish"), 'data-url' => publish_setup_content_view_definition_path(view_definition.id)}
@@ -25,20 +25,10 @@
           %th #{_("Name")}
           %th #{_("Version")}
           %th #{_("Published")}
-          %th
+          %th{:colspan => 2}
 
       %tbody.views
         - cssclass = cycle("", "alt")
         - view_definition.content_views.each do |view|
-
-          %tr{:id => "view_#{view.id}", :class => cssclass}
-            %td{:colspan => 3} #{view.name}
-            %td
-              %a.refresh_view.fr{:type => 'button', :href => '#', 'data-url' => refresh_content_view_definition_content_view_path(view_definition.id, view.id)}
-                #{_("Refresh")}
-
-          - view.versions.each do |view_version|
-            %tr{:class => "child-of-view_#{view.id}" + cssclass}
-              %td #{environments(view_version)}
-              %td #{view_version.version}
-              %td #{view_version.created_at}
+          = render :partial => 'content_view_definitions/views/view',
+            :locals => {:view_definition => view_definition, :view => view, :cssclass => cssclass}
