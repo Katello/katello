@@ -17,7 +17,7 @@ class ContentView < ActiveRecord::Base
   include Authorization::ContentView
 
   belongs_to :content_view_definition
-  belongs_to :organization
+  belongs_to :organization, :inverse_of => :content_views
 
   has_many :content_view_versions, :dependent => :destroy
   alias :versions :content_view_versions
