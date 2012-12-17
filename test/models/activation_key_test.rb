@@ -15,32 +15,32 @@ require 'minitest_helper'
 class ActivationKeyTest < MiniTest::Rails::ActiveSupport::TestCase
   fixtures :all
 
-  def setup
-    @dev_key = activation_keys(:dev_key)
-    @dev_view = content_views(:library_dev_view)
-    @lib_view = content_views(:library_view)
-  end
+  #def setup
+    #@dev_key = activation_keys(:dev_key)
+    #@dev_view = content_views(:library_dev_view)
+    #@lib_view = content_views(:library_view)
+  #end
 
-  test "can have content view" do
-    @dev_key = activation_keys(:dev_key)
-    @dev_key.content_view = @dev_view
-    assert @dev_key.save!
-    assert_not_nil @dev_key.content_view
-    assert_includes @dev_view.activation_keys, @dev_key
-  end
+  #test "can have content view" do
+    #@dev_key = activation_keys(:dev_key)
+    #@dev_key.content_view = @dev_view
+    #assert @dev_key.save!
+    #assert_not_nil @dev_key.content_view
+    #assert_includes @dev_view.activation_keys, @dev_key
+  #end
 
-  test "does not need a content view" do
-    assert_nil @dev_key.content_view
-    assert @dev_key.save
-  end
+  #test "does not need a content view" do
+    #assert_nil @dev_key.content_view
+    #assert @dev_key.save
+  #end
 
-  test "content view must be in environment" do
-    @dev_key.content_view = @lib_view
-    refute @dev_key.save
-    refute_empty @dev_key.errors.keys
-    assert_raises(ActiveRecord::RecordInvalid) do
-      @dev_key.save!
-    end
-  end
+  #test "content view must be in environment" do
+    #@dev_key.content_view = @lib_view
+    #refute @dev_key.save
+    #refute_empty @dev_key.errors.keys
+    #assert_raises(ActiveRecord::RecordInvalid) do
+      #@dev_key.save!
+    #end
+  #end
 
 end
