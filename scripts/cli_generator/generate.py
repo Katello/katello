@@ -112,7 +112,7 @@ class Method(object):
 
     def data_keys(self):
         return (p.name() for p in self.params())
-    
+
     def accepts_data(self):
         return len(self.json['params']) > 0
 
@@ -196,19 +196,19 @@ def load_json(filename):
 
 def generate_action(resource, method_name):
     mytemplate = Template(filename='./templates/action.py')
-    print mytemplate.render(resource=resource, method=resource.get_method(method_name))
+    print mytemplate.render_unicode(resource=resource, method=resource.get_method(method_name))
 
 def generate_command(resource):
     mytemplate = Template(filename='./templates/command.py')
-    print mytemplate.render(resource=resource, name=resource.name())
+    print mytemplate.render_unicode(resource=resource, name=resource.name())
 
 def generate_binding(resource):
     mytemplate = Template(filename='./templates/api.py')
-    print mytemplate.render(resource=resource, doc=MethodDocGenerator())
+    print mytemplate.render_unicode(resource=resource, doc=MethodDocGenerator())
 
 def generate_main(resource):
     mytemplate = Template(filename='./templates/main.py')
-    print mytemplate.render(resource=resource, name=resource.name(safe=True))
+    print mytemplate.render_unicode(resource=resource, name=resource.name(safe=True))
 
 
 def generate():

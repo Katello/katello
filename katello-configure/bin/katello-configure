@@ -16,6 +16,8 @@ PREFIX = ENV['KATELLO_CONFIGURE_PREFIX'] || '/usr/share/katello/install'
 require 'optparse'
 require 'fcntl'
 require 'fileutils'
+require 'rubygems'
+require 'ruby-progressbar'
 require 'socket'
 require 'tempfile'
 require "#{PREFIX}/puppet/lib/util/functions.rb"
@@ -33,42 +35,7 @@ $default_options = {}
 $default_options_order = []
 $default_options_errors = ''
 $titles = {}
-$final_options = {}
 $temp_options = {}
-
-# remove option from $final_options (and order) hashes (and optionally move
-# it to the temporary hash (used for dangerous options)
-def remove_option(name, move_to_temp = false)
-  if $final_options.has_key? name
-    $temp_options[name] = $final_options[name] if move_to_temp
-    $final_options.delete(name)
-    $default_options_order.delete(name)
-  end
-end
-
-$expected_progress_width = COLUMNS
-$expected_progress_width -= 20
-$expected_progress_width = 5 if $expected_progress_width < 0
-$previous_progress = 0
-def progress_clear
-	$previous_progress = 0
-end
-def progress_bar(filename, expected_total)
-	current_total = File.size(filename)
-	width = $expected_progress_width * current_total / expected_total
-	width = $expected_progress_width if width > $expected_progress_width
-	while $previous_progress < width - 1 do
-		$previous_progress += 1
-		print '#'
-	end
-end
-def progress_final
-	while $previous_progress < $expected_progress_width do
-		$previous_progress += 1
-		print '#'
-	end
-	$previous_progress = 0
-end
 
 # We first parse the default answer file. The list of options
 # found in the default file also determines the command line
@@ -127,21 +94,7 @@ if $default_options_errors != ''
 end
 
 # If there was an answer file specified, we parse it.
-if options['answer_file'] != nil
-	if not File.file?(options['answer_file'])
-		$stderr.puts "Answer file [#{options['answer_file']}] does seem to exist"
-		exit_with :answer_missing
-	end
-	$final_options, __unused, error = read_answer_file(options['answer_file'])
-	if error != ''
-		$stderr.puts error
-		exit_with :answer_parsing_error
-	end
-
-  unless check_options_against_default($final_options, $default_options)
-		exit_with :answer_unknown_option
-	end
-end
+$final_options = parse_answer_option(options['answer_file'], $default_options)
 
 # The command line options take precedence over the user
 # answer file values.
@@ -199,27 +152,19 @@ rescue
     $stderr.puts "Failed to write to file [#{ssl_ca_password_file_option}]."
     exit 8
 end
-remove_option('ssl_ca_password')
+remove_option!($default_options_order, $final_options, 'ssl_ca_password')
 
 # reset options are too dangerous - not storing them in the result answer file
 # and moving them to the temporary file which is merged and then deleted
-remove_option('reset_data', true)
-remove_option('reset_cache', true)
+remove_option!($default_options_order, $final_options, 'reset_data', $temp_options)
+remove_option!($default_options_order, $final_options, 'reset_cache', $temp_options)
 
 if show_resulting_answer_file
-	$default_options_order.each do |key|
-		if $final_options.has_key?(key)
-			puts key + ' = ' + $final_options[key]
-		end
-	end
-	exit
+  display_resulting_answer_file($default_options_order, $final_options)
+  exit
 end
 
-# check if running as root and change current dir
-unless Process.uid == 0
-  $stderr.puts "You must run katello-configure as root"
-  exit_with :not_root
-end
+check_root_id('katello-configure')
 
 # we MUST change the current directory to /root because Puppet expects that
 Dir.chdir '/root'
@@ -240,28 +185,10 @@ ENV['FACTER_fqdn'] = facter_hostname
 
 # start configuring
 puts 'Starting Katello configuration'
-orig_umask = File.umask(077)
-begin
-	File.unlink(result_config_path)
-rescue
-end
-result_config = IO.open(IO::sysopen(result_config_path, Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT))
-$default_options_order.each do |key|
-	if $final_options.has_key?(key)
-		result_config.syswrite('# ' + ($titles[key] || key) + "\n" + key + ' = ' + $final_options[key] + "\n\n")
-	end
-end
-result_config.close
+create_answer_file(result_config_path, $final_options, $default_options_order, $titles)
 
 # additional temporary file which is also used (but deleted afterwards)
-temp_config_path = '/dev/null'
-Tempfile.open("katello-configure-temp") do |temp_config|
-  temp_config_path = temp_config.path
-  $temp_options.each_pair do |key, value|
-    temp_config.syswrite("#{key}=#{value}\n")
-  end
-end
-File.umask(orig_umask)
+temp_config_path = create_temp_config_file($temp_options)
 
 now = Time.now.strftime("%Y%m%d-%H%M%S")
 log_directory = log_parent_directory + '/katello-configure-' + now
@@ -285,17 +212,24 @@ FileUtils.cp result_config_path, log_directory
 ENV['KATELLO_ANSWER_FILE'] = result_config_path
 ENV['KATELLO_TEMP_ANSWER_FILE'] = temp_config_path
 
-commands_by_logfiles = {
-	'/var/log/katello/katello-configure/cpsetup.log' => [ 'Candlepin setup', 276 ],
-	'/var/log/katello/katello-configure/db_seed.log' => [ 'Initializing Katello data', 204],
-	'/var/log/katello/katello-configure/db_migrate.log' => [ 'Populating Katello database schema', 29852 ],
-	'/var/log/katello/katello-configure/create-postgresql-candlepin-user.log' => [ 'Creating Candlepin database user', 12 ],
-	'/var/log/katello/katello-configure/create-postgresql-candlepin-database.log' => [ 'Creating Candlepin database', 16 ],
-	'/var/log/katello/katello-configure/create-postgresql-katello-user.log' => [ 'Creating Katello database user', 12 ],
-	'/var/log/katello/katello-configure/create-postgresql-katello-database.log' => [ 'Creating Katello database', 16 ],
+commands_by_logfiles = { # numbers are expected lines in those logs, alas currently not used
+  '/var/log/katello/katello-configure/certificates.log' => ['Creating SSL certificates', 59],
+  '/var/log/katello/katello-configure/cpdb.log' => ['Creating Candlepin database', 222 ],
+  '/var/log/katello/katello-configure/cpinit.log' => [ 'Candlepin setup', 1 ],
+  '/var/log/katello/katello-configure/create-postgresql-candlepin-user.log' => [ 'Creating Candlepin database user', 2 ],
+  '/var/log/katello/katello-configure/create-postgresql-foreman-database.log' => [ 'Creating Foreman database user', 1 ],
+  '/var/log/katello/katello-configure/create-postgresql-foreman-user.log' => [ 'Creating Foreman database user', 2 ],
+  '/var/log/katello/katello-configure/create-postgresql-katello-database.log' => [ 'Creating Katello database', 1 ],
+  '/var/log/katello/katello-configure/create-postgresql-katello-user.log' => [ 'Creating Katello database user', 2 ],
+  '/var/log/katello/katello-configure/db_env.log' => [ 'Logging environment setup', 113],
+  '/var/log/katello/katello-configure/db_migrate.log' => [ 'Populating Katello database schema', 968 ],
+  '/var/log/katello/katello-configure/db_seed.log' => [ 'Initializing Katello data', 10],
+  '/var/log/katello/katello-configure/foreman-db-migrate.log' => [ 'Populating Foreman database schema', 1076 ],
+  '/var/log/katello/katello-configure/pulp_migrate.log' => [ 'Populating Pulp database schema', 2],
 }
 
 puppet_logfile_filename = log_directory + '/main.log'
+puppet_logfile_aprox_size = 1266
 puppet_logfile = IO.open(IO::sysopen(puppet_logfile_filename, Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT))
 puts "The top-level log file is [#{puppet_logfile_filename}]"
 seen_err = false
@@ -306,6 +240,7 @@ begin
 		f.close_write
 		processing_logfile = nil
 		t = nil
+    progress_bar = nobars ? nil : ProgressBar.create(:title => 'Katello configuration', :total => puppet_logfile_aprox_size, :smoothing => 0.6)
 		while line = f.gets do
       time = Time.now.strftime("%y%m%d-%H:%M:%S ")
       puppet_logfile.syswrite(time + line.gsub(/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/, ''))
@@ -317,15 +252,12 @@ begin
           puts line
         end
       else
+        progress_bar.increment
         if processing_logfile != nil
           message = nil
           if line =~ /notice:.*executed successfully/
-            t.kill
-            progress_final()
-            puts " ... OK"
             processing_logfile = nil
           elsif line =~ /err:/
-            t.kill
             puts "\n  Failed, please check [#{processing_logfile}]\n  Report errors using # katello-debug tool."
             processing_logfile = nil
             seen_err = true
@@ -339,20 +271,14 @@ begin
           commands_by_logfiles.keys.each do |logfile|
             if line_rest.index(logfile) != nil
               processing_logfile = logfile
-              puts commands_by_logfiles[logfile][0]
-              progress_clear()
-              t = Thread.new do
-                while true do
-                  sleep 1
-                  progress_bar(logfile, commands_by_logfiles[logfile][1])
-                end
-              end
-              break
+              progress_bar.title = commands_by_logfiles[logfile][0]
             end
           end
         end
       end
 		end
+    progress_bar.finish
+    puts "\n"
 	end
 rescue => e
 	$stderr.puts 'Error: ' + e.message

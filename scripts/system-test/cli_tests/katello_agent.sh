@@ -24,14 +24,14 @@ gpgcheck=0
 EOF
 
   if grep 'hostname = subscription.rhn.redhat.com' /etc/rhsm/rhsm.conf; then
-    skip_test_success "rhsm registration" "Could not test against hosted"
+    skip_message "rhsm registration" "Could not test against hosted"
   else
     test_own_cmd_success "rhsm registration with org" $SUDO subscription-manager register --username="$USER" --password="$PASSWORD" \
       --org="$TEST_ORG" --environment "$TEST_ENV" --name="$HOST" --force
     # retrieve the system's uuid for later use
     identity=$($SUDO subscription-manager identity | grep -o -E "^Current identity is:.*")
     SYSTEM_UUID=${identity:21}
- 
+
     echo "removing package "$INSTALL_PACKAGE" from the system"
     $SUDO yum remove -y "$INSTALL_PACKAGE" &> /dev/null
     test_success "remote system package install" system packages --install "$INSTALL_PACKAGE" --name "$HOST" --org "$TEST_ORG"
@@ -74,5 +74,5 @@ EOF
   fi
   rm /etc/yum.repos.d/zoo.repo
 else
-  skip_test_success "katello-agent" "katello-agent not installed"
+  skip_message "katello-agent" "katello-agent not installed"
 fi
