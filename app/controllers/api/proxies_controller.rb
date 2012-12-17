@@ -32,7 +32,7 @@ class Api::ProxiesController < Api::ApiController
             consumer_gone = true
           end
         end
-        User.consumer? or consumer_gone or consumer_live
+        User.consumer? || consumer_gone || consumer_live
       when :api_proxy_owner_pools_path
         find_optional_organization
         if params[:consumer]
