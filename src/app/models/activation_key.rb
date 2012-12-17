@@ -19,6 +19,7 @@ class ActivationKey < ActiveRecord::Base
   belongs_to :environment, :class_name => "KTEnvironment"
   belongs_to :user
   belongs_to :system_template
+  belongs_to :content_view
 
   has_many :key_pools
   has_many :pools, :class_name => "::Pool", :through => :key_pools
@@ -39,6 +40,7 @@ class ActivationKey < ActiveRecord::Base
   validate :system_template_exists
   validate :environment_not_library
   validate :environment_key_conflict
+  validate :content_view_in_environment
   validates_each :usage_limit do |record, attr, value|
     if not value.nil? and (value < -1 or value == 0 or (value != -1 and value < record.usage_count))
       # we don't let users to set usage limit lower than current usage
@@ -58,6 +60,11 @@ class ActivationKey < ActiveRecord::Base
     elsif environment.organization != self.organization
       errors.add(:environment, _("name: %s doesn't exist ") % environment.name)
     end
+  end
+
+  def content_view_in_environment
+    errors.add(:base, _("Content view is not in environment")) if content_view.present? &&
+      !content_view.environments.include?(environment)
   end
 
   def environment_not_library
@@ -208,4 +215,5 @@ class ActivationKey < ActiveRecord::Base
       self.save!
     end
   end
+
 end
