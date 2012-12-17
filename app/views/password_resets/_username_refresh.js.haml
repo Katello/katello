@@ -11,3 +11,5 @@
      http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 != "$('#username_recovery_return_link').click();"
+-  notice = escape_javascript({"notices" => [flash[:success]]}.to_json)
+!= "notices.displayNotice('success', '#{notice}');"

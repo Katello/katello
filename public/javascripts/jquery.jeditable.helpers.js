@@ -176,7 +176,7 @@ $(document).ready(function() {
             onsuccess       :  function(result, status, xhr){
                 element.css('background-image', settings.image);
                 if ($(this).data('unlimited') != undefined) {
-                    if (result === $(this).data('unlimited'))
+                    if (parseInt(result,10) === $(this).data('unlimited'))
                         element.html(i18n.unlimited);
                     else
                         element.html(result);

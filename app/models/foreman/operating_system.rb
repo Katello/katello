@@ -10,19 +10,19 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module LayoutHelper
-  def stylesheet(*args)
-    args.map { |arg| content_for(:stylesheets) { include_stylesheets(arg) } }
-    return ""
+class Foreman::OperatingSystem < Resources::ForemanModel
+
+  attributes :id, :name, :major, :minor
+  validates :name, :major, :presence => true
+
+  resource_name 'operatingsystem'
+
+  def to_label
+    "#{name} #{release}"
   end
 
-  def javascript(*args, &block)
-    if block
-      content_for(:inline_javascript) { block.call() }
-    end
-    if args
-      args.map { |arg| content_for(:javascripts) { include_javascripts(arg) } }
-    end
-    return ""
+  def release
+    "#{major}#{('.' + minor) unless minor.empty?}"
   end
+
 end

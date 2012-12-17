@@ -35,9 +35,8 @@ describe PasswordResetsController do
     before (:each) do
       @params = {:username => @testuser_username, :email => @testuser_email}
 
-      User.stub!(:find_by_username_and_email!).and_return(@testuser)
+      User.stub!(:find_by_username_and_email).and_return(@testuser)
       @testuser.stub!(:send_password_reset)
-
     end
 
     it "should send an email with password reset details" do
@@ -47,9 +46,9 @@ describe PasswordResetsController do
       response.should be_success
     end
 
-    it "should generate a notice to inform user of email sent" do
+    it "should be successful even if user does not exist" do
       controller.stub!(:render).and_return("") #ignore missing js partial
-      controller.should notify.success
+      User.stub!(:find_by_username_and_email).and_return(nil)
       post :create, @params
       response.should be_success
     end
@@ -123,12 +122,6 @@ describe PasswordResetsController do
 
     it "should send an email with the user's logins" do
       UserMailer.should_receive(:send_logins)
-      post :email_logins, @params
-      response.should be_success
-    end
-
-    it "should generate a notice to inform user of email sent" do
-      controller.should notify.success
       post :email_logins, @params
       response.should be_success
     end

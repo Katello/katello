@@ -4,14 +4,21 @@ Apipie.configure do |config|
   config.app_info = "The sysadmin's fortress."
   config.copyright = "Copyright © 2012 Red Hat, Inc."
   config.api_base_url = "/api"
-  config.api_controllers_matcher = "#{Rails.root}/app/controllers/api/*.rb"
+  config.api_controllers_matcher = "#{Rails.root}/app/controllers/api/**/*.rb"
   config.ignored_by_recorder = %w[Api::PulpProxiesController Api::CandlepinProxiesController Api::RootController, Api::RepositoriesController#sync_complete]
   config.doc_base_url = "/apidoc"
   config.use_cache = Rails.env.production?
   config.validate = false
 
-  unless config.use_cache? or defined? JRUBY_VERSION
-    config.markup = Apipie::Markup::Markdown.new
+  unless config.use_cache?
+    require 'maruku'
+    class Katello::MarkdownMaruku
+      def self.to_html(text)
+        Maruku.new(text).to_html
+      end
+    end
+
+    config.markup = Katello::MarkdownMaruku
   end
 end
 

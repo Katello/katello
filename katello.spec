@@ -141,7 +141,7 @@ BuildRequires:       rubygem(tire) >= 0.3.0
 BuildRequires:       rubygem(tire) < 0.4
 BuildRequires:       rubygem(ldap_fluff)
 BuildRequires:       rubygem(apipie-rails) >= 0.0.12
-BuildRequires:       rubygem(redcarpet)
+BuildRequires:       rubygem(maruku)
 BuildRequires:       rubygem(foreman_api)
 
 
@@ -264,7 +264,7 @@ Requires:        rubygem(sexp_processor)
 # dependencies from bundler.d/development_boost.rb
 Requires:        rubygem(rails-dev-boost)
 # dependencies from bundler.d/apipie.rb
-Requires:        rubygem(redcarpet)
+Requires:        rubygem(maruku)
 
 %description devel
 Rake tasks and dependecies for Katello developers
@@ -443,7 +443,6 @@ install -Dp -m0644 %{confdir}/%{name}.sysconfig %{buildroot}%{_sysconfdir}/sysco
 install -Dp -m0644 %{confdir}/service-wait.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/service-wait
 install -Dp -m0755 %{confdir}/%{name}.init %{buildroot}%{_initddir}/%{name}
 install -Dp -m0755 %{confdir}/%{name}-jobs.init %{buildroot}%{_initddir}/%{name}-jobs
-install -Dp -m0644 %{confdir}/%{name}.completion.sh %{buildroot}%{_sysconfdir}/bash_completion.d/%{name}
 install -Dp -m0644 %{confdir}/%{name}.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 install -Dp -m0644 %{confdir}/%{name}-jobs.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.httpd.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
@@ -551,7 +550,17 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %exclude %{homedir}/lib/tasks/test.rake
 %exclude %{homedir}/script/pulp_integration_tests
 %{homedir}/locale
-%{homedir}/public
+%{homedir}/public/*.html
+%{homedir}/public/*.txt
+%{homedir}/public/*.ico
+%{homedir}/public/assets
+%{homedir}/public/fonts
+%{homedir}/public/images
+%{homedir}/public/javascripts
+%{homedir}/public/stylesheets
+%{homedir}/public/stylesheets/*.css
+%attr(600, katello, katello) %{homedir}/public/stylesheets/compiled
+%{homedir}/public/stylesheets/images
 %exclude %{homedir}/public/apipie-cache
 %{homedir}/script
 %exclude %{homedir}/script/service-wait
@@ -580,7 +589,6 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %config(noreplace) %{_sysconfdir}/sysconfig/service-wait
 %{_initddir}/%{name}
 %{_initddir}/%{name}-jobs
-%{_sysconfdir}/bash_completion.d/%{name}
 %{homedir}/log
 %dir %{homedir}/db
 %{homedir}/db/schema.rb
@@ -2904,7 +2912,7 @@ fi
 - reverted katello.yml back to katello master version
 - removed reference to headpin in client.conf and katello.yml
 - fixed headpin-specific variation of available releases spec test
-- fenced spec tests 
+- fenced spec tests
 - 766647 - duplicate env creation - better error message needed
 - katello-cli, katello - setting default environment for user
 - 812263 - keep the original tomcat server.xml when resetting dbs
@@ -2942,7 +2950,7 @@ fi
 - 803412 - auto-subscribe w/ SLA now on system subscription page
 - reorganizing assets to reduce the number of javascript files downloaded
 - removing unneeded print statement
-- allowing search param for all, needed for all creates 
+- allowing search param for all, needed for all creates
 - system packages - fix checbox events after loading more pkgs
 - system packages - add support for tabindex
 - 810375 - remove page size limit on repos displayed
@@ -3027,7 +3035,7 @@ fi
 - 790063 - search - few more mods for consistency
 
 * Fri Mar 09 2012 Mike McCune <mmccune@redhat.com> 0.2.9-1
-- periodic rebuild 
+- periodic rebuild
 * Tue Mar 06 2012 Mike McCune <mmccune@redhat.com> 0.2.7-1
 - Was accidentally hiding login button if ldap was enabled (jomara@redhat.com)
 - 788008 - do not attempt to poll errata status when user does not have edit
@@ -3113,7 +3121,7 @@ fi
 - 751843 - adding counts go promotion search pages
 
 * Fri Feb 24 2012 Mike McCune <mmccune@redhat.com> 0.2.2-1
-- rebuild 
+- rebuild
 * Wed Feb 22 2012 Mike McCune <mmccune@redhat.com> 0.2.1-1
 - 796268 - proper error message when erratum was not found
   (tstrachota@redhat.com)
@@ -3445,7 +3453,7 @@ fi
 * Wed Dec 21 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.151-1
 
 * Tue Dec 20 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.149-1
-- 
+-
 
 * Mon Dec 19 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.148-1
 - Revert "765888 - Error during promotion"

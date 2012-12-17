@@ -10,19 +10,14 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module LayoutHelper
-  def stylesheet(*args)
-    args.map { |arg| content_for(:stylesheets) { include_stylesheets(arg) } }
-    return ""
-  end
+require 'spec_helper'
 
-  def javascript(*args, &block)
-    if block
-      content_for(:inline_javascript) { block.call() }
-    end
-    if args
-      args.map { |arg| content_for(:javascripts) { include_javascripts(arg) } }
-    end
-    return ""
+describe Api::Foreman::SmartProxiesController do
+  if Katello.config.use_foreman
+    include LoginHelperMethods
+    before { login_user_api }
+    it_behaves_like 'simple crud controller'
+  else
+    pending 'foreman is not enabled, skipping'
   end
 end

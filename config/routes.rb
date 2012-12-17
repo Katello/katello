@@ -15,6 +15,12 @@ Src::Application.routes.draw do
           get :items
         end
       end
+
+      resources :architectures do
+        collection do
+          get :items
+        end
+      end
     end
   end
 
@@ -736,6 +742,7 @@ Src::Application.routes.draw do
       scope :module => 'foreman' do
         resources :architectures, :except => [:new, :edit]
         resources :subnets, :except => [:new, :edit]
+        resources :smart_proxies, :except => [:new, :edit]
         constraints(:id => /[^\/]+/) do
           resources :domains, :except => [:new, :edit]
         end

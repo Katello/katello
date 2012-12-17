@@ -168,7 +168,7 @@ class ApplicationController < ActionController::Base
     if current_user && current_user.default_locale
       I18n.locale = current_user.default_locale
     else
-      I18n.locale = extract_locale_from_accept_language_header
+      I18n.locale = ApplicationController.extract_locale_from_accept_language_header
     end
 
     logger.debug "Setting locale: #{I18n.locale}"
@@ -213,6 +213,27 @@ class ApplicationController < ActionController::Base
   helper_method :no_env_available_msg
   def no_env_available_msg
     _("No environments are currently available in this organization.  Please either add some to the organization or select an organization that has an environment to set user default.")
+  end
+
+  # Look for match to list of locales specified in request. If not found, try matching just
+  # first two letters. Finally, default to english if no matches at all.
+  # eg. [en_US, en] would match en
+  def self.extract_locale_from_accept_language_header
+    locales = parse_locale
+
+    # Look for full match
+    locales.each {|locale|
+      return locale if Katello.config.available_locales.include? locale
+    }
+
+    # Look for match to first two letters
+    #
+    locales.each {|locale|
+      return locale[0..1] if Katello.config.available_locales.include? locale[0..1]
+    }
+
+    # Default to 'en'
+    return 'en'
   end
 
   private
@@ -265,29 +286,8 @@ class ApplicationController < ActionController::Base
     user
   end
 
-  # Look for match to list of locales specified in request. If not found, try matching just
-  # first two letters. Finally, default to english if no matches at all.
-  # eg. [en_US, en] would match en
-  def extract_locale_from_accept_language_header
-    locales = parse_locale
-
-    # Look for full match
-    locales.each {|locale|
-      return locale if Katello.config.available_locales.include? locale
-    }
-
-    # Look for match to first two letters
-    #
-    locales.each {|locale|
-      return locale[0..1] if Katello.config.available_locales.include? locale[0..1]
-    }
-
-    # Default to 'en'
-    return 'en'
-  end
-
-  # adapted from http_accept_lang gem, return list of browser locales 
-  def parse_locale
+  # adapted from http_accept_lang gem, return list of browser locales
+  def self.parse_locale
     locale_lang = env['HTTP_ACCEPT_LANGUAGE'].split(/\s*,\s*/).collect do |l|
       l += ';q=1.0' unless l =~ /;q=\d+\.\d+$/
       l.split(';q=')
