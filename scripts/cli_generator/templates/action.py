@@ -2,7 +2,7 @@
 class ${method.name(True, True)}(${resource.name(True, True)}Action):
 
     description = _('${method.description()}')
-    
+
     def setup_parser(self, parser):
         % for p in method.params():
         parser.add_option('--${p.name()}', dest='${p.name()}', help=_("${p.help()}"))
@@ -13,7 +13,7 @@ class ${method.name(True, True)}(${resource.name(True, True)}Action):
 
     def check_options(self, validator):
         % if method.params(required=True):
-        validator.require('${"', '".join([p.name() for p in method.params(required=True)])}')
+        validator.require(('${"', '".join([p.name() for p in method.params(required=True)])}'))
         % else:
         #validator.require()
         % endif

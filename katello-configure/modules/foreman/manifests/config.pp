@@ -76,7 +76,9 @@ class foreman::config {
       content => template("foreman/httpd.conf.erb"),
       owner   => $foreman::user,
       group   => $foreman::user,
-      mode    => "600";
+      mode    => "600",
+      notify  => Exec["reload-apache2"],
+      before  => Class["apache2::service"];
   }
 
   exec {"foreman_migrate_db":
@@ -92,6 +94,9 @@ class foreman::config {
 
   exec {"foreman_config":
    command => "/usr/bin/ruby ${foreman::app_root}/script/foreman-config -k oauth_active -v '${foreman::oauth_active}'\
+                              -k foreman_url -v '${fqdn}'\
+                              -k token_duration -v '60'\
+                              -k manage_puppetca -v false\
                               -k oauth_consumer_key -v '${foreman::oauth_consumer_key}'\
                               -k oauth_consumer_secret -v '${foreman::oauth_consumer_secret}'\
                               -k oauth_map_users -v '${foreman::oauth_map_users}'\
@@ -102,7 +107,7 @@ class foreman::config {
 
   if $foreman::reset_data == 'YES' {
    exec {"reset_foreman_db":
-      command => "rm -f /var/lib/katello/foreman_db_migrate_done",
+      command => "rm -f /var/lib/katello/foreman_db_migrate_done; /usr/sbin/service-wait foreman stop",
       path    => "/sbin:/bin:/usr/bin",
       before  => Exec["foreman_migrate_db"],
     } ~>

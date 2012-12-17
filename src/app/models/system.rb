@@ -14,7 +14,7 @@
 class NonLibraryEnvironmentValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     return unless value
-    record.errors[attribute] << N_("Cannot register a system with 'Library' environment ") if record.environment != nil && record.environment.library?
+    record.errors[attribute] << N_("Cannot register a system to the '%s' environment") % "Library" if record.environment != nil && record.environment.library?
   end
 end
 

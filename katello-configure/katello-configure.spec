@@ -14,7 +14,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        1.2.0
+Version:        1.3.0
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -32,6 +32,7 @@ Requires:       openssl
 Requires:       policycoreutils-python
 Requires:       initscripts
 Requires:       rubygem(rake)
+Requires:       rubygem(ruby-progressbar)
 BuildRequires:  /usr/bin/pod2man /usr/bin/erb
 BuildRequires:  findutils puppet >= 2.6.6
 
@@ -47,7 +48,7 @@ katello-upgrade which handles upgrades between versions.
 %build
 %if ! 0%{?fastbuild:1}
     #check syntax of main configure script and libs
-    ruby -c bin/katello-configure lib/puppet/parser/functions/*rb
+    ruby -c bin/* lib/puppet/parser/functions/*rb
 
     #check syntax for all puppet scripts
     %if 0%{?rhel} || 0%{?fedora} < 17
@@ -73,8 +74,12 @@ THE_VERSION=%version perl -000 -ne 'if ($X) { s/^THE_VERSION/$ENV{THE_VERSION}/;
 sed -e 's/THE_VERSION/%version/g' man/katello-upgrade.pod | /usr/bin/pod2man --name=katello-upgrade -c "Katello Reference" --section=1 --release=%{version} - man/katello-upgrade.man1
 
 #build katello-passwd man page
-THE_VERSION=%version sed -i "s/THE_VERSION/$THE_VERSION/g" man/katello-passwd.pod bin/katello-passwd
+sed -i "s/THE_VERSION/%version/g" man/katello-passwd.pod bin/katello-passwd
 /usr/bin/pod2man --name=%{name} -c "Katello Reference" --section=1 --release=%{version} man/katello-passwd.pod man/katello-passwd.man1
+
+#build katello-configure-answer man page
+sed -i "s/THE_VERSION/%version/g" man/katello-configure-answer.pod bin/katello-configure-answer
+/usr/bin/pod2man --name=%{name} -c "Katello Reference" --section=1 --release=%{version} man/katello-configure-answer.pod man/katello-configure-answer.man1
 
 
 %install
@@ -83,6 +88,7 @@ install -d -m 0755 %{buildroot}%{_sbindir}
 install -m 0755 bin/katello-configure %{buildroot}%{_sbindir}
 install -m 0755 bin/katello-upgrade %{buildroot}%{_sbindir}
 install -m 0755 bin/katello-passwd %{buildroot}%{_sbindir}
+install -m 0755 bin/katello-configure-answer %{buildroot}%{_sbindir}
 install -d -m 0755 %{buildroot}%{homedir}
 install -d -m 0755 %{buildroot}%{homedir}/puppet/modules
 cp -Rp modules/* %{buildroot}%{homedir}/puppet/modules
@@ -94,6 +100,7 @@ install -d -m 0755 %{buildroot}%{_mandir}/man1
 install -m 0644 man/katello-configure.man1 %{buildroot}%{_mandir}/man1/katello-configure.1
 install -m 0644 man/katello-upgrade.man1 %{buildroot}%{_mandir}/man1/katello-upgrade.1
 install -m 0644 man/katello-passwd.man1 %{buildroot}%{_mandir}/man1/katello-passwd.1
+install -m 0644 man/katello-configure-answer.man1 %{buildroot}%{_mandir}/man1/katello-configure-answer.1
 install -d -m 0755 %{buildroot}%{homedir}/upgrade-scripts
 cp -Rp upgrade-scripts/* %{buildroot}%{homedir}/upgrade-scripts
 chmod +x -R %{buildroot}%{homedir}/upgrade-scripts/*
@@ -103,12 +110,103 @@ chmod +x -R %{buildroot}%{homedir}/upgrade-scripts/*
 %{_sbindir}/katello-configure
 %{_sbindir}/katello-upgrade
 %{_sbindir}/katello-passwd
+%{_sbindir}/katello-configure-answer
 %{_mandir}/man1/katello-configure.1*
 %{_mandir}/man1/katello-upgrade.1*
 %{_mandir}/man1/katello-passwd.1*
+%{_mandir}/man1/katello-configure-answer.1*
 
 
 %changelog
+* Thu Dec 06 2012 Eric D Helms <ehelms@redhat.com> 1.2.1-1
+- katello-configure - setting foreman default values to make provisioning
+  possible (inecas@redhat.com)
+- katello-configure - make Foreman accessible through http (inecas@redhat.com)
+- bundler.d - applying changes for the spec (lzap+git@redhat.com)
+- katello-configure - stop foreman before dropping the database
+  (inecas@redhat.com)
+- katello-configure-answer review fix (lzap+git@redhat.com)
+- conf-answer - finishing kconf refactoring (lzap+git@redhat.com)
+- 882167 - katello-upgrade fails to call cpdb (lzap+git@redhat.com)
+- conf-answer - introducing katello-configure-answer (lzap+git@redhat.com)
+- conf-answer - refactoring PREFIX variable (lzap+git@redhat.com)
+- conf-answer - reafactoring check_options_against_default
+  (lzap+git@redhat.com)
+- move check_hostname() to functions.rb (msuchy@redhat.com)
+- move _request_option_interactively() to functions.rb (msuchy@redhat.com)
+- move _read_password() to functions.rb (msuchy@redhat.com)
+- move _is_option_true() to functions.rb (msuchy@redhat.com)
+- move _get_valid_option_value() to functions.rb (msuchy@redhat.com)
+- move read_options_format() to functions.rb (msuchy@redhat.com)
+- move ERROR_CODES and exit_with() to functions.rb (msuchy@redhat.com)
+- move read_answer_file() to functions.rb (msuchy@redhat.com)
+- foreman 404 error configure fix - missing dep (lzap+git@redhat.com)
+- bundler_ext - development mode support
+- bundler_ext - missing colon in configure (lzap+git@redhat.com)
+- bundler_ext - no need to run bundler during configure steps
+  (lzap+git@redhat.com)
+- katello-configure - make sure Foreman is accessible through https only
+  (inecas@redhat.com)
+- bundler_ext - no need to run bundler during configure (lzap+git@redhat.com)
+- katello-configure - fix default values for term size (inecas@redhat.com)
+- katello-configure - make exec defaults more suitable for us
+  (inecas@redhat.com)
+- Adding client-ca.pem to /etc/thumbslug for thumbslug .27 (jomara@redhat.com)
+- katello-upgrade - fix in katello-configure first installation
+  (lzap+git@redhat.com)
+- katello-upgrade - tomcat start fix (lzap+git@redhat.com)
+- katello-upgrade - review changes (lzap+git@redhat.com)
+- katello-upgrade redesign (lzap+git@redhat.com)
+- Added default value for Foreman admin's email (mbacovsk@redhat.com)
+- 874160 - adding ES reindex after we migrate during upgrade
+  (lzap+git@redhat.com)
+- katello-configure - support reset data for the foreman (inecas@redhat.com)
+- candlepin-cert-consumer.rpm should require subscription-manager
+  (msuchy@redhat.com)
+- 872096 - restart services and remove upgrade -y option (lzap+git@redhat.com)
+- 872493 - Katello-configure --reset-data incorrectly sets mongod up
+  (lzap+git@redhat.com)
+- enabling foreman authentication by default (lzap+git@redhat.com)
+- adding missing require for foreman service (lzap+git@redhat.com)
+- puppet race condition in foreman (lzap+git@redhat.com)
+- katello-configure - always chomp generated password (inecas@redhat.com)
+- 872096 - add katello-configure into katello-upgrade (lzap+git@redhat.com)
+- adding OpenJDK check into katello-configure (lzap+git@redhat.com)
+- wrapping headpin only gems to the if statement (lzap+git@redhat.com)
+- moving .bundle/config out of RPM to configure (lzap+git@redhat.com)
+- 868916 - make sure we create this directory in the spec (mmccune@redhat.com)
+- 868916 - wait for elasticsearch and start httpd during upgrade
+  (lzap+git@redhat.com)
+- precreating log file for foreman with correct perms - dep
+  (lzap+git@redhat.com)
+- precreating log file for foreman with correct perms (lzap+git@redhat.com)
+- replacing constant with variable in puppet (lzap+git@redhat.com)
+- changing user under foreman-config is run (lzap+git@redhat.com)
+- headpin-foreman - fence foreman code when not configuring katello
+  (thomasmckay@redhat.com)
+- 868916 - katello-upgrade bash array fix (lzap+git@redhat.com)
+- 865811 - use the concurrency level calculation suggested in BZ
+  (inecas@redhat.com)
+- katello-configure - enclose the values in hyphens (inecas@redhat.com)
+- 865811 - set concurrency threshold for pulp (msuchy@redhat.com)
+- raise errors on Foreman Katello DB inconsistency (pchalupa@redhat.com)
+- katello-configure - fix headpin installation (inecas@redhat.com)
+- do not call pulp service script, call qpidd and mongodb directly
+  (msuchy@redhat.com)
+- Bumping package versions for 1.1. (lzap+git@redhat.com)
+- katello-configure - set oauth params when installing the server
+  (inecas@redhat.com)
+- move missing foreman user creation out of migration to upgrade script
+  (pchalupa@redhat.com)
+- do not print SQL query on output as it will confuse grep (msuchy@redhat.com)
+- use md5 for connection to postgres instead of ident (msuchy@redhat.com)
+- pass password to candlepin cpdb (msuchy@redhat.com)
+- call /usr/share/candlepin/cpdb as postgres user (msuchy@redhat.com)
+- removing sqlexec.pp (msuchy@redhat.com)
+- when connecting to postgres DB you have to be postgres user
+  (msuchy@redhat.com)
+- Revert "802346 - wait for postgres to come up in puppet" (msuchy@redhat.com)
+- 850569 - use ident method in pg_hba.conf (msuchy@redhat.com)
 * Fri Oct 12 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.11-1
 - 862441 - correcting error message for upgrade
 - puppet - fixing web workers issue

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# install the Gemfile.lock
+./scripts/gemfile-lock-install
+
 cd src/
 echo ""
 echo "********* Stylesheet Compilation Test  ***************"

@@ -32,7 +32,6 @@ class Pool < ActiveRecord::Base
     ::Pool.new(pool_json) if not pool_json.nil?
   end
 
-
   # Some fields are are not native to the Candlepin object but are useful for searching
   def provider_id
     @cp_provider_id
