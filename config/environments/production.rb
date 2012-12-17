@@ -30,6 +30,9 @@ Src::Application.configure do
   # config.logger = SyslogLogger.new
 
   config.logger = KatelloLogger.new("#{Rails.root}/log/production.log", config.log_level)
+  config.after_initialize {
+    Glue.logger = KatelloLogger.new("#{Rails.root}/log/production_orch.log", 'INFO')
+  }
 
   # Use a different cache store in production
   # config.cache_store = :mem_cache_store
