@@ -305,6 +305,9 @@ Src::Application.routes.draw do
       post :redhat_provider, :action => :update_redhat_provider
     end
     member do
+      get :repo_discovery
+      get :discovered_repos
+      post :discover
       get :products_repos
       get :manifest_progress
       get :schedule
