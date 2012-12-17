@@ -22,7 +22,6 @@ describe Api::ContentViewsController, :katello => true do
     disable_user_orchestration
 
     @org = FactoryGirl.create(:organization)
-
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
   end
@@ -57,6 +56,23 @@ describe Api::ContentViewsController, :katello => true do
         specify { subject and assigns[:content_views].map(&:id).should eql([view.id]) }
       end
 
+    end
+  end
+
+  describe "refresh" do
+    before do
+      @def = FactoryGirl.build_stubbed(:content_view_definition)
+      @view = FactoryGirl.build_stubbed(:content_view, :organization => @org)
+      @view.content_view_definition = @def
+      ContentView.stub_chain(:non_default, :find).with(@view.id).and_return(@view)
+    end
+
+    it "should call ContentView#refresh" do
+      @view.should_receive(:refresh)
+      @view.should_receive(:as_json).with(:environment => @org.library).and_return({})
+      @def.should_receive(:publishable?).and_return(true)
+      post "refresh", :id => @view.id
+      response.should be_success
     end
   end
 
