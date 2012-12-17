@@ -8,17 +8,17 @@ import katello.client.core.content_view
 from katello.client.core.content_view import List
 
 
-
 class RequiredCLIOptionsTests(CLIOptionTestCase):
 
     action = List()
 
     disallowed_options = [
-        ('--name=product_1', )
+        ('--name=view1', )
     ]
 
     allowed_options = [
-        ('--org=ACME', )
+        ('--org=ACME', ),
+        ('--org=ACME', '--env=Dev', )
     ]
 
 class ContentViewListTest(CLIActionTestCase):
