@@ -13,21 +13,23 @@
 
 class Api::ContentViewsController < Api::ApiController
   respond_to :json
-  before_filter :find_organization, :except => [:promote]
+  before_filter :find_organization, :except => [:promote, :refresh]
   before_filter :find_optional_environment, :only => [:index, :show]
   before_filter :find_environment, :only => [:promote]
-  before_filter :find_content_view, :only => [:show, :promote]
+  before_filter :find_content_view, :only => [:show, :promote, :refresh]
   before_filter :authorize
 
   def rules
     index_test   = lambda { ContentView.any_readable?(@organization) }
     show_test    = lambda { @view.readable? }
     promote_test = lambda { @view.promotable? }
+    refresh_test  = lambda { @view.content_view_definition.publishable? }
 
     {
       :index   => index_test,
       :show    => show_test,
-      :promote => promote_test
+      :promote => promote_test,
+      :refresh => refresh_test
     }
   end
 
@@ -66,6 +68,14 @@ class Api::ContentViewsController < Api::ApiController
   def promote
     task = @view.promote_via_changeset(@environment)
     render :json => task, :status => 202
+  end
+
+  api :POST, "/content_views/:id/refresh"
+  param :id, :identifer, :desc => "content view id"
+  def refresh
+    @view.refresh
+    env = @view.organization.library # show the new library version
+    render :json => @view.as_json(:environment => env)
   end
 
   private

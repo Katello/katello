@@ -69,3 +69,7 @@ class ContentViewAPI(KatelloAPI):
         path = "/api/content_views/%s/promote" % cv_id
         params = {"environment_id": env_id}
         return self.server.POST(path, params)[1]
+
+    def refresh(self, cv_id):
+        path = "/api/content_views/%s/refresh" % cv_id
+        return self.server.POST(path, {})[1]
