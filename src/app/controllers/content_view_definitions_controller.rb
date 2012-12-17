@@ -151,7 +151,8 @@ class ContentViewDefinitionsController < ApplicationController
   def refresh
     new_version = @view.refresh_view
     render :partial => 'content_view_definitions/views/view',
-           :locals => { :view_definition => @view.content_view_definition, :view => @view, :task => new_version.task_status }
+           :locals => { :view_definition => @view.content_view_definition, :view => @view,
+                        :task => new_version.task_status }
   end
 
   def status
@@ -163,7 +164,8 @@ class ContentViewDefinitionsController < ApplicationController
           :id => status.id,
           :pending? => status.pending?,
           :status_html => render_to_string(:template => 'content_view_definitions/views/_version.html.haml',
-                                           :layout => false, :locals => {:version => status.task_owner, :task => status})
+                                           :layout => false, :locals => {:version => status.task_owner,
+                                                                         :task => status})
       }
     end
 
