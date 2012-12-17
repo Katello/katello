@@ -16,7 +16,7 @@ class ContentViewDefinitionsController < ApplicationController
 
   before_filter :require_user
   before_filter :find_content_view_definition, :only => [:show, :edit, :update, :destroy, :views, :content,
-                                                         :update_content, :filter, :publish_setup, :publish]
+                                                         :update_content, :filter, :publish_setup, :publish, :status]
   before_filter :find_content_view, :only => [:refresh]
   before_filter :authorize #after find_content_view_definition, since the definition is required for authorization
   before_filter :panel_options, :only => [:index, :items]
@@ -48,6 +48,7 @@ class ContentViewDefinitionsController < ApplicationController
 
       :views => read_test,
       :refresh => manage_test,
+      :status => manage_test,
 
       :content => read_test,
       :update_content => manage_test,
@@ -142,14 +143,31 @@ class ContentViewDefinitionsController < ApplicationController
   end
 
   def views
-    render :partial => "views", :layout => "tupane_layout",
+    render :partial => "content_view_definitions/views/index", :layout => "tupane_layout",
            :locals => {:view_definition => @view_definition, :editable => @view_definition.editable?,
                        :name => controller_display_name}
   end
 
   def refresh
-    @view.refresh
-    render :json => @view.to_json
+    new_version = @view.refresh_view
+    render :partial => 'content_view_definitions/views/view',
+           :locals => { :view_definition => @view.content_view_definition, :view => @view, :task => new_version.task_status }
+  end
+
+  def status
+    # retrieve the status for the tasks (refresh) initiated by the client
+    statuses = {:refresh_status => []}
+
+    TaskStatus.where(:id => params[:refresh_task_id]).collect do |status|
+      statuses[:refresh_status] << {
+          :id => status.id,
+          :pending? => status.pending?,
+          :status_html => render_to_string(:template => 'content_view_definitions/views/_version.html.haml',
+                                           :layout => false, :locals => {:version => status.task_owner, :task => status})
+      }
+    end
+
+    render :json => statuses
   end
 
   def content
