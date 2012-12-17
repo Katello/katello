@@ -6,5 +6,8 @@
 = javascript do
   :plain
     localize({
-      "environments" : function(e){ return '#{escape_javascript(_("Environment(s): %E"))}'.replace("%E", e); }
+      "environments" : function(e){ return '#{escape_javascript(_("Environment(s): %E"))}'.replace("%E", e); },
+      "refreshing" : '#{escape_javascript(_("Refreshing"))}',
+      "refresh_complete" : '#{escape_javascript(_("Refresh complete"))}',
+      "refresh_error" : '#{escape_javascript(_("Refresh error"))}'
     });
