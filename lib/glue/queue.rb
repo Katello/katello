@@ -60,6 +60,10 @@ module Glue
       @items = [] && true
     end
 
+    def to_log
+      all.collect { |i| i.to_log }.join(", ")
+    end
+
     STATUS.each do |s|
       define_method s do
         all.find_all { |t| t.status == s }
