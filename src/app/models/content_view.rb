@@ -135,9 +135,8 @@ class ContentView < ActiveRecord::Base
   end
 
   # Refresh the content view, creating a new version in the library.  The new version will be returned.
-  def refresh
-    # retrieve the version that is currently in the library
-    library_version = self.version(organization.library)
+  def refresh_view(options = { })
+    options = { :async => true, :notify => false }.merge options
 
     # retrieve the 'next' version id to use when refreshing
     next_version_id = self.versions.maximum(:version) + 1
@@ -146,24 +145,18 @@ class ContentView < ActiveRecord::Base
     version = ContentViewVersion.create!(:version => next_version_id, :content_view => self,
                                          :environments => [organization.library])
 
-    repos = self.content_view_definition.nil? ? [] : self.content_view_definition.repos
-
-    tasks = []
-    repos.each do |repo|
-      library_clone = repo.get_clone(self.organization.library)
-      if library_clone.nil?
-        # this repo doesn't currently exist in the library
-        clone = repo.create_clone(self.organization.library, self)
-        tasks << repo.clone_contents(clone)
-      else
-        # this repos already exists in the library, so update it
-        library_clone = Repository.find(library_clone.id) # reload readonly obj
-        library_clone.content_view_version = version
-        library_clone.save!
-        tasks << library_clone.sync
-      end
+    if options[:async]
+      task  = version.async(:organization => self.organization).refresh_version
+      version.task_status = task
+      version.save!
+    else
+      version.task_status = nil
+      version.save!
+      version.refresh_version
     end
 
+    # retrieve the version that is currently in the library
+    library_version = self.version(self.organization.library)
     if library_version.environments.length == 1
       # the version initially in library was only associated with the library, so destroy it
       library_version.destroy

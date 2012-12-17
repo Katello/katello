@@ -19,26 +19,39 @@ KT.panel.set_expand_cb(function() {
 });
 
 KT.content_view_definition = (function(){
-    var initialize_views = function() {
+    var status_updater,
+
+    initialize_views = function() {
         var pane = $("#content_view_definition_views");
         if (pane.length === 0) {
             return;
         }
-        $('.refresh_view').bind('click', function(event) {
+        initialize_refresh();
+        initialize_views_treetable();
+        startUpdater();
+    },
+    initialize_refresh = function() {
+        $('.refresh_action').unbind('click');
+        $('.refresh_action').bind('click', function(event) {
             event.preventDefault();
             $.ajax({
                 type: 'POST',
                 url: $(this).data('url'),
                 cache: false,
-                success: function(content_view) {
-                    // on success, the updated content view will be provided
-                    replace_versions(content_view['id'], content_view['versions_details']);
+                success: function(response) {
+                    // the response contains the html for the view and all versions
+                    var view_id = $(response).first('tr').attr('id');
+
+                    $('.child-of-'+view_id).remove();
+                    $('#'+view_id).replaceWith(response);
+
+                    initialize_views_treetable();
+                    startUpdater();
                 },
                 error: function() {
                 }
             });
         });
-        initialize_views_treetable();
     },
     initialize_views_treetable = function() {
         $("#content_views").treeTable({
@@ -48,23 +61,47 @@ KT.content_view_definition = (function(){
             onNodeShow: function(){$.sparkline_display_visible()}
         });
     },
-    replace_versions = function(view_id, versions) {
-        // remove the current versions
-        $('.child-of-view_'+view_id).remove();
+    startUpdater = function () {
+        var timeout = 8000,
+            pending_refresh = [];
 
-        // add in the latest versions
-        var html = '', parent = $('#view_' + view_id);
-        KT.utils.each(versions, function(version, key) {
-            var row = '<tr class="child-of-view_' + view_id + '">';
-            row += '<td style="padding-left: 37px;">' + i18n.environments(version['environments'].join(', ')) + '</td>';
-            row += '<td>' + version['version'] + '</td>';
-            row += '<td>' + version['published'] + '</td>';
-            row += '</tr>';
-            html = html.concat(row);
+        $('.view_version[data-pending_refresh_id]').each(function(i) {
+            pending_refresh[i] = $(this).data("pending_refresh_id");
         });
-        parent.removeClass('initialized');
-        parent.after(html);
-        initialize_views_treetable();
+
+        if (pending_refresh.length > 0) {
+            if (status_updater !== undefined) {
+                status_updater.stop();
+            }
+            status_updater = $.PeriodicalUpdater($('#content_view_definition_views').data('status_url'), {
+                method: 'get',
+                type: 'json',
+                data: function() {return {refresh_task_id: pending_refresh};},
+                global: false,
+                minTimeout: timeout,
+                maxTimeout: timeout
+            }, updateStatus);
+        }
+    },
+    updateStatus = function(data) {
+        // For each action that the user has initiated (e.g. refresh), update the status.
+        var refresh_status = data["refresh_status"];
+        if (refresh_status) {
+            $.each(refresh_status, function(index, status) {
+                var node;
+
+                if(!status["pending?"]) {
+                    node = $('.view_version[data-pending_refresh_id=' + status['id'] + ']');
+                    if(node !== undefined) {
+                        node.replaceWith(status["status_html"]);
+                    }
+                }
+            });
+            initialize_refresh();
+        }
+        if($('.view_version[data-pending_refresh_id]').length === 0) {
+            status_updater.stop();
+        }
     };
     return {
         initialize_views : initialize_views
