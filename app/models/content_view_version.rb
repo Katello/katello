@@ -12,6 +12,7 @@
 
 
 class ContentViewVersion < ActiveRecord::Base
+  include AsyncOrchestration
 
   belongs_to :content_view
   has_many :content_view_version_environments
@@ -19,6 +20,8 @@ class ContentViewVersion < ActiveRecord::Base
            :class_name=>"KTEnvironment", :inverse_of=>:content_view_versions
 
   has_many :repositories, :dependent => :destroy
+
+  has_one :task_status, :as => :task_owner, :dependent => :destroy
 
   scope :default_view, joins(:content_view).where('content_views.default = ?', true)
   scope :non_default_view, joins(:content_view).where('content_views.default = ?', false)
@@ -42,6 +45,31 @@ class ContentViewVersion < ActiveRecord::Base
   def self.in_environment(env)
     joins(:content_view_version_environments).where('content_view_version_environments.environment_id'=>env).
         order('content_view_version_environments.environment_id')
+  end
+
+  def refresh_version
+    PulpTaskStatus::wait_for_tasks refresh_repos
+  end
+
+  def refresh_repos
+    repos = self.content_view.content_view_definition.nil? ? [] : self.content_view.content_view_definition.repos
+
+    async_tasks = []
+    repos.each do |repo|
+      library_clone = repo.get_clone(self.content_view.organization.library)
+      if library_clone.nil?
+        # this repo doesn't currently exist in the library
+        clone = repo.create_clone(self.content_view.organization.library, self.content_view)
+        async_tasks << repo.clone_contents(clone)
+      else
+        # this repo already exists in the library, so update it
+        library_clone = Repository.find(library_clone.id) # reload readonly obj
+        library_clone.content_view_version = self
+        library_clone.save!
+        async_tasks << library_clone.sync
+      end
+    end
+    async_tasks.flatten(1)
   end
 
   def delete(from_env)
