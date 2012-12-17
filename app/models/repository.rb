@@ -85,7 +85,7 @@ class Repository < ActiveRecord::Base
     filters.count > 0 || product.filters.count > 0
   end
 
-  default_scope :order => 'name ASC'
+  default_scope :order => 'repositories.name ASC'
 
   scope :enabled, where(:enabled => true)
   scope :in_product, lambda{|p|  joins(:environment_product).where("environment_products.product_id" => p.id)}
@@ -138,6 +138,11 @@ class Repository < ActiveRecord::Base
     else
       joins(:environment_product).where("environment_products.environment_id" =>  KTEnvironment.content_readable(org).where(:library => false))
     end
+  }
+
+  # only repositories in a given environment
+  scope :in_environment, lambda { |env|
+    joins(:environment_product).where(:environment_products => {:environment_id => env.id})
   }
 
   def self.any_readable_in_org? org, skip_library = false

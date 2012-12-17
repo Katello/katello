@@ -31,23 +31,23 @@
 
       &nbsp;
 
-      -if products_repos.length > 0
-        %h5
-          #{_("GPG Key assigned at the Repository Level for")}:
-        %ul.bordered-table
-          %div.block_head
-            %div.column_head.column_1
-              = _("Repositories")
+    -if products_repos.length > 0
+      %h5
+        #{_("GPG Key assigned at the Repository Level for")}:
+      %ul.bordered-table
+        %div.block_head
+          %div.column_head.column_1
+            = _("Repositories")
 
-          -products_repos.each do |element|
-            - product = element[0]
-            - repos = element[1]
-            - cssclass = cycle("", "alt")
-            %div.parent{:class => cssclass}
-              %label #{_("Product")}:
-              &nbsp;#{product}
+        -products_repos.each do |element|
+          - product = element[0]
+          - repos = element[1]
+          - cssclass = cycle("", "alt")
+          %div.parent{:class => cssclass}
+            %label #{_("Product")}:
+            &nbsp;#{product}
 
-            - repos.each do |repo|
-              %div.child{:class => cssclass}
-                %label #{_("Repository")}:
-                &nbsp;#{repo.name}
+          - repos.each do |repo|
+            %div.child{:class => cssclass}
+              %label #{_("Repository")}:
+              &nbsp;#{repo.name}

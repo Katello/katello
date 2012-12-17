@@ -391,6 +391,7 @@ module Resources
       class << self
         def find pool_id
           pool_json = self.get(path(pool_id), self.default_headers).body
+          raise ArgumentError, "pool id cannot contain ?" if pool_id["?"]
           JSON.parse(pool_json).with_indifferent_access
         end
 

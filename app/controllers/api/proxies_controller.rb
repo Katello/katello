@@ -19,19 +19,28 @@ class Api::ProxiesController < Api::ApiController
       route, match, params = Rails.application.routes.set.recognize(request)
       # route names are defined in routes.rb (:as => :name)
       case route.name
+      when :api_proxy_consumer_deletionrecord_delete_path
+        if !User.consumer?
+          @system = System.first(:conditions => {:uuid => params[:id]})
+          if @system.nil?
+            Resources::Candlepin::Consumer.get params[:id] # check with candlepin if system is Gone, raises RestClient::Gone
+            raise HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:id]
+          end
+        end
+        User.consumer? or @system.readable?
       when :api_proxy_owner_pools_path
-        find_organization
+        find_optional_organization
         if params[:consumer]
           (User.consumer? or @organization.readable?) and current_user.uuid == params[:consumer]
         else
           (User.consumer? or @organization.readable?)
         end
       when :api_proxy_owner_servicelevels_path
-        find_organization
+        find_optional_organization
         (User.consumer? or @organization.readable?)
       when :api_proxy_consumer_certificates_path, :api_proxy_consumer_releases_path, :api_proxy_certificate_serials_path,
            :api_proxy_consumer_entitlements_path, :api_proxy_consumer_entitlements_post_path, :api_proxy_consumer_entitlements_delete_path,
-           :api_proxy_consumer_dryrun_path, :api_proxy_consumer_owners_path, :api_proxy_consumer_deletionrecord_delete_path
+           :api_proxy_consumer_dryrun_path, :api_proxy_consumer_owners_path
         User.consumer? and current_user.uuid == params[:id]
       when :api_proxy_consumer_certificates_delete_path
         User.consumer? and current_user.uuid == params[:consumer_id]
@@ -75,15 +84,6 @@ class Api::ProxiesController < Api::ApiController
   def drop_api_namespace(original_request_path)
     prefix = "#{Katello.config.url_prefix}/api"
     original_request_path.gsub(prefix, '')
-  end
-
-  protected
-
-  def find_organization
-    return unless (params.has_key?(:organization_id))
-    @organization = Organization.first(:conditions => {:label => params[:organization_id].tr(' ', '_')})
-    raise HttpErrors::NotFound, _("Couldn't find organization '%s'") % id if @organization.nil?
-    @organization
   end
 
 end

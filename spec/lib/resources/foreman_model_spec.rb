@@ -72,7 +72,8 @@ describe Resources::ForemanModel do
           { :only => [:name], :methods => [:id_name] }
         end
 
-        self.resource_name       = 'a_child_klass'
+        resource_name 'a_child_klass'
+
         self.current_user_getter = lambda { that.mock('user', :username => 'username') }
 
         attributes :name
