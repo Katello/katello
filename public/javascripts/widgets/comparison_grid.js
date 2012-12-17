@@ -21,7 +21,7 @@ KT.comparison_grid = function(){
         num_columns_shown = 0,
         grid_row_headers_el,
         grid_content_el,
-        max_visible_columns = 5;
+        max_visible_columns = 7;
 
     var init = function(){
             events = KT.comparison_grid.events(this).init();
@@ -166,7 +166,7 @@ KT.comparison_grid = function(){
                 $('.grid_row').css('width', 
                     utils.reduce(models.columns, function(memo, col){ return ((parseInt(col['span'], 10) * 100) + memo); }, 0));
             } else {
-                $('.grid_row').css('width', 500);
+                $('.grid_row').css('width', 100 * max_visible_columns);
             }
 
             $('.load_row').find('.spinner').css('visibility', 'hidden');

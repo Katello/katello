@@ -8,7 +8,7 @@
   %h2
     = _("User Notifications")
 
-.grid_6
+.top_bar
   = link_to _("Delete All"), {:action => "destroy_all", :controller => "notices"}, :method => :delete, :confirm => _('Are you sure?'), :class=>'deletable', :remote => true
   %form.fr#search_form.search{"data-url" => search_index_path()}
     = text_field_tag(:search, params[:search], {:type => "text", :placeholder => "Filter..."})
@@ -29,14 +29,14 @@
       - for notice in @notices
         - if notice.details.nil?
           %tr{:class => "#{notice.level}"}
-            %td #{notice.created_at}
+            %td #{format_time(DateTime.parse(notice.created_at))}
             %td #{notice.level}
             %td #{notice.organization}
             %td
               = "#{notice.text}".html_safe
         - else
           %tr.details{:id => "#{notice.id}", :class => "#{notice.level}", 'data-url' => notices_details_path(notice.id)}
-            %td #{notice.created_at}
+            %td #{format_time(DateTime.parse(notice.created_at))}
             %td #{notice.level}
             %td #{notice.organization}
             %td

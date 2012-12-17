@@ -7,10 +7,8 @@
     };
 
 #main.container_16
-  .grid_8
-    = one_panel('products', @products, @products_options)
-  .grid_8
-    = one_panel('plans', @plans, @plans_options)
+  = one_panel('products', @products, @products_options)
+  = one_panel('plans', @plans, @plans_options)
   = form_tag sync_schedules_apply_path, :method => "post", :id => "sync_schedule_form" do
     = hidden_field_tag :data
     = button_to _("Apply Selected Plan to Selected Products"), {:action => "apply",

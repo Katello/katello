@@ -62,5 +62,23 @@ module ForemanHelper
       }
   end
 
+  def os_select(object, name, selected=nil)
+
+    choices = Foreman::OperatingSystem.all.map {|os| [os.to_label, os.id]}
+    return _("No operating systems found.") if choices.empty?
+
+    if selected.nil? && object.respond_to?(name)
+      selected = object.send(name)
+    end
+
+    select object, name, choices, {
+        :selected=>selected
+      }, {
+        :id=>name,
+        :multiple=>"true",
+        :style=>"width: 400px; height: 200px;",
+        'data-placeholder'=>_("Choose operating systems...")
+      }
+  end
 
 end

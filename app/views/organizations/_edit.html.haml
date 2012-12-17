@@ -39,7 +39,7 @@
         .jbreadcrumb.grid_9
           %ul
             %li
-              =link_to _('Library'), "#", :class => "crumb-nohover"
+              =link_to 'Library', "#", :class => "crumb-nohover"
             - for env in path
               %li
                 %a.subpanel_element{"data-url"=>edit_organization_environment_path(@organization.label, env.id)}
