@@ -30,7 +30,9 @@ class Resources::ForemanModel < Resources::AbstractModel
   protected
 
   def parse_errors(hash)
-    hash[resource_name]['errors']
+    return hash[resource_name]['errors'] if hash.key? resource_name
+    return {hash['error']['parameter_name'] => hash['error']['message']} if hash.key? 'error'
+    return hash
   end
 
   def self.parse_attributes(data)

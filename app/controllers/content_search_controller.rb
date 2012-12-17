@@ -35,6 +35,10 @@ class ContentSearchController < ApplicationController
     }
   end
 
+  def section_id
+    "content_search"
+  end
+
   def index
     render :index, :locals=>{:environments=>environment_paths(library_path_element("contents_readable?"), environment_path_element("contents_readable?"))}
   end

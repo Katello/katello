@@ -416,14 +416,15 @@ DESC
     return unless (params.has_key?(:organization_id) or params.has_key?(:owner))
 
     id = (params[:organization_id] || params[:owner]).tr(' ', '_')
-    @organization = Organization.first(:conditions => {:label => id})
+    @organization = Organization.first(:conditions => {:name => id})
+    @organization = Organization.first(:conditions => {:label => id}) if @organization.nil?
     raise HttpErrors::NotFound, _("Couldn't find organization '%s'") % id if @organization.nil?
     @organization
   end
 
   def find_only_environment
     if !@environment && @organization && !params.has_key?(:environment_id)
-      raise HttpErrors::BadRequest, _("Organization %s has 'Library' environment only. Please create an environment for system registration.") % @organization.name if @organization.environments.empty?
+      raise HttpErrors::BadRequest, _("Organization %{org} has the '%{env}' environment only. Please create an environment for system registration.") % {:org => @organization.name, :env => "Library"} if @organization.environments.empty?
 
       # Some subscription-managers will call /users/$user/owners to retrieve the orgs that a user belongs to.
       # Then, If there is just one org, that will be passed to the POST /api/consumers as the owner. To handle

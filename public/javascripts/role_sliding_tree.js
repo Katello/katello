@@ -1366,4 +1366,22 @@ $(document).ready(function() {
 
     $('.left').resizable('destroy');
 
+    var find_text = function(){
+      var title = $(this).attr('original-title');
+      if (title.length > 0) {
+        return $(this).find('.text').text() + "<br />" +  title;
+      }
+      else {
+        return $(this).find('.text').text();
+      }
+    };
+    $('.cs_action').tipsy({
+      html : true,
+      fade : true,
+      gravity : 's',
+      live : true,
+      delayIn : 500,
+      hoverable : true,
+      delayOut : 50,
+      title:find_text});
 });
