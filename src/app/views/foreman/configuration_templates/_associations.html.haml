@@ -4,22 +4,24 @@
 
 = content_for :content do
   .grid_10
-    = kt_form_for @configuration_template, :as=>"configuration_template", :url => configuration_template_path(@configuration_template), :data_url=>configuration_template_path(@configuration_template), :html=>{ :id=>"edit_config_template" } do |form|
+    .grid_2.ra
+      %label #{_("Template Combinations:")}:
+    - if @configuration_template.nil?
+      .grid_5.la
+        #{_("No Template Combinations are currently defined")}:
+    - else
+      - [1, 2, 3].each do |tc|
+        %div.grid_5.la
+          #{tc}
+          link_to _("Delete")
 
-      .grid_2.la
-        %label #{_("Environments")}
-
-      - @configuration_template.template_combinations do |tc|
-        %fieldset
-          .grid_2.la
-            #{tc.environment_id}
-          .grid_5.ra
-            = link_to _("Remove")
-
+    = form_for @configuration_template, :as=>"configuration_template", :url=> "", :html=>{:method => :post, :data_url => associations_configuration_template_path(@configuration_template), :id=>"add_association_config_template" } do |form|
       %fieldset
         .grid_2.ra
-          %label #{_("Available Environments")}:
+          %label #{_("Available Environments:")}:
         .grid_5.la
-          = select_tag 'configuration_template[template_combinations][environment_id]', options_for_select([['Environment_1', 1], ['environment_2', 2]]), :include_blank => true, :data_url=>configuration_template_path(@configuration_template)
+          = select_tag 'configuration_template[template_combinations][environment_id]', options_for_select([['dev', 1], ['test', 2]]), :include_blank => true
+
+      = form.submit _("Add Environment"), :id => :add_association_configuration_template
 
       %div{ :style => "min-height: 100px;" }

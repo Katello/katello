@@ -95,13 +95,13 @@ module Navigation
       [
         { :key => :show_configuration_template,
           :name =>_("Show"),
-          :url => lambda{configuration_templates_path(@configuration_template)},
+          :url => lambda{edit_configuration_template_path(@configuration_template)},
           :if => lambda{true},
           :options => {:class=>"panel_link"}
         },
         { :key => :configuration_template_associations,
           :name =>_("Associations"),
-          :url => lambda{configuration_templates_path(@configuration_template)},
+          :url => lambda{associations_configuration_template_path(@configuration_template)},
           :if => lambda{true},
           :options => {:class=>"panel_link"}
         }

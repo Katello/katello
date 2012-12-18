@@ -4,7 +4,7 @@
 
 = content_for :content do
   .grid_10
-    = kt_form_for ::Foreman::ConfigTemplate.new, :as=>"configuration_template", :url => configuration_templates_path, :html=>{ :id=>"new_configuration_template" } do |form|
+    = kt_form_for ::Foreman::ConfigTemplate.new, :as=>"configuration_template", :url => configuration_templates_path, :html=>{:id=>"new_configuration_template" } do |form|
 
       = form.text_field :name, :label => _("Name:")
       = form.check_box :snippet, {:label => _("Snippet:")}, 'true', 'false'
