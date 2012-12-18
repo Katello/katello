@@ -32,7 +32,7 @@ KT.templates = function() {
         $("#tree_loading").css("z-index", 300);
         $.ajax({
             type: "GET",
-            url: KT.common.rootURL() + "/system_templates/" + template_id + "/object/",
+            url: KT.common.rootURL() + "system_templates/" + template_id + "/object/",
             cache: false,
             success: function(data) {
                 $("#tree_loading").css("z-index", -1);
