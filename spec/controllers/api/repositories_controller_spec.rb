@@ -179,6 +179,7 @@ describe Api::RepositoriesController, :katello => true do
     describe "create a repository" do
       before do
         Product.stub(:find_by_cp_id => @product)
+        @product.stub!(:custom?).and_return(true)
       end
 
       it 'should call pulp and candlepin layer' do
@@ -186,6 +187,14 @@ describe Api::RepositoriesController, :katello => true do
         @product.should_receive(:add_repo).and_return({})
 
         post 'create', :name => 'repo_1', :label => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
+      end
+
+      context 'red hat providers' do
+        it "does not support creation" do
+          @product.stub!(:custom?).and_return(false)
+          post 'create', :name => 'repo_1', :label => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
+          response.code.should == '400'
+        end
       end
 
       context 'there is already a repo for the product with the same name' do
@@ -296,6 +305,7 @@ describe Api::RepositoriesController, :katello => true do
         before do
           Product.stub(:find_by_cp_id => @product)
           @product.stub(:add_repo).and_return { raise Errors::ConflictException }
+          @product.stub!(:custom?).and_return(true)
         end
 
         it "should notify about conflict" do
