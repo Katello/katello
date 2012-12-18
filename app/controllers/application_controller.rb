@@ -250,13 +250,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def matches_no_redirect?(url)
+    ["logout", "notices/get_new"].any? {|path| url.include? path}
+  end
 
   def require_user
     if current_user
       #user logged in
 
       #redirect to originally requested page
-      if !session[:original_uri].nil? && !(session[:original_uri].include? "logout")
+      if !session[:original_uri].nil? && !matches_no_redirect?(session[:original_uri])
         redirect_to session[:original_uri]
         session[:original_uri] = nil
       end
