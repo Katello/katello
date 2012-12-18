@@ -37,7 +37,9 @@ class SystemGroupPackagesController < ApplicationController
   end
 
   def index
-    actions = [:package_install, :package_update, :package_remove, :package_group_install, :package_group_remove]
+    actions = [:package_install, :package_update, :package_remove,
+               :package_group_install, :package_group_remove,
+               :package_group_update]
     jobs = @group.refreshed_jobs.joins(:task_statuses).where(
         'task_statuses.task_type' => actions, 'task_statuses.state' => [:waiting, :running])
 
@@ -136,7 +138,7 @@ class SystemGroupPackagesController < ApplicationController
     elsif !params[:groups].blank?
       # user entered one or more package group names (as comma-separated list) in the content box
       groups = params[:groups].split(/ *, */ )
-      job = @group.install_package_groups groups
+      job = @group.update_package_groups groups
       notify.success _("Update of Package Groups '%{groups}' scheduled for System Group '%{name}'.") %
         {:groups => groups.join(','), :name => @group.name}
     else
