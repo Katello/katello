@@ -222,6 +222,8 @@ KT.systems_page = (function() {
             }
         );
 
+        $('link[type*=icon]').detach().appendTo('head');
+
         KT.panel.actions.registerAction("systems_errata_action",
             {
                 enable_cb: function() {
