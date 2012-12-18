@@ -239,13 +239,6 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :owners do
-    member do
-      post :import
-      get :import_status
-    end
-  end
-
   resources :users do
     collection do
       get :auto_complete_search
