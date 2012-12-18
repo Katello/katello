@@ -14,6 +14,7 @@ test_success "ping" ping
 # DEFAULT GLOBAL VARIABLES
 TEST_USER=$(nospace "user_$RAND")
 TEST_ORG="org_$RAND"
+TEST_ORG_LABEL="org_label_$RAND"
 TEST_ENV="env $RAND"
 TEST_ENV_2="env_2 $RAND"
 YUM_PROVIDER="yum_provider_$RAND"
@@ -22,7 +23,7 @@ FEWUPS_PRODUCT="fewups_product_$RAND"
 FEWUPS_REPO="repo_$RAND"
 # BASIC RESOURCES (reused in tests)
 test_success "user create ($TEST_USER)" user create --username="$TEST_USER" --password=password --email=$TEST_USER@somewhere.com
-test_success "org create ($TEST_ORG)" org create --name="$TEST_ORG" --description="org description"
+test_success "org create ($TEST_ORG)" org create --name="$TEST_ORG" --label="$TEST_ORG_LABEL" --description="org description"
 test_success "org uebercert" org uebercert --name="$TEST_ORG"
 test_success "environment create ($TEST_ENV)" environment create --org="$TEST_ORG" --name="$TEST_ENV" --prior="Library"
 test_success "environment create ($TEST_ENV_2)" environment create --org="$TEST_ORG" --name="$TEST_ENV_2" --prior="$TEST_ENV"
