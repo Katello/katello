@@ -182,6 +182,12 @@ class SystemGroup < ActiveRecord::Base
     job = save_job(pulp_job, :package_group_install, :groups, groups)
   end
 
+  def update_package_groups(groups)
+    raise Errors::SystemGroupEmptyException if self.systems.empty?
+    pulp_job = self.install_package_group(groups)
+    job = save_job(pulp_job, :package_group_update, :groups, groups)
+  end
+
   def uninstall_package_groups groups
     raise Errors::SystemGroupEmptyException if self.systems.empty?
     pulp_job = self.uninstall_package_group(groups)
