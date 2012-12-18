@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.3.0
+Version:        1.3.1
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -305,8 +305,6 @@ Requires:        %{name} = %{version}-%{release}
 Requires:        rubygem(therubyracer)
 Requires:        rubygem(ref)
 Requires:        rubygem(jshintrb)
-Requires:        rubygem(execjs)
-Requires:        rubygem(multi_json)
 
 %description devel-checking
 Rake tasks and dependecies for Katello developers, which enables
@@ -747,6 +745,65 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Dec 18 2012 Miroslav Suchý <msuchy@redhat.com> 1.3.1-1
+- remove requires rubygem(execjs) and rubygem(multi_json) (msuchy@redhat.com)
+- Removing OR for pipeor (jomara@redhat.com)
+- Consumer.get was returning a 410 and surfacing that instead of continuing to
+  delete the deletion record (jomara@redhat.com)
+- 878191 - allowing non-consumer access to deletion record remove
+  (jomara@redhat.com)
+- Setting haml-rails to 0.3.4 to fix error (daviddavis@redhat.com)
+- Use maruku instead of redcarpet for markdown -> html (inecas@redhat.com)
+- 881616 - showing UNLIMITED instead of -1 on activation keys edit
+  (jomara@redhat.com)
+- apipie - fix in loading nested controllers (tstrachota@redhat.com)
+- smart proxies - api controller (tstrachota@redhat.com)
+- katello-jobs-locale - corrected missing method call
+  extract_locale_from_accept_language_header (thomasmckay@redhat.com)
+- 877894-i18n - remove N_ to allow match w/ translation
+  (thomasmckay@redhat.com)
+- Upstream alchemy hash for i18n. (jrist@redhat.com)
+- Fixes a few i18n issues:  - i18n forced to browser locale on login page  -
+  fixes a few items via alchemy for login page i18n. (jrist@redhat.com)
+- Ruby19 - Fixes issue with array symbols appearing in UI when running on Ruby
+  1.9+. (ehelms@redhat.com)
+- Minor simplification of the content_for(:content) block (jrist@redhat.com)
+- Reverting a critical missing space and indenting for readability.
+  (jrist@redhat.com)
+- Enhancement for former fix for 864565 (ares@igloonet.cz)
+- Fixes 855433 bug - display GPG keys repositories (ares@igloonet.cz)
+- Ordering of user_session caused interstitial to not load due to string
+  change. (jrist@redhat.com)
+- Add elasticsearch package to ping information (daviddavis@redhat.com)
+- 880113 - special validation for pool ids searching with ? (jomara@redhat.com)
+- ja-validation - updated ja.yml file from https://github.com/svenfuchs/rails-
+  i18n (thomasmckay@redhat.com)
+- katello-jobs-locale - set user's locale (thomasmckay@redhat.com)
+- 860301: Updated specs for reset notice fixes (daviddavis@redhat.com)
+- 860301: Showing notices for username and password resets
+  (daviddavis@redhat.com)
+- Use spaces instead of tabs (ares@igloonet.cz)
+- Spec refactoring (ares@igloonet.cz)
+- delayed_jobs - fix for passing bundler ext environment variables
+  (tstrachota@redhat.com)
+- Fixes 878156 bug with GPG key updating (ares@igloonet.cz)
+- cli - packaged completion script (tstrachota@redhat.com)
+- cli - python based shell completion (tstrachota@redhat.com)
+- bundler.d - not need to require ci plugin (lzap+git@redhat.com)
+- bundler.d - correcting permissions for development mode (lzap+git@redhat.com)
+- ping - correcting return code for ping controller (lzap+git@redhat.com)
+- 880710 - api systems controller - query org by name or label
+  (bbuckingham@redhat.com)
+- architectures ui - architectures tied to operating systems - new model for
+  operating systems - helper for operating system multiselect
+  (tstrachota@redhat.com)
+- abstract model - dsl for setting resource name (tstrachota@redhat.com)
+- abstract model - processing apipie exceptions (tstrachota@redhat.com)
+- architectures ui - basic crud actions (tstrachota@redhat.com)
+- Bumping package versions for 1.3. (ehelms@redhat.com)
+- 880710 - api - updates to use org id or label when retrieving org
+  (bbuckingham@redhat.com)
+
 * Thu Dec 06 2012 Eric D Helms <ehelms@redhat.com> 1.2.2-1
 - Spec - Adds line to dynamically determine installation directory of Alchemy.
   (ehelms@redhat.com)

@@ -21,7 +21,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.3.0
+Version:       1.3.1
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 Requires:      %{base_name}-cli-common
@@ -159,6 +159,12 @@ popd
 make -C po clean
 
 %changelog
+* Tue Dec 18 2012 Miroslav Suchý <msuchy@redhat.com> 1.3.1-1
+- smart proxies - cli CRUD actions (tstrachota@redhat.com)
+- cli - packaged completion script (tstrachota@redhat.com)
+- cli - python based shell completion (tstrachota@redhat.com)
+- Bumping package versions for 1.3. (ehelms@redhat.com)
+
 * Thu Dec 06 2012 Eric D Helms <ehelms@redhat.com> 1.2.2-1
 - correcting activation key help message for cli (komidore64@gmail.com)
 - Switched to python or (jomara@redhat.com)
