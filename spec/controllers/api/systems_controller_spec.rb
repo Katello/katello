@@ -289,7 +289,7 @@ describe Api::SystemsController do
         returned_uuids = JSON.parse(response.body).map{|sys| sys["uuid"]}
         expected_uuids = [@system_1.uuid, @system_3.uuid]
 
-        returned_uuids.should == expected_uuids
+        returned_uuids.sort.should == expected_uuids.sort
       end
 
       it "should show only systems in the environment that are subscribed to a pool" do
