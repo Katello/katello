@@ -47,6 +47,7 @@ class UserSessionsController < ApplicationController
   def destroy
     logout
     self.current_organization = nil
+    set_locale
     notify.success _("Logout Successful"), :persist => false
     redirect_to root_url
   end
@@ -78,7 +79,7 @@ class UserSessionsController < ApplicationController
   def login_user
     authenticate! :scope => :user
     if logged_in?
-
+      set_locale
       #save the hash anchor if it exsts
       if params[:hash_anchor] and  session[:original_uri] and !session[:original_uri].index("#")
         session[:original_uri] +=  params[:hash_anchor]
