@@ -577,6 +577,8 @@ $(window).ready(function(){
         KT.common.customConfirm({message: message}); return false;
     };
 
-    // refresh the favicon to make sure it shows up
-    $('link[type*=icon]').detach().appendTo('head');
+    $(window).bind("hashchange", function(event) {
+        // refresh the favicon to make sure it shows up
+        $('link[type*=icon]').detach().appendTo('head');
+    });
 });
