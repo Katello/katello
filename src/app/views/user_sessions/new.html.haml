@@ -12,7 +12,6 @@
 
 = content_for(:interstitial) do
   .card.slidable#interstitial{:class => ("slid" if params[:card] == "interstitial")}
-    %h2 #{_("Choose an Organization")}
     = render :partial => "/layouts/org"
 
 = content_for(:content) do

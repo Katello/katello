@@ -34,7 +34,8 @@
       %header
         %h2.fl.one-line-ellipsis{:title => title} #{title}
         - if enable_create
-          %a.fr#new{:href => "#", :class => (disable_create ? "disabled tipsify-west" : "block"), "data-ajax_url" => url_for(:action=> 'new'), :title => (disable_create if disable_create) }
+          %a.fr#new{:href => "#", :class => (disable_create ? "disabled tipsify-west" : "block"),
+          "data-ajax_url" => url_for(:action=> 'new'), :title => (disable_create if disable_create) }
             - if !create_label.nil?
               = create_label
             -else
@@ -43,18 +44,24 @@
       %div.fl.clear#items_count
         -# For translation purposes the string "Viewing 2 of 2 results (2 Total Users)" must be presented as a unit.
         -# The javascript, though, needs the spans to update the values. Solution is this raw html.
-        = raw _("Viewing %{current} of %{results} results (%{items} Total %{name})") % {:current => '<span id="current_items_count">0</span>', :results => '<span id="total_results_count">0</span>', :items => '<span id="total_items_count">0</span>', :name => title}
+        = raw _("Viewing %{current} of %{results} results (%{items} Total %{name})") % {:current => '<span id="current_items_count">0</span>',
+        :results => '<span id="total_results_count">0</span>',
+        :items => '<span id="total_items_count">0</span>',
+        :name => title}
 
       - if url.nil?
         %form#search_form.search{"data-url" => search_index_path()}
-          = text_field_tag(:search, params[:search], {:type => "text", :placeholder => _("Search..."), :class => "auto_complete_input ui-autocomplete-input"})
+          = text_field_tag(:search, params[:search], {:type => "text", :placeholder => _("Search..."),
+          :class => "auto_complete_input ui-autocomplete-input"})
           %button.action{:form => "search_form", :id => "search_button"} #{_("Search")}
       - else
         %form#search_form.search{"data-url" => url_for(url)}
-          = text_field_tag(:search, params[:search], {:type => "text", :placeholder => _("Search..."), :class => "auto_complete_input ui-autocomplete-input"})
+          = text_field_tag(:search, params[:search], {:type => "text", :placeholder => _("Search..."),
+          :class => "auto_complete_input ui-autocomplete-input"})
           %button.action{:form => "search_form", :id => "search_button"} #{_("Search")}
 
-    #list.list.clear.expand_list{:class=>("ajaxScroll" if ajax_scroll), "data-scroll_url"=>ajax_scroll, "data-page_size"=>current_user.page_size}
+    #list.list.clear.expand_list{:class=>("ajaxScroll" if ajax_scroll), "data-scroll_url"=>ajax_scroll,
+    "data-page_size"=>current_user.page_size}
       %header
         .block_head.clear
           - columns.each_index do |index|
