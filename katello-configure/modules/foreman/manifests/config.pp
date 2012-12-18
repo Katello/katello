@@ -107,7 +107,7 @@ class foreman::config {
 
   if $foreman::reset_data == 'YES' {
    exec {"reset_foreman_db":
-      command => "rm -f /var/lib/katello/foreman_db_migrate_done; service foreman status && /usr/sbin/service-wait foreman stop",
+      command => "rm -f /var/lib/katello/foreman_db_migrate_done; if service foreman status ; then /usr/sbin/service-wait foreman stop; else true; fi",
       path    => "/sbin:/bin:/usr/bin",
       before  => Exec["foreman_migrate_db"],
     } ~>
