@@ -435,7 +435,7 @@ class BaseAction(Action):
             msg = "\n".join(ser.args[1]).strip()
             if ser.args[0] == os.EX_OK:
                 out = sys.stdout
-                _log.error("error: %s" % u_str(msg))
+                _log.info(u_str(msg))
             else:
                 out = sys.stderr
 
