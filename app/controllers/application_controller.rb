@@ -236,7 +236,13 @@ class ApplicationController < ActionController::Base
     return 'en'
   end
 
-  private
+  def retain_search_history
+    current_user.create_or_update_search_history(URI(@_request.env['HTTP_REFERER']).path, params[:search])
+  rescue => error
+    log_exception(error)
+  end
+
+  private # why bother? methods below are not testable/tested
 
    def verify_ldap
     u = current_user
@@ -360,23 +366,6 @@ class ApplicationController < ActionController::Base
       format.json { head 500 }
     end
     User.current = nil
-  end
-
-  def retain_search_history
-    # save the request in the user's search history
-    unless params[:search].nil? or params[:search].blank?
-      path = URI(@_request.env['HTTP_REFERER']).path
-      histories = current_user.search_histories.where(:path => path, :params => params[:search])
-      if histories.nil? or histories.empty?
-        # user doesn't have this search stored, so save it
-        histories = current_user.search_histories.create!(:path => path, :params => params[:search])
-      else
-        # user already has this search in their history, so just update the timestamp, so that it shows as most recent
-        histories.first.update_attribute(:updated_at, Time.now)
-      end
-    end
-  rescue => error
-    log_exception(error)
   end
 
   def requested_action
