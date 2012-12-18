@@ -130,9 +130,11 @@ class Info(SystemAction):
             system['host'] = system['host']['name']
         if 'guests' in system:
             system["guests"] = "[ "+ ", ".join([guest["name"] for guest in system["guests"]]) +" ]"
+        if 'environment' in system:
+            system['environment'] = system['environment']['name']
 
 
-        batch_add_columns(self.printer, 'name', 'ipv4_address', 'uuid', 'location')
+        batch_add_columns(self.printer, 'name', 'ipv4_address', 'uuid', 'environment', 'location')
         self.printer.add_column('created_at', _('Registered'), formatter=format_date)
         self.printer.add_column('updated_at', _('Last updated'), formatter=format_date)
         self.printer.add_column('description', multiline=True)
