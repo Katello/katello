@@ -825,7 +825,7 @@ KT.panel.copy = (function () {
     perform_copy = function(event) {
         event.preventDefault();
 
-        var copy_form = $('#copy_form'), copy_button = $('#copy_button'), do_not_open = $('#do_not_open').is(':checked');
+        var copy_form = $('#copy_form'), copy_button = $('#copy_button');
         copy_button.attr('disabled', 'disabled');
 
         $.ajax({
@@ -835,12 +835,7 @@ KT.panel.copy = (function () {
             cache: false,
             success: function(data) {
                 $('.pane_action.copy-tipsy').tipsy('hide');
-
-                if (do_not_open) {
-                    list.add(data);
-                } else {
-                    KT.panel.list.createSuccess(data);
-                }
+                KT.panel.list.createSuccess(data);
             },
             error: function(data) {
                 copy_button.removeAttr('disabled');
