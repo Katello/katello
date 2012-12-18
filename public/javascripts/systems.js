@@ -354,6 +354,7 @@ KT.systems_page = (function() {
                 }
             }
         });
+        system_group_widget.multiselect('disable');
     },
     create_system_group = function() {
         var group = $('.ui-multiselect-filter > input').val();
@@ -379,11 +380,11 @@ KT.systems_page = (function() {
         });
     },
     disable_system_group_inputs = function(){
-        $("#bulk_system_system_group_id").multiselect('disable');
+        system_group_widget.multiselect('disable');
         $('.request_action.system_group').attr('disabled', true);
     },
     enable_system_group_inputs = function(){
-        $("#bulk_system_system_group_id").multiselect('enable');
+        system_group_widget.multiselect('enable');
         $('.request_action.system_group').removeAttr('disabled');
     },
     update_system_groups = function(e) {
