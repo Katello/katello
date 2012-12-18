@@ -14,7 +14,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        1.3.0
+Version:        1.3.1
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -118,6 +118,20 @@ chmod +x -R %{buildroot}%{homedir}/upgrade-scripts/*
 
 
 %changelog
+* Tue Dec 18 2012 Miroslav Suchý <msuchy@redhat.com> 1.3.1-1
+- stop foreman only if it is running (msuchy@redhat.com)
+- when finishing, reset title of progress bar back to original state
+  (msuchy@redhat.com)
+- make parse_answer_option function (msuchy@redhat.com)
+- move creation of temp config file to shared functions (msuchy@redhat.com)
+- move creation of answer file to shared functions (msuchy@redhat.com)
+- move show_resulting_answer_file to shared functions (msuchy@redhat.com)
+- move code parsing answer_file to shared functions (msuchy@redhat.com)
+- move check for root uid to shared functions (msuchy@redhat.com)
+- move remove_option() to shared functions (msuchy@redhat.com)
+- simplify progress bar (msuchy@redhat.com)
+- Bumping package versions for 1.3. (ehelms@redhat.com)
+
 * Thu Dec 06 2012 Eric D Helms <ehelms@redhat.com> 1.2.1-1
 - katello-configure - setting foreman default values to make provisioning
   possible (inecas@redhat.com)
