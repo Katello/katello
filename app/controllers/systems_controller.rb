@@ -419,6 +419,8 @@ class SystemsController < ApplicationController
   def bulk_remove_system_group
     successful_systems = []
     failed_systems = []
+    groups_info = {} # hash to store system group id to name mapping
+    systems_summary = {} # hash to store system to system group mapping, for groups removed from the system
 
     unless params[:group_ids].blank?
       @system_groups = SystemGroup.where(:id=>params[:group_ids])
@@ -429,6 +431,7 @@ class SystemsController < ApplicationController
         if !system_group.editable?
           invalid_perms.push(system_group.name)
         end
+        groups_info[system_group.id] = system_group.name
       end
       if !invalid_perms.empty?
         raise _("System Group membership modification not allowed for group(s): %s") % invalid_perms.join(', ')
@@ -436,15 +439,25 @@ class SystemsController < ApplicationController
 
       @systems.each do |system|
         begin
-          system.system_group_ids = (system.system_group_ids - @system_groups.collect{|g| g.id}).uniq
+          groups_removed = system.system_group_ids & groups_info.keys
+          system.system_group_ids = (system.system_group_ids - groups_info.keys).uniq
           system.save!
+
+          systems_summary[system] = groups_removed.collect{|g| groups_info[g]}
           successful_systems.push(system.name)
         rescue => error
           failed_systems.push(system.name)
         end
       end
       action = _("Systems Bulk Action: Remove from system group(s): %s") % @system_groups.collect{|g| g.name}.join(', ')
-      notify_bulk_action action, successful_systems, failed_systems
+
+      details = []
+      systems_summary.each_pair do |system, system_groups|
+        details.push(_("System: %{system_name}, System Groups Removed: %{system_group_names}") %
+                     {:system_name => system.name, :system_group_names => system_groups.join(', ')})
+      end
+
+      notify_bulk_action action, successful_systems, failed_systems, details.join("\n")
     end
 
     render :nothing => true
@@ -615,7 +628,7 @@ class SystemsController < ApplicationController
 
   include SortColumnList
 
-  def notify_bulk_action action, successful_systems, failed_systems
+  def notify_bulk_action action, successful_systems, failed_systems, details = ""
     # generate a notice for a bulk action
 
     success_msg = _("Successful for system(s): ")
@@ -623,13 +636,13 @@ class SystemsController < ApplicationController
     newline = '<br />'
 
     if failed_systems.empty?
-      notify.success action + newline + success_msg + successful_systems.join(', ')
+      notify.success(action + newline + success_msg + successful_systems.join(', '), {:details => details})
     else
       if successful_systems.empty?
         notify.error action + newline + failure_msg + failed_systems.join(', ')
       else
-        notify.error action + newline + success_msg + successful_systems.join(',') +
-                         newline + failure_msg + failed_systems.join(',')
+        notify.error(action + newline + success_msg + successful_systems.join(',') +
+                     newline + failure_msg + failed_systems.join(','), {:details => details})
       end
     end
   end
