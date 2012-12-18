@@ -15,7 +15,7 @@ input, textarea {
   &:focus {
     border-width: 2px;
     padding: 3px;
-    background-color: #fff;
+    background-color: $white_color;
     outline: none; 
   }
   &.disabled, &[disabled] {
@@ -147,7 +147,7 @@ input, textarea {
           cursor: pointer !important;
           text-decoration: none;
           background-color: #E6E6E6;
-          color: #000000;
+          color: $black_color;
         }
         span {
           width: 300px;
@@ -160,7 +160,7 @@ input, textarea {
             cursor: pointer !important;
             text-decoration: none;
             background-color: #E6E6E6;
-            color: #000000;
+            color: $black_color;
           }
         }
         .delete {
@@ -169,24 +169,20 @@ input, textarea {
           width: 16px;
           height: 16px;
           margin: -22px 0 0 0;
-          background: url("../../images/icons/action-icons.png") no-repeat -160px 0px;
+          background: image-url("embed/icons/action-icons.png") no-repeat -160px 0px;
           &:hover {
-            background: url("../../images/icons/action-icons.png") no-repeat -160px -16px #E6E6E6;
+            background: image-url("embed/icons/action-icons.png") no-repeat -160px -16px #E6E6E6;
           }
         }
         .favorite {
-          background: url(../../images/icons/favorite.png) no-repeat 4px center; 
+          background: image-url("embed/icons/favorite.png") no-repeat 4px center;
         }
         .recent {
-          background: url(../../images/icons/recent.png) no-repeat 4px center; 
+          background: image-url("embed/icons/recent.png") no-repeat 4px center;
         }
       }
     }
-/*
-.qdropdown ul {
-  margin: 0; padding: 0;
-}
-*/
+
     .showmore {
       display: block;
       font-size: 80%;
@@ -197,7 +193,7 @@ input, textarea {
 
       &:hover {
         cursor: pointer;
-        background-color: #fff;
+        background-color: $white_color;
         color: #000; 
       }
     }
@@ -205,7 +201,7 @@ input, textarea {
     .queryeditor {
       h1 {
         font-size: 80%;
-        color: #fff;
+        color: $white_color;
         background-color: #bbb;
         text-align: right;
         padding: 0.25em 0.5em; margin: 0; 

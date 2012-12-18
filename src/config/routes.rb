@@ -2,15 +2,25 @@ Src::Application.routes.draw do
 
   apipie
 
-  resources :subnets do
-    collection do
-      get :items
-    end
-  end
+  if AppConfig.use_foreman
+    scope :module => 'foreman' do
+      resources :subnets do
+        collection do
+          get :items
+        end
+      end
 
-  resources :domains do
-    collection do
-      get :items
+      resources :domains do
+        collection do
+          get :items
+        end
+      end
+
+      resources :architectures do
+        collection do
+          get :items
+        end
+      end
     end
   end
 
@@ -408,14 +418,14 @@ Src::Application.routes.draw do
 
   root :to => "user_sessions#new"
 
-  match '/login' => 'user_sessions#new'
+  match '/login' => 'user_sessions#new', :as=>'login'
   match '/logout' => 'user_sessions#destroy', :via=>:post
   match '/user_session/logout' => 'user_sessions#destroy'
   match '/user_session' => 'user_sessions#show', :via=>:get, :as=>'show_user_session'
 
   resources :password_resets, :only => [:create, :edit, :update] do
     collection do
-      get :email_logins
+      post :email_logins
     end
   end
 
@@ -707,6 +717,7 @@ Src::Application.routes.draw do
       scope :module => 'foreman' do
         resources :architectures, :except => [:new, :edit]
         resources :subnets, :except => [:new, :edit]
+        resources :smart_proxies, :except => [:new, :edit]
         constraints(:id => /[^\/]+/) do
           resources :domains, :except => [:new, :edit]
         end

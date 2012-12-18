@@ -34,8 +34,8 @@
                   &nbsp;
                   = subscriptions_pool_link_helper(subscription.product_name, subscription.cp_id, subscription.provider_id, current_organization)
                 %td #{subscription.virt_only ? _("Virtual") : _("Physical")}
-                %td #{subscription.start_date}
-                %td #{subscription.end_date}
+                %td #{format_time(subscription.start_date)}
+                %td #{format_time(subscription.end_date)}
             - else
               %tr{:class => 'parent ' + cssclass}
                 %td
@@ -44,8 +44,8 @@
                   &nbsp;
                   = subscriptions_pool_link_helper(subscription.product_name, subscription.cp_id, subscription.provider_id, current_organization)
                 %td #{subscription.virt_only ? _("Virtual") : _("Physical")}
-                %td #{subscription.start_date}
-                %td #{subscription.end_date}
+                %td #{format_time(subscription.start_date)}
+                %td #{format_time(subscription.end_date)}
 
     - else
       %tr

@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.2.1
+Version:        1.3.1
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -78,10 +78,11 @@ Requires:       rubygem(chunky_png)
 Requires:       rubygem(tire) >= 0.3.0
 Requires:       rubygem(tire) < 0.4
 Requires:       rubygem(ldap_fluff)
-Requires:       rubygem(apipie-rails) >= 0.0.12
 Requires:       rubygem(foreman_api) >= 0.0.7
 Requires:       rubygem(runcible) >= 0.2.0
 Requires:       rubygem(anemone)
+Requires:       rubygem(apipie-rails) >= 0.0.13
+
 Requires:       lsof
 
 %if 0%{?rhel} == 6
@@ -118,7 +119,7 @@ BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
-BuildRequires:  converge-ui-devel >= 1.0.1
+BuildRequires:  rubygem(alchemy) >= 1.0.0
 
 # we require this to be able to build api-docs
 BuildRequires:       rubygem(rails) >= 3.0.10
@@ -145,7 +146,7 @@ BuildRequires:       rubygem(tire) >= 0.3.0
 BuildRequires:       rubygem(tire) < 0.4
 BuildRequires:       rubygem(ldap_fluff)
 BuildRequires:       rubygem(apipie-rails) >= 0.0.12
-BuildRequires:       rubygem(redcarpet)
+BuildRequires:       rubygem(maruku)
 BuildRequires:       rubygem(foreman_api)
 
 
@@ -196,6 +197,7 @@ Katello connection classes for the Pulp backend
 BuildArch:      noarch
 Summary:         Katello connection classes for the Foreman backend
 Requires:        %{name}-common
+# dependencies from bundler.d/foreman.rb
 Requires:       rubygem(foreman_api) >= 0.0.7
 
 %description glue-foreman
@@ -251,7 +253,9 @@ BuildArch:       noarch
 Requires:        %{name}-devel = %{version}-%{release}
 Requires:        %{name}-devel-profiling = %{version}-%{release}
 Requires:        %{name}-devel-test = %{version}-%{release}
-Requires:        %{name}-devel-jshintrb = %{version}-%{release}
+Requires:        %{name}-devel-checking = %{version}-%{release}
+Requires:        %{name}-devel-coverage = %{version}-%{release}
+Requires:        %{name}-devel-debugging = %{version}-%{release}
 
 %description devel-all
 Meta package to install all %{name}-devel-* subpackages.
@@ -260,31 +264,20 @@ Meta package to install all %{name}-devel-* subpackages.
 Summary:         Katello devel support
 BuildArch:       noarch
 Requires:        %{name} = %{version}-%{release}
-Requires:        rubygem(redcarpet)
-%if 0%{?fedora} > 16
-Requires:        rubygem(ruby-debug19)
-Requires:        rubygem(simplecov)
-%else
-Requires:        rubygem(ruby-debug)
-Requires:        rubygem(rcov) >= 0.9.9
-%endif
-Requires:        rubygem(ZenTest) >= 4.4.0
-Requires:        rubygem(rspec-rails) >= 2.0.0
-Requires:        rubygem(autotest-rails) >= 4.1.0
-Requires:        rubygem(webrat) >= 0.7.3
-Requires:        rubygem(nokogiri) >= 0.9.9
-Requires:        rubygem(yard) >= 0.5.3
+# Gemfile
 Requires:        rubygem(ci_reporter) >= 1.6.3
+# dependencies from bundler.d/development.rb
+Requires:        rubygem(rspec-rails) >= 2.0.0
+Requires:        rubygem(parallel_tests)
+Requires:        rubygem(yard) >= 0.5.3
+Requires:        rubygem(js-routes)
 Requires:        rubygem(gettext) >= 1.9.3
 Requires:        rubygem(ruby_parser)
-Requires:        rubygem(js-routes)
-Requires:        rubygem(newrelic_rpm)
-Requires:        rubygem(logical-insight)
+Requires:        rubygem(sexp_processor)
+# dependencies from bundler.d/development_boost.rb
 Requires:        rubygem(rails-dev-boost)
-Requires:        rubygem(parallel_tests)
-Requires:        rubygem(minitest)
-Requires:        rubygem(minitest-rails)
-Requires:        rubygem(minitest_tu_shim)
+# dependencies from bundler.d/apipie.rb
+Requires:        rubygem(maruku)
 
 %description devel
 Rake tasks and dependecies for Katello developers
@@ -293,33 +286,76 @@ Rake tasks and dependecies for Katello developers
 Summary:         Katello devel support (profiling)
 BuildArch:       noarch
 Requires:        %{name} = %{version}-%{release}
+# dependencies from bundler.d/profiling.rb
 Requires:        rubygem(ruby-prof)
+Requires:        rubygem(logical-insight)
+Requires:        rubygem(newrelic_rpm)
 
 %description devel-profiling
 Rake tasks and dependecies for Katello developers, which enables
 profiling.
 
-%package devel-jshintrb
+%package devel-checking
 Summary:         Katello devel support (unit test and syntax checking)
 BuildArch:       noarch
+Provides:        katello-devel-jshintrb = 1.2.1-1
+Obsoletes:       katello-devel-jshintrb < 1.2.1-1
 Requires:        %{name} = %{version}-%{release}
-Requires:        rubygem(newrelic_rpm)
-Requires:        rubygem(logical-insight)
-Requires:        rubygem(libv8)
+# dependencies from bundler.d/checking.rb
+Requires:        rubygem(therubyracer)
+Requires:        rubygem(ref)
 Requires:        rubygem(jshintrb)
 
-%description devel-jshintrb
+%description devel-checking
 Rake tasks and dependecies for Katello developers, which enables
 syntax checking and is need for unit testing.
+
+%package devel-coverage
+Summary:         Katello devel support (test coverage utils)
+BuildArch:       noarch
+Requires:        %{name} = %{version}-%{release}
+# dependencies from bundler.d/coverage.rb
+%if 0%{?fedora} > 16
+Requires:        rubygem(simplecov)
+%else
+Requires:        rubygem(rcov) >= 0.9.9
+%endif
+
+%description devel-coverage
+Rake tasks and dependecies for Katello developers, which enables
+code coverage for tests.
+
+%package devel-debugging
+Summary:         Katello devel support (debugging)
+BuildArch:       noarch
+Requires:        %{name} = %{version}-%{release}
+# dependencies from bundler.d/debugging.rb
+%if 0%{?fedora} > 16
+Requires:        rubygem(ruby-debug19)
+%else
+Requires:        rubygem(ruby-debug)
+%endif
+
+%description devel-debugging
+Rake tasks and dependecies for Katello developers, which enables
+debugging Ruby code.
 
 %package devel-test
 Summary:         Katello devel support (testing)
 BuildArch:       noarch
 Requires:        %{name} = %{version}-%{release}
 Requires:        %{name}-devel = %{version}-%{release}
+# dependencies from bundler.d/test.rb
+Requires:        rubygem(ZenTest) >= 4.4.0
+Requires:        rubygem(autotest-rails) >= 4.1.0
+Requires:        rubygem(rspec-rails) >= 2.0.0
+Requires:        rubygem(webrat) >= 0.7.3
+Requires:        rubygem(nokogiri) >= 0.9.9
 Requires:        rubygem(vcr)
 Requires:        rubygem(webmock)
 Requires:        rubygem(minitest)
+Requires:        rubygem(minitest-rails)
+Requires:        rubygem(minitest_tu_shim)
 Requires:        rubygem(parallel_tests)
 
 %description devel-test
@@ -330,6 +366,7 @@ testing.
 %setup -q
 
 %build
+export RAILS_ENV=build
 
 #check for malformed gettext strings
 script/check-gettext.rb -m -i
@@ -341,6 +378,10 @@ rm ./lib/tasks/test.rake
 cp -R /usr/share/converge-ui-devel/* ./vendor/converge-ui
 rm ./public/fonts
 mv ./vendor/converge-ui/fonts ./public/fonts
+
+#copy alchemy
+ALCHEMY_DIR=$(rpm -ql rubygem-alchemy | grep -o '/.*/vendor' | sed 's/vendor$//' | head -n1)
+cp -R $ALCHEMY_DIR* ./vendor/alchemy
 
 #use Bundler_ext instead of Bundler
 mv Gemfile Gemfile.in
@@ -374,8 +415,11 @@ a2x -d manpage -f manpage man/katello-service.8.asciidoc
     mkdir -p doc/apidoc
 %else
     echo Generating API docs
-    rake apipie:static RAILS_ENV=apipie --trace
-    rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello RAILS_ENV=apipie --trace
+    # by default do not stop on missing dep and only require "build" environment
+    export BUNDLER_EXT_NOSTRICT=1
+    export BUNDLER_EXT_GROUPS="default apipie"
+    rake apipie:static --trace
+    rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello --trace
 %endif
 
 %install
@@ -393,9 +437,13 @@ mkdir -p %{buildroot}/%{_mandir}/man8
 # clean the application directory before installing
 [ -d tmp ] && rm -rf tmp
 
+# remove build gem group
+rm -f bundler.d/build.rb
+
 #copy the application to the target directory
 mkdir .bundle
-cp -R .bundle Gemfile.in Rakefile app autotest ca config config.ru db integration_spec lib locale public script spec vendor %{buildroot}%{homedir}
+cp -R .bundle Gemfile.in bundler.d Rakefile app autotest ca config config.ru db integration_spec lib locale public script spec vendor %{buildroot}%{homedir}
+rm -f {buildroot}%{homedir}/script/katello-reset-dbs
 
 #copy configs and other var files (will be all overwriten with symlinks)
 install -m 600 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
@@ -410,7 +458,6 @@ install -Dp -m0644 %{confdir}/%{name}.sysconfig %{buildroot}%{_sysconfdir}/sysco
 install -Dp -m0644 %{confdir}/service-wait.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/service-wait
 install -Dp -m0755 %{confdir}/%{name}.init %{buildroot}%{_initddir}/%{name}
 install -Dp -m0755 %{confdir}/%{name}-jobs.init %{buildroot}%{_initddir}/%{name}-jobs
-install -Dp -m0644 %{confdir}/%{name}.completion.sh %{buildroot}%{_sysconfdir}/bash_completion.d/%{name}
 install -Dp -m0644 %{confdir}/%{name}.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 install -Dp -m0644 %{confdir}/%{name}-jobs.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.httpd.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
@@ -463,6 +510,7 @@ chmod a+r %{buildroot}%{homedir}/ca/redhat-uep.pem
 install -m 644 man/katello-service.8 %{buildroot}/%{_mandir}/man8
 
 %post common
+
 #Add /etc/rc*.d links for the script
 /sbin/chkconfig --add %{name}
 /sbin/chkconfig --add %{name}-jobs
@@ -483,6 +531,7 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %dir %{homedir}/app
 %{homedir}/app/controllers
 %exclude %{homedir}/app/controllers/api/foreman
+%exclude %{homedir}/app/controllers/foreman
 %{homedir}/app/helpers
 %{homedir}/app/mailers
 %dir %{homedir}/app/models
@@ -491,6 +540,7 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %{homedir}/app/models/candlepin
 %{homedir}/app/stylesheets
 %{homedir}/app/views
+%exclude %{homedir}/app/views/foreman
 %{homedir}/autotest
 %{homedir}/ca
 %{homedir}/config
@@ -516,7 +566,17 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 #%exclude %{homedir}/lib/tasks/test.rake
 %exclude %{homedir}/script/pulp_integration_tests
 %{homedir}/locale
-%{homedir}/public
+%{homedir}/public/*.html
+%{homedir}/public/*.txt
+%{homedir}/public/*.ico
+%{homedir}/public/assets
+%{homedir}/public/fonts
+%{homedir}/public/images
+%{homedir}/public/javascripts
+%{homedir}/public/stylesheets
+%{homedir}/public/stylesheets/*.css
+%attr(600, katello, katello) %{homedir}/public/stylesheets/compiled
+%{homedir}/public/stylesheets/images
 %exclude %{homedir}/public/apipie-cache
 %{homedir}/script
 %exclude %{homedir}/script/service-wait
@@ -534,7 +594,7 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %doc README LICENSE
 %{_sbindir}/service-wait
 %dir %{_sysconfdir}/%{name}
-%config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
+%config(noreplace) %attr(600, katello, katello) %{_sysconfdir}/%{name}/%{name}.yml
 %config(noreplace) %{_sysconfdir}/%{name}/thin.yml
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config %{_sysconfdir}/%{name}/environment.rb
@@ -545,7 +605,6 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %config(noreplace) %{_sysconfdir}/sysconfig/service-wait
 %{_initddir}/%{name}
 %{_initddir}/%{name}-jobs
-%{_sysconfdir}/bash_completion.d/%{name}
 %{homedir}/log
 %dir %{homedir}/db
 %{homedir}/db/schema.rb
@@ -576,12 +635,14 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %{homedir}/lib/resources/candlepin.rb
 
 %files glue-foreman
+%{homedir}/bundler.d/foreman.rb
 %{homedir}/lib/resources/foreman.rb
-%{homedir}/lib/resources/foreman_model.rb
 %{homedir}/lib/resources/foreman_model.rb
 %{homedir}/app/models/foreman
 %{homedir}/app/models/glue/foreman
 %{homedir}/app/controllers/api/foreman
+%{homedir}/app/controllers/foreman
+%{homedir}/app/views/foreman
 
 %files all
 
@@ -596,6 +657,8 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %exclude %{homedir}/app/models/glue/*
 %exclude %{homedir}/app/models/foreman
 %exclude %{homedir}/app/controllers/api/foreman
+%exclude %{homedir}/app/controllers/foreman
+%exclude %{homedir}/app/views/foreman
 %{homedir}/app/stylesheets
 %{homedir}/app/views
 %{homedir}/autotest
@@ -637,19 +700,34 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %files devel-all
 
 %files devel
-%{homedir}/lib/tasks/rcov.rake
+%{homedir}/bundler.d/development.rb
+%{homedir}/bundler.d/development_boost.rb
 %{homedir}/lib/tasks/yard.rake
 %{homedir}/lib/tasks/hudson.rake
 %{homedir}/lib/tasks/jsroutes.rake
 
 %files devel-profiling
-
-%files devel-jshintrb
-%{homedir}/lib/tasks/jshint.rake
+%{homedir}/bundler.d/profiling.rb
 
 %files devel-test
+<<<<<<< HEAD
 #%{homedir}/lib/tasks/test.rake
+=======
+%{homedir}/bundler.d/test.rb
+%{homedir}/lib/tasks/test.rake
+>>>>>>> master
 %{homedir}/script/pulp_integration_tests
+
+%files devel-checking
+%{homedir}/bundler.d/checking.rb
+%{homedir}/lib/tasks/jshint.rake
+
+%files devel-coverage
+%{homedir}/bundler.d/coverage.rb
+%{homedir}/lib/tasks/rcov.rake
+
+%files devel-debugging
+%{homedir}/bundler.d/debugging.rb
 
 %pre common
 # Add the "katello" user and group
@@ -667,6 +745,438 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Dec 18 2012 Miroslav Suchý <msuchy@redhat.com> 1.3.1-1
+- remove requires rubygem(execjs) and rubygem(multi_json) (msuchy@redhat.com)
+- Removing OR for pipeor (jomara@redhat.com)
+- Consumer.get was returning a 410 and surfacing that instead of continuing to
+  delete the deletion record (jomara@redhat.com)
+- 878191 - allowing non-consumer access to deletion record remove
+  (jomara@redhat.com)
+- Setting haml-rails to 0.3.4 to fix error (daviddavis@redhat.com)
+- Use maruku instead of redcarpet for markdown -> html (inecas@redhat.com)
+- 881616 - showing UNLIMITED instead of -1 on activation keys edit
+  (jomara@redhat.com)
+- apipie - fix in loading nested controllers (tstrachota@redhat.com)
+- smart proxies - api controller (tstrachota@redhat.com)
+- katello-jobs-locale - corrected missing method call
+  extract_locale_from_accept_language_header (thomasmckay@redhat.com)
+- 877894-i18n - remove N_ to allow match w/ translation
+  (thomasmckay@redhat.com)
+- Upstream alchemy hash for i18n. (jrist@redhat.com)
+- Fixes a few i18n issues:  - i18n forced to browser locale on login page  -
+  fixes a few items via alchemy for login page i18n. (jrist@redhat.com)
+- Ruby19 - Fixes issue with array symbols appearing in UI when running on Ruby
+  1.9+. (ehelms@redhat.com)
+- Minor simplification of the content_for(:content) block (jrist@redhat.com)
+- Reverting a critical missing space and indenting for readability.
+  (jrist@redhat.com)
+- Enhancement for former fix for 864565 (ares@igloonet.cz)
+- Fixes 855433 bug - display GPG keys repositories (ares@igloonet.cz)
+- Ordering of user_session caused interstitial to not load due to string
+  change. (jrist@redhat.com)
+- Add elasticsearch package to ping information (daviddavis@redhat.com)
+- 880113 - special validation for pool ids searching with ? (jomara@redhat.com)
+- ja-validation - updated ja.yml file from https://github.com/svenfuchs/rails-
+  i18n (thomasmckay@redhat.com)
+- katello-jobs-locale - set user's locale (thomasmckay@redhat.com)
+- 860301: Updated specs for reset notice fixes (daviddavis@redhat.com)
+- 860301: Showing notices for username and password resets
+  (daviddavis@redhat.com)
+- Use spaces instead of tabs (ares@igloonet.cz)
+- Spec refactoring (ares@igloonet.cz)
+- delayed_jobs - fix for passing bundler ext environment variables
+  (tstrachota@redhat.com)
+- Fixes 878156 bug with GPG key updating (ares@igloonet.cz)
+- cli - packaged completion script (tstrachota@redhat.com)
+- cli - python based shell completion (tstrachota@redhat.com)
+- bundler.d - not need to require ci plugin (lzap+git@redhat.com)
+- bundler.d - correcting permissions for development mode (lzap+git@redhat.com)
+- ping - correcting return code for ping controller (lzap+git@redhat.com)
+- 880710 - api systems controller - query org by name or label
+  (bbuckingham@redhat.com)
+- architectures ui - architectures tied to operating systems - new model for
+  operating systems - helper for operating system multiselect
+  (tstrachota@redhat.com)
+- abstract model - dsl for setting resource name (tstrachota@redhat.com)
+- abstract model - processing apipie exceptions (tstrachota@redhat.com)
+- architectures ui - basic crud actions (tstrachota@redhat.com)
+- Bumping package versions for 1.3. (ehelms@redhat.com)
+- 880710 - api - updates to use org id or label when retrieving org
+  (bbuckingham@redhat.com)
+
+* Thu Dec 06 2012 Eric D Helms <ehelms@redhat.com> 1.2.2-1
+- Spec - Adds line to dynamically determine installation directory of Alchemy.
+  (ehelms@redhat.com)
+- Spec - Updates to new alchemy inclusion location in spec. (ehelms@redhat.com)
+- bundler.d - adding new packages to the comp files (lzap+git@redhat.com)
+- bundler.d - moving ci group into build and dev only file
+  (lzap+git@redhat.com)
+- Alchemy - Submodule hash update. (ehelms@redhat.com)
+- String - Fixes malformed i18n string. (ehelms@redhat.com)
+- Alchemy - Spec file updates for Alchemy. (ehelms@redhat.com)
+- Alchemy - Updates for pathing related to the codebase change in Alchemy.
+  (ehelms@redhat.com)
+- Minor fixes for content_search and about page. (jrist@redhat.com)
+- bundler.d - not distributing build gem group (lzap+git@redhat.com)
+- Fix build_pxe_default call (inecas@redhat.com)
+- Updating to lower case url.  Removing comment from previous test.
+  (jrist@redhat.com)
+- Fixing the password reset edit method and associated test. (jrist@redhat.com)
+- 883949-portugese - change config mapping or portugese locale
+  (thomasmckay@redhat.com)
+- 883949-chinese - change config mapping for chinese locale
+  (thomasmckay@redhat.com)
+- bundler.d - changes for build time (apipie) (lzap+git@redhat.com)
+- bundler.d - pull request review fixes (lzap+git@redhat.com)
+- bundler.d - applying changes for the spec (lzap+git@redhat.com)
+- bundler.d - copying only some gems from test into dev (lzap+git@redhat.com)
+- bundler.d - adding support for jruby (lzap+git@redhat.com)
+- bundler.d - adding test group in development env (lzap+git@redhat.com)
+- bundler.d - introcuding dynamic loading of gems (lzap+git@redhat.com)
+- bunndler.d - cleaning Gemfile (lzap+git@redhat.com)
+- Password and Username Reset fixed. (jrist@redhat.com)
+- Fix for missing images on fancyqueries dropdown. (jrist@redhat.com)
+- Update git submodule to UI-Alchemy (alchemy), small fix for dashboard.
+  (jrist@redhat.com)
+- Locking ci_reporter version due to errors in jekins (daviddavis@redhat.com)
+- Added missing word 'find' in filters searching message. (ogmaciel@gnome.org)
+- 876896, 876911, 878355, 878750, 874502, 874510 - Fixed panel-name/new-link
+  overlap (komidore64@gmail.com)
+- only restart foreman if it is installed (mmccune@redhat.com)
+- Lock therubyracer to beta version to fix jenkins (daviddavis@redhat.com)
+- fixing foreman fencing that facilitated a failure (komidore64@gmail.com)
+- i18n-fixes - updating missing localizations, including time format
+  (thomasmckay@redhat.com)
+- Bash Completion - Updates bash completion with current command and sub-
+  command sets. (ehelms@redhat.com)
+- including foreman as a service to start/stop with Katello
+  (mmccune@redhat.com)
+- 877947-clear-es - added index clean up after import and after delete manifest
+  (thomasmckay@redhat.com)
+- Added a check for anything besides html and json response for user#new
+  (jrist@redhat.com)
+- 868872 - do not distribute katello-reset-dbs (msuchy@redhat.com)
+- Change menu keys so that no menu items end up having same html 'id'
+  attribute. (jweiss@redhat.com)
+- 876869 - Adjusting overflow and ellipsis for Roles page. (jrist@redhat.com)
+- Fixes Bug 882294 - HTML element being rendered unescaped in promotions help
+  tip. (ogmaciel@gnome.org)
+- Fixes the width of the application to 1152px. Fixes the login.
+  (jrist@redhat.com)
+- Move foreman UI to glue foreman (mbacovsk@redhat.com)
+- Provide the headers for when pinging Foreman (inecas@redhat.com)
+- Having TravisCI test our Gemfile.locks (daviddavis@redhat.com)
+- 878693 - [RFE] Selecting multiple systems does not give me any action
+  (komidore64@gmail.com)
+- 880116 - pool was referencing a non-existant instance variable
+  (jomara@redhat.com)
+- allow beta of therubyracer (msuchy@redhat.com)
+- remove fix for Apipie v0.0.12 and switch to v0.0.13 (pchalupa@redhat.com)
+- bundler_ext development - correcting path for dev mode (lzap+git@redhat.com)
+- Revert "Foreman environment orchestration" (mbacovsk@redhat.com)
+- Added Foreman stuff to katello-debug (mbacovsk@redhat.com)
+- fixing build issue caused by 56de39ba17b446a2e511c4cbf57728a548581cf4
+  (komidore64@gmail.com)
+- check-gettext - correct count of malformed strings (inecas@redhat.com)
+- 878341 - [ja_JP][SAM Web GUI] Default environment name 'Library' should not
+  be localized. (komidore64@gmail.com)
+- 880905 - certain locales were not escaped properly (jomara@redhat.com)
+- Setting gem versions based on katello-devel-all.rpm (daviddavis@redhat.com)
+- updating comment for pdf-reader requirement (jsherril@redhat.com)
+- Foreman environment orchestration (mbacovsk@redhat.com)
+- Updated F17 Gemfile.lock (daviddavis@redhat.com)
+- requiring specific older version of pdf-reader (jsherril@redhat.com)
+- Fixed small typo s/Subscriptons/Subscriptions. (ogmaciel@gnome.org)
+- 866972 - katello-debug needs to take headpin into consideration
+  (komidore64@gmail.com)
+- Ensure that the name and label is unique across all all orgs
+  (bkearney@redhat.com)
+- update gems jshintrb and therubyracer (msuchy@redhat.com)
+- fix unit tests when foreman is disabled (pchalupa@redhat.com)
+- bundler_ext - development mode support
+- new foreman_api version in gemfile (tstrachota@redhat.com)
+- subnets - change data hash sent to foreman (tstrachota@redhat.com)
+- abstract model - fix for indexed models not being deleted
+  (tstrachota@redhat.com)
+- abstract model - separate module for indexed model (tstrachota@redhat.com)
+- subnet ui - workaround for bug in chosen (tstrachota@redhat.com)
+- foreman ui - helpers for resource select boxes (tstrachota@redhat.com)
+- foreman ui - refactoring (tstrachota@redhat.com)
+- subnets - elastic search indexing (tstrachota@redhat.com)
+- domain ui - controller and es indexing (tstrachota@redhat.com)
+- abstract model - support for callbacks (tstrachota@redhat.com)
+- forman menu - new setup menu (tstrachota@redhat.com)
+- subnets ui - select boxes for domains and smart proxies
+  (tstrachota@redhat.com)
+- smart proxies - new model (tstrachota@redhat.com)
+- subnets ui - basic CRUD actions (tstrachota@redhat.com)
+- subnets - model and api controller (tstrachota@redhat.com)
+- bundler_ext - require also :foreman until all require is merged
+  (lzap+git@redhat.com)
+- require bundler_ext - especially in buildtime (msuchy@redhat.com)
+- Gemfile - Adds comment marking dependency. (ehelms@redhat.com)
+- add rubygem-jshintrb (msuchy@redhat.com)
+- add rubygem-libv8 to katello-devel-jshintrb (msuchy@redhat.com)
+- add parallel_tests to devel dependecies (msuchy@redhat.com)
+- Gemfile - Adds explicit require in development,test for sexp_processor due to
+  not being pulled in as a dependency of ruby_parser in development.
+  (ehelms@redhat.com)
+- 875185 - fixing enabled redhat repos page (jsherril@redhat.com)
+- add foreman ping support (lzap+git@redhat.com)
+- Additional color overrides, fixes for many small things throughout.
+  (jrist@redhat.com)
+- introducing bundler_ext rubygem (lzap+git@redhat.com)
+- fixing env check to look for true (jsherril@redhat.com)
+- enabling debugger gem group by default (jsherril@redhat.com)
+- 873038 - Entering an env name of "Library" when creating an organization does
+  not give clear error message (komidore64@gmail.com)
+- 875609-hypervisor - allow hypervisors to successfully register and list in
+  katello (thomasmckay@redhat.com)
+- 874280 - terminology changes for consistency across subman, candlepin, etc
+  (jomara@redhat.com)
+- Translations - Update .po and .pot files for katello. (ehelms@redhat.com)
+- Translations - New translations from Transifex for katello.
+  (ehelms@redhat.com)
+- Translations - Download translations from Transifex for katello.
+  (ehelms@redhat.com)
+- 877473-fencing - force use_foreman and use_pulp off for headpin
+  (thomasmckay@redhat.com)
+- changed deployment checking (komidore64@gmail.com)
+- force devboost to be on in development mode. (mmccune@redhat.com)
+- fix monkey patch when RSpec::Version is undefined (pchalupa@redhat.com)
+- fix warning text (pchalupa@redhat.com)
+- ui - helper method for rendering editables (tstrachota@redhat.com)
+- 874391-mandel - async job behind deleting manifest (thomasmckay@redhat.com)
+- 866972 - katello-debug needs to take headpin into consideration
+  (komidore64@gmail.com)
+- make bundler happy (msuchy@redhat.com)
+- katello-upgrade redesign (lzap+git@redhat.com)
+- Rspec - Fixes broken Rspec test. (ehelms@redhat.com)
+- Rspec - Fixes issue with referencing Rspec version caused by newest version
+  to fix unit test runs. (ehelms@redhat.com)
+- Gemfile - Fixes reference to Ruport git. (ehelms@redhat.com)
+- switched to a more succinct way to open a binary file (dmitri@redhat.com)
+- Setting therubyracer version (daviddavis@redhat.com)
+- fixed a few issues dicovered when running under 1.9.3 (dmitri@redhat.com)
+- Revert "Revert "Fixed katello.spec for Ruport"" (msuchy@redhat.com)
+- Revert "Revert "Fixed Gemfile for Ruport"" (msuchy@redhat.com)
+- Revert "Revert "Fixing Ruport depend. on Prawn"" (msuchy@redhat.com)
+- Revert "Revert "Fixing Gemfile depend."" (msuchy@redhat.com)
+- Revert "Revert "Fixing Ruport dependencies"" (msuchy@redhat.com)
+- Revert "Revert "Prawn gemfile and spec dependencies"" (msuchy@redhat.com)
+- Revert "Revert "Prawn integration for PDF generation"" (msuchy@redhat.com)
+- fixing a regression i caused on one of my own bugs. (komidore64@gmail.com)
+- 874185 - make sure we don't try and process labels when env is nil
+  (mmccune@redhat.com)
+- 874510, 874502 (komidore64@gmail.com)
+- 845620 - [RFE] Improve messaging around results of setting the yStream
+  (komidore64@gmail.com)
+- 873680 - disallowing blank socket count in system creation
+  (jomara@redhat.com)
+- 853445 - correctly determine the affected repos after deletion
+  (inecas@redhat.com)
+- 874185 - fix the add_repository_library_id migration (inecas@redhat.com)
+- Remove accidentally added file (inecas@redhat.com)
+- Wiped out an unused file (paji@redhat.com)
+- subsfilter - fixes BZ 859038 where the subscription filtering chooser would
+  grab focus when the panel opens (thomasmckay@redhat.com)
+- 873809-js-error - removing oboslete red hat provider code and references
+  (two-pane subscriptions replaced) (thomasmckay@redhat.com)
+- katello-configure - support reset data for the foreman (inecas@redhat.com)
+- Get back Gemfile.lock symlink (inecas@redhat.com)
+- 864936 - products - labelize name on create entry (bbuckingham@redhat.com)
+- 873302 - Environments do not populate when adding a new user without full
+  admin (komidore64@gmail.com)
+- Fixed the permissions to access the RH Subscriptions page (paji@redhat.com)
+- fix version comparison (pchalupa@redhat.com)
+- More color changes to derive from $primary and $kprimary (jrist@redhat.com)
+- 864936 - small but important chg to fix manifest imports
+  (bbuckingham@redhat.com)
+- 864936 - api/cli - generate an error label provided is already in use
+  (bbuckingham@redhat.com)
+- 872686 - create a Role with single-character name fails
+  (komidore64@gmail.com)
+- 864936 - update product labels to ensure uniqueness (bbuckingham@redhat.com)
+- 872096 - correcting typo in a comment (lzap+git@redhat.com)
+- fix missing constant error when fast_gettext gem have older version
+  (pchalupa@redhat.com)
+- 871086 - Changes to respond with template validation errors as bad requests
+  instead of internal server errors. (ehelms@redhat.com)
+- 872305 - scope product certificate search by organization (inecas@redhat.com)
+- 866359 - API: /consumers/{id}/entitlements returns incorrect data and
+  Content-Type header (komidore64@gmail.com)
+- forgot to change branding helper to use release_short method
+  (jomara@redhat.com)
+- Moving some configuration options into branding helper (jomara@redhat.com)
+- Adding more infoz to about page & footer (jomara@redhat.com)
+- 750660 - System packages list doesn't allow you to search for a package
+  installed on the system (j.hadvig@gmail.com)
+- puppet race condition in foreman (lzap+git@redhat.com)
+- 871822 - str != str (jomara@redhat.com)
+- remove deprecation warning (pchalupa@redhat.com)
+- sync spec with Gemfile (msuchy@redhat.com)
+- 872096 - review of katello rpm-delivered conf files (lzap+git@redhat.com)
+- 871822 - nil check for mem_mb (jomara@redhat.com)
+- 871822 - Moving factname for memtotal; now in kB by default
+  (jomara@redhat.com)
+- allowing organizations (and also anything else that uses
+  katello_name_format_validator) to have a name that is one character in
+  length. (komidore64@gmail.com)
+- Added OS-specific Gemfile.lock files (daviddavis@redhat.com)
+- fixing a regression in headpin due to ascii username restrictions in katello.
+  (komidore64@gmail.com)
+- Added fonts symlink. (jrist@redhat.com)
+- 869380-confirm-delete - add confirmation message before deleting manifest
+  (thomasmckay@redhat.com)
+- More fixes for integrating converge-ui (jrist@redhat.com)
+- abstract model - spec tests (tstrachota@redhat.com)
+- abstract model - update_attributes (tstrachota@redhat.com)
+- abstract model - validation error reporting (tstrachota@redhat.com)
+- abstract model - support for naming and to_key Both needed by form_for.
+  (tstrachota@redhat.com)
+- 813291 - [RFE] Username cannot contain characters other than alpha
+  numerals,'_', '-', can not resume after failure (komidore64@gmail.com)
+- wrapping headpin only gems to the if statement (lzap+git@redhat.com)
+- Ruby 1.9.3 - Adds relative path to lib files to fix unittest failures on
+  1.9.3 (ehelms@redhat.com)
+- 870456 - existing orgs do not get default value for system_info_keys in
+  database (komidore64@gmail.com)
+- moving .bundle/config out of RPM to configure (lzap+git@redhat.com)
+- Rspec - Fixes broken test that was a result of mis-configured mocks.
+  (ehelms@redhat.com)
+- Travis - Updates travis config to change directory properly for bundle
+  install. (ehelms@redhat.com)
+- 870362 - Adding conversion method for memory str -> mb (jomara@redhat.com)
+- fixing jammit dep version for sam (lzap+git@redhat.com)
+- 861513 - Fixes issue with failed sync's not generating proper notifications.
+  (ehelms@redhat.com)
+- headpin-dashboard - adjust size of notices portlet when in headpin mode to
+  match system status (thomasmckay@redhat.com)
+- 868916 - wait for elasticsearch and start httpd during upgrade
+  (lzap+git@redhat.com)
+- headpin-foreman - return reverted foreman fencing (thomasmckay@redhat.com)
+- Revert "Prawn integration for PDF generation" (jomara@redhat.com)
+- Revert "Prawn gemfile and spec dependencies" (jomara@redhat.com)
+- Revert "Fixing Ruport dependencies" (jomara@redhat.com)
+- Revert "Fixing Gemfile depend." (jomara@redhat.com)
+- Revert "Fixing Ruport depend. on Prawn" (jomara@redhat.com)
+- Revert "Fixed Gemfile for Ruport" (jomara@redhat.com)
+- Revert "Fixed katello.spec for Ruport" (jomara@redhat.com)
+- 866995 - additional fix for ping controller (lzap+git@redhat.com)
+- 869938 - avoiding cronjob root mail folder flooding (lzap+git@redhat.com)
+- removing foreman dependency from katello-common (lzap+git@redhat.com)
+- adding more strict versions in the Gemfile (lzap+git@redhat.com)
+- Revert "headpin-system-groups - adding system groups to headpin"
+  (jomara@redhat.com)
+- Revert "headpin-system-groups - fence pulp hooks in system model"
+  (jomara@redhat.com)
+- 817946 - API not accessible from browser (komidore64@gmail.com)
+- headpin-system-groups - fence pulp hooks in system model
+  (thomasmckay@redhat.com)
+- 835321 - Fixing the user name validation (j.hadvig@gmail.com)
+- 835586 - restricting usernames to ASCII only. (mmccune@redhat.com)
+- introducing debugging group in the Gemfile (lzap+git@redhat.com)
+- remove fuzzy warnings (pchalupa@redhat.com)
+- update supported rspec versions in monkeypatch (pchalupa@redhat.com)
+- add missing tests for foreman integration (pchalupa@redhat.com)
+- 869006: Fixing variable name change for RAM support from previous pull
+  request (jomara@redhat.com)
+- localizing "NOT-SPECIFIED" string in models/custom_info.rb
+  (komidore64@gmail.com)
+- 865472 - system groups - fix auto-complete on add of systems to groups
+  (bbuckingham@redhat.com)
+- 818903 - Name of the pdf generated for headpin system report command should
+  be modified (komidore64@gmail.com)
+- RAM entitlements (jomara@redhat.com)
+- 862997 - On content search page, during repository comparison, clicking the
+  show more button will now properly load more data for packages and errata.
+  (ehelms@redhat.com)
+- Gemfile for 1.8 and 1.9 Ruby (lzap+git@redhat.com)
+- Properly setting label in before validate method (daviddavis@redhat.com)
+- trying to fix tests for automation (komidore64@gmail.com)
+- headpin-system-groups - adding system groups to headpin
+  (thomasmckay@redhat.com)
+- correctly address owner attribute (msuchy@redhat.com)
+- these aren't needed during testing and are unrelated to the spec test
+  (mmccune@redhat.com)
+- changing to correct 'find' method (komidore64@gmail.com)
+- fixing busted tests due to elastic search indexing (komidore64@gmail.com)
+- adding custom info to elastic search on systems (komidore64@gmail.com)
+- default custom info for systems by org (komidore64@gmail.com)
+- custom info rework (work it!) (komidore64@gmail.com)
+- switching to parallel_tests for our jenkins job and removing yard run
+  (mmccune@redhat.com)
+- Setting label on the backend if blank (daviddavis@redhat.com)
+- fix failing system tests (pchalupa@redhat.com)
+- 866995: Fix the status API so that it is exposed correctly for rhsm.
+  (bkearney@redhat.com)
+- Add foreman_api as a build requirement (inecas@redhat.com)
+- Add Foreman integration code to rpm spec (inecas@redhat.com)
+- removed a rescue used for debugging (dmitri@redhat.com)
+- a bunch of fixes to get katello running on ruby 1.9.3 (dmitri@redhat.com)
+- do not send plain password to Foreman in user foreman glue
+  (pchalupa@redhat.com)
+- utilize Foreman search ability in rake db:seed (pchalupa@redhat.com)
+- raise errors on Foreman Katello DB inconsistency (pchalupa@redhat.com)
+- manifests - cleaned error message, removed unused var
+  (thomasmckay@redhat.com)
+- manifests - Added delete manifest while in headpin mode (not enabled in
+  katello) manifests - fixed 857949
+  https://bugzilla.redhat.com/show_bug.cgi?id=857949 (thomasmckay@redhat.com)
+- 855267 - CLI - changesets - update controller to use before_filter for
+  product (bbuckingham@redhat.com)
+- fix missing parameter (pchalupa@redhat.com)
+- move missing foreman user creation out of migration to upgrade script
+  (pchalupa@redhat.com)
+- update katello.spec to correspond with Gemfile dependencies
+  (pchalupa@redhat.com)
+- reuse User foreman orchestration disablement in tests (pchalupa@redhat.com)
+- add missing copyright notices (pchalupa@redhat.com)
+- fix broken unit tests from 71a2926 (pchalupa@redhat.com)
+- update apipie and foreman_api dependencies in Gemfile (pchalupa@redhat.com)
+- raise error when parsing of response fails (pchalupa@redhat.com)
+- add Resources::Foreman.options method to be able to access option hash
+  (pchalupa@redhat.com)
+- change AbstractModel to correspond with unified apipie resource method
+  signatures (pchalupa@redhat.com)
+- add migration for creating missing users in foreman (pchalupa@redhat.com)
+- fix failing test (pchalupa@redhat.com)
+- improve foreman api controllers (pchalupa@redhat.com)
+- add method for parsing attributes from response (pchalupa@redhat.com)
+- fix rake db:seed with foreman orchestration on (pchalupa@redhat.com)
+- fix errors introduced by adding AbstractModel (pchalupa@redhat.com)
+- add Resources::AbstractModel (pchalupa@redhat.com)
+- add foreman user orchestration tests (pchalupa@redhat.com)
+- Rescue foreman model exceptions (pajkycz@gmail.com)
+- Architectures API fix (pajkycz@gmail.com)
+- Fix destroy foreman user (pajkycz@gmail.com)
+- katello - add spec for Resources::ForemanModel (pchalupa@redhat.com)
+- katello - fix foreman architetures, make sure actions won't fail silently
+  (pchalupa@redhat.com)
+- Foreman Config Templates improvements (pajkycz@gmail.com)
+- apidoc - added docs for config_templates (mbacovsk@redhat.com)
+- apidoc -  added docs for domains (mbacovsk@redhat.com)
+- Config templates CLI - print template kind (pajkycz@gmail.com)
+- Foreman domains added to CLI client (pajkycz@gmail.com)
+- apidoc - added api doc for architectures (mbacovsk@redhat.com)
+- Foreman's Config Templates added to CLI client. (pajkycz@gmail.com)
+- Foreman config templates added, foreman model small changes
+  (pajkycz@gmail.com)
+- katello - remove password_confirmation from foreman user model
+  (pchalupa@redhat.com)
+- Fixed packaging of foreman stuff (mbacovsk@redhat.com)
+- architectures - add conditional exposure of foreman api proxy
+  (mbacovsk@redhat.com)
+- make user orchestration to use Foreman::User (pchalupa@redhat.com)
+- foreman model polishing (pchalupa@redhat.com)
+- Foreman models: Architecture, Domain (pajkycz@gmail.com)
+- katello - foreman user mapping (pchalupa@redhat.com)
+- remove old foreman code (pchalupa@redhat.com)
+- architectures - code cleanup (mbacovsk@redhat.com)
+- Fixed katello config file template (mbacovsk@redhat.com)
+- Fixed problem with storing resource class in class var (mbacovsk@redhat.com)
+- US22811 - added architecture controller proxy (mbacovsk@redhat.com)
+
 * Wed Oct 17 2012 Ivan Necas <inecas@redhat.com> 1.2.1-1
 - skip symlinks during gettext check (msuchy@redhat.com)
 - Moved trigger from body to document element. (gstoecke@redhat.com)
@@ -2484,7 +2994,7 @@ fi
 - reverted katello.yml back to katello master version
 - removed reference to headpin in client.conf and katello.yml
 - fixed headpin-specific variation of available releases spec test
-- fenced spec tests 
+- fenced spec tests
 - 766647 - duplicate env creation - better error message needed
 - katello-cli, katello - setting default environment for user
 - 812263 - keep the original tomcat server.xml when resetting dbs
@@ -2522,7 +3032,7 @@ fi
 - 803412 - auto-subscribe w/ SLA now on system subscription page
 - reorganizing assets to reduce the number of javascript files downloaded
 - removing unneeded print statement
-- allowing search param for all, needed for all creates 
+- allowing search param for all, needed for all creates
 - system packages - fix checbox events after loading more pkgs
 - system packages - add support for tabindex
 - 810375 - remove page size limit on repos displayed
@@ -2607,7 +3117,7 @@ fi
 - 790063 - search - few more mods for consistency
 
 * Fri Mar 09 2012 Mike McCune <mmccune@redhat.com> 0.2.9-1
-- periodic rebuild 
+- periodic rebuild
 * Tue Mar 06 2012 Mike McCune <mmccune@redhat.com> 0.2.7-1
 - Was accidentally hiding login button if ldap was enabled (jomara@redhat.com)
 - 788008 - do not attempt to poll errata status when user does not have edit
@@ -2693,7 +3203,7 @@ fi
 - 751843 - adding counts go promotion search pages
 
 * Fri Feb 24 2012 Mike McCune <mmccune@redhat.com> 0.2.2-1
-- rebuild 
+- rebuild
 * Wed Feb 22 2012 Mike McCune <mmccune@redhat.com> 0.2.1-1
 - 796268 - proper error message when erratum was not found
   (tstrachota@redhat.com)
@@ -3025,7 +3535,7 @@ fi
 * Wed Dec 21 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.151-1
 
 * Tue Dec 20 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.149-1
-- 
+-
 
 * Mon Dec 19 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.148-1
 - Revert "765888 - Error during promotion"

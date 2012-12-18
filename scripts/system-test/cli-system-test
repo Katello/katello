@@ -11,6 +11,18 @@ export TESTDIR=$script_dir
 
 . $script_dir/helpers
 
+# fake beaker environment and load it if present
+function rlPhaseStartTest() {
+    return 0
+}
+function rlPhaseEnd() {
+    return 0
+}
+function rlFail() {
+    return 0
+}
+[ -f /usr/bin/rhts-environment.sh ] && . /usr/bin/rhts-environment.sh
+[ -f /usr/lib/beakerlib/beakerlib.sh ] && . /usr/lib/beakerlib/beakerlib.sh
 
 USER='admin'
 PASSWORD='admin'
@@ -197,6 +209,9 @@ function test_cmd() {
     test_success=$1; shift
     test_name=$1; shift
 
+    # beaker
+    rlPhaseStartTest "$test_name"
+
     if [ $PRINT_ALL -eq 1 ]; then
         echo $*
     fi
@@ -234,6 +249,8 @@ function test_cmd() {
             msg_status "$test_name" "${txtred}FAILED${txtrst}"
             printf "%s\n" "$*"
             printf "%s\n" "$result"
+            # beaker
+            rlFail
         fi
         let failed_cnt+=1
         let "TERMINATE=$TERMINATE - 1"
@@ -246,6 +263,11 @@ function test_cmd() {
     fi
     log_test_result "$status" "$test_name" "$result"
     let test_cnt+=1
+
+    # beaker
+    rlPhaseEnd
+
+    # termination support
     if [ $status -eq 0 -a $TERMINATE -le 0 ]; then
         # immediate termination
         echo "Failure, exiting:"
@@ -285,13 +307,18 @@ function test_own_cmd_exit_code() {
 }
 
 
+function skip_message() {
+    msg_status "$1" "${txtyel}SKIPPED${txtrst}" "Notes: $2"
+}
+
 function skip_test_success() {
     if [ $RUN_DISABLED -eq 1 ]; then
         MSG=$1
         shift
+        shift
         test_success "$MSG" "$@"
     else
-        msg_status "$1" "${txtyel}SKIPPED${txtrst}" "Notes: $2"
+        skip_message "$1" "$2"
     fi
 }
 
@@ -299,9 +326,10 @@ function skip_test_failure() {
     if [ $RUN_DISABLED -eq 1 ]; then
         MSG=$1
         shift
+        shift
         test_failure "$MSG" "$@"
     else
-        msg_status "$1" "${txtyel}SKIPPED${txtrst}" "Notes: $2"
+        skip_message "$1" "$2"
     fi
 }
 

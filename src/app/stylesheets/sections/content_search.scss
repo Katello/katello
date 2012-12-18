@@ -1,11 +1,14 @@
 @import "katello_base";
+@import "overrides";
 
 $browse_box-width: 230px;
 $browse_box-height: 500px;
 $browse_box_header-height: 40px;
 $browse_box-margin-top: 25px;
+$browse_box-margin-left: 0px;
+$browse_box-margin-right: 10px;
 
-$comparison_grid-width: 688px;
+$comparison_grid-width: $static_width - $browse_box-width - $browse_box-margin-left - $browse_box-margin-right - 24;
 $comparison_grid_header_h2-height:  45px;
 $comparison_grid_column_header-height:  35px;
 $comparison_grid_header-height: $comparison_grid_header_h2-height + $comparison_grid_column_header-height;
@@ -23,12 +26,18 @@ $comparison_grid_footer-height: 45px;
 $environment_selector-width: 97px;
 
 $comparison_grid-border-color:              #D7D7D7;
-$comparison_grid_column_header-background:  #FFFFFF;
-$grid_row_level_2-color:                    #D4EEFC;
+$comparison_grid_column_header-background:  $white_color;
+$grid_row_level_2-color:                    saturate(lighten($primary_color, 70%), 17%);
 $grid_cell_hover-background-color:          #585E64;
-$grid_cell_hover_link-color:                #40D7FD;
-@mixin grid_row_level_1-color { background: #91CFED; @include background-image(linear-gradient(#91CFED, #77C4E9)); }
-@mixin collapse_button-background-color { @include background-image(linear-gradient(#F1F1F1, #C9C9C9)); }
+$grid_cell_hover_link-color:                lighten($primary_color, 40%);
+//@mixin grid_row_level_1-color { background: #91CFED; @include background-image(linear-gradient(#91CFED, #77C4E9)); }
+@mixin grid_row_level_1-color {
+  background: saturate(lighten($primary_color, 72%), 3%);
+  @include background-image(linear-gradient(lighten($primary_color, 64%), lighten($primary_color, 58%)));
+}
+@mixin collapse_button-background-color {
+    @include background-image(linear-gradient(#F1F1F1, #C9C9C9));
+}
 
 .no_border { border: none !important; }
 
@@ -84,8 +93,8 @@ $grid_cell_hover_link-color:                #40D7FD;
   float: left;
   border: 1px solid $comparison_grid-border-color;
   margin-bottom: 50px;
-  margin-left: 15px;
-  margin-right: 12px;
+  margin-left: $browse_box-margin-left;
+  margin-right: $browse_box-margin-right;
   margin-top: $browse_box-margin-top;
   @include border-radius(3px);
   @include widget-background-color;
@@ -161,7 +170,7 @@ $grid_cell_hover_link-color:                #40D7FD;
         border: 1px solid $comparison_grid-border-color;
         border-top: none;
         padding: 8px 0 8px 0;
-        background: #FFF;
+        background: $white_color;
 
         .auto_complete_input { width: 126px; }
         ul { 
@@ -267,7 +276,7 @@ $grid_cell_hover_link-color:                #40D7FD;
         width: 16px;
         line-height: $comparison_grid_column_header-height;
         height: $comparison_grid_column_header-height;
-        background: #FFF;
+        background: $white_color;
         
         &[data-arrow_direction='left'] {
           left: 0;
@@ -275,7 +284,7 @@ $grid_cell_hover_link-color:                #40D7FD;
         }
 
         &[data-arrow_direction='right'] { 
-          right: 21px;
+          right: 25px;
           border-left: 1px solid $widget-border-color;
           border-right: 1px solid $widget-border-color;
         }
@@ -305,7 +314,7 @@ $grid_cell_hover_link-color:                #40D7FD;
       #column_headers_window {
         position: relative;
         float: left;
-        width: 400px;
+        width: 600px;
         overflow: hidden;
       }
 
@@ -340,7 +349,7 @@ $grid_cell_hover_link-color:                #40D7FD;
         right: -1px;
         z-index: 15;
         padding: 0 0 0 5px;
-        background: #FFF;
+        background: $white_color;
         line-height: $comparison_grid_column_header-height;
         height: $comparison_grid_column_header-height;
         border-left: 1px dotted $widget-border-color;
@@ -361,7 +370,7 @@ $grid_cell_hover_link-color:                #40D7FD;
       border-right: 1px solid $comparison_grid-border-color;
       min-height: $comparison_grid-height - $comparison_grid_header-height;
       float: left;
-      background: #FFF;
+      background: $white_color;
 
       [class*="-icon-"] {
         vertical-align: top;
@@ -442,7 +451,7 @@ $grid_cell_hover_link-color:                #40D7FD;
       width: $comparison_grid-width - $comparison_grid_filter-width - 1;
       min-height: $comparison_grid-height - $comparison_grid_header-height;
       float: left;
-      background: #FFF;
+      background: $white_color;
       overflow: hidden;
 
       #grid_content {
@@ -508,7 +517,7 @@ $grid_cell_hover_link-color:                #40D7FD;
           height: $comparison_grid_row-height;
           line-height: 18px;
           text-align: center;
-          color: #FFF;
+          color: $white_color;
           padding: 0 5px;
           background: $grid_cell_hover-background-color;
           position: absolute;
@@ -581,3 +590,9 @@ $grid_cell_hover_link-color:                #40D7FD;
 .button { margin: 0; }
 .button:active { padding: 4px 8px; }
 .one-line-ellipsis { display: inline-block; }
+
+#content_search {
+  .container_16 {
+    margin-left: 10px;
+  }
+}
