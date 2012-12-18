@@ -39,7 +39,7 @@ class System < ActiveRecord::Base
                                    :system_group,
                                    :installed_products,
                                    "custom_info.KEYNAME",
-                                   :ram,
+                                   :memory,
                                    :sockets]
 
   dynamic_templates = [
@@ -70,7 +70,7 @@ class System < ActiveRecord::Base
     indexes :lastCheckin, :type=>'date'
     indexes :name_autocomplete, :type=>'string', :analyzer=>'autcomplete_name_analyzer'
     indexes :installed_products, :type=>'string', :analyzer=>:kt_name_analyzer
-    indexes :ram, :type => 'integer'
+    indexes :memory, :type => 'integer'
     indexes :sockets, :type => 'integer'
     indexes :facts, :path=>"just_name" do
     end
@@ -102,6 +102,8 @@ class System < ActiveRecord::Base
   validates :description, :katello_description_format => true
   validates_length_of :location, :maximum => 255
   validates :sockets, :numericality => { :only_integer => true, :greater_than => 0 },
+            :allow_nil => true, :if => ("validation_context == :create || validation_context == :update")
+  validates :memory, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0 },
             :allow_nil => true, :if => ("validation_context == :create || validation_context == :update")
   before_create  :fill_defaults
 
@@ -302,7 +304,6 @@ class System < ActiveRecord::Base
      :system_group=>self.system_groups.collect{|g| g.name},
      :system_group_ids=>self.system_group_ids,
      :installed_products=>collect_installed_product_names,
-     :ram => self.memory,
      :sockets => self.sockets,
      :custom_info=>collect_custom_info
     }
