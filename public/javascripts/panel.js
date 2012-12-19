@@ -343,6 +343,7 @@ KT.panel = (function ($) {
             var spinner = thisPanel.find('.spinner'),
                 panelContent = thisPanel.find(".panel-content");
 
+            $(document).trigger('open_panel.tupane');
             spinner.show();
             KT.panel.copy.hide_form();
             panelContent.hide();
