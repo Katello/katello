@@ -381,7 +381,8 @@ fi
 
     #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
     echo Generating gettext files...
-    ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")'
+    LC_ALL=C ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")' 2>&1 \
+      | sed -e '/Warning: obsolete msgid exists./,+1d' | sed -e '/Warning: fuzzy message was ignored./,+1d'
 %endif
 
 #man pages
