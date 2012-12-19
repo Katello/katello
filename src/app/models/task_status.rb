@@ -329,6 +329,11 @@ class TaskStatus < ActiveRecord::Base
     task_status
   end
 
+
+  def delete_delayed_job
+
+  end
+
   protected
   def setup_task_type
     unless self.task_type

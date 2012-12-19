@@ -24,6 +24,9 @@ $(document).ready(function() {
         if ($('#discovered_repos').length > 0){
             KT.repo_discovery.page_load();
         }
+        else {
+            KT.repo_discovery.page_close();
+        }
     });
 
   $('.repo_create').live('click', function(event) {

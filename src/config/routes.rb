@@ -308,6 +308,7 @@ Src::Application.routes.draw do
       get :repo_discovery
       get :discovered_repos
       post :discover
+      post :cancel_discovery
       get :products_repos
       get :manifest_progress
       get :schedule
