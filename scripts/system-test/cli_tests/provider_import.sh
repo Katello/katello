@@ -55,7 +55,7 @@ sm_present() {
 # testing registration from rhsm
 if sm_present; then
   if grep 'hostname = subscription.rhn.redhat.com' /etc/rhsm/rhsm.conf; then
-    skip_test_success "rhsm registration" "Could not test against hosted"
+    skip_message "rhsm registration" "Could not test against hosted"
   else
     test_own_cmd_success "rhsm registration with org" $SUDO subscription-manager register --username="$USER" --password="$PASSWORD" \
       --org="$MANIFEST_ORG" --name="$HOST" --force
@@ -75,7 +75,7 @@ if sm_present; then
     test_own_cmd_success "rhsm unregister" $SUDO subscription-manager unregister
   fi
 else
-  skip_test_success "rhsm registration" "subscription-manager command not found"
+  skip_message "rhsm registration" "subscription-manager command not found"
 fi
 
 test_success "reimport manifest" provider import_manifest --name "Red Hat" --org "$MANIFEST_ORG" --file "$MANIFEST_REIMPORT_PATH" --force

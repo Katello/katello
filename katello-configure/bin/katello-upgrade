@@ -25,7 +25,7 @@ require 'optparse'
 require "#{PREFIX}/lib/util/functions.rb"
 
 # error codes for exit_with function
-ERROR_CODES = {
+UPGRADE_ERROR_CODES = {
   :success => 0,
   :interrupted => 1, # prints continuation banner
   :general_error => 2,
@@ -42,13 +42,14 @@ def opt(name)
   $options[name]
 end
 
-# Terminate script with error code from ERROR_CODES hash
+# Terminate script with error code from UPGRADE_ERROR_CODES hash
+# (Overrides exit_with defined in helper lib - we need our own handling)
 def exit_with(code = :general_error, message = nil, e = nil)
   if opt(:trace) and not e.nil?
     $stderr.puts "#{e.backtrace.first}: #{e.message} (#{e.class})", e.backtrace.drop(1).map{|s| "\t#{s}"}
   end
   $stderr.puts message unless message.nil?
-  code = ERROR_CODES[code.to_sym] || ERROR_CODES[:general_error]
+  code = UPGRADE_ERROR_CODES[code.to_sym] || UPGRADE_ERROR_CODES[:general_error]
   $stderr.puts "More info in #{KATELLO_UPGRADE_LOG}" if code > 0 and code < 100
   if code == :interrupted
     $stderr.puts "One-time steps will be skipped, regular upgrade steps can be safely"

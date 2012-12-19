@@ -63,7 +63,12 @@ module Authorization::Repository
           joins(:environment_product).where("environment_products.environment_id" =>  KTEnvironment.content_readable(org).where(:library => false))
         end
       end
-
+      
+      # only repositories in a given environment
+      scope :in_environment, lambda { |env|
+        joins(:environment_product).where(:environment_products => {:environment_id => env.id})
+      }
+      
       def self.any_readable_in_org? org, skip_library = false
         KTEnvironment.any_contents_readable? org, skip_library
       end

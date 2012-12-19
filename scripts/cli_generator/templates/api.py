@@ -14,11 +14,8 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
+from katello.client.core.utils import slice_dict
 
-
-def slice_dict(d, *key_list):
-    default = None
-    return dict((k, d.get(k, default)) for k in key_list)
 
 class ${resource.name(True, True)}API(KatelloAPI):
 

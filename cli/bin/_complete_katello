@@ -1,0 +1,38 @@
+#!/usr/bin/python
+#
+# Katello Shell
+# Copyright (c) 2012 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public License,
+# version 2 (GPLv2). There is NO WARRANTY for this software, express or
+# implied, including the implied warranties of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. You should have received a copy of GPLv2
+# along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+#
+# Red Hat trademarks are not licensed under GPLv2. No permission is
+# granted to use or replicate Red Hat trademarks that are incorporated
+# in this software or its documentation.
+#
+
+import sys
+from katello.client.completion import Completion
+
+# Change encoding of output streams when no encoding is forced via $PYTHONIOENCODING
+# or setting in lib/python{version}/site-packages
+from katello.client.utils.encoding import fix_io_encoding
+fix_io_encoding()
+
+# Set correct locale
+from katello.client.i18n import configure_i18n
+configure_i18n()
+
+from katello.client.cli.admin import AdminCLI
+from katello.client.main import setup_admin
+
+if __name__ == "__main__":
+    admin = AdminCLI()
+    setup_admin(admin)
+
+    cpl = Completion(admin)
+    print " " + " ".join(cpl.complete(sys.argv[1]))

@@ -34,7 +34,6 @@ class Repository < ActiveRecord::Base
   belongs_to :gpg_key, :inverse_of => :repositories
   belongs_to :library_instance, :class_name=>"Repository"
   has_and_belongs_to_many :changesets
-  has_and_belongs_to_many :filters
 
   has_many :content_view_definition_repositories
   has_many :content_view_definitions, :through => :content_view_definition_repositories
@@ -50,7 +49,7 @@ class Repository < ActiveRecord::Base
   belongs_to :gpg_key, :inverse_of => :repositories
   belongs_to :library_instance, :class_name=>"Repository"
 
-  default_scope :order => 'name ASC'
+  default_scope :order => 'repositories.name ASC'
   scope :enabled, where(:enabled => true)
 
   def product
@@ -112,11 +111,6 @@ class Repository < ActiveRecord::Base
 
   def custom?
     !(redhat?)
-  end
-
-  def has_filters?
-    return false unless environment.library?
-    filters.count > 0 || product.filters.count > 0
   end
 
   def clones
@@ -233,15 +227,5 @@ class Repository < ActiveRecord::Base
       repo = self.library_instance
     end
     Repository.where("library_instance_id=%s or repositories.id=%s"  % [repo.id, repo.id] )
-  end
-
-  #Filters that should be applied for content coming into this repository.
-  def applicable_filters
-    previous = self.environmental_instances.in_environment(self.environment.prior).first
-    if previous && previous.environment.prior.nil?  #if previous exists and is library
-      previous.filters + self.product.filters
-    else
-      []
-    end
   end
 end

@@ -21,14 +21,17 @@ from katello.client import constants
 from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.utils import format_date
 from katello.client.api.repo import RepoAPI
+from katello.client.api.provider import ProviderAPI
 from katello.client.core.base import BaseAction, Command
-from katello.client.api.utils import get_environment, get_product, get_repo, get_filter
+from katello.client.api.utils import get_environment, get_product, get_repo
 from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, \
     wait_for_async_task, AsyncTask, format_sync_errors
 from katello.client.core.utils import ProgressBar
+from katello.client.api.utils import get_provider
 from katello.client.utils.encoding import u_str
 from katello.client.utils import printer
 from katello.client.utils.printer import batch_add_columns
+
 
 
 ALLOWED_REPO_URL_SCHEMES = ("http", "https", "ftp", "file")
@@ -161,22 +164,25 @@ class Discovery(RepoAction):  # pylint: disable=R0904
     #TODO: temporary pylint disable, we need to refactor the class later
 
     description = _('discovery repositories contained within a URL')
+    provider_api = ProviderAPI()
 
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
+        parser.add_option('--provider', dest='provider',
+            help=_("provider name (required)"))
         parser.add_option('--name', dest='name',
             help=_("repository name prefix to add to all the discovered repositories (required)"))
         parser.add_option('--label', dest='label',
                                help=_("repo label, ASCII identifier to add to " +
                                 "all discovered repositories.  (will be generated if not specified)"))
         parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES,
-            help=_("root url to perform discovery of repositories eg: http://porkchop.devel.redhat.com/ (required)"))
+            help=_("root url to perform discovery of repositories eg: http://katello.org/repos/ (required)"))
         parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
             help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
         opt_parser_add_product(parser, required=1)
 
     def check_options(self, validator):
-        validator.require(('name', 'org', 'url'))
+        validator.require(('name', 'org', 'url', 'provider'))
         validator.require_at_least_one_of(('product', 'product_label', 'product_id'))
         validator.mutually_exclude('product', 'product_label', 'product_id')
 
@@ -185,12 +191,14 @@ class Discovery(RepoAction):  # pylint: disable=R0904
         label    = self.get_option('label')
         url      = self.get_option('url')
         assumeyes = self.get_option('assumeyes')
+        providerName   = self.get_option('provider')
         prodName = self.get_option('product')
         prodLabel = self.get_option('product_label')
         prodId   = self.get_option('product_id')
         orgName  = self.get_option('org')
 
-        repourls = self.discover_repositories(orgName, url)
+        prov_id = get_provider(orgName, providerName)['id']
+        repourls = self.discover_repositories(prov_id, url)
         self.printer.set_header(_("Repository Urls discovered @ [%s]" % url))
         selectedurls = self.select_repositories(repourls, assumeyes)
 
@@ -199,12 +207,12 @@ class Discovery(RepoAction):  # pylint: disable=R0904
 
         return os.EX_OK
 
-    def discover_repositories(self, org_name, url):
+    def discover_repositories(self, provider_id, url):
         print(_("Discovering repository urls, this could take some time..."))
-        task = self.api.repo_discovery(org_name, url, 'yum')
+        task = self.provider_api.repo_discovery(provider_id, url)
 
-        discoveryResult = run_spinner_in_bg(wait_for_async_task, [task])
-        repourls = discoveryResult[0]['result'] or []
+        run_spinner_in_bg(wait_for_async_task, [task])
+        repourls = self.provider_api.provider(provider_id)['discovered_repos']
 
         if not len(repourls):
             system_exit(os.EX_OK, "No repositories discovered @ url location [%s]" % url)
@@ -480,82 +488,6 @@ class Delete(SingleRepoAction):
         msg = self.api.delete(repo["id"])
         print msg
         return os.EX_OK
-
-
-class ListFilters(SingleRepoAction):
-
-    description = _('list filters of a repository')
-    select_by_env = False
-
-    def setup_parser(self, parser):
-        super(ListFilters, self).setup_parser(parser)
-        parser.add_option('--inherit', dest='inherit', action="store_true", default=False,
-            help=_("prints also filters assigned to repository's product."))
-
-    def run(self):
-        repo = self.get_repo()
-        inherit = self.get_option('inherit')
-
-        filters = self.api.filters(repo['id'], inherit)
-
-        self.printer.add_column('name')
-        self.printer.add_column('description')
-        self.printer.set_header(_("Repository Filters"))
-        self.printer.print_items(filters)
-
-        return os.EX_OK
-
-
-class AddRemoveFilter(SingleRepoAction):  # pylint: disable=R0904
-    #TODO: temporary pylint disable, we need to refactor the class later
-
-    select_by_env = False
-    addition = True
-
-    @property
-    def description(self):
-        if self.addition:
-            return _('add a filter to a repository')
-        else:
-            return _('remove a filter from a repository')
-
-    def __init__(self, addition):
-        super(AddRemoveFilter, self).__init__()
-        self.addition = addition
-
-    def setup_parser(self, parser):
-        self.set_repo_select_options(parser, False)
-        parser.add_option('--filter', dest='filter', help=_("filter name (required)"))
-
-    def check_options(self, validator):
-        super(AddRemoveFilter, self).check_options(validator)
-        validator.require('filter')
-
-    def run(self):
-        filter_name  = self.get_option('filter')
-        org_name     = self.get_option('org')
-
-        repo = self.get_repo()
-
-        get_filter(org_name, filter_name)
-
-        filters = self.api.filters(repo['id'])
-        filters = [f['name'] for f in filters]
-        self.update_filters(repo, filters, filter_name)
-        return os.EX_OK
-
-    def update_filters(self, repo, filters, filter_name):
-        if self.addition:
-            filters.append(filter_name)
-            message = _("Added filter [ %s ] to repository [ %s ]" % (filter_name, repo["name"]))
-        else:
-            filters.remove(filter_name)
-            message = _("Removed filter [ %s ] to repository [ %s ]" % (filter_name, repo["name"]))
-
-        self.api.update_filters(repo['id'], filters)
-        print message
-
-
 
 # command --------------------------------------------------------------------
 
