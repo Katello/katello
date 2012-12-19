@@ -21,6 +21,7 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def setup
+    User.current = User.find(users(:admin))
     @content_view_def = FactoryGirl.build(:content_view_definition)
     @repo = Repository.find(repositories(:fedora_17_x86_64).id)
     @product               = Product.find(products(:fedora).id)
