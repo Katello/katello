@@ -5,6 +5,7 @@ Src::Application.configure do
   # every request.  This slows down response time but is perfect for development
   # since you don't have to restart the webserver when you make code changes.
   config.cache_classes = false
+  #config.cache_classes = true
   #switch the above to true if you're demoing.
 
   # Log error messages when you accidentally call methods on nil.
@@ -24,10 +25,10 @@ Src::Application.configure do
   Dir.mkdir "#{Rails.root}/log" unless File.directory? "#{Rails.root}/log"
   config.active_record.logger = Logger.new("#{Rails.root}/log/development_sql.log")
 
-  config.autoload_paths += %W(#{Rails.root}/../../runcible/lib)
-
-  ActiveSupport::Dependencies.explicitly_unloadable_constants << "::Runcible::Resources"
-  ActiveSupport::Dependencies.explicitly_unloadable_constants << "::Runcible::Extensions"
+  #support for reloadable Runcible
+  #config.autoload_paths += %W(#{Rails.root}/../../runcible/lib)
+  #ActiveSupport::Dependencies.explicitly_unloadable_constants << "::Runcible::Resources"
+  #ActiveSupport::Dependencies.explicitly_unloadable_constants << "::Runcible::Extensions"
 
   Bundler.require(:debugging, Rails.env)
 end

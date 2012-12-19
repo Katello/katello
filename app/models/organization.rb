@@ -23,7 +23,6 @@ class Organization < ActiveRecord::Base
   has_many :products, :through => :providers
   has_many :environments, :class_name => "KTEnvironment", :conditions => {:library => false}, :dependent => :destroy, :inverse_of => :organization
   has_one :library, :class_name =>"KTEnvironment", :conditions => {:library => true}, :dependent => :destroy
-  has_many :filters, :dependent => :destroy, :inverse_of => :organization
   has_many :gpg_keys, :dependent => :destroy, :inverse_of => :organization
   has_many :permissions, :dependent => :destroy, :inverse_of => :organization
   has_many :sync_plans, :dependent => :destroy, :inverse_of => :organization
@@ -41,6 +40,7 @@ class Organization < ActiveRecord::Base
   validates :name, :uniqueness => true, :presence => true, :katello_name_format => true
   validates :label, :uniqueness => true, :presence => true, :katello_label_format => true
   validates :description, :katello_description_format => true
+  validate :unique_name_and_label
 
   before_save { |o| o.system_info_keys = Array.new unless o.system_info_keys }
 
@@ -57,6 +57,19 @@ class Organization < ActiveRecord::Base
       if Organization.find_by_label(self.label).nil? && Organization.unscoped.find_by_label(self.label)
         errors.add(:organization, _(" '%s' already exists and either has been scheduled for deletion or failed deletion.") % self.label)
       end
+    end
+  end
+
+  # Ensure that the name and label namespaces do not overlap
+  def unique_name_and_label
+    if new_record? and Organization.where("name = ? OR label = ?", label, name).any?
+      errors.add(:organization, _("Names and labels must be unique across all organizations"))
+    elsif label_changed? and Organization.where("id != ? AND name = ?", id, label).any?
+      errors.add(:label, _("Names and labels must be unique across all organizations"))
+    elsif name_changed? and Organization.where("id != ? AND label = ?", id, name).any?
+      errors.add(:name, _("Names and labels must be unique across all organizations"))
+    else
+      true
     end
   end
 

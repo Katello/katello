@@ -11,18 +11,22 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class SystemGroup < ActiveRecord::Base
+  include Hooks
+  define_hooks :add_system_hook, :remove_system_hook
 
   include Glue::Pulp::ConsumerGroup if (AppConfig.use_pulp)
-  include Glue::ElasticSearch::SystemGroup
-  include Glue
+  include Glue::ElasticSearch::SystemGroup if AppConfig.use_elasticsearch
+  include Glue if AppConfig.use_cp || AppConfig.use_pulp
   include Authorization::SystemGroup
 
   has_many :key_system_groups, :dependent => :destroy
   has_many :activation_keys, :through => :key_system_groups
 
   has_many :system_system_groups, :dependent => :destroy
-  has_many :systems, {:through => :system_system_groups, :before_add => :add_pulp_consumer_group,
-           :before_remove => :remove_pulp_consumer_group}.merge(update_association_indexes)
+  has_many :systems, {:through      => :system_system_groups, 
+                      :after_add    => :add_system,
+                      :after_remove => :remove_system
+                     }
 
   has_many :jobs, :as => :job_owner
 
@@ -66,6 +70,13 @@ class SystemGroup < ActiveRecord::Base
 
   default_scope :order => 'name ASC'
 
+  def add_system(system)
+    run_hook(:add_system_hook, system)
+  end
+
+  def remove_system(system)
+    run_hook(:remove_system_hook, system)
+  end
 
   def install_packages packages
     raise Errors::SystemGroupEmptyException if self.systems.empty?
@@ -190,19 +201,10 @@ class SystemGroup < ActiveRecord::Base
     end
   end
 
-  def add_pulp_consumer_group record
-    self.add_consumers([record.uuid])
-  end
-
-  def remove_pulp_consumer_group record
-    self.del_consumers([record.uuid])
-  end
-
   def save_job pulp_job, job_type, parameters_type, parameters
     job = Job.create!(:pulp_id => pulp_job[:id], :job_owner => self)
     job.create_tasks(self, pulp_job[:tasks], job_type, parameters_type => parameters)
     job
   end
-
 
 end

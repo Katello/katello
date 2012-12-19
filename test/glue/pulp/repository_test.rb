@@ -282,7 +282,7 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
     clone = @@fedora_17_x86_64.create_clone(staging)
 
     assert_kind_of Repository, clone
-
+  ensure
     clone.destroy
     assert_empty Repository.where(:id=>clone.id)
   end
@@ -293,9 +293,10 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
     @@fedora_17_x86_64_dev.create_pulp_repo
 
     task_list = @@fedora_17_x86_64.clone_contents(@@fedora_17_x86_64_dev)
-    assert_equal 3, task_list.length
+    assert_equal 4, task_list.length
 
     self.class.wait_on_tasks(task_list)
+  ensure
     @@fedora_17_x86_64_dev.destroy_repo
   end
 
@@ -348,7 +349,6 @@ class GluePulpRepoRequiresEmptyPromoteTest < GluePulpRepoTestBase
       clone_id = @@fedora_17_x86_64.clone_id(@@staging, @@staging.default_content_view)
       @@cloned_repo = Repository.where(:pulp_id => clone_id).first
     end
-
   end
 
   def self.after_suite

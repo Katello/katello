@@ -11,22 +11,28 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 //some variables that are used throughout the panel
-var thisPanel = null;
-var subpanel = null;
-var subpanelSpacing = 55;
-var panelLeft = null;
-var count = 0;
+var thisPanel = null,
+  subpanel = null,
+  subpanelSpacing = 55,
+  panelLeft = null,
+  count = 0,
+  page_width = null,
+  left = null,
+  right = null;
 
 // Saves the state of the last subpanel viewed so selecting a new item from list will keep that subpanel open.
 var last_ajax_panelpage;
 
 $(document).ready(function () {
-    $('.left').resize(function () {
+    page_width = $('#maincontent .maincontent').width();
+    left = $('.left');
+    right = $('.right');
+    left.resize(function () {
         var apanel = $('.panel');
-        panelLeft = $(this).width();
+        panelLeft = left.width();
         $('.block').not('#new').width(panelLeft - 17);
-        apanel.width(940 - panelLeft);
-        $('.right').width(885 - panelLeft);
+        apanel.width((page_width - 21) - panelLeft);
+        right.width((page_width - 75) - panelLeft);
         if (apanel.hasClass('opened')) {
             apanel.css({
                 "left": (panelLeft)
@@ -207,6 +213,7 @@ $(document).ready(function () {
     //register the default actions for the page's actions partial
     KT.panel.actions.registerDefaultActions();
 
+    $('#list-title h2').tipsy();
 
 });
 

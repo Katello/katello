@@ -19,8 +19,6 @@ module Glue::Pulp::Repo
       before_save :save_repo_orchestration
       before_destroy :destroy_repo_orchestration
 
-      has_and_belongs_to_many :filters, :uniq => true
-
       lazy_accessor :pulp_repo_facts,
                     :initializer => lambda { |s|
                       if pulp_id
@@ -125,7 +123,7 @@ module Glue::Pulp::Repo
 
     def promote from_env, to_env
       if self.is_cloned_in?(to_env)
-        return clone.sync
+        self.clone_contents(self.get_clone(to_env))
       else
         clone = self.create_clone(to_env)
         clone_events = self.clone_contents(clone) #return clone task
@@ -323,12 +321,11 @@ module Glue::Pulp::Repo
     end
 
     def clone_contents to_repo
-      filtered = to_repo.applicable_filters.collect{|f| f.package_list}.flatten
       events = []
-      events << Runcible::Extensions::Repository.rpm_copy(self.pulp_id, to_repo.pulp_id,
-                                            {:name_blacklist=>filtered})
+      events << Runcible::Extensions::Repository.rpm_copy(self.pulp_id, to_repo.pulp_id)
       events << Runcible::Extensions::Repository.errata_copy(self.pulp_id, to_repo.pulp_id)
       events << Runcible::Extensions::Repository.distribution_copy(self.pulp_id, to_repo.pulp_id)
+      events << Runcible::Extensions::Repository.package_group_copy(self.pulp_id, to_repo.pulp_id)
       events       
     end
 
@@ -345,12 +342,9 @@ module Glue::Pulp::Repo
     end
 
     def add_packages pkg_id_list
-      blacklist = []
-      self.applicable_filters.each{|f| blacklist += f.package_list}
-
       previous = self.environmental_instances.in_environment(self.environment.prior).first
       Runcible::Extensions::Repository.rpm_copy(previous.pulp_id, self.pulp_id,
-                                                {:package_ids=>pkg_id_list, :name_blacklist=>blacklist})
+                                                {:package_ids=>pkg_id_list})
     end
 
     def add_errata errata_id_list

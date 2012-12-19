@@ -75,12 +75,12 @@ class GpgKeysController < ApplicationController
   def products_repos
     products = @gpg_key.products
 
-    repos_hash = {}
-    @gpg_key.repositories.uniq_by(&:label).each do |repo|
-      repos_hash[repo.environment_product.product.name] ||= []
-      repos_hash[repo.environment_product.product.name] << repo
-    end
-    products_repos = repos_hash.sort_by{|product, repo| product}
+    products_repos = Hash.new { |h, k| h[k] = [] }
+    @gpg_key.repositories.
+        in_environment(@gpg_key.organization.library).
+        includes(:environment_product => :product).
+        order('products.name ASC').
+        each { |repo| products_repos[repo.product.name] << repo }
 
     render :partial => "products_repos", :layout => "tupane_layout",
             :locals => {:products => products, :products_repos => products_repos}
