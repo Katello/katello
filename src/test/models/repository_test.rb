@@ -48,11 +48,11 @@ class RepositoryInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_environment
-    assert_equal @library, @fedora_17_x86_64.environment
+    assert_equal @library.id, @fedora_17_x86_64.environment.id
   end
 
   def test_organization
-    assert_equal @acme_corporation, @fedora_17_x86_64.organization
+    assert_equal @acme_corporation.id, @fedora_17_x86_64.organization.id
   end
 
   def test_redhat?
