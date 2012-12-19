@@ -115,11 +115,33 @@ describe ProductsController, :katello => true do
         @product.environments << @organization.library
         @product.stub(:arch).and_return('noarch')
         @product.save!
-        put :update, :provider_id => @provider.id, :id => @product.id, :product => {:gpg_key => @gpg.id.to_s}
       end
-      specify {response.should be_success}
-      subject{Product.find(@product.id)}
-      its(:gpg_key){should == @gpg}
+
+      context "without repositories wizard" do
+        before do
+          put :update, :provider_id => @provider.id, :id => @product.id,
+              :product              => { :gpg_key => @gpg.id.to_s }
+        end
+        specify { response.should be_success }
+        subject { Product.find(@product.id) }
+        its(:gpg_key) { should == @gpg }
+      end
+
+      [true, false].each do |v|
+        context "with#{'out' unless v} all repositories" do
+          before do
+            @product.should_receive(:reset_repo_gpgs!).once.and_return([]) if v
+            @product.should_not_receive(:reset_repo_gpgs!) unless v
+            controller.stub(:find_product) { controller.instance_variable_set(:@product, @product) }
+            put :update, :provider_id => @provider.id, :id => @product.id,
+                :product              => { :gpg_key => @gpg.id.to_s, :gpg_all_repos => "#{v}" }
+          end
+          specify { response.should be_success }
+          subject { Product.find(@product.id) }
+          its(:gpg_key) { should == @gpg }
+        end
+      end
     end
+
   end
 end

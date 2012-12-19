@@ -77,6 +77,7 @@
     .needs_attention { color: red; }
     
     .lower_content {
+      margin-top: 10px;
       table {
         tbody {
           td:first-child { text-align: left; text-indent: 2px; }
@@ -140,7 +141,7 @@
       width: 36px;
       float: left;
       @include box-shadow(1px, 1px, 4px, #888);
-      @include border-bottom-r-radius(5px);
+      @include border-radius(0 0 5px 0);
       padding: 0 4px 4px 0;
     }
     .subs_image {
@@ -274,7 +275,7 @@
   
     h5 { 
       margin: 0; 
-      border-right: 2px solid $font_color; 
+      border-right: 2px solid $border_color;
       padding: 1px 10px 1px 0; 
       font-size: 125%; 
     }
@@ -296,7 +297,11 @@
   #load_more_errata {
     margin-left: 20px;
   }
-
+  #create_system_group {
+    color: $kprimary_color !important;
+    padding-left: 10px;
+    font-weight: bolder;
+  }
 }
 
 #system_group_systems{
@@ -311,7 +316,7 @@
       margin-right: 30px;
     }
     .stub {
-      @include no-select;
+      @include unselectable;
     }
 }
 #interface_table {

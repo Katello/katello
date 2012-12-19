@@ -1,6 +1,6 @@
 @import "katello_base";
 
-
+$container_width: ($static_width/2) - 36;
 .sliding_tree {
   
   .tree_breadcrumb {
@@ -15,7 +15,7 @@
     
     .currentCrumb{ color: $tree-current-breadcrumb_color; max-width: 350px; }
     .crumb { color: $tree-breadcrumb_color; }
-    .slide_link { color: $tree-breadcrumb_color; }
+    .slide_link { color: $tree-breadcrumb_color; min-width: 10%;}
     span { display: inline-block; max-width: 120px; white-space: nowrap; overflow: hidden; }
     
     .home_img {
@@ -40,6 +40,7 @@
     }
   }
   .slide_up_container {
+    width: $container_width;
     position: absolute;
     display: none;
     float: left;
@@ -50,6 +51,8 @@
     height: 250px;
     background-color:$panel_color;
     border-top: 1px solid #B5B5B5;
+    padding-top: 5px;
+    @include box-shadow(0px -5px 15px rgba(0,0,0, .1));
   }
   .sliding_tree_categories {
     width: 100%;
@@ -57,7 +60,7 @@
     font-size: 100%;
     margin: 0 0 0 0;
     display: block;
-    width: 448px;
+    width: $container_width;
     height: 42px;
     font-weight: 200;
     background-color: $white_color;
@@ -67,20 +70,27 @@
 
     .sliding_tree_category {
       float: left;
-      width: 47.77%; // ~1/2 of the right panel width
+      width: ($container_width/2) - 10;
       height: 24px;
       padding-top: 9px;
       padding: 9px 0 0 9px;
       word-wrap: break-word;
       border-left: 1px solid $tree-border_color;
-      border-right: 1px solid $tree-border_color;
       border-bottom: 1px solid $tree-border_color;
-
       background-color: $tree-container_color;
+      &:first-child {
+        margin-right: 1px;
+        border-left: 0 none;
+        .selected {
+          border-right: 1px solid $tree-border_color;
+          border-left: 0 none;
+        }
+      }
     }
     .selected {
       background-color: $white_color;
-      border: none;
+      border-left: 1px solid $tree-border_color;
+      border-bottom: 0 none;
       font-weight: bold;
     }
   }
@@ -88,7 +98,7 @@
     font-size: 100%;
     margin: 0 0 0 0;
     display: block;
-    width: 448px;
+    width: $container_width;
     font-weight: 200;
     color: $white_color;
     background-color: $tree-container_color;
@@ -139,7 +149,7 @@
     font-size: 100%;
     margin: 0 0 0 0;
     display: block;
-    width: 448px;
+    width: $container_width;
     font-weight: 200;
     color: $white_color;
     background-color: $tree-container_color;
@@ -179,21 +189,22 @@
         margin-right: 10px;
     }
   }
+
   .sliding_container {
     overflow: hidden;
     position: relative;
-    width: 448px;
+    width: $container_width;
     border: 1px solid $tree-border_color;
   
     .sliding_list {
-      width: 896px;
+      width: $container_width * 2;
       position: relative;
       top: 0;
       left: 0;
       border: none;
       
       .slider {
-        width: 448px;
+        width: $container_width;
         min-height: 450px;
         float: left;
         
@@ -265,7 +276,7 @@
     opacity: .8;
     background-color: white;
     z-index: -1;
-    width: 440px; 
+    width: $container_width - 10;
     height: 415px;
     .text {
         //vertically center
@@ -281,13 +292,15 @@
     }
   }
   #sliding_tree_actionbar {
+    background-color: #F2F2F2;
     width: 100%;
     
     .cs_action {
         float: left;
         outline: 0 none;
         margin-right: -1px;
-        width: 24.7%; // ~1/4 of the right panel width
+        //width: 24.7%; // ~1/4 of the right panel width
+        width: $container_width/4 - 1; // ~1/4 of the right panel width
         height: 20px;
         padding-top: 9px;
         font-size: 90%;

@@ -29,6 +29,9 @@ export KATELLO_LOGGING=${KATELLO_LOGGING:-warn}
 export KATELLO_LOGGING_SQL=${KATELLO_LOGGING_SQL:-warn}
 KATELLO_PREFIX=${KATELLO_PREFIX:-/katello}
 export RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX
+export BUNDLER_EXT_GROUPS
+export BUNDLER_EXT_NOSTRICT
+export BUNDLER_EXT_HOME=$KATELLO_HOME
 
 print_higher() {
     if [ 0$1 -gt 0$2 ]; then
@@ -49,7 +52,7 @@ print_lower() {
 status_of_one() {
     PID_FILE="$1"
     local RC
-    local RETVAL 
+    local RETVAL
     if [ -f "$PID_FILE" ]; then
         # set $pid
         __pids_var_run NOT_USED $PID_FILE
@@ -137,7 +140,14 @@ start() {
         # rails expects you to run from the root of the app
         pushd ${KATELLO_HOME} >/dev/null
         # start jobs
-        runuser -s /bin/bash - katello -c "RAILS_RELATIVE_URL_ROOT='$RAILS_RELATIVE_URL_ROOT' RAILS_ENV='$RAILS_ENV' KATELLO_LOGGING='$KATELLO_LOGGING' KATELLO_LOGGING_SQL='$KATELLO_LOGGING_SQL' script/delayed_job $KATELLO_JOB_PARAMS -m -n $KATELLO_JOB_WORKERS start &>>/var/log/katello/jobs-startup.log"
+        runuser -s /bin/bash - katello -c "\
+            BUNDLER_EXT_NOSTRICT='$BUNDLER_EXT_NOSTRICT' \
+            BUNDLER_EXT_HOME='$BUNDLER_EXT_HOME' \
+            RAILS_RELATIVE_URL_ROOT='$RAILS_RELATIVE_URL_ROOT' \
+            RAILS_ENV='$RAILS_ENV' \
+            KATELLO_LOGGING='$KATELLO_LOGGING' \
+            KATELLO_LOGGING_SQL='$KATELLO_LOGGING_SQL' \
+            script/delayed_job $KATELLO_JOB_PARAMS -m -n $KATELLO_JOB_WORKERS start &>>/var/log/katello/jobs-startup.log"
         RETVAL=$?
         if [ $RETVAL = 0 ]; then
             echo_success
@@ -153,12 +163,19 @@ start() {
 
 stop() {
 
-    status_q 
+    status_q
     STATUS=$?
     if [ 0$STATUS -eq 0 -o 0$STATUS -eq 10 ]; then
         # rails expects you to run from the root of the app
         pushd ${KATELLO_HOME} >/dev/null
-        runuser -s /bin/bash - katello -c "RAILS_RELATIVE_URL_ROOT='$RAILS_RELATIVE_URL_ROOT' RAILS_ENV='$RAILS_ENV' KATELLO_LOGGING='$KATELLO_LOGGING' KATELLO_LOGGING_SQL='$KATELLO_LOGGING_SQL' script/delayed_job stop &>>/var/log/katello/jobs-startup.log"
+        runuser -s /bin/bash - katello -c "\
+            BUNDLER_EXT_NOSTRICT='$BUNDLER_EXT_NOSTRICT' \
+            BUNDLER_EXT_HOME='$BUNDLER_EXT_HOME' \
+            RAILS_RELATIVE_URL_ROOT='$RAILS_RELATIVE_URL_ROOT' \
+            RAILS_ENV='$RAILS_ENV' \
+            KATELLO_LOGGING='$KATELLO_LOGGING' \
+            KATELLO_LOGGING_SQL='$KATELLO_LOGGING_SQL' \
+            script/delayed_job $KATELLO_JOB_PARAMS -m -n $KATELLO_JOB_WORKERS stop &>>/var/log/katello/jobs-startup.log"
         if [ 0$KATELLO_JOB_WORKERS -eq 1 ]; then
             if [ -f $KATELLO_PID_DIR/delayed_job_monitor.pid ]; then
                 echo -n $"Stopping delayed_job_monitor: "

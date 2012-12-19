@@ -45,7 +45,7 @@ nav {
             a{
               width: $menu_width - 33;
               &:hover {
-                background: lighten($kprimary_color, 45%);
+                background: $kprimary_hover_color;
                 color: lighten($kprimary_color, 10%);
                 border-top: 1px solid lighten($kprimary_color, 10%);
                 border-bottom: 1px solid lighten($kprimary_color, 10%);
@@ -58,7 +58,7 @@ nav {
           cursor: pointer;
           text-transform: none;
           text-decoration: none;
-          @include _text-shadow($white_color,0,1px,0);
+          @include text-shadow(0 1px 0 rgba($white_color, 1));
           display: block;
           margin: 0;
           padding: 8px 16px 6px;
@@ -83,11 +83,11 @@ nav {
           z-index: 101;
           top: 34px;
           height: 35px;
-          @include border-bottom-lr-radius(3px);
+          @include border-radius(0 0 3px 3px);
           li {
             a {
               &.selected {
-                background: lighten($kprimary_color, 45%);
+                background: $kprimary_hover_color;
                 color: lighten($kprimary_color, 10%);
                 border-top: 1px solid lighten($kprimary_color, 10%);
                 border-bottom: 1px solid lighten($kprimary_color, 10%);
@@ -118,7 +118,7 @@ nav {
     &>ul {
       display: inline-block;
       height: 3.5em;
-      background-color: lighten($kselected_color, 65%);
+      background-color: $kprimary_hover_color;
       @include border-radius(5px);
 
       li {

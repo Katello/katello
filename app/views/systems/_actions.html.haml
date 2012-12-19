@@ -30,58 +30,61 @@
       %input.trigger.button{:type=>"button", :value=>_('Yes') }
     %br.clearfloat
 
-.panel_action{:class=>"disabled", 'data-id'=>"systems_package_action"}
-  .package_icon.fl
-  = radio_button_tag :systems_action, :packages, false, :disabled => 'disabled'
-  = label_tag _('Package')
-  = radio_button_tag :systems_action, :package_groups, false, :disabled => 'disabled'
-  = label_tag _('Package Group')
-  %div
-    - help_text = _("Enter Package or Group Name(s)...")
-    %input{:type=>'text', :id=>'packages_input', :disabled => 'disabled', :size=>'25', :placeholder => help_text, :title => help_text}
-    %input.request_action.package.button{:type=>'button', :value=>_('Install'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>bulk_content_install_systems_path()}
-    %input.request_action.package.button{:type=>'button', :value=>_('Update'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>bulk_content_update_systems_path()}
-    %input.request_action.package.button{:type=>'button', :value=>_('Remove'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>bulk_content_remove_systems_path()}
+- if AppConfig.katello?
+  .panel_action{:class=>"disabled", 'data-id'=>"systems_package_action"}
+    .package_icon.fl
+    = radio_button_tag :systems_action, :packages, false, :disabled => 'disabled'
+    = label_tag _('Package')
+    = radio_button_tag :systems_action, :package_groups, false, :disabled => 'disabled'
+    = label_tag _('Package Group')
+    %div
+      - help_text = _("Enter Package or Group Name(s)...")
+      %input{:type=>'text', :id=>'packages_input', :disabled => 'disabled', :size=>'25', :placeholder => help_text, :title => help_text}
+      %input.request_action.package.button{:type=>'button', :value=>_('Install'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>bulk_content_install_systems_path()}
+      %input.request_action.package.button{:type=>'button', :value=>_('Update'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>bulk_content_update_systems_path()}
+      %input.request_action.package.button{:type=>'button', :value=>_('Remove'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>bulk_content_remove_systems_path()}
 
-  %div.validation_error
-  .options
-    %div.confirmation_text
-    .actions
-      %input.cancel.button{:type=>"button", :value=>_('No')}
-      %input.trigger.button{:type=>"button", :value=>_('Yes') }
-    %br.clearfloat
+    %div.validation_error
+    .options
+      %div.confirmation_text
+      .actions
+        %input.cancel.button{:type=>"button", :value=>_('No')}
+        %input.trigger.button{:type=>"button", :value=>_('Yes') }
+      %br.clearfloat
 
-.panel_action{:class=>"disabled", 'data-id'=>"systems_errata_action", 'data-url'=>bulk_errata_install_systems_path(), 'data-method'=>"POST"}
-  .erratum_icon.fl
-  %label
-    #{_("Errata")}
-  %div
-    - help_text = _("Enter Errata...")
-    %input{:type=>'text', :id=>'errata_input', :disabled => 'disabled', :size=>'25', :placeholder => help_text, :title => help_text}
-    %input.request_action.errata.button{:type=>'button', :value=>_('Install'), :disabled => 'disabled'}
-  %div.validation_error
-  .options
-    %div.confirmation_text
-    .actions
-      %input.cancel.button{:type=>"button", :value=>_('No')}
-      %input.trigger.button{:type=>"button", :value=>_('Yes') }
-    %br.clearfloat
+- if AppConfig.katello?
+  .panel_action{:class=>"disabled", 'data-id'=>"systems_errata_action", 'data-url'=>bulk_errata_install_systems_path(), 'data-method'=>"POST"}
+    .erratum_icon.fl
+    %label
+      #{_("Errata")}
+    %div
+      - help_text = _("Enter Errata...")
+      %input{:type=>'text', :id=>'errata_input', :disabled => 'disabled', :size=>'25', :placeholder => help_text, :title => help_text}
+      %input.request_action.errata.button{:type=>'button', :value=>_('Install'), :disabled => 'disabled'}
+    %div.validation_error
+    .options
+      %div.confirmation_text
+      .actions
+        %input.cancel.button{:type=>"button", :value=>_('No')}
+        %input.trigger.button{:type=>"button", :value=>_('Yes') }
+      %br.clearfloat
 
-.panel_action{:class=>"disabled", 'data-id'=>"systems_system_groups_action"}
-  .system_group_icon.fl
-  %label
-    #{_("System Groups")}
-  %div
-    = select_tag 'bulk_system[system_group_id]', options_from_collection_for_select(@system_groups, :id, :name), :multiple => true
-    %input.request_action.system_group.button{:type=>'button', :value=>_('Add'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>bulk_add_system_group_systems_path(), 'data-action'=>'add_group'}
-    %input.request_action.system_group.button{:type=>'button', :value=>_('Remove'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>bulk_remove_system_group_systems_path(), 'data-action'=>'remove_group'}
-  %div.validation_error
-  .options
-    %div.confirmation_text
-    .actions
-      %input.cancel.button{:type=>"button", :value=>_('No')}
-      %input.trigger.button{:type=>"button", :value=>_('Yes') }
-    %br.clearfloat
+- if AppConfig.katello?
+  .panel_action{:class=>"disabled", 'data-id'=>"systems_system_groups_action"}
+    .system_group_icon.fl
+    %label
+      #{_("System Groups")}
+    %div
+      = select_tag 'bulk_system[system_group_id]', options_from_collection_for_select(@system_groups, :id, :name), :multiple => true
+      %input.request_action.system_group.button{:type=>'button', :value=>_('Add'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>bulk_add_system_group_systems_path(), 'data-action'=>'add_group'}
+      %input.request_action.system_group.button{:type=>'button', :value=>_('Remove'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>bulk_remove_system_group_systems_path(), 'data-action'=>'remove_group'}
+    %div.validation_error
+    .options
+      %div.confirmation_text
+      .actions
+        %input.cancel.button{:type=>"button", :value=>_('No')}
+        %input.trigger.button{:type=>"button", :value=>_('Yes') }
+      %br.clearfloat
 
 .panel_action{'data-id'=>"select_none"}
   #select-result

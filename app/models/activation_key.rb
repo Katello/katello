@@ -68,7 +68,7 @@ class ActivationKey < ActiveRecord::Base
   end
 
   def environment_not_library
-    errors.add(:base, _("Cannot create activation keys in Library environment ")) if environment and  environment.library?
+    errors.add(:base, _("Cannot create activation keys in the '%s' environment") % "Library") if environment and environment.library?
   end
 
   def environment_key_conflict

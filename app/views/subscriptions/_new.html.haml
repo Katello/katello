@@ -1,4 +1,4 @@
-= javascript :edit_helpers
+= javascript :edit_helpers, :provider_redhat
 
 = content_for :title do
   #{_("Subscription Manifest")}
@@ -7,28 +7,28 @@
 
 = content_for :content do
   #subscription
-    .grid_10
+    .full
       = help_tip_button('subscriptions-help')
       = help_tip(_("If you have a subscription manifest you may upload it below. " + |
                  "This manifest may be obtained by visiting the Red Hat Customer Portal or by contacting your support representative."), 'subscriptions-help') |
 
-    .grid_10
+    .full
       %h5 #{_("Red Hat Provider Details")}
-    .grid_10
+    .full
       %input#panel_element_id{:name => @provider.id, :type => "hidden", :value => "#{@provider.name}_#{@provider.id}"}
       %fieldset
         .grid_3.ra.fieldset
           = label :red_hat_provider, :url, _("Repository Url")
-        .grid_6.la.fl#repo_url{'name' => 'provider[repository_url]',:class=>("editable edit_textfield" if @provider.editable?),  'data-url' => provider_path(@provider.id)} #{@provider[:repository_url]}
+        .grid_9.la.fl#repo_url{'name' => 'provider[repository_url]',:class=>("editable edit_textfield" if @provider.editable?),  'data-url' => provider_path(@provider.id)} #{@provider[:repository_url]}
     .clear
     - if @details['upstreamUuid']
-      .grid_10
+      .full
         %h5 #{_("Subscription Manifest")}
-      .grid_10
+      .full
         %fieldset
           .grid_3.ra.fieldset
-            =label :uuid, :uuid, _("Upstream Subscription Management Application")
-          .grid_6.la.fl
+            =label :uuid, :uuid, _("Upstream Distributor")
+          .grid_9.la.fl
             = subscriptions_manifest_link_helper({'webAppPrefix'=>@details[:webAppPrefix], 'upstreamId'=>@details['upstreamUuid']}, @details['upstreamUuid'])
         - if @provider.editable? && !AppConfig.katello?
           - if !@provider.manifest_task || @provider.manifest_task.finished?
@@ -57,9 +57,9 @@
         - if @provider.manifest_task.task_type == "import manifest"
           .grid_10
             %h5 #{_("Upload New Manifest")}
-          .grid_10
+          .full
             %fieldset
-              .grid_2.ra.fieldset
+              .grid_3.ra.fieldset
                 =label :upload, :upload, _("Manifest File")
               .grid_8.la
                 .fl
@@ -68,10 +68,10 @@
                     .fl.manifest_progress_message
                       = _("Import in progress (%s)") % @provider.manifest_task.state
       - else
-        .grid_10
+        .full
           %h5 #{_("Upload New Manifest")}
           = form_for @provider, :html => {:multipart => true, :method => :post, :id => :upload_manifest}, :remote => true, :url => upload_subscriptions_path do |f|
-            .grid_10
+            .full
               %fieldset
                 .grid_3.ra.fieldset
                   =label :upload, :upload, _("Manifest File")
@@ -83,7 +83,7 @@
                 .grid_6.la#upload_button
                   = f.submit _("Upload"), :id => :upload_form_button
 
-    .grid_10
+    .full
       %h5 #{_("Manifest History")}
       %table
         %thead
