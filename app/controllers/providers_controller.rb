@@ -17,7 +17,7 @@ class ProvidersController < ApplicationController
   before_filter :find_rh_provider, :only => [:redhat_provider]
 
   before_filter :find_provider, :only => [:products_repos, :show, :edit, :update, :destroy, :manifest_progress,
-                                          :repo_discovery, :discovered_repos, :discover]
+                                          :repo_discovery, :discovered_repos, :discover, :cancel_discovery]
   before_filter :authorize #after find_provider
   before_filter :panel_options, :only => [:index, :items]
   before_filter :search_filter, :only => [:auto_complete_search]
@@ -48,6 +48,7 @@ class ProvidersController < ApplicationController
       :manifest_progress => edit_test,
       :redhat_provider => read_test,
       :repo_discovery => edit_test,
+      :cancel_discovery=>edit_test,
       :discovered_repos => edit_test,
       :discover => edit_test
     }
@@ -156,13 +157,22 @@ class ProvidersController < ApplicationController
   end
 
   def repo_discovery
+    running = @provider.discovery_task.nil? ? false : !@provider.discovery_task.finished?
     render :partial=>'repo_discovery', :layout => "tupane_layout",
            :locals => {:provider => @provider, :discovered=>get_discovered_urls,
+              :running=>running,
               :repositories_cloned_in_envrs=>repositories_cloned_in_envrs}
   end
 
   def discovered_repos
-    render :json =>{:urls=>get_discovered_urls, :running=>true}
+    running = @provider.discovery_task.nil? ? false : !@provider.discovery_task.finished?
+    render :json =>{:urls=>get_discovered_urls, :running=>running}
+  end
+
+  def cancel_discovery
+    @provider.discovery_task = nil
+    @provider.save!
+    render :text=>''
   end
 
   def discover
