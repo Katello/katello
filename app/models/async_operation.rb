@@ -25,6 +25,11 @@ AsyncOperation = Struct.new(:status_id, :username, :object, :method_name, :args)
     self.method_name  = method_name.to_sym
   end
 
+  def self.current_task_id
+    Thread.current['current_delayed_job_task']
+  end
+
+
   def display_name
     "#{object.class}##{method_name}"
   end
@@ -32,14 +37,20 @@ AsyncOperation = Struct.new(:status_id, :username, :object, :method_name, :args)
   def perform
     User.current = User.find_by_username(username)
 
+    #Set task id so a job can reference it, currently no better way to do this :/
+    Thread.current['current_delayed_job_task'] = self.status_id
+
     # If the object provided is a Mailer object, the user wants to send an email; therefore,invoke the method with a
     # deliver; otherwise, invoke the method exactly as provided by the user.  Although this seems a bit odd, this is
     # essentially how the delayed job gem would also send mail, if we were using it directly.
+
     if object.class == Class and object.superclass == ActionMailer::Base
       @result = object.send(method_name, *args).deliver.to_s
     elsif object
       @result = object.send(method_name, *args)
     end
+  ensure
+    Thread.current['current_delayed_job_task'] = nil
   end
 
   def method_missing(symbol, *args)
