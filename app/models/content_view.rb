@@ -26,7 +26,6 @@ class ContentView < ActiveRecord::Base
       :inverse_of => :default_content_view,
       :foreign_key => :default_content_view_id
 
-
   has_many :component_content_views
   has_many :composite_content_view_definitions,
     :through => :component_content_views, :source => "content_view_definition"
@@ -42,6 +41,43 @@ class ContentView < ActiveRecord::Base
 
   scope :default, where(:default=>true)
   scope :non_default, where(:default=>false)
+
+  def publishing?
+    # Is this view currently in the process of being published?
+    library_version = self.version(self.organization.library)
+    if library_version.task_status &&
+        library_version.task_status.task_type == TaskStatus::TYPES[:content_view_publish][:type].to_s
+
+      return library_version.task_status.pending?
+
+    end
+    return false
+  end
+
+  def publish_error?
+    # Did the current view fail during publishing?
+    library_version = self.version(self.organization.library)
+    if library_version.task_status &&
+        library_version.task_status.task_type == TaskStatus::TYPES[:content_view_publish][:type].to_s
+
+      return library_version.task_status.error?
+
+    end
+    return false
+  end
+
+  def publish_task_id
+    # If the view is currently being published, return the id associated with the task
+    library_version = self.version(self.organization.library)
+    if library_version.task_status &&
+        library_version.task_status.task_type == TaskStatus::TYPES[:content_view_publish][:type].to_s &&
+        library_version.task_status.pending?
+
+      return library_version.task_status.id
+
+    end
+    return nil
+  end
 
   def as_json(options = {})
     result = self.attributes
@@ -146,7 +182,8 @@ class ContentView < ActiveRecord::Base
                                          :environments => [organization.library])
 
     if options[:async]
-      task  = version.async(:organization => self.organization).refresh_version
+      task  = version.async(:organization => self.organization,
+                            :task_type => TaskStatus::TYPES[:content_view_refresh][:type]).refresh_version
       version.task_status = task
       version.save!
     else

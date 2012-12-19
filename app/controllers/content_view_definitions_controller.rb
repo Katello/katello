@@ -157,7 +157,19 @@ class ContentViewDefinitionsController < ApplicationController
 
   def status
     # retrieve the status for the tasks (refresh) initiated by the client
-    statuses = {:refresh_status => []}
+    statuses = {:publish_status => [], :refresh_status => []}
+
+    TaskStatus.where(:id => params[:publish_task_id]).collect do |status|
+      statuses[:publish_status] << {
+          :id => status.id,
+          :pending? => status.pending?,
+          :status_html => render_to_string(:template => 'content_view_definitions/views/_view.html.haml',
+                                           :layout => false,
+                                           :locals => {:view_definition => @view_definition,
+                                                       :view => status.task_owner.content_view,
+                                                       :task => status})
+      }
+    end
 
     TaskStatus.where(:id => params[:refresh_task_id]).collect do |status|
       statuses[:refresh_status] << {

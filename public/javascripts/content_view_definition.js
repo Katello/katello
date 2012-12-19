@@ -63,20 +63,25 @@ KT.content_view_definition = (function(){
     },
     startUpdater = function () {
         var timeout = 8000,
+            pending_publish = [],
             pending_refresh = [];
+
+        $('.view[data-pending_publish_id]').each(function(i) {
+            pending_publish[i] = $(this).data("pending_publish_id");
+        });
 
         $('.view_version[data-pending_refresh_id]').each(function(i) {
             pending_refresh[i] = $(this).data("pending_refresh_id");
         });
 
-        if (pending_refresh.length > 0) {
+        if (pending_publish.length > 0 || pending_refresh.length > 0) {
             if (status_updater !== undefined) {
                 status_updater.stop();
             }
             status_updater = $.PeriodicalUpdater($('#content_view_definition_views').data('status_url'), {
                 method: 'get',
                 type: 'json',
-                data: function() {return {refresh_task_id: pending_refresh};},
+                data: function() {return {publish_task_id: pending_publish, refresh_task_id: pending_refresh};},
                 global: false,
                 minTimeout: timeout,
                 maxTimeout: timeout
@@ -85,21 +90,42 @@ KT.content_view_definition = (function(){
     },
     updateStatus = function(data) {
         // For each action that the user has initiated (e.g. refresh), update the status.
-        var refresh_status = data["refresh_status"];
-        if (refresh_status) {
-            $.each(refresh_status, function(index, status) {
-                var node;
+        var publish_status = data["publish_status"] || [],
+            refresh_status = data["refresh_status"] || [],
+            status_updated = false;
 
-                if(!status["pending?"]) {
-                    node = $('.view_version[data-pending_refresh_id=' + status['id'] + ']');
-                    if(node !== undefined) {
-                        node.replaceWith(status["status_html"]);
-                    }
+        $.each(publish_status, function(index, status) {
+            var node;
+
+            if(!status["pending?"]) {
+                node = $('.view[data-pending_publish_id=' + status['id'] + ']');
+                if(node !== undefined) {
+                    node.replaceWith(status["status_html"]);
+                    status_updated = true;
                 }
-            });
+            }
+        });
+
+        $.each(refresh_status, function(index, status) {
+            var node;
+
+            if(!status["pending?"]) {
+                node = $('.view_version[data-pending_refresh_id=' + status['id'] + ']');
+                if(node !== undefined) {
+                    node.prevAll('.parent:first').removeClass('initialized');
+                    node.replaceWith(status["status_html"]);
+                    status_updated = true;
+                }
+            }
+        });
+
+        if (status_updated === true) {
+            initialize_views_treetable();
             initialize_refresh();
         }
-        if($('.view_version[data-pending_refresh_id]').length === 0) {
+
+        if($('.view[data-pending_publish_id]').length === 0 &&
+           $('.view_version[data-pending_refresh_id]').length === 0) {
             status_updater.stop();
         }
     };
