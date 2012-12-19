@@ -167,7 +167,7 @@ class UsersController < ApplicationController
     locale = params[:locale][:locale]
     if Katello.config.available_locales.include? locale
       @user.default_locale = locale
-      I18n.locale          = locale
+      I18n.locale          = locale if @user.id == current_user.id
     else
       @user.default_locale = nil
     end

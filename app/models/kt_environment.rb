@@ -103,7 +103,6 @@ class KTEnvironment < ActiveRecord::Base
   validates :description, :katello_description_format => true
   validates_with PriorValidator
   validates_with PathDescendentsValidator
-  validate :constant_name, :on => :update
 
   before_destroy :confirm_last_env
   after_save :update_related_index
@@ -423,12 +422,6 @@ class KTEnvironment < ActiveRecord::Base
       u.default_environment = nil
       Notify.message _("Your default environment has been removed. Please choose another one."),
                      :user => u, :organization => self.organization
-    end
-  end
-
-  def constant_name
-    if changes[:name]
-      errors[:name] << _("can not be updated")
     end
   end
 

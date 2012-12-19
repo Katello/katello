@@ -123,7 +123,7 @@ describe KTEnvironment do
     describe "update an environment" do
       specify "name should not be changed" do
         @environment.name = "changed_name"
-        @environment.should_not be_valid
+        @environment.should be_valid
       end
     end
 

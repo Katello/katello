@@ -1,6 +1,7 @@
 class AddUserToTaskStatus < ActiveRecord::Migration
   def self.up
-    user_id = User.find_by_username("admin").nil? ? 0 : User.find_by_username("admin").id
+    user = User.hidden.first
+    user_id = user.nil? ? 0 : user.id
     add_column :task_statuses, :user_id, :integer, :null => false, :default => user_id
   end
 
