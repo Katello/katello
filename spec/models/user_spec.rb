@@ -252,4 +252,45 @@ describe User do
     end
   end
 
+  context "retaining search history" do
+    describe "display attribute filter" do
+      before(:each) { @user = User.new }
+
+      it "should filter out empty display attributes" do
+        ["name:", " name:", "name: "].each {|attr| @user.empty_display_attributes?(attr).should == true}
+      end
+
+      it "should leave non-empty display attributes" do
+        ["name:blah", "name: blah", " name:blah", "name:blah "].each {|attr| @user.empty_display_attributes?(attr).should == false}
+      end
+
+      it "should leave non-display attributes" do
+        ["name", "name ", " name", "name blah"].each {|attr| @user.empty_display_attributes?(attr).should == false}
+      end
+    end
+
+    describe "persisting search history" do
+      let(:path) { "/blah" }
+      before(:each) do
+        disable_user_orchestration
+        @user = User.create!(to_create_simple)
+      end
+
+      it "should not persist empty searches" do
+        ["name:", "", " "].each do |attr|
+          @user.create_or_update_search_history(path, attr)
+          @user.search_histories.where(:path => "/blah").should be_empty
+        end
+      end
+
+      it "should persist non-empty searches" do
+        ["name:blah", "abracadabra"].each do |attr|
+          @user.create_or_update_search_history(path, attr)
+          @user.search_histories.where(:path => "/blah", :params => attr).size.should == 1
+        end
+      end
+    end
+  end
+
+
 end
