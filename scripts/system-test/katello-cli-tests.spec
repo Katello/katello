@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.3.0
+Version:       1.3.1
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
@@ -51,6 +51,13 @@ cp -Rp cli_tests/ cli-system-test helpers *zip RPM-GPG-KEY* $RPM_BUILD_ROOT%{hom
 
 
 %changelog
+* Tue Dec 18 2012 Miroslav Suchý <msuchy@redhat.com> 1.3.1-1
+- system tests - tests for smart proxies (tstrachota@redhat.com)
+- system tests - new function skip_message (tstrachota@redhat.com)
+- cli smoke tests - adding support for beaker lib (lzap+git@redhat.com)
+- cli tests for org name and label (lzap+git@redhat.com)
+- Bumping package versions for 1.3. (ehelms@redhat.com)
+
 * Thu Dec 06 2012 Eric D Helms <ehelms@redhat.com> 1.2.1-1
 - subnets - system tests (tstrachota@redhat.com)
 - fix rhsm cli system test (msuchy@redhat.com)

@@ -28,7 +28,7 @@ raise "Unable to create reader role: #{format_errors reader_role}" if reader_rol
 reader_role.update_attributes(:locked => true)
 
 # create the super admin if none exist - it must be created before any statement in the seed.rb script
-User.current = user_admin = User.find_by_username('admin')
+User.current = user_admin = User.find_by_username(first_user_name)
 unless user_admin
   user_admin   = User.new(
       :roles    => [superadmin_role],

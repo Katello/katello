@@ -29,6 +29,7 @@ options_format_path = "#{PREFIX}/options-format-file"
 result_config_path = "/etc/katello/katello-configure.conf"
 puppet_cmd = "puppet apply --modulepath #{PREFIX}/puppet/modules --libdir #{PREFIX}/puppet/lib -v -d"
 log_parent_directory = '/var/log/katello'
+default_progressbar_title = 'Katello configuration'
 
 # main dictionaries
 $default_options = {}
@@ -240,7 +241,7 @@ begin
 		f.close_write
 		processing_logfile = nil
 		t = nil
-    progress_bar = nobars ? nil : ProgressBar.create(:title => 'Katello configuration', :total => puppet_logfile_aprox_size, :smoothing => 0.6)
+    progress_bar = nobars ? nil : ProgressBar.create(:title => default_progressbar_title, :total => puppet_logfile_aprox_size, :smoothing => 0.6)
 		while line = f.gets do
       time = Time.now.strftime("%y%m%d-%H:%M:%S ")
       puppet_logfile.syswrite(time + line.gsub(/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/, ''))
@@ -277,6 +278,7 @@ begin
         end
       end
 		end
+    progress_bar.title = default_progressbar_title
     progress_bar.finish
     puts "\n"
 	end
