@@ -88,7 +88,6 @@ Src::Application.routes.draw do
       get :status
       get :content
       post :update_content
-      get :filter
     end
     resources :content_view, :only => [], :controller => :content_view_definitions do
       member do
@@ -605,12 +604,6 @@ Src::Application.routes.draw do
       resources :content_views, :only => [:index, :show]
       resources :content_view_definitions do
         post :publish, :on => :member
-        resources :filters, :only => [] do
-          get :index, :action => :list_content_view_definition_filters,
-            :on => :collection
-          put :index, :action => :update_content_view_definition_filters,
-            :on => :collection
-        end
         resources :products, :only => [] do
           get :index, :action => :list_content_view_definition_products,
             :on => :collection
