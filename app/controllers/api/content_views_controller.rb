@@ -73,9 +73,9 @@ class Api::ContentViewsController < Api::ApiController
   api :POST, "/content_views/:id/refresh"
   param :id, :identifer, :desc => "content view id"
   def refresh
-    @view.refresh
+    version = @view.refresh_view(:async => true)
     env = @view.organization.library # show the new library version
-    render :json => @view.as_json(:environment => env)
+    render :json => version.task_status, :status => 202
   end
 
   private
