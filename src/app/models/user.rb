@@ -590,6 +590,22 @@ class User < ActiveRecord::Base
         where("tag_id = #{kt_environment_id}")
   end
 
+  def create_or_update_search_history(path, search_params)
+    unless search_params.nil? or search_params.blank? or empty_display_attributes?(search_params)
+      if history = search_histories.find_or_create_by_path_and_params(path, search_params)
+        history.update_attributes(:updated_at => Time.now)
+      end
+    end
+  end
+
+  def empty_display_attributes?(a_search_string)
+    tokens = a_search_string.strip.split(/\s/)
+    return false if tokens.size > 1
+
+    return false unless tokens.first.end_with?(':')
+    true
+  end
+
   protected
 
   def can_be_deleted?
@@ -630,7 +646,6 @@ class User < ActiveRecord::Base
   def extended_index_attrs
     { :username_sort => username.downcase }
   end
-
 
   private
 
@@ -719,5 +734,4 @@ class User < ActiveRecord::Base
       raise ActiveRecord::RecordInvalid, self
     end
   end
-
 end
