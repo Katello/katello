@@ -1,8 +1,23 @@
 - cssclass = "" if cssclass.nil?
 
-%tr{:id => "view_#{view.id}", :class => cssclass}
-  %td{:colspan => 4} #{view.name}
+%tr.view{:id => "view_#{view.id}", :class => cssclass,
+  'data-pending_publish_id' => view.publish_task_id}
 
-  - view.versions.each do |version|
-    = render :partial => 'content_view_definitions/views/version',
-      :locals => {:version => version, :task => version.task_status}
+  %td{:colspan => 3} #{view.name}
+  %td
+    -# If the view is currently being published or an error occurred while publishing, provide the user status...
+    - if view.publishing?
+      = image_tag('embed/icons/spinner.gif')
+      #{_('Publishing')}
+
+    - elsif view.publish_error?
+      .fl{:style => 'padding-right: 10px;'}
+        #{_('Error publishing')}
+      %a{:type => 'button', :href => '#', 'data-url' => publish_content_view_definition_path(view_definition.id)}
+        #{_("Retry")}
+
+  -# This view was successfully published, so render all versions
+  - if !view.publishing? && !view.publish_error?
+    - view.versions.each do |version|
+      = render :partial => 'content_view_definitions/views/version',
+        :locals => {:version => version, :task => version.task_status}

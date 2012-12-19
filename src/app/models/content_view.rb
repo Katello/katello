@@ -26,7 +26,6 @@ class ContentView < ActiveRecord::Base
       :inverse_of => :default_content_view,
       :foreign_key => :default_content_view_id
 
-
   has_many :component_content_views
   has_many :composite_content_view_definitions,
     :through => :component_content_views, :source => "content_view_definition"
@@ -42,6 +41,27 @@ class ContentView < ActiveRecord::Base
 
   scope :default, where(:default=>true)
   scope :non_default, where(:default=>false)
+
+  def publishing?
+    # Is this view currently in the process of being published?
+    task = publish_task_status
+    return task.pending? unless task.nil?
+    return false
+  end
+
+  def publish_error?
+    # Did the current view fail during publishing?
+    task = publish_task_status
+    return task.error? unless task.nil?
+    return false
+  end
+
+  def publish_task_id
+    # If the view is currently being published, return the id associated with the task
+    task = publish_task_status
+    return task.id if task && task.pending?
+    return nil
+  end
 
   def as_json(options = {})
     result = self.attributes
@@ -146,7 +166,8 @@ class ContentView < ActiveRecord::Base
                                          :environments => [organization.library])
 
     if options[:async]
-      task  = version.async(:organization => self.organization).refresh_version
+      task  = version.async(:organization => self.organization,
+                            :task_type => TaskStatus::TYPES[:content_view_refresh][:type]).refresh_version
       version.task_status = task
       version.save!
     else
@@ -166,6 +187,20 @@ class ContentView < ActiveRecord::Base
     end
 
     version
+  end
+
+  private
+
+  def publish_task_status
+    # If the view has a version available from when it was originally published, return it's task status.
+    library_version = self.version(self.organization.library)
+    if library_version.task_status &&
+        library_version.task_status.task_type == TaskStatus::TYPES[:content_view_publish][:type].to_s
+
+      return library_version.task_status
+    else
+      return nil
+    end
   end
 
 end
