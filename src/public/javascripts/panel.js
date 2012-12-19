@@ -682,7 +682,6 @@ KT.panel = (function ($) {
                     action.find(".trigger").click(function() {
                         var params = action_list[action.attr("data-id")];
                         var success = function() {
-                            options.slideUp('fast');
                             action.find("input").removeClass("disabled");
                             if (params.success_cb){
                                 params.success_cb(getSelected());
@@ -696,6 +695,8 @@ KT.panel = (function ($) {
                         };
 
                         if ($(this).hasClass("disabled")){return}
+
+                        options.slideUp('fast');
 
                         if(params.ajax_cb) {
                             params.ajax_cb(getSelected(), current_request_action, options);
