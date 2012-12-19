@@ -16,7 +16,7 @@ class ContentViewDefinitionsController < ApplicationController
 
   before_filter :require_user
   before_filter :find_content_view_definition, :only => [:show, :edit, :update, :destroy, :views, :content,
-                                                         :update_content, :filter, :publish_setup, :publish, :status]
+                                                         :update_content, :publish_setup, :publish, :status]
   before_filter :find_content_view, :only => [:refresh]
   before_filter :authorize #after find_content_view_definition, since the definition is required for authorization
   before_filter :panel_options, :only => [:index, :items]
@@ -52,7 +52,6 @@ class ContentViewDefinitionsController < ApplicationController
 
       :content => read_test,
       :update_content => manage_test,
-      :filter => read_test,
 
       :default_label => manage_test
     }
@@ -197,12 +196,6 @@ class ContentViewDefinitionsController < ApplicationController
 
     notify.success _("Successfully updated content for content view definition '%s'.") % @view_definition.name
     render :nothing => true
-  end
-
-  def filter
-    render :partial => "filter", :layout => "tupane_layout",
-           :locals => {:view_definition => @view_definition, :editable => @view_definition.editable?,
-                       :name => controller_display_name}
   end
 
   protected

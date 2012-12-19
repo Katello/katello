@@ -22,8 +22,7 @@ class ContentViewDefinition < ActiveRecord::Base
   has_many :component_content_views, :through => :components,
     :source => :content_view, :class_name => "ContentView"
   belongs_to :organization, :inverse_of => :content_view_definitions
-  has_many :filters
-  has_many :content_view_definition_products
+    has_many :content_view_definition_products
   has_many :products, :through => :content_view_definition_products
   has_many :content_view_definition_repositories
   has_many :repositories, :through => :content_view_definition_repositories
@@ -74,7 +73,7 @@ class ContentViewDefinition < ActiveRecord::Base
   end
 
   def has_content?
-    self.products.any? || self.repositories.any? || self.filters.any?
+    self.products.any? || self.repositories.any?
   end
 
   def as_json(options = {})
@@ -84,8 +83,6 @@ class ContentViewDefinition < ActiveRecord::Base
     result["components"] = self.component_content_views.map(&:label).join(", ")
     result["products"] = products.map(&:name)
     result["repos"] = repositories.map(&:name)
-    result["filters"] = filters.map(&:name)
-
     result
   end
 
@@ -93,7 +90,7 @@ class ContentViewDefinition < ActiveRecord::Base
 
     def validate_content
       if has_content? && composite?
-        errors.add(:base, _("cannot contain filters, products, or repositories if it contains views"))
+        errors.add(:base, _("cannot contai nproducts, or repositories if it contains views"))
       end
     end
 
