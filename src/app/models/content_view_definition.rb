@@ -17,6 +17,8 @@ class ContentViewDefinition < ActiveRecord::Base
   include Katello::LabelFromName
   include Authorization::ContentViewDefinition
 
+  include AsyncOrchestration
+
   has_many :content_views
   has_many :components, :class_name => "ComponentContentView"
   has_many :component_content_views, :through => :components,
@@ -34,25 +36,41 @@ class ContentViewDefinition < ActiveRecord::Base
   validates :organization, :presence => true
   validate :validate_content
 
-  def publish(name, description, label=nil)
+  def publish(name, description, label=nil, options = { })
+    options = { :async => true, :notify => false }.merge options
+
     view = ContentView.create!(:name => name,
                         :label=>label,
                         :description => description,
                         :content_view_definition => self,
                         :organization => organization
                        )
+
     version = ContentViewVersion.create!(:version=>1, :content_view=>view,
                                  :environments => [organization.library])
-    generate_repos(view)
+
+    if options[:async]
+      async_task = self.async(:organization => self.organization,
+                              :task_type => TaskStatus::TYPES[:content_view_publish][:type]).generate_repos(view)
+
+      version.task_status = async_task
+      version.save!
+    else
+      version.task_status = nil
+      version.save!
+      generate_repos(view)
+    end
+
     view
   end
 
   def generate_repos(view)
-    tasks = []
+    async_tasks = []
     repos.each do |repo|
       clone = repo.create_clone(self.organization.library, view)
-      tasks << repo.clone_contents(clone)
+      async_tasks << repo.clone_contents(clone)
     end
+    PulpTaskStatus::wait_for_tasks async_tasks.flatten(1)
   end
 
   # Retrieve a list of repositories associated with the definition.

@@ -122,6 +122,12 @@ module Katello
             },
             :user_message => nil
         },
+        :content_view_publish => {
+            :type => :content_view_publish
+        },
+        :content_view_refresh => {
+            :type => :content_view_refresh
+        }
     }.with_indifferent_access
 
     TYPES.each_pair do |name, value|
