@@ -128,10 +128,10 @@ class Promote(ContentViewAction):
     def setup_parser(self, parser):
         opt_parser_add_org(parser, True)
         parser.add_option('--label', dest='label',
-                help=_("content view label eg: foo.example.com"))
+                          help=_("content view label eg: foo.example.com"))
         parser.add_option('--name', dest='name',
                 help=_("content view name eg: foo.example.com"))
-        parser.add_option('--id', dest='id', 
+        parser.add_option('--id', dest='id',
                 help=_("content view id eg: 4"))
         opt_parser_add_environment(parser, True)
         parser.add_option('--async', dest='async', action="store_true",
@@ -189,11 +189,13 @@ class Refresh(ContentViewAction):
     def setup_parser(self, parser):
         opt_parser_add_org(parser, True)
         parser.add_option('--label', dest='label',
-                help=_("content view label eg: foo.example.com"))
+                          help=_("content view label eg: foo.example.com"))
         parser.add_option('--name', dest='name',
-                help=_("content view name eg: foo.example.com"))
+                          help=_("content view name eg: foo.example.com"))
         parser.add_option('--id', dest='id',
-                help=_("content view id eg: 4"))
+                          help=_("content view id eg: 4"))
+        parser.add_option('--async', dest='async', action="store_true",
+                          help=_("refresh asynchronously (default: false)"))
 
     def check_options(self, validator):
         validator.require('org')
@@ -205,13 +207,36 @@ class Refresh(ContentViewAction):
         view_label = self.get_option('label')
         view_id = self.get_option('id')
         view_name = self.get_option('name')
+        async = self.get_option('async')
 
         view = get_content_view(org_name, view_label, view_name, view_id)
 
-        self.api.refresh(view["id"])
-        print _("Content view [ %s ] was successfully refreshed.") % \
-                (view["name"])
-        return os.EX_OK
+        try:
+            task = self.api.refresh(view["id"])
+
+            if not async:
+                task = AsyncTask(task)
+                run_spinner_in_bg(wait_for_async_task, [task],
+                                  message=_("Refreshing view, please wait..."))
+
+                if task.succeeded():
+                    print _("Content view [ %s ] was successfully refreshed.") % \
+                        (view["name"])
+                    return_code = os.EX_OK
+                else:
+                    print _("View [ %s ] refresh failed: %s" %
+                            (view["name"], format_task_errors(task.errors)))
+                    return_code = os.EX_DATAERR
+
+            else:
+                print _("Refresh task [ %s ] was successfully created.") % (task["uuid"])
+                return_code = os.EX_OK
+
+        except Exception:
+            raise
+
+        return return_code
+
 
 # content_view command ------------------------------------------------------------
 
