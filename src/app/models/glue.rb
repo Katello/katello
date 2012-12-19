@@ -119,7 +119,7 @@ module Glue
         obj, met, *args = task.action
         args_str = args.collect { |x| x.inspect }.join(",")[0, 20]
         obj_id = ''
-        obj_id = "find(#{obj.id})." if obj.id
+        obj_id = "find(#{obj.id})." if obj.respond_to?(:id) && obj.id
         Glue.logger.info "Task #{task.name} (#{q_active}/#{q_total}) > #{obj.class.name}.#{obj_id}#{met}(#{args_str})"
 
         # execute the task
