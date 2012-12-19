@@ -1141,7 +1141,6 @@ $(document).ready(function() {
     $("#modified_dialog").dialog({modal: true, width: 400, autoOpen: false});
 
     buttons.download.tipsy({gravity:'n', trigger:'manual'})
-    console.log(buttons.download.data('tipsy_text'));
     KT.options.templates = KT.template_breadcrumb["templates"].templates;
 
     KT.options.content_tree = sliding_tree("content_tree", {
