@@ -90,7 +90,7 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     env.default_content_view = content_view
     env.save!
     content_view = content_view.reload
-    assert_equal content_view.environment_default, env
+    assert_equal content_view.environment_default.id, env.id
     assert_equal content_view, env.default_content_view
   end
 
