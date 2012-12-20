@@ -67,6 +67,22 @@ class Changeset < ActiveRecord::Base
   belongs_to :environment, :class_name => "KTEnvironment"
   belongs_to :task_status
 
+  # find changesets in given state/states
+  scope :with_state, lambda { |*states| where(:state => states.map(&:to_s)) }
+  # first thing after start is that progress is set to 0 so we can easily detect already started
+  scope :started, with_state(PROMOTING, DELETING)
+  # find colliding changesets which are those having target same as to.start or start same se
+  # to.target or same start and target, others should be safe, ignoring self of course
+  scope :colliding, lambda { |to|
+    start  = to.environment.prior.id
+    target = to.environment.id
+    joins(:environment => :priors).
+        where(['"changesets"."id" <> ? AND ('<<
+                   '"environments"."id" = ? OR "environment_priors"."prior_id" = ? OR ' <<
+                   '("environments"."id" = ? AND "environment_priors"."prior_id" = ?))',
+               to.id, start, target, target, start])
+  }
+
   before_save :uniquify_artifacts
   def key_for item
     "changeset_#{id}_#{item}"
