@@ -55,6 +55,7 @@ answer_file = nil
 show_resulting_answer_file = false
 nobars = false
 debug_stdout = false
+katello_configuration_files_only = false
 begin
 	option_parser.banner = "Usage: #{$0} [options]"
   option_parser.summary_width = 8
@@ -68,6 +69,10 @@ begin
 
 	option_parser.on_tail.on('-b', '--no-bars', 'Do not show progress bars and output puppet log instead') do
 		nobars = true
+	end
+	option_parser.on_tail.on('--katello-configuration-files-only',
+                           'Configure only Katello config files. Do NOT use! (used internally by katello-upgrade)') do
+    katello_configuration_files_only = true
 	end
 	option_parser.on_tail.on('-d', '--debug', 'Print more debugging information to on the stdout (use with -b)') do
     debug_stdout = true
@@ -237,7 +242,7 @@ seen_err = false
 ENV['LC_ALL'] = 'C'
 begin
 	IO.popen("#{puppet_cmd} 2>&1", 'w+') do |f|
-		f.puts "include katello"
+		f.puts katello_configuration_files_only ? 'include katello::config::files' : 'include katello'
 		f.close_write
 		processing_logfile = nil
 		t = nil
