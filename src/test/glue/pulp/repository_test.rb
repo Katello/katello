@@ -305,7 +305,7 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
     staging = KTEnvironment.find(environments(:staging).id)
 
     task_list = @@fedora_17_x86_64.promote(library, staging)
-    assert_equal 3, task_list.length
+    assert_equal 4, task_list.length
     self.class.wait_on_tasks(task_list)
 
     clone_id = @@fedora_17_x86_64.clone_id(staging, staging.default_content_view)
@@ -353,7 +353,7 @@ class GluePulpRepoRequiresEmptyPromoteTest < GluePulpRepoTestBase
 
   def self.after_suite
     VCR.use_cassette('glue_pulp_repo_helper') do
-      @@cloned_repo.destroy
+      @@cloned_repo.destroy if @@cloned_repo
       @@fedora_17_x86_64.destroy_repo
     end
   end
