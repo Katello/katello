@@ -12,9 +12,11 @@ jpa.config.hibernate.connection.username=<%= scope.lookupvar("candlepin::params:
 jpa.config.hibernate.connection.password=<%= scope.function_katello_passencrypt([scope.lookupvar("candlepin::params::db_pass")]) %>
 candlepin.consumer_system_name_pattern = .+
 candlepin.environment_content_filtering=<%= scope.lookupvar("candlepin::params::env_filtering_enabled") %>
+candlepin.auth.basic.enable = false
+candlepin.auth.trusted.enable = false
 <% if scope.lookupvar("candlepin::params::katello_oauth_key") != "" -%>
 module.config.katello=org.candlepin.katello.KatelloModule
-candlepin.auth.oauth.enabled = true
+candlepin.auth.oauth.enable = true
 candlepin.auth.oauth.consumer.<%= scope.lookupvar("candlepin::params::katello_oauth_key") %>.secret = <%= scope.lookupvar("candlepin::params::katello_oauth_secret") %>
 candlepin.crl.file = <%= scope.lookupvar("candlepin::params::crl_file") %>
 <%- end -%>
