@@ -14,7 +14,7 @@ module Navigation
   module SetupMenu
 
     def menu_setup
-      menu = {:key => :systems,
+      menu = {:key => :setup,
        :name => _("Setup"),
         :url => :sub_level,
         :options => {:class=>'setup top_level', "data-menu"=>"setup"},
@@ -31,7 +31,7 @@ module Navigation
     end
 
     def menu_subnets
-      {:key => :registered,
+      {:key => :subnets,
        :name => _("Subnets"),
        :url => subnets_path,
        :if => lambda{true}, #TODO: check permissions
@@ -40,7 +40,7 @@ module Navigation
     end
 
     def menu_domains
-      {:key => :registered,
+      {:key => :domains,
        :name => _("Domains"),
        :url => domains_path,
        :if => lambda{true}, #TODO: check permissions
@@ -49,7 +49,7 @@ module Navigation
     end
 
     def menu_architectures
-      {:key => :registered,
+      {:key => :architectures,
        :name => _("Architectures"),
        :url => architectures_path,
        :if => lambda{true}, #TODO: check permissions
