@@ -255,7 +255,6 @@ begin
       else
         progress_bar.increment
         if processing_logfile != nil
-          message = nil
           if line =~ /notice:.*executed successfully/
             processing_logfile = nil
           elsif line =~ /err:/
