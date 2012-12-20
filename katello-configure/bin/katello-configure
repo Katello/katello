@@ -240,7 +240,6 @@ begin
 		f.puts "include katello"
 		f.close_write
 		processing_logfile = nil
-		t = nil
     progress_bar = nobars ? nil : ProgressBar.create(:title => default_progressbar_title, :total => puppet_logfile_aprox_size, :smoothing => 0.6)
 		while line = f.gets do
       time = Time.now.strftime("%y%m%d-%H:%M:%S ")
