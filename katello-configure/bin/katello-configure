@@ -282,10 +282,12 @@ begin
           end
         end
       end
-		end
-    progress_bar.title = default_progressbar_title
-    progress_bar.finish
-    puts "\n"
+    end
+    if progress_bar
+      progress_bar.title = default_progressbar_title
+      progress_bar.finish
+      puts "\n"
+    end
 	end
 rescue => e
 	$stderr.puts 'Error: ' + e.message
