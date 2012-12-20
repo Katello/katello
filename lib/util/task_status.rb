@@ -78,12 +78,12 @@ module Katello
             :english_name =>N_("Package Group Update"),
             :type => :package_group,
             :event_messages => {
-                :running => [N_('updating package group...'), N_('updating package group...'), N_('updating package groups...')],
-                :waiting => [N_('updating package group...'), N_('updating package group...'), N_('updating package groups...')],
-                :finished =>[N_('package group update complete'), N_('%s package group updated'), N_('%s (%s other package groups) updated')],
-                :error => [N_('package group update failed'), N_('%s package group update failed'), N_('%s (%s other package groups) update failed')],
-                :cancelled =>[N_('package group update canceled'), N_('%s package group update canceled'), N_('%s (%s other package groups) update canceled')],
-                :timed_out =>[N_('package group update timed out'), N_('%s package group update timed out'), N_('%s (%s other package groups) update timed out')],
+                :running => [N_('Updating package group...'), N_('updating package group...'), N_('updating package groups...')],
+                :waiting => [N_('Updating package group...'), N_('updating package group...'), N_('updating package groups...')],
+                :finished =>[N_('Package group update complete'), N_('%s package group updated'), N_('%s (%s other package groups) updated')],
+                :error => [N_('Package group update failed'), N_('%s package group update failed'), N_('%s (%s other package groups) update failed')],
+                :cancelled =>[N_('Package group update canceled'), N_('%s package group update canceled'), N_('%s (%s other package groups) update canceled')],
+                :timed_out =>[N_('Package group update timed out'), N_('%s package group update timed out'), N_('%s (%s other package groups) update timed out')],
 
             },
             :user_message => _('Package Group Update scheduled by %s')
