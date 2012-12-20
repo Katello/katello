@@ -49,10 +49,23 @@ KT.configuration_templates_page = (function() {
         $(this).ajaxSubmit({
             type: "POST",
             url: url,
-            //data: {'configuration_template[operatingsystem_ids]': ids},
             cache: false,
-            success	: function(data, status, xhr){
-                $('.panel-conent').html(data);
+            success	: function(data){
+                $('.panel-content').html(data);
+            }
+        });
+        notices.checkNotices();
+        return false;
+    };
+
+    deleteAssociation = function() {
+        var url = $(this).attr("data_url");
+        $.ajax({
+            type: "DELETE",
+            url: url,
+            cache: false,
+            success	: function(data){
+                $('.panel-content').html(data);
             }
         });
         notices.checkNotices();
@@ -108,10 +121,11 @@ KT.configuration_templates_page = (function() {
     };
 
     register = function() {
-        $('#configuration_template_snippet').bind('change', checkboxChanged);
+        $('#configuration_template_snippet').live('change', checkboxChanged);
         $('#configuration_template_template_kind_id').live('change', changeType);
         $('#configuration_template_operatingsystem_ids_').live('change', addRemoveOperatingSystem);
-        $('#add_association_config_template').bind('submit', addAssociation);
+        $('#add_association_config_template').live('submit', addAssociation);
+        $('#delete_association_configuration_template').live('click', deleteAssociation);
         $('#update_upload_template').live('click', uploadTemplate);
         $('#configuration_template_file').live('change', function(){
             if( $(this).val() !== '' ){

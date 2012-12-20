@@ -33,6 +33,10 @@ class Foreman::ConfigTemplate < Resources::ForemanModel
     resource.build_pxe_default({}, header).first
   end
 
+  def add_template_combination(a_template_combination = {})
+    resource.add_template_combination(a_template_combination.merge(:id => id), Foreman::ConfigTemplate.header)
+  end
+
   index_options :display_attrs => [:name]
 
   mapping do

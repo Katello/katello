@@ -36,11 +36,9 @@ Src::Application.routes.draw do
 
       resources :configuration_templates do
         get :items, :on => :collection
-        member do
-          get :associations
-          post :associations, :action => :add_association
-        end
+        resources :template_combinations, :only => [:index, :create]
       end
+      resources :template_combinations, :only => [:destroy]
     end
   end
 

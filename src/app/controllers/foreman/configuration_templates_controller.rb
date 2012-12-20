@@ -13,7 +13,7 @@
 
 class Foreman::ConfigurationTemplatesController < SimpleCRUDController
   before_filter :handle_template_upload, :only => [:create, :update]
-  before_filter :find_resource, :only => [:edit, :update, :destroy, :associations, :add_association]
+  before_filter :find_resource, :only => [:edit, :update, :destroy, :show_template_combinations, :delete_template_combination, :create_template_combination]
 
   resource_model ::Foreman::ConfigTemplate
   list_column :name, :label=>_("Name")
@@ -30,6 +30,7 @@ class Foreman::ConfigurationTemplatesController < SimpleCRUDController
         :edit => lambda{true},
         :associations => lambda{true},
         :add_association => lambda{true},
+        :delete_association => lambda{true},
         :update => lambda{true},
         :destroy => lambda{true}
     }
@@ -56,19 +57,6 @@ class Foreman::ConfigurationTemplatesController < SimpleCRUDController
     else
       render :text => params[resource_name.to_sym].values.first || ""
     end
-  rescue Resources::AbstractModel::Invalid => error
-    notify.exception error
-    render :json => @resource.errors, :status => :bad_request
-  end
-
-  def associations
-    render :partial => "associations", :layout => "tupane_layout", :locals => { resource_name.to_sym => @resource, :accessor => "id", :editable => true}
-  end
-
-  def add_association
-    @resource.update_attributes!(params[resource_name.to_sym])
-    notify.success _("%s updated successfully.") % resource_name.capitalize
-    render :partial => "associations", :layout => "tupane_layout", :locals => { resource_name.to_sym => @resource, :accessor => "id", :editable => true}
   rescue Resources::AbstractModel::Invalid => error
     notify.exception error
     render :json => @resource.errors, :status => :bad_request

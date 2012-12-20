@@ -101,7 +101,7 @@ module Navigation
         },
         { :key => :configuration_template_associations,
           :name =>_("Associations"),
-          :url => lambda{associations_configuration_template_path(@configuration_template)},
+          :url => lambda{configuration_template_template_combinations_path(@configuration_template)},
           :if => lambda{true},
           :options => {:class=>"panel_link"}
         }
