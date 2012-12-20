@@ -278,8 +278,10 @@ begin
         end
       end
 		end
-    progress_bar.title = default_progressbar_title
-    progress_bar.finish
+    if not nobars
+      progress_bar.title = default_progressbar_title
+      progress_bar.finish
+    end
     puts "\n"
 	end
 rescue => e
