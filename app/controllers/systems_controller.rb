@@ -410,7 +410,7 @@ class SystemsController < ApplicationController
         end
       end
       action = _("Systems Bulk Action: Add to system group(s): %s") % @system_groups.collect{|g| g.name}.join(', ')
-      notify_bulk_action action, successful_systems, failed_systems
+      notify_bulk_action(action, successful_systems, failed_systems)
     end
 
     render :nothing => true
@@ -457,7 +457,7 @@ class SystemsController < ApplicationController
                      {:system_name => system.name, :system_group_names => system_groups.join(', ')})
       end
 
-      notify_bulk_action action, successful_systems, failed_systems, details.join("\n")
+      notify_bulk_action(action, successful_systems, failed_systems, details.join("\n"))
     end
 
     render :nothing => true
@@ -495,7 +495,7 @@ class SystemsController < ApplicationController
       action_text = _("Systems Bulk Action: Schedule install of package group(s): %s") % params[:groups].join(', ')
     end
 
-    notify_bulk_action action_text, successful_systems, failed_systems
+    notify_bulk_action(action_text, successful_systems, failed_systems)
     render :nothing => true
   end
 
@@ -527,7 +527,7 @@ class SystemsController < ApplicationController
         action_text = _("Systems Bulk Action: Schedule update of package(s): %s") % params[:packages].join(', ')
     end
 
-    notify_bulk_action action_text, successful_systems, failed_systems
+    notify_bulk_action(action_text, successful_systems, failed_systems)
     render :nothing => true
   end
 
@@ -562,7 +562,7 @@ class SystemsController < ApplicationController
       action_text = _("Systems Bulk Action: Schedule uninstall of package group(s): %s") % params[:groups].join(', ')
     end
 
-    notify_bulk_action action_text, successful_systems, failed_systems
+    notify_bulk_action(action_text, successful_systems, failed_systems)
     render :nothing => true
   end
 
@@ -585,7 +585,7 @@ class SystemsController < ApplicationController
     end
 
     action = _("Systems Bulk Action: Schedule install of errata(s): %s") % params[:errata].join(', ')
-    notify_bulk_action action, successful_systems, failed_systems
+    notify_bulk_action(action, successful_systems, failed_systems)
     render :nothing => true
   end
 
@@ -628,7 +628,7 @@ class SystemsController < ApplicationController
 
   include SortColumnList
 
-  def notify_bulk_action action, successful_systems, failed_systems, details = ""
+  def notify_bulk_action(action, successful_systems, failed_systems, details = nil)
     # generate a notice for a bulk action
 
     success_msg = _("Successful for system(s): ")
