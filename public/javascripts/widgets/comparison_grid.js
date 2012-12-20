@@ -617,7 +617,7 @@ KT.comparison_grid.controls = function(grid) {
                     });
 
                     selector.append(html);
-                    selector.chosen();
+                    selector.chosen({disable_search_threshold: 3});
                     selector.trigger("liszt:updated");
                 },
                 show = function(){
