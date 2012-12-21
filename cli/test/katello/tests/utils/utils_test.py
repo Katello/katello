@@ -1,6 +1,6 @@
 import unittest
 
-from katello.client.core.utils import convert_to_mime_type, attachment_file_name
+from katello.client.lib.utils.io import convert_to_mime_type, attachment_file_name
 from katello.client.lib.utils.data import slice_dict
 
 class ConvertToMimeTest(unittest.TestCase):

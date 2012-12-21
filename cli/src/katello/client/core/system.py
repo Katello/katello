@@ -24,7 +24,7 @@ from katello.client.api.custom_info import CustomInfoAPI
 from katello.client.api.utils import get_environment, get_system
 from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import convert_to_mime_type, attachment_file_name, save_report
+from katello.client.lib.utils.io import convert_to_mime_type, attachment_file_name, save_report
 from katello.client.lib.utils.data import test_record
 from katello.client.lib.ui.printer import VerboseStrategy
 from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask, \

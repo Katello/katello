@@ -396,42 +396,5 @@ class SystemGroupAsyncJob(AsyncJob):
         return ", ".join([job["status_message"] for job in self._tasks])
 
 
-def get_abs_path(path):
-    """
-    Return absolute path with .. and ~ resolved
-    @type path: string
-    @param path: relative path
-    """
-    path = os.path.expanduser(path)
-    path = os.path.abspath(path)
-    return path
 
-
-def convert_to_mime_type(type_in, default=None):
-    availableMimeTypes = {
-        'text': 'text/plain',
-        'csv':  'text/csv',
-        'html': 'text/html',
-        'pdf':  'application/pdf'
-    }
-
-    return availableMimeTypes.get(type_in, availableMimeTypes.get(default))
-
-def attachment_file_name(headers, default):
-    content_disposition = filter(lambda h: h[0].lower() == 'content-disposition', headers)
-
-    if len(content_disposition) > 0:
-        filename = content_disposition[0][1].split('filename=')
-        if len(filename) < 2:
-            return default
-        if filename[1][0] == '"' or filename[1][0] == "'":
-            return filename[1][1:-1]
-        return filename
-
-    return default
-
-def save_report(report, filename):
-    f = open(filename, 'w')
-    f.write(report)
-    f.close()
 
