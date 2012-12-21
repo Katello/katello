@@ -286,7 +286,7 @@ def parse_answer_option(answer_file, default_options)
   final_options = {}
   if answer_file != nil
     if not File.file?(answer_file)
-      $stderr.puts "Answer file [#{answer_file}] does seem to exist"
+      $stderr.puts "Answer file [#{answer_file}] does not seem to exist"
       exit_with :answer_missing
     end
     final_options, __unused, error = read_answer_file(answer_file)

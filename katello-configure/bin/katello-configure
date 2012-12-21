@@ -50,8 +50,12 @@ end
 # After having read the default option list, we parse the
 # command line options.
 options = {}
+
+# answer file is always loaded by default
+FileUtils.touch result_config_path
+options['answer_file'] = result_config_path
+
 option_parser = OptionParser.new
-answer_file = nil
 show_resulting_answer_file = false
 nobars = false
 debug_stdout = false
