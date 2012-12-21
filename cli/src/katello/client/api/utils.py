@@ -147,14 +147,14 @@ def get_user(userName):
     user_api = UserAPI()
     user = user_api.user_by_name(userName)
     if user == None:
-        raise ApiDataError(_("Could not find user '%s'") % (userName))
+        raise ApiDataError(_("Could not find user [ %s ]") % (userName))
     return user
 
 def get_role(name):
     user_role_api = UserRoleAPI()
     role = user_role_api.role_by_name(name)
     if role == None:
-        raise ApiDataError(_("Cannot find user role '%s'") % (name))
+        raise ApiDataError(_("Cannot find user role [ %s ]") % (name))
     return role
 
 def get_sync_plan(org_name, name):

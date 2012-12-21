@@ -164,7 +164,7 @@ class Import(TemplateAction):
         try:
             f = self.open_file(tplPath)
         except IOError:
-            print _("File %s does not exist" % tplPath)
+            print _("File [ %s ] does not exist" % tplPath)
             return os.EX_IOERR
 
         response = run_spinner_in_bg(self.api.import_tpl, (env["id"], desc, f),
@@ -209,7 +209,7 @@ class Export(TemplateAction):
         try:
             f = self.open_file(tplPath)
         except IOError:
-            print >> sys.stderr, _("Could not create file %s") % tplPath
+            print >> sys.stderr, _("Could not create file [ %s ]") % tplPath
             return os.EX_IOERR
 
         self.api.validate_tpl(template["id"], format_in)
@@ -217,7 +217,7 @@ class Export(TemplateAction):
             message=_("Exporting template, please wait... "))
         f.write(response)
         f.close()
-        print _("Template was exported successfully to file %s") % tplPath
+        print _("Template was exported successfully to file [ %s ]") % tplPath
         return os.EX_OK
 
     @classmethod
@@ -370,7 +370,7 @@ class Update(TemplateAction):
         #check for missing values
         for k, v in self.items['add_parameters'].iteritems():
             if v is None:
-                validator.add_option_error(_("missing value for parameter '%s'") % k)
+                validator.add_option_error(_("missing value for parameter [ %s ]") % k)
 
     def _resetParameters(self):
         # pylint: disable=W0201
