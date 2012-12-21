@@ -4,7 +4,7 @@ from mock import Mock
 
 from katello.tests.test_utils import ColoredAssertionError, EasyMock
 
-import katello.client.core.utils
+import katello.client.lib.ui.progress
 from katello.client.core.utils import SystemExitRequest
 from katello.client.api.utils import ApiDataError
 from katello.client.i18n_optparse import OptionParserExitError
@@ -101,7 +101,7 @@ class CLIActionTestCase(CLITestCase):
         self.mock(spinner, "start")
         self.mock(spinner, "stop")
         self.mock(spinner, "join")
-        self.mock(katello.client.core.utils, "Spinner", spinner)
+        self.mock(katello.client.lib.ui.progress, "Spinner", spinner)
 
     def run_action(self, expected_return_code=None):
         if expected_return_code is not None:

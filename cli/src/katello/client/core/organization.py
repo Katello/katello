@@ -20,7 +20,8 @@ from katello.client.api.organization import OrganizationAPI
 from katello.client.api.product import ProductAPI
 from katello.client.api.organization_system_info_keys import OrganizationSystemInfoKeysAPI
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, AsyncTask
+from katello.client.core.utils import AsyncTask
+from katello.client.lib.ui.progress import run_spinner_in_bg, wait_for_async_task
 from katello.client.lib.utils.data import test_record
 from katello.client.lib.ui.formatters import format_task_errors
 from katello.client.lib.ui.printer import VerboseStrategy

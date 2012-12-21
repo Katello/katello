@@ -21,7 +21,8 @@ from optparse import OptionValueError
 from katello.client.api.template import TemplateAPI
 from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import run_spinner_in_bg, system_exit
+from katello.client.core.utils import system_exit
+from katello.client.lib.ui.progress import run_spinner_in_bg
 from katello.client.lib.utils.io import get_abs_path
 from katello.client.lib.utils.data import test_record
 from katello.client.api.utils import get_library, get_environment, get_template, get_repo
