@@ -145,6 +145,8 @@ class Update(EnvironmentAction):
                                help=_("name of prior environment"))
         parser.add_option('--name', dest='name',
                                help=_("environment name (required)"))
+        parser.add_option('--new-name', dest='new-name',
+                               help=_("new environment name"))
 
 
     def check_options(self, validator):
@@ -156,6 +158,7 @@ class Update(EnvironmentAction):
         description = self.get_option('description')
         orgName     = self.get_option('org')
         priorName   = self.get_option('prior')
+        newName     = self.get_option('new-name')
 
         env = get_environment(orgName, envName)
 
@@ -163,6 +166,10 @@ class Update(EnvironmentAction):
             priorId = self.get_prior_id(orgName, priorName)
         else:
             priorId = None
+
+        if newName != None:
+            envName = newName
+
         env = self.api.update(orgName, env["id"], envName, description, priorId)
         print _("Successfully updated environment [ %s ]") % env['name']
         return os.EX_OK
