@@ -19,7 +19,7 @@
 from katello.client.api.smart_proxy import SmartProxyAPI
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import unnest_one
-from katello.client.lib.utils.printer import batch_add_columns
+from katello.client.lib.ui.printer import batch_add_columns
 
 # base smart proxy action --------------------------------------------------------
 

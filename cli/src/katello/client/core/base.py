@@ -23,7 +23,7 @@ from urlparse import urlparse
 from katello.client.config import Config
 from katello.client.api.utils import ApiDataError
 from katello.client.core.utils import parse_tokens, SystemExitRequest
-from katello.client.lib.utils.printer import Printer, GrepStrategy, VerboseStrategy
+from katello.client.lib.ui.printer import Printer, GrepStrategy, VerboseStrategy
 from katello.client.lib.utils.option_validator import OptionValidator
 from katello.client.lib.utils.encoding import u_str, u_obj
 from katello.client.logutil import getLogger

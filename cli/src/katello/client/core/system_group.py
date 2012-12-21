@@ -21,7 +21,7 @@ from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_system_group
 from katello.client.core.utils import test_record
 from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemGroupAsyncJob
-from katello.client.lib.utils.printer import batch_add_columns
+from katello.client.lib.ui.printer import batch_add_columns
 
 
 # base system group action --------------------------------------------------------

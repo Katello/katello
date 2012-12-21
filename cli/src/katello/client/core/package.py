@@ -20,8 +20,8 @@ from katello.client.api.package import PackageAPI
 from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_repo
-from katello.client.lib.utils import printer
-from katello.client.lib.utils.printer import batch_add_columns
+from katello.client.lib.ui import printer
+from katello.client.lib.ui.printer import batch_add_columns
 
 
 # base package action --------------------------------------------------------

@@ -18,7 +18,7 @@
 from katello.client.api.subnet import SubnetAPI
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import unnest_one
-from katello.client.lib.utils.printer import batch_add_columns
+from katello.client.lib.ui.printer import batch_add_columns
 
 
 # base subnet action --------------------------------------------------------

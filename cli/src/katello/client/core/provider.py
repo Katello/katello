@@ -26,7 +26,7 @@ from katello.client.core.utils import test_record, get_abs_path, run_async_task_
 from katello.client.core.repo import format_sync_state, format_sync_time
 from katello.client.core.utils import ProgressBar
 from katello.client.api.utils import get_provider
-from katello.client.lib.utils import printer
+from katello.client.lib.ui import printer
 
 
 

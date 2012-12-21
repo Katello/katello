@@ -20,13 +20,12 @@ from katello.client.api.organization import OrganizationAPI
 from katello.client.api.product import ProductAPI
 from katello.client.api.organization_system_info_keys import OrganizationSystemInfoKeysAPI
 from katello.client.core.base import BaseAction, Command
-
 from katello.client.core.utils import test_record, run_spinner_in_bg, wait_for_async_task, AsyncTask, \
     format_task_errors
-from katello.client.lib.utils.printer import VerboseStrategy
-from katello.client.lib.utils import printer
+from katello.client.lib.ui.printer import VerboseStrategy
+from katello.client.lib.ui import printer
 from datetime import timedelta, datetime
-from katello.client.lib.utils.printer import batch_add_columns
+from katello.client.lib.ui.printer import batch_add_columns
 
 
 # base organization action -----------------------------------------------------

@@ -24,8 +24,8 @@ from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, get_abs_path, run_spinner_in_bg, system_exit
 from katello.client.api.utils import get_library, get_environment, get_template, get_repo
 from katello.client.lib.utils.encoding import u_str
-from katello.client.lib.utils import printer
-from katello.client.lib.utils.printer import batch_add_columns
+from katello.client.lib.ui import printer
+from katello.client.lib.ui.printer import batch_add_columns
 
 
 

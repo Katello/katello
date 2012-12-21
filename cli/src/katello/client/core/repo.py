@@ -29,8 +29,8 @@ from katello.client.core.utils import system_exit, run_async_task_with_status, r
 from katello.client.core.utils import ProgressBar
 from katello.client.api.utils import get_provider
 from katello.client.lib.utils.encoding import u_str
-from katello.client.lib.utils import printer
-from katello.client.lib.utils.printer import batch_add_columns
+from katello.client.lib.ui import printer
+from katello.client.lib.ui.printer import batch_add_columns
 
 
 
