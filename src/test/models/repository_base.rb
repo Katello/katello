@@ -13,21 +13,15 @@
 require 'minitest_helper'
 
 
-module RepositoryTestBase
-  def self.included(base)
-    base.class_eval do
-      fixtures :all
-    end
+class RepositoryTestBase < MiniTest::Rails::ActiveSupport::TestCase
+  extend ActiveRecord::TestFixtures
 
-    base.extend ClassMethods
-  end
+  fixtures :all
 
-  module ClassMethods
-    def before_suite
-      services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-      models    = ['Repository', 'Package']
-      disable_glue_layers(services, models)
-    end
+  def self.before_suite
+    services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
+    models    = ['Repository', 'Package']
+    disable_glue_layers(services, models)
   end
 
   def setup
@@ -39,7 +33,6 @@ module RepositoryTestBase
     @staging              = KTEnvironment.find(environments(:staging).id)
     @acme_corporation     = Organization.find(organizations(:acme_corporation).id)
     @unassigned_gpg_key   = GpgKey.find(gpg_keys(:unassigned_gpg_key).id)
-    @fedora_filter        = Filter.find(filters(:fedora_filter).id)
     @admin                = User.find(users(:admin))
   end
 

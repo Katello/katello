@@ -1,0 +1,35 @@
+= content_for(:stylesheets_block) do
+  = include_stylesheets :loginpage
+
+= content_for(:javascripts_block) do
+  = include_javascripts :common
+  = include_javascripts :alchemy
+
+= content_for(:login_logo) do
+  = image_tag("embed/logo.png", :alt => _('Katello Logo'))
+
+= content_for(:title) do
+  = project_name
+  = "-"
+  = default_title
+
+= content_for(:head) do
+  = csrf_meta_tag
+  / [if lt IE 9]
+    = include_javascripts  :html5
+  / [if IE]
+    = include_stylesheets :ie, :embed_assets => false
+
+= content_for(:extra) do
+  %script{ :type => "text/javascript" }
+    -if protect_against_forgery?
+      :plain
+        var AUTH_TOKEN = #{form_authenticity_token.inspect};
+    = render :partial => 'common/common_i18n'
+    = render :partial => 'common/ajax_notices'
+    = render :partial => 'common/notification'
+
+= content_for(:footer) do
+  = render :partial => "common/footer"
+
+= render :partial => "layouts/alchemy/layouts/user_session_layout"

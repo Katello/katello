@@ -14,7 +14,7 @@ class Api::RepositoriesController < Api::ApiController
   include KatelloUrlHelper
   respond_to :json
   before_filter :find_repository, :only => [:show, :update, :destroy, :package_groups, :package_group_categories, :enable, :gpg_key_content]
-  before_filter :find_organization, :only => [:create, :discovery]
+  before_filter :find_organization, :only => [:create]
   before_filter :find_product, :only => [:create]
   before_filter :find_content_view_definition, :only => [
       :list_content_view_definition_repositories,
@@ -44,7 +44,6 @@ class Api::RepositoriesController < Api::ApiController
       :update => edit_test,
       :destroy => edit_test,
       :enable => edit_test,
-      :discovery => org_edit,
       :package_groups => read_test,
       :package_group_categories => read_test,
       :list_content_view_definition_repositories => cvd_read_test,
@@ -100,7 +99,7 @@ class Api::RepositoriesController < Api::ApiController
     #
     # TODO: these should really be done as validations, but the orchestration engine currently converts them into OrchestrationExceptions
     #
-    raise HttpErrors::BadRequest, _("Repositories can be deleted only in Library environment.") if not @repository.environment.library?
+    raise HttpErrors::BadRequest, _("Repositories can be deleted only in the '%s' environment.") % "Library" if not @repository.environment.library?
     raise HttpErrors::BadRequest, _("Repository cannot be deleted since it has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it.") if @repository.promoted?
 
     @repository.destroy
@@ -153,17 +152,6 @@ EOS
     render :text=>""
   end
 
-  # proxy repository discovery call to pulp, so we don't have to create an async task to keep track of async task on pulp side
-  api :POST, "/organizations/:organization_id/repositories/discovery", "Discover repository urls with metadata and find candidate repos. Supports http, https and file based urls. Async task, returns the delayed job."
-  param :type, String, :required => true, :desc => "type of content to discover (supported types : 'yum')"
-  param :url, String, :required => true, :desc => "remote url to perform discovery"
-  def discovery
-    pulp_task = Resources::Pulp::Repository.start_discovery(params[:url], params[:type])
-    task = PulpSyncStatus.using_pulp_task(pulp_task) {|t| t.organization = @organization}
-    task.save!
-    render :json => task
-  end
-
   api :GET, "/repositories/:id/package_groups", "List all package groups in a repository"
   param :id, :identifier, :required => true
   def package_groups
@@ -191,7 +179,7 @@ EOS
   param :id, :identifier, :required => true
   def gpg_key_content
     if @repository.gpg_key && @repository.gpg_key.content.present?
-      render(:text => @repository.gpg_key.content, :layout => false) 
+      render(:text => @repository.gpg_key.content, :layout => false)
     else
       head(404)
     end

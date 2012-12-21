@@ -1,5 +1,5 @@
 Name: katello-agent
-Version: 1.2.0
+Version: 1.3.0
 Release: 1%{?dist}
 Summary: The Katello Agent
 Group:   Development/Languages
@@ -11,8 +11,9 @@ BuildArch: noarch
 BuildRequires: python2-devel
 BuildRequires: python-setuptools
 BuildRequires: rpm-python
-Requires: gofer >= 0.60
-Requires: gofer-package >= 0.60
+Requires: gofer >= 0.74
+Requires: python-pulp-agent-lib >= 2.0.5
+Requires: pulp-rpm-handlers >= 2.0.5
 Requires: subscription-manager
 
 %description

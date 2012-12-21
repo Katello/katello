@@ -278,6 +278,8 @@ var sliding_tree = function(tree_id, options) {
         setup_filter = function(){
              var bcs,
                  bcs_height = 0,
+                 container,
+                 container_height = 0,
                  filter_form = $('#filter_form'),
                  filter_input = $('#filter_input');
 
@@ -289,7 +291,10 @@ var sliding_tree = function(tree_id, options) {
              $('#container .filter_button').toggle(
                  function() {
                      bcs = $('.breadcrumb_filter');
+                     container = bcs.next();
+                     container_height = container.height();
                      bcs_height = bcs.height();
+                     container.animate({"height":container_height-40}, { duration: 200, queue: false });
                      bcs.animate({ "height": bcs_height+40}, { duration: 200, queue: false });
                      filter_input.css("margin-left", '4px');
                      filter_form.css("opacity", "0").show();
@@ -307,6 +312,7 @@ var sliding_tree = function(tree_id, options) {
                      }
                  },function() {
                      filter_form.fadeOut("fast", function(){
+                         container.animate({"height":container_height}, { duration: 200, queue: false });
                          bcs.animate({ "height": bcs_height }, "fast");
                          if( $('.remove_item').length ){
                              $('.remove_item').css({ top : 12 });

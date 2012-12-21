@@ -16,14 +16,11 @@
 #
 
 import os
-from gettext import gettext as _
 
 from katello.client.api.${resource.name(True, False)} import ${resource.name(True, True)}API
-from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record
 
-Config()
 
 # base ${resource.name()} action --------------------------------------------------------
 

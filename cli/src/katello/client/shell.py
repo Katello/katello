@@ -11,8 +11,6 @@
 # have received a copy of LGPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/lgpl-2.0.txt.
 
-# NOTE: the 'self' variable is an instance of SpacewalkShell
-
 import atexit
 import logging
 import os
@@ -22,9 +20,9 @@ import sys
 from cmd import Cmd
 import ConfigParser
 
+from katello.client.completion import Completion
 from katello.client.config import Config, ConfigFileError
-from katello.client.core.base import Command, CommandContainer
-from katello.client.core.utils import parse_tokens
+from katello.client.core.base import Command
 from katello.client.utils.encoding import encode_stream, stdout_origin
 
 class KatelloShell(Cmd):
@@ -53,8 +51,8 @@ class KatelloShell(Cmd):
 
 
     def __init__(self, admin_cli):
-        # remove stdout stream encoding while in 'shell' mode, becuase this breaks readline 
-        # (autocompletion and shell history). In 'shell' mode the stdout 
+        # remove stdout stream encoding while in 'shell' mode, becuase this breaks readline
+        # (autocompletion and shell history). In 'shell' mode the stdout
         # is encoded just for time necessary for command execution see precmd a postcmd
 
         sys.stdout = stdout_origin
@@ -63,6 +61,7 @@ class KatelloShell(Cmd):
         self.completion_matches = None
         Cmd.__init__(self)
         self.admin_cli = admin_cli
+        self.completion = Completion(self.admin_cli)
         try:
             Config()
             self.prompt = Config.parser.get('shell', 'prompt') + ' '
@@ -189,50 +188,13 @@ class KatelloShell(Cmd):
         return cmd, arg, line
 
 
-    def __complete(self, text, line_parts, with_params=False):
-        cmd =  self.__get_command(line_parts)
-        completions = self.__get_possible_completions(cmd, with_params)
-        return [a for a in completions if a.startswith(text)]
-
-
-    @classmethod
-    def __get_possible_completions(cls, cmd, with_params=False):
-        """
-        Return all possible subcommands and options that can be used to complete
-        strings after a command cmd.
-        """
-        completions = []
-        if isinstance(cmd, CommandContainer):
-            completions += cmd.get_command_names()
-        if with_params:
-            completions += cmd.create_parser().get_long_options()
-        return completions
-
-
-    def __get_command(self, names):
-        """
-        Return instance of last command used on the line. Names represent
-        list of commands on the line.
-        """
-        cmd = self.admin_cli
-        for name in names:
-            if isinstance(cmd, CommandContainer):
-                if name in cmd.get_command_names():
-                    cmd = cmd.get_command(name)
-        return cmd
-
-
     def complete(self, text, state):
         """
         Return the next possible completion for 'text'.
         """
         if state == 0:
-            line = readline.get_line_buffer().lstrip()
-            line_parts = parse_tokens(line)
-            if len(line_parts) <= 1:
-                self.completion_matches = self.__complete(text, line_parts, with_params=False)
-            else:
-                self.completion_matches = self.__complete(text, line_parts, with_params=True)
+            line = readline.get_line_buffer()
+            self.completion_matches = self.completion.complete(line)
 
         try:
             return self.completion_matches[state]
