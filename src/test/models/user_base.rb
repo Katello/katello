@@ -12,35 +12,27 @@
 require 'minitest_helper'
 
 
-module TestUserBase
-  def self.included(base)
-    base.extend ClassMethods
+class UserTestBase < MiniTest::Rails::ActiveSupport::TestCase
+  extend ActiveRecord::TestFixtures
 
-    base.class_eval do
-      set_fixture_class :environments => KTEnvironment
-      use_instantiated_fixtures = false
-      fixtures :all
-    end
-  end
+  fixtures :all
 
-  module ClassMethods
-    def before_suite
-      services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
-      models    = ['User', 'Organization', 'KTEnvironment']
-      disable_glue_layers(services, models)
-    end
+  def self.before_suite
+    load_fixtures
+    configure_runcible
+
+    services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
+    models    = ['User', 'System', 'KTEnvironment', 'Repository', 'Organization']
+    disable_glue_layers(services, models)
   end
 
   def setup
     AppConfig.warden = 'database'
-    @no_perms_user  = User.find(users(:no_perms_user))
-    @admin          = User.find(users(:admin))
-    @disabled_user  = User.find(users(:disabled_user))
+    @no_perms_user      = User.find(users(:no_perms_user))
+    @admin              = User.find(users(:admin))
+    @disabled_user      = User.find(users(:disabled_user))
     @acme_corporation   = Organization.find(organizations(:acme_corporation).id)
     @dev                = KTEnvironment.find(environments(:dev).id)
   end
 
 end
-
-
-

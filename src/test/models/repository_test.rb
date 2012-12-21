@@ -13,8 +13,7 @@
 require './test/models/repository_base'
 require './test/models/authorization/repository_authorization_test'
 
-class RepositoryCreateTest < MiniTest::Rails::ActiveSupport::TestCase
-  include RepositoryTestBase
+class RepositoryCreateTest < RepositoryTestBase
 
   def setup
     super
@@ -35,8 +34,7 @@ class RepositoryCreateTest < MiniTest::Rails::ActiveSupport::TestCase
 end
 
 
-class RepositoryInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
-  include RepositoryTestBase
+class RepositoryInstanceTest < RepositoryTestBase
 
   def setup
     super
@@ -87,14 +85,6 @@ class RepositoryInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
     refute_nil @fedora_17_x86_64.yum_gpg_key_url
   end
 
-  def test_has_filters?
-    assert @fedora_17_x86_64.has_filters?
-  end
-
-  def test_does_not_have_filters?
-    refute @fedora_17_x86_64_dev.has_filters?
-  end
-
   def test_clones
     assert_includes @fedora_17_x86_64.clones, @fedora_17_x86_64_dev
   end
@@ -126,10 +116,6 @@ class RepositoryInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_includes @fedora_17_x86_64.environmental_instances, @fedora_17_x86_64_dev
   end
 
-  def test_applicable_filters
-    assert_includes @fedora_17_x86_64_dev.applicable_filters, @fedora_filter
-  end
-
   def test_create_clone
     clone = @fedora_17_x86_64.create_clone(@staging)
     assert clone.id
@@ -145,6 +131,5 @@ class RepositoryInstanceTest < MiniTest::Rails::ActiveSupport::TestCase
                                  @acme_corporation.label, @library.default_content_view.label)
     assert_equal repo_id, "acme_corporation_label-library_label-library_label-fedora_label-fedora_17_x86_64_label"
   end
-
 
 end

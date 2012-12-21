@@ -287,17 +287,15 @@ describe Api::SystemsController do
       it "should show all systems in the organization that are subscribed to a pool" do
         get :index, :organization_id => @organization.label, :pool_id => pool_id
         returned_uuids = JSON.parse(response.body).map{|sys| sys["uuid"]}
-        expected_uuids = [@system_1.uuid, @system_3.uuid]
 
-        returned_uuids.should == expected_uuids
+        returned_uuids.should include(@system_1.uuid, @system_3.uuid)
       end
 
       it "should show only systems in the environment that are subscribed to a pool" do
         get :index, :environment_id => @environment_2.id, :pool_id => pool_id
         returned_uuids = JSON.parse(response.body).map{|sys| sys["uuid"]}
-        expected_uuids = [@system_3.uuid]
 
-        returned_uuids.should == expected_uuids
+        returned_uuids.should include(@system_3.uuid)
       end
 
     end
@@ -561,21 +559,21 @@ describe Api::SystemsController do
     let(:enabled_repos_empty) { { "repos" => [] } }
 
     it "should not bind any" do
-      Runcible::Extensions::Consumer.should_receive(:repos).with(@system.uuid).once.and_return([{'repo_id' => 'a'}, {'repo_id' => 'b'}])
+      Runcible::Extensions::Consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{'repo_id' => 'a'}, {'repo_id' => 'b'}])
 
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
       response.status.should == 200
     end
 
     it "should bind one" do
-      Runcible::Extensions::Consumer.should_receive(:repos).with(@system.uuid).once.and_return([{'repo_id' => 'a'}])
+      Runcible::Extensions::Consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{'repo_id' => 'a'}])
       Runcible::Extensions::Consumer.should_receive(:bind_all).with(@system.uuid, 'b').once
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
       response.status.should == 200
     end
 
     it "should bind two" do
-      Runcible::Extensions::Consumer.should_receive(:repos).with(@system.uuid).once.and_return({})
+      Runcible::Extensions::Consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return({})
       Runcible::Extensions::Consumer.should_receive(:bind_all).with(@system.uuid, 'a').once
       Runcible::Extensions::Consumer.should_receive(:bind_all).with(@system.uuid, 'b').once
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
@@ -583,7 +581,7 @@ describe Api::SystemsController do
     end
 
     it "should bind one and unbind one" do
-      Runcible::Extensions::Consumer.should_receive(:repos).with(@system.uuid).once.and_return([{'repo_id' => 'b'}, {'repo_id' => 'c'}])
+      Runcible::Extensions::Consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{'repo_id' => 'b'}, {'repo_id' => 'c'}])
       Runcible::Extensions::Consumer.should_receive(:bind_all).with(@system.uuid, 'a').once
       Runcible::Extensions::Consumer.should_receive(:unbind_all).with(@system.uuid, 'c').once
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
@@ -591,7 +589,7 @@ describe Api::SystemsController do
     end
 
     it "should unbind two" do
-      Runcible::Extensions::Consumer.should_receive(:repos).with(@system.uuid).once.and_return([{'repo_id' => 'a'}, {'repo_id' => 'b'}])
+      Runcible::Extensions::Consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{'repo_id' => 'a'}, {'repo_id' => 'b'}])
       Runcible::Extensions::Consumer.should_receive(:unbind_all).with(@system.uuid, 'a').once
       Runcible::Extensions::Consumer.should_receive(:unbind_all).with(@system.uuid, 'b').once
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos_empty
@@ -599,7 +597,7 @@ describe Api::SystemsController do
     end
 
     it "should do nothing" do
-      Runcible::Extensions::Consumer.should_receive(:repos).with(@system.uuid).once.and_return({})
+      Runcible::Extensions::Consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return({})
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos_empty
       response.status.should == 200
     end

@@ -61,7 +61,6 @@ class EnvironmentsController < ApplicationController
     # the edit view
     prior_envs = envs_no_successors - [@environment] - @environment.path
     env_labels = Hash[ *prior_envs.collect { |p| [ p.id, p.display_name ] }.flatten]
-    #env_labels[''] = _("Library")
     @env_labels_json = ActiveSupport::JSON.encode(env_labels)
 
     @selected = @environment.prior.nil? ? env_labels[""] : env_labels[@environment.prior.id]
@@ -100,7 +99,7 @@ class EnvironmentsController < ApplicationController
     @environment.save!
 
     if priorUpdated
-      result = @environment.prior.nil? ? _("Library") : @environment.prior.name
+      result = @environment.prior.nil? ? "Library" : @environment.prior.name
     else
       result = params[:kt_environment].values.first
     end

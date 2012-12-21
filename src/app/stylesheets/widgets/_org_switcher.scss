@@ -22,7 +22,7 @@ $switcherformwidth: 165px !default;
     height: 100%;
     text-align: left;
     width: 100%;
-    color: $font_color;
+    color: $text_color;
     float: left;
     margin: 2px 2px 0 8px;
     text-decoration: none;
@@ -37,7 +37,7 @@ $switcherformwidth: 165px !default;
      }
     }
     &.active {
-      @include border-bottom-lr-radius(0);
+      @include border-radius(0);
       .arrow_icon_menu {
        background-position: -26px -11px;
       }
@@ -50,7 +50,7 @@ $switcherformwidth: 165px !default;
   &.active {
     background-color: $switcher-top_color;
     @include switcher-button-active_color;
-    @include border-bottom-lr-radius(0);
+    @include border-radius(0);
   }
   &:hover {
     text-decoration: none;
@@ -76,7 +76,7 @@ $switcherformwidth: 165px !default;
     margin-top: -1px;
     background-color: $switcher-top_color;
     @include switcher-form_color;
-    @include border-trbrbl-radius(3px);
+    @include border-radius(0 3px 3px 3px);
     fieldset {
       margin: 0 0 12px 0;
       display: block;
@@ -118,7 +118,7 @@ $switcherformwidth: 165px !default;
         white-space:nowrap;
       }
       &:hover {
-        background: lighten($kprimary_color, 45%);
+        background: $kprimary_hover_color;
         color: lighten($kprimary_color, 10%);
         border-top: 1px solid lighten($kprimary_color, 10%);
         border-bottom: 1px solid lighten($kprimary_color, 10%);
@@ -128,7 +128,7 @@ $switcherformwidth: 165px !default;
         }
       }
       &.selected {
-        background: lighten($kprimary_color, 45%);
+        background: $kprimary_hover_color;
         color: lighten($kprimary_color, 10%);
         border-top: 1px solid lighten($kprimary_color, 10%);
         border-bottom: 1px solid lighten($kprimary_color, 10%);

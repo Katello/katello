@@ -80,7 +80,10 @@ class List(SystemAction):
         else:
             self.printer.set_header(_("Systems List For Environment [ %s ] in Org [ %s ]") % (env_name, org_name))
 
-        batch_add_columns(self.printer, 'name', 'uuid', 'ipv4_address')
+        batch_add_columns(self.printer, 'name', 'uuid')
+        self.printer.add_column('environment',
+            item_formatter=lambda p: "%s" % (p['environment']['name']))
+
         self.printer.add_column('serviceLevel', _('Service Level'))
 
         self.printer.print_items(systems)
@@ -474,6 +477,8 @@ class Unregister(SystemAction):
         env_name = self.get_option('environment')
         sys_uuid = self.get_option('uuid')
 
+        display_name = name or sys_uuid
+
         try:
             system = get_system(org, name, env_name, sys_uuid)
 
@@ -484,7 +489,7 @@ class Unregister(SystemAction):
                 raise
 
         self.api.unregister(system['uuid'])
-        print _("Successfully unregistered System [ %s ]") % name
+        print _("Successfully unregistered System [ %s ]") % display_name
         return os.EX_OK
 
 class Subscribe(SystemAction):
@@ -513,10 +518,12 @@ class Subscribe(SystemAction):
         qty = self.get_option('quantity') or 1
         sys_uuid = self.get_option('uuid')
 
+        display_name = name or sys_uuid
+
         system = get_system(org, name, sys_uuid = sys_uuid)
 
         self.api.subscribe(system['uuid'], pool, qty)
-        print _("Successfully attached subscription to System [ %s ]") % name
+        print _("Successfully attached subscription to System [ %s ]") % display_name
         return os.EX_OK
 
 class Subscriptions(SystemAction):
@@ -553,6 +560,8 @@ class Subscriptions(SystemAction):
         no_overlap = self.get_option('no_overlap')
         uuid = self.get_option('uuid')
 
+        display_name = name or uuid
+
         if not uuid:
             uuid = get_system(org, name)['uuid']
 
@@ -561,7 +570,7 @@ class Subscriptions(SystemAction):
             # listing current subscriptions
             result = self.api.subscriptions(uuid)
             if result == None or len(result['entitlements']) == 0:
-                print _("No Subscriptions found for System [ %s ] in Org [ %s ]") % (name, org)
+                print _("No Subscriptions found for System [ %s ] in Org [ %s ]") % (display_name, org)
                 return os.EX_OK
 
             def entitlements():
@@ -573,7 +582,7 @@ class Subscriptions(SystemAction):
                     entitlement_ext['serialIds'] = serial_ids
                     yield entitlement_ext
 
-            self.printer.set_header(_("Current Subscriptions for System [ %s ]") % name)
+            self.printer.set_header(_("Current Subscriptions for System [ %s ]") % display_name)
             self.printer.add_column('entitlementId', name=_("Subscription ID"))
             self.printer.add_column('serialIds', name=_('Serial ID'))
             batch_add_columns(self.printer, 'poolName', 'expires', 'consumed', 'quantity', 'sla', 'contractNumber')
@@ -584,7 +593,7 @@ class Subscriptions(SystemAction):
             result = self.api.available_pools(uuid, match_system, match_installed, no_overlap)
 
             if result == None or len(result) == 0:
-                print _("No Pools found for System [ %s ] in Org [ %s ]") % (name, org)
+                print _("No Pools found for System [ %s ] in Org [ %s ]") % (display_name, org)
                 return os.EX_OK
 
             def available_pools():
@@ -601,7 +610,7 @@ class Subscriptions(SystemAction):
                         pool_ext['attr_' + productAttribute['name']] = productAttribute['value']
                     yield pool_ext
 
-            self.printer.set_header(_("Available Subscriptions for System [ %s ]") % name)
+            self.printer.set_header(_("Available Subscriptions for System [ %s ]") % display_name)
 
             self.printer.add_column('id')
             self.printer.add_column('productName', name=_('Name'))
@@ -644,6 +653,8 @@ class Unsubscribe(SystemAction):
         all_entitlements = self.get_option('all')
         uuid = self.get_option('uuid')
 
+        display_name = name or uuid
+
         if not uuid:
             uuid = get_system(org, name)['uuid']
 
@@ -653,7 +664,7 @@ class Unsubscribe(SystemAction):
             self.api.unsubscribe_by_serial(uuid, serial)
         elif entitlement: # unsubscribe from entitlement
             self.api.unsubscribe(uuid, entitlement)
-        print _("Successfully removed subscription from System [ %s ]") % name
+        print _("Successfully removed subscription from System [ %s ]") % display_name
 
         return os.EX_OK
 

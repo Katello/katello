@@ -15,11 +15,11 @@
   /*font: 14px;*/
   position: relative;
   z-index: 0;
-  @include no-select;
+  @include unselectable;
   .selected {
     background: $listhover_color !important;
     color: $white_color;
-    @include _text-shadow(rgba(0,0,0,0.6),2px,2px,2px);
+    @include text-shadow(2px 2px 2px rgba($black_color, 0.6));
     &:after {
       border-left-color: $listhover_color !important;
     }
@@ -80,7 +80,7 @@
         &:hover {
           background: $listhover_color !important;
           color: $white_color;
-          @include _text-shadow(rgba(0,0,0,0.6),2px,2px,2px);
+          @include text-shadow(2px 2px 2px rgba($black_color, 0.6));
           &:after { border-left-color: $listhover_color !important; }
         }
         &.active {

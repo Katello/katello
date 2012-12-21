@@ -40,7 +40,6 @@ from katello.client.core import (
   template,
   changeset,
   client,
-  filters,
   gpg_key,
   system_group,
   admin,
@@ -50,11 +49,17 @@ from katello.client.core import (
   content,
   content_view,
   content_view_definition,
-  subnet
+  subnet,
+  smart_proxy
 )
 
 def setup_admin(katello_cmd, mode=get_katello_mode()):
-    # pylint: disable=R0914,R0915
+    # pylint: disable=R0912,R0914,R0915
+    # Following pylint warnings are disabled as we break them intentionally:
+    #   R0912: Too many branches
+    #   R0914: Too many local variables
+    #   R0915: Too many statements
+
     akey_cmd = activation_key.ActivationKey()
     akey_cmd.add_command('create', activation_key.Create())
     akey_cmd.add_command('info', activation_key.Info())
@@ -131,9 +136,6 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         prod_cmd.add_command('cancel_sync', product.CancelSync())
         prod_cmd.add_command('status', product.Status())
         prod_cmd.add_command('promote', product.Promote())
-        prod_cmd.add_command('list_filters', product.ListFilters())
-        prod_cmd.add_command('add_filter', product.AddRemoveFilter(True))
-        prod_cmd.add_command('remove_filter', product.AddRemoveFilter(False))
         prod_cmd.add_command('set_plan', product.SetSyncPlan())
         prod_cmd.add_command('remove_plan', product.RemoveSyncPlan())
     katello_cmd.add_command('product', prod_cmd)
@@ -153,9 +155,6 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         repo_cmd.add_command('cancel_sync', repo.CancelSync())
         repo_cmd.add_command('enable', repo.Enable(True))
         repo_cmd.add_command('disable', repo.Enable(False))
-        repo_cmd.add_command('list_filters', repo.ListFilters())
-        repo_cmd.add_command('add_filter', repo.AddRemoveFilter(True))
-        repo_cmd.add_command('remove_filter', repo.AddRemoveFilter(False))
         katello_cmd.add_command('repo', repo_cmd)
 
     if mode == 'katello':
@@ -291,10 +290,6 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         cvd_cmd.add_command('delete', content_view_definition.Delete())
         cvd_cmd.add_command('update', content_view_definition.Update())
         cvd_cmd.add_command('publish', content_view_definition.Publish())
-        cvd_cmd.add_command('add_filter',
-                content_view_definition.AddRemoveFilter(True))
-        cvd_cmd.add_command('remove_filter',
-                content_view_definition.AddRemoveFilter(False))
         cvd_cmd.add_command('add_product',
                 content_view_definition.AddRemoveProduct(True))
         cvd_cmd.add_command('remove_product',
@@ -323,17 +318,6 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
     katello_cmd.add_command('client', client_cmd)
 
     if mode == 'katello':
-        filter_cmd = filters.Filter()
-        filter_cmd.add_command('create', filters.Create())
-        filter_cmd.add_command('update', filters.Update())
-        filter_cmd.add_command('list', filters.List())
-        filter_cmd.add_command('info', filters.Info())
-        filter_cmd.add_command('delete', filters.Delete())
-        filter_cmd.add_command('add_package', filters.AddPackage())
-        filter_cmd.add_command('remove_package', filters.RemovePackage())
-        katello_cmd.add_command('filter', filter_cmd)
-
-    if mode == 'katello':
         gpgkey_cmd = gpg_key.GpgKey()
         gpgkey_cmd.add_command('create', gpg_key.Create())
         gpgkey_cmd.add_command('info', gpg_key.Info())
@@ -347,32 +331,42 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         admin_cmd.add_command('crl_regen', admin.CrlRegen())
         katello_cmd.add_command('admin', admin_cmd)
 
+    if mode == 'katello':
+        architecture_cmd = architecture.Architecture()
+        architecture_cmd.add_command('list', architecture.List())
+        architecture_cmd.add_command('info', architecture.Show())
+        architecture_cmd.add_command('create', architecture.Create())
+        architecture_cmd.add_command('update', architecture.Update())
+        architecture_cmd.add_command('delete', architecture.Delete())
+        katello_cmd.add_command('architecture', architecture_cmd)
 
-    architecture_cmd = architecture.Architecture()
-    architecture_cmd.add_command('list', architecture.List())
-    architecture_cmd.add_command('info', architecture.Show())
-    architecture_cmd.add_command('create', architecture.Create())
-    architecture_cmd.add_command('update', architecture.Update())
-    architecture_cmd.add_command('delete', architecture.Delete())
-    katello_cmd.add_command('architecture', architecture_cmd)
+    if mode == 'katello':
+        configtemplate_cmd = config_template.ConfigTemplate()
+        configtemplate_cmd.add_command('list', config_template.List())
+        configtemplate_cmd.add_command('info', config_template.Info())
+        configtemplate_cmd.add_command('create', config_template.Create())
+        configtemplate_cmd.add_command('update', config_template.Update())
+        configtemplate_cmd.add_command('delete', config_template.Delete())
+        configtemplate_cmd.add_command('build_pxe_default', config_template.Build_Pxe_Default())
+        katello_cmd.add_command('config_template', configtemplate_cmd)
 
-    configtemplate_cmd = config_template.ConfigTemplate()
-    configtemplate_cmd.add_command('list', config_template.List())
-    configtemplate_cmd.add_command('info', config_template.Info())
-    configtemplate_cmd.add_command('create', config_template.Create())
-    configtemplate_cmd.add_command('update', config_template.Update())
-    configtemplate_cmd.add_command('delete', config_template.Delete())
-    configtemplate_cmd.add_command('build_pxe_default', config_template.Build_Pxe_Default())
-    katello_cmd.add_command('config_template', configtemplate_cmd)
+    if mode == 'katello':
+        domain_cmd = domain.Domain()
+        domain_cmd.add_command('list', domain.List())
+        domain_cmd.add_command('info', domain.Info())
+        domain_cmd.add_command('create', domain.Create())
+        domain_cmd.add_command('update', domain.Update())
+        domain_cmd.add_command('delete', domain.Delete())
+        katello_cmd.add_command('domain', domain_cmd)
 
-    domain_cmd = domain.Domain()
-    domain_cmd.add_command('list', domain.List())
-    domain_cmd.add_command('info', domain.Info())
-    domain_cmd.add_command('create', domain.Create())
-    domain_cmd.add_command('update', domain.Update())
-    domain_cmd.add_command('delete', domain.Delete())
-    katello_cmd.add_command('domain', domain_cmd)
-
+    if mode == 'katello':
+        smart_proxy_cmd = smart_proxy.SmartProxy()
+        smart_proxy_cmd.add_command('list', smart_proxy.List())
+        smart_proxy_cmd.add_command('info', smart_proxy.Info())
+        smart_proxy_cmd.add_command('create', smart_proxy.Create())
+        smart_proxy_cmd.add_command('update', smart_proxy.Update())
+        smart_proxy_cmd.add_command('delete', smart_proxy.Delete())
+        katello_cmd.add_command('smart_proxy', smart_proxy_cmd)
 
     if mode == 'katello':
         subnet_cmd = subnet.Subnet()

@@ -35,17 +35,16 @@ class PasswordResetsController < ApplicationController
 
     # note: we provide a success notice regardless of whether or not there are any users associated with the email
     # address provided... this is done on purpose for security
-    notify.success _("Email sent to '%s' with password reset instructions.") % params[:email],
-                  :persist => false
-    render :text => ""
+    flash[:success] = _("Email sent to '%s' with password reset instructions.") % params[:email]
+    render :partial=>"password_refresh"
   end
 
   def edit
     if @user.password_reset_sent_at < password_reset_expiration.minutes.ago
       notify.warning _("Password reset token has expired for user '%s'.") % @user.username
-      redirect_to new_password_reset_path
+      redirect_to login_path(:card => 'password_reset')
     else
-      render "common/user_session", :layout => "converge-ui/change_password_layout"
+      redirect_to new_user_session_path
     end
   end
 
@@ -74,14 +73,14 @@ class PasswordResetsController < ApplicationController
 
     # note: we provide a success notice regardless of whether or not there are any users associated with the email
     # address provided... this is done on purpose for security
-    notify.success _("Email sent to '%s' with valid login user names.") % params[:email], :persist => false
-    render :text => ""
+    flash[:success] = _("Email sent to '%s' with valid login user names.") % params[:email]
+    render :partial => "username_refresh"
   end
 
   protected
 
   def find_user_by_user_and_email
-    @user = User.find_by_username_and_email!(params[:username], params[:email])
+    @user = User.find_by_username_and_email(params[:username], params[:email])
     User.current = @user
   end
 

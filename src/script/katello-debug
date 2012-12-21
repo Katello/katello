@@ -47,8 +47,6 @@ end
 puts "detected deployment: \t#{deployment}"
 
 # Define what we want to collect
-sources = []
-
 MISC = [
 "/var/log/audit/audit.log",
 "/var/log/httpd",
@@ -74,7 +72,7 @@ KATELLO_HEADPIN = [
 "/etc/katello/thin.yml",
 "/etc/katello/katello-configure.conf",
 "/etc/httpd/conf.d/katello.conf",
-"/etc/katello/environment.db"
+"/etc/katello/environment.rb"
 ]
 
 ELASTIC_SEARCH = [
@@ -87,6 +85,15 @@ PULP = [
 "/var/log/pulp",
 "/etc/httpd/conf.d/pulp.conf",
 "/etc/qpidd.conf"
+]
+
+FOREMAN = [
+"/var/log/foreman",
+"/etc/foreman/settings.yaml",
+"/etc/foreman/thin.yml",
+"/etc/foreman/email.yaml",
+"/etc/foreman/database.yml",
+"/etc/sysconfig/foreman"
 ]
 
 # Exclude these files from the debug
@@ -106,11 +113,13 @@ EXCLUDES = [
 
 
 # sources list for katello or headpin deployment
+sources = []
 sources += MISC
 sources += KATELLO_HEADPIN
 sources += ELASTIC_SEARCH
 sources += CANDLEPIN
 sources += PULP if deployment == 'katello'
+sources += FOREMAN if deployment == 'katello'
 sources += THUMBSLUG if deployment == 'headpin'
 
 
@@ -160,6 +169,7 @@ end
 if deployment == 'katello'
   output = `sed -i -e 's/^\\(default_password:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/pulp.conf')}`
   output = `sed -i -e 's/^\\(oauth_secret:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/pulp.conf')}`
+  output = `sed -i -e 's/^\\(.*password\\).*$/\\1: **********************/' #{File.join(target_dir, '/etc/foreman/database.yml')}`
 end
 output = `sed -i -e 's/^\\(.*secret\\).*$/\\1 = **********************/' #{File.join(target_dir, '/etc/candlepin/candlepin.conf')}`
 output = `sed -i -e 's/^\\(.*password\\).*$/\\1 = **********************/' #{File.join(target_dir, '/etc/candlepin/candlepin.conf')}`
@@ -179,7 +189,7 @@ if deployment == 'katello'
 end
 
 # Create certificates report
-output = `katello-debug-certificates >> #{File.join(target_dir, "certificates")}`
+output = `katello-debug-certificates --perms >> #{File.join(target_dir, "certificates")}`
 
 # Add list of ssl-build dir
 output = `find /root/ssl-build -ls | sort -k 11 > #{File.join(target_dir, "ssl_build_dir")}`

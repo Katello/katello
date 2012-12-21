@@ -75,18 +75,6 @@ class ContentViewDefinitionAPI(KatelloAPI):
             data["description"] = description
         return self.server.POST(path, data)[1]
 
-    def filters(self, org, cvd_id):
-        path = "/api/organizations/%s/content_view_definitions/%s/filters" % \
-                (u_str(org), u_str(cvd_id))
-        data = self.server.GET(path)[1]
-        return data
-
-    def update_filters(self, org, cvd, filters):
-        path = "/api/organizations/%s/content_view_definitions/%s/filters" % \
-                (u_str(org), u_str(cvd))
-        data = self.server.PUT(path, {"filters": filters})[1]
-        return data
-
     def products(self, org, cvd_id):
         path = "/api/organizations/%s/content_view_definitions/%s/products" % \
                 (u_str(org), u_str(cvd_id))

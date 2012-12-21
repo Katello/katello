@@ -13,33 +13,33 @@
 
 """
 The katello agent plugin.
-Configuration:
-[reboot]
-allow=1
-delay=+1
+Provides content management APIs for pulp within the RHSM environment.
 """
 
+import os
 import sys
+
 sys.path.append('/usr/share/rhsm')
 
-import os
 from yum import YumBase
+
 from gofer.decorators import *
 from gofer.agent.plugin import Plugin
 from gofer.pmon import PathMonitor
+
 from subscription_manager.certlib import ConsumerIdentity
 from rhsm.connection import UEPConnection
+
+from pulp.agent.lib.dispatcher import Dispatcher
+from pulp.agent.lib.conduit import Conduit as HandlerConduit
+
 from logging import getLogger, Logger
 
 
 log = getLogger(__name__)
 plugin = Plugin.find(__name__)
+dispatcher = Dispatcher()
 cfg = plugin.cfg()
-
-# plugin exports
-package = Plugin.find('package')
-Package = package.export('Package')
-PackageGroup = package.export('PackageGroup')
 
 
 def getbool(v):
@@ -145,129 +145,62 @@ class RepoMonitor:
 #
 # API
 #
-  
-class Packages:
+
+class Content:
     """
-    Package management object.
+    Pulp Content Management.
     """
-    
-    def __init__(self, importkeys=False):
-        """
-        @param importkeys: Import GPG keys as needed.
-        @type importkeys: bool
-        """
-        self.importkeys = importkeys
 
     @remote
-    def install(self, names, reboot=False):
+    def install(self, units, options):
         """
-        Install packages by name.
-        @param names: A list of package names.
-        @type names: [str,]
-        @param reboot: Request reboot after packages are installed.
-        @type reboot: bool
-        @return: {installed=, reboot=}
-          - installed : A list of installed packages
-          - rebooted : A reboot was scheduled.
-        @rtype: dict
+        Install the specified content units using the specified options.
+        Delegated to content handlers.
+        @param units: A list of content units to be installed.
+        @type units: list of:
+            { type_id:<str>, unit_key:<dict> }
+        @param options: Install options; based on unit type.
+        @type options: dict
+        @return: A dispatch report.
+        @rtype: DispatchReport
         """
-        p = Package(importkeys=self.importkeys)
-        installed = p.install(names)
-        log.info('Packages installed: %s', installed)
-        if reboot and installed:
-            scheduled = self.reboot()
-        else:
-            scheduled = False
-        return dict(installed=installed, reboot_scheduled=scheduled)
-    
-    @remote
-    def update(self, names, reboot=False):
-        """
-        Update packages by name.
-        @param names: A list of package names.  Empty=ALL.
-        @type names: [str,]
-        @param reboot: Request reboot after packages are installed.
-        @type reboot: bool
-        @return: {updated=, reboot=}
-          - updated : A list of (pkg, {updates=[],obsoletes=[]})
-          - rebooted : A reboot was scheduled.
-        @rtype: dict
-        """
-        p = Package(importkeys=self.importkeys)
-        updated = p.update(names)
-        log.info('Packages updated: %s', updated)
-        if reboot and updated:
-            scheduled = self.reboot()
-        else:
-            scheduled = False
-        return dict(updated=updated, reboot_scheduled=scheduled)
+        conduit = HandlerConduit()
+        report = dispatcher.install(conduit, units, options)
+        return report.dict()
 
     @remote
-    def uninstall(self, names):
+    def update(self, units, options):
         """
-        Uninstall packages by name.
-        @param names: A list of package names.
-        @type names: [str,]
-        @return: A list of uninstalled packages
-        @rtype: list
+        Update the specified content units using the specified options.
+        Delegated to content handlers.
+        @param units: A list of content units to be updated.
+        @type units: list of:
+            { type_id:<str>, unit_key:<dict> }
+        @param options: Update options; based on unit type.
+        @type options: dict
+        @return: A dispatch report.
+        @rtype: DispatchReport
         """
-        p = Package()
-        uninstalled = p.uninstall(names)
-        log.info('Packages uninstalled: %s', uninstalled)
-        return uninstalled
-    
-    def reboot(self):
-        """
-        Schedule a sytem reboot.
-        @return: True if scheduled.
-        @rtype: bool
-        """
-        scheduled = False
-        if getbool(cfg.reboot.allow):
-            scheduled = True
-            delay = cfg.reboot.delay
-            os.system('shutdown -h %s &' % delay)
-            log.info('rebooting in %s (min)', delay)
-        return scheduled
-
-
-class PackageGroups:
-    """
-    PackageGroup management object
-    """
-    
-    def __init__(self, importkeys=False):
-        """
-        @param importkeys: Import GPG keys as needed.
-        @type importkeys: bool
-        """
-        self.importkeys = importkeys
+        conduit = HandlerConduit()
+        report = dispatcher.update(conduit, units, options)
+        return report.dict()
 
     @remote
-    def install(self, names):
+    def uninstall(self, units, options):
         """
-        Install package groups by name.
-        @param names: A list of package group names.
-        @param names: str
+        Uninstall the specified content units using the specified options.
+        Delegated to content handlers.
+        @param units: A list of content units to be uninstalled.
+        @type units: list of:
+            { type_id:<str>, unit_key:<dict> }
+        @param options: Uninstall options; based on unit type.
+        @type options: dict
+        @return: A dispatch report.
+        @rtype: DispatchReport
         """
-        g = PackageGroup(importkeys=self.importkeys)
-        installed = g.install(names)
-        log.info('Packages installed: %s', installed)
-        return installed
-
-    @remote
-    def uninstall(self, names):
-        """
-        Uninstall package groups by name.
-        @param names: A list of package group names.
-        @type names: [str,]
-        @return: A list of uninstalled packages
-        @rtype: list
-        """
-        g = PackageGroup()
-        uninstalled = g.uninstall(names)
-        log.info('Packages uninstalled: %s', uninstalled)
-        return uninstalled
+        conduit = HandlerConduit()
+        report = dispatcher.uninstall(conduit, units, options)
+        return report.dict()
 
 #
 # Utilities
@@ -323,7 +256,6 @@ class EnabledReport:
         for r in yb.repos.listEnabled():
             if not r.repofile:
                 continue
-
             fn = os.path.basename(r.repofile)
             if fn != repofn:
                 continue

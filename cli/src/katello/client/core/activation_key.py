@@ -193,7 +193,7 @@ class Update(ActivationKeyAction):
         parser.add_option('--environment', dest='env',
                                help=_("new environment name e.g.: dev"))
         parser.add_option('--new_name', dest='new_name',
-                              help=_("new template name"))
+                              help=_("new activation key name"))
         parser.add_option('--description', dest='description',
                                help=_("new description"))
         parser.add_option('--template', dest='template',

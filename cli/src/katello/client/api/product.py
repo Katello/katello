@@ -99,12 +99,3 @@ class ProductAPI(KatelloAPI):
         data = self.server.GET(path)[1]
         return data
 
-    def update_filters(self, orgName, prodId, filters):
-        path = "/api/organizations/%s/products/%s/filters" % (u_str(orgName), u_str(prodId))
-        data = self.server.PUT(path, {"filters": filters})[1]
-        return data
-
-    def filters(self, orgName, prodId):
-        path = "/api/organizations/%s/products/%s/filters" % (u_str(orgName), u_str(prodId))
-        data = self.server.GET(path)[1]
-        return data

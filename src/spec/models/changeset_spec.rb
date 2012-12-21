@@ -506,7 +506,7 @@ describe Changeset, :katello => true do
 
       it "should have correct state after unsuccessful promotion" do
         @changeset.state = Changeset::REVIEW
-        @changeset.stub(:calc_and_save_dependencies).and_raise(StandardError)
+        @changeset.stub(:promote_products).and_raise(StandardError)
         lambda { @changeset.apply(:async => false) }.should raise_exception
         @changeset.state.should == Changeset::FAILED
       end

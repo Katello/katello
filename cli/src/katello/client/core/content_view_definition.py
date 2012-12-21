@@ -20,7 +20,7 @@ from katello.client.api.content_view_definition import ContentViewDefinitionAPI
 from katello.client.cli.base import opt_parser_add_org
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_content_view, get_cv_definition, \
-        get_filter, get_product, get_repo
+        get_product, get_repo
 
 
 # base content_view_definition action ----------------------------------------
@@ -220,62 +220,6 @@ class Delete(ContentViewDefinitionAction):
         self.def_api.delete(cvd["id"])
         print _("Successfully deleted definition [ %s ]") % def_label
         return os.EX_OK
-
-
-class AddRemoveFilter(ContentViewDefinitionAction):
-
-    select_by_env = False
-    addition = True
-
-    @property
-    def description(self):
-        if self.addition:
-            return _('add a filter to a content view definition')
-        else:
-            return _('remove a filter from a content view definition')
-
-
-    def __init__(self, addition):
-        super(AddRemoveFilter, self).__init__()
-        self.addition = addition
-
-    def setup_parser(self, parser):
-        opt_parser_add_org(parser, required=1)
-        parser.add_option('--filter', dest='filter',
-                help=_("filter name (required)"))
-        self._add_get_cvd_opts(parser)
-
-    def check_options(self, validator):
-        validator.require(('filter', 'org'))
-        self._add_get_cvd_opts_check(validator)
-
-    def run(self):
-        org_name     = self.get_option('org')
-        def_label    = self.get_option('label')
-        def_name     = self.get_option('name')
-        def_id       = self.get_option('id')
-        filter_name  = self.get_option('filter')
-
-        view = get_cv_definition(org_name, def_label, def_name, def_id)
-        get_filter(org_name, filter_name)
-
-        filters = self.def_api.filters(org_name, view['id'])
-        filters = [f['name'] for f in filters]
-        self.update_filters(org_name, view, filters, filter_name)
-        return os.EX_OK
-
-    def update_filters(self, org_name, cvd, filters, filter_name):
-        if self.addition:
-            filters.append(filter_name)
-            message = _("Added filter [ %s ] to definition [ %s ]" % \
-                    (filter_name, cvd["label"]))
-        else:
-            filters.remove(filter_name)
-            message = _("Removed filter [ %s ] to definition [ %s ]" % \
-                    (filter_name, cvd["label"]))
-
-        self.def_api.update_filters(org_name, cvd['id'], filters)
-        print message
 
 
 class AddRemoveProduct(ContentViewDefinitionAction):
