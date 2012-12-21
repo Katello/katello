@@ -10,7 +10,7 @@
     - else
       - @template_combinations.each do |tc|
         %div.grid_5.la
-          #{tc.environment_id}
+          #{environments.find {|e| e.id == tc.environment_id}.name }
           = link_to  _("Delete"), "#", :id => :delete_association_configuration_template, :data_url => template_combination_path(tc.id)
 
     = form_for @configuration_template, :as=>"configuration_template", :url=> "", :html=>{:method => :post, :data_url => configuration_template_template_combinations_path(@configuration_template), :id=>"add_association_config_template" } do |form|
@@ -18,7 +18,7 @@
         .grid_2.ra
           %label #{_("Available Environments:")}:
         .grid_5.la
-          = select_tag 'template_combination[environment_id]', options_for_select([['dev', 1], ['test', 2]]), :include_blank => true
+          = collection_select :template_combination, :environment_id, environments, :id, :name, :include_blank => true
 
       = form.submit _("Add Environment")
 
