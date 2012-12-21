@@ -15,7 +15,7 @@
 
 from katello.client.api.base import KatelloAPI
 from katello.client.lib.utils.encoding import u_str
-from katello.client.core.utils import update_dict_unless_none
+from katello.client.lib.utils.data import update_dict_unless_none
 
 class OrganizationAPI(KatelloAPI):
     """

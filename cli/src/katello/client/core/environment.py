@@ -19,7 +19,7 @@ import os
 from katello.client.api.environment import EnvironmentAPI
 from katello.client.cli.base import opt_parser_add_org
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import test_record
+from katello.client.lib.utils.data import test_record
 from katello.client.api.utils import get_environment
 from katello.client.lib.ui.printer import batch_add_columns
 

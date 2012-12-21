@@ -20,7 +20,8 @@ import sys
 from katello.client.api.gpg_key import GpgKeyAPI
 from katello.client.cli.base import opt_parser_add_org
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import test_record, get_abs_path
+from katello.client.core.utils import get_abs_path
+from katello.client.lib.utils.data import test_record
 from katello.client.lib.ui import printer
 
 from sys import stdin
