@@ -110,11 +110,10 @@ class List(SubnetAction):
     def run(self):
         subnets = unnest_one(self.api.list())
 
-        batch_add_columns(self.printer, \
-            'name', 'network', 'mask')
-        batch_add_columns(self.printer, \
-            'dhcp', 'tftp', 'dns', \
-            formatter=self.format_smart_proxy)
+        batch_add_columns(self.printer, {'name': _("Name")}, {'network': _("Network")}, \
+            {'mask': _("Mask")})
+        batch_add_columns(self.printer, {'dhcp': _("DHCP")}, {'tftp': _("TFTP")}, \
+            {'dns': _("DNS")}, formatter=self.format_smart_proxy)
 
         self.printer.set_header(_("Subnets"))
         self.printer.print_items(subnets)
@@ -132,13 +131,13 @@ class Info(SubnetAction):
 
     def run(self):
         subnet = unnest_one(self.api.get(self.get_option("name")))
-        batch_add_columns(self.printer, \
-            'name', 'network', 'mask', 'gateway', \
-            'dns_primary', 'dns_secondary', 'from', 'to', 'vlanid')
-        self.printer.add_column('domain_ids', multiline=True)
-        batch_add_columns(self.printer, \
-            'dhcp', 'tftp', 'dns', \
-            formatter=self.format_smart_proxy)
+        batch_add_columns(self.printer, {'name': _("Name")}, {'network': _("Network")}, \
+            {'mask': _("Mask")}, {'gateway': _("Gateway")}, {'dns_primary': _("Primary DNS")}, \
+            {'dns_secondary': _("Secondary DNS")}, {'from': _("From")}, {'to': _("To")}, \
+            {'vlanid': _("VLAN ID")})
+        self.printer.add_column('domain_ids', _("Domain IDs"), multiline=True)
+        batch_add_columns(self.printer, {'dhcp': _("DHCP")}, {'tftp': _("TFTP")}, \
+            {'dns': _("DNS")}, formatter=self.format_smart_proxy)
 
         self.printer.set_header(_("Subnet"))
         self.printer.print_item(subnet)
