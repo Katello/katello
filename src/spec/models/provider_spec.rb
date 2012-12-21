@@ -30,7 +30,8 @@ describe Provider do
       :name => "some name",
       :description => "a description",
       :repository_url => "https://some.url/path",
-      :provider_type => Provider::CUSTOM
+      :provider_type => Provider::CUSTOM,
+      :organization => @organization
     }
   end
 
