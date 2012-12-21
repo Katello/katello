@@ -21,9 +21,10 @@ from katello.client import constants
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import test_record, run_spinner_in_bg, format_date, wait_for_async_task, \
-    AsyncTask, format_task_errors
+from katello.client.core.utils import test_record, run_spinner_in_bg, wait_for_async_task, \
+    AsyncTask
 from katello.client.api.utils import get_environment, get_changeset, get_template, get_repo, get_product
+from katello.client.lib.ui.formatters import format_date, format_task_errors
 from katello.client.lib.ui import printer
 from katello.client.lib.utils.encoding import u_str
 from katello.client.lib.ui.printer import batch_add_columns

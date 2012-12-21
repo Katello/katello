@@ -19,8 +19,9 @@ import os
 from katello.client.api.sync_plan import SyncPlanAPI
 from katello.client.cli.base import opt_parser_add_org
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import test_record, format_date, system_exit
-from katello.client.core.datetime_formatter import DateTimeFormatter, DateTimeFormatException
+from katello.client.core.utils import test_record, system_exit
+from katello.client.lib.ui.formatters import format_date
+from katello.client.lib.datetime_formatter import DateTimeFormatter, DateTimeFormatException
 from katello.client.api.utils import get_sync_plan
 
 
