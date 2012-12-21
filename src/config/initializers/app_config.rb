@@ -2,7 +2,7 @@
 # are not available in all initializers starting with 'a' letter.
 require 'ostruct'
 require 'yaml'
-require "./lib/util/boot_util"
+File.expand_path("../../lib/util/boot_util.rb", __FILE__)
 
 module ApplicationConfiguration
 
