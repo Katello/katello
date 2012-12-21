@@ -71,7 +71,7 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     @content_view_def.repositories << @repo
     @content_view_def = @content_view_def.reload
     assert_equal @repo.content_view_definitions.first, @content_view_def
-    assert_includes @content_view_def.repositories, @repo
+    assert_includes @content_view_def.repositories.map(&:id), @repo.id
   end
 
   def test_adding_products_to_composite_view
