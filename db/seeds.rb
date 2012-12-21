@@ -23,6 +23,10 @@ def format_errors model=nil
   model.errors.full_messages.join(';')
 end
 
+#Unless we reset user, db:seed will fail for some reason
+# more investigation needs to done
+User.reset_column_information
+
 # create basic roles
 superadmin_role = Role.make_super_admin_role
 
