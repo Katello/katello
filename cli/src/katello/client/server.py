@@ -196,7 +196,8 @@ class KatelloServer(object):
             self.auth_method.set_headers(self.headers)
         except GSSError, e:
             #TODO
-            raise Exception(_("Missing credentials and unable to authenticate using Kerberos"), e), None, sys.exc_info()[2]
+            raise Exception(_("Missing credentials and unable to authenticate using Kerberos"), e), \
+                None, sys.exc_info()[2]
             #raise KatelloError("Missing credentials and unable to authenticate using Kerberos", e)
         except Exception, e:
             #TODO

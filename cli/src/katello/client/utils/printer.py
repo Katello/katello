@@ -513,4 +513,5 @@ def unicode_len(text):
 
 def batch_add_columns(printer, *cols, **kwargs):
     for c in cols:
-        printer.add_column(c, **kwargs)
+        for key in c.keys(): # should only ever be one
+            printer.add_column(key, c[key], **kwargs)

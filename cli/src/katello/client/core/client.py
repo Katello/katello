@@ -111,8 +111,8 @@ class SavedOptions(ClientAction):
 
             options_list = [{'option': o, 'value': Config.parser.get('options', o)} for o in options]
 
-            self.printer.add_column('option')
-            self.printer.add_column('value')
+            self.printer.add_column('option', _("Option"))
+            self.printer.add_column('value', _("Value"))
             self.printer.print_items(options_list)
 
         return os.EX_OK
