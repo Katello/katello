@@ -46,15 +46,6 @@ KT.tipsy.custom = (function(){
     disable_details_tooltip = function(element) {
         element.replaceWith('<span class="details-icon-nohover"></span>');
     },
-    promotion_filter_tooltip = function(){
-         $('.promotion_tipsify').tipsy({
-            gravity: 'w', live : true, html : true, title : KT.tipsy.templates.promotion_filters,
-            hoverable: true, opacity : 1,delayOut : 250, delayIn : 300, className : 'promotion_filters_tooltip',
-            afterShow : function(){
-                 $('.details_container').addClass('scroll-pane');
-                 KT.common.jscroll_init($('.scroll-pane'));
-             }});
-    },
     system_packages_tooltip = function(){
         var element = $(this);
 
@@ -88,7 +79,6 @@ KT.tipsy.custom = (function(){
         tooltip                  : tooltip,
         copy_tooltip             : copy_tooltip,
         disable_details_tooltip  : disable_details_tooltip,
-        promotion_filter_tooltip : promotion_filter_tooltip,
         system_packages_tooltips : system_packages_tooltip,
         url_tooltip              : url_tooltip,
         enable_forms_tooltips    : enable_forms_tooltips
@@ -189,56 +179,6 @@ KT.tipsy.templates = (function(){
         html += '</div>';
         return html;
     },
-    promotion_filters = function(){
-        var element = $(this),
-            tipsy_body ="",
-            content_type = element.data("content_type"),
-            content_id = element.data("content_id"),
-            generate_filter_rows = function(filters){
-              var i = 0,
-                  length = filters.length,
-                  html = "";
-
-              for(i; i < length; i += 1){
-                  html += "<li>" + filters[i] + '</li>';
-              }
-              return html;
-            };
-
-        tipsy_body = '<div class="details_container">';
-        if("product" === content_type) {
-            tipsy_body +=  "<p>" + i18n.product_filter_tipsy + "</p>";
-            filter = product_repo_filters["product_"+ content_id];
-            if(filter !== undefined) {
-                if (filter.product.length > 0) {
-                    tipsy_body += '<div class="item-container"><label class="fl ra">' + i18n.applicable_product_filters + '</label><br/><ul>' +
-                                    generate_filter_rows(filter.product) + "</ul> </div>";
-                }
-                if(KT.utils.size(filter.repo) > 0) {
-                    tipsy_body +=  '<div class="item-container"><label class="fl ra"> ' + i18n.applicable_repo_filters + "</label></div><br/>";
-                    KT.utils.each(filter.repo, function(repo_filters, repo_name) {
-                        tipsy_body += '<div class="item-container"><label class="fl ra">' +
-                                    i18n.for_repository(repo_name) +'</label><br/><ul>' +
-                            generate_filter_rows(repo_filters) + "</ul> </div>";
-                    });
-                }
-            }
-        } else if ("repo" === content_type){
-            tipsy_body +=  "<p>" + i18n.repo_filter_tipsy + "</p>";
-            filter = product_repo_filters["repo_"+ content_id];
-            if(filter !== undefined) {
-                if (filter.product.length > 0) {
-                    tipsy_body += '<div class="item-container"><label class="fl ra">' + i18n.applicable_product_filters + '</label><br/><ul>' +
-                                    generate_filter_rows(filter.product) + "</ul> </div>";
-                }
-                if (filter.repo.length > 0) {
-                    tipsy_body += '<div class="item-container"><label class="fl ra">' + i18n.applicable_repo_filters +
-                                        '</label><br/><ul>' + generate_filter_rows(filter.repo) + "</ul> </div>";
-                }
-            }
-        }
-        return tipsy_body + '</div>';
-    },
     table_template = function(){
         var html = '<div class="details_container">',
             element = $(this);
@@ -251,7 +191,6 @@ KT.tipsy.templates = (function(){
     return {
         dynamic           : dynamic,
         copy_form         : copy_form,
-        promotion_filters : promotion_filters,
         table_template    : table_template,
         spinner          : spinner
     };

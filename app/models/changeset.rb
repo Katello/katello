@@ -12,7 +12,7 @@
 
 class NotInLibraryValidator < ActiveModel::Validator
   def validate(record)
-    record.errors[:environment] << _("Library environment cannot contain a changeset!") if record.environment.library?
+    record.errors[:environment] << _("The '%s' environment cannot contain a changeset!") % "Library" if record.environment.library?
   end
 end
 
@@ -250,7 +250,7 @@ class Changeset < ActiveRecord::Base
        )
   end
 
-  protected 
+  protected
 
   def validate_content! elements
     elements.each { |e| raise ActiveRecord::RecordInvalid.new(e) if not e.valid? }

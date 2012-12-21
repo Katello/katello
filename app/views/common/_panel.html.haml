@@ -16,10 +16,10 @@
   .right
     .helptip_area
       = help_tip_button('panel-help')
-      = help_tip(_("To view the details of an item on the left, simply click on a single row." + |
+      = help_tip((_("To view the details of an item on the left, simply click on a single row." + |
                 "<br/><br/>To select multiple rows, hold the Control Key and click multiple rows." + |
                 "<br/><br/>If you don't need this help anymore, please click the close button in the top right " + |
-                "of this box."), 'panel-help') |
+                "of this box.")).html_safe, 'panel-help') |
     .fl.clear
       -if actions
         = render :partial=>actions
@@ -32,7 +32,7 @@
   %div.left{:class => left_panel_width ? left_panel_width : 'column_panel_' + columns.length.to_s }
     #list-title
       %header
-        %h2.fl #{title}
+        %h2.fl.one-line-ellipsis{:title => title} #{title}
         - if enable_create
           %a.fr#new{:href => "#", :class => (disable_create ? "disabled tipsify-west" : "block"), "data-ajax_url" => url_for(:action=> 'new'), :title => (disable_create if disable_create) }
             - if !create_label.nil?
@@ -59,7 +59,7 @@
         .block_head.clear
           - columns.each_index do |index|
             %div{:class => 'column_' + columns.length.to_s}
-              -if enable_sort 
+              -if enable_sort
                 = sort(columns[index], :as => titles[index])
               -else
                 = titles[index]

@@ -195,7 +195,7 @@ class DeletionChangeset < Changeset
     async_tasks = affected_repos.collect do |repo|
       repo.generate_metadata
     end
-    async_tasks
+    async_tasks.flatten(1)
   end
 
 end

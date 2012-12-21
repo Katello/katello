@@ -180,7 +180,7 @@ class Resources::AbstractModel
     end
 
     return true
-  rescue RestClient::UnprocessableEntity => e
+  rescue RestClient::UnprocessableEntity, RestClient::BadRequest => e
     response = JSON.parse(e.response)
     parse_errors(response).each { |key, val| errors.add key, val }
     return false
@@ -207,10 +207,10 @@ class Resources::AbstractModel
     save or raise Invalid.new(self)
   end
 
-  singleton_class.instance_eval { attr_writer :resource_name }
-
-  def self.resource_name
+  def self.resource_name(name=nil)
     @resource_name ||= self.name.demodulize.underscore.downcase
+    @resource_name = name unless name.nil?
+    @resource_name
   end
 
   def resource_name

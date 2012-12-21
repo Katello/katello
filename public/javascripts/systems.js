@@ -332,7 +332,7 @@ KT.systems_page = (function() {
             noneSelectedText: i18n.select_system_groups,
             selectedList: 4,
             create: function(event, ui) {
-                var html = '<div class="none_matched">'+i18n.group_does_not_exist+'<a id="create_system_group" class="st_button" style="padding-left: 10px; font-weight: bolder; color: #1CA5D2;">'+i18n.confirm_create+'</a></div>';
+                var html = '<div class="none_matched">'+i18n.group_does_not_exist+'<a id="create_system_group" class="st_button">'+i18n.confirm_create+'</a></div>';
                 $('.ui-multiselect-checkboxes').before(html);
 
             },

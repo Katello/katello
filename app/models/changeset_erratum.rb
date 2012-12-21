@@ -19,12 +19,6 @@ class ChangesetErratumValidator < ActiveModel::Validator
     if record.changeset.action_type == Changeset::PROMOTION
       record.errors[:base] << _("Repository of the erratum '%s' has not been promoted into the target environment!") %
             record.errata_id and return if record.promotable_repositories.empty?
-
-      unfiltered_repositories = record.promotable_repositories.delete_if do |repo|
-        record.blocked_by_filters?((repo.filters + repo.product.filters).uniq)
-      end
-      record.errors[:base] << _("Filters assigned to repository or product of erratum '%s' block it from promotion!") %
-          record.errata_id and return if unfiltered_repositories.empty?
     end
   end
 end
@@ -57,17 +51,6 @@ class ChangesetErratum < ActiveRecord::Base
       repos << repo if repo.is_cloned_in? to_env
     end
     repos
-  end
-
-  def blocked_by_filters? filters
-    package_filters = filters.map { |f| f.package_list }.flatten(1).uniq
-    package_filters.each do |filter|
-      re = Regexp.new(filter)
-      if erratum_pacakges.any? { |pack| re =~ pack["filename"] }
-        return true
-      end
-    end
-    return false
   end
 
   # returns list of virtual permission tags for the current user
