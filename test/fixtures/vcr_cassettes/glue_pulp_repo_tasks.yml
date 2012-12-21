@@ -1,795 +1,1851 @@
 --- 
+recorded_with: VCR 2.3.0
 http_interactions: 
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/f3f7159c-7951-48ec-a37a-4659e617f90f/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/15e87aa5-02cb-46c7-bbb0-1dc3ba25274a/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="i7RLqOjvQyX5JpNvHW8n4Tl9E3Ome5E6RGLQDFwEBM", oauth_signature="nmNxhbIxgiHrp237EiJA57WizhI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116236", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="tQpardQpKXug2sYUM0SHp2LBEKvQyYD8G0JKyZ2EVw", oauth_signature="pS21chXt2s5rYUDfobizA5TBGyc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453686", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:26 GMT
-      Content-Type: 
-      - application/json
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "853"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:16 GMT
     body: 
-      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/f3f7159c-7951-48ec-a37a-4659e617f90f/\", \"task_id\": \"f3f7159c-7951-48ec-a37a-4659e617f90f\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:26Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-11-20T23:21:26Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"f3f7159c-7951-48ec-a37a-4659e617f90f\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/15e87aa5-02cb-46c7-bbb0-1dc3ba25274a/\", \"task_id\": \"15e87aa5-02cb-46c7-bbb0-1dc3ba25274a\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:16Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:57:16Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"15e87aa5-02cb-46c7-bbb0-1dc3ba25274a\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:26 GMT
+  recorded_at: Fri, 21 Dec 2012 18:57:16 GMT
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/db078ec9-a5fa-4ccd-8ab3-dfff9980b1c7/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/dfe8c094-af31-495b-b9a2-dd9f3c6cd14e/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="oBAJrqGYDBux1Y2qeDMr83nsbr5m7wXDmShg0gnl4", oauth_signature="8JXfUjY5reVyCxF1C3MCmLUmfIg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116237", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="rJZ15GHG1m3SESJ2WOLRHdm1yltCno9kWVzcAUSMio", oauth_signature="O7lRQkG2SHenbT6INSIQj0%2FzQxg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453687", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:27 GMT
-      Content-Type: 
-      - application/json
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "853"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:17 GMT
     body: 
-      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/db078ec9-a5fa-4ccd-8ab3-dfff9980b1c7/\", \"task_id\": \"db078ec9-a5fa-4ccd-8ab3-dfff9980b1c7\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:26Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-11-20T23:21:26Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"db078ec9-a5fa-4ccd-8ab3-dfff9980b1c7\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/dfe8c094-af31-495b-b9a2-dd9f3c6cd14e/\", \"task_id\": \"dfe8c094-af31-495b-b9a2-dd9f3c6cd14e\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:16Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:57:16Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"dfe8c094-af31-495b-b9a2-dd9f3c6cd14e\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:27 GMT
+  recorded_at: Fri, 21 Dec 2012 18:57:17 GMT
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/52ccfc62-4753-4685-91b9-564475908bec/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/cca18f30-a5c5-4342-8d1f-c77310862563/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="it8oq2zXV6oMbnX2UrUVTbIHx2kspQLNB6WyNWw6U", oauth_signature="FMSENFg2Y8YtJr4FwyW3gSeN%2FkM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116237", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="uFHrsJD6k3HTIXSb7HgdKXZJxuU92yhL1OhCZI9siM", oauth_signature="%2B%2FtSqi46cynwhHjXRlNWvI4ear0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453687", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:27 GMT
-      Content-Type: 
-      - application/json
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "853"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:17 GMT
     body: 
-      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/52ccfc62-4753-4685-91b9-564475908bec/\", \"task_id\": \"52ccfc62-4753-4685-91b9-564475908bec\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:26Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-11-20T23:21:26Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"52ccfc62-4753-4685-91b9-564475908bec\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/cca18f30-a5c5-4342-8d1f-c77310862563/\", \"task_id\": \"cca18f30-a5c5-4342-8d1f-c77310862563\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:16Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:57:16Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"cca18f30-a5c5-4342-8d1f-c77310862563\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:27 GMT
+  recorded_at: Fri, 21 Dec 2012 18:57:18 GMT
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/be71f52a-25e7-489c-a984-cdc9354c2f6d/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/d5a4ba07-865c-43dc-89c2-77ac53ca10c4/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="KTWZeKODkUEW2D9ZccXbSpa5dLUK10hzhPZxp46N1s", oauth_signature="gnZHQ0V%2BBQm81C2wlHsKmuPO8jI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116238", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="EcJhigaAX6YzuBUZJobYkmR05FfLjibC7l9Jr7k3s", oauth_signature="JeM56enN2ShcGFNxFSRo%2FOir8Hw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453688", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:28 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "853"
       Content-Type: 
       - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:18 GMT
+    body: 
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/d5a4ba07-865c-43dc-89c2-77ac53ca10c4/\", \"task_id\": \"d5a4ba07-865c-43dc-89c2-77ac53ca10c4\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:16Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:57:16Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"d5a4ba07-865c-43dc-89c2-77ac53ca10c4\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:57:18 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/3c6b36dd-91d4-45d2-ba45-49acac0a8fbc/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="bdAvOejlfpm1bWwY7A4EWHrJNqx69wXUv31U3suw", oauth_signature="8EuW4IeuVAZNYk0xEjk0gj5Wt6k%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116239", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "842"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:19 GMT
     body: 
-      string: "{\"task_group_id\": \"e6b1db48-1c9a-449c-a768-4d85a36da195\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/be71f52a-25e7-489c-a984-cdc9354c2f6d/\", \"task_id\": \"be71f52a-25e7-489c-a984-cdc9354c2f6d\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:28Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"state\": \"NOT_STARTED\"}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"IN_PROGRESS\"}}}, \"call_request_group_id\": \"e6b1db48-1c9a-449c-a768-4d85a36da195\", \"call_request_id\": \"be71f52a-25e7-489c-a984-cdc9354c2f6d\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": \"107f328b-822b-48e6-9755-06041bc23f2b\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/3c6b36dd-91d4-45d2-ba45-49acac0a8fbc/\", \"task_id\": \"3c6b36dd-91d4-45d2-ba45-49acac0a8fbc\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:19Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"state\": \"NOT_STARTED\"}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"IN_PROGRESS\"}}}, \"call_request_group_id\": \"107f328b-822b-48e6-9755-06041bc23f2b\", \"call_request_id\": \"3c6b36dd-91d4-45d2-ba45-49acac0a8fbc\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:28 GMT
+  recorded_at: Fri, 21 Dec 2012 18:57:19 GMT
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/be71f52a-25e7-489c-a984-cdc9354c2f6d/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/3c6b36dd-91d4-45d2-ba45-49acac0a8fbc/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="mzc9a1BlwCnHs63oqdAJeYkCN6XSUuQ5iotWZi8g2WU", oauth_signature="01Oi2dkHooo6VpaycdleqdVGdDo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116240", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="eUlUjWAfygjN7vSGBe7VVIEZQK3ukEYsQLgzwPBykOs", oauth_signature="yNs8R1hcMJo5mcg4TbtaW%2BSW6jA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453689", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:29 GMT
-      Content-Type: 
-      - application/json
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "1447"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:20 GMT
     body: 
-      string: "{\"task_group_id\": \"e6b1db48-1c9a-449c-a768-4d85a36da195\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/be71f52a-25e7-489c-a984-cdc9354c2f6d/\", \"task_id\": \"be71f52a-25e7-489c-a984-cdc9354c2f6d\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:28Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 4, \"size_total\": 17872, \"items_left\": 7, \"items_total\": 11, \"state\": \"IN_PROGRESS\", \"size_left\": 8960, \"details\": {\"tree_file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 3, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 4, \"size_total\": 17872, \"items_left\": 4, \"items_total\": 8, \"size_left\": 8960, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"e6b1db48-1c9a-449c-a768-4d85a36da195\", \"call_request_id\": \"be71f52a-25e7-489c-a984-cdc9354c2f6d\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": \"107f328b-822b-48e6-9755-06041bc23f2b\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/3c6b36dd-91d4-45d2-ba45-49acac0a8fbc/\", \"task_id\": \"3c6b36dd-91d4-45d2-ba45-49acac0a8fbc\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:19Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 5, \"size_total\": 17872, \"items_left\": 6, \"items_total\": 11, \"state\": \"IN_PROGRESS\", \"size_left\": 6704, \"details\": {\"tree_file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 3, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 5, \"size_total\": 17872, \"items_left\": 3, \"items_total\": 8, \"size_left\": 6704, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"107f328b-822b-48e6-9755-06041bc23f2b\", \"call_request_id\": \"3c6b36dd-91d4-45d2-ba45-49acac0a8fbc\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:29 GMT
+  recorded_at: Fri, 21 Dec 2012 18:57:20 GMT
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/be71f52a-25e7-489c-a984-cdc9354c2f6d/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/3c6b36dd-91d4-45d2-ba45-49acac0a8fbc/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="BJ6W93DUFbcdi5voXyOMWpSzkLSZenIKdww8DVsZ8", oauth_signature="pBNTGwXjkCnwk2bMhLqpU2UJ8WQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116240", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="43y6cZmlHqxvScLFoTrrK6WHfDvPCJNk0ticjFUJ2o", oauth_signature="pmNZfcu%2BzpBx2kojSZM2mcMSLiM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453690", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:30 GMT
-      Content-Type: 
-      - application/json
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "1469"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:20 GMT
     body: 
-      string: "{\"task_group_id\": \"e6b1db48-1c9a-449c-a768-4d85a36da195\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/be71f52a-25e7-489c-a984-cdc9354c2f6d/\", \"task_id\": \"be71f52a-25e7-489c-a984-cdc9354c2f6d\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:28Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"finished\", \"finish_time\": \"2012-11-20T23:21:30Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 11, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 11, \"state\": \"FINISHED\", \"size_left\": 0, \"details\": {\"tree_file\": {\"num_success\": 3, \"size_total\": 0, \"items_left\": 0, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 8, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 8, \"size_left\": 0, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"FINISHED\"}, \"errata\": {\"state\": \"FINISHED\", \"num_errata\": 2}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"e6b1db48-1c9a-449c-a768-4d85a36da195\", \"call_request_id\": \"be71f52a-25e7-489c-a984-cdc9354c2f6d\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": \"107f328b-822b-48e6-9755-06041bc23f2b\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/3c6b36dd-91d4-45d2-ba45-49acac0a8fbc/\", \"task_id\": \"3c6b36dd-91d4-45d2-ba45-49acac0a8fbc\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:19Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:57:20Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 11, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 11, \"state\": \"FINISHED\", \"size_left\": 0, \"details\": {\"tree_file\": {\"num_success\": 3, \"size_total\": 0, \"items_left\": 0, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 8, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 8, \"size_left\": 0, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"FINISHED\"}, \"errata\": {\"state\": \"FINISHED\", \"num_errata\": 2}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"107f328b-822b-48e6-9755-06041bc23f2b\", \"call_request_id\": \"3c6b36dd-91d4-45d2-ba45-49acac0a8fbc\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:30 GMT
+  recorded_at: Fri, 21 Dec 2012 18:57:20 GMT
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/bb91ccac-0923-4b24-a4f2-c6e0d22397de/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/996ea147-a5a4-410c-9552-2d626c5407e6/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="rdv3NClI115Dgs6RL0IW6oN2Nuuss7rpzhqiBR8wfE", oauth_signature="qp9Icy5muRbZrlepA%2BjF%2FAfjIVM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116243", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="w2vSKiGdRAxO7kE2gpWv8BgcX9WUCOWqPSILtOYsRpU", oauth_signature="zQt8cKG5NV%2Fv0CK089N3YC0GwMM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453692", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:32 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "839"
       Content-Type: 
       - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:23 GMT
+    body: 
+      string: "{\"task_group_id\": \"4d760743-aea2-4843-8529-a6138e229867\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/996ea147-a5a4-410c-9552-2d626c5407e6/\", \"task_id\": \"996ea147-a5a4-410c-9552-2d626c5407e6\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:23Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"state\": \"NOT_STARTED\"}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"4d760743-aea2-4843-8529-a6138e229867\", \"call_request_id\": \"996ea147-a5a4-410c-9552-2d626c5407e6\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:57:23 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/996ea147-a5a4-410c-9552-2d626c5407e6/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="a0yZKcBoKKqX8DiRft3G5RgmyXHHQ2ujGexMRFlU", oauth_signature="TWGyhfllfVqNSdGFqlgQxFhppjY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116244", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "1442"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:24 GMT
+    body: 
+      string: "{\"task_group_id\": \"4d760743-aea2-4843-8529-a6138e229867\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/996ea147-a5a4-410c-9552-2d626c5407e6/\", \"task_id\": \"996ea147-a5a4-410c-9552-2d626c5407e6\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:23Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 11, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 11, \"state\": \"IN_PROGRESS\", \"size_left\": 0, \"details\": {\"tree_file\": {\"num_success\": 3, \"size_total\": 0, \"items_left\": 0, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 8, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 8, \"size_left\": 0, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"4d760743-aea2-4843-8529-a6138e229867\", \"call_request_id\": \"996ea147-a5a4-410c-9552-2d626c5407e6\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:57:24 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/996ea147-a5a4-410c-9552-2d626c5407e6/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="5Lj4uITExfu89vKSIkoP5VbMscD9gxciwD4SP7eIEc0", oauth_signature="zChlck0XRELgzmh2j%2FND%2BV81HrM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116244", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "1469"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:24 GMT
+    body: 
+      string: "{\"task_group_id\": \"4d760743-aea2-4843-8529-a6138e229867\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/996ea147-a5a4-410c-9552-2d626c5407e6/\", \"task_id\": \"996ea147-a5a4-410c-9552-2d626c5407e6\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:23Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:57:24Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 11, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 11, \"state\": \"FINISHED\", \"size_left\": 0, \"details\": {\"tree_file\": {\"num_success\": 3, \"size_total\": 0, \"items_left\": 0, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 8, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 8, \"size_left\": 0, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"FINISHED\"}, \"errata\": {\"state\": \"FINISHED\", \"num_errata\": 2}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"4d760743-aea2-4843-8529-a6138e229867\", \"call_request_id\": \"996ea147-a5a4-410c-9552-2d626c5407e6\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:57:24 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/53925a3c-7041-4c6b-ae88-09c954a03580/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="A8Ik6RdWnPqRqW5u6NTRdNSrUcnmf8WLVC9alwEgU8", oauth_signature="v0Ml3yhtHMoslQpvqgMgAFBL99k%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116246", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "853"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:26 GMT
+    body: 
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/53925a3c-7041-4c6b-ae88-09c954a03580/\", \"task_id\": \"53925a3c-7041-4c6b-ae88-09c954a03580\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:26Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:57:26Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"53925a3c-7041-4c6b-ae88-09c954a03580\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:57:26 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/03071d4a-04e4-47a3-bbdf-9b2c3d4c9c38/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="W5qoxNz6j7KyPh0bOgXiRVYUJ57K4WDX2zCwMXotOU", oauth_signature="94yJXoleIm9jZVwUWtSmiz6I0KQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116247", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "853"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:27 GMT
+    body: 
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/03071d4a-04e4-47a3-bbdf-9b2c3d4c9c38/\", \"task_id\": \"03071d4a-04e4-47a3-bbdf-9b2c3d4c9c38\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:26Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:57:26Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"03071d4a-04e4-47a3-bbdf-9b2c3d4c9c38\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:57:27 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/f3298d22-d835-4ba2-856c-ac359fcc8e29/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="yPJBi384pVEkuOx8gRBjupgR5Q27kfcYQkKtoMC9rQ", oauth_signature="gn86cy2q5z9rretx1%2BmkoG3QCcM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116247", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "853"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:27 GMT
+    body: 
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/f3298d22-d835-4ba2-856c-ac359fcc8e29/\", \"task_id\": \"f3298d22-d835-4ba2-856c-ac359fcc8e29\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:26Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:57:26Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"f3298d22-d835-4ba2-856c-ac359fcc8e29\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:57:27 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/15065f26-c9a0-4098-b51c-d6dbff43e697/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="cNIJbBD5oWyxbILYFzhCyqReeNChpbgqePCRBIM", oauth_signature="amJfD0rWe7zzlmmYZEqLPxBNhd8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116248", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "853"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:28 GMT
+    body: 
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/15065f26-c9a0-4098-b51c-d6dbff43e697/\", \"task_id\": \"15065f26-c9a0-4098-b51c-d6dbff43e697\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:26Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:57:26Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"15065f26-c9a0-4098-b51c-d6dbff43e697\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:57:28 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/25310458-3a1e-4048-82b0-3fa998b440ca/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="0VBnJP1H7iylUT6r0889XbKzp6XNOgvFqYlnuhOlS1g", oauth_signature="NhAXKXwrw5ojsd3OYdGd4ScDNpc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116251", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "842"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:31 GMT
     body: 
-      string: "{\"task_group_id\": \"a0d6239f-6387-4ed1-9908-1d0f1fd89e46\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/bb91ccac-0923-4b24-a4f2-c6e0d22397de/\", \"task_id\": \"bb91ccac-0923-4b24-a4f2-c6e0d22397de\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:32Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"state\": \"NOT_STARTED\"}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"IN_PROGRESS\"}}}, \"call_request_group_id\": \"a0d6239f-6387-4ed1-9908-1d0f1fd89e46\", \"call_request_id\": \"bb91ccac-0923-4b24-a4f2-c6e0d22397de\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": \"7cc66061-216d-47ed-be3f-74872e8753e2\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/25310458-3a1e-4048-82b0-3fa998b440ca/\", \"task_id\": \"25310458-3a1e-4048-82b0-3fa998b440ca\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:31Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"state\": \"NOT_STARTED\"}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"IN_PROGRESS\"}}}, \"call_request_group_id\": \"7cc66061-216d-47ed-be3f-74872e8753e2\", \"call_request_id\": \"25310458-3a1e-4048-82b0-3fa998b440ca\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:33 GMT
+  recorded_at: Fri, 21 Dec 2012 18:57:31 GMT
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/bb91ccac-0923-4b24-a4f2-c6e0d22397de/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/25310458-3a1e-4048-82b0-3fa998b440ca/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="phyOODcdJ4m9HC2BFzZiQpIkbTTslKPmk0RbZXGz8", oauth_signature="jxhsQ9B%2FWf9RZeTNIdvJ92FXf8k%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116252", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="w5uG7mHqwK1WCxa899bpOel2JFwF8MqANRTztz036g", oauth_signature="2zdehmlhTmxgmFd7ARal8c13Djw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453693", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:33 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "1441"
       Content-Type: 
       - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:32 GMT
+    body: 
+      string: "{\"task_group_id\": \"7cc66061-216d-47ed-be3f-74872e8753e2\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/25310458-3a1e-4048-82b0-3fa998b440ca/\", \"task_id\": \"25310458-3a1e-4048-82b0-3fa998b440ca\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:31Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 9, \"size_total\": 17872, \"items_left\": 2, \"items_total\": 11, \"state\": \"IN_PROGRESS\", \"size_left\": 0, \"details\": {\"tree_file\": {\"num_success\": 1, \"size_total\": 0, \"items_left\": 2, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 8, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 8, \"size_left\": 0, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"7cc66061-216d-47ed-be3f-74872e8753e2\", \"call_request_id\": \"25310458-3a1e-4048-82b0-3fa998b440ca\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:57:32 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/25310458-3a1e-4048-82b0-3fa998b440ca/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="pVgpxkEZu7UahEsGVjONPpnkLWZd0OPvNjw1VD9zeU", oauth_signature="NrfQ3Cd5oyjm%2BUG%2BZle9KDHlx2A%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116252", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "1469"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:32 GMT
+    body: 
+      string: "{\"task_group_id\": \"7cc66061-216d-47ed-be3f-74872e8753e2\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/25310458-3a1e-4048-82b0-3fa998b440ca/\", \"task_id\": \"25310458-3a1e-4048-82b0-3fa998b440ca\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:31Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:57:32Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 11, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 11, \"state\": \"FINISHED\", \"size_left\": 0, \"details\": {\"tree_file\": {\"num_success\": 3, \"size_total\": 0, \"items_left\": 0, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 8, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 8, \"size_left\": 0, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"FINISHED\"}, \"errata\": {\"state\": \"FINISHED\", \"num_errata\": 2}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"7cc66061-216d-47ed-be3f-74872e8753e2\", \"call_request_id\": \"25310458-3a1e-4048-82b0-3fa998b440ca\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:57:32 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/50a7bf0c-4e10-4f64-8b45-e607ef0ab063/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="eOqrpnWkVH3AvWuRmFGQxaz5oQ8AOm54wVI7BGryJ0", oauth_signature="56eIjK0T7ETZ0o8MQT6VIktMdRA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116255", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "853"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:35 GMT
+    body: 
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/50a7bf0c-4e10-4f64-8b45-e607ef0ab063/\", \"task_id\": \"50a7bf0c-4e10-4f64-8b45-e607ef0ab063\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:34Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:57:34Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"50a7bf0c-4e10-4f64-8b45-e607ef0ab063\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:57:35 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/7ee81df7-c484-4f38-8ab7-0ba560239208/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="id3w83Y9e5bnGK5auaCOcrXbg09D4UUByPtLCI6oo", oauth_signature="yukgYihI7Dd67NqIZL2yjSG46WI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116255", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "1013"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:35 GMT
+    body: 
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/7ee81df7-c484-4f38-8ab7-0ba560239208/\", \"task_id\": \"7ee81df7-c484-4f38-8ab7-0ba560239208\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [{\"operation\": \"update\", \"resource_type\": \"repository\", \"resource_id\": \"acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\"}], \"start_time\": \"2012-12-21T18:57:34Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:57:34Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"7ee81df7-c484-4f38-8ab7-0ba560239208\", \"principal_login\": \"admin\", \"response\": \"postponed\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:57:35 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/874d210f-95fc-41cb-8510-3c05dcd5a4c9/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="x678SX5oV95NQs4zZ6X2MvX2CD8jUT4QuG5PwetLeg", oauth_signature="6nAI286Bh6zZekCybmKZ6PMQ7Oo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116256", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "853"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:36 GMT
+    body: 
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/874d210f-95fc-41cb-8510-3c05dcd5a4c9/\", \"task_id\": \"874d210f-95fc-41cb-8510-3c05dcd5a4c9\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:34Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:57:34Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"874d210f-95fc-41cb-8510-3c05dcd5a4c9\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:57:36 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/1343eb9f-c4f5-4902-ae66-2153cab33c73/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="FvNjcN0fTDrwNHyZkF6n0DQl8pcvswRxhVKRfDgDnI", oauth_signature="YxbeDVdlEBrRK80SkpSyOfZkTeo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116256", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "853"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:36 GMT
+    body: 
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/1343eb9f-c4f5-4902-ae66-2153cab33c73/\", \"task_id\": \"1343eb9f-c4f5-4902-ae66-2153cab33c73\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:35Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:57:35Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"1343eb9f-c4f5-4902-ae66-2153cab33c73\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:57:37 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/1aefdf05-1369-4019-8560-c90b7e24df94/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="b3zNiMw88UT3rQCDnRtG5l8Q3JQLjP83v0Q0fliNs", oauth_signature="tkdX6zv5NutF4vSpHQg9%2BkJcHUY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116259", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "683"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:39 GMT
+    body: 
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/1aefdf05-1369-4019-8560-c90b7e24df94/\", \"task_id\": \"1aefdf05-1369-4019-8560-c90b7e24df94\", \"call_request_tags\": [\"pulp:repository:2\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:39Z\", \"tags\": [\"pulp:repository:2\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:57:39Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"1aefdf05-1369-4019-8560-c90b7e24df94\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:57:39 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/27976fbc-b643-4bae-a34b-fe33dbcadce9/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="dnklIA7rVvyc1xlEgdjYMebuGmDa0qzKHX3MLcXapw", oauth_signature="o4jP7s5r9Tu4M9vcuw28ZjDRTbQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116260", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "683"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:40 GMT
+    body: 
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/27976fbc-b643-4bae-a34b-fe33dbcadce9/\", \"task_id\": \"27976fbc-b643-4bae-a34b-fe33dbcadce9\", \"call_request_tags\": [\"pulp:repository:2\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:39Z\", \"tags\": [\"pulp:repository:2\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:57:39Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"27976fbc-b643-4bae-a34b-fe33dbcadce9\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:57:40 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/3f8dad2c-cb4d-4966-a44b-02f535b7a65f/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="7VrqYfTaWpqxGbwkMT7SJK5dWCwvGhfkTPxCDRt0OgA", oauth_signature="OAyAXxxIB%2FCQr6jOpFBpcSuTER4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116260", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "683"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:41 GMT
+    body: 
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/3f8dad2c-cb4d-4966-a44b-02f535b7a65f/\", \"task_id\": \"3f8dad2c-cb4d-4966-a44b-02f535b7a65f\", \"call_request_tags\": [\"pulp:repository:2\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:39Z\", \"tags\": [\"pulp:repository:2\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:57:39Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"3f8dad2c-cb4d-4966-a44b-02f535b7a65f\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:57:41 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/88b9b904-a666-4add-b2d4-b4d259b3ab61/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="qicQyEvGGhn6Mq2B9STr65UlyHKB5734fYKGg6PrOz4", oauth_signature="CgxDX2Zm18%2BICcq52VgnZVAqYQo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116261", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "683"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:41 GMT
+    body: 
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/88b9b904-a666-4add-b2d4-b4d259b3ab61/\", \"task_id\": \"88b9b904-a666-4add-b2d4-b4d259b3ab61\", \"call_request_tags\": [\"pulp:repository:2\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:39Z\", \"tags\": [\"pulp:repository:2\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:57:39Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"88b9b904-a666-4add-b2d4-b4d259b3ab61\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:57:41 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/82f85f56-3555-4bd8-9b64-3644e7cf7c2b/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="IiMfDhjEqTFucrN8E6ClLcio4F98DdotZ8sSNsZPVo", oauth_signature="uAwJOFh05wfs7gd77IA52AGLAOw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116271", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "842"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:51 GMT
+    body: 
+      string: "{\"task_group_id\": \"4a08a671-9330-4fab-a760-b3e90b037bf7\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/82f85f56-3555-4bd8-9b64-3644e7cf7c2b/\", \"task_id\": \"82f85f56-3555-4bd8-9b64-3644e7cf7c2b\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:51Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"state\": \"NOT_STARTED\"}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"IN_PROGRESS\"}}}, \"call_request_group_id\": \"4a08a671-9330-4fab-a760-b3e90b037bf7\", \"call_request_id\": \"82f85f56-3555-4bd8-9b64-3644e7cf7c2b\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:57:51 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/82f85f56-3555-4bd8-9b64-3644e7cf7c2b/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="6dreb0nnMlDQshBND9WbCwgYzCXIN4ehLyOh3zpSvI", oauth_signature="XE6b%2BbAL5VyPEox5qn1JQEsfsHg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116272", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "1450"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:52 GMT
+    body: 
+      string: "{\"task_group_id\": \"4a08a671-9330-4fab-a760-b3e90b037bf7\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/82f85f56-3555-4bd8-9b64-3644e7cf7c2b/\", \"task_id\": \"82f85f56-3555-4bd8-9b64-3644e7cf7c2b\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:51Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 0, \"size_total\": 17872, \"items_left\": 11, \"items_total\": 11, \"state\": \"IN_PROGRESS\", \"size_left\": 17872, \"details\": {\"tree_file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 3, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 0, \"size_total\": 17872, \"items_left\": 8, \"items_total\": 8, \"size_left\": 17872, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"4a08a671-9330-4fab-a760-b3e90b037bf7\", \"call_request_id\": \"82f85f56-3555-4bd8-9b64-3644e7cf7c2b\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:57:52 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/82f85f56-3555-4bd8-9b64-3644e7cf7c2b/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="e2pDb6w2vFoFMrmKKxM2WLWTHf4DC0hgWqLVwPbUHvE", oauth_signature="dwBWhxQpCxvUoqHeV4%2Bmmkurm9c%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116272", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "1469"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:57:52 GMT
+    body: 
+      string: "{\"task_group_id\": \"4a08a671-9330-4fab-a760-b3e90b037bf7\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/82f85f56-3555-4bd8-9b64-3644e7cf7c2b/\", \"task_id\": \"82f85f56-3555-4bd8-9b64-3644e7cf7c2b\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:57:51Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:57:52Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 11, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 11, \"state\": \"FINISHED\", \"size_left\": 0, \"details\": {\"tree_file\": {\"num_success\": 3, \"size_total\": 0, \"items_left\": 0, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 8, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 8, \"size_left\": 0, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"FINISHED\"}, \"errata\": {\"state\": \"FINISHED\", \"num_errata\": 2}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"4a08a671-9330-4fab-a760-b3e90b037bf7\", \"call_request_id\": \"82f85f56-3555-4bd8-9b64-3644e7cf7c2b\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:57:53 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/2fe5ed61-1054-4743-b326-d78c227b2681/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="7NgGoktTV1Hrh19n2CH6sVFzsv1jFzn1aj81MdUssk", oauth_signature="fNricsHjhhnjD0KWT7ZlVUAOaw0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116353", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "853"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:14 GMT
+    body: 
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/2fe5ed61-1054-4743-b326-d78c227b2681/\", \"task_id\": \"2fe5ed61-1054-4743-b326-d78c227b2681\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:13Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:59:13Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"2fe5ed61-1054-4743-b326-d78c227b2681\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:59:14 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/85ffd35d-a31a-4b01-89a9-7eaffd111b10/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="XKgU1e6fRlRPTZLeLiScAfOXuC4AsfXhKku8wr19UoU", oauth_signature="7YXDtWc8o7wMmJ0K%2BAYmoXYob5U%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116354", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "853"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:14 GMT
+    body: 
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/85ffd35d-a31a-4b01-89a9-7eaffd111b10/\", \"task_id\": \"85ffd35d-a31a-4b01-89a9-7eaffd111b10\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:13Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:59:13Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"85ffd35d-a31a-4b01-89a9-7eaffd111b10\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:59:14 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/b0696f0d-ae59-4680-b255-e45d664a4e9c/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="l64WqMf8N2C03c4hipVgW5mcBQLdLpfLnLhn8NBQEpA", oauth_signature="L5bDuunTzGh6G41Q5XHoCQYA2aE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116355", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "853"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:15 GMT
+    body: 
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/b0696f0d-ae59-4680-b255-e45d664a4e9c/\", \"task_id\": \"b0696f0d-ae59-4680-b255-e45d664a4e9c\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:13Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:59:13Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"b0696f0d-ae59-4680-b255-e45d664a4e9c\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:59:15 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/3b6d9846-5e25-48cf-a703-dd31b058816d/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="2gyXuoR2uqlH0RPm4iuxA7kAsNAeeCRQi6GdSivxTM4", oauth_signature="3hOX8%2BqnPSTslgRT3lTBMHYkYzk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116355", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "853"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:15 GMT
+    body: 
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/3b6d9846-5e25-48cf-a703-dd31b058816d/\", \"task_id\": \"3b6d9846-5e25-48cf-a703-dd31b058816d\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:14Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:59:14Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"3b6d9846-5e25-48cf-a703-dd31b058816d\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:59:16 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/d2175703-46f7-4c0d-9667-38804c1640cc/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="Yi8jDBbksHHBJiM3VgWttBb54hqJpzcv9LRrVVgI", oauth_signature="F3aUmsREgfkg%2FhWsz4xMcHVvu1U%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116357", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "842"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:17 GMT
+    body: 
+      string: "{\"task_group_id\": \"a0a7eb3e-0803-4216-ac5a-95d384e45c83\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/d2175703-46f7-4c0d-9667-38804c1640cc/\", \"task_id\": \"d2175703-46f7-4c0d-9667-38804c1640cc\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:17Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"state\": \"NOT_STARTED\"}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"IN_PROGRESS\"}}}, \"call_request_group_id\": \"a0a7eb3e-0803-4216-ac5a-95d384e45c83\", \"call_request_id\": \"d2175703-46f7-4c0d-9667-38804c1640cc\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:59:17 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/d2175703-46f7-4c0d-9667-38804c1640cc/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="fv5ab761dM4khkKU5zmRmpJR4YGQ9q3MhIyyyPZoYP4", oauth_signature="A%2BX9lJV4JjzGDH77Pjch5MiidLg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116358", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "1449"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:18 GMT
+    body: 
+      string: "{\"task_group_id\": \"a0a7eb3e-0803-4216-ac5a-95d384e45c83\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/d2175703-46f7-4c0d-9667-38804c1640cc/\", \"task_id\": \"d2175703-46f7-4c0d-9667-38804c1640cc\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:17Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 3, \"size_total\": 17872, \"items_left\": 8, \"items_total\": 11, \"state\": \"IN_PROGRESS\", \"size_left\": 11192, \"details\": {\"tree_file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 3, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 3, \"size_total\": 17872, \"items_left\": 5, \"items_total\": 8, \"size_left\": 11192, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"a0a7eb3e-0803-4216-ac5a-95d384e45c83\", \"call_request_id\": \"d2175703-46f7-4c0d-9667-38804c1640cc\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:59:18 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/d2175703-46f7-4c0d-9667-38804c1640cc/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="PugZ1OjWNnPZjOiSdXbTq0LcnxWxd17FeZrMdUXqIc", oauth_signature="dTilnbEZgsd7EFq0BMhnYAZO6y8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116358", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "1469"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:18 GMT
+    body: 
+      string: "{\"task_group_id\": \"a0a7eb3e-0803-4216-ac5a-95d384e45c83\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/d2175703-46f7-4c0d-9667-38804c1640cc/\", \"task_id\": \"d2175703-46f7-4c0d-9667-38804c1640cc\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:17Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:59:18Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 11, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 11, \"state\": \"FINISHED\", \"size_left\": 0, \"details\": {\"tree_file\": {\"num_success\": 3, \"size_total\": 0, \"items_left\": 0, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 8, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 8, \"size_left\": 0, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"FINISHED\"}, \"errata\": {\"state\": \"FINISHED\", \"num_errata\": 2}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"a0a7eb3e-0803-4216-ac5a-95d384e45c83\", \"call_request_id\": \"d2175703-46f7-4c0d-9667-38804c1640cc\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:59:18 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/9519ba0c-b521-452b-8f96-213e4649c8e7/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="sBKG4VPbuoXuMePL3Do8GC6YDmeP9pwQMHP5XCgab98", oauth_signature="YqkXzBX0S61wBO8IKdPx%2F%2F%2FqxfY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116363", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "842"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:23 GMT
+    body: 
+      string: "{\"task_group_id\": \"dd42e4f7-98c4-4217-b5e4-cfd407e776ac\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/9519ba0c-b521-452b-8f96-213e4649c8e7/\", \"task_id\": \"9519ba0c-b521-452b-8f96-213e4649c8e7\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:22Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"state\": \"NOT_STARTED\"}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"IN_PROGRESS\"}}}, \"call_request_group_id\": \"dd42e4f7-98c4-4217-b5e4-cfd407e776ac\", \"call_request_id\": \"9519ba0c-b521-452b-8f96-213e4649c8e7\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:59:23 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/9519ba0c-b521-452b-8f96-213e4649c8e7/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="5fsOWzd2FqORRh3EpNlh5v6uaDZ1dAyfFRhAd5Z4Y", oauth_signature="VdzXeAvmjSrgnshOSiGQk3quDkQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116363", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "1447"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:23 GMT
     body: 
-      string: "{\"task_group_id\": \"a0d6239f-6387-4ed1-9908-1d0f1fd89e46\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/bb91ccac-0923-4b24-a4f2-c6e0d22397de/\", \"task_id\": \"bb91ccac-0923-4b24-a4f2-c6e0d22397de\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:32Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 4, \"size_total\": 17872, \"items_left\": 7, \"items_total\": 11, \"state\": \"IN_PROGRESS\", \"size_left\": 8928, \"details\": {\"tree_file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 3, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 4, \"size_total\": 17872, \"items_left\": 4, \"items_total\": 8, \"size_left\": 8928, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"a0d6239f-6387-4ed1-9908-1d0f1fd89e46\", \"call_request_id\": \"bb91ccac-0923-4b24-a4f2-c6e0d22397de\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": \"dd42e4f7-98c4-4217-b5e4-cfd407e776ac\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/9519ba0c-b521-452b-8f96-213e4649c8e7/\", \"task_id\": \"9519ba0c-b521-452b-8f96-213e4649c8e7\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:22Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 6, \"size_total\": 17872, \"items_left\": 5, \"items_total\": 11, \"state\": \"IN_PROGRESS\", \"size_left\": 6692, \"details\": {\"tree_file\": {\"num_success\": 1, \"size_total\": 0, \"items_left\": 2, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 5, \"size_total\": 17872, \"items_left\": 3, \"items_total\": 8, \"size_left\": 6692, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"dd42e4f7-98c4-4217-b5e4-cfd407e776ac\", \"call_request_id\": \"9519ba0c-b521-452b-8f96-213e4649c8e7\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:33 GMT
+  recorded_at: Fri, 21 Dec 2012 18:59:23 GMT
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/bb91ccac-0923-4b24-a4f2-c6e0d22397de/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/9519ba0c-b521-452b-8f96-213e4649c8e7/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="BcJEKRFLm06OT57iJNjSRIiKbhqk8hu3LSyZ7vZJ64", oauth_signature="0klXtQ7Q40Q0xUXqzVjMMg%2FBtyg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116364", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="2dSx870ARFF7stm3Gb7vHgGhGe6Kmcla4vHf5d3Q7hQ", oauth_signature="B%2FQ7h7aWiKgcZ3Q0jiUmmg%2BsRYA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453694", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:34 GMT
-      Content-Type: 
-      - application/json
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "1469"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:24 GMT
     body: 
-      string: "{\"task_group_id\": \"a0d6239f-6387-4ed1-9908-1d0f1fd89e46\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/bb91ccac-0923-4b24-a4f2-c6e0d22397de/\", \"task_id\": \"bb91ccac-0923-4b24-a4f2-c6e0d22397de\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:32Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"finished\", \"finish_time\": \"2012-11-20T23:21:34Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 11, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 11, \"state\": \"FINISHED\", \"size_left\": 0, \"details\": {\"tree_file\": {\"num_success\": 3, \"size_total\": 0, \"items_left\": 0, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 8, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 8, \"size_left\": 0, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"FINISHED\"}, \"errata\": {\"state\": \"FINISHED\", \"num_errata\": 2}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"a0d6239f-6387-4ed1-9908-1d0f1fd89e46\", \"call_request_id\": \"bb91ccac-0923-4b24-a4f2-c6e0d22397de\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": \"dd42e4f7-98c4-4217-b5e4-cfd407e776ac\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/9519ba0c-b521-452b-8f96-213e4649c8e7/\", \"task_id\": \"9519ba0c-b521-452b-8f96-213e4649c8e7\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:22Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:59:24Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 11, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 11, \"state\": \"FINISHED\", \"size_left\": 0, \"details\": {\"tree_file\": {\"num_success\": 3, \"size_total\": 0, \"items_left\": 0, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 8, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 8, \"size_left\": 0, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"FINISHED\"}, \"errata\": {\"state\": \"FINISHED\", \"num_errata\": 2}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"dd42e4f7-98c4-4217-b5e4-cfd407e776ac\", \"call_request_id\": \"9519ba0c-b521-452b-8f96-213e4649c8e7\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:34 GMT
+  recorded_at: Fri, 21 Dec 2012 18:59:24 GMT
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/1e5e4aec-71d0-48ea-b293-c0cc38de8fa9/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/b1dfdcf7-f692-404b-b19f-7f90b736aebf/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="2E6EKjSXERVhCp1dXqmLlY2eH5wXYSmWOZx8n3ceM4Q", oauth_signature="12Sm8a0p9cNC%2FSij1LaSuNVATaE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116366", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="oWh9uXIufMXnkpvqkaglE8MTvsYTgiE7i2neRRh9o", oauth_signature="Zp8SI3kH60g2694nrh35tUwoxm0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453695", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:35 GMT
-      Content-Type: 
-      - application/json
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "853"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:26 GMT
     body: 
-      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/1e5e4aec-71d0-48ea-b293-c0cc38de8fa9/\", \"task_id\": \"1e5e4aec-71d0-48ea-b293-c0cc38de8fa9\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:35Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-11-20T23:21:35Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"1e5e4aec-71d0-48ea-b293-c0cc38de8fa9\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/b1dfdcf7-f692-404b-b19f-7f90b736aebf/\", \"task_id\": \"b1dfdcf7-f692-404b-b19f-7f90b736aebf\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:26Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:59:26Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"b1dfdcf7-f692-404b-b19f-7f90b736aebf\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:35 GMT
+  recorded_at: Fri, 21 Dec 2012 18:59:26 GMT
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/66001e5c-d678-44fd-82ad-55a31e623e09/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/430d0f62-a150-4258-999d-872b6a1d654d/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="eswIrdbyeDqB9mO7IHQB58RPhlIiGa82STYoIqNhUE", oauth_signature="hNLLUAFirtv2IjWnRdeE5MLZe4M%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116367", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="Vt7u0dBu8fJHiDv6tlYBYLEqGlJsOvGgTgRHAUebL0", oauth_signature="zuQqLwDoTHeHzM%2FgyWBtsRlp7wo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453696", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:36 GMT
-      Content-Type: 
-      - application/json
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "853"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:27 GMT
     body: 
-      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/66001e5c-d678-44fd-82ad-55a31e623e09/\", \"task_id\": \"66001e5c-d678-44fd-82ad-55a31e623e09\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:35Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-11-20T23:21:35Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"66001e5c-d678-44fd-82ad-55a31e623e09\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/430d0f62-a150-4258-999d-872b6a1d654d/\", \"task_id\": \"430d0f62-a150-4258-999d-872b6a1d654d\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:26Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:59:26Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"430d0f62-a150-4258-999d-872b6a1d654d\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:36 GMT
+  recorded_at: Fri, 21 Dec 2012 18:59:27 GMT
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/24732437-67d6-4f6d-9ec2-5ea04f61b0c9/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/011c75e0-4681-4103-b803-612ed208a740/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="et2Ax7yXZCQJCaRBOgSg7oIj7CMmFeOoqvTN1ePi4", oauth_signature="myG94mc22tcm4S7D1%2FUapNdHNRo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116367", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="V9XWeeE2w9oLS80qiSdv3eKXiD0xc1wR7aPS3mcYk", oauth_signature="8gJXHW6ykoPqN7Igk6LIJZY2W58%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453697", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:37 GMT
-      Content-Type: 
-      - application/json
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "853"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:27 GMT
     body: 
-      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/24732437-67d6-4f6d-9ec2-5ea04f61b0c9/\", \"task_id\": \"24732437-67d6-4f6d-9ec2-5ea04f61b0c9\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:35Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-11-20T23:21:35Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"24732437-67d6-4f6d-9ec2-5ea04f61b0c9\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/011c75e0-4681-4103-b803-612ed208a740/\", \"task_id\": \"011c75e0-4681-4103-b803-612ed208a740\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:26Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:59:26Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"011c75e0-4681-4103-b803-612ed208a740\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:37 GMT
+  recorded_at: Fri, 21 Dec 2012 18:59:28 GMT
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/05cf1fda-c7e5-4b87-b17a-8c59392f04bd/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/062617e7-5e17-4a8d-8a56-eb1cf2f02729/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="xI9mN7rpJMYBQkhEqgkfOGfDqhNpdYa6QmDNvobeM", oauth_signature="mz1dRj9hupZ7MoFqC%2BJtmHe4yls%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116368", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="OulSG7wWBpVtVRUd51QEgmqBXnhQSQTswNsMdXjJ8s", oauth_signature="FIB%2BiuNWRO5If7PRMprOek64dKo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453699", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:39 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "853"
       Content-Type: 
       - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:28 GMT
+    body: 
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/062617e7-5e17-4a8d-8a56-eb1cf2f02729/\", \"task_id\": \"062617e7-5e17-4a8d-8a56-eb1cf2f02729\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:26Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:59:26Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"062617e7-5e17-4a8d-8a56-eb1cf2f02729\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:59:28 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/3d12b41c-c237-48c1-9ce5-f9014f804606/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="l83ksO0Enrr4CszXEvlHELCeLXwkG2M9fOE21oRZKIc", oauth_signature="xQvx3YgSv%2FcaPGUL4SvHz0lOJFI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116372", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "842"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:32 GMT
     body: 
-      string: "{\"task_group_id\": \"c8f5d0ff-4603-41b9-ab42-3297196a98b2\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/05cf1fda-c7e5-4b87-b17a-8c59392f04bd/\", \"task_id\": \"05cf1fda-c7e5-4b87-b17a-8c59392f04bd\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:39Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"state\": \"NOT_STARTED\"}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"IN_PROGRESS\"}}}, \"call_request_group_id\": \"c8f5d0ff-4603-41b9-ab42-3297196a98b2\", \"call_request_id\": \"05cf1fda-c7e5-4b87-b17a-8c59392f04bd\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": \"639d13e8-97a0-444d-b622-939309cd4b44\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/3d12b41c-c237-48c1-9ce5-f9014f804606/\", \"task_id\": \"3d12b41c-c237-48c1-9ce5-f9014f804606\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:32Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"state\": \"NOT_STARTED\"}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"IN_PROGRESS\"}}}, \"call_request_group_id\": \"639d13e8-97a0-444d-b622-939309cd4b44\", \"call_request_id\": \"3d12b41c-c237-48c1-9ce5-f9014f804606\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:40 GMT
+  recorded_at: Fri, 21 Dec 2012 18:59:32 GMT
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/05cf1fda-c7e5-4b87-b17a-8c59392f04bd/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/3d12b41c-c237-48c1-9ce5-f9014f804606/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="XA2hWiUJklbeWlkTijgBa3qiwq3XFrauCqA8RmBbYk", oauth_signature="bfFQCZd1dijCxItqh4hyO9cFCnY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116373", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="MgWBI64nTNcy0yeJNX9F1w3g6xMQEMKbjZAn3VukFV0", oauth_signature="RkJ0so%2BofRz66r50zSzUWo2pgG4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453700", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:40 GMT
-      Content-Type: 
-      - application/json
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
-      - "1449"
+      - "1450"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:33 GMT
     body: 
-      string: "{\"task_group_id\": \"c8f5d0ff-4603-41b9-ab42-3297196a98b2\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/05cf1fda-c7e5-4b87-b17a-8c59392f04bd/\", \"task_id\": \"05cf1fda-c7e5-4b87-b17a-8c59392f04bd\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:39Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 3, \"size_total\": 17872, \"items_left\": 8, \"items_total\": 11, \"state\": \"IN_PROGRESS\", \"size_left\": 11160, \"details\": {\"tree_file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 3, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 3, \"size_total\": 17872, \"items_left\": 5, \"items_total\": 8, \"size_left\": 11160, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"c8f5d0ff-4603-41b9-ab42-3297196a98b2\", \"call_request_id\": \"05cf1fda-c7e5-4b87-b17a-8c59392f04bd\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": \"639d13e8-97a0-444d-b622-939309cd4b44\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/3d12b41c-c237-48c1-9ce5-f9014f804606/\", \"task_id\": \"3d12b41c-c237-48c1-9ce5-f9014f804606\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:32Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 0, \"size_total\": 17872, \"items_left\": 11, \"items_total\": 11, \"state\": \"IN_PROGRESS\", \"size_left\": 17872, \"details\": {\"tree_file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 3, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 0, \"size_total\": 17872, \"items_left\": 8, \"items_total\": 8, \"size_left\": 17872, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"639d13e8-97a0-444d-b622-939309cd4b44\", \"call_request_id\": \"3d12b41c-c237-48c1-9ce5-f9014f804606\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:40 GMT
+  recorded_at: Fri, 21 Dec 2012 18:59:33 GMT
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/05cf1fda-c7e5-4b87-b17a-8c59392f04bd/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/3d12b41c-c237-48c1-9ce5-f9014f804606/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="KvmkXROiChPFx8OQeOL6kdYtwW0LHm8PEeW0mmU1EU", oauth_signature="6EsNZqFQTAb3Bj5VDX8D%2BkqvGLw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116373", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="vniDDfPQ6fewoGTiefS6fbM7jcYk9WibNlMDpLcFzoQ", oauth_signature="qCTTvv4lN1p%2FCuqSKCturcM7uMc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453701", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:41 GMT
-      Content-Type: 
-      - application/json
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "1469"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:34 GMT
     body: 
-      string: "{\"task_group_id\": \"c8f5d0ff-4603-41b9-ab42-3297196a98b2\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/05cf1fda-c7e5-4b87-b17a-8c59392f04bd/\", \"task_id\": \"05cf1fda-c7e5-4b87-b17a-8c59392f04bd\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:39Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"finished\", \"finish_time\": \"2012-11-20T23:21:41Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 11, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 11, \"state\": \"FINISHED\", \"size_left\": 0, \"details\": {\"tree_file\": {\"num_success\": 3, \"size_total\": 0, \"items_left\": 0, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 8, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 8, \"size_left\": 0, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"FINISHED\"}, \"errata\": {\"state\": \"FINISHED\", \"num_errata\": 2}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"c8f5d0ff-4603-41b9-ab42-3297196a98b2\", \"call_request_id\": \"05cf1fda-c7e5-4b87-b17a-8c59392f04bd\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": \"639d13e8-97a0-444d-b622-939309cd4b44\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/3d12b41c-c237-48c1-9ce5-f9014f804606/\", \"task_id\": \"3d12b41c-c237-48c1-9ce5-f9014f804606\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:32Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:59:34Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 11, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 11, \"state\": \"FINISHED\", \"size_left\": 0, \"details\": {\"tree_file\": {\"num_success\": 3, \"size_total\": 0, \"items_left\": 0, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 8, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 8, \"size_left\": 0, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"FINISHED\"}, \"errata\": {\"state\": \"FINISHED\", \"num_errata\": 2}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"639d13e8-97a0-444d-b622-939309cd4b44\", \"call_request_id\": \"3d12b41c-c237-48c1-9ce5-f9014f804606\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:41 GMT
+  recorded_at: Fri, 21 Dec 2012 18:59:34 GMT
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/fa96d970-7cdb-4ff6-b928-c6b90821b90c/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/437f7329-f58f-45c1-a67c-80cb548d6ec3/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="aG3CoevDgVPPyanpjRTDo4lfcUxO9kL0O0E6gLXsQ4", oauth_signature="QG2WtUq24z8SBiMlzwr7LpUJnUQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116383", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="TiMCbNpxjlJjt6cd37CyH8keJlxDDJldoteEBfZiT4", oauth_signature="%2FboRVmdKiipLvns33YXzJ%2BKDy6U%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453706", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:47 GMT
-      Content-Type: 
-      - application/json
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "683"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:43 GMT
     body: 
-      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/fa96d970-7cdb-4ff6-b928-c6b90821b90c/\", \"task_id\": \"fa96d970-7cdb-4ff6-b928-c6b90821b90c\", \"call_request_tags\": [\"pulp:repository:2\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:46Z\", \"tags\": [\"pulp:repository:2\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-11-20T23:21:46Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"fa96d970-7cdb-4ff6-b928-c6b90821b90c\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/437f7329-f58f-45c1-a67c-80cb548d6ec3/\", \"task_id\": \"437f7329-f58f-45c1-a67c-80cb548d6ec3\", \"call_request_tags\": [\"pulp:repository:2\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:43Z\", \"tags\": [\"pulp:repository:2\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:59:43Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"437f7329-f58f-45c1-a67c-80cb548d6ec3\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:47 GMT
+  recorded_at: Fri, 21 Dec 2012 18:59:43 GMT
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/9fd9fc79-49aa-4187-9acb-281f2bd8b354/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/07f776cb-d615-450f-8945-5296408cc22a/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="HdzMk7gWnVREvybSx44VaeL5DnULF4yXTeYrK86pI8", oauth_signature="nwEFJ3Adgv8Gyoovy%2BGNSdSBX54%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116384", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="MjHQwK55wUAjTHGxXAt32PirUlcdl5fxdOrUxOdCxY", oauth_signature="a1dvrxy3o0H%2B%2BiIM8OpIvyHw4Vg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453707", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:47 GMT
-      Content-Type: 
-      - application/json
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "683"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:44 GMT
     body: 
-      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/9fd9fc79-49aa-4187-9acb-281f2bd8b354/\", \"task_id\": \"9fd9fc79-49aa-4187-9acb-281f2bd8b354\", \"call_request_tags\": [\"pulp:repository:2\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:46Z\", \"tags\": [\"pulp:repository:2\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-11-20T23:21:46Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"9fd9fc79-49aa-4187-9acb-281f2bd8b354\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/07f776cb-d615-450f-8945-5296408cc22a/\", \"task_id\": \"07f776cb-d615-450f-8945-5296408cc22a\", \"call_request_tags\": [\"pulp:repository:2\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:43Z\", \"tags\": [\"pulp:repository:2\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:59:43Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"07f776cb-d615-450f-8945-5296408cc22a\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:47 GMT
+  recorded_at: Fri, 21 Dec 2012 18:59:44 GMT
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/df9062cf-593b-443a-9ea8-2de6bd70924b/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/e0bc8abb-7d5a-401e-8822-9c88ff1315b6/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="I6VXrfPLhEzRlLRyF1BB85p18NrnPFxtZUqGwBCgc", oauth_signature="aK0wog0Mh%2FVlYdWi7R5s%2B6M1N24%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116384", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="qv7643phTebkDqduuFpdZy7xfnW4umKZP13x6uQ7lEA", oauth_signature="J8XJ8x7iPdGLKustMUiBnLARoTY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453708", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:48 GMT
-      Content-Type: 
-      - application/json
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "683"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:44 GMT
     body: 
-      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/df9062cf-593b-443a-9ea8-2de6bd70924b/\", \"task_id\": \"df9062cf-593b-443a-9ea8-2de6bd70924b\", \"call_request_tags\": [\"pulp:repository:2\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:46Z\", \"tags\": [\"pulp:repository:2\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-11-20T23:21:46Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"df9062cf-593b-443a-9ea8-2de6bd70924b\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/e0bc8abb-7d5a-401e-8822-9c88ff1315b6/\", \"task_id\": \"e0bc8abb-7d5a-401e-8822-9c88ff1315b6\", \"call_request_tags\": [\"pulp:repository:2\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:43Z\", \"tags\": [\"pulp:repository:2\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:59:43Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"e0bc8abb-7d5a-401e-8822-9c88ff1315b6\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:48 GMT
+  recorded_at: Fri, 21 Dec 2012 18:59:44 GMT
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/9d0cfd4a-4b64-49a1-810a-b4dc1a3dc745/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/97ab420d-e016-48ea-a4e7-b31adb1540bf/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="7gvHG8BS11neUpOt7sX1SoKL0hHtDGJV2CC74DKEP6k", oauth_signature="i2RT2a%2BvfN11MuFcaHVaqwl%2BQFE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116385", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="1qrfaXKSZhyx3wtso461PCO6k6n2Foc54WM5SMkoYE4", oauth_signature="QB7RzV3%2BY3kyUXaCqdkEeTqLlbY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453713", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:53 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "683"
       Content-Type: 
       - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:45 GMT
+    body: 
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/97ab420d-e016-48ea-a4e7-b31adb1540bf/\", \"task_id\": \"97ab420d-e016-48ea-a4e7-b31adb1540bf\", \"call_request_tags\": [\"pulp:repository:2\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:43Z\", \"tags\": [\"pulp:repository:2\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:59:43Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"97ab420d-e016-48ea-a4e7-b31adb1540bf\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:59:45 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/02a779b1-a8d9-458b-b089-39c79059440a/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="zgjPsW1ajEZMDuSsugxyEAajQD8BmlxqsRYSksQXyIY", oauth_signature="iBrGT3z54V1YyiJVL1BbkO261Ss%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116388", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "853"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:48 GMT
     body: 
-      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/9d0cfd4a-4b64-49a1-810a-b4dc1a3dc745/\", \"task_id\": \"9d0cfd4a-4b64-49a1-810a-b4dc1a3dc745\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:52Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-11-20T23:21:52Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"9d0cfd4a-4b64-49a1-810a-b4dc1a3dc745\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/02a779b1-a8d9-458b-b089-39c79059440a/\", \"task_id\": \"02a779b1-a8d9-458b-b089-39c79059440a\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:47Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:59:47Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"02a779b1-a8d9-458b-b089-39c79059440a\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:53 GMT
+  recorded_at: Fri, 21 Dec 2012 18:59:48 GMT
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/9e2291f8-7e07-4af1-b28d-c2230227ca11/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/011d8785-fdcf-4873-95ea-c13f92b738bd/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="mc4jCoWI7JoBtLfCad2bbEAjIGXfMZ41FviF16Vr8", oauth_signature="jWN4x31%2FZFvlI7bqDHQZTjuKFZU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116389", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="t6LrFwq6FJrFuLYq9aJ33dqonVzKVBsPv2qwOygINA", oauth_signature="nek6Sp0aaBNF47OwzSqSr4dqkUI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453713", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:54 GMT
-      Content-Type: 
-      - application/json
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "853"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:49 GMT
     body: 
-      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/9e2291f8-7e07-4af1-b28d-c2230227ca11/\", \"task_id\": \"9e2291f8-7e07-4af1-b28d-c2230227ca11\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:53Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-11-20T23:21:53Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"9e2291f8-7e07-4af1-b28d-c2230227ca11\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/011d8785-fdcf-4873-95ea-c13f92b738bd/\", \"task_id\": \"011d8785-fdcf-4873-95ea-c13f92b738bd\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:48Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:59:48Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"011d8785-fdcf-4873-95ea-c13f92b738bd\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:54 GMT
+  recorded_at: Fri, 21 Dec 2012 18:59:49 GMT
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/6866aebc-83ec-4c14-ab89-5c802c670004/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/9b6b9dcf-bee6-49c0-8c07-d546e75d4d06/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="2UO4PbkDxH6kxa2ZfF7A4ruwlvBffs8JA23S1sjosdc", oauth_signature="sqElhEdxEEjeOVGflwzI4xpbZkY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116389", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="2yfBa6czDDQ27wkW3KDwAv9X9Ifh2Z4TAPIma8Gs", oauth_signature="OZTEJTkGRKB%2FIahMLOhxwLaDQrk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453714", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:54 GMT
-      Content-Type: 
-      - application/json
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "853"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:49 GMT
     body: 
-      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/6866aebc-83ec-4c14-ab89-5c802c670004/\", \"task_id\": \"6866aebc-83ec-4c14-ab89-5c802c670004\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:53Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-11-20T23:21:53Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"6866aebc-83ec-4c14-ab89-5c802c670004\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/9b6b9dcf-bee6-49c0-8c07-d546e75d4d06/\", \"task_id\": \"9b6b9dcf-bee6-49c0-8c07-d546e75d4d06\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:48Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:59:48Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"9b6b9dcf-bee6-49c0-8c07-d546e75d4d06\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:54 GMT
+  recorded_at: Fri, 21 Dec 2012 18:59:49 GMT
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/b576e71d-9f1c-4c36-9fde-9e8cd6dbbb5a/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/074515d9-6a1d-40ec-b3f1-76623fc5ec1f/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="JHjufLGCQ4vR4qxSdCs7gSM9L0GjUofxNYR2qKfS158", oauth_signature="BuPmjwoP1fe4OD4Vf%2FIKzg6lW0M%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116390", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="4nLYUdOiEfhnY6QSP34hQdwT8UlJ5KkBs26NSDiswc", oauth_signature="UXy9N9KaFqjZol9uy03m3L8Xisw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453716", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:56 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "853"
       Content-Type: 
       - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:50 GMT
+    body: 
+      string: "{\"task_group_id\": null, \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/074515d9-6a1d-40ec-b3f1-76623fc5ec1f/\", \"task_id\": \"074515d9-6a1d-40ec-b3f1-76623fc5ec1f\", \"call_request_tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:48Z\", \"tags\": [\"pulp:repository:acme_corporation_label-staging_label-staging_label-fedora_label-fedora_17_x86_64_label\", \"pulp:repository:1\", \"pulp:action:associate\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:59:48Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {}, \"call_request_group_id\": null, \"call_request_id\": \"074515d9-6a1d-40ec-b3f1-76623fc5ec1f\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+    http_version: 
+  recorded_at: Fri, 21 Dec 2012 18:59:50 GMT
+- request: 
+    method: get
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/8651a6ed-0d9c-4787-9725-3d41216ea60a/
+    body: 
+      string: ""
+    headers: 
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="u3Al9qU5K5EKvHVfA2GujNLcC0LtXma9f1u1Sodbc", oauth_signature="8%2Fwf8xk0cCHYCK1qXajnlc%2BX%2FUM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116395", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "842"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:55 GMT
     body: 
-      string: "{\"task_group_id\": \"c64e80c8-7722-4a62-a292-36b3e99e8d5f\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/b576e71d-9f1c-4c36-9fde-9e8cd6dbbb5a/\", \"task_id\": \"b576e71d-9f1c-4c36-9fde-9e8cd6dbbb5a\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:56Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"state\": \"NOT_STARTED\"}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"IN_PROGRESS\"}}}, \"call_request_group_id\": \"c64e80c8-7722-4a62-a292-36b3e99e8d5f\", \"call_request_id\": \"b576e71d-9f1c-4c36-9fde-9e8cd6dbbb5a\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": \"1efcfe87-042c-410f-a667-5bcafddf9271\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/8651a6ed-0d9c-4787-9725-3d41216ea60a/\", \"task_id\": \"8651a6ed-0d9c-4787-9725-3d41216ea60a\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:55Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"state\": \"NOT_STARTED\"}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"IN_PROGRESS\"}}}, \"call_request_group_id\": \"1efcfe87-042c-410f-a667-5bcafddf9271\", \"call_request_id\": \"8651a6ed-0d9c-4787-9725-3d41216ea60a\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:57 GMT
+  recorded_at: Fri, 21 Dec 2012 18:59:55 GMT
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/b576e71d-9f1c-4c36-9fde-9e8cd6dbbb5a/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/8651a6ed-0d9c-4787-9725-3d41216ea60a/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="CGp3XalqmlwRQRDDh0AFkZYs4FOrrILuskWbwJ14g", oauth_signature="kz6sl1vpFIxk8et463f9LgOIPMw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116395", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="CrXFMvd4thLjBk38UIdz3Jdef5rzuGHiTfdPhXtIII", oauth_signature="8mQFLv4HHLy2AWOE2bztAlFoRTc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453717", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:57 GMT
-      Content-Type: 
-      - application/json
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
-      - "1449"
+      - "1442"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:56 GMT
     body: 
-      string: "{\"task_group_id\": \"c64e80c8-7722-4a62-a292-36b3e99e8d5f\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/b576e71d-9f1c-4c36-9fde-9e8cd6dbbb5a/\", \"task_id\": \"b576e71d-9f1c-4c36-9fde-9e8cd6dbbb5a\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:56Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 3, \"size_total\": 17872, \"items_left\": 8, \"items_total\": 11, \"state\": \"IN_PROGRESS\", \"size_left\": 11196, \"details\": {\"tree_file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 3, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 3, \"size_total\": 17872, \"items_left\": 5, \"items_total\": 8, \"size_left\": 11196, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"c64e80c8-7722-4a62-a292-36b3e99e8d5f\", \"call_request_id\": \"b576e71d-9f1c-4c36-9fde-9e8cd6dbbb5a\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": \"1efcfe87-042c-410f-a667-5bcafddf9271\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/8651a6ed-0d9c-4787-9725-3d41216ea60a/\", \"task_id\": \"8651a6ed-0d9c-4787-9725-3d41216ea60a\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:55Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"running\", \"finish_time\": null, \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 11, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 11, \"state\": \"IN_PROGRESS\", \"size_left\": 0, \"details\": {\"tree_file\": {\"num_success\": 3, \"size_total\": 0, \"items_left\": 0, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 8, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 8, \"size_left\": 0, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"NOT_STARTED\"}, \"errata\": {\"state\": \"NOT_STARTED\"}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"1efcfe87-042c-410f-a667-5bcafddf9271\", \"call_request_id\": \"8651a6ed-0d9c-4787-9725-3d41216ea60a\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:57 GMT
+  recorded_at: Fri, 21 Dec 2012 18:59:56 GMT
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/b576e71d-9f1c-4c36-9fde-9e8cd6dbbb5a/
+    uri: https://kafka.usersys.redhat.com/pulp/api/v2/tasks/8651a6ed-0d9c-4787-9725-3d41216ea60a/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="HncnOwtEqUqCmFrvD6UmFZbl5WNpP5uYYNkuVSE14", oauth_signature="CRHxiJPAFlRn8ooCCtAC6uge9RI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116396", oauth_version="1.0"
+      Pulp-User: 
+      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="VGHEhlXJfSjUG5hSZ311L88BjsEeTydk2bRdU", oauth_signature="mHL7yCJM7bcJHSxYG8JyGsO0nlE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1353453718", oauth_version="1.0"
+      Accept: 
+      - application/json
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 20 Nov 2012 23:21:58 GMT
-      Content-Type: 
-      - application/json
       Server: 
       - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "1469"
+      Content-Type: 
+      - application/json
+      Date: 
+      - Fri, 21 Dec 2012 18:59:56 GMT
     body: 
-      string: "{\"task_group_id\": \"c64e80c8-7722-4a62-a292-36b3e99e8d5f\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/b576e71d-9f1c-4c36-9fde-9e8cd6dbbb5a/\", \"task_id\": \"b576e71d-9f1c-4c36-9fde-9e8cd6dbbb5a\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-11-20T23:21:56Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"finished\", \"finish_time\": \"2012-11-20T23:21:58Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 11, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 11, \"state\": \"FINISHED\", \"size_left\": 0, \"details\": {\"tree_file\": {\"num_success\": 3, \"size_total\": 0, \"items_left\": 0, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 8, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 8, \"size_left\": 0, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"FINISHED\"}, \"errata\": {\"state\": \"FINISHED\", \"num_errata\": 2}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"c64e80c8-7722-4a62-a292-36b3e99e8d5f\", \"call_request_id\": \"b576e71d-9f1c-4c36-9fde-9e8cd6dbbb5a\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
+      string: "{\"task_group_id\": \"1efcfe87-042c-410f-a667-5bcafddf9271\", \"exception\": null, \"traceback\": null, \"_href\": \"/pulp/api/v2/tasks/8651a6ed-0d9c-4787-9725-3d41216ea60a/\", \"task_id\": \"8651a6ed-0d9c-4787-9725-3d41216ea60a\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2012-12-21T18:59:55Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"finished\", \"finish_time\": \"2012-12-21T18:59:56Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 11, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 11, \"state\": \"FINISHED\", \"size_left\": 0, \"details\": {\"tree_file\": {\"num_success\": 3, \"size_total\": 0, \"items_left\": 0, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 8, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 8, \"size_left\": 0, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"FINISHED\"}, \"errata\": {\"state\": \"FINISHED\", \"num_errata\": 2}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"1efcfe87-042c-410f-a667-5bcafddf9271\", \"call_request_id\": \"8651a6ed-0d9c-4787-9725-3d41216ea60a\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}"
     http_version: 
-  recorded_at: Tue, 20 Nov 2012 23:21:58 GMT
-recorded_with: VCR 2.2.5
+  recorded_at: Fri, 21 Dec 2012 18:59:56 GMT

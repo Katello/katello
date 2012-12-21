@@ -74,7 +74,7 @@ module IndexedModel
         { :after_add => :reindex_on_association_change, :after_remove => :reindex_on_association_change }
       end
 
-      def reindex_on_association_change record
+      def reindex_on_association_change(record)
         record.update_index if record.respond_to? :update_index
       end
 

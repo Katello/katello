@@ -146,7 +146,7 @@ module ApplicationHelper
 
     # the path widget and entries classes allow the user to override the classes that will be applied to these
     # elements.  by default, they are set assuming the env selector will be displayed on a page (vs w/in a panel)
-    options[:path_widget_class] = "grid_10 prefix_3 suffix_3" if options[:path_widget_class].nil?
+    options[:path_widget_class] = "" if options[:path_widget_class].nil?
     options[:path_entries_class] = "grid_10" if options[:path_entries_class].nil?
 
     # allow user to include additional data attributes (urls) to retrieve other elements from the env, such as

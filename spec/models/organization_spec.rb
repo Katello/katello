@@ -19,7 +19,7 @@ describe Organization do
     Resources::Candlepin::Owner.stub!(:create_user).and_return(true)
     Resources::Candlepin::Owner.should_receive(:create).at_least(:once).and_return({})
     disable_env_orchestration
-    @organization = Organization.create(:name => 'test_organization', :label=>'test_organization')
+    @organization = Organization.create(:name => 'test_org_name', :label=>'test_org_label')
   end
 
   context "organization validation" do
@@ -36,8 +36,8 @@ describe Organization do
   end
 
   context "create an organization" do
-    specify {@organization.name.should == 'test_organization'}
-    specify {@organization.label.should == 'test_organization'}
+    specify {@organization.name.should == 'test_org_name'}
+    specify {@organization.label.should == 'test_org_label'}
     specify {@organization.library.should_not be_nil}
     specify {@organization.redhat_provider.should_not be_nil}
     specify {@organization.environments.should be_empty}
@@ -45,24 +45,60 @@ describe Organization do
     specify {Organization.where(:name => @organization.name).first.should == @organization}
     
     it "should complain on duplicate name" do
-      lambda{Organization.create!(:name => @organization.name, :label => @organization.name + "foo")}.should raise_error
+      lambda{
+        Organization.create!(:name => @organization.name, :label => @organization.name + "_changed")
+      }.should raise_error(ActiveRecord::RecordInvalid)
     end
     it "should complain on duplicate label" do
-      lambda{Organization.create!(:name => @organization.name + "foo", :label =>@organization.name)}.should raise_error
+      lambda{
+        Organization.create!(:name => @organization.name + "_changed", :label =>@organization.name)
+      }.should raise_error(ActiveRecord::RecordInvalid)
     end
-
+    it "should complain on duplicate name when label is taken" do
+      lambda{
+        Organization.create!(:name => @organization.label)
+      }.should raise_error(ActiveRecord::RecordInvalid)
+    end
+    it "should complain on duplicate label when name is taken" do
+      lambda{
+        Organization.create!(:label => @organization.name)
+      }.should raise_error(ActiveRecord::RecordInvalid)
+    end
   end
 
   context "update an organization" do
-    
-    it "can update the name" do
-      new_name = @organization.name + "1"
+    before(:each) do
+      @organization2 = Organization.create(:name => 'test_org_name2', :label=>'test_org_label2')
+    end
+    it "can update name" do
+      new_name = @organization.name + "_changed"
       @organization = Organization.update(@organization.id, {:name => new_name})
       @organization.name.should == new_name
     end
-
+    it "can update label" do
+      new_label = @organization.label + "_changed"
+      @organization = Organization.update(@organization.id, {:name => new_label})
+      @organization.name.should == new_label
+    end
+    it "name update is ok for overlapping label from the same org" do
+      @organization = Organization.update(@organization.id, {:name => @organization.label})
+      @organization.name.should == @organization.label
+    end
+    it "label update is ok for overlapping name from the same org" do
+      @organization = Organization.update(@organization.id, {:label => @organization.name})
+      @organization.label.should == @organization.name
+    end
+    it "name update should fail when already taken for different org" do
+      lambda{
+        @organization.update_attributes!({:name => @organization2.label})
+      }.should raise_error(ActiveRecord::RecordInvalid)
+    end
+    it "label update should fail when already taken for different org" do
+      lambda{
+        @organization.update_attributes!({:label => @organization2.name})
+      }.should raise_error(ActiveRecord::RecordInvalid)
+    end
   end
-  
 
   context "delete an organization" do
     before do

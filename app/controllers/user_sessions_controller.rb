@@ -17,6 +17,7 @@ class UserSessionsController < ApplicationController
   protect_from_forgery
 
   skip_before_filter :authorize # ok - need to skip all methods
+  layout "user_session"
 
   def section_id
     "loginpage"
@@ -30,7 +31,12 @@ class UserSessionsController < ApplicationController
       login_user
     else
       @disable_password_recovery = AppConfig.warden == 'ldap'
-      render "common/user_session", :layout => "converge-ui/login_layout"
+      set_locale
+      respond_to do |f|
+        f.html { render "new" }
+        f.json { render :js => "window.location = '#{user_session_logout_path.to_json}'" }
+        f.any { user_session_logout_path }
+      end
     end
   end
 

@@ -51,7 +51,6 @@ describe Api::RepositoriesController, :katello => true do
       ep = EnvironmentProduct.find_or_create(@organization.library, @product)
       @repository = new_test_repo(ep, "repo_1", "#{@organization.name}/Library/prod/repo")
       Repository.stub(:find).and_return(@repository)
-      Resources::Pulp::Repository.stub(:start_discovery).and_return({})
       PulpSyncStatus.stub(:using_pulp_task).and_return(task_stub)
       Runcible::Extensions::PackageGroup.stub(:all => {})
       Runcible::Extensions::PackageCategory.stub(:all => {})
@@ -112,20 +111,6 @@ describe Api::RepositoriesController, :katello => true do
       let(:req) { get :enable, :id => 1, :enable => 1 }
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:update, :providers, @provider.id, @organization) }
-      end
-      let(:unauthorized_user) do
-        user_without_permissions
-      end
-      it_should_behave_like "protected action"
-    end
-
-    describe "for discovery" do
-      let(:action) {:discovery}
-      let(:req) do
-        post 'discovery', :organization_id => "ACME", :url => url, :type => type
-      end
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:update, :organizations, @organization.id, @organization) }
       end
       let(:unauthorized_user) do
         user_without_permissions
@@ -292,43 +277,12 @@ describe Api::RepositoriesController, :katello => true do
       end
     end
 
-    describe "repository discovery" do
-      it "should call Resources::Pulp::Proxy.post" do
-        url  = "http://url.org"
-        type = "yum"
-
-        post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
-      end
-
-      context 'there is already a repo for the product with the same name' do
-        before do
-          Product.stub(:find_by_cp_id => @product)
-          @product.stub(:add_repo).and_return { raise Errors::ConflictException }
-        end
-
-        it "should notify about conflict" do
-          post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
-          response.code.should == '409'
-        end
-      end
-    end
-
     describe "show a repository" do
       it 'should call pulp glue layer' do
         repo_mock = mock(Repository)
         Repository.should_receive(:find).with("1").and_return(repo_mock)
         repo_mock.should_receive(:to_hash)
         get 'show', :id => '1'
-      end
-    end
-
-    describe "repository discovery" do
-      it "should call Resources::Pulp::Proxy.post" do
-        Resources::Pulp::Repository.should_receive(:start_discovery).with(url, type).once.and_return({})
-        PulpSyncStatus.should_receive(:using_pulp_task).with({}).and_return(task_stub)
-        Organization.stub!(:first).and_return(@organization)
-
-        post 'discovery', :organization_id => "ACME", :url => url, :type => type
       end
     end
 
