@@ -1909,7 +1909,7 @@ fi
   locale when using the info parameter. (ogmaciel@gnome.org)
 - Added --default_locale to CLI for user creation. (ogmaciel@gnome.org)
 - Fixed more spec tests (paji@redhat.com)
-- Fixed broken spec tests that occured after master merge (paji@redhat.com)
+- Fixed broken spec tests that occurred after master merge (paji@redhat.com)
 - Removed unused methods in the pulp and reporb (paji@redhat.com)
 - Moved the add+remove repo packages method to orchestration layer
   (paji@redhat.com)
@@ -5388,7 +5388,7 @@ fi
 - 730358 - repo discovery now uses asynchronous tasks - the route has been
   changed to /organizations/ID/repositories/discovery/
 - 735359 - Don't create content in CP when creating a repo.
-- Fixed a couple of errors that occured due to wrong sql in postgres
+- Fixed a couple of errors that occurred due to wrong sql in postgres
 - reset-dbs - katello-jobs are restarted now
 - Changes roles and permission success and error notices to include the name of
   the role/permission and fit the format of other pages.

@@ -156,8 +156,8 @@ Warden::Strategies.add(:oauth) do
     Rails.logger.error "Unknown oauth signature method"+ e.to_s
     fail!("Unknown oauth signature method"+ e.to_s)
   rescue => e
-    Rails.logger.error "exception occured while authenticating via oauth "+ e.to_s
-    fail!("exception occured while authenticating via oauth "+ e.to_s)
+    Rails.logger.error "exception occurred while authenticating via oauth "+ e.to_s
+    fail!("exception occurred while authenticating via oauth "+ e.to_s)
   end
 
   def consumer(consumer_key)
