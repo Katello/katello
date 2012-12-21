@@ -124,7 +124,8 @@ class CategoryInfo(PackageGroupAction):
             system_exit(os.EX_DATAERR, _("Package group category [%s] not found in repo [%s]") % (categoryId, repoid))
 
         self.printer.set_header(_("Package Group Category Information"))
-        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, {'packagegroupids': _("Package Group IDs")})
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, \
+            {'packagegroupids': _("Package Group IDs")})
 
         self.printer.print_item(category)
 
