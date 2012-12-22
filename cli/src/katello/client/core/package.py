@@ -157,7 +157,7 @@ class Search(List):
         if not repoId:
             return os.EX_DATAERR
         query   = self.get_option('query')
-        self.printer.set_header(_("Package List For Repo %s and Query %s") % (repoId, query))
+        self.printer.set_header(_("Package List For Repo %(repoId)s and Query %(query)s") % {'repoId':repoId, 'query':query})
 
         packages = self.api.search(query, repoId)
         self.print_packages(packages)

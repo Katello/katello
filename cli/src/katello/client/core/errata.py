@@ -119,7 +119,7 @@ class SystemErrata(ErrataAction):
         errata = systemApi.errata(system["uuid"])
 
         batch_add_columns(self.printer, 'id', 'title', 'type')
-        self.printer.set_header(_("Errata for system %s in organization %s") % (sys_name, org_name))
+        self.printer.set_header(_("Errata for system %(sys_name)s in organization %(org_name)s") % {'sys_name':sys_name, 'org_name':org_name})
         self.printer.print_items(errata)
 
         return os.EX_OK
@@ -151,7 +151,7 @@ class SystemGroupErrata(ErrataAction):
         self.printer.add_column('systems', _('# Systems'), formatter=len)
         self.printer.add_column('systems', multiline=True, show_with=printer.VerboseStrategy)
 
-        self.printer.set_header(_("Errata for system group %s in organization %s") % (group_name, org_name))
+        self.printer.set_header(_("Errata for system group %(org_name)s in organization %(org_name)s") % {'group_name':group_name, 'org_name':org_name})
         self.printer.print_items(errata)
 
         return os.EX_OK
