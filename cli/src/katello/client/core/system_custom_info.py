@@ -64,8 +64,8 @@ class AddCustomInfo(BaseSystemCustomInfo):
         ident = sys_uuid if sys_uuid else sys_name
 
         test_record(response,
-            _("Successfully added Custom Information [ %s : %s ] to System [ %s ]") % (keyname, value, ident),
-            _("Could not add Custom Information [ %s : %s ] to System [ %s ]") % (keyname, value, ident)
+            _("Successfully added Custom Information [ %(keyname)s : %(value)s ] to System [ %(ident)s ]") % {'keyname':keyname, 'value':value, 'ident':ident},
+            _("Could not add Custom Information [ %(keyname)s : %(value)s ] to System [ %(ident)s ]") % {'keyname':keyname, 'value':value, 'ident':ident}
         )
 
 
@@ -97,9 +97,8 @@ class UpdateCustomInfo(BaseSystemCustomInfo):
         ident = sys_uuid if sys_uuid else sys_name
 
         test_record(response,
-            _("Successfully updated Custom Information [ %s ] for System [ %s ]") % (keyname, ident),
-            _("Could not update Custom Information [ %s ] for System [ %s ]") % (keyname, ident)
-        )
+            _("Successfully updated Custom Information [ %(keyname)s ] for System [ %(ident)s ]") % {'keyname':keyname, 'ident':ident},
+            _("Could not update Custom Information [ %(keyname)s ] for System [ %(ident)s ]") % {'keyname':keyname, 'ident':ident}
 
 
 class RemoveCustomInfo(BaseSystemCustomInfo):

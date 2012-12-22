@@ -78,7 +78,7 @@ class List(SystemAction):
         if env_name is None:
             self.printer.set_header(_("Systems List For Org [ %s ]") % org_name)
         else:
-            self.printer.set_header(_("Systems List For Environment [ %s ] in Org [ %s ]") % (env_name, org_name))
+            self.printer.set_header(_("Systems List For Environment [ %(env_name)s ] in Org [ %(org_name)s ]") % {'env_name':env_name, 'org_name':org_name})
 
         batch_add_columns(self.printer, 'name', 'uuid')
         self.printer.add_column('environment',
@@ -116,7 +116,7 @@ class Info(SystemAction):
         elif env_name is None:
             self.printer.set_header(_("System Information For Org [ %s ]") % org_name)
         else:
-            self.printer.set_header(_("System Information For Environment [ %s ] in Org [ %s ]") % (env_name, org_name))
+            self.printer.set_header(_("System Information For Environment [ %(env_name)s ] in Org [ %(org_name)s ]") % {'env_name':env_name, 'org_name':org_name})
 
         # get system details
         system = get_system(org_name, sys_name, env_name, sys_uuid)
@@ -199,10 +199,10 @@ class InstalledPackages(SystemAction):
         task = None
 
         if env_name is None:
-            self.printer.set_header(_("Package Information for System [ %s ] in Org [ %s ]") % (sys_name, org_name))
+            self.printer.set_header(_("Package Information for System [ %(sys_name)s ] in Org [ %(org_name)s ]") % {'sys_name':sys_name, 'org_name':org_name})
         else:
-            self.printer.set_header(_("Package Information for System [ %s ] in Environment [ %s ] in Org [ %s ]") %
-                (sys_name, env_name, org_name))
+            self.printer.set_header(_("Package Information for System [ %(sys_name)s ] in Environment [ %(env_name)s ] in Org [ %(org_name)s ]") %
+                {'sys_name':sys_name, 'env_name':env_name, 'org_name':org_name})
 
         system = get_system(org_name, sys_name, env_name, sys_uuid)
         system_id = system['uuid']
@@ -384,11 +384,11 @@ class Facts(SystemAction):
         sys_uuid = self.get_option('uuid')
 
         if env_name is None:
-            self.printer.set_header(_("System Facts For System [ %s ] in Org [ %s ]") %
-                (sys_name if sys_name else sys_uuid, org_name))
+            self.printer.set_header(_("System Facts For System [ %(sys_name)s ] in Org [ %(org_name)s ]") %
+                {'sys_name':sys_name if sys_name else sys_uuid, 'org_name':org_name})
         else:
-            self.printer.set_header(_("System Facts For System [ %s ] in Environment [ %s ] in Org [ %s ]") %
-                (sys_name, env_name, org_name))
+            self.printer.set_header(_("System Facts For System [ %(sys_name)s ] in Environment [ %(env_name)s ] in Org [ %(org_name)s ]") %
+                {'sys_name':sys_name, 'env_name':env_name, 'org_name':org_name})
 
         system = get_system(org_name, sys_name, env_name, sys_uuid)
 
@@ -570,7 +570,7 @@ class Subscriptions(SystemAction):
             # listing current subscriptions
             result = self.api.subscriptions(uuid)
             if result == None or len(result['entitlements']) == 0:
-                print _("No Subscriptions found for System [ %s ] in Org [ %s ]") % (display_name, org)
+                print _("No Subscriptions found for System [ %(display_name)s ] in Org [ %(org)s ]") % {'display_name':display_name, 'org':org}
                 return os.EX_OK
 
             def entitlements():
@@ -593,7 +593,7 @@ class Subscriptions(SystemAction):
             result = self.api.available_pools(uuid, match_system, match_installed, no_overlap)
 
             if result == None or len(result) == 0:
-                print _("No Pools found for System [ %s ] in Org [ %s ]") % (display_name, org)
+                print _("No Pools found for System [ %(display_name)s ] in Org [ %(org)s ]") % {'display_name':display_name, 'org':org}
                 return os.EX_OK
 
             def available_pools():
