@@ -166,8 +166,8 @@ class Create(ChangesetAction):
         env = get_environment(orgName, envName)
         cset = self.api.create(orgName, env["id"], csName, csType, csDescription)
         test_record(cset,
-            _("Successfully created changeset [ %s ] for environment [ %s ]") % (csName, env["name"]),
-            _("Could not create changeset [ %s ] for environment [ %s ]") % (csName, env["name"])
+            _("Successfully created changeset [ %(csName)s ] for environment [ %(env_name)s ]") % {'csName':csName, 'env_name':env["name"]},
+            _("Could not create changeset [ %(csName)s ] for environment [ %(env_name)s ]") % {'csName':csName, 'env_name':env["name"]}
         )
 
         return os.EX_OK
@@ -514,7 +514,7 @@ class Apply(ChangesetAction):
             print _("Changeset [ %s ] applied" % csName)
             return os.EX_OK
         else:
-            print _("Changeset [ %s ] promotion failed: %s" % (csName, format_task_errors(task.errors())))
+            print _("Changeset [ %(csName)s ] promotion failed: %(task_errors)s" % {'csName':csName, 'task_errors':format_task_errors(task.errors())})
             return os.EX_DATAERR
 
 # ==============================================================================

@@ -285,7 +285,7 @@ class Update(TemplateAction):
 
     def _store_parameter_value(self, option, opt_str, value, parser):
         if self.current_parameter == None:
-            raise OptionValueError(_("each %s must be preceeded by %s") % (option, "--add_parameter") )
+            raise OptionValueError(_("each %(option)s must be preceeded by %(paramater)s") % {'option':option, 'parameter':"--add_parameter"} )
 
         self.items['add_parameters'][self.current_parameter] = u_str(value)
         self.current_parameter = None

@@ -179,7 +179,7 @@ class AddPackage(FilterAction):
         filter_info = self.api.info(org, name)
         self.api.update_packages(org, name, filter_info["package_list"] + [package_id])
 
-        print _("Successfully added package [ %s ] to filter [ %s ]") % (package_id, name)
+        print _("Successfully added package [ %(package_id)s ] to filter [ %(name)s ]") % {'package_id':package_id, 'name':name}
         return os.EX_OK
 
 class RemovePackage(FilterAction):
@@ -206,7 +206,7 @@ class RemovePackage(FilterAction):
 
         self.api.update_packages(org, name, package_list)
 
-        print _("Successfully removed package [ %s ] from filter [ %s ]") % (package_id, name)
+        print _("Successfully removed package [ %(package_id)s ] from filter [ %(name)s ]") % {'package_id':package_id, 'name':name}
         return os.EX_OK
 
 
