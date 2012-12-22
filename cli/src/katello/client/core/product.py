@@ -150,13 +150,13 @@ class List(ProductAction):
         if prov_name:
             prov = get_provider(org_name, prov_name)
 
-            self.printer.set_header(_("Product List For Provider %s") % (prov_name))
+            self.printer.set_header(_("Product List For Provider [ %s ]") % (prov_name))
             prods = self.api.products_by_provider(prov["id"])
 
         else:
             env = get_environment(org_name, env_name)
 
-            self.printer.set_header(_("Product List For Organization %s, Environment '%s'") % (org_name, env["name"]))
+            self.printer.set_header(_("Product List For Organization [ %s ], Environment [ %s ]") % (org_name, env["name"]))
             prods = self.api.products_by_env(env['id'])
 
         # hide marketing products by default
@@ -364,7 +364,7 @@ class Create(ProductAction):
 
         if not nodiscovery:
             repourls = self.discoverRepos.discover_repositories(orgName, url)
-            self.printer.set_header(_("Repository Urls discovered @ [%s]" % url))
+            self.printer.set_header(_("Repository Urls discovered @ [ %s ]" % url))
             selectedurls = self.discoverRepos.select_repositories(repourls, assumeyes)
             self.discoverRepos.create_repositories(orgName, prod["id"], prod["name"], prod["label"], selectedurls)
 
