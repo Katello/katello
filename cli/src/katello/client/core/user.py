@@ -42,8 +42,10 @@ class List(UserAction):
     def run(self):
         users = self.api.users()
 
-        batch_add_columns(self.printer, 'id', 'username', 'email', \
-            'disabled', 'default_organization', 'default_environment')
+        batch_add_columns(self.printer, {'id': _("ID")}, {'username': _("Username")}, \
+            {'email': _("Email")}, {'disabled': _("Disabled")}, \
+            {'default_organization': _("Default Organization")}, \
+            {'default_environment': _("Default Environment")})
 
         self.printer.set_header(_("User List"))
         self.printer.print_items(users)
@@ -109,8 +111,11 @@ class Info(UserAction):
 
         user = get_user(username)
 
-        batch_add_columns(self.printer, 'id', 'username', 'email', 'disabled', \
-            'default_organization', 'default_environment', 'default_locale')
+        batch_add_columns(self.printer, {'id': _("ID")}, {'username': _("Username")}, \
+            {'email': _("Email")}, {'disabled': _("Disabled")}, \
+            {'default_organization': _("Default Organization")}, \
+            {'default_environment': _("Default Environment")}, \
+            {'default_locale': _("Default Locale")})
         self.printer.set_header(_("User Information"))
 
         # Add user locale to user dictionary
@@ -216,8 +221,8 @@ class ListRoles(UserAction):
 
         roles = self.api.roles(user['id'])
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
         self.printer.set_header(_("User Role List"))
         self.printer.print_items(roles)
         return os.EX_OK

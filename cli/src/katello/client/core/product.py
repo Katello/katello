@@ -141,9 +141,11 @@ class List(ProductAction):
         prov_name = self.get_option('prov')
         all_opt = self.get_option('all')
 
-        batch_add_columns(self.printer, 'id', 'name', 'label', 'provider_id', 'provider_name', 'sync_plan_name')
-        self.printer.add_column('last_sync', formatter=format_sync_time)
-        self.printer.add_column('gpg_key_name', name=_("GPG key"))
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, \
+            {'label': _("Label")}, {'provider_id': _("Provider ID")}, \
+            {'provider_name': _("Provider Name")}, {'sync_plan_name': _("Sync Plan Name")})
+        self.printer.add_column('last_sync', _("Last Sync"), formatter=format_sync_time)
+        self.printer.add_column('gpg_key_name', _("GPG key"))
 
         if prov_name:
             prov = get_provider(org_name, prov_name)
@@ -241,10 +243,11 @@ class Status(SingleProductAction):
 
         #TODO: last errors?
 
-        batch_add_columns(self.printer, 'id', 'name', 'provider_id', 'provider_name')
-        self.printer.add_column('last_sync', formatter=format_sync_time)
-        self.printer.add_column('sync_state', formatter=format_sync_state)
-        self.printer.add_column('progress', show_with=printer.VerboseStrategy)
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, \
+            {'provider_id': _("Provider ID")}, {'provider_name': _("Provider Name")})
+        self.printer.add_column('last_sync', _("Last Sync"), formatter=format_sync_time)
+        self.printer.add_column('sync_state', _("Sync State"), formatter=format_sync_state)
+        self.printer.add_column('progress', _("Progress"), show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Product Status"))
         self.printer.print_item(prod)
@@ -433,8 +436,8 @@ class ListFilters(SingleProductAction):
         prod = get_product(orgName, prodName, prodLabel, prodId)
 
         filters = self.api.filters(orgName, prod['id'])
-        self.printer.add_column('name')
-        self.printer.add_column('description')
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('description', _("Description"))
         self.printer.set_header(_("Product Filters"))
         self.printer.print_items(filters)
 

@@ -65,11 +65,11 @@ class List(TemplateAction):
         if not templates:
             print _("No templates found in environment [ %s ]") % environment["name"]
             return os.EX_OK
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('description', multiline=True)
-        self.printer.add_column('environment_id')
-        self.printer.add_column('parent_id')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('description', _("Description"), multiline=True)
+        self.printer.add_column('environment_id', _("Environment ID"))
+        self.printer.add_column('parent_id', _("Parent ID"))
 
         self.printer.set_header(_("Template List"))
         self.printer.print_items(templates)
@@ -105,16 +105,16 @@ class Info(TemplateAction):
         template["package_group_categories"] = [p["name"] for p in template["pg_categories"]]
 
 
-        batch_add_columns(self.printer, 'id', 'name')
-        self.printer.add_column('revision', show_with=printer.VerboseStrategy)
-        self.printer.add_column('description', multiline=True)
-        self.printer.add_column('environment_id')
-        self.printer.add_column('parent_id')
-        batch_add_columns(self.printer, \
-            'errata', 'products', 'repositories', \
-            'packages', 'parameters', 'package_groups', \
-            'package_group_categories', \
-            multiline=True, show_with=printer.VerboseStrategy)
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")})
+        self.printer.add_column('revision', _("Revision"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('description', _("Description"), multiline=True)
+        self.printer.add_column('environment_id', _("Environment ID"))
+        self.printer.add_column('parent_id', _("Parent ID"))
+        batch_add_columns(self.printer, {'errata': _("Errata")}, {'products': _("Products")}, \
+            {'repositories': _("Repositories")}, {'packages': _("Packages")}, \
+            {'parameters': _("Parameters")}, {'package_groups': _("Package Groups")}, \
+            {'package_group_categories': _("Package Group Categories")}, multiline=True, \
+            show_with=printer.VerboseStrategy)
         self.printer.set_header(_("Template Info"))
         self.printer.print_item(template)
         return os.EX_OK

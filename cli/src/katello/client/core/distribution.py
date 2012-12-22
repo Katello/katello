@@ -62,9 +62,9 @@ class List(DistributionAction):
         prodLabel = self.get_option('product_label')
         prodId   = self.get_option('product_id')
 
-        self.printer.add_column('id')
-        self.printer.add_column('description')
-        self.printer.add_column('files', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('description', _("Description"))
+        self.printer.add_column('files', _("Files"), multiline=True, show_with=printer.VerboseStrategy)
 
         if not repoId:
             repo = get_repo(orgName, prodName, prodLabel, prodId, repoName, envName)
@@ -89,7 +89,7 @@ class Info(DistributionAction):
         parser.add_option('--repo_id', dest='repo_id',
                       help=_("repository ID (required)"))
         parser.add_option('--id', dest='id',
-                               help=_("distribution ID eg: ks-rh-noarch (required)"))
+                      help=_("distribution ID eg: ks-rh-noarch (required)"))
 
     def check_options(self, validator):
         validator.require(('repo_id', 'id'))
@@ -100,9 +100,10 @@ class Info(DistributionAction):
 
         data = self.api.distribution(repoId, dist_id)
 
-        batch_add_columns(self.printer,
-            'id', 'description', 'family', 'variant', 'version')
-        self.printer.add_column('files', multiline=True, show_with=printer.VerboseStrategy)
+        batch_add_columns(self.printer, {'id': _("ID")}, {'description': _("Description")}, \
+            {'family': _("Family")}, {'variant': _("Variant")}, {'version': _("Version")})
+        self.printer.add_column('files', _("Files"), multiline=True, \
+            show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Distribution Information"))
 
