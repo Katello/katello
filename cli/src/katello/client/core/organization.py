@@ -20,7 +20,8 @@ from katello.client.api.organization import OrganizationAPI
 from katello.client.api.product import ProductAPI
 from katello.client.api.organization_system_info_keys import OrganizationSystemInfoKeysAPI
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import test_record, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_task_errors
+from katello.client.core.utils import test_record, run_spinner_in_bg, wait_for_async_task, AsyncTask, \
+    format_task_errors
 from katello.client.utils.printer import VerboseStrategy
 from katello.client.utils import printer
 from datetime import timedelta, datetime
@@ -141,7 +142,8 @@ class Delete(OrganizationAction):
             print _("Successfully deleted org [ %s ]") % name
             return os.EX_OK
         else:
-            print _("Organization [ %s ] deletion failed: %s" % (name, format_task_errors(task.errors())) )
+            print _("Organization [ %(name)s ] deletion failed: %(format_task_errors)s" \
+                % {'name':name, 'format_task_errors':format_task_errors(task.errors())} )
             return os.EX_DATAERR
 
 # ------------------------------------------------------------------------------
@@ -282,9 +284,11 @@ class AddDefaultSystemInfo(OrganizationAction):
         response = self.system_info_keys_api.create(org_name, keyname)
 
         if response:
-            print _("Successfully added default custom info key [ %s ] to Org [ %s ]") % (keyname, org_name)
+            print _("Successfully added default custom info key [ %(keyname)s ] to Org [ %(org_name)s ]") \
+                % {'keyname':keyname, 'org_name':org_name}
         else:
-            print _("Could not add default custom info key [ %s ] to Org [ %s ]") % (keyname, org_name)
+            print _("Could not add default custom info key [ %(keyname)s ] to Org [ %(org_name)s ]") \
+                % {'keyname':keyname, 'org_name':org_name}
 
 # ------------------------------------------------------------------------------
 
@@ -310,9 +314,11 @@ class RemoveDefaultSystemInfo(OrganizationAction):
         response = self.system_info_keys_api.destroy(org_name, keyname)
 
         if not keyname in response:
-            print _("Successfully removed default custom info key [ %s ] for Org [ %s ]") % (keyname, org_name)
+            print _("Successfully removed default custom info key [ %(keyname)s ] for Org [ %(org_name)s ]") \
+                % {'keyname':keyname, 'org_name':org_name}
         else:
-            print _("Could not remove default custom info key [ %s ] for Org [ %s ]") % (keyname, org_name)
+            print _("Could not remove default custom info key [ %(keyname)s ] for Org [ %(org_name)s ]") \
+                % {'keyname':keyname, 'org_name':org_name}
 
 # ------------------------------------------------------------------------------
 
@@ -336,8 +342,9 @@ class ApplyDefaultSystemInfo(OrganizationAction):
         response = self.system_info_keys_api.apply(org_name)
 
         if response:
-            print _("Successfully applied default custom info keys to [ %d ] systems in Org [ %s ]")\
-                  % (len(response), org_name)
+            print _("Successfully applied default custom info keys to \
+                  [ %(sys_count)d ] systems in Org [ %(org_name)s ]") \
+                  % {'sys_count':len(response), 'org_name':org_name}
         elif  len(response) == 0:
             print _("No default custom info keys to apply in Org [ %s ]") % org_name
         else:
