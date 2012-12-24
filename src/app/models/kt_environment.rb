@@ -14,6 +14,8 @@ class KTEnvironment < ActiveRecord::Base
 
   include Authorization::Environment
   include Glue::ElasticSearch::Environment if Katello.config.use_elasticsearch
+  include Glue::Candlepin::Environment if Katello.config.use_cp
+  include Glue::Foreman::Environment if AppConfig.use_foreman
   include Glue if Katello.config.use_cp || Katello.config.use_pulp
 
   set_table_name "environments"
