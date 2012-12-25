@@ -84,7 +84,7 @@ class Create(PermissionAction):
         try:
             return [tag_map[t] for t in tags]
         except KeyError, e:
-            system_exit(os.EX_DATAERR, _("Could not find tag [ %s ] in scope of [ %s ]") % (e[0], scope))
+            system_exit(os.EX_DATAERR, _("Could not find tag [ %(e)s ] in scope of [ %(scope)s ]") % {'e':e[0], 'scope':scope})
 
 
     def run(self):
@@ -103,7 +103,7 @@ class Create(PermissionAction):
 
         permission = self.api.create(role['id'], name, desc, scope, verbs, tag_ids, org_name, all_tags)
         test_record(permission,
-            _("Successfully created permission [ %s ] for user role [ %s ]") % (name, role['name']),
+            _("Successfully created permission [ %(name)s ] for user role [ %(role)s ]") % {'name':name, 'role':role['name']},
             _("Could not create permission [ %s ]") % name
         )
 
@@ -127,7 +127,7 @@ class Delete(PermissionAction):
         perm = get_permission(role_name, name)
 
         self.api.delete(role['id'], perm['id'])
-        print _("Successfully deleted permission [ %s ] for role [ %s ]") % (name, role_name)
+        print _("Successfully deleted permission [ %(name)s ] for role [ %(role_name)s ]") % {'name':name, 'role_name':role_name}
         return os.EX_OK
 
 

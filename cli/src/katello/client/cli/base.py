@@ -68,7 +68,7 @@ def opt_parser_add_environment(parser, required=None, default=''):
     if default:
         default = _(" (default: %s)") % default
     parser.add_option('--environment', dest='environment',
-                      help=_('environment name e.g.: production%s%s') % (required, default))
+                      help=_('environment name e.g.: production%(required)s%(default)s') % {'required':required, 'default':default})
 
 class OptionException(Exception):
     """
