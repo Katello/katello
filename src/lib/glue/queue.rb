@@ -61,7 +61,7 @@ module Glue
     end
 
     def to_log
-      all.collect { |i| i.to_log }.join(", ")
+      all.collect(&:to_log).join ", "
     end
 
     STATUS.each do |s|
