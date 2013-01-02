@@ -89,6 +89,7 @@ Src::Application.routes.draw do
       get :status
       get :content
       post :update_content
+      get :filter
     end
     resources :content_view, :only => [], :controller => :content_view_definitions do
       member do
