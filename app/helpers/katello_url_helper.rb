@@ -16,7 +16,8 @@ module KatelloUrlHelper
     PORT = /(([:]\d{1,5})?)/
     PROTOCOLS = /(https?|ftp):\/\//ix 
     FILEPREFIX = /(^file:\/\/)|^\//ix # is this a file based url
-    DOMAIN = /([a-z0-9\-]+\.?)*([a-z0-9]{2,})\.[a-z]{2,}/  
+    # validation of hostname according to RFC952 and RFC1123
+    DOMAIN = /(?:(?:(?:(?:[a-z0-9][-a-z0-9]{0,61})?[a-z0-9])[.])*(?:[a-z][-a-z0-9]{0,61}[a-z0-9]|[a-z])[.]?)/
     IPV4 = /(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/
     #TODO: ipv6 support
     #IPV6 = /(?:[0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4}/
