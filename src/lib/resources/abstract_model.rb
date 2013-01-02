@@ -136,9 +136,8 @@ class Resources::AbstractModel
     raise ArgumentError, "unknown attributes: #{attributes.keys.join(', ')}" unless attributes.empty?
   end
 
-  singleton_class.instance_eval { attr_writer :resource }
-
-  def self.resource
+  def self.resource(res=nil)
+    @resource = res unless res.nil?
     @resource
   end
 
@@ -189,7 +188,7 @@ class Resources::AbstractModel
   def create
     run_callbacks :create do
       data, response = resource.create as_json(json_create_options), self.class.header
-      self.id        = data[resource_name]['id']
+      self.id        = data[resource_name.to_s]['id']
       set_as_persisted
     end
   end
