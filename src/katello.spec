@@ -383,7 +383,8 @@ fi
 
     #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
     echo Generating gettext files...
-    ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")'
+    LC_ALL=C ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")' 2>&1 \
+      | sed -e '/Warning: obsolete msgid exists./,+1d' | sed -e '/Warning: fuzzy message was ignored./,+1d'
 %endif
 
 #man pages
@@ -573,7 +574,7 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %{_mandir}/man8/katello-service.8*
 
 %files common
-%doc README LICENSE
+%doc LICENSE
 %{_sbindir}/service-wait
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %attr(600, katello, katello) %{_sysconfdir}/%{name}/%{name}.yml
@@ -602,6 +603,8 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_sql.log
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs.log
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs_sql.log
+%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_orch.log
+%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs_orch.log
 
 %files glue-pulp
 %{homedir}/app/models/glue/pulp
@@ -1913,7 +1916,7 @@ fi
   locale when using the info parameter. (ogmaciel@gnome.org)
 - Added --default_locale to CLI for user creation. (ogmaciel@gnome.org)
 - Fixed more spec tests (paji@redhat.com)
-- Fixed broken spec tests that occured after master merge (paji@redhat.com)
+- Fixed broken spec tests that occurred after master merge (paji@redhat.com)
 - Removed unused methods in the pulp and reporb (paji@redhat.com)
 - Moved the add+remove repo packages method to orchestration layer
   (paji@redhat.com)
@@ -5392,7 +5395,7 @@ fi
 - 730358 - repo discovery now uses asynchronous tasks - the route has been
   changed to /organizations/ID/repositories/discovery/
 - 735359 - Don't create content in CP when creating a repo.
-- Fixed a couple of errors that occured due to wrong sql in postgres
+- Fixed a couple of errors that occurred due to wrong sql in postgres
 - reset-dbs - katello-jobs are restarted now
 - Changes roles and permission success and error notices to include the name of
   the role/permission and fit the format of other pages.

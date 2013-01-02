@@ -10,6 +10,7 @@ if caller.last =~ /script\/delayed_job:\d+$/ ||
       KatelloLogger.new("#{Rails.root}/log/#{Rails.env}_delayed_jobs.log", Katello.config.log_level)
   ActiveRecord::Base.logger =
       KatelloLogger.new("#{Rails.root}/log/#{Rails.env}_delayed_jobs_sql.log", Katello.config.log_level_sql)
+  Glue.logger = KatelloLogger.new("#{Rails.root}/log/production_delayed_jobs_orch.log", 'INFO')
 end
 
 Delayed::Worker.destroy_failed_jobs = false

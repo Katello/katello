@@ -58,11 +58,12 @@ class Provider < ActiveRecord::Base
   end
 
   def prevent_redhat_deletion
-    if redhat_provider?
-      errors.add(:base, _("Red Hat provider can not be deleted"))
-      return false
+    if !being_deleted? && redhat_provider?
+      Rails.logger.error _("Red Hat provider can not be deleted")
+      false
+    else
+      true
     end
-    true
   end
 
   def constraint_redhat_update
@@ -110,6 +111,10 @@ class Provider < ActiveRecord::Base
     # we need the organization info to be present in the provider
     # so that we can properly phase out the orchestration and handle search indices.
     (read_attribute(:organization) || Organization.unscoped.find(self.organization_id)) if self.organization_id
+  end
+
+  def being_deleted?
+    ! organization.task_id.nil?
   end
 
   #permissions

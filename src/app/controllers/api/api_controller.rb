@@ -39,7 +39,10 @@ class Api::ApiController < ActionController::Base
   rescue_from HttpErrors::BadRequest, :with => proc { |e| render_wrapped_exception(400, e) }
   rescue_from HttpErrors::Conflict, :with => proc { |e| render_wrapped_exception(409, e) }
 
-  rescue_from Errors::SecurityViolation, :with => proc { |e| render_exception(403, e) }
+  rescue_from(Errors::SecurityViolation, :with => proc do |e|
+    logger.warn pp_exception(e, :with_body => false, :with_backtrace => false)
+    render_exception_without_logging(403, e)
+  end)
   rescue_from Errors::ConflictException, :with => proc { |e| render_exception(409, e) }
   rescue_from Errors::UnsupportedActionException, :with => proc { |e| render_exception(400, e) }
   rescue_from Errors::UsageLimitExhaustedException, :with => proc { |e| render_exception_without_logging(409, e) }
@@ -203,12 +206,12 @@ class Api::ApiController < ActionController::Base
   end
 
   def pp_exception(exception, options = { })
-    options = options.reverse_merge(:with_class => true, :with_body => true)
+    options = options.reverse_merge(:with_class => true, :with_body => true, :with_backtrace => true)
     message = ""
     message << "#{exception.class}: " if options[:with_class]
     message << "#{exception.message}\n"
     message << "Body: #{exception.http_body}\n" if options[:with_body] && exception.respond_to?(:http_body)
-    message << exception.backtrace.join("\n")
+    message << exception.backtrace.join("\n") if options[:with_backtrace]
     message
   end
 

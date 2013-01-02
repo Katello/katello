@@ -57,8 +57,10 @@ class Remember(ClientAction):
 
         try:
             Config.save()
-            verb = "overwrote" if has_option else "remembered"
-            print _("Successfully " + verb + " option [ %s ] ") % u_str(option)
+            if has_option:
+                print _("Successfully overwrote option [ %s ] ") % u_str(option)
+            else:
+                print _("Successfully remembered option [ %s ] ") % u_str(option)
         except (Exception):
             print _("Unsuccessfully remembered option [ %s ]") % u_str(option)
             raise # re-raise to get into main method -> log
@@ -109,8 +111,8 @@ class SavedOptions(ClientAction):
 
             options_list = [{'option': o, 'value': Config.parser.get('options', o)} for o in options]
 
-            self.printer.add_column('option')
-            self.printer.add_column('value')
+            self.printer.add_column('option', _("Option"))
+            self.printer.add_column('value', _("Value"))
             self.printer.print_items(options_list)
 
         return os.EX_OK

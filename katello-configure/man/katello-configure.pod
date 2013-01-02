@@ -20,6 +20,14 @@ on the command line. The values from user answer file override the
 default configuration values, and they are further overriden by
 options specified on the command line.
 
+All configuration options provided are stored in the
+/etc/katello/katello-configure.conf file which is always loaded 
+on subsequent executions of katello-configure. To override a value,
+provide it on the commandline or edit the configuration file.
+
+All the default options are stored in the
+/usr/share/katello/install/default-answer-file.
+
 =head1 COMMAND LINE PARAMETERS
 
 =over 4
@@ -46,6 +54,21 @@ collected from user answer files and command line options.
 Display short summary of all options.
 
 =back
+
+=head1 EXAMPLE
+
+First Katello configuration with the most typical options:
+
+  katello-configure --user-name=superadmin \
+    --user-pass=MyPassWord123 \
+    --user-email=my.email@foobar.com \
+    --org-name=foobar_inc
+
+Additional change of ElasticSearch heap memory value:
+
+  katello-configure --es-min-mem=512m --es-max-mem=1024m
+
+All the parameters are kept in the answer file.
 
 =head1 VERSION
 

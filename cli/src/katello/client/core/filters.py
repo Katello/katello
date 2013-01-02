@@ -46,8 +46,8 @@ class List(FilterAction):
 
         filters = self.api.filters(org)
 
-        self.printer.add_column('name')
-        self.printer.add_column('description')
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('description', _("Description"))
 
         self.printer.set_header(_("Filter List"))
         self.printer.print_items(filters)
@@ -146,9 +146,9 @@ class Info(FilterAction):
 
         filter_info = self.api.info(org, name)
 
-        self.printer.add_column('name')
-        self.printer.add_column('description')
-        self.printer.add_column('package_list', formatter=self.package_list_as_string)
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('description', _("Description"))
+        self.printer.add_column('package_list', _("Package List"), formatter=self.package_list_as_string)
 
         self.printer.set_header(_("Filter Information"))
         self.printer.print_item(filter_info)

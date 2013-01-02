@@ -30,7 +30,7 @@ test_success "system group delete " system_group delete --name $SYS_GROUP_NAME -
 
 test_success "system subscriptions" system subscriptions --org="$TEST_ORG" --name="$SYSTEM_NAME_ADMIN" --available
 test_success "system subscriptions uuid" system subscriptions --org="$TEST_ORG" --uuid="$UUID" --available
-POOL_ID=$($CMD system subscriptions --org="$TEST_ORG" --name="$SYSTEM_NAME_ADMIN" --available -v | grep Id | grep -oE '[a-z0-9]{32}' | head -n1)
+POOL_ID=$($CMD system subscriptions --org="$TEST_ORG" --name="$SYSTEM_NAME_ADMIN" --available -v | grep ID | grep -oE '[a-z0-9]{32}' | head -n1)
 test_success "system subscribe" system subscribe --org="$TEST_ORG" --name="$SYSTEM_NAME_ADMIN" --pool="$POOL_ID"
 test_success "system unsubscribe" system unsubscribe --org="$TEST_ORG" --name="$SYSTEM_NAME_ADMIN" --all
 test_success "system subscribe" system subscribe --org="$TEST_ORG" --uuid="$UUID" --pool="$POOL_ID"
