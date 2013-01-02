@@ -73,14 +73,22 @@ module Katello
         end
       end
 
+      # TODO - once we upgrade to 3.2 we need to test if request.uuid works (check the orchestration log)
+      raise "Please test request.uuid with Rails 3.2+ ^^^" if Rails.version.starts_with? "3.2"
       def thread_locals
+        # store request uuid (for Rails 3.2+ we can use Request.uuid)
+        Thread.current[:request_uuid] = request.respond_to?(:uuid) ? request.uuid : SecureRandom.hex(16)
+
+        # store user
         u = current_user
         User.current = u
+        
         yield
-        # reset the current user just for the case
+        
+        # reset the current user (for security reasons)
         User.current = nil
       rescue => exception
-        # reset the current user just for the case
+        # reset the current user (for security reasons)
         User.current = nil
         raise
       end

@@ -17,7 +17,9 @@ class katello::config {
     "${katello::params::log_base}/production.log",
     "${katello::params::log_base}/production_sql.log",
     "${katello::params::log_base}/production_delayed_jobs.log",
-    "${katello::params::log_base}/production_delayed_jobs_sql.log"]:
+    "${katello::params::log_base}/production_delayed_jobs_sql.log",
+    "${katello::params::log_base}/production_orch.log",
+    "${katello::params::log_base}/production_delayed_jobs_orch.log"]:
       owner   => $katello::params::user,
       group   => $katello::params::group,
       content => "",
