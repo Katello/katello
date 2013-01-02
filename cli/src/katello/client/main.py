@@ -362,4 +362,5 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         resource_cmd = compute_resource.ComputeResource()
         resource_cmd.add_command('list', compute_resource.List())
         resource_cmd.add_command('info', compute_resource.Info())
+        resource_cmd.add_command('create', compute_resource.Create())
         katello_cmd.add_command('compute_resource', resource_cmd)

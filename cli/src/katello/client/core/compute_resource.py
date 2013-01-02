@@ -107,6 +107,50 @@ class Info(ComputeResourceAction):
         return os.EX_OK
 
 
+class Create(ComputeResourceAction):
+
+    description = _('create compute resource')
+
+    PROVIDER_TYPES = [ 'Libvirt', 'Ovirt', 'EC2', 'Vmware', 'Openstack', 'Rackspace' ]
+
+    PROVIDER_REQUIRED_OPTS = {
+        'ovirt':     ('user', 'password', 'uuid'),
+        'ec2':       ('user', 'password', 'region'),
+        'vmware':    ('user', 'password', 'uuid', 'server'),
+        'openstack': ('user', 'password', 'tenant'),
+        'rackspace': ('user', 'password', 'region')
+    }
+
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name', help=_("COmpute resource name (required)"))
+        parser.add_option('--provider', dest='provider',
+            type='choice', case_sensitive=False,
+            choices=self.PROVIDER_TYPES,
+            help=_("Providers include Libvirt, Ovirt, EC2, Vmware, Openstack, Rackspace (required)"))
+        parser.add_option('--url', dest='url', type='url', help=_("URL for Libvirt, Ovirt, and Openstack (required)"))
+        parser.add_option('--description', dest='description', help=_(""))
+        parser.add_option('--user', dest='user', help=_("Username for Ovirt, Vmware, Openstack. Access Key for EC2."))
+        parser.add_option('--password', dest='password', help=_("Password for Ovirt, Vmware, Openstack. Secret key for EC2"))
+        parser.add_option('--uuid', dest='uuid', help=_("for Ovirt, Vmware Datacenter"))
+        parser.add_option('--region', dest='region', help=_("for EC2 only"))
+        parser.add_option('--tenant', dest='tenant', help=_("for Openstack only"))
+        parser.add_option('--server', dest='server', help=_("for Vmware"))
+
+    def check_options(self, validator):
+        validator.require(('name', 'provider', 'url'))
+
+        provider_type = self.get_option('provider', '').lower()
+        provider_specific_opts = self.PROVIDER_REQUIRED_OPTS.get(provider_type, tuple())
+        validator.require(provider_specific_opts)
+
+    def run(self):
+        resource = self.api.create(self.get_option_dict())
+        test_foreman_record(resource, 'compute_resource',
+            _("Compute resource [ %s ] created.") % self.get_option("name"),
+            _("Could not create compute resource [ %s ].") % self.get_option("name")
+        )
+
+
 # compute resource command ------------------------------------------------------------
 
 class ComputeResource(Command):
