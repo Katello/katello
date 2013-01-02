@@ -133,12 +133,18 @@ class ContentViewDefinitionsController < ApplicationController
   def publish
     # perform the publish
     view = @view_definition.publish(params[:content_view][:name], params[:content_view][:description],
-                                    params[:content_view][:label]) if params.has_key?(:content_view)
+                                    params[:content_view][:label], {:notify => true}) if params.has_key?(:content_view)
 
-    notify.success _("Successfully published content view '%{view_name}' from definition '%{definition_name}'.") %
-                       {:view_name => view.name, :definition_name => @view_definition.name}
+    notify.success(_("Started publish of content view '%{view_name}' from definition '%{definition_name}'.") %
+                       {:view_name => params[:content_view][:name], :definition_name => @view_definition.name})
 
     render :nothing => true
+
+  rescue => e
+    notify.exception(_("Failed to publish content view '%{view_name}' from definition '%{definition_name}'.") %
+                         {:view_name => params[:content_view][:name], :definition_name => @view_definition.name}, e)
+
+    render :text => e.to_s, :status => 500
   end
 
   def views
@@ -148,10 +154,20 @@ class ContentViewDefinitionsController < ApplicationController
   end
 
   def refresh
-    new_version = @view.refresh_view
+    new_version = @view.refresh_view({:notify => true})
+
+    notify.success(_("Started refresh of content view '%{view_name}' to version %{view_version}.") %
+                       {:view_name => @view.name, :view_version => new_version.version})
+
     render :partial => 'content_view_definitions/views/view',
            :locals => { :view_definition => @view.content_view_definition, :view => @view,
                         :task => new_version.task_status }
+  rescue => e
+    version = new_version.nil? ? nil : new_version.version
+    notify.exception(_("Failed to refresh content view '%{view_name}' to version %{view_version}.") %
+                         {:view_name => @view.name, :view_version => version}, e)
+
+    render :text => e.to_s, :status => 500
   end
 
   def status
