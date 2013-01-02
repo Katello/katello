@@ -185,7 +185,7 @@ class KatelloCLI(Command):
     # pylint: disable=W0221
     def error(self, exception, errorMsg = None):
         msg = errorMsg if errorMsg else u_str(exception)
-        print >> sys.stderr, "error: %s (more in the log file %s)" % (msg, logfile())
+        print >> sys.stderr, _("error: %(msg)s (more in the log file %(log)s)") % {"msg": msg, "log": logfile()}
         _log.error(u_str(exception))
         _log.error(format_exc(exception))
 

@@ -31,7 +31,7 @@ class List(PackageGroupAction):
                         _("No package groups found in repo [%s]") % (repoid))
         self.printer.set_header(_("Package Group Information"))
 
-        batch_add_columns(self.printer, 'id', 'name', 'description')
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, {'description': _("Description")})
 
         self.printer.print_items(groups)
 
@@ -64,12 +64,12 @@ class Info(PackageGroupAction):
             for name, required_package in group['conditional_package_names'].items()]
 
         self.printer.set_header(_("Package Group Information"))
-        batch_add_columns(self.printer,
-            'id', 'name')
-        batch_add_columns(self.printer,
-            'description', 'mandatory_package_names', 'default_package_names',
-            'optional_package_names', 'conditional_package_names',
-            multiline=True)
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")})
+        batch_add_columns(self.printer, {'description': _("Description")}, \
+            {'mandatory_package_names': _("Mandatory Package Names")}, \
+            {'default_package_names': _("Default Package Names")}, \
+            {'optional_package_names': _("Optional Package Names")}, \
+            {'conditional_package_names': _("Conditional Package Names")}, multiline=True)
 
         self.printer.print_item(group)
 
@@ -93,8 +93,8 @@ class CategoryList(PackageGroupAction):
                         _("No package group categories found in repo [%s]") % (repoid))
         self.printer.set_header(_("Package Group Cateogory Information"))
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
 
         self.printer.print_items(groups)
 
@@ -124,7 +124,8 @@ class CategoryInfo(PackageGroupAction):
             system_exit(os.EX_DATAERR, _("Package group category [%s] not found in repo [%s]") % (categoryId, repoid))
 
         self.printer.set_header(_("Package Group Category Information"))
-        batch_add_columns(self.printer, 'id', 'name', 'packagegroupids')
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, \
+            {'packagegroupids': _("Package Group IDs")})
 
         self.printer.print_item(category)
 

@@ -54,10 +54,10 @@ class List(EnvironmentAction):
 
         envs = self.api.environments_by_org(orgName)
 
-        batch_add_columns(self.printer, 'id', 'name', 'label')
-        self.printer.add_column('description', multiline=True)
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, {'label': _("Label")})
+        self.printer.add_column('description', _("Description"), multiline=True)
         self.printer.add_column('organization', _('Org'))
-        self.printer.add_column('prior', _('Prior Environment'))
+        self.printer.add_column('prior', _("Prior Environment"))
 
         self.printer.set_header(_("Environment List"))
         self.printer.print_items(envs)
@@ -82,11 +82,11 @@ class Info(EnvironmentAction):
 
         env = get_environment(orgName, envName)
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('description', multiline=True)
-        self.printer.add_column('organization', _('Org'))
-        self.printer.add_column('prior', _('Prior Environment'))
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('description', _("Description"), multiline=True)
+        self.printer.add_column('organization', _("Org"))
+        self.printer.add_column('prior', _("Prior Environment"))
 
         self.printer.set_header(_("Environment Info"))
         self.printer.print_item(env)
@@ -117,7 +117,7 @@ class Create(EnvironmentAction):
 
     def run(self):
         name        = self.get_option('name')
-        label        = self.get_option('label')
+        label       = self.get_option('label')
         description = self.get_option('description')
         orgName     = self.get_option('org')
         priorName   = self.get_option('prior')

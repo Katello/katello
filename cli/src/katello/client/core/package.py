@@ -73,12 +73,13 @@ class Info(PackageAction):
 
         pack = self.api.package(packId, repoId)
 
-        batch_add_columns(self.printer,
-            'id', 'name', 'filename', 'arch', 'release', 'version', 'vendor')
-        self.printer.add_column('download_url', show_with=printer.VerboseStrategy)
-        batch_add_columns(self.printer,
-            'description', 'provides', 'requires',
-            multiline=True, show_with=printer.VerboseStrategy)
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, \
+            {'filename': _("Filename")}, {'arch': _("Arch")}, {'release': _("Release")}, \
+            {'version': _("Version")}, {'vendor': _("Vendor")})
+        self.printer.add_column('download_url', _("Download URL"), show_with=printer.VerboseStrategy)
+        batch_add_columns(self.printer, {'description': _("Description")}, \
+            {'provides': _("Provides")}, {'requires': _("Requires")}, multiline=True, \
+            show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Package Information"))
         self.printer.print_item(pack)
@@ -133,8 +134,7 @@ class List(PackageAction):
         return repoId
 
     def print_packages(self, packages):
-        batch_add_columns(self.printer,
-            'id', 'name', 'filename')
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, {'filename': _("Filename")})
         self.printer.print_items(packages)
 
 

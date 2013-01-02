@@ -41,7 +41,7 @@ class List(ArchitectureAction):
         archs = self.api.index()
         if archs:
             archs = unnest_one(archs)
-        batch_add_columns(self.printer, 'id', 'name')
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")})
 
         self.printer.set_header(_("Architectures List"))
         self.printer.print_items(archs)
@@ -115,7 +115,7 @@ class Show(ArchitectureAction):
         arch = self.api.show(self.get_option('name'))
         arch = unnest_one(arch)
 
-        batch_add_columns(self.printer, 'id', 'name')
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")})
 
         self.printer.set_header(_("Architecture"))
         self.printer.print_item(arch)
