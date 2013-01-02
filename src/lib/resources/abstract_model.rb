@@ -156,7 +156,7 @@ class Resources::AbstractModel
   def set_as_persisted
     @persisted = true
   end
-  private :set_as_persisted
+  protected :set_as_persisted
 
   def destroyed?
     @destroyed
