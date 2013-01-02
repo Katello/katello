@@ -94,7 +94,7 @@ install -m 0644 katello-selinux-enable.man8 %{buildroot}%{_mandir}/man8/katello-
 install -m 0644 katello-selinux-relabel.man8 %{buildroot}%{_mandir}/man8/katello-selinux-relabel.8
 
 # Install secure (extra protected) directory
-install -d %{buildroot}%{_sysconfdir}/katello/secure
+install -d -m 0750 %{buildroot}%{_sysconfdir}/katello/secure
 
 %post
 if /usr/sbin/selinuxenabled ; then
