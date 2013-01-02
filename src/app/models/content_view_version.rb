@@ -47,8 +47,30 @@ class ContentViewVersion < ActiveRecord::Base
         order('content_view_version_environments.environment_id')
   end
 
-  def refresh_version
+  def refresh_version(notify = false)
     PulpTaskStatus::wait_for_tasks refresh_repos
+
+    if notify
+      message = _("Successfully refreshed content view '%{view_name}' to version %{view_version}.") %
+          {:view_name => self.content_view.name, :view_version => self.version}
+
+      Notify.success(message, :request_type => "content_view_definitions___refresh",
+                     :organization => self.content_view.organization)
+    end
+
+  rescue => e
+    Rails.logger.error(e)
+    Rails.logger.error(e.backtrace.join("\n"))
+
+    if notify
+      message = _("Failed to refresh content view '%{view_name}' to version %{view_version}.") %
+          {:view_name => self.content_view.name, :view_version => self.version}
+
+      Notify.exception(message, e, :request_type => "content_view_definitions___refresh",
+                       :organization => self.content_view.organization)
+    end
+
+    raise e
   end
 
   def refresh_repos
