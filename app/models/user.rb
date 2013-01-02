@@ -49,7 +49,8 @@ class User < ActiveRecord::Base
   has_many :search_histories, :dependent => :destroy
   serialize :preferences, HashWithIndifferentAccess
 
-  validates :username, :uniqueness => true, :presence => true, :username => true
+  validates :username, :uniqueness => true, :presence => true
+  validates_with Validators::UsernameValidator, :attributes => :username
   validates :email, :presence => true, :if => :not_ldap_mode?
   validates :default_locale, :inclusion => {:in => Katello.config.available_locales, :allow_nil => true, :message => _("must be one of %s") % Katello.config.available_locales.join(', ')}
 

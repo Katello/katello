@@ -33,8 +33,9 @@ class Provider < ActiveRecord::Base
   belongs_to :task_status
   has_many :products, :inverse_of => :provider
 
-  validates :name, :presence => true, :katello_name_format => true
-  validates :description, :katello_description_format => true
+  validates :name, :presence => true
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_uniqueness_of :name, :scope => :organization_id
   validates_inclusion_of :provider_type,
     :in => TYPES,

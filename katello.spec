@@ -543,6 +543,7 @@ usermod -a -G katello-shared tomcat
 %{homedir}/lib/monkeys
 %{homedir}/lib/navigation
 %{homedir}/lib/notifications
+%{homedir}/lib/validators
 %dir %{homedir}/lib/resources
 %{homedir}/lib/resources/cdn.rb
 %{homedir}/lib/resources/abstract_model.rb
@@ -661,6 +662,7 @@ usermod -a -G katello-shared tomcat
 %{homedir}/lib/navigation
 %{homedir}/lib/notifications
 %{homedir}/lib/resources
+%{homedir}/lib/validators
 %exclude %{homedir}/lib/resources/candlepin.rb
 %exclude %{homedir}/lib/resources/pulp.rb
 %exclude %{homedir}/lib/resources/foreman_model.rb

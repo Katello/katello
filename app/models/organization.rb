@@ -49,10 +49,12 @@ class Organization < ActiveRecord::Base
 
   before_create :create_library
   before_create :create_redhat_provider
-  validates :name, :uniqueness => true, :presence => true, :katello_name_format => true
+  validates :name, :uniqueness => true, :presence => true
   validates :label, :uniqueness => { :message => _("already exists (including organizations being deleted)") },
-    :presence => true, :katello_label_format => true
-  validates :description, :katello_description_format => true
+            :presence => true
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+  validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validate :unique_name_and_label
 
   before_save { |o| o.system_info_keys = Array.new unless o.system_info_keys }

@@ -11,13 +11,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class NonLibraryEnvironmentValidator < ActiveModel::EachValidator
-  def validate_each(record, attribute, value)
-    return unless value
-    record.errors[attribute] << N_("Cannot register a system to the '%s' environment") % "Library" if record.environment != nil && record.environment.library?
-  end
-end
-
 class System < ActiveRecord::Base
   include Glue::Candlepin::Consumer
   include Glue::Pulp::Consumer if Katello.config.katello?
@@ -96,10 +89,12 @@ class System < ActiveRecord::Base
 
   has_many :custom_info, :as => :informable, :dependent => :destroy
 
-  validates :environment, :presence => true, :non_library_environment => true
+  validates :environment, :presence => true
+  validates_with Validators::NonLibraryEnvironmentValidator, :attributes => :environment
   # multiple systems with a single name are supported
-  validates :name, :presence => true, :no_trailing_space => true
-  validates :description, :katello_description_format => true
+  validates :name, :presence => true
+  validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_length_of :location, :maximum => 255
   validates :sockets, :numericality => { :only_integer => true, :greater_than => 0 },
             :allow_nil => true, :if => ("validation_context == :create || validation_context == :update")
