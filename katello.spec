@@ -598,6 +598,8 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_sql.log
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs.log
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs_sql.log
+%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_orch.log
+%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs_orch.log
 
 %files glue-pulp
 %{homedir}/app/models/glue/pulp
