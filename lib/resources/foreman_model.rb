@@ -36,7 +36,7 @@ class Resources::ForemanModel < Resources::AbstractModel
   end
 
   def self.parse_attributes(data)
-    data[resource_name] or
+    data.with_indifferent_access[resource_name] or
         raise ResponseParsingError, data
   end
 
