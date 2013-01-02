@@ -441,19 +441,9 @@ KT.roles.permissionWidget = function(){
                         flow['tags'].container.show();
                     }
                     
-                }).change();
+                });
 
-				if( permission.tags === 'all'){
-					handleAllTags(false);
-				} else if( current_organization !== 'global' ) {
-					length = permission.tags.length;
-					values = [];
-					for( i=0; i < length; i += 1){
-                                            values.push(permission.tags[i].name);
-						flow['verbs'].input.find('option[value=' + permission.tags[i].name + ']').attr('selected', true);
-					}
-					flow['tags'].input.val(values);
-				}
+                set_verbs_and_tags(flow['resource_type'].input.val(), current_organization, false);
 
 				if( permission.verbs === 'all' ){
 					handleAllVerbs(false);
@@ -466,10 +456,25 @@ KT.roles.permissionWidget = function(){
 					flow['verbs'].input.val(values);
 				}
 
+				if( permission.tags === 'all' ){
+					handleAllTags(false);
+				} else {
+					length = permission.tags.length;
+					for( i=0; i < length; i += 1){
+                                            values.push(permission.tags[i].name);
+						flow['tags'].input.find('option[value=' + permission.tags[i].name + ']').attr('selected', true);
+					}
+					flow['tags'].input.val(values);
+				}
+
 				if( permission.type === 'all' ){
 					flow['tags'].container.hide();
 					flow['verbs'].container.hide();
 				}
+
+                if( only_no_tag_verbs_selected() ){
+                    flow['tags'].container.hide();
+                }
 
 				if( roleActions.getCurrentOrganization() === 'global' ){
 					flow['tags'].container.hide();
@@ -540,10 +545,12 @@ KT.roles.permissionWidget = function(){
             selected = selected || all_verbs_button.hasClass('selected');
 
             if( !selected ){
+                flow['verbs'].input.find('option').attr('selected', 'selected');
                 flow['verbs'].input.attr('disabled', 'disabled');
                 all_verbs_button.html(i18n.cancel);
                 all_verbs_button.addClass('selected');
             } else {
+                flow['verbs'].input.find('option').removeAttr('selected');
                 flow['verbs'].input.removeAttr('disabled');
                 all_verbs_button.html(i18n.all);
                 all_verbs_button.removeClass('selected');
