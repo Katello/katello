@@ -35,6 +35,10 @@ class Task
     "#{name}\t #{priority}\t #{status}\t #{action}"
   end
 
+  def to_log
+    "#{name}[#{status}]"
+  end
+
   private
   def update_ts
     @timestamp = Time.now
