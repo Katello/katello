@@ -25,8 +25,16 @@ Requires:       coreutils
 BuildRequires:  /usr/bin/pod2man
 BuildRequires:  findutils
 BuildRequires:  ruby
-Requires:       rubygem-json
 Requires:       unzip
+Requires:       katello-common
+Requires:       katello
+Requires:       katello-glue-pulp
+Requires:       rubygems
+Requires:       rubygem(json)
+Requires:       rubygem(activesupport)
+Requires:       rubygem(oauth)
+Requires:       rubygem(rest-client)
+
 
 BuildArch: noarch
 
