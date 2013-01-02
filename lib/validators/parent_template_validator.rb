@@ -10,9 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class SystemTemplatePackGroup < ActiveRecord::Base
-  belongs_to :system_template, :inverse_of => :package_groups
-  validates_with Validators::PackGroupValidator
-  validates_uniqueness_of [:name], :scope => :system_template_id, :message => _("is already in the template")
-
+module Validators
+  class ParentTemplateValidator < ActiveModel::Validator
+    def validate(record)
+      #check if the parent is from
+      if not record.parent.nil?
+        record.errors[:parent] << _("Template can have parent templates only from the same environment") if record.environment_id != record.parent.environment_id
+      end
+    end
+  end
 end

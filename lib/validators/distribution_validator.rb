@@ -10,9 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class SystemTemplatePackGroup < ActiveRecord::Base
-  belongs_to :system_template, :inverse_of => :package_groups
-  validates_with Validators::PackGroupValidator
-  validates_uniqueness_of [:name], :scope => :system_template_id, :message => _("is already in the template")
-
+module Validators
+  class DistributionValidator < ActiveModel::Validator
+    def validate(record)
+      id = record.distribution_pulp_id
+      env = record.system_template.environment
+      cnt = env.get_distribution(id).length
+      record.errors[:base] << _("Distribution '%{id}' not found in the '%{name}' environment") % {:id => id, :name => env.name} if cnt == 0
+    end
+  end
 end

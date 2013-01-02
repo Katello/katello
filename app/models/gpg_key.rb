@@ -11,17 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 require 'iconv'
 
-class ContentValidator < ActiveModel::EachValidator
-  def validate_each(record, attribute, value)
-    begin
-      # TODO: this is going to be deprecated. Switch to String#encode
-      Iconv.conv("UTF8", "UTF8", value)
-    rescue
-      record.errors[attribute] << (options[:message] || _("cannot be a binary file."))
-    end
-  end
-end
-
 class GpgKey < ActiveRecord::Base
   include IndexedModel
 
@@ -40,8 +29,10 @@ class GpgKey < ActiveRecord::Base
 
   belongs_to :organization, :inverse_of => :gpg_keys
 
-  validates :name, :katello_name_format => true, :presence => true
-  validates :content, :presence => true, :content => true
+  validates :name, :presence => true
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+  validates :content, :presence => true
+  validates_with Validators::ContentValidator, :attributes => :content
   validates_presence_of :organization
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
 
