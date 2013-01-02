@@ -26,25 +26,21 @@ module KatelloUrlHelper
     CONSTANTS_DEFINED = true
   end
 
-  def kipv4? url
-    IPV4.match(url) ? true : false
+  def kipv4?(url)
+    !!IPV4.match(url)
   end
 
-  def kprotocol? url
+  def kprotocol?(url)
     regex = /^#{PROTOCOLS}/
-    regex.match(url) ? true : false
+    !!regex.match(url)
   end
 
-  def kurl_valid? url
-    if !file_prefix?(url)
-      URLREG.match(url) ? true : false
-    else
-      FILEREG.match(url) ? true : false
-    end
+  def kurl_valid?(url)
+    !!(file_prefix?(url) ? FILEREG.match(url) : URLREG.match(url))
   end
 
-  def file_prefix? url
-    FILEPREFIX.match(url) ? true : false
+  def file_prefix?(url)
+    !!FILEPREFIX.match(url)
   end
 
 end
