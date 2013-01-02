@@ -11,12 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 require "util/model_util"
 
-class LibraryPresenceValidator < ActiveModel::EachValidator
-  def validate_each(record, attribute, value)
-    record.errors[attribute] << N_("must contain '%s'") % "Library" if value.select {|e| e.library}.empty?
-  end
-end
-
 class Product < ActiveRecord::Base
   include Glue::Candlepin::Product if Katello.config.use_cp
   include Glue::Pulp::Repos if Katello.config.katello?
@@ -55,10 +49,12 @@ class Product < ActiveRecord::Base
   belongs_to :sync_plan, :inverse_of => :products
   belongs_to :gpg_key, :inverse_of => :products
 
-  validates :description, :katello_description_format => true
-  validates :environments, :library_presence => true
-  validates :name, :presence => true, :katello_name_format => true
-  validates :label, :presence => true, :katello_label_format => true
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
+  validates_with Validators::LibraryPresenceValidator, :attributes => :environments
+  validates :name, :presence => true
+  validates :label, :presence => true
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+  validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
 
   scope :with_repos_only, lambda { |env|
     with_repos(env, false)

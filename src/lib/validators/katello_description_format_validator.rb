@@ -10,9 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class SystemTemplatePackGroup < ActiveRecord::Base
-  belongs_to :system_template, :inverse_of => :package_groups
-  validates_with Validators::PackGroupValidator
-  validates_uniqueness_of [:name], :scope => :system_template_id, :message => _("is already in the template")
-
+module Validators
+  class KatelloDescriptionFormatValidator < ActiveModel::EachValidator
+    def validate_each(record, attribute, value)
+      if value
+        max_length = 255
+        record.errors[attribute] << N_("cannot contain more than %s characters") % max_length unless value.length <= max_length
+      end
+    end
+  end
 end

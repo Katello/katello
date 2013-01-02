@@ -10,9 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class SystemTemplatePackGroup < ActiveRecord::Base
-  belongs_to :system_template, :inverse_of => :package_groups
-  validates_with Validators::PackGroupValidator
-  validates_uniqueness_of [:name], :scope => :system_template_id, :message => _("is already in the template")
-
+module Validators
+  class ChangesetDistributionValidator < ActiveModel::Validator
+    def validate(record)
+      record.errors[:base] << _("Distribution '%s' does not belong to the specified product!") %
+          record.distribution_id and return if record.repositories.empty?
+      record.errors[:base] << _("Repository of the distribution '%s' has not been promoted into the target environment!") %
+          record.distribution_id if record.promotable_repositories.empty?
+    end
+  end
 end

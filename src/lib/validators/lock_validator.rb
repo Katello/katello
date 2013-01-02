@@ -10,9 +10,14 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class SystemTemplatePackGroup < ActiveRecord::Base
-  belongs_to :system_template, :inverse_of => :package_groups
-  validates_with Validators::PackGroupValidator
-  validates_uniqueness_of [:name], :scope => :system_template_id, :message => _("is already in the template")
-
+module Validators
+  class LockValidator < ActiveModel::Validator
+    def validate(record)
+      if record.locked?
+        if record.name_changed? || record.description_changed?
+          record.errors[:base] << _("Cannot change the name or description of a locked role.")
+        end
+      end
+    end
+  end
 end

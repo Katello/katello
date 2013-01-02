@@ -10,12 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class NotInLibraryValidator < ActiveModel::Validator
-  def validate(record)
-    record.errors[:environment] << _("The '%s' environment cannot contain a changeset!") % "Library" if record.environment.library?
-  end
-end
-
 require 'util/package_util'
 
 class Changeset < ActiveRecord::Base
@@ -53,8 +47,8 @@ class Changeset < ActiveRecord::Base
   validates :name, :presence => true, :allow_blank => false, :length => { :maximum => 255 }
   validates_uniqueness_of :name, :scope => :environment_id, :message => N_("Must be unique within an environment")
   validates :environment, :presence => true
-  validates :description, :katello_description_format => true
-  validates_with NotInLibraryValidator
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
+  validates_with Validators::NotInLibraryValidator
 
   has_and_belongs_to_many :products, :uniq => true
   has_many :packages, :class_name => "ChangesetPackage", :inverse_of => :changeset
