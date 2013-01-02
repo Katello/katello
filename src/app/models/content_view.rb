@@ -167,13 +167,15 @@ class ContentView < ActiveRecord::Base
 
     if options[:async]
       task  = version.async(:organization => self.organization,
-                            :task_type => TaskStatus::TYPES[:content_view_refresh][:type]).refresh_version
+                            :task_type => TaskStatus::TYPES[:content_view_refresh][:type]).
+                      refresh_version(options[:notify])
+
       version.task_status = task
       version.save!
     else
       version.task_status = nil
       version.save!
-      version.refresh_version
+      version.refresh_version(options[:notify])
     end
 
     # retrieve the version that is currently in the library

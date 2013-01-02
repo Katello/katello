@@ -50,26 +50,50 @@ class ContentViewDefinition < ActiveRecord::Base
 
     if options[:async]
       async_task = self.async(:organization => self.organization,
-                              :task_type => TaskStatus::TYPES[:content_view_publish][:type]).generate_repos(view)
+                              :task_type => TaskStatus::TYPES[:content_view_publish][:type]).
+                        generate_repos(view, options[:notify])
 
       version.task_status = async_task
       version.save!
     else
       version.task_status = nil
       version.save!
-      generate_repos(view)
+      generate_repos(view, options[:notify])
     end
 
     view
   end
 
-  def generate_repos(view)
+  def generate_repos(view, notify = false)
     async_tasks = []
     repos.each do |repo|
       clone = repo.create_clone(self.organization.library, view)
       async_tasks << repo.clone_contents(clone)
     end
     PulpTaskStatus::wait_for_tasks async_tasks.flatten(1)
+
+    if notify
+      message = _("Successfully published content view '%{view_name}' from definition '%{definition_name}'.") %
+          {:view_name => view.name, :definition_name => self.name}
+
+      Notify.success(message, :request_type => "content_view_definitions___publish",
+                     :organization => self.organization)
+    end
+
+  rescue => e
+    Rails.logger.error(e)
+    Rails.logger.error(e.backtrace.join("\n"))
+
+    if notify
+      message = _("Failed to publish content view '%{view_name}' from definition '%{definition_name}'.") %
+          {:view_name => view.name, :definition_name => self.name}
+
+
+      Notify.exception(message, e, :request_type => "content_view_definitions___publish",
+                       :organization => self.organization)
+    end
+
+    raise e
   end
 
   # Retrieve a list of repositories associated with the definition.
