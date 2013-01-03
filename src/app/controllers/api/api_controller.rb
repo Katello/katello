@@ -186,7 +186,7 @@ class Api::ApiController < ActionController::Base
     logger.error "REQUEST URL: #{request.fullpath}"
     logger.error pp_exception(ex.original.nil? ? ex : ex.original)
     orig_message = (ex.original.nil? && '') || ex.original.message
-    format_text_orig_message = (orig_message.empty?) ? '' : " (#{orig_message})"
+    format_text_orig_message = (orig_message.blank?) ? '' : " (#{orig_message})"
     respond_to do |format|
       format.json { render :json => {:displayMessage => ex.message, :errors => [ ex.message, orig_message ]}, :status => status_code }
       format.all { render :text => "#{ex.message}#{format_text_orig_message}", :status => status_code }
