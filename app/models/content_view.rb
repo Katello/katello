@@ -52,8 +52,7 @@ class ContentView < ActiveRecord::Base
   def publish_error?
     # Did the current view fail during publishing?
     task = publish_task_status
-    return task.error? unless task.nil?
-    return false
+    task.nil? ? true : task.error?
   end
 
   def publish_task_id
