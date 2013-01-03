@@ -178,40 +178,36 @@ class ContentViewDefinitionsController < ApplicationController
   end
 
   def refresh
+    initial_version = @view.version(current_organization.library).version unless @view.version(current_organization.library).nil?
+
     new_version = @view.refresh_view({:notify => true})
 
-    notify.success(_("Started refresh of content view '%{view_name}' to version %{view_version}.") %
+    notify.success(_("Started generating version %{view_version} of content view '%{view_name}'.") %
                        {:view_name => @view.name, :view_version => new_version.version})
 
     render :partial => 'content_view_definitions/views/view',
            :locals => { :view_definition => @view.content_view_definition, :view => @view,
                         :task => new_version.task_status }
   rescue => e
-    version = new_version.nil? ? nil : new_version.version
-    notify.exception(_("Failed to refresh content view '%{view_name}' to version %{view_version}.") %
-                         {:view_name => @view.name, :view_version => version}, e)
+    current_version = @view.version(current_organization.library).version unless @view.version(current_organization.library).nil?
+
+    if (current_version == initial_version)
+      notify.exception(_("Failed to generate a new version of content view '%{view_name}'.") %
+                           {:view_name => @view.name}, e)
+    else
+      notify.exception(_("Failed to generate version %{view_version} of content view '%{view_name}'.") %
+                           {:view_name => @view.name, :view_version => current_version}, e)
+    end
 
     render :text => e.to_s, :status => 500
   end
 
   def status
-    # retrieve the status for the tasks (refresh) initiated by the client
-    statuses = {:publish_status => [], :refresh_status => []}
+    # retrieve the status for publish & refresh tasks initiated by the client
+    statuses = {:task_statuses => []}
 
-    TaskStatus.where(:id => params[:publish_task_id]).collect do |status|
-      statuses[:publish_status] << {
-          :id => status.id,
-          :pending? => status.pending?,
-          :status_html => render_to_string(:template => 'content_view_definitions/views/_view.html.haml',
-                                           :layout => false,
-                                           :locals => {:view_definition => @view_definition,
-                                                       :view => status.task_owner.content_view,
-                                                       :task => status})
-      }
-    end
-
-    TaskStatus.where(:id => params[:refresh_task_id]).collect do |status|
-      statuses[:refresh_status] << {
+    TaskStatus.where(:id => params[:task_ids]).collect do |status|
+      statuses[:task_statuses] << {
           :id => status.id,
           :pending? => status.pending?,
           :status_html => render_to_string(:template => 'content_view_definitions/views/_version.html.haml',
