@@ -2,7 +2,9 @@
 
 = content_for :content do
 
-  #content_view_definition_views{'data-status_url' => status_content_view_definition_path(view_definition.id)}
+  #content_view_definition_views{'data-views_url' => views_content_view_definition_path(view_definition.id),
+    'data-status_url' => status_content_view_definition_path(view_definition.id)}
+
     %table#content_views
 
       %thead
