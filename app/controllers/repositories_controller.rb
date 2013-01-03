@@ -16,8 +16,8 @@ class RepositoriesController < ApplicationController
 
   respond_to :html, :js
 
-  before_filter :find_provider, :only => [:new, :create, :default_label, :edit, :destroy, :update_gpg_key]
-  before_filter :find_product, :only => [:new, :create, :default_label, :edit, :destroy, :update_gpg_key]
+  before_filter :find_provider, :only => [:new, :create, :edit, :destroy, :update_gpg_key]
+  before_filter :find_product, :only => [:new, :create, :edit, :destroy, :update_gpg_key]
   before_filter :authorize
   before_filter :find_repository, :only => [:edit, :destroy, :enable_repo, :update_gpg_key]
 
@@ -29,7 +29,7 @@ class RepositoriesController < ApplicationController
     {
       :new => edit_test,
       :create => edit_test,
-      :default_label => edit_test,
+      :default_label => lambda{true},
       :edit => read_test,
       :update_gpg_key => edit_test,
       :destroy => edit_test,

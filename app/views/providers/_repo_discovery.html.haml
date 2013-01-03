@@ -13,8 +13,8 @@
   = render_menu(1..2, custom_provider_navigation)
 
 = content_for :content do
-  %form#repo_discovery_form{:data=>{:url=>discover_provider_path(@provider.id)}}
-    .grid_10
+  .grid_10
+    %form#repo_discovery_form{:data=>{:url=>discover_provider_path(@provider.id)}}
       .grid_1.ra
         = _("URL:")
       .grid_6.la
@@ -24,8 +24,13 @@
       .grid_1.la{:style=>'display: none;'}
         %input#cancel_discover.button{:type=>:button, :name=>:cancel, :value=>_('Cancel'),
                               :data=>{:url=>cancel_discovery_provider_path(@provider.id)}}
-
-  %h3
-    = _("Discovered URLS:")
-  #discovered_repos{:data=>{:url=>discovered_repos_provider_path(@provider.id)}}
+  %br
+  .grid_10
+    .grid_4
+      %h3
+        = _("Discovered URLS:")
+    .grid_3
+      %button.button#new_repos{:data=>{:url=>new_discovered_repos_provider_path(@provider.id)}}
+        = _("Create Within Product")
+    #discovered_repos{:data=>{:url=>discovered_repos_provider_path(@provider.id)}}
 
