@@ -304,10 +304,10 @@ module Glue::Pulp::Repos
       url
     end
 
-    def add_repo(label, name, url, repo_type, gpg = nil)
+    def add_repo(label, name, url, repo_type, gpg = nil, to_save=true)
       check_for_repo_conflicts(name, label)
-      key = EnvironmentProduct.find_or_create(self.organization.library, self)
-      Repository.create!(:environment_product => key, :pulp_id => repo_id(name),
+      key = EnvironmentProduct.find_or_new(self.organization.library, self)
+      repo = Repository.new(:environment_product => key, :pulp_id => repo_id(name),
           :relative_path => Glue::Pulp::Repos.custom_repo_path(self.library, self, label),
           :arch => arch,
           :name => name,
@@ -316,6 +316,8 @@ module Glue::Pulp::Repos
           :gpg_key => gpg,
           :content_type => repo_type
       )
+      repo.save! if to_save
+      repo
     end
 
     def setup_sync_schedule
