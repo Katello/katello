@@ -196,7 +196,7 @@ class ProvidersController < ApplicationController
 
   def get_discovered_urls
     urls = (@provider.discovered_repos.nil? ? [] : @provider.discovered_repos.sort)
-    urls.collect{|r| {:url=>r}}
+    urls.collect{|r| {:url=>r, :path=>('/' + r.sub(@provider.discovery_url, ''))}}
   end
 
   def find_provider
