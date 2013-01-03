@@ -50,7 +50,8 @@ describe Api::ProductsController, :katello => true do
                                      :label=> "repo_label",
                                      :relative_path => "#{@organization.name}/Library/prod/repo",
                                      :pulp_id=>"2",
-                                     :enabled => true)
+                                     :enabled => true,
+                                     :feed => 'https://localhost')
     @repo = promote(@repo_library, @environment)
 
 

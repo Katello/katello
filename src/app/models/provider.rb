@@ -15,7 +15,6 @@ class Provider < ActiveRecord::Base
   include Glue
   include AsyncOrchestration
   include Authorization
-  include KatelloUrlHelper
   include IndexedModel
 
   index_options :extended_json=>:extended_index_attrs,
@@ -47,7 +46,10 @@ class Provider < ActiveRecord::Base
 
 
   validate :only_one_rhn_provider
-  validate :valid_url, :if => :redhat_provider?
+  validates :repository_url, :length => {:maximum => 255}, :if => :redhat_provider?
+  validates_with Validators::KatelloUrlFormatValidator, :if => :redhat_provider?,
+                 :attributes => :repository_url
+
 
   scope :redhat, where(:provider_type => REDHAT)
   scope :custom, where(:provider_type => CUSTOM)
@@ -76,11 +78,6 @@ class Provider < ActiveRecord::Base
         errors.add(:base, _("the following attributes can not be updated for the Red Hat provider: [ %s ]") % not_allowed_changes.join(", "))
       end
     end
-  end
-
-  def valid_url
-    errors.add(:repository_url, _("is too long")) if self.repository_url.length > 255
-    errors.add(:repository_url, _("is invalid")) unless kurl_valid?(self.repository_url)
   end
 
   def count_providers type

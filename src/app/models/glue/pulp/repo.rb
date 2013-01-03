@@ -16,6 +16,11 @@ module Glue::Pulp::Repo
     base.send :include, InstanceMethods
 
     base.class_eval do
+      validates_with Validators::KatelloUrlFormatValidator,
+                     :attributes => :feed,
+                     :field_name => :url, :on => :create,
+                     :if => Proc.new { |o| o.environment.library? }
+
       before_validation :setup_repo_clone
       before_save :save_repo_orchestration
       before_destroy :destroy_repo_orchestration

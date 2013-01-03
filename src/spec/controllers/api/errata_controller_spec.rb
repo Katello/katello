@@ -38,7 +38,8 @@ describe Api::ErrataController, :katello => true do
                                :label=> "repo_label",
                                :relative_path => "#{@organization.name}/Library/prod/repo",
                                :pulp_id=> "1",
-                               :enabled => true)
+                               :enabled => true,
+                               :feed => 'https://localhost')
     @repo.stub(:has_distribution?).and_return(true)
     Repository.stub(:find).and_return(@repo)
     @repo.stub(:distributions).and_return([])

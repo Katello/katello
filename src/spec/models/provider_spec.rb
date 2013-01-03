@@ -186,7 +186,8 @@ describe Provider do
                              :label => repo_label,
                              :pulp_id => product.repo_id(repo_name),
                              :major => version[:major],
-                             :minor => version[:minor])
+                             :minor => version[:minor],
+                             :feed => 'https://localhost')
         end
       end
       product
