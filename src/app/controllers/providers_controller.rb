@@ -17,7 +17,8 @@ class ProvidersController < ApplicationController
   before_filter :find_rh_provider, :only => [:redhat_provider]
 
   before_filter :find_provider, :only => [:products_repos, :show, :edit, :update, :destroy, :manifest_progress,
-                                          :repo_discovery, :discovered_repos, :discover, :cancel_discovery]
+                                          :repo_discovery, :discovered_repos, :discover, :cancel_discovery,
+                                          :new_discovered_repos, :create_discovered_repos]
   before_filter :authorize #after find_provider
   before_filter :panel_options, :only => [:index, :items]
   before_filter :search_filter, :only => [:auto_complete_search]
@@ -48,15 +49,18 @@ class ProvidersController < ApplicationController
       :manifest_progress => edit_test,
       :redhat_provider => read_test,
       :repo_discovery => edit_test,
+      :new_discovered_repos => edit_test,
       :cancel_discovery=>edit_test,
       :discovered_repos => edit_test,
-      :discover => edit_test
+      :discover => edit_test,
+      :create_discovered_repos => edit_test
     }
   end
 
   def param_rules
     {
-        :create => {:provider => [:name, :description]}
+        :create => {:provider => [:name, :description]},
+        :create_discovered_repos =>{}
     }
   end
 
@@ -169,6 +173,11 @@ class ProvidersController < ApplicationController
     render :json =>{:urls=>get_discovered_urls, :running=>running}
   end
 
+  def new_discovered_repos
+    urls = params[:urls] || []
+    render :partial=>'new_discovered_repos', :layout => "tupane_layout", :locals=>{:urls=>urls}
+  end
+
   def cancel_discovery
     @provider.discovery_task = nil
     @provider.save!
@@ -182,10 +191,11 @@ class ProvidersController < ApplicationController
     render :text=>''
   end
 
+
   protected
 
   def get_discovered_urls
-    urls = (@provider.discovered_repos.sort || [])
+    urls = (@provider.discovered_repos.nil? ? [] : @provider.discovered_repos.sort)
     urls.collect{|r| {:url=>r}}
   end
 
