@@ -132,3 +132,11 @@ class ComputeResourceAPI(KatelloAPI):
             'server'
         )
         return self.server.PUT(self.__path(resource_id), {'compute_resource': data})[1]
+
+
+    def destroy(self, resource_id):
+        """
+        :type resource_id: string
+        :param resource_id: resource identifier
+        """
+        return self.server.DELETE(self.__path(resource_id))[1]
