@@ -46,7 +46,8 @@ describe DistributionsController, :katello => true do
                                :label => "repo_label",
                                :relative_path => "#{@organization.name}/Library/prod/repo",
                                :pulp_id=> "1",
-                               :enabled => true)
+                               :enabled => true,
+                               :feed => 'https://localhost')
     Repository.stub(:find).and_return(@repo)
     Glue::Pulp::Distribution.stub(:find).and_return([])
   end

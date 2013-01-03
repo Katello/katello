@@ -304,7 +304,8 @@ describe System do
                           :environment_product_id => env_product.id,
                           :major => "6",
                           :minor => release,
-                          :cp_label => "repo")
+                          :cp_label => "repo",
+                          :feed => 'https://localhost')
       end
       Repository.create!(:name => "Repo without releases",
                          :label => "Repo_without_releases",
@@ -313,7 +314,8 @@ describe System do
                          :environment_product_id => env_product.id,
                          :major => nil,
                          :minor => nil,
-                         :cp_label => "repo")
+                         :cp_label => "repo",
+                         :feed => 'https://localhost')
       @system.environment = @environment
       @system.save!
     end
