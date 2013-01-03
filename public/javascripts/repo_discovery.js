@@ -31,6 +31,11 @@ KT.repo_discovery = (function(){
         });
         $('#new_repos').unbind('click');
         $('#new_repos').click(open_subpane);
+
+        $('#url_filter').bind('change, keyup', function(){
+            $.uiTableFilter($(list_id), this.value);
+        });
+
         init_cancel();
     },
     open_subpane = function(){
@@ -75,7 +80,7 @@ KT.repo_discovery = (function(){
     },
     draw_url_list = function(url_list){
         KT.initial_repo_discovery.urls = url_list;
-        $(list_id).html(KT.discovery_templates.url_list(url_list, selected()));
+        $(list_id).find('tbody').html(KT.discovery_templates.url_list(url_list, selected()));
     },
     start_discovery = function(){
         var form = $(form_id),
@@ -127,7 +132,8 @@ KT.repo_discovery = (function(){
         form.find('#cancel_discover').parent().hide();
     },
     discovery_started = function() {
-        $(list_id).html('');
+        $(list_id).find('tbody').html('<tr><td></td></tr>');
+        $('#url_filter').val('');
         init_updater();
     },
     discovery_ended = function(){
@@ -157,15 +163,17 @@ KT.repo_discovery = (function(){
 
 KT.discovery_templates = (function(){
     var url_list = function(url_list, selected_list){
-        var html = '<table>';
+        var html = '';
 
         if(selected_list === undefined){
             selected_list = [];
         }
+        if (url_list.length === 0) {
+            return '<tr><td></td></tr>';
+        }
         KT.utils.each(url_list, function(elem){
             html += url_list_item(elem, selected_list);
         });
-        html += '</table>';
         return html;
     },
     url_list_item = function(item, selected_list){
@@ -174,7 +182,7 @@ KT.discovery_templates = (function(){
         if (KT.utils.indexOf(selected_list, item.url) !== -1){
             selected = 'checked';
         }
-        html = '<tr><td><label><input type="checkbox"' + selected + ' value="' + item.url + '"/>' + item.url + '</label></td></tr>';
+        html = '<tr><td><label><input type="checkbox"' + selected + ' value="' + item.url + '"/>' + item.path + '</label></td></tr>';
         return html;
     };
 
