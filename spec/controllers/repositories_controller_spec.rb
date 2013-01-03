@@ -119,7 +119,8 @@ describe RepositoriesController, :katello => true do
       before do
         @repo = Repository.create!(:environment_product => @ep, :pulp_id => "pulp-id-#{rand 10**6}",
                                  :name=>"newname#{rand 10**6}", :label=>"newname#{rand 10**6}",
-                                 :url => "http://fedorahosted org")
+                                 :url => "http://fedorahosted org",
+                                 :feed => "https://localhost")
 
         #product = @repo.product
         Repository.stub(:find).and_return(@repo)
