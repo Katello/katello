@@ -100,8 +100,8 @@ class Api::ApiController < ActionController::Base
 
   def find_optional_organization
     if params[:organization_id]
-      @organization = Organization.first(:conditions => {:name => params[:organization_id]})
-      @organization = Organization.first(:conditions => {:label => params[:organization_id]}) if @organization.nil?
+      # id in name/label is always unique
+      @organization = Organization.without_deleting.where("name = :id or label = :id", {:id => params[:organization_id]}).first
       raise HttpErrors::NotFound, _("Couldn't find organization '%s'") % params[:organization_id] if @organization.nil?
       @organization
     end
