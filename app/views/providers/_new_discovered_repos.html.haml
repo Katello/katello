@@ -12,7 +12,11 @@
   #repo_creation
     %form#discovered_creation{:data=>{:provider_id=>@provider.id}}
       #product_details
-        = _("Create repositories within:")
+        .grid_10
+          %h3
+            =_('Product Selection')
+        .grid_10
+          = _("Create repositories within:")
         .grid_10
           %label
             %input{:type=>:radio, :name=>:new_product, :value=>:false, :tabindex=>++tabindex,:checked=>:checked}
@@ -40,12 +44,13 @@
                     :tabindex=>++tabindex, :data=>{:url=>default_label_provider_products_path(@provider.id)}}
 
       .grid_10
-        %h2
+        %h3
           = _("Selected URLs")
       .grid_10
         #urls
           - urls.each_with_index do |url, count|
-            .grid_9
+            .grid_9.url
+              %span.dot_icon-grey
               = url
             .grid_9.new_repo{:id=>"new_repo_#{count}"}
               %fieldset
