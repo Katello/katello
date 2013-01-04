@@ -196,7 +196,20 @@ class ProvidersController < ApplicationController
 
   def get_discovered_urls
     urls = (@provider.discovered_repos.nil? ? [] : @provider.discovered_repos.sort)
-    urls.collect{|r| {:url=>r, :path=>('/' + r.sub(@provider.discovery_url, ''))}}
+    urls.collect do |url|
+      path = url.sub(@provider.discovery_url, '')
+      path = "/#{path}" if path[0] != '/'
+
+      all_repos = Repository.where(:feed=>url).in_environments_products([current_organization.library.id],
+                                                            @provider.products.pluck(:id))
+      existing = {}
+      all_repos.each do |repo|
+        existing[repo.product.name] ||= []
+        existing[repo.product.name] << repo.name
+      end
+
+      {:url=>url, :path=>path, :existing=>existing}
+    end
   end
 
   def find_provider
