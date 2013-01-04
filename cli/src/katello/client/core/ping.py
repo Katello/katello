@@ -60,7 +60,7 @@ class Status(PingAction):
             pulp:           8
             pulp_auth:     16
         """
-        if status['result'] == 'ok':
+        if status['result'].lower() == 'ok':
             return 0
 
         code = 0
