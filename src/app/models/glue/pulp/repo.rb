@@ -38,7 +38,7 @@ module Glue::Pulp::Repo
                       pulp_repo_facts["distributors"] if pulp_id
                     }
 
-      attr_accessor :feed, :feed_cert, :feed_key, :feed_ca
+      attr_accessor :feed_cert, :feed_key, :feed_ca
 
       def self.ensure_sync_notification
         resource =  Runcible::Resources::EventNotifier
