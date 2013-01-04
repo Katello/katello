@@ -33,7 +33,7 @@ KT.repo_discovery = (function(){
         $('#new_repos').click(open_subpane);
 
         $('#url_filter').bind('change, keyup', function(){
-            $.uiTableFilter($(list_id), this.value);
+            $.uiTableFilter($(list_id), this.value, $(list_id).find("thead > tr:last > th").first().text().trim());
         });
 
         init_cancel();
