@@ -69,6 +69,10 @@ class Repository < ActiveRecord::Base
     joins(:environment_product).where("environment_products.product_id" => product.id)
   end
 
+  def self.in_environments_products(env_ids, product_ids)
+    joins(:environment_product).where(:environment_products => { :environment_id => env_ids, :product_id=>product_ids})
+  end
+
   def other_repos_with_same_product_and_content
     list = Repository.in_product(Product.find(self.product.id)).where(:content_id=>self.content_id).all
     list.delete(self)
