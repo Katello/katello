@@ -67,7 +67,7 @@ module Authorization::ContentViewDefinition
     end
 
     def creatable?(org)
-      User.allowed_to?([:create], :providers, nil, org)
+      User.allowed_to?([:create], :content_view_definitions, nil, org)
     end
 
     def items(org, verbs)
