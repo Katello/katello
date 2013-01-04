@@ -36,6 +36,8 @@ describe Api::RepositoriesController, :katello => true do
       disable_user_orchestration
 
       @organization = new_test_org
+      Organization.stub!(:without_deleting).and_return(Organization)
+      Organization.stub!(:where).and_return(Organization)
       Organization.stub!(:first).and_return(@organization)
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
       Provider.stub!(:find).and_return(@provider)
@@ -329,6 +331,8 @@ describe Api::RepositoriesController, :katello => true do
       it "should call Resources::Pulp::Proxy.post" do
         Resources::Pulp::Repository.should_receive(:start_discovery).with(url, type).once.and_return({})
         PulpSyncStatus.should_receive(:using_pulp_task).with({}).and_return(task_stub)
+        Organization.stub!(:without_deleting).and_return(Organization)
+        Organization.stub!(:where).and_return(Organization)
         Organization.stub!(:first).and_return(@organization)
 
         post 'discovery', :organization_id => "ACME", :url => url, :type => type

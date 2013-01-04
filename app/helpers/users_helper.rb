@@ -23,7 +23,7 @@ module UsersHelper
         !org.any_systems_registerable?
       end
     else
-      orgs = Organization.all
+      orgs = Organization.without_deleting.all
     end
     choices = orgs.map {|a| [a.name, a.id]}
     if optional

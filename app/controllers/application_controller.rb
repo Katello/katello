@@ -26,6 +26,7 @@ class ApplicationController < ActionController::Base
   helper_method :current_organization
   before_filter :set_locale
   before_filter :require_user,:require_org
+  before_filter :check_deleted_org
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
   after_filter :flash_to_headers
@@ -253,6 +254,13 @@ class ApplicationController < ActionController::Base
     unless session && current_organization
       execute_after_filters
       raise Errors::SecurityViolation, _("User does not belong to an organization.")
+    end
+  end
+
+  # TODO this check can be removed once we start deleting sessions during org deletion
+  def check_deleted_org
+    if current_organization && current_organization.being_deleted?
+      raise Errors::SecurityViolation, _("Current organization is being deleted, switch to a different one.")
     end
   end
 

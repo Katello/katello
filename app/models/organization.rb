@@ -111,6 +111,10 @@ class Organization < ActiveRecord::Base
     end
   end
 
+  def being_deleted?
+    ! self.task_id.nil?
+  end
+
   #permissions
   scope :readable, lambda {authorized_items(READ_PERM_VERBS)}
 

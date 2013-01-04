@@ -20,6 +20,8 @@ describe Api::EnvironmentsController do
     @org         = Organization.new(:label=>"1")
     @environment = KTEnvironment.new
     @environment.organization = @org
+    Organization.stub!(:without_deleting).and_return(Organization)
+    Organization.stub!(:where).and_return(Organization)
     Organization.stub!(:first).and_return(@org)
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
