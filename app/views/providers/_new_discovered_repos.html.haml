@@ -57,14 +57,15 @@
                 .grid_2.ra
                   = _('Repository Name')
                 .grid_5.la
-                  %input{:type=>:text, :name=>"repo_name", :label => _("Repository Name"),
-                    :class => :name_input, :tabindex=>++tabindex}
+                  %input{:type=>:text, :name=>"repo_name", :label => _("Repository Name"), :size=>30,
+                    :class => :name_input, :tabindex=>++tabindex, :value=>name_from_url(url)}
               %fieldset
                 .grid_2.ra
                   = _('Repository Label')
                 .grid_5.la
-                  %input{:type=>:text, :name=>"repo_label", :label => _("Repository Label"),
-                    :class => :label_input, :tabindex=>++tabindex, :data=>{:url=>default_label_provider_product_repositories_path(0, 0)}}
+                  %input{:type=>:text, :name=>"repo_label", :value=>label_from_url(url), :label => _("Repository Label"),
+                    :class => :label_input, :tabindex=>++tabindex, :size=>30,
+                    :data=>{:url=>default_label_provider_product_repositories_path(0, 0)}}
               %input{:type=>:hidden, :name=>"repo_url", :value=>url}
 
 
