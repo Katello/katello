@@ -106,7 +106,7 @@ class Provider < ActiveRecord::Base
   end
 
   def being_deleted?
-    ! organization.task_id.nil?
+    organization.being_deleted?
   end
 
   #permissions

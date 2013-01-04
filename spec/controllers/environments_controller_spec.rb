@@ -35,7 +35,9 @@ describe EnvironmentsController do
   describe "rules" do
     before (:each) do
       new_test_org
-      Organization.stub!(:first).with(:conditions => {:label=>@organization.label}).and_return(@organization)
+      Organization.stub!(:without_deleting).and_return(Organization)
+      Organization.stub!(:where).and_return(Organization)
+      Organization.stub!(:first).and_return(@organization)
     end
     describe "GET new" do
       let(:action) {:new}
@@ -100,7 +102,9 @@ describe EnvironmentsController do
       @org.environments.stub!(:first).with(:conditions => {:name => @env.name}).and_return(@env)
       @org.stub!(:library).and_return(@library)
 
-      Organization.stub!(:first).with(:conditions => {:label=>@org.label}).and_return(@org)
+      Organization.stub!(:without_deleting).and_return(Organization)
+      Organization.stub!(:where).and_return(Organization)
+      Organization.stub!(:first).and_return(@org)
       KTEnvironment.stub!(:find).and_return(@env)
     end
 
@@ -158,10 +162,7 @@ describe EnvironmentsController do
       end
     end
 
-    describe "env create invalid params" do
-      before do
-        new_test_org
-      end
+    pending "env create invalid params" do
         it_should_behave_like "bad request"  do
           let(:req) do
             bad_req = {:organization_id => @organization.label, :kt_environment => {:name => 'production', :prior => @organization.library}}

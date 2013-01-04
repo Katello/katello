@@ -47,6 +47,8 @@ describe System do
     @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
     @environment = KTEnvironment.create!(:name=>'test', :label=> 'test', :prior => @organization.library.id, :organization => @organization)
     @organization.reload #reload to get environment info
+    Organization.stub!(:without_deleting).and_return(Organization)
+    Organization.stub!(:where).and_return(Organization)
     Organization.stub!(:first).and_return(@organization)
 
     @system = System.new(:name => system_name,

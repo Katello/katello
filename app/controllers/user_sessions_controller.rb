@@ -17,6 +17,8 @@ class UserSessionsController < ApplicationController
   protect_from_forgery
 
   skip_before_filter :authorize # ok - need to skip all methods
+  skip_before_filter :check_deleted_org
+
   layout "user_session"
 
   def section_id
