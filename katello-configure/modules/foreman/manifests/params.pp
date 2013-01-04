@@ -29,7 +29,7 @@ class foreman::params {
   $deployment_url     = "foreman"
   
   # admin's email format has to be <user>@<some>.<domain>
-  $administrator      = "root@localhost.localdoamin"
+  $administrator      = "root@localhost.localdomain"
 
   # should oauth be used?
   $oauth_active       = false
