@@ -43,7 +43,7 @@ Requires(post):   /usr/sbin/semodule, /sbin/restorecon, /usr/sbin/setsebool, /us
 Requires(post): policycoreutils-python
 Requires(post): selinux-policy-targeted
 Requires(postun): /usr/sbin/semodule, /sbin/restorecon
-Requires:       %{modulename}-common
+Requires(pre):       %{modulename}-common
 
 %description
 SELinux policy module supporting Katello.
@@ -123,7 +123,7 @@ fi
 %{_mandir}/man8/*
 %attr(0755,root,root) %{_sbindir}/%{name}-enable
 %attr(0755,root,root) %{_sbindir}/%{name}-relabel
-%{_sysconfdir}/katello/secure
+%attr(0750,root,katello-shared) %{_sysconfdir}/katello/secure
 
 %changelog
 * Thu Sep 27 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.2-1
