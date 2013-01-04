@@ -66,7 +66,13 @@ module ProvidersHelper
     data
   end
 
+  def name_from_url(url)
+    url.sub(@provider.discovery_url, '').gsub('/', ' ').strip
+  end
 
+  def label_from_url(url)
+    Katello::ModelUtils::labelize(name_from_url(url))
+  end
 
 end
 
