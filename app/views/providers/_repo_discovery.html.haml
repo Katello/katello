@@ -1,6 +1,11 @@
 = javascript do
   :plain
     KT.initial_repo_discovery = $.parseJSON('#{escape_javascript({:urls=>discovered, :running=>running}.to_json)}');
+     localize({
+          "existing_repos_found": '#{escape_javascript(_('This feed has already been found in one or more existing repositories:'))}'
+     });
+
+
 
 = content_for :title do
   #{@provider.name}
@@ -32,8 +37,10 @@
     %table#discovered_repos{:data=>{:url=>discovered_repos_provider_path(@provider.id)}}
       %thead
         %td
-          .grid_5
+          .grid_6
             %input#url_filter{:type=>'text', :size=>20, :placeholder=>_('Filter found paths')}
+
+        %td
           .grid_3
             %button.button#new_repos{:data=>{:url=>new_discovered_repos_provider_path(@provider.id)}}
               = _("Create Within Product")

@@ -79,8 +79,13 @@ KT.repo_discovery = (function(){
         cancel.click(cancel_discovery);
     },
     draw_url_list = function(url_list){
+        var list = $(list_id),
+            find_text = function(){ return $(this).find('.hidden-text').html();};
+
         KT.initial_repo_discovery.urls = url_list;
-        $(list_id).find('tbody').html(KT.discovery_templates.url_list(url_list, selected()));
+        list.find('tbody').html(KT.discovery_templates.url_list(url_list, selected()));
+        list.find('.check_icon-black').tipsy({html:true, gravity:'w', className:'content-tipsy',
+            title:find_text});
     },
     start_discovery = function(){
         var form = $(form_id),
@@ -156,7 +161,8 @@ KT.repo_discovery = (function(){
     return {
         page_load: page_load,
         page_close: page_close,
-        clear_selections: clear_selections
+        clear_selections: clear_selections,
+        init_updater: init_updater
     }
 })();
 
@@ -182,8 +188,35 @@ KT.discovery_templates = (function(){
         if (KT.utils.indexOf(selected_list, item.url) !== -1){
             selected = 'checked';
         }
-        html = '<tr><td><label><input type="checkbox"' + selected + ' value="' + item.url + '"/>' + item.path + '</label></td></tr>';
+        html = '<tr><td><label>'
+        html += '<input type="checkbox"' + selected + ' value="' + item.url + '"/>' + item.path + '</label>';
+        html += '</td>';
+        html += '<td>' + existing_tipsy(item.existing) + '</td></tr>';
         return html;
+    },
+    existing_tipsy = function(existing_hash){
+        var html = '';
+        if (KT.utils.isEmpty(existing_hash)) {
+            return html;
+        }
+
+        html += '<span class="grid_3"><span class="check_icon-black">';
+        html += '<span class="hidden-text hidden"><span class="repo_tipsy la">';
+        html += i18n.existing_repos_found + '<ul>';
+        KT.utils.each(existing_hash, function(repo_list, product_name){
+            html += existing_product(product_name, repo_list);
+        });
+
+        html += '</ul></span></span></span></span>';
+        return html;
+    },
+    existing_product = function(product_name, repo_list){
+        var html = '<li class="product_item">' + product_name + '<ul class="repo_list">';
+        KT.utils.each(repo_list, function(repo_name){
+           html += '<li class="repo_item">' + repo_name + '</li>';
+        });
+
+        return html + '</ul></li>';
     };
 
     return {
@@ -275,6 +308,7 @@ KT.repo_discovery.new = (function(){
                 }
                 else {
                     KT.repo_discovery.clear_selections();
+                    KT.repo_discovery.init_updater();
                     KT.panel.closeSubPanel($('#subpanel'));
                 }
             },
