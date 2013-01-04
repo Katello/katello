@@ -31,18 +31,20 @@
                               :data=>{:url=>cancel_discovery_provider_path(@provider.id)}}
   %br
   .grid_10
-    .grid_9
-      %h3
-        = _("Discovered URLS:")
     %table#discovered_repos{:data=>{:url=>discovered_repos_provider_path(@provider.id)}}
       %thead
-        %td
-          .grid_6
-            %input#url_filter{:type=>'text', :size=>20, :placeholder=>_('Filter found paths')}
-
-        %td
-          .grid_3
-            %button.button#new_repos{:data=>{:url=>new_discovered_repos_provider_path(@provider.id)}}
-              = _("Create Within Product")
+        %tr.underline
+          %td
+            .grid_6
+              %input#url_filter{:type=>'search', :name=>'search', :placeholder=>_('Filter paths...')}
+          %td
+            .grid_3
+              %button.button#new_repos{:data=>{:url=>new_discovered_repos_provider_path(@provider.id)}}
+                = _("Create Within Product")
+        %tr
+          %th
+            = _("Discovered URLS:")
+          %th
+            = _("Created previously")
       %tbody
         %td
