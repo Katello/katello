@@ -15,7 +15,7 @@ class ContentViewDefinitionsController < ApplicationController
   helper ProductsHelper
 
   before_filter :require_user
-  before_filter :find_content_view_definition, :only => [:show, :edit, :update, :destroy, :views, :content,
+  before_filter :find_content_view_definition, :only => [:clone, :show, :edit, :update, :destroy, :views, :content,
                                                          :update_content, :publish_setup, :publish, :status]
   before_filter :find_content_view, :only => [:refresh]
   before_filter :authorize #after find_content_view_definition, since the definition is required for authorization
@@ -37,6 +37,7 @@ class ContentViewDefinitionsController < ApplicationController
 
       :new => manage_test,
       :create => manage_test,
+      :clone => manage_test,
 
       :edit => read_test,
       :update => manage_test,
@@ -90,6 +91,23 @@ class ContentViewDefinitionsController < ApplicationController
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @view_definition["name"]
       render :json => { :no_match => true }
     end
+  end
+
+  def clone
+    new_definition = ContentViewDefinition.new
+    new_definition.name = params[:name]
+    new_definition.description = params[:description]
+    new_definition.organization = @view_definition.organization
+    new_definition.products = @view_definition.products
+    new_definition.repositories = @view_definition.repositories
+    new_definition.save!
+
+    notify.success(_("Content view definition '%{new_definition_name}' created successfully as a clone of '%{definition_name}'.") %
+                       {:new_definition_name => new_definition.name, :definition_name => @view_definition.name})
+
+    render :partial => "common/list_item", :locals  => { :item => new_definition, :initial_action => :views,
+                                                         :accessor => "id", :columns => ["name"],
+                                                         :name => controller_display_name }
   end
 
   def edit
