@@ -28,33 +28,38 @@ class ContentViewDefinitionsController < ApplicationController
   end
 
   def rules
-    read_test = lambda{current_organization && ContentViewDefinition.any_readable?(current_organization)}
-    manage_test = lambda{true}  # TODO: update w/ correct permissions
+    index_rule   = lambda { ContentViewDefinition.any_readable?(current_organization) }
+    show_rule    = lambda { @view_definition.readable? }
+    manage_rule  = lambda { @view_definition.editable? }
+    publish_rule = lambda { @view_definition.publishable? }
+    refresh_rule = lambda { @view.content_view_definition.publishable? }
+    create_rule  = lambda { ContentViewDefinition.creatable?(current_organization) }
+
     {
-      :index => read_test,
-      :items => read_test,
-      :show => read_test,
+      :index => index_rule,
+      :items => index_rule,
+      :show => show_rule,
 
-      :new => manage_test,
-      :create => manage_test,
-      :clone => manage_test,
+      :new => create_rule,
+      :create => create_rule,
+      :clone => create_rule,
 
-      :edit => read_test,
-      :update => manage_test,
+      :edit => show_rule,
+      :update => manage_rule,
 
-      :publish_setup => manage_test,
-      :publish => manage_test,
+      :publish_setup => publish_rule,
+      :publish => publish_rule,
 
-      :destroy => manage_test,
+      :destroy => manage_rule,
 
-      :views => read_test,
-      :refresh => manage_test,
-      :status => manage_test,
+      :views => show_rule,
+      :refresh => refresh_rule,
+      :status => publish_rule,
 
-      :content => read_test,
-      :update_content => manage_test,
+      :content => show_rule,
+      :update_content => manage_rule,
 
-      :default_label => manage_test
+      :default_label => manage_rule
     }
   end
 
