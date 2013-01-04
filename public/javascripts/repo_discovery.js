@@ -39,7 +39,7 @@ KT.repo_discovery = (function(){
         init_cancel();
     },
     open_subpane = function(){
-        var urls = '?';
+        var urls = '?url=';
         KT.utils.each(selected(), function(element, index){
            if(index > 0) {
                urls += '&';
@@ -86,6 +86,8 @@ KT.repo_discovery = (function(){
         list.find('tbody').html(KT.discovery_templates.url_list(url_list, selected()));
         list.find('.check_icon-black').tipsy({html:true, gravity:'w', className:'content-tipsy',
             title:find_text});
+
+        list.find()
     },
     start_discovery = function(){
         var form = $(form_id),
@@ -177,18 +179,22 @@ KT.discovery_templates = (function(){
         if (url_list.length === 0) {
             return '<tr><td></td></tr>';
         }
-        KT.utils.each(url_list, function(elem){
-            html += url_list_item(elem, selected_list);
+        KT.utils.each(url_list, function(elem, index){
+            html += url_list_item(elem, selected_list, index % 2 === 0);
         });
         return html;
     },
-    url_list_item = function(item, selected_list){
+    url_list_item = function(item, selected_list, odd){
         var selected = '',
-            html = '';
+            html = '',
+            alt = '';
+        if (!odd) {
+            alt = 'alt';
+        }
         if (KT.utils.indexOf(selected_list, item.url) !== -1){
             selected = 'checked';
         }
-        html = '<tr><td><label>'
+        html = '<tr class="' + alt + '"><td><label>'
         html += '<input type="checkbox"' + selected + ' value="' + item.url + '"/>' + item.path + '</label>';
         html += '</td>';
         html += '<td>' + existing_tipsy(item.existing) + '</td></tr>';
