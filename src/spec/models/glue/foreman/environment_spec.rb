@@ -43,4 +43,14 @@ describe Glue::Foreman::Environment do
       @environment.destroy
     end
   end
+
+  context "Updating an environment" do
+    it "should update the name" do
+      @environment.save!
+
+      foreman_environment.should_receive(:name=).with("a different name")
+      foreman_environment.should_receive(:save!)
+      @environment.update_attributes!(:name => "a different name")
+    end
+  end
 end

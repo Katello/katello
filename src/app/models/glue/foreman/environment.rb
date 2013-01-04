@@ -45,6 +45,9 @@ module Glue::Foreman::Environment
         when :create
           pre_queue.create :name   => "create foreman environment: #{name}", :priority => 3,
                            :action => [self, :create_foreman_environment]
+        when :update
+          pre_queue.create :name => "update foreman environment: #{foreman_id}:#{name}", :priority => 3,
+                           :action => [self, :update_foreman_environment]
       end
     end
 
@@ -59,6 +62,11 @@ module Glue::Foreman::Environment
       @foreman_environment = ::Foreman::Environment.new(:name => name)
       foreman_environment.save!
       self.foreman_id = foreman_environment.id
+    end
+
+    def update_foreman_environment
+      foreman_environment.name = name
+      foreman_environment.save!
     end
 
     def destroy_foreman_environment
