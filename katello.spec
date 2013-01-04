@@ -709,7 +709,7 @@ getent group %{name} >/dev/null || groupadd -r %{name} -g 182
 getent passwd %{name} >/dev/null || \
     useradd -r -g %{name} -d %{homedir} -u 182 -s /sbin/nologin -c "Katello" %{name}
 # add tomcat & katello to the katello shared group for reading sensitive files
-groupadd katello-shared
+getent group katello-shared > /dev/null || groupadd -r katello-shared
 usermod -a -G katello-shared tomcat
 usermod -a -G katello-shared katello
 exit 0

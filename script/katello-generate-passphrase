@@ -42,4 +42,4 @@ FILE=/etc/katello/secure/passphrase
 PASS=$(</dev/urandom tr -dc A-Za-z0-9 | head -c 64)
 echo "$PASS" > $FILE
 
-chgrp -R katello-shared /etc/katello/secure/
+chgrp katello-shared $FILE
