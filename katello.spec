@@ -507,7 +507,7 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %post headpin
 usermod -a -G katello-shared tomcat
 
-%post katello
+%post
 usermod -a -G katello-shared tomcat
 
 %files
