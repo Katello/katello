@@ -1,12 +1,4 @@
-= content_for :title do
-  #{view_definition.name}
-
-= content_for :remove_item do
-  - if editable
-    = link_to _("Remove"), content_view_definition_path(view_definition.id), :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
-
-= content_for :navigation do
-  = render_menu(1..2, content_view_definition_navigation)
+= render :partial => "content_view_definitions/tupane_header"
 
 = content_for :content do
 

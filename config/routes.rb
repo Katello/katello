@@ -82,6 +82,7 @@ Src::Application.routes.draw do
       get :items
     end
     member do
+      post :clone
       get :views
       get :publish_setup
       post :publish
