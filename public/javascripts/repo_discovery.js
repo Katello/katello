@@ -39,7 +39,7 @@ KT.repo_discovery = (function(){
         init_cancel();
     },
     open_subpane = function(){
-        var urls = '?url=';
+        var urls = '?';
         KT.utils.each(selected(), function(element, index){
            if(index > 0) {
                urls += '&';
