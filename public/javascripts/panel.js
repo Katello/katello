@@ -353,7 +353,7 @@ KT.panel = (function ($) {
                     });
 
                     KT.common.jscroll_init($('.scroll-pane'));
-    				        KT.common.jscroll_resize($('.jspPane'));
+    				KT.common.jscroll_resize($('.jspPane'));
 
                     if (isSubpanel) {
                         panelResize($('#subpanel_main'), isSubpanel);
@@ -385,17 +385,12 @@ KT.panel = (function ($) {
         adjustHeight = function (paneljQ, isSubpanel) {
             var leftPanel = $('.left'),
                 tupane_panel = $('#panel'),
-                new_top = Math.floor($('.list').offset().top - 60),
                 header_spacing = tupane_panel.find('.head').height(),
                 subnav_spacing = tupane_panel.find('nav').height() + 10,
-                content_spacing = paneljQ.height(),
-                panelFrame = paneljQ.parent().parent().parent().parent(),
                 tupane_header = $('.tupane_header').height() || 0,
                 tupane_footer = $('.tupane_footer').height() || 0,
-                extraHeight = 0,
                 window_height = $(window).height(),
-                container_offset = $('#container').offset().top,
-                subpanelnav,
+                container_offset = $('#container').offset().top,                
                 height,
                 default_height = 565,
                 default_spacing = header_spacing + subnav_spacing + tupane_header + tupane_footer + 30;
@@ -411,10 +406,15 @@ KT.panel = (function ($) {
             } else {
                 height = default_height - default_spacing + 20;
             }
+
+
             if (isSubpanel) {
-                subpanelnav = ($('#subpanel').find('nav').length > 0) ? $('#subpanel').find('nav').height() + 10 : 0;
-                height = height - subpanelSpacing * 2 - subpanelnav + subnav_spacing;
+                //if we have a footer, lets make sure we cover it up
+                if($('.tupane_footer').length > 0) {
+                    height += $('.tupane_footer').outerHeight();
+                }
             }
+
 
             paneljQ.height(height);
 
