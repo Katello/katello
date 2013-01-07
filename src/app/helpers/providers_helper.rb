@@ -14,12 +14,6 @@ module ProvidersHelper
   include SyncManagementHelper
   include SyncManagementHelper::RepoMethods
 
-  #def product_map
-  #  data = Support.time{product_map1}
-  #  logger.info("Took #{data} seconds to setup")
-  #  product_map1
-  #end
-
   def product_map
     @product_map ||= normalize(collect_repos(
                                     @provider.products.with_repos_only(current_organization.library),
@@ -42,9 +36,9 @@ module ProvidersHelper
     @provider_editable
   end
 
- def normalize children, parent_set =[], data = nil, item_type = nil
-   data = [] unless data
-   children.sort{|a,b| a[:name] <=> b[:name]}.each do |child|
+  def normalize(children, parent_set =[], data = nil, item_type = nil)
+    data = [] unless data
+    children.sort{|a,b| a[:name] <=> b[:name]}.each do |child|
       new_set = parent_set + [child[:id]]
       item =  {:id => set_id(new_set),
                :class => parent_set_class(parent_set),
@@ -69,8 +63,16 @@ module ProvidersHelper
         normalize(child[:repos], new_set, data, "repository")
       end
     end
-   data
- end
+    data
+  end
+
+  def name_from_url(provider, url)
+    url.sub(provider.discovery_url, '').gsub('/', ' ').strip
+  end
+
+  def label_from_url(provider, url)
+    Katello::ModelUtils::labelize(name_from_url(provider, url))
+  end
 
 end
 
