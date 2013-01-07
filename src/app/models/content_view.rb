@@ -42,6 +42,11 @@ class ContentView < ActiveRecord::Base
   scope :default, where(:default=>true)
   scope :non_default, where(:default=>false)
 
+  def promoted?
+    # if the view exists in more than 1 environment, it has been promoted
+    self.environments.length > 1 ? true : false
+  end
+
   def as_json(options = {})
     result = self.attributes
     result['organization'] = self.organization.try(:name)
