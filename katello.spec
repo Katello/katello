@@ -508,10 +508,10 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %posttrans common
 /sbin/service %{name} condrestart >/dev/null 2>&1 || :
 
-%post headpin
+%post headpin-all
 usermod -a -G katello-shared tomcat
 
-%post
+%post all
 usermod -a -G katello-shared tomcat
 
 %files
