@@ -11,7 +11,7 @@ require './lib/util/boot_util'
 # With a pull request, send also link to our (or Fedora) koji with RPMs.
 source 'http://rubygems.org'
 
-gem 'rails', '~> 3.0.10'
+gem 'rails', '3.0.10'
 gem 'json'
 gem 'rest-client', :require => 'rest_client'
 gem 'jammit', '>= 0.5.4'
