@@ -1,11 +1,26 @@
 @import "katello_base";
 
+$sixty: (($static_width) * 0.6);
+$forty: $static_width - $sixty;
+.sixty, .forty {
+  float: left;
+  margin: 0 10px
+}
+.sixty {
+  margin-left: 20px;
+  width: $sixty - 50;
+}
+.forty {
+  width: $forty - 10;
+  margin-right: 0;
+}
 
 /* box for "errors" on the custom 500 error page */
 .dash {
     $big_height: 350px;
-    $big_width: 490px;
+    $big_width: $sixty - 85;
     $small_height: 153px;
+    $small_width: $forty - 35;
 
     @include border-radius(3px);
     background-color: $lightergrey_color;
@@ -35,7 +50,6 @@
 
     #dashboard_subscriptions {
       height: $small_height;
-      color: $font_color;
       .sub_count {
         font-family: $headlinefont;
         font-size: 140%;
@@ -43,7 +57,7 @@
       .sys_count {
         font-size: 220%;
         font-weight: bold;
-        @include _text-shadow(#FFF,0,1px,0px);
+        @include text-shadow(0 1px 0 rgba($white_color, 1));
         margin-left: 20px;
       }
       #sub_graph {
@@ -61,7 +75,7 @@
         font-size: 115%;
       }
       .left_side {
-        width: 300px;
+        width: ($big_width * 0.70);
         display: inline-block;
 
         .icon {
@@ -426,13 +440,14 @@
     .small_widget {
         overflow: hidden;
         height: $small_height;
-        width: 375px;
+        width: $small_width;
         list-style: None;
         li {
-          margin-bottom: 3px;
-        }
-        li {
           margin-bottom: 5px;
+          @include border-radius(10px);
+          &:hover {
+            background-color: $g1;
+          }
         }
         h5 {
           margin-bottom: -1px;
@@ -442,14 +457,15 @@
       }
     .small_widget_headpin {
         overflow: hidden;
-        height: 147px;
-        width: 375px;
+        height: 170px;
+        width: $small_width;
         list-style: None;
         li {
-          margin-bottom: 3px;
-        }
-        li {
           margin-bottom: 5px;
+          @include border-radius(10px);
+          &:hover {
+            background-color: $g1;
+          }
         }
         h5 {
           margin-bottom: -1px;
@@ -461,12 +477,14 @@
         overflow: hidden;
         height: $small_height;
         width: $big_width;
-        list-style: None;
+        list-style: none;
         li {
-          margin-bottom: 3px;
-        }
-        li {
-          margin: 10px 0;
+          margin: 5px 0 3px 0;
+          padding: 3px;
+          @include border-radius(10px);
+          &:hover {
+            background-color: $g1;
+          }
         }
         h5 {
           margin-bottom: -5px;
@@ -525,7 +543,7 @@
             width: 100%;
             padding: 7px 0 4px 0;
             label {
-                color: #FFF;
+                color: $white_color;
             }
             select {
                 width: 115px;
@@ -538,7 +556,7 @@
   // about page css
 
   .dash {
-    height: 210px;
+
   }
 
   h2.about-header {
@@ -575,6 +593,12 @@
 
   .widget .package:last-child {
     margin-bottom: 3px;
+  }
+  .support {
+    height: 30px;
+  }
+  .packages {
+    height: 320px;
   }
 }
 

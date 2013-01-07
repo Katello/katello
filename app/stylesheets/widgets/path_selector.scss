@@ -6,13 +6,17 @@
 $widget-border-color: #D7D7D7;
 $widget-background-color: #F9F8F8;
 
+#path-widget {
+  width: 80%
+}
+
 .path_button {
   position: relative;
 }
 
 //If the selector is not inline, we add a background color
 .hover_selector {
-  background: #FFF;
+  background: $white_color;
   border-color: $widget-border-color;
   border-width: 1px;
   border-style: solid;
@@ -25,7 +29,7 @@ $widget-background-color: #F9F8F8;
   top: 100%;
   line-height: 22px;
   @include border-radius(0 0 8px 8px);
-  @include box-shadow(0px 6px 10px #D4EEFC);
+  @include box-shadow(0px 6px 10px $kprimary_hover_color);
 
   form { padding: 15px; }
   footer { 
@@ -82,7 +86,7 @@ $widget-background-color: #F9F8F8;
           }
 
           &:hover {
-            color: #FFF;
+            color: $white_color;
             background: $listhover_color !important;
           }
           &:after {
@@ -121,8 +125,7 @@ $widget-background-color: #F9F8F8;
 
     &:hover {
       background: $listhover_color !important;
-      color: #FFF;
-      //@include _text-shadow(rgba(0,0,0,0.6),2px,2px,2px);
+      color: $white_color;
       &:after { border-left-color: $listhover_color !important; }
     }
     &.active {

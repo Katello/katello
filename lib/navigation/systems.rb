@@ -64,13 +64,13 @@ module Navigation
           :options => {:class=>"panel_link menu_parent"},
           :items => systems_subnav
         },
-        { :key => :subscriptions,
+        { :key => :systems_subscriptions,
           :name =>_("Subscriptions"),
           :url => lambda{subscriptions_system_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"panel_link"}
         },
-        { :key => :content,
+        { :key => :system_content,
           :name =>_("Content"),
           :url => lambda{products_system_path(@system.id)},
           :if => lambda{@system},
@@ -78,7 +78,7 @@ module Navigation
           :items => systems_content_subnav
         }
       ]
-      menu << { :key => :system_groups,
+      menu << { :key => :systems_system_groups,
           :name =>_("System Groups"),
           :url => lambda{system_groups_system_path(@system.id)},
           :if => lambda{@system},
@@ -112,14 +112,14 @@ module Navigation
 
     def systems_content_subnav
       menu = [
-        { :key => :products,
+        { :key => :systems_products,
           :name =>_("Software"),
           :url => lambda{products_system_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"third_level panel_link"}
         }
       ]
-      menu << { :key => :packages,
+      menu << { :key => :systems_packages,
           :name =>_("Packages"),
           :url => lambda{packages_system_system_packages_path(@system.id)},
           :if => lambda{@system},
@@ -137,20 +137,20 @@ module Navigation
     def system_groups_navigation
       [
         {
-          :key => :systems,
+          :key => :system_groups_systems,
           :name => _('Systems'),
           :url => lambda{systems_system_group_path(@group.id)},
           :if => lambda{@group},
           :options => {:class=>"panel_link"}
         },
-        { :key => :content,
+        { :key => :system_group_content,
           :name =>_("Content"),
           :url => lambda{system_group_packages_path(@group.id)},
           :if => lambda{@group},
           :options => {:class=>"panel_link menu_parent"},
           :items => system_groups_content_subnav
         },
-        { :key => :details,
+        { :key => :system_group_details,
           :name =>_("Details"),
           :url => lambda{edit_system_group_path(@group.id)},
           :if => lambda{@group},
@@ -168,7 +168,7 @@ module Navigation
           :if => lambda{@group},
           :options => {:class=>"third_level panel_link"},
         },
-        { :key => :events,
+        { :key => :system_group_events,
           :name =>_("Events History"),
           :url => lambda{system_group_events_path(@group.id)},
           :if => lambda{@group},
@@ -179,13 +179,13 @@ module Navigation
 
     def system_groups_content_subnav
       [
-        { :key => :packages,
+        { :key => :system_groups_packages,
           :name =>_("Packages"),
           :url => lambda{system_group_packages_path(@group.id)},
           :if => lambda{@group},
           :options => {:class=>"third_level panel_link"},
         },
-        { :key => :errata,
+        { :key => :system_group_errata,
           :name =>_("Errata"),
           :url => lambda{system_group_errata_path(@group.id)},
           :if => lambda{@group},

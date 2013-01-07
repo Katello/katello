@@ -13,7 +13,7 @@ require "util/model_util"
 
 class LibraryPresenceValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    record.errors[attribute] << N_("must contain 'Library'") if value.select {|e| e.library}.empty?
+    record.errors[attribute] << N_("must contain '%s'") % "Library" if value.select {|e| e.library}.empty?
   end
 end
 
@@ -36,7 +36,6 @@ class Product < ActiveRecord::Base
   has_and_belongs_to_many :changesets
 
   has_many :environment_products, :class_name => "EnvironmentProduct", :dependent => :destroy, :uniq=>true
-  has_and_belongs_to_many :filters, :uniq => true
 
   belongs_to :provider, :inverse_of => :products
   belongs_to :sync_plan, :inverse_of => :products
@@ -147,13 +146,6 @@ class Product < ActiveRecord::Base
     repo_ids = self.repos(env).collect{|r| r.pulp_id}
     results = Errata.search('', 0, 1, :repoids => repo_ids)
     results.empty? ? 0 : results.total
-  end
-
-  def has_filters? env
-    return false unless env == organization.library
-    return true if filters.count > 0
-    repos(organization.library).any?{|repo| repo.has_filters?}
-
   end
 
   scope :all_in_org, lambda{|org| ::Product.joins(:provider).where('providers.organization_id = ?', org.id)}

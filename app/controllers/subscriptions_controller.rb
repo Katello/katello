@@ -78,27 +78,7 @@ class SubscriptionsController < ApplicationController
     #       search and didn't refresh the page while the data was changing behind the scenes. Until this
     #       becomes a specific issue, re-indexing will not be performed constantly.
     if search.nil?
-      # Raw candlepin pools
-      cp_pools = Resources::Candlepin::Owner.pools(current_organization.label)
-      if cp_pools
-        # Pool objects
-        pools = cp_pools.collect{|cp_pool| ::Pool.find_pool(cp_pool['id'], cp_pool)}
-
-        # Limit subscriptions to just those from Red Hat provider
-        subscriptions = pools.collect do |pool|
-          product = Product.where(:cp_id => pool.product_id, :provider_id => current_organization.redhat_provider.id).first
-          next if product.nil?
-          pool.provider_id = product.provider_id   # Set so it is saved into elastic search
-          pool
-        end.compact
-        subscriptions = [] if subscriptions.nil?
-
-        # Index pools
-        # Note: Only the Red Hat provider subscriptions are being indexed.
-        ::Pool.index_pools(subscriptions) if subscriptions.length > 0
-      else
-        subscriptions = []
-      end
+      subscriptions = current_organization.redhat_provider.index_subscriptions
 
       if offset != 0
         render :text => "" and return if subscriptions.empty?

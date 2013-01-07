@@ -80,7 +80,7 @@ class ProductsController < ApplicationController
       end
     end
 
-    if params[:product].has_key?(:gpg_all_repos)
+    if params[:product].fetch(:gpg_all_repos, 'false').to_bool
       notify.success _("All repository GPG keys for Product '%s' were updated.") % @product.name
       @product.reset_repo_gpgs!
     else

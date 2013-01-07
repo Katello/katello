@@ -14,10 +14,14 @@ module Glue::Pulp::Consumer
   def self.included(base)
     base.send :include, InstanceMethods
     base.send :include, LazyAccessor
+
     base.class_eval do
-      before_save :save_pulp_orchestration
+      before_save    :save_pulp_orchestration
       before_destroy :destroy_pulp_orchestration
       after_rollback :rollback_on_pulp_create, :on => :create
+  
+      add_system_group_hook     lambda { |system_group| system_group.add_consumer(self) }
+      remove_system_group_hook  lambda { |system_group| system_group.remove_consumer(self) }
 
       lazy_accessor :pulp_facts, :initializer => lambda {|s| Runcible::Extensions::Consumer.retrieve(uuid) }
       lazy_accessor :package_profile, :initializer => lambda {|s| Runcible::Extensions::Consumer.profile(uuid, 'rpm') }
@@ -25,23 +29,28 @@ module Glue::Pulp::Consumer
                                                               collect{|package| Glue::Pulp::SimplePackage.new(package)} }
       lazy_accessor :errata, :initializer => lambda {|s| Resources::Pulp::Consumer.errata(uuid).
                                                               collect{|errata| Errata.new(errata)} }
-      lazy_accessor :repoids, :initializer => lambda {|s| Runcible::Extensions::Consumer.repos(uuid).
-                                                              collect{|repo| repo["repo_id"]} }
+      lazy_accessor :repoids, :initializer => lambda {|s| Runcible::Extensions::Consumer.retrieve_bindings(uuid).
+                                                              collect{ |repo| repo["repo_id"]} }
     end
   end
 
   module InstanceMethods
+
     def enable_repos update_ids
       # calculate repoids to bind/unbind
-      bound_ids = repoids
-      intersection = update_ids & bound_ids
-      bind_ids = update_ids - intersection
-      unbind_ids = bound_ids - intersection
+      bound_ids     = repoids
+      intersection  = update_ids & bound_ids
+      bind_ids      = update_ids - intersection
+      unbind_ids    = bound_ids - intersection
+
       Rails.logger.debug "Bound repo ids: #{bound_ids.inspect}"
       Rails.logger.debug "Update repo ids: #{update_ids.inspect}"
       Rails.logger.debug "Repo ids to bind: #{bind_ids.inspect}"
       Rails.logger.debug "Repo ids to unbind: #{unbind_ids.inspect}"
-      processed_ids = []; error_ids = []
+
+      processed_ids = []
+      error_ids     = []
+
       unbind_ids.each do |repoid|
         begin
           Runcible::Extensions::Consumer.unbind_all(uuid, repoid)
@@ -51,6 +60,7 @@ module Glue::Pulp::Consumer
           error_ids << repoid
         end
       end
+
       bind_ids.each do |repoid|
         begin
           Runcible::Extensions::Consumer.bind_all(uuid, repoid)
@@ -60,7 +70,8 @@ module Glue::Pulp::Consumer
           error_ids << repoid
         end
       end
-      [processed_ids, error_ids]
+
+      return [processed_ids, error_ids]
     rescue => e
       Rails.logger.error "Failed to enable repositories: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -95,10 +106,10 @@ module Glue::Pulp::Consumer
     def update_pulp_consumer
       return true if @changed_attributes.empty?
 
-      Rails.logger.debug "Updating consumer in pulp: #{@old.name}"
+      Rails.logger.debug "Updating consumer in pulp: #{self.name}"
       Runcible::Extensions::Consumer.update(self.uuid, :display_name => self.name)
     rescue => e
-      Rails.logger.error "Failed to update pulp consumer #{@old.name}: #{e}, #{e.backtrace.join("\n")}"
+      Rails.logger.error "Failed to update pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
     
