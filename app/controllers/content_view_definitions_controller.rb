@@ -178,7 +178,7 @@ class ContentViewDefinitionsController < ApplicationController
   end
 
   def refresh
-    initial_version = @view.version(current_organization.library).version unless @view.version(current_organization.library).nil?
+    initial_version = @view.version(current_organization.library).try(:version)
 
     new_version = @view.refresh_view({:notify => true})
 
@@ -189,7 +189,7 @@ class ContentViewDefinitionsController < ApplicationController
            :locals => { :view_definition => @view.content_view_definition, :view => @view,
                         :task => new_version.task_status }
   rescue => e
-    current_version = @view.version(current_organization.library).version unless @view.version(current_organization.library).nil?
+    current_version = @view.version(current_organization.library).try(:version)
 
     if (current_version == initial_version)
       notify.exception(_("Failed to generate a new version of content view '%{view_name}'.") %
