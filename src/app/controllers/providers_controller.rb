@@ -179,14 +179,14 @@ class ProvidersController < ApplicationController
   def cancel_discovery
     @provider.discovery_task = nil
     @provider.save!
-    render :text=>''
+    render :nothing=>true
   end
 
   def discover
     @provider.discovery_url = params[:url]
     @provider.save!
     @provider.discover_repos
-    render :text=>''
+    render :nothing=>true
   end
 
 
