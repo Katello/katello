@@ -33,7 +33,7 @@ class Ping
     # This should be called as 'admin' user otherwise the oauth will fail.
     #
     def ping
-      if AppConfig.katello?
+      if Katello.config.katello?
         result = { :result => OK_RETURN_CODE, :status => {
           :pulp => {},
           :candlepin => {},
@@ -53,27 +53,27 @@ class Ping
       end
 
       # pulp - ping without oauth
-      if AppConfig.katello?
-        url = AppConfig.pulp.url
+      if Katello.config.katello?
+        url = Katello.config.pulp.url
         exception_watch(result[:status][:pulp]) do
           RestClient.get "#{url}/services/status/"
         end
       end
 
       # candlepin - ping without oauth
-      url = AppConfig.candlepin.url
+      url = Katello.config.candlepin.url
       exception_watch(result[:status][:candlepin]) do
         RestClient.get "#{url}/status"
       end
 
       # elasticsearch - ping without oauth
-      url = AppConfig.elastic_url
+      url = Katello.config.elastic_url
       exception_watch(result[:status][:elasticsearch]) do
         RestClient.get "#{url}/_status"
       end
 
       # pulp - ping with oauth
-      if AppConfig.katello?
+      if Katello.config.katello?
         exception_watch(result[:status][:pulp_auth]) do
           Resources::Pulp::PulpPing.ping
         end

@@ -97,7 +97,7 @@ class Pool < ActiveRecord::Base
   end
 
   def self.index
-    "#{AppConfig.elastic_index}_pool"
+    "#{Katello.config.elastic_index}_pool"
   end
 
   # If the pool_json is passed in, then candlepin is not hit again to fetch it. This is for the case where

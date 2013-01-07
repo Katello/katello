@@ -44,7 +44,7 @@ describe User do
   describe "User shouldn't" do
     before(:each) do
       disable_user_orchestration
-      AppConfig.warden = 'database'
+      Katello.config[:warden] = 'database'
     end
 
     it "be able to create" do
@@ -58,12 +58,12 @@ describe User do
   describe "Users in LDAP should" do
     before(:each) do
       disable_user_orchestration
-      AppConfig.warden = 'ldap'
+      Katello.config[:warden] = 'ldap'
       @user = User.create_ldap_user!('testuser')
     end
 
     after(:each) do
-      AppConfig.warden = 'database'
+      Katello.config[:warden] = 'database'
     end
 
     it 'be able to create' do
@@ -116,7 +116,7 @@ describe User do
 
   it "should allow email address as username", :katello => false do
     disable_user_orchestration
-    AppConfig.warden = 'database'
+    Katello.config[:warden] = 'database'
     User.create!(:username => EMAIL, :password => PASSWORD, :email => EMAIL)
     u = User.find_by_username(EMAIL)
     u.should_not be_nil
@@ -125,7 +125,7 @@ describe User do
   describe "User should" do
     before(:each) do
       disable_user_orchestration
-      AppConfig.warden = 'database'
+      Katello.config[:warden] = 'database'
       @user = User.create!(to_create_simple)
       current_user = @user
       User.stub(:current).and_return(current_user)

@@ -29,7 +29,7 @@ class Api::ApiController < ActionController::Base
   rescue_from RestClient::ExceptionWithResponse, :with => :exception_with_response
   rescue_from ActiveRecord::RecordInvalid, :with => :process_invalid
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
-  if AppConfig.use_foreman
+  if Katello.config.use_foreman
     rescue_from Resources::ForemanModel::Invalid, :with => :process_invalid
     rescue_from Resources::ForemanModel::NotFound, :with => :record_not_found
   end
@@ -64,7 +64,7 @@ class Api::ApiController < ActionController::Base
   end
 
   def add_candlepin_version_header
-    response.headers["X-CANDLEPIN-VERSION"] = "katello/#{AppConfig.katello_version}"
+    response.headers["X-CANDLEPIN-VERSION"] = "katello/#{Katello.config.katello_version}"
   end
 
   # remove unwanted parameters 'action' and 'controller' from params list and return it
@@ -110,7 +110,7 @@ class Api::ApiController < ActionController::Base
   def verify_ldap
     if !request.authorization.blank?
       u = current_user
-      u.verify_ldap_roles if (AppConfig.ldap_roles && u != nil)
+      u.verify_ldap_roles if (Katello.config.ldap_roles && u != nil)
     end
   end
 
@@ -153,7 +153,7 @@ class Api::ApiController < ActionController::Base
     logger.error exception.class
     logger.debug exception.backtrace.join("\n")
     errors = case exception
-    when AppConfig.use_foreman && Resources::ForemanModel::Invalid
+    when Katello.config.use_foreman && Resources::ForemanModel::Invalid
       exception.resource.errors
     when ActiveRecord::RecordInvalid
       exception.record.errors
@@ -232,7 +232,7 @@ class Api::ApiController < ActionController::Base
 
   protected
 
-  if AppConfig.debug_rest
+  if Katello.config.debug_rest
     def process_action(method_name, *args)
       super(method_name, *args)
       Rails.logger.debug "With body: #{response.body}\n"

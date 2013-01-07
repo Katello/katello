@@ -14,10 +14,6 @@ first_user_email= Util::Puppet.config_value("user_email") || 'root@localhost'
 first_org_name = Util::Puppet.config_value("org_name") || 'ACME_Corporation'
 first_org_label = Util::Puppet.config_value("org_label") || 'ACME_Corporation'
 
-AppConfig.use_cp = false if ENV['NO_CP']
-AppConfig.use_pulp = false if ENV['NO_PULP']
-AppConfig.use_foreman = false if ENV['NO_FOREMAN']
-
 def format_errors model=nil
   return '(nil found)' if model.nil?
   model.errors.full_messages.join(';')
@@ -44,7 +40,7 @@ unless user_admin
       :password => first_user_password,
       :email    => first_user_email)
   User.current = user_admin
-  if AppConfig.use_foreman
+  if Katello.config.use_foreman
     foreman_admin_user = ::Foreman::User.all(:search => 'login=admin').first or
         raise 'could not find foreman-admin-user'
     user_admin.foreman_id = foreman_admin_user.id

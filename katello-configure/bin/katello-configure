@@ -59,6 +59,7 @@ option_parser = OptionParser.new
 show_resulting_answer_file = false
 nobars = false
 debug_stdout = false
+katello_configuration_files_only = false
 begin
 	option_parser.banner = "Usage: #{$0} [options]"
   option_parser.summary_width = 8
@@ -72,6 +73,10 @@ begin
 
 	option_parser.on_tail.on('-b', '--no-bars', 'Do not show progress bars and output puppet log instead') do
 		nobars = true
+	end
+	option_parser.on_tail.on('--katello-configuration-files-only',
+                           'Configure only Katello config files. Do NOT use! (used internally by katello-upgrade)') do
+    katello_configuration_files_only = true
 	end
 	option_parser.on_tail.on('-d', '--debug', 'Print more debugging information to on the stdout (use with -b)') do
     debug_stdout = true
@@ -236,6 +241,13 @@ commands_by_logfiles = { # numbers are expected lines in those logs, alas curren
 puppet_logfile_filename = log_directory + '/main.log'
 puppet_logfile_aprox_size = 1266
 
-main_puppet(puppet_cmd, nobars, default_progressbar_title, puppet_logfile_filename, puppet_logfile_aprox_size, debug_stdout, commands_by_logfiles, "include katello")
+main_puppet puppet_cmd,
+            nobars,
+            default_progressbar_title,
+            puppet_logfile_filename,
+            puppet_logfile_aprox_size,
+            debug_stdout,
+            commands_by_logfiles,
+            katello_configuration_files_only ? 'include katello::config::files' : 'include katello'
 
 exit

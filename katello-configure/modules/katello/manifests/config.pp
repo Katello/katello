@@ -1,32 +1,5 @@
 class katello::config {
-
-  # this should be required by all classes that need to log there (one of these)
-  file { "${katello::params::log_base}":
-    owner   => $katello::params::user,
-    group   => $katello::params::group,
-    mode    => 750;
-  # this is a symlink when called via katello-configure
-  "${katello::params::configure_log_base}":
-    owner   => $katello::params::user,
-    group   => $katello::params::group,
-    mode    => 750;
-  }
-
-  # create Rails logs in advance to get correct owners and permissions
-  file {[
-    "${katello::params::log_base}/production.log",
-    "${katello::params::log_base}/production_sql.log",
-    "${katello::params::log_base}/production_delayed_jobs.log",
-    "${katello::params::log_base}/production_delayed_jobs_sql.log",
-    "${katello::params::log_base}/production_orch.log",
-    "${katello::params::log_base}/production_delayed_jobs_orch.log"]:
-      owner   => $katello::params::user,
-      group   => $katello::params::group,
-      content => "",
-      replace => false,
-      mode    => 640,
-      require => [ File["${katello::params::log_base}"] ];
-  }
+  include katello::config::files
 
   postgres::createuser { $katello::params::db_user:
     passwd  => $katello::params::db_pass,
@@ -40,46 +13,9 @@ class katello::config {
     require => [ Postgres::Createuser[$katello::params::db_user], File["${katello::params::configure_log_base}"] ],
   }
 
-  file {
-    "${katello::params::config_dir}/thin.yml":
-      content => template("katello/${katello::params::config_dir}/thin.yml.erb"),
-      owner   => "root",
-      group   => "root",
-      mode    => "644";
-
-    "${katello::params::config_dir}/katello.yml":
-      content => template("katello/${katello::params::config_dir}/katello.yml.erb"),
-      owner   => $katello::params::user,
-      group   => $katello::params::group,
-      mode    => "600",
-      notify  => Exec["reload-apache2"];
-
-    "/etc/sysconfig/katello":
-      content => template("katello/etc/sysconfig/katello.erb"),
-      owner   => "root",
-      group   => "root",
-      mode    => "644",
-      notify  => Exec["reload-apache2"];
-
-    "/etc/katello/client.conf":
-      content => template("katello/etc/katello/client.conf.erb"),
-      owner   => "root",
-      group   => "root",
-      mode    => "644";
-
-    "/etc/httpd/conf.d/katello.conf":
-      content => template("katello/etc/httpd/conf.d/katello.conf.erb"),
-      owner   => "root",
-      group   => "root",
-      mode    => "644",
-      notify  => Exec["reload-apache2"];
-
-    "/etc/ldap_fluff.yml":
-      content => template("katello/etc/ldap_fluff.yml.erb"),
-      owner   => $katello::params::user,
-      group   => $katello::params::group,
-      mode    => "600";
-  }
+  File["${katello::params::config_dir}/katello.yml"] ~> Exec["reload-apache2"]
+  File["/etc/sysconfig/katello"] ~> Exec["reload-apache2"]
+  File["/etc/httpd/conf.d/katello.conf"] ~> Exec["reload-apache2"]
 
   exec {"httpd-restart":
     command => "/bin/sleep 5; /sbin/service httpd restart; /bin/sleep 10",

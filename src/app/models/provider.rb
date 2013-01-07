@@ -128,7 +128,7 @@ class Provider < ActiveRecord::Base
   end
 
   def self.list_verbs  global = false
-    if AppConfig.katello?
+    if Katello.config.katello?
       {
         :create => _("Administer Providers"),
         :read => _("Read Providers"),
@@ -156,12 +156,12 @@ class Provider < ActiveRecord::Base
 
   def readable?
     return organization.readable? if redhat_provider?
-    User.allowed_to?(READ_PERM_VERBS, :providers, self.id, self.organization) || (AppConfig.katello? && self.organization.syncable?)
+    User.allowed_to?(READ_PERM_VERBS, :providers, self.id, self.organization) || (Katello.config.katello? && self.organization.syncable?)
   end
 
 
   def self.any_readable? org
-    (AppConfig.katello? && org.syncable?) || User.allowed_to?(READ_PERM_VERBS, :providers, nil, org)
+    (Katello.config.katello? && org.syncable?) || User.allowed_to?(READ_PERM_VERBS, :providers, nil, org)
   end
 
   def self.creatable? org
@@ -181,7 +181,7 @@ class Provider < ActiveRecord::Base
   def serializable_hash(options={})
     options = {} if options == nil
     hash = super(options)
-    if AppConfig.katello?
+    if Katello.config.katello?
       hash = hash.merge(:sync_state => self.sync_state,
                         :last_sync => self.last_sync)
     end
@@ -189,7 +189,7 @@ class Provider < ActiveRecord::Base
   end
 
   def extended_index_attrs
-    if AppConfig.katello?
+    if Katello.config.katello?
       products = self.products.map{|prod|
         {:product=>prod.name, :repo=>prod.repos(self.organization.library).collect{|repo| repo.name}}
       }
@@ -253,8 +253,7 @@ class Provider < ActiveRecord::Base
 
    def sanitize_repository_url
      if redhat_provider? && self.repository_url.blank?
-      self.repository_url = AppConfig.REDHAT_REPOSITORY_URL
-      self.repository_url = "https://cdn.redhat.com" unless self.repository_url
+      self.repository_url = Katello.config.redhat_repository_url
      end
      if self.repository_url
        self.repository_url.strip!
@@ -264,17 +263,17 @@ class Provider < ActiveRecord::Base
   def self.items org, verbs
     raise "scope requires an organization" if org.nil?
     resource = :providers
-    if (AppConfig.katello? && verbs.include?(:read) && org.syncable?) ||  User.allowed_all_tags?(verbs, resource, org)
+    if (Katello.config.katello? && verbs.include?(:read) && org.syncable?) ||  User.allowed_all_tags?(verbs, resource, org)
        where(:organization_id => org)
     else
       where("providers.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
     end
   end
 
-  READ_PERM_VERBS = [:read, :create, :update, :delete] if AppConfig.katello?
-  READ_PERM_VERBS = [:read, :update] if !AppConfig.katello?
-  EDIT_PERM_VERBS = [:create, :update] if AppConfig.katello?
-  EDIT_PERM_VERBS = [:update] if !AppConfig.katello?
+  READ_PERM_VERBS = [:read, :create, :update, :delete] if Katello.config.katello?
+  READ_PERM_VERBS = [:read, :update] if !Katello.config.katello?
+  EDIT_PERM_VERBS = [:create, :update] if Katello.config.katello?
+  EDIT_PERM_VERBS = [:update] if !Katello.config.katello?
 
 
 end

@@ -18,9 +18,9 @@ class LibraryPresenceValidator < ActiveModel::EachValidator
 end
 
 class Product < ActiveRecord::Base
-  include Glue::Candlepin::Product if AppConfig.use_cp
-  include Glue::Pulp::Repos if AppConfig.katello?
-  include Glue if AppConfig.use_cp
+  include Glue::Candlepin::Product if Katello.config.use_cp
+  include Glue::Pulp::Repos if Katello.config.katello?
+  include Glue if Katello.config.use_cp
   include Authorization
   include AsyncOrchestration
   include IndexedModel
@@ -122,7 +122,7 @@ class Product < ActiveRecord::Base
                       :multiplier => self.multiplier,
                       :attributes => self.attrs,
                       :id => self.cp_id)
-    if AppConfig.katello?
+    if Katello.config.katello?
       hash = hash.merge({
         :sync_plan_name => self.sync_plan ? self.sync_plan.name : nil,
         :sync_state => self.sync_state,

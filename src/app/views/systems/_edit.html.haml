@@ -70,7 +70,7 @@
           .grid_5.la{'name' => 'system[releaseVer]', 'class' => ("editable edit_select_system_releasever_message error_message" if editable), 'data-url'=>system_path(system.id), 'data-message'=>releases_error}
             = system.release == "" ? _("System Default") : system.release
         - elsif releases == []
-          - if AppConfig.katello?
+          - if Katello.config.katello?
             - none_message = ("No alternate release version choices are available. These choices are based upon the repositories that have been enabled and promoted to this system's environment.")
           - else
             - none_message = _("No alternate release version choices are available. These choices are based upon the Red Hat manifest imported and the content available in the CDN.")

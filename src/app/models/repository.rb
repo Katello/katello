@@ -21,9 +21,9 @@ end
 
 
 class Repository < ActiveRecord::Base
-  include Glue::Candlepin::Content if (AppConfig.use_cp and AppConfig.use_pulp)
-  include Glue::Pulp::Repo if (AppConfig.use_cp and AppConfig.use_pulp)
-  include Glue if AppConfig.use_cp
+  include Glue::Candlepin::Content if (Katello.config.use_cp and Katello.config.use_pulp)
+  include Glue::Pulp::Repo if (Katello.config.use_cp and Katello.config.use_pulp)
+  include Glue if Katello.config.use_cp
   include Authorization
   include AsyncOrchestration
   include IndexedModel

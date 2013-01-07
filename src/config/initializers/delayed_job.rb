@@ -6,11 +6,10 @@ require 'katello_logger'
 
 if caller.last =~ /script\/delayed_job:\d+$/ ||
     (caller[-10..-1].any? {|l| l =~ /\/rake/} && ARGV.include?("jobs:work"))
-  level = (ENV['KATELLO_LOGGING'] || "warn").dup
-  level_sql = (ENV['KATELLO_LOGGING_SQL'] || "fatal").dup
-  Delayed::Worker.logger = KatelloLogger.new("#{Rails.root}/log/#{Rails.env}_delayed_jobs.log", level)
-  Rails.logger = Delayed::Worker.logger
-  ActiveRecord::Base.logger = KatelloLogger.new("#{Rails.root}/log/#{Rails.env}_delayed_jobs_sql.log", level_sql)
+  Rails.logger = Delayed::Worker.logger =
+      KatelloLogger.new("#{Rails.root}/log/#{Rails.env}_delayed_jobs.log", Katello.config.log_level)
+  ActiveRecord::Base.logger =
+      KatelloLogger.new("#{Rails.root}/log/#{Rails.env}_delayed_jobs_sql.log", Katello.config.log_level_sql)
   Glue.logger = KatelloLogger.new("#{Rails.root}/log/production_delayed_jobs_orch.log", 'INFO')
 end
 

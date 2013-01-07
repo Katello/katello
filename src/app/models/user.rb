@@ -15,9 +15,9 @@ require 'util/threadsession'
 require 'util/password'
 
 class User < ActiveRecord::Base
-  include Glue::Pulp::User if AppConfig.katello?
-  include Glue::Foreman::User if AppConfig.use_foreman
-  include Glue if AppConfig.use_cp
+  include Glue::Pulp::User if Katello.config.katello?
+  include Glue::Foreman::User if Katello.config.use_foreman
+  include Glue if Katello.config.use_cp
   include AsyncOrchestration
   include IndexedModel
 
@@ -51,11 +51,11 @@ class User < ActiveRecord::Base
 
   validates :username, :uniqueness => true, :presence => true, :username => true
   validates :email, :presence => true, :if => :not_ldap_mode?
-  validates :default_locale, :inclusion => {:in => AppConfig.available_locales, :allow_nil => true, :message => _("must be one of %s") % AppConfig.available_locales.join(', ')}
+  validates :default_locale, :inclusion => {:in => Katello.config.available_locales, :allow_nil => true, :message => _("must be one of %s") % Katello.config.available_locales.join(', ')}
 
   # validate the password length before hashing
   validates_each :password do |model, attr, value|
-    if AppConfig.warden != 'ldap'
+    if Katello.config.warden != 'ldap'
       if model.password_changed?
         model.errors.add(attr, _("must be at least 5 characters.")) if value.length < 5
       end
@@ -63,7 +63,7 @@ class User < ActiveRecord::Base
   end
 
   def not_ldap_mode?
-    return AppConfig.warden != 'ldap'
+    return Katello.config.warden != 'ldap'
   end
 
 #  validates_each :own_role do |model, attr, value|
@@ -86,7 +86,7 @@ class User < ActiveRecord::Base
 
 # hash the password before creating or updateing the record
   before_save do |u|
-    if AppConfig.warden != 'ldap'
+    if Katello.config.warden != 'ldap'
       u.password = Password::update(u.password) if u.password.length != 192
     end
     u.preferences=HashWithIndifferentAccess.new unless u.preferences
@@ -714,7 +714,7 @@ class User < ActiveRecord::Base
   end
 
   def log_roles verbs, resource_type, tags, org, any_tags = false
-    if AppConfig.allow_roles_logging
+    if Katello.config.allow_roles_logging
       verbs_str = verbs ? verbs.join(',') :"perform any verb"
       tags_str  = "any tags"
       if tags

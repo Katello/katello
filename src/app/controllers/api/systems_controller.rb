@@ -241,7 +241,7 @@ DESC
   api :PUT, "/consumers/:id/profile", "Update installed packages"
   param :id, String, :desc => "UUID of the system", :required => true
   def upload_package_profile
-    if AppConfig.katello?
+    if Katello.config.katello?
       raise HttpErrors::BadRequest, _("No package profile received for %s") % @system.name unless params.has_key?(:_json)
       @system.upload_package_profile(params[:_json])
     end
@@ -317,7 +317,7 @@ DESC
       format.pdf do
         send_data(
           system_report.as(:prawn_pdf, pdf_options),
-          :filename => "%s_systems_report.pdf" % (AppConfig.katello? ? "katello" : "headpin"),
+          :filename => "%s_systems_report.pdf" % (Katello.config.katello? ? "katello" : "headpin"),
           :type => "application/pdf"
         )
       end

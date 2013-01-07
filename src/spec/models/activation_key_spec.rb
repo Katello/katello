@@ -27,13 +27,13 @@ describe ActivationKey do
     @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
     @environment_1 = KTEnvironment.create!(:name=>'dev', :label=> 'dev', :prior => @organization.library.id, :organization => @organization)
     @environment_2 = KTEnvironment.create!(:name=>'test', :label=> 'test', :prior => @environment_1.id, :organization => @organization)
-    @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @environment_1) if AppConfig.katello?
-    @system_template_2 = SystemTemplate.create!(:name => 'template2', :environment => @environment_1) if AppConfig.katello?
-    @system_template_env2 = SystemTemplate.create!(:name => 'template3', :environment => @environment_2) if AppConfig.katello?
+    @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @environment_1) if Katello.config.katello?
+    @system_template_2 = SystemTemplate.create!(:name => 'template2', :environment => @environment_1) if Katello.config.katello?
+    @system_template_env2 = SystemTemplate.create!(:name => 'template3', :environment => @environment_2) if Katello.config.katello?
     @akey = ActivationKey.create!(:name => aname, :description => adesc, :organization => @organization,
-                                  :environment_id => @environment_1.id, :system_template_id => @system_template_1.id) if AppConfig.katello?
+                                  :environment_id => @environment_1.id, :system_template_id => @system_template_1.id) if Katello.config.katello?
     @akey = ActivationKey.create!(:name => aname, :description => adesc, :organization => @organization,
-                                  :environment_id => @environment_1.id) unless AppConfig.katello?
+                                  :environment_id => @environment_1.id) unless Katello.config.katello?
   end
 
   context "in invalid state" do

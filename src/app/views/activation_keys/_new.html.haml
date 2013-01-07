@@ -21,7 +21,7 @@
         .clear
           &nbsp;
 
-      - if AppConfig.katello?
+      - if Katello.config.katello?
         = form.field :system_template_id, :label => _("System Template"), :wrapper => {:id => 'system_templates'}, :grid => [2,7] do
           = select_tag 'activation_key[system_template_id]', options_for_select(@system_template_labels, @selected_template)
 

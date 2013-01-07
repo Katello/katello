@@ -79,7 +79,7 @@ describe System do
 
   it "registers system in candlepin and pulp on create" do
     Resources::Candlepin::Consumer.should_receive(:create).once.with(@environment.id, @organization.name, system_name, cp_type, facts, installed_products, nil, nil, nil).and_return({:uuid => uuid, :owner => {:key => uuid}})
-    Resources::Pulp::Consumer.should_receive(:create).once.with(@organization.label, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}}) if AppConfig.katello?
+    Resources::Pulp::Consumer.should_receive(:create).once.with(@organization.label, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}}) if Katello.config.katello?
     @system.save!
   end
 
@@ -114,7 +114,7 @@ describe System do
 
     it "should delete consumer in candlepin and pulp" do
       Resources::Candlepin::Consumer.should_receive(:destroy).once.with(uuid).and_return(true)
-      Resources::Pulp::Consumer.should_receive(:destroy).once.with(uuid).and_return(true) if AppConfig.katello?
+      Resources::Pulp::Consumer.should_receive(:destroy).once.with(uuid).and_return(true) if Katello.config.katello?
       @system.destroy
     end
   end
@@ -288,7 +288,7 @@ describe System do
       @environment = KTEnvironment.create!({:name=>"Dev", :label=> "Dev", :prior => @organization.library, :organization => @organization}) do |e|
         e.products << @product
       end
-      if AppConfig.katello?
+      if Katello.config.katello?
         env_product = @product.environment_products.where(:environment_id => @environment.id).first
       else
         env_product = @product.environment_products.where(:environment_id => @organization.library.id).first
@@ -534,7 +534,7 @@ describe System do
   describe "a user with random system permissions in headpin mode" do
     before (:each) do
       @system.save!
-      AppConfig.stub!(:katello?).and_return(false)
+      Katello.config.stub!(:katello?).and_return(false)
     end
 
     it "should be deletable" do

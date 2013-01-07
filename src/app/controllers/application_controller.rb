@@ -223,13 +223,13 @@ class ApplicationController < ActionController::Base
 
     # Look for full match
     locales.each {|locale|
-      return locale if AppConfig.available_locales.include? locale
+      return locale if Katello.config.available_locales.include? locale
     }
 
     # Look for match to first two letters
     #
     locales.each {|locale|
-      return locale[0..1] if AppConfig.available_locales.include? locale[0..1]
+      return locale[0..1] if Katello.config.available_locales.include? locale[0..1]
     }
 
     # Default to 'en'
@@ -246,7 +246,7 @@ class ApplicationController < ActionController::Base
 
    def verify_ldap
     u = current_user
-    u.verify_ldap_roles if (AppConfig.ldap_roles && u != nil)
+    u.verify_ldap_roles if (Katello.config.ldap_roles && u != nil)
   end
 
   def require_org
@@ -295,7 +295,7 @@ class ApplicationController < ActionController::Base
     user
   end
 
-  # adapted from http_accept_lang gem, return list of browser locales 
+  # adapted from http_accept_lang gem, return list of browser locales
   def self.parse_locale
     locale_lang = env['HTTP_ACCEPT_LANGUAGE'].split(/\s*,\s*/).collect do |l|
       l += ';q=1.0' unless l =~ /;q=\d+\.\d+$/
@@ -461,7 +461,7 @@ class ApplicationController < ActionController::Base
 
     if search.nil? || search== ''
       all_rows = true
-    elsif search_options[:simple_query] && !AppConfig.simple_search_tokens.any?{|s| search.downcase.match(s)}
+    elsif search_options[:simple_query] && !Katello.config.simple_search_tokens.any?{|s| search.downcase.match(s)}
       search = search_options[:simple_query]
     end
     #search = Katello::Search::filter_input search
