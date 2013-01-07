@@ -39,8 +39,8 @@ module Resources
     end
 
     class PulpResource < HttpResource
-      if AppConfig.pulp
-        cfg = AppConfig.pulp
+      if Katello.config.pulp
+        cfg = Katello.config.pulp
         url = cfg.url
         self.prefix = URI.parse(url).path
         self.site = url.gsub(self.prefix, "")
@@ -274,8 +274,8 @@ module Resources
         end
 
         def sync (repo_id, data = {})
-          data[:limit] ||= AppConfig.pulp.sync_KBlimit if AppConfig.pulp.sync_KBlimit # set bandwidth limit
-          data[:threads] ||= AppConfig.pulp.sync_threads if AppConfig.pulp.sync_threads # set threads per sync
+          data[:limit] ||= Katello.config.pulp.sync_KBlimit if Katello.config.pulp.sync_KBlimit # set bandwidth limit
+          data[:threads] ||= Katello.config.pulp.sync_threads if Katello.config.pulp.sync_threads # set threads per sync
           path = Repository.repository_path + repo_id + "/sync/"
           response = post(path, JSON.generate(data), self.default_headers)
           JSON.parse(response.body).with_indifferent_access

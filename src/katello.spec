@@ -373,7 +373,9 @@ fi
 %if ! 0%{?fastbuild:1}
     #compile SASS files
     echo Compiling SASS files...
+    cp config/katello.template.yml config/katello.yml
     compass compile
+    rm config/katello.yml
 
     #generate Rails JS/CSS/... assets
     echo Generating Rails assets...
@@ -398,8 +400,10 @@ a2x -d manpage -f manpage man/katello-service.8.asciidoc
     # by default do not stop on missing dep and only require "build" environment
     export BUNDLER_EXT_NOSTRICT=1
     export BUNDLER_EXT_GROUPS="default apipie"
+    cp config/katello.template.yml config/katello.yml
     rake apipie:static --trace
     rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello --trace
+    rm config/katello.yml
 %endif
 
 %install
@@ -426,7 +430,7 @@ cp -R .bundle Gemfile.in bundler.d Rakefile app autotest ca config config.ru db 
 rm -f {buildroot}%{homedir}/script/katello-reset-dbs
 
 #copy configs and other var files (will be all overwriten with symlinks)
-install -m 600 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
+install -m 600 config/%{name}.template.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
 install -m 644 config/environments/production.rb %{buildroot}%{_sysconfdir}/%{name}/environment.rb
 
 #copy cron scripts to be scheduled daily

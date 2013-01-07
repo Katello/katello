@@ -30,8 +30,8 @@ describe Api::PingController do
 
   context "in headpin mode" do
     before (:each) do
-      AppConfig.stub!(:app_name).and_return("Headpin")
-      AppConfig.stub!(:katello_version).and_return("12")
+      Katello.config.stub!(:app_name).and_return("Headpin")
+      Katello.config.stub!(:katello_version).and_return("12")
     end
     it "staus should reflect the correct information" do
       get :status
@@ -43,8 +43,8 @@ describe Api::PingController do
   context "in katello mode" do
 
     before (:each) do
-      AppConfig.stub!(:app_name).and_return("Katello")
-      AppConfig.stub!(:katello_version).and_return("12")
+      Katello.config.stub!(:app_name).and_return("Katello")
+      Katello.config.stub!(:katello_version).and_return("12")
     end
     it "staus should reflect the correct information" do
       get :status

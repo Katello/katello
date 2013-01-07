@@ -10,24 +10,11 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-# utility functions available during Rails boot time
-module Katello
-  module BootUtil
-    def self.headpin?
-      ENV['RAILS_RELATIVE_URL_ROOT'] == '/headpin' || ENV['RAILS_RELATIVE_URL_ROOT'] == '/sam'
-    end
-
-    def self.katello?
-      not headpin?
-    end
-
-    def self.app_root
-      root = ENV['RAILS_RELATIVE_URL_ROOT']
-      if root != nil && !root.empty?
-        return root.split('/')[1]
-      else
-        return 'katello'
-      end
-    end
+class AppConfigDeprecate
+  def method_missing(method, *args, &block)
+    warn "AppConfig is deprecated use Katello.config, called from: #{caller.first}"
+    Katello.config.__send__ method, *args, &block
   end
 end
+
+AppConfig = AppConfigDeprecate.new

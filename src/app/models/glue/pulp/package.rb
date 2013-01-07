@@ -49,7 +49,7 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
   end
 
   def self.index
-    "#{AppConfig.elastic_index}_package"
+    "#{Katello.config.elastic_index}_package"
   end
 
   def index_options

@@ -12,8 +12,8 @@
 
 
 class Organization < ActiveRecord::Base
-  include Glue::Candlepin::Owner if AppConfig.use_cp
-  include Glue if AppConfig.use_cp
+  include Glue::Candlepin::Owner if Katello.config.use_cp
+  include Glue if Katello.config.use_cp
   include Authorization
   include IndexedModel
 
@@ -55,7 +55,7 @@ class Organization < ActiveRecord::Base
 
   before_save { |o| o.system_info_keys = Array.new unless o.system_info_keys }
 
-  if AppConfig.use_cp
+  if Katello.config.use_cp
     before_validation :create_label, :on => :create
     validate :unique_label
 
@@ -169,7 +169,7 @@ class Organization < ActiveRecord::Base
   end
 
   def self.list_verbs global = false
-    if AppConfig.katello?
+    if Katello.config.katello?
       org_verbs = {
         :update => _("Modify Organization and Administer Environments"),
         :read => _("Read Organization"),

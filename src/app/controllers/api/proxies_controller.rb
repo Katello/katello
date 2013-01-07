@@ -87,7 +87,7 @@ class Api::ProxiesController < Api::ApiController
   end
 
   def drop_api_namespace(original_request_path)
-    prefix = "#{ENV["RAILS_RELATIVE_URL_ROOT"]}/api"
+    prefix = "#{Katello.config.url_prefix}/api"
     original_request_path.gsub(prefix, '')
   end
 

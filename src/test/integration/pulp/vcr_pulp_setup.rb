@@ -22,15 +22,12 @@ require 'restclient'
 require 'rails'
 require 'json'
 
-require './lib/http_resource'
-require './lib/resource_permissions'
+path = File.expand_path('../../lib', File.dirname(__FILE__))
+$LOAD_PATH << path unless $LOAD_PATH.include? path
+require 'katello_config'
+require 'http_resource'
+require 'resource_permissions'
 
-katello_config = YAML.load_file('/etc/katello/katello.yml') rescue nil
-if katello_config.nil?
-  katello_config = YAML.load_file("#{Rails.root}/config/katello.yml") rescue nil
-end
-
-AppConfig = OpenStruct.new(:pulp => OpenStruct.new(katello_config['common']['pulp']))
 Rails.logger = Logger.new(STDOUT)
 
 require 'lib/resources/pulp'

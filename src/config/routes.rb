@@ -2,7 +2,7 @@ Src::Application.routes.draw do
 
   apipie
 
-  if AppConfig.use_foreman
+  if Katello.config.use_foreman
     scope :module => 'foreman' do
       resources :subnets do
         collection do
@@ -454,7 +454,7 @@ Src::Application.routes.draw do
     match '/' => 'root#resource_list'
 
     # Headpin does not support system creation
-    if AppConfig.katello?
+    if Katello.config.katello?
       onlies = [:show, :destroy, :create, :index, :update]
     else
       onlies = [:show, :destroy, :index, :update]
@@ -738,7 +738,7 @@ Src::Application.routes.draw do
     match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
 
       # foreman proxy --------------
-    if AppConfig.use_foreman
+    if Katello.config.use_foreman
       scope :module => 'foreman' do
         resources :architectures, :except => [:new, :edit]
         resources :subnets, :except => [:new, :edit]

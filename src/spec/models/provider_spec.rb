@@ -348,7 +348,7 @@ describe Provider do
       @provider.name = "url test"
       @provider.provider_type = Provider::REDHAT
       @default_url = "http://boo.com"
-      AppConfig.stub!(:REDHAT_REPOSITORY_URL).and_return(@default_url)
+      Katello.config.stub!(:redhat_repository_url).and_return(@default_url)
     end
 
     context "should accept" do

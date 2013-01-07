@@ -30,7 +30,7 @@ class UserSessionsController < ApplicationController
       # credentials 
       login_user
     else
-      @disable_password_recovery = AppConfig.warden == 'ldap'
+      @disable_password_recovery = Katello.config.warden == 'ldap'
       set_locale
       respond_to do |f|
         f.html { render "new" }
@@ -87,7 +87,7 @@ class UserSessionsController < ApplicationController
       # set the current user in the thread-local variable (before notification)
       User.current = current_user
       # set ldap roles
-      current_user.set_ldap_roles if AppConfig.ldap_roles
+      current_user.set_ldap_roles if Katello.config.ldap_roles
 
       orgs = current_user.allowed_organizations
       user_default_org = nil
