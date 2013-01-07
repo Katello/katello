@@ -18,7 +18,6 @@ module Navigation
         helper_method :promotion_packages_navigation
         helper_method :promotion_errata_navigation
         helper_method :promotion_distribution_navigation
-        helper_method :package_filter_navigation
         helper_method :gpg_keys_navigation
         helper_method :subscriptions_navigation
         helper_method :new_subscription_navigation
@@ -61,7 +60,7 @@ module Navigation
     end
 
     def menu_subscriptions_list
-      {:key => :subscriptions,
+      {:key => :red_hat_subscriptions,
        :name =>_("Red Hat Subscriptions"),
        :url => subscriptions_path,
        :if => lambda{current_organization.redhat_provider.readable?},
@@ -106,7 +105,7 @@ module Navigation
        :url => :sub_level,
        :if => :sub_level,
        :options => {:class=>'content second_level menu_parent', "data-menu"=>"content", "data-dropdown"=>"repositories"},
-       :items => [menu_custom_providers, menu_redhat_providers, menu_filters, menu_gpg]
+       :items => [menu_custom_providers, menu_redhat_providers, menu_gpg]
       }
 
     end
@@ -220,15 +219,6 @@ module Navigation
        }
     end
 
-    def menu_filters
-       {:key => :filters,
-        :name => _("Package Filters"),
-        :url => filters_path,
-        :if => lambda {Filter.any_readable?(current_organization)},
-        :options => {:class=>"third_level", "data-dropdown"=>"repositories"}
-       }
-    end
-
     def promotion_packages_navigation
       [
         { :key => :dependencies,
@@ -237,7 +227,7 @@ module Navigation
           :if => lambda{@package},
           :options => {:class=>"panel_link"}
         },
-        { :key => :details,
+        { :key => :package_details,
           :name =>_("Details"),
           :url => lambda{package_path(@package.id)},
           :if => lambda{@package},
@@ -248,13 +238,13 @@ module Navigation
 
     def promotion_errata_navigation
       [
-        { :key => :packages,
+        { :key => :errata_packages,
           :name =>_("Packages"),
           :url => lambda{packages_erratum_path(@errata.id)},
           :if => lambda{@errata},
           :options => {:class=>"panel_link"}
         },
-        { :key => :details,
+        { :key => :errata_details,
           :name =>_("Details"),
           :url => lambda{erratum_path(@errata.id)},
           :if => lambda{@errata},
@@ -271,33 +261,10 @@ module Navigation
           :if => lambda{@distribution},
           :options => {:class=>"panel_link"}
         },
-        { :key => :details,
+        { :key => :distribution_details,
           :name =>_("Details"),
           :url => lambda{repository_distribution_path(@repo.id, URI::escape(@distribution.id))},
           :if => lambda{@distribution},
-          :options => {:class=>"panel_link"}
-        }
-      ]
-    end
-
-    def package_filter_navigation
-      [
-        { :key => :packages,
-          :name =>_("Filtered Packages"),
-          :url => lambda{packages_filter_path(@filter.id)},
-          :if => lambda{@filter},
-          :options => {:class=>"panel_link"}
-        },
-        { :key => :products,
-          :name =>_("Products and Repositories"),
-          :url => lambda{products_filter_path(@filter.id)},
-          :if => lambda{@filter},
-          :options => {:class=>"panel_link"}
-        },
-        { :key => :details,
-          :name =>_("Details"),
-          :url => lambda{edit_filter_path(@filter.id)},
-          :if => lambda{@filter},
           :options => {:class=>"panel_link"}
         }
       ]
@@ -311,7 +278,7 @@ module Navigation
           :if =>lambda{@gpg_key},
           :options => {:class=>"panel_link"}
         },
-        { :key => :details,
+        { :key => :gpg_key_details,
           :name =>_("Details"),
           :url => lambda{edit_gpg_key_path(@gpg_key.id)},
           :if => lambda{@gpg_key},
@@ -334,7 +301,7 @@ module Navigation
           :if => lambda{@activation_key},
           :options => {:class=>"panel_link"}
         },
-        { :key => :details,
+        { :key => :activation_key_details,
           :name =>_("Details"),
           :url => lambda{edit_activation_key_path(@activation_key.id)},
           :if => lambda{@activation_key},
@@ -350,7 +317,7 @@ module Navigation
           :options => {:class=>'panel_link menu_parent'}
         }
       else
-        { :key => :systems,
+        { :key => :activation_keys_systems,
           :name =>_("Systems"),
           :url => lambda{systems_activation_key_path(@activation_key.id)},
           :if => lambda{@activation_key},
@@ -363,13 +330,13 @@ module Navigation
 
     def ak_systems_subnav
       [
-        { :key => :system_groups,
+        { :key => :activation_keys_menu_system_groups,
           :name =>_("System Groups"),
           :url => lambda{system_groups_activation_key_path(@activation_key.id)},
           :if => lambda{@activation_key},
           :options => {:class=>"third_level panel_link"}
         },
-        { :key => :systems,
+        { :key => :activation_keys_menu_systems,
           :name =>_("Systems"),
           :url => lambda{systems_activation_key_path(@activation_key.id)},
           :if => lambda{@activation_key},
@@ -380,13 +347,13 @@ module Navigation
 
     def subscriptions_navigation
       [
-        { :key => :details,
+        { :key => :subscription_details,
           :name =>_("Details"),
           :url => lambda{edit_subscription_path(@subscription.cp_id)},
           :if => lambda{@subscription},
           :options => {:class=>"panel_link"},
         },
-        { :key => :products,
+        { :key => :subscription_products,
           :name =>_("Products"),
           :url => lambda{products_subscription_path(@subscription.cp_id)},
           :if => lambda{@subscription},
@@ -409,7 +376,7 @@ module Navigation
           :if => lambda{current_organization && current_organization.readable?},
           :options => {:class=>"panel_link"},
         },
-        { :key => :history,
+        { :key => :subscription_history,
           :name =>_("History"),
           :url => history_items_subscriptions_path,
           :if => lambda{current_organization && current_organization.readable?},

@@ -21,8 +21,11 @@ module Glue::Pulp::ConsumerGroup
     base.class_eval do
       lazy_accessor  :consumer_ids, :initializer => lambda { |s| Runcible::Extensions::ConsumerGroup.retrieve(pulp_id) }
 
-      before_save :save_consumer_group_orch
-      before_destroy :destroy_consumer_group_orch
+      before_save     :save_consumer_group_orch
+      before_destroy  :destroy_consumer_group_orch
+
+      add_system_hook     :add_consumer
+      remove_system_hook  :remove_consumer
     end
   end
 
@@ -44,7 +47,11 @@ module Glue::Pulp::ConsumerGroup
       raise e
     end
 
-    def add_consumers id_list
+    def add_consumer(system)
+      add_consumers([system.uuid])
+    end
+
+    def add_consumers(id_list)
       Rails.logger.debug "adding consumers to pulp consumer group '#{self.pulp_id}'"
       Runcible::Extensions::ConsumerGroup.add_consumers_by_id(pulp_id, id_list)
     rescue => e
@@ -52,7 +59,11 @@ module Glue::Pulp::ConsumerGroup
       raise e
     end
 
-    def del_consumers id_list
+    def remove_consumer(system)
+      remove_consumers([system.uuid])
+    end
+
+    def remove_consumers(id_list)
       Rails.logger.debug "removing consumers from pulp consumer group '#{self.pulp_id}'"
       Runcible::Extensions::ConsumerGroup.remove_consumers_by_id(pulp_id, id_list)
     rescue => e
@@ -131,7 +142,7 @@ module Glue::Pulp::ConsumerGroup
             removed_consumers = old_consumers - new_consumers
             
             pre_queue.create(:name => "adding consumers to group: #{self.pulp_id}", :priority => 3, :action => [self, :add_consumers, added_consumers]) unless added_consumers.empty?
-            pre_queue.create(:name => "removing consumers from group: #{self.pulp_id}", :priority => 4, :action => [self, :del_consumers, removed_consumers]) unless removed_consumers.empty?
+            pre_queue.create(:name => "removing consumers from group: #{self.pulp_id}", :priority => 4, :action => [self, :remove_consumers, removed_consumers]) unless removed_consumers.empty?
           end
       end
     end

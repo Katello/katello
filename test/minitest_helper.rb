@@ -80,7 +80,7 @@ def disable_glue_layers(services=[], models=[])
   AppConfig.use_foreman       = services.include?('Foreman') ? false : true
   AppConfig.use_elasticsearch = services.include?('ElasticSearch') ? false : true
 
-  cached_entry = {:cp=>AppConfig.use_cp, :pulp=>AppConfig.use_pulp, :es=>AppConfig.use_elasticsearch}
+  cached_entry = {:cp=>AppConfig.use_cp, :pulp=>AppConfig.use_pulp, :es=>AppConfig.use_elasticsearch, :foreman => AppConfig.use_foreman}
   models.each do |model|
     if @@model_service_cache[model] != cached_entry
       Object.send(:remove_const, model)
@@ -90,7 +90,10 @@ def disable_glue_layers(services=[], models=[])
     end
   end
 
-  FactoryGirl.reload if change
+  if change
+    ActiveSupport::Dependencies::Reference.clear!
+    FactoryGirl.reload
+  end
 end
 
 

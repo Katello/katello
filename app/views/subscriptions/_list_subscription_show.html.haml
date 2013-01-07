@@ -11,7 +11,7 @@
         - else
           = _("Consumed: %{consumed} of %{total}") % {:consumed => item.consumed, :total => item.quantity}
       %li
-        = _("Expires: %s") % item.end_date
+        = _("Expires: %s") % format_time(item.end_date)
   %div{:class=>'column_2'}
     %ul
       %li

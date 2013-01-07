@@ -2,15 +2,25 @@ Src::Application.routes.draw do
 
   apipie
 
-  resources :subnets do
-    collection do
-      get :items
-    end
-  end
+  if AppConfig.use_foreman
+    scope :module => 'foreman' do
+      resources :subnets do
+        collection do
+          get :items
+        end
+      end
 
-  resources :domains do
-    collection do
-      get :items
+      resources :domains do
+        collection do
+          get :items
+        end
+      end
+
+      resources :architectures do
+        collection do
+          get :items
+        end
+      end
     end
   end
 
@@ -254,22 +264,6 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :filters do
-    collection do
-      get :auto_complete_search
-      get :auto_complete_products_repos
-      get :items
-    end
-    member do
-      get  :packages
-      post :add_packages
-      post :remove_packages
-      get  :products
-      post :update_products
-    end
-
-  end
-
   resources :system_templates do
     collection do
       get :auto_complete_search
@@ -429,14 +423,14 @@ Src::Application.routes.draw do
 
   root :to => "user_sessions#new"
 
-  match '/login' => 'user_sessions#new'
+  match '/login' => 'user_sessions#new', :as=>'login'
   match '/logout' => 'user_sessions#destroy', :via=>:post
   match '/user_session/logout' => 'user_sessions#destroy'
   match '/user_session' => 'user_sessions#show', :via=>:get, :as=>'show_user_session'
 
   resources :password_resets, :only => [:create, :edit, :update] do
     collection do
-      get :email_logins
+      post :email_logins
     end
   end
 
@@ -534,10 +528,6 @@ Src::Application.routes.draw do
         resources :sync, :only => [:index, :create] do
           delete :index, :on => :collection, :action => :cancel
         end
-        resources :filters, :only => [] do
-          get :index, :on => :collection, :action => :list_product_filters
-          put :index, :on => :collection, :action => :update_product_filters
-        end
       end
 
       resources :system_groups, :except => [:new, :edit] do
@@ -582,7 +572,6 @@ Src::Application.routes.draw do
       resources :repositories, :only => [] do
       end
       resource :uebercert, :only => [:show]
-      resources :filters, :only => [:index, :create, :destroy, :show, :update]
 
       resources :gpg_keys, :only => [:index, :create]
 
@@ -634,10 +623,6 @@ Src::Application.routes.draw do
       end
       resources :errata, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.:]+/ }
       resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ }
-      resources :filters, :only => [] do
-        get :index, :on => :collection, :action => :list_repository_filters
-        put :index, :on => :collection, :action => :update_repository_filters
-      end
       member do
         get :package_groups
         get :package_group_categories
@@ -737,6 +722,7 @@ Src::Application.routes.draw do
       scope :module => 'foreman' do
         resources :architectures, :except => [:new, :edit]
         resources :subnets, :except => [:new, :edit]
+        resources :smart_proxies, :except => [:new, :edit]
         constraints(:id => /[^\/]+/) do
           resources :domains, :except => [:new, :edit]
         end

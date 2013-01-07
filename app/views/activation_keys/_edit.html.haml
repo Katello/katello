@@ -23,30 +23,30 @@
 
   #activation_key
     = hidden_field_tag 'environment_id', @activation_key.environment_id
-    .grid_10
+    .full
       = help_tip((_("Edit Activation Key enables you to modify the selected activation key.  This key may " + |
-                 "be used during system registration.  For example, <BR/><BR/>" + |
+                 "be used during system registration.  For example, <br/><br/>" + |
                  "subscription-manager register --org %s " + |
                  "--activationkey %s") % [h(@activation_key.organization.label), h(@activation_key.name)]).html_safe, 'activation_keys_edit-help') |
 
-    .grid_10
+    .full
       = form_tag activation_key_path(@activation_key), :method => :put, :remote => true do
         %fieldset.clearfix
           .grid_2.ra
             %label #{_("Name")}:
-          .grid_7.la#activation_key_name{'name' => 'activation_key[name]', :class => ("editable edit_panel_element" if editable), 'data-url' => activation_key_path(@activation_key.id)} #{@activation_key[:name]}
+          .grid_10.la#activation_key_name{'name' => 'activation_key[name]', :class => ("editable edit_panel_element" if editable), 'data-url' => activation_key_path(@activation_key.id)} #{@activation_key[:name]}
 
         %fieldset.clearfix
           .grid_2.ra
             %label #{_("Description")}:
-          .grid_7.la#activation_key_description{:style => "word-wrap: break-word;", 'name' => 'activation_key[description]', :class => ("editable edit_textarea" if editable), 'data-url' => activation_key_path(@activation_key.id)}<> #{@activation_key[:description]}
+          .grid_10.la#activation_key_description{:style => "word-wrap: break-word;", 'name' => 'activation_key[description]', :class => ("editable edit_textarea" if editable), 'data-url' => activation_key_path(@activation_key.id)}<> #{@activation_key[:description]}
 
       = form_tag activation_key_path(@activation_key), :method => :put, :id => "save_key" do
         .promotion_paths#env_edit
           = hidden_field_tag 'activation_key[environment_id]', @activation_key.environment_id
           .grid_2.ra
             %label #{_("Environment")}:
-          .grid_7.la
+          .grid_10.la
             = environment_selector(:path_widget_class=>"grid_7", :path_entries_class=>"grid_7", :library_clickable=>false,
               :accessible_envs=>accessible_envs, :url_templates_proc=>url_templates_proc, :url_products_proc=>url_products_proc)
 
@@ -57,7 +57,7 @@
             %fieldset.clearfix
               .grid_2.ra
                 %label #{_("System Template")}:
-              .grid_7.la
+              .grid_10.la
                 - if editable
                   = select_tag 'activation_key[system_template_id]', options_for_select(@system_template_labels, @selected_template)
                 - else
@@ -65,15 +65,15 @@
 
             .prefix_2.la#products_in_env
               %label #{_("Product(s) in this environment")}:
-              .grid_7.productsbox
+              .grid_10.productsbox
                 = render :partial => "environments/products"
 
         %fieldset.clearfix
           .grid_2.ra
             %label #{_("Usage Limit")}:
-          .grid_7.la#activation_key_usage_limit{'name' => 'activation_key[usage_limit]', :class => ("editable edit_number" if editable), 'data-unlimited' => -1, 'data-min' => 1, 'data-url' => activation_key_path(@activation_key.id)} #{@activation_key[:usage_limit] == -1 ? _('Unlimited') : @activation_key[:usage_limit]}
+          .grid_10.la#activation_key_usage_limit{'name' => 'activation_key[usage_limit]', :class => ("editable edit_number" if editable), 'data-unlimited' => -1, 'data-min' => 1, 'data-url' => activation_key_path(@activation_key.id)} #{@activation_key[:usage_limit] == -1 ? _('Unlimited') : @activation_key[:usage_limit]}
 
-        .prefix_2.grid_7.ra
+        .prefix_2.grid_10.ra
           #cancel_key.button{'data-url' => edit_activation_key_path(@activation_key)}
             #{_("Cancel")}
           %input#save_key.button{:type => "submit", :value => "#{_("Save")}"}

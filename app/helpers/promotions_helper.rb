@@ -26,52 +26,6 @@ module PromotionsHelper
     }
   end
 
-  def product_filters(prod_or_repo)
-    filters = []
-    if Product === prod_or_repo
-      filters = prod_or_repo.filters
-    elsif Repository === prod_or_repo
-      filters = prod_or_repo.product.filters
-    end
-    filters.collect {|f| f.name}
-  end
-
-  def repo_filters(prod_or_repo)
-    filters = []
-    if Product === prod_or_repo
-      repos = {}
-      prod_or_repo.repos(current_organization.library).each do |repo|
-        if repo.filters.count > 0
-          repos[repo.name] = repo.filters.collect {|f| f.name}
-        end
-      end
-      return repos
-    elsif Repository === prod_or_repo
-      filters = prod_or_repo.filters
-    end
-    filters.collect {|f| f.name}
-  end
-
-
-  def generate_product_repo_filters
-    filters = {}
-    if @environment == current_organization.library
-      @products.each do |prod|
-        pid = "product_#{prod.id}"
-        filters[pid] = {:product => product_filters(prod),
-                                        :repo => repo_filters(prod)}
-        filters[pid][:has_filters] = filters[pid][:product].size > 0 || filters[pid][:repo].size > 0
-        prod.repos(current_organization.library).each do |repo|
-          rid = "repo_#{repo.id}"
-          filters[rid] = {:product => product_filters(repo),
-                                          :repo => repo_filters(repo)}
-          filters[rid][:has_filters] = filters[rid][:product].size > 0 || filters[rid][:repo].size > 0
-        end
-      end
-    end
-    escape_javascript(filters.to_json)
-  end
-
   def show_new_button?(manage_promotion, manage_deletion)
     if @environment.library?
       manage_promotion && @next_environment
