@@ -16,5 +16,5 @@ if rpm -q foreman >> /dev/null; then
 	test_failure "architecture try to delete old name" architecture delete --name="$ARCH_NAME"
 	test_success "architecture delete" architecture delete --name="$NEW_ARCH_NAME"
 else
-	skip_test_success "architectures" "Foreman not installed, skipping architecture tests"
+	skip_message "architectures" "Foreman not installed, skipping architecture tests"
 fi

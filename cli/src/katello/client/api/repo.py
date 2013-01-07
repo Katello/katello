@@ -124,11 +124,3 @@ class RepoAPI(KatelloAPI):
             return None
         else:
             return categories[0]
-
-    def update_filters(self, repo_id, filters):
-        path = "/api/repositories/%s/filters" % repo_id
-        return self.server.PUT(path, {"filters": filters})[1]
-
-    def filters(self, repo_id, inherit=False):
-        path = "/api/repositories/%s/filters" % repo_id
-        return self.server.GET(path, {"inherit": inherit})[1]

@@ -16,6 +16,9 @@ module Glue::ElasticSearch::System
     base.class_eval do
       include IndexedModel
 
+      add_system_group_hook     lambda { |system_group| reindex_on_association_change(system_group) }
+      remove_system_group_hook  lambda { |system_group| reindex_on_association_change(system_group) }
+
       index_options :extended_json=>:extended_index_attrs,
                     :json=>{:only=> [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id, :memory, :sockets]},
                     :display_attrs => [:name,

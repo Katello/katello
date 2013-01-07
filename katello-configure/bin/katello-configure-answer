@@ -1,0 +1,86 @@
+#!/usr/bin/ruby
+# vim: ts=2:sw=2:et:
+#
+# Copyright © 2012 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public License,
+# version 2 (GPLv2). There is NO WARRANTY for this software, express or
+# implied, including the implied warranties of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. You should have received a copy of GPLv2
+# along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+#
+
+PREFIX = ENV['KATELLO_CONFIGURE_PREFIX'] || '/usr/share/katello/install'
+REQUIRE_PREFIX = ENV['KATELLO_CONFIGURE_REQUIRE_PREFIX'] || "#{PREFIX}/puppet"
+
+require 'optparse'
+require 'fileutils'
+require "#{REQUIRE_PREFIX}/lib/util/functions.rb"
+
+default_path = "#{PREFIX}/default-answer-file"
+answer_file = "/etc/katello/katello-configure.conf"
+$default_answers = {}
+
+oparser = OptionParser.new
+begin
+  oparser.banner = <<EOS
+  Katello configure answer file tool.
+
+  This tool shows all katello-configure answer file values and allows
+  to query for particular values.
+  
+  Usage:
+    katello-configure-answer [value]
+
+  Options:
+EOS
+
+	oparser.on('-a', '--answer-file=FILE', 'Load different answer file instead of the default one') do |file|
+    answer_file = file
+	end
+  oparser.on( '-v', '--version', 'Display version information' ) do
+    # string THE VERSION is replaced build time - do not remove
+    puts <<EOS
+katello-configure-answer THE_VERSION
+Copyright (C) 2012 Red Hat, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+Distributed under GNU GPLv2+, see /usr/share/doc/katello-common-*/LICENSE.
+EOS
+    exit
+  end
+	oparser.on('-h', '--help', 'Show this short summary (more in the man page)') do
+		puts oparser
+		exit
+	end
+	oparser.parse!
+rescue => e
+	$stderr.puts e.message
+	$stderr.puts oparser
+	exit_with :general
+end
+value = ARGV[0]
+
+# Check default and answer files
+unless File.file?(default_path)
+  $stderr.puts "Default answer file #{default_path} does seem to exist"
+  exit_with :answer_missing
+end
+unless File.file?(answer_file)
+  $stderr.puts "Answer file #{answer_file} does seem to exist"
+  exit_with :answer_missing
+end
+
+# Load default answers
+$default_answers, _, _, _ = read_answer_file(default_path)
+$answers, _, _, _ = read_answer_file(answer_file)
+$default_answers.merge! $answers
+
+if value
+  puts $default_answers[value]
+else
+  $default_answers.each_pair do |k,v|
+    puts "#{k}=#{v}"
+  end
+end

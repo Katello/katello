@@ -166,10 +166,9 @@ class PromotionChangeset < Changeset
       product.repos(from_env).each do |repo|
         if repo.is_cloned_in? to_env
           clone             = repo.get_clone to_env
-          affecting_filters = (repo.filters + repo.product.filters).uniq
 
-          if repo.has_erratum? err.errata_id and !clone.has_erratum? err.errata_id and
-              !err.blocked_by_filters? affecting_filters
+
+          if repo.has_erratum? err.errata_id and !clone.has_erratum? err.errata_id
             errata_promote[clone] ||= []
             errata_promote[clone] << err.errata_id
           end

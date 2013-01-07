@@ -19,19 +19,33 @@ class Api::ProxiesController < Api::ApiController
       route, match, params = Rails.application.routes.set.recognize(request)
       # route names are defined in routes.rb (:as => :name)
       case route.name
+      when :api_proxy_consumer_deletionrecord_delete_path
+        if !User.consumer?
+          consumer_gone, consumer_live = false
+          begin
+            Resources::Candlepin::Consumer.get params[:id] # check with candlepin if system is Gone, raises RestClient::Gone
+            # a 200 means the system exists. the deletion record wont exist, but its
+            # not a permissions error
+            consumer_live = true
+          rescue RestClient::Gone
+            # the correct response is a 410, since the system has been deleted
+            consumer_gone = true
+          end
+        end
+        User.consumer? || consumer_gone || consumer_live
       when :api_proxy_owner_pools_path
-        find_organization
+        find_optional_organization
         if params[:consumer]
           (User.consumer? or @organization.readable?) and current_user.uuid == params[:consumer]
         else
           (User.consumer? or @organization.readable?)
         end
       when :api_proxy_owner_servicelevels_path
-        find_organization
+        find_optional_organization
         (User.consumer? or @organization.readable?)
       when :api_proxy_consumer_certificates_path, :api_proxy_consumer_releases_path, :api_proxy_certificate_serials_path,
            :api_proxy_consumer_entitlements_path, :api_proxy_consumer_entitlements_post_path, :api_proxy_consumer_entitlements_delete_path,
-           :api_proxy_consumer_dryrun_path, :api_proxy_consumer_owners_path, :api_proxy_consumer_deletionrecord_delete_path
+           :api_proxy_consumer_dryrun_path, :api_proxy_consumer_owners_path
         User.consumer? and current_user.uuid == params[:id]
       when :api_proxy_consumer_certificates_delete_path
         User.consumer? and current_user.uuid == params[:consumer_id]
@@ -75,15 +89,6 @@ class Api::ProxiesController < Api::ApiController
   def drop_api_namespace(original_request_path)
     prefix = "#{ENV["RAILS_RELATIVE_URL_ROOT"]}/api"
     original_request_path.gsub(prefix, '')
-  end
-
-  protected
-
-  def find_organization
-    return unless (params.has_key?(:organization_id))
-    @organization = Organization.first(:conditions => {:label => params[:organization_id].tr(' ', '_')})
-    raise HttpErrors::NotFound, _("Couldn't find organization '%s'") % id if @organization.nil?
-    @organization
   end
 
 end
