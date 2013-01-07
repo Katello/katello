@@ -4,6 +4,7 @@
 #  - Sebastien Grosjean - ZenCocoon.com
 #  - Bruno Michel - http://github.com/nono
 #  - Tsutomu Kuroda - http://github.com/kuroda (t-kuroda@oiax.jp)
+# Emended by Benjamin des Gachons and Patrick Chew : <http://www.fitima.org/docs/fiche.pdf>
 
 fr:
   date:
@@ -11,11 +12,54 @@ fr:
       default: "%d/%m/%Y"
       short: "%e %b"
       long: "%e %B %Y"
-    day_names: [dimanche, lundi, mardi, mercredi, jeudi, vendredi, samedi]
-    abbr_day_names: [dim, lun, mar, mer, jeu, ven, sam]
-    month_names: [~, janvier, février, mars, avril, mai, juin, juillet, août, septembre, octobre, novembre, décembre]
-    abbr_month_names: [~, jan., fév., mar., avr., mai, juin, juil., août, sept., oct., nov., déc.]
-    order: [ :day, :month, :year ]
+    day_names:
+      - dimanche
+      - lundi
+      - mardi
+      - mercredi
+      - jeudi
+      - vendredi
+      - samedi
+    abbr_day_names:
+      - dim
+      - lun
+      - mar
+      - mer
+      - jeu
+      - ven
+      - sam
+    month_names:
+      - ~
+      - janvier
+      - février
+      - mars
+      - avril
+      - mai
+      - juin
+      - juillet
+      - août
+      - septembre
+      - octobre
+      - novembre
+      - décembre
+    abbr_month_names:
+      - ~
+      - jan.
+      - fév.
+      - mar.
+      - avr.
+      - mai
+      - juin
+      - juil.
+      - août
+      - sept.
+      - oct.
+      - nov.
+      - déc.
+    order:
+      - :day
+      - :month
+      - :year
 
   time:
     formats:
@@ -30,36 +74,36 @@ fr:
       half_a_minute: "une demi-minute"
       less_than_x_seconds:
         zero:  "moins d'une seconde"
-        one:   "moins d'une seconde"
-        other: "moins de %{count} secondes"
+        one:   "moins d'une seconde"
+        other: "moins de %{count} secondes"
       x_seconds:
-        one:   "1 seconde"
-        other: "%{count} secondes"
+        one:   "1 seconde"
+        other: "%{count} secondes"
       less_than_x_minutes:
-        zero:  "moins d'une minute"
-        one:   "moins d'une minute"
-        other: "moins de %{count} minutes"
+        zero:  "moins d'une minute"
+        one:   "moins d'une minute"
+        other: "moins de %{count} minutes"
       x_minutes:
-        one:   "1 minute"
-        other: "%{count} minutes"
+        one:   "1 minute"
+        other: "%{count} minutes"
       about_x_hours:
         one:   "environ une heure"
-        other: "environ %{count} heures"
+        other: "environ %{count} heures"
       x_days:
-        one:   "1 jour"
-        other: "%{count} jours"
+        one:   "1 jour"
+        other: "%{count} jours"
       about_x_months:
         one:   "environ un mois"
-        other: "environ %{count} mois"
+        other: "environ %{count} mois"
       x_months:
-        one:   "1 mois"
-        other: "%{count} mois"
+        one:   "1 mois"
+        other: "%{count} mois"
       about_x_years:
         one:   "environ un an"
-        other: "environ %{count} ans"
+        other: "environ %{count} ans"
       over_x_years:
         one:   "plus d'un an"
-        other: "plus de %{count} ans"
+        other: "plus de %{count} ans"
       almost_x_years:
         one:   "presqu'un an"
         other: "presque %{count} ans"
@@ -124,30 +168,17 @@ fr:
       words_connector: ", "
       two_words_connector: " et "
       last_word_connector: " et "
-    select:
-      prompt: "Veuillez sélectionner"
 
   helpers:
     select:
       prompt: "Veuillez sélectionner"
     submit:
-      create: "Créer un %{model}"
-      update: "Modifier ce %{model}"
-      submit: "Enregistrer ce %{model}"
+      create: "Créer un(e) %{model}"
+      update: "Modifier ce(tte) %{model}"
+      submit: "Enregistrer ce(tte) %{model}"
 
-  errors:
-    template: &errors_template
-      header:
-        one:   "Impossible d'enregistrer ce %{model} : 1 erreur"
-        other: "Impossible d'enregistrer ce %{model} : %{count} erreurs"
-      body: "Veuillez vérifier les champs suivants : "
-
-  attributes:
-    created_at: "Créé le"
-    updated_at: "Modifié le"
-
-  errors:
-    format: "Le %{attribute} %{message}"
+  errors: &errors
+    format: "%{attribute} %{message}"
     messages: &errors_messages
       inclusion: "n'est pas inclus(e) dans la liste"
       exclusion: "n'est pas disponible"
@@ -156,9 +187,15 @@ fr:
       accepted: "doit être accepté(e)"
       empty: "doit être rempli(e)"
       blank: "doit être rempli(e)"
-      too_long: "est trop long (pas plus de %{count} caractères)"
-      too_short: "est trop court (au moins %{count} caractères)"
-      wrong_length: "ne fait pas la bonne longueur (doit comporter %{count} caractères)"
+      too_long:
+        one: "est trop long (pas plus d'un caractère)"
+        other: "est trop long (pas plus de %{count} caractères)"
+      too_short:
+        one: "est trop court (au moins un caractère)"
+        other: "est trop court (au moins %{count} caractères)"
+      wrong_length:
+        one: "ne fait pas la bonne longueur (doit comporter un seul caractère)"
+        other: "ne fait pas la bonne longueur (doit comporter %{count} caractères)"
       not_a_number: "n'est pas un nombre"
       not_an_integer: "doit être un nombre entier"
       greater_than: "doit être supérieur à %{count}"
@@ -168,14 +205,18 @@ fr:
       less_than_or_equal_to: "doit être inférieur ou égal à %{count}"
       odd: "doit être impair"
       even: "doit être pair"
+      taken: "n'est pas disponible"
+      record_invalid: "La validation a échoué : %{errors}"
 
+    template: &errors_template
+      header:
+        one:   "Impossible d'enregistrer ce(tte) %{model} : 1 erreur"
+        other: "Impossible d'enregistrer ce(tte) %{model} : %{count} erreurs"
+      body: "Veuillez vérifier les champs suivants : "
+
+  activemodel:
+    errors:
+      <<: *errors
   activerecord:
     errors:
-      messages:
-        taken: "n'est pas disponible"
-        record_invalid: "La validation a échoué : %{errors}"
-        <<: *errors_messages
-      template:
-        <<: *errors_template
-      full_messages:
-        format: "%{attribute} %{message}"
+      <<: *errors
