@@ -24,13 +24,12 @@ KT.repo_discovery = (function(){
             discovery_started();
             disable_discovery();
         }
-        $(form_id).unbind('submit');
-        $(form_id).submit(function(e){
+        $(form_id).unbind('submit').submit(function(e){
             e.preventDefault();
             start_discovery();
         });
-        $('#new_repos').unbind('click');
-        $('#new_repos').click(open_subpane);
+
+        $('#new_repos').unbind('click').click(open_subpane);
 
         $('#url_filter').bind('change, keyup', function(){
             $.uiTableFilter($(list_id), this.value, $(list_id).find("thead > tr:last > th").first().text().trim());
@@ -128,11 +127,12 @@ KT.repo_discovery = (function(){
 
     },
     disable_discovery = function(){
-        var form = $(form_id);
+        var form = $(form_id),
+            cancel = form.find('#cancel_discover');
         form.find('input[type=text]').attr('disabled', 'disabled');
         form.find('input[type=submit]').parent().hide();
-        form.find('#cancel_discover').removeAttr('disabled');
-        form.find('#cancel_discover').parent().show();
+        cancel.removeAttr('disabled');
+        cancel.parent().show();
     },
     enable_discovery = function(){
         var form = $(form_id);

@@ -36,7 +36,7 @@ module ProvidersHelper
     @provider_editable
   end
 
-  def normalize children, parent_set =[], data = nil, item_type = nil
+  def normalize(children, parent_set =[], data = nil, item_type = nil)
     data = [] unless data
     children.sort{|a,b| a[:name] <=> b[:name]}.each do |child|
       new_set = parent_set + [child[:id]]
@@ -66,12 +66,12 @@ module ProvidersHelper
     data
   end
 
-  def name_from_url(url)
-    url.sub(@provider.discovery_url, '').gsub('/', ' ').strip
+  def name_from_url(provider, url)
+    url.sub(provider.discovery_url, '').gsub('/', ' ').strip
   end
 
-  def label_from_url(url)
-    Katello::ModelUtils::labelize(name_from_url(url))
+  def label_from_url(provider, url)
+    Katello::ModelUtils::labelize(name_from_url(provider, url))
   end
 
 end
