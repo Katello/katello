@@ -7,12 +7,14 @@
 
 :ruby
   sockets_help = _("The number of CPU Sockets or LPARs which this system uses")
+  memory_help = _("The amount of RAM memory, in megabytes (MB), which this system has")
 
 
 - if @environment
   = content_for :title do
     #{_("New system")}
-    = content_for :content do
+  = content_for :content do
+    .full
       = kt_form_for(System.new, :action => "create", :id => "new_system") do |form|
         = hidden_field_tag 'system[environment_id]', @environment.id
         .grid_8#new_system
@@ -22,6 +24,8 @@
             = architecture_select
 
           = form.text_field :sockets, :label => _("Number of Sockets or LPARs:"), :help => sockets_help, :value => 1
+
+          = form.text_field :memory, :label => _("Amount of RAM (MB):"), :help => memory_help, :value => ''
 
           = form.field :virtual, :label => _("System Type:") do
             = virtual_buttons
