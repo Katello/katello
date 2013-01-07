@@ -2,7 +2,9 @@
   :plain
     KT.initial_repo_discovery = $.parseJSON('#{escape_javascript({:urls=>discovered, :running=>running}.to_json)}');
      localize({
-          "existing_repos_found": '#{escape_javascript(_('This feed has already been found in one or more existing repositories:'))}'
+          "existing_repos_found": '#{escape_javascript(_('This feed has already been found in one or more existing repositories:'))}',
+          "discovery_success_one": '#{escape_javascript(_('One repository successfully created.'))}',
+          "discovery_success_multi":  function(x){ return "#{escape_javascript(_('%X repositories successfully created.'))}".replace("%X", x);},
      });
 
 
@@ -26,9 +28,11 @@
         %input{:type=>:text, :name=>'discover_url', :size=>40, :value=>(@provider.discovery_url || '')}
       .grid_1.la
         %input{:type=>:submit, :value=>_("Discover")}
-      .grid_1.la{:style=>'display: none;'}
+      .grid_2.la{:style=>'display: none;'}
         %input#cancel_discover.button{:type=>:button, :name=>:cancel, :value=>_('Cancel'),
                               :data=>{:url=>cancel_discovery_provider_path(@provider.id)}}
+        = image_tag("embed/icons/spinner.gif")
+
   %br
   .grid_10
     %table#discovered_repos{:data=>{:url=>discovered_repos_provider_path(@provider.id)}}
@@ -47,4 +51,5 @@
           %th
             = _("Created previously")
       %tbody
+        %td
         %td
