@@ -52,15 +52,13 @@ class ProvidersController < ApplicationController
       :new_discovered_repos => edit_test,
       :cancel_discovery=>edit_test,
       :discovered_repos => edit_test,
-      :discover => edit_test,
-      :create_discovered_repos => edit_test
+      :discover => edit_test
     }
   end
 
   def param_rules
     {
-        :create => {:provider => [:name, :description]},
-        :create_discovered_repos =>{}
+        :create => {:provider => [:name, :description]}
     }
   end
 
