@@ -11,7 +11,7 @@ script:
   - ./scripts/ci/cli_pull_request_tests.sh
   - cd src/
   - cp -f config/katello.template.yml config/katello.yml 
-  - bundle install --without jshintrb:devboost:profiling:debugging
+  - bundle install --without checking:devboost:profiling:debugging
   - cd ../
   - ./scripts/ci/katello_pull_request_tests.sh
 
