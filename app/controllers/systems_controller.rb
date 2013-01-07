@@ -84,7 +84,7 @@ class SystemsController < ApplicationController
         check_array_params([:id], params)
       end
     end
-    {   :create => {:arch => [:arch_id],:system=>[:sockets, :name, :environment_id], :system_type =>[:virtualized]},
+    {   :create => {:arch => [:arch_id],:system=>[:sockets, :name, :environment_id, :memory], :system_type =>[:virtualized]},
         :update => update_check
     }
   end
@@ -109,6 +109,7 @@ class SystemsController < ApplicationController
     @system.facts = {}
     @system.arch = params["arch"]["arch_id"]
     @system.sockets = params["system"]["sockets"]
+    @system.memory = params["system"]["memory"]
     @system.guest = (params["system_type"]["virtualized"] == 'virtual')
     @system.name= params["system"]["name"]
     @system.cp_type = "system"
