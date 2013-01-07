@@ -42,27 +42,6 @@ class ContentView < ActiveRecord::Base
   scope :default, where(:default=>true)
   scope :non_default, where(:default=>false)
 
-  def publishing?
-    # Is this view currently in the process of being published?
-    task = publish_task_status
-    return task.pending? unless task.nil?
-    return false
-  end
-
-  def publish_error?
-    # Did the current view fail during publishing?
-    task = publish_task_status
-    return task.error? unless task.nil?
-    return false
-  end
-
-  def publish_task_id
-    # If the view is currently being published, return the id associated with the task
-    task = publish_task_status
-    return task.id if task && task.pending?
-    return nil
-  end
-
   def as_json(options = {})
     result = self.attributes
     result['organization'] = self.organization.try(:name)
@@ -158,8 +137,18 @@ class ContentView < ActiveRecord::Base
   def refresh_view(options = { })
     options = { :async => true, :notify => false }.merge options
 
-    # retrieve the 'next' version id to use when refreshing
+    # retrieve the 'next' version id to use
     next_version_id = self.versions.maximum(:version) + 1
+
+    # retrieve the version that is currently in the library
+    library_version = self.version(self.organization.library)
+    if library_version.environments.length == 1
+      # the version initially in library was only associated with the library, so destroy it
+      library_version.destroy
+    else
+      # the current version was associated with multiple environments, so only unassociate it from the library
+      library_version.environments.delete(self.organization.library)
+    end
 
     # create a new version
     version = ContentViewVersion.create!(:version => next_version_id, :content_view => self,
@@ -178,31 +167,7 @@ class ContentView < ActiveRecord::Base
       version.refresh_version(options[:notify])
     end
 
-    # retrieve the version that is currently in the library
-    library_version = self.version(self.organization.library)
-    if library_version.environments.length == 1
-      # the version initially in library was only associated with the library, so destroy it
-      library_version.destroy
-    else
-      # the current version was associated with multiple environments, so only unassociate it from the library
-      library_version.environments.delete(self.organization.library)
-    end
-
     version
-  end
-
-  private
-
-  def publish_task_status
-    # If the view has a version available from when it was originally published, return it's task status.
-    library_version = self.version(self.organization.library)
-    if library_version.task_status &&
-        library_version.task_status.task_type == TaskStatus::TYPES[:content_view_publish][:type].to_s
-
-      return library_version.task_status
-    else
-      return nil
-    end
   end
 
 end

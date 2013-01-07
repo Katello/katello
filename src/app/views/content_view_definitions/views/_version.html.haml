@@ -1,25 +1,27 @@
 - cssclass = "" if cssclass.nil?
 
 %tr.view_version{:class => "child-of-view_#{version.content_view.id}" + cssclass,
-  'data-pending_refresh_id' => (task.id if task && task.pending?)}
+  'data-pending_task_id' => (task.id if task && task.pending?)}
 
   %td #{environments(version)}
-  %td #{version.version}
+  %td #{version.version unless task && task.pending?}
   %td #{task.finish_time unless task.nil?}
 
   %td
-    .fl{:style => "padding-right: 10px;"}
-      - if task
+    .fl{:style => "padding-right: 16px;"}
+      - if task.nil?
+        #{_("Error generating version")}
+      - else
         - if task.pending?
           = image_tag("embed/icons/spinner.gif")
-          #{_('Refreshing')}
+          #{_("Generating version: %{view_version}") % {:view_version => version.version}}
         - elsif task.error?
-          #{_('Error refreshing')}
+          #{_("Error generating version")}
 
     - if version.environments.include?(version.content_view.organization.library)
-      - unless task.nil? || (task && task.pending?)
+      - unless task && task.pending?
         %a.refresh_action{:type => 'button', :href => '#', 'data-url' => refresh_content_view_definition_content_view_path(version.content_view.content_view_definition.id, version.content_view.id)}
-          - if task.error?
+          - if task.nil? || task.error?
             #{_("Retry")}
           - else
             #{_("Refresh")}

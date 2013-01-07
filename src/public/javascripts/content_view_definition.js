@@ -49,6 +49,7 @@ KT.content_view_definition = (function(){
                     startUpdater();
                 },
                 error: function() {
+                    KT.panel.panelAjax('', $('#content_view_definition_views').data('views_url'), $('#panel'), false);
                 }
             });
         });
@@ -63,25 +64,20 @@ KT.content_view_definition = (function(){
     },
     startUpdater = function () {
         var timeout = 8000,
-            pending_publish = [],
-            pending_refresh = [];
+            pending_tasks = [];
 
-        $('.view[data-pending_publish_id]').each(function(i) {
-            pending_publish[i] = $(this).data("pending_publish_id");
+        $('.view_version[data-pending_task_id]').each(function(i) {
+            pending_tasks[i] = $(this).data("pending_task_id");
         });
 
-        $('.view_version[data-pending_refresh_id]').each(function(i) {
-            pending_refresh[i] = $(this).data("pending_refresh_id");
-        });
-
-        if (pending_publish.length > 0 || pending_refresh.length > 0) {
+        if (pending_tasks.length > 0) {
             if (status_updater !== undefined) {
                 status_updater.stop();
             }
             status_updater = $.PeriodicalUpdater($('#content_view_definition_views').data('status_url'), {
                 method: 'get',
                 type: 'json',
-                data: function() {return {publish_task_id: pending_publish, refresh_task_id: pending_refresh};},
+                data: function() {return {task_ids: pending_tasks};},
                 global: false,
                 minTimeout: timeout,
                 maxTimeout: timeout
@@ -90,27 +86,14 @@ KT.content_view_definition = (function(){
     },
     updateStatus = function(data) {
         // For each action that the user has initiated (e.g. refresh), update the status.
-        var publish_status = data["publish_status"] || [],
-            refresh_status = data["refresh_status"] || [],
+        var task_statuses = data["task_statuses"] || [],
             status_updated = false;
 
-        $.each(publish_status, function(index, status) {
+        $.each(task_statuses, function(index, status) {
             var node;
 
             if(!status["pending?"]) {
-                node = $('.view[data-pending_publish_id=' + status['id'] + ']');
-                if(node !== undefined) {
-                    node.replaceWith(status["status_html"]);
-                    status_updated = true;
-                }
-            }
-        });
-
-        $.each(refresh_status, function(index, status) {
-            var node;
-
-            if(!status["pending?"]) {
-                node = $('.view_version[data-pending_refresh_id=' + status['id'] + ']');
+                node = $('.view_version[data-pending_task_id=' + status['id'] + ']');
                 if(node !== undefined) {
                     node.prevAll('.parent:first').removeClass('initialized');
                     node.replaceWith(status["status_html"]);
@@ -124,8 +107,7 @@ KT.content_view_definition = (function(){
             initialize_refresh();
         }
 
-        if($('.view[data-pending_publish_id]').length === 0 &&
-           $('.view_version[data-pending_refresh_id]').length === 0) {
+        if($('.view_version[data-pending_task_id]').length === 0) {
             status_updater.stop();
         }
     };
