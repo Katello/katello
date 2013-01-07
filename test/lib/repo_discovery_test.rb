@@ -22,9 +22,10 @@ class FileRepoDiscoveryTest < MiniTest::Rails::ActiveSupport::TestCase
 
     rd = RepoDiscovery.new(base_url)
     found = []
-    found_final = rd.run do |url|
-      found << url
-    end
+    add_proc = lambda{|url| found << url}
+    continue_proc = lambda{|url| true}
+
+    found_final = rd.run(add_proc, continue_proc)
     assert_equal  found, found_final  #validate that final list equals incremental list
     assert_equal 1, found.size
     assert_equal found.first, base_url + 'zoo5'
