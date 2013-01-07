@@ -158,7 +158,7 @@ Requires:       %{name}-cli
 Requires:       postgresql-server
 Requires:       postgresql
 Requires:       pulp
-Requires:       candlepin-tomcat6
+Requires(post):       candlepin-tomcat6
 Requires:       candlepin-selinux
 # the following backend engine deps are required by <katello-configure>
 Requires:       mongodb mongodb-server
@@ -217,7 +217,7 @@ Requires:       katello-configure
 Requires:       katello-cli
 Requires:       postgresql-server
 Requires:       postgresql
-Requires:       candlepin-tomcat6
+Requires(post):       candlepin-tomcat6
 Requires:       thumbslug
 Requires:       thumbslug-selinux
 
@@ -508,6 +508,12 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %posttrans common
 /sbin/service %{name} condrestart >/dev/null 2>&1 || :
 
+%post headpin
+usermod -a -G katello-shared tomcat
+
+%post
+usermod -a -G katello-shared tomcat
+
 %files
 %attr(600, katello, katello)
 %{_bindir}/katello-*
@@ -712,6 +718,9 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 getent group %{name} >/dev/null || groupadd -r %{name} -g 182
 getent passwd %{name} >/dev/null || \
     useradd -r -g %{name} -d %{homedir} -u 182 -s /sbin/nologin -c "Katello" %{name}
+# add tomcat & katello to the katello shared group for reading sensitive files
+getent group katello-shared > /dev/null || groupadd -r katello-shared
+usermod -a -G katello-shared katello
 exit 0
 
 %preun common
