@@ -15,7 +15,7 @@ class ContentViewDefinitionsController < ApplicationController
   helper ProductsHelper
 
   before_filter :require_user
-  before_filter :find_content_view_definition, :only => [:show, :edit, :update, :destroy, :views, :content,
+  before_filter :find_content_view_definition, :only => [:clone, :show, :edit, :update, :destroy, :views, :content,
                                                          :update_content, :publish_setup, :publish, :status]
   before_filter :find_content_view, :only => [:refresh]
   before_filter :authorize #after find_content_view_definition, since the definition is required for authorization
@@ -28,32 +28,38 @@ class ContentViewDefinitionsController < ApplicationController
   end
 
   def rules
-    read_test = lambda{current_organization && ContentViewDefinition.any_readable?(current_organization)}
-    manage_test = lambda{true}  # TODO: update w/ correct permissions
+    index_rule   = lambda { ContentViewDefinition.any_readable?(current_organization) }
+    show_rule    = lambda { @view_definition.readable? }
+    manage_rule  = lambda { @view_definition.editable? }
+    publish_rule = lambda { @view_definition.publishable? }
+    refresh_rule = lambda { @view.content_view_definition.publishable? }
+    create_rule  = lambda { ContentViewDefinition.creatable?(current_organization) }
+
     {
-      :index => read_test,
-      :items => read_test,
-      :show => read_test,
+      :index => index_rule,
+      :items => index_rule,
+      :show => show_rule,
 
-      :new => manage_test,
-      :create => manage_test,
+      :new => create_rule,
+      :create => create_rule,
+      :clone => create_rule,
 
-      :edit => read_test,
-      :update => manage_test,
+      :edit => show_rule,
+      :update => manage_rule,
 
-      :publish_setup => manage_test,
-      :publish => manage_test,
+      :publish_setup => publish_rule,
+      :publish => publish_rule,
 
-      :destroy => manage_test,
+      :destroy => manage_rule,
 
-      :views => read_test,
-      :refresh => manage_test,
-      :status => manage_test,
+      :views => show_rule,
+      :refresh => refresh_rule,
+      :status => publish_rule,
 
-      :content => read_test,
-      :update_content => manage_test,
+      :content => show_rule,
+      :update_content => manage_rule,
 
-      :default_label => manage_test
+      :default_label => manage_rule
     }
   end
 
@@ -90,6 +96,23 @@ class ContentViewDefinitionsController < ApplicationController
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @view_definition["name"]
       render :json => { :no_match => true }
     end
+  end
+
+  def clone
+    new_definition = ContentViewDefinition.new
+    new_definition.name = params[:name]
+    new_definition.description = params[:description]
+    new_definition.organization = @view_definition.organization
+    new_definition.products = @view_definition.products
+    new_definition.repositories = @view_definition.repositories
+    new_definition.save!
+
+    notify.success(_("Content view definition '%{new_definition_name}' created successfully as a clone of '%{definition_name}'.") %
+                       {:new_definition_name => new_definition.name, :definition_name => @view_definition.name})
+
+    render :partial => "common/list_item", :locals  => { :item => new_definition, :initial_action => :views,
+                                                         :accessor => "id", :columns => ["name"],
+                                                         :name => controller_display_name }
   end
 
   def edit
