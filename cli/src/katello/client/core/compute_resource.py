@@ -130,7 +130,8 @@ class Create(ComputeResourceAction):
         parser.add_option('--url', dest='url', type='url', help=_("URL for Libvirt, Ovirt, and Openstack (required)"))
         parser.add_option('--description', dest='description', help=_(""))
         parser.add_option('--user', dest='user', help=_("Username for Ovirt, Vmware, Openstack. Access Key for EC2."))
-        parser.add_option('--password', dest='password', help=_("Password for Ovirt, Vmware, Openstack. Secret key for EC2"))
+        parser.add_option('--password', dest='password',
+            help=_("Password for Ovirt, Vmware, Openstack. Secret key for EC2"))
         parser.add_option('--uuid', dest='uuid', help=_("for Ovirt, Vmware Datacenter"))
         parser.add_option('--region', dest='region', help=_("for EC2 only"))
         parser.add_option('--tenant', dest='tenant', help=_("for Openstack only"))
@@ -161,8 +162,10 @@ class Update(ComputeResourceAction):
         parser.add_option('--new_name', dest='name', help=_("New compute resource name"))
         parser.add_option('--url', dest='url', type='url', help=_("URL for Libvirt, Ovirt, and Openstack"))
         parser.add_option('--description', dest='description', help=_(""))
-        parser.add_option('--user', dest='user', help=_("Username for Ovirt, Vmware, Openstack. Access Key for EC2."))
-        parser.add_option('--password', dest='password', help=_("Password for Ovirt, Vmware, Openstack. Secret key for EC2"))
+        parser.add_option('--user', dest='user',
+            help=_("Username for Ovirt, Vmware, Openstack. Access Key for EC2."))
+        parser.add_option('--password', dest='password',
+            help=_("Password for Ovirt, Vmware, Openstack. Secret key for EC2"))
         parser.add_option('--uuid', dest='uuid', help=_("for Ovirt, Vmware Datacenter"))
         parser.add_option('--region', dest='region', help=_("for EC2 only"))
         parser.add_option('--tenant', dest='tenant', help=_("for Openstack only"))
