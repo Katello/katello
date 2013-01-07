@@ -17,6 +17,7 @@ fi
 
 # Run unit tests
 cd src
+cp -f config/katello.template.yml config/katello.yml
 sudo bundle install
 rake parallel:drop
 rake parallel:create

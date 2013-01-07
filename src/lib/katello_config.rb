@@ -109,6 +109,8 @@ module Katello
         @data.has_key? key
       end
 
+      # @example does node contain value at node[:key1][:key2]
+      #    node.present? :key1, :key2
       def present?(*keys)
         key, rest = keys.first, keys[1..-1]
         raise ArgumentError, 'supply at least one key' unless key
@@ -344,7 +346,7 @@ module Katello
 
       def config_file_path
         @config_file_path ||= config_file_paths.find { |path| File.exist? path } or
-            raise "no config file found, candidates: #{config_file_paths}"
+            raise "no config file found, candidates: #{config_file_paths.join ' '}"
       end
     end
 
