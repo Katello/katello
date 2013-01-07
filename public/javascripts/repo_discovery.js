@@ -36,6 +36,8 @@ KT.repo_discovery = (function(){
             $.uiTableFilter($(list_id), this.value, $(list_id).find("thead > tr:last > th").first().text().trim());
         });
 
+        $(list_id).delegate("input[type=checkbox]", 'change', on_checkbox_change);
+        on_checkbox_change();
         init_cancel();
     },
     open_subpane = function(){
@@ -81,7 +83,7 @@ KT.repo_discovery = (function(){
     draw_url_list = function(url_list){
         var list = $(list_id),
             find_text = function(){ return $(this).find('.hidden-text').html();};
-
+        list.find('.check_icon-black').tipsy('hide');
         KT.initial_repo_discovery.urls = url_list;
         list.find('tbody').html(KT.discovery_templates.url_list(url_list, selected()));
         list.find('.check_icon-black').tipsy({html:true, gravity:'w', className:'content-tipsy',
@@ -139,7 +141,7 @@ KT.repo_discovery = (function(){
         form.find('#cancel_discover').parent().hide();
     },
     discovery_started = function() {
-        $(list_id).find('tbody').html('<tr><td></td></tr>');
+        $(list_id).find('tbody').html('<tr><td></td><td></td></tr>');
         $('#url_filter').val('');
         init_updater();
     },
@@ -148,6 +150,14 @@ KT.repo_discovery = (function(){
         KT.initial_repo_discovery.running = false;
         updater = undefined;
         enable_discovery();
+    },
+    on_checkbox_change = function(){
+        var count = selected().length;
+        if(count === 0){
+            $('#new_repos').attr('disabled', 'disabled');
+        }else {
+            $('#new_repos').removeAttr('disabled');
+        }
     },
     selected = function(){
         var to_ret = [];
@@ -177,7 +187,7 @@ KT.discovery_templates = (function(){
             selected_list = [];
         }
         if (url_list.length === 0) {
-            return '<tr><td></td></tr>';
+            return '<tr><td></td><td></td></tr>';
         }
         KT.utils.each(url_list, function(elem, index){
             html += url_list_item(elem, selected_list, index % 2 === 0);
@@ -302,10 +312,11 @@ KT.repo_discovery.new = (function(){
         $.ajax({
             url:create_url,
             type: 'POST',
-            data: {'repo':repo},
+            data: {'repo':repo, 'ignore_success_notice':true},
             success:function(){
-                var repo_div = $(repo.id);
-                repo_div.removeClass('new_repo');
+                var repo_div = $(repo.id),
+                    created_num, created_msg;
+                repo_div.removeClass('new_repo').addClass('created_repo');
                 repo_div.find('.name_input').replaceWith(repo.name);
                 repo_div.find('.label_input').replaceWith(repo.label);
 
@@ -315,7 +326,19 @@ KT.repo_discovery.new = (function(){
                 else {
                     KT.repo_discovery.clear_selections();
                     KT.repo_discovery.init_updater();
+
+                    created_num = $('.created_repo').length;
+                    if (created_num === 1) {
+                        created_msg = i18n.discovery_success_one
+                    }
+                    else{
+                        created_msg = i18n.discovery_success_multi(created_num)
+                    }
+
                     KT.panel.closeSubPanel($('#subpanel'));
+                    notices.displayNotice('success', JSON.stringify({notices:[created_msg]}),
+                                            'repositories___create');
+
                 }
             },
             error: function(){
