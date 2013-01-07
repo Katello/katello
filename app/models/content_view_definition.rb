@@ -19,7 +19,7 @@ class ContentViewDefinition < ActiveRecord::Base
 
   include AsyncOrchestration
 
-  has_many :content_views
+  has_many :content_views, :dependent => :destroy
   has_many :components, :class_name => "ComponentContentView"
   has_many :component_content_views, :through => :components,
     :source => :content_view, :class_name => "ContentView"
@@ -116,6 +116,13 @@ class ContentViewDefinition < ActiveRecord::Base
 
   def has_content?
     self.products.any? || self.repositories.any?
+  end
+
+  def has_promoted_views?
+    self.content_views.each do |view|
+      return true if view.promoted?
+    end
+    return false
   end
 
   def as_json(options = {})
