@@ -306,8 +306,8 @@ module Glue::Pulp::Repos
 
     def add_repo(label, name, url, repo_type, gpg = nil)
       check_for_repo_conflicts(name, label)
-      key = EnvironmentProduct.find_or_new(self.organization.library, self)
-      repo = Repository.new(:environment_product => key, :pulp_id => repo_id(name),
+      key = EnvironmentProduct.find_or_create(self.organization.library, self)
+      repo = Repository.create!(:environment_product => key, :pulp_id => repo_id(name),
           :relative_path => Glue::Pulp::Repos.custom_repo_path(self.library, self, label),
           :arch => arch,
           :name => name,
@@ -316,8 +316,6 @@ module Glue::Pulp::Repos
           :gpg_key => gpg,
           :content_type => repo_type
       )
-      repo.save!
-      repo
     end
 
     def setup_sync_schedule
