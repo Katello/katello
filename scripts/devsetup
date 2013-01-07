@@ -92,7 +92,7 @@ FileUtils.cd(File.join(kt_home, "src"))
 
 FileUtils.cp(File.join(origin_home, "Gemfile.lock"), File.join(kt_home, "src"))
 
-run_command("bundle install --without jshintrb")
+run_command("bundle install --without checking")
 
 puts <<EOF
 Turning your machine into a development mode finished successfully.
