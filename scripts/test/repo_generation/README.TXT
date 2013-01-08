@@ -1,7 +1,10 @@
 Set of scripts for generating dummy repos
 
-Usage:
+Usage of fake repo generation (see zoo for sample definition dir):
  create_repo.sh -d <DEFINITION_DIRECTORY> -o <OUTPUT_DIRECTORY>
+
+Usage of fake cds generation (see cds for sample definition dir):
+ create_cds.sh -d <DEFINITION_DIRECTORY> -o <OUTPUT_DIRECTORY>
 
 Environment:
 
