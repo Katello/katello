@@ -19,7 +19,7 @@
 %define modulename katello
 
 Name:           %{modulename}-selinux
-Version:        1.3.0
+Version:        1.3.1
 Release:        1%{?dist}
 Summary:        SELinux policy module supporting Katello
 
@@ -126,6 +126,12 @@ fi
 %attr(0750,root,katello-shared) %{_sysconfdir}/katello/secure
 
 %changelog
+* Tue Jan 08 2013 Lukas Zapletal <lzap+git@redhat.com> 1.3.1-1
+- 879094 - a few updates to katello & katello-selinux spec based on comments
+- 879094 - CVE-2012-5561 - fix permissions on /etc/katello/secure
+- Bumping package versions for 1.3.
+- Bumping package versions for 1.1.
+
 * Thu Sep 27 2012 Miroslav Suchý <msuchy@redhat.com> 1.1.2-1
 - package katello-selinux-relabel (msuchy@redhat.com)
 - do not pretend that we support MLS or Simple selinux (msuchy@redhat.com)
