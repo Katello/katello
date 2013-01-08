@@ -14,7 +14,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        1.3.1
+Version:        1.3.2
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -118,6 +118,29 @@ chmod +x -R %{buildroot}%{homedir}/upgrade-scripts/*
 
 
 %changelog
+* Tue Jan 08 2013 Lukas Zapletal <lzap+git@redhat.com> 1.3.2-1
+- fix typo
+- Merge pull request #1271 from lzap/orch-logging
+- Merge pull request #1259 from lzap/org-delete-885261
+- 885261 - katello-configure now always loads answer file
+- move loop over puppet output to shared function
+- remove dead code
+- Merge pull request #1314 from xsuchy/pull-req-pg24
+- add upgrade script to upgrade old configuration to a new one
+- fix 'nil' bug in katello-configure when running with --no-bars option
+- add --katello-configuration-files-only option to katello-configure
+- Merge pull request #1297 from Katello/bkearney/865860
+- Merge pull request #1256 from bkearney/bkearney/758813
+- if nobars is set then progress_bar is not defined
+- 865860: Change the default org and  orgunit values for the candlepin cert
+- if foreman is stopped, status returns 3 - in such case return 0 to make
+  puppet happy
+- logging - orchestration logger and uuid request tracking
+- 885261 - org deletion should remove rh provider
+- 758813: Disable basic and trusted auth in the candlepin engine since it is
+  not required.
+- fix packaging and katello-configure
+
 * Tue Dec 18 2012 Miroslav Suchý <msuchy@redhat.com> 1.3.1-1
 - stop foreman only if it is running (msuchy@redhat.com)
 - when finishing, reset title of progress bar back to original state
