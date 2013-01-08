@@ -57,6 +57,7 @@ class Api::RepositoriesController < Api::ApiController
   see "gpg_keys#index"
   def create
     raise HttpErrors::BadRequest, _('Invalid Url') if !kurl_valid?(params[:url])
+    raise HttpErrors::BadRequest, _("Repository can be only created for custom provider.") unless @product.custom?
 
     if params[:gpg_key_name].present?
       gpg = GpgKey.readable(@product.organization).find_by_name!(params[:gpg_key_name])
