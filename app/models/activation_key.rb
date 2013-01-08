@@ -90,6 +90,7 @@ class ActivationKey < ActiveRecord::Base
     end
     system.environment_id = self.environment_id if self.environment_id
     system.system_template_id = self.system_template_id if self.system_template_id
+    system.content_view_id = self.content_view_id if self.content_view_id
     system.system_activation_keys.build(:activation_key => self)
   end
 
