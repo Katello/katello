@@ -182,6 +182,13 @@ describe System do
       Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil, nil, nil, anything).and_return(true)
       @system.save!
     end
+
+    it "should fail if the content view is not in the enviornment" do
+      content_view = FactoryGirl.build_stubbed(:content_view)
+      @system.stub(:content_view).and_return(content_view)
+      @system.save.should be_false
+      expect { @system.save! }.to raise_exception(/Content view is not in environment/)
+    end
   end
 
   context "persisted system has correct attributes" do
