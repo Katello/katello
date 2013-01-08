@@ -76,8 +76,8 @@ pulp-admin content upload -r $repo_id --nosig -v $packages_dir/RPMS/*.rpm
 
 pulp-admin repo generate_metadata --id $repo_id
 
-cp -r $pulp_repo_dir $out_dir/RPMS
-cp -r $packages_dir/SRPMS $out_dir/SRPMS
+cp -rHL $pulp_repo_dir $out_dir/RPMS
+cp -rHL $packages_dir/SRPMS $out_dir/SRPMS
 cp RPM-GPG-KEY-dummy-packages-generator $out_dir
 
 if [ -e "$dir/packages" ]; then
