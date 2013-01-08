@@ -51,6 +51,7 @@ class System < ActiveRecord::Base
   validates_length_of :location, :maximum => 255
   validates :sockets, :numericality => { :only_integer => true, :greater_than => 0 },
             :allow_nil => true, :if => ("validation_context == :create || validation_context == :update")
+  validate :content_view_in_environment
 
   before_create  :fill_defaults
   after_create :init_default_custom_info_keys
@@ -168,6 +169,7 @@ class System < ActiveRecord::Base
     json['environment'] = environment.as_json unless environment.nil?
     json['activation_key'] = activation_keys.as_json unless activation_keys.nil?
     json['template'] = system_template.as_json unless system_template.nil?
+    json['content_view'] = content_view.as_json if content_view
     json['ipv4_address'] = facts.try(:[], 'network.ipv4_address')
     if self.guest == 'true'
       json['host'] = self.host.attributes if self.host
@@ -214,6 +216,11 @@ class System < ActiveRecord::Base
       hash = {}
       self.custom_info.each{ |c| hash[c.keyname] = c.value} if self.custom_info
       hash
+    end
+
+    def content_view_in_environment
+      errors.add(:base, _("Content view is not in environment")) if content_view.present? &&
+        !content_view.environments.include?(environment)
     end
 
 end
