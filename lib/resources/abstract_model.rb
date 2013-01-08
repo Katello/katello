@@ -230,11 +230,13 @@ class Resources::AbstractModel
     end
   end
 
+  def self.resource_class(data)
+    self
+  end
+
   def self.find!(id)
     data, _ = resource.show({ 'id' => id }, header)
-    new(clean_attribute_hash(parse_attributes(data))).tap do |o|
-      o.send :set_as_persisted
-    end
+    self.load_instance(data)
   rescue RestClient::ResourceNotFound => e
     raise NotFound.new(self, id)
   end
@@ -248,9 +250,7 @@ class Resources::AbstractModel
   def self.all(params = nil)
     items, _ = resource.index(params, header)
     items.map do |item|
-      new(clean_attribute_hash(parse_attributes(item))).tap do |o|
-        o.send :set_as_persisted
-      end
+      self.load_instance(item)
     end
   end
 
@@ -275,6 +275,20 @@ class Resources::AbstractModel
 
   def self.base_class
     self
+  end
+
+  protected
+
+  def self.load_instance(data)
+    data = parse_attributes(data)
+    klass = self.resource_class(data)
+    klass.new(klass.clean_attribute_hash(data)).tap do |o|
+      o.send :set_as_persisted
+    end
+  end
+
+  def self.clean_attribute_hash(attributes)
+    attributes.reject { |k, _| not self.attributes.map(&:to_s).include? k.to_s }
   end
 
   private
@@ -302,10 +316,6 @@ class Resources::AbstractModel
 
   def self.header
     { }
-  end
-
-  def self.clean_attribute_hash(attributes)
-    attributes.reject { |k, _| not self.attributes.map(&:to_s).include? k.to_s }
   end
 
 end
