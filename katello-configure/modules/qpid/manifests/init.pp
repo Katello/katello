@@ -1,5 +1,5 @@
 class qpid {
-  Exec { logoutput => on_failure, timeout => 0 }
+  Exec { logoutput => true, timeout => 0 }
 
   include certs::params
   include qpid::install
