@@ -59,6 +59,9 @@ module Src
       end
     end
 
+    # set the relative url for rails and jammit
+    ActionController::Base.config.relative_url_root = Katello.config.url_prefix
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
