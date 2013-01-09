@@ -119,10 +119,7 @@ class ContentViewDefinition < ActiveRecord::Base
   end
 
   def has_promoted_views?
-    self.content_views.each do |view|
-      return true if view.promoted?
-    end
-    return false
+    !! self.content_views.promoted.first
   end
 
   def as_json(options = {})
