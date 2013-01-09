@@ -42,6 +42,19 @@ class ContentView < ActiveRecord::Base
   scope :default, where(:default=>true)
   scope :non_default, where(:default=>false)
 
+  def self.promoted(safe = false)
+    # retrieve the view, if it has been promoted (i.e. exists in more than 1 environment)
+    relation = self.joins(:content_view_versions => :environments).group('"content_views"."id"').
+        having('count("environments"."id") > 1')
+
+    if safe
+      # do not include group and having in returned relation
+      self.where :id => relation.all.map(&:id)
+    else
+      relation
+    end
+  end
+
   def promoted?
     # if the view exists in more than 1 environment, it has been promoted
     self.environments.length > 1 ? true : false
