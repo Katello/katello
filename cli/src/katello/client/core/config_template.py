@@ -17,7 +17,7 @@
 from katello.client.api.config_template import ConfigTemplateAPI
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_foreman_record, unnest_one, format_sub_resource
-from katello.client.utils.printer import batch_add_columns
+from katello.client.lib.utils.printer import batch_add_columns
 
 
 # base config template action --------------------------------------------------------

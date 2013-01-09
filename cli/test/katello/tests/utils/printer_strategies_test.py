@@ -1,9 +1,9 @@
 from unittest import TestCase
 from mock import Mock
 
-from katello.client.utils import printer
-from katello.client.utils.printer import Printer, VerboseStrategy, GrepStrategy
-from katello.client.utils.printer import indent_text, text_to_line, center_text, print_line, get_term_width
+from katello.client.lib.utils import printer
+from katello.client.lib.utils.printer import Printer, VerboseStrategy, GrepStrategy
+from katello.client.lib.utils.printer import indent_text, text_to_line, center_text, print_line, get_term_width
 from katello.tests.test_utils import ColoredAssertionError, EasyMock
 
 import os

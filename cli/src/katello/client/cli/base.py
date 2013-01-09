@@ -20,7 +20,7 @@ from traceback import format_exc
 
 from optparse import OptionGroup, SUPPRESS_HELP
 from katello.client.i18n_optparse import OptionParserExitError
-from katello.client.utils.encoding import u_str
+from katello.client.lib.utils.encoding import u_str
 from katello.client.core.base import Command
 from katello.client.config import Config
 from katello.client.logutil import getLogger, logfile

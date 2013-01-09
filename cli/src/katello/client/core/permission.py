@@ -21,9 +21,9 @@ from katello.client.api.permission import PermissionAPI
 from katello.client.api.utils import get_role, get_permission
 from katello.client.cli.base import opt_parser_add_org
 from katello.client.core.utils import system_exit, test_record
-from katello.client.utils.printer import GrepStrategy, VerboseStrategy
+from katello.client.lib.utils.printer import GrepStrategy, VerboseStrategy
 from katello.client.core.base import BaseAction, Command
-from katello.client.utils import printer
+from katello.client.lib.utils import printer
 
 
 

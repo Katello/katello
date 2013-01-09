@@ -17,7 +17,7 @@
 
 from katello.client.api.ping import PingAPI
 from katello.client.core.base import BaseAction
-from katello.client.utils.printer import batch_add_columns
+from katello.client.lib.utils.printer import batch_add_columns
 
 
 # base ping action --------------------------------------------------------

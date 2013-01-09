@@ -24,9 +24,9 @@ from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, run_spinner_in_bg, format_date, wait_for_async_task, \
     AsyncTask, format_task_errors
 from katello.client.api.utils import get_environment, get_changeset, get_template, get_repo, get_product
-from katello.client.utils import printer
-from katello.client.utils.encoding import u_str
-from katello.client.utils.printer import batch_add_columns
+from katello.client.lib.utils import printer
+from katello.client.lib.utils.encoding import u_str
+from katello.client.lib.utils.printer import batch_add_columns
 
 
 

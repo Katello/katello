@@ -17,7 +17,7 @@
 from katello.client.api.domain import DomainAPI
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_foreman_record, unnest_one
-from katello.client.utils.printer import batch_add_columns
+from katello.client.lib.utils.printer import batch_add_columns
 
 
 # base domain action --------------------------------------------------------

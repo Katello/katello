@@ -21,7 +21,7 @@ import unicodedata
 
 
 from math import floor
-from katello.client.utils.encoding import u_str
+from katello.client.lib.utils.encoding import u_str
 
 
 
