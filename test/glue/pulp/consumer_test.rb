@@ -13,6 +13,7 @@
 require 'minitest_helper'
 require './test/support/repository_support'
 require './test/support/consumer_support'
+require './test/support/user_support'
 
 
 class GluePulpConsumerTestBase < MiniTest::Rails::ActiveSupport::TestCase
@@ -96,13 +97,14 @@ class GluePulpConsumerBindTest < GluePulpConsumerTestBase
   def self.before_suite
     super
     RepositorySupport.create_and_sync_repo(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
-    
+    UserSupport.create_hidden_user
     @@simple_server = ConsumerSupport.create_consumer(@loaded_fixtures['systems']['simple_server']['id'])
   end
 
   def self.after_suite
     RepositorySupport.destroy_repo
     ConsumerSupport.destroy_consumer
+    UserSupport.destroy_hidden_user
     super
   end
 
@@ -123,7 +125,7 @@ class GluePulpConsumerRequiresBoundRepoTest < GluePulpConsumerTestBase
   def self.before_suite
     super
     RepositorySupport.create_and_sync_repo(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
-
+    UserSupport.create_hidden_user
     @@simple_server = ConsumerSupport.create_consumer(@loaded_fixtures['systems']['simple_server']['id'])
     @@simple_server.enable_repos([RepositorySupport.repo_id])
   end
@@ -131,6 +133,7 @@ class GluePulpConsumerRequiresBoundRepoTest < GluePulpConsumerTestBase
   def self.after_suite
     ConsumerSupport.destroy_consumer
     RepositorySupport.destroy_repo
+    UserSupport.destroy_hidden_user
     super
   end
 
