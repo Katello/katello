@@ -1,5 +1,5 @@
 class katello {
-  Exec { logoutput => on_failure, timeout => 0 }
+  Exec { logoutput => true, timeout => 0 }
 
   include katello::params
   include certs

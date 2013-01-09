@@ -30,7 +30,7 @@ class foreman (
 
   $reset_data         = $foreman::params::reset_data
   ) inherits foreman::params {
-  Exec { logoutput => on_failure, timeout => 0 }
+  Exec { logoutput => true, timeout => 0 }
 
   if $foreman::install {
     class { '::foreman::repos': } ~>
