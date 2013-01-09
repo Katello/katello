@@ -6,68 +6,68 @@ http_interactions:
     body: 
       string: ""
     headers: 
+      Accept-Encoding: 
+      - gzip, deflate
       Accept: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="N6hlJ9kkqBIlDrOAFCtOJ8GFAEqG74Qlwqit9EPvg", oauth_signature="K46LfuCk7EbC3%2BuAONH9SEfWOBE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1354126723", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      Accept-Encoding: 
-      - gzip, deflate
+      - OAuth oauth_consumer_key="katello", oauth_nonce="iY2UIKvdrN1wVKcg6Mvpnb6arIBIPX6mBaNa0WiQXc", oauth_signature="kK9mReiycym9%2FNms%2BuckJg9nhKo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1357769138", oauth_version="1.0"
       Content-Type: 
       - application/json
+      Pulp-User: 
+      - admin
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Content-Length: 
-      - "2"
+      Date: 
+      - Wed, 09 Jan 2013 22:05:38 GMT
       Server: 
       - Apache/2.2.22 (Fedora)
-      Date: 
-      - Wed, 28 Nov 2012 18:18:43 GMT
       Content-Type: 
       - application/json
+      Content-Length: 
+      - "2"
     body: 
       string: "[]"
     http_version: 
-  recorded_at: Wed, 28 Nov 2012 18:18:43 GMT
+  recorded_at: Wed, 09 Jan 2013 22:05:38 GMT
 - request: 
     method: post
     uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
     body: 
-      string: "{\"schedule\":\"2013-11-28T13:18:43-05:00/P1D\"}"
+      string: "{\"schedule\":\"2014-01-09T17:05:38-05:00/P1D\"}"
     headers: 
+      Accept-Encoding: 
+      - gzip, deflate
       Accept: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="PxEfAwgkUAQap34voWu8MbALVH0PpCdjFYDmzSpcNs", oauth_signature="1zZltUrDNCkxd%2B5y7Ay1j2fvgZk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1354126723", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Length: 
-      - "44"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="zAERIR4Do6lSD5rjAj9lKMJifOsPFaXt135o8U1pgE", oauth_signature="8oFKBW%2FnuOIQfwpqezqv1fqFYg8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1357769138", oauth_version="1.0"
       Content-Type: 
       - application/json
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "44"
   response: 
     status: 
       code: 201
       message: Created
     headers: 
-      Location: 
-      - /pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/50b655839c60ed613800299e/
-      Content-Length: 
-      - "393"
+      Date: 
+      - Wed, 09 Jan 2013 22:05:39 GMT
       Server: 
       - Apache/2.2.22 (Fedora)
-      Date: 
-      - Wed, 28 Nov 2012 18:18:43 GMT
       Content-Type: 
       - application/json
+      Content-Length: 
+      - "393"
+      Location: 
+      - /pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/50ede9b39c60ed2cd3004120/
     body: 
-      string: "{\"next_run\": \"2013-11-28T18:18:43Z\", \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/50b655839c60ed613800299e/\", \"schedule\": \"2013-11-28T13:18:43-05:00/P1D\", \"override_config\": {}, \"remaining_runs\": null, \"first_run\": \"2013-11-28T18:18:43Z\", \"enabled\": true, \"last_run\": null, \"failure_threshold\": null, \"_id\": \"50b655839c60ed613800299e\", \"consecutive_failures\": 0}"
+      string: "{\"next_run\": \"2014-01-09T22:05:38Z\", \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/50ede9b39c60ed2cd3004120/\", \"schedule\": \"2014-01-09T17:05:38-05:00/P1D\", \"override_config\": {}, \"remaining_runs\": null, \"first_run\": \"2014-01-09T22:05:38Z\", \"enabled\": true, \"last_run\": null, \"failure_threshold\": null, \"_id\": \"50ede9b39c60ed2cd3004120\", \"consecutive_failures\": 0}"
     http_version: 
-  recorded_at: Wed, 28 Nov 2012 18:18:43 GMT
-recorded_with: VCR 2.3.0
+  recorded_at: Wed, 09 Jan 2013 22:05:39 GMT
+recorded_with: VCR 2.4.0
