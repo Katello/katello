@@ -20,6 +20,8 @@ require 'rubygems'
 require 'ruby-progressbar'
 require 'socket'
 require 'tempfile'
+require 'puppet'
+require 'puppet/util/selinux'
 require "#{PREFIX}/puppet/lib/util/functions.rb"
 
 $stdout.sync = true
@@ -218,6 +220,7 @@ FileUtils.ln_sf('katello-configure-' + now, log_directory_link)
 FileUtils.chown('katello', 'katello', log_directory)
 FileUtils.chown('katello', 'katello', log_directory_link)
 FileUtils.cp result_config_path, log_directory
+(Object.new.extend Puppet::Util::SELinux).set_selinux_context(log_directory_link, 'system_u', :seluser)
 
 ENV['KATELLO_ANSWER_FILE'] = result_config_path
 ENV['KATELLO_TEMP_ANSWER_FILE'] = temp_config_path
