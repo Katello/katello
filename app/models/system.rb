@@ -219,8 +219,9 @@ class System < ActiveRecord::Base
     end
 
     def content_view_in_environment
-      errors.add(:base, _("Content view is not in environment")) if content_view.present? &&
-        !content_view.environments.include?(environment)
+      if content_view.present? && !content_view.environments.include?(environment)
+        errors.add(:base, _("Content view is not in environment '%s'.") % environment.name)
+      end
     end
 
 end
