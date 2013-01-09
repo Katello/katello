@@ -86,6 +86,7 @@ class foreman::config {
     environment => ["RAILS_ENV=${foreman::environment}", "BUNDLER_EXT_NOSTRICT=1"],
     command     => "rake security:generate_token",
     path        => "/bin:/usr/bin",
+    creates     => "${foreman::app_root}/config/initializers/local_secret_token.rb",
   }
 
   exec {"foreman_migrate_db":
