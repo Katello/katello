@@ -67,7 +67,8 @@ class List(ActivationKeyAction):
             if envName == None:
                 print _("No keys found in organization [ %s ]") % orgName
             else:
-                print _("No keys found in organization [ %s ] environment [ %s ]") % (orgName, envName)
+                print _("No keys found in organization [ %(orgName)s ] environment [ %(envName)s ]") \
+                    % {'orgName':orgName, 'envName':envName}
 
             return os.EX_OK
 

@@ -156,8 +156,8 @@ class List(ProductAction):
         else:
             env = get_environment(org_name, env_name)
 
-            self.printer.set_header(_("Product List For Organization [ %s ], Environment [ %s ]") \
-                % (org_name, env["name"]))
+            self.printer.set_header(_("Product List For Organization %(org_name)s, Environment '%(env_name)s'") \
+                % {'org_name':org_name, 'env_name':env["name"]})
             prods = self.api.products_by_env(env['id'])
 
         # hide marketing products by default
@@ -192,7 +192,8 @@ class Sync(SingleProductAction):
             errors = [t["result"]['errors'][0] for t in task.get_hashes() if t['state'] == 'error' and
                                                                              isinstance(t["result"], dict) and
                                                                              "errors" in t["result"]]
-            print _("Product [ %s ] failed to sync: %s" % (prod["name"], errors))
+            print _("Product [ %(prod_name)s ] failed to sync: %(errors)s" \
+                % {'prod_name':prod["name"], 'errors':errors})
             return os.EX_DATAERR
         elif task.cancelled():
             print _("Product [ %s ] synchronization canceled" % prod["name"])
@@ -287,10 +288,12 @@ class Promote(SingleProductAction):
             run_spinner_in_bg(wait_for_async_task, [task], message=_("Promoting the product, please wait... "))
 
             if task.succeeded():
-                print _("Product [ %s ] promoted to environment [ %s ] " % (prod["name"], envName))
+                print _("Product [ %(prod_name)s ] promoted to environment [ %(envName)s ] " \
+                    % {'prod_name':prod["name"], 'envName':envName})
                 returnCode = os.EX_OK
             else:
-                print _("Product [ %s ] promotion failed: %s" % (prod["name"], format_task_errors(task.errors())) )
+                print _("Product [ %(prod_name)s ] promotion failed: %(task_errors)s" \
+                    % {'prod_name':prod["name"], 'task_errors':format_task_errors(task.errors())} )
                 returnCode = os.EX_DATAERR
 
         except Exception:
@@ -489,10 +492,12 @@ class AddRemoveFilter(SingleProductAction):
     def update_filters(self, org_name, product, filters, filter_name):
         if self.addition:
             filters.append(filter_name)
-            message = _("Added filter [ %s ] to product [ %s ]") % (filter_name, product["name"])
+            message = _("Added filter [ %(filter_name)s ] to product [ %(product)s ]") \
+                % {'filter_name':filter_name, 'product':product["name"]}
         else:
             filters.remove(filter_name)
-            message = _("Removed filter [ %s ] from product [ %s ]") % (filter_name, product["name"])
+            message = _("Removed filter [ %(filter_name)s ] from product [ %(product)s ]") \
+                % {'filter_name':filter_name, 'product':product["name"]}
 
         self.api.update_filters(org_name, product['id'], filters)
         print message

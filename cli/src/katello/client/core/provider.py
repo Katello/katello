@@ -199,7 +199,8 @@ class Sync(SingleProviderAction):
 
         if task.failed():
             errors = format_sync_errors(task)
-            print _("Provider [ %s ] failed to sync: %s" % (providerName, errors))
+            print _("Provider [ %(providerName)s ] failed to sync: %(errors)s" \
+                % {'providerName':providerName, 'errors':errors})
             return os.EX_DATAERR
         elif task.cancelled():
             print _("Provider [ %s ] synchronization canceled" % providerName)
@@ -241,8 +242,8 @@ class Status(SingleProviderAction):
         if task.is_running():
             pkgsTotal = task.total_count()
             pkgsLeft = task.items_left()
-            prov['progress'] = (_("%d%% done (%d of %d packages downloaded)") % \
-                (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
+            prov['progress'] = (_("%(task_progress)d%% done (%(pkgsCount)d of %(pkgsTotal)d packages downloaded)") % \
+                {'task_progress':task.get_progress()*100, 'pkgsCount':pkgsTotal-pkgsLeft, 'pkgsTotal':pkgsTotal})
 
         #TODO: last errors?
 

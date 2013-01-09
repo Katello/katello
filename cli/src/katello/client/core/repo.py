@@ -296,8 +296,8 @@ class Status(SingleRepoAction):
         if task.is_running():
             pkgsTotal = task.total_count()
             pkgsLeft = task.items_left()
-            repo['progress'] = ("%d%% done (%d of %d packages downloaded)" % (
-                task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
+            repo['progress'] = ("%(task_progress)d%% done (%(pkgs_count)d of %(pkgs_total)d packages downloaded)" % 
+                {'task_progress':task.get_progress()*100, 'pkgs_count':pkgsTotal-pkgsLeft, 'pkgs_total':pkgsTotal})
 
         repo['last_errors'] = format_sync_errors(task)
 
@@ -380,7 +380,8 @@ class Sync(SingleRepoAction):
             print _("Repo [ %s ] synchronization canceled" % repo['name'])
             return os.EX_OK
         else:
-            print _("Repo [ %s ] failed to sync: %s" % (repo['name'], format_sync_errors(task)) )
+            print _("Repo [ %(repo_name)s ] failed to sync: %(sync_errors)s") \
+                % {'repo_name':repo['name'], 'sync_errors':format_sync_errors(task)} 
             return os.EX_DATAERR
 
 
@@ -452,22 +453,22 @@ class List(RepoAction):
             env  = get_environment(orgName, envName)
             prod = get_product(orgName, prodName, prodLabel, prodId)
 
-            self.printer.set_header(_("Repo List For Org %s Environment %s Product %s") %
-                (orgName, env["name"], prodName))
+            self.printer.set_header(_("Repo List For Org %(org_name)s Environment %(env_name)s Product %(prodName)s") %
+                {'org_name':orgName, 'env_name':env["name"], 'prodName':prodName})
             repos = self.api.repos_by_env_product(env["id"], prod["id"], None, listDisabled)
             self.printer.print_items(repos)
 
         elif prodIncluded:
             prod = get_product(orgName, prodName, prodLabel, prodId)
-            self.printer.set_header(_("Repo List for Product %s in Org %s ") %
-                (prodName, orgName))
+            self.printer.set_header(_("Repo List for Product %(prodName)s in Org %(orgName)s ") %
+                {'prodName':prodName, 'orgName':orgName})
             repos = self.api.repos_by_product(orgName, prod["id"], listDisabled)
             self.printer.print_items(repos)
 
         else:
             env  = get_environment(orgName, envName)
-            self.printer.set_header(_("Repo List For Org %s Environment %s") %
-                (orgName, env["name"]))
+            self.printer.set_header(_("Repo List For Org %(orgName)s Environment %(env_name)s") %
+                {'orgName':orgName, 'env_name':env["name"]})
             repos = self.api.repos_by_org_env(orgName,  env["id"], listDisabled)
             self.printer.print_items(repos)
 
@@ -552,10 +553,12 @@ class AddRemoveFilter(SingleRepoAction):  # pylint: disable=R0904
     def update_filters(self, repo, filters, filter_name):
         if self.addition:
             filters.append(filter_name)
-            message = _("Added filter [ %s ] to repository [ %s ]" % (filter_name, repo["name"]))
+            message = _("Added filter [ %(filter_name)s ] to repository [ %(repo_name)s ]") \
+                % {'filter_name':filter_name, 'repo_name':repo["name"]}
         else:
             filters.remove(filter_name)
-            message = _("Removed filter [ %s ] to repository [ %s ]" % (filter_name, repo["name"]))
+            message = _("Removed filter [ %(filter_name)s ] to repository [ %(repo_name)s ]") \
+                % {'filter_name':filter_name, 'repo_name':repo["name"]}
 
         self.api.update_filters(repo['id'], filters)
         print message
