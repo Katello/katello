@@ -81,15 +81,25 @@ class foreman::config {
       before  => Class["apache2::service"];
   }
 
+  exec {"generate_token":
+    cwd         => $foreman::app_root,
+    environment => ["RAILS_ENV=${foreman::environment}", "BUNDLER_EXT_NOSTRICT=1"],
+    command     => "rake security:generate_token",
+    path        => "/bin:/usr/bin",
+  }
+
   exec {"foreman_migrate_db":
     cwd         => $foreman::app_root,
     environment => ["RAILS_ENV=${foreman::environment}", "BUNDLER_EXT_NOSTRICT=1"],
-    command     => "/usr/bin/env rake db:migrate --trace --verbose > ${foreman::configure_log_base}/foreman-db-migrate.log 2>&1 && touch /var/lib/katello/foreman_db_migrate_done",
+    command     => "rake db:migrate --trace --verbose > ${foreman::configure_log_base}/foreman-db-migrate.log 2>&1 && touch /var/lib/katello/foreman_db_migrate_done",
+    path        => "/sbin:/usr/sbin:/bin:/usr/bin",
     creates     => "/var/lib/katello/foreman_db_migrate_done",
     require     => [ Postgres::Createdb[$foreman::db_name],
                  File["${foreman::log_base}/production.log"],
                  File["${foreman::config_dir}/settings.yaml"],
-                 File["${foreman::config_dir}/database.yml"]];
+                 File["${foreman::config_dir}/database.yml"],
+                 Exec["generate_token"],
+                 ];
   } ~>
 
   exec {"foreman_config":
