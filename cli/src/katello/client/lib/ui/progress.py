@@ -18,7 +18,7 @@
 import sys
 import time
 import threading
-from katello.client.core.utils import AsyncTask
+from katello.client.lib.async import AsyncTask
 
 
 class ProgressBar(object):

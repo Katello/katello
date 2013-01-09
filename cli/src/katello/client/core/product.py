@@ -27,7 +27,7 @@ from katello.client.lib.ui.formatters import format_sync_state, format_sync_time
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_environment, get_provider, get_product, get_sync_plan
-from katello.client.core.utils import AsyncTask
+from katello.client.lib.async import AsyncTask
 from katello.client.lib.ui.progress import ProgressBar, run_async_task_with_status, run_spinner_in_bg, wait_for_async_task
 from katello.client.lib.ui import printer
 from katello.client.lib.ui.printer import batch_add_columns
