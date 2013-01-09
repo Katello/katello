@@ -19,7 +19,7 @@ import os
 from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.permission import PermissionAPI
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import system_exit
+from katello.client.lib.control import system_exit
 from katello.client.lib.utils.data import test_record
 
 

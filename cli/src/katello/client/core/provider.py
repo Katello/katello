@@ -22,7 +22,7 @@ from katello.client.cli.base import opt_parser_add_org
 from katello.client.server import ServerRequestError
 from katello.client.core.base import BaseAction, Command
 from katello.client.lib.ui.progress import run_async_task_with_status, run_spinner_in_bg
-from katello.client.core.utils import system_exit
+from katello.client.lib.control import system_exit
 from katello.client.lib.async import AsyncTask
 from katello.client.lib.utils.io import get_abs_path
 from katello.client.lib.utils.data import test_record

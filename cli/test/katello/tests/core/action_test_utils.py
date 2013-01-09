@@ -5,7 +5,7 @@ from mock import Mock
 from katello.tests.test_utils import ColoredAssertionError, EasyMock
 
 import katello.client.lib.ui.progress
-from katello.client.core.utils import SystemExitRequest
+from katello.client.lib.control import SystemExitRequest
 from katello.client.api.utils import ApiDataError
 from katello.client.i18n_optparse import OptionParserExitError
 from katello.client.server import ServerRequestError

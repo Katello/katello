@@ -19,7 +19,7 @@ import re
 import sys
 from katello.client.config import Config
 
-#  mode check -----------------------------------------------------------------
+
 def get_katello_mode():
     Config()
     path = Config.parser.get('server', 'path') if Config.parser.has_option('server', 'path') else ''
@@ -27,15 +27,6 @@ def get_katello_mode():
         return "headpin"
     else:
         return "katello"
-
-
-# custom info -----------------------------------------------------------------
-def stringify_custom_info(list_custom_info):
-    arr = []
-    for info in list_custom_info:
-        arr.append("%s: %s" % (info["keyname"], info["value"]))
-
-    return "[ %s ]" % ", ".join(arr)
 
 
 class SystemExitRequest(Exception):
@@ -46,7 +37,7 @@ class SystemExitRequest(Exception):
     """
     pass
 
-# system exit -----------------------------------------------------------------
+
 def system_exit(code, msgs=None):
     """
     Raise a system exit request exception with a return code and optional message(s).
@@ -69,6 +60,7 @@ def system_exit(code, msgs=None):
             lstMsgs = msgs
 
     raise SystemExitRequest(code, lstMsgs)
+
 
 def parse_tokens(tokenstring):
     """

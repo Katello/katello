@@ -20,16 +20,17 @@ import datetime
 from katello.client import constants
 from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
 from katello.client.core import repo
+from katello.client.core.repo import ALLOWED_REPO_URL_SCHEMES
+from katello.client.core.base import BaseAction, Command
 from katello.client.api.product import ProductAPI
 from katello.client.api.repo import RepoAPI
-from katello.client.core.repo import ALLOWED_REPO_URL_SCHEMES
-from katello.client.lib.ui.formatters import format_sync_state, format_sync_time, format_task_errors
 from katello.client.api.changeset import ChangesetAPI
-from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_environment, get_provider, get_product, get_sync_plan
 from katello.client.lib.async import AsyncTask
-from katello.client.lib.ui.progress import ProgressBar, run_async_task_with_status, run_spinner_in_bg, wait_for_async_task
 from katello.client.lib.ui import printer
+from katello.client.lib.ui.formatters import format_sync_state, format_sync_time, format_task_errors
+from katello.client.lib.ui.progress import ProgressBar, run_async_task_with_status, run_spinner_in_bg
+from katello.client.lib.ui.progress import wait_for_async_task
 from katello.client.lib.ui.printer import batch_add_columns
 
 

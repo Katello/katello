@@ -16,7 +16,7 @@
 #
 
 import os
-from katello.client.core.utils import system_exit
+from katello.client.lib.control import system_exit
 
 
 def is_valid_record(rec):

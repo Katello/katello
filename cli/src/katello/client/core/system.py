@@ -25,9 +25,9 @@ from katello.client.api.utils import get_environment, get_system
 
 from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import stringify_custom_info, get_katello_mode
 from katello.client.server import ServerRequestError
 
+from katello.client.lib.control import get_katello_mode
 from katello.client.lib.utils.io import convert_to_mime_type, attachment_file_name, save_report
 from katello.client.lib.utils.data import test_record, update_dict_unless_none
 from katello.client.lib.utils.encoding import u_str
