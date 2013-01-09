@@ -393,7 +393,8 @@ class BaseAction(Action):
             print _("ERROR: The server hostname you have configured in /etc/katello/client.conf does not match the")
             print _("hostname returned from the katello server you are connecting to.  ")
             print ""
-            print _("You have: [%s] configured but got: [%s] from the server.") % (wh.expectedHost, wh.actualHost)
+            print _("You have: [%(expectedHost)s] configured but got: [%(actualHost)s] from the server.") \
+                % {'expectedHost':wh.expectedHost, 'actualHost':wh.actualHost}
             print ""
             print _("Please correct the host in the /etc/katello/client.conf file")
             sys.exit(1)
@@ -461,7 +462,7 @@ def check_bool(option, opt, value):
     if value.lower() in ["true","false"]:
         return (value.lower() == "true")
     else:
-        raise OptionValueError(_("option %s: invalid boolean value: %r") % (opt, value))
+        raise OptionValueError(_("option %(opt)s: invalid boolean value: %(value)r") % {'opt':opt, 'value':value})
 
 def check_list(option, opt, value):
     if not option.delimiter:
@@ -482,7 +483,8 @@ def check_url(option, opt, value):
     url_parsed = urlparse(value)
     if not url_parsed.scheme in schemes:                                 # pylint: disable=E1101
         formatted_schemes = " or ".join([s+"://" for s in schemes])
-        raise OptionValueError(_('option %s: has to start with %s') % (opt, formatted_schemes))
+        raise OptionValueError(_('option %(opt)s: has to start with %(formatted_schemes)s') \
+            % {'opt':opt, 'formatted_schemes':formatted_schemes})
     elif not url_parsed.netloc and not url_parsed.path:                  # pylint: disable=E1101
         raise OptionValueError(_('option %s: invalid format') % (opt))
     return value

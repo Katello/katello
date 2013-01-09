@@ -105,7 +105,8 @@ class Info(UserRoleAction):
             verbs = ', '.join([v['verb'] for v in p['verbs']])
             tags  = ', '.join([t['formatted']['display_name'] for t in p['tags']])
             type_in  = p['resource_type']['name']
-            return _("%s\n\tfor: %s\n\tverbs: %s\n\ton: %s") % (p['name'], type_in, verbs, tags)
+            return _("%(param_name)s\n\tfor: %(type_in)s\n\tverbs: %(verbs)s\n\ton: %(tags)s") \
+                % {'param_name':p['name'], 'type_in':type_in, 'verbs':verbs, 'tags':tags}
         else:
             return p['name']
 
@@ -198,7 +199,8 @@ class AddLdapGroup(UserRoleAction):
         role = self.get_role(name)
 
         self.api.add_ldap_group(role['id'], group_name)
-        print _("Successfully added LDAP group [ %s ] to the user role [ %s ]") % (group_name, name)
+        print _("Successfully added LDAP group [ %(group_name)s ] to the user role [ %(name)s ]") \
+            % {'group_name':group_name, 'name':name}
         return os.EX_OK
 
 # ------------------------------------------------------------------------------
@@ -221,7 +223,8 @@ class RemoveLdapGroup(UserRoleAction):
         role = self.get_role(name)
 
         self.api.remove_ldap_group(role['id'], group_name)
-        print _("Successfully removed LDAP group [ %s ] from the user role [ %s ]") % (group_name, name)
+        print _("Successfully removed LDAP group [ %(group_name)s ] from the user role [ %(name)s ]") \
+            % {'group_name':group_name, 'name':name}
         return os.EX_OK
 
 # user command ------------------------------------------------------------
