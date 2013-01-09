@@ -57,6 +57,8 @@ class RepositoriesController < ApplicationController
   def create
     repo_params = params[:repo]
     repo_params[:label], label_assigned = generate_label(repo_params[:name], _('repository')) if repo_params[:label].blank?
+    
+    raise HttpErrors::BadRequest, _("Repository can be only created for custom provider.") unless @product.custom?
 
     raise URI::InvalidURIError.new _('Invalid Url') if !kurl_valid?(repo_params[:feed])
     gpg = GpgKey.readable(current_organization).find(repo_params[:gpg_key]) if repo_params[:gpg_key] and repo_params[:gpg_key] != ""
