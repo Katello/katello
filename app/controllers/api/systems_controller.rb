@@ -168,8 +168,12 @@ DESC
   param :serviceLevel, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT"
   param :releaseVer, String, :desc => "Release of the os. The $releasever variable in repo url will be replaced with this value"
   param :location, String, :desc => "Physical of the system"
+  param :content_view_id, :identifier, :desc => "content view id"
   def update
-    @system.update_attributes!(params.slice(:name, :description, :location, :facts, :guestIds, :installedProducts, :releaseVer, :serviceLevel, :environment_id))
+    @system.update_attributes!(params.slice(:name, :description, :location,
+                                            :facts, :guestIds, :installedProducts,
+                                            :releaseVer, :serviceLevel,
+                                            :environment_id, :content_view_id))
     render :json => @system.to_json
   end
 
