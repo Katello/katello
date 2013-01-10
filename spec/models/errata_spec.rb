@@ -71,5 +71,5 @@ end
 
 
 def disable_errata_orchestration
-  Runcible::Extensions::Errata.stub(:find).and_return({})
+  Runcible::Extensions::Errata.stub(:find_by_unit_id).and_return({})
 end
