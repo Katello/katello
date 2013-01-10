@@ -15,5 +15,6 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
     allowed_options = [
         ('--org=ACME', '--name=raspbi'),
         ('--org=ACME', '--name=raspbi', '--content_view=view1'),
-        ('--org=ACME', '--env=Dev', '--name=raspbi')
+        ('--org=ACME', '--env=Dev', '--name=raspbi'),
+        ('--org=ACME', '--name=raspbi', '--content_view=view1', '--env=Dev'),
     ]
