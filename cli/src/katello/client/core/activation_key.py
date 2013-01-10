@@ -133,7 +133,7 @@ class Info(ActivationKeyAction):
         self.printer.add_column('usage_limit', value_formatter=lambda x: "unlimited" if x == -1 else x)
         self.printer.add_column('environment_id')
         self.printer.add_column('system_template_id')
-        self.printer.add_column('content_view')
+        self.printer.add_column('content_view', value_formatter=lambda x: "[ %s ]" % x)
         self.printer.add_column('pools', multiline=True, show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Activation Key Info"))
