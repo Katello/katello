@@ -85,10 +85,10 @@ KT.repo_discovery = (function(){
         list.find('.check_icon-black').tipsy('hide');
         KT.initial_repo_discovery.urls = url_list;
         list.find('tbody').html(KT.discovery_templates.url_list(url_list, selected()));
+        $('#url_filter').trigger('keyup');
+
         list.find('.check_icon-black').tipsy({html:true, gravity:'w', className:'content-tipsy',
             title:find_text});
-
-        list.find()
     },
     start_discovery = function(){
         var form = $(form_id),
