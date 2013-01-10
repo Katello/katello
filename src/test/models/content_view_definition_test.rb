@@ -50,7 +50,7 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     definition = FactoryGirl.create(:content_view_definition,
                                     :content_views => [content_view])
     assert definition.destroy
-    assert_not_nil ContentView.find_by_id(content_view.id)
+    assert_nil ContentView.find_by_id(content_view.id)
   end
 
   def test_publish
