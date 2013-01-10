@@ -1,3 +1,5 @@
+-# Partial for the 'Content' pane of a 'single' content view definitio
+
 = render :partial => "common/common_products", :locals => {:record => view_definition}
 
 = render :partial => "content_view_definitions/tupane_header"
@@ -25,8 +27,5 @@
         %td.no_padding
           %table#product_list
 
-
-    %input.fr.button{:id=>'revert_products', :type=>'button', :value=>_("Revert")}
     %input.fr.button{:id=>'update_products', :type=>'button', :value=>_("Save"),
                      'data-url'=>update_content_content_view_definition_path(view_definition.id) }
-

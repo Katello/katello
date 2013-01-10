@@ -11,7 +11,16 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module ContentViewDefinitionsHelper
+  def definition_type(definition)
+    definition.composite ? _('Composite View Definition') : _('View Definition')
+  end
+
   def environments(view_version)
     _("Environment(s): %{environments}") % {:environments => view_version.environments.collect{|e| e.name}.join(', ')}
+  end
+
+  def view_checked?(view_id, views_hash=nil)
+    return false if views_hash.nil?
+    return views_hash.has_key?(view_id)
   end
 end
