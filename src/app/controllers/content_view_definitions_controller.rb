@@ -60,7 +60,7 @@ class ContentViewDefinitionsController < ApplicationController
       :update_content => manage_rule,
       :filter => show_rule,
 
-      :default_label => manage_rule
+      :default_label => create_rule
     }
   end
 
