@@ -46,9 +46,7 @@ class Api::ContentViewsController < Api::ApiController
 
     search = ContentView.non_default.where(query_params)
     @content_views = if @environment
-      search.readable(@organization).
-        joins(:content_view_versions => :content_view_version_environments).
-        where("content_view_version_environments.environment_id = ?", @environment.id)
+      search.readable(@organization).in_environment(@environment)
     else
       search.readable(@organization)
     end
