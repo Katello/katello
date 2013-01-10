@@ -45,13 +45,13 @@ KT.configuration_templates_page = (function() {
     };
 
     addAssociation = function() {
-        var url = $(this).attr("data_url");
+        var url = $(this).attr("data-url");
         $(this).ajaxSubmit({
             type: "POST",
             url: url,
             cache: false,
             success	: function(data){
-                $('.panel-content').html(data);
+                $('#template_combinations').html(data);
             }
         });
         notices.checkNotices();

@@ -13,6 +13,7 @@
 
 class Foreman::ConfigurationTemplatesController < SimpleCRUDController
   before_filter :handle_template_upload, :only => [:create, :update]
+  before_filter :handle_operatingsystem_ids, :only => [:create, :update]
   before_filter :find_resource, :only => [:edit, :update, :destroy, :show_template_combinations, :delete_template_combination, :create_template_combination]
 
   resource_model ::Foreman::ConfigTemplate
@@ -65,5 +66,12 @@ class Foreman::ConfigurationTemplatesController < SimpleCRUDController
   def handle_template_upload
     return unless params[:configuration_template] and (t=params[:configuration_template][:template])
     params[:configuration_template][:template] = t.read if t.respond_to?(:read)
+  end
+
+  def handle_operatingsystem_ids
+    params[:configuration_template] = {:operatingsystems => []} unless params[:configuration_template]
+    if (ids=params[:configuration_template].delete(:operatingsystem_ids))
+      params[:configuration_template][:operatingsystems] = ids.collect {|id| {:id => id}}
+    end
   end
 end

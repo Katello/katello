@@ -34,6 +34,7 @@ module Resources
     Architecture    = ForemanApi::Resources::Architecture.new options, timeout_options
     Bookmark        = ForemanApi::Resources::Bookmark.new options, timeout_options
     Home            = ForemanApi::Resources::Home.new options, timeout_options
+    Environment     = ForemanApi::Resources::Environment.new options, timeout_options
     OperatingSystem = ForemanApi::Resources::OperatingSystem.new options, timeout_options
     User            = ForemanApi::Resources::User.new options, timeout_options
     Domain          = ForemanApi::Resources::Domain.new options, timeout_options
@@ -43,5 +44,6 @@ module Resources
     ComputeResource = ForemanApi::Resources::ComputeResource.new options, timeout_options
     HardwareModel   = ForemanApi::Resources::Model.new options, timeout_options
     TemplateCombination  = ForemanApi::Resources::TemplateCombination.new options, timeout_options
+    TemplateKind  = ForemanApi::Resources::TemplateKind.new options, timeout_options
   end
 end

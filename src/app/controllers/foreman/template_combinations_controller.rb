@@ -48,7 +48,8 @@ class Foreman::TemplateCombinationsController < SimpleCRUDController
 
     @template_combinations = Foreman::TemplateCombination.all('config_template_id' => params[:configuration_template_id])
     notify.success _("'%s' created successfully.") % @resource.name
-    render :partial => "items", :layout => "tupane_layout", :locals => { resource_name.to_sym => @resource, :accessor => "id", :environments => @environments }
+    render :partial => "combinations", :locals => {:environments => @environments}
+    #render :partial => "items", :layout => "tupane_layout", :locals => { resource_name.to_sym => @resource, :accessor => "id", :environments => @environments }
   rescue Resources::AbstractModel::Invalid => error
     notify.exception error
     render :json => @resource.errors, :status => :bad_request
@@ -76,6 +77,6 @@ class Foreman::TemplateCombinationsController < SimpleCRUDController
   end
 
   def find_environments
-    @environments = Foreman::Environment.all
+    @environments = current_organization.environments
   end
 end

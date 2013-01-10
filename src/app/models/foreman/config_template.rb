@@ -14,15 +14,15 @@ class Foreman::ConfigTemplate < Resources::ForemanModel
   include Resources::AbstractModel::IndexedModel
 
   attributes :id, :name, :template, :snippet, :audit_comment,
-    :template_kind, :template_combinations, :operatingsystem_ids
+    :template_kind, :template_combinations, :operatingsystems
 
   def json_default_options
     { :only => [:name, :template, :snippet, :audit_comment, :template_kind,
-                :template_combinations, :operatingsystem_ids] }
+                :template_combinations, :operatingsystems] }
   end
 
   def json_create_options
-    { :only => [:name, :template, :snippet, :audit_comment, :template_kind, :operatingsystem_ids]}
+    { :only => [:name, :template, :snippet, :audit_comment, :template_kind, :operatingsystems]}
   end
 
   def self.revision(audit_id)

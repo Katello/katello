@@ -1,0 +1,11 @@
+#template_combinations
+  .grid_2.ra
+    %label #{_("Template Combinations:")}:
+  - if @template_combinations.empty?
+    .grid_5.la
+      #{_("No Template Combinations are currently defined")}:
+  - else
+    - @template_combinations.each do |tc|
+      %div.grid_5.la
+        #{environments.detect {|e| e.foreman_id == tc.environment_id}.name }
+        = link_to  _("Delete"), "#", :id => :delete_association_configuration_template, :data_url => template_combination_path(tc.id)
