@@ -8,8 +8,15 @@
         = _('Clone')
 
     - if @view_definition.editable?
-      = link_to(_("Remove"), content_view_definition_path(@view_definition.id), :confirm => _('Are you sure?'),
-        :method => :delete, :class=>"pane_action remove", :remote=>true)
+      - if @view_definition.has_promoted_views?
+        %a.pane_action.remove.disabled
+          = _('Remove')
+        %span.hidden-text.hidden
+          .la.content-tipsy
+            = _("Before removing this definition, all promoted content views must first be deleted from their respective environments using a deletion changeset.")
+      - else
+        = link_to(_("Remove"), content_view_definition_path(@view_definition.id), :confirm => _('Are you sure?'),
+          :method => :delete, :class => "pane_action remove", :remote => true)
 
 = content_for :navigation do
   = render_menu(1..2, content_view_definition_navigation)
