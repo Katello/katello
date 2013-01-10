@@ -17,6 +17,7 @@ from katello.client.api.base import KatelloAPI
 from katello.client.core.utils import update_dict_unless_none
 from katello.client.utils.encoding import u_str
 
+
 class ContentViewDefinitionAPI(KatelloAPI):
     """
     Connection class to access content_view calls
@@ -26,8 +27,8 @@ class ContentViewDefinitionAPI(KatelloAPI):
         defs = self.server.GET(path)[1]
         return defs
 
-    def cvd_by_label_or_name_or_id(self, org_id, label=None, name=None, \
-            cvd_id=None):
+    def cvd_by_label_or_name_or_id(self, org_id, label=None, name=None,
+                                   cvd_id=None):
         path = "/api/organizations/%s/content_view_definitions/" % org_id
         params = {}
         update_dict_unless_none(params, "name", name)

@@ -20,7 +20,9 @@ from katello.client.api.content_view_definition import ContentViewDefinitionAPI
 from katello.client.cli.base import opt_parser_add_org
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_content_view, get_cv_definition, \
-        get_product, get_repo
+    get_product, get_repo
+from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, \
+    AsyncTask, format_task_errors
 
 
 # base content_view_definition action ----------------------------------------
@@ -73,6 +75,7 @@ class List(ContentViewDefinitionAction):
         self.printer.print_items(defs)
         return os.EX_OK
 
+
 class Publish(ContentViewDefinitionAction):
 
     description = _("create a content view from a definition")
@@ -80,13 +83,15 @@ class Publish(ContentViewDefinitionAction):
     def setup_parser(self, parser):
         opt_parser_add_org(parser)
         parser.add_option('--definition', dest='definition',
-                help=_("definition label eg: Database (required)"))
+                          help=_("definition label eg: Database (required)"))
         parser.add_option('--name', dest='name',
-                help=_("name to give published view (required)"))
+                          help=_("name to give published view (required)"))
         parser.add_option('--label', dest='label',
-                help=_("label to give published view"))
+                          help=_("label to give published view"))
         parser.add_option('--description', dest='description',
-                help=_("description to give published view"))
+                          help=_("description to give published view"))
+        parser.add_option('--async', dest='async', action='store_true',
+                          help=_("publish the view asynchronously"))
 
     def check_options(self, validator):
         validator.require(('org', 'name', 'definition'))
@@ -97,11 +102,35 @@ class Publish(ContentViewDefinitionAction):
         name = self.get_option('name')
         def_label = self.get_option('definition')
         description = self.get_option('description')
+        async = self.get_option('async')
         cvd = get_cv_definition(org_name, def_label)
 
-        view = self.def_api.publish(org_name, cvd["id"], name, label, description )
-        print _("Successfully published content view [ %s ]") % view['label']
-        return os.EX_OK
+        try:
+            task = self.def_api.publish(org_name, cvd["id"], name, label, description)
+
+            if not async:
+                task = AsyncTask(task)
+                run_spinner_in_bg(wait_for_async_task, [task],
+                                  message=_("Publishing content view, please wait..."))
+
+                if task.succeeded():
+                    print _("Content view [ %s ] published successfully.") % \
+                        name
+                    return_code = os.EX_OK
+                else:
+                    print _("Content view [ %s ] failed to be promoted: %s") % \
+                        ({"name": name, "errors": format_task_errors(task.errors)})
+                    return_code = os.EX_DATAERR
+
+            else:
+                print _("Publish task [ %s ] was successfully created.") % task['uuid']
+                return_code = os.EX_OK
+
+        except Exception:
+            raise
+
+        return return_code
+
 
 class Info(ContentViewDefinitionAction):
 
