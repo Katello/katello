@@ -43,7 +43,8 @@ module Navigation
         { :key => :filter,
           :name =>_("Filter"),
           :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : filter_content_view_definition_path(@view_definition.id),
-          :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
+          :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record? &&
+              !@view_definition.composite},
           :options => {:class=>"panel_link"}
         },
         { :key => :details,

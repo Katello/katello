@@ -16,12 +16,13 @@ class ContentViewDefinitionsController < ApplicationController
 
   before_filter :require_user
   before_filter :find_content_view_definition, :only => [:clone, :show, :edit, :update, :destroy, :views, :content,
-                                                         :update_content, :filter, :publish_setup, :publish, :status]
+                                                         :update_content, :update_component_views, :filter,
+                                                         :publish_setup, :publish, :status]
   before_filter :find_content_view, :only => [:refresh]
   before_filter :authorize #after find_content_view_definition, since the definition is required for authorization
   before_filter :panel_options, :only => [:index, :items]
 
-  respond_to :html, :js
+  respond_to :html
 
   def section_id
     'contents'
@@ -58,6 +59,7 @@ class ContentViewDefinitionsController < ApplicationController
 
       :content => show_rule,
       :update_content => manage_rule,
+      :update_component_views => manage_rule,
       :filter => show_rule,
 
       :default_label => create_rule
@@ -67,7 +69,8 @@ class ContentViewDefinitionsController < ApplicationController
   def param_rules
     {
       :create => {:view_definition => [:name, :label, :description]},
-      :update => {:view_definition => [:name, :description]}
+      :update => {:view_definition => [:name, :description]},
+      :update_content => [:id, :products, :repos]
     }
   end
 
@@ -81,13 +84,20 @@ class ContentViewDefinitionsController < ApplicationController
   end
 
   def new
-    render :partial => "new", :layout => "tupane_layout"
+    render :partial => "new", :layout => "tupane_layout",
+           :locals => {:view_definitions => ContentViewDefinition.readable(current_organization)}
   end
 
   def create
     @view_definition = ContentViewDefinition.create!(params[:content_view_definition]) do |cv|
       cv.organization = current_organization
     end
+    if @view_definition.composite && params[:content_views]
+      @views = ContentView.where(:id => params[:content_views].keys)
+      @view_definition.component_content_views += @views
+      @view_definition.save!
+    end
+
     notify.success _("Content view definition '%s' was created.") % @view_definition['name']
 
     if search_validate(ContentViewDefinition, @view_definition.id, params[:search])
@@ -103,9 +113,11 @@ class ContentViewDefinitionsController < ApplicationController
     new_definition = ContentViewDefinition.new
     new_definition.name = params[:name]
     new_definition.description = params[:description]
+    new_definition.composite = @view_definition.composite
     new_definition.organization = @view_definition.organization
     new_definition.products = @view_definition.products
     new_definition.repositories = @view_definition.repositories
+    new_definition.component_content_views = @view_definition.component_content_views
     new_definition.save!
 
     notify.success(_("Content view definition '%{new_definition_name}' created successfully as a clone of '%{definition_name}'.") %
@@ -220,9 +232,23 @@ class ContentViewDefinitionsController < ApplicationController
   end
 
   def content
-    render :partial => "content", :layout => "tupane_layout",
-           :locals => {:view_definition => @view_definition, :editable=>@view_definition.editable?,
-                       :name=>controller_display_name}
+    if @view_definition.composite
+      component_views = @view_definition.component_content_views.inject({}) do |hash, view|
+        hash[view.id] = view
+        hash
+      end
+
+      render :partial => "composite_definition_content", :layout => "tupane_layout",
+             :locals => {:view_definition => @view_definition,
+                         :view_definitions => ContentViewDefinition.readable(current_organization),
+                         :views => component_views,
+                         :editable=>@view_definition.editable?,
+                         :name=>controller_display_name}
+    else
+      render :partial => "single_definition_content", :layout => "tupane_layout",
+             :locals => {:view_definition => @view_definition, :editable=>@view_definition.editable?,
+                         :name=>controller_display_name}
+    end
   end
 
   def update_content
@@ -241,6 +267,21 @@ class ContentViewDefinitionsController < ApplicationController
     end
 
     @view_definition.save!
+
+    notify.success _("Successfully updated content for content view definition '%s'.") % @view_definition.name
+    render :nothing => true
+  end
+
+  def update_component_views
+    if params[:content_views]
+      @content_views = ContentView.where(:id => params[:content_views].keys)
+      deleted_content_views = @view_definition.component_content_views - @content_views
+      added_content_views = @content_views - @view_definition.component_content_views
+
+      @view_definition.component_content_views -= deleted_content_views
+      @view_definition.component_content_views += added_content_views
+      @view_definition.save!
+    end
 
     notify.success _("Successfully updated content for content view definition '%s'.") % @view_definition.name
     render :nothing => true

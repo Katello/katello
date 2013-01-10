@@ -18,12 +18,62 @@ KT.panel.set_expand_cb(function() {
         title:function() { return $('.hidden-text.hidden').html();} });
 
     KT.object.label.initialize();
+    KT.content_view_definition.initialize();
     KT.content_view_definition.initialize_views();
+    KT.content_view_definition.initialize_composite_content();
+    KT.content_view_definition.initialize_create();
 });
 
 KT.content_view_definition = (function(){
     var status_updater,
 
+    initialize = function() {
+        $("#view_definitions").treeTable({
+            expandable: true,
+            initialState: "expanded",
+            clickableNodeNames: true,
+            onNodeShow: function(){$.sparkline_display_visible()}
+        });
+    },
+    initialize_create = function() {
+        var pane = $("#content_view_definition_create");
+        if (pane.length === 0) {
+            return;
+        }
+        $("#content_view_definition_composite").change(function() {
+            // If the definition is a composite, show the list of views; otherwise, do not.
+            if ($(this).is(":checked")) {
+                $("#select_views").show();
+            } else {
+                $("#select_views").hide();
+            }
+        })
+    },
+    initialize_composite_content = function() {
+        var pane = $("#composite_definition_content");
+        if (pane.length === 0) {
+            return;
+        }
+        $("#update_component_views").click(function(){
+            var btn = $(this);
+            if(btn.hasClass("disabled")){
+                return;
+            }
+            btn.addClass("disabled");
+
+            $("#component_views_form").ajaxSubmit({
+                type: "POST",
+                url: btn.data("url"),
+                cache: false,
+                success: function(){
+                    $("#update_component_views").removeClass("disabled");
+                },
+                error: function(){
+                    $("#update_component_views").removeClass("disabled");
+                }
+            });
+        });
+    },
     initialize_views = function() {
         var pane = $("#content_view_definition_views");
         if (pane.length === 0) {
@@ -115,6 +165,9 @@ KT.content_view_definition = (function(){
         }
     };
     return {
-        initialize_views : initialize_views
+        initialize                   : initialize,
+        initialize_composite_content : initialize_composite_content,
+        initialize_create            : initialize_create,
+        initialize_views             : initialize_views
     };
 }());
