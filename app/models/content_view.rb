@@ -42,6 +42,11 @@ class ContentView < ActiveRecord::Base
   scope :default, where(:default=>true)
   scope :non_default, where(:default=>false)
 
+  def self.in_environment(env)
+    joins(:content_view_versions => :content_view_version_environments).
+      where("content_view_version_environments.environment_id = ?", env.id)
+  end
+
   def self.promoted(safe = false)
     # retrieve the view, if it has been promoted (i.e. exists in more than 1 environment)
     relation = self.joins(:content_view_versions => :environments).group('"content_views"."id"').
