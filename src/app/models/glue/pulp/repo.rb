@@ -36,7 +36,7 @@ module Glue::Pulp::Repo
                       pulp_repo_facts["distributors"] if pulp_id
                     }
 
-      attr_accessor :feed_cert, :feed_key, :feed_ca
+      attr_accessor :feed, :feed_cert, :feed_key, :feed_ca
 
       def self.ensure_sync_notification
         resource =  Runcible::Resources::EventNotifier
@@ -177,7 +177,7 @@ module Glue::Pulp::Repo
         #we fetch ids and then fetch packages by id, because repo packages
         #  does not contain all the info we need (bz 854260)
         pkg_ids = Runcible::Extensions::Repository.rpm_ids(self.pulp_id)
-        self.packages = Runcible::Extensions::Rpm.find_all(pkg_ids)
+        self.packages = Runcible::Extensions::Rpm.find_all_by_unit_ids(pkg_ids)
       end
       @repo_packages
     end
@@ -194,7 +194,7 @@ module Glue::Pulp::Repo
         #we fetch ids and then fetch errata by id, because repo errata
         #  do not contain all the info we need (bz 854260)
         e_ids = Runcible::Extensions::Repository.errata_ids(self.pulp_id)
-        self.errata = Runcible::Extensions::Errata.find_all(e_ids)
+        self.errata = Runcible::Extensions::Errata.find_all_by_unit_ids(e_ids)
       end
       @repo_errata
     end
@@ -269,15 +269,15 @@ module Glue::Pulp::Repo
     end
 
     def find_packages_by_name name
-      Runcible::Extensions::Repository.packages_by_nvre self.pulp_id, name
+      Runcible::Extensions::Repository.rpms_by_nvre self.pulp_id, name
     end
 
     def find_packages_by_nvre name, version, release, epoch
-      Runcible::Extensions::Repository.packages_by_nvre self.pulp_id, name, version, release, epoch
+      Runcible::Extensions::Repository.rpms_by_nvre self.pulp_id, name, version, release, epoch
     end
 
     def find_latest_packages_by_name name
-      packages = Runcible::Extensions::Repository.packages_by_nvre(self.pulp_id, name)
+      packages = Runcible::Extensions::Repository.rpms_by_nvre(self.pulp_id, name)
       Katello::PackageUtils.find_latest_packages(packages)
     end
 

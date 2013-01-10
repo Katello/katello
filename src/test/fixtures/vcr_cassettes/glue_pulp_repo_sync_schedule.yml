@@ -2,72 +2,76 @@
 http_interactions: 
 - request: 
     method: get
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
+    uri: https://knifeparty.localdomain/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
     body: 
       string: ""
     headers: 
       Accept: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="N6hlJ9kkqBIlDrOAFCtOJ8GFAEqG74Qlwqit9EPvg", oauth_signature="K46LfuCk7EbC3%2BuAONH9SEfWOBE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1354126723", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="YG2sB9ulKcf7653kloqIgy2tYGCYYer1MKHnvGGc", oauth_signature="HyFXDcQLnNrs8gURZzSYbx5y1%2Bk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1357780522", oauth_version="1.0"
       Pulp-User: 
       - admin
-      Accept-Encoding: 
-      - gzip, deflate
       Content-Type: 
       - application/json
+      Accept-Encoding: 
+      - gzip, deflate
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Content-Length: 
-      - "2"
+      Connection: 
+      - close
       Server: 
       - Apache/2.2.22 (Fedora)
-      Date: 
-      - Wed, 28 Nov 2012 18:18:43 GMT
       Content-Type: 
       - application/json
+      Content-Length: 
+      - "2"
+      Date: 
+      - Thu, 10 Jan 2013 01:15:22 GMT
     body: 
       string: "[]"
     http_version: 
-  recorded_at: Wed, 28 Nov 2012 18:18:43 GMT
+  recorded_at: Thu, 10 Jan 2013 01:15:22 GMT
 - request: 
     method: post
-    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
+    uri: https://knifeparty.localdomain/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
     body: 
-      string: "{\"schedule\":\"2013-11-28T13:18:43-05:00/P1D\"}"
+      string: "{\"schedule\":\"2014-01-09T20:15:22-05:00/P1D\"}"
     headers: 
       Accept: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="PxEfAwgkUAQap34voWu8MbALVH0PpCdjFYDmzSpcNs", oauth_signature="1zZltUrDNCkxd%2B5y7Ay1j2fvgZk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1354126723", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="0BYFBfrWOgA3SLpahkurBSH39Y1eLJEA6nEXfTv0", oauth_signature="BBMH4EPTZKCqCHDIcX621lBy7ug%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1357780522", oauth_version="1.0"
       Pulp-User: 
       - admin
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Length: 
-      - "44"
       Content-Type: 
       - application/json
+      Content-Length: 
+      - "44"
+      Accept-Encoding: 
+      - gzip, deflate
   response: 
     status: 
       code: 201
       message: Created
     headers: 
-      Location: 
-      - /pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/50b655839c60ed613800299e/
-      Content-Length: 
-      - "393"
+      Connection: 
+      - close
       Server: 
       - Apache/2.2.22 (Fedora)
-      Date: 
-      - Wed, 28 Nov 2012 18:18:43 GMT
       Content-Type: 
       - application/json
+      Content-Length: 
+      - "393"
+      Date: 
+      - Thu, 10 Jan 2013 01:15:22 GMT
+      Location: 
+      - /pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/50ee162adc792129cb002968/
     body: 
-      string: "{\"next_run\": \"2013-11-28T18:18:43Z\", \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/50b655839c60ed613800299e/\", \"schedule\": \"2013-11-28T13:18:43-05:00/P1D\", \"override_config\": {}, \"remaining_runs\": null, \"first_run\": \"2013-11-28T18:18:43Z\", \"enabled\": true, \"last_run\": null, \"failure_threshold\": null, \"_id\": \"50b655839c60ed613800299e\", \"consecutive_failures\": 0}"
+      string: "{\"next_run\": \"2014-01-10T01:15:22Z\", \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/50ee162adc792129cb002968/\", \"schedule\": \"2014-01-09T20:15:22-05:00/P1D\", \"override_config\": {}, \"remaining_runs\": null, \"first_run\": \"2014-01-10T01:15:22Z\", \"enabled\": true, \"last_run\": null, \"failure_threshold\": null, \"_id\": \"50ee162adc792129cb002968\", \"consecutive_failures\": 0}"
     http_version: 
-  recorded_at: Wed, 28 Nov 2012 18:18:43 GMT
-recorded_with: VCR 2.3.0
+  recorded_at: Thu, 10 Jan 2013 01:15:22 GMT
+recorded_with: VCR 2.4.0
