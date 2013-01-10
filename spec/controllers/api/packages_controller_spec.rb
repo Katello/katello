@@ -92,7 +92,7 @@ describe Api::PackagesController, :katello => true do
 
     describe "show a package" do
       it "should call pulp find package api" do
-         Runcible::Extensions::Rpm.should_receive(:find).once.with(1)
+         Runcible::Extensions::Rpm.should_receive(:find_by_unit_id).once.with(1)
         get 'show', :id => 1, :repository_id => repo_id
       end
     end
