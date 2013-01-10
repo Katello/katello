@@ -43,6 +43,23 @@ describe Api::ContentViewsController, :katello => true do
         eql(org_view_ids) }
     end
 
+    context "with environment filter param" do
+      it "should return only the environment's views" do
+        env = @org.environments.first || KTEnvironment.create!(:name => "Test",
+                                                               :library => false,
+                                                               :priors => [@org.library],
+                                                               :organization_id => @org.id
+                                                              )
+        view_version = ContentViewVersion.create!(:environments => [env],
+                                                  :content_view => @content_views.last,
+                                                  :version => 1
+                                                 )
+        get "index", :organization_id => @org.name, :environment_id => env.id
+        response.should be_success
+        ids = env.content_views(true).select{|cv| !cv.default}.map(&:id)
+        assigns[:content_views].map(&:id).should eql(ids)
+      end
+    end
 
     [:id, :name, :label].each do |param|
 
