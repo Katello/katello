@@ -44,13 +44,11 @@ end
 class GluePulpConsumerTestCreateDestroy < GluePulpConsumerTestBase
 
   def setup
-    super
     @simple_server = System.find(systems(:simple_server).id)
   end
 
   def teardown
-    @simple_server.del_pulp_consumer
-    super
+    ConsumerSupport.destroy_consumer(@simple_server.id)
   rescue => e
     puts e
   end

@@ -28,9 +28,12 @@ module Glue::Pulp::Package
       alias_method 'repoids', 'repository_memberships'
 
       def self.find(id)
-        package_attrs = Runcible::Extensions::Rpm.find(id)
+        package_attrs = Runcible::Extensions::Rpm.find_by_unit_id(id)
         return if package_attrs.nil?
         Package.new(package_attrs) if package_attrs
+      rescue RestClient::ResourceNotFound => exception
+        Rails.logger.error "Failed to find pulp package #{id}: #{exception}, #{exception.backtrace.join("\n")}"
+        raise exception
       end
     end
   end
