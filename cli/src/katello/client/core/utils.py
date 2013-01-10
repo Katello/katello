@@ -226,6 +226,13 @@ def format_date(date, to_format="%Y/%m/%d %H:%M:%S"):
     t = iso8601.parse(date)
     return time.strftime(to_format, time.localtime(t))
 
+def format_sub_resource(item, name_key, id_key, format_string="%s (Id: %d)"):
+    name = item[name_key]
+    resource_id = item[id_key]
+    if resource_id is not None:
+        return format_string % (name, resource_id)
+    else:
+        return "None"
 
 def format_sync_errors(task):
     """
