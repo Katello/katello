@@ -16,7 +16,7 @@
 
 from katello.client.api.config_template import ConfigTemplateAPI
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import test_foreman_record, unnest_one
+from katello.client.core.utils import test_foreman_record, unnest_one, format_sub_resource
 from katello.client.utils.printer import batch_add_columns
 
 
@@ -70,8 +70,8 @@ class Info(ConfigTemplateAction):
         batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, {'snippet': _("Snippet")})
 
         if not configtemplate.get('snippet'):
-            configtemplate['Template Kind'] = "%s (Id: %d)" % (configtemplate['kind'], configtemplate['kind_id'])
-            self.printer.add_column('Template Kind', _("Template Kind"))
+            self.printer.add_column('kind', _("Template Kind"),
+                                item_formatter=lambda item: format_sub_resource(item, 'kind', 'kind_id'))
 
         if configtemplate.get('template_combinations'):
             content = []

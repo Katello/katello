@@ -73,7 +73,7 @@ class PrinterStrategy(object):
         :param item: data to get the value from
         :rtype: bool
         """
-        return (column['attr_name'] in item) or ('value' in column)
+        return (column['attr_name'] in item) or ('value' in column) or ('item_formatter' in column)
 
     @classmethod
     def _get_column_value(cls, column, item):
