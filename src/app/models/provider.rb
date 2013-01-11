@@ -62,6 +62,7 @@ class Provider < ActiveRecord::Base
       Rails.logger.error _("Red Hat provider can not be deleted")
       false
     else
+      # organization that is being deleted via background destroyer can delete rh provider
       true
     end
   end
@@ -104,17 +105,8 @@ class Provider < ActiveRecord::Base
     redhat_provider?
   end
 
-  def organization
-    # note i need to add 'unscoped' here
-    # to account for the fact that org might have been "scoped out"
-    # on an Org delete action.
-    # we need the organization info to be present in the provider
-    # so that we can properly phase out the orchestration and handle search indices.
-    (read_attribute(:organization) || Organization.unscoped.find(self.organization_id)) if self.organization_id
-  end
-
   def being_deleted?
-    ! organization.task_id.nil?
+    organization.being_deleted?
   end
 
   #permissions

@@ -43,7 +43,7 @@ class Api::OrganizationsController < Api::ApiController
   param :label, String, :desc => "label for filtering"
   param :description, String, :desc => "description"
   def index
-    render :json => (Organization.readable.where query_params).to_json
+    render :json => (Organization.without_deleting.readable.where query_params).to_json
   end
 
   # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME

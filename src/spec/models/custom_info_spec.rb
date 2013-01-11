@@ -26,6 +26,8 @@ describe CustomInfo do
     @organization = Organization.create!(:name => "test_org", :label => "test_org")
     @environment = KTEnvironment.create!(:name => "test_env", :label => "test_env", :prior => @organization.library.id, :organization => @organization)
 
+    Organization.stub!(:without_deleting).and_return(Organization)
+    Organization.stub!(:where).and_return(Organization)
     Organization.stub!(:first).and_return(@organization)
 
     Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})

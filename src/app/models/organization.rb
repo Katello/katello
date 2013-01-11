@@ -44,12 +44,14 @@ class Organization < ActiveRecord::Base
 
   attr_accessor :statistics
 
-  default_scope  where(:task_id=>nil) #ignore organizations that are being deleted
+  # Organizations which are being deleted (or deletion failed) can be filtered out with this scope.
+  scope :without_deleting, where(:task_id => nil)
 
   before_create :create_library
   before_create :create_redhat_provider
   validates :name, :uniqueness => true, :presence => true, :katello_name_format => true
-  validates :label, :uniqueness => true, :presence => true, :katello_label_format => true
+  validates :label, :uniqueness => { :message => _("already exists (including organizations being deleted)") },
+    :presence => true, :katello_label_format => true
   validates :description, :katello_description_format => true
   validate :unique_name_and_label
 
@@ -57,17 +59,9 @@ class Organization < ActiveRecord::Base
 
   if Katello.config.use_cp
     before_validation :create_label, :on => :create
-    validate :unique_label
 
     def create_label
       self.label = self.name.tr(' ', '_') if self.label.blank? && self.name.present?
-    end
-
-    def unique_label
-      # org is being deleted
-      if Organization.find_by_label(self.label).nil? && Organization.unscoped.find_by_label(self.label)
-        errors.add(:organization, _(" '%s' already exists and either has been scheduled for deletion or failed deletion.") % self.label)
-      end
     end
   end
 
@@ -115,6 +109,10 @@ class Organization < ActiveRecord::Base
     elsif (Organization.count == 1)
       [def_error, _("At least one organization must exist.")]
     end
+  end
+
+  def being_deleted?
+    ! self.task_id.nil?
   end
 
   #permissions
