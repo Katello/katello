@@ -73,16 +73,20 @@ module Glue::Pulp::Consumer
         end
       end
 
-      #the consumer user does not have access to check tasks in pulp
-      #   so we have to switch to the hidden user temporarily
-      previous_user = User.current
-      User.current = User.hidden.first
-      #reject agent bind events, and wait for others
-      events.reject!{|event| !(event['tags'] & ['pulp:action:agent_bind', 'pulp:action:agent_unbind',
-                                                'pulp:action:delete_binding']).empty? }
-      tasks = PulpTaskStatus::wait_for_tasks(events)
-      tasks.each{|task| Rails.logger.error(task.error) if task.error?}
-      User.current = previous_user
+      begin
+        #the consumer user does not have access to check tasks in pulp
+        #   so we have to switch to the hidden user temporarily
+        previous_user = User.current
+        User.current = User.hidden.first
+        #reject agent bind events, and wait for others
+        events.reject!{|event| !(event['tags'] & ['pulp:action:agent_bind', 'pulp:action:agent_unbind',
+                                                  'pulp:action:delete_binding']).empty? }
+        tasks = PulpTaskStatus::wait_for_tasks(events)
+        tasks.each{|task| Rails.logger.error(task.error) if task.error?}
+      ensure
+        User.current = previous_user
+      end
+
 
       return [processed_ids, error_ids]
     rescue => e
