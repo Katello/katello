@@ -173,6 +173,15 @@ describe Api::SystemsController do
           System.last.system_group_ids.should include(@system_group_2.id)
         end
 
+        it "should set the system's content view to the key's view" do
+          content_view = FactoryGirl.build_stubbed(:content_view)
+          @activation_key_2.stub(:content_view_id).and_return(content_view.id)
+          @activation_key_2.unstub(:apply_to_system)
+          post :activate, @system_data
+          response.should be_success
+          System.last.content_view_id.should eql(content_view.id)
+        end
+
       end
 
       context "and they are not in the system" do

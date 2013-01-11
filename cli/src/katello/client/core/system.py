@@ -21,7 +21,7 @@ from katello.client.api.system import SystemAPI
 from katello.client.api.task_status import SystemTaskStatusAPI
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.custom_info import CustomInfoAPI
-from katello.client.api.utils import get_environment, get_system
+from katello.client.api.utils import get_environment, get_system, get_content_view
 from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
 from katello.client.core.utils import test_record, convert_to_mime_type, attachment_file_name, save_report, \
@@ -86,6 +86,10 @@ class List(SystemAction):
 
         self.printer.add_column('serviceLevel', _('Service Level'))
 
+        cv_format = lambda p: "%s" % (p['content_view']['name'] if 'content_view' in p else "")
+        self.printer.add_column('content_view',
+                                item_formatter=cv_format)
+
         self.printer.print_items(systems)
         return os.EX_OK
 
@@ -131,6 +135,9 @@ class Info(SystemAction):
         if 'guests' in system:
             system["guests"] = "[ "+ ", ".join([guest["name"] for guest in system["guests"]]) +" ]"
 
+        if 'content_view' in system:
+            system['content_view'] = "[ %s ]" % system['content_view']['name']
+
 
         batch_add_columns(self.printer, 'name', 'ipv4_address', 'uuid', 'location')
         self.printer.add_column('created_at', _('Registered'), formatter=format_date)
@@ -147,6 +154,7 @@ class Info(SystemAction):
         if "template" in system:
             self.printer.add_column('template', show_with=printer.VerboseStrategy, value=system["template"]["name"])
         self.printer.add_column('custom_info', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('content_view')
 
         self.printer.print_item(system)
 
@@ -414,6 +422,8 @@ class Register(SystemAction):
         parser.add_option('--release', dest='release', help=_("values of $releasever for the system"))
         parser.add_option('--fact', dest='fact', action='append', nargs=2, metavar="KEY VALUE",
                                help=_("system facts"))
+        parser.add_option('--content_view', dest="content_view",
+                          help=_("content view label (eg. database)"))
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
@@ -427,11 +437,19 @@ class Register(SystemAction):
         release = self.get_option('release')
         sla = self.get_option('sla')
         facts = dict(self.get_option('fact') or {})
+        view_label = self.get_option("content_view")
 
         environment_id = None
         if environment_name is not None:
             environment_id = get_environment(org, environment_name)['id']
-        system = self.api.register(name, org, environment_id, activation_keys, 'system', release, sla, facts=facts)
+
+        view_id = None
+        if view_label is not None:
+            view = get_content_view(org, view_label)
+            view_id = view["id"]
+
+        system = self.api.register(name, org, environment_id, activation_keys,
+                                   'system', release, sla, facts, view_id)
 
         test_record(system,
             _("Successfully registered system [ %s ]") % name,
@@ -689,6 +707,8 @@ class Update(SystemAction):
                        help=_("value of $releasever for the system"))
         parser.add_option('--servicelevel', dest='sla',
                        help=_("service level agreement"))
+        parser.add_option('--content_view', dest='view',
+                          help=_("content view label (eg. database)"))
 
     def check_options(self, validator):
         validator.require('org')
@@ -707,6 +727,7 @@ class Update(SystemAction):
         new_release = self.get_option('release')
         new_sla = self.get_option('sla')
         sys_uuid = self.get_option('uuid')
+        view_label = self.get_option('view')
 
         system = get_system(org_name, sys_name, env_name, sys_uuid)
         new_environment = get_environment(org_name, new_environment_name)
@@ -725,6 +746,9 @@ class Update(SystemAction):
         if new_environment_name:
             new_environment = get_environment(org_name, new_environment_name)
             updates['environment_id'] = new_environment['id']
+
+        if view_label is not None:
+            updates["content_view_id"] = get_content_view(org_name, view_label)["id"]
 
         response = self.api.update(system['uuid'], updates)
 
