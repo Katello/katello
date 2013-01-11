@@ -14,6 +14,7 @@ candlepin.consumer_system_name_pattern = .+
 candlepin.environment_content_filtering=<%= scope.lookupvar("candlepin::params::env_filtering_enabled") %>
 candlepin.auth.basic.enable = false
 candlepin.auth.trusted.enable = false
+candlepin.enable_cert_v3=true
 <% if scope.lookupvar("candlepin::params::katello_oauth_key") != "" -%>
 module.config.katello=org.candlepin.katello.KatelloModule
 candlepin.auth.oauth.enable = true
