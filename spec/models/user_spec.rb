@@ -114,7 +114,7 @@ describe User do
     end
   end
 
-  it "should allow email address as username", :katello => false do
+  it "should allow email address as username", :headpin => true do
     disable_user_orchestration
     Katello.config[:warden] = 'database'
     User.create!(:username => EMAIL, :password => PASSWORD, :email => EMAIL)
