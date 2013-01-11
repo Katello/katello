@@ -301,12 +301,9 @@ class User < ActiveRecord::Base
     #test for all orgs
     perms = Permission.joins(:role).joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
         where("roles_users.user_id = ?", self.id).where(:organization_id => nil).count()
-    return Organization.all if perms > 0
+    return Organization.without_deleting.all if perms > 0
 
-    perms = Permission.joins(:role).joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
-        where("roles_users.user_id = ?", self.id).where("organization_id is NOT null")
-    #return the individual organizations
-    perms.collect { |perm| perm.organization }.uniq
+    Organization.without_deleting.joins(:permissions => {:role => :users}).where(:users => {:id => self.id}).uniq
   end
 
 
