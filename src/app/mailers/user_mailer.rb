@@ -13,6 +13,8 @@
 class UserMailer < ActionMailer::Base
   include AsyncOrchestration
 
+  default :from => Katello.config.email_reply_address
+
   def send_password_reset(user)
     # TODO: temporarily hardcoding org to the first org... this will be changed to use the user's default org, once
     # that logic is merged in
