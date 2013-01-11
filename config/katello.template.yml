@@ -43,7 +43,12 @@ common:
 
   password_reset_expiration: 120
 
-  # Availabe language locale choices. (Note: Syntax for yaml requires a space after each comma ', ')
+  # email_reply_address is used to specify the "From:" address included
+  # in emails sent from the Server.  If not specified, it will default to
+  # no-reply@host, where host is the value specified above.
+  email_reply_address:
+
+  # Available language locale choices. (Note: Syntax for yaml requires a space after each comma ', ')
   # Default available locales are below
   available_locales: ["bn", "de", "en", "es", "fr", "gu", "hi", "it", "ja", "kn", "ko", "mr", "or", "pa", "pt-BR",
   "ru", "ta", "te", "zh-CN", "zh-TW"]
