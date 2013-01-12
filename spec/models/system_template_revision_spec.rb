@@ -75,7 +75,7 @@ describe SystemTemplate, :katello => true do
     before :each do
 
       stub_repos([repo])
-      Runcible::Extensions::Repository.stub(:packages_by_nvre => [pack1])
+      Runcible::Extensions::Repository.stub(:rpms_by_nvre => [pack1])
       Runcible::Extensions::Repository.stub(:package_groups => pack_groups.clone)
       Runcible::Extensions::Repository.stub(:package_categories => pack_group_categories.clone)
 
