@@ -40,12 +40,12 @@ module Glue::Pulp::Errata
       end
 
       def self.find(id)
-        erratum_attrs = Runcible::Extensions::Errata.find(id)
+        erratum_attrs = Runcible::Extensions::Errata.find_by_unit_id(id)
         ::Errata.new(erratum_attrs) if not erratum_attrs.nil?
       end
 
       def self.find_by_errata_id(id)
-        erratum_attrs = Runcible::Extensions::Errata.find_by_errata_id(id)
+        erratum_attrs = Runcible::Extensions::Errata.find(id)
         ::Errata.new(erratum_attrs) if not erratum_attrs.nil?
       end
 

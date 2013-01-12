@@ -50,7 +50,6 @@ module Glue::Pulp::Consumer
 
       processed_ids = []
       error_ids     = []
-
       events = []
 
       unbind_ids.each do |repoid|
@@ -83,15 +82,13 @@ module Glue::Pulp::Consumer
                                                   'pulp:action:delete_binding']).empty? }
         tasks = PulpTaskStatus::wait_for_tasks(events)
         tasks.each{|task| Rails.logger.error(task.error) if task.error?}
+        return [processed_ids, error_ids]
+      rescue => e
+        Rails.logger.error "Failed to enable repositories: #{e}, #{e.backtrace.join("\n")}"
+        raise e
       ensure
         User.current = previous_user
       end
-
-
-      return [processed_ids, error_ids]
-    rescue => e
-      Rails.logger.error "Failed to enable repositories: #{e}, #{e.backtrace.join("\n")}"
-      raise e
     end
 
     def del_pulp_consumer

@@ -13,6 +13,7 @@
 require 'minitest_helper'
 require './test/support/repository_support'
 require './test/support/consumer_support'
+require './test/support/user_support'
 
 
 class GluePulpConsumerTestBase < MiniTest::Rails::ActiveSupport::TestCase
@@ -27,7 +28,7 @@ class GluePulpConsumerTestBase < MiniTest::Rails::ActiveSupport::TestCase
     configure_runcible
 
     services  = ['Candlepin', 'ElasticSearch', 'Foreman']
-    models    = ['System', 'Repository']
+    models    = ['System', 'Repository', 'User']
     disable_glue_layers(services, models)
 
     User.current = User.find(@loaded_fixtures['users']['admin']['id'])
@@ -44,13 +45,11 @@ end
 class GluePulpConsumerTestCreateDestroy < GluePulpConsumerTestBase
 
   def setup
-    super
     @simple_server = System.find(systems(:simple_server).id)
   end
 
   def teardown
-    @simple_server.del_pulp_consumer
-    super
+    ConsumerSupport.destroy_consumer(@simple_server.id)
   rescue => e
     puts e
   end
@@ -95,11 +94,13 @@ class GluePulpConsumerBindTest < GluePulpConsumerTestBase
 
   def self.before_suite
     super
+    UserSupport.setup_hidden_user(@loaded_fixtures['users']['hidden']['id'])
     RepositorySupport.create_and_sync_repo(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
     @@simple_server = ConsumerSupport.create_consumer(@loaded_fixtures['systems']['simple_server']['id'])
   end
 
   def self.after_suite
+    UserSupport.delete_hidden_user(@loaded_fixtures['users']['hidden']['id'])
     RepositorySupport.destroy_repo
     ConsumerSupport.destroy_consumer
     super
@@ -107,7 +108,6 @@ class GluePulpConsumerBindTest < GluePulpConsumerTestBase
 
   def test_enable_repos
     ids = @@simple_server.enable_repos([RepositorySupport.repo.pulp_id])
-
     assert_includes ids.first, RepositorySupport.repo.pulp_id
     refute_includes ids.last, RepositorySupport.repo.pulp_id
   end
@@ -121,12 +121,14 @@ class GluePulpConsumerRequiresBoundRepoTest < GluePulpConsumerTestBase
 
   def self.before_suite
     super
+    UserSupport.setup_hidden_user(@loaded_fixtures['users']['hidden']['id'])
     RepositorySupport.create_and_sync_repo(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
     @@simple_server = ConsumerSupport.create_consumer(@loaded_fixtures['systems']['simple_server']['id'])
-    @@simple_server.enable_repos([RepositorySupport.repo_id])
+    @@simple_server.enable_repos([RepositorySupport.repo.pulp_id])
   end
 
   def self.after_suite
+    UserSupport.delete_hidden_user(@loaded_fixtures['users']['hidden']['id'])
     ConsumerSupport.destroy_consumer
     RepositorySupport.destroy_repo
     super
