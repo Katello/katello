@@ -1,114 +1,116 @@
 --- 
+recorded_with: VCR 2.4.0
 http_interactions: 
 - request: 
     method: delete
-    uri: https://knifeparty.localdomain/pulp/api/v2/users/
+    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/users/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="P4ptLTFTpQBr7aedzTohjp9FY0EjoOpHn3BH2twtezM", oauth_signature="ZAY61wY5L1zdObFR37YUs4Q8kEY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1357780529", oauth_version="1.0"
-      Pulp-User: 
-      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="2XbRW5DpXo2BCwDetBWPTx68ChZ6fMIpnsifEiaA2w", oauth_signature="n2dXmJ1u9U8zDhMWTlLDdUIsiMU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1357954327", oauth_version="1.0"
   response: 
     status: 
       code: 405
       message: Method Not Allowed
     headers: 
-      Connection: 
-      - close
+      Content-Length: 
+      - "24"
+      Date: 
+      - Sat, 12 Jan 2013 01:32:07 GMT
+      Content-Type: 
+      - text/html; charset=UTF-8
+      Vary: 
+      - Accept-Encoding
+      Content-Encoding: 
+      - gzip
       Allow: 
       - GET, POST
       Server: 
       - Apache/2.2.22 (Fedora)
-      Content-Type: 
-      - text/html; charset=UTF-8
-      Content-Length: 
-      - "4"
-      Date: 
-      - Thu, 10 Jan 2013 01:15:29 GMT
     body: 
-      string: None
+      string: !binary |
+        H4sIAAAAAAAAA/PLz0sFAPGvot8EAAAA
+
     http_version: 
-  recorded_at: Thu, 10 Jan 2013 01:15:29 GMT
+  recorded_at: Sat, 12 Jan 2013 01:32:07 GMT
 - request: 
     method: post
-    uri: https://knifeparty.localdomain/pulp/api/v2/users/
+    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/users/
     body: 
-      string: "{\"password\":\"GwHc3fnF17tKcshj\",\"login\":\"batman\",\"name\":\"batman\"}"
+      string: "{\"name\":\"batman\",\"login\":\"batman\",\"password\":\"QzeR9fT1gqTfGCxG\"}"
     headers: 
-      Accept: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="NIqX6EGrKYFpUv1Rrt2t4fqeE26M72evZi6JqURIgU", oauth_signature="MnwcLnEqjDoYSsM%2FSKkjpAbrikM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1357780530", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      Content-Type: 
-      - application/json
       Content-Length: 
       - "64"
-      Accept-Encoding: 
-      - gzip, deflate
-  response: 
-    status: 
-      code: 201
-      message: Created
-    headers: 
-      Connection: 
-      - close
-      Server: 
-      - Apache/2.2.22 (Fedora)
       Content-Type: 
       - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="wnhAN6Mv9Zyk0MOilyxrzCYejVNdMobNpqzK2sk", oauth_signature="%2Bpv6lcmSGsk%2F3KdzfGv%2BJt4HFfk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1357954327", oauth_version="1.0"
+  response: 
+    status: 
+      code: 409
+      message: Conflict
+    headers: 
       Content-Length: 
-      - "184"
+      - "193"
       Date: 
-      - Thu, 10 Jan 2013 01:15:30 GMT
-      Location: 
-      - batman
+      - Sat, 12 Jan 2013 01:32:07 GMT
+      Content-Type: 
+      - application/json
+      Content-Encoding: 
+      - utf-8
+      Server: 
+      - Apache/2.2.22 (Fedora)
     body: 
-      string: "{\"_id\": {\"$oid\": \"50ee1632dc792129cb002a4a\"}, \"name\": \"batman\", \"roles\": [], \"_ns\": \"users\", \"login\": \"batman\", \"id\": \"50ee1632dc792129cb002a4a\", \"_href\": \"/pulp/api/v2/users/batman/\"}"
+      string: "{\"http_request_method\": \"POST\", \"exception\": null, \"error_message\": \"Duplicate resource: batman\", \"_href\": \"/pulp/api/v2/users/\", \"http_status\": 409, \"resource_id\": \"batman\", \"traceback\": null}"
     http_version: 
-  recorded_at: Thu, 10 Jan 2013 01:15:30 GMT
+  recorded_at: Sat, 12 Jan 2013 01:32:07 GMT
 - request: 
     method: delete
-    uri: https://knifeparty.localdomain/pulp/api/v2/users/batman/
+    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/users/batman/
     body: 
       string: ""
     headers: 
-      Accept: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="kPTishWkRO4L6LsQt0lsaDgxW43YRryFLFWirAkbow", oauth_signature="rDhUzVoQaIXOSJzF5qt%2Bbsb8Gyg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1357780531", oauth_version="1.0"
-      Pulp-User: 
-      - admin
       Content-Type: 
       - application/json
       Accept-Encoding: 
       - gzip, deflate
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="qoQTMo637g8FvNDeJqhyPcFexAciX9kM0vbTB30bros", oauth_signature="NCeoivAdPU7y%2FYlUIe5bLBRdAsQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1357954327", oauth_version="1.0"
   response: 
     status: 
-      code: 200
-      message: OK
+      code: 404
+      message: Not Found
     headers: 
-      Connection: 
-      - close
-      Server: 
-      - Apache/2.2.22 (Fedora)
+      Content-Length: 
+      - "230"
+      Date: 
+      - Sat, 12 Jan 2013 01:32:07 GMT
       Content-Type: 
       - application/json
-      Content-Length: 
-      - "4"
-      Date: 
-      - Thu, 10 Jan 2013 01:15:31 GMT
+      Content-Encoding: 
+      - utf-8
+      Server: 
+      - Apache/2.2.22 (Fedora)
     body: 
-      string: "null"
+      string: "{\"http_request_method\": \"DELETE\", \"exception\": null, \"error_message\": \"Missing resource(s): resource_id=batman\", \"_href\": \"/pulp/api/v2/users/batman/\", \"http_status\": 404, \"traceback\": null, \"resources\": {\"resource_id\": \"batman\"}}"
     http_version: 
-  recorded_at: Thu, 10 Jan 2013 01:15:31 GMT
-recorded_with: VCR 2.4.0
+  recorded_at: Sat, 12 Jan 2013 01:32:08 GMT

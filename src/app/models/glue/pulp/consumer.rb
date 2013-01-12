@@ -50,10 +50,11 @@ module Glue::Pulp::Consumer
 
       processed_ids = []
       error_ids     = []
+      events = []
 
       unbind_ids.each do |repoid|
         begin
-          Runcible::Extensions::Consumer.unbind_all(uuid, repoid)
+          events.concat(Runcible::Extensions::Consumer.unbind_all(uuid, repoid))
           processed_ids << repoid
         rescue => e
           Rails.logger.error "Failed to unbind repo #{repoid}: #{e}, #{e.backtrace.join("\n")}"
@@ -63,7 +64,7 @@ module Glue::Pulp::Consumer
 
       bind_ids.each do |repoid|
         begin
-          Runcible::Extensions::Consumer.bind_all(uuid, repoid)
+          events.concat(Runcible::Extensions::Consumer.bind_all(uuid, repoid))
           processed_ids << repoid
         rescue => e
           Rails.logger.error "Failed to bind repo #{repoid}: #{e}, #{e.backtrace.join("\n")}"
@@ -71,10 +72,23 @@ module Glue::Pulp::Consumer
         end
       end
 
-      return [processed_ids, error_ids]
-    rescue => e
-      Rails.logger.error "Failed to enable repositories: #{e}, #{e.backtrace.join("\n")}"
-      raise e
+      begin
+        #the consumer user does not have access to check tasks in pulp
+        #   so we have to switch to the hidden user temporarily
+        previous_user = User.current
+        User.current = User.hidden.first
+        #reject agent bind events, and wait for others
+        events.reject!{|event| !(event['tags'] & ['pulp:action:agent_bind', 'pulp:action:agent_unbind',
+                                                  'pulp:action:delete_binding']).empty? }
+        tasks = PulpTaskStatus::wait_for_tasks(events)
+        tasks.each{|task| Rails.logger.error(task.error) if task.error?}
+        return [processed_ids, error_ids]
+      rescue => e
+        Rails.logger.error "Failed to enable repositories: #{e}, #{e.backtrace.join("\n")}"
+        raise e
+      ensure
+        User.current = previous_user
+      end
     end
 
     def del_pulp_consumer
