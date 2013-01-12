@@ -66,6 +66,37 @@ describe ProvidersController do
       response.should be_success
     end
 
+    it "Should be able to get repo discovery screen" do
+      get 'repo_discovery', {:id=>@provider.id}
+      response.should be_success
+    end
+
+    it "Should be able to get discovered repos" do
+      get 'discovered_repos', {:id=>@provider.id}
+      response.should be_success
+    end
+
+    it "should be able to get new discovered urls" do
+      get 'new_discovered_repos', {:id=>@provider.id, :urls=>['http://redhat.com/foo']}
+      response.should be_success
+    end
+
+    it "Should be able to start discovery" do
+      url = 'http://redhat.com/foo'
+      @provider.should_receive(:discover_repos)
+      @provider.should_receive(:discovery_url=).with(url)
+      Provider.stub(:find).and_return @provider
+      post 'discover', {:id=>@provider.id, :url=>url}
+      response.should be_success
+    end
+
+    it "Should be able to cancel discovery" do
+      @provider.should_receive(:discovery_task=).with(nil)
+      Provider.stub(:find).and_return @provider
+      post 'cancel_discovery', {:id=>@provider.id}
+      response.should be_success
+    end
+
   end
 
   describe "should be able to create a custom provider", :katello => true do
