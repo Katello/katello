@@ -27,6 +27,7 @@ class Provider < ActiveRecord::Base
 
   belongs_to :organization
   belongs_to :task_status
+  belongs_to :discovery_task, :class_name=>'TaskStatus'
   has_many :products, :inverse_of => :provider
 
   validates :name, :presence => true, :katello_name_format => true
@@ -166,10 +167,11 @@ class Provider < ActiveRecord::Base
 
   def discover_repos
     raise _("Cannot discover repos for the Red Hat Provider") if self.redhat_provider?
+    raise _("Repository Discovery already in progress") if self.discovery_task && !self.discovery_task.finished?
     raise _("Discovery URL not set.") if self.discovery_url.blank?
     self.discovered_repos = []
+    self.discovery_task = self.async(:organization=>self.organization).start_discovery_task
     self.save!
-    task = self.async(:organization=>self.organization).start_discovery_task
   end
 
   def discovery_url=(value)
@@ -192,14 +194,30 @@ class Provider < ActiveRecord::Base
   private
 
   def start_discovery_task
+    task_id = AsyncOperation.current_task_id
     provider_id = self.id
-    discover = RepoDiscovery.new(self.discovery_url)
-    discover.run do |url|
 
-          provider = ::Provider.find(provider_id)
-          provider.discovered_repos << url
-          provider.save!
+    #Lambda to continually update the provider
+    found_func = lambda do |url|
+      provider = ::Provider.find(provider_id)
+      provider.discovered_repos << url
+      provider.save!
     end
+
+    #Lambda to decide to continue or not
+    #  Using the saved task_id to compare current providers
+    #  task id
+    continue_func = lambda do
+      new_prov = ::Provider.find(provider_id)
+      if new_prov.discovery_task.nil? || new_prov.discovery_task.id != task_id
+        return false
+      end
+      true
+    end
+
+    discover = RepoDiscovery.new(self.discovery_url)
+    discover.run(found_func, continue_func)
+
   ensure
     ##in case of error
   end
