@@ -322,6 +322,9 @@ module Katello
         config[:use_pulp] = config.katello? if config[:use_pulp].nil?
         config[:use_foreman] = config.katello? if config[:use_foreman].nil?
 
+        config[:email_reply_address] = config[:email_reply_address] ?
+            config[:email_reply_address] : "no-reply@"+config[:host]
+
         load_version config
       end
 
@@ -358,7 +361,7 @@ module Katello
                     cloud_forms use_pulp cdn_proxy use_ssl warden katello? url_prefix foreman
                     search use_foreman password_reset_expiration redhat_repository_url port
                     elastic_url rest_client_timeout elastic_index allow_roles_logging
-                    katello_version pulp tire_log log_level log_level_sql)
+                    katello_version pulp tire_log log_level log_level_sql email_reply_address)
 
       has_values :app_mode, %w(katello headpin)
       has_values :url_prefix, %w(/headpin /sam /cfse /katello)
