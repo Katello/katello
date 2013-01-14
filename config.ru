@@ -5,7 +5,7 @@ require ::File.expand_path('../config/environment', __FILE__)
 # apply a prefix to the application, if one is defined
 # e.g. http://some.server.com/prefix where '/prefix' is defined by env variable
 
-if Rails.env.development?
+if Katello.config.embed_yard_documentation
   prefixed_router = Class.new YARD::Server::Router do
     prefix  = Katello.early_config.url_prefix + '/yard/'
     methods = { :docs_prefix => 'docs', :list_prefix => 'list', :search_prefix => 'search' }
@@ -22,6 +22,6 @@ if Rails.env.development?
       :server_options => { :incremental => true }
 end
 
-map Katello.early_config.url_prefix do
+map Katello.config.url_prefix do
   run Src::Application
 end

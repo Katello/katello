@@ -3,5 +3,5 @@
     #{link_to (_("%{app_name} Version: %{version}") % {:app_name => release_name, :version => Katello.config.katello_version}), about_path}
   - else
     #{_("%{app_name} Version: %{version}") % {:app_name => release_name, :version => Katello.config.katello_version}}
-  - if Rails.env.development?
+  - if Katello.config.embed_yard_documentation
     #{link_to 'YARD documentation', 'yard/docs/katello/frames'}
