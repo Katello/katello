@@ -99,6 +99,19 @@ describe Api::ContentViewDefinitionsController, :katello => true do
     end
   end
 
+  describe "update" do
+    it "should not allow me to change the definition's org" do
+      org1 = FactoryGirl.create(:organization)
+      org2 = FactoryGirl.create(:organization)
+      content_view_definition = FactoryGirl.create(:content_view_definition,
+                                                   :organization => org1
+                                                  )
+      put :update, :id => content_view_definition.id, :organization_id => org1.id,
+        :content_view_definition => {:organization_id => org2.id}
+      content_view_definition.reload.organization_id.should_not eql(org2.id)
+    end
+  end
+
   describe "update_content_views" do
     let(:definition) { FactoryGirl.create(:content_view_definition) }
     let(:views) { FactoryGirl.create_list(:content_view, 2) }
