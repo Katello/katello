@@ -6,6 +6,7 @@ group :development do
 
   # code documentation
   gem 'yard', '>= 0.5.3'
+  gem 'yard-activerecord', :git => 'git://github.com/pitr-ch/yard-activerecord.git'
 
   # generates routes in javascript
   gem "js-routes", :require => 'js_routes'
