@@ -27,8 +27,11 @@ module Glue::Pulp::Consumer
       lazy_accessor :package_profile, :initializer => lambda {|s| Runcible::Extensions::Consumer.profile(uuid, 'rpm') }
       lazy_accessor :simple_packages, :initializer => lambda {|s| Runcible::Extensions::Consumer.profile(uuid, 'rpm')["profile"].
                                                               collect{|package| Glue::Pulp::SimplePackage.new(package)} }
-      lazy_accessor :errata, :initializer => lambda {|s| Resources::Pulp::Consumer.errata(uuid).
-                                                              collect{|errata| Errata.new(errata)} }
+      lazy_accessor :errata, :initializer => lambda {|s| #Resources::Pulp::Consumer.errata(uuid).
+                                                              #collect{|errata| Errata.new(errata)} }
+                                                         raise NotImplementedError
+                                                         #TODO: Needs corresponding Runcible call once fixed in Pulp
+                                                    }
       lazy_accessor :repoids, :initializer => lambda {|s| Runcible::Extensions::Consumer.retrieve_bindings(uuid).
                                                               collect{ |repo| repo["repo_id"]} }
     end
