@@ -65,9 +65,9 @@ describe Api::SystemGroupErrataController, :katello => true do
 
     it_should_behave_like "protected action"
 
-    it { should be_successful }
+    pending { should be_successful }
 
-    it "should retrieve errata from pulp" do
+    pending "should retrieve errata from pulp" do
       subject
     end
   end
