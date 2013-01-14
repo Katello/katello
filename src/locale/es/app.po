@@ -1,27 +1,22 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # Miroslav Suchy <msuchy@redhat.com>, 2012.
 msgid ""
 msgstr ""
-"Project-Id-Version: Katello\n"
+"Project-Id-Version: version 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-19 09:10-0500\n"
+"POT-Creation-Date: 2013-01-14 17:43-0500\n"
 "PO-Revision-Date: 2012-12-20 12:58+0000\n"
 "Last-Translator: Miroslav Suchý <msuchy@redhat.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-msgid ""
-" '%s' already exists and either has been scheduled for deletion or failed "
-"deletion."
-msgstr "Puede ser que %s' ya exista,  o haya sido programado para ser borrado oque el borrado haya fallado."
 
 msgid " created successfully."
 msgstr "Creado con éxito."
@@ -212,6 +207,10 @@ msgstr "%s actualización de paquetes se detuvo"
 msgid "%s package updated"
 msgstr "%s paquete actualizado"
 
+#, fuzzy
+msgid "%s updated successfully."
+msgstr "Usuario ha sido actualizado."
+
 msgid "%{errata} (%{rest} other errata)"
 msgstr "%{errata} (%{rest} otros errores)"
 
@@ -230,17 +229,33 @@ msgstr "%{package} (%{rest} otros paquetes)"
 msgid "%{repo} (Product: %{product})"
 msgstr "%{repo} (Producto: %{product})"
 
+#, fuzzy
+msgid "'%s' created successfully."
+msgstr "Creado con éxito."
+
 msgid "'%s' did not meet the current search criteria and is not being shown."
 msgstr "'%s' no cumplió con los criterios actuales de búsqueda y no se muestra."
 
 msgid "'%s' no longer matches the current search criteria."
 msgstr "'%s' ya no concuerda con los criterios de búsqueda actuales."
 
+#, fuzzy
+msgid "'%s' was deleted."
+msgstr "Rol '%s' ha sido borrado."
+
 msgid "+ Import Manifest"
 msgstr "+ Importar manifiesto"
 
+#, fuzzy
+msgid "+ New Architecture"
+msgstr "Seleccionar arquitectura"
+
 msgid "+ New Changeset"
 msgstr "+ Nuevo Changeset"
+
+#, fuzzy
+msgid "+ New Domain"
+msgstr "+ Nuevo Plan"
 
 msgid "+ New Filter"
 msgstr "+ Nuevo Filtro"
@@ -263,6 +278,10 @@ msgstr "+ Nuevo proveedor"
 msgid "+ New Role"
 msgstr "+ Nuevo rol"
 
+#, fuzzy
+msgid "+ New Subnet"
+msgstr "+ Nuevo sistema"
+
 msgid "+ New System"
 msgstr "+ Nuevo sistema"
 
@@ -272,13 +291,14 @@ msgstr "+ Nueva plantilla"
 msgid "+ New User"
 msgstr "+ Nuevo usuario"
 
+#, fuzzy
+msgid ": '%s' is a built-in environment"
+msgstr "No se halló producto '%s' en este entorno."
+
 msgid "A keyname must be provided"
 msgstr "Se debe proporcionar un nombre de clave"
 
-msgid ""
-"A label was not provided during %s creation; therefore, a label of '%s' was "
-"automatically assigned. If you would like a different label, please delete "
-"the %s and recreate it with the desired label."
+msgid "A label was not provided during %s creation; therefore, a label of '%s' was automatically assigned. If you would like a different label, please delete the %s and recreate it with the desired label."
 msgstr "No se proporcionó una etiqueta durante la creación %s; por lo tanto, se ha asignado automáticamente una etiqueta de '%s'. Si desea una etiqueta diferente, por favor borre la %s y vuelva a crearla con la etiqueta deseada."
 
 msgid "About"
@@ -380,15 +400,22 @@ msgstr "Todos los proveedores para propietario en %s Candlepin"
 msgid "All repository GPG keys for Product '%s' were updated."
 msgstr "Todas las llaves GPG de repositorio para producto '%' han sido actualizadas"
 
-msgid "Applied Subscriptions"
+#, fuzzy
+msgid "Application"
 msgstr "Suscripciones aplicadas"
+
+#, fuzzy
+msgid "Architecture"
+msgstr "Seleccionar arquitectura"
+
+#, fuzzy
+msgid "Architectures"
+msgstr "Seleccionar arquitectura"
 
 msgid "At least one activation key must be provided"
 msgstr "Al menos una llave de activación debe ser promovida"
 
-msgid ""
-"At least one environment is required to create or register systems in your "
-"current organization."
+msgid "At least one environment is required to create or register systems in your current organization."
 msgstr "Se requiere  al menos un entorno para crear o registrar sistemas en su organización actual."
 
 msgid "At least one organization must exist."
@@ -397,20 +424,31 @@ msgstr "Al menos una organización debe existir."
 msgid "At least repository must be present to export a TDL"
 msgstr "Al menos un repositorio debe estar presente para exportar un TDL"
 
-msgid "Auto-heal %{val}, %{sla}"
+#, fuzzy
+msgid "Attached Subscriptions"
+msgstr "Suscripciones aplicadas"
+
+msgid "Authentication"
 msgstr ""
 
-msgid "Auto-heal Off, No Service Level Preference"
+msgid "Auto-attach %{val}, %{sla}"
 msgstr ""
 
-msgid "Auto-heal Off, Service Level %s"
-msgstr ""
+#, fuzzy
+msgid "Auto-attach Off, No Service Level Preference"
+msgstr "No hay preferencia de nivel de servicio"
 
-msgid "Auto-heal On, No Service Level Preference"
-msgstr ""
+#, fuzzy
+msgid "Auto-attach Off, Service Level %s"
+msgstr "Nivel de servicio %s"
 
-msgid "Auto-heal On, Service Level %s"
-msgstr ""
+#, fuzzy
+msgid "Auto-attach On, No Service Level Preference"
+msgstr "No hay preferencia de nivel de servicio"
+
+#, fuzzy
+msgid "Auto-attach On, Service Level %s"
+msgstr "Nivel de servicio %s"
 
 msgid "Available Subscriptions"
 msgstr "Suscripciones disponibles"
@@ -430,7 +468,8 @@ msgstr "Error de carga CDN: acceso prohibido a %s"
 msgid "Can't copy System Groups to a different org: '%{org1}' != '%{org2}'"
 msgstr "No se puede copiar los grupos del sistema en un org diferente: '%{org1}' != '%{org2}'"
 
-msgid "Can't update Library environment"
+#, fuzzy
+msgid "Can't update the '%s' environment"
 msgstr "No se puede actualizar entorno de biblioteca"
 
 msgid "Canceled synchronization of %{name}: %{id}"
@@ -448,47 +487,38 @@ msgstr "No se pueden añadir o cambiar permisos relacionados con el rol bloquead
 msgid "Cannot change the name or description of a locked role."
 msgstr "No se puede cambiar el nombre o descripción de un rol bloqueado."
 
-msgid "Cannot create activation keys in Library environment "
+#, fuzzy
+msgid "Cannot create activation keys in the '%s' environment"
 msgstr "No se pueden crear llaves de activación en el entorno de biblioteca"
 
 msgid "Cannot delete currently logged user"
 msgstr "No se puede borrar el usuario que está conectado actualmente "
 
-msgid ""
-"Cannot delete the changeset '%s' because it is not in the review phase."
+msgid "Cannot delete the changeset '%s' because it is not in the review phase."
 msgstr "No se puede borrar el changeset '%s' ya que no se encuentra en la fase de revisión."
 
-msgid ""
-"Cannot delete the changeset '%{changeset}' while another changeset "
-"(%{another_changeset}) is being deleted or promoted."
-msgstr "No se puede borrar el changeset '%{changeset}' mientras que otro changeset (%{another_changeset}) se borra o se presenta."
-
-msgid ""
-"Cannot dissociate user '%{username}' from '%{role}' role. Need at least one "
-"user in the '%{role}' role."
+msgid "Cannot dissociate user '%{username}' from '%{role}' role. Need at least one user in the '%{role}' role."
 msgstr "No se puede desasociar el usuario '%{username}' del rol '%{role}'. Se necesita por lo menos un usuario en el rol '%{role}'."
 
-msgid ""
-"Cannot dissociate user '%{user}' from '%{role}' role. Need at least one user"
-" in the '%{role}' role."
+msgid "Cannot dissociate user '%{user}' from '%{role}' role. Need at least one user in the '%{role}' role."
 msgstr "No se puede desasociar el usuario '%{user}' del rol '%{role}'. Se necesita por lo menos un usuario en el rol '%{role}'."
 
-msgid "Cannot export templates for the Library environment."
+#, fuzzy
+msgid "Cannot export templates for the '%s' environment."
 msgstr "No se pueden exportar plantillas para el entorno de biblioteca."
 
 msgid "Cannot modify a template that is another environment"
 msgstr "No se puede modificar una plantilla que esté en otro entorno"
 
-msgid ""
-"Cannot promote the changeset '%s' because it is not in the review phase."
+msgid "Cannot promote the changeset '%s' because it is not in the review phase."
 msgstr "No se puede presentar el changeset '%s' ya que no se encuentra en la fase de revisión."
 
-msgid ""
-"Cannot promote the changeset '%{changeset}' while another changeset "
-"(%{another_changeset}) is being promoted."
+#, fuzzy
+msgid "Cannot promote the changeset '%{changeset}' while another colliding changeset (%{another_changeset}) is being promoted."
 msgstr "No se puede presentar el changeset '%{changeset}' mientras que se presenta otro changeset (%{another_changeset})."
 
-msgid "Cannot register a system with 'Library' environment "
+#, fuzzy
+msgid "Cannot register a system to the '%s' environment"
 msgstr "No se puede registrar un sistema con un entorno de 'biblioteca'"
 
 msgid "Cannot specify a tag if all_tags is selected."
@@ -500,11 +530,9 @@ msgstr "No se puede especificar un verbo si se selecciona all_verbs."
 msgid "Cannot specify all_types without all_tags and all_verbs"
 msgstr "No se puede especificar all_types sin all_tags y all_verbs"
 
-msgid "Cannot validate templates for the Library environment."
+#, fuzzy
+msgid "Cannot validate templates for the '%s' environment."
 msgstr "No se pueden validar plantillas para el entorno de biblioteca."
-
-msgid "Change Password"
-msgstr "Cambiar contraseña"
 
 msgid "Changeset Management"
 msgstr "Administración de contraseña"
@@ -515,17 +543,20 @@ msgstr "Changesets"
 msgid "Changesets History"
 msgstr "Historial de contraseña"
 
+msgid "Choose %s..."
+msgstr ""
+
+msgid "Choose domains..."
+msgstr ""
+
+msgid "Choose operating systems..."
+msgstr ""
+
 msgid "Cleared"
 msgstr "Borrado"
 
 msgid "Click on 'Add Environment' to create the first environment"
 msgstr "Haga clic en 'Añadir entorno' para crear el primer entorno."
-
-msgid "Confirm Password"
-msgstr "Confirmar contraseña"
-
-msgid "Consumers"
-msgstr "Usuarios"
 
 msgid "Content"
 msgstr "Contenido"
@@ -536,14 +567,10 @@ msgstr "Búsqueda de contenido"
 msgid "Could not delete organization '%s'."
 msgstr "No se puede borrar organización '%s'."
 
-msgid ""
-"Could not modify environments.  One or more associated activation keys (%s) "
-"would become invalid."
+msgid "Could not modify environments.  One or more associated activation keys (%s) would become invalid."
 msgstr "No se  pudieron modificar los entornos. Una  o  varias llaves de activación (%s) se invalidarían."
 
-msgid ""
-"Could not modify environments. System group membership does not match new "
-"environment association."
+msgid "Could not modify environments. System group membership does not match new environment association."
 msgstr "No se  pudieron modificar los entornos. La membresía del grupo de sistema no coincide con la asociación del nuevo entorno."
 
 msgid "Couldn't find GPG key '%s'"
@@ -563,6 +590,10 @@ msgstr "No se pudo hallar entorno '%s'"
 
 msgid "Couldn't find filter '%s'"
 msgstr "No se pudo hallar el filtro '%s'"
+
+#, fuzzy
+msgid "Couldn't find one of the filters in '%s'"
+msgstr "No se pudieron hallar los filtros '%s' "
 
 msgid "Couldn't find organization '%s'"
 msgstr "No se pudo hallar la organización '%s'"
@@ -606,14 +637,15 @@ msgstr "No se pudo hallar el usuario '%s' "
 msgid "Couldn't find user role '%s'"
 msgstr "No se pudo hallar el rol '%s' "
 
-msgid "Couldn't one of the filters in '%s'"
-msgstr "No se pudieron hallar los filtros '%s' "
-
 msgid "Creating an environment in candlepin: %s"
 msgstr "Crear un entorno en Candlepin: %s"
 
 msgid "Creating an owner in candlepin: %s"
 msgstr "Crear un propietario en Candlepin: %s"
+
+#, fuzzy
+msgid "Current organization is being deleted, switch to a different one."
+msgstr "La actual organización no puede ser borrada. Por favor cambie a una organización diferente antes de borrar."
 
 msgid "Custom Content Repositories"
 msgstr "Personalizar repositorios de contenido "
@@ -726,6 +758,10 @@ msgstr "Dependencias"
 msgid "Details"
 msgstr "Información"
 
+#, fuzzy
+msgid "Directory"
+msgstr "Repositorio"
+
 msgid "Disable/enable is not supported for custom repositories."
 msgstr "Habilitado/inhabilitado no es soportado para repositorios personales"
 
@@ -753,6 +789,12 @@ msgstr "Distribución '%{id}' no se encontró en el entorno '%{name}' "
 msgid "Distributions"
 msgstr "Distribuciones"
 
+msgid "Domain"
+msgstr ""
+
+msgid "Domains"
+msgstr ""
+
 msgid "Either organization ID or environment ID needs to be specified"
 msgstr "Necesita especificar el ID de la organización o el ID de entorno"
 
@@ -762,53 +804,35 @@ msgstr "Se deben proporcionar ya sean los paquetes o los grupos."
 msgid "Either packages or groups must be provided"
 msgstr "Deben promoverse los paquetes o los grupos"
 
-msgid "Email Address"
-msgstr "Dirección de correo-e"
-
 msgid "Email sent to '%s' with password reset instructions."
 msgstr "Correo-e enviado  a '%s' con instrucciones para restablecer la contraseñaa"
 
 msgid "Email sent to '%s' with valid login user names."
 msgstr "Correo -e enviado a '%s' con nombres de usuario de ingreso válidos."
 
-msgid ""
-"Empty request received to install Packages or Package Groups for System "
-"'%s'."
+msgid "Empty request received to install Packages or Package Groups for System '%s'."
 msgstr "Solicitud vacía recibida para instalar paquetes o grupos de paquetes para el sistema '%s'."
 
-msgid ""
-"Empty request received to install Packages or Package Groups for System "
-"Group '%s'."
+msgid "Empty request received to install Packages or Package Groups for System Group '%s'."
 msgstr "Solicitud vacía recibida para instalar paquetes o grupos de paquetes para el grupo del sistema '%s'."
 
-msgid ""
-"Empty request received to uninstall Packages or Package Groups for System "
-"'%s'."
+msgid "Empty request received to uninstall Packages or Package Groups for System '%s'."
 msgstr "Solicitud vacía recibida para desinstalar paquetes o grupos de paquetes para el sistema '%s'."
 
-msgid ""
-"Empty request received to uninstall Packages or Package Groups for System "
-"Group '%s'."
+msgid "Empty request received to uninstall Packages or Package Groups for System Group '%s'."
 msgstr "Solicitud vacía recibida para desinstalar paquetes o grupos de paquetes para el grupo del sistema '%s'."
 
-msgid ""
-"Empty request received to update Packages or Package Groups for System Group"
-" '%s'."
+msgid "Empty request received to update Packages or Package Groups for System Group '%s'."
 msgstr "Solicitud vacía recibida para actualizar paquetes o grupos de paquetes para el grupo del sistema '%s'."
 
-msgid ""
-"Enter your username and email address below and instructions on resetting "
-"your password will be sent to you."
-msgstr "Ingrese su nombre de usuario y  dirección de correo-e abajo y le serán enviadas las instruciones sobre cómo restablecer su  contraseña."
+#, fuzzy
+msgid "Environment"
+msgstr "Entornos"
 
-msgid ""
-"Environment %s has a successor.  Only the last environment on a path can be "
-"deleted"
+msgid "Environment %s has a successor.  Only the last environment on a path can be deleted"
 msgstr "Entorno %s tiene un sucesor. Solamente el último entorno en una ruta puede ser borrado"
 
-msgid ""
-"Environment %s has a successor. Only the last environment on a path can be "
-"deleted."
+msgid "Environment %s has a successor. Only the last environment on a path can be deleted."
 msgstr "Entorno %s tiene un sucesor. Solamente el último entorno en una ruta puede ser borrado."
 
 msgid "Environment '%s' was created."
@@ -898,8 +922,7 @@ msgstr "Falló la creación de entorno de Candlepin %s"
 msgid "Failed to create candlepin owner %s"
 msgstr "Falló  la creación de propietario de Candlepin %s"
 
-msgid ""
-"Failed to delete all environments for owner %{org} in candlepin: %{message}"
+msgid "Failed to delete all environments for owner %{org} in candlepin: %{message}"
 msgstr "No se logró borrar todos los entornos para el propietario %{org} en candlepin: %{message}"
 
 msgid "Failed to delete all providers for owner %s in candlepin"
@@ -938,19 +961,12 @@ msgstr "Paquetes filtrados"
 msgid "Filters"
 msgstr "Filtros"
 
-msgid ""
-"Filters assigned to repository or product of erratum '%s' block it from "
-"promotion!"
+msgid "Filters assigned to repository or product of erratum '%s' block it from promotion!"
 msgstr "Filtros asignados a repositorio o producto de errata '%s' lo bloquean de la promoción"
 
-msgid "Filters can be stored only in Library repositories."
+#, fuzzy
+msgid "Filters can be stored only in the '%s' repositories."
 msgstr "Los filtros pueden ser almacenados únicamente en repositorios de bibliotecas."
-
-msgid "Forgot %s or %s?"
-msgstr "¿Olvidó %s o %s?"
-
-msgid "Forgot Username or Password?"
-msgstr "¿Olvidó el nombre de usuario o contraseña?"
 
 msgid "GPG Key"
 msgstr "llave GPG"
@@ -997,16 +1013,8 @@ msgstr "Los hipervisores no tienen paquetes"
 msgid "Hypervisors do not have software products"
 msgstr "Los hipervisores no tienen productos de software"
 
-msgid "I remembered my login credentials."
-msgstr "Recordé mis credenciales de inicio de sesión."
-
 msgid "ID: %s doesn't exist "
 msgstr "ID: %s no existe "
-
-msgid ""
-"If you do not know your username, please enter your email address below and "
-"your username information will be sent to you."
-msgstr "Si no  conoce su nombre de usuario, por favor ingrese su dirección de correo-e abajo y la información de su nombre de usuario le será enviada."
 
 msgid "Import"
 msgstr "Importar"
@@ -1017,33 +1025,25 @@ msgstr "Importar historia"
 msgid "Initial Registration Params"
 msgstr "Parámetros de registro iniciales"
 
-msgid ""
-"Install of Errata '%{errata}' scheduled for System Group '%{group}' failed."
-"  Reason: %{message}"
+msgid "Install of Errata '%{errata}' scheduled for System Group '%{group}' failed.  Reason: %{message}"
 msgstr "Falló la instalación de errata '%{errata}' programada para el grupo del sistema '%{group}'.  Razón: %{message}"
 
 msgid "Install of Errata '%{errata}' scheduled for System Group '%{group}'."
 msgstr "Instalación de errata '%{errata}' programada para el grupo del sistema '%{group}'."
 
-msgid ""
-"Install of Package Groups '%{groups}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
+msgid "Install of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
 msgstr "Falló la instalación de los grupos de paquetes '%{groups}' programada para el grupo del sistema '%{name}'.  Razón: %{message}"
 
-msgid ""
-"Install of Package Groups '%{groups}' scheduled for System Group '%{name}'."
+msgid "Install of Package Groups '%{groups}' scheduled for System Group '%{name}'."
 msgstr "Instalación de grupos de paquetes '%{groups}' programada para el grupo del sistema '%{name}'."
 
 msgid "Install of Package Groups '%{g}' scheduled for System '%{s}'."
 msgstr "Instalación de grupos de paquetes '%{g}' programada para sistema '%{s}'."
 
-msgid ""
-"Install of Packages '%{packages}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
+msgid "Install of Packages '%{packages}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
 msgstr "Falló la instalación de paquetes '%{packages}' programada para el grupo del sistema '%{name}'.  Razón: %{message}"
 
-msgid ""
-"Install of Packages '%{packages}' scheduled for System Group '%{name}'."
+msgid "Install of Packages '%{packages}' scheduled for System Group '%{name}'."
 msgstr "Instalación de paquetes '%{packages}' programada para el grupo del sistema '%{name}'."
 
 msgid "Install of Packages '%{p}' scheduled for System '%{s}'."
@@ -1061,31 +1061,22 @@ msgstr "Instalando paquete..."
 msgid "Interval"
 msgstr "Intervalo"
 
-msgid "Invalid Url"
-msgstr "URL inválida"
-
 msgid "Invalid date or time format"
 msgstr "Fecha inválida o formato de hora"
 
 msgid "Invalid organization"
 msgstr "Organización inválida"
 
-msgid ""
-"Invalid parameters sent in the request for this operation. Please contact a "
-"system administrator."
+msgid "Invalid parameters sent in the request for this operation. Please contact a system administrator."
 msgstr "Parámetros inválidos enviados en la solicitud para esta operación. Por favor contacte a un administrador de sistemas."
 
-msgid ""
-"Invalid resource type '%{resource_type}'. Resource Types can be one of "
-"'%{possible_types}'"
+msgid "Invalid resource type '%{resource_type}'. Resource Types can be one of '%{possible_types}'"
 msgstr "Tipo de recurso inválido '%{resource_type}'. Tipos de recursos pueden ser alguno de '%{possible_types}'"
 
 msgid "Invalid state"
 msgstr "Estado inválido"
 
-msgid ""
-"Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be "
-"one of %{possible_verbs}"
+msgid "Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be one of %{possible_verbs}"
 msgstr "Verbo inválido '%{verb}'. Verbos para tipo de recurso '%{resource_type}' pueden ser alguno de  %{possible_verbs}"
 
 msgid "It is not allowed to create products in Red Hat provider."
@@ -1105,9 +1096,6 @@ msgstr "No se permite la actualización de un producto de Red Hat."
 
 msgid "It is not allowed to update a Red Hat repository."
 msgstr "No se permite la actualización de un repositorio de Red Hat."
-
-msgid "Javascript must be enabled for this application to work properly."
-msgstr "Javascript debe estar activado para que esta aplicación funcione adecuadamente."
 
 msgid "Katello Logins"
 msgstr "Nombres de usuario de Katello"
@@ -1130,20 +1118,8 @@ msgstr "Grupos LDAP"
 msgid "LDAP group '%{group}' associated to role '%{role}' was not found."
 msgstr "No se encoentró el grupo LDAP '%{group}' asociado al rol '%{role}'."
 
-msgid "Library"
-msgstr "Biblioteca"
-
-msgid "Library environment cannot contain a changeset!"
-msgstr "Entorno de biblioteca no puede contener un Changeset"
-
 msgid "List"
 msgstr "Lista"
-
-msgid "Login"
-msgstr "Inicio  de sesión"
-
-msgid "Login Information"
-msgstr "Información de inicio de sesión"
 
 msgid "Login Successful"
 msgstr "Ingreso exitoso"
@@ -1154,13 +1130,8 @@ msgstr "Inicio de sesión, ingresando a '%s'"
 msgid "Login Successful, please choose an Organization"
 msgstr "Inicio de sesión, por favor elija una organización"
 
-msgid ""
-"Login Successful, please contact administrator to get permission to access "
-"an organization."
+msgid "Login Successful, please contact administrator to get permission to access an organization."
 msgstr "Inicio de sesión, por favor contacte al administrador para obtener permiso de acceso a su organización."
-
-msgid "Logo"
-msgstr "Logotipo"
 
 msgid "Logout Successful"
 msgstr "Salida exitosa"
@@ -1216,16 +1187,22 @@ msgstr "Nombre no puede estar en blanco"
 msgid "Name must be unique within one organization"
 msgstr "Nombre debe ser único dentro de la organización"
 
+#, fuzzy
+msgid "Names and labels must be unique across all organizations"
+msgstr "Nombre debe ser único dentro de la organización"
+
 msgid "Never checked in"
 msgstr "Nunca se registró"
 
 msgid "Never checked in."
 msgstr "Nunca se registró."
 
-msgid "New templates can be created only in a Library environment"
+#, fuzzy
+msgid "New templates can be created only in the '%s' environment"
 msgstr "Solamente se pueden crear nuevas plantillas en un entorno de biblioteca. "
 
-msgid "New templates can be imported only into a Library environment"
+#, fuzzy
+msgid "New templates can be imported only into the '%s' environment"
 msgstr "Solamente las nuevas plantillas pueden importarse en un entorno de biblioteca"
 
 msgid "No Overlap with Current"
@@ -1237,10 +1214,11 @@ msgstr "No hay preferencia de nivel de servicio"
 msgid "No Template"
 msgstr "No hay plantilla"
 
-msgid ""
-"No environments are currently available in this organization.  Please either"
-" add some to the organization or select an organization that has an "
-"environment to set user default."
+#, fuzzy
+msgid "No domains found."
+msgstr "No se encontró"
+
+msgid "No environments are currently available in this organization.  Please either add some to the organization or select an organization that has an environment to set user default."
 msgstr "No hay entornos disponibles actualmente en esta organización. Por favor añada algo a la organización o seleccione una organización  que tenga un entorno establecido como predeterminado. "
 
 msgid "No errors"
@@ -1252,6 +1230,9 @@ msgstr "No hay eventos coincidentes con sus criterios de búsqueda."
 msgid "No new packages installed"
 msgstr "No hay paquetes nuevos instalados"
 
+msgid "No operating systems found."
+msgstr ""
+
 msgid "No package profile received for %s"
 msgstr "No se ha recibido perfil de paquetes para %s"
 
@@ -1260,6 +1241,9 @@ msgstr "No se han retirado paquetes"
 
 msgid "No packages updated"
 msgstr "No hay paquetes actualizados"
+
+msgid "No smart proxy with %s feature found."
+msgstr ""
 
 msgid "No synchronization of the %s is currently running"
 msgstr "Actualmente no se está ejecutando la sincronización del %s"
@@ -1270,15 +1254,14 @@ msgstr "No hay registro de sistema predeterminado establecido para este usuario.
 msgid "None"
 msgstr "Ninguno"
 
-msgid ""
-"Not enough entitlements in pools (%{size}), required: %{required}, "
-"available: %{available}"
+msgid "Not enough subscriptions in pools (%{size}), required: %{required}, available: %{available}"
 msgstr ""
 
 msgid "Not found"
 msgstr "No se encontró"
 
-msgid "Number of consumed entitlements exceeded quantity for %s"
+#, fuzzy
+msgid "Number of attached subscriptions exceeded quantity for %s"
 msgstr "Número de derechos consumidos cantidad excedida para %s"
 
 msgid "Number of sockets must be higher than 0 for system %s"
@@ -1314,14 +1297,11 @@ msgstr "Administración de sistemas de  código abierto"
 msgid "Organization"
 msgstr "Organización"
 
-msgid ""
-"Organization %s has 'Library' environment only. Please create an environment"
-" for system registration."
-msgstr ""
+msgid "Organization %s has more than one environment. Please specify target environment for system registration."
+msgstr "La organización %s tiene más de un entorno. Por favor especifique un entorno de destino para el registro del sistema."
 
-msgid ""
-"Organization %s has more than one environment. Please specify target "
-"environment for system registration."
+#, fuzzy
+msgid "Organization %{org} has the '%{env}' environment only. Please create an environment for system registration."
 msgstr "La organización %s tiene más de un entorno. Por favor especifique un entorno de destino para el registro del sistema."
 
 msgid "Organization '%s' has been scheduled for background deletion."
@@ -1477,6 +1457,22 @@ msgstr "No se halló categoría de grupo de paquetes %s' en esta plantilla."
 msgid "Package group category '%{group}' not found in the %{env} environment"
 msgstr "No se encontró la categoría del grupo de paquetes '%{group}' en el entorno %{env}"
 
+#, fuzzy
+msgid "Package group update canceled"
+msgstr "actualización del grupo de paquetes cancelada"
+
+#, fuzzy
+msgid "Package group update complete"
+msgstr "Actualización de grupo de paquetes completa"
+
+#, fuzzy
+msgid "Package group update failed"
+msgstr "Actualización de grupo de paquetes falló"
+
+#, fuzzy
+msgid "Package group update timed out"
+msgstr "Actualización de grupo de paquetes expiró"
+
 msgid "Package with id '%s' not found"
 msgstr "No se encontró el paquete con ID '%s' "
 
@@ -1492,23 +1488,11 @@ msgstr "No se halló parámetro '%s' en la plantilla."
 msgid "Parameter '%{name}': '%{value}' was set"
 msgstr "Se estableció el parámetro '%{name}': '%{value}' "
 
-msgid "Password"
-msgstr "Contraseña"
-
-msgid "Password Unknown"
-msgstr "Contraseña desconocida"
-
 msgid "Password has been reset for user '%s'."
 msgstr "La contraseña se ha restablecido  para el usuario '%s'."
 
 msgid "Password reset token has expired for user '%s'."
 msgstr "La señal de restablecimiento de la contraseña ha expirado para el usuario '%s'."
-
-msgid "Passwords do not match."
-msgstr "Las contraseñas no coinciden."
-
-msgid "Passwords match."
-msgstr "Las contraseñas coinciden."
 
 msgid "Pending"
 msgstr "Pendiente"
@@ -1522,9 +1506,7 @@ msgstr "Permiso '%s' ha sido retirado."
 msgid "Permission '%s' was updated."
 msgstr "Permiso '%s' ha sido actualizado."
 
-msgid ""
-"Permission Denied. User '%{user}' does not have permissions to access "
-"organization '%{org}'."
+msgid "Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'."
 msgstr "Permiso negado. El usuario '%{user}' no tiene permiso para accecer a la organización '%{org}'."
 
 msgid "Permissions"
@@ -1539,16 +1521,11 @@ msgstr "Plan"
 msgid "Plan Name"
 msgstr "Nombre de plan"
 
-msgid ""
-"Please add '%{product}' product to the changeset '%{changeset}' if you wish "
-"to promote repository '%{repo}' with it."
+msgid "Please add '%{product}' product to the changeset '%{changeset}' if you wish to promote repository '%{repo}' with it."
 msgstr "Agregue el producto '%{product}' al changeset '%{changeset}' si desea presentar el repositorio '%{repo}' con este."
 
 msgid "Please create at least one environment."
 msgstr "Por favor cree por lo menos un entorno."
-
-msgid "Please provide entitlement ID"
-msgstr ""
 
 msgid "Please provide pool ID"
 msgstr "Por favor proporcionar ID de pool"
@@ -1557,6 +1534,10 @@ msgid "Please provide pool and quantity"
 msgstr "Por favor proporcionar grupo y cantidad"
 
 msgid "Please provide serial ID"
+msgstr "Por favor proporcione un ID de serie"
+
+#, fuzzy
+msgid "Please provide subscription ID"
 msgstr "Por favor proporcione un ID de serie"
 
 msgid "Please select at least one system group."
@@ -1619,10 +1600,7 @@ msgstr "Proveedor '%s' ha sido borrado."
 msgid "Provider '%s' was updated."
 msgstr "Proveedor '%s' ha sido actualizado."
 
-msgid ""
-"Provider cannot be deleted since one of its products or repositories has "
-"already been promoted. Using a changeset, please delete the repository from "
-"existing environments before deleting it."
+msgid "Provider cannot be deleted since one of its products or repositories has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it."
 msgstr "El proveedor no  puede ser borrado porque uno de sus  productos o repositorios  ya  ha sido promovido. Se utiliza Changeset, por favor borre el   repositorio de los entornos existentes  antes de borrarlo."
 
 msgid "Providers"
@@ -1790,7 +1768,8 @@ msgstr "Repositorio"
 msgid "Repositories"
 msgstr "Repositorios"
 
-msgid "Repositories can be deleted only in Library environment."
+#, fuzzy
+msgid "Repositories can be deleted only in the '%s' environment."
 msgstr "Solamente se pueden borrar los repositorios  en un entorno de biblioteca."
 
 msgid "Repository '%s' created."
@@ -1826,41 +1805,30 @@ msgstr "Repositorio '%s' actualizado."
 msgid "Repository Comparison"
 msgstr "Comparación de repositorio"
 
-msgid ""
-"Repository cannot be deleted since it has already been promoted. Using a "
-"changeset, please delete the repository from existing environments before "
-"deleting it."
+#, fuzzy
+msgid "Repository can be only created for custom provider."
+msgstr "No se permite actualizar productos para proveedor personal."
+
+msgid "Repository cannot be deleted since it has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it."
 msgstr "El repositorio no  puede ser borrado porque ya  ha sido promovido. Se  utiliza Changeset, por favor borre el   repositorio  de los entornos antes de borrarlo."
 
 msgid "Repository cannot be disabled since it has already been promoted."
 msgstr "El repositorio no puede inhabilitarse porque ya está siendo promovido."
 
-msgid ""
-"Repository of the distribution '%s' has not been promoted into the target "
-"environment!"
+msgid "Repository of the distribution '%s' has not been promoted into the target environment!"
 msgstr "iRepositorio de la distribución '%s' no ha sido promovido en el entorno de destino!"
 
-msgid ""
-"Repository of the erratum '%s' has not been promoted into the target "
-"environment!"
+msgid "Repository of the erratum '%s' has not been promoted into the target environment!"
 msgstr "iRepositorio de la errata '%s' no ha sido promovido en el entorno de destino!"
 
-msgid ""
-"Repository of the package '%s' has not been promoted into the target "
-"environment!"
+msgid "Repository of the package '%s' has not been promoted into the target environment!"
 msgstr "iRepositorio del paquete '%s' no ha sido promovido en el entorno de destino!"
 
 msgid "Request received has either an invalid or expired token. Token: '%s'"
 msgstr "La solicitud recibida tiene una credencial inválida o caduca. Credencial: '%s'"
 
-msgid "Reset Password"
-msgstr "Restablecer contraseña"
-
 msgid "Resource not found on the server"
 msgstr "No se encontró  recurso en el servidor"
-
-msgid "Return to log in."
-msgstr "Volver a ingresar."
 
 msgid "Role"
 msgstr "Rol"
@@ -1886,9 +1854,6 @@ msgstr "Ruta no existe:"
 msgid "Running."
 msgstr "Ejecutando."
 
-msgid "Save"
-msgstr "Guardar"
-
 msgid "Select Architecture"
 msgstr "Seleccionar arquitectura"
 
@@ -1904,11 +1869,11 @@ msgstr "Elegir productos para programar"
 msgid "Selected Distribution"
 msgstr "Distribución seleccionada"
 
-msgid "Send Login"
-msgstr "Enviar nombre de usuario"
-
 msgid "Service Level %s"
 msgstr "Nivel de servicio %s"
+
+msgid "Setup"
+msgstr ""
 
 msgid "Severity: Critical"
 msgstr "Gravedad: crítica"
@@ -1922,9 +1887,6 @@ msgstr "Gravedad: baja"
 msgid "Severity: Moderate"
 msgstr "Gravedad: moderada"
 
-msgid "Show My Password"
-msgstr "Mostrar mi contraseña"
-
 msgid "Software"
 msgstr "Software"
 
@@ -1936,6 +1898,12 @@ msgstr "Se inició el borrado de contenido desde el entorno %{env} usando '%{cha
 
 msgid "Started content promotion to %{env} environment using '%{changeset}'"
 msgstr "Se inició la presentación de contenido para el entorno %{env} usando '%{changeset}'"
+
+msgid "Subnet"
+msgstr ""
+
+msgid "Subnets"
+msgstr ""
 
 msgid "Subscription manifest delete for provider '%s' failed."
 msgstr ""
@@ -1952,10 +1920,7 @@ msgstr "Falló la carga del manifiesto de suscripción para el proveedor '%s'. "
 msgid "Subscription manifest uploaded successfully for provider '%s'."
 msgstr "Ha sido cargado el manifiesto de suscripción para proveedor '%s'."
 
-msgid ""
-"Subscription manifest uploaded successfully for provider '%s'. Please enable"
-" the repositories you want to sync by selecting 'Enable Repositories' and "
-"selecting individual repositories to be enabled."
+msgid "Subscription manifest uploaded successfully for provider '%s'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled."
 msgstr "Ha sido  cargado  el manifiesto de suscripción para el proveedor '%s'. Por favor habilite los repositorios que desea sincronizar, seleccione 'Habilitar repositorios' y los repositorios individuales que van a ser activados."
 
 msgid "Subscriptions"
@@ -2060,9 +2025,7 @@ msgstr "Grupo de sistema %s ha sido  borrado."
 msgid "System Group %s has been updated."
 msgstr "Grupo de sistema %s ha sido actualizado."
 
-msgid ""
-"System Group %{new_group} created successfully as a copy of system group "
-"%{group}."
+msgid "System Group %{new_group} created successfully as a copy of system group %{group}."
 msgstr "Grupo del sistema %{new_group} creado exitosamente como copia del grupo del sistema %{group}."
 
 msgid "System Group Info"
@@ -2095,6 +2058,9 @@ msgstr "Suscripciones de sistemas actualizados."
 msgid "System's environment not compatible with the group '%s'."
 msgstr "Variable del sistema no compatible con el grupo '%s'."
 
+msgid "System: %{system_name}, System Groups Removed: %{system_group_names}"
+msgstr ""
+
 msgid "Systems"
 msgstr "Sistemas"
 
@@ -2104,8 +2070,7 @@ msgstr "Acción de sistemas en volumen: Añadir al o los grupo(s) del sistema: %
 msgid "Systems Bulk Action: No errata IDs have been provided."
 msgstr "Acción de sistemas en volumen: No se proporcionan ID de erratas."
 
-msgid ""
-"Systems Bulk Action: No package or package group names have been provided."
+msgid "Systems Bulk Action: No package or package group names have been provided."
 msgstr "Acción de sistemas en volumen: No se han proporcionado los nombres de paquetes o grupo de paquetes."
 
 msgid "Systems Bulk Action: Remove from system group(s): %s"
@@ -2147,11 +2112,7 @@ msgstr "Ha sido actualizada la plantilla %s "
 msgid "Template %s updated successfully."
 msgstr "Plantilla %s  actualizada con éxito."
 
-msgid ""
-"Template '%s' has been updated successfully, however you have removed either"
-" a product or repository that contained the selected distribution for this "
-"template.  Please select another distribution to ensure a working system "
-"template."
+msgid "Template '%s' has been updated successfully, however you have removed either a product or repository that contained the selected distribution for this template.  Please select another distribution to ensure a working system template."
 msgstr "Plantilla '%s' ha sido actualizada con éxito, sin embargo usted ha retirado un producto o un repositorio que contenía la distribución seleccionada para esta plantilla. Por favor seleccione otra distribución para garantizar una plantilla de sistema de trabajo."
 
 msgid "Template '%s' not found in the changeset"
@@ -2172,49 +2133,39 @@ msgstr "Plantilla importada"
 msgid "Templates"
 msgstr "Plantillas"
 
-msgid "Templates can be updated only in a Library environment"
+#, fuzzy
+msgid "Templates can be updated only in the '%s' environment"
 msgstr "Las plantillas únicamente pueden actualizarse en el entorno de biblioteca"
 
-msgid ""
-"The current organization cannot be deleted. Please switch to a different "
-"organization before deleting."
+#, fuzzy
+msgid "The '%s' environment cannot contain a changeset!"
+msgstr "Entorno de biblioteca no puede contener un Changeset"
+
+msgid "The current organization cannot be deleted. Please switch to a different organization before deleting."
 msgstr "La actual organización no puede ser borrada. Por favor cambie a una organización diferente antes de borrar."
 
 msgid "The environment still has content that belongs to product '%s'."
 msgstr "El entorno aún tiene el contenido perteneciente al producto '%s'."
 
-msgid ""
-"The label requested is already used by another %s; therefore, a unique label"
-" was assigned.  If you would like a different label, please delete the %s "
-"and recreate it with a unique label.  Requested label: %s, Assigned label: "
-"%s"
+msgid "The label requested is already used by another %s; therefore, a unique label was assigned.  If you would like a different label, please delete the %s and recreate it with a unique label.  Requested label: %s, Assigned label: %s"
 msgstr ""
 
-msgid ""
-"The selected system groups (%s) are not compatible with the selected "
-"environment."
+msgid "The selected system groups (%s) are not compatible with the selected environment."
 msgstr "Los grupos de sistema seleccionados (%s) no son compatibles con el entorno seleccionado."
 
-msgid ""
-"The system registration default you supplied was the same as the old system "
-"registration default."
+msgid "The system registration default you supplied was the same as the old system registration default."
 msgstr "El registro del sistema predeterminado que proporcionó era el mismo sistema de registro anterior predeterminado."
 
 msgid "The template has children templates."
 msgstr "La plantilla tiene plantillas hijas."
 
-msgid ""
-"There is already a repo with the label [ %{repo} ] for product [ %{product} "
-"]"
+msgid "There is already a repo with the label [ %{repo} ] for product [ %{product} ]"
 msgstr ""
 
-msgid ""
-"There is already a repo with the name [ %{repo} ] for product [ %{product} ]"
+msgid "There is already a repo with the name [ %{repo} ] for product [ %{product} ]"
 msgstr "Ya hay un repositorio con el nombre [ %{repo} ] para el producto [ %{product} ]"
 
-msgid ""
-"There is already an active sync process for the '%s' repository. Please try "
-"again later"
+msgid "There is already an active sync process for the '%s' repository. Please try again later"
 msgstr "Ya existe un proceso de sincronización activo para el repositorio '%'. Por favor intente de nuevo más tarde."
 
 msgid "There must be at least one plan selected"
@@ -2223,9 +2174,7 @@ msgstr "Por lo menos debe haber un plan seleccionado"
 msgid "There must be at least one product selected"
 msgstr "Por lo menos debe haber un producto seleccionado"
 
-msgid ""
-"There were errors syncing repository '%s'. See notices page for more "
-"details."
+msgid "There were errors syncing repository '%s'. See notices page for more details."
 msgstr "Hubo errores de sincronización del repositorio '%s'.  Vea, los avisos de la página para obtener más información."
 
 msgid "This action doesn't support pacakge groups"
@@ -2252,38 +2201,32 @@ msgstr "No se encontró el paquete %s"
 msgid "Unable to parse repositories: %s"
 msgstr "No se pueden analizar los repositorios %s"
 
-msgid ""
-"Unable to retrieve release versions from Repository URL %{url}. Error "
-"message: %{error}"
+msgid "Unable to retrieve release versions from Repository URL %{url}. Error message: %{error}"
 msgstr "No se pueden recuperar las versiones del lanzamiento desde la URL del repositorio %{url}. Mensaje de error: %{error}"
 
 msgid "Unable to retrieve subscription history for provider '%{name}'."
 msgstr "No se puede recuperar historia de suscripción para el proveedor '%{name}'."
 
-msgid ""
-"Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}'"
-" failed.  Reason: %{message}"
+msgid "Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
 msgstr "Falló la desinstalación de los grupos de paquetes '%{groups}' programada para el grupo del sistema '%{name}'.  Razón: %{message}"
 
-msgid ""
-"Uninstall of Package Groups '%{groups}' scheduled for System Group "
-"'%{name}'."
+msgid "Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}'."
 msgstr "Desinstalación de los grupos de paquetes '%{groups}' programada para el grupo del sistema '%{name}'."
 
 msgid "Uninstall of Package Groups '%{p}' scheduled for System '%{s}'."
 msgstr "Desinstalar grupos de paquetes '%{p}' programados para sistema '%{s}'."
 
-msgid ""
-"Uninstall of Packages '%{packages}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
+msgid "Uninstall of Packages '%{packages}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
 msgstr "Falló la desinstalación de los grupos de paquetes '%{packages}' programada para el grupo del sistema '%{name}'.  Razón: %{message}"
 
-msgid ""
-"Uninstall of Packages '%{packages}' scheduled for System Group '%{name}'."
+msgid "Uninstall of Packages '%{packages}' scheduled for System Group '%{name}'."
 msgstr "Desinstalación de los paquetes '%{packages}' programada para el grupo del sistema '%{name}'."
 
 msgid "Uninstall of Packages '%{p}' scheduled for System '%{s}'."
 msgstr "Desinstalar paquetes '%{p}' programados para sistema '%{s}'."
+
+msgid "Units"
+msgstr ""
 
 msgid "Unknown changeset type, must be PROMOTION or DELETION: %s"
 msgstr "Tipo de Changeset desconocido, debe ser PROMOCIÓN o BORRADO:  %s"
@@ -2294,18 +2237,13 @@ msgstr "Fecha de registro desconocida"
 msgid "Unknown repository label: %s"
 msgstr "Etiqueta de repositorio desconocida: %s"
 
-msgid ""
-"Update of Package Groups '%{groups}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
+msgid "Update of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
 msgstr "Falló la actualización de grupos de paquetes '%{groups}' para el grupo del sistema '%{name}'.  Razón: %{message}"
 
-msgid ""
-"Update of Package Groups '%{groups}' scheduled for System Group '%{name}'."
+msgid "Update of Package Groups '%{groups}' scheduled for System Group '%{name}'."
 msgstr "Actualización de los grupos de paquetes '%{groups}' programada para el grupo del sistema '%{name}'."
 
-msgid ""
-"Update of Packages '%{packages}' scheduled for System Group '%{group}' "
-"failed.  Reason: %{message}"
+msgid "Update of Packages '%{packages}' scheduled for System Group '%{group}' failed.  Reason: %{message}"
 msgstr "Falló la actualización de los paquetes '%{packages}'  programada para el grupo del sistema'%{group}'.  Razón: %{message}"
 
 msgid "Update of Packages '%{packages}' scheduled for System Group '%{name}'."
@@ -2319,6 +2257,10 @@ msgstr "Actualización de todos los paquetes programada para el sistema '%s'."
 
 msgid "Updating Package..."
 msgstr "Actualizando el paquete..."
+
+#, fuzzy
+msgid "Updating package group..."
+msgstr "Actualizando grupo de paquetes..."
 
 msgid "Usage limit (%{limit}) exhausted for activation key '%{name}'"
 msgstr "Límite de uso (%{limit}) acabado para la llave de activación '%{name}'"
@@ -2350,14 +2292,15 @@ msgstr "Usuario ha sido actualizado."
 msgid "Username"
 msgstr "Nombre de usuario"
 
-msgid "Username Unknown?"
-msgstr "¿Nombre de usuario desconocido?"
-
 msgid "Users"
 msgstr "Usuarios"
 
 msgid "Validation failed: Label has already been taken"
 msgstr ""
+
+#, fuzzy
+msgid "Version"
+msgstr "Permisos"
 
 msgid "Virtual"
 msgstr "Virtual"
@@ -2365,44 +2308,28 @@ msgstr "Virtual"
 msgid "Welcome Back"
 msgstr "Bienvenido de nuevo"
 
-msgid ""
-"Wrong/Invalid parameters sent for %{controller}/%{action}.\\n Wrong "
-"Parameters: \\n%{params}\\n Parameters Received:\\n %{all_params} "
+msgid "Wrong/Invalid parameters sent for %{controller}/%{action}.\\n Wrong Parameters: \\n%{params}\\n Parameters Received:\\n %{all_params} "
 msgstr ""
 
 msgid "You can synchronize repositories only in library environment'"
 msgstr "Puede sincronizar repositorios únicamente en el entorno de biblioteca"
 
-msgid ""
-"You cannot have more than %{max_systems} system(s) associated with system "
-"group '%{group}'."
+msgid "You cannot have more than %{max_systems} system(s) associated with system group '%{group}'."
 msgstr "No puede tener más de %{max_systems} sistema(s) asociados con el grupo del sistema '%{group}'."
 
-msgid ""
-"You do not have valid credentials to access this system. Please contact your"
-" administrator."
+msgid "You do not have valid credentials to access this system. Please contact your administrator."
 msgstr "No tiene credenciales válidas para acceder a este sistema. Por favor contacte a su administrador."
 
-msgid ""
-"You have entered an incorrect username/password combination, or your account"
-" may currently be disabled. Please try again or contact your administrator."
+msgid "You have entered an incorrect username/password combination, or your account may currently be disabled. Please try again or contact your administrator."
 msgstr "Ha ingresado una combinación de nombre de usuario y contraseña incorrectos o su cuenta puede estar inhabilitada actualmente. Por favor intente de nuevo o contacte a sus administrador."
 
-msgid ""
-"You have not set a default organization and environment on the user %s."
+msgid "You have not set a default organization and environment on the user %s."
 msgstr "No ha establecido una organización predeterminada y entorno en el usurio %s."
 
 msgid "You must be logged in to access that page."
 msgstr "Debe haber ingresado para tener acceso a esa página:"
 
-msgid ""
-"You must specify host in %{config_file} for %{app_name} to work properly"
-msgstr "Debe especificar un host en %{config_file} para que %{app_name} funcione apropiadamente"
-
-msgid ""
-"Your current organization is no longer valid. It is possible that either the"
-" organization has been deleted or your permissions revoked, please log back "
-"in to continue."
+msgid "Your current organization is no longer valid. It is possible that either the organization has been deleted or your permissions revoked, please log back in to continue."
 msgstr "Su organización actual ya no es válida. Es posible que la organización haya sido borrada o que sus permisos hayan sido revocados, por favor regístrese de nuevo para continuar."
 
 msgid "Your default environment has been removed. Please choose another one."
@@ -2417,8 +2344,8 @@ msgstr "Actualizar todos los paquetes"
 msgid "all packages update failed"
 msgstr "Falló la actualización de todos los paquetes "
 
-msgid "can not be updated"
-msgstr "No se puede actualizar"
+msgid "already exists (including organizations being deleted)"
+msgstr ""
 
 msgid "can't be blank"
 msgstr "No se puede dejar en blanco"
@@ -2477,14 +2404,10 @@ msgstr "Ya es una plantilla"
 msgid "is invalid"
 msgstr "Es inválida"
 
-msgid "is too long"
-msgstr "Es demasiado larga"
-
 msgid "katello-jobs service not running"
 msgstr "el servicio de katello-jobs no se está ejecutando"
 
-msgid ""
-"may not be less than the number of systems associated with the system group."
+msgid "may not be less than the number of systems associated with the system group."
 msgstr "No puede ser menor que el número de sistemas asociados al grupo de sistemas"
 
 msgid "may not be set to 0."
@@ -2514,7 +2437,8 @@ msgstr "Debe ser único dentro de una organización"
 msgid "must be unique."
 msgstr "Debe ser único."
 
-msgid "must contain 'Library'"
+#, fuzzy
+msgid "must contain '%s'"
 msgstr "Debe contener 'biblioteca'"
 
 msgid "must contain at least %s character"
@@ -2529,23 +2453,15 @@ msgstr "nombre: %s no existe "
 msgid "none"
 msgstr "Ninguno"
 
+#, fuzzy
+msgid "of environment must be unique within one organization"
+msgstr "Nombre debe ser único dentro de la organización"
+
 msgid "organization"
 msgstr "Organización"
 
 msgid "organization_id required but not specified."
 msgstr "ID de la organización se requiere pero no está especificado."
-
-msgid "package group update canceled"
-msgstr "actualización del grupo de paquetes cancelada"
-
-msgid "package group update complete"
-msgstr "Actualización de grupo de paquetes completa"
-
-msgid "package group update failed"
-msgstr "Actualización de grupo de paquetes falló"
-
-msgid "package group update timed out"
-msgstr "Actualización de grupo de paquetes expiró"
 
 msgid "plan"
 msgstr "plan"
@@ -2577,8 +2493,7 @@ msgstr "el Bugzilla %s "
 msgid "the CloudForms Documentation"
 msgstr "la documentación CloudForms"
 
-msgid ""
-"the following attributes can not be updated for the Red Hat provider: [ %s ]"
+msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "Los siguientes atributos no pueden ser actualizados para el proveedor de Red Hat: [ %s ]"
 
 msgid "updating package group..."
@@ -2595,3 +2510,93 @@ msgstr "Actualizando paquetes..."
 
 msgid "weekly"
 msgstr "Semanal"
+
+#~ msgid " '%s' already exists and either has been scheduled for deletion or failed deletion."
+#~ msgstr "Puede ser que %s' ya exista,  o haya sido programado para ser borrado oque el borrado haya fallado."
+
+#~ msgid "Cannot delete the changeset '%{changeset}' while another changeset (%{another_changeset}) is being deleted or promoted."
+#~ msgstr "No se puede borrar el changeset '%{changeset}' mientras que otro changeset (%{another_changeset}) se borra o se presenta."
+
+#~ msgid "Change Password"
+#~ msgstr "Cambiar contraseña"
+
+#~ msgid "Confirm Password"
+#~ msgstr "Confirmar contraseña"
+
+#~ msgid "Consumers"
+#~ msgstr "Usuarios"
+
+#~ msgid "Email Address"
+#~ msgstr "Dirección de correo-e"
+
+#~ msgid "Enter your username and email address below and instructions on resetting your password will be sent to you."
+#~ msgstr "Ingrese su nombre de usuario y  dirección de correo-e abajo y le serán enviadas las instruciones sobre cómo restablecer su  contraseña."
+
+#~ msgid "Forgot %s or %s?"
+#~ msgstr "¿Olvidó %s o %s?"
+
+#~ msgid "Forgot Username or Password?"
+#~ msgstr "¿Olvidó el nombre de usuario o contraseña?"
+
+#~ msgid "I remembered my login credentials."
+#~ msgstr "Recordé mis credenciales de inicio de sesión."
+
+#~ msgid "If you do not know your username, please enter your email address below and your username information will be sent to you."
+#~ msgstr "Si no  conoce su nombre de usuario, por favor ingrese su dirección de correo-e abajo y la información de su nombre de usuario le será enviada."
+
+#~ msgid "Invalid Url"
+#~ msgstr "URL inválida"
+
+#~ msgid "Javascript must be enabled for this application to work properly."
+#~ msgstr "Javascript debe estar activado para que esta aplicación funcione adecuadamente."
+
+#~ msgid "Library"
+#~ msgstr "Biblioteca"
+
+#~ msgid "Login"
+#~ msgstr "Inicio  de sesión"
+
+#~ msgid "Login Information"
+#~ msgstr "Información de inicio de sesión"
+
+#~ msgid "Logo"
+#~ msgstr "Logotipo"
+
+#~ msgid "Password"
+#~ msgstr "Contraseña"
+
+#~ msgid "Password Unknown"
+#~ msgstr "Contraseña desconocida"
+
+#~ msgid "Passwords do not match."
+#~ msgstr "Las contraseñas no coinciden."
+
+#~ msgid "Passwords match."
+#~ msgstr "Las contraseñas coinciden."
+
+#~ msgid "Reset Password"
+#~ msgstr "Restablecer contraseña"
+
+#~ msgid "Return to log in."
+#~ msgstr "Volver a ingresar."
+
+#~ msgid "Save"
+#~ msgstr "Guardar"
+
+#~ msgid "Send Login"
+#~ msgstr "Enviar nombre de usuario"
+
+#~ msgid "Show My Password"
+#~ msgstr "Mostrar mi contraseña"
+
+#~ msgid "Username Unknown?"
+#~ msgstr "¿Nombre de usuario desconocido?"
+
+#~ msgid "You must specify host in %{config_file} for %{app_name} to work properly"
+#~ msgstr "Debe especificar un host en %{config_file} para que %{app_name} funcione apropiadamente"
+
+#~ msgid "can not be updated"
+#~ msgstr "No se puede actualizar"
+
+#~ msgid "is too long"
+#~ msgstr "Es demasiado larga"
