@@ -16,8 +16,8 @@ class RepositoriesController < ApplicationController
 
   respond_to :html, :js
 
-  before_filter :find_provider, :only => [:new, :create, :default_label, :edit, :destroy, :update_gpg_key]
-  before_filter :find_product, :only => [:new, :create, :default_label, :edit, :destroy, :update_gpg_key]
+  before_filter :find_provider, :only => [:new, :create, :edit, :destroy, :update_gpg_key]
+  before_filter :find_product, :only => [:new, :create, :edit, :destroy, :update_gpg_key]
   before_filter :authorize
   before_filter :find_repository, :only => [:edit, :destroy, :enable_repo, :update_gpg_key]
 
@@ -29,7 +29,7 @@ class RepositoriesController < ApplicationController
     {
       :new => edit_test,
       :create => edit_test,
-      :default_label => edit_test,
+      :default_label => lambda{true},
       :edit => read_test,
       :update_gpg_key => edit_test,
       :destroy => edit_test,
@@ -65,8 +65,8 @@ class RepositoriesController < ApplicationController
     @product.add_repo(repo_params[:label],repo_params[:name], repo_params[:feed], 'yum', gpg)
     @product.save!
 
-    notify.success _("Repository '%s' created.") % repo_params[:name]
-    notify.message label_assigned unless label_assigned.blank?
+    notify.success _("Repository '%s' created.") % repo_params[:name] unless params[:ignore_success_notice]
+    notify.message label_assigned unless label_assigned.blank? unless params[:ignore_success_notice]
 
     render :nothing => true
   rescue Errors::ConflictException, URI::InvalidURIError => e

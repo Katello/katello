@@ -38,7 +38,7 @@
   %fieldset
     .grid_2.ra
       %label #{_("URL")}:
-    .grid_5.la{'name' => 'repo[feed]', 'data-url' => provider_path(@provider.id)} #{@repository.importers[0][:config][:feed_url]}
+    .grid_5.la{'name' => 'repo[feed]', 'data-url' => provider_path(@provider.id)} #{@repository.feed}
     
   %fieldset
     .grid_2.ra
