@@ -12,5 +12,14 @@
 
 ### Viewing
 
+There are several options
+
+- start Katello server and click on the link in the footer
+
+  - or go directly to {http://katello.path/prefix/yard/docs}
+
 - open statically generated documentation `open yardoc/index.html`
-- or run server which will regenerate any changes made to files `yard server --reload` and go to {http://localhost:8808}
+
+  - run `yard doc` to generate the files first
+
+- run server `yard server --reload` and go to {http://localhost:8808}
