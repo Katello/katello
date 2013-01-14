@@ -96,7 +96,8 @@ Warden::Strategies.add(:certificate) do
     ssl_client_cert = client_cert_from_request
     return fail('No ssl client certificate, skipping ssl-certificate authentication') if ssl_client_cert.blank?
     consumer_cert = OpenSSL::X509::Certificate.new(ssl_client_cert)
-    u = CpConsumerUser.new(:uuid => uuid(consumer_cert), :username => uuid(consumer_cert))
+    uuid = uuid(consumer_cert)
+    u = CpConsumerUser.new(:uuid =>uuid, :username =>uuid, :remote_id=> uuid)
     success!(u, "certificate")
   end
 
