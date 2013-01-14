@@ -482,7 +482,6 @@ describe Api::SystemsController do
     end
 
     it "should retrieve Consumer's errata from pulp" do
-      Resources::Pulp::Consumer.should_receive(:errata).once.with(uuid).and_return([])
       get :errata, :id => @system.uuid
     end
   end
