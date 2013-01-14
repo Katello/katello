@@ -10,13 +10,14 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class UsernameValidator < ActiveModel::EachValidator
-  def validate_each(record, attribute, value)
-    if value
-      if Katello.config.katello?
-        record.errors[attribute] << _("cannot contain characters other than ASCII values") unless value.ascii_only?
-      end
-      KatelloNameFormatValidator.validate_length(record, attribute, value, 64, 3)
+module Validators
+  class KatelloUrlFormatValidator < ActiveModel::EachValidator
+    include KatelloUrlHelper
+
+    def validate_each(record, attribute, value)
+      attribute_name = options[:field_name] || attribute
+      record.errors[attribute_name] << N_("is invalid") unless kurl_valid?(value)
     end
+
   end
 end

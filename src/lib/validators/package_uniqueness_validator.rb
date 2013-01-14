@@ -10,11 +10,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class KatelloDescriptionFormatValidator < ActiveModel::EachValidator
-  def validate_each(record, attribute, value)
-    if value
-      max_length = 255
-      record.errors[attribute] << N_("cannot contain more than %s characters") % max_length unless value.length <= max_length
+module Validators
+  class PackageUniquenessValidator < ActiveModel::Validator
+    def validate(record)
+      duplicate_ids = SystemTemplatePackage.where(:system_template_id => record.system_template_id, :package_name => record.package_name, :version => record.version, :release => record.release, :epoch => record.epoch, :arch => record.arch).all.map {|p| p.id}
+      duplicate_ids -= [record.id]
+      record.errors[:base] << _("Package '%s' is already present in the template") % record.nvrea if duplicate_ids.count > 0
     end
   end
 end
