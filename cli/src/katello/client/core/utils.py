@@ -18,7 +18,7 @@ import re
 import sys
 import time
 import threading
-from xml.utils import iso8601
+import dateutil.parser
 from katello.client.api.task_status import TaskStatusAPI, SystemTaskStatusAPI
 from katello.client.api.job import SystemGroupJobStatusAPI
 from katello.client.config import Config
@@ -223,8 +223,8 @@ def format_date(date, to_format="%Y/%m/%d %H:%M:%S"):
     """
     if not date:
         return ""
-    t = iso8601.parse(date)
-    return time.strftime(to_format, time.localtime(t))
+    t = dateutil.parser.parse(date)
+    return t.strftime(to_format)
 
 def format_sub_resource(item, name_key, id_key, format_string="%s (Id: %d)"):
     name = item[name_key]

@@ -12,7 +12,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 %global base_name katello
-%global katello_requires python-iniparse python-simplejson python-kerberos m2crypto PyXML
+%global katello_requires python-iniparse python-simplejson python-kerberos m2crypto python-dateutil
 %global locale_dir /usr/share/locale/
 %global homedir %{_datarootdir}/%{base_name}
 
@@ -54,12 +54,12 @@ Common classes for katello clients
 Summary:       Unit tests for Katello client
 Group:         Applications/System
 License:       GPLv2
-Requires:      PyXML
 Requires:      python-kerberos
 Requires:      m2crypto
 Requires:      python-nose
 Requires:      python-mock
 Requires:      %{name} = %{version}-%{release}
+Requires:      %{base_name}-common = %{version}-%{release}
 BuildArch:     noarch
 
 %description unit-tests
