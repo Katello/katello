@@ -29,7 +29,7 @@ describe Glue::Pulp::Errata, :katello => true do
   context "Find errata" do
     it "should call pulp find errata api" do
       
-      Runcible::Extensions::Errata.should_receive(:find).once.with('1')
+      Runcible::Extensions::Errata.should_receive(:find_by_unit_id).once.with('1')
       Errata.find('1')
     end
     
@@ -71,5 +71,5 @@ end
 
 
 def disable_errata_orchestration
-  Runcible::Extensions::Errata.stub(:find).and_return({})
+  Runcible::Extensions::Errata.stub(:find_by_unit_id).and_return({})
 end

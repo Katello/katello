@@ -76,8 +76,14 @@ class Repository < ActiveRecord::Base
     joins(:environment_product).where("environment_products.product_id" => product.id)
   end
 
+
   def in_default_view?
     content_view_version && content_view_version.has_default_content_view?
+  end
+
+  def self.in_environments_products(env_ids, product_ids)
+    joins(:environment_product).where(:environment_products => { :environment_id => env_ids, :product_id=>product_ids})
+
   end
 
   def other_repos_with_same_product_and_content

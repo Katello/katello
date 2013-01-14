@@ -1,5 +1,4 @@
 --- 
-recorded_with: VCR 2.3.0
 http_interactions: 
 - request: 
     method: get
@@ -7,15 +6,15 @@ http_interactions:
     body: 
       string: ""
     headers: 
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="92r37BCB9W7C6iYr2OYIlYoparQFIDTpoNtSFxwHOo", oauth_signature="Msl9YQh8EEN%2BNT%2FeEpHewEU7a2I%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116394", oauth_version="1.0"
+      Accept: 
+      - application/json
       Pulp-User: 
       - admin
-      Content-Type: 
-      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="xcMKaQbG9KH4UO0ld2ry0a7dkGkOOLxxmgvwD9TUKU", oauth_signature="IhS7hg9afJWR%2F8z0vs1pXmxaDpI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1358179723", oauth_version="1.0"
       Accept-Encoding: 
       - gzip, deflate
-      Accept: 
+      Content-Type: 
       - application/json
   response: 
     status: 
@@ -24,33 +23,33 @@ http_interactions:
     headers: 
       Server: 
       - Apache/2.2.22 (Fedora)
+      Date: 
+      - Mon, 14 Jan 2013 16:08:43 GMT
       Content-Length: 
       - "2"
       Content-Type: 
       - application/json
-      Date: 
-      - Fri, 21 Dec 2012 18:59:54 GMT
     body: 
       string: "[]"
     http_version: 
-  recorded_at: Fri, 21 Dec 2012 18:59:54 GMT
+  recorded_at: Mon, 14 Jan 2013 16:08:43 GMT
 - request: 
     method: post
     uri: https://kafka.usersys.redhat.com/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
     body: 
-      string: "{\"schedule\":\"2013-12-21T13:59:54-05:00/P1D\"}"
+      string: "{\"schedule\":\"2014-01-14T11:08:43-05:00/P1D\"}"
     headers: 
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="jjKTOvByhfaTlUrhyoRBuMabtOYSntYn6RyntYqU", oauth_signature="3QGeacGGlIr2gBELBkPrpGOko%2FM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1356116394", oauth_version="1.0"
+      Accept: 
+      - application/json
       Pulp-User: 
       - admin
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="pTxpPUKJPskUmffDjF4uyWBOlkCkkMRQ6msH1EG5Xw", oauth_signature="bkCpPuvs1EwML2WYukjV6zjCcrI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1358179723", oauth_version="1.0"
+      Accept-Encoding: 
+      - gzip, deflate
       Content-Length: 
       - "44"
       Content-Type: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Accept: 
       - application/json
   response: 
     status: 
@@ -59,15 +58,16 @@ http_interactions:
     headers: 
       Server: 
       - Apache/2.2.22 (Fedora)
-      Location: 
-      - /pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/50d4b1aa196cbe42f9000c3f/
+      Date: 
+      - Mon, 14 Jan 2013 16:08:43 GMT
       Content-Length: 
       - "393"
+      Location: 
+      - /pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/50f42d8b196cbe47d700194d/
       Content-Type: 
       - application/json
-      Date: 
-      - Fri, 21 Dec 2012 18:59:54 GMT
     body: 
-      string: "{\"next_run\": \"2013-12-21T18:59:54Z\", \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/50d4b1aa196cbe42f9000c3f/\", \"schedule\": \"2013-12-21T13:59:54-05:00/P1D\", \"override_config\": {}, \"remaining_runs\": null, \"first_run\": \"2013-12-21T18:59:54Z\", \"enabled\": true, \"last_run\": null, \"failure_threshold\": null, \"_id\": \"50d4b1aa196cbe42f9000c3f\", \"consecutive_failures\": 0}"
+      string: "{\"next_run\": \"2014-01-14T16:08:43Z\", \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/50f42d8b196cbe47d700194d/\", \"schedule\": \"2014-01-14T11:08:43-05:00/P1D\", \"override_config\": {}, \"remaining_runs\": null, \"first_run\": \"2014-01-14T16:08:43Z\", \"enabled\": true, \"last_run\": null, \"failure_threshold\": null, \"_id\": \"50f42d8b196cbe47d700194d\", \"consecutive_failures\": 0}"
     http_version: 
-  recorded_at: Fri, 21 Dec 2012 18:59:55 GMT
+  recorded_at: Mon, 14 Jan 2013 16:08:43 GMT
+recorded_with: VCR 2.4.0
