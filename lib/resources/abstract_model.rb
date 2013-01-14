@@ -10,8 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+# {Resources::AbstractModel} is light-weighted representation of remote resources. It behaves similarly as ActiveRecord or ActiveResource.
+# {Resources::ForemanModel} is a base class for all foreman remote resources. (There may be CandlepinModel and
+# PulpModel in future if we decide to go this way.)
 class Resources::AbstractModel
-
   class Error < StandardError
   end
 
@@ -48,10 +50,11 @@ class Resources::AbstractModel
 
   class_attribute :_attributes, :instance_reader => false, :instance_writer => false
 
+  # defines which attributes the model has
   # @param [Array<Symbol>] attrs of attribute names
   def self.attributes(*attrs)
     if attrs.empty?
-      _attributes or raise 'not yet defined'
+      _attributes or raise 'attributes not yet defined'
     else
       self._attributes ||= []
       self._attributes += attrs
@@ -68,6 +71,7 @@ class Resources::AbstractModel
   include ActiveModel::Naming
   include ActiveModel::Validations
 
+  # @api private
   def read_attribute_for_validation(key)
     __send__ key
   end
@@ -80,6 +84,7 @@ class Resources::AbstractModel
 
   include ActiveModel::Serializers::JSON
 
+  # @return [Hash] hash of attributes
   def attributes
     self.class.attributes.inject({ }) do |hash, attr_name|
       hash[attr_name.to_s] = __send__ attr_name
@@ -87,6 +92,7 @@ class Resources::AbstractModel
     end
   end
 
+  # @return [Hash, Array] JSON representation of the model in requests
   def as_json(options = nil)
     options ||= json_default_options
     super options
@@ -94,6 +100,7 @@ class Resources::AbstractModel
 
   protected
 
+  # @abstract options for #as_json, used when object is rendered to request
   def json_default_options
     raise NotImplementedError
   end
@@ -106,12 +113,15 @@ class Resources::AbstractModel
     json_default_options
   end
 
-  # @return Hash of errors (key is attribute name, value is error message)
-  def parse_errors(hash)
+  # @abstract parse errors from response
+  # @param [Hash, Array] response parsed
+  # @return [Hash] a hash of errors (key is attribute name, value is error message)
+  def parse_errors(response)
     raise NotImplementedError
   end
 
-  # @return array of parsed attributes
+  # @param [Hash] data parsed response data
+  # @return [Hash] parsed attributes
   def self.parse_attributes(data)
     raise NotImplementedError
   end
@@ -121,12 +131,15 @@ class Resources::AbstractModel
 
   attributes :id
 
+  # @param [Hash] attributes
   def initialize(attributes = { })
     self.attributes = attributes
     @persisted      = false
     @destroyed      = false
   end
 
+  # sets attributes of the model
+  # @param [Hash] attributes
   def attributes=(attributes)
     return if attributes.blank?
     attributes = attributes.stringify_keys
@@ -138,10 +151,12 @@ class Resources::AbstractModel
 
   singleton_class.instance_eval { attr_writer :resource }
 
+  # @return a resource, e.g. ForemanApi::Resources::Architecture
   def self.resource
     @resource
   end
 
+  # @return a resource, e.g. ForemanApi::Resources::Architecture
   def resource
     self.class.resource
   end
@@ -150,6 +165,7 @@ class Resources::AbstractModel
     !self.persisted?
   end
 
+  # @return [true, false] is object persisted?
   def persisted?
     @persisted && !self.destroyed?
   end
@@ -168,6 +184,8 @@ class Resources::AbstractModel
   end
   private :set_as_destroyed
 
+  # saves the object
+  # @return [true,false] true when saved, false when invalid
   def save
     return false unless valid?
 
@@ -203,20 +221,27 @@ class Resources::AbstractModel
   end
   private :update
 
+  # saves the object
+  # @raise [Invalid] when invalid
   def save!
     save or raise Invalid.new(self)
   end
 
+  # @param [String] name of the resource to set
+  # @return [String] for resource ForemanApi::Resources::Architecture returns "architecture"
   def self.resource_name(name=nil)
     @resource_name ||= self.name.demodulize.underscore.downcase
     @resource_name = name unless name.nil?
     @resource_name
   end
 
+  # @return [String] for resource ForemanApi::Resources::Architecture returns "architecture"
   def resource_name
     self.class.resource_name
   end
 
+  # destroys the model
+  # @return [true,false]
   def destroy
     run_callbacks :destroy do
       self.class.delete id
@@ -224,6 +249,8 @@ class Resources::AbstractModel
     end
   end
 
+  # destroys the model
+  # @raise [NotFound] when object is missing
   def destroy!
     run_callbacks :destroy do
       self.class.delete! id
@@ -231,6 +258,10 @@ class Resources::AbstractModel
     end
   end
 
+  # find a model by id
+  # @param [Integer, String] id
+  # @return [AbstractModel]
+  # @raise [NotFound] when missing
   def self.find!(id)
     data, _ = resource.show({ 'id' => id }, header)
     new(clean_attribute_hash(parse_attributes(data))).tap do |o|
@@ -240,12 +271,22 @@ class Resources::AbstractModel
     raise NotFound.new(self, id)
   end
 
+  # @see .find!
+  # @return [AbstractModel, nil]
   def self.find(id)
     find!(id)
   rescue NotFound
     nil
   end
 
+  # finds collection of models
+  # @return [Array<AbstractModel>]
+  # @example for Foreman::Architecture
+  #   Foreman::Architecture.all
+  #   # => [#<Foreman::Architecture:0x108114708 @persisted=true, @name="arch1", @id=4>,
+  #   #     #<Foreman::Architecture:0x108113588 @persisted=true, @name="arch2", @id=5>]
+  #   Foreman::Architecture.all :search => 'name = arch1'
+  #   # => [#<Foreman::Architecture:0x1080d6ea8 @persisted=true, @name="arch1", @id=4>]
   def self.all(params = nil)
     items, _ = resource.index(params, header)
     items.map do |item|
@@ -280,6 +321,9 @@ class Resources::AbstractModel
 
   private
 
+  # deletes a model with id
+  # @param [String,Integer] id
+  # @raise [NotFound] when missing
   def self.delete!(id)
     resource.destroy({ 'id' => id }, header)
     true
@@ -287,6 +331,8 @@ class Resources::AbstractModel
     raise NotFound.new(self, id)
   end
 
+  # @see .delete!
+  # @return [true,false]
   def self.delete(id)
     delete!(id)
   rescue NotFound
@@ -298,9 +344,10 @@ class Resources::AbstractModel
   def self.get_current_user
     @current_user_getter.try(:call) or
         User.current or
-        raise 'could not obtain current user'
+        raise 'current user is not set'
   end
 
+  # @return [Hash] additional headers for requests
   def self.header
     { }
   end
