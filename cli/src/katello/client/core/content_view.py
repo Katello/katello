@@ -168,8 +168,8 @@ class Promote(ContentViewAction):
                         (view["name"], environment["name"])
                     return_code = os.EX_OK
                 else:
-                    print _("View [ %s ] promotion failed: %s" % (view["name"],
-                        format_task_errors(task.errors)))
+                    print _("View [ %s ] promotion failed: %s") % \
+                        (view["name"], format_task_errors(task.errors))
                     return_code = os.EX_DATAERR
 
             else:

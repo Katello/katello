@@ -80,8 +80,9 @@ class Api::ContentViewDefinitionsController < Api::ApiController
   param :description, String, :desc=>"Description for the new content view", :required=>false
   param :id, :identifier, :desc => "Definition identifier", :required => true
   def publish
-    content_view = @definition.publish(params[:name], params[:description], params[:label])
-    render :json => content_view
+    view = @definition.publish(params[:name], params[:description], params[:label])
+    task = view.content_view_versions.first.task_status
+    render :json => task, :status => 202
   end
 
   api :DELETE, "/content_view_definitions/:id", "Delete a cv definition"
