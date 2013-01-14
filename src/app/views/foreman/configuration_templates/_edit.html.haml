@@ -27,15 +27,9 @@
           %input.button{ "type" => "button", :id => :clear_upload_template, :disabled => "disabled", "value" => _("Clear") }
       %fieldset
         .grid_2.ra
-          %label #{_("Applicable Operating Systems")}:
-        - ::Foreman::Operatingsystem.all.each do |os|
-          #operatingsystem_ids.grid_5.la
-            %input{ :name => 'configuration_template[operatingsystem_ids][]', :type => 'hidden'}
-            = check_box_tag('configuration_template[operatingsystem_ids][]', os.id, (@configuration_template.operatingsystems.nil? ? false : @configuration_template.operatingsystems.any? {|ctos| ctos['id'] == os.id}), 'data-url' => configuration_template_path(@configuration_template))
-            #{os.name}
-
-
-
+          %label #{_("Operating systems")}:
+        .grid_5.la
+          = os_select @configuration_template, "operatingsystem_ids", @configuration_template.operatingsystems.collect {|os| os['id']}, :data_url=>configuration_template_path(@configuration_template)
 
       = form.editable :audit_comment, :label => _("Audit Comment:")
 

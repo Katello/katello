@@ -17,14 +17,8 @@
       // "Selecting a file will override the editor and load the file instead"
       = form.file_field :template, :label => _("Template:")
       = form.text_area :audit_comment, :label => _("Audit Comment:"), :value=> ""
-      %fieldset
-        .grid_2.ra
-          %label #{_("Applicable Operating Systems")}:
-        - ::Foreman::Operatingsystem.all.each do |os|
-          .grid_5.la
-            %input{ :name => 'configuration_template[operatingsystem_ids][]', :type => 'hidden'}
-            = check_box_tag('configuration_template[operatingsystem_ids][]', os.id)
-            #{os.name}
+      = form.field :operatingsystem_ids, :label => _("Operating systems:") do
+        = os_select "configuration_template", "operatingsystem_ids"
 
       = form.submit _("Save Configuration Template"), :id => :save_configuration_template
 

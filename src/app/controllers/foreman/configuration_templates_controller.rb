@@ -71,7 +71,7 @@ class Foreman::ConfigurationTemplatesController < SimpleCRUDController
   def handle_operatingsystem_ids
     params[:configuration_template] = {:operatingsystems => []} unless params[:configuration_template]
     if (ids=params[:configuration_template].delete(:operatingsystem_ids))
-      params[:configuration_template][:operatingsystems] = ids.collect {|id| {:id => id}}
+      params[:configuration_template][:operatingsystems] = ids.collect {|id| {:id => id}} unless ids.nil?
     end
   end
 end

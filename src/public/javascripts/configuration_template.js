@@ -31,14 +31,12 @@ KT.configuration_templates_page = (function() {
     };
 
     addRemoveOperatingSystem = function() {
-        var checkboxes = $('#configuration_template_operatingsystem_ids_:checked');
-        var ids = [];
-        checkboxes.each( function(index, item) { ids.push($(item).attr("value")); });
-        var url = $(this).attr("data-url");
+        var ids = $('#operatingsystem_ids').val();
+        var url = $(this).attr("data_url");
         $.ajax({
             type: "PUT",
             url: url,
-            data: {'configuration_template[operatingsystem_ids]': ids},
+            data: {'configuration_template[operatingsystem_ids]': ids == null ? [] : ids},
             cache: false
         });
         return false;
@@ -123,7 +121,7 @@ KT.configuration_templates_page = (function() {
     register = function() {
         $('#configuration_template_snippet').live('change', checkboxChanged);
         $('#configuration_template_template_kind_id').live('change', changeType);
-        $('#configuration_template_operatingsystem_ids_').live('change', addRemoveOperatingSystem);
+        $('#operatingsystem_ids').live('change', addRemoveOperatingSystem);
         $('#add_association_config_template').live('submit', addAssociation);
         $('#delete_association_configuration_template').live('click', deleteAssociation);
         $('#update_upload_template').live('click', uploadTemplate);
@@ -141,6 +139,7 @@ KT.configuration_templates_page = (function() {
             $('#clear_upload_template').attr('disabled', 'disabled');
             $('#configuration_template_file').val('');
         });
+        $('#operatingsystem_ids').chosen();
     };
 
     return {
