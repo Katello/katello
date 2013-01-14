@@ -11,6 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Resources
+
+  # Resources::Foreman defines constants holding configured instances of ForemanApi::Resources::* classes.
   module Foreman
 
     def self.options
