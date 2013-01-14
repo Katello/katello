@@ -1,27 +1,22 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # Miroslav Suchy <msuchy@redhat.com>, 2012.
 msgid ""
 msgstr ""
-"Project-Id-Version: Katello\n"
+"Project-Id-Version: version 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-19 09:10-0500\n"
+"POT-Creation-Date: 2013-01-14 17:43-0500\n"
 "PO-Revision-Date: 2012-12-20 12:57+0000\n"
 "Last-Translator: Miroslav Suchý <msuchy@redhat.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: hi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-msgid ""
-" '%s' already exists and either has been scheduled for deletion or failed "
-"deletion."
-msgstr "'%s' पहले से मौजूद है और इनमें से एक को या तो विलोपन या विफल मिटाने के लिए नियत किया गया है."
 
 msgid " created successfully."
 msgstr "सफलतापूर्वक बनाया गया."
@@ -212,6 +207,10 @@ msgstr "%s संकुल अद्यतन समय समाप्त"
 msgid "%s package updated"
 msgstr "%s संकुल अद्यतन"
 
+#, fuzzy
+msgid "%s updated successfully."
+msgstr "उपयोक्ता को सफलतापूर्वक अपडेट किया गया."
+
 msgid "%{errata} (%{rest} other errata)"
 msgstr "%{errata} (%{rest} अन्य इरेटा)"
 
@@ -230,17 +229,33 @@ msgstr "%{package} (%{rest} अन्य संकुल)"
 msgid "%{repo} (Product: %{product})"
 msgstr "%{repo} (Product: %{product})"
 
+#, fuzzy
+msgid "'%s' created successfully."
+msgstr "सफलतापूर्वक बनाया गया."
+
 msgid "'%s' did not meet the current search criteria and is not being shown."
 msgstr "'%s' मौजूदा खोज मापदंड से मेल नहीं खाता है और नहीं दिख रहा है."
 
 msgid "'%s' no longer matches the current search criteria."
 msgstr "'%s' अब मौजूदा खोज मापदंड से मेल नहीं खाता है."
 
+#, fuzzy
+msgid "'%s' was deleted."
+msgstr "भूमिका '%s' मिटाया गया था."
+
 msgid "+ Import Manifest"
 msgstr "+ आयात मेनिफेस्ट"
 
+#, fuzzy
+msgid "+ New Architecture"
+msgstr "आर्किटेक्चर चुनें"
+
 msgid "+ New Changeset"
 msgstr "+ नई चेंजशीट"
+
+#, fuzzy
+msgid "+ New Domain"
+msgstr "+ नयी योजना"
 
 msgid "+ New Filter"
 msgstr "+ नया फिल्टर"
@@ -263,6 +278,10 @@ msgstr "+ नए प्रदाता"
 msgid "+ New Role"
 msgstr "+ नई भूमिका"
 
+#, fuzzy
+msgid "+ New Subnet"
+msgstr "+ नया तंत्र"
+
 msgid "+ New System"
 msgstr "+ नया तंत्र"
 
@@ -272,13 +291,14 @@ msgstr "+ नया टेम्प्लेट"
 msgid "+ New User"
 msgstr "+ नया उपयोक्ता"
 
+#, fuzzy
+msgid ": '%s' is a built-in environment"
+msgstr "उत्पाद '%s' इस वातावरण में नहीं मिला."
+
 msgid "A keyname must be provided"
 msgstr "कुँजीनाम जरूर दिया जाना चाहिए"
 
-msgid ""
-"A label was not provided during %s creation; therefore, a label of '%s' was "
-"automatically assigned. If you would like a different label, please delete "
-"the %s and recreate it with the desired label."
+msgid "A label was not provided during %s creation; therefore, a label of '%s' was automatically assigned. If you would like a different label, please delete the %s and recreate it with the desired label."
 msgstr "%s निर्माण के दौरान लेबल नहीं दिया गया था; इसलिए, '%s' का स्तर स्वतः असाइन किया गया था. यदि आप भिन्न स्तर पसंद करते हैं, कृपया %s मिटाएँ और इसे वांछित स्तर के साथ फिर निर्मित करें."
 
 msgid "About"
@@ -380,15 +400,22 @@ msgstr "%s स्वामी के लिए कैंडलपिन मे�
 msgid "All repository GPG keys for Product '%s' were updated."
 msgstr "सभी रिपोजिटरी GPG कुंजी उत्पाद '%s' के लिए अद्यतन किया गया था."
 
-msgid "Applied Subscriptions"
+#, fuzzy
+msgid "Application"
 msgstr "अनुप्रयुक्त सदस्यताएँ"
+
+#, fuzzy
+msgid "Architecture"
+msgstr "आर्किटेक्चर चुनें"
+
+#, fuzzy
+msgid "Architectures"
+msgstr "आर्किटेक्चर चुनें"
 
 msgid "At least one activation key must be provided"
 msgstr "कम-से कम एक सक्रियकरण कुंजी प्रदान किया जाना चाहिए"
 
-msgid ""
-"At least one environment is required to create or register systems in your "
-"current organization."
+msgid "At least one environment is required to create or register systems in your current organization."
 msgstr "आपके मौजूदा वातावरण में कम से कम एक वातावरण तंत्र को पंजीकृत करने और बनाने के लिए जरूरी है."
 
 msgid "At least one organization must exist."
@@ -397,20 +424,31 @@ msgstr "कम-से-कम एक संगठन मौजूद होना
 msgid "At least repository must be present to export a TDL"
 msgstr "कम से कम रिपोजिटरी को TDL को निर्यात करने के लिए उपस्थित रहना चाहिए"
 
-msgid "Auto-heal %{val}, %{sla}"
+#, fuzzy
+msgid "Attached Subscriptions"
+msgstr "अनुप्रयुक्त सदस्यताएँ"
+
+msgid "Authentication"
 msgstr ""
 
-msgid "Auto-heal Off, No Service Level Preference"
+msgid "Auto-attach %{val}, %{sla}"
 msgstr ""
 
-msgid "Auto-heal Off, Service Level %s"
-msgstr ""
+#, fuzzy
+msgid "Auto-attach Off, No Service Level Preference"
+msgstr "कोई सेवा स्तरीय प्रदर्शन नहीं"
 
-msgid "Auto-heal On, No Service Level Preference"
-msgstr ""
+#, fuzzy
+msgid "Auto-attach Off, Service Level %s"
+msgstr "सेवा स्तर %s"
 
-msgid "Auto-heal On, Service Level %s"
-msgstr ""
+#, fuzzy
+msgid "Auto-attach On, No Service Level Preference"
+msgstr "कोई सेवा स्तरीय प्रदर्शन नहीं"
+
+#, fuzzy
+msgid "Auto-attach On, Service Level %s"
+msgstr "सेवा स्तर %s"
 
 msgid "Available Subscriptions"
 msgstr "उपलब्ध सदस्यता"
@@ -430,7 +468,8 @@ msgstr "CDN लोडिंग त्रुटि: %s में पहुँच 
 msgid "Can't copy System Groups to a different org: '%{org1}' != '%{org2}'"
 msgstr "भिन्न संगठन में तंत्र समूह की नक़ल नहीं ले सकता है: '%{org1}' != '%{org2}'"
 
-msgid "Can't update Library environment"
+#, fuzzy
+msgid "Can't update the '%s' environment"
 msgstr "लाइब्रेरी वातावरण अद्यतन नहीं कर सकते"
 
 msgid "Canceled synchronization of %{name}: %{id}"
@@ -448,47 +487,38 @@ msgstr "तालाबंद भूमिका में अनुमति �
 msgid "Cannot change the name or description of a locked role."
 msgstr "तालाबंद फ़ाइल का विवरण या नाम बदल नहीं सकता है."
 
-msgid "Cannot create activation keys in Library environment "
+#, fuzzy
+msgid "Cannot create activation keys in the '%s' environment"
 msgstr "लाइब्रेरी वातावरण के साथ सक्रियकरण कुंजी बना नहीं कर सकता"
 
 msgid "Cannot delete currently logged user"
 msgstr "अभी लॉग किए हुए उपयोक्ता को मिटाया नहीं जा सकता है"
 
-msgid ""
-"Cannot delete the changeset '%s' because it is not in the review phase."
+msgid "Cannot delete the changeset '%s' because it is not in the review phase."
 msgstr "चेंजसेट '%s' नहीं मिटा सका क्योंकि यह समीक्षा के चरण में नहीं है."
 
-msgid ""
-"Cannot delete the changeset '%{changeset}' while another changeset "
-"(%{another_changeset}) is being deleted or promoted."
-msgstr "चेंजसेट '%{changeset}' को दूसरे चेंजसेट (%{another_changeset}) के मिटाये या प्रोन्नत किए जाते हुए मिटा नहीं सकता है."
-
-msgid ""
-"Cannot dissociate user '%{username}' from '%{role}' role. Need at least one "
-"user in the '%{role}' role."
+msgid "Cannot dissociate user '%{username}' from '%{role}' role. Need at least one user in the '%{role}' role."
 msgstr "उपयोक्ता '%{username}' को '%{role}' भूमिका से अलग नहीं कर सकता है. '%{role}' भूमिका में कम से कम एक उपयोक्ता चाहिए."
 
-msgid ""
-"Cannot dissociate user '%{user}' from '%{role}' role. Need at least one user"
-" in the '%{role}' role."
+msgid "Cannot dissociate user '%{user}' from '%{role}' role. Need at least one user in the '%{role}' role."
 msgstr "उपयोक्ता '%{user}' को '%{role}' भूमिका से अलग नहीं किया जा सकात है. '%{role}' भूमिका में कम से कम एक उपयोक्ता की जरूरत है."
 
-msgid "Cannot export templates for the Library environment."
+#, fuzzy
+msgid "Cannot export templates for the '%s' environment."
 msgstr "टेम्पलेट्स को लाइब्रेरी वातावरण के लिए निर्यात नहीं किया जा सकता है"
 
 msgid "Cannot modify a template that is another environment"
 msgstr "दूसरे वातावरण के नमूने को बदल नहीं सकते हैं"
 
-msgid ""
-"Cannot promote the changeset '%s' because it is not in the review phase."
+msgid "Cannot promote the changeset '%s' because it is not in the review phase."
 msgstr "चेंजसेट '%s' को प्रोन्नत नहीं कर सकता है क्योंकि यह समीक्षा के चरण में नहीं है."
 
-msgid ""
-"Cannot promote the changeset '%{changeset}' while another changeset "
-"(%{another_changeset}) is being promoted."
+#, fuzzy
+msgid "Cannot promote the changeset '%{changeset}' while another colliding changeset (%{another_changeset}) is being promoted."
 msgstr "चेंजसेट '%{changeset}' को प्रोन्नत नहीं किया जा सकता है जब दूसरा चेंजसेट (%{another_changeset}) प्रोन्नत किया जा रहा हो."
 
-msgid "Cannot register a system with 'Library' environment "
+#, fuzzy
+msgid "Cannot register a system to the '%s' environment"
 msgstr "'लाइब्रेरी' वातावरण के साथ एक सिस्टम पंजीकृत नहीं कर सकता"
 
 msgid "Cannot specify a tag if all_tags is selected."
@@ -500,11 +530,9 @@ msgstr "निर्दिष्ट अगर all_verbs चयनित है �
 msgid "Cannot specify all_types without all_tags and all_verbs"
 msgstr "बिना all_tags और all_verbs के all_types नहीं निर्दिष्ट नहीं कर सकते हैं"
 
-msgid "Cannot validate templates for the Library environment."
+#, fuzzy
+msgid "Cannot validate templates for the '%s' environment."
 msgstr "टेम्पलेट्स को लाइब्रेरी वातावरण के लिए वैध नहीं किया जा सकता है"
-
-msgid "Change Password"
-msgstr "कूटशब्द बदलें"
 
 msgid "Changeset Management"
 msgstr "चेंजशीट प्रबंधन"
@@ -515,17 +543,20 @@ msgstr "चेंजशेट"
 msgid "Changesets History"
 msgstr "चेंजशेट इतिहास"
 
+msgid "Choose %s..."
+msgstr ""
+
+msgid "Choose domains..."
+msgstr ""
+
+msgid "Choose operating systems..."
+msgstr ""
+
 msgid "Cleared"
 msgstr "साफ किया"
 
 msgid "Click on 'Add Environment' to create the first environment"
 msgstr "पहले वातावरण बनाने के लिए 'वातावरण जोड़ें) पर क्लिक करें"
-
-msgid "Confirm Password"
-msgstr "कूटशब्द की पुष्टि करें"
-
-msgid "Consumers"
-msgstr "ग्राहक"
 
 msgid "Content"
 msgstr "सामग्री"
@@ -536,14 +567,10 @@ msgstr "अंतर्वस्तु खोज"
 msgid "Could not delete organization '%s'."
 msgstr "'%s' संगठन मिटा नहीं सका."
 
-msgid ""
-"Could not modify environments.  One or more associated activation keys (%s) "
-"would become invalid."
+msgid "Could not modify environments.  One or more associated activation keys (%s) would become invalid."
 msgstr "वातावरण नहीं बदल सका.  एक या अधिक सक्रियकरण कुँजी (%s) अवैध हो जाएगा."
 
-msgid ""
-"Could not modify environments. System group membership does not match new "
-"environment association."
+msgid "Could not modify environments. System group membership does not match new environment association."
 msgstr "वातावरण नहीं बदल सका. तंत्र समूह सदस्यता किसी वातावरण संगछन से मेल नहीं खाता है."
 
 msgid "Couldn't find GPG key '%s'"
@@ -563,6 +590,10 @@ msgstr "वातावऱण '%s' नहीं मिल सका"
 
 msgid "Couldn't find filter '%s'"
 msgstr "फिल्टर '%s' नहीं ढूँढ़ सका"
+
+#, fuzzy
+msgid "Couldn't find one of the filters in '%s'"
+msgstr "'%s' में एक फिल्टर नहीं हो सका"
 
 msgid "Couldn't find organization '%s'"
 msgstr "संगठन '%s' नहीं ढूँढ़ सका"
@@ -606,14 +637,15 @@ msgstr "उपयोक्ता '%s' नहीं ढूँढ़ सका"
 msgid "Couldn't find user role '%s'"
 msgstr "'%s' उपयोक्ता भूमिका ढूँढ़ नहीं सकता है"
 
-msgid "Couldn't one of the filters in '%s'"
-msgstr "'%s' में एक फिल्टर नहीं हो सका"
-
 msgid "Creating an environment in candlepin: %s"
 msgstr "कैंडलपिन में एक वातावऱण बना रहा है: %s"
 
 msgid "Creating an owner in candlepin: %s"
 msgstr "कैंडलपिन में एक स्वामी बना रहा है: %s"
+
+#, fuzzy
+msgid "Current organization is being deleted, switch to a different one."
+msgstr "वर्तमान संगठन को हटाया नहीं जा सकता. हटाने से पहले एक अलग संगठन के लिए स्विच करें."
 
 msgid "Custom Content Repositories"
 msgstr "पसंदीदा अंतर्वस्तु रिपोजिटरी"
@@ -726,6 +758,10 @@ msgstr "निर्भरता"
 msgid "Details"
 msgstr "विवरण"
 
+#, fuzzy
+msgid "Directory"
+msgstr "रिपोजिटरी"
+
 msgid "Disable/enable is not supported for custom repositories."
 msgstr "पसंदीदा रिपोजिटरी के लिए सक्रिय/निष्क्रिय करें समर्थित नहीं है."
 
@@ -753,6 +789,12 @@ msgstr "वितरण '%{id}' '%{name}' वातावरण में नह
 msgid "Distributions"
 msgstr "वितरण"
 
+msgid "Domain"
+msgstr ""
+
+msgid "Domains"
+msgstr ""
+
 msgid "Either organization ID or environment ID needs to be specified"
 msgstr "संगठन आईडी या वातावरण आईडी में से किसी को निर्दिष्ट किया जाना चाहिए"
 
@@ -762,53 +804,35 @@ msgstr "संकुल या समूह जरूर देना होग�
 msgid "Either packages or groups must be provided"
 msgstr "संकुल या समूह जरूर देना होगा"
 
-msgid "Email Address"
-msgstr "ईमेल पता"
-
 msgid "Email sent to '%s' with password reset instructions."
 msgstr "कूटशब्द रिसेट निर्देश के साथ '%s' में ईमेल भेजा गया."
 
 msgid "Email sent to '%s' with valid login user names."
 msgstr "वैध लॉगिन उपयोक्ता नाम के साथ '%s' में ईमेल भेजा गया."
 
-msgid ""
-"Empty request received to install Packages or Package Groups for System "
-"'%s'."
+msgid "Empty request received to install Packages or Package Groups for System '%s'."
 msgstr "संकुल या संकुल समूह तंत्र '%s' के लिए संस्थापित करने के लिए रिक्त निवेदन पाया गया."
 
-msgid ""
-"Empty request received to install Packages or Package Groups for System "
-"Group '%s'."
+msgid "Empty request received to install Packages or Package Groups for System Group '%s'."
 msgstr "संकुल समूह या तंत्र समूह '%s' के लिए संस्थापित करने के लिए रिक्त निवेदन पाया गया."
 
-msgid ""
-"Empty request received to uninstall Packages or Package Groups for System "
-"'%s'."
+msgid "Empty request received to uninstall Packages or Package Groups for System '%s'."
 msgstr "संकुल या संकुल समूह तंत्र '%s' के लिए विसंस्थापित करने के लिए रिक्त निवेदन पाया गया."
 
-msgid ""
-"Empty request received to uninstall Packages or Package Groups for System "
-"Group '%s'."
+msgid "Empty request received to uninstall Packages or Package Groups for System Group '%s'."
 msgstr "संकुल समूह या तंत्र समूह '%s' के लिए विसंस्थापित करने के लिए रिक्त निवेदन पाया गया."
 
-msgid ""
-"Empty request received to update Packages or Package Groups for System Group"
-" '%s'."
+msgid "Empty request received to update Packages or Package Groups for System Group '%s'."
 msgstr "तंत्र समूह '%s' के लिए संकुल या संकुल समूह अद्यतन करने के लिए रिक्त निवेदन पाया गया."
 
-msgid ""
-"Enter your username and email address below and instructions on resetting "
-"your password will be sent to you."
-msgstr "अपना उपयोक्तानाम और ईमेल पता नीचे दाखिल करें और आपका अपने कूटशब्द को फिर सेट करने का निर्देश भेजा जाएगा."
+#, fuzzy
+msgid "Environment"
+msgstr "वातावरण"
 
-msgid ""
-"Environment %s has a successor.  Only the last environment on a path can be "
-"deleted"
+msgid "Environment %s has a successor.  Only the last environment on a path can be deleted"
 msgstr "वातावरण %s के पास सक्सेसर है.  पथ पर अंतिम वातावरण मिटाया जा सकता है"
 
-msgid ""
-"Environment %s has a successor. Only the last environment on a path can be "
-"deleted."
+msgid "Environment %s has a successor. Only the last environment on a path can be deleted."
 msgstr "वातावरण %s का उत्तरवर्ती है. केवल किसी पथ पर अंतिम वातावरण मिटाया जा सकता है."
 
 msgid "Environment '%s' was created."
@@ -898,8 +922,7 @@ msgstr "कैंडलपिन वातावरण %s बनाने मे
 msgid "Failed to create candlepin owner %s"
 msgstr "कैंडलपिन स्वामी %s बनाने में विफल"
 
-msgid ""
-"Failed to delete all environments for owner %{org} in candlepin: %{message}"
+msgid "Failed to delete all environments for owner %{org} in candlepin: %{message}"
 msgstr "स्वामी %{org} के लिए सभी वातावरण को मिटाने में कैंडलपिन में विफल रहा: %{message}"
 
 msgid "Failed to delete all providers for owner %s in candlepin"
@@ -938,19 +961,12 @@ msgstr "फिल्टर किया संकुल"
 msgid "Filters"
 msgstr "फिल्टर"
 
-msgid ""
-"Filters assigned to repository or product of erratum '%s' block it from "
-"promotion!"
+msgid "Filters assigned to repository or product of erratum '%s' block it from promotion!"
 msgstr "'%s' ने इसे प्रोन्नयन के लिए रोका!"
 
-msgid "Filters can be stored only in Library repositories."
+#, fuzzy
+msgid "Filters can be stored only in the '%s' repositories."
 msgstr "केवल लाइब्रेरी रिपोजिटरी में फिल्टर छाँटा जा सकता है."
-
-msgid "Forgot %s or %s?"
-msgstr "%s या %s भूल गए?"
-
-msgid "Forgot Username or Password?"
-msgstr "क्या उपयोक्तानाम और कूटशब्द भूल गए?"
 
 msgid "GPG Key"
 msgstr "जीपीजी कुंजी"
@@ -997,16 +1013,8 @@ msgstr "हाइपरविजर के पास संकुल नही�
 msgid "Hypervisors do not have software products"
 msgstr "हाइपरविजर के पास सॉफ्टवेयर उत्पाद नहीं है"
 
-msgid "I remembered my login credentials."
-msgstr "मुझे अपना लॉगिन सूचना याद है."
-
 msgid "ID: %s doesn't exist "
 msgstr "ID: %s मौजूद नहीं है"
-
-msgid ""
-"If you do not know your username, please enter your email address below and "
-"your username information will be sent to you."
-msgstr "यदि आप अपना उपयोक्तानाम नहीं जानते हैं, तो कृपया अपना ईमेल पता नीचे दाखिल करें और आपका उपयोक्तानाम सूचना आपको भेजा जाएगा."
 
 msgid "Import"
 msgstr "आयात करें"
@@ -1017,33 +1025,25 @@ msgstr "इतिहास आयात करें"
 msgid "Initial Registration Params"
 msgstr "आरंभिक पंजीयन परम"
 
-msgid ""
-"Install of Errata '%{errata}' scheduled for System Group '%{group}' failed."
-"  Reason: %{message}"
+msgid "Install of Errata '%{errata}' scheduled for System Group '%{group}' failed.  Reason: %{message}"
 msgstr "इरेटा '%{errata}' को तंत्र समूह '%{group}' के लिए संस्थापन को नियोजित किया गया जो विफल रहा. कारण: %{message}"
 
 msgid "Install of Errata '%{errata}' scheduled for System Group '%{group}'."
 msgstr "इरेटा '%{errata}' के लिए संस्थापन '%{group}' के लिए तंत्र समूह का संस्थापन."
 
-msgid ""
-"Install of Package Groups '%{groups}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
+msgid "Install of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
 msgstr "संकुल समूह '%{groups}' का संस्थापन जो तंत्र समूह '%{name}' के लिए नियोजित था विफल रहा.  कारण: %{message}"
 
-msgid ""
-"Install of Package Groups '%{groups}' scheduled for System Group '%{name}'."
+msgid "Install of Package Groups '%{groups}' scheduled for System Group '%{name}'."
 msgstr "संकुल समूह '%{groups}' का संस्थापन तंत्र समूह '%{name}' के लिए नियत."
 
 msgid "Install of Package Groups '%{g}' scheduled for System '%{s}'."
 msgstr "संकुल समूह '%{g}' का संस्थापन तंत्र '%{s}' के लिए नियत है."
 
-msgid ""
-"Install of Packages '%{packages}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
+msgid "Install of Packages '%{packages}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
 msgstr "संकुल '%{packages}' का संस्थापन तंत्र समूह '%{name}' के लिए नियतन विफल.  कारण: %{message}"
 
-msgid ""
-"Install of Packages '%{packages}' scheduled for System Group '%{name}'."
+msgid "Install of Packages '%{packages}' scheduled for System Group '%{name}'."
 msgstr "संकुल '%{packages}' का संस्थापन तंत्र समूह '%{name}' के लिए नियत."
 
 msgid "Install of Packages '%{p}' scheduled for System '%{s}'."
@@ -1061,31 +1061,22 @@ msgstr "संकुल संस्थापित कर रहा है..."
 msgid "Interval"
 msgstr "अंतराल"
 
-msgid "Invalid Url"
-msgstr "अवैध यूआरएल"
-
 msgid "Invalid date or time format"
 msgstr "अवैध तिथि या समय प्रारूप"
 
 msgid "Invalid organization"
 msgstr "अमान्य संगठन"
 
-msgid ""
-"Invalid parameters sent in the request for this operation. Please contact a "
-"system administrator."
+msgid "Invalid parameters sent in the request for this operation. Please contact a system administrator."
 msgstr "इस ऑपरेशन के लिए आग्रह में अवैध पैरामीटर प्रेषित. किसी तंत्र प्रशासक को संपर्क करें."
 
-msgid ""
-"Invalid resource type '%{resource_type}'. Resource Types can be one of "
-"'%{possible_types}'"
+msgid "Invalid resource type '%{resource_type}'. Resource Types can be one of '%{possible_types}'"
 msgstr "अवैध संसाधन प्रकार '%{resource_type}'. संसाधन प्रकार '%{possible_types}' में से एक हो सकता है"
 
 msgid "Invalid state"
 msgstr "अमान्य स्थिति"
 
-msgid ""
-"Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be "
-"one of %{possible_verbs}"
+msgid "Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be one of %{possible_verbs}"
 msgstr "अवैध क्रिया '%{verb}'. संसाधन प्रकार '%{resource_type}' के लिए क्रिया %{possible_verbs} में से कोई एक हो सकता है"
 
 msgid "It is not allowed to create products in Red Hat provider."
@@ -1105,9 +1096,6 @@ msgstr "Red Hat उत्पाद को अद्यतन की अनुम
 
 msgid "It is not allowed to update a Red Hat repository."
 msgstr "Red Hat रिपो को को अद्यतन की अनुमति प्राप्त नहीं है."
-
-msgid "Javascript must be enabled for this application to work properly."
-msgstr "जावास्क्रिप्ट इस अनुप्रयोग के ठीक से काम करने के लिए जरूर सक्रिय होना चाहिए."
 
 msgid "Katello Logins"
 msgstr "Katello लॉगिन"
@@ -1130,20 +1118,8 @@ msgstr "LDAP समूह"
 msgid "LDAP group '%{group}' associated to role '%{role}' was not found."
 msgstr "'%{role}' से संबद्ध LDAP समूह '%{group}'  नहीं मिला."
 
-msgid "Library"
-msgstr "लाइब्रेरी"
-
-msgid "Library environment cannot contain a changeset!"
-msgstr "लाइब्रेरी वातावरण में चेंजसेट नहीं हो सकता है!"
-
 msgid "List"
 msgstr "सूची"
-
-msgid "Login"
-msgstr "लॉगिन"
-
-msgid "Login Information"
-msgstr "लॉगिन सूचना"
 
 msgid "Login Successful"
 msgstr "लॉगिन सफल"
@@ -1154,13 +1130,8 @@ msgstr "लॉगिन सफल, '%s' में लॉगिंग कर र�
 msgid "Login Successful, please choose an Organization"
 msgstr "लॉगिन सफल, कृपया कोई संगठन चुनें"
 
-msgid ""
-"Login Successful, please contact administrator to get permission to access "
-"an organization."
+msgid "Login Successful, please contact administrator to get permission to access an organization."
 msgstr "लॉगिन सफल, कृपया किसी संगठन में अनुमति पाने के लिए किसी प्रशासक से संपर्क करें."
-
-msgid "Logo"
-msgstr "लोगो"
 
 msgid "Logout Successful"
 msgstr "लॉगआउट सफल"
@@ -1216,16 +1187,22 @@ msgstr "नाम रिक्त नहीं हो सकता."
 msgid "Name must be unique within one organization"
 msgstr "नाम एक संगठन के भीतर अद्वितीय होना चाहिए"
 
+#, fuzzy
+msgid "Names and labels must be unique across all organizations"
+msgstr "नाम एक संगठन के भीतर अद्वितीय होना चाहिए"
+
 msgid "Never checked in"
 msgstr "कभी चेकइन नहीं"
 
 msgid "Never checked in."
 msgstr "कभी जाँचा नहीं गया."
 
-msgid "New templates can be created only in a Library environment"
+#, fuzzy
+msgid "New templates can be created only in the '%s' environment"
 msgstr "नई टेम्पलेट्स एक लाइब्रेरी वातावरण में ही बनाया जा सकता है है"
 
-msgid "New templates can be imported only into a Library environment"
+#, fuzzy
+msgid "New templates can be imported only into the '%s' environment"
 msgstr "नई टेम्पलेट्स को केवल एक लाइब्रेरी वातावरण में आयात किया जा सकता है"
 
 msgid "No Overlap with Current"
@@ -1237,10 +1214,11 @@ msgstr "कोई सेवा स्तरीय प्रदर्शन न�
 msgid "No Template"
 msgstr "कोई टेम्पलेट नहीं"
 
-msgid ""
-"No environments are currently available in this organization.  Please either"
-" add some to the organization or select an organization that has an "
-"environment to set user default."
+#, fuzzy
+msgid "No domains found."
+msgstr "नहीं मिला"
+
+msgid "No environments are currently available in this organization.  Please either add some to the organization or select an organization that has an environment to set user default."
 msgstr "इस संगठन में कोई वातावरण अभी उपलब्ध नहीं है.  कृपया या तो कई संगठन जोड़ें या कोई संगठन चुनें जिसके पास कोई वातावरण हो ताकि उपयोक्ता तयशुदा सेट किया जा सके."
 
 msgid "No errors"
@@ -1252,6 +1230,9 @@ msgstr "आपके खोज मापदंड से कोई कार्�
 msgid "No new packages installed"
 msgstr "कोई नया संकुल संस्थापित नहीं किया गया"
 
+msgid "No operating systems found."
+msgstr ""
+
 msgid "No package profile received for %s"
 msgstr "%s के लिए कोई संकुल प्रोफ़ाइल नहीं मिला"
 
@@ -1260,6 +1241,9 @@ msgstr "कोई संकुल नहीं हटाया गया"
 
 msgid "No packages updated"
 msgstr "कोई संकुल अद्यतन नहीं किया गया"
+
+msgid "No smart proxy with %s feature found."
+msgstr ""
 
 msgid "No synchronization of the %s is currently running"
 msgstr "%s को कोई तुल्यकालन अभी नहीं चल रहा है"
@@ -1270,15 +1254,14 @@ msgstr "इस उपयोक्ता के लिए कोई तंत्�
 msgid "None"
 msgstr "कोई नहीं"
 
-msgid ""
-"Not enough entitlements in pools (%{size}), required: %{required}, "
-"available: %{available}"
+msgid "Not enough subscriptions in pools (%{size}), required: %{required}, available: %{available}"
 msgstr ""
 
 msgid "Not found"
 msgstr "नहीं मिला"
 
-msgid "Number of consumed entitlements exceeded quantity for %s"
+#, fuzzy
+msgid "Number of attached subscriptions exceeded quantity for %s"
 msgstr "खपत हुए एंटाइटेलमेंट की संख्या %s के लिए ज्यादा हो गई"
 
 msgid "Number of sockets must be higher than 0 for system %s"
@@ -1314,14 +1297,11 @@ msgstr "ओपन सोर्स सिस्टम प्रबंधन"
 msgid "Organization"
 msgstr "संगठन"
 
-msgid ""
-"Organization %s has 'Library' environment only. Please create an environment"
-" for system registration."
-msgstr ""
+msgid "Organization %s has more than one environment. Please specify target environment for system registration."
+msgstr "संगठन %s के पास एक से अधिक वातावरण है. कृपया तंत्र पंजीयन के लिए लक्ष्य वातावारण निर्दिष्ट करें."
 
-msgid ""
-"Organization %s has more than one environment. Please specify target "
-"environment for system registration."
+#, fuzzy
+msgid "Organization %{org} has the '%{env}' environment only. Please create an environment for system registration."
 msgstr "संगठन %s के पास एक से अधिक वातावरण है. कृपया तंत्र पंजीयन के लिए लक्ष्य वातावारण निर्दिष्ट करें."
 
 msgid "Organization '%s' has been scheduled for background deletion."
@@ -1477,6 +1457,22 @@ msgstr "इस नमूना में संकुल समूह श्र�
 msgid "Package group category '%{group}' not found in the %{env} environment"
 msgstr "संकुल समूह श्रेणी '%{group}' वातावरण %{env} में नहीं मिला"
 
+#, fuzzy
+msgid "Package group update canceled"
+msgstr "संकुल समूह अद्यतन रद्द"
+
+#, fuzzy
+msgid "Package group update complete"
+msgstr "संकुल समूह अद्यतन संपन्न"
+
+#, fuzzy
+msgid "Package group update failed"
+msgstr "संकुल समूह अद्यतन विफल"
+
+#, fuzzy
+msgid "Package group update timed out"
+msgstr "संकुल समूह अद्यतन समय समाप्त"
+
 msgid "Package with id '%s' not found"
 msgstr "id '%s' के साथ संकुल नहीं मिला"
 
@@ -1492,23 +1488,11 @@ msgstr "इस नमूना में पैरामीटर '%s' नही
 msgid "Parameter '%{name}': '%{value}' was set"
 msgstr "पैरामीटर '%{name}': '%{value}' सेट था"
 
-msgid "Password"
-msgstr "कूटशब्द"
-
-msgid "Password Unknown"
-msgstr "कूटशब्द अज्ञात"
-
 msgid "Password has been reset for user '%s'."
 msgstr "कूटशब्द को उपयोक्ता  '%s' के लिए रिसेट किया गया है."
 
 msgid "Password reset token has expired for user '%s'."
 msgstr "कूटशब्द रिसेट टोकन उपयोक्ता  '%s' के लिए समाप्त हो गया है."
-
-msgid "Passwords do not match."
-msgstr "कूटशब्द एक समान नहीं हैं."
-
-msgid "Passwords match."
-msgstr "कूटशब्द एक समान हैं."
 
 msgid "Pending"
 msgstr "स्थगित"
@@ -1522,9 +1506,7 @@ msgstr "अनुमति '%s' हटाया गया था."
 msgid "Permission '%s' was updated."
 msgstr "अनुमति '%s' अद्यतन किया गया था."
 
-msgid ""
-"Permission Denied. User '%{user}' does not have permissions to access "
-"organization '%{org}'."
+msgid "Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'."
 msgstr "अनुमति की मनाही. उपयोक्ता '%{user}' के पास संगठन '%{org}' की पहुँच की अनुमति नहीं थी."
 
 msgid "Permissions"
@@ -1539,16 +1521,11 @@ msgstr "योजना"
 msgid "Plan Name"
 msgstr "योजना नाम"
 
-msgid ""
-"Please add '%{product}' product to the changeset '%{changeset}' if you wish "
-"to promote repository '%{repo}' with it."
+msgid "Please add '%{product}' product to the changeset '%{changeset}' if you wish to promote repository '%{repo}' with it."
 msgstr "कृपया '%{product}' उत्पाद को '%{changeset}' चेंजसेट में जोड़े यदि आप रिपोजिटरी को  '%{repo}' इसके साथ प्रोन्नत करना चाहते हैं."
 
 msgid "Please create at least one environment."
 msgstr "कृपया कम से कम एक वातावरण बनाएँ."
-
-msgid "Please provide entitlement ID"
-msgstr ""
 
 msgid "Please provide pool ID"
 msgstr "कृपया पूल आईडी दें"
@@ -1557,6 +1534,10 @@ msgid "Please provide pool and quantity"
 msgstr "कृपया पूल और मात्रा प्रदान करें"
 
 msgid "Please provide serial ID"
+msgstr "कृपया क्रम आईडी दें"
+
+#, fuzzy
+msgid "Please provide subscription ID"
 msgstr "कृपया क्रम आईडी दें"
 
 msgid "Please select at least one system group."
@@ -1619,10 +1600,7 @@ msgstr "प्रदाता '%s' मिटाया गया था."
 msgid "Provider '%s' was updated."
 msgstr "प्रदाता '%s' अद्यतन किया गया था."
 
-msgid ""
-"Provider cannot be deleted since one of its products or repositories has "
-"already been promoted. Using a changeset, please delete the repository from "
-"existing environments before deleting it."
+msgid "Provider cannot be deleted since one of its products or repositories has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it."
 msgstr "प्रदाता मिटाया नहीं जा सकता है चूँकि इसका एक उत्पाद या रिपोजिटरी पहले प्रोन्नत किया जा चुका है. किसी चेंजशीट के उपयोग से, मौजूदा वातावरण से रिपोजिटरी को इसे मिटाने के पहले मिटाएँ."
 
 msgid "Providers"
@@ -1790,7 +1768,8 @@ msgstr "रिपोज"
 msgid "Repositories"
 msgstr "रिपॉजिटरी"
 
-msgid "Repositories can be deleted only in Library environment."
+#, fuzzy
+msgid "Repositories can be deleted only in the '%s' environment."
 msgstr "केवल लाइब्रेरी वातावरण में रिपोजिटरी मिटाया जा सकता है."
 
 msgid "Repository '%s' created."
@@ -1826,41 +1805,30 @@ msgstr "रिपॉजिटरी '%s' अद्यतन किया गय�
 msgid "Repository Comparison"
 msgstr "रिजोजिटरी तुलना"
 
-msgid ""
-"Repository cannot be deleted since it has already been promoted. Using a "
-"changeset, please delete the repository from existing environments before "
-"deleting it."
+#, fuzzy
+msgid "Repository can be only created for custom provider."
+msgstr "पसंदीदा प्रदाता के लिए उत्पाद को ताजा करने की जरूरत नहीं है."
+
+msgid "Repository cannot be deleted since it has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it."
 msgstr "रिपोजिटरी मिटाया नहीं जा सकता है चूँकि यह पहले प्रोन्नत किया जा चुका है. किसी चेंजशीट के उपयोग से, मौजूदा वातावरण से रिपोजिटरी को इसे मिटाने के पहले मिटाएँ."
 
 msgid "Repository cannot be disabled since it has already been promoted."
 msgstr "रिपोजिटरी को निष्क्रिय नहीं किया जा सकता है जबसे यह पहले ही प्रोन्नत किया गया है."
 
-msgid ""
-"Repository of the distribution '%s' has not been promoted into the target "
-"environment!"
+msgid "Repository of the distribution '%s' has not been promoted into the target environment!"
 msgstr "वितऱण '%s' का रिपोजिटरी को लक्षित वातावरण में प्रांप्ट नहीं किया गया है!"
 
-msgid ""
-"Repository of the erratum '%s' has not been promoted into the target "
-"environment!"
+msgid "Repository of the erratum '%s' has not been promoted into the target environment!"
 msgstr "इरेटा '%s' का रिपोजिटरी को लक्षित वातावरण में प्रांप्ट नहीं किया गया है!"
 
-msgid ""
-"Repository of the package '%s' has not been promoted into the target "
-"environment!"
+msgid "Repository of the package '%s' has not been promoted into the target environment!"
 msgstr "संकुल '%s' का रिपोजिटरी को लक्षित वातावरण में प्रांप्ट नहीं किया गया है!"
 
 msgid "Request received has either an invalid or expired token. Token: '%s'"
 msgstr "प्राप्त आग्रह ने अवैध या समय समाप्त टोकेन पाया. टोकेन: '%s'"
 
-msgid "Reset Password"
-msgstr "कूटशब्द फिर सेट करें"
-
 msgid "Resource not found on the server"
 msgstr "संसाधन सर्वर पर नहीं मिला"
-
-msgid "Return to log in."
-msgstr "लॉगिन में वापस लौटें."
 
 msgid "Role"
 msgstr "भूमिका"
@@ -1886,9 +1854,6 @@ msgstr "रूट मौजूद नहीं है:"
 msgid "Running."
 msgstr "चल रहा है."
 
-msgid "Save"
-msgstr "सहेजें"
-
 msgid "Select Architecture"
 msgstr "आर्किटेक्चर चुनें"
 
@@ -1904,11 +1869,11 @@ msgstr "कार्यक्रम के लिए उत्पाद का �
 msgid "Selected Distribution"
 msgstr "चयनित वितरण"
 
-msgid "Send Login"
-msgstr "लॉगिन भेजें"
-
 msgid "Service Level %s"
 msgstr "सेवा स्तर %s"
+
+msgid "Setup"
+msgstr ""
 
 msgid "Severity: Critical"
 msgstr "Severity: गंभीर"
@@ -1922,9 +1887,6 @@ msgstr "Severity: कम"
 msgid "Severity: Moderate"
 msgstr "Severity: बीचबिचाव वाला"
 
-msgid "Show My Password"
-msgstr "मेरा कूटशब्द दिखाएँ"
-
 msgid "Software"
 msgstr "सॉफ्टवेयर"
 
@@ -1936,6 +1898,12 @@ msgstr "%{env} वातावरण से '%{changeset}' के उपयो�
 
 msgid "Started content promotion to %{env} environment using '%{changeset}'"
 msgstr "%{env} वातावरण में '%{changeset}' के उपयोग से सामग्री प्रोन्नयन आरंभ किया"
+
+msgid "Subnet"
+msgstr ""
+
+msgid "Subnets"
+msgstr ""
 
 msgid "Subscription manifest delete for provider '%s' failed."
 msgstr ""
@@ -1952,10 +1920,7 @@ msgstr "प्रदाता '%s'  के लिए सदस्यता म�
 msgid "Subscription manifest uploaded successfully for provider '%s'."
 msgstr "प्रदाता  '%s' के लिए सदस्यता मेनिफेस्ट सफलतापूर्वक अपलोड किया गया."
 
-msgid ""
-"Subscription manifest uploaded successfully for provider '%s'. Please enable"
-" the repositories you want to sync by selecting 'Enable Repositories' and "
-"selecting individual repositories to be enabled."
+msgid "Subscription manifest uploaded successfully for provider '%s'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled."
 msgstr "सदस्यता मेनिफेस्ट को सफलतापूर्वक अपलोड किया गया  '%s' प्रदाता के लिए. कृपया रिपोजिटरी को सक्रिय करें जिसे आप 'रिपोजिटरी सक्रिय करें' को चुनकर सिंक करना चाहते हैं और सक्रिय किए जाने के लिए अलग अलग रिपोजिटरी चुनकर."
 
 msgid "Subscriptions"
@@ -2060,9 +2025,7 @@ msgstr "तंत्र समूह %s मिटाया गया."
 msgid "System Group %s has been updated."
 msgstr "तंत्र समूह %s अद्यतन किया गया."
 
-msgid ""
-"System Group %{new_group} created successfully as a copy of system group "
-"%{group}."
+msgid "System Group %{new_group} created successfully as a copy of system group %{group}."
 msgstr "तंत्र समूह %{new_group} तंत्र समूह %{group} के नक़ल के रूप में सफलतापूर्वक बनाया."
 
 msgid "System Group Info"
@@ -2095,6 +2058,9 @@ msgstr "सिस्टम सदस्यता अद्यतन."
 msgid "System's environment not compatible with the group '%s'."
 msgstr "तंत्र का वातावरण '%s' के साथ संगत नहीं है."
 
+msgid "System: %{system_name}, System Groups Removed: %{system_group_names}"
+msgstr ""
+
 msgid "Systems"
 msgstr "सिस्टम"
 
@@ -2104,8 +2070,7 @@ msgstr "तंत्र बल्क क्रिया: तंत्र सम�
 msgid "Systems Bulk Action: No errata IDs have been provided."
 msgstr "तंत्र एकमुश्त क्रिया: कोई इरेटा आईडी नहीं दिया गया है."
 
-msgid ""
-"Systems Bulk Action: No package or package group names have been provided."
+msgid "Systems Bulk Action: No package or package group names have been provided."
 msgstr "तंत्र एकमुश्त क्रिया: कोई संकुल या संकुल समूह नाम नहीं दिया गया है."
 
 msgid "Systems Bulk Action: Remove from system group(s): %s"
@@ -2147,11 +2112,7 @@ msgstr "नमूना %s सफलतापूर्वक अद्यतन 
 msgid "Template %s updated successfully."
 msgstr "नमूना %s सफलतापूर्वक अद्यतन किया गया"
 
-msgid ""
-"Template '%s' has been updated successfully, however you have removed either"
-" a product or repository that contained the selected distribution for this "
-"template.  Please select another distribution to ensure a working system "
-"template."
+msgid "Template '%s' has been updated successfully, however you have removed either a product or repository that contained the selected distribution for this template.  Please select another distribution to ensure a working system template."
 msgstr "नमूना %s सफलतापूर्वक अद्यतन किया जा रहा है हालाँकि आपके पास या तो कोई उत्पाद है या रिपोजिटरी है जो इस नमूना के लिए चुना वितरण समाहित करता है. कृपया दूसरा वितरण चुनें ताकि कार्य तंत्र नमूना पक्का किया जा सके."
 
 msgid "Template '%s' not found in the changeset"
@@ -2172,49 +2133,39 @@ msgstr "नमूना आयातित"
 msgid "Templates"
 msgstr "नमूना"
 
-msgid "Templates can be updated only in a Library environment"
+#, fuzzy
+msgid "Templates can be updated only in the '%s' environment"
 msgstr "नमूना केवल एक लाइब्रेरी वातावरण में अद्यतन किया जा सकता है"
 
-msgid ""
-"The current organization cannot be deleted. Please switch to a different "
-"organization before deleting."
+#, fuzzy
+msgid "The '%s' environment cannot contain a changeset!"
+msgstr "लाइब्रेरी वातावरण में चेंजसेट नहीं हो सकता है!"
+
+msgid "The current organization cannot be deleted. Please switch to a different organization before deleting."
 msgstr "वर्तमान संगठन को हटाया नहीं जा सकता. हटाने से पहले एक अलग संगठन के लिए स्विच करें."
 
 msgid "The environment still has content that belongs to product '%s'."
 msgstr "इस वातावरण में अभी भी सामग्री है और '%s' उत्पाद का हिस्सा होती है."
 
-msgid ""
-"The label requested is already used by another %s; therefore, a unique label"
-" was assigned.  If you would like a different label, please delete the %s "
-"and recreate it with a unique label.  Requested label: %s, Assigned label: "
-"%s"
+msgid "The label requested is already used by another %s; therefore, a unique label was assigned.  If you would like a different label, please delete the %s and recreate it with a unique label.  Requested label: %s, Assigned label: %s"
 msgstr ""
 
-msgid ""
-"The selected system groups (%s) are not compatible with the selected "
-"environment."
+msgid "The selected system groups (%s) are not compatible with the selected environment."
 msgstr "चयनित तंत्र समूह (%s) चयनित वातावरण से संगत नहीं है."
 
-msgid ""
-"The system registration default you supplied was the same as the old system "
-"registration default."
+msgid "The system registration default you supplied was the same as the old system registration default."
 msgstr "तंत्र पंजीयन तयशुदा जिसे आप आपूर्ति करते हैं वह समान था पुराने पंजीयन तयशुदा की तरह."
 
 msgid "The template has children templates."
 msgstr "नमूना के पास संतति नमूने हैं."
 
-msgid ""
-"There is already a repo with the label [ %{repo} ] for product [ %{product} "
-"]"
+msgid "There is already a repo with the label [ %{repo} ] for product [ %{product} ]"
 msgstr ""
 
-msgid ""
-"There is already a repo with the name [ %{repo} ] for product [ %{product} ]"
+msgid "There is already a repo with the name [ %{repo} ] for product [ %{product} ]"
 msgstr "[ %{repo} ] के साथ [ %{product} ] उत्पाद के लिए पहले से एक रेपो है"
 
-msgid ""
-"There is already an active sync process for the '%s' repository. Please try "
-"again later"
+msgid "There is already an active sync process for the '%s' repository. Please try again later"
 msgstr "'%s' रिपोजिटरी के लिए पहले से सक्रिय सिंक प्रक्रिया है. कृपया बाद में फिर कोशिश करें"
 
 msgid "There must be at least one plan selected"
@@ -2223,9 +2174,7 @@ msgstr "कम से कम एक योजना चुना होना �
 msgid "There must be at least one product selected"
 msgstr "कम से कम एक उत्पाद चुना होना चाहिए"
 
-msgid ""
-"There were errors syncing repository '%s'. See notices page for more "
-"details."
+msgid "There were errors syncing repository '%s'. See notices page for more details."
 msgstr "रिपोजिटरी '%s' को सिंक करने में त्रुटि थी. अधिक विवरण के लिए सूचना पृष्ठ देखें."
 
 msgid "This action doesn't support pacakge groups"
@@ -2252,38 +2201,32 @@ msgstr "संकुल %s ढूँढ़ने में असमर्थ"
 msgid "Unable to parse repositories: %s"
 msgstr "रिपोजिटरी के विश्लेषण में असमर्थ: %s"
 
-msgid ""
-"Unable to retrieve release versions from Repository URL %{url}. Error "
-"message: %{error}"
+msgid "Unable to retrieve release versions from Repository URL %{url}. Error message: %{error}"
 msgstr "रिपोजिटरी URL %{url} से सूचना पाने में त्रुटि. त्रुटि संदेश: %{error}"
 
 msgid "Unable to retrieve subscription history for provider '%{name}'."
 msgstr "प्रदाता '%{name}' के लिए सदस्यता इतिहास पाने में असमर्थ."
 
-msgid ""
-"Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}'"
-" failed.  Reason: %{message}"
+msgid "Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
 msgstr "संकुल समूह का विसंस्थापन '%{groups}' तंत्र समूह '%{name}' के लिए विफल रहा.  कारण: %{message}"
 
-msgid ""
-"Uninstall of Package Groups '%{groups}' scheduled for System Group "
-"'%{name}'."
+msgid "Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}'."
 msgstr "संकुल समूह '%{groups}' का विसंस्थापन तंत्र समूह '%{name}' के लिए नियत किया गया."
 
 msgid "Uninstall of Package Groups '%{p}' scheduled for System '%{s}'."
 msgstr "संकुल समूह '%{g}' का विसंस्थापन तंत्र '%{s}' के लिए नियत है."
 
-msgid ""
-"Uninstall of Packages '%{packages}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
+msgid "Uninstall of Packages '%{packages}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
 msgstr "संकुल '%{packages}' का विसंस्थापन जो तंत्र समूह '%{name}' के लिए नियत था विफल रहा.  कारण: %{message}"
 
-msgid ""
-"Uninstall of Packages '%{packages}' scheduled for System Group '%{name}'."
+msgid "Uninstall of Packages '%{packages}' scheduled for System Group '%{name}'."
 msgstr "संकुल '%{packages}' का विसंस्थापन तंत्र समूह '%{name}' के लिए नियत किया गया."
 
 msgid "Uninstall of Packages '%{p}' scheduled for System '%{s}'."
 msgstr "तंत्र '%{s}' के लिए संकुल '%{p}' विसंस्थापन नियत किया है."
+
+msgid "Units"
+msgstr ""
 
 msgid "Unknown changeset type, must be PROMOTION or DELETION: %s"
 msgstr "अज्ञात चेंजसेट प्रकार, जरूर प्रोन्नयन या विलोपन होना चाहिए: %s"
@@ -2294,18 +2237,13 @@ msgstr "अज्ञता पंजीयन तिथि"
 msgid "Unknown repository label: %s"
 msgstr "अज्ञात रिपोजिटरी स्तर: %s"
 
-msgid ""
-"Update of Package Groups '%{groups}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
+msgid "Update of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
 msgstr "संकुल समूह '%{groups}' का अद्यतन जो तंत्र समूह '%{name}' के लिए नियत था विफल रहा.  कारण: %{message}"
 
-msgid ""
-"Update of Package Groups '%{groups}' scheduled for System Group '%{name}'."
+msgid "Update of Package Groups '%{groups}' scheduled for System Group '%{name}'."
 msgstr "संकुल समूह '%{groups}' के लिए अद्यतन तंत्र समूह '%{name}' के लिए नियत है."
 
-msgid ""
-"Update of Packages '%{packages}' scheduled for System Group '%{group}' "
-"failed.  Reason: %{message}"
+msgid "Update of Packages '%{packages}' scheduled for System Group '%{group}' failed.  Reason: %{message}"
 msgstr "संकुल '%{packages}' का अद्यतन तंत्र समूह '%{group}' के लिए विफल रहा.  कारण: %{message}"
 
 msgid "Update of Packages '%{packages}' scheduled for System Group '%{name}'."
@@ -2319,6 +2257,10 @@ msgstr "तंत्र '%s' के लिए सभी संकुल का �
 
 msgid "Updating Package..."
 msgstr "संकुल अद्यतन कर रहा है..."
+
+#, fuzzy
+msgid "Updating package group..."
+msgstr "संकुल समूह अद्यतन कर रहा है..."
 
 msgid "Usage limit (%{limit}) exhausted for activation key '%{name}'"
 msgstr "उपयोग सीमा (%{limit}) सक्रियकरण कुँजी '%{name}' के लिए समाप्त हो गया"
@@ -2350,14 +2292,15 @@ msgstr "उपयोक्ता को सफलतापूर्वक अप
 msgid "Username"
 msgstr "उपयोक्तानाम"
 
-msgid "Username Unknown?"
-msgstr "अज्ञात उपयोक्तानाम?"
-
 msgid "Users"
 msgstr "उपयोक्ता"
 
 msgid "Validation failed: Label has already been taken"
 msgstr ""
+
+#, fuzzy
+msgid "Version"
+msgstr "अनुमति"
 
 msgid "Virtual"
 msgstr "आभासी"
@@ -2365,44 +2308,28 @@ msgstr "आभासी"
 msgid "Welcome Back"
 msgstr "आपका फिर स्वागत है"
 
-msgid ""
-"Wrong/Invalid parameters sent for %{controller}/%{action}.\\n Wrong "
-"Parameters: \\n%{params}\\n Parameters Received:\\n %{all_params} "
+msgid "Wrong/Invalid parameters sent for %{controller}/%{action}.\\n Wrong Parameters: \\n%{params}\\n Parameters Received:\\n %{all_params} "
 msgstr ""
 
 msgid "You can synchronize repositories only in library environment'"
 msgstr "आप केवल लाइब्रेरी वातावरण में रिपोजिटरी को तुल्यकालित कर सकते हैं'"
 
-msgid ""
-"You cannot have more than %{max_systems} system(s) associated with system "
-"group '%{group}'."
+msgid "You cannot have more than %{max_systems} system(s) associated with system group '%{group}'."
 msgstr "आपके पास %{max_systems} तंत्र से अधिक तंत्र समूह '%{group}' से जुड़े नहीं हो सकते हैं."
 
-msgid ""
-"You do not have valid credentials to access this system. Please contact your"
-" administrator."
+msgid "You do not have valid credentials to access this system. Please contact your administrator."
 msgstr "आपके पास वैध श्रेय नहीं है कि आप इस तंत्र की पहुँच ले सकें. कृपया अपना प्रशासक से संपर्क करें."
 
-msgid ""
-"You have entered an incorrect username/password combination, or your account"
-" may currently be disabled. Please try again or contact your administrator."
+msgid "You have entered an incorrect username/password combination, or your account may currently be disabled. Please try again or contact your administrator."
 msgstr "आपने एक गलत उपयोक्तानाम/कूटशब्द संयोग दर्ज किया है या आपका खाता निष्क्रिय कर दिया गया है, कृपया फिर कोशिश करें या अपने प्रशासक से संपर्क करें."
 
-msgid ""
-"You have not set a default organization and environment on the user %s."
+msgid "You have not set a default organization and environment on the user %s."
 msgstr "आपके पास उपयोक्ता %s के लिए तयशुदा संगठन और वातावरण नहीं है."
 
 msgid "You must be logged in to access that page."
 msgstr "इस पृष्ठ की पहुँच के लिए आपको जरूर लॉगिन करना होगा."
 
-msgid ""
-"You must specify host in %{config_file} for %{app_name} to work properly"
-msgstr "आपको मेजबान को %{config_file} में %{app_name} जरूर निर्दिष्ट करना चाहिए ताकि ठीक से काम हो"
-
-msgid ""
-"Your current organization is no longer valid. It is possible that either the"
-" organization has been deleted or your permissions revoked, please log back "
-"in to continue."
+msgid "Your current organization is no longer valid. It is possible that either the organization has been deleted or your permissions revoked, please log back in to continue."
 msgstr "आपका मौजूदा संगठन अब मान्य नहीं है. यह संभव है कि संगठन को मिटा दिया गया हो या अनुमति आपसे ले ली गई हो, कृपया जारी रखने के लिए वापस लॉग इन करें."
 
 msgid "Your default environment has been removed. Please choose another one."
@@ -2417,8 +2344,8 @@ msgstr "सभी संकुल अद्यतन"
 msgid "all packages update failed"
 msgstr "सभी संकुल अद्यतन विफल"
 
-msgid "can not be updated"
-msgstr "अद्यतन नहीं किया जा सकता है"
+msgid "already exists (including organizations being deleted)"
+msgstr ""
 
 msgid "can't be blank"
 msgstr "रिक्त नहीं हो सकता"
@@ -2477,14 +2404,10 @@ msgstr "नमूना में पहले से ही है"
 msgid "is invalid"
 msgstr "अमान्य है"
 
-msgid "is too long"
-msgstr "काफी लंबा है"
-
 msgid "katello-jobs service not running"
 msgstr "katello-jobs सर्विस चल नहीं रही है"
 
-msgid ""
-"may not be less than the number of systems associated with the system group."
+msgid "may not be less than the number of systems associated with the system group."
 msgstr "तंत्र समूह के साथ संबद्ध तंत्र की संख्या कम नहीं भी हो सकती है."
 
 msgid "may not be set to 0."
@@ -2514,7 +2437,8 @@ msgstr "एक संगठन के भीतर अद्वितीय ह�
 msgid "must be unique."
 msgstr "जरूर अद्वितीय होना चाहिए."
 
-msgid "must contain 'Library'"
+#, fuzzy
+msgid "must contain '%s'"
 msgstr "जरूर 'लाइब्रेरी' समाहित करना चाहिए"
 
 msgid "must contain at least %s character"
@@ -2529,23 +2453,15 @@ msgstr "नाम: %s मौजूद नहीं है"
 msgid "none"
 msgstr "कोई नहीं"
 
+#, fuzzy
+msgid "of environment must be unique within one organization"
+msgstr "नाम एक संगठन के भीतर अद्वितीय होना चाहिए"
+
 msgid "organization"
 msgstr "संगठन"
 
 msgid "organization_id required but not specified."
 msgstr "organization_id जरूरी लेकिन निर्दिष्ट नहीं."
-
-msgid "package group update canceled"
-msgstr "संकुल समूह अद्यतन रद्द"
-
-msgid "package group update complete"
-msgstr "संकुल समूह अद्यतन संपन्न"
-
-msgid "package group update failed"
-msgstr "संकुल समूह अद्यतन विफल"
-
-msgid "package group update timed out"
-msgstr "संकुल समूह अद्यतन समय समाप्त"
 
 msgid "plan"
 msgstr "योजना"
@@ -2577,8 +2493,7 @@ msgstr "%s बगजिला"
 msgid "the CloudForms Documentation"
 msgstr "CloudForms दस्तावेज़ीकरण"
 
-msgid ""
-"the following attributes can not be updated for the Red Hat provider: [ %s ]"
+msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "निम्नलिखित विशेषताओं को Red Hat प्रदाता के लिए अद्यतन नहीं कर सकते हैं: [% s]"
 
 msgid "updating package group..."
@@ -2595,3 +2510,93 @@ msgstr "संकुलों को अद्यतन कर रहा है.
 
 msgid "weekly"
 msgstr "साप्ताहिक"
+
+#~ msgid " '%s' already exists and either has been scheduled for deletion or failed deletion."
+#~ msgstr "'%s' पहले से मौजूद है और इनमें से एक को या तो विलोपन या विफल मिटाने के लिए नियत किया गया है."
+
+#~ msgid "Cannot delete the changeset '%{changeset}' while another changeset (%{another_changeset}) is being deleted or promoted."
+#~ msgstr "चेंजसेट '%{changeset}' को दूसरे चेंजसेट (%{another_changeset}) के मिटाये या प्रोन्नत किए जाते हुए मिटा नहीं सकता है."
+
+#~ msgid "Change Password"
+#~ msgstr "कूटशब्द बदलें"
+
+#~ msgid "Confirm Password"
+#~ msgstr "कूटशब्द की पुष्टि करें"
+
+#~ msgid "Consumers"
+#~ msgstr "ग्राहक"
+
+#~ msgid "Email Address"
+#~ msgstr "ईमेल पता"
+
+#~ msgid "Enter your username and email address below and instructions on resetting your password will be sent to you."
+#~ msgstr "अपना उपयोक्तानाम और ईमेल पता नीचे दाखिल करें और आपका अपने कूटशब्द को फिर सेट करने का निर्देश भेजा जाएगा."
+
+#~ msgid "Forgot %s or %s?"
+#~ msgstr "%s या %s भूल गए?"
+
+#~ msgid "Forgot Username or Password?"
+#~ msgstr "क्या उपयोक्तानाम और कूटशब्द भूल गए?"
+
+#~ msgid "I remembered my login credentials."
+#~ msgstr "मुझे अपना लॉगिन सूचना याद है."
+
+#~ msgid "If you do not know your username, please enter your email address below and your username information will be sent to you."
+#~ msgstr "यदि आप अपना उपयोक्तानाम नहीं जानते हैं, तो कृपया अपना ईमेल पता नीचे दाखिल करें और आपका उपयोक्तानाम सूचना आपको भेजा जाएगा."
+
+#~ msgid "Invalid Url"
+#~ msgstr "अवैध यूआरएल"
+
+#~ msgid "Javascript must be enabled for this application to work properly."
+#~ msgstr "जावास्क्रिप्ट इस अनुप्रयोग के ठीक से काम करने के लिए जरूर सक्रिय होना चाहिए."
+
+#~ msgid "Library"
+#~ msgstr "लाइब्रेरी"
+
+#~ msgid "Login"
+#~ msgstr "लॉगिन"
+
+#~ msgid "Login Information"
+#~ msgstr "लॉगिन सूचना"
+
+#~ msgid "Logo"
+#~ msgstr "लोगो"
+
+#~ msgid "Password"
+#~ msgstr "कूटशब्द"
+
+#~ msgid "Password Unknown"
+#~ msgstr "कूटशब्द अज्ञात"
+
+#~ msgid "Passwords do not match."
+#~ msgstr "कूटशब्द एक समान नहीं हैं."
+
+#~ msgid "Passwords match."
+#~ msgstr "कूटशब्द एक समान हैं."
+
+#~ msgid "Reset Password"
+#~ msgstr "कूटशब्द फिर सेट करें"
+
+#~ msgid "Return to log in."
+#~ msgstr "लॉगिन में वापस लौटें."
+
+#~ msgid "Save"
+#~ msgstr "सहेजें"
+
+#~ msgid "Send Login"
+#~ msgstr "लॉगिन भेजें"
+
+#~ msgid "Show My Password"
+#~ msgstr "मेरा कूटशब्द दिखाएँ"
+
+#~ msgid "Username Unknown?"
+#~ msgstr "अज्ञात उपयोक्तानाम?"
+
+#~ msgid "You must specify host in %{config_file} for %{app_name} to work properly"
+#~ msgstr "आपको मेजबान को %{config_file} में %{app_name} जरूर निर्दिष्ट करना चाहिए ताकि ठीक से काम हो"
+
+#~ msgid "can not be updated"
+#~ msgstr "अद्यतन नहीं किया जा सकता है"
+
+#~ msgid "is too long"
+#~ msgstr "काफी लंबा है"

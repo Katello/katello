@@ -1,27 +1,22 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # Miroslav Suchy <msuchy@redhat.com>, 2012.
 msgid ""
 msgstr ""
-"Project-Id-Version: Katello\n"
+"Project-Id-Version: version 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-19 09:10-0500\n"
+"POT-Creation-Date: 2013-01-14 17:43-0500\n"
 "PO-Revision-Date: 2012-12-20 12:58+0000\n"
 "Last-Translator: Miroslav Suchý <msuchy@redhat.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-msgid ""
-" '%s' already exists and either has been scheduled for deletion or failed "
-"deletion."
-msgstr "「%s」已存在，並已排程準備刪除，或刪除失敗。"
 
 msgid " created successfully."
 msgstr "已成功建立。"
@@ -212,6 +207,10 @@ msgstr "%s 套件更新逾時"
 msgid "%s package updated"
 msgstr "已更新 %s 套件"
 
+#, fuzzy
+msgid "%s updated successfully."
+msgstr "已成功更新使用者。"
+
 msgid "%{errata} (%{rest} other errata)"
 msgstr "%{errata}（%{rest} 個其它勘誤）"
 
@@ -230,17 +229,33 @@ msgstr "%{package}（%{rest} 個其它套件）"
 msgid "%{repo} (Product: %{product})"
 msgstr "%{repo} (產品: %{product})"
 
+#, fuzzy
+msgid "'%s' created successfully."
+msgstr "已成功建立。"
+
 msgid "'%s' did not meet the current search criteria and is not being shown."
 msgstr "「%s」並不符合目前的搜尋條件，因此不會顯示。"
 
 msgid "'%s' no longer matches the current search criteria."
 msgstr "「%s」不再符合現有的搜尋條件。"
 
+#, fuzzy
+msgid "'%s' was deleted."
+msgstr "已刪除「%s」角色。"
+
 msgid "+ Import Manifest"
 msgstr "+ 匯入清單"
 
+#, fuzzy
+msgid "+ New Architecture"
+msgstr "選擇架構"
+
 msgid "+ New Changeset"
 msgstr "+ 新變更集"
+
+#, fuzzy
+msgid "+ New Domain"
+msgstr "+ 新增計劃"
 
 msgid "+ New Filter"
 msgstr "+ 新增篩選器"
@@ -263,6 +278,10 @@ msgstr "+ 新增供應方"
 msgid "+ New Role"
 msgstr "+ 新增角色"
 
+#, fuzzy
+msgid "+ New Subnet"
+msgstr "+ 新增系統"
+
 msgid "+ New System"
 msgstr "+ 新增系統"
 
@@ -272,13 +291,14 @@ msgstr "+ 新增範本"
 msgid "+ New User"
 msgstr "+ 新增使用者"
 
+#, fuzzy
+msgid ": '%s' is a built-in environment"
+msgstr "此環境中找不到產品 '%s'。"
+
 msgid "A keyname must be provided"
 msgstr "必須提供一組 keyname"
 
-msgid ""
-"A label was not provided during %s creation; therefore, a label of '%s' was "
-"automatically assigned. If you would like a different label, please delete "
-"the %s and recreate it with the desired label."
+msgid "A label was not provided during %s creation; therefore, a label of '%s' was automatically assigned. If you would like a different label, please delete the %s and recreate it with the desired label."
 msgstr "建立 %s 時並未提供標籤；因此已自動指定了一個標籤「%s」。若您希望使用不同的標籤，請刪除 %s 並重新建立您希望使用的標籤。"
 
 msgid "About"
@@ -380,15 +400,22 @@ msgstr "candlepin 中屬於使用者 %s 的所有供應方"
 msgid "All repository GPG keys for Product '%s' were updated."
 msgstr "所有屬於產品「%s」的軟體庫 GPG 金鑰都已更新。"
 
-msgid "Applied Subscriptions"
+#, fuzzy
+msgid "Application"
 msgstr "已套用的訂閱"
+
+#, fuzzy
+msgid "Architecture"
+msgstr "選擇架構"
+
+#, fuzzy
+msgid "Architectures"
+msgstr "選擇架構"
 
 msgid "At least one activation key must be provided"
 msgstr "必須提供至少一組啟動金鑰"
 
-msgid ""
-"At least one environment is required to create or register systems in your "
-"current organization."
+msgid "At least one environment is required to create or register systems in your current organization."
 msgstr "需要至少一個環境，以在您目前的組織中建立或註冊系統。"
 
 msgid "At least one organization must exist."
@@ -397,20 +424,31 @@ msgstr "至少必須存在一個組織。"
 msgid "At least repository must be present to export a TDL"
 msgstr "至少須提供軟體庫，以匯出 TDL"
 
-msgid "Auto-heal %{val}, %{sla}"
+#, fuzzy
+msgid "Attached Subscriptions"
+msgstr "已套用的訂閱"
+
+msgid "Authentication"
 msgstr ""
 
-msgid "Auto-heal Off, No Service Level Preference"
+msgid "Auto-attach %{val}, %{sla}"
 msgstr ""
 
-msgid "Auto-heal Off, Service Level %s"
-msgstr ""
+#, fuzzy
+msgid "Auto-attach Off, No Service Level Preference"
+msgstr "無服務等級偏好設定"
 
-msgid "Auto-heal On, No Service Level Preference"
-msgstr ""
+#, fuzzy
+msgid "Auto-attach Off, Service Level %s"
+msgstr "服務等級 %s"
 
-msgid "Auto-heal On, Service Level %s"
-msgstr ""
+#, fuzzy
+msgid "Auto-attach On, No Service Level Preference"
+msgstr "無服務等級偏好設定"
+
+#, fuzzy
+msgid "Auto-attach On, Service Level %s"
+msgstr "服務等級 %s"
 
 msgid "Available Subscriptions"
 msgstr "可用的訂閱"
@@ -430,7 +468,8 @@ msgstr "CDN 載入錯誤：%s 被禁止存取"
 msgid "Can't copy System Groups to a different org: '%{org1}' != '%{org2}'"
 msgstr "無法將系統群組複製至不同的組織：「%{org1}」!=「%{org2}」"
 
-msgid "Can't update Library environment"
+#, fuzzy
+msgid "Can't update the '%s' environment"
 msgstr "無法更新函式庫環境"
 
 msgid "Canceled synchronization of %{name}: %{id}"
@@ -448,47 +487,38 @@ msgstr "無法新增 / 移除或改變與已鎖定角色相關的存取權限。
 msgid "Cannot change the name or description of a locked role."
 msgstr "無法變更已鎖定角色的名稱或描述。"
 
-msgid "Cannot create activation keys in Library environment "
+#, fuzzy
+msgid "Cannot create activation keys in the '%s' environment"
 msgstr "無法在函式庫環境中建立啟動金鑰"
 
 msgid "Cannot delete currently logged user"
 msgstr "無法刪除目前登入的使用者"
 
-msgid ""
-"Cannot delete the changeset '%s' because it is not in the review phase."
+msgid "Cannot delete the changeset '%s' because it is not in the review phase."
 msgstr "無法刪除變更集「%s」，因為它並非處於檢視階段。"
 
-msgid ""
-"Cannot delete the changeset '%{changeset}' while another changeset "
-"(%{another_changeset}) is being deleted or promoted."
-msgstr "無法刪除變更集 '%{changeset}'，另一變更集（%{another_changeset}）正被刪除或推送中。"
-
-msgid ""
-"Cannot dissociate user '%{username}' from '%{role}' role. Need at least one "
-"user in the '%{role}' role."
+msgid "Cannot dissociate user '%{username}' from '%{role}' role. Need at least one user in the '%{role}' role."
 msgstr "無法取消使用者 '%{username}' 與 '%{role}' 角色的關聯。'%{role}' 角色中需要至少一名使用者。"
 
-msgid ""
-"Cannot dissociate user '%{user}' from '%{role}' role. Need at least one user"
-" in the '%{role}' role."
+msgid "Cannot dissociate user '%{user}' from '%{role}' role. Need at least one user in the '%{role}' role."
 msgstr "無法取消使用者 '%{user}' 與 '%{role}' 角色的關聯。'%{role}' 角色中需要至少一名使用者。"
 
-msgid "Cannot export templates for the Library environment."
+#, fuzzy
+msgid "Cannot export templates for the '%s' environment."
 msgstr "無法為函式庫環境匯出範本。"
 
 msgid "Cannot modify a template that is another environment"
 msgstr "無法修改另一個環境的範本"
 
-msgid ""
-"Cannot promote the changeset '%s' because it is not in the review phase."
+msgid "Cannot promote the changeset '%s' because it is not in the review phase."
 msgstr "無法推送變更集「%s」，因為它並不處於檢閱階段。"
 
-msgid ""
-"Cannot promote the changeset '%{changeset}' while another changeset "
-"(%{another_changeset}) is being promoted."
+#, fuzzy
+msgid "Cannot promote the changeset '%{changeset}' while another colliding changeset (%{another_changeset}) is being promoted."
 msgstr "無法推送變更集 '%{changeset}'，另一變更集（%{another_changeset}）正被推送中。"
 
-msgid "Cannot register a system with 'Library' environment "
+#, fuzzy
+msgid "Cannot register a system to the '%s' environment"
 msgstr "無法以「函式庫」環境註冊系統"
 
 msgid "Cannot specify a tag if all_tags is selected."
@@ -500,11 +530,9 @@ msgstr "選擇了「all_verbs」（所有動詞）之後，將無法指定動詞
 msgid "Cannot specify all_types without all_tags and all_verbs"
 msgstr "在無「all_tags」與「all_verbs」的情況下，將無法指定「all_types」"
 
-msgid "Cannot validate templates for the Library environment."
+#, fuzzy
+msgid "Cannot validate templates for the '%s' environment."
 msgstr "無法驗證函式庫環境的範本。"
-
-msgid "Change Password"
-msgstr "變更密碼"
 
 msgid "Changeset Management"
 msgstr "變更集管理"
@@ -515,17 +543,20 @@ msgstr "變更集"
 msgid "Changesets History"
 msgstr "變更集歷史"
 
+msgid "Choose %s..."
+msgstr ""
+
+msgid "Choose domains..."
+msgstr ""
+
+msgid "Choose operating systems..."
+msgstr ""
+
 msgid "Cleared"
 msgstr "已清除"
 
 msgid "Click on 'Add Environment' to create the first environment"
 msgstr "按下「新增環境」以建立第一組環境"
-
-msgid "Confirm Password"
-msgstr "確認密碼"
-
-msgid "Consumers"
-msgstr "消耗者"
 
 msgid "Content"
 msgstr "內容"
@@ -536,14 +567,10 @@ msgstr "內容搜尋"
 msgid "Could not delete organization '%s'."
 msgstr "無法刪除組織 '%s'。"
 
-msgid ""
-"Could not modify environments.  One or more associated activation keys (%s) "
-"would become invalid."
+msgid "Could not modify environments.  One or more associated activation keys (%s) would become invalid."
 msgstr "無法修改環境。一或更多組相聯的啟動金鑰（%s）將會變無效。"
 
-msgid ""
-"Could not modify environments. System group membership does not match new "
-"environment association."
+msgid "Could not modify environments. System group membership does not match new environment association."
 msgstr "無法修改環境。系統群組成員與新環境相聯性不符。"
 
 msgid "Couldn't find GPG key '%s'"
@@ -563,6 +590,10 @@ msgstr "找不到環境 '%s'"
 
 msgid "Couldn't find filter '%s'"
 msgstr "找不到篩選器「%s」"
+
+#, fuzzy
+msgid "Couldn't find one of the filters in '%s'"
+msgstr "在「%s」中找不到其中一個篩選器"
 
 msgid "Couldn't find organization '%s'"
 msgstr "找不到組織「%s」"
@@ -606,14 +637,15 @@ msgstr "找不到使用者「%s」"
 msgid "Couldn't find user role '%s'"
 msgstr "找不到使用者角色「%s」"
 
-msgid "Couldn't one of the filters in '%s'"
-msgstr "在「%s」中找不到其中一個篩選器"
-
 msgid "Creating an environment in candlepin: %s"
 msgstr "在 candlepin 中建立環境：%s"
 
 msgid "Creating an owner in candlepin: %s"
 msgstr "在 candlepin 中建立使用者：%s"
+
+#, fuzzy
+msgid "Current organization is being deleted, switch to a different one."
+msgstr "不能刪除目前的組織。刪除前請切換到其它組織。"
 
 msgid "Custom Content Repositories"
 msgstr "自訂內容軟體庫"
@@ -726,6 +758,10 @@ msgstr "相依性"
 msgid "Details"
 msgstr "詳細資料"
 
+#, fuzzy
+msgid "Directory"
+msgstr "軟體庫"
+
 msgid "Disable/enable is not supported for custom repositories."
 msgstr "自訂軟體庫不支援停用/啟用。"
 
@@ -753,6 +789,12 @@ msgstr "在 '%{name}' 環境中找不到散佈版本 '%{id}'。"
 msgid "Distributions"
 msgstr "發行版"
 
+msgid "Domain"
+msgstr ""
+
+msgid "Domains"
+msgstr ""
+
 msgid "Either organization ID or environment ID needs to be specified"
 msgstr "必須指定組織 ID 或環境 ID"
 
@@ -762,53 +804,35 @@ msgstr "必須提供套件或群組"
 msgid "Either packages or groups must be provided"
 msgstr "必須提供套件或是群組"
 
-msgid "Email Address"
-msgstr "電子郵件地址"
-
 msgid "Email sent to '%s' with password reset instructions."
 msgstr "已傳送電子郵件至 '%s'，並包含了重設密碼的指示。"
 
 msgid "Email sent to '%s' with valid login user names."
 msgstr "已傳送電子郵件至 '%s'，並包含了有效的登錄使用者名稱。"
 
-msgid ""
-"Empty request received to install Packages or Package Groups for System "
-"'%s'."
+msgid "Empty request received to install Packages or Package Groups for System '%s'."
 msgstr "未收到為系統 '%s' 安裝套件或套件群組的電子郵件。"
 
-msgid ""
-"Empty request received to install Packages or Package Groups for System "
-"Group '%s'."
+msgid "Empty request received to install Packages or Package Groups for System Group '%s'."
 msgstr "未收到為系統群組 '%s' 安裝套件或套件群組的電子郵件。"
 
-msgid ""
-"Empty request received to uninstall Packages or Package Groups for System "
-"'%s'."
+msgid "Empty request received to uninstall Packages or Package Groups for System '%s'."
 msgstr "未收到為系統 '%s' 移除套件或套件群組的電子郵件。"
 
-msgid ""
-"Empty request received to uninstall Packages or Package Groups for System "
-"Group '%s'."
+msgid "Empty request received to uninstall Packages or Package Groups for System Group '%s'."
 msgstr "未收到為系統群組 '%s' 移除套件或套件群組的電子郵件。"
 
-msgid ""
-"Empty request received to update Packages or Package Groups for System Group"
-" '%s'."
+msgid "Empty request received to update Packages or Package Groups for System Group '%s'."
 msgstr "未收到為系統群組 '%s' 更新套件或套件群組的電子郵件。"
 
-msgid ""
-"Enter your username and email address below and instructions on resetting "
-"your password will be sent to you."
-msgstr "請在下方輸入您的使用者名稱和電子郵件位址，之後您將會收到重設密碼的相關指示。"
+#, fuzzy
+msgid "Environment"
+msgstr "環境"
 
-msgid ""
-"Environment %s has a successor.  Only the last environment on a path can be "
-"deleted"
+msgid "Environment %s has a successor.  Only the last environment on a path can be deleted"
 msgstr "環境 %s 擁有繼承者。僅有路徑上最後的環境能被刪除"
 
-msgid ""
-"Environment %s has a successor. Only the last environment on a path can be "
-"deleted."
+msgid "Environment %s has a successor. Only the last environment on a path can be deleted."
 msgstr "環境 %s 擁有繼承者。僅有路徑上最後的環境能被刪除。"
 
 msgid "Environment '%s' was created."
@@ -898,8 +922,7 @@ msgstr "建立 candlepin 環境 %s 失敗"
 msgid "Failed to create candlepin owner %s"
 msgstr "建立 candlepin 擁有者 %s 失敗"
 
-msgid ""
-"Failed to delete all environments for owner %{org} in candlepin: %{message}"
+msgid "Failed to delete all environments for owner %{org} in candlepin: %{message}"
 msgstr "刪除 candlepin 中的擁有者 %{org} 的所有環境失敗：%{message}"
 
 msgid "Failed to delete all providers for owner %s in candlepin"
@@ -938,19 +961,12 @@ msgstr "已篩選的套件"
 msgid "Filters"
 msgstr "篩選器"
 
-msgid ""
-"Filters assigned to repository or product of erratum '%s' block it from "
-"promotion!"
+msgid "Filters assigned to repository or product of erratum '%s' block it from promotion!"
 msgstr "軟體庫已指定篩選器，或是勘誤「%s」的產品使它無法推送！"
 
-msgid "Filters can be stored only in Library repositories."
+#, fuzzy
+msgid "Filters can be stored only in the '%s' repositories."
 msgstr "篩選器只能存於函式庫軟體庫。"
-
-msgid "Forgot %s or %s?"
-msgstr "忘記了 %s 或 %s？"
-
-msgid "Forgot Username or Password?"
-msgstr "忘記了使用者名稱或密碼？"
 
 msgid "GPG Key"
 msgstr "GPG 金鑰"
@@ -997,16 +1013,8 @@ msgstr "Hypervisors 沒有套件"
 msgid "Hypervisors do not have software products"
 msgstr "Hypervisors 沒有軟體產品"
 
-msgid "I remembered my login credentials."
-msgstr "我記得我的登錄認證資訊"
-
 msgid "ID: %s doesn't exist "
 msgstr "ID：%s 不存在"
-
-msgid ""
-"If you do not know your username, please enter your email address below and "
-"your username information will be sent to you."
-msgstr "若您不知道您的使用者名稱為何，請在下方輸入您的電子郵件地址，之後我們便會將使用者名稱資訊寄給您。"
 
 msgid "Import"
 msgstr "匯入"
@@ -1017,33 +1025,25 @@ msgstr "匯入紀錄"
 msgid "Initial Registration Params"
 msgstr "初始註冊參數"
 
-msgid ""
-"Install of Errata '%{errata}' scheduled for System Group '%{group}' failed."
-"  Reason: %{message}"
+msgid "Install of Errata '%{errata}' scheduled for System Group '%{group}' failed.  Reason: %{message}"
 msgstr "安裝勘誤 '%{errata}' 失敗（為系統群組 '%{group}' 所排程的勘誤安裝）。原因：%{message}"
 
 msgid "Install of Errata '%{errata}' scheduled for System Group '%{group}'."
 msgstr "安裝勘誤 '%{errata}' 失敗（為系統群組 '%{group}' 所排程的勘誤安裝）。"
 
-msgid ""
-"Install of Package Groups '%{groups}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
+msgid "Install of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
 msgstr "安裝套件群組 '%{groups}' 失敗（為系統群組 '%{name}' 所排程的套件群組更新）。原因：%{message}"
 
-msgid ""
-"Install of Package Groups '%{groups}' scheduled for System Group '%{name}'."
+msgid "Install of Package Groups '%{groups}' scheduled for System Group '%{name}'."
 msgstr "安裝套件群組 '%{groups}'（已為系統群組 '%{name}' 排程）。"
 
 msgid "Install of Package Groups '%{g}' scheduled for System '%{s}'."
 msgstr "已為系統 '%{s}' 排程了套件群組 '%{g}' 的安裝程序。"
 
-msgid ""
-"Install of Packages '%{packages}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
+msgid "Install of Packages '%{packages}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
 msgstr "安裝套件 '%{packages}' 失敗（為系統群組 '%{name}' 所排程的套件更新）。原因：%{message}"
 
-msgid ""
-"Install of Packages '%{packages}' scheduled for System Group '%{name}'."
+msgid "Install of Packages '%{packages}' scheduled for System Group '%{name}'."
 msgstr "安裝套件 '%{packages}'（已為系統群組 '%{name}' 排程）。"
 
 msgid "Install of Packages '%{p}' scheduled for System '%{s}'."
@@ -1061,31 +1061,22 @@ msgstr "正在安裝套件..."
 msgid "Interval"
 msgstr "間隔"
 
-msgid "Invalid Url"
-msgstr "無效的 URL"
-
 msgid "Invalid date or time format"
 msgstr "無效的日期或時間格式"
 
 msgid "Invalid organization"
 msgstr "無效的組織"
 
-msgid ""
-"Invalid parameters sent in the request for this operation. Please contact a "
-"system administrator."
+msgid "Invalid parameters sent in the request for this operation. Please contact a system administrator."
 msgstr "此作業的請求中傳送了無效的參數。請聯絡系統管理員。"
 
-msgid ""
-"Invalid resource type '%{resource_type}'. Resource Types can be one of "
-"'%{possible_types}'"
+msgid "Invalid resource type '%{resource_type}'. Resource Types can be one of '%{possible_types}'"
 msgstr "無效的資源種類「%{resource_type}」。資源類型可以是「%{possible_types}」之一"
 
 msgid "Invalid state"
 msgstr "無效的狀態"
 
-msgid ""
-"Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be "
-"one of %{possible_verbs}"
+msgid "Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be one of %{possible_verbs}"
 msgstr "無效的動詞「%{verb}」。資源類型「%{resource_type}」的動詞可以是「%{possible_verbs}」之一"
 
 msgid "It is not allowed to create products in Red Hat provider."
@@ -1105,9 +1096,6 @@ msgstr "不允許更新 Red Hat 產品。"
 
 msgid "It is not allowed to update a Red Hat repository."
 msgstr "不允許更新 Red Hat 軟體庫。"
-
-msgid "Javascript must be enabled for this application to work properly."
-msgstr "必須啟用 Javascript，此應用程式才能正常運作。"
 
 msgid "Katello Logins"
 msgstr "Katello 使用者名稱"
@@ -1130,20 +1118,8 @@ msgstr "LDAP 群組"
 msgid "LDAP group '%{group}' associated to role '%{role}' was not found."
 msgstr "找不到與角色 '%{role}' 相聯的 LDAP 群組 '%{group}'。"
 
-msgid "Library"
-msgstr "函式庫"
-
-msgid "Library environment cannot contain a changeset!"
-msgstr "函式庫環境不能包括變更集！"
-
 msgid "List"
 msgstr "清單"
-
-msgid "Login"
-msgstr "登錄"
-
-msgid "Login Information"
-msgstr "登錄資訊"
 
 msgid "Login Successful"
 msgstr "登入成功"
@@ -1154,13 +1130,8 @@ msgstr "登錄成功，正在登入 '%s'"
 msgid "Login Successful, please choose an Organization"
 msgstr "登錄成功，請選擇組織"
 
-msgid ""
-"Login Successful, please contact administrator to get permission to access "
-"an organization."
+msgid "Login Successful, please contact administrator to get permission to access an organization."
 msgstr "登錄成功，請聯絡管理員以取得存取組織的權限。"
-
-msgid "Logo"
-msgstr "商標"
 
 msgid "Logout Successful"
 msgstr "登出成功"
@@ -1216,16 +1187,22 @@ msgstr "名稱不能是空白的。"
 msgid "Name must be unique within one organization"
 msgstr "一個組織中的名稱必須是獨一無二的"
 
+#, fuzzy
+msgid "Names and labels must be unique across all organizations"
+msgstr "一個組織中的名稱必須是獨一無二的"
+
 msgid "Never checked in"
 msgstr "從未簽入"
 
 msgid "Never checked in."
 msgstr "從未簽入。"
 
-msgid "New templates can be created only in a Library environment"
+#, fuzzy
+msgid "New templates can be created only in the '%s' environment"
 msgstr "新範本只能在函式庫環境中建立"
 
-msgid "New templates can be imported only into a Library environment"
+#, fuzzy
+msgid "New templates can be imported only into the '%s' environment"
 msgstr "新範本只能匯入至函式庫環境"
 
 msgid "No Overlap with Current"
@@ -1237,10 +1214,11 @@ msgstr "無服務等級偏好設定"
 msgid "No Template"
 msgstr "沒有範本"
 
-msgid ""
-"No environments are currently available in this organization.  Please either"
-" add some to the organization or select an organization that has an "
-"environment to set user default."
+#, fuzzy
+msgid "No domains found."
+msgstr "找不到"
+
+msgid "No environments are currently available in this organization.  Please either add some to the organization or select an organization that has an environment to set user default."
 msgstr "此組織中目前沒有可用的環境。請新增環境至組織中，或是選擇一個含有環境的組織，以設置使用者預設值。"
 
 msgid "No errors"
@@ -1252,6 +1230,9 @@ msgstr "沒有符合搜尋條件的事件。"
 msgid "No new packages installed"
 msgstr "未安裝新的套件"
 
+msgid "No operating systems found."
+msgstr ""
+
 msgid "No package profile received for %s"
 msgstr "%s 未收到套件設定檔"
 
@@ -1260,6 +1241,9 @@ msgstr "未移除任何套件"
 
 msgid "No packages updated"
 msgstr "未更新任何套件"
+
+msgid "No smart proxy with %s feature found."
+msgstr ""
 
 msgid "No synchronization of the %s is currently running"
 msgstr "%s 目前沒有正在進行的同步程序"
@@ -1270,15 +1254,14 @@ msgstr "尚未為此使用者設定系統註冊預設值。"
 msgid "None"
 msgstr "無"
 
-msgid ""
-"Not enough entitlements in pools (%{size}), required: %{required}, "
-"available: %{available}"
+msgid "Not enough subscriptions in pools (%{size}), required: %{required}, available: %{available}"
 msgstr ""
 
 msgid "Not found"
 msgstr "找不到"
 
-msgid "Number of consumed entitlements exceeded quantity for %s"
+#, fuzzy
+msgid "Number of attached subscriptions exceeded quantity for %s"
 msgstr "%s 的已消耗權利數量超出"
 
 msgid "Number of sockets must be higher than 0 for system %s"
@@ -1314,14 +1297,11 @@ msgstr "開放式原始碼系統管理"
 msgid "Organization"
 msgstr "組織"
 
-msgid ""
-"Organization %s has 'Library' environment only. Please create an environment"
-" for system registration."
-msgstr ""
+msgid "Organization %s has more than one environment. Please specify target environment for system registration."
+msgstr "組織 %s 含有超過一個環境。請指定目標環境以進行系統註冊。"
 
-msgid ""
-"Organization %s has more than one environment. Please specify target "
-"environment for system registration."
+#, fuzzy
+msgid "Organization %{org} has the '%{env}' environment only. Please create an environment for system registration."
 msgstr "組織 %s 含有超過一個環境。請指定目標環境以進行系統註冊。"
 
 msgid "Organization '%s' has been scheduled for background deletion."
@@ -1477,6 +1457,22 @@ msgstr "此範本中找不到套件群組類別 '%s'。"
 msgid "Package group category '%{group}' not found in the %{env} environment"
 msgstr "%{env} 環境中找不到套件群組類型 '%{group}'"
 
+#, fuzzy
+msgid "Package group update canceled"
+msgstr "已取消套件群組更新"
+
+#, fuzzy
+msgid "Package group update complete"
+msgstr "已完成套件群組更新"
+
+#, fuzzy
+msgid "Package group update failed"
+msgstr "套件群組更新失敗"
+
+#, fuzzy
+msgid "Package group update timed out"
+msgstr "套件群組更新逾時"
+
 msgid "Package with id '%s' not found"
 msgstr "找不到 id 為「%s」的套件"
 
@@ -1492,23 +1488,11 @@ msgstr "範本中找不到參數 '%s'。"
 msgid "Parameter '%{name}': '%{value}' was set"
 msgstr "參數 '%{name}'：已設置了 '%{value}'"
 
-msgid "Password"
-msgstr "密碼"
-
-msgid "Password Unknown"
-msgstr "密碼不明"
-
 msgid "Password has been reset for user '%s'."
 msgstr "使用者 '%s' 的密碼已重設。"
 
 msgid "Password reset token has expired for user '%s'."
 msgstr "使用者 '%s' 的密碼重設 token 已過期。"
-
-msgid "Passwords do not match."
-msgstr "密碼不符。"
-
-msgid "Passwords match."
-msgstr "密碼相符。"
 
 msgid "Pending"
 msgstr "等待處理"
@@ -1522,9 +1506,7 @@ msgstr "已移除存取權限「%s」。"
 msgid "Permission '%s' was updated."
 msgstr "已更新存取權限「%s」。"
 
-msgid ""
-"Permission Denied. User '%{user}' does not have permissions to access "
-"organization '%{org}'."
+msgid "Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'."
 msgstr "存取被拒。使用者 '%{user}' 並沒有存取組織 '%{org}' 的權限。"
 
 msgid "Permissions"
@@ -1539,16 +1521,11 @@ msgstr "計劃"
 msgid "Plan Name"
 msgstr "計畫名稱"
 
-msgid ""
-"Please add '%{product}' product to the changeset '%{changeset}' if you wish "
-"to promote repository '%{repo}' with it."
+msgid "Please add '%{product}' product to the changeset '%{changeset}' if you wish to promote repository '%{repo}' with it."
 msgstr "請將 '%{product}' 產品新增至變更集 '%{changeset}' 中（若您希望搭配推送軟體庫 '%{repo}' 的話）。"
 
 msgid "Please create at least one environment."
 msgstr "請建立至少一個環境。"
-
-msgid "Please provide entitlement ID"
-msgstr ""
 
 msgid "Please provide pool ID"
 msgstr "請提供集區 ID"
@@ -1557,6 +1534,10 @@ msgid "Please provide pool and quantity"
 msgstr "請提供集區與數量"
 
 msgid "Please provide serial ID"
+msgstr "請提供序列 ID"
+
+#, fuzzy
+msgid "Please provide subscription ID"
 msgstr "請提供序列 ID"
 
 msgid "Please select at least one system group."
@@ -1619,10 +1600,7 @@ msgstr "已刪除供應方「%s」。"
 msgid "Provider '%s' was updated."
 msgstr "已更新供應方「%s」。"
 
-msgid ""
-"Provider cannot be deleted since one of its products or repositories has "
-"already been promoted. Using a changeset, please delete the repository from "
-"existing environments before deleting it."
+msgid "Provider cannot be deleted since one of its products or repositories has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it."
 msgstr "無法刪除供應方，因為它的其中一項產品或軟體庫已推送。在刪除軟體庫之前，請使用變更集來將它由既有的環境中刪除掉。"
 
 msgid "Providers"
@@ -1790,7 +1768,8 @@ msgstr "軟體庫"
 msgid "Repositories"
 msgstr "軟體庫"
 
-msgid "Repositories can be deleted only in Library environment."
+#, fuzzy
+msgid "Repositories can be deleted only in the '%s' environment."
 msgstr "軟體庫只能在函式庫環境中移除。"
 
 msgid "Repository '%s' created."
@@ -1826,41 +1805,30 @@ msgstr "已更新軟體庫「%s」。"
 msgid "Repository Comparison"
 msgstr "軟體庫比對"
 
-msgid ""
-"Repository cannot be deleted since it has already been promoted. Using a "
-"changeset, please delete the repository from existing environments before "
-"deleting it."
+#, fuzzy
+msgid "Repository can be only created for custom provider."
+msgstr "不允許更新自訂供應方的產品。"
+
+msgid "Repository cannot be deleted since it has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it."
 msgstr "因為軟體庫已推送，因此無法將它刪除。在刪除軟體庫之前，請使用變更集來將它由既有的環境中刪除掉。"
 
 msgid "Repository cannot be disabled since it has already been promoted."
 msgstr "軟體庫無法停用，因為該軟體庫已推送。"
 
-msgid ""
-"Repository of the distribution '%s' has not been promoted into the target "
-"environment!"
+msgid "Repository of the distribution '%s' has not been promoted into the target environment!"
 msgstr "發行版「%s」的軟體庫並未推送到目標環境上！"
 
-msgid ""
-"Repository of the erratum '%s' has not been promoted into the target "
-"environment!"
+msgid "Repository of the erratum '%s' has not been promoted into the target environment!"
 msgstr "勘誤「%s」的軟體庫並未推送到目標環境上！"
 
-msgid ""
-"Repository of the package '%s' has not been promoted into the target "
-"environment!"
+msgid "Repository of the package '%s' has not been promoted into the target environment!"
 msgstr "套件「%s」的軟體庫並未推送到目標環境上！"
 
 msgid "Request received has either an invalid or expired token. Token: '%s'"
 msgstr "收到的請求的 token 無效或是已過期。Token：'%s'"
 
-msgid "Reset Password"
-msgstr "重設密碼"
-
 msgid "Resource not found on the server"
 msgstr "伺服器上找不到資源"
-
-msgid "Return to log in."
-msgstr "返回登錄畫面。"
 
 msgid "Role"
 msgstr "角色"
@@ -1886,9 +1854,6 @@ msgstr "路線不存在："
 msgid "Running."
 msgstr "執行中。"
 
-msgid "Save"
-msgstr "儲存"
-
 msgid "Select Architecture"
 msgstr "選擇架構"
 
@@ -1904,11 +1869,11 @@ msgstr "選擇要排程的產品"
 msgid "Selected Distribution"
 msgstr "選擇散佈版本"
 
-msgid "Send Login"
-msgstr "發送登入"
-
 msgid "Service Level %s"
 msgstr "服務等級 %s"
+
+msgid "Setup"
+msgstr ""
 
 msgid "Severity: Critical"
 msgstr "嚴重性：嚴重"
@@ -1922,9 +1887,6 @@ msgstr "嚴重性：低"
 msgid "Severity: Moderate"
 msgstr "嚴重性：中等"
 
-msgid "Show My Password"
-msgstr "顯示我的密碼"
-
 msgid "Software"
 msgstr "軟體"
 
@@ -1936,6 +1898,12 @@ msgstr "開始從 %{env} 環境刪除內容，使用 '%{changeset}'"
 
 msgid "Started content promotion to %{env} environment using '%{changeset}'"
 msgstr "開始推送內容至 %{env} 環境，使用 '%{changeset}'"
+
+msgid "Subnet"
+msgstr ""
+
+msgid "Subnets"
+msgstr ""
 
 msgid "Subscription manifest delete for provider '%s' failed."
 msgstr "刪除供應方 '%s' 的訂閱清單失敗。"
@@ -1952,10 +1920,7 @@ msgstr "供應方 '%s' 的訂閱服務清單上載失敗。"
 msgid "Subscription manifest uploaded successfully for provider '%s'."
 msgstr "供應方 '%s' 的訂閱服務清單上載成功。"
 
-msgid ""
-"Subscription manifest uploaded successfully for provider '%s'. Please enable"
-" the repositories you want to sync by selecting 'Enable Repositories' and "
-"selecting individual repositories to be enabled."
+msgid "Subscription manifest uploaded successfully for provider '%s'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled."
 msgstr "供應方 '%s' 的訂閱清單已成功上傳。請啟用您想要同步的軟體庫，方法是選擇「啟用軟體庫」，然後選擇要啟用的個別軟體庫。"
 
 msgid "Subscriptions"
@@ -2060,9 +2025,7 @@ msgstr "系統群組 %s 已刪除。"
 msgid "System Group %s has been updated."
 msgstr "系統群組 %s 已更新。"
 
-msgid ""
-"System Group %{new_group} created successfully as a copy of system group "
-"%{group}."
+msgid "System Group %{new_group} created successfully as a copy of system group %{group}."
 msgstr "系統群組 %{new_group} 已成功建立為系統群組 %{group} 的備份。"
 
 msgid "System Group Info"
@@ -2095,6 +2058,9 @@ msgstr "已更新系統訂閱。"
 msgid "System's environment not compatible with the group '%s'."
 msgstr "系統的環境與群組「%s」不相容。"
 
+msgid "System: %{system_name}, System Groups Removed: %{system_group_names}"
+msgstr ""
+
 msgid "Systems"
 msgstr "系統"
 
@@ -2104,8 +2070,7 @@ msgstr "系統大批動作：新增至系統群組：%s"
 msgid "Systems Bulk Action: No errata IDs have been provided."
 msgstr "系統大批動作：未提供勘誤 ID。"
 
-msgid ""
-"Systems Bulk Action: No package or package group names have been provided."
+msgid "Systems Bulk Action: No package or package group names have been provided."
 msgstr "系統大批動作：未提供套件或是套件群組名稱。"
 
 msgid "Systems Bulk Action: Remove from system group(s): %s"
@@ -2147,11 +2112,7 @@ msgstr "範本 %s 已成功更新"
 msgid "Template %s updated successfully."
 msgstr "範本 %s 已成功更新。"
 
-msgid ""
-"Template '%s' has been updated successfully, however you have removed either"
-" a product or repository that contained the selected distribution for this "
-"template.  Please select another distribution to ensure a working system "
-"template."
+msgid "Template '%s' has been updated successfully, however you have removed either a product or repository that contained the selected distribution for this template.  Please select another distribution to ensure a working system template."
 msgstr "範本 '%s' 已成功更新，然而您已移除了一項包含此範本的發行版之產品或軟體庫。請選擇其它發行版，以確保系統範本能正常運作。"
 
 msgid "Template '%s' not found in the changeset"
@@ -2172,49 +2133,39 @@ msgstr "已匯入範本"
 msgid "Templates"
 msgstr "範本"
 
-msgid "Templates can be updated only in a Library environment"
+#, fuzzy
+msgid "Templates can be updated only in the '%s' environment"
 msgstr "範本僅能在 Library 環境中更新"
 
-msgid ""
-"The current organization cannot be deleted. Please switch to a different "
-"organization before deleting."
+#, fuzzy
+msgid "The '%s' environment cannot contain a changeset!"
+msgstr "函式庫環境不能包括變更集！"
+
+msgid "The current organization cannot be deleted. Please switch to a different organization before deleting."
 msgstr "不能刪除目前的組織。刪除前請切換到其它組織。"
 
 msgid "The environment still has content that belongs to product '%s'."
 msgstr "環境仍擁有屬於產品 %s 的內容。"
 
-msgid ""
-"The label requested is already used by another %s; therefore, a unique label"
-" was assigned.  If you would like a different label, please delete the %s "
-"and recreate it with a unique label.  Requested label: %s, Assigned label: "
-"%s"
+msgid "The label requested is already used by another %s; therefore, a unique label was assigned.  If you would like a different label, please delete the %s and recreate it with a unique label.  Requested label: %s, Assigned label: %s"
 msgstr "要求的標籤已經由 %s 所使用；因此已指定了一組獨一無二的標籤。如果您想要使用不同的標籤，請刪除 %s 標籤，然後用其它名稱重新建立。要求的標籤：%s，指定的標籤：%s"
 
-msgid ""
-"The selected system groups (%s) are not compatible with the selected "
-"environment."
+msgid "The selected system groups (%s) are not compatible with the selected environment."
 msgstr "所選擇的系統群組（%s）與選擇的環境不相容。"
 
-msgid ""
-"The system registration default you supplied was the same as the old system "
-"registration default."
+msgid "The system registration default you supplied was the same as the old system registration default."
 msgstr "您所提供的系統註冊預設值與舊的系統註冊預設值相同。"
 
 msgid "The template has children templates."
 msgstr "範本有子範本。"
 
-msgid ""
-"There is already a repo with the label [ %{repo} ] for product [ %{product} "
-"]"
+msgid "There is already a repo with the label [ %{repo} ] for product [ %{product} ]"
 msgstr "已經有名為 [ %{repo} ] 的軟體庫，給產品 [ %{product} ] 使用。"
 
-msgid ""
-"There is already a repo with the name [ %{repo} ] for product [ %{product} ]"
+msgid "There is already a repo with the name [ %{repo} ] for product [ %{product} ]"
 msgstr "已經有名為 [ %{repo} ] 的軟體庫，給產品 [ %{product} ] 使用。"
 
-msgid ""
-"There is already an active sync process for the '%s' repository. Please try "
-"again later"
+msgid "There is already an active sync process for the '%s' repository. Please try again later"
 msgstr "'%s' 軟體庫已有項啟用的同步程序。請稍後再次嘗試"
 
 msgid "There must be at least one plan selected"
@@ -2223,9 +2174,7 @@ msgstr "必須選擇至少一項計劃"
 msgid "There must be at least one product selected"
 msgstr "必須選擇至少一項產品"
 
-msgid ""
-"There were errors syncing repository '%s'. See notices page for more "
-"details."
+msgid "There were errors syncing repository '%s'. See notices page for more details."
 msgstr "同步軟體庫 '%s' 時發生了錯誤。請查看告示網頁，以取得更多詳細資訊。"
 
 msgid "This action doesn't support pacakge groups"
@@ -2252,38 +2201,32 @@ msgstr "找不到套件 %s"
 msgid "Unable to parse repositories: %s"
 msgstr "無法叵析軟體庫：%s"
 
-msgid ""
-"Unable to retrieve release versions from Repository URL %{url}. Error "
-"message: %{error}"
+msgid "Unable to retrieve release versions from Repository URL %{url}. Error message: %{error}"
 msgstr "無法由軟體庫 URL %{url} 取得發行版本。錯誤訊息：%{error}"
 
 msgid "Unable to retrieve subscription history for provider '%{name}'."
 msgstr "無法取得供應方 '%{name}' 的訂閱歷史。"
 
-msgid ""
-"Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}'"
-" failed.  Reason: %{message}"
+msgid "Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
 msgstr "移除套件群組 '%{groups}' 失敗（為系統群組 '%{name}' 所排程的套件群組更新）。原因：%{message}"
 
-msgid ""
-"Uninstall of Package Groups '%{groups}' scheduled for System Group "
-"'%{name}'."
+msgid "Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}'."
 msgstr "移除套件群組 '%{groups}'（已為系統群組 '%{name}' 排程）。"
 
 msgid "Uninstall of Package Groups '%{p}' scheduled for System '%{s}'."
 msgstr "排程系統 %{s} 解除安裝套件群組 %{p}。"
 
-msgid ""
-"Uninstall of Packages '%{packages}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
+msgid "Uninstall of Packages '%{packages}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
 msgstr "移除套件 '%{packages}' 失敗（為系統群組 '%{name}' 所排程的套件更新）。原因：%{message}"
 
-msgid ""
-"Uninstall of Packages '%{packages}' scheduled for System Group '%{name}'."
+msgid "Uninstall of Packages '%{packages}' scheduled for System Group '%{name}'."
 msgstr "移除套件 '%{packages}'（已為系統群組 '%{name}' 排程）。"
 
 msgid "Uninstall of Packages '%{p}' scheduled for System '%{s}'."
 msgstr "排程系統 %{s} 解除安裝套件 %{p}。"
+
+msgid "Units"
+msgstr ""
 
 msgid "Unknown changeset type, must be PROMOTION or DELETION: %s"
 msgstr "不明的變更集類型，必須是 PROMOTION 或是 DELETION：%s"
@@ -2294,18 +2237,13 @@ msgstr "未知的註冊日期"
 msgid "Unknown repository label: %s"
 msgstr "未知的軟體庫標籤：%s"
 
-msgid ""
-"Update of Package Groups '%{groups}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
+msgid "Update of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
 msgstr "更新套件群組 '%{groups}' 失敗（為系統群組 '%{name}' 所排程的套件群組更新）。原因：%{message}"
 
-msgid ""
-"Update of Package Groups '%{groups}' scheduled for System Group '%{name}'."
+msgid "Update of Package Groups '%{groups}' scheduled for System Group '%{name}'."
 msgstr "更新套件群組 '%{groups}'（已為系統群組 '%{name}' 排程）。"
 
-msgid ""
-"Update of Packages '%{packages}' scheduled for System Group '%{group}' "
-"failed.  Reason: %{message}"
+msgid "Update of Packages '%{packages}' scheduled for System Group '%{group}' failed.  Reason: %{message}"
 msgstr "更新套件 '%{packages}' 失敗（為系統群組 '%{groups}' 所排程的套件更新）。原因：%{message}"
 
 msgid "Update of Packages '%{packages}' scheduled for System Group '%{name}'."
@@ -2319,6 +2257,10 @@ msgstr "已為系統 '%s' 排程更新所有套件。"
 
 msgid "Updating Package..."
 msgstr "正在更新套件……"
+
+#, fuzzy
+msgid "Updating package group..."
+msgstr "正在更新套件群組..."
 
 msgid "Usage limit (%{limit}) exhausted for activation key '%{name}'"
 msgstr "已達使用量限制（%{limit}），啟動金鑰為 '%{name}'"
@@ -2350,14 +2292,15 @@ msgstr "已成功更新使用者。"
 msgid "Username"
 msgstr "使用者名稱"
 
-msgid "Username Unknown?"
-msgstr "使用者名稱不明？"
-
 msgid "Users"
 msgstr "使用者"
 
 msgid "Validation failed: Label has already been taken"
 msgstr "驗證失敗：標籤已被使用"
+
+#, fuzzy
+msgid "Version"
+msgstr "存取權限"
 
 msgid "Virtual"
 msgstr "虛擬"
@@ -2365,44 +2308,28 @@ msgstr "虛擬"
 msgid "Welcome Back"
 msgstr "歡迎回來"
 
-msgid ""
-"Wrong/Invalid parameters sent for %{controller}/%{action}.\\n Wrong "
-"Parameters: \\n%{params}\\n Parameters Received:\\n %{all_params} "
+msgid "Wrong/Invalid parameters sent for %{controller}/%{action}.\\n Wrong Parameters: \\n%{params}\\n Parameters Received:\\n %{all_params} "
 msgstr "錯誤 / 不正確的參數發送至 %{controller}/%{action}。\\n 錯誤的參數： \\n%{params}\\n 收到的參數：\\n %{all_params} "
 
 msgid "You can synchronize repositories only in library environment'"
 msgstr "您只可以在 library 環境中同步軟體庫"
 
-msgid ""
-"You cannot have more than %{max_systems} system(s) associated with system "
-"group '%{group}'."
+msgid "You cannot have more than %{max_systems} system(s) associated with system group '%{group}'."
 msgstr "您不能讓超過 %{max_systems} 台系統與系統群組 '%{group}' 相關連。"
 
-msgid ""
-"You do not have valid credentials to access this system. Please contact your"
-" administrator."
+msgid "You do not have valid credentials to access this system. Please contact your administrator."
 msgstr "您沒有足夠的權限存取此系統。請聯絡系統管理員。"
 
-msgid ""
-"You have entered an incorrect username/password combination, or your account"
-" may currently be disabled. Please try again or contact your administrator."
+msgid "You have entered an incorrect username/password combination, or your account may currently be disabled. Please try again or contact your administrator."
 msgstr "您輸入了錯誤的使用者名稱/密碼，或是您的帳號可能目前無法使用。請重新嘗試，或聯絡您的管理員。"
 
-msgid ""
-"You have not set a default organization and environment on the user %s."
+msgid "You have not set a default organization and environment on the user %s."
 msgstr "您尚未設置使用者 %s 的設置預設組織和環境。"
 
 msgid "You must be logged in to access that page."
 msgstr "您必須先登入，才能存取該網頁。"
 
-msgid ""
-"You must specify host in %{config_file} for %{app_name} to work properly"
-msgstr "您必須在 %{config_file} 中指定主機，好讓 %{app_name} 運作正常"
-
-msgid ""
-"Your current organization is no longer valid. It is possible that either the"
-" organization has been deleted or your permissions revoked, please log back "
-"in to continue."
+msgid "Your current organization is no longer valid. It is possible that either the organization has been deleted or your permissions revoked, please log back in to continue."
 msgstr "您目前的組織已無效。這可能是因為組織已被刪除，或是您的權限已被移除，請重新登入以繼續進行。"
 
 msgid "Your default environment has been removed. Please choose another one."
@@ -2417,8 +2344,8 @@ msgstr "所有套件更新"
 msgid "all packages update failed"
 msgstr "所有套件更新皆失敗了"
 
-msgid "can not be updated"
-msgstr "無法更新"
+msgid "already exists (including organizations being deleted)"
+msgstr ""
 
 msgid "can't be blank"
 msgstr "不能留白"
@@ -2477,14 +2404,10 @@ msgstr "已位於範本中"
 msgid "is invalid"
 msgstr "無效"
 
-msgid "is too long"
-msgstr "太長"
-
 msgid "katello-jobs service not running"
 msgstr "katello-jobs 服務非執行中"
 
-msgid ""
-"may not be less than the number of systems associated with the system group."
+msgid "may not be less than the number of systems associated with the system group."
 msgstr "不可少於與系統群組相聯的系統數量。"
 
 msgid "may not be set to 0."
@@ -2514,7 +2437,8 @@ msgstr "必須在組織中是獨一無二的"
 msgid "must be unique."
 msgstr "必須是獨特的。"
 
-msgid "must contain 'Library'"
+#, fuzzy
+msgid "must contain '%s'"
 msgstr "必須包含 'Library'"
 
 msgid "must contain at least %s character"
@@ -2529,23 +2453,15 @@ msgstr "名稱：%s 不存在"
 msgid "none"
 msgstr "無"
 
+#, fuzzy
+msgid "of environment must be unique within one organization"
+msgstr "一個組織中的名稱必須是獨一無二的"
+
 msgid "organization"
 msgstr "組織"
 
 msgid "organization_id required but not specified."
 msgstr "需要 organization_id，不過尚未指定。"
-
-msgid "package group update canceled"
-msgstr "已取消套件群組更新"
-
-msgid "package group update complete"
-msgstr "已完成套件群組更新"
-
-msgid "package group update failed"
-msgstr "套件群組更新失敗"
-
-msgid "package group update timed out"
-msgstr "套件群組更新逾時"
 
 msgid "plan"
 msgstr "計劃"
@@ -2577,8 +2493,7 @@ msgstr "%s Bugzilla"
 msgid "the CloudForms Documentation"
 msgstr "CloudForms 文件"
 
-msgid ""
-"the following attributes can not be updated for the Red Hat provider: [ %s ]"
+msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "Red Hat 供應者的以下屬性可以更新：[ %s ]"
 
 msgid "updating package group..."
@@ -2595,3 +2510,93 @@ msgstr "正在更新套件..."
 
 msgid "weekly"
 msgstr "每週"
+
+#~ msgid " '%s' already exists and either has been scheduled for deletion or failed deletion."
+#~ msgstr "「%s」已存在，並已排程準備刪除，或刪除失敗。"
+
+#~ msgid "Cannot delete the changeset '%{changeset}' while another changeset (%{another_changeset}) is being deleted or promoted."
+#~ msgstr "無法刪除變更集 '%{changeset}'，另一變更集（%{another_changeset}）正被刪除或推送中。"
+
+#~ msgid "Change Password"
+#~ msgstr "變更密碼"
+
+#~ msgid "Confirm Password"
+#~ msgstr "確認密碼"
+
+#~ msgid "Consumers"
+#~ msgstr "消耗者"
+
+#~ msgid "Email Address"
+#~ msgstr "電子郵件地址"
+
+#~ msgid "Enter your username and email address below and instructions on resetting your password will be sent to you."
+#~ msgstr "請在下方輸入您的使用者名稱和電子郵件位址，之後您將會收到重設密碼的相關指示。"
+
+#~ msgid "Forgot %s or %s?"
+#~ msgstr "忘記了 %s 或 %s？"
+
+#~ msgid "Forgot Username or Password?"
+#~ msgstr "忘記了使用者名稱或密碼？"
+
+#~ msgid "I remembered my login credentials."
+#~ msgstr "我記得我的登錄認證資訊"
+
+#~ msgid "If you do not know your username, please enter your email address below and your username information will be sent to you."
+#~ msgstr "若您不知道您的使用者名稱為何，請在下方輸入您的電子郵件地址，之後我們便會將使用者名稱資訊寄給您。"
+
+#~ msgid "Invalid Url"
+#~ msgstr "無效的 URL"
+
+#~ msgid "Javascript must be enabled for this application to work properly."
+#~ msgstr "必須啟用 Javascript，此應用程式才能正常運作。"
+
+#~ msgid "Library"
+#~ msgstr "函式庫"
+
+#~ msgid "Login"
+#~ msgstr "登錄"
+
+#~ msgid "Login Information"
+#~ msgstr "登錄資訊"
+
+#~ msgid "Logo"
+#~ msgstr "商標"
+
+#~ msgid "Password"
+#~ msgstr "密碼"
+
+#~ msgid "Password Unknown"
+#~ msgstr "密碼不明"
+
+#~ msgid "Passwords do not match."
+#~ msgstr "密碼不符。"
+
+#~ msgid "Passwords match."
+#~ msgstr "密碼相符。"
+
+#~ msgid "Reset Password"
+#~ msgstr "重設密碼"
+
+#~ msgid "Return to log in."
+#~ msgstr "返回登錄畫面。"
+
+#~ msgid "Save"
+#~ msgstr "儲存"
+
+#~ msgid "Send Login"
+#~ msgstr "發送登入"
+
+#~ msgid "Show My Password"
+#~ msgstr "顯示我的密碼"
+
+#~ msgid "Username Unknown?"
+#~ msgstr "使用者名稱不明？"
+
+#~ msgid "You must specify host in %{config_file} for %{app_name} to work properly"
+#~ msgstr "您必須在 %{config_file} 中指定主機，好讓 %{app_name} 運作正常"
+
+#~ msgid "can not be updated"
+#~ msgstr "無法更新"
+
+#~ msgid "is too long"
+#~ msgstr "太長"
