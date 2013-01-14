@@ -25,6 +25,13 @@ class Api::ContentViewDefinitionsController < Api::ApiController
     }
   end
 
+  def param_rules
+    {
+      :create => { :content_view_definition => [:name, :description, :label] },
+      :update => { :content_view_definition => [:name, :description] }
+    }
+  end
+
   api :GET, "/organizations/:organization_id/content_view_definitions",
     "List content view definitions"
   param :organization_id, :identifier, :desc => "organization identifier"
