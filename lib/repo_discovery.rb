@@ -21,11 +21,11 @@ class RepoDiscovery
     @crawled = []
   end
 
-  def run(&block)
+  def run(found_lambda, continue_lambda)
     if @uri.scheme == 'file'
-      file_crawl(&block)
+      file_crawl(found_lambda, continue_lambda)
     elsif ['http', 'https'].include?(@uri.scheme)
-      http_crawl(&block)
+      http_crawl(found_lambda, continue_lambda)
     else
       raise _("Unsupported URL protocol %s.")  % @uri.scheme
     end
@@ -37,18 +37,18 @@ class RepoDiscovery
 
   private
 
-  def http_crawl(&block)
+  def http_crawl(found_lambda, continue_lambda)
     Anemone.crawl(@uri) do |anemone|
 
       anemone.focus_crawl do |page|
-        print "\n#{page.url.path}\n"
+        return false if !continue_lambda.call
         @crawled << page.url.path
 
         to_follow = []
         page.links.each do |link|
           if link.path.ends_with?('/repodata/')
             @found << page.url.to_s
-            yield(page.url.to_s)
+            found_lambda.call(page.url.to_s)
           else
             to_follow << link if should_follow?(link.path)
           end
@@ -60,13 +60,15 @@ class RepoDiscovery
     @found
   end
 
-  def file_crawl(&block)
+  def file_crawl(found_lambda, continue_lambda)
     directories = Dir.glob("#{@uri.path}**/")
     directories.each do |dir|
+      return false if !continue_lambda.call
+
       if dir.ends_with?('/repodata/')
         found_path = Pathname(dir).parent.to_s
         @found << "file://#{found_path}"
-        yield("file://#{found_path}")
+        found_lambda.call("file://#{found_path}")
       end
     end
     @found
