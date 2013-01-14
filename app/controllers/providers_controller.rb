@@ -193,7 +193,7 @@ class ProvidersController < ApplicationController
   protected
 
   def get_discovered_urls
-    urls = (@provider.discovered_repos.nil? ? [] : @provider.discovered_repos.sort)
+    urls = @provider.discovered_repos.try(:sort) || []
     urls.collect do |url|
       path = url.sub(@provider.discovery_url, '')
       path = "/#{path}" if path[0] != '/'
