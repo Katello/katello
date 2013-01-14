@@ -51,11 +51,12 @@ class SystemGroup < ActiveRecord::Base
   before_save :save_system_environments
 
   validates :pulp_id, :presence => true
-  validates :name, :presence => true, :katello_name_format => true
+  validates :name, :presence => true
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_presence_of :organization_id, :message => N_("Organization cannot be blank.")
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
   validates_uniqueness_of :pulp_id, :message=> N_("must be unique.")
-  validates :description, :katello_description_format => true
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
 
   alias_attribute :system_limit, :max_systems
   UNLIMITED_SYSTEMS = -1

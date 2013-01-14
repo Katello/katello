@@ -10,35 +10,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class PackageUniquenessValidator < ActiveModel::Validator
-  def validate(record)
-    duplicate_ids = SystemTemplatePackage.where(:system_template_id => record.system_template_id, :package_name => record.package_name, :version => record.version, :release => record.release, :epoch => record.epoch, :arch => record.arch).all.map {|p| p.id}
-    duplicate_ids -= [record.id]
-    record.errors[:base] << _("Package '%s' is already present in the template") % record.nvrea if duplicate_ids.count > 0
-  end
-end
-
-class PackageValidator < ActiveModel::Validator
-  def validate(record)
-    env = record.system_template.environment
-    if record.is_nvr?
-      cnt = env.find_packages_by_nvre(record.package_name, record.version, record.release, record.epoch).length
-      name = record.nvrea
-    else
-      cnt = env.find_packages_by_name(record.package_name).length
-      name = record.package_name
-    end
-
-    record.errors[:base] <<  _("Package '%{package}' not found in the %{env} environment") % {:package => name, :env => env.name} if cnt == 0
-  end
-end
-
 class SystemTemplatePackage < ActiveRecord::Base
   include Authorization
 
   belongs_to :system_template, :inverse_of => :packages
-  validates_with PackageUniquenessValidator
-  validates_with PackageValidator
+  validates_with Validators::PackageUniquenessValidator
+  validates_with Validators::PackageValidator
 
   def is_nvr?
     not (self.package_name.nil? or self.version.nil? or self.release.nil?)

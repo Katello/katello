@@ -50,7 +50,9 @@ describe Api::RepositoriesController, :katello => true do
       Product.stub!(:find).and_return(@product)
       Product.stub!(:find_by_cp_id).and_return(@product)
       ep = EnvironmentProduct.find_or_create(@organization.library, @product)
-      @repository = Repository.create!(:environment_product => ep, :name=> "repo_1", :label=>"repo_label", :pulp_id=>"1")
+      @repository = Repository.create!(:environment_product => ep, :name=> "repo_1",
+                                       :label=>"repo_label", :pulp_id=>"1",
+                                       :feed => 'https://localhost')
       Repository.stub(:find).and_return(@repository)
       Resources::Pulp::Repository.stub(:start_discovery).and_return({})
       PulpSyncStatus.stub(:using_pulp_task).and_return(task_stub)
