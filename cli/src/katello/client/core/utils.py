@@ -293,9 +293,9 @@ class Spinner(threading.Thread):
 
     def _eraseMessage(self):
         l = len(self._msg)
-        sys.stdout.write('\033['+ str(l) +'D')
+        sys.stdout.write('\033['+ str(l) +'D') # pylint: disable=E0012,W1401
         sys.stdout.write(' '*l)
-        sys.stdout.write('\033['+ str(l) +'D')
+        sys.stdout.write('\033['+ str(l) +'D') # pylint: disable=E0012,W1401
 
 
     @classmethod
@@ -306,7 +306,7 @@ class Spinner(threading.Thread):
     @classmethod
     def _resetCaret(cls):
         #move the caret one character back
-        sys.stdout.write('\033[3D')
+        sys.stdout.write('\033[3D') # pylint: disable=E0012,W1401
         sys.stdout.flush()
 
     def _eraseSpinner(self):
@@ -317,7 +317,7 @@ class Spinner(threading.Thread):
     def run(self):
         self._putMessage()
         while True:
-            for char in '/-\|':
+            for char in r'/-\|':
                 self._putChar(char)
                 if self._stopevent.wait(0.1) or self._stopevent.is_set():
                     self._eraseSpinner()
