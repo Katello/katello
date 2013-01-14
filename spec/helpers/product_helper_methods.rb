@@ -63,7 +63,6 @@ module ProductHelperMethods
     repo.stub(:sync).and_return([])
 
     repo.stub!(:pulp_repo_facts).and_return({:clone_ids => []})
-    Resources::Pulp::Repository.stub!(:clone_repo).and_return({})
     Glue::Pulp::Repos.stub!(:groupid).and_return([])
     repo.stub(:content => {:id => "123"})
     repo.promote(environment.prior, environment)
