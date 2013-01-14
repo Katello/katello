@@ -1,5 +1,5 @@
 Name: katello-agent
-Version: 1.3.0
+Version: 1.3.1
 Release: 1%{?dist}
 Summary: The Katello Agent
 Group:   Development/Languages
@@ -45,6 +45,9 @@ rm -rf %{buildroot}
 %doc LICENSE
 
 %changelog
+* Mon Jan 07 2013 Justin Sherrill <jsherril@redhat.com> 1.3.1-1
+- Refit agent for pulp v2. (jortel@redhat.com)
+
 * Fri Oct 12 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.3-1
 - 
 
