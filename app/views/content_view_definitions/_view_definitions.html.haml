@@ -15,7 +15,8 @@
 
         - definition.content_views.each do |view|
           %tr.view{:class => "child-of-definition_#{definition.id}"}
-            %td
-              = check_box_tag "content_views[#{view.id}]", "1", view_checked?(view.id, views), {:tabindex => form.tabindex}
+            %td.view_checkbox
+              = check_box_tag "content_views[#{view.id}]", "1", view_checked?(view.id, views),
+                {:tabindex => form.tabindex, 'data-view_id' => view.id}
               #{view.name}
             %td #{view.version(current_organization.library).try(:task_status).try(:finish_time)}
