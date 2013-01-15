@@ -100,8 +100,6 @@ EOKEY
     Runcible::Extensions::Repository.stub!(:create_or_update_schedule).and_return(true)
     Runcible::Extensions::Repository.stub!(:remove_schedules).and_return(true)
 
-    Resources::Pulp::Repository.stub!(:all).and_return([])
-    Resources::Pulp::Repository.stub!(:update).and_return([])
   end
 
   def disable_org_orchestration
