@@ -182,6 +182,7 @@ development:
     random_password: false
   database:
     database: katello
+    min_messages: WARNING
 
 #
 # Test environment configuration
@@ -191,6 +192,7 @@ development:
 test:
   database:
     database: katello-test<%= ENV['TEST_ENV_NUMBER'] %>
+    min_messages: WARNING
 
 
 # Blank configuration for build environment
