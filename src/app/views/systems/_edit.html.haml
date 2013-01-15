@@ -100,6 +100,10 @@
           = label :arch, :arch, _("Environment")
         .grid_5.la#environment_path_selector{'name'=> 'system[environment_id]', :class=>("editable" if editable), 'data-url'=>system_path(system.id)}
           %span #{system_environment_name system}
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :content_view, :content_view, _("Content View")
+        .grid_5.la#system_content_view{'name' => 'system[content_view_id]', :class=>("editable edit_select" if editable), 'data-url'=>system_path(system.id), 'data-options' => system_content_view_opts} #{system.content_view}
 
     .clear
     .grid_8
