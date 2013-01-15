@@ -168,8 +168,8 @@ class ContentViewDefinitionsController < ApplicationController
 
   def publish
     # perform the publish
-    view = @view_definition.publish(params[:content_view][:name], params[:content_view][:description],
-                                    params[:content_view][:label], {:notify => true}) if params.has_key?(:content_view)
+    @view_definition.publish(params[:content_view][:name], params[:content_view][:description],
+                             params[:content_view][:label], {:notify => true}) if params.has_key?(:content_view)
 
     notify.success(_("Started publish of content view '%{view_name}' from definition '%{definition_name}'.") %
                        {:view_name => params[:content_view][:name], :definition_name => @view_definition.name})
@@ -233,6 +233,7 @@ class ContentViewDefinitionsController < ApplicationController
 
   def content
     if @view_definition.composite
+
       component_views = @view_definition.component_content_views.inject({}) do |hash, view|
         hash[view.id] = view
         hash
@@ -280,8 +281,10 @@ class ContentViewDefinitionsController < ApplicationController
 
       @view_definition.component_content_views -= deleted_content_views
       @view_definition.component_content_views += added_content_views
-      @view_definition.save!
+    else
+      @view_definition.component_content_views = []
     end
+    @view_definition.save!
 
     notify.success _("Successfully updated content for content view definition '%s'.") % @view_definition.name
     render :nothing => true
