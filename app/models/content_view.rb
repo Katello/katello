@@ -60,6 +60,10 @@ class ContentView < ActiveRecord::Base
     end
   end
 
+  def to_s
+    name
+  end
+
   def promoted?
     # if the view exists in more than 1 environment, it has been promoted
     self.environments.length > 1 ? true : false
