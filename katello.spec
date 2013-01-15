@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.3.2
+Version:        1.3.3
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -734,6 +734,29 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Jan 15 2013 Justin Sherrill <jsherril@redhat.com> 1.3.3-1
+- Translations - Update .po and .pot files for katello. (jsherril@redhat.com)
+- Translations - New translations from Transifex for katello.
+  (jsherril@redhat.com)
+- Translations - Download translations from Transifex for katello.
+  (jsherril@redhat.com)
+- Setting the min_messages level to warning (daviddavis@redhat.com)
+- Repository feed validation moved to validator (mhulan@redhat.com)
+- Code cleanup (mhulan@redhat.com)
+- Move all validators to one place (mhulan@redhat.com)
+- 820392 - repository hostname validation (mhulan@redhat.com)
+- emails - add default From to login/password emails (bbuckingham@redhat.com)
+- 882311 - hide and check organizations being deleted (lzap+git@redhat.com)
+- 882311 - remove scope-based organization hiding when deleting it
+  (lzap+git@redhat.com)
+- fix missing assets when running in development (pchalupa@redhat.com)
+- 868090 - [ru_RU] L10n:Content Management - Repositories: Untranslated string
+  in Products and Repositories tab (komidore64@gmail.com)
+- 880515 - [ALL_LANG][headpin CLI] Redundant brackets in the message of
+  'Couldn't find organization '??' ()' for system report module with invalid
+  --org name. (komidore64@gmail.com)
+- 808461 - prevent from creating a repo in rh providers (lzap+git@redhat.com)
+
 * Tue Jan 08 2013 Lukas Zapletal <lzap+git@redhat.com> 1.3.2-1
 - Merge pull request #1307 from thomasmckay/869371-ram
 - Merge pull request #1294 from thomasmckay/878891-actkey-alignment
