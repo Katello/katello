@@ -23,4 +23,17 @@ module ContentViewDefinitionsHelper
     return false if views_hash.nil?
     return views_hash.has_key?(view_id)
   end
+
+  def view_repos(definitions)
+    view_repos = {}
+    definitions.each do |definition|
+      definition.content_views.each do |view|
+        view_repos[view.id] = {
+            :repos => view.repos(current_organization.library).collect{|repo| repo.library_instance_id}
+        }
+      end
+    end
+    view_repos
+  end
+
 end

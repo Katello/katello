@@ -1,4 +1,7 @@
 -# Partial for the 'Content' pane of a composite content view definition.
+= javascript do
+  :plain
+    KT.content_view_definition.set_view_repos($.parseJSON('#{escape_javascript(view_repos(view_definitions).to_json)}'));
 
 = render :partial => "content_view_definitions/tupane_header"
 
