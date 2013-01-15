@@ -14,7 +14,7 @@ class SystemGroup < ActiveRecord::Base
   include Hooks
   define_hooks :add_system_hook, :remove_system_hook
 
-  include Glue::Pulp::ConsumerGroup if (AppConfig.use_pulp)
+  include Glue::Pulp::ConsumerGroup if AppConfig.use_pulp
   include Glue::ElasticSearch::SystemGroup if AppConfig.use_elasticsearch
   include Glue if AppConfig.use_cp || AppConfig.use_pulp
   include Authorization::SystemGroup

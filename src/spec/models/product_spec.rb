@@ -65,7 +65,6 @@ describe Product, :katello => true do
       before do
         Resources::Candlepin::Product.stub!(:certificate).and_return("")
         Resources::Candlepin::Product.stub!(:key).and_return("")
-        Resources::Pulp::Repository.stub!(:create).and_return([])
       end
 
       context "with attributes" do
@@ -399,9 +398,6 @@ describe Product, :katello => true do
 
     context "resetting product gpg work across multiple environments" do
       before do
-        Resources::Pulp::Repository.stub(:packages).and_return([])
-        Resources::Pulp::Repository.stub(:errata).and_return([])
-
         @env = KTEnvironment.create!(:name=>"new_repo", :label=> "new_repo", :organization =>@organization, :prior=>@organization.library)
         @new_repo = promote(@repo, @env)
         @new_repo.stub(:content).and_return(OpenStruct.new(:id=>"adsf", :gpgUrl=>'http://foo'))

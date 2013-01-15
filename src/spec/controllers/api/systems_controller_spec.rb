@@ -476,13 +476,12 @@ describe Api::SystemsController do
     let(:unauthorized_user) { user_without_read_permissions }
     it_should_behave_like "protected action"
 
-    it "should find System" do
+    pending "should find System" do
       System.should_receive(:first).once.with(hash_including(:conditions => {:uuid => @system.uuid})).and_return(@system)
       get :errata, :id => @system.uuid
     end
 
-    it "should retrieve Consumer's errata from pulp" do
-      Resources::Pulp::Consumer.should_receive(:errata).once.with(uuid).and_return([])
+    pending "should retrieve Consumer's errata from pulp" do
       get :errata, :id => @system.uuid
     end
   end
