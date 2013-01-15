@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.3.2
+Version:       1.3.3
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
@@ -51,6 +51,9 @@ cp -Rp cli_tests/ cli-system-test helpers *zip RPM-GPG-KEY* $RPM_BUILD_ROOT%{hom
 
 
 %changelog
+* Tue Jan 15 2013 Justin Sherrill <jsherril@redhat.com> 1.3.3-1
+- run system-test on os x without warning (pchalupa@redhat.com)
+
 * Tue Jan 08 2013 Lukas Zapletal <lzap+git@redhat.com> 1.3.2-1
 - 879151, 879161, 879169, 879174, 879195, 880031, 880048, 880054, 880066,
   880073, 880089, 880131, 880566 (komidore64@gmail.com)
