@@ -147,8 +147,6 @@ describe SystemsController do
       Resources::Candlepin::Consumer.stub!(:get).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
-      Resources::Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-      Resources::Pulp::Consumer.stub!(:update).and_return(true)
     end
 
     describe "viewing systems" do
@@ -194,7 +192,6 @@ describe SystemsController do
         before (:each) do
           @system = System.create!(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
 
-          Resources::Pulp::Consumer.stub!(:installed_packages).and_return([])
         end
 
         it "it should show facts" do
