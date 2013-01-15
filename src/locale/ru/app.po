@@ -1,3 +1,4 @@
+# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
@@ -7,23 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: version 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-19 09:10-0500\n"
-"PO-Revision-Date: 2012-12-20 13:18+0100\n"
-"Last-Translator: Miroslav Suchy <msuchy@redhat.com>\n"
-"Language-Team: American English <katello-devel@redhat.com>\n"
+"POT-Creation-Date: 2013-01-14 17:43-0500\n"
+"PO-Revision-Date: 2012-12-20 13:08+0000\n"
+"Last-Translator: Miroslav Suchý <msuchy@redhat.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<"
-"=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 1.5\n"
-
-msgid ""
-" '%s' already exists and either has been scheduled for deletion or failed "
-"deletion."
-msgstr ""
-"«%s» уже существует и ожидает удаления (или удаление завершилось неудачей)."
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 msgid " created successfully."
 msgstr "создан(о) успешно."
@@ -214,6 +207,10 @@ msgstr "Истекло время ожидания обновления паке
 msgid "%s package updated"
 msgstr "Пакет %s обновлён"
 
+#, fuzzy
+msgid "%s updated successfully."
+msgstr "Пользователь обновлён."
+
 msgid "%{errata} (%{rest} other errata)"
 msgstr "%{errata} (других исправлений: %{rest})"
 
@@ -232,17 +229,33 @@ msgstr "%{package} (других пакетов: %{rest})"
 msgid "%{repo} (Product: %{product})"
 msgstr "%{repo} (продукт: %{product})"
 
+#, fuzzy
+msgid "'%s' created successfully."
+msgstr "создан(о) успешно."
+
 msgid "'%s' did not meet the current search criteria and is not being shown."
 msgstr "«%s» не удовлетворяет критериям поиска, поэтому не будет показан."
 
 msgid "'%s' no longer matches the current search criteria."
 msgstr "«%s» не удовлетворяет критериям поиска."
 
+#, fuzzy
+msgid "'%s' was deleted."
+msgstr "Роль «%s» удалена."
+
 msgid "+ Import Manifest"
 msgstr "+ импорт манифеста"
 
+#, fuzzy
+msgid "+ New Architecture"
+msgstr "Выберите архитектуру"
+
 msgid "+ New Changeset"
 msgstr "+ Новый набор изменений"
+
+#, fuzzy
+msgid "+ New Domain"
+msgstr "+ Новый план"
 
 msgid "+ New Filter"
 msgstr "+ Новый фильтр"
@@ -265,6 +278,10 @@ msgstr "+ Новый провайдер"
 msgid "+ New Role"
 msgstr "+ Новая роль"
 
+#, fuzzy
+msgid "+ New Subnet"
+msgstr "+ Новая система"
+
 msgid "+ New System"
 msgstr "+ Новая система"
 
@@ -274,17 +291,15 @@ msgstr "+ Новый шаблон"
 msgid "+ New User"
 msgstr "+ Новый пользователь"
 
+#, fuzzy
+msgid ": '%s' is a built-in environment"
+msgstr "В этом окружении нет продукта «%s»."
+
 msgid "A keyname must be provided"
 msgstr "Необходимо указать имя ключа"
 
-msgid ""
-"A label was not provided during %s creation; therefore, a label of '%s' was "
-"automatically assigned. If you would like a different label, please delete "
-"the %s and recreate it with the desired label."
-msgstr ""
-"В процессе создания %s не была определена метка, поэтому была автоматически "
-"присвоена метка «%s». Чтобы присвоить другое значение, удалите %s и "
-"повторите процесс создания с указанием метки."
+msgid "A label was not provided during %s creation; therefore, a label of '%s' was automatically assigned. If you would like a different label, please delete the %s and recreate it with the desired label."
+msgstr "В процессе создания %s не была определена метка, поэтому была автоматически присвоена метка «%s». Чтобы присвоить другое значение, удалите %s и повторите процесс создания с указанием метки."
 
 msgid "About"
 msgstr "О программе"
@@ -385,18 +400,23 @@ msgstr "Все провайдеры для владельца %s в candlepin"
 msgid "All repository GPG keys for Product '%s' were updated."
 msgstr "GPG-ключи репозиториев для «%s» обновлены."
 
-msgid "Applied Subscriptions"
+#, fuzzy
+msgid "Application"
 msgstr "Применённые подписки"
+
+#, fuzzy
+msgid "Architecture"
+msgstr "Выберите архитектуру"
+
+#, fuzzy
+msgid "Architectures"
+msgstr "Выберите архитектуру"
 
 msgid "At least one activation key must be provided"
 msgstr "Необходимо предоставить ключ активации."
 
-msgid ""
-"At least one environment is required to create or register systems in your "
-"current organization."
-msgstr ""
-"Для создания и регистрации систем в текущей организации необходимо наличие "
-"как минимум одного окружения."
+msgid "At least one environment is required to create or register systems in your current organization."
+msgstr "Для создания и регистрации систем в текущей организации необходимо наличие как минимум одного окружения."
 
 msgid "At least one organization must exist."
 msgstr "Должна существовать как минимум одна организация."
@@ -404,26 +424,31 @@ msgstr "Должна существовать как минимум одна о�
 msgid "At least repository must be present to export a TDL"
 msgstr "Для экспорта TDL необходим как минимум один репозиторий"
 
-msgid "Auto-heal %{val}, %{sla}"
+#, fuzzy
+msgid "Attached Subscriptions"
+msgstr "Применённые подписки"
+
+msgid "Authentication"
+msgstr ""
+
+msgid "Auto-attach %{val}, %{sla}"
 msgstr ""
 
 #, fuzzy
-msgid "Auto-heal Off, No Service Level Preference"
-msgstr ""
-"Автоматическая подписка отключена. Нет предпочитаемого уровня обслуживания."
+msgid "Auto-attach Off, No Service Level Preference"
+msgstr "Предпочитаемый уровень обслуживания не определен"
 
 #, fuzzy
-msgid "Auto-heal Off, Service Level %s"
-msgstr "Автоматическая подписка отключена. Уровень обслуживания: %s"
+msgid "Auto-attach Off, Service Level %s"
+msgstr "Уровень обслуживания %s"
 
 #, fuzzy
-msgid "Auto-heal On, No Service Level Preference"
-msgstr ""
-"Автоматическая подписка включена. Нет предпочитаемого уровня обслуживания."
+msgid "Auto-attach On, No Service Level Preference"
+msgstr "Предпочитаемый уровень обслуживания не определен"
 
 #, fuzzy
-msgid "Auto-heal On, Service Level %s"
-msgstr "Автоматическая подписка включена. Уровень обслуживания: %s"
+msgid "Auto-attach On, Service Level %s"
+msgstr "Уровень обслуживания %s"
 
 msgid "Available Subscriptions"
 msgstr "Доступные подписки"
@@ -441,11 +466,10 @@ msgid "CDN loading error: access forbidden to %s"
 msgstr "Ошибка загрузки CDN: доступ к %s запрещен"
 
 msgid "Can't copy System Groups to a different org: '%{org1}' != '%{org2}'"
-msgstr ""
-"Не удалось скопировать группы систем в другую организацию: '%{org1}' != "
-"'%{org2}'"
+msgstr "Не удалось скопировать группы систем в другую организацию: '%{org1}' != '%{org2}'"
 
-msgid "Can't update Library environment"
+#, fuzzy
+msgid "Can't update the '%s' environment"
 msgstr "Не удалось обновить окружение Library"
 
 msgid "Canceled synchronization of %{name}: %{id}"
@@ -458,64 +482,43 @@ msgid "Candlepin Event"
 msgstr "Событие Candlepin"
 
 msgid "Cannot add/remove or change permissions related to a locked role."
-msgstr ""
-"Не допускается добавлять, изменять и удалять разрешения для заблокированной "
-"роли."
+msgstr "Не допускается добавлять, изменять и удалять разрешения для заблокированной роли."
 
 msgid "Cannot change the name or description of a locked role."
 msgstr "Не допускается изменять имя и описание заблокированной роли."
 
-msgid "Cannot create activation keys in Library environment "
+#, fuzzy
+msgid "Cannot create activation keys in the '%s' environment"
 msgstr "Невозможно создать ключи активации в окружении Locker"
 
 msgid "Cannot delete currently logged user"
 msgstr "Невозможно удалить авторизованного пользователя"
 
 msgid "Cannot delete the changeset '%s' because it is not in the review phase."
-msgstr ""
-"Набор «%s» не может быть удален, так как он не находится на стадии проверки."
+msgstr "Набор «%s» не может быть удален, так как он не находится на стадии проверки."
 
-msgid ""
-"Cannot delete the changeset '%{changeset}' while another changeset (%"
-"{another_changeset}) is being deleted or promoted."
-msgstr ""
-"Набор «%{changeset}» не может быть удален, так как другой набор "
-"(%{another_changeset}) уже удаляется или переносится."
+msgid "Cannot dissociate user '%{username}' from '%{role}' role. Need at least one user in the '%{role}' role."
+msgstr "Роль «%{role}» пользователя «%{username}» не может быть удалена.  «%{role}» должна быть сопоставлена как минимум одному пользователю."
 
-msgid ""
-"Cannot dissociate user '%{username}' from '%{role}' role. Need at least one "
-"user in the '%{role}' role."
-msgstr ""
-"Роль «%{role}» пользователя «%{username}» не может быть удалена.  «%{role}» "
-"должна быть сопоставлена как минимум одному пользователю."
+msgid "Cannot dissociate user '%{user}' from '%{role}' role. Need at least one user in the '%{role}' role."
+msgstr "Роль «%{role}» пользователя «%{user}» не может быть удалена.  «%{role}» должна быть сопоставлена как минимум одному пользователю."
 
-msgid ""
-"Cannot dissociate user '%{user}' from '%{role}' role. Need at least one user "
-"in the '%{role}' role."
-msgstr ""
-"Роль «%{role}» пользователя «%{user}» не может быть удалена.  «%{role}» "
-"должна быть сопоставлена как минимум одному пользователю."
-
-msgid "Cannot export templates for the Library environment."
+#, fuzzy
+msgid "Cannot export templates for the '%s' environment."
 msgstr "Невозможно экспортировать шаблоны окружения Locker"
 
 msgid "Cannot modify a template that is another environment"
 msgstr "Невозможно изменить шаблон с другим окружением."
 
-msgid ""
-"Cannot promote the changeset '%s' because it is not in the review phase."
-msgstr ""
-"Набор «%s» не может быть перенесен, так как он не находится на стадии "
-"проверки."
+msgid "Cannot promote the changeset '%s' because it is not in the review phase."
+msgstr "Набор «%s» не может быть перенесен, так как он не находится на стадии проверки."
 
-msgid ""
-"Cannot promote the changeset '%{changeset}' while another changeset (%"
-"{another_changeset}) is being promoted."
-msgstr ""
-"Набор «%{changeset}» не может быть перенесен, так как другой набор "
-"(%{another_changeset}) уже переносится."
+#, fuzzy
+msgid "Cannot promote the changeset '%{changeset}' while another colliding changeset (%{another_changeset}) is being promoted."
+msgstr "Набор «%{changeset}» не может быть перенесен, так как другой набор (%{another_changeset}) уже переносится."
 
-msgid "Cannot register a system with 'Library' environment "
+#, fuzzy
+msgid "Cannot register a system to the '%s' environment"
 msgstr "Невозможно зарегистрировать систему в Locker"
 
 msgid "Cannot specify a tag if all_tags is selected."
@@ -527,11 +530,9 @@ msgstr "Нельзя выбрать команду, если выбрано \"al
 msgid "Cannot specify all_types without all_tags and all_verbs"
 msgstr "Нельзя выбрать \"all_types\" без \"all_tags\" и \"all_verbs\"."
 
-msgid "Cannot validate templates for the Library environment."
+#, fuzzy
+msgid "Cannot validate templates for the '%s' environment."
 msgstr "Невозможно выполнить проверку шаблонов для окружения Locker."
-
-msgid "Change Password"
-msgstr "Изменить пароль"
 
 msgid "Changeset Management"
 msgstr "Управление набором изменений"
@@ -542,17 +543,20 @@ msgstr "Наборы изменений"
 msgid "Changesets History"
 msgstr "Журнал наборов изменений"
 
+msgid "Choose %s..."
+msgstr ""
+
+msgid "Choose domains..."
+msgstr ""
+
+msgid "Choose operating systems..."
+msgstr ""
+
 msgid "Cleared"
 msgstr "Очищено"
 
 msgid "Click on 'Add Environment' to create the first environment"
 msgstr "Нажмите \"Добавить окружение\" для создания нового окружения."
-
-msgid "Confirm Password"
-msgstr "Подтвердить пароль"
-
-msgid "Consumers"
-msgstr "Клиенты"
 
 msgid "Content"
 msgstr "Содержимое"
@@ -563,18 +567,11 @@ msgstr "Поиск содержимого"
 msgid "Could not delete organization '%s'."
 msgstr "Не удалось удалить организацию \"%s\"."
 
-msgid ""
-"Could not modify environments.  One or more associated activation keys (%s) "
-"would become invalid."
-msgstr ""
-"Не удалось изменить окружения. Ключи активации (%s) будут признаны "
-"недействительными."
+msgid "Could not modify environments.  One or more associated activation keys (%s) would become invalid."
+msgstr "Не удалось изменить окружения. Ключи активации (%s) будут признаны недействительными."
 
-msgid ""
-"Could not modify environments. System group membership does not match new "
-"environment association."
-msgstr ""
-"Не удалось изменить окружения. Состав группы несовместим с новым окружением."
+msgid "Could not modify environments. System group membership does not match new environment association."
+msgstr "Не удалось изменить окружения. Состав группы несовместим с новым окружением."
 
 msgid "Couldn't find GPG key '%s'"
 msgstr "GPG-ключ «%s» не найден."
@@ -593,6 +590,10 @@ msgstr "Окружение «%s» не найдено."
 
 msgid "Couldn't find filter '%s'"
 msgstr "Фильтр «%s» не найден."
+
+#, fuzzy
+msgid "Couldn't find one of the filters in '%s'"
+msgstr "Не найдены фильтры в «%s»."
 
 msgid "Couldn't find organization '%s'"
 msgstr "Организация «%s» не найдена."
@@ -636,14 +637,15 @@ msgstr "Пользователь «%s»  не найден."
 msgid "Couldn't find user role '%s'"
 msgstr "Роль «%s»  не найдена."
 
-msgid "Couldn't one of the filters in '%s'"
-msgstr "Не найдены фильтры в «%s»."
-
 msgid "Creating an environment in candlepin: %s"
 msgstr "Создание окружения в candlepin: %s"
 
 msgid "Creating an owner in candlepin: %s"
 msgstr "Создание владельца в candlepin: %s"
+
+#, fuzzy
+msgid "Current organization is being deleted, switch to a different one."
+msgstr "Организация не может быть удалена. Перейдите в другую организацию и повторите попытку."
 
 msgid "Custom Content Repositories"
 msgstr "Другие репозитории"
@@ -756,10 +758,12 @@ msgstr "Зависимости"
 msgid "Details"
 msgstr "Свойства"
 
+#, fuzzy
+msgid "Directory"
+msgstr "репозиторий"
+
 msgid "Disable/enable is not supported for custom repositories."
-msgstr ""
-"Функции включения и отключения не поддерживаются для пользовательских "
-"репозиториев."
+msgstr "Функции включения и отключения не поддерживаются для пользовательских репозиториев."
 
 msgid "Disabled help tips have been re-enabled."
 msgstr "Подсказки включены."
@@ -785,6 +789,12 @@ msgstr "Дистрибутив «%{id}» не найден в окружении
 msgid "Distributions"
 msgstr "Дистрибутивы"
 
+msgid "Domain"
+msgstr ""
+
+msgid "Domains"
+msgstr ""
+
 msgid "Either organization ID or environment ID needs to be specified"
 msgstr "Необходимо указать ID организации или окружения"
 
@@ -794,59 +804,36 @@ msgstr "Необходимо указать пакеты или группы"
 msgid "Either packages or groups must be provided"
 msgstr "Необходимо указать пакеты или группы"
 
-msgid "Email Address"
-msgstr "Email"
-
 msgid "Email sent to '%s' with password reset instructions."
 msgstr "Инструкции по изменению пароля отправлены на адрес «%s»."
 
 msgid "Email sent to '%s' with valid login user names."
 msgstr "Письмо с именами пользователей отправлено на адрес «%s»."
 
-msgid ""
-"Empty request received to install Packages or Package Groups for System '%s'."
+msgid "Empty request received to install Packages or Package Groups for System '%s'."
 msgstr "Получен пустой запрос установки пакетов или их групп для системы «%s»."
 
-msgid ""
-"Empty request received to install Packages or Package Groups for System Group "
-"'%s'."
+msgid "Empty request received to install Packages or Package Groups for System Group '%s'."
 msgstr "Получен пустой запрос установки пакетов для группы «%s»."
 
-msgid ""
-"Empty request received to uninstall Packages or Package Groups for System '%"
-"s'."
+msgid "Empty request received to uninstall Packages or Package Groups for System '%s'."
 msgstr "Получен пустой запрос удаления пакетов для системы «%s»."
 
-msgid ""
-"Empty request received to uninstall Packages or Package Groups for System "
-"Group '%s'."
+msgid "Empty request received to uninstall Packages or Package Groups for System Group '%s'."
 msgstr "Получен пустой запрос удаления пакетов для группы «%s»."
 
-msgid ""
-"Empty request received to update Packages or Package Groups for System Group "
-"'%s'."
+msgid "Empty request received to update Packages or Package Groups for System Group '%s'."
 msgstr "Получен пустой запрос обновления пакетов для группы  «%s»."
 
-msgid ""
-"Enter your username and email address below and instructions on resetting "
-"your password will be sent to you."
-msgstr ""
-"Введите имя пользователя и адрес, на который будут отправлены инструкции по "
-"изменению пароля."
+#, fuzzy
+msgid "Environment"
+msgstr "Окружения"
 
-msgid ""
-"Environment %s has a successor.  Only the last environment on a path can be "
-"deleted"
-msgstr ""
-"За окружением %s следуют другие окружения. Только последнее окружение может "
-"быть удалено."
+msgid "Environment %s has a successor.  Only the last environment on a path can be deleted"
+msgstr "За окружением %s следуют другие окружения. Только последнее окружение может быть удалено."
 
-msgid ""
-"Environment %s has a successor. Only the last environment on a path can be "
-"deleted."
-msgstr ""
-"За окружением %s следуют другие окружения. Только последнее окружение может "
-"быть удалено."
+msgid "Environment %s has a successor. Only the last environment on a path can be deleted."
+msgstr "За окружением %s следуют другие окружения. Только последнее окружение может быть удалено."
 
 msgid "Environment '%s' was created."
 msgstr "Окружение «%s» создано."
@@ -935,17 +922,14 @@ msgstr "Не удалось создать окружение candlepin %s"
 msgid "Failed to create candlepin owner %s"
 msgstr "Не удалось создать владельца candlepin %s"
 
-msgid ""
-"Failed to delete all environments for owner %{org} in candlepin: %{message}"
-msgstr ""
-"Не удалось удалить окружения для владельца %{org} в candlepin: %{message}"
+msgid "Failed to delete all environments for owner %{org} in candlepin: %{message}"
+msgstr "Не удалось удалить окружения для владельца %{org} в candlepin: %{message}"
 
 msgid "Failed to delete all providers for owner %s in candlepin"
 msgstr "Не удалось удалить провайдеры для владельца %s в candlepin"
 
 msgid "Failed to delete all systems for owner %{org} in candlepin: %{message}"
-msgstr ""
-"Не удалось удалить системы для владельца %{org} в candlepin: %{message}"
+msgstr "Не удалось удалить системы для владельца %{org} в candlepin: %{message}"
 
 msgid "Failed to delete candlepin environment %s"
 msgstr "Не удалось удалить окружение candlepin %s"
@@ -977,21 +961,12 @@ msgstr "Пакеты"
 msgid "Filters"
 msgstr "Фильтры"
 
-msgid ""
-"Filters assigned to repository or product of erratum '%s' block it from "
-"promotion!"
-msgstr ""
-"Фильтры для репозиториев или продуктов исправления «%s» не допускают его "
-"перенос."
+msgid "Filters assigned to repository or product of erratum '%s' block it from promotion!"
+msgstr "Фильтры для репозиториев или продуктов исправления «%s» не допускают его перенос."
 
-msgid "Filters can be stored only in Library repositories."
+#, fuzzy
+msgid "Filters can be stored only in the '%s' repositories."
 msgstr "Фильтры могут храниться только в репозитории Library."
-
-msgid "Forgot %s or %s?"
-msgstr "Забыли %s или %s?"
-
-msgid "Forgot Username or Password?"
-msgstr "Забыли имя пользователя или пароль?"
 
 msgid "GPG Key"
 msgstr "Ключ GPG"
@@ -1038,18 +1013,8 @@ msgstr "Гипервизоры не предоставляют пакеты"
 msgid "Hypervisors do not have software products"
 msgstr "Гипервизоры не предоставляют программы"
 
-msgid "I remembered my login credentials."
-msgstr "Я помню свои реквизиты доступа."
-
 msgid "ID: %s doesn't exist "
 msgstr "Идентификатор %s не существует"
-
-msgid ""
-"If you do not know your username, please enter your email address below and "
-"your username information will be sent to you."
-msgstr ""
-"Если вы забыли имя пользователя, введите электронный адрес, на который будет "
-"выслано напоминание."
 
 msgid "Import"
 msgstr "Импорт"
@@ -1060,37 +1025,23 @@ msgstr "Журнал импорта"
 msgid "Initial Registration Params"
 msgstr "Исходные настройки регистрации"
 
-msgid ""
-"Install of Errata '%{errata}' scheduled for System Group '%{group}' failed.  "
-"Reason: %{message}"
-msgstr ""
-"Запланированная для группы «%{groups}» установка исправления «%{errata}» не "
-"удалась. Причина: %{message}"
+msgid "Install of Errata '%{errata}' scheduled for System Group '%{group}' failed.  Reason: %{message}"
+msgstr "Запланированная для группы «%{groups}» установка исправления «%{errata}» не удалась. Причина: %{message}"
 
 msgid "Install of Errata '%{errata}' scheduled for System Group '%{group}'."
-msgstr ""
-"Установка исправления «%{errata}» для группы «%{group}» успешно назначена."
+msgstr "Установка исправления «%{errata}» для группы «%{group}» успешно назначена."
 
-msgid ""
-"Install of Package Groups '%{groups}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
-msgstr ""
-"Запланированная для «%{name}» установка группы «%{groups}» не удалась. "
-"Причина: %{message}"
+msgid "Install of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
+msgstr "Запланированная для «%{name}» установка группы «%{groups}» не удалась. Причина: %{message}"
 
-msgid ""
-"Install of Package Groups '%{groups}' scheduled for System Group '%{name}'."
+msgid "Install of Package Groups '%{groups}' scheduled for System Group '%{name}'."
 msgstr "Установка групп «%{groups}» для группы «%{group}» успешно назначена."
 
 msgid "Install of Package Groups '%{g}' scheduled for System '%{s}'."
 msgstr "Назначена установка групп пакетов '%{g}' для системы '%{s}'."
 
-msgid ""
-"Install of Packages '%{packages}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
-msgstr ""
-"Запланированная для «%{name}» установка пакетов «%{packages}» не удалась. "
-"Причина: %{message}"
+msgid "Install of Packages '%{packages}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
+msgstr "Запланированная для «%{name}» установка пакетов «%{packages}» не удалась. Причина: %{message}"
 
 msgid "Install of Packages '%{packages}' scheduled for System Group '%{name}'."
 msgstr "Установка пакетов «%{groups}» для группы «%{group}» успешно назначена."
@@ -1110,36 +1061,23 @@ msgstr "Установка пакета..."
 msgid "Interval"
 msgstr "Интервал"
 
-msgid "Invalid Url"
-msgstr "Неверный URL"
-
 msgid "Invalid date or time format"
 msgstr "Недействительная дата или неверный формат"
 
 msgid "Invalid organization"
 msgstr "Недействительная организация"
 
-msgid ""
-"Invalid parameters sent in the request for this operation. Please contact a "
-"system administrator."
-msgstr ""
-"Запрос операции содержит недопустимые параметры. Обратитесь к администратору."
+msgid "Invalid parameters sent in the request for this operation. Please contact a system administrator."
+msgstr "Запрос операции содержит недопустимые параметры. Обратитесь к администратору."
 
-msgid ""
-"Invalid resource type '%{resource_type}'. Resource Types can be one of '%"
-"{possible_types}'"
-msgstr ""
-"Неверный тип: '%{resource_type}'. Допустимые значения: '%{possible_types}'"
+msgid "Invalid resource type '%{resource_type}'. Resource Types can be one of '%{possible_types}'"
+msgstr "Неверный тип: '%{resource_type}'. Допустимые значения: '%{possible_types}'"
 
 msgid "Invalid state"
 msgstr "Недопустимый статус"
 
-msgid ""
-"Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be one "
-"of %{possible_verbs}"
-msgstr ""
-"Неверное значение: '%{verb}'. Допустимые команды для '%{resource_type}': %"
-"{possible_verbs}"
+msgid "Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be one of %{possible_verbs}"
+msgstr "Неверное значение: '%{verb}'. Допустимые команды для '%{resource_type}': %{possible_verbs}"
 
 msgid "It is not allowed to create products in Red Hat provider."
 msgstr "Создание продуктов для провайдера Red Hat не разрешено."
@@ -1158,9 +1096,6 @@ msgstr "Обновление продукта Red Hat не разрешено."
 
 msgid "It is not allowed to update a Red Hat repository."
 msgstr "Обновление репозитория Red Hat не разрешено."
-
-msgid "Javascript must be enabled for this application to work properly."
-msgstr "Для работы этой программы необходимо включить Javascript."
 
 msgid "Katello Logins"
 msgstr "Авторизация Katello"
@@ -1183,20 +1118,8 @@ msgstr "Группы LDAP"
 msgid "LDAP group '%{group}' associated to role '%{role}' was not found."
 msgstr "Группа LDAP «%{group}», сопоставленная роли «%{role}», не найдена."
 
-msgid "Library"
-msgstr "Library"
-
-msgid "Library environment cannot contain a changeset!"
-msgstr "Окружение Library не может содержать набор изменений."
-
 msgid "List"
 msgstr "Список"
-
-msgid "Login"
-msgstr "Вход"
-
-msgid "Login Information"
-msgstr "Информация об авторизации"
 
 msgid "Login Successful"
 msgstr "Успешный вход"
@@ -1207,15 +1130,8 @@ msgstr "Авторизация успешна. Вход в «%s»..."
 msgid "Login Successful, please choose an Organization"
 msgstr "Авторизация успешна. Выберите организацию."
 
-msgid ""
-"Login Successful, please contact administrator to get permission to access an "
-"organization."
-msgstr ""
-"Авторизация успешна. Чтобы получить доступ к организации, обратитесь к "
-"администратору."
-
-msgid "Logo"
-msgstr "Логотип"
+msgid "Login Successful, please contact administrator to get permission to access an organization."
+msgstr "Авторизация успешна. Чтобы получить доступ к организации, обратитесь к администратору."
 
 msgid "Logout Successful"
 msgstr "Выход успешен"
@@ -1271,16 +1187,22 @@ msgstr "Имя не может быть пустым."
 msgid "Name must be unique within one organization"
 msgstr "Имя должно быть уникальным в пределах организации."
 
+#, fuzzy
+msgid "Names and labels must be unique across all organizations"
+msgstr "Имя должно быть уникальным в пределах организации."
+
 msgid "Never checked in"
 msgstr "Нет"
 
 msgid "Never checked in."
 msgstr "Нет"
 
-msgid "New templates can be created only in a Library environment"
+#, fuzzy
+msgid "New templates can be created only in the '%s' environment"
 msgstr "Шаблоны могут быть созданы только в окружении Library"
 
-msgid "New templates can be imported only into a Library environment"
+#, fuzzy
+msgid "New templates can be imported only into the '%s' environment"
 msgstr "Новые шаблоны могут быть импортированы только в окружение Library"
 
 msgid "No Overlap with Current"
@@ -1292,13 +1214,12 @@ msgstr "Предпочитаемый уровень обслуживания н�
 msgid "No Template"
 msgstr "Нет шаблона"
 
-msgid ""
-"No environments are currently available in this organization.  Please either "
-"add some to the organization or select an organization that has an "
-"environment to set user default."
-msgstr ""
-"Нет окружений в организации. Необходимо их добавить или выбрать организацию с "
-"существующим окружением."
+#, fuzzy
+msgid "No domains found."
+msgstr "Не найдено"
+
+msgid "No environments are currently available in this organization.  Please either add some to the organization or select an organization that has an environment to set user default."
+msgstr "Нет окружений в организации. Необходимо их добавить или выбрать организацию с существующим окружением."
 
 msgid "No errors"
 msgstr "Нет ошибок"
@@ -1309,6 +1230,9 @@ msgstr "Нет событий для выбранных критериев."
 msgid "No new packages installed"
 msgstr "Нет новых пакетов"
 
+msgid "No operating systems found."
+msgstr ""
+
 msgid "No package profile received for %s"
 msgstr "Не получен профиль пакетов для %s"
 
@@ -1318,26 +1242,26 @@ msgstr "Пакеты не удалены"
 msgid "No packages updated"
 msgstr "Пакеты не обновлены"
 
+msgid "No smart proxy with %s feature found."
+msgstr ""
+
 msgid "No synchronization of the %s is currently running"
 msgstr "Синхронизация %s  в данный момент не выполняется"
 
 msgid "No system registration default set for this user."
-msgstr ""
-"Стандартные параметры регистрации систем для этого пользователя не определены."
+msgstr "Стандартные параметры регистрации систем для этого пользователя не определены."
 
 msgid "None"
 msgstr "Нет"
 
-#, fuzzy
-msgid ""
-"Not enough entitlements in pools (%{size}), required: %{required}, available: "
-"%{available}"
-msgstr "Недостаточно полномочий в пулах (%d). Требуется %d, доступно %d"
+msgid "Not enough subscriptions in pools (%{size}), required: %{required}, available: %{available}"
+msgstr ""
 
 msgid "Not found"
 msgstr "Не найдено"
 
-msgid "Number of consumed entitlements exceeded quantity for %s"
+#, fuzzy
+msgid "Number of attached subscriptions exceeded quantity for %s"
 msgstr "Число занятых полномочий превысило допустимое количество для %s"
 
 msgid "Number of sockets must be higher than 0 for system %s"
@@ -1362,9 +1286,7 @@ msgid "Only %s favorites may be created."
 msgstr "Допускается добавить в избранное: %s"
 
 msgid "Only one Red Hat provider permitted for an Organization"
-msgstr ""
-"Для каждой организации допускается добавление только одного провайдера Red "
-"Hat."
+msgstr "Для каждой организации допускается добавление только одного провайдера Red Hat."
 
 msgid "Open Source Subscription Management"
 msgstr "Управление подписками на основе открытого кода"
@@ -1375,17 +1297,12 @@ msgstr "Управление системами на основе открыто
 msgid "Organization"
 msgstr "Организация"
 
-msgid ""
-"Organization %s has 'Library' environment only. Please create an environment "
-"for system registration."
-msgstr ""
+msgid "Organization %s has more than one environment. Please specify target environment for system registration."
+msgstr "Организация  «%s» содержит несколько окружений. Выберите окружение, в котором будет зарегистрирована система."
 
-msgid ""
-"Organization %s has more than one environment. Please specify target "
-"environment for system registration."
-msgstr ""
-"Организация  «%s» содержит несколько окружений. Выберите окружение, в "
-"котором будет зарегистрирована система."
+#, fuzzy
+msgid "Organization %{org} has the '%{env}' environment only. Please create an environment for system registration."
+msgstr "Организация  «%s» содержит несколько окружений. Выберите окружение, в котором будет зарегистрирована система."
 
 msgid "Organization '%s' has been scheduled for background deletion."
 msgstr "Организация «%s» будет удалена в фоновом режиме."
@@ -1540,6 +1457,22 @@ msgstr "В этом шаблоне нет категории «%s»."
 msgid "Package group category '%{group}' not found in the %{env} environment"
 msgstr "Категория групп «%{group}»  не найдена в окружении «%{env}» "
 
+#, fuzzy
+msgid "Package group update canceled"
+msgstr "Обновление группы пакетов отменено"
+
+#, fuzzy
+msgid "Package group update complete"
+msgstr "Группа пакетов обновлена."
+
+#, fuzzy
+msgid "Package group update failed"
+msgstr "Не удалось обновить группу пакетов"
+
+#, fuzzy
+msgid "Package group update timed out"
+msgstr "Время ожидания обновления группы пакетов истекло"
+
 msgid "Package with id '%s' not found"
 msgstr "Пакет с ID «%s» не найден."
 
@@ -1555,23 +1488,11 @@ msgstr "В этом шаблоне нет параметра «%s»."
 msgid "Parameter '%{name}': '%{value}' was set"
 msgstr "Параметру «%{name}» присвоено значение «%{value}»"
 
-msgid "Password"
-msgstr "Пароль"
-
-msgid "Password Unknown"
-msgstr "Неизвестный пароль"
-
 msgid "Password has been reset for user '%s'."
 msgstr "Пароль пользователя «%s» изменён."
 
 msgid "Password reset token has expired for user '%s'."
 msgstr "Разрешение изменения пароля пользователя «%s» истекло."
-
-msgid "Passwords do not match."
-msgstr "Пароли не совпадают."
-
-msgid "Passwords match."
-msgstr "Пароли совпадают."
 
 msgid "Pending"
 msgstr "Ожидание"
@@ -1585,12 +1506,8 @@ msgstr "Разрешение «%s» удалено."
 msgid "Permission '%s' was updated."
 msgstr "Разрешение «%s» обновлено."
 
-msgid ""
-"Permission Denied. User '%{user}' does not have permissions to access "
-"organization '%{org}'."
-msgstr ""
-"Отказ в разрешении. У пользователя «%{user}» нет прав доступа к организации "
-"«%{org}»."
+msgid "Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'."
+msgstr "Отказ в разрешении. У пользователя «%{user}» нет прав доступа к организации «%{org}»."
 
 msgid "Permissions"
 msgstr "Разрешения"
@@ -1604,18 +1521,11 @@ msgstr "План"
 msgid "Plan Name"
 msgstr "План"
 
-msgid ""
-"Please add '%{product}' product to the changeset '%{changeset}' if you wish "
-"to promote repository '%{repo}' with it."
-msgstr ""
-"Добавьте продукт «%{product}» в набор изменений «%{changeset}», чтобы "
-"перенести его в составе  репозитория «%{repo}»."
+msgid "Please add '%{product}' product to the changeset '%{changeset}' if you wish to promote repository '%{repo}' with it."
+msgstr "Добавьте продукт «%{product}» в набор изменений «%{changeset}», чтобы перенести его в составе  репозитория «%{repo}»."
 
 msgid "Please create at least one environment."
 msgstr "Сначала необходимо создать окружение."
-
-msgid "Please provide entitlement ID"
-msgstr ""
 
 msgid "Please provide pool ID"
 msgstr "Укажите ID зоны"
@@ -1624,6 +1534,10 @@ msgid "Please provide pool and quantity"
 msgstr "Необходимо указать зону и число"
 
 msgid "Please provide serial ID"
+msgstr "Укажите серийный ID"
+
+#, fuzzy
+msgid "Please provide subscription ID"
 msgstr "Укажите серийный ID"
 
 msgid "Please select at least one system group."
@@ -1686,14 +1600,8 @@ msgstr "Провайдер «%s» удален."
 msgid "Provider '%s' was updated."
 msgstr "Провайдер «%s» обновлен."
 
-msgid ""
-"Provider cannot be deleted since one of its products or repositories has "
-"already been promoted. Using a changeset, please delete the repository from "
-"existing environments before deleting it."
-msgstr ""
-"Провайдер не может быть удалён, так как его продукты или репозитории уже "
-"перенесены. Прежде чем приступить к удалению, необходимо удалить репозиторий"
-" из существующих окружений."
+msgid "Provider cannot be deleted since one of its products or repositories has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it."
+msgstr "Провайдер не может быть удалён, так как его продукты или репозитории уже перенесены. Прежде чем приступить к удалению, необходимо удалить репозиторий из существующих окружений."
 
 msgid "Providers"
 msgstr "Провайдеры"
@@ -1860,7 +1768,8 @@ msgstr "Репозитории"
 msgid "Repositories"
 msgstr "Репозитории"
 
-msgid "Repositories can be deleted only in Library environment."
+#, fuzzy
+msgid "Repositories can be deleted only in the '%s' environment."
 msgstr "Удаление репозиториев возможно только в окружении Library."
 
 msgid "Repository '%s' created."
@@ -1896,41 +1805,30 @@ msgstr "Репозиторий «%s» обновлен."
 msgid "Repository Comparison"
 msgstr "Сравнение репозиториев"
 
-msgid ""
-"Repository cannot be deleted since it has already been promoted. Using a "
-"changeset, please delete the repository from existing environments before "
-"deleting it."
+#, fuzzy
+msgid "Repository can be only created for custom provider."
+msgstr "Обновление продуктов дополнительных провайдеров не разрешено."
+
+msgid "Repository cannot be deleted since it has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it."
 msgstr "Удалить все"
 
 msgid "Repository cannot be disabled since it has already been promoted."
 msgstr "Репозиторий не может быть отключен, так как он уже перенесён."
 
-msgid ""
-"Repository of the distribution '%s' has not been promoted into the target "
-"environment!"
+msgid "Repository of the distribution '%s' has not been promoted into the target environment!"
 msgstr "Репозиторий дистрибутива «%s» не был перенесен в выбранное окружение."
 
-msgid ""
-"Repository of the erratum '%s' has not been promoted into the target "
-"environment!"
+msgid "Repository of the erratum '%s' has not been promoted into the target environment!"
 msgstr "Репозиторий исправления «%s» не был перенесен в выбранное окружение."
 
-msgid ""
-"Repository of the package '%s' has not been promoted into the target "
-"environment!"
+msgid "Repository of the package '%s' has not been promoted into the target environment!"
 msgstr "Репозиторий пакета «%s» не был перенесен в выбранное окружение."
 
 msgid "Request received has either an invalid or expired token. Token: '%s'"
 msgstr "Неверный или устаревший запрос: «%s»."
 
-msgid "Reset Password"
-msgstr "Восстановить пароль"
-
 msgid "Resource not found on the server"
 msgstr "Ресурс на найден на сервере"
-
-msgid "Return to log in."
-msgstr "Вернуться к авторизации"
 
 msgid "Role"
 msgstr "Роль"
@@ -1956,9 +1854,6 @@ msgstr "Путь не существует:"
 msgid "Running."
 msgstr "Выполняется."
 
-msgid "Save"
-msgstr "Сохранить"
-
 msgid "Select Architecture"
 msgstr "Выберите архитектуру"
 
@@ -1974,11 +1869,11 @@ msgstr "Выберите продукты"
 msgid "Selected Distribution"
 msgstr "Выбранный дистрибутив"
 
-msgid "Send Login"
-msgstr "Отправить имя пользователя"
-
 msgid "Service Level %s"
 msgstr "Уровень обслуживания %s"
+
+msgid "Setup"
+msgstr ""
 
 msgid "Severity: Critical"
 msgstr "Степень: критично"
@@ -1992,9 +1887,6 @@ msgstr "Степень: низкая"
 msgid "Severity: Moderate"
 msgstr "Степень: средняя"
 
-msgid "Show My Password"
-msgstr "Показать мой пароль"
-
 msgid "Software"
 msgstr "Программы"
 
@@ -2002,11 +1894,16 @@ msgid "Start Date and Time can't be blank"
 msgstr "Дата и время начала не могут быть пустыми."
 
 msgid "Started content deletion from %{env} environment using '%{changeset}'"
-msgstr ""
-"Выполняется удаление данных из окружения «%{env}» на основе «%{changeset}»"
+msgstr "Выполняется удаление данных из окружения «%{env}» на основе «%{changeset}»"
 
 msgid "Started content promotion to %{env} environment using '%{changeset}'"
 msgstr "Выполняется перенос данных в «%{env}» на основе «%{changeset}»"
+
+msgid "Subnet"
+msgstr ""
+
+msgid "Subnets"
+msgstr ""
 
 msgid "Subscription manifest delete for provider '%s' failed."
 msgstr ""
@@ -2023,13 +1920,8 @@ msgstr "Не удалось отправить манифест подписок
 msgid "Subscription manifest uploaded successfully for provider '%s'."
 msgstr "Манифест для провайдера «%s» отправлен."
 
-msgid ""
-"Subscription manifest uploaded successfully for provider '%s'. Please enable "
-"the repositories you want to sync by selecting 'Enable Repositories' and "
-"selecting individual repositories to be enabled."
-msgstr ""
-"Манифест для «%s» успешно отправлен. Для синхронизации репозиториев выберите "
-"их на вкладке «Репозитории»."
+msgid "Subscription manifest uploaded successfully for provider '%s'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled."
+msgstr "Манифест для «%s» успешно отправлен. Для синхронизации репозиториев выберите их на вкладке «Репозитории»."
 
 msgid "Subscriptions"
 msgstr "Подписки"
@@ -2133,9 +2025,7 @@ msgstr "Группа %s удалена."
 msgid "System Group %s has been updated."
 msgstr "Группа %s обновлена."
 
-msgid ""
-"System Group %{new_group} created successfully as a copy of system group %"
-"{group}."
+msgid "System Group %{new_group} created successfully as a copy of system group %{group}."
 msgstr "Группа %{new_group} успешно создана из копии %{group}."
 
 msgid "System Group Info"
@@ -2168,6 +2058,9 @@ msgstr "Подписки обновлены."
 msgid "System's environment not compatible with the group '%s'."
 msgstr "Системное окружение несовместимо с группой «%s»."
 
+msgid "System: %{system_name}, System Groups Removed: %{system_group_names}"
+msgstr ""
+
 msgid "Systems"
 msgstr "Системы"
 
@@ -2177,8 +2070,7 @@ msgstr "Групповая операция. Добавление в групп�
 msgid "Systems Bulk Action: No errata IDs have been provided."
 msgstr "Групповая операция. Не указаны идентификаторы исправлений."
 
-msgid ""
-"Systems Bulk Action: No package or package group names have been provided."
+msgid "Systems Bulk Action: No package or package group names have been provided."
 msgstr "Групповая операция. Не указаны имена пакетов или групп."
 
 msgid "Systems Bulk Action: Remove from system group(s): %s"
@@ -2220,14 +2112,8 @@ msgstr "Шаблон %s обновлён."
 msgid "Template %s updated successfully."
 msgstr "Шаблон %s обновлён."
 
-msgid ""
-"Template '%s' has been updated successfully, however you have removed either "
-"a product or repository that contained the selected distribution for this "
-"template.  Please select another distribution to ensure a working system "
-"template."
-msgstr ""
-"Шаблон «%s» обновлен, но вы удалили продукт или репозиторий, содержащий "
-"дистрибутив для этого шаблона. Выберите другой дистрибутив."
+msgid "Template '%s' has been updated successfully, however you have removed either a product or repository that contained the selected distribution for this template.  Please select another distribution to ensure a working system template."
+msgstr "Шаблон «%s» обновлен, но вы удалили продукт или репозиторий, содержащий дистрибутив для этого шаблона. Выберите другой дистрибутив."
 
 msgid "Template '%s' not found in the changeset"
 msgstr "Шаблон «%s» не найден в наборе изменений."
@@ -2236,8 +2122,7 @@ msgid "Template '%s' was deleted."
 msgstr "Шаблон «%s» удален."
 
 msgid "Template can have parent templates only from the same environment"
-msgstr ""
-"Шаблону могут соответствовать родительские шаблоны в этом же окружении."
+msgstr "Шаблону могут соответствовать родительские шаблоны в этом же окружении."
 
 msgid "Template cannot be exported"
 msgstr "Невозможно выполнить экспорт шаблона."
@@ -2248,50 +2133,39 @@ msgstr "Импорт шаблона завершён."
 msgid "Templates"
 msgstr "Шаблоны"
 
-msgid "Templates can be updated only in a Library environment"
+#, fuzzy
+msgid "Templates can be updated only in the '%s' environment"
 msgstr "Обновление шаблонов доступно только в окружении Library."
 
-msgid ""
-"The current organization cannot be deleted. Please switch to a different "
-"organization before deleting."
-msgstr ""
-"Организация не может быть удалена. Перейдите в другую организацию и повторите "
-"попытку."
+#, fuzzy
+msgid "The '%s' environment cannot contain a changeset!"
+msgstr "Окружение Library не может содержать набор изменений."
+
+msgid "The current organization cannot be deleted. Please switch to a different organization before deleting."
+msgstr "Организация не может быть удалена. Перейдите в другую организацию и повторите попытку."
 
 msgid "The environment still has content that belongs to product '%s'."
 msgstr "В окружении есть содержимое для продукта «%s»."
 
-msgid ""
-"The label requested is already used by another %s; therefore, a unique label "
-"was assigned.  If you would like a different label, please delete the %s and "
-"recreate it with a unique label.  Requested label: %s, Assigned label: %s"
+msgid "The label requested is already used by another %s; therefore, a unique label was assigned.  If you would like a different label, please delete the %s and recreate it with a unique label.  Requested label: %s, Assigned label: %s"
 msgstr ""
 
-msgid ""
-"The selected system groups (%s) are not compatible with the selected "
-"environment."
+msgid "The selected system groups (%s) are not compatible with the selected environment."
 msgstr "Выбранные группы (%s) несовместимы с этим окружением."
 
-msgid ""
-"The system registration default you supplied was the same as the old system "
-"registration default."
-msgstr ""
-"Новые стандартные параметры регистрации системы не отличаются от предыдущих."
+msgid "The system registration default you supplied was the same as the old system registration default."
+msgstr "Новые стандартные параметры регистрации системы не отличаются от предыдущих."
 
 msgid "The template has children templates."
 msgstr "У шаблона есть подчинённые шаблоны."
 
-msgid ""
-"There is already a repo with the label [ %{repo} ] for product [ %{product} ]"
+msgid "There is already a repo with the label [ %{repo} ] for product [ %{product} ]"
 msgstr ""
 
-msgid ""
-"There is already a repo with the name [ %{repo} ] for product [ %{product} ]"
+msgid "There is already a repo with the name [ %{repo} ] for product [ %{product} ]"
 msgstr "Репозиторий [ %{repo} ] для [ %{product} ] уже существует."
 
-msgid ""
-"There is already an active sync process for the '%s' repository. Please try "
-"again later"
+msgid "There is already an active sync process for the '%s' repository. Please try again later"
 msgstr "Выполняется синхронизация репозитория «%s». Повторите попытку позже."
 
 msgid "There must be at least one plan selected"
@@ -2300,11 +2174,8 @@ msgstr "Необходимо выбрать план"
 msgid "There must be at least one product selected"
 msgstr "Необходимо выбрать продукт"
 
-msgid ""
-"There were errors syncing repository '%s'. See notices page for more details."
-msgstr ""
-"Ошибки при синхронизации репозитория «%s». Дополнительную информацию можно "
-"найти на странице уведомлений."
+msgid "There were errors syncing repository '%s'. See notices page for more details."
+msgstr "Ошибки при синхронизации репозитория «%s». Дополнительную информацию можно найти на странице уведомлений."
 
 msgid "This action doesn't support pacakge groups"
 msgstr "Это действие неприменимо к группам пакетов."
@@ -2330,46 +2201,35 @@ msgstr " %s не найден."
 msgid "Unable to parse repositories: %s"
 msgstr "Ошибка анализа репозиториев: %s"
 
-msgid ""
-"Unable to retrieve release versions from Repository URL %{url}. Error "
-"message: %{error}"
-msgstr ""
-"Не удалось получить версии из URL репозитория %{url}. Ошибка:  %{error}"
+msgid "Unable to retrieve release versions from Repository URL %{url}. Error message: %{error}"
+msgstr "Не удалось получить версии из URL репозитория %{url}. Ошибка:  %{error}"
 
 msgid "Unable to retrieve subscription history for provider '%{name}'."
 msgstr "Не удалось получить историю подписок для «%{name}»."
 
-msgid ""
-"Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
-msgstr ""
-"Запланированное для «%{name}» удаление групп «%{groups}» не удалось. "
-"Причина: %{message}"
+msgid "Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
+msgstr "Запланированное для «%{name}» удаление групп «%{groups}» не удалось. Причина: %{message}"
 
-msgid ""
-"Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}'."
+msgid "Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}'."
 msgstr "Назначено удаление групп пакетов «%{groups}» для группы «%{name}»."
 
 msgid "Uninstall of Package Groups '%{p}' scheduled for System '%{s}'."
 msgstr "Назначено удаление групп пакетов '%{p}' для системы '%{s}'."
 
-msgid ""
-"Uninstall of Packages '%{packages}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
-msgstr ""
-"Запланированное для «%{name}» удаление пакетов «%{packages}» не удалось. "
-"Причина: %{message}"
+msgid "Uninstall of Packages '%{packages}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
+msgstr "Запланированное для «%{name}» удаление пакетов «%{packages}» не удалось. Причина: %{message}"
 
-msgid ""
-"Uninstall of Packages '%{packages}' scheduled for System Group '%{name}'."
+msgid "Uninstall of Packages '%{packages}' scheduled for System Group '%{name}'."
 msgstr "Назначено удаление пакетов «%{packages}» для группы «%{name}»."
 
 msgid "Uninstall of Packages '%{p}' scheduled for System '%{s}'."
 msgstr "Назначено удаление пакетов '%{p}' для системы '%{s}'."
 
-msgid "Unknown changeset type, must be PROMOTION or DELETION: %s"
+msgid "Units"
 msgstr ""
-"Неизвестный тип набора изменений. Допускается PROMOTION или DELETION: %s"
+
+msgid "Unknown changeset type, must be PROMOTION or DELETION: %s"
+msgstr "Неизвестный тип набора изменений. Допускается PROMOTION или DELETION: %s"
 
 msgid "Unknown registration date"
 msgstr "Неизвестная дата регистрации"
@@ -2377,23 +2237,14 @@ msgstr "Неизвестная дата регистрации"
 msgid "Unknown repository label: %s"
 msgstr "Неизвестная метка репозитория %s"
 
-msgid ""
-"Update of Package Groups '%{groups}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
-msgstr ""
-"Запланированное для «%{name}» обновление групп «%{groups}» не удалось. "
-"Причина: %{message}"
+msgid "Update of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
+msgstr "Запланированное для «%{name}» обновление групп «%{groups}» не удалось. Причина: %{message}"
 
-msgid ""
-"Update of Package Groups '%{groups}' scheduled for System Group '%{name}'."
+msgid "Update of Package Groups '%{groups}' scheduled for System Group '%{name}'."
 msgstr "Назначено обновление групп пакетов «%{groups}» для группы «%{name}»."
 
-msgid ""
-"Update of Packages '%{packages}' scheduled for System Group '%{group}' "
-"failed.  Reason: %{message}"
-msgstr ""
-"Запланированное для «%{group}» обновление пакетов «%{packages}» не удалось. "
-"Причина: %{message}"
+msgid "Update of Packages '%{packages}' scheduled for System Group '%{group}' failed.  Reason: %{message}"
+msgstr "Запланированное для «%{group}» обновление пакетов «%{packages}» не удалось. Причина: %{message}"
 
 msgid "Update of Packages '%{packages}' scheduled for System Group '%{name}'."
 msgstr "Назначено обновление пакетов «%{packages}» для группы «%{name}»."
@@ -2406,6 +2257,10 @@ msgstr "Назначено обновление всех пакетов для �
 
 msgid "Updating Package..."
 msgstr "Обновление пакета..."
+
+#, fuzzy
+msgid "Updating package group..."
+msgstr "обновление группы пакетов..."
 
 msgid "Usage limit (%{limit}) exhausted for activation key '%{name}'"
 msgstr "Лимит (%{limit}) для ключа «%{name}» исчерпан."
@@ -2437,14 +2292,15 @@ msgstr "Пользователь обновлён."
 msgid "Username"
 msgstr "Пользователь"
 
-msgid "Username Unknown?"
-msgstr "Имя пользователя неизвестно?"
-
 msgid "Users"
 msgstr "Пользователи"
 
 msgid "Validation failed: Label has already been taken"
 msgstr ""
+
+#, fuzzy
+msgid "Version"
+msgstr "Разрешения"
 
 msgid "Virtual"
 msgstr " Виртуальная"
@@ -2452,53 +2308,29 @@ msgstr " Виртуальная"
 msgid "Welcome Back"
 msgstr "Добро пожаловать"
 
-msgid ""
-"Wrong/Invalid parameters sent for %{controller}/%{action}.\\n Wrong "
-"Parameters: \\n%{params}\\n Parameters Received:\\n %{all_params} "
+msgid "Wrong/Invalid parameters sent for %{controller}/%{action}.\\n Wrong Parameters: \\n%{params}\\n Parameters Received:\\n %{all_params} "
 msgstr ""
 
 msgid "You can synchronize repositories only in library environment'"
 msgstr "Синхронизация репозиториев возможна только в окружении Library"
 
-msgid ""
-"You cannot have more than %{max_systems} system(s) associated with system "
-"group '%{group}'."
-msgstr ""
-"Превышено максимально допустимое число систем (%{max_systems}) в группе "
-"«%{group}»."
+msgid "You cannot have more than %{max_systems} system(s) associated with system group '%{group}'."
+msgstr "Превышено максимально допустимое число систем (%{max_systems}) в группе «%{group}»."
 
-msgid ""
-"You do not have valid credentials to access this system. Please contact your "
-"administrator."
+msgid "You do not have valid credentials to access this system. Please contact your administrator."
 msgstr "Ошибка авторизации. Обратитесь к администратору."
 
-msgid ""
-"You have entered an incorrect username/password combination, or your account "
-"may currently be disabled. Please try again or contact your administrator."
-msgstr ""
-"Неверное имя пользователя, пароль, или учётная запись отключена. Повторите "
-"попытку или обратитесь к администратору."
+msgid "You have entered an incorrect username/password combination, or your account may currently be disabled. Please try again or contact your administrator."
+msgstr "Неверное имя пользователя, пароль, или учётная запись отключена. Повторите попытку или обратитесь к администратору."
 
 msgid "You have not set a default organization and environment on the user %s."
-msgstr ""
-"Для пользователя %s не выбрана организация и окружение для использования по "
-"умолчанию."
+msgstr "Для пользователя %s не выбрана организация и окружение для использования по умолчанию."
 
 msgid "You must be logged in to access that page."
 msgstr "Для доступа к странице необходимо авторизоваться."
 
-msgid ""
-"You must specify host in %{config_file} for %{app_name} to work properly"
-msgstr ""
-"Для нормальной работы %{app_name} необходимо задать узел в %{config_file}"
-
-msgid ""
-"Your current organization is no longer valid. It is possible that either the "
-"organization has been deleted or your permissions revoked, please log back in "
-"to continue."
-msgstr ""
-"Текущая организация недоступна. Возможно, она была удалена, или у вас "
-"недостаточно разрешений. Авторизуйтесь для продолжения."
+msgid "Your current organization is no longer valid. It is possible that either the organization has been deleted or your permissions revoked, please log back in to continue."
+msgstr "Текущая организация недоступна. Возможно, она была удалена, или у вас недостаточно разрешений. Авторизуйтесь для продолжения."
 
 msgid "Your default environment has been removed. Please choose another one."
 msgstr "Используемое по умолчанию окружение удалено. Выберите новое окружение."
@@ -2512,8 +2344,8 @@ msgstr "обновление всех пакетов"
 msgid "all packages update failed"
 msgstr "не удалось обновить все пакеты"
 
-msgid "can not be updated"
-msgstr "обновление невозможно"
+msgid "already exists (including organizations being deleted)"
+msgstr ""
 
 msgid "can't be blank"
 msgstr "не может быть пустым"
@@ -2572,14 +2404,10 @@ msgstr "уже в шаблоне"
 msgid "is invalid"
 msgstr "неверно."
 
-msgid "is too long"
-msgstr "превышает допустимую длину."
-
 msgid "katello-jobs service not running"
 msgstr "katello-jobs не выполняется"
 
-msgid ""
-"may not be less than the number of systems associated with the system group."
+msgid "may not be less than the number of systems associated with the system group."
 msgstr "не может быть меньше количества систем в группе."
 
 msgid "may not be set to 0."
@@ -2609,7 +2437,8 @@ msgstr "должно быть уникальным в пределах орга�
 msgid "must be unique."
 msgstr "должно быть уникальным."
 
-msgid "must contain 'Library'"
+#, fuzzy
+msgid "must contain '%s'"
 msgstr "должно содержать «Library»"
 
 msgid "must contain at least %s character"
@@ -2624,23 +2453,15 @@ msgstr "Имя %s не существует"
 msgid "none"
 msgstr "нет"
 
+#, fuzzy
+msgid "of environment must be unique within one organization"
+msgstr "Имя должно быть уникальным в пределах организации."
+
 msgid "organization"
 msgstr "организация"
 
 msgid "organization_id required but not specified."
 msgstr "Необходимо указать organization_id."
-
-msgid "package group update canceled"
-msgstr "Обновление группы пакетов отменено"
-
-msgid "package group update complete"
-msgstr "Группа пакетов обновлена."
-
-msgid "package group update failed"
-msgstr "Не удалось обновить группу пакетов"
-
-msgid "package group update timed out"
-msgstr "Время ожидания обновления группы пакетов истекло"
 
 msgid "plan"
 msgstr "план"
@@ -2672,8 +2493,7 @@ msgstr " %s Bugzilla"
 msgid "the CloudForms Documentation"
 msgstr "документация CloudForms"
 
-msgid ""
-"the following attributes can not be updated for the Red Hat provider: [ %s ]"
+msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "Не удалось обновить атрибуты провайдера Red Hat: [ %s ]"
 
 msgid "updating package group..."
@@ -2691,1868 +2511,92 @@ msgstr "обновление пакетов..."
 msgid "weekly"
 msgstr "еженедельно"
 
-#~ msgid " Changesets"
-#~ msgstr "Наборы изменений"
+#~ msgid " '%s' already exists and either has been scheduled for deletion or failed deletion."
+#~ msgstr "«%s» уже существует и ожидает удаления (или удаление завершилось неудачей)."
 
-#~ msgid " Content"
-#~ msgstr "Содержимое"
+#~ msgid "Cannot delete the changeset '%{changeset}' while another changeset (%{another_changeset}) is being deleted or promoted."
+#~ msgstr "Набор «%{changeset}» не может быть удален, так как другой набор (%{another_changeset}) уже удаляется или переносится."
 
-#~ msgid " items selected."
-#~ msgstr " выбрано."
+#~ msgid "Change Password"
+#~ msgstr "Изменить пароль"
 
-#~ msgid "%d of %d"
-#~ msgstr "%d из %d"
+#~ msgid "Confirm Password"
+#~ msgstr "Подтвердить пароль"
 
-#~ msgid "%s / %s"
-#~ msgstr "%s / %s"
+#~ msgid "Consumers"
+#~ msgstr "Клиенты"
 
-#~ msgid "%s Version: %s"
-#~ msgstr "%s, версия %s"
+#~ msgid "Email Address"
+#~ msgstr "Email"
 
-#~ msgid "(%X of %Y repositories selected)"
-#~ msgstr "(выбрано репозиториев: %X из %Y )"
+#~ msgid "Enter your username and email address below and instructions on resetting your password will be sent to you."
+#~ msgstr "Введите имя пользователя и адрес, на который будут отправлены инструкции по изменению пароля."
 
-#~ msgid "(%{n} Types)"
-#~ msgstr "(%{n} тип.)"
+#~ msgid "Forgot %s or %s?"
+#~ msgstr "Забыли %s или %s?"
 
-#~ msgid "(Entire product selected)"
-#~ msgstr "(продукт выбран полностью)"
+#~ msgid "Forgot Username or Password?"
+#~ msgstr "Забыли имя пользователя или пароль?"
 
-#~ msgid "(Load %X More)"
-#~ msgstr "(загрузить еще %X)"
+#~ msgid "I remembered my login credentials."
+#~ msgstr "Я помню свои реквизиты доступа."
 
-#~ msgid "(Loaded %X of %Y Total)"
-#~ msgstr "(всего загружено %X из %Y)"
+#~ msgid "If you do not know your username, please enter your email address below and your username information will be sent to you."
+#~ msgstr "Если вы забыли имя пользователя, введите электронный адрес, на который будет выслано напоминание."
 
-#~ msgid "(Undo)"
-#~ msgstr "(отменить)"
+#~ msgid "Invalid Url"
+#~ msgstr "Неверный URL"
 
-#~ msgid "+ Add"
-#~ msgstr "+ Добавить"
+#~ msgid "Javascript must be enabled for this application to work properly."
+#~ msgstr "Для работы этой программы необходимо включить Javascript."
 
-#~ msgid "+ All"
-#~ msgstr "+ Все"
+#~ msgid "Library"
+#~ msgstr "Library"
 
-#~ msgid "+ New %s"
-#~ msgstr "+ Создать %s"
+#~ msgid "Login"
+#~ msgstr "Вход"
 
-#~ msgid "+ Yes"
-#~ msgstr "+ Да"
+#~ msgid "Login Information"
+#~ msgstr "Информация об авторизации"
 
-#~ msgid "- Remove"
-#~ msgstr "- Удалить"
+#~ msgid "Logo"
+#~ msgstr "Логотип"
 
-#~ msgid "400 - Invalid Parameters"
-#~ msgstr "400 Недопустимые параметы"
+#~ msgid "Password"
+#~ msgstr "Пароль"
 
-#~ msgid "403 - Permission denied"
-#~ msgstr "403 Отказ в разрешении"
+#~ msgid "Password Unknown"
+#~ msgstr "Неизвестный пароль"
 
-#~ msgid "404 - That page doesn't exist or is missing!"
-#~ msgstr "404 Страница не найдена"
-
-#~ msgid "500 Internal Server Error"
-#~ msgstr "500 Внутренняя ошибка сервера"
-
-#~ msgid "<< Previous"
-#~ msgstr "<< Назад"
-
-#~ msgid "A request has been received by Katello server '%s' to retrieve the logins for email '%s'. The following is a list of those logins:"
-#~ msgstr "Сервер Katello «%s» получил запрос имени пользователя для адреса «%s». Список:"
-
-#~ msgid "A request has been received to reset the Katello password for user '%s'.  In order to reset this password, click the URL below."
-#~ msgstr "Получен запрос изменения пароля Katello для пользователя \"%s\". Нажмите приведённую ниже ссылку."
-
-#~ msgid "Account Number"
-#~ msgstr "Номер учётной записи"
-
-#~ msgid "Activation Key"
-#~ msgstr "Ключ активации"
-
-#~ msgid "Activation Keys provide a set of characteristics that may be applied to a system during system registration.  This includes things such as, default environment to assign to the system, subscriptions to allocate to the system, system template to apply to the system...etc."
-#~ msgstr "Ключи активации определяют параметры для применения в процессе регистрации системы, включая выбор исходного окружения, подписок, шаблонов и т.п."
-
-#~ msgid "Activation Keys provide a set of characteristics that may be applied to a system during system registration.  This includes things such as, default environment to assign to the system, subscriptions to allocate to the system...etc."
-#~ msgstr "Ключи активации определяют параметры для применения в процессе регистрации системы, включая выбор исходного окружения, подписок и т.п."
-
-#~ msgid "Add"
-#~ msgstr "Добавить"
-
-#~ msgid "Add All"
-#~ msgstr "Добавить все"
-
-#~ msgid "Add Global Permission"
-#~ msgstr "Добавление разрешения"
-
-#~ msgid "Add New Environment"
-#~ msgstr "Добавить окружение"
-
-#~ msgid "Add Package Canceled"
-#~ msgstr "Добавление пакета отменено"
-
-#~ msgid "Add Package Complete"
-#~ msgstr "Добавление пакета завершено"
-
-#~ msgid "Add Package Error"
-#~ msgstr "Ошибка добавления пакета"
-
-#~ msgid "Add Package Group Canceled"
-#~ msgstr "Добавление группы пакетов отменено"
-
-#~ msgid "Add Package Group Complete"
-#~ msgstr "Добавление группы пакетов завершено"
-
-#~ msgid "Add Package Group Timeout"
-#~ msgstr "Время ожидания добавления группы пакетов истекло"
-
-#~ msgid "Add Package Timeout"
-#~ msgstr "Время ожидания добавления пакета истекло"
-
-#~ msgid "Add Permission"
-#~ msgstr "Добавить разрешение"
-
-#~ msgid "Add Permission to"
-#~ msgstr "Добавить разрешение для"
-
-#~ msgid "Add Product"
-#~ msgstr "Добавить продукт"
-
-#~ msgid "Add Subscriptions ▸"
-#~ msgstr "Добавить подписки ▸"
-
-#~ msgid "Add to Key"
-#~ msgstr "Добавить в ключ"
-
-#~ msgid "Added"
-#~ msgstr "Добавлено"
-
-#~ msgid "Added to changeset '%X'"
-#~ msgstr "Добавлен в набор «%X»"
-
-#~ msgid "Added:"
-#~ msgstr "Добавлено:"
-
-#~ msgid "Adding..."
-#~ msgstr "Добавление..."
-
-#~ msgid "Administration"
-#~ msgstr "Администрирование"
-
-#~ msgid "Advisory"
-#~ msgstr "Рекомендация"
-
-#~ msgid "Alert"
-#~ msgstr "Предупреждение"
-
-#~ msgid "All Errata"
-#~ msgstr "Все исправления"
-
-#~ msgid "All Products"
-#~ msgstr "Все продукты"
-
-#~ msgid "All Repos"
-#~ msgstr "Все репозитории"
-
-#~ msgid "All Repositories"
-#~ msgstr "Все репозитории"
-
-#~ msgid "All:"
-#~ msgstr "Все:"
-
-#~ msgid "An environment does not exist.  If you would like to manage changesets and content, please create a new environment."
-#~ msgstr "Окружение не существует. Создайте новое окружение."
-
-#~ msgid "An error has occurred when communicating with the server, please refresh the page to retrieve the current System Template"
-#~ msgstr "Ошибка обращения к серверу. Обновите страницу для просмотра текущего шаблона."
-
-#~ msgid "An error has occurred when communicating with the server, please refresh the page to retrieve the current changeset."
-#~ msgstr "Ошибка обращения к серверу. Обновите страницу для получения текущего набора изменений."
-
-#~ msgid "Applicable Product filters:"
-#~ msgstr "Применимые фильтры для продуктов:"
-
-#~ msgid "Applicable Repository filters:"
-#~ msgstr "Применимые фильтры для репозиториев:"
-
-#~ msgid "Applied"
-#~ msgstr "Применено"
-
-#~ msgid "Apply Deletion Changeset"
-#~ msgstr "Применить набор изменений для удаления"
-
-#~ msgid "Apply Failed"
-#~ msgstr "Ошибка"
-
-#~ msgid "Apply Promotion Changeset"
-#~ msgstr "Применить набор изменений для переноса"
-
-#~ msgid "Apply Selected Plan to Selected Products"
-#~ msgstr "Применить план"
-
-#~ msgid "Applying..."
-#~ msgstr "Применение..."
-
-#~ msgid "Arch"
-#~ msgstr "Арх."
-
-#~ msgid "Architecture"
-#~ msgstr "Архитектура"
-
-#~ msgid "Architecture:"
-#~ msgstr "Архитектура:"
-
-#~ msgid "Are you sure you want to %X the %Y entered on the %Z selected system(s)?"
-#~ msgstr "Выполнить операцию %X для %Y в выбранных системах (%Z)?"
-
-#~ msgid "Are you sure you want to add the %X selected system(s) to the system group(s) entered?"
-#~ msgstr "Добавить выбранные системы (всего: %X) в группы?"
-
-#~ msgid "Are you sure you want to delete the %X selected system(s)?"
-#~ msgstr "Удалить выбранные системы (%X) ?"
-
-#~ msgid "Are you sure you want to delete the system group?"
-#~ msgstr "Удалить группу?"
-
-#~ msgid "Are you sure you want to delete this GPG Key?"
-#~ msgstr "Удалить ключ GPG?"
-
-#~ msgid "Are you sure you want to delete this filter?"
-#~ msgstr "Удалить фильтр?"
-
-#~ msgid "Are you sure you want to delete this provider?"
-#~ msgstr "Удалить провайдер?"
-
-#~ msgid "Are you sure you want to install the errata entered on the %X selected system(s)?"
-#~ msgstr "Установить исправления в выбранных системах (всего систем: %X)?"
-
-#~ msgid "Are you sure you want to remove the %X selected system(s) from the system group(s) entered?"
-#~ msgstr "Удалить выбранные системы (всего: %X) из групп?"
-
-#~ msgid "Are you sure you want to remove this deletion changeset?"
-#~ msgstr "Удалить набор изменений?"
-
-#~ msgid "Are you sure you want to remove this organization?"
-#~ msgstr "Удалить организацию?"
-
-#~ msgid "Are you sure you want to remove this product?"
-#~ msgstr "Удалить продукт?"
-
-#~ msgid "Are you sure you want to remove this promotion changeset?"
-#~ msgstr "Удалить набор изменений для переноса?"
-
-#~ msgid "Are you sure you want to remove this repository?"
-#~ msgstr "Удалить репозиторий?"
-
-#~ msgid "Are you sure you want to remove this role?"
-#~ msgstr "Удалить роль?"
-
-#~ msgid "Are you sure you want to remove this system?"
-#~ msgstr "Удалить систему?"
-
-#~ msgid "Are you sure you want to remove this template?"
-#~ msgstr "Удалить шаблон?"
-
-#~ msgid "Are you sure you want to remove this user?"
-#~ msgstr "Удалить пользователя?"
-
-#~ msgid "Are you sure?"
-#~ msgstr "Продолжить?"
-
-#~ msgid "Are you sure? If any users have this environment set as their default, it will unset it."
-#~ msgstr "Продолжить? Если пользователи используют это окружение по умолчанию, потребуется изменить настройки."
-
-#~ msgid "Associated Bugs"
-#~ msgstr "Известные ошибки"
-
-#~ msgid "At least one erratum ID must be provided."
-#~ msgstr "Необходимо предоставить ID исправления."
-
-#~ msgid "At least one package group name must be provided."
-#~ msgstr "Необходимо указать имя пакета."
-
-#~ msgid "At least one system group must be selected."
-#~ msgstr "Необходимо выбрать как минимум одну группу."
-
-#~ msgid "Auto-complete Product"
-#~ msgstr "Автозавершение продукта"
-
-#~ msgid "Auto-complete repository"
-#~ msgstr "Автозавершение репозитория"
-
-#~ msgid "Auto-subscribe %s, %s"
-#~ msgstr "Автоматическая подписка %s, %s"
-
-#~ msgid "Available Errata"
-#~ msgstr "Доступные исправления"
-
-#~ msgid "Back"
-#~ msgstr "Назад"
-
-#~ msgid "Back to Results"
-#~ msgstr "Назад к результатам"
-
-#~ msgid "Before removing this repository from the product, it must first be deleted from the following environments using a deletion changeset: "
-#~ msgstr "Прежде чем удалить репозиторий из продукта, его необходимо удалить из следующих окружений:"
-
-#~ msgid "Browse"
-#~ msgstr "Обзор"
-
-#~ msgid "Browser Default Locale"
-#~ msgstr "Стандартный язык браузера"
-
-#~ msgid "Bug Fix"
-#~ msgstr "Исправление ошибки"
-
-#~ msgid "Build Host"
-#~ msgstr "Хост сборки"
-
-#~ msgid "Cancel"
-#~ msgstr "Отмена"
-
-#~ msgid "Cancel Add"
-#~ msgstr "Отменить добавление"
-
-#~ msgid "Cancel Changeset Review"
-#~ msgstr "Отменить обзор набора изменений"
-
-#~ msgid "Cancel Review"
-#~ msgstr "Отменить"
-
-#~ msgid "Change Password:"
-#~ msgstr "Новый пароль:"
-
-#~ msgid "Changeset Details"
-#~ msgstr "Свойства набора изменений"
-
-#~ msgid "Changeset is empty."
-#~ msgstr "Пустой набор."
-
-#~ msgid "Changesets allow you to either promote content to or delete content from an environment.<BR/><BR/> For a promotion, you may promote content from one environment to the next along a promotion path.  Once you have created a promotion changeset, clicking \"Add\" next to one or more products will add them to the changeset.  If products already exist in the next environment, you may promote other types of content.  Once you have created a changeset, click the \"Review\" button to place the changeset in a locked state for review and when ready click the \"Promote\" button to apply it to the next environment.<BR/><BR/>For a deletion, you may remove content from the current environment. Once you have created a deletion changeset, clicking \"Add\" next to content will add that content to the changeset.  Once you have created a changeset, click the \"Review\" button to place the changeset in a locked state for review and when ready click the \"Delete\" button to apply it to the current environment.  Note: deletion of content from Library is not allowed using a deletion changeset.<BR/><BR/>"
-#~ msgstr "Наборы изменений позволяют удалять или переносить содержимое из одного окружения в другое. <BR/><BR/>Перенос содержимого осуществляется последовательно в структуре окружений. Нажмите «Добавить» напротив продуктов для их добавления в набор изменений. Для проверки и блокирования созданного набора с последующим переносом нажмите «Проверка» и «Перенести».<BR/><BR/>При удалении сначала потребуется удалить содержимое из текущего окружения. Чтобы добавить содержимое в набор, нажмите кнопку «Добавить». Для проверки и блокирования набора с последующим удалением нажмите «Проверка» и «Удалить». Примечание: наборы удаления не могут использоваться для удаления содержимого из окружения Library.<BR/><BR/>"
-
-#~ msgid "Checked In"
-#~ msgstr "Последний вход"
-
-#~ msgid "Choose Environment:"
-#~ msgstr "Выберите окружение:"
-
-#~ msgid "Choose New System Registration Defaults:"
-#~ msgstr "Выберите новые параметры регистрации систем по умолчанию:"
-
-#~ msgid "Choose a product.."
-#~ msgstr "Выберите продукт..."
-
-#~ msgid "Choose an Organization"
-#~ msgstr "Выберите организацию"
-
-#~ msgid "Clear"
-#~ msgstr "Очистить"
-
-#~ msgid "Clear Disabled Helptips:"
-#~ msgstr "Очистить отключенные подсказки:"
-
-#~ msgid "Clear the Search"
-#~ msgstr "Очистить поиск"
-
-#~ msgid "Click Add or Remove next to a user name to apply or remove them from role."
-#~ msgstr "Нажмите \"Добавить\" или \"Удалить\" напротив пользователя для изменения роли."
-
-#~ msgid "Click Add permission from the bar below to add a permission."
-#~ msgstr "Нажмите «Добавить разрешение»."
-
-#~ msgid "Click edit permission from the bar below to edit the current permission."
-#~ msgstr "Нажмите \"Изменить разрешение\" для изменения разрешения."
-
-#~ msgid "Click to edit"
-#~ msgstr "Правка"
-
-#~ msgid "Close"
-#~ msgstr "Закрыть"
-
-#~ msgid "Close Add Permission"
-#~ msgstr "Закрыть окно "
-
-#~ msgid "Close Changeset Details"
-#~ msgstr "Закрыть окно"
-
-#~ msgid "Close Details"
-#~ msgstr "Закрыть свойства"
-
-#~ msgid "Close Edit"
-#~ msgstr "Закрыть"
-
-#~ msgid "Close Edit Permission"
-#~ msgstr "Закрыть изменение"
-
-#~ msgid "Close Role Details"
-#~ msgstr "Закрыть свойства"
-
-#~ msgid "Collapse"
-#~ msgstr "Свернуть"
-
-#~ msgid "Collapse All"
-#~ msgstr "Свернуть все"
-
-#~ msgid "Compare Repositories"
-#~ msgstr "Сравнить репозитории"
-
-#~ msgid "Confirm:"
-#~ msgstr "Подтвердить:"
-
-#~ msgid "Confirmation"
-#~ msgstr "Подтверждение"
-
-#~ msgid "Consumed"
-#~ msgstr "Занято"
-
-#~ msgid "Consumed: %d of %d"
-#~ msgstr "Занято: %d из %d"
-
-#~ msgid "Consumed: Unlimited"
-#~ msgstr "Занято: не ограничено"
-
-#~ msgid "Content Download URL: "
-#~ msgstr "URL загрузки содержимого:"
-
-#~ msgid "Contents:"
-#~ msgstr "Содержимое:"
-
-#~ msgid "Continue"
-#~ msgstr "Продолжить"
-
-#~ msgid "Contract"
-#~ msgstr "Контракт"
-
-#~ msgid "Contract Number"
-#~ msgstr "Номер контракта"
-
-#~ msgid "Copy"
-#~ msgstr "Копировать"
-
-#~ msgid "Create"
-#~ msgstr "Создать"
-
-#~ msgid "Create Application Life Cycle Management Environment"
-#~ msgstr "Создание окружения"
-
-#~ msgid "Create Product"
-#~ msgstr "Создать продукт"
-
-#~ msgid "Create Repository"
-#~ msgstr "Создать репозиторий"
-
-#~ msgid "Created (UTC)"
-#~ msgstr "Время (UTC)"
-
-#~ msgid "Creating..."
-#~ msgstr "Создается..."
-
-#~ msgid "Critical"
-#~ msgstr "Критическое"
-
-#~ msgid "Current Organization"
-#~ msgstr "Текущая организация"
-
-#~ msgid "Current Subscriptions"
-#~ msgstr "Действительные"
-
-#~ msgid "Current System Registration Defaults"
-#~ msgstr "Стандартные параметры регистрации систем"
-
-#~ msgid "DETAILS"
-#~ msgstr "СВОЙСТВА"
-
-#~ msgid "Date"
-#~ msgstr "Дата"
-
-#~ msgid "Debug Certificate"
-#~ msgstr "Сертификат"
-
-#~ msgid "Delete"
-#~ msgstr "Удалить"
-
-#~ msgid "Delete All"
-#~ msgstr "Удалить все"
-
-#~ msgid "Deleted System Group %s and it's %s systems."
-#~ msgstr "Группа %s и её системы (всего: %s) удалены."
-
-#~ msgid "Dependency of "
-#~ msgstr "Зависимость "
-
-#~ msgid "Description"
-#~ msgstr "Описание"
-
-#~ msgid "Description:"
-#~ msgstr "Описание:"
-
-#~ msgid "Details for the currently selected permission."
-#~ msgstr "Свойства выбранного разрешения."
-
-#~ msgid "Difference"
-#~ msgstr "Отличия"
-
-#~ msgid "Difference (Intersection):"
-#~ msgstr "Отличия (пересечение)"
-
-#~ msgid "Display"
-#~ msgstr "Показать"
-
-#~ msgid "Distribution"
-#~ msgstr "Дистрибутив"
-
-#~ msgid "Do not open the copy upon completion"
-#~ msgstr "Не открывать копию после заверешения"
-
-#~ msgid "Do you also want to delete the systems in the system group?"
-#~ msgstr "Удалить системы из группы?"
-
-#~ msgid "Do you want to set this GPG Key as the key for all repositories within this product?"
-#~ msgstr "Использовать этот ключ GPG для всех репозиториев этого продукта?"
-
-#~ msgid "Done"
-#~ msgstr "Готово"
-
-#~ msgid "Download"
-#~ msgstr "Загрузить"
-
-#~ msgid "Download System Template"
-#~ msgstr "Загрузка шаблона"
-
-#~ msgid "Duration"
-#~ msgstr "Длительность"
-
-#~ msgid "ERRATA"
-#~ msgstr "ИСПРАВЛЕНИЯ"
-
-#~ msgid "Edit Activation Key enables you to modify the selected activation key.  This key may be used during system registration.  For example, <BR/><BR/>subscription-manager register --org %s --activationkey %s"
-#~ msgstr "Здесь можно изменить характеристики ключа. Ключ активации используется при регистрации системы. Пример: <BR/><BR/>subscription-manager register --org %s --activationkey %s"
-
-#~ msgid "Edit Changeset Details"
-#~ msgstr "Правка свойств набора изменений"
-
-#~ msgid "Edit Details"
-#~ msgstr "Изменить"
-
-#~ msgid "Edit Environment"
-#~ msgstr "Изменить окружение"
-
-#~ msgid "Edit GPG Key enables you to modify the selected GPG Key.  A new key can be copied and pasted in directly."
-#~ msgstr "В поле ключа можно вставить значение из буфера обмена."
-
-#~ msgid "Edit Permission"
-#~ msgstr "Изменить разрешение"
-
-#~ msgid "Edit Permission in"
-#~ msgstr "Разрешения:"
-
-#~ msgid "Edit Product"
-#~ msgstr "Изменить продукт"
-
-#~ msgid "Edit Role"
-#~ msgstr "Изменить роль"
-
-#~ msgid "Edit Role Details"
-#~ msgstr "Изменить свойства роли"
-
-#~ msgid "Edit System Template"
-#~ msgstr "Изменить шаблон системы"
-
-#~ msgid "Eligible Content"
-#~ msgstr "Доступное содержимое"
-
-#~ msgid "Email Address:"
-#~ msgstr "Email:"
-
-#~ msgid "Enabled by Default: "
-#~ msgstr "Включено по умолчанию:"
-
-#~ msgid "End"
-#~ msgstr "Конец"
-
-#~ msgid "End Date"
-#~ msgstr "Срок действия"
-
-#~ msgid "Enhancement"
-#~ msgstr "Дополнение"
-
-#~ msgid "Enter Errata..."
-#~ msgstr "Введите исправления..."
-
-#~ msgid "Enter Package or Group Name(s)..."
-#~ msgstr "Введите имена пакетов и группов..."
-
-#~ msgid "Enter Selected Content..."
-#~ msgstr "Введите выбранное содержимое..."
-
-#~ msgid "Enter system name..."
-#~ msgstr "Введите имя системы..."
-
-#~ msgid "Env: "
-#~ msgstr "Окр.:"
-
-#~ msgid "Environment Promotion Paths"
-#~ msgstr "Диаграмма окружений"
-
-#~ msgid "Environment:"
-#~ msgstr "Окружение:"
-
-#~ msgid "Errata (0)"
-#~ msgstr "Исправления (0)"
-
-#~ msgid "Erratum"
-#~ msgstr "Исправление"
-
-#~ msgid "Error"
-#~ msgstr "Ошибка"
-
-#~ msgid "Error on Install"
-#~ msgstr "Ошибка установки"
-
-#~ msgid "Error:"
-#~ msgstr "Ошибка:"
-
-#~ msgid "Event"
-#~ msgstr "Событие"
-
-#~ msgid "Example Searches:"
-#~ msgstr "Пример поиска:"
-
-#~ msgid "Expand"
-#~ msgstr "Развернуть"
-
-#~ msgid "Expand All"
-#~ msgstr "Развернуть все"
-
-#~ msgid "Expand each Red Hat product below to see the available repositories in each. Selecting the checkbox will make that repository's content available for synchronizing."
-#~ msgstr "Каждый продукт Red Hat содержит список доступных репозиториев. Выберите репозитории для доступа к их содержимому."
-
-#~ msgid "Expanded"
-#~ msgstr "Развернуто"
-
-#~ msgid "Expires: %s"
-#~ msgstr "Истекает: %s"
-
-#~ msgid "Fact"
-#~ msgstr "Компонент"
-
-#~ msgid "File"
-#~ msgstr "Файл"
-
-#~ msgid "Filter on Loaded Events..."
-#~ msgstr "Выбрать по загруженным событиям..."
-
-#~ msgid "Filter on loaded Events..."
-#~ msgstr "Выбрать по загруженным событиям..."
-
-#~ msgid "Filter on loaded packages..."
-#~ msgstr "Выбрать по загруженным пакетам..."
-
-#~ msgid "Filter..."
-#~ msgstr "Фильтр..."
-
-#~ msgid "Full Access"
-#~ msgstr "Полный доступ"
-
-#~ msgid "Full Products"
-#~ msgstr "Целые продукты"
-
-#~ msgid "GPG Key URL: "
-#~ msgstr "URL ключа GPG"
-
-#~ msgid "GPG Key assigned at the Product Level for"
-#~ msgstr "Ключ GPG назначен на уровне продуктов для "
-
-#~ msgid "GPG Key assigned at the Repository Level for"
-#~ msgstr "Ключ GPG назначен на уровне репозитория для "
-
-#~ msgid "GPG Keys may be stored by uploading a key directly or copying and pasting the key in upon creation. By visiting the Providers page and selecting either a product or repository, a GPG key that has been created here can be associated with the given entity."
-#~ msgstr "Файл ключа GPG можно отправить на сервер или вставить его содержимое из буфера обмена. На странице \"Провайдеры\" можно выбрать продукт или репозиторий, с которым будет связан ключ GPG."
-
-#~ msgid "Global permissions allow you to create permissions that span all organizations, or choose a specific organization to apply permissions."
-#~ msgstr "Глобальные разрешения распространяются на все организации."
-
-#~ msgid "Global permissions are permissions that span all organizations; however, organization permissions apply only to the organization they are associated with."
-#~ msgstr "Глобальные разрешения распространяются на все организации, а разрешения организации &mdash; на выбранную организацию."
-
-#~ msgid "Go"
-#~ msgstr "Перейти"
-
-#~ msgid "Good"
-#~ msgstr "Удовлетворительный"
-
-#~ msgid "Group"
-#~ msgstr "Группа"
-
-#~ msgid "Guests"
-#~ msgstr "Гости"
-
-#~ msgid "Host & Guest Info"
-#~ msgstr "Виртуализация"
-
-#~ msgid "Hostname"
-#~ msgstr "Имя узла"
-
-#~ msgid "ID"
-#~ msgstr "ID"
-
-#~ msgid "If you continue having trouble, please contact an Administrator."
-#~ msgstr "При повторении ошибки обратитесь к администратору."
-
-#~ msgid "If you did not request this password to be reset, just ignore this email and the password will continue to stay the same."
-#~ msgstr "Если вы не запрашивали изменение пароля, не предпринимайте никаких действий."
-
-#~ msgid "If you have a subscription manifest you may upload it below. This manifest may be obtained by visiting the Red Hat Customer Portal or by contacting your support representative."
-#~ msgstr "Здесь можно добавить манифест подписок. Манифест можно получить на портале клиентов Red Hat или через представителя поддержки."
-
-#~ msgid "Import Time"
-#~ msgstr "Время импорта"
-
-#~ msgid "Import in progress (%M)"
-#~ msgstr "Выполняется импорт (%МБ)"
-
-#~ msgid "Import in progress (%s)"
-#~ msgstr "Выполняется импорт (%МБ)"
-
-#~ msgid "Info"
-#~ msgstr "Информация"
-
-#~ msgid "Initial Application Life Cycle Management Environment"
-#~ msgstr "Исходное окружение"
-
-#~ msgid "Inline Help Enabled:"
-#~ msgstr "Встроенная справка:"
-
-#~ msgid "Install"
-#~ msgstr "Установить"
-
-#~ msgid "Install Finished"
-#~ msgstr "Установка завершена"
-
-#~ msgid "Installing"
-#~ msgstr "Установка..."
-
-#~ msgid "Insufficient Entitlements"
-#~ msgstr "Недостаточно полномочий"
-
-#~ msgid "Insufficient Subscriptions are Attached to This System"
-#~ msgstr "У системы недостаточно подписок."
-
-#~ msgid "Interfaces"
-#~ msgstr "Интерфейсы"
-
-#~ msgid "Invalid Subscriptions"
-#~ msgstr "Неверные подписки"
-
-#~ msgid "Invalid parameters sent for %s/%s. You may have mistyped the address. If you continue having trouble with this, please contact an Administrator."
-#~ msgstr "%s/%s переданы неверные параметры. Проверьте адрес. При повторении ошибки обратитесь к администратору."
-
-#~ msgid "Issued"
-#~ msgstr "Выпущен"
-
-#~ msgid "Issued: "
-#~ msgstr "Выпущен:"
-
-#~ msgid "Katello Logo"
-#~ msgstr "Логотип Katello"
-
-#~ msgid "Label"
-#~ msgstr "Метка"
-
-#~ msgid "Last Booted"
-#~ msgstr "Последняя загрузка"
-
-#~ msgid "Last Checked in Date"
-#~ msgstr "Последний вход"
-
-#~ msgid "Latest Notifications"
-#~ msgstr "Уведомления"
-
-#~ msgid "Level"
-#~ msgstr "Уровень"
-
-#~ msgid "License"
-#~ msgstr "Лицензия"
-
-#~ msgid "Limit"
-#~ msgstr "Лимит"
-
-#~ msgid "List Actions"
-#~ msgstr "Действия"
-
-#~ msgid "Load %{n} More"
-#~ msgstr "Загрузить еще %{n}"
-
-#~ msgid "Loading Changeset"
-#~ msgstr "Загрузка набора изменений"
-
-#~ msgid "Loading Permissions"
-#~ msgstr "Загрузка разрешений"
-
-#~ msgid "Loading Role"
-#~ msgstr "Загрузка роли"
-
-#~ msgid "Loading System Template"
-#~ msgstr "Загружается шаблон"
-
-#~ msgid "Loading dependencies."
-#~ msgstr "Загрузка зависимостей."
-
-#~ msgid "Location"
-#~ msgstr "Расположение"
-
-#~ msgid "Log Out"
-#~ msgstr "Выход"
-
-#~ msgid "Make this your default organization."
-#~ msgstr "Использовать по умолчанию."
-
-#~ msgid "Manage Environments"
-#~ msgstr "Управление окружениями"
-
-#~ msgid "Manage Packages"
-#~ msgstr "Управление пакетами"
-
-#~ msgid "Manifest File"
-#~ msgstr "Файл манифеста"
-
-#~ msgid "Manifest from "
-#~ msgstr "Манифест из"
-
-#~ msgid "Maximum Limit"
-#~ msgstr "Максимум"
-
-#~ msgid "Maximum Number of Systems"
-#~ msgstr "Максимальное число систем"
-
-#~ msgid "Message"
-#~ msgstr "Сообщение"
-
-#~ msgid "Missing"
-#~ msgstr "Отсутствует"
-
-#~ msgid "More >>"
-#~ msgstr "Подробнее >>"
-
-#~ msgid "More..."
-#~ msgstr "Подробнее..."
-
-#~ msgid "Multi-entitlement"
-#~ msgstr "Многократные полномочия"
-
-#~ msgid "Name can not be blank."
-#~ msgstr "Имя не может быть пустым."
-
-#~ msgid "Name of Your System:"
-#~ msgstr "Имя системы:"
-
-#~ msgid "Name:"
-#~ msgstr "Имя:"
-
-#~ msgid "Networking"
-#~ msgstr "Сеть"
-
-#~ msgid "New Activation Key"
-#~ msgstr "Новый ключ активации"
-
-#~ msgid "New Changeset"
-#~ msgstr "Новый набор изменений"
-
-#~ msgid "New GPG Key"
-#~ msgstr "Новый ключ GPG"
-
-#~ msgid "New Organization"
-#~ msgstr "Новая организация"
-
-#~ msgid "New Package Filter"
-#~ msgstr "Новый фильтр пакетов"
-
-#~ msgid "New Provider"
-#~ msgstr "Новый провайдер"
-
-#~ msgid "New Role"
-#~ msgstr "Новая роль"
-
-#~ msgid "New Sync Plan"
-#~ msgstr "Новый план синхронизации"
-
-#~ msgid "New System Group"
-#~ msgstr "+ Новая группа"
-
-#~ msgid "New System Template"
-#~ msgstr "Новый шаблон"
-
-#~ msgid "New User"
-#~ msgstr "Новый пользователь"
-
-#~ msgid "New system"
-#~ msgstr "Новая система"
-
-#~ msgid "Next >>"
-#~ msgstr "Вперёд >>"
-
-#~ msgid "No"
-#~ msgstr "Нет"
-
-#~ msgid "No System Templates are currently defined"
-#~ msgstr "Нет шаблонов."
-
-#~ msgid "No Templates"
-#~ msgstr "Нет шаблонов"
-
-#~ msgid "No changesets found."
-#~ msgstr "Наборы не найдены."
-
-#~ msgid "No default environment. Select an organization to choose from available environments."
-#~ msgstr "Нет окружения по умолчанию. Выберите организацию."
-
-#~ msgid "No distributions available."
-#~ msgstr "Нет дистрибутивов."
-
-#~ msgid "No distributions exist in this changeset."
-#~ msgstr "В наборе нет дистрибутивов."
-
-#~ msgid "No environments are available in this organization. Please add some environments to be able register systems to this organization."
-#~ msgstr "Нет окружений в организации. Для регистрации систем в этой организации необходимо добавить окружение"
-
-#~ msgid "No environments are currently available in this organization.  Please add some to be able to create activation keys."
-#~ msgstr "Нет окружений в организации. Для создания ключей активации необходимо добавить окружение"
-
-#~ msgid "No environments are currently available in this organization. Saving will set user to no system registration default environment."
-#~ msgstr "Нет окружений в организации. Пользователю не будет назначено исходное окружение."
-
-#~ msgid "No errata available."
-#~ msgstr "Нет исправлений."
-
-#~ msgid "No errata exist in this changeset."
-#~ msgstr "В наборе нет исправлений."
-
-#~ msgid "No event history found for %s"
-#~ msgstr "Не найден журнал событий %s"
-
-#~ msgid "No package groups available."
-#~ msgstr "Нет групп пакетов."
-
-#~ msgid "No packages are currently filtered."
-#~ msgstr "Пакеты не отфильтрованы."
-
-#~ msgid "No packages available"
-#~ msgstr "Нет пакетов."
-
-#~ msgid "No packages exist in this changeset."
-#~ msgstr "В наборе нет пакетов."
-
-#~ msgid "No packages found."
-#~ msgstr "Пакеты не найдены."
-
-#~ msgid "No products"
-#~ msgstr "Нет продуктов."
-
-#~ msgid "No products exist in this changeset."
-#~ msgstr "Нет продуктов в наборе изменений."
-
-#~ msgid "No products or repositories are currently associated with this system template.  Please add either a product or repository that contains distributions in order to select a distribution."
-#~ msgstr "В шаблоне нет продуктов и репозиториев. Добавьте продукт или репозиторий, содержащий дистрибутив."
-
-#~ msgid "No products or repositories are currently associated."
-#~ msgstr "Нет соответствующих продуктов и репозиториев."
-
-#~ msgid "No recently synced products."
-#~ msgstr "Нет недавно синхронизированных продуктов."
-
-#~ msgid "No repositories"
-#~ msgstr "Нет репозиториев"
-
-#~ msgid "No repositories available"
-#~ msgstr "Нет репозиториев."
-
-#~ msgid "No repositories available."
-#~ msgstr "Нет репозиториев."
-
-#~ msgid "No repositories exist in this changeset."
-#~ msgstr "Нет репозиториев в наборе."
-
-#~ msgid "No subscriptions have been imported."
-#~ msgstr "Нет подписок."
-
-#~ msgid "No system groups found."
-#~ msgstr "Группы систем не найдены."
-
-#~ msgid "No system registration default environment. Select an organization to choose from available environments."
-#~ msgstr "Нет используемого по умолчанию окружения для регистрации системы. Выберите организацию для последующего выбора окружений."
-
-#~ msgid "No system templates exist in the changeset."
-#~ msgstr "Нет шаблонов."
-
-#~ msgid "No systems currently exist in this system group."
-#~ msgstr "В этой группе пока нет систем."
-
-#~ msgid "No systems found."
-#~ msgstr "Системы не найдены."
-
-#~ msgid "No, only delete the system group."
-#~ msgstr "Нет, удалить только группу."
-
-#~ msgid "None defined for this Organization."
-#~ msgstr "Не определены для этой организации."
-
-#~ msgid "None of the associated products or repositories contain distributions, please add a product or repository that contains at least one distribution."
-#~ msgstr "Продукты не содержат дистрибутивы. Добавьте продукт с дистрибутивами в его составе."
-
-#~ msgid "None."
-#~ msgstr "Нет."
-
-#~ msgid "Not Applied"
-#~ msgstr "Не применено"
-
-#~ msgid "Note: This will be set as your initial default environment."
-#~ msgstr "Это окружение будет использоваться по умолчанию."
-
-#~ msgid "Number of Sockets or LPARs:"
-#~ msgstr "Число сокетов или LPAR:"
-
-#~ msgid "OS"
-#~ msgstr "ОС"
-
-#~ msgid "OS: "
-#~ msgstr "ОС:"
-
-#~ msgid "Ok"
-#~ msgstr "ОК"
-
-#~ msgid "On Products & Repositories you can add your own Products and Repositories to your Provider.  This allows you to synchronize content from any remote repository to this server.  Simply add a Product and then setup one or more repositories to add to this Provider.  This feature is only available for Custom Providers."
-#~ msgstr "Можно добавить собственные продукты и репозитории для провайдера. Это позволит синхронизировать содержимое с удалёнными репозиториями. Добавьте продукт и настройте репозитории. Доступно только для дополнительных провайдеров."
-
-#~ msgid "On:"
-#~ msgstr "На:"
-
-#~ msgid "One or more of the groups provided has an action pending."
-#~ msgstr "Группы ожидают выполнения действия."
-
-#~ msgid "One or more of the packages provided has an action pending."
-#~ msgstr "Пакеты ожидают выполнения действия."
-
-#~ msgid "One or more package names are invalid."
-#~ msgstr "Есть пакеты с недопустимыми именами."
-
-#~ msgid "Only show syncing."
-#~ msgstr "В процессе синхронизации"
-
-#~ msgid "Organization:"
-#~ msgstr "Организация:"
-
-#~ msgid "Organizations allow content and systems to be separated by logical divisions.  To edit the environments within an organization, click on that organization and then click on the desired environment."
-#~ msgstr "Организации позволяют логически сгруппировать системы и пакеты. Чтобы изменить окружение, щёлкните на имени организации и выберите окружение."
-
-#~ msgid "Package"
-#~ msgstr "Пакет"
-
-#~ msgid "Package Dependencies"
-#~ msgstr "Зависимости"
-
-#~ msgid "Package Filters allow you to blacklist packages from being promoted into subsequent environments. Simply create a filter and add either a package name or regular expression to the filter.  You can associate the filter with entire products or individual repositories within any product."
-#~ msgstr "Фильтры позволяют исключить пакеты при переносе в другое окружение. Для этого в фильтр надо добавить шаблон или точное имя пакета. Полученный фильтр можно применить к продуктам и отдельным репозиториям."
-
-#~ msgid "Package Group"
-#~ msgstr "Группа пакетов"
-
-#~ msgid "Package Name"
-#~ msgstr "Пакет"
-
-#~ msgid "Package Size"
-#~ msgstr "Размер пакета"
-
-#~ msgid "Packages (0)"
-#~ msgstr "Пакеты (0)"
-
-#~ msgid "Packages:"
-#~ msgstr "Пакеты:"
-
-#~ msgid "Parameters"
-#~ msgstr "Параметры"
-
-#~ msgid "Partial Products"
-#~ msgstr "Частичные продукты"
-
-#~ msgid "Password Strength"
-#~ msgstr "Уровень защиты"
-
-#~ msgid "Password:"
-#~ msgstr "Пароль:"
-
-#~ msgid "Paste GPG Key"
-#~ msgstr "Вставить ключ GPG"
-
-#~ msgid "Permission"
-#~ msgstr "Разрешение"
-
-#~ msgid "Permission For:"
-#~ msgstr "Разрешение для:"
-
-#~ msgid "Permissions for this role."
-#~ msgstr "Разрешения для этой роли."
-
-#~ msgid "Physical or Virtual"
-#~ msgstr "Физическая или виртуальная"
-
-#~ msgid "Pick your Environment to download template from:"
-#~ msgstr "Выберите окружение, откуда будет загружен шаблон:"
-
-#~ msgid "Place Changeset in Review State"
-#~ msgstr "Перевести набор изменений в стадию проверки"
-
-#~ msgid "Please request the required privileges from an administrator."
-#~ msgstr "Необходимые привилегии можно получить через администратора."
-
-#~ msgid "Please select Package(s) or Package Group(s)."
-#~ msgstr "Выберите пакеты или группы"
-
-#~ msgid "Please select Permissions to view and add permissions for this role or Users to see current users with this role."
-#~ msgstr "Выберите «Разрешения» для просмотра и добавления разрешений или «Пользователи» для просмотра пользователей."
-
-#~ msgid "Please select Permissions to view permissions for this role or Users to see current users with this role."
-#~ msgstr "Выберите «Разрешения»  для просмотра разрешений или  «Пользователи» для просмотра пользователей."
-
-#~ msgid "Preferred Locale"
-#~ msgstr "Язык интерфейса"
-
-#~ msgid "Prior Environment"
-#~ msgstr "Предыдущее окружение"
-
-#~ msgid "Processing changeset modifications, please wait."
-#~ msgstr "Обработка набора изменений. Пожалуйста, подождите..."
-
-#~ msgid "Product"
-#~ msgstr "Продукт"
-
-#~ msgid "Product Name: "
-#~ msgstr "Название продукта:"
-
-#~ msgid "Product(s) in this environment"
-#~ msgstr "Продукты в окружении"
-
-#~ msgid "Product: "
-#~ msgstr "Продукт:"
-
-#~ msgid "Progress:"
-#~ msgstr "Прогресс:"
-
-#~ msgid "Promote"
-#~ msgstr "Перенести"
-
-#~ msgid "Promote to "
-#~ msgstr "Перенести в"
-
-#~ msgid "Promoted"
-#~ msgstr "Перенесен"
-
-#~ msgid "Promoted By:"
-#~ msgstr "Перенос выполнил:"
-
-#~ msgid "Promotion Date:"
-#~ msgstr "Дата переноса:"
-
-#~ msgid "Promotion to %s"
-#~ msgstr "Перенос в %s"
-
-#~ msgid "Promotions Overview"
-#~ msgstr "Обзор переносов"
-
-#~ msgid "Provided Product Details"
-#~ msgstr "Предоставленные свойства продукта"
-
-#~ msgid "Provided Products"
-#~ msgstr "Предоставленные продукты"
-
-#~ msgid "Provider: "
-#~ msgstr "Провайдер:"
-
-#~ msgid "Providers provide many types of content such as packages, errata, kickstart trees, and installation disc images.  A provider may be delivering all of your paid content or it could simply be a local yum repository providing a few yum repos."
-#~ msgstr "Провайдеры предоставляют пакеты, исправления, структуры кикстарта и установочные образы. Удалённый провайдер может предоставлять доступ к платному содержимому, а локальный может представлять собой локальный репозиторий YUM."
-
-#~ msgid "Provides"
-#~ msgstr "Предоставляет"
-
-#~ msgid "Quantity"
-#~ msgstr "Количество"
-
-#~ msgid "Red Hat Provider Details"
-#~ msgstr "Провайдер Red Hat"
-
-#~ msgid "References:"
-#~ msgstr "Ссылки:"
-
-#~ msgid "Refresh Results"
-#~ msgstr "Обновить результаты"
-
-#~ msgid "Registered"
-#~ msgstr "Зарегистрирована"
-
-#~ msgid "Release"
-#~ msgstr "Выпуск"
-
-#~ msgid "Release Version"
-#~ msgstr "Версия выпуска"
-
-#~ msgid "Remove"
-#~ msgstr "Удалить"
-
-#~ msgid "Remove Activation Key"
-#~ msgstr "Удалить ключ активации"
-
-#~ msgid "Remove All"
-#~ msgstr "Удалить все"
-
-#~ msgid "Remove Changeset"
-#~ msgstr "Удалить набор изменений"
-
-#~ msgid "Remove Environment"
-#~ msgstr "Удалить окружение"
-
-#~ msgid "Remove Filter"
-#~ msgstr "Удалить фильтр"
-
-#~ msgid "Remove GPG Key"
-#~ msgstr "Удалить ключ GPG"
-
-#~ msgid "Remove Organization"
-#~ msgstr "Удалить организацию"
-
-#~ msgid "Remove Package Canceled"
-#~ msgstr "Удаление пакета отменено"
-
-#~ msgid "Remove Package Complete"
-#~ msgstr "Удаление пакета завершено"
-
-#~ msgid "Remove Package Error"
-#~ msgstr "Ошибка удаления пакета"
-
-#~ msgid "Remove Package Group Canceled"
-#~ msgstr "Удаление группы пакетов отменено"
-
-#~ msgid "Remove Package Group Complete"
-#~ msgstr "Удаление группы пакетов завершено"
-
-#~ msgid "Remove Package Group Timeout"
-#~ msgstr "Время ожидания удаления группы пакетов истекло"
-
-#~ msgid "Remove Package Timeout"
-#~ msgstr "Время ожидания удаления пакета истекло"
-
-#~ msgid "Remove Provider"
-#~ msgstr "Удалить провайдер"
-
-#~ msgid "Remove Role"
-#~ msgstr "Удалить роль"
-
-#~ msgid "Remove Selected"
-#~ msgstr "Удалить выбранные"
-
-#~ msgid "Remove Sync Plan"
-#~ msgstr "Удалить план синхронизации"
-
-#~ msgid "Remove System"
-#~ msgstr "Удалить систему"
-
-#~ msgid "Remove System(s)"
-#~ msgstr "Удалить системы"
-
-#~ msgid "Remove User"
-#~ msgstr "Удалить пользователя"
-
-#~ msgid "Removed:"
-#~ msgstr "Удалено:"
-
-#~ msgid "Removing..."
-#~ msgstr "Удаление..."
-
-#~ msgid "Repo Type: "
-#~ msgstr "Тип репозитория:"
-
-#~ msgid "Repository Details"
-#~ msgstr "Свойства репозитория"
-
-#~ msgid "Repository Url"
-#~ msgstr "URL"
-
-#~ msgid "Request"
-#~ msgstr "Запрос"
-
-#~ msgid "Required Host"
-#~ msgstr "Обязательный хост"
-
-#~ msgid "Requires"
-#~ msgstr "Требует"
-
-#~ msgid "Result"
-#~ msgstr "Результат"
-
-#~ msgid "Revert Filter"
-#~ msgstr "Отменить фильтр"
-
-#~ msgid "Review"
-#~ msgstr "Проверка"
-
-#~ msgid "Role Details"
-#~ msgstr "Свойства роли"
-
-#~ msgid "SLA"
-#~ msgstr "SLA"
-
-#~ msgid "SLA: %s"
-#~ msgstr "SLA: %s"
-
-#~ msgid "SYSTEMS"
-#~ msgstr "СИСТЕМЫ"
-
-#~ msgid "Save Changeset"
-#~ msgstr "Сохранить"
-
-#~ msgid "Save Filter"
-#~ msgstr "Сохранить фильтр"
-
-#~ msgid "Save Roles"
-#~ msgstr "Сохранить роли"
-
-#~ msgid "Save User"
-#~ msgstr "Сохранить"
-
-#~ msgid "Save as Favorite"
-#~ msgstr "Добавить в избранное"
-
-#~ msgid "Saving System Template"
-#~ msgstr "Сохранение шаблона"
-
-#~ msgid "Saving..."
-#~ msgstr "Сохраняется..."
-
-#~ msgid "Scope"
-#~ msgstr "Область применения"
-
-#~ msgid "Search"
-#~ msgstr "Поиск"
-
-#~ msgid "Search Errata"
-#~ msgstr "Поиск исправлений"
-
-#~ msgid "Search Results"
-#~ msgstr "Результаты поиска"
-
-#~ msgid "Search available package names..."
-#~ msgstr "Поиск пакетов..."
-
-#~ msgid "Search available product names..."
-#~ msgstr "Поиск продуктов..."
-
-#~ msgid "Search available repository names..."
-#~ msgstr "Поиск по имени репозитория..."
-
-#~ msgid "Search for all packages with a specific requires:"
-#~ msgstr "Поиск пакетов, требующих:"
-
-#~ msgid "Search for kernel in the title:"
-#~ msgstr "Поиск по имени ядра в названии:"
-
-#~ msgid "Search is not available for the current content"
-#~ msgstr "Поиск недоступен"
-
-#~ msgid "Search packages"
-#~ msgstr "Поиск пакетов"
-
-#~ msgid "Search repositories"
-#~ msgstr "Поиск репозиториев"
-
-#~ msgid "Search..."
-#~ msgstr "Поиск..."
-
-#~ msgid "Searching by exact name:"
-#~ msgstr "Поиск по имени:"
-
-#~ msgid "Searching by name and arch:"
-#~ msgstr "Поиск по имени и архитектуре:"
-
-#~ msgid "Searching by type (bugfix, security, enhancement allowed):"
-#~ msgstr "Поиск по типу (bugfix,  security, enhancement):"
-
-#~ msgid "Searching by type (critical, important, moderate, low allowed):"
-#~ msgstr "Поиск по типу (критический, важный, средний, низкий):"
-
-#~ msgid "Searching for a specific arch:"
-#~ msgstr "Поиск по архитектуре:"
-
-#~ msgid "Searching for a specific minor version:"
-#~ msgstr "Поиск по доп. номеру версии:"
-
-#~ msgid "Searching for all repositories containing the word \"Server\""
-#~ msgstr "Поиск в репозиториях, содержащих слово «Server»"
-
-#~ msgid "Searching for an exact errata:"
-#~ msgstr "Поиск исправления:"
-
-#~ msgid "Searching for an exact package:"
-#~ msgstr "Поиск пакета:"
-
-#~ msgid "Searching starting with kernel:"
-#~ msgstr "Поиск начиная с ядра:"
-
-#~ msgid "Security"
-#~ msgstr "Безопасность"
-
-#~ msgid "Select All"
-#~ msgstr "Выбрать все"
-
-#~ msgid "Select Auto-subscribe Level..."
-#~ msgstr "Выберите уровень автоматической подписки..."
-
-#~ msgid "Select None"
-#~ msgstr "Отменить выбор"
-
-#~ msgid "Select Repositories: "
-#~ msgstr "Выберите репозитории:"
-
-#~ msgid "Select System Groups."
-#~ msgstr "Выберите группы систем."
-
-#~ msgid "Select a System Template"
-#~ msgstr "Выбрать шаблон системы"
-
-#~ msgid "Select a set of repositories that you wish to compare the contents of by clicking the checkboxes inside the cells."
-#~ msgstr "Выберите репозитории для сравнения их содержимого."
-
-#~ msgid "Select an Organization:"
-#~ msgstr "Выберите организацию:"
-
-#~ msgid "Severity"
-#~ msgstr "Степень"
-
-#~ msgid "Shared"
-#~ msgstr "Общий доступ"
-
-#~ msgid "Show"
-#~ msgstr "Показать"
-
-#~ msgid "Show %P more"
-#~ msgstr "Показать ещё %P"
-
-#~ msgid "Show all results regardless of which columns they exist in."
-#~ msgstr "Показать результаты всех столбцов"
-
-#~ msgid "Show only results that do not exist in all selected columns."
-#~ msgstr "Показать результаты из невыбранных столбцов"
-
-#~ msgid "Show only results that exist in all selected columns."
-#~ msgstr "Показать результаты из выбранных столбцов"
-
-#~ msgid "Signature"
-#~ msgstr "Подпись"
-
-#~ msgid "Size (Packages)"
-#~ msgstr "Размер пакетов"
-
-#~ msgid "Sockets"
-#~ msgstr "Сокеты"
-
-#~ msgid "Some changeset modifications have not finished processing, are you sure you want to leave the page?  By leaving you may lose some modifications."
-#~ msgstr "Изменения не применены. Вы действительно хотите покинуть страницу? В этом случае изменения будут потеряны."
-
-#~ msgid "Sorry about that! It seems something went wrong.  If you continue having trouble with this, please contact an Administrator."
-#~ msgstr "Приносим извинения за неполадки. Обратитесь к администратору."
-
-#~ msgid "Start"
-#~ msgstr "Запуск"
-
-#~ msgid "Start Date"
-#~ msgstr "Дата начала"
-
-#~ msgid "Start Time"
-#~ msgstr "Дата начала"
-
-#~ msgid "Starts / Ends"
-#~ msgstr "Начало/конец"
-
-#~ msgid "Strong"
-#~ msgstr "Сильный"
-
-#~ msgid "Subscribe"
-#~ msgstr "Подписать"
-
-#~ msgid "Subscription"
-#~ msgstr "Подписка"
-
-#~ msgid "Subscription Filter Options"
-#~ msgstr "Параметры фильтра подписок"
-
-#~ msgid "Subscription Info"
-#~ msgstr "Сведения о подписке"
-
-#~ msgid "Subscription Manifest"
-#~ msgstr "Манифест подписок"
-
-#~ msgid "Subscriptions are Current"
-#~ msgstr "Подписки действительны"
-
-#~ msgid "Subscriptions are Current Until %s"
-#~ msgstr "Подписки действительны до %s"
-
-#~ msgid "Subscriptions are not Current"
-#~ msgstr "Подписки недействительны"
-
-#~ msgid "Summary"
-#~ msgstr "Сводка"
-
-#~ msgid "Summary:"
-#~ msgstr "Сводка:"
-
-#~ msgid "Support Level"
-#~ msgstr "Уровень поддержки"
-
-#~ msgid "Support Type"
-#~ msgstr "Тип поддержки"
-
-#~ msgid "Sync Overview"
-#~ msgstr "Обзор синхронизации"
-
-#~ msgid "System Current Subscription(s)"
-#~ msgstr "Текущие подписки"
-
-#~ msgid "System Default"
-#~ msgstr "По умолчанию"
-
-#~ msgid "System Events"
-#~ msgstr "Системные события"
-
-#~ msgid "System Group Overview"
-#~ msgstr "Обзор групп систем"
-
-#~ msgid "System Group does not exist.  Would you like to create it?"
-#~ msgstr "Группа систем не существует. Создать?"
-
-#~ msgid "System Groups allow you to create groups consisting of multiple systems and then use those groups to manage the systems.  This includes performing actions such as package and package group  installations, updates and removals as well as errata installations."
-#~ msgstr "Системы могут объединяться в группы. Группы облегчают управление и позволяют выполнять одновременную установку, обновление и обновление пакетов во всех системах в составе группы."
-
-#~ msgid "System Notifications"
-#~ msgstr "Уведомления"
-
-#~ msgid "System Properties"
-#~ msgstr "Свойства системы"
-
-#~ msgid "System Registration Defaults"
-#~ msgstr "Стандартные параметры регистрации систем"
-
-#~ msgid "System Subscription Status"
-#~ msgstr "Состояние подписок"
-
-#~ msgid "System Template"
-#~ msgstr "Шаблон"
-
-#~ msgid "System Templates allow you to create a template for what a system should look like.  This includes what products are subscribed and what packages are installed."
-#~ msgstr "Шаблоны позволяют сгруппировать продукты и пакеты для последующей установки в системе."
-
-#~ msgid "System Type"
-#~ msgstr "Тип системы"
-
-#~ msgid "System Type:"
-#~ msgstr "Тип:"
-
-#~ msgid "TITLE"
-#~ msgstr "НАЗВАНИЕ"
-
-#~ msgid "TYPE"
-#~ msgstr "ТИП"
-
-#~ msgid "The current template \"$TEMPLATE\" has been modified.  Would you like to save the changes?"
-#~ msgstr "«$TEMPLATE» изменён. Сохранить изменения?"
-
-#~ msgid "The current template \"$TEMPLATE\" has been modified. If you leave, any changes will be lost.\""
-#~ msgstr "«$TEMPLATE» изменён. После выхода изменения будут потеряны."
-
-#~ msgid "The following repositories are currently syncing.  It is recommended that you wait for them to complete before continuing the promotion."
-#~ msgstr "Выполняется синхронизация репозиториев. Дождитесь завершения операции."
-
-#~ msgid "The number of CPU Sockets or LPARs which this machine uses"
-#~ msgstr "Число используемых сокетов CPU или LPAR"
-
-#~ msgid "The password should not contain the username."
-#~ msgstr "Пароль не может содержать имя пользователя."
-
-#~ msgid "The passwords do not match"
+#~ msgid "Passwords do not match."
 #~ msgstr "Пароли не совпадают."
 
-#~ msgid "The selected environment is not the last environment in its promotion path.  Only the last environment can be deleted."
-#~ msgstr "За выбранным окружением следуют другие окружения. Только последнее окружение может быть удалено."
+#~ msgid "Passwords match."
+#~ msgstr "Пароли совпадают."
 
-#~ msgid "The system is not currently consuming any subscriptions."
-#~ msgstr "Система не использует подписки."
+#~ msgid "Reset Password"
+#~ msgstr "Восстановить пароль"
 
-#~ msgid "There are currently no Global permissions for this role.  Please click Add Permission in the action bar below to add a Global permission.  A Global permission is one that cuts across all organizations."
-#~ msgstr "Нет глобальных разрешений. Выберите «Добавить разрешение». Глобальные разрешения распространяются на все организации."
+#~ msgid "Return to log in."
+#~ msgstr "Вернуться к авторизации"
 
-#~ msgid "There are currently no permissions for this organization.  Please click Add Permission in the action bar below to add a permission to this organization."
-#~ msgstr "Нет разрешений для этой организации. Выберите «Добавить разрешение»."
+#~ msgid "Save"
+#~ msgstr "Сохранить"
 
-#~ msgid "There are no custom products or repositories enabled. Try enabling via Content Providers."
-#~ msgstr "Нет дополнительных продуктов и репозиториев. Их можно добавить в секции «Провайдеры»."
+#~ msgid "Send Login"
+#~ msgstr "Отправить имя пользователя"
 
-#~ msgid "There are no errata that need to be applied to registered systems."
-#~ msgstr "Нет исправлений для зарегистрированных систем."
+#~ msgid "Show My Password"
+#~ msgstr "Показать мой пароль"
 
-#~ msgid "There are no events to display."
-#~ msgstr "Нет событий."
+#~ msgid "Username Unknown?"
+#~ msgstr "Имя пользователя неизвестно?"
 
-#~ msgid "There are no more subscriptions available."
-#~ msgstr "Нет доступных подписок."
+#~ msgid "You must specify host in %{config_file} for %{app_name} to work properly"
+#~ msgstr "Для нормальной работы %{app_name} необходимо задать узел в %{config_file}"
 
-#~ msgid "There are no packages to display."
-#~ msgstr "Нет пакетов."
+#~ msgid "can not be updated"
+#~ msgstr "обновление невозможно"
 
-#~ msgid "There are no tags for the resource type you have chosen."
-#~ msgstr "Нет тегов для выбранного типа."
-
-#~ msgid "There was an error retrieving that row:"
-#~ msgstr "Ошибка при получении строки:"
-
-#~ msgid "This GPG Key is not currently assigned to any products or repositories."
-#~ msgstr "Этот ключ не связан с продуктами и репозиториями."
-
-#~ msgid "This activation key is not currently associated with a System Group."
-#~ msgstr "Этот ключ не связан с группами систем."
-
-#~ msgid "This activation key is not currently associated with a System."
-#~ msgstr "Этот ключ не связан с системами."
-
-#~ msgid "This changeset contains no content."
-#~ msgstr "Пустой набор."
-
-#~ msgid "This changeset is currently being applied."
-#~ msgstr "Этот набор изменений применяется."
-
-#~ msgid "This product or one of the repositories belonging to it has one or more filters applied. Packages matching the filter criteria will not be promoted."
-#~ msgstr "К этому продукту или его репозиториям применен фильтр. Отфильтрованные пакеты не будут перенесены."
-
-#~ msgid "This repository or its product has one or more filters applied to it. Packages matching the filter criteria will not be promoted to the next environment for this repository."
-#~ msgstr "К этому репозиторию или егопродуктам применен фильтр. Отфильтрованные пакеты не будут перенесены в следующее окружение."
-
-#~ msgid "This system is not currently associated with a System Group."
-#~ msgstr "Эта система не входит в состав групп."
-
-#~ msgid "This table allows you to initiate package or package group installs and removals.  Simply select either Packages or Package groups, enter a comma-separated list of names in the box provided and click either +Add or -Remove."
-#~ msgstr "В этой таблице можно выбрать пакеты и группы для установки (+ Добавить) и удаления (- Удалить)."
-
-#~ msgid "This table allows you to initiate package or package group installs, updates and removals.  Simply select either Packages or Package groups, enter a comma-separated list of names in the box provided and click either Install, Update or Remove.  Note: for any given package or package group, there may only be 1 action in progress at a time."
-#~ msgstr "В этой таблице можно выбрать пакеты и группы для установки, обновления и удаления. Выберите пакеты или введите имена через запятую. Для каждого пакета может сразу выполняться только одна операция."
-
-#~ msgid "This table allows you to initiate package updates or removals as well as update all packages.  In order to update or remove packages, simply select the packages you are interested in and click Update or Remove.  In order to update all packages, click Update All when no packages are selected."
-#~ msgstr "В этой таблице можно выбрать обновления для установки и обновления. Выберите пакеты и нажмите «Обновить» или «Удалить». Чтобы обновить все пакеты, выберите «Обновить все»."
-
-#~ msgid "This table shows you the status of any pending package or package group actions on the system group."
-#~ msgstr "В этой таблице показан статус ожидающих действий обработки пакетов и групп."
-
-#~ msgid "This template contains no content."
-#~ msgstr "Пустой шаблон."
-
-#~ msgid "This will completely remove those systems."
-#~ msgstr "Системы будут безвозвратно удалены."
-
-#~ msgid "This will override any GPG keys already associated with a repository within this product"
-#~ msgstr "Ключи GPG, связанные с репозиторием этого продукта, будут переопределены."
-
-#~ msgid "Time"
-#~ msgstr "Время"
-
-#~ msgid "Title"
-#~ msgstr "Название"
-
-#~ msgid "Title: "
-#~ msgstr "Название:"
-
-#~ msgid "To view the details of an item on the left, simply click on a single row.<br/><br/>To select multiple rows, hold the Control Key and click multiple rows.<br/><br/>If you don't need this help anymore, please click the close button in the top right of this box."
-#~ msgstr "Слева выберите пункт для просмотра подробной информации. <br/><br/>Чтобы выбрать несколько строк, удерживайте CTRL.<br/><br/>Закройте окно, чтобы скрыть справку."
-
-#~ msgid "Total"
-#~ msgstr "Всего"
-
-#~ msgid "Total Systems"
-#~ msgstr "Всего систем"
-
-#~ msgid "Type"
-#~ msgstr "Тип"
-
-#~ msgid "Type:"
-#~ msgstr "Тип:"
-
-#~ msgid "URL"
-#~ msgstr "URL"
-
-#~ msgid "UUID"
-#~ msgstr "UUID"
-
-#~ msgid "Union"
-#~ msgstr "Объединение"
-
-#~ msgid "Union:"
-#~ msgstr "Объединение:"
-
-#~ msgid "Unique"
-#~ msgstr "Уникально"
-
-#~ msgid "Unknown"
-#~ msgstr "Неизвестно"
-
-#~ msgid "Unlimited"
-#~ msgstr "Не ограничено"
-
-#~ msgid "Unsubscribe"
-#~ msgstr "Отписаться"
-
-#~ msgid "Up to date"
-#~ msgstr "Не требует обновления"
-
-#~ msgid "Update"
-#~ msgstr "Обновить"
-
-#~ msgid "Update All"
-#~ msgstr "Обновить все"
-
-#~ msgid "Update Package Canceled"
-#~ msgstr "Обновление пакета отменено"
-
-#~ msgid "Update Package Complete"
-#~ msgstr "Обновление пакета завершено"
-
-#~ msgid "Update Package Error"
-#~ msgstr "Ошибка обновления пакета"
-
-#~ msgid "Update Package Timeout"
-#~ msgstr "Время ожидания обновления пакета истекло"
-
-#~ msgid "Updated"
-#~ msgstr "Обновлено"
-
-#~ msgid "Updates"
-#~ msgstr "Обновления"
-
-#~ msgid "Upload"
-#~ msgstr "Отправить"
-
-#~ msgid "Upload History"
-#~ msgstr "Журнал передач"
-
-#~ msgid "Upload Subscription Manifest"
-#~ msgstr "Манифест подписок"
-
-#~ msgid "Uploading"
-#~ msgstr "Отправляется"
-
-#~ msgid "Usage Limit"
-#~ msgstr "Лимит"
-
-#~ msgid "User Notifications"
-#~ msgstr "Уведомления пользователей"
-
-#~ msgid "User assignments for this role"
-#~ msgstr "Пользователи для этой роли"
-
-#~ msgid "User notifications lists all notifications generated by a user as well as global notifications that are sent to all users."
-#~ msgstr "Список уведомлений, генерируемых пользователями, и глобальных уведомлений, отправляемых всем пользователям."
-
-#~ msgid "Username:"
-#~ msgstr "Пользователь:"
-
-#~ msgid "Validation Failed:"
-#~ msgstr "Проверка:"
-
-#~ msgid "Value"
-#~ msgstr "Значение"
-
-#~ msgid "Verb(s):"
-#~ msgstr "Команды:"
-
-#~ msgid "Verbs"
-#~ msgstr "Команды"
-
-#~ msgid "Very Weak"
-#~ msgstr "Очень слабый"
-
-#~ msgid "View"
-#~ msgstr "Просмотр"
-
-#~ msgid "Viewing %C of %T"
-#~ msgstr "%C из %T"
-
-#~ msgid "Viewing %X of %Y results"
-#~ msgstr "%X из %Y"
-
-#~ msgid "Viewing %X of %Y results (%Z Total)"
-#~ msgstr "%X из %Y (всего: %Z)"
-
-#~ msgid "Viewing %s of %s results (%s Total %s)"
-#~ msgstr "%s из %s (%s всего: %s)"
-
-#~ msgid "Viewing %{n} of %{t} results (%{t} Total Errata)"
-#~ msgstr "%{n} из %{t} (всего исправлений %{t})"
-
-#~ msgid "Virt Guest From"
-#~ msgstr "Виртуальный гость из"
-
-#~ msgid "Virtual Guest"
-#~ msgstr "Вирт. гость"
-
-#~ msgid "Virtual Only"
-#~ msgstr "Только виртуальная"
-
-#~ msgid "Warning"
-#~ msgstr "Предупреждение"
-
-#~ msgid "Weak"
-#~ msgstr "Слабый"
-
-#~ msgid "Yes"
-#~ msgstr "Да"
-
-#~ msgid "You are not authorised to perform this action."
-#~ msgstr "Недостаточно полномочий для выполнения операции."
-
-#~ msgid "You have no assigned roles."
-#~ msgstr "У вас нет ролей."
-
-#~ msgid "You have selected all resource types; this will grant full access to the organization. Press the Cancel button to select an individual resource type."
-#~ msgstr "Выбраны все типы: это откроет полный доступ к организации. Нажмите «Отмена», чтобы выбрать отдельный тип ресурса."
-
-#~ msgid "You may have mistyped the address or the page may have moved."
-#~ msgstr "Неверный адрес или страница перемещена."
-
-#~ msgid "You might want to log out and log back in again to clear your cookies."
-#~ msgstr "Чтобы очистить cookie-файлы, можно выйти и авторизоваться заново."
-
-#~ msgid "You must select an organization above before you can add a permission."
-#~ msgstr "Прежде чем добавить разрешение, необходимо выбрать организацию."
-
-#~ msgid "You must select and view a permission before you can edit it."
-#~ msgstr "Сначала надо выбрать и просмотреть разрешение, после чего можно приступить к изменению."
-
-#~ msgid "You must select at least one verb."
-#~ msgstr "Необходимо выбрать команду."
-
-#~ msgid "You need to create an environment for this org before you can create a system."
-#~ msgstr "Прежде чем создать систему, необходимо создать окружение для этой организации."
-
-#~ msgid "Your update has applied successfully, but during that time another user has also made an update."
-#~ msgstr "Обновление успешно, но в это время другой пользователь также выполнял обновление."
-
-#~ msgid "currently editing this changeset"
-#~ msgstr "этот набор находится в стадии изменения"
-
-#~ msgid "displayed"
-#~ msgstr "показано"
-
-#~ msgid "link"
-#~ msgstr "ссылка"
-
-#~ msgid "or"
-#~ msgstr "или"
-
-#~ msgid "promote_confirm"
-#~ msgstr "promote_confirm"
-
-#~ msgid "results."
-#~ msgstr "результат(а)(ов)."
+#~ msgid "is too long"
+#~ msgstr "превышает допустимую длину."
