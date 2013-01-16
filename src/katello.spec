@@ -580,7 +580,7 @@ usermod -a -G katello-shared tomcat
 %{_mandir}/man8/katello-service.8*
 
 %files common
-%doc LICENSE
+%doc LICENSE.txt
 %{_sbindir}/service-wait
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %attr(600, katello, katello) %{_sysconfdir}/%{name}/%{name}.yml
