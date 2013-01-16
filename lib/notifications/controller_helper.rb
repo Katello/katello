@@ -12,6 +12,16 @@
 
 module Notifications
   module ControllerHelper
+
+    # defines helper to access notifications from controller
+    # @example how to send notification from controller
+    #   notify.success _("Welcome Back") + ", " + current_user.username, :persist => false
+    #   notify.message _("'%s' no longer matches the current search criteria.") % @gpg_key["name"], :asynchronous => false
+    #   notify.invalid_record @an_user
+    #   notify.warning _("You must be logged in to access that page.")
+    #   notify.error _("Please select at least one system group.")
+    #   notify.exception an_exception
+    # @see Notifier
     def notify
       @notifier ||= Notifier.new(self, default_notify_options)
     end
