@@ -741,6 +741,7 @@ Src::Application.routes.draw do
     if Katello.config.use_foreman
       scope :module => 'foreman' do
         resources :architectures, :except => [:new, :edit]
+        resources :compute_resources, :except => [:new, :edit]
         resources :subnets, :except => [:new, :edit]
         resources :smart_proxies, :except => [:new, :edit]
         constraints(:id => /[^\/]+/) do
