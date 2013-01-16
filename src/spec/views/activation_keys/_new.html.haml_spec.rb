@@ -26,6 +26,8 @@ describe "activation_keys/_new.html.haml" do
 
     @system_template_labels = []
     @selected_template = "No Template"
+    @content_view_labels = []
+    @selected_content_view = "No Content View"
     view.stub!(:environment_selector)
 
     render :partial => "new", :locals => {:accessible_envs => [@environment]}
@@ -44,6 +46,7 @@ describe "activation_keys/_new.html.haml" do
       view.content_for(:content).should have_selector("input#activation_key_name", :count => 1)
       view.content_for(:content).should have_selector("textarea#activation_key_description", :count => 1)
       view.content_for(:content).should have_selector("input#activation_key_environment_id", :count => 1)
+      view.content_for(:content).should have_selector("select#activation_key_content_view_id", :count => 1)
     end
 
     it "should include button to save the new key" do
