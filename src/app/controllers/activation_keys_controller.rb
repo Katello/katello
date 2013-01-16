@@ -62,8 +62,14 @@ class ActivationKeysController < ApplicationController
 
   def param_rules
     {
-      :create => {:activation_key => [:name, :description, :environment_id, :system_template_id, :usage_limit]},
-      :update => {:activation_key  => [:name, :description,:environment_id, :system_template_id, :usage_limit]},
+      :create => {:activation_key => [:name, :description, :environment_id,
+                                      :system_template_id, :usage_limit,
+                                      :content_view_id]
+        },
+      :update => {:activation_key  => [:name, :description,:environment_id,
+                                       :system_template_id, :usage_limit,
+                                       :content_view_id]
+        },
       :update_system_groups => {:activation_key => [:system_group_ids]}
     }
   end
@@ -186,6 +192,10 @@ class ActivationKeysController < ApplicationController
 
     @selected_template = no_template
 
+    @content_view_labels = [[no_content_view, '']]
+    @content_view_labels += ContentView.readable(@organization).non_default.collect {|cv| [cv.name, cv.id]}
+    @selected_content_view = no_content_view
+
     render :partial => "new", :layout => "tupane_layout", :locals => {:activation_key => activation_key,
                                                                       :accessible_envs => accessible_envs}
   end
@@ -200,6 +210,10 @@ class ActivationKeysController < ApplicationController
       @system_template_labels = [[no_template, '']] + (@activation_key.environment.system_templates).collect {|p| [ p.name, p.id ]}
     end
     @selected_template = @activation_key.system_template.nil? ? no_template : @activation_key.system_template.id
+
+    @content_view_labels = [[no_content_view, '']]
+    @content_view_labels += ContentView.readable(@organization).non_default.collect {|v| [v.name, v.id]}
+    @selected_content_view = @activation_key.content_view.nil? ? no_content_view : @activation_key.content_view_id
 
     render :partial => "edit", :layout => "tupane_layout", :locals => {:activation_key => @activation_key,
                                                                        :editable => ActivationKey.manageable?(current_organization),
