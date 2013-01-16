@@ -18,6 +18,8 @@ module Foreman
     list_column :name, :label=>_("Name")
     sort_by :name
 
+    before_filter :check_params, :only => [:update]
+
     helper :foreman
 
     def rules
@@ -39,6 +41,11 @@ module Foreman
         :create_label => _('+ New Architecture'),
         :ajax_scroll => items_architectures_path,
       }
+    end
+
+    def check_params
+      params['architecture'] ||= {}
+      params['architecture']['operatingsystem_ids'] ||= []
     end
 
   end
