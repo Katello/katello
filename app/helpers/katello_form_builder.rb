@@ -28,26 +28,29 @@ class KatelloFormBuilder < ActionView::Helpers::FormBuilder
   # Instead of writing complete html code for the field and the label
   # it allows to use 'editable' form helper.
   #
-  # Usage:
+  # @example usage
+  #   kt_form_for @record, :data_url => record_path(@record) do |form|
+  #     form.editable :name, :label => _("Name:")
+  #   end
   #
-  # = kt_form_for @record, :data_url => record_path(@record) do |form|
-  #     = form.editable :name, :label => _("Name:")
+  #   kt_form_for @record do |form|
+  #     form.editable :name, :data_url => record_path_1(@record)
+  #     form.editable :surname, :data_url => record_path_2(@record)
+  #   end
   #
-  # = kt_form_for @record do |form|
-  #     = form.editable :name, :data_url => record_path_1(@record)
-  #     = form.editable :surname, :data_url => record_path_2(@record)
+  #   kt_form_for @record, :data_url => record_path(@record) do |form|
+  #     form.editable :name do
+  #       # Some custom value
+  #     end
+  #   end
   #
-  # = kt_form_for @record, :data_url => record_path(@record) do |form|
-  #     = form.editable :name do
-  #         Some custom value
-  #
-  # Options:
-  #   :label    - label text
-  #   :editable - boolean flag, switches possibility to edit the field
-  #   :class    - additional css class
-  #   :help - help string
-  #   :type - editable type, eg. edit_textarea, edit_number. Default is edit_panel_element
-  #   :tag  - options passed directly to the element
+  # @param [Hash] options
+  # @option options [String] :label label text
+  # @option options [true,false] :editable boolean flag, switches possibility to edit the field
+  # @option options [String] :class additional css class
+  # @option options [String] :help help string
+  # @option options [String] :type editable type, eg. edit_textarea, edit_number. Default is edit_panel_element
+  # @option options [Hash] :tag  options passed directly to the element
   def editable(name, options)
     options.symbolize_keys!
     options[:editable] = true if options[:editable].nil?
