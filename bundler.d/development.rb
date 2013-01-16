@@ -15,4 +15,5 @@ group :development do
   gem 'gettext', '>= 1.9.3', :require => false
     gem 'ruby_parser'
       gem 'sexp_processor'
+  gem 'railroady'
 end
