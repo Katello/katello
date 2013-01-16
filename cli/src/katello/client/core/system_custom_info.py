@@ -34,6 +34,7 @@ class BaseSystemCustomInfo(SystemAction):
         validator.require_at_least_one_of(('name', 'uuid'))
         validator.mutually_exclude('name', 'uuid')
         validator.mutually_exclude('environment', 'uuid')
+        validator.require('keyname')
 
 
 class AddCustomInfo(BaseSystemCustomInfo):
