@@ -18,8 +18,8 @@ describe Resources::ForemanModel do
   let(:klass) { Resources::ForemanModel }
   let(:instance) { klass.new }
 
-  before { klass.resource = resource }
-  after { klass.resource = nil }
+  before { klass.resource resource }
+  after { klass.resource nil }
 
   subject { klass }
 

@@ -185,7 +185,7 @@ BuildArch:      noarch
 Summary:         Katello connection classes for the Foreman backend
 Requires:        %{name}-common
 # dependencies from bundler.d/foreman.rb
-Requires:       rubygem(foreman_api) >= 0.0.7
+Requires:       rubygem(foreman_api) >= 0.0.10
 
 %description glue-foreman
 Katello connection classes for the Foreman backend
