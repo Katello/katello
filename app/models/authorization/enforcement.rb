@@ -70,7 +70,6 @@ module Authorization::Enforcement
     org_permissions = org_permissions.where(:organization_id => nil) if resource_type == :organizations
 
 
-    verbs = verbs.collect { |verb| action_to_verb(verb, resource_type) }
     no_tag_verbs = ResourceType::TYPES[resource_type][:model].no_tag_verbs.clone rescue []
     no_tag_verbs ||= []
     no_tag_verbs.delete_if { |verb| !verbs.member? verb }
@@ -160,7 +159,6 @@ module Authorization::Enforcement
     org = Organization.find(org) if Numeric === org
     org_permissions = org_permissions_query(org, resource_type == :organizations)
 
-    verbs         = verbs.collect { |verb| action_to_verb(verb, resource_type) }
     clause        = ""
     clause_params = { :all => "all", :true => true, :resource_type => resource_type, :verbs => verbs }
 
@@ -193,6 +191,19 @@ module Authorization::Enforcement
       SQL
     end
     org_permissions.where(clause, clause_params)
+  end
+
+  def org_permissions_query(org, exclude_orgs_clause = false)
+    org_clause = "permissions.organization_id is null"
+    org_clause = org_clause + " OR permissions.organization_id = :organization_id " if org
+    org_hash = { }
+    org_hash = { :organization_id => org.id } if org
+    query = Permission.joins(:role).joins(
+        "INNER JOIN roles_users ON roles_users.role_id = roles.id").joins(
+        "left outer join permissions_verbs on permissions.id = permissions_verbs.permission_id").joins(
+        "left outer join verbs on verbs.id = permissions_verbs.verb_id").where({ "roles_users.user_id" => id })
+    return query.where(org_clause, org_hash) unless exclude_orgs_clause
+    query
   end
 
 end
