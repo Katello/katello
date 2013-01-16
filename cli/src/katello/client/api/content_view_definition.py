@@ -44,7 +44,7 @@ class ContentViewDefinitionAPI(KatelloAPI):
         return cvd
 
     def create(self, org_id, name, label, description):
-        cvd = {"label": label, "organization_id": org_id, "name": name}
+        cvd = {"label": label, "name": name}
         cvd = update_dict_unless_none(cvd, "description", description)
 
         path = "/api/organizations/%s/content_view_definitions/" % org_id
