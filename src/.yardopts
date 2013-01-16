@@ -3,9 +3,11 @@
 --verbose
 --use-cache
 --plugin yard-activerecord
+--load ./lib/monkeys/yard_svg_fix.rb
 --output-dir=./yardoc/
 --main=README.md
 --title=Katello
+--asset ./doc/graphs:graphs/
 ./app/**/*.rb
 ./lib/**/*.rb
 ./db/schema.rb
