@@ -18,8 +18,10 @@ if Katello.config.embed_yard_documentation
   libraries = { 'katello' => [YARD::Server::LibraryVersion.new('katello', nil, "#{Rails.root}/.yardoc")] }
   use YARD::Server::RackMiddleware,
       :libraries      => libraries,
-      :options        => { :router => prefixed_router },
-      :server_options => { :incremental => true }
+      :options        => { :router => prefixed_router, :incremental => true, :single_library => true },
+      :server_options => { }
+
+  YARD::Logger.instance.level = 0
 end
 
 map Katello.config.url_prefix do
