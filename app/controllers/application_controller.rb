@@ -453,12 +453,14 @@ class ApplicationController < ActionController::Base
     results.total > 0
   end
 
-  # search_options
-  #    :default_field - The field that should be used by the search engine when a user performs
-  #                     a search without specifying field.
-  #    :filter  -  Filter to apply to search. Array of hashes.  Each key/value within the hash
-  #                  is OR'd, whereas each HASH itself is AND'd together
-  #    :load  - whether or not to load the active record object (defaults to false)
+  # @param [Hash] search_options
+  # @option search_options :default_field
+  #   The field that should be used by the search engine when a user performs
+  #   a search without specifying field.
+  # @option search_options :filter
+  #   Filter to apply to search. Array of hashes.  Each key/value within the hash
+  #   is OR'd, whereas each HASH itself is AND'd together
+  # @option search_options :load whether or not to load the active record object (defaults to false)
   def render_panel_direct(obj_class, panel_options, search, start, sort, search_options={})
   
     filters = search_options[:filter] || []
