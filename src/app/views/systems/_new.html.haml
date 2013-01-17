@@ -18,6 +18,9 @@
         .grid_8#new_system
           = form.text_field :name, :label => _("Name of Your System:")
 
+          = form.field :content_view_id, :label => _("Content View:") do
+            = content_view_select(current_organization)
+
           = form.field :arch, :label => _("Architecture:") do
             = architecture_select
 
