@@ -50,6 +50,31 @@ class List(HardwareModelAction):
         self.printer.print_items(hw_models)
 
 
+
+class Info(HardwareModelAction):
+
+    description = _('show hardware model')
+
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name', help=_("hardware model name (required)"))
+
+    def check_options(self, validator):
+        validator.require('name')
+
+    def run(self):
+        hw_model = self.api.show(self.get_option('name'))
+        hw_model = unnest_one(hw_model)
+
+        self.printer.add_column('name')
+        self.printer.add_column('info', multiline=True)
+        self.printer.add_column('vendor_class')
+        self.printer.add_column('hardware_model')
+
+        self.printer.set_header(_("Hardware Model"))
+        self.printer.print_item(hw_model)
+
+
+
 # hardware model command ------------------------------------------------------------
 
 class HardwareModel(Command):
