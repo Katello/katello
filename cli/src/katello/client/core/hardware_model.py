@@ -74,6 +74,31 @@ class Info(HardwareModelAction):
         self.printer.print_item(hw_model)
 
 
+class Create(HardwareModelAction):
+
+    description = _('create hardware model')
+
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name', help=_("hardware model name (required)"))
+        parser.add_option('--info', dest='info',
+            help=_("General useful description, for example this kind of hardware"
+            "needs a special BIOS setup"))
+        parser.add_option('--vendor_class', dest='vendor_class',
+            help=_("The class of the machine reported by the Open Boot Prom."
+            "This is primarily used by Sparc Solaris builds and can be left blank"
+            "for other architectures."))
+        parser.add_option('--hw_model', dest='hardware_model',
+            help=_("The class of CPU supplied in this machine. This is primarily used"
+            "by Sparc Solaris builds and can be left blank for other architectures."))
+
+    def check_options(self, validator):
+        validator.require('name')
+
+    def run(self):
+        self.api.create(self.get_option_dict('name', 'info', 'vendor_class', 'hardware_model'))
+        print _('Hardware Model [ %s ] created') % self.get_option('name')
+
+
 
 # hardware model command ------------------------------------------------------------
 

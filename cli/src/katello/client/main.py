@@ -354,7 +354,7 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         hardware_model_cmd = hardware_model.HardwareModel()
         hardware_model_cmd.add_command('list', hardware_model.List())
         hardware_model_cmd.add_command('info', hardware_model.Info())
-        # hardware_model_cmd.add_command('create', hardware_model.Create())
+        hardware_model_cmd.add_command('create', hardware_model.Create())
         # hardware_model_cmd.add_command('update', hardware_model.Update())
         # hardware_model_cmd.add_command('destroy', hardware_model.Destroy())
         katello_cmd.add_command('hw_model', hardware_model_cmd)
