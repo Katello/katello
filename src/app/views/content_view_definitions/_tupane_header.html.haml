@@ -1,5 +1,5 @@
 = content_for :title do
-  #{@view_definition.name}
+  #{_("%{definition_type}: %{definition_name}") % {:definition_type => definition_type(@view_definition), :definition_name => @view_definition.name}}
 
 = content_for :remove_item do
   .pane_actions
