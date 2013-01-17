@@ -120,7 +120,8 @@ class Api::ProvidersController < Api::ApiController
   def discovery
     @provider.discovery_url = params[:url]
     @provider.save
-    task = @provider.discover_repos
+    @provider.discover_repos
+    task = @provider.discovery_task
     render :json => task
   end
 
