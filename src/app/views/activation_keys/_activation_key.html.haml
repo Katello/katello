@@ -1,18 +1,15 @@
-.block.tall.activation_key{:id => "#{name}_#{activation_key.send(accessor)}",
-    "data-ajax_url" => "#{url_for(:controller=>controller.controller_name)}/#{activation_key.send(accessor)}",
-    "data-ajax_panelpage" => @panel_options[:initial_action]}
-  %div{:id => "activation_key_#{activation_key.id}", :class => "column_1"}
-    %ul
-      %li
-        %div.one-line-ellipsis#heading_title
-          %span#name
-            = activation_key.name
-      %li.one-line-ellipsis
-        = _('Env: ')
-        %span#environment
-          = activation_key.environment
-      %li.one-line-ellipsis
-        = _('View: ')
-        %span#view
-          = activation_key.content_view
-  .arrow-right
+%div{:class => "column_1"}
+  %ul
+    %li
+      %div.one-line-ellipsis#heading_title
+        %span#name
+          = activation_key.name
+    %li.one-line-ellipsis
+      = _('Env: ')
+      %span#environment
+        = activation_key.environment
+    %li.one-line-ellipsis
+      = _('View: ')
+      %span#view
+        = activation_key.content_view
+.arrow-right

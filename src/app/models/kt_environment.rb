@@ -140,6 +140,10 @@ class KTEnvironment < ActiveRecord::Base
     self.name
   end
 
+  def to_s
+    display_name
+  end
+
   def prior
     self.priors[0]
   end
