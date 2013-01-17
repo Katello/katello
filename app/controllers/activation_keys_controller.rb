@@ -21,7 +21,7 @@ class ActivationKeysController < ApplicationController
                                                 :system_groups, :systems, :add_system_groups, :remove_system_groups]
   before_filter :find_environment, :only => [:edit]
   before_filter :authorize #after find_activation_key, since the key is required for authorization
-  before_filter :panel_options, :only => [:index, :items]
+  before_filter :panel_options, :only => [:index, :items, :show]
   before_filter :search_filter, :only => [:auto_complete_search]
 
   respond_to :html, :js
@@ -80,7 +80,7 @@ class ActivationKeysController < ApplicationController
   end
 
   def show
-    render :partial=>"common/list_update", :locals=>{:item=>@activation_key, :accessor=>"id", :columns=>['name']}
+    render @activation_key
   end
 
   def available_subscriptions
