@@ -27,7 +27,7 @@ class ActivationKeysController < ApplicationController
   respond_to :html, :js
 
   def section_id
-    'contents'
+    'activation_keys'
   end
 
   def rules
@@ -290,6 +290,7 @@ class ActivationKeysController < ApplicationController
       :create => _('Key'),
       :create_label => _('+ New Key'),
       :name => controller_display_name,
+      :list_partial => 'activation_keys/list_activation_keys',
       :ajax_load  => true,
       :ajax_scroll => items_activation_keys_path(),
       :enable_create => ActivationKey.manageable?(current_organization),
