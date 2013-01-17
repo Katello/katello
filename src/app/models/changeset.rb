@@ -150,12 +150,13 @@ class Changeset < ActiveRecord::Base
    end
 
    def add_erratum! erratum_id, product
+     errata = Errata.find(erratum_id)
      product.has_erratum?(env_to_verify_on_add_content, erratum_id) or
          raise Errors::ChangesetContentException.new(
                    "Erratum not found within this environment you want to promote from.")
 
      self.errata << erratum =
-         ChangesetErratum.create!(:errata_id  => erratum_id, :display_name => erratum_id,
+         ChangesetErratum.create!(:errata_id  => errata.id, :display_name => errata.errata_id,
                                   :product_id => product.id, :changeset => self)
      save!
      return erratum
