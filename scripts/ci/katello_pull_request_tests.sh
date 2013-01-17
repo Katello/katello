@@ -17,4 +17,4 @@ psql -c "ALTER ROLE katello WITH CREATEDB" -U postgres
 psql -c "CREATE DATABASE katello_test OWNER katello;" -U postgres
 bundle exec rake parallel:create VERBOSE=false
 bundle exec rake parallel:migrate VERBOSE=alse
-bundle exec rake "ptest:spec['', 2]"
+bundle exec rake ptest:spec
