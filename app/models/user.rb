@@ -162,10 +162,8 @@ class User < ActiveRecord::Base
   # returns the set of users who have kt_environment_id's environment set as their
   # default. the data relationship is somewhat odd...
   def self.find_by_default_environment(kt_environment_id)
-    self.joins(:own_role).
-        joins("inner join permissions on users.own_role_id  = permissions.role_id").
-        joins("inner join permission_tags on permissions.id = permission_tags.permission_id").
-        where("tag_id = #{kt_environment_id}")
+    self.joins(:own_role => { :permissions => :tags }).
+         where("tag_id = #{kt_environment_id}")
   end
 
   def disable_helptip(key)
