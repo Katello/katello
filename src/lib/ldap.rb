@@ -28,4 +28,5 @@ class Ldap
     ldap = LdapFluff.new
     ldap.is_in_groups?(uid, grouplist)
   end
+
 end

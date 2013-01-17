@@ -14,17 +14,13 @@ class UserMailer < ActionMailer::Base
   include AsyncOrchestration
 
   def send_password_reset(user)
-    # TODO: temporarily hardcoding org to the first org... this will be changed to use the user's default org, once
-    # that logic is merged in
-    org = Organization.find(1)
+    org = user.default_org
     User.current = user
     UserMailer.async(:organization => org).password_reset(user, I18n.locale)
   end
 
   def send_logins(users)
-    # TODO: temporarily hardcoding org to the first org... this will be changed to use the user's default org, once
-    # that logic is merged in
-    org = Organization.find(1)
+    org = user.default_org
     UserMailer.async(:organization => org).logins(users, I18n.locale)
   end
 
