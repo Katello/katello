@@ -24,8 +24,8 @@ module Glue::Pulp::Consumer
       remove_system_group_hook  lambda { |system_group| system_group.remove_consumer(self) }
 
       lazy_accessor :pulp_facts, :initializer => lambda {|s| Runcible::Extensions::Consumer.retrieve(uuid) }
-      lazy_accessor :package_profile, :initializer => lambda {|s| Runcible::Extensions::Consumer.profile(uuid, 'rpm') }
-      lazy_accessor :simple_packages, :initializer => lambda {|s| Runcible::Extensions::Consumer.profile(uuid, 'rpm')["profile"].
+      lazy_accessor :package_profile, :initializer => lambda{|s| fetch_package_profile}
+      lazy_accessor :simple_packages, :initializer => lambda {|s| fetch_package_profile["profile"].
                                                               collect{|package| Glue::Pulp::SimplePackage.new(package)} }
       lazy_accessor :errata, :initializer => lambda {|s| #Resources::Pulp::Consumer.errata(uuid).
                                                               #collect{|errata| Errata.new(errata)} }
@@ -194,6 +194,14 @@ module Glue::Pulp::Consumer
         when :update
           pre_queue.create(:name => "update pulp consumer: #{self.name}", :priority => 3, :action => [self, :update_pulp_consumer])
       end
+    end
+
+    private
+
+    def fetch_package_profile
+      Runcible::Extensions::Consumer.retrieve_profile(uuid, 'rpm')
+    rescue RestClient::ResourceNotFound =>e
+      {:profile=>[]}.with_indifferent_access
     end
 
   end
