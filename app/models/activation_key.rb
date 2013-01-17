@@ -191,12 +191,6 @@ class ActivationKey < ActiveRecord::Base
     ret
   end
 
-  def extended_json
-    to_ret = {:environment=>self.environment.name, :name_sort=>name.downcase}
-    to_ret[:template] = self.system_template.name if self.system_template
-    to_ret
-  end
-
   private
 
   # Fetch each of the pools from candlepin, removing any that no longer
