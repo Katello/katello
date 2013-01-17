@@ -19,8 +19,8 @@ require 'katello_config'
 if File.exist?(File.expand_path('../../Gemfile.in', __FILE__))
   # In bundler_ext mode we always load all groups except the testing group
   # which can cause problems mocking objects for production or development envs.
-  require 'aeolus/ext/bundler_ext'
-  Aeolus::Ext::BundlerExt.system_require(File.expand_path('../../Gemfile.in', __FILE__), :all)
+  require 'bundler_ext'
+  BundlerExt.system_require(File.expand_path('../../Gemfile.in', __FILE__), :all)
 
   # Webmock rubygem have very strong default setting - it blocks all HTTP connections
   # after it is required. Therefore we want to turn off this behavior for all environments
