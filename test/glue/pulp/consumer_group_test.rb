@@ -72,9 +72,10 @@ class GluePulpConsumerGroupTest < GluePulpConsumerGroupTestBase
 
   def teardown
     ConsumerSupport.destroy_consumer(@simple_server.id)
+    Runcible::Resources::ConsumerGroup.retrieve(@simple_group.pulp_id)
     @simple_group.del_pulp_consumer_group
-  rescue => e
-    puts e
+  rescue RestClient::ResourceNotFound => e
+    #do nothing
   end
 
   def test_del_pulp_consumer_group
