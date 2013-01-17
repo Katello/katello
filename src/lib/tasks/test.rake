@@ -11,7 +11,7 @@ namespace "ptest" do
   end
 
   def tests(env, task_args, rspec_args)
-    task_args.with_defaults(:pattern => '\'\'', :threads => 4)
+    task_args.with_defaults(:pattern => '\'\'', :threads => 0)
 
     pattern_search = task_args[:pattern] != '\'\''
 
