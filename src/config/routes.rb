@@ -837,6 +837,7 @@ Src::Application.routes.draw do
         resources :subnets, :except => [:new, :edit]
         resources :smart_proxies, :except => [:new, :edit]
         resources :hardware_models, :except => [:new, :edit]
+        resources :partition_tables, :except => [:new, :edit]
         constraints(:id => /[^\/]+/) do
           resources :domains, :except => [:new, :edit]
         end
