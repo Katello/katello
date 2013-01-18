@@ -242,7 +242,7 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
 
   def test_has_erratum?
     VCR.use_cassette('glue_pulp_repo_units', :match_requests_on => [:body_json, :path, :method]) do
-      e_id = @@fedora_17_x86_64.errata.first.id
+      e_id = @@fedora_17_x86_64.errata.first.errata_id
       assert @@fedora_17_x86_64.has_erratum?(e_id)
     end
   end
