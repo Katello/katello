@@ -99,6 +99,33 @@ class Create(HardwareModelAction):
         print _('Hardware Model [ %s ] created') % self.get_option('name')
 
 
+class Update(HardwareModelAction):
+
+    description = _('update hardware model')
+
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='old_name', help=_("hardware model name (required)"))
+        parser.add_option('--new_name', dest='name', help=_("new name for the hardware model"))
+        parser.add_option('--info', dest='info',
+            help=_("General useful description, for example this kind of hardware"
+            "needs a special BIOS setup"))
+        parser.add_option('--vendor_class', dest='vendor_class',
+            help=_("The class of the machine reported by the Open Boot Prom."
+            "This is primarily used by Sparc Solaris builds and can be left blank"
+            "for other architectures."))
+        parser.add_option('--hw_model', dest='hardware_model',
+            help=_("The class of CPU supplied in this machine. This is primarily used"
+            "by Sparc Solaris builds and can be left blank for other architectures."))
+
+    def check_options(self, validator):
+        validator.require('old_name')
+        validator.require_at_least_one_of(('name', 'info', 'vendor_class', 'hardware_model'))
+
+    def run(self):
+        self.api.update(self.get_option('old_name'), self.get_option_dict())
+        print _('Hardware Model [ %s ] updated') % self.get_option('old_name')
+
+
 class Delete(HardwareModelAction):
 
     description = _('delete hardware model')
