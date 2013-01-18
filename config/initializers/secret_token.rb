@@ -1,4 +1,8 @@
-require 'active_support/secure_random'
+if RUBY_VERSION >= "1.9.3"
+  require 'securerandom'
+else 
+  require 'active_support/secure_random'
+end
 
 begin
   # Read token string from the file.
@@ -10,5 +14,5 @@ rescue Exception => e
   # Katello is not configured correctly for any reason (but session is lost
   # after each restart).
   Rails.logger.warn "Using randomly generated secure token: #{e.message}"
-  Src::Application.config.secret_token = ActiveSupport::SecureRandom.hex(80)
+  Src::Application.config.secret_token = RUBY_VERSION >= "1.9.3" ? SecureRandom.hex(80) : ActiveSupport::SecureRandom.hex(80)
 end
