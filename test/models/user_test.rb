@@ -13,6 +13,46 @@
 
 require './test/models/user_base'
 
+
+class UserClassTest < UserTestBase
+
+  def test_authenticate
+    refute_nil User.authenticate!(@no_perms_user.username, @no_perms_user.username)
+  end
+
+  def test_authenticate_fails_with_wrong_password
+    assert_nil User.authenticate!(@no_perms_user.username, '')
+  end
+
+  def test_authenticate_fails_with_non_user
+    assert_nil User.authenticate!('fake_user', '')
+  end
+
+  def test_authenticate_fails_with_disabled_user
+    assert_nil User.authenticate!(@disabled_user.username, @disabled_user.password)
+  end
+
+  def test_cp_oauth_header
+    User.current = @admin
+    assert        User.cp_oauth_header.key?('cp-user')
+    assert_equal  @admin.username, User.cp_oauth_header['cp-user']
+  end
+
+  def test_consumer?
+    refute User.consumer?
+  end
+
+  def test_find_by_default_environment
+    @admin.default_environment = @dev
+    @admin.save!
+    user_list = User.find_by_default_environment(@dev.id)
+
+    assert_includes user_list, @admin
+  end
+
+end
+
+
 class UserCreateTest < UserTestBase 
 
   def setup
@@ -65,14 +105,20 @@ class UserCreateTest < UserTestBase
     assert_empty  @user.errors
     refute_nil    User.find_by_username(email)
   end
+
 end
 
 
-class UserInstanceTest < UserTestBase
+class UserTest < UserTestBase
 
   def setup
     super
     User.current = @admin
+    @admin_role  = Role.find(roles(:administrator))
+  end
+
+  def test_own_role
+    refute_nil @admin.own_role
   end
 
   def test_destroy
@@ -81,7 +127,7 @@ class UserInstanceTest < UserTestBase
     assert @no_perms_user.destroyed?
   end
 
-  def test_before_destroy_remove_self_role
+  def test_destroy_own_role
     role = @no_perms_user.own_role
     @no_perms_user.destroy
 
@@ -90,29 +136,190 @@ class UserInstanceTest < UserTestBase
     end
   end
 
-  def test_before_destroy_not_last_superuser
+  def test_is_last_super_user?
     assert !@admin.destroy
+  end
+
+  def test_defined_roles
+    assert_equal [@admin_role], @admin.defined_roles
+  end
+
+  def test_defined_role_ids
+    assert_equal [@admin_role.id], @admin.defined_role_ids
+  end
+
+  def test_has_superadmin_role?
+    assert @admin.has_superadmin_role?
+  end
+
+  def test_pop_notices
+    assert_equal 1, @admin.pop_notices.length
+  end
+
+  def test_disable_helptip
+    assert @admin.disable_helptip("repositories-index")
+  end
+
+  def test_enable_helptip
+    assert @admin.enable_helptip("promotions-show")
+  end
+
+  def test_clear_helptips
+    assert @admin.clear_helptips
+  end
+
+  def test_helptip_enabled?
+    @admin.clear_helptips
+    assert @admin.helptip_enabled?('promotions-show')
+  end
+
+  def test_cp_oauth_header
+    assert        @admin.cp_oauth_header.key?('cp-user')
+    assert_equal  @admin.username, @admin.cp_oauth_header['cp-user']
+  end
+
+  def test_send_password_reset
+    UserMailer.stub(:send_password_reset, true) do
+      assert @admin.send_password_reset
+    end
+  end
+
+  def test_has_default_environment?
+    @admin.default_environment = @dev
+
+    assert @admin.has_default_environment?
+  end
+
+  def test_default_systems_reg_permission
+    permission = @admin.default_systems_reg_permission(@acme_corporation)
+
+    assert_instance_of Permission, permission
+    assert_equal       "environments", permission.resource_type.name
+    assert_equal       "default systems reg permission", permission.name
+  end
+
+  def test_default_environment
+    @admin.default_environment = @dev
+  
+    assert_equal @dev, @admin.default_environment
+  end
+
+  def test_default_environment=
+    assert @admin.default_environment = @dev
+  end
+
+  def test_default_locale
+    @admin.default_locale = "en"
+    assert_equal "en", @admin.default_locale
+  end
+
+  def test_default_locale=
+    assert @admin.default_locale = "en"
+  end
+
+  def test_default_org
+    @admin.default_org = @acme_corporation.id
+    assert_equal @acme_corporation, @admin.default_org
+  end
+
+  def test_default_org=
+    assert @admin.default_org = @acme_corporation.id
+  end
+
+  def test_subscriptions_match_system_preference=
+    assert @admin.subscriptions_match_system_preference = 'flag-1'
+  end
+
+  def test_subscriptions_match_system_preference
+    @admin.subscriptions_match_system_preference = 'flag-1'
+
+    assert_equal  'flag-1', @admin.subscriptions_match_system_preference
+  end
+
+  def test_subscriptions_match_installed_preference
+    assert @admin.subscriptions_match_installed_preference = 'flag-1'
+  end
+
+  def test_subscriptions_match_installed_preference=
+    @admin.subscriptions_match_installed_preference = 'flag-1'
+
+    assert_equal  'flag-1', @admin.subscriptions_match_installed_preference
+  end
+
+  def test_subscriptions_no_overlap_preference
+    assert @admin.subscriptions_match_installed_preference = 'flag-1'
+  end
+
+  def test_subscriptions_no_overlap_preference=
+    @admin.subscriptions_no_overlap_preference = 'flag-1'
+
+    assert_equal  'flag-1', @admin.subscriptions_no_overlap_preference
   end
 
 end
 
 
-class UserClassTest < UserTestBase
+class UserProtectedMethodTest < UserTestBase
 
-  def test_authenticate
-    refute_nil User.authenticate!(@no_perms_user.username, @no_perms_user.username)
+  def setup
+    super
+    User.current = @admin
+    @admin_role  = Role.find(roles(:administrator))
   end
 
-  def test_authenticate_fails_with_wrong_password
-    assert_nil User.authenticate!(@no_perms_user.username, '')
+  def test_can_be_deleted?
+    refute @admin.send(:can_be_deleted?)
   end
 
-  def test_authenticate_fails_with_non_user
-    assert_nil User.authenticate!('fake_user', '')
+  def test_own_role_included_in_roles
+    assert @admin.send(:own_role_included_in_roles?)
   end
 
-  def test_authenticate_fails_with_disabled_user
-    assert_nil User.authenticate!(@disabled_user.username, @disabled_user.password)
+  def test_own_role_included_in_roles_without_own_role
+    @admin.roles.delete(@admin.own_role)
+
+    assert_raises(ActiveRecord::ActiveRecordError) do
+      @admin.send(:own_role_included_in_roles?)
+    end
+  end
+
+  def test_default_systems_reg_permission_check
+    permission = @admin.send(:default_systems_reg_permission, @acme_corporation)
+
+    assert_instance_of Permission, permission
+  end
+
+end
+
+
+class UserInstancePrivateMethodTest < UserTestBase
+
+  def setup
+    super
+    User.current = @admin
+    @admin_role  = Role.find(roles(:administrator))
+  end
+
+  def test_generate_token
+    @admin.send(:generate_token, :password_reset_token)
+    @admin.save!
+    @no_perms_user.send(:generate_token, :password_reset_token)
+
+    refute_equal @no_perms_user.password_reset_token, @admin.password_reset_token
+  end
+
+  def test_super_admin_check
+    assert_raises(ActiveRecord::RecordInvalid) do
+      @admin.send(:super_admin_check, @admin_role)
+    end
+  end
+
+  def test_setup_remote_id
+    assert @admin.send(:setup_remote_id)
+  end
+
+  def test_generate_remote_id
+    refute_equal @admin.send(:generate_remote_id), @admin.username
   end
 
 end
@@ -126,19 +333,65 @@ class UserLdapTest < UserTestBase
     @@user = User.create_ldap_user!('testuser')
   end
 
-  def test_find_created
-    refute_nil User.find_by_username('testuser')
+  def setup
+    super
+    @ldap = Minitest::Mock.new
+    @ldap.expect(:authenticate?, true, [@@user.username, @@user.password])
+    @ldap.expect(:group_list, ['test_role'], [@@user.username])
+    @ldap.expect(:is_in_groups?, true, [@@user.username, []])
   end
 
   def test_no_email
     assert_nil @@user.email
   end
 
-  def test_own_role
-    refute_nil @@user.own_role
+  def test_find_created
+    refute_nil User.find_by_username('testuser')
   end
-end
 
+  def test_authenticate_using_ldap!
+    LdapFluff.stub(:new, @ldap) do
+      assert_instance_of User, User.authenticate_using_ldap!(@@user.username, @@user.password)
+    end
+  end
+
+  def test_create_ldap_user!
+    AppConfig.stub(:warden, 'ldap') do
+      assert_instance_of User, User.create_ldap_user!('alice')
+    end
+  end
+
+  def test_clear_existing_ldap_roles
+    LdapFluff.stub(:new, @ldap) do
+      @@user.set_ldap_roles
+      refute_empty @@user.roles
+
+      @@user.clear_existing_ldap_roles
+      assert_empty @@user.ldap_roles
+    end
+  end
+
+  def test_set_ldap_roles
+    LdapFluff.stub(:new, @ldap) do
+      @@user.set_ldap_roles
+
+      refute_empty @@user.roles
+    end
+  end
+
+  def test_verify_ldap_roles
+    LdapFluff.stub(:new, @ldap) do
+      @@user.set_ldap_roles
+
+      assert @@user.verify_ldap_roles
+    end
+  end
+
+  def test_not_ldap_mode?
+    assert @admin.not_ldap_mode?
+  end
+
+end
 
 
 class UserDefaultEnvTest < UserTestBase
@@ -162,13 +415,6 @@ class UserDefaultEnvTest < UserTestBase
     @user = @user.reload
 
     assert_equal @env, @user.default_environment
-  end
-
-  def test_find_by_default_env
-    @user.default_environment = @env
-    @user.save!
-
-    assert_includes User.find_by_default_environment(@env.id), @user
   end
 
   def test_default_env_removed
