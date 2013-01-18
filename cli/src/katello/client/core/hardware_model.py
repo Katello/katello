@@ -81,14 +81,14 @@ class Create(HardwareModelAction):
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name', help=_("hardware model name (required)"))
         parser.add_option('--info', dest='info',
-            help=_("General useful description, for example this kind of hardware"
+            help=_("General useful description, for example this kind of hardware "
             "needs a special BIOS setup"))
         parser.add_option('--vendor_class', dest='vendor_class',
-            help=_("The class of the machine reported by the Open Boot Prom."
-            "This is primarily used by Sparc Solaris builds and can be left blank"
+            help=_("The class of the machine reported by the Open Boot Prom. "
+            "This is primarily used by Sparc Solaris builds and can be left blank "
             "for other architectures."))
         parser.add_option('--hw_model', dest='hardware_model',
-            help=_("The class of CPU supplied in this machine. This is primarily used"
+            help=_("The class of CPU supplied in this machine. This is primarily used "
             "by Sparc Solaris builds and can be left blank for other architectures."))
 
     def check_options(self, validator):
@@ -97,6 +97,21 @@ class Create(HardwareModelAction):
     def run(self):
         self.api.create(self.get_option_dict('name', 'info', 'vendor_class', 'hardware_model'))
         print _('Hardware Model [ %s ] created') % self.get_option('name')
+
+
+class Delete(HardwareModelAction):
+
+    description = _('delete hardware model')
+
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name', help=_("hardware model name (required)"))
+
+    def check_options(self, validator):
+        validator.require('name')
+
+    def run(self):
+        self.api.destroy(self.get_option('name'))
+        print _('Hardware Model [ %s ] deleted.') % self.get_option('name')
 
 
 
