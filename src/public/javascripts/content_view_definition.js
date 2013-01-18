@@ -18,12 +18,65 @@ KT.panel.set_expand_cb(function() {
         title:function() { return $('.hidden-text.hidden').html();} });
 
     KT.object.label.initialize();
+    KT.content_view_definition.initialize();
     KT.content_view_definition.initialize_views();
+    KT.content_view_definition.initialize_composite_content();
+    KT.content_view_definition.initialize_create();
 });
 
 KT.content_view_definition = (function(){
     var status_updater,
+        view_repos,
 
+    initialize = function() {
+        $("#view_definitions").treeTable({
+            expandable: true,
+            initialState: "expanded",
+            clickableNodeNames: true,
+            onNodeShow: function(){$.sparkline_display_visible()}
+        });
+    },
+    initialize_create = function() {
+        var pane = $("#content_view_definition_create");
+        if (pane.length === 0) {
+            return;
+        }
+        $("#content_view_definition_composite").change(function() {
+            // If the definition is a composite, show the list of views; otherwise, do not.
+            if ($(this).is(":checked")) {
+                $("#select_views").show();
+            } else {
+                $("#select_views").hide();
+            }
+        });
+        initialize_view_checkboxes();
+    },
+    initialize_composite_content = function() {
+        var pane = $("#composite_definition_content");
+        if (pane.length === 0) {
+            return;
+        }
+        $("#update_component_views").click(function(){
+            var btn = $(this);
+            if(btn.hasClass("disabled")){
+                return;
+            }
+            btn.addClass("disabled");
+
+            $("#component_views_form").ajaxSubmit({
+                type: "POST",
+                url: btn.data("url"),
+                cache: false,
+                success: function(){
+                    $("#update_component_views").removeClass("disabled");
+                },
+                error: function(){
+                    $("#update_component_views").removeClass("disabled");
+                }
+            });
+        });
+        initialize_view_checkboxes();
+    },
     initialize_views = function() {
         var pane = $("#content_view_definition_views");
         if (pane.length === 0) {
@@ -56,6 +109,87 @@ KT.content_view_definition = (function(){
                 }
             });
         });
+    },
+    initialize_view_checkboxes = function() {
+        $('.view_checkbox').tipsy({fade : true, gravity : 'e', live : true, delayIn : 500, hoverable : true,
+            delayOut : 50 });
+
+        $("input[id^='content_views_']").change(function() {
+            var clicked_view_id = $(this).data('view_id').toString();
+
+            if ($(this).is(":checked")) {
+                // if the user selected a view, look to see if it has at least 1 repo in common
+                // with the other enabled views and if so, disable the checkboxes on those views
+                var enabled_views = $("input[id^='content_views_']:not(disabled)");
+                KT.utils.each(enabled_views, function(enabled_view) {
+                    var enabled_view_id = $(enabled_view).data('view_id').toString();
+                    if (enabled_view_id !== clicked_view_id) {
+                        if (repo_in_common(clicked_view_id, enabled_view_id)) {
+                            $(enabled_view).attr("disabled", "true");
+                            $(enabled_view).parent().attr("original-title", i18n.repos_in_common);
+                        }
+                    }
+                });
+
+            } else {
+                // if the user unselected a view, look to see if it has at least 1 repo in common
+                // with any disabled views and if so, enable the checkboxes on those views
+                // (if they do not have a repo in common with any other selected view)
+                var disabled_views = $("input[id^='content_views_']:disabled");
+                KT.utils.each(disabled_views, function(disabled_view) {
+                    var disabled_view_id = $(disabled_view).data('view_id').toString();
+                    if (disabled_view_id !== clicked_view_id) {
+                        // does the clicked view have any repos in common with the disabled view?
+                        if (repo_in_common(clicked_view_id, disabled_view_id)) {
+                            // does the disabled view have any repos in common with other selected views?
+                            var selected_views = $("input[id^='content_views_']:checked"),
+                                common_with_selected = false;
+
+                            common_with_selected = KT.utils.find(selected_views, function(selected_view) {
+                                var selected_view_id = $(selected_view).data('view_id').toString();
+                                return repo_in_common(disabled_view_id, selected_view_id);
+                            });
+                            if (!common_with_selected) {
+                                $(disabled_view).parent().removeAttr("original-title");
+                                $(disabled_view).removeAttr("disabled");
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+        // As part of initializing, if there are selected views, we need to disable
+        // any views with repos in common.  This necessary when rendering the Content
+        // pane for an existing composite definition.
+        var selected_views = $("input[id^='content_views_']:checked"),
+            enabled_views = $("input[id^='content_views_']:not(disabled)");
+
+        KT.utils.each(selected_views, function(selected_view) {
+            var selected_view_id = $(selected_view).data('view_id').toString();
+            KT.utils.each(enabled_views, function(enabled_view) {
+                var enabled_view_id = $(enabled_view).data('view_id').toString();
+                if (enabled_view_id !== selected_view_id) {
+                    if (repo_in_common(selected_view_id, enabled_view_id)) {
+                        $(enabled_view).attr("disabled", "true");
+                        $(enabled_view).parent().attr("original-title", i18n.repos_in_common);
+                    }
+                }
+            });
+        });
+    },
+    repo_in_common = function(view_id_1, view_id_2) {
+        // Does view 1 have any repos in common with view 2?
+        var in_common = false,
+            view_1_repos = view_repos[view_id_1]['repos'],
+            view_2_repos = view_repos[view_id_2]['repos'];
+
+        KT.utils.each(view_1_repos, function(view_1_repo) {
+            if (KT.utils.contains(view_2_repos, view_1_repo)) {
+                in_common = true;
+            }
+        });
+        return in_common;
     },
     initialize_views_treetable = function() {
         $("#content_views").treeTable({
@@ -115,6 +249,10 @@ KT.content_view_definition = (function(){
         }
     };
     return {
-        initialize_views : initialize_views
+        initialize                   : initialize,
+        initialize_composite_content : initialize_composite_content,
+        initialize_create            : initialize_create,
+        initialize_views             : initialize_views,
+        set_view_repos               : function(vp) {view_repos = vp;}
     };
 }());
