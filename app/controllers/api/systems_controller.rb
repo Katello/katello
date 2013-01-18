@@ -228,7 +228,7 @@ DESC
   api :GET, "/systems/:id/packages", "List packages installed on the system"
   param :id, String, :desc => "UUID of the system", :required => true
   def package_profile
-    render :json => @system.package_profile.sort {|a,b| a["name"].downcase <=> b["name"].downcase}.to_json
+    render :json => @system.simple_packages.sort {|a,b| a["name"].downcase <=> b["name"].downcase}.to_json
   end
 
   api :GET, "/systems/:id/errata", "List errata available for the system"
