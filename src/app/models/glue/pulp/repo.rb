@@ -281,9 +281,9 @@ module Glue::Pulp::Repo
       Katello::PackageUtils.find_latest_packages(packages)
     end
 
-    def has_erratum? id
+    def has_erratum? errata_id
       self.errata.each do |err|
-        return true if err.id == id
+        return true if err.errata_id == errata_id
       end
       return false
     end
@@ -392,9 +392,9 @@ module Glue::Pulp::Repo
                                                 {:package_ids=>pkg_id_list})
     end
 
-    def add_errata errata_id_list
+    def add_errata errata_unit_id_list
       previous = self.environmental_instances.in_environment(self.environment.prior).first
-      Runcible::Extensions::Repository.errata_copy(previous.pulp_id, self.pulp_id, {:errata_ids=>errata_id_list})
+      Runcible::Extensions::Repository.errata_copy(previous.pulp_id, self.pulp_id, {:errata_ids=>errata_unit_id_list})
     end
 
     def add_distribution distribution_id

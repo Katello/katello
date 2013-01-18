@@ -38,7 +38,7 @@ class ChangesetErratum < ActiveRecord::Base
     @repos   = []
 
     self.product.repos(from_env).each do |repo|
-      @repos << repo if repo.has_erratum? self.errata_id
+      @repos << repo if repo.has_erratum? self.display_name
     end
     @repos
   end

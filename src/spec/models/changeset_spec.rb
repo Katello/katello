@@ -77,7 +77,7 @@ describe Changeset, :katello => true do
                :repositories => [])
         end
         @prod.save!
-
+        Runcible::Extensions::Errata.stub(:find).and_return({:id=>'errata-unit-id', :errata_id=>'err'})
       end
 
       it "should fail on add product" do
@@ -129,7 +129,7 @@ describe Changeset, :katello => true do
             :release => @pack_release,
             :arch    => @pack_arch
         }.with_indifferent_access)
-        @err          = mock('Err', { :id => 'err', :name => 'err' })
+        @err          = mock('Err', { :id => 'errata-unit-id', :errata_id=>'err', :name => 'err' })
 
         @repo = Repository.new(:environment_product => ep, :name => "repo", :label => "repo_label",
                                    :pulp_id => "135adsf", :content_id=>'23423', :relative_path=>'/foobar/')
@@ -152,6 +152,8 @@ describe Changeset, :katello => true do
         @environment.prior.stub(:products).and_return([@prod])
         @environment.prior.products.stub(:find_by_name).and_return(@prod)
         @environment.prior.products.stub(:find_by_cp_id).and_return(@prod)
+
+        Runcible::Extensions::Errata.stub(:find).and_return({:id=>'errata-unit-id', :errata_id=>'err'})
       end
 
 
@@ -277,7 +279,7 @@ describe Changeset, :katello => true do
         @pack_arch    = "noarch"
         @pack_nvre    = @pack_name +"-"+ @pack_version +"-"+ @pack_release +"."+ @pack_arch
         @pack         = { :id => 1, :name => @pack_name }.with_indifferent_access
-        @err          = mock('Err', { :id => 'err', :name => 'err' })
+        @err          = mock('Err', { :id => 'errata-unit-id', :errata_id=>'err', :name => 'err' })
 
         @repo = Repository.new(:environment_product => ep, :name => "repo", :label => "repo_label",
                                    :pulp_id => "1343", :content_id=>'23423', :relative_path=>'/foobar/')
@@ -315,7 +317,7 @@ describe Changeset, :katello => true do
 
       it "should remove erratum" do
         ChangesetErratum.should_receive(:destroy_all).
-            with(:errata_id => 'err', :changeset_id => @changeset.id, :product_id => @prod.id).and_return(true)
+            with(:display_name => 'err', :changeset_id => @changeset.id, :product_id => @prod.id).and_return(true)
         @changeset.remove_erratum!("err", @prod)
       end
 
@@ -348,7 +350,7 @@ describe Changeset, :katello => true do
         Product.stub(:find).and_return(@prod)
 
         @pack         = mock('Pack', { :id => 1, :name => 'pack' })
-        @err          = mock('Err', { :id => 'err', :name => 'err' })
+        @err          = mock('Err', { :id => 'asdfasdf', :name => 'err' , :errata_id=>'err'})
         @distribution = mock('Distribution', { :id => 'some-distro-id' })
         ep            = EnvironmentProduct.find_or_create(@organization.library, @prod)
         @repo         = Repository.new(:environment_product => ep, :name => 'repo', :label => 'repo_label',
@@ -464,7 +466,7 @@ describe Changeset, :katello => true do
 
       it "should promote errata" do
         @prod.environments << @environment
-        @changeset.errata << ChangesetErratum.new(:errata_id  => @err.id, :display_name => @err.name,
+        @changeset.errata << ChangesetErratum.new(:errata_id  => @err.id, :display_name => @err.errata_id,
                                                   :product_id => @prod.id, :changeset => @changeset)
         @changeset.state = Changeset::REVIEW
 
