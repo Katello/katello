@@ -740,6 +740,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Jan 21 2013 Justin Sherrill <jsherril@redhat.com> 1.3.5_pulpv2-1
+- removing old converge-ui build code (jsherril@redhat.com)
+
 * Mon Jan 21 2013 Justin Sherrill <jsherril@redhat.com>
 - removing old converge-ui build code (jsherril@redhat.com)
 
