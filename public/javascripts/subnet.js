@@ -13,18 +13,8 @@
 
 KT.panel.list.registerPage('subnets', {create: 'new_subnet'});
 
-
 KT.subnet_page = (function() {
-    var getData = function(fieldNames) {
-        var data = {};
-        $.each(fieldNames, function(i, fieldName){
-            var value = $('#'+fieldName).val();
-            if (value != null)
-                data[fieldName] = value;
-        });
-        return data;
-    },
-    updateSubnet = function() {
+    var updateSubnet = function() {
         var button = $(this),
             url = button.attr("data-url");
 
@@ -34,7 +24,7 @@ KT.subnet_page = (function() {
         $.ajax({
             type: "PUT",
             url: url,
-            data: { "subnet": getData([
+            data: { "subnet": KT.getData([
                 "domain_ids",
                 "dhcp_id",
                 "tftp_id",
@@ -44,22 +34,11 @@ KT.subnet_page = (function() {
         });
     },
     register = function() {
-        $('#domain_ids').chosen();
+        $('#domain_ids').delayed_chosen();
 
-        // Workaround for a bug in chosen
-        // When a chosen select receives focus() invoked from js code
-        // it ends up in an infinite loop of displaying and hiding the options.
-        // 2pane gives focus to a first enabled visible input on the panel.
-        // Therefore we hide the inner input at the beginning and show it
-        // after first click.
-        $("#domain_ids_chzn :input").hide();
-        $("#domain_ids_chzn").click(function() {
-            $("#domain_ids_chzn :input").show();
-        });
-
-        $('#dhcp_id').chosen();
-        $('#tftp_id').chosen();
-        $('#dns_id').chosen();
+        $('#dhcp_id').chosen({allow_single_deselect:true});
+        $('#tftp_id').chosen({allow_single_deselect:true});
+        $('#dns_id').chosen({allow_single_deselect:true});
 
         $('#update_subnet').live('click', updateSubnet);
     };
