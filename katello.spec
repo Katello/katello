@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.3.4_pulpv2
+Version:        1.3.5_pulpv2
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -740,6 +740,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Jan 21 2013 Justin Sherrill <jsherril@redhat.com>
+- removing old converge-ui build code (jsherril@redhat.com)
+
 * Mon Jan 21 2013 Justin Sherrill <jsherril@redhat.com> 1.3.4_pulpv2-1
 - version downgrade from mistaken bump (jsherril@redhat.com)
 
