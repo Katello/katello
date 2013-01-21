@@ -745,6 +745,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Jan 21 2013 Justin Sherrill <jsherril@redhat.com> 1.3.4_pulpv2-1
+- version downgrade from mistaken bump (jsherril@redhat.com)
+
 * Mon Jan 21 2013 Justin Sherrill <jsherril@redhat.com> 1.4.1_pulpv2-1
 - Integration with pulp v2
 * Tue Dec 18 2012 Miroslav Suchý <msuchy@redhat.com> 1.3.1-1
