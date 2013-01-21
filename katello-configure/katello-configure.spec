@@ -14,7 +14,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        1.3.2_pulpv2
+Version:        1.4.2_pulpv2
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -118,6 +118,9 @@ chmod +x -R %{buildroot}%{homedir}/upgrade-scripts/*
 
 
 %changelog
+* Mon Jan 21 2013 Justin Sherrill <jsherril@redhat.com> 1.4.2_pulpv2-1
+- adding post sync url to katello.yml (jsherril@redhat.com)
+
 * Mon Jan 21 2013 Justin Sherrill <jsherril@redhat.com>
 - adding post sync url to katello.yml (jsherril@redhat.com)
 
