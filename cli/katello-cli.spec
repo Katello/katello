@@ -159,6 +159,8 @@ popd
 make -C po clean
 
 %changelog
+* Mon Jan 21 2013 Justin Sherrill <jsherril@redhat.com> 1.3.1_pulpv2-1
+- adding pulpv2 prefix to cli spec version (jsherril@redhat.com)
 * Tue Dec 18 2012 Miroslav Suchý <msuchy@redhat.com> 1.3.1-1
 - smart proxies - cli CRUD actions (tstrachota@redhat.com)
 - cli - packaged completion script (tstrachota@redhat.com)
