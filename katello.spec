@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.3.1_pulpv2
+Version:        1.4.1_pulpv2
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -745,6 +745,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Jan 21 2013 Justin Sherrill <jsherril@redhat.com> 1.4.1_pulpv2-1
+- Integration with pulp v2
 * Tue Dec 18 2012 Miroslav Suchý <msuchy@redhat.com> 1.3.1-1
 - remove requires rubygem(execjs) and rubygem(multi_json) (msuchy@redhat.com)
 - Removing OR for pipeor (jomara@redhat.com)
