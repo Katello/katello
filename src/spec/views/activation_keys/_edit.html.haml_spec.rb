@@ -39,6 +39,8 @@ describe "activation_keys/_edit.html.haml" do
 
     @system_template_labels = []
     @selected_template = "No Template"
+    @content_view_labels = []
+    @selected_content_view = "No Content View"
     view.stub!(:environment_selector)
     view.stub!(:activation_keys_navigation).and_return([])
     render :partial => "edit", :locals => {:accessible_envs => [@environment]}
@@ -84,6 +86,10 @@ describe "activation_keys/_edit.html.haml" do
 
     it "renders the activation key system template" do
       view.content_for(:content).should have_selector("input#activation_key_environment_id", :count => 1)
+    end
+
+    it "renders the activation key content view select" do
+      view.content_for(:content).should have_selector("select#activation_key_content_view_id", :count => 1)
     end
 
     it "renders a box to display the products in the environment", :katello => true do

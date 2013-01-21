@@ -24,6 +24,9 @@
       - if AppConfig.katello?
         = form.field :system_template_id, :label => _("System Template"), :wrapper => {:id => 'system_templates'}, :grid => [2,7] do
           = select_tag 'activation_key[system_template_id]', options_for_select(@system_template_labels, @selected_template)
+        = form.field :content_view_id, :label => _("Content View"), :wrapper => {:id => "content_views"}, :grid => [2,7] do
+          = select_tag 'activation_key[content_view_id]', options_for_select(@content_view_labels, @selected_content_view),
+            :tabindex => auto_tab_index
 
       = form.field :usage_limit, :label => _("Usage Limit"), :grid => [2,7] do
         = number_field_tag 'activation_key[usage_limit]', params[:usage_limit], :size => "4", :tabindex => auto_tab_index, :min => 1, :id => :activation_key_usage_limit, :disabled => true
