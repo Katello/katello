@@ -22,11 +22,11 @@ from katello.client.core.utils import slice_dict
 class HardwareModelAPI(KatelloAPI):
 
     @classmethod
-    def __path(cls, resource_id=None):
-        if resource_id is None:
+    def __path(cls, model_id=None):
+        if model_id is None:
             return "/api/hardware_models/"
         else:
-            return "/api/hardware_models/%s/" % quote(str(resource_id))
+            return "/api/hardware_models/%s/" % quote(str(model_id))
 
     def list(self):
         """
@@ -67,9 +67,9 @@ class HardwareModelAPI(KatelloAPI):
         update hardware model
 
         :type  model_id: string
-        :param model_id: <p>hardware model name</p>
+        :param model_id: hardware model name
         :type  data: hash
-        :param data: <p>hardware model info</p>
+        :param data: hardware model info
         :type  data['name']: string
         :param data['name']:
         :type  data['info']: string
@@ -88,7 +88,7 @@ class HardwareModelAPI(KatelloAPI):
         destroy hardware model
 
         :type  model_id: string
-        :param model_id: <p>hardware model name</p>
+        :param model_id: hardware model name
         """
         return self.server.DELETE(self.__path(model_id))[1]
 
