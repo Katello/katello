@@ -374,11 +374,6 @@ script/check-gettext.rb -m -i
 #temporarily delete test.rake
 rm ./lib/tasks/test.rake
 
-#copy converge-ui
-cp -R /usr/share/converge-ui-devel/* ./vendor/converge-ui
-rm ./public/fonts
-mv ./vendor/converge-ui/fonts ./public/fonts
-
 #copy alchemy
 ALCHEMY_DIR=$(rpm -ql rubygem-alchemy | grep -o '/.*/vendor' | sed 's/vendor$//' | head -n1)
 cp -R $ALCHEMY_DIR* ./vendor/alchemy
