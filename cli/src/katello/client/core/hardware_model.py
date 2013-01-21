@@ -28,27 +28,35 @@ class HardwareModelAction(BaseAction):
         super(HardwareModelAction, self).__init__()
         self.api = HardwareModelAPI()
 
+class HardwareModelModifyingAction(HardwareModelAction):
+
+    def setup_parser(self, parser):
+        parser.add_option('--info', dest='info',
+            help=_("General useful description, for example this kind of hardware "
+            "needs a special BIOS setup"))
+        parser.add_option('--vendor_class', dest='vendor_class',
+            help=_("The class of the machine reported by the Open Boot Prom. "
+            "This is primarily used by Sparc Solaris builds and can be left blank "
+            "for other architectures."))
+        parser.add_option('--hw_model', dest='hardware_model',
+            help=_("The class of CPU supplied in this machine. This is primarily used "
+            "by Sparc Solaris builds and can be left blank for other architectures."))
+
+
 # hardware model actions ------------------------------------------------------------
 
 class List(HardwareModelAction):
 
     description = _('list hardware model')
 
-    def setup_parser(self, parser):
-        pass
-
-    def check_options(self, validator):
-        pass
-
     def run(self):
         hw_models = unnest_one(self.api.list())
-        self.printer.add_column('name')
-        self.printer.add_column('vendor_class')
-        self.printer.add_column('hardware_model')
+        self.printer.add_column('name', _('Name'))
+        self.printer.add_column('vendor_class', _('Vendor class'))
+        self.printer.add_column('hardware_model', _('HW model'))
 
         self.printer.set_header(_("Hardware Model"))
         self.printer.print_items(hw_models)
-
 
 
 class Info(HardwareModelAction):
@@ -65,31 +73,22 @@ class Info(HardwareModelAction):
         hw_model = self.api.show(self.get_option('name'))
         hw_model = unnest_one(hw_model)
 
-        self.printer.add_column('name')
-        self.printer.add_column('info', multiline=True)
-        self.printer.add_column('vendor_class')
-        self.printer.add_column('hardware_model')
+        self.printer.add_column('name', _('Name'))
+        self.printer.add_column('info', _('Info'), multiline=True)
+        self.printer.add_column('vendor_class', _('Vendor class'))
+        self.printer.add_column('hardware_model', _('HW model'))
 
         self.printer.set_header(_("Hardware Model"))
         self.printer.print_item(hw_model)
 
 
-class Create(HardwareModelAction):
+class Create(HardwareModelModifyingAction):
 
     description = _('create hardware model')
 
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name', help=_("hardware model name (required)"))
-        parser.add_option('--info', dest='info',
-            help=_("General useful description, for example this kind of hardware "
-            "needs a special BIOS setup"))
-        parser.add_option('--vendor_class', dest='vendor_class',
-            help=_("The class of the machine reported by the Open Boot Prom. "
-            "This is primarily used by Sparc Solaris builds and can be left blank "
-            "for other architectures."))
-        parser.add_option('--hw_model', dest='hardware_model',
-            help=_("The class of CPU supplied in this machine. This is primarily used "
-            "by Sparc Solaris builds and can be left blank for other architectures."))
+        super(Create, self).setup_parser(parser)
 
     def check_options(self, validator):
         validator.require('name')
@@ -99,23 +98,14 @@ class Create(HardwareModelAction):
         print _('Hardware Model [ %s ] created') % self.get_option('name')
 
 
-class Update(HardwareModelAction):
+class Update(HardwareModelModifyingAction):
 
     description = _('update hardware model')
 
     def setup_parser(self, parser):
         parser.add_option('--name', dest='old_name', help=_("hardware model name (required)"))
         parser.add_option('--new_name', dest='name', help=_("new name for the hardware model"))
-        parser.add_option('--info', dest='info',
-            help=_("General useful description, for example this kind of hardware"
-            "needs a special BIOS setup"))
-        parser.add_option('--vendor_class', dest='vendor_class',
-            help=_("The class of the machine reported by the Open Boot Prom."
-            "This is primarily used by Sparc Solaris builds and can be left blank"
-            "for other architectures."))
-        parser.add_option('--hw_model', dest='hardware_model',
-            help=_("The class of CPU supplied in this machine. This is primarily used"
-            "by Sparc Solaris builds and can be left blank for other architectures."))
+        super(Update, self).setup_parser(parser)
 
     def check_options(self, validator):
         validator.require('old_name')
