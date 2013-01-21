@@ -14,7 +14,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        1.3.1
+Version:        1.3.2_pulpv2
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -118,6 +118,9 @@ chmod +x -R %{buildroot}%{homedir}/upgrade-scripts/*
 
 
 %changelog
+* Mon Jan 21 2013 Justin Sherrill <jsherril@redhat.com>
+- adding post sync url to katello.yml (jsherril@redhat.com)
+
 * Tue Dec 18 2012 Miroslav Suchý <msuchy@redhat.com> 1.3.1-1
 - stop foreman only if it is running (msuchy@redhat.com)
 - when finishing, reset title of progress bar back to original state
