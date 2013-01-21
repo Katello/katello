@@ -22,8 +22,8 @@ module ProvidersHelper
 
   def product_map
     @product_map ||= normalize(collect_repos(
-                                    @provider.products.with_repos_only(current_organization.library),
-                                    current_organization.library, true))
+                                   @provider.products.engineering,
+                                   current_organization.library, true))
     @product_map
   end
 
