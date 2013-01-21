@@ -740,6 +740,10 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Jan 21 2013 Justin Sherrill <jsherril@redhat.com> 1.3.7_pulpv2-1
+- revert of requiring compass < 0.12 (jsherril@redhat.com)
+- fixing use of reserved javascript word (jsherril@redhat.com)
+
 * Mon Jan 21 2013 Justin Sherrill <jsherril@redhat.com> 1.3.6_pulpv2-1
 - fixing rpm build for pulpv2 (jsherril@redhat.com)
 
