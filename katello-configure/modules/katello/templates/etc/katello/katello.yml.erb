@@ -38,6 +38,8 @@ common:
 
   password_reset_expiration: 120
 
+  post_sync_url: http://localhost:5000/<%= scope.lookupvar("katello::params::deployment_url") %>/api/repositories/sync_complete
+
   #Allowed log levels: 'debug', 'info', 'warn', 'error', 'fatal'
   #log_level: warn
   #log_level_sql: fatal
