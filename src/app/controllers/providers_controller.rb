@@ -16,7 +16,8 @@ class ProvidersController < ApplicationController
 
   before_filter :find_rh_provider, :only => [:redhat_provider]
 
-  before_filter :find_provider, :only => [:products_repos, :show, :edit, :update, :destroy, :manifest_progress]
+  before_filter :find_provider, :only => [:products_repos, :show, :edit, :update, :destroy,
+                                          :manifest_progress, :refresh_products]
   before_filter :authorize #after find_provider
   before_filter :panel_options, :only => [:index, :items]
   before_filter :search_filter, :only => [:auto_complete_search]
@@ -45,6 +46,7 @@ class ProvidersController < ApplicationController
       :destroy => delete_test,
       :products_repos => read_test,
       :manifest_progress => edit_test,
+      :refresh_products => edit_test,
 
       :redhat_provider =>read_test,
     }
@@ -150,6 +152,16 @@ class ProvidersController < ApplicationController
     end
 
     render :text => escape_html(result)
+  end
+
+  def refresh_products
+    unless @provider.redhat_provider?
+      raise _("It is not allowed to refresh products for custom provider.")
+    end
+
+    @provider.refresh_products
+    notify.message _("Provider '%s' repositories were refreshed" % @provider.name)
+    render :js => "window.location.pathname='#{redhat_provider_providers_path}'"
   end
 
   protected

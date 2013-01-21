@@ -452,4 +452,14 @@ describe Provider do
 
   end
 
+  describe "#failed_products" do
+    before do
+      @provider = Provider.create(:name => 'test')
+      @provider.products.should_receive(:repositories_cdn_import_failed).once
+    end
+
+    it "should ask products for repositories_cdn_import_failed" do
+      @provider.failed_products
+    end
+  end
 end
