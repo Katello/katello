@@ -14,7 +14,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        1.4.2_pulpv2
+Version:        1.3.2_pulpv2
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
