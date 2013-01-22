@@ -83,7 +83,6 @@ Requires:       rubygem(foreman_api) >= 0.0.7
 Requires:       rubygem(runcible) >= 0.2.0
 Requires:       rubygem(anemone)
 Requires:       rubygem(apipie-rails) >= 0.0.13
-
 Requires:       lsof
 
 %if 0%{?rhel} == 6
@@ -149,7 +148,6 @@ BuildRequires:       rubygem(ldap_fluff)
 BuildRequires:       rubygem(apipie-rails) >= 0.0.12
 BuildRequires:       rubygem(maruku)
 BuildRequires:       rubygem(foreman_api)
-
 
 %description common
 Common bits for all Katello instances
@@ -359,6 +357,10 @@ Requires:        rubygem(minitest-rails)
 Requires:        rubygem(minitest_tu_shim)
 Requires:        rubygem(parallel_tests)
 
+BuildRequires:        rubygem(minitest)
+BuildRequires:        rubygem(minitest-rails)
+BuildRequires:        rubygem(rspec-rails)
+
 %description devel-test
 Rake tasks and dependecies for Katello developers, which enables
 testing.
@@ -371,9 +373,6 @@ export RAILS_ENV=build
 
 #check for malformed gettext strings
 script/check-gettext.rb -m -i
-
-#temporarily delete test.rake
-rm ./lib/tasks/test.rake
 
 #copy alchemy
 ALCHEMY_DIR=$(rpm -ql rubygem-alchemy | grep -o '/.*/vendor' | sed 's/vendor$//' | head -n1)
@@ -413,7 +412,8 @@ a2x -d manpage -f manpage man/katello-service.8.asciidoc
     echo Generating API docs
     # by default do not stop on missing dep and only require "build" environment
     export BUNDLER_EXT_NOSTRICT=1
-    export BUNDLER_EXT_GROUPS="default apipie"
+    export BUNDLER_EXT_GROUPS="default apipie test"
+    export RAILS_ENV=production
     rake apipie:static --trace
     rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello --trace
 %endif
