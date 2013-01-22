@@ -86,7 +86,7 @@ module Glue::ElasticSearch::Pool
             end
           end
         end
-      
+
         json_pools = pools.collect{ |pool|
           pool.as_json.merge(pool.index_options)
         }

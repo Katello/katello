@@ -33,7 +33,7 @@ def configure_vcr
     begin
       c.register_request_matcher :body_json do |request_1, request_2|
         begin
-          json_1 = JSON.parse(request_1.body) 
+          json_1 = JSON.parse(request_1.body)
           json_2 = JSON.parse(request_2.body)
 
           json_1 == json_2
@@ -60,7 +60,7 @@ end
 def configure_runcible
   uri = URI.parse(AppConfig.pulp.url)
 
-  Runcible::Base.config = { 
+  Runcible::Base.config = {
     :url      => "#{uri.scheme}://#{uri.host}",
     :api_path => uri.path,
     :user     => "admin",

@@ -413,7 +413,7 @@ describe Api::SystemsController do
       @sys.facts = {}
       @sys.stub(:guest => 'false', :guests => [], :environment => @environment_2)
       Resources::Candlepin::Consumer.should_receive(:update).once.with(uuid, {}, nil, nil, nil, nil, nil, @environment_2.id).and_return(true)
-      put :update, :id => uuid, :environment_id => @environment_2.id 
+      put :update, :id => uuid, :environment_id => @environment_2.id
       response.body.should == @sys.to_json
       response.should be_success
     end
@@ -445,7 +445,7 @@ describe Api::SystemsController do
 
   describe "remove system groups to a system" do
     before(:each) do
-      @system = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, 
+      @system = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts,
                               :uuid => uuid, :description => "fake description", :system_group_ids => [@system_group_1.id, @system_group_2.id])
       Resources::Candlepin::Consumer.stub!(:get).and_return({:uuid => uuid})
       System.stub!(:first).and_return(@system)

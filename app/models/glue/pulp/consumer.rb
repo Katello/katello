@@ -19,7 +19,7 @@ module Glue::Pulp::Consumer
       before_save    :save_pulp_orchestration
       before_destroy :destroy_pulp_orchestration
       after_rollback :rollback_on_pulp_create, :on => :create
-  
+
       add_system_group_hook     lambda { |system_group| system_group.add_consumer(self) }
       remove_system_group_hook  lambda { |system_group| system_group.remove_consumer(self) }
 
@@ -119,7 +119,7 @@ module Glue::Pulp::Consumer
       Rails.logger.error "Failed to create pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
-    
+
     def update_pulp_consumer
       return true if @changed_attributes.empty?
 
@@ -129,13 +129,13 @@ module Glue::Pulp::Consumer
       Rails.logger.error "Failed to update pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
-    
+
     def upload_package_profile profile
       Rails.logger.debug "Uploading package profile for consumer #{self.name}"
       Runcible::Extensions::Consumer.upload_profile(self.uuid, 'rpm', profile)
     rescue => e
       Rails.logger.error "Failed to upload package profile to pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e  
+      raise e
     end
 
     def install_package packages

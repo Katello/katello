@@ -11,9 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class KatelloUrlFormatValidator < ActiveModel::EachValidator
-  
+
   def validate_each(record, attribute, value)
-    
+
     # build protocol regex
     # default: allow "http" only
     p = options[:protocol]
@@ -29,7 +29,7 @@ class KatelloUrlFormatValidator < ActiveModel::EachValidator
       end
       protocol += ")"
     end
-    
+
     # allow port numbers?
     #
     # true: require port numbers
@@ -43,12 +43,12 @@ class KatelloUrlFormatValidator < ActiveModel::EachValidator
     else
       port_number = ""
     end
-    
+
     if value
       record.errors[attribute] << N_("is invalid") unless value =~ /^#{protocol}:\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}#{port_number}(\/.*)?$/ix
     else
       record.errors[attribute] << N_("can't be blank")
     end
   end
-  
+
 end

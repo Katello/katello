@@ -21,7 +21,7 @@ module Glue::Pulp::Errata
   ENHANCEMENT = "enhancement"
 
   def self.included(base)
-    base.send :include, InstanceMethods    
+    base.send :include, InstanceMethods
 
     base.class_eval do
 

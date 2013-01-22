@@ -36,7 +36,7 @@ class Api::RoleLdapGroupsController < Api::ApiController
 
   api :DELETE, "/roles/:role_id/ldap_groups/:id", "Remove group from the list of LDAP groups associated with the role"
   param :role_id, :identifier, :desc => "role identifier"
-  param :id, String, :desc => "ldap group (name)" 
+  param :id, String, :desc => "ldap group (name)"
   def destroy
     @role.remove_ldap_group(params[:id])
     render :text => _("Removed LDAP group '%s'") % params[:id], :status => 200
@@ -53,7 +53,7 @@ class Api::RoleLdapGroupsController < Api::ApiController
   def find_role
     @role = Role.find(params[:role_id])
     raise HttpErrors::NotFound, _("Couldn't find user role '%s'") % params[:role_id] if @role.nil?
-    @role 
+    @role
   end
 
 end
