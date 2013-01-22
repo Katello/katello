@@ -158,7 +158,7 @@ class Api::SystemGroupsController < Api::ApiController
 
   def copy
     if @organization.id != @group.organization.id
-      raise HttpErrors::BadRequest, 
+      raise HttpErrors::BadRequest,
         _("Can't copy System Groups to a different org: '%{org1}' != '%{org2}'") % {:org1 => @organization.id, :org2 => @group.organization.id}
     end
     grp_param = params[:system_group]

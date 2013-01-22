@@ -77,7 +77,7 @@ class RepositoryInstanceTest < RepositoryTestBase
   end
 
   def test_environment_id
-    assert_equal @library.id, @fedora_17_x86_64.environment_id  
+    assert_equal @library.id, @fedora_17_x86_64.environment_id
   end
 
   def test_yum_gpg_key_url

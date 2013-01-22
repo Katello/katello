@@ -45,7 +45,7 @@ else
 end
 
 module Src
-  class Application < Rails::Application    
+  class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -77,7 +77,7 @@ module Src
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
-    
+
     config.generators do |g|
       g.test_framework :rspec
       g.template_engine :haml

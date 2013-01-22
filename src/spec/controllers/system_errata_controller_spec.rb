@@ -47,7 +47,7 @@ describe SystemErrataController, :katello => true do
           @system = System.create!(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
 
           types = [Glue::Pulp::Errata::SECURITY, Glue::Pulp::Errata::ENHANCEMENT, Glue::Pulp::Errata::BUGZILLA]
-        
+
           to_ret = []
           40.times{ |num|
             errata = {}
@@ -58,43 +58,43 @@ describe SystemErrataController, :katello => true do
           }
 
         end
-        
+
         describe 'on initial load' do
           it "should be successful" do
             get :index, :system_id => @system.id
             response.should be_success
           end
-  
+
           it "should render errata template" do
             get :index, :system_id => @system.id
             response.should render_template("index")
           end
         end
-        
+
         describe 'with an offset' do
           pending "should be successful" do
             get :items, :system_id => @system.id, :offset => 25
             response.should be_success
           end
-  
+
           pending "should render errata items" do
             get :items, :system_id => @system.id, :offset => 25
             response.should render_template("items")
           end
         end
-        
+
         describe 'with a filter type' do
           pending "should be successful" do
             get :items, :system_id => @system.id, :offset => 5, :filter_type => 'BugFix'
             response.should be_success
           end
-          
+
           pending "should render errata items" do
             get :items, :system_id => @system.id, :offset => 5, :filter_type => 'BugFix'
             response.should render_template("items")
           end
-        end  
-        
+        end
+
         describe 'with a bad filter type' do
           pending "should be unsuccessful" do
             get :items, :system_id => @system.id, :offset => 5, :filter_type => 'Fake Type'
@@ -102,9 +102,9 @@ describe SystemErrataController, :katello => true do
           end
         end
       end
-  
+
       describe 'and installing errata' do
-        
+
       end
     end
   end
