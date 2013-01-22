@@ -10,7 +10,7 @@ if ::Rails.env != "test"
   # Require any additional compass plugins here.
 
   project_type = :rails
-  if Gem.loaded_specs["compass"].version.to_s < "0.12.0"
+  if Gem.loaded_specs["compass"].version < Gem::Version.new("0.12.0")
     project_path = Compass::AppIntegration::Rails.root
   else
     require 'compass-rails'
@@ -20,7 +20,7 @@ if ::Rails.env != "test"
   css_dir = "public/stylesheets/compiled"
   sass_dir = "app/stylesheets"
   images_dir = "public/images"
-  if Gem.loaded_specs["compass"].version.to_s < "0.12.0"
+  if Gem.loaded_specs["compass"].version < Gem::Version.new("0.12.0")
     environment = Compass::AppIntegration::Rails.env
   end
   # To enable relative paths to assets via compass helper functions. Uncomment:
