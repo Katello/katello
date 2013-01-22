@@ -502,6 +502,8 @@ install -m 644 man/katello-service.8 %{buildroot}/%{_mandir}/man8
 #Generate secret token if the file does not exist
 #(this must be called both for installation and upgrade)
 TOKEN=/etc/katello/secret_token
+# this file must not be world readable at generation time
+umask 0077
 test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN \
     && chmod 600 $TOKEN && chown katello:katello $TOKEN)
 
