@@ -155,6 +155,7 @@ class Info(SystemGroupAction):
         self.printer.add_column('id', _("ID"))
         self.printer.add_column('name', _("Name"))
         self.printer.add_column('description', _("Description"), multiline=True)
+        self.printer.add_column('max_systems', _("Max Systems"))
         self.printer.add_column('total_systems', _("Total Systems"))
 
         self.printer.print_item(system_group)
