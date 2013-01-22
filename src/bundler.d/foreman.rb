@@ -3,5 +3,5 @@
 if Katello.early_config.katello?
   group :foreman do
     gem 'foreman_api', '>= 0.1.1'
-  end
+  end 
 end
