@@ -71,6 +71,7 @@ Requires:       rubygem(ruport) >= 1.7.0
 Requires:       rubygem(prawn)
 Requires:       rubygem(daemons) >= 1.1.4
 Requires:       rubygem(uuidtools)
+Requires:       rubygem(hooks)
 Requires:       rubygem(thin)
 Requires:       rubygem(fssm)
 Requires:       rubygem(sass)
