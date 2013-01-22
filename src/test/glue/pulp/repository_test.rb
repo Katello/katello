@@ -116,7 +116,7 @@ class GluePulpRepoTest < GluePulpRepoTestBase
 
     refute_empty    task_list
     assert_kind_of  PulpSyncStatus, task_list.first
-    
+
     @task = task_list.first
     self.class.wait_on_task(@task)
   end
@@ -430,7 +430,7 @@ class GluePulpRepoRequiresSyncAndPromoteTest < GluePulpRepoTestBase
   rescue => e
     puts "ERROR: " + e.to_s
   end
-    
+
   def test_delete_packages
     package = @@fedora_17_x86_64.find_packages_by_name('elephant').first
 

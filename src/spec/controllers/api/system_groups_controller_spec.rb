@@ -201,7 +201,7 @@ describe Api::SystemGroupsController, :katello => true do
          response.should_not be_success
          SystemGroup.where(:name=>"foo2").count.should == 0
        end
-       
+
      end
 
      describe "PUT update" do

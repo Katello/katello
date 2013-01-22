@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module SystemErrataHelper
-  
+
   def errata_type_class errata
     case errata.type
       when Errata::SECURITY

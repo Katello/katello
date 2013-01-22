@@ -49,7 +49,7 @@ class SyncPlan < ActiveRecord::Base
     errors.add :base, _("Start Date and Time can't be blank") if self.sync_date.nil?
   end
 
-  def zone_converted 
+  def zone_converted
      #convert time to local timezone
      self.sync_date.localtime.to_datetime
   end

@@ -58,7 +58,7 @@ module Katello
                   end
                 end
 
-              Runcible::Base.config = { 
+              Runcible::Base.config = {
                 :url      => "#{uri.scheme}://#{uri.host}",
                 :api_path => uri.path,
                 :user     => user_id,
