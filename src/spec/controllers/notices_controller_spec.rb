@@ -22,13 +22,13 @@ describe NoticesController do
     set_default_locale
     controller.stub(:render_panel_direct).and_return([])
   end
-  
+
   describe "viewing notices" do
     before (:each) do
       20.times{|a| Notice.create!(:text=>"bar#{a}", :level=>:success, :user_notices=>[UserNotice.new(:user => @user)])}
       @notices = Notice.select(:id).where("text like 'bar%'").order("id desc").all.collect{|s| s.id}
     end
-    
+
     it 'should show all user notices' do
       get :show
       response.should be_success
@@ -50,13 +50,13 @@ describe NoticesController do
       get :details, :id=>n.id
       response.should be_success
     end
-    
+
     it 'should throw an exception if the notice has no details' do
-      Notice.create!(:text=>"Test notice", :level=>:success, 
+      Notice.create!(:text=>"Test notice", :level=>:success,
                     :user_notices=>[UserNotice.new(:user => @user)])
       get :details, :id=>21
       response.should_not be_success
-    end 
+    end
   end
 
   describe "deleting notices" do
@@ -74,7 +74,7 @@ describe NoticesController do
       response.should be_success
       Notice.count.should == 0
       UserNotice.count.should == 0
-    end 
+    end
   end
 
 end

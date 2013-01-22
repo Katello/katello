@@ -77,12 +77,12 @@ class RolesController < ApplicationController
   def section_id
      'operations'
   end
-  
+
   def items
     render_panel_direct(Role, @panel_options,  params[:search], params[:offset], [:name_sort, :asc],
                         {:default_field => :name, :filter=>[{:self_role=>[false]}], :load=>true})
   end
-  
+
   def setup_options
     @panel_options = { :title => _('Roles'),
                  :col => ['name'],
@@ -96,7 +96,7 @@ class RolesController < ApplicationController
                  :enable_create=> Role.creatable?,
                  :search_class=>Role}
   end
-  
+
   def new
     @role = Role.new
     render :partial=>"new", :layout => "tupane_layout", :locals=>{:role=>@role}

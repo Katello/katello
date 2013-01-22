@@ -62,7 +62,7 @@ class User < ActiveRecord::Base
   # THIS CHECK MUST BE THE FIRST before_destroy
   before_destroy :is_last_super_user?, :destroy_own_role
   after_validation :setup_remote_id
-  
+
   # hash the password before creating or updateing the record
   def hash_password
     if AppConfig.warden != 'ldap'

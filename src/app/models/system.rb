@@ -39,7 +39,7 @@ class System < ActiveRecord::Base
   has_many :activation_keys, :through => :system_activation_keys
   has_many :system_system_groups, :dependent => :destroy
   has_many :system_groups, {:through      => :system_system_groups,
-                            :after_add    => :add_system_group, 
+                            :after_add    => :add_system_group,
                             :after_remove => :remove_system_group
                            }
   has_many :custom_info, :as => :informable, :dependent => :destroy

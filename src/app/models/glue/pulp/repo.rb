@@ -371,7 +371,7 @@ module Glue::Pulp::Repo
       events << Runcible::Extensions::Repository.errata_copy(self.pulp_id, to_repo.pulp_id)
       events << Runcible::Extensions::Repository.distribution_copy(self.pulp_id, to_repo.pulp_id)
       events << Runcible::Extensions::Repository.package_group_copy(self.pulp_id, to_repo.pulp_id)
-      events       
+      events
     end
 
     def sync_start

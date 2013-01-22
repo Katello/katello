@@ -27,7 +27,7 @@ class GluePulpErrataTestBase < MiniTest::Rails::ActiveSupport::TestCase
     services  = ['Candlepin', 'ElasticSearch', 'Foreman']
     models    = ['Repository', 'Errata', 'Package']
     disable_glue_layers(services, models)
-    
+
     User.current = User.find(@loaded_fixtures['users']['admin']['id'])
     RepositorySupport.create_and_sync_repo(@loaded_fixtures['repositories']['fedora_17_x86_64']['id'])
 
@@ -55,7 +55,7 @@ class GluePulpErrataTest < GluePulpErrataTestBase
   def test_errata_by_consumer
     skip "Re-enable once the Runcible call is created"
     errata = Errata.errata_by_consumer([RepositorySupport.repo_id])
-    
+
     refute_empty errata
   end
 

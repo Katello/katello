@@ -53,7 +53,7 @@ class UserClassTest < UserTestBase
 end
 
 
-class UserCreateTest < UserTestBase 
+class UserCreateTest < UserTestBase
 
   def setup
     super
@@ -131,7 +131,7 @@ class UserTest < UserTestBase
     role = @no_perms_user.own_role
     @no_perms_user.destroy
 
-    assert_raises ActiveRecord::RecordNotFound do 
+    assert_raises ActiveRecord::RecordNotFound do
       Role.find(role.id)
     end
   end
@@ -200,7 +200,7 @@ class UserTest < UserTestBase
 
   def test_default_environment
     @admin.default_environment = @dev
-  
+
     assert_equal @dev, @admin.default_environment
   end
 
