@@ -59,7 +59,6 @@ Requires:      m2crypto
 Requires:      python-nose
 Requires:      python-mock
 Requires:      %{name} = %{version}-%{release}
-Requires:      %{base_name}-common = %{version}-%{release}
 BuildArch:     noarch
 
 %description unit-tests
