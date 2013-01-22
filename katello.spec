@@ -622,7 +622,6 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 
 %files glue-pulp
 %{homedir}/app/models/glue/pulp
-%{homedir}/lib/resources/pulp.rb
 %config(missingok) %{_sysconfdir}/cron.daily/katello-refresh-cdn
 
 %files glue-candlepin
@@ -670,7 +669,6 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %{homedir}/lib/notifications
 %{homedir}/lib/resources
 %exclude %{homedir}/lib/resources/candlepin.rb
-%exclude %{homedir}/lib/resources/pulp.rb
 %exclude %{homedir}/lib/resources/foreman_model.rb
 %{homedir}/lib/tasks
 %{homedir}/lib/util
