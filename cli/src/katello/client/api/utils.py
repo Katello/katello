@@ -109,7 +109,7 @@ def get_repo(orgName, prodName, prodLabel, prodId, repoName, envName=None, inclu
 
     raise ApiDataError(_("Could not find repository [ %(repoName)s ] within organization [ %(orgName)s ], " \
         "product [ %(prodName)s ] and environment [ %(env_name)s ]") %
-        {'repoName':repoName, 'orgName':orgName, 'prodName':prodName, 'env_name':env["name"]})
+        {'repoName':repoName, 'orgName':orgName, 'prodName':prod["name"], 'env_name':env["name"]})
 
 
 def get_provider(orgName, provName):
