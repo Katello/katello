@@ -62,7 +62,7 @@ module DashboardHelper
 
   def changeset_path_helper cs
       if cs.state === Changeset::PROMOTED
-        changesets_path() + "#panel=changeset_#{cs.id}"
+        changesets_path() + "#panel=changeset_#{cs.id}&env_id=#{cs.environment_id}"
       else
         promotion_path(cs.environment.prior.name)
       end
