@@ -14,6 +14,15 @@ then
 fi
 
 echo ""
+echo "********* Ruby Lint Test  ***************"
+echo "RUNNING: ./script/ruby-linter"
+./script/ruby-linter
+if [ $? -ne 0 ]
+then
+  exit 1
+fi
+
+echo ""
 echo "********* RSPEC Unit Tests ****************"
 psql -c "CREATE USER katello WITH PASSWORD 'katello';" -U postgres
 psql -c "ALTER ROLE katello WITH CREATEDB" -U postgres
