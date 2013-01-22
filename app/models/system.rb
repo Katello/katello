@@ -58,7 +58,7 @@ class System < ActiveRecord::Base
 
   mapping   :dynamic_templates => dynamic_templates do
     indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :description, :type => 'string', :analyzer => :kt_name_analyzer
+    indexes :description, :type => 'string'
     indexes :name_sort, :type => 'string', :index => :not_analyzed
     indexes :lastCheckin, :type=>'date'
     indexes :name_autocomplete, :type=>'string', :analyzer=>'autcomplete_name_analyzer'
