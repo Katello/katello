@@ -704,12 +704,8 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %{homedir}/bundler.d/profiling.rb
 
 %files devel-test
-<<<<<<< HEAD
-#%{homedir}/lib/tasks/test.rake
-=======
 %{homedir}/bundler.d/test.rb
 %{homedir}/lib/tasks/test.rake
->>>>>>> master
 %{homedir}/script/pulp_integration_tests
 
 %files devel-checking
