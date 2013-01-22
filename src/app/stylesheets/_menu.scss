@@ -1,3 +1,4 @@
+$second_level_width: 163px !default;
 $menu_width: 253px !default;
 
 nav {
@@ -9,6 +10,22 @@ nav {
     min-height: 15px;
     height: 35px;
     overflow: hidden;
+    .second_level, .second_level a {
+      //width: $second_level_width - 43;
+      max-width: $second_level_width - 43;
+      width:expression(document.body.clientWidth > 120? "120px": "auto" );
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space:nowrap;
+    }
+    .second_level {
+      //width: $second_level_width;
+      max-width: $second_level_width;
+      width:expression(document.body.clientWidth > 163? "163px": "auto" );
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space:nowrap;
+    }
     .arrow_icon_menu {
       height: 11px;
       width: 13px;
@@ -24,13 +41,16 @@ nav {
       min-height: 35px;
       height: 35px;
       .third_level {
-        background: white;
-        background-image: none;
-        height: auto;
         border-left: 1px solid $border_color;
         border-right: 1px solid $border_color;
         border-bottom: 1px solid $border_color;
+      }
+      .third_level, .third_level a {
+        background: white;
+        background-image: none;
+        height: auto;
         width: $menu_width;
+        max-width: $menu_width;
       }
       li {
         display: inline-block;
@@ -39,10 +59,11 @@ nav {
         .third_level {
             display: block;
             width: $menu_width;
+            max-width: $menu_width;
             height: auto;
             clear: both;
             border-bottom: 1px transparent;
-            a{
+            a {
               width: $menu_width - 33;
               &:hover {
                 background: $kprimary_hover_color;

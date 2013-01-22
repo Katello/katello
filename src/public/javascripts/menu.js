@@ -23,6 +23,13 @@
  */
 $(document).ready(function (){
   KT.menu.menuSetup();
+  $('.second_level a').each(function(){
+      if (this.scrollWidth > this.clientWidth) {
+        $(this).attr("title", this.text);
+        $(this).attr("original-title", this.text);
+      }
+    }
+  ).tipsy({ live : true, gravity: 's', fade: true, delayIn : 350 });
 });
 
 KT.menu = (function(){
