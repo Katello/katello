@@ -17,13 +17,13 @@ class Api::Foreman::SmartProxiesController < Api::Foreman::SimpleCrudController
       A smart proxy is an autonomous web-based foreman component that is placed on
       a host performing a specific function in the host commissioning phase.
       It receives requests from Foreman to perform operations that are required
-      during the commissioning process and executes them on its behalf. 
+      during the commissioning process and executes them on its behalf.
       More details can be found on the Foreman Architecture page.
 
-      To fully manage the commissioning process then a smart proxy 
-      will have to manipulate these services, DHCP, DNS, Puppet CA, Puppet and TFTP. 
-      These services may exist on separate machines or several of them may be hosted 
-      on the same machine. As each smart proxy instance is capable of managing all 
+      To fully manage the commissioning process then a smart proxy
+      will have to manipulate these services, DHCP, DNS, Puppet CA, Puppet and TFTP.
+      These services may exist on separate machines or several of them may be hosted
+      on the same machine. As each smart proxy instance is capable of managing all
       of these services, there is only need for one proxy per host.
 
       The Domains API is available only if support for Foreman is installed.

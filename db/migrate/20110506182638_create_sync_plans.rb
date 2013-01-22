@@ -4,7 +4,7 @@ class CreateSyncPlans < ActiveRecord::Migration
       t.string :name
       t.text :description
       t.datetime :sync_date
-      t.string :interval 
+      t.string :interval
       t.references :organization, :null => false
       t.timestamps
     end

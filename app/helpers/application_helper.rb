@@ -54,11 +54,11 @@ module ApplicationHelper
     key ||= params[:controller] + "-" + params[:action]
     render :partial => "common/helptip", :locals=>{:key=>key, :text=>text}
   end
-  
+
   def help_tip_button(key=nil)
     key ||= params[:controller] + "-" + params[:action]
     render :partial => "common/helptip_button", :locals=>{:key=>key}
-  end  
+  end
 
   # Headpin inclusion
   def stats_line(stats, options ={})

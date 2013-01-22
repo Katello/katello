@@ -41,7 +41,7 @@ class PulpTaskStatus < TaskStatus
           timeout_count += 1
           Rails.logger.error "Timeout in pulp occured: #{timeout_count}"
           raise e if timeout_count >= 10 #10 timeouts in a row, lets bail
-          sleep 50 #if we got a timeout, lets backoff and let it catchup 
+          sleep 50 #if we got a timeout, lets backoff and let it catchup
        end
        sleep 15
     end

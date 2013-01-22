@@ -23,7 +23,7 @@ class SystemGroup < ActiveRecord::Base
   has_many :activation_keys, :through => :key_system_groups
 
   has_many :system_system_groups, :dependent => :destroy
-  has_many :systems, {:through      => :system_system_groups, 
+  has_many :systems, {:through      => :system_system_groups,
                       :after_add    => :add_system,
                       :after_remove => :remove_system
                      }

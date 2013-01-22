@@ -28,7 +28,7 @@ class Repository < ActiveRecord::Base
   include Authorization::Repository
   include AsyncOrchestration
   include Katello::LabelFromName
-  include Rails.application.routes.url_helpers 
+  include Rails.application.routes.url_helpers
 
   belongs_to :environment_product, :inverse_of => :repositories
   belongs_to :gpg_key, :inverse_of => :repositories

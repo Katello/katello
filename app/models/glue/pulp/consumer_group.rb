@@ -141,7 +141,7 @@ module Glue::Pulp::ConsumerGroup
 
             added_consumers = (new_consumers - old_consumers).uniq
             removed_consumers = old_consumers - new_consumers
-            
+
             pre_queue.create(:name => "adding consumers to group: #{self.pulp_id}", :priority => 3, :action => [self, :add_consumers, added_consumers]) unless added_consumers.empty?
             pre_queue.create(:name => "removing consumers from group: #{self.pulp_id}", :priority => 4, :action => [self, :remove_consumers, removed_consumers]) unless removed_consumers.empty?
           end
