@@ -1,5 +1,7 @@
 # Graphs
 
+*Note: If you do not see any graph images please generate them, see bottom of this page.*
+
 ## Models brief
 
 <div style="overflow: scroll; width: 100%;">
