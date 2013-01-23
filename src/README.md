@@ -9,7 +9,7 @@ YARD documentation is intended for developers. This documentation contains:
 
 User documentation can be found on [wiki](https://fedorahosted.org/katello/).
 
-*Note:* older guides can be found on wiki, they have not been migrated.
+*Note: older guides can be found on wiki, they have not been migrated.*
 
 ### Guides
 
@@ -17,6 +17,7 @@ User documentation can be found on [wiki](https://fedorahosted.org/katello/).
 -   {file:doc/ForemanIntegration.md}
 -   {file:doc/Graphs.md}
 -   Original Rails generated README {file:doc/RailsReadme}, we may do certain things differently
+
     -   we use `doc` directory for storing markdown guides instead of a generated documentation
 
 ### Source
