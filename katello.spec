@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.3.9.pulpv2
+Version:        1.3.10.pulpv2
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -736,6 +736,14 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Jan 23 2013 Justin Sherrill <jsherril@redhat.com> 1.3.10.pulpv2-1
+- requiring pulp rpm package in the correct place (jsherril@redhat.com)
+- Skipping Zentest 4.8.4 due to bad gemspec (msuchy@redhat.com)
+- Streaming files instead of loading them entirely into mem
+  (daviddavis@redhat.com)
+- Fixed whitespace (daviddavis@redhat.com)
+- Added a lint check for ruby code (daviddavis@redhat.com)
+
 * Tue Jan 22 2013 Justin Sherrill <jsherril@redhat.com> 1.3.9_pulpv2-1
 - spec file changes for build (jsherril@redhat.com)
 - removing lib/resources/pulp.rb from spec (jsherril@redhat.com)
