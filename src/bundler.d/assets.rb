@@ -2,7 +2,7 @@ def rails32?
   begin
     require 'rails'
   rescue LoadError
-    return false
+    return RUBY_VERSION >= "1.9.2"
   end
   return RUBY_VERSION >= "1.9.2" unless defined?(::Rails)
   rails_version = Rails::VERSION::STRING
