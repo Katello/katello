@@ -4,8 +4,8 @@
 
 YARD documentation is intended for developers. This documentation contains:
 
-- code documentation
-- high level guides to architectures and implementation details
+-   code documentation
+-   high level guides to architectures and implementation details
 
 User documentation can be found on [wiki](https://fedorahosted.org/katello/).
 
@@ -13,34 +13,20 @@ User documentation can be found on [wiki](https://fedorahosted.org/katello/).
 
 ### Guides
 
-- {file:doc/ForemanIntegration.md}
-- {file:doc/RailsReadme}
-- {file:doc/Graphs.md}
-- {file:doc/HowToDocument.md}
+-   {file:doc/YARDDocumentation.md}
+-   {file:doc/ForemanIntegration.md}
+-   {file:doc/Graphs.md}
+-   Original Rails generated README {file:doc/RailsReadme}, we may do certain things differently
+    -   we use `doc` directory for storing markdown guides instead of a generated documentation
 
 ### Source
 
-- {Katello::Configuration}
-- {Notifications}
+-   {Katello::Configuration}
+-   {Notifications}
 
-## YARD
+## How to YARD
 
-### How to generate this documentation
+-   to see YARD documentation start Katello server and click on the link in the UI footer or go directly to
+    {http://path.to.katello/a_prefix/yard/docs/katello/frames}
+-   see {file:doc/YARDDocumentation.md}
 
-- go to rails home
-
-      !!!txt
-      cd katello/src
-
-- generate the documentation (it will use `src/.yardopts` automatically)
-
-      !!!txt
-      yard doc
-
-### Browsing the documentation
-
-There are several options
-
-1. start Katello server and click on the link in the footer or go directly to {http://path.to.katello/a_prefix/yard/docs/katello/frames}
-1. open statically generated documentation `open yardoc/index.html`, run `yard doc` to generate the files first
-1. run standalone server `yard server --reload` and go to {http://localhost:8808}
