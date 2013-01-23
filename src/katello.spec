@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.3.9_pulpv2
+Version:        1.3.9.pulpv2
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
