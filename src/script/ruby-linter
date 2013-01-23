@@ -1,0 +1,15 @@
+#!/usr/bin/ruby
+
+puts "[Katello Ruby Linter] Checking ruby files."
+
+Dir.glob( '**/*.rb' ) do |file|
+  line_num = 0
+  IO.foreach(file) do |line|
+    line_num += 1
+    if !line.empty? && line =~ /\s+\s$/
+      raise "File #{file} has trailing whitespace on line #{line_num}"
+    end
+  end
+end
+
+puts "[Katello Ruby Linter] Code has passed successfully."
