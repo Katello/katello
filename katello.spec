@@ -735,6 +735,11 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Jan 22 2013 Justin Sherrill <jsherril@redhat.com> 1.3.9_pulpv2-1
+- spec file changes for build (jsherril@redhat.com)
+- removing lib/resources/pulp.rb from spec (jsherril@redhat.com)
+- Fixing trailing whitespace (daviddavis@redhat.com)
+
 * Tue Jan 22 2013 Justin Sherrill <jsherril@redhat.com> 1.3.8_pulpv2-1
 - adding rubygem-hooks to spec requires (jsherril@redhat.com)
 - fixing bundler_ext changes (jsherril@redhat.com)
