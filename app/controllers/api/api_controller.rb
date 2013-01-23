@@ -52,9 +52,23 @@ class Api::ApiController < ActionController::Base
   include AuthorizationRules
 
   def set_locale
-    hal = request.env['HTTP_ACCEPT_LANGUAGE']
-    I18n.locale = hal.nil? ? 'en' : hal.scan(/^[a-z]{2}/).first
+    if current_user && current_user.default_locale
+      I18n.locale = current_user.default_locale
+    else
+      I18n.locale = ApplicationController.extract_locale_from_accept_language_header parse_locale
+    end
+
     logger.debug "Setting locale: #{I18n.locale}"
+  end
+
+  def parse_locale
+    first, second = request.env['HTTP_ACCEPT_LANGUAGE'].split(/[-_]/)
+    if second.nil?
+      return [first.downcase]
+    else
+      # HTTP spec defines only dash-based languages, se we need to convert and add a fallback
+      return ["#{first.downcase}-#{second.upcase}", first.downcase]
+    end
   end
 
   # override warden current_user (returns nil because there is no user in that scope)
