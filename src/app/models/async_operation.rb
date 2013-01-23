@@ -36,7 +36,10 @@ AsyncOperation = Struct.new(:status_id, :username, :object, :method_name, :args)
     if User.current && User.current.default_locale
       I18n.locale = User.current.default_locale
     else
-      I18n.locale = ApplicationController.extract_locale_from_accept_language_header
+      # if user did not set his locale we are not able to detect browser setting here and we have to
+      # fall back to system language or English
+      system_lang = ENV['LC_LANG'] || 'en'
+      I18n.locale = ApplicationController.extract_locale_from_accept_language_header [system_lang]
     end
     Rails.logger.debug "Setting locale: #{I18n.locale}"
 
