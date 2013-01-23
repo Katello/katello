@@ -130,8 +130,8 @@ class Api::ApiController < ActionController::Base
   private
 
   def get_organization org_id
-    # id in name/label is always unique
-    return Organization.without_deleting.where("name = :id or label = :id", {:id => org_id}).first
+    # name/label is always unique
+    return Organization.without_deleting.having_name_or_label(org_id).first
   end
 
   def organization_id
