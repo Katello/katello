@@ -4,8 +4,7 @@ puts "[Katello Ruby Linter] Checking ruby files."
 
 Dir.glob( '**/*.rb' ) do |file|
   line_num = 0
-  data = File.open(file).read
-  data.each_line do |line|
+  IO.foreach(file) do |line|
     line_num += 1
     if !line.empty? && line =~ /\s+\s$/
       raise "File #{file} has trailing whitespace on line #{line_num}"
