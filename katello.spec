@@ -161,7 +161,6 @@ Requires:       %{name}-configure
 Requires:       %{name}-cli
 Requires:       postgresql-server
 Requires:       postgresql
-Requires:       pulp-rpm-server
 Requires:       candlepin-tomcat6
 Requires:       candlepin-selinux
 # the following backend engine deps are required by <katello-configure>
@@ -188,6 +187,8 @@ Katello connection classes for the Elastic Search backend
 BuildArch:      noarch
 Summary:         Katello connection classes for the Pulp backend
 Requires:        %{name}-common
+Requires:        pulp-server
+Requires:        pulp-rpm-plugins
 
 %description glue-pulp
 Katello connection classes for the Pulp backend
