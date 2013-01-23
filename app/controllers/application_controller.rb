@@ -314,7 +314,7 @@ class ApplicationController < ActionController::Base
     end.collect do |l|
       l.first.downcase.gsub(/-[a-z]+$/i) { |x| x.upcase }
     end
-  rescue 
+  rescue
     []
   end
 
@@ -429,7 +429,7 @@ class ApplicationController < ActionController::Base
       path = path.collect{ |e| environment_path_element_generator.call(e) }
       to_ret << [library] + path if path.any?{|e| e[:select]}
     end
-    
+
     if paths.empty?
       to_ret << [library]
     end
@@ -460,9 +460,9 @@ class ApplicationController < ActionController::Base
   # @option search_options :filter
   #   Filter to apply to search. Array of hashes.  Each key/value within the hash
   #   is OR'd, whereas each HASH itself is AND'd together
-  # @option search_options :load whether or not to load the active record object (defaults to false)
+  # @option search_options [true, false] :load whether or not to load the active record object (defaults to false)
   def render_panel_direct(obj_class, panel_options, search, start, sort, search_options={})
-  
+
     filters = search_options[:filter] || []
     load = search_options[:load] || false
     all_rows = false
@@ -558,7 +558,7 @@ class ApplicationController < ActionController::Base
       rendered_html = render_to_string(:partial=>"common/list_items", :locals=>options)
     end
 
-    
+
 
     render :json => {:html => rendered_html,
                       :results_count => options[:total_count],
@@ -566,16 +566,16 @@ class ApplicationController < ActionController::Base
                       :current_items => options[:collection].length }
 
     retain_search_history unless options[:no_search_history]
-    
+
   end
 
   def render_panel_items(items, options, search, start)
     @items = items
-    
+
     options[:accessor] ||= "id"
     options[:columns] = options[:col]
     options[:initial_action] ||= :edit
-    
+
     if start == "0"
       options[:total_count] = @items.count
     end
@@ -593,18 +593,18 @@ class ApplicationController < ActionController::Base
 
     options[:total_results] = items_searched.count
     options[:collection] ||= items_offset
-    
+
     if options[:list_partial]
       rendered_html = render_to_string(:partial=>options[:list_partial], :locals=>options)
     else
-      rendered_html = render_to_string(:partial=>"common/list_items", :locals=>options) 
+      rendered_html = render_to_string(:partial=>"common/list_items", :locals=>options)
     end
-    
+
     render :json => {:html => rendered_html,
                       :results_count => options[:total_count],
                       :total_items => options[:total_results],
                       :current_items => options[:collection].length }
-                      
+
     retain_search_history
   end
 

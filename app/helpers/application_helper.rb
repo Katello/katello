@@ -54,11 +54,11 @@ module ApplicationHelper
     key ||= params[:controller] + "-" + params[:action]
     render :partial => "common/helptip", :locals=>{:key=>key, :text=>text}
   end
-  
+
   def help_tip_button(key=nil)
     key ||= params[:controller] + "-" + params[:action]
     render :partial => "common/helptip_button", :locals=>{:key=>key}
-  end  
+  end
 
   # Headpin inclusion
   def stats_line(stats, options ={})
@@ -230,8 +230,8 @@ module ApplicationHelper
   #   sort @search, :by => :created_at, :as => "Created"
   #
   # @param [Hash] options This helper accepts the following options:
-  # @option options :by the name of the named scope. This helper will prepend this value with "ascend_by_" and "descend_by_"
-  # @option options :as the text used in the link, defaults to whatever is passed to :by
+  # @option options [String] :by the name of the named scope. This helper will prepend this value with "ascend_by_" and "descend_by_"
+  # @option options [String] :as the text used in the link, defaults to whatever is passed to :by
   def sort(field, options = {}, html_options = {})
 
     unless options[:as]
