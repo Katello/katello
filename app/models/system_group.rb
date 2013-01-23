@@ -16,6 +16,7 @@ class SystemGroup < ActiveRecord::Base
   include Glue
   include Authorization
   include IndexedModel
+  include CustomPermissions
 
   index_options :extended_json=>:extended_index_attrs,
                 :json=>{:only=>[:id, :organization_id, :name, :description, :max_systems]},
