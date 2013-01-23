@@ -105,7 +105,7 @@ EOKEY
   def disable_org_orchestration
     Resources::Candlepin::Owner.stub!(:create).and_return({})
     Resources::Candlepin::Owner.stub!(:create_user).and_return(true)
-    Resources::Candlepin::Owner.stub!(:destroy)
+    Resources::Candlepin::Owner.stub!(:destroy).and_return(true)
     Resources::Candlepin::Owner.stub!(:get_ueber_cert).and_return({ :cert => CERT, :key => KEY })
     disable_env_orchestration # env is orchestrated with org - we disable this as well
   end
