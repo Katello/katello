@@ -49,6 +49,7 @@ class Organization < ActiveRecord::Base
 
   before_create :create_library
   before_create :create_redhat_provider
+
   validates :name, :uniqueness => true, :presence => true
   validates :label, :uniqueness => { :message => _("already exists (including organizations being deleted)") },
             :presence => true
@@ -58,6 +59,7 @@ class Organization < ActiveRecord::Base
   validate :unique_name_and_label
 
   before_save { |o| o.system_info_keys = Array.new unless o.system_info_keys }
+  after_destroy :delete_associated_permission_tags
 
   if Katello.config.use_cp
     before_validation :create_label, :on => :create
@@ -209,6 +211,14 @@ class Organization < ActiveRecord::Base
 
   def syncable?
     User.allowed_to?(SYNC_PERM_VERBS, :organizations, nil, self)
+  end
+
+  def delete_associated_permission_tags
+    PermissionTag.where(
+        :permission_id =>
+            Permission.where(:resource_type_id => ResourceType.where(:name => 'organizations'))
+    )
+    .where(:tag_id => id).delete_all
   end
 
   private
