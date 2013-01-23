@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.3.1.pulpv2
+Version:       1.3.2.pulpv2
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
@@ -51,6 +51,10 @@ cp -Rp cli_tests/ cli-system-test helpers *zip RPM-GPG-KEY* $RPM_BUILD_ROOT%{hom
 
 
 %changelog
+* Wed Jan 23 2013 Justin Sherrill <jsherril@redhat.com> 1.3.2.pulpv2-1
+- Removing filter entries in the cli-system tests (paji@redhat.com)
+- cli system test - just delete the provider (jsherril@redhat.com)
+
 * Tue Dec 18 2012 Miroslav Suchý <msuchy@redhat.com> 1.3.1-1
 - system tests - tests for smart proxies (tstrachota@redhat.com)
 - system tests - new function skip_message (tstrachota@redhat.com)
