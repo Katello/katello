@@ -190,7 +190,7 @@ class SystemsController < ApplicationController
       {:label=>label, :value=>s.name, :id=>s.id}
     }
   rescue Tire::Search::SearchRequestFailed => e
-    render :json=>Support.array_with_total
+    render :json=>Util::Support.array_with_total
   end
 
 

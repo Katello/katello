@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
   include Glue::Foreman::User if Katello.config.use_foreman
   include Glue if Katello.config.use_cp
   include AsyncOrchestration
-  include IndexedModel
+  include Ext::IndexedModel
 
 
   acts_as_reportable
