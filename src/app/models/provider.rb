@@ -16,7 +16,7 @@ class Provider < ActiveRecord::Base
   include AsyncOrchestration
   include Authorization
   include IndexedModel
-  include CustomPermissions
+  include PermissionTagCleanup
 
   index_options :extended_json=>:extended_index_attrs,
                 :display_attrs=>[:name, :product, :repo, :description]
