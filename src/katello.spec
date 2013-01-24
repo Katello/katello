@@ -371,7 +371,6 @@ script/check-gettext.rb -m -i
 ALCHEMY_DIR=$(rpm -ql rubygem-alchemy | grep -o '/.*/vendor' | sed 's/vendor$//' | head -n1)
 cp -R $ALCHEMY_DIR* ./vendor/alchemy
 
-sed -i 's/if RUBY_VERSION < "1.9.2"  # and F17 - see .spec file/if true  # edited by .specfile/' Gemfile
 #use Bundler_ext instead of Bundler
 mv Gemfile Gemfile.in
 
