@@ -4,12 +4,10 @@ cd src/
 echo "\n"
 echo "********* Stylesheet Compilation Test  ***************"
 echo "RUNNING: RAILS_ENV=development bundle exec compass compile"
-if ruby -v | grep -v 1.9.3; then
-  RAILS_ENV=development bundle exec compass compile
-  if [ $? -ne 0 ]
-  then
-    exit 1
-  fi
+RAILS_ENV=development bundle exec compass compile
+if [ $? -ne 0 ]
+then
+  exit 1
 fi
 
 echo ""
