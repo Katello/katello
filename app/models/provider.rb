@@ -14,9 +14,9 @@ class Provider < ActiveRecord::Base
   include Glue::Provider
   include Glue
   include AsyncOrchestration
-  include Authorization
-  include IndexedModel
-  include PermissionTagCleanup
+  include Ext::Authorization
+  include Ext::IndexedModel
+  include Ext::PermissionTagCleanup
 
   index_options :extended_json=>:extended_index_attrs,
                 :display_attrs=>[:name, :product, :repo, :description]
