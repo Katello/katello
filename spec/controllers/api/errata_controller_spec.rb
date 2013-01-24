@@ -15,12 +15,14 @@ require 'spec_helper.rb'
 describe Api::ErrataController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
+  include LocaleHelperMethods
 
   before(:each) do
     disable_org_orchestration
     disable_product_orchestration
     disable_user_orchestration
     disable_repo_orchestration
+    set_default_locale
 
     @organization = new_test_org
     @provider = Provider.create!(:name => "provider",
