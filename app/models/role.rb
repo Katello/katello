@@ -16,16 +16,14 @@ class Role < ActiveRecord::Base
 
   acts_as_reportable
 
-  attr_accessor :self_role #used to indicate during user creation that a role is intended to be a self role
   has_many :roles_users
   has_many :users, :through => :roles_users, :before_remove =>:super_admin_check
-  has_many :permissions, :dependent => :destroy,:inverse_of =>:role, :class_name=>"Permission"
+  has_many :permissions, :dependent => :destroy, :inverse_of =>:role, :class_name=>"Permission", :extend => RolesPermissions::DefaultSystemRegistrationPermission
   has_many :ldap_group_roles, :dependent => :destroy, :inverse_of => :role
-  has_one :owner, :class_name => 'User', :foreign_key => "own_role_id"
   has_many :resource_types, :through => :permissions
 
   # scope to facilitate retrieving roles that are 'non-self' roles... group() so that unique roles are returned
-  scope :non_self, joins("left outer join users on users.own_role_id = roles.id").where('users.own_role_id'=>nil).order('roles.name')
+  scope :non_self, where("type <> 'UserOwnRole' or type is NULL").order('roles.name')
   validates :name, :uniqueness => true, :length => {:maximum => 128, :minimum => 1}, :presence => true
   validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
   validates_with Validators::RolenameValidator, :attributes => :name
@@ -73,12 +71,11 @@ class Role < ActiveRecord::Base
   end
 
   def self.non_self_roles
-    #gotta be a better way to do this, but others wouldn't work
-    Role.all(:conditions=>{"users.own_role_id"=>nil}, :include=> :owner)
+    Role.non_self
   end
 
   def self_role_for_user
-    User.where(:own_role_id => self.id).first
+    nil
   end
 
   def self.make_readonly_role name, organization = nil
