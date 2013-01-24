@@ -65,7 +65,9 @@ KT.system.errata = function() {
     		$('#select_all_errata').bind('change', select_all_errata);
     		$('#errata_state_radio_applied').bind('change', fetch_errata);
     		$('#errata_state_radio_outstanding').bind('change', fetch_errata);
-            $('#run_errata_button').bind('click', add_errata);
+               $('#run_errata_button').bind('click', add_errata);
+               $('#select_all_button').bind('click', select_all);
+               $('#deselect_all_button').bind('click', deselect_all);
     		load_more.bind('click', { clear_items : false }, fetch_errata);
     	},
         init_status_check = function(){
@@ -117,6 +119,14 @@ KT.system.errata = function() {
     			checkboxes.attr('checked', false);
     		}
     	},
+        select_all = function(){
+            var checkboxes = table_body.find(':checkbox');
+            checkboxes.attr('checked', true);
+        },
+        deselect_all = function(){
+            var checkboxes = table_body.find(':checkbox');
+            checkboxes.attr('checked', false);
+        },
         add_errata = function(){
             var selected_errata = errata_container.find(':checkbox:checked'),
                 errata_ids = [],
