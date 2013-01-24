@@ -18,7 +18,7 @@ class KTEnvironment < ActiveRecord::Base
   include Glue if Katello.config.use_cp
   set_table_name "environments"
   include Katello::LabelFromName
-  include CustomPermissions
+  include PermissionTagCleanup
   acts_as_reportable
 
   belongs_to :organization, :inverse_of => :environments
