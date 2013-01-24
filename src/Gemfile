@@ -14,11 +14,10 @@ require 'katello_config'
 # With a pull request, send also link to our (or Fedora) koji with RPMs.
 source 'http://rubygems.org'
 
-version = `uname -a` rescue ""
-if version =~ /fc18/
-  gem 'rails', '~> 3.2.8'
-else
+if RUBY_VERSION < "1.9.2"  # and F17 - see .spec file
   gem 'rails', '3.0.10'
+else
+  gem 'rails', '~> 3.2.8'
 end
 gem 'json'
 gem 'rest-client', :require => 'rest_client'
