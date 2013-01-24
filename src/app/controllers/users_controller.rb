@@ -120,8 +120,8 @@ class UsersController < ApplicationController
     if default_environment_id
       @environment  = KTEnvironment.find(default_environment_id)
       @organization = @environment.organization
-      @user.save!
       @user.default_environment = @environment
+      @user.save!
     else
       # user selected an org that has no environments defined
       raise no_env_available_msg unless params['org_id']['org_id'].blank?
@@ -141,6 +141,9 @@ class UsersController < ApplicationController
       render :json => { :no_match => true }
     end
   rescue ActiveRecord::RecordNotSaved, ActiveRecord::RecordInvalid => error
+
+    logger.error("#{error}")
+
     notify.exception error
     #transaction, if something goes wrong with the creation of the permission, we will need to delete the user
     @user.destroy unless @user.new_record?

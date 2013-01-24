@@ -188,8 +188,9 @@ class UserTest < UserTestBase
     assert @admin.has_default_environment?
   end
 
-  def test_default_systems_reg_permission
-    permission = @admin.default_systems_reg_permission(@acme_corporation)
+  # TODO: should be moved into permission test
+  def test_create_or_update_default_system_registration_permission
+    permission = @admin.own_role.create_or_update_default_system_registration_permission(@acme_corporation, @dev)
 
     assert_instance_of Permission, permission
     assert_equal       "environments", permission.resource_type.name
@@ -269,24 +270,10 @@ class UserProtectedMethodTest < UserTestBase
     refute @admin.send(:can_be_deleted?)
   end
 
-  def test_own_role_included_in_roles
-    assert @admin.send(:own_role_included_in_roles?)
-  end
-
   def test_own_role_included_in_roles_without_own_role
     @admin.roles.delete(@admin.own_role)
-
-    assert_raises(ActiveRecord::ActiveRecordError) do
-      @admin.send(:own_role_included_in_roles?)
-    end
+    refute @admin.valid?
   end
-
-  def test_default_systems_reg_permission_check
-    permission = @admin.send(:default_systems_reg_permission, @acme_corporation)
-
-    assert_instance_of Permission, permission
-  end
-
 end
 
 
@@ -410,17 +397,16 @@ class UserDefaultEnvTest < UserTestBase
   end
 
   def test_set_default_env
-    @user.default_environment = @env
-    @user.save!
+    @user.update_attributes!(:default_environment => @env)
     @user = @user.reload
 
     assert_equal @env, @user.default_environment
   end
 
   def test_default_env_removed
-    @user.default_environment = @env
-    @user.save!
+    @user.update_attributes!(:default_environment => @env)
     @env.destroy
+    @user = @user.reload
 
     assert_empty  User.find_by_default_environment(@env.id)
     assert_nil    @user.default_environment
