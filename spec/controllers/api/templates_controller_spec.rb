@@ -15,6 +15,7 @@ require 'spec_helper.rb'
 describe Api::TemplatesController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
+  include LocaleHelperMethods
 
   TEMPLATE_ID = 1
   TEMPLATE_NAME = "template"
@@ -43,6 +44,7 @@ describe Api::TemplatesController, :katello => true do
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
+    set_default_locale
   end
 
   let(:to_create) do
