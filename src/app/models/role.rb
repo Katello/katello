@@ -36,6 +36,7 @@ class Role < ActiveRecord::Base
   scope :non_self, joins("left outer join users on users.own_role_id = roles.id").where('users.own_role_id'=>nil).order('roles.name')
   validates :name, :uniqueness => true, :length => {:maximum => 128, :minimum => 1}, :presence => true
   validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates :description, :length => { :maximum => 250 }
   validates_with Validators::LockValidator, :on => :update
 
