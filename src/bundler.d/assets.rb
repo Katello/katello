@@ -1,14 +1,3 @@
-def rails32?
-  begin
-    require 'rails'
-  rescue LoadError
-    return false
-  end
-  return RUBY_VERSION >= "1.9.2" unless defined?(::Rails)
-  rails_version = Rails::VERSION::STRING
-  rails_version =~ %r{^3.2}
-end
-
 # Stuff for view/display/frontend
 group :assets do
   gem 'haml', '>= 3.1.2'
@@ -20,18 +9,10 @@ group :assets do
     else
       gem 'compass', '~> 0.12.0'
       gem 'compass-rails', '~> 1.0.3'
-      if rails32?
-        gem 'sass-rails'
-        gem 'actionpack'
-      end
     end
   rescue LoadError
     gem 'compass', '~> 0.12.0'
     gem 'compass-rails', '~> 1.0.3'
-    if rails32?
-      gem 'sass-rails'
-      gem 'actionpack'
-    end
   end
   gem 'compass-960-plugin', '>= 0.10.4', :require => 'ninesixty'
   gem 'simple-navigation', '>= 3.3.4'
