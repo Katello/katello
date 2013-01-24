@@ -1,5 +1,5 @@
 group :test do
-  gem 'ZenTest', '>= 4.4.0', '< 4.8.4', :require => "autotest"
+  gem 'ZenTest', '>= 4.4.0', :require => "autotest"
   gem 'autotest-rails', '>= 4.1.0'
   
   # (also appears in development group)
