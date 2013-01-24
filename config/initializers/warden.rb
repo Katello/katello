@@ -172,6 +172,6 @@ Warden::Strategies.add(:no_credentials) do
   end
 
   def authenticate!
-    custom! [401, {"WWW-Authenticate" => 'Basic realm="Secure Area"'}, "No Credentials provided"]
+    custom! [401, {"WWW-Authenticate" => 'Basic realm="Secure Area"'}, ["No Credentials provided"]]
   end
 end
