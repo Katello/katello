@@ -37,6 +37,7 @@ describe Api::PermissionsController do
     Permission.stub(:find).with(perm_id).and_return(@perm)
 
     login_user_api
+    set_default_locale
   end
 
   describe "list permissions" do

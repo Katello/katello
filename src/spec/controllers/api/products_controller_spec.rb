@@ -16,6 +16,7 @@ describe Api::ProductsController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
   include ProductHelperMethods
+  include LocaleHelperMethods
   let(:user_with_read_permissions) { user_with_permissions { |u| u.can([:read], :providers, @provider.id, @organization) } }
   let(:user_without_read_permissions) { user_without_permissions }
 
@@ -26,6 +27,7 @@ describe Api::ProductsController, :katello => true do
     disable_org_orchestration
     disable_product_orchestration
     disable_user_orchestration
+    set_default_locale
 
     Resources::Pulp::Repository.stub(:packages).and_return([])
     Resources::Pulp::Repository.stub(:errata).and_return([])
