@@ -49,6 +49,8 @@ class KTEnvironment < ActiveRecord::Base
 
   has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED}, :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
 
+  has_many :users, :foreign_key => :default_environment_id, :inverse_of => :default_environment, :dependent => :nullify
+
   scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
 
   validates :name, :exclusion => { :in => ["Library"], :message => N_(": '%s' is a built-in environment") % "Library" }, :unless => :library?
@@ -227,7 +229,6 @@ class KTEnvironment < ActiveRecord::Base
   def unset_users_with_default
     users = User.find_by_default_environment(self.id)
     users.each do |u|
-      u.default_environment = nil
       Notify.message _("Your default environment has been removed. Please choose another one."),
                      :user => u, :organization => self.organization
     end

@@ -15,6 +15,13 @@ require 'util/threadsession'
 require 'util/password'
 require 'util/model_util'
 
+class OwnRolePresenceValidator < ActiveModel::Validator
+  def validate(record)
+    record.errors[:roles] << _("Own Role must be included in roles #{record.roles}") and return unless record.roles.any? {|r| r.type == 'UserOwnRole'}
+  end
+end
+
+
 class User < ActiveRecord::Base
   include Glue::Pulp::User if Katello.config.use_pulp
   include Glue::Foreman::User if Katello.config.use_foreman
@@ -34,14 +41,13 @@ class User < ActiveRecord::Base
   scope :visible, where(:hidden => false)
 
   has_many :roles_users
-  has_many :roles, :through => :roles_users, :before_remove => :super_admin_check
-  #the own_role is used exclusively for storing a perm with a tag that tells the default env
-  belongs_to :own_role, :class_name => 'Role'
+  has_many :roles, :through => :roles_users, :before_remove => :super_admin_check, :uniq => true, :extend => RolesPermissions::UserOwnRole
   has_many :help_tips
   has_many :user_notices
   has_many :notices, :through => :user_notices
   has_many :search_favorites, :dependent => :destroy
   has_many :search_histories, :dependent => :destroy
+  belongs_to :default_environment, :class_name => "KTEnvironment"
   serialize :preferences, HashWithIndifferentAccess
 
   validates :username, :uniqueness => true, :presence => true
@@ -60,11 +66,13 @@ class User < ActiveRecord::Base
     end
   end
 
-  before_create :create_self_role
-  before_save   :hash_password, :setup_preferences, :default_systems_reg_permission_check, :own_role_included_in_roles?
+  before_validation :create_own_role
+  after_validation :setup_remote_id
+  validates :roles, :own_role_presence => true
+  before_save   :hash_password, :setup_preferences
+  after_save :create_or_update_default_system_registration_permission
   # THIS CHECK MUST BE THE FIRST before_destroy
   before_destroy :is_last_super_user?, :destroy_own_role
-  after_validation :setup_remote_id
 
   # hash the password before creating or updateing the record
   def hash_password
@@ -75,20 +83,6 @@ class User < ActiveRecord::Base
 
   def setup_preferences
     self.preferences = HashWithIndifferentAccess.new unless self.preferences
-  end
-
-  # create own role for new user
-  def create_self_role
-    if self.new_record? and self.own_role.nil?
-      # create the own_role where the name will be a string consisting of username and 20 random chars
-      begin
-        role_name = "#{self.username}_#{Password.generate_random_string(20)}"
-      end while Role.exists?(:name => role_name)
-
-      r = Role.create!(:name => role_name, :self_role => true)
-      self.roles << r unless roles.include? r
-      self.own_role = r
-    end
   end
 
   def is_last_super_user?
@@ -106,19 +100,13 @@ class User < ActiveRecord::Base
     return true
   end
 
-  # destroy own role for user
-  def destroy_own_role
-    if !self.own_role.nil?
-      self.own_role.destroy
-      unless self.own_role.destroyed?
-        Rails.logger.error error.to_s
-      end
-    end
-    self.roles.clear
-  end
 
   def not_ldap_mode?
     return Katello.config.warden != 'ldap'
+  end
+
+  def own_role
+    roles.find_own_role
   end
 
   def self.authenticate!(username, password)
@@ -160,13 +148,6 @@ class User < ActiveRecord::Base
   # is the current user consumer? (rhsm)
   def self.consumer?
     User.current.is_a? CpConsumerUser
-  end
-
-  # returns the set of users who have kt_environment_id's environment set as their
-  # default. the data relationship is somewhat odd...
-  def self.find_by_default_environment(kt_environment_id)
-    self.joins(:own_role => { :permissions => :tags }).
-         where("tag_id = #{kt_environment_id}")
   end
 
   def allowed_organizations
@@ -217,7 +198,7 @@ class User < ActiveRecord::Base
   end
 
   def defined_role_ids
-    self.role_ids - [self.own_role_id]
+    self.role_ids - [self.own_role.id]
   end
 
   def cp_oauth_header
@@ -234,53 +215,12 @@ class User < ActiveRecord::Base
   end
 
   def has_default_environment?
-    !!default_systems_reg_permission
+    !default_environment.nil?
   end
 
-  def default_systems_reg_permission(organization=nil)
-    return nil unless own_role
-
-    resource_type = ResourceType.find_or_create_by_name("environments")
-    verb          = Verb.find_or_create_by_verb("register_systems")
-    name          = "default systems reg permission"
-
-    permission = own_role.permissions.joins(:verbs).
-        where(:resource_type_id => resource_type, :verbs => { :id => verb }, :name => name).first
-    if permission.nil? && !organization.nil?
-      permission = own_role.permissions.create!(:resource_type => resource_type,
-                                                :verbs         => [verb],
-                                                :name          => name,
-                                                :organization  => organization)
-    end
-    permission
-  end
-
-  def default_environment
-    permission = default_systems_reg_permission
-    return nil if permission.nil? or permission.tags.empty?
-    KTEnvironment.find(permission.tags.first.tag_id)
-  end
-
-  def default_environment=(environment)
-    raise 'do not call default_environment= on new_record objects' if new_record?
-
-    unless environment.nil? || environment.kind_of?(KTEnvironment)
-      raise ArgumentError, "environment has to be KTEnvironment or nil"
-    end
-
-    if environment.nil?
-      default_systems_reg_permission.try :destroy
-      return
-    end
-
-    permission = default_systems_reg_permission(environment.organization)
-    if tag = permission.tags.first
-      tag.tag_id = environment.id
-      tag.save!
-    else
-      permission.tags.create! :tag_id => environment.id
-    end
-    environment
+  def create_or_update_default_system_registration_permission
+    return if default_environment.nil? or (not default_environment.changed?)
+    own_role.create_or_update_default_system_registration_permission(default_environment.organization, default_environment)
   end
 
   def default_locale
@@ -398,6 +338,11 @@ class User < ActiveRecord::Base
     roles_users.select { |r| r.ldap }.map { |r| r.role }
   end
 
+  # returns the set of users who have kt_environment_id's environment set as their default
+  def self.find_by_default_environment(kt_environment_id)
+    User.where(:default_environment_id => kt_environment_id)
+  end
+
   def create_or_update_search_history(path, search_params)
     unless search_params.nil? or search_params.blank? or empty_display_attributes?(search_params)
       if history = search_histories.find_or_create_by_path_and_params(path, search_params)
@@ -426,21 +371,6 @@ class User < ActiveRecord::Base
     more_than_one_supers
   end
 
-  def own_role_included_in_roles?
-    return true if own_role.nil?
-    if roles.include?(own_role)
-      return true
-    else
-      raise ActiveRecord::ActiveRecordError, 'own role must be included in roles'
-    end
-  end
-
-  def default_systems_reg_permission_check
-    if permission = default_systems_reg_permission and permission.tags.size != 1
-      raise ActiveRecord::ActiveRecordError, 'default_systems_reg_permission must have one tag'
-    end
-  end
-
   private
 
   # generate a random token, that is unique within the User table for the column provided
@@ -464,7 +394,16 @@ class User < ActiveRecord::Base
     end
   end
 
-  def super_admin_check(role)
+  def create_own_role
+    return unless new_record?
+    roles.find_or_create_own_role(self)
+  end
+
+  def destroy_own_role
+    roles.destroy_own_role
+  end
+
+  def super_admin_check role
     if role.superadmin? && role.users.length == 1
       message = _("Cannot dissociate user '%{username}' from '%{role}' role. Need at least one user in the '%{role}' role.") % {:username => username, :role => role.name}
       errors[:base] << message
