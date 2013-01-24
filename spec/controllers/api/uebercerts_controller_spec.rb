@@ -15,11 +15,13 @@ require 'spec_helper.rb'
 describe Api::UebercertsController do
   include LoginHelperMethods
   include AuthorizationHelperMethods
+  include LocaleHelperMethods
   OWNER_KEY = "some_org"
 
   let(:org) { Organization.new(:label => OWNER_KEY) }
   before(:each) do
     login_user
+    set_default_locale
     Organization.should_receive(:without_deleting).at_least(:once).and_return(Organization)
     Organization.stub!(:where).and_return(Organization)
     Organization.stub!(:first).and_return(org)
