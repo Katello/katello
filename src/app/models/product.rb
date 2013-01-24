@@ -15,9 +15,9 @@ class Product < ActiveRecord::Base
   include Glue::Candlepin::Product if Katello.config.use_cp
   include Glue::Pulp::Repos if Katello.config.katello?
   include Glue if Katello.config.use_cp
-  include Authorization
+  include Ext::Authorization
   include AsyncOrchestration
-  include IndexedModel
+  include Ext::IndexedModel
   include Katello::LabelFromName
 
   index_options :extended_json=>:extended_index_attrs,

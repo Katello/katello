@@ -19,7 +19,7 @@ module Errors
     attr_accessor :broken_params, :params
     def initialize broken_params, params
       @broken_params = broken_params
-      @params = Support.scrub(Support.deep_copy(params)) do |key, value|
+      @params = Util::Support.scrub(Util::Support.deep_copy(params)) do |key, value|
         String === value && key.to_s.downcase =~ /password|authenticity_token/
       end
       super BadParameters.generate_message @broken_params, @params

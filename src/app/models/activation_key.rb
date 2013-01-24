@@ -11,8 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class ActivationKey < ActiveRecord::Base
-  include Authorization
-  include IndexedModel
+  include Ext::Authorization
+  include Ext::IndexedModel
 
   index_options :extended_json=>:extended_json, :display_attrs=>[:name, :description, :environment, :template]
 

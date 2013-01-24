@@ -13,8 +13,8 @@
 class Filter < ActiveRecord::Base
   include Glue::Pulp::Filter if Katello.config.katello?
   include Glue
-  include Authorization
-  include IndexedModel
+  include Ext::Authorization
+  include Ext::IndexedModel
 
   index_options :extended_json=>:extended_index_attrs,
                 :display_attrs=>[:name, :packages, :products],

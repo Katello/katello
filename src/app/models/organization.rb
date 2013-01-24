@@ -14,8 +14,9 @@
 class Organization < ActiveRecord::Base
   include Glue::Candlepin::Owner if Katello.config.use_cp
   include Glue if Katello.config.use_cp
-  include Authorization
-  include IndexedModel
+  include Ext::Authorization
+  include Ext::IndexedModel
+  include Ext::PermissionTagCleanup
 
   index_options :extended_json=>:extended_index_attrs,
                 :json=>{:except=>[:debug_cert, :events]},
@@ -59,7 +60,6 @@ class Organization < ActiveRecord::Base
   validate :unique_name_and_label
 
   before_save { |o| o.system_info_keys = Array.new unless o.system_info_keys }
-  after_destroy :delete_associated_permission_tags
 
   if Katello.config.use_cp
     before_validation :create_label, :on => :create
@@ -211,14 +211,6 @@ class Organization < ActiveRecord::Base
 
   def syncable?
     User.allowed_to?(SYNC_PERM_VERBS, :organizations, nil, self)
-  end
-
-  def delete_associated_permission_tags
-    PermissionTag.where(
-        :permission_id =>
-            Permission.where(:resource_type_id => ResourceType.where(:name => 'organizations'))
-    )
-    .where(:tag_id => id).delete_all
   end
 
   private

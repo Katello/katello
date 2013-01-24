@@ -15,9 +15,9 @@ class Repository < ActiveRecord::Base
   include Glue::Candlepin::Content if (Katello.config.use_cp and Katello.config.use_pulp)
   include Glue::Pulp::Repo if (Katello.config.use_cp and Katello.config.use_pulp)
   include Glue if Katello.config.use_cp
-  include Authorization
+  include Ext::Authorization
   include AsyncOrchestration
-  include IndexedModel
+  include Ext::IndexedModel
   include Katello::LabelFromName
 
   index_options :extended_json=>:extended_index_attrs,

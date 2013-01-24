@@ -15,9 +15,9 @@ class System < ActiveRecord::Base
   include Glue::Candlepin::Consumer
   include Glue::Pulp::Consumer if Katello.config.katello?
   include Glue
-  include Authorization
+  include Ext::Authorization
   include AsyncOrchestration
-  include IndexedModel
+  include Ext::IndexedModel
 
   after_rollback :rollback_on_create, :on => :create
 
