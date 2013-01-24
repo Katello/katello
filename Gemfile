@@ -14,7 +14,7 @@ require 'katello_config'
 # With a pull request, send also link to our (or Fedora) koji with RPMs.
 source 'http://rubygems.org'
 
-if RUBY_VERSION < "1.9.2"  # and F17 - see .spec file
+if RUBY_VERSION < "1.9.2"
   gem 'rails', '3.0.10'
 else
   gem 'rails', '~> 3.2.8'
