@@ -15,11 +15,7 @@ require 'katello_config'
 source 'http://rubygems.org'
 
 version = `uname -a` rescue ""
-if version =~ /fc18/
-  gem 'rails', '~> 3.2.8'
-else
   gem 'rails', '3.0.10'
-end
 gem 'json'
 gem 'rest-client', :require => 'rest_client'
 gem 'jammit', '>= 0.5.4'
