@@ -14,15 +14,6 @@ require 'util/package_util'
 require 'active_support/builder' unless defined?(Builder)
 require 'mapping'
 
-class ParentTemplateValidator < ActiveModel::Validator
-  def validate(record)
-    #check if the parent is from
-    if not record.parent.nil?
-      record.errors[:parent] << _("Template can have parent templates only from the same environment") if record.environment_id != record.parent.environment_id
-    end
-  end
-end
-
 class SystemTemplate < ActiveRecord::Base
   include Authorization::SystemTemplate
   include LazyAccessor
@@ -34,8 +25,8 @@ class SystemTemplate < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => :environment_id
   validates_length_of :name, :maximum => 255
-  validates_with ParentTemplateValidator
-  validates :description, :katello_description_format => true
+  validates_with Validators::ParentTemplateValidator
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_length_of :parameters_json, :maximum => 255
 
   belongs_to :parent, :class_name => "SystemTemplate"

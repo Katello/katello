@@ -39,6 +39,10 @@ class Api::Foreman::SmartProxiesController < Api::Foreman::SimpleCrudController
     super params.slice('order', 'search')
   end
 
+  def show_json_options
+    { :only => [:name, :url, :features] }
+  end
+
   api :GET, "/smart_proxies/:id/", "Show a smart proxy."
   param :id, String, "domain name (no slashes)"
   def show

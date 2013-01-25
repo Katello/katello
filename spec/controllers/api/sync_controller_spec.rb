@@ -273,6 +273,8 @@ describe Api::SyncController, :katello => true do
       disable_product_orchestration
 
       @organization = new_test_org
+      Organization.stub!(:without_deleting).and_return(Organization)
+      Organization.stub!(:where).and_return(Organization)
       Organization.stub!(:first).and_return(@organization)
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
       Provider.stub!(:find).and_return(@provider)
@@ -284,7 +286,6 @@ describe Api::SyncController, :katello => true do
       Product.stub!(:find).and_return(@product)
       Product.stub!(:find_by_cp_id).and_return(@product)
       ep = EnvironmentProduct.find_or_create(@organization.library, @product)
-
       @repository = new_test_repo(ep, "repo_1", "#{@organization.name}/Library/prod/repo")
       @repository2 = new_test_repo(ep, "repo_2", "#{@organization.name}/Library/prod/repo")
 

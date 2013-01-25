@@ -30,7 +30,7 @@
       %input.trigger.button{:type=>"button", :value=>_('Yes') }
     %br.clearfloat
 
-- if AppConfig.katello?
+- if Katello.config.katello?
   .panel_action{:class=>"disabled", 'data-id'=>"systems_package_action"}
     .package_icon.fl
     = radio_button_tag :systems_action, :packages, false, :disabled => 'disabled'
@@ -52,7 +52,7 @@
         %input.trigger.button{:type=>"button", :value=>_('Yes') }
       %br.clearfloat
 
-- if AppConfig.katello?
+- if Katello.config.katello?
   .panel_action{:class=>"disabled", 'data-id'=>"systems_errata_action", 'data-url'=>bulk_errata_install_systems_path(), 'data-method'=>"POST"}
     .erratum_icon.fl
     %label
@@ -69,7 +69,7 @@
         %input.trigger.button{:type=>"button", :value=>_('Yes') }
       %br.clearfloat
 
-- if AppConfig.katello?
+- if Katello.config.katello?
   .panel_action{:class=>"disabled", 'data-id'=>"systems_system_groups_action"}
     .system_group_icon.fl
     %label

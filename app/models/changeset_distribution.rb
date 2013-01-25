@@ -11,21 +11,12 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 #
 
-class ChangesetDistributionValidator < ActiveModel::Validator
-  def validate(record)
-    record.errors[:base] << _("Distribution '%s' does not belong to the specified product!") %
-        record.distribution_id and return if record.repositories.empty?
-    record.errors[:base] << _("Repository of the distribution '%s' has not been promoted into the target environment!") %
-        record.distribution_id if record.promotable_repositories.empty?
-  end
-end
-
 class ChangesetDistribution < ActiveRecord::Base
 
   belongs_to :changeset, :inverse_of => :distributions
   belongs_to :product
   validates :distribution_id, :uniqueness => { :scope => :changeset_id }
-  validates_with ChangesetDistributionValidator
+  validates_with Validators::ChangesetDistributionValidator
 
   def repositories
     return @repos if not @repos.nil?

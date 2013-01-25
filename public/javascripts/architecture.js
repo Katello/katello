@@ -18,25 +18,21 @@ KT.panel.list.registerPage('architectures', {create: 'new_architecture'});
 KT.architecture_page = (function() {
     var updateArchitecture = function() {
         var button = $(this),
-            url = button.attr("data-url"),
-            osIds = $('#operatingsystem_ids').val(),
-            architecture_data = {};
+            url = button.attr("data-url");
 
         if (button.hasClass("disabled"))
             return;
 
-        if (osIds != null)
-            architecture_data["operatingsystem_ids"] = osIds;
-
         $.ajax({
             type: "PUT",
             url: url,
-            data: { "architecture": architecture_data },
+            data: {architecture: KT.getData(["operatingsystem_ids"])},
             cache: false
         });
     },
     register = function() {
-        $('#operatingsystem_ids').chosen();
+        $('#operatingsystem_ids').delayed_chosen();
+
         $('#update_architecture').live('click', updateArchitecture);
     };
 

@@ -12,56 +12,13 @@
 
 require 'util/model_util'
 
-class SelfReferenceEnvironmentValidator < ActiveModel::Validator
-  def validate(record)
-    record.errors[:base] << _("Environment cannot be in its own promotion path") if record.priors.select(:id).include? record.id
-  end
-end
-
-class PriorValidator < ActiveModel::Validator
-  def validate(record)
-    #need to ensure that prior
-    #environment already does not have a successor
-    #this is because in v1.0 we want
-    # prior to have only one child (unless its the Library)
-    has_no_prior = true
-    if record.organization
-      has_no_prior = record.organization.environments.reject{|env| env == record || env.prior != record.prior || env.prior == env.organization.library}.empty?
-    end
-    record.errors[:prior] << _("environment can only have one child") unless has_no_prior
-
-    # only Library can have prior=nil
-    record.errors[:prior] << _("environment required") unless !record.prior.nil? || record.library?
-  end
-end
-
-
-class PathDescendentsValidator < ActiveModel::Validator
-  def validate(record)
-    #need to ensure that
-    #environment is not duplicated in its path
-    # We do not want circular dependencies
-    return if record.prior.nil?
-     record.errors[:prior] << _(" environment cannot be set to an environment already on its path") if is_duplicate? record.prior
-  end
-
-  def is_duplicate? record
-    s = record.successor
-    ret = [record.id]
-    until s.nil?
-      return true if ret.include? s.id
-      ret << s.id
-      s = s.successor
-    end
-    false
-  end
-end
-
 class KTEnvironment < ActiveRecord::Base
+
   include Authorization::Environment
-  include Glue::ElasticSearch::Environment if AppConfig.use_elasticsearch
-  include Glue::Candlepin::Environment if AppConfig.use_cp
-  include Glue if AppConfig.use_cp || AppConfig.use_pulp
+  include Glue::ElasticSearch::Environment if Katello.config.use_elasticsearch
+  include Glue::Candlepin::Environment if Katello.config.use_cp
+  include Glue if Katello.config.use_cp || Katello.config.use_pulp
+
   set_table_name "environments"
   include Katello::LabelFromName
   acts_as_reportable
@@ -98,13 +55,13 @@ class KTEnvironment < ActiveRecord::Base
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("of environment must be unique within one organization")
   validates_uniqueness_of :label, :scope => :organization_id, :message => N_("of environment must be unique within one organization")
   validates_presence_of :organization
-  validates :name, :presence => true, :katello_name_format => true
-  validates :label, :presence => true, :katello_label_format => true
-
-  validates :description, :katello_description_format => true
-  validates_with PriorValidator
-  validates_with PathDescendentsValidator
-  validate :constant_name, :on => :update
+  validates :name, :presence => true
+  validates :label, :presence => true
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+  validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
+  validates_with Validators::PriorValidator
+  validates_with Validators::PathDescendentsValidator
 
   before_destroy :confirm_last_env
 
@@ -275,17 +232,11 @@ class KTEnvironment < ActiveRecord::Base
     end
   end
 
-  def constant_name
-    if changes[:name]
-      errors[:name] << _("can not be updated")
-    end
-  end
-
   # Katello, which understands repository content and promotion, provides release versions based upon
   # enabled repos. Headpin, which does not traverse products to the repo level, exposes all release
   # versions in the manifest.
   def available_releases
-    if AppConfig.katello?
+    if Katello.config.katello?
       self.repositories.enabled.map(&:minor).compact.uniq.sort
     else
       self.organization.redhat_provider.available_releases

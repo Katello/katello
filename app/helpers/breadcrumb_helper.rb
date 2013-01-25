@@ -252,7 +252,7 @@ module RolesBreadcrumbs
     add_crumb_node!(bc, "role_users", "", _("Users"), ['roles'],
                     {:client_render => true})
     add_crumb_node!(bc, "role_ldap_groups", "", _("LDAP Groups"), ['roles'],
-                    {:client_render => true}) if AppConfig.ldap_roles
+                    {:client_render => true}) if Katello.config.ldap_roles
     add_crumb_node!(bc, "global", "", _("Global Permissions"), ['roles', "role_permissions"],
                     {:client_render => true}, { :count => 0, :permission_details => get_global_verbs_and_tags })
 

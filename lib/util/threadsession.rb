@@ -100,13 +100,19 @@ module Katello
       end
 
       def thread_locals
+        # store request uuid (for Rails 3.2+ we can use Request.uuid)
+        Thread.current[:request_uuid] = request.respond_to?(:uuid) ? request.uuid : SecureRandom.hex(16)
+
+        # store user
         u = current_user
         User.current = u
+        
         yield
-        # reset the current user just for the case
+        
+        # reset the current user (for security reasons)
         User.current = nil
       rescue => exception
-        # reset the current user just for the case
+        # reset the current user (for security reasons)
         User.current = nil
         raise
       end

@@ -13,7 +13,6 @@
 require "util/search"
 require 'util/package_util'
 
-
 module Glue::Pulp::Package
   def self.included(base)
     base.send :include, InstanceMethods

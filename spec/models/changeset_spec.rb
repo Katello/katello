@@ -60,6 +60,67 @@ describe Changeset, :katello => true do
       json['action_type'].should_not be_nil
     end
 
+    describe "scopes" do
+      before do
+        @promoting = PromotionChangeset.create!(:environment => @environment,
+                                                :name        => "bar-changeset",
+                                                :state       => Changeset::PROMOTING)
+        @deleting  = DeletionChangeset.create!(:environment => @environment,
+                                               :name        => "baz-changeset",
+                                               :state       => Changeset::DELETING)
+      end
+
+      describe ".with_state" do
+        it "should find right changesets" do
+          Changeset.with_state(Changeset::DELETED).should be_empty
+          Changeset.with_state(Changeset::NEW).size.should eql(1)
+          Changeset.with_state(Changeset::PROMOTING).size.should eql(1)
+          Changeset.with_state(Changeset::NEW, Changeset::PROMOTING).size.should eql(2)
+          Changeset.with_state(Changeset::DELETED,
+                               Changeset::NEW,
+                               Changeset::PROMOTING).size.should eql(2)
+        end
+      end
+
+      describe ".started" do
+        subject { Changeset.started }
+        its(:size) { should eql(2) }
+        it { should include(@promoting, @deleting) }
+      end
+
+      describe ".colliding(changeset)" do
+        before do
+          @alpha      = KTEnvironment.create!(:name         => 'alpha', :label => 'alpha',
+                                              :prior        => @environment,
+                                              :organization => @organization)
+          @beta       = KTEnvironment.create!(:name         => 'beta', :label => 'beta',
+                                              :prior        => @organization.library,
+                                              :organization => @organization)
+          @collision = PromotionChangeset.create!(:environment => @alpha,
+                                                   :name        => "collision1")
+          @no_collision = PromotionChangeset.create!(:environment => @beta,
+                                                   :name        => "nocollision1")
+        end
+
+        it 'should detect "identical" collision' do
+          Changeset.colliding(@promoting).should include(@deleting)
+        end
+
+        it 'should detect "following" collision' do
+          Changeset.colliding(@promoting).should include(@collision)
+        end
+
+        it 'should detect "previous" collision' do
+          Changeset.colliding(@collision).should include(@promoting)
+        end
+
+        it 'should ignore other cases' do
+          Changeset.colliding(@promoting).should_not include(@no_collision) # only same start
+          Changeset.colliding(@collision).should_not include(@no_collision) # nothing in common
+        end
+      end
+    end
+
     describe "fail adding content not contained in the prior environment" do
       before do
         @provider      = Provider.create!(:name         => "provider", :provider_type => Provider::CUSTOM,
@@ -132,7 +193,8 @@ describe Changeset, :katello => true do
         @err          = mock('Err', { :id => 'errata-unit-id', :errata_id=>'err', :name => 'err' })
 
         @repo = Repository.new(:environment_product => ep, :name => "repo", :label => "repo_label",
-                                   :pulp_id => "135adsf", :content_id=>'23423', :relative_path=>'/foobar/')
+                                   :pulp_id => "135adsf", :content_id=>'23423', :relative_path=>'/foobar/',
+                                   :feed => 'https://localhost')
         @repo.stub(:create_pulp_repo).and_return([])
         @repo.save!
         @distribution = mock('Distribution', { :id => 'some-distro-id' })
@@ -280,7 +342,6 @@ describe Changeset, :katello => true do
         @pack_nvre    = @pack_name +"-"+ @pack_version +"-"+ @pack_release +"."+ @pack_arch
         @pack         = { :id => 1, :name => @pack_name }.with_indifferent_access
         @err          = mock('Err', { :id => 'errata-unit-id', :errata_id=>'err', :name => 'err' })
-
         @repo = Repository.new(:environment_product => ep, :name => "repo", :label => "repo_label",
                                    :pulp_id => "1343", :content_id=>'23423', :relative_path=>'/foobar/')
         @repo.stub(:create_pulp_repo).and_return([])
@@ -354,7 +415,8 @@ describe Changeset, :katello => true do
         @distribution = mock('Distribution', { :id => 'some-distro-id' })
         ep            = EnvironmentProduct.find_or_create(@organization.library, @prod)
         @repo         = Repository.new(:environment_product => ep, :name => 'repo', :label => 'repo_label',
-                                           :pulp_id => "test_pulp_id", :relative_path=>"/foo/", :content_id=>'aasfd')
+                                           :pulp_id => "test_pulp_id", :relative_path=>"/foo/", 
+                                           :content_id=>'aasfd', :feed=>'https://localhost')
         @repo.stub(:create_pulp_repo).and_return([])
         @repo.save!
         @repo.stub_chain(:distributions, :index).and_return([@distribution])
