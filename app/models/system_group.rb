@@ -16,7 +16,7 @@ class SystemGroup < ActiveRecord::Base
 
   include Authorization::SystemGroup
   include Glue::Pulp::ConsumerGroup if (Katello.config.use_pulp)
-  include Glue::ElasticSearch::SystemGroup if Katello.use_elasticsearch
+  include Glue::ElasticSearch::SystemGroup if Katello.config.use_elasticsearch
   include Glue
   include Authorization::SystemGroup
 

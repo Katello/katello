@@ -194,7 +194,7 @@ describe Changeset, :katello => true do
 
         @repo = Repository.new(:environment_product => ep, :name => "repo", :label => "repo_label",
                                    :pulp_id => "135adsf", :content_id=>'23423', :relative_path=>'/foobar/',
-                                   :feed => 'https://localhost')
+                                   :feed => 'https://localhost.com/foo/')
         @repo.stub(:create_pulp_repo).and_return([])
         @repo.save!
         @distribution = mock('Distribution', { :id => 'some-distro-id' })
@@ -343,7 +343,8 @@ describe Changeset, :katello => true do
         @pack         = { :id => 1, :name => @pack_name }.with_indifferent_access
         @err          = mock('Err', { :id => 'errata-unit-id', :errata_id=>'err', :name => 'err' })
         @repo = Repository.new(:environment_product => ep, :name => "repo", :label => "repo_label",
-                                   :pulp_id => "1343", :content_id=>'23423', :relative_path=>'/foobar/')
+                                   :pulp_id => "1343", :content_id=>'23423', :relative_path=>'/foobar/',
+                                   :feed=>"http://localhost.com/foo/")
         @repo.stub(:create_pulp_repo).and_return([])
         @repo.save!
         @distribution = mock('Distribution', { :id => 'some-distro-id' })
@@ -416,7 +417,7 @@ describe Changeset, :katello => true do
         ep            = EnvironmentProduct.find_or_create(@organization.library, @prod)
         @repo         = Repository.new(:environment_product => ep, :name => 'repo', :label => 'repo_label',
                                            :pulp_id => "test_pulp_id", :relative_path=>"/foo/", 
-                                           :content_id=>'aasfd', :feed=>'https://localhost')
+                                           :content_id=>'aasfd', :feed=>'https://localhost.com/foo/')
         @repo.stub(:create_pulp_repo).and_return([])
         @repo.save!
         @repo.stub_chain(:distributions, :index).and_return([@distribution])
