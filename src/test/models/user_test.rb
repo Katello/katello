@@ -90,7 +90,6 @@ class UserCreateTest < UserTestBase
   def test_i18n_username
     uname = "ಬoo0000"
     @user.username = uname
-
     assert        @user.save
     refute_nil    @user.remote_id
     assert_empty  @user.errors
@@ -100,7 +99,6 @@ class UserCreateTest < UserTestBase
   def test_email_username
     email = "foo@redhat.com"
     @user.username = email
-
     assert        @user.save
     assert_empty  @user.errors
     refute_nil    User.find_by_username(email)
@@ -329,7 +327,7 @@ class UserLdapTest < UserTestBase
 
   def self.before_suite
     super
-    AppConfig.warden = 'ldap'
+    Katello.config[:warden] = 'ldap'
     @@user = User.create_ldap_user!('testuser')
   end
 
@@ -356,9 +354,11 @@ class UserLdapTest < UserTestBase
   end
 
   def test_create_ldap_user!
-    AppConfig.stub(:warden, 'ldap') do
+    old_warden = Katello.config.warden
+    Katello.config[:warden] = 'ldap'
       assert_instance_of User, User.create_ldap_user!('alice')
-    end
+  ensure
+    Katello.config[:warden] = old_warden
   end
 
   def test_clear_existing_ldap_roles

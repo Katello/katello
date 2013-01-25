@@ -11,10 +11,12 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Validators
-  class UsernameValidator < ActiveModel::EachValidator
+  class RolenameValidator < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
       if value
-        KatelloNameFormatValidator.validate_length(record, attribute, value, 128, 3)
+        #max length is 20 more than the usernam,e because we add 20 random characters
+        #  on the end for the self role
+        KatelloNameFormatValidator.validate_length(record, attribute, value, 148, 3)
       end
     end
   end

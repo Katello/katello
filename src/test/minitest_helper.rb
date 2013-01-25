@@ -58,14 +58,14 @@ def configure_vcr
 end
 
 def configure_runcible
-  uri = URI.parse(AppConfig.pulp.url)
+  uri = URI.parse(Katello.config.pulp.url)
 
   Runcible::Base.config = {
     :url      => "#{uri.scheme}://#{uri.host}",
     :api_path => uri.path,
     :user     => "admin",
-    :oauth    => {:oauth_secret => AppConfig.pulp.oauth_secret,
-                  :oauth_key    => AppConfig.pulp.oauth_key }
+    :oauth    => {:oauth_secret => Katello.config.pulp.oauth_secret,
+                  :oauth_key    => Katello.config.pulp.oauth_key }
   }
 
   Runcible::Base.config[:logger] = 'stdout' if ENV['logging'] == "true"
@@ -75,12 +75,13 @@ def disable_glue_layers(services=[], models=[])
   @@model_service_cache ||= {}
   change = false
 
-  AppConfig.use_cp            = services.include?('Candlepin') ? false : true
-  AppConfig.use_pulp          = services.include?('Pulp') ? false : true
-  AppConfig.use_foreman       = services.include?('Foreman') ? false : true
-  AppConfig.use_elasticsearch = services.include?('ElasticSearch') ? false : true
+  Katello.config[:use_cp]            = services.include?('Candlepin') ? false : true
+  Katello.config[:use_pulp]          = services.include?('Pulp') ? false : true
+  Katello.config[:use_foreman]       = services.include?('Foreman') ? false : true
+  Katello.config[:use_elasticsearch] = services.include?('ElasticSearch') ? false : true
 
-  cached_entry = {:cp=>AppConfig.use_cp, :pulp=>AppConfig.use_pulp, :es=>AppConfig.use_elasticsearch, :foreman => AppConfig.use_foreman}
+  cached_entry = {:cp=>Katello.config.use_cp, :pulp=>Katello.config.use_pulp, :es=>Katello.config.use_elasticsearch,
+                  :foreman => Katello.config.use_foreman}
   models.each do |model|
     if @@model_service_cache[model] != cached_entry
       Object.send(:remove_const, model)

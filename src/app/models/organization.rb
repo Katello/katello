@@ -17,7 +17,7 @@ class Organization < ActiveRecord::Base
   include Glue if Katello.config.use_cp
 
   include Authorization::Organization
-  include Glue::ElasticSearch::Organization if AppConfig.use_elasticsearch
+  include Glue::ElasticSearch::Organization if Katello.config.use_elasticsearch
 
   has_many :activation_keys, :dependent => :destroy
   has_many :providers, :dependent => :destroy
