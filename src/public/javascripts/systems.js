@@ -1,5 +1,5 @@
 /**
- Copyright 2011 Red Hat, Inc.
+ Copyright 2011-2013 Red Hat, Inc.
 
  This software is licensed to you under the GNU General Public
  License as published by the Free Software Foundation; either version
@@ -40,15 +40,15 @@ KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distributio
         $.extend(options, { 'extra_params' :
 					[ { hash_id 	: 'env_id',
 						init_func 	: function(){
-							var state = $.bbq.getState('env_id'); 
-							
-							if( state ){ 
-								env_select.set_selected(state); 
+							var state = $.bbq.getState('env_id');
+
+							if( state ){
+								env_select.set_selected(state);
 							} else {
 								$.bbq.pushState({ env_id : env_select.get_selected_env() });
 							}
 						}
-				  	} 
+					}
 				]});
   	}
   	KT.panel.list.registerPage('systems', options);
@@ -570,7 +570,7 @@ KT.subs = (function() {
           });
         });
     };
-    
+
     return {
         unsubSetup: unsubSetup,
         subSetup: subSetup,
