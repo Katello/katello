@@ -19,7 +19,7 @@ module SearchHelperMethods
 
     end
 
-    results = Support.array_with_total.concat(options[:results] || [])
+    results = Util::Support.array_with_total.concat(options[:results] || [])
 
     Tire::Search::Search.instance_eval do
       define_method(:perform) do

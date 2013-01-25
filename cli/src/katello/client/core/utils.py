@@ -18,7 +18,7 @@ import re
 import sys
 import time
 import threading
-from xml.utils import iso8601
+import dateutil.parser
 from katello.client.api.task_status import TaskStatusAPI, SystemTaskStatusAPI
 from katello.client.api.job import SystemGroupJobStatusAPI
 from katello.client.config import Config
@@ -223,8 +223,8 @@ def format_date(date, to_format="%Y/%m/%d %H:%M:%S"):
     """
     if not date:
         return ""
-    t = iso8601.parse(date)
-    return time.strftime(to_format, time.localtime(t))
+    t = dateutil.parser.parse(date)
+    return t.strftime(to_format)
 
 def format_sub_resource(item, name_key, id_key, format_string="%s (Id: %d)"):
     name = item[name_key]
@@ -293,9 +293,9 @@ class Spinner(threading.Thread):
 
     def _eraseMessage(self):
         l = len(self._msg)
-        sys.stdout.write('\033['+ str(l) +'D')
+        sys.stdout.write('\033['+ str(l) +'D') # pylint: disable=E0012,W1401
         sys.stdout.write(' '*l)
-        sys.stdout.write('\033['+ str(l) +'D')
+        sys.stdout.write('\033['+ str(l) +'D') # pylint: disable=E0012,W1401
 
 
     @classmethod
@@ -306,7 +306,7 @@ class Spinner(threading.Thread):
     @classmethod
     def _resetCaret(cls):
         #move the caret one character back
-        sys.stdout.write('\033[3D')
+        sys.stdout.write('\033[3D') # pylint: disable=E0012,W1401
         sys.stdout.flush()
 
     def _eraseSpinner(self):
@@ -317,7 +317,7 @@ class Spinner(threading.Thread):
     def run(self):
         self._putMessage()
         while True:
-            for char in '/-\|':
+            for char in r'/-\|':
                 self._putChar(char)
                 if self._stopevent.wait(0.1) or self._stopevent.is_set():
                     self._eraseSpinner()

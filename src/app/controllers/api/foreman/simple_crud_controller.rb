@@ -20,25 +20,24 @@ class Api::Foreman::SimpleCrudController < Api::ApiController
   end
 
   def index(request_options = nil)
-    render :json => foreman_model.all(request_options)
+    render :json => foreman_model.all(request_options).as_json(json_options(:index))
   end
 
   def show
-    render :json => foreman_model.find!(params[:id])
+    render :json => foreman_model.find!(params[:id]).as_json(json_options(:show))
   end
 
   def create
     resource = foreman_model.new(params[foreman_model.resource_name])
     if resource.save!
-      render :json => resource
+      render :json => resource.as_json(json_options(:create))
     end
   end
 
   def update
-    resource            = foreman_model.find!(params[:id])
-    resource.attributes = params[foreman_model.resource_name]
-    if resource.save!
-      render :json => resource
+    resource = foreman_model.find!(params[:id])
+    if resource.update_attributes!(params[foreman_model.resource_name])
+      render :json => resource.as_json(json_options(:update))
     end
   end
 
@@ -47,6 +46,14 @@ class Api::Foreman::SimpleCrudController < Api::ApiController
     if resource.destroy!
       render :nothing => true
     end
+  end
+
+  def json_options(action)
+    method_name = (action.to_s+'_json_options').to_sym
+
+    return send method_name if respond_to? method_name
+    return send :common_json_options if respond_to? :common_json_options
+    return nil
   end
 
   singleton_class.send :attr_reader, :foreman_model

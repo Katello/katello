@@ -12,7 +12,7 @@
 #
 
 class SystemSystemGroup < ActiveRecord::Base
-  include Authorization
+  include Ext::Authorization
 
   belongs_to :system
   belongs_to :system_group

@@ -14,7 +14,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        1.3.2
+Version:        1.3.3
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -119,6 +119,20 @@ chmod +x -R %{buildroot}%{homedir}/upgrade-scripts/*
 
 
 %changelog
+* Tue Jan 15 2013 Justin Sherrill <jsherril@redhat.com> 1.3.3-1
+- emails - add default From to login/password emails (bbuckingham@redhat.com)
+- 890000 - enabling certv3 in candlepin conf (jomara@redhat.com)
+- run security:generate_token only if token does not exist (msuchy@redhat.com)
+- generate token for foreman (msuchy@redhat.com)
+- do not continue if something fails (msuchy@redhat.com)
+- add service-wait to path (msuchy@redhat.com)
+- enable logging of all output (msuchy@redhat.com)
+- tee could not be used, because it is executed under postgres which does not
+  have acl for /var/log/foo (msuchy@redhat.com)
+- 889488 - change selinux identity to system_u (msuchy@redhat.com)
+- 889488 - run createdb only if needed (msuchy@redhat.com)
+- 889488 - run create user only if it is needed (msuchy@redhat.com)
+
 * Tue Jan 08 2013 Lukas Zapletal <lzap+git@redhat.com> 1.3.2-1
 - fix typo
 - Merge pull request #1271 from lzap/orch-logging

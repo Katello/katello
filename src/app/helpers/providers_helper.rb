@@ -15,7 +15,7 @@ module ProvidersHelper
   include SyncManagementHelper::RepoMethods
 
   #def product_map
-  #  data = Support.time{product_map1}
+  #  data = Util::Support.time{product_map1}
   #  logger.info("Took #{data} seconds to setup")
   #  product_map1
   #end

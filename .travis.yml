@@ -5,7 +5,7 @@ before_install:
     
 install:
   - sudo apt-get install libssl-dev python m2crypto --quiet
-  - sudo pip install mock nose pyxml kerberos pep8 pylint==0.25.1 simplejson --quiet
+  - sudo pip install mock nose python-dateutil kerberos pep8 pylint simplejson --quiet
 
 script:
   - ./scripts/ci/cli_pull_request_tests.sh

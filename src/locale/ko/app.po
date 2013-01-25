@@ -1,3 +1,4 @@
+# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
@@ -7,21 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: version 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-19 09:10-0500\n"
-"PO-Revision-Date: 2012-12-20 13:19+0100\n"
-"Last-Translator: Miroslav Suchy <msuchy@redhat.com>\n"
-"Language-Team: American English <katello-devel@redhat.com>\n"
+"POT-Creation-Date: 2013-01-14 17:43-0500\n"
+"PO-Revision-Date: 2012-12-20 12:56+0000\n"
+"Last-Translator: Miroslav Suchý <msuchy@redhat.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 1.5\n"
-
-msgid ""
-" '%s' already exists and either has been scheduled for deletion or failed "
-"deletion."
-msgstr "'%s'이 이미 존재하며 삭제 용으로 스케줄되었거나 삭제 실패했습니다. "
 
 msgid " created successfully."
 msgstr "성공적으로 생성되었습니다. "
@@ -212,6 +207,10 @@ msgstr "%s 패키지 업데이트 시간 초과 "
 msgid "%s package updated"
 msgstr "%s 패키지 업데이트됨"
 
+#, fuzzy
+msgid "%s updated successfully."
+msgstr "사용자가 성공적으로 업데이트되었습니다. "
+
 msgid "%{errata} (%{rest} other errata)"
 msgstr "%{errata} (%{rest} 기타 에라타)"
 
@@ -230,17 +229,33 @@ msgstr "%{package} (%{rest} 기타 패키지)"
 msgid "%{repo} (Product: %{product})"
 msgstr "%{repo} (제품: %{product})"
 
+#, fuzzy
+msgid "'%s' created successfully."
+msgstr "성공적으로 생성되었습니다. "
+
 msgid "'%s' did not meet the current search criteria and is not being shown."
 msgstr "'%s'은(는) 현재 검색 조건과 일치하지 않으며 표시되지 않습니다. "
 
 msgid "'%s' no longer matches the current search criteria."
 msgstr "'%s'은(는) 더이상 현재 검색 조건과 일치하지 않습니다. "
 
+#, fuzzy
+msgid "'%s' was deleted."
+msgstr "역할 '%s'이 삭제되었습니다. "
+
 msgid "+ Import Manifest"
 msgstr "+ 매니페스트 가져오기 "
 
+#, fuzzy
+msgid "+ New Architecture"
+msgstr "아키텍처 선택 "
+
 msgid "+ New Changeset"
 msgstr "+새 변경 집합 "
+
+#, fuzzy
+msgid "+ New Domain"
+msgstr "+ 새 계획 "
 
 msgid "+ New Filter"
 msgstr "+ 새 필터 "
@@ -263,6 +278,10 @@ msgstr "+ 새 공급자 "
 msgid "+ New Role"
 msgstr "+ 새 역할 "
 
+#, fuzzy
+msgid "+ New Subnet"
+msgstr "+ 새 시스템 "
+
 msgid "+ New System"
 msgstr "+ 새 시스템 "
 
@@ -272,16 +291,15 @@ msgstr "+새 템플릿 "
 msgid "+ New User"
 msgstr "+ 새 사용자 "
 
+#, fuzzy
+msgid ": '%s' is a built-in environment"
+msgstr "제품 '%s'을 이 환경에서 찾을 수 없습니다. "
+
 msgid "A keyname must be provided"
 msgstr "키 이름이 필요함 "
 
-msgid ""
-"A label was not provided during %s creation; therefore, a label of '%s' was "
-"automatically assigned. If you would like a different label, please delete "
-"the %s and recreate it with the desired label."
-msgstr ""
-"%s 생성 시 레이블이 지정되지 않았습니다; 따라서 '%s'의 레이블이 자동으로 할당되었습니다. 다른 레이블을 지정하시려면 %s을 "
-"삭제하고 원하는 레이블을 다시 생성하십시오."
+msgid "A label was not provided during %s creation; therefore, a label of '%s' was automatically assigned. If you would like a different label, please delete the %s and recreate it with the desired label."
+msgstr "%s 생성 시 레이블이 지정되지 않았습니다; 따라서 '%s'의 레이블이 자동으로 할당되었습니다. 다른 레이블을 지정하시려면 %s을 삭제하고 원하는 레이블을 다시 생성하십시오."
 
 msgid "About"
 msgstr "정보 "
@@ -382,15 +400,22 @@ msgstr "candlepin에 있는 소유자 %s에 대한 모든 공급자 "
 msgid "All repository GPG keys for Product '%s' were updated."
 msgstr "제품 '%s'에 대한 모든 리포지터리 GPG 키가 업데이트되었습니다. "
 
-msgid "Applied Subscriptions"
+#, fuzzy
+msgid "Application"
 msgstr "적용된 서브스크립션 "
+
+#, fuzzy
+msgid "Architecture"
+msgstr "아키텍처 선택 "
+
+#, fuzzy
+msgid "Architectures"
+msgstr "아키텍처 선택 "
 
 msgid "At least one activation key must be provided"
 msgstr "최소 하나의 활성키가 필요합니다. "
 
-msgid ""
-"At least one environment is required to create or register systems in your "
-"current organization."
+msgid "At least one environment is required to create or register systems in your current organization."
 msgstr "현재 조직에 시스템을 생성하거나 등록하려면 최소 하나의 환경이 필요합니다."
 
 msgid "At least one organization must exist."
@@ -399,24 +424,31 @@ msgstr "최소 하나의 조직이 존재해야 합니다. "
 msgid "At least repository must be present to export a TDL"
 msgstr "TDL을 내보내기 위해 리포지터리가 필요합니다. "
 
-msgid "Auto-heal %{val}, %{sla}"
+#, fuzzy
+msgid "Attached Subscriptions"
+msgstr "적용된 서브스크립션 "
+
+msgid "Authentication"
+msgstr ""
+
+msgid "Auto-attach %{val}, %{sla}"
 msgstr ""
 
 #, fuzzy
-msgid "Auto-heal Off, No Service Level Preference"
-msgstr "자동 등록이 꺼져 있습니다, 서비스 레벨 설정이 없습니다 "
+msgid "Auto-attach Off, No Service Level Preference"
+msgstr "서비스 레벨 설정이 없음 "
 
 #, fuzzy
-msgid "Auto-heal Off, Service Level %s"
-msgstr "자동 등록이 꺼져 있습니다, 서비스 레벨은 %s입니다 "
+msgid "Auto-attach Off, Service Level %s"
+msgstr "서비스 레벨 %s"
 
 #, fuzzy
-msgid "Auto-heal On, No Service Level Preference"
-msgstr "자동 등록이 켜져 있습니다, 서비스 레벨 설정이 없습니다 "
+msgid "Auto-attach On, No Service Level Preference"
+msgstr "서비스 레벨 설정이 없음 "
 
 #, fuzzy
-msgid "Auto-heal On, Service Level %s"
-msgstr "자동 등록이 켜져 있습니다, 서비스 레벨은 %s입니다 "
+msgid "Auto-attach On, Service Level %s"
+msgstr "서비스 레벨 %s"
 
 msgid "Available Subscriptions"
 msgstr "사용 가능한 서브스크립션 "
@@ -436,7 +468,8 @@ msgstr "CDN 로딩 중 오류 발생: %s로 액세스 금지됨 "
 msgid "Can't copy System Groups to a different org: '%{org1}' != '%{org2}'"
 msgstr "시스템 그룹을 다른 조직에 복사할 수 없음: '%{org1}' != '%{org2}'"
 
-msgid "Can't update Library environment"
+#, fuzzy
+msgid "Can't update the '%s' environment"
 msgstr "라이브러리 환경을 업데이트할 수 없음 "
 
 msgid "Canceled synchronization of %{name}: %{id}"
@@ -454,7 +487,8 @@ msgstr "잠금 역할과 관련된 권한을 추가/제거 또는 변경할 수 
 msgid "Cannot change the name or description of a locked role."
 msgstr "잠금 역할의 이름이나 설명을 변경할 수 없습니다. "
 
-msgid "Cannot create activation keys in Library environment "
+#, fuzzy
+msgid "Cannot create activation keys in the '%s' environment"
 msgstr "라이브러리 환경에서 활성키를 생성할 수 없음 "
 
 msgid "Cannot delete currently logged user"
@@ -463,44 +497,28 @@ msgstr "현재 로그인된 사용자를 삭제할 수 없음 "
 msgid "Cannot delete the changeset '%s' because it is not in the review phase."
 msgstr "변경 집합 '%s'이 확인 단계에 있지 않기 때분에 이를 삭제할 수 없습니다. "
 
-msgid ""
-"Cannot delete the changeset '%{changeset}' while another changeset (%"
-"{another_changeset}) is being deleted or promoted."
-msgstr ""
-"다른 변경 집합 (%{another_changeset})이 제거 또는 승격되는 동안 변경 집합 '%{changeset}' 을 삭제할 수 "
-"없습니다. "
+msgid "Cannot dissociate user '%{username}' from '%{role}' role. Need at least one user in the '%{role}' role."
+msgstr "사용자 '%{username}'를 '%{role}' 역할에서 연결해제할 수 없습니다. '%{role}' 역할에는 최소 하나의 사용자가 필요합니다."
 
-msgid ""
-"Cannot dissociate user '%{username}' from '%{role}' role. Need at least one "
-"user in the '%{role}' role."
-msgstr ""
-"사용자 '%{username}'를 '%{role}' 역할에서 연결해제할 수 없습니다. '%{role}' 역할에는 최소 하나의 사용자가 "
-"필요합니다."
+msgid "Cannot dissociate user '%{user}' from '%{role}' role. Need at least one user in the '%{role}' role."
+msgstr "사용자 '%{user}'를 '%{role}' 역할에서 연결해제할 수 없습니다. '%{role}' 역할에는 최소 하나의 사용자가 필요합니다."
 
-msgid ""
-"Cannot dissociate user '%{user}' from '%{role}' role. Need at least one user "
-"in the '%{role}' role."
-msgstr ""
-"사용자 '%{user}'를 '%{role}' 역할에서 연결해제할 수 없습니다. '%{role}' 역할에는 최소 하나의 사용자가 "
-"필요합니다."
-
-msgid "Cannot export templates for the Library environment."
+#, fuzzy
+msgid "Cannot export templates for the '%s' environment."
 msgstr "라이브러리 환경에 대해 템플릿을 내보내기할 수 없음 "
 
 msgid "Cannot modify a template that is another environment"
 msgstr "다른 환경에 있는 템플릿을 수정할 수 없음 "
 
-msgid ""
-"Cannot promote the changeset '%s' because it is not in the review phase."
+msgid "Cannot promote the changeset '%s' because it is not in the review phase."
 msgstr "확인 단계에 있지 않으므로 변경 집합 '%s'을(를) 승격할 수 없습니다. "
 
-msgid ""
-"Cannot promote the changeset '%{changeset}' while another changeset (%"
-"{another_changeset}) is being promoted."
-msgstr ""
-"다른 변경 집합 (%{another_changeset})이 승격되는 동안 변경 집합 '%{changeset}' 을 승격할 수 없습니다. "
+#, fuzzy
+msgid "Cannot promote the changeset '%{changeset}' while another colliding changeset (%{another_changeset}) is being promoted."
+msgstr "다른 변경 집합 (%{another_changeset})이 승격되는 동안 변경 집합 '%{changeset}' 을 승격할 수 없습니다. "
 
-msgid "Cannot register a system with 'Library' environment "
+#, fuzzy
+msgid "Cannot register a system to the '%s' environment"
 msgstr "'Library' 환경으로 시스템을 등록할 수 없음 "
 
 msgid "Cannot specify a tag if all_tags is selected."
@@ -512,11 +530,9 @@ msgstr "all_verbs가 선택되어 있는 경우 verb를 지정할 수 없습니�
 msgid "Cannot specify all_types without all_tags and all_verbs"
 msgstr "all_tags와 all_verbs 없이 all_types를 지정할 수 없습니다. "
 
-msgid "Cannot validate templates for the Library environment."
+#, fuzzy
+msgid "Cannot validate templates for the '%s' environment."
 msgstr "Library 환경에 대한 템플릿을 유효하게 할 수 없습니다. "
-
-msgid "Change Password"
-msgstr "암호 변경 "
 
 msgid "Changeset Management"
 msgstr "변경 집합 관리 "
@@ -527,17 +543,20 @@ msgstr "변경 집합 "
 msgid "Changesets History"
 msgstr "변경 집합 기록 "
 
+msgid "Choose %s..."
+msgstr ""
+
+msgid "Choose domains..."
+msgstr ""
+
+msgid "Choose operating systems..."
+msgstr ""
+
 msgid "Cleared"
 msgstr "삭제됨 "
 
 msgid "Click on 'Add Environment' to create the first environment"
 msgstr "첫 번째 환경을 생성하려면 '환경 추가'를 클릭합니다. "
-
-msgid "Confirm Password"
-msgstr "암호 확인"
-
-msgid "Consumers"
-msgstr "컨슈머 "
 
 msgid "Content"
 msgstr "컨텐츠 "
@@ -548,14 +567,10 @@ msgstr "컨텐츠 검색"
 msgid "Could not delete organization '%s'."
 msgstr "조직 '%s'을 삭제할 수 없음. "
 
-msgid ""
-"Could not modify environments.  One or more associated activation keys (%s) "
-"would become invalid."
+msgid "Could not modify environments.  One or more associated activation keys (%s) would become invalid."
 msgstr "환경을 변경할 수 없습니다. 하나 이상의 연관된 활성키 (%s)가 비활성화될 수 있습니다. "
 
-msgid ""
-"Could not modify environments. System group membership does not match new "
-"environment association."
+msgid "Could not modify environments. System group membership does not match new environment association."
 msgstr "환경을 변경할 수 없습니다. 시스템 그룹 구성원이 새 환경 관련과 일치하지 않습니다."
 
 msgid "Couldn't find GPG key '%s'"
@@ -575,6 +590,10 @@ msgstr "환경 '%s'을 찾을 수 없음 "
 
 msgid "Couldn't find filter '%s'"
 msgstr "필터 '%s'를 찾을 수 없음 "
+
+#, fuzzy
+msgid "Couldn't find one of the filters in '%s'"
+msgstr "'%s'에 있는 필터 중 하나를 찾을 수 없음 "
 
 msgid "Couldn't find organization '%s'"
 msgstr "조직 '%s'을 찾을 수 없음 "
@@ -618,14 +637,15 @@ msgstr "사용자 '%s'를 찾을 수 없음 "
 msgid "Couldn't find user role '%s'"
 msgstr "사용자 역할 '%s'을 찾을 수 없음 "
 
-msgid "Couldn't one of the filters in '%s'"
-msgstr "'%s'에 있는 필터 중 하나를 찾을 수 없음 "
-
 msgid "Creating an environment in candlepin: %s"
 msgstr "candlepin에 환경 생성 중: %s"
 
 msgid "Creating an owner in candlepin: %s"
 msgstr "candlepin에 소유자 생성 중: %s"
+
+#, fuzzy
+msgid "Current organization is being deleted, switch to a different one."
+msgstr "현재 조직을 삭제할 수 없습니다. 삭제하기 전 다른 조직으로 전환하십시오. "
 
 msgid "Custom Content Repositories"
 msgstr "사용자 정의 컨텐츠 리포지터리 "
@@ -738,6 +758,10 @@ msgstr "종속성 "
 msgid "Details"
 msgstr "상세 정보 "
 
+#, fuzzy
+msgid "Directory"
+msgstr "리포지터리"
+
 msgid "Disable/enable is not supported for custom repositories."
 msgstr "비활성화/활성화는 사용자 정의 리포지터리에 대해 지원되지 않습니다. "
 
@@ -765,6 +789,12 @@ msgstr "'%{name}' 환경에서 배포판 '%{id}'을 찾을 수 없음  "
 msgid "Distributions"
 msgstr "배포판 "
 
+msgid "Domain"
+msgstr ""
+
+msgid "Domains"
+msgstr ""
+
 msgid "Either organization ID or environment ID needs to be specified"
 msgstr "조직 ID 또는 환경 ID를 지정해야 함 "
 
@@ -774,52 +804,35 @@ msgstr "패키지 또는 그룹이 필요함 "
 msgid "Either packages or groups must be provided"
 msgstr "패키지 또는 그룹을 지정해야 함 "
 
-msgid "Email Address"
-msgstr "이메일 주소"
-
 msgid "Email sent to '%s' with password reset instructions."
 msgstr "암호 재설정 방법이 있는 이메일이 '%s'로 전송되었습니다. "
 
 msgid "Email sent to '%s' with valid login user names."
 msgstr "유효한 로그인 사용자 이름이 있는 이메일이 '%s'로 전송되었습니다. "
 
-msgid ""
-"Empty request received to install Packages or Package Groups for System '%s'."
+msgid "Empty request received to install Packages or Package Groups for System '%s'."
 msgstr "시스템 '%s' 용의 패키지 또는 패키지 그룹을 설치하기 위해 빈 요청을 받았습니다."
 
-msgid ""
-"Empty request received to install Packages or Package Groups for System Group "
-"'%s'."
+msgid "Empty request received to install Packages or Package Groups for System Group '%s'."
 msgstr "시스템  그룹 '%s' 용의 패키지 또는 패키지 그룹을 설치하기 위해 빈 요청을 받았습니다."
 
-msgid ""
-"Empty request received to uninstall Packages or Package Groups for System '%"
-"s'."
+msgid "Empty request received to uninstall Packages or Package Groups for System '%s'."
 msgstr "시스템 '%s' 용의 패키지 또는 패키지 그룹을 설치 해제하기 위해 빈 요청을 받았습니다."
 
-msgid ""
-"Empty request received to uninstall Packages or Package Groups for System "
-"Group '%s'."
+msgid "Empty request received to uninstall Packages or Package Groups for System Group '%s'."
 msgstr "시스템  그룹 '%s' 용의 패키지 또는 패키지 그룹을 설치 해제하기 위해 빈 요청을 받았습니다."
 
-msgid ""
-"Empty request received to update Packages or Package Groups for System Group "
-"'%s'."
+msgid "Empty request received to update Packages or Package Groups for System Group '%s'."
 msgstr "시스템  그룹 '%s' 용의 패키지 또는 패키지 그룹을 업데이트하기 위해 빈 요청을 받았습니다."
 
-msgid ""
-"Enter your username and email address below and instructions on resetting "
-"your password will be sent to you."
-msgstr "아래에 사용자 이름과 이메일 주소를 입력하십시오. 암호를 다시 설정하는 방법이 전송됩니다."
+#, fuzzy
+msgid "Environment"
+msgstr "환경 "
 
-msgid ""
-"Environment %s has a successor.  Only the last environment on a path can be "
-"deleted"
+msgid "Environment %s has a successor.  Only the last environment on a path can be deleted"
 msgstr "환경 %s 이후에 다른 환경이 있습니다. 경로에 있는 마지막 환경만을 삭제할 수 있습니다 "
 
-msgid ""
-"Environment %s has a successor. Only the last environment on a path can be "
-"deleted."
+msgid "Environment %s has a successor. Only the last environment on a path can be deleted."
 msgstr "환경 %s 이후에 다른 환경이 있습니다. 경로에 있는 마지막 환경만을 삭제할 수 있습니다 "
 
 msgid "Environment '%s' was created."
@@ -909,8 +922,7 @@ msgstr "candlepin 환경 %s 생성 실패 "
 msgid "Failed to create candlepin owner %s"
 msgstr "candlepin 소유자 %s 생성 실패 "
 
-msgid ""
-"Failed to delete all environments for owner %{org} in candlepin: %{message}"
+msgid "Failed to delete all environments for owner %{org} in candlepin: %{message}"
 msgstr "candlepin의 소유자 %{org}의 모든 환경 제거를 실패했습니다: %{message}"
 
 msgid "Failed to delete all providers for owner %s in candlepin"
@@ -949,19 +961,12 @@ msgstr "필터된 패키지 "
 msgid "Filters"
 msgstr "필터 "
 
-msgid ""
-"Filters assigned to repository or product of erratum '%s' block it from "
-"promotion!"
+msgid "Filters assigned to repository or product of erratum '%s' block it from promotion!"
 msgstr "에라타 '%s' 제품 또는 리포지터리에서 할당된 필터는 승격에서 차단되어 있습니다! "
 
-msgid "Filters can be stored only in Library repositories."
+#, fuzzy
+msgid "Filters can be stored only in the '%s' repositories."
 msgstr "필터는 라이브러리 리포지터리에만 저장할 수 있습니다. "
-
-msgid "Forgot %s or %s?"
-msgstr "%s 또는 %s를 잊어버리셨습니까? "
-
-msgid "Forgot Username or Password?"
-msgstr "사용자 이름 또는 암호를 잊어버리셨습니까? "
 
 msgid "GPG Key"
 msgstr "GPG 키 "
@@ -1008,16 +1013,8 @@ msgstr "하이퍼바이저는 패키지를 갖지 않습니다 "
 msgid "Hypervisors do not have software products"
 msgstr "하이퍼바이저는 소프트웨어 제품을 갖지 않습니다 "
 
-msgid "I remembered my login credentials."
-msgstr "내 로그인 인증을 기억합니다. "
-
 msgid "ID: %s doesn't exist "
 msgstr "ID: %s이 존재하지 않습니다 "
-
-msgid ""
-"If you do not know your username, please enter your email address below and "
-"your username information will be sent to you."
-msgstr "사용자 이름을 모르는 경우 아래에 이메일 주소를 입력하면 사용자 이름 정보가 전송됩니다."
 
 msgid "Import"
 msgstr "가져오기 "
@@ -1028,32 +1025,23 @@ msgstr "가져오기 기록 "
 msgid "Initial Registration Params"
 msgstr "초기 등록 매개 변수 "
 
-msgid ""
-"Install of Errata '%{errata}' scheduled for System Group '%{group}' failed.  "
-"Reason: %{message}"
+msgid "Install of Errata '%{errata}' scheduled for System Group '%{group}' failed.  Reason: %{message}"
 msgstr "시스템 그룹 '%{group}'에 대해 스케줄된 에라타 '%{errata}' 설치를 실패했습니다. 원인: %{message}"
 
 msgid "Install of Errata '%{errata}' scheduled for System Group '%{group}'."
 msgstr "에라타 '%{errata}'의 설치가 시스템 그룹 '%{group}'에 대해 스케줄되었습니다. "
 
-msgid ""
-"Install of Package Groups '%{groups}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
-msgstr ""
-"시스템 그룹 '%{name}'에 대해 스케줄된 패키지 그룹 '%{groups}'의 설치를 실패했습니다. 원인: %{message}"
+msgid "Install of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
+msgstr "시스템 그룹 '%{name}'에 대해 스케줄된 패키지 그룹 '%{groups}'의 설치를 실패했습니다. 원인: %{message}"
 
-msgid ""
-"Install of Package Groups '%{groups}' scheduled for System Group '%{name}'."
+msgid "Install of Package Groups '%{groups}' scheduled for System Group '%{name}'."
 msgstr "시스템 그룹 '%{name}'에 대해 패키지 그룹 '%{groups}'의 설치가 스케줄되었습니다."
 
 msgid "Install of Package Groups '%{g}' scheduled for System '%{s}'."
 msgstr "패키지 그룹 '%{g}'의 설치가 시스템 '%{s}'에 대해 스케줄되었습니다. "
 
-msgid ""
-"Install of Packages '%{packages}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
-msgstr ""
-"시스템 그룹 '%{name}'에 대해 스케줄된 패키지 '%{packages}'의 설치를 실패했습니다. 원인: %{message}"
+msgid "Install of Packages '%{packages}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
+msgstr "시스템 그룹 '%{name}'에 대해 스케줄된 패키지 '%{packages}'의 설치를 실패했습니다. 원인: %{message}"
 
 msgid "Install of Packages '%{packages}' scheduled for System Group '%{name}'."
 msgstr "시스템 그룹 '%{name}'에 대해 패키지 '%{packages}'의 설치가 스케줄되었습니다."
@@ -1073,23 +1061,16 @@ msgstr "패키지 설치 중..."
 msgid "Interval"
 msgstr "간격 "
 
-msgid "Invalid Url"
-msgstr "잘못된 Url "
-
 msgid "Invalid date or time format"
 msgstr "잘못된 날짜 또는 시간 형식"
 
 msgid "Invalid organization"
 msgstr "잘못된 조직"
 
-msgid ""
-"Invalid parameters sent in the request for this operation. Please contact a "
-"system administrator."
+msgid "Invalid parameters sent in the request for this operation. Please contact a system administrator."
 msgstr "잘못된 매개 변수가 이 작업에 대한 요청에 전송되었습니다. 시스템 관리자에게 문의하십시오. "
 
-msgid ""
-"Invalid resource type '%{resource_type}'. Resource Types can be one of '%"
-"{possible_types}'"
+msgid "Invalid resource type '%{resource_type}'. Resource Types can be one of '%{possible_types}'"
 msgstr ""
 "잘못된 리소스 유형 '%{resource_type}'. \n"
 "리소스 유형은 '%{possible_types}' 중 하나가 될 수 있음 "
@@ -1097,12 +1078,8 @@ msgstr ""
 msgid "Invalid state"
 msgstr "잘못된 상태 "
 
-msgid ""
-"Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be one "
-"of %{possible_verbs}"
-msgstr ""
-"잘못된 verb '%{verb}'. 리소스 유형 '%{resource_type}'에 대한 verb는 %{possible_verbs} 중 "
-"하나가 될 수 있습니다"
+msgid "Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be one of %{possible_verbs}"
+msgstr "잘못된 verb '%{verb}'. 리소스 유형 '%{resource_type}'에 대한 verb는 %{possible_verbs} 중 하나가 될 수 있습니다"
 
 msgid "It is not allowed to create products in Red Hat provider."
 msgstr "Red Hat 공급자에 제품을 생성할 수 없습니다. "
@@ -1121,9 +1098,6 @@ msgstr "Red Hat 제품을 업데이트할 수 없습니다. "
 
 msgid "It is not allowed to update a Red Hat repository."
 msgstr "Red Hat 리포지터리를 업데이트할 수 없습니다. "
-
-msgid "Javascript must be enabled for this application to work properly."
-msgstr "이 애플리케이션이 제대로 작동하게 하려면 Javascript를 활성화해야 합니다."
 
 msgid "Katello Logins"
 msgstr "Katello 로그인 "
@@ -1146,20 +1120,8 @@ msgstr "LDAP 그룹 "
 msgid "LDAP group '%{group}' associated to role '%{role}' was not found."
 msgstr "'%{role}' 역할과 관련된 LDAP 그룹 '%{group}'을 찾을 수 없습니다. "
 
-msgid "Library"
-msgstr "라이브러리 "
-
-msgid "Library environment cannot contain a changeset!"
-msgstr "라이브러리 환경에는 변경 집합을 포함시킬 수 없습니다! "
-
 msgid "List"
 msgstr "목록 "
-
-msgid "Login"
-msgstr "로그인 "
-
-msgid "Login Information"
-msgstr "로그인 정보 "
 
 msgid "Login Successful"
 msgstr "성공적으로 로그인했습니다 "
@@ -1170,13 +1132,8 @@ msgstr "성공적으로 로그인했습니다. '%s'에 로그인합니다 "
 msgid "Login Successful, please choose an Organization"
 msgstr "성공적으로 로그인했습니다. 조직을 선택하십시오 "
 
-msgid ""
-"Login Successful, please contact administrator to get permission to access an "
-"organization."
+msgid "Login Successful, please contact administrator to get permission to access an organization."
 msgstr "성공적으로 로그인했습니다. 조직에 액세스할 권한을 취득하려면 관리자에게 문의하십시오."
-
-msgid "Logo"
-msgstr "로고 "
 
 msgid "Logout Successful"
 msgstr "성공적으로 로그 아웃했습니다 "
@@ -1232,16 +1189,22 @@ msgstr "이름을 빈 칸으로 둘 수 없습니다. "
 msgid "Name must be unique within one organization"
 msgstr "이름은 하나의 조직 내에서 유일한 것이어야 합니다 "
 
+#, fuzzy
+msgid "Names and labels must be unique across all organizations"
+msgstr "이름은 하나의 조직 내에서 유일한 것이어야 합니다 "
+
 msgid "Never checked in"
 msgstr "한 번도 접속하지 않았습니다"
 
 msgid "Never checked in."
 msgstr "한 번도 접속하지 않았습니다. "
 
-msgid "New templates can be created only in a Library environment"
+#, fuzzy
+msgid "New templates can be created only in the '%s' environment"
 msgstr "라이브러리 환경에서만 새 템플릿을 생성할 수 있음 "
 
-msgid "New templates can be imported only into a Library environment"
+#, fuzzy
+msgid "New templates can be imported only into the '%s' environment"
 msgstr "라이브러리 환경으로만 새 템플릿을 불러올 수 있음 "
 
 msgid "No Overlap with Current"
@@ -1253,13 +1216,12 @@ msgstr "서비스 레벨 설정이 없음 "
 msgid "No Template"
 msgstr "템플릿이 없음 "
 
-msgid ""
-"No environments are currently available in this organization.  Please either "
-"add some to the organization or select an organization that has an "
-"environment to set user default."
-msgstr ""
-"현재 이 조직에서 사용 가능한 환경이 없습니다. 조직에서 사용할 수 있는 환경을 추가하거나 환경이 사용자 디폴트로 설정된 조직을 "
-"선택합니다. "
+#, fuzzy
+msgid "No domains found."
+msgstr "찾을 수 없음 "
+
+msgid "No environments are currently available in this organization.  Please either add some to the organization or select an organization that has an environment to set user default."
+msgstr "현재 이 조직에서 사용 가능한 환경이 없습니다. 조직에서 사용할 수 있는 환경을 추가하거나 환경이 사용자 디폴트로 설정된 조직을 선택합니다. "
 
 msgid "No errors"
 msgstr "오류 없음 "
@@ -1270,6 +1232,9 @@ msgstr "검색 조건에 일치하는 이벤트가 없음. "
 msgid "No new packages installed"
 msgstr "설치된 새 패키지가 없음 "
 
+msgid "No operating systems found."
+msgstr ""
+
 msgid "No package profile received for %s"
 msgstr "%s의 패키지 프로파일이 수신되지 않음 "
 
@@ -1278,6 +1243,9 @@ msgstr "삭제된 패키지가 없음 "
 
 msgid "No packages updated"
 msgstr "업데이트된 패키지가 없음 "
+
+msgid "No smart proxy with %s feature found."
+msgstr ""
 
 msgid "No synchronization of the %s is currently running"
 msgstr "현재 %s의 동기화는 실행되고 있지 않습니다 "
@@ -1288,16 +1256,14 @@ msgstr "이 사용자에 대해 설정된 시스템 등록 기본값이 없습�
 msgid "None"
 msgstr "없음 "
 
-#, fuzzy
-msgid ""
-"Not enough entitlements in pools (%{size}), required: %{required}, available: "
-"%{available}"
-msgstr "풀 (%d)에 충분한 인타이틀먼트가 없습니다. 필요: %d, 사용 가능:  %d"
+msgid "Not enough subscriptions in pools (%{size}), required: %{required}, available: %{available}"
+msgstr ""
 
 msgid "Not found"
 msgstr "찾을 수 없음 "
 
-msgid "Number of consumed entitlements exceeded quantity for %s"
+#, fuzzy
+msgid "Number of attached subscriptions exceeded quantity for %s"
 msgstr "소비되는 인타이틀먼트 수가 %s의 수량을 초과했습니다 "
 
 msgid "Number of sockets must be higher than 0 for system %s"
@@ -1333,14 +1299,11 @@ msgstr "오픈 소스 시스템 관리 "
 msgid "Organization"
 msgstr "조직 "
 
-msgid ""
-"Organization %s has 'Library' environment only. Please create an environment "
-"for system registration."
-msgstr ""
+msgid "Organization %s has more than one environment. Please specify target environment for system registration."
+msgstr "조직 %s에 하나 이상의 환경이 있습니다. 시스템 등록을 위해 대상 환경을 지정하십시오."
 
-msgid ""
-"Organization %s has more than one environment. Please specify target "
-"environment for system registration."
+#, fuzzy
+msgid "Organization %{org} has the '%{env}' environment only. Please create an environment for system registration."
 msgstr "조직 %s에 하나 이상의 환경이 있습니다. 시스템 등록을 위해 대상 환경을 지정하십시오."
 
 msgid "Organization '%s' has been scheduled for background deletion."
@@ -1496,6 +1459,22 @@ msgstr "템플릿에서 패키지 그룹 카테고리 '%s'를 찾을 수 없습�
 msgid "Package group category '%{group}' not found in the %{env} environment"
 msgstr "패키지 그룹 카타고리 '%{group}'를 %{env} 환경에서 찾을 수 없습니다 "
 
+#, fuzzy
+msgid "Package group update canceled"
+msgstr "패키지 그룹 업데이트 취소 "
+
+#, fuzzy
+msgid "Package group update complete"
+msgstr "패키지 그룹 업데이트 완료"
+
+#, fuzzy
+msgid "Package group update failed"
+msgstr "패키지 그룹 업데이트 실패 "
+
+#, fuzzy
+msgid "Package group update timed out"
+msgstr "패키지 그룹 업데이트 시간 초과 "
+
 msgid "Package with id '%s' not found"
 msgstr "id '%s'인 패키지를 찾을 수 없습니다 "
 
@@ -1511,23 +1490,11 @@ msgstr "템플릿에서 매개 변수 '%s'을 찾을 수 없습니다. "
 msgid "Parameter '%{name}': '%{value}' was set"
 msgstr "매개 변수 '%{name}': '%{value}'이 설정되었습니다 "
 
-msgid "Password"
-msgstr "암호 "
-
-msgid "Password Unknown"
-msgstr "암호를 알 수 없음 "
-
 msgid "Password has been reset for user '%s'."
 msgstr "사용자 '%s'에 대한 암호가 재설정되었습니다. "
 
 msgid "Password reset token has expired for user '%s'."
 msgstr "사용자 '%s'에 대한 암호 재설정 토큰이 만료되었습니다. "
-
-msgid "Passwords do not match."
-msgstr "암호가 일치하지 않습니다."
-
-msgid "Passwords match."
-msgstr "암호가 일치합니다."
 
 msgid "Pending"
 msgstr "보류 중 "
@@ -1541,9 +1508,7 @@ msgstr "권한 '%s'이 제거되었습니다. "
 msgid "Permission '%s' was updated."
 msgstr "권한 '%s'이 업데이트되었습니다. "
 
-msgid ""
-"Permission Denied. User '%{user}' does not have permissions to access "
-"organization '%{org}'."
+msgid "Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'."
 msgstr "권한이 거부되었습니다. 사용자 '%{user}'은(는) 조직 '%{org}'에 액세스할 수 있는 권한이 없습니다. "
 
 msgid "Permissions"
@@ -1558,18 +1523,11 @@ msgstr "계획 "
 msgid "Plan Name"
 msgstr "동기화 계획 이름 "
 
-msgid ""
-"Please add '%{product}' product to the changeset '%{changeset}' if you wish "
-"to promote repository '%{repo}' with it."
-msgstr ""
-"제품과 함께 리포지터리 '%{repo}'를 승격하려면 해당 '%{product}' 제품을 변경 집합 '%{changeset}'에 "
-"추가하십시오."
+msgid "Please add '%{product}' product to the changeset '%{changeset}' if you wish to promote repository '%{repo}' with it."
+msgstr "제품과 함께 리포지터리 '%{repo}'를 승격하려면 해당 '%{product}' 제품을 변경 집합 '%{changeset}'에 추가하십시오."
 
 msgid "Please create at least one environment."
 msgstr "최소 하나의 환경을 생성하십시오."
-
-msgid "Please provide entitlement ID"
-msgstr ""
 
 msgid "Please provide pool ID"
 msgstr "풀 ID를 입력하십시오 "
@@ -1578,6 +1536,10 @@ msgid "Please provide pool and quantity"
 msgstr "풀 및 수량을 입력하십시오 "
 
 msgid "Please provide serial ID"
+msgstr "시리얼 ID를 입력하십시오 "
+
+#, fuzzy
+msgid "Please provide subscription ID"
 msgstr "시리얼 ID를 입력하십시오 "
 
 msgid "Please select at least one system group."
@@ -1640,13 +1602,8 @@ msgstr "공급자 '%s'가 삭제되었습니다. "
 msgid "Provider '%s' was updated."
 msgstr "공급자 '%s'가 업데이트되었습니다. "
 
-msgid ""
-"Provider cannot be deleted since one of its products or repositories has "
-"already been promoted. Using a changeset, please delete the repository from "
-"existing environments before deleting it."
-msgstr ""
-"제품 또는 리포지터리가 이미 승격되어 있기 때문에 공급자를 삭제할 수 없습니다. 변경 집합을 사용하여 먼저 기존 환경에서 리포지터리를 "
-"삭제한 후 이를 삭제해야 합니다."
+msgid "Provider cannot be deleted since one of its products or repositories has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it."
+msgstr "제품 또는 리포지터리가 이미 승격되어 있기 때문에 공급자를 삭제할 수 없습니다. 변경 집합을 사용하여 먼저 기존 환경에서 리포지터리를 삭제한 후 이를 삭제해야 합니다."
 
 msgid "Providers"
 msgstr "공급자 "
@@ -1813,7 +1770,8 @@ msgstr "리포지터리 "
 msgid "Repositories"
 msgstr "리포지터리 "
 
-msgid "Repositories can be deleted only in Library environment."
+#, fuzzy
+msgid "Repositories can be deleted only in the '%s' environment."
 msgstr "리포지터리는 라이브러리 환경에서만 삭제할 수 있습니다. "
 
 msgid "Repository '%s' created."
@@ -1849,43 +1807,30 @@ msgstr "리포지터리 '%s'가 업데이트되었습니다. "
 msgid "Repository Comparison"
 msgstr "리포지터리 비교 "
 
-msgid ""
-"Repository cannot be deleted since it has already been promoted. Using a "
-"changeset, please delete the repository from existing environments before "
-"deleting it."
-msgstr ""
-"리포지터리가 이미 승격되어 있기 때문에 이를 삭제할 수 없습니다. 변경 집합을 사용하여 먼저 기존 환경에서 리포지터리를 삭제하고 리포지터리 "
-"자체를 삭제해야 합니다."
+#, fuzzy
+msgid "Repository can be only created for custom provider."
+msgstr "사용자 정의 공급자에 대한 제품을 새로 고침할 수 없습니다. "
+
+msgid "Repository cannot be deleted since it has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it."
+msgstr "리포지터리가 이미 승격되어 있기 때문에 이를 삭제할 수 없습니다. 변경 집합을 사용하여 먼저 기존 환경에서 리포지터리를 삭제하고 리포지터리 자체를 삭제해야 합니다."
 
 msgid "Repository cannot be disabled since it has already been promoted."
 msgstr "리포지터리는 이미 승격되었기 때문에 이를 비활성화할 수 없습니다. "
 
-msgid ""
-"Repository of the distribution '%s' has not been promoted into the target "
-"environment!"
+msgid "Repository of the distribution '%s' has not been promoted into the target environment!"
 msgstr "배포판 '%s'의 리포지터리가 대상 환경에 승격되지 않았습니다! "
 
-msgid ""
-"Repository of the erratum '%s' has not been promoted into the target "
-"environment!"
+msgid "Repository of the erratum '%s' has not been promoted into the target environment!"
 msgstr "에라타 '%s'의 리포지터리가 대상 환경에 승격되지 않았습니다! "
 
-msgid ""
-"Repository of the package '%s' has not been promoted into the target "
-"environment!"
+msgid "Repository of the package '%s' has not been promoted into the target environment!"
 msgstr "패키지 '%s'의 리포지터리가 대상 환경에 승격되지 않았습니다! "
 
 msgid "Request received has either an invalid or expired token. Token: '%s'"
 msgstr "수신된 요청에 유효하지 않거나 만료된 토큰이 있습니다. 토큰: '%s'"
 
-msgid "Reset Password"
-msgstr "암호 재설정 "
-
 msgid "Resource not found on the server"
 msgstr "서버에서 리소스를 찾을 수 없음 "
-
-msgid "Return to log in."
-msgstr "로그인으로 돌아갑니다."
 
 msgid "Role"
 msgstr "역할 "
@@ -1911,9 +1856,6 @@ msgstr "라우터가 존재하지 않음: "
 msgid "Running."
 msgstr "실행 중. "
 
-msgid "Save"
-msgstr "저장 "
-
 msgid "Select Architecture"
 msgstr "아키텍처 선택 "
 
@@ -1929,11 +1871,11 @@ msgstr "스케줄할 제품을 선택 "
 msgid "Selected Distribution"
 msgstr "선택한 배포판 "
 
-msgid "Send Login"
-msgstr "로그인 전송 "
-
 msgid "Service Level %s"
 msgstr "서비스 레벨 %s"
+
+msgid "Setup"
+msgstr ""
 
 msgid "Severity: Critical"
 msgstr "중요도: 아주 중요 "
@@ -1947,9 +1889,6 @@ msgstr "중요도: 낮음 "
 msgid "Severity: Moderate"
 msgstr "중요도: 중간 "
 
-msgid "Show My Password"
-msgstr "내 암호 보기 "
-
 msgid "Software"
 msgstr "소프트웨어 "
 
@@ -1961,6 +1900,12 @@ msgstr "'%{changeset}'을 사용하여 %{env} 환경에서 컨텐츠 삭제를 �
 
 msgid "Started content promotion to %{env} environment using '%{changeset}'"
 msgstr "'%{changeset}'을 사용하여 %{env} 환경에서 컨텐츠 승격을 시작했습니다 "
+
+msgid "Subnet"
+msgstr ""
+
+msgid "Subnets"
+msgstr ""
 
 msgid "Subscription manifest delete for provider '%s' failed."
 msgstr ""
@@ -1977,13 +1922,8 @@ msgstr "공급자 '%s'에 대한 서브스크립션 매니페스트 업로드를
 msgid "Subscription manifest uploaded successfully for provider '%s'."
 msgstr "공급자 '%s'에 대한 서브스크립션 매니페스트를 성공적으로 업로드했습니다. "
 
-msgid ""
-"Subscription manifest uploaded successfully for provider '%s'. Please enable "
-"the repositories you want to sync by selecting 'Enable Repositories' and "
-"selecting individual repositories to be enabled."
-msgstr ""
-"공급자 '%s'에 대한 서브스크립션 매니페스트를 성공적으로 업로드했습니다. '리포지터리 활성화'를 및 활성화하려는 개별 리포지터리를 "
-"선택하여 동기화하고자 하는 리포지터리를 활성화하십시오. "
+msgid "Subscription manifest uploaded successfully for provider '%s'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled."
+msgstr "공급자 '%s'에 대한 서브스크립션 매니페스트를 성공적으로 업로드했습니다. '리포지터리 활성화'를 및 활성화하려는 개별 리포지터리를 선택하여 동기화하고자 하는 리포지터리를 활성화하십시오. "
 
 msgid "Subscriptions"
 msgstr "서브스크립션 "
@@ -2087,9 +2027,7 @@ msgstr "시스템 그룹 '%s'이 삭제되었습니다. "
 msgid "System Group %s has been updated."
 msgstr "시스템 그룹 '%s'이 업데이트되었습니다. "
 
-msgid ""
-"System Group %{new_group} created successfully as a copy of system group %"
-"{group}."
+msgid "System Group %{new_group} created successfully as a copy of system group %{group}."
 msgstr "시스템 그룹 %{new_group}이 시스템 그룹 %{group}의 사본으로 성공적으로 생성되었습니다."
 
 msgid "System Group Info"
@@ -2122,6 +2060,9 @@ msgstr "시스템 서브스크립션이 업데이트되었습니다. "
 msgid "System's environment not compatible with the group '%s'."
 msgstr "시스템 환경은 그룹 '%s'과 호환하지 않습니다."
 
+msgid "System: %{system_name}, System Groups Removed: %{system_group_names}"
+msgstr ""
+
 msgid "Systems"
 msgstr "시스템 "
 
@@ -2131,8 +2072,7 @@ msgstr "시스템의 대량 작업: 시스템 그룹에 추가: %s"
 msgid "Systems Bulk Action: No errata IDs have been provided."
 msgstr "시스템의 대량 작업: 에라타 ID가 지정되어 있지 않습니다."
 
-msgid ""
-"Systems Bulk Action: No package or package group names have been provided."
+msgid "Systems Bulk Action: No package or package group names have been provided."
 msgstr "시스템의 대량 작업: 패키지 또는 패키지 그룹 이름이 지정되어 있지 않습니다."
 
 msgid "Systems Bulk Action: Remove from system group(s): %s"
@@ -2174,14 +2114,8 @@ msgstr "템플릿 %s이 성공적으로 업데이트됨 "
 msgid "Template %s updated successfully."
 msgstr "템플릿 %s이 성공적으로 업데이트되었습니다. "
 
-msgid ""
-"Template '%s' has been updated successfully, however you have removed either "
-"a product or repository that contained the selected distribution for this "
-"template.  Please select another distribution to ensure a working system "
-"template."
-msgstr ""
-"템플릿 성공적으로 업데이트되었지만 템플릿에 대해 선택한 배포판이 들어 있는 제품 또는 리포지터리 중 하나가 제거되었습니다. 다른 배포판을 "
-"선택하여 시스템 템플릿이 올바르게 작동하는지 확인하십시오. "
+msgid "Template '%s' has been updated successfully, however you have removed either a product or repository that contained the selected distribution for this template.  Please select another distribution to ensure a working system template."
+msgstr "템플릿 성공적으로 업데이트되었지만 템플릿에 대해 선택한 배포판이 들어 있는 제품 또는 리포지터리 중 하나가 제거되었습니다. 다른 배포판을 선택하여 시스템 템플릿이 올바르게 작동하는지 확인하십시오. "
 
 msgid "Template '%s' not found in the changeset"
 msgstr "변경 집합에서 템플릿 '%s'을 찾을 수 없습니다 "
@@ -2201,47 +2135,39 @@ msgstr "템플릿을 가져옴 "
 msgid "Templates"
 msgstr "템플릿 "
 
-msgid "Templates can be updated only in a Library environment"
+#, fuzzy
+msgid "Templates can be updated only in the '%s' environment"
 msgstr "템플릿은 라이브러리 환경에서만 업데이트할 수 있습니다 "
 
-msgid ""
-"The current organization cannot be deleted. Please switch to a different "
-"organization before deleting."
+#, fuzzy
+msgid "The '%s' environment cannot contain a changeset!"
+msgstr "라이브러리 환경에는 변경 집합을 포함시킬 수 없습니다! "
+
+msgid "The current organization cannot be deleted. Please switch to a different organization before deleting."
 msgstr "현재 조직을 삭제할 수 없습니다. 삭제하기 전 다른 조직으로 전환하십시오. "
 
 msgid "The environment still has content that belongs to product '%s'."
 msgstr "환경에 제품 '%s'에 속한 컨텐츠가 여전히 존재합니다. "
 
-msgid ""
-"The label requested is already used by another %s; therefore, a unique label "
-"was assigned.  If you would like a different label, please delete the %s and "
-"recreate it with a unique label.  Requested label: %s, Assigned label: %s"
+msgid "The label requested is already used by another %s; therefore, a unique label was assigned.  If you would like a different label, please delete the %s and recreate it with a unique label.  Requested label: %s, Assigned label: %s"
 msgstr ""
 
-msgid ""
-"The selected system groups (%s) are not compatible with the selected "
-"environment."
+msgid "The selected system groups (%s) are not compatible with the selected environment."
 msgstr "선택한 시스템 그룹 (%s)은 선택한 환경과 호환하지 않습니다."
 
-msgid ""
-"The system registration default you supplied was the same as the old system "
-"registration default."
+msgid "The system registration default you supplied was the same as the old system registration default."
 msgstr "지정된 시스템 등록 기본값은 이전 시스템 등록 기본값과 동일합니다."
 
 msgid "The template has children templates."
 msgstr "템플릿에 자식 템플릿이 있습니다. "
 
-msgid ""
-"There is already a repo with the label [ %{repo} ] for product [ %{product} ]"
+msgid "There is already a repo with the label [ %{repo} ] for product [ %{product} ]"
 msgstr ""
 
-msgid ""
-"There is already a repo with the name [ %{repo} ] for product [ %{product} ]"
+msgid "There is already a repo with the name [ %{repo} ] for product [ %{product} ]"
 msgstr "제품 [ %{product} ]에 [ %{repo} ]라는 리포지터리가 이미 존재합니다"
 
-msgid ""
-"There is already an active sync process for the '%s' repository. Please try "
-"again later"
+msgid "There is already an active sync process for the '%s' repository. Please try again later"
 msgstr "'%s' 리포지터리에 대해 이미 활성 동기화 프로세스가 있습니다. 나중에 다시 시도해 보십시오. "
 
 msgid "There must be at least one plan selected"
@@ -2250,8 +2176,7 @@ msgstr "최소 하나의 계획이 선택되어 있어야 합니다 "
 msgid "There must be at least one product selected"
 msgstr "최소 하나의 제품이 선택되어 있어야 합니다 "
 
-msgid ""
-"There were errors syncing repository '%s'. See notices page for more details."
+msgid "There were errors syncing repository '%s'. See notices page for more details."
 msgstr "리포지터리 '%s'를 동기화하는 도중 오류가 발생했습니다. 보다 자세한 내용은 알림 페이지에서 참조하십시오. "
 
 msgid "This action doesn't support pacakge groups"
@@ -2278,38 +2203,32 @@ msgstr "패키지 %s를 찾을 수 없음 "
 msgid "Unable to parse repositories: %s"
 msgstr "리포지터리를 구문 분석할 수 없음: %s"
 
-msgid ""
-"Unable to retrieve release versions from Repository URL %{url}. Error "
-"message: %{error}"
+msgid "Unable to retrieve release versions from Repository URL %{url}. Error message: %{error}"
 msgstr "리포지터리 URL %{url}에서 릴리즈 버전을 검색할 수 없습니다. 오류 메세지: %{error}"
 
 msgid "Unable to retrieve subscription history for provider '%{name}'."
 msgstr "공급자 '%{name}'에 대한 서브스크립션 기록을 가져올 수 없습니다. "
 
-msgid ""
-"Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
-msgstr ""
-"시스템 그룹 '%{name}'에 대해 스케줄된 패키지 그룹 '%{groups}' 제거를 실패했습니다. 원인: %{message}"
+msgid "Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
+msgstr "시스템 그룹 '%{name}'에 대해 스케줄된 패키지 그룹 '%{groups}' 제거를 실패했습니다. 원인: %{message}"
 
-msgid ""
-"Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}'."
+msgid "Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}'."
 msgstr "시스템 그룹 '%{name}'에 대해 패키지 그룹 '%{groups}' 제거가 스케줄되었습니다."
 
 msgid "Uninstall of Package Groups '%{p}' scheduled for System '%{s}'."
 msgstr "패키지 그룹 '%{p}'의 설치 해제가 시스템 '%{s}'에 대해 스케줄되었습니다. "
 
-msgid ""
-"Uninstall of Packages '%{packages}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
+msgid "Uninstall of Packages '%{packages}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
 msgstr "시스템 그룹 '%{name}'에 대해 스케줄된 패키지 '%{packages}' 제거를 실패했습니다. 원인: %{message}"
 
-msgid ""
-"Uninstall of Packages '%{packages}' scheduled for System Group '%{name}'."
+msgid "Uninstall of Packages '%{packages}' scheduled for System Group '%{name}'."
 msgstr "시스템 그룹 '%{name}'에 대해 패키지 '%{packages}' 제거가 스케줄되었습니다."
 
 msgid "Uninstall of Packages '%{p}' scheduled for System '%{s}'."
 msgstr "패키지 '%{p}'의 설치 해제가 시스템 '%{s}'에 대해 스케줄되었습니다. "
+
+msgid "Units"
+msgstr ""
 
 msgid "Unknown changeset type, must be PROMOTION or DELETION: %s"
 msgstr "알 수 없는 변경 집합 유형, 승격하거나 삭제해야 함: %s"
@@ -2320,21 +2239,14 @@ msgstr "알 수 없는 등록 날짜 "
 msgid "Unknown repository label: %s"
 msgstr "알 수 없는 리포지터리 레이블: %s"
 
-msgid ""
-"Update of Package Groups '%{groups}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
-msgstr ""
-"시스템 그룹 '%{name}'에 대해 스케줄된 패키지 그룹 '%{groups}'의 업데이트를 실패했습니다. 원인: %{message}"
+msgid "Update of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
+msgstr "시스템 그룹 '%{name}'에 대해 스케줄된 패키지 그룹 '%{groups}'의 업데이트를 실패했습니다. 원인: %{message}"
 
-msgid ""
-"Update of Package Groups '%{groups}' scheduled for System Group '%{name}'."
+msgid "Update of Package Groups '%{groups}' scheduled for System Group '%{name}'."
 msgstr "시스템 그룹 '%{name}'에 대해 패키지 그룹 '%{groups}'의 업데이트가 스케줄되었습니다."
 
-msgid ""
-"Update of Packages '%{packages}' scheduled for System Group '%{group}' "
-"failed.  Reason: %{message}"
-msgstr ""
-"시스템 그룹 '%{name}'에 대해 스케줄된 패키지 '%{packages}'의 업데이트를 실패했습니다. 원인: %{message}"
+msgid "Update of Packages '%{packages}' scheduled for System Group '%{group}' failed.  Reason: %{message}"
+msgstr "시스템 그룹 '%{name}'에 대해 스케줄된 패키지 '%{packages}'의 업데이트를 실패했습니다. 원인: %{message}"
 
 msgid "Update of Packages '%{packages}' scheduled for System Group '%{name}'."
 msgstr "시스템 그룹 '%{name}'에 대해 패키지 '%{packages}'의 업데이트가 스케줄되었습니다. "
@@ -2347,6 +2259,10 @@ msgstr "모든 패키지의 업데이트가 시스템 '%s'에 대해 스케줄�
 
 msgid "Updating Package..."
 msgstr "패키지 업데이트 중..."
+
+#, fuzzy
+msgid "Updating package group..."
+msgstr "패키지 그룹 업데이트 중..."
 
 msgid "Usage limit (%{limit}) exhausted for activation key '%{name}'"
 msgstr "활성키 '%{name}'의 사용 한도 (%{limit})를 모두 사용했습니다"
@@ -2378,14 +2294,15 @@ msgstr "사용자가 성공적으로 업데이트되었습니다. "
 msgid "Username"
 msgstr "사용자 이름 "
 
-msgid "Username Unknown?"
-msgstr "사용자 이름을 알 수 없습니까?"
-
 msgid "Users"
 msgstr "사용자 "
 
 msgid "Validation failed: Label has already been taken"
 msgstr ""
+
+#, fuzzy
+msgid "Version"
+msgstr "권한 "
 
 msgid "Virtual"
 msgstr "가상 "
@@ -2393,29 +2310,20 @@ msgstr "가상 "
 msgid "Welcome Back"
 msgstr "환영합니다"
 
-msgid ""
-"Wrong/Invalid parameters sent for %{controller}/%{action}.\\n Wrong "
-"Parameters: \\n%{params}\\n Parameters Received:\\n %{all_params} "
+msgid "Wrong/Invalid parameters sent for %{controller}/%{action}.\\n Wrong Parameters: \\n%{params}\\n Parameters Received:\\n %{all_params} "
 msgstr ""
 
 msgid "You can synchronize repositories only in library environment'"
 msgstr "라이브러리 환경에 있는 리포지터리만 동기화할 수 있습니다 "
 
-msgid ""
-"You cannot have more than %{max_systems} system(s) associated with system "
-"group '%{group}'."
+msgid "You cannot have more than %{max_systems} system(s) associated with system group '%{group}'."
 msgstr "%{max_systems}개 이상의 시스템을 시스템 그룹 '%{group}'에 연결할 수 없습니다."
 
-msgid ""
-"You do not have valid credentials to access this system. Please contact your "
-"administrator."
+msgid "You do not have valid credentials to access this system. Please contact your administrator."
 msgstr "이 시스템을 액세스하기 위한 유효한 인증서가 없습니다. 관리자에게 문의하십시오. "
 
-msgid ""
-"You have entered an incorrect username/password combination, or your account "
-"may currently be disabled. Please try again or contact your administrator."
-msgstr ""
-"잘못된 사용자 이름/암호 조합이 입력되었거나 현재 계정이 비활성화되어 있을 수 있습니다. 다시 실행하거나 관리자에게 문의하십시오. "
+msgid "You have entered an incorrect username/password combination, or your account may currently be disabled. Please try again or contact your administrator."
+msgstr "잘못된 사용자 이름/암호 조합이 입력되었거나 현재 계정이 비활성화되어 있을 수 있습니다. 다시 실행하거나 관리자에게 문의하십시오. "
 
 msgid "You have not set a default organization and environment on the user %s."
 msgstr "사용자 %s에 디폴트 조직 및 환경이 설정되어 있지 않습니다. "
@@ -2423,16 +2331,8 @@ msgstr "사용자 %s에 디폴트 조직 및 환경이 설정되어 있지 않�
 msgid "You must be logged in to access that page."
 msgstr "페이지에 액세스하려면 로그인해야 합니다. "
 
-msgid ""
-"You must specify host in %{config_file} for %{app_name} to work properly"
-msgstr "올바르게 작동하게 하기 위해 %{app_name}의 %{config_file}에 있는 호스트를 지정해야 합니다"
-
-msgid ""
-"Your current organization is no longer valid. It is possible that either the "
-"organization has been deleted or your permissions revoked, please log back in "
-"to continue."
-msgstr ""
-"현재 조직이 더이상 유효하지 않습니다. 조직이 삭제되었거나 권한이 취소되었을 수 있습니다. 다시 로그인하여 계속 진행하십시오. "
+msgid "Your current organization is no longer valid. It is possible that either the organization has been deleted or your permissions revoked, please log back in to continue."
+msgstr "현재 조직이 더이상 유효하지 않습니다. 조직이 삭제되었거나 권한이 취소되었을 수 있습니다. 다시 로그인하여 계속 진행하십시오. "
 
 msgid "Your default environment has been removed. Please choose another one."
 msgstr "디폴트 환경이 삭제되었습니다. 다른 환경을 선택하십시오."
@@ -2446,8 +2346,8 @@ msgstr "모든 패키지 업데이트 "
 msgid "all packages update failed"
 msgstr "모든 패키지 업데이트 실패 "
 
-msgid "can not be updated"
-msgstr "업데이트할 수 없음 "
+msgid "already exists (including organizations being deleted)"
+msgstr ""
 
 msgid "can't be blank"
 msgstr "빈 칸으로 두지 마십시오. "
@@ -2506,14 +2406,10 @@ msgstr "이미 템플릿에 있음 "
 msgid "is invalid"
 msgstr "유효하지 않음 "
 
-msgid "is too long"
-msgstr "너무 깁니다 "
-
 msgid "katello-jobs service not running"
 msgstr "katello-jobs 서비스가 실행되고 있지 않음 "
 
-msgid ""
-"may not be less than the number of systems associated with the system group."
+msgid "may not be less than the number of systems associated with the system group."
 msgstr "시스템 그룹에 연결된 시스템 수 보다 적게 할 수 없습니다."
 
 msgid "may not be set to 0."
@@ -2543,7 +2439,8 @@ msgstr "하나의 조직 내에서 고유한 것이어야 함 "
 msgid "must be unique."
 msgstr "고유한 것이어야 합니다. "
 
-msgid "must contain 'Library'"
+#, fuzzy
+msgid "must contain '%s'"
 msgstr "'라이브러리'가 포함되어 있어야 함 "
 
 msgid "must contain at least %s character"
@@ -2558,23 +2455,15 @@ msgstr "이름: %s이 존재하지 않습니다 "
 msgid "none"
 msgstr "없음 "
 
+#, fuzzy
+msgid "of environment must be unique within one organization"
+msgstr "이름은 하나의 조직 내에서 유일한 것이어야 합니다 "
+
 msgid "organization"
 msgstr "조직 "
 
 msgid "organization_id required but not specified."
 msgstr "organization_id가 필요하지만 지정되어 있지 않습니다."
-
-msgid "package group update canceled"
-msgstr "패키지 그룹 업데이트 취소 "
-
-msgid "package group update complete"
-msgstr "패키지 그룹 업데이트 완료"
-
-msgid "package group update failed"
-msgstr "패키지 그룹 업데이트 실패 "
-
-msgid "package group update timed out"
-msgstr "패키지 그룹 업데이트 시간 초과 "
 
 msgid "plan"
 msgstr "계획 "
@@ -2606,8 +2495,7 @@ msgstr "%s Bugzilla"
 msgid "the CloudForms Documentation"
 msgstr "CloudForms 문서 "
 
-msgid ""
-"the following attributes can not be updated for the Red Hat provider: [ %s ]"
+msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "다음 속성은 Red Hat 공급자 [ %s ]에 대해 업데이트될 수 없습니다 "
 
 msgid "updating package group..."
@@ -2625,1870 +2513,92 @@ msgstr "패키지 업데이트 중..."
 msgid "weekly"
 msgstr "매주 "
 
-#~ msgid " Changesets"
-#~ msgstr "변경 집합 "
+#~ msgid " '%s' already exists and either has been scheduled for deletion or failed deletion."
+#~ msgstr "'%s'이 이미 존재하며 삭제 용으로 스케줄되었거나 삭제 실패했습니다. "
 
-#~ msgid " Content"
-#~ msgstr "컨텐츠 "
+#~ msgid "Cannot delete the changeset '%{changeset}' while another changeset (%{another_changeset}) is being deleted or promoted."
+#~ msgstr "다른 변경 집합 (%{another_changeset})이 제거 또는 승격되는 동안 변경 집합 '%{changeset}' 을 삭제할 수 없습니다. "
 
-#~ msgid " items selected."
-#~ msgstr "항목이 선택됨. "
+#~ msgid "Change Password"
+#~ msgstr "암호 변경 "
 
-#~ msgid "%d of %d"
-#~ msgstr "%d 중 %d"
+#~ msgid "Confirm Password"
+#~ msgstr "암호 확인"
 
-#~ msgid "%s / %s"
-#~ msgstr "%s / %s"
+#~ msgid "Consumers"
+#~ msgstr "컨슈머 "
 
-#~ msgid "%s Version: %s"
-#~ msgstr "%s 버전: %s"
+#~ msgid "Email Address"
+#~ msgstr "이메일 주소"
 
-#~ msgid "(%X of %Y repositories selected)"
-#~ msgstr "(%Y 중 %X 개의 리포지터리가 선택됨) "
+#~ msgid "Enter your username and email address below and instructions on resetting your password will be sent to you."
+#~ msgstr "아래에 사용자 이름과 이메일 주소를 입력하십시오. 암호를 다시 설정하는 방법이 전송됩니다."
 
-#~ msgid "(%{n} Types)"
-#~ msgstr "(%{n} 유형)"
+#~ msgid "Forgot %s or %s?"
+#~ msgstr "%s 또는 %s를 잊어버리셨습니까? "
 
-#~ msgid "(Entire product selected)"
-#~ msgstr "(전체 제품이 선택됨) "
+#~ msgid "Forgot Username or Password?"
+#~ msgstr "사용자 이름 또는 암호를 잊어버리셨습니까? "
 
-#~ msgid "(Load %X More)"
-#~ msgstr "(%X 로딩)"
+#~ msgid "I remembered my login credentials."
+#~ msgstr "내 로그인 인증을 기억합니다. "
 
-#~ msgid "(Loaded %X of %Y Total)"
-#~ msgstr "(총 %Y 중 %X 로딩) "
+#~ msgid "If you do not know your username, please enter your email address below and your username information will be sent to you."
+#~ msgstr "사용자 이름을 모르는 경우 아래에 이메일 주소를 입력하면 사용자 이름 정보가 전송됩니다."
 
-#~ msgid "(Undo)"
-#~ msgstr "(되돌리기)"
+#~ msgid "Invalid Url"
+#~ msgstr "잘못된 Url "
 
-#~ msgid "+ Add"
-#~ msgstr "+ 추가 "
+#~ msgid "Javascript must be enabled for this application to work properly."
+#~ msgstr "이 애플리케이션이 제대로 작동하게 하려면 Javascript를 활성화해야 합니다."
 
-#~ msgid "+ All"
-#~ msgstr "+모두 "
+#~ msgid "Library"
+#~ msgstr "라이브러리 "
 
-#~ msgid "+ New %s"
-#~ msgstr "+ 새 %s"
+#~ msgid "Login"
+#~ msgstr "로그인 "
 
-#~ msgid "+ Yes"
-#~ msgstr "+ 예"
+#~ msgid "Login Information"
+#~ msgstr "로그인 정보 "
 
-#~ msgid "- Remove"
-#~ msgstr "- 제거 "
+#~ msgid "Logo"
+#~ msgstr "로고 "
 
-#~ msgid "400 - Invalid Parameters"
-#~ msgstr "400 - 잘못된 매개 변수 "
+#~ msgid "Password"
+#~ msgstr "암호 "
 
-#~ msgid "403 - Permission denied"
-#~ msgstr "403 - 사용 권한이 거부됨 "
+#~ msgid "Password Unknown"
+#~ msgstr "암호를 알 수 없음 "
 
-#~ msgid "404 - That page doesn't exist or is missing!"
-#~ msgstr "404 - 페이지가 없거나 찾을 수 없습니다! "
+#~ msgid "Passwords do not match."
+#~ msgstr "암호가 일치하지 않습니다."
 
-#~ msgid "500 Internal Server Error"
-#~ msgstr "500 내부 서버 오류 "
+#~ msgid "Passwords match."
+#~ msgstr "암호가 일치합니다."
 
-#~ msgid "<< Previous"
-#~ msgstr "<< 이전 "
+#~ msgid "Reset Password"
+#~ msgstr "암호 재설정 "
 
-#~ msgid "A request has been received by Katello server '%s' to retrieve the logins for email '%s'. The following is a list of those logins:"
-#~ msgstr "Katello 서버 '%s'는 요청을 수신하여 이메일 '%s'에 대한 로그인 정보를 검색했습니다. 다음은 로그인 정보 목록입니다: "
+#~ msgid "Return to log in."
+#~ msgstr "로그인으로 돌아갑니다."
 
-#~ msgid "A request has been received to reset the Katello password for user '%s'.  In order to reset this password, click the URL below."
-#~ msgstr "사용자 '%s'의 Katello 암호 재설정 요청을 받았습니다. 암호를 재설정하려면 아래의 URL을 클릭하십시오. "
+#~ msgid "Save"
+#~ msgstr "저장 "
 
-#~ msgid "Account Number"
-#~ msgstr "계정 번호 "
+#~ msgid "Send Login"
+#~ msgstr "로그인 전송 "
 
-#~ msgid "Activation Key"
-#~ msgstr "활성키"
+#~ msgid "Show My Password"
+#~ msgstr "내 암호 보기 "
 
-#~ msgid "Activation Keys provide a set of characteristics that may be applied to a system during system registration.  This includes things such as, default environment to assign to the system, subscriptions to allocate to the system, system template to apply to the system...etc."
-#~ msgstr "활성키는 시스템 등록 시 시스템에 적용할 수 있는 일련의 특징을 제공합니다. 예를 들어 시스템에 할당할 디폴트 환경, 시스템에 할당할 서브스크립션, 시스템에 적용할 시스템 템플릿 등이 포함됩니다. "
+#~ msgid "Username Unknown?"
+#~ msgstr "사용자 이름을 알 수 없습니까?"
 
-#~ msgid "Activation Keys provide a set of characteristics that may be applied to a system during system registration.  This includes things such as, default environment to assign to the system, subscriptions to allocate to the system...etc."
-#~ msgstr "활성키는 시스템 등록 시 시스템에 적용할 수 있는 일련의 특징을 제공합니다. 예를 들어, 시스템에 할당할 디폴트 환경, 시스템에 할당할 서브스크립션 등이 포함됩니다. "
+#~ msgid "You must specify host in %{config_file} for %{app_name} to work properly"
+#~ msgstr "올바르게 작동하게 하기 위해 %{app_name}의 %{config_file}에 있는 호스트를 지정해야 합니다"
 
-#~ msgid "Add"
-#~ msgstr "추가 "
+#~ msgid "can not be updated"
+#~ msgstr "업데이트할 수 없음 "
 
-#~ msgid "Add All"
-#~ msgstr "모두 추가 "
-
-#~ msgid "Add Global Permission"
-#~ msgstr "글로벌 권한 추가 "
-
-#~ msgid "Add New Environment"
-#~ msgstr "새 환경 추가 "
-
-#~ msgid "Add Package Canceled"
-#~ msgstr "패키지 추가 취소 "
-
-#~ msgid "Add Package Complete"
-#~ msgstr "패키지 추가 완료 "
-
-#~ msgid "Add Package Error"
-#~ msgstr "패키지 추가 오류 "
-
-#~ msgid "Add Package Group Canceled"
-#~ msgstr "패키지 그룹 추가 취소 "
-
-#~ msgid "Add Package Group Complete"
-#~ msgstr "패키지 그룹 추가 완료 "
-
-#~ msgid "Add Package Group Timeout"
-#~ msgstr "패키지 그룹 추가 시간 초과 "
-
-#~ msgid "Add Package Timeout"
-#~ msgstr "패키지 추가 시간 초과 "
-
-#~ msgid "Add Permission"
-#~ msgstr "권한 추가 "
-
-#~ msgid "Add Permission to"
-#~ msgstr "권한 추가 "
-
-#~ msgid "Add Product"
-#~ msgstr "제품 추가 "
-
-#~ msgid "Add Subscriptions ▸"
-#~ msgstr "서브스크립션 추가 "
-
-#~ msgid "Add to Key"
-#~ msgstr "키에 추가 "
-
-#~ msgid "Added"
-#~ msgstr "추가됨"
-
-#~ msgid "Added to changeset '%X'"
-#~ msgstr "변경 집합 '%X'에 추가함"
-
-#~ msgid "Added:"
-#~ msgstr "추가됨: "
-
-#~ msgid "Adding..."
-#~ msgstr "추가 중..."
-
-#~ msgid "Administration"
-#~ msgstr "관리 "
-
-#~ msgid "Advisory"
-#~ msgstr "권고 "
-
-#~ msgid "Alert"
-#~ msgstr "경고 "
-
-#~ msgid "All Errata"
-#~ msgstr "전체 에라타"
-
-#~ msgid "All Products"
-#~ msgstr "전체 제품"
-
-#~ msgid "All Repos"
-#~ msgstr "전체 리포지터리"
-
-#~ msgid "All Repositories"
-#~ msgstr "전체 리포지터리 "
-
-#~ msgid "All:"
-#~ msgstr "전체:"
-
-#~ msgid "An environment does not exist.  If you would like to manage changesets and content, please create a new environment."
-#~ msgstr "환경이 존재하지 않습니다. 승격 변경 집합과 컨텐츠를 관리하려면 새 환경을 생성하십시오. "
-
-#~ msgid "An error has occurred when communicating with the server, please refresh the page to retrieve the current System Template"
-#~ msgstr "서버와 통신할 때 오류가 발생했습니다. 현재 시스템 템플릿을 검색하기 위해 페이지를 새로 고침하십시오.  "
-
-#~ msgid "An error has occurred when communicating with the server, please refresh the page to retrieve the current changeset."
-#~ msgstr "서버와 통신할 때 오류가 발생했습니다. 변경 집합을 검색하기 위해 페이지를 새로 고침하십시오.  "
-
-#~ msgid "Applicable Product filters:"
-#~ msgstr "적용 가능한 제품 필터: "
-
-#~ msgid "Applicable Repository filters:"
-#~ msgstr "적용 가능한 리포지터리 필터: "
-
-#~ msgid "Applied"
-#~ msgstr "적용됨 "
-
-#~ msgid "Apply Deletion Changeset"
-#~ msgstr "변경 집합 삭제 적용 "
-
-#~ msgid "Apply Failed"
-#~ msgstr "적용 실패 "
-
-#~ msgid "Apply Promotion Changeset"
-#~ msgstr "승격 변경 집합 적용 "
-
-#~ msgid "Apply Selected Plan to Selected Products"
-#~ msgstr "선택한 계획을 선택한 제품에 적용 "
-
-#~ msgid "Applying..."
-#~ msgstr "적용 중..."
-
-#~ msgid "Arch"
-#~ msgstr "아키텍처 "
-
-#~ msgid "Architecture"
-#~ msgstr "아키텍처 "
-
-#~ msgid "Architecture:"
-#~ msgstr "아키텍처: "
-
-#~ msgid "Are you sure you want to %X the %Y entered on the %Z selected system(s)?"
-#~ msgstr "정말로 선택한 %Z 개의 시스템에 입력한 %Y를(을) %X하시겠습니까?"
-
-#~ msgid "Are you sure you want to add the %X selected system(s) to the system group(s) entered?"
-#~ msgstr "정말로 선택한 %X 시스템을 입력한 시스템 그룹에 추가하시겠습니까?"
-
-#~ msgid "Are you sure you want to delete the %X selected system(s)?"
-#~ msgstr "정말로 선택한 %X 시스템을 삭제하시겠습니까?"
-
-#~ msgid "Are you sure you want to delete the system group?"
-#~ msgstr "정말로 이 시스템 그룹을 삭제하시겠습니까? "
-
-#~ msgid "Are you sure you want to delete this GPG Key?"
-#~ msgstr "정말로 이 GPG 키를 삭제하시겠습니까? "
-
-#~ msgid "Are you sure you want to delete this filter?"
-#~ msgstr "정말로 이 필터를 삭제하시겠습니까?"
-
-#~ msgid "Are you sure you want to delete this provider?"
-#~ msgstr "정말로 이 공급자를 삭제하시겠습니까? "
-
-#~ msgid "Are you sure you want to install the errata entered on the %X selected system(s)?"
-#~ msgstr "정말로 선택한 %X 시스템에 입력한 에라타를 설치하시겠습니까?"
-
-#~ msgid "Are you sure you want to remove the %X selected system(s) from the system group(s) entered?"
-#~ msgstr "정말로 선택한 %X 시스템을 입력한 시스템 그룹에서 제거하시겠습니까?"
-
-#~ msgid "Are you sure you want to remove this deletion changeset?"
-#~ msgstr "정말로 삭제용 변경 집합을 제거하시겠습니까?"
-
-#~ msgid "Are you sure you want to remove this organization?"
-#~ msgstr "정말로 이 조직을 삭제하시겠습니까? "
-
-#~ msgid "Are you sure you want to remove this product?"
-#~ msgstr "정말로 이 제품을 삭제하시겠습니까? "
-
-#~ msgid "Are you sure you want to remove this promotion changeset?"
-#~ msgstr "정말로 이 승격 변경 집합을 제거하시겠습니까?"
-
-#~ msgid "Are you sure you want to remove this repository?"
-#~ msgstr "정말로 이 리포지터리를 삭제하시겠습니까? "
-
-#~ msgid "Are you sure you want to remove this role?"
-#~ msgstr "정말로 이 역할을 삭제하시겠습니까? "
-
-#~ msgid "Are you sure you want to remove this system?"
-#~ msgstr "정말로 이 시스템을 삭제하시겠습니까? "
-
-#~ msgid "Are you sure you want to remove this template?"
-#~ msgstr "정말로 이 템플릿을 삭제하시겠습니까? "
-
-#~ msgid "Are you sure you want to remove this user?"
-#~ msgstr "정말로 이 사용자를 삭제하시겠습니까? "
-
-#~ msgid "Are you sure?"
-#~ msgstr "정말로 그렇게 하시겠습니까? "
-
-#~ msgid "Are you sure? If any users have this environment set as their default, it will unset it."
-#~ msgstr "정말로 계속 진행하시겠습니까? 이 환경을 디폴트로 설정하는 사용자가 있을 경우 이 설정이 해제될 수 있습니다."
-
-#~ msgid "Associated Bugs"
-#~ msgstr "관련 버그 "
-
-#~ msgid "At least one erratum ID must be provided."
-#~ msgstr "최소 하나의 에라타 ID를 입력해야 합니다."
-
-#~ msgid "At least one package group name must be provided."
-#~ msgstr "최소 하나의 패키지 그룹 이름을 입력해야 합니다."
-
-#~ msgid "At least one system group must be selected."
-#~ msgstr "최소 하나의 시스템 그룹을 선택해야 합니다."
-
-#~ msgid "Auto-complete Product"
-#~ msgstr "제품 자동 완료 "
-
-#~ msgid "Auto-complete repository"
-#~ msgstr "리포지터리 자동 완료 "
-
-#~ msgid "Auto-subscribe %s, %s"
-#~ msgstr "자동 등록 %s, %s"
-
-#~ msgid "Available Errata"
-#~ msgstr "사용 가능한 에라타 "
-
-#~ msgid "Back"
-#~ msgstr "뒤로 "
-
-#~ msgid "Back to Results"
-#~ msgstr "결과로 돌아가기 "
-
-#~ msgid "Before removing this repository from the product, it must first be deleted from the following environments using a deletion changeset: "
-#~ msgstr "제품에서 이 리포지터리를 제거하기 전 삭제 용 변경 집합을 사용하여 다음의 환경을 먼저 삭제해야 합니다:"
-
-#~ msgid "Browse"
-#~ msgstr "검색"
-
-#~ msgid "Browser Default Locale"
-#~ msgstr "브라우저 디폴트 로케일 "
-
-#~ msgid "Bug Fix"
-#~ msgstr "버그 수정"
-
-#~ msgid "Build Host"
-#~ msgstr "빌드 호스트 "
-
-#~ msgid "Cancel"
-#~ msgstr "취소 "
-
-#~ msgid "Cancel Add"
-#~ msgstr "추가 취소 "
-
-#~ msgid "Cancel Changeset Review"
-#~ msgstr "변경 집합 확인 취소 "
-
-#~ msgid "Cancel Review"
-#~ msgstr "확인 취소 "
-
-#~ msgid "Change Password:"
-#~ msgstr "암호 변경: "
-
-#~ msgid "Changeset Details"
-#~ msgstr "변경 집합 상세 정보 "
-
-#~ msgid "Changeset is empty."
-#~ msgstr "변경 집합이 비어 있습니다. "
-
-#~ msgid "Changesets allow you to either promote content to or delete content from an environment.<BR/><BR/> For a promotion, you may promote content from one environment to the next along a promotion path.  Once you have created a promotion changeset, clicking \"Add\" next to one or more products will add them to the changeset.  If products already exist in the next environment, you may promote other types of content.  Once you have created a changeset, click the \"Review\" button to place the changeset in a locked state for review and when ready click the \"Promote\" button to apply it to the next environment.<BR/><BR/>For a deletion, you may remove content from the current environment. Once you have created a deletion changeset, clicking \"Add\" next to content will add that content to the changeset.  Once you have created a changeset, click the \"Review\" button to place the changeset in a locked state for review and when ready click the \"Delete\" button to apply it to the current environment.  Note: deletion of content from Library is not allowed using a deletion changeset.<BR/><BR/>"
-#~ msgstr ""
-#~ "변경 집합을 사용하여 환경에서 컨텐츠를 삭제하거나 컨텐츠를 승격할 수 있습니다. <BR/><BR/> 승격할 경우, 하나의 환경에서 승격 경로에 있는 다른 환경으로 컨텐츠를 승격할 수 있습니다. 승격 변경 집합을 생성한 후 제품 옆에 있는 \"추가\"를 클릭하여 변경 집합에 제품을 추가합니다. 다음 환경에 제품이 이미 존재하는 경우 다른 유형의 컨텐츠를 승격할 수 있습니다. 변경 집합을 생성한 후 \"확인\" 버튼을 클릭하여 확인을 위해 변경 집합을 잠금 상태로 두고 준비가 되면 \"승격\" 버튼을 클릭하여 변경 집합을 다음 환경에 적용합니다.<BR/><BR/> 삭제할 경우, 현재 환경에서 컨텐츠를 제거할 수 있습니다. 삭제 용 변경 집합을 생성한 후 컨텐츠 옆에 있는 \"추가\"를 클릭하여 컨텐츠를 변경 집합에 추가합니다. 변경 집합을 생성한 후 \"확인\" 버튼을 클릭하여 확인을 위해 변경 집합을 잠금 상태로 두고 준비가 되면 \"삭제\" 버튼을 클릭하여 변경 집합을 현재 환경에 적용합니다. 알림: 삭제 용 변경 집합을 사용하여 라이브러리에서 컨테츠를 삭제할 수 없습니다. \n"
-#~ "<BR/><BR/>"
-
-#~ msgid "Checked In"
-#~ msgstr "접속함 "
-
-#~ msgid "Choose Environment:"
-#~ msgstr "환경 선택: "
-
-#~ msgid "Choose New System Registration Defaults:"
-#~ msgstr "새 시스템 등록 기본 값 선택:"
-
-#~ msgid "Choose a product.."
-#~ msgstr "제품 선택.."
-
-#~ msgid "Choose an Organization"
-#~ msgstr "조직 선택"
-
-#~ msgid "Clear"
-#~ msgstr "삭제 "
-
-#~ msgid "Clear Disabled Helptips:"
-#~ msgstr "비활성화된 도움말 삭제: "
-
-#~ msgid "Clear the Search"
-#~ msgstr "검색 삭제 "
-
-#~ msgid "Click Add or Remove next to a user name to apply or remove them from role."
-#~ msgstr "역할에서 사용자 이름을 적용 또는 삭제하려면 이름 옆에 있는 추가 또는 삭제를 클릭합니다. "
-
-#~ msgid "Click Add permission from the bar below to add a permission."
-#~ msgstr "권한을 추가혀려면 하단 바에서 권한 추가를 클릭합니다. "
-
-#~ msgid "Click edit permission from the bar below to edit the current permission."
-#~ msgstr "현재 권한을 편집하려면 하단 바에서 권한 편집을 클릭합니다. "
-
-#~ msgid "Click to edit"
-#~ msgstr "클릭하여 편집 "
-
-#~ msgid "Close"
-#~ msgstr "종료 "
-
-#~ msgid "Close Add Permission"
-#~ msgstr "권한 추가 종료 "
-
-#~ msgid "Close Changeset Details"
-#~ msgstr "변경 집합 상세 정보 종료"
-
-#~ msgid "Close Details"
-#~ msgstr "상세 정보 종료 "
-
-#~ msgid "Close Edit"
-#~ msgstr "편집 종료 "
-
-#~ msgid "Close Edit Permission"
-#~ msgstr "권한 편집 종료 "
-
-#~ msgid "Close Role Details"
-#~ msgstr "역할 상세 정보 종료 "
-
-#~ msgid "Collapse"
-#~ msgstr "손상 "
-
-#~ msgid "Collapse All"
-#~ msgstr "모두 손상 "
-
-#~ msgid "Compare Repositories"
-#~ msgstr "리포지터리 비교"
-
-#~ msgid "Confirm:"
-#~ msgstr "확인: "
-
-#~ msgid "Confirmation"
-#~ msgstr "확인 "
-
-#~ msgid "Consumed"
-#~ msgstr "사용됨 "
-
-#~ msgid "Consumed: %d of %d"
-#~ msgstr "사용됨: %d 중 %d"
-
-#~ msgid "Consumed: Unlimited"
-#~ msgstr "사용됨: 제한 없음 "
-
-#~ msgid "Content Download URL: "
-#~ msgstr "컨텐츠 다운로드 URL: "
-
-#~ msgid "Contents:"
-#~ msgstr "컨텐츠: "
-
-#~ msgid "Continue"
-#~ msgstr "계속 진행 "
-
-#~ msgid "Contract"
-#~ msgstr "계약 "
-
-#~ msgid "Contract Number"
-#~ msgstr "계약 번호"
-
-#~ msgid "Copy"
-#~ msgstr "복사"
-
-#~ msgid "Create"
-#~ msgstr "생성 "
-
-#~ msgid "Create Application Life Cycle Management Environment"
-#~ msgstr "애플리케이션 라이프 사이클 관리 환경 생성 "
-
-#~ msgid "Create Product"
-#~ msgstr "제품 생성 "
-
-#~ msgid "Create Repository"
-#~ msgstr "리포지터리 생성 "
-
-#~ msgid "Created (UTC)"
-#~ msgstr "생성됨 (UTC) "
-
-#~ msgid "Creating..."
-#~ msgstr "생성 중..."
-
-#~ msgid "Critical"
-#~ msgstr "중요 "
-
-#~ msgid "Current Organization"
-#~ msgstr "현재 조직 "
-
-#~ msgid "Current Subscriptions"
-#~ msgstr "현재 서브스크립션 "
-
-#~ msgid "Current System Registration Defaults"
-#~ msgstr "현재 시스템 등록 기본값 "
-
-#~ msgid "DETAILS"
-#~ msgstr "상세 정보 "
-
-#~ msgid "Date"
-#~ msgstr "날짜 "
-
-#~ msgid "Debug Certificate"
-#~ msgstr "디버그 인증서 "
-
-#~ msgid "Delete"
-#~ msgstr "삭제 "
-
-#~ msgid "Delete All"
-#~ msgstr "모두 삭제 "
-
-#~ msgid "Deleted System Group %s and it's %s systems."
-#~ msgstr "시스템 그룹 %s 및 시스템 그룹의 %s 시스템을 삭제했습니다."
-
-#~ msgid "Dependency of "
-#~ msgstr "종속성 "
-
-#~ msgid "Description"
-#~ msgstr "설명 "
-
-#~ msgid "Description:"
-#~ msgstr "설명: "
-
-#~ msgid "Details for the currently selected permission."
-#~ msgstr "현재 선택된 권한에 대한 상세 정보 "
-
-#~ msgid "Difference"
-#~ msgstr "차이점"
-
-#~ msgid "Difference (Intersection):"
-#~ msgstr "차이점 (교차점): "
-
-#~ msgid "Display"
-#~ msgstr "보기 "
-
-#~ msgid "Distribution"
-#~ msgstr "배포판 "
-
-#~ msgid "Do not open the copy upon completion"
-#~ msgstr "완료 시 복사 본을 열지 마십시오"
-
-#~ msgid "Do you also want to delete the systems in the system group?"
-#~ msgstr "시스템 그룹에 있는 시스템도 삭제하시겠습니까?"
-
-#~ msgid "Do you want to set this GPG Key as the key for all repositories within this product?"
-#~ msgstr "이 GPG 키를 이 제품에 있는 모든 리포지터리에 대한 키로 설정하시겠습니까? "
-
-#~ msgid "Done"
-#~ msgstr "완료 "
-
-#~ msgid "Download"
-#~ msgstr "다운로드 "
-
-#~ msgid "Download System Template"
-#~ msgstr "시스템 템플릿 다운로드 "
-
-#~ msgid "Duration"
-#~ msgstr "기간 "
-
-#~ msgid "ERRATA"
-#~ msgstr "에라타 "
-
-#~ msgid "Edit Activation Key enables you to modify the selected activation key.  This key may be used during system registration.  For example, <BR/><BR/>subscription-manager register --org %s --activationkey %s"
-#~ msgstr "선택한 활성키를 수정할 수 있도록 활성키를 편집합니다. 이러한 키는 시스템 등록 시 사용할 수 있습니다. 예: <BR/><BR/>subscription-manager register --org %s --activationkey %s"
-
-#~ msgid "Edit Changeset Details"
-#~ msgstr "변경 집합 상세 정보 편집"
-
-#~ msgid "Edit Details"
-#~ msgstr "상세 정보 편집 "
-
-#~ msgid "Edit Environment"
-#~ msgstr "환경 편집 "
-
-#~ msgid "Edit GPG Key enables you to modify the selected GPG Key.  A new key can be copied and pasted in directly."
-#~ msgstr "GPG 키 편집으로 선택한 GPG 키를 변경할 수 있습니다. 새 키는 직접 복사 및 붙여넣기가 가능합니다. "
-
-#~ msgid "Edit Permission"
-#~ msgstr "권한 편집 "
-
-#~ msgid "Edit Permission in"
-#~ msgstr "권한 편집 "
-
-#~ msgid "Edit Product"
-#~ msgstr "제품 편집 "
-
-#~ msgid "Edit Role"
-#~ msgstr "역할 편집 "
-
-#~ msgid "Edit Role Details"
-#~ msgstr "역할 정보 편집 "
-
-#~ msgid "Edit System Template"
-#~ msgstr "시스템 템플릿 편집 "
-
-#~ msgid "Eligible Content"
-#~ msgstr "자격을 갖는 컨텐츠 "
-
-#~ msgid "Email Address:"
-#~ msgstr "이메일 주소: "
-
-#~ msgid "Enabled by Default: "
-#~ msgstr "디폴트로 활성화됨: "
-
-#~ msgid "End"
-#~ msgstr "종료 "
-
-#~ msgid "End Date"
-#~ msgstr "종료 날짜 "
-
-#~ msgid "Enhancement"
-#~ msgstr "기능 강화"
-
-#~ msgid "Enter Errata..."
-#~ msgstr "에라타 입력..."
-
-#~ msgid "Enter Package or Group Name(s)..."
-#~ msgstr "패키지 또는 그룹 이름 입력..."
-
-#~ msgid "Enter Selected Content..."
-#~ msgstr "선택한 컨텐츠를 입력..."
-
-#~ msgid "Enter system name..."
-#~ msgstr "시스템 이름 입력..."
-
-#~ msgid "Env: "
-#~ msgstr "환경:"
-
-#~ msgid "Environment Promotion Paths"
-#~ msgstr "환경 승격 경로 "
-
-#~ msgid "Environment:"
-#~ msgstr "환경: "
-
-#~ msgid "Errata (0)"
-#~ msgstr "에라타 (0)"
-
-#~ msgid "Erratum"
-#~ msgstr "에라타 "
-
-#~ msgid "Error"
-#~ msgstr "오류 "
-
-#~ msgid "Error on Install"
-#~ msgstr "설치 시 오류 발생 "
-
-#~ msgid "Error:"
-#~ msgstr "오류: "
-
-#~ msgid "Event"
-#~ msgstr "이벤트 "
-
-#~ msgid "Example Searches:"
-#~ msgstr "예시 검색: "
-
-#~ msgid "Expand"
-#~ msgstr "확장 "
-
-#~ msgid "Expand All"
-#~ msgstr "모두 확장 "
-
-#~ msgid "Expand each Red Hat product below to see the available repositories in each. Selecting the checkbox will make that repository's content available for synchronizing."
-#~ msgstr "각 제품에 사용 가능한 리포지터리가 있는지 확인하기 위해 다음의 각 Red Hat 제품을 확장합니다. 확인란을 선택하여 해당 리포지터리의 컨텐츠를 동기화할 수 있게 합니다."
-
-#~ msgid "Expanded"
-#~ msgstr "확장됨 "
-
-#~ msgid "Expires: %s"
-#~ msgstr "만료일: %s"
-
-#~ msgid "Fact"
-#~ msgstr "정보 "
-
-#~ msgid "File"
-#~ msgstr "파일 "
-
-#~ msgid "Filter on Loaded Events..."
-#~ msgstr "로딩된 이벤트를 필터..."
-
-#~ msgid "Filter on loaded Events..."
-#~ msgstr "로딩된 이벤트를 필터..."
-
-#~ msgid "Filter on loaded packages..."
-#~ msgstr "로딩된 패키지를 필터..."
-
-#~ msgid "Filter..."
-#~ msgstr "필터..."
-
-#~ msgid "Full Access"
-#~ msgstr "전체 액세스 "
-
-#~ msgid "Full Products"
-#~ msgstr "전체 제품 "
-
-#~ msgid "GPG Key URL: "
-#~ msgstr "GPG 키 URL: "
-
-#~ msgid "GPG Key assigned at the Product Level for"
-#~ msgstr "제품 수준에 할당된 GPG 키 "
-
-#~ msgid "GPG Key assigned at the Repository Level for"
-#~ msgstr "리포지터리 수준에 할당된 GPG 키 "
-
-#~ msgid "GPG Keys may be stored by uploading a key directly or copying and pasting the key in upon creation. By visiting the Providers page and selecting either a product or repository, a GPG key that has been created here can be associated with the given entity."
-#~ msgstr "직접 키를 업로드하거나 키 생성시 키를 복사 및 붙여넣기하여 GPG 키를 저장할 수 있습니다. 공급자 페이지로 이동하여 제품이나 리포지터리를 선택하여 여기서 생성한 GPG 키를 주어진 엔티티에 연결할 수 있습니다. "
-
-#~ msgid "Global permissions allow you to create permissions that span all organizations, or choose a specific organization to apply permissions."
-#~ msgstr "글로벌 권한은 모든 조직을 확장하는 권한을 생성하거나 권한을 적용하기 위한 특정 조직을 선택하게 할 수 있습니다. "
-
-#~ msgid "Global permissions are permissions that span all organizations; however, organization permissions apply only to the organization they are associated with."
-#~ msgstr "글로벌 권한은 모든 조직을 확장하는 권한이지만 조직 권한은 관련 조직에만 적용됩니다. "
-
-#~ msgid "Go"
-#~ msgstr "이동 "
-
-#~ msgid "Good"
-#~ msgstr "만족 "
-
-#~ msgid "Group"
-#~ msgstr "그룹 "
-
-#~ msgid "Guests"
-#~ msgstr "게스트 "
-
-#~ msgid "Host & Guest Info"
-#~ msgstr "호스트 & 게스트 정보 "
-
-#~ msgid "Hostname"
-#~ msgstr "호스트 이름"
-
-#~ msgid "ID"
-#~ msgstr "ID"
-
-#~ msgid "If you continue having trouble, please contact an Administrator."
-#~ msgstr "계속 문제가 발생할 경우, 관리자에게 문의하십시오. "
-
-#~ msgid "If you did not request this password to be reset, just ignore this email and the password will continue to stay the same."
-#~ msgstr "이 암호를 재설정하도록 요청하지 않은 경우 이 이메일을 무시하십시오. 암호는 동일하게 유지됩니다. "
-
-#~ msgid "If you have a subscription manifest you may upload it below. This manifest may be obtained by visiting the Red Hat Customer Portal or by contacting your support representative."
-#~ msgstr "서브스크립션 매니페스트가 있는 경우 이를 다음에 업로드할 수 있습니다. 이 매니페스트를 얻으려면 Red Hat 고객 포털로 가보시거나 지원 담당자에게 문의하십시오."
-
-#~ msgid "Import Time"
-#~ msgstr "가져오기 시간 "
-
-#~ msgid "Import in progress (%M)"
-#~ msgstr "가져오기 진행 중 (%M)"
-
-#~ msgid "Import in progress (%s)"
-#~ msgstr "가져오기 진행 중 (%s)"
-
-#~ msgid "Info"
-#~ msgstr "정보 "
-
-#~ msgid "Initial Application Life Cycle Management Environment"
-#~ msgstr "초기 애플리케이션 라이프 사이클 관리 환경 "
-
-#~ msgid "Inline Help Enabled:"
-#~ msgstr "인라인 도움말 사용: "
-
-#~ msgid "Install"
-#~ msgstr "설치 "
-
-#~ msgid "Install Finished"
-#~ msgstr "설치가 완료되었습니다"
-
-#~ msgid "Installing"
-#~ msgstr "설치 중 "
-
-#~ msgid "Insufficient Entitlements"
-#~ msgstr "불충분한 인타이틀먼트 "
-
-#~ msgid "Insufficient Subscriptions are Attached to This System"
-#~ msgstr "불충분한 서브스크립션이 시스템에 할당되었습니다"
-
-#~ msgid "Interfaces"
-#~ msgstr "인터페이스 "
-
-#~ msgid "Invalid Subscriptions"
-#~ msgstr "잘못된 서브스크립션 "
-
-#~ msgid "Invalid parameters sent for %s/%s. You may have mistyped the address. If you continue having trouble with this, please contact an Administrator."
-#~ msgstr "잘못된 매개 변수가 %s/%s로 전송되었습니다. 주소를 잘못 입력하신것 같습니다. 문제가 계속 발생하면 관리자에게 문의하십시오. "
-
-#~ msgid "Issued"
-#~ msgstr "발행됨 "
-
-#~ msgid "Issued: "
-#~ msgstr "발행됨: "
-
-#~ msgid "Katello Logo"
-#~ msgstr "Katello 로고 "
-
-#~ msgid "Label"
-#~ msgstr "레이블 "
-
-#~ msgid "Last Booted"
-#~ msgstr "마지막 부팅 "
-
-#~ msgid "Last Checked in Date"
-#~ msgstr "마지막 접속 날짜 "
-
-#~ msgid "Latest Notifications"
-#~ msgstr "최근 통지 "
-
-#~ msgid "Level"
-#~ msgstr "레벨 "
-
-#~ msgid "License"
-#~ msgstr "라이센스 "
-
-#~ msgid "Limit"
-#~ msgstr "제한 "
-
-#~ msgid "List Actions"
-#~ msgstr "작업 목록 "
-
-#~ msgid "Load %{n} More"
-#~ msgstr "%{n}개 더 불러오기"
-
-#~ msgid "Loading Changeset"
-#~ msgstr "변경 집합 로딩 중 "
-
-#~ msgid "Loading Permissions"
-#~ msgstr "권한 로딩 중 "
-
-#~ msgid "Loading Role"
-#~ msgstr "역할 로딩 중 "
-
-#~ msgid "Loading System Template"
-#~ msgstr "시스템 템플릿 로딩 중 "
-
-#~ msgid "Loading dependencies."
-#~ msgstr "종속성 로딩 중 "
-
-#~ msgid "Location"
-#~ msgstr "위치 "
-
-#~ msgid "Log Out"
-#~ msgstr "로그 아웃 "
-
-#~ msgid "Make this your default organization."
-#~ msgstr "이 조직을 사용자의 기본 조직으로 합니다."
-
-#~ msgid "Manage Environments"
-#~ msgstr "환경 관리"
-
-#~ msgid "Manage Packages"
-#~ msgstr "패키지 관리 "
-
-#~ msgid "Manifest File"
-#~ msgstr "매니페스트 파일 "
-
-#~ msgid "Manifest from "
-#~ msgstr "다음에서 매니페스트"
-
-#~ msgid "Maximum Limit"
-#~ msgstr "최대 한도  "
-
-#~ msgid "Maximum Number of Systems"
-#~ msgstr "최대 시스템 수 "
-
-#~ msgid "Message"
-#~ msgstr "메세지 "
-
-#~ msgid "Missing"
-#~ msgstr "누락됨 "
-
-#~ msgid "More >>"
-#~ msgstr "상세 정보 >>"
-
-#~ msgid "More..."
-#~ msgstr "상세 정보..."
-
-#~ msgid "Multi-entitlement"
-#~ msgstr "멀티 인타이틀먼트 "
-
-#~ msgid "Name can not be blank."
-#~ msgstr "이름을 빈 칸으로 둘 수 없습니다. "
-
-#~ msgid "Name of Your System:"
-#~ msgstr "시스템 이름: "
-
-#~ msgid "Name:"
-#~ msgstr "이름: "
-
-#~ msgid "Networking"
-#~ msgstr "네트워크 구성 "
-
-#~ msgid "New Activation Key"
-#~ msgstr "새 활성화 키 "
-
-#~ msgid "New Changeset"
-#~ msgstr "새 변경 집합 "
-
-#~ msgid "New GPG Key"
-#~ msgstr "새 GPG 키 "
-
-#~ msgid "New Organization"
-#~ msgstr "새 조직 "
-
-#~ msgid "New Package Filter"
-#~ msgstr "새 패키지 필터 "
-
-#~ msgid "New Provider"
-#~ msgstr "새 공급자 "
-
-#~ msgid "New Role"
-#~ msgstr "새 역할 "
-
-#~ msgid "New Sync Plan"
-#~ msgstr "새 동기화 계획 "
-
-#~ msgid "New System Group"
-#~ msgstr "새 시스템 그룹 "
-
-#~ msgid "New System Template"
-#~ msgstr "새 시스템 템플릿 "
-
-#~ msgid "New User"
-#~ msgstr "새 사용자 "
-
-#~ msgid "New system"
-#~ msgstr "새 시스템 "
-
-#~ msgid "Next >>"
-#~ msgstr "다음 >>"
-
-#~ msgid "No"
-#~ msgstr "없음 "
-
-#~ msgid "No System Templates are currently defined"
-#~ msgstr "현재 정의된 시스템 템플릿이 없음 "
-
-#~ msgid "No Templates"
-#~ msgstr "템플릿이 없음 "
-
-#~ msgid "No changesets found."
-#~ msgstr "변경 집합을 찾을 수 없음 "
-
-#~ msgid "No default environment. Select an organization to choose from available environments."
-#~ msgstr "디폴트 환경이 없습니다. 사용 가능한 환경에서 선택하기 위해 조직을 선택합니다. "
-
-#~ msgid "No distributions available."
-#~ msgstr "사용 가능한 배포판이 없음. "
-
-#~ msgid "No distributions exist in this changeset."
-#~ msgstr "변경 집합에 존재하는 배포판이 없음. "
-
-#~ msgid "No environments are available in this organization. Please add some environments to be able register systems to this organization."
-#~ msgstr "이 조직에서 사용 가능한 환경이 없습니다. 시스템을 조직에 등록 가능하게 하려면 환경을 추가하십시오. "
-
-#~ msgid "No environments are currently available in this organization.  Please add some to be able to create activation keys."
-#~ msgstr "현재 이 조직에서 사용 가능한 환경이 없습니다. 활성키를 생성 가능하게 하려면 일부 환경을 추가하십시오. "
-
-#~ msgid "No environments are currently available in this organization. Saving will set user to no system registration default environment."
-#~ msgstr "현재 이 조직에서 사용 가능한 환경이 없습니다. 저장하면 시스템 등록 기본 환경 없음으로 사용자를 설정하게 됩니다. "
-
-#~ msgid "No errata available."
-#~ msgstr "사용 가능한 에라타가 없음."
-
-#~ msgid "No errata exist in this changeset."
-#~ msgstr "변경 집합에 존재하는 에라타가 없음. "
-
-#~ msgid "No event history found for %s"
-#~ msgstr "%s에 대한 이벤트 기록을 찾을 수 없음 "
-
-#~ msgid "No package groups available."
-#~ msgstr "사용 가능한 패키지 그룹이 없음. "
-
-#~ msgid "No packages are currently filtered."
-#~ msgstr "현재 필터되는 패키지가 없음. "
-
-#~ msgid "No packages available"
-#~ msgstr "사용 가능한 패키지가 없음  "
-
-#~ msgid "No packages exist in this changeset."
-#~ msgstr "변경 집합에 존재하는 패키지가 없음. "
-
-#~ msgid "No packages found."
-#~ msgstr "패키지를 찾을 수 없음. "
-
-#~ msgid "No products"
-#~ msgstr "제품이 없음 "
-
-#~ msgid "No products exist in this changeset."
-#~ msgstr "변경 집합에 존재하는 제품이 없음. "
-
-#~ msgid "No products or repositories are currently associated with this system template.  Please add either a product or repository that contains distributions in order to select a distribution."
-#~ msgstr "현재 이 시스템 템플릿과 관련된 제품이나 리포지터리가 없습니다. 배포판을 선택하기 위해 배포판이 들어 있는 제품이나 리포지터리를 추가하십시오. "
-
-#~ msgid "No products or repositories are currently associated."
-#~ msgstr "현재 연결된 제품이나 리포지터리가 없음. "
-
-#~ msgid "No recently synced products."
-#~ msgstr "최근 동기화된 제품이 없음. "
-
-#~ msgid "No repositories"
-#~ msgstr "리포지터리가 없음 "
-
-#~ msgid "No repositories available"
-#~ msgstr "사용 가능한 리포지터리가 없음"
-
-#~ msgid "No repositories available."
-#~ msgstr "사용 가능한 리포지터리가 없음. "
-
-#~ msgid "No repositories exist in this changeset."
-#~ msgstr "변경 집합에 존재하는 리포지터리가 없음."
-
-#~ msgid "No subscriptions have been imported."
-#~ msgstr "불러온 서브스크립션이 없음. "
-
-#~ msgid "No system groups found."
-#~ msgstr "시스템 그룹을 찾을 수 없음. "
-
-#~ msgid "No system registration default environment. Select an organization to choose from available environments."
-#~ msgstr "시스템 등록 기본 환경이 없습니다. 사용 가능한 환경에서 선택하기 위해 조직을 선택합니다. "
-
-#~ msgid "No system templates exist in the changeset."
-#~ msgstr "변경 집합에 존재하는 시스템 템플릿이 없음. "
-
-#~ msgid "No systems currently exist in this system group."
-#~ msgstr "이 시스템 그룹에 현재 존재하는 시스템이 없음."
-
-#~ msgid "No systems found."
-#~ msgstr "시스템을 찾을 수 없음. "
-
-#~ msgid "No, only delete the system group."
-#~ msgstr "아니오, 시스템 그룹만 삭제합니다."
-
-#~ msgid "None defined for this Organization."
-#~ msgstr "이 조직에 대해 정의된 것이 없음."
-
-#~ msgid "None of the associated products or repositories contain distributions, please add a product or repository that contains at least one distribution."
-#~ msgstr "배포판이 들어 있는 연결된 제품이나 리포지터리가 없습니다. 최소 하나의 배포판이 들어 있는 제품이나 리포지터리를 추가하십시오. "
-
-#~ msgid "None."
-#~ msgstr "없음. "
-
-#~ msgid "Not Applied"
-#~ msgstr "적용되지 않음 "
-
-#~ msgid "Note: This will be set as your initial default environment."
-#~ msgstr "알림: 이는 초기 디폴트 환경으로 설정됩니다. "
-
-#~ msgid "Number of Sockets or LPARs:"
-#~ msgstr "소켓 또는 LPAR 수: "
-
-#~ msgid "OS"
-#~ msgstr "OS"
-
-#~ msgid "OS: "
-#~ msgstr "OS: "
-
-#~ msgid "Ok"
-#~ msgstr "Ok"
-
-#~ msgid "On Products & Repositories you can add your own Products and Repositories to your Provider.  This allows you to synchronize content from any remote repository to this server.  Simply add a Product and then setup one or more repositories to add to this Provider.  This feature is only available for Custom Providers."
-#~ msgstr "제품 & 리포지터리에서 공급자에게 제품 및 리포지터리를 추가할 수 있습니다. 이는 모든 원격 리포지터리에서 이 서버로 컨텐츠를 동기화 가능하게 합니다. 간단하게 제품을 추가한 후 공급자를 추가하기 위해 하나 이상의 리포지터리를 설정합니다. 이 기능은 사용자 정의 공급자에 대해서만 사용 가능합니다. "
-
-#~ msgid "On:"
-#~ msgstr "위치: "
-
-#~ msgid "One or more of the groups provided has an action pending."
-#~ msgstr "하나 이상의 그룹에 보류 중인 작업이 있습니다. "
-
-#~ msgid "One or more of the packages provided has an action pending."
-#~ msgstr "하나 이상의 패키지에 보류 중인 작업이 있습니다. "
-
-#~ msgid "One or more package names are invalid."
-#~ msgstr "하나 이상의 패키지 이름이 잘못되었습니다. "
-
-#~ msgid "Only show syncing."
-#~ msgstr "동기화 중인 것만을 표시. "
-
-#~ msgid "Organization:"
-#~ msgstr "조직: "
-
-#~ msgid "Organizations allow content and systems to be separated by logical divisions.  To edit the environments within an organization, click on that organization and then click on the desired environment."
-#~ msgstr "조직은 컨텐츠와 시스템을 논리적 단위로 구분할 수 있습니다. 조직에 있는 환경을 편집하려면 해당 조직을 클릭하고 원하는 환경을 클릭합니다. "
-
-#~ msgid "Package"
-#~ msgstr "패키지 "
-
-#~ msgid "Package Dependencies"
-#~ msgstr "패키지 종속성 "
-
-#~ msgid "Package Filters allow you to blacklist packages from being promoted into subsequent environments. Simply create a filter and add either a package name or regular expression to the filter.  You can associate the filter with entire products or individual repositories within any product."
-#~ msgstr "패키지 필터는 후속 환경으로 승격되는 것에서 패키지를 블랙리스트할 수 있습니다. 필터를 생성하여 필터에 패키지 이름 또는 정규 표현을 추가하면 됩니다. 전체 제품 또는 제품에 있는 개별 리포지터리와 필터를 연결할 수 있습니다.  "
-
-#~ msgid "Package Group"
-#~ msgstr "패키지 그룹 "
-
-#~ msgid "Package Name"
-#~ msgstr "패키지 이름 "
-
-#~ msgid "Package Size"
-#~ msgstr "패키지 크기 "
-
-#~ msgid "Packages (0)"
-#~ msgstr "패키지 (0)"
-
-#~ msgid "Packages:"
-#~ msgstr "패키지:"
-
-#~ msgid "Parameters"
-#~ msgstr "매개 변수 "
-
-#~ msgid "Partial Products"
-#~ msgstr "일부 제품 "
-
-#~ msgid "Password Strength"
-#~ msgstr "암호 강도 "
-
-#~ msgid "Password:"
-#~ msgstr "암호: "
-
-#~ msgid "Paste GPG Key"
-#~ msgstr "GPG 키 붙여넣기 "
-
-#~ msgid "Permission"
-#~ msgstr "권한 "
-
-#~ msgid "Permission For:"
-#~ msgstr "권한 "
-
-#~ msgid "Permissions for this role."
-#~ msgstr "이 역할에 대한 권한 "
-
-#~ msgid "Physical or Virtual"
-#~ msgstr "물리 또는 가상 "
-
-#~ msgid "Pick your Environment to download template from:"
-#~ msgstr "템플릿을 다운로드할 환경을 선택합니다: "
-
-#~ msgid "Place Changeset in Review State"
-#~ msgstr "변경 집합을 확인 상태로 둠 "
-
-#~ msgid "Please request the required privileges from an administrator."
-#~ msgstr "관리자로 부터 필요한 권한을 요청하십시오. "
-
-#~ msgid "Please select Package(s) or Package Group(s)."
-#~ msgstr "패키지 또는 패키지 그룹을 선택하십시오."
-
-#~ msgid "Please select Permissions to view and add permissions for this role or Users to see current users with this role."
-#~ msgstr "이 역할에 대한 권한을 보거나 추가하려면 권한을 선택하고 역할을 갖는 현재 사용자를 확인하려면 사용자를 선택하십시오. "
-
-#~ msgid "Please select Permissions to view permissions for this role or Users to see current users with this role."
-#~ msgstr "이 역할에 대한 권한을 보려면 권한을 선택하고 역할을 갖는 현재 사용자를 확인하려면 사용자를 선택하십시오. "
-
-#~ msgid "Preferred Locale"
-#~ msgstr "선택한 로케일 "
-
-#~ msgid "Prior Environment"
-#~ msgstr "이전 환경 "
-
-#~ msgid "Processing changeset modifications, please wait."
-#~ msgstr "변경 집합 수정을 처리하고 있습니다. 잠시만 기다리십시오. "
-
-#~ msgid "Product"
-#~ msgstr "제품 "
-
-#~ msgid "Product Name: "
-#~ msgstr "제품 이름: "
-
-#~ msgid "Product(s) in this environment"
-#~ msgstr "이 환경에 있는 제품 "
-
-#~ msgid "Product: "
-#~ msgstr "제품: "
-
-#~ msgid "Progress:"
-#~ msgstr "진행 상태: "
-
-#~ msgid "Promote"
-#~ msgstr "승격 "
-
-#~ msgid "Promote to "
-#~ msgstr "승격 "
-
-#~ msgid "Promoted"
-#~ msgstr "승격됨 "
-
-#~ msgid "Promoted By:"
-#~ msgstr "다음에 따라 승격됨: "
-
-#~ msgid "Promotion Date:"
-#~ msgstr "승격 날짜: "
-
-#~ msgid "Promotion to %s"
-#~ msgstr "%s에 승격 "
-
-#~ msgid "Promotions Overview"
-#~ msgstr "승격 개요 "
-
-#~ msgid "Provided Product Details"
-#~ msgstr "제공되는 제품 상세 정보 "
-
-#~ msgid "Provided Products"
-#~ msgstr "제공되는 제품 "
-
-#~ msgid "Provider: "
-#~ msgstr "공급자: "
-
-#~ msgid "Providers provide many types of content such as packages, errata, kickstart trees, and installation disc images.  A provider may be delivering all of your paid content or it could simply be a local yum repository providing a few yum repos."
-#~ msgstr "공급자는 패키지, 에라타, 킥스타트 트리, 설치 디스크 이미지와 같은 여러 종류의 컨텐츠를 제공합니다. 공급자는 모든 유료 컨텐츠를 제공하거나 yum 리포지터리를 제공하는 로컬 yum 리포지터리가 될 수 도 있습니다. "
-
-#~ msgid "Provides"
-#~ msgstr "제공 "
-
-#~ msgid "Quantity"
-#~ msgstr "수량 "
-
-#~ msgid "Red Hat Provider Details"
-#~ msgstr "Red Hat 공급자 정보 "
-
-#~ msgid "References:"
-#~ msgstr "참조: "
-
-#~ msgid "Refresh Results"
-#~ msgstr "결과 새로 고침 "
-
-#~ msgid "Registered"
-#~ msgstr "등록됨 "
-
-#~ msgid "Release"
-#~ msgstr "릴리즈 "
-
-#~ msgid "Release Version"
-#~ msgstr "릴리즈 버전 "
-
-#~ msgid "Remove"
-#~ msgstr "삭제 "
-
-#~ msgid "Remove Activation Key"
-#~ msgstr "활성 키 삭제 "
-
-#~ msgid "Remove All"
-#~ msgstr "모두 삭제 "
-
-#~ msgid "Remove Changeset"
-#~ msgstr "변경 집합 삭제 "
-
-#~ msgid "Remove Environment"
-#~ msgstr "환경 삭제 "
-
-#~ msgid "Remove Filter"
-#~ msgstr "필터 삭제 "
-
-#~ msgid "Remove GPG Key"
-#~ msgstr "GPG 키 삭제 "
-
-#~ msgid "Remove Organization"
-#~ msgstr "조직 삭제 "
-
-#~ msgid "Remove Package Canceled"
-#~ msgstr "취소된 패키지 삭제 "
-
-#~ msgid "Remove Package Complete"
-#~ msgstr "완료된 패키지 삭제 "
-
-#~ msgid "Remove Package Error"
-#~ msgstr "패키지 오류 삭제 "
-
-#~ msgid "Remove Package Group Canceled"
-#~ msgstr "취소된 패키지 그룹 삭제 "
-
-#~ msgid "Remove Package Group Complete"
-#~ msgstr "완료된 패키지 그룹 삭제 "
-
-#~ msgid "Remove Package Group Timeout"
-#~ msgstr "패키지 그룹 시간 초과 삭제 "
-
-#~ msgid "Remove Package Timeout"
-#~ msgstr "패키지 시간 초과 삭제 "
-
-#~ msgid "Remove Provider"
-#~ msgstr "공급자 삭제 "
-
-#~ msgid "Remove Role"
-#~ msgstr "역할 삭제 "
-
-#~ msgid "Remove Selected"
-#~ msgstr "선택한 사항 삭제 "
-
-#~ msgid "Remove Sync Plan"
-#~ msgstr "동기화 계획 삭제 "
-
-#~ msgid "Remove System"
-#~ msgstr "시스템 삭제 "
-
-#~ msgid "Remove System(s)"
-#~ msgstr "시스템 삭제 "
-
-#~ msgid "Remove User"
-#~ msgstr "사용자 삭제 "
-
-#~ msgid "Removed:"
-#~ msgstr "삭제됨: "
-
-#~ msgid "Removing..."
-#~ msgstr "삭제 중..."
-
-#~ msgid "Repo Type: "
-#~ msgstr "리포지터리 유형: "
-
-#~ msgid "Repository Details"
-#~ msgstr "리포지터리 상세 정보 "
-
-#~ msgid "Repository Url"
-#~ msgstr "리포지터리 Url"
-
-#~ msgid "Request"
-#~ msgstr "요청 "
-
-#~ msgid "Required Host"
-#~ msgstr "필요한 호스트 "
-
-#~ msgid "Requires"
-#~ msgstr "요구 사항 "
-
-#~ msgid "Result"
-#~ msgstr "결과 "
-
-#~ msgid "Revert Filter"
-#~ msgstr "필터 되돌리기 "
-
-#~ msgid "Review"
-#~ msgstr "확인 "
-
-#~ msgid "Role Details"
-#~ msgstr "역할 상세 정보 "
-
-#~ msgid "SLA"
-#~ msgstr "SLA"
-
-#~ msgid "SLA: %s"
-#~ msgstr "SLA: %s"
-
-#~ msgid "SYSTEMS"
-#~ msgstr "시스템 "
-
-#~ msgid "Save Changeset"
-#~ msgstr "변경 집합 저장 "
-
-#~ msgid "Save Filter"
-#~ msgstr "필터 저장 "
-
-#~ msgid "Save Roles"
-#~ msgstr "역할 저장 "
-
-#~ msgid "Save User"
-#~ msgstr "사용자 저장 "
-
-#~ msgid "Save as Favorite"
-#~ msgstr "즐겨찾기로 저장 "
-
-#~ msgid "Saving System Template"
-#~ msgstr "시스템 템플릿 저장 중 "
-
-#~ msgid "Saving..."
-#~ msgstr "저장 중..."
-
-#~ msgid "Scope"
-#~ msgstr "범위 "
-
-#~ msgid "Search"
-#~ msgstr "검색 "
-
-#~ msgid "Search Errata"
-#~ msgstr "에라타 검색 "
-
-#~ msgid "Search Results"
-#~ msgstr "검색 결과"
-
-#~ msgid "Search available package names..."
-#~ msgstr "사용 가능한 패키지 이름 검색..."
-
-#~ msgid "Search available product names..."
-#~ msgstr "사용 가능한 제품 이름 검색..."
-
-#~ msgid "Search available repository names..."
-#~ msgstr "사용 가능한 리포지터리 이름 검색..."
-
-#~ msgid "Search for all packages with a specific requires:"
-#~ msgstr "특정 요구 사항이 있는 모든 패키지를 검색: "
-
-#~ msgid "Search for kernel in the title:"
-#~ msgstr "제목에서 커널 검색:"
-
-#~ msgid "Search is not available for the current content"
-#~ msgstr "현재 컨텐츠에 대해 검색을 사용할 수 없습니다. "
-
-#~ msgid "Search packages"
-#~ msgstr "패키지 검색 "
-
-#~ msgid "Search repositories"
-#~ msgstr "리포지터리가 검색 "
-
-#~ msgid "Search..."
-#~ msgstr "검색..."
-
-#~ msgid "Searching by exact name:"
-#~ msgstr "일치하는 이름별로 검색 중: "
-
-#~ msgid "Searching by name and arch:"
-#~ msgstr "이름 및 아키텍처별로 검색 중:"
-
-#~ msgid "Searching by type (bugfix, security, enhancement allowed):"
-#~ msgstr "유형 (버그 수정, 보안, 확장 가능 등) 별로 검색 중:"
-
-#~ msgid "Searching by type (critical, important, moderate, low allowed):"
-#~ msgstr "유형 (매우 중요, 중요, 보통, 낮음 등) 별로 검색 중:"
-
-#~ msgid "Searching for a specific arch:"
-#~ msgstr "특정 아키텍처를 검색 중:"
-
-#~ msgid "Searching for a specific minor version:"
-#~ msgstr "특정 마이너 버전을 검색 중:"
-
-#~ msgid "Searching for all repositories containing the word \"Server\""
-#~ msgstr "\"Server\"라는 단어가 들어 있는 모든 리포지터리를 검색 중 "
-
-#~ msgid "Searching for an exact errata:"
-#~ msgstr "일치하는 에라타를 검색 중: "
-
-#~ msgid "Searching for an exact package:"
-#~ msgstr "일치하는 패키지를 검색 중: "
-
-#~ msgid "Searching starting with kernel:"
-#~ msgstr "커널에서 검색을 시작: "
-
-#~ msgid "Security"
-#~ msgstr "보안 "
-
-#~ msgid "Select All"
-#~ msgstr "모두 선택 "
-
-#~ msgid "Select Auto-subscribe Level..."
-#~ msgstr "자동 등록 레벨 선택..."
-
-#~ msgid "Select None"
-#~ msgstr "선택하지 않음 "
-
-#~ msgid "Select Repositories: "
-#~ msgstr "리포지터리 선택: "
-
-#~ msgid "Select System Groups."
-#~ msgstr "시스템 그룹을 선택합니다."
-
-#~ msgid "Select a System Template"
-#~ msgstr "시스템 템플릿 선택 "
-
-#~ msgid "Select a set of repositories that you wish to compare the contents of by clicking the checkboxes inside the cells."
-#~ msgstr "셀에 있는 확인란을 클릭하여 컨텐츠를 비교하고자 하는 리포지터리의 모음을 선택합니다."
-
-#~ msgid "Select an Organization:"
-#~ msgstr "조직 선택:"
-
-#~ msgid "Severity"
-#~ msgstr "중요도"
-
-#~ msgid "Shared"
-#~ msgstr "공유됨 "
-
-#~ msgid "Show"
-#~ msgstr "보기 "
-
-#~ msgid "Show %P more"
-#~ msgstr "%P 개 더보기 "
-
-#~ msgid "Show all results regardless of which columns they exist in."
-#~ msgstr "어떤 컬럼에 있는지와 상관없이 모든 결과를 표시합니다."
-
-#~ msgid "Show only results that do not exist in all selected columns."
-#~ msgstr "선택한 모든 컬럼에 존재하지 않는 결과만 표시합니다."
-
-#~ msgid "Show only results that exist in all selected columns."
-#~ msgstr "선택한 모든 컬럼에 존재하는 결과만 표시합니다."
-
-#~ msgid "Signature"
-#~ msgstr "서명 "
-
-#~ msgid "Size (Packages)"
-#~ msgstr "크기 (패키지) "
-
-#~ msgid "Sockets"
-#~ msgstr "소켓 "
-
-#~ msgid "Some changeset modifications have not finished processing, are you sure you want to leave the page?  By leaving you may lose some modifications."
-#~ msgstr "일부 변경 집합 수정 사항이 처리 완료되지 않았습니다, 페이지를 종료하면 수정 사항을 손실할 수 있습니다. 정말로 종료하시겠습니까?"
-
-#~ msgid "Sorry about that! It seems something went wrong.  If you continue having trouble with this, please contact an Administrator."
-#~ msgstr "죄송합니다! 문제가 발생한 것 같습니다. 문제가 계속 발생할 경우 관리자에게 문의하십시오. "
-
-#~ msgid "Start"
-#~ msgstr "시작 "
-
-#~ msgid "Start Date"
-#~ msgstr "시작 날짜 "
-
-#~ msgid "Start Time"
-#~ msgstr "시작 시간 "
-
-#~ msgid "Starts / Ends"
-#~ msgstr "시작 / 종료 "
-
-#~ msgid "Strong"
-#~ msgstr "강력한 "
-
-#~ msgid "Subscribe"
-#~ msgstr "구독 "
-
-#~ msgid "Subscription"
-#~ msgstr "서브스크립션 "
-
-#~ msgid "Subscription Filter Options"
-#~ msgstr "서브스크립션 필터 옵션 "
-
-#~ msgid "Subscription Info"
-#~ msgstr "서브스크립션 정보 "
-
-#~ msgid "Subscription Manifest"
-#~ msgstr "서브스크립션 매니페스트"
-
-#~ msgid "Subscriptions are Current"
-#~ msgstr "최신 서브스크립션임 "
-
-#~ msgid "Subscriptions are Current Until %s"
-#~ msgstr "서브스크립션은 %s까지 최신 버전임 "
-
-#~ msgid "Subscriptions are not Current"
-#~ msgstr "최신 서브스크립션이 아님 "
-
-#~ msgid "Summary"
-#~ msgstr "요약 "
-
-#~ msgid "Summary:"
-#~ msgstr "요약: "
-
-#~ msgid "Support Level"
-#~ msgstr "지원 수준 "
-
-#~ msgid "Support Type"
-#~ msgstr "지원 유형 "
-
-#~ msgid "Sync Overview"
-#~ msgstr "동기화 개요 "
-
-#~ msgid "System Current Subscription(s)"
-#~ msgstr "현재 시스템 서브스크립션 "
-
-#~ msgid "System Default"
-#~ msgstr "시스템 기본값 "
-
-#~ msgid "System Events"
-#~ msgstr "시스템 이벤트 "
-
-#~ msgid "System Group Overview"
-#~ msgstr "시스템 그룹 개요 "
-
-#~ msgid "System Group does not exist.  Would you like to create it?"
-#~ msgstr "시스템 그룹이 존재하지 않습니다. 시스템 그룹을 생성하시겠습니까?"
-
-#~ msgid "System Groups allow you to create groups consisting of multiple systems and then use those groups to manage the systems.  This includes performing actions such as package and package group  installations, updates and removals as well as errata installations."
-#~ msgstr "시스템 그룹을 사용하면 여러 시스템으로 구성된 그룹을 생성하고 이 그룹을 사용하여 시스템을 관리할 수 있습니다. 예를 들어 패키지 및 패키지 그룹 설치, 업데이트, 삭제 및 에라타 설치와 같은 작업을 수행할 수 있습니다. "
-
-#~ msgid "System Notifications"
-#~ msgstr "시스템 통지 "
-
-#~ msgid "System Properties"
-#~ msgstr "시스템 속성 "
-
-#~ msgid "System Registration Defaults"
-#~ msgstr "시스템 등록 기본값 "
-
-#~ msgid "System Subscription Status"
-#~ msgstr "시스템 서브스크립션 상태 "
-
-#~ msgid "System Template"
-#~ msgstr "시스템 템플릿 "
-
-#~ msgid "System Templates allow you to create a template for what a system should look like.  This includes what products are subscribed and what packages are installed."
-#~ msgstr "시스템 템플릿은 시스템의 모양을 설정하는 템플릿을 생성 가능하게 합니다. 이에는 구독된 제품 및 설치된 패키지가 포함되어 있습니다. "
-
-#~ msgid "System Type"
-#~ msgstr "시스템 유형"
-
-#~ msgid "System Type:"
-#~ msgstr "시스템 유형: "
-
-#~ msgid "TITLE"
-#~ msgstr "제목 "
-
-#~ msgid "TYPE"
-#~ msgstr "유형 "
-
-#~ msgid "The current template \"$TEMPLATE\" has been modified.  Would you like to save the changes?"
-#~ msgstr "현재 템플릿 \"$TEMPLATE\"이 수정되었습니다. 변경 사항을 저장하시겠습니까? "
-
-#~ msgid "The current template \"$TEMPLATE\" has been modified. If you leave, any changes will be lost.\""
-#~ msgstr "현재 템플릿 \"$TEMPLATE\"이 수정되었습니다. 종료할 경우 변경 사항을 손실하게 됩니다. "
-
-#~ msgid "The following repositories are currently syncing.  It is recommended that you wait for them to complete before continuing the promotion."
-#~ msgstr "현재 다음과 같은 리포지터리는 동기화 중입니다. 승격을 진행하기 전 동기화가 완료될 때 까지 기다리는 것이 좋습니다. "
-
-#~ msgid "The number of CPU Sockets or LPARs which this machine uses"
-#~ msgstr "이 시스템이 사용하는 CPU 소켓 또는 LPAR 수 "
-
-#~ msgid "The password should not contain the username."
-#~ msgstr "암호에 사용자 이름이 포함되어 있어서는 안됩니다. "
-
-#~ msgid "The passwords do not match"
-#~ msgstr "암호가 일치하지 않음 "
-
-#~ msgid "The selected environment is not the last environment in its promotion path.  Only the last environment can be deleted."
-#~ msgstr "선택한 환경은 승력 경로에 있는 마지막 환경이 아닙니다. 마지막 환경만을 삭제할 수 있습니다. "
-
-#~ msgid "The system is not currently consuming any subscriptions."
-#~ msgstr "현재 시스템은 서비스크립션을 소비하지 않고 있습니다. "
-
-#~ msgid "There are currently no Global permissions for this role.  Please click Add Permission in the action bar below to add a Global permission.  A Global permission is one that cuts across all organizations."
-#~ msgstr "현재 이 역할에 대한 글로벌 권한이 없습니다. 하단 작업 표시줄의 권한 추가를 클릭하여 글로벌 권한을 추가합니다. 글로벌 권한은 모든 조직에 걸쳐 영향을 미치는 권한입니다. "
-
-#~ msgid "There are currently no permissions for this organization.  Please click Add Permission in the action bar below to add a permission to this organization."
-#~ msgstr "현재 이 조직에 대한 권한이 없습니다. 하단 작업 표시줄의 권한 추가를 클릭하여 이 조직에 권한을 추가합니다. "
-
-#~ msgid "There are no custom products or repositories enabled. Try enabling via Content Providers."
-#~ msgstr "활성화된 사용자 정의 제품 또는 리포지터리가 없습니다. 컨텐츠 공급자를 통해 활성화하십시오. "
-
-#~ msgid "There are no errata that need to be applied to registered systems."
-#~ msgstr "등록된 시스템에 적용해야 하는 에라타가 없습니다. "
-
-#~ msgid "There are no events to display."
-#~ msgstr "표시할 이벤트가 없습니다. "
-
-#~ msgid "There are no more subscriptions available."
-#~ msgstr "더 이상 사용 가능한 서브스크립션이 없습니다. "
-
-#~ msgid "There are no packages to display."
-#~ msgstr "표시할 패키지가 없습니다. "
-
-#~ msgid "There are no tags for the resource type you have chosen."
-#~ msgstr "선택하신 리소스 유형에 대한 태그가 없습니다. "
-
-#~ msgid "There was an error retrieving that row:"
-#~ msgstr "해당 행을 검색하는 도중 오류가 발생했습니다: "
-
-#~ msgid "This GPG Key is not currently assigned to any products or repositories."
-#~ msgstr "현재 이 GPG 키는 어떤 제품이나 리포지터리에 할당되어 있지 않습니다. "
-
-#~ msgid "This activation key is not currently associated with a System Group."
-#~ msgstr "현재 이 활성키는 시스템 그룹과 연결되어 있지 않습니다."
-
-#~ msgid "This activation key is not currently associated with a System."
-#~ msgstr "현재 이 활성키는 시스템과 연결되어 있지 않습니다."
-
-#~ msgid "This changeset contains no content."
-#~ msgstr "변경 집합에 컨텐츠가 들어있지 않습니다. "
-
-#~ msgid "This changeset is currently being applied."
-#~ msgstr "현재 이 변경 집합이 적용되어 있습니다. "
-
-#~ msgid "This product or one of the repositories belonging to it has one or more filters applied. Packages matching the filter criteria will not be promoted."
-#~ msgstr "이 제품 또는 이 제품에 속한 리포지터리 중 하나에는 하나 이상의 필터가 적용되어 있습니다. 필터 기준과 일치하는 패키지는 승격되지 않습니다. "
-
-#~ msgid "This repository or its product has one or more filters applied to it. Packages matching the filter criteria will not be promoted to the next environment for this repository."
-#~ msgstr "이 리포지터리 또는 리포지터리의 제품에는 하나 이상의 필터가 적용되어 있습니다. 필터 기준과 일치하는 패키지는 리포지터리의 다음 환경에 승격되지 않습니다. "
-
-#~ msgid "This system is not currently associated with a System Group."
-#~ msgstr "현재 이 시스템 키는 시스템 그룹과 연결되어 있지 않습니다."
-
-#~ msgid "This table allows you to initiate package or package group installs and removals.  Simply select either Packages or Package groups, enter a comma-separated list of names in the box provided and click either +Add or -Remove."
-#~ msgstr "이 표를 사용하여 패키지 또는 패키지 그룹 설치 및 제거를 시작할 수 있습니다. 패키지 또는 패키지 그룹을 선택하고 해당란에 콤마로 구분하여 이름 목록을 입력한 후, + 추가 또는 -제거를 클릭하면 됩니다. "
-
-#~ msgid "This table allows you to initiate package or package group installs, updates and removals.  Simply select either Packages or Package groups, enter a comma-separated list of names in the box provided and click either Install, Update or Remove.  Note: for any given package or package group, there may only be 1 action in progress at a time."
-#~ msgstr "이 표를 사용하여 패키지 또는 패키지 그룹 설치, 업데이트 및 제거를 시작할 수 있습니다. 패키지 또는 패키지 그룹을 선택하고 해당란에 콤마로 구분하여 이름 목록을 입력한 후, 설치, 업데이트 또는 제거를 클릭하면 됩니다. 알림: 특정 패키지 또는 패키지 그룹의 경우  한 번에 하나의 작업만이 진행될 수 있습니다."
-
-#~ msgid "This table allows you to initiate package updates or removals as well as update all packages.  In order to update or remove packages, simply select the packages you are interested in and click Update or Remove.  In order to update all packages, click Update All when no packages are selected."
-#~ msgstr "이 표를 사용하여 패키지 업데이트, 삭제, 모든 패키지 업데이트를 시작할 수 있습니다. 패키지를 업데이트하거나 삭제하려면 해당 패키지를 선택하고 업데이트 또는 삭제를 클릭합니다. 모든 패키지를 업데이트하려면 패키지를 선택하지 않은 상태에서 모두 업데이트를 클릭합니다. "
-
-#~ msgid "This table shows you the status of any pending package or package group actions on the system group."
-#~ msgstr "이 표에서는 시스템 그룹에서 보류 중인 패키지 또는 패키지 그룹 작업의 상태를 보여줍니다."
-
-#~ msgid "This template contains no content."
-#~ msgstr "이 템플릿에는 컨텐츠가 들어 있지 않습니다. "
-
-#~ msgid "This will completely remove those systems."
-#~ msgstr "이는 시스템을 완전하게 제거합니다."
-
-#~ msgid "This will override any GPG keys already associated with a repository within this product"
-#~ msgstr "이 제품에 있는 리포지터리와 이미 연결된 GPG 키만을 덮어 쓰기합니다.  "
-
-#~ msgid "Time"
-#~ msgstr "시간 "
-
-#~ msgid "Title"
-#~ msgstr "제목 "
-
-#~ msgid "Title: "
-#~ msgstr "제목:"
-
-#~ msgid "To view the details of an item on the left, simply click on a single row.<br/><br/>To select multiple rows, hold the Control Key and click multiple rows.<br/><br/>If you don't need this help anymore, please click the close button in the top right of this box."
-#~ msgstr "왼쪽에 있는 항목의 세부 정보를 확인하려면 하나의 행을 클릭하면 됩니다. <br/><br/> 여러 행을 선택하려면, Ctrl 키를 누른 상태에서 여러 행을 클릭합니다. <br/><br/>이러한 기능이 필요 없는 경우, 이 상자의 오른쪽 상단에 있는 닫기 버튼을 클릭하십시오. "
-
-#~ msgid "Total"
-#~ msgstr "합계 "
-
-#~ msgid "Total Systems"
-#~ msgstr "전체 시스템 "
-
-#~ msgid "Type"
-#~ msgstr "유형 "
-
-#~ msgid "Type:"
-#~ msgstr "유형:"
-
-#~ msgid "URL"
-#~ msgstr "URL"
-
-#~ msgid "UUID"
-#~ msgstr "UUID"
-
-#~ msgid "Union"
-#~ msgstr "유니온 "
-
-#~ msgid "Union:"
-#~ msgstr "유니온:"
-
-#~ msgid "Unique"
-#~ msgstr "고유함 "
-
-#~ msgid "Unknown"
-#~ msgstr "알 수 없음 "
-
-#~ msgid "Unlimited"
-#~ msgstr "제한 없음 "
-
-#~ msgid "Unsubscribe"
-#~ msgstr "구독 해제 "
-
-#~ msgid "Up to date"
-#~ msgstr "최신"
-
-#~ msgid "Update"
-#~ msgstr "업데이트 "
-
-#~ msgid "Update All"
-#~ msgstr "모두 업데이트 "
-
-#~ msgid "Update Package Canceled"
-#~ msgstr "취소된 패키지 업데이트 "
-
-#~ msgid "Update Package Complete"
-#~ msgstr "완료된 패키지 업데이트 "
-
-#~ msgid "Update Package Error"
-#~ msgstr "패키지 오류 업데이트 "
-
-#~ msgid "Update Package Timeout"
-#~ msgstr "패키지 시간 초과 업데이트 "
-
-#~ msgid "Updated"
-#~ msgstr "업데이트됨 "
-
-#~ msgid "Updates"
-#~ msgstr "업데이트 "
-
-#~ msgid "Upload"
-#~ msgstr "업로드 "
-
-#~ msgid "Upload History"
-#~ msgstr "업로드 기록 "
-
-#~ msgid "Upload Subscription Manifest"
-#~ msgstr "서브스크립션 매니페스트를 업로드 "
-
-#~ msgid "Uploading"
-#~ msgstr "업로드 중 "
-
-#~ msgid "Usage Limit"
-#~ msgstr "사용 한도 "
-
-#~ msgid "User Notifications"
-#~ msgstr "사용자 통지 "
-
-#~ msgid "User assignments for this role"
-#~ msgstr "이 역할에 대해 사용자 할당 "
-
-#~ msgid "User notifications lists all notifications generated by a user as well as global notifications that are sent to all users."
-#~ msgstr "사용자 통지는 모든 사용자에게 전송되는 글로벌 통지 및 사용자가 생성한 모든 통지를 나열합니다. "
-
-#~ msgid "Username:"
-#~ msgstr "사용자 이름: "
-
-#~ msgid "Validation Failed:"
-#~ msgstr "유효성 검사 실패: "
-
-#~ msgid "Value"
-#~ msgstr "값 "
-
-#~ msgid "Verb(s):"
-#~ msgstr "Verb: "
-
-#~ msgid "Verbs"
-#~ msgstr "Verb"
-
-#~ msgid "Very Weak"
-#~ msgstr "매우 취약함 "
-
-#~ msgid "View"
-#~ msgstr "보기"
-
-#~ msgid "Viewing %C of %T"
-#~ msgstr "%T 중 %C 보기"
-
-#~ msgid "Viewing %X of %Y results"
-#~ msgstr "%Y 개의 결과 중 %X 보기"
-
-#~ msgid "Viewing %X of %Y results (%Z Total)"
-#~ msgstr "%Y개의 결과 중 %X 보기 (총 %Z) "
-
-#~ msgid "Viewing %s of %s results (%s Total %s)"
-#~ msgstr "%s 개의 결과 중 %s 개 보기 (%s 총 %s)"
-
-#~ msgid "Viewing %{n} of %{t} results (%{t} Total Errata)"
-#~ msgstr "%{t} 개의 결과 중 %{n}개 보기 (총 %{t}개의 에라타) "
-
-#~ msgid "Virt Guest From"
-#~ msgstr "가상 게스트 "
-
-#~ msgid "Virtual Guest"
-#~ msgstr "가상 게스트"
-
-#~ msgid "Virtual Only"
-#~ msgstr "가상 전용 "
-
-#~ msgid "Warning"
-#~ msgstr "경고 "
-
-#~ msgid "Weak"
-#~ msgstr "취약함 "
-
-#~ msgid "Yes"
-#~ msgstr "예 "
-
-#~ msgid "You are not authorised to perform this action."
-#~ msgstr "이 작업을 실행할 권한이 없습니다. "
-
-#~ msgid "You have no assigned roles."
-#~ msgstr "할당된 역할이 없습니다. "
-
-#~ msgid "You have selected all resource types; this will grant full access to the organization. Press the Cancel button to select an individual resource type."
-#~ msgstr "모든 리소스 유형을 선택했습니다. 이제 조직에 대해 완전한 액세스가 가능합니다. 취소 버튼을 눌러 개별 리소스 유형을 선택합니다. "
-
-#~ msgid "You may have mistyped the address or the page may have moved."
-#~ msgstr "주소를 잘못 입력했거나 페이지가 이전되었을 수 있습니다. "
-
-#~ msgid "You might want to log out and log back in again to clear your cookies."
-#~ msgstr "쿠키를 삭제하기 위해 로그아웃 후 다시 로그인하고자 할 수 있습니다. "
-
-#~ msgid "You must select an organization above before you can add a permission."
-#~ msgstr "권한을 추가하기 전 위에서 조직을 선택해야 합니다. "
-
-#~ msgid "You must select and view a permission before you can edit it."
-#~ msgstr "권한을 편집하기 전 권한을 선택 및 확인해야 합니다. "
-
-#~ msgid "You must select at least one verb."
-#~ msgstr "최소 하나의 verb를 선택해야 합니다. "
-
-#~ msgid "You need to create an environment for this org before you can create a system."
-#~ msgstr "시스템을 생성하기 전 이 조직에 대한 환경을 생성해야 합니다. "
-
-#~ msgid "Your update has applied successfully, but during that time another user has also made an update."
-#~ msgstr "업데이트가 성공적으로 적용되었으나 동일한 시간에 다른 사용자도 업데이트를 수행했습니다. "
-
-#~ msgid "currently editing this changeset"
-#~ msgstr "현재 변경 집합을 편집하고 있습니다 "
-
-#~ msgid "displayed"
-#~ msgstr "표시됨 "
-
-#~ msgid "link"
-#~ msgstr "링크 "
-
-#~ msgid "or"
-#~ msgstr "또는 "
-
-#~ msgid "promote_confirm"
-#~ msgstr "promote_confirm"
-
-#~ msgid "results."
-#~ msgstr "결과"
+#~ msgid "is too long"
+#~ msgstr "너무 깁니다 "

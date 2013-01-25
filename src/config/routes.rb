@@ -21,6 +21,12 @@ Src::Application.routes.draw do
           get :items
         end
       end
+
+      resources :smart_proxies do
+        collection do
+          get :items
+        end
+      end
     end
   end
 
@@ -236,13 +242,6 @@ Src::Application.routes.draw do
   resources :products, :only => [:new, :create, :edit,:update, :destroy] do
     collection do
        get :auto_complete
-    end
-  end
-
-  resources :owners do
-    member do
-      post :import
-      get :import_status
     end
   end
 
@@ -741,6 +740,7 @@ Src::Application.routes.draw do
     if Katello.config.use_foreman
       scope :module => 'foreman' do
         resources :architectures, :except => [:new, :edit]
+        resources :compute_resources, :except => [:new, :edit]
         resources :subnets, :except => [:new, :edit]
         resources :smart_proxies, :except => [:new, :edit]
         constraints(:id => /[^\/]+/) do

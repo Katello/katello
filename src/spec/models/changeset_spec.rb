@@ -189,7 +189,9 @@ describe Changeset, :katello => true do
         }.with_indifferent_access
         @err          = mock('Err', { :id => 'err', :name => 'err' })
 
-        @repo         = Repository.create!(:environment_product => ep, :name => "repo", :label => "repo_label", :pulp_id => "1")
+        @repo         = Repository.create!(:environment_product => ep, :name => "repo",
+                                           :label => "repo_label", :pulp_id => "1",
+                                           :feed => 'https://localhost')
         @distribution = mock('Distribution', { :id => 'some-distro-id' })
         @repo.stub(:distributions).and_return([@distribution])
         @repo.stub_chain(:distributions, :index).and_return([@distribution])
@@ -334,7 +336,8 @@ describe Changeset, :katello => true do
         @pack         = { :id => 1, :name => @pack_name }.with_indifferent_access
         @err          = mock('Err', { :id => 'err', :name => 'err' })
 
-        @repo = Repository.create!(:environment_product => ep, :name => "repo", :label => "repo_label", :pulp_id => "1")
+        @repo = Repository.create!(:environment_product => ep, :name => "repo", :label => "repo_label",
+                                   :pulp_id => "1", :feed => 'https://localhost')
 
         @distribution = mock('Distribution', { :id => 'some-distro-id' })
         @repo.stub(:distributions).and_return([@distribution])
@@ -404,7 +407,9 @@ describe Changeset, :katello => true do
         @err          = mock('Err', { :id => 'err', :name => 'err' })
         @distribution = mock('Distribution', { :id => 'some-distro-id' })
         ep            = EnvironmentProduct.find_or_create(@organization.library, @prod)
-        @repo         = Repository.create!(:environment_product => ep, :name => 'repo', :label => 'repo_label', :pulp_id => "1")
+        @repo         = Repository.create!(:environment_product => ep, :name => 'repo',
+                                           :label => 'repo_label', :pulp_id => "1",
+                                           :feed => 'https://localhost')
         @repo.stub_chain(:distributions, :index).and_return([@distribution])
         @repo.stub(:distributions).and_return([@distribution])
         @repo.stub(:packages).and_return([@pack])

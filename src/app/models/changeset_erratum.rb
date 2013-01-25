@@ -10,33 +10,14 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
-class ChangesetErratumValidator < ActiveModel::Validator
-  def validate(record)
-    record.errors[:base] << _("Erratum '%s' doesn't belong to the specified product!") %
-        record.errata_id and return if record.repositories.empty?
-
-    if record.changeset.action_type == Changeset::PROMOTION
-      record.errors[:base] << _("Repository of the erratum '%s' has not been promoted into the target environment!") %
-            record.errata_id and return if record.promotable_repositories.empty?
-
-      unfiltered_repositories = record.promotable_repositories.delete_if do |repo|
-        record.blocked_by_filters?((repo.filters + repo.product.filters).uniq)
-      end
-      record.errors[:base] << _("Filters assigned to repository or product of erratum '%s' block it from promotion!") %
-          record.errata_id and return if unfiltered_repositories.empty?
-    end
-  end
-end
-
 class ChangesetErratum < ActiveRecord::Base
-  include Authorization
+  include Ext::Authorization
 
   belongs_to :changeset, :inverse_of => :errata
   belongs_to :product
   validates :display_name, :length => { :maximum => 255 }
   validates :errata_id, :uniqueness => { :scope => :changeset_id }
-  validates_with ChangesetErratumValidator
+  validates_with Validators::ChangesetErratumValidator
 
   def repositories
     return @repos if not @repos.nil?

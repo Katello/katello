@@ -48,7 +48,8 @@ from katello.client.core import (
   config_template,
   domain,
   subnet,
-  smart_proxy
+  smart_proxy,
+  compute_resource
 )
 
 def setup_admin(katello_cmd, mode=get_katello_mode()):
@@ -357,3 +358,11 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         subnet_cmd.add_command('delete', subnet.Delete())
         katello_cmd.add_command('subnet', subnet_cmd)
 
+    if mode == 'katello':
+        resource_cmd = compute_resource.ComputeResource()
+        resource_cmd.add_command('list', compute_resource.List())
+        resource_cmd.add_command('info', compute_resource.Info())
+        resource_cmd.add_command('create', compute_resource.Create())
+        resource_cmd.add_command('update', compute_resource.Update())
+        resource_cmd.add_command('delete', compute_resource.Delete())
+        katello_cmd.add_command('compute_resource', resource_cmd)

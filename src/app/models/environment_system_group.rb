@@ -12,7 +12,7 @@
 #
 
 class EnvironmentSystemGroup < ActiveRecord::Base
-  include Authorization
+  include Ext::Authorization
 
   belongs_to :environment, :class_name => 'KTEnvironment'
   belongs_to :system_group
