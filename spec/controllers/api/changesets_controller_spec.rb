@@ -16,7 +16,6 @@ describe Api::ChangesetsController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
   include OrchestrationHelper
-  include LocaleHelperMethods
 
   CSET_ID = 1
   CSET_NAME = "changeset_x"
@@ -44,7 +43,6 @@ describe Api::ChangesetsController, :katello => true do
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
-    set_default_locale
   end
 
   let(:to_create) do
