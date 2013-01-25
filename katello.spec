@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.3.10.pulpv2
+Version:        1.3.11.pulpv2
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -759,6 +759,234 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Jan 25 2013 Justin Sherrill <jsherril@redhat.com> 1.3.11.pulpv2-1
+- fixing pulp url in config template (jsherril@redhat.com)
+- fix whitespace (jsherril@redhat.com)
+- change ruby-linter to print out all errors (jsherril@redhat.com)
+- adding use_elasticsearch to config template (jsherril@redhat.com)
+- merge fix (jsherril@redhat.com)
+- updating ES glue to use Ext::IndexedModel (jsherril@redhat.com)
+- merge conflict (jsherril@redhat.com)
+- more spec fixes (jsherril@redhat.com)
+- fixing minitests and most specs (jsherril@redhat.com)
+- added lib/resources/abstract_model dir and its contents to the .spec file
+  (dmitri@redhat.com)
+- orgs - new scope for finding by name or label (tstrachota@redhat.com)
+- 895212 - correct org search (tstrachota@redhat.com)
+- fixes building of foreman glue rpm (dmitri@redhat.com)
+- removed redundant dir inclusion in headpin (dmitri@redhat.com)
+- fix for a broken .spec: now includes files in models/ext dir during the build
+  (dmitri@redhat.com)
+- 887095 - fixing API breakage (lzap+git@redhat.com)
+- fixing some merge conflict broken-ness (jsherril@redhat.com)
+- merge conflict (jsherril@redhat.com)
+- 887095 - Fixing test and feedback (daviddavis@redhat.com)
+- 903000 - Fix for missing params checking on System Templates
+  (jrist@redhat.com)
+- bumping version of therubyracer (lzap+git@redhat.com)
+- exclude test.rake for main rpm (jsherril@redhat.com)
+- avoid problematic ZenTest-4.8.4 (lzap+git@redhat.com)
+- Revert "fix building on F18" (lzap+git@redhat.com)
+- Revert "Fix F16,EL6 after fixing F18" (lzap+git@redhat.com)
+- Revert "correctly compare version" (lzap+git@redhat.com)
+- Revert "do not fail if you use bundler" (lzap+git@redhat.com)
+- Revert "workaround BZ 901540" (lzap+git@redhat.com)
+- Revert "do not use ZenTest 4.8.4" (lzap+git@redhat.com)
+- fixed a syntax error under 1.8.7 (dmitri@redhat.com)
+- moved most of the modules in app/models to either models/ext or lib/
+  directories (dmitri@redhat.com)
+- Revert "Fixing Travis for Ruby 1.9" (lzap+git@redhat.com)
+- renamed 'CustomPermissions' into 'PermissionTagCleanup' (dmitri@redhat.com)
+- fix for BZ 860452: custom tags are now being deleted when associated entity
+  is deleted (dmitri@redhat.com)
+- uuid - now works with Rails 3.2 (lzap+git@redhat.com)
+  (martin.bacovsky@gmail.com)
+- Fixed wrong param format (mbacovsk@redhat.com)
+  (bryan.kearney@gmail.com)
+- 896074 - fixing remove deletion permissions (lzap+git@redhat.com)
+- smart proxies - listing available features in cli info
+  (tstrachota@redhat.com)
+- 887095 - cli locale was not set properly (lzap+git@redhat.com)
+- Fixing Travis for Ruby 1.9 (daviddavis@redhat.com)
+- do not use ZenTest 4.8.4 (msuchy@redhat.com)
+- workaround BZ 901540 (msuchy@redhat.com)
+- do not fail if you use bundler (msuchy@redhat.com)
+- correctly compare version (msuchy@redhat.com)
+- Fix F16,EL6 after fixing F18 (msuchy@redhat.com)
+- fix building on F18 (msuchy@redhat.com)
+- 901657 - Adds standard name validator to role names to prevent HTML
+  injection. (ehelms@redhat.com)
+- 867991 - fixing tab index on env and activation key new pages
+  (jsherril@redhat.com)
+- 795003 - Adds a word wrap to edit text fields so that long names, such as the
+  CDN URL being long. (ehelms@redhat.com)
+- 902948 - fixing errata icons in content search (jsherril@redhat.com)
+- 858008 - Adds event trigger and bind to close action bar when sliding tree
+  items are clicked. (ehelms@redhat.com)
+- CVE-2012-3503 - setting umask for /etc/katello/secret-token
+  (jomara@redhat.com)
+- 852885 - Fixing spinner image (daviddavis@redhat.com)
+- 860471 - Fix for flicker - extra .tipsify call. (jrist@redhat.com)
+- rails 3.2 removed ActiveSupport::SecureRandom in favor of SecureRandom
+  (msuchy@redhat.com)
+- fixing test runs for jenkins and travis (komidore64@gmail.com)
+- bundler_ext - renaming namespace (lzap+git@redhat.com)
+- Smart proxies UI (mbacovsk@redhat.com)
+- foreman_api gem version bumped up to 0.0.10 (tstrachota@redhat.com)
+- comp. res. - api, model for each provider (tstrachota@redhat.com)
+- simple crud controller - support for custom as_json options
+  (tstrachota@redhat.com)
+- abstract model - support for instantiating subclasses (tstrachota@redhat.com)
+- abstract model - setting resources made consistent (tstrachota@redhat.com)
+- architectures - fixed removing all OSs on update (tstrachota@redhat.com)
+- subnets - required attributes in model (tstrachota@redhat.com)
+- foreman integration ui fixes (tstrachota@redhat.com)
+- requiring 'thumbslug_url' in configuration for headpin only
+  (komidore64@gmail.com)
+- Automatic commit of package [katello] release [1.3.3-1].
+  (jsherril@redhat.com)
+- Translations - Update .po and .pot files for katello. (jsherril@redhat.com)
+- Translations - New translations from Transifex for katello.
+  (jsherril@redhat.com)
+- Translations - Download translations from Transifex for katello.
+  (jsherril@redhat.com)
+- Setting the min_messages level to warning (daviddavis@redhat.com)
+- Repository feed validation moved to validator (mhulan@redhat.com)
+- Code cleanup (mhulan@redhat.com)
+- Move all validators to one place (mhulan@redhat.com)
+- 820392 - repository hostname validation (mhulan@redhat.com)
+- emails - add default From to login/password emails (bbuckingham@redhat.com)
+- adding thumbslug to headpin's ping function and tests, etc
+  (komidore64@gmail.com)
+- 882311 - hide and check organizations being deleted (lzap+git@redhat.com)
+- 882311 - remove scope-based organization hiding when deleting it
+  (lzap+git@redhat.com)
+- Fixing the reset-oauth script to also do ../config/katello.yml if it exists.
+  (jrist@redhat.com)
+- fix missing assets when running in development (pchalupa@redhat.com)
+- Automatic commit of package [katello] release [1.3.2-1].
+  (lzap+git@redhat.com)
+- Fix post install scriptlet (inecas@redhat.com)
+- add missing documentation (pchalupa@redhat.com)
+- fix error message, missing space (pchalupa@redhat.com)
+- rails-i18n - upstream checker script (lzap+git@redhat.com)
+- rails-i18n - pulling yml files from upstream (lzap+git@redhat.com)
+- rails-i18n - adding update script (lzap+git@redhat.com)
+- 891926 - katello refuses to restart (lzap+git@redhat.com)
+- Locking rails version to fix bundle install (daviddavis@redhat.com)
+- 879094 - fixing %%post error in spec (jomara@redhat.com)
+- Moving tomcat group add to katello-shared to %%post (jomara@redhat.com)
+- 879094 - a few updates to katello & katello-selinux spec based on comments
+  (jomara@redhat.com)
+- renaming katello_shared -> katello-shared (jomara@redhat.com)
+- 879094 - CVE-2012-5561 - fix permissions on /etc/katello/secure
+  (jomara@redhat.com)
+- Allowing for local gem groups (daviddavis@redhat.com)
+- 868090 - [ru_RU] L10n:Content Management - Repositories: Untranslated string
+  in Products and Repositories tab (komidore64@gmail.com)
+- changing 'empty?' to 'blank?' (komidore64@gmail.com)
+- Removing Gemfile.lock files since they are out of date
+  (daviddavis@redhat.com)
+- 880515 - [ALL_LANG][headpin CLI] Redundant brackets in the message of
+  'Couldn't find organization '??' ()' for system report module with invalid
+  --org name. (komidore64@gmail.com)
+- fixing reset issue (jsherril@redhat.com)
+- Adding tests to check menu item keys for uniqueness (daviddavis@redhat.com)
+- fix typo occured -> occurred (msuchy@redhat.com)
+- 843421 - add parens to existing code (bbuckingham@redhat.com)
+- Make the :key fields of all the Setup menu items unique across all the
+  navigation. (jweiss@redhat.com)
+- merge pt_BR from SAM (msuchy@redhat.com)
+- add accidentally deleted pt_BR (msuchy@redhat.com)
+- Removing README and updating spec file (daviddavis@redhat.com)
+- fixing ru/app.po (msuchy@redhat.com)
+- forward port translation from SAM (msuchy@redhat.com)
+- Add back katello specific readme. (jweiss@redhat.com)
+- Remove README that was generated by Ruby on Rails. (jweiss@redhat.com)
+- ignore obsoletes and fuzzy warnings (msuchy@redhat.com)
+- Bug 799356 - systems that have been deleted that are still calling back to
+  server generate stack trace (pchalupa@redhat.com)
+- logging - orchestration log - unit test fix (lzap+git@redhat.com)
+- removing console.log (jsherril@redhat.com)
+- 751159 - downloading a modified system template would present warning
+  (jsherril@redhat.com)
+- 820404- Renamed the debug cert button as suggested in the bz
+  (paji@redhat.com)
+- 831362 - systems - disable/enable system group widget on actions panel
+  (bbuckingham@redhat.com)
+- 869371-ram - able to set RAM during new system creation in UI
+  (thomasmckay@redhat.com)
+- 848566 - fixing verbage of system group limit (jsherril@redhat.com)
+- 848553 - tupane - remove 'do_not_open' on copy (bbuckingham@redhat.com)
+- user searches containing empty display attributes are no longer being saved
+  in the history (dmitri@redhat.com)
+- 858743 - Stop redirect after login to ajax notices path
+  (daviddavis@redhat.com)
+- 842745 - Fixed rspec test (daviddavis@redhat.com)
+- 844708 - update panel action confirmation dialog to close on 'yes' click
+  (bbuckingham@redhat.com)
+- 842745 - Showing update message on package group update
+  (daviddavis@redhat.com)
+- Code review comments lead to discovery of dead code. The import_status and
+  export_status files do not appear tied to any controller and they are only
+  referenced by a route which is also not tied to a controller
+  (bkearney@redhat.com)
+- 878891-actkey-alignment - put act keys into table (thomasmckay@redhat.com)
+- 873665 - getting rid of last find_by_username admin calls
+  (lzap+git@redhat.com)
+- 808461 - prevent from creating a repo in rh providers (lzap+git@redhat.com)
+- 875225 - Binding favicon refresh to hash change (daviddavis@redhat.com)
+- 888019 - fixing issue where only 10 repos would appear on content search
+  (jsherril@redhat.com)
+- 843421 - systems - include summary when removing system groups using bulk
+  action (bbuckingham@redhat.com)
+- Fix for not loading system template detail (mhulan@redhat.com)
+- Fixing a non-deterministic text failure (jomara@redhat.com)
+- 848571 - fixing verbage on content search (jsherril@redhat.com)
+- 882248 - making environment name editable (jomara@redhat.com)
+- 806096 fix - display checkboxes to readonly users (mhulan@redhat.com)
+- 868045: Missed translating string when there are no products for a system
+  (bkearney@redhat.com)
+- 781287 fix - update notification counter (mhulan@redhat.com)
+- Fixes few typos (ares@igloonet.cz)
+- 835902 fixes notification for GPG key upload (ares@igloonet.cz)
+- logging - orchestration log rotating (lzap+git@redhat.com)
+- logging - orchestration logger and uuid request tracking
+  (lzap+git@redhat.com)
+- Fixes 790216 running changesets concurently (ares@igloonet.cz)
+- 885261 - org deletion unit test correction (lzap+git@redhat.com)
+- 885261 - make data repair script to work from any dir (lzap+git@redhat.com)
+- 885261 - org deletion should remove rh provider (lzap+git@redhat.com)
+- better error messages (pchalupa@redhat.com)
+- 858726 - Sets the compare repos button to disable if there are 0 or 1 repos
+  enabled on content search. (ehelms@redhat.com)
+- 817858 - Permission edits now show tags when appropriate. (ehelms@redhat.com)
+- 791345 - Deletes errant tick mark that was appearing after list updates on
+  the sync plan page. (ehelms@redhat.com)
+- 843566 - Sets the chosen dropdown in Content Search to not display a filter
+  mechanism. (ehelms@redhat.com)
+- 855945 - Content search now displays the Library if there are no
+  environments. (ehelms@redhat.com)
+- 871093 - Fix to show tags when "+ All" verbs is selected. (ehelms@redhat.com)
+- 845062 - Fixes typo with errata search icon tooltip. (ehelms@redhat.com)
+- 772199 - Adds a tool tip to explain that GPG keys are optional for products
+  and repositories. (ehelms@redhat.com)
+- 839394 - Changes wording on sync management page when no repositories are
+  enabled to cross-link to custom repos and red hat provider link.
+  (ehelms@redhat.com)
+- 857061 - System template actions on the right pane will now close whenever
+  the new system template button is clicked. (ehelms@redhat.com)
+- fix 1.9 incompatibility (pchalupa@redhat.com)
+- fix rpm build process (pchalupa@redhat.com)
+- fix packaging and katello-configure (pchalupa@redhat.com)
+- setup bundler before Application definition (pchalupa@redhat.com)
+- remove ENV from config.ru (pchalupa@redhat.com)
+- add better definitions of configuration validation (pchalupa@redhat.com)
+- remove deprecated ApiConfig (pchalupa@redhat.com)
+- make sure katello_config is loadable stand-alone (pchalupa@redhat.com)
+- sort available locales (pchalupa@redhat.com)
+- clean up configuration (pchalupa@redhat.com)
+
 * Wed Jan 23 2013 Justin Sherrill <jsherril@redhat.com> 1.3.10.pulpv2-1
 - requiring pulp rpm package in the correct place (jsherril@redhat.com)
 - Skipping Zentest 4.8.4 due to bad gemspec (msuchy@redhat.com)
