@@ -17,11 +17,9 @@ describe Api::TasksController do
   include AuthorizationHelperMethods
   include OrchestrationHelper
   include OrganizationHelperMethods
-  include LocaleHelperMethods
 
   before(:each) do
     login_user_api
-    set_default_locale
 
     disable_product_orchestration
     disable_user_orchestration
