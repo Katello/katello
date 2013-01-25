@@ -529,6 +529,7 @@ usermod -a -G katello-shared tomcat
 %dir %{homedir}/app/models
 %{homedir}/app/models/*.rb
 %{homedir}/app/models/candlepin
+%{homedir}/app/models/ext
 %{homedir}/app/stylesheets
 %{homedir}/app/views
 %exclude %{homedir}/app/views/foreman
