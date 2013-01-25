@@ -30,7 +30,8 @@ module ProductHelperMethods
     disable_product_orchestration
     disable_repo_orchestration
     @provider = Provider.create!({:organization => org, :name => 'provider' + suffix, :repository_url => "https://something.url", :provider_type => Provider::CUSTOM})
-    @p = Product.create!(ProductTestData::SIMPLE_PRODUCT.merge({:name=>'product' + suffix, :environments => [env], :provider => @provider}))
+    @p = Product.create!(ProductTestData::SIMPLE_PRODUCT.merge({:name=>'product' + suffix, :environments => [env],
+                                                                :provider => @provider}))
 
     env_product = EnvironmentProduct.find_or_create(env, @p)
 

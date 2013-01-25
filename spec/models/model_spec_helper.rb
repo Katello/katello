@@ -83,7 +83,9 @@ EOKEY
 
 
   def disable_product_orchestration
-    Resources::Candlepin::Product.stub!(:get).and_return([{:productContent => []}])
+    Resources::Candlepin::Product.stub!(:get).and_return do
+      [{:productContent => []}] #return a fresh hash, as add_repo modified it
+    end
     Resources::Candlepin::Product.stub!(:add_content).and_return(true)
     Resources::Candlepin::Product.stub!(:create).and_return({:id => '1'})
     Resources::Candlepin::Product.stub!(:create_unlimited_subscription).and_return(true)
