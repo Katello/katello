@@ -94,7 +94,7 @@ module Navigation
         :url => :sub_level,
         :options => {:class=>'content top_level', "data-menu"=>"content"},
         :if => lambda{current_organization},
-        :items=> AppConfig.katello? ? [ menu_subscriptions, menu_providers, menu_sync_management, menu_content_search, menu_system_templates, menu_changeset_management] :
+        :items=> Katello.config.katello? ? [ menu_subscriptions, menu_providers, menu_sync_management, menu_content_search, menu_system_templates, menu_changeset_management] :
             [ menu_subscriptions, menu_system_templates]
       }
     end
@@ -123,7 +123,7 @@ module Navigation
       {:key => :custom_providers,
         :name =>_("Custom Content Repositories"),
         :url => providers_path,
-        :if => lambda{AppConfig.katello? && current_organization && Provider.any_readable?(current_organization())},
+        :if => lambda{Katello.config.katello? && current_organization && Provider.any_readable?(current_organization())},
         :options => {:class=>"third_level", "data-dropdown"=>"repositories"}
       }
     end
@@ -132,7 +132,7 @@ module Navigation
       {:key => :sync_mgmt,
        :name =>_("Sync Management"),
        :items => lambda{[menu_sync_status, menu_sync_plan, menu_sync_schedule]},
-       :if => lambda{AppConfig.katello? && (current_organization.syncable? || Provider.any_readable?(current_organization))},
+       :if => lambda{Katello.config.katello? && (current_organization.syncable? || Provider.any_readable?(current_organization))},
        :options => {:class=>'content second_level menu_parent', "data-menu"=>"content", "data-dropdown"=>"sync"}
       }
     end
@@ -140,7 +140,7 @@ module Navigation
     def menu_content_search
       {:key => :content_search,
        :name =>_("Content Search"),
-       :if => lambda{AppConfig.katello? && !KTEnvironment.content_readable(current_organization).empty?},
+       :if => lambda{Katello.config.katello? && !KTEnvironment.content_readable(current_organization).empty?},
        :options => {:class=>'content second_level', "data-menu"=>"content"},
        :url =>content_search_index_path,
       }
@@ -176,7 +176,7 @@ module Navigation
       {:key => :system_templates,
        :name =>_("System Templates"),
         :url => system_templates_path,
-        :if => lambda{AppConfig.katello? && SystemTemplate.any_readable?(current_organization())},
+        :if => lambda{Katello.config.katello? && SystemTemplate.any_readable?(current_organization())},
         :options => {:class=>'content second_level', "data-menu"=>"content"}
       }
 
@@ -187,7 +187,7 @@ module Navigation
         :name => _("Changeset Management"),
         :url => promotions_path,
         :items => lambda{[menu_changeset, menu_changeset_history]},
-        :if => lambda {AppConfig.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
+        :if => lambda {Katello.config.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
         :options => {:highlights_on =>/\/promotions.*/ , :class=>'menu_parent content second_level', "data-menu"=>"content", "data-dropdown"=>"changesets"}
        }
     end
@@ -196,7 +196,7 @@ module Navigation
        {:key => :changesets,
         :name => _("Changesets"),
         :url => promotions_path,
-        :if => lambda {AppConfig.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
+        :if => lambda {Katello.config.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
         :options => {:highlights_on =>/\/promotions.*/ , :class=>'content third_level', "data-dropdown"=>"changesets"}
        }
     end
@@ -205,7 +205,7 @@ module Navigation
        {:key => :changeset,
         :name => _("Changesets History"),
         :url => changesets_path,
-        :if => lambda {AppConfig.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
+        :if => lambda {Katello.config.katello? && KTEnvironment.any_viewable_for_promotions?(current_organization)},
         :options => {:class=>'content third_level', "data-dropdown"=>"changesets"}
        }
     end
@@ -308,7 +308,7 @@ module Navigation
           :options => {:class=>"panel_link"}
         }
       ]
-      menu << if AppConfig.katello?
+      menu << if Katello.config.katello?
         { :key => :system_mgmt,
           :name =>_("System Groups"),
           :items => lambda{ak_systems_subnav},

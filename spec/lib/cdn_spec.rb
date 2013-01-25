@@ -36,7 +36,7 @@ describe Resources::CDN::CdnResource do
   end
 
   it "should be able to use proxy" do
-    AppConfig.cdn_proxy = OpenStruct.new(:host => "localhost", :port => 3128, :user => "test", :password => "pwd")
+    Katello.config[:cdn_proxy] = { :host => "localhost", :port => 3128, :user => "test", :password => "pwd" }
 
     Net::HTTP.stub("Proxy" => Net::HTTP)
     Net::HTTP.should_receive("Proxy").with("localhost", 3128, "test", "pwd")
@@ -45,7 +45,7 @@ describe Resources::CDN::CdnResource do
   end
 
   it "should be able to use url as proxy host" do
-    AppConfig.cdn_proxy = OpenStruct.new(:host => "http://localhost", :port => 3128, :user => "test", :password => "pwd")
+    Katello.config[:cdn_proxy] = {:host => "http://localhost", :port => 3128, :user => "test", :password => "pwd"}
 
     Net::HTTP.stub("Proxy" => Net::HTTP)
     Net::HTTP.should_receive("Proxy").with("localhost", 3128, "test", "pwd")

@@ -20,6 +20,8 @@ describe Api::UebercertsController do
   let(:org) { Organization.new(:label => OWNER_KEY) }
   before(:each) do
     login_user
+    Organization.should_receive(:without_deleting).at_least(:once).and_return(Organization)
+    Organization.stub!(:where).and_return(Organization)
     Organization.stub!(:first).and_return(org)
   end
 
@@ -46,7 +48,8 @@ describe Api::UebercertsController do
     end
 
     it "should find organization" do
-      Organization.should_receive(:first).once.and_return(org)
+      Organization.should_receive(:where).once.and_return(Organization)
+      Organization.stub!(:first).and_return(org)
       post :show, :organization_id => OWNER_KEY
     end
 

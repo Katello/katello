@@ -11,7 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Api::RepositoriesController < Api::ApiController
-  include KatelloUrlHelper
   respond_to :json
   before_filter :find_repository, :only => [:show, :update, :destroy, :package_groups, :package_group_categories, :enable, :gpg_key_content]
   before_filter :find_organization, :only => [:create]
@@ -55,7 +54,7 @@ class Api::RepositoriesController < Api::ApiController
   param :gpg_key_name, String, :desc => "name of a gpg key that will be assigned to the new repository"
   see "gpg_keys#index"
   def create
-    raise HttpErrors::BadRequest, _('Invalid Url') if !kurl_valid?(params[:url])
+    raise HttpErrors::BadRequest, _("Repository can be only created for custom provider.") unless @product.custom?
 
     if params[:gpg_key_name].present?
       gpg = GpgKey.readable(@product.organization).find_by_name!(params[:gpg_key_name])

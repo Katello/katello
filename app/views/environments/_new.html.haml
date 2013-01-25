@@ -19,6 +19,6 @@
 
     = form.text_area :description, :size => "40x5", :label => _("Description")
 
-    = form.select :prior, options_for_select(@env_labels, @selected), :label => _("Prior Environment")
+    = form.select :prior, options_for_select(@env_labels, @selected), {}, {:label => _("Prior Environment"), :size=>1, :tabindex => form.tabindex}
 
     = form.submit _("Create"), :disable_with => _("Creating..."), :class => 'subpanel_create create_button'

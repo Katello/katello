@@ -15,7 +15,7 @@ module Resources
 
     def self.options
       @options ||= begin
-        config = AppConfig.foreman
+        config = Katello.config.foreman
         { :base_url           => config.url,
           :enable_validations => false,
           :oauth              => { :consumer_key    => config.oauth_key,
@@ -32,6 +32,7 @@ module Resources
     SmartProxy      = ForemanApi::Resources::SmartProxy.new options
     Subnet          = ForemanApi::Resources::Subnet.new options
     ConfigTemplate  = ForemanApi::Resources::ConfigTemplate.new options
+    ComputeResource = ForemanApi::Resources::ComputeResource.new options
 
   end
 end

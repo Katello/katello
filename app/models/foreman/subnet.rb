@@ -16,7 +16,7 @@ class Foreman::Subnet < Resources::ForemanModel
   attributes :name, :network, :mask, :gateway, :dns_primary,
     :dns_secondary, :from, :to, :vlanid, :domain_ids, :dhcp_id, :tftp_id, :dns_id
 
-  validates :name, :presence => true
+  validates :name, :mask, :network, :presence => true
 
   def json_default_options
     {}

@@ -25,6 +25,8 @@ describe Api::TasksController do
     disable_user_orchestration
 
     @organization = new_test_org
+    Organization.stub!(:without_deleting).and_return(Organization)
+    Organization.stub!(:where).and_return(Organization)
     Organization.stub!(:first).and_return(@organization)
     @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
     Provider.stub!(:find).and_return(@provider)

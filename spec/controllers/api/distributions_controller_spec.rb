@@ -29,7 +29,6 @@ describe Api::DistributionsController, :katello => true do
     @product = new_test_product(@organization, @env)
     ep_library = EnvironmentProduct.find_or_create(@organization.library, @product)
     @repo = new_test_repo(ep_library, "repo", "#{@organization.name}/Library/prod/repo")
-
     @repo.stub(:has_distribution?).and_return(true)
     Repository.stub(:find).and_return(@repo)
     @repo.stub(:distributions).and_return([])

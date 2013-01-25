@@ -71,6 +71,8 @@ ru:
         other: около %{count} лет
       almost_x_years:
         one: почти 1 год
+        few: почти %{count} года
+        many: почти %{count} лет
         other: почти %{count} лет
       half_a_minute: меньше минуты
       less_than_x_minutes:
@@ -115,7 +117,7 @@ ru:
       month: Месяц
       second: Секунд
       year: Год
-  errors:
+  errors: &errors
     format: ! '%{attribute} %{message}'
     messages:
       accepted: нужно подтвердить
@@ -246,3 +248,10 @@ ru:
       long: ! '%d %B %Y, %H:%M'
       short: ! '%d %b, %H:%M'
     pm: вечера
+  # remove these aliases after 'activemodel' and 'activerecord' namespaces are removed from Rails repository
+  activemodel:
+    errors:
+      <<: *errors
+  activerecord:
+    errors:
+      <<: *errors
