@@ -646,7 +646,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/helpers
 %{homedir}/app/mailers
 %{homedir}/app/models
-%{homedir}/app/models/ext
 %exclude %{homedir}/app/models/glue/*
 %exclude %{homedir}/app/models/foreman
 %exclude %{homedir}/app/controllers/api/foreman
