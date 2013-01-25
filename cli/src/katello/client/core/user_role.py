@@ -33,7 +33,7 @@ class UserRoleAction(BaseAction):
     def get_role(self, name):
         role = self.api.role_by_name(name)
         if role == None:
-            system_exit(os.EX_DATAERR, _("Cannot find user role '%s'") % name )
+            system_exit(os.EX_DATAERR, _("Cannot find user role [ %s ]") % name )
         return role
 
 # user actions ---------------------------------------------------------
@@ -45,8 +45,8 @@ class List(UserRoleAction):
     def run(self):
         roles = self.api.roles()
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
 
         self.printer.set_header(_("User Role List"))
         self.printer.print_items(roles)
@@ -105,7 +105,8 @@ class Info(UserRoleAction):
             verbs = ', '.join([v['verb'] for v in p['verbs']])
             tags  = ', '.join([t['formatted']['display_name'] for t in p['tags']])
             type_in  = p['resource_type']['name']
-            return _("%s\n\tfor: %s\n\tverbs: %s\n\ton: %s") % (p['name'], type_in, verbs, tags)
+            return _("%(param_name)s\n\tfor: %(type_in)s\n\tverbs: %(verbs)s\n\ton: %(tags)s") \
+                % {'param_name':p['name'], 'type_in':type_in, 'verbs':verbs, 'tags':tags}
         else:
             return p['name']
 
@@ -120,11 +121,11 @@ class Info(UserRoleAction):
         ldap_groups = self.getLdapGroups(role['id'])
         role['ldap_groups'] = ", ".join(ldap_groups)
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('description')
-        self.printer.add_column('permissions', multiline=True)
-        self.printer.add_column('ldap_groups')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('description', _("Description"))
+        self.printer.add_column('permissions', _("Permissions"), multiline=True)
+        self.printer.add_column('ldap_groups', _("LDAP Groups"))
 
         self.printer.set_header(_("User Role Information"))
         self.printer.print_item(role)
@@ -198,7 +199,8 @@ class AddLdapGroup(UserRoleAction):
         role = self.get_role(name)
 
         self.api.add_ldap_group(role['id'], group_name)
-        print _("Successfully added LDAP group [ %s ] to the user role [ %s ]") % (group_name, name)
+        print _("Successfully added LDAP group [ %(group_name)s ] to the user role [ %(name)s ]") \
+            % {'group_name':group_name, 'name':name}
         return os.EX_OK
 
 # ------------------------------------------------------------------------------
@@ -221,7 +223,8 @@ class RemoveLdapGroup(UserRoleAction):
         role = self.get_role(name)
 
         self.api.remove_ldap_group(role['id'], group_name)
-        print _("Successfully removed LDAP group [ %s ] from the user role [ %s ]") % (group_name, name)
+        print _("Successfully removed LDAP group [ %(group_name)s ] from the user role [ %(name)s ]") \
+            % {'group_name':group_name, 'name':name}
         return os.EX_OK
 
 # user command ------------------------------------------------------------

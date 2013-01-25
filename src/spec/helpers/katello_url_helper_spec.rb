@@ -20,6 +20,7 @@ describe KatelloUrlHelper do
         kurl_valid?('HTtp://www.hugheshoney.com').should be_true
         kurl_valid?('http://www.hugheshoney.com:8888').should be_true
         kurl_valid?('http://www.hugheshoney.com:8888/homepage/index.html').should be_true
+        kurl_valid?('http://9seng.cz/katello').should be_true
       end
       it "should validate clean https urls" do
         kurl_valid?('https://www.hugheshoney.com').should be_true
@@ -63,6 +64,11 @@ describe KatelloUrlHelper do
         kurl_valid?('/////opt/repo').should be_true
       end
 
+      it "should validate not fully qualified domain names" do
+        kurl_valid?('http://seng9/katello').should be_true
+        kurl_valid?('http://s-eng').should be_true
+        kurl_valid?('http://seng').should be_true
+      end
     end
     describe "Invalid Urls" do
       it "should catch invalid ipv4 urls" do
@@ -78,6 +84,10 @@ describe KatelloUrlHelper do
         kurl_valid?('www..foo.com').should_not be_true
         kurl_valid?('www..foo.com').should_not be_true
         kurl_valid?('htttp://foo.bar.edu').should_not be_true
+      end
+      it "should catch domains with invalid dashes" do
+        kurl_valid?('-seng9').should_not be_true
+        kurl_valid?('seng9-.com').should_not be_true
       end
     end
     describe "Invalid Urls" do

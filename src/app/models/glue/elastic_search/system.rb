@@ -14,7 +14,7 @@
 module Glue::ElasticSearch::System
   def self.included(base)
     base.class_eval do
-      include IndexedModel
+      include Ext::IndexedModel
 
       add_system_group_hook     lambda { |system_group| reindex_on_association_change(system_group) }
       remove_system_group_hook  lambda { |system_group| reindex_on_association_change(system_group) }
@@ -30,7 +30,7 @@ module Glue::ElasticSearch::System
                                        :system_group,
                                        :installed_products,
                                        "custom_info.KEYNAME",
-                                       :ram,
+                                       :memory,
                                        :sockets]
 
       dynamic_templates = [
@@ -61,7 +61,7 @@ module Glue::ElasticSearch::System
         indexes :lastCheckin, :type=>'date'
         indexes :name_autocomplete, :type=>'string', :analyzer=>'autcomplete_name_analyzer'
         indexes :installed_products, :type=>'string', :analyzer=>:kt_name_analyzer
-        indexes :ram, :type => 'integer'
+        indexes :memory, :type => 'integer'
         indexes :sockets, :type => 'integer'
         indexes :facts, :path=>"just_name" do
         end
@@ -80,7 +80,6 @@ module Glue::ElasticSearch::System
      :system_group=>self.system_groups.collect{|g| g.name},
      :system_group_ids=>self.system_group_ids,
      :installed_products=>collect_installed_product_names,
-     :ram => self.memory,
      :sockets => self.sockets,
      :custom_info=>collect_custom_info
     }

@@ -21,14 +21,14 @@
         .clear
           &nbsp;
 
-      - if AppConfig.katello?
+      - if Katello.config.katello?
         = form.field :system_template_id, :label => _("System Template"), :wrapper => {:id => 'system_templates'}, :grid => [2,7] do
-          = select_tag 'activation_key[system_template_id]', options_for_select(@system_template_labels, @selected_template)
+          = select_tag 'activation_key[system_template_id]', options_for_select(@system_template_labels, @selected_template), {:size=>1, :tabindex=>form.tabindex}
 
       = form.field :usage_limit, :label => _("Usage Limit"), :grid => [2,7] do
-        = number_field_tag 'activation_key[usage_limit]', params[:usage_limit], :size => "4", :tabindex => auto_tab_index, :min => 1, :id => :activation_key_usage_limit, :disabled => true
+        = number_field_tag 'activation_key[usage_limit]', params[:usage_limit], :size => "4", :tabindex => form.tabindex, :min => 1, :id => :activation_key_usage_limit, :disabled => true
         %label
-          %input{:type => "checkbox", :checked => 'checked', :id => :usage_limit_checkbox}
+          %input{:type => "checkbox", :checked => 'checked', :id => :usage_limit_checkbox, :tabindex=>form.tabindex}
           = _("Unlimited")
 
       = form.submit _("Save"), :id => :save_key

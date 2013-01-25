@@ -67,8 +67,8 @@ def get_environment(orgName, envName=None):
         env = environment_api.environment_by_name(orgName, envName)
 
     if env == None:
-        raise ApiDataError(_("Could not find environment [ %s ] within organization [ %s ]") %
-            (envName, orgName))
+        raise ApiDataError(_("Could not find environment [ %(envName)s ] within organization [ %(orgName)s ]") %
+            {'envName':envName, 'orgName':orgName})
     return env
 
 
@@ -89,8 +89,8 @@ def get_product(orgName, prodName=None, prodLabel=None, prodId=None):
                              "recommend using product id.  The product id may be retrieved "\
                              "using the 'product list' command."))
     elif len(products) == 0:
-        raise ApiDataError(_("Could not find product [ %s ] within organization [ %s ]") %
-            (prodName, orgName))
+        raise ApiDataError(_("Could not find product [ %(prodName)s ] within organization [ %(orgName)s ]") %
+            {'prodName':prodName, 'orgName':orgName})
 
     return products[0]
 
@@ -106,9 +106,9 @@ def get_repo(orgName, prodName, prodLabel, prodId, repoName, envName=None, inclu
         #repo by id call provides more information
         return repo_api.repo(repos[0]["id"])
 
-    raise ApiDataError(_("Could not find repository [ %s ] within organization [ %s ], " \
-        "product [ %s ] and environment [ %s ]") %
-        (repoName, orgName, prodName, env["name"]))
+    raise ApiDataError(_("Could not find repository [ %(repoName)s ] within organization [ %(orgName)s ], " \
+        "product [ %(prodName)s ] and environment [ %(env_name)s ]") %
+        {'repoName':repoName, 'orgName':orgName, 'prodName':prod["name"], 'env_name':env["name"]})
 
 
 def get_provider(orgName, provName):
@@ -116,8 +116,8 @@ def get_provider(orgName, provName):
 
     prov = provider_api.provider_by_name(orgName, provName)
     if prov == None:
-        raise ApiDataError(_("Could not find provider [ %s ] within organization [ %s ]") %
-            (provName, orgName))
+        raise ApiDataError(_("Could not find provider [ %(provName)s ] within organization [ %(orgName)s ]") %
+            {'provName':provName, 'orgName':orgName})
     return prov
 
 
@@ -127,8 +127,8 @@ def get_template(orgName, envName, tplName):
     env = get_environment(orgName, envName)
     tpl = template_api.template_by_name(env["id"], tplName)
     if tpl == None:
-        raise ApiDataError(_("Could not find template [ %s ] within environment [ %s ]") %
-            (tplName, env["name"]))
+        raise ApiDataError(_("Could not find template [ %(tplName)s ] within environment [ %(env_name)s ]") %
+            {'tplName':tplName, 'env_name':env["name"]})
     return tpl
 
 
@@ -138,22 +138,22 @@ def get_changeset(orgName, envName, csName):
     env = get_environment(orgName, envName)
     cset = changeset_api.changeset_by_name(orgName, env["id"], csName)
     if cset == None:
-        raise ApiDataError(_("Could not find changeset [ %s ] within environment [ %s ]") %
-            (csName, env["name"]))
+        raise ApiDataError(_("Could not find changeset [ %(csName)s ] within environment [ %(env_name)s ]") %
+            {'csName':csName, 'env_name':env["name"]})
     return cset
 
 def get_user(userName):
     user_api = UserAPI()
     user = user_api.user_by_name(userName)
     if user == None:
-        raise ApiDataError(_("Could not find user '%s'") % (userName))
+        raise ApiDataError(_("Could not find user [ %s ]") % (userName))
     return user
 
 def get_role(name):
     user_role_api = UserRoleAPI()
     role = user_role_api.role_by_name(name)
     if role == None:
-        raise ApiDataError(_("Cannot find user role '%s'") % (name))
+        raise ApiDataError(_("Cannot find user role [ %s ]") % (name))
     return role
 
 def get_sync_plan(org_name, name):
@@ -170,8 +170,8 @@ def get_permission(role_name, permission_name):
 
     perm = permission_api.permission_by_name(role['id'], permission_name)
     if perm == None:
-        raise ApiDataError(_("Cannot find permission [ %s ] for user role [ %s ]") %
-            (role_name, permission_name))
+        raise ApiDataError(_("Cannot find permission [ %(role_name)s ] for user role [ %(permission_name)s ]") %
+            {'role_name':role_name, 'permission_name':permission_name})
     return perm
 
 def get_system_group(org_name, system_group_name):
@@ -179,8 +179,9 @@ def get_system_group(org_name, system_group_name):
 
     system_group = system_group_api.system_group_by_name(org_name, system_group_name)
     if system_group == None:
-        raise ApiDataError(_("Could not find system group [ %s ] within organization [ %s ]") % \
-            (system_group_name, org_name))
+        raise ApiDataError(_("Could not find system group [ %(system_group_name)s ] " \
+            "within organization [ %(org_name)s ]") \
+            % {'system_group_name':system_group_name, 'org_name':org_name})
     return system_group
 
 def get_system(org_name, sys_name, env_name=None, sys_uuid=None):
@@ -188,25 +189,29 @@ def get_system(org_name, sys_name, env_name=None, sys_uuid=None):
     if sys_uuid:
         systems = system_api.systems_by_org(org_name, {'uuid': sys_uuid})
         if systems is None:
-            raise ApiDataError(_("Could not find System [ %s ] in Org [ %s ]") % (sys_name, org_name))
+            raise ApiDataError(_("Could not find System [ %(sys_name)s ] in Org [ %(org_name)s ]") \
+                % {'sys_name':sys_name, 'org_name':org_name})
         elif len(systems) != 1:
-            raise ApiDataError(_("Found ambiguous Systems [ %s ] in Org [ %s ]") % (sys_uuid, org_name))
+            raise ApiDataError(_("Found ambiguous Systems [ %(sys_uuid)s ] in Org [ %(org_name)s ]") \
+                % {'sys_uuid':sys_uuid, 'org_name':org_name})
     elif env_name is None:
         systems = system_api.systems_by_org(org_name, {'name': sys_name})
         if systems is None or len(systems) == 0:
-            raise ApiDataError(_("Could not find System [ %s ] in Org [ %s ]") % (sys_name, org_name))
+            raise ApiDataError(_("Could not find System [ %(sys_name)s ] in Org [ %(org_name)s ]") \
+                % {'sys_name':sys_name, 'org_name':org_name})
         elif len(systems) != 1:
-            raise ApiDataError( _("Found ambiguous Systems [ %s ] in Environment [ %s ] in Org [ %s ], "\
-                    "use --uuid to specify the system") % (sys_name, env_name, org_name))
+            raise ApiDataError( _("Found ambiguous Systems [ %(sys_name)s ] " \
+                "in Environment [ %(env_name)s ] in Org [ %(org_name)s ], "\
+                "use --uuid to specify the system") % {'sys_name':sys_name, 'env_name':env_name, 'org_name':org_name})
     else:
         environment = get_environment(org_name, env_name)
         systems = system_api.systems_by_env(environment["id"], {'name': sys_name})
         if systems is None:
-            raise ApiDataError(_("Could not find System [ %s ] in Environment [ %s ] in Org [ %s ]") %
-                (sys_name, env_name, org_name))
+            raise ApiDataError(_("Could not find System [ %(sys_name)s ] " \
+                "in Environment [ %(env_name)s ] in Org [ %(org_name)s ]") \
+                % {'sys_name':sys_name, 'env_name':env_name, 'org_name':org_name})
         elif len(systems) != 1:
-            raise ApiDataError(_("Found ambiguous Systems [ %s ] in Org [ %s ], "\
-                "you have to specify the environment") %
-                (sys_name, org_name))
+            raise ApiDataError(_("Found ambiguous Systems [ %(sys_name)s ] in Org [ %(org_name)s ], "\
+                "you have to specify the environment") % {'sys_name':sys_name, 'org_name':org_name})
 
     return system_api.system(systems[0]['uuid'])

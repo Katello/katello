@@ -16,6 +16,12 @@ module Glue::Pulp::Repo
     base.send :include, InstanceMethods
 
     base.class_eval do
+
+      validates_with Validators::KatelloUrlFormatValidator,
+                     :attributes => :feed,
+                     :field_name => :url, :on => :create,
+                     :if => Proc.new { |o| o.environment.library? }
+
       before_save :save_repo_orchestration
       before_destroy :destroy_repo_orchestration
 
@@ -40,7 +46,7 @@ module Glue::Pulp::Repo
 
       def self.ensure_sync_notification
         resource =  Runcible::Resources::EventNotifier
-        url = AppConfig.post_sync_url
+        url = Katello.config.post_sync_url
         type = resource::EventTypes::REPO_SYNC_COMPLETE
         notifs = resource.list()
 
@@ -100,7 +106,7 @@ module Glue::Pulp::Repo
     end
 
     def uri
-      uri = URI.parse(AppConfig.pulp.url)
+      uri = URI.parse(Katello.config.pulp.url)
       "https://#{uri.host}/pulp/repos/#{relative_path}"
     end
 
@@ -290,8 +296,8 @@ module Glue::Pulp::Repo
 
     def sync(options = { })
       sync_options= {}
-      sync_options[:max_speed] ||= AppConfig.pulp.sync_KBlimit if AppConfig.pulp.sync_KBlimit # set bandwidth limit
-      sync_options[:num_threads] ||= AppConfig.pulp.sync_threads if AppConfig.pulp.sync_threads # set threads per sync
+      sync_options[:max_speed] ||= Katello.config.pulp.sync_KBlimit if Katello.config.pulp.sync_KBlimit # set bandwidth limit
+      sync_options[:num_threads] ||= Katello.config.pulp.sync_threads if Katello.config.pulp.sync_threads # set threads per sync
       pulp_tasks = Runcible::Extensions::Repository.sync(self.pulp_id, sync_options)
       pulp_task = pulp_tasks.select{|i| i['tags'].include?("pulp:action:sync")}.first.with_indifferent_access
 

@@ -14,7 +14,7 @@ require 'spec_helper'
 
 describe Glue::Foreman::User do
 
-  unless AppConfig.use_foreman
+  unless Katello.config.use_foreman
     pending 'foreman is not enabled, skipping'
   else
 

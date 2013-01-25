@@ -16,10 +16,12 @@ require 'util/password'
 require 'util/model_util'
 
 class User < ActiveRecord::Base
-  include Glue::Pulp::User          if AppConfig.use_pulp
-  include Glue::ElasticSearch::User if AppConfig.use_elasticsearch
-  include Glue::Foreman::User       if AppConfig.use_foreman
-  include Glue if AppConfig.use_cp || AppConfig.use_pulp || AppConfig.use_foreman
+  include Glue::Pulp::User if Katello.config.use_pulp
+  include Glue::Foreman::User if Katello.config.use_foreman
+  include Glue::ElasticSearch::User if Katello.config.use_elasticsearch
+  include Glue if Katello.config.use_cp || Katello.config.use_foreman || Katello.config.use_pulp
+  include AsyncOrchestration
+  include Ext::IndexedModel
 
   include AsyncOrchestration
   include Authorization::User
@@ -42,15 +44,16 @@ class User < ActiveRecord::Base
   has_many :search_histories, :dependent => :destroy
   serialize :preferences, HashWithIndifferentAccess
 
-  validates :username, :uniqueness => true,
-            :no_trailing_space => true, :presence => true,
-            :length => {:minimum => 3, :maximum => 128}
+  validates :username, :uniqueness => true, :presence => true
+  validates_with Validators::UsernameValidator, :attributes => :username
+  validates_with Validators::NoTrailingSpaceValidator, :attributes => :username
+
   validates :email, :presence => true, :if => :not_ldap_mode?
-  validates :default_locale, :inclusion => {:in => AppConfig.available_locales, :allow_nil => true, :message => _("must be one of %s") % AppConfig.available_locales.join(', ')}
+  validates :default_locale, :inclusion => {:in => Katello.config.available_locales, :allow_nil => true, :message => _("must be one of %s") % Katello.config.available_locales.join(', ')}
 
   # validate the password length before hashing
   validates_each :password do |model, attr, value|
-    if AppConfig.warden != 'ldap'
+    if Katello.config.warden != 'ldap'
       if model.password_changed?
         model.errors.add(attr, _("must be at least 5 characters.")) if value.length < 5
       end
@@ -65,7 +68,7 @@ class User < ActiveRecord::Base
 
   # hash the password before creating or updateing the record
   def hash_password
-    if AppConfig.warden != 'ldap'
+    if Katello.config.warden != 'ldap'
       self.password = Password::update(self.password) if self.password.length != 192
     end
   end
@@ -115,7 +118,7 @@ class User < ActiveRecord::Base
   end
 
   def not_ldap_mode?
-    return AppConfig.warden != 'ldap'
+    return Katello.config.warden != 'ldap'
   end
 
   def self.authenticate!(username, password)
@@ -164,6 +167,15 @@ class User < ActiveRecord::Base
   def self.find_by_default_environment(kt_environment_id)
     self.joins(:own_role => { :permissions => :tags }).
          where("tag_id = #{kt_environment_id}")
+  end
+
+  def allowed_organizations
+    #test for all orgs
+    perms = Permission.joins(:role).joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
+        where("roles_users.user_id = ?", self.id).where(:organization_id => nil).count()
+    return Organization.without_deleting.all if perms > 0
+
+    Organization.without_deleting.joins(:permissions => {:role => :users}).where(:users => {:id => self.id}).uniq
   end
 
   def disable_helptip(key)
@@ -244,7 +256,9 @@ class User < ActiveRecord::Base
   end
 
   def default_environment
-    permission = default_systems_reg_permission and KTEnvironment.find(permission.tags.first.tag_id)
+    permission = default_systems_reg_permission
+    return nil if permission.nil? or permission.tags.empty?
+    KTEnvironment.find(permission.tags.first.tag_id)
   end
 
   def default_environment=(environment)
@@ -384,6 +398,21 @@ class User < ActiveRecord::Base
     roles_users.select { |r| r.ldap }.map { |r| r.role }
   end
 
+  def create_or_update_search_history(path, search_params)
+    unless search_params.nil? or search_params.blank? or empty_display_attributes?(search_params)
+      if history = search_histories.find_or_create_by_path_and_params(path, search_params)
+        history.update_attributes(:updated_at => Time.now)
+      end
+    end
+  end
+
+  def empty_display_attributes?(a_search_string)
+    tokens = a_search_string.strip.split(/\s/)
+    return false if tokens.size > 1
+
+    return false unless tokens.first.end_with?(':')
+    true
+  end
 
   protected
 
@@ -421,8 +450,8 @@ class User < ActiveRecord::Base
     end while User.exists?(column => self[column])
   end
 
-  def log_roles(verbs, resource_type, tags, org, any_tags = false)
-    if AppConfig.allow_roles_logging
+  def log_roles verbs, resource_type, tags, org, any_tags = false
+    if Katello.config.allow_roles_logging
       verbs_str = verbs ? verbs.join(',') :"perform any verb"
       tags_str  = "any tags"
       if tags

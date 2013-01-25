@@ -142,7 +142,7 @@ module Glue::ElasticSearch::Pool
       end
 
       def self.index
-        "#{AppConfig.elastic_index}_pool"
+        "#{Katello.config.elastic_index}_pool"
       end
     end
   end

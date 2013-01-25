@@ -50,7 +50,7 @@ function update_status() {
           }
       });
   }, 1000);
-}  
+}
 
 // Common functionality throughout Katello
 
@@ -60,6 +60,39 @@ function log(msg) {
         throw new Error(msg);
     }, 0);
 }
+
+// Workaround for a bug in chosen
+// When a chosen select receives focus() invoked from js code
+// it ends up in an infinite loop of displaying and hiding the options.
+// 2pane gives automatically focus to a first enabled visible input on the panel.
+// Therefore we disable the inner input at the beginning and enable it
+// after 400ms.
+//
+// requires jQuery
+$.fn.delayed_chosen = function(options, delay_time) {
+    var chzn_input;
+
+    $(this).chosen(options);
+
+    delay_time = (delay_time === undefined) ? 400 : delay_time;
+    chzn_input = $(this).parent().find('.chzn-container :input');
+    chzn_input.prop('disabled', true);
+    chzn_input.delay(delay_time).queue(function(){ $(this).prop('disabled', false); $(this).dequeue();} );
+}
+
+//requires jQuery
+KT.getData = (function(fieldNames) {
+    var data = {},
+        value;
+
+    $.each(fieldNames, function(i, fieldName){
+        value = $('#'+fieldName).val();
+        if (value !== undefined)
+            data[fieldName] = value;
+    });
+    return data;
+});
+
 
 KT.helptip =  (function($) {
     var enable = function(key, url) {
@@ -83,10 +116,10 @@ KT.helptip =  (function($) {
               url = $(this).attr('data-url');
 
           $("#helptip-opened_" + key).hide();
-          $("#helptip-closed_" + key).show(); 
-          
+          $("#helptip-closed_" + key).show();
+
           $(document).trigger('helptip-closed');
-          
+
           disable(key, url);
         },
         handle_open = function(){
@@ -95,12 +128,12 @@ KT.helptip =  (function($) {
 
           $("#helptip-opened_" + key).show();
           $("#helptip-closed_" + key).hide();
-          
+
           $(document).trigger('helptip-opened');
-          
+
           enable(key, url);
         };
-        
+
     return {
         handle_close    :    handle_close,
         handle_open     :    handle_open
@@ -158,7 +191,7 @@ $.expr[':'].contains = function(a, i, m) {
 
 //requires jQuery
 KT.common = (function() {
-    var root_url = undefined; 
+    var root_url = undefined;
     return {
         height: function() {
             return $(window).height();
@@ -363,7 +396,7 @@ KT.common = (function() {
             var search_string = $.bbq.getState('list_search');
 
         	if( search_string ){
-        		return { 'search' : search_string };	
+        		return { 'search' : search_string };
         	} else {
         		return false;
         	}
@@ -385,8 +418,8 @@ KT.common = (function() {
         to_human_readable_bytes : function(bytes) {
             var sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'],
                 i;
-            
-            if (bytes == 0) { 
+
+            if (bytes == 0) {
                 return '0';
             } else {
                 i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
@@ -577,6 +610,8 @@ $(window).ready(function(){
         KT.common.customConfirm({message: message}); return false;
     };
 
-    // refresh the favicon to make sure it shows up
-    $('link[type*=icon]').detach().appendTo('head');
+    $(window).bind("hashchange", function(event) {
+        // refresh the favicon to make sure it shows up
+        $('link[type*=icon]').detach().appendTo('head');
+    });
 });

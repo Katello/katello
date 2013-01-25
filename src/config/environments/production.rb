@@ -21,15 +21,16 @@ Src::Application.configure do
   # just comment this out and Rails will serve the files
 
   # See everything in the log (default is :warn)
-  config.log_level = (ENV['KATELLO_LOGGING'] || "warn").dup
-  log_level_sql = (ENV['KATELLO_LOGGING_SQL'] || "fatal").dup
-  config.active_record.logger = KatelloLogger.new("#{Rails.root}/log/production_sql.log", log_level_sql)
+  config.active_record.logger = KatelloLogger.new("#{Rails.root}/log/production_sql.log", Katello.config.log_level_sql)
   config.colorize_logging = false
 
   # Use a different logger for distributed setups
   # config.logger = SyslogLogger.new
 
   config.logger = KatelloLogger.new("#{Rails.root}/log/production.log", config.log_level)
+  config.after_initialize {
+    Glue.logger = KatelloLogger.new("#{Rails.root}/log/production_orch.log", 'INFO')
+  }
 
   # Use a different cache store in production
   # config.cache_store = :mem_cache_store

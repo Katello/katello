@@ -13,7 +13,7 @@
 
 module Glue::ElasticSearch::TaskStatus
   def self.included(base)
-    base.send :include, IndexedModel
+    base.send :include, Ext::IndexedModel
 
     base.class_eval do
       index_options :json=>{:only=> [:parameters, :result, :organization_id, :start_time, :finish_time, :task_owner_id, :task_owner_type ]},

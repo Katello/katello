@@ -26,6 +26,8 @@ $(document).ready(function() {
     var search = KT.content_search(KT.available_environments);
 
     $('#content_selector select').chosen();
+
+    Spinner().spin($('.large_spinner').get(0));
 });
 
 

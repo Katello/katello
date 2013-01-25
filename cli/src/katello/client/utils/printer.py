@@ -73,7 +73,7 @@ class PrinterStrategy(object):
         :param item: data to get the value from
         :rtype: bool
         """
-        return (column['attr_name'] in item) or ('value' in column)
+        return (column['attr_name'] in item) or ('value' in column) or ('item_formatter' in column)
 
     @classmethod
     def _get_column_value(cls, column, item):
@@ -513,4 +513,5 @@ def unicode_len(text):
 
 def batch_add_columns(printer, *cols, **kwargs):
     for c in cols:
-        printer.add_column(c, **kwargs)
+        for key in c.keys(): # should only ever be one
+            printer.add_column(key, c[key], **kwargs)

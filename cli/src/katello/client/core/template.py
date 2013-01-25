@@ -65,11 +65,11 @@ class List(TemplateAction):
         if not templates:
             print _("No templates found in environment [ %s ]") % environment["name"]
             return os.EX_OK
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('description', multiline=True)
-        self.printer.add_column('environment_id')
-        self.printer.add_column('parent_id')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('description', _("Description"), multiline=True)
+        self.printer.add_column('environment_id', _("Environment ID"))
+        self.printer.add_column('parent_id', _("Parent ID"))
 
         self.printer.set_header(_("Template List"))
         self.printer.print_items(templates)
@@ -105,16 +105,16 @@ class Info(TemplateAction):
         template["package_group_categories"] = [p["name"] for p in template["pg_categories"]]
 
 
-        batch_add_columns(self.printer, 'id', 'name')
-        self.printer.add_column('revision', show_with=printer.VerboseStrategy)
-        self.printer.add_column('description', multiline=True)
-        self.printer.add_column('environment_id')
-        self.printer.add_column('parent_id')
-        batch_add_columns(self.printer, \
-            'errata', 'products', 'repositories', \
-            'packages', 'parameters', 'package_groups', \
-            'package_group_categories', \
-            multiline=True, show_with=printer.VerboseStrategy)
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")})
+        self.printer.add_column('revision', _("Revision"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('description', _("Description"), multiline=True)
+        self.printer.add_column('environment_id', _("Environment ID"))
+        self.printer.add_column('parent_id', _("Parent ID"))
+        batch_add_columns(self.printer, {'errata': _("Errata")}, {'products': _("Products")}, \
+            {'repositories': _("Repositories")}, {'packages': _("Packages")}, \
+            {'parameters': _("Parameters")}, {'package_groups': _("Package Groups")}, \
+            {'package_group_categories': _("Package Group Categories")}, multiline=True, \
+            show_with=printer.VerboseStrategy)
         self.printer.set_header(_("Template Info"))
         self.printer.print_item(template)
         return os.EX_OK
@@ -164,7 +164,7 @@ class Import(TemplateAction):
         try:
             f = self.open_file(tplPath)
         except IOError:
-            print _("File %s does not exist" % tplPath)
+            print _("File [ %s ] does not exist" % tplPath)
             return os.EX_IOERR
 
         response = run_spinner_in_bg(self.api.import_tpl, (env["id"], desc, f),
@@ -209,7 +209,7 @@ class Export(TemplateAction):
         try:
             f = self.open_file(tplPath)
         except IOError:
-            print >> sys.stderr, _("Could not create file %s") % tplPath
+            print >> sys.stderr, _("Could not create file [ %s ]") % tplPath
             return os.EX_IOERR
 
         self.api.validate_tpl(template["id"], format_in)
@@ -217,7 +217,7 @@ class Export(TemplateAction):
             message=_("Exporting template, please wait... "))
         f.write(response)
         f.close()
-        print _("Template was exported successfully to file %s") % tplPath
+        print _("Template was exported successfully to file [ %s ]") % tplPath
         return os.EX_OK
 
     @classmethod
@@ -285,7 +285,8 @@ class Update(TemplateAction):
 
     def _store_parameter_value(self, option, opt_str, value, parser):
         if self.current_parameter == None:
-            raise OptionValueError(_("each %s must be preceeded by %s") % (option, "--add_parameter") )
+            raise OptionValueError(_("each %(option)s must be preceeded by %(paramater)s") \
+                % {'option':option, 'parameter':"--add_parameter"} )
 
         self.items['add_parameters'][self.current_parameter] = u_str(value)
         self.current_parameter = None
@@ -370,7 +371,7 @@ class Update(TemplateAction):
         #check for missing values
         for k, v in self.items['add_parameters'].iteritems():
             if v is None:
-                validator.add_option_error(_("missing value for parameter '%s'") % k)
+                validator.add_option_error(_("missing value for parameter [ %s ]") % k)
 
     def _resetParameters(self):
         # pylint: disable=W0201

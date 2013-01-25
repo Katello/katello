@@ -13,7 +13,7 @@
 
 module Glue::ElasticSearch::Job
   def self.included(base)
-    base.send :include, IndexedModel
+    base.send :include, Ext::IndexedModel
 
     base.class_eval do
       index_options :json=>{:only=> [:job_owner_id, :job_owner_type]},

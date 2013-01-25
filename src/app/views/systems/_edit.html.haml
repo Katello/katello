@@ -70,7 +70,7 @@
           .grid_5.la{'name' => 'system[releaseVer]', 'class' => ("editable edit_select_system_releasever_message error_message" if editable), 'data-url'=>system_path(system.id), 'data-message'=>releases_error}
             = system.release == "" ? _("System Default") : system.release
         - elsif releases == []
-          - if AppConfig.katello?
+          - if Katello.config.katello?
             - none_message = ("No alternate release version choices are available. These choices are based upon the repositories that have been enabled and promoted to this system's environment.")
           - else
             - none_message = _("No alternate release version choices are available. These choices are based upon the Red Hat manifest imported and the content available in the CDN.")
@@ -85,7 +85,7 @@
         .grid_5.la #{System.architectures[system.arch]}
       %fieldset
         .grid_2.ra.fieldset
-          = label :ram, :ram, _("RAM (MB)")
+          = label :memory, :memory, _("RAM (MB)")
         .grid_5.la #{system.memory}
       %fieldset
         .grid_2.ra.fieldset
@@ -120,16 +120,20 @@
           = label :last_booted, :last_booted, _("Last Booted")
         .grid_5.la #{_("None")}
       %fieldset
-        .grid_2.ra
+        .grid_2.ra.fieldset
           = label :host_guest, :activation_key, _("Activation Key")
         - if @system.activation_keys.blank?
           .grid_5.la= _("None")
-        - @system.activation_keys.each do |key|
-          .grid_5.la
-            - if ActivationKey.readable? key.organization
-              = link_to key.name, activation_keys_path(:anchor => "panel=activation_key_#{key.id}")
-            - else
-              = key.name
+        - else
+          .grid_5
+            - @system.activation_keys.each do |key|
+              %table#interface_table
+                %tr
+                  %td
+                    - if ActivationKey.readable? key.organization
+                      = link_to key.name, activation_keys_path(:anchor => "panel=activation_key_#{key.id}")
+                    - else
+                      = key[:name]
     .clear
     .grid_8
       %h5 #{_("Host & Guest Info")}

@@ -198,7 +198,7 @@ BuildArch:      noarch
 Summary:         Katello connection classes for the Foreman backend
 Requires:        %{name}-common
 # dependencies from bundler.d/foreman.rb
-Requires:       rubygem(foreman_api) >= 0.0.7
+Requires:       rubygem(foreman_api) >= 0.0.10
 
 %description glue-foreman
 Katello connection classes for the Foreman backend
@@ -230,7 +230,7 @@ Requires:       katello-configure
 Requires:       katello-cli
 Requires:       postgresql-server
 Requires:       postgresql
-Requires:       candlepin-tomcat6
+Requires(post):       candlepin-tomcat6
 Requires:       thumbslug
 Requires:       thumbslug-selinux
 
@@ -390,7 +390,9 @@ fi
 %if ! 0%{?fastbuild:1}
     #compile SASS files
     echo Compiling SASS files...
+    cp config/katello.template.yml config/katello.yml
     compass compile
+    rm config/katello.yml
 
     #generate Rails JS/CSS/... assets
     echo Generating Rails assets...
@@ -398,7 +400,8 @@ fi
 
     #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
     echo Generating gettext files...
-    ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")'
+    LC_ALL=C ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")' 2>&1 \
+      | sed -e '/Warning: obsolete msgid exists./,+1d' | sed -e '/Warning: fuzzy message was ignored./,+1d'
 %endif
 
 #man pages
@@ -415,8 +418,10 @@ a2x -d manpage -f manpage man/katello-service.8.asciidoc
     export BUNDLER_EXT_NOSTRICT=1
     export BUNDLER_EXT_GROUPS="default apipie test"
     export RAILS_ENV=production
+    cp config/katello.template.yml config/katello.yml
     rake apipie:static --trace
     rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello --trace
+    rm config/katello.yml
 %endif
 
 %install
@@ -443,7 +448,7 @@ cp -R .bundle Gemfile.in bundler.d Rakefile app autotest ca config config.ru db 
 rm -f {buildroot}%{homedir}/script/katello-reset-dbs
 
 #copy configs and other var files (will be all overwriten with symlinks)
-install -m 600 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
+install -m 600 config/%{name}.template.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
 install -m 644 config/environments/production.rb %{buildroot}%{_sysconfdir}/%{name}/environment.rb
 
 #copy cron scripts to be scheduled daily
@@ -515,11 +520,19 @@ install -m 644 man/katello-service.8 %{buildroot}/%{_mandir}/man8
 #Generate secret token if the file does not exist
 #(this must be called both for installation and upgrade)
 TOKEN=/etc/katello/secret_token
+# this file must not be world readable at generation time
+umask 0077
 test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN \
     && chmod 600 $TOKEN && chown katello:katello $TOKEN)
 
 %posttrans common
 /sbin/service %{name} condrestart >/dev/null 2>&1 || :
+
+%post headpin-all
+usermod -a -G katello-shared tomcat
+
+%post all
+usermod -a -G katello-shared tomcat
 
 %files
 %attr(600, katello, katello)
@@ -535,6 +548,7 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %{homedir}/app/models/*.rb
 %{homedir}/app/models/authorization/*.rb
 %{homedir}/app/models/candlepin
+%{homedir}/app/models/ext
 %{homedir}/app/stylesheets
 %{homedir}/app/views
 %exclude %{homedir}/app/views/foreman
@@ -551,9 +565,12 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %{homedir}/lib/monkeys
 %{homedir}/lib/navigation
 %{homedir}/lib/notifications
+%{homedir}/lib/validators
 %dir %{homedir}/lib/resources
 %{homedir}/lib/resources/cdn.rb
 %{homedir}/lib/resources/abstract_model.rb
+%dir %{homedir}/lib/resources/abstract_model
+%{homedir}/lib/resources/abstract_model/indexed_model.rb
 %{homedir}/lib/tasks
 %exclude %{homedir}/lib/tasks/rcov.rake
 %exclude %{homedir}/lib/tasks/yard.rake
@@ -588,7 +605,7 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %{_mandir}/man8/katello-service.8*
 
 %files common
-%doc README LICENSE
+%doc LICENSE
 %{_sbindir}/service-wait
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %attr(600, katello, katello) %{_sysconfdir}/%{name}/%{name}.yml
@@ -617,6 +634,8 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_sql.log
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs.log
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs_sql.log
+%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_orch.log
+%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs_orch.log
 
 %files glue-elasticsearch
 %{homedir}/app/models/glue/elastic_search
@@ -669,6 +688,7 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 %{homedir}/lib/navigation
 %{homedir}/lib/notifications
 %{homedir}/lib/resources
+%{homedir}/lib/validators
 %exclude %{homedir}/lib/resources/candlepin.rb
 %exclude %{homedir}/lib/resources/foreman_model.rb
 %{homedir}/lib/tasks
@@ -725,6 +745,9 @@ test -f $TOKEN || (echo $(</dev/urandom tr -dc A-Za-z0-9 | head -c128) > $TOKEN 
 getent group %{name} >/dev/null || groupadd -r %{name} -g 182
 getent passwd %{name} >/dev/null || \
     useradd -r -g %{name} -d %{homedir} -u 182 -s /sbin/nologin -c "Katello" %{name}
+# add tomcat & katello to the katello shared group for reading sensitive files
+getent group katello-shared > /dev/null || groupadd -r katello-shared
+usermod -a -G katello-shared katello
 exit 0
 
 %preun common
@@ -763,14 +786,171 @@ fi
 * Mon Jan 21 2013 Justin Sherrill <jsherril@redhat.com> 1.3.5_pulpv2-1
 - removing old converge-ui build code (jsherril@redhat.com)
 
-* Mon Jan 21 2013 Justin Sherrill <jsherril@redhat.com>
-- removing old converge-ui build code (jsherril@redhat.com)
+* Tue Jan 15 2013 Justin Sherrill <jsherril@redhat.com> 1.3.3-1
+- Translations - Update .po and .pot files for katello. (jsherril@redhat.com)
+- Translations - New translations from Transifex for katello.
+  (jsherril@redhat.com)
+- Translations - Download translations from Transifex for katello.
+  (jsherril@redhat.com)
+- Setting the min_messages level to warning (daviddavis@redhat.com)
+- Repository feed validation moved to validator (mhulan@redhat.com)
+- Code cleanup (mhulan@redhat.com)
+- Move all validators to one place (mhulan@redhat.com)
+- 820392 - repository hostname validation (mhulan@redhat.com)
+- emails - add default From to login/password emails (bbuckingham@redhat.com)
+- 882311 - hide and check organizations being deleted (lzap+git@redhat.com)
+- 882311 - remove scope-based organization hiding when deleting it
+  (lzap+git@redhat.com)
+- fix missing assets when running in development (pchalupa@redhat.com)
+- 868090 - [ru_RU] L10n:Content Management - Repositories: Untranslated string
+  in Products and Repositories tab (komidore64@gmail.com)
+- 880515 - [ALL_LANG][headpin CLI] Redundant brackets in the message of
+  'Couldn't find organization '??' ()' for system report module with invalid
+  --org name. (komidore64@gmail.com)
+- 808461 - prevent from creating a repo in rh providers (lzap+git@redhat.com)
 
-* Mon Jan 21 2013 Justin Sherrill <jsherril@redhat.com> 1.3.4_pulpv2-1
-- version downgrade from mistaken bump (jsherril@redhat.com)
+* Tue Jan 08 2013 Lukas Zapletal <lzap+git@redhat.com> 1.3.2-1
+- Merge pull request #1307 from thomasmckay/869371-ram
+- Merge pull request #1294 from thomasmckay/878891-actkey-alignment
+- Merge pull request #1366 from pitr-ch/story/configuration
+- Merge pull request #1364 from lzap/locale-update
+- Fix post install scriptlet
+- add missing documentation
+- fix error message, missing space
+- rails-i18n - upstream checker script
+- rails-i18n - pulling yml files from upstream
+- rails-i18n - adding update script
+- Merge pull request #1356 from daviddavis/lock_rails
+- 891926 - katello refuses to restart
+- Locking rails version to fix bundle install
+- Merge pull request #1347 from daviddavis/0
+- Merge pull request #1343 from daviddavis/rm_gemfiles
+- 879094 - fixing %%post error in spec
+- Moving tomcat group add to katello-shared to %%post
+- 879094 - a few updates to katello & katello-selinux spec based on comments
+- renaming katello_shared -> katello-shared
+- 879094 - CVE-2012-5561 - fix permissions on /etc/katello/secure
+- Allowing for local gem groups
+- Removing Gemfile.lock files since they are out of date
+- Merge pull request #1327 from daviddavis/unique_keys
+- Merge pull request #1315 from xsuchy/pull-req-ignore
+- Merge pull request #1280 from pitr-ch/bug/799356-stack-trace-in-production
+- Merge pull request #1271 from lzap/orch-logging
+- logging - orchestration log - review
+- Merge pull request #1328 from xsuchy/pull-req-typo
+- fixing reset issue
+- Merge pull request #1259 from lzap/org-delete-885261
+- Merge pull request #1324 from daviddavis/README
+- Adding tests to check menu item keys for uniqueness
+- fix typo occured -> occurred
+- Merge pull request #1326 from weissjeffm/menu-keys2
+- Merge pull request #1288 from bbuckingham/fork-843421
+- 843421 - add parens to existing code
+- Merge pull request #1303 from ehelms/843566
+- Merge pull request #1298 from ehelms/bug-871093
+- Merge pull request #1313 from ehelms/817858
+- Make the :key fields of all the Setup menu items unique across all the
+  navigation.
+- Merge pull request #1323 from xsuchy/pull-req-sam-translations
+- Merge pull request #1284 from ares/bug/fix_for_system_templates_ui
+- Merge pull request #1316 from
+  ares/bugs/790216-concurrent_changeset_promotions
+- merge pt_BR from SAM
+- add accidentally deleted pt_BR
+- Removing README and updating spec file
+- fixing ru/app.po
+- forward port translation from SAM
+- Merge pull request #1274 from
+  ares/bug/781287-allow_notifications_for_pw_change
+- Merge pull request #1273 from ares/bug/835902_notifications_for_iframe_upload
+- Merge pull request #1320 from weissjeffm/remove-readme
+- Merge pull request #1305 from ehelms/858726
+- Add back katello specific readme.
+- Remove README that was generated by Ruby on Rails.
+- Merge pull request #1295 from daviddavis/pg_update
+- Merge pull request #1299 from bbuckingham/fork-844708
+- Merge pull request #1304 from bbuckingham/fork-848553
+- Merge pull request #1311 from bbuckingham/fork-831362
+- Merge pull request #1296 from ehelms/bug-845062
+- Merge pull request #1290 from ehelms/bug-772199
+- Merge pull request #1302 from witlessbird/832148
+- ignore obsoletes and fuzzy warnings
+- Bug 799356 - systems that have been deleted that are still calling back to
+  server generate stack trace
+- Merge pull request #1292 from lzap/squash-admins-873665
+- Merge pull request #1289 from daviddavis/favicon_bind_fix
+- logging - orchestration log - unit test fix
+- Merge pull request #1279 from ares/bug/806096-display_repos_to_readonly_user
+- Merge pull request #1306 from jlsherrill/bugday
+- Merge pull request #1301 from ehelms/855945
+- removing console.log
+- Merge pull request #1309 from ehelms/791345
+- 751159 - downloading a modified system template would present warning
+- 831362 - systems - disable/enable system group widget on actions panel
+- 869371-ram - able to set RAM during new system creation in UI
+- 848566 - fixing verbage of system group limit
+- 848553 - tupane - remove 'do_not_open' on copy
+- user searches containing empty display attributes are no longer being saved
+  in the history
+- 858743 - Stop redirect after login to ajax notices path
+- 842745 - Fixed rspec test
+- Merge pull request #1285 from ehelms/bug-857061
+- 844708 - update panel action confirmation dialog to close on 'yes' click
+- 842745 - Showing update message on package group update
+- 878891-actkey-alignment - put act keys into table
+- 873665 - getting rid of last find_by_username admin calls
+- 875225 - Binding favicon refresh to hash change
+- 888019 - fixing issue where only 10 repos would appear on content search
+- 843421 - systems - include summary when removing system groups using bulk
+  action
+- Merge pull request #1281 from jsomara/882248
+- Merge pull request #1282 from ehelms/bug-839934
+- Fix for not loading system template detail
+- Fixing a non-deterministic text failure
+- 848571 - fixing verbage on content search
+- Merge pull request #1277 from daviddavis/favicon_fix
+- 882248 - making environment name editable
+- 806096 fix - display checkboxes to readonly users
+- 875225 - Refreshing favicon to ensure its presence
+- 784326 fix for mixed locale for admin
+- 781287 fix - update notification counter
+- Fixes few typos
+- 835902 fixes notification for GPG key upload
+- logging - orchestration log rotating
+- logging - orchestration logger and uuid request tracking
+- Fixes 790216 running changesets concurently
+- 885261 - org deletion unit test correction
+- 885261 - make data repair script to work from any dir
+- 885261 - org deletion should remove rh provider
+- better error messages
+- 858726 - Sets the compare repos button to disable if there are 0 or 1 repos
+  enabled on content search.
+- 817858 - Permission edits now show tags when appropriate.
+- 791345 - Deletes errant tick mark that was appearing after list updates on
+  the sync plan page.
+- 843566 - Sets the chosen dropdown in Content Search to not display a filter
+  mechanism.
+- 855945 - Content search now displays the Library if there are no
+  environments.
+- 871093 - Fix to show tags when "+ All" verbs is selected.
+- 845062 - Fixes typo with errata search icon tooltip.
+- 772199 - Adds a tool tip to explain that GPG keys are optional for products
+  and repositories.
+- 839394 - Changes wording on sync management page when no repositories are
+  enabled to cross-link to custom repos and red hat provider link.
+- 857061 - System template actions on the right pane will now close whenever
+  the new system template button is clicked.
+- fix 1.9 incompatibility
+- fix rpm build process
+- fix packaging and katello-configure
+- setup bundler before Application definition
+- remove ENV from config.ru
+- add better definitions of configuration validation
+- remove deprecated ApiConfig
+- make sure katello_config is loadable stand-alone
+- sort available locales
+- clean up configuration
 
-* Mon Jan 21 2013 Justin Sherrill <jsherril@redhat.com> 1.4.1_pulpv2-1
-- Integration with pulp v2
 * Tue Dec 18 2012 Miroslav Suchý <msuchy@redhat.com> 1.3.1-1
 - remove requires rubygem(execjs) and rubygem(multi_json) (msuchy@redhat.com)
 - Removing OR for pipeor (jomara@redhat.com)
@@ -1964,7 +2144,7 @@ fi
   locale when using the info parameter. (ogmaciel@gnome.org)
 - Added --default_locale to CLI for user creation. (ogmaciel@gnome.org)
 - Fixed more spec tests (paji@redhat.com)
-- Fixed broken spec tests that occured after master merge (paji@redhat.com)
+- Fixed broken spec tests that occurred after master merge (paji@redhat.com)
 - Removed unused methods in the pulp and reporb (paji@redhat.com)
 - Moved the add+remove repo packages method to orchestration layer
   (paji@redhat.com)
@@ -5443,7 +5623,7 @@ fi
 - 730358 - repo discovery now uses asynchronous tasks - the route has been
   changed to /organizations/ID/repositories/discovery/
 - 735359 - Don't create content in CP when creating a repo.
-- Fixed a couple of errors that occured due to wrong sql in postgres
+- Fixed a couple of errors that occurred due to wrong sql in postgres
 - reset-dbs - katello-jobs are restarted now
 - Changes roles and permission success and error notices to include the name of
   the role/permission and fit the format of other pages.

@@ -26,7 +26,9 @@ class ApplicationController < ActionController::Base
   helper "alchemy/translation"
   helper_method :current_organization
   before_filter :set_locale
-  before_filter :require_user, :require_org
+  before_filter :require_user,:require_org
+  before_filter :check_deleted_org
+
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
   after_filter :flash_to_headers
@@ -169,7 +171,7 @@ class ApplicationController < ActionController::Base
     if current_user && current_user.default_locale
       I18n.locale = current_user.default_locale
     else
-      I18n.locale = ApplicationController.extract_locale_from_accept_language_header
+      I18n.locale = ApplicationController.extract_locale_from_accept_language_header parse_locale
     end
 
     logger.debug "Setting locale: #{I18n.locale}"
@@ -219,29 +221,35 @@ class ApplicationController < ActionController::Base
   # Look for match to list of locales specified in request. If not found, try matching just
   # first two letters. Finally, default to english if no matches at all.
   # eg. [en_US, en] would match en
-  def self.extract_locale_from_accept_language_header
-    locales = parse_locale
+  # Expects list of locales to search as an array (use parse_locale for that)
+  def self.extract_locale_from_accept_language_header locales
 
     # Look for full match
     locales.each {|locale|
-      return locale if AppConfig.available_locales.include? locale
+      return locale if Katello.config.available_locales.include? locale
     }
 
     # Look for match to first two letters
     #
     locales.each {|locale|
-      return locale[0..1] if AppConfig.available_locales.include? locale[0..1]
+      return locale[0..1] if Katello.config.available_locales.include? locale[0..1]
     }
 
     # Default to 'en'
     return 'en'
   end
 
-  private
+  def retain_search_history
+    current_user.create_or_update_search_history(URI(@_request.env['HTTP_REFERER']).path, params[:search])
+  rescue => error
+    log_exception(error)
+  end
+
+  private # why bother? methods below are not testable/tested
 
    def verify_ldap
     u = current_user
-    u.verify_ldap_roles if (AppConfig.ldap_roles && u != nil)
+    u.verify_ldap_roles if (Katello.config.ldap_roles && u != nil)
   end
 
   def require_org
@@ -251,13 +259,23 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # TODO this check can be removed once we start deleting sessions during org deletion
+  def check_deleted_org
+    if current_organization && current_organization.being_deleted?
+      raise Errors::SecurityViolation, _("Current organization is being deleted, switch to a different one.")
+    end
+  end
+
+  def matches_no_redirect?(url)
+    ["logout", "notices/get_new"].any? {|path| url.include? path}
+  end
 
   def require_user
     if current_user
       #user logged in
 
       #redirect to originally requested page
-      if !session[:original_uri].nil? && !(session[:original_uri].include? "logout")
+      if !session[:original_uri].nil? && !matches_no_redirect?(session[:original_uri])
         redirect_to session[:original_uri]
         session[:original_uri] = nil
       end
@@ -288,8 +306,8 @@ class ApplicationController < ActionController::Base
   end
 
   # adapted from http_accept_lang gem, return list of browser locales
-  def self.parse_locale
-    locale_lang = env['HTTP_ACCEPT_LANGUAGE'].split(/\s*,\s*/).collect do |l|
+  def parse_locale
+    locale_lang = request.env['HTTP_ACCEPT_LANGUAGE'].split(/\s*,\s*/).collect do |l|
       l += ';q=1.0' unless l =~ /;q=\d+\.\d+$/
       l.split(';q=')
     end.sort do |x,y|
@@ -363,23 +381,6 @@ class ApplicationController < ActionController::Base
     User.current = nil
   end
 
-  def retain_search_history
-    # save the request in the user's search history
-    unless params[:search].nil? or params[:search].blank?
-      path = URI(@_request.env['HTTP_REFERER']).path
-      histories = current_user.search_histories.where(:path => path, :params => params[:search])
-      if histories.nil? or histories.empty?
-        # user doesn't have this search stored, so save it
-        histories = current_user.search_histories.create!(:path => path, :params => params[:search])
-      else
-        # user already has this search in their history, so just update the timestamp, so that it shows as most recent
-        histories.first.update_attribute(:updated_at, Time.now)
-      end
-    end
-  rescue => error
-    log_exception(error)
-  end
-
   def requested_action
     unless controller_name.nil? or action_name.nil?
       controller_name + '___' + action_name
@@ -430,6 +431,11 @@ class ApplicationController < ActionController::Base
       path = path.collect{ |e| environment_path_element_generator.call(e) }
       to_ret << [library] + path if path.any?{|e| e[:select]}
     end
+
+    if paths.empty?
+      to_ret << [library]
+    end
+
     to_ret
   end
 
@@ -465,7 +471,7 @@ class ApplicationController < ActionController::Base
 
     if search.nil? || search== ''
       all_rows = true
-    elsif search_options[:simple_query] && !AppConfig.simple_search_tokens.any?{|s| search.downcase.match(s)}
+    elsif search_options[:simple_query] && !Katello.config.simple_search_tokens.any?{|s| search.downcase.match(s)}
       search = search_options[:simple_query]
     end
     #search = Katello::Search::filter_input search

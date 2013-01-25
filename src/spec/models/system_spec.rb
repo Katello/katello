@@ -45,7 +45,6 @@ describe System do
     @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
     @environment = KTEnvironment.create!(:name=>'test', :label=> 'test', :prior => @organization.library.id, :organization => @organization)
     @organization.reload #reload to get environment info
-    Organization.stub!(:first).and_return(@organization)
 
     @system = System.new(:name => system_name,
                          :environment => @environment,
@@ -77,7 +76,7 @@ describe System do
 
   it "registers system in candlepin and pulp on create" do
     Resources::Candlepin::Consumer.should_receive(:create).once.with(@environment.id, @organization.name, system_name, cp_type, facts, installed_products, nil, nil, nil).and_return({:uuid => uuid, :owner => {:key => uuid}})
-    Runcible::Extensions::Consumer.should_receive(:create).once.with(uuid, {:display_name => system_name}).and_return({:id => uuid}) if AppConfig.katello?
+    Runcible::Extensions::Consumer.should_receive(:create).once.with(uuid, {:display_name => system_name}).and_return({:id => uuid}) if Katello.config.katello?
     @system.save!
   end
 
@@ -112,7 +111,7 @@ describe System do
 
     it "should delete consumer in candlepin and pulp" do
       Resources::Candlepin::Consumer.should_receive(:destroy).once.with(uuid).and_return(true)
-      Runcible::Extensions::Consumer.should_receive(:delete).once.with(uuid).and_return(true) if AppConfig.katello?
+      Runcible::Extensions::Consumer.should_receive(:delete).once.with(uuid).and_return(true) if Katello.config.katello?
       @system.destroy
     end
   end
@@ -290,7 +289,7 @@ describe System do
       @environment = KTEnvironment.create!({:name=>"Dev", :label=> "Dev", :prior => @organization.library, :organization => @organization}) do |e|
         e.products << @product
       end
-      if AppConfig.katello?
+      if Katello.config.katello?
         env_product = @product.environment_products.where(:environment_id => @environment.id).first
       else
         env_product = @product.environment_products.where(:environment_id => @organization.library.id).first
@@ -306,7 +305,8 @@ describe System do
                           :minor => release,
                           :cp_label => "repo",
                           :relative_path=>'/foo',
-                          :content_id=>'foo')
+                          :content_id=>'foo',
+                          :feed => 'https://localhost')
       end
       Repository.create!(:name => "Repo without releases",
                          :label => "Repo_without_releases",
@@ -317,7 +317,8 @@ describe System do
                          :minor => nil,
                          :cp_label => "repo",
                          :relative_path=>'/foo',
-                         :content_id=>'foo')
+                         :content_id=>'foo',
+                         :feed => 'https://localhost')
       @system.environment = @environment
       @system.save!
     end
@@ -540,7 +541,7 @@ describe System do
   describe "a user with random system permissions in headpin mode" do
     before (:each) do
       @system.save!
-      AppConfig.stub!(:katello?).and_return(false)
+      Katello.config.stub!(:katello?).and_return(false)
     end
 
     it "should be deletable" do

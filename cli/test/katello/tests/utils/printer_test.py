@@ -182,8 +182,8 @@ class BatchAddColumnsTest(PrinterTestCase):
         self.printer = Mock()
 
     def test_it_adds_columns(self):
-        batch_add_columns(self.printer, "col_a", "col_b")
-        self.printer.add_column.assert_any_call("col_a")
-        self.printer.add_column.assert_any_call("col_b")
+        batch_add_columns(self.printer, {'col_a': "Column A"}, {'col_b': "Column B"})
+        self.printer.add_column.assert_any_call("col_a", "Column A")
+        self.printer.add_column.assert_any_call("col_b", "Column B")
 
 
