@@ -14,7 +14,7 @@ class Api::SystemsController < Api::ApiController
   respond_to :json
 
   before_filter :verify_presence_of_organization_or_environment, :only => [:create, :index, :activate]
-  before_filter :find_organization, :only => [:create, :hypervisors_update, :index, :activate, :report, :tasks]
+  before_filter :find_optional_organization, :only => [:create, :hypervisors_update, :index, :activate, :report, :tasks]
   before_filter :find_only_environment, :only => [:create]
   before_filter :find_environment, :only => [:create, :index, :report, :tasks]
   before_filter :find_environment_by_name, :only => [:hypervisors_update]
@@ -26,6 +26,10 @@ class Api::SystemsController < Api::ApiController
   before_filter :authorize, :except => :activate
 
   skip_before_filter :require_user, :only => [:activate]
+
+  def organization_id_keys
+    [:organization_id, :owner]
+  end
 
   def rules
     index_systems = lambda { System.any_readable?(@organization) }
@@ -412,16 +416,6 @@ DESC
   end
 
   protected
-
-  def find_organization
-    return unless (params.has_key?(:organization_id) or params.has_key?(:owner))
-
-    id = (params[:organization_id] || params[:owner]).tr(' ', '_')
-    @organization = Organization.first(:conditions => {:name => id})
-    @organization = Organization.first(:conditions => {:label => id}) if @organization.nil?
-    raise HttpErrors::NotFound, _("Couldn't find organization '%s'") % id if @organization.nil?
-    @organization
-  end
 
   def find_only_environment
     if !@environment && @organization && !params.has_key?(:environment_id)

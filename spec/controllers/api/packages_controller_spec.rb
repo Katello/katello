@@ -17,6 +17,7 @@ describe Api::PackagesController, :katello => true do
   include AuthorizationHelperMethods
   include ProductHelperMethods
   include RepositoryHelperMethods
+  include LocaleHelperMethods
 
   let(:repo_id) {'f8ab5088-688e-4ce4-ade3-700aa4cbb070'}
   before(:each) do
@@ -24,6 +25,7 @@ describe Api::PackagesController, :katello => true do
     disable_product_orchestration
     disable_user_orchestration
     disable_repo_orchestration
+    set_default_locale
 
     @organization = new_test_org
     @env = @organization.library

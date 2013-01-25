@@ -12,6 +12,7 @@
 require 'iconv'
 
 class GpgKey < ActiveRecord::Base
+
   include Glue::ElasticSearch::GpgKey if AppConfig.use_elasticsearch
   include Authorization::GpgKey
 

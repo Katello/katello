@@ -467,7 +467,7 @@ class ContentSearchController < ApplicationController
     Katello::PackageUtils.setup_shared_unique_filter(repoids, search_mode, search)
     search.perform.results
   rescue Tire::Search::SearchRequestFailed => e
-    Support.array_with_total
+    Util::Support.array_with_total
   end
 
 

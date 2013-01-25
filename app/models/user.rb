@@ -21,7 +21,7 @@ class User < ActiveRecord::Base
   include Glue::ElasticSearch::User if Katello.config.use_elasticsearch
   include Glue if Katello.config.use_cp || Katello.config.use_foreman || Katello.config.use_pulp
   include AsyncOrchestration
-  include IndexedModel
+  include Ext::IndexedModel
 
   include AsyncOrchestration
   include Authorization::User
@@ -256,7 +256,9 @@ class User < ActiveRecord::Base
   end
 
   def default_environment
-    permission = default_systems_reg_permission and KTEnvironment.find(permission.tags.first.tag_id)
+    permission = default_systems_reg_permission
+    return nil if permission.nil? or permission.tags.empty?
+    KTEnvironment.find(permission.tags.first.tag_id)
   end
 
   def default_environment=(environment)

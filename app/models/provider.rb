@@ -18,6 +18,7 @@ class Provider < ActiveRecord::Base
   include Authorization::Provider
   include AsyncOrchestration
 
+  include Ext::PermissionTagCleanup
 
   REDHAT = 'Red Hat'
   CUSTOM = 'Custom'
@@ -42,7 +43,6 @@ class Provider < ActiveRecord::Base
   validate :constraint_redhat_update
   before_destroy :prevent_redhat_deletion
   before_validation :sanitize_repository_url
-
 
   validate :only_one_rhn_provider
   validates :repository_url, :length => {:maximum => 255}, :if => :redhat_provider?

@@ -14,7 +14,7 @@ module Resources::AbstractModel::IndexedModel
 
   def self.included(base)
     base.class_eval do
-      include ::IndexedModel
+      include ::Ext::IndexedModel
     end
   end
 

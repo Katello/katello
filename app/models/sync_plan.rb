@@ -12,6 +12,7 @@
 
 class SyncPlan < ActiveRecord::Base
   include Glue
+
   include Glue::ElasticSearch::SyncPlan if AppConfig.use_elasticsearch
 
   NONE = _('none')

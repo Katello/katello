@@ -17,12 +17,14 @@ describe Api::ErrataController, :katello => true do
   include AuthorizationHelperMethods
   include ProductHelperMethods
   include RepositoryHelperMethods
+  include LocaleHelperMethods
 
   before(:each) do
     disable_org_orchestration
     disable_product_orchestration
     disable_user_orchestration
     disable_repo_orchestration
+    set_default_locale
 
     @organization = new_test_org
     @env = @organization.library

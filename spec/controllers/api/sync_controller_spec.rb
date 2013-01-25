@@ -173,14 +173,10 @@ describe Api::SyncController, :katello => true do
 
     describe "start a sync" do
       before(:each) do
-        #@organization = Organization.create!(:name=>"organization", :label=> "123")
-
         stub_product_with_repo
 
         Runcible::Extensions::Repository.stub(:sync).with(@repository.pulp_id, anything()).and_return([async_task_1])
         Runcible::Extensions::Repository.stub(:sync).with(@repository2.pulp_id, anything()).and_return([async_task_2])
-        #@syncable = mock()
-        #@syncable.stub!(:organization).and_return(@organization)
       end
 
       it "should find provider" do
@@ -273,9 +269,7 @@ describe Api::SyncController, :katello => true do
       disable_product_orchestration
 
       @organization = new_test_org
-      Organization.stub!(:without_deleting).and_return(Organization)
-      Organization.stub!(:where).and_return(Organization)
-      Organization.stub!(:first).and_return(@organization)
+
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
       Provider.stub!(:find).and_return(@provider)
       @product = Product.new({:name=>"prod", :label=> "prod"})

@@ -23,7 +23,6 @@ class Product < ActiveRecord::Base
 
   include Katello::LabelFromName
 
-
   has_many :environments, :class_name => "KTEnvironment", :uniq => true , :through => :environment_products  do
     def <<(*items)
       super( items - proxy_owner.environment_products.collect{|ep| ep.environment} )

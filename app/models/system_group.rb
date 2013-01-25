@@ -18,7 +18,9 @@ class SystemGroup < ActiveRecord::Base
   include Glue::Pulp::ConsumerGroup if (Katello.config.use_pulp)
   include Glue::ElasticSearch::SystemGroup if Katello.config.use_elasticsearch
   include Glue
+
   include Authorization::SystemGroup
+  include Ext::PermissionTagCleanup
 
   has_many :key_system_groups, :dependent => :destroy
   has_many :activation_keys, :through => :key_system_groups

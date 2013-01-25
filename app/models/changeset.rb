@@ -13,9 +13,9 @@
 require 'util/package_util'
 
 class Changeset < ActiveRecord::Base
+
   include AsyncOrchestration
   include Glue::ElasticSearch::Changeset  if AppConfig.use_elasticsearch
-
 
   NEW       = 'new'
   REVIEW    = 'review'
