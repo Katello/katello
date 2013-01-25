@@ -121,6 +121,10 @@ KT.activation_key = (function($) {
         env_select.reset_hover();
         env_select.recalc_scroll();
     },
+    refresh_list_item = function(id) {
+        var elem_id = "activation_key_" + id;
+        KT.panel.list.refresh(id, $("#" + elem_id).data("ajax_url"));
+    },
     save_key = function(data) {
         disable_buttons();
 
@@ -128,6 +132,7 @@ KT.activation_key = (function($) {
          success: function(data) {
              highlight_system_templates(false);
              enable_buttons();
+             refresh_list_item(this.url.match(/\d+/)[0]);
          }, error: function(e) {
              highlight_system_templates(false);
              enable_buttons();
@@ -306,7 +311,8 @@ KT.activation_key = (function($) {
         save_selected_environment: save_selected_environment,
         disable_buttons: disable_buttons,
         enable_buttons: enable_buttons,
-        highlight_system_templates: highlight_system_templates
+        highlight_system_templates: highlight_system_templates,
+        refresh_list_item: refresh_list_item
     }
 }(jQuery));
 
