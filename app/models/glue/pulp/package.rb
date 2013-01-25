@@ -46,5 +46,6 @@ module Glue::Pulp::Package
     def nvrea
       Katello::PackageUtils::build_nvrea(self.as_json.with_indifferent_access, false)
     end
+  end
 
 end
