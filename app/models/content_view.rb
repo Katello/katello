@@ -90,6 +90,10 @@ class ContentView < ActiveRecord::Base
     result
   end
 
+  def to_s
+    name
+  end
+
   def environments
     KTEnvironment.joins(:content_view_versions).where('content_view_versions.content_view_id' => self.id)
   end
