@@ -12,7 +12,7 @@
 #
 
 class KeyPool < ActiveRecord::Base
-  include Authorization
+  include Ext::Authorization
 
   belongs_to :activation_key
   belongs_to :pool, :class_name => "::Pool"

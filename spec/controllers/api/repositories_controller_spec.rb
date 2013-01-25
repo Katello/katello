@@ -20,6 +20,7 @@ describe Api::RepositoriesController, :katello => true do
   include OrchestrationHelper
   include ProductHelperMethods
   include OrganizationHelperMethods
+  include LocaleHelperMethods
 
   let(:task_stub) do
     @task = mock(PulpTaskStatus)
@@ -34,6 +35,7 @@ describe Api::RepositoriesController, :katello => true do
     before(:each) do
       disable_product_orchestration
       disable_user_orchestration
+      set_default_locale
 
       @organization = new_test_org
       Organization.stub!(:without_deleting).and_return(Organization)
@@ -50,7 +52,9 @@ describe Api::RepositoriesController, :katello => true do
       Product.stub!(:find).and_return(@product)
       Product.stub!(:find_by_cp_id).and_return(@product)
       ep = EnvironmentProduct.find_or_create(@organization.library, @product)
-      @repository = Repository.create!(:environment_product => ep, :name=> "repo_1", :label=>"repo_label", :pulp_id=>"1")
+      @repository = Repository.create!(:environment_product => ep, :name=> "repo_1",
+                                       :label=>"repo_label", :pulp_id=>"1",
+                                       :feed => 'https://localhost')
       Repository.stub(:find).and_return(@repository)
       Resources::Pulp::Repository.stub(:start_discovery).and_return({})
       PulpSyncStatus.stub(:using_pulp_task).and_return(task_stub)
@@ -165,6 +169,7 @@ describe Api::RepositoriesController, :katello => true do
       @product.save!
       @request.env["HTTP_ACCEPT"] = "application/json"
       login_user_api
+      set_default_locale
 
       disable_authorization_rules
     end

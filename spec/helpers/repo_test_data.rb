@@ -31,7 +31,7 @@ module RepoTestData
     :arch => 'architecture',
     :relative_path => "ACME_Corporation/Library/zoo/base",
     :uri =>  "https://localhost/pulp/repos/ACME_Corporation/Library/zoo/base",
-    :feed => 'url',
+    :feed => 'https://localhost',
     "groupid" => [
       "product:"+REPO_PRODUCT_CP_ID.to_s,
       "env:"+REPO_ENV_ID.to_s,
@@ -49,7 +49,7 @@ module RepoTestData
     :arch => 'architecture',
     :relative_path => "ACME_Corporation/Dev/zoo/base",
     :uri =>  "https://localhost/pulp/repos/ACME_Corporation/Dev/zoo/base",
-    :feed => 'url',
+    :feed => 'https://localhost',
     "groupid" => [
       "product:"+REPO_PRODUCT_CP_ID.to_s,
       "env:"+CLONED_REPO_ENV_ID.to_s,

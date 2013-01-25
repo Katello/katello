@@ -15,12 +15,14 @@ require 'spec_helper.rb'
 describe Api::ErrataController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
+  include LocaleHelperMethods
 
   before(:each) do
     disable_org_orchestration
     disable_product_orchestration
     disable_user_orchestration
     disable_repo_orchestration
+    set_default_locale
 
     @organization = new_test_org
     @provider = Provider.create!(:name => "provider",
@@ -38,7 +40,8 @@ describe Api::ErrataController, :katello => true do
                                :label=> "repo_label",
                                :relative_path => "#{@organization.name}/Library/prod/repo",
                                :pulp_id=> "1",
-                               :enabled => true)
+                               :enabled => true,
+                               :feed => 'https://localhost')
     @repo.stub(:has_distribution?).and_return(true)
     Repository.stub(:find).and_return(@repo)
     @repo.stub(:distributions).and_return([])

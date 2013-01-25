@@ -11,22 +11,13 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 require "util/model_util"
 
-class RepoDisablementValidator < ActiveModel::Validator
-  def validate(record)
-    if record.redhat? && record.enabled_changed? && (!record.enabled?) && record.promoted?
-      record.errors[:base] << N_("Repository cannot be disabled since it has already been promoted.")
-    end
-  end
-end
-
-
 class Repository < ActiveRecord::Base
   include Glue::Candlepin::Content if (Katello.config.use_cp and Katello.config.use_pulp)
   include Glue::Pulp::Repo if (Katello.config.use_cp and Katello.config.use_pulp)
   include Glue if Katello.config.use_cp
-  include Authorization
+  include Ext::Authorization
   include AsyncOrchestration
-  include IndexedModel
+  include Ext::IndexedModel
   include Katello::LabelFromName
 
   index_options :extended_json=>:extended_index_attrs,
@@ -45,8 +36,9 @@ class Repository < ActiveRecord::Base
   has_and_belongs_to_many :changesets
   validates :pulp_id, :presence => true, :uniqueness => true
   validates :name, :presence => true
-  validates :label, :presence => true,:katello_label_format => true
-  validates :enabled, :repo_disablement => true, :on => :update
+  validates :label, :presence => true
+  validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
+  validates_with Validators::RepoDisablementValidator, :attributes => :enabled, :on => :update
   belongs_to :gpg_key, :inverse_of => :repositories
   belongs_to :library_instance, :class_name=>"Repository"
 

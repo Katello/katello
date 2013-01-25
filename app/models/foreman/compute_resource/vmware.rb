@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2012 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -10,14 +10,16 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class NoTrailingSpaceValidator < ActiveModel::EachValidator
-  def validate_each(record, attribute, value)
-    NoTrailingSpaceValidator.validate_trailing_space(record, attribute, value)
+class Foreman::ComputeResource::Vmware < Foreman::ComputeResource
+
+  attributes :user, :password, :uuid, :server
+  validates :user, :password, :uuid, :server, :presence => true
+
+  resource_name :compute_resource
+  resource Resources::Foreman::ComputeResource
+
+  def json_attributes
+    super + [:user, :password, :uuid, :server]
   end
 
-  def self.validate_trailing_space(record, attribute, value)
-    if value
-      record.errors[attribute] << _("must not contain leading or trailing white spaces.") unless value.strip == value
-    end
-  end
 end

@@ -12,8 +12,8 @@
 
 class Job < ActiveRecord::Base
   include Glue
-  include IndexedModel
-  include Authorization
+  include Ext::IndexedModel
+  include Ext::Authorization
   include AsyncOrchestration
 
   belongs_to :job_owner, :polymorphic => true

@@ -248,6 +248,12 @@ module Katello
         env      = environment ? "'#{environment}' environment" : 'early configuration'
         "Key: '#{key_path}' in #{env} #{message}"
       end
+
+      def is_not_empty(key)
+        if config[key].nil? || config[key].empty?
+          raise error_format(key.to_sym, "must not be empty")
+        end
+      end
     end
 
     # processes configuration loading from config_files
@@ -372,6 +378,10 @@ module Katello
       log_levels = %w(debug info warn error fatal)
       has_values :log_level, log_levels
       has_values :log_level_sql, log_levels
+
+      unless config.katello?
+        is_not_empty :thumbslug_url
+      end
 
       are_booleans :use_cp, :use_foreman, :use_pulp, :use_ssl, :ldap_roles, :debug_rest,
                    :debug_cp_proxy, :debug_pulp_proxy, :logical_insight

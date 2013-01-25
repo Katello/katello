@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2012 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -10,13 +10,16 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class UsernameValidator < ActiveModel::EachValidator
-  def validate_each(record, attribute, value)
-    if value
-      if Katello.config.katello?
-        record.errors[attribute] << _("cannot contain characters other than ASCII values") unless value.ascii_only?
-      end
-      KatelloNameFormatValidator.validate_length(record, attribute, value, 64, 3)
-    end
+class Foreman::ComputeResource::Ovirt < Foreman::ComputeResource
+
+  attributes :user, :password, :uuid
+  validates :user, :password, :uuid, :presence => true
+
+  resource_name :compute_resource
+  resource Resources::Foreman::ComputeResource
+
+  def json_attributes
+    super + not_nil_attrs(:user, :password, :uuid)
   end
+
 end
