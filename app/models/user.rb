@@ -46,6 +46,8 @@ class User < ActiveRecord::Base
 
   validates :username, :uniqueness => true, :presence => true
   validates_with Validators::UsernameValidator, :attributes => :username
+  validates_with Validators::NoTrailingSpaceValidator, :attributes => :username
+
   validates :email, :presence => true, :if => :not_ldap_mode?
   validates :default_locale, :inclusion => {:in => Katello.config.available_locales, :allow_nil => true, :message => _("must be one of %s") % Katello.config.available_locales.join(', ')}
 
