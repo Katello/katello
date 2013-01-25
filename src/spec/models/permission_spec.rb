@@ -92,7 +92,7 @@ describe Permission do
 
   context "super_admin" do
     it { @god.allowed_to?('create', 'organizations').should be_true }
-    it { @god.allowed_to?('create', 'providers').should be_true if AppConfig.katello? }
+    it { @god.allowed_to?('create', 'providers').should be_true if Katello.config.katello? }
   end
 
   context "some_role" do
@@ -320,9 +320,76 @@ describe Permission do
       end
 
     end
-
-
   end
 
+  context "cleanup" do
+    before do
+      disable_org_orchestration
+      @organization = Organization.create!(:name=>'test_organization_1', :label=> 'test_organization_1')
+    end
 
+    describe "after organization deletion" do
+      before do
+        @organization2 = Organization.create!(:name=>'test_organization_2', :label=> 'test_organization_2')
+        Permission.create!(:name => 'test1001', :role => @some_role, :tag_values=> [@organization.id, @organization2.id],
+                                         :resource_type=> ResourceType.find_or_create_by_name('organizations'), :organization => @organization)
+      end
+
+      specify "should result in removal of organization-specific tags" do
+        @organization2.destroy
+        Permission.find_by_name('test1001').tag_values.should == [@organization.id]
+      end
+    end
+
+    describe "after environment deletion" do
+      before do
+        disable_env_orchestration
+        @environment = KTEnvironment.create!(
+            {:name=>"test1000", :label=> "test100", :organization => @organization, :prior => @organization.library})
+        @environment2 = KTEnvironment.create!(
+            {:name=>"test1001", :label=> "test101", :organization => @organization, :prior => @organization.library})
+
+        p = Permission.new(:name => 'test1001', :role => @some_role, :tag_values=> [@environment.id, @environment2.id],
+           :resource_type=> ResourceType.find_or_create_by_name('environments'), :organization => @organization)
+        p.save!
+      end
+
+      specify "should result in removal of environment-specific tags" do
+        @environment.destroy
+        Permission.find_by_name('test1001').tag_values.should == [@environment2.id]
+      end
+    end
+
+    describe "after provider deletion" do
+      before do
+        @provider = Provider.create!({:name => 'test1000', :repository_url => 'https://something.net',
+          :provider_type => Provider::CUSTOM, :organization => @organization})
+        @provider2 = Provider.create!({:name => 'test1001', :repository_url => 'https://something2.net',
+                                      :provider_type => Provider::CUSTOM, :organization => @organization})
+        Permission.create!(:name => 'test1001', :role => @some_role, :tag_values=> [@provider.id, @provider2.id],
+                                   :resource_type=> ResourceType.find_or_create_by_name('providers'), :organization => @organization)
+      end
+
+      specify "should result in removal of provider-specific tags" do
+        @provider.destroy
+        Permission.find_by_name('test1001').tag_values.should == [@provider2.id]
+      end
+    end
+
+    describe "after system group deletion" do
+      before do
+        disable_consumer_group_orchestration
+
+        @group = SystemGroup.create!(:name=>"TestSystemGroup", :organization=>@organization)
+        @group2 = SystemGroup.create!(:name=>"TestSystemGroup2", :organization=>@organization)
+        Permission.create!(:name => 'test1001', :role => @some_role, :tag_values=> [@group.id, @group2.id],
+                           :resource_type=> ResourceType.find_or_create_by_name('system_groups'), :organization => @organization)
+      end
+
+      specify "should result in removal of system-group-specific tags" do
+        @group.destroy
+        Permission.find_by_name('test1001').tag_values.should == [@group2.id]
+      end
+    end
+  end
 end

@@ -15,6 +15,7 @@ require 'spec_helper.rb'
 describe Api::ProvidersController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
+  include LocaleHelperMethods
 
   let(:user_with_read_permissions) { user_with_permissions { |u| u.can([:read], :providers, nil, @ogranization) } }
   let(:user_without_read_permissions) { user_without_permissions }
@@ -29,6 +30,7 @@ describe Api::ProvidersController, :katello => true do
     disable_org_orchestration
     disable_product_orchestration
     disable_user_orchestration
+    set_default_locale
     @organization = new_test_org
     @provider = Provider.create!(:name => provider_name, :provider_type => Provider::CUSTOM,
                                  :organization => @organization)

@@ -17,6 +17,7 @@ describe Api::DistributionsController, :katello => true do
   include AuthorizationHelperMethods
   include ProductHelperMethods
   include RepositoryHelperMethods
+  include LocaleHelperMethods
 
   before(:each) do
     disable_org_orchestration
@@ -29,7 +30,6 @@ describe Api::DistributionsController, :katello => true do
     @product = new_test_product(@organization, @env)
     ep_library = EnvironmentProduct.find_or_create(@organization.library, @product)
     @repo = new_test_repo(ep_library, "repo", "#{@organization.name}/Library/prod/repo")
-
     @repo.stub(:has_distribution?).and_return(true)
     Repository.stub(:find).and_return(@repo)
     @repo.stub(:distributions).and_return([])
@@ -37,6 +37,7 @@ describe Api::DistributionsController, :katello => true do
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
+    set_default_locale
   end
   let(:authorized_user) do
     user_with_permissions do |u|

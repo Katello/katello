@@ -1,4 +1,13 @@
+
+def test_response_json(data)
+  JSON.parse(response.body).should == JSON.parse(data.to_json)
+end
+
 shared_examples_for "simple crud controller" do
+
+  before do
+    controller.stub :json_options => nil
+  end
 
   describe '#index' do
     let(:data) { [{ :a => 'a' }] }
@@ -7,7 +16,7 @@ shared_examples_for "simple crud controller" do
       get :index
     end
 
-    it('renders collection of objects') { response.body.should == data.to_json }
+    it('renders collection of objects') { test_response_json data }
     it('be success') { response.should be_success }
   end
 
@@ -18,7 +27,7 @@ shared_examples_for "simple crud controller" do
       get :show, :id => 1
     end
 
-    it('renders object') { response.body.should == data.to_json }
+    it('renders object') { test_response_json data }
     it('be success') { response.should be_success }
   end
 
@@ -30,9 +39,7 @@ shared_examples_for "simple crud controller" do
       get :create
     end
 
-    it('renders object') {
-      response.body.should == a_model.to_json({ })
-    }
+    it('renders object') { test_response_json a_model }
     it('be success') { response.should be_success }
   end
 
@@ -44,7 +51,7 @@ shared_examples_for "simple crud controller" do
       get :update, :id => 1
     end
 
-    it('renders object') { response.body.should == model.to_json({ }) }
+    it('renders object') { test_response_json model }
     it('be success') { response.should be_success }
   end
 

@@ -51,6 +51,7 @@ module Glue::Pulp::Errata
       end
 
     end
+
   end
 
   module InstanceMethods

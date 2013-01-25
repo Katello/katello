@@ -15,6 +15,7 @@ require 'spec_helper'
 describe Api::ActivationKeysController do
   include LoginHelperMethods
   include AuthorizationHelperMethods
+  include LocaleHelperMethods
 
   let(:user_with_read_permissions) { user_with_permissions { |u| u.can(:read_all, :activation_keys) } }
   let(:user_without_read_permissions) { user_without_permissions }
@@ -26,6 +27,7 @@ describe Api::ActivationKeysController do
     @request.env["HTTP_ACCEPT"] = "application/json"
     disable_org_orchestration
     disable_consumer_group_orchestration
+    set_default_locale
 
     @organization = Organization.create! do |o|
       o.id = 1234
@@ -70,7 +72,7 @@ describe Api::ActivationKeysController do
 
   context "show all activation keys" do
     before(:each) do
-      Organization.stub!(:first).and_return(@organization)
+      @controller.stub!(:get_organization).and_return(@organization)
       ActivationKey.stub!(:where).and_return([@activation_key])
     end
 
@@ -81,12 +83,12 @@ describe Api::ActivationKeysController do
     it_should_behave_like "protected action"
 
     it "should retrieve organization" do
-      Organization.should_receive(:first).once.with(hash_including(:conditions => {:name => '1234'})).and_return(@organization)
+      @controller.should_receive(:find_optional_organization)
       get :index, :organization_id => '1234'
     end
 
     it "should retrieve all keys in organization" do
-      ActivationKey.should_receive(:where).once.with(hash_including(:organization_id => 1234)).and_return([@activation_key])
+      @controller.should_receive(:find_optional_organization)
       get :index, :organization_id => '1234'
     end
 

@@ -10,18 +10,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class NotInLibraryValidator < ActiveModel::Validator
-  def validate(record)
-    record.errors[:environment] << _("The '%s' environment cannot contain a changeset!") % "Library" if record.environment.library?
-  end
-end
-
 require 'util/package_util'
 
 class Changeset < ActiveRecord::Base
+
   include AsyncOrchestration
   include Glue::ElasticSearch::Changeset  if AppConfig.use_elasticsearch
-
 
   NEW       = 'new'
   REVIEW    = 'review'
@@ -45,8 +39,8 @@ class Changeset < ActiveRecord::Base
   validates :name, :presence => true, :allow_blank => false, :length => { :maximum => 255 }
   validates_uniqueness_of :name, :scope => :environment_id, :message => N_("Must be unique within an environment")
   validates :environment, :presence => true
-  validates :description, :katello_description_format => true
-  validates_with NotInLibraryValidator
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
+  validates_with Validators::NotInLibraryValidator
 
   has_and_belongs_to_many :products, :uniq => true
   has_many :packages, :class_name => "ChangesetPackage", :inverse_of => :changeset
@@ -58,6 +52,22 @@ class Changeset < ActiveRecord::Base
   has_many :dependencies, :class_name => "ChangesetDependency", :inverse_of => :changeset
   belongs_to :environment, :class_name => "KTEnvironment"
   belongs_to :task_status
+
+  # find changesets in given state/states
+  scope :with_state, lambda { |*states| where(:state => states.map(&:to_s)) }
+  # first thing after start is that progress is set to 0 so we can easily detect already started
+  scope :started, with_state(PROMOTING, DELETING)
+  # find colliding changesets which are those having target same as to.start or start same se
+  # to.target or same start and target, others should be safe, ignoring self of course
+  scope :colliding, lambda { |to|
+    start  = to.environment.prior.id
+    target = to.environment.id
+    joins(:environment => :priors).
+        where(['"changesets"."id" <> ? AND ('<<
+                   '"environments"."id" = ? OR "environment_priors"."prior_id" = ? OR ' <<
+                   '("environments"."id" = ? AND "environment_priors"."prior_id" = ?))',
+               to.id, start, target, target, start])
+  }
 
   before_save :uniquify_artifacts
   def key_for item

@@ -108,7 +108,7 @@ class UsersController < ApplicationController
   def new
     @user         = User.new
     @organization = nil
-    @ldap = AppConfig.warden == 'ldap'
+    @ldap = Katello.config.warden == 'ldap'
     render :partial => "new", :layout => "tupane_layout", :locals => { :user => @user, :accessible_envs => nil }
   end
 
@@ -165,7 +165,7 @@ class UsersController < ApplicationController
 
   def update_locale
     locale = params[:locale][:locale]
-    if AppConfig.available_locales.include? locale
+    if Katello.config.available_locales.include? locale
       @user.default_locale = locale
       I18n.locale          = locale if @user.id == current_user.id
     else
@@ -296,7 +296,7 @@ class UsersController < ApplicationController
   end
 
   def ldap_enabled?
-    AppConfig.warden == 'ldap'
+    Katello.config.warden == 'ldap'
   end
 
   #method for saving the user's default org

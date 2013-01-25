@@ -57,8 +57,8 @@ class List(SystemGroupAction):
             return os.EX_DATAERR
 
         self.printer.set_header(_("System Groups List For Org [ %s ]") % org_name)
-        self.printer.add_column('id')
-        self.printer.add_column('name')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
         self.printer.print_items(system_groups)
         return os.EX_OK
 
@@ -125,8 +125,9 @@ class Copy(SystemGroupAction):
         new_system_group = self.api.copy(org_name, source_system_group["id"], new_name, description, max_systems)
 
         test_record(new_system_group,
-            _("Successfully copied system group [ %s ] to [ %s ]") %
-                       (source_system_group['name'], new_system_group['name']),
+            _("Successfully copied system group [ %(source_system_group_name)s ] to [ %(new_system_group_name)s ]") % \
+                {'source_system_group_name':source_system_group['name'], \
+                'new_system_group_name':new_system_group['name']},
             _("Could not create system group [ %s ]") % new_name
         )
 
@@ -151,10 +152,11 @@ class Info(SystemGroupAction):
         # get system details
         system_group = get_system_group(org_name, system_group_name)
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('description', multiline=True)
-        self.printer.add_column('total_systems')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('description', _("Description"), multiline=True)
+        self.printer.add_column('max_systems', _("Max Systems"))
+        self.printer.add_column('total_systems', _("Total Systems"))
 
         self.printer.print_item(system_group)
 
@@ -192,10 +194,10 @@ class History(SystemGroupAction):
             job['parameters'] = params
 
 
-        self.printer.add_column('id')
-        self.printer.add_column('task_type', name='Type')
-        self.printer.add_column('parameters', multiline=True)
-        self.printer.add_column('tasks')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('task_type', _("Type"))
+        self.printer.add_column('parameters', _("Parameters"), multiline=True)
+        self.printer.add_column('tasks', _("Tasks"))
         self.printer.print_items(history)
 
         return os.EX_OK
@@ -225,14 +227,15 @@ class HistoryTasks(SystemGroupAction):
         # get list of jobs
         history = self.api.system_group_history(org_name, system_group['id'], job_id)
         if history == None:
-            print >> sys.stderr, _("Could not find job [ %s ] for system group [ %s ]") % (job_id, system_group_name)
+            print >> sys.stderr, _("Could not find job [ %(job_id)s ] for system group [ %(system_group_name)s ]") \
+                % {'job_id':job_id, 'system_group_name':system_group_name}
             return os.EX_DATAERR
 
         tasks = history['tasks']
 
-        self.printer.add_column('id', name='task id')
-        self.printer.add_column('uuid', name='system uuid')
-        batch_add_columns(self.printer, 'state', 'progress', 'start_time', 'finish_time')
+        batch_add_columns(self.printer, {'id': _("Task ID")}, {'uuid': _("System UUID")}, \
+            {'state': _("State")}, {'progress': _("Progress")}, {'start_time': _("Start Time")}, \
+            {'finish_time': _("Finish Time")})
         self.printer.print_items(tasks)
 
 
@@ -325,10 +328,10 @@ class Systems(SystemGroupAction):
         if systems is None:
             return os.EX_DATAERR
 
-        self.printer.set_header(_("Systems within System Group [ %s ] For Org [ %s ]") %
-            (system_group["name"], org_name))
-        self.printer.add_column('id')
-        self.printer.add_column('name')
+        self.printer.set_header(_("Systems within System Group [ %(system_group_name)s ] For Org [ %(org_name)s ]") %
+            {'system_group_name':system_group["name"], 'org_name':org_name})
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
         self.printer.print_items(systems)
 
         return os.EX_OK

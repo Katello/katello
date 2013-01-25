@@ -56,11 +56,12 @@ class List(ChangesetAction):
         changesets = self.api.changesets(orgName, env['id'])
 
 
-        batch_add_columns(self.printer, 'id', 'name', 'action_type')
-        self.printer.add_column('updated_at', formatter=format_date)
-        batch_add_columns(self.printer, 'state', 'environment_id', 'environment_name')
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, {'action_type': _("Action Type")})
+        self.printer.add_column('updated_at', _("Last Updated"), formatter=format_date)
+        batch_add_columns(self.printer, {'state': _("State")}, \
+            {'environment_id': _("Environment ID")}, {'environment_name': _("Environment Name")})
         if verbose:
-            self.printer.add_column('description', multiline=True)
+            self.printer.add_column('description', _("Description"), multiline=True)
 
         self.printer.set_header(_("Changeset List"))
         self.printer.print_items(changesets)
@@ -108,18 +109,18 @@ class Info(ChangesetAction):
         if displayDeps:
             cset["dependencies"] = self.get_dependencies(cset["id"])
 
-        batch_add_columns(self.printer,
-            'id', 'name', 'action_type')
-        self.printer.add_column('description', multiline=True, show_with=printer.VerboseStrategy)
-        self.printer.add_column('updated_at', formatter=format_date)
-        batch_add_columns(self.printer,
-            'state', 'environment_id', 'environment_name')
-        batch_add_columns(self.printer,
-            'errata', 'products', 'packages',
-            'repositories', 'system_templates', 'distributions',
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, {'action_type': _("Action Type")})
+        self.printer.add_column('description', _("Description"), multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('updated_at', _("Last Updated"), formatter=format_date)
+        batch_add_columns(self.printer, {'state': _("State")}, \
+            {'environment_id': _("Environment ID")}, {'environment_name': _("Environment Name")})
+        batch_add_columns(self.printer, {'errata': _("Errata")}, {'products': _("Products")}, \
+            {'packages': _("Packages")}, {'repositories': _("Repositories")}, \
+            {'system_templates': _("System Templates")}, {'distributions': _("Distributions")}, \
             multiline=True, show_with=printer.VerboseStrategy)
         if displayDeps:
-            self.printer.add_column('dependencies', multiline=True, show_with=printer.VerboseStrategy)
+            self.printer.add_column('dependencies', _("Dependencies"), \
+                multiline=True, show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Changeset Info"))
         self.printer.print_item(cset)
@@ -166,8 +167,10 @@ class Create(ChangesetAction):
         env = get_environment(orgName, envName)
         cset = self.api.create(orgName, env["id"], csName, csType, csDescription)
         test_record(cset,
-            _("Successfully created changeset [ %s ] for environment [ %s ]") % (csName, env["name"]),
-            _("Could not create changeset [ %s ] for environment [ %s ]") % (csName, env["name"])
+            _("Successfully created changeset [ %(csName)s ] for environment [ %(env_name)s ]") 
+                % {'csName':csName, 'env_name':env["name"]},
+            _("Could not create changeset [ %(csName)s ] for environment [ %(env_name)s ]") 
+                % {'csName':csName, 'env_name':env["name"]}
         )
 
         return os.EX_OK
@@ -228,7 +231,7 @@ class UpdateContent(ChangesetAction):
 
         def repo_id(self, options):
             prod_opts = self.product_options(options)
-            repo = get_repo(self.org_name, prod_opts['name'], prod_opts['label'], prod_opts['id'], 
+            repo = get_repo(self.org_name, prod_opts['name'], prod_opts['label'], prod_opts['id'],
                 options['name'], self.env_name)
 
             return repo['id']
@@ -514,7 +517,8 @@ class Apply(ChangesetAction):
             print _("Changeset [ %s ] applied" % csName)
             return os.EX_OK
         else:
-            print _("Changeset [ %s ] promotion failed: %s" % (csName, format_task_errors(task.errors())))
+            print _("Changeset [ %(csName)s ] promotion failed: %(task_errors)s" \
+                % {'csName':csName, 'task_errors':format_task_errors(task.errors())})
             return os.EX_DATAERR
 
 # ==============================================================================

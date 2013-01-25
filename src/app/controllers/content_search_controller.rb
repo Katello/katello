@@ -313,9 +313,16 @@ class ContentSearchController < ApplicationController
                   {:terms => {:enabled => [true]}}]
     conditions << {:terms => {:product_id => product_ids}} unless product_ids.blank?
 
+    #get total repos
+    found = Repository.search(:load => true) do
+      query {string term, {:default_field => 'name'}} unless term.blank?
+      filter "and", conditions
+      size 1
+    end
     Repository.search(:load => true) do
       query {string term, {:default_field => 'name'}} unless term.blank?
       filter "and", conditions
+      size found.total
     end
   end
 
@@ -460,7 +467,7 @@ class ContentSearchController < ApplicationController
     Katello::PackageUtils.setup_shared_unique_filter(repoids, search_mode, search)
     search.perform.results
   rescue Tire::Search::SearchRequestFailed => e
-    Support.array_with_total
+    Util::Support.array_with_total
   end
 
 

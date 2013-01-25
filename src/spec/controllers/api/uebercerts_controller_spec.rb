@@ -15,12 +15,14 @@ require 'spec_helper.rb'
 describe Api::UebercertsController do
   include LoginHelperMethods
   include AuthorizationHelperMethods
+  include LocaleHelperMethods
   OWNER_KEY = "some_org"
 
   let(:org) { Organization.new(:label => OWNER_KEY) }
   before(:each) do
     login_user
-    Organization.stub!(:first).and_return(org)
+    set_default_locale
+    @controller.stub(:get_organization).and_return(org)
   end
 
   describe "rules" do
@@ -33,7 +35,7 @@ describe Api::UebercertsController do
     describe "show" do
       let(:action) { :show }
       let(:req) do
-        post :show, :organization_id => OWNER_KEY
+        get :show, :organization_id => OWNER_KEY
       end
       it_should_behave_like "protected action"
     end
@@ -46,13 +48,13 @@ describe Api::UebercertsController do
     end
 
     it "should find organization" do
-      Organization.should_receive(:first).once.and_return(org)
-      post :show, :organization_id => OWNER_KEY
+      @controller.should_receive(:find_organization)
+      get :show, :organization_id => OWNER_KEY
     end
 
     it "should call Uebercert create api" do
       org.should_receive(:debug_cert).once.and_return({})
-      post :show, :organization_id => OWNER_KEY
+      get :show, :organization_id => OWNER_KEY
     end
   end
 end

@@ -1,0 +1,12 @@
+
+= content_for :title do
+  #{_("New Smart Proxy")}
+
+= content_for :content do
+  .grid_10
+    = kt_form_for ::Foreman::SmartProxy.new, :as=>"smart_proxy", :url=>smart_proxies_path, :html=>{ :id=>"new_smart_proxy" } do |form|
+
+      = form.text_field :name, :label => _("Name:")
+      = form.text_field :url, :label => _("URL:"), :value=> ""
+      = form.submit _("Save Smart Proxy"), :id => :save_smart_proxy
+

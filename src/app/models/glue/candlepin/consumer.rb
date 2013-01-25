@@ -288,10 +288,19 @@ module Glue::Candlepin::Consumer
     end
 
     def memory
-      mem = facts["memory.memtotal"]
-      # dmi.memory.size is on older clients
-      mem ||= facts["dmi.memory.size"]
+      if facts
+        mem = facts["memory.memtotal"]
+        # dmi.memory.size is on older clients
+        mem ||= facts["dmi.memory.size"]
+      else
+        mem = '0'
+      end
       memory_in_megabytes(mem)
+    end
+
+    def memory=(mem)
+      mem = "#{mem.to_i} MB"
+      facts["memory.memtotal"] = mem
     end
 
     def entitlements_valid?

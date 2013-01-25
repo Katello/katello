@@ -14,10 +14,13 @@ class SystemGroup < ActiveRecord::Base
   include Hooks
   define_hooks :add_system_hook, :remove_system_hook
 
-  include Glue::Pulp::ConsumerGroup if AppConfig.use_pulp
-  include Glue::ElasticSearch::SystemGroup if AppConfig.use_elasticsearch
-  include Glue if AppConfig.use_cp || AppConfig.use_pulp
   include Authorization::SystemGroup
+  include Glue::Pulp::ConsumerGroup if (Katello.config.use_pulp)
+  include Glue::ElasticSearch::SystemGroup if Katello.config.use_elasticsearch
+  include Glue
+
+  include Authorization::SystemGroup
+  include Ext::PermissionTagCleanup
 
   has_many :key_system_groups, :dependent => :destroy
   has_many :activation_keys, :through => :key_system_groups
@@ -42,22 +45,24 @@ class SystemGroup < ActiveRecord::Base
   before_save :save_system_environments
 
   validates :pulp_id, :presence => true
-  validates :name, :presence => true, :katello_name_format => true
+  validates :name, :presence => true
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_presence_of :organization_id, :message => N_("Organization cannot be blank.")
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
   validates_uniqueness_of :pulp_id, :message=> N_("must be unique.")
-  validates :description, :katello_description_format => true
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
 
+  alias_attribute :system_limit, :max_systems
   UNLIMITED_SYSTEMS = -1
-  validates_numericality_of :max_systems, :only_integer => true, :greater_than_or_equal_to => -1, :message => N_("must be a positive integer value.")
+  validates_numericality_of :system_limit, :only_integer => true, :greater_than_or_equal_to => -1, :message => N_("must be a positive integer value.")
   validate :validate_max_systems
 
   def validate_max_systems
     if new_record? or max_systems_changed?
       if (max_systems != UNLIMITED_SYSTEMS) and (systems.length > 0 and (systems.length > max_systems))
-        errors.add :max_systems, _("may not be less than the number of systems associated with the system group.")
+        errors.add :system_limit, _("may not be less than the number of systems associated with the system group.")
       elsif (max_systems == 0)
-        errors.add :max_systems, _("may not be set to 0.")
+        errors.add :system_limit, _("may not be set to 0.")
       end
     end
   end
@@ -101,6 +106,12 @@ class SystemGroup < ActiveRecord::Base
     raise Errors::SystemGroupEmptyException if self.systems.empty?
     pulp_job = self.install_package_group(groups)
     job = save_job(pulp_job, :package_group_install, :groups, groups)
+  end
+
+  def update_package_groups(groups)
+    raise Errors::SystemGroupEmptyException if self.systems.empty?
+    pulp_job = self.install_package_group(groups)
+    job = save_job(pulp_job, :package_group_update, :groups, groups)
   end
 
   def uninstall_package_groups groups

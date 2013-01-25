@@ -54,10 +54,10 @@ class List(EnvironmentAction):
 
         envs = self.api.environments_by_org(orgName)
 
-        batch_add_columns(self.printer, 'id', 'name', 'label')
-        self.printer.add_column('description', multiline=True)
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, {'label': _("Label")})
+        self.printer.add_column('description', _("Description"), multiline=True)
         self.printer.add_column('organization', _('Org'))
-        self.printer.add_column('prior', _('Prior Environment'))
+        self.printer.add_column('prior', _("Prior Environment"))
 
         self.printer.set_header(_("Environment List"))
         self.printer.print_items(envs)
@@ -82,11 +82,11 @@ class Info(EnvironmentAction):
 
         env = get_environment(orgName, envName)
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('description', multiline=True)
-        self.printer.add_column('organization', _('Org'))
-        self.printer.add_column('prior', _('Prior Environment'))
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('description', _("Description"), multiline=True)
+        self.printer.add_column('organization', _("Org"))
+        self.printer.add_column('prior', _("Prior Environment"))
 
         self.printer.set_header(_("Environment Info"))
         self.printer.print_item(env)
@@ -117,7 +117,7 @@ class Create(EnvironmentAction):
 
     def run(self):
         name        = self.get_option('name')
-        label        = self.get_option('label')
+        label       = self.get_option('label')
         description = self.get_option('description')
         orgName     = self.get_option('org')
         priorName   = self.get_option('prior')
@@ -145,6 +145,8 @@ class Update(EnvironmentAction):
                                help=_("name of prior environment"))
         parser.add_option('--name', dest='name',
                                help=_("environment name (required)"))
+        parser.add_option('--new-name', dest='new-name',
+                               help=_("new environment name"))
 
 
     def check_options(self, validator):
@@ -156,6 +158,7 @@ class Update(EnvironmentAction):
         description = self.get_option('description')
         orgName     = self.get_option('org')
         priorName   = self.get_option('prior')
+        newName     = self.get_option('new-name')
 
         env = get_environment(orgName, envName)
 
@@ -163,6 +166,10 @@ class Update(EnvironmentAction):
             priorId = self.get_prior_id(orgName, priorName)
         else:
             priorId = None
+
+        if newName != None:
+            envName = newName
+
         env = self.api.update(orgName, env["id"], envName, description, priorId)
         print _("Successfully updated environment [ %s ]") % env['name']
         return os.EX_OK

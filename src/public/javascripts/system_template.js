@@ -32,7 +32,7 @@ KT.templates = function() {
         $("#tree_loading").css("z-index", 300);
         $.ajax({
             type: "GET",
-            url: KT.common.rootURL() + "/system_templates/" + template_id + "/object/",
+            url: KT.common.rootURL() + "system_templates/" + template_id + "/object/",
             cache: false,
             success: function(data) {
                 $("#tree_loading").css("z-index", -1);
@@ -201,6 +201,7 @@ KT.templates = function() {
             buttons.remove.addClass("disabled");
             buttons.save.addClass("disabled");
             buttons.download.addClass("disabled");
+            buttons.download.tipsy('hide');
             $('.package_add_remove').hide();
             $('.package_group_add_remove').hide();
             $('.repo_add_remove').hide();
@@ -209,11 +210,14 @@ KT.templates = function() {
         else {
             buttons.edit.removeClass("disabled");
             buttons.remove.removeClass("disabled");
-            buttons.download.removeClass("disabled");
             if (KT.options.current_template.modified) {
+                buttons.download.tipsy('show')
+                buttons.download.addClass("disabled");
                 buttons.save.removeClass("disabled");
             }
             else {
+                buttons.download.tipsy('hide')
+                buttons.download.removeClass("disabled");
                 buttons.save.addClass("disabled");
             }
 
@@ -1136,8 +1140,7 @@ $(document).ready(function() {
 
     $("#modified_dialog").dialog({modal: true, width: 400, autoOpen: false});
 
-
-
+    buttons.download.tipsy({gravity:'n', trigger:'manual'})
     KT.options.templates = KT.template_breadcrumb["templates"].templates;
 
     KT.options.content_tree = sliding_tree("content_tree", {
@@ -1188,4 +1191,8 @@ $(document).ready(function() {
         }
     };
     $(window).trigger('hashchange');
+
+    $(document).bind('open_panel.tupane', function(){
+        KT.options.action_bar.reset();
+    });
 });

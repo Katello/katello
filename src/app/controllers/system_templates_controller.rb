@@ -168,31 +168,31 @@ class SystemTemplatesController < ApplicationController
   def update_content
 
     pkgs = params[:packages]
-    products = params[:products]
     pkg_groups = params[:package_groups]
     distro = params[:distribution]
     repos = params[:repos]
 
     @template.packages.delete_all
-    pkgs.each{|pkg|
-      @template.packages << SystemTemplatePackage.new(:system_template=>@template, :package_name=>pkg[:name])
-    }
 
-    #bz 796239
-    #@template.products = []
-    #products.each{|prod|
-    #  @template.products << Product.readable(current_organization).find(prod[:id])
-    #}
+    if !pkgs.nil?
+      pkgs.each{|pkg|
+        @template.packages << SystemTemplatePackage.new(:system_template=>@template, :package_name=>pkg[:name])
+      }
+    end
 
     @template.repositories = []
-    repos.each{|repo|
-      @template.repositories << Repository.readable(current_organization.library).find(repo[:id])
-    }
+    if !repos.nil?
+      repos.each{|repo|
+        @template.repositories << Repository.readable(current_organization.library).find(repo[:id])
+      }
+    end
 
     @template.package_groups = []
-    pkg_groups.each{|grp|
-      @template.add_package_group(grp[:name])
-    }
+    if !pkg_groups.nil?
+      pkg_groups.each{|grp|
+        @template.add_package_group(grp[:name])
+      }
+    end
 
     if !distro.nil?
       @template.distributions = []

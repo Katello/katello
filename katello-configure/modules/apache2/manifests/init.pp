@@ -2,7 +2,7 @@
 # Ensure that there is no network user called apache before installing
 # this is a CentOS 5 compatable (e.g. apache 2.2) manifest.
 class apache2 {
-  Exec { logoutput => on_failure, timeout => 0 }
+  Exec { logoutput => true, timeout => 0 }
 
   include apache2::params
   include apache2::config
