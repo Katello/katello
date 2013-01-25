@@ -9,7 +9,7 @@ YARD documentation is intended for developers. This documentation contains:
 
 User documentation can be found on [wiki](https://fedorahosted.org/katello/).
 
-*Note: older guides can be found on wiki, they have not been migrated.*
+*Note: older developer guides can be found on wiki, they have not been migrated.*
 
 ### Guides
 

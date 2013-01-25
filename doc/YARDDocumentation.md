@@ -12,6 +12,9 @@ There are several options
     -   `yarddoc` directory is in `.gitignore`
 1.  run standalone server `yard server --reload` and go to {http://localhost:8808}
 
+Enable gem `yard-activerecord` in `bundler.d/development.rb` to have attributes and associations of ActiveRecord
+documented. *Note: It'll be permanently added later when gem is published and rpm packaged.*
+
 ## Basics
 
 -   YARD is set to [Markdown syntax](http://daringfireball.net/projects/markdown/syntax#html) by default.
@@ -25,9 +28,9 @@ There are several options
 
 -   Markdown is indented by 4 spaces. 2 space indentation also works but only sometimes, it's better to use 4 to avoid
     trouble.
-    
+
         -   list1
-                
+
                 a block of code
 
         -   list2

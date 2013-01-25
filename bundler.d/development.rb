@@ -6,7 +6,12 @@ group :development do
 
   # code documentation
   gem 'yard', '>= 0.5.3'
-  gem 'yard-activerecord', :git => 'git://github.com/pitr-ch/yard-activerecord.git'
+
+  # Enable to have attributes and associations of ActiveRecord documented
+  # gem 'yard-activerecord', :git => 'git://github.com/pitr-ch/yard-activerecord.git'
+
+  # Enable to be able to generate graphs
+  # gem 'railroady'
 
   # generates routes in javascript
   gem "js-routes", :require => 'js_routes'
@@ -15,5 +20,5 @@ group :development do
   gem 'gettext', '>= 1.9.3', :require => false
     gem 'ruby_parser'
       gem 'sexp_processor'
-  gem 'railroady'
+
 end
