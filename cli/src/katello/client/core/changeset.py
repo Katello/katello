@@ -142,12 +142,14 @@ class Create(ChangesetAction):
         parser.add_option('--promotion', dest='type_promotion', action="store_true", default=False,
                                help=constants.OPT_HELP_PROMOTION)
         parser.add_option('--deletion', dest='type_deletion', action="store_true", default=False,
-                               help=constants.OPT_ERR_PROMOTION_OR_DELETE)
+                               help=constants.OPT_HELP_DELETION)
 
 
 
     def check_options(self, validator):
         validator.require(('org', 'name', 'environment'))
+        validator.require_at_least_one_of(('type_promotion', 'type_deletion'))
+        validator.mutually_exclude('type_promotion', 'type_deletion')
 
     def run(self):
         orgName = self.get_option('org')
@@ -156,20 +158,17 @@ class Create(ChangesetAction):
         csDescription = self.get_option('description')
         csType = constants.PROMOTION
 
-        # Check for duplicate type flags
-        if self.get_option('type_promotion') and self.get_option('type_deletion'):
-            raise OptionValueError(constants.OPT_ERR_PROMOTION_OR_DELETE)
         if self.get_option('type_promotion'):
             csType = constants.PROMOTION
-        elif self.get_option('type_deletion'):
+        else:
             csType = constants.DELETION
 
         env = get_environment(orgName, envName)
         cset = self.api.create(orgName, env["id"], csName, csType, csDescription)
         test_record(cset,
-            _("Successfully created changeset [ %(csName)s ] for environment [ %(env_name)s ]") 
+            _("Successfully created changeset [ %(csName)s ] for environment [ %(env_name)s ]")
                 % {'csName':csName, 'env_name':env["name"]},
-            _("Could not create changeset [ %(csName)s ] for environment [ %(env_name)s ]") 
+            _("Could not create changeset [ %(csName)s ] for environment [ %(env_name)s ]")
                 % {'csName':csName, 'env_name':env["name"]}
         )
 
@@ -335,7 +334,7 @@ class UpdateContent(ChangesetAction):
         if (parser.values.from_product == None) and \
            (parser.values.from_product_label == None) and \
            (parser.values.from_product_id == None):
-            raise OptionValueError(_("%s must be preceded by %s, %s or %s") %
+            raise OptionValueError("%s must be preceded by %s, %s or %s" %
                   (option, "--from_product", "--from_product_label", "--from_product_id"))
 
         if self.current_product_option == 'product_label':

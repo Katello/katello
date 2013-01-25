@@ -462,7 +462,7 @@ def check_bool(option, opt, value):
     if value.lower() in ["true","false"]:
         return (value.lower() == "true")
     else:
-        raise OptionValueError(_("option %(opt)s: invalid boolean value: %(value)r") % {'opt':opt, 'value':value})
+        raise OptionValueError("option %(opt)s: invalid boolean value: %(value)r" % {'opt':opt, 'value':value})
 
 def check_insensitive_choice(option, opt, value):
     if option.case_sensitive is False:
@@ -475,9 +475,7 @@ def check_insensitive_choice(option, opt, value):
         return value
     else:
         choices = ", ".join(option.choices)
-        raise OptionValueError(
-            _("option %s: invalid choice: %r (choose from %s)")
-            % (opt, value, choices))
+        raise OptionValueError("option %s: invalid choice: %r (choose from %s)" % (opt, value, choices))
 
 def check_list(option, opt, value):
     if not option.delimiter:
@@ -498,16 +496,16 @@ def check_url(option, opt, value):
     url_parsed = urlparse(value)
     if not url_parsed.scheme in schemes:                                 # pylint: disable=E1101
         formatted_schemes = " or ".join([s+"://" for s in schemes])
-        raise OptionValueError(_('option %(opt)s: has to start with %(formatted_schemes)s') \
+        raise OptionValueError('option %(opt)s: has to start with %(formatted_schemes)s' \
             % {'opt':opt, 'formatted_schemes':formatted_schemes})
     elif not url_parsed.netloc and not url_parsed.path:                  # pylint: disable=E1101
-        raise OptionValueError(_('option %s: invalid format') % (opt))
+        raise OptionValueError('option %s: invalid format' % (opt))
     return value
 
 def check_ip(option, opt, value):
 
     def raise_exception():
-        raise OptionValueError(_('option %s: invalid ip address format') % (opt))
+        raise OptionValueError('option %s: invalid ip address format' % (opt))
 
     parts = value.strip().split('.')
     if len(parts) != 4:

@@ -285,7 +285,7 @@ class Update(TemplateAction):
 
     def _store_parameter_value(self, option, opt_str, value, parser):
         if self.current_parameter == None:
-            raise OptionValueError(_("each %(option)s must be preceeded by %(paramater)s") \
+            raise OptionValueError("each %(option)s must be preceeded by %(parameter)s" \
                 % {'option':option, 'parameter':"--add_parameter"} )
 
         self.items['add_parameters'][self.current_parameter] = u_str(value)
@@ -300,7 +300,7 @@ class Update(TemplateAction):
         if (parser.values.from_product == None) and \
            (parser.values.from_product_label == None) and \
            (parser.values.from_product_id == None):
-            raise OptionValueError(_("%s must be preceded by %s, %s or %s") %
+            raise OptionValueError("%s must be preceded by %s, %s or %s" % \
                   (option, "--from_product", "--from_product_label", "--from_product_id"))
 
         if self.current_product_option == 'from_product_label':
