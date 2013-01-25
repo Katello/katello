@@ -89,7 +89,7 @@ module ProductTestData
             "gpgUrl" => "/some/gpg/url/",
             "updated" => "2011-01-04T18:47:47.219+0000",
             "created" => "2011-01-04T18:47:47.219+0000"
-          },
+          }.with_indifferent_access,
           "enabled" => true,
           "flexEntitlement" => 0,
           "physicalEntitlement" => 0
@@ -115,7 +115,7 @@ module ProductTestData
             "gpgUrl" => "/some/gpg/url/",
             "updated" => "2011-01-04T18:47:47.219+0000",
             "created" => "2011-01-04T18:47:47.219+0000"
-          },
+          }.with_indifferent_access,
           "enabled" => true,
           "flexEntitlement" => 0,
           "physicalEntitlement" => 0}

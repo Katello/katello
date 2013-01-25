@@ -66,7 +66,7 @@ class User < ActiveRecord::Base
 
   # hash the password before creating or updateing the record
   def hash_password
-    if AppConfig.warden != 'ldap'
+    if Katello.config.warden != 'ldap'
       self.password = Password::update(self.password) if self.password.length != 192
     end
   end
@@ -116,7 +116,7 @@ class User < ActiveRecord::Base
   end
 
   def not_ldap_mode?
-    return AppConfig.warden != 'ldap'
+    return Katello.config.warden != 'ldap'
   end
 
   def self.authenticate!(username, password)
