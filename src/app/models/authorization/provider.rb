@@ -32,12 +32,12 @@ module Authorization::Provider
       end
 
 
-      def self.creatable?(org)
-        User.allowed_to?([:create], :providers, nil, org)
+      def self.any_readable? org
+        (Katello.config.katello? && org.syncable?) || ::User.allowed_to?(READ_PERM_VERBS, :providers, nil, org)
       end
 
-      def self.any_readable?(org)
-        (AppConfig.katello? && org.syncable?) || User.allowed_to?(READ_PERM_VERBS, :providers, nil, org)
+      def self.creatable? org
+        ::User.allowed_to?([:create], :providers, nil, org)
       end
 
       def self.read_verbs
@@ -85,21 +85,9 @@ module Authorization::Provider
     end
   end
 
-  scope :readable, lambda {|org| items(org, READ_PERM_VERBS)}
-  scope :editable, lambda {|org| items(org, EDIT_PERM_VERBS)}
-
   def readable?
     return organization.readable? if redhat_provider?
     User.allowed_to?(READ_PERM_VERBS, :providers, self.id, self.organization) || (Katello.config.katello? && self.organization.syncable?)
-  end
-
-
-  def self.any_readable? org
-    (Katello.config.katello? && org.syncable?) || User.allowed_to?(READ_PERM_VERBS, :providers, nil, org)
-  end
-
-  def self.creatable? org
-    User.allowed_to?([:create], :providers, nil, org)
   end
 
   def editable?

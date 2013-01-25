@@ -44,13 +44,13 @@ module Katello
             Rails.logger.debug "Setting current user thread-local variable to " + username
             Thread.current[:user] = o
 
-            set_pulp_config(remote_id) if AppConfig.katello?
+            set_pulp_config(remote_id) if Katello.config.katello?
 
           end
 
           def self.set_pulp_config(user_id)
             if user_id
-              uri = URI.parse(AppConfig.pulp.url)
+              uri = URI.parse(Katello.config.pulp.url)
               RestClient.log =
                 Object.new.tap do |proxy|
                   def proxy.<<(message)
@@ -62,8 +62,8 @@ module Katello
                 :url      => "#{uri.scheme}://#{uri.host}",
                 :api_path => uri.path,
                 :user     => user_id,
-                :oauth    => {:oauth_secret => AppConfig.pulp.oauth_secret,
-                              :oauth_key    => AppConfig.pulp.oauth_key },
+                :oauth    => {:oauth_secret => Katello.config.pulp.oauth_secret,
+                              :oauth_key    => Katello.config.pulp.oauth_key },
                 :logger   => RestClient.log
               }
             end

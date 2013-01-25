@@ -39,9 +39,12 @@ class System < ActiveRecord::Base
                            }
   has_many :custom_info, :as => :informable, :dependent => :destroy
 
-  validates :environment, :presence => true, :non_library_environment => true
-  validates :name, :presence => true, :no_trailing_space => true # multiple systems with a single name are supported
-  validates :description, :katello_description_format => true
+  validates :environment, :presence => true
+  validates_with Validators::NonLibraryEnvironmentValidator, :attributes => :environment
+  # multiple systems with a single name are supported
+  validates :name, :presence => true
+  validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_length_of :location, :maximum => 255
   validates :sockets, :numericality => { :only_integer => true, :greater_than => 0 },
             :allow_nil => true, :if => ("validation_context == :create || validation_context == :update")
