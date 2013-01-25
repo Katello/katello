@@ -20,7 +20,6 @@ describe Api::RepositoriesController, :katello => true do
   include OrchestrationHelper
   include ProductHelperMethods
   include OrganizationHelperMethods
-  include LocaleHelperMethods
 
   let(:task_stub) do
     @task = mock(PulpTaskStatus)
@@ -35,7 +34,6 @@ describe Api::RepositoriesController, :katello => true do
     before(:each) do
       disable_product_orchestration
       disable_user_orchestration
-      set_default_locale
 
       @organization = new_test_org
       @controller.stub!(:get_organization).and_return(@organization)
@@ -167,7 +165,6 @@ describe Api::RepositoriesController, :katello => true do
       @product.save!
       @request.env["HTTP_ACCEPT"] = "application/json"
       login_user_api
-      set_default_locale
 
       disable_authorization_rules
     end
