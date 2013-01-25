@@ -83,7 +83,7 @@ module Glue::ElasticSearch::Package
       end
 
       def self.autocomplete_nvrea query, repoids=nil, page_size=15
-        return Support.array_with_total if !Tire.index(self.index).exists?
+        return Util::Support.array_with_total if !Tire.index(self.index).exists?
 
         query = Katello::Search::filter_input query
         query = "*" if query == ""
@@ -105,7 +105,7 @@ module Glue::ElasticSearch::Package
       end
 
       def self.id_search ids
-        return Support.array_with_total unless Tire.index(self.index).exists?
+        return Util::Support.array_with_total unless Tire.index(self.index).exists?
         search = Tire.search self.index do
           fields [:id, :name, :nvrea, :repoids, :type, :filename, :checksum]
           query do
@@ -118,7 +118,7 @@ module Glue::ElasticSearch::Package
       end
 
       def self.search query, start, page_size, repoids=nil, sort=[:nvrea_sort, "ASC"], search_mode = :all
-        return Support.array_with_total if !Tire.index(self.index).exists?
+        return Util::Support.array_with_total if !Tire.index(self.index).exists?
 
         all_rows = query.blank? #if blank, get all rows
 
@@ -146,7 +146,7 @@ module Glue::ElasticSearch::Package
 
         return search.perform.results
       rescue Tire::Search::SearchRequestFailed => e
-        Support.array_with_total
+        Util::Support.array_with_totals
       end
 
       def self.index_packages pkg_ids

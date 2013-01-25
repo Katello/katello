@@ -17,6 +17,7 @@ describe Api::DistributionsController, :katello => true do
   include AuthorizationHelperMethods
   include ProductHelperMethods
   include RepositoryHelperMethods
+  include LocaleHelperMethods
 
   before(:each) do
     disable_org_orchestration
@@ -36,6 +37,7 @@ describe Api::DistributionsController, :katello => true do
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
+    set_default_locale
   end
   let(:authorized_user) do
     user_with_permissions do |u|

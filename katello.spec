@@ -117,18 +117,9 @@ BuildRequires:  rubygem(jammit)
 BuildRequires:  rubygem(chunky_png)
 BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
-%if 0%{?fedora} && 0%{?fedora} >= 17
-BuildRequires:  rubygem(compass-rails) >= 0.11.5
-Requires:  rubygem(compass-rails) >= 0.11.5
-%endif
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
 BuildRequires:  rubygem(alchemy) >= 1.0.0
-# workaround for BZ 901540
-%if 0%{?fedora} && 0%{?fedora} >= 18
-Requires:       rubygem(sass-rails) rubygem(actionpack) rubygem(rails)
-BuildRequires:       rubygem(sass-rails) rubygem(actionpack) rubygem(rails)
-%endif
 
 # we require this to be able to build api-docs
 BuildRequires:       rubygem(rails) >= 3.0.10
@@ -388,7 +379,6 @@ script/check-gettext.rb -m -i
 ALCHEMY_DIR=$(rpm -ql rubygem-alchemy | grep -o '/.*/vendor' | sed 's/vendor$//' | head -n1)
 cp -R $ALCHEMY_DIR* ./vendor/alchemy
 
-sed -i 's/if RUBY_VERSION < "1.9.2"  # and F17 - see .spec file/if true  # edited by .specfile/' Gemfile
 #use Bundler_ext instead of Bundler
 mv Gemfile Gemfile.in
 
@@ -401,18 +391,7 @@ fi
     #compile SASS files
     echo Compiling SASS files...
     cp config/katello.template.yml config/katello.yml
-
-    mv bundler.d bundler.d.bak
-    mkdir bundler.d
-    cp bundler.d.bak/build.rb bundler.d.bak/assets.rb bundler.d/
-#FIXME F18
-    %if 0%{?fedora} <= 17
-    # this does not work for F18 due https://github.com/rails/sass-rails/issues/121 (at least)    
     compass compile
-    %endif
-    rm -rf bundler.d
-    mv bundler.d.bak bundler.d
-
     rm config/katello.yml
 
     #generate Rails JS/CSS/... assets
@@ -440,13 +419,8 @@ a2x -d manpage -f manpage man/katello-service.8.asciidoc
     export BUNDLER_EXT_GROUPS="default apipie test"
     export RAILS_ENV=production
     cp config/katello.template.yml config/katello.yml
-#FIXME F18
-    %if 0%{?fedora} <= 17
     rake apipie:static --trace
     rake apipie:cache RAILS_RELATIVE_URL_ROOT=katello --trace
-    %else
-    mkdir -p doc/apidoc
-    %endif
     rm config/katello.yml
 %endif
 
@@ -574,6 +548,7 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/models/*.rb
 %{homedir}/app/models/authorization/*.rb
 %{homedir}/app/models/candlepin
+%{homedir}/app/models/ext
 %{homedir}/app/stylesheets
 %{homedir}/app/views
 %exclude %{homedir}/app/views/foreman
@@ -594,6 +569,8 @@ usermod -a -G katello-shared tomcat
 %dir %{homedir}/lib/resources
 %{homedir}/lib/resources/cdn.rb
 %{homedir}/lib/resources/abstract_model.rb
+%dir %{homedir}/lib/resources/abstract_model
+%{homedir}/lib/resources/abstract_model/indexed_model.rb
 %{homedir}/lib/tasks
 %exclude %{homedir}/lib/tasks/rcov.rake
 %exclude %{homedir}/lib/tasks/yard.rake
@@ -610,12 +587,9 @@ usermod -a -G katello-shared tomcat
 %{homedir}/public/fonts
 %{homedir}/public/images
 %{homedir}/public/javascripts
-%dir %{homedir}/public/stylesheets
+%{homedir}/public/stylesheets
 %{homedir}/public/stylesheets/*.css
-#FIXME F18
-%if 0%{?fedora} <= 17
 %attr(600, katello, katello) %{homedir}/public/stylesheets/compiled
-%endif
 %{homedir}/public/stylesheets/images
 %exclude %{homedir}/public/apipie-cache
 %{homedir}/script
@@ -626,7 +600,6 @@ usermod -a -G katello-shared tomcat
 %dir %{homedir}/.bundle
 %{homedir}/config.ru
 %{homedir}/Gemfile.in
-%{homedir}/bundler.d/assets.rb
 %config(noreplace) %{_sysconfdir}/%{name}/service-list
 %{homedir}/Rakefile
 %{_mandir}/man8/katello-service.8*
@@ -652,7 +625,6 @@ usermod -a -G katello-shared tomcat
 %dir %{homedir}/lib
 %{homedir}/lib/util
 %{homedir}/script/service-wait
-%dir %{homedir}/bundler.d/
 
 %defattr(-, katello, katello)
 %dir %{homedir}
@@ -732,17 +704,13 @@ usermod -a -G katello-shared tomcat
 %{homedir}/.bundle
 %{homedir}/config.ru
 %{homedir}/Gemfile.in
-%{homedir}/bundler.d/assets.rb
 %{homedir}/Rakefile
 
 %files headpin-all
 
 %files api-docs
 %doc doc/apidoc*
-#FIXME F18
-%if 0%{?fedora} <= 17
 %{homedir}/public/apipie-cache
-%endif
 
 %files devel-all
 

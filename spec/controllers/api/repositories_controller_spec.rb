@@ -21,6 +21,7 @@ describe Api::RepositoriesController, :katello => true do
   include ProductHelperMethods
   include RepositoryHelperMethods
   include OrganizationHelperMethods
+  include LocaleHelperMethods
 
   let(:task_stub) do
     @task = mock(PulpTaskStatus)
@@ -35,11 +36,10 @@ describe Api::RepositoriesController, :katello => true do
     before(:each) do
       disable_product_orchestration
       disable_user_orchestration
+      set_default_locale
 
       @organization = new_test_org
-      Organization.stub!(:without_deleting).and_return(Organization)
-      Organization.stub!(:where).and_return(Organization)
-      Organization.stub!(:first).and_return(@organization)
+      @controller.stub!(:get_organization).and_return(@organization)
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
       Provider.stub!(:find).and_return(@provider)
       @product = Product.new({:name=>"prod", :label=> "prod"})
@@ -159,6 +159,7 @@ describe Api::RepositoriesController, :katello => true do
       @product.save!
       @request.env["HTTP_ACCEPT"] = "application/json"
       login_user_api
+      set_default_locale
 
       disable_authorization_rules
     end

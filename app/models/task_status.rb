@@ -26,6 +26,7 @@ class TaskStatus < ActiveRecord::Base
     CANCELED = :canceled
     TIMED_OUT = :timed_out
   end
+
   include Glue::ElasticSearch::TaskStatus if AppConfig.use_elasticsearch
 
   belongs_to :organization

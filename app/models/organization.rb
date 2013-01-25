@@ -16,6 +16,8 @@ class Organization < ActiveRecord::Base
   include Glue::Candlepin::Owner if Katello.config.use_cp
   include Glue if Katello.config.use_cp
 
+  include Ext::PermissionTagCleanup
+
   include Authorization::Organization
   include Glue::ElasticSearch::Organization if Katello.config.use_elasticsearch
 
@@ -34,9 +36,11 @@ class Organization < ActiveRecord::Base
 
   # Organizations which are being deleted (or deletion failed) can be filtered out with this scope.
   scope :without_deleting, where(:task_id => nil)
+  scope :having_name_or_label, lambda { |name_or_label| { :conditions => ["name = :id or label = :id", {:id=>name_or_label}] } }
 
   before_create :create_library
   before_create :create_redhat_provider
+
   validates :name, :uniqueness => true, :presence => true
   validates :label, :uniqueness => { :message => _("already exists (including organizations being deleted)") },
             :presence => true

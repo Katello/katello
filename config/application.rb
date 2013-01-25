@@ -33,7 +33,7 @@ else
   # In Bundler mode we load only specified groups
   ENV['BUNDLE_GEMFILE'] = File.expand_path('../../Gemfile', __FILE__)
   if defined?(Bundler)
-    basic_groups = [:default, (:foreman if Katello.early_config.katello?), :assets]
+    basic_groups = [:default, (:foreman if Katello.early_config.katello?)]
     groups = case Rails.env.to_sym
              when :build
                basic_groups + [:development, :build]
