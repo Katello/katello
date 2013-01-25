@@ -14,8 +14,9 @@ class SystemGroup < ActiveRecord::Base
 
   include Glue::Pulp::ConsumerGroup if (Katello.config.use_pulp)
   include Glue
-  include Authorization
-  include IndexedModel
+  include Ext::Authorization
+  include Ext::IndexedModel
+  include Ext::PermissionTagCleanup
 
   index_options :extended_json=>:extended_index_attrs,
                 :json=>{:only=>[:id, :organization_id, :name, :description, :max_systems]},

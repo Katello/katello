@@ -15,7 +15,7 @@ require 'active_support/builder' unless defined?(Builder)
 require 'mapping'
 
 class SystemTemplate < ActiveRecord::Base
-  #include Authorization
+  #include Ext::Authorization
   include LazyAccessor
   include AsyncOrchestration
 

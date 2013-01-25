@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
   include Glue::Foreman::User if Katello.config.use_foreman
   include Glue if Katello.config.use_cp
   include AsyncOrchestration
-  include IndexedModel
+  include Ext::IndexedModel
 
 
   acts_as_reportable
@@ -444,7 +444,9 @@ class User < ActiveRecord::Base
   end
 
   def default_environment
-    permission = default_systems_reg_permission and KTEnvironment.find(permission.tags.first.tag_id)
+    permission = default_systems_reg_permission
+    return nil if permission.nil? or permission.tags.empty?
+    KTEnvironment.find(permission.tags.first.tag_id)
   end
 
   def default_environment=(environment)

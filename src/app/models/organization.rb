@@ -14,8 +14,9 @@
 class Organization < ActiveRecord::Base
   include Glue::Candlepin::Owner if Katello.config.use_cp
   include Glue if Katello.config.use_cp
-  include Authorization
-  include IndexedModel
+  include Ext::Authorization
+  include Ext::IndexedModel
+  include Ext::PermissionTagCleanup
 
   index_options :extended_json=>:extended_index_attrs,
                 :json=>{:except=>[:debug_cert, :events]},
@@ -49,6 +50,7 @@ class Organization < ActiveRecord::Base
 
   before_create :create_library
   before_create :create_redhat_provider
+
   validates :name, :uniqueness => true, :presence => true
   validates :label, :uniqueness => { :message => _("already exists (including organizations being deleted)") },
             :presence => true
