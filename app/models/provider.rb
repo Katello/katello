@@ -14,8 +14,9 @@ class Provider < ActiveRecord::Base
   include Glue::Provider
   include Glue
   include AsyncOrchestration
-  include Authorization
-  include IndexedModel
+  include Ext::Authorization
+  include Ext::IndexedModel
+  include Ext::PermissionTagCleanup
 
   index_options :extended_json=>:extended_index_attrs,
                 :display_attrs=>[:name, :product, :repo, :description]
@@ -43,7 +44,6 @@ class Provider < ActiveRecord::Base
   validate :constraint_redhat_update
   before_destroy :prevent_redhat_deletion
   before_validation :sanitize_repository_url
-
 
   validate :only_one_rhn_provider
   validates :repository_url, :length => {:maximum => 255}, :if => :redhat_provider?

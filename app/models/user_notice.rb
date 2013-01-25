@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class UserNotice < ActiveRecord::Base
-  include Authorization
+  include Ext::Authorization
 
   belongs_to :user
   belongs_to :notice

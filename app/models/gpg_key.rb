@@ -12,7 +12,7 @@
 require 'iconv'
 
 class GpgKey < ActiveRecord::Base
-  include IndexedModel
+  include Ext::IndexedModel
 
 
   index_options :extended_json=>:extended_index_attrs,

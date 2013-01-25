@@ -13,11 +13,12 @@
 require 'util/model_util'
 
 class KTEnvironment < ActiveRecord::Base
-  include Authorization
+  include Ext::Authorization
   include Glue::Candlepin::Environment if Katello.config.use_cp
   include Glue if Katello.config.use_cp
   set_table_name "environments"
   include Katello::LabelFromName
+  include Ext::PermissionTagCleanup
   acts_as_reportable
 
   belongs_to :organization, :inverse_of => :environments
@@ -65,7 +66,6 @@ class KTEnvironment < ActiveRecord::Base
   after_destroy :delete_related_index
   after_destroy :unset_users_with_default
    ERROR_CLASS_NAME = "Environment"
-
 
   def library?
     self.library
