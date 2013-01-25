@@ -47,6 +47,7 @@ class Organization < ActiveRecord::Base
 
   # Organizations which are being deleted (or deletion failed) can be filtered out with this scope.
   scope :without_deleting, where(:task_id => nil)
+  scope :having_name_or_label, lambda { |name_or_label| { :conditions => ["name = :id or label = :id", {:id=>name_or_label}] } }
 
   before_create :create_library
   before_create :create_redhat_provider
