@@ -13,6 +13,7 @@
 */
 /**
  * This file is for use with the events subnav within systems page.
+ * It is also used on the events subnav of the distributors page.
  */
 
 
