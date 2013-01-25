@@ -550,6 +550,8 @@ usermod -a -G katello-shared tomcat
 %dir %{homedir}/lib/resources
 %{homedir}/lib/resources/cdn.rb
 %{homedir}/lib/resources/abstract_model.rb
+%dir %{homedir}/lib/resources/abstract_model
+%{homedir}/lib/resources/abstract_model/indexed_model.rb
 %{homedir}/lib/tasks
 %exclude %{homedir}/lib/tasks/rcov.rake
 %exclude %{homedir}/lib/tasks/yard.rake
@@ -630,7 +632,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/bundler.d/foreman.rb
 %{homedir}/lib/resources/foreman.rb
 %{homedir}/lib/resources/foreman_model.rb
-%{homedir}/app/models/ext
 %{homedir}/app/models/foreman
 %{homedir}/app/models/glue/foreman
 %{homedir}/app/controllers/api/foreman
