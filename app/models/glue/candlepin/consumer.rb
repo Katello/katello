@@ -87,7 +87,7 @@ module Glue::Candlepin::Consumer
 
     def validate_cp_consumer
       if new_record?
-        validates_inclusion_of :cp_type, :in => %w( system hypervisor candlepin)
+        validates_inclusion_of :cp_type, :in => %w( system hypervisor candlepin )
         validates_presence_of :facts
       end
     end
@@ -280,12 +280,18 @@ module Glue::Candlepin::Consumer
       facts["uname.machine"] = arch if @facts
     end
 
+    # Sockets are required to have a value in katello for searching as well as for checking subscription limits
+    # Force always to an integer value for consistency
     def sockets
-      facts["cpu.cpu_socket(s)"] if @facts
+      s = @facts ? Integer(facts["cpu.cpu_socket(s)"]) : 0
+    rescue
+      0
     end
 
     def sockets=(sock)
-      facts["cpu.cpu_socket(s)"] = sock if @facts
+      s = Integer(sock) rescue 0
+
+      facts["cpu.cpu_socket(s)"] = s if @facts
     end
 
     def guest
