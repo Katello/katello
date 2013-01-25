@@ -106,9 +106,9 @@ module Katello
         # store user
         u = current_user
         User.current = u
-        
+
         yield
-        
+
         # reset the current user (for security reasons)
         User.current = nil
       rescue => exception
