@@ -86,8 +86,9 @@ class Repository < ActiveRecord::Base
   def yum_gpg_key_url
     # if the repo has a gpg key return a url to access it
     if (self.gpg_key && self.gpg_key.content.present?)
-      host = AppConfig.host
-      host += ":" + AppConfig.port.to_s unless AppConfig.port.blank? || AppConfig.port.to_s == "443"
+      host = Katello.config.host
+      port = Katello.config.port
+      host += ":" + port.to_s unless port.blank? || port.to_s == "443"
       gpg_key_content_api_repository_url(self, :host => host + ENV['RAILS_RELATIVE_URL_ROOT'].to_s, :protocol => 'https')
     end
   end
