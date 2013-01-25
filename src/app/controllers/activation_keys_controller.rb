@@ -21,13 +21,13 @@ class ActivationKeysController < ApplicationController
                                                 :system_groups, :systems, :add_system_groups, :remove_system_groups]
   before_filter :find_environment, :only => [:edit]
   before_filter :authorize #after find_activation_key, since the key is required for authorization
-  before_filter :panel_options, :only => [:index, :items]
+  before_filter :panel_options, :only => [:index, :items, :show]
   before_filter :search_filter, :only => [:auto_complete_search]
 
   respond_to :html, :js
 
   def section_id
-    'contents'
+    'activation_keys'
   end
 
   def rules
@@ -62,8 +62,14 @@ class ActivationKeysController < ApplicationController
 
   def param_rules
     {
-      :create => {:activation_key => [:name, :description, :environment_id, :system_template_id, :usage_limit]},
-      :update => {:activation_key  => [:name, :description,:environment_id, :system_template_id, :usage_limit]},
+      :create => {:activation_key => [:name, :description, :environment_id,
+                                      :system_template_id, :usage_limit,
+                                      :content_view_id]
+        },
+      :update => {:activation_key  => [:name, :description,:environment_id,
+                                       :system_template_id, :usage_limit,
+                                       :content_view_id]
+        },
       :update_system_groups => {:activation_key => [:system_group_ids]}
     }
   end
@@ -74,7 +80,7 @@ class ActivationKeysController < ApplicationController
   end
 
   def show
-    render :partial=>"common/list_update", :locals=>{:item=>@activation_key, :accessor=>"id", :columns=>['name']}
+    render @activation_key
   end
 
   def available_subscriptions
@@ -186,6 +192,10 @@ class ActivationKeysController < ApplicationController
 
     @selected_template = no_template
 
+    @content_view_labels = [[no_content_view, '']]
+    @content_view_labels += ContentView.readable(@organization).non_default.collect {|cv| [cv.name, cv.id]}
+    @selected_content_view = no_content_view
+
     render :partial => "new", :layout => "tupane_layout", :locals => {:activation_key => activation_key,
                                                                       :accessible_envs => accessible_envs}
   end
@@ -200,6 +210,10 @@ class ActivationKeysController < ApplicationController
       @system_template_labels = [[no_template, '']] + (@activation_key.environment.system_templates).collect {|p| [ p.name, p.id ]}
     end
     @selected_template = @activation_key.system_template.nil? ? no_template : @activation_key.system_template.id
+
+    @content_view_labels = [[no_content_view, '']]
+    @content_view_labels += ContentView.readable(@organization).non_default.collect {|v| [v.name, v.id]}
+    @selected_content_view = @activation_key.content_view.nil? ? no_content_view : @activation_key.content_view_id
 
     render :partial => "edit", :layout => "tupane_layout", :locals => {:activation_key => @activation_key,
                                                                        :editable => ActivationKey.manageable?(current_organization),
@@ -276,6 +290,7 @@ class ActivationKeysController < ApplicationController
       :create => _('Key'),
       :create_label => _('+ New Key'),
       :name => controller_display_name,
+      :list_partial => 'activation_keys/list_activation_keys',
       :ajax_load  => true,
       :ajax_scroll => items_activation_keys_path(),
       :enable_create => ActivationKey.manageable?(current_organization),
