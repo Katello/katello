@@ -76,8 +76,8 @@ https://fedorahosted.org/katello/wiki/TestingHowto
 
 # generate usage docs and incorporate it into the man page
 pushd man
-PYTHONPATH=../src python ../src/katello/client/utils/usage.py "katello" >katello-usage.txt
-PYTHONPATH=../src python ../src/katello/client/utils/usage.py "headpin" >headpin-usage.txt
+PYTHONPATH=../src python ../scripts/usage.py "katello" >katello-usage.txt
+PYTHONPATH=../src python ../scripts/usage.py "headpin" >headpin-usage.txt
 sed -e '/^THE_USAGE/{r katello-usage.txt' -e 'd}' katello.pod |\
     sed -e 's/THE_VERSION/%{version}/g' |\
     /usr/bin/pod2man --name=katello -c "Katello Reference" --section=1 --release=%{version} - katello.man1
