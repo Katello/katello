@@ -13,10 +13,10 @@
 require 'util/package_util'
 
 class Changeset < ActiveRecord::Base
-  include Authorization
+  include Ext::Authorization
   include AsyncOrchestration
 
-  include IndexedModel
+  include Ext::IndexedModel
   index_options :extended_json => :extended_index_attrs,
                 :display_attrs => [:name, :description, :package, :errata, :product, :repo, :system_template, :user, :type]
 

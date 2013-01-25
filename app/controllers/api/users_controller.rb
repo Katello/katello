@@ -81,7 +81,6 @@ class Api::UsersController < Api::ApiController
             user.save!
         end
     end
-
     render :json => user.to_json
   end
 
