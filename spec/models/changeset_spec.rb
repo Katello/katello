@@ -416,7 +416,7 @@ describe Changeset, :katello => true do
         @distribution = mock('Distribution', { :id => 'some-distro-id' })
         ep            = EnvironmentProduct.find_or_create(@organization.library, @prod)
         @repo         = Repository.new(:environment_product => ep, :name => 'repo', :label => 'repo_label',
-                                           :pulp_id => "test_pulp_id", :relative_path=>"/foo/", 
+                                           :pulp_id => "test_pulp_id", :relative_path=>"/foo/",
                                            :content_id=>'aasfd', :feed=>'https://localhost.com/foo/')
         @repo.stub(:create_pulp_repo).and_return([])
         @repo.save!
