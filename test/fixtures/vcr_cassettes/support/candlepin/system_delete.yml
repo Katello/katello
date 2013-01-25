@@ -1,0 +1,77 @@
+---
+recorded_with: VCR 2.4.0
+http_interactions:
+- request:
+    method: delete
+    uri: https://localhost:8443/candlepin/consumers/3b50ae73-66bc-45c7-b460-aab5044bb9cc
+    body:
+      string: ""
+    headers:
+      Accept-Encoding:
+      - gzip, deflate
+      Cp-User:
+      - admin
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Authorization:
+      - OAuth oauth_consumer_key="katello", oauth_nonce="Sni6tqIweSvtxrWWyuqn1CxZU3cFuMriugCQFUDo", oauth_signature="X%2BGHV%2F36xdCGP1XVEtvUcQeW91E%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1361806531", oauth_version="1.0"
+  response:
+    status:
+      code: 410
+      message: Gone
+    headers:
+      Content-Length:
+      - "145"
+      X-Candlepin-Version:
+      - 0.7.25-1
+      Content-Type:
+      - application/json
+      Server:
+      - Apache-Coyote/1.1
+      Date:
+      - Mon, 25 Feb 2013 15:35:31 GMT
+    body:
+      string: |-
+        {
+          "displayMessage" : "Consumer 3b50ae73-66bc-45c7-b460-aab5044bb9cc has been deleted",
+          "deletedId" : "3b50ae73-66bc-45c7-b460-aab5044bb9cc"
+        }
+    http_version:
+  recorded_at: Mon, 25 Feb 2013 15:35:31 GMT
+- request:
+    method: delete
+    uri: https://localhost:8443/candlepin/consumers/f60d6f85-3fa7-4200-9c76-2dff628b1f51
+    body:
+      string: ""
+    headers:
+      Accept-Encoding:
+      - gzip, deflate
+      Cp-User:
+      - admin
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Authorization:
+      - OAuth oauth_consumer_key="katello", oauth_nonce="3NjiF6Ia4bma717WzXywxDhlbYWBEIq0iHUI2LUp9G0", oauth_signature="agOewgnrA58dcAE7daflbucFrmM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1361806901", oauth_version="1.0"
+  response:
+    status:
+      code: 410
+      message: Gone
+    headers:
+      Content-Length:
+      - "145"
+      X-Candlepin-Version:
+      - 0.7.25-1
+      Content-Type:
+      - application/json
+      Server:
+      - Apache-Coyote/1.1
+      Date:
+      - Mon, 25 Feb 2013 15:41:41 GMT
+    body:
+      string: |-
+        {
+          "displayMessage" : "Consumer f60d6f85-3fa7-4200-9c76-2dff628b1f51 has been deleted",
+          "deletedId" : "f60d6f85-3fa7-4200-9c76-2dff628b1f51"
+        }
+    http_version:
+  recorded_at: Mon, 25 Feb 2013 15:41:41 GMT
