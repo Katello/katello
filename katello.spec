@@ -550,6 +550,8 @@ usermod -a -G katello-shared tomcat
 %dir %{homedir}/lib/resources
 %{homedir}/lib/resources/cdn.rb
 %{homedir}/lib/resources/abstract_model.rb
+%dir %{homedir}/lib/resources/abstract_model
+%{homedir}/lib/resources/abstract_model/indexed_model.rb
 %{homedir}/lib/tasks
 %exclude %{homedir}/lib/tasks/rcov.rake
 %exclude %{homedir}/lib/tasks/yard.rake
