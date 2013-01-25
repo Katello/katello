@@ -62,7 +62,8 @@ class Api::ApiController < ActionController::Base
   end
 
   def parse_locale
-    first, second = request.env['HTTP_ACCEPT_LANGUAGE'].split(/[-_]/)
+    hal = request.env['HTTP_ACCEPT_LANGUAGE'] || 'en'
+    first, second = hal.split(/[-_]/)
     if second.nil?
       return [first.downcase]
     else
