@@ -13,7 +13,7 @@
 
 module Glue::ElasticSearch::Provider
   def self.included(base)
-    base.send :include, IndexedModel
+    base.send :include, Ext::IndexedModel
 
     base.class_eval do
       index_options :extended_json=>:extended_index_attrs,
