@@ -27,7 +27,7 @@ module Glue::ElasticSearch::Provider
   end
 
   def extended_index_attrs
-    if AppConfig.katello?
+    if Katello.config.katello?
       products = self.products.map{|prod|
         {:product=>prod.name, :repo=>prod.repos(self.organization.library).collect{|repo| repo.name}}
       }
@@ -41,4 +41,5 @@ module Glue::ElasticSearch::Provider
       :name_sort=>name.downcase
     }
   end
+
 end

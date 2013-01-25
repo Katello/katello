@@ -31,6 +31,7 @@ Requires:       nss-tools
 Requires:       openssl
 Requires:       policycoreutils-python
 Requires:       initscripts
+Requires:       libselinux-ruby
 Requires:       rubygem(rake)
 Requires:       rubygem(ruby-progressbar)
 BuildRequires:  /usr/bin/pod2man /usr/bin/erb
@@ -118,14 +119,42 @@ chmod +x -R %{buildroot}%{homedir}/upgrade-scripts/*
 
 
 %changelog
-* Mon Jan 21 2013 Justin Sherrill <jsherril@redhat.com> 1.3.2_pulpv2-1
-- version downgrade from mistaken bump (jsherril@redhat.com)
+* Tue Jan 15 2013 Justin Sherrill <jsherril@redhat.com> 1.3.3-1
+- emails - add default From to login/password emails (bbuckingham@redhat.com)
+- 890000 - enabling certv3 in candlepin conf (jomara@redhat.com)
+- run security:generate_token only if token does not exist (msuchy@redhat.com)
+- generate token for foreman (msuchy@redhat.com)
+- do not continue if something fails (msuchy@redhat.com)
+- add service-wait to path (msuchy@redhat.com)
+- enable logging of all output (msuchy@redhat.com)
+- tee could not be used, because it is executed under postgres which does not
+  have acl for /var/log/foo (msuchy@redhat.com)
+- 889488 - change selinux identity to system_u (msuchy@redhat.com)
+- 889488 - run createdb only if needed (msuchy@redhat.com)
+- 889488 - run create user only if it is needed (msuchy@redhat.com)
 
-* Mon Jan 21 2013 Justin Sherrill <jsherril@redhat.com> 1.4.2_pulpv2-1
-- adding post sync url to katello.yml (jsherril@redhat.com)
-
-* Mon Jan 21 2013 Justin Sherrill <jsherril@redhat.com>
-- adding post sync url to katello.yml (jsherril@redhat.com)
+* Tue Jan 08 2013 Lukas Zapletal <lzap+git@redhat.com> 1.3.2-1
+- fix typo
+- Merge pull request #1271 from lzap/orch-logging
+- Merge pull request #1259 from lzap/org-delete-885261
+- 885261 - katello-configure now always loads answer file
+- move loop over puppet output to shared function
+- remove dead code
+- Merge pull request #1314 from xsuchy/pull-req-pg24
+- add upgrade script to upgrade old configuration to a new one
+- fix 'nil' bug in katello-configure when running with --no-bars option
+- add --katello-configuration-files-only option to katello-configure
+- Merge pull request #1297 from Katello/bkearney/865860
+- Merge pull request #1256 from bkearney/bkearney/758813
+- if nobars is set then progress_bar is not defined
+- 865860: Change the default org and  orgunit values for the candlepin cert
+- if foreman is stopped, status returns 3 - in such case return 0 to make
+  puppet happy
+- logging - orchestration logger and uuid request tracking
+- 885261 - org deletion should remove rh provider
+- 758813: Disable basic and trusted auth in the candlepin engine since it is
+  not required.
+- fix packaging and katello-configure
 
 * Tue Dec 18 2012 Miroslav Suchý <msuchy@redhat.com> 1.3.1-1
 - stop foreman only if it is running (msuchy@redhat.com)

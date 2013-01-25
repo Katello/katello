@@ -11,12 +11,12 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Provider < ActiveRecord::Base
+
+  include Glue::ElasticSearch::Provider if Katello.config.use_elasticsearch
   include Glue::Provider
   include Glue
   include Authorization::Provider
   include AsyncOrchestration
-  include KatelloUrlHelper
-  include Glue::ElasticSearch::Provider if AppConfig.use_elasticsearch
 
 
   REDHAT = 'Red Hat'
@@ -30,8 +30,9 @@ class Provider < ActiveRecord::Base
   belongs_to :discovery_task, :class_name=>'TaskStatus'
   has_many :products, :inverse_of => :provider
 
-  validates :name, :presence => true, :katello_name_format => true
-  validates :description, :katello_description_format => true
+  validates :name, :presence => true
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
 
   validates_uniqueness_of :name, :scope => :organization_id
   validates_inclusion_of :provider_type,
@@ -44,7 +45,10 @@ class Provider < ActiveRecord::Base
 
 
   validate :only_one_rhn_provider
-  validate :valid_url, :if => :redhat_provider?
+  validates :repository_url, :length => {:maximum => 255}, :if => :redhat_provider?
+  validates_with Validators::KatelloUrlFormatValidator, :if => :redhat_provider?,
+                 :attributes => :repository_url
+
 
   scope :redhat, where(:provider_type => REDHAT)
   scope :custom, where(:provider_type => CUSTOM)
@@ -56,11 +60,13 @@ class Provider < ActiveRecord::Base
   end
 
   def prevent_redhat_deletion
-    if redhat_provider?
-      errors.add(:base, _("Red Hat provider can not be deleted"))
-      return false
+    if !being_deleted? && redhat_provider?
+      Rails.logger.error _("Red Hat provider can not be deleted")
+      false
+    else
+      # organization that is being deleted via background destroyer can delete rh provider
+      true
     end
-    true
   end
 
   def constraint_redhat_update
@@ -71,11 +77,6 @@ class Provider < ActiveRecord::Base
         errors.add(:base, _("the following attributes can not be updated for the Red Hat provider: [ %s ]") % not_allowed_changes.join(", "))
       end
     end
-  end
-
-  def valid_url
-    errors.add(:repository_url, _("is too long")) if self.repository_url.length > 255
-    errors.add(:repository_url, _("is invalid")) unless kurl_valid?(self.repository_url)
   end
 
   def count_providers type
@@ -101,20 +102,14 @@ class Provider < ActiveRecord::Base
     redhat_provider?
   end
 
-  def organization
-    # note i need to add 'unscoped' here
-    # to account for the fact that org might have been "scoped out"
-    # on an Org delete action.
-    # we need the organization info to be present in the provider
-    # so that we can properly phase out the orchestration and handle search indices.
-    (read_attribute(:organization) || Organization.unscoped.find(self.organization_id)) if self.organization_id
+  def being_deleted?
+    organization.being_deleted?
   end
-
 
   def serializable_hash(options={})
     options = {} if options == nil
     hash = super(options)
-    if AppConfig.katello?
+    if Katello.config.katello?
       hash = hash.merge(:sync_state => self.sync_state,
                         :last_sync => self.last_sync)
     end
@@ -183,8 +178,7 @@ class Provider < ActiveRecord::Base
 
    def sanitize_repository_url
      if redhat_provider? && self.repository_url.blank?
-      self.repository_url = AppConfig.REDHAT_REPOSITORY_URL
-      self.repository_url = "https://cdn.redhat.com" unless self.repository_url
+      self.repository_url = Katello.config.redhat_repository_url
      end
      if self.repository_url
        self.repository_url.strip!
@@ -203,7 +197,6 @@ class Provider < ActiveRecord::Base
       provider.discovered_repos << url
       provider.save!
     end
-
     #Lambda to decide to continue or not
     #  Using the saved task_id to compare current providers
     #  task id

@@ -21,8 +21,7 @@ module Glue::ElasticSearch::Package
           "nvrea_sort" => nvrea.downcase,
           "nvrea" => nvrea,
           "nvrea_autocomplete" => nvrea,
-          "name_autocomplete" => name,
-          "repoids" => repository_memberships
+          "name_autocomplete" => name
         }
       end
 
@@ -54,7 +53,7 @@ module Glue::ElasticSearch::Package
       end
 
       def self.index
-        "#{AppConfig.elastic_index}_package"
+        "#{Katello.config.elastic_index}_package"
       end
 
       def self.autocomplete_name query, repoids=nil, page_size=15

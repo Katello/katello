@@ -47,7 +47,7 @@ txtgrn=$(tput setaf 2)    # Green
 txtyel=$(tput setaf 3)    # Yellow
 txtrst=$(tput sgr0)       # Text reset
 
-all_tests=`ls $TEST_DIR/ | grep -v '^_.*' | sed -s 's/.sh//g'`
+all_tests=`ls $TEST_DIR/ | grep -v '^_.*' | sed 's/.sh//g'`
 required_tests=""
 
 PRINT_ALL=0

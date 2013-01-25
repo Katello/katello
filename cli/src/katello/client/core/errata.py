@@ -75,9 +75,9 @@ class List(ErrataAction):
         prod_label = self.get_option('product_label')
         prod_id = self.get_option('product_id')
 
-        self.printer.add_column('id')
-        self.printer.add_column('title')
-        self.printer.add_column('type')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('title', _("Title"))
+        self.printer.add_column('type', _("Type"))
 
         if not repo_id:
             if repo_name:
@@ -118,8 +118,9 @@ class SystemErrata(ErrataAction):
         system = get_system(org_name, sys_name)
         errata = systemApi.errata(system["uuid"])
 
-        batch_add_columns(self.printer, 'id', 'title', 'type')
-        self.printer.set_header(_("Errata for system %s in organization %s") % (sys_name, org_name))
+        batch_add_columns(self.printer, {'id': _("ID")}, {'title': _("Title")}, {'type': _("Type")})
+        self.printer.set_header(_("Errata for system %(sys_name)s in organization %(org_name)s") 
+            % {'sys_name':sys_name, 'org_name':org_name})
         self.printer.print_items(errata)
 
         return os.EX_OK
@@ -147,11 +148,12 @@ class SystemGroupErrata(ErrataAction):
 
         errata = systemGroupApi.errata(org_name, system_group_id, type_in=type_in)
 
-        batch_add_columns(self.printer, 'id', 'title', 'type')
+        batch_add_columns(self.printer, {'id': _("ID")}, {'title': _("Title")}, {'type': _("Type")})
         self.printer.add_column('systems', _('# Systems'), formatter=len)
-        self.printer.add_column('systems', multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('systems', _("Systems"), multiline=True, show_with=printer.VerboseStrategy)
 
-        self.printer.set_header(_("Errata for system group %s in organization %s") % (group_name, org_name))
+        self.printer.set_header(_("Errata for system group %(org_name)s in organization %(org_name)s") 
+            % {'group_name':group_name, 'org_name':org_name})
         self.printer.print_items(errata)
 
         return os.EX_OK
@@ -199,12 +201,12 @@ class Info(ErrataAction):
                          for pkg in pack['pkglist']
                          for pinfo in pkg['packages']]
 
-        batch_add_columns(self.printer, 'id', 'title')
-        self.printer.add_column('description', multiline=True)
-        batch_add_columns(self.printer,
-            'type', 'issued', 'updated', 'version',
-            'release', 'status', 'reboot_suggested')
-        self.printer.add_column('affected_packages', multiline=True)
+        batch_add_columns(self.printer, {'id': _("ID")}, {'title': _("Title")})
+        self.printer.add_column('description', _("Description"), multiline=True)
+        batch_add_columns(self.printer, {'type': _("Type")}, {'issued': _("Issued")}, \
+            {'updated': _("Updated")}, {'version': _("Version")}, {'release': _("Release")}, \
+            {'status': _("Status")}, {'reboot_suggested': _("Reboot Suggested")})
+        self.printer.add_column('affected_packages', _("Affected Packages"), multiline=True)
 
         self.printer.set_header(_("Errata Information"))
         self.printer.print_item(pack)

@@ -4,14 +4,22 @@ if ENV['BUNDLER_ENABLE_RPM_PREFERRING'] == 'true'
   require File.join(File.dirname(__FILE__), 'lib', 'bundler_patch_rpm-gems_preferred')
 end
 
-require './lib/util/boot_util'
+# load Katello configuration
+path = File.expand_path('../lib', __FILE__)
+$LOAD_PATH << path unless $LOAD_PATH.include? path
+require 'katello_config'
 
 # When adding new version requirement check out EPEL6 repository first
 # and use this version if possible. Also check Fedora version (usually higher).
 # With a pull request, send also link to our (or Fedora) koji with RPMs.
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.10'
+version = `uname -a` rescue ""
+if version =~ /fc18/
+  gem 'rails', '~> 3.2.8'
+else
+  gem 'rails', '3.0.10'
+end
 gem 'json'
 gem 'rest-client', :require => 'rest_client'
 gem 'jammit', '>= 0.5.4'
@@ -33,13 +41,6 @@ end
 gem 'delayed_job', '~> 2.1.4'
 gem 'daemons', '>= 1.1.4'
 gem 'uuidtools'
-
-# Stuff for view/display/frontend
-gem 'haml', '>= 3.1.2'
-gem 'haml-rails', "= 0.3.4"
-gem 'compass', '>= 0.11.5', '< 0.12'
-gem 'compass-960-plugin', '>= 0.10.4', :require => 'ninesixty'
-gem 'simple-navigation', '>= 3.3.4'
 
 # Stuff for i18n
 gem 'gettext_i18n_rails'
@@ -64,7 +65,6 @@ gem "apipie-rails", '>= 0.0.13'
 # Pulp API bindings
 gem 'hooks'
 gem 'runcible', '~> 0.3.1'
-
 gem 'anemone'
 
 # Load all sub-gemfiles from bundler.d directory

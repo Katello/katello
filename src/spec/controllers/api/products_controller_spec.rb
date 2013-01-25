@@ -30,6 +30,9 @@ describe Api::ProductsController, :katello => true do
     disable_user_orchestration
 
     @organization = new_test_org
+    Organization.stub!(:without_deleting).and_return(Organization)
+    Organization.stub!(:where).and_return(Organization)
+    Organization.stub!(:first).and_return(@organization)
     @environment = KTEnvironment.create!(:name=>"foo123", :label=> "foo123", :organization => @organization, :prior =>@organization.library)
     @provider = Provider.create!(:name => "provider", :provider_type => Provider::CUSTOM,
                                  :organization => @organization, :repository_url => "https://something.url/stuff")
@@ -149,7 +152,7 @@ describe Api::ProductsController, :katello => true do
     end
 
     it "should find organization" do
-      Organization.should_receive(:first).once.with({:conditions => {:name => @organization.name}}).and_return(@organization)
+      Organization.should_receive(:where).once.with("name = :id or label = :id", hash_including(:id => @organization.label)).and_return(@organization)
       get 'index', :organization_id => @organization.label
     end
 
@@ -177,13 +180,13 @@ describe Api::ProductsController, :katello => true do
     end
 
     it "should find organization" do
-      Organization.should_receive(:first).once.with({:conditions => {:name => @organization.name}}).and_return(@organization)
+      Organization.should_receive(:where).once.with("name = :id or label = :id", hash_including(:id => @organization.label)).and_return(@organization)
       get 'index', :organization_id => @organization.label
     end
 
     it "should find library" do
-      @organization.should_receive(:library).once.and_return(@organization.library)
       get 'index', :organization_id => @organization.label
+      response.should be_success
     end
 
     it "should respond with success" do

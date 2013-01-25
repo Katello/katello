@@ -304,18 +304,18 @@ class Status(SingleRepoAction):
         if task.is_running():
             pkgsTotal = task.total_count()
             pkgsLeft = task.items_left()
-            repo['progress'] = ("%d%% done (%d of %d packages downloaded)" % (
-                task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
+            repo['progress'] = ("%(task_progress)d%% done (%(pkgs_count)d of %(pkgs_total)d packages downloaded)" % 
+                {'task_progress':task.get_progress()*100, 'pkgs_count':pkgsTotal-pkgsLeft, 'pkgs_total':pkgsTotal})
 
         repo['last_errors'] = format_sync_errors(task)
 
-        self.printer.add_column('package_count')
-        self.printer.add_column('last_sync', formatter=format_sync_time)
-        self.printer.add_column('sync_state', formatter=format_sync_state)
+        self.printer.add_column('package_count', _("Package Count"))
+        self.printer.add_column('last_sync', _("Last Sync"), formatter=format_sync_time)
+        self.printer.add_column('sync_state', _("Sync State"), formatter=format_sync_state)
         if 'next_scheduled_sync' in repo:
-            self.printer.add_column('next_scheduled_sync', formatter=format_sync_time)
-        self.printer.add_column('progress', show_with=printer.VerboseStrategy)
-        self.printer.add_column('last_errors', multiline=True, show_with=printer.VerboseStrategy)
+            self.printer.add_column('next_scheduled_sync', _("Next Scheduled Sync"), formatter=format_sync_time)
+        self.printer.add_column('progress', _("Progress"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('last_errors', _("Last Errors"), multiline=True, show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Repository Status"))
         self.printer.print_item(repo)
@@ -332,12 +332,16 @@ class Info(SingleRepoAction):
 
         repo['url'] = repo['source']['url']
 
-        batch_add_columns(self.printer, 'id', 'name', 'package_count')
-        batch_add_columns(self.printer, 'arch', 'url', show_with=printer.VerboseStrategy)
-        self.printer.add_column('last_sync', show_with=printer.VerboseStrategy, formatter=format_sync_time)
-        self.printer.add_column('sync_state', name=_("Progress"),
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, \
+            {'package_count': _("Package Count")})
+        batch_add_columns(self.printer, {'arch': _("Arch")}, {'url': _("URL")}, \
+            show_with=printer.VerboseStrategy)
+        self.printer.add_column('last_sync', _("Last Sync"), \
+            show_with=printer.VerboseStrategy, formatter=format_sync_time)
+        self.printer.add_column('sync_state', _("Progress"), \
             show_with=printer.VerboseStrategy, formatter=format_sync_state)
-        self.printer.add_column('gpg_key_name', name=_("GPG key"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('gpg_key_name', _("GPG Key"), \
+            show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Information About Repo %s") % repo['id'])
 
@@ -384,7 +388,8 @@ class Sync(SingleRepoAction):
             print _("Repo [ %s ] synchronization canceled" % repo['name'])
             return os.EX_OK
         else:
-            print _("Repo [ %s ] failed to sync: %s" % (repo['name'], format_sync_errors(task)) )
+            print _("Repo [ %(repo_name)s ] failed to sync: %(sync_errors)s") \
+                % {'repo_name':repo['name'], 'sync_errors':format_sync_errors(task)} 
             return os.EX_DATAERR
 
 
@@ -447,30 +452,31 @@ class List(RepoAction):
         prodId = self.get_option('product_id')
         listDisabled = self.has_option('disabled')
 
-        batch_add_columns(self.printer, 'id', 'name', 'label', 'package_count')
-        self.printer.add_column('last_sync', formatter=format_sync_time)
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, \
+            {'label': _("Label")}, {'package_count': _("Package Count")})
+        self.printer.add_column('last_sync', _("Last Sync"), formatter=format_sync_time)
 
         prodIncluded = prodName or prodLabel or prodId
         if prodIncluded and envName:
             env  = get_environment(orgName, envName)
             prod = get_product(orgName, prodName, prodLabel, prodId)
 
-            self.printer.set_header(_("Repo List For Org %s Environment %s Product %s") %
-                (orgName, env["name"], prodName))
+            self.printer.set_header(_("Repo List For Org %(org_name)s Environment %(env_name)s Product %(prodName)s") %
+                {'org_name':orgName, 'env_name':env["name"], 'prodName':prodName})
             repos = self.api.repos_by_env_product(env["id"], prod["id"], None, listDisabled)
             self.printer.print_items(repos)
 
         elif prodIncluded:
             prod = get_product(orgName, prodName, prodLabel, prodId)
-            self.printer.set_header(_("Repo List for Product %s in Org %s ") %
-                (prodName, orgName))
+            self.printer.set_header(_("Repo List for Product %(prodName)s in Org %(orgName)s ") %
+                {'prodName':prodName, 'orgName':orgName})
             repos = self.api.repos_by_product(orgName, prod["id"], listDisabled)
             self.printer.print_items(repos)
 
         else:
             env  = get_environment(orgName, envName)
-            self.printer.set_header(_("Repo List For Org %s Environment %s") %
-                (orgName, env["name"]))
+            self.printer.set_header(_("Repo List For Org %(orgName)s Environment %(env_name)s") %
+                {'orgName':orgName, 'env_name':env["name"]})
             repos = self.api.repos_by_org_env(orgName,  env["id"], listDisabled)
             self.printer.print_items(repos)
 

@@ -20,7 +20,8 @@ from katello.client.api.organization import OrganizationAPI
 from katello.client.api.product import ProductAPI
 from katello.client.api.organization_system_info_keys import OrganizationSystemInfoKeysAPI
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import test_record, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_task_errors
+from katello.client.core.utils import test_record, run_spinner_in_bg, wait_for_async_task, AsyncTask, \
+    format_task_errors
 from katello.client.utils.printer import VerboseStrategy
 from katello.client.utils import printer
 from datetime import timedelta, datetime
@@ -45,8 +46,8 @@ class List(OrganizationAction):
     def run(self):
         orgs = self.api.organizations()
 
-        batch_add_columns(self.printer, 'id', 'name', 'label')
-        self.printer.add_column('description', multiline=True)
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, {'label': _("Label")})
+        self.printer.add_column('description', _("Description"), multiline=True)
 
         self.printer.set_header(_("Organization List"))
         self.printer.print_items(orgs)
@@ -104,11 +105,11 @@ class Info(OrganizationAction):
 
         org['system_info_keys'] = "[ %s ]" % ", ".join(org['system_info_keys'])
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('description', multiline=True)
-        self.printer.add_column('service_levels', name=_("Available Service Levels"), multiline=True)
-        self.printer.add_column('system_info_keys', name=_("Default System Info Keys"), multiline=True,
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('description', _("Description"), multiline=True)
+        self.printer.add_column('service_levels', _("Available Service Levels"), multiline=True)
+        self.printer.add_column('system_info_keys', _("Default System Info Keys"), multiline=True,
             show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Organization Information"))
@@ -141,7 +142,8 @@ class Delete(OrganizationAction):
             print _("Successfully deleted org [ %s ]") % name
             return os.EX_OK
         else:
-            print _("Organization [ %s ] deletion failed: %s" % (name, format_task_errors(task.errors())) )
+            print _("Organization [ %(name)s ] deletion failed: %(format_task_errors)s" \
+                % {'name':name, 'format_task_errors':format_task_errors(task.errors())} )
             return os.EX_DATAERR
 
 # ------------------------------------------------------------------------------
@@ -189,8 +191,8 @@ class GenerateDebugCert(OrganizationAction):
 
         uebercert = self.api.uebercert(name, regenerate)
 
-        self.printer.add_column('key')
-        self.printer.add_column('cert')
+        self.printer.add_column('key', _("Key"))
+        self.printer.add_column('cert', _("Cert"))
         self.printer.set_header(_("Organization Uebercert"))
         self.printer.print_item(uebercert)
 
@@ -224,13 +226,13 @@ class ShowSubscriptions(OrganizationAction):
         if not self.has_option('grep'):
             self.printer.set_strategy(VerboseStrategy())
 
-        self.printer.add_column('productName', name='Subscription')
-        self.printer.add_column('consumed')
-        self.printer.add_column('contractNumber', show_with=printer.VerboseStrategy)
-        self.printer.add_column('sla', show_with=printer.VerboseStrategy)
-        self.printer.add_column('id')
-        self.printer.add_column('startDate', show_with=printer.VerboseStrategy)
-        self.printer.add_column('endDate', show_with=printer.VerboseStrategy)
+        self.printer.add_column('productName', _("Subscription"))
+        self.printer.add_column('consumed', _("Consumed"))
+        self.printer.add_column('contractNumber', _("Contract Number"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('sla', _("SLA"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('startDate', _("Start Date"), show_with=printer.VerboseStrategy)
+        self.printer.add_column('endDate', _("End Date"), show_with=printer.VerboseStrategy)
         self.printer.set_header(_("Organization's Subscriptions"))
         self.printer.print_items(updated_pool_info)
 
@@ -282,9 +284,11 @@ class AddDefaultSystemInfo(OrganizationAction):
         response = self.system_info_keys_api.create(org_name, keyname)
 
         if response:
-            print _("Successfully added default custom info key [ %s ] to Org [ %s ]") % (keyname, org_name)
+            print _("Successfully added default custom info key [ %(keyname)s ] to Org [ %(org_name)s ]") \
+                % {'keyname':keyname, 'org_name':org_name}
         else:
-            print _("Could not add default custom info key [ %s ] to Org [ %s ]") % (keyname, org_name)
+            print _("Could not add default custom info key [ %(keyname)s ] to Org [ %(org_name)s ]") \
+                % {'keyname':keyname, 'org_name':org_name}
 
 # ------------------------------------------------------------------------------
 
@@ -310,9 +314,11 @@ class RemoveDefaultSystemInfo(OrganizationAction):
         response = self.system_info_keys_api.destroy(org_name, keyname)
 
         if not keyname in response:
-            print _("Successfully removed default custom info key [ %s ] for Org [ %s ]") % (keyname, org_name)
+            print _("Successfully removed default custom info key [ %(keyname)s ] for Org [ %(org_name)s ]") \
+                % {'keyname':keyname, 'org_name':org_name}
         else:
-            print _("Could not remove default custom info key [ %s ] for Org [ %s ]") % (keyname, org_name)
+            print _("Could not remove default custom info key [ %(keyname)s ] for Org [ %(org_name)s ]") \
+                % {'keyname':keyname, 'org_name':org_name}
 
 # ------------------------------------------------------------------------------
 
@@ -336,8 +342,9 @@ class ApplyDefaultSystemInfo(OrganizationAction):
         response = self.system_info_keys_api.apply(org_name)
 
         if response:
-            print _("Successfully applied default custom info keys to [ %d ] systems in Org [ %s ]")\
-                  % (len(response), org_name)
+            print _("Successfully applied default custom info keys to \
+                  [ %(sys_count)d ] systems in Org [ %(org_name)s ]") \
+                  % {'sys_count':len(response), 'org_name':org_name}
         elif  len(response) == 0:
             print _("No default custom info keys to apply in Org [ %s ]") % org_name
         else:

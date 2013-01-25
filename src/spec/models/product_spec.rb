@@ -322,7 +322,8 @@ describe Product, :katello => true do
       @ep = EnvironmentProduct.find_or_create(@organization.library, @product)
       @repo = Repository.create!(:environment_product => @ep, :name => "testrepo",
                                  :label => "testrepo_label", :pulp_id=>"1010",
-                                 :content_id=>'123', :relative_path=>"/foo/")
+                                 :content_id=>'123', :relative_path=>"/foo/",
+                                 :feed => 'https://localhost')
       @repo.stub(:promoted?).and_return(false)
       @repo.stub(:update_content).and_return(Candlepin::Content.new)
     end
@@ -376,7 +377,8 @@ describe Product, :katello => true do
                                  :label => "testrepo_label",
                                  :pulp_id=>"1010",
                                  :content_id=>"123",
-                                 :relative_path => "#{@organization.name}/library/Prod/Repo")
+                                 :relative_path => "#{@organization.name}/library/Prod/Repo",
+                                 :feed => 'https://localhost')
 
       @repo.stub(:product).and_return(@product)
       @repo.stub(:promoted?).and_return(false)

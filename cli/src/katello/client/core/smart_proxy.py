@@ -43,7 +43,7 @@ class List(SmartProxyAction):
 
     def run(self):
         proxies = unnest_one(self.api.list())
-        batch_add_columns(self.printer, 'name', 'url')
+        batch_add_columns(self.printer, {'name': _("Name")}, {'url': _("URL")})
 
         self.printer.set_header(_("Smart Proxies"))
         self.printer.print_items(proxies)
@@ -62,7 +62,8 @@ class Info(SmartProxyAction):
     def run(self):
         proxy = self.api.show(self.get_option('name'))
         proxy = unnest_one(proxy)
-        batch_add_columns(self.printer, 'name', 'url')
+        batch_add_columns(self.printer, {'name': _("Name")}, {'url': _("URL")})
+        self.printer.add_column('features', _("Features"), multiline=True)
 
         self.printer.set_header(_("Smart Proxy"))
         self.printer.print_item(proxy)

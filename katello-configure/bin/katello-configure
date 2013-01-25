@@ -20,6 +20,8 @@ require 'rubygems'
 require 'ruby-progressbar'
 require 'socket'
 require 'tempfile'
+require 'puppet'
+require 'puppet/util/selinux'
 require "#{PREFIX}/puppet/lib/util/functions.rb"
 
 $stdout.sync = true
@@ -50,11 +52,16 @@ end
 # After having read the default option list, we parse the
 # command line options.
 options = {}
+
+# answer file is always loaded by default
+FileUtils.touch result_config_path
+options['answer_file'] = result_config_path
+
 option_parser = OptionParser.new
-answer_file = nil
 show_resulting_answer_file = false
 nobars = false
 debug_stdout = false
+katello_configuration_files_only = false
 begin
 	option_parser.banner = "Usage: #{$0} [options]"
   option_parser.summary_width = 8
@@ -68,6 +75,10 @@ begin
 
 	option_parser.on_tail.on('-b', '--no-bars', 'Do not show progress bars and output puppet log instead') do
 		nobars = true
+	end
+	option_parser.on_tail.on('--katello-configuration-files-only',
+                           'Configure only Katello config files. Do NOT use! (used internally by katello-upgrade)') do
+    katello_configuration_files_only = true
 	end
 	option_parser.on_tail.on('-d', '--debug', 'Print more debugging information to on the stdout (use with -b)') do
     debug_stdout = true
@@ -209,6 +220,7 @@ FileUtils.ln_sf('katello-configure-' + now, log_directory_link)
 FileUtils.chown('katello', 'katello', log_directory)
 FileUtils.chown('katello', 'katello', log_directory_link)
 FileUtils.cp result_config_path, log_directory
+(Object.new.extend Puppet::Util::SELinux).set_selinux_context(log_directory_link, 'system_u', :seluser)
 
 ENV['KATELLO_ANSWER_FILE'] = result_config_path
 ENV['KATELLO_TEMP_ANSWER_FILE'] = temp_config_path
@@ -230,66 +242,15 @@ commands_by_logfiles = { # numbers are expected lines in those logs, alas curren
 }
 
 puppet_logfile_filename = log_directory + '/main.log'
-puppet_logfile_aprox_size = 1266
-puppet_logfile = IO.open(IO::sysopen(puppet_logfile_filename, Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT))
-puts "The top-level log file is [#{puppet_logfile_filename}]"
-seen_err = false
-ENV['LC_ALL'] = 'C'
-begin
-	IO.popen("#{puppet_cmd} 2>&1", 'w+') do |f|
-		f.puts "include katello"
-		f.close_write
-		processing_logfile = nil
-		t = nil
-    progress_bar = nobars ? nil : ProgressBar.create(:title => default_progressbar_title, :total => puppet_logfile_aprox_size, :smoothing => 0.6)
-		while line = f.gets do
-      time = Time.now.strftime("%y%m%d-%H:%M:%S ")
-      puppet_logfile.syswrite(time + line.gsub(/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/, ''))
-      puts "Got " + line if ENV['KATELLO_CONFIGURE_DEBUG']
-      if nobars
-        if line =~ /debug:/
-          puts line if debug_stdout
-        else
-          puts line
-        end
-      else
-        progress_bar.increment
-        if processing_logfile != nil
-          message = nil
-          if line =~ /notice:.*executed successfully/
-            processing_logfile = nil
-          elsif line =~ /err:/
-            puts "\n  Failed, please check [#{processing_logfile}]\n  Report errors using # katello-debug tool."
-            processing_logfile = nil
-            seen_err = true
-          end
-        elsif line =~ /err:/
-          print line
-          seen_err = true
-        end
-        if line =~ /debug: Executing \'(.+)/
-          line_rest = $1
-          commands_by_logfiles.keys.each do |logfile|
-            if line_rest.index(logfile) != nil
-              processing_logfile = logfile
-              progress_bar.title = commands_by_logfiles[logfile][0]
-            end
-          end
-        end
-      end
-		end
-    progress_bar.title = default_progressbar_title
-    progress_bar.finish
-    puts "\n"
-	end
-rescue => e
-	$stderr.puts 'Error: ' + e.message
-	seen_err = true
-end
-puppet_logfile.close
+puppet_logfile_aprox_size = 1296
 
-if seen_err
-	exit_with :error_executing_puppet
-end
+main_puppet puppet_cmd,
+            nobars,
+            default_progressbar_title,
+            puppet_logfile_filename,
+            puppet_logfile_aprox_size,
+            debug_stdout,
+            commands_by_logfiles,
+            katello_configuration_files_only ? 'include katello::config::files' : 'include katello'
 
 exit

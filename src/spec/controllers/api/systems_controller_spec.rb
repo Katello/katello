@@ -289,7 +289,6 @@ describe Api::SystemsController do
       it "should show all systems in the organization that are subscribed to a pool" do
         get :index, :organization_id => @organization.label, :pool_id => pool_id
         returned_uuids = JSON.parse(response.body).map{|sys| sys["uuid"]}
-
         returned_uuids.should include(@system_1.uuid, @system_3.uuid)
       end
 
@@ -376,12 +375,33 @@ describe Api::SystemsController do
     it_should_behave_like "protected action"
 
     it "should change the name" do
+<<<<<<< HEAD
       Runcible::Extensions::Consumer.should_receive(:update).once.with(uuid, {:display_name => "foo_name"}).and_return(true) if AppConfig.katello?
+=======
+      Resources::Pulp::Consumer.should_receive(:update).once.with(@organization.label, uuid, @sys.description).and_return(true) if Katello.config.katello?
+>>>>>>> a47bcf7c3da82bcd916a89387ad45d5ac7b259b4
       put :update, :id => uuid, :name => "foo_name"
       response.body.should == @sys.to_json
       response.should be_success
     end
 
+<<<<<<< HEAD
+=======
+    it "should change the description" do
+      Resources::Pulp::Consumer.should_receive(:update).once.with(@organization.label, uuid, "redkin is awesome.").and_return(true) if Katello.config.katello?
+      put :update, :id => uuid, :description => "redkin is awesome."
+      response.body.should == @sys.to_json
+      response.should be_success
+    end
+
+    it "should change the location" do
+      Resources::Pulp::Consumer.should_receive(:update).once.with(@organization.label, uuid, @sys.description).and_return(true) if Katello.config.katello?
+      put :update, :id => uuid, :location => "never-neverland"
+      response.body.should == @sys.to_json
+      response.should be_success
+    end
+
+>>>>>>> a47bcf7c3da82bcd916a89387ad45d5ac7b259b4
     it "should update installed products" do
       @sys.facts = {}
       @sys.stub(:guest => 'false', :guests => [])

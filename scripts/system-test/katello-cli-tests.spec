@@ -51,9 +51,14 @@ cp -Rp cli_tests/ cli-system-test helpers *zip RPM-GPG-KEY* $RPM_BUILD_ROOT%{hom
 
 
 %changelog
+<<<<<<< HEAD
 * Wed Jan 23 2013 Justin Sherrill <jsherril@redhat.com> 1.3.2.pulpv2-1
 - Removing filter entries in the cli-system tests (paji@redhat.com)
 - cli system test - just delete the provider (jsherril@redhat.com)
+
+* Tue Jan 08 2013 Lukas Zapletal <lzap+git@redhat.com> 1.3.2-1
+- 879151, 879161, 879169, 879174, 879195, 880031, 880048, 880054, 880066,
+  880073, 880089, 880131, 880566 (komidore64@gmail.com)
 
 * Tue Dec 18 2012 Miroslav Suchý <msuchy@redhat.com> 1.3.1-1
 - system tests - tests for smart proxies (tstrachota@redhat.com)

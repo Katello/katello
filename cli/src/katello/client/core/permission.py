@@ -84,7 +84,8 @@ class Create(PermissionAction):
         try:
             return [tag_map[t] for t in tags]
         except KeyError, e:
-            system_exit(os.EX_DATAERR, _("Could not find tag [ %s ] in scope of [ %s ]") % (e[0], scope))
+            system_exit(os.EX_DATAERR, _("Could not find tag [ %(e)s ] in scope of [ %(scope)s ]") \
+                % {'e':e[0], 'scope':scope})
 
 
     def run(self):
@@ -103,7 +104,8 @@ class Create(PermissionAction):
 
         permission = self.api.create(role['id'], name, desc, scope, verbs, tag_ids, org_name, all_tags)
         test_record(permission,
-            _("Successfully created permission [ %s ] for user role [ %s ]") % (name, role['name']),
+            _("Successfully created permission [ %(name)s ] for user role [ %(role)s ]") \
+            % {'name':name, 'role':role['name']},
             _("Could not create permission [ %s ]") % name
         )
 
@@ -127,7 +129,8 @@ class Delete(PermissionAction):
         perm = get_permission(role_name, name)
 
         self.api.delete(role['id'], perm['id'])
-        print _("Successfully deleted permission [ %s ] for role [ %s ]") % (name, role_name)
+        print _("Successfully deleted permission [ %(name)s ] for role [ %(role_name)s ]") \
+            % {'name':name, 'role_name':role_name}
         return os.EX_OK
 
 
@@ -156,11 +159,11 @@ class List(PermissionAction):
 
         permissions = self.api.permissions(role['id'])
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('scope', item_formatter=lambda perm: perm['resource_type']['name'])
-        self.printer.add_column('verbs', multiline=True, formatter=self.format_verbs)
-        self.printer.add_column('tags', multiline=True, formatter=self.format_tags)
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('scope', _("Scope"), item_formatter=lambda perm: perm['resource_type']['name'])
+        self.printer.add_column('verbs', _("Verbs"), multiline=True, formatter=self.format_verbs)
+        self.printer.add_column('tags', _("Tags"), multiline=True, formatter=self.format_tags)
 
         self.printer.set_header(_("Permission List"))
         self.printer.print_items(permissions)
@@ -183,10 +186,11 @@ class ListAvailableVerbs(PermissionAction):
 
         self.set_output_mode()
 
-        self.printer.add_column("scope")
-        self.printer.add_column("available_verbs", multiline=True)
+        self.printer.add_column("scope", _("Scope"))
+        self.printer.add_column("available_verbs", _("Available Verbs"), multiline=True)
         if not listGlobal:
-            self.printer.add_column("available_tags", multiline=True, show_with=printer.VerboseStrategy)
+            self.printer.add_column("available_tags", _("Available Tags"), \
+                multiline=True, show_with=printer.VerboseStrategy)
 
         permissions = self.getAvailablePermissions(orgName, scope)
         display_data = self.formatDisplayData(permissions, listGlobal)

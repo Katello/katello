@@ -13,11 +13,12 @@
 
 
 module Authorization::Provider
-  READ_PERM_VERBS = [:read, :create, :update, :delete] if AppConfig.katello?
-  READ_PERM_VERBS = [:read, :update] if !AppConfig.katello?
 
-  EDIT_PERM_VERBS = [:create, :update] if AppConfig.katello?
-  EDIT_PERM_VERBS = [:update] if !AppConfig.katello?
+  READ_PERM_VERBS = [:read, :create, :update, :delete] if Katello.config.katello?
+  EDIT_PERM_VERBS = [:create, :update] if Katello.config.katello?
+
+  READ_PERM_VERBS = [:read, :update] if !Katello.config.katello?
+  EDIT_PERM_VERBS = [:update] if !Katello.config.katello?
 
   def self.included(base)
     base.class_eval do
@@ -55,8 +56,8 @@ module Authorization::Provider
         select('id,name').where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
       end
 
-      def self.list_verbs(global = false)
-        if AppConfig.katello?
+      def self.list_verbs  global = false
+        if Katello.config.katello?
           {
             :create => _("Administer Providers"),
             :read => _("Read Providers"),
@@ -71,10 +72,10 @@ module Authorization::Provider
         end
       end
 
-      def self.items(org, verbs)
+      def self.items org, verbs
         raise "scope requires an organization" if org.nil?
         resource = :providers
-        if (AppConfig.katello? && verbs.include?(:read) && org.syncable?) ||  User.allowed_all_tags?(verbs, resource, org)
+        if (Katello.config.katello? && verbs.include?(:read) && org.syncable?) ||  User.allowed_all_tags?(verbs, resource, org)
            where(:organization_id => org)
         else
           where("providers.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
@@ -84,11 +85,21 @@ module Authorization::Provider
     end
   end
 
-
+  scope :readable, lambda {|org| items(org, READ_PERM_VERBS)}
+  scope :editable, lambda {|org| items(org, EDIT_PERM_VERBS)}
 
   def readable?
     return organization.readable? if redhat_provider?
-    User.allowed_to?(READ_PERM_VERBS, :providers, self.id, self.organization) || (AppConfig.katello? && self.organization.syncable?)
+    User.allowed_to?(READ_PERM_VERBS, :providers, self.id, self.organization) || (Katello.config.katello? && self.organization.syncable?)
+  end
+
+
+  def self.any_readable? org
+    (Katello.config.katello? && org.syncable?) || User.allowed_to?(READ_PERM_VERBS, :providers, nil, org)
+  end
+
+  def self.creatable? org
+    User.allowed_to?([:create], :providers, nil, org)
   end
 
   def editable?

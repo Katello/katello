@@ -16,7 +16,7 @@
 
 from katello.client.api.config_template import ConfigTemplateAPI
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import test_foreman_record, unnest_one
+from katello.client.core.utils import test_foreman_record, unnest_one, format_sub_resource
 from katello.client.utils.printer import batch_add_columns
 
 
@@ -48,7 +48,7 @@ class List(ConfigTemplateAction):
         if configtemplates:
             configtemplates = unnest_one(configtemplates)
 
-        batch_add_columns(self.printer, 'id', 'name', 'snippet')
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, {'snippet': _("Snippet")})
 
         self.printer.set_header(_("Config Template"))
         self.printer.print_items(configtemplates)
@@ -67,11 +67,11 @@ class Info(ConfigTemplateAction):
         configtemplate = self.api.show(self.get_option('id'))
         configtemplate = unnest_one(configtemplate)
 
-        batch_add_columns(self.printer, 'id', 'name', 'snippet')
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, {'snippet': _("Snippet")})
 
         if not configtemplate.get('snippet'):
-            configtemplate['Template Kind'] = "%s (Id: %d)" % (configtemplate['kind'], configtemplate['kind_id'])
-            self.printer.add_column('Template Kind')
+            self.printer.add_column('kind', _("Template Kind"),
+                                item_formatter=lambda item: format_sub_resource(item, 'kind', 'kind_id'))
 
         if configtemplate.get('template_combinations'):
             content = []
@@ -80,7 +80,7 @@ class Info(ConfigTemplateAction):
                 content.append("%s / %s (Id: %d)" % (combo['hostgroup_id'], combo['environment_id'], combo['id']))
                 # key = "Hostgroup / Environment id %d" % combo['id']
             configtemplate['Hostgroup/Environment combinations'] = ', '.join(content)
-            self.printer.add_column('Hostgroup/Environment combinations')
+            self.printer.add_column('Hostgroup/Environment combinations', _("Hostgroup/Environment Combinations"))
 
         if configtemplate.get('operatingsystems'):
             content = []
@@ -88,9 +88,9 @@ class Info(ConfigTemplateAction):
                 system = unnest_one(system)
                 content.append("%s (Id: %d)" % (system['name'], system['id']))
             configtemplate['Operating Systems'] = ', '.join(content)
-            self.printer.add_column('Operating Systems')
+            self.printer.add_column('Operating Systems', _("Operating Systems"))
 
-        self.printer.add_column('template')
+        self.printer.add_column('template', _("Template"))
 
         self.printer.set_header(_("Config Template"))
         self.printer.print_item(configtemplate)
