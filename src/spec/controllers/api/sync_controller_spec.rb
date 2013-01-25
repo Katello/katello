@@ -155,7 +155,7 @@ describe Api::SyncController, :katello => true do
     describe "start a sync" do
       before(:each) do
         #@organization = Organization.create!(:name=>"organization", :label=> "123")
-        
+
         Resources::Pulp::Repository.stub(:sync).with("1").and_return(async_task_1)
         Resources::Pulp::Repository.stub(:sync).with("2").and_return(async_task_2)
         #@syncable = mock()
@@ -254,9 +254,7 @@ describe Api::SyncController, :katello => true do
       disable_product_orchestration
 
       @organization = new_test_org
-      Organization.stub!(:without_deleting).and_return(Organization)
-      Organization.stub!(:where).and_return(Organization)
-      Organization.stub!(:first).and_return(@organization)
+
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
       Provider.stub!(:find).and_return(@provider)
       @product = Product.new({:name=>"prod", :label=> "prod"})
