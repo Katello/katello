@@ -34,6 +34,7 @@ end
 describe Api::TemplatesContentController do
   include LoginHelperMethods
   include AuthorizationHelperMethods
+  include LocaleHelperMethods
 
   let(:template_id) { 1 }
   let(:non_library_template_id) { 2 }
@@ -68,6 +69,7 @@ describe Api::TemplatesContentController do
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
+    set_default_locale
   end
 
   describe "rules" do

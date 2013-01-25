@@ -26,8 +26,8 @@ class TaskStatus < ActiveRecord::Base
     CANCELED = :canceled
     TIMED_OUT = :timed_out
   end
-  include IndexedModel
-  include Authorization
+  include Ext::IndexedModel
+  include Ext::Authorization
 
   belongs_to :organization
   belongs_to :user

@@ -41,14 +41,15 @@ class Ping
           :pulp_auth => {},
           :candlepin_auth => {},
           :katello_jobs => {},
-          :foreman_auth => {},
+          :foreman_auth => {}
         }}
       else
         result = { :result => OK_RETURN_CODE, :status => {
           :candlepin => {},
           :elasticsearch => {},
           :candlepin_auth => {},
-          :katello_jobs => {}
+          :katello_jobs => {},
+          :thumbslug => {}
         }}
       end
 
@@ -72,6 +73,19 @@ class Ping
         RestClient.get "#{url}/_status"
       end
 
+      # thumbslug - ping without authentication
+      unless Katello.config.katello?
+        url = Katello.config.thumbslug_url
+        exception_watch(result[:status][:thumbslug]) do
+          begin
+            RestClient.get "#{url}/ping"
+          rescue OpenSSL::SSL::SSLError
+            # We want to see this error, because it means that Thumbslug
+            # is running and refused our (non-existent) ssl cert.
+          end
+        end
+      end
+
       # pulp - ping with oauth
       if Katello.config.katello?
         exception_watch(result[:status][:pulp_auth]) do
@@ -85,13 +99,15 @@ class Ping
       end
 
       # foreman - ping with oauth
-      exception_watch(result[:status][:foreman_auth]) do
-        Resources::Foreman::Home.status({}, Resources::ForemanModel.header)
+      if Katello.config.katello?
+        exception_watch(result[:status][:foreman_auth]) do
+          Resources::Foreman::Home.status({}, Resources::ForemanModel.header)
+        end
       end
 
       # katello jobs - TODO we should not spawn processes
       exception_watch(result[:status][:katello_jobs]) do
-        raise _("katello-jobs service not running") if !system("/sbin/service katello-jobs status")
+        raise _("katello-jobs service not running") unless system("/sbin/service katello-jobs status")
       end
 
       # set overall status result code

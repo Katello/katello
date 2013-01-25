@@ -11,10 +11,11 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Foreman::SmartProxy < Resources::ForemanModel
+  include Resources::AbstractModel::IndexedModel
 
-  ProxyFeatures = %w[TFTP BMC DNS DHCP Puppetca Puppet]
+  PROXY_FEATURES = %w[TFTP BMC DNS DHCP Puppetca Puppet]
 
-  attributes :name, :url
+  attributes :name, :url, :features
 
   def json_default_options
     { :only => [:name, :url] }
@@ -23,14 +24,28 @@ class Foreman::SmartProxy < Resources::ForemanModel
   validates :name, :presence => true
   validates :url, :presence => true
 
+  index_options :display_attrs => [:name, :url]
+
+  mapping do
+    indexes :id, :type=>'string', :index => :not_analyzed
+    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
+    indexes :url, :type => 'string', :analyzer => :kt_name_analyzer
+  end
+
   class << self
 
-    ProxyFeatures.each do |feature|
+    PROXY_FEATURES.each do |feature|
       send :define_method, (feature.downcase+'_proxies').to_sym do
         return Foreman::SmartProxy.all(:type=>feature)
       end
     end
 
+  end
+
+  private
+
+  def features=(features)
+    @features = features.collect { |f| f['feature']['name']}
   end
 
 end

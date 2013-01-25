@@ -15,6 +15,7 @@ require 'spec_helper.rb'
 describe Api::DistributionsController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
+  include LocaleHelperMethods
 
   before(:each) do
     disable_org_orchestration
@@ -38,7 +39,8 @@ describe Api::DistributionsController, :katello => true do
                                :label=> "repo_label",
                                :relative_path => "#{@organization.name}/Library/prod/repo",
                                :pulp_id=> "1",
-                               :enabled => true)
+                               :enabled => true,
+                               :feed => 'https://localhost')
     @repo.stub(:has_distribution?).and_return(true)
     Repository.stub(:find).and_return(@repo)
     @repo.stub(:distributions).and_return([])
@@ -46,6 +48,7 @@ describe Api::DistributionsController, :katello => true do
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
+    set_default_locale
   end
   let(:authorized_user) do
     user_with_permissions do |u|

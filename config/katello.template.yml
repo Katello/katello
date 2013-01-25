@@ -41,6 +41,8 @@ common:
   elastic_index: katello
   elastic_url: http://localhost:9200
 
+  thumbslug_url: https://localhost:8088
+
   password_reset_expiration: 120
 
   # email_reply_address is used to specify the "From:" address included
@@ -184,6 +186,7 @@ development:
     random_password: false
   database:
     database: katello
+    min_messages: WARNING
 
 #
 # Test environment configuration
@@ -193,6 +196,7 @@ development:
 test:
   database:
     database: katello-test<%= ENV['TEST_ENV_NUMBER'] %>
+    min_messages: WARNING
 
 
 # Blank configuration for build environment

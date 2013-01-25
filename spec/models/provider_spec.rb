@@ -186,7 +186,8 @@ describe Provider do
                              :label => repo_label,
                              :pulp_id => product.repo_id(repo_name),
                              :major => version[:major],
-                             :minor => version[:minor])
+                             :minor => version[:minor],
+                             :feed => 'https://localhost')
         end
       end
       product
@@ -388,6 +389,11 @@ describe Provider do
         @provider.should be_valid
       end
 
+      it "'https://something'" do
+        @provider.repository_url = "https://something"
+        @provider.should be_valid
+      end
+
     end
 
     context "should refuse" do
@@ -409,11 +415,6 @@ describe Provider do
 
       it "'https://.bogus'" do
         @provider.repository_url = "https://.bogus"
-        @provider.should_not be_valid
-      end
-
-      it "'https://something'" do
-        @provider.repository_url = "https://something"
         @provider.should_not be_valid
       end
 
