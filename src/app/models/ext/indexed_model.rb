@@ -12,7 +12,7 @@
 
 require "util/search"
 
-module IndexedModel
+module Ext::IndexedModel
 
   def self.included(base)
     base.class_eval do

@@ -14,12 +14,7 @@ require 'katello_config'
 # With a pull request, send also link to our (or Fedora) koji with RPMs.
 source 'http://rubygems.org'
 
-version = `uname -a` rescue ""
-if version =~ /fc18/
-  gem 'rails', '~> 3.2.8'
-else
-  gem 'rails', '3.0.10'
-end
+gem 'rails', '3.0.10'
 gem 'json'
 gem 'rest-client', :require => 'rest_client'
 gem 'jammit', '>= 0.5.4'
@@ -41,6 +36,13 @@ end
 gem 'delayed_job', '~> 2.1.4'
 gem 'daemons', '>= 1.1.4'
 gem 'uuidtools'
+
+# Stuff for view/display/frontend
+gem 'haml', '>= 3.1.2'
+gem 'haml-rails', "= 0.3.4"
+gem 'compass', '>= 0.11.5', '< 0.12'
+gem 'compass-960-plugin', '>= 0.10.4', :require => 'ninesixty'
+gem 'simple-navigation', '>= 3.3.4'
 
 # Stuff for i18n
 gem 'gettext_i18n_rails'

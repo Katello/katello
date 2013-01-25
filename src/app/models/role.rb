@@ -14,7 +14,6 @@ class Role < ActiveRecord::Base
   include Authorization::Role
   include Glue::ElasticSearch::Role if AppConfig.use_elasticsearch
 
-
   acts_as_reportable
 
   attr_accessor :self_role #used to indicate during user creation that a role is intended to be a self role

@@ -171,7 +171,7 @@ class ApplicationController < ActionController::Base
     if current_user && current_user.default_locale
       I18n.locale = current_user.default_locale
     else
-      I18n.locale = ApplicationController.extract_locale_from_accept_language_header
+      I18n.locale = ApplicationController.extract_locale_from_accept_language_header parse_locale
     end
 
     logger.debug "Setting locale: #{I18n.locale}"
@@ -221,8 +221,8 @@ class ApplicationController < ActionController::Base
   # Look for match to list of locales specified in request. If not found, try matching just
   # first two letters. Finally, default to english if no matches at all.
   # eg. [en_US, en] would match en
-  def self.extract_locale_from_accept_language_header
-    locales = parse_locale
+  # Expects list of locales to search as an array (use parse_locale for that)
+  def self.extract_locale_from_accept_language_header locales
 
     # Look for full match
     locales.each {|locale|
@@ -306,8 +306,8 @@ class ApplicationController < ActionController::Base
   end
 
   # adapted from http_accept_lang gem, return list of browser locales
-  def self.parse_locale
-    locale_lang = env['HTTP_ACCEPT_LANGUAGE'].split(/\s*,\s*/).collect do |l|
+  def parse_locale
+    locale_lang = request.env['HTTP_ACCEPT_LANGUAGE'].split(/\s*,\s*/).collect do |l|
       l += ';q=1.0' unless l =~ /;q=\d+\.\d+$/
       l.split(';q=')
     end.sort do |x,y|

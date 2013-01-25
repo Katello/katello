@@ -10,18 +10,18 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Support
-  def Support.deep_copy object
+module Util::Support
+  def self.deep_copy object
     Marshal::load(Marshal.dump(object))
   end
 
-  def Support.time
+  def self.time
     a = Time.now
     yield
     Time.now - a
   end
 
-  def Support.scrub(params, &block_to_match)
+  def self.scrub(params, &block_to_match)
     params.keys.each do |key|
       if Hash === params[key]
         scrub(params[key], &block_to_match)
@@ -37,7 +37,7 @@ module Support
   # Basically this is a empty array with a total
   # method. We could ve user Tire::Result:Collection
   # But that class is way more involved
-  def Support.array_with_total a=[]
+  def self.array_with_total a=[]
     def a.total
       size
     end

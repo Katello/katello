@@ -21,6 +21,7 @@ class KTEnvironment < ActiveRecord::Base
 
   set_table_name "environments"
   include Katello::LabelFromName
+  include Ext::PermissionTagCleanup
   acts_as_reportable
 
   belongs_to :organization, :inverse_of => :environments

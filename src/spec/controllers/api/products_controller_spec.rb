@@ -17,6 +17,7 @@ describe Api::ProductsController, :katello => true do
   include AuthorizationHelperMethods
   include ProductHelperMethods
   include RepositoryHelperMethods
+  include LocaleHelperMethods
 
   let(:user_with_read_permissions) { user_with_permissions { |u| u.can([:read], :providers, @provider.id, @organization) } }
   let(:user_without_read_permissions) { user_without_permissions }
@@ -28,11 +29,10 @@ describe Api::ProductsController, :katello => true do
     disable_org_orchestration
     disable_product_orchestration
     disable_user_orchestration
+    set_default_locale
 
     @organization = new_test_org
-    Organization.stub!(:without_deleting).and_return(Organization)
-    Organization.stub!(:where).and_return(Organization)
-    Organization.stub!(:first).and_return(@organization)
+
     @environment = KTEnvironment.create!(:name=>"foo123", :label=> "foo123", :organization => @organization, :prior =>@organization.library)
     @provider = Provider.create!(:name => "provider", :provider_type => Provider::CUSTOM,
                                  :organization => @organization, :repository_url => "https://something.url/stuff")
@@ -152,7 +152,7 @@ describe Api::ProductsController, :katello => true do
     end
 
     it "should find organization" do
-      Organization.should_receive(:where).once.with("name = :id or label = :id", hash_including(:id => @organization.label)).and_return(@organization)
+      @controller.should_receive(:find_optional_organization)
       get 'index', :organization_id => @organization.label
     end
 
@@ -180,7 +180,7 @@ describe Api::ProductsController, :katello => true do
     end
 
     it "should find organization" do
-      Organization.should_receive(:where).once.with("name = :id or label = :id", hash_including(:id => @organization.label)).and_return(@organization)
+      @controller.should_receive(:find_optional_organization)
       get 'index', :organization_id => @organization.label
     end
 
