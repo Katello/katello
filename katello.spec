@@ -630,6 +630,7 @@ usermod -a -G katello-shared tomcat
 %{homedir}/bundler.d/foreman.rb
 %{homedir}/lib/resources/foreman.rb
 %{homedir}/lib/resources/foreman_model.rb
+%{homedir}/app/models/ext
 %{homedir}/app/models/foreman
 %{homedir}/app/models/glue/foreman
 %{homedir}/app/controllers/api/foreman
