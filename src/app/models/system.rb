@@ -47,12 +47,7 @@ class System < ActiveRecord::Base
   validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_length_of :location, :maximum => 255
-  validates :sockets, :numericality => { :only_integer => true, :greater_than => 0 },
-            :allow_nil => true, :if => ("validation_context == :create || validation_context == :update")
-
   validates_with Validators::ContentViewEnvironmentValidator
-  validates :memory, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0 },
-            :allow_nil => true, :if => ("validation_context == :create || validation_context == :update")
 
   before_create  :fill_defaults
 

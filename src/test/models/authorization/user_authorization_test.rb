@@ -86,7 +86,7 @@ class UserOrganizationAccess < AuthorizationTestBase
   def setup
     super
     @user = @no_perms_user
-    @org = @acme_organization
+    @org = @acme_corporation
     @org2 = FactoryGirl.create(:organization, :label=>"foolabel", :name=>"fooname")
   end
 
