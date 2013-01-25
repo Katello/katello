@@ -79,10 +79,27 @@ class ContentViewVersion < ActiveRecord::Base
   end
 
   def refresh_repos(library_version)
-    repos = self.content_view.content_view_definition.nil? ? [] : self.content_view.content_view_definition.repos
+    # generate a hash of the repos associated with the definition, where key = repo id & value = repo
+    definition_repos_hash = self.content_view.content_view_definition.nil? ? {} :
+        Hash[ self.content_view.content_view_definition.repos.collect{|repo| [repo.id, repo]}]
 
     async_tasks = []
-    repos.each do |repo|
+    # prepare the repos currently in the library for the refresh
+    library_version.repositories.in_environment(self.content_view.organization.library).each do |repo|
+      if definition_repos_hash.include?(repo.library_instance_id)
+        # this repo is in both the definition and in the previous library version,
+        # so clear it and later we'll regenerate the content... this is more
+        # efficient than deleting the repo and recreating it...
+        async_tasks << repo.clear_contents
+      else
+        # this repo no longer exists in the definition, so destroy it
+        repo.destroy
+      end
+    end
+    PulpTaskStatus::wait_for_tasks async_tasks unless async_tasks.blank?
+
+    async_tasks = []
+    definition_repos_hash.each do |repo_id, repo|
       # the repos from the definition are based upon initial synced repos, we need to
       # determine if each of those repos has been cloned in the view...
       library_clone = library_version.get_repo_clone(self.content_view.organization.library, repo).first
@@ -95,7 +112,7 @@ class ContentViewVersion < ActiveRecord::Base
         library_clone = Repository.find(library_clone) # reload readonly obj
         library_clone.content_view_version = self
         library_clone.save!
-        async_tasks << library_clone.sync
+        async_tasks << repo.clone_contents(library_clone)
       end
     end
     library_version.destroy if library_version.environments.length == 0
