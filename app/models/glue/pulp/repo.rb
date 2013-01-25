@@ -329,6 +329,10 @@ module Glue::Pulp::Repo
       events       
     end
 
+    def clear_contents
+      Runcible::Extensions::Repository.unassociate_units(self.pulp_id)
+    end
+
     def sync_start
       status = self.sync_status
       retval = nil

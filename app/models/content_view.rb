@@ -143,8 +143,27 @@ class ContentView < ActiveRecord::Base
     promote_version.environments << to_env
     promote_version.save!
 
+    # prepare the to_env for the promotion
     tasks = []
-    self.repos(from_env).each do |repo|
+    if replacing_version
+      replacing_version.repos(to_env).each do |repo|
+        clone = self.get_repo_clone(from_env, repo).first
+        if clone.nil?
+          # this repo doesn't exist in the from environment, so destroy it
+          repo.destroy
+        else
+          # this repo does exist in the next environment, so clear it and later
+          # we'll regenerate the content... this is more efficient than deleting
+          # the repo and recreating it...
+          tasks << repo.clear_contents
+        end
+      end
+    end
+    PulpTaskStatus::wait_for_tasks tasks unless tasks.blank?
+
+    # promote the repos from from_env to to_env
+    tasks = []
+    promote_version.repos(from_env).each do |repo|
       clone = self.get_repo_clone(to_env, repo).first
       if clone.nil?
         # this repo doesn't currently exist in the next environment, so create it
@@ -155,7 +174,7 @@ class ContentView < ActiveRecord::Base
         clone = Repository.find(clone) # reload readonly obj
         clone.content_view_version = promote_version
         clone.save!
-        tasks << clone.sync
+        tasks << repo.clone_contents(clone)
       end
     end
 
