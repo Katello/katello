@@ -133,7 +133,7 @@ describe EnvironmentsController do
           @new_env = mock(KTEnvironment, EnvControllerTest::EMPTY_ENVIRONMENT)
           KTEnvironment.stub!(:new).and_return(@new_env)
           @new_env.stub!(:save!).and_return(true)
-          Support.stub!(:deep_copy) {|p| p}
+          Util::Support.stub!(:deep_copy) {|p| p}
         end
 
 
