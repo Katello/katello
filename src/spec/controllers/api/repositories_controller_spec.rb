@@ -38,9 +38,7 @@ describe Api::RepositoriesController, :katello => true do
       set_default_locale
 
       @organization = new_test_org
-      Organization.stub!(:without_deleting).and_return(Organization)
-      Organization.stub!(:where).and_return(Organization)
-      Organization.stub!(:first).and_return(@organization)
+      @controller.stub!(:get_organization).and_return(@organization)
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
       Provider.stub!(:find).and_return(@provider)
       @product = Product.new({:name=>"prod", :label=> "prod"})
@@ -336,9 +334,7 @@ describe Api::RepositoriesController, :katello => true do
       it "should call Resources::Pulp::Proxy.post" do
         Resources::Pulp::Repository.should_receive(:start_discovery).with(url, type).once.and_return({})
         PulpSyncStatus.should_receive(:using_pulp_task).with({}).and_return(task_stub)
-        Organization.stub!(:without_deleting).and_return(Organization)
-        Organization.stub!(:where).and_return(Organization)
-        Organization.stub!(:first).and_return(@organization)
+        @controller.stub!(:get_organization).and_return(@organization)
 
         post 'discovery', :organization_id => "ACME", :url => url, :type => type
       end
