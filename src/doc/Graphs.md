@@ -28,6 +28,7 @@
 
 ## How to generate and update these graphs
 
+- enable `railroady` gem in `bundler.d/development.rb`
 - generate svg graphs
 
       !!!txt
