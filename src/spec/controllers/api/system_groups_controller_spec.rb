@@ -17,14 +17,13 @@ describe Api::SystemGroupsController, :katello => true do
   include AuthorizationHelperMethods
   include OrchestrationHelper
   include SystemHelperMethods
-  include LocaleHelperMethods
+
 
   let(:uuid) { '1234' }
 
   before(:each) do
     disable_org_orchestration
     disable_consumer_group_orchestration
-    set_default_locale
 
     @org = Organization.create!(:name=>'test_org', :label=> 'test_org')
     @environment = KTEnvironment.create!(:name=>'test_1', :label=> 'test_1', :prior => @org.library.id, :organization => @org)

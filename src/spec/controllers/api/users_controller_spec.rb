@@ -34,7 +34,6 @@ describe Api::UsersController do
     before (:each) do
       @user = User.new(:username => "test_user",:password => "123")
       User.stub(:find).with("123").and_return(@user)
-      set_default_locale
     end
 
     describe "show users" do
@@ -81,7 +80,6 @@ describe Api::UsersController do
   describe "create" do
     before do
       login_user_api
-      set_default_locale
       @request.env["HTTP_ACCEPT"] = "application/json"
     end
       let(:request_params) do
@@ -112,7 +110,6 @@ describe Api::UsersController do
   describe "update" do
     before do
       login_user_api
-      set_default_locale
       @request.env["HTTP_ACCEPT"] = "application/json"
     end
 

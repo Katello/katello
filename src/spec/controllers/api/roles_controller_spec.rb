@@ -34,7 +34,6 @@ describe Api::RolesController do
     Role.stub(:find).with(role_id).and_return(@role)
 
     login_user_api
-    set_default_locale
   end
 
   describe "list roles" do
