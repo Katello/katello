@@ -15,7 +15,6 @@ require 'spec_helper'
 describe Api::ActivationKeysController do
   include LoginHelperMethods
   include AuthorizationHelperMethods
-  include LocaleHelperMethods
 
   let(:user_with_read_permissions) { user_with_permissions { |u| u.can(:read_all, :activation_keys) } }
   let(:user_without_read_permissions) { user_without_permissions }
@@ -27,7 +26,6 @@ describe Api::ActivationKeysController do
     @request.env["HTTP_ACCEPT"] = "application/json"
     disable_org_orchestration
     disable_consumer_group_orchestration
-    set_default_locale
 
     @organization = Organization.create! do |o|
       o.id = 1234

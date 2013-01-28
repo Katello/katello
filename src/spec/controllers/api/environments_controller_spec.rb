@@ -15,7 +15,6 @@ require 'spec_helper'
 describe Api::EnvironmentsController do
   include LoginHelperMethods
   include AuthorizationHelperMethods
-  include LocaleHelperMethods
 
   before(:each) do
     @org         = Organization.new(:label=>"1")
@@ -25,7 +24,6 @@ describe Api::EnvironmentsController do
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
-    set_default_locale
   end
 
   let(:user_with_read_permissions) do
