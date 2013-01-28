@@ -163,7 +163,7 @@ grinder_file: /var/log/pulp/grinder.log
 # unbind_timeout: (timeout) messaging timeout for unbinds in seconds
 
 [messaging]
-url: tcp://localhost:5672
+url: ssl://localhost:5671
 cacert:     /usr/share/katello/candlepin-cert.crt
 clientcert: /etc/pki/pulp/qpid_client_striped.crt
 topic_exchange: 'amq.topic'
