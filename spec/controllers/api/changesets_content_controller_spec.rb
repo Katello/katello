@@ -27,7 +27,6 @@ require 'spec_helper.rb'
 describe Api::ChangesetsContentController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
-  include LocaleHelperMethods
 
   let(:changeset_id) { 1 }
   let(:product_cp_id) { 123456 }
@@ -58,7 +57,6 @@ describe Api::ChangesetsContentController, :katello => true do
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
-    set_default_locale
   end
 
   let(:authorized_user) do
