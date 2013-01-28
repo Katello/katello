@@ -8,7 +8,7 @@ group :development do
   gem 'yard', '>= 0.5.3'
 
   # generates routes in javascript
-  gem "js-routes", :require => 'js_routes'
+  gem "js-routes", '~> 0.6.2', :require => 'js_routes'
 
   # for generating i18n files - TODO do we need ruby_parser here?
   gem 'gettext', '>= 1.9.3', :require => false
