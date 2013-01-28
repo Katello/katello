@@ -404,5 +404,5 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         partition_table_cmd.add_command('info', partition_table.Info())
         partition_table_cmd.add_command('create', partition_table.Create())
         partition_table_cmd.add_command('update', partition_table.Update())
-        #partition_table_cmd.add_command('destroy', partition_table.Destroy())
+        partition_table_cmd.add_command('delete', partition_table.Delete())
         katello_cmd.add_command('partition_table', partition_table_cmd)

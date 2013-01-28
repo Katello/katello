@@ -147,6 +147,19 @@ class Update(PartitionTableModifyingAction):
         print _('Partition table [ %s ] updated.') % old_name
 
 
+class Delete(PartitionTableAction):
+
+    description = _('destroy partition table')
+
+    def setup_parser(self, parser):
+        parser.add_option('--name', dest='name', help=_("partition table name (required)"))
+
+    def check_options(self, validator):
+        validator.require('name')
+
+    def run(self):
+        self.api.destroy(self.get_option('name'))
+        print _('Partition table [ %s ] deleted') % self.get_option('name')
 
 
 # partition table command ------------------------------------------------------------
