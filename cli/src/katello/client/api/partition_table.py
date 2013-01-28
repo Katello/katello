@@ -75,7 +75,7 @@ class PartitionTableAPI(KatelloAPI):
         :param data['os_family']:
         """
         data = slice_dict(data, 'name', 'layout', 'os_family')
-        return self.server.PUT(self.__path(table_id), data)[1]
+        return self.server.PUT(self.__path(table_id), {"partition_table": data})[1]
 
 
     def destroy(self, table_id):
