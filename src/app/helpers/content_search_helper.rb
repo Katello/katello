@@ -17,7 +17,8 @@ module ContentSearchHelper
       [ _("Products"), "products"],
       [ _("Repositories"), "repos"],
       [ _("Packages"), "packages"],
-      [ _("Errata"), "errata"]
+      [ _("Errata"), "errata"],
+      [ _("Content Views"), "views"]
     ]
   end
 
