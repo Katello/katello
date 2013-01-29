@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.3.11.pulpv2
+Version:        1.3.12.pulpv2
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -760,6 +760,15 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Jan 28 2013 Justin Sherrill <jsherril@redhat.com> 1.3.12.pulpv2-1
+- fixing changelog (jsherril@redhat.com)
+- merge conflict (jsherril@redhat.com)
+- Merge pull request #1466 from daviddavis/apispecfix (daviddavis@redhat.com)
+- Automatic commit of package [katello] release [1.3.5-1].
+  (jsherril@redhat.com)
+- fixing compass version (jsherril@redhat.com)
+- Reverting locale changes to api specs (daviddavis@redhat.com)
+
 * Fri Jan 25 2013 Justin Sherrill <jsherril@redhat.com> 1.3.11.pulpv2-1
 - fixing pulp url in config template (jsherril@redhat.com)
 - fix whitespace (jsherril@redhat.com)
