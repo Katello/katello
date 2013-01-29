@@ -304,7 +304,11 @@ Src::Application.routes.draw do
   end
 
   resources :providers do
-    get 'auto_complete_search', :on => :collection
+    collection do
+      get :auto_complete_search
+      put :refresh_products
+    end
+
     resources :products do
       get :default_label, :on => :collection
 

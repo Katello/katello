@@ -25,7 +25,6 @@ describe Api::PackagesController, :katello => true do
     disable_product_orchestration
     disable_user_orchestration
     disable_repo_orchestration
-    set_default_locale
 
     @organization = new_test_org
     @env = @organization.library

@@ -16,8 +16,8 @@ module ProvidersHelper
 
   def product_map
     @product_map ||= normalize(collect_repos(
-                                    @provider.products.with_repos_only(current_organization.library),
-                                    current_organization.library, true))
+                                   @provider.products.engineering,
+                                   current_organization.library, true))
     @product_map
   end
 
@@ -36,32 +36,23 @@ module ProvidersHelper
     @provider_editable
   end
 
-  def normalize(children, parent_set =[], data = nil, item_type = nil)
-    data ||= []
-    children.sort{|a,b| a[:name] <=> b[:name]}.each do |child|
+  # make the structure plain setting it's attributes according to the tree (namely id and class)
+  def normalize(children, parent_set = [], data = [], item_type = nil)
+    children.sort { |a, b| a[:name] <=> b[:name] }.each do |child|
       new_set = parent_set + [child[:id]]
-      item =  {:id => set_id(new_set),
+
+      item = { :id    => set_id(new_set),
                :class => parent_set_class(parent_set),
-               :name => child[:name],
-                :item => child
-               }
-      if item_type
-        item[:type] = item_type
-      elsif child[:type]
-        item[:type] = child[:type]
-      end
-      if item[:type] == "product"
-        item[:id] = product_id(child[:id])
-      end
+               :name  => child[:name],
+               :item  => child,
+               :type  => item_type || child[:type]
+      }
+      item[:id] = product_id(child[:id]) if item[:type] == "product"
 
       data << item
 
-      if child[:children] && !child[:children].empty?
-        normalize(child[:children], new_set, data)
-      end
-      if child[:repos] && !child[:repos].empty?
-        normalize(child[:repos], new_set, data, "repository")
-      end
+      normalize(child[:children], new_set, data) if child[:children].present?
+      normalize(child[:repos], new_set, data, "repository") if child[:repos].present?
     end
     data
   end
