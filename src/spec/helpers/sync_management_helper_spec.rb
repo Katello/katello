@@ -35,6 +35,7 @@ describe SyncManagementHelper do
   before do
     disable_product_orchestration
     disable_org_orchestration
+    Runcible::Extensions::Repository.stub(:search_by_repository_ids).and_return([])
     ProductTestData::PRODUCT_WITH_ATTRS.merge!({ :provider => provider, :environments => [organization.library] })
   end
 
