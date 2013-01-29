@@ -31,7 +31,8 @@ class ContentSearchController < ApplicationController
         :repo_packages => contents_test,
         :repo_errata => contents_test,
         :repo_compare_errata =>contents_test,
-        :repo_compare_packages =>contents_test
+        :repo_compare_packages =>contents_test,
+        :views => contents_test
     }
   end
 
@@ -57,7 +58,16 @@ class ContentSearchController < ApplicationController
     elsif params[:mode] == 'unique'
       products = products.select{|p|  !(envs - p.environments ).empty?}
     end
-    render :json=>{:rows=>product_rows(products), :name=>_('Products')}
+    render :json=>{:rows=>container_rows(products), :name=>_('Products')}
+  end
+
+  def views
+    if !(ids = params[:views][:autocomplete].map{|v| v["id"]} rescue []).empty?
+      views = ContentView.readable(current_organization).non_default.where(:id => ids)
+    else
+      views = ContentView.readable(current_organization).non_default
+    end
+    render :json=>{:rows=> container_rows(views), :name=>_('Content View')}
   end
 
   def repos
@@ -78,7 +88,7 @@ class ContentSearchController < ApplicationController
     end
 
     products = repos.collect(&:product).uniq
-    render :json=>{:rows=>(product_rows(products) + repo_rows(repos)), :name=>_('Repositories')}
+    render :json=>{:rows=>(container_rows(products) + repo_rows(repos)), :name=>_('Repositories')}
   end
 
   def packages
@@ -254,19 +264,20 @@ class ContentSearchController < ApplicationController
     render_to_string :partial=>'repo_hover', :locals=>{:repo=>repo}
   end
 
-  def product_rows products
+  def container_rows(containers)
     env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
-    products.collect do |p|
+    containers.collect do |c|
       cols = {}
-      p.environments.collect do |env|
-        cols[env.id] = {:hover => product_hover_html(p, env)} if env_ids.include?(env.id)
+      c.environments.collect do |env|
+        cols[env.id] = {:hover => view_hover_html(c, env)} if env_ids.include?(env.id)
       end
-       {:id=>"product_#{p.id}", :name=>p.name, :cols=>cols, :data_type => "product", :value => p.name}
+      container_type = c.is_a? Product ? "product" : "view"
+      {:id=>"#{container_type}_#{c.id}", :name=>c.name, :cols=>cols, :data_type => "#{container_type}", :value => c.name}
     end
   end
 
-  def product_hover_html product, environment
-    render_to_string :partial=>'product_hover', :locals=>{:product=>product, :env=>environment}
+  def container_hover_html(container, environment)
+    render_to_string :partial=>'container_hover', :locals=>{:container=>container, :env=>environment}
   end
 
   def param_product_ids
