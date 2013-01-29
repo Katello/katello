@@ -17,15 +17,17 @@ describe Api::TasksController do
   include AuthorizationHelperMethods
   include OrchestrationHelper
   include OrganizationHelperMethods
+  include LocaleHelperMethods
 
   before(:each) do
     login_user_api
+    set_default_locale
 
     disable_product_orchestration
     disable_user_orchestration
 
     @organization = new_test_org
-    Organization.stub!(:first).and_return(@organization)
+    @controller.stub!(:get_organization).and_return(@organization)
     @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
     Provider.stub!(:find).and_return(@provider)
 

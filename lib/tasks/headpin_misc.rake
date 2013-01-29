@@ -5,7 +5,7 @@ task :headpin_create_envs => :environment do
   puts "Loading organizations"
   Organization.all.each do |org|
     puts "Org #{org.name}"
-    if !AppConfig.katello?
+    if !Katello.config.katello?
       env_params = {:name => "Headpin",
                     :description => "Default environment for Headpin",
                     :prior => org.library.id,

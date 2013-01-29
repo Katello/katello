@@ -66,7 +66,7 @@ module Glue::Foreman::User
           :login    => username,
           :mail     => email,
           :admin    => true,
-          :password => AppConfig.foreman.random_password ? Password.generate_random_string(25) : password)
+          :password => Katello.config.foreman.random_password ? Password.generate_random_string(25) : password)
       foreman_user.save!
       self.foreman_user = foreman_user
     end

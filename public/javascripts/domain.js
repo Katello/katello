@@ -36,7 +36,7 @@ KT.domain_page = (function() {
         });
     },
     register = function() {
-        $('#dns_id').chosen();
+        $('#dns_id').chosen({allow_single_deselect:true});
         $('#update_domain').live('click', updateDomain);
     };
 

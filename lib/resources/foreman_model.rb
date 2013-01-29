@@ -12,11 +12,11 @@
 
 class Resources::ForemanModel < Resources::AbstractModel
 
-  def self.resource
-    super or Resources::Foreman.const_get to_s.demodulize
+  def self.resource(res=nil)
+    super(res) or Resources::Foreman.const_get to_s.demodulize
   rescue NameError => e
     if e.message =~ /Resources::Foreman::#{to_s.demodulize}/
-      raise "could not find Resources::Foreman::#{to_s.demodulize}, try to set the resource with #{to_s}.set_resource"
+      raise "could not find Resources::Foreman::#{to_s.demodulize}, try to set the resource with #{to_s}#resource"
     else
       raise e
     end
@@ -36,7 +36,7 @@ class Resources::ForemanModel < Resources::AbstractModel
   end
 
   def self.parse_attributes(data)
-    data[resource_name] or
+    data.with_indifferent_access[resource_name] or
         raise ResponseParsingError, data
   end
 

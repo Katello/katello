@@ -17,8 +17,7 @@ module OrganizationHelperMethods
   def new_test_org user=nil
     disable_org_orchestration
     suffix = Organization.count + 1
-    @organization = Organization.create!(:name=>"test_organization#{suffix}", :label=> "test_organization#{suffix}", :label => "test_organization#{suffix}")
-
+    @organization = Organization.create!(:name=>"test_organization#{suffix}", :label=> "test_organization#{suffix}_label")
     session[:current_organization_id] = @organization.id if defined? session
     return @organization
   end
@@ -26,7 +25,7 @@ module OrganizationHelperMethods
   def new_test_org_model user=nil
     disable_org_orchestration
     suffix = Organization.count + 1
-    @organization = Organization.create!(:name=>"test_organization#{suffix}", :label=> "test_organization#{suffix}", :label => "test_organization#{suffix}")
+    @organization = Organization.create!(:name=>"test_organization#{suffix}", :label=> "test_organization#{suffix}_label")
     return @organization
   end
 

@@ -1,6 +1,6 @@
 .grid_16
   = help_tip_button
-  - if AppConfig.katello?
+  - if Katello.config.katello?
     = help_tip(_("Activation Keys provide a set of characteristics that may be applied to a system " + |
                  "during system registration.  This includes things such as, default environment to assign " + |
                  "to the system, subscriptions to allocate to the system, system template to apply " + |

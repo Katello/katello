@@ -44,13 +44,13 @@ module Katello
             Rails.logger.debug "Setting current user thread-local variable to " + username
             Thread.current[:user] = o
 
-            set_pulp_config(remote_id) if AppConfig.katello?
+            set_pulp_config(remote_id) if Katello.config.katello?
 
           end
 
           def self.set_pulp_config(user_id)
             if user_id
-              uri = URI.parse(AppConfig.pulp.url)
+              uri = URI.parse(Katello.config.pulp.url)
               RestClient.log =
                 Object.new.tap do |proxy|
                   def proxy.<<(message)
@@ -58,12 +58,12 @@ module Katello
                   end
                 end
 
-              Runcible::Base.config = { 
+              Runcible::Base.config = {
                 :url      => "#{uri.scheme}://#{uri.host}",
                 :api_path => uri.path,
                 :user     => user_id,
-                :oauth    => {:oauth_secret => AppConfig.pulp.oauth_secret,
-                              :oauth_key    => AppConfig.pulp.oauth_key },
+                :oauth    => {:oauth_secret => Katello.config.pulp.oauth_secret,
+                              :oauth_key    => Katello.config.pulp.oauth_key },
                 :logger   => RestClient.log
               }
             end
@@ -100,13 +100,19 @@ module Katello
       end
 
       def thread_locals
+        # store request uuid (for Rails 3.2+ we can use Request.uuid)
+        Thread.current[:request_uuid] = request.respond_to?(:uuid) ? request.uuid : SecureRandom.hex(16)
+
+        # store user
         u = current_user
         User.current = u
+
         yield
-        # reset the current user just for the case
+
+        # reset the current user (for security reasons)
         User.current = nil
       rescue => exception
-        # reset the current user just for the case
+        # reset the current user (for security reasons)
         User.current = nil
         raise
       end

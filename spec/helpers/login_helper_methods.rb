@@ -43,6 +43,7 @@ module LoginHelperMethods
       @mock_org = mock(Organization)
       @mock_org.stub!(:name).and_return("admin_one")
       @mock_org.stub!(:label).and_return("admin_one")
+      @mock_org.stub!(:being_deleted?).and_return(false)
       org = @mock_org
     end
 

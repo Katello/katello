@@ -10,18 +10,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class NotInLibraryValidator < ActiveModel::Validator
-  def validate(record)
-    record.errors[:environment] << _("The '%s' environment cannot contain a changeset!") % "Library" if record.environment.library?
-  end
-end
-
 require 'util/package_util'
 
 class Changeset < ActiveRecord::Base
+
   include AsyncOrchestration
   include Glue::ElasticSearch::Changeset  if AppConfig.use_elasticsearch
-
 
   NEW       = 'new'
   REVIEW    = 'review'
@@ -45,8 +39,8 @@ class Changeset < ActiveRecord::Base
   validates :name, :presence => true, :allow_blank => false, :length => { :maximum => 255 }
   validates_uniqueness_of :name, :scope => :environment_id, :message => N_("Must be unique within an environment")
   validates :environment, :presence => true
-  validates :description, :katello_description_format => true
-  validates_with NotInLibraryValidator
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
+  validates_with Validators::NotInLibraryValidator
 
   has_and_belongs_to_many :products, :uniq => true
   has_many :packages, :class_name => "ChangesetPackage", :inverse_of => :changeset
@@ -60,6 +54,22 @@ class Changeset < ActiveRecord::Base
   belongs_to :task_status
   has_many :changeset_content_views
   has_many :content_views, :through => :changeset_content_views
+
+  # find changesets in given state/states
+  scope :with_state, lambda { |*states| where(:state => states.map(&:to_s)) }
+  # first thing after start is that progress is set to 0 so we can easily detect already started
+  scope :started, with_state(PROMOTING, DELETING)
+  # find colliding changesets which are those having target same as to.start or start same se
+  # to.target or same start and target, others should be safe, ignoring self of course
+  scope :colliding, lambda { |to|
+    start  = to.environment.prior.id
+    target = to.environment.id
+    joins(:environment => :priors).
+        where(['"changesets"."id" <> ? AND ('<<
+                   '"environments"."id" = ? OR "environment_priors"."prior_id" = ? OR ' <<
+                   '("environments"."id" = ? AND "environment_priors"."prior_id" = ?))',
+               to.id, start, target, target, start])
+  }
 
   before_save :uniquify_artifacts
   def key_for item
@@ -152,12 +162,13 @@ class Changeset < ActiveRecord::Base
    end
 
    def add_erratum! erratum_id, product
-     product.has_erratum?(env_to_verify_on_add_content, erratum_id) or
+     errata = Errata.find_by_errata_id(erratum_id)
+     product.has_erratum?(env_to_verify_on_add_content, errata.errata_id) or
          raise Errors::ChangesetContentException.new(
                    "Erratum not found within this environment you want to promote from.")
 
      self.errata << erratum =
-         ChangesetErratum.create!(:errata_id  => erratum_id, :display_name => erratum_id,
+         ChangesetErratum.create!(:errata_id  => errata.id, :display_name => errata.errata_id,
                                   :product_id => product.id, :changeset => self)
      save!
      return erratum
@@ -223,7 +234,7 @@ class Changeset < ActiveRecord::Base
   end
 
   def remove_erratum! erratum_id, product
-    deleted = ChangesetErratum.destroy_all(:errata_id  => erratum_id, :changeset_id => self.id,
+    deleted = ChangesetErratum.destroy_all(:display_name  => erratum_id, :changeset_id => self.id,
                                            :product_id => product.id)
     save!
     return deleted

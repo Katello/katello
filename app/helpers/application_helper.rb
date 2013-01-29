@@ -54,11 +54,11 @@ module ApplicationHelper
     key ||= params[:controller] + "-" + params[:action]
     render :partial => "common/helptip", :locals=>{:key=>key, :text=>text}
   end
-  
+
   def help_tip_button(key=nil)
     key ||= params[:controller] + "-" + params[:action]
     render :partial => "common/helptip_button", :locals=>{:key=>key}
-  end  
+  end
 
   # Headpin inclusion
   def stats_line(stats, options ={})
@@ -135,7 +135,7 @@ module ApplicationHelper
   end
 
   def notification_polling_time
-    time  = AppConfig.notification && AppConfig.notification.polling_seconds
+    time  = Katello.config.notification && Katello.config.notification.polling_seconds
     return time.to_i  * 1000 if time
     return 120000
   end

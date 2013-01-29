@@ -10,18 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class PackGroupValidator < ActiveModel::Validator
-  def validate(record)
-    env = record.system_template.environment
-    if env.package_groups({'name' => record.name}).length == 0
-      record.errors[:base] <<  _("Package group '%{group}' not found in the %{environment} environment") % {:group => record.name, :environment => env.name}
-    end
-  end
-end
-
 class SystemTemplatePackGroup < ActiveRecord::Base
   belongs_to :system_template, :inverse_of => :package_groups
-  validates_with PackGroupValidator
+  validates_with Validators::PackGroupValidator
   validates_uniqueness_of [:name], :scope => :system_template_id, :message => _("is already in the template")
 
 end

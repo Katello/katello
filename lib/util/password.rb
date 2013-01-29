@@ -57,8 +57,8 @@ module Password
   end
 
   def Password.decrypt(text, passphrase = nil)
-    passphrase = File.open('/etc/katello/secure/passphrase', 'rb') { |f| f.read }.chomp if passphrase.nil?
     return text unless text.start_with? '$1$' # password is plain
+    passphrase = File.open('/etc/katello/secure/passphrase', 'rb') { |f| f.read }.chomp if passphrase.nil?
     Password.aes_decrypt(text[3..-1].unpack('m0')[0], passphrase)
   rescue => e
     if defined?(Rails) && Rails.logger

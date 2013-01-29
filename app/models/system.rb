@@ -11,23 +11,19 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class NonLibraryEnvironmentValidator < ActiveModel::EachValidator
-  def validate_each(record, attribute, value)
-    return unless value
-    record.errors[attribute] << N_("Cannot register a system to the '%s' environment") % "Library" if record.environment != nil && record.environment.library?
-  end
-end
-
 class System < ActiveRecord::Base
   include Hooks
   define_hooks :add_system_group_hook, :remove_system_group_hook
 
-  include Glue::Candlepin::Consumer if AppConfig.use_cp
-  include Glue::Pulp::Consumer if AppConfig.use_pulp
-  include Glue::ElasticSearch::System if AppConfig.use_elasticsearch
-  include Glue if AppConfig.use_cp || AppConfig.use_pulp
+  include Glue::Candlepin::Consumer if Katello.config.use_cp
+  include Glue::Pulp::Consumer if Katello.config.use_pulp
+  include Glue if Katello.config.use_cp ||  Katello.config.use_pulp
+  include Glue::ElasticSearch::System if Katello.config.use_elasticsearch
   include Authorization::System
   include AsyncOrchestration
+
+
+  after_rollback :rollback_on_create, :on => :create
 
   acts_as_reportable
 
@@ -39,21 +35,28 @@ class System < ActiveRecord::Base
   has_many :activation_keys, :through => :system_activation_keys
   has_many :system_system_groups, :dependent => :destroy
   has_many :system_groups, {:through      => :system_system_groups,
-                            :after_add    => :add_system_group, 
+                            :after_add    => :add_system_group,
                             :after_remove => :remove_system_group
                            }
   has_many :custom_info, :as => :informable, :dependent => :destroy
   belongs_to :content_view
 
-  validates :environment, :presence => true, :non_library_environment => true
-  validates :name, :presence => true, :no_trailing_space => true # multiple systems with a single name are supported
-  validates :description, :katello_description_format => true
+  validates :environment, :presence => true
+  validates_with Validators::NonLibraryEnvironmentValidator, :attributes => :environment
+  # multiple systems with a single name are supported
+  validates :name, :presence => true
+  validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_length_of :location, :maximum => 255
   validates :sockets, :numericality => { :only_integer => true, :greater_than => 0 },
             :allow_nil => true, :if => ("validation_context == :create || validation_context == :update")
+
   validate :content_view_in_environment
+  validates :memory, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0 },
+            :allow_nil => true, :if => ("validation_context == :create || validation_context == :update")
 
   before_create  :fill_defaults
+
   after_create :init_default_custom_info_keys
 
   scope :by_env, lambda { |env| where('environment_id = ?', env) unless env.nil?}
@@ -169,12 +172,22 @@ class System < ActiveRecord::Base
     json['environment'] = environment.as_json unless environment.nil?
     json['activation_key'] = activation_keys.as_json unless activation_keys.nil?
     json['template'] = system_template.as_json unless system_template.nil?
+<<<<<<< HEAD
     json['content_view'] = content_view.as_json if content_view
     json['ipv4_address'] = facts.try(:[], 'network.ipv4_address')
     if self.guest == 'true'
       json['host'] = self.host.attributes if self.host
     else
       json['guests'] = self.guests.map(&:attributes)
+=======
+    json['ipv4_address'] = facts.try(:[], 'network.ipv4_address') if respond_to?(:facts)
+    if respond_to?(:guest)
+      if self.guest == 'true'
+        json['host'] = self.host.attributes if self.host
+      else
+        json['guests'] = self.guests.map(&:attributes)
+      end
+>>>>>>> pulpv2
     end
     json
   end
@@ -184,7 +197,6 @@ class System < ActiveRecord::Base
       self.custom_info.create!(:keyname => k)
     end
   end
-
 
   def tasks
     TaskStatus.refresh_for_system(self)
