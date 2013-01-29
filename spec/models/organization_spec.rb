@@ -43,7 +43,7 @@ describe Organization do
     specify {@organization.environments.should be_empty}
     specify {Organization.where(:name => @organization.name).size.should == 1}
     specify {Organization.where(:name => @organization.name).first.should == @organization}
-    
+
     it "should complain on duplicate name" do
       lambda{
         Organization.create!(:name => @organization.name, :label => @organization.name + "_changed")
@@ -108,39 +108,39 @@ describe Organization do
     it "can delete the org" do
       id = @organization.id
       @organization.destroy
-      
+
       lambda{Organization.find(id)}.should raise_error(ActiveRecord::RecordNotFound)
     end
 
     it "can delete the org and envs are deleted" do
       org_id = @organization.id
-      
-      env_name = "prod"      
+
+      env_name = "prod"
       @env = KTEnvironment.new(:name=>env_name, :label=> env_name, :library => false, :prior => @organization.library)
       @organization.environments << @env
       @env.save!
-      
+
       @organization.destroy
-      
+
       lambda{Organization.find(org_id)}.should raise_error(ActiveRecord::RecordNotFound)
       #@env.should_receive(:destroy).at_least(:once)
       KTEnvironment.where(:name => env_name).all.should be_empty
     end
-    
-    
+
+
     it "can delete the org and env of a different org exist" do
       env_name = "prod"
-      
+
       @org2 = Organization.create!(:name=>"foobar", :label=> "foobar")
 
       @env1 = KTEnvironment.new(:name=>env_name, :label=> env_name, :organization => @organization, :prior => @organization.library)
       @organization.environments << @env1
-      @env1.save!    
-      
+      @env1.save!
+
       @env2 = KTEnvironment.new(:name=>env_name, :label=> env_name, :organization => @org2, :prior => @organization.library)
       @org2.environments << @env2
       @env2.save!
-      
+
       id1 = @organization.id
       @organization.destroy
       lambda{Organization.find(id1)}.should raise_error(ActiveRecord::RecordNotFound)

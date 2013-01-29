@@ -15,6 +15,7 @@ require 'spec_helper.rb'
 describe Api::ProvidersController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
+  include LocaleHelperMethods
 
   let(:user_with_read_permissions) { user_with_permissions { |u| u.can([:read], :providers, nil, @ogranization) } }
   let(:user_without_read_permissions) { user_without_permissions }
@@ -29,6 +30,7 @@ describe Api::ProvidersController, :katello => true do
     disable_org_orchestration
     disable_product_orchestration
     disable_user_orchestration
+    set_default_locale
     @organization = new_test_org
     @provider = Provider.create!(:name => provider_name, :provider_type => Provider::CUSTOM,
                                  :organization => @organization)
@@ -110,7 +112,7 @@ describe Api::ProvidersController, :katello => true do
     it "should call Provider#update_attributes" do
       Provider.should_receive(:find).with(provider_id).and_return(@provider)
       @provider.should_receive(:update_attributes!).once
-      
+
       req
     end
     it_should_behave_like "bad request"  do
@@ -136,13 +138,13 @@ describe Api::ProvidersController, :katello => true do
 
     it "should call Provider.first" do
       Provider.should_receive(:find).with(provider_id).and_return(@provider)
-      
+
       req
     end
   end
 
   describe "delete a provider" do
- 
+
     let(:action) { :destroy }
     let(:req) { delete :destroy, :id => provider_id }
     let(:authorized_user) { user_with_write_permissions }
@@ -171,7 +173,7 @@ describe Api::ProvidersController, :katello => true do
       req
     end
   end
-  
+
   describe "import manifest" do
 
     let(:action) { :import_manifest }

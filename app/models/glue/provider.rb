@@ -213,7 +213,7 @@ module Glue::Provider
         self.save!
 
         if options[:notify]
-          message = if AppConfig.katello?
+          message = if Katello.config.katello?
                       _("Subscription manifest uploaded successfully for provider '%s'. " +
                             "Please enable the repositories you want to sync by selecting 'Enable Repositories' and " +
                             "selecting individual repositories to be enabled.")

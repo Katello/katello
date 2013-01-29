@@ -43,9 +43,8 @@ module Glue::ElasticSearch::Errata
           :errata => {
             :properties => {
               :repoids      => { :type => 'string', :index =>:not_analyzed},
-              :errata_id_sort      => { :type => 'string', :index => :not_analyzed},
+              :id_sort      => { :type => 'string', :index => :not_analyzed},
               :id_title     => { :type => 'string', :analyzer =>:title_analyzer},
-              :errata_id     => { :type => 'string', :analyzer =>:title_analyzer},
               :id           => { :type => 'string', :analyzer =>:snowball},
               :product_ids  => { :type => 'integer', :analyzer =>:kt_name_analyzer},
               :severity     => { :type => 'string', :analyzer =>:kt_name_analyzer},
@@ -57,7 +56,7 @@ module Glue::ElasticSearch::Errata
       end
 
       def self.index
-        "#{AppConfig.elastic_index}_errata"
+        "#{Katello.config.elastic_index}_errata"
       end
 
       def index_options
@@ -131,7 +130,7 @@ module Glue::ElasticSearch::Errata
 
         return search.perform.results
       rescue Tire::Search::SearchRequestFailed => e
-        Support.array_with_total
+        Util::Support.array_with_total
       end
 
       def self.index_errata errata_ids

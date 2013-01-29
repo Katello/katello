@@ -13,7 +13,7 @@
 
 module Glue::ElasticSearch::Product
   def self.included(base)
-    base.send :include, IndexedModel
+    base.send :include, Ext::IndexedModel
 
     base.class_eval do
       after_save :update_related_index

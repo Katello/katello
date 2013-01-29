@@ -44,7 +44,7 @@ RSpec.configure do |config|
   # config.mock_with :flexmock
   # config.mock_with :rr
   config.mock_with :rspec
-  
+
 #  config.include Rack::Test::Methods
 
   config.include Warden::Test::Helpers
@@ -58,7 +58,7 @@ RSpec.configure do |config|
   config.before :each do
     I18n.locale = :en
   end
-  
+
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 

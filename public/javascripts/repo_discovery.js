@@ -242,7 +242,7 @@ KT.discovery_templates = (function(){
 })();
 
 
-KT.repo_discovery.new = (function(){
+KT.repo_discovery.new_page = (function(){
     var panel_id = '#repo_creation',
         product_select_id = "#existing_product_select",
         form_id = '#discovered_creation',

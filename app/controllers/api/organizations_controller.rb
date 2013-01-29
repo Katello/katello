@@ -17,6 +17,10 @@ class Api::OrganizationsController < Api::ApiController
   respond_to :json
   before_filter :authorize
 
+  def organization_id_keys
+    [:id]
+  end
+
   def rules
     index_test = lambda{Organization.any_readable?}
     create_test = lambda{Organization.creatable?}
@@ -43,7 +47,7 @@ class Api::OrganizationsController < Api::ApiController
   param :label, String, :desc => "label for filtering"
   param :description, String, :desc => "description"
   def index
-    render :json => (Organization.readable.where query_params).to_json
+    render :json => (Organization.without_deleting.readable.where query_params).to_json
   end
 
   # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
@@ -73,17 +77,6 @@ class Api::OrganizationsController < Api::ApiController
   def destroy
     async_job = OrganizationDestroyer.destroy @organization
     render :json => async_job, :status => 202
-  end
-
-  private
-
-  def find_organization
-    # Look first based on name, and then based on label.
-    # The latter is to better support subscrption manager.
-    @organization = Organization.first(:conditions => {:name => params[:id]})
-    @organization = Organization.first(:conditions => {:label => params[:id]}) if @organization.nil?
-    raise HttpErrors::NotFound, _("Couldn't find organization '%s'") % params[:id] if @organization.nil?
-    @organization
   end
 
 end

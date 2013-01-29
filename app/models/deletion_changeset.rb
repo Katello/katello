@@ -20,17 +20,18 @@ class DeletionChangeset < Changeset
     self.state == Changeset::REVIEW or
         raise _("Cannot delete the changeset '%s' because it is not in the review phase.") % self.name
 
-    #check for other changesets promoting
-    if self.environment.promoting_to?
-      raise _("Cannot delete the changeset '%{changeset}' while another changeset (%{another_changeset}) is being deleted or promoted.") % {:changeset => self.name, :another_changeset => self.environment.promoting.first.name}
-    end
-
     validate_content! self.errata
     validate_content! self.packages
     validate_content! self.distributions
 
-    self.state = Changeset::DELETING
-    self.save!
+    # check no collision exists
+    if (collision = Changeset.started.colliding(self).first)
+      raise _("Cannot promote the changeset '%{changeset}' while another colliding changeset (%{another_changeset}) is being promoted.") %
+                { :changeset => self.name, :another_changeset => collision.name }
+    else
+      self.state = Changeset::DELETING
+      self.save!
+    end
 
     if options[:async]
       task  = self.async(:organization => self.environment.organization).delete_content(options[:notify])

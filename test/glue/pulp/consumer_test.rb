@@ -50,8 +50,8 @@ class GluePulpConsumerTestCreateDestroy < GluePulpConsumerTestBase
 
   def teardown
     ConsumerSupport.destroy_consumer(@simple_server.id)
-  rescue => e
-    puts e
+  rescue RestClient::ResourceNotFound => e
+    #do nothing
   end
 
   def test_set_pulp_consumer

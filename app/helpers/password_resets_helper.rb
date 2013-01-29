@@ -12,7 +12,7 @@
 
 module PasswordResetsHelper
   def password_reset_expiration
-    time = AppConfig.password_reset_expiration
+    time = Katello.config.password_reset_expiration
     return time.to_i if time
     return 120 # minutes
   end

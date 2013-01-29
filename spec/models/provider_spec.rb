@@ -30,7 +30,8 @@ describe Provider do
       :name => "some name",
       :description => "a description",
       :repository_url => "https://some.url/path",
-      :provider_type => Provider::CUSTOM
+      :provider_type => Provider::CUSTOM,
+      :organization => @organization
     }
   end
 
@@ -189,7 +190,8 @@ describe Provider do
                              :minor => version[:minor],
                              :relative_path=>'/foo',
                              :content_id=>'asdfasdf',
-                             :content_view_version=>ep.environment.default_view_version)
+                             :content_view_version=>ep.environment.default_view_version,
+                             :feed => 'https://localhost')
           repo.stub(:create_pulp_repo).and_return({})
           repo.save!
 
@@ -355,7 +357,7 @@ describe Provider do
       @provider.name = "url test"
       @provider.provider_type = Provider::REDHAT
       @default_url = "http://boo.com"
-      AppConfig.stub!(:REDHAT_REPOSITORY_URL).and_return(@default_url)
+      Katello.config.stub!(:redhat_repository_url).and_return(@default_url)
     end
 
     context "should accept" do
@@ -395,6 +397,11 @@ describe Provider do
         @provider.should be_valid
       end
 
+      it "'https://something'" do
+        @provider.repository_url = "https://something"
+        @provider.should be_valid
+      end
+
     end
 
     context "should refuse" do
@@ -416,11 +423,6 @@ describe Provider do
 
       it "'https://.bogus'" do
         @provider.repository_url = "https://.bogus"
-        @provider.should_not be_valid
-      end
-
-      it "'https://something'" do
-        @provider.repository_url = "https://something"
         @provider.should_not be_valid
       end
 

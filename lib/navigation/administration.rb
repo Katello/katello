@@ -48,7 +48,7 @@ module Navigation
         :options => {:class=>'operations header-widget fl menu_parent', "data-menu"=>"operations"},
         :if => :sub_level
       }
-      menu[:items] << menu_sync_tasks if AppConfig.katello?
+      menu[:items] << menu_sync_tasks if Katello.config.katello?
       menu[:items] << menu_about # keep the about as the last item
       return menu
     end

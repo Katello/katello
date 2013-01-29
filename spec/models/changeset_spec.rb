@@ -60,6 +60,67 @@ describe Changeset, :katello => true do
       json['action_type'].should_not be_nil
     end
 
+    describe "scopes" do
+      before do
+        @promoting = PromotionChangeset.create!(:environment => @environment,
+                                                :name        => "bar-changeset",
+                                                :state       => Changeset::PROMOTING)
+        @deleting  = DeletionChangeset.create!(:environment => @environment,
+                                               :name        => "baz-changeset",
+                                               :state       => Changeset::DELETING)
+      end
+
+      describe ".with_state" do
+        it "should find right changesets" do
+          Changeset.with_state(Changeset::DELETED).should be_empty
+          Changeset.with_state(Changeset::NEW).size.should eql(1)
+          Changeset.with_state(Changeset::PROMOTING).size.should eql(1)
+          Changeset.with_state(Changeset::NEW, Changeset::PROMOTING).size.should eql(2)
+          Changeset.with_state(Changeset::DELETED,
+                               Changeset::NEW,
+                               Changeset::PROMOTING).size.should eql(2)
+        end
+      end
+
+      describe ".started" do
+        subject { Changeset.started }
+        its(:size) { should eql(2) }
+        it { should include(@promoting, @deleting) }
+      end
+
+      describe ".colliding(changeset)" do
+        before do
+          @alpha      = KTEnvironment.create!(:name         => 'alpha', :label => 'alpha',
+                                              :prior        => @environment,
+                                              :organization => @organization)
+          @beta       = KTEnvironment.create!(:name         => 'beta', :label => 'beta',
+                                              :prior        => @organization.library,
+                                              :organization => @organization)
+          @collision = PromotionChangeset.create!(:environment => @alpha,
+                                                   :name        => "collision1")
+          @no_collision = PromotionChangeset.create!(:environment => @beta,
+                                                   :name        => "nocollision1")
+        end
+
+        it 'should detect "identical" collision' do
+          Changeset.colliding(@promoting).should include(@deleting)
+        end
+
+        it 'should detect "following" collision' do
+          Changeset.colliding(@promoting).should include(@collision)
+        end
+
+        it 'should detect "previous" collision' do
+          Changeset.colliding(@collision).should include(@promoting)
+        end
+
+        it 'should ignore other cases' do
+          Changeset.colliding(@promoting).should_not include(@no_collision) # only same start
+          Changeset.colliding(@collision).should_not include(@no_collision) # nothing in common
+        end
+      end
+    end
+
     describe "fail adding content not contained in the prior environment" do
       before do
         @provider      = Provider.create!(:name         => "provider", :provider_type => Provider::CUSTOM,
@@ -77,7 +138,7 @@ describe Changeset, :katello => true do
                :repositories => [])
         end
         @prod.save!
-
+        Runcible::Extensions::Errata.stub(:find).and_return({:id=>'errata-unit-id', :errata_id=>'err'})
       end
 
       it "should fail on add product" do
@@ -129,11 +190,13 @@ describe Changeset, :katello => true do
             :release => @pack_release,
             :arch    => @pack_arch
         }.with_indifferent_access)
-        @err          = mock('Err', { :id => 'err', :name => 'err' })
+        @err          = mock('Err', { :id => 'errata-unit-id', :errata_id=>'err', :name => 'err' })
 
         @repo = Repository.new(:environment_product => ep, :name => "repo", :label => "repo_label",
                                    :pulp_id => "135adsf", :content_id=>'23423', :relative_path=>'/foobar/',
-                                   :content_view_version=>ep.environment.default_view_version)
+                                   :content_view_version=>ep.environment.default_view_version,
+                                   :feed => 'https://localhost.com/foo/')
+
         @repo.stub(:create_pulp_repo).and_return([])
         @repo.save!
         @distribution = mock('Distribution', { :id => 'some-distro-id' })
@@ -153,6 +216,8 @@ describe Changeset, :katello => true do
         @environment.prior.stub(:products).and_return([@prod])
         @environment.prior.products.stub(:find_by_name).and_return(@prod)
         @environment.prior.products.stub(:find_by_cp_id).and_return(@prod)
+
+        Runcible::Extensions::Errata.stub(:find).and_return({:id=>'errata-unit-id', :errata_id=>'err'})
       end
 
 
@@ -278,11 +343,11 @@ describe Changeset, :katello => true do
         @pack_arch    = "noarch"
         @pack_nvre    = @pack_name +"-"+ @pack_version +"-"+ @pack_release +"."+ @pack_arch
         @pack         = { :id => 1, :name => @pack_name }.with_indifferent_access
-        @err          = mock('Err', { :id => 'err', :name => 'err' })
-
+        @err          = mock('Err', { :id => 'errata-unit-id', :errata_id=>'err', :name => 'err' })
         @repo = Repository.new(:environment_product => ep, :name => "repo", :label => "repo_label",
                                    :pulp_id => "1343", :content_id=>'23423', :relative_path=>'/foobar/',
-                                   :content_view_version=>ep.environment.default_view_version)
+                                   :content_view_version=>ep.environment.default_view_version,
+                                   :feed=>"http://localhost.com/foo/")
         @repo.stub(:create_pulp_repo).and_return([])
         @repo.save!
         @distribution = mock('Distribution', { :id => 'some-distro-id' })
@@ -317,7 +382,7 @@ describe Changeset, :katello => true do
 
       it "should remove erratum" do
         ChangesetErratum.should_receive(:destroy_all).
-            with(:errata_id => 'err', :changeset_id => @changeset.id, :product_id => @prod.id).and_return(true)
+            with(:display_name => 'err', :changeset_id => @changeset.id, :product_id => @prod.id).and_return(true)
         @changeset.remove_erratum!("err", @prod)
       end
 
@@ -350,12 +415,15 @@ describe Changeset, :katello => true do
         Product.stub(:find).and_return(@prod)
 
         @pack         = mock('Pack', { :id => 1, :name => 'pack' })
-        @err          = mock('Err', { :id => 'err', :name => 'err' })
+        @err          = mock('Err', { :id => 'asdfasdf', :name => 'err' , :errata_id=>'err'})
         @distribution = mock('Distribution', { :id => 'some-distro-id' })
         ep            = EnvironmentProduct.find_or_create(@organization.library, @prod)
         @repo         = Repository.new(:environment_product => ep, :name => 'repo', :label => 'repo_label',
                                            :pulp_id => "test_pulp_id", :relative_path=>"/foo/", :content_id=>'aasfd',
-                                           :content_view_version=>ep.environment.default_view_version)
+                                           :content_view_version=>ep.environment.default_view_version,
+                                           :pulp_id => "test_pulp_id", :relative_path=>"/foo/",
+                                           :content_id=>'aasfd', :feed=>'https://localhost.com/foo/')
+
         @repo.stub(:create_pulp_repo).and_return([])
         @repo.save!
         @repo.stub_chain(:distributions, :index).and_return([@distribution])
@@ -467,7 +535,7 @@ describe Changeset, :katello => true do
 
       it "should promote errata" do
         @prod.environments << @environment
-        @changeset.errata << ChangesetErratum.new(:errata_id  => @err.id, :display_name => @err.name,
+        @changeset.errata << ChangesetErratum.new(:errata_id  => @err.id, :display_name => @err.errata_id,
                                                   :product_id => @prod.id, :changeset => @changeset)
         @changeset.state = Changeset::REVIEW
 

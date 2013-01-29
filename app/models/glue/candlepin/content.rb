@@ -115,9 +115,9 @@ module Glue::Candlepin::Content
     def yum_gpg_key_url
       # if the repo has a gpg key return a url to access it
       if (gpg_key && gpg_key.content.present?)
-        host = AppConfig.host
-        host += ":" + AppConfig.port.to_s unless AppConfig.port.blank? || AppConfig.port.to_s == "443"
-        gpg_key_content_api_repository_url(self, :host => host + ENV['RAILS_RELATIVE_URL_ROOT'].to_s, :protocol => 'https')
+        host = Katello.config.host
+        host += ":" + Katello.config.port.to_s unless Katello.config.port.blank? || Katello.config.port.to_s == "443"
+        gpg_key_content_api_repository_url(self, :host => host + Katello.config.url_prefix, :protocol => 'https')
       end
     end
 

@@ -35,7 +35,7 @@ end
 
 class PulpSyncStatus < PulpTaskStatus
   use_index_of TaskStatus
-  
+
   SUCCESS   = "success"
   FINISHED  = "finished"
   ERROR     = "failed"
@@ -50,7 +50,7 @@ class PulpSyncStatus < PulpTaskStatus
   def progress
     PulpSyncProgress.new(attributes['progress'])
   end
-  
+
   def after_refresh
     correct_state
   end

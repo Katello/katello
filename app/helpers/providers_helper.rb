@@ -37,7 +37,7 @@ module ProvidersHelper
   end
 
   def normalize(children, parent_set =[], data = nil, item_type = nil)
-    data = [] unless data
+    data ||= []
     children.sort{|a,b| a[:name] <=> b[:name]}.each do |child|
       new_set = parent_set + [child[:id]]
       item =  {:id => set_id(new_set),

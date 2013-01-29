@@ -13,11 +13,11 @@
 
 module BrandingHelper
   def project_name
-    AppConfig.app_name
+    Katello.config.app_name
   end
 
   def default_title
-    if AppConfig.katello?
+    if Katello.config.katello?
       _("Open Source Systems Management")
     else
       _("Open Source Subscription Management")
@@ -30,12 +30,6 @@ module BrandingHelper
   end
 
   def release_name
-    case AppConfig.release_short
-      when "headpin"
-        root = "Headpin"
-      else
-        root = "Katello"
-    end
-    return root
+    Katello.config.app_name
   end
 end
