@@ -58,7 +58,7 @@ class ChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
 
     changeset.reload
     view.reload
-    
+
     assert changeset.add_content_view!(view)
     assert_includes changeset.content_views, view
   end

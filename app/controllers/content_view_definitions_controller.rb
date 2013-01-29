@@ -307,7 +307,7 @@ class ContentViewDefinitionsController < ApplicationController
   end
 
   def panel_options
-    @panel_options = { 
+    @panel_options = {
       :title => _('Content View Definitions'),
       :col => ['name'],
       :titles => [_('Name')],
