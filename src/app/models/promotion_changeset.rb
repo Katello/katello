@@ -339,6 +339,7 @@ class PromotionChangeset < Changeset
     repos += self.errata.collect { |p| p.promotable_repositories }.flatten(1)
     repos += self.distributions.collect { |d| d.promotable_repositories }.flatten(1)
     repos += self.repos_to_be_promoted
+    repos += self.content_views.collect { |v| v.repos(self.environment.prior)}.flatten(1)
     repos += self.products_to_be_promoted.collect{|p| p.repos(self.environment.prior)}.flatten(1)
     repos.uniq
   end
