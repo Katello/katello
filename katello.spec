@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.3.11.pulpv2
+Version:        1.3.12.pulpv2
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -117,6 +117,7 @@ BuildRequires:  rubygem(jammit)
 BuildRequires:  rubygem(chunky_png)
 BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
+BuildRequires:  rubygem(compass) < 0.12
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
 BuildRequires:  rubygem(alchemy) >= 1.0.0
@@ -759,6 +760,15 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Jan 28 2013 Justin Sherrill <jsherril@redhat.com> 1.3.12.pulpv2-1
+- fixing changelog (jsherril@redhat.com)
+- merge conflict (jsherril@redhat.com)
+- Merge pull request #1466 from daviddavis/apispecfix (daviddavis@redhat.com)
+- Automatic commit of package [katello] release [1.3.5-1].
+  (jsherril@redhat.com)
+- fixing compass version (jsherril@redhat.com)
+- Reverting locale changes to api specs (daviddavis@redhat.com)
+
 * Fri Jan 25 2013 Justin Sherrill <jsherril@redhat.com> 1.3.11.pulpv2-1
 - fixing pulp url in config template (jsherril@redhat.com)
 - fix whitespace (jsherril@redhat.com)
@@ -769,6 +779,93 @@ fi
 - merge conflict (jsherril@redhat.com)
 - more spec fixes (jsherril@redhat.com)
 - fixing minitests and most specs (jsherril@redhat.com)
+
+* Fri Jan 25 2013 Justin Sherrill <jsherril@redhat.com> 1.3.5-1
+- fixing compass version (jsherril@redhat.com)
+- added lib/resources/abstract_model dir and its contents to the .spec file
+  (dmitri@redhat.com)
+- orgs - new scope for finding by name or label (tstrachota@redhat.com)
+- 895212 - correct org search (tstrachota@redhat.com)
+- fixes building of foreman glue rpm (dmitri@redhat.com)
+- removed redundant dir inclusion in headpin (dmitri@redhat.com)
+- fix for a broken .spec: now includes files in models/ext dir during the build
+  (dmitri@redhat.com)
+- 887095 - fixing API breakage (lzap+git@redhat.com)
+- 887095 - Fixing test and feedback (daviddavis@redhat.com)
+- 903000 - Fix for missing params checking on System Templates
+  (jrist@redhat.com)
+- bumping version of therubyracer (lzap+git@redhat.com)
+- avoid problematic ZenTest-4.8.4 (lzap+git@redhat.com)
+- Revert "fix building on F18" (lzap+git@redhat.com)
+- Revert "Fix F16,EL6 after fixing F18" (lzap+git@redhat.com)
+- Revert "correctly compare version" (lzap+git@redhat.com)
+- Revert "do not fail if you use bundler" (lzap+git@redhat.com)
+- Revert "workaround BZ 901540" (lzap+git@redhat.com)
+- Revert "do not use ZenTest 4.8.4" (lzap+git@redhat.com)
+- fixed a syntax error under 1.8.7 (dmitri@redhat.com)
+- moved most of the modules in app/models to either models/ext or lib/
+  directories (dmitri@redhat.com)
+- Revert "Fixing Travis for Ruby 1.9" (lzap+git@redhat.com)
+- renamed 'CustomPermissions' into 'PermissionTagCleanup' (dmitri@redhat.com)
+- fix for BZ 860452: custom tags are now being deleted when associated entity
+  is deleted (dmitri@redhat.com)
+- uuid - now works with Rails 3.2 (lzap+git@redhat.com)
+- Fixed wrong param format (mbacovsk@redhat.com)
+- 896074 - fixing remove deletion permissions (lzap+git@redhat.com)
+- smart proxies - listing available features in cli info
+  (tstrachota@redhat.com)
+- 887095 - cli locale was not set properly (lzap+git@redhat.com)
+- Fixing Travis for Ruby 1.9 (daviddavis@redhat.com)
+- do not use ZenTest 4.8.4 (msuchy@redhat.com)
+- workaround BZ 901540 (msuchy@redhat.com)
+- do not fail if you use bundler (msuchy@redhat.com)
+- correctly compare version (msuchy@redhat.com)
+- Fix F16,EL6 after fixing F18 (msuchy@redhat.com)
+- fix building on F18 (msuchy@redhat.com)
+- 901657 - Adds standard name validator to role names to prevent HTML
+  injection. (ehelms@redhat.com)
+- 867991 - fixing tab index on env and activation key new pages
+  (jsherril@redhat.com)
+- 795003 - Adds a word wrap to edit text fields so that long names, such as the
+  CDN URL being long. (ehelms@redhat.com)
+- 902948 - fixing errata icons in content search (jsherril@redhat.com)
+- 858008 - Adds event trigger and bind to close action bar when sliding tree
+  items are clicked. (ehelms@redhat.com)
+- CVE-2012-3503 - setting umask for /etc/katello/secret-token
+  (jomara@redhat.com)
+- 852885 - Fixing spinner image (daviddavis@redhat.com)
+- 860471 - Fix for flicker - extra .tipsify call. (jrist@redhat.com)
+- rails 3.2 removed ActiveSupport::SecureRandom in favor of SecureRandom
+  (msuchy@redhat.com)
+- fixing test runs for jenkins and travis (komidore64@gmail.com)
+- bundler_ext - renaming namespace (lzap+git@redhat.com)
+- Smart proxies UI (mbacovsk@redhat.com)
+- foreman_api gem version bumped up to 0.0.10 (tstrachota@redhat.com)
+- comp. res. - api, model for each provider (tstrachota@redhat.com)
+- simple crud controller - support for custom as_json options
+  (tstrachota@redhat.com)
+- abstract model - support for instantiating subclasses (tstrachota@redhat.com)
+- abstract model - setting resources made consistent (tstrachota@redhat.com)
+- architectures - fixed removing all OSs on update (tstrachota@redhat.com)
+- subnets - required attributes in model (tstrachota@redhat.com)
+- foreman integration ui fixes (tstrachota@redhat.com)
+- requiring 'thumbslug_url' in configuration for headpin only
+  (komidore64@gmail.com)
+- adding thumbslug to headpin's ping function and tests, etc
+  (komidore64@gmail.com)
+- Fixing the reset-oauth script to also do ../config/katello.yml if it exists.
+  (jrist@redhat.com)
+- 820404- Renamed the debug cert button as suggested in the bz
+  (paji@redhat.com)
+- Code review comments lead to discovery of dead code. The import_status and
+  export_status files do not appear tied to any controller and they are only
+  referenced by a route which is also not tied to a controller
+  (bkearney@redhat.com)
+- 868045: Missed translating string when there are no products for a system
+  (bkearney@redhat.com)
+
+* Fri Jan 25 2013 Justin Sherrill <jsherril@redhat.com>
+- fixing compass version (jsherril@redhat.com)
 - added lib/resources/abstract_model dir and its contents to the .spec file
   (dmitri@redhat.com)
 - orgs - new scope for finding by name or label (tstrachota@redhat.com)
@@ -927,6 +1024,12 @@ fi
   (bbuckingham@redhat.com)
 - 842745 - Showing update message on package group update
   (daviddavis@redhat.com)
+- adding thumbslug to headpin's ping function and tests, etc
+  (komidore64@gmail.com)
+- Fixing the reset-oauth script to also do ../config/katello.yml if it exists.
+  (jrist@redhat.com)
+- 820404- Renamed the debug cert button as suggested in the bz
+  (paji@redhat.com)
 - Code review comments lead to discovery of dead code. The import_status and
   export_status files do not appear tied to any controller and they are only
   referenced by a route which is also not tied to a controller
@@ -1013,6 +1116,8 @@ fi
 
 * Mon Jan 21 2013 Justin Sherrill <jsherril@redhat.com> 1.3.5_pulpv2-1
 - removing old converge-ui build code (jsherril@redhat.com)
+- 868045: Missed translating string when there are no products for a system
+  (bkearney@redhat.com)
 
 * Tue Jan 15 2013 Justin Sherrill <jsherril@redhat.com> 1.3.3-1
 - Translations - Update .po and .pot files for katello. (jsherril@redhat.com)

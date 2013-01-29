@@ -15,14 +15,12 @@ require 'spec_helper'
 describe Api::GpgKeysController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
-  include LocaleHelperMethods
 
   let(:authorized_user)   { user_with_permissions { |u| u.can(:gpg, :organizations, nil, @organization)} }
   let(:unauthorized_user) { user_without_permissions }
 
   before(:each) do
     login_user_api
-    set_default_locale
     @request.env["HTTP_ACCEPT"] = "application/json"
     disable_org_orchestration
 
