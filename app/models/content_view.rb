@@ -15,6 +15,7 @@ require 'util/model_util.rb'
 class ContentView < ActiveRecord::Base
   include Katello::LabelFromName
   include Authorization::ContentView
+  include Glue::ElasticSearch::ContentView if Katello.config.use_elasticsearch
 
   belongs_to :content_view_definition
   belongs_to :organization, :inverse_of => :content_views
