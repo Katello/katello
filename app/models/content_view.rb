@@ -34,10 +34,16 @@ class ContentView < ActiveRecord::Base
   has_many :changesets, :through => :changeset_content_views
   has_many :activation_keys
 
+
+
+
   validates :label, :uniqueness => {:scope => :organization_id},
-    :presence => true, :katello_label_format => true
-  validates :name, :presence => true, :katello_name_format => true
+    :presence => true
+  validates :name, :presence => true
   validates :organization_id, :presence => true
+
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+  validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
 
   scope :default, where(:default=>true)
   scope :non_default, where(:default=>false)
