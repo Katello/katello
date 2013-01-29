@@ -18,7 +18,7 @@ module Navigation
        :name => _("Setup"),
         :url => :sub_level,
         :options => {:class=>'setup top_level', "data-menu"=>"setup"},
-        :items=> [ menu_smart_proxies, menu_subnets, menu_domains, menu_architectures ]
+        :items=> [ menu_architectures, menu_locations, menu_domains, menu_smart_proxies, menu_subnets, menu_hardware_models ]
         # TODO: final order of the setup menu items
         #   Setup
         #   Locations
@@ -31,39 +31,57 @@ module Navigation
       menu
     end
 
-    def menu_smart_proxies
-      {:key => :registered,
-       :name => _("Smart Proxies"),
-       :url => smart_proxies_path,
-       :if => lambda{true}, #TODO: check permissions
-       :options => {:class=>'setup second_level', "data-menu"=>"smart_proxies"}
-      }
-    end
-
     def menu_subnets
       {:key => :subnets,
-       :name => _("Subnets"),
+       :name => _("Subnets With Really Long Text Ok How"),
        :url => subnets_path,
        :if => lambda{true}, #TODO: check permissions
-       :options => {:class=>'setup second_level', "data-menu"=>"subnets"}
+       :options => {:class=>'setup second_level', "data-menu"=>"setup"}
       }
     end
 
     def menu_domains
       {:key => :domains,
-       :name => _("Domains"),
+       :name => _("Domains That Take Up A Lot of Text"),
        :url => domains_path,
        :if => lambda{true}, #TODO: check permissions
-       :options => {:class=>'setup second_level', "data-menu"=>"domains"}
+       :options => {:class=>'setup second_level', "data-menu"=>"setup"}
       }
     end
 
     def menu_architectures
       {:key => :architectures,
-       :name => _("Architectures"),
-       :url => architectures_path,
+       :name => _("Architectures Holy Mother of Poo This is Awesome"),
+       :url => "",
        :if => lambda{true}, #TODO: check permissions
-       :options => {:class=>'setup second_level', "data-menu"=>"subnets"}
+       :options => {:class=>'setup second_level', "data-menu"=>"setup"}
+      }
+    end
+
+    def menu_locations
+      {:key => :locations,
+       :name => _("Locations And Places Where People Might Store Things"),
+       :url => "",
+       :if => lambda{true}, #TODO: check permissions
+       :options => {:class=>'setup second_level', "data-menu"=>"setup"}
+      }
+    end
+
+    def menu_smart_proxies
+      {:key => :smart_proxies,
+       :name => _("Smart Proxies That Are Really Long So I Can Test"),
+       :url => "",
+       :if => lambda{true}, #TODO: check permissions
+       :options => {:class=>'setup second_level', "data-menu"=>"setup"}
+      }
+    end
+
+    def menu_hardware_models
+      {:key => :hardware_models,
+       :name => _("Hardware Models Please Help Me Oh God My Legs"),
+       :url => "",
+       :if => lambda{true}, #TODO: check permissions
+       :options => {:class=>'setup second_level', "data-menu"=>"setup"}
       }
     end
     
