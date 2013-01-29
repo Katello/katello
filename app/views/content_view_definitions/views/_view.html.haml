@@ -1,8 +1,8 @@
 - cssclass = "" if cssclass.nil?
 
 %tr.view{:id => "view_#{view.id}", :class => cssclass}
-
   %td{:colspan => 4} #{view.name}
   - view.versions.each do |version|
-    = render :partial => 'content_view_definitions/views/version',
-      :locals => {:version => version, :task => version.task_status}
+    - if version.environments.length > 0
+      = render :partial => 'content_view_definitions/views/version',
+        :locals => {:version => version, :task => version.task_status}
