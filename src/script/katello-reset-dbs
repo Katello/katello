@@ -149,7 +149,11 @@ $SRV tomcat6 restart
 echo "Initializing Katello database"
 # cannot use initdb for this (BZ 745542)
 pushd $KATELLO_HOME >/dev/null
-RAILS_ENV=$KATELLO_ENV rake setup --trace RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX 2>&1
+
+RAKE_TASKS=( 'clear_search_indices' 'db:migrate:reset' 'seed_with_logging' )
+for i in ${RAKE_TASKS[@]};  do 
+  RAILS_ENV=$KATELLO_ENV rake $i --trace RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX 2>&1
+done
 popd >/dev/null
 
 # Only stop the services if we are in production mode
