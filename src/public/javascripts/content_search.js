@@ -18,10 +18,11 @@ $(document).ready(function() {
     KT.widgets = {repos:{id:"repos_selector", autocomplete:'repo_autocomplete_list', search:'repo_search'},
                   packages:{id:"packages_selector", search:'package_search'},
                   products:{id:"products_selector", autocomplete:'product_autocomplete_list'},
+                  views:{id:"views_selector", autocomplete:'view_autocomplete_list'},
                   errata:{id:"errata_selector", search:'errata_search'}};
 
     KT.mapping = {products:['products'], repos:['products', 'repos'], packages:['products', 'repos', 'packages'],
-                    errata:['products', 'repos', 'errata']};
+                    errata:['products', 'repos', 'errata'], views:['views']};
 
     var search = KT.content_search(KT.available_environments);
 
@@ -73,6 +74,7 @@ KT.content_search = function(paths_in){
     search_pages = {errata:{url:KT.routes.errata_content_search_index_path(), modes:true},
                     repos:{url:KT.routes.repos_content_search_index_path(), modes:true, comparable:true},
                     products:{url:KT.routes.products_content_search_index_path(), modes:true},
+                    views:{url:KT.routes.views_content_search_index_path(), modes:true},
                     packages:{url:KT.routes.packages_content_search_index_path(), modes:true}
     },
     more_results_urls = {
