@@ -286,7 +286,7 @@ class AddRemoveProduct(ContentViewDefinitionAction):
         product_label  = self.get_option('product')
 
         view    = get_cv_definition(org_name, def_label, def_name, def_id)
-        product = get_product(org_name, product_label)
+        product = get_product(org_name, prodLabel=product_label)
 
         products = self.def_api.products(org_name, view['id'])
         products = [f['id'] for f in products]
