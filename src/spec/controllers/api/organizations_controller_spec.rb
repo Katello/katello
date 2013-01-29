@@ -16,7 +16,6 @@ describe Api::OrganizationsController do
   include LoginHelperMethods
   include AuthorizationHelperMethods
   include OrganizationHelperMethods
-  include LocaleHelperMethods
 
   let(:user_with_index_permissions) { user_with_permissions { |u| u.can([:read], :organizations) } }
   let(:user_without_index_permissions) { user_without_permissions }
@@ -36,7 +35,6 @@ describe Api::OrganizationsController do
     @controller.stub(:get_organization => @org)
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
-    set_default_locale
   end
 
 
