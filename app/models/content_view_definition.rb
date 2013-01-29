@@ -13,7 +13,7 @@
 require 'util/model_util.rb'
 
 class ContentViewDefinition < ActiveRecord::Base
-  include Glue::ElasticSearch::ContentViewDefinition if AppConfig.use_elasticsearch
+  include Glue::ElasticSearch::ContentViewDefinition if Katello.config.use_elasticsearch
   include Katello::LabelFromName
   include Authorization::ContentViewDefinition
 
@@ -30,10 +30,13 @@ class ContentViewDefinition < ActiveRecord::Base
   has_many :repositories, :through => :content_view_definition_repositories
 
   validates :label, :uniqueness => {:scope => :organization_id},
-    :presence => true, :katello_label_format => true
-  validates :name, :presence => true, :katello_name_format => true
+    :presence => true
+  validates :name, :presence => true
   validates :organization, :presence => true
   validate :validate_content
+
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+  validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
 
   def publish(name, description, label=nil, options = { })
     options = { :async => true, :notify => false }.merge options
