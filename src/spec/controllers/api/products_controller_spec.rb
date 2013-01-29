@@ -29,7 +29,6 @@ describe Api::ProductsController, :katello => true do
     disable_org_orchestration
     disable_product_orchestration
     disable_user_orchestration
-    set_default_locale
 
     @organization = new_test_org
 
