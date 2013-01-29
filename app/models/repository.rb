@@ -122,7 +122,6 @@ class Repository < ActiveRecord::Base
 
   #is the repo cloned in the specified environment
   def is_cloned_in? env
-    lib_id = self.library_instance_id ? self.library_instance_id : self.id
     self.get_clone(env) != nil
   end
 
@@ -135,8 +134,15 @@ class Repository < ActiveRecord::Base
   end
 
   def get_clone env
-    lib_id = self.library_instance_id || self.id
-    Repository.in_environment(env).where(:library_instance_id=>lib_id).first
+    if self.content_view.default
+      # this repo is part of a default content view
+      lib_id = self.library_instance_id || self.id
+      Repository.in_environment(env).where(:library_instance_id => lib_id).
+          joins(:content_view_version => :content_view).where('content_views.default'=>true).first
+    else
+      # this repo is part of a content view that was published from a user created definition
+      self.content_view.get_repo_clone(env, self).first
+    end
   end
 
   def gpg_key_name=(name)
@@ -187,13 +193,13 @@ class Repository < ActiveRecord::Base
     raise _("View %{view} has not been promoted to %{env}") %
               {:view=>content_view.name, :env=>to_env.name} if view_version.nil?
 
-    library = self.environment.library? ? self : self.library_instance
+    library = self.library_instance ? self.library_instance : self
 
     if content_view.default?
       raise _("Cannot clone repository from %{from_env} to %{to_env}.  They are not sequential.") %
                 {:from_env=>self.environment.name, :to_env=>to_env.name} if to_env.prior != self.environment
       raise _("Repository has already been promoted to %{to_env}") %
-              {:to_env=>to_env} if Repository.where(:library_instance_id=>library.id).in_environment(to_env).count > 0
+              {:to_env=>to_env} if self.is_cloned_in?(to_env)
     else
       raise _("Repository has already been cloned to %{cv_name} in environment %{to_env}") %
                 {:to_env=>to_env, :cv_name=>content_view.name} if
