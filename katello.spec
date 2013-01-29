@@ -760,7 +760,6 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
-<<<<<<< HEAD
 * Fri Jan 25 2013 Justin Sherrill <jsherril@redhat.com> 1.3.11.pulpv2-1
 - fixing pulp url in config template (jsherril@redhat.com)
 - fix whitespace (jsherril@redhat.com)
@@ -771,7 +770,7 @@ fi
 - merge conflict (jsherril@redhat.com)
 - more spec fixes (jsherril@redhat.com)
 - fixing minitests and most specs (jsherril@redhat.com)
-=======
+
 * Fri Jan 25 2013 Justin Sherrill <jsherril@redhat.com> 1.3.5-1
 - fixing compass version (jsherril@redhat.com)
 - added lib/resources/abstract_model dir and its contents to the .spec file
@@ -858,7 +857,6 @@ fi
 
 * Fri Jan 25 2013 Justin Sherrill <jsherril@redhat.com>
 - fixing compass version (jsherril@redhat.com)
->>>>>>> ac8ce648d43bacc301b16720397384907d746009
 - added lib/resources/abstract_model dir and its contents to the .spec file
   (dmitri@redhat.com)
 - orgs - new scope for finding by name or label (tstrachota@redhat.com)
@@ -868,19 +866,13 @@ fi
 - fix for a broken .spec: now includes files in models/ext dir during the build
   (dmitri@redhat.com)
 - 887095 - fixing API breakage (lzap+git@redhat.com)
-<<<<<<< HEAD
 - fixing some merge conflict broken-ness (jsherril@redhat.com)
 - merge conflict (jsherril@redhat.com)
-=======
->>>>>>> ac8ce648d43bacc301b16720397384907d746009
 - 887095 - Fixing test and feedback (daviddavis@redhat.com)
 - 903000 - Fix for missing params checking on System Templates
   (jrist@redhat.com)
 - bumping version of therubyracer (lzap+git@redhat.com)
-<<<<<<< HEAD
 - exclude test.rake for main rpm (jsherril@redhat.com)
-=======
->>>>>>> ac8ce648d43bacc301b16720397384907d746009
 - avoid problematic ZenTest-4.8.4 (lzap+git@redhat.com)
 - Revert "fix building on F18" (lzap+git@redhat.com)
 - Revert "Fix F16,EL6 after fixing F18" (lzap+git@redhat.com)
@@ -939,7 +931,6 @@ fi
 - foreman integration ui fixes (tstrachota@redhat.com)
 - requiring 'thumbslug_url' in configuration for headpin only
   (komidore64@gmail.com)
-<<<<<<< HEAD
 - Automatic commit of package [katello] release [1.3.3-1].
   (jsherril@redhat.com)
 - Translations - Update .po and .pot files for katello. (jsherril@redhat.com)
@@ -1024,19 +1015,16 @@ fi
   (bbuckingham@redhat.com)
 - 842745 - Showing update message on package group update
   (daviddavis@redhat.com)
-=======
 - adding thumbslug to headpin's ping function and tests, etc
   (komidore64@gmail.com)
 - Fixing the reset-oauth script to also do ../config/katello.yml if it exists.
   (jrist@redhat.com)
 - 820404- Renamed the debug cert button as suggested in the bz
   (paji@redhat.com)
->>>>>>> ac8ce648d43bacc301b16720397384907d746009
 - Code review comments lead to discovery of dead code. The import_status and
   export_status files do not appear tied to any controller and they are only
   referenced by a route which is also not tied to a controller
   (bkearney@redhat.com)
-<<<<<<< HEAD
 - 878891-actkey-alignment - put act keys into table (thomasmckay@redhat.com)
 - 873665 - getting rid of last find_by_username admin calls
   (lzap+git@redhat.com)
@@ -1119,10 +1107,8 @@ fi
 
 * Mon Jan 21 2013 Justin Sherrill <jsherril@redhat.com> 1.3.5_pulpv2-1
 - removing old converge-ui build code (jsherril@redhat.com)
-=======
 - 868045: Missed translating string when there are no products for a system
   (bkearney@redhat.com)
->>>>>>> ac8ce648d43bacc301b16720397384907d746009
 
 * Tue Jan 15 2013 Justin Sherrill <jsherril@redhat.com> 1.3.3-1
 - Translations - Update .po and .pot files for katello. (jsherril@redhat.com)
