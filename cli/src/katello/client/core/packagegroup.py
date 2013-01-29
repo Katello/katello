@@ -61,9 +61,6 @@ class Info(PackageGroupAction):
             system_exit(os.EX_DATAERR, _("Package group [%(groupid)s] not found in repo [%(repoid)s]") \
                 % {'groupid':groupid, 'repoid':repoid})
 
-        group['conditional_package_names'] = [name+": "+required_package  \
-            for name, required_package in group['conditional_package_names'].items()]
-
         self.printer.set_header(_("Package Group Information"))
         batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")})
         batch_add_columns(self.printer, {'description': _("Description")}, \

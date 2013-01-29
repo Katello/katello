@@ -12,7 +12,7 @@
 
 class ErrataController < ApplicationController
 
-  
+
   before_filter :lookup_errata
   before_filter :authorize
 
@@ -42,9 +42,9 @@ class ErrataController < ApplicationController
 
   private
 
-  
+
   def lookup_errata
-    @errata = Glue::Pulp::Errata.find(params[:id])
-  end 
-  
+    @errata = Errata.find(params[:id])
+  end
+
 end

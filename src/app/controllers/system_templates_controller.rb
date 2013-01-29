@@ -99,7 +99,7 @@ class SystemTemplatesController < ApplicationController
     distro = @template.distributions.empty? ? nil : @template.distributions.first.distribution_pulp_id
     repos = @template.repositories.collect{|repo| {:name=>repo.name, :id=>repo.id}}
 
-    # Collect up the environments for all templates with this name 
+    # Collect up the environments for all templates with this name
     @templates = SystemTemplate.where(:name => @template.name).joins(:environment).
         where("environments.organization_id =  :org_id", :org_id=>current_organization.id)
 
@@ -144,7 +144,7 @@ class SystemTemplatesController < ApplicationController
 
   def product_comps
     @product = Product.readable(current_organization).find(params[:product_id])
-    
+
     @groups = []
     @product.repos(current_organization.library).each{|repo|
       repo.package_groups.each{|grp|
@@ -166,7 +166,7 @@ class SystemTemplatesController < ApplicationController
   end
 
   def update_content
-    
+
     pkgs = params[:packages]
     pkg_groups = params[:package_groups]
     distro = params[:distribution]

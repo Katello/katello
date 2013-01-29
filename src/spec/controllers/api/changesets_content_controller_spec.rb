@@ -32,6 +32,8 @@ describe Api::ChangesetsContentController, :katello => true do
   let(:product_cp_id) { 123456 }
   let(:package_name) { "package-123" }
   let(:erratum_id) { "erratum-123" }
+  let(:erratum_unit_id) { "asdfasdf" }
+
   let(:repo_id) { 2 }
   let(:template_id) { 3 }
   let(:distribution_id) { 4 }
@@ -131,6 +133,7 @@ describe Api::ChangesetsContentController, :katello => true do
   describe "erratum" do
     before(:each) do
       Product.should_receive(:find_by_cp_id).with(product_cp_id).and_return(@product)
+      Runcible::Extensions::Errata.stub(:find).and_return({:id=>erratum_unit_id, :errata_id=>erratum_id})
     end
 
     let(:action) { :add_erratum }
@@ -147,6 +150,7 @@ describe Api::ChangesetsContentController, :katello => true do
   describe "erratum" do
     before(:each) do
       Product.should_receive(:find_by_cp_id).with(product_cp_id).and_return(@product)
+      Runcible::Extensions::Errata.stub(:find).and_return({:id=>erratum_unit_id, :errata_id=>erratum_id})
     end
 
     let(:action) { :remove_erratum }
