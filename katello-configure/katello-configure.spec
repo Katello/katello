@@ -14,7 +14,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        1.3.4.pulpv2
+Version:        1.3.5.pulpv2
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -119,6 +119,9 @@ chmod +x -R %{buildroot}%{homedir}/upgrade-scripts/*
 
 
 %changelog
+* Tue Jan 29 2013 Justin Sherrill <jsherril@redhat.com> 1.3.5.pulpv2-1
+- fixing sync hanging in pulpv2 (jsherril@redhat.com)
+
 * Sun Jan 27 2013 Justin Sherrill <jsherril@redhat.com> 1.3.4.pulpv2-1
 - changing pulp configure to use ssl for qpid (jsherril@redhat.com)
 
