@@ -17,15 +17,17 @@
 RPMBUILD_HOME=~/rpmbuild
 
 printHelp() {
-    printf "Takes 5 params:\n"
-    printf " - name of the package\n"
-    printf " - version\n"
-    printf " - release\n"
-    printf " - required packages\n"
-    printf " - destination directory\n"
-    printf "\nExample:\n"
-    printf " ./create_dummy_package.sh walrus 0.3 8 \"elephant cheetah\" ~/ \n"
-    printf "\n"
+cat <<EOF
+Takes 5 params:
+ - name of the package
+ - version
+ - release
+ - required packages
+ - destination directory
+
+Example:
+ ./create_dummy_package.sh walrus 0.3 8 \"elephant cheetah\" ~/
+EOF
 }
 
 
@@ -44,7 +46,11 @@ TMPDIR="/var/tmp/dummy_package_$RAND"
 
 
 # create tmp dir
-mkdir $TMPDIR/
+mkdir $TMPDIR $TMPDIR/RPMS $TMPDIR/SRPMS
+
+# create subdirs
+mkdir $DEST/RPMS $DEST/SRPMS
+
 echo $TMPDIR
 
 # create spec file from template
@@ -75,7 +81,8 @@ cp $TMPDIR/$NAME.tar.gz $RPMBUILD_HOME/SOURCES/
 rpmbuild -ba $TMPDIR/$NAME.spec
 
 # move the package to the destination folder
-cp $RPMBUILD_HOME/RPMS/noarch/$NAME-$VERSION-$RELEASE.noarch.rpm $DEST
+cp $RPMBUILD_HOME/RPMS/noarch/$NAME-$VERSION-$RELEASE.noarch.rpm $DEST/RPMS
+cp $RPMBUILD_HOME/SRPMS/$NAME-$VERSION-$RELEASE.src.rpm $DEST/SRPMS
 
 # cleanup tmp directory
 #rm -rf $TMPDIR

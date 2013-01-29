@@ -32,13 +32,16 @@ module ProductHelperMethods
     disable_product_orchestration
     disable_repo_orchestration
     @provider = Provider.create!({:organization => org, :name => 'provider' + suffix, :repository_url => "https://something.url", :provider_type => Provider::CUSTOM})
-    @p = Product.create!(ProductTestData::SIMPLE_PRODUCT.merge({:name=>'product' + suffix, :environments => [env], :provider => @provider}))
+    @p = Product.create!(ProductTestData::SIMPLE_PRODUCT.merge({:name=>'product' + suffix, :environments => [env],
+                                                                :provider => @provider}))
+
     env_product = EnvironmentProduct.find_or_create(env, @p)
 
+
     repo = Repository.new(:environment_product => env_product, :name=>"FOOREPO" + suffix,
-                          :label=>"FOOREPO" + suffix, :pulp_id=>RepoTestData::REPO_ID,
+                          :label=>"FOOREPO" + suffix, :pulp_id=>"anid" + suffix,
                           :content_id=> "1234", :content_view_version=>env.default_view_version,
-                          :relative_path=>'/foo/')
+                          :relative_path=>'/foo/', :feed => 'https://localhost.com/foo')
     repo.stub(:create_pulp_repo).and_return([])
     repo.save!
 
@@ -68,11 +71,12 @@ module ProductHelperMethods
     repo.stub(:sync).and_return([])
 
     repo.stub!(:pulp_repo_facts).and_return({:clone_ids => []})
-    Resources::Pulp::Repository.stub!(:clone_repo).and_return({})
     Glue::Pulp::Repos.stub!(:groupid).and_return([])
     repo.stub(:content => {:id => "123"})
     repo.promote(environment.prior, environment)
     ep = EnvironmentProduct.find_or_create(environment, repo.product)
-    Repository.where(:environment_product_id => ep).first
+    Repository.where(:environment_product_id => ep).first.tap do |promoted|
+        promoted.stub(:feed => repo.feed)
+    end
   end
 end

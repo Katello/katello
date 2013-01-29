@@ -39,6 +39,9 @@ cp src/katello/agent/katelloplugin.py %{buildroot}/%{_prefix}/lib/gofer/plugins
 %clean
 rm -rf %{buildroot}
 
+%postun
+LC_ALL=C service goferd status | grep 'is running' && service goferd restart
+
 %files
 %config(noreplace) %{_sysconfdir}/gofer/plugins/katelloplugin.conf
 %{_prefix}/lib/gofer/plugins/katelloplugin.*

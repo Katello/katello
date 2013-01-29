@@ -64,7 +64,7 @@ class OrganizationsController < ApplicationController
   end
 
   def items
-    ids = Organization.readable.collect{|o| o.id}
+    ids = Organization.without_deleting.readable.collect(&:id)
     render_panel_direct(Organization, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
                         {:default_field => :name, :filter=>[{"id"=>ids}]})
   end
@@ -154,6 +154,10 @@ class OrganizationsController < ApplicationController
       render :text=>found_errors[1], :status=>:bad_request and return
     end
 
+    # log off all users for this organization
+    # TODO - since we use cookie-based session this is not possible (need to switch over to db-based sessions first)
+
+    # schedule background deletion
     id = @organization.label
     OrganizationDestroyer.destroy @organization, :notify => true
     notify.success _("Organization '%s' has been scheduled for background deletion.") % @organization.name

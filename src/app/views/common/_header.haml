@@ -1,11 +1,11 @@
 = content_for(:appname) do
-  = AppConfig.app_name.upcase
+  = Katello.config.app_name.upcase
 
 = content_for(:logo) do
-  = link_to AppConfig.app_name.upcase, dashboard_index_path, :title=>AppConfig.app_name.upcase, :class => "logo"
+  = link_to Katello.config.app_name.upcase, dashboard_index_path, :title=>Katello.config.app_name.upcase, :class => "logo"
 
 = content_for(:header_title_2) do
-  = AppConfig.app_name.upcase
+  = Katello.config.app_name.upcase
 
 = content_for(:tabs) do
   - if not current_user.nil?

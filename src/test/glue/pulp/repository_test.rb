@@ -116,7 +116,7 @@ class GluePulpRepoTest < GluePulpRepoTestBase
 
     refute_empty    task_list
     assert_kind_of  PulpSyncStatus, task_list.first
-    
+
     @task = task_list.first
     self.class.wait_on_task(@task)
   end
@@ -230,7 +230,7 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
 
   def test_has_erratum?
     VCR.use_cassette('glue_pulp_repo_units', :match_requests_on => [:body_json, :path, :method]) do
-      e_id = @@fedora_17_x86_64.errata.first.id
+      e_id = @@fedora_17_x86_64.errata.first.errata_id
       assert @@fedora_17_x86_64.has_erratum?(e_id)
     end
   end
@@ -412,7 +412,7 @@ class GluePulpRepoRequiresSyncAndPromoteTest < GluePulpRepoTestBase
       @@cloned_repo.destroy
     end
   end
-    
+
   def test_delete_packages
     package = @@fedora_17_x86_64.find_packages_by_name('elephant').first
 

@@ -10,21 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-
-class LockValidator < ActiveModel::Validator
-  def validate(record)
-    if record.locked?
-      if record.name_changed? || record.description_changed?
-        record.errors[:base] << _("Cannot change the name or description of a locked role.")
-      end
-    end
-  end
-end
-
 class Role < ActiveRecord::Base
   include Authorization::Role
   include Glue::ElasticSearch::Role if AppConfig.use_elasticsearch
-
 
   acts_as_reportable
 
@@ -38,9 +26,12 @@ class Role < ActiveRecord::Base
 
   # scope to facilitate retrieving roles that are 'non-self' roles... group() so that unique roles are returned
   scope :non_self, joins("left outer join users on users.own_role_id = roles.id").where('users.own_role_id'=>nil).order('roles.name')
-  validates :name, :uniqueness => true, :no_trailing_space => true, :length => {:maximum => 128, :minimum => 1}, :presence => true
+  validates :name, :uniqueness => true, :length => {:maximum => 128, :minimum => 1}, :presence => true
+  validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
+  validates_with Validators::RolenameValidator, :attributes => :name
+
   validates :description, :length => { :maximum => 250 }
-  validates_with LockValidator, :on => :update
+  validates_with Validators::LockValidator, :on => :update
 
   #validates_associated :permissions
   accepts_nested_attributes_for :permissions, :allow_destroy => true

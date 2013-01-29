@@ -17,12 +17,14 @@ describe Api::ErrataController, :katello => true do
   include AuthorizationHelperMethods
   include ProductHelperMethods
   include RepositoryHelperMethods
+  include LocaleHelperMethods
 
   before(:each) do
     disable_org_orchestration
     disable_product_orchestration
     disable_user_orchestration
     disable_repo_orchestration
+    set_default_locale
 
     @organization = new_test_org
     @env = @organization.library
@@ -31,6 +33,7 @@ describe Api::ErrataController, :katello => true do
     @repo = new_test_repo(ep_library, "repo", "#{@organization.name}/Library/prod/repo")
 
     @product.stub(:repos).and_return([@repository])
+    @repo.stub(:has_distribution?).and_return(true)
     Repository.stub(:find).and_return(@repo)
 
     KTEnvironment.stub(:find).and_return(@organization.library)

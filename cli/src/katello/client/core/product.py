@@ -141,20 +141,23 @@ class List(ProductAction):
         prov_name = self.get_option('prov')
         all_opt = self.get_option('all')
 
-        batch_add_columns(self.printer, 'id', 'name', 'label', 'provider_id', 'provider_name', 'sync_plan_name')
-        self.printer.add_column('last_sync', formatter=format_sync_time)
-        self.printer.add_column('gpg_key_name', name=_("GPG key"))
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, \
+            {'label': _("Label")}, {'provider_id': _("Provider ID")}, \
+            {'provider_name': _("Provider Name")}, {'sync_plan_name': _("Sync Plan Name")})
+        self.printer.add_column('last_sync', _("Last Sync"), formatter=format_sync_time)
+        self.printer.add_column('gpg_key_name', _("GPG key"))
 
         if prov_name:
             prov = get_provider(org_name, prov_name)
 
-            self.printer.set_header(_("Product List For Provider %s") % (prov_name))
+            self.printer.set_header(_("Product List For Provider [ %s ]") % (prov_name))
             prods = self.api.products_by_provider(prov["id"])
 
         else:
             env = get_environment(org_name, env_name)
 
-            self.printer.set_header(_("Product List For Organization %s, Environment '%s'") % (org_name, env["name"]))
+            self.printer.set_header(_("Product List For Organization %(org_name)s, Environment '%(env_name)s'") \
+                % {'org_name':org_name, 'env_name':env["name"]})
             prods = self.api.products_by_env(env['id'])
 
         # hide marketing products by default
@@ -189,7 +192,8 @@ class Sync(SingleProductAction):
             errors = [t["result"]['errors'][0] for t in task.get_hashes() if t['state'] == 'error' and
                                                                              isinstance(t["result"], dict) and
                                                                              "errors" in t["result"]]
-            print _("Product [ %s ] failed to sync: %s" % (prod["name"], errors))
+            print _("Product [ %(prod_name)s ] failed to sync: %(errors)s" \
+                % {'prod_name':prod["name"], 'errors':errors})
             return os.EX_DATAERR
         elif task.cancelled():
             print _("Product [ %s ] synchronization canceled" % prod["name"])
@@ -241,10 +245,11 @@ class Status(SingleProductAction):
 
         #TODO: last errors?
 
-        batch_add_columns(self.printer, 'id', 'name', 'provider_id', 'provider_name')
-        self.printer.add_column('last_sync', formatter=format_sync_time)
-        self.printer.add_column('sync_state', formatter=format_sync_state)
-        self.printer.add_column('progress', show_with=printer.VerboseStrategy)
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, \
+            {'provider_id': _("Provider ID")}, {'provider_name': _("Provider Name")})
+        self.printer.add_column('last_sync', _("Last Sync"), formatter=format_sync_time)
+        self.printer.add_column('sync_state', _("Sync State"), formatter=format_sync_state)
+        self.printer.add_column('progress', _("Progress"), show_with=printer.VerboseStrategy)
 
         self.printer.set_header(_("Product Status"))
         self.printer.print_item(prod)
@@ -283,10 +288,12 @@ class Promote(SingleProductAction):
             run_spinner_in_bg(wait_for_async_task, [task], message=_("Promoting the product, please wait... "))
 
             if task.succeeded():
-                print _("Product [ %s ] promoted to environment [ %s ] " % (prod["name"], envName))
+                print _("Product [ %(prod_name)s ] promoted to environment [ %(envName)s ] " \
+                    % {'prod_name':prod["name"], 'envName':envName})
                 returnCode = os.EX_OK
             else:
-                print _("Product [ %s ] promotion failed: %s" % (prod["name"], format_task_errors(task.errors())) )
+                print _("Product [ %(prod_name)s ] promotion failed: %(task_errors)s" \
+                    % {'prod_name':prod["name"], 'task_errors':format_task_errors(task.errors())} )
                 returnCode = os.EX_DATAERR
 
         except Exception:

@@ -85,7 +85,7 @@ start() {
         export HOME=
         RETVAL=0
         for P in $( seq $THIN_PORT $(( $THIN_PORT + $THIN_SERVERS - 1)) ); do
-            /usr/sbin/lsof -t -i TCP:$P > /dev/null && \
+            /usr/sbin/lsof -tPni TCP:$P -sTCP:LISTEN > /dev/null && \
             echo "Something is blocking port $P. THIN could not start." && \
             RETVAL=1;
         done

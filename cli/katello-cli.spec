@@ -12,7 +12,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 %global base_name katello
-%global katello_requires python-iniparse python-simplejson python-kerberos m2crypto PyXML
+%global katello_requires python-iniparse python-simplejson python-kerberos m2crypto python-dateutil
 %global locale_dir /usr/share/locale/
 %global homedir %{_datarootdir}/%{base_name}
 
@@ -21,7 +21,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.3.1
+Version:       1.3.1_pulpv2
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 Requires:      %{base_name}-cli-common
@@ -54,7 +54,6 @@ Common classes for katello clients
 Summary:       Unit tests for Katello client
 Group:         Applications/System
 License:       GPLv2
-Requires:      PyXML
 Requires:      python-kerberos
 Requires:      m2crypto
 Requires:      python-nose
@@ -159,6 +158,33 @@ popd
 make -C po clean
 
 %changelog
+* Tue Jan 15 2013 Justin Sherrill <jsherril@redhat.com> 1.3.3-1
+- Translations - Update .po and POTFILES.in files for katello-cli.
+  (jsherril@redhat.com)
+- Translations - Download translations from Transifex for katello-cli.
+  (jsherril@redhat.com)
+- 894480 - remove PyXML dependency (msuchy@redhat.com)
+- resolve pylint errors on Fedora 19 (msuchy@redhat.com)
+- Revert "Pylint - Updates to remove disablement of pylint warnings present in"
+  (msuchy@redhat.com)
+- cli completion - fix in sed expression (tstrachota@redhat.com)
+- fix config_template info formatting (pchalupa@redhat.com)
+
+* Tue Jan 08 2013 Lukas Zapletal <lzap+git@redhat.com> 1.3.2-1
+- Merge pull request #1341 from komidore64/cli-ping
+- 886462 - [cli] ping returns $? == 30 (but all services are OK)
+- 853385: Display the environment in the output of system info
+- fricken pylint
+- unifying "blah blah blah [ %%s ]" in CLI" (komidore64@gmail.com)
+- 879151, 879161, 879169, 879174, 879195, 880031, 880048, 880054, 880066,
+  880073, 880089, 880131, 880566
+- Merge pull request #1322 from jsomara/envname
+-  Adding environment tests in CLI
+- fixing locales
+- forward port translation from SAM
+- Adding environment name change to CLI
+- 876248: Successful actions should be logged as info, not as errors
+
 * Tue Dec 18 2012 Miroslav Suchý <msuchy@redhat.com> 1.3.1-1
 - smart proxies - cli CRUD actions (tstrachota@redhat.com)
 - cli - packaged completion script (tstrachota@redhat.com)

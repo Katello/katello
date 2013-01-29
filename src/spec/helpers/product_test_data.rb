@@ -43,7 +43,7 @@ module ProductTestData
     :productContent => [],
     :attributes => []
   })
-  
+
   PRODUCT_WITH_ATTRS = HashWithIndifferentAccess.new({
     :name => ProductTestData::PRODUCT_NAME,
     :label => "foo",
@@ -71,7 +71,7 @@ module ProductTestData
         "value" => 2
       }]
   })
-  
+
   PRODUCT_WITH_CONTENT = HashWithIndifferentAccess.new({
     :name => ProductTestData::PRODUCT_NAME,
     :label => "dream",
@@ -89,7 +89,7 @@ module ProductTestData
             "gpgUrl" => "/some/gpg/url/",
             "updated" => "2011-01-04T18:47:47.219+0000",
             "created" => "2011-01-04T18:47:47.219+0000"
-          },
+          }.with_indifferent_access,
           "enabled" => true,
           "flexEntitlement" => 0,
           "physicalEntitlement" => 0
@@ -115,7 +115,7 @@ module ProductTestData
             "gpgUrl" => "/some/gpg/url/",
             "updated" => "2011-01-04T18:47:47.219+0000",
             "created" => "2011-01-04T18:47:47.219+0000"
-          },
+          }.with_indifferent_access,
           "enabled" => true,
           "flexEntitlement" => 0,
           "physicalEntitlement" => 0}
@@ -173,7 +173,7 @@ module ProductTestData
 #       :sockets => 2
 #     }
 #   })
-# 
+#
 #   CREATED_CONTENT_URL = "/foo/path/always"
 #   CREATED_CONTENT = {
 #       "flexEntitlement" => 0,
@@ -191,7 +191,7 @@ module ProductTestData
 #         "created" => "2010-11-25T20:33:28.394+0000"
 #       }
 #   }
-# 
+#
 #   CREATED_PRODUCT = {
 #     "href" => "/products/66667",
 #     "name" => ProductTestData::PRODUCT_NAME,
@@ -208,7 +208,7 @@ module ProductTestData
 #     "updated" => "2010-11-25T20:02:42.775+0000",
 #     "created" => "2010-11-25T20:02:42.775+0000"
 #   }
-# 
+#
 #   CREATED_PRODUCT_WITH_NO_CONTENT = {
 #     "href" => "/products/66667",
 #     "name" => ProductTestData::PRODUCT_NAME,
@@ -225,7 +225,7 @@ module ProductTestData
 #     "updated" => "2010-11-25T20:02:42.775+0000",
 #     "created" => "2010-11-25T20:02:42.775+0000"
 #   }
-# 
+#
 #   SYNC_STATUS_STARTED = {
 #     "scheduled_time" => 0,
 #     "exception" => nil,
@@ -265,13 +265,13 @@ module ProductTestData
 #         }
 #       },
 #       "error_details" => [
-# 
+#
 #       ],
 #       "num_error" => 0
 #     },
 #     "id" => "5f0f0fbd-4ab7-11e0-8544-0019d1630404"
 #   }
-# 
+#
 #   SYNC_STATUS_FINISHED =  {
 #     "scheduled_time" => 0,
 #     "exception" => nil,
@@ -303,14 +303,14 @@ module ProductTestData
 #         }
 #       },
 #       "error_details" => [
-# 
+#
 #       ],
 #       "num_error" => 0
 #     },
 #     "id" => "1ff5c247-4ab8-11e0-b577-0019d1630404"
 #   }
-# 
-#   SYNC_STATUS_ERRORED = 
+#
+#   SYNC_STATUS_ERRORED =
 #   {
 #     "scheduled_time" => 0,
 #     "exception" => "RepoError()",
@@ -343,17 +343,17 @@ module ProductTestData
 #       "step" => "Downloading Metadata",
 #       "size_left" => 0,
 #       "details" => {
-# 
+#
 #       },
 #       "error_details" => [
-# 
+#
 #       ],
 #       "num_error" => 0
 #     },
 #     "id" => "632c1d35-4ab9-11e0-bbab-0019d1630404"
 #   }
-# 
-# 
+#
+#
 
 
 end

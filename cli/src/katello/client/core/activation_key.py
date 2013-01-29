@@ -67,7 +67,8 @@ class List(ActivationKeyAction):
             if envName == None:
                 print _("No keys found in organization [ %s ]") % orgName
             else:
-                print _("No keys found in organization [ %s ] environment [ %s ]") % (orgName, envName)
+                print _("No keys found in organization [ %(orgName)s ] environment [ %(envName)s ]") \
+                    % {'orgName':orgName, 'envName':envName}
 
             return os.EX_OK
 
@@ -80,13 +81,13 @@ class List(ActivationKeyAction):
                 view = get_content_view(orgName, view_id=k['content_view_id'])
                 k['content_view'] = view["label"]
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('description', multiline=True)
-        self.printer.add_column('usage')
-        self.printer.add_column('environment_id')
-        self.printer.add_column('system_template_id')
-        self.printer.add_column('content_view')
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('description', _("Description"), multiline=True)
+        self.printer.add_column('usage', _("Usage"))
+        self.printer.add_column('environment_id', _("Environment ID"))
+        self.printer.add_column('system_template_id', _("System Template ID"))
+        self.printer.add_column('content_view', _("Content View Label"))
 
         self.printer.set_header(_("Activation Key List"))
         self.printer.print_items(keys)
@@ -123,6 +124,7 @@ class Info(ActivationKeyAction):
         for akey in keys:
             akey["pools"] = "[ "+ ", ".join([pool["cp_id"] for pool in akey["pools"]]) +" ]"
 
+<<<<<<< HEAD
         if keys[0]['content_view_id']:
             view = get_content_view(orgName, view_id=keys[0]['content_view_id'])
             keys[0]['content_view'] = view['label']
@@ -135,6 +137,16 @@ class Info(ActivationKeyAction):
         self.printer.add_column('system_template_id')
         self.printer.add_column('content_view', value_formatter=lambda x: "[ %s ]" % x)
         self.printer.add_column('pools', multiline=True, show_with=printer.VerboseStrategy)
+=======
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('description', _("Description"), multiline=True)
+        self.printer.add_column('usage_limit', _("Usage Limit"), \
+            value_formatter=lambda x: "unlimited" if x == -1 else x)
+        self.printer.add_column('environment_id', _("Environment ID"))
+        self.printer.add_column('system_template_id', _("System Template ID"))
+        self.printer.add_column('pools', _("Pools"), multiline=True, show_with=printer.VerboseStrategy)
+>>>>>>> pulpv2
 
         self.printer.set_header(_("Activation Key Info"))
         self.printer.print_item(keys[0])
@@ -183,7 +195,7 @@ class Create(ActivationKeyAction):
         try:
             templateId = self.get_template_id(environment['id'], templateName)
         except OptionException:
-            print >> sys.stderr, _("Couldn't find template '%s'") % templateName
+            print >> sys.stderr, _("Couldn't find template [ %s ]") % templateName
             return os.EX_DATAERR
 
         if view_label is not None:
@@ -248,6 +260,7 @@ class Update(ActivationKeyAction):
 
         keys = self.api.activation_keys_by_organization(orgName, keyName)
         if len(keys) == 0:
+            print >> sys.stderr, _("Could not find activation key [ %s ]") % keyName
             return os.EX_DATAERR
         key = keys[0]
 
@@ -258,7 +271,7 @@ class Update(ActivationKeyAction):
         try:
             templateId = self.get_template_id(key['environment_id'], templateName)
         except OptionException:
-            print >> sys.stderr, _("Couldn't find template '%s'") % (templateName)
+            print >> sys.stderr, _("Couldn't find template [ %s ]") % (templateName)
             return os.EX_DATAERR
 
         key = self.api.update(orgName, key['id'], environment['id'] if environment != None else None,
@@ -294,7 +307,7 @@ class Delete(ActivationKeyAction):
 
         keys = self.api.activation_keys_by_organization(orgName, keyName)
         if len(keys) == 0:
-            #TODO: not found?
+            print >> sys.stderr, _("Could not find activation key [ %s ]") % keyName
             return os.EX_DATAERR
 
         self.api.delete(orgName, keys[0]['id'])

@@ -16,6 +16,12 @@ module Glue::Pulp::Repo
     base.send :include, InstanceMethods
 
     base.class_eval do
+
+      validates_with Validators::KatelloUrlFormatValidator,
+                     :attributes => :feed,
+                     :field_name => :url, :on => :create,
+                     :if => Proc.new { |o| o.environment.library? }
+
       before_save :save_repo_orchestration
       before_destroy :destroy_repo_orchestration
 
@@ -40,7 +46,7 @@ module Glue::Pulp::Repo
 
       def self.ensure_sync_notification
         resource =  Runcible::Resources::EventNotifier
-        url = AppConfig.post_sync_url
+        url = Katello.config.post_sync_url
         type = resource::EventTypes::REPO_SYNC_COMPLETE
         notifs = resource.list()
 
@@ -87,7 +93,7 @@ module Glue::Pulp::Repo
     end
 
     def uri
-      uri = URI.parse(AppConfig.pulp.url)
+      uri = URI.parse(Katello.config.pulp.url)
       "https://#{uri.host}/pulp/repos/#{relative_path}"
     end
 
@@ -262,17 +268,17 @@ module Glue::Pulp::Repo
       Katello::PackageUtils.find_latest_packages(packages)
     end
 
-    def has_erratum? id
+    def has_erratum? errata_id
       self.errata.each do |err|
-        return true if err.id == id
+        return true if err.errata_id == errata_id
       end
       return false
     end
 
     def sync(options = { })
       sync_options= {}
-      sync_options[:max_speed] ||= AppConfig.pulp.sync_KBlimit if AppConfig.pulp.sync_KBlimit # set bandwidth limit
-      sync_options[:num_threads] ||= AppConfig.pulp.sync_threads if AppConfig.pulp.sync_threads # set threads per sync
+      sync_options[:max_speed] ||= Katello.config.pulp.sync_KBlimit if Katello.config.pulp.sync_KBlimit # set bandwidth limit
+      sync_options[:num_threads] ||= Katello.config.pulp.sync_threads if Katello.config.pulp.sync_threads # set threads per sync
       pulp_tasks = Runcible::Extensions::Repository.sync(self.pulp_id, sync_options)
       pulp_task = pulp_tasks.select{|i| i['tags'].include?("pulp:action:sync")}.first.with_indifferent_access
 
@@ -326,7 +332,7 @@ module Glue::Pulp::Repo
       events << Runcible::Extensions::Repository.errata_copy(self.pulp_id, to_repo.pulp_id)
       events << Runcible::Extensions::Repository.distribution_copy(self.pulp_id, to_repo.pulp_id)
       events << Runcible::Extensions::Repository.package_group_copy(self.pulp_id, to_repo.pulp_id)
-      events       
+      events
     end
 
     def sync_start
@@ -347,9 +353,9 @@ module Glue::Pulp::Repo
                                                 {:package_ids=>pkg_id_list})
     end
 
-    def add_errata errata_id_list
+    def add_errata errata_unit_id_list
       previous = self.environmental_instances.in_environment(self.environment.prior).first
-      Runcible::Extensions::Repository.errata_copy(previous.pulp_id, self.pulp_id, {:errata_ids=>errata_id_list})
+      Runcible::Extensions::Repository.errata_copy(previous.pulp_id, self.pulp_id, {:errata_ids=>errata_unit_id_list})
     end
 
     def add_distribution distribution_id

@@ -245,7 +245,7 @@ class ContentSearchController < ApplicationController
         Repository.where(:pulp_id=>all_repos).each do |r|
           cols[r.environment.id] = {:hover => repo_hover_html(r)} if env_ids.include?(r.environment_id)
         end
-        {:id=>"repo_#{repo.id}", :comparable=>true, :parent_id=>"product_#{repo.product.id}", 
+        {:id=>"repo_#{repo.id}", :comparable=>true, :parent_id=>"product_#{repo.product.id}",
         :name=>repo.name, :cols=>cols, :data_type => "repo", :value => repo.name}
     end
   end
@@ -313,9 +313,16 @@ class ContentSearchController < ApplicationController
                   {:terms => {:enabled => [true]}}]
     conditions << {:terms => {:product_id => product_ids}} unless product_ids.blank?
 
+    #get total repos
+    found = Repository.search(:load => true) do
+      query {string term, {:default_field => 'name'}} unless term.blank?
+      filter "and", conditions
+      size 1
+    end
     Repository.search(:load => true) do
       query {string term, {:default_field => 'name'}} unless term.blank?
       filter "and", conditions
+      size found.total
     end
   end
 
@@ -368,7 +375,7 @@ class ContentSearchController < ApplicationController
       repo = Repository.find(repo_id)
       repo_span = spanned_repo_content(repo, content_type,  search_obj, 0, search_mode, environments)
       if repo_span
-        rows << {:name=>repo.name, :cols=>repo_span[:repo_cols], :id=>"repo_#{repo.id}", 
+        rows << {:name=>repo.name, :cols=>repo_span[:repo_cols], :id=>"repo_#{repo.id}",
                  :parent_id=>"product_#{product_id}", :data_type => "repo", :value => repo.name}
         repo_span[:repo_cols].values.each do |span|
           product_envs[span[:id]] += span[:display]
@@ -460,7 +467,7 @@ class ContentSearchController < ApplicationController
     Katello::PackageUtils.setup_shared_unique_filter(repoids, search_mode, search)
     search.perform.results
   rescue Tire::Search::SearchRequestFailed => e
-    Support.array_with_total
+    Util::Support.array_with_total
   end
 
 
@@ -488,10 +495,10 @@ class ContentSearchController < ApplicationController
         if item.repoids.include? repo.pulp_id
             row[:cols][repo.environment_id] = {:id=>repo.environment_id} if env_ids.include?(repo.environment_id)
         end
-      end 
+      end
       to_ret << row
     end
     to_ret
-  end 
+  end
 
 end

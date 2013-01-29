@@ -145,7 +145,7 @@ class ChangesetsController < ApplicationController
     if params[:description]
       @changeset.description = params[:description]
       @changeset.save!
-            
+
       render :json=>{:description=> params[:description], :timestamp => @changeset.updated_at.to_i.to_s} and return
     end
 
@@ -366,7 +366,7 @@ class ChangesetsController < ApplicationController
         type = item["type"]
         id = item["item_id"]
         item = nil
- 
+
         if not product_id.nil?
           if not update_item_valid?(type, id, product_id)
             return false
@@ -408,7 +408,7 @@ class ChangesetsController < ApplicationController
 
   def update_errata_valid? id
     errata = Errata.find(id)
-    
+
     errata.repoids.each{ |repoid|
       repo = Repository.where(:pulp_id => repoid)[0]
       product = repo.product

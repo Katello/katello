@@ -83,7 +83,9 @@ EOKEY
 
 
   def disable_product_orchestration
-    Resources::Candlepin::Product.stub!(:get).and_return([{:productContent => []}])
+    Resources::Candlepin::Product.stub!(:get).and_return do
+      [{:productContent => []}] #return a fresh hash, as add_repo modified it
+    end
     Resources::Candlepin::Product.stub!(:add_content).and_return(true)
     Resources::Candlepin::Product.stub!(:create).and_return({:id => '1'})
     Resources::Candlepin::Product.stub!(:create_unlimited_subscription).and_return(true)
@@ -100,14 +102,12 @@ EOKEY
     Runcible::Extensions::Repository.stub!(:create_or_update_schedule).and_return(true)
     Runcible::Extensions::Repository.stub!(:remove_schedules).and_return(true)
 
-    Resources::Pulp::Repository.stub!(:all).and_return([])
-    Resources::Pulp::Repository.stub!(:update).and_return([])
   end
 
   def disable_org_orchestration
     Resources::Candlepin::Owner.stub!(:create).and_return({})
     Resources::Candlepin::Owner.stub!(:create_user).and_return(true)
-    Resources::Candlepin::Owner.stub!(:destroy)
+    Resources::Candlepin::Owner.stub!(:destroy).and_return(true)
     Resources::Candlepin::Owner.stub!(:get_ueber_cert).and_return({ :cert => CERT, :key => KEY })
     disable_env_orchestration # env is orchestrated with org - we disable this as well
   end
@@ -129,7 +129,7 @@ EOKEY
     Runcible::Resources::Role.stub!(:add).and_return(true)
     Runcible::Resources::Role.stub!(:remove).and_return(true)
 
-    User.disable_foreman_orchestration! !options[:keep_foreman] if AppConfig.use_foreman
+    User.disable_foreman_orchestration! !options[:keep_foreman] if Katello.config.use_foreman
   end
 
 
