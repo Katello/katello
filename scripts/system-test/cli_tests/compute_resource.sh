@@ -3,7 +3,7 @@
 
 header "Compute resources"
 
-if rpm -q foreman >> /dev/null; then
+if foreman_installed; then
 
   #PROVIDERS=( "EC2" "LIBVIRT" "OPENSTACK" "OVIRT" "RACKSPACE" "VMWARE" )
   PROVIDERS=( "LIBVIRT" "OVIRT" "RACKSPACE" )

@@ -3,7 +3,7 @@
 
 header "Architectures"
 
-if rpm -q foreman >> /dev/null; then
+if foreman_installed; then
 
 	ARCH_NAME="a_${RAND:0:5}"
 	NEW_ARCH_NAME="b_${RAND:0:5}"
