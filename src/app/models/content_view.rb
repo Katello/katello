@@ -99,7 +99,7 @@ class ContentView < ActiveRecord::Base
   end
 
   def version(env)
-    self.versions.in_environment(env).last
+    self.versions.in_environment(env).order('content_view_versions.id ASC').last
   end
 
   def repos(env)
@@ -120,6 +120,12 @@ class ContentView < ActiveRecord::Base
     end
   end
 
+  def get_repo_clone(env, repo)
+    lib_id = repo.library_instance_id || repo.id
+    Repository.in_environment(env).where(:library_instance_id => lib_id).
+        joins(:content_view_version => :content_view).where('content_views.id' => repo.content_view.id)
+  end
+
   def promote_via_changeset(env, apply_options = {:async => true},
                             cs_name = "#{self.name}_#{env.name}_#{Time.now.to_i}")
     ActiveRecord::Base.transaction do
@@ -134,17 +140,57 @@ class ContentView < ActiveRecord::Base
 
   def promote(from_env, to_env)
     raise "Cannot promote from #{from_env.name}, view does not exist there." if !self.environments.include?(from_env)
-    #remove this when refresh is supported
-    raise "Cannot promote to #{to_env.name}, view already exist there and refreshing not supported." if self.environments.include?(to_env)
 
-    version = self.version(from_env)
-    version.environments << to_env
-    version.save!
+    replacing_version = self.version(to_env)
+
+    promote_version = self.version(from_env)
+    promote_version.environments << to_env
+    promote_version.save!
+
+    # prepare the to_env for the promotion
     tasks = []
-    self.repos(from_env).each do |repo|
-      clone = repo.create_clone(to_env, self)
-      tasks << repo.clone_contents(clone)
+    if replacing_version
+      replacing_version.repos(to_env).each do |repo|
+        clone = self.get_repo_clone(from_env, repo).first
+        if clone.nil?
+          # this repo doesn't exist in the from environment, so destroy it
+          repo.destroy
+        else
+          # this repo does exist in the next environment, so clear it and later
+          # we'll regenerate the content... this is more efficient than deleting
+          # the repo and recreating it...
+          tasks << repo.clear_contents
+        end
+      end
     end
+    PulpTaskStatus::wait_for_tasks tasks unless tasks.blank?
+
+    # promote the repos from from_env to to_env
+    tasks = []
+    promote_version.repos(from_env).each do |repo|
+      clone = self.get_repo_clone(to_env, repo).first
+      if clone.nil?
+        # this repo doesn't currently exist in the next environment, so create it
+        clone = repo.create_clone(to_env, self)
+        tasks << repo.clone_contents(clone)
+      else
+        # this repo already exists in the next environment, so update it
+        clone = Repository.find(clone) # reload readonly obj
+        clone.content_view_version = promote_version
+        clone.save!
+        tasks << repo.clone_contents(clone)
+      end
+    end
+
+    if replacing_version
+      if replacing_version.environments.length == 1
+        replacing_version.destroy
+      else
+        replacing_version.environments.delete(to_env)
+        replacing_version.save!
+      end
+    end
+
     tasks
   end
 
@@ -171,15 +217,11 @@ class ContentView < ActiveRecord::Base
     # retrieve the 'next' version id to use
     next_version_id = self.versions.maximum(:version) + 1
 
-    # retrieve the version that is currently in the library
+    # retrieve the version that is currently in the library and remove the library association.
+    # at this point, we don't want to delete the version as we need to reference the repos it
+    # contains during the refresh
     library_version = self.version(self.organization.library)
-    if library_version.environments.length == 1
-      # the version initially in library was only associated with the library, so destroy it
-      library_version.destroy
-    else
-      # the current version was associated with multiple environments, so only unassociate it from the library
-      library_version.environments.delete(self.organization.library)
-    end
+    library_version.environments.delete(self.organization.library)
 
     # create a new version
     version = ContentViewVersion.create!(:version => next_version_id, :content_view => self,
@@ -188,14 +230,14 @@ class ContentView < ActiveRecord::Base
     if options[:async]
       task  = version.async(:organization => self.organization,
                             :task_type => TaskStatus::TYPES[:content_view_refresh][:type]).
-                      refresh_version(options[:notify])
+                      refresh_version(library_version, options[:notify])
 
       version.task_status = task
       version.save!
     else
       version.task_status = nil
       version.save!
-      version.refresh_version(options[:notify])
+      version.refresh_version(library_version, options[:notify])
     end
 
     version
