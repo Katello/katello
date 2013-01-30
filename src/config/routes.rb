@@ -16,6 +16,12 @@ Src::Application.routes.draw do
         end
       end
 
+      resources :hardware_models do
+        collection do
+          get :items
+        end
+      end
+
       resources :architectures do
         collection do
           get :items
