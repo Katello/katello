@@ -12,7 +12,7 @@
 
 class ActivationKey < ActiveRecord::Base
 
-  include Glue::ElasticSearch::ActivationKey if AppConfig.use_elasticsearch
+  include Glue::ElasticSearch::ActivationKey if Katello.config.use_elasticsearch
   include Authorization::ActivationKey
 
   belongs_to :organization

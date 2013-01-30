@@ -384,21 +384,21 @@ describe Api::SystemsController do
     it_should_behave_like "protected action"
 
     it "should change the name" do
-      Runcible::Extensions::Consumer.should_receive(:update).once.with(uuid, {:display_name => "foo_name"}).and_return(true) if AppConfig.katello?
+      Runcible::Extensions::Consumer.should_receive(:update).once.with(uuid, {:display_name => "foo_name"}).and_return(true) if Katello.config.katello?
       put :update, :id => uuid, :name => "foo_name"
       response.body.should == @sys.to_json
       response.should be_success
     end
 
     it "should change the description" do
-      Runcible::Extensions::Consumer.should_receive(:update).once.with(uuid, {:display_name => "test"}).and_return(true) if AppConfig.katello?
+      Runcible::Extensions::Consumer.should_receive(:update).once.with(uuid, {:display_name => "test"}).and_return(true) if Katello.config.katello?
       put :update, :id => uuid, :description => "redkin is awesome."
       response.body.should == @sys.to_json
       response.should be_success
     end
 
     it "should change the location" do
-      Runcible::Extensions::Consumer.should_receive(:update).once.with(uuid, {:display_name => "test"}).and_return(true) if AppConfig.katello?
+      Runcible::Extensions::Consumer.should_receive(:update).once.with(uuid, {:display_name => "test"}).and_return(true) if Katello.config.katello?
       put :update, :id => uuid, :location => "never-neverland"
       response.body.should == @sys.to_json
       response.should be_success

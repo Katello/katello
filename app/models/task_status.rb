@@ -27,7 +27,7 @@ class TaskStatus < ActiveRecord::Base
     TIMED_OUT = :timed_out
   end
 
-  include Glue::ElasticSearch::TaskStatus if AppConfig.use_elasticsearch
+  include Glue::ElasticSearch::TaskStatus if Katello.config.use_elasticsearch
 
   belongs_to :organization
   belongs_to :user
