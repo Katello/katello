@@ -1,5 +1,5 @@
 Name: katello-agent
-Version: 1.3.0
+Version: 1.3.1
 Release: 1%{?dist}
 Summary: The Katello Agent
 Group:   Development/Languages
@@ -11,8 +11,9 @@ BuildArch: noarch
 BuildRequires: python2-devel
 BuildRequires: python-setuptools
 BuildRequires: rpm-python
-Requires: gofer >= 0.60
-Requires: gofer-package >= 0.60
+Requires: gofer >= 0.74
+Requires: python-pulp-agent-lib >= 2.0.5
+Requires: pulp-rpm-handlers >= 2.0.5
 Requires: subscription-manager
 
 %description
@@ -38,12 +39,18 @@ cp src/katello/agent/katelloplugin.py %{buildroot}/%{_prefix}/lib/gofer/plugins
 %clean
 rm -rf %{buildroot}
 
+%postun
+LC_ALL=C service goferd status | grep 'is running' && service goferd restart
+
 %files
 %config(noreplace) %{_sysconfdir}/gofer/plugins/katelloplugin.conf
 %{_prefix}/lib/gofer/plugins/katelloplugin.*
 %doc LICENSE
 
 %changelog
+* Mon Jan 07 2013 Justin Sherrill <jsherril@redhat.com> 1.3.1-1
+- Refit agent for pulp v2. (jortel@redhat.com)
+
 * Fri Oct 12 2012 Lukas Zapletal <lzap+git@redhat.com> 1.1.3-1
 - 
 

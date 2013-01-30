@@ -165,6 +165,9 @@ var sliding_tree = function(tree_id, options) {
             }else {
               settings.direction = "right";
             }
+
+            $(document).trigger('content_clicked.slidingtree');
+
             render_content(element.attr('id'));
         },
         render_content = function(id){
@@ -627,6 +630,10 @@ sliding_tree.ActionBar = function(toggle_list){
 
     $.each(toggle_list, function(item){
       register_toggle(item, toggle_list[item]);
+    });
+
+    $(document).bind('content_clicked.slidingtree', function(){
+        close();
     });
 
     return {

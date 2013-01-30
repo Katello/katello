@@ -15,7 +15,8 @@ require 'active_support/builder' unless defined?(Builder)
 require 'mapping'
 
 class SystemTemplate < ActiveRecord::Base
-  #include Authorization
+
+  include Authorization::SystemTemplate
   include LazyAccessor
   include AsyncOrchestration
 
@@ -363,40 +364,6 @@ end
     end.flatten(1)
   end
 
-
-  #### Permissions
-  def self.list_verbs global = false
-    {
-      :manage_all => _("Administer System Templates"),
-      :read_all => _("Read System Templates")
-   }.with_indifferent_access
-  end
-
-  def self.read_verbs
-    [:read_all]
-  end
-
-
-  def self.no_tag_verbs
-    SystemTemplate.list_verbs.keys
-  end
-
-  def self.any_readable? org
-    User.allowed_to?([:read_all, :manage_all], :system_templates, nil, org)
-
-  end
-
-  def self.readable? org
-    User.allowed_to?([:read_all, :manage_all], :system_templates, nil, org)
-  end
-
-  def self.manageable? org
-    User.allowed_to?([:manage_all], :system_templates, nil, org)
-  end
-
-  def readable?
-    self.class.readable?(self.environment.organization)
-  end
 
   def repos_to_be_promoted
     repos = self.repositories || []

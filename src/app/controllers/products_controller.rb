@@ -58,12 +58,11 @@ class ProductsController < ApplicationController
     notify.success _("Product '%s' created.") % product_params[:name]
 
     if requested_label.blank?
-      notify.message default_label_assigned(product)
+      notify.success default_label_assigned(product)
     elsif requested_label != product.label
-      notify.message label_overridden(product, requested_label)
+      notify.success label_overridden(product, requested_label)
     end
-
-    render :nothing => true
+    render :json=>{:id=>product.id}
   end
 
   def update
@@ -110,7 +109,7 @@ class ProductsController < ApplicationController
     end
     render :json=>products.collect{|s| {:label=>s.name, :value=>s.name, :id=>s.id}}
   rescue Tire::Search::SearchRequestFailed => e
-    render :json=>Support.array_with_total
+    render :json=>Util::Support.array_with_total
   end
 
   protected

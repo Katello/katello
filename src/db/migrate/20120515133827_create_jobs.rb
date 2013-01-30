@@ -8,7 +8,7 @@ class CreateJobs < ActiveRecord::Migration
     create_table :job_tasks do |t|
       t.references :job
       t.references :task_status
-    end    
+    end
   end
 
   def self.down

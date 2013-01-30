@@ -3,7 +3,7 @@
 PACKAGE_GROUPS = [
 {
     "name": "katello",
-    "conditional_package_names": {},
+    "conditional_package_names": [],
     "mandatory_package_names": [],
     "default": True,
     "_id": "123",
