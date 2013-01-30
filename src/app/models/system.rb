@@ -22,7 +22,6 @@ class System < ActiveRecord::Base
   include Authorization::System
   include AsyncOrchestration
 
-
   after_rollback :rollback_on_create, :on => :create
 
   acts_as_reportable
