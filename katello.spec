@@ -80,7 +80,6 @@ Requires:       rubygem(tire) >= 0.3.0
 Requires:       rubygem(tire) < 0.4
 Requires:       rubygem(ldap_fluff)
 Requires:       rubygem(foreman_api) >= 0.0.7
-Requires:       rubygem(runcible) >= 0.2.0
 Requires:       rubygem(anemone)
 Requires:       rubygem(apipie-rails) >= 0.0.13
 Requires:       lsof
@@ -191,6 +190,7 @@ Requires:        %{name}-common
 Requires:        pulp-server
 Requires:        pulp-rpm-plugins
 Requires:        pulp-selinux
+Requires:        rubygem(runcible) >= 0.3.1
 
 %description glue-pulp
 Katello connection classes for the Pulp backend
