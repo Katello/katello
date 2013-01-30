@@ -61,7 +61,7 @@ class PromotionsController < ApplicationController
       :read_promotion_changesets => (@next_environment && @next_environment.changesets_readable?)? true : false,
       :read_contents => (@environment && @environment.contents_readable?)? true: false
     }
-    
+
     render :show, :locals=>@locals_hash
   end
 
@@ -73,13 +73,13 @@ class PromotionsController < ApplicationController
     product_id = params[:product_id]
     repos = Product.find(product_id).repos(@environment)
     repo_ids = repos.collect{ |repo| repo.pulp_id }
-    
+
     @promotable_packages = []
     @not_promotable = []
 
     search = params[:search]
     offset = params[:offset] || 0
-    @packages = Glue::Pulp::Package.search(search, params[:offset], current_user.page_size, repo_ids)
+    @packages = Package.search(search, params[:offset], current_user.page_size, repo_ids)
     total_count = Product.find(product_id).total_package_count(@environment)
 
     render :text=>"" and return if @packages.empty?
@@ -90,7 +90,7 @@ class PromotionsController < ApplicationController
         promotable = false
         repos.each{ |repo|
           if pack.repoids.include? repo.pulp_id
-            if repo.is_cloned_in? @next_environment 
+            if repo.is_cloned_in? @next_environment
               if pack.repoids.include? repo.clone_id(@next_environment)
                 promoted = promoted && true
               else
@@ -154,18 +154,18 @@ class PromotionsController < ApplicationController
       repo_ids = repos.collect{ |repo| repo.pulp_id }
       filters[:repoids] = repo_ids
     end
-    
+
     filters = filters.merge(params.slice(:type, :severity).symbolize_keys)
 
     search = params[:search]
     offset = params[:offset] || 0
 
     if search.blank?
-      @errata = Glue::Pulp::Errata.search(search, offset, current_user.page_size, filters)
+      @errata = Errata.search(search, offset, current_user.page_size, filters)
       total_size =  @errata.empty? ? 0 :  @errata.total
     else
-      @errata = Glue::Pulp::Errata.search(search, offset, current_user.page_size, filters, false)
-      all = Glue::Pulp::Errata.search("*", offset, 1, filters, false)
+      @errata = Errata.search(search, offset, current_user.page_size, filters, false)
+      all = Errata.search("*", offset, 1, filters, false)
       total_size = all.empty? ? 0 : all.total
     end
 
@@ -176,7 +176,7 @@ class PromotionsController < ApplicationController
 
         repos.each{ |repo|
           if erratum.repoids.include? repo.pulp_id
-            if repo.is_cloned_in? @next_environment 
+            if repo.is_cloned_in? @next_environment
               if erratum.repoids.include? repo.clone_id(@next_environment)
                 promoted = promoted && true
               else
@@ -239,7 +239,7 @@ class PromotionsController < ApplicationController
 
     render :partial=>"distributions"
   end
-  
+
 
   def system_templates
     # render the list of system_templates

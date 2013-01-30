@@ -110,7 +110,7 @@ class DeletionChangeset < Changeset
     self.repos.each do |repo|
       product = repo.product
       next if (products.uniq! or []).include? product
-      product.delete_repo(repo, from_env, true)
+      repo.destroy
     end
   end
 
@@ -127,15 +127,14 @@ class DeletionChangeset < Changeset
         end
       end
     end
-    pkg_ids = []
+    total_pkg_ids = []
 
-    pkgs_delete.each_pair do |repo, pkgs|
-      pkg_ids.concat(pkgs)
-      pkgs_delete[repo] = Glue::Pulp::Package.id_search(pkgs)
+    pkgs_delete.each_pair do |repo, pkg_ids|
+      total_pkg_ids  += pkg_ids
+      repo.delete_packages(pkg_ids)
     end
 
-    Glue::Pulp::Repo.delete_repo_packages(pkgs_delete)
-    Glue::Pulp::Package.index_packages(pkg_ids)
+    Package.index_packages(total_pkg_ids)
   end
 
 
@@ -156,7 +155,7 @@ class DeletionChangeset < Changeset
 
     errata_delete.each_pair do |repo, errata|
        repo.delete_errata(errata)
-       Glue::Pulp::Errata.index_errata(errata)
+       Errata.index_errata(errata)
     end
   end
 
@@ -188,7 +187,7 @@ class DeletionChangeset < Changeset
     async_tasks = affected_repos.collect do |repo|
       repo.generate_metadata
     end
-    async_tasks
+    async_tasks.flatten(1)
   end
 
 end

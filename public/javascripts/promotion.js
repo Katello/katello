@@ -1157,8 +1157,6 @@ var registerEvents = function(){
         changesetEdit.toggle();
         return true;
     });
-
-    KT.tipsy.custom.promotion_filter_tooltip();
 };
 
 var changesetEdit = (function(){

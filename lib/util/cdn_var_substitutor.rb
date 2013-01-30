@@ -17,7 +17,7 @@ module Util
     # cdn_resource - an object providing access to CDN. It has to
     # provide a get method that takes a path (e.g.
     # /content/rhel/6.2/listing) and returns the body response)
-    def initialize cdn_resource
+    def initialize(cdn_resource)
       @resource = cdn_resource
       @substitutions = Thread.current[:cdn_var_substitutor_cache] || {}
     end
@@ -81,6 +81,7 @@ module Util
                 paths_with_vars[new_substitution] = new_path
               rescue Errors::SecurityViolation => e
                 # Some paths may not be accessible
+                @resource.log :warn, "#{new_path} is not accessible, ignoring"
               end
             end
           else
@@ -106,7 +107,7 @@ module Util
     def for_each_substitute_of_next_var(substitutions, path)
       if path =~ /^(.*?)\$([^\/]*)/
         base_path, var = $1, $2
-        get_substitutions_from(base_path).each do |value|
+        get_substitutions_from(base_path).compact.each do |value|
 
           new_substitutions = substitutions.merge(var => value)
           new_path = path.sub("$#{var}",value)
@@ -118,6 +119,10 @@ module Util
 
     def get_substitutions_from(base_path)
       @resource.get(File.join(base_path,"listing")).split("\n")
+    rescue Errors::NotFound => e # some of listing file points to not existing content
+      @resource.log :error, e.message
+      @resource.product.try(:repositories_cdn_import_failed!)
+      [] # return no substitution for unreachable listings
     end
 
   end
