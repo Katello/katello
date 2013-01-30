@@ -12,5 +12,5 @@
 
 
 class Distribution
-  include Glue::Pulp::Distribution if AppConfig.use_pulp
+  include Glue::Pulp::Distribution if Katello.config.use_pulp
 end
