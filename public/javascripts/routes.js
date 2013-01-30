@@ -77,7 +77,7 @@
       if( prefix !== "" ){
         prefix = prefix.match('\/$') ? prefix : ( prefix + '/');
       }
-      
+
       return prefix;
     }
 
@@ -131,6 +131,10 @@
 // notices_auto_complete_search => /notices/auto_complete_search(.:format)
   notices_auto_complete_search_path: function(options) {
   return Utils.build_path(1, ["/notices/auto_complete_search"], arguments)
+  },
+// hardware_models_path => /hardware_models(.:format)
+  hardware_models_path: function(options) {
+  return Utils.build_path(1, ["/hardware_models"], arguments)
   },
 // repo_packages_content_search_index => /content_search/repo_packages(.:format)
   repo_packages_content_search_index_path: function(options) {
@@ -1649,7 +1653,7 @@
   return Utils.build_path(2, ["/systems/", "/events/more_events"], arguments)
   }}
 ;
-  
+
   window.KT.routes.options = {
     prefix: '',
     default_format: '',
