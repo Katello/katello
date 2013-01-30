@@ -66,6 +66,6 @@ module Navigation
        :options => {:class=>'setup second_level', "data-menu"=>"subnets"}
       }
     end
-    
+
   end
 end

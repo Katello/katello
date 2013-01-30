@@ -93,6 +93,7 @@ class ContentSearchController < ApplicationController
     product_repo_map.each do |p_id, product_repo_ids|
       rows.concat spanned_product_content(p_id, product_repo_ids, 'package', package_ids)
     end
+
     render :json => {:rows => rows, :name => _('Packages')}
   end
 
@@ -132,7 +133,7 @@ class ContentSearchController < ApplicationController
 
   def repo_packages
     offset = params[:offset] || 0
-    packages = Glue::Pulp::Package.search('', offset, current_user.page_size, [@repo.pulp_id])
+    packages = Package.search('', offset, current_user.page_size, [@repo.pulp_id])
     rows = packages.collect do |pack|
       {:name => display = package_display(pack),
         :id => pack.id, :cols => {:description => {:display => pack.description}}, :data_type => "package", :value => pack.nvrea}
@@ -146,7 +147,7 @@ class ContentSearchController < ApplicationController
 
   def repo_errata
     offset = params[:offset] || 0
-    errata = Glue::Pulp::Errata.search('', offset, current_user.page_size, :repoids => [@repo.pulp_id])
+    errata = Errata.search('', offset, current_user.page_size, :repoids => [@repo.pulp_id])
     rows = errata.collect do |e|
       {:name => errata_display(e), :id => e.id, :data_type => "errata", :value => e.id,
           :cols => {:title => {:display => e[:title]},
@@ -180,9 +181,9 @@ class ContentSearchController < ApplicationController
       repo_map[r.pulp_id] = r
     end
     if is_package
-      packages = Glue::Pulp::Package.search('', params[:offset], current_user.page_size, repo_map.keys, [:nvrea_sort, "ASC"], process_search_mode())
+      packages = Package.search('', params[:offset], current_user.page_size, repo_map.keys, [:nvrea_sort, "ASC"], process_search_mode())
     else
-      packages = Glue::Pulp::Errata.search('', params[:offset], current_user.page_size, :repoids =>  repo_map.keys, :search_mode => process_search_mode)
+      packages = Errata.search('', params[:offset], current_user.page_size, :repoids =>  repo_map.keys, :search_mode => process_search_mode)
     end
     rows = packages.collect do |pack|
       cols = {}
@@ -244,7 +245,7 @@ class ContentSearchController < ApplicationController
         Repository.where(:pulp_id=>all_repos).each do |r|
           cols[r.environment.id] = {:hover => repo_hover_html(r)} if env_ids.include?(r.environment_id)
         end
-        {:id=>"repo_#{repo.id}", :comparable=>true, :parent_id=>"product_#{repo.product.id}", 
+        {:id=>"repo_#{repo.id}", :comparable=>true, :parent_id=>"product_#{repo.product.id}",
         :name=>repo.name, :cols=>cols, :data_type => "repo", :value => repo.name}
     end
   end
@@ -374,7 +375,7 @@ class ContentSearchController < ApplicationController
       repo = Repository.find(repo_id)
       repo_span = spanned_repo_content(repo, content_type,  search_obj, 0, search_mode, environments)
       if repo_span
-        rows << {:name=>repo.name, :cols=>repo_span[:repo_cols], :id=>"repo_#{repo.id}", 
+        rows << {:name=>repo.name, :cols=>repo_span[:repo_cols], :id=>"repo_#{repo.id}",
                  :parent_id=>"product_#{product_id}", :data_type => "repo", :value => repo.name}
         repo_span[:repo_cols].values.each do |span|
           product_envs[span[:id]] += span[:display]
@@ -417,8 +418,8 @@ class ContentSearchController < ApplicationController
       end
     end
     to_ret = {}
-    content_attribute = content_type.to_sym == :package ? 'nvrea' : 'id'
-    content_class = content_type.to_sym == :package ? Glue::Pulp::Package : Glue::Pulp::Errata
+    content_attribute = content_type.to_sym == :package ? 'nvrea' : 'errata_id'
+    content_class = content_type.to_sym == :package ? Package : Errata
     content = multi_repo_content_search(content_class, content_search_obj, spanning_repos, offset, content_attribute, search_mode)
 
     return nil if content.total == 0
@@ -452,7 +453,7 @@ class ContentSearchController < ApplicationController
         end
       end
       sort { by "#{default_field}_sort", 'asc'}
-      fields [:id, :name, :nvrea, :repoids, :type]
+      fields [:id, :name, :nvrea, :repoids, :type, :errata_id]
       size user.page_size
       from offset
       if  search_obj.is_a? Array
@@ -494,10 +495,10 @@ class ContentSearchController < ApplicationController
         if item.repoids.include? repo.pulp_id
             row[:cols][repo.environment_id] = {:id=>repo.environment_id} if env_ids.include?(repo.environment_id)
         end
-      end 
+      end
       to_ret << row
     end
     to_ret
-  end 
+  end
 
 end

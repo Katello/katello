@@ -50,7 +50,7 @@ describe Ping do
     stub_request(:get, "#{Katello.config.elastic_url}/_status")
 
     # pulp - with oauth
-    Resources::Pulp::PulpPing.stub!(:ping).and_return()
+    Runcible::Resources::User.stub!(:retrieve_all).and_return()
 
     # candlepin - with oauth
     Resources::Candlepin::CandlepinPing.stub!(:ping).and_return()

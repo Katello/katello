@@ -33,8 +33,8 @@ describe SystemGroupEventsController do
       Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
-      Resources::Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-      Resources::Pulp::Consumer.stub!(:update).and_return(true)
+      Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid})
+      Runcible::Extensions::Consumer.stub!(:update).and_return(true)
 
       @group = SystemGroup.new(:name=>"test_group", :organization=>@org)
       @system = System.create!(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})

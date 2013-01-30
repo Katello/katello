@@ -55,7 +55,7 @@ class PackagesController < ApplicationController
   def auto_complete_library
     begin
         repos = current_organization.library.repositories.collect{|r| r.pulp_id}
-        packages = Glue::Pulp::Package.autocomplete_name(params[:term], repos)
+        packages = Package.autocomplete_name(params[:term], repos)
     rescue Tire::Search::SearchRequestFailed
         packages = []
     end
@@ -65,7 +65,7 @@ class PackagesController < ApplicationController
   def auto_complete_nvrea_library
     begin
         repos = current_organization.library.repositories.collect{|r| r.pulp_id}
-        packages = Glue::Pulp::Package.autocomplete_nvrea(params[:term], repos)
+        packages = Package.autocomplete_nvrea(params[:term], repos)
     rescue Tire::Search::SearchRequestFailed
         packages = []
     end
@@ -75,14 +75,14 @@ class PackagesController < ApplicationController
 
   def validate_name_library
     name = params[:term]
-    render :json=>Glue::Pulp::Package.search("name:#{name}", 0, 1).count
+    render :json=>Package.search("name:#{name}", 0, 1).count
   end
 
   private
 
   def lookup_package
     @package_id = params[:id]
-    @package = Glue::Pulp::Package.find @package_id
+    @package = Package.find @package_id
     raise _("Unable to find package %s")% @package_id if @package.nil?
   end
 

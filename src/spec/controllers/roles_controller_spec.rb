@@ -18,19 +18,19 @@ describe RolesController do
   include LocaleHelperMethods
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
-  
+
   module RolesControllerTest
     ADMIN_ID = 2
     ADMIN = { :name => "admin", :id => ADMIN_ID }
     ROLE = { :name => "Foo_Role" }
   end
-  
+
   before(:each) do
     disable_user_orchestration
 
     @user = login_user(:mock=>false)
     set_default_locale
-    
+
     @organization = new_test_org
     controller.stub!(:current_organization).and_return(@organization)
     controller.stub(:search_validate).and_return(true)
@@ -44,7 +44,7 @@ describe RolesController do
       response.should be_success
       Role.where(:name=>RolesControllerTest::ROLE[:name]).should_not be_empty
     end
-    
+
     describe "with invalid params" do
       it_should_behave_like "bad request"  do
         let(:req) do
@@ -63,18 +63,18 @@ describe RolesController do
       end
     end
   end
-  
+
   describe "update a role" do
     before (:each) do
       @role = Role.create(RolesControllerTest::ROLE)
     end
-    
+
     it 'should allow changing of the name' do
       put 'update', { :id => @role.id, :role => {  :name => "new_test_role_name"}}
       response.should be_success
       Role.where(:name=>"new_test_role_name").should_not be_empty
     end
-    
+
     it "should be able to show the edit partial" do
       get :edit, :id=>@role.id
       response.should be_success
@@ -116,19 +116,19 @@ describe RolesController do
       Role.where(:name=>"admin").should_not be_empty
     end
 =end
-    
+
   end
-    
+
   describe "delete a role" do
     before (:each) do
       @role = Role.create(RolesControllerTest::ROLE)
     end
-    
+
     it 'should successfully delete' do
       delete 'destroy', { :id => @role.id }
       Role.exists?(@role.id).should be_false
     end
-    
+
     describe 'with wrong id' do
       it 'should thrown an exception' do
         delete 'destroy', { :id => 13 }
@@ -136,10 +136,10 @@ describe RolesController do
       end
     end
   end
-  
+
   describe "viewing roles" do
     render_views
-    
+
     before (:each) do
       150.times{|a| Role.create!(:name=>"bar%05d" % [a])}
     end
@@ -149,7 +149,7 @@ describe RolesController do
       response.should be_success
       response.should render_template("index")
     end
-   
+
     it "should render list of roles" do
 
       controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
@@ -159,7 +159,7 @@ describe RolesController do
       get :items
       response.should be_success
     end
-    
+
   end
 
 
@@ -207,19 +207,19 @@ describe RolesController do
       @organization = new_test_org
       @role = Role.create!(:name=>"TestRole")
     end
-   
+
     it "should be successful" do
       controller.should notify.success
       put "create_permission", { :role_id => @role.id, :permission => { :resource_type_attributes => { :name => 'organizations' }, :name=> "New Perm"}}
       response.should be_success
       assigns[:role].permissions.should include Permission.where(:name => "New Perm")[0]
     end
-    
+
     it "with all types set should be successful" do
       controller.should notify.success
       put "create_permission", { :role_id => @role.id, :permission => { :resource_type_attributes => { :name => 'all' }, :name=> "New Perm"}}
       response.should be_success
-      assigns[:role].permissions.should include Permission.where(:name => "New Perm")[0]    
+      assigns[:role].permissions.should include Permission.where(:name => "New Perm")[0]
     end
 
     describe "with bad requests" do
@@ -240,32 +240,32 @@ describe RolesController do
   end
 
   describe 'destroy permission' do
-  
+
     before (:each) do
       @organization = new_test_org
       @role = Role.create!(:name=>"TestRole")
       put "create_permission", { :role_id => @role.id, :permission => { :resource_type_attributes => { :name => 'all' }, :name=> "New Perm"}}
       @perm = Permission.where(:name => "New Perm")[0]
-    end    
-  
+    end
+
     it "should remove the permission from the role and delete it" do
       controller.should notify.success
       put "destroy_permission", { :role_id => @role.id, :permission_id => @perm.id}
       response.should be_success
       assigns[:role].permissions.should_not include @perm
     end
-  
+
   end
-   
+
   describe 'update permission' do
-    
+
     before (:each) do
       @organization = new_test_org
       @role = Role.create!(:name=>"TestRole")
       put "create_permission", { :role_id => @role.id, :permission => { :resource_type_attributes => { :name => 'all' }, :name=> "New Perm"}}
       @perm = Permission.where(:name => "New Perm")[0]
-    end    
-    
+    end
+
     it 'should change the name of the permission' do
       controller.should notify.success
       put "update_permission", { :role_id => @role.id, :permission_id => @perm.id, :permission => { :name => "New Named Perm"}}
@@ -286,7 +286,7 @@ describe RolesController do
       response.should be_success
       Permission.find(@perm.id).all_verbs.should == true
     end
-    
+
     it 'should set all tags' do
       controller.should notify.success
       put "update_permission", { :role_id => @role.id, :permission_id => @perm.id, :permission => { :all_tags => true }}
@@ -310,14 +310,14 @@ describe RolesController do
       end
     end
   end
-   
+
   describe 'getting verbs and tags' do
-    
+
     it 'should return a json object of verbs and tags' do
       get 'verbs_and_scopes', { :organization_id => @organization.id }
       response.should be_success
     end
-  
+
   end
-   
+
 end

@@ -327,6 +327,7 @@ module Katello
         config[:use_cp] = true if config[:use_cp].nil?
         config[:use_pulp] = config.katello? if config[:use_pulp].nil?
         config[:use_foreman] = config.katello? if config[:use_foreman].nil?
+        config[:use_elasticsearch] = config.katello? if config[:use_elasticsearch].nil?
 
         config[:email_reply_address] = config[:email_reply_address] ?
             config[:email_reply_address] : "no-reply@"+config[:host]
@@ -380,7 +381,7 @@ module Katello
         is_not_empty :thumbslug_url
       end
 
-      are_booleans :use_cp, :use_foreman, :use_pulp, :use_ssl, :ldap_roles, :debug_rest,
+      are_booleans :use_cp, :use_foreman, :use_pulp, :use_elasticsearch, :use_ssl, :ldap_roles, :debug_rest,
                    :debug_cp_proxy, :debug_pulp_proxy, :logical_insight
 
       if !early? && environment != :build

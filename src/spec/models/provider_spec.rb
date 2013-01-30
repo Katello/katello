@@ -180,14 +180,19 @@ describe Provider do
           version = Resources::CDN::Utils.parse_version(release)
           repo_name = "#{product_content.content.name} #{release}"
           repo_label = repo_name.gsub(/[^-\w]/,"_")
-          Repository.create!(:environment_product => EnvironmentProduct.find_or_create(product.organization.library, product),
+          repo = Repository.new(:environment_product => EnvironmentProduct.find_or_create(product.organization.library, product),
                              :cp_label => product_content.content.label,
                              :name => repo_name,
                              :label => repo_label,
                              :pulp_id => product.repo_id(repo_name),
                              :major => version[:major],
                              :minor => version[:minor],
+                             :relative_path=>'/foo',
+                             :content_id=>'asdfasdf',
                              :feed => 'https://localhost')
+          repo.stub(:create_pulp_repo).and_return({})
+          repo.save!
+
         end
       end
       product
@@ -230,6 +235,7 @@ describe Provider do
       @organization.library.repositories(true).map(&:name).sort.should == ["product-with-change 1.0",
                                                                            "product-without-change 1.0",
                                                                            "product-without-change 1.1"]
+      Runcible::Extensions::Repository.stub(:create).and_return({})
       @provider.refresh_products
       @organization.library.repositories(true).map(&:name).sort.should == ["product-with-change 1.0",
                                                                            "product-with-change 1.1",
@@ -452,4 +458,14 @@ describe Provider do
 
   end
 
+  describe "#failed_products" do
+    before do
+      @provider = Provider.create(:name => 'test')
+      @provider.products.should_receive(:repositories_cdn_import_failed).once
+    end
+
+    it "should ask products for repositories_cdn_import_failed" do
+      @provider.failed_products
+    end
+  end
 end

@@ -18,7 +18,7 @@ describe "distributions/_show.html.haml" do
 
     @id = "distro-id-1"
     @description = "this is distro 1"
-    @distribution = Glue::Pulp::Distribution.new()
+    @distribution = Distribution.new()
     @distribution.stub!(:id).and_return(@id)
     @distribution.stub!(:description).and_return(@description)
     view.stub(:promotion_distribution_navigation).and_return([])
