@@ -38,6 +38,8 @@ describe Api::ContentViewDefinitionsController, :katello => true do
 
     context "with organization_id" do
       it "should assign the organiation's definitions" do
+        Organization.stub_chain(:without_deleting,
+                                :having_name_or_label,:first).and_return(@organization)
         req = get action, :organization_id => @organization.name
         req.should be_success
         assigns[:definitions].map(&:id).should eql(@defs.map(&:id))
@@ -46,6 +48,8 @@ describe Api::ContentViewDefinitionsController, :katello => true do
 
     context "with label" do
       it "should find the matching content view definition" do
+        Organization.stub_chain(:without_deleting,
+                                :having_name_or_label,:first).and_return(@organization)
         get action, :organization_id => @organization.name,
           :label => @defs.last.label
         assigns[:definitions].map(&:id).should eql([@defs.last.id])
@@ -55,6 +59,8 @@ describe Api::ContentViewDefinitionsController, :katello => true do
     context "with id" do
       it "should find the matching definition" do
         cvd = @defs.sample
+        Organization.stub_chain(:without_deleting,
+                                :having_name_or_label,:first).and_return(@organization)
         get action, :organization_id => @organization.name,
           :id => cvd.id
         assigns[:definitions].map(&:id).should eql([cvd.id])
@@ -63,6 +69,8 @@ describe Api::ContentViewDefinitionsController, :katello => true do
 
     context "with name" do
       it "should find the matching definitions" do
+        Organization.stub_chain(:without_deleting,
+                                :having_name_or_label,:first).and_return(@organization)
         name = "Lotus 1-2-3"
         defs = FactoryGirl.create_list(:content_view_definition, 2,
                                        :name => name,
@@ -83,6 +91,8 @@ describe Api::ContentViewDefinitionsController, :katello => true do
     let(:definition) { @organization.content_view_definitions.last }
 
     it "should create a content view" do
+      Organization.stub_chain(:without_deleting,
+                              :having_name_or_label,:first).and_return(@organization)
       cv_count = ContentView.count
       req = post :publish, :id => definition.id,
         :organization_id => @organization.id, :name => "TestView"
