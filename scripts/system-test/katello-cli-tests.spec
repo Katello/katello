@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.3.4
+Version:       1.3.5
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
@@ -51,6 +51,13 @@ cp -Rp cli_tests/ cli-system-test helpers *zip RPM-GPG-KEY* $RPM_BUILD_ROOT%{hom
 
 
 %changelog
+* Wed Jan 30 2013 Justin Sherrill <jsherril@redhat.com> 1.3.5-1
+- removing pulpv2 prefix from pulpv2 branch (jsherril@redhat.com)
+- comp. res. - system tests (tstrachota@redhat.com)
+- run system-test on os x without warning (pchalupa@redhat.com)
+- 879151, 879161, 879169, 879174, 879195, 880031, 880048, 880054, 880066,
+  880073, 880089, 880131, 880566 (komidore64@gmail.com)
+
 * Wed Jan 23 2013 Justin Sherrill <jsherril@redhat.com> 1.3.2.pulpv2-1
 - Removing filter entries in the cli-system tests (paji@redhat.com)
 - cli system test - just delete the provider (jsherril@redhat.com)
