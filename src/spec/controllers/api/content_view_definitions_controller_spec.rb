@@ -93,7 +93,7 @@ describe Api::ContentViewDefinitionsController, :katello => true do
     it "should create a content view" do
       Organization.stub_chain(:without_deleting,
                               :having_name_or_label,:first).and_return(@organization)
-      cv_count = ContentView.count
+I k      cv_count = ContentView.count
       req = post :publish, :id => definition.id,
         :organization_id => @organization.id, :name => "TestView"
       req.should be_success
