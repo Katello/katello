@@ -14,7 +14,7 @@ class Api::SystemsController < Api::ApiController
   respond_to :json
 
   before_filter :verify_presence_of_organization_or_environment, :only => [:create, :index, :activate]
-  before_filter :find_organization, :only => [:create, :hypervisors_update, :index, :activate, :report, :tasks]
+  before_filter :find_optional_organization, :only => [:create, :hypervisors_update, :index, :activate, :report, :tasks]
   before_filter :find_only_environment, :only => [:create]
   before_filter :find_environment, :only => [:create, :index, :report, :tasks]
   before_filter :find_environment_by_name, :only => [:hypervisors_update]
@@ -26,6 +26,10 @@ class Api::SystemsController < Api::ApiController
   before_filter :authorize, :except => :activate
 
   skip_before_filter :require_user, :only => [:activate]
+
+  def organization_id_keys
+    [:organization_id, :owner]
+  end
 
   def rules
     index_systems = lambda { System.any_readable?(@organization) }
@@ -228,13 +232,14 @@ DESC
   api :GET, "/systems/:id/packages", "List packages installed on the system"
   param :id, String, :desc => "UUID of the system", :required => true
   def package_profile
-    render :json => @system.package_profile.sort {|a,b| a["name"].downcase <=> b["name"].downcase}.to_json
+    render :json => @system.simple_packages.sort {|a,b| a["name"].downcase <=> b["name"].downcase}.to_json
   end
 
   api :GET, "/systems/:id/errata", "List errata available for the system"
   param :id, String, :desc => "UUID of the system", :required => true
   def errata
-    render :json => Resources::Pulp::Consumer.errata(@system.uuid)
+    raise NotImplementedError
+    render :json => ::Consumer.errata(@system.uuid)
   end
 
   api :PUT, "/consumers/:id/packages", "Update installed packages"
@@ -411,16 +416,6 @@ DESC
   end
 
   protected
-
-  def find_organization
-    return unless (params.has_key?(:organization_id) or params.has_key?(:owner))
-
-    id = (params[:organization_id] || params[:owner]).tr(' ', '_')
-    @organization = Organization.first(:conditions => {:name => id})
-    @organization = Organization.first(:conditions => {:label => id}) if @organization.nil?
-    raise HttpErrors::NotFound, _("Couldn't find organization '%s'") % id if @organization.nil?
-    @organization
-  end
 
   def find_only_environment
     if !@environment && @organization && !params.has_key?(:environment_id)

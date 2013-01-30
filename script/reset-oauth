@@ -24,8 +24,8 @@ if [ -f $CP_CONF ]; then
   fi
 fi
 
-test -f /etc/pulp/pulp.conf && sed -i "s;.*oauth_secret:.*;oauth_secret: $SECRET;" /etc/pulp/pulp.conf
-test -f /etc/pulp/pulp.conf && sed -i "s;.*oauth_key:.*;oauth_key: katello;" /etc/pulp/pulp.conf
+test -f /etc/pulp/server.conf && sed -i "s;.*oauth_secret:.*;oauth_secret: $SECRET;" /etc/pulp/server.conf
+test -f /etc/pulp/server.conf && sed -i "s;.*oauth_key:.*;oauth_key: katello;" /etc/pulp/server.conf
 test -f ../config/katello.yml && sed -i "s;\(.*oauth_secret.*:\).*;\1 $SECRET;g" ../config/katello.yml
 
 echo "Don't forget to restart tomcat6, pulp-server and katello if applicable. (service <thing> restart)"

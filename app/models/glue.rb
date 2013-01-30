@@ -152,7 +152,7 @@ module Glue
     def execute opts = {}
       obj, met, *args = opts[:action]
       rollback = opts[:rollback] || false
-      
+
       # at the moment, the rollback method invoked will be based upon:
       #   1. the :action_rollback specified when the action was queued --or--
       #   2. by replacing set with del in the method name

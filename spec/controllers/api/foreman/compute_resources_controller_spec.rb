@@ -13,7 +13,7 @@
 require 'spec_helper'
 
 describe Api::Foreman::ComputeResourcesController do
-  if AppConfig.use_foreman
+  if Katello.config.use_foreman
     include LoginHelperMethods
 
     let(:a_model) { controller.foreman_model.new }

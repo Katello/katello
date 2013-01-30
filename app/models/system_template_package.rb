@@ -11,7 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class SystemTemplatePackage < ActiveRecord::Base
-  include Authorization
 
   belongs_to :system_template, :inverse_of => :packages
   validates_with Validators::PackageUniquenessValidator

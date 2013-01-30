@@ -30,6 +30,10 @@ module Glue::Candlepin::Product
 
       before_save :save_product_orchestration
       before_destroy :destroy_product_orchestration
+
+      # we must store custom logger object during product importing so we can log status
+      # from various places like callbacks
+      attr_accessor :import_logger
     end
   end
 
@@ -38,11 +42,8 @@ module Glue::Candlepin::Product
   end
 
   def self.import_from_cp(attrs=nil, &block)
-    if attrs.has_key?(:productContent)
-      productContent_attrs = attrs.delete(:productContent)
-    else
-      productContent_attrs = []
-    end
+    productContent_attrs = attrs.delete(:productContent) || []
+    import_logger        = attrs[:import_logger]
 
     attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Katello::ModelUtils::labelize(attrs['name']))
 
@@ -55,7 +56,9 @@ module Glue::Candlepin::Product
     product.save!
 
   rescue => e
-    Rails.logger.error "Failed to create product #{attrs['name']}: #{e}"
+    [Rails.logger, import_logger].each do |logger|
+      logger.error "Failed to create product #{attrs['name']}: #{e}" if logger
+    end
     raise e
   end
 

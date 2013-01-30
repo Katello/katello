@@ -13,27 +13,22 @@
 require 'ldap'
 require 'util/threadsession'
 require 'util/password'
+require 'util/model_util'
 
 class User < ActiveRecord::Base
-  include Glue::Pulp::User if Katello.config.katello?
+  include Glue::Pulp::User if Katello.config.use_pulp
   include Glue::Foreman::User if Katello.config.use_foreman
-  include Glue if Katello.config.use_cp
+  include Glue::ElasticSearch::User if Katello.config.use_elasticsearch
+  include Glue if Katello.config.use_cp || Katello.config.use_foreman || Katello.config.use_pulp
   include AsyncOrchestration
-  include IndexedModel
+  include Ext::IndexedModel
 
+  include AsyncOrchestration
+  include Authorization::User
+  include Authorization::Enforcement
+  include Katello::ThreadSession::UserModel
 
   acts_as_reportable
-
-  index_options :extended_json => :extended_index_attrs,
-                :display_attrs => [:username, :email],
-                :json          => { :except => [:password, :password_reset_token,
-                                                :password_reset_sent_at, :helptips_enabled,
-                                                :disabled, :own_role_id, :login] }
-
-  mapping do
-    indexes :username, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :username_sort, :type => 'string', :index => :not_analyzed
-  end
 
   scope :hidden, where(:hidden => true)
   scope :visible, where(:hidden => false)
@@ -51,6 +46,8 @@ class User < ActiveRecord::Base
 
   validates :username, :uniqueness => true, :presence => true
   validates_with Validators::UsernameValidator, :attributes => :username
+  validates_with Validators::NoTrailingSpaceValidator, :attributes => :username
+
   validates :email, :presence => true, :if => :not_ldap_mode?
   validates :default_locale, :inclusion => {:in => Katello.config.available_locales, :allow_nil => true, :message => _("must be one of %s") % Katello.config.available_locales.join(', ')}
 
@@ -63,79 +60,66 @@ class User < ActiveRecord::Base
     end
   end
 
-  def not_ldap_mode?
-    return Katello.config.warden != 'ldap'
+  before_create :create_self_role
+  before_save   :hash_password, :setup_preferences, :default_systems_reg_permission_check, :own_role_included_in_roles?
+  # THIS CHECK MUST BE THE FIRST before_destroy
+  before_destroy :is_last_super_user?, :destroy_own_role
+  after_validation :setup_remote_id
+
+  # hash the password before creating or updateing the record
+  def hash_password
+    if Katello.config.warden != 'ldap'
+      self.password = Password::update(self.password) if self.password.length != 192
+    end
   end
 
-#  validates_each :own_role do |model, attr, value|
-#    #This is enforced throught a user's self role where a permission with a tag is created
-#    #that has the environment id of the default environment for the user
-#    err_msg =  _("A user must have a default org and environment associated.")
-#    if model.blank?
-#      model.errors.add(attr,err_msg)
-#    else
-#      perm = Permission.find_all_by_role_id(@user.own_role.id)
-#      if perm.blank?
-#        model.errors.add(attr,err_msg)
-#      else
-#        if !perm[0].tags
-#          model.errors.add(attr,err_msg)
-#        end
-#      end
-#    end
-#  end
-
-# hash the password before creating or updateing the record
-  before_save do |u|
-    if Katello.config.warden != 'ldap'
-      u.password = Password::update(u.password) if u.password.length != 192
-    end
-    u.preferences=HashWithIndifferentAccess.new unless u.preferences
+  def setup_preferences
+    self.preferences = HashWithIndifferentAccess.new unless self.preferences
   end
 
   # create own role for new user
-  before_save do |u|
-    if u.new_record? and u.own_role.nil?
+  def create_self_role
+    if self.new_record? and self.own_role.nil?
       # create the own_role where the name will be a string consisting of username and 20 random chars
       begin
-        role_name = "#{u.username}_#{Password.generate_random_string(20)}"
+        role_name = "#{self.username}_#{Password.generate_random_string(20)}"
       end while Role.exists?(:name => role_name)
 
       r = Role.create!(:name => role_name, :self_role => true)
-      u.roles << r unless u.roles.include? r
-      u.own_role = r
+      self.roles << r unless roles.include? r
+      self.own_role = r
     end
   end
 
+  def is_last_super_user?
+    if !User.current.nil?
+      if self.id == User.current.id
+        self.errors.add(:base, _("Cannot delete currently logged user"))
+        return false
+      end
+    end
 
-  # THIS CHECK MUST BE THE FIRST before_destroy
-  # check if this is not the last superuser
-  before_destroy do |u|
-    if u.id == User.current.id
-      u.errors.add(:base, _("Cannot delete currently logged user"))
-      false
+    unless self.can_be_deleted?
+      self.errors.add(:base, "cannot delete last admin user")
+      return false
     end
-    unless u.can_be_deleted?
-      u.errors.add(:base, "cannot delete last admin user")
-      false
-    end
-    true
+    return true
   end
 
   # destroy own role for user
-  before_destroy do |u|
-    u.own_role.destroy
-    unless u.own_role.destroyed?
-      Rails.logger.error error.to_s
+  def destroy_own_role
+    if !self.own_role.nil?
+      self.own_role.destroy
+      unless self.own_role.destroyed?
+        Rails.logger.error error.to_s
+      end
     end
-    u.roles.clear
+    self.roles.clear
   end
 
-  # support for session (thread-local) variables
-  include Katello::ThreadSession::UserModel
-
-  before_save :default_systems_reg_permission_check
-  before_save :own_role_included_in_roles
+  def not_ldap_mode?
+    return Katello.config.warden != 'ldap'
+  end
 
   def self.authenticate!(username, password)
     u = User.where({ :username => username }).first
@@ -168,134 +152,21 @@ class User < ActiveRecord::Base
     u
   end
 
-  # Returns true if for a given verbs, resource_type org combination
-  # the user has access to all the tags
-  # This is used extensively in many of the model permission scope queries.
-  def allowed_all_tags?(verbs, resource_type, org = nil)
-    ResourceType.check resource_type, verbs
-    verbs = [] if verbs.nil?
-    verbs = [verbs] unless verbs.is_a? Array
-    org = Organization.find(org) if Numeric === org
-
-    log_roles(verbs, resource_type, nil, org)
-
-    org_permissions = org_permissions_query(org, resource_type == :organizations)
-    org_permissions = org_permissions.where(:organization_id => nil) if resource_type == :organizations
-
-
-    verbs = verbs.collect { |verb| action_to_verb(verb, resource_type) }
-    no_tag_verbs = ResourceType::TYPES[resource_type][:model].no_tag_verbs.clone rescue []
-    no_tag_verbs ||= []
-    no_tag_verbs.delete_if { |verb| !verbs.member? verb }
-    verbs.delete_if { |verb| no_tag_verbs.member? verb }
-
-    all_tags_clause = ""
-    unless resource_type == :organizations || ResourceType.global_types.include?(resource_type.to_s)
-      all_tags_clause = " AND (permissions.all_tags = :true)"
-    end
-
-    clause_all_resources_or_tags = <<-SQL.split.join(" ")
-        permissions.resource_type_id =
-          (select id from resource_types where resource_types.name = :all) OR
-          (permissions.resource_type_id =
-            (select id from resource_types where resource_types.name = :resource_type) AND
-            (verbs.verb in (:no_tag_verbs) OR
-              (permissions.all_verbs=:true OR verbs.verb in (:verbs) #{all_tags_clause} )))
-    SQL
-    clause_params = { :true => true, :all => "all", :resource_type => resource_type, :verbs => verbs }
-    org_permissions.where(clause_all_resources_or_tags,
-                          { :no_tag_verbs => no_tag_verbs }.merge(clause_params)).count > 0
+  def self.cp_oauth_header
+    raise Errors::UserNotSet, "unauthenticated to call a backend engine" if User.current.nil?
+    User.current.cp_oauth_header
   end
 
-  # Class method that has the same functionality as allowed_all_tags? method but operates
-  # on the current logged user. The class attribute User.current must be set!
-  def self.allowed_all_tags?(verb, resource_type = nil, org = nil)
-    u = User.current
-    raise Errors::UserNotSet, "current user is not set" if u.nil? or not u.is_a? User
-    u.allowed_all_tags?(verb, resource_type, org)
+  # is the current user consumer? (rhsm)
+  def self.consumer?
+    User.current.is_a? CpConsumerUser
   end
 
-
-  # Return the sql that shows all the allowed tags for a given verb, resource_type, org
-  # combination .
-  # Note: one needs generally check for "allowed_all_tags?" before executing this
-  # Note: This returns the SQL not result of the query
-  #
-  # This method is called by every Model's list method
-  def allowed_tags_sql(verbs=nil, resource_type = nil, org = nil)
-    select_on = "DISTINCT(permission_tags.tag_id)"
-    select_on = "DISTINCT(permissions.organization_id)" if resource_type == :organizations
-
-    allowed_tags_query(verbs, resource_type, org, false).select(select_on).to_sql
-  end
-
-
-  # Class method that has the same functionality as allowed_tags_sql method but operates
-  # on the current logged user. The class attribute User.current must be set!
-  def self.allowed_tags_sql(verb, resource_type = nil, org = nil)
-    ResourceType.check resource_type, verb
-    u = User.current
-    raise Errors::UserNotSet, "current user is not set" if u.nil? or not u.is_a? User
-    u.allowed_tags_sql(verb, resource_type, org)
-  end
-
-
-  # Return true if the user is allowed to do the specified action for a resource type
-  # verb/action can be:
-  # * a parameter-like Hash (eg. :controller => 'projects', :action => 'edit')
-  # * a permission Symbol (eg. :edit_project)
-  #
-  # This method is called by every protected controller.
-  def allowed_to?(verbs, resource_type, tags = nil, org = nil, any_tags = false)
-    tags = [] if tags.nil?
-    tags = [tags] unless tags.is_a? Array
-    if tags.detect { |tag| !(Numeric === tag ||(String === tag && /^\d+$/=== tag.to_s)) }
-      raise ArgumentError, "Tags need to be integers - #{tags} are not."
-    end
-    ResourceType.check resource_type, verbs
-    verbs = [] if verbs.nil?
-    verbs = [verbs] unless verbs.is_a? Array
-    log_roles(verbs, resource_type, tags, org, any_tags)
-
-    return true if allowed_all_tags?(verbs, resource_type, org)
-
-
-    tags_query = allowed_tags_query(verbs, resource_type, org)
-
-    if tags.empty? || resource_type == :organizations
-      to_count = "permissions.id"
-    else
-      to_count = "permission_tags.tag_id"
-    end
-
-    tags_query = tags_query.where("permission_tags.tag_id in (:tags)", :tags => tags) unless tags.empty?
-    count = tags_query.count(to_count, :distinct => true)
-    if tags.empty? || any_tags
-      count > 0
-    else
-      tags.length == count
-    end
-  end
-
-
-  # Class method that has the same functionality as allowed_to? method but operates
-  # on the current logged user. The class attribute User.current must be set!
-  def self.allowed_to?(verb, resource_type, tags = nil, org = nil, any_tags = false)
-    u = User.current
-    raise Errors::UserNotSet, "current user is not set" if u.nil? or not u.is_a? User
-    u.allowed_to?(verb, resource_type, tags, org, any_tags)
-  end
-
-  # Class method with the very same functionality as allowed_to? but throws
-  # SecurityViolation exception leading to the denial page.
-  def self.allowed_to_or_error?(verb, resource_type, tags = nil, org = nil, any_tags = false)
-    u = User.current
-    raise Errors::UserNotSet, "current user is not set" if u.nil? or not u.is_a? User
-    unless u.allowed_to?(verb, resource_type, tags, org, any_tags)
-      msg = "User #{u.username} is not allowed to #{verb} in #{resource_type} using #{tags}"
-      Rails.logger.error msg
-      raise Errors::SecurityViolation, msg
-    end
+  # returns the set of users who have kt_environment_id's environment set as their
+  # default. the data relationship is somewhat odd...
+  def self.find_by_default_environment(kt_environment_id)
+    self.joins(:own_role => { :permissions => :tags }).
+         where("tag_id = #{kt_environment_id}")
   end
 
   def allowed_organizations
@@ -306,7 +177,6 @@ class User < ActiveRecord::Base
 
     Organization.without_deleting.joins(:permissions => {:role => :users}).where(:users => {:id => self.id}).uniq
   end
-
 
   def disable_helptip(key)
     return if !self.helptips_enabled? #don't update helptips if user has it disabled
@@ -354,64 +224,6 @@ class User < ActiveRecord::Base
     { 'cp-user' => self.username }
   end
 
-  def self.cp_oauth_header
-    raise Errors::UserNotSet, "unauthenticated to call a backend engine" if User.current.nil?
-    User.current.cp_oauth_header
-  end
-
-  def pulp_oauth_header
-    { 'pulp-user' => self.username }
-  end
-
-  def self.pulp_oauth_header
-    raise Errors::UserNotSet, "unauthenticated to call a backend engine" if User.current.nil?
-    { 'pulp-user' => User.current.username }
-  end
-
-  # is the current user consumer? (rhsm)
-  def self.consumer?
-    User.current.is_a? CpConsumerUser
-  end
-
-  def self.list_verbs global = false
-    { :create => _("Administer Users"),
-      :read   => _("Read Users"),
-      :update => _("Modify Users"),
-      :delete => _("Delete Users")
-    }.with_indifferent_access
-  end
-
-  def self.read_verbs
-    [:read]
-  end
-
-  def self.no_tag_verbs
-    [:create]
-  end
-
-  READ_PERM_VERBS = [:read, :update, :create, :delete]
-  scope :readable, lambda { User.allowed_all_tags?(READ_PERM_VERBS, :users) ? where(:hidden => false) : where("0 = 1") }
-
-  def self.creatable?
-    User.allowed_to?([:create], :users, nil)
-  end
-
-  def self.any_readable?
-    User.allowed_to?(READ_PERM_VERBS, :users, nil)
-  end
-
-  def readable?
-    User.any_readable? && !hidden
-  end
-
-  def editable?
-    User.allowed_to?([:create, :update], :users, nil) && !hidden
-  end
-
-  def deletable?
-    self.id != User.current.id && User.allowed_to?([:delete], :users, nil)
-  end
-
   def send_password_reset
     # generate a random password reset token that will be valid for only a configurable period of time
     generate_token(:password_reset_token)
@@ -425,7 +237,7 @@ class User < ActiveRecord::Base
     !!default_systems_reg_permission
   end
 
-  def default_systems_reg_permission(create_with_organization = false)
+  def default_systems_reg_permission(organization=nil)
     return nil unless own_role
 
     resource_type = ResourceType.find_or_create_by_name("environments")
@@ -434,17 +246,19 @@ class User < ActiveRecord::Base
 
     permission = own_role.permissions.joins(:verbs).
         where(:resource_type_id => resource_type, :verbs => { :id => verb }, :name => name).first
-    if permission.nil? && create_with_organization
+    if permission.nil? && !organization.nil?
       permission = own_role.permissions.create!(:resource_type => resource_type,
                                                 :verbs         => [verb],
                                                 :name          => name,
-                                                :organization  => create_with_organization)
+                                                :organization  => organization)
     end
     permission
   end
 
   def default_environment
-    permission = default_systems_reg_permission and KTEnvironment.find(permission.tags.first.tag_id)
+    permission = default_systems_reg_permission
+    return nil if permission.nil? or permission.tags.empty?
+    KTEnvironment.find(permission.tags.first.tag_id)
   end
 
   def default_environment=(environment)
@@ -473,7 +287,7 @@ class User < ActiveRecord::Base
     self.preferences[:user][:locale] rescue nil
   end
 
-  def default_locale= locale
+  def default_locale=(locale)
     self.preferences[:user] = { } unless self.preferences.has_key? :user
     self.preferences[:user][:locale] = locale
   end
@@ -489,7 +303,7 @@ class User < ActiveRecord::Base
   end
 
   #set the default org if it's an actual org_id
-  def default_org= org_id
+  def default_org=(org_id)
     self.preferences[:user] = { } unless self.preferences.has_key? :user
     if !org_id.nil? && org_id != "nil"
       organization = Organization.find_by_id(org_id)
@@ -499,12 +313,11 @@ class User < ActiveRecord::Base
     end
   end
 
-
   def subscriptions_match_system_preference
     self.preferences[:user][:subscriptions_match_system] rescue false
   end
 
-  def subscriptions_match_system_preference= flag
+  def subscriptions_match_system_preference=(flag)
     self.preferences[:user] = { } unless self.preferences.has_key? :user
     self.preferences[:user][:subscriptions_match_system] = flag
   end
@@ -513,7 +326,7 @@ class User < ActiveRecord::Base
     self.preferences[:user][:subscriptions_match_installed] rescue false
   end
 
-  def subscriptions_match_installed_preference= flag
+  def subscriptions_match_installed_preference=(flag)
     self.preferences[:user] = { } unless self.preferences.has_key? :user
     self.preferences[:user][:subscriptions_match_installed] = flag
   end
@@ -522,7 +335,7 @@ class User < ActiveRecord::Base
     self.preferences[:user][:subscriptions_no_overlap] rescue false
   end
 
-  def subscriptions_no_overlap_preference= flag
+  def subscriptions_no_overlap_preference=(flag)
     self.preferences[:user] = { } unless self.preferences.has_key? :user
     self.preferences[:user][:subscriptions_no_overlap] = flag
   end
@@ -553,6 +366,8 @@ class User < ActiveRecord::Base
       # if user is not in these groups, flush their roles
       # this is expensive
       set_ldap_roles
+    else
+      return true
     end
   end
 
@@ -579,13 +394,8 @@ class User < ActiveRecord::Base
     self.roles = self.roles_users.select { |r| !r.ldap }.map { |r| r.role }
   end
 
-  # returns the set of users who have kt_environment_id's environment set as their
-  # default. the data relationship is somewhat odd...
-  def self.find_by_default_environment(kt_environment_id)
-    self.joins(:own_role).
-        joins("inner join permissions on users.own_role_id  = permissions.role_id").
-        joins("inner join permission_tags on permissions.id = permission_tags.permission_id").
-        where("tag_id = #{kt_environment_id}")
+  def ldap_roles
+    roles_users.select { |r| r.ldap }.map { |r| r.role }
   end
 
   def create_or_update_search_history(path, search_params)
@@ -616,33 +426,19 @@ class User < ActiveRecord::Base
     more_than_one_supers
   end
 
-  def own_role_included_in_roles
+  def own_role_included_in_roles?
     return true if own_role.nil?
-    raise ActiveRecord::ActiveRecordError, 'own role must be included in roles' unless roles.include? own_role
+    if roles.include?(own_role)
+      return true
+    else
+      raise ActiveRecord::ActiveRecordError, 'own role must be included in roles'
+    end
   end
 
   def default_systems_reg_permission_check
     if permission = default_systems_reg_permission and permission.tags.size != 1
       raise ActiveRecord::ActiveRecordError, 'default_systems_reg_permission must have one tag'
     end
-  end
-
-  DEFAULT_VERBS = {
-      :destroy => 'delete', :destroy_favorite => 'delete'
-  }.with_indifferent_access
-
-  ACTION_TO_VERB = {
-      :owners => { :import_status => 'read' },
-  }.with_indifferent_access
-
-  def action_to_verb(verb, type)
-    return ACTION_TO_VERB[type][verb] if ACTION_TO_VERB[type] and ACTION_TO_VERB[type][verb]
-    return DEFAULT_VERBS[verb] if DEFAULT_VERBS[verb]
-    verb
-  end
-
-  def extended_index_attrs
-    { :username_sort => username.downcase }
   end
 
   private
@@ -652,63 +448,6 @@ class User < ActiveRecord::Base
     begin
       self[column] = SecureRandom.hex(32)
     end while User.exists?(column => self[column])
-  end
-
-  def allowed_tags_query(verbs, resource_type, org = nil, allowed_to_check = true)
-    ResourceType.check resource_type, verbs
-    verbs = [] if verbs.nil?
-    verbs = [verbs] unless verbs.is_a? Array
-    log_roles(verbs, resource_type, nil, org)
-    org = Organization.find(org) if Numeric === org
-    org_permissions = org_permissions_query(org, resource_type == :organizations)
-
-    verbs         = verbs.collect { |verb| action_to_verb(verb, resource_type) }
-    clause        = ""
-    clause_params = { :all => "all", :true => true, :resource_type => resource_type, :verbs => verbs }
-
-    unless resource_type == :organizations
-      clause = <<-SQL.split.join(" ")
-                permissions.resource_type_id =
-                  (select id from resource_types where resource_types.name = :resource_type) AND
-                  (permissions.all_verbs=:true OR verbs.verb in (:verbs))
-      SQL
-
-      org_permissions = org_permissions.joins(
-          "left outer join permission_tags on permissions.id = permission_tags.permission_id")
-    else
-      if allowed_to_check
-        org_clause = "permissions.organization_id is null"
-        org_clause = org_clause + " OR permissions.organization_id = :organization_id " if org
-        org_hash = { }
-        org_hash = { :organization_id => org.id } if org
-        org_permissions = org_permissions.where(org_clause, org_hash)
-      else
-        org_permissions = org_permissions.where("permissions.organization_id is not null")
-      end
-
-      clause = <<-SQL.split.join(" ")
-                permissions.resource_type_id =
-                  (select id from resource_types where resource_types.name = :all) OR
-                  (permissions.resource_type_id =
-                    (select id from resource_types where resource_types.name = :resource_type) AND
-                    (permissions.all_verbs=:true OR verbs.verb in (:verbs)))
-      SQL
-    end
-    org_permissions.where(clause, clause_params)
-  end
-
-
-  def org_permissions_query(org, exclude_orgs_clause = false)
-    org_clause = "permissions.organization_id is null"
-    org_clause = org_clause + " OR permissions.organization_id = :organization_id " if org
-    org_hash = { }
-    org_hash = { :organization_id => org.id } if org
-    query = Permission.joins(:role).joins(
-        "INNER JOIN roles_users ON roles_users.role_id = roles.id").joins(
-        "left outer join permissions_verbs on permissions.id = permissions_verbs.permission_id").joins(
-        "left outer join verbs on verbs.id = permissions_verbs.verb_id").where({ "roles_users.user_id" => id })
-    return query.where(org_clause, org_hash) unless exclude_orgs_clause
-    query
   end
 
   def log_roles verbs, resource_type, tags, org, any_tags = false
@@ -725,11 +464,29 @@ class User < ActiveRecord::Base
     end
   end
 
-  def super_admin_check role
+  def super_admin_check(role)
     if role.superadmin? && role.users.length == 1
       message = _("Cannot dissociate user '%{username}' from '%{role}' role. Need at least one user in the '%{role}' role.") % {:username => username, :role => role.name}
       errors[:base] << message
       raise ActiveRecord::RecordInvalid, self
     end
   end
+
+  def setup_remote_id
+    #if validation failed, don't setup
+    return false unless self.errors.empty?
+    if  self.remote_id.nil?
+      self.remote_id = generate_remote_id
+    end
+    return true
+  end
+
+  def generate_remote_id
+    if self.username.ascii_only?
+      "#{Katello::ModelUtils::labelize(self.username)}-#{SecureRandom.hex(4)}"
+    else
+      Katello::ModelUtils::uuid
+    end
+  end
+
 end

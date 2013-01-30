@@ -58,7 +58,6 @@ describe Navigation do
   [:menu_main,
    :admin_main,
    :systems_navigation,
-   :package_filter_navigation,
    :promotion_distribution_navigation,
    :organization_navigation,
    :system_groups_navigation,

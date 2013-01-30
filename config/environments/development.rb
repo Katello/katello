@@ -24,4 +24,11 @@ Src::Application.configure do
   config.colorize_logging = false
   Dir.mkdir "#{Rails.root}/log" unless File.directory? "#{Rails.root}/log"
   config.active_record.logger = Logger.new("#{Rails.root}/log/development_sql.log")
+
+  #support for reloadable Runcible
+  #config.autoload_paths += %W(#{Rails.root}/../../runcible/lib)
+  #ActiveSupport::Dependencies.explicitly_unloadable_constants << "::Runcible::Resources"
+  #ActiveSupport::Dependencies.explicitly_unloadable_constants << "::Runcible::Extensions"
+
+  Bundler.require(:debugging, Rails.env)
 end
