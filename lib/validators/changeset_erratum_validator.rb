@@ -19,12 +19,6 @@ module Validators
       if record.changeset.action_type == Changeset::PROMOTION
         record.errors[:base] << _("Repository of the erratum '%s' has not been promoted into the target environment!") %
             record.errata_id and return if record.promotable_repositories.empty?
-
-        unfiltered_repositories = record.promotable_repositories.delete_if do |repo|
-          record.blocked_by_filters?((repo.filters + repo.product.filters).uniq)
-        end
-        record.errors[:base] << _("Filters assigned to repository or product of erratum '%s' block it from promotion!") %
-            record.errata_id and return if unfiltered_repositories.empty?
       end
     end
   end

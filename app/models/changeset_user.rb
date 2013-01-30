@@ -11,7 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class ChangesetUser < ActiveRecord::Base
-  include Ext::Authorization
 
   belongs_to :changeset, :inverse_of => :users
   belongs_to :user

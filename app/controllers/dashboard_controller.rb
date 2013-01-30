@@ -37,7 +37,7 @@ class DashboardController < ApplicationController
     errata_hash = {}
 
     unless repos.empty?
-      errata_by_consumer = Glue::Pulp::Errata.errata_by_consumer(repos)
+      errata_by_consumer = Errata.errata_by_consumer(repos)
 
       # grab the N (i.e. quantity) errata that have the most systems associated with them
       n_errata = errata_by_consumer.sort_by{|a,b| b.length}.reverse[0..quantity-1]
@@ -58,7 +58,7 @@ class DashboardController < ApplicationController
 
         # retrieve the errata (type/product)
         errata_ids.each do |errata_id|
-          e = Glue::Pulp::Errata.find(errata_id)
+          e = Errata.find(errata_id)
           errata_hash[e.id] = e
         end
       end

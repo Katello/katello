@@ -17,36 +17,33 @@ describe PackagesController do
   include LocaleHelperMethods
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
-  include OrchestrationHelper
 
+  before (:each) do
+    set_default_locale
+    login_user
+    new_test_org
+  end
 
+  describe "get auto_complete_package" do
     before (:each) do
-      set_default_locale
-      login_user
-      new_test_org
+      ::Package.should_receive(:autocomplete_name).once.and_return(["a", "aa"])
     end
 
-    describe "get auto_complete_package" do
-      before (:each) do
-        Glue::Pulp::Package.should_receive(:autocomplete_name).once.and_return(["a", "aa"])
-      end
+    it 'should succeed' do
+      get :auto_complete_library, :term => "a"
+      response.should be_success
+    end
+  end
 
-      it 'should succeed' do
-        get :auto_complete_library, :term => "a"
-        response.should be_success
-      end
+  describe "get validate name library" do
+    before (:each) do
+      ::Package.should_receive(:search).once.and_return([{}])
     end
 
-    describe "get validate name library" do 
-      before (:each) do
-        Glue::Pulp::Package.should_receive(:search).once.and_return([{}])
-      end
-
-      it 'should succeed' do
-        get :validate_name_library, :term => "a"
-        response.should be_success
-      end
-  
+    it 'should succeed' do
+      get :validate_name_library, :term => "a"
+      response.should be_success
     end
+  end
 
-end 
+end

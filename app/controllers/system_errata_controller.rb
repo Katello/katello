@@ -83,7 +83,7 @@ class SystemErrataController < ApplicationController
   include Katello::Errata
 
   def get_errata start, finish, filter_type="All", errata_state="outstanding"
-    types = [Glue::Pulp::Errata::SECURITY, Glue::Pulp::Errata::ENHANCEMENT, Glue::Pulp::Errata::BUGZILLA]
+    types = [Errata::SECURITY, Errata::ENHANCEMENT, Errata::BUGZILLA]
     errata_state = errata_state || "outstanding"
     filter_type = filter_type || "All"
 
@@ -95,10 +95,7 @@ class SystemErrataController < ApplicationController
 
     filtered_errata_count = errata_list.length
 
-    errata_list = errata_list.sort { |a,b|
-      a.id.downcase <=> b.id.downcase
-    }
-
+    errata_list = errata_list.sort_by{ |a| a.errata_id.downcase}
     errata_list = errata_list[start...finish]
 
     return errata_list, total_errata_count, filtered_errata_count

@@ -1,0 +1,73 @@
+--- 
+recorded_with: VCR 2.4.0
+http_interactions: 
+- request: 
+    method: post
+    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/consumers/
+    body: 
+      string: "{\"display_name\":\"Simple Server\",\"id\":\"010E99C0-3276-11E2-81C1-0800200C9A66\"}"
+    headers: 
+      Accept: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="R2vLGiCykHOzl1xnxQtagG5YKLb89IcywlLMiegkBVU", oauth_signature="N1ciIWTBWGWeDIpvn7YE92J0kmc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1358377429", oauth_version="1.0"
+      Content-Length: 
+      - "76"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Content-Length: 
+      - "2191"
+      Location: 
+      - "{'_href': u'/pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/'}"
+      Date: 
+      - Wed, 16 Jan 2013 23:03:49 GMT
+      Content-Type: 
+      - application/json
+      Server: 
+      - Apache/2.2.22 (Fedora)
+    body: 
+      string: "{\"display_name\": \"Simple Server\", \"description\": null, \"certificate\": \"-----BEGIN RSA PRIVATE KEY-----\\nMIICXQIBAAKBgQCoWW4lu9U6up1AlOyus23imMUdJqjM2bHXjyeSaYCPqlYbHiM7\\nJE46EVdRcWZ1+68EjaTdyScuKaQBTF+WIg5zYXWlqsjNPuYdE2rZdknGM2QzAmkb\\nGqSxlgSYyLfcOQ722s/SV0nx1ueRCiIEG3wZE9bhMOAjzKBQ/2+n9o8MswIDAQAB\\nAoGANwNCY0JGI7LnwDrqPQyVU/7oKuZ/MrHQ08gL/mRLhqb7DFGE4cazaXZROmP8\\nP4HHZ42B2pfpHcStu17hvYXTgokVmtz+HFkS5qHfHC+p9RP9jyRPiYHpVVhSdyYZ\\nYXLr9eXxDBaB4SeSt1hRpH7yMhtYQ9ktii60aze6OdoqREECQQDU5QR2wZ6S2enG\\nvjtSdHx9d+JQIVLZF91nDNB0J5o9MHit9gWar4hBZhuwhoHBlBtBWRDgOfAvz1jG\\nT6vAchX/AkEAym9+pmOj0+8h7vwDbRuE1YuAM67NHae1qGtnpGhiu7uUDTXFYOs5\\nLZsZmukaTKEeFCkYf321zyJTyV1cRDeRTQJAIAh5nHjTqFr7jvjuqiB23tYcClyJ\\nP7sUiD3oW6Hd1lklv18mRrkkslpvzibe/UaQt0t0e5icKEV1oRk5yZIg9wJBAIkb\\nGJlTFOt+o+n7z8o/ACmtsOfQNWYnZ3apP+nvNSfXNL/5sjQhPHmx+Zac2E4cNYYM\\nC2aV2uRuaHcSf2JIjGUCQQCIDsqQnmVemdryi7EA3H07hMiG8Zm0AizEVKJ8FAIK\\nn8tEhHHLbcIexqx/3hdMIrY8Dkw+pL8DqpKn+2AQRi6e\\n-----END RSA PRIVATE KEY-----\\n-----BEGIN CERTIFICATE-----\\nMIICojCCAYoCAgKiMA0GCSqGSIb3DQEBBQUAMIGBMQswCQYDVQQGEwJVUzEXMBUG\\nA1UECBMOTm9ydGggQ2Fyb2xpbmExEDAOBgNVBAcTB1JhbGVpZ2gxEDAOBgNVBAoT\\nB1JlZCBIYXQxETAPBgNVBAsTCENsb3VkIEJVMSIwIAYDVQQDExlkaGNwMjMxLTE2\\nLnJkdS5yZWRoYXQuY29tMB4XDTEzMDExNjIzMDM1MFoXDTIzMDExNDIzMDM1MFow\\nLzEtMCsGA1UEAxMkMDEwRTk5QzAtMzI3Ni0xMUUyLTgxQzEtMDgwMDIwMEM5QTY2\\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCoWW4lu9U6up1AlOyus23imMUd\\nJqjM2bHXjyeSaYCPqlYbHiM7JE46EVdRcWZ1+68EjaTdyScuKaQBTF+WIg5zYXWl\\nqsjNPuYdE2rZdknGM2QzAmkbGqSxlgSYyLfcOQ722s/SV0nx1ueRCiIEG3wZE9bh\\nMOAjzKBQ/2+n9o8MswIDAQABMA0GCSqGSIb3DQEBBQUAA4IBAQBnhL/GbwmPGXSc\\n0+tjSnqYLzowxZ7QqdfIZmC/9xHIJX7kpAXKd4tM6KwmzYIKIk/jXEwBCkcXcZlV\\nYhapcYFqOAm/260CNGvOBn5BdpgXF4ORht0al6CMkJA7iuRY+WkEiQJ3t+fLeIRd\\ns3V12YgYMWfQ7vvVokHrfXzMBr+JJB7w7pruL+i/f4WzfBcEAymT9ZUo4t5DLcZS\\nvmuRtkvHgXGuNMVtF0cqF1TGy2cEDGx24OTWX+hclm+mbhHmha/EmevCH0+Jo+KU\\no9m+eHBn1s4iA74N09MtjV4hzhfwovKTLf8fBnjN0P2rl5R/ZuQTB40AKXcK1PFc\\nl8CcI/Gu\\n-----END CERTIFICATE-----\", \"_ns\": \"consumers\", \"notes\": {}, \"capabilities\": {}, \"_id\": {\"$oid\": \"50f731d69c60ed27ce003284\"}, \"id\": \"010E99C0-3276-11E2-81C1-0800200C9A66\", \"_href\": {\"_href\": \"/pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/\"}}"
+    http_version: 
+  recorded_at: Wed, 16 Jan 2013 23:03:50 GMT
+- request: 
+    method: delete
+    uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/
+    body: 
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="6VXnKfWnmslgjkJYxFh9R5eWlQjkEJZIYQH0aC7jrw", oauth_signature="biU7ZSC%2BvfRILNON9TtMWA0zVLM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1358377455", oauth_version="1.0"
+      Content-Type: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Pulp-User: 
+      - admin
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Content-Length: 
+      - "4"
+      Date: 
+      - Wed, 16 Jan 2013 23:04:15 GMT
+      Content-Type: 
+      - application/json
+      Server: 
+      - Apache/2.2.22 (Fedora)
+    body: 
+      string: "null"
+    http_version: 
+  recorded_at: Wed, 16 Jan 2013 23:04:15 GMT

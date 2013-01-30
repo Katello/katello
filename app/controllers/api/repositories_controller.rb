@@ -13,7 +13,7 @@
 class Api::RepositoriesController < Api::ApiController
   respond_to :json
   before_filter :find_repository, :only => [:show, :update, :destroy, :package_groups, :package_group_categories, :enable, :gpg_key_content]
-  before_filter :find_organization, :only => [:create, :discovery]
+  before_filter :find_organization, :only => [:create]
   before_filter :find_product, :only => [:create]
 
   before_filter :authorize
@@ -35,7 +35,6 @@ class Api::RepositoriesController < Api::ApiController
       :update => edit_test,
       :destroy => edit_test,
       :enable => edit_test,
-      :discovery => org_edit,
       :package_groups => read_test,
       :package_group_categories => read_test,
     }
@@ -134,23 +133,12 @@ EOS
 
     User.current = User.hidden.first
 
-    args = ActiveSupport::JSON.decode(request.body.read).with_indifferent_access
-    repo = Repository.where(:pulp_id =>args[:repo_id]).first
+    repo_id = params['payload']['repo_id']
+    repo = Repository.where(:pulp_id =>repo_id).first
     raise _("Couldn't find repository '%s'") % repo.name if repo.nil?
     Rails.logger.info("Sync_complete called for #{repo.name}, running after_sync.")
-    repo.async(:organization=>repo.environment.organization).after_sync(args[:task_id])
+    repo.async(:organization=>repo.environment.organization).after_sync(params[:task_id])
     render :text=>""
-  end
-
-  # proxy repository discovery call to pulp, so we don't have to create an async task to keep track of async task on pulp side
-  api :POST, "/organizations/:organization_id/repositories/discovery", "Discover repository urls with metadata and find candidate repos. Supports http, https and file based urls. Async task, returns the delayed job."
-  param :type, String, :required => true, :desc => "type of content to discover (supported types : 'yum')"
-  param :url, String, :required => true, :desc => "remote url to perform discovery"
-  def discovery
-    pulp_task = Resources::Pulp::Repository.start_discovery(params[:url], params[:type])
-    task = PulpSyncStatus.using_pulp_task(pulp_task) {|t| t.organization = @organization}
-    task.save!
-    render :json => task
   end
 
   api :GET, "/repositories/:id/package_groups", "List all package groups in a repository"

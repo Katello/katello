@@ -36,8 +36,8 @@ describe Api::SystemPackagesController do
     Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
-    Resources::Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-    Resources::Pulp::Consumer.stub!(:update).and_return(true)
+    Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid})
+    Runcible::Extensions::Consumer.stub!(:update).and_return(true)
 
     @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
     @environment_1 = KTEnvironment.create!(:name=>'test_1', :label=> 'test_1', :prior => @organization.library.id, :organization => @organization)

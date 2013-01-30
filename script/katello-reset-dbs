@@ -125,7 +125,7 @@ if [ $DEPLOYMENT = "katello" ] ; then
 
     echo "Initializing Pulp database"
     sleep 10s # let mongo initialize
-    sudo /usr/bin/pulp-migrate
+    sudo /usr/bin/pulp-manage-db
 fi
 
 echo "Initializing Candlepin database"
@@ -152,7 +152,7 @@ pushd $KATELLO_HOME >/dev/null
 
 RAKE_TASKS=( 'clear_search_indices' 'db:migrate:reset' 'seed_with_logging' )
 for i in ${RAKE_TASKS[@]};  do 
-  RAILS_ENV=$KATELLO_ENV rake $i --trace RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX 2>&1
+  RAILS_ENV=$KATELLO_ENV RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX rake $i --trace  2>&1
 done
 popd >/dev/null
 

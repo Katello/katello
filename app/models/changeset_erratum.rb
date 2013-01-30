@@ -10,8 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+
 class ChangesetErratum < ActiveRecord::Base
-  include Ext::Authorization
 
   belongs_to :changeset, :inverse_of => :errata
   belongs_to :product
@@ -26,7 +26,7 @@ class ChangesetErratum < ActiveRecord::Base
     @repos   = []
 
     self.product.repos(from_env).each do |repo|
-      @repos << repo if repo.has_erratum? self.errata_id
+      @repos << repo if repo.has_erratum? self.display_name
     end
     @repos
   end
@@ -41,17 +41,6 @@ class ChangesetErratum < ActiveRecord::Base
     repos
   end
 
-  def blocked_by_filters? filters
-    package_filters = filters.map { |f| f.package_list }.flatten(1).uniq
-    package_filters.each do |filter|
-      re = Regexp.new(filter)
-      if erratum_pacakges.any? { |pack| re =~ pack["filename"] }
-        return true
-      end
-    end
-    return false
-  end
-
   # returns list of virtual permission tags for the current user
   def self.list_tags
     select('id,display_name').all.collect { |m| VirtualTag.new(m.id, m.display_name) }
@@ -59,7 +48,7 @@ class ChangesetErratum < ActiveRecord::Base
 
   private
   def erratum_pacakges
-    Glue::Pulp::Errata::find(self.errata_id).pkglist.map { |list| list["packages"] }.flatten(1).uniq
+    Errata::find(self.errata_id).pkglist.map { |list| list["packages"] }.flatten(1).uniq
   end
 
 end
