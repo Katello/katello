@@ -12,7 +12,7 @@
 
 class Role < ActiveRecord::Base
   include Authorization::Role
-  include Glue::ElasticSearch::Role if AppConfig.use_elasticsearch
+  include Glue::ElasticSearch::Role if Katello.config.use_elasticsearch
 
   acts_as_reportable
 
