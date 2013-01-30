@@ -190,6 +190,7 @@ Summary:         Katello connection classes for the Pulp backend
 Requires:        %{name}-common
 Requires:        pulp-server
 Requires:        pulp-rpm-plugins
+Requires:        pulp-selinux
 
 %description glue-pulp
 Katello connection classes for the Pulp backend
