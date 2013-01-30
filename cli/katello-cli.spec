@@ -21,7 +21,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.3.1_pulpv2
+Version:       1.3.4
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 Requires:      %{base_name}-cli-common
@@ -158,6 +158,60 @@ popd
 make -C po clean
 
 %changelog
+* Wed Jan 30 2013 Justin Sherrill <jsherril@redhat.com> 1.3.4-1
+- removing pulpv2 prefix from pulpv2 branch (jsherril@redhat.com)
+- 880125 - Errors message when no key can be found (ares@igloonet.cz)
+- smart proxies - listing available features in cli info
+  (tstrachota@redhat.com)
+- 875117 - fix in msg when repo not found in CLI (tstrachota@redhat.com)
+- 839584 - cli system_group info should show max allowed systems
+  (tstrachota@redhat.com)
+- comp. res. cli - pylint fixes (tstrachota@redhat.com)
+- comp. res. cli - deleting (tstrachota@redhat.com)
+- comp. res. cli - updating (tstrachota@redhat.com)
+- comp. res. cli - create (tstrachota@redhat.com)
+- comp. res. cli - actions list and info (tstrachota@redhat.com)
+- cli - case insensitive choices for optparse options (tstrachota@redhat.com)
+- 895735 - [RFE] Specifying the keyname when removing custom info from a system
+  should be required (komidore64@gmail.com)
+- Automatic commit of package [katello-cli] release [1.3.3-1].
+  (jsherril@redhat.com)
+- Translations - Update .po and POTFILES.in files for katello-cli.
+  (jsherril@redhat.com)
+- Translations - Download translations from Transifex for katello-cli.
+  (jsherril@redhat.com)
+- 894480 - remove PyXML dependency (msuchy@redhat.com)
+- resolve pylint errors on Fedora 19 (msuchy@redhat.com)
+- Revert "Pylint - Updates to remove disablement of pylint warnings present in"
+  (msuchy@redhat.com)
+- cli completion - fix in sed expression (tstrachota@redhat.com)
+- fix config_template info formatting (pchalupa@redhat.com)
+- Cli Fix (jhadvig@gmail.com)
+- 886462 - [cli] ping returns $? == 30 (but all services are OK)
+  (komidore64@gmail.com)
+- 853385: Display the environment in the output of system info
+  (komidore64@gmail.com)
+- fricken pylint (komidore64@gmail.com)
+- unifying "blah blah blah [ %%s ]" in CLI" (komidore64@gmail.com)
+- 879151, 879161, 879169, 879174, 879195, 880031, 880048, 880054, 880066,
+  880073, 880089, 880131, 880566 (komidore64@gmail.com)
+- 879151, 879161, 879169, 879174, 879195, 880031, 880048, 880054, 880066,
+  880073, 880089, 880131, 880566 (komidore64@gmail.com)
+-  Adding environment tests in CLI (jomara@redhat.com)
+- fixing zh_TW.po (msuchy@redhat.com)
+- fix pt.po (msuchy@redhat.com)
+- fix ko.po (msuchy@redhat.com)
+- fixing ko.po (msuchy@redhat.com)
+- fix zh_CN.po (msuchy@redhat.com)
+- update pt.po (msuchy@redhat.com)
+- fix ru.po (msuchy@redhat.com)
+- fix ja.po (msuchy@redhat.com)
+- fix zh_TW.po (msuchy@redhat.com)
+- forward port translation from SAM (msuchy@redhat.com)
+- Adding environment name change to CLI (jomara@redhat.com)
+- 876248: Successful actions should be logged as info, not as errors
+  (bkearney@redhat.com)
+
 * Tue Jan 15 2013 Justin Sherrill <jsherril@redhat.com> 1.3.3-1
 - Translations - Update .po and POTFILES.in files for katello-cli.
   (jsherril@redhat.com)
