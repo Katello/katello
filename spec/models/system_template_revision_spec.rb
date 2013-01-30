@@ -12,11 +12,9 @@
 
 require 'spec_helper'
 require 'helpers/repo_test_data'
-require 'helpers/repo_helper_methods'
 
 include OrchestrationHelper
-
-
+include RepositoryHelperMethods
 
 describe SystemTemplate, :katello => true do
 
@@ -53,33 +51,33 @@ describe SystemTemplate, :katello => true do
     let(:pack1) {{
       :name => 'package 1'
     }}
-    let(:pack_groups) {{
-      'pack_group1' => {
+    let(:pack_groups) {[
+      {
         'id' => 'pack_group1',
         'name' => 'pack_group1'
       },
-      'pack_group2' => {
+      {
         'id' => 'pack_group2',
         'name' => 'pack_group2'
       }
-    }}
-    let(:pack_group_categories) {{
-      'pg_category1' => {
+    ]}
+    let(:pack_group_categories) {[
+      {
         'id' => 'pg_category1',
         'name' => 'pg_category1'
       },
-      'pg_category2' => {
+      {
         'id' => 'pg_category2',
         'name' => 'pg_category2'
       }
-    }}
+    ]}
 
     before :each do
 
       stub_repos([repo])
-      Resources::Pulp::Repository.stub(:packages_by_name => [pack1])
-      Resources::Pulp::PackageGroup.stub(:all => pack_groups.clone)
-      Resources::Pulp::PackageGroupCategory.stub(:all => pack_group_categories.clone)
+      Runcible::Extensions::Repository.stub(:rpms_by_nvre => [pack1])
+      Runcible::Extensions::Repository.stub(:package_groups => pack_groups.clone)
+      Runcible::Extensions::Repository.stub(:package_categories => pack_group_categories.clone)
 
 
 
@@ -90,8 +88,9 @@ describe SystemTemplate, :katello => true do
       @tpl1.add_pg_category("pg_category1")
       @tpl1.save!
 
-      Resources::Pulp::PackageGroup.stub(:all => pack_groups.clone)
-      Resources::Pulp::PackageGroupCategory.stub(:all => pack_group_categories.clone)
+
+      Runcible::Extensions::Repository.stub(:package_groups => pack_groups.clone)
+      Runcible::Extensions::Repository.stub(:package_categories => pack_group_categories.clone)
     end
 
 

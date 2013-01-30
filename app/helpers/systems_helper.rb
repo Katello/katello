@@ -53,11 +53,11 @@ module SystemsHelper
 
   def errata_type_class errata
     case errata.e_type
-      when  Glue::Pulp::Errata::SECURITY
+      when  Errata::SECURITY
         return "security_icon"
-      when  Glue::Pulp::Errata::ENHANCEMENT
+      when  Errata::ENHANCEMENT
         return "enhancement_icon"
-      when  Glue::Pulp::Errata::BUGZILLA
+      when  Errata::BUGZILLA
         return "bugzilla_icon"
     end
   end

@@ -32,7 +32,7 @@ describe PromotionsController, :katello => true do
       controller.stub(:current_organization).and_return(@org)
       Glue::Pulp::Repos.stub!(:prepopulate!).and_return([])
       @env = @org.library
-      
+
     end
 
     it "should be successful with library and no next environment" do
@@ -80,7 +80,7 @@ describe PromotionsController, :katello => true do
     it "should be successful when requesting packages" do
       results = [OpenStruct.new(:id => 1)]
       results.stub(:total).and_return(1)
-      Glue::Pulp::Package.stub(:search).and_return(results)
+      Package.stub(:search).and_return(results)
       get 'packages', :id=>@env.name, :product_id => @product.id
       response.should be_success
       assigns(:environment).should == @env
@@ -90,7 +90,7 @@ describe PromotionsController, :katello => true do
     it "should be successful when requesting errata" do
       results = [OpenStruct.new(:id => 1)]
       results.stub(:total).and_return(1)
-      Glue::Pulp::Errata.stub(:search).and_return(results)
+      Errata.stub(:search).and_return(results)
       get 'errata', :id=>@env.name, :product_id => @product.id
       response.should be_success
       assigns(:environment).should == @env

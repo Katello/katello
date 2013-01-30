@@ -17,7 +17,8 @@ class Api::ProvidersController < Api::ApiController
   end
 
   before_filter :find_organization, :only => [:index, :create]
-  before_filter :find_provider, :only => [:show, :update, :destroy, :products, :import_products, :refresh_products, :import_manifest, :delete_manifest, :product_create]
+  before_filter :find_provider, :only => [:show, :update, :destroy, :products, :import_products, :discovery,
+                                          :refresh_products, :import_manifest, :delete_manifest, :product_create]
   before_filter :authorize
 
   def rules
@@ -33,7 +34,7 @@ class Api::ProvidersController < Api::ApiController
       :create => create_test,
       :update => edit_test,
       :destroy => delete_test,
-
+      :discovery => edit_test,
       :products => read_test,
       :import_manifest => edit_test,
       :delete_manifest => edit_test,
@@ -112,6 +113,16 @@ class Api::ProvidersController < Api::ApiController
   param :id, :number, :desc => "Provider numeric identifier", :required => true
   def products
     render :json => @provider.products.all_readable(@provider.organization).select("products.*, providers.name AS provider_name").joins(:provider).to_json
+  end
+
+  api :POST, "/providers/:id/discovery", "Discover repository urls with metadata and find candidate repos. Supports http, https and file based urls. Async task, returns the delayed job."
+  param :url, String, :required => true, :desc => "remote url to perform discovery"
+  def discovery
+    @provider.discovery_url = params[:url]
+    @provider.save
+    @provider.discover_repos
+    task = @provider.discovery_task
+    render :json => task
   end
 
   api :POST, "/providers/:id/import_manifest", "Import manifest for Red Hat provider"

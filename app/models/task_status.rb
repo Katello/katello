@@ -21,13 +21,13 @@ class TaskStatus < ActiveRecord::Base
   class Status
     WAITING = :waiting
     RUNNING = :running
-    ERROR = :error
+    ERROR = :failed
     FINISHED = :finished
     CANCELED = :canceled
     TIMED_OUT = :timed_out
   end
-  include IndexedModel
-  include Authorization
+
+  include Glue::ElasticSearch::TaskStatus if Katello.config.use_elasticsearch
 
   belongs_to :organization
   belongs_to :user
@@ -67,42 +67,6 @@ class TaskStatus < ActiveRecord::Base
 
   after_destroy :destroy_job
 
-  index_options :json=>{:only=> [:parameters, :result, :organization_id, :start_time, :finish_time, :task_owner_id, :task_owner_type ]},
-                :extended_json=>:extended_index_attrs
-
-  mapping do
-   indexes :start_time, :type=>'date'
-   indexes :finish_time, :type=>'date'
-   indexes :status, :type=>'string', :analyzer => 'snowball'
-  end
-
-  def extended_index_attrs
-    ret = {}
-    ret[:username] = user.username if user
-
-    ret[:status] = state.to_s
-    ret[:status] += " pending" if pending?
-    if state.to_s == "error" || state.to_s == "timed_out"
-      ret[:status] += " fail failure"
-    end
-
-    case state.to_s
-      when "finished"
-        ret[:status] += " completed"
-      when "timed_out"
-        ret[:status] += " timed out"
-    end
-
-    if task_type
-      tt = task_type
-      if (System.class.name == task_owner_type)
-        tt = TaskStatus::TYPES[task_type][:english_name]
-      end
-      ret[:status] +=" #{tt}"
-    end
-    ret
-  end
-
   def initialize(attrs = nil)
     unless attrs.nil?
       # only keep keys for which we have db columns
@@ -114,12 +78,27 @@ class TaskStatus < ActiveRecord::Base
     super(attrs)
   end
 
+  def overall_status
+    # the overall status of tasks (e.g. associated with a system) are determined by a
+    # combination of the task state and the status of the unit within the task.
+    unit_status = true
+    if (self.result.is_a? Hash) && (self.result.has_key? :details)
+      if self.result[:details].has_key? :rpm
+        unit_status = self.result[:details][:rpm][:status]
+      elsif self.result[:details].has_key? :package_group
+        unit_status = self.result[:details][:package_group][:status]
+      end
+    end
+
+    (self.state.to_s == "error" || !unit_status) ? "error" : self.state
+  end
+
   def pending?
     self.state.to_s == "waiting" || self.state.to_s == "running"
   end
 
   def finished?
-    ((self.state != TaskStatus::Status::WAITING.to_s) && (self.state != TaskStatus::Status::RUNNING.to_s)) 
+    ((self.state != TaskStatus::Status::WAITING.to_s) && (self.state != TaskStatus::Status::RUNNING.to_s))
   end
 
   def error?
@@ -143,7 +122,7 @@ class TaskStatus < ActiveRecord::Base
     json.merge(options) if options
 
     if ('System' == task_owner_type)
-      methods = [:description, :result_description]
+      methods = [:description, :result_description, :overall_status]
       json.merge!(super(:only=>methods, :methods => methods))
       json[:system_name] = task_owner.name
     end
@@ -201,7 +180,7 @@ class TaskStatus < ActiveRecord::Base
         p = self.parameters[:packages]
         unless p && p.length > 0
           if "package_update" == self.task_type
-            case self.state
+            case self.overall_status
               when "running"
                 return "updating"
               when "waiting"
@@ -214,17 +193,17 @@ class TaskStatus < ActiveRecord::Base
           end
           return ""
         end
-        msg = details[:event_messages][self.state]
+        msg = details[:event_messages][self.overall_status]
         return n_(msg[1], msg[2], p.length) % [p.first, p.length - 1]
       when :candlepin_event
         return self.result
       when :package_group
         p = self.parameters[:groups]
-        msg = details[:event_messages][self.state]
+        msg = details[:event_messages][self.overall_status]
         return n_(msg[1], msg[2], p.length) % [p.first, p.length - 1]
       when :errata
         p = self.parameters[:errata_ids]
-        msg = details[:event_messages][self.state]
+        msg = details[:event_messages][self.overall_status]
         return n_(msg[1], msg[2], p.length) % [p.first, p.length - 1]
     end
   end
@@ -253,38 +232,38 @@ class TaskStatus < ActiveRecord::Base
   def result_description
     case self.state.to_s
     when "finished"
-      success_description
+      # tasks initiated by pulp to the system can have state=finished
+      # when the request is fully successful (e.g. all packages installed)
+      # as well as if the task is not fully successful (e.g. attempt to
+      # install a pkg that does not exist)
+      generate_description
     when "error"
-      error_description
+      # tasks initiated by pulp to the system will only have state=error
+      # if an exception is thrown from the system/agent during remote
+      # method invocation
+      rmi_error_description
     else ""
     end
   end
 
-  def success_description
+  def generate_description
     ret = ""
     task_type = self.task_type.to_s
 
-    # if pulp returns an array response, that indicates that nothing
-    # was actually changed on the consumer, so set the result to {}
-    result = self.result.is_a?(Array) ? {} : self.result
-
     if task_type =~ /^package_group/
       action = task_type.include?("remove") ? :removed : :installed
-      ret << packages_change_description(result, action)
-    elsif self.task_type.to_s == "package_remove"
-      ret << packages_change_description(result, :removed)
-    else
-      if task_type.include?("install")
-        ret << packages_change_description(result[:installed], :installed)
-      end
-      if task_type.include?("update")
-        ret << packages_change_description(result[:updated], :updated)
-      end
+      ret << packages_change_description(result[:details][:package_group], action)
+    elsif task_type == "package_install"
+      ret << packages_change_description(result[:details][:rpm], :installed)
+    elsif task_type == "package_update"
+      ret << packages_change_description(result[:details][:rpm], :updated)
+    elsif task_type == "package_remove"
+      ret << packages_change_description(result[:details][:rpm], :removed)
     end
     ret
   end
 
-  def error_description
+  def rmi_error_description
     errors, stacktrace = self.result[:errors]
     return "" unless errors
 
@@ -317,7 +296,7 @@ class TaskStatus < ActiveRecord::Base
     # call that Katello passes through to Candlepin record the task explicitly.
     system = System.find(sid)
     system.events.each {|event|
-      event_status = {:id => event[:id], :state => event[:type],
+      event_status = {:task_id => event[:id], :state => event[:type],
                      :start_time => event[:timestamp], :finish_time => event[:timestamp],
                      :progress => "100", :result => event[:messageText]}
       # Find or create task
@@ -330,10 +309,10 @@ class TaskStatus < ActiveRecord::Base
 
   def self.refresh(ids)
     unless ids.nil? || ids.empty?
-      uuids = TaskStatus.select(:uuid).where(:id => ids).collect{|t| t.uuid}
-      ret = Resources::Pulp::Task.find(uuids)
+      uuids = TaskStatus.where(:id=>ids).pluck(:uuid)
+      ret = Runcible::Resources::Task.poll_all(uuids)
       ret.each do |pulp_task|
-        PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by_uuid(pulp_task["id"]))
+        PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by_uuid(pulp_task[:task_id]))
       end
     end
   end
@@ -374,20 +353,25 @@ class TaskStatus < ActiveRecord::Base
 
   def packages_change_description(data, action)
     ret = ""
-    packages = data.nil? ? [] : (data[:resolved] + data[:deps])
-    if packages.empty?
-      case action
-      when :updated
-        ret << _("No packages updated")
-      when :removed
-        ret << _("No packages removed")
+
+    if data[:status]
+      packages = data.nil? ? [] : (data[:details][:resolved] + data[:details][:deps])
+      if packages.empty?
+        case action
+          when :updated
+            ret << _("No packages updated")
+          when :removed
+            ret << _("No packages removed")
+          else
+            ret << _("No new packages installed")
+        end
       else
-        ret << _("No new packages installed")
+        ret << packages.map do |package_attrs|
+          package_attrs[:qname]
+        end.join("\n")
       end
     else
-      ret << packages.map do |package_attrs|
-        package_attrs[:qname]
-      end.join("\n")
+      ret << data[:details][:message]
     end
     ret
   end

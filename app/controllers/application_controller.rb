@@ -16,6 +16,7 @@ require 'util/model_util'
 require 'cgi'
 require 'base64'
 
+
 class ApplicationController < ActionController::Base
   layout 'katello'
   include Notifications::ControllerHelper
@@ -27,6 +28,7 @@ class ApplicationController < ActionController::Base
   before_filter :set_locale
   before_filter :require_user,:require_org
   before_filter :check_deleted_org
+
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
   after_filter :flash_to_headers
@@ -169,7 +171,7 @@ class ApplicationController < ActionController::Base
     if current_user && current_user.default_locale
       I18n.locale = current_user.default_locale
     else
-      I18n.locale = ApplicationController.extract_locale_from_accept_language_header
+      I18n.locale = ApplicationController.extract_locale_from_accept_language_header parse_locale
     end
 
     logger.debug "Setting locale: #{I18n.locale}"
@@ -219,8 +221,8 @@ class ApplicationController < ActionController::Base
   # Look for match to list of locales specified in request. If not found, try matching just
   # first two letters. Finally, default to english if no matches at all.
   # eg. [en_US, en] would match en
-  def self.extract_locale_from_accept_language_header
-    locales = parse_locale
+  # Expects list of locales to search as an array (use parse_locale for that)
+  def self.extract_locale_from_accept_language_header locales
 
     # Look for full match
     locales.each {|locale|
@@ -304,8 +306,8 @@ class ApplicationController < ActionController::Base
   end
 
   # adapted from http_accept_lang gem, return list of browser locales
-  def self.parse_locale
-    locale_lang = env['HTTP_ACCEPT_LANGUAGE'].split(/\s*,\s*/).collect do |l|
+  def parse_locale
+    locale_lang = request.env['HTTP_ACCEPT_LANGUAGE'].split(/\s*,\s*/).collect do |l|
       l += ';q=1.0' unless l =~ /;q=\d+\.\d+$/
       l.split(';q=')
     end.sort do |x,y|
@@ -314,7 +316,7 @@ class ApplicationController < ActionController::Base
     end.collect do |l|
       l.first.downcase.gsub(/-[a-z]+$/i) { |x| x.upcase }
     end
-  rescue 
+  rescue
     []
   end
 
@@ -429,7 +431,7 @@ class ApplicationController < ActionController::Base
       path = path.collect{ |e| environment_path_element_generator.call(e) }
       to_ret << [library] + path if path.any?{|e| e[:select]}
     end
-    
+
     if paths.empty?
       to_ret << [library]
     end
@@ -460,7 +462,7 @@ class ApplicationController < ActionController::Base
   #                  is OR'd, whereas each HASH itself is AND'd together
   #    :load  - whether or not to load the active record object (defaults to false)
   def render_panel_direct(obj_class, panel_options, search, start, sort, search_options={})
-  
+
     filters = search_options[:filter] || []
     load = search_options[:load] || false
     all_rows = false
@@ -536,7 +538,6 @@ class ApplicationController < ActionController::Base
       total_count = 0
       panel_options[:total_results] = 0
     end
-
     render_panel_results(@items, total_count, panel_options) if !skip_render
     return @items
   end
@@ -556,7 +557,7 @@ class ApplicationController < ActionController::Base
       rendered_html = render_to_string(:partial=>"common/list_items", :locals=>options)
     end
 
-    
+
 
     render :json => {:html => rendered_html,
                       :results_count => options[:total_count],
@@ -564,16 +565,16 @@ class ApplicationController < ActionController::Base
                       :current_items => options[:collection].length }
 
     retain_search_history unless options[:no_search_history]
-    
+
   end
 
   def render_panel_items(items, options, search, start)
     @items = items
-    
+
     options[:accessor] ||= "id"
     options[:columns] = options[:col]
     options[:initial_action] ||= :edit
-    
+
     if start == "0"
       options[:total_count] = @items.count
     end
@@ -591,18 +592,18 @@ class ApplicationController < ActionController::Base
 
     options[:total_results] = items_searched.count
     options[:collection] ||= items_offset
-    
+
     if options[:list_partial]
       rendered_html = render_to_string(:partial=>options[:list_partial], :locals=>options)
     else
-      rendered_html = render_to_string(:partial=>"common/list_items", :locals=>options) 
+      rendered_html = render_to_string(:partial=>"common/list_items", :locals=>options)
     end
-    
+
     render :json => {:html => rendered_html,
                       :results_count => options[:total_count],
                       :total_items => options[:total_results],
                       :current_items => options[:collection].length }
-                      
+
     retain_search_history
   end
 

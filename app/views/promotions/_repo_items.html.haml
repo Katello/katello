@@ -14,8 +14,5 @@
         = _("Promoted")
 
     .simple_link
-      - if repo.has_filters?
-        %span.filter_warning_icon.fl.promotion_tipsify{"data-content_id"=> repo.id, "data-content_type" => "repo", "data-environment" => @environment.name}
-          &nbsp;
       %span
         = repo.name

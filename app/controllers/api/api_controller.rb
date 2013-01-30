@@ -52,9 +52,24 @@ class Api::ApiController < ActionController::Base
   include AuthorizationRules
 
   def set_locale
-    hal = request.env['HTTP_ACCEPT_LANGUAGE']
-    I18n.locale = hal.nil? ? 'en' : hal.scan(/^[a-z]{2}/).first
+    if current_user && current_user.default_locale
+      I18n.locale = current_user.default_locale
+    else
+      I18n.locale = ApplicationController.extract_locale_from_accept_language_header parse_locale
+    end
+
     logger.debug "Setting locale: #{I18n.locale}"
+  end
+
+  def parse_locale
+    hal = request.env['HTTP_ACCEPT_LANGUAGE'] || 'en'
+    first, second = hal.split(/[-_]/)
+    if second.nil?
+      return [first.downcase]
+    else
+      # HTTP spec defines only dash-based languages, se we need to convert and add a fallback
+      return ["#{first.downcase}-#{second.upcase}", first.downcase]
+    end
   end
 
   # override warden current_user (returns nil because there is no user in that scope)
@@ -91,20 +106,38 @@ class Api::ApiController < ActionController::Base
     return @query_params
   end
 
-  private
+  protected
 
   def find_organization
-    raise HttpErrors::NotFound, _("organization_id required but not specified.") if params[:organization_id].nil?
-    find_optional_organization
+    @organization = find_optional_organization
+    raise HttpErrors::NotFound, _("One of parameters [%s] required but not specified.") %
+      organization_id_keys.join(", ") if @organization.nil?
+    @organization
   end
 
   def find_optional_organization
-    if params[:organization_id]
-      # id in name/label is always unique
-      @organization = Organization.without_deleting.where("name = :id or label = :id", {:id => params[:organization_id]}).first
-      raise HttpErrors::NotFound, _("Couldn't find organization '%s'") % params[:organization_id] if @organization.nil?
-      @organization
-    end
+    org_id = organization_id
+    return if org_id.nil?
+
+    @organization = get_organization(org_id)
+    raise HttpErrors::NotFound, _("Couldn't find organization '%s'") % org_id if @organization.nil?
+    @organization
+  end
+
+  def organization_id_keys
+    return [:organization_id]
+  end
+
+  private
+
+  def get_organization org_id
+    # name/label is always unique
+    return Organization.without_deleting.having_name_or_label(org_id).first
+  end
+
+  def organization_id
+    key = organization_id_keys.find {|k| not params[k].nil? }
+    return params[key]
   end
 
   def verify_ldap

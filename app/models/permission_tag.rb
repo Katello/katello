@@ -12,7 +12,7 @@
 
 
 class PermissionTag < ActiveRecord::Base
-  include Authorization
+
   belongs_to :permission, :inverse_of=>:tags
 
   def to_s

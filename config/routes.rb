@@ -245,13 +245,6 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :owners do
-    member do
-      post :import
-      get :import_status
-    end
-  end
-
   resources :users do
     collection do
       get :auto_complete_search
@@ -268,22 +261,6 @@ Src::Application.routes.draw do
       get :edit_environment
       put :update_environment
     end
-  end
-
-  resources :filters do
-    collection do
-      get :auto_complete_search
-      get :auto_complete_products_repos
-      get :items
-    end
-    member do
-      get  :packages
-      post :add_packages
-      post :remove_packages
-      get  :products
-      post :update_products
-    end
-
   end
 
   resources :system_templates do
@@ -304,7 +281,11 @@ Src::Application.routes.draw do
   end
 
   resources :providers do
-    get 'auto_complete_search', :on => :collection
+    collection do
+      get :auto_complete_search
+      put :refresh_products
+    end
+
     resources :products do
       get :default_label, :on => :collection
 
@@ -321,6 +302,11 @@ Src::Application.routes.draw do
       post :redhat_provider, :action => :update_redhat_provider
     end
     member do
+      get :repo_discovery
+      get :discovered_repos
+      get :new_discovered_repos
+      post :discover
+      post :cancel_discovery
       get :products_repos
       get :manifest_progress
       get :schedule
@@ -498,6 +484,7 @@ Src::Application.routes.draw do
         post :refresh_products
         post :product_create
         get :products
+        post :discovery
       end
     end
 
@@ -544,10 +531,6 @@ Src::Application.routes.draw do
         resources :sync, :only => [:index, :create] do
           delete :index, :on => :collection, :action => :cancel
         end
-        resources :filters, :only => [] do
-          get :index, :on => :collection, :action => :list_product_filters
-          put :index, :on => :collection, :action => :update_product_filters
-        end
       end
 
       resources :system_groups, :except => [:new, :edit] do
@@ -590,10 +573,8 @@ Src::Application.routes.draw do
         end
       end
       resources :repositories, :only => [] do
-        post :discovery, :on => :collection
       end
       resource :uebercert, :only => [:show]
-      resources :filters, :only => [:index, :create, :destroy, :show, :update]
 
       resources :gpg_keys, :only => [:index, :create]
 
@@ -645,10 +626,6 @@ Src::Application.routes.draw do
       end
       resources :errata, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.:]+/ }
       resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ }
-      resources :filters, :only => [] do
-        get :index, :on => :collection, :action => :list_repository_filters
-        put :index, :on => :collection, :action => :update_repository_filters
-      end
       member do
         get :package_groups
         get :package_group_categories
