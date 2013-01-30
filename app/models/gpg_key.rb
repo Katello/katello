@@ -13,7 +13,7 @@ require 'iconv'
 
 class GpgKey < ActiveRecord::Base
 
-  include Glue::ElasticSearch::GpgKey if AppConfig.use_elasticsearch
+  include Glue::ElasticSearch::GpgKey if Katello.config.use_elasticsearch
   include Authorization::GpgKey
 
   has_many :repositories, :inverse_of => :gpg_key
