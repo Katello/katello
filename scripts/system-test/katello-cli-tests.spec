@@ -51,7 +51,6 @@ cp -Rp cli_tests/ cli-system-test helpers *zip RPM-GPG-KEY* $RPM_BUILD_ROOT%{hom
 
 
 %changelog
-<<<<<<< HEAD
 * Wed Jan 23 2013 Justin Sherrill <jsherril@redhat.com> 1.3.2.pulpv2-1
 - Removing filter entries in the cli-system tests (paji@redhat.com)
 - cli system test - just delete the provider (jsherril@redhat.com)
