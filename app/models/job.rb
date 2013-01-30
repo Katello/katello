@@ -12,7 +12,7 @@
 
 class Job < ActiveRecord::Base
   include Glue
-  include Glue::ElasticSearch::Job  if AppConfig.use_elasticsearch
+  include Glue::ElasticSearch::Job  if Katello.config.use_elasticsearch
   include AsyncOrchestration
 
   belongs_to :job_owner, :polymorphic => true

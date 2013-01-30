@@ -13,7 +13,7 @@ require "util/model_util"
 
 class Product < ActiveRecord::Base
 
-  include Glue::ElasticSearch::Product if AppConfig.use_elasticsearch
+  include Glue::ElasticSearch::Product if Katello.config.use_elasticsearch
   include Glue::Candlepin::Product if Katello.config.use_cp
   include Glue::Pulp::Repos if Katello.config.use_pulp
   include Glue if Katello.config.use_cp || Katello.config.use_pulp

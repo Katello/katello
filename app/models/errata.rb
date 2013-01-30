@@ -12,6 +12,6 @@
 
 
 class Errata
-  include Glue::Pulp::Errata if AppConfig.use_pulp
-  include Glue::ElasticSearch::Errata if AppConfig.use_elasticsearch
+  include Glue::Pulp::Errata if Katello.config.use_pulp
+  include Glue::ElasticSearch::Errata if Katello.config.use_elasticsearch
 end
