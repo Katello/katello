@@ -450,7 +450,7 @@ class AsyncTask():
 
     @classmethod
     def _subtask_is_running(cls, task):
-        return task['state'] not in ('finished', 'error', 'timed out', 'canceled', 'not_synced')
+        return task['state'] not in ('finished', 'failed', 'timed out', 'canceled', 'not_synced')
 
     def is_multiple(self):
         return self.subtask_count() > 1

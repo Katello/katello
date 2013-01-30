@@ -82,13 +82,13 @@ class ChangesetsController < ApplicationController
 
   def dependencies
     to_ret = {}
+    #if @changeset.promotion?
+    #  @changeset.calc_dependencies.each do |dependency|
+    #    to_ret[dependency.product_id] ||= []
+    #    to_ret[dependency.product_id] << {:name=>dependency.display_name, :dep_of=>dependency.dependency_of}
+    #  end
+    #end
 
-    if @changeset.promotion?
-      @changeset.calc_dependencies.each do |dependency|
-        to_ret[dependency.product_id] ||= []
-        to_ret[dependency.product_id] << {:name=>dependency.display_name, :dep_of=>dependency.dependency_of}
-      end
-    end
 
     render :json=>to_ret
   end
@@ -145,7 +145,7 @@ class ChangesetsController < ApplicationController
     if params[:description]
       @changeset.description = params[:description]
       @changeset.save!
-            
+
       render :json=>{:description=> params[:description], :timestamp => @changeset.updated_at.to_i.to_s} and return
     end
 
@@ -326,9 +326,9 @@ class ChangesetsController < ApplicationController
     end
 
     cs.involved_products.each{|product|
-      to_ret[:products][product.id] = {:id=> product.id, :name=>product.name,     :provider=>product.provider.provider_type,
-      :filtered => product.has_filters?(cs.environment.prior),
-       'package'=>[], 'errata'=>[], 'repo'=>[], 'distribution'=>[]}
+      to_ret[:products][product.id] = {:id=> product.id, :name=>product.name,
+        :provider=>product.provider.provider_type,
+      'package'=>[], 'errata'=>[], 'repo'=>[], 'distribution'=>[]}
     }
 
     cs.products.each {|product|
@@ -338,8 +338,7 @@ class ChangesetsController < ApplicationController
     cs.repos.each{|item|
       pid = item.product.id
       cs_product = to_ret[:products][pid]
-      cs_product['repo'] << {:id=>item.id, :name=>item.name, :filtered => item.has_filters?}
-      cs_product[:filtered] = true if item.has_filters?
+      cs_product['repo'] << {:id=>item.id, :name=>item.name}
     }
 
     ['errata', 'package', 'distribution'].each{ |type|
@@ -359,7 +358,7 @@ class ChangesetsController < ApplicationController
         type = item["type"]
         id = item["item_id"]
         item = nil
- 
+
         if not product_id.nil?
           if not update_item_valid?(type, id, product_id)
             return false
@@ -398,8 +397,8 @@ class ChangesetsController < ApplicationController
   end
 
   def update_errata_valid? id
-    errata = Glue::Pulp::Errata.find(id)
-    
+    errata = Errata.find(id)
+
     errata.repoids.each{ |repoid|
       repo = Repository.where(:pulp_id => repoid)[0]
       product = repo.product

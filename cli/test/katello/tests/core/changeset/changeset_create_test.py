@@ -47,9 +47,3 @@ class ChangesetAddTest(CLIActionTestCase):
     def tearDown(self):
         self.restore_mocks()
 
-
-    def test_it_uses_filter_create_api(self):
-        self.run_action()
-        self.action.api.create.assert_called_once_with(self.ORG, ENVS[0]['id'], self.NAME, self.DESCRIPTION, self.TYPE)
-
-

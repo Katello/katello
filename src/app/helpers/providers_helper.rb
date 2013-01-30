@@ -14,12 +14,6 @@ module ProvidersHelper
   include SyncManagementHelper
   include SyncManagementHelper::RepoMethods
 
-  #def product_map
-  #  data = Util::Support.time{product_map1}
-  #  logger.info("Took #{data} seconds to setup")
-  #  product_map1
-  #end
-
   def product_map
     @product_map ||= normalize(collect_repos(
                                    @provider.products.engineering,
@@ -61,6 +55,14 @@ module ProvidersHelper
       normalize(child[:repos], new_set, data, "repository") if child[:repos].present?
     end
     data
+  end
+
+  def name_from_url(provider, url)
+    url.sub(provider.discovery_url, '').gsub('/', ' ').strip
+  end
+
+  def label_from_url(provider, url)
+    Katello::ModelUtils::labelize(name_from_url(provider, url))
   end
 
 end

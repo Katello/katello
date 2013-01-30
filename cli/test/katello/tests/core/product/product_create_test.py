@@ -70,7 +70,7 @@ class CreateTest(unittest.TestCase):
 
     def test_discovers_repos(self):
         self.create_action.create_product_with_repos(self.PROVIDER, self.ORGANIZATION, self.PRODUCT, self.PRODUCT_LABEL, self.DESCRIPTION, self.URL, self.ASSUMEYES, self.NODISC, None)
-        self.create_action.discoverRepos.discover_repositories.assert_called_once_with(self.ORGANIZATION, self.URL)
+        self.create_action.discoverRepos.discover_repositories.assert_called_once_with(self.PROVIDER_ID, self.URL)
 
     def test_creates_product_without_repositories_if_url_was_not_specified(self):
         self.create_action.create_product_with_repos(self.PROVIDER, self.ORGANIZATION, self.PRODUCT, self.PRODUCT_LABEL, self.DESCRIPTION, None, self.ASSUMEYES, self.NODISC, None)

@@ -4,8 +4,19 @@
 #
 
 # Apache configuration file for pulp web services and repositories
-
-# Pulp common -----------------------------------------------------------------
+#
+# Copyright © 2010 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public License,
+# version 2 (GPLv2). There is NO WARRANTY for this software, express or
+# implied, including the implied warranties of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. You should have received a copy of GPLv2
+# along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+#
+# Red Hat trademarks are not licensed under GPLv2. No permission is
+# granted to use or replicate Red Hat trademarks that are incorporated
+# in this software or its documentation.
 
 AddType application/x-pkcs7-crl .crl
 AddType application/x-x509-ca-cert .crt
@@ -17,15 +28,14 @@ SSLCACertificateFile <%= scope.lookupvar("pulp::params::ssl_certificate_ca_file"
 # allow older yum clients to connect, see bz 647828
 SSLInsecureRenegotiation on
 
-# Pulp web services -----------------------------------------------------------
-
 WSGIProcessGroup pulp
 WSGIApplicationGroup pulp
 WSGIDaemonProcess pulp user=apache group=apache processes=1 threads=8 display-name=%{GROUP}
+
 # DEBUG - uncomment the next 2 lines to enable debugging
 #WSGIRestrictStdin Off
 #WSGIRestrictStdout Off
-#WSGISocketPrefix /srv/pulp/
+
 WSGISocketPrefix run/wsgi
 WSGIScriptAlias /pulp/api /srv/pulp/webservices.wsgi
 WSGIImportScript /srv/pulp/webservices.wsgi process-group=pulp application-group=pulp
@@ -40,29 +50,3 @@ WSGIImportScript /srv/pulp/webservices.wsgi process-group=pulp application-group
     SSLOptions +StdEnvVars +ExportCertData
     SSLVerifyClient optional
 </Files>
-
-# Pulp repositories -----------------------------------------------------------
-
-Alias /pulp/repos /var/www/pub/repos
-
-<Directory /var/www/pub/repos>
-
-    WSGIAccessScript /srv/pulp/repo_auth.wsgi
-
-    SSLRequireSSL
-    SSLVerifyClient optional_no_ca
-    SSLVerifyDepth 2
-    SSLOptions +StdEnvVars +ExportCertData +FakeBasicAuth
-
-</Directory>
-
-Alias /pulp/gpg /var/www/pub/gpg
-
-<Directory /var/www/pub/gpg/>
-</Directory>
-
-Alias /pulp/ks /var/www/pub/ks
-
-<Directory /var/www/pub/ks>
-    Options FollowSymLinks Indexes
-</Directory>

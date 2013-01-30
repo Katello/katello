@@ -21,7 +21,7 @@ describe Role do
   end
 
   context "role in valid state should be valid" do
-    specify { Role.new(:name => "a").should be_valid }
+    specify { Role.new(:name => "aaaaa").should be_valid }
   end
 
  context "test read only" do

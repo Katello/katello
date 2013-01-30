@@ -12,17 +12,8 @@
 
 class SyncPlan < ActiveRecord::Base
   include Glue
-  include Ext::IndexedModel
 
-  index_options :extended_json=>:extended_index_attrs,
-                :display_attrs=>[:name, :sync_date, :description, :interval]
-
-  mapping do
-    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :name_sort, :type => 'string', :index => :not_analyzed
-    indexes :sync_date, :type=>'date'
-  end
-
+  include Glue::ElasticSearch::SyncPlan if AppConfig.use_elasticsearch
 
   NONE = _('none')
   HOURLY = _('hourly')
@@ -31,7 +22,6 @@ class SyncPlan < ActiveRecord::Base
   TYPES = [NONE, HOURLY, DAILY, WEEKLY]
   DURATION = { NONE => '', HOURLY => 'T1H', DAILY => 'T24H', WEEKLY => '7D' }
   WEEK_DAYS = (%W(Sunday Monday Tuesday Wednesday Thursday Friday)).collect{|d| N_(d)}
-
 
   belongs_to :organization
   has_many :products
@@ -61,7 +51,7 @@ class SyncPlan < ActiveRecord::Base
     errors.add :base, _("Start Date and Time can't be blank") if self.sync_date.nil?
   end
 
-  def zone_converted 
+  def zone_converted
      #convert time to local timezone
      self.sync_date.localtime.to_datetime
   end
@@ -95,10 +85,6 @@ class SyncPlan < ActiveRecord::Base
 
   def plan_zone
     self.sync_date.strftime('%Z')
-  end
-
-  def extended_index_attrs
-    {:name_sort=>name.downcase}
   end
 
 end

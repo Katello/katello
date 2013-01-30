@@ -25,7 +25,7 @@ class SearchController < ApplicationController
 
 
   def show
-    # retrieve the search history and favorites for the user... 
+    # retrieve the search history and favorites for the user...
     # only return histories that are associated with the page the request is received on...
     path = retrieve_path
 
@@ -36,7 +36,7 @@ class SearchController < ApplicationController
 
     # clean up the histories... we will only store the last N entries in the
     # search history, so delete any past N
-    if @search_histories.length > max_search_history 
+    if @search_histories.length > max_search_history
       for i in (max_search_history..@search_histories.length-1)
         @search_histories[i].delete unless @search_histories[i].nil?
       end

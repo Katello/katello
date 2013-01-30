@@ -27,6 +27,7 @@ common:
   use_cp: # set to true/false if you want to override default
   use_pulp: # set to true/false if you want to override default
   use_foreman: # set to true/false if you want to override default
+  use_elasticsearch: # set to true/false if you want to override default
   app_name: # set a name if you want to override default
 
   warden: database
@@ -123,7 +124,7 @@ common:
   #   (typically /etc/pki/tls/certs/localhost.crt) location that is needed
   #   to connect to pulp over https.
   pulp:
-    url: https://localhost/pulp/api
+    url: https://localhost/pulp/api/v2/
     oauth_key: katello
     oauth_secret: shhhh
     sync_threads: 4

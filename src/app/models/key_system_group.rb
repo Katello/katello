@@ -12,8 +12,6 @@
 #
 
 class KeySystemGroup < ActiveRecord::Base
-  include Ext::Authorization
-
   belongs_to :activation_key
   belongs_to :system_group
 end
