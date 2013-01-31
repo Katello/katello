@@ -16,8 +16,12 @@ class ContentViewVersion < ActiveRecord::Base
 
   belongs_to :content_view
   has_many :content_view_version_environments
-  has_many :environments, :through=>:content_view_version_environments,
-           :class_name=>"KTEnvironment", :inverse_of=>:content_view_versions
+  has_many :environments, {:through      => :content_view_version_environments,
+                           :class_name   => "KTEnvironment",
+                           :inverse_of   => :content_view_versions,
+                           :after_add    => :add_environment,
+                           :after_remove => :remove_environment
+                          }
 
   has_many :repositories, :dependent => :destroy
 
@@ -127,6 +131,16 @@ class ContentViewVersion < ActiveRecord::Base
     else
       self.save!
     end
+  end
+
+private
+
+  def add_environment(env)
+    self.content_view.add_environment(env)
+  end
+
+  def remove_environment(env)
+    self.content_view.remove_environment(env)
   end
 
 end

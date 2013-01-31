@@ -48,8 +48,9 @@ class ContentViewDefinition < ActiveRecord::Base
                         :organization => organization
                        )
 
-    version = ContentViewVersion.create!(:version=>1, :content_view=>view,
-                                 :environments => [organization.library])
+    version = ContentViewVersion.new(:version=>1, :content_view=>view)
+    version.environments << organization.library
+    version.save!
 
     if options[:async]
       async_task = self.async(:organization => self.organization,
