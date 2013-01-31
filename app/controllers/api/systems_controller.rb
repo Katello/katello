@@ -464,17 +464,21 @@ DESC
     # equivalent of "environment_id"-"content_view_id".
     return unless params.has_key?(:environment_id)
 
-    ids = params[:environment_id].split('-')
+    if params[:environment_id].is_a? String
+      ids = params[:environment_id].split('-')
 
-    @environment = KTEnvironment.find(ids.first)
-    raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % ids.first if @environment.nil?
-    @organization = @environment.organization
+      @environment = KTEnvironment.find(ids.first)
+      raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % ids.first if @environment.nil?
+      @organization = @environment.organization
 
-    if ids.length > 1
-      @content_view = ContentView.find(ids.last)
-      raise HttpErrors::NotFound, _("Couldn't find content view '%s'") % ids.last if @content_view.nil?
+      if ids.length > 1
+        @content_view = ContentView.find(ids.last)
+        raise HttpErrors::NotFound, _("Couldn't find content view '%s'") % ids.last if @content_view.nil?
+      end
+      return @environment, @content_view
+    else
+      find_environment
     end
-    return @environment, @content_view
   end
 
   def verify_presence_of_organization_or_environment
