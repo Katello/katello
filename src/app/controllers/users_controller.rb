@@ -141,9 +141,6 @@ class UsersController < ApplicationController
       render :json => { :no_match => true }
     end
   rescue ActiveRecord::RecordNotSaved, ActiveRecord::RecordInvalid => error
-
-    logger.error("#{error}")
-
     notify.exception error
     #transaction, if something goes wrong with the creation of the permission, we will need to delete the user
     @user.destroy unless @user.new_record?
