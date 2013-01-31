@@ -21,7 +21,7 @@ class ActivationKeysController < ApplicationController
                                                 :system_groups, :systems, :add_system_groups, :remove_system_groups]
   before_filter :find_environment, :only => [:edit]
   before_filter :authorize #after find_activation_key, since the key is required for authorization
-  before_filter :panel_options, :only => [:index, :items, :show]
+  before_filter :panel_options, :only => [:index, :items, :show, :create]
   before_filter :search_filter, :only => [:auto_complete_search]
 
   respond_to :html, :js
@@ -229,7 +229,7 @@ class ActivationKeysController < ApplicationController
     notify.success _("Activation key '%s' was created.") % @activation_key['name']
 
     if search_validate(ActivationKey, @activation_key.id, params[:search])
-      render :partial=>"common/list_item", :locals=>{:item=>@activation_key, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
+      render :partial => "list_activation_keys", :locals => {:collection => [@activation_key]}
     else
       notify.message _("'%s' did not meet the current search criteria and is not being shown.") % @activation_key["name"]
       render :json => { :no_match => true }

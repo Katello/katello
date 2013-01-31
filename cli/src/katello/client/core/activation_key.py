@@ -135,7 +135,7 @@ class Info(ActivationKeyAction):
             value_formatter=lambda x: "unlimited" if x == -1 else x)
         self.printer.add_column('environment_id', _("Environment ID"))
         self.printer.add_column('system_template_id', _("System Template ID"))
-        self.printer.add_column('content_view',_("Content View"), value_formatter=lambda x: "[ %s ]" % x)
+        self.printer.add_column('content_view', _("Content View"), value_formatter=lambda x: "[ %s ]" % x)
         self.printer.add_column('pools', _("Pools"), multiline=True, show_with=printer.VerboseStrategy)
         self.printer.set_header(_("Activation Key Info"))
         self.printer.print_item(keys[0])
