@@ -171,7 +171,9 @@ class Repository < ActiveRecord::Base
     org, env, content_path = repo.relative_path.split("/",3)
     if for_cp
       "/#{content_path}"
-    elsif content_view.default?
+    elsif content_view.default? || !environment.library
+      # note, if this is a non-library environment, the content view has already been
+      # added to the path, so we do not need to add it again
       "#{org}/#{environment.label}/#{content_path}"
     else
       "#{org}/#{environment.label}/#{content_view.label}/#{content_path}"
