@@ -117,7 +117,7 @@ class Info(ChangesetAction):
             {'environment_id': _("Environment ID")}, {'environment_name': _("Environment Name")})
         batch_add_columns(self.printer, {'errata': _("Errata")}, {'products': _("Products")}, \
             {'packages': _("Packages")}, {'repositories': _("Repositories")}, \
-            {'system_templates': _("System Templates")}, {'distributions': _("Distributions")}, {'content_views': _("Content Views")}}, \
+            {'system_templates': _("System Templates")}, {'distributions': _("Distributions")}, {'content_views': _("Content Views")}, \
             multiline=True, show_with=printer.VerboseStrategy)
         if displayDeps:
             self.printer.add_column('dependencies', _("Dependencies"), \
