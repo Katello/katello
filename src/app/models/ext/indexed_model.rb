@@ -74,7 +74,7 @@ module Ext::IndexedModel
         { :after_add => :reindex_on_association_change, :after_remove => :reindex_on_association_change }
       end
 
-      def reindex_on_association_change record
+      def reindex_on_association_change(record)
         record.update_index if record.respond_to? :update_index
       end
 
@@ -127,7 +127,6 @@ module Ext::IndexedModel
   def indexed_attributes
     attrs = self.attributes.keys.collect{|key| key.to_sym}
     attrs += self.lazy_attributes if self.respond_to?(:lazy_attributes)
-
     if self.class.class_index_options[:json]
       options = self.class.class_index_options[:json]
       if options[:only]

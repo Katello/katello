@@ -18,6 +18,7 @@ describe ContentSearchController, :katello => true do
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
   include ProductHelperMethods
+  include RepositoryHelperMethods
   include SearchHelperMethods
 
   before do
@@ -42,19 +43,13 @@ describe ContentSearchController, :katello => true do
                                    :organization => @organization, :repository_url => "https://something.url/stuff")
       @product = Product.new({:name=>"prod", :label=> "prod"})
 
-
       @product.provider = @provider
       @product.environments << @organization.library
       @product.stub(:arch).and_return('noarch')
       @product.save!
       ep_library = EnvironmentProduct.find_or_create(@organization.library, @product)
-      @repo_library= Repository.create!(:environment_product => ep_library,
-                                       :name=> "repo",
-                                       :label=> "repo_label",
-                                       :relative_path => "#{@organization.name}/Library/prod/repo",
-                                       :pulp_id=>"2",
-                                       :enabled => true,
-                                       :feed => 'https://localhost')
+
+      @repo_library = new_test_repo(ep_library, "repo", "#{@organization.name}/Library/prod/repo")
       @repo = promote(@repo_library, @env1)
       Repository.stub(:search).and_return([@repo])
     end
@@ -77,7 +72,7 @@ describe ContentSearchController, :katello => true do
           end
 
           it "should return some #{content_type}" do
-            setup_search(:filter => @expected_filters[mode], :fields =>[:id, :name, :nvrea, :repoids, :type], :results => [])
+            setup_search(:filter => @expected_filters[mode], :fields =>[:id, :name, :nvrea, :repoids, :type, :errata_id], :results => [])
             params = {"mode"=>mode.to_s, "#{content_type}"=>{"search"=>""}, "content_type"=>"#{content_type}", "repos"=>{"search"=>""}}
             post "#{content_type}", params
             response.should be_success

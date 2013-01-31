@@ -15,18 +15,15 @@ require 'spec_helper'
 describe Api::EnvironmentsController do
   include LoginHelperMethods
   include AuthorizationHelperMethods
-  include LocaleHelperMethods
 
   before(:each) do
     @org         = Organization.new(:label=>"1")
     @environment = KTEnvironment.new
     @environment.organization = @org
-    Organization.stub!(:without_deleting).and_return(Organization)
-    Organization.stub!(:where).and_return(Organization)
-    Organization.stub!(:first).and_return(@org)
+    @controller.stub!(:get_organization).and_return(@org)
+
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
-    set_default_locale
   end
 
   let(:user_with_read_permissions) do

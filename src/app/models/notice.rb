@@ -11,19 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Notice < ActiveRecord::Base
-  include Ext::Authorization
-  include Ext::IndexedModel
-
-
-  index_options :extended_json => :extended_index_attrs,
-                :json          => { :only => [:text, :created_at, :details, :level] },
-                :display_attrs => [:text, :details, :level, :organization]
-
-  mapping do
-    indexes :level_sort, :type => 'string', :index => :not_analyzed
-    indexes :created_at, :type=>'date'
-  end
-
+  include Glue::ElasticSearch::Notice if Katello.config.use_elasticsearch
 
   has_many :user_notices
   has_many :users, :through => :user_notices
@@ -67,23 +55,7 @@ class Notice < ActiveRecord::Base
     "#{level}: #{text}"
   end
 
-  def check_permissions operation
-    logger.debug "CHECKING #{operation}"
-    # anybody can create notices
-    return true if operation == :create
-    if operation == :update or operation == :destroy
-      # TODO: who is a real owner of a notice?
-    end
-    false
-  end
-
   private
-
-  def extended_index_attrs
-    { :level_sort   => level.to_s.downcase,
-      :user_ids     => self.users.collect { |u| u.id },
-      :organization => organization.try(:name) }
-  end
 
   def add_to_all_users
     if global

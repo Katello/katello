@@ -13,7 +13,6 @@
 require 'spec_helper'
 
 
-
 describe SystemGroup do
 
   include SystemHelperMethods
@@ -24,6 +23,7 @@ describe SystemGroup do
   before(:each) do
     disable_org_orchestration
     disable_consumer_group_orchestration
+
     @org = Organization.create!(:name=>'test_org', :label=> 'test_org')
 
     @group = SystemGroup.create!(:name=>"TestSystemGroup", :organization=>@org)
@@ -38,7 +38,7 @@ describe SystemGroup do
   context "create should" do
 
     it "should create succesfully with an org" do
-      Resources::Pulp::ConsumerGroup.should_receive(:create).and_return({})
+      Runcible::Extensions::ConsumerGroup.should_receive(:create).and_return({})
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
       grp.pulp_id.should_not == nil
     end
@@ -61,7 +61,7 @@ describe SystemGroup do
 
   context "delete should" do
     it "should delete a group successfully" do
-      Resources::Pulp::ConsumerGroup.should_receive(:destroy).and_return(200)
+      Runcible::Extensions::ConsumerGroup.should_receive(:delete).and_return(200)
       @group.destroy
       SystemGroup.where(:name=>@group.name).count.should == 0
     end
@@ -78,36 +78,36 @@ describe SystemGroup do
 
   context "changing consumer ids"  do
     it "should contact pulp if new ids are added" do
-      Resources::Pulp::ConsumerGroup.should_receive(:add_consumer).twice
-      grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumerids=>[:a, :b])
-      grp.consumerids = [:a, :b, :c, :d]
+      Runcible::Extensions::ConsumerGroup.should_receive(:add_consumers_by_id).once
+      grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumer_ids=>[:a, :b])
+      grp.consumer_ids = [:a, :b, :c, :d]
       grp.save!
     end
     it "should contact pulp if new ids are removed" do
-      Resources::Pulp::ConsumerGroup.should_receive(:delete_consumer).twice
-      grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumerids=>[:a, :b])
-      grp.consumerids = []
+      Runcible::Extensions::ConsumerGroup.should_receive(:remove_consumers_by_id).once
+      grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumer_ids=>[:a, :b])
+      grp.consumer_ids = []
       grp.save!
     end
     it "should contact pulp if new ids are added and removed" do
-      Resources::Pulp::ConsumerGroup.should_receive(:add_consumer).twice
-      Resources::Pulp::ConsumerGroup.should_receive(:delete_consumer).twice
-      grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumerids=>[:a, :b])
-      grp.consumerids = [:c, :d]
+      Runcible::Extensions::ConsumerGroup.should_receive(:add_consumers_by_id).once
+      Runcible::Extensions::ConsumerGroup.should_receive(:remove_consumers_by_id).once
+      grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :consumer_ids=>[:a, :b])
+      grp.consumer_ids = [:c, :d]
       grp.save!
     end
   end
 
   context "changing systems" do
     it "should call out to pulp when adding" do
-      Resources::Pulp::ConsumerGroup.should_receive(:add_consumer).once
+      Runcible::Extensions::ConsumerGroup.should_receive(:add_consumers_by_id).once
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
       grp.systems << @system
       grp.save!
     end
     it "should call out to pulp when removing" do
-      Resources::Pulp::ConsumerGroup.should_receive(:add_consumer).once
-      Resources::Pulp::ConsumerGroup.should_receive(:delete_consumer).once
+      Runcible::Extensions::ConsumerGroup.should_receive(:add_consumers_by_id).once
+      Runcible::Extensions::ConsumerGroup.should_receive(:remove_consumers_by_id).once
       grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :systems=>[@system])
       grp.systems = grp.systems - [@system]
       grp.save!

@@ -39,7 +39,7 @@ class SystemPackagesController < ApplicationController
     if !params[:packages].blank?
       # user entered one or more package names (as comma-separated list) in the content box
       packages = Katello::PackageUtils.validate_package_list_format(params[:packages])
-      
+
       if packages
         task = @system.install_packages packages
         notify.success _("Install of Packages '%{p}' scheduled for System '%{s}'.") %
@@ -75,7 +75,7 @@ class SystemPackagesController < ApplicationController
     elsif !params[:packages].blank?
       # user entered one or more package names (as comma-separated list) in the content box
       packages = Katello::PackageUtils.validate_package_list_format(params[:packages])
-      
+
       if packages
         task = @system.uninstall_packages packages
         notify.success _("Uninstall of Packages '%{p}' scheduled for System '%{s}'.") %
@@ -126,7 +126,7 @@ class SystemPackagesController < ApplicationController
                        :message=>_("Hypervisors do not have packages")}
       return
     end
-    
+
     offset = current_user.page_size
     packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
     total_packages = packages.length
@@ -162,7 +162,7 @@ class SystemPackagesController < ApplicationController
     end
 
     render :partial=>"package_items", :locals=>{:packages => packages, :package_tasks => nil,
-                                                :group_tasks => nil, :offset=> 0, 
+                                                :group_tasks => nil, :offset=> 0,
                                                 :editable => @system.editable?}
   end
 

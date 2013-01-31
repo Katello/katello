@@ -56,9 +56,6 @@ class PromotionChangeset < Changeset
 
   def promote_content(notify = false)
     update_progress! '0'
-    self.calc_and_save_dependencies
-
-    update_progress! '10'
 
     from_env = self.environment.prior
     to_env   = self.environment
@@ -153,11 +150,10 @@ class PromotionChangeset < Changeset
     pkg_ids = []
 
     pkgs_promote.each_pair do |repo, pkgs|
+      repo.add_packages(pkgs)
       pkg_ids.concat(pkgs)
-      pkgs_promote[repo] = Glue::Pulp::Package.id_search(pkgs)
     end
-    Glue::Pulp::Repo.add_repo_packages(pkgs_promote)
-    Glue::Pulp::Package.index_packages(pkg_ids)
+    Package.index_packages(pkg_ids)
   end
 
 
@@ -171,10 +167,9 @@ class PromotionChangeset < Changeset
       product.repos(from_env).each do |repo|
         if repo.is_cloned_in? to_env
           clone             = repo.get_clone to_env
-          affecting_filters = (repo.filters + repo.product.filters).uniq
 
-          if repo.has_erratum? err.errata_id and !clone.has_erratum? err.errata_id and
-              !err.blocked_by_filters? affecting_filters
+
+          if repo.has_erratum? err.errata_id and !clone.has_erratum? err.errata_id
             errata_promote[clone] ||= []
             errata_promote[clone] << err.errata_id
           end
@@ -182,10 +177,12 @@ class PromotionChangeset < Changeset
       end
     end
 
+    errata_ids = []
     errata_promote.each_pair do |repo, errata|
       repo.add_errata(errata)
-      Glue::Pulp::Errata.index_errata(errata)
+      errata_ids.concat(errata)
     end
+    Errata.index_errata(errata_ids)
   end
 
 
@@ -254,7 +251,7 @@ class PromotionChangeset < Changeset
   def errata_for_dep_calc product
     cs_errata = ChangesetErratum.where({ :changeset_id => self.id, :product_id => product.id })
     cs_errata.collect do |err|
-      Glue::Pulp::Errata.find(err.errata_id)
+      Errata.find(err.errata_id)
     end
   end
 
@@ -264,7 +261,7 @@ class PromotionChangeset < Changeset
 
     cs_pacakges = ChangesetPackage.where({ :changeset_id => self.id, :product_id => product.id })
     packages    += cs_pacakges.collect do |pack|
-      Glue::Pulp::Package.find(pack.package_id)
+      Package.find(pack.package_id)
     end
 
     packages += errata_for_dep_calc(product).collect do |err|
@@ -323,7 +320,7 @@ class PromotionChangeset < Changeset
     async_tasks = affected_repos.collect do |repo|
       repo.get_clone(to_env).generate_metadata
     end
-    async_tasks
+    async_tasks.flatten(1)
   end
 
   def affected_repos
@@ -331,7 +328,8 @@ class PromotionChangeset < Changeset
     repos += self.packages.collect { |e| e.promotable_repositories }.flatten(1)
     repos += self.errata.collect { |p| p.promotable_repositories }.flatten(1)
     repos += self.distributions.collect { |d| d.promotable_repositories }.flatten(1)
-
+    repos += self.repos_to_be_promoted
+    repos += self.products_to_be_promoted.collect{|p| p.repos(self.environment.prior)}.flatten(1)
     repos.uniq
   end
 

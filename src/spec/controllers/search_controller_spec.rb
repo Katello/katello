@@ -22,9 +22,9 @@ describe SearchController do
     login_user
 
     controller.stub!(:current_user).and_return(@mock_user)
-    
+
     @from_resource = "/resource"
-    # stub out retrieve_path... this method needs specific details from the request which 
+    # stub out retrieve_path... this method needs specific details from the request which
     # will not be available from rpec (e.g. HTTP_REFERER)
     controller.stub!(:retrieve_path).and_return(@from_resource)
 
@@ -51,7 +51,7 @@ describe SearchController do
       get 'show'
       assigns[:search_favorites].should == @search_favorites
     end
-    
+
     it "renders search partial" do
       get 'show'
       response.should be_success

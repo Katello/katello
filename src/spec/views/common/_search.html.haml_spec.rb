@@ -22,7 +22,7 @@ describe "common/_search.html.haml" do
         @history_1_path = '?search='+@history_1+'#'
         @history_2 = 'recent history 2'
         @history_2_path = '?search='+@history_2+'#'
-  
+
         assign(:search_histories, [
                stub_model(SearchHistory, :params => @history_1),
                stub_model(SearchHistory, :params => @history_2)

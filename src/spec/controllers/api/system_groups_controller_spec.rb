@@ -17,14 +17,13 @@ describe Api::SystemGroupsController, :katello => true do
   include AuthorizationHelperMethods
   include OrchestrationHelper
   include SystemHelperMethods
-  include LocaleHelperMethods
+
 
   let(:uuid) { '1234' }
 
   before(:each) do
     disable_org_orchestration
     disable_consumer_group_orchestration
-    set_default_locale
 
     @org = Organization.create!(:name=>'test_org', :label=> 'test_org')
     @environment = KTEnvironment.create!(:name=>'test_1', :label=> 'test_1', :prior => @org.library.id, :organization => @org)
@@ -127,9 +126,10 @@ describe Api::SystemGroupsController, :katello => true do
        end
 
        it "should allow creation of a group without specifying maximum systems" do
+         count = SystemGroup.where(:max_systems=>"-1").count
          post :create, :organization_id=>@org.label, :system_group=>{:description=>"describe", :name => "foo"}
          response.should be_success
-         SystemGroup.where(:max_systems=>"-1").count.should == 1
+         SystemGroup.where(:max_systems=>"-1").count.should == count+1
        end
 
        it "should allow creation of a group specifying maximum systems" do
@@ -201,7 +201,7 @@ describe Api::SystemGroupsController, :katello => true do
          response.should_not be_success
          SystemGroup.where(:name=>"foo2").count.should == 0
        end
-       
+
      end
 
      describe "PUT update" do

@@ -28,6 +28,7 @@ common:
   use_cp: # set to true/false if you want to override default
   use_pulp: # set to true/false if you want to override default
   use_foreman: # set to true/false if you want to override default
+  use_elasticsearch: # set to true/false if you want to override default
   app_name: # set a name if you want to override default
 
   warden:  <%= scope.lookupvar("katello::params::auth_method") %>
@@ -45,6 +46,8 @@ common:
   thumbslug_url: https://localhost:8088
 
   password_reset_expiration: 120
+
+  post_sync_url: http://localhost:5000/<%= scope.lookupvar("katello::params::deployment_url") %>/api/repositories/sync_complete
 
   # email_reply_address is used to specify the "From:" address included
   # in emails sent from the Server.  If not specified, it will default to

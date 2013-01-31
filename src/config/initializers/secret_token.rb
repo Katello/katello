@@ -1,6 +1,6 @@
 if RUBY_VERSION >= "1.9.3"
   require 'securerandom'
-else 
+else
   require 'active_support/secure_random'
 end
 
