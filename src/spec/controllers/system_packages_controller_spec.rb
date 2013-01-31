@@ -46,7 +46,8 @@ describe SystemPackagesController, :katello => true do
         before (:each) do
           @system = System.create!(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
 
-          Runcible::Extensions::Consumer.stub!(:profile).and_return({"profile" => []})
+          Runcible::Extensions::Consumer.stub!(:retrieve_profile).and_return({"profile" => []})
+
           Resources::Candlepin::Consumer.stub!(:events).and_return([])
         end
 

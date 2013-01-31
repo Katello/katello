@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Notice < ActiveRecord::Base
-  include Glue::ElasticSearch::Notice if AppConfig.use_elasticsearch
+  include Glue::ElasticSearch::Notice if Katello.config.use_elasticsearch
 
   has_many :user_notices
   has_many :users, :through => :user_notices

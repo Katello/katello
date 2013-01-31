@@ -11,9 +11,38 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'spec_helper'
+require 'webmock/rspec'
 
 describe Api::PingController do
   include LoginHelperMethods
+
+  let(:katello_ping_ok) {
+    {
+      :result => "ok",
+      :status => {
+        :pulp => {:result => "ok", :duration_ms => "10"},
+        :candlepin => {:result => "ok", :duration_ms => "10"},
+        :elasticsearch => {:result => "ok", :duration_ms => "10"},
+        :pulp_auth => {:result => "ok", :duration_ms => "10"},
+        :candlepin_auth => {:result => "ok", :duration_ms => "10"},
+        :katello_jobs => {:result => "ok", :duration_ms => "10"},
+        :foreman_auth => {:result => "ok", :duration_ms => "10"}
+      }
+    }
+  }
+
+  let(:headpin_ping_ok) {
+    {
+      :result => "ok",
+      :status => {
+        :candlepin => {:result => "ok", :duration_ms => "10"},
+        :elasticsearch => {:result => "ok", :duration_ms => "10"},
+        :candlepin_auth => {:result => "ok", :duration_ms => "10"},
+        :katello_jobs => {:result => "ok", :duration_ms => "10"},
+        :thumbslug => {:result => "ok", :duration_ms => "10"}
+      }
+    }
+  }
 
   before (:each) do
     login_user
@@ -28,29 +57,41 @@ describe Api::PingController do
     JSON.parse(response.body)
   end
 
-  context "in headpin mode" do
-    before (:each) do
-      AppConfig.stub!(:app_name).and_return("Headpin")
-      AppConfig.stub!(:katello_version).and_return("12")
-    end
-    it "staus should reflect the correct information" do
+  context "status" do
+
+    it "should reflect the correct information", :headpin => true do
+      Katello.config.stub!(:app_name).and_return("Headpin")
+      Katello.config.stub!(:katello_version).and_return("12")
       get :status
       json(response).should include "release" => "Headpin"
       json(response).should include "version" => "12"
     end
-  end
 
-  context "in katello mode" do
-
-    before (:each) do
-      AppConfig.stub!(:app_name).and_return("Katello")
-      AppConfig.stub!(:katello_version).and_return("12")
-    end
-    it "staus should reflect the correct information" do
+    it "should reflect the correct information", :katello => true do
+      Katello.config.stub!(:app_name).and_return("Katello")
+      Katello.config.stub!(:katello_version).and_return("12")
       get :status
       json(response).should include "release" => "Katello"
       json(response).should include "version" => "12"
     end
+
   end
+
+  context "ping" do
+
+    it "should call Ping.ping()", :headpin => true do
+      Ping.should_receive(:ping).once.and_return(:headpin_ping_ok)
+      get :index
+      response.body.should == :headpin_ping_ok.to_json
+    end
+
+    it "should call Ping.ping()", :katello => true do
+      Ping.should_receive(:ping).once.and_return(:katello_ping_ok)
+      get :index
+      response.body.should == :katello_ping_ok.to_json
+    end
+
+  end
+
 
 end

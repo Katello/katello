@@ -31,6 +31,9 @@ KT.user_page = function() {
             error: function(data) {
                 chkbox.removeClass("disabled");
                 chkbox.button('option',  'label', data);
+            },
+            complete: function(e) {
+                notices.checkNotices();
             }
         });
     },
@@ -48,7 +51,10 @@ KT.user_page = function() {
             type: "PUT",
             url: url,
             data: options,
-            cache: false
+            cache: false,
+            complete: function(e) {
+                notices.checkNotices();
+            }
         });        
         return false;
     },
@@ -135,6 +141,9 @@ KT.user_page = function() {
             },
             error: function(e) {
                 button.removeClass('disabled');
+            },
+            complete: function(e) {
+                notices.checkNotices();
             }
         });
     },

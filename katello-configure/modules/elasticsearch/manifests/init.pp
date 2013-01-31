@@ -1,5 +1,5 @@
 class elasticsearch {
-  Exec { logoutput => on_failure, timeout => 0 }
+  Exec { logoutput => true, timeout => 0 }
 
   include elasticsearch::params
   include elasticsearch::config

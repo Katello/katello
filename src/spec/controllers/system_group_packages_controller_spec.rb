@@ -280,20 +280,20 @@ describe SystemGroupPackagesController, :katello => true do
 
       describe 'update package groups' do
         it 'should support receiving a comma-separated list of package group names' do
-          @group.should_receive(:install_package_groups).with(["grp1", "grp2", "grp3"]).and_return(@job)
+          @group.should_receive(:update_package_groups).with(["grp1", "grp2", "grp3"]).and_return(@job)
           put :update, :system_group_id => @group.id, :groups => "grp1, grp2, grp3"
           response.should be_success
         end
 
         it 'should generate a notice on success' do
           controller.should notify.success
-          @group.stub!(:install_package_groups).and_return(@job)
+          @group.stub!(:update_package_groups).and_return(@job)
           put :update, :system_group_id => @group.id, :groups => "grp1"
           response.should be_success
         end
 
         it 'should render the items partial on success' do
-          @group.stub!(:install_package_groups).and_return(@job)
+          @group.stub!(:update_package_groups).and_return(@job)
           put :update, :system_group_id => @group.id, :groups => "grp1"
           response.should be_success
           response.should render_template(:partial => 'system_groups/packages/_items')
@@ -301,7 +301,7 @@ describe SystemGroupPackagesController, :katello => true do
 
         it 'should generate an error notice, if no package group names provided' do
           controller.should notify.error
-          @group.should_not_receive(:install_package_groups)
+          @group.should_not_receive(:update_package_groups)
           put :update, :system_group_id => @group.id, :groups => ""
           response.should be_success
           response.should_not render_template(:partial => 'system_groups/packages/_items')
@@ -309,7 +309,7 @@ describe SystemGroupPackagesController, :katello => true do
 
         it 'should return an error notice, if no package group structure provided' do
           controller.should notify.error
-          @group.should_not_receive(:install_package_groups)
+          @group.should_not_receive(:update_package_groups)
           put :update, :system_group_id => @group.id
           response.should be_success
           response.should_not render_template(:partial => 'system_groups/packages/_items')

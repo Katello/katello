@@ -14,7 +14,7 @@ require 'util/search'
 
 class Pool < ActiveRecord::Base
   include Glue::Candlepin::Pool
-  include Glue::ElasticSearch::Pool if AppConfig.use_elasticsearch
+  include Glue::ElasticSearch::Pool if Katello.config.use_elasticsearch
 
   set_table_name "pools"
   has_many :key_pools, :foreign_key => "pool_id", :dependent => :destroy

@@ -17,6 +17,7 @@ describe Api::PackagesController, :katello => true do
   include AuthorizationHelperMethods
   include ProductHelperMethods
   include RepositoryHelperMethods
+  include LocaleHelperMethods
 
   let(:repo_id) {'f8ab5088-688e-4ce4-ade3-700aa4cbb070'}
   before(:each) do
@@ -32,6 +33,7 @@ describe Api::PackagesController, :katello => true do
     @repo = new_test_repo(ep_library, "repo", "#{@organization.name}/Library/prod/repo")
 
     @product.stub(:repos).and_return([@repository])
+    @repo.stub(:has_distribution?).and_return(true)
     @repo.stub(:pulp_id).and_return(repo_id)
     Repository.stub(:find).and_return(@repo)
 

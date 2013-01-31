@@ -34,7 +34,7 @@ describe Api::RootController do
 
   context "in headpin mode" do
     before (:each) do
-      AppConfig.stub!(:katello?).and_return(false)
+      Katello.config.stub!(:katello?).and_return(false)
     end
     it "should not show katello apis" do
       resource_list
@@ -48,7 +48,7 @@ describe Api::RootController do
   context "in katello mode" do
 
     before (:each) do
-      AppConfig.stub!(:katello?).and_return(true)
+      Katello.config.stub!(:katello?).and_return(true)
     end
     it "should show katello apis" do
       resource_list

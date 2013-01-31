@@ -12,7 +12,7 @@
 
 class ActivationKey < ActiveRecord::Base
 
-  include Glue::ElasticSearch::ActivationKey if AppConfig.use_elasticsearch
+  include Glue::ElasticSearch::ActivationKey if Katello.config.use_elasticsearch
   include Authorization::ActivationKey
 
   belongs_to :organization
@@ -32,9 +32,10 @@ class ActivationKey < ActiveRecord::Base
 
   after_find :validate_pools
 
-  validates :name, :presence => true, :katello_name_format => true
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+  validates :name, :presence => true
   validates_uniqueness_of :name, :scope => :organization_id
-  validates :description, :katello_description_format => true
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates :environment, :presence => true
   validate :environment_exists
   validate :system_template_exists

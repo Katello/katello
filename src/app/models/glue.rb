@@ -14,6 +14,11 @@ require 'glue/queue'
 require 'errors'
 
 module Glue
+  singleton_class.send :attr_writer, :logger
+  def self.logger
+    @logger ||= Rails.logger
+  end
+
   def self.included(base)
     base.send :include, InstanceMethods
     base.class_eval do
@@ -29,8 +34,10 @@ module Glue
   module InstanceMethods
 
     def on_save
+      Glue.logger.debug "Processing on save pre-queue: #{pre_queue.to_log}" if pre_queue.count > 0
       process pre_queue
       yield if block_given?
+      Glue.logger.debug "Processing on save post-queue: #{post_queue.to_log}" if post_queue.count > 0
       process post_queue
       @orchestration_for = nil
     end
@@ -38,8 +45,10 @@ module Glue
     def on_destroy
       return false unless errors.empty?
 
+      Glue.logger.debug "Processing on destroy pre-queue: #{pre_queue.to_log}" if pre_queue.count > 0
       process(pre_queue)
       yield if block_given?
+      Glue.logger.debug "Processing on destroy post-queue: #{post_queue.to_log}" if post_queue.count > 0
       process post_queue
       @orchestration_for = nil
     end
@@ -54,6 +63,9 @@ module Glue
     end
 
     def rollback
+      Glue.logger.warning "Rollback initiated"
+      Glue.logger.warning "Before rollback pre-queue: #{pre_queue.to_log}"
+      Glue.logger.warning "Before rollback post-queue: #{post_queue.to_log}"
       raise ActiveRecord::Rollback
     end
 
@@ -97,11 +109,23 @@ module Glue
       return if q.empty?
 
       # process all pending tasks
+      q_total = q.pending.count
+      q_active = 1
       q.pending.each do |task|
         # if we have failures, we don't want to process any more tasks
         next unless q.failed.empty?
+
+        # send into orchestration log
+        obj, met, *args = task.action
+        args_str = args.collect { |x| x.inspect }.join(",")[0, 20]
+        obj_id = ''
+        obj_id = "find(#{obj.id})." if obj.respond_to?(:id) && obj.id
+        Glue.logger.info "Task #{task.name} (#{q_active}/#{q_total}) > #{obj.class.name}.#{obj_id}#{met}(#{args_str})"
+
+        # execute the task
         task.status = "running"
         task.status = execute({:action => task.action}) ? "completed" : "failed"
+        q_active += 1
       end
 
       # if we have no failures - we are done

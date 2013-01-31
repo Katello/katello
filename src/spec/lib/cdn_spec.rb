@@ -18,7 +18,8 @@ describe Resources::CDN::CdnResource do
   let(:path_with_variables) { "/content/dist/rhel/server/5/$releasever/$basearch/os" }
   let(:another_path_with_variables) { "/content/dist/rhel/server/6/$releasever/$basearch/os" }
   let(:connect_options) do
-    {:ssl_client_cert => "456",:ssl_ca_file => "fake-ca.pem", :ssl_client_key => "123"}
+    {:ssl_client_cert => "456",:ssl_ca_file => "fake-ca.pem", :ssl_client_key => "123",
+    :product => mock("Product", :repositories_cdn_import_failed! => true)}
   end
 
   subject do
@@ -36,7 +37,7 @@ describe Resources::CDN::CdnResource do
   end
 
   it "should be able to use proxy" do
-    AppConfig.cdn_proxy = OpenStruct.new(:host => "localhost", :port => 3128, :user => "test", :password => "pwd")
+    Katello.config[:cdn_proxy] = { :host => "localhost", :port => 3128, :user => "test", :password => "pwd" }
 
     Net::HTTP.stub("Proxy" => Net::HTTP)
     Net::HTTP.should_receive("Proxy").with("localhost", 3128, "test", "pwd")
@@ -45,7 +46,7 @@ describe Resources::CDN::CdnResource do
   end
 
   it "should be able to use url as proxy host" do
-    AppConfig.cdn_proxy = OpenStruct.new(:host => "http://localhost", :port => 3128, :user => "test", :password => "pwd")
+    Katello.config[:cdn_proxy] = {:host => "http://localhost", :port => 3128, :user => "test", :password => "pwd"}
 
     Net::HTTP.stub("Proxy" => Net::HTTP)
     Net::HTTP.should_receive("Proxy").with("localhost", 3128, "test", "pwd")
@@ -70,7 +71,8 @@ describe Resources::CDN::CdnResource do
 
     it "should describe why it failed when some listing unavailable" do
       stub_not_found_cdn_request
-      expect { subject.precalculate([path_with_variables]) }.to raise_error Errors::NotFound, /\/content\/dist\/rhel\/server\/5\/listing not found/
+      connect_options[:product].should_receive(:repositories_cdn_import_failed!).once
+      expect { subject.precalculate([path_with_variables]) }.not_to raise_error
     end
   end
 

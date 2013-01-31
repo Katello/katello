@@ -21,7 +21,7 @@ module Glue::Pulp::Errata
   ENHANCEMENT = "enhancement"
 
   def self.included(base)
-    base.send :include, InstanceMethods    
+    base.send :include, InstanceMethods
 
     base.class_eval do
 
@@ -36,7 +36,8 @@ module Glue::Pulp::Errata
       end
 
       def self.errata_by_consumer(repos)
-        Resources::Pulp::Consumer.errata_by_consumer(repos)
+        raise NotImplementedError
+        #TODO: Needs corresponding Runcible call once fixed in Pulp
       end
 
       def self.find(id)
@@ -50,6 +51,7 @@ module Glue::Pulp::Errata
       end
 
     end
+
   end
 
   module InstanceMethods

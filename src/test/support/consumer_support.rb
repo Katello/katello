@@ -41,7 +41,7 @@ module ConsumerSupport
     VCR.use_cassette('support/consumer') do
       @consumer.del_pulp_consumer
     end
-  rescue => e
+  rescue RestClient::ResourceNotFound => e
     puts e
   end
 

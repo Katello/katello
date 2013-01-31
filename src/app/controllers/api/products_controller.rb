@@ -129,7 +129,7 @@ class Api::ProductsController < Api::ApiController
     render :text => _("Synchronization plan removed."), :status => 200
   end
 
-  api :GET, "/content_view_definitions/:content_view_definition_id/products", 
+  api :GET, "/content_view_definitions/:content_view_definition_id/products",
     "Get products for content view definition"
   param :content_view_definition_id, :identifier, :required => true,
     :desc => "content view definition identifier"

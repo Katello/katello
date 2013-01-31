@@ -41,8 +41,8 @@ class Status(PingAction):
 
         status = self.api.ping()
 
-        batch_add_columns(self.printer,
-            'status', 'service', 'result', 'duration', 'message')
+        batch_add_columns(self.printer, {'status': _("Status")}, {'service': _("Service")}, \
+            {'result': _("Result")}, {'duration': _("Duration")}, {'message': _("Message")})
         self.printer.set_header(_("Katello Status"))
 
         statusList = self.__statusToList(status)
@@ -60,7 +60,7 @@ class Status(PingAction):
             pulp:           8
             pulp_auth:     16
         """
-        if status['result'] == 'ok':
+        if status['result'].lower() == 'ok':
             return 0
 
         code = 0

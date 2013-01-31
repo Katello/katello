@@ -5,16 +5,16 @@
 .sixty
   - if current_organization && current_organization.readable?
     = dashboard_entry(_("System Subscription Status"), "subscriptions", false)
-  - if AppConfig.katello? && current_organization && Repository.any_readable_in_org?(current_organization, true)
+  - if Katello.config.katello? && current_organization && Repository.any_readable_in_org?(current_organization, true)
     = dashboard_ajax_entry(_("Available Errata"), "errata", errata_dashboard_index_path(), "big_widget", true)
   -#= dashboard_ajax_entry(_("System Overview"), "systems", systems_dashboard_index_path(), "big_widget", true)
-  - if AppConfig.katello? && current_organization && SystemGroup.any_readable?(current_organization)
+  - if Katello.config.katello? && current_organization && SystemGroup.any_readable?(current_organization)
     = dashboard_ajax_entry(_("System Group Overview"), "system_groups", system_groups_dashboard_index_path(), "big_widget", true)
 
 .forty
-  - widget_class = AppConfig.katello? ? "small_widget" : "small_widget_headpin"
+  - widget_class = Katello.config.katello? ? "small_widget" : "small_widget_headpin"
   = dashboard_ajax_entry(_("Latest Notifications"), "notices", notices_dashboard_index_path(), widget_class, true)
-  - if AppConfig.katello?
+  - if Katello.config.katello?
     - if current_organization && KTEnvironment.any_viewable_for_promotions?(current_organization)
       = dashboard_ajax_entry(_("Promotions Overview"), "promotions", promotions_dashboard_index_path(), "small_widget", true)
     - if current_organization && current_organization.syncable?

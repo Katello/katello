@@ -39,3 +39,7 @@ Src::Application.configure do
   Dir.mkdir "#{Rails.root}/log" unless File.directory? "#{Rails.root}/log"
   config.active_record.logger = Logger.new("#{Rails.root}/log/test_sql.log")
 end
+
+# test running optimization
+Password.password_rounds = 1
+

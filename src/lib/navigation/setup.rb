@@ -14,11 +14,11 @@ module Navigation
   module SetupMenu
 
     def menu_setup
-      menu = {:key => :systems,
+      menu = {:key => :setup,
        :name => _("Setup"),
         :url => :sub_level,
         :options => {:class=>'setup top_level', "data-menu"=>"setup"},
-        :items=> [ menu_subnets, menu_domains, menu_architectures ]
+        :items=> [ menu_smart_proxies, menu_subnets, menu_domains, menu_architectures ]
         # TODO: final order of the setup menu items
         #   Setup
         #   Locations
@@ -26,12 +26,22 @@ module Navigation
         #   Subnets
         #   Domains
         #   Hardware Models
+        #   Architectures
       }
       menu
     end
 
-    def menu_subnets
+    def menu_smart_proxies
       {:key => :registered,
+       :name => _("Smart Proxies"),
+       :url => smart_proxies_path,
+       :if => lambda{true}, #TODO: check permissions
+       :options => {:class=>'setup second_level', "data-menu"=>"smart_proxies"}
+      }
+    end
+
+    def menu_subnets
+      {:key => :subnets,
        :name => _("Subnets"),
        :url => subnets_path,
        :if => lambda{true}, #TODO: check permissions
@@ -40,7 +50,7 @@ module Navigation
     end
 
     def menu_domains
-      {:key => :registered,
+      {:key => :domains,
        :name => _("Domains"),
        :url => domains_path,
        :if => lambda{true}, #TODO: check permissions
@@ -49,7 +59,7 @@ module Navigation
     end
 
     def menu_architectures
-      {:key => :registered,
+      {:key => :architectures,
        :name => _("Architectures"),
        :url => architectures_path,
        :if => lambda{true}, #TODO: check permissions

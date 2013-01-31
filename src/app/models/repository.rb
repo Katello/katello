@@ -11,24 +11,18 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 require "util/model_util"
 
-class RepoDisablementValidator < ActiveModel::Validator
-  def validate(record)
-    if record.redhat? && record.enabled_changed? && (!record.enabled?) && record.promoted?
-      record.errors[:base] << N_("Repository cannot be disabled since it has already been promoted.")
-    end
-  end
-end
-
-
 class Repository < ActiveRecord::Base
-  include Glue::ElasticSearch::Repository if AppConfig.use_elasticsearch
-  include Glue::Candlepin::Content if (AppConfig.use_cp and AppConfig.use_pulp)
-  include Glue::Pulp::Repo if AppConfig.use_pulp
-  include Glue if AppConfig.use_cp || AppConfig.use_pulp
+
+  include Glue::Candlepin::Content if (Katello.config.use_cp and Katello.config.use_pulp)
+  include Glue::Pulp::Repo if Katello.config.use_pulp
+  include Glue::ElasticSearch::Repository if Katello.config.use_elasticsearch
+
+  include Glue if (Katello.config.use_cp || Katello.config.use_pulp)
   include Authorization::Repository
+
   include AsyncOrchestration
   include Katello::LabelFromName
-  include Rails.application.routes.url_helpers 
+  include Rails.application.routes.url_helpers
 
   belongs_to :environment_product, :inverse_of => :repositories
   belongs_to :gpg_key, :inverse_of => :repositories
@@ -43,9 +37,10 @@ class Repository < ActiveRecord::Base
   validates :pulp_id, :presence => true, :uniqueness => true
   validates :name, :presence => true
   #validates :content_id, :presence => true #add back after fixing add_repo orchestration
-  validates :label, :presence => true,:katello_label_format => true
+  validates :label, :presence => true
+  validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
+  validates_with Validators::RepoDisablementValidator, :attributes => :enabled, :on => :update
 
-  validates :enabled, :repo_disablement => true, :on => :update
   belongs_to :gpg_key, :inverse_of => :repositories
   belongs_to :library_instance, :class_name=>"Repository"
 
@@ -105,8 +100,9 @@ class Repository < ActiveRecord::Base
   def yum_gpg_key_url
     # if the repo has a gpg key return a url to access it
     if (self.gpg_key && self.gpg_key.content.present?)
-      host = AppConfig.host
-      host += ":" + AppConfig.port.to_s unless AppConfig.port.blank? || AppConfig.port.to_s == "443"
+      host = Katello.config.host
+      port = Katello.config.port
+      host += ":" + port.to_s unless port.blank? || port.to_s == "443"
       gpg_key_content_api_repository_url(self, :host => host + ENV['RAILS_RELATIVE_URL_ROOT'].to_s, :protocol => 'https')
     end
   end

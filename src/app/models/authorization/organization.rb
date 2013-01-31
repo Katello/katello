@@ -31,7 +31,7 @@ module Authorization::Organization
       end
 
       def self.list_verbs global = false
-        if AppConfig.katello?
+        if Katello.config.katello?
           org_verbs = {
             :update => _("Modify Organization and Administer Environments"),
             :read => _("Read Organization"),
@@ -57,6 +57,7 @@ module Authorization::Organization
         :delete => _("Delete Organization")
         }) if global
         org_verbs.with_indifferent_access
+
       end
 
       def self.read_verbs
@@ -87,32 +88,28 @@ module Authorization::Organization
   end
 
   def readable?
-    User.allowed_to?(READ_PERM_VERBS, :organizations,nil, self)
+    ::User.allowed_to?(READ_PERM_VERBS, :organizations,nil, self)
   end
-
 
   def environments_manageable?
-    User.allowed_to?([:update, :create], :organizations, nil, self)
+    ::User.allowed_to?([:update, :create], :organizations, nil, self)
   end
 
-
   def systems_readable?
-    User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
+    ::User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
   end
 
   def systems_deletable?
-    User.allowed_to?([:delete_systems], :organizations, nil, self)
+    ::User.allowed_to?([:delete_systems], :organizations, nil, self)
   end
 
   def systems_registerable?
-    User.allowed_to?([:register_systems], :organizations, nil, self)
+    ::User.allowed_to?([:register_systems], :organizations, nil, self)
   end
-
 
   def any_systems_registerable?
     systems_registerable? || User.allowed_to?([:register_systems], :environments, environment_ids, self, true)
   end
-
 
   def gpg_keys_manageable?
     ::User.allowed_to?([:gpg], :organizations, nil, self)
