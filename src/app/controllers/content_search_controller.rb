@@ -31,7 +31,8 @@ class ContentSearchController < ApplicationController
         :repo_packages => contents_test,
         :repo_errata => contents_test,
         :repo_compare_errata =>contents_test,
-        :repo_compare_packages =>contents_test
+        :repo_compare_packages =>contents_test,
+        :views => contents_test
     }
   end
 
@@ -58,6 +59,22 @@ class ContentSearchController < ApplicationController
       products = products.select{|p|  !(envs - p.environments ).empty?}
     end
     render :json=>{:rows=>product_rows(products), :name=>_('Products')}
+  end
+
+  def views
+    if !(ids = params[:views][:autocomplete].map{|v| v["id"]} rescue []).empty?
+      views = ContentView.readable(current_organization).non_default.where(:id => ids)
+    else
+      views = ContentView.readable(current_organization).non_default
+    end
+
+    envs = process_env_ids
+    if params[:mode] == 'shared'
+      views = views.select{|v|  (envs - v.environments).empty? }
+    elsif params[:mode] == 'unique'
+      views = views.select{|v|  !(envs - v.environments ).empty?}
+    end
+    render :json=>{:rows=> view_rows(views), :name=>_('Content View')}
   end
 
   def repos
@@ -265,8 +282,23 @@ class ContentSearchController < ApplicationController
     end
   end
 
+  def view_rows(views)
+    env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
+    views.collect do |v|
+      cols = {}
+      v.environments.collect do |env|
+        cols[env.id] = {:hover => view_hover_html(v, env)} if env_ids.include?(env.id)
+      end
+      {:id=>"view_#{v.id}", :name=>v.name, :cols=>cols, :data_type => "view", :value => v.name}
+    end
+  end
+
   def product_hover_html product, environment
     render_to_string :partial=>'product_hover', :locals=>{:product=>product, :env=>environment}
+  end
+
+  def view_hover_html(view, environment)
+    render_to_string :partial=>'product_hover', :locals=>{:product=>view, :env=>environment}
   end
 
   def param_product_ids

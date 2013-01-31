@@ -15,6 +15,7 @@ require 'util/model_util.rb'
 class ContentView < ActiveRecord::Base
   include Katello::LabelFromName
   include Authorization::ContentView
+  include Glue::ElasticSearch::ContentView
 
   belongs_to :content_view_definition
   belongs_to :organization, :inverse_of => :content_views
@@ -208,6 +209,18 @@ class ContentView < ActiveRecord::Base
 
   def in_non_library_environment?
     environments.where(:library => false).length > 0
+  end
+
+  def total_package_count(env)
+    repoids = self.repos(env).collect{|r| r.pulp_id}
+    result = Package.search('*', 0, 1, repoids)
+    result.length > 0 ? result.total : 0
+  end
+
+  def total_errata_count(env)
+    repo_ids = self.repos(env).collect{|r| r.pulp_id}
+    results = Errata.search('', 0, 1, :repoids => repo_ids)
+    results.empty? ? 0 : results.total
   end
 
   # Refresh the content view, creating a new version in the library.  The new version will be returned.
