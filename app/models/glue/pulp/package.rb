@@ -13,158 +13,39 @@
 require "util/search"
 require 'util/package_util'
 
-class Glue::Pulp::Package < Glue::Pulp::SimplePackage
-  attr_accessor :id, :download_url, :checksum, :license, :group, :filename, :requires,  :provides, :description, :size, :buildhost, :repoids
+module Glue::Pulp::Package
+  def self.included(base)
+    base.send :include, InstanceMethods
 
-  def self.find id
-    package_attrs = Resources::Pulp::Package.find(id)
-    Glue::Pulp::Package.new(package_attrs) if not package_attrs.nil?
-  end
+    base.class_eval do
 
-  def self.index_settings
-    {
-        "index" => {
-            "analysis" => {
-                "filter" => Katello::Search::custom_filters,
-                "analyzer" =>Katello::Search::custom_analyzers
-            }
-        }
-    }
-  end
+      attr_accessor :_id, :download_url, :checksum, :license, :group, :filename, :requires,  :provides, :description,
+                    :size, :buildhost, :repository_memberships, :name, :arch
 
-  def self.index_mapping
-    {
-      :package => {
-        :properties => {
-          :id            => {:type=>'string', :index=>:not_analyzed},
-          :name          => { :type=> 'string', :analyzer=>:kt_name_analyzer},
-          :name_autocomplete  => { :type=> 'string', :analyzer=>'autcomplete_name_analyzer'},
-          :nvrea_autocomplete  => { :type=> 'string', :analyzer=>'autcomplete_name_analyzer'},
-          :nvrea         => { :type=> 'string', :analyzer=>:kt_name_analyzer},
-          :nvrea_sort    => { :type => 'string', :index=> :not_analyzed },
-          :repoids       => { :type=> 'string', :index=>:not_analyzed}
-        }
-      }
-    }
-  end
+      alias_method 'id=', '_id='
+      alias_method 'id', '_id'
+      alias_method 'repoids', 'repository_memberships'
 
-  def self.index
-    "#{Katello.config.elastic_index}_package"
-  end
-
-  def index_options
-    {
-      "_type" => :package,
-      "nvrea_sort" => nvrea.downcase,
-      "nvrea" => nvrea,
-      "nvrea_autocomplete" => nvrea,
-      "name_autocomplete" => name
-    }
-  end
-
-  def self.autocomplete_name query, repoids=nil, page_size=15
-    return [] if !Tire.index(self.index).exists?
-
-    query = Katello::Search::filter_input query
-    query = "*" if query == ""
-    query = "name_autocomplete:(#{query})"
-
-    search = Tire.search self.index do
-      fields [:name]
-      query do
-        string query
-      end
-
-      if repoids
-        filter :terms, :repoids => repoids
+      def self.find(id)
+        package_attrs = Runcible::Extensions::Rpm.find_by_unit_id(id)
+        return if package_attrs.nil?
+        Package.new(package_attrs) if package_attrs
+      rescue RestClient::ResourceNotFound => exception
+        Rails.logger.error "Failed to find pulp package #{id}: #{exception}, #{exception.backtrace.join("\n")}"
+        raise exception
       end
     end
-
-    to_ret = []
-    search.results.each{|pkg|
-       to_ret << pkg.name if !to_ret.include?(pkg.name)
-       break if to_ret.size == page_size
-    }
-    return to_ret
   end
 
-  def self.autocomplete_nvrea query, repoids=nil, page_size=15
-     return Util::Support.array_with_total if !Tire.index(self.index).exists?
+  module InstanceMethods
 
-     query = Katello::Search::filter_input query
-     query = "*" if query == ""
-     query = "name_autocomplete:(#{query})"
-
-     search = Tire.search self.index do
-       fields [:nvrea]
-       query do
-         string query
-       end
-       size page_size
-
-       if repoids
-         filter :terms, :repoids => repoids
-       end
-     end
-
-     search.results
-   end
-
-
-  def self.id_search ids
-    return Util::Support.array_with_total unless Tire.index(self.index).exists?
-    search = Tire.search self.index do
-      fields [:id, :name, :nvrea, :repoids, :type, :filename, :checksum]
-      query do
-        all
-      end
-      size ids.size
-      filter :terms, :id => ids
-    end
-    search.results
-  end
-
-
-  def self.search query, start, page_size, repoids=nil, sort=[:nvrea_sort, "ASC"], search_mode = :all
-    return Util::Support.array_with_total if !Tire.index(self.index).exists?
-
-    all_rows = query.blank? #if blank, get all rows
-
-    search = Tire::Search::Search.new(self.index)
-
-    search.instance_eval do
-      query do
-        if all_rows
-          all
-        else
-          string query, {:default_field=>'nvrea'}
-        end
-      end
-
-      if page_size > 0
-       size page_size
-       from start
-      end
-      sort { by sort[0], sort[1] } unless !all_rows
+    def initialize(params = {})
+      params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
     end
 
-    if repoids
-      Katello::PackageUtils.setup_shared_unique_filter(repoids, search_mode, search)
+    def nvrea
+      Katello::PackageUtils::build_nvrea(self.as_json.with_indifferent_access, false)
     end
-
-    return search.perform.results
-  rescue Tire::Search::SearchRequestFailed => e
-    Util::Support.array_with_total
   end
 
-  def self.index_packages pkg_ids
-    pkgs = pkg_ids.collect{ |pkg_id|
-      pkg = self.find(pkg_id)
-      pkg.as_json.merge(pkg.index_options)
-    }
-    Tire.index Glue::Pulp::Package.index do
-      create :settings => Glue::Pulp::Package.index_settings, :mappings => Glue::Pulp::Package.index_mapping
-      import pkgs
-    end if !pkgs.empty?
-  end
 end

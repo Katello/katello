@@ -62,7 +62,8 @@ class Api::ApiController < ActionController::Base
   end
 
   def parse_locale
-    first, second = request.env['HTTP_ACCEPT_LANGUAGE'].split(/[-_]/)
+    hal = request.env['HTTP_ACCEPT_LANGUAGE'] || 'en'
+    first, second = hal.split(/[-_]/)
     if second.nil?
       return [first.downcase]
     else
@@ -105,20 +106,38 @@ class Api::ApiController < ActionController::Base
     return @query_params
   end
 
-  private
+  protected
 
   def find_organization
-    raise HttpErrors::NotFound, _("organization_id required but not specified.") if params[:organization_id].nil?
-    find_optional_organization
+    @organization = find_optional_organization
+    raise HttpErrors::NotFound, _("One of parameters [%s] required but not specified.") %
+      organization_id_keys.join(", ") if @organization.nil?
+    @organization
   end
 
   def find_optional_organization
-    if params[:organization_id]
-      # id in name/label is always unique
-      @organization = Organization.without_deleting.where("name = :id or label = :id", {:id => params[:organization_id]}).first
-      raise HttpErrors::NotFound, _("Couldn't find organization '%s'") % params[:organization_id] if @organization.nil?
-      @organization
-    end
+    org_id = organization_id
+    return if org_id.nil?
+
+    @organization = get_organization(org_id)
+    raise HttpErrors::NotFound, _("Couldn't find organization '%s'") % org_id if @organization.nil?
+    @organization
+  end
+
+  def organization_id_keys
+    return [:organization_id]
+  end
+
+  private
+
+  def get_organization org_id
+    # name/label is always unique
+    return Organization.without_deleting.having_name_or_label(org_id).first
+  end
+
+  def organization_id
+    key = organization_id_keys.find {|k| not params[k].nil? }
+    return params[key]
   end
 
   def verify_ldap

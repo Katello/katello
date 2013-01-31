@@ -100,7 +100,7 @@ describe PasswordResetsController do
 
   end
 
-  describe "GET edit" do  
+  describe "GET edit" do
     before (:each) do
       User.stub!(:find_by_password_reset_token!).and_return(@testuser)
     end

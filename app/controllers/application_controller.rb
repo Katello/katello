@@ -16,6 +16,7 @@ require 'util/model_util'
 require 'cgi'
 require 'base64'
 
+
 class ApplicationController < ActionController::Base
   layout 'katello'
   include Notifications::ControllerHelper
@@ -27,6 +28,7 @@ class ApplicationController < ActionController::Base
   before_filter :set_locale
   before_filter :require_user,:require_org
   before_filter :check_deleted_org
+
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
   after_filter :flash_to_headers
@@ -538,7 +540,6 @@ class ApplicationController < ActionController::Base
       total_count = 0
       panel_options[:total_results] = 0
     end
-
     render_panel_results(@items, total_count, panel_options) if !skip_render
     return @items
   end

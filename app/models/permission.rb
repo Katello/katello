@@ -20,10 +20,11 @@ class Permission < ActiveRecord::Base
   before_save :cleanup_tags_verbs
   before_save :check_global
   after_save :update_related_index
-  
+
   validates :name, :presence => true
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
+
   validates_uniqueness_of :name, :scope => [:organization_id, :role_id], :message => N_("must be unique within an organization scope")
 
   before_destroy :check_locked
@@ -127,8 +128,6 @@ class Permission < ActiveRecord::Base
         _("Read Providers")
       when "Read Activation_keys"
         _("Read Activation Keys")
-      when "Read Filters"
-        _("Read Filters")
       when "Read Users"
         _("Read Users")
       when "Read Roles"
@@ -152,8 +151,6 @@ class Permission < ActiveRecord::Base
         _("Read Providers permission")
       when "Read Activation_keys permission"
         _("Read Activation Keys permission")
-      when "Read Filters permission"
-        _("Read Filters permission")
       when "Read Users permission"
         _("Read Users permission")
       when "Read Roles permission"

@@ -4,7 +4,7 @@ class CreateSystemSystemGroups < ActiveRecord::Migration
       t.references :system
       t.references :system_group
       t.timestamps
-    end    
+    end
   end
 
   def self.down

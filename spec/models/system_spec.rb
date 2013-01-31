@@ -15,11 +15,9 @@ require 'helpers/system_test_data'
 include OrchestrationHelper
 include SystemHelperMethods
 
-
 describe System do
 
   include AuthorizationHelperMethods
-
 
   let(:facts) { {"distribution.name" => "Fedora"} }
   let(:system_name) { 'testing' }
@@ -47,9 +45,6 @@ describe System do
     @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
     @environment = KTEnvironment.create!(:name=>'test', :label=> 'test', :prior => @organization.library.id, :organization => @organization)
     @organization.reload #reload to get environment info
-    Organization.stub!(:without_deleting).and_return(Organization)
-    Organization.stub!(:where).and_return(Organization)
-    Organization.stub!(:first).and_return(@organization)
 
     @system = System.new(:name => system_name,
                          :environment => @environment,
@@ -63,7 +58,7 @@ describe System do
     Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
-    Resources::Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid})
   end
 
   context "system in invalid state should not be valid" do
@@ -81,7 +76,7 @@ describe System do
 
   it "registers system in candlepin and pulp on create" do
     Resources::Candlepin::Consumer.should_receive(:create).once.with(@environment.id, @organization.name, system_name, cp_type, facts, installed_products, nil, nil, nil).and_return({:uuid => uuid, :owner => {:key => uuid}})
-    Resources::Pulp::Consumer.should_receive(:create).once.with(@organization.label, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}}) if Katello.config.katello?
+    Runcible::Extensions::Consumer.should_receive(:create).once.with(uuid, {:display_name => system_name}).and_return({:id => uuid}) if Katello.config.katello?
     @system.save!
   end
 
@@ -116,7 +111,7 @@ describe System do
 
     it "should delete consumer in candlepin and pulp" do
       Resources::Candlepin::Consumer.should_receive(:destroy).once.with(uuid).and_return(true)
-      Resources::Pulp::Consumer.should_receive(:destroy).once.with(uuid).and_return(true) if Katello.config.katello?
+      Runcible::Extensions::Consumer.should_receive(:delete).once.with(uuid).and_return(true) if Katello.config.katello?
       @system.destroy
     end
   end
@@ -189,12 +184,15 @@ describe System do
   end
 
   context "persisted system has correct attributes" do
-    before(:each) { @system.save! }
+    before(:each) {
+      @count = System.count
+      @system.save! }
 
-    specify { System.all.size.should == 1 }
-    specify { System.first.name.should == system_name }
-    specify { System.first.uuid.should == uuid }
-    specify { System.first.organization.id.should == @organization.id }
+    specify { System.count.should == @count + 1 }
+    specify { System.find(@system.id).name == system_name }
+    specify { System.find(@system.id).uuid.should == uuid }
+    specify {
+      System.find(@system.id).organization.id.should == @organization.id }
   end
 
   context "cp attributes" do
@@ -278,7 +276,7 @@ describe System do
 
   context "pulp attributes", :katello => true do
     it "should update package-profile" do
-      Resources::Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
+      Runcible::Extensions::Consumer.should_receive(:upload_profile).once.with(uuid, 'rpm', package_profile).and_return(true)
       @system.upload_package_profile(package_profile)
     end
   end
@@ -286,6 +284,7 @@ describe System do
   describe "available releases" do
     before do
       disable_product_orchestration
+      disable_repo_orchestration
       @product = Product.create!(:name=>"prod1", :label=> "prod1", :cp_id => '12345', :provider => @organization.redhat_provider, :environments => [@organization.library])
       @environment = KTEnvironment.create!({:name=>"Dev", :label=> "Dev", :prior => @organization.library, :organization => @organization}) do |e|
         e.products << @product
@@ -305,6 +304,8 @@ describe System do
                           :major => "6",
                           :minor => release,
                           :cp_label => "repo",
+                          :relative_path=>'/foo',
+                          :content_id=>'foo',
                           :feed => 'https://localhost')
       end
       Repository.create!(:name => "Repo without releases",
@@ -315,6 +316,8 @@ describe System do
                          :major => nil,
                          :minor => nil,
                          :cp_label => "repo",
+                         :relative_path=>'/foo',
+                         :content_id=>'foo',
                          :feed => 'https://localhost')
       @system.environment = @environment
       @system.save!
