@@ -123,7 +123,7 @@ KT.activation_key = (function($) {
     },
     refresh_list_item = function(id) {
         var elem_id = "activation_key_" + id;
-        KT.panel.list.refresh(id, $("#" + elem_id).data("ajax_url"));
+        KT.panel.list.refresh(elem_id, $("#" + elem_id).data("ajax_url"));
     },
     save_key = function(data) {
         disable_buttons();
