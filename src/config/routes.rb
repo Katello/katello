@@ -771,7 +771,7 @@ Src::Application.routes.draw do
     match '/consumers' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
     match '/hypervisors' => 'systems#hypervisors_update', :via => :post
     resources :consumers, :controller => 'systems'
-    match '/owners/:organization_id/environments' => 'environments#index', :via => :get
+    match '/owners/:organization_id/environments' => 'environments#rhsm_index', :via => :get
     match '/owners/:organization_id/pools' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_pools_path
     match '/owners/:organization_id/servicelevels' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_servicelevels_path
     match '/environments/:environment_id/consumers' => 'systems#index', :via => :get
