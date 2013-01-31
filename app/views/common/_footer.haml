@@ -4,4 +4,4 @@
   - else
     #{_("%{app_name} Version: %{version}") % {:app_name => release_name, :version => Katello.config.katello_version}}
   - if Katello.config.embed_yard_documentation
-    #{link_to 'YARD documentation', 'yard/docs/file/README.md'}
+    #{link_to 'YARD documentation', Katello.config.url_prefix + '/yard/docs/file/README.md'}
