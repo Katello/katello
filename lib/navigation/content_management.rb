@@ -18,7 +18,6 @@ module Navigation
         helper_method :promotion_packages_navigation
         helper_method :promotion_errata_navigation
         helper_method :promotion_distribution_navigation
-        helper_method :package_filter_navigation
         helper_method :gpg_keys_navigation
         helper_method :subscriptions_navigation
         helper_method :new_subscription_navigation
@@ -32,6 +31,13 @@ module Navigation
           :url => (@provider.nil? || @provider.new_record?) ? "" : products_repos_provider_path(@provider.id),
           :if => lambda{!@provider.nil? && @provider.readable? &&
                         !@provider.new_record? && !@provider.has_subscriptions?},
+          :options => {:class=>"panel_link"}
+        },
+        { :key => :repo_discovery,
+          :name =>_("Repository Discovery"),
+          :url => (@provider.nil? || @provider.new_record?) ? "" : repo_discovery_provider_path(@provider.id),
+          :if => lambda{!@provider.nil? && @provider.editable? &&
+                        !@provider.new_record?},
           :options => {:class=>"panel_link"}
         },
         { :key => :edit_custom_providers,
@@ -99,7 +105,7 @@ module Navigation
        :url => :sub_level,
        :if => :sub_level,
        :options => {:class=>'content second_level menu_parent', "data-menu"=>"content", "data-dropdown"=>"repositories"},
-       :items => [menu_custom_providers, menu_redhat_providers, menu_filters, menu_gpg]
+       :items => [menu_custom_providers, menu_redhat_providers, menu_gpg]
       }
 
     end
@@ -213,15 +219,6 @@ module Navigation
        }
     end
 
-    def menu_filters
-       {:key => :filters,
-        :name => _("Package Filters"),
-        :url => filters_path,
-        :if => lambda {Filter.any_readable?(current_organization)},
-        :options => {:class=>"third_level", "data-dropdown"=>"repositories"}
-       }
-    end
-
     def promotion_packages_navigation
       [
         { :key => :dependencies,
@@ -268,29 +265,6 @@ module Navigation
           :name =>_("Details"),
           :url => lambda{repository_distribution_path(@repo.id, URI::escape(@distribution.id))},
           :if => lambda{@distribution},
-          :options => {:class=>"panel_link"}
-        }
-      ]
-    end
-
-    def package_filter_navigation
-      [
-        { :key => :packages,
-          :name =>_("Filtered Packages"),
-          :url => lambda{packages_filter_path(@filter.id)},
-          :if => lambda{@filter},
-          :options => {:class=>"panel_link"}
-        },
-        { :key => :filter_products,
-          :name =>_("Products and Repositories"),
-          :url => lambda{products_filter_path(@filter.id)},
-          :if => lambda{@filter},
-          :options => {:class=>"panel_link"}
-        },
-        { :key => :filter_details,
-          :name =>_("Details"),
-          :url => lambda{edit_filter_path(@filter.id)},
-          :if => lambda{@filter},
           :options => {:class=>"panel_link"}
         }
       ]

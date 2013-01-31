@@ -22,9 +22,6 @@ describe Hypervisor do
     @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
     @environment = KTEnvironment.create!(:name=>'test', :label=> 'test', :prior => @organization.library.id, :organization => @organization)
 
-    Organization.stub!(:without_deleting).and_return(Organization)
-    Organization.stub!(:where).and_return(Organization)
-    Organization.stub!(:first).and_return(@organization)
   end
 
   describe "creating" do

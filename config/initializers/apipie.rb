@@ -31,7 +31,7 @@ class UndefValidator < Apipie::Validator::BaseValidator
 
   def self.build(param_description, argument, options, block)
     if argument == :undef
-      self.new(param_description) 
+      self.new(param_description)
     end
   end
 
@@ -60,7 +60,7 @@ class NumberValidator < Apipie::Validator::BaseValidator
 
   def self.build(param_description, argument, options, block)
     if argument == :number
-      self.new(param_description) 
+      self.new(param_description)
     end
   end
 
@@ -82,7 +82,7 @@ class IdentifierValidator < Apipie::Validator::BaseValidator
 
   def self.build(param_description, argument, options, block)
     if argument == :identifier
-      self.new(param_description) 
+      self.new(param_description)
     end
   end
 
@@ -103,7 +103,7 @@ class BooleanValidator < Apipie::Validator::BaseValidator
 
   def self.build(param_description, argument, options, block)
     if argument == :bool
-      self.new(param_description) 
+      self.new(param_description)
     end
   end
 

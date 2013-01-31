@@ -12,8 +12,7 @@
 
 class Job < ActiveRecord::Base
   include Glue
-  include Ext::IndexedModel
-  include Ext::Authorization
+  include Glue::ElasticSearch::Job  if Katello.config.use_elasticsearch
   include AsyncOrchestration
 
   belongs_to :job_owner, :polymorphic => true
@@ -21,25 +20,12 @@ class Job < ActiveRecord::Base
   has_many :job_tasks, :dependent => :destroy
   has_many :task_statuses, :through => :job_tasks
 
-  index_options :json=>{:only=> [:job_owner_id, :job_owner_type]},
-                :extended_json=>:extended_index_attrs
-
-  def extended_index_attrs
-    ret = {}
-
-    first_task = self.task_statuses.first
-    unless first_task.nil?
-      ret[:username] = first_task.user.username
-      ret[:parameters] = first_task.parameters
-    end
-    ret
-  end
-
   class << self
     def refresh_tasks(ids)
       unless ids.nil? || ids.empty?
-        uuids = TaskStatus.select(:uuid).where(:id => ids).collect{|t| t.uuid}
-        ret = Resources::Pulp::Task.find(uuids)
+        uuids = TaskStatus.where(:id => ids).pluck(:uuid)
+        ret = Runcible::Resources::Task.poll_all(uuids)
+
         ret.each do |pulp_task|
           PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by_uuid(pulp_task["id"]))
         end

@@ -141,41 +141,41 @@ describe GpgKeysController, :katello => true do
           post :create, @gpg_key_params_pasted
           response.should be_success
         end
-        
+
         it "assigns a newly created GPG Key" do
           post :create, @gpg_key_params_pasted
           assigns[:gpg_key].name.should eq(@gpg_key_params_pasted[:gpg_key][:name])
           assigns[:gpg_key].content.should eq(@gpg_key_params_pasted[:gpg_key][:content])
         end
-  
+
         it "renders list item partial for 2 pane" do
           post :create, @gpg_key_params_pasted
           response.should render_template(:partial => "common/_list_item")
         end
-        
+
         it "should generate a success notice" do
           controller.should notify.success
           post :create, @gpg_key_params_pasted
         end
       end
-      
+
       describe "that include an uploaded GPG Key file" do
         it "should be successful" do
           post :create, @gpg_key_params_uploaded
           response.should be_success
         end
-        
+
         it "assigns a newly created GPG Key" do
           post :create, @gpg_key_params_uploaded
           assigns[:gpg_key].name.should eq(@gpg_key_params_uploaded[:gpg_key][:name])
           assigns[:gpg_key].content.should eq(@file.read)
         end
-  
+
         it "renders list item partial for 2 pane" do
           post :create, @gpg_key_params_uploaded
           response.should render_template(:partial => "common/_list_item")
         end
-        
+
         it "should generate a success notice" do
           controller.should notify.success
           post :create, @gpg_key_params_uploaded
@@ -202,7 +202,7 @@ describe GpgKeysController, :katello => true do
         end
       end
     end
-    
+
     describe "with inclusive search parameters" do
       it "should render list item partial for 2pane" do
         @gpg_key_params_pasted[:search] = 'name ~ Test'
@@ -210,7 +210,7 @@ describe GpgKeysController, :katello => true do
         response.should render_template(:partial => "common/_list_item")
       end
     end
-    
+
     describe "with exclusive search parameters" do
       before :each do
         controller.stub(:search_validate).and_return(false)
@@ -221,7 +221,7 @@ describe GpgKeysController, :katello => true do
         post :create, @gpg_key_params_pasted
         response.body.should eq("{\"no_match\":true}")
       end
-      
+
       it "should generate message notice" do
         @gpg_key_params_pasted[:search] = 'name ~ Fake'
         controller.should notify(:success, :message)
@@ -253,38 +253,38 @@ describe GpgKeysController, :katello => true do
           put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME
           assigns[:gpg_key].name.should eq(GPGKeyControllerTest::GPGKEY_NAME[:name])
         end
-  
+
         it "should generate a success notice" do
           controller.should notify.success
           put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME
         end
-  
+
         it "should not redirect from edit view" do
           put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME
           response.should_not be_redirect
         end
-  
+
         it "should be successful" do
           put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME
           response.should be_success
         end
-        
+
         describe "that include a copy/pasted GPG Key" do
           it "should update requested field - content" do
             put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_CONTENT
             assigns[:gpg_key].content.should eq(GPGKeyControllerTest::GPGKEY_CONTENT[:content])
           end
-    
+
           it "should generate a success notice" do
             controller.should notify.success
             put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_CONTENT
           end
-    
+
           it "should not redirect from edit view" do
             put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_CONTENT
             response.should_not be_redirect
           end
-    
+
           it "should be successful" do
             put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_CONTENT
             response.should be_success
@@ -296,25 +296,25 @@ describe GpgKeysController, :katello => true do
             @gpg_key_file = mock(Object)
             @gpg_key_file.stub_chain(:tempfile, :path).and_return('test_key.gpg')
             @gpg_key_file.stub!(:read).and_return("This is uploaded key data.")
-            
+
             @GPGKEY_CONTENT_UPLOAD = { :content_upload => @gpg_key_file }
           end
-          
+
           it "should update requested field - content_upload" do
             put :update, :id => @gpg_key.id, :gpg_key => @GPGKEY_CONTENT_UPLOAD
             assigns[:gpg_key].content.should eq(@gpg_key_file.read)
           end
-    
+
           it "should generate a success notice" do
             controller.should notify.success
             put :update, :id => @gpg_key.id, :gpg_key => @GPGKEY_CONTENT_UPLOAD
           end
-    
+
           it "should not redirect from edit view" do
             put :update, :id => @gpg_key.id, :gpg_key => @GPGKEY_CONTENT_UPLOAD
             response.should_not be_redirect
           end
-    
+
           it "should be successful" do
             put :update, :id => @gpg_key.id, :gpg_key => @GPGKEY_CONTENT_UPLOAD
             response.should be_success
@@ -356,14 +356,14 @@ describe GpgKeysController, :katello => true do
         response.should_not be_success
       end
     end
-    
+
     describe "with inclusive search parameters" do
       it "should generate a single notice" do
         controller.should notify.success
         put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME, :search => 'name ~ Test'
       end
     end
-    
+
     describe "with exclusive search parameters" do
       it "should generate message notice" do
         controller.stub(:search_validate).and_return(false)

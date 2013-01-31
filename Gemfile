@@ -64,6 +64,11 @@ gem 'acts_as_reportable', '>=1.1.1', :require => 'ruport/acts_as_reportable'
 # Documentation
 gem "apipie-rails", '>= 0.0.13'
 
+# Pulp API bindings
+gem 'hooks'
+gem 'runcible', '~> 0.3.1'
+gem 'anemone'
+
 # Load all sub-gemfiles from bundler.d directory
 Dir[File.expand_path('bundler.d/*.rb', File.dirname(__FILE__))].each do |bundle|
   self.instance_eval(Bundler.read_file(bundle), bundle)
