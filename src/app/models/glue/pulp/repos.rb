@@ -20,8 +20,6 @@ module Glue::Pulp::Repos
     base.class_eval do
       before_save :save_repos_orchestration
       before_destroy :destroy_repos_orchestration
-
-      scope :repositories_cdn_import_failed, where(:cdn_import_success => false)
     end
   end
 
