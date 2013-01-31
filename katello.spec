@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        1.3.13
+Version:        1.3.14
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -80,7 +80,6 @@ Requires:       rubygem(tire) >= 0.3.0
 Requires:       rubygem(tire) < 0.4
 Requires:       rubygem(ldap_fluff)
 Requires:       rubygem(foreman_api) >= 0.0.7
-Requires:       rubygem(runcible) >= 0.2.0
 Requires:       rubygem(anemone)
 Requires:       rubygem(apipie-rails) >= 0.0.13
 Requires:       lsof
@@ -191,6 +190,7 @@ Requires:        %{name}-common
 Requires:        pulp-server
 Requires:        pulp-rpm-plugins
 Requires:        pulp-selinux
+Requires:        rubygem(runcible) >= 0.3.1
 
 %description glue-pulp
 Katello connection classes for the Pulp backend
@@ -761,6 +761,12 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Jan 30 2013 Justin Sherrill <jsherril@redhat.com> 1.3.14-1
+- bumping required runcible version (jsherril@redhat.com)
+- require pulp-selinux (jsherril@redhat.com)
+- 832134 - making description search more consistent (jsherril@redhat.com)
+- 820382 - adding env_id to promoted cs link on dashboard (jsherril@redhat.com)
+
 * Wed Jan 30 2013 Justin Sherrill <jsherril@redhat.com> 1.3.13-1
 - changing default config template port for post_sync_url (jsherril@redhat.com)
 - removing pulpv2 prefix from pulpv2 branch (jsherril@redhat.com)
