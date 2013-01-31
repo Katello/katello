@@ -29,5 +29,8 @@ User documentation can be found on [wiki](https://fedorahosted.org/katello/).
 
 -   to see YARD documentation start Katello server and click on the link in the UI footer or go directly to
     {http://path.to.katello/a_prefix/yard/docs/katello/frames}
+
+    -   if it fails run `bundle exec yard doc --no-cache` first
+
 -   see {file:doc/YARDDocumentation.md}
 

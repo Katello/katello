@@ -4,13 +4,19 @@
 
 There are several options
 
-1.  start Katello server and click on the link in the UI footer or go directly to
+
+-   start Katello server and click on the link in the UI footer or go directly to
     {http://path.to.katello/a_prefix/yard/docs/katello/frames}
-1.  generate documentation statically
+-   run standalone server `yard server --reload` and go to {http://localhost:8808}
+
+*Note: if any of the above fails try to run `bundle exec yard doc --no-cache` first.*
+
+-   generate documentation statically
+
     -   run `yard doc` in `katello/src`
     -   `open katello/src/yardoc/index.html`
     -   `yarddoc` directory is in `.gitignore`
-1.  run standalone server `yard server --reload` and go to {http://localhost:8808}
+
 
 Enable gem `yard-activerecord` in `bundler.d/development.rb` to have attributes and associations of ActiveRecord
 documented. *Note: It'll be permanently added later when gem is published and rpm packaged.*
@@ -19,7 +25,7 @@ documented. *Note: It'll be permanently added later when gem is published and rp
 
 -   YARD is set to [Markdown syntax](http://daringfireball.net/projects/markdown/syntax#html) by default.
     Files without extension and code documentation will us it. It can be overridden by different file extension.
--   You should read the [Getting started](http://rubydoc.info/docs/yard/file/docs/GettingStarted.md) guide
+-   Consider reading [Getting started](http://rubydoc.info/docs/yard/file/docs/GettingStarted.md) guide
     to get familiar with YARD features.
 -   There is a [cheat-sheet](https://gist.github.com/1827484) available.
 -   [Tag list](http://rubydoc.info/docs/yard/file/docs/Tags.md#List_of_Available_Tags) is also very useful
