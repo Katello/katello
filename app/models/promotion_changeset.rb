@@ -70,6 +70,7 @@ class PromotionChangeset < Changeset
     to_env.update_cp_content
     update_progress! '80'
     PulpTaskStatus::wait_for_tasks promote_views(from_env, to_env)
+    update_view_cp_content(to_env)
     update_progress! '85'
     promote_packages from_env, to_env
     update_progress! '90'
@@ -137,6 +138,12 @@ class PromotionChangeset < Changeset
     self.content_views.collect do |view|
       view.promote(from_env, to_env)
     end.flatten
+  end
+
+  def update_view_cp_content(to_env)
+    self.content_views.collect do |view|
+      view.update_cp_content(to_env)
+    end
   end
 
   def promote_packages from_env, to_env
