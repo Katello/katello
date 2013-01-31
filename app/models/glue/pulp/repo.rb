@@ -126,7 +126,7 @@ module Glue::Pulp::Repo
         importer = Runcible::Extensions::YumImporter.new
       end
 
-      distributors = self.enabled? ? [generate_distributor] : []
+      distributors =  [generate_distributor]
 
       Runcible::Extensions::Repository.create_with_importer_and_distributors(self.pulp_id,
           importer,
