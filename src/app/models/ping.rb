@@ -57,7 +57,7 @@ class Ping
       if Katello.config.katello?
         url = Katello.config.pulp.url
         exception_watch(result[:status][:pulp]) do
-          RestClient.get "#{url}/services/status/"
+          RestClient.options "#{url}/repositories/"
         end
       end
 
