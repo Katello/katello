@@ -161,7 +161,7 @@ describe ActivationKeysController do
 
       it "renders list item partial for 2 pane" do
         post :create, @akey_params
-        response.should render_template(:partial => "common/_list_item")
+        response.should render_template(:partial => "activation_keys/_list_activation_keys")
       end
 
       it "should generate a success notice" do
