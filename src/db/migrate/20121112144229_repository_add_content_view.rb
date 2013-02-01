@@ -2,9 +2,9 @@ class RepositoryAddContentView < ActiveRecord::Migration
   def self.up
     add_column :repositories, :content_view_version_id, :integer, :null=>true
     add_index :repositories, :content_view_version_id
-    
+
     KTEnvironment.all.each do |env|
-     view = ContentView.create!(:name=>"Default View for #{env.name}", 
+     view = ContentView.create!(:name=>"Default View for #{env.name}",
                          :organization=>env.organization, :default=>true)
      env.default_content_view = view
      env.save!
@@ -14,7 +14,7 @@ class RepositoryAddContentView < ActiveRecord::Migration
        view.save!
      end
     end
-     
+
     change_column :repositories, :content_view_version_id, :integer, :null => false
   end
 

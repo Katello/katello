@@ -21,11 +21,6 @@ class PromotionChangeset < Changeset
     self.state == Changeset::REVIEW or
         raise _("Cannot promote the changeset '%s' because it is not in the review phase.") % self.name
 
-    #check for other changesets promoting
-    if self.environment.promoting_to?
-      raise _("Cannot promote the changeset '%{changeset}' while another changeset (%{another_changeset}) is being promoted.") % {:changeset => self.name, :another_changeset => self.environment.promoting.first.name}
-    end
-
     # check that solitare repos in the changeset and its templates
     # will have its associated product in the env as well after promotion
     repos_to_be_promoted.each do |repo|
@@ -39,8 +34,14 @@ class PromotionChangeset < Changeset
     validate_content! self.distributions
     validate_content! self.content_views
 
-    self.state = Changeset::PROMOTING
-    self.save!
+    # check no collision exists
+    if (collision = Changeset.started.colliding(self).first)
+      raise _("Cannot promote the changeset '%{changeset}' while another colliding changeset (%{another_changeset}) is being promoted.") %
+                { :changeset => self.name, :another_changeset => collision.name }
+    else
+      self.state = Changeset::PROMOTING
+      self.save!
+    end
 
     if options[:async]
       task             = self.async(:organization => self.environment.organization).promote_content(options[:notify])

@@ -11,22 +11,17 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 require "util/model_util"
 
-class LibraryPresenceValidator < ActiveModel::EachValidator
-  def validate_each(record, attribute, value)
-    record.errors[attribute] << N_("must contain '%s'") % "Library" if value.select {|e| e.library}.empty?
-  end
-end
-
 class Product < ActiveRecord::Base
-  include Glue::Candlepin::Product if AppConfig.use_cp
-  include Glue::Pulp::Repos if AppConfig.use_pulp
-  include Glue::ElasticSearch::Product if AppConfig.use_elasticsearch
-  include Glue if AppConfig.use_cp || AppConfig.use_pulp
+
+  include Glue::ElasticSearch::Product if Katello.config.use_elasticsearch
+  include Glue::Candlepin::Product if Katello.config.use_cp
+  include Glue::Pulp::Repos if Katello.config.use_pulp
+  include Glue if Katello.config.use_cp || Katello.config.use_pulp
+
   include Authorization::Product
   include AsyncOrchestration
 
   include Katello::LabelFromName
-
 
   has_many :environments, :class_name => "KTEnvironment", :uniq => true , :through => :environment_products  do
     def <<(*items)
@@ -43,10 +38,12 @@ class Product < ActiveRecord::Base
   has_many :content_view_definition_products
   has_many :content_view_definitions, :through => :content_view_definition_products
 
-  validates :description, :katello_description_format => true
-  validates :environments, :library_presence => true
-  validates :name, :presence => true, :katello_name_format => true
-  validates :label, :presence => true, :katello_label_format => true
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
+  validates_with Validators::LibraryPresenceValidator, :attributes => :environments
+  validates :name, :presence => true
+  validates :label, :presence => true
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+  validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
 
   scope :with_repos_only, lambda { |env|
     with_repos(env, false)
@@ -103,7 +100,7 @@ class Product < ActiveRecord::Base
                       :multiplier => self.multiplier,
                       :attributes => self.attrs,
                       :id => self.cp_id)
-    if AppConfig.katello?
+    if Katello.config.katello?
       hash = hash.merge({
         :sync_plan_name => self.sync_plan ? self.sync_plan.name : nil,
         :sync_state => self.sync_state,
@@ -151,6 +148,8 @@ class Product < ActiveRecord::Base
   end
 
   scope :all_in_org, lambda{|org| ::Product.joins(:provider).where('providers.organization_id = ?', org.id)}
+
+  scope :repositories_cdn_import_failed, where(:cdn_import_success => false)
 
   def assign_unique_label
     self.label = Katello::ModelUtils::labelize(self.name) if self.label.blank?

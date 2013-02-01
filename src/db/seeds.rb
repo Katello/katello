@@ -14,10 +14,6 @@ first_user_email= Util::Puppet.config_value("user_email") || 'root@localhost'
 first_org_name = Util::Puppet.config_value("org_name") || 'ACME_Corporation'
 first_org_label = Util::Puppet.config_value("org_label") || 'ACME_Corporation'
 
-AppConfig.use_cp = false if ENV['NO_CP']
-AppConfig.use_pulp = false if ENV['NO_PULP']
-AppConfig.use_foreman = false if ENV['NO_FOREMAN']
-
 def format_errors model=nil
   return '(nil found)' if model.nil?
   model.errors.full_messages.join(';')
@@ -32,7 +28,7 @@ raise "Unable to create reader role: #{format_errors reader_role}" if reader_rol
 reader_role.update_attributes(:locked => true)
 
 # create the super admin if none exist - it must be created before any statement in the seed.rb script
-User.current = user_admin = User.find_by_username('admin')
+User.current = user_admin = User.find_by_username(first_user_name)
 unless user_admin
   user_admin   = User.new(
       :roles    => [superadmin_role],
@@ -41,7 +37,7 @@ unless user_admin
       :email    => first_user_email,
       :remote_id => first_user_name)
   User.current = user_admin
-  if AppConfig.use_foreman
+  if Katello.config.use_foreman
     foreman_admin_user = ::Foreman::User.all(:search => 'login=admin').first or
         raise 'could not find foreman-admin-user'
     user_admin.foreman_id = foreman_admin_user.id

@@ -28,7 +28,7 @@ class FailedAuthenticationController < ActionController::Base
       flash[:error] = {"notices" => [_("You do not have valid credentials to access this system. Please contact your administrator.")]}.to_json
       redirect_to show_user_session_url
     end
-    
+
     return false
   end
 

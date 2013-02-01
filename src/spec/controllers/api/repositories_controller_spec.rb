@@ -37,7 +37,7 @@ describe Api::RepositoriesController, :katello => true do
       disable_user_orchestration
 
       @organization = new_test_org
-      Organization.stub!(:first).and_return(@organization)
+      @controller.stub!(:get_organization).and_return(@organization)
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
       Provider.stub!(:find).and_return(@provider)
       @product = Product.new({:name=>"prod", :label=> "prod"})
@@ -173,6 +173,7 @@ describe Api::RepositoriesController, :katello => true do
     describe "create a repository" do
       before do
         Product.stub(:find_by_cp_id => @product)
+        @product.stub!(:custom?).and_return(true)
       end
 
       it 'should call pulp and candlepin layer' do
@@ -180,6 +181,14 @@ describe Api::RepositoriesController, :katello => true do
         @product.should_receive(:add_repo).and_return({})
 
         post 'create', :name => 'repo_1', :label => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
+      end
+
+      context 'red hat providers' do
+        it "does not support creation" do
+          @product.stub!(:custom?).and_return(false)
+          post 'create', :name => 'repo_1', :label => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
+          response.code.should == '400'
+        end
       end
 
       context 'there is already a repo for the product with the same name' do
@@ -275,6 +284,29 @@ describe Api::RepositoriesController, :katello => true do
         end
 
       end
+    end
+
+    describe "repository discovery" do
+      it "should call Resources::Pulp::Proxy.post" do
+        url  = "http://url.org"
+        type = "yum"
+
+        post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
+      end
+
+      context 'there is already a repo for the product with the same name' do
+        before do
+          Product.stub(:find_by_cp_id => @product)
+          @product.stub(:add_repo).and_return { raise Errors::ConflictException }
+          @product.stub!(:custom?).and_return(true)
+        end
+
+        it "should notify about conflict" do
+          post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
+          response.code.should == '409'
+        end
+      end
+
     end
 
     describe "show a repository" do

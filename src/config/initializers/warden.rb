@@ -9,7 +9,7 @@ Rails.configuration.middleware.use RailsWarden::Manager do |config|
   # all UI requests are handled in the default scope
   config.scope_defaults(
     :user,
-    :strategies   => [:sso, AppConfig.warden.to_sym],
+    :strategies   => [:sso, Katello.config.warden.to_sym],
     :store        => true,
     :action       => 'unauthenticated_ui'
   )
@@ -17,7 +17,7 @@ Rails.configuration.middleware.use RailsWarden::Manager do |config|
   # API requests are handled in the :api scope
   config.scope_defaults(
     :api,
-    :strategies   => [:oauth, :sso, :certificate, AppConfig.warden.to_sym, :no_credentials],
+    :strategies   => [:oauth, :sso, :certificate, Katello.config.warden.to_sym, :no_credentials],
     :store        => false,
     :action       => 'unauthenticated_api'
   )
@@ -157,15 +157,13 @@ Warden::Strategies.add(:oauth) do
     Rails.logger.error "Unknown oauth signature method"+ e.to_s
     fail!("Unknown oauth signature method"+ e.to_s)
   rescue => e
-    Rails.logger.error "exception occured while authenticating via oauth "+ e.to_s
-    fail!("exception occured while authenticating via oauth "+ e.to_s)
+    Rails.logger.error "exception occurred while authenticating via oauth "+ e.to_s
+    fail!("exception occurred while authenticating via oauth "+ e.to_s)
   end
 
   def consumer(consumer_key)
-    raise "No consumer #{consumer_key}" unless AppConfigHash.has_key?(consumer_key)
-
-    config_hash = AppConfigHash[consumer_key]
-    OAuth::Consumer.new(config_hash['oauth_key'], config_hash['oauth_secret'])
+    OAuth::Consumer.new Katello.config[consumer_key.to_sym].oauth_key,
+                        Katello.config[consumer_key.to_sym].oauth_secret
   end
 end
 
@@ -175,6 +173,6 @@ Warden::Strategies.add(:no_credentials) do
   end
 
   def authenticate!
-    custom! [401, {"WWW-Authenticate" => 'Basic realm="Secure Area"'}, "No Credentials provided"]
+    custom! [401, {"WWW-Authenticate" => 'Basic realm="Secure Area"'}, ["No Credentials provided"]]
   end
 end

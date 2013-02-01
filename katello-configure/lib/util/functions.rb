@@ -286,7 +286,7 @@ def parse_answer_option(answer_file, default_options)
   final_options = {}
   if answer_file != nil
     if not File.file?(answer_file)
-      $stderr.puts "Answer file [#{answer_file}] does seem to exist"
+      $stderr.puts "Answer file [#{answer_file}] does not seem to exist"
       exit_with :answer_missing
     end
     final_options, __unused, error = read_answer_file(answer_file)
@@ -338,4 +338,68 @@ def create_temp_config_file(temp_options)
   end
   File.umask(orig_umask)
   return temp_config_path
+end
+
+def main_puppet(puppet_cmd, nobars, default_progressbar_title, puppet_logfile_filename, puppet_logfile_aprox_size, debug_stdout, commands_by_logfiles, puppet_in)
+  puppet_logfile = IO.open(IO::sysopen(puppet_logfile_filename, Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT))
+  puts "The top-level log file is [#{puppet_logfile_filename}]"
+  seen_err = false
+  ENV['LC_ALL'] = 'C'
+  begin
+    IO.popen("#{puppet_cmd} 2>&1", 'w+') do |f|
+      f.puts puppet_in
+      f.close_write
+      processing_logfile = nil
+      t = nil
+      progress_bar = nobars ? nil : ProgressBar.create(:title => default_progressbar_title, :total => puppet_logfile_aprox_size, :smoothing => 0.6)
+      while line = f.gets do
+        time = Time.now.strftime("%y%m%d-%H:%M:%S ")
+        puppet_logfile.syswrite(time + line.gsub(/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/, ''))
+        puts "Got " + line if ENV['KATELLO_CONFIGURE_DEBUG']
+        if nobars
+          if line =~ /debug:/
+            puts line if debug_stdout
+          else
+            puts line
+          end
+        else
+          progress_bar.increment
+          if processing_logfile != nil
+            if line =~ /notice:.*executed successfully/
+              processing_logfile = nil
+            elsif line =~ /err:/
+              puts "\n  Failed, please check [#{processing_logfile}]\n  Report errors using # katello-debug tool."
+              processing_logfile = nil
+              seen_err = true
+            end
+          elsif line =~ /err:/
+            print line
+            seen_err = true
+          end
+          if line =~ /debug: Executing \'(.+)/
+            line_rest = $1
+            commands_by_logfiles.keys.each do |logfile|
+              if line_rest.index(logfile) != nil
+                processing_logfile = logfile
+                progress_bar.title = commands_by_logfiles[logfile][0]
+              end
+            end
+          end
+        end
+      end
+      if not nobars
+        progress_bar.title = default_progressbar_title
+        progress_bar.finish
+      end
+      puts "\n"
+    end
+  rescue => e
+    $stderr.puts 'Error: ' + e.message
+    seen_err = true
+  end
+  puppet_logfile.close
+
+  if seen_err
+    exit_with :error_executing_puppet
+  end
 end

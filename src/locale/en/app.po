@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: version 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-19 09:10-0500\n"
+"POT-Creation-Date: 2013-01-14 17:43-0500\n"
 "PO-Revision-Date: 2011-01-06 19:28-0700\n"
 "Last-Translator: Jason E. Rist <jrist@redhat.com>\n"
 "Language-Team: English\n"
@@ -16,9 +16,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-msgid " '%s' already exists and either has been scheduled for deletion or failed deletion."
-msgstr ""
 
 msgid " created successfully."
 msgstr ""
@@ -209,6 +206,9 @@ msgstr ""
 msgid "%s package updated"
 msgstr ""
 
+msgid "%s updated successfully."
+msgstr ""
+
 msgid "%{errata} (%{rest} other errata)"
 msgstr ""
 
@@ -227,16 +227,28 @@ msgstr ""
 msgid "%{repo} (Product: %{product})"
 msgstr ""
 
+msgid "'%s' created successfully."
+msgstr ""
+
 msgid "'%s' did not meet the current search criteria and is not being shown."
 msgstr ""
 
 msgid "'%s' no longer matches the current search criteria."
 msgstr ""
 
+msgid "'%s' was deleted."
+msgstr ""
+
 msgid "+ Import Manifest"
 msgstr ""
 
+msgid "+ New Architecture"
+msgstr ""
+
 msgid "+ New Changeset"
+msgstr ""
+
+msgid "+ New Domain"
 msgstr ""
 
 msgid "+ New Filter"
@@ -260,6 +272,9 @@ msgstr ""
 msgid "+ New Role"
 msgstr ""
 
+msgid "+ New Subnet"
+msgstr ""
+
 msgid "+ New System"
 msgstr ""
 
@@ -267,6 +282,9 @@ msgid "+ New Template"
 msgstr ""
 
 msgid "+ New User"
+msgstr ""
+
+msgid ": '%s' is a built-in environment"
 msgstr ""
 
 msgid "A keyname must be provided"
@@ -374,7 +392,13 @@ msgstr ""
 msgid "All repository GPG keys for Product '%s' were updated."
 msgstr ""
 
-msgid "Applied Subscriptions"
+msgid "Application"
+msgstr ""
+
+msgid "Architecture"
+msgstr ""
+
+msgid "Architectures"
 msgstr ""
 
 msgid "At least one activation key must be provided"
@@ -389,19 +413,25 @@ msgstr ""
 msgid "At least repository must be present to export a TDL"
 msgstr ""
 
-msgid "Auto-heal %{val}, %{sla}"
+msgid "Attached Subscriptions"
 msgstr ""
 
-msgid "Auto-heal Off, No Service Level Preference"
+msgid "Authentication"
 msgstr ""
 
-msgid "Auto-heal Off, Service Level %s"
+msgid "Auto-attach %{val}, %{sla}"
 msgstr ""
 
-msgid "Auto-heal On, No Service Level Preference"
+msgid "Auto-attach Off, No Service Level Preference"
 msgstr ""
 
-msgid "Auto-heal On, Service Level %s"
+msgid "Auto-attach Off, Service Level %s"
+msgstr ""
+
+msgid "Auto-attach On, No Service Level Preference"
+msgstr ""
+
+msgid "Auto-attach On, Service Level %s"
 msgstr ""
 
 msgid "Available Subscriptions"
@@ -422,7 +452,7 @@ msgstr ""
 msgid "Can't copy System Groups to a different org: '%{org1}' != '%{org2}'"
 msgstr ""
 
-msgid "Can't update Library environment"
+msgid "Can't update the '%s' environment"
 msgstr ""
 
 msgid "Canceled synchronization of %{name}: %{id}"
@@ -440,7 +470,7 @@ msgstr ""
 msgid "Cannot change the name or description of a locked role."
 msgstr ""
 
-msgid "Cannot create activation keys in Library environment "
+msgid "Cannot create activation keys in the '%s' environment"
 msgstr ""
 
 msgid "Cannot delete currently logged user"
@@ -449,16 +479,13 @@ msgstr ""
 msgid "Cannot delete the changeset '%s' because it is not in the review phase."
 msgstr ""
 
-msgid "Cannot delete the changeset '%{changeset}' while another changeset (%{another_changeset}) is being deleted or promoted."
-msgstr ""
-
 msgid "Cannot dissociate user '%{username}' from '%{role}' role. Need at least one user in the '%{role}' role."
 msgstr ""
 
 msgid "Cannot dissociate user '%{user}' from '%{role}' role. Need at least one user in the '%{role}' role."
 msgstr ""
 
-msgid "Cannot export templates for the Library environment."
+msgid "Cannot export templates for the '%s' environment."
 msgstr ""
 
 msgid "Cannot modify a template that is another environment"
@@ -467,10 +494,10 @@ msgstr ""
 msgid "Cannot promote the changeset '%s' because it is not in the review phase."
 msgstr ""
 
-msgid "Cannot promote the changeset '%{changeset}' while another changeset (%{another_changeset}) is being promoted."
+msgid "Cannot promote the changeset '%{changeset}' while another colliding changeset (%{another_changeset}) is being promoted."
 msgstr ""
 
-msgid "Cannot register a system with 'Library' environment "
+msgid "Cannot register a system to the '%s' environment"
 msgstr ""
 
 msgid "Cannot specify a tag if all_tags is selected."
@@ -482,10 +509,7 @@ msgstr ""
 msgid "Cannot specify all_types without all_tags and all_verbs"
 msgstr ""
 
-msgid "Cannot validate templates for the Library environment."
-msgstr ""
-
-msgid "Change Password"
+msgid "Cannot validate templates for the '%s' environment."
 msgstr ""
 
 msgid "Changeset Management"
@@ -497,16 +521,19 @@ msgstr ""
 msgid "Changesets History"
 msgstr ""
 
+msgid "Choose %s..."
+msgstr ""
+
+msgid "Choose domains..."
+msgstr ""
+
+msgid "Choose operating systems..."
+msgstr ""
+
 msgid "Cleared"
 msgstr ""
 
 msgid "Click on 'Add Environment' to create the first environment"
-msgstr ""
-
-msgid "Confirm Password"
-msgstr ""
-
-msgid "Consumers"
 msgstr ""
 
 msgid "Content"
@@ -540,6 +567,9 @@ msgid "Couldn't find environment '%s'"
 msgstr ""
 
 msgid "Couldn't find filter '%s'"
+msgstr ""
+
+msgid "Couldn't find one of the filters in '%s'"
 msgstr ""
 
 msgid "Couldn't find organization '%s'"
@@ -584,13 +614,13 @@ msgstr ""
 msgid "Couldn't find user role '%s'"
 msgstr ""
 
-msgid "Couldn't one of the filters in '%s'"
-msgstr ""
-
 msgid "Creating an environment in candlepin: %s"
 msgstr ""
 
 msgid "Creating an owner in candlepin: %s"
+msgstr ""
+
+msgid "Current organization is being deleted, switch to a different one."
 msgstr ""
 
 msgid "Custom Content Repositories"
@@ -704,6 +734,9 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
+msgid "Directory"
+msgstr ""
+
 msgid "Disable/enable is not supported for custom repositories."
 msgstr ""
 
@@ -731,6 +764,12 @@ msgstr ""
 msgid "Distributions"
 msgstr ""
 
+msgid "Domain"
+msgstr ""
+
+msgid "Domains"
+msgstr ""
+
 msgid "Either organization ID or environment ID needs to be specified"
 msgstr ""
 
@@ -738,9 +777,6 @@ msgid "Either packages or groups  must be provided"
 msgstr ""
 
 msgid "Either packages or groups must be provided"
-msgstr ""
-
-msgid "Email Address"
 msgstr ""
 
 msgid "Email sent to '%s' with password reset instructions."
@@ -764,7 +800,7 @@ msgstr ""
 msgid "Empty request received to update Packages or Package Groups for System Group '%s'."
 msgstr ""
 
-msgid "Enter your username and email address below and instructions on resetting your password will be sent to you."
+msgid "Environment"
 msgstr ""
 
 msgid "Environment %s has a successor.  Only the last environment on a path can be deleted"
@@ -902,13 +938,7 @@ msgstr ""
 msgid "Filters assigned to repository or product of erratum '%s' block it from promotion!"
 msgstr ""
 
-msgid "Filters can be stored only in Library repositories."
-msgstr ""
-
-msgid "Forgot %s or %s?"
-msgstr ""
-
-msgid "Forgot Username or Password?"
+msgid "Filters can be stored only in the '%s' repositories."
 msgstr ""
 
 msgid "GPG Key"
@@ -956,13 +986,7 @@ msgstr ""
 msgid "Hypervisors do not have software products"
 msgstr ""
 
-msgid "I remembered my login credentials."
-msgstr ""
-
 msgid "ID: %s doesn't exist "
-msgstr ""
-
-msgid "If you do not know your username, please enter your email address below and your username information will be sent to you."
 msgstr ""
 
 msgid "Import"
@@ -1010,9 +1034,6 @@ msgstr ""
 msgid "Interval"
 msgstr ""
 
-msgid "Invalid Url"
-msgstr ""
-
 msgid "Invalid date or time format"
 msgstr ""
 
@@ -1049,9 +1070,6 @@ msgstr ""
 msgid "It is not allowed to update a Red Hat repository."
 msgstr ""
 
-msgid "Javascript must be enabled for this application to work properly."
-msgstr ""
-
 msgid "Katello Logins"
 msgstr ""
 
@@ -1073,19 +1091,7 @@ msgstr ""
 msgid "LDAP group '%{group}' associated to role '%{role}' was not found."
 msgstr ""
 
-msgid "Library"
-msgstr ""
-
-msgid "Library environment cannot contain a changeset!"
-msgstr ""
-
 msgid "List"
-msgstr ""
-
-msgid "Login"
-msgstr ""
-
-msgid "Login Information"
 msgstr ""
 
 msgid "Login Successful"
@@ -1098,9 +1104,6 @@ msgid "Login Successful, please choose an Organization"
 msgstr ""
 
 msgid "Login Successful, please contact administrator to get permission to access an organization."
-msgstr ""
-
-msgid "Logo"
 msgstr ""
 
 msgid "Logout Successful"
@@ -1157,16 +1160,19 @@ msgstr ""
 msgid "Name must be unique within one organization"
 msgstr ""
 
+msgid "Names and labels must be unique across all organizations"
+msgstr ""
+
 msgid "Never checked in"
 msgstr ""
 
 msgid "Never checked in."
 msgstr ""
 
-msgid "New templates can be created only in a Library environment"
+msgid "New templates can be created only in the '%s' environment"
 msgstr ""
 
-msgid "New templates can be imported only into a Library environment"
+msgid "New templates can be imported only into the '%s' environment"
 msgstr ""
 
 msgid "No Overlap with Current"
@@ -1176,6 +1182,9 @@ msgid "No Service Level Preference"
 msgstr ""
 
 msgid "No Template"
+msgstr ""
+
+msgid "No domains found."
 msgstr ""
 
 msgid "No environments are currently available in this organization.  Please either add some to the organization or select an organization that has an environment to set user default."
@@ -1190,6 +1199,9 @@ msgstr ""
 msgid "No new packages installed"
 msgstr ""
 
+msgid "No operating systems found."
+msgstr ""
+
 msgid "No package profile received for %s"
 msgstr ""
 
@@ -1197,6 +1209,9 @@ msgid "No packages removed"
 msgstr ""
 
 msgid "No packages updated"
+msgstr ""
+
+msgid "No smart proxy with %s feature found."
 msgstr ""
 
 msgid "No synchronization of the %s is currently running"
@@ -1208,13 +1223,13 @@ msgstr ""
 msgid "None"
 msgstr ""
 
-msgid "Not enough entitlements in pools (%{size}), required: %{required}, available: %{available}"
+msgid "Not enough subscriptions in pools (%{size}), required: %{required}, available: %{available}"
 msgstr ""
 
 msgid "Not found"
 msgstr ""
 
-msgid "Number of consumed entitlements exceeded quantity for %s"
+msgid "Number of attached subscriptions exceeded quantity for %s"
 msgstr ""
 
 msgid "Number of sockets must be higher than 0 for system %s"
@@ -1250,10 +1265,10 @@ msgstr ""
 msgid "Organization"
 msgstr ""
 
-msgid "Organization %s has 'Library' environment only. Please create an environment for system registration."
+msgid "Organization %s has more than one environment. Please specify target environment for system registration."
 msgstr ""
 
-msgid "Organization %s has more than one environment. Please specify target environment for system registration."
+msgid "Organization %{org} has the '%{env}' environment only. Please create an environment for system registration."
 msgstr ""
 
 msgid "Organization '%s' has been scheduled for background deletion."
@@ -1409,6 +1424,18 @@ msgstr ""
 msgid "Package group category '%{group}' not found in the %{env} environment"
 msgstr ""
 
+msgid "Package group update canceled"
+msgstr ""
+
+msgid "Package group update complete"
+msgstr ""
+
+msgid "Package group update failed"
+msgstr ""
+
+msgid "Package group update timed out"
+msgstr ""
+
 msgid "Package with id '%s' not found"
 msgstr ""
 
@@ -1424,22 +1451,10 @@ msgstr ""
 msgid "Parameter '%{name}': '%{value}' was set"
 msgstr ""
 
-msgid "Password"
-msgstr ""
-
-msgid "Password Unknown"
-msgstr ""
-
 msgid "Password has been reset for user '%s'."
 msgstr ""
 
 msgid "Password reset token has expired for user '%s'."
-msgstr ""
-
-msgid "Passwords do not match."
-msgstr ""
-
-msgid "Passwords match."
 msgstr ""
 
 msgid "Pending"
@@ -1475,9 +1490,6 @@ msgstr ""
 msgid "Please create at least one environment."
 msgstr ""
 
-msgid "Please provide entitlement ID"
-msgstr ""
-
 msgid "Please provide pool ID"
 msgstr ""
 
@@ -1485,6 +1497,9 @@ msgid "Please provide pool and quantity"
 msgstr ""
 
 msgid "Please provide serial ID"
+msgstr ""
+
+msgid "Please provide subscription ID"
 msgstr ""
 
 msgid "Please select at least one system group."
@@ -1715,7 +1730,7 @@ msgstr ""
 msgid "Repositories"
 msgstr ""
 
-msgid "Repositories can be deleted only in Library environment."
+msgid "Repositories can be deleted only in the '%s' environment."
 msgstr ""
 
 msgid "Repository '%s' created."
@@ -1751,6 +1766,9 @@ msgstr ""
 msgid "Repository Comparison"
 msgstr ""
 
+msgid "Repository can be only created for custom provider."
+msgstr ""
+
 msgid "Repository cannot be deleted since it has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it."
 msgstr ""
 
@@ -1769,13 +1787,7 @@ msgstr ""
 msgid "Request received has either an invalid or expired token. Token: '%s'"
 msgstr ""
 
-msgid "Reset Password"
-msgstr ""
-
 msgid "Resource not found on the server"
-msgstr ""
-
-msgid "Return to log in."
 msgstr ""
 
 msgid "Role"
@@ -1802,9 +1814,6 @@ msgstr ""
 msgid "Running."
 msgstr ""
 
-msgid "Save"
-msgstr ""
-
 msgid "Select Architecture"
 msgstr ""
 
@@ -1820,10 +1829,10 @@ msgstr ""
 msgid "Selected Distribution"
 msgstr ""
 
-msgid "Send Login"
+msgid "Service Level %s"
 msgstr ""
 
-msgid "Service Level %s"
+msgid "Setup"
 msgstr ""
 
 msgid "Severity: Critical"
@@ -1838,9 +1847,6 @@ msgstr ""
 msgid "Severity: Moderate"
 msgstr ""
 
-msgid "Show My Password"
-msgstr ""
-
 msgid "Software"
 msgstr ""
 
@@ -1851,6 +1857,12 @@ msgid "Started content deletion from %{env} environment using '%{changeset}'"
 msgstr ""
 
 msgid "Started content promotion to %{env} environment using '%{changeset}'"
+msgstr ""
+
+msgid "Subnet"
+msgstr ""
+
+msgid "Subnets"
 msgstr ""
 
 msgid "Subscription manifest delete for provider '%s' failed."
@@ -2006,6 +2018,9 @@ msgstr ""
 msgid "System's environment not compatible with the group '%s'."
 msgstr ""
 
+msgid "System: %{system_name}, System Groups Removed: %{system_group_names}"
+msgstr ""
+
 msgid "Systems"
 msgstr ""
 
@@ -2078,7 +2093,10 @@ msgstr ""
 msgid "Templates"
 msgstr ""
 
-msgid "Templates can be updated only in a Library environment"
+msgid "Templates can be updated only in the '%s' environment"
+msgstr ""
+
+msgid "The '%s' environment cannot contain a changeset!"
 msgstr ""
 
 msgid "The current organization cannot be deleted. Please switch to a different organization before deleting."
@@ -2165,6 +2183,9 @@ msgstr ""
 msgid "Uninstall of Packages '%{p}' scheduled for System '%{s}'."
 msgstr ""
 
+msgid "Units"
+msgstr ""
+
 msgid "Unknown changeset type, must be PROMOTION or DELETION: %s"
 msgstr ""
 
@@ -2193,6 +2214,9 @@ msgid "Update of all packages scheduled for System '%s'."
 msgstr ""
 
 msgid "Updating Package..."
+msgstr ""
+
+msgid "Updating package group..."
 msgstr ""
 
 msgid "Usage limit (%{limit}) exhausted for activation key '%{name}'"
@@ -2225,13 +2249,13 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-msgid "Username Unknown?"
-msgstr ""
-
 msgid "Users"
 msgstr ""
 
 msgid "Validation failed: Label has already been taken"
+msgstr ""
+
+msgid "Version"
 msgstr ""
 
 msgid "Virtual"
@@ -2261,9 +2285,6 @@ msgstr ""
 msgid "You must be logged in to access that page."
 msgstr ""
 
-msgid "You must specify host in %{config_file} for %{app_name} to work properly"
-msgstr ""
-
 msgid "Your current organization is no longer valid. It is possible that either the organization has been deleted or your permissions revoked, please log back in to continue."
 msgstr ""
 
@@ -2279,7 +2300,7 @@ msgstr ""
 msgid "all packages update failed"
 msgstr ""
 
-msgid "can not be updated"
+msgid "already exists (including organizations being deleted)"
 msgstr ""
 
 msgid "can't be blank"
@@ -2339,9 +2360,6 @@ msgstr ""
 msgid "is invalid"
 msgstr ""
 
-msgid "is too long"
-msgstr ""
-
 msgid "katello-jobs service not running"
 msgstr ""
 
@@ -2375,7 +2393,7 @@ msgstr ""
 msgid "must be unique."
 msgstr ""
 
-msgid "must contain 'Library'"
+msgid "must contain '%s'"
 msgstr ""
 
 msgid "must contain at least %s character"
@@ -2390,22 +2408,13 @@ msgstr ""
 msgid "none"
 msgstr ""
 
+msgid "of environment must be unique within one organization"
+msgstr ""
+
 msgid "organization"
 msgstr ""
 
 msgid "organization_id required but not specified."
-msgstr ""
-
-msgid "package group update canceled"
-msgstr ""
-
-msgid "package group update complete"
-msgstr ""
-
-msgid "package group update failed"
-msgstr ""
-
-msgid "package group update timed out"
 msgstr ""
 
 msgid "plan"

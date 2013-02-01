@@ -34,8 +34,9 @@ class KatelloLogger < ActiveSupport::BufferedLogger
     unless level > severity
       message = (message || (block && block.call) || progname).to_s
       status = SEVERITY_TO_TEXT[severity] || "UNKNOWN"
-      message = "[%s: %s #%d] %s" % [status,
+      message = "[%s %s %s #%d] %s" % [status,
                                      Time.now.strftime("%Y-%m-%d %H:%M:%S"),
+                                     Thread.current[:request_uuid],
                                      $$,
                                      message]
       super(severity, message)

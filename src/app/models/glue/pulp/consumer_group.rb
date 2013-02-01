@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "resources/pulp"
 
 module Glue::Pulp::ConsumerGroup
 
@@ -32,6 +31,7 @@ module Glue::Pulp::ConsumerGroup
   module InstanceMethods
 
     def set_pulp_consumer_group
+      consumer_ids = self.systems.collect { |system| system.uuid }
       Rails.logger.debug "creating pulp consumer group '#{self.pulp_id}'"
       Runcible::Extensions::ConsumerGroup.create(self.pulp_id, :description=>self.description, :consumer_ids=>(consumer_ids || []))
     rescue => e
@@ -41,7 +41,7 @@ module Glue::Pulp::ConsumerGroup
 
     def del_pulp_consumer_group
       Rails.logger.debug "deleting pulp consumer group '#{self.pulp_id}'"
-      Runcible::Extensions::ConsumerGroup.delete self.pulp_id
+      Runcible::Extensions::ConsumerGroup.delete(self.pulp_id)
     rescue => e
       Rails.logger.error "Failed to delete pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -71,55 +71,56 @@ module Glue::Pulp::ConsumerGroup
       raise e
     end
 
-    def install_package packages
+    def install_package(packages)
+      raise NotImplementedError
       Rails.logger.debug "Scheduling package install for consumer group #{self.pulp_id}"
-      # initiate the action and return the response... a successful response will include a job containing 1 or more tasks
-      response = Resources::Pulp::ConsumerGroup.install_packages(self.pulp_id, packages)
+      #TODO: Needs corresponding Runcible call once fixed in Pulp
     rescue => e
       Rails.logger.error "Failed to schedule package install for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
-    def uninstall_package packages
+    def uninstall_package(packages)
+      raise NotImplementedError
       Rails.logger.debug "Scheduling package uninstall for consumer group #{self.pulp_id}"
       # initiate the action and return the response... a successful response will include a job containing 1 or more tasks
-      response = Resources::Pulp::ConsumerGroup.uninstall_packages(self.pulp_id, packages)
+      #TODO: Needs corresponding Runcible call once fixed in Pulp
     rescue => e
       Rails.logger.error "Failed to schedule package uninstall for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
-    def update_package packages
+    def update_package(packages)
+      raise NotImplementedError
       Rails.logger.debug "Scheduling package update for consumer #{self.name}"
-      # initiate the action and return the response... a successful response will include a job containing 1 or more tasks
-      response = Resources::Pulp::ConsumerGroup.update_packages(self.pulp_id, packages)
+      #TODO: Needs corresponding Runcible call once fixed in Pulp
     rescue => e
       Rails.logger.error "Failed to schedule package update for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
-    def install_package_group groups
+    def install_package_group(groups)
+      raise NotImplementedError
       Rails.logger.debug "Scheduling package group install for consumer group #{self.pulp_id}"
-      # initiate the action and return the response... a successful response will include a job containing 1 or more tasks
-      response = Resources::Pulp::ConsumerGroup.install_package_groups(self.pulp_id, groups)
+      #TODO: Needs corresponding Runcible call once fixed in Pulp
     rescue => e
       Rails.logger.error "Failed to schedule package group install for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
-    def uninstall_package_group groups
+    def uninstall_package_group(groups)
+      raise NotImplementedError
       Rails.logger.debug "Scheduling package group uninstall for consumer group #{self.pulp_id}"
-      # initiate the action and return the response... a successful response will include a job containing 1 or more tasks
-      response = Resources::Pulp::ConsumerGroup.uninstall_package_groups(self.pulp_id, groups)
+      #TODO: Needs corresponding Runcible call once fixed in Pulp
     rescue => e
       Rails.logger.error "Failed to schedule package group uninstall for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
-    def install_consumer_errata errata_ids
+    def install_consumer_errata(errata_ids)
+      raise NotImplementedError
       Rails.logger.debug "Scheduling errata install for consumer group #{self.pulp_id}"
-      # initiate the action and return the response... a successful response will include a job containing 1 or more tasks
-      response = Resources::Pulp::ConsumerGroup.install_errata(self.pulp_id, errata_ids)
+      #TODO: Needs corresponding Runcible call once fixed in Pulp
     rescue => e
       Rails.logger.error "Failed to schedule errata install for pulp consumer group #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -140,7 +141,7 @@ module Glue::Pulp::ConsumerGroup
 
             added_consumers = (new_consumers - old_consumers).uniq
             removed_consumers = old_consumers - new_consumers
-            
+
             pre_queue.create(:name => "adding consumers to group: #{self.pulp_id}", :priority => 3, :action => [self, :add_consumers, added_consumers]) unless added_consumers.empty?
             pre_queue.create(:name => "removing consumers from group: #{self.pulp_id}", :priority => 4, :action => [self, :remove_consumers, removed_consumers]) unless removed_consumers.empty?
           end

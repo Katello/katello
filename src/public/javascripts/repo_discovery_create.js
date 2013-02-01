@@ -13,5 +13,5 @@
 
 
 $(document).ready(function() {
-    KT.repo_discovery.new.init_panel();
+    KT.repo_discovery.new_page.init_panel();
 });

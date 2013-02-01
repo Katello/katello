@@ -46,7 +46,7 @@ class SystemGroupErrataController < ApplicationController
     errata_state = params[:errata_state] if params[:errata_state]
     chunk_size = current_user.page_size
     errata, errata_systems, total_count, results_count = get_errata(offset.to_i, offset.to_i+chunk_size, filter_type, errata_state)
-        
+
     rendered_html = render_to_string(:partial=>"systems/errata/items", :locals => { :errata => errata,
                                                                                     :errata_systems => errata_systems,
                                                                                     :editable => @group.systems_editable? })
@@ -60,7 +60,7 @@ class SystemGroupErrataController < ApplicationController
   def install
     errata_ids = params[:errata_ids]
     job = @group.install_errata(errata_ids)
-    
+
     notify.success _("Install of Errata '%{errata}' scheduled for System Group '%{group}'.") % {:errata => params[:errata_ids], :group => @group.name}
     render :text => job.id
 
@@ -89,7 +89,7 @@ class SystemGroupErrataController < ApplicationController
   def get_errata start, finish, filter_type="All", errata_state="outstanding"
     types = [Errata::SECURITY, Errata::ENHANCEMENT, Errata::BUGZILLA]
     errata_state = errata_state || "outstanding"
-    filter_type = filter_type || "All"    
+    filter_type = filter_type || "All"
 
     errata_hash = {} # {id => erratum}
     errata_system_hash = {} # {id => [system_name]}
@@ -108,7 +108,7 @@ class SystemGroupErrataController < ApplicationController
 
     errata_list = filter_by_type(errata_list, filter_type)
     errata_list = filter_by_state(errata_list, errata_state)
-    
+
     filtered_errata_count = errata_list.length
 
     errata_list = errata_list.sort_by{ |a| a.errata_id.downcase}

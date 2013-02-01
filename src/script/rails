@@ -9,20 +9,25 @@ require 'webrick'
 require 'webrick/https'
 require 'yaml'
 
+# load Katello configuration
+path = File.expand_path('../../lib', __FILE__)
+$LOAD_PATH << path unless $LOAD_PATH.include? path
+require 'katello_config'
+
 #
 # this is to enable ssl and ssl cert-based client authentication
 #  use common -> use_ssl in /etc/satellite/satellite.yml to enable ssl
 #  if you are running candlepin on a separate host:
 #    make sure to copy candlepin certificates from /etc/candlepin/certs into the same local directory
 #
-config = YAML.load_file('/etc/katello/katello.yml') rescue nil
-if config and config['common']['use_ssl']
+
+if Katello.early_config.use_ssl
   module Rails
       class Server < ::Rack::Server
           def default_options
               super.merge({
                   :Port => 3000,
-                  :environment => (ENV['RAILS_ENV'] || "development").dup,
+                  :environment => (Rails.env || "development").dup,
                   :daemonize => false,
                   :debugger => false,
                   :pid => File.expand_path("tmp/pids/server.pid"),

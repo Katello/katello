@@ -320,8 +320,22 @@ module Glue::Pulp::Repos
       content_urls = self.productContent.map { |pc| pc.content.contentUrl }
       cdn_var_substitutor = Resources::CDN::CdnResource.new(self.provider[:repository_url],
                                                        :ssl_client_cert => OpenSSL::X509::Certificate.new(self.certificate),
-                                                       :ssl_client_key => OpenSSL::PKey::RSA.new(self.key)).substitutor
-      cdn_var_substitutor.precalculate(content_urls)
+                                                       :ssl_client_key => OpenSSL::PKey::RSA.new(self.key),
+                                                       :product        => self).substitutor(self.import_logger)
+      begin
+        cdn_var_substitutor.precalculate(content_urls)
+      rescue Errors::SecurityViolation => e
+        # in case we cannot access CDN server to obtain repository URLS we note down error
+        self.repositories_cdn_import_failed!
+        if self.import_logger
+          self.import_logger.error("\nproduct #{self.name} repositories import: " <<
+                                       'SecurityViolation occurred when contacting CDN to fetch ' <<
+                                       "listing files\n" + e.backtrace.join("\n"))
+        end
+        # false would cancel orchestration and would lead to product save cancellation
+        # but we want import process to succeed
+        return true
+      end
 
       self.productContent.collect do |pc|
         ca = File.read(Resources::CDN::CdnResource.ca_file)
@@ -354,6 +368,7 @@ module Glue::Pulp::Repos
                                         :content_view_version=>self.organization.library.default_view_version
                                        )
             end
+            self.repositories_cdn_import_passed! unless self.cdn_import_success?
 
           rescue RestClient::InternalServerError => e
             if e.message.include? "Architecture must be one of"
@@ -364,6 +379,20 @@ module Glue::Pulp::Repos
           end
         end
       end
+    end
+
+    def repositories_cdn_import_failed!
+      set_repositories_cdn_import false
+    end
+
+    def repositories_cdn_import_passed!
+      set_repositories_cdn_import true
+    end
+
+    # update flag skipping all callbacks (hence orchestration)
+    # after upgrade to >= 3.1.0 we could use #update_column
+    def set_repositories_cdn_import(value)
+      self.class.where(:id => self.id).update_all(:cdn_import_success => value)
     end
 
     def del_repos

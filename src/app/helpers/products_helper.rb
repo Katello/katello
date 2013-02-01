@@ -13,16 +13,16 @@
 module ProductsHelper
   def gpg_keys_edit
     keys = {}
-    
+
     GpgKey.readable(current_organization).each{ |key|
       keys[key.id] = key.name
     }
-    
+
     keys[""] = ""
     keys["selected"] = @product.gpg_key_id || ""
     return keys.to_json
   end
-  
+
   def gpg_keys
     GpgKey.readable(current_organization)
   end

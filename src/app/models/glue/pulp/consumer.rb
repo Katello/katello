@@ -19,16 +19,19 @@ module Glue::Pulp::Consumer
       before_save    :save_pulp_orchestration
       before_destroy :destroy_pulp_orchestration
       after_rollback :rollback_on_pulp_create, :on => :create
-  
+
       add_system_group_hook     lambda { |system_group| system_group.add_consumer(self) }
       remove_system_group_hook  lambda { |system_group| system_group.remove_consumer(self) }
 
       lazy_accessor :pulp_facts, :initializer => lambda {|s| Runcible::Extensions::Consumer.retrieve(uuid) }
-      lazy_accessor :package_profile, :initializer => lambda {|s| Runcible::Extensions::Consumer.profile(uuid, 'rpm') }
-      lazy_accessor :simple_packages, :initializer => lambda {|s| Runcible::Extensions::Consumer.profile(uuid, 'rpm')["profile"].
+      lazy_accessor :package_profile, :initializer => lambda{|s| fetch_package_profile}
+      lazy_accessor :simple_packages, :initializer => lambda {|s| fetch_package_profile["profile"].
                                                               collect{|package| Glue::Pulp::SimplePackage.new(package)} }
-      lazy_accessor :errata, :initializer => lambda {|s| Resources::Pulp::Consumer.errata(uuid).
-                                                              collect{|errata| Errata.new(errata)} }
+      lazy_accessor :errata, :initializer => lambda {|s| #Resources::Pulp::Consumer.errata(uuid).
+                                                              #collect{|errata| Errata.new(errata)} }
+                                                         raise NotImplementedError
+                                                         #TODO: Needs corresponding Runcible call once fixed in Pulp
+                                                    }
       lazy_accessor :repoids, :initializer => lambda {|s| Runcible::Extensions::Consumer.retrieve_bindings(uuid).
                                                               collect{ |repo| repo["repo_id"]} }
     end
@@ -116,7 +119,7 @@ module Glue::Pulp::Consumer
       Rails.logger.error "Failed to create pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
-    
+
     def update_pulp_consumer
       return true if @changed_attributes.empty?
 
@@ -126,13 +129,13 @@ module Glue::Pulp::Consumer
       Rails.logger.error "Failed to update pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
-    
+
     def upload_package_profile profile
       Rails.logger.debug "Uploading package profile for consumer #{self.name}"
       Runcible::Extensions::Consumer.upload_profile(self.uuid, 'rpm', profile)
     rescue => e
       Rails.logger.error "Failed to upload package profile to pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e  
+      raise e
     end
 
     def install_package packages
@@ -191,6 +194,14 @@ module Glue::Pulp::Consumer
         when :update
           pre_queue.create(:name => "update pulp consumer: #{self.name}", :priority => 3, :action => [self, :update_pulp_consumer])
       end
+    end
+
+    private
+
+    def fetch_package_profile
+      Runcible::Extensions::Consumer.retrieve_profile(uuid, 'rpm')
+    rescue RestClient::ResourceNotFound =>e
+      {:profile=>[]}.with_indifferent_access
     end
 
   end
