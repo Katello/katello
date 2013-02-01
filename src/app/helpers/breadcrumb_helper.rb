@@ -104,7 +104,7 @@ module ChangesetBreadcrumbs
   end
 
 end
-  
+
 module ContentBreadcrumbs
   def details_path product_id=nil
     promotion_details_path(@organization.label, @environment.name, :product_id=>product_id)
@@ -244,7 +244,7 @@ module ContentBreadcrumbs
     end
   end
 end
-  
+
 module RolesBreadcrumbs
   def generate_roles_breadcrumb
     bc = {}
@@ -256,7 +256,7 @@ module RolesBreadcrumbs
     add_crumb_node!(bc, "role_users", "", _("Users"), ['roles'],
                     {:client_render => true})
     add_crumb_node!(bc, "role_ldap_groups", "", _("LDAP Groups"), ['roles'],
-                    {:client_render => true}) if AppConfig.ldap_roles
+                    {:client_render => true}) if Katello.config.ldap_roles
     add_crumb_node!(bc, "global", "", _("Global Permissions"), ['roles', "role_permissions"],
                     {:client_render => true}, { :count => 0, :permission_details => get_global_verbs_and_tags })
 
@@ -269,10 +269,10 @@ module RolesBreadcrumbs
       add_crumb_node!(bc, user_bc_id(user), "", user.username, ['roles', 'role_users'],
                     {:client_render => true}, { :has_role => false })
     }
-    
+
     @role.ldap_group_roles.each do |group|
-      add_group_to_bc(bc, group) 
-    end 
+      add_group_to_bc(bc, group)
+    end
 
     @role.users.each{ |user|
       bc[user_bc_id(user)][:has_role] = true
@@ -288,8 +288,8 @@ module RolesBreadcrumbs
   def add_group_to_bc(bc, group)
     add_crumb_node!(bc, "ldap_group_#{group.id}", '', group.ldap_group, ['roles', 'roles_ldap_groups'],
                   {:client_render => true}, { :has_role => false, :id => group.id })
-  end 
-    
+  end
+
   def add_permission_bc bc, perm, adjust_count
     global = perm.resource_type.global?
 

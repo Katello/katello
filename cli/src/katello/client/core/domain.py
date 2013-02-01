@@ -47,8 +47,8 @@ class List(DomainAction):
         if domains:
             domains = unnest_one(domains)
 
-        batch_add_columns(self.printer,
-            'id', 'name', 'fullname', 'dns_id')
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, \
+            {'fullname': _("Full Name")}, {'dns_id': _("DNS ID")})
 
         self.printer.set_header(_("Domains"))
         self.printer.print_items(domains)
@@ -67,8 +67,8 @@ class Info(DomainAction):
         domain_id = self.get_option('id')
         domain = unnest_one(self.api.show(domain_id))
 
-        batch_add_columns(self.printer,
-            'id', 'name', 'fullname', 'dns_id')
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, \
+            {'fullname': _("Full Name")}, {'dns_id': _("DNS ID")})
 
         self.printer.set_header(_("Domain"))
         self.printer.print_item(domain)

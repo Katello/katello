@@ -38,47 +38,50 @@ module SyncManagementHelper
   end
 
   module RepoMethods
+    # returns all repos in hash representation with minors and arch children included
     def collect_repos(products, env, include_disabled = false)
       Glue::Pulp::Repos.prepopulate! products, env,[]
-      list = []
-      products.each do |prod|
-        minors = []
-        release, non_release = collect_minor(prod.repos(env, include_disabled))
-        release.each do |minor, minor_repos|
-          arches = []
-          collect_arches(minor_repos).each do |arch, arch_repos|
-            arches << {:name=>arch, :id=>arch, :type=>"arch", :children=>[], :repos=>arch_repos}
-          end
-          minors << {:name=>minor, :id=>minor, :type=>"minor", :children=>arches, :repos=>[]}
-        end
 
-        list << {:name=>prod.name, :id=>prod.id, :type=>"product",  :repos=>non_release,
-            :children=>minors, :organization=>prod.organization.name}
+      products.map do |prod|
+        minor_repos, repos_without_minor = collect_minor(prod.repos(env, include_disabled))
+        { :name     => prod.name, :id => prod.id, :type => "product", :repos => repos_without_minor,
+          :children => minors(minor_repos), :organization => prod.organization.name }
       end
-      list
     end
 
-    def collect_minor repos
-      minors = {}
-      empty = []
-      repos.each{|r|
-        if r.minor
-          minors[r.minor] ||= []
-          minors[r.minor] << r
-        else
-          empty << r
-        end
-      }
-      [minors, empty]
+    # returns all minors in hash representation with arch children included
+    def minors(minor_repos)
+      minor_repos.map do |minor, repos|
+        { :name => minor, :id => minor, :type => "minor", :children => arches(repos), :repos => [] }
+      end
     end
 
-    def collect_arches repos
-      arches = {}
-      repos.each{|r|
-        arches[r.arch] ||= [ ]
-        arches[r.arch] << r
-      }
-      arches
+    # returns all archs in hash representation
+    def arches(arch_repos)
+      collect_arches(arch_repos).map do |arch, repos|
+        { :name => arch, :id => arch, :type => "arch", :children => [], :repos => repos }
+      end
+    end
+
+    # converts array of repositories to hash using minor as key
+    #
+    # repositories having nil minor are returned as a second variable, if none such is present,
+    # empty array is returned
+    #
+    # collect_arches [<#repo1 minor:1>, <#repo2 minor:2>, <#repo3 minor:nil>] # =>
+    #   [{'1' => [<#repo1>], '2' => <#repo2>]}, [#<repo3>]]
+    def collect_minor(repos)
+      result               = repos.group_by(&:minor)
+      result_without_minor = result.delete(nil)
+      [result, result_without_minor || []]
+    end
+
+    # converts array of repositories to hash using architecture as key
+    #
+    # collect_arches [<#repo1 arch:i386>, <#repo2 arch:i386>, <#repo3 arch:x86_64>] # =>
+    #   {'i386' => [<#repo1>, <#repo2>], 'x86_64' => [#<repo3>]}
+    def collect_arches(repos)
+      repos.group_by(&:arch)
     end
 
     #Used for debugging collect_repos output

@@ -13,7 +13,6 @@
 require "util/search"
 require 'util/package_util'
 
-
 module Glue::Pulp::Package
   def self.included(base)
     base.send :include, InstanceMethods
@@ -47,7 +46,6 @@ module Glue::Pulp::Package
     def nvrea
       Katello::PackageUtils::build_nvrea(self.as_json.with_indifferent_access, false)
     end
-
   end
 
 end

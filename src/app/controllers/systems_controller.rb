@@ -85,7 +85,7 @@ class SystemsController < ApplicationController
       end
     end
     {   :create => {:arch => [:arch_id],
-                    :system=>[:sockets, :name, :environment_id, :content_view_id],
+                    :system=>[:sockets, :name, :environment_id, :content_view_id, :memory],
                     :system_type =>[:virtualized]
                    },
         :update => update_check
@@ -112,6 +112,7 @@ class SystemsController < ApplicationController
     @system.facts = {}
     @system.arch = params["arch"]["arch_id"]
     @system.sockets = params["system"]["sockets"]
+    @system.memory = params["system"]["memory"]
     @system.guest = (params["system_type"]["virtualized"] == 'virtual')
     @system.name= params["system"]["name"]
     @system.cp_type = "system"
@@ -193,7 +194,7 @@ class SystemsController < ApplicationController
       {:label=>label, :value=>s.name, :id=>s.id}
     }
   rescue Tire::Search::SearchRequestFailed => e
-    render :json=>Support.array_with_total
+    render :json=>Util::Support.array_with_total
   end
 
 
@@ -414,7 +415,7 @@ class SystemsController < ApplicationController
         end
       end
       action = _("Systems Bulk Action: Add to system group(s): %s") % @system_groups.collect{|g| g.name}.join(', ')
-      notify_bulk_action action, successful_systems, failed_systems
+      notify_bulk_action(action, successful_systems, failed_systems)
     end
 
     render :nothing => true
@@ -423,6 +424,8 @@ class SystemsController < ApplicationController
   def bulk_remove_system_group
     successful_systems = []
     failed_systems = []
+    groups_info = {} # hash to store system group id to name mapping
+    systems_summary = {} # hash to store system to system group mapping, for groups removed from the system
 
     unless params[:group_ids].blank?
       @system_groups = SystemGroup.where(:id=>params[:group_ids])
@@ -433,6 +436,7 @@ class SystemsController < ApplicationController
         if !system_group.editable?
           invalid_perms.push(system_group.name)
         end
+        groups_info[system_group.id] = system_group.name
       end
       if !invalid_perms.empty?
         raise _("System Group membership modification not allowed for group(s): %s") % invalid_perms.join(', ')
@@ -440,15 +444,25 @@ class SystemsController < ApplicationController
 
       @systems.each do |system|
         begin
-          system.system_group_ids = (system.system_group_ids - @system_groups.collect{|g| g.id}).uniq
+          groups_removed = system.system_group_ids & groups_info.keys
+          system.system_group_ids = (system.system_group_ids - groups_info.keys).uniq
           system.save!
+
+          systems_summary[system] = groups_removed.collect{|g| groups_info[g]}
           successful_systems.push(system.name)
         rescue => error
           failed_systems.push(system.name)
         end
       end
       action = _("Systems Bulk Action: Remove from system group(s): %s") % @system_groups.collect{|g| g.name}.join(', ')
-      notify_bulk_action action, successful_systems, failed_systems
+
+      details = []
+      systems_summary.each_pair do |system, system_groups|
+        details.push(_("System: %{system_name}, System Groups Removed: %{system_group_names}") %
+                     {:system_name => system.name, :system_group_names => system_groups.join(', ')})
+      end
+
+      notify_bulk_action(action, successful_systems, failed_systems, details.join("\n"))
     end
 
     render :nothing => true
@@ -486,7 +500,7 @@ class SystemsController < ApplicationController
       action_text = _("Systems Bulk Action: Schedule install of package group(s): %s") % params[:groups].join(', ')
     end
 
-    notify_bulk_action action_text, successful_systems, failed_systems
+    notify_bulk_action(action_text, successful_systems, failed_systems)
     render :nothing => true
   end
 
@@ -518,7 +532,7 @@ class SystemsController < ApplicationController
         action_text = _("Systems Bulk Action: Schedule update of package(s): %s") % params[:packages].join(', ')
     end
 
-    notify_bulk_action action_text, successful_systems, failed_systems
+    notify_bulk_action(action_text, successful_systems, failed_systems)
     render :nothing => true
   end
 
@@ -553,7 +567,7 @@ class SystemsController < ApplicationController
       action_text = _("Systems Bulk Action: Schedule uninstall of package group(s): %s") % params[:groups].join(', ')
     end
 
-    notify_bulk_action action_text, successful_systems, failed_systems
+    notify_bulk_action(action_text, successful_systems, failed_systems)
     render :nothing => true
   end
 
@@ -576,7 +590,7 @@ class SystemsController < ApplicationController
     end
 
     action = _("Systems Bulk Action: Schedule install of errata(s): %s") % params[:errata].join(', ')
-    notify_bulk_action action, successful_systems, failed_systems
+    notify_bulk_action(action, successful_systems, failed_systems)
     render :nothing => true
   end
 
@@ -619,7 +633,7 @@ class SystemsController < ApplicationController
 
   include SortColumnList
 
-  def notify_bulk_action action, successful_systems, failed_systems
+  def notify_bulk_action(action, successful_systems, failed_systems, details = nil)
     # generate a notice for a bulk action
 
     success_msg = _("Successful for system(s): ")
@@ -627,13 +641,13 @@ class SystemsController < ApplicationController
     newline = '<br />'
 
     if failed_systems.empty?
-      notify.success action + newline + success_msg + successful_systems.join(', ')
+      notify.success(action + newline + success_msg + successful_systems.join(', '), {:details => details})
     else
       if successful_systems.empty?
         notify.error action + newline + failure_msg + failed_systems.join(', ')
       else
-        notify.error action + newline + success_msg + successful_systems.join(',') +
-                         newline + failure_msg + failed_systems.join(',')
+        notify.error(action + newline + success_msg + successful_systems.join(',') +
+                     newline + failure_msg + failed_systems.join(','), {:details => details})
       end
     end
   end
@@ -661,7 +675,7 @@ class SystemsController < ApplicationController
       :col => ["name_sort", "lastCheckin"],
       :titles => [_("Name"), _("Registered / Last Checked In")],
       :custom_rows => true,
-      :enable_create => AppConfig.katello? && System.registerable?(@environment, current_organization),
+      :enable_create => Katello.config.katello? && System.registerable?(@environment, current_organization),
       :create => _("System"),
       :create_label => _('+ New System'),
       :enable_sort => true,

@@ -20,9 +20,11 @@ class Permission < ActiveRecord::Base
   before_save :cleanup_tags_verbs
   before_save :check_global
   after_save :update_related_index
-  
-  validates :name, :presence => true, :katello_name_format => true
-  validates :description, :katello_description_format => true
+
+  validates :name, :presence => true
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
+
   validates_uniqueness_of :name, :scope => [:organization_id, :role_id], :message => N_("must be unique within an organization scope")
 
   before_destroy :check_locked
@@ -31,37 +33,7 @@ class Permission < ActiveRecord::Base
     p.tags.destroy_all
   end
 
-
-  class PermissionValidator < ActiveModel::Validator
-    def validate(record)
-      if record.role.locked?
-        record.errors[:base] << _("Cannot add/remove or change permissions related to a locked role.")
-      end
-
-      if record.all_verbs? && !record.verbs.empty?
-        record.errors[:base] << N_("Cannot specify a verb if all_verbs is selected.")
-      end
-
-      if record.all_tags? && !record.tags.empty?
-        record.errors[:base] << N_("Cannot specify a tag if all_tags is selected.")
-      end
-
-      if record.all_types? && (!record.all_verbs? || !record.all_tags?)
-        record.errors[:base] << N_("Cannot specify all_types without all_tags and all_verbs")
-      end
-
-      begin
-        ResourceType.check(record.resource_type.name, record.verb_values)
-      rescue VerbNotFound => verb_error
-        record.errors[:base] << verb_error.message
-      rescue ResourceTypeNotFound => type_error
-        record.errors[:base] << type_error.message
-      end
-    end
-  end
-
-
-  validates_with PermissionValidator
+  validates_with Validators::PermissionValidator
   validates_presence_of :resource_type
 
   def tag_values

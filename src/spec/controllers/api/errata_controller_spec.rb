@@ -17,6 +17,7 @@ describe Api::ErrataController, :katello => true do
   include AuthorizationHelperMethods
   include ProductHelperMethods
   include RepositoryHelperMethods
+  include LocaleHelperMethods
 
   before(:each) do
     disable_org_orchestration
@@ -31,6 +32,7 @@ describe Api::ErrataController, :katello => true do
     @repo = new_test_repo(ep_library, "repo", "#{@organization.name}/Library/prod/repo")
 
     @product.stub(:repos).and_return([@repository])
+    @repo.stub(:has_distribution?).and_return(true)
     Repository.stub(:find).and_return(@repo)
 
     KTEnvironment.stub(:find).and_return(@organization.library)

@@ -109,7 +109,7 @@ recv_enabled: false
 # oauth_secret: (secret) string shared secret that can be used for OAuth style
 #                        authentication
 
-#[oauth]
+[oauth]
 enabled: true
 oauth_key: <%= scope.lookupvar("pulp::params::oauth_key") %>
 oauth_secret: <%= scope.lookupvar("pulp::params::oauth_secret") %>
@@ -163,7 +163,7 @@ grinder_file: /var/log/pulp/grinder.log
 # unbind_timeout: (timeout) messaging timeout for unbinds in seconds
 
 [messaging]
-url: tcp://localhost:5672
+url: ssl://localhost:5671
 cacert:     /usr/share/katello/candlepin-cert.crt
 clientcert: /etc/pki/pulp/qpid_client_striped.crt
 topic_exchange: 'amq.topic'
@@ -259,11 +259,7 @@ debugging_mode: false
 # sync_weight: (integer) concurrency "weight" of a repository sync task
 
 [tasks]
-<% if processorcount.to_i <= 1 %>
-concurrency_threshold = 1
-<% else %>
-concurrency_threshold = <%= processorcount.to_i-1 %>
-<% end %>
+concurrency_threshold = <%= 2*processorcount.to_i + 1 %>
 dispatch_interval: 0.5
 archived_call_lifetime: 48
 consumer_content_weight: 0

@@ -14,7 +14,7 @@ class Api::SyncPlansController < Api::ApiController
 
   resource_description do
     description <<-DOC
-      Synchronization plans are used to configure the scheduled 
+      Synchronization plans are used to configure the scheduled
       synchronization of the repository with the upstream.
     DOC
 

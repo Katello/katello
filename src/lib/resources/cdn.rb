@@ -29,20 +29,23 @@ module Resources
     end
 
     class CdnResource
-      attr_reader :url
+      attr_reader :url, :product
       attr_accessor :proxy_host, :proxy_port, :proxy_user, :proxy_password
 
-      def substitutor
+      def substitutor(logger = nil)
+        @logger = logger
         Util::CdnVarSubstitutor.new(self)
       end
 
       def initialize url, options = {}
         options.reverse_merge!(:verify_ssl => 9)
-        options.assert_valid_keys(:ssl_client_key, :ssl_client_cert, :ssl_ca_file, :verify_ssl)
+        options.assert_valid_keys(:ssl_client_key, :ssl_client_cert, :ssl_ca_file, :verify_ssl,
+                                  :product)
         if options[:ssl_client_cert]
           options.reverse_merge!(:ssl_ca_file => CdnResource.ca_file)
         end
         load_proxy_settings
+        @product = options[:product]
 
         @url = url
         @uri = URI.parse(url)
@@ -69,7 +72,8 @@ module Resources
 
       def get(path, headers={})
         path = File.join(@uri.request_uri,path)
-        Rails.logger.debug "CDN: Requesting path #{path}"
+        used_url = File.join("#{@uri.scheme}://#{@uri.host}:#{@uri.port}", path)
+        Rails.logger.debug "CDN: Requesting path #{used_url}"
         req = Net::HTTP::Get.new(path)
         begin
           @net.start do |http|
@@ -93,11 +97,11 @@ module Resources
         rescue Timeout::Error
           raise RestClient::RequestTimeout
         rescue RestClient::ResourceNotFound
-          raise Errors::NotFound.new(_("CDN loading error: %s not found") % File.join(url, path))
+          raise Errors::NotFound.new(_("CDN loading error: %s not found") % used_url)
         rescue RestClient::Unauthorized
-          raise Errors::SecurityViolation.new(_("CDN loading error: access denied to %s") % File.join(url, path))
+          raise Errors::SecurityViolation.new(_("CDN loading error: access denied to %s") % used_url)
         rescue RestClient::Forbidden
-          raise Errors::SecurityViolation.new(_("CDN loading error: access forbidden to %s") % File.join(url, path))
+          raise Errors::SecurityViolation.new(_("CDN loading error: access forbidden to %s") % used_url)
         end
       end
 
@@ -114,11 +118,11 @@ module Resources
       end
 
       def load_proxy_settings
-        if AppConfig.cdn_proxy && AppConfig.cdn_proxy.host
-          self.proxy_host = parse_host(AppConfig.cdn_proxy.host)
-          self.proxy_port = AppConfig.cdn_proxy.port
-          self.proxy_user = AppConfig.cdn_proxy.user
-          self.proxy_password = AppConfig.cdn_proxy.password
+        if Katello.config.cdn_proxy && Katello.config.cdn_proxy.host
+          self.proxy_host = parse_host(Katello.config.cdn_proxy.host)
+          self.proxy_port = Katello.config.cdn_proxy.port
+          self.proxy_user = Katello.config.cdn_proxy.user
+          self.proxy_password = Katello.config.cdn_proxy.password
         end
       rescue URI::Error => e
         Rails.logger.error "Could not parse cdn_proxy:"
@@ -128,6 +132,10 @@ module Resources
       def parse_host(host_or_url)
         uri = URI.parse(host_or_url)
         return uri.host || uri.path
+      end
+
+      def log(level, *args)
+        [Rails.logger, @logger].compact.each { |logger| logger.send(level, *args)}
       end
 
     end

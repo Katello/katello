@@ -13,7 +13,7 @@
 require 'spec_helper'
 
 describe Api::Foreman::ConfigTemplatesController do
-  if AppConfig.use_foreman
+  if Katello.config.use_foreman
     include LoginHelperMethods
     before { login_user_api }
     it_behaves_like 'simple crud controller'
