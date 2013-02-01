@@ -394,21 +394,21 @@ module Glue::Pulp::Repo
 
     def add_packages pkg_id_list
       previous = self.environmental_instances.in_environment(self.environment.prior).first
-      Runcible::Extensions::Repository::Rpm.copy(previous.pulp_id, self.pulp_id, {:ids=>pkg_id_list})
+      Runcible::Extensions::Rpm.copy(previous.pulp_id, self.pulp_id, {:ids=>pkg_id_list})
     end
 
     def add_errata errata_unit_id_list
       previous = self.environmental_instances.in_environment(self.environment.prior).first
-      Runcible::Extensions::Repository.Errata.copy(previous.pulp_id, self.pulp_id, {:ids=>errata_unit_id_list})
+      Runcible::Extensions::Errata.copy(previous.pulp_id, self.pulp_id, {:ids=>errata_unit_id_list})
     end
 
     def add_distribution distribution_id
       previous = self.environmental_instances.in_environment(self.environment.prior).first
-      Runcible::Extensions::Repository::Distribution.copy(previous.pulp_id, self.pulp_id, {:ids=>[distribution_id]})
+      Runcible::Extensions::Distribution.copy(previous.pulp_id, self.pulp_id, {:ids=>[distribution_id]})
     end
 
     def delete_packages package_id_list
-      Runcible::Extensions::Rpm.unassociate_ids_from_repo(self.pulp_id,  package_id_list)
+      Runcible::Extensions::Rpm.unassociate_unit_ids_from_repo(self.pulp_id,  package_id_list)
     end
 
     def delete_errata errata_id_list
