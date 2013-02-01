@@ -93,7 +93,7 @@ module Glue::ElasticSearch::System
      :installed_products=>collect_installed_product_names,
      :sockets => self.sockets,
      :custom_info=>collect_custom_info,
-     :content_view => self.content_view.name
+     :content_view => self.content_view.try(:name)
     }
   end
 end
