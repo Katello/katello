@@ -11,46 +11,44 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 
-
 module Authorization::SystemTemplate
+  extend ActiveSupport::Concern
 
-  def self.included(base)
-    base.class_eval do
 
-      def self.any_readable? org
-        User.allowed_to?([:read_all, :manage_all], :system_templates, nil, org)
+  module ClassMethods
+    def any_readable?(org)
+      User.allowed_to?([:read_all, :manage_all], :system_templates, nil, org)
+    end
 
-      end
+    def readable?(org)
+      User.allowed_to?([:read_all, :manage_all], :system_templates, nil, org)
+    end
 
-      def self.readable? org
-        User.allowed_to?([:read_all, :manage_all], :system_templates, nil, org)
-      end
+    def manageable?(org)
+      User.allowed_to?([:manage_all], :system_templates, nil, org)
+    end
 
-      def self.manageable? org
-        User.allowed_to?([:manage_all], :system_templates, nil, org)
-      end
+    def list_verbs(global=false)
+      {
+        :manage_all => _("Administer System Templates"),
+        :read_all => _("Read System Templates")
+      }.with_indifferent_access
+    end
 
-      def self.list_verbs global = false
-        {
-          :manage_all => _("Administer System Templates"),
-          :read_all => _("Read System Templates")
-       }.with_indifferent_access
-      end
+    def read_verbs
+      [:read_all]
+    end
 
-      def self.read_verbs
-        [:read_all]
-      end
-
-      def self.no_tag_verbs
-        SystemTemplate.list_verbs.keys
-      end
-
+    def no_tag_verbs
+      SystemTemplate.list_verbs.keys
     end
   end
 
 
-  def readable?
-    self.class.readable?(self.environment.organization)
+  module InstanceMethods
+    def readable?
+      self.class.readable?(self.environment.organization)
+    end
   end
 
 end

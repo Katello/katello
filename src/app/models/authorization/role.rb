@@ -11,54 +11,52 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 
-
 module Authorization::Role
+  extend ActiveSupport::Concern
+
   READ_PERM_VERBS = [:read,:update, :create,:delete]
 
-  def self.included(base)
-
-    base.class_eval do
-
-      scope :readable, lambda {where("0 = 1")  unless User.allowed_all_tags?(READ_PERM_VERBS, :roles)}
-
-       def self.creatable?
-         User.allowed_to?([:create], :roles, nil)
-       end
-
-       def self.editable?
-         User.allowed_to?([:update, :create], :roles, nil)
-       end
-
-       def self.deletable?
-         User.allowed_to?([:delete, :create],:roles, nil)
-       end
-
-       def self.any_readable?
-         User.allowed_to?(READ_PERM_VERBS, :roles, nil)
-       end
-
-       def self.readable?
-         Role.any_readable?
-       end
-
-      def self.list_verbs global = false
-        {
-        :create => _("Administer Roles"),
-        :read => _("Read Roles"),
-        :update => _("Modify Roles"),
-        :delete => _("Delete Roles"),
-        }.with_indifferent_access
-      end
-
-      def self.read_verbs
-        [:read]
-      end
-
-      def self.no_tag_verbs
-        [:create]
-      end
+  included do
+    scope :readable, lambda {where("0 = 1")  unless User.allowed_all_tags?(READ_PERM_VERBS, :roles)}
+  end
 
 
+  module ClassMethods
+    def creatable?
+      User.allowed_to?([:create], :roles, nil)
+    end
+
+    def editable?
+      User.allowed_to?([:update, :create], :roles, nil)
+    end
+
+    def deletable?
+      User.allowed_to?([:delete, :create],:roles, nil)
+    end
+
+    def any_readable?
+      User.allowed_to?(READ_PERM_VERBS, :roles, nil)
+    end
+
+    def readable?
+      Role.any_readable?
+    end
+
+    def list_verbs global = false
+      {
+      :create => _("Administer Roles"),
+      :read => _("Read Roles"),
+      :update => _("Modify Roles"),
+      :delete => _("Delete Roles"),
+      }.with_indifferent_access
+    end
+
+    def read_verbs
+      [:read]
+    end
+
+    def no_tag_verbs
+      [:create]
     end
   end
 
