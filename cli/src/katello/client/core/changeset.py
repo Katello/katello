@@ -117,8 +117,8 @@ class Info(ChangesetAction):
             {'environment_id': _("Environment ID")}, {'environment_name': _("Environment Name")})
         batch_add_columns(self.printer, {'errata': _("Errata")}, {'products': _("Products")}, \
             {'packages': _("Packages")}, {'repositories': _("Repositories")}, \
-            {'system_templates': _("System Templates")}, {'distributions': _("Distributions")}, {'content_views': _("Content Views")}, \
-            multiline=True, show_with=printer.VerboseStrategy)
+            {'system_templates': _("System Templates")}, {'distributions': _("Distributions")}, \
+            {'content_views': _("Content Views")}, multiline=True, show_with=printer.VerboseStrategy)
         if displayDeps:
             self.printer.add_column('dependencies', _("Dependencies"), \
                 multiline=True, show_with=printer.VerboseStrategy)
@@ -168,9 +168,9 @@ class Create(ChangesetAction):
         env = get_environment(orgName, envName)
         cset = self.api.create(orgName, env["id"], csName, csType, csDescription)
         test_record(cset,
-            _("Successfully created changeset [ %(csName)s ] for environment [ %(env_name)s ]") 
+            _("Successfully created changeset [ %(csName)s ] for environment [ %(env_name)s ]")
                 % {'csName':csName, 'env_name':env["name"]},
-            _("Could not create changeset [ %(csName)s ] for environment [ %(env_name)s ]") 
+            _("Could not create changeset [ %(csName)s ] for environment [ %(env_name)s ]")
                 % {'csName':csName, 'env_name':env["name"]}
         )
 
