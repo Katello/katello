@@ -8,7 +8,7 @@ group :test do
 
   # TODO - it looks we do not have any webrat tests
   gem 'webrat', '>=0.7.3'
-    gem 'nokogiri', '>= 1.5.0'
+  gem 'nokogiri', '>= 1.5.0'
 
   gem 'vcr'
   gem 'webmock'
