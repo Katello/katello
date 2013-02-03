@@ -70,6 +70,13 @@ gem 'runcible', '~> 0.3.1'
 gem 'anemone'
 
 # Load all sub-gemfiles from bundler.d directory
+ignored = ENV['IGNORE_BUNDLES'] || ''
+ignored = ignored.split(/\s*,\s*/)
 Dir[File.expand_path('bundler.d/*.rb', File.dirname(__FILE__))].each do |bundle|
-  self.instance_eval(Bundler.read_file(bundle), bundle)
+  bundle_name = bundle.scan(/bundler\.d\/(\w*)\.rb/).first.first
+  unless ignored.include? bundle_name
+    self.instance_eval(Bundler.read_file(bundle), bundle)
+  else
+    puts "Ignoring bundle group #{bundle_name}"
+  end
 end
