@@ -25,7 +25,9 @@ gem 'ldap_fluff'
 
 if defined? JRUBY_VERSION
   gem 'jruby-openssl'
-  gem 'activerecord-jdbcpostgresql-adapter', '1.1.3'
+  gem 'activerecord-jdbc-adapter'
+  gem 'jdbc-postgres', :require => false
+  gem 'activerecord-jdbcpostgresql-adapter', :require => false
   gem 'tire', '>= 0.3.0'
 else
   gem 'thin', '>= 1.2.8'
