@@ -108,7 +108,7 @@ describe SystemPackagesController, :katello => true do
 
       describe 'add package groups' do
         it 'should support receiving a comma-separated list of package groups' do
-          @system.should_receive(:install_package_groups).with(["group 1", "group 2", "group3"]).and_return(@task_status)
+          @system.should_receive(:install_package_groups).with(match_array(["group 1", "group 2", "group3"])).and_return(@task_status)
           put :add, :system_id => @system.id, :groups => "group 1, group 2, group3"
           response.should be_success
         end
@@ -190,7 +190,7 @@ describe SystemPackagesController, :katello => true do
 
       describe 'remove package groups' do
         it 'should support receiving a comma-separated list of package groups' do
-          @system.should_receive(:uninstall_package_groups).with(["group 1", "group 2", "group3"]).and_return(@task_status)
+          @system.should_receive(:uninstall_package_groups).with(match_array(["group 1", "group 2", "group3"])).and_return(@task_status)
           put :remove, :system_id => @system.id, :groups => "group 1, group 2, group3"
           response.should be_success
         end
