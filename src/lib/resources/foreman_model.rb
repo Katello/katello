@@ -27,16 +27,34 @@ class Resources::ForemanModel < Resources::AbstractModel
     super.merge :foreman_user => user.username
   end
 
+  def json_create_options
+    json_default_options.merge(:root => foreman_resource_name)
+  end
+
+  def json_update_options
+    json_default_options.merge(:root => foreman_resource_name)
+  end
+
   protected
 
+  def self.foreman_resource_name(name=nil)
+    @foreman_resource_name ||= resource_name
+    @foreman_resource_name = name unless name.nil?
+    @foreman_resource_name
+  end
+
+  def foreman_resource_name
+    self.class.foreman_resource_name
+  end
+
   def parse_errors(hash)
-    return hash[resource_name]['errors'] if hash.key? resource_name
+    return hash[foreman_resource_name]['errors'] if hash.key? foreman_resource_name
     return {hash['error']['parameter_name'] => hash['error']['message']} if hash.key? 'error'
     return hash
   end
 
   def self.parse_attributes(data)
-    data.with_indifferent_access[resource_name] or
+    data.with_indifferent_access[foreman_resource_name] or
         raise ResponseParsingError, data
   end
 
