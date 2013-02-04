@@ -70,7 +70,7 @@ describe SystemPackagesController, :katello => true do
 
       describe 'add packages' do
         it 'should support receiving a comma-separated list of package names' do
-          @system.should_receive(:install_packages).with(["pkg1", "pkg2", "pkg3"]).and_return(@task_status)
+          @system.should_receive(:install_packages).with(match_array(["pkg1", "pkg2", "pkg3"])).and_return(@task_status)
           put :add, :system_id => @system.id, :packages => "pkg1, pkg2, pkg3"
           response.should be_success
         end
@@ -146,13 +146,13 @@ describe SystemPackagesController, :katello => true do
 
       describe 'remove packages' do
         it 'should support receiving a comma-separated list of package names' do
-          @system.should_receive(:uninstall_packages).with(["pkg1", "pkg2", "pkg3"]).and_return(@task_status)
+          @system.should_receive(:uninstall_packages).with(match_array(["pkg1", "pkg2", "pkg3"])).and_return(@task_status)
           put :remove, :system_id => @system.id, :packages => "pkg1, pkg2, pkg3"
           response.should be_success
         end
 
         it 'should support receiving a hash of package names' do
-          @system.should_receive(:uninstall_packages).with(["pkg1", "pkg2", "pkg3"]).and_return(@task_status)
+          @system.should_receive(:uninstall_packages).with(match_array(["pkg1", "pkg2", "pkg3"])).and_return(@task_status)
           put :remove, :system_id => @system.id, :package => {"pkg1" => 1, "pkg2" => 1, "pkg3" => 1}
           response.should be_success
         end
@@ -229,7 +229,7 @@ describe SystemPackagesController, :katello => true do
       describe 'update packages' do
         describe 'list of packages provided' do
           it 'should support receiving a hash of package names' do
-            @system.should_receive(:update_packages).with(["pkg1", "pkg2", "pkg3"]).and_return(@task_status)
+            @system.should_receive(:update_packages).with(match_array(["pkg1", "pkg2", "pkg3"])).and_return(@task_status)
             put :update, :system_id => @system.id, :package => {"pkg1" => 1, "pkg2" => 1, "pkg3" => 1}
             response.should be_success
           end
