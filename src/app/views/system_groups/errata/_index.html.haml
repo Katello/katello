@@ -63,4 +63,11 @@
     %span.fr
       %button.button.disabled{:id => 'run_errata_button', 'data-url' => system_group_errata_path(@group.id) }
         #{_('Install')}
-
+    .selection_group
+      %span.fr
+        %button.button{:id => 'deselect_all_button'}
+          #{_('Deselect all')}
+      %span.fr
+        %button.button{:id => 'select_all_button'}
+          #{_('Select all')}
+    
