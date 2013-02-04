@@ -13,44 +13,44 @@
 
 
 module Authorization::GpgKey
+  extend ActiveSupport::Concern
 
-  def self.included(base)
-    base.class_eval do
 
-      def self.readable(org)
-         if org.readable? || org.gpg_keys_manageable? || ::Provider.any_readable?(org)
-            where(:organization_id => org.id)
-         else
-           where("0 = 1")
-         end
-      end
+  module ClassMethods
+    def readable(org)
+       if org.readable? || org.gpg_keys_manageable? || ::Provider.any_readable?(org)
+          where(:organization_id => org.id)
+       else
+         where("0 = 1")
+       end
+    end
 
-      def self.manageable(org)
-         if org.gpg_keys_manageable?
-            where(:organization_id => org.id)
-         else
-           where("0 = 1")
-         end
-      end
+    def manageable(org)
+       if org.gpg_keys_manageable?
+          where(:organization_id => org.id)
+       else
+         where("0 = 1")
+       end
+    end
 
-      def self.createable?(organization)
-        organization.gpg_keys_manageable?
-      end
+    def createable?(organization)
+      organization.gpg_keys_manageable?
+    end
 
-      def self.any_readable?(organization)
-        organization.readable? || organization.gpg_keys_manageable? || ::Provider.any_readable?(organization)
-      end
-
+    def any_readable?(organization)
+      organization.readable? || organization.gpg_keys_manageable? || ::Provider.any_readable?(organization)
     end
   end
 
 
-  def readable?
-     GpgKey.any_readable?(organization)
-  end
+  module InstanceMethods
+    def readable?
+       GpgKey.any_readable?(organization)
+    end
 
-  def manageable?
-     organization.gpg_keys_manageable?
+    def manageable?
+       organization.gpg_keys_manageable?
+    end
   end
 
 end
