@@ -126,7 +126,7 @@ module Glue::Pulp::Repo
         importer = Runcible::Extensions::YumImporter.new
       end
 
-      distributors =  [generate_distributor]
+      distributors = [generate_distributor]
 
       Runcible::Extensions::Repository.create_with_importer_and_distributors(self.pulp_id,
           importer,
@@ -373,10 +373,10 @@ module Glue::Pulp::Repo
 
     def clone_contents to_repo
       events = []
-      events << Runcible::Extensions::Repository.rpm_copy(self.pulp_id, to_repo.pulp_id)
-      events << Runcible::Extensions::Repository.errata_copy(self.pulp_id, to_repo.pulp_id)
-      events << Runcible::Extensions::Repository.distribution_copy(self.pulp_id, to_repo.pulp_id)
-      events << Runcible::Extensions::Repository.package_group_copy(self.pulp_id, to_repo.pulp_id)
+      events << Runcible::Extensions::Rpm.copy(self.pulp_id, to_repo.pulp_id)
+      events << Runcible::Extensions::Errata.copy(self.pulp_id, to_repo.pulp_id)
+      events << Runcible::Extensions::Distribution.copy(self.pulp_id, to_repo.pulp_id)
+      events << Runcible::Extensions::PackageGroup.copy(self.pulp_id, to_repo.pulp_id)
       events
     end
 
@@ -394,30 +394,29 @@ module Glue::Pulp::Repo
 
     def add_packages pkg_id_list
       previous = self.environmental_instances.in_environment(self.environment.prior).first
-      Runcible::Extensions::Repository.rpm_copy(previous.pulp_id, self.pulp_id,
-                                                {:package_ids=>pkg_id_list})
+      Runcible::Extensions::Rpm.copy(previous.pulp_id, self.pulp_id, {:ids=>pkg_id_list})
     end
 
     def add_errata errata_unit_id_list
       previous = self.environmental_instances.in_environment(self.environment.prior).first
-      Runcible::Extensions::Repository.errata_copy(previous.pulp_id, self.pulp_id, {:errata_ids=>errata_unit_id_list})
+      Runcible::Extensions::Errata.copy(previous.pulp_id, self.pulp_id, {:ids=>errata_unit_id_list})
     end
 
     def add_distribution distribution_id
       previous = self.environmental_instances.in_environment(self.environment.prior).first
-      Runcible::Extensions::Repository.distribution_copy(previous.pulp_id, self.pulp_id, {:errata_ids=>[distribution_id]})
+      Runcible::Extensions::Distribution.copy(previous.pulp_id, self.pulp_id, {:ids=>[distribution_id]})
     end
 
     def delete_packages package_id_list
-      Runcible::Extensions::Repository.rpm_remove self.pulp_id,  package_id_list
+      Runcible::Extensions::Rpm.unassociate_unit_ids_from_repo(self.pulp_id,  package_id_list)
     end
 
     def delete_errata errata_id_list
-      Runcible::Extensions::Repository.errata_remove self.pulp_id,  errata_id_list
+      Runcible::Extensions::Errata.unassociate_ids_from_repo(self.pulp_id,  errata_id_list)
     end
 
     def delete_distribution distribution_id
-      Runcible::Extensions::Repository.distribution_remove(self.pulp_id, distribution_id)
+      Runcible::Extensions::Distribution.unassociate_ids_from_repo(self.pulp_id, [distribution_id])
     end
 
     def cancel_sync
