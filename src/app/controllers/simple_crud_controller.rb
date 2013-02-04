@@ -43,7 +43,7 @@ class SimpleCRUDController < ApplicationController
   end
 
   def new
-    render :partial => "new", :layout => "tupane_layout", :locals => { }
+    render :partial => "new", :locals => { }
   end
 
   def create
@@ -58,7 +58,7 @@ class SimpleCRUDController < ApplicationController
 
 
   def edit
-    render :partial => "edit", :layout => "tupane_layout", :locals => { resource_name.to_sym => @resource, :accessor => "id", :editable => true}
+    render :partial => "edit", :locals => { resource_name.to_sym => @resource, :accessor => "id", :editable => true}
   end
 
   def update
