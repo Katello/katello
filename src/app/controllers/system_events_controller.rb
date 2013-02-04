@@ -31,7 +31,7 @@ class SystemEventsController < ApplicationController
   end
 
   def index
-    render :partial=>"events", :layout => "tupane_layout", :locals=>{:system => @system, :tasks => tasks}
+    render :partial=>"events", :locals=>{:system => @system, :tasks => tasks}
   end
 
   def show
@@ -44,8 +44,8 @@ class SystemEventsController < ApplicationController
     else
       user_message = task_template[:english_name]
     end
-    render :partial=>"details", :layout => "tupane_layout", :locals=>{:type => type, :user_message => user_message,
-                                                                      :system => @system, :task =>task}
+    render :partial=>"details", :locals=>{:type => type, :user_message => user_message,
+                                          :system => @system, :task =>task}
   end
 
   def status
