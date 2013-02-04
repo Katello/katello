@@ -339,8 +339,8 @@ class User < ActiveRecord::Base
   end
 
   # returns the set of users who have kt_environment_id's environment set as their default
-  def self.find_by_default_environment(kt_environment_id)
-    User.where(:default_environment_id => kt_environment_id)
+  def self.with_default_environment(kt_environment_id)
+    where(:default_environment_id => kt_environment_id)
   end
 
   def create_or_update_search_history(path, search_params)
