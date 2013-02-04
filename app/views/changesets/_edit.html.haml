@@ -77,7 +77,4 @@
                     :locals=>{:items=>@changeset.distributions.where(:product_id=>prod.id).collect{|i| i.display_name},
                     :type_string=>_("Distributions")}
 
-
-
-
-
+= render :template => "layouts/tupane_layout"

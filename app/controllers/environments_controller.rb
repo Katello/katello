@@ -51,7 +51,7 @@ class EnvironmentsController < ApplicationController
   def new
     @environment = KTEnvironment.new(:organization => @organization)
     setup_new_edit_screen
-    render :partial=>"new", :layout => "tupane_layout"
+    render :partial=>"new",
   end
 
 
@@ -64,7 +64,7 @@ class EnvironmentsController < ApplicationController
     @env_labels_json = ActiveSupport::JSON.encode(env_labels)
 
     @selected = @environment.prior.nil? ? env_labels[""] : env_labels[@environment.prior.id]
-    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:editable=> @organization.environments_manageable?}
+    render :partial=>"edit", :locals=>{:editable=> @organization.environments_manageable?}
   end
 
   # POST /environments

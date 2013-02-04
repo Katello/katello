@@ -65,7 +65,7 @@ class ProvidersController < ApplicationController
 
   def products_repos
     @products = @provider.products
-    render :partial => "products_repos", :layout => "tupane_layout", :locals => {:provider => @provider,
+    render :partial => "products_repos", :locals => {:provider => @provider,
                                          :providers => @providers, :products => @products, :editable=>@provider.editable?,
                                          :repositories_cloned_in_envrs=>repositories_cloned_in_envrs}
   end
@@ -105,14 +105,14 @@ class ProvidersController < ApplicationController
   end
 
   def edit
-    render :partial => "edit", :layout => "tupane_layout", :locals => {:provider => @provider, :editable=>@provider.editable?,
+    render :partial => "edit", :locals => {:provider => @provider, :editable=>@provider.editable?,
                                                                        :repositories_cloned_in_envrs=>repositories_cloned_in_envrs,
                                                                        :name=>controller_display_name}
   end
 
   def new
     @provider = Provider.new
-    render :partial => "new", :layout => "tupane_layout", :locals => {:provider => @provider}
+    render :partial => "new", :locals => {:provider => @provider}
   end
 
   def create
@@ -161,7 +161,7 @@ class ProvidersController < ApplicationController
 
   def repo_discovery
     running = @provider.discovery_task.nil? ? false : !@provider.discovery_task.finished?
-    render :partial=>'repo_discovery', :layout => "tupane_layout",
+    render :partial=>'repo_discovery',
            :locals => {:provider => @provider, :discovered=>get_discovered_urls,
               :running=>running,
               :repositories_cloned_in_envrs=>repositories_cloned_in_envrs}
@@ -174,7 +174,7 @@ class ProvidersController < ApplicationController
 
   def new_discovered_repos
     urls = params[:urls] || []
-    render :partial=>'new_discovered_repos', :layout => "tupane_layout", :locals=>{:urls=>urls}
+    render :partial=>'new_discovered_repos', :locals=>{:urls=>urls}
   end
 
   def cancel_discovery

@@ -36,7 +36,7 @@ class SystemGroupErrataController < ApplicationController
 
   def index
     offset = current_user.page_size
-    render :partial=>"system_groups/errata/index", :layout => "tupane_layout",
+    render :partial=>"system_groups/errata/index",
            :locals=>{:system=>@group, :editable => @group.systems_editable?, :offset => offset}
   end
 

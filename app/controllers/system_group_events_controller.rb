@@ -31,7 +31,7 @@ class SystemGroupEventsController < ApplicationController
   end
 
   def index
-    render :partial=>'system_groups/events/index', :layout => 'tupane_layout', :locals=>{:group => @group, :jobs => jobs}
+    render :partial=>'system_groups/events/index', :locals=>{:group => @group, :jobs => jobs}
   end
 
   def show
@@ -39,7 +39,7 @@ class SystemGroupEventsController < ApplicationController
     if job.nil?
       render :nothing => true
     else
-      render :partial=>'system_groups/events/show', :layout => 'tupane_layout',
+      render :partial=>'system_groups/events/show',
              :locals=>{:group => @group, :job =>job}
     end
   end
