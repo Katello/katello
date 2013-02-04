@@ -52,7 +52,7 @@ module AuthorizationRules
       bad_params = check_hash_params(rule, params)
     end
     return true if bad_params.empty?
-    raise Errors::BadParameters.new(bad_params, params)
+    raise Errors::UnprocessableEntity.new(bad_params, params)
   end
 
   def check_hash_params(rule, params)

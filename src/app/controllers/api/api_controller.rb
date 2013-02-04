@@ -38,6 +38,7 @@ class Api::ApiController < ActionController::Base
   rescue_from HttpErrors::NotFound, :with => proc { |e| render_wrapped_exception(404, e) }
   rescue_from HttpErrors::BadRequest, :with => proc { |e| render_wrapped_exception(400, e) }
   rescue_from HttpErrors::Conflict, :with => proc { |e| render_wrapped_exception(409, e) }
+  rescue_from HttpErrors::UnprocessableEntity, :with => proc { |e| render_wrapped_exception(422, e) }
 
   rescue_from(Errors::SecurityViolation, :with => proc do |e|
     logger.warn pp_exception(e, :with_body => false, :with_backtrace => false)
