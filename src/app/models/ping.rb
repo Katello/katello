@@ -41,22 +41,22 @@ class Ping
           :pulp_auth => {},
           :candlepin_auth => {},
           :katello_jobs => {},
-          :foreman_auth => {},
+          :foreman_auth => {}
         }}
       else
         result = { :result => OK_RETURN_CODE, :status => {
           :candlepin => {},
           :elasticsearch => {},
           :candlepin_auth => {},
-          :katello_jobs => {}
+          :katello_jobs => {},
+          :thumbslug => {}
         }}
       end
 
       # pulp - ping without oauth
       if Katello.config.katello?
-        url = Katello.config.pulp.url
         exception_watch(result[:status][:pulp]) do
-          RestClient.get "#{url}/services/status/"
+          Ping.pulp_without_oauth
         end
       end
 
@@ -72,10 +72,23 @@ class Ping
         RestClient.get "#{url}/_status"
       end
 
+      # thumbslug - ping without authentication
+      unless Katello.config.katello?
+        url = Katello.config.thumbslug_url
+        exception_watch(result[:status][:thumbslug]) do
+          begin
+            RestClient.get "#{url}/ping"
+          rescue OpenSSL::SSL::SSLError
+            # We want to see this error, because it means that Thumbslug
+            # is running and refused our (non-existent) ssl cert.
+          end
+        end
+      end
+
       # pulp - ping with oauth
       if Katello.config.katello?
         exception_watch(result[:status][:pulp_auth]) do
-          Resources::Pulp::PulpPing.ping
+          Runcible::Resources::User.retrieve_all
         end
       end
 
@@ -85,13 +98,15 @@ class Ping
       end
 
       # foreman - ping with oauth
-      exception_watch(result[:status][:foreman_auth]) do
-        Resources::Foreman::Home.status({}, Resources::ForemanModel.header)
+      if Katello.config.katello?
+        exception_watch(result[:status][:foreman_auth]) do
+          Resources::Foreman::Home.status({}, Resources::ForemanModel.header)
+        end
       end
 
       # katello jobs - TODO we should not spawn processes
       exception_watch(result[:status][:katello_jobs]) do
-        raise _("katello-jobs service not running") if !system("/sbin/service katello-jobs status")
+        raise _("katello-jobs service not running") unless system("/sbin/service katello-jobs status")
       end
 
       # set overall status result code
@@ -118,6 +133,24 @@ class Ping
       names = PACKAGES.join("|")
       packages = `rpm -qa | egrep "#{names}"`
       packages.split("\n").sort
+    end
+
+
+    # this checks Pulp is running and responding without need
+    # for authentication. We don't use RestClient.options here
+    # because it returns empty string, which is not enough to say
+    # pulp is the one that responded
+    def pulp_without_oauth
+      url = Katello.config.pulp.url
+      uri = URI("#{url}/repositories/")
+      http = Net::HTTP.new(uri.host, uri.port)
+      if uri.scheme == "https"
+        http.use_ssl = true
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      end
+      unless http.options(uri.path).content_length > 0
+        raise _("Pulp not running")
+      end
     end
   end
 end

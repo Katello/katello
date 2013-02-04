@@ -58,10 +58,8 @@ class Info(PackageGroupAction):
 
         group = self.api.packagegroup_by_id(repoid, groupid)
         if group == None:
-            system_exit(os.EX_DATAERR, _("Package group [%s] not found in repo [%s]") % (groupid, repoid))
-
-        group['conditional_package_names'] = [name+": "+required_package  \
-            for name, required_package in group['conditional_package_names'].items()]
+            system_exit(os.EX_DATAERR, _("Package group [%(groupid)s] not found in repo [%(repoid)s]") \
+                % {'groupid':groupid, 'repoid':repoid})
 
         self.printer.set_header(_("Package Group Information"))
         batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")})
@@ -121,7 +119,8 @@ class CategoryInfo(PackageGroupAction):
         category = self.api.packagegroupcategory_by_id(repoid, categoryId)
 
         if category == None:
-            system_exit(os.EX_DATAERR, _("Package group category [%s] not found in repo [%s]") % (categoryId, repoid))
+            system_exit(os.EX_DATAERR, _("Package group category [%(categoryId)s] not found in repo [%(repoid)s]") \
+                % {'categoryId':categoryId, 'repoid':repoid})
 
         self.printer.set_header(_("Package Group Category Information"))
         batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, \

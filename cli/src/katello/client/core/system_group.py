@@ -125,8 +125,9 @@ class Copy(SystemGroupAction):
         new_system_group = self.api.copy(org_name, source_system_group["id"], new_name, description, max_systems)
 
         test_record(new_system_group,
-            _("Successfully copied system group [ %s ] to [ %s ]") %
-                       (source_system_group['name'], new_system_group['name']),
+            _("Successfully copied system group [ %(source_system_group_name)s ] to [ %(new_system_group_name)s ]") % \
+                {'source_system_group_name':source_system_group['name'], \
+                'new_system_group_name':new_system_group['name']},
             _("Could not create system group [ %s ]") % new_name
         )
 
@@ -154,6 +155,7 @@ class Info(SystemGroupAction):
         self.printer.add_column('id', _("ID"))
         self.printer.add_column('name', _("Name"))
         self.printer.add_column('description', _("Description"), multiline=True)
+        self.printer.add_column('max_systems', _("Max Systems"))
         self.printer.add_column('total_systems', _("Total Systems"))
 
         self.printer.print_item(system_group)
@@ -225,7 +227,8 @@ class HistoryTasks(SystemGroupAction):
         # get list of jobs
         history = self.api.system_group_history(org_name, system_group['id'], job_id)
         if history == None:
-            print >> sys.stderr, _("Could not find job [ %s ] for system group [ %s ]") % (job_id, system_group_name)
+            print >> sys.stderr, _("Could not find job [ %(job_id)s ] for system group [ %(system_group_name)s ]") \
+                % {'job_id':job_id, 'system_group_name':system_group_name}
             return os.EX_DATAERR
 
         tasks = history['tasks']
@@ -325,8 +328,8 @@ class Systems(SystemGroupAction):
         if systems is None:
             return os.EX_DATAERR
 
-        self.printer.set_header(_("Systems within System Group [ %s ] For Org [ %s ]") %
-            (system_group["name"], org_name))
+        self.printer.set_header(_("Systems within System Group [ %(system_group_name)s ] For Org [ %(org_name)s ]") %
+            {'system_group_name':system_group["name"], 'org_name':org_name})
         self.printer.add_column('id', _("ID"))
         self.printer.add_column('name', _("Name"))
         self.printer.print_items(systems)

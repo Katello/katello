@@ -93,10 +93,16 @@ module Password
     decrypted
   end
 
-  if defined?(Rails) and Rails.env.test?
-    PASSWORD_ROUNDS = 1
-  else
-    PASSWORD_ROUNDS = 500
+  # this option is intended for altering the behaviour
+  # of hashin (such as faster passowrd hashing when running tests)
+  # should be used with caution (setting to 1 in testing environment
+  # is probably the only reasonable usage)
+  def Password.password_rounds=(value)
+    @password_rounds = value
+  end
+
+  def Password.password_rounds
+    @password_rounds || 500
   end
 
   # Generates a psuedo-random 64 character string
@@ -107,7 +113,7 @@ module Password
   # Generates a 128 character hash
   def Password.hash(password, salt)
     digest = "#{password}:#{salt}"
-    PASSWORD_ROUNDS.times { digest = Digest::SHA512.hexdigest(digest) }
+    password_rounds.times { digest = Digest::SHA512.hexdigest(digest) }
     digest
   end
 

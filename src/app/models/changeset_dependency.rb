@@ -12,7 +12,6 @@
 
 
 class ChangesetDependency < ActiveRecord::Base
-  include Authorization
 
   belongs_to :changeset, :inverse_of=>:dependencies
   belongs_to :product

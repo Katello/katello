@@ -11,31 +11,25 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class SystemGroup < ActiveRecord::Base
+  include Hooks
+  define_hooks :add_system_hook, :remove_system_hook
 
+  include Authorization::SystemGroup
   include Glue::Pulp::ConsumerGroup if (Katello.config.use_pulp)
+  include Glue::ElasticSearch::SystemGroup if Katello.config.use_elasticsearch
   include Glue
-  include Authorization
-  include IndexedModel
 
-  index_options :extended_json=>:extended_index_attrs,
-                :json=>{:only=>[:id, :organization_id, :name, :description, :max_systems]},
-                :display_attrs=>[:name, :description, :system]
-
-  mapping do
-    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :description, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :name_sort, :type => 'string', :index => :not_analyzed
-    indexes :name_autocomplete, :type=>'string', :analyzer=>'autcomplete_name_analyzer'
-  end
-
-  update_related_indexes :systems, :name
+  include Authorization::SystemGroup
+  include Ext::PermissionTagCleanup
 
   has_many :key_system_groups, :dependent => :destroy
   has_many :activation_keys, :through => :key_system_groups
 
   has_many :system_system_groups, :dependent => :destroy
-  has_many :systems, {:through => :system_system_groups, :before_add => :add_pulp_consumer_group,
-           :before_remove => :remove_pulp_consumer_group}.merge(update_association_indexes)
+  has_many :systems, {:through      => :system_system_groups,
+                      :after_add    => :add_system,
+                      :after_remove => :remove_system
+                     }
 
   has_many :jobs, :as => :job_owner
 
@@ -51,11 +45,12 @@ class SystemGroup < ActiveRecord::Base
   before_save :save_system_environments
 
   validates :pulp_id, :presence => true
-  validates :name, :presence => true, :katello_name_format => true
+  validates :name, :presence => true
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_presence_of :organization_id, :message => N_("Organization cannot be blank.")
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
   validates_uniqueness_of :pulp_id, :message=> N_("must be unique.")
-  validates :description, :katello_description_format => true
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
 
   alias_attribute :system_limit, :max_systems
   UNLIMITED_SYSTEMS = -1
@@ -75,87 +70,17 @@ class SystemGroup < ActiveRecord::Base
   belongs_to :organization
 
   before_validation(:on=>:create) do
-    self.pulp_id ||= "#{self.organization.label}-#{self.name}-#{SecureRandom.hex(4)}"
+    self.pulp_id ||= "#{self.organization.label}-#{Katello::ModelUtils::labelize(self.name)}-#{SecureRandom.hex(4)}"
   end
 
   default_scope :order => 'name ASC'
 
-  scope :readable, lambda { |org|
-    items(org, READ_PERM_VERBS)
-  }
-  scope :editable, lambda { |org|
-    items(org, [:update])
-  }
-  scope :systems_readable, lambda{|org|
-      SystemGroup.items(org, SYSTEM_READ_PERMS)
-  }
-
-  scope :systems_editable, lambda{|org|
-      SystemGroup.items(org, [:update_systems])
-  }
-
-  scope :systems_deletable, lambda{|org|
-      SystemGroup.items(org, [:delete_systems])
-  }
-
-  def self.creatable? org
-    User.allowed_to?([:create], :system_groups, nil, org)
+  def add_system(system)
+    run_hook(:add_system_hook, system)
   end
 
-  def self.any_readable? org
-    User.allowed_to?(READ_PERM_VERBS, :system_groups, nil, org)
-  end
-
-  def systems_readable?
-    User.allowed_to?(SYSTEM_READ_PERMS, :system_groups, self.id, self.organization)
-  end
-
-  def systems_deletable?
-    User.allowed_to?([:delete_systems], :system_groups, self.id, self.organization)
-  end
-
-  def systems_editable?
-    User.allowed_to?([:update_systems], :system_groups, self.id, self.organization)
-  end
-
-  def readable?
-    User.allowed_to?(READ_PERM_VERBS, :system_groups, self.id, self.organization)
-  end
-
-  def editable?
-    User.allowed_to?([:update, :create], :system_groups, self.id, self.organization)
-  end
-
-  def deletable?
-    User.allowed_to?([:delete, :create], :system_groups, self.id, self.organization)
-  end
-
-  def self.list_tags org_id
-    SystemGroup.select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
-  end
-
-  def self.tags(ids)
-    select('id,name').where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
-  end
-
-  def self.list_verbs  global = false
-    {
-       :create => _("Administer System Groups"),
-       :read => _("Read System Group"),
-       :update => _("Modify System Group details and system membership"),
-       :delete => _("Delete System Group"),
-       :read_systems => _("Read Systems in System Group"),
-       :update_systems => _("Modify Systems in System Group"),
-       :delete_systems => _("Delete Systems in System Group")
-    }.with_indifferent_access
-  end
-
-  def self.read_verbs
-    [:read]
-  end
-
-  def self.no_tag_verbs
-    [:create]
+  def remove_system(system)
+    run_hook(:remove_system_hook, system)
   end
 
   def install_packages packages
@@ -205,12 +130,6 @@ class SystemGroup < ActiveRecord::Base
     Job.refresh_for_owner(self)
   end
 
-  def extended_index_attrs
-    {:name_sort=>name.downcase, :name_autocomplete=>self.name,
-     :system=>self.systems.collect{|s| s.name}
-    }
-  end
-
   def environments
     @cached_environments ||= db_environments.all #.all to ensure we don't refer to the AR relation
   end
@@ -247,13 +166,13 @@ class SystemGroup < ActiveRecord::Base
       group.systems.each do |system|
         system.errata.each do |erratum|
           case erratum.type
-            when Glue::Pulp::Errata::SECURITY
+            when Errata::SECURITY
               # there is a critical errata, so stop searching...
               group_state = :critical
               break
 
-            when Glue::Pulp::Errata::BUGZILLA
-            when Glue::Pulp::Errata::ENHANCEMENT
+            when Errata::BUGZILLA
+            when Errata::ENHANCEMENT
               # set state to warning, but continue searching...
               group_state = :warning
           end
@@ -293,31 +212,10 @@ class SystemGroup < ActiveRecord::Base
     end
   end
 
-  def add_pulp_consumer_group record
-    self.add_consumers([record.uuid])
-  end
-
-  def remove_pulp_consumer_group record
-    self.del_consumers([record.uuid])
-  end
-
   def save_job pulp_job, job_type, parameters_type, parameters
     job = Job.create!(:pulp_id => pulp_job[:id], :job_owner => self)
     job.create_tasks(self, pulp_job[:tasks], job_type, parameters_type => parameters)
     job
   end
-
-  def self.items org, verbs
-    raise "scope requires an organization" if org.nil?
-    resource = :system_groups
-    if User.allowed_all_tags?(verbs, resource, org)
-       where(:organization_id => org)
-    else
-      where("system_groups.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
-    end
-  end
-
-  READ_PERM_VERBS = SystemGroup.list_verbs.keys
-  SYSTEM_READ_PERMS = [:read_systems, :update_systems, :delete_systems]
 
 end

@@ -246,6 +246,12 @@ module Katello
         env      = environment ? "'#{environment}' environment" : 'early configuration'
         "Key: '#{key_path}' in #{env} #{message}"
       end
+
+      def is_not_empty(key)
+        if config[key].nil? || config[key].empty?
+          raise error_format(key.to_sym, "must not be empty")
+        end
+      end
     end
 
     # processes configuration loading from config_files
@@ -321,6 +327,10 @@ module Katello
         config[:use_cp] = true if config[:use_cp].nil?
         config[:use_pulp] = config.katello? if config[:use_pulp].nil?
         config[:use_foreman] = config.katello? if config[:use_foreman].nil?
+        config[:use_elasticsearch] = config.katello? if config[:use_elasticsearch].nil?
+
+        config[:email_reply_address] = config[:email_reply_address] ?
+            config[:email_reply_address] : "no-reply@"+config[:host]
 
         load_version config
       end
@@ -358,7 +368,7 @@ module Katello
                     cloud_forms use_pulp cdn_proxy use_ssl warden katello? url_prefix foreman
                     search use_foreman password_reset_expiration redhat_repository_url port
                     elastic_url rest_client_timeout elastic_index allow_roles_logging
-                    katello_version pulp tire_log log_level log_level_sql)
+                    katello_version pulp tire_log log_level log_level_sql email_reply_address)
 
       has_values :app_mode, %w(katello headpin)
       has_values :url_prefix, %w(/headpin /sam /cfse /katello)
@@ -367,7 +377,11 @@ module Katello
       has_values :log_level, log_levels
       has_values :log_level_sql, log_levels
 
-      are_booleans :use_cp, :use_foreman, :use_pulp, :use_ssl, :ldap_roles, :debug_rest,
+      unless config.katello?
+        is_not_empty :thumbslug_url
+      end
+
+      are_booleans :use_cp, :use_foreman, :use_pulp, :use_elasticsearch, :use_ssl, :ldap_roles, :debug_rest,
                    :debug_cp_proxy, :debug_pulp_proxy, :logical_insight
 
       if !early? && environment != :build

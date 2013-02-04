@@ -4,6 +4,7 @@
     %td
       -#= check_box_tag "product[#{pid}]", '', '', :disabled=>!@sproducts.include?(prod)
       #{child[:name]}
+      = _('(no repositories available)') if child[:item][:children].empty?
 - elsif child[:type] == "repository"
   - repo = child[:item]
   %tr{:class=>child[:class], :id=>child[:id], "data-product_id="=>repo.product.id, "data-id"=>repo.id}

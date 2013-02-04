@@ -17,6 +17,8 @@ describe DistributionsController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
   include AuthorizationHelperMethods
+  include ProductHelperMethods
+  include RepositoryHelperMethods
 
   let(:distribution_id) { RepoTestData.repo_distributions["id"] }
   let(:distribution) { [RepoTestData.repo_distributions] }
@@ -26,27 +28,13 @@ describe DistributionsController, :katello => true do
     set_default_locale
 
     disable_org_orchestration
-    disable_product_orchestration
     disable_user_orchestration
-    disable_repo_orchestration
 
     @organization = new_test_org
-    @provider = Provider.create!(:name => "provider",
-                                 :provider_type => Provider::CUSTOM,
-                                 :organization => @organization,
-                                 :repository_url => "https://localhost")
-    @product = Product.create!(:name=>"prod", :label=> "prod",
-                               :provider => @provider,
-                               :environments => [@organization.library])
-    @product.stub(:repos).and_return([@repository])
-
+    @env = @organization.library
+    @product = new_test_product(@organization, @env)
     ep_library = EnvironmentProduct.find_or_create(@organization.library, @product)
-    @repo = Repository.create!(:environment_product => ep_library,
-                               :name=> "repo",
-                               :label => "repo_label",
-                               :relative_path => "#{@organization.name}/Library/prod/repo",
-                               :pulp_id=> "1",
-                               :enabled => true)
+    @repo = new_test_repo(ep_library, "repo", "#{@organization.name}/Library/prod/repo")
     Repository.stub(:find).and_return(@repo)
     Glue::Pulp::Distribution.stub(:find).and_return([])
   end

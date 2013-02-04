@@ -14,17 +14,9 @@ require 'util/package_util'
 require 'active_support/builder' unless defined?(Builder)
 require 'mapping'
 
-class ParentTemplateValidator < ActiveModel::Validator
-  def validate(record)
-    #check if the parent is from
-    if not record.parent.nil?
-      record.errors[:parent] << _("Template can have parent templates only from the same environment") if record.environment_id != record.parent.environment_id
-    end
-  end
-end
-
 class SystemTemplate < ActiveRecord::Base
-  #include Authorization
+
+  include Authorization::SystemTemplate
   include LazyAccessor
   include AsyncOrchestration
 
@@ -34,8 +26,8 @@ class SystemTemplate < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => :environment_id
   validates_length_of :name, :maximum => 255
-  validates_with ParentTemplateValidator
-  validates :description, :katello_description_format => true
+  validates_with Validators::ParentTemplateValidator
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_length_of :parameters_json, :maximum => 255
 
   belongs_to :parent, :class_name => "SystemTemplate"
@@ -372,40 +364,6 @@ end
     end.flatten(1)
   end
 
-
-  #### Permissions
-  def self.list_verbs global = false
-    {
-      :manage_all => _("Administer System Templates"),
-      :read_all => _("Read System Templates")
-   }.with_indifferent_access
-  end
-
-  def self.read_verbs
-    [:read_all]
-  end
-
-
-  def self.no_tag_verbs
-    SystemTemplate.list_verbs.keys
-  end
-
-  def self.any_readable? org
-    User.allowed_to?([:read_all, :manage_all], :system_templates, nil, org)
-
-  end
-
-  def self.readable? org
-    User.allowed_to?([:read_all, :manage_all], :system_templates, nil, org)
-  end
-
-  def self.manageable? org
-    User.allowed_to?([:manage_all], :system_templates, nil, org)
-  end
-
-  def readable?
-    self.class.readable?(self.environment.organization)
-  end
 
   def repos_to_be_promoted
     repos = self.repositories || []

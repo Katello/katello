@@ -40,7 +40,6 @@ from katello.client.core import (
   template,
   changeset,
   client,
-  filters,
   gpg_key,
   system_group,
   admin,
@@ -48,7 +47,9 @@ from katello.client.core import (
   config_template,
   domain,
   subnet,
-  smart_proxy
+  smart_proxy,
+  compute_resource,
+  hardware_model
 )
 
 def setup_admin(katello_cmd, mode=get_katello_mode()):
@@ -134,9 +135,6 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         prod_cmd.add_command('cancel_sync', product.CancelSync())
         prod_cmd.add_command('status', product.Status())
         prod_cmd.add_command('promote', product.Promote())
-        prod_cmd.add_command('list_filters', product.ListFilters())
-        prod_cmd.add_command('add_filter', product.AddRemoveFilter(True))
-        prod_cmd.add_command('remove_filter', product.AddRemoveFilter(False))
         prod_cmd.add_command('set_plan', product.SetSyncPlan())
         prod_cmd.add_command('remove_plan', product.RemoveSyncPlan())
     katello_cmd.add_command('product', prod_cmd)
@@ -156,9 +154,6 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         repo_cmd.add_command('cancel_sync', repo.CancelSync())
         repo_cmd.add_command('enable', repo.Enable(True))
         repo_cmd.add_command('disable', repo.Enable(False))
-        repo_cmd.add_command('list_filters', repo.ListFilters())
-        repo_cmd.add_command('add_filter', repo.AddRemoveFilter(True))
-        repo_cmd.add_command('remove_filter', repo.AddRemoveFilter(False))
         katello_cmd.add_command('repo', repo_cmd)
 
     if mode == 'katello':
@@ -287,17 +282,6 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
     katello_cmd.add_command('client', client_cmd)
 
     if mode == 'katello':
-        filter_cmd = filters.Filter()
-        filter_cmd.add_command('create', filters.Create())
-        filter_cmd.add_command('update', filters.Update())
-        filter_cmd.add_command('list', filters.List())
-        filter_cmd.add_command('info', filters.Info())
-        filter_cmd.add_command('delete', filters.Delete())
-        filter_cmd.add_command('add_package', filters.AddPackage())
-        filter_cmd.add_command('remove_package', filters.RemovePackage())
-        katello_cmd.add_command('filter', filter_cmd)
-
-    if mode == 'katello':
         gpgkey_cmd = gpg_key.GpgKey()
         gpgkey_cmd.add_command('create', gpg_key.Create())
         gpgkey_cmd.add_command('info', gpg_key.Info())
@@ -357,3 +341,20 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         subnet_cmd.add_command('delete', subnet.Delete())
         katello_cmd.add_command('subnet', subnet_cmd)
 
+    if mode == 'katello':
+        resource_cmd = compute_resource.ComputeResource()
+        resource_cmd.add_command('list', compute_resource.List())
+        resource_cmd.add_command('info', compute_resource.Info())
+        resource_cmd.add_command('create', compute_resource.Create())
+        resource_cmd.add_command('update', compute_resource.Update())
+        resource_cmd.add_command('delete', compute_resource.Delete())
+        katello_cmd.add_command('compute_resource', resource_cmd)
+
+    if mode == 'katello':
+        hardware_model_cmd = hardware_model.HardwareModel()
+        hardware_model_cmd.add_command('list', hardware_model.List())
+        hardware_model_cmd.add_command('info', hardware_model.Info())
+        hardware_model_cmd.add_command('create', hardware_model.Create())
+        hardware_model_cmd.add_command('update', hardware_model.Update())
+        hardware_model_cmd.add_command('delete', hardware_model.Delete())
+        katello_cmd.add_command('hw_model', hardware_model_cmd)

@@ -218,7 +218,7 @@ class SystemGroupsController < ApplicationController
     end
     render :json=>groups.map{|s| {:label=>s.name, :value=>s.name, :id=>s.id}}
   rescue Tire::Search::SearchRequestFailed => e
-    render :json=>Support.array_with_total
+    render :json=>Util::Support.array_with_total
   end
 
   def controller_display_name

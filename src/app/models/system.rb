@@ -11,75 +11,18 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class NonLibraryEnvironmentValidator < ActiveModel::EachValidator
-  def validate_each(record, attribute, value)
-    return unless value
-    record.errors[attribute] << N_("Cannot register a system to the '%s' environment") % "Library" if record.environment != nil && record.environment.library?
-  end
-end
-
 class System < ActiveRecord::Base
-  include Glue::Candlepin::Consumer
-  include Glue::Pulp::Consumer if Katello.config.katello?
-  include Glue
-  include Authorization
+  include Hooks
+  define_hooks :add_system_group_hook, :remove_system_group_hook
+
+  include Glue::Candlepin::Consumer if Katello.config.use_cp
+  include Glue::Pulp::Consumer if Katello.config.use_pulp
+  include Glue if Katello.config.use_cp ||  Katello.config.use_pulp
+  include Glue::ElasticSearch::System if Katello.config.use_elasticsearch
+  include Authorization::System
   include AsyncOrchestration
-  include IndexedModel
 
   after_rollback :rollback_on_create, :on => :create
-
-  index_options :extended_json=>:extended_index_attrs,
-                :json=>{:only=> [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id, :memory, :sockets]},
-                :display_attrs => [:name,
-                                   :description,
-                                   :id,
-                                   :uuid,
-                                   :created_at,
-                                   :lastCheckin,
-                                   :system_group,
-                                   :installed_products,
-                                   "custom_info.KEYNAME",
-                                   :memory,
-                                   :sockets]
-
-  dynamic_templates = [
-      {
-        "fact_string" => {
-          :path_match => "facts.*",
-          :mapping => {
-              :type => "string",
-              :analyzer => "kt_name_analyzer"
-          }
-        }
-      },
-      {
-        "custom_info_string" => {
-          :path_match => "custom_info.*",
-          :mapping => {
-              :type => "string",
-              :analyzer => "kt_name_analyzer"
-          }
-        }
-      }
-  ]
-
-  mapping   :dynamic_templates => dynamic_templates do
-    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :description, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :name_sort, :type => 'string', :index => :not_analyzed
-    indexes :lastCheckin, :type=>'date'
-    indexes :name_autocomplete, :type=>'string', :analyzer=>'autcomplete_name_analyzer'
-    indexes :installed_products, :type=>'string', :analyzer=>:kt_name_analyzer
-    indexes :memory, :type => 'integer'
-    indexes :sockets, :type => 'integer'
-    indexes :facts, :path=>"just_name" do
-    end
-    indexes :custom_info, :path => "just_name" do
-    end
-
-  end
-
-  update_related_indexes :system_groups, :name
 
   acts_as_reportable
 
@@ -87,19 +30,21 @@ class System < ActiveRecord::Base
   belongs_to :system_template
 
   has_many :task_statuses, :as => :task_owner, :dependent => :destroy
-
   has_many :system_activation_keys, :dependent => :destroy
   has_many :activation_keys, :through => :system_activation_keys
-
   has_many :system_system_groups, :dependent => :destroy
-  has_many :system_groups, {:through => :system_system_groups, :before_add => :add_pulp_consumer_group, :before_remove => :remove_pulp_consumer_group}.merge(update_association_indexes)
-
+  has_many :system_groups, {:through      => :system_system_groups,
+                            :after_add    => :add_system_group,
+                            :after_remove => :remove_system_group
+                           }
   has_many :custom_info, :as => :informable, :dependent => :destroy
 
-  validates :environment, :presence => true, :non_library_environment => true
+  validates :environment, :presence => true
+  validates_with Validators::NonLibraryEnvironmentValidator, :attributes => :environment
   # multiple systems with a single name are supported
-  validates :name, :presence => true, :no_trailing_space => true
-  validates :description, :katello_description_format => true
+  validates :name, :presence => true
+  validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_length_of :location, :maximum => 255
   validates :sockets, :numericality => { :only_integer => true, :greater_than => 0 },
             :allow_nil => true, :if => ("validation_context == :create || validation_context == :update")
@@ -111,6 +56,14 @@ class System < ActiveRecord::Base
 
   scope :by_env, lambda { |env| where('environment_id = ?', env) unless env.nil?}
   scope :completer_scope, lambda { |options| readable(options[:organization_id])}
+
+  def add_system_group(system_group)
+    run_hook(:add_system_group_hook, system_group)
+  end
+
+  def remove_system_group(system_group)
+    run_hook(:remove_system_group_hook, system_group)
+  end
 
   class << self
     def architectures
@@ -209,21 +162,18 @@ class System < ActiveRecord::Base
     task_status = save_task_status(pulp_task, :errata_install, :errata_ids, errata_ids)
   end
 
-  # returns list of virtual permission tags for the current user
-  def self.list_tags
-    select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
-  end
-
   def as_json(options)
     json = super(options)
     json['environment'] = environment.as_json unless environment.nil?
     json['activation_key'] = activation_keys.as_json unless activation_keys.nil?
     json['template'] = system_template.as_json unless system_template.nil?
-    json['ipv4_address'] = facts.try(:[], 'network.ipv4_address')
-    if self.guest == 'true'
-      json['host'] = self.host.attributes if self.host
-    else
-      json['guests'] = self.guests.map(&:attributes)
+    json['ipv4_address'] = facts.try(:[], 'network.ipv4_address') if respond_to?(:facts)
+    if respond_to?(:guest)
+      if self.guest == 'true'
+        json['host'] = self.host.attributes if self.host
+      else
+        json['guests'] = self.guests.map(&:attributes)
+      end
     end
     json
   end
@@ -234,79 +184,8 @@ class System < ActiveRecord::Base
     end
   end
 
-  def self.any_readable? org
-    org.systems_readable? ||
-        KTEnvironment.systems_readable(org).count > 0 ||
-        SystemGroup.systems_readable(org).count > 0
-  end
-
-  def self.readable org
-      raise "scope requires an organization" if org.nil?
-      if org.systems_readable?
-         where(:environment_id => org.environment_ids) #list all systems in an org
-      else #just list for environments the user can access
-        where_clause = "systems.environment_id in (#{KTEnvironment.systems_readable(org).select(:id).to_sql})"
-        where_clause += " or "
-        where_clause += "system_system_groups.system_group_id in (#{SystemGroup.systems_readable(org).select(:id).to_sql})"
-        joins("left outer join system_system_groups on systems.id =
-                                    system_system_groups.system_id").where(where_clause)
-      end
-  end
-
-  def readable?
-    sg_readable = false
-    if Katello.config.katello?
-      sg_readable = !SystemGroup.systems_readable(self.organization).where(:id=>self.system_group_ids).empty?
-    end
-    environment.systems_readable? || sg_readable
-  end
-
-  def editable?
-    sg_editable = false
-    if Katello.config.katello?
-      sg_editable = !SystemGroup.systems_editable(self.organization).where(:id=>self.system_group_ids).empty?
-    end
-    environment.systems_editable? || sg_editable
-  end
-
-  def deletable?
-    sg_deletable = false
-    if Katello.config.katello?
-      sg_deletable = !SystemGroup.systems_deletable(self.organization).where(:id=>self.system_group_ids).empty?
-    end
-    environment.systems_deletable? || sg_deletable
-  end
-
-  #TODO these two functions are somewhat poorly written and need to be redone
-  def self.any_deletable? env, org
-    if env
-      env.systems_deletable? || org.system_groups.any?{|g| g.systems_deletable?}
-    else
-      org.systems_deletable? || org.system_groups.any?{|g| g.systems_deletable?}
-    end
-  end
-
-  def self.registerable? env, org
-    if env
-      env.systems_registerable?
-    else
-      org.systems_registerable?
-    end
-  end
-
   def tasks
     TaskStatus.refresh_for_system(self)
-  end
-
-  def extended_index_attrs
-    {:facts=>self.facts, :organization_id=>self.organization.id,
-     :name_sort=>name.downcase, :name_autocomplete=>self.name,
-     :system_group=>self.system_groups.collect{|g| g.name},
-     :system_group_ids=>self.system_group_ids,
-     :installed_products=>collect_installed_product_names,
-     :sockets => self.sockets,
-     :custom_info=>collect_custom_info
-    }
   end
 
   # A rollback occurred while attempting to create the system; therefore, perform necessary cleanup.
@@ -318,14 +197,6 @@ class System < ActiveRecord::Base
   end
 
   private
-    def add_pulp_consumer_group record
-      record.add_consumers([self.uuid])
-    end
-
-    def remove_pulp_consumer_group record
-      record.del_consumers([self.uuid])
-    end
-
     def save_task_status pulp_task, task_type, parameters_type, parameters
       TaskStatus.make(self, pulp_task, task_type, parameters_type => parameters)
     end

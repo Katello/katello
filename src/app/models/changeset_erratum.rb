@@ -11,32 +11,13 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 
-class ChangesetErratumValidator < ActiveModel::Validator
-  def validate(record)
-    record.errors[:base] << _("Erratum '%s' doesn't belong to the specified product!") %
-        record.errata_id and return if record.repositories.empty?
-
-    if record.changeset.action_type == Changeset::PROMOTION
-      record.errors[:base] << _("Repository of the erratum '%s' has not been promoted into the target environment!") %
-            record.errata_id and return if record.promotable_repositories.empty?
-
-      unfiltered_repositories = record.promotable_repositories.delete_if do |repo|
-        record.blocked_by_filters?((repo.filters + repo.product.filters).uniq)
-      end
-      record.errors[:base] << _("Filters assigned to repository or product of erratum '%s' block it from promotion!") %
-          record.errata_id and return if unfiltered_repositories.empty?
-    end
-  end
-end
-
 class ChangesetErratum < ActiveRecord::Base
-  include Authorization
 
   belongs_to :changeset, :inverse_of => :errata
   belongs_to :product
   validates :display_name, :length => { :maximum => 255 }
   validates :errata_id, :uniqueness => { :scope => :changeset_id }
-  validates_with ChangesetErratumValidator
+  validates_with Validators::ChangesetErratumValidator
 
   def repositories
     return @repos if not @repos.nil?
@@ -45,7 +26,7 @@ class ChangesetErratum < ActiveRecord::Base
     @repos   = []
 
     self.product.repos(from_env).each do |repo|
-      @repos << repo if repo.has_erratum? self.errata_id
+      @repos << repo if repo.has_erratum? self.display_name
     end
     @repos
   end
@@ -60,17 +41,6 @@ class ChangesetErratum < ActiveRecord::Base
     repos
   end
 
-  def blocked_by_filters? filters
-    package_filters = filters.map { |f| f.package_list }.flatten(1).uniq
-    package_filters.each do |filter|
-      re = Regexp.new(filter)
-      if erratum_pacakges.any? { |pack| re =~ pack["filename"] }
-        return true
-      end
-    end
-    return false
-  end
-
   # returns list of virtual permission tags for the current user
   def self.list_tags
     select('id,display_name').all.collect { |m| VirtualTag.new(m.id, m.display_name) }
@@ -78,7 +48,7 @@ class ChangesetErratum < ActiveRecord::Base
 
   private
   def erratum_pacakges
-    Glue::Pulp::Errata::find(self.errata_id).pkglist.map { |list| list["packages"] }.flatten(1).uniq
+    Errata::find(self.errata_id).pkglist.map { |list| list["packages"] }.flatten(1).uniq
   end
 
 end

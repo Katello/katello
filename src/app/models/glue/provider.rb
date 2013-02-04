@@ -202,14 +202,28 @@ module Glue::Provider
       Resources::Candlepin::Owner.imports self.organization.label
     end
 
+    # All products that had problem with repository creation in pulp
+    def failed_products
+      self.products.repositories_cdn_import_failed
+    end
+
+    # Returns text representation of failed products status
+    def failed_products_status
+      (s = failed_products.size) > 0 ? (_('%d products may have missing repositories') % s): _('OK')
+    end
+
     def queue_import_manifest zip_file_path, options
+      output        = StringIO.new
+      import_logger = Logger.new(output)
+      options.merge!(:import_logger => import_logger)
+      [Rails.logger, import_logger].each { |l| l.debug "Importing manifest for provider #{name}" }
+
       begin
-        Rails.logger.debug "Importing manifest for provider #{name}"
         pre_queue.create(:name     => "import manifest #{zip_file_path} for owner: #{self.organization.name}",
                          :priority => 3, :action => [self, :owner_import, zip_file_path, options],
                          :action_rollback => [self, :del_owner_import])
         pre_queue.create(:name     => "import of products in manifest #{zip_file_path}",
-                         :priority => 5, :action => [self, :import_products_from_cp])
+                         :priority => 5, :action => [self, :import_products_from_cp, options])
         self.save!
 
         if options[:notify]
@@ -220,9 +234,23 @@ module Glue::Provider
                     else
                       _("Subscription manifest uploaded successfully for provider '%s'.")
                     end
-          Notify.success message % self.name,
+          values = [self.name]
+          if self.failed_products.present?
+            message << _("There are %d products having repositories that could not be created.")
+            builder = Object.new.extend(ActionView::Helpers::UrlHelper, ActionView::Helpers::TagHelper)
+            path    = Katello.config.url_prefix + '/' + Rails.application.routes.url_helpers.refresh_products_providers_path(:id => self)
+            link    = builder.link_to(_('repository refresh'),
+                                      path,
+                                      :method => :put,
+                                      :remote => true)
+            message << _("You can run %s action to fix this. Note that it can take some time to complete." % link)
+            values.push self.failed_products.size
+          end
+          output.rewind
+          Notify.success message % values,
                          :request_type => 'providers__update_redhat_provider',
-                         :organization => self.organization
+                         :organization => self.organization,
+                         :details      => output.read
         end
       rescue => error
         if error.respond_to?(:response)
@@ -247,7 +275,8 @@ module Glue::Provider
       end
     end
 
-    def import_products_from_cp
+    def import_products_from_cp(options={ })
+      import_logger = options[:import_logger]
       product_in_katello_ids = self.organization.providers.redhat.first.products.pluck("cp_id")
       products_in_candlepin_ids = []
       Util::CdnVarSubstitutor.with_cache do
@@ -261,14 +290,23 @@ module Glue::Provider
           adjusted_eng_products = []
           added_eng_products.each do |product_attrs|
             begin
+              product_attrs.merge!(:import_logger => import_logger)
+
               Glue::Candlepin::Product.import_from_cp(product_attrs) do |p|
                 p.provider = self
                 p.environments << self.organization.library
               end
               adjusted_eng_products << product_attrs
+              if import_logger
+                import_logger.info "import of product '#{product_attrs["name"]}' from Candlepin OK"
+              end
             rescue Errors::SecurityViolation => e
               # Do not add non-accessible products
-              Rails.logger.info e
+              [Rails.logger, import_logger].each do |logger|
+                next if logger.nil?
+                logger.info "import of product '#{product_attrs["name"]}' from Candlepin failed"
+                import_logger.info e
+              end
             end
           end
 

@@ -22,8 +22,8 @@ module SystemHelperMethods
       Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
-      Resources::Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-      Resources::Pulp::Consumer.stub!(:update).and_return(true)
+      Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid})
+      Runcible::Extensions::Consumer.stub!(:update).and_return(true)
     new_test_org
   end
 
@@ -37,7 +37,7 @@ module SystemHelperMethods
 
   def pulp_task_without_error
     {
-      :id => '123',
+      :task_id => '123',
       :state => 'waiting',
       :start_time => Time.now,
       :finish_time => Time.now,
@@ -47,7 +47,7 @@ module SystemHelperMethods
 
   def updated_pulp_task
     {
-      :id => '123',
+      :task_id => '123',
       :state => 'finished',
       :start_time => Time.now,
       :finish_time => Time.now + 60,
@@ -57,7 +57,7 @@ module SystemHelperMethods
 
   def pulp_task_with_error
     {
-      :id => '123',
+      :task_id => '123',
       :state => 'error',
       :start_time => Time.now,
       :finish_time => Time.now,
@@ -69,8 +69,8 @@ module SystemHelperMethods
 
   def stub_consumer_packages_install(expected_response, refresh_response = nil)
     refresh_response ||= expected_response
-    Resources::Pulp::Consumer.stub!(:install_packages).and_return(expected_response)
-    Resources::Pulp::Task.stub!(:find).and_return([refresh_response])
+    Runcible::Extensions::Consumer.stub!(:install_content).and_return(expected_response)
+    Runcible::Resources::Task.stub!(:poll).and_return(refresh_response)
   end
 
 end

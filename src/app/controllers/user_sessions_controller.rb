@@ -17,6 +17,8 @@ class UserSessionsController < ApplicationController
   protect_from_forgery
 
   skip_before_filter :authorize # ok - need to skip all methods
+  skip_before_filter :check_deleted_org
+
   layout "user_session"
 
   def section_id
@@ -26,8 +28,8 @@ class UserSessionsController < ApplicationController
   def new
     if !request.env['HTTP_X_FORWARDED_USER'].blank?
       # if we received the X-Forwarded-User, the user must have logged in via SSO; therefore,
-      # attempt to authenticate and log the user in now versus requiring them to enter 
-      # credentials 
+      # attempt to authenticate and log the user in now versus requiring them to enter
+      # credentials
       login_user
     else
       @disable_password_recovery = Katello.config.warden == 'ldap'

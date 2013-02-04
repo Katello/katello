@@ -21,13 +21,13 @@ describe EnvironmentsController do
   module EnvControllerTest
     ENV_NAME = "environment_name"
     NEW_ENV_NAME = "another_environment_name"
-    
+
     ENVIRONMENT = {:id => 2, :name => ENV_NAME, :description => nil, :prior => nil, :path => []}
     LIBRARY = {:id => 1, :name => 'Library', :description => nil, :prior => nil, :path => [],
                :display_name => 'Library'}
     UPDATED_ENVIRONMENT = {:id => 3, :name => NEW_ENV_NAME, :description => nil, :prior => nil, :path => []}
     EMPTY_ENVIRONMENT = {:name => "", :description => "", :prior => nil, :display_name => ''}
-    
+
     ORG_ID = 1
     ORGANIZATION = {:id => 1, :name => "organization_name", :description => "organization_description", :label=>"foo"}
   end
@@ -35,7 +35,6 @@ describe EnvironmentsController do
   describe "rules" do
     before (:each) do
       new_test_org
-      Organization.stub!(:first).with(:conditions => {:label=>@organization.label}).and_return(@organization)
     end
     describe "GET new" do
       let(:action) {:new}
@@ -100,7 +99,6 @@ describe EnvironmentsController do
       @org.environments.stub!(:first).with(:conditions => {:name => @env.name}).and_return(@env)
       @org.stub!(:library).and_return(@library)
 
-      Organization.stub!(:first).with(:conditions => {:label=>@org.label}).and_return(@org)
       KTEnvironment.stub!(:find).and_return(@env)
     end
 
@@ -129,7 +127,7 @@ describe EnvironmentsController do
           @new_env = mock(KTEnvironment, EnvControllerTest::EMPTY_ENVIRONMENT)
           KTEnvironment.stub!(:new).and_return(@new_env)
           @new_env.stub!(:save!).and_return(true)
-          Support.stub!(:deep_copy) {|p| p}
+          Util::Support.stub!(:deep_copy) {|p| p}
         end
 
 
@@ -158,10 +156,7 @@ describe EnvironmentsController do
       end
     end
 
-    describe "env create invalid params" do
-      before do
-        new_test_org
-      end
+    pending "env create invalid params" do
         it_should_behave_like "bad request"  do
           let(:req) do
             bad_req = {:organization_id => @organization.label, :kt_environment => {:name => 'production', :prior => @organization.library}}

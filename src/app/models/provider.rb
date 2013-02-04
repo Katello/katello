@@ -11,30 +11,30 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Provider < ActiveRecord::Base
+
+  include Glue::ElasticSearch::Provider if Katello.config.use_elasticsearch
   include Glue::Provider
   include Glue
+  include Authorization::Provider
   include AsyncOrchestration
-  include Authorization
-  include KatelloUrlHelper
-  include IndexedModel
 
-  index_options :extended_json=>:extended_index_attrs,
-                :display_attrs=>[:name, :product, :repo, :description]
-
-  mapping do
-    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :name_sort, :type => 'string', :index => :not_analyzed
-  end
+  include Ext::PermissionTagCleanup
 
   REDHAT = 'Red Hat'
   CUSTOM = 'Custom'
   TYPES = [REDHAT, CUSTOM]
+
+  serialize :discovered_repos, Array
+
   belongs_to :organization
   belongs_to :task_status
+  belongs_to :discovery_task, :class_name=>'TaskStatus'
   has_many :products, :inverse_of => :provider
 
-  validates :name, :presence => true, :katello_name_format => true
-  validates :description, :katello_description_format => true
+  validates :name, :presence => true
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
+
   validates_uniqueness_of :name, :scope => :organization_id
   validates_inclusion_of :provider_type,
     :in => TYPES,
@@ -44,9 +44,11 @@ class Provider < ActiveRecord::Base
   before_destroy :prevent_redhat_deletion
   before_validation :sanitize_repository_url
 
-
   validate :only_one_rhn_provider
-  validate :valid_url, :if => :redhat_provider?
+  validates :repository_url, :length => {:maximum => 255}, :if => :redhat_provider?
+  validates_with Validators::KatelloUrlFormatValidator, :if => :redhat_provider?,
+                 :attributes => :repository_url
+
 
   scope :redhat, where(:provider_type => REDHAT)
   scope :custom, where(:provider_type => CUSTOM)
@@ -62,6 +64,7 @@ class Provider < ActiveRecord::Base
       Rails.logger.error _("Red Hat provider can not be deleted")
       false
     else
+      # organization that is being deleted via background destroyer can delete rh provider
       true
     end
   end
@@ -74,11 +77,6 @@ class Provider < ActiveRecord::Base
         errors.add(:base, _("the following attributes can not be updated for the Red Hat provider: [ %s ]") % not_allowed_changes.join(", "))
       end
     end
-  end
-
-  def valid_url
-    errors.add(:repository_url, _("is too long")) if self.repository_url.length > 255
-    errors.add(:repository_url, _("is invalid")) unless kurl_valid?(self.repository_url)
   end
 
   def count_providers type
@@ -104,78 +102,8 @@ class Provider < ActiveRecord::Base
     redhat_provider?
   end
 
-  def organization
-    # note i need to add 'unscoped' here
-    # to account for the fact that org might have been "scoped out"
-    # on an Org delete action.
-    # we need the organization info to be present in the provider
-    # so that we can properly phase out the orchestration and handle search indices.
-    (read_attribute(:organization) || Organization.unscoped.find(self.organization_id)) if self.organization_id
-  end
-
   def being_deleted?
-    ! organization.task_id.nil?
-  end
-
-  #permissions
-  # returns list of virtual permission tags for the current user
-  def self.list_tags org_id
-    custom.select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
-  end
-
-  def self.tags(ids)
-    select('id,name').where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
-  end
-
-  def self.list_verbs  global = false
-    if Katello.config.katello?
-      {
-        :create => _("Administer Providers"),
-        :read => _("Read Providers"),
-        :update => _("Modify Providers and Administer Products"),
-        :delete => _("Delete Providers"),
-      }.with_indifferent_access
-    else
-      {
-        :read => _("Read Providers"),
-        :update => _("Modify Providers and Administer Products"),
-      }.with_indifferent_access
-    end
-  end
-
-  def self.read_verbs
-    [:read]
-  end
-
-  def self.no_tag_verbs
-    [:create]
-  end
-
-  scope :readable, lambda {|org| items(org, READ_PERM_VERBS)}
-  scope :editable, lambda {|org| items(org, EDIT_PERM_VERBS)}
-
-  def readable?
-    return organization.readable? if redhat_provider?
-    User.allowed_to?(READ_PERM_VERBS, :providers, self.id, self.organization) || (Katello.config.katello? && self.organization.syncable?)
-  end
-
-
-  def self.any_readable? org
-    (Katello.config.katello? && org.syncable?) || User.allowed_to?(READ_PERM_VERBS, :providers, nil, org)
-  end
-
-  def self.creatable? org
-    User.allowed_to?([:create], :providers, nil, org)
-  end
-
-  def editable?
-    return organization.editable? if redhat_provider?
-    User.allowed_to?([:update, :create], :providers, self.id, self.organization)
-  end
-
-  def deletable?
-    return false if redhat_provider?
-    User.allowed_to?([:delete, :create], :providers, self.id, self.organization)
+    organization.being_deleted?
   end
 
   def serializable_hash(options={})
@@ -187,23 +115,6 @@ class Provider < ActiveRecord::Base
     end
     hash
   end
-
-  def extended_index_attrs
-    if Katello.config.katello?
-      products = self.products.map{|prod|
-        {:product=>prod.name, :repo=>prod.repos(self.organization.library).collect{|repo| repo.name}}
-      }
-    else
-      products = self.products.map{|prod|
-        {:product=>prod.name}
-      }
-    end
-    {
-      :products=>products,
-      :name_sort=>name.downcase
-    }
-  end
-
 
   # refreshes products' repositories from CDS. If new versions are released on
   # the CDN, this method will provide loading this new versions.
@@ -249,6 +160,20 @@ class Provider < ActiveRecord::Base
     return task_status
   end
 
+  def discover_repos
+    raise _("Cannot discover repos for the Red Hat Provider") if self.redhat_provider?
+    raise _("Repository Discovery already in progress") if self.discovery_task && !self.discovery_task.finished?
+    raise _("Discovery URL not set.") if self.discovery_url.blank?
+    self.discovered_repos = []
+    self.discovery_task = self.async(:organization=>self.organization).start_discovery_task
+    self.save!
+  end
+
+  def discovery_url=(value)
+    self.discovered_repos = []
+    write_attribute(:discovery_url, value)
+  end
+
   protected
 
    def sanitize_repository_url
@@ -260,21 +185,34 @@ class Provider < ActiveRecord::Base
      end
    end
 
-  def self.items org, verbs
-    raise "scope requires an organization" if org.nil?
-    resource = :providers
-    if (Katello.config.katello? && verbs.include?(:read) && org.syncable?) ||  User.allowed_all_tags?(verbs, resource, org)
-       where(:organization_id => org)
-    else
-      where("providers.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
+  private
+
+  def start_discovery_task
+    task_id = AsyncOperation.current_task_id
+    provider_id = self.id
+
+    #Lambda to continually update the provider
+    found_func = lambda do |url|
+      provider = ::Provider.find(provider_id)
+      provider.discovered_repos << url
+      provider.save!
     end
+    #Lambda to decide to continue or not
+    #  Using the saved task_id to compare current providers
+    #  task id
+    continue_func = lambda do
+      new_prov = ::Provider.find(provider_id)
+      if new_prov.discovery_task.nil? || new_prov.discovery_task.id != task_id
+        return false
+      end
+      true
+    end
+
+    discover = RepoDiscovery.new(self.discovery_url)
+    discover.run(found_func, continue_func)
+
+  ensure
+    ##in case of error
   end
-
-  READ_PERM_VERBS = [:read, :create, :update, :delete] if Katello.config.katello?
-  READ_PERM_VERBS = [:read, :update] if !Katello.config.katello?
-  EDIT_PERM_VERBS = [:create, :update] if Katello.config.katello?
-  EDIT_PERM_VERBS = [:update] if !Katello.config.katello?
-
-
 end
 

@@ -12,30 +12,20 @@
 
 
 class Organization < ActiveRecord::Base
+
   include Glue::Candlepin::Owner if Katello.config.use_cp
   include Glue if Katello.config.use_cp
-  include Authorization
-  include IndexedModel
 
-  index_options :extended_json=>:extended_index_attrs,
-                :json=>{:except=>[:debug_cert, :events]},
-                :display_attrs=>[:name, :description, :environment]
+  include Ext::PermissionTagCleanup
 
-
-
-
-  mapping do
-    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
-    indexes :name_sort, :type => 'string', :index => :not_analyzed
-    indexes :label, :type => 'string', :index => :not_analyzed
-  end
+  include Authorization::Organization
+  include Glue::ElasticSearch::Organization if Katello.config.use_elasticsearch
 
   has_many :activation_keys, :dependent => :destroy
   has_many :providers, :dependent => :destroy
   has_many :products, :through => :providers
   has_many :environments, :class_name => "KTEnvironment", :conditions => {:library => false}, :dependent => :destroy, :inverse_of => :organization
   has_one :library, :class_name =>"KTEnvironment", :conditions => {:library => true}, :dependent => :destroy
-  has_many :filters, :dependent => :destroy, :inverse_of => :organization
   has_many :gpg_keys, :dependent => :destroy, :inverse_of => :organization
   has_many :permissions, :dependent => :destroy, :inverse_of => :organization
   has_many :sync_plans, :dependent => :destroy, :inverse_of => :organization
@@ -44,30 +34,28 @@ class Organization < ActiveRecord::Base
 
   attr_accessor :statistics
 
-  default_scope  where(:task_id=>nil) #ignore organizations that are being deleted
+  # Organizations which are being deleted (or deletion failed) can be filtered out with this scope.
+  scope :without_deleting, where(:task_id => nil)
+  scope :having_name_or_label, lambda { |name_or_label| { :conditions => ["name = :id or label = :id", {:id=>name_or_label}] } }
 
   before_create :create_library
   before_create :create_redhat_provider
-  validates :name, :uniqueness => true, :presence => true, :katello_name_format => true
-  validates :label, :uniqueness => true, :presence => true, :katello_label_format => true
-  validates :description, :katello_description_format => true
+
+  validates :name, :uniqueness => true, :presence => true
+  validates :label, :uniqueness => { :message => _("already exists (including organizations being deleted)") },
+            :presence => true
+  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+  validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
+  validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validate :unique_name_and_label
 
   before_save { |o| o.system_info_keys = Array.new unless o.system_info_keys }
 
   if Katello.config.use_cp
     before_validation :create_label, :on => :create
-    validate :unique_label
 
     def create_label
       self.label = self.name.tr(' ', '_') if self.label.blank? && self.name.present?
-    end
-
-    def unique_label
-      # org is being deleted
-      if Organization.find_by_label(self.label).nil? && Organization.unscoped.find_by_label(self.label)
-        errors.add(:organization, _(" '%s' already exists and either has been scheduled for deletion or failed deletion.") % self.label)
-      end
     end
   end
 
@@ -117,114 +105,8 @@ class Organization < ActiveRecord::Base
     end
   end
 
-  #permissions
-  scope :readable, lambda {authorized_items(READ_PERM_VERBS)}
-
-  def self.creatable?
-    User.allowed_to?([:create], :organizations)
-  end
-
-  def editable?
-      User.allowed_to?([:update, :create], :organizations, nil, self)
-  end
-
-  def deletable?
-    User.allowed_to?([:delete, :create], :organizations)
-  end
-
-  def readable?
-    User.allowed_to?(READ_PERM_VERBS, :organizations,nil, self)
-  end
-
-  def self.any_readable?
-    Organization.readable.count > 0
-  end
-
-  def environments_manageable?
-    User.allowed_to?([:update, :create], :organizations, nil, self)
-  end
-
-  SYSTEMS_READABLE = [:read_systems, :register_systems, :update_systems, :delete_systems]
-
-  def systems_readable?
-    User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
-  end
-
-  def systems_deletable?
-    User.allowed_to?([:delete_systems], :organizations, nil, self)
-  end
-
-  def systems_registerable?
-    User.allowed_to?([:register_systems], :organizations, nil, self)
-  end
-
-
-  def any_systems_registerable?
-    systems_registerable? || User.allowed_to?([:register_systems], :environments, environment_ids, self, true)
-  end
-
-
-  def gpg_keys_manageable?
-    User.allowed_to?([:gpg], :organizations, nil, self)
-  end
-
-  def self.list_verbs global = false
-    if Katello.config.katello?
-      org_verbs = {
-        :update => _("Modify Organization and Administer Environments"),
-        :read => _("Read Organization"),
-        :read_systems => _("Read Systems"),
-        :register_systems =>_("Register Systems"),
-        :update_systems => _("Modify Systems"),
-        :delete_systems => _("Delete Systems"),
-        :sync => _("Sync Products"),
-        :gpg => _("Administer GPG Keys")
-     }
-    else
-      org_verbs = {
-        :update => _("Modify Organization and Administer Environments"),
-        :read => _("Read Organization"),
-        :read_systems => _("Read Systems"),
-        :register_systems =>_("Register Systems"),
-        :update_systems => _("Modify Systems"),
-        :delete_systems => _("Delete Systems"),
-     }
-    end
-    org_verbs.merge!({
-    :create => _("Administer Organization"),
-    :delete => _("Delete Organization")
-    }) if global
-    org_verbs.with_indifferent_access
-
-  end
-
-  def self.read_verbs
-    [:read, :read_systems]
-  end
-
-
-  def self.no_tag_verbs
-    [:create]
-  end
-
-  def syncable?
-    User.allowed_to?(SYNC_PERM_VERBS, :organizations, nil, self)
-  end
-
-  private
-
-  def self.authorized_items verbs, resource = :organizations
-    if !User.allowed_all_tags?(verbs, resource)
-      where("organizations.id in (#{User.allowed_tags_sql(verbs, resource)})")
-    end
-  end
-
-  READ_PERM_VERBS = [:read, :create, :update, :delete]
-  SYNC_PERM_VERBS = [:sync]
-
-
-  def extended_index_attrs
-    {:name_sort=>name.downcase, :environment=>self.environments.collect{|e| e.name}}
+  def being_deleted?
+    ! self.task_id.nil?
   end
 
 end

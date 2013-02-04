@@ -12,11 +12,11 @@
 
 class Resources::ForemanModel < Resources::AbstractModel
 
-  def self.resource
-    super or Resources::Foreman.const_get to_s.demodulize
+  def self.resource(res=nil)
+    super(res) or Resources::Foreman.const_get to_s.demodulize
   rescue NameError => e
     if e.message =~ /Resources::Foreman::#{to_s.demodulize}/
-      raise "could not find Resources::Foreman::#{to_s.demodulize}, try to set the resource with #{to_s}.set_resource"
+      raise "could not find Resources::Foreman::#{to_s.demodulize}, try to set the resource with #{to_s}#resource"
     else
       raise e
     end
@@ -27,16 +27,34 @@ class Resources::ForemanModel < Resources::AbstractModel
     super.merge :foreman_user => user.username
   end
 
+  def json_create_options
+    json_default_options.merge(:root => foreman_resource_name)
+  end
+
+  def json_update_options
+    json_default_options.merge(:root => foreman_resource_name)
+  end
+
   protected
 
+  def self.foreman_resource_name(name=nil)
+    @foreman_resource_name ||= resource_name
+    @foreman_resource_name = name unless name.nil?
+    @foreman_resource_name
+  end
+
+  def foreman_resource_name
+    self.class.foreman_resource_name
+  end
+
   def parse_errors(hash)
-    return hash[resource_name]['errors'] if hash.key? resource_name
+    return hash[foreman_resource_name]['errors'] if hash.key? foreman_resource_name
     return {hash['error']['parameter_name'] => hash['error']['message']} if hash.key? 'error'
     return hash
   end
 
   def self.parse_attributes(data)
-    data[resource_name] or
+    data.with_indifferent_access[foreman_resource_name] or
         raise ResponseParsingError, data
   end
 

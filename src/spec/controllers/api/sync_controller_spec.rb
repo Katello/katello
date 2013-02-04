@@ -18,24 +18,43 @@ describe Api::SyncController, :katello => true do
   include LocaleHelperMethods
   include OrganizationHelperMethods
   include ProductHelperMethods
+  include RepositoryHelperMethods
   include AuthorizationHelperMethods
 
   let(:provider_id) { "123" }
   let(:product_id) { "123" }
   let(:repository_id) { "123" }
   let(:async_task_1) do
-    { :id => "123",
-      :state => "waiting",
-      :start_time => DateTime.now,
-      :finish_time => DateTime.now,
-      :progress => nil }
+    { "href" => "/pulp/api/v2/task_groups/a4e8579d-6c41-4134-a150-cf65faeafdfe/",
+      "response" => "postponed",
+      "reasons" => [],
+      "state" => "waiting",
+      "task_id" => "123",
+      "task_group_id" => "a4e8579d-6c41-4134-a150-cf65faeafdfe",
+      "schedule_id" => nil,
+      "progress" => {},
+      "result" => nil,
+      "exception" => nil,
+      "traceback" => nil,
+      "start_time" => DateTime.now,
+      "finish_time" => DateTime.now,
+      "tags" => ["pulp:action:sync", "pulp:repository:repo_id"] }
   end
   let(:async_task_2) do
-    { :id => "456",
-      :state => "waiting",
-      :start_time => DateTime.now,
-      :finish_time => DateTime.now,
-      :progress => nil }
+    { "href" => "/pulp/api/v2/task_groups/a4e8579d-6c41-4134-a150-cf65faeafdfe/",
+      "response" => "postponed",
+      "reasons" => [],
+      "state" => "waiting",
+      "task_id" => "456",
+      "task_group_id" => "a4e8579d-6c41-4134-a150-cf65faeafdfe",
+      "schedule_id" => nil,
+      "progress" => {},
+      "result" => nil,
+      "exception" => nil,
+      "traceback" => nil,
+      "start_time" => DateTime.now,
+      "finish_time" => DateTime.now,
+      "tags" => ["pulp:action:sync", "pulp:repository:repo_id_2"] }
   end
 
   before(:each) do
@@ -154,14 +173,10 @@ describe Api::SyncController, :katello => true do
 
     describe "start a sync" do
       before(:each) do
-        #@organization = Organization.create!(:name=>"organization", :label=> "123")
-        
-        Resources::Pulp::Repository.stub(:sync).with("1").and_return(async_task_1)
-        Resources::Pulp::Repository.stub(:sync).with("2").and_return(async_task_2)
-        #@syncable = mock()
-        #@syncable.stub!(:organization).and_return(@organization)
-
         stub_product_with_repo
+
+        Runcible::Extensions::Repository.stub(:sync).with(@repository.pulp_id, anything()).and_return([async_task_1])
+        Runcible::Extensions::Repository.stub(:sync).with(@repository2.pulp_id, anything()).and_return([async_task_2])
       end
 
       it "should find provider" do
@@ -179,8 +194,8 @@ describe Api::SyncController, :katello => true do
 
         found = PulpTaskStatus.all
         found.size.should == 2
-        found.any? {|t| t[:uuid] == async_task_1[:id]} .should == true
-        found.any? {|t| t[:uuid] == async_task_2[:id]} .should == true
+        found.any? {|t| t['uuid'] == async_task_1['task_id']} .should == true
+        found.any? {|t| t['uuid'] == async_task_2['task_id']} .should == true
       end
 
       it "should return sync objects" do
@@ -188,8 +203,8 @@ describe Api::SyncController, :katello => true do
 
         status = JSON.parse(response.body)
         status.size.should == 2
-        status.any? {|s| s['uuid'] == async_task_1[:id]} .should == true
-        status.any? {|s| s['uuid'] == async_task_2[:id]} .should == true
+        status.any? {|s| s['uuid'] == async_task_1['task_id']} .should == true
+        status.any? {|s| s['uuid'] == async_task_2['task_id']} .should == true
       end
     end
 
@@ -254,7 +269,7 @@ describe Api::SyncController, :katello => true do
       disable_product_orchestration
 
       @organization = new_test_org
-      Organization.stub!(:first).and_return(@organization)
+
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
       Provider.stub!(:find).and_return(@provider)
       @product = Product.new({:name=>"prod", :label=> "prod"})
@@ -265,9 +280,9 @@ describe Api::SyncController, :katello => true do
       Product.stub!(:find).and_return(@product)
       Product.stub!(:find_by_cp_id).and_return(@product)
       ep = EnvironmentProduct.find_or_create(@organization.library, @product)
-      @repository = Repository.create!(:environment_product => ep, :name=> "repo_1", :label=> "repo_1_label", :pulp_id=>"1")
-      Repository.stub(:find).and_return(@repository)
-      @repository2 = Repository.create!(:environment_product => ep, :name=> "repo_2", :label=> "repo_2_label", :pulp_id=>"2")
+      @repository = new_test_repo(ep, "repo_1", "#{@organization.name}/Library/prod/repo")
+      @repository2 = new_test_repo(ep, "repo_2", "#{@organization.name}/Library/prod/repo")
+
       Repository.stub(:find).and_return(@repository)
   end
 

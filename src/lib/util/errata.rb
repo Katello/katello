@@ -21,7 +21,7 @@ module Katello
         pulp_filter_type = get_pulp_filter_type(filter_type)
 
         errata_list.each{ |erratum|
-          if erratum.class.name == "Glue::Pulp::Errata"
+          if erratum.class.name == "Errata"
             if erratum.type == pulp_filter_type
               filtered_list << erratum
             end

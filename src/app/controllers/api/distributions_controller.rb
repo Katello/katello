@@ -33,7 +33,7 @@ class Api::DistributionsController < Api::ApiController
   api :GET, "/repositories/:repository_id/distributions/:id", "Show a distribution"
   param :repository_id, :number, :desc => "repository numeric id"
   def show
-    dist = Glue::Pulp::Distribution.find(params[:id])
+    dist = Distribution.find(params[:id])
     render :json => dist
   end
 

@@ -83,29 +83,31 @@ EOKEY
 
 
   def disable_product_orchestration
-    Resources::Candlepin::Product.stub!(:get).and_return([{:productContent => []}])
+    Resources::Candlepin::Product.stub!(:get).and_return do
+      [{:productContent => []}] #return a fresh hash, as add_repo modified it
+    end
     Resources::Candlepin::Product.stub!(:add_content).and_return(true)
     Resources::Candlepin::Product.stub!(:create).and_return({:id => '1'})
     Resources::Candlepin::Product.stub!(:create_unlimited_subscription).and_return(true)
     Resources::Candlepin::Product.stub!(:pools).and_return([])
     Resources::Candlepin::Product.stub!(:delete_subscriptions).and_return(nil)
 
-    Resources::Candlepin::Content.stub!(:create).and_return(true)
+    Resources::Candlepin::Content.stub!(:create).and_return({:id=>'123'})
+    Resources::Candlepin::Content.stub!(:update).and_return({:id=>'123'})
 
     # pulp orchestration
     Resources::Candlepin::Product.stub!(:certificate).and_return("")
     Resources::Candlepin::Product.stub!(:key).and_return("")
-    Resources::Pulp::Repository.stub!(:create).and_return([])
-    Resources::Pulp::Repository.stub!(:update_schedule).and_return(true)
-    Resources::Pulp::Repository.stub!(:delete_schedule).and_return(true)
-    Resources::Pulp::Repository.stub!(:all).and_return([])
-    Resources::Pulp::Repository.stub!(:update).and_return([])
+
+    Runcible::Extensions::Repository.stub!(:create_or_update_schedule).and_return(true)
+    Runcible::Extensions::Repository.stub!(:remove_schedules).and_return(true)
+
   end
 
   def disable_org_orchestration
     Resources::Candlepin::Owner.stub!(:create).and_return({})
     Resources::Candlepin::Owner.stub!(:create_user).and_return(true)
-    Resources::Candlepin::Owner.stub!(:destroy)
+    Resources::Candlepin::Owner.stub!(:destroy).and_return(true)
     Resources::Candlepin::Owner.stub!(:get_ueber_cert).and_return({ :cert => CERT, :key => KEY })
     disable_env_orchestration # env is orchestrated with org - we disable this as well
   end
@@ -118,43 +120,41 @@ EOKEY
   end
 
   def disable_system_orchestration
-    Resources::Candlepin::Consumer.stub(:get).and_return({})
+    Resources::Candlepin::Consumer.stub!(:get).and_return({})
   end
 
   def disable_user_orchestration(options = { })
-    Resources::Pulp::User.stub!(:create).and_return({})
-    Resources::Pulp::User.stub!(:destroy).and_return(200)
-    Resources::Pulp::Roles.stub!(:add).and_return(true)
-    Resources::Pulp::Roles.stub!(:remove).and_return(true)
+    Runcible::Resources::User.stub!(:create).and_return({})
+    Runcible::Resources::User.stub!(:delete).and_return(200)
+    Runcible::Resources::Role.stub!(:add).and_return(true)
+    Runcible::Resources::Role.stub!(:remove).and_return(true)
 
     User.disable_foreman_orchestration! !options[:keep_foreman] if Katello.config.use_foreman
   end
 
-  def disable_filter_orchestration
-    Resources::Pulp::Filter.stub!(:create).and_return({})
-    Resources::Pulp::Filter.stub!(:destroy).and_return(200)
-    Resources::Pulp::Filter.stub(:find).and_return({})
-  end
 
   def disable_consumer_group_orchestration
-    Resources::Pulp::ConsumerGroup.stub!(:create).and_return({})
-    Resources::Pulp::ConsumerGroup.stub!(:destroy).and_return(200)
-    Resources::Pulp::ConsumerGroup.stub(:find).and_return({})
-    Resources::Pulp::ConsumerGroup.stub!(:add_consumer).and_return(200)
-    Resources::Pulp::ConsumerGroup.stub!(:delete_consumer).and_return(200)
+    Runcible::Extensions::ConsumerGroup.stub!(:create).and_return({})
+    Runcible::Extensions::ConsumerGroup.stub!(:delete).and_return(200)
+    Runcible::Extensions::ConsumerGroup.stub!(:retrieve).and_return({})
+    Runcible::Extensions::ConsumerGroup.stub!(:add_consumers_by_id).and_return(200)
+    Runcible::Extensions::ConsumerGroup.stub!(:remove_consumers_by_id).and_return(200)
   end
 
   def disable_repo_orchestration
-    Resources::Pulp::Repository.stub(:sync_history).and_return([])
-    Resources::Pulp::Task.stub!(:destroy).and_return({})
+    Runcible::Extensions::Repository.stub(:create).and_return({})
+    Runcible::Extensions::Repository.stub(:sync_history).and_return([])
+    Runcible::Resources::Task.stub!(:destroy).and_return({})
 
-    Resources::Pulp::Repository.stub(:packages).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PACKAGES)
-    Resources::Pulp::Repository.stub(:errata).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_ERRATA)
-    Resources::Pulp::Repository.stub(:distributions).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_DISTRIBUTIONS)
-    Resources::Pulp::Repository.stub(:find).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PROPERTIES)
-    Resources::Pulp::Repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
+    Runcible::Extensions::Repository.stub(:packages).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PACKAGES)
+    Runcible::Extensions::Repository.stub(:errata).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_ERRATA)
+    Runcible::Extensions::Repository.stub(:distributions).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_DISTRIBUTIONS)
+    Runcible::Extensions::Repository.stub(:find).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PROPERTIES)
+    Runcible::Extensions::Repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
 
-    Resources::Pulp::Package.stub(:name_search).and_return(RepoTestData::REPO_PACKAGES[0])
+    Resources::Candlepin::Content.stub!(:create).and_return({:id=>'123'})
+    Resources::Candlepin::Content.stub!(:update).and_return({:id=>'123'})
+    Resources::Candlepin::Content.stub!(:get).and_return({:id=>'123'})
 
     Repository.instance_eval do
       define_method(:index_packages) {

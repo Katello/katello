@@ -55,7 +55,6 @@ describe Api::SystemGroupErrataController, :katello => true do
         errata["release"] = "Red Hat Enterprise Linux 6.0"
         to_ret << errata
       }
-      Resources::Pulp::Consumer.stub!(:errata).and_return(to_ret)
     end
 
     let(:action) { :index }
@@ -66,10 +65,9 @@ describe Api::SystemGroupErrataController, :katello => true do
 
     it_should_behave_like "protected action"
 
-    it { should be_successful }
+    pending { should be_successful }
 
-    it "should retrieve errata from pulp" do
-      Resources::Pulp::Consumer.should_receive(:errata)
+    pending "should retrieve errata from pulp" do
       subject
     end
   end

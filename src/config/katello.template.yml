@@ -27,6 +27,7 @@ common:
   use_cp: # set to true/false if you want to override default
   use_pulp: # set to true/false if you want to override default
   use_foreman: # set to true/false if you want to override default
+  use_elasticsearch: # set to true/false if you want to override default
   app_name: # set a name if you want to override default
 
   warden: database
@@ -41,9 +42,17 @@ common:
   elastic_index: katello
   elastic_url: http://localhost:9200
 
+  post_sync_url: "http://localhost:3000/katello/api/repositories/sync_complete"
+  thumbslug_url: https://localhost:8088
+
   password_reset_expiration: 120
 
-  # Availabe language locale choices. (Note: Syntax for yaml requires a space after each comma ', ')
+  # email_reply_address is used to specify the "From:" address included
+  # in emails sent from the Server.  If not specified, it will default to
+  # no-reply@host, where host is the value specified above.
+  email_reply_address:
+
+  # Available language locale choices. (Note: Syntax for yaml requires a space after each comma ', ')
   # Default available locales are below
   available_locales: ["bn", "de", "en", "es", "fr", "gu", "hi", "it", "ja", "kn", "ko", "mr", "or", "pa", "pt-BR",
   "ru", "ta", "te", "zh-CN", "zh-TW"]
@@ -116,7 +125,7 @@ common:
   #   (typically /etc/pki/tls/certs/localhost.crt) location that is needed
   #   to connect to pulp over https.
   pulp:
-    url: https://localhost/pulp/api
+    url: https://localhost/pulp/api/v2/
     oauth_key: katello
     oauth_secret: shhhh
     sync_threads: 4
@@ -177,6 +186,7 @@ development:
     random_password: false
   database:
     database: katello
+    min_messages: WARNING
 
 #
 # Test environment configuration
@@ -186,6 +196,7 @@ development:
 test:
   database:
     database: katello-test<%= ENV['TEST_ENV_NUMBER'] %>
+    min_messages: WARNING
 
 
 # Blank configuration for build environment

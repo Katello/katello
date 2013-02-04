@@ -10,22 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class DistributionValidator < ActiveModel::Validator
-  def validate(record)
-    id = record.distribution_pulp_id
-    env = record.system_template.environment
-    cnt = env.get_distribution(id).length
-    record.errors[:base] << _("Distribution '%{id}' not found in the '%{name}' environment") % {:id => id, :name => env.name} if cnt == 0
-  end
-end
-
 class SystemTemplateDistribution < ActiveRecord::Base
   belongs_to :system_template, :inverse_of => :distributions
   validates_uniqueness_of [:distribution_pulp_id], :scope => :system_template_id, :message => _("is already in the template")
-  validates_with DistributionValidator
+  validates_with Validators::DistributionValidator
 
   def load_backend_attributes
-    @distribution_glue ||= Glue::Pulp::Distribution.new(Resources::Pulp::Distribution.find(self.distribution_pulp_id))
+    @distribution_glue ||= Distribution.find(self.distribution_pulp_id)
     raise Errors::NotFound.new(_("Distribution '%s' was not found in Pulp.") % distribution_pulp_id) if @distribution_glue.nil?
   end
 

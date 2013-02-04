@@ -15,6 +15,9 @@ require 'spec_helper.rb'
 describe Api::DistributionsController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
+  include ProductHelperMethods
+  include RepositoryHelperMethods
+  include LocaleHelperMethods
 
   before(:each) do
     disable_org_orchestration
@@ -23,26 +26,14 @@ describe Api::DistributionsController, :katello => true do
     disable_repo_orchestration
 
     @organization = new_test_org
-    @provider = Provider.create!(:name => "provider",
-                                 :provider_type => Provider::CUSTOM,
-                                 :organization => @organization,
-                                 :repository_url => "https://localhost")
-    @product = Product.create!(:name=>"prod", :label=> "prod",
-                               :provider => @provider,
-                               :environments => [@organization.library])
-    @product.stub(:repos).and_return([@repository])
-
+    @env = @organization.library
+    @product = new_test_product(@organization, @env)
     ep_library = EnvironmentProduct.find_or_create(@organization.library, @product)
-    @repo = Repository.create!(:environment_product => ep_library,
-                               :name=> "repo",
-                               :label=> "repo_label",
-                               :relative_path => "#{@organization.name}/Library/prod/repo",
-                               :pulp_id=> "1",
-                               :enabled => true)
+    @repo = new_test_repo(ep_library, "repo", "#{@organization.name}/Library/prod/repo")
     @repo.stub(:has_distribution?).and_return(true)
     Repository.stub(:find).and_return(@repo)
     @repo.stub(:distributions).and_return([])
-    Glue::Pulp::Distribution.stub(:find).and_return([])
+    ::Distribution.stub(:find).and_return([])
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api

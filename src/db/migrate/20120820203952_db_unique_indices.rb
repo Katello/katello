@@ -7,7 +7,6 @@ class DbUniqueIndices < ActiveRecord::Migration
     add_index(:changeset_errata, [:errata_id, :changeset_id], :unique => true)
     add_index(:changeset_packages, [:nvrea, :changeset_id], :unique => true)
 
-    add_index(:filters, [:name, :organization_id], :unique => true)
     add_index(:environments, [:name, :organization_id], :unique => true)
     add_index(:ldap_group_roles, [:ldap_group, :role_id], :unique => true)
     add_index(:organizations, :name, :unique => true)
@@ -35,7 +34,6 @@ class DbUniqueIndices < ActiveRecord::Migration
     remove_index(:changeset_errata, [:errata_id, :changeset_id])
     remove_index(:changeset_packages, [:nvrea, :changeset_id])
 
-    remove_index(:filters, :column => [:name, :organization_id])
     remove_index(:environments, :column => [:name, :organization_id])
     remove_index(:ldap_group_roles, :column => [:ldap_group, :role_id])
     remove_index(:organizations, :name)

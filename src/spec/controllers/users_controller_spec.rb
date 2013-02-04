@@ -13,7 +13,7 @@
 require 'spec_helper'
 
 describe UsersController do
-  
+
   include LoginHelperMethods
   include LocaleHelperMethods
   include AuthorizationHelperMethods
@@ -41,11 +41,11 @@ describe UsersController do
       response.should be_success
       User.where(:username=>name).should_not be_empty
     end
-    
+
     it "should error if no username " do
       post 'create', {:user => {:username=>"", :password=>"password1234", :email=> "user@somewhere.com", :env_id => @environment.id}}
       response.should_not be_success
-      
+
       post 'create', {:user => { :password=>"password1234", :email=> "user@somewhere.com", :env_id => @environment.id}}
       response.should_not be_success
     end
@@ -53,7 +53,7 @@ describe UsersController do
     it "should error if no password " do
       post 'create', {:user => {:username=>"testuser", :password=>"", :email=> "user@somewhere.com", :env_id => @environment.id}}
       response.should_not be_success
-      
+
       post 'create', {:user => {:username=>"testuser", :email=> "user@somewhere.com", :env_id => @environment.id}}
       response.should_not be_success
     end
@@ -61,7 +61,7 @@ describe UsersController do
     it "should error if no email address " do
       post 'create', {:user => {:username=>"testuser", :password=>"password1234", :email=>"", :env_id => @environment.id}}
       response.should_not be_success
-      
+
       post 'create', {:user => {:username=>"testuser", :password=>"password1234", :env_id => @environment.id}}
       response.should_not be_success
     end
@@ -75,22 +75,22 @@ describe UsersController do
       end
     end
   end
-  
+
   describe "edit a user" do
-    
+
     before(:each) do
       controller.stub!(:escape_html)
 
       allow 'Test', ["create", "read","delete"], "product", ["RHEL-4", "RHEL-5","Cluster","ClusterStorage","Fedora"]
-    end    
-    
-    it "should be allowed to change the password" do 
+    end
+
+    it "should be allowed to change the password" do
        put 'update', {:id => @user.id, :user => {:password=>"password1234"}}
        response.should be_success
        User.authenticate!(@user.username, "password1234").should be_true
     end
-    
-    it "should be allowed to change the email address" do 
+
+    it "should be allowed to change the email address" do
        new_email = "foo-user@somewhere-new.com"
        put 'update', {:id => @user.id, :user => {:email=>new_email}}
        response.should be_success
@@ -107,14 +107,14 @@ describe UsersController do
     end
 
 
-    it "should not change the username" do 
+    it "should not change the username" do
        put 'update', {:id => @user.id, :user => {:username=>"FOO"}}
        response.should_not be_success
        response.status.should == 400
        assert User.where(:username=>"FOO").empty?
-       assert !User.where(:username=>@user.username).empty?      
+       assert !User.where(:username=>@user.username).empty?
     end
-    
+
     it "should allow roles to be changed" do
        role = Role.where(:name=>"Test")[0]
        assert !role.nil?
@@ -134,45 +134,45 @@ describe UsersController do
       end
     end
 
-  end  
-  
+  end
+
   describe "set helptips" do
-    
+
     before(:each) do
       @user.stub(:allowed_to?).and_return true
-    end    
-    
+    end
+
     it "should enable and disable a helptip if user's helptips are enabled" do
       assert @user.help_tips.empty?
       post 'disable_helptip', {:key=>"apples"}
       response.should be_success
       user = User.find(@user.id)
       assert !user.help_tips.empty?
-      
-      post 'enable_helptip', {:key=>"apples"}      
+
+      post 'enable_helptip', {:key=>"apples"}
       user = User.find(@user.id)
-      assert user.help_tips.empty?      
+      assert user.help_tips.empty?
     end
-    
-    it "should not enable and disable a helptip if user's helptips are disabled" do     
+
+    it "should not enable and disable a helptip if user's helptips are disabled" do
       post 'disable_helptip', {:key=>"apples"}
       user = User.find(@user.id)
-      assert user.help_tips.size == 1    
-      
+      assert user.help_tips.size == 1
+
       @user.helptips_enabled = false
       @user.save
-      
+
       #disabling a 2nd helptip shouldn't cause it to be disabled
-      post 'disable_helptip', {:key=>"oranges"}  
+      post 'disable_helptip', {:key=>"oranges"}
       user = User.find(@user.id)
-      assert user.help_tips.size == 1    
-      
+      assert user.help_tips.size == 1
+
       #enabling the 1st helptip shouldn't cause it to be enabled
-      post 'enable_helptip', {:key=>"apples"}  
+      post 'enable_helptip', {:key=>"apples"}
       user = User.find(@user.id)
-      assert user.help_tips.size == 1          
+      assert user.help_tips.size == 1
     end
-  end  
+  end
 
   describe "rules" do
     before (:each) do

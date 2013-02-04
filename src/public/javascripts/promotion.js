@@ -1031,8 +1031,6 @@ var changeset_obj = function(data_struct) {
 
 //doc ready
 var registerEvents = function(){
-    $('.tipsify').tipsy({fade : true, gravity : 's', live : true, delayIn : 500, hoverable : true, delayOut : 50 });
-
     $('.sliding_tree_category[data-cs_type]').live('click', function() {
         // user clicked on a changeset category (promotion/deletion)
         var selected = $(this);
@@ -1159,8 +1157,6 @@ var registerEvents = function(){
         changesetEdit.toggle();
         return true;
     });
-
-    KT.tipsy.custom.promotion_filter_tooltip();
 };
 
 var changesetEdit = (function(){

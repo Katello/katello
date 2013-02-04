@@ -16,12 +16,14 @@ javascripts:
     - public/javascripts/katello.js
     - public/javascripts/menu.js
     - public/javascripts/routes.js
+    - public/javascripts/chosen.jquery.js
     - public/javascripts/vendor/jquery/plugins/jquery.linkHover.js
     - public/javascripts/vendor/jquery/plugins/jquery.sparkline.min.js
     - public/javascripts/vendor/jquery/plugins/jquery.mousewheel.js
     - public/javascripts/vendor/jquery/plugins/jquery.jscrollpane.js
     - public/javascripts/vendor/jquery/plugins/jquery.ba-bbq.js
     - public/javascripts/vendor/jquery/plugins/jquery.tipsy.js
+    - public/javascripts/spin.min.js
     #edit
     - public/javascripts/vendor/jquery/plugins/jquery.jeditable.js
     - public/javascripts/vendor/jquery/plugins/jquery.jeditable.ajaxupload.js
@@ -62,11 +64,12 @@ javascripts:
     - public/javascripts/chosen.jquery.js
   domain:
     - public/javascripts/domain.js
-    - public/javascripts/chosen.jquery.js
   gpg_key:
     - public/javascripts/gpg_key.js
   gpg_key_edit:
     - public/javascripts/gpg_key_edit.js
+  hardware_model:
+    - public/javascripts/hardware_model.js
   content:
     - public/javascripts/vendor/jquery/plugins/jquery.treeTable.js
     - public/javascripts/content.js
@@ -80,11 +83,6 @@ javascripts:
     - public/javascripts/vendor/jquery/plugins/jquery.timepickr.js
   plan_edit:
     - public/javascripts/plan_edit.js
-  filters:
-    - public/javascripts/filters.js
-    - public/javascripts/vendor/jquery/plugins/jquery.sortElements.js
-    - public/javascripts/auto_complete.js
-    - public/javascripts/chosen.jquery.js
   promotion:
     - public/javascripts/promotion.js
     - public/javascripts/vendor/jquery/plugins/jquery.sortElements.js
@@ -94,14 +92,14 @@ javascripts:
   changeset_edit:
     - public/javascripts/changeset_edit.js
   content_search:
-    - public/javascripts/chosen.jquery.js
     - public/javascripts/widgets/comparison_grid.js
     - public/javascripts/content_search.js
     - public/javascripts/auto_complete.js
     - public/javascripts/vendor/jquery/plugins/jquery.trunk8.js
+  smart_proxy:
+    - public/javascripts/smart_proxy.js
   subnet:
     - public/javascripts/subnet.js
-    - public/javascripts/chosen.jquery.js
     - public/javascripts/vendor/jquery/plugins/jquery.multiselect.js
   subscription:
     - public/javascripts/subscription.js
@@ -117,7 +115,6 @@ javascripts:
     - public/javascripts/auto_complete.js
     - public/javascripts/vendor/jquery/plugins/jquery.multiselect.js
     - public/javascripts/vendor/jquery/plugins/jquery.multiselect.filter.js
-    - public/javascripts/vendor/jquery/plugins/chosen.jquery.js
   system_edit:
     - public/javascripts/system_edit.js
   system_events:
@@ -158,7 +155,11 @@ javascripts:
     - public/javascripts/products_repos.js
   provider:
     - public/javascripts/provider.js
+    - public/javascripts/repo_discovery.js
     - public/javascripts/vendor/jquery/plugins/jquery.treeTable.js
+    - public/javascripts/vendor/jquery/plugins/jquery.uitablefilter.js
+  repo_discovery_create:
+    - public/javascripts/repo_discovery_create.js
   provider_redhat:
     - public/javascripts/provider_redhat.js
   provider_create:

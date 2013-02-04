@@ -20,15 +20,7 @@ module Glue::Pulp::Repos
     base.class_eval do
       before_save :save_repos_orchestration
       before_destroy :destroy_repos_orchestration
-
-      has_and_belongs_to_many :filters, :uniq => true, :before_add => :add_filters_orchestration, :before_remove => :remove_filters_orchestration
     end
-  end
-
-  def self.groupid(product, environment, content = nil)
-      groups = [self.product_groupid(product), self.env_groupid(environment), self.org_groupid(product.library.organization)]
-      groups << self.content_groupid(content) if content
-      groups
   end
 
   def self.clone_repo_path(repo, environment, for_cp = false)
@@ -46,23 +38,6 @@ module Glue::Pulp::Repos
     "#{path_prefix}/#{content_path}"
   end
 
-  # create content for custom repo
-  def create_content(repo)
-    new_content = ::Candlepin::ProductContent.new({
-      :content => {
-        :name => repo.name,
-        :contentUrl => Glue::Pulp::Repos.custom_content_path(repo.product, repo.label),
-        :gpgUrl => repo.yum_gpg_key_url,
-        :type => "yum",
-        :label => repo.custom_content_label,
-        :vendor => Provider::CUSTOM
-      },
-      :enabled => true
-    })
-    new_content.create
-    add_content new_content
-    new_content.content
-  end
 
   # repo path for custom product repos (RH repo paths are derived from
   # content url)
@@ -87,34 +62,8 @@ module Glue::Pulp::Repos
   end
 
 
-  def self.org_groupid(org)
-      "org:#{org.id}"
-  end
-
-  def self.env_groupid(environment)
-      "env:#{environment.id}"
-  end
-
-  def self.product_groupid(product)
-    if product.is_a? String
-      product_id = product
-    else
-      product_id = product.cp_id
-    end
-     "product:#{product_id}"
-  end
-
-  def self.content_groupid(content)
-    if content.is_a? String
-      content_id = content
-    else
-      content_id = content.id
-    end
-    "content:#{content_id}"
-  end
-
   def self.prepopulate!(products, environment, repos = [])
-    items = Resources::Pulp::Repository.all(["env:#{environment.id}"])
+    items = Runcible::Extensions::Repository.search_by_repository_ids(Repository.in_environment(environment).pluck(:pulp_id))
     full_repos = {}
     items.each { |item| full_repos[item["id"]] = item }
 
@@ -163,7 +112,7 @@ module Glue::Pulp::Repos
 
     def delete_from_env from_env
       @orchestration_for = :delete
-      delete_repos(repos(from_env), from_env)
+      delete_repos(repos(from_env))
       if from_env.products.include? self
         self.environments.delete(from_env)
       end
@@ -355,27 +304,18 @@ module Glue::Pulp::Repos
       url
     end
 
-    def delete_repo_by_id(repo_id)
-      Repository.destroy_all(:id=>repo_id)
-    end
-
     def add_repo(label, name, url, repo_type, gpg = nil)
       check_for_repo_conflicts(name, label)
       key = EnvironmentProduct.find_or_create(self.organization.library, self)
-      repo = Repository.create!(:environment_product => key, :pulp_id => repo_id(label),
-          :groupid => Glue::Pulp::Repos.groupid(self, self.library),
+      repo = Repository.create!(:environment_product => key, :pulp_id => repo_id(name),
           :relative_path => Glue::Pulp::Repos.custom_repo_path(self.library, self, label),
           :arch => arch,
           :name => name,
           :label => label,
           :feed => url,
-          :content_type => repo_type,
-          :gpg_key => gpg
+          :gpg_key => gpg,
+          :content_type => repo_type
       )
-      content = create_content(repo)
-      Resources::Pulp::Repository.update(repo.pulp_id, :addgrp => Glue::Pulp::Repos.content_groupid(content))
-      repo.update_attributes!(:cp_label => content.label)
-      repo
     end
 
     def setup_sync_schedule
@@ -390,8 +330,22 @@ module Glue::Pulp::Repos
       content_urls = self.productContent.map { |pc| pc.content.contentUrl }
       cdn_var_substitutor = Resources::CDN::CdnResource.new(self.provider[:repository_url],
                                                        :ssl_client_cert => OpenSSL::X509::Certificate.new(self.certificate),
-                                                       :ssl_client_key => OpenSSL::PKey::RSA.new(self.key)).substitutor
-      cdn_var_substitutor.precalculate(content_urls)
+                                                       :ssl_client_key => OpenSSL::PKey::RSA.new(self.key),
+                                                       :product        => self).substitutor(self.import_logger)
+      begin
+        cdn_var_substitutor.precalculate(content_urls)
+      rescue Errors::SecurityViolation => e
+        # in case we cannot access CDN server to obtain repository URLS we note down error
+        self.repositories_cdn_import_failed!
+        if self.import_logger
+          self.import_logger.error("\nproduct #{self.name} repositories import: " <<
+                                       'SecurityViolation occurred when contacting CDN to fetch ' <<
+                                       "listing files\n" + e.backtrace.join("\n"))
+        end
+        # false would cancel orchestration and would lead to product save cancellation
+        # but we want import process to succeed
+        return true
+      end
 
       self.productContent.collect do |pc|
         ca = File.read(Resources::CDN::CdnResource.ca_file)
@@ -407,6 +361,7 @@ module Glue::Pulp::Repos
             unless Repository.where(:environment_product_id => env_prod.id, :pulp_id => repo_id(repo_name)).any?
               repo = Repository.create!(:environment_product=> env_prod, :pulp_id => repo_id(repo_name),
                                         :cp_label => pc.content.label,
+                                        :content_id=>pc.content.id,
                                         :arch => arch,
                                         :major => version[:major],
                                         :minor => version[:minor],
@@ -418,11 +373,11 @@ module Glue::Pulp::Repos
                                         :feed_cert => self.certificate,
                                         :feed_key => self.key,
                                         :content_type => pc.content.type,
-                                        :groupid => Glue::Pulp::Repos.groupid(self, self.library, pc.content),
                                         :preserve_metadata => true, #preserve repo metadata when importing from cp
                                         :enabled =>false
                                        )
             end
+            self.repositories_cdn_import_passed! unless self.cdn_import_success?
 
           rescue RestClient::InternalServerError => e
             if e.message.include? "Architecture must be one of"
@@ -435,11 +390,30 @@ module Glue::Pulp::Repos
       end
     end
 
+    def repositories_cdn_import_failed!
+      set_repositories_cdn_import false
+    end
+
+    def repositories_cdn_import_passed!
+      set_repositories_cdn_import true
+    end
+
+    # update flag skipping all callbacks (hence orchestration)
+    # after upgrade to >= 3.1.0 we could use #update_column
+    def set_repositories_cdn_import(value)
+      self.class.where(:id => self.id).update_all(:cdn_import_success => value)
+    end
+
     def del_repos
       #destroy all repos in all environments
       Rails.logger.debug "deleting all repositories in product #{self.label}"
       self.environment_products.destroy_all
       true
+    end
+
+
+    def custom_repos_create_orchestration
+      pre_queue.create(:name => "create pulp repositories for product: #{self.label}",      :priority => 1, :action => [self, :set_repos])
     end
 
     def save_repos_orchestration
@@ -460,34 +434,6 @@ module Glue::Pulp::Repos
       pre_queue.create(:name => "delete pulp repositories for product: #{self.label}", :priority => 6, :action => [self, :del_repos])
     end
 
-    def add_filters_orchestration(added_filter)
-      return true unless environments.size > 1 and promoted_to?(library.successor)
-
-      self.repos(library.successor).each do |r|
-        pre_queue.create(
-            :name => "add filter '#{added_filter.pulp_id}' to repo: #{r.id}",
-            :priority => 5,
-            :action => [self, :set_filter, r, added_filter.pulp_id])
-      end
-
-      @orchestration_for = :add_filter
-      on_save
-    end
-
-    def remove_filters_orchestration(removed_filter)
-      return true unless environments.size > 1 and promoted_to?(library.successor)
-
-      self.repos(library.successor).each do |r|
-        pre_queue.create(
-            :name => "remove filter '#{removed_filter.pulp_id}' from repo: #{r.id}",
-            :priority => 5,
-            :action => [self, :del_filter, r, removed_filter.pulp_id])
-      end
-
-      @orchestration_for = :remove_filter
-      on_save
-    end
-
     protected
     def promote_repos repos, from_env, to_env
       async_tasks = []
@@ -497,38 +443,15 @@ module Glue::Pulp::Repos
       async_tasks.flatten(1)
     end
 
-    def delete_repos repos, from_env
-      repos.each do |repo|
-        self.delete_repo(repo, from_env, true)
-      end
-    end
-
-    # Delete the repo; however, if delete_only_if_last_env is false
-    # and the repo is not the in the last environment of the
-    # path, simply disable/hide it.
-    def delete_repo repo, from_env, delete_only_if_last_env=false
-      if delete_only_if_last_env and !from_env.successor.nil? and repo.is_cloned_in?(from_env.successor)
-        repo.disable_repo
-      else
-        self.delete_repo_by_id(repo.id)
-      end
-    end
-
-    def set_filter repo, filter_id
-      repo.set_filters [filter_id]
-    end
-
-    def del_filter repo, filter_id
-      repo.del_filters [filter_id]
+    def delete_repos repos
+      repos.each{|repo| repo.destroy}
     end
 
     def check_for_repo_conflicts(repo_name, repo_label)
       is_dupe =  Repository.joins(:environment_product).where( :name=> repo_name,
               "environment_products.product_id" => self.id, "environment_products.environment_id"=> self.library.id).count > 0
       if is_dupe
-        raise Errors::ConflictException.new(_("There is already a repo with the name [ %{repo} ] for product [ %{product} ]") % {:repo => repo_name, :product => self.label})
-      end
-
+        raise Errors::ConflictException.new(_("There is already a repo with the name [ %{repo} ] for product [ %{product} ]") % {:repo => repo_name, :product => self.label})      end
       unless repo_label.blank?
         is_dupe =  Repository.joins(:environment_product).where( :label=> repo_label,
                "environment_products.product_id" => self.id, "environment_products.environment_id"=> self.library.id).count > 0
@@ -537,5 +460,6 @@ module Glue::Pulp::Repos
         end
       end
     end
+
   end
 end

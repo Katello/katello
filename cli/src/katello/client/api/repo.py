@@ -101,15 +101,6 @@ class RepoAPI(KatelloAPI):
         data = self.server.GET(path)[1]
         return data
 
-    def repo_discovery(self, org_name, url, repotype):
-        discoverydata = {"url": url, "type": repotype}
-        path = "/api/organizations/%s/repositories/discovery" % org_name
-        return self.server.POST(path, discoverydata)[1]
-
-    def repo_discovery_status(self, discoveryTaskId):
-        path = "/api/repositories/discovery/%s" % discoveryTaskId
-        return self.server.GET(path)[1]
-
     def packagegroups(self, repoid):
         path = "/api/repositories/%s/package_groups" % repoid
         return self.server.GET(path)[1]
@@ -133,11 +124,3 @@ class RepoAPI(KatelloAPI):
             return None
         else:
             return categories[0]
-
-    def update_filters(self, repo_id, filters):
-        path = "/api/repositories/%s/filters" % repo_id
-        return self.server.PUT(path, {"filters": filters})[1]
-
-    def filters(self, repo_id, inherit=False):
-        path = "/api/repositories/%s/filters" % repo_id
-        return self.server.GET(path, {"inherit": inherit})[1]

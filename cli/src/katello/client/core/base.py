@@ -393,7 +393,8 @@ class BaseAction(Action):
             print _("ERROR: The server hostname you have configured in /etc/katello/client.conf does not match the")
             print _("hostname returned from the katello server you are connecting to.  ")
             print ""
-            print _("You have: [%s] configured but got: [%s] from the server.") % (wh.expectedHost, wh.actualHost)
+            print _("You have: [%(expectedHost)s] configured but got: [%(actualHost)s] from the server.") \
+                % {'expectedHost':wh.expectedHost, 'actualHost':wh.actualHost}
             print ""
             print _("Please correct the host in the /etc/katello/client.conf file")
             sys.exit(1)
@@ -461,7 +462,22 @@ def check_bool(option, opt, value):
     if value.lower() in ["true","false"]:
         return (value.lower() == "true")
     else:
-        raise OptionValueError(_("option %s: invalid boolean value: %r") % (opt, value))
+        raise OptionValueError(_("option %(opt)s: invalid boolean value: %(value)r") % {'opt':opt, 'value':value})
+
+def check_insensitive_choice(option, opt, value):
+    if option.case_sensitive is False:
+        value = str(value).lower()
+        choices = [str(c).lower() for c in option.choices]
+    else:
+        choices = option.choices
+
+    if value in choices:
+        return value
+    else:
+        choices = ", ".join(option.choices)
+        raise OptionValueError(
+            _("option %s: invalid choice: %r (choose from %s)")
+            % (opt, value, choices))
 
 def check_list(option, opt, value):
     if not option.delimiter:
@@ -482,7 +498,8 @@ def check_url(option, opt, value):
     url_parsed = urlparse(value)
     if not url_parsed.scheme in schemes:                                 # pylint: disable=E1101
         formatted_schemes = " or ".join([s+"://" for s in schemes])
-        raise OptionValueError(_('option %s: has to start with %s') % (opt, formatted_schemes))
+        raise OptionValueError(_('option %(opt)s: has to start with %(formatted_schemes)s') \
+            % {'opt':opt, 'formatted_schemes':formatted_schemes})
     elif not url_parsed.netloc and not url_parsed.path:                  # pylint: disable=E1101
         raise OptionValueError(_('option %s: invalid format') % (opt))
     return value
@@ -539,6 +556,18 @@ class KatelloOption(Option):
             parser.add_option('--package', dest='package', type="list", delimiter=",")
 
 
+    **choice**
+        Extension of original optparse choice.[[BR]]
+        Allows case insensitive comparison.
+
+        :arguments: - case_sensitive - sensitivity switch flag. Default value is True.
+
+        .. code-block:: python
+
+            # usage:
+            parser.add_option('--select_one', dest='select_one', type="choice", choices=['A', 'B', 'C'], case_sensitive=False)
+
+
     **url**
         Parses an url string that starts with a given scheme ("http" and "https" is accepted by default).
         Throws an exception if the value is not a valid url.
@@ -572,6 +601,9 @@ class KatelloOption(Option):
     TYPE_CHECKER["list"] = check_list
     TYPES += ("list", )
     ATTRS += ["delimiter", ]
+
+    TYPE_CHECKER["choice"] = check_insensitive_choice
+    ATTRS += ["case_sensitive", ]
 
     TYPE_CHECKER["url"] = check_url
     TYPES += ("url", )

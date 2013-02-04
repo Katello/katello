@@ -15,6 +15,9 @@ require 'spec_helper.rb'
 describe Api::ErrataController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
+  include ProductHelperMethods
+  include RepositoryHelperMethods
+  include LocaleHelperMethods
 
   before(:each) do
     disable_org_orchestration
@@ -23,32 +26,20 @@ describe Api::ErrataController, :katello => true do
     disable_repo_orchestration
 
     @organization = new_test_org
-    @provider = Provider.create!(:name => "provider",
-                                 :provider_type => Provider::CUSTOM,
-                                 :organization => @organization,
-                                 :repository_url => "https://localhost")
-    @product = Product.create!(:name=>"prod", :label=> "prod",
-                               :provider => @provider,
-                               :environments => [@organization.library])
-    @product.stub(:repos).and_return([@repository])
-
+    @env = @organization.library
+    @product = new_test_product(@organization, @env)
     ep_library = EnvironmentProduct.find_or_create(@organization.library, @product)
-    @repo = Repository.create!(:environment_product => ep_library,
-                               :name=> "repo",
-                               :label=> "repo_label",
-                               :relative_path => "#{@organization.name}/Library/prod/repo",
-                               :pulp_id=> "1",
-                               :enabled => true)
+    @repo = new_test_repo(ep_library, "repo", "#{@organization.name}/Library/prod/repo")
+
+    @product.stub(:repos).and_return([@repository])
     @repo.stub(:has_distribution?).and_return(true)
     Repository.stub(:find).and_return(@repo)
-    @repo.stub(:distributions).and_return([])
-    Glue::Pulp::Distribution.stub(:find).and_return([])
 
     KTEnvironment.stub(:find).and_return(@organization.library)
     @erratum = {}
     @erratum.stub(:repoids).and_return([ @repo.pulp_id ])
-    Glue::Pulp::Errata.stub(:find => @erratum)
-    Glue::Pulp::Errata.stub(:filter => @erratum)
+    ::Errata.stub(:find => @erratum)
+    ::Errata.stub(:filter => @erratum)
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
@@ -101,22 +92,21 @@ describe Api::ErrataController, :katello => true do
       end
 
       it "should call pulp find repo api" do
-        Glue::Pulp::Errata.should_receive(:filter).once.with(:repoid => 1).and_return([])
-
+        ::Errata.should_receive(:filter).once.with(:repoid => 1).and_return([])
         get 'index', :repoid => 1
       end
 
       it "should accept type as filter attribute" do
-        Glue::Pulp::Errata.should_receive(:filter).once.with(:repoid => 1, :type => 'security').and_return([])
+        ::Errata.should_receive(:filter).once.with(:repoid => 1, :type => 'security').and_return([])
         get 'index', :repoid => 1, :type => 'security'
 
-        Glue::Pulp::Errata.should_receive(:filter).once.with(:type => 'security', :environment_id => '123').and_return([])
+        ::Errata.should_receive(:filter).once.with(:type => 'security', :environment_id => '123').and_return([])
         get 'index', :type => 'security', :environment_id => "123"
 
-        Glue::Pulp::Errata.should_receive(:filter).once.with(:severity => 'critical', :environment_id => '123').and_return([])
+        ::Errata.should_receive(:filter).once.with(:severity => 'critical', :environment_id => '123').and_return([])
         get 'index', :severity => 'critical', :environment_id => "123"
 
-        Glue::Pulp::Errata.should_receive(:filter).once.with(:severity => 'critical', :product_id => 'product-123', :environment_id => '123').and_return([])
+        ::Errata.should_receive(:filter).once.with(:severity => 'critical', :product_id => 'product-123', :environment_id => '123').and_return([])
         get 'index', :severity => 'critical', :product_id => 'product-123', :environment_id => "123"
       end
 
@@ -128,7 +118,7 @@ describe Api::ErrataController, :katello => true do
 
     describe "show an erratum" do
       it "should call pulp find errata api" do
-        Glue::Pulp::Errata.should_receive(:find).once.with(1)
+        ::Errata.should_receive(:find).once.with(1)
         get 'show', :id => 1, :repository_id => 1
       end
     end

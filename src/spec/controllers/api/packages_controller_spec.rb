@@ -15,6 +15,9 @@ require 'spec_helper.rb'
 describe Api::PackagesController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
+  include ProductHelperMethods
+  include RepositoryHelperMethods
+  include LocaleHelperMethods
 
   let(:repo_id) {'f8ab5088-688e-4ce4-ade3-700aa4cbb070'}
   before(:each) do
@@ -24,31 +27,19 @@ describe Api::PackagesController, :katello => true do
     disable_repo_orchestration
 
     @organization = new_test_org
-    @provider = Provider.create!(:name => "provider",
-                                 :provider_type => Provider::CUSTOM,
-                                 :organization => @organization,
-                                 :repository_url => "https://localhost")
-    @product = Product.create!(:name=>"prod", :label=> "prod",
-                               :provider => @provider,
-                               :environments => [@organization.library])
-    @product.stub(:repos).and_return([@repository])
-
+    @env = @organization.library
+    @product = new_test_product(@organization, @env)
     ep_library = EnvironmentProduct.find_or_create(@organization.library, @product)
-    @repo = Repository.create!(:environment_product => ep_library,
-                               :name=> "repo",
-                               :label=> "repo_label",
-                               :relative_path => "#{@organization.name}/Library/prod/repo",
-                               :pulp_id=> "1",
-                               :enabled => true)
+    @repo = new_test_repo(ep_library, "repo", "#{@organization.name}/Library/prod/repo")
+
+    @product.stub(:repos).and_return([@repository])
     @repo.stub(:has_distribution?).and_return(true)
     @repo.stub(:pulp_id).and_return(repo_id)
     Repository.stub(:find).and_return(@repo)
-    @repo.stub(:distributions).and_return([])
-    Glue::Pulp::Distribution.stub(:find).and_return([])
 
     @repo.stub(:packages).and_return([])
-    package = { 'repoids' => [ repo_id ] }
-    Resources::Pulp::Package.stub(:find).and_return(package)
+    package = { 'repository_memberships' => [ repo_id ] }
+    Runcible::Extensions::Rpm.stub(:find_by_unit_id).and_return(package)
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
@@ -103,14 +94,14 @@ describe Api::PackagesController, :katello => true do
 
     describe "show a package" do
       it "should call pulp find package api" do
-        Resources::Pulp::Package.should_receive(:find).once.with(1)
+         Runcible::Extensions::Rpm.should_receive(:find_by_unit_id).once.with(1)
         get 'show', :id => 1, :repository_id => repo_id
       end
     end
 
     describe "search for a package" do
       it "should call glue layer" do
-        Glue::Pulp::Package.should_receive(:search).once.with("cheetah*", 0, 0, [@repo.pulp_id])
+        ::Package.should_receive(:search).once.with("cheetah*", 0, 0, [@repo.pulp_id])
         get 'search', :repository_id => repo_id, :search => "cheetah*"
       end
     end

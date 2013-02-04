@@ -67,7 +67,8 @@ class List(ActivationKeyAction):
             if envName == None:
                 print _("No keys found in organization [ %s ]") % orgName
             else:
-                print _("No keys found in organization [ %s ] environment [ %s ]") % (orgName, envName)
+                print _("No keys found in organization [ %(orgName)s ] environment [ %(envName)s ]") \
+                    % {'orgName':orgName, 'envName':envName}
 
             return os.EX_OK
 
@@ -228,6 +229,7 @@ class Update(ActivationKeyAction):
 
         keys = self.api.activation_keys_by_organization(orgName, keyName)
         if len(keys) == 0:
+            print >> sys.stderr, _("Could not find activation key [ %s ]") % keyName
             return os.EX_DATAERR
         key = keys[0]
 
@@ -270,7 +272,7 @@ class Delete(ActivationKeyAction):
 
         keys = self.api.activation_keys_by_organization(orgName, keyName)
         if len(keys) == 0:
-            #TODO: not found?
+            print >> sys.stderr, _("Could not find activation key [ %s ]") % keyName
             return os.EX_DATAERR
 
         self.api.delete(orgName, keys[0]['id'])

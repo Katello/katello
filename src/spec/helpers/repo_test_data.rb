@@ -30,8 +30,9 @@ module RepoTestData
     :label => REPO_LABEL,
     :arch => 'architecture',
     :relative_path => "ACME_Corporation/Library/zoo/base",
+    :content_id=>'123234',
     :uri =>  "https://localhost/pulp/repos/ACME_Corporation/Library/zoo/base",
-    :feed => 'url',
+    :feed => 'https://localhost',
     "groupid" => [
       "product:"+REPO_PRODUCT_CP_ID.to_s,
       "env:"+REPO_ENV_ID.to_s,
@@ -40,7 +41,12 @@ module RepoTestData
     "clone_ids" => [
       CLONED_REPO_ID
     ],
-  }.with_indifferent_access
+    "distributors" => [
+       {'config' => {'relative_url'=>"ACME_Corporation/Library/zoo/base"}}
+    ],
+    "importers" => [
+    ]
+    }.with_indifferent_access
 
   CLONED_PROPERTIES = {
     :pulp_id => CLONED_REPO_ID,
@@ -49,7 +55,7 @@ module RepoTestData
     :arch => 'architecture',
     :relative_path => "ACME_Corporation/Dev/zoo/base",
     :uri =>  "https://localhost/pulp/repos/ACME_Corporation/Dev/zoo/base",
-    :feed => 'url',
+    :feed => 'https://localhost',
     "groupid" => [
       "product:"+REPO_PRODUCT_CP_ID.to_s,
       "env:"+CLONED_REPO_ENV_ID.to_s,
@@ -57,6 +63,9 @@ module RepoTestData
     ],
     "clone_ids" => [
     ],
+    "distributors" => [
+       {'config' => {'relative_url'=>"ACME_Corporation/Library/zoo/base"}}
+    ]
   }.with_indifferent_access
 
   REPO_FILTER = {
@@ -228,8 +237,7 @@ module RepoTestData
 
   # using methods instead of constants due to immutability
   def self.repo_package_groups
-    {
-      "123" =>
+    [
       {"name" => "katello",
        "conditional_package_names" => {},
        "mandatory_package_names" => [],
@@ -247,12 +255,11 @@ module RepoTestData
        "description" => "Katello related packages",
        "translated_name" => {}
       }
-    }.with_indifferent_access
+    ]
   end
 
   def self.repo_package_group_categories
-    {
-      "development" =>
+    [
       {"name" => "Development",
        "_id" => "development",
        "id" => "development",
@@ -263,7 +270,7 @@ module RepoTestData
        "description" => "",
        "packagegroupids" => ["123"],
        "translated_name" => {}}
-    }.with_indifferent_access
+    ]
   end
 
 
