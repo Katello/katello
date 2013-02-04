@@ -24,6 +24,7 @@
 # http://rails-bestpractices.com/posts/47-fetch-current-user-in-models
 #
 
+
 module Katello
   module ThreadSession
 
@@ -51,12 +52,6 @@ module Katello
           def self.set_pulp_config(user_id)
             if user_id
               uri = URI.parse(Katello.config.pulp.url)
-              RestClient.log =
-                Object.new.tap do |proxy|
-                  def proxy.<<(message)
-                    Rails.logger.debug message
-                  end
-                end
 
               Runcible::Base.config = {
                 :url      => "#{uri.scheme}://#{uri.host}",
@@ -64,7 +59,9 @@ module Katello
                 :user     => user_id,
                 :oauth    => {:oauth_secret => Katello.config.pulp.oauth_secret,
                               :oauth_key    => Katello.config.pulp.oauth_key },
-                :logger   => RestClient.log
+                :logging  => {:logger     => Rails.logger,
+                              :exception  => true,
+                              :debug      => true }
               }
             end
           end
