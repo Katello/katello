@@ -188,7 +188,7 @@ class Resources::AbstractModel
   def create
     run_callbacks :create do
       data, response = resource.create as_json(json_create_options), self.class.header
-      self.id        = data[resource_name.to_s]['id']
+      self.id        = self.class.parse_attributes(data)['id']
       set_as_persisted
     end
   end

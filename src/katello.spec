@@ -190,7 +190,7 @@ Requires:        %{name}-common
 Requires:        pulp-server
 Requires:        pulp-rpm-plugins
 Requires:        pulp-selinux
-Requires:        rubygem(runcible) >= 0.3.1
+Requires:        rubygem(runcible) >= 0.3.2
 
 %description glue-pulp
 Katello connection classes for the Pulp backend
