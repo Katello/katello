@@ -42,10 +42,10 @@ class UserClassTest < UserTestBase
     refute User.consumer?
   end
 
-  def test_find_by_default_environment
+  def test_with_default_environment
     @admin.default_environment = @dev
     @admin.save!
-    user_list = User.find_by_default_environment(@dev.id)
+    user_list = User.with_default_environment(@dev.id)
 
     assert_includes user_list, @admin
   end
@@ -408,7 +408,7 @@ class UserDefaultEnvTest < UserTestBase
     @env.destroy
     @user = @user.reload
 
-    assert_empty  User.find_by_default_environment(@env.id)
+    assert_empty  User.with_default_environment(@env.id)
     assert_nil    @user.default_environment
   end
 

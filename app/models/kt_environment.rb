@@ -227,7 +227,7 @@ class KTEnvironment < ActiveRecord::Base
   end
 
   def unset_users_with_default
-    users = User.find_by_default_environment(self.id)
+    users = User.with_default_environment(self.id)
     users.each do |u|
       Notify.message _("Your default environment has been removed. Please choose another one."),
                      :user => u, :organization => self.organization
