@@ -29,5 +29,6 @@ module HttpErrors
   class NotFound < WrappedError; end
   class BadRequest < WrappedError; end
   class Conflict < WrappedError; end
+  class UnprocessableEntity < WrappedError; end
 
 end
