@@ -51,7 +51,7 @@ class EnvironmentsController < ApplicationController
   def new
     @environment = KTEnvironment.new(:organization => @organization)
     setup_new_edit_screen
-    render :partial=>"new",
+    render :partial=>"new"
   end
 
 
