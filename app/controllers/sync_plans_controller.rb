@@ -57,7 +57,7 @@ class SyncPlansController < ApplicationController
   end
 
   def edit
-    render :partial => "edit", :layout => "tupane_layout",
+    render :partial => "edit",
            :locals => {:plan=>@plan, :editable=> current_organization.syncable?, :name=>controller_display_name }
   end
 
@@ -114,7 +114,7 @@ class SyncPlansController < ApplicationController
   def new
     @plan = SyncPlan.new
     @plan.sync_date = DateTime.now
-    render :partial => "new", :layout => "tupane_layout", :locals => {:plan => @plan}
+    render :partial => "new", :locals => {:plan => @plan}
   end
 
   def param_rules

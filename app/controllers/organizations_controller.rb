@@ -70,7 +70,7 @@ class OrganizationsController < ApplicationController
   end
 
   def new
-    render :partial=>"new", :layout => "tupane_layout"
+    render :partial=>"new"
   end
 
   def create
@@ -127,7 +127,7 @@ class OrganizationsController < ApplicationController
       @org_label = _("Make this my default organization.")
     end
     @env_choices =  @organization.environments.collect {|p| [ p.name, p.name ]}
-    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:organization=>@organization, :editable=>@organization.editable?, :name => controller_display_name, :org_label=>@org_label}
+    render :partial=>"edit", :locals=>{:organization=>@organization, :editable=>@organization.editable?, :name => controller_display_name, :org_label=>@org_label}
   end
 
   def update
@@ -188,7 +188,7 @@ class OrganizationsController < ApplicationController
     #entries.compact!  # To remove the nils inserted for rejected entries
 
     # TODO: add more/paging to these results instead of truncating at 250
-    render :partial => 'events', :layout => "tupane_layout", :locals => {:entries => entries[0...250]}
+    render :partial => 'events', :locals => {:entries => entries[0...250]}
   end
 
   def download_debug_certificate
