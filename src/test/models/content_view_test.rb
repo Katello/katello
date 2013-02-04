@@ -23,11 +23,11 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def setup
-    @library              = KTEnvironment.find(environments(:library).id)
-    @dev                  = KTEnvironment.find(environments(:dev).id)
-    @acme_corporation     = Organization.find(organizations(:acme_corporation).id)
-    @library_view            = ContentView.find(content_views(:library_view))
-    @library_dev_view            = ContentView.find(content_views(:library_dev_view))
+    @library          = KTEnvironment.find(environments(:library).id)
+    @dev              = KTEnvironment.find(environments(:dev).id)
+    @acme_corporation = Organization.find(organizations(:acme_corporation).id)
+    @library_view     = ContentView.find(content_views(:library_view))
+    @library_dev_view = ContentView.find(content_views(:library_dev_view))
   end
 
   def test_create
@@ -58,6 +58,18 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     assert content_view.invalid?
     refute content_view.save
     assert content_view.errors.has_key?(:name)
+  end
+
+  def test_duplicate_name
+    attrs = FactoryGirl.attributes_for(:content_view,
+                                       :name => @library_dev_view.name
+                                      )
+    assert_raises(ActiveRecord::RecordInvalid) do
+      ContentView.create!(attrs)
+    end
+    cv = ContentView.create(attrs)
+    refute cv.persisted?
+    refute cv.save
   end
 
   def test_bad_label
