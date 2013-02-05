@@ -90,6 +90,10 @@ sed -e '/^THE_USAGE/{r headpin-usage.txt' -e 'd}' headpin.pod |\
 sed -e 's/THE_VERSION/%{version}/g' katello-debug-certificates.pod |\
 /usr/bin/pod2man --name=katello -c "Katello Reference" --section=1 --release=%{version} - katello-debug-certificates.man1
 popd
+
+#check locale file
+for i in po/*.po; do msgfmt -c $i; done
+
 # create locale files
 make -C po all-mo
 
