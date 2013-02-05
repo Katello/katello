@@ -88,7 +88,7 @@ module Glue::Pulp::Repo
       @relative_path = path
     end
 
-    def initialize(attrs = nil)
+    def initialize(attrs=nil, options={})
       if attrs.nil?
         super
       elsif

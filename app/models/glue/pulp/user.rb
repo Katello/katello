@@ -24,7 +24,7 @@ module Glue::Pulp::User
 
   module InstanceMethods
 
-    def initialize(attrs = nil)
+    def initialize(attrs = nil, options={})
       attrs = prune_pulp_only_attributes(attrs)
       super(attrs)
     end

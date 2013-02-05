@@ -182,7 +182,7 @@ module Glue
 
     def setup_clone
       return if new_record?
-      @old = clone
+      @old = clone.dup
       for key in (changed_attributes.keys - ["updated_at"])
         @old.send "#{key}=", changed_attributes[key]
       end
