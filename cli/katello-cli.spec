@@ -76,8 +76,8 @@ https://fedorahosted.org/katello/wiki/TestingHowto
 
 # generate usage docs and incorporate it into the man page
 pushd man
-PYTHONPATH=../src python ../src/katello/client/utils/usage.py "katello" >katello-usage.txt
-PYTHONPATH=../src python ../src/katello/client/utils/usage.py "headpin" >headpin-usage.txt
+PYTHONPATH=../src python ../scripts/usage.py "katello" >katello-usage.txt
+PYTHONPATH=../src python ../scripts/usage.py "headpin" >headpin-usage.txt
 sed -e '/^THE_USAGE/{r katello-usage.txt' -e 'd}' katello.pod |\
     sed -e 's/THE_VERSION/%{version}/g' |\
     /usr/bin/pod2man --name=katello -c "Katello Reference" --section=1 --release=%{version} - katello.man1
@@ -98,7 +98,9 @@ install -d %{buildroot}%{python_sitelib}/%{base_name}/client
 install -d %{buildroot}%{python_sitelib}/%{base_name}/client/api
 install -d %{buildroot}%{python_sitelib}/%{base_name}/client/cli
 install -d %{buildroot}%{python_sitelib}/%{base_name}/client/core
-install -d %{buildroot}%{python_sitelib}/%{base_name}/client/utils
+install -d %{buildroot}%{python_sitelib}/%{base_name}/client/lib
+install -d %{buildroot}%{python_sitelib}/%{base_name}/client/lib/ui
+install -d %{buildroot}%{python_sitelib}/%{base_name}/client/lib/utils
 install -pm 0644 bin/%{base_name} %{buildroot}%{_bindir}/%{base_name}
 install -pm 0644 bin/_complete_%{base_name} %{buildroot}%{_bindir}/_complete_%{base_name}
 install -pm 0644 bin/%{base_name}-debug-certificates %{buildroot}%{_bindir}/%{base_name}-debug-certificates
@@ -109,7 +111,9 @@ install -pm 0644 src/%{base_name}/client/*.py %{buildroot}%{python_sitelib}/%{ba
 install -pm 0644 src/%{base_name}/client/api/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/api/
 install -pm 0644 src/%{base_name}/client/cli/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/cli/
 install -pm 0644 src/%{base_name}/client/core/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/core/
-install -pm 0644 src/%{base_name}/client/utils/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/utils/
+install -pm 0644 src/%{base_name}/client/lib/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/lib/
+install -pm 0644 src/%{base_name}/client/lib/ui/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/lib/ui/
+install -pm 0644 src/%{base_name}/client/lib/utils/*.py %{buildroot}%{python_sitelib}/%{base_name}/client/lib/utils/
 install -d -m 0755 %{buildroot}%{_mandir}/man1
 install -m 0644 man/%{base_name}.man1 %{buildroot}%{_mandir}/man1/%{base_name}.1
 install -m 0644 man/headpin.man1 %{buildroot}%{_mandir}/man1/headpin.1

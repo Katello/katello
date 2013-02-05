@@ -12,7 +12,7 @@
 # http://www.gnu.org/licenses/old-licenses/lgpl-2.0.txt.
 
 from katello.client.core.base import CommandContainer
-from katello.client.core.utils import parse_tokens
+from katello.client.lib.control import parse_tokens
 
 
 

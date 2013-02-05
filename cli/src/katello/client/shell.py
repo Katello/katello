@@ -23,7 +23,7 @@ import ConfigParser
 from katello.client.completion import Completion
 from katello.client.config import Config, ConfigFileError
 from katello.client.core.base import Command
-from katello.client.utils.encoding import encode_stream, stdout_origin
+from katello.client.lib.utils.encoding import encode_stream, stdout_origin
 
 class KatelloShell(Cmd):
 
