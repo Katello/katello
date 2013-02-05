@@ -52,16 +52,16 @@ class OptionParser(_OptionParser):
 
         # stuff for option value sanity checking
         _("no such option: %s")
-        _("ambiguous option: %s (%s?)")
+        _("ambiguous option: %s (%s?)")#dont_check_gettext
         _("%s option requires an argument")
-        _("%s option requires %d arguments")
+        _("%s option requires %d arguments")#dont_check_gettext
         _("%s option does not take a value")
         _("integer")
         _("long integer")
         _("floating-point")
         _("complex")
-        _("option %s: invalid %s value: %r")
-        _("option %s: invalid choice: %r (choose from %s)")
+        _("option %s: invalid %s value: %r")#dont_check_gettext
+        _("option %s: invalid choice: %r (choose from %s)")#dont_check_gettext
 
         # default options
         _("show this help message and exit")
