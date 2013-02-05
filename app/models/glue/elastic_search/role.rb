@@ -27,9 +27,9 @@ module Glue::ElasticSearch::Role
   end
 
   def extended_index_attrs
-    {:name_sort=>name.downcase,
-     :permissions=>self.permissions.collect{|p| p.name},
-     :self_role=>(self_role_for_user != nil || self.self_role == true)
+    {:name_sort => name.downcase,
+     :permissions => self.permissions.collect{|p| p.name},
+     :self_role => (self.class == UserOwnRole)
     }
   end
 end

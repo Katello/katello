@@ -66,7 +66,7 @@ gem "apipie-rails", '>= 0.0.13'
 
 # Pulp API bindings
 gem 'hooks'
-gem 'runcible', '~> 0.3.2'
+gem 'runcible', '~> 0.3.3'
 gem 'anemone'
 
 
