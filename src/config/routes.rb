@@ -75,6 +75,7 @@ Src::Application.routes.draw do
         post :packages_items
         post :errata_items
         post :repos
+        post :views
         get :repo_packages
         get :repo_errata
         get :repo_compare_packages
@@ -102,6 +103,12 @@ Src::Application.routes.draw do
       member do
         post :refresh
       end
+    end
+  end
+
+  resources :content_views do
+    collection do
+       get :auto_complete
     end
   end
 
