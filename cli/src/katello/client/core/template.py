@@ -300,8 +300,10 @@ class Update(TemplateAction):
         if (parser.values.from_product == None) and \
            (parser.values.from_product_label == None) and \
            (parser.values.from_product_id == None):
-            raise OptionValueError(_("%s must be preceded by %s, %s or %s") %
-                  (option, "--from_product", "--from_product_label", "--from_product_id"))
+            raise OptionValueError(_("%(option)s must be preceded by %(from_product)s, \
+                %(from_product_label)s or %(from_product_id)s") 
+                    % {'option':option, 'from_product':"--from_product",
+                    'from_product_label':"--from_product_label", 'from_product_id':"--from_product_id"})
 
         if self.current_product_option == 'from_product_label':
             self.items[option.dest].append({"name": u_str(value), "from_product_label": self.current_product})

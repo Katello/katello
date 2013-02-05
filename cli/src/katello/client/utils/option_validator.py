@@ -120,11 +120,11 @@ class OptionValidator(object):
             elif colliding_opts:
                 colliding_flags = ', '.join(self.__get_option_strings(colliding_opts))
                 if len(colisions) > 1:
-                    self.add_option_error(_('Options %s are colliding with %s; please see --help') % \
-                        (flags, colliding_flags))
+                    self.add_option_error(_('Options %(flags)s are colliding with \
+                        %(colliding_flags)s; please see --help') % {'flags':flags, 'colliding_flags':colliding_flags})
                 else:
-                    self.add_option_error(_('Option %s is colliding with %s; please see --help') % \
-                        (flags, colliding_flags))
+                    self.add_option_error(_('Option %(flags)s is colliding with \
+                        %(colliding_flags)s; please see --help') % {'flags':flags, 'colliding_flags':colliding_flags})
             else:
                 if len(colisions) > 1:
                     self.add_option_error(_('Options %s can\'t be used in this command; please see --help') % flags)
