@@ -15,13 +15,6 @@ require 'util/threadsession'
 require 'util/password'
 require 'util/model_util'
 
-class OwnRolePresenceValidator < ActiveModel::Validator
-  def validate(record)
-    record.errors[:roles] << _("Own Role must be included in roles #{record.roles}") and return unless record.roles.any? {|r| r.type == 'UserOwnRole'}
-  end
-end
-
-
 class User < ActiveRecord::Base
   include Glue::Pulp::User if Katello.config.use_pulp
   include Glue::Foreman::User if Katello.config.use_foreman
@@ -42,6 +35,7 @@ class User < ActiveRecord::Base
 
   has_many :roles_users
   has_many :roles, :through => :roles_users, :before_remove => :super_admin_check, :uniq => true, :extend => RolesPermissions::UserOwnRole
+  validates_with Validators::OwnRolePresenceValidator, :attributes => :roles
   has_many :help_tips
   has_many :user_notices
   has_many :notices, :through => :user_notices
@@ -68,7 +62,6 @@ class User < ActiveRecord::Base
 
   before_validation :create_own_role
   after_validation :setup_remote_id
-  validates :roles, :own_role_presence => true
   before_save   :hash_password, :setup_preferences
   after_save :create_or_update_default_system_registration_permission
   # THIS CHECK MUST BE THE FIRST before_destroy
