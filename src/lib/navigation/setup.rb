@@ -18,7 +18,7 @@ module Navigation
        :name => _("Setup"),
         :url => :sub_level,
         :options => {:class=>'setup top_level', "data-menu"=>"setup"},
-        :items=> [ menu_smart_proxies, menu_subnets, menu_domains, menu_architectures ]
+        :items=> [ menu_smart_proxies, menu_subnets, menu_domains, menu_architectures, menu_hw_models]
         # TODO: final order of the setup menu items
         #   Setup
         #   Locations
@@ -64,6 +64,15 @@ module Navigation
        :url => architectures_path,
        :if => lambda{true}, #TODO: check permissions
        :options => {:class=>'setup second_level', "data-menu"=>"subnets"}
+      }
+    end
+
+    def menu_hw_models
+      {:key => :hw_models,
+       :name => _("Hardware Models"),
+       :url => hardware_models_path,
+       :if => lambda{true}, #TODO: check permissions
+       :options => {:class=>'setup second_level', "data-menu"=>"hardware_models"}
       }
     end
 

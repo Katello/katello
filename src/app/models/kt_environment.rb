@@ -51,9 +51,9 @@ class KTEnvironment < ActiveRecord::Base
 
   has_many :content_view_version_environments, :foreign_key=>:environment_id
   has_many :content_view_versions, :through=>:content_view_version_environments, :inverse_of=>:environments
-
-
   belongs_to :default_content_view, :class_name => "ContentView", :foreign_key => :default_content_view_id
+
+  has_many :users, :foreign_key => :default_environment_id, :inverse_of => :default_environment, :dependent => :nullify
 
   scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
 
@@ -245,9 +245,8 @@ class KTEnvironment < ActiveRecord::Base
   end
 
   def unset_users_with_default
-    users = User.find_by_default_environment(self.id)
+    users = User.with_default_environment(self.id)
     users.each do |u|
-      u.default_environment = nil
       Notify.message _("Your default environment has been removed. Please choose another one."),
                      :user => u, :organization => self.organization
     end

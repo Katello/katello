@@ -146,7 +146,7 @@ module Glue::ElasticSearch::Package
 
         return search.perform.results
       rescue Tire::Search::SearchRequestFailed => e
-        Util::Support.array_with_totals
+        Util::Support.array_with_total
       end
 
       def self.index_packages pkg_ids

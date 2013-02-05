@@ -62,6 +62,8 @@ describe Ping do
     # katello jobs
     Ping.should_receive(:system).with("/sbin/service katello-jobs status").and_return(true)
 
+    Ping.should_receive(:pulp_without_oauth).and_return(nil)
+
     result = Ping.ping()
     result[:result].should == "ok"
   end

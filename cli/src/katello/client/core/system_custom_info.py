@@ -17,7 +17,7 @@
 from katello.client import constants
 from katello.client.api.custom_info import CustomInfoAPI
 from katello.client.api.utils import get_system
-from katello.client.core.utils import test_record
+from katello.client.lib.utils.data import test_record
 from katello.client.core.system import SystemAction
 
 class BaseSystemCustomInfo(SystemAction):
