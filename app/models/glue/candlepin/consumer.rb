@@ -50,7 +50,7 @@ module Glue::Candlepin::Consumer
 
   module InstanceMethods
 
-    def initialize(attrs = nil)
+    def initialize(attrs=nil, options={})
       if attrs.nil?
         super
       elsif
