@@ -14,7 +14,7 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
-from katello.client.utils.encoding import u_str
+from katello.client.lib.utils.encoding import u_str
 
 class PermissionAPI(KatelloAPI):
     """

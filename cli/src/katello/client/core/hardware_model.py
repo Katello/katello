@@ -17,7 +17,7 @@
 
 from katello.client.api.hardware_model import HardwareModelAPI
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import unnest_one
+from katello.client.lib.utils.data import unnest_one
 
 
 # base hardware model action --------------------------------------------------------

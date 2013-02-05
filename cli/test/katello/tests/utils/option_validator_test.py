@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from katello.client.core.base import Action
 from katello.client.i18n_optparse import OptionParser
-from katello.client.utils.option_validator import OptionValidator
+from katello.client.lib.utils.option_validator import OptionValidator
 from katello.tests.test_utils import ColoredAssertionError
 import os
 

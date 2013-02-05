@@ -14,7 +14,7 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
-from katello.client.core.utils import slice_dict
+from katello.client.lib.utils.data import slice_dict
 
 
 class ${resource.name(True, True)}API(KatelloAPI):

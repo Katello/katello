@@ -22,10 +22,10 @@ from urlparse import urlparse
 
 from katello.client.config import Config
 from katello.client.api.utils import ApiDataError
-from katello.client.core.utils import parse_tokens, SystemExitRequest
-from katello.client.utils.printer import Printer, GrepStrategy, VerboseStrategy
-from katello.client.utils.option_validator import OptionValidator
-from katello.client.utils.encoding import u_str, u_obj
+from katello.client.lib.control import parse_tokens, SystemExitRequest
+from katello.client.lib.ui.printer import Printer, GrepStrategy, VerboseStrategy
+from katello.client.lib.utils.option_validator import OptionValidator
+from katello.client.lib.utils.encoding import u_str, u_obj
 from katello.client.logutil import getLogger
 from katello.client.server import ServerRequestError
 
@@ -476,8 +476,8 @@ def check_insensitive_choice(option, opt, value):
     else:
         choices = ", ".join(option.choices)
         raise OptionValueError(
-            _("option %s: invalid choice: %r (choose from %s)")
-            % (opt, value, choices))
+            _("option %(opt)s: invalid choice: %(value)r (choose from %(choices)s)")
+            % {'opt':opt, 'value':value, 'choices':choices})
 
 def check_list(option, opt, value):
     if not option.delimiter:

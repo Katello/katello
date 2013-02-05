@@ -6,7 +6,7 @@ from katello.tests.core.organization import organization_data
 
 import katello.client.core.system
 from katello.client.core.system import Report
-from katello.client.core.utils import convert_to_mime_type
+from katello.client.lib.utils.io import convert_to_mime_type
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
     #requires: organization

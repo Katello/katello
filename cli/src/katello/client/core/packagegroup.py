@@ -2,8 +2,8 @@ import os
 
 from katello.client.api.repo import RepoAPI
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import system_exit
-from katello.client.utils.printer import batch_add_columns
+from katello.client.lib.control import system_exit
+from katello.client.lib.ui.printer import batch_add_columns
 
 
 class PackageGroupAction(BaseAction):

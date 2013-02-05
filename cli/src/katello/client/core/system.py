@@ -24,15 +24,17 @@ from katello.client.api.custom_info import CustomInfoAPI
 from katello.client.api.utils import get_environment, get_system, get_content_view
 from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import test_record, convert_to_mime_type, attachment_file_name, save_report, \
-    update_dict_unless_none, stringify_custom_info
-from katello.client.utils.printer import VerboseStrategy
-from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask, \
-    format_date, get_katello_mode
-from katello.client.utils.encoding import u_str
-from katello.client.utils import printer
 from katello.client.server import ServerRequestError
-from katello.client.utils.printer import batch_add_columns
+
+from katello.client.lib.control import get_katello_mode
+from katello.client.lib.utils.io import convert_to_mime_type, attachment_file_name, save_report
+from katello.client.lib.utils.data import test_record, update_dict_unless_none
+from katello.client.lib.utils.encoding import u_str
+from katello.client.lib.async import SystemAsyncTask
+from katello.client.lib.ui import printer
+from katello.client.lib.ui.printer import VerboseStrategy, batch_add_columns
+from katello.client.lib.ui.progress import run_spinner_in_bg, wait_for_async_task
+from katello.client.lib.ui.formatters import format_date, stringify_custom_info
 
 
 # base system action --------------------------------------------------------
