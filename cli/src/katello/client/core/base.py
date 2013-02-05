@@ -476,8 +476,8 @@ def check_insensitive_choice(option, opt, value):
     else:
         choices = ", ".join(option.choices)
         raise OptionValueError(
-            _("option %s: invalid choice: %r (choose from %s)")
-            % (opt, value, choices))
+            _("option %(opt)s: invalid choice: %(value)r (choose from %(choices)s)")
+            % {'opt':opt, 'value':value, 'choices':choices})
 
 def check_list(option, opt, value):
     if not option.delimiter:
