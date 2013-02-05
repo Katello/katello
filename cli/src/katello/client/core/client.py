@@ -18,7 +18,7 @@ import os
 
 from katello.client.config import Config
 from katello.client.core.base import BaseAction, Command
-from katello.client.utils.encoding import u_str
+from katello.client.lib.utils.encoding import u_str
 
 
 # base system action --------------------------------------------------------

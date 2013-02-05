@@ -21,12 +21,15 @@ from katello.client.api.provider import ProviderAPI
 from katello.client.cli.base import opt_parser_add_org
 from katello.client.server import ServerRequestError
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import test_record, get_abs_path, run_async_task_with_status, run_spinner_in_bg, \
-    AsyncTask, format_sync_errors, system_exit
-from katello.client.core.repo import format_sync_state, format_sync_time
-from katello.client.core.utils import ProgressBar
+from katello.client.lib.ui.progress import run_async_task_with_status, run_spinner_in_bg
+from katello.client.lib.control import system_exit
+from katello.client.lib.async import AsyncTask
+from katello.client.lib.utils.io import get_abs_path
+from katello.client.lib.utils.data import test_record
+from katello.client.lib.ui.formatters import format_sync_state, format_sync_time, format_sync_errors
+from katello.client.lib.ui.progress import ProgressBar
+from katello.client.lib.ui import printer
 from katello.client.api.utils import get_provider
-from katello.client.utils import printer
 
 
 

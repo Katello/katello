@@ -19,7 +19,7 @@ import os
 
 from katello.client.api.${resource.name(True, False)} import ${resource.name(True, True)}API
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import test_record
+from katello.client.lib.utils.data import test_record
 
 
 # base ${resource.name()} action --------------------------------------------------------

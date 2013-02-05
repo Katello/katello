@@ -5,7 +5,7 @@ from katello.tests.core.action_test_utils import CLIOptionTestCase, CLIActionTes
 
 import katello.client.core.user
 from katello.client.core.user import Report
-from katello.client.core.utils import convert_to_mime_type
+from katello.client.lib.utils.io import convert_to_mime_type
 
 class UserReportTest(CLIActionTestCase):
 
