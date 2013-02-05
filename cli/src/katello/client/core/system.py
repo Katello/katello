@@ -162,7 +162,7 @@ class Info(SystemAction):
         if "template" in system:
             self.printer.add_column('template', _("Template"), \
                 show_with=printer.VerboseStrategy, value=system["template"]["name"])
-        self.printer.add_column('custom_info',_("Custom Info"), multiline=True, show_with=printer.VerboseStrategy)
+        self.printer.add_column('custom_info', _("Custom Info"), multiline=True, show_with=printer.VerboseStrategy)
         self.printer.add_column('content_view', _("Content View"))
 
         self.printer.print_item(system)
