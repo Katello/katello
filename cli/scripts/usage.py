@@ -19,7 +19,7 @@
 import os
 import sys
 from katello.client.config import Config
-Config.PATH = os.path.join(os.path.dirname(__file__), "../../../../etc/client.conf")
+Config.PATH = os.path.join(os.path.dirname(__file__), "../etc/client.conf")
 
 if __name__ == "__main__":
     # Set correct locale

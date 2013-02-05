@@ -15,7 +15,7 @@ class Permission < ActiveRecord::Base
   belongs_to :organization
   belongs_to :role, :inverse_of => :permissions
   has_and_belongs_to_many :verbs
-  has_many :tags, :class_name=>"PermissionTag", :inverse_of=>:permission
+  has_many :tags, :class_name=>"PermissionTag", :dependent => :destroy, :inverse_of=>:permission
 
   before_save :cleanup_tags_verbs
   before_save :check_global
@@ -28,10 +28,6 @@ class Permission < ActiveRecord::Base
   validates_uniqueness_of :name, :scope => [:organization_id, :role_id], :message => N_("must be unique within an organization scope")
 
   before_destroy :check_locked
-
-  before_destroy do |p|
-    p.tags.destroy_all
-  end
 
   validates_with Validators::PermissionValidator
   validates_presence_of :resource_type

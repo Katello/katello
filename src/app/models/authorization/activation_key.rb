@@ -11,44 +11,41 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 
-
 module Authorization::ActivationKey
-  def self.included(base)
-    base.class_eval do
+  extend ActiveSupport::Concern
 
+  module ClassMethods
+    def readable(org)
+      ActivationKey.readable?(org) ? where(:organization_id=>org.id) : where("0 = 1")
+    end
 
-      def self.readable(org)
-        ActivationKey.readable?(org) ? where(:organization_id=>org.id) : where("0 = 1")
-      end
+    # returns list of virtual permission tags for the current user
+    def list_tags(organization_id)
+      [] #don't list tags for keys
+    end
 
-      # returns list of virtual permission tags for the current user
-      def self.list_tags(organization_id)
-        [] #don't list tags for keys
-      end
+    def list_verbs(global = false)
+      {
+        :read_all => _("Read Activation Keys"),
+        :manage_all => _("Administer Activation Keys")
+      }.with_indifferent_access
+    end
 
-      def self.list_verbs(global = false)
-        {
-          :read_all => _("Read Activation Keys"),
-          :manage_all => _("Administer Activation Keys")
-        }.with_indifferent_access
-      end
+    def read_verbs
+      [:read_all]
+    end
 
-      def self.read_verbs
-        [:read_all]
-      end
+    def no_tag_verbs
+      ::ActivationKey.list_verbs.keys
+    end
 
-      def self.no_tag_verbs
-        ::ActivationKey.list_verbs.keys
-      end
+    def readable?(org)
+      User.allowed_to?([:read_all, :manage_all], :activation_keys, nil, org)
+    end
 
-      def self.readable?(org)
-        User.allowed_to?([:read_all, :manage_all], :activation_keys, nil, org)
-      end
-
-      def self.manageable?(org)
-        User.allowed_to?([:manage_all], :activation_keys, nil, org)
-      end
-
+    def manageable?(org)
+      User.allowed_to?([:manage_all], :activation_keys, nil, org)
     end
   end
+
 end

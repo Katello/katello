@@ -21,9 +21,9 @@ from katello.client.api.activation_key import ActivationKeyAPI
 from katello.client.api.template import TemplateAPI
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import test_record
-from katello.client.utils import printer
 from katello.client.api.utils import get_environment, get_content_view
+from katello.client.lib.utils.data import test_record
+from katello.client.lib.ui import printer
 from katello.client.cli.base import OptionException, opt_parser_add_org, opt_parser_add_environment
 
 class ActivationKeyAction(BaseAction):

@@ -14,7 +14,7 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
-from katello.client.core.utils import update_dict_unless_none
+from katello.client.lib.utils.data import update_dict_unless_none
 
 # pylint: disable=R0904
 class RepoAPI(KatelloAPI):

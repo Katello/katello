@@ -27,7 +27,7 @@ module Navigation
         },
         { :key => :user_roles,
           :name =>_("Roles"),
-          :url => lambda{edit_role_path(@user.own_role_id)},
+          :url => lambda{edit_role_path(@user.own_role.id)},
           :if => lambda{@user},
           :options => {:class=>"panel_link"}
         },

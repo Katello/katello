@@ -55,9 +55,8 @@ class Ping
 
       # pulp - ping without oauth
       if Katello.config.katello?
-        url = Katello.config.pulp.url
         exception_watch(result[:status][:pulp]) do
-          RestClient.get "#{url}/services/status/"
+          Ping.pulp_without_oauth
         end
       end
 
@@ -134,6 +133,24 @@ class Ping
       names = PACKAGES.join("|")
       packages = `rpm -qa | egrep "#{names}"`
       packages.split("\n").sort
+    end
+
+
+    # this checks Pulp is running and responding without need
+    # for authentication. We don't use RestClient.options here
+    # because it returns empty string, which is not enough to say
+    # pulp is the one that responded
+    def pulp_without_oauth
+      url = Katello.config.pulp.url
+      uri = URI("#{url}/repositories/")
+      http = Net::HTTP.new(uri.host, uri.port)
+      if uri.scheme == "https"
+        http.use_ssl = true
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      end
+      unless http.options(uri.path).content_length > 0
+        raise _("Pulp not running")
+      end
     end
   end
 end
