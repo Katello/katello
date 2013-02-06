@@ -147,6 +147,8 @@ class Product < ActiveRecord::Base
 
   scope :all_in_org, lambda{|org| ::Product.joins(:provider).where('providers.organization_id = ?', org.id)}
 
+  scope :repositories_cdn_import_failed, where(:cdn_import_success => false)
+
   def assign_unique_label
     self.label = Katello::ModelUtils::labelize(self.name) if self.label.blank?
 

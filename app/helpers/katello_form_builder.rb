@@ -68,6 +68,7 @@ class KatelloFormBuilder < ActionView::Helpers::FormBuilder
     field_options = {}
     field_options[:label] = options[:label]
     field_options[:help] = options[:help]
+    field_options[:label_help] = options[:label_help]
     field_options[:input_wrapper] = {}
     field_options[:input_wrapper][:class] = css_class
     field_options[:input_wrapper][:tag_options] = tag_options
@@ -143,7 +144,12 @@ class KatelloFormBuilder < ActionView::Helpers::FormBuilder
     required = object.class.validators_on(name).any? do|v|
       v.kind_of? ActiveModel::Validations::PresenceValidator
     end
-    label(name, options[:label], :class => ("required" if required))
+
+    label_content = label(name, options[:label], :class => ("required" if required))
+    return label_content if options[:label_help].nil?
+
+    help_content = content_tag(:i, '', :class => 'details_icon-grey tipsify', 'title' => options[:label_help])
+    return help_content + label_content
   end
 
   def objectify_options(options)
