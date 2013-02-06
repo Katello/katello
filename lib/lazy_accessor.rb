@@ -20,7 +20,7 @@ module LazyAccessor
   module ClassMethods
     attr_accessor :lazy_attributes
 
-    # example: lazy_accessor :a, :b, :c,
+    # @example lazy_accessor :a, :b, :c,
     #   :initializer => lambda { json = Resources::Candlepin::Product.get(cp_id)[0] },
     #   :unless => lambda { cp_id.nil? }
     def lazy_accessor *args

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 Apipie.configure do |config|
-  config.app_name = "Katello"
+  config.app_name = Katello.config.app_name
   config.app_info = "The sysadmin's fortress."
   config.copyright = "Copyright © 2012 Red Hat, Inc."
   config.api_base_url = "/api"
@@ -19,6 +19,26 @@ Apipie.configure do |config|
     end
 
     config.markup = Katello::MarkdownMaruku
+  end
+
+  if Katello.config.headpin?
+    config.ignored = %w[Api::ChangesetsController
+                        Api::ChangesetsContentController
+                        Api::ErrataController
+                        Api::DistributionsController
+                        Api::GpgKeysController
+                        Api::RepositoriesController
+                        Api::PackagesController
+                        Api::TasksController
+                        Api::TemplatesController
+                        Api::TemplatesContentController
+                        Api::Foreman::ArchitecturesController
+                        Api::Foreman::ConfigTemplates
+                        Api::Foreman::DomainsController
+                        Api::Foreman::SimpleCrudController
+                        Api::Foreman::SubnetsController]
+
+    config.cache_dir = File.join(Rails.root, "public/headpin-apipie-cache")
   end
 end
 

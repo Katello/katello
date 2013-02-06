@@ -79,6 +79,8 @@ common:
   debug_cp_proxy: false
   # if paranoia is set to true even children of Exception will be rescued
   exception_paranoia: false
+  # run yard server inside katello server
+  embed_yard_documentation: false
 
   #setup how often you want
   #your notifications to be checked
@@ -185,6 +187,7 @@ production:
 # The following configuration values override ones from the common section
 #
 development:
+  embed_yard_documentation: true
   foreman:
     random_password: false
   database:

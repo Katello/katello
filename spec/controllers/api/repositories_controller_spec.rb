@@ -280,7 +280,7 @@ describe Api::RepositoriesController, :katello => true do
 
         it "should fail with bad request" do
           put :update, {:id => '1', :repository => {:gpg_key_name => "gpg_key", :name => "another name"}}
-          response.code.should eq("400")
+          response.status.should == HttpErrors::UNPROCESSABLE_ENTITY
         end
 
       end

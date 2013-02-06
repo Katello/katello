@@ -1,0 +1,20 @@
+--protected
+--private
+--verbose
+--use-cache
+--markup markdown
+--template default
+--template-path ./yard-template
+--plugin yard-activerecord
+--load ./lib/monkeys/yard_svg_fix.rb
+--output-dir=./yardoc/
+--main=README.md
+--title=Katello
+--asset ./doc/graphs:graphs/
+./app/**/*.rb
+./lib/**/*.rb
+./db/schema.rb
+-
+./doc/**/*.md
+./doc/RailsReadme.rdoc
+./LICENSE.txt
