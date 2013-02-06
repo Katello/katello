@@ -23,9 +23,9 @@ from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org, 
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_repo, get_environment, get_product, \
     get_system_group, get_system
-from katello.client.utils.encoding import u_str
-from katello.client.utils import printer
-from katello.client.utils.printer import batch_add_columns
+from katello.client.lib.utils.encoding import u_str
+from katello.client.lib.ui import printer
+from katello.client.lib.ui.printer import batch_add_columns
 
 
 # base package action --------------------------------------------------------

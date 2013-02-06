@@ -15,7 +15,7 @@
 # in this software or its documentation.
 #
 
-from katello.client.core.utils import get_katello_mode
+from katello.client.lib.control import get_katello_mode
 
 from katello.client.core import (
   activation_key,

@@ -53,7 +53,7 @@ module Katello
             if user_id
               uri = URI.parse(Katello.config.pulp.url)
 
-              Runcible::Base.config = {
+              ::Runcible::Base.config = {
                 :url      => "#{uri.scheme}://#{uri.host}",
                 :api_path => uri.path,
                 :user     => user_id,

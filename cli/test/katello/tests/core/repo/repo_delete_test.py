@@ -6,7 +6,7 @@ from katello.tests.core.repo import repo_data
 
 import katello.client.core.repo
 from katello.client.core.repo import Delete
-from katello.client.core.utils import SystemExitRequest
+from katello.client.lib.control import SystemExitRequest
 from katello.client.api.utils import ApiDataError
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
