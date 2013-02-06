@@ -23,13 +23,13 @@ module Glue::Foreman::User
   end
 
   module ClassMethods
-    # @private
+    # @api private
     def disable_foreman_orchestration!(value)
       raise ArgumentError unless [true, false].include? value
       @foreman_orchestration_disabled = value
     end
 
-    # @private
+    # @api private
     def foreman_orchestration_disabled?
       !!@foreman_orchestration_disabled
     end
@@ -82,7 +82,7 @@ module Glue::Foreman::User
       self.foreman_user.destroy!
     end
 
-    # @private
+    # @api private
     def disable_foreman_orchestration(&block)
       original = @disable_foreman_orchestration
       disable_foreman_orchestration! true
@@ -91,14 +91,14 @@ module Glue::Foreman::User
       @disable_foreman_orchestration = original
     end
 
-    # @private
+    # @api private
     # @param [true, false, nil] value when nil is supplied, self.class.foreman_orchestration_disabled? is used
     def disable_foreman_orchestration!(value)
       raise ArgumentError unless [true, false, nil].include? value
       @foreman_orchestration_disabled = value
     end
 
-    # @private
+    # @api private
     def foreman_orchestration_disabled?
       if @foreman_orchestration_disabled.nil?
         self.class.foreman_orchestration_disabled?

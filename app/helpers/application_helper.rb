@@ -220,23 +220,18 @@ module ApplicationHelper
   end
 
 
-  # These 2 methods copied from scoped_search:
-  #
-  #  https://github.com/wvanbergen/scoped_search
-  #
+  # These 2 methods copied from scoped_search {https://github.com/wvanbergen/scoped_search}
   # which Katello used to use but no longer uses.
   #
   # Creates a link that alternates between ascending and descending.
   #
-  # Examples:
-  #
+  # @example
   #   sort @search, :by => :username
   #   sort @search, :by => :created_at, :as => "Created"
   #
-  # This helper accepts the following options:
-  #
-  # * <tt>:by</tt> - the name of the named scope. This helper will prepend this value with "ascend_by_" and "descend_by_"
-  # * <tt>:as</tt> - the text used in the link, defaults to whatever is passed to :by
+  # @param [Hash] options This helper accepts the following options:
+  # @option options [String] :by the name of the named scope. This helper will prepend this value with "ascend_by_" and "descend_by_"
+  # @option options [String] :as the text used in the link, defaults to whatever is passed to :by
   def sort(field, options = {}, html_options = {})
 
     unless options[:as]
