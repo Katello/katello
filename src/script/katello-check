@@ -1,4 +1,4 @@
-#!/usr/bin/rails runner
+#!/usr/bin/ruby
 # vim: ft=ruby:ts=2:sw=2:et
 
 puts '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
@@ -36,6 +36,12 @@ puts '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 puts '                                                   Katello integrity checker'
 puts '                                                   (takes a while to finish)'
 
+Dir.chdir "/usr/share/katello"
+ENV["RAILS_ENV"] = 'production'
+require "/usr/share/katello/config/boot"
+require "/usr/share/katello/config/application"
+Rails.application.require_environment!
+
 # TYPE => DESCRIPTION (HOW TO FIX IT)
 ERROR_TYPES = {}
 ERROR_TYPES[:ERRREPOKAPU] = <<EOS
@@ -46,7 +52,7 @@ ERROR_TYPES[:ERRREPOPUKA] = <<EOS
 Repository was found in Pulp, but not in Katello.
 EOS
 ERROR_TYPES[:TEMPLATE] = <<EOS
-Use this as a template for you description. Please keep paragraph width max. 79
+Use this as a template for your description. Please keep paragraph width max. 79
 characters. Inform user how to fix error.
 EOS
 
@@ -61,19 +67,27 @@ User.current = User.find(1)
 
 # <CHECKS>
 
-puts "Checking repos from Katello against Pulp..."
-Repository.all.each do |repo|
-  if Pulp::Repository.find(repo.pulp_id).nil?
-    err :ERRREPOKAPU, "repo #{repo.id} (#{repo.pulp_id}) not found in Pulp"
-  end
-end
+if defined? Resources::Pulp::Repository
+  # Pulp version 1.x checks
 
-puts "Checking repos from Pulp against Katello..."
-Pulp::Repository.all.each do |repo_json|
-  id = repo_json["id"]
-  if Repository.where(:pulp_id => id).count != 1
-    err :ERRREPOPUKA, "repo '#{id}' not found in Katello"
+  puts "Checking repos from Katello against Pulp..."
+  Repository.all.each do |repo|
+    if Resources::Pulp::Repository.find(repo.pulp_id).nil?
+      err :ERRREPOKAPU, "repo #{repo.id} (#{repo.pulp_id}) not found in Pulp"
+    end
   end
+
+  puts "Checking repos from Pulp against Katello..."
+  Resources::Pulp::Repository.all.each do |repo_json|
+    id = repo_json["id"]
+    if Repository.where(:pulp_id => id).count != 1
+      err :ERRREPOPUKA, "repo '#{id}' not found in Katello"
+    end
+  end
+else
+  # Pulp version 2.x checks
+
+  # TODO
 end
 
 # </CHECKS>
