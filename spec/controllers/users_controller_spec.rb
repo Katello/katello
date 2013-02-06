@@ -110,7 +110,7 @@ describe UsersController do
     it "should not change the username" do
        put 'update', {:id => @user.id, :user => {:username=>"FOO"}}
        response.should_not be_success
-       response.status.should == 400
+       response.status.should == HttpErrors::UNPROCESSABLE_ENTITY
        assert User.where(:username=>"FOO").empty?
        assert !User.where(:username=>@user.username).empty?
     end
