@@ -10,4 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+# used for sending notifications form ActiveRecord models
+# @example
+#   Notify.success a_message
 Notify = Notifications::Notifier.new

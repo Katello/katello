@@ -79,7 +79,7 @@ class Api::ChangesetsController < Api::ApiController
     elsif params[:changeset][:type] == 'DELETION'
       @changeset = DeletionChangeset.new(params[:changeset])
     else
-      raise HttpErrors::ApiError, _("Unknown changeset type, must be PROMOTION or DELETION: %s") % csType
+      raise HttpErrors::UnprocessableEntity, _("Unknown changeset type, must be PROMOTION or DELETION: %s") % csType
     end
 
     @changeset.environment = @environment
