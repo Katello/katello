@@ -17,12 +17,18 @@ class SyncManagementController < ApplicationController
   include SyncManagementHelper::RepoMethods
   respond_to :html, :json
 
-  @@status_values = { PulpSyncStatus::Status::WAITING => _("Queued."),
+  # to avoid problems when generating Headpin documenation when
+  # building RPMs
+  if Katello.config.use_pulp
+    @@status_values = { PulpSyncStatus::Status::WAITING => _("Queued."),
                      PulpSyncStatus::Status::FINISHED => _("Sync complete."),
                      PulpSyncStatus::Status::ERROR => _("Error syncing!"),
                      PulpSyncStatus::Status::RUNNING => _("Running."),
                      PulpSyncStatus::Status::CANCELED => _("Canceled."),
                      PulpSyncStatus::Status::NOT_SYNCED => ""}
+  else
+    @@status_values = {}
+  end
 
 
   before_filter :find_provider, :except => [:index, :sync, :sync_status, :manage]
