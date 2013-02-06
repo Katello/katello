@@ -20,7 +20,7 @@ module Glue::ElasticSearch::User
                     :display_attrs => [:username, :email],
                     :json          => { :except => [:password, :password_reset_token,
                                                     :password_reset_sent_at, :helptips_enabled,
-                                                    :disabled, :own_role_id, :login] }
+                                                    :disabled, :login] }
 
       mapping do
         indexes :username, :type => 'string', :analyzer => :kt_name_analyzer

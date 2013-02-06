@@ -16,7 +16,7 @@ import sys
 import gettext
 import locale
 
-from katello.client.utils.encoding import encode_stream
+from katello.client.lib.utils.encoding import encode_stream
 
 # Localization domain:
 APP = 'katello-cli'

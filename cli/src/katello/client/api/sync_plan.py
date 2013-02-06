@@ -14,8 +14,8 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
-from katello.client.utils.encoding import u_str
-from katello.client.core.utils import update_dict_unless_none
+from katello.client.lib.utils.encoding import u_str
+from katello.client.lib.utils.data import update_dict_unless_none
 
 class SyncPlanAPI(KatelloAPI):
     """

@@ -35,6 +35,7 @@ module Resources
     Subnet          = ForemanApi::Resources::Subnet.new options
     ConfigTemplate  = ForemanApi::Resources::ConfigTemplate.new options
     ComputeResource = ForemanApi::Resources::ComputeResource.new options
+    HardwareModel   = ForemanApi::Resources::Model.new options
 
   end
 end

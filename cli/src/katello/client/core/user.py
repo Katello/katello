@@ -20,8 +20,9 @@ from katello.client.api.user import UserAPI
 from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.utils import get_user, get_environment
 from katello.client.core.base import BaseAction, Command
-from katello.client.core.utils import test_record, convert_to_mime_type, attachment_file_name, save_report
-from katello.client.utils.printer import batch_add_columns
+from katello.client.lib.utils.io import convert_to_mime_type, attachment_file_name, save_report
+from katello.client.lib.utils.data import test_record
+from katello.client.lib.ui.printer import batch_add_columns
 
 
 # base user action -----------------------------------------------------

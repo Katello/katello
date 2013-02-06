@@ -13,62 +13,67 @@
 
 
 module Authorization::User
+  extend ActiveSupport::Concern
 
   READ_PERM_VERBS = [:read, :update, :create, :delete]
 
-  def self.included(base)
-    base.class_eval do
-      scope :readable, lambda { User.allowed_all_tags?(READ_PERM_VERBS, :users) ?
-          where(:hidden => false) : where("0 = 1") }
+  included do
+    scope :readable, lambda { User.allowed_all_tags?(READ_PERM_VERBS, :users) ?
+        where(:hidden => false) : where("0 = 1") }
+  end
 
 
-      def self.creatable?
-        User.allowed_to?([:create], :users, nil)
-      end
+  module ClassMethods
+    def creatable?
+      User.allowed_to?([:create], :users, nil)
+    end
 
-      def self.any_readable?
-        User.allowed_to?(READ_PERM_VERBS, :users, nil)
-      end
+    def any_readable?
+      User.allowed_to?(READ_PERM_VERBS, :users, nil)
+    end
 
-      def self.list_verbs global = false
-        { :create => _("Administer Users"),
-          :read   => _("Read Users"),
-          :update => _("Modify Users"),
-          :delete => _("Delete Users")
-        }.with_indifferent_access
-      end
+    def list_verbs(global=false)
+      { :create => _("Administer Users"),
+        :read   => _("Read Users"),
+        :update => _("Modify Users"),
+        :delete => _("Delete Users")
+      }.with_indifferent_access
+    end
 
-      def self.read_verbs
-        [:read]
-      end
+    def read_verbs
+      [:read]
+    end
 
-      def self.no_tag_verbs
-        [:create]
-      end
+    def no_tag_verbs
+      [:create]
     end
   end
 
-  def readable?
-    User.any_readable? && !hidden
+
+  module InstanceMethods
+    def readable?
+      User.any_readable? && !hidden
+    end
+
+    def editable?
+      User.allowed_to?([:create, :update], :users, nil) && !hidden
+    end
+
+    def deletable?
+      self.id != User.current.id && User.allowed_to?([:delete], :users, nil)
+    end
+
+    def allowed_organizations
+      #test for all orgs
+      perms = ::Permission.joins(:role).joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
+          where("roles_users.user_id = ?", self.id).where(:organization_id => nil).count()
+      return ::Organization.all if perms > 0
+
+      perms = ::Permission.joins(:role).joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
+          where("roles_users.user_id = ?", self.id).where("organization_id is NOT null")
+      #return the individual organizations
+      perms.collect { |perm| perm.organization }.uniq
+    end
   end
 
-  def editable?
-    User.allowed_to?([:create, :update], :users, nil) && !hidden
-  end
-
-  def deletable?
-    self.id != User.current.id && User.allowed_to?([:delete], :users, nil)
-  end
-
-  def allowed_organizations
-    #test for all orgs
-    perms = ::Permission.joins(:role).joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
-        where("roles_users.user_id = ?", self.id).where(:organization_id => nil).count()
-    return ::Organization.all if perms > 0
-
-    perms = ::Permission.joins(:role).joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
-        where("roles_users.user_id = ?", self.id).where("organization_id is NOT null")
-    #return the individual organizations
-    perms.collect { |perm| perm.organization }.uniq
-  end
 end
