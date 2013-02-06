@@ -26,8 +26,7 @@ module Katello
   # (even before Rails). Therefore this configuration can be used anywhere
   # (Gemfile, boot scripts, stand-alone)
   #
-  # Configuration access points are methods #config and #early_config, see method documentation.
-  # There are shortcuts defined: `Katello.config` and `Katello.early_config`
+  # Configuration access points are methods {Katello.config} and {Katello.early_config}, see method documentation.
   #
   # Configuration is represented with tree-like-structure defined with Configuration::Node. Node has
   # minimal Hash-like interface. Node is more strict than Hash. Differences:
@@ -39,6 +38,8 @@ module Katello
   # AppConfig will work for now, but warning is printed to `$stderr`.
   #
   # Some examples
+  #
+  #     !!!txt
   #     # create by a Hash which is converted to Node instance
   #     irb> n = Katello::Configuration::Node.new 'a' => nil
   #     => #<Katello::Configuration::Node:0x10e27b618 @data={:a=>nil}>
@@ -64,12 +65,12 @@ module Katello
   #         {:a=>#<Katello::Configuration::Node:0x10e2a64d0 @data={:a=>12, :b=>34}>}>
   #     irb> n.to_hash
   #     => {:a=>{:a=>12, :b=>34}}
+  #
   module Configuration
 
     # Hash like container for configuration
     # @example allows access by method
-    #   Config.new('a' => {:b => 2}).a.b # => 2
-    # @example
+    #     Config.new('a' => {:b => 2}).a.b # => 2
     class Node
       class NoKey < StandardError
         def initialize(message = nil)
@@ -88,9 +89,9 @@ module Katello
         @data.each &block
       end
 
-      # get configuration for +key+
+      # get configuration for `key`
       # @param [Symbol] key
-      # @raise [NoKye] when +key+ is missing
+      # @raise [NoKye] when key is missing
       def [](key)
         raise ArgumentError, "#{key.inspect} should be a Symbol" unless Symbol === key
         if has_key? key
@@ -100,7 +101,8 @@ module Katello
         end
       end
 
-      # converts +value+ to Config (see #convert)
+      # converts `value` to Config
+      # @see #convert
       def []=(key, value)
         @data[key.to_sym] = convert value
       end
@@ -109,7 +111,7 @@ module Katello
         @data.has_key? key
       end
 
-      # @example does node contain value at node[:key1][:key2]
+      # @example does node contain value at `node[:key1][:key2]`
       #    node.present? :key1, :key2
       def present?(*keys)
         key, rest = keys.first, keys[1..-1]
@@ -124,7 +126,7 @@ module Katello
       end
 
       # allows access keys by method call
-      # @raise [NoKye] when +key+ is missing
+      # @raise [NoKye] when `key` is missing
       def method_missing(method, *args, &block)
         if has_key?(method)
           self[method]
@@ -368,7 +370,8 @@ module Katello
                     cloud_forms use_pulp cdn_proxy use_ssl warden katello? url_prefix foreman
                     search use_foreman password_reset_expiration redhat_repository_url port
                     elastic_url rest_client_timeout elastic_index allow_roles_logging
-                    katello_version pulp tire_log log_level log_level_sql email_reply_address)
+                    katello_version pulp tire_log log_level log_level_sql email_reply_address
+                    embed_yard_documentation)
 
       has_values :app_mode, %w(katello headpin)
       has_values :url_prefix, %w(/headpin /sam /cfse /katello)
@@ -397,14 +400,17 @@ module Katello
   end
 
 
+  # @see Configuration::LoaderImpl#config
   def self.config
     Configuration::Loader.config
   end
 
+  # @see Configuration::LoaderImpl#early_config
   def self.early_config
     Configuration::Loader.early_config
   end
 
+  # @see Configuration::LoaderImpl#database_configs
   def self.database_configs
     Configuration::Loader.database_configs
   end
