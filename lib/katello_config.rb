@@ -368,7 +368,8 @@ module Katello
                     cloud_forms use_pulp cdn_proxy use_ssl warden katello? url_prefix foreman
                     search use_foreman password_reset_expiration redhat_repository_url port
                     elastic_url rest_client_timeout elastic_index allow_roles_logging
-                    katello_version pulp tire_log log_level log_level_sql email_reply_address)
+                    katello_version pulp tire_log log_level log_level_sql email_reply_address
+                    exception_paranoia)
 
       has_values :app_mode, %w(katello headpin)
       has_values :url_prefix, %w(/headpin /sam /cfse /katello)
