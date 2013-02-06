@@ -77,6 +77,8 @@ common:
   debug_rest: false
   debug_pulp_proxy: false
   debug_cp_proxy: false
+  # if paranoia is set to true even children of Exception will be rescued
+  exception_paranoia: false
 
   #setup how often you want
   #your notifications to be checked
@@ -173,6 +175,7 @@ common:
 production:
   log_level: warn
   log_level_sql: fatal
+  exception_paranoia: true
   database:
     database: katello
 
