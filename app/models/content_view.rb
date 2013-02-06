@@ -290,7 +290,7 @@ class ContentView < ActiveRecord::Base
   def remove_environment(env)
     unless env.library
       view_env = ContentViewEnvironment.where(:cp_id => self.cp_environment_id(env))
-      view_env.first.destroy if view_env
+      view_env.first.destroy unless view_env.blank?
     end
   end
 end
