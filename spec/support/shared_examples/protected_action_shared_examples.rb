@@ -78,7 +78,7 @@ shared_examples_for "bad request" do
   context "action" do
     it "should fail" do
       req
-      response.status.should == 400
+      response.status.should == HttpErrors::UNPROCESSABLE_ENTITY
     end
   end
 end
