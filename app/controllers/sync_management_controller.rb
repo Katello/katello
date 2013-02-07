@@ -35,6 +35,9 @@ class SyncManagementController < ApplicationController
   before_filter :find_providers, :only => [:sync, :sync_status]
   before_filter :authorize
 
+  def menu_definition
+    {:manage => :admin_menu}.with_indifferent_access
+  end
 
   def section_id
     'contents'
