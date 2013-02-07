@@ -1,9 +1,3 @@
-# set environment variable BUNDLER_ENABLE_RPM_PREFERRING to 'true' to enable bundler patch
-# if enabled bundler prefers rpm-gems even if they are older version then gems in gem-repo
-if ENV['BUNDLER_ENABLE_RPM_PREFERRING'] == 'true'
-  require File.join(File.dirname(__FILE__), 'lib', 'bundler_patch_rpm-gems_preferred')
-end
-
 # load Katello configuration
 path = File.expand_path('../lib', __FILE__)
 $LOAD_PATH << path unless $LOAD_PATH.include? path
