@@ -95,7 +95,7 @@ class ApplicationController < ActionController::Base
     execute_rescue(exception, lambda{|exception| render_403})
   end
 
-  rescue_from Errors::BadParameters do |exception|
+  rescue_from HttpErrors::UnprocessableEntity do |exception|
     execute_rescue(exception, lambda{|exception| render_bad_parameters(exception)})
   end
   # support for session (thread-local) variables must be the last filter (except authorize)in this class
@@ -346,20 +346,18 @@ class ApplicationController < ActionController::Base
   end
 
   # render bad params
-  def render_bad_parameters(exception = nil)
+  def render_bad_parameters(exception)
     if exception
-        logger.error _("Rendering 400:") + " #{exception.message}"
+        logger.error _("Rendering 422:") + " #{exception.message}"
         notify.exception(
             _("Invalid parameters sent in the request for this operation. Please contact a system administrator."),
             exception)
     end
     respond_to do |format|
-      #format.html { render :template => "common/400", :layout => "katello", :status => 400,
-      #                          :locals=>{:error=>exception} }
-      format.html { render :template => "common/400", :layout => !request.xhr?, :status => 400 }
-      format.atom { head 400 }
-      format.xml  { head 400 }
-      format.json { head 400 }
+      format.html { render :template => "common/400", :layout => !request.xhr?, :status => exception.status_code }
+      format.atom { head exception.status_code }
+      format.xml  { head exception.status_code }
+      format.json { head exception.status_code }
     end
     User.current = nil
   end
@@ -455,12 +453,14 @@ class ApplicationController < ActionController::Base
     results.total > 0
   end
 
-  # search_options
-  #    :default_field - The field that should be used by the search engine when a user performs
-  #                     a search without specifying field.
-  #    :filter  -  Filter to apply to search. Array of hashes.  Each key/value within the hash
-  #                  is OR'd, whereas each HASH itself is AND'd together
-  #    :load  - whether or not to load the active record object (defaults to false)
+  # @param [Hash] search_options
+  # @option search_options :default_field
+  #   The field that should be used by the search engine when a user performs
+  #   a search without specifying field.
+  # @option search_options :filter
+  #   Filter to apply to search. Array of hashes.  Each key/value within the hash
+  #   is OR'd, whereas each HASH itself is AND'd together
+  # @option search_options [true, false] :load whether or not to load the active record object (defaults to false)
   def render_panel_direct(obj_class, panel_options, search, start, sort, search_options={})
 
     filters = search_options[:filter] || []

@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -10,7 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-# used for sending notifications form ActiveRecord models
-# @example
-#   Notify.success a_message
-Notify = Notifications::Notifier.new
+
+# see {Notify} and what is defined inside the namespace
+module Notifications
+end
