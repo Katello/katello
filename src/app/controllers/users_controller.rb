@@ -17,6 +17,10 @@ class UsersController < ApplicationController
     'operations'
   end
 
+  def menu_definition
+    {:index => :admin_menu}.with_indifferent_access
+  end
+
   before_filter :setup_options, :only => [:items, :index]
   before_filter :find_user, :only => [:items, :index, :edit, :edit_environment, :update_environment, :update_preference,
                                       :update, :update_roles, :update_locale, :clear_helptips, :setup_default_org, :destroy]

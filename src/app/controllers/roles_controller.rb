@@ -78,6 +78,10 @@ class RolesController < ApplicationController
      'operations'
   end
 
+  def menu_definition
+    {:index => :admin_menu}.with_indifferent_access
+  end
+
   def items
     render_panel_direct(Role, @panel_options,  params[:search], params[:offset], [:name_sort, :asc],
                         {:default_field => :name, :filter=>[{:self_role=>[false]}], :load=>true})
