@@ -261,11 +261,19 @@ class ContentView < ActiveRecord::Base
   end
 
   def cp_environment_label(env)
-    [env.label, self.label].join('/')
+    # The label for a default view, will simply be the env label; otherwise, it
+    # will be a combination of env and view label.  The reason being, the label
+    # for a default view is internally generated (e.g. 'Default_View_for_dev')
+    # and we do not need to expose it to the user.
+    self.default ? env.label : [env.label, self.label].join('/')
   end
 
   def cp_environment_id(env)
-    [env.id, self.id].join('-')
+    # The id for a default view, will simply be the env id; otherwise, it
+    # will be a combination of env id and view id.  The reason being,
+    # for a default view, the same candlepin environment will be referenced
+    # by the kt_environment and content_view_environment.
+    self.default ? env.id.to_s : [env.id, self.id].join('-')
   end
 
   protected

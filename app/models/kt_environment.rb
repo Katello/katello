@@ -71,6 +71,7 @@ class KTEnvironment < ActiveRecord::Base
   validates_with Validators::PathDescendentsValidator
 
   before_create :create_default_content_view
+  after_create :set_content_view_environment
   before_destroy :confirm_last_env
 
   after_destroy :unset_users_with_default
@@ -267,9 +268,16 @@ class KTEnvironment < ActiveRecord::Base
     if self.default_content_view.nil?
       self.default_content_view = ContentView.create!(:name=>"Default View for #{self.name}",
                                                 :organization=>self.organization, :default=>true)
-      version = ContentViewVersion.create!(:version=>1, :content_view=>self.default_content_view)
-      self.content_view_versions << version
+
+      ContentViewVersion.create!(:version=>1, :content_view=>self.default_content_view)
     end
   end
 
+  def set_content_view_environment
+    if self.default_content_view
+      version = self.default_content_view.versions.first
+      version.environments << self
+      version.save
+    end
+  end
 end
