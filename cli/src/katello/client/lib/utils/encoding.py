@@ -16,6 +16,7 @@
 import collections
 import codecs
 import sys
+from optparse import OptParseError
 
 stdout_origin = sys.stdout
 
@@ -43,6 +44,8 @@ def u_str(value):
     """
     Casts value to unicode string.
     """
+    if isinstance(value, OptParseError):
+        value = value.__str__()
     if not isinstance(value, basestring):
         value = str(value)
     if not isinstance(value, unicode):

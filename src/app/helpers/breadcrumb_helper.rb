@@ -111,8 +111,9 @@ module ContentBreadcrumbs
   end
 
   #  Generates a json structure of the breadcrumb, consisting of a hash map of:
-  #   :id =>  {:url, :name, :trail}   where name is a human readable name, and :trail is
-  #                                    a list of other :ids creating the trail leading up to it
+  #
+  #     :id =>  {:url, :name, :trail} # where name is a human readable name, and :trail is
+  #                                   # a list of other :ids creating the trail leading up to it
   #
   def generate_content_breadcrumb
    bc = {}

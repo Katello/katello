@@ -58,7 +58,7 @@ class Api::Foreman::SimpleCrudController < Api::ApiController
 
   singleton_class.send :attr_reader, :foreman_model
 
-  # @private
+  # @api private
   attr_writer :foreman_model
 
   def foreman_model

@@ -35,7 +35,7 @@ module AuthorizationRules
     raise Errors::SecurityViolation,"Rules not defined for  #{current_user.username} for #{params[:controller]}/#{params[:action]}"
   end
 
-# authorize the user for the requested action
+  # TODO: should be moved out of authorization module
   def params_match(ctrl = params[:controller], action = self.action_name)
     logger.debug "Checking  params  for #{ctrl}/#{action}"
 
@@ -52,7 +52,14 @@ module AuthorizationRules
       bad_params = check_hash_params(rule, params)
     end
     return true if bad_params.empty?
-    raise Errors::BadParameters.new(bad_params, params)
+    raise HttpErrors::UnprocessableEntity.new(build_bad_params_error_msg(bad_params, params))
+  end
+
+  def build_bad_params_error_msg(bad_params, params)
+    scrubbed_params = Util::Support.scrub(Util::Support.deep_copy(params)) do |key, value|
+      String === value && key.to_s.downcase =~ /password|authenticity_token/
+    end
+    _("Wrong/Invalid parameters sent for %{controller}/%{action}.\n Wrong Parameters: \n%{params}\n Parameters Received:\n %{all_params} ") % {:controller => params[:controller], :action => params[:action], :params => bad_params.inspect, :all_params => scrubbed_params.inspect}
   end
 
   def check_hash_params(rule, params)
@@ -77,9 +84,6 @@ module AuthorizationRules
   def param_rules
     {}
   end
-
-
-
 
 end
 
