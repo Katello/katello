@@ -108,12 +108,15 @@ class Api::EnvironmentsController < Api::ApiController
   param :name, :identifier, :desc => "filter only environments with this identifier"
   def rhsm_index
     if query_params.has_key?(:name)
-      # retrieve the requested environment (e.g. kt_environment or
-      # content_view_environment)
-      all_environments = retrieve_environment_result(query_params[:name])
+      # retrieve the requested environment
+      all_environments = get_content_view_environments(query_params[:name]).
+                          collect{|env| {:id => env.cp_id, :name => env.label,
+                                         :description => env.content_view.description}}
     else
-      # retrieve the list of all environments and content view environments
-      all_environments = retrieve_all_environments_result
+      # retrieve the list of all environments
+      all_environments = get_content_view_environments.collect{|env| {:id => env.cp_id, :name => env.label,
+                                                                      :description => env.content_view.description}}
+
     end
     render :json => all_environments.flatten
   end
@@ -193,50 +196,6 @@ either library or an environment at the end of the chain
     raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:id] if @environment.nil?
     @organization = @environment.organization
     @environment
-  end
-
-  def retrieve_environment_result(name=nil)
-    environments = get_kt_environments(name)
-    if environments.empty?
-      view_environments = get_content_view_environments(name)
-      unless view_environments.empty?
-        environment = view_environments.collect{|env| {:id => env.cp_id, :name => env.label,
-                                                       :description => env.content_view.description}}
-      end
-    else
-      environment = environments.collect{|env| {:id => env.id, :name => env.name,
-                                                :description => env.description}}
-    end
-    environment || []
-  end
-
-  def retrieve_all_environments_result
-    environments = get_kt_environments.collect{|env| {:id => env.id, :name => env.name,
-                                                      :description => env.description}}
-
-    environments << get_content_view_environments.collect{|env| {:id => env.cp_id, :name => env.label,
-                                                                 :description => env.content_view.description}}
-    environments
-  end
-
-  def get_kt_environments(name=nil)
-    environments = KTEnvironment.where(:organization_id => @organization.id)
-    environments = environments.where(:name => name) if name
-
-    # The following is a workaround to handle the fact that rhsm currently requests the
-    # environment using the 'name' parameter; however, the value is actually the environment label.
-    if environments.empty?
-      environments = KTEnvironment.where(:organization_id => @organization.id)
-      environments = environments.where(:label => name) if name
-    end
-
-    # remove any environments that aren't readable
-    unless @organization.readable?
-      environments.delete_if do |env|
-        !env.any_operation_readable?
-      end
-    end
-    environments
   end
 
   def get_content_view_environments(name=nil)
