@@ -27,6 +27,7 @@ http://bugs.python.org/issue4319
 import sys
 
 from optparse import OptionParser as _OptionParser
+from optparse import BadOptionError, OptionValueError
 
 class OptionParserExitError(Exception):
     """
@@ -34,7 +35,6 @@ class OptionParserExitError(Exception):
     Takes error code as it's only argument.
     """
     pass
-
 
 # pylint: disable=R0904
 class OptionParser(_OptionParser):
@@ -68,6 +68,13 @@ class OptionParser(_OptionParser):
         _("show program's version number and exit")
 
     displayed_help = False
+
+
+    def _process_args(self, largs, rargs, values):
+        try:
+            _OptionParser._process_args(self, largs, rargs, values)
+        except (BadOptionError, OptionValueError), err:
+            self.error(err.__str__())
 
     def print_help(self, out_file=None):
         if out_file is None:
