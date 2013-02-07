@@ -45,18 +45,22 @@ module Glue::Candlepin::ContentViewEnvironment
     end
 
     def save_environment_orchestration
-      case self.orchestration_for
-        when :create
-          post_queue.create(:name => "candlepin environment for content view: #{self.content_view.label}",
-                            :priority => 3,
-                            :action => [self, :set_environment])
+      unless self.content_view.default
+        case self.orchestration_for
+          when :create
+            post_queue.create(:name => "candlepin environment for content view: #{self.content_view.label}",
+                              :priority => 3,
+                              :action => [self, :set_environment])
+        end
       end
     end
 
     def destroy_environment_orchestration
-      post_queue.create(:name => "candlepin environment for content view: #{self.content_view.label}",
-                        :priority => 4,
-                        :action => [self, :del_environment])
+      unless self.content_view.default
+        post_queue.create(:name => "candlepin environment for content view: #{self.content_view.label}",
+                          :priority => 4,
+                          :action => [self, :del_environment])
+      end
     end
 
     def update_cp_content
