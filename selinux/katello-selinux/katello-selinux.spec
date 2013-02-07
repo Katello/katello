@@ -100,6 +100,8 @@ install -d -m 0750 %{buildroot}%{_sysconfdir}/katello/secure
 if /usr/sbin/selinuxenabled ; then
    %{_sbindir}/%{name}-enable
 fi
+chmod 0640 /etc/katello/secure/passphrase
+chown root:katello-shared /etc/katello/secure/passphrase
 
 %posttrans
 if /usr/sbin/selinuxenabled ; then
@@ -124,6 +126,7 @@ fi
 %attr(0755,root,root) %{_sbindir}/%{name}-enable
 %attr(0755,root,root) %{_sbindir}/%{name}-relabel
 %attr(0750,root,katello-shared) %{_sysconfdir}/katello/secure
+%ghost %attr(0640,root,katello-shared) %{_sysconfdir}/katello/secure/passphrase
 
 %changelog
 * Tue Jan 08 2013 Lukas Zapletal <lzap+git@redhat.com> 1.3.1-1
