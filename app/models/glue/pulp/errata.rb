@@ -28,13 +28,6 @@ module Glue::Pulp::Errata
       attr_accessor :id, :errata_id, :title, :description, :version, :release, :type, :status, :updated,  :issued, :from_str,
                     :reboot_suggested, :references, :pkglist, :severity, :repoids
 
-      def initialize(params = {})
-        params['repoids'] = params.delete(:repository_memberships)
-        params['errata_id'] = params['id']
-        params['id'] = params.delete('_id')
-        params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
-      end
-
       def self.errata_by_consumer(repos)
         raise NotImplementedError
         #TODO: Needs corresponding Runcible call once fixed in Pulp
@@ -57,6 +50,9 @@ module Glue::Pulp::Errata
   module InstanceMethods
 
     def initialize(params = {})
+      params['repoids'] = params.delete(:repository_memberships)
+      params['errata_id'] = params['id']
+      params['id'] = params.delete('_id')
       params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
     end
 
