@@ -12,7 +12,7 @@
 
 class ContentViewEnvironment < ActiveRecord::Base
   include Glue if AppConfig.use_cp
-  include Glue::Candlepin::ContentViewEnvironment if AppConfig.use_cp
+  include Glue::Candlepin::Environment if AppConfig.use_cp
 
   belongs_to :content_view
 
