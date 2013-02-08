@@ -44,6 +44,7 @@ module Glue::ElasticSearch::Errata
             :properties => {
               :repoids      => { :type => 'string', :index =>:not_analyzed},
               :id_sort      => { :type => 'string', :index => :not_analyzed},
+              :errata_id_sort => { :type => 'string', :index => :not_analyzed},
               :id_title     => { :type => 'string', :analyzer =>:title_analyzer},
               :id           => { :type => 'string', :analyzer =>:snowball},
               :product_ids  => { :type => 'integer', :analyzer =>:kt_name_analyzer},
