@@ -363,7 +363,7 @@ Requires:        rubygem(webrat) >= 0.7.3
 Requires:        rubygem(nokogiri) >= 0.9.9
 Requires:        rubygem(vcr)
 Requires:        rubygem(webmock)
-Requires:        rubygem(minitest)
+Requires:        rubygem(minitest) <= 4.5.0
 Requires:        rubygem(minitest-rails)
 Requires:        rubygem(minitest_tu_shim)
 Requires:        rubygem(parallel_tests)
