@@ -17,7 +17,7 @@ class EnvironmentsController < ApplicationController
 
   before_filter :find_organization, :only => [:show, :edit, :update, :destroy, :index, :new, :create, :default_label, :system_templates, :products]
   before_filter :authorize
-  before_filter :find_environment, :only => [:show, :edit, :update, :destroy, :system_templates, :products]
+  before_filter :find_environment, :only => [:show, :edit, :update, :destroy, :system_templates, :products, :content_views]
 
   def section_id
     'orgs'
@@ -35,7 +35,8 @@ class EnvironmentsController < ApplicationController
       :update => manage_rule,
       :destroy => manage_rule,
       :system_templates => view_akey_rule,
-      :products => view_akey_rule
+      :products => view_akey_rule,
+      :content_views => view_akey_rule
     }
   end
 
@@ -123,9 +124,28 @@ class EnvironmentsController < ApplicationController
 
   # GET /environments/1/products
   def products
+    @products = if params[:content_view_id]
+      view = ContentView.find(params[:content_view_id])
+      view.try(:products, @environment) || []
+    else
+      @environment.products
+    end
+
     respond_to do |format|
-      format.html {render :partial => "products", :content_type => 'text/html'}
-      format.json {render :json => @environment.products}
+      format.html {render :partial => "products", :locals => {:products => @products}, :content_type => 'text/html'}
+      format.json {render :json => @products}
+    end
+  end
+
+  # GET /environments/1/content_views
+  def content_views
+    content_views = if params[:include_default]
+      @environment.content_views.readable(current_organization)
+    else
+      ContentView.readable(current_organization).non_default.in_environment(@environment)
+    end
+    respond_to do |format|
+      format.json {render :json => content_views}
     end
   end
 
