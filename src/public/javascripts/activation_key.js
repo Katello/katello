@@ -41,11 +41,16 @@ $(document).ready(function() {
     env_select.click_callback = function(env_id) {
         KT.activation_key.save_selected_environment(env_id);
         KT.activation_key.get_system_templates();
+        KT.activation_key.get_content_views();
         KT.activation_key.get_products();
     };
 
     $('#activation_key_system_template_id').live('change', function() {
         KT.activation_key.highlight_system_templates(false);
+    });
+
+    $('#activation_key_content_view_id').live('change', function() {
+        KT.activation_key.highlight_content_views(false);
     });
 
     $('.clickable.product_family').live('click', function() {
@@ -115,6 +120,7 @@ KT.activation_key = (function($) {
         reset_env_select();
         enable_buttons();
         highlight_system_templates(false);
+        highlight_content_views(false);
     },
     reset_env_select = function() {
         $('#path-expanded').hide();
@@ -129,14 +135,16 @@ KT.activation_key = (function($) {
         disable_buttons();
 
         data.ajaxSubmit({
-         success: function(data) {
-             highlight_system_templates(false);
-             enable_buttons();
-             refresh_list_item(this.url.match(/\d+/)[0]);
-         }, error: function(e) {
-             highlight_system_templates(false);
-             enable_buttons();
-         }});
+            success: function(data) {
+                highlight_system_templates(false);
+                highlight_content_views(false);
+                enable_buttons();
+                refresh_list_item(this.url.match(/\d+/)[0]);
+            }, error: function(e) {
+                highlight_system_templates(false);
+                highlight_content_views(false);
+                enable_buttons();
+        }});
     },
     cancel_key = function(data) {
         var url = $('#cancel_key').attr('data-url');
@@ -271,6 +279,40 @@ KT.activation_key = (function($) {
             });
         }
     },
+    get_content_views = function() {
+        // this function will retrieve the views associated with a given environment and
+        // update the views box with the results
+        var url = $('.path_link.active').attr('data-content_views_url');
+        if (url !== undefined) {
+            disable_buttons();
+            $.ajax({
+                type: "GET",
+                url: url,
+                cache: false,
+                success: function(response) {
+                    // update the appropriate content on the page
+                    var options = '';
+                    var opt_template = KT.utils.template("<option value='<%= key %>'><%= text %></option>");
+
+                    // create an html option list using the response
+                    options += opt_template({key: "", text: i18n.noContentView});
+                    $.each(response, function(key, item) {
+                        options += opt_template({key: item.id, text: item.name});
+                    });
+
+                    $("#activation_key_content_view_id").html(options);
+
+                    if (response.length > 0) {
+                        highlight_content_views(true);
+                    }
+                    enable_buttons();
+                },
+                error: function(data) {
+                    enable_buttons();
+                }
+            });
+        }
+    },
     save_selected_environment = function(env_id) {
         // save the id of the env selected
         $("#activation_key_environment_id").attr('value', env_id);
@@ -284,11 +326,18 @@ KT.activation_key = (function($) {
         $('input[id^=save_key]').removeAttr('disabled');
     },
     highlight_system_templates = function(add_highlight) {
-        var select_input = $('#activation_key_system_template_id');
+        highlight_input("#activation_key_system_template_id", add_highlight);
+    };
+    highlight_content_views = function(add_highlight) {
+        highlight_input("#activation_key_content_view_id", add_highlight);
+    };
+    highlight_input = function(element_id, add_highlight) {
+        var text = element_id.match(/template/) ? "update_template" : "update_view";
+        var select_input = $(element_id);
         if (add_highlight) {
             if( !select_input.next('span').hasClass('highlight_input_text')) {
                 select_input.addClass('highlight_input');
-                select_input.after('<span class ="highlight_input_text">' + i18n.update_template + '</span>');
+                select_input.after('<span class ="highlight_input_text">' + i18n[text] + '</span>');
             }
         } else {
             select_input.removeClass('highlight_input');
@@ -307,11 +356,14 @@ KT.activation_key = (function($) {
         toggle_family_checkboxes: toggle_family_checkboxes,
         toggle_parent_checkbox: toggle_parent_checkbox,
         get_system_templates: get_system_templates,
+        get_content_views: get_content_views,
         get_products: get_products,
         save_selected_environment: save_selected_environment,
         disable_buttons: disable_buttons,
         enable_buttons: enable_buttons,
         highlight_system_templates: highlight_system_templates,
+        highlight_content_views: highlight_content_views,
+        highlight_input: highlight_input,
         refresh_list_item: refresh_list_item
     }
 }(jQuery));
