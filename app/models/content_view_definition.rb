@@ -126,6 +126,21 @@ class ContentViewDefinition < ActiveRecord::Base
     !! self.content_views.promoted.first
   end
 
+  def has_repo_conflicts?
+    # Check to see if there is a repo conflict in the component views associated with
+    # the definition.  A conflict exists if the same repo exists in more than
+    # one of those component views.
+    if self.composite
+      repos_hash = self.views_repos
+      repos_hash.each do |view_id, repo_ids|
+        repos_hash.each do |other_view_id, other_repo_ids|
+          return true if (view_id != other_view_id) && !repo_ids.intersection(other_repo_ids).empty?
+        end
+      end
+    end
+    false
+  end
+
   def as_json(options = {})
     result = self.attributes
     result["organization"] = self.organization.try(:name)
@@ -136,12 +151,25 @@ class ContentViewDefinition < ActiveRecord::Base
     result
   end
 
-  private
+protected
 
-    def validate_content
-      if has_content? && composite?
-        errors.add(:base, _("cannot contai nproducts, or repositories if it contains views"))
+  def views_repos
+    # Retrieve a hash where, key=view.id and value=Set(view's repo library instance ids)
+    view_repos = {}
+    self.component_content_views.each do |view|
+      view_repos[view.id] = view.repos(self.organization.library).inject(Set.new) do |ids, repo|
+        ids << repo.library_instance_id
       end
     end
+    view_repos
+  end
+
+private
+
+  def validate_content
+    if has_content? && composite?
+      errors.add(:base, _("cannot contai nproducts, or repositories if it contains views"))
+    end
+  end
 
 end
