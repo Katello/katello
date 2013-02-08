@@ -26,6 +26,17 @@ class CustomInfo < ActiveRecord::Base
   after_save :reindex_informable
   after_destroy :reindex_informable
 
+  def self.find_by_informable_keyname(informable, keyname)
+    return informable.custom_info.find_by_keyname(keyname)
+  end
+
+  # find the Katello object by type and ID (i.e. "system", 32)
+  def self.find_informable(informable_type, informable_id)
+    klass = informable_type.classify.constantize
+    informable = klass.find(informable_id)
+    return informable
+  end
+
   # Apply a set of custom info to a list of objects.
   # Does not apply to a particular object if it already has custom info with the given keyname.
   # Returns a list of the objects that had at least one custom info added to them.
@@ -50,6 +61,10 @@ class CustomInfo < ActiveRecord::Base
 
   def to_s
     "#{self.keyname}: #{self.value.nil? ? _("NOT-SPECIFIED") : self.value}"
+  end
+
+  def <=>(obj)
+    return self.keyname <=> obj.keyname
   end
 
 end
