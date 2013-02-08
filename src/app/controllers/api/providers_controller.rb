@@ -136,7 +136,7 @@ class Api::ProvidersController < Api::ApiController
     end
 
     begin
-      temp_file = File.new(File.join("#{Rails.root}/tmp", "import_#{SecureRandom.hex(10)}.zip"), 'w+', 0600)
+      temp_file = File.new(File.join("#{Rails.root}/tmp", "import_#{SecureRandom.hex(10)}.zip"), 'wb+', 0600)
       temp_file.write params[:import].read
     ensure
       temp_file.close
