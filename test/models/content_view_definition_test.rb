@@ -45,6 +45,18 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     assert content_view_def.errors.has_key?(:name)
   end
 
+  def test_duplicate_name
+    attrs = FactoryGirl.attributes_for(:content_view_definition,
+                                       :name => @content_view_def.name
+                                      )
+    assert_raises(ActiveRecord::RecordInvalid) do
+      ContentViewDefinition.create!(attrs)
+    end
+    cv = ContentViewDefinition.create(attrs)
+    refute cv.persisted?
+    refute cv.save
+  end
+
   def test_destroy_with_content_views
     content_view = FactoryGirl.create(:content_view)
     definition = FactoryGirl.create(:content_view_definition,
