@@ -72,9 +72,9 @@
                   = @content_view.nil? ? no_content_view : @content_view.name
 
             .prefix_2.la#products_in_env
-              %label #{_("Product(s) in this environment")}:
+              %label #{_("Product(s) in this environment/content view")}:
               .grid_10.productsbox
-                = render :partial => "environments/products"
+                = render "environments/products", :products => @products
 
         %fieldset.clearfix
           .grid_2.ra
