@@ -31,7 +31,7 @@ class ContentViewDefinition < ActiveRecord::Base
 
   validates :label, :uniqueness => {:scope => :organization_id},
     :presence => true
-  validates :name, :presence => true
+  validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
   validates :organization, :presence => true
   validate :validate_content
 
