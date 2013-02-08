@@ -16,7 +16,6 @@ class KTEnvironment < ActiveRecord::Base
 
   include Authorization::Environment
   include Glue::ElasticSearch::Environment if Katello.config.use_elasticsearch
-  include Glue::Candlepin::Environment if Katello.config.use_cp
   include Glue if Katello.config.use_cp || Katello.config.use_pulp
 
   set_table_name "environments"
@@ -51,6 +50,7 @@ class KTEnvironment < ActiveRecord::Base
 
   has_many :content_view_version_environments, :foreign_key=>:environment_id
   has_many :content_view_versions, :through=>:content_view_version_environments, :inverse_of=>:environments
+
   belongs_to :default_content_view, :class_name => "ContentView", :foreign_key => :default_content_view_id
 
   has_many :users, :foreign_key => :default_environment_id, :inverse_of => :default_environment, :dependent => :nullify
@@ -70,7 +70,7 @@ class KTEnvironment < ActiveRecord::Base
   validates_with Validators::PriorValidator
   validates_with Validators::PathDescendentsValidator
 
-  before_create :create_default_content_view
+  after_create :create_default_content_view
   before_destroy :confirm_last_env
 
   after_destroy :unset_users_with_default
@@ -87,6 +87,10 @@ class KTEnvironment < ActiveRecord::Base
   def content_views(reload = false)
     content_view_versions.reload if reload
     content_view_versions.collect{|vv| vv.content_view}
+  end
+
+  def content_view_environment
+    self.default_content_view.content_view_environments.first
   end
 
   def successor
@@ -267,9 +271,13 @@ class KTEnvironment < ActiveRecord::Base
     if self.default_content_view.nil?
       self.default_content_view = ContentView.create!(:name=>"Default View for #{self.name}",
                                                 :organization=>self.organization, :default=>true)
-      version = ContentViewVersion.create!(:version=>1, :content_view=>self.default_content_view)
-      self.content_view_versions << version
+
+      #ContentViewVersion.create!(:version=>1, :content_view=>self.default_content_view)
+      version = ContentViewVersion.new(:version=>1, :content_view=>self.default_content_view)
+      version.environments << self
+      version.save!
+
+      self.save!
     end
   end
-
 end
