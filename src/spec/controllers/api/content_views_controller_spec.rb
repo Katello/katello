@@ -50,10 +50,10 @@ describe Api::ContentViewsController, :katello => true do
                                                                :priors => [@org.library],
                                                                :organization_id => @org.id
                                                               )
-        view_version = ContentViewVersion.create!(:environments => [env],
-                                                  :content_view => @content_views.last,
-                                                  :version => 1
-                                                 )
+        view_version = ContentViewVersion.new(:version => 1, :content_view => @content_views.last)
+        view_version.environments << env
+        view_version.save!
+
         get "index", :organization_id => @org.name, :environment_id => env.id
         response.should be_success
         ids = env.content_views(true).select{|cv| !cv.default}.map(&:id)

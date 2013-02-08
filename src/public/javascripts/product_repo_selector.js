@@ -502,7 +502,7 @@ KT.filters = (function(){
         var repos = current_filter.repos[parseInt(prod_id, 10)],
         index;
         if(repos) {
-            index = KT.utils.indexOf(repos, parseInt(repo_id, 10));
+            index = KT.utils.indexOf(repos, repo_id);
             repos.splice(index, 1);
         }
 

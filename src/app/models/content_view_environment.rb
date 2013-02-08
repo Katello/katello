@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -10,18 +10,15 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+class ContentViewEnvironment < ActiveRecord::Base
+  include Glue if AppConfig.use_cp
+  include Glue::Candlepin::Environment if AppConfig.use_cp
 
+  belongs_to :content_view
 
-class ContentViewVersionEnvironment < ActiveRecord::Base
-  belongs_to :environment, :class_name=>'KTEnvironment'
-  belongs_to :content_view_version
-
-  before_create :verify_not_exists
-
-  def verify_not_exists
-    if self.content_view_version.environments.include?(self.environment)
-      raise _("Content View %{view} is already in environment %{env}") % {:view=>self.content_view_version.content_view.name, :env=>self.environment.name}
-    end
+  # retrieve the owning environment for this content view environment.
+  def owner
+    env_id = self.cp_id.split('-').first
+    KTEnvironment.find(env_id)
   end
-
 end
