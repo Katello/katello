@@ -397,7 +397,6 @@ describe Changeset, :katello => true do
             and_return(true)
         @changeset.remove_distribution!('some-distro-id', @prod)
       end
-
     end
 
 
@@ -516,7 +515,9 @@ describe Changeset, :katello => true do
 
       it "should update env content" do
         @changeset.state = Changeset::REVIEW
-        @environment.should_receive(:update_cp_content)
+        @content_view_environment = @environment.content_view_environment
+        @environment.stub(:content_view_environment).and_return(@content_view_environment)
+        @content_view_environment.should_receive(:update_cp_content)
         @changeset.apply(:async => false)
       end
 

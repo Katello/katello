@@ -67,7 +67,7 @@ class PromotionChangeset < Changeset
     update_progress! '50'
     PulpTaskStatus::wait_for_tasks promote_repos(from_env, to_env)
     update_progress! '70'
-    to_env.update_cp_content
+    to_env.content_view_environment.update_cp_content
     update_progress! '80'
     PulpTaskStatus::wait_for_tasks promote_views(from_env, to_env)
     update_view_cp_content(to_env)
