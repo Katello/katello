@@ -59,7 +59,7 @@ class DeletionChangeset < Changeset
     update_progress! '60'
     delete_views from_env
     update_progress! '70'
-    from_env.update_cp_content
+    from_env.content_view_environment.update_cp_content
     update_progress! '80'
     delete_packages from_env
     update_progress! '90'
