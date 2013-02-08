@@ -12,7 +12,7 @@ group :test do
 
   gem 'vcr'
   gem 'webmock'
-  gem 'minitest', :require => "hoe/minitest"
+  gem 'minitest', '~>4.5.0', :require => "hoe/minitest"
   gem 'minitest-rails'
 
   # make our specs go faster (also appears in development group)
