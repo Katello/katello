@@ -106,6 +106,12 @@ module Navigation
           :url => lambda{facts_system_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"third_level panel_link"},
+        },
+        { :key => :custom_info,
+          :name => _("Custom Information"),
+          :url => lambda{custom_info_system_path(@system.id)},
+          :if => lambda{@system},
+          :options => {:class => "third_level panel_link"}
         }
       ]
     end

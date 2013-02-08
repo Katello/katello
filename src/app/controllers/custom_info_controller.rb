@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 #
-# Copyright 2012 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -10,11 +11,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class Api::CustomInfoController < Api::ApiController
-  respond_to :json
+class CustomInfoController < ApplicationController
 
   before_filter :find_informable
-  before_filter :find_custom_info, :only => [:show, :update, :destroy]
+  before_filter :find_custom_info, :only => [ :update, :destroy ]
   before_filter :authorize
 
 
@@ -23,8 +23,6 @@ class Api::CustomInfoController < Api::ApiController
     view_custom_info = lambda { @informable.readable? }
 
     {
-        :index => view_custom_info,
-        :show => view_custom_info,
         :create => edit_custom_info,
         :update => edit_custom_info,
         :destroy => edit_custom_info
@@ -32,30 +30,31 @@ class Api::CustomInfoController < Api::ApiController
   end
 
   def create
-    raise HttpErrors::BadRequest, _("must include a keyname and value") if params[:keyname].nil? || params[:value].nil?
     keyname = params[:keyname].strip
     value = params[:value].strip
-    response = @informable.custom_info.create!(:keyname => keyname, :value => value)
-    render :json => response.to_json
-  end
-
-  def index
-    render :json => @informable.custom_info.to_json
-  end
-
-  def show
-    render :json => @single_custom_info.to_json
+    @informable.custom_info.create!(:keyname => keyname, :value => value)
+    notify.success _("%{object_type} '%{name}' was updated") % {:object_type => @informable.class.class_name, :name => @informable.name}
+    info = CustomInfo.find_by_informable_keyname(@informable, keyname)
+    hash = {}
+    hash[:keyname] = info.keyname
+    hash[:value] = info.value
+    hash[:informable_type] = params[:informable_type]
+    hash[:informable_id] = params[:informable_id]
+    render :json => hash.to_json
   end
 
   def update
-    value = params[:value].strip
-    @single_custom_info.update_attributes!(:value => value)
-    render :json => @single_custom_info.to_json
+    keyname = params[:keyname].strip
+    @single_custom_info.update_attributes!(:value => params[:custom_info][keyname])
+    notify.success _("%{object_type} '%{name}' was updated") % {:object_type => @informable.class.class_name, :name => @informable.name}
+
+    render :text => @single_custom_info.value
   end
 
   def destroy
     @single_custom_info.destroy
-    render :text => _("Deleted custom info '%s'") % params[:keyname], :status => 204
+    notify.success _("%{object_type} '%{name}' was updated") % {:object_type => @informable.class.class_name, :name => @informable.name}
+    render :text => "true"
   end
 
   private
@@ -67,7 +66,6 @@ class Api::CustomInfoController < Api::ApiController
   def find_custom_info
     keyname = params[:keyname].strip
     @single_custom_info = CustomInfo.find_by_informable_keyname(@informable, keyname)
-    raise HttpErrors::NotFound, _("Couldn't find custom info with keyname '%s'") % params[:keyname] if @single_custom_info.nil?
   end
 
 end
