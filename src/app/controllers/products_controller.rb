@@ -38,11 +38,11 @@ class ProductsController < ApplicationController
   end
 
   def new
-    render :partial => "new", :layout => "tupane_layout"
+    render :partial => "new"
   end
 
   def edit
-    render :partial => "edit", :layout => "tupane_layout", :locals=>{:editable=>@provider.editable?}
+    render :partial => "edit", :locals=>{:editable=>@provider.editable?}
   end
 
   def create

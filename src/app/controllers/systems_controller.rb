@@ -101,7 +101,7 @@ class SystemsController < ApplicationController
     # Environments page is displayed.
     envsys = !params[:env_id].nil?
 
-    render :partial=>"new", :layout => "tupane_layout", :locals=>{:system=>@system, :accessible_envs => accessible_envs, :envsys => envsys}
+    render :partial=>"new", :locals=>{:system=>@system, :accessible_envs => accessible_envs, :envsys => envsys}
   end
 
   def create
@@ -243,8 +243,7 @@ class SystemsController < ApplicationController
               current_user.subscriptions_no_overlap_preference ? "selected='selected'" : '', _("No Overlap with Current")]
 
     @organization = current_organization
-    render :partial=>"subscriptions", :layout => "tupane_layout",
-                                      :locals=>{:system=>@system, :avail_subs => subscriptions,
+    render :partial=>"subscriptions", :locals=>{:system=>@system, :avail_subs => subscriptions,
                                                 :consumed_entitlements => consumed_entitlements,
                                                 :editable=>@system.editable?, :subscription_filters=>subscription_filters}
   end
@@ -266,7 +265,7 @@ class SystemsController < ApplicationController
 
   def products
     if @system.class == Hypervisor
-      render :partial=>"hypervisor", :layout=>"tupane_layout",
+      render :partial=>"hypervisor",
              :locals=>{:system=>@system,
                        :message=>_("Hypervisors do not have software products")}
       return
@@ -274,8 +273,8 @@ class SystemsController < ApplicationController
 
     @products_count = @system.installedProducts.size
     @products, @offset = first_objects @system.installedProducts.sort {|a,b| a['productName'].downcase <=> b['productName'].downcase}
-    render :partial=>"products", :layout=>"tupane_layout", :locals=>{
-        :system=>@system, :products=>@products,:offset=>@offset, :products_count=>@products_count}
+    render :partial=>"products", 
+           :locals=>{:system=>@system, :products=>@products,:offset=>@offset, :products_count=>@products_count}
   end
 
   def more_products
@@ -298,7 +297,7 @@ class SystemsController < ApplicationController
     @locals_hash = { :system => @system, :editable => @system.editable?,
                     :releases => releases, :releases_error => releases_error, :name => controller_display_name,
                     :environments => environment_paths(library_path_element, environment_path_element("systems_readable?")) }
-    render :partial => "edit", :layout => "tupane_layout", :locals => @locals_hash
+    render :partial => "edit", :locals => @locals_hash
   end
 
   def update
@@ -353,7 +352,7 @@ class SystemsController < ApplicationController
   end
 
   def facts
-    render :partial => 'facts', :layout => "tupane_layout"
+    render :partial => 'facts'
   end
 
   def destroy
@@ -598,7 +597,7 @@ class SystemsController < ApplicationController
         group("system_groups.id, system_groups.name, system_groups.max_systems having count(system_system_groups.system_id) < system_groups.max_systems or system_groups.max_systems = -1").
         order(:name) - @system.system_groups
 
-    render :partial=>"system_groups", :layout => "tupane_layout", :locals=>{:editable=>@system.editable?}
+    render :partial=>"system_groups", :locals=>{:editable=>@system.editable?}
   end
 
   def add_system_groups

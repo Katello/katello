@@ -64,7 +64,7 @@ class ChangesetsController < ApplicationController
   end
 
   def edit
-    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:editable=>@environment.changesets_manageable?, :name=>controller_display_name}
+    render :partial=>"edit", :locals=>{:editable=>@environment.changesets_manageable?, :name=>controller_display_name}
   end
 
   #list item
@@ -99,7 +99,7 @@ class ChangesetsController < ApplicationController
 
   def new
     @changeset = Changeset.new
-    render :partial=>"new", :layout => "tupane_layout", :locals => {:changeset_type => params[:changeset_type]}
+    render :partial=>"new", :locals => {:changeset_type => params[:changeset_type]}
   end
 
   def create

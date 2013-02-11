@@ -114,7 +114,7 @@ class SystemTemplatesController < ApplicationController
   end
 
   def edit
-    render :partial => "edit", :layout => "tupane_layout",
+    render :partial => "edit",
            :locals => {:template=>@template,
                        :editable=> SystemTemplate.manageable?(current_organization)}
   end
@@ -250,11 +250,11 @@ class SystemTemplatesController < ApplicationController
 
   def new
     @template = SystemTemplate.new
-    render :partial => "new", :layout => "tupane_layout", :locals => {:template => @template}
+    render :partial => "new", :locals => {:template => @template}
   end
 
   def promotion_details
-    render :partial => "promotion_details", :layout => "tupane_layout", :locals=>{:template=>@template}
+    render :partial => "promotion_details", :locals=>{:template=>@template}
   end
 
   def create

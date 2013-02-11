@@ -35,7 +35,7 @@ class SystemErrataController < ApplicationController
 
   def index
     if @system.class == Hypervisor
-      render :partial=>"systems/hypervisor", :layout=>"tupane_layout",
+      render :partial=>"systems/hypervisor",
              :locals=>{:system=>@system,
                        :message=>_("Hypervisors do not have errata")}
       return
@@ -43,8 +43,8 @@ class SystemErrataController < ApplicationController
 
     offset = current_user.page_size
 
-    render :partial=>"systems/errata/index", :layout => "tupane_layout", :locals=>{:system=>@system,
-                                                                          :editable => @system.editable?, :offset => offset}
+    render :partial=>"systems/errata/index", 
+           :locals=>{:system=>@system, :editable => @system.editable?, :offset => offset}
   end
 
   def items
