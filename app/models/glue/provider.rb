@@ -276,52 +276,53 @@ module Glue::Provider
     end
 
     def import_products_from_cp(options={ })
+
       import_logger = options[:import_logger]
       product_in_katello_ids = self.organization.providers.redhat.first.products.pluck("cp_id")
       products_in_candlepin_ids = []
-      Util::CdnVarSubstitutor.with_cache do
-        marketing_to_enginnering_product_ids_mapping.each do |marketing_product_id, engineering_product_ids|
-          engineering_product_ids = engineering_product_ids.uniq
-          products_in_candlepin_ids << marketing_product_id
-          products_in_candlepin_ids.concat(engineering_product_ids)
-          added_eng_products = (engineering_product_ids - product_in_katello_ids).map do |id|
-            Resources::Candlepin::Product.get(id)[0]
-          end
-          adjusted_eng_products = []
-          added_eng_products.each do |product_attrs|
-            begin
-              product_attrs.merge!(:import_logger => import_logger)
 
-              Glue::Candlepin::Product.import_from_cp(product_attrs) do |p|
-                p.provider = self
-                p.environments << self.organization.library
-              end
-              adjusted_eng_products << product_attrs
-              if import_logger
-                import_logger.info "import of product '#{product_attrs["name"]}' from Candlepin OK"
-              end
-            rescue Errors::SecurityViolation => e
-              # Do not add non-accessible products
-              [Rails.logger, import_logger].each do |logger|
-                next if logger.nil?
-                logger.info "import of product '#{product_attrs["name"]}' from Candlepin failed"
-                import_logger.info e
-              end
-            end
-          end
+      marketing_to_enginnering_product_ids_mapping.each do |marketing_product_id, engineering_product_ids|
+        engineering_product_ids = engineering_product_ids.uniq
+        products_in_candlepin_ids << marketing_product_id
+        products_in_candlepin_ids.concat(engineering_product_ids)
+        added_eng_products = (engineering_product_ids - product_in_katello_ids).map do |id|
+          Resources::Candlepin::Product.get(id)[0]
+        end
+        adjusted_eng_products = []
+        added_eng_products.each do |product_attrs|
+          begin
+            product_attrs.merge!(:import_logger => import_logger)
 
-          product_in_katello_ids.concat(adjusted_eng_products.map{|p| p["id"]})
-
-          unless product_in_katello_ids.include?(marketing_product_id)
-            engineering_product_in_katello_ids = self.organization.library.products.where(:cp_id => engineering_product_ids).map(&:id)
-            Glue::Candlepin::Product.import_marketing_from_cp(Resources::Candlepin::Product.get(marketing_product_id)[0], engineering_product_in_katello_ids) do |p|
+            Glue::Candlepin::Product.import_from_cp(product_attrs) do |p|
               p.provider = self
               p.environments << self.organization.library
             end
-            product_in_katello_ids << marketing_product_id
+            adjusted_eng_products << product_attrs
+            if import_logger
+              import_logger.info "import of product '#{product_attrs["name"]}' from Candlepin OK"
+            end
+          rescue Errors::SecurityViolation => e
+            # Do not add non-accessible products
+            [Rails.logger, import_logger].each do |logger|
+              next if logger.nil?
+              logger.info "import of product '#{product_attrs["name"]}' from Candlepin failed"
+              import_logger.info e
+            end
           end
         end
+
+        product_in_katello_ids.concat(adjusted_eng_products.map{|p| p["id"]})
+
+        unless product_in_katello_ids.include?(marketing_product_id)
+          engineering_product_in_katello_ids = self.organization.library.products.where(:cp_id => engineering_product_ids).map(&:id)
+          Glue::Candlepin::Product.import_marketing_from_cp(Resources::Candlepin::Product.get(marketing_product_id)[0], engineering_product_in_katello_ids) do |p|
+            p.provider = self
+            p.environments << self.organization.library
+          end
+          product_in_katello_ids << marketing_product_id
+        end
       end
+
 
       product_to_remove_ids = (product_in_katello_ids - products_in_candlepin_ids).uniq
       product_to_remove_ids.each { |cp_id| Product.find_by_cp_id(cp_id).destroy }
