@@ -28,7 +28,7 @@ def configure_vcr
   VCR.configure do |c|
     c.cassette_library_dir = 'test/fixtures/vcr_cassettes'
     c.hook_into :webmock
-    
+
     if ENV['record'] == "false" && mode != :none
       uri = URI.parse(Katello.config.pulp.url)
       c.ignore_hosts uri.host
