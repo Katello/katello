@@ -43,7 +43,7 @@ class SystemErrataController < ApplicationController
 
     offset = current_user.page_size
 
-    render :partial=>"systems/errata/index", 
+    render :partial=>"systems/errata/index",
            :locals=>{:system=>@system, :editable => @system.editable?, :offset => offset}
   end
 

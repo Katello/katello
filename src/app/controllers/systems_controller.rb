@@ -273,7 +273,7 @@ class SystemsController < ApplicationController
 
     @products_count = @system.installedProducts.size
     @products, @offset = first_objects @system.installedProducts.sort {|a,b| a['productName'].downcase <=> b['productName'].downcase}
-    render :partial=>"products", 
+    render :partial=>"products",
            :locals=>{:system=>@system, :products=>@products,:offset=>@offset, :products_count=>@products_count}
   end
 

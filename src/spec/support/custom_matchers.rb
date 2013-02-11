@@ -60,7 +60,7 @@ end
 # @response.body.should be_json('{"my":{"expected":["json","hash"]}}')
 RSpec::Matchers.define :be_json do |expected|
   match do |actual|
-    actual = ActiveSupport::JSON.decode(actual)                                                                                           
+    actual = ActiveSupport::JSON.decode(actual)
     if actual.is_a? Array
       actual.map { |item| item.with_indifferent_access }
     else
