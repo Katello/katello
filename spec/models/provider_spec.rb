@@ -224,6 +224,9 @@ describe Provider do
       @product_with_change = create_product_with_content("product-with-change", ["1.0"])
       set_upstream_releases(@product_with_change, ["1.0", "1.1"])
 
+      @product_without_change.productContent.each{|pc| pc.product = @product_without_change}
+      @product_with_change.productContent.each{|pc| pc.product = @product_with_change}
+
       @provider.stub_chain(:products, :engineering).and_return([@product_without_change, @product_with_change])
     end
 
