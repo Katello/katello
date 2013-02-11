@@ -28,26 +28,26 @@ module Navigation
 
     def content_view_definition_navigation
       [
-        { :key => :views,
+        { :key => :view_definition_views,
           :name =>_("Views"),
           :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : views_content_view_definition_path(@view_definition.id),
           :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
           :options => {:class=>"panel_link"}
         },
-        { :key => :content,
+        { :key => :view_definition_content,
           :name =>_("Content"),
           :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : content_content_view_definition_path(@view_definition.id),
           :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
           :options => {:class=>"panel_link"}
         },
-        { :key => :filter,
+        { :key => :view_definition_filter,
           :name =>_("Filter"),
           :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : filter_content_view_definition_path(@view_definition.id),
           :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record? &&
               !@view_definition.composite},
           :options => {:class=>"panel_link"}
         },
-        { :key => :details,
+        { :key => :view_definition_details,
           :name =>_("Details"),
           :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : edit_content_view_definition_path(@view_definition.id),
           :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
@@ -181,8 +181,8 @@ module Navigation
 
     def menu_content_view_definitions
       {:key => :content_view_definitions,
-       :name => _("Views"),
-       :if => lambda{AppConfig.katello? && ContentViewDefinition.any_readable?(current_organization)},
+       :name => _("Content View Definitions"),
+       :if => lambda{Katello.config.katello? && ContentViewDefinition.any_readable?(current_organization)},
        :options => {:class=>'content second_level', "data-menu"=>"content"},
        :url =>content_view_definitions_path,
       }
