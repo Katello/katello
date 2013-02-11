@@ -132,6 +132,9 @@ module Glue::Pulp::Repo
           importer,
           distributors,
           {:display_name=>self.name})
+    rescue RestClient::ServiceUnavailable => e
+      message = _("Pulp service unavailable during creating repository '%s', please try again later.") % self.name
+      raise PulpErrors::ServiceUnavailable.new(message, e)
     end
 
     def generate_distributor
