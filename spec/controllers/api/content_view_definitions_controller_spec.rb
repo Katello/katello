@@ -71,13 +71,12 @@ describe Api::ContentViewDefinitionsController, :katello => true do
       it "should find the matching definitions" do
         Organization.stub_chain(:without_deleting,
                                 :having_name_or_label,:first).and_return(@organization)
-        name = "Lotus 1-2-3"
         defs = FactoryGirl.create_list(:content_view_definition, 2,
-                                       :name => name,
                                        :organization => @organization)
-        get action, :organization_id => @organization.name, :name => name
-        assigns[:definitions].length.should eql(2)
-        assigns[:definitions].map(&:id).should eql(defs.map(&:id))
+        view = ContentViewDefinition.last
+        get action, :organization_id => @organization.name, :name => view.name
+        assigns[:definitions].length.should eql(1)
+        assigns[:definitions].map(&:id).should eql([view.id])
       end
     end
   end
