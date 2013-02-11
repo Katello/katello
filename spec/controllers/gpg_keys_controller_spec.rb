@@ -299,24 +299,24 @@ describe GpgKeysController, :katello => true do
 
             @GPGKEY_CONTENT_UPLOAD = { :content_upload => @gpg_key_file }
           end
-          
+
           it "should update requested field - content_upload" do
             put :update, :id => @gpg_key.id, :gpg_key => @GPGKEY_CONTENT_UPLOAD
             gpg_key_content = @gpg_key_file.open.read
             @gpg_key_file.close
             assigns[:gpg_key].content.should eq(gpg_key_content)
           end
-    
+
           it "should generate a success notice" do
             controller.should notify.success
             put :update, :id => @gpg_key.id, :gpg_key => @GPGKEY_CONTENT_UPLOAD
           end
-    
+
           it "should not redirect from edit view" do
             put :update, :id => @gpg_key.id, :gpg_key => @GPGKEY_CONTENT_UPLOAD
             response.should_not be_redirect
           end
-    
+
           it "should be successful" do
             put :update, :id => @gpg_key.id, :gpg_key => @GPGKEY_CONTENT_UPLOAD
             response.should be_success
@@ -358,14 +358,14 @@ describe GpgKeysController, :katello => true do
         response.should_not be_success
       end
     end
-    
+
     describe "with inclusive search parameters" do
       it "should generate a single notice" do
         controller.should notify.success
         put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME, :search => 'name ~ Test'
       end
     end
-    
+
     describe "with exclusive search parameters" do
       it "should generate message notice" do
         controller.stub(:search_validate).and_return(false)
