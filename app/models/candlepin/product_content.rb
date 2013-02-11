@@ -15,8 +15,11 @@ class Candlepin::ProductContent
   attr_accessor :content, :enabled
 
   def initialize(params = {}, product_id=nil)
-    @enabled = params[:enabled] || params["enabled"]
-    @content = ::Candlepin::Content.new(params[:content] || params["content"])
+    params = params.with_indifferent_access
+    #controls whether repo is enabled in yum repo file on client
+    #  unrelated to enable/disable from katello
+    @enabled = params[:enabled]
+    @content = ::Candlepin::Content.new(params[:content])
     @product_id = product_id
   end
 
@@ -33,8 +36,22 @@ class Candlepin::ProductContent
     @product
   end
 
-  def enabled?
+  #Has the user enabled the 'repository set' for this product
+  def katello_enabled?
     self.product.repos(self.product.organization.library).where(:content_id=>self.content.id).count > 0
+  end
+
+  def can_disable?
+    repos = self.product.repos(self.product.organization.library).where(:content_id=>self.content.id)
+    repos.empty?
+  end
+
+  def disable
+    raise _("One or more repositories are still enabled for this content set.") unless self.can_disable?
+    repos = self.product.repos(self.product.organization.library, true).where(:content_id=>self.content.id)
+    repos.each do |repo|
+      repo.destroy
+    end
   end
 
   def enable
@@ -51,7 +68,7 @@ class Candlepin::ProductContent
     rescue Errors::SecurityViolation => e
       # in case we cannot access CDN server to obtain repository URLS we note down error
       self.repositories_cdn_import_failed!
-      if self.import_logger
+      if product.import_logger
         product.import_logger.error("\nproduct #{product.name} repositories import: " <<
                                      'SecurityViolation occurred when contacting CDN to fetch ' <<
                                      "listing files\n" + e.backtrace.join("\n"))
