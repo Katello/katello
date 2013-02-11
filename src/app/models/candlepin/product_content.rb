@@ -58,7 +58,7 @@ class Candlepin::ProductContent
     end
   end
 
-  def enable
+  def refresh_repositories
     product = self.product
 
     cdn_var_substitutor = Resources::CDN::CdnResource.new(product.provider[:repository_url],

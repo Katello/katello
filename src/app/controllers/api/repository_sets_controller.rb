@@ -35,8 +35,7 @@ class Api::RepositorySetsController < Api::ApiController
   param :product_id, :number, :required => true, :desc => "id of a product the repository will be contained in"
   def enable
     raise _('Repository sets are enabled by default for custom products..') if @product.custom?
-    @product_content.enable
-    render :text=>true
+    render :json=>@product.async(:organization=>@organization).enable_content(@product_content.content.id)
   end
 
   api :GET, "/product/:product_id/repository_set/", "List repository sets for a product."
@@ -44,11 +43,13 @@ class Api::RepositorySetsController < Api::ApiController
   param :product_id, :number, :required => true, :desc => "id of a product to list repository sets in"
   def index
     raise _('Repository sets are not available for custom products.') if @product.custom?
-    render :json=>@product.productContent.collect do |pc|
-      content = pc.content.as_json
-      content[:katello_enabled] = pc.katello_enabled?
-      content
-    end
+    content = @product.productContent.collect do |pc|
+          content = pc.content.as_json
+          content[:katello_enabled] = pc.katello_enabled?
+          content
+        end
+
+    render :json=>content
   end
 
   private

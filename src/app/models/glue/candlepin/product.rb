@@ -170,6 +170,10 @@ module Glue::Candlepin::Product
       raise e
     end
 
+    def enable_content content_id
+      pc = self.productContent.select{|pc| pc.content.id == content_id}.first
+      pc.refresh_repositories
+    end
 
     def set_content
       self.productContent.each do |pc|

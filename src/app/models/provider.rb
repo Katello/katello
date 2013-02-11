@@ -121,7 +121,7 @@ class Provider < ActiveRecord::Base
   def refresh_products
     self.products.engineering.each do |product|
       product.productContent.each do |pc|
-        pc.enable
+        pc.refresh_repositories if pc.katello_enabled? #only refresh PCs that are already enabled
       end
     end
   end
