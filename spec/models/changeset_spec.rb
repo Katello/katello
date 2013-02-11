@@ -192,11 +192,10 @@ describe Changeset, :katello => true do
         }.with_indifferent_access)
         @err          = mock('Err', { :id => 'errata-unit-id', :errata_id=>'err', :name => 'err' })
 
-        @repo = Repository.new(:environment_product => ep, :name => "repo", :label => "repo_label",
-                                   :pulp_id => "135adsf", :content_id=>'23423', :relative_path=>'/foobar/',
-                                   :feed => 'https://localhost.com/foo/')
-        @repo.stub(:create_pulp_repo).and_return([])
-        @repo.save!
+        @repo = Repository.create!(:environment_product => ep, :name => "testrepo",
+                                 :label => "testrepo_label", :pulp_id=>"1010",
+                                 :content_id=>'123', :relative_path=>"/foo/",
+                                 :feed => 'https://localhost')
         @distribution = mock('Distribution', { :id => 'some-distro-id' })
         @repo.stub(:distributions).and_return([@distribution])
         @repo.stub_chain(:distributions, :index).and_return([@distribution])
@@ -215,7 +214,11 @@ describe Changeset, :katello => true do
         @environment.prior.products.stub(:find_by_name).and_return(@prod)
         @environment.prior.products.stub(:find_by_cp_id).and_return(@prod)
 
-        Runcible::Extensions::Errata.stub(:find).and_return({:id=>'errata-unit-id', :errata_id=>'err'})
+        ChangesetDistribution.any_instance.stub(:product).and_return(@prod)
+        ChangesetErratum.any_instance.stub(:product).and_return(@prod)
+        ChangesetPackage.any_instance.stub(:product).and_return(@prod)
+
+        Errata.stub(:find_by_errata_id).and_return(@err)
       end
 
 
@@ -465,6 +468,10 @@ describe Changeset, :katello => true do
         Glue::Pulp::Package.stub(:index_packages).and_return(true)
         Glue::Pulp::Errata.stub(:index_errata).and_return(true)
         Glue::Pulp::Repo.stub(:add_repo_packages)
+
+        ChangesetDistribution.any_instance.stub(:product).and_return(@prod)
+        ChangesetErratum.any_instance.stub(:product).and_return(@prod)
+        ChangesetPackage.any_instance.stub(:product).and_return(@prod)
       end
 
       it "should fail if the product is not in the review phase" do

@@ -31,9 +31,8 @@ describe GpgKeysController, :katello => true do
     set_default_locale
     login_user({:mock => false})
     controller.stub(:validate_search).and_return(true)
-    @file = mock(Object)
-    @file.stub_chain(:tempfile, :path).and_return('test_key.gpg')
-    @file.stub!(:read).and_return("This is uploaded key data.")
+    test_document = "#{Rails.root}/spec/assets/gpg_test_key"
+    @file = Rack::Test::UploadedFile.new(test_document, "text/plain")
 
     @organization = new_test_org
     @gpg_key = GpgKey.create!( :name => "Another Test Key", :content => "This is the key data string", :organization => @organization )
@@ -166,9 +165,11 @@ describe GpgKeysController, :katello => true do
         end
 
         it "assigns a newly created GPG Key" do
+          test_document = "#{Rails.root}/spec/assets/gpg_test_key"
+          temp_file = Rack::Test::UploadedFile.new(test_document, "text/plain")
           post :create, @gpg_key_params_uploaded
           assigns[:gpg_key].name.should eq(@gpg_key_params_uploaded[:gpg_key][:name])
-          assigns[:gpg_key].content.should eq(@file.read)
+          assigns[:gpg_key].content.should eq(temp_file.read)
         end
 
         it "renders list item partial for 2 pane" do
@@ -293,28 +294,29 @@ describe GpgKeysController, :katello => true do
 
         describe "that include an uploaded GPG Key file" do
           before(:each) do
-            @gpg_key_file = mock(Object)
-            @gpg_key_file.stub_chain(:tempfile, :path).and_return('test_key.gpg')
-            @gpg_key_file.stub!(:read).and_return("This is uploaded key data.")
+            test_document = "#{Rails.root}/spec/assets/gpg_test_key"
+            @gpg_key_file = Rack::Test::UploadedFile.new(test_document, "text/plain")
 
             @GPGKEY_CONTENT_UPLOAD = { :content_upload => @gpg_key_file }
           end
-
+          
           it "should update requested field - content_upload" do
             put :update, :id => @gpg_key.id, :gpg_key => @GPGKEY_CONTENT_UPLOAD
-            assigns[:gpg_key].content.should eq(@gpg_key_file.read)
+            gpg_key_content = @gpg_key_file.open.read
+            @gpg_key_file.close
+            assigns[:gpg_key].content.should eq(gpg_key_content)
           end
-
+    
           it "should generate a success notice" do
             controller.should notify.success
             put :update, :id => @gpg_key.id, :gpg_key => @GPGKEY_CONTENT_UPLOAD
           end
-
+    
           it "should not redirect from edit view" do
             put :update, :id => @gpg_key.id, :gpg_key => @GPGKEY_CONTENT_UPLOAD
             response.should_not be_redirect
           end
-
+    
           it "should be successful" do
             put :update, :id => @gpg_key.id, :gpg_key => @GPGKEY_CONTENT_UPLOAD
             response.should be_success
@@ -356,14 +358,14 @@ describe GpgKeysController, :katello => true do
         response.should_not be_success
       end
     end
-
+    
     describe "with inclusive search parameters" do
       it "should generate a single notice" do
         controller.should notify.success
         put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME, :search => 'name ~ Test'
       end
     end
-
+    
     describe "with exclusive search parameters" do
       it "should generate message notice" do
         controller.stub(:search_validate).and_return(false)

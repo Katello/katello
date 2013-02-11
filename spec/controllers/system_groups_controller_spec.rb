@@ -22,21 +22,23 @@ describe SystemGroupsController, :katello => true do
 
   let(:uuid) { '1234' }
   before(:each) do
-      set_default_locale
-      login_user :mock=>false
-      disable_org_orchestration
-      disable_consumer_group_orchestration
+    set_default_locale
+    login_user :mock=>false
+    disable_org_orchestration
+    disable_consumer_group_orchestration
 
-      controller.stub(:search_validate).and_return(true)
-      @org = Organization.create!(:name=>'test_org', :label=> 'test_org')
-      @environment = KTEnvironment.create!(:name=>"DEV", :label=> "DEV", :prior=>@org.library, :organization=>@org)
-      @org = @org.reload
-      setup_current_organization(@org)
-      setup_system_creation
-      Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-      Resources::Candlepin::Consumer.stub!(:update).and_return(true)
+    controller.stub(:search_validate).and_return(true)
+    @org = Organization.create!(:name=>'test_org', :label=> 'test_org')
+    @environment = KTEnvironment.create!(:name=>"DEV", :label=> "DEV", :prior=>@org.library, :organization=>@org)
+    @org = @org.reload
+    setup_current_organization(@org)
+    setup_system_creation
+    Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Resources::Candlepin::Consumer.stub!(:update).and_return(true)
+    Resources::Candlepin::Consumer.stub!(:destroy).and_return(true)
+    Runcible::Extensions::Consumer.stub!(:delete).and_return(true)
 
-      @system = System.create!(:name=>"bar1", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
+    @system = System.create!(:name=>"bar1", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
   end
 
 
@@ -304,7 +306,6 @@ describe SystemGroupsController, :katello => true do
       end
     end
 
-
     describe "DELETE destroy_systems" do
       let(:action) {:destroy_systems}
       let(:req) { delete :destroy_systems, :id=>@group.id}
@@ -320,10 +321,6 @@ describe SystemGroupsController, :katello => true do
       it "should complete successfully" do
         @group.systems  = [@system]
         @group.save
-
-        System.stub(:find).and_return([@system])
-        @system.should_receive(:destroy)
-        controller.stub(:render)
 
         delete :destroy_systems, :id=>@group.id
         response.should be_success

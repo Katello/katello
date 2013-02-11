@@ -7,6 +7,7 @@ module ActiveRecord
   module Persistence
     private
 
+      # TODO: All instances of this method should be converted to self.class.column_defaults
       def attributes_from_column_definition
         self.class.columns.inject({}) do |attributes, column|
           attributes[column.name] = column.default unless column.name == self.class.primary_key

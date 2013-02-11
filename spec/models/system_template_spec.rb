@@ -240,34 +240,32 @@ describe SystemTemplate, :katello => true do
   describe "import & export template" do
 
     before(:each) do
-      @import="
-{
-  'name': 'Web Server',
-  'revision': 1,
-  'products': [
-    'prod_a1',
-    'prod_a2'
-  ],
-  'packages': [
-    'walrus'
-  ],
-  'parameters': {
-    'attr1': 'val1',
-    'attr2': 'val2'
-  },
-  'package_groups': [
-    'pg-123',
-    'pg-456'
-  ],
-  'package_group_categories': [
-    'pgc-123',
-    'pgc-456'
-  ],
-  'distributions': [
-    'ks-distro'
-  ]
-}
-"
+      @import='{
+        "name": "Web Server",
+        "revision": 1,
+        "products": [
+          "prod_a1",
+          "prod_a2"
+        ],
+        "packages": [
+          "walrus"
+        ],
+        "parameters": {
+          "attr1": "val1",
+          "attr2": "val2"
+        },
+        "package_groups": [
+          "pg-123",
+          "pg-456"
+        ],
+        "package_group_categories": [
+          "pgc-123",
+          "pgc-456"
+        ],
+        "distributions": [
+          "ks-distro"
+        ]
+      }'
     end
 
     it "should import template content" do
