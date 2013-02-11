@@ -1,0 +1,69 @@
+#
+# Copyright 2011 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+
+class Api::RepositorySetsController < Api::ApiController
+  respond_to :json
+
+  before_filter :find_organization, :only => [:enable, :index]
+  before_filter :find_product, :only => [:enable, :index]
+  before_filter :find_product_content, :only=> [:enable]
+
+  before_filter :authorize
+
+
+  def rules
+    edit_product_test = lambda{@product.editable?}
+    read_test = lambda{@product.readable?}
+    {
+      :enable => edit_product_test,
+      :index => read_test,
+    }
+  end
+
+
+  api :POST, "/product/:product_id/repository_set/:id/enable", "Enable a repository set for a product."
+  param :organization_id, :identifier, :required => true, :desc => "id of an organization the repository will be contained in"
+  param :product_id, :number, :required => true, :desc => "id of a product the repository will be contained in"
+  def enable
+    raise _('Repository sets are enabled by default for custom products..') if @product.custom?
+    @product_content.enable
+    render :text=>true
+  end
+
+  api :GET, "/product/:product_id/repository_set/", "List repository sets for a product."
+  param :organization_id, :identifier, :required => true, :desc => "id of an "
+  param :product_id, :number, :required => true, :desc => "id of a product to list repository sets in"
+  def index
+    raise _('Repository sets are not available for custom products.') if @product.custom?
+    render :json=>@product.productContent.collect do |pc|
+      content = pc.content.as_json
+      content[:katello_enabled] = pc.katello_enabled?
+      content
+    end
+  end
+
+  private
+
+  def find_product_content
+    pcs = @product.productContent.select{|pc| pc.content.id == params[:id]}
+    raise HttpErrors::NotFound, _("Couldn't find repository set with id.") % params[:id] if pcs.empty?
+    raise HttpErrors::NotFound, _("Found multiple product contents with id %s.") % params[:id] if pcs.size > 1
+    @product_content = pcs.first
+  end
+
+
+
+  def find_product
+    @product = @organization.products.find_by_cp_id params[:product_id]
+    raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:product_id] if @product.nil?
+  end
+end
