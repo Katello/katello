@@ -26,6 +26,7 @@ class Product < ActiveRecord::Base
   has_many :environment_products, :class_name => "EnvironmentProduct", :dependent => :destroy, :uniq=>true
   has_many :environments, :class_name => "KTEnvironment", :uniq => true , :through => :environment_products  do
     def <<(*items)
+      # TODO:  RAILS32 Convert this to @association.owner
       if @association.nil?
         owner = @owner
       else
@@ -60,7 +61,7 @@ class Product < ActiveRecord::Base
 
   before_save :assign_unique_label
 
-  def initialize(attrs = nil)
+  def initialize(attrs=nil, options={})
 
     unless attrs.nil?
       attrs = attrs.with_indifferent_access
@@ -79,7 +80,12 @@ class Product < ActiveRecord::Base
       end
     end
 
-    super(attrs)
+    # TODO RAILS32 Clean up supers
+    if Rails::VERSION::STRING.start_with?('3.2')
+      super
+    else
+      super(attrs)
+    end
   end
 
   def organization

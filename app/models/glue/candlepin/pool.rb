@@ -42,13 +42,22 @@ module Glue::Candlepin::Pool
 
   module InstanceMethods
 
-    def initialize(attrs = nil)
+    def initialize(attrs=nil, options={})
+      # TODO RAILS32 Clean up supers
       if not attrs.nil? and attrs.member? 'id'
         # initializing from cadlepin json
         load_remote_data(attrs)
-        super(:cp_id => attrs['id'])
+        if Rails::VERSION::STRING.start_with?('3.2')
+          super({:cp_id => attrs['id']}, options)
+        else
+          super(:cp_id => attrs['id'])
+        end
       else
-        super
+        if Rails::VERSION::STRING.start_with?('3.2')
+          super
+        else
+          super(attrs)
+        end
       end
     end
 
