@@ -31,7 +31,9 @@ module Glue::Candlepin::Content
 
     def save_content_orchestration
       if self.new_record? && !self.product.provider.redhat_provider? && self.environment.library?
-        pre_queue.create(:name => "create content : #{self.name}", :priority => 2, :action => [self, :create_content])
+        pre_queue.create(:name => "create content : #{self.name}", :priority => 2, :action => [self, :create_content],
+            :action_rollback => [self, :del_content]
+        )
       elsif !self.new_record? && should_update_content?
         pre_queue.create(:name => "update content : #{self.name}", :priority => 2, :action => [self, :update_content])
       end
@@ -50,7 +52,7 @@ module Glue::Candlepin::Content
       return true unless self.content_id
       if other_repos_with_same_product_and_content.empty?
         self.product.remove_content_by_id self.content_id
-        if other_repos_with_same_content.empty? && !self.product.provider.redhat_provider?
+        unless self.product.provider.redhat_provider?
           Resources::Candlepin::Content.destroy(self.content_id)
         end
       end

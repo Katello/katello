@@ -1,9 +1,3 @@
-# set environment variable BUNDLER_ENABLE_RPM_PREFERRING to 'true' to enable bundler patch
-# if enabled bundler prefers rpm-gems even if they are older version then gems in gem-repo
-if ENV['BUNDLER_ENABLE_RPM_PREFERRING'] == 'true'
-  require File.join(File.dirname(__FILE__), 'lib', 'bundler_patch_rpm-gems_preferred')
-end
-
 # load Katello configuration
 path = File.expand_path('../lib', __FILE__)
 $LOAD_PATH << path unless $LOAD_PATH.include? path
@@ -25,7 +19,9 @@ gem 'ldap_fluff'
 
 if defined? JRUBY_VERSION
   gem 'jruby-openssl'
-  gem 'activerecord-jdbcpostgresql-adapter', '1.1.3'
+  gem 'activerecord-jdbc-adapter'
+  gem 'jdbc-postgres', :require => false
+  gem 'activerecord-jdbcpostgresql-adapter', :require => false
   gem 'tire', '>= 0.3.0'
 else
   gem 'thin', '>= 1.2.8'

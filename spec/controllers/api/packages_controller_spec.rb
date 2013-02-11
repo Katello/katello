@@ -38,7 +38,7 @@ describe Api::PackagesController, :katello => true do
     Repository.stub(:find).and_return(@repo)
 
     @repo.stub(:packages).and_return([])
-    package = { 'repository_memberships' => [ repo_id ] }
+    package = { 'repository_memberships' => [ repo_id ] }.with_indifferent_access
     Runcible::Extensions::Rpm.stub(:find_by_unit_id).and_return(package)
 
     @request.env["HTTP_ACCEPT"] = "application/json"
