@@ -22,13 +22,13 @@ describe NoticesController do
     set_default_locale
     controller.stub(:render_panel_direct).and_return([])
   end
-  
+
   describe "viewing notices" do
     before (:each) do
       20.times{|a| Notice.create!(:text=>"bar#{a}", :level=>:success, :user_notices=>[UserNotice.new(:user => @user)])}
       @notices = Notice.select(:id).where("text like 'bar%'").order("id desc").all.collect{|s| s.id}
     end
-    
+
     it 'should show all user notices' do
       get :show
       response.should be_success
