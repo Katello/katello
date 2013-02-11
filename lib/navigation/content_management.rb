@@ -182,7 +182,7 @@ module Navigation
     def menu_content_view_definitions
       {:key => :content_view_definitions,
        :name => _("Views"),
-       :if => lambda{AppConfig.katello? && ContentViewDefinition.any_readable?(current_organization)},
+       :if => lambda{Katello.config.katello? && ContentViewDefinition.any_readable?(current_organization)},
        :options => {:class=>'content second_level', "data-menu"=>"content"},
        :url =>content_view_definitions_path,
       }
