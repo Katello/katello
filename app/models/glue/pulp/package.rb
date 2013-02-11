@@ -40,6 +40,7 @@ module Glue::Pulp::Package
 
     def initialize(params = {})
       params[:repoids] =  params.delete(:repository_memberships) if params.has_key?(:repository_memberships)
+      params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
     end
 
     def nvrea
