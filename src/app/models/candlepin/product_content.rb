@@ -36,6 +36,10 @@ class Candlepin::ProductContent
     @product
   end
 
+  def product=(prod)
+    @product = prod
+  end
+
   #Has the user enabled the 'repository set' for this product
   def katello_enabled?
     self.product.repos(self.product.organization.library).where(:content_id=>self.content.id).count > 0
@@ -55,7 +59,6 @@ class Candlepin::ProductContent
   end
 
   def enable
-    raise _("Content set #{self.content.name} already enabled for product #{self.product.name}") if self.enabled?
     product = self.product
 
     cdn_var_substitutor = Resources::CDN::CdnResource.new(product.provider[:repository_url],

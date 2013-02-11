@@ -120,7 +120,9 @@ class Provider < ActiveRecord::Base
   # the CDN, this method will provide loading this new versions.
   def refresh_products
     self.products.engineering.each do |product|
-      product.set_repos
+      product.productContent.each do |pc|
+        pc.enable
+      end
     end
   end
 
