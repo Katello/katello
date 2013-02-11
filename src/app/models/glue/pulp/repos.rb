@@ -325,71 +325,6 @@ module Glue::Pulp::Repos
       end
     end
 
-
-    def set_repos
-      content_urls = self.productContent.map { |pc| pc.content.contentUrl }
-      cdn_var_substitutor = Resources::CDN::CdnResource.new(self.provider[:repository_url],
-                                                       :ssl_client_cert => OpenSSL::X509::Certificate.new(self.certificate),
-                                                       :ssl_client_key => OpenSSL::PKey::RSA.new(self.key),
-                                                       :product        => self).substitutor(self.import_logger)
-      begin
-        cdn_var_substitutor.precalculate(content_urls)
-      rescue Errors::SecurityViolation => e
-        # in case we cannot access CDN server to obtain repository URLS we note down error
-        self.repositories_cdn_import_failed!
-        if self.import_logger
-          self.import_logger.error("\nproduct #{self.name} repositories import: " <<
-                                       'SecurityViolation occurred when contacting CDN to fetch ' <<
-                                       "listing files\n" + e.backtrace.join("\n"))
-        end
-        # false would cancel orchestration and would lead to product save cancellation
-        # but we want import process to succeed
-        return true
-      end
-
-      self.productContent.collect do |pc|
-        ca = File.read(Resources::CDN::CdnResource.ca_file)
-
-        cdn_var_substitutor.substitute_vars(pc.content.contentUrl).each do |(substitutions, path)|
-          feed_url = repo_url(path)
-          arch = substitutions["basearch"] || "noarch"
-          repo_name = [pc.content.name, substitutions.sort_by {|k,_| k.to_s}.map(&:last)].flatten.compact.join(" ").gsub(/[^a-z0-9\-\._ ]/i,"")
-          version = Resources::CDN::Utils.parse_version(substitutions["releasever"])
-
-          begin
-            env_prod = EnvironmentProduct.find_or_create(self.organization.library, self)
-            unless Repository.where(:environment_product_id => env_prod.id, :pulp_id => repo_id(repo_name)).any?
-              repo = Repository.create!(:environment_product=> env_prod, :pulp_id => repo_id(repo_name),
-                                        :cp_label => pc.content.label,
-                                        :content_id=>pc.content.id,
-                                        :arch => arch,
-                                        :major => version[:major],
-                                        :minor => version[:minor],
-                                        :relative_path => Glue::Pulp::Repos.repo_path_from_content_path(self.library, path),
-                                        :name => repo_name,
-                                        :label => Katello::ModelUtils::labelize(repo_name),
-                                        :feed => feed_url,
-                                        :feed_ca => ca,
-                                        :feed_cert => self.certificate,
-                                        :feed_key => self.key,
-                                        :content_type => pc.content.type,
-                                        :preserve_metadata => true, #preserve repo metadata when importing from cp
-                                        :enabled =>false
-                                       )
-            end
-            self.repositories_cdn_import_passed! unless self.cdn_import_success?
-
-          rescue RestClient::InternalServerError => e
-            if e.message.include? "Architecture must be one of"
-              Rails.logger.error("Pulp does not support arch '#{arch}'")
-            else
-              raise e
-            end
-          end
-        end
-      end
-    end
-
     def repositories_cdn_import_failed!
       set_repositories_cdn_import false
     end
@@ -420,8 +355,6 @@ module Glue::Pulp::Repos
       case orchestration_for
         when :create
           # no repositories are added when a product is created
-        when :import_from_cp
-          pre_queue.create(:name => "create pulp repositories for product: #{self.label}",      :priority => 1, :action => [self, :set_repos])
         when :update
           #called when sync schedule changed, repo added, repo deleted
           pre_queue.create(:name => "setting up pulp sync schedule for product: #{self.label}", :priority => 2, :action => [self, :setup_sync_schedule])
