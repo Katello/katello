@@ -536,11 +536,11 @@ describe SystemsController do
 
           disable_consumer_group_orchestration
           @group1 = SystemGroup.new(:name=>"test_group1", :organization=>@organization)
-          @group1.systems << [@system1, @system2]
           @group1.save!
+          @group1.systems << [@system1, @system2]
           @group2 = SystemGroup.new(:name=>"test_group2", :organization=>@organization)
-          @group2.systems << [@system1, @system2]
           @group2.save!
+          @group2.systems << [@system1, @system2]
         end
 
         it "should remove the list of systems from the groups provided" do
