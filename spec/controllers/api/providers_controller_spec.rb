@@ -22,7 +22,6 @@ describe Api::ProvidersController, :katello => true do
   let(:user_without_write_permissions) { user_with_permissions { |u| u.can([:read], :providers, nil, @ogranization) } }
 
   let(:provider_name) { "name" }
-  let(:provider_id) { 1 }
   let(:another_provider_name) { "another name" }
 
   before(:each) do
@@ -32,8 +31,8 @@ describe Api::ProvidersController, :katello => true do
     @organization = new_test_org
     @provider = Provider.create!(:name => provider_name, :provider_type => Provider::CUSTOM,
                                  :organization => @organization)
-    Provider.stub!(:find_by_name).and_return(@provider)
-    Provider.stub!(:find).and_return(@provider)
+    Provider.stub(:find).with(@provider.id.to_s.to_s).and_return(@provider)
+    Provider.stub(:find_by_name).with(@provider.name).and_return(@provider)
     @provider.organization = @organization
 
     @request.env["HTTP_ACCEPT"] = "application/json"
@@ -102,13 +101,13 @@ describe Api::ProvidersController, :katello => true do
   describe "update a provider" do
 
     let(:action) { :update }
-    let(:req) { put 'update', { :id => provider_id, :provider => { :name => another_provider_name }} }
+    let(:req) { put 'update', { :id => @provider.id.to_s, :provider => { :name => another_provider_name }} }
     let(:authorized_user) { user_with_write_permissions }
     let(:unauthorized_user) { user_without_write_permissions }
     it_should_behave_like "protected action"
 
     it "should call Provider#update_attributes" do
-      Provider.should_receive(:find).with(provider_id).and_return(@provider)
+      Provider.should_receive(:find).with(@provider.id.to_s.to_s).and_return(@provider)
       @provider.should_receive(:update_attributes!).once
 
       req
@@ -129,13 +128,13 @@ describe Api::ProvidersController, :katello => true do
   describe "find a provider" do
 
     let(:action) { :show }
-    let(:req) { get :show, :id => provider_id }
+    let(:req) { get :show, :id => @provider.id.to_s }
     let(:authorized_user) { user_with_read_permissions }
     let(:unauthorized_user) { user_without_read_permissions }
     it_should_behave_like "protected action"
 
     it "should call Provider.first" do
-      Provider.should_receive(:find).with(provider_id).and_return(@provider)
+      Provider.should_receive(:find).with(@provider.id.to_s.to_s).and_return(@provider)
 
       req
     end
@@ -144,13 +143,13 @@ describe Api::ProvidersController, :katello => true do
   describe "delete a provider" do
 
     let(:action) { :destroy }
-    let(:req) { delete :destroy, :id => provider_id }
+    let(:req) { delete :destroy, :id => @provider.id.to_s }
     let(:authorized_user) { user_with_write_permissions }
     let(:unauthorized_user) { user_without_write_permissions }
     it_should_behave_like "protected action"
 
    it "should remove the specified provider" do
-      Provider.should_receive(:find).with(provider_id).and_return(@provider)
+      Provider.should_receive(:find).with(@provider.id.to_s.to_s).and_return(@provider)
       @provider.should_receive(:destroy).once
       req
     end
@@ -159,14 +158,14 @@ describe Api::ProvidersController, :katello => true do
   describe "product create" do
 
     let(:action) { :product_create }
-    let(:req) { post 'product_create', { :id => provider_id , :product => product_to_create } }
+    let(:req) { post 'product_create', { :id => @provider.id.to_s , :product => product_to_create } }
     let(:authorized_user) { user_with_write_permissions }
     let(:unauthorized_user) { user_without_write_permissions }
     it_should_behave_like "protected action"
 
 
     it "should remove the specified provider" do
-      Provider.should_receive(:find).with(provider_id).and_return(@provider)
+      Provider.should_receive(:find).with(@provider.id.to_s.to_s).and_return(@provider)
       @provider.should_receive(:add_custom_product).once
       req
     end
@@ -175,31 +174,28 @@ describe Api::ProvidersController, :katello => true do
   describe "import manifest" do
 
     let(:action) { :import_manifest }
-    let(:req) { post :import_manifest, { :id => @organization.redhat_provider.id , :import => @temp_file } }
+    let(:req) { post :import_manifest, { :id => @provider.id.to_s, :import => @temp_file } }
     let(:authorized_user) { user_with_write_permissions }
     let(:unauthorized_user) { user_without_write_permissions }
     it_should_behave_like "protected action"
 
     before(:each) do
-      @temp_file = mock(File)
-      @temp_file.stub(:read).and_return('FILE_DATA')
-      @temp_file.stub(:close)
-      @temp_file.stub(:write)
-      @temp_file.stub(:path).and_return("/a/b/c")
-
-      File.stub(:new).and_return(@temp_file)
+      test_document = "#{Rails.root}/spec/assets/gpg_test_key"
+      @temp_file = Rack::Test::UploadedFile.new(test_document, "text/plain")
     end
 
     it "should call Provider#import_manifest" do
-      Provider.should_receive(:find).with(@organization.redhat_provider.id).and_return(@organization.redhat_provider)
-      @organization.redhat_provider.should_receive(:import_manifest).once
+      redhat_provider = @organization.redhat_provider
+      Provider.stub(:find).and_return(redhat_provider)
+      redhat_provider.should_receive(:import_manifest).once
       req
     end
+
   end
 
   describe "repo discovery" do
     let(:action) {:discovery}
-    let(:req) {post :discovery, {:id=>@provider.id, :url=>'http://testurl.com/path/'}}
+    let(:req) {post :discovery, {:id=>@provider.id.to_s, :url=>'http://testurl.com/path/'}}
     let(:authorized_user) { user_with_write_permissions}
     let(:unauthorized_user) { user_without_write_permissions}
     it_should_behave_like "protected action"
@@ -214,22 +210,28 @@ describe Api::ProvidersController, :katello => true do
   describe "refresh products" do
 
     let(:action) { :refresh_products }
-    let(:req) { post :refresh_products, { :id => @organization.redhat_provider.id  } }
+    let(:req) { post :refresh_products, { :id => @provider.id.to_s }}
     let(:authorized_user) { user_with_write_permissions }
     let(:unauthorized_user) { user_without_write_permissions }
     it_should_behave_like "protected action"
 
-    it "should refresh all the engineering products of the provider" do
-      Provider.should_receive(:find).with(@organization.redhat_provider.id).and_return(@organization.redhat_provider)
-      @organization.redhat_provider.should_receive(:refresh_products).once
-      req
-    end
+    describe "" do
+      before(:each) do
+        @redhat_provider = @organization.redhat_provider
+        Provider.stub(:find).with(@redhat_provider.id.to_s.to_s).and_return(@redhat_provider)
+      end
 
-    it "should fail for no-red-hat provider" do
-      Provider.should_receive(:find).with(@organization.redhat_provider.id).and_return(@provider)
-      @organization.redhat_provider.should_not_receive(:refresh_products)
-      req
-      response.should_not be_success
+      it "should refresh all the engineering products of the provider" do
+        @redhat_provider.should_receive(:refresh_products).once
+        post :refresh_products, { :id => @organization.redhat_provider.id.to_s  }
+        response.should be_success
+      end
+
+      it "should fail for no-red-hat provider" do
+        @organization.redhat_provider.should_not_receive(:refresh_products)
+        post :refresh_products, { :id => @provider.id.to_s  }
+        response.should_not be_success
+      end
     end
   end
 

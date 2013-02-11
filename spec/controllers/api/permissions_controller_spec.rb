@@ -25,8 +25,8 @@ describe Api::PermissionsController do
   let(:user_with_destroy_permissions) { user_with_permissions { |u| u.can(:delete, :roles) } }
   let(:user_without_destroy_permissions) { user_with_permissions { |u| u.can(:update, :roles) } }
 
-  let(:role_id) { 123 }
-  let(:perm_id) { 456 }
+  let(:role_id) { '123' }
+  let(:perm_id) { '456' }
 
   before (:each) do
     disable_org_orchestration
@@ -47,7 +47,7 @@ describe Api::PermissionsController do
     it_should_behave_like "protected action"
 
     it 'should find the role' do
-      Role.should_receive(:find).with(role_id)
+      Role.should_receive(:find).with(role_id.to_s)
       req
     end
 

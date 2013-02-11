@@ -135,7 +135,7 @@ describe Api::SystemsController do
         @system_data = {
           :name => "Test System 1",
           :facts => facts,
-          :environment => @environment_1,
+          :environment_id => @environment_1.id,
           :cp_type => "system",
           :sockets => 2,
           :organization_id => @organization.label,
@@ -322,7 +322,7 @@ describe Api::SystemsController do
 
       it "successfully with update permissions" do
         Runcible::Extensions::Consumer.should_receive(:upload_profile).once.with(uuid, 'rpm', package_profile[:profile]).and_return(true)
-        put :upload_package_profile, :id => uuid, :_json => package_profile[:profile]
+        put :upload_package_profile, :id => uuid, :_json => package_profile[:profile], :format => :json
         response.body.should == @sys.to_json
       end
     end
@@ -334,7 +334,7 @@ describe Api::SystemsController do
 
       it "successfully with register permissions" do
         Runcible::Extensions::Consumer.should_receive(:upload_profile).once.with(uuid, 'rpm', package_profile[:profile]).and_return(true)
-        put :upload_package_profile, :id => uuid, :_json => package_profile[:profile]
+        put :upload_package_profile, :id => uuid, :_json => package_profile[:profile], :format => :json
         response.body.should == @sys.to_json
       end
     end

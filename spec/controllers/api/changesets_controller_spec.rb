@@ -17,7 +17,7 @@ describe Api::ChangesetsController, :katello => true do
   include AuthorizationHelperMethods
   include OrchestrationHelper
 
-  CSET_ID = 1
+  CSET_ID = '1'
   CSET_NAME = "changeset_x"
 
   let(:uuid) { '1234' }
@@ -98,7 +98,7 @@ describe Api::ChangesetsController, :katello => true do
     it_should_behave_like "protected action"
 
     it "should call PromotionChangeset.first" do
-      Changeset.should_receive(:find).with(CSET_ID).and_return(@changeset)
+      Changeset.should_receive(:find).with(CSET_ID.to_s).and_return(@changeset)
       req
     end
   end

@@ -266,7 +266,7 @@ class PromotionsController < ApplicationController
     KTEnvironment.changesets_readable(current_organization).each{|env|
       list << env.prior if env.prior
     }
-    list.uniq
+    list.length > 1 ? list.uniq : list
   end
 
 
