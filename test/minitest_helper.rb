@@ -19,13 +19,23 @@ end
 def configure_vcr
   require "vcr"
 
-  mode = ENV['mode'] ? ENV['mode'] : :none
+  mode = ENV['mode'] ? ENV['mode'].to_sym : :none
+
+  if ENV['record'] == "false" && mode == :none
+    raise "Record flag is not applicable for mode 'none', please use with 'mode=all'"
+  end
 
   VCR.configure do |c|
     c.cassette_library_dir = 'test/fixtures/vcr_cassettes'
     c.hook_into :webmock
+    
+    if ENV['record'] == "false" && mode != :none
+      uri = URI.parse(Katello.config.pulp.url)
+      c.ignore_hosts uri.host
+    end
+
     c.default_cassette_options = {
-      :record => mode.to_sym,
+      :record => mode,
       :match_requests_on => [:method, :path, :params],
       :serialize_with => :syck
     }
