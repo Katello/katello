@@ -133,7 +133,7 @@ module Glue::Candlepin::Product
 
     def convert_from_cp_fields(cp_json)
       ar_safe_json = cp_json.has_key?(:attributes) ? cp_json.merge(:attrs => cp_json.delete(:attributes)) : cp_json
-      ar_safe_json[:productContent] = ar_safe_json[:productContent].collect { |pc| ::Candlepin::ProductContent.new pc }
+      ar_safe_json[:productContent] = ar_safe_json[:productContent].collect { |pc| ::Candlepin::ProductContent.new(pc, self.id) }
       ar_safe_json[:attrs] ||=[]
       ar_safe_json.except('id')
     end
@@ -216,10 +216,10 @@ module Glue::Candlepin::Product
     def update_content
       return true unless productContent_changed?
 
-      deleted_content_ids.each do |content_id|
-        Rails.logger.debug "deleting content #{content_id}"
-        Resources::Candlepin::Product.remove_content cp_id, content_id
-        Resources::Candlepin::Content.destroy(content_id)
+      deleted_content.each do |content|
+        Rails.logger.debug "deleting content #{content.id}"
+        Resources::Candlepin::Product.remove_content cp_id, content.id
+        Resources::Candlepin::Content.destroy(content.id)
       end
 
       added_content.each do |pc|
@@ -288,6 +288,8 @@ module Glue::Candlepin::Product
           pre_queue.create(:name => "create unlimited subscription in candlepin: #{self.name}", :priority => 2, :action => [self, :set_unlimited_subscription])
         when :import_from_cp
           # we leave it as it is - to not break re-import logic
+        when :import_from_cp_ar_setup
+          # skip creating product in candlepin as its already there
         when :update
           #called when sync schedule changed, repo added, repo deleted
           pre_queue.create(:name => "update content in candlein: #{self.name}", :priority => 1, :action => [self, :update_content])
