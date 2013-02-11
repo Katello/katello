@@ -135,7 +135,7 @@ class SystemTemplate < ActiveRecord::Base
   # Method validate_tdl MUST be called before exporting, this method expects
   # validated system template.
   def export_as_tdl
-    xm = Builder::XmlMarkup.new
+    xm = ::Builder::XmlMarkup.new
     xm.instruct!
 
     validate_tdl
