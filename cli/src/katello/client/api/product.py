@@ -99,3 +99,11 @@ class ProductAPI(KatelloAPI):
         data = self.server.GET(path)[1]
         return data
 
+    def repository_sets(self, orgName, prodId):
+        path = "/api/organizations/%s/products/%s/repository_sets" % (u_str(orgName), u_str(prodId))
+        return self.server.GET(path)[1]
+  
+    def enable_repository_set(self, orgName, prodId, repoSetId):
+        path = "/api/organizations/%s/products/%s/repository_sets/%s/enable" % (u_str(orgName), 
+                         u_str(prodId), u_str(repoSetId))
+        return self.server.POST(path)[1]

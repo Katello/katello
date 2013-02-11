@@ -137,6 +137,9 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         prod_cmd.add_command('promote', product.Promote())
         prod_cmd.add_command('set_plan', product.SetSyncPlan())
         prod_cmd.add_command('remove_plan', product.RemoveSyncPlan())
+        prod_cmd.add_command('repository_sets', product.ListRepositorySets())
+        prod_cmd.add_command('repository_set_enable', product.EnableRepositorySet())
+
     katello_cmd.add_command('product', prod_cmd)
 
     # these could be set in the same block but are separated
