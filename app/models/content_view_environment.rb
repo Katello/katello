@@ -11,8 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class ContentViewEnvironment < ActiveRecord::Base
-  include Glue if AppConfig.use_cp
-  include Glue::Candlepin::Environment if AppConfig.use_cp
+  include Glue if Katello.config.use_cp
+  include Glue::Candlepin::Environment if Katello.config.use_cp
 
   belongs_to :content_view
 
