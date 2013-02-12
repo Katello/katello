@@ -185,8 +185,9 @@ class ChangesetsController < ApplicationController
 
           when "errata"
             product = Product.find pid
-            @changeset.add_erratum! id, product if adding
-            @changeset.remove_erratum! id, product if !adding
+            erratum = Errata.find(id)
+            @changeset.add_erratum! erratum, product if adding
+            @changeset.remove_erratum! erratum, product if !adding
 
           when "package"
             product = Product.find pid

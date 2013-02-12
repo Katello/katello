@@ -150,7 +150,7 @@ describe Changeset, :katello => true do
       end
 
       it "should fail on add erratum" do
-        lambda { @changeset.add_erratum!("err", @prod) }.should raise_error(Errors::ChangesetContentException)
+        lambda { @changeset.add_erratum!(Errata.new(:errata_id=>"err"), @prod) }.should raise_error(Errors::ChangesetContentException)
       end
 
       it "should fail on add repo" do
@@ -232,7 +232,7 @@ describe Changeset, :katello => true do
 
         it "should fail on add erratum" do
           @prod.stub(:has_erratum?).and_return(false)
-          lambda { @changeset.add_erratum!("err", @prod) }.should raise_error(Errors::ChangesetContentException)
+          lambda { @changeset.add_erratum!(Errata.new(:errata_id=>"err"), @prod) }.should raise_error(Errors::ChangesetContentException)
         end
 
         it "should fail on add repo" do
@@ -259,7 +259,7 @@ describe Changeset, :katello => true do
         end
 
         it "should fail on add erratum" do
-          lambda { @changeset.add_erratum!("err", @prod) }.
+          lambda { @changeset.add_erratum!(Errata.new(:errata_id=>"err"), @prod) }.
               should raise_error(ActiveRecord::RecordInvalid, /has not been promoted/)
         end
 
@@ -299,9 +299,9 @@ describe Changeset, :katello => true do
         end
 
         it "should add erratum" do
-          @changeset.add_erratum!("err", @prod)
+          @changeset.add_erratum!(Errata.new(:errata_id=>"err"), @prod)
           @changeset.errata.length.should == 1
-          lambda { @changeset.add_erratum!("err", @prod) }.
+          lambda { @changeset.add_erratum!(Errata.new(:errata_id=>"err"), @prod) }.
               should raise_error(ActiveRecord::RecordInvalid, /already been taken/)
         end
 
@@ -380,7 +380,7 @@ describe Changeset, :katello => true do
       it "should remove erratum" do
         ChangesetErratum.should_receive(:destroy_all).
             with(:display_name => 'err', :changeset_id => @changeset.id, :product_id => @prod.id).and_return(true)
-        @changeset.remove_erratum!("err", @prod)
+        @changeset.remove_erratum!(Errata.new(:errata_id=>"err"), @prod)
       end
 
       it "should remove repo" do
