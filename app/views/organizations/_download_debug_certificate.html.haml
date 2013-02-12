@@ -6,6 +6,9 @@
       = image_tag('embed/icons/expander-collapsed.png', :alt => _('Expand'))
     .grid_7.la
       #{_("Debug Certificate")}:
-    .grid_8.la#show_debug_button
+    .grid_12.la#show_debug_button
+      %div.helptip-open
+        %p
+          = _('Generating and downloading the debug certificate allows a user to view the repositories in any environment from a browser.')
       .button#download_debug_cert_key{"data-url"=>download_debug_certificate_organization_path(@organization.id)}
         = _("Generate and Download")
