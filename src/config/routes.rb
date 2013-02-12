@@ -322,12 +322,11 @@ Src::Application.routes.draw do
   match '/providers/:id' => 'providers#update', :via => :put
   match '/providers/:id' => 'providers#update', :via => :post
 
+  match '/repositories/:id/enable_repo' => 'repositories#enable_repo', :via => :put, :as => :enable_repo
+
   resources :repositories, :only => [:new, :create, :edit, :destroy] do
     collection do
       get :auto_complete_library
-    end
-    member do
-      put :enable_repo
     end
 
     resources :distributions, :only => [:show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ } do
