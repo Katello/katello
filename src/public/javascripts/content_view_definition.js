@@ -33,7 +33,7 @@ KT.content_view_definition = (function(){
             expandable: true,
             initialState: "expanded",
             clickableNodeNames: true,
-            onNodeShow: function(){$.sparkline_display_visible()}
+            onNodeShow: function(){$.sparkline_display_visible();}
         });
     },
     initialize_create = function() {
@@ -196,7 +196,7 @@ KT.content_view_definition = (function(){
             expandable: true,
             initialState: "expanded",
             clickableNodeNames: true,
-            onNodeShow: function(){$.sparkline_display_visible()}
+            onNodeShow: function(){$.sparkline_display_visible();}
         });
     },
     startUpdater = function () {
