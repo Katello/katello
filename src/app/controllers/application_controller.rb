@@ -271,13 +271,15 @@ class ApplicationController < ActionController::Base
   end
 
   def require_user
-    if current_user
-      #user logged in
 
-      #redirect to originally requested page
-      if !session[:original_uri].nil? && !matches_no_redirect?(session[:original_uri])
-        redirect_to session[:original_uri]
-        session[:original_uri] = nil
+    if current_user
+      #don't redirect if the user is trying to set an org
+      if params[:action] != 'set_org' && params[:controller] != 'user_sessions'
+        #redirect to originally requested page
+        if !session[:original_uri].nil? && !matches_no_redirect?(session[:original_uri])
+          redirect_to session[:original_uri]
+          session[:original_uri] = nil
+        end
       end
 
       return true
