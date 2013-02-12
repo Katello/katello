@@ -1,0 +1,18 @@
+= javascript :edit_helpers
+
+= content_for :content do
+  .grid_8
+    %h5 #{_("Custom Information")}
+  -#.grid_8
+    %input{:placeholder => "keyname"}
+    %input{:placeholder => "value"}
+    %input.btn.primary#submit_button{:value => "add", :type => "submit"}
+  .grid_8
+    - informable.custom_info.sort.each do |info|
+      %fieldset
+        .grid_3.ra.fieldset
+          = label :custom_info, info.keyname.to_sym, info.keyname
+        .grid_4.la{:id => "custom_info_#{info.keyname}",                 |
+          'name' => "custom_info[#{info.keyname}]",                      |
+          :class => ("editable edit_textfield" if informable.editable?), |
+          'data-url' => update_custom_info_path(informable_type, informable_id, info.keyname)} #{info.value}
