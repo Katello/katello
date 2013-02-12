@@ -52,7 +52,7 @@ module Glue::Candlepin::Content
       return true unless self.content_id
       if other_repos_with_same_product_and_content.empty?
         self.product.remove_content_by_id self.content_id
-        unless self.product.provider.redhat_provider?
+        if other_repos_with_same_content.empty? && !self.product.provider.redhat_provider?
           Resources::Candlepin::Content.destroy(self.content_id)
         end
       end
