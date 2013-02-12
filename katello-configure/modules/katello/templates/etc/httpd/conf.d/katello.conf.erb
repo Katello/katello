@@ -8,7 +8,7 @@ NameVirtualHost *:443
 
   ErrorLog /etc/httpd/logs/ssl_kt_error_log
   TransferLog /etc/httpd/logs/ssl_kt_access_log
-  LogLevel info
+  LogLevel warn
 
   ProxyRequests Off
   SSLEngine On
@@ -52,24 +52,25 @@ NameVirtualHost *:443
   ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment_url") %>/fonts !
   ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment_url") %>/javascripts !
 
-  <Location /<%= scope.lookupvar("katello::params::deployment_url") %>>
+  <Location /<%= scope.lookupvar("katello::params::deployment_url") %>/api>
+    # client certs support (old rhsm clients)
     RequestHeader set SSL_CLIENT_CERT "%{SSL_CLIENT_CERT}s"
     SSLVerifyClient optional
     SSLRenegBufferSize 16777216 
     SSLVerifyDepth 2
-  </Location>
 
-  <Location /<%= scope.lookupvar("katello::params::deployment_url") %>/api>
     # report to CLI and RHSM nicely when Katello is down
     ErrorDocument 500 '{"displayMessage": "Internal error, contact administrator", "errors": ["Internal error, contact administrator"], "status": "500" }'
     ErrorDocument 503 '{"displayMessage": "Service unavailable or restarting, try later", "errors": ["Service unavailable or restarting, try later"], "status": "503" }'
   </Location>
 
   <Location /subscription>
+    # client certs support
     RequestHeader set SSL_CLIENT_CERT "%{SSL_CLIENT_CERT}s"
     SSLVerifyClient optional
     SSLRenegBufferSize 16777216
     SSLVerifyDepth 2
+
     ProxyPass balancer://thinservers/api
     ProxyPassReverse balancer://thinservers/api
   </Location>
