@@ -173,7 +173,7 @@ class SubscriptionsController < ApplicationController
         display_message = ""
       end
 
-      Notify.exception @provider.delete_error_message(display_message), error
+      notify.exception @provider.delete_error_message(display_message), error
     end
 
     render :json=>{'state' => 'running'}
