@@ -186,7 +186,7 @@ class ProvidersController < ApplicationController
   def discover
     @provider.discovery_url = params[:url]
     @provider.save!
-    @provider.discover_repos
+    @provider.discover_repos(true)
     render :nothing=>true
   end
 
