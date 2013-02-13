@@ -193,7 +193,8 @@ class ActivationKeysController < ApplicationController
     @selected_template = no_template
 
     @content_view_labels = [[no_content_view, '']]
-    @content_view_labels += ContentView.readable(@organization).non_default.collect {|cv| [cv.name, cv.id]}
+    @content_view_labels += ContentView.readable(@organization).non_default.
+      in_environment(@environment).collect {|cv| [cv.name, cv.id]}
     @selected_content_view = no_content_view
 
     render :partial => "new", :layout => "tupane_layout", :locals => {:activation_key => activation_key,
@@ -212,8 +213,10 @@ class ActivationKeysController < ApplicationController
     @selected_template = @activation_key.system_template.nil? ? no_template : @activation_key.system_template.id
 
     @content_view_labels = [[no_content_view, '']]
-    @content_view_labels += ContentView.readable(@organization).non_default.collect {|v| [v.name, v.id]}
+    @content_view_labels += ContentView.readable(@organization).non_default.
+      in_environment(@activation_key.environment).collect {|cv| [cv.name, cv.id]}
     @selected_content_view = @activation_key.content_view.nil? ? no_content_view : @activation_key.content_view_id
+    @products = @activation_key.content_view ? @activation_key.content_view.products(@environment) : @environment.products
 
     render :partial => "edit", :layout => "tupane_layout", :locals => {:activation_key => @activation_key,
                                                                        :editable => ActivationKey.manageable?(current_organization),
