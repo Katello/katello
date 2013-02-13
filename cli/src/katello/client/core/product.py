@@ -424,6 +424,7 @@ class EnableRepositorySet(SingleProductAction):
             print _("Repository enable [ %(set_id)s ] failed: %(task_errors)s" \
                     % {'set_id':set_id, 'task_errors':format_task_errors(task.errors())} )
             returnCode = os.EX_DATAERR
+        return returnCode
 
 
 # ------------------------------------------------------------------------------
