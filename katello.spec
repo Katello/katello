@@ -389,7 +389,9 @@ for i in locale/*/app.po; do
     echo $i
     msgfmt -c $i
     FILE=$(mktemp)
-    pofilter --nofuzzy -t variables --gnome $i | tee $FILE
+    # TODO - enable endwhitespace, endpunc, puncspacing filters
+    pofilter --nofuzzy -t variables -t blank -t urls -t emails -t long -t newlines \
+        -t options -t printf -t validchars --gnome $i | tee $FILE
     grep msgid $FILE >/dev/null && exit 1
     rm $FILE
 done
