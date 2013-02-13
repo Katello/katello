@@ -36,12 +36,7 @@ class CustomInfoController < ApplicationController
     notify.success _("%{object_type} '%{name}' was updated") %
       {:object_type => @informable.class.class_name, :name => @informable.name}
     info = CustomInfo.find_by_informable_keyname(@informable, keyname)
-    hash = {}
-    hash[:keyname] = info.keyname
-    hash[:value] = info.value
-    hash[:informable_type] = params[:informable_type]
-    hash[:informable_id] = params[:informable_id]
-    render :json => hash.to_json
+    render :json => info.to_json(:only => [:informable_type, :informable_id, :keyname, :value])
   end
 
   def update
