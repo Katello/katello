@@ -213,8 +213,10 @@ module Glue::Provider
     end
 
     def queue_import_manifest zip_file_path, options
-      output        = StringIO.new
-      import_logger = Logger.new(output)
+      output = Logging.appenders.string_io.new('manifest_import_appender')
+      import_logger = Logging.logger['manifest_import_logger']
+      import_logger.add_appenders(output)
+
       options.merge!(:import_logger => import_logger)
       [Rails.logger, import_logger].each { |l| l.debug "Importing manifest for provider #{name}" }
 
@@ -246,7 +248,6 @@ module Glue::Provider
             message << _("You can run %s action to fix this. Note that it can take some time to complete." % link)
             values.push self.failed_products.size
           end
-          output.rewind
           Notify.success message % values,
                          :request_type => 'providers__update_redhat_provider',
                          :organization => self.organization,

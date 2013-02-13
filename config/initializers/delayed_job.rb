@@ -1,4 +1,4 @@
-require 'katello_logger'
+require 'katello_logging'
 
 # Models have to use logger.info instead of Rails.logger.info in order for the desired log file to be used.
 # When running under Rails last caller is "/usr/share/katello/config.ru:1" but when running standalone
@@ -6,11 +6,10 @@ require 'katello_logger'
 
 if caller.last =~ /script\/delayed_job:\d+$/ ||
     (caller[-10..-1].any? {|l| l =~ /\/rake/} && ARGV.include?("jobs:work"))
-  Rails.logger = Delayed::Worker.logger =
-      KatelloLogger.new("#{Rails.root}/log/#{Rails.env}_delayed_jobs.log", Katello.config.log_level)
-  ActiveRecord::Base.logger =
-      KatelloLogger.new("#{Rails.root}/log/#{Rails.env}_delayed_jobs_sql.log", Katello.config.log_level_sql)
-  Glue.logger = KatelloLogger.new("#{Rails.root}/log/production_delayed_jobs_orch.log", 'INFO')
+  Rails.logger = Delayed::Worker.logger = Rails.logger
+  ActiveRecord::Base.logger = Rails.logger
+  Glue.logger = Rails.logger
+  Logging.logger.root.appenders = Katello::Logging.new.configure_appenders()
 end
 
 Delayed::Worker.destroy_failed_jobs = false

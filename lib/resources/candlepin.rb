@@ -17,20 +17,24 @@ module Resources
   module Candlepin
 
     class Proxy
+      def self.logger
+        ::Logging.logger['candlepin_proxy']
+      end
+
       def self.post path, body
-        Rails.logger.debug "Sending POST request to Candlepin: #{path}"
+        logger.debug "Sending POST request to Candlepin: #{path}"
         client = CandlepinResource.rest_client(Net::HTTP::Post, :post, path_with_cp_prefix(path))
         client.post body, {:accept => :json, :content_type => :json}.merge(User.cp_oauth_header)
       end
 
       def self.delete path
-        Rails.logger.debug "Sending DELETE request to Candlepin: #{path}"
+        logger.debug "Sending DELETE request to Candlepin: #{path}"
         client = CandlepinResource.rest_client(Net::HTTP::Delete, :delete, path_with_cp_prefix(path))
         client.delete({:accept => :json, :content_type => :json}.merge(User.cp_oauth_header))
       end
 
       def self.get path
-        Rails.logger.debug "Sending GET request to Candlepin: #{path}"
+        logger.debug "Sending GET request to Candlepin: #{path}"
         client = CandlepinResource.rest_client(Net::HTTP::Get, :get, path_with_cp_prefix(path))
         client.get({:accept => :json}.merge(User.cp_oauth_header))
       end
@@ -55,6 +59,10 @@ module Resources
       self.consumer_key = cfg.oauth_key
       self.ca_cert_file = cfg.ca_cert_file
       self.resource_permissions = CandlepinResourcePermissions
+
+      def self.logger
+        ::Logging.logger['candlepin_rest']
+      end
 
       def self.default_headers
         {'accept' => 'application/json',
@@ -591,7 +599,7 @@ module Resources
             products = ([s['product']] + s['providedProducts'])
             products.each do |p|
               if p['id'] == product_id
-                Rails.logger.debug "Deleting subscription: " + s.to_json
+                logger.debug "Deleting subscription: " + s.to_json
                 Candlepin::Subscription.destroy s['id']
                 update_subscriptions = true
               end

@@ -13,6 +13,7 @@ require 'apipie-rails'
 path = File.expand_path("../lib", File.dirname(__FILE__))
 $LOAD_PATH << path unless $LOAD_PATH.include? path
 require 'katello_config'
+require 'katello_logging'
 
 
 # If you have a Gemfile, require the gems listed there, including any gems
@@ -125,7 +126,11 @@ module Src
     # profiles will be stored in tmp/profiles/
     config.do_profiles = []
 
-    config.log_level = Katello.config.log_level
+    # logging configuration
+    config.colorize_logging = false
+    Katello::Logging.new.configure
+    config.logger = Logging.logger['app']
+    config.active_record.logger = Logging.logger['sql']
   end
 end
 
