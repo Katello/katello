@@ -307,7 +307,7 @@ class ApplicationController < ActionController::Base
 
   # adapted from http_accept_lang gem, return list of browser locales
   def parse_locale
-    locale_lang = request.env['HTTP_ACCEPT_LANGUAGE'].split(/\s*,\s*/).collect do |l|
+    locale_lang = (request.env['HTTP_ACCEPT_LANGUAGE'] || '').split(/\s*,\s*/).collect do |l|
       l += ';q=1.0' unless l =~ /;q=\d+\.\d+$/
       l.split(';q=')
     end.sort do |x,y|
