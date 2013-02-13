@@ -44,7 +44,13 @@ describe "activation_keys/_edit.html.haml" do
     @selected_content_view = "No Content View"
     view.stub!(:environment_selector)
     view.stub!(:activation_keys_navigation).and_return([])
-    render :partial => "edit", :locals => {:accessible_envs => [@environment]}
+    render :partial => "edit", :locals => {:accessible_envs => [@environment],
+                                           :system_template_labels => @system_template_labels,
+                                           :selected_template => @selected_template,
+                                           :content_view_labels => @content_view_labels,
+                                           :selected_content_view => @selected_content_view,
+                                           :products => @products
+                                          }
   end
 
   it "content_for :title is included" do
@@ -68,7 +74,13 @@ describe "activation_keys/_edit.html.haml" do
 
     it "renders sub-navigation links" do
       view.should_receive(:render_menu).with(1..2, []).once
-      render :partial => "edit", :locals => {:accessible_envs => [@environment]}
+      render :partial => "edit", :locals => {:accessible_envs => [@environment],
+                                             :system_template_labels => @system_template_labels,
+                                             :selected_template => @selected_template,
+                                             :content_view_labels => @content_view_labels,
+                                             :selected_content_view => @selected_content_view,
+                                             :products => @products
+                                            }
     end
   end
 

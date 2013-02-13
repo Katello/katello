@@ -206,22 +206,28 @@ class ActivationKeysController < ApplicationController
     accessible_envs = current_organization.environments
     setup_environment_selector(current_organization, accessible_envs)
 
-    @system_template_labels = [[no_template, '']]
+    system_template_labels = [[no_template, '']]
     unless @environment.nil?
-      @system_template_labels = [[no_template, '']] + (@activation_key.environment.system_templates).collect {|p| [ p.name, p.id ]}
+      system_template_labels = [[no_template, '']] + (@activation_key.environment.system_templates).collect {|p| [ p.name, p.id ]}
     end
-    @selected_template = @activation_key.system_template.nil? ? no_template : @activation_key.system_template.id
+    selected_template = @activation_key.system_template.nil? ? no_template : @activation_key.system_template.id
 
-    @content_view_labels = [[no_content_view, '']]
-    @content_view_labels += ContentView.readable(@organization).non_default.
+    content_view_labels = [[no_content_view, '']]
+    content_view_labels += ContentView.readable(@organization).non_default.
       in_environment(@activation_key.environment).collect {|cv| [cv.name, cv.id]}
-    @selected_content_view = @activation_key.content_view.nil? ? no_content_view : @activation_key.content_view_id
-    @products = @activation_key.content_view ? @activation_key.content_view.products(@environment) : @environment.products
+    selected_content_view = @activation_key.content_view.nil? ? no_content_view : @activation_key.content_view_id
+    products = @activation_key.content_view ? @activation_key.content_view.products(@environment) : @environment.products
 
     render :partial => "edit", :layout => "tupane_layout", :locals => {:activation_key => @activation_key,
                                                                        :editable => ActivationKey.manageable?(current_organization),
                                                                        :name => controller_display_name,
-                                                                       :accessible_envs => accessible_envs}
+                                                                       :accessible_envs => accessible_envs,
+                                                                       :system_template_labels => system_template_labels,
+                                                                       :selected_template => selected_template,
+                                                                       :content_view_labels => content_view_labels,
+                                                                       :selected_content_view => selected_content_view,
+                                                                       :products => products
+                                                                      }
   end
 
   def create
