@@ -28,6 +28,9 @@ module Katello
   #
   # Configuration access points are methods {Katello.config} and {Katello.early_config}, see method documentation.
   #
+  # Default configuration values are stored in `src/config/katello-defaults.yml`. Default values can be overridden
+  # in configuration files (`config/katello.yml` or `/etc/katello/katello.yml`)
+  #
   # Configuration is represented with tree-like-structure defined with Configuration::Node. Node has
   # minimal Hash-like interface. Node is more strict than Hash. Differences:
   # * If undefined key is accessed an error NoKey is raised (keys with nil values has to be
