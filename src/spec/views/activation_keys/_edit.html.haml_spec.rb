@@ -20,6 +20,7 @@ describe "activation_keys/_edit.html.haml" do
     @environment = assign(:environment, stub_model(KTEnvironment,
       :name => "dev").as_new_record)
     @environment.stub(:products).and_return([])
+    @products = []
 
     @key_name = "New Key"
     @key_description = "This is a new activation key"
