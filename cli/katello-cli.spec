@@ -27,6 +27,7 @@ Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.
 Requires:      %{base_name}-cli-common
 BuildArch:     noarch
 BuildRequires: spacewalk-pylint
+BuildRequires: translate-toolkit
 Obsoletes:     katello-cli-headpin < 1.0.1-1
 Provides:      katello-cli-headpin = 1.0.1-1
 
@@ -92,7 +93,14 @@ sed -e 's/THE_VERSION/%{version}/g' katello-debug-certificates.pod |\
 popd
 
 #check locale file
-for i in po/*.po; do msgfmt -c $i; done
+for i in po/*.po; do
+    msgfmt -c $i
+    # TODO - enable endwhitespace, endpunc, puncspacing, options filters
+    pofilter --nofuzzy -t variables -t blank -t urls -t emails -t long -t newlines \
+        -t printf -t validchars --gnome $i | tee $FILE
+    grep msgid $FILE >/dev/null && exit 1
+    rm $FILE
+done
 
 # create locale files
 make -C po all-mo
