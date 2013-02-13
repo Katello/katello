@@ -399,6 +399,7 @@ Src::Application.routes.draw do
       member do
         get :system_templates
         get :products
+        get :content_views
       end
       resources :content_view_versions, :only => [:show] do
         member do
