@@ -34,7 +34,7 @@ gem 'daemons', '>= 1.1.4'
 gem 'uuidtools'
 
 # Stuff for view/display/frontend
-gem 'haml', '>= 3.1.2'
+gem 'haml', '~> 3.1.2'
 gem 'haml-rails', "= 0.3.4"
 gem 'compass', '>= 0.11.5', '< 0.12'
 gem 'compass-960-plugin', '>= 0.10.4', :require => 'ninesixty'
