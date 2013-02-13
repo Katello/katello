@@ -388,7 +388,10 @@ export RAILS_ENV=build
 for i in locale/*/app.po; do
     echo $i
     msgfmt -c $i
-    pofilter --nofuzzy -t variables --gnome $i
+    FILE=$(mktemp)
+    pofilter --nofuzzy -t variables --gnome $i | tee $FILE
+    grep msgid $FILE >/dev/null && exit 1
+    rm $FILE
 done
 script/check-gettext.rb -m -i
 
