@@ -58,9 +58,12 @@ class OrganizationsController < ApplicationController
     }
   end
 
-
   def section_id
     'orgs'
+  end
+
+  def menu_definition
+    {:index => :admin_menu}.with_indifferent_access
   end
 
   def items
