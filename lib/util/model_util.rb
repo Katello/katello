@@ -44,11 +44,7 @@ module Katello
     end
 
     def self.labelize name
-      unless name.ascii_only?
-        name = uuid
-      else
-        name.gsub(/[^a-z0-9\-_]/i,"_")
-      end
+      name.ascii_only? ? name.gsub(/[^a-z0-9\-_]/i,"_") : uuid
     end
 
     def self.uuid
