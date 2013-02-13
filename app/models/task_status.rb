@@ -84,9 +84,9 @@ class TaskStatus < ActiveRecord::Base
     unit_status = true
     if (self.result.is_a? Hash) && (self.result.has_key? :details)
       if self.result[:details].has_key? :rpm
-        unit_status = self.result[:details][:rpm][:status]
+        unit_status = self.result[:details][:rpm][:succeeded]
       elsif self.result[:details].has_key? :package_group
-        unit_status = self.result[:details][:package_group][:status]
+        unit_status = self.result[:details][:package_group][:succeeded]
       end
     end
 
@@ -354,7 +354,7 @@ class TaskStatus < ActiveRecord::Base
   def packages_change_description(data, action)
     ret = ""
 
-    if data[:status]
+    if data[:succeeded]
       packages = data.nil? ? [] : (data[:details][:resolved] + data[:details][:deps])
       if packages.empty?
         case action
