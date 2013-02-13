@@ -106,7 +106,11 @@ class System < ActiveRecord::Base
   end
 
   def filtered_pools match_system, match_installed, no_overlap
-    pools = self.available_pools
+    if match_system
+      pools = self.available_pools
+    else
+      pools = self.all_available_pools
+    end
 
     # Only available pool's with a product on the system'
     if match_installed

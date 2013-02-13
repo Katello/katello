@@ -58,7 +58,7 @@ module Glue::ElasticSearch::Repository
 
         import pkgs do |documents|
           documents.each do |document|
-            if document["repoids"].length > 1
+            if !document["repoids"].nil? && document["repoids"].length > 1
               # if there is more than 1 repo associated w/ the pkg, remove this repo
               document["repoids"].delete(pulp_id)
             end
@@ -91,7 +91,7 @@ module Glue::ElasticSearch::Repository
 
         import errata do |documents|
           documents.each do |document|
-            if document["repoids"].length > 1
+            if !document["repoids"].nil? && document["repoids"].length > 1
               # if there is more than 1 repo associated w/ the errata, remove this repo
               document["repoids"].delete(pulp_id)
             end
