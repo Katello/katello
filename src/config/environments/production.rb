@@ -1,5 +1,3 @@
-require 'katello_logger'
-
 # workaround for https://github.com/nex3/sass/issues/69
 require 'sass/plugin'
 
@@ -24,16 +22,10 @@ Src::Application.configure do
   # just comment this out and Rails will serve the files
 
   # See everything in the log (default is :warn)
-  config.active_record.logger = KatelloLogger.new("#{Rails.root}/log/production_sql.log", Katello.config.log_level_sql)
   config.colorize_logging = false
 
   # Use a different logger for distributed setups
   # config.logger = SyslogLogger.new
-
-  config.logger = KatelloLogger.new("#{Rails.root}/log/production.log", config.log_level)
-  config.after_initialize {
-    Glue.logger = KatelloLogger.new("#{Rails.root}/log/production_orch.log", 'INFO')
-  }
 
   # Use a different cache store in production
   # config.cache_store = :mem_cache_store
