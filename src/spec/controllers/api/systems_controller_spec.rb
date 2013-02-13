@@ -57,6 +57,7 @@ describe Api::SystemsController do
 
     Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
+    Resources::Candlepin::Consumer.stub!(:available_pools).and_return([])
 
     Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid})
     Runcible::Extensions::Consumer.stub!(:update).and_return(true)
@@ -527,16 +528,22 @@ describe Api::SystemsController do
       get :pools, :id => @system.uuid
     end
 
-    it "should retrieve avaialble pools from Candlepin" do
+    it "should retrieve available pools from Candlepin" do
       #@system.should_receive(:available_pools_full).once.and_return([])
-      Resources::Candlepin::Consumer.should_receive(:available_pools).once.with(uuid, false).and_return([])
+      Resources::Candlepin::Consumer.should_receive(:available_pools).once.with(@system.uuid, true).and_return([])
       get :pools, :id => @system.uuid
     end
 
-    it "should retrieve available pools from Candlepin" do
+    pending "should retrieve available pools from Candlepin, explicit match_system false" do
       #@system.should_receive(:available_pools_full).once.and_return([])
-      Resources::Candlepin::Consumer.should_receive(:available_pools).once.with(uuid, false).and_return([])
-      get :pools, :id => @system.uuid, :listall => true
+      Resources::Candlepin::Consumer.should_receive(:available_pools).once.with(@system.uuid, true).and_return([])
+      get :pools, :id => @system.uuid, :match_system => true
+    end
+
+    pending "should retrieve available pools from Candlepin, explicit match_system true" do
+      #@system.should_receive(:available_pools_full).once.and_return([])
+      Resources::Candlepin::Consumer.should_receive(:available_pools).once.with(@system.uuid, true).and_return([])
+      get :pools, :id => @system.uuid, :match_system => true
     end
   end
 
