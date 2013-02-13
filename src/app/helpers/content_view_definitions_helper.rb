@@ -12,11 +12,50 @@
 
 module ContentViewDefinitionsHelper
   def definition_type(definition)
-    definition.composite ? _('Composite View Definition') : _('View Definition')
+    definition.composite? ? _('Composite View Definition') : _('View Definition')
   end
 
   def environments(view_version)
     _("Environment(s): %{environments}") % {:environments => view_version.environments.collect{|e| e.name}.join(', ')}
+  end
+
+  def publish_button(definition)
+    if definition.has_repo_conflicts?
+      content_tag(:td,
+                  tag(:input, {:type => 'button', :class => 'fr button',
+                                :value => _('Publish'), :disabled => true}),
+                  :class => 'repo_conflict',
+                  'original-title' => _("The definition consists of component content views that "\
+                                        "share the same repository; therefore, it cannot be "\
+                                        "published.  Please visit the Content pane to "\
+                                        "resolve this issue."))
+
+    else
+      content_tag(:td,
+                  tag(:input, {:type => 'button', :class => 'fr button subpanel_element publish',
+                                :value => _('Publish'),
+                                'data-url' => publish_setup_content_view_definition_path(definition.id)}))
+    end
+  end
+
+  def refresh_link(version, task)
+    if version.content_view.content_view_definition.has_repo_conflicts?
+      content_tag(:a, _('Refresh'),
+                  {:type => 'button', :href => '#', :class => 'repo_conflict disabled',
+                   'original-title' => _("The definition consists of component content views "\
+                                         "that share the same repository; therefore, views "\
+                                         "cannot be refreshed.  Please visit the Content "\
+                                         "pane to resolve this issue.")})
+    else
+      if version.environments.include?(version.content_view.organization.library)
+        unless task && task.pending?
+          content_tag(:a, task.nil? || task.error? ? _('Retry') : _('Refresh'),
+                      {:type => 'button', :href => '#', :class => 'refresh_action',
+                       'data-url' => refresh_content_view_definition_content_view_path(
+                           version.content_view.content_view_definition.id, version.content_view.id)})
+        end
+      end
+    end
   end
 
   def view_checked?(view_id, views_hash=nil)

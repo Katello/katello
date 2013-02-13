@@ -133,7 +133,7 @@ class ContentViewVersion < ActiveRecord::Base
     end
   end
 
-private
+  private
 
   def add_environment(env)
     self.content_view.add_environment(env)
