@@ -262,9 +262,9 @@ class PromotionsController < ApplicationController
   end
 
   def accessible_environments
-   (KTEnvironment.content_readable(current_organization).all +
-        KTEnvironment.changesets_readable(current_organization).all.map { |env| env.prior if env.prior }.compact).
-        uniq
+    envs = KTEnvironment.content_readable(current_organization).all
+    envs += KTEnvironment.changesets_readable(current_organization).all.map { |env| env.prior if env.prior }.compact
+    envs.uniq
   end
 
   def templates
