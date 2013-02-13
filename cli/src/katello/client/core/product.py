@@ -280,26 +280,25 @@ class Promote(SingleProductAction):
 
         returnCode = os.EX_OK
 
+        if not self.repoapi.repos_by_product(orgName, prod['id']):
+            print _("Product [ %(prod_name)s ] has no repository") % {'prod_name':prod['name']}
+            return os.EX_DATAERR
+
         cset = self.csapi.create(orgName, env["id"], self.create_cs_name(), constants.PROMOTION)
-        try:
-            self.csapi.add_content(cset["id"], "products", {'product_id': prod['id']})
-            task = self.csapi.apply(cset["id"])
-            task = AsyncTask(task)
+        self.csapi.add_content(cset["id"], "products", {'product_id': prod['id']})
+        task = self.csapi.apply(cset["id"])
+        task = AsyncTask(task)
 
-            run_spinner_in_bg(wait_for_async_task, [task], message=_("Promoting the product, please wait... "))
+        run_spinner_in_bg(wait_for_async_task, [task], message=_("Promoting the product, please wait... "))
 
-            if task.succeeded():
-                print _("Product [ %(prod_name)s ] promoted to environment [ %(envName)s ] " \
-                    % {'prod_name':prod["name"], 'envName':envName})
-                returnCode = os.EX_OK
-            else:
-                print _("Product [ %(prod_name)s ] promotion failed: %(task_errors)s" \
-                    % {'prod_name':prod["name"], 'task_errors':format_task_errors(task.errors())} )
-                returnCode = os.EX_DATAERR
-
-        except Exception:
-            #exception message is printed from action's main method
-            raise
+        if task.succeeded():
+            print _("Product [ %(prod_name)s ] promoted to environment [ %(envName)s ] " \
+                % {'prod_name':prod["name"], 'envName':envName})
+            returnCode = os.EX_OK
+        else:
+            print _("Product [ %(prod_name)s ] promotion failed: %(task_errors)s" \
+                % {'prod_name':prod["name"], 'task_errors':format_task_errors(task.errors())} )
+            returnCode = os.EX_DATAERR
 
         return returnCode
 

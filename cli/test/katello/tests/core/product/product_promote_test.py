@@ -35,6 +35,7 @@ class ProductPromoteTest(CLIActionTestCase):
     CSET = product_data.EMPTY_CHANGESET
     TMP_CHANGESET_NAME = 'tmp_changeset_name'
     TYPE = 'PROMOTION'
+    REPOS = repo_data.REPOS
 
     OPTIONS = {
         'org': ORG['name'],
@@ -61,6 +62,8 @@ class ProductPromoteTest(CLIActionTestCase):
         self.mock(self.module, 'get_environment', self.ENV)
         self.mock(self.module, 'get_product', self.PROD)
         self.mock(self.module, 'run_spinner_in_bg', repo_data.SYNC_RESULT_WITHOUT_ERROR)
+
+        self.mock(self.action.repoapi, 'repos_by_product', self.REPOS)
 
     def tearDown(self):
         self.restore_mocks()
