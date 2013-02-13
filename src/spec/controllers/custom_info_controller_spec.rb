@@ -48,7 +48,7 @@ describe CustomInfoController do
       @expected_create_response = {
         :keyname => "asset_tag",
         :value => "123456",
-        :informable_type => "system",
+        :informable_type => "System",
         :informable_id => @system.id
       }.to_json
     end
