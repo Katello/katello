@@ -12,7 +12,7 @@
 
 module ContentViewDefinitionsHelper
   def definition_type(definition)
-    definition.composite ? _('Composite View Definition') : _('View Definition')
+    definition.composite? ? _('Composite View Definition') : _('View Definition')
   end
 
   def environments(view_version)

@@ -92,7 +92,7 @@ class ContentViewDefinitionsController < ApplicationController
     @view_definition = ContentViewDefinition.create!(params[:content_view_definition]) do |cv|
       cv.organization = current_organization
     end
-    if @view_definition.composite && params[:content_views]
+    if @view_definition.composite? && params[:content_views]
       @views = ContentView.where(:id => params[:content_views].keys)
       @view_definition.component_content_views += @views
       @view_definition.save!
@@ -232,7 +232,7 @@ class ContentViewDefinitionsController < ApplicationController
   end
 
   def content
-    if @view_definition.composite
+    if @view_definition.composite?
 
       component_views = @view_definition.component_content_views.inject({}) do |hash, view|
         hash[view.id] = view
