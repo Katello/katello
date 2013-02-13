@@ -83,11 +83,10 @@ class Publish(ContentViewDefinitionAction):
 
     def setup_parser(self, parser):
         opt_parser_add_org(parser)
-        parser.add_option('--definition', dest='definition',
-                          help=_("definition label eg: Database (required)"))
-        parser.add_option('--name', dest='name',
+        self._add_get_cvd_opts(parser)
+        parser.add_option('--view_name', dest='view_name',
                           help=_("name to give published view (required)"))
-        parser.add_option('--label', dest='label',
+        parser.add_option('--view_label', dest='view_label',
                           help=_("label to give published view"))
         parser.add_option('--description', dest='description',
                           help=_("description to give published view"))
@@ -95,19 +94,22 @@ class Publish(ContentViewDefinitionAction):
                           help=_("publish the view asynchronously"))
 
     def check_options(self, validator):
-        validator.require(('org', 'name', 'definition'))
+        validator.require(('org', 'view_name'))
+        self._add_get_cvd_opts_check(validator)
 
     def run(self):
-        org_name = self.get_option('org')
-        label = self.get_option('label')
-        name = self.get_option('name')
-        def_label = self.get_option('definition')
+        org_name    = self.get_option('org')
+        label       = self.get_option('label')
+        name        = self.get_option('name')
+        def_id      = self.get_option('id')
+        view_label  = self.get_option('view_label')
+        view_name   = self.get_option('view_name')
         description = self.get_option('description')
-        async = self.get_option('async')
-        cvd = get_cv_definition(org_name, def_label)
+        async       = self.get_option('async')
+        cvd         = get_cv_definition(org_name, label, name, def_id)
 
         try:
-            task = self.def_api.publish(org_name, cvd["id"], name, label, description)
+            task = self.def_api.publish(org_name, cvd["id"], view_name, view_label, description)
 
             if not async:
                 task = AsyncTask(task)
@@ -272,22 +274,30 @@ class AddRemoveProduct(ContentViewDefinitionAction):
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--product', dest='product',
-                help=_("product label (required)"))
+                          help=_("product name (product name, label or id required)"))
+        parser.add_option('--product_label', dest='product_label',
+                          help=_("product label (product name, label or id required)"))
+        parser.add_option('--product_id', dest='product_id',
+                          help=_("product id (product name, label or id required)"))
         self._add_get_cvd_opts(parser)
 
     def check_options(self, validator):
-        validator.require(('product', 'org'))
+        validator.require('org')
         self._add_get_cvd_opts_check(validator)
+        validator.require_at_least_one_of(('product', 'product_label', 'product_id'))
+        validator.mutually_exclude('product', 'product_label', 'product_id')
 
     def run(self):
-        org_name       = self.get_option('org')
-        def_label      = self.get_option('label')
-        def_name       = self.get_option('name')
-        def_id         = self.get_option('id')
-        product_label  = self.get_option('product')
+        org_name      = self.get_option('org')
+        def_label     = self.get_option('label')
+        def_name      = self.get_option('name')
+        def_id        = self.get_option('id')
+        product_name  = self.get_option('product')
+        product_id    = self.get_option('product_id')
+        product_label = self.get_option('product_label')
 
         view    = get_cv_definition(org_name, def_label, def_name, def_id)
-        product = get_product(org_name, product_label)
+        product = get_product(org_name, product_name, product_label, product_id)
 
         products = self.def_api.products(org_name, view['id'])
         products = [f['id'] for f in products]
@@ -328,9 +338,13 @@ class AddRemoveRepo(ContentViewDefinitionAction):
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
         parser.add_option('--repo', dest='repo',
-                help=_("repository name (required)"))
+                          help=_("repository name (required)"))
         parser.add_option('--product', dest='product',
-                help=_("product label (required)"))
+                          help=_("product name (product name, label or id required)"))
+        parser.add_option('--product_label', dest='product_label',
+                          help=_("product label (product name, label or id required)"))
+        parser.add_option('--product_id', dest='product_id',
+                          help=_("product id (product name, label or id required)"))
         self._add_get_cvd_opts(parser)
 
     def check_options(self, validator):
@@ -344,9 +358,11 @@ class AddRemoveRepo(ContentViewDefinitionAction):
         def_id         = self.get_option('id')
         repo_name      = self.get_option('repo')
         product        = self.get_option('product')
+        product_label  = self.get_option('product_label')
+        product_id     = self.get_option('product_id')
 
         view = get_cv_definition(org_name, def_label, def_name, def_id)
-        repo = get_repo(org_name, repo_name, prodLabel=product)
+        repo = get_repo(org_name, repo_name, product, product_label, product_id)
 
         repos = self.def_api.repos(org_name, view['id'])
         repos = [f['id'] for f in repos]
