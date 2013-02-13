@@ -32,7 +32,9 @@ class Api::CustomInfoController < Api::ApiController
   end
 
   def create
-    raise HttpErrors::BadRequest, _("must include a keyname and value") if params[:keyname].nil? || params[:value].nil?
+    if params[:keyname].nil? || params[:value].nil?
+      raise HttpErrors::BadRequest, _("must include a keyname and value")
+    end
     keyname = params[:keyname].strip
     value = params[:value].strip
     response = @informable.custom_info.create!(:keyname => keyname, :value => value)
@@ -67,7 +69,9 @@ class Api::CustomInfoController < Api::ApiController
   def find_custom_info
     keyname = params[:keyname].strip
     @single_custom_info = CustomInfo.find_by_informable_keyname(@informable, keyname)
-    raise HttpErrors::NotFound, _("Couldn't find custom info with keyname '%s'") % params[:keyname] if @single_custom_info.nil?
+    if @single_custom_info.nil?
+      raise HttpErrors::NotFound, _("Couldn't find custom info with keyname '%s'") % params[:keyname]
+    end
   end
 
 end
