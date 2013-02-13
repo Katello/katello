@@ -54,7 +54,9 @@ class SystemGroup < ActiveRecord::Base
 
   alias_attribute :system_limit, :max_systems
   UNLIMITED_SYSTEMS = -1
-  validates_numericality_of :system_limit, :only_integer => true, :greater_than_or_equal_to => -1, :message => N_("must be a positive integer value.")
+  validates_numericality_of :system_limit, :only_integer => true, :greater_than_or_equal_to => -1,
+                            :less_than_or_equal_to => 2147483647,
+                            :message => N_("must be a positive integer value.")
   validate :validate_max_systems
 
   def validate_max_systems
