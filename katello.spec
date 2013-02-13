@@ -121,6 +121,7 @@ BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
 BuildRequires:  rubygem(alchemy) >= 1.0.0
 BuildRequires:  gettext
+BuildRequires:  translate-toolkit
 
 # we require this to be able to build api-docs
 BuildRequires:       rubygem(rails) >= 3.0.10
@@ -384,7 +385,11 @@ testing.
 export RAILS_ENV=build
 
 #check for malformed gettext strings
-for i in locale/*/app.po; do msgfmt -c $i; done
+for i in locale/*/app.po; do
+    echo $i
+    msgfmt -c $i
+    pofilter --nofuzzy -t variables --gnome $i
+done
 script/check-gettext.rb -m -i
 
 #copy alchemy
