@@ -133,7 +133,8 @@ describe Api::ChangesetsContentController, :katello => true do
   describe "erratum" do
     before(:each) do
       Product.should_receive(:find_by_cp_id).with(product_cp_id).and_return(@product)
-      Runcible::Extensions::Errata.stub(:find).and_return({:id=>erratum_unit_id, :errata_id=>erratum_id})
+      @errata = Errata.new({:id=>erratum_unit_id, :errata_id=>erratum_id})
+      Errata.stub(:find_by_errata_id).and_return(@errata)
     end
 
     let(:action) { :add_erratum }
@@ -141,7 +142,7 @@ describe Api::ChangesetsContentController, :katello => true do
     it_should_behave_like "protected action"
 
     it "should add an erratum" do
-      @cs.should_receive(:add_erratum!).with(erratum_id, @product)
+      @cs.should_receive(:add_erratum!).with(@errata, @product)
       req
       response.should be_success
     end
@@ -150,7 +151,8 @@ describe Api::ChangesetsContentController, :katello => true do
   describe "erratum" do
     before(:each) do
       Product.should_receive(:find_by_cp_id).with(product_cp_id).and_return(@product)
-      Runcible::Extensions::Errata.stub(:find).and_return({:id=>erratum_unit_id, :errata_id=>erratum_id})
+      @errata = Errata.new({:id=>erratum_unit_id, :errata_id=>erratum_id})
+      Errata.stub(:find_by_errata_id).and_return(@errata)
     end
 
     let(:action) { :remove_erratum }
@@ -158,7 +160,7 @@ describe Api::ChangesetsContentController, :katello => true do
     it_should_behave_like "protected action"
 
     it "should remove an erratum" do
-      @cs.should_receive(:remove_erratum!).with(erratum_id, @product).and_return([true])
+      @cs.should_receive(:remove_erratum!).with(@errata, @product).and_return([true])
       req
       response.should be_success
     end
