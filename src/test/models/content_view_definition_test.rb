@@ -88,13 +88,15 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_adding_products_to_composite_view
+    @content_view_def.composite = true
     @content_view_def.component_content_views << FactoryGirl.create(:content_view)
     @content_view_def.products << FactoryGirl.build_stubbed(:product)
     refute @content_view_def.save
     refute_empty @content_view_def.errors
   end
 
-  def test_adding_views_to_content_definition
+  def test_adding_views_to_composite_content_definition
+    @content_view_def.composite = true
     @content_view_def.products << FactoryGirl.build_stubbed(:product)
     assert @content_view_def.save
     @content_view_def.component_content_views << FactoryGirl.create(:content_view)
