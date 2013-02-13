@@ -33,7 +33,8 @@ class CustomInfoController < ApplicationController
     keyname = params[:keyname].strip
     value = params[:value].strip
     @informable.custom_info.create!(:keyname => keyname, :value => value)
-    notify.success _("%{object_type} '%{name}' was updated") % {:object_type => @informable.class.class_name, :name => @informable.name}
+    notify.success _("%{object_type} '%{name}' was updated") %
+      {:object_type => @informable.class.class_name, :name => @informable.name}
     info = CustomInfo.find_by_informable_keyname(@informable, keyname)
     hash = {}
     hash[:keyname] = info.keyname
@@ -46,14 +47,16 @@ class CustomInfoController < ApplicationController
   def update
     keyname = params[:keyname].strip
     @single_custom_info.update_attributes!(:value => params[:custom_info][keyname])
-    notify.success _("%{object_type} '%{name}' was updated") % {:object_type => @informable.class.class_name, :name => @informable.name}
+    notify.success _("%{object_type} '%{name}' was updated") %
+      {:object_type => @informable.class.class_name, :name => @informable.name}
 
     render :text => @single_custom_info.value
   end
 
   def destroy
     @single_custom_info.destroy
-    notify.success _("%{object_type} '%{name}' was updated") % {:object_type => @informable.class.class_name, :name => @informable.name}
+    notify.success _("%{object_type} '%{name}' was updated") %
+      {:object_type => @informable.class.class_name, :name => @informable.name}
     render :text => "true"
   end
 

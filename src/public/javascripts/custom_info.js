@@ -54,29 +54,29 @@ KT.custom_info = (function() {
     }
 
     function add_custom_info_row(data) {
-        var keyname = data["keyname"];
-        var space_safe_keyname = keyname.replace(" ", "_")
+        var esc_keyname = escape(data["keyname"]);
+        var _keyname = data["keyname"].replace(" ", "_")
         var value = data["value"];
         var informable_type = data["informable_type"];
         var informable_id = data["informable_id"];
-        var update_path = KT.routes.update_custom_info_path(informable_type, informable_id, space_safe_keyname);
-        var destroy_path = KT.routes.destroy_custom_info_path(informable_type, informable_id, space_safe_keyname);
+        var update_path = KT.routes.update_custom_info_path(informable_type, informable_id, esc_keyname);
+        var destroy_path = KT.routes.destroy_custom_info_path(informable_type, informable_id, esc_keyname);
 
-        var new_row = "<tr class=\"custom_info_row\" data-id=\"custom_info_" + space_safe_keyname + "\">"
+        var new_row = "<tr class=\"custom_info_row\" data-id=\"custom_info_" + _keyname + "\">"
         + "<td class=\"ra\">"
-        + "<label for=\"custom_info_" + space_safe_keyname + "\">" + keyname + "</label>"
+        + "<label for=\"custom_info_" + _keyname + "\">" + data["keyname"] + "</label>"
         + "</td>"
         + "<td>"
-        + "<div class=\"editable edit_textfield\" data-url=\"" + update_path + "\" name=\"custom_info[" + space_safe_keyname + "]\" style title=\"Click to edit\">" + value + "</div>"
+        + "<div class=\"editable edit_textfield\" data-url=\"" + update_path + "\" name=\"custom_info[" + data["keyname"] + "]\" style title=\"Click to edit\">" + value + "</div>"
         + "</td>"
         + "<td>"
-        + "<input class=\"btn warning remove_custom_info_button\" data-id=\"custom_info_" + space_safe_keyname + "\" data-method=\"delete\" data-url=\"" + destroy_path + "\" type=\"submit\" value=\"remove\">"
+        + "<input class=\"btn warning remove_custom_info_button\" data-id=\"custom_info_" + _keyname + "\" data-method=\"delete\" data-url=\"" + destroy_path + "\" type=\"submit\" value=\"remove\">"
         + "</td>"
         + "</tr>"
         $("#new_custom_info_row").after(new_row);
         $("#new_custom_info_keyname").val("");
         $("#new_custom_info_value").val("");
-        var $new_editable = $("tr[data-id='custom_info_" + space_safe_keyname + "']").find(".editable");
+        var $new_editable = $("tr[data-id='custom_info_" + _keyname + "']").find(".editable");
 
         var common_settings = {
             method          :  'PUT',
