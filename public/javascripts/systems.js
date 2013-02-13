@@ -551,6 +551,7 @@ KT.subs = (function() {
           var children = $(this).children();
           $('#available_section').addClass('hidden');
           $('#available_spinner').removeClass('hidden');
+          var i = 0;
           $.each(children, function(i, item) {
              $.ajax({
                  url: $('#matchsystem_form')[0].action + "?preference=" + item.value,
@@ -558,11 +559,11 @@ KT.subs = (function() {
                  type: 'PUT',
                  success: function(data) {
                      if (i == children.length-1) {
-                       $('#subscriptions > a').click();  // Refresh page
+                       $('#systems_subscriptions > a').click();  // Refresh page
                      }
                  }, error: function(e) {
                      if (i == children.length-1) {
-                       $('#subscriptions > a').click();  // Refresh page
+                       $('#systems_subscriptions > a').click();  // Refresh page
                      }
                  }
              });
