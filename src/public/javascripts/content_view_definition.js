@@ -82,6 +82,10 @@ KT.content_view_definition = (function(){
         if (pane.length === 0) {
             return;
         }
+        $('.repo_conflict').tipsy({fade : true, gravity : 'e', live : true, delayIn : 500,
+                                   hoverable : true, delayOut : 50 });
+        $('.repo_conflict').click(function(e) {e.preventDefault();});
+
         initialize_refresh();
         initialize_views_treetable();
         startUpdater();
