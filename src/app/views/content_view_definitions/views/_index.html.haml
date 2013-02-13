@@ -11,8 +11,8 @@
         %tr{:style => "background-color: #F5FAFA;"}
           %td{:colspan => 4, :style => "vertical-align:middle; font-size:130%;"}
             #{_("Publish new content view from this view definition")}
-          %td
-            %input.fr.button.subpanel_element{:type=>'button', :value=>_("Publish"), 'data-url' => publish_setup_content_view_definition_path(view_definition.id)}
+          = publish_button(view_definition)
+
         %tr
           %th #{_("Name")}
           %th #{_("Version")}

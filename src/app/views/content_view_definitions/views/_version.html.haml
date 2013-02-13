@@ -18,10 +18,4 @@
         - elsif task.error?
           #{_("Error generating version")}
 
-    - if version.environments.include?(version.content_view.organization.library)
-      - unless task && task.pending?
-        %a.refresh_action{:type => 'button', :href => '#', 'data-url' => refresh_content_view_definition_content_view_path(version.content_view.content_view_definition.id, version.content_view.id)}
-          - if task.nil? || task.error?
-            #{_("Retry")}
-          - else
-            #{_("Refresh")}
+    = refresh_link(version, task)

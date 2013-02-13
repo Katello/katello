@@ -114,16 +114,27 @@ class ContentViewDefinition < ActiveRecord::Base
     repos
   end
 
-  def composite?
-    self.component_content_views.any?
-  end
-
   def has_content?
     self.products.any? || self.repositories.any?
   end
 
   def has_promoted_views?
     !! self.content_views.promoted.first
+  end
+
+  def has_repo_conflicts?
+    # Check to see if there is a repo conflict in the component views associated with
+    # the definition.  A conflict exists if the same repo exists in more than
+    # one of those component views.
+    if self.composite?
+      repos_hash = self.views_repos
+      repos_hash.each do |view_id, repo_ids|
+        repos_hash.each do |other_view_id, other_repo_ids|
+          return true if (view_id != other_view_id) && !repo_ids.intersection(other_repo_ids).empty?
+        end
+      end
+    end
+    false
   end
 
   def as_json(options = {})
@@ -136,12 +147,22 @@ class ContentViewDefinition < ActiveRecord::Base
     result
   end
 
+  protected
+
+  def views_repos
+    # Retrieve a hash where, key=view.id and value=Set(view's repo library instance ids)
+    self.component_content_views.inject({}) do |view_repos, view|
+      view_repos.update view.id => view.repos(self.organization.library).
+          inject(Set.new) { |ids, repo| ids << repo.library_instance_id }
+    end
+  end
+
   private
 
-    def validate_content
-      if has_content? && composite?
-        errors.add(:base, _("cannot contai nproducts, or repositories if it contains views"))
-      end
+  def validate_content
+    if has_content? && self.composite?
+      errors.add(:base, _("cannot contain products, or repositories if it contains views"))
     end
+  end
 
 end
