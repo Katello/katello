@@ -42,7 +42,7 @@ describe TaskStatus do
     its(:description) { should == "Package Install: cheetah, penguin" }
 
     context "No packages installed" do
-      let(:result) { { :details => {:rpm => { :status => true, :details => { :deps => [], :resolved => []} } } } }
+      let(:result) { { :details => {:rpm => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
       its(:result_description) { should == "No new packages installed" }
     end
 
@@ -50,7 +50,7 @@ describe TaskStatus do
       let(:result) do
         { :details =>
           { :rpm =>
-            { :status => true,
+            { :succeeded => true,
               :details =>
                 { "deps"=>
                      [{"qname"=>"elephant-8.8-1.noarch",
@@ -88,7 +88,7 @@ elephant-8.8-1.noarch
     its(:description) { should == "Package Group Install: @mammals, @FTP Server" }
 
     context "No packages installed" do
-      let(:result) { { :details => {:package_group => { :status => true, :details => { :deps => [], :resolved => []} } } } }
+      let(:result) { { :details => {:package_group => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
       its(:result_description) { should == "No new packages installed" }
     end
 
@@ -96,7 +96,7 @@ elephant-8.8-1.noarch
       let(:result) do
         { :details =>
           { :package_group =>
-            { :status => true,
+            { :succeeded => true,
               :details =>
               { "deps"=>
                     [{"qname"=>"elephant-8.8-1.noarch",
@@ -134,7 +134,7 @@ elephant-8.8-1.noarch
     its(:description) { should == "Package Remove: elephant" }
 
     context "No packages removed" do
-      let(:result) { { :details => {:rpm => { :status => true, :details => { :deps => [], :resolved => []} } } } }
+      let(:result) { { :details => {:rpm => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
       its(:result_description) { should == "No packages removed" }
     end
 
@@ -142,7 +142,7 @@ elephant-8.8-1.noarch
       let(:result) do
         { :details =>
           { :rpm =>
-            { :status => true,
+            { :succeeded => true,
               :details =>
               { "deps"=>
                     [{"qname"=>"cheetah-1.26.3-5.noarch",
@@ -181,7 +181,7 @@ cheetah-1.26.3-5.noarch
     its(:description) { should == "Package Group Remove: @mammals, @FTP Server" }
 
     context "No packages removed" do
-      let(:result) { { :details => {:package_group => { :status => true, :details => { :deps => [], :resolved => []} } } } }
+      let(:result) { { :details => {:package_group => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
       its(:result_description) { should == "No packages removed" }
     end
 
@@ -189,7 +189,7 @@ cheetah-1.26.3-5.noarch
       let(:result) do
         { :details =>
           { :package_group =>
-            { :status => true,
+            { :succeeded => true,
               :details =>
               { "deps"=>
                    [{"qname"=>"elephant-8.8-1.noarch",
@@ -228,7 +228,7 @@ elephant-8.8-1.noarch
     its(:description) { should == "Package Update: cheetah" }
 
     context "No packages updated" do
-      let(:result) { { :details => {:rpm => { :status => true, :details => { :deps => [], :resolved => []} } } } }
+      let(:result) { { :details => {:rpm => { :succeeded => true, :details => { :deps => [], :resolved => []} } } } }
       its(:result_description) { should == "No packages updated" }
     end
 
@@ -236,7 +236,7 @@ elephant-8.8-1.noarch
       let(:result) do
         { :details =>
           { :rpm =>
-            { :status => true,
+            { :succeeded => true,
               :details =>
               { "deps"=>
                     [{"qname"=>"elephant-8.8-1.noarch",
