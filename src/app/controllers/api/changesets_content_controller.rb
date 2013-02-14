@@ -75,14 +75,16 @@ class Api::ChangesetsContentController < Api::ApiController
   param :erratum_id, :number, :desc => "The id of the errata to add"
   param :product_id, :number, :desc => "The product which contains the errata"
   def add_erratum
-    @changeset.add_erratum!(params[:erratum_id], @product)
+    erratum = Errata.find_by_errata_id(params[:erratum_id])
+    @changeset.add_erratum!(erratum, @product)
     render :text => _("Added erratum '%s'") % params[:erratum_id], :status => 200
   end
 
   api :DELETE, "/changesets/:changeset_id/errata/:id", "Remove an errata from a changeset"
   param :product_id, :number, :desc => "The product which contains the errata"
   def remove_erratum
-    render_after_removal @changeset.remove_erratum!(params[:id], @product),
+    erratum = Errata.find_by_errata_id(params[:id])
+    render_after_removal @changeset.remove_erratum!(erratum, @product),
                          :success   => _("Removed erratum '%s'") % params[:id],
                          :not_found => _("Erratum '%s' not found in the changeset") % params[:id]
   end

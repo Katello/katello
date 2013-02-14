@@ -67,7 +67,7 @@ class TaskStatus < ActiveRecord::Base
 
   after_destroy :destroy_job
 
-  def initialize(attrs = nil)
+  def initialize(attrs = nil, options={})
     unless attrs.nil?
       # only keep keys for which we have db columns
       attrs = attrs.reject do |k, v|

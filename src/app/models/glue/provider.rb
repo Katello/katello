@@ -152,8 +152,8 @@ module Glue::Provider
         })
         self.products << product
         product.provider = self
-        product.environments << self.organization.library
         product.gpg_key = gpg
+        product.environments << self.organization.library
         product.save!
         product
       rescue => e

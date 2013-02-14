@@ -24,9 +24,14 @@ module Glue::Pulp::User
 
   module InstanceMethods
 
-    def initialize(attrs = nil)
+    def initialize(attrs = nil, options={})
+      # TODO RAILS32 Clean up supers
       attrs = prune_pulp_only_attributes(attrs)
-      super(attrs)
+      if Rails::VERSION::STRING.start_with?('3.2')
+        super
+      else
+        super(attrs)
+      end
     end
 
     def prune_pulp_only_attributes(attrs)

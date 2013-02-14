@@ -50,9 +50,14 @@ module Glue::Candlepin::Consumer
 
   module InstanceMethods
 
-    def initialize(attrs = nil)
+    def initialize(attrs=nil, options={})
+      # TODO RAILS32 Clean up supers
       if attrs.nil?
-        super
+        if Rails::VERSION::STRING.start_with?('3.2')
+          super
+        else
+          super(attrs)
+        end
       elsif
         type_key = attrs.has_key?('type') ? 'type' : :type
         #rename "type" to "cp_type" (activerecord and candlepin variable name conflict)
@@ -66,7 +71,11 @@ module Glue::Candlepin::Consumer
         if attrs_used_by_model["environment"].is_a? Hash
           attrs_used_by_model.delete("environment")
         end
-        super(attrs_used_by_model)
+        if Rails::VERSION::STRING.start_with?('3.2')
+          super(attrs_used_by_model, options)
+        else
+          super(attrs_used_by_model)
+        end
       end
     end
 

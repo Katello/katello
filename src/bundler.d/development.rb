@@ -27,5 +27,5 @@ group :development do
     gem 'minitest_tu_shim'
   end
 
-  gem 'factory_girl_rails', "~> 1.7.0"
+  gem 'factory_girl_rails', "~> 1.4.0"
 end

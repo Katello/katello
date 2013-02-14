@@ -161,17 +161,16 @@ class Changeset < ActiveRecord::Base
      return package
    end
 
-   def add_erratum! erratum_id, product
-     errata = Errata.find_by_errata_id(erratum_id)
-     product.has_erratum?(env_to_verify_on_add_content, errata.errata_id) or
+   def add_erratum! erratum, product
+     product.has_erratum?(env_to_verify_on_add_content, erratum.errata_id) or
          raise Errors::ChangesetContentException.new(
                    "Erratum not found within this environment you want to promote from.")
 
-     self.errata << erratum =
-         ChangesetErratum.create!(:errata_id  => errata.id, :display_name => errata.errata_id,
+     self.errata << cs_erratum =
+         ChangesetErratum.create!(:errata_id  => erratum.id, :display_name => erratum.errata_id,
                                   :product_id => product.id, :changeset => self)
      save!
-     return erratum
+     return cs_erratum
    end
 
    def add_repository! repository
@@ -233,8 +232,8 @@ class Changeset < ActiveRecord::Base
     return deleted
   end
 
-  def remove_erratum! erratum_id, product
-    deleted = ChangesetErratum.destroy_all(:display_name  => erratum_id, :changeset_id => self.id,
+  def remove_erratum! erratum, product
+    deleted = ChangesetErratum.destroy_all(:display_name  => erratum.errata_id, :changeset_id => self.id,
                                            :product_id => product.id)
     save!
     return deleted

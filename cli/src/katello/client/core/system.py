@@ -607,7 +607,10 @@ class Subscriptions(SystemAction):
                 for entitlement in result['entitlements']:
                     entitlement_ext = entitlement.copy()
                     provided_products = ', '.join([e['name'] for e in entitlement_ext['providedProducts']])
-                    entitlement_ext['providedProductsFormatted'] = provided_products
+                    if provided_products:
+                        entitlement_ext['providedProductsFormatted'] = _('Not Applicable')
+                    else:
+                        entitlement_ext['providedProductsFormatted'] = provided_products
                     serial_ids = ', '.join([u_str(s['id']) for s in entitlement_ext['serials']])
                     entitlement_ext['serialIds'] = serial_ids
                     yield entitlement_ext
@@ -633,7 +636,10 @@ class Subscriptions(SystemAction):
                 for pool in result['pools']:
                     pool_ext = pool.copy()
                     provided_products = ', '.join([p['productName'] for p in pool_ext['providedProducts']])
-                    pool_ext['providedProductsFormatted'] = provided_products
+                    if provided_products:
+                        pool_ext['providedProductsFormatted'] = _('Not Applicable')
+                    else:
+                        pool_ext['providedProductsFormatted'] = provided_products
 
                     if pool_ext['quantity'] == -1:
                         pool_ext['quantity'] = _('Unlimited')

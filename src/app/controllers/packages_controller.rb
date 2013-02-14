@@ -37,19 +37,19 @@ class PackagesController < ApplicationController
   end
 
 	def show
-		render :partial=>"show", :layout => "tupane_layout"
+		render :partial=>"show"
 	end
 
 	def filelist
-        render :partial=>"filelist", :layout => "tupane_layout"
+    render :partial=>"filelist"
 	end
 
 	def changelog
-        render :partial=>"changelog", :layout => "tupane_layout"
+    render :partial=>"changelog"
 	end
 
   def dependencies
-      render :partial=>"dependencies", :layout => "tupane_layout"
+    render :partial=>"dependencies"
   end
 
   def auto_complete_library

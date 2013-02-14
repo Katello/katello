@@ -97,7 +97,7 @@ class UsersController < ApplicationController
       setup_environment_selector(current_organization, accessible_envs)
       @environment = first_env_in_path(accessible_envs)
     end
-    render :partial => "edit", :layout => "tupane_layout",
+    render :partial => "edit",
            :locals  => { :user            => @user,
                          :editable        => can_edit_user?,
                          :name            => controller_display_name,
@@ -109,7 +109,7 @@ class UsersController < ApplicationController
     @user         = User.new
     @organization = nil
     @ldap = Katello.config.warden == 'ldap'
-    render :partial => "new", :layout => "tupane_layout", :locals => { :user => @user, :accessible_envs => nil }
+    render :partial => "new", :locals => { :user => @user, :accessible_envs => nil }
   end
 
   def create
@@ -215,7 +215,7 @@ class UsersController < ApplicationController
       accessible_envs = nil
     end
 
-    render :partial => "edit_environment", :layout => "tupane_layout",
+    render :partial => "edit_environment",
            :locals  => { :user            => @user,
                          :editable        => can_edit_user?,
                          :name            => controller_display_name,

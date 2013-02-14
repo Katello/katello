@@ -341,23 +341,23 @@ describe ActivationKeysController do
   describe "GET systems" do
     before(:each) do
       @system = System.new(:name => "test_system", :environment => @environment_1, :cp_type=>"system", :facts=>{"Test" => ""})
-      ActivationKey.stub!(:find).with(@a_key.id).and_return(@a_key)
+      ActivationKey.stub!(:find).with(@a_key.id.to_s).and_return(@a_key)
       @a_key.should_receive(:systems).and_return([@system])
     end
 
     it "retrieves the systems to display" do
-      get :systems, :id => @a_key.id
+      get :systems, :id => @a_key.id.to_s
       response.should be_success
     end
 
     it "renders the systems partial" do
-      get :systems, :id => @a_key.id
+      get :systems, :id => @a_key.id.to_s
       response.should render_template(:partial => "_systems")
       response.should be_success
     end
 
     it "should be successful" do
-      get :systems, :id => @a_key.id
+      get :systems, :id => @a_key.id.to_s
       response.should be_success
     end
   end

@@ -279,13 +279,10 @@ class PromotionsController < ApplicationController
   end
 
   def accessible_environments
-    list = KTEnvironment.content_readable(current_organization)
-    KTEnvironment.changesets_readable(current_organization).each{|env|
-      list << env.prior if env.prior
-    }
-    list.uniq
+    envs = KTEnvironment.content_readable(current_organization).all
+    envs += KTEnvironment.changesets_readable(current_organization).all.map { |env| env.prior if env.prior }.compact
+    envs.uniq
   end
-
 
   def templates
     @environment.system_templates || []
