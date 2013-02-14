@@ -24,3 +24,5 @@
         - view_definition.content_views.each do |view|
           = render :partial => 'content_view_definitions/views/view',
             :locals => {:view_definition => view_definition, :view => view, :cssclass => cssclass}
+
+= render :template => "layouts/tupane_layout"

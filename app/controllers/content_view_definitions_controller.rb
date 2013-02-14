@@ -84,7 +84,7 @@ class ContentViewDefinitionsController < ApplicationController
   end
 
   def new
-    render :partial => "new", :layout => "tupane_layout",
+    render :partial => "new",
            :locals => {:view_definitions => ContentViewDefinition.readable(current_organization)}
   end
 
@@ -129,9 +129,9 @@ class ContentViewDefinitionsController < ApplicationController
   end
 
   def edit
-    render :partial => "edit", :layout => "tupane_layout", :locals => {:view_definition => @view_definition,
-                                                                       :editable => @view_definition.editable?,
-                                                                       :name => controller_display_name}
+    render :partial => "edit", :locals => {:view_definition => @view_definition,
+                                           :editable => @view_definition.editable?,
+                                           :name => controller_display_name}
   end
 
   def update
@@ -161,7 +161,7 @@ class ContentViewDefinitionsController < ApplicationController
 
   def publish_setup
     # retrieve the form to enable the user to request a publish
-    render :partial => "publish", :layout => "tupane_layout",
+    render :partial => "publish",
            :locals => {:view_definition => @view_definition, :editable=>@view_definition.editable?,
                        :name=>controller_display_name}
   end
@@ -184,7 +184,7 @@ class ContentViewDefinitionsController < ApplicationController
   end
 
   def views
-    render :partial => "content_view_definitions/views/index", :layout => "tupane_layout",
+    render :partial => "content_view_definitions/views/index",
            :locals => {:view_definition => @view_definition, :editable => @view_definition.editable?,
                        :name => controller_display_name}
   end
@@ -239,14 +239,14 @@ class ContentViewDefinitionsController < ApplicationController
         hash
       end
 
-      render :partial => "composite_definition_content", :layout => "tupane_layout",
+      render :partial => "composite_definition_content",
              :locals => {:view_definition => @view_definition,
                          :view_definitions => ContentViewDefinition.readable(current_organization),
                          :views => component_views,
                          :editable=>@view_definition.editable?,
                          :name=>controller_display_name}
     else
-      render :partial => "single_definition_content", :layout => "tupane_layout",
+      render :partial => "single_definition_content",
              :locals => {:view_definition => @view_definition, :editable=>@view_definition.editable?,
                          :name=>controller_display_name}
     end
@@ -291,7 +291,7 @@ class ContentViewDefinitionsController < ApplicationController
   end
 
   def filter
-    render :partial => "filter", :layout => "tupane_layout",
+    render :partial => "filter",
            :locals => {:view_definition => @view_definition, :editable => @view_definition.editable?,
                        :name => controller_display_name}
   end
