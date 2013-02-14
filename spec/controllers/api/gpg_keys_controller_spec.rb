@@ -103,13 +103,13 @@ describe Api::GpgKeysController, :katello => true do
   end
 
   describe "update gpg key" do
-    let(:req_params) { {:id => @gpg_key.id, :gpg_key => {:name => "Gpg Key", :content => "This is the key string" }}.with_indifferent_access }
+    let(:req_params) { {:id => @gpg_key.id.to_s, :gpg_key => {:name => "Gpg Key", :content => "This is the key string" }}.with_indifferent_access }
     let(:req) { put :update, req_params }
     let(:action) { :update }
     it_should_behave_like "protected action"
 
     it "returns JSON with updated key" do
-      GpgKey.stub(:find).with(@gpg_key.id).and_return(@gpg_key)
+      GpgKey.stub(:find).with(@gpg_key.id.to_s).and_return(@gpg_key)
       req
       JSON.parse(response.body).slice(*%w[name content]).should == req_params[:gpg_key]
     end
