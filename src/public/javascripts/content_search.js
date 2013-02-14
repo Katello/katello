@@ -68,8 +68,8 @@ KT.content_search = function(paths_in){
                        modes: true
         }
     },
-    search_modes = [{id:'all', name:i18n.all},
-                    {id:'shared', name:i18n.union},
+    search_modes = [{id:'all', name:i18n.union},
+                    {id:'shared', name:i18n.intersection},
                     {id:'unique', name:i18n.difference}
                    ],
     search_pages = {errata:{url:KT.routes.errata_content_search_index_path(), modes:true},
