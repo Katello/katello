@@ -73,9 +73,9 @@ describe Api::DistributionsController, :katello => true do
 
     describe "get a listing of distributions" do
       it "should call pulp find repo api" do
-        Repository.should_receive(:find).once.with(@repo.id).and_return(@repo)
+        Repository.should_receive(:find).once.with(@repo.id.to_s).and_return(@repo)
         @repo.should_receive(:distributions)
-        get 'index', :repository_id => @repo.id
+        get 'index', :repository_id => @repo.id.to_s
       end
     end
   end

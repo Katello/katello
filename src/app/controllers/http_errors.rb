@@ -19,6 +19,7 @@ module HttpErrors
   CONFLICT             = 409
   UNPROCESSABLE_ENTITY = 422
   INTERNAL_ERROR       = 500
+  SERVICE_UNAVAILABLE  = 503
 
   class WrappedError < StandardError
     class_attribute :status_code
@@ -46,7 +47,6 @@ module HttpErrors
     self.status_code = NOT_FOUND
   end
 
-
   class Conflict < WrappedError
     self.status_code = CONFLICT
   end
@@ -57,5 +57,9 @@ module HttpErrors
 
   class InternalError < WrappedError
     self.status_code = INTERNAL_ERROR
+  end
+
+  class ServiceUnavailable < WrappedError
+    self.status_code = SERVICE_UNAVAILABLE
   end
 end

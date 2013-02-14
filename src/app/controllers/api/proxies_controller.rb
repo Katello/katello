@@ -16,7 +16,14 @@ class Api::ProxiesController < Api::ApiController
 
   def rules
     proxy_test = lambda {
-      route, match, params = Rails.application.routes.set.recognize(request)
+      if Rails.application.routes.respond_to?(:router)
+        route, match, params = Rails.application.routes.router.recognize(request) do |rte, mtch, prms|
+          return rte, mtch, prms
+        end
+      else
+        route, match, params = Rails.application.routes.set.recognize(request)
+      end
+
       # route names are defined in routes.rb (:as => :name)
       case route.name
       when :api_proxy_consumer_deletionrecord_delete_path

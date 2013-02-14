@@ -58,8 +58,8 @@ class Api::ApiController < ActionController::Base
   end
 
   def parse_locale
-    hal = request.env['HTTP_ACCEPT_LANGUAGE'] || 'en'
-    first, second = hal.split(/[-_]/)
+    first, second = (request.env['HTTP_ACCEPT_LANGUAGE'] || 'en').split(/[-_]/)
+    first ||= 'en' # in case of invalid input like '-'
     if second.nil?
       return [first.downcase]
     else
@@ -191,8 +191,15 @@ class Api::ApiController < ActionController::Base
       raise ArgumentError.new("Expected ForemanModel::Invalid or ActiveRecord::RecordInvalid exception.")
     end
 
-    errors.each_pair do |c,e|
-      logger.error "#{c}: #{e}"
+    # TODO RAILS32 Clean up if-else
+    if errors.respond_to?(:messages)
+      errors.messages.each_pair do |c,e|
+        logger.error "#{c}: #{e}"
+      end
+    else
+      errors.each_pair do |c,e|
+        logger.error "#{c}: #{e}"
+      end
     end
 
     respond_to do |format|
