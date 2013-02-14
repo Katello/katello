@@ -68,7 +68,7 @@ describe Api::CustomInfoController do
     it "should require key + value pairs" do
       System.find(@system.id).custom_info.empty?.should == true
       post :create, :informable_id => @system.id, :informable_type => "system"
-      response.status.should == HttpErrors::UNPROCESSABLE_ENTITY
+      response.status.should == HttpErrors::BAD_REQUEST
       System.find(@system.id).custom_info.empty?.should == true
     end
   end
