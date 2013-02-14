@@ -62,7 +62,7 @@ class SystemGroupsController < ApplicationController
 
   def new
     @group = SystemGroup.new
-    render :partial => 'new', :layout => 'tupane_layout'
+    render :partial => 'new'
   end
 
   def create
@@ -97,7 +97,7 @@ class SystemGroupsController < ApplicationController
   end
 
   def edit
-    render :partial => "edit", :layout => "tupane_layout", :locals => {:filter => @group, :name=>controller_display_name,
+    render :partial => "edit", :locals => {:filter => @group, :name=>controller_display_name,
                                                                        :editable=>@group.editable?
                                                                        }
   end
@@ -149,7 +149,7 @@ class SystemGroupsController < ApplicationController
     notify.success _("Deleted System Group %{group} and it's %{count} systems.") % {:group => @group.name, :count => system_names.length.to_s},
                    :details => system_names.join("\n")
 
-    render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
+    render :partial => "common/list_remove.js", :locals => {:id=>params[:id], :name=>controller_display_name}
   end
 
   def items
@@ -177,7 +177,7 @@ class SystemGroupsController < ApplicationController
 
   def systems
     @system_joins = @group.system_system_groups.sort_by{|a| a.system.name}
-    render :partial => "systems", :layout => "tupane_layout",
+    render :partial => "systems",
            :locals => {:filter => @group, :name=>controller_display_name, :editable=>@group.editable?,
                        :systems_deletable=>@group.systems_deletable?}
   end

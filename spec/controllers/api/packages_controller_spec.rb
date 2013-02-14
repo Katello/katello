@@ -20,6 +20,7 @@ describe Api::PackagesController, :katello => true do
   include LocaleHelperMethods
 
   let(:repo_id) {'f8ab5088-688e-4ce4-ade3-700aa4cbb070'}
+
   before(:each) do
     disable_org_orchestration
     disable_product_orchestration
@@ -94,8 +95,8 @@ describe Api::PackagesController, :katello => true do
 
     describe "show a package" do
       it "should call pulp find package api" do
-         Runcible::Extensions::Rpm.should_receive(:find_by_unit_id).once.with(1)
-        get 'show', :id => 1, :repository_id => repo_id
+         Runcible::Extensions::Rpm.should_receive(:find_by_unit_id).once.with('1')
+        get 'show', :id => '1', :repository_id => repo_id
       end
     end
 

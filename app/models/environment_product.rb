@@ -14,7 +14,6 @@ class EnvironmentProduct < ActiveRecord::Base
   belongs_to :product, :inverse_of => :environment_products
   belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :environment_products
   has_many :repositories, :dependent => :destroy, :inverse_of => :environment_product
-  validates_uniqueness_of :product_id, :scope => :environment_id, :message => N_("must be unique within one environment")
 
   def self.find_or_create(env, product)
     item = EnvironmentProduct.where(:environment_id=> env.id, :product_id=> product.id).first

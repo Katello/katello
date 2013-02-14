@@ -157,7 +157,6 @@ describe Api::OrganizationsController do
         }.with_indifferent_access
         put :update, bad_req
       end
-
     end
   end
 end

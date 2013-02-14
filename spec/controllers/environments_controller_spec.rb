@@ -133,8 +133,8 @@ describe EnvironmentsController do
 
         it "should create new environment" do
           KTEnvironment.should_receive(:new).with({:name => 'production',:label=>"boo",
-                :prior => @org.library, :description => nil, :organization_id => @org.id}).and_return(@new_env)
-          post :create, :organization_id => @org.label, :kt_environment => {:name => 'production', :label=>"boo", :prior => @org.library}
+                :prior => "#{@org.library}", :description => nil, :organization_id => @org.id}).and_return(@new_env)
+          post :create, :organization_id => @org.label, :kt_environment => {:name => 'production', :label=>"boo", :prior => "#{@org.library}"}
         end
 
         it "should save new environment" do
