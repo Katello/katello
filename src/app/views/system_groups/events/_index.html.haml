@@ -29,3 +29,5 @@
     %a#more{:style => "padding-left: 20px;", "data-scroll_url"=>url_for(more_items_system_group_events_path(group.id)), "data-page_size"=>current_user.page_size, :class=>"fl"}
   - if total_events_length > 0
     %span{:id => 'loaded_summary', :style => "padding-left: 20px;"}
+
+= render :template => "layouts/tupane_layout"

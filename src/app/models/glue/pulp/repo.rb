@@ -88,9 +88,13 @@ module Glue::Pulp::Repo
       @relative_path = path
     end
 
-    def initialize(attrs = nil)
+    def initialize(attrs=nil, options={})
       if attrs.nil?
-        super
+        if Rails::VERSION::STRING.start_with?('3.2')
+          super
+        else
+          super(attrs)
+        end
       elsif
         type_key = attrs.has_key?('type') ? 'type' : :type
         #rename "type" to "cp_type" (activerecord and candlepin variable name conflict)
@@ -101,7 +105,11 @@ module Glue::Pulp::Repo
         attrs_used_by_model = attrs.reject do |k, v|
           !attributes_from_column_definition.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
         end
-        super(attrs_used_by_model)
+        if Rails::VERSION::STRING.start_with?('3.2')
+          super(attrs_used_by_model, options)
+        else
+          super(attrs_used_by_model)
+        end
       end
     end
 

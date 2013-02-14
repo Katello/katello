@@ -58,8 +58,8 @@ describe Api::SubscriptionsController do
 
     context "subscribes" do
       it "to one pool" do
-        Resources::Candlepin::Consumer.should_receive(:consume_entitlement).once.with(@system.uuid, "poolidXYZ", 1)
-        post :create, :system_id => @system.id, :pool => "poolidXYZ", :quantity => 1
+        Resources::Candlepin::Consumer.should_receive(:consume_entitlement).once.with(@system.uuid, "poolidXYZ", "1")
+        post :create, :system_id => @system.id, :pool => "poolidXYZ", :quantity => '1'
       end
     end
 

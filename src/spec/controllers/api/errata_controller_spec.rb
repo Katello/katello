@@ -92,13 +92,13 @@ describe Api::ErrataController, :katello => true do
       end
 
       it "should call pulp find repo api" do
-        ::Errata.should_receive(:filter).once.with(:repoid => 1).and_return([])
-        get 'index', :repoid => 1
+        ::Errata.should_receive(:filter).once.with(:repoid => '1').and_return([])
+        get 'index', :repoid => '1'
       end
 
       it "should accept type as filter attribute" do
-        ::Errata.should_receive(:filter).once.with(:repoid => 1, :type => 'security').and_return([])
-        get 'index', :repoid => 1, :type => 'security'
+        ::Errata.should_receive(:filter).once.with(:repoid => '1', :type => 'security').and_return([])
+        get 'index', :repoid => '1', :type => 'security'
 
         ::Errata.should_receive(:filter).once.with(:type => 'security', :environment_id => '123').and_return([])
         get 'index', :type => 'security', :environment_id => "123"
@@ -118,8 +118,8 @@ describe Api::ErrataController, :katello => true do
 
     describe "show an erratum" do
       it "should call pulp find errata api" do
-        ::Errata.should_receive(:find).once.with(1)
-        get 'show', :id => 1, :repository_id => 1
+        ::Errata.should_receive(:find).once.with('1')
+        get 'show', :id => '1', :repository_id => 1
       end
     end
   end

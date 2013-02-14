@@ -409,7 +409,7 @@ DESC
     param :system_group_ids, Array, :desc => "List of group ids to add the system to", :required => true
   end
   def remove_system_groups
-    ids = params[:system][:system_group_ids]
+    ids = params[:system][:system_group_ids].map(&:to_i)
     @system.system_group_ids = (@system.system_group_ids - ids).uniq
     @system.save!
     render :json => @system.to_json
