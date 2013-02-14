@@ -26,7 +26,7 @@ module Glue::Pulp::Distribution
 
   module InstanceMethods
 
-    def initialize(attrs = {})
+    def initialize(attrs = {}, options={})
       generate_instance_variables(attrs)
     end
 

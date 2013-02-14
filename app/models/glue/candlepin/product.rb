@@ -79,7 +79,7 @@ module Glue::Candlepin::Product
 
   module InstanceMethods
 
-    def initialize(attribs = nil)
+    def initialize(attribs=nil, options={})
       unless attribs.nil?
         attributes_key = attribs.has_key?(:attributes) ? :attributes : 'attributes'
         if attribs.has_key?(attributes_key)
@@ -95,7 +95,12 @@ module Glue::Candlepin::Product
         end
       end
 
-      super(attribs)
+      # TODO RAILS32 Clean up supers
+      if Rails::VERSION::STRING.start_with?('3.2')
+        super
+      else
+        super(attribs)
+      end
     end
 
     def build_productContent(attrs)

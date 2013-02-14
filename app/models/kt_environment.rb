@@ -35,7 +35,13 @@ class KTEnvironment < ActiveRecord::Base
   has_many :environment_products, :class_name => "EnvironmentProduct", :foreign_key => "environment_id", :dependent => :destroy, :uniq=>true
   has_many :products, :uniq => true, :through => :environment_products  do
     def <<(*items)
-      super( items - proxy_owner.environment_products.collect{|ep| ep.product} )
+      # TODO:  RAILS32 Convert this to @association.owner
+      if @association.nil?
+        owner = @owner
+      else
+        owner = @association.owner
+      end
+      super( items - owner.environment_products.collect{|ep| ep.product} )
     end
   end
 

@@ -31,7 +31,7 @@ class SystemGroupEventsController < ApplicationController
   end
 
   def index
-    render :partial=>'system_groups/events/index', :layout => 'tupane_layout', :locals=>{:group => @group, :jobs => jobs}
+    render :partial=>'system_groups/events/index', :locals=>{:group => @group, :jobs => jobs}
   end
 
   def show
@@ -39,7 +39,7 @@ class SystemGroupEventsController < ApplicationController
     if job.nil?
       render :nothing => true
     else
-      render :partial=>'system_groups/events/show', :layout => 'tupane_layout',
+      render :partial=>'system_groups/events/show',
              :locals=>{:group => @group, :job =>job}
     end
   end
@@ -52,7 +52,7 @@ class SystemGroupEventsController < ApplicationController
       statuses[:jobs] << {
         :id => status.id,
         :pending? => status.pending?,
-        :status_html => render_to_string(:template => 'system_groups/events/_items.html.haml', :layout => false,
+        :status_html => render_to_string(:template => 'system_groups/events/_items.html', :layout => false,
                                          :locals => {:include_tr => false, :group => @group, :job => status})
       }
     end
@@ -61,7 +61,7 @@ class SystemGroupEventsController < ApplicationController
       statuses[:tasks] << {
         :id => status.id,
         :pending? => status.pending?,
-        :status_html => render_to_string(:template => 'system_groups/events/_system_items.html.haml', :layout => false,
+        :status_html => render_to_string(:template => 'system_groups/events/_system_items.html', :layout => false,
                                          :locals => {:include_tr => false, :t => status})
       }
     end

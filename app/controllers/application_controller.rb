@@ -271,13 +271,15 @@ class ApplicationController < ActionController::Base
   end
 
   def require_user
-    if current_user
-      #user logged in
 
-      #redirect to originally requested page
-      if !session[:original_uri].nil? && !matches_no_redirect?(session[:original_uri])
-        redirect_to session[:original_uri]
-        session[:original_uri] = nil
+    if current_user
+      #don't redirect if the user is trying to set an org
+      if params[:action] != 'set_org' && params[:controller] != 'user_sessions'
+        #redirect to originally requested page
+        if !session[:original_uri].nil? && !matches_no_redirect?(session[:original_uri])
+          redirect_to session[:original_uri]
+          session[:original_uri] = nil
+        end
       end
 
       return true
@@ -307,7 +309,7 @@ class ApplicationController < ActionController::Base
 
   # adapted from http_accept_lang gem, return list of browser locales
   def parse_locale
-    locale_lang = request.env['HTTP_ACCEPT_LANGUAGE'].split(/\s*,\s*/).collect do |l|
+    locale_lang = (request.env['HTTP_ACCEPT_LANGUAGE'] || '').split(/\s*,\s*/).collect do |l|
       l += ';q=1.0' unless l =~ /;q=\d+\.\d+$/
       l.split(';q=')
     end.sort do |x,y|
@@ -394,6 +396,7 @@ class ApplicationController < ActionController::Base
     # reject any paths that don't have accessible envs
     @paths.reject!{|path|  (path & accessible).empty?}
 
+    @paths = @paths.sort_by{|p| p[1].name}
     @paths = [[org.library]] if @paths.empty?
 
     if @environment and !@environment.library?
@@ -424,6 +427,7 @@ class ApplicationController < ActionController::Base
 
   def environment_paths(library, environment_path_element_generator)
     paths = current_organization.promotion_paths
+    paths = paths.sort_by{|p| p[0].name}
     to_ret = []
     paths.each do |path|
       path = path.collect{ |e| environment_path_element_generator.call(e) }

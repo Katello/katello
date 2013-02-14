@@ -29,11 +29,11 @@ class ErrataController < ApplicationController
   end
 
   def show
-    render :partial=>"show", :layout => "tupane_layout"
+    render :partial=>"show"
   end
 
   def packages
-    render :partial=>"packages", :layout => "tupane_layout"
+    render :partial=>"packages"
   end
 
   def short_details
