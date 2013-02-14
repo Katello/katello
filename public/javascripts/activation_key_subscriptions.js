@@ -16,7 +16,3 @@
  * A small javascript file needed to load system subscription related stuff
  *
  */
-
-$(document).ready(function() {
-    KT.activation_key.subscription_setup();
-});

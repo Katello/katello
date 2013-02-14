@@ -57,6 +57,7 @@ describe Api::SystemsController do
 
     Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
+    Resources::Candlepin::Consumer.stub!(:available_pools).and_return([])
 
     Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid})
     Runcible::Extensions::Consumer.stub!(:update).and_return(true)
@@ -134,7 +135,7 @@ describe Api::SystemsController do
         @system_data = {
           :name => "Test System 1",
           :facts => facts,
-          :environment => @environment_1,
+          :environment_id => @environment_1.id,
           :cp_type => "system",
           :sockets => 2,
           :organization_id => @organization.label,
@@ -257,12 +258,12 @@ describe Api::SystemsController do
 
     it "should show all systems in the organization" do
       get :index, :organization_id => @organization.label
-      response.body.should == [@system_1, @system_2].to_json
+      response.body.should be_json([@system_1, @system_2].to_json)
     end
 
     it "should show all systems for the owner" do
       get :index, :owner => @organization.label
-      response.body.should == [@system_1, @system_2].to_json
+      response.body.should be_json([@system_1, @system_2].to_json)
     end
 
     it "should show only systems in the environment" do
@@ -321,7 +322,7 @@ describe Api::SystemsController do
 
       it "successfully with update permissions" do
         Runcible::Extensions::Consumer.should_receive(:upload_profile).once.with(uuid, 'rpm', package_profile[:profile]).and_return(true)
-        put :upload_package_profile, :id => uuid, :_json => package_profile[:profile]
+        put :upload_package_profile, :id => uuid, :_json => package_profile[:profile], :format => :json
         response.body.should == @sys.to_json
       end
     end
@@ -333,7 +334,7 @@ describe Api::SystemsController do
 
       it "successfully with register permissions" do
         Runcible::Extensions::Consumer.should_receive(:upload_profile).once.with(uuid, 'rpm', package_profile[:profile]).and_return(true)
-        put :upload_package_profile, :id => uuid, :_json => package_profile[:profile]
+        put :upload_package_profile, :id => uuid, :_json => package_profile[:profile], :format => :json
         response.body.should == @sys.to_json
       end
     end
@@ -518,16 +519,22 @@ describe Api::SystemsController do
       get :pools, :id => @system.uuid
     end
 
-    it "should retrieve avaialble pools from Candlepin" do
+    it "should retrieve available pools from Candlepin" do
       #@system.should_receive(:available_pools_full).once.and_return([])
-      Resources::Candlepin::Consumer.should_receive(:available_pools).once.with(uuid, false).and_return([])
+      Resources::Candlepin::Consumer.should_receive(:available_pools).once.with(@system.uuid, true).and_return([])
       get :pools, :id => @system.uuid
     end
 
-    it "should retrieve available pools from Candlepin" do
+    pending "should retrieve available pools from Candlepin, explicit match_system false" do
       #@system.should_receive(:available_pools_full).once.and_return([])
-      Resources::Candlepin::Consumer.should_receive(:available_pools).once.with(uuid, false).and_return([])
-      get :pools, :id => @system.uuid, :listall => true
+      Resources::Candlepin::Consumer.should_receive(:available_pools).once.with(@system.uuid, true).and_return([])
+      get :pools, :id => @system.uuid, :match_system => true
+    end
+
+    pending "should retrieve available pools from Candlepin, explicit match_system true" do
+      #@system.should_receive(:available_pools_full).once.and_return([])
+      Resources::Candlepin::Consumer.should_receive(:available_pools).once.with(@system.uuid, true).and_return([])
+      get :pools, :id => @system.uuid, :match_system => true
     end
   end
 

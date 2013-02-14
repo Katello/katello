@@ -87,10 +87,10 @@ KT.menu = (function(){
           })
           .bind("close.menu", function(){
             //take away tab highlight
-            $(this).removeClass('selected');
-            activeTab.addClass('selected');
-            activeSubnav.show();
             if(!$(this).hasClass('active')) {
+                $(this).removeClass('selected');
+                activeTab.addClass('selected');
+                activeSubnav.show();
               //the stuff to do to if it's not the current tab
               currentSubnav.slideUp('fast');
             }

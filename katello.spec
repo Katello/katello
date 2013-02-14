@@ -284,6 +284,7 @@ Requires:        rubygem(js-routes)
 Requires:        rubygem(gettext) >= 1.9.3
 Requires:        rubygem(ruby_parser)
 Requires:        rubygem(sexp_processor)
+Requires:        rubygem(factory_girl_rails) >= 1.4.0
 # dependencies from bundler.d/development_boost.rb
 Requires:        rubygem(rails-dev-boost)
 # dependencies from bundler.d/apipie.rb

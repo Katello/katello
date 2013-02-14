@@ -27,7 +27,7 @@ end
 
 class HttpResource
 
-  class_inheritable_accessor :consumer_secret, :consumer_key, :ca_cert_file, :prefix, :site, :default_headers, :resource_permissions
+  class_attribute :consumer_secret, :consumer_key, :ca_cert_file, :prefix, :site, :default_headers, :resource_permissions
 
   attr_reader :json
 

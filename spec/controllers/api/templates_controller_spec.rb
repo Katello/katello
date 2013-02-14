@@ -16,7 +16,7 @@ describe Api::TemplatesController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
 
-  TEMPLATE_ID = 1
+  TEMPLATE_ID = "1"
   TEMPLATE_NAME = "template"
 
   before(:each) do
@@ -29,9 +29,9 @@ describe Api::TemplatesController, :katello => true do
     @environment2.id = 3
     @library = KTEnvironment.new(:name => 'Library', :library => true, :label => 'library')
     @library.id = 2
-    KTEnvironment.stub(:find).with(@library.id).and_return(@library)
-    KTEnvironment.stub(:find).with(@environment.id).and_return(@environment)
-    KTEnvironment.stub(:find).with(@environment2.id).and_return(@environment2)
+    KTEnvironment.stub(:find).with(@library.id.to_s).and_return(@library)
+    KTEnvironment.stub(:find).with(@environment.id.to_s).and_return(@environment)
+    KTEnvironment.stub(:find).with(@environment2.id.to_s).and_return(@environment2)
 
     @organization.library = @library
     @organization.environments << @library
@@ -68,7 +68,7 @@ describe Api::TemplatesController, :katello => true do
     describe "index" do
       let(:action) { :index }
       let(:req) do
-        get 'index', :environment_id => @library.id
+        get 'index', :environment_id => @library.id.to_s
       end
       let(:authorized_user) { user_with_read_permissions }
       it_should_behave_like "protected action"
@@ -84,7 +84,7 @@ describe Api::TemplatesController, :katello => true do
     describe "create" do
       let(:action) {:create}
       let(:req) do
-        post 'create', :template => to_create, :environment_id => @library.id
+        post 'create', :template => to_create, :environment_id => @library.id.to_s
       end
       let(:authorized_user) { user_with_manage_permissions }
       it_should_behave_like "protected action"
@@ -152,7 +152,7 @@ describe Api::TemplatesController, :katello => true do
         tpl_selection_mock = mock('where')
         tpl_selection_mock.stub(:where).and_return([@tpl])
         @library.should_receive(:system_templates).and_return(tpl_selection_mock)
-        get 'index', :environment_id => @library.id
+        get 'index', :environment_id => @library.id.to_s
         response.should be_success
       end
 
@@ -161,7 +161,7 @@ describe Api::TemplatesController, :katello => true do
         tpl_selection_mock.stub(:where).and_return([])
         @environment2.should_receive(:system_templates).and_return(tpl_selection_mock)
 
-        get 'index', :environment_id => @environment2.id
+        get 'index', :environment_id => @environment2.id.to_s
         response.should be_success
       end
     end
@@ -189,7 +189,7 @@ describe Api::TemplatesController, :katello => true do
       end
 
       it "should fail when creating in non-library environment" do
-        post 'create', :template => to_create, :environment_id => @environment.id
+        post 'create', :template => to_create, :environment_id => @environment.id.to_s
         SystemTemplate.should_not_receive(:new)
         response.should_not be_success
       end
@@ -263,13 +263,8 @@ describe Api::TemplatesController, :katello => true do
 
     describe "import" do
       before(:each) do
-        @temp_file = mock(File)
-        @temp_file.stub(:read).and_return('FILE_DATA')
-        @temp_file.stub(:close)
-        @temp_file.stub(:write)
-        @temp_file.stub(:path).and_return("/a/b/c")
-
-        File.stub(:new).and_return(@temp_file)
+        test_document = "#{Rails.root}/spec/assets/gpg_test_key"
+        @temp_file = Rack::Test::UploadedFile.new(test_document, "text/plain")
         KTEnvironment.stub(:find).and_return(@library)
       end
 

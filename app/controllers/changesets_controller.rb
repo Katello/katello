@@ -64,7 +64,7 @@ class ChangesetsController < ApplicationController
   end
 
   def edit
-    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:editable=>@environment.changesets_manageable?, :name=>controller_display_name}
+    render :partial=>"edit", :locals=>{:editable=>@environment.changesets_manageable?, :name=>controller_display_name}
   end
 
   #list item
@@ -99,7 +99,7 @@ class ChangesetsController < ApplicationController
 
   def new
     @changeset = Changeset.new
-    render :partial=>"new", :layout => "tupane_layout", :locals => {:changeset_type => params[:changeset_type]}
+    render :partial=>"new", :locals => {:changeset_type => params[:changeset_type]}
   end
 
   def create
@@ -185,8 +185,9 @@ class ChangesetsController < ApplicationController
 
           when "errata"
             product = Product.find pid
-            @changeset.add_erratum! id, product if adding
-            @changeset.remove_erratum! id, product if !adding
+            erratum = Errata.find(id)
+            @changeset.add_erratum! erratum, product if adding
+            @changeset.remove_erratum! erratum, product if !adding
 
           when "package"
             product = Product.find pid
@@ -275,7 +276,7 @@ class ChangesetsController < ApplicationController
       @environment = KTEnvironment.find(params[:env_id])
     else
       #didnt' find an environment, just do the first the user has access to
-      list = KTEnvironment.changesets_readable(current_organization).where(:library=>false)
+      list = KTEnvironment.changesets_readable(current_organization).where(:library=>false).order(:name)
       @environment ||= list.first || current_organization.library
     end
 

@@ -100,7 +100,7 @@ class SystemTemplate < ActiveRecord::Base
       :package_groups => self.package_groups.map(&:name),
       :package_group_categories => self.pg_categories.map(&:name),
       :distributions => self.distributions.map(&:distribution_pulp_id),
-      :repositories => self.repositories.collect{ |r| {:product => r.product.name, :name => r.name} }
+      :repositories => self.repositories.collect{ |r| {:product => r.product.label, :name => r.name} }
     }
     tpl[:description] = self.description if not self.description.nil?
     tpl
@@ -135,7 +135,7 @@ class SystemTemplate < ActiveRecord::Base
   # Method validate_tdl MUST be called before exporting, this method expects
   # validated system template.
   def export_as_tdl
-    xm = Builder::XmlMarkup.new
+    xm = ::Builder::XmlMarkup.new
     xm.instruct!
 
     validate_tdl
@@ -294,9 +294,9 @@ class SystemTemplate < ActiveRecord::Base
     self.repositories << repo
   end
 
-  def add_repo_by_name product_name, repo_name
-    product = Product.joins(:environment_products).where(:name => product_name, 'environment_products.environment_id' => self.environment_id).first
-    raise Errors::TemplateContentException.new(_("Product '%s' not found in this environment.") % product_name) if product == nil
+  def add_repo_by_name product_label, repo_name
+    product = Product.joins(:environment_products).where(:label => product_label, 'environment_products.environment_id' => self.environment_id).first
+    raise Errors::TemplateContentException.new(_("Product '%s' not found in this environment.") % product_label) if product == nil
 
     repo = Repository.joins(:environment_product).where(:name => repo_name, 'environment_products.environment_id' => self.environment_id, 'environment_products.product_id' => product.id).first
 

@@ -28,3 +28,5 @@
     %fieldset.fl.clear
       %label.grid_2 #{_("Time")}:
       .grid_5.la#plan_time{'name' => 'sync_plan[time]', :class=>("editable edit_timepicker" if editable), 'data-url' => url_for(:action => 'update')} #{@plan.plan_time}
+
+= render :template => "layouts/tupane_layout"

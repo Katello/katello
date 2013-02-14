@@ -176,6 +176,10 @@ class Provider < ActiveRecord::Base
     write_attribute(:discovery_url, value)
   end
 
+  def as_json(*args)
+    super.merge('organization_label' => self.organization.label)
+  end
+
   protected
 
    def sanitize_repository_url

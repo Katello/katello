@@ -94,7 +94,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def edit
-    render :partial => "edit", :layout => "tupane_layout", :locals => {:subscription => @subscription, :editable => false, :name => controller_display_name}
+    render :partial => "edit", :locals => {:subscription => @subscription, :editable => false, :name => controller_display_name}
   end
 
   def show
@@ -103,7 +103,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def products
-    render :partial=>"products", :layout => "tupane_layout", :locals=>{:subscription=>@subscription, :editable => false, :name => controller_display_name}
+    render :partial=>"products", :locals=>{:subscription=>@subscription, :editable => false, :name => controller_display_name}
   end
 
   def consumers
@@ -113,7 +113,7 @@ class SubscriptionsController < ApplicationController
     activation_keys = ActivationKey.joins(:pools).where('pools.cp_id'=>@subscription.cp_id).readable(current_organization)
     activation_keys = [] if !activation_keys
 
-    render :partial=>"consumers", :layout => "tupane_layout", :locals=>{:subscription=>@subscription, :systems=>systems, :activation_keys=>activation_keys, :editable => false, :name => controller_display_name}
+    render :partial=>"consumers", :locals=>{:subscription=>@subscription, :systems=>systems, :activation_keys=>activation_keys, :editable => false, :name => controller_display_name}
   end
 
   def new
@@ -130,7 +130,7 @@ class SubscriptionsController < ApplicationController
     rescue => error
       # quietly ignore
     end
-    render :partial=>"new", :layout =>"tupane_layout", :locals=>{:provider=>@provider, :statuses=>@statuses, :details=>@details, :name => controller_display_name}
+    render :partial=>"new", :locals=>{:provider=>@provider, :statuses=>@statuses, :details=>@details, :name => controller_display_name}
   end
 
   def history
@@ -154,11 +154,11 @@ class SubscriptionsController < ApplicationController
       Rails.logger.error "Error fetching subscription history from Candlepin"
       Rails.logger.error error
       Rails.logger.error error.backtrace.join("\n")
-      render :partial=>"history_items", :layout =>"tupane_layout", :status => :bad_request, :locals=>{:provider=>@provider, :name => controller_display_name, :statuses=>@statuses}
+      render :partial=>"history_items", :status => :bad_request, :locals=>{:provider=>@provider, :name => controller_display_name, :statuses=>@statuses}
       return
     end
 
-    render :partial=>"history_items", :layout =>"tupane_layout", :locals=>{:provider=>@provider, :name => controller_display_name, :statuses=>@statuses}
+    render :partial=>"history_items", :locals=>{:provider=>@provider, :name => controller_display_name, :statuses=>@statuses}
   end
 
   def delete_manifest
