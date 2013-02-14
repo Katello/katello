@@ -71,7 +71,8 @@ class SystemsController < ApplicationController
       :bulk_errata_install => bulk_edit_systems,
       :system_groups => read_system,
       :add_system_groups => edit_system,
-      :remove_system_groups => edit_system
+      :remove_system_groups => edit_system,
+      :custom_info => read_system
     }
   end
 
@@ -324,7 +325,7 @@ class SystemsController < ApplicationController
     @system.update_attributes!(params[:system])
     notify.success _("System '%s' was updated.") % @system["name"]
 
-    if not search_validate(System, @system.id, params[:search])
+    if !search_validate(System, @system.id, params[:search])
       notify.message _("'%s' no longer matches the current search criteria.") % @system["name"],
                      :asynchronous => false
     end
@@ -340,6 +341,10 @@ class SystemsController < ApplicationController
       }
       format.js
     end
+  end
+
+  def custom_info
+    render :partial => "edit_custom_info", :layout => "tupane_layout"
   end
 
   def show
@@ -657,7 +662,8 @@ class SystemsController < ApplicationController
   end
 
   def find_system
-    @system = System.find(params[:id])
+    sys_id = params[:id] || params[:system_id]
+    @system = System.find(sys_id)
   end
 
   def find_systems
