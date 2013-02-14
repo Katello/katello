@@ -35,7 +35,7 @@ declare -a RHSM_VERSION=($RHSM_V)
 
 # exit on non-RHEL systems or when rhsm.conf is not found
 test -f $CFG || exit
-type -P subscription-manager >/dev/null || exit
+type -P subscription-manager >/dev/null || type -P subscription-manager-cli >/dev/null || exit
 
 # backup configuration during the first run
 test -f $CFG_BACKUP || cp $CFG $CFG_BACKUP
@@ -43,7 +43,7 @@ test -f $CFG_BACKUP || cp $CFG $CFG_BACKUP
 # configure rhsm
 # the config command was introduced in rhsm 0.96.6
 # fallback left for older versions
-if test ${RHSM_VERSION[0]} -gt 0 -o ${RHSM_VERSION[1]} -gt 96 -o \( ${RHSM_VERSION[1]} -eq 96 -a ${RHSM_VERSION[2]} -gt 6 \); then
+if test ${RHSM_VERSION[0]:-0} -gt 0 -o ${RHSM_VERSION[1]:-0} -gt 96 -o \( ${RHSM_VERSION[1]:-0} -eq 96 -a ${RHSM_VERSION[2]:-0} -gt 6 \); then
   subscription-manager config \
     --server.hostname="$KATELLO_SERVER" \
     --server.port="$PORT" \
