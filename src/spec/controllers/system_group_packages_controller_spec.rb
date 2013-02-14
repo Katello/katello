@@ -38,8 +38,8 @@ describe SystemGroupPackagesController, :katello => true do
 
       @group = SystemGroup.new(:name=>"test_group", :organization=>@org)
       @system = System.create!(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
-      @group.systems << @system
       @group.save!
+      @group.systems << @system
     end
 
     describe 'package actions' do

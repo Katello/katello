@@ -25,11 +25,11 @@ class DistributionsController < ApplicationController
   end
 
   def show
-    render :partial=>"show", :layout => "tupane_layout"
+    render :partial=>"show"
   end
 
   def filelist
-    render :partial=>"filelist", :layout => "tupane_layout"
+    render :partial=>"filelist"
   end
 
   private

@@ -44,7 +44,7 @@ class SystemGroupPackagesController < ApplicationController
     jobs = @group.refreshed_jobs.joins(:task_statuses).where(
         'task_statuses.task_type' => actions, 'task_statuses.state' => [:waiting, :running])
 
-    render :partial=>"system_groups/packages/index", :layout => "tupane_layout",
+    render :partial=>"system_groups/packages/index",
            :locals=>{:jobs => jobs, :editable => @group.systems_editable?}
   end
 
@@ -168,7 +168,7 @@ class SystemGroupPackagesController < ApplicationController
     response = []
     jobs = @group.refreshed_jobs.where('jobs.id' => params[:id])
     jobs.each do |job|
-      status_html = render_to_string(:template => 'system_groups/packages/_status.html.haml', :layout => false,
+      status_html = render_to_string(:template => 'system_groups/packages/_status.html', :layout => false,
                                      :locals => {:group_id => @group.id, :id => job.id, :state => job.state,
                                                  :status_message => job.status_message})
 

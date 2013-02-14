@@ -64,11 +64,11 @@ class GpgKeysController < ApplicationController
   end
 
   def new
-    render :partial => "new", :layout => "tupane_layout"
+    render :partial => "new"
   end
 
   def edit
-    render :partial => "edit", :layout => "tupane_layout", :locals => {:editable => @gpg_key.manageable?,
+    render :partial => "edit", :locals => {:editable => @gpg_key.manageable?,
                                                                        :name => controller_display_name }
   end
 
@@ -82,7 +82,7 @@ class GpgKeysController < ApplicationController
         order('products.name ASC').
         each { |repo| products_repos[repo.product.name] << repo }
 
-    render :partial => "products_repos", :layout => "tupane_layout",
+    render :partial => "products_repos",
             :locals => {:products => products, :products_repos => products_repos}
   end
 

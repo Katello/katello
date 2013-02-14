@@ -48,3 +48,5 @@
               .grid_2.ra.limit
                 %label #{_("Limit")}:
               .grid_5.la.limit#system_group_max_systems{'name' => 'system_group[max_systems]', 'data-url' => system_group_path(@group.id), :class=>("editable edit_max_systems" if editable)} #{@group.max_systems}
+
+= render :template => "layouts/tupane_layout"

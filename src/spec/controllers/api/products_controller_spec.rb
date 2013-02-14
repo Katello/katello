@@ -156,8 +156,8 @@ describe Api::ProductsController, :katello => true do
     end
 
     it "should find environment" do
-      KTEnvironment.should_receive(:find_by_id).once.with(@environment.id).and_return([@environment])
-      get 'index', :organization_id => @organization.label, :environment_id => @environment.id
+      KTEnvironment.should_receive(:find_by_id).once.with(@environment.id.to_s).and_return([@environment])
+      get 'index', :organization_id => @organization.label, :environment_id => @environment.id.to_s
     end
 
     it "should respond with success" do
@@ -209,8 +209,8 @@ describe Api::ProductsController, :katello => true do
     it_should_behave_like "protected action"
 
     it "should find environment" do
-      KTEnvironment.should_receive(:find_by_id).once.with(@environment.id).and_return([@environment])
-      get 'repositories', :organization_id => @organization.label, :environment_id => @environment.id, :id => @product.id
+      KTEnvironment.should_receive(:find_by_id).once.with(@environment.id.to_s).and_return([@environment])
+      get 'repositories', :organization_id => @organization.label, :environment_id => @environment.id.to_s, :id => @product.id
     end
 
     it "should find product" do

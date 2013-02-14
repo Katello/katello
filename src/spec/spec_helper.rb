@@ -67,8 +67,11 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = true
 
-end
+  if !File.directory?("#{Rails.root}/tmp")
+    Dir.mkdir("#{Rails.root}/tmp")
+  end
 
+end
 
 Webrat.configure do |config|
   config.mode = :rails

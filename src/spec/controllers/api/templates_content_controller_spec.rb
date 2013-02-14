@@ -35,15 +35,15 @@ describe Api::TemplatesContentController do
   include LoginHelperMethods
   include AuthorizationHelperMethods
 
-  let(:template_id) { 1 }
-  let(:non_library_template_id) { 2 }
-  let(:product_cp_id) { 123456 }
+  let(:template_id) { '1' }
+  let(:non_library_template_id) { '2' }
+  let(:product_cp_id) { '123456' }
   let(:package_name) { "package-x.y-z" }
   let(:package_group_name) { "package_group" }
   let(:package_group_cat_name) { "package_group_cat" }
   let(:param_name) { "parameter_1" }
   let(:param_value) { "value_1" }
-  let(:distribution_id) { 1 }
+  let(:distribution_id) { '1' }
 
   before(:each) do
     @organization = Organization.new(:name => 'organization', :label => 'organization')

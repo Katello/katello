@@ -19,7 +19,7 @@ describe SyncPlan, :katello => true do
     before(:each) do
       disable_org_orchestration
       @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
-      @plan = SyncPlan.create!({:name => 'Norman Rockwell', :organization_id => @organization, :sync_date => DateTime.now, :interval => 'daily'})
+      @plan = SyncPlan.create!({:name => 'Norman Rockwell', :organization => @organization, :sync_date => DateTime.now, :interval => 'daily'})
     end
 
     it "be able to create" do
