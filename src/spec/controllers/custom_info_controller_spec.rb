@@ -50,14 +50,14 @@ describe CustomInfoController do
         :value => "123456",
         :informable_type => "System",
         :informable_id => @system.id
-      }.to_json
+      }.sort.to_json
     end
 
     it "should create successfully" do
       ci_count = System.find(@system.id).custom_info.size
       post :create, :informable_type => "system", :informable_id => @system.id, :keyname => "asset_tag", :value => "123456"
       response.code.should == "200"
-      response.body.should == @expected_create_response
+      JSON.parse(response.body).sort.to_json.should == @expected_create_response
       System.find(@system.id).custom_info.size.should == (ci_count + 1)
     end
   end
