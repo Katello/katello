@@ -32,6 +32,9 @@ describe Api::SystemGroupsController, :katello => true do
 
     Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
+    Resources::Candlepin::Consumer.stub!(:destroy).and_return(true)
+    Runcible::Extensions::Consumer.stub!(:delete).and_return(true)
+
     @system = System.create!(:name=>"bar1", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
 
     @request.env["HTTP_ACCEPT"] = "application/json"
@@ -304,12 +307,8 @@ describe Api::SystemGroupsController, :katello => true do
 
 
        it "should complete successfully" do
-         @group.systems  = [@system]
-         @group.save
-
-         System.stub(:find).and_return([@system])
-         @system.should_receive(:destroy)
-         controller.stub(:render)
+         @group.systems = [@system]
+         @group.save!
 
          delete :destroy_systems, :organization_id=>@org.label, :id=>@group.id
          response.should be_success

@@ -22,3 +22,5 @@
     = form.select :prior, options_for_select(@env_labels, @selected), {}, {:label => _("Prior Environment"), :size=>1, :tabindex => form.tabindex}
 
     = form.submit _("Create"), :disable_with => _("Creating..."), :class => 'subpanel_create create_button'
+
+= render :template => "layouts/tupane_layout"

@@ -87,7 +87,7 @@ class ActivationKeysController < ApplicationController
     all_pools = retrieve_all_pools
     available_pools = retrieve_available_pools(all_pools).sort
 
-    render :partial=>"available_subscriptions", :layout => "tupane_layout",
+    render :partial=>"available_subscriptions",
            :locals => {:akey => @activation_key, :editable => ActivationKey.manageable?(current_organization),
                        :available_subs => available_pools}
   end
@@ -96,7 +96,7 @@ class ActivationKeysController < ApplicationController
     all_pools = retrieve_all_pools
     applied_pools = retrieve_applied_pools(all_pools).sort
 
-    render :partial=>"applied_subscriptions", :layout => "tupane_layout",
+    render :partial=>"applied_subscriptions",
            :locals => {:akey => @activation_key, :editable => ActivationKey.manageable?(current_organization),
                        :applied_subs => applied_pools}
   end
@@ -118,7 +118,7 @@ class ActivationKeysController < ApplicationController
       end
     end
     notify.success _("Subscriptions successfully added to Activation Key '%s'.") % @activation_key.name
-    render :partial => "available_subscriptions_update.js.haml"
+    render :partial => "available_subscriptions_update.js"
   end
 
   def remove_subscriptions
@@ -136,18 +136,18 @@ class ActivationKeysController < ApplicationController
       end
     end
     notify.success _("Subscriptions successfully removed from Activation Key '%s'.") % @activation_key.name
-    render :partial => "applied_subscriptions_update.js.haml"
+    render :partial => "applied_subscriptions_update.js"
   end
 
   def system_groups
     # retrieve the available groups that aren't currently assigned to the key
     @system_groups = SystemGroup.where(:organization_id=>current_organization).order(:name) - @activation_key.system_groups
-    render :partial=>"system_groups", :layout => "tupane_layout", :locals=>{:editable=>ActivationKey.manageable?(current_organization)}
+    render :partial=>"system_groups", :locals=>{:editable=>ActivationKey.manageable?(current_organization)}
   end
 
   def systems
     @systems = @activation_key.systems
-    render :partial=>"systems", :layout => "tupane_layout", :locals=>{:editable=>ActivationKey.manageable?(current_organization)}
+    render :partial=>"systems", :locals=>{:editable=>ActivationKey.manageable?(current_organization)}
   end
 
   def add_system_groups
@@ -197,8 +197,8 @@ class ActivationKeysController < ApplicationController
       in_environment(@environment).collect {|cv| [cv.name, cv.id]}
     @selected_content_view = no_content_view
 
-    render :partial => "new", :layout => "tupane_layout", :locals => {:activation_key => activation_key,
-                                                                      :accessible_envs => accessible_envs}
+    render :partial => "new", :locals => {:activation_key => activation_key,
+                                          :accessible_envs => accessible_envs}
   end
 
   def edit
@@ -218,16 +218,16 @@ class ActivationKeysController < ApplicationController
     selected_content_view = @activation_key.content_view.nil? ? no_content_view : @activation_key.content_view_id
     products = @activation_key.content_view ? @activation_key.content_view.products(@environment) : @environment.products
 
-    render :partial => "edit", :layout => "tupane_layout", :locals => {:activation_key => @activation_key,
-                                                                       :editable => ActivationKey.manageable?(current_organization),
-                                                                       :name => controller_display_name,
-                                                                       :accessible_envs => accessible_envs,
-                                                                       :system_template_labels => system_template_labels,
-                                                                       :selected_template => selected_template,
-                                                                       :content_view_labels => content_view_labels,
-                                                                       :selected_content_view => selected_content_view,
-                                                                       :products => products
-                                                                      }
+    render :partial => "edit", :locals => {:activation_key => @activation_key,
+                                           :editable => ActivationKey.manageable?(current_organization),
+                                           :name => controller_display_name,
+                                           :accessible_envs => accessible_envs,
+                                           :system_template_labels => system_template_labels,
+                                           :selected_template => selected_template,
+                                           :content_view_labels => content_view_labels,
+                                           :selected_content_view => selected_content_view,
+                                           :products => products
+                                          }
   end
 
   def create

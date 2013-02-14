@@ -50,14 +50,14 @@ describe Api::TasksController do
     it_should_behave_like "protected action"
 
     it "should retrieve all async tasks in the organization" do
-      TaskStatus.should_receive(:where).once.with(:organization_id => @organization).and_return([])
+      TaskStatus.should_receive(:where).once.with(:organization => @organization).and_return([])
       req
     end
   end
 
   context "get a specific task" do
     let(:action) {:show}
-    let(:req) { get :show, :id => 1 }
+    let(:req) { get :show, :id => '1' }
     let(:authorized_user) do
       user_with_permissions { |u| u.can(:read, :providers, @provider.id, @organization) }
     end
@@ -67,7 +67,7 @@ describe Api::TasksController do
     it_should_behave_like "protected action"
 
     it "should retrieve task specified by uuid" do
-      TaskStatus.should_receive(:find_by_uuid).once.with(1).and_return(@t)
+      TaskStatus.should_receive(:find_by_uuid).once.with('1').and_return(@t)
       req
     end
 

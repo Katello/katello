@@ -28,7 +28,7 @@ describe Api::ActivationKeysController do
     disable_consumer_group_orchestration
 
     @organization = Organization.create! do |o|
-      o.id = 1234
+      o.id = '1234'
       o.name = "org-1234"
       o.label = "org-1234"
     end
@@ -38,11 +38,11 @@ describe Api::ActivationKeysController do
   end
 
   context "before_filter :find_activation_key should retrieve activation key" do
-    before { ActivationKey.should_receive(:find).once.with(123).and_return(@activation_key) }
+    before { ActivationKey.should_receive(:find).once.with('123').and_return(@activation_key) }
 
-    specify { get :show, :id => 123 }
-    specify { put :update, :id => 123, :activation_key => {:description => "genius"} }
-    specify { delete :destroy, :id => 123 }
+    specify { get :show, :id => '123' }
+    specify { put :update, :id => '123', :activation_key => {:description => "genius"} }
+    specify { delete :destroy, :id => '123' }
   end
 
   it "before_filter :find_activation_key should return a 404 if activation key wasn't found" do
@@ -54,11 +54,11 @@ describe Api::ActivationKeysController do
 
   context "before_filter :find_environment should retrieve environment" do
     before do
-      KTEnvironment.should_receive(:find).once.with(123).and_return(@environment)
+      KTEnvironment.should_receive(:find).once.with('123').and_return(@environment)
     end
 
-    specify { get :index, :environment_id => 123 }
-    specify { post :create, :environment_id => 123, :activation_key=> {:description => "gah"} }
+    specify { get :index, :environment_id => '123' }
+    specify { post :create, :environment_id => '123', :activation_key=> {:description => "gah"} }
   end
 
   it "before_filter :find_environment should return 404 if environment wasn't found" do
@@ -70,12 +70,12 @@ describe Api::ActivationKeysController do
 
   context "show all activation keys" do
     before(:each) do
-      @controller.stub!(:get_organization).and_return(@organization)
+      Organization.stub!(:first).and_return(@organization)
       ActivationKey.stub!(:where).and_return([@activation_key])
     end
 
     let(:action) {:index }
-    let(:req) { get :index, :organization_id => '1234'  }
+    let(:req) { get :index, :organization_id => 'org-1234'  }
     let(:authorized_user) { user_with_read_permissions }
     let(:unauthorized_user) { user_without_read_permissions }
     it_should_behave_like "protected action"
@@ -91,7 +91,7 @@ describe Api::ActivationKeysController do
     end
 
     it "should return all keys in organization" do
-      get :index, :organization_id => '1234'
+      get :index, :organization_id => 'org-1234'
       response.body.should == [@activation_key].to_json
     end
   end

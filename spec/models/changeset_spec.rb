@@ -150,7 +150,7 @@ describe Changeset, :katello => true do
       end
 
       it "should fail on add erratum" do
-        lambda { @changeset.add_erratum!("err", @prod) }.should raise_error(Errors::ChangesetContentException)
+        lambda { @changeset.add_erratum!(Errata.new(:errata_id=>"err"), @prod) }.should raise_error(Errors::ChangesetContentException)
       end
 
       it "should fail on add repo" do
@@ -192,13 +192,12 @@ describe Changeset, :katello => true do
         }.with_indifferent_access)
         @err          = mock('Err', { :id => 'errata-unit-id', :errata_id=>'err', :name => 'err' })
 
-        @repo = Repository.new(:environment_product => ep, :name => "repo", :label => "repo_label",
-                                   :pulp_id => "135adsf", :content_id=>'23423', :relative_path=>'/foobar/',
-                                   :content_view_version=>ep.environment.default_view_version,
-                                   :feed => 'https://localhost.com/foo/')
+        @repo = Repository.create!(:environment_product => ep, :name => "testrepo",
+                                 :label => "testrepo_label", :pulp_id=>"1010",
+                                 :content_id=>'123', :relative_path=>"/foo/",
+                                 :content_view_version=>ep.environment.default_view_version,
+                                 :feed => 'https://localhost')
 
-        @repo.stub(:create_pulp_repo).and_return([])
-        @repo.save!
         @distribution = mock('Distribution', { :id => 'some-distro-id' })
         @repo.stub(:distributions).and_return([@distribution])
         @repo.stub_chain(:distributions, :index).and_return([@distribution])
@@ -217,7 +216,11 @@ describe Changeset, :katello => true do
         @environment.prior.products.stub(:find_by_name).and_return(@prod)
         @environment.prior.products.stub(:find_by_cp_id).and_return(@prod)
 
-        Runcible::Extensions::Errata.stub(:find).and_return({:id=>'errata-unit-id', :errata_id=>'err'})
+        ChangesetDistribution.any_instance.stub(:product).and_return(@prod)
+        ChangesetErratum.any_instance.stub(:product).and_return(@prod)
+        ChangesetPackage.any_instance.stub(:product).and_return(@prod)
+
+        Errata.stub(:find_by_errata_id).and_return(@err)
       end
 
 
@@ -234,7 +237,7 @@ describe Changeset, :katello => true do
 
         it "should fail on add erratum" do
           @prod.stub(:has_erratum?).and_return(false)
-          lambda { @changeset.add_erratum!("err", @prod) }.should raise_error(Errors::ChangesetContentException)
+          lambda { @changeset.add_erratum!(Errata.new(:errata_id=>"err"), @prod) }.should raise_error(Errors::ChangesetContentException)
         end
 
         it "should fail on add repo" do
@@ -261,7 +264,7 @@ describe Changeset, :katello => true do
         end
 
         it "should fail on add erratum" do
-          lambda { @changeset.add_erratum!("err", @prod) }.
+          lambda { @changeset.add_erratum!(Errata.new(:errata_id=>"err"), @prod) }.
               should raise_error(ActiveRecord::RecordInvalid, /has not been promoted/)
         end
 
@@ -301,9 +304,9 @@ describe Changeset, :katello => true do
         end
 
         it "should add erratum" do
-          @changeset.add_erratum!("err", @prod)
+          @changeset.add_erratum!(Errata.new(:errata_id=>"err"), @prod)
           @changeset.errata.length.should == 1
-          lambda { @changeset.add_erratum!("err", @prod) }.
+          lambda { @changeset.add_erratum!(Errata.new(:errata_id=>"err"), @prod) }.
               should raise_error(ActiveRecord::RecordInvalid, /already been taken/)
         end
 
@@ -383,7 +386,7 @@ describe Changeset, :katello => true do
       it "should remove erratum" do
         ChangesetErratum.should_receive(:destroy_all).
             with(:display_name => 'err', :changeset_id => @changeset.id, :product_id => @prod.id).and_return(true)
-        @changeset.remove_erratum!("err", @prod)
+        @changeset.remove_erratum!(Errata.new(:errata_id=>"err"), @prod)
       end
 
       it "should remove repo" do
@@ -470,6 +473,10 @@ describe Changeset, :katello => true do
         Glue::Pulp::Package.stub(:index_packages).and_return(true)
         Glue::Pulp::Errata.stub(:index_errata).and_return(true)
         Glue::Pulp::Repo.stub(:add_repo_packages)
+
+        ChangesetDistribution.any_instance.stub(:product).and_return(@prod)
+        ChangesetErratum.any_instance.stub(:product).and_return(@prod)
+        ChangesetPackage.any_instance.stub(:product).and_return(@prod)
       end
 
       it "should fail if the product is not in the review phase" do

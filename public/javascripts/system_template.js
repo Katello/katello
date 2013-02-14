@@ -422,10 +422,10 @@ KT.template_renderer = function() {
     package_item = function(pkg_name) {
         var html = '<li class="">';
         html += '<div class="simple_link" id=pkg_"' + pkg_name + '">';
-        html += '<span class="sort_attr">' + pkg_name + '</span>';
         if (KT.permissions.editable) {
             html += '<a id="" class="fr st_button remove_package">' + i18n.remove + '</a>';
         }
+        html += '<span class="sort_attr">' + pkg_name + '</span>';
         html += "</div></li>";
         return html ;
     },
@@ -447,11 +447,11 @@ KT.template_renderer = function() {
     repo_item = function(name, id) {
         var html = '<li class="">';
         html += '<div class="simple_link" id=repo_"' + id + '">';
-        html += '<span class="sort_attr">' + name + '</span>';
         if (KT.permissions.editable) {
             html += '<a id="" class="fr st_button remove_repo" data-id="' + id + '" data-name="'+ name + '">';
             html += i18n.remove + '</a>';
         }
+        html += '<span class="sort_attr">' + name + '</span>';
         html += "</div></li>";
         return html ;
     },
@@ -473,11 +473,11 @@ KT.template_renderer = function() {
     product_item = function(name, id) {
         var html = '<li class="">';
         html += '<div class="simple_link" id=prod_"' + id + '">';
-        html += '<span class="sort_attr">' + name + '</span>';
         if (KT.permissions.editable) {
             html += '<a id="" class="fr st_button remove_product" data-id="' + id + '" data-name="'+ name + '">';
             html += i18n.remove + '</a>';
         }
+        html += '<span class="sort_attr">' + name + '</span>';
         html += "</div></li>";
         return html ;
     },
@@ -513,10 +513,10 @@ KT.template_renderer = function() {
     comps_item = function(pkg_name) {
         var html = '<li class="">';
         html += '<div class="simple_link" id=group_"' + pkg_name + '">';
-        html += '<span class="sort_attr">' + pkg_name + '</span>';
         if (KT.permissions.editable) {
             html += '<a id="" class="fr st_button remove_package_group">' + i18n.remove + '</a>';
         }
+        html += '<span class="sort_attr">' + pkg_name + '</span>';
         html += "</div></li>";
         return html ;
     },

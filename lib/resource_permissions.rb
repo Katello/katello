@@ -50,7 +50,7 @@ class ResourcePermissions
   #
   class DefaultResourcePermissions < ResourcePermissions
 
-    class_inheritable_accessor :url_prefix
+    class_attribute :url_prefix
 
     # arrays of pairs pattern path + action proc
     @@after_get_actions = []

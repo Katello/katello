@@ -25,6 +25,10 @@ $(document).ready(function() {
     KT.panel.set_expand_cb(function() {
         KT.activation_key.initialize_new();
         KT.activation_key.initialize_edit();
+
+        if( $('#subscription_form').length > 0 ){
+            KT.activation_key.subscription_setup();
+        }
     });
 
     $('#save_key').live('submit', function(e) {
@@ -110,7 +114,7 @@ KT.activation_key = (function($) {
             });
         });
 
-        subbutton.unbind('click').click(disableSubmit);
+        //subbutton.unbind('click').click(disable_submit);
     },
     initialize_new = function() {
         $('#usage_limit_checkbox').live('click', function() {
