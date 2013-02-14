@@ -25,11 +25,11 @@ class ContentViewVersionsController < ApplicationController
   end
 
   def show
-    render :partial=>"show", :layout => "tupane_layout"
+    render :partial=>"show"
   end
 
   def content
-    render :partial=>"content", :layout => "tupane_layout",
+    render :partial=>"content",
            :locals => {:view_repos => @view_version.repos_ordered_by_product(@environment)}
   end
 
