@@ -76,7 +76,7 @@ class OrganizationsController < ApplicationController
   def create
     org_label_assigned = ""
     org_params = params[:organization]
-    org_params[:label], org_label_assigned = generate_label(org_params[:name], _('organization')) if org_params[:label].blank?
+    org_params[:label], org_label_assigned = generate_label(org_params[:name], 'organization') if org_params[:label].blank?
     @organization = Organization.new(:name => org_params[:name], :label => org_params[:label], :description => org_params[:description])
     @organization.save!
 
@@ -84,7 +84,7 @@ class OrganizationsController < ApplicationController
     env_params = params[:environment]
     if env_params[:name].present?
       if env_params[:label].blank?
-        env_params[:label], env_label_assigned = generate_label(env_params[:name], _('environment')) if env_params[:label].blank?
+        env_params[:label], env_label_assigned = generate_label(env_params[:name], 'environment') if env_params[:label].blank?
       end
 
       @new_env = KTEnvironment.new(:name => env_params[:name], :label => env_params[:label], :description => env_params[:description])
