@@ -23,14 +23,20 @@ class Product < ActiveRecord::Base
 
   include Katello::LabelFromName
 
+  has_many :environment_products, :class_name => "EnvironmentProduct", :dependent => :destroy, :uniq=>true
   has_many :environments, :class_name => "KTEnvironment", :uniq => true , :through => :environment_products  do
     def <<(*items)
-      super( items - proxy_owner.environment_products.collect{|ep| ep.environment} )
+      # TODO:  RAILS32 Convert this to @association.owner
+      if @association.nil?
+        owner = @owner
+      else
+        owner = @association.owner
+      end
+      super( items - owner.environment_products.collect{|ep| ep.environment} )
     end
   end
-  has_and_belongs_to_many :changesets
 
-  has_many :environment_products, :class_name => "EnvironmentProduct", :dependent => :destroy, :uniq=>true
+  has_and_belongs_to_many :changesets
 
   belongs_to :provider, :inverse_of => :products
   belongs_to :sync_plan, :inverse_of => :products
@@ -55,7 +61,7 @@ class Product < ActiveRecord::Base
 
   before_save :assign_unique_label
 
-  def initialize(attrs = nil)
+  def initialize(attrs=nil, options={})
 
     unless attrs.nil?
       attrs = attrs.with_indifferent_access
@@ -74,7 +80,12 @@ class Product < ActiveRecord::Base
       end
     end
 
-    super(attrs)
+    # TODO RAILS32 Clean up supers
+    if Rails::VERSION::STRING.start_with?('3.2')
+      super
+    else
+      super(attrs)
+    end
   end
 
   def organization
