@@ -21,6 +21,9 @@ production:
       root:
         # only messages with severity >= this level from all loggers will be logged
         level: info
+        # file or syslog, for file variant you can specify other options below like filename,
+        # pattern or rolling options
+        type: file
         # 'daily', 'weekly', 'monthly' or number as seconds
         age: 'daily'
         # how many old log files to keep
@@ -76,6 +79,7 @@ development:
     loggers:
       root:
         level: debug
+        type: file
         age: 'monthly'
         keep: 1
         pattern: "[%5l %d %c] %m\n"
@@ -97,6 +101,7 @@ test:
     loggers:
       root:
         level: debug
+        type: file
         age: 'monthly'
         keep: 1
         pattern: "[%5l %d %c] %m\n"
