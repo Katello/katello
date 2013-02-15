@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -179,6 +179,7 @@ class ContentViewDefinitionsController < ApplicationController
   rescue => e
     notify.exception(_("Failed to publish content view '%{view_name}' from definition '%{definition_name}'.") %
                          {:view_name => params[:content_view][:name], :definition_name => @view_definition.name}, e)
+    log_exception(e)
 
     render :text => e.to_s, :status => 500
   end
@@ -211,6 +212,7 @@ class ContentViewDefinitionsController < ApplicationController
                            {:view_name => @view.name, :view_version => current_version}, e)
     end
 
+    log_exception(e)
     render :text => e.to_s, :status => 500
   end
 
