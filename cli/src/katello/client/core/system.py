@@ -90,7 +90,7 @@ class List(SystemAction):
         self.printer.add_column('serviceLevel', _("Service Level"))
 
         cv_format = lambda p: "%s" % (p['content_view']['name'] if 'content_view' in p else "")
-        self.printer.add_column('content_view',
+        self.printer.add_column('content_view', _("Content View"),
                                 item_formatter=cv_format)
 
         self.printer.print_items(systems)
