@@ -92,7 +92,7 @@ class DistributorsController < ApplicationController
     # Environments page is displayed.
     envsys = !params[:env_id].nil?
 
-    render :partial=>"new", :layout => "tupane_layout", :locals=>{:distributor=>@distributor, :accessible_envs => accessible_envs, :envsys => envsys}
+    render :partial=>"new", :locals=>{:distributor=>@distributor, :accessible_envs => accessible_envs, :envsys => envsys}
   end
 
   def create
@@ -217,8 +217,7 @@ class DistributorsController < ApplicationController
     end
 
     @organization = current_organization
-    render :partial=>"subscriptions", :layout => "tupane_layout",
-                                      :locals=>{:distributor=>@distributor, :avail_subs => subscriptions,
+    render :partial=>"subscriptions", :locals=>{:distributor=>@distributor, :avail_subs => subscriptions,
                                                 :consumed_entitlements => consumed_entitlements,
                                                 :editable=>@distributor.editable?}
   end
@@ -240,7 +239,7 @@ class DistributorsController < ApplicationController
 
   def products
     if @distributor.class == Hypervisor
-      render :partial=>"hypervisor", :layout=>"tupane_layout",
+      render :partial=>"hypervisor",
              :locals=>{:distributor=>@distributor,
                        :message=>_("Hypervisors do not have software products")}
       return
@@ -248,8 +247,8 @@ class DistributorsController < ApplicationController
 
     @products_count = @distributor.installedProducts.size
     @products, @offset = first_objects @distributor.installedProducts.sort {|a,b| a['productName'].downcase <=> b['productName'].downcase}
-    render :partial=>"products", :layout=>"tupane_layout", :locals=>{
-        :distributor=>@distributor, :products=>@products,:offset=>@offset, :products_count=>@products_count}
+    render :partial=>"products",
+           :locals=>{:distributor=>@distributor, :products=>@products,:offset=>@offset, :products_count=>@products_count}
   end
 
   def more_products
@@ -272,7 +271,7 @@ class DistributorsController < ApplicationController
     @locals_hash = { :distributor => @distributor, :editable => @distributor.editable?,
                     :releases => releases, :releases_error => releases_error, :name => controller_display_name,
                     :environments => environment_paths(library_path_element, environment_path_element("distributors_readable?")) }
-    render :partial => "edit", :layout => "tupane_layout", :locals => @locals_hash
+    render :partial => "edit", :locals => @locals_hash
   end
 
   def update
@@ -324,10 +323,6 @@ class DistributorsController < ApplicationController
 
   def section_id
     'distributors'
-  end
-
-  def facts
-    render :partial => 'facts', :layout => "tupane_layout"
   end
 
   def destroy

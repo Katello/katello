@@ -31,7 +31,7 @@ class DistributorEventsController < ApplicationController
   end
 
   def index
-    render :partial=>"events", :layout => "tupane_layout", :locals=>{:distributor => @distributor, :tasks => tasks}
+    render :partial=>"events", :locals=>{:distributor => @distributor, :tasks => tasks}
   end
 
   def show
@@ -44,7 +44,7 @@ class DistributorEventsController < ApplicationController
     else
       user_message = task_template[:english_name]
     end
-    render :partial=>"details", :layout => "tupane_layout", :locals=>{:type => type, :user_message => user_message,
+    render :partial=>"details", :locals=>{:type => type, :user_message => user_message,
                                                                       :distributor => @distributor, :task =>task}
   end
 
