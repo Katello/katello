@@ -246,6 +246,32 @@ Src::Application.routes.draw do
     end
   end
 
+  resources :distributors do
+    resources :events, :only => [:index, :show], :controller => "distributor_events" do
+      collection do
+        get :status
+        get :more_events
+        get :items
+      end
+    end
+
+    member do
+      get :edit
+      get :subscriptions
+      post :update_subscriptions
+      get :products
+      get :more_products
+      get :download
+    end
+    collection do
+      get :auto_complete
+      get :items
+      get :env_items
+      get :environments
+      delete :bulk_destroy
+    end
+  end
+
   resources :products, :only => [:new, :create, :edit,:update, :destroy] do
     collection do
        get :auto_complete
