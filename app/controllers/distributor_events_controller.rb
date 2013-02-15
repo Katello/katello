@@ -48,8 +48,8 @@ class DistributorEventsController < ApplicationController
                                                                       :distributor => @distributor, :task =>task}
   end
 
+  # retrieve the status for the actions initiated by the client
   def status
-    # retrieve the status for the actions initiated by the client
     statuses = {:tasks => []}
     @distributor.tasks.where(:id => params[:task_id]).collect do |status|
       statuses[:tasks] << {
@@ -63,11 +63,7 @@ class DistributorEventsController < ApplicationController
   end
 
   def more_events
-    if params.has_key? :offset
-      offset = params[:offset].to_i
-    else
-      offset = current_user.page_size
-    end
+    offset = params[:offset].try(:to_i) || current_user.page_size
 
     statuses = tasks(current_user.page_size + offset)
     statuses = statuses[offset..statuses.length]
