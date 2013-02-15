@@ -45,11 +45,11 @@ class Status(TaskAction):
 
         task = self.api.status(uuid)
 
-        self.printer.add_column('uuid')
-        self.printer.add_column('state')
-        self.printer.add_column('progress')
-        self.printer.add_column('start_time')
-        self.printer.add_column('finish_time')
+        self.printer.add_column('uuid', _("UUID"))
+        self.printer.add_column('state', _("State"))
+        self.printer.add_column('progress', _("Progress"))
+        self.printer.add_column('start_time', _("Start Time"))
+        self.printer.add_column('finish_time', ("Finish Time"))
         self.printer.set_header(_("Task Status"))
         self.printer.print_item(task)
         return os.EX_OK
