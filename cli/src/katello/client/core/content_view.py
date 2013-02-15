@@ -165,12 +165,12 @@ class Promote(ContentViewAction):
                         message=_("Promoting content view, please wait..."))
 
                 if task.succeeded():
-                    print _("Content view [ %s ] promoted to environment [ %s ]") % \
-                        (view["name"], environment["name"])
+                    print _("Content view [ %(view)s ] promoted to environment [ %(env)s ]") % \
+                            ({"view": view["name"], "env": environment["name"]})
                     return_code = os.EX_OK
                 else:
-                    print _("View [ %s ] promotion failed: %s") % \
-                        (view["name"], format_task_errors(task.errors))
+                    print _("View [ %(view)s ] promotion failed: %(err)s") % \
+                            ({"view": view["name"], "err": format_task_errors(task.errors)})
                     return_code = os.EX_DATAERR
 
             else:
@@ -225,8 +225,8 @@ class Refresh(ContentViewAction):
                         (view["name"])
                     return_code = os.EX_OK
                 else:
-                    print _("View [ %s ] refresh failed: %s" %
-                            (view["name"], format_task_errors(task.errors)))
+                    print _("View [ %(view)s ] refresh failed: %(err)s" %
+                            ({"view": view["name"], "err": format_task_errors(task.errors)}))
                     return_code = os.EX_DATAERR
 
             else:

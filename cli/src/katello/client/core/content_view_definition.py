@@ -121,7 +121,7 @@ class Publish(ContentViewDefinitionAction):
                         name
                     return_code = os.EX_OK
                 else:
-                    print _("Content view [ %s ] failed to be promoted: %s") % \
+                    print _("Content view [ %(name)s ] failed to be promoted: %(errors)s") % \
                         ({"name": name, "errors": format_task_errors(task.errors)})
                     return_code = os.EX_DATAERR
 
@@ -307,12 +307,12 @@ class AddRemoveProduct(ContentViewDefinitionAction):
     def update_products(self, org_name, cvd, products, product):
         if self.addition:
             products.append(product['id'])
-            message = _("Added product [ %s ] to content view [ %s ]" % \
-                    (product['label'], cvd["label"]))
+            message = _("Added product [ %(prod)s ] to definition [ %(def)s ]" % \
+                        ({"prod": product['label'], "def": cvd["label"]}))
         else:
             products.remove(product['id'])
-            message = _("Removed product [ %s ] to content view [ %s ]" % \
-                    (product['label'], cvd["label"]))
+            message = _("Removed product [ %(prod)s ] to definition [ %(def)s ]" % \
+                        ({"prod": product['label'], "def": cvd["label"]}))
 
         self.def_api.update_products(org_name, cvd['id'], products)
         print message
@@ -372,12 +372,12 @@ class AddRemoveRepo(ContentViewDefinitionAction):
     def update_repos(self, org_name, cvd, repos, repo):
         if self.addition:
             repos.append(repo["id"])
-            message = _("Added repository [ %s ] to content view [ %s ]" % \
-                    (repo["name"], cvd["label"]))
+            message = _("Added repository [ %(repo)s ] to definition [ %(def)s ]" % \
+                        ({"repo": repo["name"], "def": cvd["label"]}))
         else:
             repos.remove(repo["id"])
-            message = _("Removed repository [ %s ] to content view [ %s ]" % \
-                    (repo["name"], cvd["label"]))
+            message = _("Removed repository [ %(repo)s ] to definition [ %(def)s ]" % \
+                        ({"repo": repo["name"], "def": cvd["label"]}))
 
         self.def_api.update_repos(org_name, cvd['id'], repos)
         print message
@@ -428,12 +428,12 @@ class AddRemoveContentView(ContentViewDefinitionAction):
     def update_content_views(self, cvd, content_views, content_view):
         if self.addition:
             content_views.append(content_view["id"])
-            message = _("Added content view [ %s ] to content view [ %s ]" % \
-                    (content_view["name"], cvd["label"]))
+            message = _("Added content view [ %(view)s ] to definition [ %(def)s ]" % \
+                        ({"def": content_view["name"], "view": cvd["label"]}))
         else:
             content_views.remove(content_view["id"])
-            message = _("Removed content view [ %s ] to content view [ %s ]" % \
-                    (content_view["name"], cvd["label"]))
+            message = _("Removed content view [ %(view)s ] to content view [ %(def)s ]" % \
+                        ({"def": content_view["name"], "view": cvd["label"]}))
 
         self.def_api.update_content_views(cvd['id'], content_views)
         print message
