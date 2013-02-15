@@ -146,6 +146,11 @@ module Resources
           JSON.parse(response).with_indifferent_access
         end
 
+        def export uuid
+          response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'export'), self.default_headers)
+          response
+        end
+
         def entitlements uuid
           response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'entitlements'), self.default_headers).body
           Util::Data::array_with_indifferent_access JSON.parse(response)

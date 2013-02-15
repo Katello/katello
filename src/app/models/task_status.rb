@@ -285,26 +285,17 @@ class TaskStatus < ActiveRecord::Base
     self.result[:errors].join(' ').to_s
   end
 
-  def self.refresh_for_system(sid)
-    query = TaskStatus.select(:id).where(:task_owner_type => 'System').where(:task_owner_id => sid)
-    ids = query.where(:state => [:waiting, :running]).collect {|row| row[:id]}
-    refresh(ids)
-    statuses = TaskStatus.where("task_statuses.id in (#{query.to_sql})")
+  def self.refresh_for_system(system_id)
+    system = System.find(system_id)
 
-    # Since Candlepin events are not recorded as tasks, fetch them for this system and add them
-    # here. The alternative to this lazy loading of Candlepin tasks would be to have each API
-    # call that Katello passes through to Candlepin record the task explicitly.
-    system = System.find(sid)
-    system.events.each {|event|
-      event_status = {:task_id => event[:id], :state => event[:type],
-                     :start_time => event[:timestamp], :finish_time => event[:timestamp],
-                     :progress => "100", :result => event[:messageText]}
-      # Find or create task
-      task = statuses.where("#{TaskStatus.table_name}.uuid" => event_status[:id]).first
-      task ||= TaskStatus.make(system, event_status, :candlepin_event, :event => event)
-    }
+    return self.refresh_for_candlepin_consumer('System', system_id, system)
+  end
 
-    statuses = TaskStatus.where("task_statuses.id in (#{query.to_sql})")
+  def self.refresh_for_distributor(distributor_id)
+    distributor = System.find(distributor_id)
+
+    return self.refresh_for_candlepin_consumer('Distributor', distributor_id, distributor)
+
   end
 
   def self.refresh(ids)
@@ -374,6 +365,27 @@ class TaskStatus < ActiveRecord::Base
       ret << data[:details][:message]
     end
     ret
+  end
+
+  def self.refresh_for_candlepin_consumer(owner_type, consumer_id, consumer)
+    query = TaskStatus.select(:id).where(:task_owner_type => owner_type).where(:task_owner_id => consumer_id)
+    ids = query.where(:state => [:waiting, :running]).collect {|row| row[:id]}
+    refresh(ids)
+    statuses = TaskStatus.where("task_statuses.id in (#{query.to_sql})")
+
+    # Since Candlepin events are not recorded as tasks, fetch them for this system or distributor
+    # and add them here. The alternative to this lazy loading of Candlepin tasks would be to have
+    # each API call that Katello passes through to Candlepin record the task explicitly.
+    consumer.events.each {|event|
+      event_status = {:task_id => event[:id], :state => event[:type],
+                     :start_time => event[:timestamp], :finish_time => event[:timestamp],
+                     :progress => "100", :result => event[:messageText]}
+      # Find or create task
+      task = statuses.where("#{TaskStatus.table_name}.uuid" => event_status[:id]).first
+      task ||= TaskStatus.make(consumer, event_status, :candlepin_event, :event => event)
+    }
+
+    statuses = TaskStatus.where("task_statuses.id in (#{query.to_sql})")
   end
 
 end

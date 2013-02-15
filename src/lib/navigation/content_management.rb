@@ -23,6 +23,8 @@ module Navigation
         helper_method :gpg_keys_navigation
         helper_method :subscriptions_navigation
         helper_method :new_subscription_navigation
+        helper_method :distributors_navigation
+        helper_method :new_distributor_navigation
       end
     end
 
@@ -85,7 +87,7 @@ module Navigation
       {:key => :subscriptions,
        :name =>_("Subscriptions"),
        :url => subscriptions_path,
-       :items => lambda{[menu_subscriptions_list, menu_activation_keys, menu_import_history]},
+       :items => lambda{[menu_subscriptions_list, menu_distributors_list, menu_activation_keys, menu_import_history]},
        :if => lambda{current_organization},
        :options => {:class=>'content second_level menu_parent', "data-menu"=>"content", "data-dropdown"=>"subscriptions"}
       }
@@ -96,6 +98,15 @@ module Navigation
        :name =>_("Red Hat Subscriptions"),
        :url => subscriptions_path,
        :if => lambda{current_organization.redhat_provider.readable?},
+       :options => {:class=>'content third_level', "data-menu"=>"subscriptions", "data-dropdown"=>"subscriptions"}
+      }
+    end
+
+    def menu_distributors_list
+      {:key => :distributors_list,
+       :name =>_("Subscription Manager Applications"),
+       :url => distributors_path,
+       :if => lambda{current_organization && current_organization.readable?},
        :options => {:class=>'content third_level', "data-menu"=>"subscriptions", "data-dropdown"=>"subscriptions"}
       }
     end
@@ -441,5 +452,43 @@ module Navigation
         }
       ]
     end
+
+    def distributors_navigation
+      menu = [
+        { :key => :distributor_details,
+          :name =>_("Details"),
+          :url => lambda{edit_distributor_path(@distributor.id)},
+          :if => lambda{@distributor},
+          :options => {:class=>"panel_link menu_parent"},
+          :items => distributors_subnav
+        },
+        { :key => :distributor_subscriptions,
+          :name =>_("Subscriptions"),
+          :url => lambda{subscriptions_distributor_path(@distributor.id)},
+          :if => lambda{@distributor},
+          :options => {:class=>"panel_link"}
+        }
+      ]
+      menu
+    end
+
+    def distributors_subnav
+      [
+        { :key => :distributor_info,
+          :name =>_("Distributor Info"),
+          :url => lambda{edit_distributor_path(@distributor.id)},
+          :if => lambda{@distributor},
+          :options => {:class=>"third_level panel_link"},
+        },
+        { :key => :distributor_events,
+          :name =>_("Events History"),
+          :url => lambda{distributor_events_path(@distributor.id)},
+          :if => lambda{@distributor},
+          :options => {:class=>"third_level panel_link"},
+        }
+      ]
+    end
+
+
   end
 end

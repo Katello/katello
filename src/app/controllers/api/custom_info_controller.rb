@@ -32,7 +32,13 @@ class Api::CustomInfoController < Api::ApiController
   end
 
   def create
-    render :json => @informable.custom_info.create!(params.slice(:keyname, :value)).to_json
+    if params[:keyname].nil? || params[:value].nil?
+      raise HttpErrors::BadRequest, _("must include a keyname and value")
+    end
+    keyname = params[:keyname].strip
+    value = params[:value].strip
+    response = @informable.custom_info.create!(:keyname => keyname, :value => value)
+    render :json => response.to_json
   end
 
   def index
@@ -40,31 +46,32 @@ class Api::CustomInfoController < Api::ApiController
   end
 
   def show
-    render :json => @custom_informatios.to_json
+    render :json => @single_custom_info.to_json
   end
 
   def update
-    @custom_informatios.update_attributes!(:value => params[:value])
-    render :json => @custom_informatios.to_json
+    value = params[:value].strip
+    @single_custom_info.update_attributes!(:value => value)
+    render :json => @single_custom_info.to_json
   end
 
   def destroy
-    @custom_informatios.destroy
+    @single_custom_info.destroy
     render :text => _("Deleted custom info '%s'") % params[:keyname], :status => 204
   end
 
   private
 
   def find_informable
-    @klass = params[:informable_type].classify.constantize
-    @informable = @klass.find(params[:informable_id])
-    @informable
+    @informable = CustomInfo.find_informable(params[:informable_type], params[:informable_id])
   end
 
   def find_custom_info
-    @custom_informatios = @informable.custom_info.find_by_keyname(params[:keyname])
-    raise HttpErrors::NotFound, _("Couldn't find custom info") if @custom_informatios.nil?
-    @custom_informatios
+    keyname = params[:keyname].strip
+    @single_custom_info = CustomInfo.find_by_informable_keyname(@informable, keyname)
+    if @single_custom_info.nil?
+      raise HttpErrors::NotFound, _("Couldn't find custom info with keyname '%s'") % params[:keyname]
+    end
   end
 
 end
