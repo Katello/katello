@@ -38,6 +38,7 @@ class ContentViewAction(BaseAction):
 
 # content_view actions ------------------------------------------------------------
 
+
 class List(ContentViewAction):
 
     description = _('list known content views')
@@ -50,23 +51,24 @@ class List(ContentViewAction):
         validator.require('org')
 
     def run(self):
-        org_name    = self.get_option('org')
-        env_name    = self.get_option('environment')
+        org_name = self.get_option('org')
+        env_name = self.get_option('environment')
 
         env = get_environment(org_name, env_name) if env_name else None
 
         views = self.api.content_views_by_org(org_name, env)
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('label')
-        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('label', _("Label"))
+        self.printer.add_column('description', _("Description"), multiline=True)
         self.printer.add_column('organization', _('Org'))
         self.printer.add_column('environments', _('Env'), multiline=True)
 
         self.printer.set_header(_("Content View List"))
         self.printer.print_items(views)
         return os.EX_OK
+
 
 class Info(ContentViewAction):
 
@@ -105,17 +107,17 @@ class Info(ContentViewAction):
 
         view = self.api.show(org_name, view["id"], env_id)
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('label')
-        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('label', _("Label"))
+        self.printer.add_column('description', _("Description"), multiline=True)
         self.printer.add_column('organization', _('Org'))
-        self.printer.add_column('definition')
+        self.printer.add_column('definition', _("Definition"))
         self.printer.add_column('environments', _('Environments'),
-                multiline=True)
-        self.printer.add_column('versions', multiline=True)
+                                multiline=True)
+        self.printer.add_column('versions', _("Versions"), multiline=True)
         self.printer.add_column('repositories', _('Repos'),
-                multiline=True)
+                                multiline=True)
 
         self.printer.set_header(_("ContentView Info"))
         self.printer.print_item(view)

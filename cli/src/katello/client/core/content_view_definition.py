@@ -63,13 +63,13 @@ class List(ContentViewDefinitionAction):
         validator.require('org')
 
     def run(self):
-        org_name    = self.get_option('org')
+        org_name = self.get_option('org')
         defs = self.def_api.content_view_definitions_by_org(org_name)
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('label')
-        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('label', _("Label"))
+        self.printer.add_column('description', _("Description"), multiline=True)
         self.printer.add_column('organization', _('Org'))
 
         self.printer.set_header(_("Content View Definition List"))
@@ -155,15 +155,15 @@ class Info(ContentViewDefinitionAction):
 
         cvd = get_cv_definition(org_name, def_label, def_name, def_id)
 
-        self.printer.add_column('id')
-        self.printer.add_column('name')
-        self.printer.add_column('label')
-        self.printer.add_column('description', multiline=True)
+        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('name', _("Name"))
+        self.printer.add_column('label', _("Label"))
+        self.printer.add_column('description', _("Description"), multiline=True)
         self.printer.add_column('organization', _('Org'))
         self.printer.add_column('content_views', _('Published Views'), multiline=True)
         self.printer.add_column('components', _('Component Views'), multiline=True)
-        self.printer.add_column('products', multiline=True)
-        self.printer.add_column('repos', multiline=True)
+        self.printer.add_column('products', _("Products"), multiline=True)
+        self.printer.add_column('repos', _("Repos"), multiline=True)
 
         self.printer.set_header(_("Content View Definition Info"))
         self.printer.print_item(cvd)
