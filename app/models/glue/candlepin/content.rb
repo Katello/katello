@@ -30,6 +30,11 @@ module Glue::Candlepin::Content
     end
 
     def save_content_orchestration
+      #until candelpin supports view content, just ignore
+      if self.new_record? && !self.content_view.default?
+        return
+      end
+
       if self.new_record? && !self.product.provider.redhat_provider? && self.environment.library?
         pre_queue.create(:name => "create content : #{self.name}", :priority => 2, :action => [self, :create_content],
             :action_rollback => [self, :del_content]
@@ -60,7 +65,6 @@ module Glue::Candlepin::Content
       true
     end
 
-    # TODO: UGH. This calls methods from Glue::Pulp::Repo.
     def content
       return @content unless @content.nil?
       unless self.content_id.nil?

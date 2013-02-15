@@ -20,7 +20,17 @@ module Glue::ElasticSearch::System
       remove_system_group_hook  lambda { |system_group| reindex_on_association_change(system_group) }
 
       index_options :extended_json=>:extended_index_attrs,
-                    :json=>{:only=> [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id, :memory, :sockets]},
+                    :json=>{:only=> [:name,
+                                     :description,
+                                     :id,
+                                     :uuid,
+                                     :created_at,
+                                     :lastCheckin,
+                                     :environment_id,
+                                     :memory,
+                                     :sockets,
+                                     :content_view
+                      ]},
                     :display_attrs => [:name,
                                        :description,
                                        :id,
@@ -30,6 +40,7 @@ module Glue::ElasticSearch::System
                                        :system_group,
                                        :installed_products,
                                        "custom_info.KEYNAME",
+                                       :content_view,
                                        :memory,
                                        :sockets]
 
@@ -81,7 +92,8 @@ module Glue::ElasticSearch::System
      :system_group_ids=>self.system_group_ids,
      :installed_products=>collect_installed_product_names,
      :sockets => self.sockets,
-     :custom_info=>collect_custom_info
+     :custom_info=>collect_custom_info,
+     :content_view => self.content_view.try(:name)
     }
   end
 end

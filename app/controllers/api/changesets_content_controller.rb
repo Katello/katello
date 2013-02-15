@@ -17,10 +17,12 @@ class Api::ChangesetsContentController < Api::ApiController
   before_filter :find_product, :only => [:add_product, :remove_product, :add_package, :remove_package, :add_erratum,
                                          :remove_erratum, :add_distribution, :remove_distribution]
   before_filter :find_changeset!
+  before_filter :find_content_view!, :only => [:add_content_view, :remove_content_view]
   before_filter :authorize
 
   def rules
     manage_perm = lambda { @changeset.environment.changesets_manageable? }
+    cv_perm = lambda { @changeset.environment.changesets_manageable? && @view.promotable? }
     { :add_product         => manage_perm,
       :remove_product      => manage_perm,
       :add_package         => manage_perm,
@@ -33,6 +35,8 @@ class Api::ChangesetsContentController < Api::ApiController
       :remove_template     => manage_perm,
       :add_distribution    => manage_perm,
       :remove_distribution => manage_perm,
+      :add_content_view    => cv_perm,
+      :remove_content_view => cv_perm
     }
   end
 
@@ -117,6 +121,20 @@ class Api::ChangesetsContentController < Api::ApiController
                          :not_found => _("Template '%s' not found in the changeset") % params[:id]
   end
 
+  api :POST, "/changesets/:changeset_id/content_views", "Add a content view to a changeset"
+  param :content_view_id, :number, :desc => "The id of the content view to add"
+  def add_content_view
+    @changeset.add_content_view!(@view)
+    render :text => _("Added content view '%s'") % @view.name, :status => 200
+  end
+
+  api :DELETE, "/changesets/:changeset_id/content_views/:id", "Remove a content_view from a changeset"
+  def remove_content_view
+    render_after_removal @changeset.remove_content_view!(@view),
+                         :success   => _("Removed content view '%s'") % params[:id],
+                         :not_found => _("content view '%s' not found in the changeset") % params[:id]
+  end
+
   api :POST, "/changesets/:changeset_id/distributions", "Add a distribution to a changeset"
   param :distribution_id, :number, :desc => "The id of the distribution to add"
   param :product_id, :number, :desc => "The product which contains the distribution"
@@ -137,6 +155,12 @@ class Api::ChangesetsContentController < Api::ApiController
   def find_changeset!
     @changeset = Changeset.find_by_id(params[:changeset_id]) or
         raise HttpErrors::NotFound, _("Couldn't find changeset '%s'") % params[:changeset_id]
+  end
+
+  def find_content_view!
+    id = params[:action] == "add_content_view" ? params[:content_view_id] : params[:id]
+    @view = ContentView.find_by_id(id)
+    raise HttpErrors::NotFound, _("Couldn't find content view '%s'") % id if @view.nil?
   end
 
   def render_after_removal(removed_objects, options = { })

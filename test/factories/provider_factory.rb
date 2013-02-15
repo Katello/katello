@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :provider do
-    association   :organization, :strategy => :build
+    association   :organization
 
     trait :fedora_hosted do
       name          "FedoraHosted"

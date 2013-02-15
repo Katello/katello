@@ -16,7 +16,6 @@ class KTEnvironment < ActiveRecord::Base
 
   include Authorization::Environment
   include Glue::ElasticSearch::Environment if Katello.config.use_elasticsearch
-  include Glue::Candlepin::Environment if Katello.config.use_cp
   include Glue if Katello.config.use_cp || Katello.config.use_pulp
 
   set_table_name "environments"
@@ -56,6 +55,11 @@ class KTEnvironment < ActiveRecord::Base
 
   has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED}, :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
 
+  has_many :content_view_version_environments, :foreign_key=>:environment_id
+  has_many :content_view_versions, :through=>:content_view_version_environments, :inverse_of=>:environments
+
+  belongs_to :default_content_view, :class_name => "ContentView", :foreign_key => :default_content_view_id
+
   has_many :users, :foreign_key => :default_environment_id, :inverse_of => :default_environment, :dependent => :nullify
 
   scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
@@ -73,6 +77,7 @@ class KTEnvironment < ActiveRecord::Base
   validates_with Validators::PriorValidator
   validates_with Validators::PathDescendentsValidator
 
+  after_create :create_default_content_view
   before_destroy :confirm_last_env
 
   after_destroy :unset_users_with_default
@@ -82,6 +87,19 @@ class KTEnvironment < ActiveRecord::Base
     self.library
   end
 
+  def default_view_version
+    self.default_content_view.version(self)
+  end
+
+  def content_views(reload = false)
+    content_view_versions.reload if reload
+    content_view_versions.collect{|vv| vv.content_view}
+  end
+
+  def content_view_environment
+    self.default_content_view.content_view_environments.first
+  end
+
   def successor
     return self.successors[0] unless self.library?
     self.organization.promotion_paths()[0][0] if !self.organization.promotion_paths().empty?
@@ -89,6 +107,10 @@ class KTEnvironment < ActiveRecord::Base
 
   def display_name
     self.name
+  end
+
+  def to_s
+    display_name
   end
 
   def prior
@@ -252,4 +274,17 @@ class KTEnvironment < ActiveRecord::Base
     end
   end
 
+  def create_default_content_view
+    if self.default_content_view.nil?
+      self.default_content_view = ContentView.create!(:name=>"Default View for #{self.name}",
+                                                :organization=>self.organization, :default=>true)
+
+      #ContentViewVersion.create!(:version=>1, :content_view=>self.default_content_view)
+      version = ContentViewVersion.new(:version=>1, :content_view=>self.default_content_view)
+      version.environments << self
+      version.save!
+
+      self.save!
+    end
+  end
 end

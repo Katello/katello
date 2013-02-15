@@ -820,9 +820,11 @@ KT.panel.copy = (function () {
     },
     show_form = function() {
         $('.pane_action.copy-tipsy').tipsy('show');
+        $('#copy_form').find('#name_input').focus();
     },
     hide_form = function() {
         $('.pane_action.copy-tipsy').tipsy('hide');
+        $('#copy_form').find('#name_input').blur();
     },
     perform_copy = function(event) {
         event.preventDefault();

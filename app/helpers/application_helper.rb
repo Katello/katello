@@ -219,6 +219,11 @@ module ApplicationHelper
     }
   end
 
+  def url_content_views_proc
+    lambda do |args|
+      content_views_organization_environment_path(args[:organization].label, args[:environment].id)
+    end
+  end
 
   # These 2 methods copied from scoped_search {https://github.com/wvanbergen/scoped_search}
   # which Katello used to use but no longer uses.

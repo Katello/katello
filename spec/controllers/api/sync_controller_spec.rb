@@ -190,10 +190,11 @@ describe Api::SyncController, :katello => true do
       end
 
       it "should persist all sync objects" do
+        count = PulpTaskStatus.all.count
         post :create, :provider_id => provider_id
 
         found = PulpTaskStatus.all
-        found.size.should == 2
+        found.size.should ==  count + 2
         found.any? {|t| t['uuid'] == async_task_1['task_id']} .should == true
         found.any? {|t| t['uuid'] == async_task_2['task_id']} .should == true
       end

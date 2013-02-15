@@ -128,6 +128,16 @@ describe Api::ActivationKeysController do
       post :create, :environment_id => 123, :activation_key => {:name => 'blah'}
     end
 
+    it "should create a key with a content view" do
+      @content_view = FactoryGirl.build_stubbed(:content_view)
+      @activation_key.content_view = @content_view
+      ActivationKey.should_receive(:create!).once.with(
+          hash_including(:content_view_id => @content_view.id)
+        ).and_return(@activation_key)
+
+      post :create, :environment_id => 123, :activation_key => {:name => 'blah', :content_view_id => @content_view.id}
+    end
+
     it "should return created key" do
       ActivationKey.stub!(:create!).and_return(@activation_key)
       post :create, :environment_id => 123, :activation_key=> {:name=>"egypt", :description => "gah"}
