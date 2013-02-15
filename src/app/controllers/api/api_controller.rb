@@ -157,7 +157,7 @@ class Api::ApiController < ActionController::Base
     cvd_id = params[:content_view_definition_id]
     @definition = ContentViewDefinition.find_by_id(cvd_id)
     if @definition.nil?
-      raise HttpErrors::NotFound, _("Couildn't find content view with id '#{cvd_id}'")
+      raise HttpErrors::NotFound, _("Couildn't find content view with id '%s'") % cvd_id
     end
   end
 

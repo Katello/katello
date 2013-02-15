@@ -30,10 +30,9 @@ module ProductsHelper
   # Objectify the record provided. This will generate a hash containing
   # the record id, list of products and list of repos. It assumes that the
   # record has a 'repositories' relationship.
-  def objectify record
-    repos = {}
+  def objectify(record)
+    repos = Hash.new { |h,k| h[k] = [] }
     record.repositories.each do |repo|
-      repos[repo.product.id.to_s] = [] unless repos[repo.product.id.to_s]
       repos[repo.product.id.to_s] <<  repo.id.to_s
     end
 
@@ -49,7 +48,7 @@ module ProductsHelper
     if @product_hash.nil?
       products = Product.readable(current_organization)
       editable_products = Product.editable(current_organization)
-      products.sort!{|a,b| a.name <=> b.name}
+      products.sort_by!(&:name)
       @product_hash = {}
       products.each do |prod|
         repos = []
