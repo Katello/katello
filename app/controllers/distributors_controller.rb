@@ -179,7 +179,7 @@ class DistributorsController < ApplicationController
   end
 
 
-  def split_order order
+  def split_order(order)
     if order
       order.split("|")
     else
@@ -195,7 +195,7 @@ class DistributorsController < ApplicationController
     consumed_entitlements = @distributor.consumed_entitlements.collect do |entitlement|
       pool = ::Pool.find_pool(entitlement.poolId)
       product = Product.where(:cp_id => pool.product_id).first
-      entitlement.provider_id = product.nil? ? nil : product.provider_id
+      entitlement.provider_id = product.try :provider_id
       entitlement
     end
 
@@ -460,12 +460,12 @@ class DistributorsController < ApplicationController
   end
 
   def sort_order_limit distributors
-      sort_columns(COLUMNS, distributors) if params[:order]
-      offset = params[:offset].to_i if params[:offset]
-      offset ||= 0
-      last = offset + current_user.page_size
-      last = distributors.length if last > distributors.length
-      distributors[offset...last]
+    sort_columns(COLUMNS, distributors) if params[:order]
+    offset = params[:offset].to_i if params[:offset]
+    offset ||= 0
+    last = offset + current_user.page_size
+    last = distributors.length if last > distributors.length
+    distributors[offset...last]
   end
 
   def first_objects objects

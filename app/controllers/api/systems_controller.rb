@@ -133,27 +133,6 @@ DESC
     end
   end
 
-  # TODO: Unreachable - remove
-  def subscriptions
-    render :json => @system.entitlements
-  end
-
-  # TODO: Unreachable - remove
-  def subscribe
-    expected_params = params.with_indifferent_access.slice(:pool, :quantity)
-    raise HttpErrors::BadRequest, _("Please provide pool and quantity") if expected_params.count != 2
-    @system.subscribe(expected_params[:pool], expected_params[:quantity])
-    render :json => @system.to_json
-  end
-
-  # TODO: Unreachable - remove
-  def unsubscribe
-    expected_params = params.with_indifferent_access.slice(:pool)
-    raise HttpErrors::BadRequest, _("Please provide pool ID") if expected_params.count != 1
-    @system.unsubscribe(expected_params[:serial_id])
-    render :json => @system.to_json
-  end
-
   api :POST, "/consumers/:id", "Regenerate consumer identity"
   param :id, String, :desc => "UUID of the consumer"
   desc <<-DESC
@@ -211,9 +190,9 @@ DESC
   api :GET, "/systems/:id/pools", "List pools a system is subscribed to"
   param :id, String, :desc => "UUID of the system", :required => true
   def pools
-    match_system = (params.has_key? :match_system) ? params[:match_system].to_bool : false
-    match_installed = (params.has_key? :match_installed) ? params[:match_installed].to_bool : false
-    no_overlap = (params.has_key? :no_overlap) ? params[:no_overlap].to_bool : false
+    match_system = params.has_key?(:match_system) ? params[:match_system].to_bool : false
+    match_installed = params.has_key?(:match_installed) ? params[:match_installed].to_bool : false
+    no_overlap = params.has_key?(:no_overlap) ? params[:no_overlap].to_bool : false
 
     cp_pools = @system.filtered_pools(match_system, match_installed, no_overlap)
 

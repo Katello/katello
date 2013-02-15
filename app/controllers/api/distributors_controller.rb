@@ -66,28 +66,6 @@ class Api::DistributorsController < Api::ApiController
     render :json => distributor.to_json
   end
 
-
-  # TODO: Unreachable - remove
-  def subscriptions
-    render :json => @distributor.entitlements
-  end
-
-  # TODO: Unreachable - remove
-  def subscribe
-    expected_params = params.with_indifferent_access.slice(:pool, :quantity)
-    raise HttpErrors::BadRequest, _("Please provide pool and quantity") if expected_params.count != 2
-    @distributor.subscribe(expected_params[:pool], expected_params[:quantity])
-    render :json => @distributor.to_json
-  end
-
-  # TODO: Unreachable - remove
-  def unsubscribe
-    expected_params = params.with_indifferent_access.slice(:pool)
-    raise HttpErrors::BadRequest, _("Please provide pool ID") if expected_params.count != 1
-    @distributor.unsubscribe(expected_params[:serial_id])
-    render :json => @distributor.to_json
-  end
-
   api :PUT, "/distributors/:id", "Update distributor information"
   param :facts, Hash, :desc => "Key-value hash of distributor-specific facts"
   param :installedProducts, Array, :desc => "List of products installed on the distributor"
@@ -131,9 +109,9 @@ class Api::DistributorsController < Api::ApiController
   api :GET, "/distributors/:id/pools", "List pools a distributor is subscribed to"
   param :id, String, :desc => "UUID of the distributor", :required => true
   def pools
-    match_distributor = (params.has_key? :match_distributor) ? params[:match_distributor].to_bool : false
-    match_installed = (params.has_key? :match_installed) ? params[:match_installed].to_bool : false
-    no_overlap = (params.has_key? :no_overlap) ? params[:no_overlap].to_bool : false
+    match_distributor = params.has_key?(:match_distributor) ? params[:match_distributor].to_bool : false
+    match_installed = params.has_key?(:match_installed) ? params[:match_installed].to_bool : false
+    no_overlap = params.has_key?(:no_overlap) ? params[:no_overlap].to_bool : false
 
     cp_pools = @distributor.filtered_pools(match_distributor, match_installed, no_overlap)
 
