@@ -16,7 +16,7 @@ module Glue::ElasticSearch::ActivationKey
     base.send :include, Ext::IndexedModel
 
     base.class_eval do
-      index_options :extended_json=>:extended_json, :display_attrs=>[:name, :description, :environment, :template]
+      index_options :extended_json=>:extended_json, :display_attrs=>[:name, :description, :environment, :template, :content_view]
 
       mapping do
         indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
@@ -24,4 +24,14 @@ module Glue::ElasticSearch::ActivationKey
       end
     end
   end
+
+  def extended_json
+    to_ret = {:environment  => self.environment.name,
+              :name_sort    => name.downcase,
+              :content_view => self.content_view.try(:name)
+             }
+    to_ret[:template] = self.system_template.name if self.system_template
+    to_ret
+  end
+
 end

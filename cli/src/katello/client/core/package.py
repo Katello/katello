@@ -68,7 +68,7 @@ class Info(PackageAction):
         prodId   = self.get_option('product_id')
 
         if not repoId:
-            repo = get_repo(orgName, prodName, prodLabel, prodId, repoName, envName)
+            repo = get_repo(orgName, repoName, prodName, prodLabel, prodId, envName)
             repoId = repo["id"]
 
         pack = self.api.package(packId, repoId)
@@ -127,7 +127,7 @@ class List(PackageAction):
         prodId   = self.get_option('product_id')
 
         if not repoId:
-            repo = get_repo(orgName, prodName, prodLabel, prodId, repoName, envName)
+            repo = get_repo(orgName, repoName, prodName, prodLabel, prodId, envName)
             if repo != None:
                 repoId = repo["id"]
 

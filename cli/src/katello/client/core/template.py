@@ -452,7 +452,7 @@ class Update(TemplateAction):
             elif 'from_product_id' in rec:
                 prodId = rec['from_product_id']
 
-            repo = get_repo(orgName, prodName, prodLabel, prodId, rec['name'])
+            repo = get_repo(orgName, rec['name'], prodName, prodLabel, prodId)
             ids.append(repo['id'])
         return ids
 

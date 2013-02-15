@@ -323,6 +323,7 @@ describe Product, :katello => true do
       @repo = Repository.create!(:environment_product => @ep, :name => "testrepo",
                                  :label => "testrepo_label", :pulp_id=>"1010",
                                  :content_id=>'123', :relative_path=>"/foo/",
+                                 :content_view_version=>@ep.environment.default_view_version,
                                  :feed => 'https://localhost')
       @repo.stub(:promoted?).and_return(false)
       @repo.stub(:update_content).and_return(Candlepin::Content.new)
@@ -378,8 +379,8 @@ describe Product, :katello => true do
                                  :pulp_id=>"1010",
                                  :content_id=>"123",
                                  :relative_path => "#{@organization.name}/library/Prod/Repo",
+                                 :content_view_version=>@ep.environment.default_view_version,
                                  :feed => 'https://localhost')
-
       @repo.stub(:product).and_return(@product)
       @repo.stub(:promoted?).and_return(false)
       @repo.stub(:update_content).and_return(Candlepin::Content.new)

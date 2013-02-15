@@ -41,13 +41,32 @@ module SystemsHelper
 
   def architecture_select
     select(:arch, "arch_id", System.architectures.invert,
-             {:prompt => _('Select Architecture'), :id=>"arch_field"}, {:tabindex => 2})
+             {:prompt => _('Select Architecture'), :id=>"arch_field"}, {:tabindex => 3})
+  end
+
+  def content_view_select(org)
+    views = ContentView.readable(org).non_default
+    choices = views.map {|v| [v.name, v.id]}
+    select(:system, "content_view_id", choices,
+             {:prompt => _('Select Content View'), :id=>"content_view_field"},
+             {:tabindex => 2})
+  end
+
+  def system_content_view_opts
+    keys = {}
+    ContentView.readable(current_organization).non_default.each do |view|
+      keys[view.id] = view.name
+    end
+    keys[""] = ""
+    keys["selected"] = @system.content_view_id || ""
+
+    keys.to_json
   end
 
   def virtual_buttons
-    raw [radio_button("system_type","virtualized", "physical", :checked=>true, :tabindex => 4 ),
+    raw [radio_button("system_type","virtualized", "physical", :checked=>true, :tabindex => 5 ),
     content_tag(:label, _("Physical"), :for => 'system_type_virtualized_physical'),
-    radio_button("system_type","virtualized", "virtual", :tabindex => 5 ),
+    radio_button("system_type","virtualized", "virtual", :tabindex => 6 ),
     content_tag(:label, _("Virtual"), :for => 'system_type_virtualized_virtual')].join(' ')
   end
 

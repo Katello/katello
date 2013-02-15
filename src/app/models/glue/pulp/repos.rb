@@ -23,15 +23,6 @@ module Glue::Pulp::Repos
     end
   end
 
-  def self.clone_repo_path(repo, environment, for_cp = false)
-    org, env, content_path = repo.relative_path.split("/",3)
-    if for_cp
-      "/#{content_path}"
-    else
-      "#{org}/#{environment.label}/#{content_path}"
-    end
-  end
-
   def self.repo_path_from_content_path(environment, content_path)
     content_path = content_path.sub(/^\//, "")
     path_prefix = [environment.organization.label, environment.label].join("/")
@@ -58,7 +49,7 @@ module Glue::Pulp::Repos
   end
 
   def self.clone_repo_path_for_cp(repo)
-    self.clone_repo_path(repo, nil, true)
+    Repository.clone_repo_path(repo, nil, nil, true)
   end
 
 
@@ -85,9 +76,7 @@ module Glue::Pulp::Repos
       # cache repos so we can cache lazy_accessors
       @repo_cache ||= {}
 
-      @repo_cache[env.id] ||= Repository.joins(:environment_product).where(
-          "environment_products.product_id" => self.id,
-          "environment_products.environment_id" => env)
+      @repo_cache[env.id] ||= env.default_content_view.repos_in_product(env, self)
 
       if include_disabled
         @repo_cache[env.id]
@@ -292,7 +281,7 @@ module Glue::Pulp::Repos
 
     def repo_id(content_name, env_label = nil)
       return content_name if content_name.include?(self.organization.label) && content_name.include?(self.label.to_s)
-      Glue::Pulp::Repo.repo_id(self.label.to_s, content_name.to_s, env_label, self.organization.label)
+      Repository.repo_id(self.label.to_s, content_name.to_s, env_label, self.organization.label, nil)
     end
 
     def repo_url(content_url)
@@ -314,7 +303,8 @@ module Glue::Pulp::Repos
           :label => label,
           :feed => url,
           :gpg_key => gpg,
-          :content_type => repo_type
+          :content_type => repo_type,
+          :content_view_version=>self.organization.library.default_view_version
       )
     end
 
@@ -374,7 +364,8 @@ module Glue::Pulp::Repos
                                         :feed_key => self.key,
                                         :content_type => pc.content.type,
                                         :preserve_metadata => true, #preserve repo metadata when importing from cp
-                                        :enabled =>false
+                                        :enabled =>false,
+                                        :content_view_version=>self.organization.library.default_view_version
                                        )
             end
             self.repositories_cdn_import_passed! unless self.cdn_import_success?

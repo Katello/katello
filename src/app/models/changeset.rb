@@ -52,6 +52,8 @@ class Changeset < ActiveRecord::Base
   has_many :dependencies, :class_name => "ChangesetDependency", :inverse_of => :changeset
   belongs_to :environment, :class_name => "KTEnvironment"
   belongs_to :task_status
+  has_many :changeset_content_views
+  has_many :content_views, :through => :changeset_content_views
 
   # find changesets in given state/states
   scope :with_state, lambda { |*states| where(:state => states.map(&:to_s)) }
@@ -194,6 +196,22 @@ class Changeset < ActiveRecord::Base
      save!
      distro
    end
+
+  def add_content_view!(view)
+    unless env_to_verify_on_add_content.content_views.include?(view)
+      raise Errors::ChangesetContentException.new("Content view not found within environment you want to promote from.")
+    end
+
+    self.content_views << view
+    save!
+    view
+  end
+
+  def remove_content_view!(view)
+    deleted = self.content_views.delete(view)
+    save!
+    return deleted
+  end
 
   def remove_product! product
     deleted = self.products.delete(product)

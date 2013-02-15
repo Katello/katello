@@ -59,14 +59,22 @@
                 %label #{_("System Template")}:
               .grid_10.la
                 - if editable
-                  = select_tag 'activation_key[system_template_id]', options_for_select(@system_template_labels, @selected_template)
+                  = select_tag 'activation_key[system_template_id]', options_for_select(system_template_labels, selected_template)
                 - else
                   = @system_template.nil? ? no_template : @system_template[:name]
+            %fieldset.clearfix
+              .grid_2.ra
+                %label #{_("Content View")}:
+              .grid_10.la
+                - if editable
+                  = select_tag 'activation_key[content_view_id]', options_for_select(content_view_labels, selected_content_view)
+                - else
+                  = @content_view.nil? ? no_content_view : @content_view.name
 
             .prefix_2.la#products_in_env
-              %label #{_("Product(s) in this environment")}:
+              %label #{_("Product(s) in this environment/content view")}:
               .grid_10.productsbox
-                = render :partial => "environments/products"
+                = render "environments/products", :products => products
 
         %fieldset.clearfix
           .grid_2.ra

@@ -97,7 +97,7 @@ module Src
     config.filter_parameters += [:password]
 
     config.generators do |g|
-      g.test_framework :rspec
+      g.test_framework :mini_test, :spec => false, :fixture => false
       g.template_engine :haml
     end
 

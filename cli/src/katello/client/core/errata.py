@@ -81,7 +81,7 @@ class List(ErrataAction):
 
         if not repo_id:
             if repo_name:
-                repo = get_repo(org_name, prod_name, prod_label, prod_id, repo_name, env_name)
+                repo = get_repo(org_name, repo_name, prod_name, prod_label, prod_id, env_name)
                 repo_id = repo["id"]
             else:
                 env = get_environment(org_name, env_name)
@@ -192,7 +192,7 @@ class Info(ErrataAction):
         prodId   = self.get_option('product_id')
 
         if not repoId:
-            repo = get_repo(orgName, prodName, prodLabel, prodId, repoName, envName)
+            repo = get_repo(orgName, repoName, prodName, prodLabel, prodId, envName)
             repoId = repo["id"]
 
         pack = self.api.errata(errId, repoId)

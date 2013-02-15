@@ -10,6 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'helpers/repo_test_data'
+
 module ProductHelperMethods
 
   def self.included(base)
@@ -35,8 +37,11 @@ module ProductHelperMethods
 
     env_product = EnvironmentProduct.find_or_create(env, @p)
 
-    repo = Repository.new(:environment_product => env_product, :name=>"FOOREPO" + suffix, :label=>"FOOREPO" + suffix,
-                          :pulp_id=>"anid" + suffix, :content_id=> "1234", :feed => 'https://localhost.com/foo')
+
+    repo = Repository.new(:environment_product => env_product, :name=>"FOOREPO" + suffix,
+                          :label=>"FOOREPO" + suffix, :pulp_id=>RepoTestData::REPO_ID,
+                          :content_id=> "1234", :content_view_version=>env.default_view_version,
+                          :relative_path=>'/foo/', :feed => 'https://localhost.com/foo')
     repo.stub(:create_pulp_repo).and_return([])
     repo.save!
 
