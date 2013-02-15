@@ -28,7 +28,7 @@ module Katello
   #
   # Configuration access points are methods {Katello.config} and {Katello.early_config}, see method documentation.
   #
-  # Default configuration values are stored in `src/config/katello-defaults.yml`. Default values can be overridden
+  # Default configuration values are stored in `src/config/katello_defaults.yml`. Default values can be overridden
   # in configuration files (`config/katello.yml` or `/etc/katello/katello.yml`)
   #
   # Configuration is represented with tree-like-structure defined with Configuration::Node. Node has
@@ -277,7 +277,7 @@ module Katello
         end
       end
 
-      # raw config data from katello-defaults.yml represented with Node
+      # raw config data from katello_defaults.yml represented with Node
       def default_config_data
         @default_config_data ||= load_yml_file default_config_file_path
       end
@@ -423,7 +423,7 @@ module Katello
 
     Loader = LoaderImpl.new(
         :config_file_paths        => %W(#{root}/config/katello.yml /etc/katello/katello.yml),
-        :default_config_file_path => "#{root}/config/katello-defaults.yml",
+        :default_config_file_path => "#{root}/config/katello_defaults.yml",
         :validation               => VALIDATION)
   end
 
