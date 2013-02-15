@@ -103,8 +103,9 @@ describe Api::ContentViewDefinitionsController, :katello => true do
   describe "destroy" do
     it "should delete the definition from the database" do
       definition = FactoryGirl.create(:content_view_definition)
-      expect { delete :destroy, :id => definition.id }.to change(
-        ContentViewDefinition, :count).by(-1)
+      count = ContentViewDefinition.count
+      delete :destroy, :id => definition.id
+      ContentViewDefinition.count.should eql(count-1)
     end
   end
 
