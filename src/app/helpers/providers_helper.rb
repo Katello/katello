@@ -14,6 +14,39 @@ module ProvidersHelper
   include SyncManagementHelper
   include SyncManagementHelper::RepoMethods
 
+  def redhat_repo_tabs(provider)
+    tabs = {
+        :rpms => {:id=>:rpms, :name=>_('RPMs'), :products=>{}, :order=>1},
+        :srpms => {:id=>:srpms, :name=>_('Source RPMs'), :products=>{}, :order=>2},
+        :debug => {:id=>:debug, :name=>_('Debug RPMs'), :products=>{}, :order=>3},
+        :beta => {:id=>:beta, :name=>_('Beta'), :products=>{}, :order=>4},
+        :isos => {:id=>:isos, :name=>_('ISOs'), :products=>{}, :order=>5},
+        :other => {:id=>:other, :name=>_('Other'), :products=>{}, :order=>6}
+    }
+    provider.products.engineering.each do |product|
+      product.productContent.each do |prod_content|
+        name = prod_content.content.name
+        if name.include?(" Beta ")
+          key = :beta
+        elsif name.include?("(Source RPMs)")
+          key = :srpms
+        elsif name.include?("(Debug RPMs)")
+          key = :debug
+        elsif name.include?("(ISOs)") || name.include?("Source ISOs")
+          key = :isos
+        elsif name.include?("(RPMs)")
+          key = :rpms
+        else
+          key = :other
+        end
+        tabs[key][:products][product.id] ||= []
+        tabs[key][:products][product.id] << prod_content
+      end
+    end
+    tabs.values.sort{|h1, h2| h1[:order] <=> h2[:order]}
+  end
+
+
   def product_map
     @product_map ||= normalize(collect_repos(
                                    @provider.products.engineering,

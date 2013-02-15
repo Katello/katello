@@ -40,14 +40,19 @@ class Candlepin::ProductContent
     @product = prod
   end
 
+  def repositories
+    @repos ||= self.product.repos(self.product.organization.library, true).where(:content_id=>self.content.id)
+    @repos
+  end
+
   #Has the user enabled the 'repository set' for this product
   def katello_enabled?
-    self.product.repos(self.product.organization.library).where(:content_id=>self.content.id).count > 0
+    self.repositories.count > 0
   end
 
   def can_disable?
-    repos = self.product.repos(self.product.organization.library).where(:content_id=>self.content.id)
-    repos.empty?
+    #are all repos disabled?
+    self.product.repos(self.product.organization.library, false).where(:content_id=>self.content.id).empty?
   end
 
   def disable

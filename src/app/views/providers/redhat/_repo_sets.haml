@@ -1,0 +1,38 @@
+%table.tree_table
+  %thead
+    %th #{_("Product")}
+    %th
+  %tbody
+    - for product in provider.products.engineering.order(:name)
+      - if product_map[product.id]
+        - pc = product_map[product.id].sort{|p1, p2| p1.content.name <=> p2.content.name}
+        %tr.product{:id=>"#{tab_id}_prod_#{product.id}"}
+          %td
+            #{product.name}
+          %td
+            foo
+        - for pContent in pc
+          %tr.repo_set{:id=>"#{tab_id}_repo_set_#{pContent.content.id}", :class=>"child-of-#{tab_id}_prod_#{product.id}"}
+            %td
+              - if !pContent.katello_enabled?
+                %label
+                  =image_tag( "embed/icons/spinner.gif", :class=>"hidden fl",
+                      :id=>"spinner_set_#{pContent.content.id}", :style=>"margin-right:1px;")
+                  .refresh_icon-black
+                  #{pContent.content.name}
+
+              -else
+                #{pContent.content.name}
+            %td
+              foo
+          - for repo in pContent.repositories
+            %tr.repo{:id=>"repo_#{repo.id}", :class=>"child-of-#{tab_id}_repo_set_#{pContent.content.id}"}
+              %td
+                %label
+                  =image_tag( "embed/icons/spinner.gif", :class=>"hidden fl", :id=>"spinner_#{repo.id}", :style=>"margin-right:1px;")
+                  %input.repo_enable{:id=>"input_repo_#{repo.id}", :type=>:checkbox, :value=>repo.id, "data-url" => enable_repo_path(repo.id),
+                        :disabled =>(repo.promoted? || !can_enable_repo?), :checked=>(:checked if repo.enabled?)}
+                  #{repo.name}
+              %td
+                foo
+
