@@ -20,6 +20,7 @@ describe "activation_keys/_edit.html.haml" do
     @environment = assign(:environment, stub_model(KTEnvironment,
       :name => "dev").as_new_record)
     @environment.stub(:products).and_return([])
+    @products = []
 
     @key_name = "New Key"
     @key_description = "This is a new activation key"
@@ -39,9 +40,17 @@ describe "activation_keys/_edit.html.haml" do
 
     @system_template_labels = []
     @selected_template = "No Template"
+    @content_view_labels = []
+    @selected_content_view = "No Content View"
     view.stub!(:environment_selector)
     view.stub!(:activation_keys_navigation).and_return([])
-    render :partial => "edit", :locals => {:accessible_envs => [@environment]}
+    render :partial => "edit", :locals => {:accessible_envs => [@environment],
+                                           :system_template_labels => @system_template_labels,
+                                           :selected_template => @selected_template,
+                                           :content_view_labels => @content_view_labels,
+                                           :selected_content_view => @selected_content_view,
+                                           :products => @products
+                                          }
   end
 
   it "content_for :title is included" do
@@ -65,7 +74,13 @@ describe "activation_keys/_edit.html.haml" do
 
     it "renders sub-navigation links" do
       view.should_receive(:render_menu).with(1..2, []).once
-      render :partial => "edit", :locals => {:accessible_envs => [@environment]}
+      render :partial => "edit", :locals => {:accessible_envs => [@environment],
+                                             :system_template_labels => @system_template_labels,
+                                             :selected_template => @selected_template,
+                                             :content_view_labels => @content_view_labels,
+                                             :selected_content_view => @selected_content_view,
+                                             :products => @products
+                                            }
     end
   end
 
@@ -84,6 +99,10 @@ describe "activation_keys/_edit.html.haml" do
 
     it "renders the activation key system template" do
       view.content_for(:content).should have_selector("input#activation_key_environment_id", :count => 1)
+    end
+
+    it "renders the activation key content view select" do
+      view.content_for(:content).should have_selector("select#activation_key_content_view_id", :count => 1)
     end
 
     it "renders a box to display the products in the environment", :katello => true do
