@@ -16,6 +16,7 @@ module Authorization::Organization
   extend ActiveSupport::Concern
 
   SYSTEMS_READABLE = [:read_systems, :register_systems, :update_systems, :delete_systems]
+  DISTRIBUTORS_READABLE = [:read_distributors, :register_distributors, :update_distributors, :delete_distributors]
   READ_PERM_VERBS = [:read, :create, :update, :delete]
   SYNC_PERM_VERBS = [:sync]
 
@@ -42,6 +43,10 @@ module Authorization::Organization
           :register_systems =>_("Register Systems"),
           :update_systems => _("Modify Systems"),
           :delete_systems => _("Delete Systems"),
+          :read_distributors => _("Read Distributors"),
+          :register_distributors =>_("Register Distributors"),
+          :update_distributors => _("Modify Distributors"),
+          :delete_distributors => _("Delete Distributors"),
           :sync => _("Sync Products"),
           :gpg => _("Administer GPG Keys")
        }
@@ -53,6 +58,10 @@ module Authorization::Organization
           :register_systems =>_("Register Systems"),
           :update_systems => _("Modify Systems"),
           :delete_systems => _("Delete Systems"),
+          :read_distributors => _("Read Distributors"),
+          :register_distributors =>_("Register Distributors"),
+          :update_distributors => _("Modify Distributors"),
+          :delete_distributors => _("Delete Distributors"),
        }
       end
       org_verbs.merge!({
@@ -63,7 +72,7 @@ module Authorization::Organization
     end
 
     def read_verbs
-      [:read, :read_systems]
+      [:read, :read_systems, :read_distributors]
     end
 
     def no_tag_verbs
@@ -110,6 +119,22 @@ module Authorization::Organization
 
     def any_systems_registerable?
       systems_registerable? || User.allowed_to?([:register_systems], :environments, environment_ids, self, true)
+    end
+
+    def distributors_readable?
+      User.allowed_to?(DISTRIBUTORS_READABLE, :organizations, nil, self)
+    end
+
+    def distributors_deletable?
+      User.allowed_to?([:delete_distributors], :organizations, nil, self)
+    end
+
+    def distributors_registerable?
+      User.allowed_to?([:register_distributors], :organizations, nil, self)
+    end
+
+    def any_distributors_registerable?
+      distributors_registerable? || User.allowed_to?([:register_distributors], :environments, environment_ids, self, true)
     end
 
     def gpg_keys_manageable?

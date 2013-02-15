@@ -18,6 +18,7 @@ module Authorization::Environment
   CHANGE_SETS_READABLE = [:manage_changesets, :read_changesets, :promote_changesets, :delete_changesets]
   CONTENTS_READABLE = [:read_contents]
   SYSTEMS_READABLE = [:read_systems, :register_systems, :update_systems, :delete_systems]
+  DISTRIBUTORS_READABLE = [:read_distributors, :register_distributors, :update_distributors, :delete_distributors]
 
 
   module ClassMethods
@@ -42,6 +43,22 @@ module Authorization::Environment
         where(:organization_id => org)
       else
         authorized_items(org, [:register_systems])
+      end
+    end
+
+    def distributors_readable(org)
+      if  org.distributors_readable?
+        where(:organization_id => org)
+      else
+        authorized_items(org, DISTRIBUTORS_READABLE)
+      end
+    end
+
+    def distributors_registerable(org)
+      if org.distributors_registerable?
+        where(:organization_id => org)
+      else
+        authorized_items(org, [:register_distributors])
       end
     end
 
@@ -73,6 +90,10 @@ module Authorization::Environment
         :register_systems =>_("Register Systems in Environment"),
         :update_systems => _("Modify Systems in Environment"),
         :delete_systems => _("Remove Systems in Environment"),
+        :read_distributors => _("Read Distributors in Environment"),
+        :register_distributors =>_("Register Distributors in Environment"),
+        :update_distributors => _("Modify Distributors in Environment"),
+        :delete_distributors => _("Remove Distributors in Environment"),
         :read_changesets => _("Read Changesets in Environment"),
         :manage_changesets => _("Administer Changesets in Environment"),
         :promote_changesets => _("Promote Content to Environment"),
@@ -85,15 +106,19 @@ module Authorization::Environment
         :register_systems =>_("Register Systems in Environment"),
         :update_systems => _("Modify Systems in Environment"),
         :delete_systems => _("Remove Systems in Environment"),
+        :read_distributors => _("Read Distributors in Environment"),
+        :register_distributors =>_("Register Distributors in Environment"),
+        :update_distributors => _("Modify Distributors in Environment"),
+        :delete_distributors => _("Remove Distributors in Environment"),
         }.with_indifferent_access
       end
     end
 
     def read_verbs
       if Katello.config.katello?
-        [:read_contents, :read_changesets, :read_systems]
+        [:read_contents, :read_changesets, :read_systems, :read_distributors]
       else
-        [:read_contents, :read_systems]
+        [:read_contents, :read_systems, :read_distributors]
       end
     end
   end
@@ -109,6 +134,7 @@ module Authorization::Environment
       return false if !Katello.config.katello?
       User.allowed_to?(self.class.list_verbs.keys, :environments, self.id, self.organization) ||
           self.organization.systems_readable? || self.organization.any_systems_registerable? ||
+          self.organization.distributors_readable? || self.organization.any_distributors_registerable? ||
           ActivationKey.readable?(self.organization)
     end
 
@@ -160,6 +186,26 @@ module Authorization::Environment
     def systems_registerable?
       self.organization.systems_registerable? ||
           User.allowed_to?([:register_systems], :environments, self.id, self.organization)
+    end
+
+    def distributors_readable?
+      self.organization.distributors_readable? ||
+          User.allowed_to?(DISTRIBUTORS_READABLE, :environments, self.id, self.organization)
+    end
+
+    def distributors_editable?
+      User.allowed_to?([:update_distributors], :organizations, nil, self.organization) ||
+          User.allowed_to?([:update_distributors], :environments, self.id, self.organization)
+    end
+
+    def distributors_deletable?
+      User.allowed_to?([:delete_distributors], :organizations, nil, self.organization) ||
+          User.allowed_to?([:delete_distributors], :environments, self.id, self.organization)
+    end
+
+    def distributors_registerable?
+      self.organization.distributors_registerable? ||
+          User.allowed_to?([:register_distributors], :environments, self.id, self.organization)
     end
   end
 
