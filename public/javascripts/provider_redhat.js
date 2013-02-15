@@ -13,38 +13,35 @@
 
 $(document).ready(function() {
 
-  $("#redhatSubscriptionTable").treeTable({
-    expandable: true,
-    initialState: "collapsed",
-    clickableNodeNames: true,
-    onNodeShow: function(){$.sparkline_display_visible()}
-  });
+
     KT.common.jscroll_init($('.scroll-pane'));
     KT.common.jscroll_resize($('.jspPane'));
 
-  $("#products_table").treeTable({
+    $("#content_tabs").tabs();
+
+  $(".tree_table").treeTable({
     expandable: true,
     initialState: "collapsed",
     clickableNodeNames: true,
-    onNodeShow: function(){$.sparkline_display_visible()}
+    onNodeShow: KT.redhat_provider_page.on_node_show
   });
 
 
-  $('#products_table input[type="checkbox"]').live('change', function() {
-      KT.redhat_provider_page.checkboxChanged($(this));
-  });
+  $("#content_tabs").delegate('.repo_enable', 'change', function() {
+        KT.redhat_provider_page.repoChange($(this));
+    });
   //end doc ready
 });
 
 
 KT.redhat_provider_page = (function($) {
-    var checkboxChanged = function(checkbox) {
+    var repoChange = function(checkbox) {
         var name = checkbox.attr("name");
         var options = {};
         if (checkbox.attr("checked") !== undefined) {
-            options[name] = "1";
+            options['repo'] = "1";
         } else {
-            options[name] = "0";
+            options['repo'] = "0";
         }
         var url = checkbox.attr("data-url");
         var id = checkbox.attr("value");
@@ -60,14 +57,23 @@ KT.redhat_provider_page = (function($) {
             }
         });
         return false;
-    };
-    var checkboxHighlightRow = function(id){
+    },
+    checkboxHighlightRow = function(id){
       $('#repo-'+id).effect('highlight', {'color':'#390'}, 1000);
       $('#spinner_'+id).hide().addClass('hidden');
       $('#input_repo_'+id).show();
+    },
+    on_node_show = function(a, b, c){
+        //$(this).hide();
+        $.sparkline_display_visible();
+    },
+    should_show = function(blacklist, name){
+
     };
+
     return {
-        checkboxChanged: checkboxChanged,
-        checkboxHighlightRow: checkboxHighlightRow
+        repoChange: repoChange,
+        checkboxHighlightRow: checkboxHighlightRow,
+        on_node_show: on_node_show
     }
 }(jQuery));

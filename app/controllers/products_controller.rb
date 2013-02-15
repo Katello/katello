@@ -29,7 +29,8 @@ class ProductsController < ApplicationController
       :edit =>read_test,
       :update => edit_test,
       :destroy => edit_test,
-      :auto_complete=>  auto_complete_test
+      :auto_complete=>  auto_complete_test,
+      :enable_content => edit_test
     }
   end
 
@@ -63,6 +64,12 @@ class ProductsController < ApplicationController
       notify.success label_overridden(product, requested_label)
     end
     render :json=>{:id=>product.id}
+  end
+
+  def enable_content
+    @product.enable_content(params[:content_id])
+    @product.
+    render
   end
 
   def update
