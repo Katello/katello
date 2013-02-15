@@ -237,6 +237,7 @@ Src::Application.routes.draw do
       get :system_groups
       put :add_system_groups
       put :remove_system_groups
+      get :custom_info
     end
     collection do
       get :auto_complete
@@ -272,6 +273,32 @@ Src::Application.routes.draw do
     member do
       get :packages
       get :short_details
+    end
+  end
+
+  resources :distributors do
+    resources :events, :only => [:index, :show], :controller => "distributor_events" do
+      collection do
+        get :status
+        get :more_events
+        get :items
+      end
+    end
+
+    member do
+      get :edit
+      get :subscriptions
+      post :update_subscriptions
+      get :products
+      get :more_products
+      get :download
+    end
+    collection do
+      get :auto_complete
+      get :items
+      get :env_items
+      get :environments
+      delete :bulk_destroy
     end
   end
 
@@ -479,6 +506,13 @@ Src::Application.routes.draw do
       post :email_logins
     end
   end
+
+  # custom information
+  match '/custom_info/:informable_type/:informable_id' => 'custom_info#create', :via => :post, :as => :create_custom_info
+  match '/custom_info/:informable_type/:informable_id' => 'custom_info#index', :via => :get, :as => :custom_info
+  match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#show', :via => :get, :as => :show_custom_info
+  match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#update', :via => :put, :as => :update_custom_info
+  match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#destroy', :via => :delete, :as => :destroy_custom_info
 
   namespace :api do
     class RegisterWithActivationKeyContraint
@@ -820,12 +854,12 @@ Src::Application.routes.draw do
       get 'status/memory'
     end
 
-    # custom information
-    match '/custom_info/:informable_type/:informable_id' => 'custom_info#create', :via => :post
-    match '/custom_info/:informable_type/:informable_id' => 'custom_info#index', :via => :get
-    match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#show', :via => :get
-    match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#update', :via => :put
-    match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#destroy', :via => :delete
+    # api custom information
+    match '/custom_info/:informable_type/:informable_id' => 'custom_info#create', :via => :post, :as => :create_custom_info
+    match '/custom_info/:informable_type/:informable_id' => 'custom_info#index', :via => :get, :as => :custom_info
+    match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#show', :via => :get, :as => :show_custom_info
+    match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#update', :via => :put, :as => :update_custom_info
+    match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#destroy', :via => :delete, :as => :destroy_custom_info
 
     match '*a', :to => 'errors#render_404'
   # end '/api' namespace

@@ -792,6 +792,19 @@ describe SystemsController do
         assigns[:locals_hash][:releases_error].should == "some error"
       end
     end
+
+    describe "custom info" do
+
+      before (:each) do
+        @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts => { "test" => "test" }, :serviceLevel => nil)
+        System.stub(:find).and_return(@system)
+      end
+
+      it "should render correctly" do
+        get :custom_info, :id => @system.id
+        response.should render_template(:edit_custom_info)
+      end
+    end
   end
 
 end

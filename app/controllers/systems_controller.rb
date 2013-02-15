@@ -71,7 +71,8 @@ class SystemsController < ApplicationController
       :bulk_errata_install => bulk_edit_systems,
       :system_groups => read_system,
       :add_system_groups => edit_system,
-      :remove_system_groups => edit_system
+      :remove_system_groups => edit_system,
+      :custom_info => read_system
     }
   end
 
@@ -198,7 +199,7 @@ class SystemsController < ApplicationController
   end
 
 
-  def split_order order
+  def split_order(order)
     if order
       order.split("|")
     else
@@ -214,7 +215,7 @@ class SystemsController < ApplicationController
     consumed_entitlements = @system.consumed_entitlements.collect do |entitlement|
       pool = ::Pool.find_pool(entitlement.poolId)
       product = Product.where(:cp_id => pool.product_id).first
-      entitlement.provider_id = product.nil? ? nil : product.provider_id
+      entitlement.provider_id = product.try :provider_id
       entitlement
     end
 
@@ -328,7 +329,7 @@ class SystemsController < ApplicationController
     @system.update_attributes!(params[:system])
     notify.success _("System '%s' was updated.") % @system["name"]
 
-    if not search_validate(System, @system.id, params[:search])
+    if !search_validate(System, @system.id, params[:search])
       notify.message _("'%s' no longer matches the current search criteria.") % @system["name"],
                      :asynchronous => false
     end
@@ -344,6 +345,10 @@ class SystemsController < ApplicationController
       }
       format.js
     end
+  end
+
+  def custom_info
+    render :partial => "edit_custom_info", :layout => "tupane_layout"
   end
 
   def show
@@ -661,7 +666,8 @@ class SystemsController < ApplicationController
   end
 
   def find_system
-    @system = System.find(params[:id])
+    sys_id = params[:id] || params[:system_id]
+    @system = System.find(sys_id)
   end
 
   def find_systems
@@ -727,12 +733,12 @@ class SystemsController < ApplicationController
   end
 
   def sort_order_limit systems
-      sort_columns(COLUMNS, systems) if params[:order]
-      offset = params[:offset].to_i if params[:offset]
-      offset ||= 0
-      last = offset + current_user.page_size
-      last = systems.length if last > systems.length
-      systems[offset...last]
+    sort_columns(COLUMNS, systems) if params[:order]
+    offset = params[:offset].to_i if params[:offset]
+    offset ||= 0
+    last = offset + current_user.page_size
+    last = systems.length if last > systems.length
+    systems[offset...last]
   end
 
   def first_objects objects
