@@ -110,6 +110,9 @@ class ResourceType < ActiveRecord::Base
         :providers => { :model => Provider, :name => _("Providers"), :global=>false},
         :users => { :model => User, :name => _("Users"), :global=>true},
         :roles => { :model => Role, :name => _("Roles"), :global=>true},
+        :content_view_definitions => { :model => ContentViewDefinition,
+          :name => _("Content View Defintions"), :global => false},
+        :content_views => { :model => ContentView, :name => _("Content View"), :global => false},
         :all => { :model => DefaultModel, :name => _("All"), :global => false}
      }.with_indifferent_access
   else

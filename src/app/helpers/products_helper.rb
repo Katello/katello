@@ -26,5 +26,39 @@ module ProductsHelper
   def gpg_keys
     GpgKey.readable(current_organization)
   end
+
+  # Objectify the record provided. This will generate a hash containing
+  # the record id, list of products and list of repos. It assumes that the
+  # record has a 'repositories' relationship.
+  def objectify(record)
+    repos = Hash.new { |h,k| h[k] = [] }
+    record.repositories.each do |repo|
+      repos[repo.product.id.to_s] <<  repo.id.to_s
+    end
+
+    {
+        :id => record.id,
+        :products=>record.product_ids,  # :id
+        :repos=>repos
+    }
+  end
+
+  # Retrieve a hash of products that are accessible to the user.
+  def get_products
+    if @product_hash.nil?
+      products = Product.readable(current_organization).sort_by(&:name)
+      editable_products = Product.editable(current_organization)
+      @product_hash = {}
+      products.each do |prod|
+        repos = []
+        prod.repos(current_organization.library).sort{|a,b| a.name <=> b.name}.each{|repo|
+          repos << {:name=>repo.name, :id=>repo.id}
+        }
+        @product_hash[prod.id] = {:name=>prod.name, :repos=>repos, :id=>prod.id,
+                                  :editable=>editable_products.include?(prod)}
+      end
+    end
+    @product_hash
+  end
 end
 

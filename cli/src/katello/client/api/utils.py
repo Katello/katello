@@ -35,6 +35,8 @@ from katello.client.api.sync_plan import SyncPlanAPI
 from katello.client.api.permission import PermissionAPI
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.system import SystemAPI
+from katello.client.api.content_view import ContentViewAPI
+from katello.client.api.content_view_definition import ContentViewDefinitionAPI
 
 
 class ApiDataError(Exception):
@@ -90,12 +92,48 @@ def get_product(orgName, prodName=None, prodLabel=None, prodId=None):
                              "using the 'product list' command."))
     elif len(products) == 0:
         raise ApiDataError(_("Could not find product [ %(prodName)s ] within organization [ %(orgName)s ]") %
-            {'prodName':prodName, 'orgName':orgName})
+            {'prodName':prodName or prodLabel or prodId, 'orgName':orgName})
 
     return products[0]
 
 
-def get_repo(orgName, prodName, prodLabel, prodId, repoName, envName=None, includeDisabled=False):
+def get_content_view(org_name, view_label=None, view_name=None, view_id=None):
+    cv_api = ContentViewAPI()
+
+    views = cv_api.views_by_label_name_or_id(org_name, view_label,
+            view_name, view_id)
+
+    if len(views) > 1:
+        raise ApiDataError(_("More than 1 content view with name provided, " \
+                             "recommend using label or id. These may be " \
+                             "retrieved using 'content view list'."))
+
+    elif len(views) == 0:
+        raise ApiDataError(_("Could not find content view [ %s ] within " \
+            "organization [ %s ]") %
+            ((view_label or view_name or view_id), org_name))
+    return views[0]
+
+
+def get_cv_definition(org_name, def_label=None, def_name=None, def_id=None):
+    cvd_api = ContentViewDefinitionAPI()
+
+    cvds = cvd_api.cvd_by_label_or_name_or_id(org_name, def_label, def_name,
+            def_id)
+
+    if len(cvds) > 1:
+        raise ApiDataError(_("More than 1 definition found with name, " \
+                "recommend using label or id. These may be retrieved using " \
+                "the 'content definition list' command"))
+    elif len(cvds) < 1:
+        raise ApiDataError(_("Could not find content view definition [ %(a)s ]" \
+                " within organization [ %(b)s ]") %
+                ({"a": (def_label or def_id or def_name), "b": org_name}))
+
+    return cvds[0]
+
+
+def get_repo(orgName, repoName, prodName=None, prodLabel=None, prodId=None, envName=None, includeDisabled=False):
     repo_api = RepoAPI()
 
     env  = get_environment(orgName, envName)

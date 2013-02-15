@@ -14,4 +14,8 @@ module ActivationKeysHelper
   def no_template
     _("No Template")
   end
+
+  def no_content_view
+    _("No Content View")
+  end
 end

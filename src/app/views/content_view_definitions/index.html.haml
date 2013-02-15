@@ -1,0 +1,11 @@
+.grid_16#main
+  = two_panel(@view_definitions, @panel_options)
+
+= javascript :content_view_definition, :product_repo_selector, :treetable
+
+= javascript do
+  :plain
+    localize({
+      "repos_in_common" : "#{escape_javascript(_('This content view has one or more repositories in common with a view that is currently selected.'))}",
+      "environments" : function(e){ return '#{escape_javascript(_("Environment(s): %E"))}'.replace("%E", e); }
+    });

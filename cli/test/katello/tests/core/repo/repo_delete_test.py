@@ -61,7 +61,7 @@ class DeleteTest(CLIActionTestCase):
     def test_finds_repo_by_name(self):
         self.mock_options(self.OPTIONS_WITH_NAME)
         self.run_action()
-        self.module.get_repo.assert_called_once_with(self.ORG_NAME, self.PROD_NAME, None, None, self.REPO['name'], None, False)
+        self.module.get_repo.assert_called_once_with(self.ORG_NAME, self.REPO['name'], self.PROD_NAME, None, None, None, False)
 
     def test_returns_with_error_when_no_repo_found(self):
         self.mock_options(self.OPTIONS_WITH_NAME)

@@ -2,7 +2,6 @@
 #
 # Katello Shell
 # Copyright (c) 2012 Red Hat, Inc.
-#
 # This software is licensed to you under the GNU General Public License,
 # version 2 (GPLv2). There is NO WARRANTY for this software, express or
 # implied, including the implied warranties of MERCHANTABILITY or FITNESS
@@ -35,6 +34,7 @@ from katello.client.core import (
   errata,
   system,
   system_custom_info,
+  task,
   sync_plan,
   shell_command,
   template,
@@ -46,6 +46,9 @@ from katello.client.core import (
   architecture,
   config_template,
   domain,
+  content,
+  content_view,
+  content_view_definition,
   subnet,
   smart_proxy,
   compute_resource,
@@ -274,6 +277,41 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         cset_cmd.add_command('apply', changeset.Apply())
         cset_cmd.add_command('promote', changeset.Promote())
         katello_cmd.add_command('changeset', cset_cmd)
+
+    if mode == 'katello':
+        content_cmd = content.Content()
+        cv_cmd = content_view.ContentView()
+        cv_cmd.add_command('list', content_view.List())
+        cv_cmd.add_command('info', content_view.Info())
+        cv_cmd.add_command('promote', content_view.Promote())
+        cv_cmd.add_command('refresh', content_view.Refresh())
+        cvd_cmd = content_view_definition.ContentViewDefinition()
+        cvd_cmd.add_command('list', content_view_definition.List())
+        cvd_cmd.add_command('info', content_view_definition.Info())
+        cvd_cmd.add_command('create', content_view_definition.Create())
+        cvd_cmd.add_command('delete', content_view_definition.Delete())
+        cvd_cmd.add_command('update', content_view_definition.Update())
+        cvd_cmd.add_command('publish', content_view_definition.Publish())
+        cvd_cmd.add_command('add_product',
+                content_view_definition.AddRemoveProduct(True))
+        cvd_cmd.add_command('remove_product',
+                content_view_definition.AddRemoveProduct(False))
+        cvd_cmd.add_command('add_repo',
+                content_view_definition.AddRemoveRepo(True))
+        cvd_cmd.add_command('remove_repo',
+                content_view_definition.AddRemoveRepo(False))
+        cvd_cmd.add_command('add_view',
+                content_view_definition.AddRemoveContentView(True))
+        cvd_cmd.add_command('remove_view',
+                content_view_definition.AddRemoveContentView(False))
+        content_cmd.add_command('view', cv_cmd)
+        content_cmd.add_command('definition', cvd_cmd)
+        katello_cmd.add_command('content', content_cmd)
+
+    if mode == 'katello':
+        task_cmd = task.Task()
+        task_cmd.add_command('status', task.Status())
+        katello_cmd.add_command('task', task_cmd)
 
     client_cmd = client.Client()
     client_cmd.add_command('remember', client.Remember())

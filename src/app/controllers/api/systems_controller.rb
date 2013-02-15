@@ -16,7 +16,8 @@ class Api::SystemsController < Api::ApiController
   before_filter :verify_presence_of_organization_or_environment, :only => [:create, :index, :activate]
   before_filter :find_optional_organization, :only => [:create, :hypervisors_update, :index, :activate, :report, :tasks]
   before_filter :find_only_environment, :only => [:create]
-  before_filter :find_environment, :only => [:create, :index, :report, :tasks]
+  before_filter :find_environment, :only => [:index, :report, :tasks]
+  before_filter :find_environment_and_content_view, :only => [:create]
   before_filter :find_environment_by_name, :only => [:hypervisors_update]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
                                         :upload_package_profile, :errata, :package_profile, :subscribe,
@@ -81,7 +82,9 @@ class Api::SystemsController < Api::ApiController
   param :type, String, :desc => "Type of the system, it should always be 'system'", :required => true
   param :serviceLevel, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT"
   def create
-    system = System.create!(params.merge({:environment => @environment, :serviceLevel => params[:service_level]}))
+    system = System.create!(params.merge({:environment => @environment,
+                                          :content_view => @content_view,
+                                          :serviceLevel => params[:service_level]}))
     render :json => system.to_json
   end
 
@@ -151,8 +154,12 @@ DESC
   param :serviceLevel, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT"
   param :releaseVer, String, :desc => "Release of the os. The $releasever variable in repo url will be replaced with this value"
   param :location, String, :desc => "Physical of the system"
+  param :content_view_id, :identifier, :desc => "content view id"
   def update
-    @system.update_attributes!(params.slice(:name, :description, :location, :facts, :guestIds, :installedProducts, :releaseVer, :serviceLevel, :environment_id))
+    @system.update_attributes!(params.slice(:name, :description, :location,
+                                            :facts, :guestIds, :installedProducts,
+                                            :releaseVer, :serviceLevel,
+                                            :environment_id, :content_view_id))
     render :json => @system.to_json
   end
 
@@ -428,6 +435,29 @@ DESC
     raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
     @organization = @environment.organization
     @environment
+  end
+
+  def find_environment_and_content_view
+    # There are some scenarios (primarily create) where a system may be
+    # created using the content_view_environment.cp_id which is the
+    # equivalent of "environment_id"-"content_view_id".
+    return unless params.has_key?(:environment_id)
+
+    if params[:environment_id].is_a? String
+      ids = params[:environment_id].split('-')
+
+      @environment = KTEnvironment.find(ids.first)
+      raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % ids.first if @environment.nil?
+      @organization = @environment.organization
+
+      if ids.length > 1
+        @content_view = ContentView.find(ids.last)
+        raise HttpErrors::NotFound, _("Couldn't find content view '%s'") % ids.last if @content_view.nil?
+      end
+      return @environment, @content_view
+    else
+      find_environment
+    end
   end
 
   def verify_presence_of_organization_or_environment

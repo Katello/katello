@@ -67,7 +67,7 @@ class List(DistributionAction):
         self.printer.add_column('files', _("Files"), multiline=True, show_with=printer.VerboseStrategy)
 
         if not repoId:
-            repo = get_repo(orgName, prodName, prodLabel, prodId, repoName, envName)
+            repo = get_repo(orgName, repoName, prodName, prodLabel, prodId, envName)
             repoId = repo["id"]
 
         self.printer.set_header(_("Distribution List For Repo %s") % repoId)

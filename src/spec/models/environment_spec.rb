@@ -14,6 +14,7 @@ require 'spec_helper'
 describe KTEnvironment do
   include AuthorizationHelperMethods
   include OrchestrationHelper
+
   describe "perm tests" do
     before do
       disable_product_orchestration
@@ -71,6 +72,7 @@ describe KTEnvironment do
       end
     end
   end
+
   describe "main" do
     before(:each) do
 
@@ -237,10 +239,11 @@ describe KTEnvironment do
 
     describe "updating CP content assignment" do
       it "should add content not already promoted" do
+        @content_view_environment = @environment.content_view_environment
         already_promoted_content("123", "456")
         newly_promoted_content("123", "456", "789", "10")
-        Resources::Candlepin::Environment.should_receive(:add_content).with(@environment.id, Set.new(["789", "10"]))
-        @environment.update_cp_content
+        Resources::Candlepin::Environment.should_receive(:add_content).with(@environment.id.to_s, Set.new(["789", "10"]))
+        @content_view_environment.update_cp_content
       end
 
       def already_promoted_content(*content_ids)
@@ -251,7 +254,7 @@ describe KTEnvironment do
 
       def newly_promoted_content(*content_ids)
         promoted_repos = content_ids.map{|id| mock(:content_id => id, :enabled=>true) }
-        @environment.stub_chain(:repositories, :all).and_return(promoted_repos)
+        @content_view_environment.stub_chain(:content_view, :repos).and_return(promoted_repos)
       end
     end
   end
