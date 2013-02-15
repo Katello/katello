@@ -53,14 +53,15 @@ task_state_poll_interval: 0.1
 #                         datamodel changes
 # name: (string) name of the database to use
 # seeds: (comma separated list) list of hostname:port of database replica seed
-#                               hosts
+#                               hosts, do NOT use localhost which may cause connection 
+#                               issues in some cases, use 127.0.0.1 instead
 # operation_retries: (integer) number of retries on database operations to
 #                              conduct before giving up and reporting an error
 
 [database]
 auto_migrate: false
 name: pulp_database
-seeds: localhost:27017
+seeds: 127.0.0.1:27017
 operation_retries: 2
 
 
