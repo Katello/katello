@@ -403,7 +403,13 @@ ALCHEMY_DIR=$(rpm -ql rubygem-alchemy | grep -o '/.*/vendor' | sed 's/vendor$//'
 cp -R $ALCHEMY_DIR* ./vendor/alchemy
 
 #use Bundler_ext instead of Bundler
-mv Gemfile Gemfile.in
+%if 0%{?fedora} > 17
+  mv Gemfile.32 Gemfile.in
+  rm Gemfile
+%else
+  mv Gemfile Gemfile.in
+  rm Gemfile.32
+%endif
 
 #pull in branding if present
 if [ -d branding ] ; then
