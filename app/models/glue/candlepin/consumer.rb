@@ -87,7 +87,7 @@ module Glue::Candlepin::Consumer
 
     def validate_cp_consumer
       if new_record?
-        validates_inclusion_of :cp_type, :in => %w( system hypervisor)
+        validates_inclusion_of :cp_type, :in => %w( system hypervisor candlepin)
         validates_presence_of :facts
       end
     end
@@ -152,6 +152,14 @@ module Glue::Candlepin::Consumer
     def subscribe pool, quantity = nil
       Rails.logger.debug "Subscribing to pool '#{pool}' for : #{name}"
       Resources::Candlepin::Consumer.consume_entitlement self.uuid, pool, quantity
+    rescue => e
+      Rails.logger.debug e.backtrace.join("\n\t")
+      raise e
+    end
+
+    def export
+      Rails.logger.debug "Exporting manifest"
+      Resources::Candlepin::Consumer.export self.uuid
     rescue => e
       Rails.logger.debug e.backtrace.join("\n\t")
       raise e

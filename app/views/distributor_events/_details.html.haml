@@ -1,0 +1,32 @@
+= content_for :title do
+  = type
+
+= content_for :subcontent do
+  %h4
+    = format_time(task.finish_time)
+
+  %fieldset
+    .grid_7
+      %h5 #{_("Summary")}
+    .grid_7.multiline
+      = user_message
+
+  %fieldset
+    .grid_7
+      %h5 #{_("Request")}
+    .grid_7.la
+      = task.message
+
+  %fieldset
+    .grid_7
+      %h5 #{_("Parameters")}
+    .grid_7.la
+      = task.humanize_parameters
+
+  %fieldset
+    .grid_7
+      %h5 #{_("Result")}
+    .grid_7.multiline
+      = task.result_description
+
+= render :template => "layouts/tupane_layout"
