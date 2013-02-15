@@ -374,7 +374,6 @@ class User < ActiveRecord::Base
   end
 
   def log_roles verbs, resource_type, tags, org, any_tags = false
-    if Katello.config.allow_roles_logging
       verbs_str = verbs ? verbs.join(',') :"perform any verb"
       tags_str  = "any tags"
       if tags
@@ -382,9 +381,8 @@ class User < ActiveRecord::Base
       end
 
       org_str = org ? "organization #{org.name} (#{org.name})" :" any organization"
-      Rails.logger.debug "Checking if user #{username} is allowed to #{verbs_str} in #{resource_type.inspect} " +
-                             "scoped for #{tags_str} in #{org_str}"
-    end
+      logger.debug "Checking if user #{username} is allowed to #{verbs_str} in #{resource_type.inspect} " +
+                       "scoped for #{tags_str} in #{org_str}"
   end
 
   def create_own_role
@@ -419,6 +417,10 @@ class User < ActiveRecord::Base
     else
       Katello::ModelUtils::uuid
     end
+  end
+
+  def logger
+    ::Logging.logger['roles']
   end
 
 end
