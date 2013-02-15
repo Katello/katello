@@ -16,19 +16,19 @@ class Api::CandlepinProxiesController < Api::ProxiesController
 
   def get
     r = ::Resources::Candlepin::Proxy.get(@request_path)
-    logger.debug r if Katello.config.debug_cp_proxy
+    logger.debug r
     render :json => r
   end
 
   def delete
     r = ::Resources::Candlepin::Proxy.delete(@request_path)
-    logger.debug r if Katello.config.debug_cp_proxy
+    logger.debug r
     render :json => r
   end
 
   def post
     r = ::Resources::Candlepin::Proxy.post(@request_path, @request_body)
-    logger.debug r if Katello.config.debug_cp_proxy
+    logger.debug r
     render :json => r
   end
 

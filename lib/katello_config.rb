@@ -392,27 +392,23 @@ module Katello
     root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
 
     VALIDATION = lambda do |*_|
-      has_keys *%w( app_name candlepin notification debug_pulp_proxy debug_rest available_locales
-                    use_cp simple_search_tokens database debug_cp_proxy headpin? host ldap_roles
+      has_keys *%w( app_name candlepin notification available_locales
+                    use_cp simple_search_tokens database headpin? host ldap_roles
                     cloud_forms use_pulp cdn_proxy use_ssl warden katello? url_prefix foreman
                     search use_foreman password_reset_expiration redhat_repository_url port
-                    elastic_url rest_client_timeout elastic_index allow_roles_logging
-                    katello_version pulp tire_log log_level log_level_sql email_reply_address
-                    exception_paranoia embed_yard_documentation)
+                    elastic_url rest_client_timeout elastic_index
+                    katello_version pulp email_reply_address
+                    embed_yard_documentation)
 
       has_values :app_mode, %w(katello headpin)
       has_values :url_prefix, %w(/headpin /sam /cfse /katello)
-
-      log_levels = %w(debug info warn error fatal)
-      has_values :log_level, log_levels
-      has_values :log_level_sql, log_levels
 
       unless config.katello?
         is_not_empty :thumbslug_url
       end
 
-      are_booleans :use_cp, :use_foreman, :use_pulp, :use_elasticsearch, :use_ssl, :ldap_roles, :debug_rest,
-                   :debug_cp_proxy, :debug_pulp_proxy, :logical_insight
+      are_booleans :use_cp, :use_foreman, :use_pulp, :use_elasticsearch, :use_ssl, :ldap_roles,
+                   :logical_insight
 
       if !early? && environment != :build
         validate :database do

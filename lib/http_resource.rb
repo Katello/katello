@@ -55,7 +55,7 @@ class HttpResource
 
     def process_response(resp)
       logger.debug "Processing response: #{resp.code}"
-      logger.debug resp.body if Katello.config.debug_rest
+      logger.debug resp.body
       return resp unless resp.code.to_i >= 400
       parsed = {}
       message = "Rest exception while processing the call"
@@ -94,7 +94,7 @@ class HttpResource
 
     def get(a_path, headers={})
       logger.debug "Resource GET request: #{a_path}"
-      print_debug_info(a_path, headers) if Katello.config.debug_rest
+      print_debug_info(a_path, headers)
       a_path = URI.encode(a_path)
       resource_permissions.before_get_callback(a_path, headers)
       client = rest_client(Net::HTTP::Get, :get, a_path)
@@ -107,7 +107,7 @@ class HttpResource
 
     def post(a_path, payload={}, headers={})
       logger.debug "Resource POST request: #{a_path}, #{payload}"
-      print_debug_info(a_path, headers, payload) if Katello.config.debug_rest
+      print_debug_info(a_path, headers, payload)
       a_path = URI.encode(a_path)
       resource_permissions.before_post_callback(a_path, payload, headers)
       client = rest_client(Net::HTTP::Post, :post, a_path)
@@ -120,7 +120,7 @@ class HttpResource
 
     def put(a_path, payload={}, headers={})
       logger.debug "Resource PUT request: #{a_path}, #{payload}"
-      print_debug_info(a_path, headers, payload) if Katello.config.debug_rest
+      print_debug_info(a_path, headers, payload)
       a_path = URI.encode(a_path)
       resource_permissions.before_put_callback(a_path, payload, headers)
       client = rest_client(Net::HTTP::Put, :put, a_path)
@@ -133,7 +133,7 @@ class HttpResource
 
     def delete(a_path=nil, headers={})
       logger.debug "Resource DELETE request: #{a_path}"
-      print_debug_info(a_path, headers) if Katello.config.debug_rest
+      print_debug_info(a_path, headers)
       a_path = URI.encode(a_path)
       resource_permissions.before_delete_callback(a_path, headers)
       client = rest_client(Net::HTTP::Delete, :delete, a_path)

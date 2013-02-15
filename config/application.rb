@@ -127,7 +127,7 @@ module Src
     config.do_profiles = []
 
     # logging configuration
-    config.colorize_logging = false
+    config.colorize_logging = Katello.config.logging.colorize
     Katello::Logging.new.configure
     config.logger = Logging.logger['app']
     config.active_record.logger = Logging.logger['sql']
