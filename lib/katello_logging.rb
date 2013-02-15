@@ -14,7 +14,6 @@ module Katello
     def initialize
       Dir.mkdir_p "#{Rails.root}/log" unless File.directory?("#{Rails.root}/log")
       configure_color_scheme
-      configure_appenders
     end
 
     def configuration
@@ -26,19 +25,15 @@ module Katello
     end
 
     def configure(options = {})
-      # root configuration
-      ::Logging.logger.root.level     = root_configuration.level
-      root_appender                   = options[:root_appender] || 'joined'
-      ::Logging.logger.root.appenders = ::Logging.appenders[root_appender]
+      configure_root_logger(options)
+      configure_children_loggers
 
-      # fallback to log to STDOUT if there is any configuration problem
-      if ::Logging.logger.root.appenders.empty?
-        ::Logging.logger.root.appenders = ::Logging.appenders.stdout
-        ::Logging.logger.root.warn 'No appender set, logging to STDOUT'
-      end
+      # you can add specific files per logger easily like this
+      #   Logging.logger['sql'].appenders = Logging.appenders.file("#{Rails.env}_sql.log")
+    end
 
-      # extra levels for subloggers
-      loggers_hash                    = configuration.loggers.to_hash
+    def configure_children_loggers
+      loggers_hash = configuration.loggers.to_hash
       loggers_hash.keys.tap { |a| a.delete(:root) }.each do |logger|
         logger_config = configuration.loggers[logger]
         logger_object = ::Logging.logger[logger]
@@ -47,25 +42,40 @@ module Katello
       end
     end
 
-    def configure_appenders
-      build_root_appender('joined',
-                          :filename => "#{Rails.root}/log/#{root_configuration.filename}")
-      build_root_appender('delayed_joined',
-                          :filename => "#{Rails.root}/log/delayed_#{root_configuration.filename}")
+    def configure_root_logger(options)
+      ::Logging.logger.root.level     = root_configuration.level
+      root_appender                   = build_root_appender(options)
+      ::Logging.logger.root.appenders = root_appender
 
-      # you can add specific files per logger easily like this
-      #   Logging.logger['sql'].appenders = Logging.appenders.file("#{Rails.env}_sql.log")
+      # fallback to log to STDOUT if there is any configuration problem
+      if ::Logging.logger.root.appenders.empty?
+        ::Logging.logger.root.appenders = ::Logging.appenders.stdout
+        ::Logging.logger.root.warn 'No appender set, logging to STDOUT'
+      end
     end
 
-    def build_root_appender(name, options)
-      ::Logging.appenders.rolling_file(
-          name,
-          options.reverse_merge(:filename => "#{Rails.root}/log/#{name}.log",
-                                :roll_by  => 'date',
-                                :age      => root_configuration.age,
-                                :keep     => root_configuration.keep,
-                                :layout   => build_layout(root_configuration.pattern, configuration.colorize))
-      )
+    def build_root_appender(options)
+      name = "#{options[:prefix]}joined"
+      case root_configuration.type
+        when 'syslog'
+          ::Logging.appenders.syslog(
+              name,
+              options.reverse_merge(:ident    => "#{options[:prefix]}katello",
+                                    :facility => ::Syslog::Constants::LOG_DAEMON)
+          )
+        when 'file'
+          log_filename = "#{Rails.root}/log/#{options[:prefix]}#{root_configuration.filename}"
+          ::Logging.appenders.rolling_file(
+              name,
+              options.reverse_merge(:filename => log_filename,
+                                    :roll_by  => 'date',
+                                    :age      => root_configuration.age,
+                                    :keep     => root_configuration.keep,
+                                    :layout   => build_layout(root_configuration.pattern, configuration.colorize))
+          )
+        else
+          raise 'unsupported logger type, please choose syslog or file'
+      end
     end
 
     def build_layout(pattern, colorize)
