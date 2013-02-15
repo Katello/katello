@@ -91,7 +91,7 @@ class ChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_raises(Errors::ChangesetContentException) do
       changeset.add_content_view!(view)
     end
-    assert_raises(Exception) do
+    assert_raises(Errors::ChangesetContentException) do
       view.delete(@dev)
     end
     refute_includes changeset.content_views, view
@@ -100,7 +100,7 @@ class ChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
   def test_content_view_invalid_library_deletion
     view = @library_dev_view
 
-    assert_raises(Exception) do
+    assert_raises(Errors::ChangesetContentException) do
       view.delete(@library)
     end
   end
