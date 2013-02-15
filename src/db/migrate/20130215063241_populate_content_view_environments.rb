@@ -1,14 +1,21 @@
 class PopulateContentViewEnvironments < ActiveRecord::Migration
   def self.up
-    # For each of the environments, a content view environment needs to be
-    # created and associated with the environment's default content view
+    # For each katello environment, associate it with the environment's
+    # default content view version.  This will trigger the creation of
+    # the content view environment.
     User.current = User.hidden.first
     KTEnvironment.all.each do |env|
       unless env.content_view_environment
-        ContentViewEnvironment.create!(:name => env.name,
-                                       :label => env.default_content_view.cp_environment_label(env),
-                                       :content_view => env.default_content_view,
-                                       :cp_id => env.default_content_view.cp_environment_id(env))
+        # a kt_environment will only have a single version
+        version = env.default_content_view.versions.first
+        version.environments << env
+        version.save!
+
+        # perform a save on each of the environment's repos.
+        # this will trigger an update to the search index
+        env.repositories.each do |repo|
+          repo.save!
+        end
       end
     end
   end
