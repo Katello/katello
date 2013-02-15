@@ -57,8 +57,7 @@ Requires:       rubygem(rest-client)
 Requires:       rubygem(jammit)
 Requires:       rubygem(rails_warden)
 Requires:       rubygem(net-ldap)
-Requires:       rubygem(compass) >= 0.11.5
-Requires:       rubygem(compass) < 0.12
+Requires:       rubygem(compass)
 Requires:       rubygem(compass-960-plugin) >= 0.10.4
 Requires:       rubygem(oauth)
 Requires:       rubygem(i18n_data) >= 0.2.6
@@ -115,8 +114,7 @@ BuildRequires:  rubygem(gettext)
 BuildRequires:  rubygem(jammit)
 BuildRequires:  rubygem(chunky_png)
 BuildRequires:  rubygem(fssm) >= 0.2.7
-BuildRequires:  rubygem(compass) >= 0.11.5
-BuildRequires:  rubygem(compass) < 0.12
+BuildRequires:  rubygem(compass)
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
 BuildRequires:  rubygem(alchemy) >= 1.0.0
