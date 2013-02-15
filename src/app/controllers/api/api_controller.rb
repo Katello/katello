@@ -282,10 +282,8 @@ class Api::ApiController < ActionController::Base
 
   protected
 
-  if Katello.config.debug_rest
-    def process_action(method_name, *args)
-      super(method_name, *args)
-      Rails.logger.debug "With body: #{response.body}\n"
-    end
+  def process_action(method_name, *args)
+    super(method_name, *args)
+    Rails.logger.debug "With body: #{response.body}\n"
   end
 end

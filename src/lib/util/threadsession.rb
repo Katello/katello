@@ -100,7 +100,6 @@ module Katello
         # store request uuid (for Rails 3.2+ we can use Request.uuid) and process pid
         uuid = request.respond_to?(:uuid) ? request.uuid : SecureRandom.hex(16)
         ::Logging.mdc['uuid'] = Thread.current[:request_uuid] = uuid
-        ::Logging.mdc['pid'] = Process.pid
 
         # store user
         u = current_user

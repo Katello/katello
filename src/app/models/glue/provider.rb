@@ -215,6 +215,7 @@ module Glue::Provider
     def queue_import_manifest zip_file_path, options
       output = Logging.appenders.string_io.new('manifest_import_appender')
       import_logger = Logging.logger['manifest_import_logger']
+      import_logger.additive = false
       import_logger.add_appenders(output)
 
       options.merge!(:import_logger => import_logger)

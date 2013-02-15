@@ -6,10 +6,11 @@ require 'katello_logging'
 
 if caller.last =~ /script\/delayed_job:\d+$/ ||
     (caller[-10..-1].any? {|l| l =~ /\/rake/} && ARGV.include?("jobs:work"))
-  Rails.logger = Delayed::Worker.logger = Rails.logger
-  ActiveRecord::Base.logger = Rails.logger
-  Glue.logger = Rails.logger
-  Logging.logger.root.appenders = Katello::Logging.new.configure_appenders()
+  Katello::Logging.new.configure(:root_appender => 'delayed_joined')
+
+  Rails.logger = Delayed::Worker.logger = Logging.logger['app']
+  ActiveRecord::Base.logger = Logging.logger['sql']
+  Glue.logger = Logging.logger['glue']
 end
 
 Delayed::Worker.destroy_failed_jobs = false
