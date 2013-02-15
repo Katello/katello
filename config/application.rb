@@ -128,7 +128,17 @@ module Src
 
     # logging configuration
     config.colorize_logging = Katello.config.logging.colorize
-    Katello::Logging.new.configure
+
+    # When running under Rails last caller is "/usr/share/katello/config.ru:1" but when running standalone
+    # last caller is "script/delayed_job:3".
+    if caller.last =~ /script\/delayed_job:\d+$/ ||
+        ((caller[-10..-1] || []).any? {|l| l =~ /\/rake/} && ARGV.include?("jobs:work"))
+      Katello::Logging.new.configure(:prefix => 'delayed_')
+      Delayed::Worker.logger = Logging.logger['app']
+    else
+      Katello::Logging.new.configure
+    end
+
     config.logger = Logging.logger['app']
     config.active_record.logger = Logging.logger['sql']
   end
