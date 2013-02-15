@@ -211,11 +211,11 @@ class ContentView < ActiveRecord::Base
 
   def delete(from_env)
     if from_env.library? && in_non_library_environment?
-      raise Exception, _("Cannot delete view while it exits in environments")
+      raise ChangesetContentException, _("Cannot delete view while it exits in environments")
     end
     version = self.version(from_env)
     if version.nil?
-      raise Exception, _("Cannot delete from %s, view does not exist there.") % from_env.name
+      raise ChangesetContentException, _("Cannot delete from %s, view does not exist there.") % from_env.name
     end
     version.delete(from_env)
     self.destroy if self.versions.empty?

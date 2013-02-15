@@ -34,8 +34,8 @@ class Api::RepositoriesController < Api::ApiController
     edit_test = lambda{@repository.product.editable?}
     org_edit = lambda{@organization.editable?}
 
-    cvd_read_test = lambda { true } #{ @definition.readable? }
-    cvd_edit_test = lambda { true } #{ @definition.editable? }
+    cvd_read_test = lambda { @definition.readable? }
+    cvd_edit_test = lambda { @definition.editable? }
 
     {
       :create => edit_product_test,
