@@ -13,59 +13,58 @@
 
 
 module Authorization::Distributor
+  extend ActiveSupport::Concern
 
-  def self.included(base)
-    base.class_eval do
+  module ClassMethods
+    # returns list of virtual permission tags for the current user
+    def list_tags
+      select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
+    end
 
-      # returns list of virtual permission tags for the current user
-      def self.list_tags
-        select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
+    def readable(org)
+      raise "scope requires an organization" if org.nil?
+      if org.distributors_readable?
+         where(:environment_id => org.environment_ids) #list all distributors in an org
+      else #just list for environments the user can access
+        where("distributors.environment_id in (#{::KTEnvironment.distributors_readable(org).select(:id).to_sql})")
       end
+    end
 
-      def self.readable(org)
-          raise "scope requires an organization" if org.nil?
-          if org.distributors_readable?
-             where(:environment_id => org.environment_ids) #list all distributors in an org
-          else #just list for environments the user can access
-            where("distributors.environment_id in (#{::KTEnvironment.distributors_readable(org).select(:id).to_sql})")
-          end
+    def any_readable?(org)
+      org.distributors_readable? ||
+           ::KTEnvironment.distributors_readable(org).count > 0
+    end
+
+    #TODO these two functions are somewhat poorly written and need to be redone
+    def any_deletable?(env, org)
+      if env
+        env.distributors_deletable?
+      else
+        org.distributors_deletable?
       end
+    end
 
-      def self.any_readable?(org)
-         org.distributors_readable? ||
-             ::KTEnvironment.distributors_readable(org).count > 0
-       end
-
-      #TODO these two functions are somewhat poorly written and need to be redone
-      def self.any_deletable?(env, org)
-       if env
-         env.distributors_deletable?
-       else
-         org.distributors_deletable?
-       end
-      end
-
-      def self.registerable?(env, org)
-       if env
-         env.distributors_registerable?
-       else
-         org.distributors_registerable?
-       end
+    def registerable?(env, org)
+      if env
+        env.distributors_registerable?
+      else
+        org.distributors_registerable?
       end
     end
   end
 
+  module InstanceMethods
+    def readable?
+      environment.distributors_readable?
+    end
 
-  def readable?
-   environment.distributors_readable?
-  end
+    def editable?
+      environment.distributors_editable?
+    end
 
-  def editable?
-   environment.distributors_editable?
-  end
-
-  def deletable?
-    environment.distributors_deletable?
+    def deletable?
+      environment.distributors_deletable?
+    end
   end
 
 end

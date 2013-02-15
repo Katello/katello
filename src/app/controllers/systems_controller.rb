@@ -195,7 +195,7 @@ class SystemsController < ApplicationController
   end
 
 
-  def split_order order
+  def split_order(order)
     if order
       order.split("|")
     else
@@ -211,7 +211,7 @@ class SystemsController < ApplicationController
     consumed_entitlements = @system.consumed_entitlements.collect do |entitlement|
       pool = ::Pool.find_pool(entitlement.poolId)
       product = Product.where(:cp_id => pool.product_id).first
-      entitlement.provider_id = product.nil? ? nil : product.provider_id
+      entitlement.provider_id = product.try :provider_id
       entitlement
     end
 
@@ -729,12 +729,12 @@ class SystemsController < ApplicationController
   end
 
   def sort_order_limit systems
-      sort_columns(COLUMNS, systems) if params[:order]
-      offset = params[:offset].to_i if params[:offset]
-      offset ||= 0
-      last = offset + current_user.page_size
-      last = systems.length if last > systems.length
-      systems[offset...last]
+    sort_columns(COLUMNS, systems) if params[:order]
+    offset = params[:offset].to_i if params[:offset]
+    offset ||= 0
+    last = offset + current_user.page_size
+    last = systems.length if last > systems.length
+    systems[offset...last]
   end
 
   def first_objects objects
