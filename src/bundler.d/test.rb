@@ -14,6 +14,9 @@ group :test do
   gem 'webmock'
   gem 'minitest', '<=4.5.0', :require => "hoe/minitest"
   gem 'minitest-rails'
+  if RUBY_VERSION == "1.8.7"
+    gem 'minitest_tu_shim'
+  end
 
   # make our specs go faster (also appears in development group)
   gem "parallel_tests"
