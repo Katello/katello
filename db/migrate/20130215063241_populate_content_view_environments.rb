@@ -21,7 +21,7 @@ class PopulateContentViewEnvironments < ActiveRecord::Migration
   end
 
   def self.down
-    # Purposely not providing a down migration for this one.  If the content 
+    # Purposely not providing a down migration for this one.  If the content
     # view environment table exists, then there really should be these records.
     # So, the assumption is that if the content_view_environment is not desired,
     # the user will continue to rollback schemas until the content view environment
