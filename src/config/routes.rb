@@ -248,7 +248,11 @@ Src::Application.routes.draw do
 
   resources :products, :only => [:new, :create, :edit,:update, :destroy] do
     collection do
-       get :auto_complete
+      get :auto_complete
+    end
+    member do
+      put :refresh_content
+      put :disable_content
     end
   end
 
