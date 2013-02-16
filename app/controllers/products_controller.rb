@@ -13,8 +13,9 @@
 class ProductsController < ApplicationController
   respond_to :html, :js
 
-  before_filter :find_product, :only => [:edit, :update, :destroy]
-  before_filter :find_provider, :only => [:new, :create, :default_label, :edit, :update, :destroy]
+  before_filter :find_product, :only => [:edit, :update, :destroy, :refresh_content, :disable_content]
+  before_filter :find_provider, :only => [:new, :create, :default_label, :edit, :update, :destroy,
+                                          :refresh_content, :disable_content]
   before_filter :authorize
 
   def rules
@@ -30,7 +31,8 @@ class ProductsController < ApplicationController
       :update => edit_test,
       :destroy => edit_test,
       :auto_complete=>  auto_complete_test,
-      :enable_content => edit_test
+      :refresh_content => edit_test,
+      :disable_content => edit_test,
     }
   end
 
@@ -66,10 +68,14 @@ class ProductsController < ApplicationController
     render :json=>{:id=>product.id}
   end
 
-  def enable_content
-    @product.enable_content(params[:content_id])
-    @product.
-    render
+  def refresh_content
+    pc = @product.enable_content(params[:content_id])
+    render :partial=>'providers/redhat/repos', :locals=>{:pContent=>pc}
+  end
+
+  def disable_content
+    pc = @product.disable_content(params[:content_id])
+    render :json=>pc
   end
 
   def update

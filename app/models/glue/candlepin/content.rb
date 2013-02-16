@@ -26,7 +26,9 @@ module Glue::Candlepin::Content
 
   module InstanceMethods
     def destroy_content_orchestration
-      pre_queue.create(:name => "remove content : #{self.name}", :priority => 2, :action => [self, :del_content])
+      if !self.product.provider.redhat_provider?
+        pre_queue.create(:name => "remove content : #{self.name}", :priority => 2, :action => [self, :del_content])
+      end
     end
 
     def save_content_orchestration

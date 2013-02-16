@@ -32,6 +32,7 @@
         - if tab[:products].empty?
           = _("No products are available containing this content type.")
         - else
+          - reset_cycle
           = render :partial=>"providers/redhat/repo_sets", :locals=>{:tab_id=>tab[:id], :provider=>@provider, :product_map=>tab[:products]}
 
 
