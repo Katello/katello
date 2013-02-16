@@ -93,7 +93,8 @@ class RepositoriesController < ApplicationController
   def enable_repo
     @repository.enabled = params[:repo] == "1"
     @repository.save!
-    render :json => @repository.id
+    product_content = @repository.product.productContent.select{|pc| pc.content.id == @repository.content_id}.first
+    render :json => {:id=>@repository.id, :can_disable_repo_set=>product_content.can_disable?}
   end
 
   def destroy

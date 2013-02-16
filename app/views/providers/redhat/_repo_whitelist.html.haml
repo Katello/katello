@@ -1,6 +1,0 @@
--#%table#products_table
-  %thead
-    %th #{_("Product")}
-  %tbody
-  - unless product_map.empty?
-    -#= render :partial=>"providers/redhat/children", :collection=>product_map,:as =>:child
