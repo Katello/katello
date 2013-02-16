@@ -279,7 +279,6 @@ class KTEnvironment < ActiveRecord::Base
       self.default_content_view = ContentView.create!(:name=>"Default View for #{self.name}",
                                                 :organization=>self.organization, :default=>true)
 
-      #ContentViewVersion.create!(:version=>1, :content_view=>self.default_content_view)
       version = ContentViewVersion.new(:version=>1, :content_view=>self.default_content_view)
       version.environments << self
       version.save!
