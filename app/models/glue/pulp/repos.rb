@@ -78,7 +78,7 @@ module Glue::Pulp::Repos
 
       @repo_cache[env.id] ||= env.default_content_view.repos_in_product(env, self)
 
-      if include_disabled
+      if @repo_cache[env.id].blank? || include_disabled
         @repo_cache[env.id]
       else
         # we only want the enabled repos to be visible
