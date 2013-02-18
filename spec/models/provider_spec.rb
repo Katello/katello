@@ -180,7 +180,8 @@ describe Provider do
           version = Resources::CDN::Utils.parse_version(release)
           repo_name = "#{product_content.content.name} #{release}"
           repo_label = repo_name.gsub(/[^-\w]/,"_")
-          repo = Repository.new(:environment_product => EnvironmentProduct.find_or_create(product.organization.library, product),
+          ep = EnvironmentProduct.find_or_create(product.organization.library, product)
+          repo = Repository.new(:environment_product => ep,
                              :cp_label => product_content.content.label,
                              :name => repo_name,
                              :label => repo_label,
@@ -189,6 +190,7 @@ describe Provider do
                              :minor => version[:minor],
                              :relative_path=>'/foo',
                              :content_id=>'asdfasdf',
+                             :content_view_version=>ep.environment.default_view_version,
                              :feed => 'https://localhost')
           repo.stub(:create_pulp_repo).and_return({})
           repo.save!

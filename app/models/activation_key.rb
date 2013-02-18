@@ -19,6 +19,7 @@ class ActivationKey < ActiveRecord::Base
   belongs_to :environment, :class_name => "KTEnvironment"
   belongs_to :user
   belongs_to :system_template
+  belongs_to :content_view, :inverse_of => :activation_keys
 
   has_many :key_pools
   has_many :pools, :class_name => "::Pool", :through => :key_pools
@@ -40,6 +41,7 @@ class ActivationKey < ActiveRecord::Base
   validate :system_template_exists
   validate :environment_not_library
   validate :environment_key_conflict
+  validate :content_view_in_environment
   validates_each :usage_limit do |record, attr, value|
     if not value.nil? and (value < -1 or value == 0 or (value != -1 and value < record.usage_count))
       # we don't let users to set usage limit lower than current usage
@@ -58,6 +60,12 @@ class ActivationKey < ActiveRecord::Base
       errors.add(:environment, _("ID: %s doesn't exist ") % environment_id)
     elsif environment.organization != self.organization
       errors.add(:environment, _("name: %s doesn't exist ") % environment.name)
+    end
+  end
+
+  def content_view_in_environment
+    if content_view.present? && !content_view.environments.include?(environment)
+      errors.add(:base, _("Content view is not in environment"))
     end
   end
 
@@ -84,6 +92,7 @@ class ActivationKey < ActiveRecord::Base
     end
     system.environment_id = self.environment_id if self.environment_id
     system.system_template_id = self.system_template_id if self.system_template_id
+    system.content_view_id = self.content_view_id if self.content_view_id
     system.system_activation_keys.build(:activation_key => self)
   end
 
@@ -184,12 +193,6 @@ class ActivationKey < ActiveRecord::Base
     ret
   end
 
-  def extended_json
-    to_ret = {:environment=>self.environment.name, :name_sort=>name.downcase}
-    to_ret[:template] = self.system_template.name if self.system_template
-    to_ret
-  end
-
   private
 
   # Fetch each of the pools from candlepin, removing any that no longer
@@ -209,4 +212,5 @@ class ActivationKey < ActiveRecord::Base
       self.save!
     end
   end
+
 end

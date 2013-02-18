@@ -13,15 +13,49 @@ module Navigation
   module ContentMenu
     def self.included(base)
       base.class_eval do
+        helper_method :content_view_definition_navigation
         helper_method :custom_provider_navigation
         helper_method :activation_keys_navigation
         helper_method :promotion_packages_navigation
         helper_method :promotion_errata_navigation
         helper_method :promotion_distribution_navigation
+        helper_method :promotion_content_view_navigation
         helper_method :gpg_keys_navigation
         helper_method :subscriptions_navigation
         helper_method :new_subscription_navigation
+        helper_method :distributors_navigation
+        helper_method :new_distributor_navigation
       end
+    end
+
+    def content_view_definition_navigation
+      [
+        { :key => :view_definition_views,
+          :name =>_("Views"),
+          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : views_content_view_definition_path(@view_definition.id),
+          :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
+          :options => {:class=>"panel_link"}
+        },
+        { :key => :view_definition_content,
+          :name =>_("Content"),
+          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : content_content_view_definition_path(@view_definition.id),
+          :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
+          :options => {:class=>"panel_link"}
+        },
+        { :key => :view_definition_filter,
+          :name =>_("Filter"),
+          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : filter_content_view_definition_path(@view_definition.id),
+          :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record? &&
+              !@view_definition.composite},
+          :options => {:class=>"panel_link"}
+        },
+        { :key => :view_definition_details,
+          :name =>_("Details"),
+          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : edit_content_view_definition_path(@view_definition.id),
+          :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record?},
+          :options => {:class=>"panel_link"}
+        }
+      ]
     end
 
     def custom_provider_navigation
@@ -53,7 +87,7 @@ module Navigation
       {:key => :subscriptions,
        :name =>_("Subscriptions"),
        :url => subscriptions_path,
-       :items => lambda{[menu_subscriptions_list, menu_activation_keys, menu_import_history]},
+       :items => lambda{[menu_subscriptions_list, menu_distributors_list, menu_activation_keys, menu_import_history]},
        :if => lambda{current_organization},
        :options => {:class=>'content second_level menu_parent', "data-menu"=>"content", "data-dropdown"=>"subscriptions"}
       }
@@ -64,6 +98,15 @@ module Navigation
        :name =>_("Red Hat Subscriptions"),
        :url => subscriptions_path,
        :if => lambda{current_organization.redhat_provider.readable?},
+       :options => {:class=>'content third_level', "data-menu"=>"subscriptions", "data-dropdown"=>"subscriptions"}
+      }
+    end
+
+    def menu_distributors_list
+      {:key => :distributors_list,
+       :name =>_("Subscription Manager Applications"),
+       :url => distributors_path,
+       :if => lambda{current_organization && current_organization.readable?},
        :options => {:class=>'content third_level', "data-menu"=>"subscriptions", "data-dropdown"=>"subscriptions"}
       }
     end
@@ -94,8 +137,10 @@ module Navigation
         :url => :sub_level,
         :options => {:class=>'content top_level', "data-menu"=>"content"},
         :if => lambda{current_organization},
-        :items=> Katello.config.katello? ? [ menu_subscriptions, menu_providers, menu_sync_management, menu_content_search, menu_system_templates, menu_changeset_management] :
-            [ menu_subscriptions, menu_system_templates]
+          :items=> Katello.config.katello? ?
+            [menu_subscriptions, menu_providers, menu_sync_management, menu_content_search,
+             menu_content_view_definitions, menu_system_templates, menu_changeset_management] :
+            [menu_subscriptions, menu_system_templates]
       }
     end
 
@@ -107,7 +152,6 @@ module Navigation
        :options => {:class=>'content second_level menu_parent', "data-menu"=>"content", "data-dropdown"=>"repositories"},
        :items => [menu_custom_providers, menu_redhat_providers, menu_gpg]
       }
-
     end
 
     def menu_redhat_providers
@@ -146,6 +190,14 @@ module Navigation
       }
     end
 
+    def menu_content_view_definitions
+      {:key => :content_view_definitions,
+       :name => _("Content View Definitions"),
+       :if => lambda{Katello.config.katello? && ContentViewDefinition.any_readable?(current_organization)},
+       :options => {:class=>'content second_level', "data-menu"=>"content"},
+       :url =>content_view_definitions_path,
+      }
+    end
 
     def menu_sync_status
       {:key => :sync_status,
@@ -154,7 +206,6 @@ module Navigation
         :options => {:class=>"third_level", "data-dropdown"=>"sync"}
       }
     end
-
 
     def menu_sync_plan
       {:key => :sync_plans,
@@ -267,6 +318,23 @@ module Navigation
           :if => lambda{@distribution},
           :options => {:class=>"panel_link"}
         }
+      ]
+    end
+
+    def promotion_content_view_navigation
+      [
+          { :key => :promotion_content_view_content,
+            :name =>_("Content"),
+            :url => lambda{content_organization_environment_content_view_version_path(@view_version.id)},
+            :if => lambda{@view_version},
+            :options => {:class=>"panel_link"}
+          },
+          { :key => :promotion_content_view_details,
+            :name =>_("Details"),
+            :url => lambda{organization_environment_content_view_version_path(@view_version.id)},
+            :if => lambda{@view_version},
+            :options => {:class=>"panel_link"}
+          }
       ]
     end
 
@@ -384,5 +452,43 @@ module Navigation
         }
       ]
     end
+
+    def distributors_navigation
+      menu = [
+        { :key => :distributor_details,
+          :name =>_("Details"),
+          :url => lambda{edit_distributor_path(@distributor.id)},
+          :if => lambda{@distributor},
+          :options => {:class=>"panel_link menu_parent"},
+          :items => distributors_subnav
+        },
+        { :key => :distributor_subscriptions,
+          :name =>_("Subscriptions"),
+          :url => lambda{subscriptions_distributor_path(@distributor.id)},
+          :if => lambda{@distributor},
+          :options => {:class=>"panel_link"}
+        }
+      ]
+      menu
+    end
+
+    def distributors_subnav
+      [
+        { :key => :distributor_info,
+          :name =>_("Distributor Info"),
+          :url => lambda{edit_distributor_path(@distributor.id)},
+          :if => lambda{@distributor},
+          :options => {:class=>"third_level panel_link"},
+        },
+        { :key => :distributor_events,
+          :name =>_("Events History"),
+          :url => lambda{distributor_events_path(@distributor.id)},
+          :if => lambda{@distributor},
+          :options => {:class=>"third_level panel_link"},
+        }
+      ]
+    end
+
+
   end
 end

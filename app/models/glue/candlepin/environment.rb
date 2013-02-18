@@ -1,5 +1,5 @@
 #
-# Copyright 2012 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -24,55 +24,70 @@ module Glue::Candlepin::Environment
   end
 
   module InstanceMethods
+
     def set_environment
-      Rails.logger.info _("Creating an environment in candlepin: %s") % label
-      Resources::Candlepin::Environment.create(self.organization.label, id, label, description)
+      Resources::Candlepin::Environment.find(self.cp_id)
+      Rails.logger.info _("Candlepin environment already exists: %s") % self.label
+
+    rescue RestClient::ResourceNotFound => e
+      Rails.logger.info _("Creating environment in candlepin: %s") % self.label
+      Resources::Candlepin::Environment.create(self.content_view.organization.label, self.cp_id, self.label,
+                                               self.content_view.description)
+
     rescue => e
-      Rails.logger.error _("Failed to create candlepin environment %s") % "#{label}: #{e}, #{e.backtrace.join("\n")}"
+      Rails.logger.error _("Failed to create candlepin environment %s") %
+                           "#{self.label}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
     def del_environment
-      Rails.logger.info _("Deleting environment in candlepin: %s") % label
-      Resources::Candlepin::Environment.destroy(id)
+      Rails.logger.info _("Deleting environment in candlepin: %s") % self.label
+      Resources::Candlepin::Environment.destroy(self.cp_id)
     rescue => e
-      Rails.logger.error _("Failed to delete candlepin environment %s") % "#{label}: #{e}, #{e.backtrace.join("\n")}"
+      Rails.logger.error _("Failed to delete candlepin environment %s") %
+                           "#{self.label}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
     def save_environment_orchestration
       case self.orchestration_for
         when :create
-          post_queue.create(:name => "candlepin environment for organization: #{self.label}", :priority => 3, :action => [self, :set_environment])
+          post_queue.create(:name => "candlepin environment for content view: #{self.content_view.label}",
+                            :priority => 3,
+                            :action => [self, :set_environment])
       end
     end
 
     def destroy_environment_orchestration
-      post_queue.create(:name => "candlepin environment for organization: #{self.label}", :priority => 4, :action => [self, :del_environment])
+      post_queue.create(:name => "candlepin environment for content view: #{self.content_view.label}",
+                        :priority => 4,
+                        :action => [self, :del_environment])
     end
 
-
-    # the name of the method is misleading - it's not update of content, but rather promotion of content to environment
     def update_cp_content
-      new_content_ids = all_env_content_ids - saved_env_content_ids
-      Resources::Candlepin::Environment.add_content(self.id, new_content_ids)
+      all_env_ids = all_env_content_ids
+      saved_cp_ids = saved_env_content_ids
+
+      add_ids = all_env_ids - saved_cp_ids
+      Resources::Candlepin::Environment.add_content(self.cp_id, add_ids) unless add_ids.empty?
+
+      delete_ids = saved_cp_ids - all_env_ids.to_a
+      Resources::Candlepin::Environment.delete_content(self.cp_id, delete_ids) unless delete_ids.empty?
     end
 
     protected
 
     def all_env_content_ids
-      #can't use enabled scope due to intermittent issue
-      self.repositories.all.select{|r| r.enabled}.reduce(Set.new) do |env_content_ids, repo|
+      self.content_view.repos(self.owner).select{|r| r.enabled}.reduce(Set.new) do |env_content_ids, repo|
         env_content_ids << repo.content_id
       end
     end
 
     def saved_env_content_ids
-      Resources::Candlepin::Environment.find(self.id)[:environmentContent].map do |content|
+      Resources::Candlepin::Environment.find(self.cp_id)[:environmentContent].map do |content|
         content[:contentId]
       end
     end
-
 
   end
 

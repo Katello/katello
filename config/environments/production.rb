@@ -1,5 +1,8 @@
 require 'katello_logger'
 
+# workaround for https://github.com/nex3/sass/issues/69
+require 'sass/plugin'
+
 Src::Application.configure do
   # Settings specified here will take precedence over those in config/environment.rb
 
@@ -57,8 +60,4 @@ Src::Application.configure do
 
   # Do not update compass SASS files in production (we precompile them)
   Sass::Plugin.options[:never_update] = true
-
-  # if paranoia is set to true even children of Exception will be rescued
-  # set it true in production
-  config.exception_paranoia = true
 end

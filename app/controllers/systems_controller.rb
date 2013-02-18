@@ -79,13 +79,16 @@ class SystemsController < ApplicationController
   def param_rules
     update_check = lambda do
       if params[:system]
-        sys_rules = {:system => [:name, :description, :location, :releaseVer, :serviceLevel, :environment_id] }
+        sys_rules = {:system => [:name, :description, :location, :releaseVer, :serviceLevel, :environment_id, :content_view_id] }
         check_hash_params(sys_rules, params)
       else
         check_array_params([:id], params)
       end
     end
-    {   :create => {:arch => [:arch_id],:system=>[:sockets, :name, :environment_id, :memory], :system_type =>[:virtualized]},
+    {   :create => {:arch => [:arch_id],
+                    :system=>[:sockets, :name, :environment_id, :content_view_id, :memory],
+                    :system_type =>[:virtualized]
+                   },
         :update => update_check
     }
   end
@@ -115,6 +118,7 @@ class SystemsController < ApplicationController
     @system.name= params["system"]["name"]
     @system.cp_type = "system"
     @system.environment = KTEnvironment.find(params["system"]["environment_id"])
+    @system.content_view = ContentView.find_by_id(params["system"].try(:[], "content_view_id"))
     #create it in candlepin, parse the JSON and create a new ruby object to pass to the view
     #find the newly created system
     if @system.save!
@@ -195,7 +199,7 @@ class SystemsController < ApplicationController
   end
 
 
-  def split_order order
+  def split_order(order)
     if order
       order.split("|")
     else
@@ -211,7 +215,7 @@ class SystemsController < ApplicationController
     consumed_entitlements = @system.consumed_entitlements.collect do |entitlement|
       pool = ::Pool.find_pool(entitlement.poolId)
       product = Product.where(:cp_id => pool.product_id).first
-      entitlement.provider_id = product.nil? ? nil : product.provider_id
+      entitlement.provider_id = product.try :provider_id
       entitlement
     end
 
@@ -729,12 +733,12 @@ class SystemsController < ApplicationController
   end
 
   def sort_order_limit systems
-      sort_columns(COLUMNS, systems) if params[:order]
-      offset = params[:offset].to_i if params[:offset]
-      offset ||= 0
-      last = offset + current_user.page_size
-      last = systems.length if last > systems.length
-      systems[offset...last]
+    sort_columns(COLUMNS, systems) if params[:order]
+    offset = params[:offset].to_i if params[:offset]
+    offset ||= 0
+    last = offset + current_user.page_size
+    last = systems.length if last > systems.length
+    systems[offset...last]
   end
 
   def first_objects objects
