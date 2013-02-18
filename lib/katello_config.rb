@@ -28,6 +28,9 @@ module Katello
   #
   # Configuration access points are methods {Katello.config} and {Katello.early_config}, see method documentation.
   #
+  # Default configuration values are stored in `src/config/katello_defaults.yml`. Default values can be overridden
+  # in configuration files (`config/katello.yml` or `/etc/katello/katello.yml`)
+  #
   # Configuration is represented with tree-like-structure defined with Configuration::Node. Node has
   # minimal Hash-like interface. Node is more strict than Hash. Differences:
   # * If undefined key is accessed an error NoKey is raised (keys with nil values has to be
@@ -258,21 +261,25 @@ module Katello
 
     # processes configuration loading from config_files
     class LoaderImpl
-      attr_reader :config_file_paths, :validation
+      attr_reader :config_file_paths, :validation, :default_config_file_path
 
-      def initialize(options = { })
-        @config_file_paths = options[:config_file_paths] || raise(ArgumentError)
-        @validation        = options[:validation] || raise(ArgumentError)
+      def initialize(options = {})
+        @config_file_paths        = options[:config_file_paths] || raise(ArgumentError)
+        @default_config_file_path = options[:default_config_file_path] || raise(ArgumentError)
+        @validation               = options[:validation] || raise(ArgumentError)
       end
 
-      # raw config data form katello.yml represented with Node
+      # raw config data from katello.yml represented with Node
       def config_data
-        @config_data ||= Node.new(
-            YAML::load(ERB.new(File.read(config_file_path)).result(Object.new.send(:binding)))).tap do |config|
-          config.each do |k, env_config|
-            decrypt_password! env_config.database if env_config && env_config.present?(:database)
-          end
+        @config_data ||= Node.new.tap do |c|
+          c.deep_merge! default_config_data
+          c.deep_merge! load_yml_file(config_file_path)
         end
+      end
+
+      # raw config data from katello_defaults.yml represented with Node
+      def default_config_data
+        @default_config_data ||= load_yml_file default_config_file_path
       end
 
       # access point for Katello configuration
@@ -312,6 +319,23 @@ module Katello
         end
       end
 
+      def load_yml_file(file_path)
+        raw_parsed_yml  = YAML::load(ERB.new(File.read(file_path)).result(Object.new.send(:binding)))
+        hash_parsed_yml = case raw_parsed_yml
+                          when Hash
+                            raw_parsed_yml
+                          when nil, false, ''
+                            {}
+                          else
+                            raise "malformed yml file '#{file_path}'"
+                          end
+        Node.new(hash_parsed_yml).tap do |config|
+          config.each do |k, env_config|
+            decrypt_password! env_config.database if env_config && env_config.present?(:database)
+          end
+        end
+      end
+
       def environment
         Rails.env.to_sym rescue raise 'Rails.env is not accessible, try to use #early_config instead'
       end
@@ -331,8 +355,11 @@ module Katello
         config[:use_foreman] = config.katello? if config[:use_foreman].nil?
         config[:use_elasticsearch] = config.katello? if config[:use_elasticsearch].nil?
 
-        config[:email_reply_address] = config[:email_reply_address] ?
-            config[:email_reply_address] : "no-reply@"+config[:host]
+        config[:email_reply_address] = if config[:email_reply_address]
+                                         config[:email_reply_address]
+                                       else
+                                         "no-reply@"+config[:host]
+                                       end
 
         load_version config
       end
@@ -371,7 +398,7 @@ module Katello
                     search use_foreman password_reset_expiration redhat_repository_url port
                     elastic_url rest_client_timeout elastic_index allow_roles_logging
                     katello_version pulp tire_log log_level log_level_sql email_reply_address
-                    embed_yard_documentation)
+                    exception_paranoia embed_yard_documentation)
 
       has_values :app_mode, %w(katello headpin)
       has_values :url_prefix, %w(/headpin /sam /cfse /katello)
@@ -395,8 +422,9 @@ module Katello
     end
 
     Loader = LoaderImpl.new(
-        :config_file_paths => %W(#{root}/config/katello.yml /etc/katello/katello.yml),
-        :validation        => VALIDATION)
+        :config_file_paths        => %W(#{root}/config/katello.yml /etc/katello/katello.yml),
+        :default_config_file_path => "#{root}/config/katello_defaults.yml",
+        :validation               => VALIDATION)
   end
 
 
