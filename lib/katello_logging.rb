@@ -86,7 +86,8 @@ module Katello
                                     :facility => ::Syslog::Constants::LOG_DAEMON)
           )
         when 'file'
-          log_filename = "#{Rails.root}/log/#{options[:prefix]}#{root_configuration.filename}"
+          path = root_configuration.has_key?(:path) ? root_configuration.path : "#{Rails.root}/log"
+          log_filename = "#{path}/#{options[:prefix]}#{root_configuration.filename}"
           ::Logging.appenders.rolling_file(
               name,
               options.reverse_merge(:filename => log_filename,
