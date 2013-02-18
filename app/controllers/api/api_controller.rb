@@ -221,7 +221,7 @@ class Api::ApiController < ActionController::Base
   end
 
   def record_not_found(exception)
-    logger.error exception.class
+    logger.error(pp_exception(exception), :with_backtrace => false)
     logger.debug exception.backtrace.join("\n")
 
     respond_to do |format|
