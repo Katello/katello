@@ -495,7 +495,6 @@ install -Dp -m0644 %{confdir}/service-wait.sysconfig %{buildroot}%{_sysconfdir}/
 install -Dp -m0755 %{confdir}/%{name}.init %{buildroot}%{_initddir}/%{name}
 install -Dp -m0755 %{confdir}/%{name}-jobs.init %{buildroot}%{_initddir}/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
-install -Dp -m0644 %{confdir}/%{name}-jobs.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.httpd.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 install -Dp -m0644 %{confdir}/thin.yml %{buildroot}%{_sysconfdir}/%{name}/
 install -Dp -m0644 %{confdir}/mapping.yml %{buildroot}%{_sysconfdir}/%{name}/
@@ -648,7 +647,6 @@ usermod -a -G katello-shared tomcat
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config %{_sysconfdir}/%{name}/environment.rb
 %config %{_sysconfdir}/logrotate.d/%{name}
-%config %{_sysconfdir}/logrotate.d/%{name}-jobs
 %config %{_sysconfdir}/%{name}/mapping.yml
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/service-wait
