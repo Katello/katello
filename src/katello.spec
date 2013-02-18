@@ -15,6 +15,11 @@
 %global datadir %{_sharedstatedir}/%{name}
 %global confdir deploy/common
 
+### TODO temp disabled for F18 ###
+%if 0%{?fedora} == 18
+%global nodoc 1
+%endif
+
 Name:           katello
 Version:        1.3.14
 Release:        1%{?dist}
@@ -435,12 +440,7 @@ fi
 a2x -d manpage -f manpage man/katello-service.8.asciidoc
 
 #api docs
-### TODO temp disabled for F18 ###
-%if 0%{?fastbuild:1} || 0%{?fedora} == 18
-    # make empty directories when doing fast build
-    mkdir -p %{buildroot}%{homedir}/public/apipie-cache
-    mkdir -p doc/apidoc
-%else
+%if ! 0%{?nodoc:1}
     echo Generating API docs
     # by default do not stop on missing dep and only require "build" environment
     export BUNDLER_EXT_NOSTRICT=1
@@ -743,12 +743,16 @@ usermod -a -G katello-shared tomcat
 %files headpin-all
 
 %files api-docs
+%if ! 0%{?nodoc:1}
 %doc doc/apidoc*
 %{homedir}/public/apipie-cache
+%endif
 
 %files headpin-api-docs
+%if ! 0%{?nodoc:1}
 %doc doc/headpin-apidoc*
 %{homedir}/public/headpin-apipie-cache
+%endif
 
 %files devel-all
 
