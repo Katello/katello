@@ -617,6 +617,7 @@ Src::Application.routes.draw do
         end
         resources :repository_sets, :only=>[:index] do
           post :enable, :on => :member
+          post :disable, :on => :member
         end
       end
 

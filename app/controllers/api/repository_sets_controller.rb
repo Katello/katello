@@ -13,9 +13,9 @@
 class Api::RepositorySetsController < Api::ApiController
   respond_to :json
 
-  before_filter :find_organization, :only => [:enable, :index]
-  before_filter :find_product, :only => [:enable, :index]
-  before_filter :find_product_content, :only=> [:enable]
+  before_filter :find_organization, :only => [:enable, :disable, :index]
+  before_filter :find_product, :only => [:enable, :disable, :index]
+  before_filter :find_product_content, :only=> [:enable, :disable]
 
   before_filter :authorize
 
@@ -25,6 +25,7 @@ class Api::RepositorySetsController < Api::ApiController
     read_test = lambda{@product.readable?}
     {
       :enable => edit_product_test,
+      :disable => edit_product_test,
       :index => read_test,
     }
   end
@@ -33,14 +34,24 @@ class Api::RepositorySetsController < Api::ApiController
   api :POST, "/product/:product_id/repository_set/:id/enable", "Enable a repository set for a product."
   param :organization_id, :identifier, :required => true, :desc => "id of an organization the repository will be contained in"
   param :product_id, :number, :required => true, :desc => "id of a product the repository will be contained in"
+  param :id, :number, :required => true, :desc => "id of the repository set to enable"
   def enable
     raise _('Repository sets are enabled by default for custom products..') if @product.custom?
-    render :json=>@product.async(:organization=>@organization).enable_content(@product_content.content.id)
+    render :json=>@product.async(:organization=>@organization).refresh_content(@product_content.content.id)
+  end
+
+  api :POST, "/product/:product_id/repository_set/:id/disable", "Enable a repository set for a product."
+  param :organization_id, :identifier, :required => true, :desc => "id of an organization the repository will be contained in"
+  param :product_id, :number, :required => true, :desc => "id of a product the repository will be contained in"
+  def disable
+    raise _('Repository sets are not applicable for custom products..') if @product.custom?
+    render :json=>@product.async(:organization=>@organization).disable_content(@product_content.content.id)
   end
 
   api :GET, "/product/:product_id/repository_set/", "List repository sets for a product."
   param :organization_id, :identifier, :required => true, :desc => "id of an "
   param :product_id, :number, :required => true, :desc => "id of a product to list repository sets in"
+  param :id, :number, :required => true, :desc => "id of the repository set to disable"
   def index
     raise _('Repository sets are not available for custom products.') if @product.custom?
     content = @product.productContent.collect do |pc|
@@ -48,7 +59,6 @@ class Api::RepositorySetsController < Api::ApiController
           content[:katello_enabled] = pc.katello_enabled?
           content
         end
-
     render :json=>content
   end
 
@@ -57,14 +67,12 @@ class Api::RepositorySetsController < Api::ApiController
   def find_product_content
     pcs = @product.productContent.select{|pc| pc.content.id == params[:id]}
     raise HttpErrors::NotFound, _("Couldn't find repository set with id.") % params[:id] if pcs.empty?
-    raise HttpErrors::NotFound, _("Found multiple product contents with id %s.") % params[:id] if pcs.size > 1
+    raise HttpErrors::NotFound, _("Found multiple repository sets with id %s.") % params[:id] if pcs.size > 1
     @product_content = pcs.first
   end
 
-
-
   def find_product
-    @product = @organization.products.find_by_cp_id params[:product_id]
+    @product = @organization.products.find_by_cp_id(params[:product_id])
     raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:product_id] if @product.nil?
   end
 end

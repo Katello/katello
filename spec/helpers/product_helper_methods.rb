@@ -28,10 +28,11 @@ module ProductHelperMethods
     new_test_product org, @library
   end
 
-  def new_test_product org, env, suffix=""
+  def new_test_product org, env, suffix="", custom=true
     disable_product_orchestration
     disable_repo_orchestration
-    @provider = Provider.create!({:organization => org, :name => 'provider' + suffix, :repository_url => "https://something.url", :provider_type => Provider::CUSTOM})
+    @provider = org.redhat_provider if !custom
+    @provider ||= Provider.create!({:organization => org, :name => 'provider' + suffix, :repository_url => "https://something.url", :provider_type => Provider::CUSTOM})
     @p = Product.create!(ProductTestData::SIMPLE_PRODUCT.merge({:name=>'product' + suffix, :environments => [env],
                                                                 :provider => @provider}))
 
