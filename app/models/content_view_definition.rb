@@ -105,12 +105,18 @@ class ContentViewDefinition < ActiveRecord::Base
   # as well as repositories that are explicitly associated with the definition).
   def repos
     repos = []
-    self.products.each do |prod|
-      prod_repos = prod.repos(organization.library).enabled
-      prod_repos.select{|r| r.in_default_view?}.each{|r| repos << r}
+    if self.composite?
+      self.component_content_views.each do |component_view|
+        component_view.repos(organization.library).each{|r| repos << r}
+      end
+    else
+      self.products.each do |prod|
+        prod_repos = prod.repos(organization.library).enabled
+        prod_repos.select{|r| r.in_default_view?}.each{|r| repos << r}
+      end
+      repos.concat(self.repositories)
+      repos.uniq!
     end
-    repos.concat(self.repositories)
-    repos.uniq!
     repos
   end
 
