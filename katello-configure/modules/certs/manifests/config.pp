@@ -152,16 +152,6 @@ class certs::config {
   }
 
 
-  file { "${certs::params::candlepin_certs_dir}/candlepin-upstream-ca.crt":
-    ensure => link,
-    owner => "root",
-    group => "katello",
-    mode => 644,
-    target => "${certs::params::candlepin_certs_dir}/candlepin-ca.crt",
-    require => File["${certs::params::candlepin_certs_dir}/candlepin-ca.crt"]
-  }
-
-
   require "katello::params"
 
   if ($katello::params::deployment != 'headpin') {
