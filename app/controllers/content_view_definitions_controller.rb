@@ -85,7 +85,7 @@ class ContentViewDefinitionsController < ApplicationController
 
   def new
     render :partial => "new",
-           :locals => {:view_definitions => ContentViewDefinition.readable(current_organization)}
+           :locals => {:view_definitions => ContentViewDefinition.readable(current_organization).non_composite}
   end
 
   def create
@@ -243,7 +243,7 @@ class ContentViewDefinitionsController < ApplicationController
 
       render :partial => "composite_definition_content",
              :locals => {:view_definition => @view_definition,
-                         :view_definitions => ContentViewDefinition.readable(current_organization),
+                         :view_definitions => ContentViewDefinition.readable(current_organization).non_composite,
                          :views => component_views,
                          :editable=>@view_definition.editable?,
                          :name=>controller_display_name}
