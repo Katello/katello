@@ -83,7 +83,7 @@ module Navigation
     end
 
     def menu_configuration_templates
-      {:key => :registered,
+      {:key => :configuration_templates,
        :name => _("Configuration Templates"),
        :url => configuration_templates_path,
        :if => lambda{true}, #TODO: check permissions
