@@ -166,7 +166,7 @@ Requires:       %{name}-configure
 Requires:       %{name}-cli
 Requires:       postgresql-server
 Requires:       postgresql
-Requires:       candlepin-tomcat6
+Requires(post): candlepin-tomcat6
 Requires:       candlepin-selinux
 # the following backend engine deps are required by <katello-configure>
 Requires:       mongodb mongodb-server
@@ -237,7 +237,7 @@ Requires:       katello-configure
 Requires:       katello-cli
 Requires:       postgresql-server
 Requires:       postgresql
-Requires(post):       candlepin-tomcat6
+Requires(post): candlepin-tomcat6
 Requires:       thumbslug
 Requires:       thumbslug-selinux
 
