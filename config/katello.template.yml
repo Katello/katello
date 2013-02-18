@@ -5,6 +5,30 @@
 
 common:
   app_mode: katello
+
+  # when adding a new logger don't forget to add it in here even if it's disabled by default
+  # otherwise log trace feature won't work for such logger
+  logging:
+    loggers:
+      sql:
+        enabled: true
+      app:
+        enabled: true
+      glue:
+        enabled: true
+      pulp_rest:
+        enabled: true
+      candlepin_rest:
+        enabled: true
+      candlepin_proxy:
+        enabled: true
+      foreman_rest:
+        enabled: true
+      roles:
+        enabled: false
+      tire_rest:
+        enabled: false
+
 #
 # Production environment configuration
 #
@@ -14,6 +38,9 @@ production:
   logging:
     # colorize log including level token based on severity
     colorize: false
+    # adds an extra line after each log message with information from which file:line and method
+    # was this message logged
+    log_trace: false
     # configuration of all loggers used in app
     loggers:
       # this logger is parent of all other loggers, by default this is the only one having appender
@@ -39,6 +66,7 @@ production:
         #  [%F] filename where the logging request was issued
         #  [%L] line number where the logging request was issued
         #  [%M] method name where the logging request was issued
+        #  [%X{string}] variable set using ::Logging.mdc['string'] =
         pattern: "[%5l %d %c %X{uuid} #%p] %m\n"
         # log filename for this environment, it will be placed into #{Rails.root}/log directory
         filename: "production.log"

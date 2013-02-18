@@ -16,10 +16,12 @@ module Katello
       configure_color_scheme
     end
 
+    # shortcut to logging configuration
     def configuration
       Katello.config.logging
     end
 
+    # shortcut to root logger configuration
     def root_configuration
       configuration.loggers.root
     end
@@ -32,7 +34,13 @@ module Katello
       #   Logging.logger['sql'].appenders = Logging.appenders.file("#{Rails.env}_sql.log")
     end
 
+    # sets all children loggers according to configuration
+    #
+    # we use +additive+ feature of logging gem to enable or disable logger output, by default
+    # only root logger has an appender so if we set +additive+ attribute to false, no message
+    # is outputted by particular logger
     def configure_children_loggers
+      # set level and enabled configuration
       loggers_hash = configuration.loggers.to_hash
       loggers_hash.keys.tap { |a| a.delete(:root) }.each do |logger|
         logger_config = configuration.loggers[logger]
@@ -40,12 +48,24 @@ module Katello
         logger_object.level = logger_config.level if logger_config.has_key?(:level)
         logger_object.additive = logger_config.enabled if logger_config.has_key?(:enabled)
       end
+
+      # set trace according to configuration
+      children = ::Logging::Repository.instance.children(:root)
+      children = children.map(&:name).tap { |l| l.delete('Logging') }
+      children.each do |logger|
+        ::Logging.logger[logger].trace = configuration.log_trace
+      end
     end
 
+    # set root logger specific configuration
+    #
+    # root logger has configurable appender by argument +options+
+    # we also set fallback appender to STDOUT in case a developer asks for unusable appender
     def configure_root_logger(options)
       ::Logging.logger.root.level     = root_configuration.level
       root_appender                   = build_root_appender(options)
       ::Logging.logger.root.appenders = root_appender
+      ::Logging.logger.root.trace     = configuration.log_trace
 
       # fallback to log to STDOUT if there is any configuration problem
       if ::Logging.logger.root.appenders.empty?
@@ -54,6 +74,8 @@ module Katello
       end
     end
 
+    # currently we support two types of appenders, rolling file and syslog
+    # note that syslog ignores pattern and logs only messages
     def build_root_appender(options)
       name = "#{options[:prefix]}joined"
       case root_configuration.type
@@ -79,6 +101,7 @@ module Katello
     end
 
     def build_layout(pattern, colorize)
+      pattern += "  Log trace: %F:%L method: %M\n" if configuration.log_trace
       ::Logging.layouts.pattern(:pattern => pattern, :color_scheme => colorize ? 'bright' : nil)
     end
 
@@ -92,6 +115,9 @@ module Katello
                              },
                              :date   => :blue,
                              :logger => :cyan,
+                             :line   => :yellow,
+                             :file   => :yellow,
+                             :method => :yellow,
       )
     end
 
