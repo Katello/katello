@@ -87,21 +87,21 @@ module Glue::Candlepin::Consumer
 
     def validate_cp_consumer
       if new_record?
-        validates_inclusion_of :cp_type, :in => %w( system hypervisor)
+        validates_inclusion_of :cp_type, :in => %w( system hypervisor candlepin)
         validates_presence_of :facts
       end
     end
 
     def set_candlepin_consumer
       Rails.logger.debug "Creating a consumer in candlepin: #{name}"
-      consumer_json = Resources::Candlepin::Consumer.create(self.environment_id,
-                                                 self.organization.label,
-                                                 self.name, self.cp_type,
-                                                 self.facts,
-                                                 self.installedProducts,
-                                                 self.autoheal,
-                                                 self.releaseVer,
-                                                 self.serviceLevel)
+      consumer_json = Resources::Candlepin::Consumer.create(self.cp_environment_id,
+                                                            self.organization.label,
+                                                            self.name, self.cp_type,
+                                                            self.facts,
+                                                            self.installedProducts,
+                                                            self.autoheal,
+                                                            self.releaseVer,
+                                                            self.serviceLevel)
 
       load_from_cp(consumer_json)
     rescue => e
@@ -119,7 +119,8 @@ module Glue::Candlepin::Consumer
 
     def update_candlepin_consumer
       Rails.logger.debug "Updating consumer in candlepin: #{name}"
-      Resources::Candlepin::Consumer.update(self.uuid, @facts, @guestIds, @installedProducts, @autoheal, @releaseVer, self.serviceLevel, environment_id)
+      Resources::Candlepin::Consumer.update(self.uuid, @facts, @guestIds, @installedProducts, @autoheal,
+                                            @releaseVer, self.serviceLevel, self.cp_environment_id)
     rescue => e
       Rails.logger.error "Failed to update candlepin consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -151,6 +152,14 @@ module Glue::Candlepin::Consumer
     def subscribe pool, quantity = nil
       Rails.logger.debug "Subscribing to pool '#{pool}' for : #{name}"
       Resources::Candlepin::Consumer.consume_entitlement self.uuid, pool, quantity
+    rescue => e
+      Rails.logger.debug e.backtrace.join("\n\t")
+      raise e
+    end
+
+    def export
+      Rails.logger.debug "Exporting manifest"
+      Resources::Candlepin::Consumer.export self.uuid
     rescue => e
       Rails.logger.debug e.backtrace.join("\n\t")
       raise e
@@ -216,6 +225,14 @@ module Glue::Candlepin::Consumer
     # A rollback occurred while attempting to create the consumer; therefore, perform necessary cleanup.
     def rollback_on_candlepin_create
       del_candlepin_consumer
+    end
+
+    def cp_environment_id
+      if self.content_view
+        self.content_view.cp_environment_id(self.environment)
+      else
+        self.environment_id
+      end
     end
 
     def hostname

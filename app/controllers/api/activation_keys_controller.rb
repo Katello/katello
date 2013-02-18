@@ -42,8 +42,8 @@ class Api::ActivationKeysController < Api::ApiController
 
   def param_rules
     {
-      :create => {:activation_key => [:name, :description, :system_template_id, :usage_limit]},
-      :update => {:activation_key  => [:name, :description, :environment_id, :system_template_id, :usage_limit]}
+      :create => {:activation_key => [:name, :description, :system_template_id, :usage_limit, :content_view_id]},
+      :update => {:activation_key  => [:name, :description, :environment_id, :system_template_id, :usage_limit, :content_view_id]}
     }
   end
 
@@ -68,6 +68,7 @@ class Api::ActivationKeysController < Api::ApiController
   param :activation_key, Hash do
     param :name, :identifier, :desc => "activation key identifier (alphanum characters, space, _ and -)"
     param :description, String, :allow_nil => true
+    param :content_view_id, :identifier, :desc => "content view id", :allow_nil => true
   end
   def create
     created = ActivationKey.create!(params[:activation_key]) do |ak|

@@ -81,11 +81,41 @@ Src::Application.routes.draw do
         post :packages_items
         post :errata_items
         post :repos
+        post :views
         get :repo_packages
         get :repo_errata
         get :repo_compare_packages
         get :repo_compare_errata
       end
+  end
+
+  resources :content_view_definitions do
+    collection do
+      get :default_label
+      get :items
+    end
+    member do
+      post :clone
+      get :views
+      get :publish_setup
+      post :publish
+      get :status
+      get :content
+      post :update_content
+      put :update_component_views
+      get :filter
+    end
+    resources :content_view, :only => [], :controller => :content_view_definitions do
+      member do
+        post :refresh
+      end
+    end
+  end
+
+  resources :content_views do
+    collection do
+       get :auto_complete
+    end
   end
 
   resources :activation_keys do
@@ -246,6 +276,32 @@ Src::Application.routes.draw do
     end
   end
 
+  resources :distributors do
+    resources :events, :only => [:index, :show], :controller => "distributor_events" do
+      collection do
+        get :status
+        get :more_events
+        get :items
+      end
+    end
+
+    member do
+      get :edit
+      get :subscriptions
+      post :update_subscriptions
+      get :products
+      get :more_products
+      get :download
+    end
+    collection do
+      get :auto_complete
+      get :items
+      get :env_items
+      get :environments
+      delete :bulk_destroy
+    end
+  end
+
   resources :products, :only => [:new, :create, :edit,:update, :destroy] do
     collection do
       get :auto_complete
@@ -354,6 +410,7 @@ Src::Application.routes.draw do
       get :repos
       get :distributions
       get :details
+      get :content_views
     end
 
   end
@@ -376,6 +433,12 @@ Src::Application.routes.draw do
       member do
         get :system_templates
         get :products
+        get :content_views
+      end
+      resources :content_view_versions, :only => [:show] do
+        member do
+          get :content
+        end
       end
     end
   end
@@ -607,6 +670,34 @@ Src::Application.routes.draw do
         get :apply, :on => :collection, :action => :apply_to_all_systems
       end
       match '/system_info_keys/:keyname' => 'organization_system_info_keys#destroy', :via => :delete
+
+      resources :content_views, :only => [:index, :show]
+      resources :content_view_definitions do
+        post :publish, :on => :member
+        resources :products, :only => [] do
+          get :index, :action => :list_content_view_definition_products,
+            :on => :collection
+          put :index, :action => :update_content_view_definition_products,
+            :on => :collection
+        end
+        resources :repositories, :only => [] do
+          get :index, :action => :list_content_view_definition_repositories,
+            :on => :collection
+          put :index, :action => :update_content_view_definition_repositories,
+            :on => :collection
+        end
+      end
+    end
+
+    resources :content_view_definitions, :only => [:destroy, :content_views] do
+      get :content_views, :on => :member
+      put :content_views, :on => :member, :action => :update_content_views
+    end
+    resources :content_views, :only => [:promote, :show] do
+      member do
+        post :promote
+        post :refresh
+      end
     end
 
     resources :changesets, :only => [:show, :update, :destroy] do
@@ -636,6 +727,10 @@ Src::Application.routes.draw do
       resources :templates, :controller => :changesets_content do
         post   :index, :on => :collection, :action => :add_template
         delete :destroy, :on => :member, :action => :remove_template
+      end
+      resources :content_views, :controller => :changesets_content do
+        post   :index, :on => :collection, :action => :add_content_view
+        delete :destroy, :on => :member, :action => :remove_content_view
       end
 
     end
@@ -722,7 +817,7 @@ Src::Application.routes.draw do
     match '/consumers' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
     match '/hypervisors' => 'systems#hypervisors_update', :via => :post
     resources :consumers, :controller => 'systems'
-    match '/owners/:organization_id/environments' => 'environments#index', :via => :get
+    match '/owners/:organization_id/environments' => 'environments#rhsm_index', :via => :get
     match '/owners/:organization_id/pools' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_pools_path
     match '/owners/:organization_id/servicelevels' => 'candlepin_proxies#get', :via => :get, :as => :proxy_owner_servicelevels_path
     match '/environments/:environment_id/consumers' => 'systems#index', :via => :get

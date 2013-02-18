@@ -1,5 +1,3 @@
-= include_stylesheets :activation_keys
-
 .grid_16
   = help_tip_button
   - if Katello.config.katello?
@@ -22,5 +20,7 @@
   :plain
     localize({
       "noTemplate": '#{no_template}',
-      "update_template": '#{escape_javascript(_('Select a System Template'))}'
+      "noContentView": '#{no_content_view}',
+      "update_template": '#{escape_javascript(_('Select a System Template'))}',
+      "update_view": '#{escape_javascript(_('Select a Content View'))}'
     });

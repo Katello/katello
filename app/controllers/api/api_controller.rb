@@ -153,6 +153,18 @@ class Api::ApiController < ActionController::Base
     head :status => HttpErrors::INTERNAL_ERROR and return false
   end
 
+  def find_content_view_definition
+    cvd_id = params[:content_view_definition_id]
+    @definition = ContentViewDefinition.find_by_id(cvd_id)
+    if @definition.nil?
+      raise HttpErrors::NotFound, _("Couildn't find content view with id '%s'") % cvd_id
+    end
+  end
+
+  def find_optional_environment
+    @environment = KTEnvironment.find_by_id(params[:environment_id]) if params[:environment_id]
+  end
+
   protected
 
   def exception_with_response(exception)
@@ -209,7 +221,7 @@ class Api::ApiController < ActionController::Base
   end
 
   def record_not_found(exception)
-    logger.error exception.class
+    logger.error(pp_exception(exception), :with_backtrace => false)
     logger.debug exception.backtrace.join("\n")
 
     respond_to do |format|

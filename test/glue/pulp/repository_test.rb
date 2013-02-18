@@ -151,15 +151,6 @@ class GluePulpRepoTest < GluePulpRepoTestBase
     assert_kind_of Runcible::Extensions::YumDistributor, @fedora_17_x86_64.generate_distributor
   end
 
-  def test_repo_id
-    @fedora             = Product.find(products(:fedora).id)
-    @library            = KTEnvironment.find(environments(:library).id)
-    @acme_corporation   = Organization.find(organizations(:acme_corporation).id)
-    repo_id = Glue::Pulp::Repo.repo_id(@fedora.label, @fedora_17_x86_64.label, @library.label, @acme_corporation.label)
-
-    assert_equal "acme_corporation_label-library_label-fedora_label-fedora_17_x86_64_label", repo_id
-  end
-
   def test_populate_from
     assert @fedora_17_x86_64.populate_from({ @fedora_17_x86_64.pulp_id => {} })
   end
@@ -186,15 +177,12 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
       task = @@fedora_17_x86_64.sync.first
       wait_on_task(task)
     end
-  rescue => e
-    puts e
   end
 
   def self.after_suite
     VCR.use_cassette('glue_pulp_repo_helper') do
       @@fedora_17_x86_64.destroy_repo
     end
-  rescue
   end
 
   def test_last_sync
@@ -301,11 +289,12 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
     assert_kind_of Repository, clone
   ensure
     clone.destroy
+    assert_empty Repository.where(:id=>clone.id)
   end
 
   def test_clone_contents
     dev = KTEnvironment.find(environments(:dev).id)
-    @@fedora_17_x86_64_dev.relative_path = Glue::Pulp::Repos.clone_repo_path(@@fedora_17_x86_64, dev)
+    @@fedora_17_x86_64_dev.relative_path = Repository.clone_repo_path(@@fedora_17_x86_64, dev, dev.default_content_view)
     @@fedora_17_x86_64_dev.create_pulp_repo
 
     task_list = @@fedora_17_x86_64.clone_contents(@@fedora_17_x86_64_dev)
@@ -322,9 +311,9 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
 
     task_list = @@fedora_17_x86_64.promote(library, staging)
     assert_equal 4, task_list.length
-
     self.class.wait_on_tasks(task_list)
-    clone_id = @@fedora_17_x86_64.clone_id(staging)
+
+    clone_id = @@fedora_17_x86_64.clone_id(staging, staging.default_content_view)
     cloned_repo = Repository.where(:pulp_id => clone_id).first
     cloned_repo.destroy
   end
@@ -355,25 +344,23 @@ class GluePulpRepoRequiresEmptyPromoteTest < GluePulpRepoTestBase
       #Runcible::Resources::Repository.delete(clone_id)
       ##@@fedora_17_x86_64.destroy_repo
       @@fedora_17_x86_64.create_pulp_repo
-
       task_list = @@fedora_17_x86_64.promote(@@library, @@staging)
       wait_on_tasks(task_list)
 
       task = @@fedora_17_x86_64.sync.first
       wait_on_task(task)
 
-      clone_id = @@fedora_17_x86_64.clone_id(@@staging)
+
+      clone_id = @@fedora_17_x86_64.clone_id(@@staging, @@staging.default_content_view)
       @@cloned_repo = Repository.where(:pulp_id => clone_id).first
     end
   end
 
   def self.after_suite
     VCR.use_cassette('glue_pulp_repo_helper') do
-      @@cloned_repo.destroy
+      @@cloned_repo.destroy if @@cloned_repo
       @@fedora_17_x86_64.destroy_repo
     end
-  rescue => e
-    puts "ERROR: " + e.to_s
   end
 
   def test_add_packages
@@ -416,15 +403,12 @@ class GluePulpRepoRequiresSyncAndPromoteTest < GluePulpRepoTestBase
       task = @@fedora_17_x86_64.sync.first
       wait_on_task(task)
 
-      clone_id = @@fedora_17_x86_64.clone_id(@@staging)
-
       task_list = @@fedora_17_x86_64.promote(@@library, @@staging)
       wait_on_tasks(task_list)
 
+      clone_id = @@fedora_17_x86_64.clone_id(@@staging, @@staging.default_content_view)
       @@cloned_repo = Repository.where(:pulp_id => clone_id).first
     end
-  rescue => e
-    puts "ERROR: " + e.to_s
   end
 
   def self.after_suite
@@ -432,8 +416,6 @@ class GluePulpRepoRequiresSyncAndPromoteTest < GluePulpRepoTestBase
       @@fedora_17_x86_64.destroy_repo
       @@cloned_repo.destroy
     end
-  rescue => e
-    puts "ERROR: " + e.to_s
   end
 
   def test_delete_packages
