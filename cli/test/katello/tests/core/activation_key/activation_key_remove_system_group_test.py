@@ -51,6 +51,7 @@ class ActivationKeyRemoveSystemGroupGroupsTest(CLIActionTestCase):
         self.mock(self.action.api, 'remove_system_group', self.ACTIVATION_KEY)
         self.mock(self.action.api, 'activation_keys_by_organization', [self.ACTIVATION_KEY])
         self.mock(SystemGroupAPI, 'system_groups', [self.SYSTEM_GROUP_1])
+        self.mock(self.module.sys, "stderr", None)
 
     def test_it_calls_system_remove_system_group_api(self):
         self.action.run()

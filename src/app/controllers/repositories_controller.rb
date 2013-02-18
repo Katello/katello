@@ -70,7 +70,7 @@ class RepositoriesController < ApplicationController
     notify.message label_assigned unless label_assigned.blank? unless params[:ignore_success_notice]
 
     render :nothing => true
-  rescue Errors::ConflictException, ActiveRecord::RecordInvalid, PulpErrors::ServiceUnavailable => e
+  rescue Errors::ConflictException, ActiveRecord::RecordInvalid, Glue::Pulp::PulpErrors::ServiceUnavailable => e
     notify.exception e
     execute_after_filters
     render :nothing => true, :status => :bad_request

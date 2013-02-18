@@ -94,7 +94,7 @@ class SingleRepoAction(RepoAction):
         if repoId:
             repo = self.api.repo(repoId)
         else:
-            repo = get_repo(orgName, prodName, prodLabel, prodId, repoName, envName, includeDisabled)
+            repo = get_repo(orgName, repoName, prodName, prodLabel, prodId, envName, includeDisabled)
 
         return repo
 

@@ -162,12 +162,12 @@ class Provider < ActiveRecord::Base
     return task_status
   end
 
-  def discover_repos
+  def discover_repos(notify = false)
     raise _("Cannot discover repos for the Red Hat Provider") if self.redhat_provider?
     raise _("Repository Discovery already in progress") if self.discovery_task && !self.discovery_task.finished?
     raise _("Discovery URL not set.") if self.discovery_url.blank?
     self.discovered_repos = []
-    self.discovery_task = self.async(:organization=>self.organization).start_discovery_task
+    self.discovery_task = self.async(:organization=>self.organization).start_discovery_task(notify)
     self.save!
   end
 
@@ -193,7 +193,7 @@ class Provider < ActiveRecord::Base
 
   private
 
-  def start_discovery_task
+  def start_discovery_task(notify = false)
     task_id = AsyncOperation.current_task_id
     provider_id = self.id
 
@@ -217,6 +217,9 @@ class Provider < ActiveRecord::Base
     discover = RepoDiscovery.new(self.discovery_url)
     discover.run(found_func, continue_func)
 
+  rescue => e
+    Notify.exception _('Repos discovery failed.'), e if notify
+    raise e
   ensure
     ##in case of error
   end

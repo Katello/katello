@@ -32,6 +32,7 @@ class PromotionChangeset < Changeset
     validate_content! self.errata
     validate_content! self.packages
     validate_content! self.distributions
+    validate_content! self.content_views
 
     # check no collision exists
     if (collision = Changeset.started.colliding(self).first)
@@ -66,8 +67,11 @@ class PromotionChangeset < Changeset
     update_progress! '50'
     PulpTaskStatus::wait_for_tasks promote_repos(from_env, to_env)
     update_progress! '70'
-    to_env.update_cp_content
+    to_env.content_view_environment.update_cp_content
     update_progress! '80'
+    PulpTaskStatus::wait_for_tasks promote_views(from_env, to_env)
+    update_view_cp_content(to_env)
+    update_progress! '85'
     promote_packages from_env, to_env
     update_progress! '90'
     promote_errata from_env, to_env
@@ -127,6 +131,19 @@ class PromotionChangeset < Changeset
       async_tasks << repo.promote(from_env, to_env)
     end
     async_tasks.flatten(1)
+  end
+
+
+  def promote_views(from_env, to_env)
+    self.content_views.collect do |view|
+      view.promote(from_env, to_env)
+    end.flatten
+  end
+
+  def update_view_cp_content(to_env)
+    self.content_views.collect do |view|
+      view.update_cp_content(to_env)
+    end
   end
 
   def promote_packages from_env, to_env
@@ -329,6 +346,7 @@ class PromotionChangeset < Changeset
     repos += self.errata.collect { |p| p.promotable_repositories }.flatten(1)
     repos += self.distributions.collect { |d| d.promotable_repositories }.flatten(1)
     repos += self.repos_to_be_promoted
+    repos += self.content_views.collect { |v| v.repos(self.environment.prior)}.flatten(1)
     repos += self.products_to_be_promoted.collect{|p| p.repos(self.environment.prior)}.flatten(1)
     repos.uniq
   end

@@ -20,7 +20,7 @@ module Glue::Pulp::Repo
       validates_with Validators::KatelloUrlFormatValidator,
                      :attributes => :feed,
                      :field_name => :url, :on => :create,
-                     :if => Proc.new { |o| o.environment.library? }
+                     :if => Proc.new { |o| o.environment.library? && o.in_default_view?  }
 
       before_save :save_repo_orchestration
       before_destroy :destroy_repo_orchestration
@@ -63,10 +63,6 @@ module Glue::Pulp::Repo
     end
   end
 
-  def self.repo_id product_label, repo_label, env_label, organization_label
-    [organization_label, env_label, product_label, repo_label].compact.join("-").gsub(/[^-\w]/,"_")
-  end
-
   module InstanceMethods
     def save_repo_orchestration
       case orchestration_for
@@ -77,15 +73,6 @@ module Glue::Pulp::Repo
 
     def last_sync
       self.importers.first["last_sync"] if self.importers.first
-    end
-
-    def relative_path
-      return @relative_path if @relative_path
-      self.distributors.first['config']['relative_url'] if self.distributors.first
-    end
-
-    def relative_path=(path)
-      @relative_path = path
     end
 
     def initialize(attrs=nil, options={})
@@ -152,7 +139,6 @@ module Glue::Pulp::Repo
     end
 
     def promote from_env, to_env
-
       if self.is_cloned_in?(to_env)
         self.clone_contents(self.get_clone(to_env))
       else
@@ -264,11 +250,6 @@ module Glue::Pulp::Repo
       return false
     end
 
-    def clone_id(env)
-      Glue::Pulp::Repo.repo_id(self.product.label, self.label, env.label, env.organization.label)
-    end
-
-
     def set_sync_schedule(date_and_time)
       type = Runcible::Extensions::YumImporter::ID
       if date_and_time
@@ -356,32 +337,6 @@ module Glue::Pulp::Repo
       end
     end
 
-
-    def create_clone to_env
-      library = self.environment.library? ? self : self.library_instance
-      raise _("Cannot clone repository from %{from_env} to %{to_env}.  They are not sequential.") %
-                {:from_env=>self.environment.name, :to_env=>to_env.name} if to_env.prior != self.environment
-      raise _("Repository has already been promoted to %{to_env}") %
-                {:to_env=>to_env} if Repository.where(:library_instance_id=>library.id).in_environment(to_env).count > 0
-
-      key = EnvironmentProduct.find_or_create(to_env, self.product)
-      clone = Repository.new(:environment_product => key,
-                             :cp_label => self.cp_label,
-                             :library_instance=>library,
-                             :label=>self.label,
-                             :name=>self.name,
-                             :arch=>self.arch,
-                             :major=>self.major,
-                             :minor=>self.minor,
-                             :enable=>self.enabled,
-                             :content_id=>self.content_id
-                             )
-      clone.pulp_id = clone.clone_id(to_env)
-      clone.relative_path = Glue::Pulp::Repos.clone_repo_path(self, to_env)
-      clone.save!
-      return clone
-    end
-
     def clone_contents to_repo
       events = []
       events << Runcible::Extensions::Rpm.copy(self.pulp_id, to_repo.pulp_id)
@@ -389,6 +344,10 @@ module Glue::Pulp::Repo
       events << Runcible::Extensions::Distribution.copy(self.pulp_id, to_repo.pulp_id)
       events << Runcible::Extensions::PackageGroup.copy(self.pulp_id, to_repo.pulp_id)
       events
+    end
+
+    def clear_contents
+      Runcible::Extensions::Repository.unassociate_units(self.pulp_id)
     end
 
     def sync_start

@@ -95,6 +95,7 @@ popd
 #check locale file
 for i in po/*.po; do
     msgfmt -c $i
+    FILE=$(mktemp)
     # TODO - enable endwhitespace, endpunc, puncspacing, options filters
     pofilter --nofuzzy -t variables -t blank -t urls -t emails -t long -t newlines \
         -t printf -t validchars --gnome $i | tee $FILE

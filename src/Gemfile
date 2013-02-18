@@ -45,7 +45,7 @@ gem 'gettext_i18n_rails'
 gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 
 # Reports - TODO this is hack that needs to be removed once ruport is officially released
-if system('rpm -q rubygem-ruport >/dev/null')
+if system('rpm -q rubygem-ruport >/dev/null') && ! defined? JRUBY_VERSION
   gem 'ruport', '>=1.7.0'
 else
   gem 'ruport', '>=1.7.0', :git => 'git://github.com/ruport/ruport.git'
@@ -64,6 +64,7 @@ gem "apipie-rails", '>= 0.0.13'
 gem 'hooks'
 gem 'runcible', '~> 0.3.3'
 gem 'anemone'
+
 
 # Load all sub-gemfiles from bundler.d directory
 Dir[File.expand_path('bundler.d/*.rb', File.dirname(__FILE__))].each do |bundle|

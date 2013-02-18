@@ -15,6 +15,11 @@
 %global datadir %{_sharedstatedir}/%{name}
 %global confdir deploy/common
 
+### TODO temp disabled for F18 ###
+%if 0%{?fedora} == 18
+%global nodoc 1
+%endif
+
 Name:           katello
 Version:        1.3.14
 Release:        1%{?dist}
@@ -57,8 +62,7 @@ Requires:       rubygem(rest-client)
 Requires:       rubygem(jammit)
 Requires:       rubygem(rails_warden)
 Requires:       rubygem(net-ldap)
-Requires:       rubygem(compass) >= 0.11.5
-Requires:       rubygem(compass) < 0.12
+Requires:       rubygem(compass)
 Requires:       rubygem(compass-960-plugin) >= 0.10.4
 Requires:       rubygem(oauth)
 Requires:       rubygem(i18n_data) >= 0.2.6
@@ -115,8 +119,7 @@ BuildRequires:  rubygem(gettext)
 BuildRequires:  rubygem(jammit)
 BuildRequires:  rubygem(chunky_png)
 BuildRequires:  rubygem(fssm) >= 0.2.7
-BuildRequires:  rubygem(compass) >= 0.11.5
-BuildRequires:  rubygem(compass) < 0.12
+BuildRequires:  rubygem(compass)
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
 BuildRequires:  rubygem(alchemy) >= 1.0.0
@@ -403,7 +406,13 @@ ALCHEMY_DIR=$(rpm -ql rubygem-alchemy | grep -o '/.*/vendor' | sed 's/vendor$//'
 cp -R $ALCHEMY_DIR* ./vendor/alchemy
 
 #use Bundler_ext instead of Bundler
-mv Gemfile Gemfile.in
+%if 0%{?fedora} > 17
+  mv Gemfile32 Gemfile.in
+  rm Gemfile
+%else
+  mv Gemfile Gemfile.in
+  rm Gemfile32
+%endif
 
 #pull in branding if present
 if [ -d branding ] ; then
@@ -431,11 +440,7 @@ fi
 a2x -d manpage -f manpage man/katello-service.8.asciidoc
 
 #api docs
-%if 0%{?fastbuild:1}
-    # make empty directories when doing fast build
-    mkdir -p %{buildroot}%{homedir}/public/apipie-cache
-    mkdir -p doc/apidoc
-%else
+%if ! 0%{?nodoc:1}
     echo Generating API docs
     # by default do not stop on missing dep and only require "build" environment
     export BUNDLER_EXT_NOSTRICT=1
@@ -738,12 +743,16 @@ usermod -a -G katello-shared tomcat
 %files headpin-all
 
 %files api-docs
+%if ! 0%{?nodoc:1}
 %doc doc/apidoc*
 %{homedir}/public/apipie-cache
+%endif
 
 %files headpin-api-docs
+%if ! 0%{?nodoc:1}
 %doc doc/headpin-apidoc*
 %{homedir}/public/headpin-apipie-cache
+%endif
 
 %files devel-all
 

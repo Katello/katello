@@ -40,7 +40,8 @@ gem 'uuidtools'
 # Stuff for view/display/frontend
 gem 'haml', '~> 3.1.2'
 gem 'haml-rails', "= 0.3.4"
-gem 'compass', '>= 0.11.5', '< 0.12'
+gem 'compass-rails'
+gem 'compass'
 gem 'compass-960-plugin', '>= 0.10.4', :require => 'ninesixty'
 gem 'simple-navigation', '>= 3.3.4'
 
@@ -49,7 +50,7 @@ gem 'gettext_i18n_rails'
 gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 
 # Reports - TODO this is hack that needs to be removed once ruport is officially released
-if system('rpm -q rubygem-ruport >/dev/null')
+if system('rpm -q rubygem-ruport >/dev/null') && ! defined? JRUBY_VERSION
   gem 'ruport', '>=1.7.0'
 else
   gem 'ruport', '>=1.7.0', :git => 'git://github.com/ruport/ruport.git'

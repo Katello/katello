@@ -40,7 +40,7 @@ class Api::EnvironmentsController < Api::ApiController
   end
 
   respond_to :json
-  before_filter :find_organization, :only => [:index, :create]
+  before_filter :find_organization, :only => [:index, :rhsm_index, :create]
   before_filter :find_environment, :only => [:show, :update, :destroy, :repositories, :releases]
   before_filter :authorize
   def rules
@@ -55,6 +55,7 @@ class Api::EnvironmentsController < Api::ApiController
 
     {
       :index => index_rule,
+      :rhsm_index => index_rule,
       :show => view_rule,
       :create => manage_rule,
       :update => manage_rule,
@@ -69,12 +70,12 @@ class Api::EnvironmentsController < Api::ApiController
     {
       :create => {:environment =>  ["name", "label", "description", "prior" ]},
       :update => {:environment =>  ["name", "description", "prior" ]},
-      :index => [:name, :library, :id, :organization_id]
+      :index => [:name, :library, :id, :organization_id],
+      :rhsm_index => [:name, :library, :id, :organization_id]
     }
   end
 
   api :GET, "/organizations/:organization_id/environments", "List environments in an organization"
-  api :GET, "/owners/:organization_id/environments", "List environments for RHSM"
   param :organization_id, :identifier, :desc => "organization identifier"
   param :library, :bool, :desc => "set true if you want to see only library environment"
   param :name, :identifier, :desc => "filter only environments with this identifier"
@@ -99,6 +100,25 @@ class Api::EnvironmentsController < Api::ApiController
     end
 
     render :json => (environments).to_json
+  end
+
+  api :GET, "/owners/:organization_id/environments", "List environments for RHSM"
+  param :organization_id, :identifier, :desc => "organization identifier"
+  param :library, :bool, :desc => "set true if you want to see only library environment"
+  param :name, :identifier, :desc => "filter only environments with this identifier"
+  def rhsm_index
+    if query_params.has_key?(:name)
+      # retrieve the requested environment
+      all_environments = get_content_view_environments(query_params[:name]).
+                          collect{|env| {:id => env.cp_id, :name => env.label,
+                                         :description => env.content_view.description}}
+    else
+      # retrieve the list of all environments
+      all_environments = get_content_view_environments.collect{|env| {:id => env.cp_id, :name => env.label,
+                                                                      :description => env.content_view.description}}
+
+    end
+    render :json => all_environments.flatten
   end
 
   api :GET, "/environments/:id", "Show an environment"
@@ -176,6 +196,26 @@ either library or an environment at the end of the chain
     raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:id] if @environment.nil?
     @organization = @environment.organization
     @environment
+  end
+
+  def get_content_view_environments(name=nil)
+    environments = ContentViewEnvironment.joins(:content_view => :organization).
+        where("organizations.id = ?", @organization.id)
+    environments = environments.where("content_view_environments.name = ?", name) if name
+
+    if environments.empty?
+      environments = ContentViewEnvironment.joins(:content_view => :organization).
+          where("organizations.id = ?", @organization.id)
+      environments = environments.where("content_view_environments.label = ?", name) if name
+    end
+
+    # remove any content view environments that aren't readable
+    unless @organization.readable?
+      environments.delete_if do |env|
+        !env.content_view.readable?
+      end
+    end
+    environments
   end
 
 end

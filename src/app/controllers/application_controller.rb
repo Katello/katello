@@ -37,7 +37,7 @@ class ApplicationController < ActionController::Base
   # this is always in the top
   # order of these are important.
   rescue_from Exception do |exception|
-    paranoia = Src::Application.config.exception_paranoia
+    paranoia = Katello.config.exception_paranoia
 
     to_do = case exception
               when StandardError
