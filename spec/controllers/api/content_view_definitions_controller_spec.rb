@@ -102,10 +102,10 @@ describe Api::ContentViewDefinitionsController, :katello => true do
 
   describe "destroy" do
     it "should delete the definition from the database" do
-      definition = FactoryGirl.create(:content_view_definition)
-      count = ContentViewDefinition.count
+      definition = FactoryGirl.build_stubbed(:content_view_definition)
+      ContentViewDefinition.stub(:find).with(definition.id).and_return(definition)
+      definition.should_receive(:destroy).and_return(true)
       delete :destroy, :id => definition.id
-      ContentViewDefinition.count.should eql(count-1)
     end
   end
 
