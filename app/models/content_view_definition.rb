@@ -38,6 +38,9 @@ class ContentViewDefinition < ActiveRecord::Base
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
 
+  scope :composite, where(:composite=>true)
+  scope :non_composite, where(:composite=>false)
+
   def publish(name, description, label=nil, options = { })
     options = { :async => true, :notify => false }.merge options
 
