@@ -57,8 +57,4 @@ Src::Application.configure do
 
   # Do not update compass SASS files in production (we precompile them)
   Sass::Plugin.options[:never_update] = true
-
-  # if paranoia is set to true even children of Exception will be rescued
-  # set it true in production
-  config.exception_paranoia = true
 end
