@@ -69,11 +69,13 @@ class ProductsController < ApplicationController
   end
 
   def refresh_content
-    pc = @product.enable_content(params[:content_id])
+    raise _('Repository sets are enabled by default for custom products.') if @product.custom?
+    pc = @product.refresh_content(params[:content_id])
     render :partial=>'providers/redhat/repos', :locals=>{:pContent=>pc}
   end
 
   def disable_content
+    raise _('Repository sets cannot be disabled for custom products.') if @product.custom?
     pc = @product.disable_content(params[:content_id])
     render :json=>pc
   end

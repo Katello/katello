@@ -143,5 +143,51 @@ describe ProductsController, :katello => true do
       end
     end
 
+
+    context "when enabling/disabling content" do
+      before(:each) do
+        disable_product_orchestration
+        disable_org_orchestration
+        @organization = new_test_org
+        @product = Product.create!(:name=>"red Hat product", :provider=>@organization.redhat_provider,
+                                   :environments=>[@organization.library])
+        Product.stub(:find).and_return(@product)
+      end
+
+      it "should call refresh_content on enable" do
+        @product.should_receive(:refresh_content).with('3').and_return(true)
+        put :refresh_content, {:id=>@product.id, :content_id=>'3'}
+        response.should be_success
+      end
+
+      it "should call disable_content on enable" do
+        @product.should_receive(:disable_content).with('3').and_return(true)
+        put :disable_content, {:id=>@product.id, :content_id=>'3'}
+        response.should be_success
+      end
+    end
+
+    context "when enabling/disabling content from custom products" do
+      before(:each) do
+        disable_product_orchestration
+        disable_org_orchestration
+        @organization = new_test_org
+        @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
+        @product = Product.create!(:name=>"custom product", :provider=>@provider,
+                                   :environments=>[@organization.library])
+        Product.stub(:find).and_return(@product)
+      end
+
+      it "enable should throw an exception with a non-redhat product" do
+        put :refresh_content, {:id=>@product.id, :content_id=>'3'}
+        response.should_not be_success
+      end
+
+      it "disable should throw an exception with a non-redhat product" do
+        put :disable_content, {:id=>@product.id, :content_id=>'3'}
+        response.should_not be_success
+      end
+    end
+
   end
 end
