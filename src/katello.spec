@@ -435,7 +435,8 @@ fi
 a2x -d manpage -f manpage man/katello-service.8.asciidoc
 
 #api docs
-%if 0%{?fastbuild:1}
+### TODO temp disabled for F18 ###
+%if 0%{?fastbuild:1} || 0%{?fedora} == 18
     # make empty directories when doing fast build
     mkdir -p %{buildroot}%{homedir}/public/apipie-cache
     mkdir -p doc/apidoc
