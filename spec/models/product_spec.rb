@@ -255,7 +255,7 @@ describe Product, :katello => true do
           Repository.should_receive(:create!).once.with(hash_including(:major => 6, :minor => '6Server'))
           Repository.should_receive(:create!).once.with(hash_including(:major => 6, :minor => '6.0'))
           Repository.should_receive(:create!).once.with(hash_including(:major => 6, :minor => '6.1'))
-          @product.productContent.first.enable
+          @product.productContent.first.refresh_repositories
         end
       end
 
@@ -279,7 +279,7 @@ describe Product, :katello => true do
           p.orchestration_for = :import_from_cp
           p.productContent.each{|pc| pc.product = p} #fake pc can't easily keep track of its product
           p.save!
-          p.productContent.first.enable
+          p.productContent.first.refresh_repositories
         end
 
         describe "repository for product content" do
