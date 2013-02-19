@@ -11,6 +11,9 @@ common:
   logging:
     # enable logging output inline in rails console
     console_inline: true
+    # adds an extra line after each log message with information from which file:line and method
+    # was this message logged
+    log_trace: false
     loggers:
       sql:
         enabled: true
