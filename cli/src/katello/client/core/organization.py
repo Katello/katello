@@ -20,10 +20,9 @@ from katello.client.api.organization import OrganizationAPI
 from katello.client.api.product import ProductAPI
 from katello.client.api.organization_system_info_keys import OrganizationSystemInfoKeysAPI
 from katello.client.core.base import BaseAction, Command
-from katello.client.lib.async import AsyncTask
+from katello.client.lib.async import AsyncTask, evaluate_task_status
 from katello.client.lib.ui.progress import run_spinner_in_bg, wait_for_async_task
 from katello.client.lib.utils.data import test_record
-from katello.client.lib.ui.formatters import format_task_errors
 from katello.client.lib.ui.printer import VerboseStrategy
 from katello.client.lib.ui import printer
 from datetime import timedelta, datetime
@@ -140,13 +139,10 @@ class Delete(OrganizationAction):
 
         run_spinner_in_bg(wait_for_async_task, [task], message=_("Deleting the organization, please wait... "))
 
-        if task.succeeded():
-            print _("Successfully deleted org [ %s ]") % name
-            return os.EX_OK
-        else:
-            print _("Organization [ %(name)s ] deletion failed: %(format_task_errors)s" \
-                % {'name':name, 'format_task_errors':format_task_errors(task.errors())} )
-            return os.EX_DATAERR
+        return evaluate_task_status(task,
+            failed = _("Organization [ %s ] deletion failed:") % name,
+            ok =     _("Successfully deleted org [ %s ]") % name
+        )
 
 # ------------------------------------------------------------------------------
 

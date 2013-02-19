@@ -15,6 +15,9 @@
 # in this software or its documentation.
 #
 
+import os
+
+from katello.client.lib.ui.formatters import format_sync_errors, format_sync_status
 from katello.client.api.task_status import TaskStatusAPI, SystemTaskStatusAPI
 from katello.client.api.job import SystemGroupJobStatusAPI
 
@@ -70,11 +73,11 @@ class AsyncTask():
     def failed(self):
         return (len(filter(lambda t: t['state'] in ('error', 'timed out'), self._tasks)) > 0)
 
-    def cancelled(self):
+    def canceled(self):
         return (len(filter(lambda t: t['state'] in ('cancelled', 'canceled'), self._tasks)) > 0)
 
     def succeeded(self):
-        return not (self.failed() or self.cancelled())
+        return not (self.failed() or self.canceled())
 
     def subtask_left(self):
         return len([1 for task in self._tasks if self._subtask_is_running(task)])
@@ -127,8 +130,8 @@ class SystemAsyncTask(AsyncTask):
     def status_api(self):
         return SystemTaskStatusAPI()
 
-    def get_result_description(self):
-        return ", ".join([task["result_description"] for task in self._tasks])
+    def status_messages(self):
+        return [task["result_description"] for task in self._tasks]
 
 
 def progress(left, total):
@@ -176,11 +179,6 @@ class AsyncJob(AsyncTask):
     def update(self):
         self._tasks = [self.status_api().status(j['id']) for j in self._tasks]
 
-    def succeeded(self):
-        return not (self.failed() or self.cancelled())
-
-    def __str__(self):
-        return object.__str__(self) + ' ' + str(self._tasks)
 
 
 # SystemGroup representation for a job
@@ -193,5 +191,42 @@ class SystemGroupAsyncJob(AsyncJob):
     def status_api(self):
         return SystemGroupJobStatusAPI(self.__org_id, self.__system_group_id)
 
-    def get_status_message(self):
-        return ", ".join([job["status_message"] for job in self._tasks])
+    def status_messages(self):
+        return [job["status_message"] for job in self._tasks]
+
+
+
+def evaluate_task_status(task, failed="", canceled="", ok=""):
+    """
+    Test task status and print the corresponding message
+
+    :type task: AsyncTask
+    :type failed: string
+    :param failed: message that is printed when the task failed
+    :type canceled: string
+    :param canceled:  message that is printed when the task was cancelled
+    :type ok: string
+    :param ok:  message that is printed when the task went ok
+    :return: EX_DATAERR on failure or cancel, otherwise EX_OK
+    """
+
+    if task.failed():
+        print failed + ":" + format_sync_errors(task)
+        return os.EX_DATAERR
+    elif task.canceled():
+        print canceled
+        return os.EX_DATAERR
+    else:
+        if "status_messages" in dir(task):
+            print ok + ":" + format_sync_status(task)
+        else:
+            print ok
+        return os.EX_OK
+
+
+def evaluate_remote_action(task):
+    evaluate_task_status(task,
+        failed =   _("Remote action failed"),
+        canceled = _("Remote action canceled"),
+        ok =       _("Remote action finished")
+    )

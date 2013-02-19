@@ -21,15 +21,17 @@ from katello.client import constants
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
+
 from katello.client.api.utils import get_environment, get_changeset, get_template, get_repo, get_product, \
     get_content_view
-from katello.client.lib.async import AsyncTask
+from katello.client.lib.async import AsyncTask, evaluate_task_status
 from katello.client.lib.ui.progress import run_spinner_in_bg, wait_for_async_task
 from katello.client.lib.utils.data import test_record
-from katello.client.lib.ui.formatters import format_date, format_task_errors
+from katello.client.lib.ui.formatters import format_date
 from katello.client.lib.ui import printer
 from katello.client.lib.utils.encoding import u_str
 from katello.client.lib.ui.printer import batch_add_columns
+
 # base changeset action ========================================================
 class ChangesetAction(BaseAction):
     def __init__(self):
@@ -536,13 +538,10 @@ class Apply(ChangesetAction):
 
         run_spinner_in_bg(wait_for_async_task, [task], message=_("Applying the changeset, please wait... "))
 
-        if task.succeeded():
-            print _("Changeset [ %s ] applied" % csName)
-            return os.EX_OK
-        else:
-            print _("Changeset [ %(csName)s ] promotion failed: %(task_errors)s" \
-                % {'csName':csName, 'task_errors':format_task_errors(task.errors())})
-            return os.EX_DATAERR
+        return evaluate_task_status(task,
+            failed = _("Changeset [ %s ] promotion failed") % csName,
+            ok =     _("Changeset [ %s ] applied") % csName
+        )
 
 # ==============================================================================
 class Promote(Apply):

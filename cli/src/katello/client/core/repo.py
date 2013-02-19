@@ -26,7 +26,7 @@ from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org, 
 from katello.client.core.base import BaseAction, Command
 
 from katello.client.lib.control import system_exit
-from katello.client.lib.async import AsyncTask
+from katello.client.lib.async import AsyncTask, evaluate_task_status
 from katello.client.lib.utils.encoding import u_str
 from katello.client.lib.ui import printer
 from katello.client.lib.ui.printer import batch_add_columns
@@ -365,16 +365,11 @@ class Sync(SingleRepoAction):
         task = AsyncTask(self.api.sync(repo['id']))
         run_async_task_with_status(task, ProgressBar())
 
-        if task.succeeded():
-            print _("Repo [ %s ] synced" % repo['name'])
-            return os.EX_OK
-        elif task.cancelled():
-            print _("Repo [ %s ] synchronization canceled" % repo['name'])
-            return os.EX_OK
-        else:
-            print _("Repo [ %(repo_name)s ] failed to sync: %(sync_errors)s") \
-                % {'repo_name':repo['name'], 'sync_errors':format_sync_errors(task)}
-            return os.EX_DATAERR
+        return evaluate_task_status(task,
+            failed =   _("Repo [ %s ] failed to sync") % repo["name"],
+            canceled = _("Repo [ %s ] synchronization canceled") % repo["name"],
+            ok =       _("Repo [ %s ] synchronized") % repo["name"]
+        )
 
 
 class CancelSync(SingleRepoAction):

@@ -23,9 +23,8 @@ from katello.client.cli.base import opt_parser_add_org, \
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_environment, get_content_view, \
         get_library
-from katello.client.lib.async import AsyncTask
+from katello.client.lib.async import AsyncTask, evaluate_task_status
 from katello.client.lib.ui.progress import run_spinner_in_bg, wait_for_async_task
-from katello.client.lib.ui.formatters import format_task_errors
 
 # base content_view action --------------------------------------------------------
 
@@ -158,31 +157,22 @@ class Promote(ContentViewAction):
         environment = get_environment(org_name, env_name)
         env_id = environment["id"]
 
-        try:
-            task = self.api.promote(view["id"], env_id)
+        task = self.api.promote(view["id"], env_id)
 
-            if not async:
-                task = AsyncTask(task)
-                run_spinner_in_bg(wait_for_async_task, [task],
-                        message=_("Promoting content view, please wait..."))
+        if not async:
+            task = AsyncTask(task)
+            run_spinner_in_bg(wait_for_async_task, [task],
+                    message=_("Promoting content view, please wait..."))
 
-                if task.succeeded():
-                    print _("Content view [ %(view)s ] promoted to environment [ %(env)s ]") % \
-                            ({"view": view["name"], "env": environment["name"]})
-                    return_code = os.EX_OK
-                else:
-                    print _("View [ %(view)s ] promotion failed: %(err)s") % \
-                            ({"view": view["name"], "err": format_task_errors(task.errors)})
-                    return_code = os.EX_DATAERR
+            return evaluate_task_status(task,
+                failed = _("View [ %s ] promotion failed") % view["name"],
+                ok =     _("Content view [ %(view)s ] promoted to environment [ %(env)s ]") %
+                    {"view": view["name"], "env": environment["name"]},
+            )
 
-            else:
-                print _("Promotion task [ %s ] was successfully created.") % (task["uuid"])
-                return_code = os.EX_OK
-
-        except Exception:
-            raise
-
-        return return_code
+        else:
+            print _("Promotion task [ %s ] was successfully created.") % (task["uuid"])
+            return os.EX_OK
 
 
 class Refresh(ContentViewAction):
@@ -214,31 +204,21 @@ class Refresh(ContentViewAction):
 
         view = get_content_view(org_name, view_label, view_name, view_id)
 
-        try:
-            task = self.api.refresh(view["id"])
+        task = self.api.refresh(view["id"])
 
-            if not async:
-                task = AsyncTask(task)
-                run_spinner_in_bg(wait_for_async_task, [task],
-                                  message=_("Refreshing view, please wait..."))
+        if not async:
+            task = AsyncTask(task)
+            run_spinner_in_bg(wait_for_async_task, [task],
+                              message=_("Refreshing view, please wait..."))
 
-                if task.succeeded():
-                    print _("Content view [ %s ] was successfully refreshed.") % \
-                        (view["name"])
-                    return_code = os.EX_OK
-                else:
-                    print _("View [ %(view)s ] refresh failed: %(err)s" %
-                            ({"view": view["name"], "err": format_task_errors(task.errors)}))
-                    return_code = os.EX_DATAERR
+            return evaluate_task_status(task,
+                ok =     _("Content view [ %s ] was successfully refreshed.") % view["name"],
+                failed = _("View [ %s ] refresh failed") % view["name"]
+            )
 
-            else:
-                print _("Refresh task [ %s ] was successfully created.") % (task["uuid"])
-                return_code = os.EX_OK
-
-        except Exception:
-            raise
-
-        return return_code
+        else:
+            print _("Refresh task [ %s ] was successfully created.") % (task["uuid"])
+            return os.EX_OK
 
 
 # content_view command ------------------------------------------------------------

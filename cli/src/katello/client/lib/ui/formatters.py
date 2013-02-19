@@ -50,6 +50,9 @@ def format_date(date, to_format="%Y/%m/%d %H:%M:%S"):
     return t.strftime(to_format)
 
 
+def format_sync_status(task):
+    return "\n".join(task.status_messages())
+
 def format_sync_errors(task):
     """
     Format errors in progress returned from AsyncTask
