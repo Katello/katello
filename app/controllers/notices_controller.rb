@@ -14,6 +14,7 @@
 # and open the template in the editor.
 
 class NoticesController < ApplicationController
+
   skip_before_filter :authorize,:require_org
   before_filter :notices_authorize
   before_filter :readable_by, :only => [:auto_complete_search]
@@ -22,6 +23,10 @@ class NoticesController < ApplicationController
 
   def section_id
      'notifications'
+  end
+
+  def menu_definition
+    { :show => :notices_menu }.with_indifferent_access
   end
 
   def notices_authorize

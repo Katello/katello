@@ -15,10 +15,12 @@ require 'navigation/organization'
 require 'navigation/dashboard'
 require 'navigation/setup'
 require 'navigation/systems'
+require 'navigation/notifications'
 
 
 module Navigation
   def self.included(base)
+    base.send :include, NotificationsMenu
     base.send :include, AdministrationMenu
     base.send :include, ContentMenu
     base.send :include, MainMenu
@@ -39,6 +41,12 @@ module Navigation
   module AdministrationMenu
     def admin_main
       [ menu_administration ]
+    end
+  end
+
+  module NotificationsMenu
+    def notifications_menu_main
+      [ menu_notifications ]
     end
   end
 end

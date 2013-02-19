@@ -44,11 +44,10 @@ module Navigation
       menu = {:key => :admin,
        :name => _("Administer"),
         :url => :sub_level,
-        :items=> [ menu_users, menu_roles, menu_orgs ],
+        :items=> [ menu_orgs, (menu_sync_tasks if Katello.config.katello?), menu_users, menu_roles ],
         :options => {:class=>'operations header-widget fl menu_parent', "data-menu"=>"operations"},
         :if => :sub_level
       }
-      menu[:items] << menu_sync_tasks if Katello.config.katello?
       menu[:items] << menu_about # keep the about as the last item
       return menu
     end
@@ -74,7 +73,7 @@ module Navigation
 
     def menu_orgs
       {:key => :orgs,
-       :name => _("Manage Organizations"),
+       :name => _("Organizations"),
        :url => organizations_path,
        :if =>lambda {Organization.any_readable?},
        :options => {:class=>'operations section_level', "data-menu"=>"operations"}
