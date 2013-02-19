@@ -26,9 +26,9 @@ from katello.client.api.product import ProductAPI
 from katello.client.api.repo import RepoAPI
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.api.utils import get_environment, get_provider, get_product, get_sync_plan
-from katello.client.lib.async import AsyncTask
+from katello.client.lib.async import AsyncTask, evaluate_task_status
 from katello.client.lib.ui import printer
-from katello.client.lib.ui.formatters import format_sync_state, format_sync_time, format_task_errors
+from katello.client.lib.ui.formatters import format_sync_state, format_sync_time
 from katello.client.lib.ui.progress import ProgressBar, run_async_task_with_status, run_spinner_in_bg
 from katello.client.lib.ui.progress import wait_for_async_task
 from katello.client.lib.ui.printer import batch_add_columns
@@ -189,19 +189,11 @@ class Sync(SingleProductAction):
         task = AsyncTask(self.api.sync(orgName, prod["id"]))
         run_async_task_with_status(task, ProgressBar())
 
-        if task.failed():
-            errors = [t["result"]['errors'][0] for t in task.get_hashes() if t['state'] == 'error' and
-                                                                             isinstance(t["result"], dict) and
-                                                                             "errors" in t["result"]]
-            print _("Product [ %(prod_name)s ] failed to sync: %(errors)s" \
-                % {'prod_name':prod["name"], 'errors':errors})
-            return os.EX_DATAERR
-        elif task.cancelled():
-            print _("Product [ %s ] synchronization canceled" % prod["name"])
-            return os.EX_DATAERR
-
-        print _("Product [ %s ] synchronized" % prod["name"])
-        return os.EX_OK
+        return evaluate_task_status(task,
+            failed =   _("Product [ %s ] failed to sync") % prod["name"],
+            canceled = _("Product [ %s ] synchronization canceled") % prod["name"],
+            ok =       _("Product [ %s ] synchronized") % prod["name"]
+        )
 
 # ------------------------------------------------------------------------------
 class CancelSync(SingleProductAction):
@@ -278,29 +270,24 @@ class Promote(SingleProductAction):
         env = get_environment(orgName, envName)
         prod = get_product(orgName, prodName, prodLabel, prodId)
 
-        returnCode = os.EX_OK
 
         if not self.repoapi.repos_by_product(orgName, prod['id']):
             print _("Product [ %(prod_name)s ] has no repository") % {'prod_name':prod['name']}
             return os.EX_DATAERR
 
         cset = self.csapi.create(orgName, env["id"], self.create_cs_name(), constants.PROMOTION)
+
         self.csapi.add_content(cset["id"], "products", {'product_id': prod['id']})
         task = self.csapi.apply(cset["id"])
         task = AsyncTask(task)
 
         run_spinner_in_bg(wait_for_async_task, [task], message=_("Promoting the product, please wait... "))
 
-        if task.succeeded():
-            print _("Product [ %(prod_name)s ] promoted to environment [ %(envName)s ] " \
-                % {'prod_name':prod["name"], 'envName':envName})
-            returnCode = os.EX_OK
-        else:
-            print _("Product [ %(prod_name)s ] promotion failed: %(task_errors)s" \
-                % {'prod_name':prod["name"], 'task_errors':format_task_errors(task.errors())} )
-            returnCode = os.EX_DATAERR
-
-        return returnCode
+        return evaluate_task_status(task,
+            failed = _("Product [ %s ] promotion failed") % prod["name"],
+            ok =     _("Product [ %(prod)s ] promoted to environment [ %(env)s ]") %
+                {'prod':prod["name"], 'env':envName}
+        )
 
     @classmethod
     def create_cs_name(cls):

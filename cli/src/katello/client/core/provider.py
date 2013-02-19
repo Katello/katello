@@ -23,10 +23,10 @@ from katello.client.server import ServerRequestError
 from katello.client.core.base import BaseAction, Command
 from katello.client.lib.ui.progress import run_async_task_with_status, run_spinner_in_bg
 from katello.client.lib.control import system_exit
-from katello.client.lib.async import AsyncTask
+from katello.client.lib.async import AsyncTask, evaluate_task_status
 from katello.client.lib.utils.io import get_abs_path
 from katello.client.lib.utils.data import test_record
-from katello.client.lib.ui.formatters import format_sync_state, format_sync_time, format_sync_errors
+from katello.client.lib.ui.formatters import format_sync_state, format_sync_time
 from katello.client.lib.ui.progress import ProgressBar
 from katello.client.lib.ui import printer
 from katello.client.api.utils import get_provider
@@ -200,17 +200,12 @@ class Sync(SingleProviderAction):
         task = AsyncTask(self.api.sync(prov["id"]))
         run_async_task_with_status(task, ProgressBar())
 
-        if task.failed():
-            errors = format_sync_errors(task)
-            print _("Provider [ %(providerName)s ] failed to sync: %(errors)s" \
-                % {'providerName':providerName, 'errors':errors})
-            return os.EX_DATAERR
-        elif task.cancelled():
-            print _("Provider [ %s ] synchronization canceled" % providerName)
-            return os.EX_DATAERR
+        return evaluate_task_status(task,
+            failed =   _("Provider [ %s ] failed to sync") % providerName,
+            canceled = _("Provider [ %s ] synchronization canceled") % providerName,
+            ok =       _("Provider [ %s ] synchronized") % providerName
+        )
 
-        print _("Provider [ %s ] synchronized" % providerName)
-        return os.EX_OK
 
 
 class CancelSync(SingleProviderAction):
