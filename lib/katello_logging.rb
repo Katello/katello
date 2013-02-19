@@ -23,7 +23,8 @@ module Katello
       configure_children_loggers
 
       if defined?(Rails::Console) && configuration.console_inline
-        ::Logging.logger.root.add_appenders ::Logging.appenders.stdout
+        ::Logging.logger.root.add_appenders(
+            ::Logging.appenders.stdout(:layout => build_layout(root_configuration.pattern, configuration.colorize)))
       end
 
       # you can add specific files per logger easily like this
