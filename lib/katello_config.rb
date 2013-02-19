@@ -142,6 +142,12 @@ module Katello
         end
       end
 
+      # respond to implementation according to method missing
+      def respond_to?(symbol, include_private=false)
+        has_key?(symbol) || super
+      end
+
+
       # does not supports Hashes in Arrays
       def deep_merge!(hash_or_config)
         return self if hash_or_config.nil?
