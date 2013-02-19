@@ -25,6 +25,7 @@ class ApplicationController < ActionController::Base
 
   helper "alchemy/translation"
   helper_method :current_organization
+  helper_method :render_correct_nav
   before_filter :set_locale
   before_filter :require_user,:require_org
   before_filter :check_deleted_org
@@ -171,7 +172,7 @@ class ApplicationController < ActionController::Base
     if current_user && current_user.default_locale
       I18n.locale = current_user.default_locale
     else
-      I18n.locale = ApplicationController.extract_locale_from_accept_language_header parse_locale
+      I18n.locale = ApplicationController.extract_locale_from_accept_language_header
     end
 
     logger.debug "Setting locale: #{I18n.locale}"
@@ -221,8 +222,8 @@ class ApplicationController < ActionController::Base
   # Look for match to list of locales specified in request. If not found, try matching just
   # first two letters. Finally, default to english if no matches at all.
   # eg. [en_US, en] would match en
-  # Expects list of locales to search as an array (use parse_locale for that)
-  def self.extract_locale_from_accept_language_header locales
+  def self.extract_locale_from_accept_language_header
+    locales = parse_locale
 
     # Look for full match
     locales.each {|locale|
@@ -243,6 +244,23 @@ class ApplicationController < ActionController::Base
     current_user.create_or_update_search_history(URI(@_request.env['HTTP_REFERER']).path, params[:search])
   rescue => error
     log_exception(error)
+  end
+
+  def render_correct_nav
+    if self.respond_to?(:menu_definition) && self.menu_definition[params[:action]] == :admin_menu
+      session[:menu_back] = true
+      #the menu definition exists, return true
+      render_admin_menu
+    elsif self.respond_to?(:menu_definition) && self.menu_definition[params[:action]] == :notices_menu
+      session[:menu_back] = true
+      session[:notifications] = true
+      render_notifications_menu
+    else
+      #the menu definition does not exist, return false
+      session[:menu_back] = false
+      session[:notifications] = false
+      render_menu(1)
+    end
   end
 
   private # why bother? methods below are not testable/tested
@@ -308,8 +326,8 @@ class ApplicationController < ActionController::Base
   end
 
   # adapted from http_accept_lang gem, return list of browser locales
-  def parse_locale
-    locale_lang = (request.env['HTTP_ACCEPT_LANGUAGE'] || '').split(/\s*,\s*/).collect do |l|
+  def self.parse_locale
+    locale_lang = env['HTTP_ACCEPT_LANGUAGE'].split(/\s*,\s*/).collect do |l|
       l += ';q=1.0' unless l =~ /;q=\d+\.\d+$/
       l.split(';q=')
     end.sort do |x,y|

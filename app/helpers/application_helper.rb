@@ -17,14 +17,9 @@ module ApplicationHelper
   include LayoutHelper
   include BrandingHelper
 
-  #require 'navigation/main'
-
-  #include Navigation
-
   def current_url(extra_params={})
     url_for params.merge(extra_params)
   end
-
 
   def link_to_authorized(*args, &block)
 
@@ -78,7 +73,6 @@ module ApplicationHelper
     list
   end
 
-
   def two_panel(collection, options)
     options[:accessor] ||= "id"
     options[:left_panel_width] ||= nil
@@ -88,8 +82,6 @@ module ApplicationHelper
     enable_sort = options[:enable_sort] ? options[:enable_sort] : false
 
     raise ":titles option not provided" unless options[:titles]
-
-
 
     render :partial => "common/panel",
            :locals => {
@@ -293,5 +285,4 @@ module ApplicationHelper
     options[:builder] = KatelloFormBuilder
     form_for(object, options, &block)
   end
-
 end
