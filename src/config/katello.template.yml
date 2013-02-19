@@ -9,6 +9,8 @@ common:
   # when adding a new logger don't forget to add it in here even if it's disabled by default
   # otherwise log trace feature won't work for such logger
   logging:
+    # enable logging output inline in rails console
+    console_inline: true
     loggers:
       sql:
         enabled: true
@@ -70,6 +72,10 @@ production:
         pattern: "[%5l %d %c %X{uuid} #%p] %m\n"
         # log filename for this environment, it will be placed into #{Rails.root}/log directory
         filename: "production.log"
+        # you log files will be stored here
+        # note when you log outside of standard rails path you won't see log output in WEBrick
+        # STDOUT (usually not wanted in development)
+        path: /var/log/katello
       # you can configure each logger individually, you can turn it off completely by using key
       # 'enabled' or you can adjust it's logging 'level'. If you specify level higher than root
       # logger has, messages below this level are ignored. If you specify lower level than root

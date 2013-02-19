@@ -12,9 +12,25 @@
 module Katello
   class Logging
     def initialize
-      Dir.mkdir_p "#{Rails.root}/log" unless File.directory?("#{Rails.root}/log")
+      if !File.directory?(default_path) && !Katello.config.logging.has_key?(:path)
+        Dir.mkdir_p default_path
+      end
       configure_color_scheme
     end
+
+    def configure(options = {})
+      configure_root_logger(options)
+      configure_children_loggers
+
+      if defined?(Rails::Console) && configuration.console_inline
+        ::Logging.logger.root.add_appenders ::Logging.appenders.stdout
+      end
+
+      # you can add specific files per logger easily like this
+      #   Logging.logger['sql'].appenders = Logging.appenders.file("#{Rails.env}_sql.log")
+    end
+
+    private
 
     # shortcut to logging configuration
     def configuration
@@ -26,13 +42,6 @@ module Katello
       configuration.loggers.root
     end
 
-    def configure(options = {})
-      configure_root_logger(options)
-      configure_children_loggers
-
-      # you can add specific files per logger easily like this
-      #   Logging.logger['sql'].appenders = Logging.appenders.file("#{Rails.env}_sql.log")
-    end
 
     # sets all children loggers according to configuration
     #
@@ -63,8 +72,7 @@ module Katello
     # we also set fallback appender to STDOUT in case a developer asks for unusable appender
     def configure_root_logger(options)
       ::Logging.logger.root.level     = root_configuration.level
-      root_appender                   = build_root_appender(options)
-      ::Logging.logger.root.appenders = root_appender
+      ::Logging.logger.root.appenders = build_root_appender(options)
       ::Logging.logger.root.trace     = configuration.log_trace
 
       # fallback to log to STDOUT if there is any configuration problem
@@ -86,7 +94,7 @@ module Katello
                                     :facility => ::Syslog::Constants::LOG_DAEMON)
           )
         when 'file'
-          path = root_configuration.has_key?(:path) ? root_configuration.path : "#{Rails.root}/log"
+          path = root_configuration.has_key?(:path) ? root_configuration.path : default_path
           log_filename = "#{path}/#{options[:prefix]}#{root_configuration.filename}"
           ::Logging.appenders.rolling_file(
               name,
@@ -120,6 +128,10 @@ module Katello
                              :file   => :yellow,
                              :method => :yellow,
       )
+    end
+
+    def default_path
+      "#{Rails.root}/log"
     end
 
     # We need a bridge for Tire so we can log their messages to our logger
