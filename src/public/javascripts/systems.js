@@ -34,6 +34,9 @@ KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distributio
             if(env_select.envsys == true){
                 $('#new').attr('data-ajax_url', KT.routes.new_system_path() + '?env_id=' + env_id);
             }
+            if($("#system_content_view_id").length > 0) {
+                KT.systems_page.update_content_views();
+            }
             $('#system_environment_id').attr('value', env_id);
         };
 
@@ -399,11 +402,56 @@ KT.systems_page = (function() {
                 button.removeAttr('disabled');
             }
         });
+    },
+    update_content_views = function(){
+        // this function will retrieve the views associated with a given environment and
+        // update the views box with the results
+        var url = $('.path_link.active').attr('data-content_views_url');
+        if (url !== undefined) {
+            $.ajax({
+                type: "GET",
+                url: url,
+                cache: false,
+                success: function(response) {
+                    // update the appropriate content on the page
+                    var options = '';
+                    var opt_template = KT.utils.template("<option value='<%= key %>'><%= text %></option>");
+
+                    // create an html option list using the response
+                    options += opt_template({key: "", text: i18n.noContentView});
+                    $.each(response, function(key, item) {
+                        options += opt_template({key: item.id, text: item.name});
+                    });
+
+                    $("#system_content_view_id").html(options);
+
+                    if (response.length > 0) {
+                        highlight_content_views(true);
+                    }
+                }
+            });
+        }
+    },
+    highlight_content_views = function(add_highlight){
+        var select_input = $("#system_content_view_id");
+        if (add_highlight) {
+            if( !select_input.next('span').hasClass('highlight_input_text')) {
+                select_input.addClass('highlight_input');
+                select_input.after('<span class ="highlight_input_text">' +
+                        i18n["update_view"] + '</span>');
+            }
+        } else {
+            select_input.removeClass('highlight_input');
+            $('.highlight_input_text').remove();
+        }
     };
+
   return {
       env_change : env_change,
       create_system : create_system,
       registerActions : registerActions,
+      update_content_views: update_content_views,
+      highlight_content_views: highlight_content_views,
       system_group_setup: system_group_setup
   }
 })();
