@@ -23,6 +23,7 @@ module Menu
       helper_method :render_main_menu
       helper_method :render_main_sub_menu
       helper_method :render_admin_menu
+      helper_method :render_notifications_menu
     end
   end
   def render_menu(level, items = nil, prune = true)
@@ -39,6 +40,12 @@ module Menu
 
   def render_admin_menu()
     items = admin_main
+    prune_menu(items)
+    render_navigation(:items=>items, :expand_all=>true, :level=> 2) unless items.empty?
+  end
+
+  def render_notifications_menu()
+    items = notifications_menu_main
     prune_menu(items)
     render_navigation(:items=>items, :expand_all=>true) unless items.empty?
   end
