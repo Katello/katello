@@ -20,7 +20,7 @@ class ProvidersControllerTest < MiniTest::Rails::ActionController::TestCase
     @org = organizations(:acme_corporation)
     @redhat_product = providers(:redhat)
     @custom_product = providers(:fedora_hosted)
-    login_user(users(:admin), @org)
+    login_user(User.find(users(:admin)), @org)
 
 
     models = ["Organization", "KTEnvironment", "Changeset"]
