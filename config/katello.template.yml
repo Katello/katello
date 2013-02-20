@@ -11,36 +11,6 @@ common:
   logging:
     # enable logging output inline in rails console
     console_inline: true
-    # adds an extra line after each log message with information from which file:line and method
-    # was this message logged
-    log_trace: false
-    loggers:
-      sql:
-        enabled: true
-      app:
-        enabled: true
-      glue:
-        enabled: true
-      pulp_rest:
-        enabled: true
-      candlepin_rest:
-        enabled: true
-      candlepin_proxy:
-        enabled: true
-      foreman_rest:
-        enabled: true
-      roles:
-        enabled: false
-      tire_rest:
-        enabled: false
-
-#
-# Production environment configuration
-#
-# The following configuration values override ones from the common section
-#
-production:
-  logging:
     # colorize log including level token based on severity
     colorize: false
     # adds an extra line after each log message with information from which file:line and method
@@ -72,20 +42,32 @@ production:
         #  [%L] line number where the logging request was issued
         #  [%M] method name where the logging request was issued
         #  [%X{string}] variable set using ::Logging.mdc['string'] =
-        pattern: "[%5l %d %c %X{uuid} #%p] %m\n"
+        pattern: "[%5l %d %-12c %X{uuid} #%p] %m\n"
         # log filename for this environment, it will be placed into #{Rails.root}/log directory
         filename: "production.log"
         # you log files will be stored here
         # note when you log outside of standard rails path you won't see log output in WEBrick
         # STDOUT (usually not wanted in development)
         path: /var/log/katello
-      # you can configure each logger individually, you can turn it off completely by using key
-      # 'enabled' or you can adjust it's logging 'level'. If you specify level higher than root
-      # logger has, messages below this level are ignored. If you specify lower level than root
-      # they are still ignored but you can add appender in Katello::Logging just for this logger
-      # and see these logs outside of main log.
+        # you can configure each logger individually, you can turn it off completely by using key
+        # 'enabled' or you can adjust it's logging 'level'. If you specify level higher than root
+        # logger has, messages below this level are ignored. If you specify lower level than root
+        # they are still ignored but you can add appender in Katello::Logging just for this logger
+        # and see these logs outside of main log.
       sql:
-        level: warn
+        enabled: true
+      app:
+        enabled: true
+      glue:
+        enabled: true
+      pulp_rest:
+        enabled: true
+      cp_rest:
+        enabled: true
+      cp_proxy:
+        enabled: true
+      foreman_rest:
+        enabled: true
       roles:
         enabled: false
       # tire is a special case, all logs coming from it are debug level however they count depends
@@ -93,19 +75,19 @@ production:
       # unfortunately there is currently no better way
       tire_rest:
         enabled: false
-#      app:
-#       enabled: true
-#      glue:
-#       enabled: true
-#      pulp_rest:
-#       enabled: true
-#      candlepin_rest:
-#       enabled: true
-#      candlepin_proxy:
-#       enabled: true
-#      foreman_rest:
-#       enabled: true
 #
+# Production environment configuration
+#
+# The following configuration values override ones from the common section
+#
+production:
+  database:
+    database: katello
+  logging:
+    loggers:
+      sql:
+        level: warn
+
 # Development environment configuration
 #
 # The following configuration values override ones from the common section
@@ -119,13 +101,8 @@ development:
         type: file
         age: 'monthly'
         keep: 1
-        pattern: "[%5l %d %c] %m\n"
+        pattern: "[%5l %d %-12c] %m\n"
         filename: "development.log"
-      roles:
-        enabled: false
-      tire_rest:
-        enabled: false
-
 
 #
 # Test environment configuration
@@ -142,8 +119,4 @@ test:
         age: 'monthly'
         keep: 1
         pattern: "[%5l %d %c] %m\n"
-        filename: "development.log"
-      roles:
-        enabled: false
-      tire_rest:
-        enabled: false
+        filename: "test.log"
