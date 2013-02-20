@@ -223,6 +223,7 @@ describe ActivationKey do
           :startDate => dates[x][:startDate],
           :quantity => dates[x][:quantity],
           :consumed => dates[x][:consumed],
+          :productAttributes => [{:name => "sockets", :value => (dates[x][:sockets] || 1)}]
         }.with_indifferent_access
       end
       @system = System.new(:name => "test", :cp_type => "system", :facts => {"distribution.name"=>"Fedora"}, :uuid => "uuid-uuid")
@@ -240,6 +241,7 @@ describe ActivationKey do
         pool = ::Pool.create!(:cp_id => k)
         @akey.key_pools.create!(:pool_id  => pool.id)
       end
+      Resources::Candlepin::Consumer.stub(:consume_entitlement)
     end
 
     describe "with no pools" do
@@ -458,7 +460,7 @@ describe ActivationKey do
       let(:sockets) { 2 }
 
       it "consumes the correct entitlement" do
-        lambda { @akey.subscribe_system(@system) }.should raise_error(RuntimeError, /^Not enough subscriptions/)
+        lambda { @akey.subscribe_system(@system) }.should raise_error(RuntimeError, /^Not enough pools/)
       end
     end
 
@@ -483,7 +485,7 @@ describe ActivationKey do
       let(:sockets) { 2 }
 
       it "consumes the correct entitlement" do
-        lambda { @akey.subscribe_system(@system) }.should raise_error(RuntimeError, /^Not enough subscriptions/)
+        lambda { @akey.subscribe_system(@system) }.should raise_error(RuntimeError, /^Not enough pools/)
       end
     end
 
@@ -534,7 +536,7 @@ describe ActivationKey do
       let(:sockets) { 2 }
 
       it "consumes the correct entitlement" do
-        lambda { @akey.subscribe_system(@system) }.should raise_error(RuntimeError, /^Not enough subscriptions/)
+        lambda { @akey.subscribe_system(@system) }.should raise_error(RuntimeError, /^Not enough pools/)
       end
     end
 
@@ -561,7 +563,7 @@ describe ActivationKey do
       it "consumes the correct entitlement" do
         Resources::Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 1", 2).and_return([ { "id" => "ent1" } ])
         Resources::Candlepin::Consumer.should_receive(:remove_entitlement).with(@system.uuid, "ent1")
-        lambda { @akey.subscribe_system(@system) }.should raise_error(RuntimeError, /^Not enough subscriptions/)
+        lambda { @akey.subscribe_system(@system) }.should raise_error(RuntimeError, /^Not enough pools/)
       end
     end
 
@@ -592,6 +594,90 @@ describe ActivationKey do
       end
     end
 
-  end
+    # see https://fedorahosted.org/katello/wiki/ActivationKeysDesign for more info
+    context "multi-socket pools" do
 
+      describe "consume 2 entitlements in S2 (0-2)" do
+        let(:dates) do
+          {
+            "pool 1" => {
+              :productId => "product 1",
+              :startDate => "2011-01-01T00:00:00.000+0000", # same date
+              :quantity => 5,
+              :consumed => 5,
+            },
+            "pool 2" => {
+              :productId => "product 1",
+              :startDate => "2011-01-01T00:00:00.000+0000", # same date
+              :quantity => 5, # 2 remaining
+              :consumed => 3,
+              :sockets => 2
+            },
+          }
+        end
+        let(:sockets) { 3 }
+
+        it "consumes the correct entitlement" do
+          Resources::Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 2", 2)
+          @akey.subscribe_system(@system)
+        end
+
+        describe "consume 2 entitlements in S2 (1-1)" do
+          let(:dates) do
+            {
+              "pool 1" => {
+                :productId => "product 1",
+                :startDate => "2011-01-01T00:00:00.000+0000", # same date
+                :quantity => 5, # 1 remaining
+                :consumed => 4,
+                :sockets => 2,
+              },
+              "pool 2" => {
+                :productId => "product 1",
+                :startDate => "2011-01-01T00:00:00.000+0000", # same date
+                :quantity => 5, # 1 remaining
+                :consumed => 4,
+                :sockets => 2,
+              },
+            }
+          end
+          let(:sockets) { 4 }
+
+          it "consumes the correct entitlement" do
+            Resources::Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 1", 1)
+            Resources::Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 2", 1)
+            @akey.subscribe_system(@system)
+          end
+        end
+
+        describe "not enough entitlements in two pools" do
+          let(:dates) do
+            {
+              "pool 1" => {
+                :productId => "product 1",
+                :startDate => "2011-01-01T00:00:00.000+0000", # older
+                :quantity => 2,
+                :consumed => 0,
+                :sockets => 3,
+              },
+              "pool 2" => {
+                :productId => "product 1",
+                :startDate => "2011-01-02T00:00:00.000+0000",
+                :quantity => 2, # 1 remaining
+                :consumed => 1,
+                :sockets => 3,
+
+              },
+            }
+          end
+          let(:sockets) { 10 }
+
+          it "should not consume anything and report error" do
+            Resources::Candlepin::Consumer.should_not_receive(:consume_entitlement)
+            lambda { @akey.subscribe_system(@system) }.should raise_error(RuntimeError, /^Not enough pools/)
+          end
+        end
+      end
+    end
+  end
 end
