@@ -245,7 +245,7 @@ describe Product, :katello => true do
           env_product = mock_model(EnvironmentProduct, {:id => 1})
           EnvironmentProduct.stub(:find_or_create).and_return(env_product)
           env_product.stub(:environment).and_return(@organization.library)
-          
+
           @product = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
           @product.orchestration_for = :import_from_cp
 
