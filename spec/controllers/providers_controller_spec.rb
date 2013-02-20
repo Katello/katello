@@ -159,22 +159,6 @@ describe ProvidersController do
       it_should_behave_like "protected action"
     end
 
-    describe "refresh_provider put" do
-      let(:redhat) { Provider.redhat.first.tap { |rh| rh.stub(:editable? => true) } }
-      let(:action) { :refresh_provider }
-      let(:req) do
-        put 'refresh_products', :id => redhat.id
-      end
-      # for redhat providers, organization privileges are effective
-      let(:authorized_user) do
-        controller.stub(:find_provider) { controller.instance_variable_set "@provider", redhat }
-        user_with_permissions { |u| u.can(:update, :providers, @provider.id, @organization) }
-      end
-      let(:unauthorized_user) do
-        user_without_permissions
-      end
-      it_should_behave_like "protected action"
-    end
   end
 
 
