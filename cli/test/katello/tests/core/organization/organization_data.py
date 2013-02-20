@@ -8,7 +8,7 @@ ORGS = [
     "id": 1,
     "label": "ACME_Corporation",
     "description": "ACME Corporation Organization",
-    "system_info_keys" : ["asset_tag"]
+    "info_keys" : { "system": ["asset_tag"] }
   }
 ]
 

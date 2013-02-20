@@ -655,10 +655,9 @@ Src::Application.routes.draw do
 
       resources :gpg_keys, :only => [:index, :create]
 
-      resources :system_info_keys, :only => [:create, :index], :controller => :organization_system_info_keys do
-        get :apply, :on => :collection, :action => :apply_to_all_systems
-      end
-      match '/system_info_keys/:keyname' => 'organization_system_info_keys#destroy', :via => :delete
+      match '/info_keys/:informable_type' => 'organization_info_keys#create', :via => :post, :as => :create_info_keys
+      match '/info_keys/:informable_type/:keyname' => 'organization_info_keys#destroy', :via => :delete, :as => :destroy_info_keys
+      match '/info_keys/:informable_type/apply' => 'organization_info_keys#apply_to_all', :via => :get, :as => :apply_info_keys
 
       resources :content_views, :only => [:index, :show]
       resources :content_view_definitions do

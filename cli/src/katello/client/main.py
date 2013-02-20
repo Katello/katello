@@ -90,9 +90,9 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
     org_cmd.add_command('subscriptions', organization.ShowSubscriptions())
     if mode == 'katello':
         org_cmd.add_command('uebercert', organization.GenerateDebugCert())
-    org_cmd.add_command("add_default_system_info", organization.AddDefaultSystemInfo())
-    org_cmd.add_command("remove_default_system_info", organization.RemoveDefaultSystemInfo())
-    org_cmd.add_command("apply_default_system_info", organization.ApplyDefaultSystemInfo())
+    org_cmd.add_command("add_default_info", organization.AddDefaultInfo())
+    org_cmd.add_command("remove_default_info", organization.RemoveDefaultInfo())
+    org_cmd.add_command("apply_default_info", organization.ApplyDefaultInfo())
     katello_cmd.add_command('org', org_cmd)
 
     user_cmd = user.User()

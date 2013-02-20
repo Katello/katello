@@ -16,23 +16,23 @@
 from katello.client.api.base import KatelloAPI
 from katello.client.lib.utils.encoding import u_str
 
-class OrganizationSystemInfoKeysAPI(KatelloAPI):
+class OrganizationInfoKeysAPI(KatelloAPI):
     """
-    Connection class to access default system info keys under an organization
+    Connection class to access default info keys under an organization
     """
-    def create(self, org_name, keyname):
+    def create(self, org_name, informable_type, keyname):
         data = {'keyname': keyname}
-        path = "/api/organizations/%s/system_info_keys" % u_str(org_name)
+        path = "/api/organizations/%s/info_keys/%s" % (u_str(org_name), u_str(informable_type))
         return self.server.POST(path, data)[1]
 
-    def index(self, org_name):
-        path = "/api/organizations/%s/system_info_keys" % u_str(org_name)
+    def index(self, org_name, informable_type):
+        path = "/api/organizations/%s/info_keys/%s" % (u_str(org_name), u_str(informable_type))
         return self.server.GET(path)[1]
 
-    def destroy(self, org_name, keyname):
-        path = "/api/organizations/%s/system_info_keys/%s" % (u_str(org_name), u_str(keyname))
+    def destroy(self, org_name, informable_type, keyname):
+        path = "/api/organizations/%s/info_keys/%s/%s" % (u_str(org_name), u_str(informable_type), u_str(keyname))
         return self.server.DELETE(path)[1]
 
-    def apply(self, org_name):
-        path = "/api/organizations/%s/system_info_keys/apply" % u_str(org_name)
+    def apply(self, org_name,  informable_type):
+        path = "/api/organizations/%s/info_keys/%s/apply" % (u_str(org_name), u_str(informable_type))
         return self.server.GET(path)[1]
