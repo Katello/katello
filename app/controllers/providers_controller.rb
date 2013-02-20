@@ -52,8 +52,7 @@ class ProvidersController < ApplicationController
       :new_discovered_repos => edit_test,
       :cancel_discovery=>edit_test,
       :discovered_repos => edit_test,
-      :discover => edit_test,
-      :refresh_products => edit_test
+      :discover => edit_test
     }
   end
 
@@ -188,16 +187,6 @@ class ProvidersController < ApplicationController
     @provider.save!
     @provider.discover_repos(true)
     render :nothing=>true
-  end
-
-  def refresh_products
-    unless @provider.redhat_provider?
-      raise _("It is not allowed to refresh products for custom provider.")
-    end
-
-    @provider.refresh_products
-    notify.message _("Provider '%s' repositories were refreshed" % @provider.name)
-    render :js => "window.location.pathname='#{redhat_provider_providers_path}'"
   end
 
   protected
