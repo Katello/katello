@@ -244,7 +244,8 @@ describe Product, :katello => true do
           end
           env_product = mock_model(EnvironmentProduct, {:id => 1})
           EnvironmentProduct.stub(:find_or_create).and_return(env_product)
-
+          env_product.stub(:environment).and_return(@organization.library)
+          
           @product = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
           @product.orchestration_for = :import_from_cp
 
@@ -273,7 +274,7 @@ describe Product, :katello => true do
 
           env_product = mock_model(EnvironmentProduct, {:id => 1})
           EnvironmentProduct.stub(:find_or_create).and_return(env_product)
-
+          env_product.stub(:environment).and_return(@organization.library)
           p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
           p.stub(:attrs => [{:name => 'arch', :value => 'x86_64,i386'}])
           p.orchestration_for = :import_from_cp

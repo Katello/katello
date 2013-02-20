@@ -18,7 +18,7 @@ class ProvidersController < ApplicationController
 
   before_filter :find_provider, :only => [:products_repos, :show, :edit, :update, :destroy, :manifest_progress,
                                           :repo_discovery, :discovered_repos, :discover, :cancel_discovery,
-                                          :new_discovered_repos, :create_discovered_repos, :refresh_products]
+                                          :new_discovered_repos, :create_discovered_repos]
   before_filter :authorize #after find_provider
   before_filter :panel_options, :only => [:index, :items]
   before_filter :search_filter, :only => [:auto_complete_search]
