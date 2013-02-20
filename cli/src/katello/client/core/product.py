@@ -403,6 +403,9 @@ class EnableRepositorySet(SingleProductAction):
         parser.add_option('--set_id', dest='set_id',
                            help=_("id of the repository set to enable"))
 
+    def check_options(self, validator):
+        validator.require(('org', 'set_id'))
+
     def run(self):
         orgName     = self.get_option('org')
         prodName    = self.get_option('name')
@@ -424,6 +427,39 @@ class EnableRepositorySet(SingleProductAction):
                     % {'set_id':set_id, 'task_errors':format_task_errors(task.errors())} )
             returnCode = os.EX_DATAERR
         return returnCode
+
+class DisableRepositorySet(SingleProductAction):
+    description = _('Disable  a repository set for a Red Hat product')
+    def setup_parser(self, parser):
+        self.set_product_select_options(parser, False)
+        parser.add_option('--set_id', dest='set_id',
+                           help=_("id of the repository set to disable"))
+
+    def check_options(self, validator):
+        validator.require(('org', 'set_id'))
+
+    def run(self):
+        orgName     = self.get_option('org')
+        prodName    = self.get_option('name')
+        prodLabel   = self.get_option('label')
+        prodId      = self.get_option('id')
+        prod = get_product(orgName, prodName, prodLabel, prodId)
+        set_id      = self.get_option('set_id')
+
+        task = AsyncTask(self.api.disable_repository_set(orgName, prod['id'], set_id))
+        task = run_spinner_in_bg(wait_for_async_task, [task],
+                message=_("Disabling Repository Set..."))
+        task = AsyncTask(task)
+        if task.succeeded():
+            print _("Repository Set [ %(set_id)s ] disabled. " \
+                    % {'set_id':set_id})
+            returnCode = os.EX_OK
+        else:
+            print _("Repository enable [ %(set_id)s ] failed: %(task_errors)s" \
+                    % {'set_id':set_id, 'task_errors':format_task_errors(task.errors())} )
+            returnCode = os.EX_DATAERR
+        return returnCode
+
 
 
 # ------------------------------------------------------------------------------
