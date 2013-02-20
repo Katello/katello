@@ -9,6 +9,8 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+require 'logging'
+
 module Katello
   class Logging
     def initialize
@@ -112,7 +114,7 @@ module Katello
 
     def build_layout(pattern, colorize)
       pattern += "  Log trace: %F:%L method: %M\n" if configuration.log_trace
-      ::Logging.layouts.pattern(:pattern => pattern, :color_scheme => colorize ? 'bright' : nil)
+      MultilinePatternLayout.new(:pattern => pattern, :color_scheme => colorize ? 'bright' : nil)
     end
 
     def configure_color_scheme
@@ -151,6 +153,21 @@ module Katello
       # to tire_rest logger
       def write(message)
         @logger.debug message
+      end
+    end
+
+    # Custom pattern layout that indents multiline strings and adds | symbol to beginning of each
+    # following line hence you can see what belongs to the same message
+    class MultilinePatternLayout < ::Logging::Layouts::Pattern
+      def format_obj(obj)
+        obj.kind_of?(String) ? indent_lines(obj) : super
+      end
+
+      private
+
+      # all new lines will be indented
+      def indent_lines(string)
+        string.gsub("\n", "\n | ")
       end
     end
   end
