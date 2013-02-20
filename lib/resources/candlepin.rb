@@ -18,7 +18,7 @@ module Resources
 
     class Proxy
       def self.logger
-        ::Logging.logger['candlepin_proxy']
+        ::Logging.logger['cp_proxy']
       end
 
       def self.post path, body
@@ -61,7 +61,7 @@ module Resources
       self.resource_permissions = CandlepinResourcePermissions
 
       def self.logger
-        ::Logging.logger['candlepin_rest']
+        ::Logging.logger['cp_rest']
       end
 
       def self.default_headers

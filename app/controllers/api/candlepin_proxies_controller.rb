@@ -35,7 +35,7 @@ class Api::CandlepinProxiesController < Api::ProxiesController
   private
 
   def logger
-    ::Logging.logger['candlepin_proxy']
+    ::Logging.logger['cp_proxy']
   end
 
 end
