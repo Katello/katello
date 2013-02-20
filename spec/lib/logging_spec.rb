@@ -193,4 +193,35 @@ describe Katello::Logging do
     end
   end
 
+  describe Katello::Logging::MultilinePatternLayout do
+    let(:layout) { Katello::Logging::MultilinePatternLayout.new(:pattern => '%m') }
+
+    describe "#format_obj(obj)" do
+      context "string" do
+        it "should call indent_lines" do
+          layout.should_receive(:indent_lines).once.and_return('test')
+          layout.format_obj('test')
+        end
+      end
+
+      context "hash" do
+        before { layout.should_not_receive(:indent_lines) }
+        subject { layout.format_obj({}) }
+        it { should be_kind_of(String) }
+      end
+    end
+
+    describe "#indent_lines(string)" do
+      context "one liners" do
+        subject { layout.send :indent_lines, "test" }
+        it { should eql("test") }
+      end
+
+      context "multiline log message" do
+        subject { layout.send :indent_lines, "test\none\ntwo\nthree" }
+        it { should eql("test\n | one\n | two\n | three") }
+      end
+    end
+  end
+
 end
