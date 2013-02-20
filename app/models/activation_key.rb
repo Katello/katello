@@ -96,78 +96,62 @@ class ActivationKey < ActiveRecord::Base
     system.system_activation_keys.build(:activation_key => self)
   end
 
-  # calculate entitlement consumption for given amount and pool quantity left, example use:
-  #   calculate_consumption(4, [10, 10]) -> [4, 0]
-  #   calculate_consumption(4, [3, 2]) -> [3, 1]
-  #   calculate_consumption(4, [1, 2, 1]) -> [1, 2, 1]
-  #   calculate_consumption(4, [1, 1]) -> exception "Not enough entitlements"
-  #   calculate_consumption(4, []) -> exception "Not enough entitlements"
-  def calculate_consumption(amount = 1, entitlements = [])
-    a = amount
-    result = entitlements.collect do |x|
-      if a > 0
-        min = [a,x].min
-        a = a - min
-        min
-      else
-        0
+  # compute number of cosumptions per pools for a product to satisfy
+  # the allocate requirement
+  def calculate_consumption(product, pools, allocate)
+    pools = pools.sort_by { |pool| [pool.start_date, pool.cp_id] }
+    consumption = {}
+
+    if product.provider.redhat_provider?
+      not_allocated = pools.reduce(allocate) do |left_to_allocate, pool|
+        break if left_to_allocate <= 0
+        sockets = [pool.sockets, 1].max
+        available = (pool.quantity == -1 ? 999_999_999 : pool.quantity) - pool.consumed
+        # take the number of sockets per pool into account
+        to_consume = [(left_to_allocate.to_f / sockets).ceil, available].min
+        consumption[pool] = to_consume
+        left_to_allocate - (to_consume * sockets)
       end
+
+      if not_allocated.to_i > 0
+        raise _("Not enough pools: %{not_allocated} sockets " +
+                "out of %{allocate} not covered") %
+                {:not_allocated => not_allocated, :allocate => allocate}
+      end
+    else
+      consumption[pools.first] = 1
     end
-    total = result.inject{|sum,x| sum + x }
-    raise _("Not enough subscriptions in pools (%{size}), required: %{required}, available: %{available}") % {:size => entitlements.size, :required => amount, :available => total} if amount != total
-    result
+    return consumption
   end
 
   # subscribe to each product according the entitlements remaining
   def subscribe_system(system)
     already_subscribed = []
     begin
-      # collect products involved in this activation key as a hash in the following format:
-      # {"productId" => { "poolId_1" => [start_date, entitlements_left], "poolId_2" => ... } }
-      products = {}
+      # sanity check before we start subscribing
       self.pools.each do |pool|
         raise _("Pool %s has no product associated") % pool.cp_id unless pool.product_id
-        products[pool.product_id] = {} unless products.key? pool.product_id
-        quantity = pool.quantity == -1 ? 999_999_999 : pool.quantity
-        raise _("Unable to determine quantity for pool %s") % pool.cp_id if quantity.nil?
-        left = quantity - pool.consumed
-        raise _("Number of attached subscriptions exceeded quantity for %s") % pool.cp_id if left < 0
-        products[pool.product_id][pool.cp_id] = [pool.start_date, left]
+        raise _("Unable to determine quantity for pool %s") % pool.cp_id unless pool.quantity
       end
 
-      # for each product consumer "allocate" amount of entitlements
       allocate = system.sockets.to_i
       Rails.logger.debug "Number of sockets for registration: #{allocate}"
-      raise _("Number of sockets must be higher than 0 for system %s") % system.name if allocate.nil? or allocate <= 0
-      #puts products.inspect
-      products.each do |productId, pools|
-        product = Product.find_by_cp_id(productId)
-        # create two arrays - pool ids and remaining entitlements
-        # subscription order is with most recent start or with the least pool number available
-        pools_a = pools.to_a.sort { |a,b| (a[1][0] <=> b[1][0]).nonzero? || (a[0] <=> b[0]) }
-        pools_ids = []
-        pools_left = []
-        pools_a.each { |p| pools_ids << p[0]; pools_left << p[1][1] }
+      raise _("Number of sockets must be higher than 0 for system %s") % system.name if allocate <= 0
 
-        if product.provider.redhat_provider?
-          # calculate consumption array (throws an error when there are not enough entitlements)
-          to_consume = calculate_consumption(allocate, pools_left)
-        else
-          to_consume = 1
-        end
-        i = 0
-        Rails.logger.debug "Autosubscribing pools: #{pools_ids.inspect} with amounts: #{to_consume.inspect}"
-        pools_ids.each do |poolId|
-          amount = to_consume[i]
-          Rails.logger.debug "Subscribing #{system.name} to product: #{productId}, amount: #{amount}"
-          if amount > 0
-            entitlements_array = system.subscribe(poolId, amount)
+      # we sort just to make the order deterministig.
+      self.pools.group_by(&:product_id).sort_by(&:first).each do |product_id, pools|
+        product = Product.find_by_cp_id(product_id)
+        consumption = calculate_consumption(product, pools, allocate)
+
+        Rails.logger.debug "Autosubscribing pools: #{consumption.map { |pool, amount| "#{pool.cp_id} => #{amount}"}.join(", ")}"
+        consumption.each do |pool, amount|
+          Rails.logger.debug "Subscribing #{system.name} to product: #{product_id}, consuming pool #{pool.cp_id} of amount: #{amount}"
+          if entitlements_array = system.subscribe(pool.cp_id, amount)
             # store for possible rollback
             entitlements_array.each do |ent|
               already_subscribed << ent['id']
-            end unless entitlements_array.nil?
+            end
           end
-          i = i + 1
         end
       end
     rescue => e
