@@ -68,6 +68,7 @@ module ContentViewDefinitionsHelper
     definitions.each do |definition|
       definition.content_views.each do |view|
         view_repos[view.id] = {
+            :name => view.name,
             :repos => view.repos(current_organization.library).collect{|repo| repo.library_instance_id}
         }
       end
