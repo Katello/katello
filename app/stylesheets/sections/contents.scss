@@ -559,3 +559,12 @@ $container_width: ($static_width/2) - 36;
     list-style: circle;
   }
 }
+
+#view_definitions {
+  tr.error {
+    @include background-image(linear-gradient(white, white, rgb(255,150,150)));
+    &:hover {
+      @include background-image(linear-gradient(white, rgb(255,150,150)));
+    }
+  }
+}
