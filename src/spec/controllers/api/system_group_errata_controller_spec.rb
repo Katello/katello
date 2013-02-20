@@ -14,7 +14,7 @@
 require 'spec_helper.rb'
 include OrchestrationHelper
 
-describe Api::SystemGroupErrataController, :katello => true do
+describe Api::V1::SystemGroupErrataController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
   include AuthorizationHelperMethods

@@ -12,7 +12,7 @@
 
 require 'spec_helper.rb'
 
-describe Api::ChangesetsController, :katello => true do
+describe Api::V1::ChangesetsController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
   include OrchestrationHelper

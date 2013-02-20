@@ -15,7 +15,7 @@ require 'helpers/system_test_data.rb'
 include OrchestrationHelper
 include SystemHelperMethods
 
-describe Api::SystemsController do
+describe Api::V1::SystemsController do
   include LoginHelperMethods
   include LocaleHelperMethods
   include SystemHelperMethods

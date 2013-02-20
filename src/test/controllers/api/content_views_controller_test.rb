@@ -13,7 +13,7 @@
 
 require "minitest_helper"
 
-class Api::ContentViewsControllerTest < MiniTest::Rails::ActionController::TestCase
+class Api::V1::ContentViewsControllerTest < MiniTest::Rails::ActionController::TestCase
   fixtures :all
 
   def setup

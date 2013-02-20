@@ -14,7 +14,7 @@
 require 'spec_helper.rb'
 include OrchestrationHelper
 
-describe Api::SystemPackagesController do
+describe Api::V1::SystemPackagesController do
   include LoginHelperMethods
   include LocaleHelperMethods
   include SystemHelperMethods

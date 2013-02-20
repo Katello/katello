@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe Api::RootController do
+describe Api::V1::RootController do
   include LoginHelperMethods
 
   before (:each) do

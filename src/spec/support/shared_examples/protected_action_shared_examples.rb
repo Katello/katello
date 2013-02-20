@@ -33,7 +33,7 @@ shared_examples_for "protected action" do
       login_user_by_described_class(authorized_user) if defined?  authorized_user
       before_success if defined?(before_success)
 
-      if controller.kind_of? Api::ApiController
+      if controller.kind_of? Api::V1::ApiController
         controller.should_not_receive(:render_exception_without_logging).with { |status, e| status.should == 403 }
       else
         controller.should_not_receive(:render_403)
@@ -61,7 +61,7 @@ shared_examples_for "protected action" do
       session.delete(:current_organization_id)
       login_user_by_described_class(unauthorized_user) if defined?  unauthorized_user
       before_failure if defined?(before_failure)
-      if @controller.kind_of? Api::ApiController
+      if @controller.kind_of? Api::V1::ApiController
         @controller.should_receive(:render_exception_without_logging).with { |status, e| status.should == 403 }
       else
         @controller.should_receive(:render_403)

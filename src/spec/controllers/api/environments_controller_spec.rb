@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe Api::EnvironmentsController do
+describe Api::V1::EnvironmentsController do
   include LoginHelperMethods
   include AuthorizationHelperMethods
 

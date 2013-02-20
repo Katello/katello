@@ -12,7 +12,7 @@
 
 require 'spec_helper.rb'
 
-describe Api::TasksController do
+describe Api::V1::TasksController do
   include LoginHelperMethods
   include AuthorizationHelperMethods
   include OrchestrationHelper

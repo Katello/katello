@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe Api::OrganizationsController do
+describe Api::V1::OrganizationsController do
   include LoginHelperMethods
   include AuthorizationHelperMethods
   include OrganizationHelperMethods

@@ -13,7 +13,7 @@
 require 'spec_helper.rb'
 include OrchestrationHelper
 
-describe Api::SubscriptionsController do
+describe Api::V1::SubscriptionsController do
   include LoginHelperMethods
   include LocaleHelperMethods
   include SystemHelperMethods
