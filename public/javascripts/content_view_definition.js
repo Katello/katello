@@ -27,6 +27,7 @@ KT.panel.set_expand_cb(function() {
 KT.content_view_definition = (function(){
     var status_updater,
         view_repos,
+        view_conflicts = [],
 
     initialize = function() {
         $("#view_definitions").treeTable({
@@ -56,25 +57,7 @@ KT.content_view_definition = (function(){
         if (pane.length === 0) {
             return;
         }
-        $("#update_component_views").click(function(){
-            var btn = $(this);
-            if(btn.hasClass("disabled")){
-                return;
-            }
-            btn.addClass("disabled");
-
-            $("#component_views_form").ajaxSubmit({
-                type: "POST",
-                url: btn.data("url"),
-                cache: false,
-                success: function(){
-                    $("#update_component_views").removeClass("disabled");
-                },
-                error: function(){
-                    $("#update_component_views").removeClass("disabled");
-                }
-            });
-        });
+        enable_component_view_content_save();
         initialize_view_checkboxes();
     },
     initialize_views = function() {
@@ -115,8 +98,10 @@ KT.content_view_definition = (function(){
         });
     },
     initialize_view_checkboxes = function() {
-        $('.view_checkbox').tipsy({fade : true, gravity : 'e', live : true, delayIn : 500, hoverable : true,
-            delayOut : 50 });
+        $('.view_checkbox').tipsy({fade : true, gravity : 'e', live : true, delayIn : 500,
+                                  html: true, hoverable : true, delayOut : 50 });
+
+        view_conflicts = [];
 
         $("input[id^='content_views_']").change(function() {
             var clicked_view_id = $(this).data('view_id').toString();
@@ -160,12 +145,16 @@ KT.content_view_definition = (function(){
                         }
                     }
                 });
+
+                remove_view_conflicts($(this));
             }
         });
 
-        // As part of initializing, if there are selected views, we need to disable
-        // any views with repos in common.  This necessary when rendering the Content
-        // pane for an existing composite definition.
+        // As part of initializing, we need to determine if there are any views
+        // with repos in common.  If there are and if more than one of the views is
+        // selected, the views need to be highlighted as errors for the user to
+        // address; otherwise, if only one of the views is selected, the others
+        // should be disabled to avoid errors.
         var selected_views = $("input[id^='content_views_']:checked"),
             enabled_views = $("input[id^='content_views_']:not(disabled)");
 
@@ -175,12 +164,107 @@ KT.content_view_definition = (function(){
                 var enabled_view_id = $(enabled_view).data('view_id').toString();
                 if (enabled_view_id !== selected_view_id) {
                     if (repo_in_common(selected_view_id, enabled_view_id)) {
-                        $(enabled_view).attr("disabled", "true");
-                        $(enabled_view).parent().attr("original-title", i18n.repos_in_common);
+                        if ($(enabled_view).is(":checked")) {
+                            // both views are selected, so we've got a conflict that needs to be resolved
+                            disable_component_view_content_save();
+
+                            add_view_conflict(enabled_view, selected_view);
+                            add_view_conflict(selected_view, enabled_view);
+
+                            display_view_conflict(enabled_view_id, $(enabled_view).parent());
+                            display_view_conflict(selected_view_id, $(selected_view).parent());
+                        } else {
+                            $(enabled_view).attr("disabled", "true");
+                            $(enabled_view).parent().attr("original-title", i18n.repos_in_common);
+                        }
                     }
                 }
             });
         });
+    },
+    disable_component_view_content_save = function() {
+        var saveButton = $("#update_component_views");
+        saveButton.addClass("disabled");
+        saveButton.unbind("click");
+    },
+    enable_component_view_content_save = function() {
+        var saveButton = $("#update_component_views");
+        saveButton.click(function(){
+            var btn = $(this);
+            if(btn.hasClass("disabled")){
+                return;
+            }
+            btn.addClass("disabled");
+
+            $("#component_views_form").ajaxSubmit({
+                type: "POST",
+                url: btn.data("url"),
+                cache: false,
+                success: function(){
+                    $("#update_component_views").removeClass("disabled");
+                },
+                error: function(){
+                    $("#update_component_views").removeClass("disabled");
+                }
+            });
+        });
+        saveButton.removeClass("disabled");
+    },
+    add_view_conflict = function(view, conflict_view) {
+        var view_id = $(view).data('view_id').toString(),
+            conflict_view_id = $(conflict_view).data('view_id').toString();
+
+        if (view_conflicts[view_id] === undefined) {
+            view_conflicts[view_id] = [];
+        }
+        if (KT.utils.indexOf(view_conflicts[view_id], view_repos[conflict_view_id]['name']) === -1) {
+            view_conflicts[view_id].push(view_repos[conflict_view_id]['name']);
+        }
+        $(view).closest("tr").addClass("error");
+    },
+    remove_view_conflicts = function(unselected_view) {
+        var rows_with_error = $("tr.error"),
+            unselected_view_id = $(unselected_view).data('view_id').toString();
+
+        KT.utils.each(rows_with_error, function(row) {
+            var conflicted_view = $(row).find("input[id^='content_views_']"),
+                conflicted_view_id = conflicted_view.data('view_id').toString(),
+                unselected_index;
+
+            if (view_conflicts[conflicted_view_id].length > 0) {
+                if (unselected_view_id === conflicted_view_id) {
+                    // the current element is the one that was unselected... so we can clear
+                    // conflicts completely from that view
+                    view_conflicts[unselected_view_id] = [];
+                    $(unselected_view).closest("tr").removeClass("error");
+
+                    $(unselected_view).attr("disabled", "true");
+                    $(unselected_view).parent().attr("original-title", i18n.repos_in_common);
+
+                } else {
+                    // the current element has conflicts, but let's see if it has the
+                    // unselected element as a conflict...
+                    unselected_index = KT.utils.indexOf(view_conflicts[conflicted_view_id],
+                                                        view_repos[unselected_view_id]['name']);
+                    if (unselected_index !== -1) {
+                        view_conflicts[conflicted_view_id].splice(unselected_index, 1);
+                    }
+
+                    if (view_conflicts[conflicted_view_id].length === 0) {
+                        $(conflicted_view).closest("tr").removeClass("error");
+                        $(conflicted_view).parent().removeAttr("original-title");
+                    }
+                }
+            }
+        });
+
+        if ($("tr.error").length === 0) {
+            enable_component_view_content_save();
+        }
+
+    },
+    display_view_conflict = function(view_id, element) {
+        element.attr("original-title", i18n.view_conflicts(view_conflicts[view_id].join(", ")));
     },
     repo_in_common = function(view_id_1, view_id_2) {
         // Does view 1 have any repos in common with view 2?
