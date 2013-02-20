@@ -12,7 +12,7 @@
 
 require 'spec_helper.rb'
 
-describe Api::SystemGroupsController, :katello => true do
+describe Api::V1::SystemGroupsController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
   include OrchestrationHelper

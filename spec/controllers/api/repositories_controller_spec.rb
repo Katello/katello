@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe Api::RepositoriesController, :katello => true do
+describe Api::V1::RepositoriesController, :katello => true do
   include OrchestrationHelper
   include LoginHelperMethods
   include AuthorizationHelperMethods

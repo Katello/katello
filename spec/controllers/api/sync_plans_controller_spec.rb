@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe Api::SyncPlansController do
+describe Api::V1::SyncPlansController do
   include LoginHelperMethods
   include AuthorizationHelperMethods
 

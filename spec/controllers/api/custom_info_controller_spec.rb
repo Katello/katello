@@ -14,7 +14,7 @@ require 'spec_helper.rb'
 include OrchestrationHelper
 include SystemHelperMethods
 
-describe Api::CustomInfoController do
+describe Api::V1::CustomInfoController do
   include LoginHelperMethods
   include LocaleHelperMethods
   include AuthorizationHelperMethods

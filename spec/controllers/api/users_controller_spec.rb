@@ -13,7 +13,7 @@
 require 'spec_helper.rb'
 include OrchestrationHelper
 
-describe Api::UsersController do
+describe Api::V1::UsersController do
   include LoginHelperMethods
   include LocaleHelperMethods
   include AuthorizationHelperMethods

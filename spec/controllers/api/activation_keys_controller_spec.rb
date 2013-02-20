@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe Api::ActivationKeysController do
+describe Api::V1::ActivationKeysController do
   include LoginHelperMethods
   include AuthorizationHelperMethods
 

@@ -13,7 +13,7 @@
 require 'spec_helper'
 require 'webmock/rspec'
 
-describe Api::PingController do
+describe Api::V1::PingController do
   include LoginHelperMethods
 
   let(:katello_ping_ok) {

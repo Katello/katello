@@ -12,7 +12,7 @@
 
 require 'spec_helper.rb'
 
-describe Api::UebercertsController do
+describe Api::V1::UebercertsController do
   include LoginHelperMethods
   include AuthorizationHelperMethods
   OWNER_KEY = "some_org"

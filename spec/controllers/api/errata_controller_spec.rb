@@ -12,7 +12,7 @@
 
 require 'spec_helper.rb'
 
-describe Api::ErrataController, :katello => true do
+describe Api::V1::ErrataController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
   include ProductHelperMethods

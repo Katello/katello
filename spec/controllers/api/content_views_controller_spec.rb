@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe Api::ContentViewsController, :katello => true do
+describe Api::V1::ContentViewsController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
 
