@@ -155,7 +155,7 @@ describe Provider do
       Candlepin::ProductContent.new(
         "content" => {
         "name" => name,
-        "id" => name.hash,
+        "id" => name.hash.to_s,
         "type" => "yum",
         "label" => name,
         "vendor" => "redhat",
@@ -175,6 +175,7 @@ describe Provider do
       end
 
       product.productContent = [product_content(product_name)]
+      product.productContent.first.stub(:katello_enabled?).and_return(true)
       product.productContent.each do |product_content|
         releases.each do |release|
           version = Resources::CDN::Utils.parse_version(release)

@@ -113,7 +113,8 @@ class Candlepin::ProductContent
                                     :feed_key => self.product.key,
                                     :content_type => self.content.type,
                                     :preserve_metadata => true, #preserve repo metadata when importing from cp
-                                    :enabled =>false
+                                    :enabled =>false,
+                                    :content_view_version=>env_prod.environment.organization.library.default_view_version
                                    )
         end
         product.repositories_cdn_import_passed! unless product.cdn_import_success?
