@@ -72,21 +72,6 @@ module Glue::Pulp::Repos
       return self.repos(library).empty?
     end
 
-    def repos(env, include_disabled = false)
-      # cache repos so we can cache lazy_accessors
-      @repo_cache ||= {}
-
-      @repo_cache[env.id] ||= env.default_content_view.repos_in_product(env, self)
-
-      if @repo_cache[env.id].blank? || include_disabled
-        @repo_cache[env.id]
-      else
-        # we only want the enabled repos to be visible
-        # This serves as a white list for redhat repos
-        @repo_cache[env.id].where(:enabled => true)
-      end
-    end
-
     def promote from_env, to_env
       @orchestration_for = :promote
 
