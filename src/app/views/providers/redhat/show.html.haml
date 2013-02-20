@@ -19,20 +19,23 @@
     -#  refresh_products_providers_path(:id => @provider), :method => :put, :remote => true))
     -#= _("You can encounter missing repositories because of errors during manifest import or new content was uploaded to CDN.")
     -#= _("Note that this action can take some time to complete.")
+  - if @provider.products.empty?
+    = _("No Red Hat products currently exist, please import a manifest <a href='#{subscriptions_path}'>here</a> to receive Red Hat content.")
+  - else
+    - tabs = redhat_repo_tabs(@provider)
+    #content_tabs.grid_16
 
-  - tabs = redhat_repo_tabs(@provider)
-  #content_tabs.grid_16
-    %ul
+      %ul
+        - for tab in tabs
+          %li
+            %a{:href=>"##{tab[:id]}"}
+              = tab[:name]
       - for tab in tabs
-        %li
-          %a{:href=>"##{tab[:id]}"}
-            = tab[:name]
-    - for tab in tabs
-      %div{:id=>tab[:id]}
-        - if tab[:products].empty?
-          = _("No products are available containing this content type.")
-        - else
-          - reset_cycle
-          = render :partial=>"providers/redhat/repo_sets", :locals=>{:tab_id=>tab[:id], :provider=>@provider, :product_map=>tab[:products]}
+        %div{:id=>tab[:id]}
+          - if tab[:products].empty?
+            = _("No products are available containing this content type.")
+          - else
+            - reset_cycle
+            = render :partial=>"providers/redhat/repo_sets", :locals=>{:tab_id=>tab[:id], :provider=>@provider, :product_map=>tab[:products]}
 
 

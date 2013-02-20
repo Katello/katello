@@ -7,7 +7,7 @@
         - pc = product_map[product.id].sort{|p1, p2| p1.content.name <=> p2.content.name}
         %tr.product{:id=>"#{tab_id}_prod_#{product.id}", :class=>cycle(nil, 'alt')}
           %td
-            #{product.name}
+            = "#{product.name}"
         %tr{:class=>"child-of-#{tab_id}_prod_#{product.id} #{current_cycle()}"}
           %td
             %table.content_table
@@ -32,7 +32,7 @@
                       %span.expander_area
                         %span.expander{:style=>('display:none;' if !content_enabled)}
                         #{pContent.content.name}
-                      .refresh_icon-black.repo_set_refresh{:style=>('display: none' if !content_enabled)}
+                      .refresh_icon-black.repo_set_refresh{:title=>_('Refresh repositories'), :style=>('display: none' if !content_enabled)}
 
                       - if content_enabled
                         = render :partial=>'providers/redhat/repos', :locals=>{:pContent=>pContent}
