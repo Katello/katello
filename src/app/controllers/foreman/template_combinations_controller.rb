@@ -38,7 +38,7 @@ class Foreman::TemplateCombinationsController < SimpleCRUDController
 
   def index
     @template_combinations = Foreman::TemplateCombination.all('config_template_id' => params[:configuration_template_id])
-    render :partial => "items", :layout => "tupane_layout", :locals => { resource_name.to_sym => @resource, :accessor => "id", :environments => @environments }
+    render :partial => "items", :locals => { resource_name.to_sym => @resource, :accessor => "id", :environments => @environments }
   end
 
   def create
@@ -62,7 +62,7 @@ class Foreman::TemplateCombinationsController < SimpleCRUDController
     @template_combinations = Foreman::TemplateCombination.all('config_template_id' => template_combination.config_template_id)
     @configuration_template = @resource = Foreman::ConfigTemplate.find(template_combination.config_template_id)
     notify.success _("Template Combination deleted successfully.")
-    render :partial => "items", :layout => "tupane_layout", :locals => { resource_name.to_sym => @resource, :accessor => "id", :environments => @environments }
+    render :partial => "items", :locals => { resource_name.to_sym => @resource, :accessor => "id", :environments => @environments }
   rescue Resources::AbstractModel::Invalid => error
     notify.exception error
     render :json => @resource.errors, :status => :bad_request

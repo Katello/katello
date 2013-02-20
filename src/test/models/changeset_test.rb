@@ -17,7 +17,7 @@ class ChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def self.before_suite
     models = ["Organization", "KTEnvironment", "ContentViewEnvironment"]
-    disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
+    disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch", "Foreman"], models)
   end
 
   def setup

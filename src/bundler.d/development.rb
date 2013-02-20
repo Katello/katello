@@ -28,4 +28,6 @@ group :development do
   end
 
   gem 'factory_girl_rails', "~> 1.4.0"
+
+  gem "mocha", :require => false
 end
