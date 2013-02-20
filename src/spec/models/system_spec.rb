@@ -80,7 +80,7 @@ describe System do
     CustomInfo.skip_callback(:destroy, :after, :reindex_informable)
 
     o = Organization.find(@organization.id)
-    o.system_info_keys << "test_key"
+    o.default_info["system"] << "test_key"
     o.save!
     e = KTEnvironment.create!(:name=>'test2', :label=> 'test2', :prior => o.library.id, :organization => o)
 
