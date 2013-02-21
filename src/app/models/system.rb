@@ -50,7 +50,7 @@ class System < ActiveRecord::Base
   validates :sockets, :numericality => { :only_integer => true, :greater_than => 0 },
             :allow_nil => true, :if => ("validation_context == :create || validation_context == :update")
 
-  validate :content_view_in_environment
+  validates_with Validators::ContentViewEnvironmentValidator
   validates :memory, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0 },
             :allow_nil => true, :if => ("validation_context == :create || validation_context == :update")
 
@@ -225,12 +225,6 @@ class System < ActiveRecord::Base
       hash = {}
       self.custom_info.each{ |c| hash[c.keyname] = c.value} if self.custom_info
       hash
-    end
-
-    def content_view_in_environment
-      if content_view.present? && !content_view.environments.include?(environment)
-        errors.add(:base, _("Content view is not in environment '%s'.") % environment.name)
-      end
     end
 
 end
