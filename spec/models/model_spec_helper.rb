@@ -84,25 +84,26 @@ EOKEY
 
   def disable_product_orchestration
     Resources::Candlepin::Product.stub!(:get).and_return do
-      [{:productContent => []}] #return a fresh hash, as add_repo modified it
+      [{ :productContent => [] }] #return a fresh hash, as add_repo modified it
     end
     Resources::Candlepin::Product.stub!(:add_content).and_return(true)
     Resources::Candlepin::Product.stub!(:delete_content).and_return(true)
-    Resources::Candlepin::Product.stub!(:create).and_return({:id => '1'})
+    Resources::Candlepin::Product.stub!(:create).and_return({ :id => '1' })
     Resources::Candlepin::Product.stub!(:create_unlimited_subscription).and_return(true)
     Resources::Candlepin::Product.stub!(:pools).and_return([])
     Resources::Candlepin::Product.stub!(:delete_subscriptions).and_return(nil)
 
-    Resources::Candlepin::Content.stub!(:create).and_return({:id=>'123'})
-    Resources::Candlepin::Content.stub!(:update).and_return({:id=>'123'})
+    Resources::Candlepin::Content.stub!(:create).and_return({ :id => '123' })
+    Resources::Candlepin::Content.stub!(:update).and_return({ :id => '123' })
 
     # pulp orchestration
     Resources::Candlepin::Product.stub!(:certificate).and_return("")
     Resources::Candlepin::Product.stub!(:key).and_return("")
 
-    Runcible::Extensions::Repository.stub!(:create_or_update_schedule).and_return(true)
-    Runcible::Extensions::Repository.stub!(:remove_schedules).and_return(true)
-
+    if Katello.config.katello?
+      Runcible::Extensions::Repository.stub!(:create_or_update_schedule).and_return(true)
+      Runcible::Extensions::Repository.stub!(:remove_schedules).and_return(true)
+    end
   end
 
   def disable_org_orchestration
@@ -116,7 +117,7 @@ EOKEY
   def disable_env_orchestration
     Resources::Candlepin::Environment.stub!(:create).and_return({})
     Resources::Candlepin::Environment.stub!(:destroy).and_return({})
-    Resources::Candlepin::Environment.stub!(:find).and_return({:environmentContent => []})
+    Resources::Candlepin::Environment.stub!(:find).and_return({ :environmentContent => [] })
     Resources::Candlepin::Environment.stub!(:add_content).and_return({})
     Resources::Candlepin::Environment.stub!(:delete_content).and_return({})
   end
@@ -125,45 +126,51 @@ EOKEY
     Resources::Candlepin::Consumer.stub!(:get).and_return({})
   end
 
-  def disable_user_orchestration(options = { })
-    Runcible::Resources::User.stub!(:create).and_return({})
-    Runcible::Resources::User.stub!(:delete).and_return(200)
-    Runcible::Resources::Role.stub!(:add).and_return(true)
-    Runcible::Resources::Role.stub!(:remove).and_return(true)
+  def disable_user_orchestration(options = {})
+    if Katello.config.katello?
+      Runcible::Resources::User.stub!(:create).and_return({})
+      Runcible::Resources::User.stub!(:delete).and_return(200)
+      Runcible::Resources::Role.stub!(:add).and_return(true)
+      Runcible::Resources::Role.stub!(:remove).and_return(true)
+    end
 
     User.disable_foreman_orchestration! !options[:keep_foreman] if Katello.config.use_foreman
   end
 
 
   def disable_consumer_group_orchestration
-    Runcible::Extensions::ConsumerGroup.stub!(:create).and_return({})
-    Runcible::Extensions::ConsumerGroup.stub!(:delete).and_return(200)
-    Runcible::Extensions::ConsumerGroup.stub!(:retrieve).and_return({})
-    Runcible::Extensions::ConsumerGroup.stub!(:add_consumers_by_id).and_return(200)
-    Runcible::Extensions::ConsumerGroup.stub!(:remove_consumers_by_id).and_return(200)
+    if Katello.config.katello?
+      Runcible::Extensions::ConsumerGroup.stub!(:create).and_return({})
+      Runcible::Extensions::ConsumerGroup.stub!(:delete).and_return(200)
+      Runcible::Extensions::ConsumerGroup.stub!(:retrieve).and_return({})
+      Runcible::Extensions::ConsumerGroup.stub!(:add_consumers_by_id).and_return(200)
+      Runcible::Extensions::ConsumerGroup.stub!(:remove_consumers_by_id).and_return(200)
+    end
   end
 
   def disable_repo_orchestration
-    Runcible::Extensions::Repository.stub(:create).and_return({})
-    Runcible::Extensions::Repository.stub(:sync_history).and_return([])
-    Runcible::Resources::Task.stub!(:destroy).and_return({})
+    if Katello.config.katello?
+      Runcible::Extensions::Repository.stub(:create).and_return({})
+      Runcible::Extensions::Repository.stub(:sync_history).and_return([])
+      Runcible::Resources::Task.stub!(:destroy).and_return({})
 
-    Runcible::Extensions::Repository.stub(:packages).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PACKAGES)
-    Runcible::Extensions::Repository.stub(:errata).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_ERRATA)
-    Runcible::Extensions::Repository.stub(:distributions).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_DISTRIBUTIONS)
-    Runcible::Extensions::Repository.stub(:find).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PROPERTIES)
-    Runcible::Extensions::Repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
+      Runcible::Extensions::Repository.stub(:packages).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PACKAGES)
+      Runcible::Extensions::Repository.stub(:errata).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_ERRATA)
+      Runcible::Extensions::Repository.stub(:distributions).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_DISTRIBUTIONS)
+      Runcible::Extensions::Repository.stub(:find).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PROPERTIES)
+      Runcible::Extensions::Repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
+    end
 
-    Resources::Candlepin::Content.stub!(:create).and_return({:id=>'123'})
-    Resources::Candlepin::Content.stub!(:update).and_return({:id=>'123'})
-    Resources::Candlepin::Content.stub!(:get).and_return({:id=>'123'})
+    Resources::Candlepin::Content.stub!(:create).and_return({ :id => '123' })
+    Resources::Candlepin::Content.stub!(:update).and_return({ :id => '123' })
+    Resources::Candlepin::Content.stub!(:get).and_return({ :id => '123' })
 
     Repository.instance_eval do
       define_method(:index_packages) {
-      #do nothing
+        #do nothing
       }
       define_method(:index_errata) {
-            #do nothing
+        #do nothing
       }
     end
   end

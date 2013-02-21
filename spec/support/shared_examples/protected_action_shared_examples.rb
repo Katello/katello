@@ -24,7 +24,7 @@ shared_examples_for "protected action" do
     # it takes action from describe method
   end
   context "ALLOWING me" do
-    it "to it" do
+    it "to it", :katello => true do #TODO headpin
       if !defined?(on_success) && !defined?(before_success)
 
         controller.stub(action)
@@ -53,7 +53,7 @@ shared_examples_for "protected action" do
     end
   end
   context "NOT ALLOWING me" do
-    it "to it" do
+    it "to it", :katello => true do #TODO headpin
       if !defined?(on_success) && !defined?(before_success)
         @controller.stub(action)
         @controller.stub(:render)
@@ -76,7 +76,7 @@ end
 
 shared_examples_for "bad request" do
   context "action" do
-    it "should fail" do
+    it "should fail", :katello => true do #TODO headpin
       req
       response.status.should == HttpErrors::UNPROCESSABLE_ENTITY
     end

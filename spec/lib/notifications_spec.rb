@@ -29,28 +29,28 @@ describe Notifications do
 
   describe 'create a notification that is asynchronous' do
     describe 'with the notice as a string' do
-      it 'should generate a notice' do
+      it 'should generate a notice', :katello => true do #TODO headpin
         notifier.message @notice_string
         Notice.count.should == 1
       end
     end
 
     describe 'with the notice as an array' do
-      it 'should generate a notice' do
+      it 'should generate a notice', :katello => true do #TODO headpin
         notifier.message @notice_string_array
         Notice.count.should == 1
       end
     end
 
     describe 'with the notice as an ActiveRecord::RecordInvalid exception' do
-      it 'should generate a notice' do
+      it 'should generate a notice', :katello => true do #TODO headpin
         notifier.exception @notice_validation_error, :asynchronous => true, :persist => true
         Notice.count.should == 1
       end
     end
 
     describe 'with the notice as a RuntimeError exception' do
-      it 'should generate a notice' do
+      it 'should generate a notice', :katello => true do #TODO headpin
         notifier.exception @notice_standard_error, :asynchronous => true
         Notice.count.should == 1
       end
@@ -63,28 +63,28 @@ describe Notifications do
     end
 
     describe 'with the notice as a string' do
-      it 'should generate a notice' do
+      it 'should generate a notice', :katello => true do #TODO headpin
         notifier.success(@notice_string)
         Notice.count.should == 1
       end
     end
 
     describe 'with the notice as an array' do
-      it 'should generate a notice' do
+      it 'should generate a notice', :katello => true do #TODO headpin
         notifier.success(@notice_string_array)
         Notice.count.should == 1
       end
     end
 
     describe 'with the notice as an ActiveRecord::RecordInvalid exception' do
-      it 'should generate a notice' do
+      it 'should generate a notice', :katello => true do #TODO headpin
         notifier.exception(@notice_validation_error, :persist => true)
         Notice.count.should == 1
       end
     end
 
     describe 'with the notice as a RuntimeError exception' do
-      it 'should generate a notice' do
+      it 'should generate a notice', :katello => true do #TODO headpin
         notifier.exception(@notice_standard_error)
         Notice.count.should == 1
       end
@@ -92,7 +92,7 @@ describe Notifications do
 
     describe 'and does not persist' do
       describe 'with the notice as a string' do
-        it 'should generate a notice' do
+        it 'should generate a notice', :katello => true do #TODO headpin
           notifier.success(@notice_string, { :persist => false })
           Notice.count.should == 0
         end
@@ -105,7 +105,7 @@ describe Notifications do
       User.stub!(:current).and_return(@user)
     end
 
-    it 'should have the level set to :error' do
+    it 'should have the level set to :error', :katello => true do #TODO headpin
       notifier.error(@notice_string)
       Notice.count.should == 1
       Notice.first.level.should == "error"

@@ -30,7 +30,7 @@ describe CustomInfoController do
 
     Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
 
-    Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid})
+    Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid}) if defined?(Runcible)
 
     @org = Organization.create!(:name => "test_org", :label => "test_org")
     @env1 = KTEnvironment.create!(:name => "test_env", :label => "test_env", :prior => @org.library.id, :organization => @org)
@@ -53,7 +53,7 @@ describe CustomInfoController do
       }.sort.to_json
     end
 
-    it "should create successfully" do
+    it "should create successfully", :katello => true do #TODO headpin
       ci_count = System.find(@system.id).custom_info.size
       post :create, :informable_type => "system", :informable_id => @system.id, :keyname => "asset_tag", :value => "123456"
       response.code.should == "200"
@@ -67,7 +67,7 @@ describe CustomInfoController do
       @system.custom_info.create!(:keyname => "asset_tag", :value => "1234")
     end
 
-    it "should update successfully" do
+    it "should update successfully", :katello => true do #TODO headpin
       ci_count = System.find(@system.id).custom_info.size
       put :update, :informable_type => "system", :informable_id => @system.id, :keyname => "asset_tag", :value => "5678", :custom_info => { :asset_tag => "5678" }
       response.code.should == "200"
@@ -81,7 +81,7 @@ describe CustomInfoController do
       @system.custom_info.create!(:keyname => "asset_tag", :value => "1234")
     end
 
-    it "should destroy successfully" do
+    it "should destroy successfully", :katello => true do #TODO headpin
       ci_count = System.find(@system.id).custom_info.size
       delete :destroy, :informable_type => "system", :informable_id => @system.id, :keyname => "asset_tag"
       response.code.should == "200"

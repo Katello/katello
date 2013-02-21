@@ -34,7 +34,7 @@ describe UsersController do
       @environment = KTEnvironment.create!(:name=>'first-env', :label=> 'first-env', :prior => @organization.library.id, :organization => @organization)
     end
 
-    it "should create a user correctly" do
+    it "should create a user correctly", :katello => true do #TODO headpin
       name = "foo-user-1"
       controller.should_receive(:search_validate).once.and_return(:true)
       post 'create', {:user => {:username=>name, :password=>"password1234", :email=>"#{name}@somewhere.com", :env_id => @environment.id}}
@@ -42,7 +42,7 @@ describe UsersController do
       User.where(:username=>name).should_not be_empty
     end
 
-    it "should error if no username " do
+    it "should error if no username", :katello => true do #TODO headpin
       post 'create', {:user => {:username=>"", :password=>"password1234", :email=> "user@somewhere.com", :env_id => @environment.id}}
       response.should_not be_success
 
@@ -50,7 +50,7 @@ describe UsersController do
       response.should_not be_success
     end
 
-    it "should error if no password " do
+    it "should error if no password", :katello => true do #TODO headpin
       post 'create', {:user => {:username=>"testuser", :password=>"", :email=> "user@somewhere.com", :env_id => @environment.id}}
       response.should_not be_success
 
@@ -58,7 +58,7 @@ describe UsersController do
       response.should_not be_success
     end
 
-    it "should error if no email address " do
+    it "should error if no email address", :katello => true do #TODO headpin
       post 'create', {:user => {:username=>"testuser", :password=>"password1234", :email=>"", :env_id => @environment.id}}
       response.should_not be_success
 
@@ -84,13 +84,13 @@ describe UsersController do
       allow 'Test', ["create", "read","delete"], "product", ["RHEL-4", "RHEL-5","Cluster","ClusterStorage","Fedora"]
     end
 
-    it "should be allowed to change the password" do
+    it "should be allowed to change the password", :katello => true do #TODO headpin
        put 'update', {:id => @user.id, :user => {:password=>"password1234"}}
        response.should be_success
        User.authenticate!(@user.username, "password1234").should be_true
     end
 
-    it "should be allowed to change the email address" do
+    it "should be allowed to change the email address", :katello => true do #TODO headpin
        new_email = "foo-user@somewhere-new.com"
        put 'update', {:id => @user.id, :user => {:email=>new_email}}
        response.should be_success
@@ -107,7 +107,7 @@ describe UsersController do
     end
 
 
-    it "should not change the username" do
+    it "should not change the username", :katello => true do #TODO headpin
        put 'update', {:id => @user.id, :user => {:username=>"FOO"}}
        response.should_not be_success
        response.status.should == HttpErrors::UNPROCESSABLE_ENTITY
@@ -115,7 +115,7 @@ describe UsersController do
        assert !User.where(:username=>@user.username).empty?
     end
 
-    it "should allow roles to be changed" do
+    it "should allow roles to be changed", :katello => true do #TODO headpin
        role = Role.where(:name=>"Test")[0]
        assert !role.nil?
        put 'update_roles', {:id => @user.id, :user=>{:role_ids=>[role.id]}}

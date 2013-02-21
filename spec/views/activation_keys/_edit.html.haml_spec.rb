@@ -101,7 +101,7 @@ describe "activation_keys/_edit.html.haml" do
       view.content_for(:content).should have_selector("input#activation_key_environment_id", :count => 1)
     end
 
-    it "renders the activation key content view select" do
+    it "renders the activation key content view select", :katello => true do #TODO headpin
       view.content_for(:content).should have_selector("select#activation_key_content_view_id", :count => 1)
     end
 

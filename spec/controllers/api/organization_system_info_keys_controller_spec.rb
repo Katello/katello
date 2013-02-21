@@ -42,21 +42,21 @@ describe Api::OrganizationSystemInfoKeysController do
 
   describe "add default custom info to an org" do
 
-    it "should be successful" do
+    it "should be successful", :katello => true do #TODO headpin
       Organization.find(@org.id).system_info_keys.empty?.should == true
       post :create, :organization_id => @org.label, :keyname => "test_key"
       response.code.should == "200"
       Organization.find(@org.id).system_info_keys.include?("test_key").should == true
     end
 
-    it "should fail without keyname" do
+    it "should fail without keyname", :katello => true do #TODO headpin
       Organization.find(@org.id).system_info_keys.empty?.should == true
       post :create, :organization_id => @org.label
       response.code.should == "400"
       Organization.find(@org.id).system_info_keys.empty?.should == true
     end
 
-    it "should fail with wrong org id" do
+    it "should fail with wrong org id", :katello => true do #TODO headpin
       Organization.find(@org.id).system_info_keys.empty?.should == true
       post :create, :organization_id => "blahblahblah", :keyname => "test_key"
       response.code.should == "404"
@@ -72,14 +72,14 @@ describe Api::OrganizationSystemInfoKeysController do
       @org.save!
     end
 
-    it "should be successful" do
+    it "should be successful", :katello => true do #TODO headpin
       Organization.find(@org.id).system_info_keys.size.should == 1
       post :destroy, :organization_id => @org.label, :keyname => "test_key"
       response.code.should == "200"
       Organization.find(@org.id).system_info_keys.empty?.should == true
     end
 
-    it "should fail with wrong org id" do
+    it "should fail with wrong org id", :katello => true do #TODO headpin
       Organization.find(@org.id).system_info_keys.size.should == 1
       post :destroy, :organization_id => "bad org label", :keyname => "test_key"
       response.code.should == "404"
@@ -96,7 +96,7 @@ describe Api::OrganizationSystemInfoKeysController do
       end
     end
 
-    it "should be successful" do
+    it "should be successful", :katello => true do #TODO headpin
       @org.systems.each do |s|
         s.custom_info.empty?.should == true
       end
