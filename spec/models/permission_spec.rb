@@ -386,7 +386,7 @@ describe Permission do
                            :resource_type=> ResourceType.find_or_create_by_name('system_groups'), :organization => @organization)
       end
 
-      specify "should result in removal of system-group-specific tags" do
+      it "should result in removal of system-group-specific tags", :katello => true do #TODO headpin
         @group.destroy
         Permission.find_by_name('test1001').tag_values.should == [@group2.id]
       end

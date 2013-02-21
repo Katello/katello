@@ -50,7 +50,7 @@ describe Api::RootController do
     before (:each) do
       Katello.config.stub!(:katello?).and_return(true)
     end
-    it "should show katello apis" do
+    it "should show katello apis", :katello => true do #TODO headpin
       resource_list
       json(response).should include @systems
       json(response).should include @packages
