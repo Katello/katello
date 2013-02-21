@@ -320,7 +320,7 @@ module Katello
       def load(environment = nil)
         Node.new.tap do |c|
           load_config_file c, environment
-          post_process c
+          post_process c, environment
           validate c, environment
         end
       end
@@ -351,7 +351,7 @@ module Katello
         config.deep_merge! config_data[environment] if environment
       end
 
-      def post_process config
+      def post_process config, environment
         config[:katello?] = lambda { config.app_mode == 'katello' }
         config[:headpin?] = lambda { config.app_mode == 'headpin' }
         config[:app_name] ||= config.katello? ? 'Katello' : 'Headpin'
@@ -366,6 +366,11 @@ module Katello
                                        else
                                          "no-reply@"+config[:host]
                                        end
+
+        if environment
+          root = config.logging.loggers.root
+          root[:path] = "#{Rails.root}/log" unless root.has_key?(:path)
+        end
 
         load_version config
       end
@@ -404,10 +409,25 @@ module Katello
                     search use_foreman password_reset_expiration redhat_repository_url port
                     elastic_url rest_client_timeout elastic_index
                     katello_version pulp email_reply_address
-                    embed_yard_documentation)
+                    embed_yard_documentation logging)
 
       has_values :app_mode, %w(katello headpin)
       has_values :url_prefix, %w(/headpin /sam /cfse /katello)
+
+      validate :logging do
+        has_keys *%w(console_inline colorize log_trace loggers)
+
+        validate :loggers do
+          has_keys 'root'
+          validate :root do
+            has_keys 'level'
+            if config.type == 'file'
+              has_keys *%w(age keep pattern filename)
+              has_keys 'path' unless early?
+            end
+          end
+        end
+      end
 
       unless config.katello?
         is_not_empty :thumbslug_url
