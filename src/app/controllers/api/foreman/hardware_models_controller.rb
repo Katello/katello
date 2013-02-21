@@ -18,6 +18,15 @@ class Api::Foreman::HardwareModelsController < Api::Foreman::SimpleCrudControlle
     DOC
   end
 
+  def_param_group :hardware_model do
+    param :hardware_model, Hash, :desc => "hardware model info", :required => true, :action_aware => true do
+      param :name, String, :required => true
+      param :info, String
+      param :vendor_class, String
+      param :hardware_model, String
+    end
+  end
+
   self.foreman_model = ::Foreman::HardwareModel
 
   api :GET, "/hardware_models", "Get list of hardware models available in Foreman"
@@ -32,24 +41,14 @@ class Api::Foreman::HardwareModelsController < Api::Foreman::SimpleCrudControlle
   end
 
   api :POST, "/hardware_models", "Create new hardware model in Foreman"
-  param :hardware_model, Hash, :desc => "hardware model info", :required => true do
-    param :name, String, :required => true
-    param :info, String, :required => false
-    param :vendor_class, String, :required => false
-    param :hardware_model, String, :required => false
-  end
+  param_group :hardware_model
   def create
     super
   end
 
   api :PUT, "/hardware_models/:id", "Update an hardware model record in Foreman"
   param :id, String, "hardware model name"
-  param :hardware_model, Hash, :desc => "hardware model info", :required => true do
-    param :name, String, :required => true
-    param :info, String, :required => false
-    param :vendor_class, String, :required => false
-    param :hardware_model, String, :required => false
-  end
+  param_group :hardware_model
   def update
     super
   end
