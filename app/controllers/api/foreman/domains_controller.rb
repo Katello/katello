@@ -25,6 +25,15 @@ class Api::Foreman::DomainsController < Api::Foreman::SimpleCrudController
     DOC
   end
 
+  def_param_group :domain do
+    param :domain, Hash, :required => true, :action_aware => true do
+      param :name, String, :required => true, :desc => "The full DNS Domain name"
+      param :fullname, String, :desc => "Full name describing the domain"
+      param :dns_id, :number, :desc => "DNS Proxy to use within this domain"
+      param :domain_parameters_attributes, Array, :desc => "Array of parameters (name, value)"
+    end
+  end
+
   self.foreman_model = ::Foreman::Domain
 
   api :GET, "/domains/", "List of domains"
@@ -46,23 +55,13 @@ class Api::Foreman::DomainsController < Api::Foreman::SimpleCrudController
     and other pages that refer to domains, and also available as
     an external node parameter
   DOC
-  param :domain, Hash, :required => true do
-    param :name, String, :required => true, :desc => "The full DNS Domain name"
-    param :fullname, String, :required => false, :desc => "Full name describing the domain"
-    param :dns_id, :number, :required => false, :desc => "DNS Proxy to use within this domain"
-    param :domain_parameters_attributes, Array, :required => false, :desc => "Array of parameters (name, value)"
-  end
+  param_group :domain
   def create
     super
   end
 
   api :PUT, "/domains/:id/", "Update a domain."
-  param :domain, Hash, :required => true do
-    param :name, String, :required => true, :desc => "The full DNS Domain name"
-    param :fullname, String, :required => false, :desc => "Full name describing the domain"
-    param :dns_id, :number, :required => false, :desc => "DNS Proxy to use within this domain"
-    param :domain_parameters_attributes, Array, :required => false, :desc => "Array of parameters (name, value)"
-  end
+  param_group :domain
   def update
     super
   end
