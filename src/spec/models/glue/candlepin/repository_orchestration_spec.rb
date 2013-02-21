@@ -24,12 +24,12 @@ describe Repository do
     repository._destroy_callbacks.select {|cb| cb.kind.eql?(:before)}.collect(&:filter).include?(:destroy_content_orchestration)
   end
 
-  it "should retrieve remote content first time it's accessed" do
+  it "should retrieve remote content first time it's accessed", :katello => true do #TODO headpin
     Candlepin::Content.should_receive(:find).with(repository.content_id)
     repository.content
   end
 
-  it "should update content when a gpg key is added and there was none before" do
+  it "should update content when a gpg key is added and there was none before", :katello => true do #TODO headpin
     repository.stub(:gpg_key_id_was).and_return(nil)
     repository.stub(:gpg_key_id).and_return(rand(100))
     repository.stub(:content).and_return(Candlepin::Content.new(:gpgUrl => ""))
@@ -37,7 +37,7 @@ describe Repository do
     repository.should_update_content?.should == true
   end
 
-  it "should update content when an existing gpg key is removed" do
+  it "should update content when an existing gpg key is removed", :katello => true do #TODO headpin
     repository.stub(:gpg_key_id_was).and_return(rand(100))
     repository.stub(:gpg_key_id).and_return(nil)
     repository.stub(:content).and_return(Candlepin::Content.new(:gpgUrl => "#{rand(100)}"))
@@ -45,7 +45,7 @@ describe Repository do
     repository.should_update_content?.should == true
   end
 
-  it "should call update on content in update_content" do
+  it "should call update on content in update_content", :katello => true do #TODO headpin
     remote_content = double("Candlepin::Content")
     remote_content.stub(:update).and_return(remote_content)
     Candlepin::Content.stub(:find).and_return(remote_content)
@@ -77,7 +77,9 @@ describe Repository do
 
     context "there isn't another product using same candlepin content" do
       before { Resources::Candlepin::Content.should_receive(:destroy).once }
-      it("should delete CP content") { repository.del_content }
+      it "should delete CP content", :katello => true do #TODO headpin
+        repository.del_content
+      end
     end
 
     context "there is another product using same candlepin content" do
@@ -85,7 +87,9 @@ describe Repository do
         Resources::Candlepin::Content.should_not_receive(:destroy)
         repository.stub :other_repos_with_same_content => ['not', 'empty']
       end
-      it("should not delete CP content") { repository.del_content }
+      it "should not delete CP content", :katello => true do #TODO headpin
+        repository.del_content
+      end
     end
   end
 end

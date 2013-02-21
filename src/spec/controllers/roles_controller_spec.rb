@@ -39,7 +39,7 @@ describe RolesController do
 
   describe "create a role" do
 
-    it "should create a role correctly" do
+    it "should create a role correctly", :katello => true do #TODO headpin
       post 'create', {:role => RolesControllerTest::ROLE }
       response.should be_success
       Role.where(:name=>RolesControllerTest::ROLE[:name]).should_not be_empty
@@ -52,12 +52,12 @@ describe RolesController do
           post :create, bad_req
         end
       end
-      it "should error if no name" do
+      it "should error if no name", :katello => true do #TODO headpin
         post 'create', {:role => {}}
         response.should_not be_success
       end
 
-      it "should error if blank name" do
+      it "should error if blank name", :katello => true do #TODO headpin
         post 'create', {:role => { :name=> "" }}
         response.should_not be_success
       end
@@ -69,7 +69,7 @@ describe RolesController do
       @role = Role.create(RolesControllerTest::ROLE)
     end
 
-    it 'should allow changing of the name' do
+    it 'should allow changing of the name', :katello => true do #TODO headpin
       put 'update', { :id => @role.id, :role => {  :name => "new_test_role_name"}}
       response.should be_success
       Role.where(:name=>"new_test_role_name").should_not be_empty
@@ -124,13 +124,13 @@ describe RolesController do
       @role = Role.create(RolesControllerTest::ROLE)
     end
 
-    it 'should successfully delete' do
+    it 'should successfully delete', :katello => true do #TODO headpin
       delete 'destroy', { :id => @role.id }
       Role.exists?(@role.id).should be_false
     end
 
     describe 'with wrong id' do
-      it 'should thrown an exception' do
+      it 'should thrown an exception', :katello => true do #TODO headpin
         delete 'destroy', { :id => 13 }
         response.should_not be_success
       end
@@ -144,7 +144,7 @@ describe RolesController do
       150.times{|a| Role.create!(:name=>"bar%05d" % [a])}
     end
 
-    it "should show the role 2 pane list" do
+    it "should show the role 2 pane list", :katello => true do #TODO headpin
       get :index
       response.should be_success
       response.should render_template("index")
@@ -248,7 +248,7 @@ describe RolesController do
       @perm = Permission.where(:name => "New Perm")[0]
     end
 
-    it "should remove the permission from the role and delete it" do
+    it "should remove the permission from the role and delete it", :katello => true do #TODO headpin
       controller.should notify.success
       put "destroy_permission", { :role_id => @role.id, :permission_id => @perm.id}
       response.should be_success
@@ -266,28 +266,28 @@ describe RolesController do
       @perm = Permission.where(:name => "New Perm")[0]
     end
 
-    it 'should change the name of the permission' do
+    it 'should change the name of the permission', :katello => true do #TODO headpin
       controller.should notify.success
       put "update_permission", { :role_id => @role.id, :permission_id => @perm.id, :permission => { :name => "New Named Perm"}}
       response.should be_success
       Permission.find(@perm.id).name.should == "New Named Perm"
     end
 
-    it 'should change the description of the permission' do
+    it 'should change the description of the permission', :katello => true do #TODO headpin
       controller.should notify.success
       put "update_permission", { :role_id => @role.id, :permission_id => @perm.id, :permission => { :description => "This is the new description."}}
       response.should be_success
       Permission.find(@perm.id).description.should == "This is the new description."
     end
 
-    it 'should set all verbs' do
+    it 'should set all verbs', :katello => true do #TODO headpin
       controller.should notify.success
       put "update_permission", { :role_id => @role.id, :permission_id => @perm.id, :permission => { :all_verbs => true }}
       response.should be_success
       Permission.find(@perm.id).all_verbs.should == true
     end
 
-    it 'should set all tags' do
+    it 'should set all tags', :katello => true do #TODO headpin
       controller.should notify.success
       put "update_permission", { :role_id => @role.id, :permission_id => @perm.id, :permission => { :all_tags => true }}
       response.should be_success

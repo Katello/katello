@@ -33,7 +33,7 @@ describe Ping do
       Ping.should_receive(:system).with("/sbin/service katello-jobs status").and_return(true)
     end
 
-    context "headpin mode" do
+    context "headpin mode", :headpin => true do
       before do
         stub_headpin_mode
 
@@ -45,7 +45,7 @@ describe Ping do
       it(:headpin => true) { should eql('ok') }
     end
 
-    context "katello mode" do
+    context "katello mode", :katello => true do
       before do
         # pulp - without oauth
         stub_request(:get, "#{Katello.config.pulp.url}/services/status/") # gotta have that trailing slash

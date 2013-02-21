@@ -13,7 +13,7 @@
 require 'spec_helper'
 
 
-describe SystemGroup do
+describe SystemGroup, :katello => true do
 
   include SystemHelperMethods
   include OrchestrationHelper
