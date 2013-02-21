@@ -8,7 +8,6 @@ install:
   - sudo pip install mock nose python-dateutil kerberos pep8 pylint simplejson --quiet
 
 script:
-  - ./scripts/ci/cli_pull_request_tests.sh
   - cd src/
   - cp -f config/katello.template.yml config/katello.yml 
   - bundle install --without checking:devboost:profiling:debugging
