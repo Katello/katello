@@ -82,7 +82,7 @@ module Katello
         end
       end
 
-      def initialize(data = { })
+      def initialize(data = {})
         @data = convert_hash data
       end
 
@@ -166,7 +166,7 @@ module Katello
       end
 
       def to_hash
-        @data.inject({ }) do |hash, (k, v)|
+        @data.inject({}) do |hash, (k, v)|
           hash.update k => (Node === v ? v.to_hash : v)
         end
       end
@@ -234,7 +234,7 @@ module Katello
         has_values key, [true, false]
       end
 
-      def has_values(key, values, options = { })
+      def has_values(key, values, options = {})
         values << nil if options[:allow_nil]
         return true if values.include?(config[key])
         raise ArgumentError, error_format(key, "should be one of #{values.inspect}, but was #{config[key].inspect}")
@@ -267,12 +267,13 @@ module Katello
 
     # processes configuration loading from config_files
     class LoaderImpl
-      attr_reader :config_file_paths, :validation, :default_config_file_path
+      attr_reader :config_file_paths, :validation, :default_config_file_path, :post_process
 
       def initialize(options = {})
         @config_file_paths        = options[:config_file_paths] || raise(ArgumentError)
         @default_config_file_path = options[:default_config_file_path] || raise(ArgumentError)
         @validation               = options[:validation] || raise(ArgumentError)
+        @post_process             = options[:post_process] || raise(ArgumentError)
       end
 
       # raw config data from katello.yml represented with Node
@@ -302,7 +303,7 @@ module Katello
       # @return [Hash{String => Hash}] database configurations
       def database_configs
         @database_configs ||= begin
-          %w(production development test).inject({ }) do |hash, environment|
+          %w(production development test).inject({}) do |hash, environment|
             common = config_data.common.database.to_hash
             if config_data.present?(environment.to_sym, :database)
               hash.update(
@@ -320,7 +321,7 @@ module Katello
       def load(environment = nil)
         Node.new.tap do |c|
           load_config_file c, environment
-          post_process c, environment
+          post_process.call c, environment
           validate c, environment
         end
       end
@@ -351,43 +352,8 @@ module Katello
         config.deep_merge! config_data[environment] if environment
       end
 
-      def post_process config, environment
-        config[:katello?] = lambda { config.app_mode == 'katello' }
-        config[:headpin?] = lambda { config.app_mode == 'headpin' }
-        config[:app_name] ||= config.katello? ? 'Katello' : 'Headpin'
-
-        config[:use_cp] = true if config[:use_cp].nil?
-        config[:use_pulp] = config.katello? if config[:use_pulp].nil?
-        config[:use_foreman] = config.katello? if config[:use_foreman].nil?
-        config[:use_elasticsearch] = true if config[:use_elasticsearch].nil?
-
-        config[:email_reply_address] = if config[:email_reply_address]
-                                         config[:email_reply_address]
-                                       else
-                                         "no-reply@"+config[:host]
-                                       end
-
-        if environment
-          root = config.logging.loggers.root
-          root[:path] = "#{Rails.root}/log" unless root.has_key?(:path)
-        end
-
-        load_version config
-      end
-
       def decrypt_password!(database_config)
         database_config[:password] = Password.decrypt database_config.password if database_config.present?(:password)
-      end
-
-      def load_version(config)
-        package = config.katello? ? 'katello-common' : 'katello-headpin'
-        version = `rpm -q #{package} --queryformat '%{VERSION}-%{RELEASE}' 2>&1`
-        if $? != 0
-          hash    = `git rev-parse --short HEAD 2>/dev/null`
-          version = $? == 0 ? "git hash (#{hash.chop})" : "Unknown"
-        end
-
-        config[:katello_version] = version
       end
 
       def validate(config, environment)
@@ -401,6 +367,38 @@ module Katello
     end
 
     root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
+
+    POST_PROCESS = lambda do |config, environment|
+      config[:katello?] = lambda { config.app_mode == 'katello' }
+      config[:headpin?] = lambda { config.app_mode == 'headpin' }
+      config[:app_name] ||= config.katello? ? 'Katello' : 'Headpin'
+
+      config[:use_cp] = true if config[:use_cp].nil?
+      config[:use_pulp] = config.katello? if config[:use_pulp].nil?
+      config[:use_foreman] = config.katello? if config[:use_foreman].nil?
+      config[:use_elasticsearch] = config.katello? if config[:use_elasticsearch].nil?
+
+      config[:email_reply_address] = if config[:email_reply_address]
+                                       config[:email_reply_address]
+                                     else
+                                       "no-reply@"+config[:host]
+                                     end
+
+      if environment
+        root = config.logging.loggers.root
+        root[:path] = "#{Rails.root}/log" unless root.has_key?(:path)
+      end
+
+      config[:katello_version] = begin
+        package = config.katello? ? 'katello-common' : 'katello-headpin'
+        `rpm -q #{package} --queryformat '%{VERSION}-%{RELEASE}' 2>&1`.tap do |version|
+          if $? != 0
+            hash    = `git rev-parse --short HEAD 2>/dev/null`
+            version.replace $? == 0 ? "git hash (#{hash.chop})" : "Unknown"
+          end
+        end
+      end
+    end
 
     VALIDATION = lambda do |*_|
       has_keys *%w( app_name candlepin notification available_locales
@@ -446,7 +444,8 @@ module Katello
     Loader = LoaderImpl.new(
         :config_file_paths        => %W(#{root}/config/katello.yml /etc/katello/katello.yml),
         :default_config_file_path => "#{root}/config/katello_defaults.yml",
-        :validation               => VALIDATION)
+        :validation               => VALIDATION,
+        :post_process             => POST_PROCESS)
   end
 
 
