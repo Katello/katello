@@ -22,8 +22,8 @@ class ProductsControllerTest < MiniTest::Rails::ActionController::TestCase
     @redhat_product = products(:redhat)
     @custom_product = products(:fedora)
     login_user(User.find(users(:admin)), @org)
-    models = ["Organization", "KTEnvironment", "Changeset"]
-    services = ["Pulp", "ElasticSearch", "Foreman"]
+    models = ["Organization", "KTEnvironment"]
+    services = ["Pulp", "ElasticSearch", "Foreman", "Candlepin"]
     disable_glue_layers(services, models)
 
     @pc = Candlepin::ProductContent.new({:content=>{:id=>'3'}}, @redhat_product.id)
