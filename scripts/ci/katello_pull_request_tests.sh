@@ -45,7 +45,6 @@ cd ../cli
 
 echo ""
 echo "********* Python CLI Unit Tests ***************"
-cd cli/
 echo "RUNNING: make test"
 make test
 if [ $? -ne 0 ]
