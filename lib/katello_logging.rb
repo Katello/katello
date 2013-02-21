@@ -14,9 +14,7 @@ require 'logging'
 module Katello
   class Logging
     def initialize
-      if !File.directory?(default_path) && !Katello.config.logging.has_key?(:path)
-        Dir.mkdir_p default_path
-      end
+      FileUtils.mkdir_p root_configuration.path unless File.directory?(root_configuration.path)
       configure_color_scheme
     end
 
@@ -97,7 +95,7 @@ module Katello
                                     :facility => ::Syslog::Constants::LOG_DAEMON)
           )
         when 'file'
-          path = root_configuration.has_key?(:path) ? root_configuration.path : default_path
+          path = root_configuration.path
           log_filename = "#{path}/#{options[:prefix]}#{root_configuration.filename}"
           ::Logging.appenders.rolling_file(
               name,
@@ -131,10 +129,6 @@ module Katello
                              :file   => :yellow,
                              :method => :yellow,
       )
-    end
-
-    def default_path
-      "#{Rails.root}/log"
     end
 
     # We need a bridge for Tire so we can log their messages to our logger

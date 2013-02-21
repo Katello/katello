@@ -16,7 +16,6 @@ describe Katello::Logging do
   let(:testing_config) do
     Katello::Configuration::Node.new(
         { :logging => { :colorize       => false,
-                        :path           => '/var/log/katello',
                         :console_inline => false,
                         :log_trace      => false,
                         :loggers        => {
@@ -25,20 +24,25 @@ describe Katello::Logging do
                                             :filename => 'test.log',
                                             :age      => 'weekly',
                                             :keep     => 1,
-                                            :pattern  => "%m" },
+                                            :pattern  => "%m",
+                                            :path     => "#{Rails.root}/log" },
                             :app       => { :level => 'debug' },
                             :sql       => { :level => 'warn' },
                             :tire_rest => { :enabled => false }
                         } },
         })
   end
-  before { Katello.stub(:config => testing_config) }
+
+  before do
+    Katello.stub(:config => testing_config)
+    FileUtils.stub(:mkdir_p => true)
+  end
 
   let(:logging) { Katello::Logging.new }
 
   describe "#configuration" do
     subject { logging.send :configuration }
-    it { should respond_to(:colorize, :path, :console_inline, :loggers, :log_trace) }
+    it { should respond_to(:colorize, :console_inline, :loggers, :log_trace) }
   end
 
   describe "#root_configuration" do
@@ -169,12 +173,6 @@ describe Katello::Logging do
   describe "#configure_color_scheme" do
     subject { logging.send :configure_color_scheme }
     it { should be_kind_of(Logging::ColorScheme) }
-  end
-
-  describe "#default_path" do
-    subject { logging.send :default_path }
-    it { should be_kind_of(String) }
-    it { should include(Rails.root.to_s) }
   end
 
   describe Katello::Logging::TireBridge do
