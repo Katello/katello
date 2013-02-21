@@ -145,6 +145,7 @@ module ApplicationHelper
     # products and system templates
     options[:url_templates_proc] = nil if options[:url_templates_proc].nil?
     options[:url_products_proc] = nil if options[:url_products_proc].nil?
+    options[:url_content_views_proc] = nil if options[:url_content_views_proc].nil?
 
     render :partial=>"/common/env_select", :locals => options
   end
