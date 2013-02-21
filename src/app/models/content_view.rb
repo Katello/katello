@@ -59,8 +59,12 @@ class ContentView < ActiveRecord::Base
 
   def self.promoted(safe = false)
     # retrieve the view, if it has been promoted (i.e. exists in more than 1 environment)
-    relation = self.joins(:content_view_versions => :environments).group('"content_views"."id"').
-        having('count("environments"."id") > 1')
+    relation = self.joins(:content_view_versions => :environments).
+                    group("content_views.id, content_views.name, content_views.label,"\
+                          "content_views.description, content_views.content_view_definition_id,"\
+                          "content_views.organization_id, content_views.default, content_views.created_at,"\
+                          "content_views.updated_at").
+                    having('count(environments.id) > 1')
 
     if safe
       # do not include group and having in returned relation
