@@ -51,7 +51,7 @@ class Api::ApiController < ActionController::Base
     if current_user && current_user.default_locale
       I18n.locale = current_user.default_locale
     else
-      I18n.locale = ApplicationController.extract_locale_from_accept_language_header
+      I18n.locale = ApplicationController.extract_locale_from_accept_language_header parse_locale
     end
 
     logger.debug "Setting locale: #{I18n.locale}"
