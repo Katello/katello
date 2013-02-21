@@ -40,6 +40,13 @@ class Api::GpgKeysController < Api::ApiController
     }
   end
 
+  def_param_group :gpg_key do
+    param :gpg_key, Hash, :required => true, :action_aware => true do
+      param :name, :identifier, :required => true, :desc => "identifier of the gpg key"
+      param :content, String, :required => true,  :desc => "public key block in DER encoding"
+    end
+  end
+
   api :GET, "/organizations/:organization_id/gpg_keys", "List gpg keys"
   param :organization_id, :identifier, :desc => "organization identifier"
   param :name, :identifier, :desc => "identifier of the gpg key"
@@ -56,17 +63,14 @@ class Api::GpgKeysController < Api::ApiController
 
   api :POST, "/organizations/:organization_id/gpg_keys", "Create a gpg key"
   param :organization_id, :identifier, :desc => "organization identifier"
-  param :gpg_key, Hash do
-    param :name, :identifier, :desc => "identifier of the gpg key"
-    param :content, String, :desc => "public key block in DER encoding"
-  end
+  param_group :gpg_key
   def create
     gpg_key = @organization.gpg_keys.create!(params[:gpg_key].slice(:name, :content))
     render :json => gpg_key
   end
 
   api :PUT, "/gpg_keys/:id", "Update a gpg key"
-  see "gpg_keys#create"
+  param_group :gpg_key
   def update
     @gpg_key.update_attributes!(params[:gpg_key].slice(:name, :content))
     render :json => @gpg_key
