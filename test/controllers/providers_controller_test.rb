@@ -23,7 +23,7 @@ class ProvidersControllerTest < MiniTest::Rails::ActionController::TestCase
     login_user(User.find(users(:admin)), @org)
 
 
-    models = ["Organization", "KTEnvironment", "Changeset"]
+    models = ["Organization", "KTEnvironment"]
     services = ["Candlepin", "Pulp", "ElasticSearch", "Foreman"]
     disable_glue_layers(services, models)
   end
