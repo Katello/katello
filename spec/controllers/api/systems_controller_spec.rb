@@ -179,6 +179,8 @@ describe Api::SystemsController do
         it "should set the system's content view to the key's view" do
           content_view = FactoryGirl.build_stubbed(:content_view)
           @activation_key_2.stub(:content_view_id).and_return(content_view.id)
+          ContentView.stub(:find).and_return(content_view)
+          content_view.stub(:in_environment?).and_return(true)
           @activation_key_2.unstub(:apply_to_system)
           post :activate, @system_data
           response.should be_success

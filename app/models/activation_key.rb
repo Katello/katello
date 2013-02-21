@@ -41,13 +41,13 @@ class ActivationKey < ActiveRecord::Base
   validate :system_template_exists
   validate :environment_not_library
   validate :environment_key_conflict
-  validate :content_view_in_environment
   validates_each :usage_limit do |record, attr, value|
     if not value.nil? and (value < -1 or value == 0 or (value != -1 and value < record.usage_count))
       # we don't let users to set usage limit lower than current usage
       record.errors[attr] << _("must be higher than current usage (%s) or unlimited" % record.usage_count)
     end
   end
+  validates_with Validators::ContentViewEnvironmentValidator
 
   def system_template_exists
     if system_template && system_template.environment != self.environment
@@ -60,12 +60,6 @@ class ActivationKey < ActiveRecord::Base
       errors.add(:environment, _("ID: %s doesn't exist ") % environment_id)
     elsif environment.organization != self.organization
       errors.add(:environment, _("name: %s doesn't exist ") % environment.name)
-    end
-  end
-
-  def content_view_in_environment
-    if content_view.present? && !content_view.environments.include?(environment)
-      errors.add(:base, _("Content view is not in environment"))
     end
   end
 
