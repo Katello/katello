@@ -58,7 +58,7 @@ class ContentSearchController < ApplicationController
     elsif params[:mode] == 'unique'
       products = products.select{|p|  !(envs - p.environments ).empty?}
     end
-    render :json=>{:rows=>container_rows(products), :name=>_('Products')}
+    render :json=>{:rows=>product_rows(products), :name=>_('Products')}
   end
 
   def views
@@ -67,7 +67,7 @@ class ContentSearchController < ApplicationController
     else
       views = ContentView.readable(current_organization).non_default
     end
-    render :json=>{:rows=> container_rows(views), :name=>_('Content View')}
+    render :json=>{:rows=> view_rows(views), :name=>_('Content View')}
   end
 
   def repos
@@ -88,7 +88,7 @@ class ContentSearchController < ApplicationController
     end
 
     products = repos.collect(&:product).uniq
-    render :json=>{:rows=>(container_rows(products) + repo_rows(repos)), :name=>_('Repositories')}
+    render :json=>{:rows=>(product_rows(products) + repo_rows(repos)), :name=>_('Repositories')}
   end
 
   def packages
@@ -264,15 +264,29 @@ class ContentSearchController < ApplicationController
     render_to_string :partial=>'repo_hover', :locals=>{:repo=>repo}
   end
 
-  def container_rows(containers)
+  def product_rows(products)
     env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
-    containers.collect do |c|
+    products.collect do |prod|
       cols = {}
-      c.environments.collect do |env|
-        cols[env.id] = {:hover => view_hover_html(c, env)} if env_ids.include?(env.id)
+      prod.environments.collect do |env|
+        cols[env.id] = {:hover => container_hover_html(prod, env)} if env_ids.include?(env.id)
       end
-      container_type = c.is_a? Product ? "product" : "view"
-      {:id=>"#{container_type}_#{c.id}", :name=>c.name, :cols=>cols, :data_type => "#{container_type}", :value => c.name}
+      {:id=>"product_#{prod.id}", :name=>prod.name, :cols=>cols, :data_type => "product", :value => prod.name}
+    end
+  end
+
+  def view_rows(views)
+    env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
+    views.collect do |view|
+      cols = {}
+      view.environments.collect do |env|
+        if env_ids.include?(env.id)
+          version = view.version(env).try(:version)
+          display = version ? (_("version %s") % version) : ""
+          cols[env.id] = {:hover => container_hover_html(view, env), :display => display}
+        end
+      end
+      {:id=>"view_#{view.id}", :name=>view.name, :cols=>cols, :data_type => "view", :value => view.name}
     end
   end
 
