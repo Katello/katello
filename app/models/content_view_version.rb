@@ -99,6 +99,7 @@ class ContentViewVersion < ActiveRecord::Base
         # this repo no longer exists in the definition, so destroy it
         repo.destroy
       end
+      library_version.reload
     end
     PulpTaskStatus::wait_for_tasks async_tasks unless async_tasks.blank?
 
