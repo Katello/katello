@@ -2,29 +2,29 @@ FactoryGirl.define do
   factory :k_t_environment, :aliases => [:environment] do
     sequence(:name) { |n| "Environment#{n}" }
     sequence(:label) { |n| "environment#{n}" }
+    association :organization
 
-    ignore do
-      stubbed_org = true
-    end
-
-    after_build do |environment, e|
-      environment.organization = FactoryGirl.build_stubbed(:organization, :acme_corporation) if stubbed_org
+    trait :stubbed_org do
+      association :organization, :strategy => :build_stubbed
     end
 
     trait :library do
-      name          "Library"
-      description   "This is the Library"
-      label         "library_label"
-      library       true
+      name "Library"
+      description "This is the Library"
+      sequence(:label) { |n| "library_label_#{n}" }
+      library true
+
+      after_build do |lib|
+        lib.organization.library = lib
+      end
     end
     factory :library, :traits => [:library]
 
     trait :with_library do
       after_build do |env|
         unless env.library || env.prior
-          library = FactoryGirl.create(:library)
+          library = FactoryGirl.build(:library, :organization => env.organization)
           env.priors = [library]
-          env.organization = FactoryGirl.create(:organization, :library => library)
         end
       end
     end

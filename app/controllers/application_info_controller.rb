@@ -18,6 +18,10 @@ class ApplicationInfoController < ApplicationController
     "dashboard"
   end
 
+  def menu_definition
+    {:about => :admin_menu}.with_indifferent_access
+  end
+
   def about
     @ping = Ping.ping
     @packages = Ping.packages

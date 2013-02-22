@@ -166,7 +166,7 @@ Requires:       %{name}-configure
 Requires:       %{name}-cli
 Requires:       postgresql-server
 Requires:       postgresql
-Requires:       candlepin-tomcat6
+Requires(post): candlepin-tomcat6
 Requires:       candlepin-selinux
 # the following backend engine deps are required by <katello-configure>
 Requires:       mongodb mongodb-server
@@ -222,7 +222,8 @@ Katello connection classes for the Candlepin backend
 Summary:        A subscription management only version of Katello
 BuildArch:      noarch
 Requires:       katello-common
-Requires:       katello-glue-candlepin
+Requires:       %{name}-glue-candlepin
+Requires:       %{name}-glue-elasticsearch
 Requires:       katello-selinux
 Requires:       rubygem(bundler_ext)
 BuildRequires:  rubygem(bundler_ext)
@@ -237,7 +238,7 @@ Requires:       katello-configure
 Requires:       katello-cli
 Requires:       postgresql-server
 Requires:       postgresql
-Requires(post):       candlepin-tomcat6
+Requires(post): candlepin-tomcat6
 Requires:       thumbslug
 Requires:       thumbslug-selinux
 
@@ -675,6 +676,7 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/models/glue/elastic_search
 
 %files glue-pulp
+%{homedir}/bundler.d/pulp.rb
 %{homedir}/app/models/glue/pulp
 %config(missingok) %{_sysconfdir}/cron.daily/katello-refresh-cdn
 
@@ -708,6 +710,7 @@ usermod -a -G katello-shared tomcat
 %exclude %{homedir}/app/controllers/api/foreman
 %exclude %{homedir}/app/controllers/foreman
 %exclude %{homedir}/app/views/foreman
+%exclude %{homedir}/lib/tasks/test.rake
 %{homedir}/app/stylesheets
 %{homedir}/app/views
 %{homedir}/autotest

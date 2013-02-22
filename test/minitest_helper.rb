@@ -88,17 +88,19 @@ def configure_vcr
 end
 
 def configure_runcible
-  uri = URI.parse(Katello.config.pulp.url)
+  if Katello.config[:use_pulp]
+    uri = URI.parse(Katello.config.pulp.url)
 
-  Runcible::Base.config = {
-    :url      => "#{uri.scheme}://#{uri.host}",
-    :api_path => uri.path,
-    :user     => "admin",
-    :oauth    => {:oauth_secret => Katello.config.pulp.oauth_secret,
-                  :oauth_key    => Katello.config.pulp.oauth_key }
-  }
+    Runcible::Base.config = {
+      :url      => "#{uri.scheme}://#{uri.host}",
+      :api_path => uri.path,
+      :user     => "admin",
+      :oauth    => {:oauth_secret => Katello.config.pulp.oauth_secret,
+                    :oauth_key    => Katello.config.pulp.oauth_key }
+    }
 
-  Runcible::Base.config[:logger] = 'stdout' if ENV['logging'] == "true"
+    Runcible::Base.config[:logger] = 'stdout' if ENV['logging'] == "true"
+  end
 end
 
 def disable_glue_layers(services=[], models=[])
