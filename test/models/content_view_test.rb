@@ -15,14 +15,14 @@ require 'minitest_helper'
 class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
   fixtures :all
 
-
   def self.before_suite
-    models = ["Organization", "KTEnvironment"]
+    models = ["Organization", "KTEnvironment", "User", "ContentViewEnvironment"]
     services = ["Candlepin", "Pulp", "ElasticSearch"]
     disable_glue_layers(services, models)
   end
 
   def setup
+    User.current      = User.find(users(:admin))
     @library          = KTEnvironment.find(environments(:library).id)
     @dev              = KTEnvironment.find(environments(:dev).id)
     @acme_corporation = Organization.find(organizations(:acme_corporation).id)
