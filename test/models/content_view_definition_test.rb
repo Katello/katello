@@ -65,14 +65,6 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_nil ContentView.find_by_id(content_view.id)
   end
 
-  def test_publish
-    content_view_def = FactoryGirl.create(:content_view_definition)
-    content_view = content_view_def.publish('test_name', 'test_description', 'test_label')
-    refute_nil content_view
-    refute_empty content_view_def.content_views.reload
-    assert_includes content_view_def.content_views, content_view
-  end
-
   def test_products
     @content_view_def.save!
     @content_view_def.products << @product
@@ -88,20 +80,36 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_adding_products_to_composite_view
+    # verify that products cannot be added to a composite view
     @content_view_def.composite = true
-    @content_view_def.component_content_views << FactoryGirl.create(:content_view)
     @content_view_def.products << FactoryGirl.build_stubbed(:product)
     refute @content_view_def.save
     refute_empty @content_view_def.errors
   end
 
   def test_adding_views_to_composite_content_definition
+    # verify that component views may be added to a composite view
     @content_view_def.composite = true
     @content_view_def.component_content_views << FactoryGirl.create(:content_view)
     assert @content_view_def.save
-    @content_view_def.products << FactoryGirl.build_stubbed(:product)
-    refute @content_view_def.save
-    refute_empty @content_view_def.errors
+  end
+
+  def test_publish
+    content_view_def = FactoryGirl.create(:content_view_definition)
+    content_view = content_view_def.publish('test_name', 'test_description', 'test_label')
+    refute_nil content_view
+    refute_empty content_view_def.content_views.reload
+    assert_includes content_view_def.content_views, content_view
+  end
+
+  def test_publish_composite
+    content_view_def = FactoryGirl.create(:content_view_definition)
+    content_view_def.composite = true
+    content_view_def.save!
+    content_view = content_view_def.publish('test_name', 'test_description', 'test_label')
+    refute_nil content_view
+    refute_empty content_view_def.content_views.reload
+    assert_includes content_view_def.content_views, content_view
   end
 
 end
