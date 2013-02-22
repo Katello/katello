@@ -21,9 +21,8 @@ from katello.client.cli.base import opt_parser_add_org
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_content_view, get_cv_definition, \
     get_product, get_repo
-from katello.client.lib.async import AsyncTask
+from katello.client.lib.async import AsyncTask, evaluate_task_status
 from katello.client.lib.ui.progress import run_spinner_in_bg, wait_for_async_task
-from katello.client.lib.ui.formatters import format_task_errors
 
 
 # base content_view_definition action ----------------------------------------
@@ -108,31 +107,23 @@ class Publish(ContentViewDefinitionAction):
         async       = self.get_option('async')
         cvd         = get_cv_definition(org_name, label, name, def_id)
 
-        try:
-            task = self.def_api.publish(org_name, cvd["id"], view_name, view_label, description)
 
-            if not async:
-                task = AsyncTask(task)
-                run_spinner_in_bg(wait_for_async_task, [task],
-                                  message=_("Publishing content view, please wait..."))
+        task = self.def_api.publish(org_name, cvd["id"], view_name, view_label, description)
 
-                if task.succeeded():
-                    print _("Content view [ %s ] published successfully.") % \
-                        name
-                    return_code = os.EX_OK
-                else:
-                    print _("Content view [ %(name)s ] failed to be promoted: %(errors)s") % \
-                        ({"name": name, "errors": format_task_errors(task.errors)})
-                    return_code = os.EX_DATAERR
+        if not async:
+            task = AsyncTask(task)
+            run_spinner_in_bg(wait_for_async_task, [task],
+                              message=_("Publishing content view, please wait..."))
 
-            else:
-                print _("Publish task [ %s ] was successfully created.") % task['uuid']
-                return_code = os.EX_OK
+            return evaluate_task_status(task,
+                ok =     _("Content view [ %s ] published successfully.") % name,
+                failed = _("Content view [ %s ] failed to be promoted") % name
+            )
 
-        except Exception:
-            raise
+        else:
+            print _("Publish task [ %s ] was successfully created.") % task['uuid']
+            return os.EX_OK
 
-        return return_code
 
 
 class Info(ContentViewDefinitionAction):

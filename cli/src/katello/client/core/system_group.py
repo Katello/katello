@@ -20,7 +20,7 @@ from katello.client.core.base import BaseAction, Command
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.utils import get_system_group
 from katello.client.lib.utils.data import test_record
-from katello.client.lib.async import SystemGroupAsyncJob
+from katello.client.lib.async import SystemGroupAsyncJob, evaluate_remote_action
 from katello.client.lib.ui.progress import run_spinner_in_bg, wait_for_async_task
 from katello.client.lib.ui.printer import batch_add_columns
 
@@ -464,14 +464,8 @@ class Packages(SystemGroupAction):
             print (_("Performing remote action [ %s ]... ") % job_id)
             job = SystemGroupAsyncJob(org_name, system_group_id, job)
             run_spinner_in_bg(wait_for_async_task, [job])
-            if job.succeeded():
-                print _("Remote action finished:")
-                print job.get_status_message()
-                return os.EX_OK
-            else:
-                print _("Remote action failed:")
-                print job.get_status_message()
-                return os.EX_DATAERR
+
+            return evaluate_remote_action(job)
 
         return os.EX_OK
 
@@ -507,13 +501,7 @@ class Errata(SystemGroupAction):
             print (_("Performing remote action [ %s ]... ") % job_id)
             job = SystemGroupAsyncJob(org_name, system_group_id, job)
             run_spinner_in_bg(wait_for_async_task, [job])
-            if job.succeeded():
-                print _("Remote action finished:")
-                print job.get_status_message()
-                return os.EX_OK
-            else:
-                print _("Remote action failed:")
-                print job.get_status_message()
-                return os.EX_DATAERR
+
+            return evaluate_remote_action(job)
 
         return os.EX_OK

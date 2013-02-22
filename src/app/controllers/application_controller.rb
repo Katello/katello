@@ -25,6 +25,7 @@ class ApplicationController < ActionController::Base
 
   helper "alchemy/translation"
   helper_method :current_organization
+  helper_method :render_correct_nav
   before_filter :set_locale
   before_filter :require_user,:require_org
   before_filter :check_deleted_org
@@ -221,7 +222,10 @@ class ApplicationController < ActionController::Base
   # Look for match to list of locales specified in request. If not found, try matching just
   # first two letters. Finally, default to english if no matches at all.
   # eg. [en_US, en] would match en
-  # Expects list of locales to search as an array (use parse_locale for that)
+  #
+  # The method accept parameter = list of locales returned by parse_locale. Since the method is used
+  # outside of the request context, we need to pass this data in as a parameter.
+  #
   def self.extract_locale_from_accept_language_header locales
 
     # Look for full match
@@ -243,6 +247,23 @@ class ApplicationController < ActionController::Base
     current_user.create_or_update_search_history(URI(@_request.env['HTTP_REFERER']).path, params[:search])
   rescue => error
     log_exception(error)
+  end
+
+  def render_correct_nav
+    if self.respond_to?(:menu_definition) && self.menu_definition[params[:action]] == :admin_menu
+      session[:menu_back] = true
+      #the menu definition exists, return true
+      render_admin_menu
+    elsif self.respond_to?(:menu_definition) && self.menu_definition[params[:action]] == :notices_menu
+      session[:menu_back] = true
+      session[:notifications] = true
+      render_notifications_menu
+    else
+      #the menu definition does not exist, return false
+      session[:menu_back] = false
+      session[:notifications] = false
+      render_menu(1)
+    end
   end
 
   private # why bother? methods below are not testable/tested
