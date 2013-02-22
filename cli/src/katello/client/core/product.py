@@ -405,16 +405,11 @@ class EnableRepositorySet(SingleProductAction):
         task = run_spinner_in_bg(wait_for_async_task, [task],
                 message=_("Enabling Repository Set..."))
         task = AsyncTask(task)
-        if task.succeeded():
-            print _("Repository Set [ %(set_id)s ] enabled. " \
-                    % {'set_id':set_id})
-            returnCode = os.EX_OK
-        else:
-            error = format_task_errors(task.errors())
-            print _("Repository enable [ %(set_id)s ] failed: %(task_errors)s" \
-                    % {'set_id':set_id, 'task_errors':error})
-            returnCode = os.EX_DATAERR
-        return returnCode
+        return evaluate_task_status(task,
+            failed = _("Repository enable [ %(set_id)s ] failed.") % 
+                        {'set_id':set_id},
+            ok = _("Repository Set [ %(set_id)s ] enabled.") % {'set_id':set_id}
+        )
 
 class DisableRepositorySet(SingleProductAction):
     description = _('Disable  a repository set for a Red Hat product')
@@ -438,18 +433,11 @@ class DisableRepositorySet(SingleProductAction):
         task = run_spinner_in_bg(wait_for_async_task, [task],
                 message=_("Disabling Repository Set..."))
         task = AsyncTask(task)
-        if task.succeeded():
-            print _("Repository Set [ %(set_id)s ] disabled. " \
-                    % {'set_id':set_id})
-            returnCode = os.EX_OK
-        else:
-            error = format_task_errors(task.errors())
-            print _("Repository enable [ %(set_id)s ] failed: %(task_errors)s" \
-                    % {'set_id':set_id, 'task_errors':error})
-            returnCode = os.EX_DATAERR
-        return returnCode
-
-
+        return evaluate_task_status(task,
+            failed = _("Repository disable [ %(set_id)s ] failed.") % 
+                        {'set_id':set_id},
+            ok = _("Repository Set [ %(set_id)s ] disabled.") % {'set_id':set_id}
+        )
 
 # ------------------------------------------------------------------------------
 class Update(SingleProductAction):
