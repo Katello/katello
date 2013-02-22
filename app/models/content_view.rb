@@ -163,7 +163,7 @@ class ContentView < ActiveRecord::Base
     if replacing_version
       PulpTaskStatus::wait_for_tasks prepare_repos_for_promotion(replacing_version.repos(to_env), repos_to_promote)
     end
-    tasks = promote_repos(to_env, repos_to_promote)
+    tasks = promote_repos(promote_version, to_env, repos_to_promote)
 
     if replacing_version
       if replacing_version.environments.length == 1
@@ -278,16 +278,17 @@ class ContentView < ActiveRecord::Base
         # a version of this repo is being promoted, so clear it and later
         # we'll regenerate the content... this is more efficient than
         # destroying the repo and recreating it...
-        result << repo.clear_content
+        result << repo.clear_contents
       else
         # a version of this repo is not being promoted, so destroy it
         repo.destroy
+        result
       end
     end
     tasks
   end
 
-  def promote_repos(to_env, promoting_repos)
+  def promote_repos(promote_version, to_env, promoting_repos)
     # promote the repos to the target env
     tasks = []
     promoting_repos.each_pair do |library_instance_id, repo|
