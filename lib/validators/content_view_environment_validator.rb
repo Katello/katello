@@ -10,15 +10,19 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class ContentViewEnvironment < ActiveRecord::Base
-  include Glue::Candlepin::Environment if Katello.config.use_cp
-  include Glue if Katello.config.use_cp
+module Validators
+  class ContentViewEnvironmentValidator < ActiveModel::Validator
 
-  belongs_to :content_view
+    def validate(record)
+      if record.content_view_id && record.environment_id
+        view = ContentView.find(record.content_view_id)
+        env = KTEnvironment.find(record.environment_id)
+        if !view.in_environment?(env)
+          record.errors[:base] << _("Content view '%{view}' is not in environment '%{env}'") %
+                                    {:view => view.name, :env => env.name}
+        end
+      end
+    end
 
-  # retrieve the owning environment for this content view environment.
-  def owner
-    env_id = self.cp_id.split('-').first
-    KTEnvironment.find(env_id)
   end
 end
