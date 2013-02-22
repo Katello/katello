@@ -43,7 +43,7 @@ module ProvidersHelper
         tabs[key][:products][product.id] << prod_content
       end
     end
-    tabs.values.sort{|h1, h2| h1[:order] <=> h2[:order]}
+    tabs.values.sort_by { |h| h[:order] }
   end
 
 

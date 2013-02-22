@@ -46,20 +46,12 @@ cd ../cli
 echo ""
 echo "********* Python CLI Unit Tests ***************"
 echo "RUNNING: make test"
-make test
-if [ $? -ne 0 ]
-then
-  exit 1
-fi
+make test || exit 1
 
 echo ""
 echo "********* Running Pylint ************************"
 echo "RUNNING: PYTHONPATH=src/ pylint --rcfile=./etc/spacewalk-pylint.rc --additional-builtins=_ katello"
-PYTHONPATH=src/ pylint --rcfile=./etc/spacewalk-pylint.rc --additional-builtins=_ katello
-if [ $? -ne 0 ]
-then
-  exit 1
-fi
+PYTHONPATH=src/ pylint --rcfile=./etc/spacewalk-pylint.rc --additional-builtins=_ katello || exit 1
 
 cd ../
 
