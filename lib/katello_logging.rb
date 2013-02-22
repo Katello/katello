@@ -94,18 +94,12 @@ module Katello
     def configure_children_loggers
       # set level and enabled configuration
       loggers_hash = configuration.loggers.to_hash
-      loggers_hash.keys.tap { |a| a.delete(:root) }.each do |logger|
-        logger_config = configuration.loggers[logger]
-        logger_object = ::Logging.logger[logger]
-        logger_object.level = logger_config.level if logger_config.has_key?(:level)
-        logger_object.additive = logger_config.enabled if logger_config.has_key?(:enabled)
-      end
-
-      # set trace according to configuration
-      children = ::Logging::Repository.instance.children(:root)
-      children = children.map(&:name).tap { |l| l.delete('Logging') }
-      children.each do |logger|
-        ::Logging.logger[logger].trace = configuration.log_trace
+      loggers_hash.keys.tap { |a| a.delete(:root) }.each do |logger_name|
+        logger_config = configuration.loggers[logger_name]
+        logger        = ::Logging.logger[logger_name]
+        logger.level = logger_config.level if logger_config.has_key?(:level)
+        logger.additive = logger_config.enabled if logger_config.has_key?(:enabled)
+        logger.trace = configuration.log_trace
       end
     end
 
