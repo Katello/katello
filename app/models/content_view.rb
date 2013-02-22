@@ -254,7 +254,7 @@ class ContentView < ActiveRecord::Base
   def get_repos_to_promote(from_env, to_env)
     # Retrieve the repos that will end up in the to_env as a result of promoting this view.
     # The structure will be a hash, where key=repo.library_instance_id and value=repo
-    if self.content_view_definition.composite?
+    if self.try(:content_view_definition).try(:composite?)
       # For a composite view, the repos are based upon the component_content_views
       # currently in the to_env
       promoting_repos = Repository.in_environment(to_env).
