@@ -43,6 +43,7 @@ class Api::RepositorySetsController < Api::ApiController
   api :POST, "/product/:product_id/repository_set/:id/disable", "Enable a repository set for a product."
   param :organization_id, :identifier, :required => true, :desc => "id of an organization the repository will be contained in"
   param :product_id, :number, :required => true, :desc => "id of a product the repository will be contained in"
+  param :id, :number, :required => true, :desc => "id of the repository set to disable"
   def disable
     raise _('Repository sets are not applicable for custom products..') if @product.custom?
     render :json=>@product.async(:organization=>@organization).disable_content(@product_content.content.id)
@@ -51,7 +52,6 @@ class Api::RepositorySetsController < Api::ApiController
   api :GET, "/product/:product_id/repository_set/", "List repository sets for a product."
   param :organization_id, :identifier, :required => true, :desc => "id of an "
   param :product_id, :number, :required => true, :desc => "id of a product to list repository sets in"
-  param :id, :number, :required => true, :desc => "id of the repository set to disable"
   def index
     raise _('Repository sets are not available for custom products.') if @product.custom?
     content = @product.productContent.collect do |pc|

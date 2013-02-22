@@ -4,7 +4,7 @@
   %tbody
     - for product in provider.products.engineering.order(:name)
       - if product_map[product.id]
-        - pc = product_map[product.id].sort{|p1, p2| p1.content.name <=> p2.content.name}
+        - contents = product_map[product.id].sort{|p1, p2| p1.content.name <=> p2.content.name}
         %tr.product{:id=>"#{tab_id}_prod_#{product.id}", :class=>cycle(nil, 'alt')}
           %td
             = "#{product.name}"
@@ -17,24 +17,24 @@
                 %th
                   = _('Repository Set')
               %tbody
-                - for pContent in pc
-                  - content_enabled = pContent.katello_enabled?
-                  %tr.collapsed.repo_set{:id=>"#{tab_id}_repo_set_#{pContent.content.id}", :class=>(:disable if !content_enabled)}
+                - for product_content in contents
+                  - content_enabled = product_content.katello_enabled?
+                  %tr.collapsed.repo_set{:id=>"#{tab_id}_repo_set_#{product_content.content.id}", :class=>(:disable if !content_enabled)}
                     %td
                       =image_tag( "embed/icons/spinner.gif", :class=>"hidden fl repo_set_spinner",
-                          :id=>"spinner_set_#{pContent.content.id}", :style=>"margin-right:1px;")
-                      %input.repo_set_enable{:type=>:checkbox, :value=>pContent.content.id,
+                          :id=>"spinner_set_#{product_content.content.id}", :style=>"margin-right:1px;")
+                      %input.repo_set_enable{:type=>:checkbox, :value=>product_content.content.id,
                                              :data=>{:url => refresh_content_product_path(product.id),
                                                      :disable_url=>disable_content_product_path(product.id)},
-                                             :disabled =>(!pContent.can_disable? || !@provider.editable?),
-                                             :checked=>(:checked if pContent.katello_enabled?)}
+                                             :disabled =>(!product_content.can_disable? || !@provider.editable?),
+                                             :checked=>(:checked if product_content.katello_enabled?)}
                     %td
                       %span.expander_area
                         %span.expander{:style=>('display:none;' if !content_enabled)}
-                        #{pContent.content.name}
+                        #{product_content.content.name}
                       .refresh_icon-black.repo_set_refresh{:title=>_('Refresh repositories'), :style=>('display: none' if !content_enabled)}
 
                       - if content_enabled
-                        = render :partial=>'providers/redhat/repos', :locals=>{:pContent=>pContent}
+                        = render :partial=>'providers/redhat/repos', :locals=>{:product_content=>product_content}
                       - else
                         %table{:style=>'display:none;'}
