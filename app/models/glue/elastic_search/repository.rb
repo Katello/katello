@@ -41,11 +41,15 @@ module Glue::ElasticSearch::Repository
     end
 
     def index_packages
-      pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
       Tire.index Package.index do
         create :settings => Package.index_settings, :mappings => Package.index_mapping
-        import pkgs
-      end if !pkgs.empty?
+      end
+      pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
+      pkgs.each_slice(200) do |sublist|
+        Tire.index Package.index do
+          import sublist
+        end if !sublist.empty?
+      end
     end
 
     def update_packages_index
