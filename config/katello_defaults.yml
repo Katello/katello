@@ -226,6 +226,9 @@ common:
       # unfortunately there is currently no better way
       tire_rest:
         enabled: false
+      yard:
+        enabled: true
+        level: warn
 #
 # Production environment configuration
 #
@@ -264,6 +267,8 @@ development:
         keep: 1
         pattern: "[%5l %d %c] %m\n"
         filename: "development.log"
+      yard:
+        level: info
 
 #
 # Test environment configuration
