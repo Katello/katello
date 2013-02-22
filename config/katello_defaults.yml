@@ -178,7 +178,7 @@ common:
         # pattern or rolling options
         type: file
         # 'daily', 'weekly', 'monthly' or number as seconds
-        age: 'daily'
+        age: 'weekly'
         # how many old log files to keep
         keep: 365
         # logger line pattern, you can use following macros
@@ -193,7 +193,7 @@ common:
         #  [%L] line number where the logging request was issued
         #  [%M] method name where the logging request was issued
         #  [%X{string}] variable set using ::Logging.mdc['string'] =
-        pattern: "[%5l %d %-12c %X{uuid} #%p] %m\n"
+        pattern: "[%5l %d %c %X{uuid} #%p] %m\n"
         # log filename for this environment, it will be placed into #{Rails.root}/log directory
         filename: "production.log"
         # you log files will be stored here
