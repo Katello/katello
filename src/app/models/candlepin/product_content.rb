@@ -61,6 +61,7 @@ class Candlepin::ProductContent
     repos.each do |repo|
       repo.destroy
     end
+    @repos = nil #reset repo cache
   end
 
   def refresh_repositories
@@ -118,7 +119,7 @@ class Candlepin::ProductContent
                                    )
         end
         product.repositories_cdn_import_passed! unless product.cdn_import_success?
-
+        @repos = nil #reset repo cache
       rescue RestClient::InternalServerError => e
         if e.message.include? "Architecture must be one of"
           Rails.logger.error("Pulp does not support arch '#{arch}'")

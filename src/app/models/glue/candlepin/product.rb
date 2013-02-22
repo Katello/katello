@@ -176,15 +176,19 @@ module Glue::Candlepin::Product
     end
 
     def refresh_content(content_id)
-      pc = self.productContent.select{|pc| pc.content.id == content_id}.first
+      pc = product_content_by_id(content_id)
       pc.refresh_repositories
       pc
     end
 
     def disable_content(content_id)
-      pc = self.productContent.select{|pc| pc.content.id == content_id}.first
+      pc = product_content_by_id(content_id)
       pc.disable
       pc
+    end
+
+    def product_content_by_id(content_id)
+      self.productContent.find{|pc| pc.content.id == content_id}
     end
 
     def set_content
