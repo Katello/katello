@@ -20,6 +20,7 @@ module Katello
 
     def configure(options = {})
       configure_root_logger(options)
+      integrate_yard_logger!
       configure_children_loggers
 
       if defined?(Rails::Console) && configuration.console_inline
@@ -32,6 +33,47 @@ module Katello
     end
 
     private
+
+    def integrate_yard_logger!
+      if defined?(::YARD)
+        # redefine by YARD globally defined method #log to point to our logger
+        Object.send :define_method, :log do
+          Katello::Logging::YARDLoggerDelegator.instance
+        end
+
+        # define our logger child for YARD
+        self.class.const_set(:YARDLoggerDelegator, Class.new(::YARD::Logger) do
+
+          # @return [::Logging::Logger] for yard
+          def _logging_logger
+            @_logging_logger ||= begin
+              yard_logger_delegator = self
+              ::Logging.logger['yard'].tap do |logger|
+                # redefine method #level= to set also YARD logger level
+                original_method = logger.method :level=
+                logger.singleton_class.send :define_method, :level= do |level|
+                  yard_logger_delegator.instance_variable_set :@level, level
+                  original_method.call level
+                end
+                logger.level = logger.level
+              end
+            end
+          end
+
+          # delegate all messages to a ::Logging::Logger
+          def add(severity, message = nil, progname = nil, &block)
+            clear_line
+            #puts "-- #{severity} #{message || progname}"
+            _logging_logger.add severity, message || progname, &block
+          end
+
+          # disable setting level by Yard logger
+          def level=(level)
+            # debug "setting level:#{level} ignored, use Logging.logger['yard'].level= instead"
+          end
+        end)
+      end
+    end
 
     # shortcut to logging configuration
     def configuration
