@@ -90,7 +90,7 @@ class ActivationKey < ActiveRecord::Base
     system.system_activation_keys.build(:activation_key => self)
   end
 
-  # compute number of cosumptions per pools for a product to satisfy
+  # compute number of consumptions per pool for a product to satisfy
   # the allocate requirement
   def calculate_consumption(product, pools, allocate)
     pools = pools.sort_by { |pool| [pool.start_date, pool.cp_id] }
