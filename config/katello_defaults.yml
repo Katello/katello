@@ -179,8 +179,8 @@ common:
         type: file
         # 'daily', 'weekly', 'monthly' or number as seconds
         age: 'weekly'
-        # how many old log files to keep
-        keep: 365
+        # how many old log files to keep (156 = 52 * 3 = 3 years for weekly age)
+        keep: 156
         # logger line pattern, you can use following macros
         #  [%c] name of the logger that generate the log event
         #  [%d] datestamp
@@ -200,11 +200,12 @@ common:
         # note when you log outside of standard rails path you won't see log output in WEBrick
         # STDOUT (usually not wanted in development), to use Rails default path, don't set path
         # path: /var/log/katello
-        # you can configure each logger individually, you can turn it off completely by using key
-        # 'enabled' or you can adjust it's logging 'level'. If you specify level higher than root
-        # logger has, messages below this level are ignored. If you specify lower level than root
-        # they are still ignored but you can add appender in Katello::Logging just for this logger
-        # and see these logs outside of main log.
+
+      # you can configure each logger individually, you can turn it off completely by using key
+      # 'enabled' or you can adjust it's logging 'level'. If you specify level higher than root
+      # logger has, messages below this level are ignored. If you specify lower level than root
+      # they are still ignored but you can add appender in Katello::Logging just for this logger
+      # and see these logs outside of main log.
       sql:
         enabled: true
       app:
@@ -227,8 +228,7 @@ common:
       tire_rest:
         enabled: false
       yard:
-        enabled: true
-        level: warn
+        enabled: false
 #
 # Production environment configuration
 #
