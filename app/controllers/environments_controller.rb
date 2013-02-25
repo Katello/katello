@@ -76,7 +76,7 @@ class EnvironmentsController < ApplicationController
               :label => params[:kt_environment][:label],
               :organization_id => @organization.id}
 
-    env_params[:label], label_assigned = generate_label(env_params[:name], _('environment')) if env_params[:label].blank?
+    env_params[:label], label_assigned = generate_label(env_params[:name], 'environment') if env_params[:label].blank?
 
     @environment = KTEnvironment.new env_params
     @environment.save!

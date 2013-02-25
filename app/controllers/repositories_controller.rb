@@ -56,7 +56,7 @@ class RepositoriesController < ApplicationController
 
   def create
     repo_params = params[:repo]
-    repo_params[:label], label_assigned = generate_label(repo_params[:name], _('repository')) if repo_params[:label].blank?
+    repo_params[:label], label_assigned = generate_label(repo_params[:name], 'repository') if repo_params[:label].blank?
 
     raise HttpErrors::BadRequest, _("Repository can be only created for custom provider.") unless @product.custom?
 
