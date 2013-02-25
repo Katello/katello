@@ -86,6 +86,7 @@ Requires:       rubygem(ldap_fluff)
 Requires:       rubygem(foreman_api) >= 0.0.7
 Requires:       rubygem(anemone)
 Requires:       rubygem(apipie-rails) >= 0.0.18
+Requires:       rubygem(logging) >= 1.8.0
 Requires:       lsof
 
 %if 0%{?rhel} == 6
