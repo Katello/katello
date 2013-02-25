@@ -68,7 +68,7 @@ NameVirtualHost *:443
     # client certs support
     RequestHeader set SSL_CLIENT_CERT "%{SSL_CLIENT_CERT}s"
     SSLVerifyClient optional
-    SSLRenegBufferSize 16777216
+    SSLRenegBufferSize 1048576
     SSLVerifyDepth 2
 
     ProxyPass balancer://thinservers/api
