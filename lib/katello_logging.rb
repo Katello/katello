@@ -123,7 +123,7 @@ module Katello
     # note that syslog ignores pattern and logs only messages
     def build_root_appender(options)
       name = "#{options[:prefix]}joined"
-      case root_configuration.type
+      case root_configuration[:type]
         when 'syslog'
           ::Logging.appenders.syslog(
               name,
@@ -163,7 +163,7 @@ module Katello
                              :logger => :cyan,
                              :line   => :yellow,
                              :file   => :yellow,
-                             :method => :yellow,
+                             :method => :yellow
       )
     end
 
