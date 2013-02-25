@@ -70,18 +70,17 @@ class Candlepin::ProductContent
     cdn_var_substitutor = Resources::CDN::CdnResource.new(product.provider[:repository_url],
                                                      :ssl_client_cert => OpenSSL::X509::Certificate.new(product.certificate),
                                                      :ssl_client_key => OpenSSL::PKey::RSA.new(product.key),
-                                                     :product        => product).substitutor(product.import_logger)
+                                                     :product        => product).substitutor(Rails.logger)
+
     content_url = self.content.contentUrl
     begin
       cdn_var_substitutor.precalculate([content_url])
     rescue Errors::SecurityViolation => e
       # in case we cannot access CDN server to obtain repository URLS we note down error
       self.repositories_cdn_import_failed!
-      if product.import_logger
-        product.import_logger.error("\nproduct #{product.name} repositories import: " <<
-                                     'SecurityViolation occurred when contacting CDN to fetch ' <<
-                                     "listing files\n" + e.backtrace.join("\n"))
-      end
+      Rails.logger.error("\nproduct #{product.name} repositories import: " <<
+                                   'SecurityViolation occurred when contacting CDN to fetch ' <<
+                                   "listing files\n" + e.backtrace.join("\n"))
       # false would cancel orchestration and would lead to product save cancellation
       # but we want import process to succeed
       return true
