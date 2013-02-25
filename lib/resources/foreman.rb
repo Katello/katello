@@ -21,7 +21,8 @@ module Resources
         { :base_url           => config.url,
           :enable_validations => false,
           :oauth              => { :consumer_key    => config.oauth_key,
-                                   :consumer_secret => config.oauth_secret } }
+                                   :consumer_secret => config.oauth_secret },
+          :logger             => Logging.logger['foreman_rest'] }
       end
     end
 
