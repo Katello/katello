@@ -60,6 +60,7 @@ gem 'acts_as_reportable', '>=1.1.1', :require => 'ruport/acts_as_reportable'
 # Documentation
 gem "apipie-rails", '>= 0.0.13'
 
+gem 'hooks'
 
 
 # Load all sub-gemfiles from bundler.d directory
