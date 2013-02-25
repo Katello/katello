@@ -6,7 +6,7 @@ header "Compute resources"
 if rpm -q foreman >> /dev/null; then
 
   #PROVIDERS=( "EC2" "LIBVIRT" "OPENSTACK" "OVIRT" "RACKSPACE" "VMWARE" )
-  PROVIDERS=( "LIBVIRT" "OVIRT" "RACKSPACE" )
+  PROVIDERS=( "OVIRT" "RACKSPACE" )
   OPENSTACK_OPTS="--user=user --password=passwd --tenant=tenant"
   OVIRT_OPTS="--user=user --password=passwd --uuid=uuid"
   VMWARE_OPTS="--user=user --password=passwd --uuid=uuid --server=server"
@@ -25,8 +25,8 @@ if rpm -q foreman >> /dev/null; then
 	test_success "compute_resource list" compute_resource list
 
   #update resource's name there and back
-  CR_NAME="LIBVIRT_$RAND"
-  NEW_CR_NAME="LIBVIRT_2_$RAND"
+  CR_NAME="OVIRT_$RAND"
+  NEW_CR_NAME="OVIRT_2_$RAND"
 	test_success "compute_resource update" compute_resource update --name="$CR_NAME" --new_name="$NEW_CR_NAME"
 	test_success "compute_resource update" compute_resource update --name="$NEW_CR_NAME" --new_name="$CR_NAME"
 

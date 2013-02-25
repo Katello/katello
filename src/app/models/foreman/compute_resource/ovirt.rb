@@ -13,7 +13,6 @@
 class Foreman::ComputeResource::Ovirt < Foreman::ComputeResource
 
   attributes :user, :password, :uuid
-  validates :user, :password, :uuid, :presence => true
 
   resource_name :compute_resource
   resource Resources::Foreman::ComputeResource
