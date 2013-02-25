@@ -72,7 +72,7 @@ class Repository < ActiveRecord::Base
   end
 
   def self.in_content_views(views)
-    joins(:content_view_version => :content_view).where('content_views.id' => views.map(&:id))
+    joins(:content_view_version).where('content_view_versions.content_view_id' => views.map(&:id))
   end
 
   def in_default_view?
@@ -175,7 +175,7 @@ class Repository < ActiveRecord::Base
     if for_cp
       "/#{content_path}"
     elsif (content_view.default? || !environment.library) &&
-        !content_view.try(:content_view_definition).try(:composite?)
+        !content_view.content_view_definition.try(:composite?)
       # if this repo is in a non-library environment and is not related to a
       # composite content view definition, the content view has already been
       # added to the path, so we do not need to add it again
