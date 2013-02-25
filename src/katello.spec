@@ -85,7 +85,7 @@ Requires:       rubygem(tire) < 0.4
 Requires:       rubygem(ldap_fluff)
 Requires:       rubygem(foreman_api) >= 0.0.7
 Requires:       rubygem(anemone)
-Requires:       rubygem(apipie-rails) >= 0.0.16
+Requires:       rubygem(apipie-rails) >= 0.0.18
 Requires:       lsof
 
 %if 0%{?rhel} == 6
@@ -150,7 +150,7 @@ BuildRequires:       rubygem(sass)
 BuildRequires:       rubygem(tire) >= 0.3.0
 BuildRequires:       rubygem(tire) < 0.4
 BuildRequires:       rubygem(ldap_fluff)
-BuildRequires:       rubygem(apipie-rails) >= 0.0.16
+BuildRequires:       rubygem(apipie-rails) >= 0.0.18
 BuildRequires:       rubygem(maruku)
 BuildRequires:       rubygem(foreman_api)
 
@@ -205,7 +205,7 @@ BuildArch:      noarch
 Summary:         Katello connection classes for the Foreman backend
 Requires:        %{name}-common
 # dependencies from bundler.d/foreman.rb
-Requires:       rubygem(foreman_api) >= 0.0.10
+Requires:       rubygem(foreman_api) >= 0.0.18
 
 %description glue-foreman
 Katello connection classes for the Foreman backend

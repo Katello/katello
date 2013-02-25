@@ -47,6 +47,13 @@ class Api::UsersController < Api::ApiController
     }
   end
 
+  def_param_group :user do
+    param :email, String, :required => true, :action_aware => true
+    param :password, String, :required => true, :action_aware => true
+    param :default_environment_id, Integer, :action_aware => true
+    param :disabled, :bool, :action_aware => true
+  end
+
   api :GET, "/users", "List users"
   param :email, String, :desc => "filter by email"
   param :disabled, :bool, :desc => "filter by disabled flag"
@@ -61,11 +68,8 @@ class Api::UsersController < Api::ApiController
   end
 
   api :POST, "/users", "Create an user"
-  param :disabled, :bool
-  param :email, String, :required => true
-  param :password, String, :required => true
   param :username, String, :required => true
-  param :default_environment_id, Integer
+  param_group :user
   def create
     # warning - request already contains "username" and "password" (logged user)
     user = User.create!(:username => params[:username],
@@ -85,10 +89,7 @@ class Api::UsersController < Api::ApiController
   end
 
   api :PUT, "/users/:id", "Update an user"
-  param :disabled, :bool
-  param :email, String
-  param :password, String
-  param :default_environment_id, Integer
+  param_group :user
   def update
     user_params = params[:user].reject { |k, _| k == 'default_environment_id' }
 

@@ -72,15 +72,22 @@ class Api::SystemsController < Api::ApiController
     }
   end
 
+  def_param_group :system do
+    param :facts, Hash, :desc => "Key-value hash of system-specific facts", :action_aware => true
+    param :installedProducts, Array, :desc => "List of products installed on the system", :action_aware => true
+    param :name, String, :desc => "Name of the system", :required => true, :action_aware => true
+    param :type, String, :desc => "Type of the system, it should always be 'system'", :required => true, :action_aware => true
+    param :serviceLevel, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT", :action_aware => true
+    param :location, String, :desc => "Physical of the system"
+    param :content_view_id, :identifier
+    param :environment_id, :identifier
+  end
+
   # this method is called from katello cli client and it does not work with activation keys
   # for activation keys there is method activate (see custom routes)
   api :POST, "/environments/:environment_id/consumers", "Register a system in environment (compatibility reason)"
   api :POST, "/environments/:environment_id/systems", "Register a system in environment"
-  param :facts, Hash, :desc => "Key-value hash of system-specific facts"
-  param :installedProducts, Array, :desc => "List of products installed on the system"
-  param :name, String, :desc => "Name of the system", :required => true
-  param :type, String, :desc => "Type of the system, it should always be 'system'", :required => true
-  param :serviceLevel, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT"
+  param_group :system
   def create
     system = System.create!(params.merge({:environment => @environment,
                                           :content_view => @content_view,
@@ -105,11 +112,7 @@ DESC
   api :POST, "/consumers", "Register a system with activation key (compatibility)"
   api :POST, "/organizations/:organization_id/systems", "Register a system with activation key"
   param :activation_keys, String, :required => true
-  param :facts, Hash, :desc => "Key-value hash of system-specific facts"
-  param :installedProducts, Array, :desc => "List of products installed on the system"
-  param :name, String, :desc => "Name of the system", :required => true
-  param :type, String, :desc => "Type of the system, it should always be 'system'", :required => true
-  param :serviceLevel, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT"
+  param_group :system, :as => :create
   def activate
     # Activation keys are userless by definition so use the internal generic user
     # Set it before calling find_activation_keys to allow communication with candlepin
@@ -148,13 +151,7 @@ DESC
 
   api :PUT, "/consumers/:id", "Update system information (compatibility)"
   api :PUT, "/systems/:id", "Update system information"
-  param :facts, Hash, :desc => "Key-value hash of system-specific facts"
-  param :installedProducts, Array, :desc => "List of products installed on the system"
-  param :name, String, :desc => "Name of the system"
-  param :serviceLevel, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT"
-  param :releaseVer, String, :desc => "Release of the os. The $releasever variable in repo url will be replaced with this value"
-  param :location, String, :desc => "Physical of the system"
-  param :content_view_id, :identifier, :desc => "content view id"
+  param_group :system
   def update
     @system.update_attributes!(params.slice(:name, :description, :location,
                                             :facts, :guestIds, :installedProducts,
