@@ -65,7 +65,7 @@ class Api::RepositorySetsController < Api::ApiController
   private
 
   def find_product_content
-    @product_content = product_content_by_id(params[:id])
+    @product_content = @product.product_content_by_id(params[:id])
     raise HttpErrors::NotFound, _("Couldn't find repository set with id.") % params[:id] if @product_content.nil?
   end
 
