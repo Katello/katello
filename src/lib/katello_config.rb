@@ -384,10 +384,9 @@ module Katello
                                        "no-reply@"+config[:host]
                                      end
 
-      if environment
-        root = config.logging.loggers.root
-        root[:path] = "#{Rails.root}/log" unless root.has_key?(:path)
-      end
+      root = config.logging.loggers.root
+      root[:path] = "#{Rails.root}/log" unless root.has_key?(:path) if environment
+      root[:type] ||= 'file'
 
       config[:katello_version] = begin
         package = config.katello? ? 'katello-common' : 'katello-headpin'
