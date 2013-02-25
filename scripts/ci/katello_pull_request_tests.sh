@@ -20,7 +20,7 @@ then
 fi
 
 echo ""
-echo "********* RSPEC Unit Tests ****************"
+echo "********* Katello RSPEC Unit Tests ****************"
 psql -c "CREATE USER katello WITH PASSWORD 'katello';" -U postgres
 psql -c "ALTER ROLE katello WITH CREATEDB" -U postgres
 psql -c "CREATE DATABASE katello_test OWNER katello;" -U postgres
@@ -35,6 +35,16 @@ fi
 echo ""
 echo "********* Minitest Model and Glue Tests ****************"
 bundle exec rake minitest
+if [ $? -ne 0 ]
+then
+  exit 1
+fi
+
+echo ""
+echo "********* Headpin RSPEC Unit Tests ****************"
+sed -i 's/app_mode: katello/app_mode: headpin/' config/katello.yml
+bundle exec rake parallel:prepare VERBOSE=false
+bundle exec rake ptest:spec
 if [ $? -ne 0 ]
 then
   exit 1
