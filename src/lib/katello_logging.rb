@@ -14,8 +14,10 @@ require 'logging'
 module Katello
   class Logging
     def initialize
-      FileUtils.mkdir_p root_configuration.path unless File.directory?(root_configuration.path)
       configure_color_scheme
+      FileUtils.mkdir_p root_configuration.path unless File.directory?(root_configuration.path)
+    rescue Errno::EACCES # ignore when we have not sufficient privileges
+      true
     end
 
     def configure(options = {})
@@ -133,7 +135,8 @@ module Katello
         when 'file'
           path = root_configuration.path
           log_filename = "#{path}/#{options[:prefix]}#{root_configuration.filename}"
-          ::Logging.appenders.rolling_file(
+          begin
+            ::Logging.appenders.rolling_file(
               name,
               options.reverse_merge(:filename => log_filename,
                                     :roll_by  => 'date',
@@ -141,6 +144,10 @@ module Katello
                                     :keep     => root_configuration.keep,
                                     :layout   => build_layout(root_configuration.pattern, configuration.colorize))
           )
+          rescue ArgumentError
+            # if appender cannot open output file we ignore it, STDOUT fallback will be used
+            nil
+          end
         else
           raise 'unsupported logger type, please choose syslog or file'
       end
