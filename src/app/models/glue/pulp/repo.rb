@@ -181,7 +181,7 @@ module Glue::Pulp::Repo
         #  does not contain all the info we need (bz 854260)
         pkg_ids = Runcible::Extensions::Repository.rpm_ids(self.pulp_id)
         tmp_packages = []
-        pkg_ids.each_slice(200) do |sub_list|
+        pkg_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
           tmp_packages .concat(Runcible::Extensions::Rpm.find_all_by_unit_ids(sub_list))
         end
       end
@@ -202,7 +202,7 @@ module Glue::Pulp::Repo
         #  do not contain all the info we need (bz 854260)
         e_ids = Runcible::Extensions::Repository.errata_ids(self.pulp_id)
         tmp_errata = []
-        e_ids.each_slice(200) do |sub_list|
+        e_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
           tmp_errata.concat(Runcible::Extensions::Errata.find_all_by_unit_ids(sub_list))
         end
         self.errata = tmp_errata
