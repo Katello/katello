@@ -5,6 +5,7 @@ require 'minitest/autorun'
 require 'minitest/rails'
 require 'json'
 require 'support/warden_support'
+require 'mocha/setup'
 
 class MiniTest::Rails::ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods
