@@ -45,6 +45,15 @@ class Api::SyncPlansController < Api::ApiController
     }
   end
 
+  def_param_group :sync_plan do
+    param :sync_plan, Hash, :required => true, :action_aware => true do
+      param :name, String, :desc => "sync plan name", :required => true
+      param :interval, ['none', 'hourly', 'daily', 'weekly'], :desc => "how often synchronization should run"
+      param :sync_date, String, :desc => "start datetime of synchronization"
+      param :description, String, :desc => "sync plan description"
+    end
+  end
+
   api :GET, "/organizations/:organization_id/sync_plans", "List sync plans"
   param :name, String, :desc => "filter by name"
   param :sync_date, String, :desc => "filter by sync date"
@@ -62,12 +71,7 @@ class Api::SyncPlansController < Api::ApiController
 
 
   api :POST, "/organizations/:organization_id/sync_plans", "Create a sync plan"
-  param :sync_plan, Hash, :required => true do
-    param :description, :undef, :desc => "sync plan description"
-    param :interval, ['none', 'hourly', 'daily', 'weekly'], :desc => "how often synchronization should run"
-    param :name, String, :desc => "sync plan name", :required => true
-    param :sync_date, String, :desc => "start datetime of synchronization"
-  end
+  param_group :sync_plan
   def create
     sync_date = params[:sync_plan][:sync_date].to_time
 
@@ -81,12 +85,7 @@ class Api::SyncPlansController < Api::ApiController
 
   api :PUT, "/organizations/:organization_id/sync_plans/:id", "Update a sync plan"
   param :id, :number, :desc => "sync plan numeric identifier", :required => true
-  param :sync_plan, Hash, :required => true do
-    param :description, :undef, :desc => "sync plan description"
-    param :interval, ['none', 'hourly', 'daily', 'weekly'], :desc => "how often synchronization should run"
-    param :name, String, :desc => "sync plan name", :required => true
-    param :sync_date, String, :desc => "start datetime of synchronization"
-  end
+  param_group :sync_plan
   def update
     sync_date = params[:sync_plan][:sync_date].to_time
 

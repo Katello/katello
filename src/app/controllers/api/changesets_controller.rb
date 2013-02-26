@@ -36,6 +36,13 @@ class Api::ChangesetsController < Api::ApiController
 
   respond_to :json
 
+  def_param_group :changeset do
+    param :changeset, Hash, :required => true, :action_aware => true do
+      param :name, String, :desc => "The name of the changeset", :required => true
+      param :description, String, :desc => "The description of the changeset"
+    end
+  end
+
   api :GET, "/organizations/:organization_id/environments/:environment_id/changesets", "List changesets in an environment"
   param :name, String, :desc => "An optional changeset name to filter upon"
   def index
@@ -51,10 +58,7 @@ class Api::ChangesetsController < Api::ApiController
   end
 
   api :PUT, "/changesets/:id", "Update a changeset"
-  param :changeset, Hash do
-    param :description, String, :desc => "The description of the changeset"
-    param :name, String, :desc => "The name of the changeset"
-  end
+  param_group :changeset
   def update
     @changeset.attributes = params[:changeset].slice(:name, :description)
     @changeset.save!
@@ -68,9 +72,9 @@ class Api::ChangesetsController < Api::ApiController
   end
 
   api :POST, "/organizations/:organization_id/environments/:environment_id/changesets", "Create a changeset"
+  param_group :changeset
   param :changeset, Hash do
-    param :description, String, :allow_nil => true, :desc => "The description of the changeset"
-    param :name, String, :desc => "The name of the changeset"
+    param :type, ["PROMOTION", "DELETION"], :required => true
   end
   def create
     csType = params[:changeset][:type]

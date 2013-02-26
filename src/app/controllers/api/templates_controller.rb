@@ -53,6 +53,14 @@ class Api::TemplatesController < Api::ApiController
     }
   end
 
+  def_param_group :template do
+    param :template, Hash, :required => true, :action_aware => true do
+      param :name, :identifier, :desc => "new template name", :required => true
+      param :parent_id, :number, :desc => "parent template numeric identifier"
+      param :description, String, :desc => "template description"
+    end
+  end
+
   api :GET, "/environments/:environment_id/templates", "List system templates for given environment."
   param :environment_id, :number, :desc => "environment numeric identifier", :required => true
   param :name, :identifier, :desc => "system template identifier"
@@ -69,11 +77,7 @@ class Api::TemplatesController < Api::ApiController
 
   api :POST, "/templates", "Create a template"
   param :environment_id, :number, :desc => "environment numeric identifier", :required => true
-  param :template, Hash do
-    param :description, String, :desc => "template description"
-    param :name, :identifier, :desc => "new template name", :required => true
-    param :parent_id, :number, :desc => "parent template numeric identifier"
-  end
+  param_group :template
   def create
     raise HttpErrors::BadRequest, _("New templates can be created only in the '%s' environment") % "Library" if not @environment.library?
 
@@ -86,10 +90,7 @@ class Api::TemplatesController < Api::ApiController
 
   api :PUT, "/templates/:id", "Update a template"
   param :id, :number, :desc => "template numeric identifier", :required => true
-  param :template, Hash do
-    param :description, String, :desc => "template new description"
-    param :name, :identifier, :desc => "template new name"
-  end
+  param_group :template
   def update
     raise HttpErrors::BadRequest, _("Templates can be updated only in the '%s' environment") % "Library" if not @template.environment.library?
 
@@ -116,11 +117,7 @@ class Api::TemplatesController < Api::ApiController
   api :POST, "/templates/import", "Import a template"
   param :environment_id, :number, :desc => "environment numeric identifier", :required => true
   param :template_file, File, :desc => "template file to import", :required => true
-  param :template, Hash do
-    param :description, String, :desc => "template description"
-    param :name, :identifier, :desc => "new template name", :required => true
-    param :parent_id, :number, :desc => "parent template numeric identifier"
-  end
+  param_group :template, :as => :create
   def import
     raise HttpErrors::BadRequest, _("New templates can be imported only into the '%s' environment") % "Library" if not @environment.library?
 

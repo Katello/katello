@@ -18,6 +18,21 @@ class Api::Foreman::ComputeResourcesController < Api::Foreman::SimpleCrudControl
     DOC
   end
 
+  def_param_group :compute_resource do
+    param :compute_resource, Hash, :desc => "compute resource info", :required => true, :action_aware => true do
+      param :name, String, :required => true
+      param :provider, String, :desc => "Providers include #{::Foreman::ComputeResource::PROVIDERS.join(', ')}", :required => true
+      param :url, String, :desc => "URL for Libvirt, Ovirt, and Openstack", :required => true
+      param :description, String
+      param :user, String, :desc => "Username for Ovirt, EC2, Vmware, Openstack. Access Key for EC2."
+      param :password, String, :desc => "Password for Ovirt, EC2, Vmware, Openstack. Secret key for EC2"
+      param :uuid, String, :desc => "for Ovirt, Vmware Datacenter"
+      param :region, String, :desc => "for EC2 only"
+      param :tenant, String, :desc => "for Openstack only"
+      param :server, String, :desc => "for Vmware"
+    end
+  end
+
   self.foreman_model = ::Foreman::ComputeResource
 
   def common_json_options
@@ -36,18 +51,7 @@ class Api::Foreman::ComputeResourcesController < Api::Foreman::SimpleCrudControl
   end
 
   api :POST, "/compute_resources", "Create new compute resource in Foreman"
-  param :compute_resource, Hash, :desc => "compute resource info" do
-    param :name, String, :required => true
-    param :provider, String, :desc => "Providers include #{::Foreman::ComputeResource::PROVIDERS.join(', ')}", :required => true
-    param :url, String, :desc => "URL for Libvirt, Ovirt, and Openstack", :required => true
-    param :description, String
-    param :user, String, :desc => "Username for Ovirt, EC2, Vmware, Openstack. Access Key for EC2."
-    param :password, String, :desc => "Password for Ovirt, EC2, Vmware, Openstack. Secret key for EC2"
-    param :uuid, String, :desc => "for Ovirt, Vmware Datacenter"
-    param :region, String, :desc => "for EC2 only"
-    param :tenant, String, :desc => "for Openstack only"
-    param :server, String, :desc => "for Vmware"
-  end
+  param_group :compute_resource
   def create
     res = ::Foreman::ComputeResource.new_provider(params[:compute_resource])
     render :json => res.as_json(common_json_options) if res.save!
@@ -55,18 +59,7 @@ class Api::Foreman::ComputeResourcesController < Api::Foreman::SimpleCrudControl
 
   api :PUT, "/compute_resources/:id", "Update an compute resource record in Foreman"
   param :id, String, "compute resource name", :required => true
-  param :compute_resource, Hash, :desc => "compute resource info" do
-    param :name, String
-    param :provider, String, :desc => "Providers include #{::Foreman::ComputeResource::PROVIDERS.join(', ')}"
-    param :url, String, :desc => "URL for Libvirt, Ovirt, and Openstack"
-    param :description, String
-    param :user, String, :desc => "Username for Ovirt, EC2, Vmware, Openstack. Access Key for EC2."
-    param :password, String, :desc => "Password for Ovirt, EC2, Vmware, Openstack. Secret key for EC2"
-    param :uuid, String, :desc => "for Ovirt, Vmware Datacenter"
-    param :region, String, :desc => "for EC2 only"
-    param :tenant, String, :desc => "for Openstack only"
-    param :server, String, :desc => "for Vmware"
-  end
+  param_group :compute_resource
   def update
     super
   end
