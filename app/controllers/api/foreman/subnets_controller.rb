@@ -18,6 +18,12 @@ class Api::Foreman::SubnetsController < Api::Foreman::SimpleCrudController
     DOC
   end
 
+  def_param_group :subnet do
+    param :subnet, Hash, :desc => "subnet info", :required => true, :action_aware => true do
+      param :name, String, "subnet name", :required => true
+    end
+  end
+
   self.foreman_model = ::Foreman::Subnet
 
   api :GET, "/subnets", "Get list of subnets available in Foreman"
@@ -32,18 +38,14 @@ class Api::Foreman::SubnetsController < Api::Foreman::SimpleCrudController
   end
 
   api :POST, "/subnet", "Create new subnet in Foreman"
-  param :subnet, Hash, :desc => "subnet info" do
-    param :name, String, "subnet name"
-  end
+  param_group :subnet
   def create
     super
   end
 
   api :PUT, "/subnets/:id", "Update an subnet record in Foreman"
   param :id, String, "subnet name"
-  param :subnet, Hash, :desc => "subnet info" do
-    param :name, String, "subnet name"
-  end
+  param_group :subnet
   def update
     super
   end

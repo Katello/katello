@@ -41,6 +41,13 @@ class Api::RolesController < Api::ApiController
      }
   end
 
+  def_param_group :role do
+    param :role, Hash, :required => true, :action_aware => true do
+      param :name, String, :required => true
+      param :description, String, :allow_nil => true
+    end
+  end
+
   api :GET, "/roles", "List roles"
   api :GET, "/users/:user_id/roles", "List roles assigned to a user"
   param :name, :undef
@@ -56,20 +63,14 @@ class Api::RolesController < Api::ApiController
 
   api :POST, "/roles", "Create a role"
   api :POST, "/users/:user_id/roles", "Create a role"
-  param :role, Hash do
-    param :description, String, :allow_nil => true
-    param :name, String, :required => true
-  end
+  param_group :role
   def create
     render :json => Role.create!(params[:role]).to_json
   end
 
   api :PUT, "/roles/:id", "Update a role"
   api :PUT, "/users/:user_id/roles/:id", "Update a role"
-  param :role, Hash do
-    param :description, String, :allow_nil => true
-    param :name, String
-  end
+  param_group :role
   def update
     @role.update_attributes!(params[:role])
     @role.save!

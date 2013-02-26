@@ -32,10 +32,14 @@ class Api::SystemPackagesController < Api::ApiController
     }
   end
 
+  def_param_group :packages_or_groups do
+    param :packages, Array, :desc => "List of package names", :required => false
+    param :groups, Array, :desc => "List of package group names", :required => false
+  end
+
   # install packages remotely
   api :POST, "/systems/:system_id/packages", "Install packages remotely"
-  param :groups, Array, :desc => "list of groups names"
-  param :packages, Array, :desc => "list of packages names"
+  param_group :packages_or_groups
   def create
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
@@ -63,8 +67,7 @@ class Api::SystemPackagesController < Api::ApiController
 
   # uninstall packages remotely
   api :DELETE, "/systems/:system_id/packages", "Uninstall packages remotely"
-  param :groups, Array, :desc => "list of groups names"
-  param :packages, Array, :desc => "list of packages names"
+  param_group :packages_or_groups
   def destroy
     if params[:packages]
       packages = validate_package_list_format(params[:packages])

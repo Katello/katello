@@ -52,6 +52,14 @@ class Api::SystemGroupsController < Api::ApiController
 
   respond_to :json
 
+  def_param_group :system_group do
+    param :system_group, Hash, :required => true, :action_aware => true do
+      param :name, String, :required => true, :desc => "System group name"
+      param :description, String
+      param :max_systems, Integer, :desc => "Maximum number of systems in the group"
+    end
+  end
+
   api :GET, "/organizations/:organization_id/system_groups", "List system groups"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :name, String, :desc => "System group name to filter by"
@@ -70,11 +78,7 @@ class Api::SystemGroupsController < Api::ApiController
   api :PUT, "/organizations/:organization_id/system_groups/:id", "Update a system group"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :id, :identifier, :desc => "Id of the system group", :required => true
-  param :system_group, Hash, :required => true do
-    param :name, String, :desc => "System group name"
-    param :description, String
-    param :max_systems, Integer, :desc => "Maximum number of systems in the group"
-  end
+  param_group :system_group
   def update
     grp_param = params[:system_group]
     if grp_param[:system_ids]
@@ -140,11 +144,7 @@ class Api::SystemGroupsController < Api::ApiController
 
   api :POST, "/organizations/:organization_id/system_groups", "Create a system group"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
-  param :system_group , Hash , :required => true do
-      param :name, String, :desc => "System group name", :required => true
-      param :description, String
-      param :max_systems, Integer, :desc => "Maximum number of systems in the group", :required => true
-  end
+  param_group :system_group
   def create
     grp_param = params[:system_group]
     if grp_param[:system_ids]
