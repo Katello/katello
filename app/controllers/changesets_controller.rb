@@ -176,8 +176,31 @@ class ChangesetsController < ApplicationController
         pid    = item["product_id"]
         case type
           when "content_view"
-            @changeset.add_content_view! ContentView.find(id) if adding
             @changeset.remove_content_view! ContentView.find(id) if !adding
+
+            if adding
+              view = ContentView.find(id)
+              @changeset.add_content_view!(view)
+
+              # If adding a composite view, also add any of it's component views which need to be
+              # promoted to the next env
+              if @changeset.type == "PromotionChangeset" && view.composite
+                # get the component views that aren't in the target environment,
+                # ignoring any that are already in the changeset
+                component_views = view.components_not_in_env(@changeset.environment).
+                    promotable(current_organization) - @changeset.content_views
+
+                unless component_views.blank?
+                  component_views.each{ |component| @changeset.add_content_view!(component) }
+                  notify.message(_("The following content views were automatically added to changeset '%{changeset}'"\
+                                   " for composite view '%{composite_view}': %{component_views}") %
+                                 {:changeset => @changeset.name, :composite_view => view.name,
+                                  :component_views => component_views.map(&:name).join(', ')},
+                                 {:asynchronous => false})
+                  send_changeset = true
+                end
+              end
+            end
 
           when "template"
             @changeset.add_template! SystemTemplate.find(id) if adding
