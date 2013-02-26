@@ -36,8 +36,7 @@ class Api::SystemGroupPackagesController < Api::ApiController
   end
 
   api :POST, "/organizations/:organization_id/system_groups/:system_group_id/packages", "Install packages remotely"
-  param :packages, Array, :desc => "List of package names to install", :required => false
-  param :groups, Array, :desc => "List of package group names to install", :required => false
+  param_group :packages_or_groups, Api::SystemPackagesController
   def create
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
@@ -53,8 +52,7 @@ class Api::SystemGroupPackagesController < Api::ApiController
   end
 
   api :PUT, "/organizations/:organization_id/system_groups/:system_group_id/packages", "Update packages remotely"
-  param :packages, Array, :desc => "List of package names to install", :required => false
-  param :groups, Array, :desc => "List of package group names to install", :required => false
+  param_group :packages_or_groups, Api::SystemPackagesController
   def update
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
@@ -70,8 +68,7 @@ class Api::SystemGroupPackagesController < Api::ApiController
   end
 
   api :DELETE, "/organizations/:organization_id/system_groups/:system_group_id/packages", "Uninstall packages remotely"
-  param :packages, Array, :desc => "List of package names to install", :required => false
-  param :groups, Array, :desc => "List of package group names to install", :required => false
+  param_group :packages_or_groups, Api::SystemPackagesController
   def destroy
     if params[:packages]
       packages = validate_package_list_format(params[:packages])

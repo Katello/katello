@@ -19,6 +19,17 @@ class Api::Foreman::ConfigTemplatesController < Api::Foreman::SimpleCrudControll
 
   self.foreman_model = ::Foreman::ConfigTemplate
 
+  def_param_group :config_template do
+    param :config_template, Hash, :action_aware => true, :required => true do
+      param :name, String, :required => true, :desc => "template name"
+      param :template, [String, File], :required => true
+      param :snippet, :bool
+      param :audit_comment, String
+      param :template_kind_id, :number, :desc => "not relevant for snippet"
+      param :template_combinations_attributes, Array, :desc => "Array of template combinations (hostgroup_id, environment_id)"
+    end
+  end
+
   api :GET, "/config_templates/", "List templates"
   param :search, String, :desc => "filter results"
   param :order, String, :desc => "sort results"
@@ -32,27 +43,13 @@ class Api::Foreman::ConfigTemplatesController < Api::Foreman::SimpleCrudControll
   end
 
   api :POST, "/config_templates/", "Create a template"
-  param :config_template, Hash, :required => true do
-    param :name, String, :required => true, :desc => "template name"
-    param :template, [String, File], :required => true
-    param :snippet, :bool
-    param :audit_comment, String
-    param :template_kind_id, :number, :desc => "not relevant for snippet"
-    param 'template_combinations_attributes', Array, :desc => "Array of template combinations (hostgroup_id, environment_id)"
-  end
+  param_group :config_template
   def create
     super
   end
 
   api :PUT, "/config_templates/:id", "Update a template"
-  param :config_template, Hash, :required => true do
-    param :name, String, :required => true, :desc => "template name"
-    param :template, [String, File], :required => true
-    param :snippet, :bool
-    param :audit_comment, String
-    param :template_kind_id, :number, :desc => "not relevant for snippet"
-    param 'template_combinations_attributes', Array, :desc => "Array of template combinations (hostgroup_id, environment_id)"
-  end
+  param_group :config_template
   def update
     super
   end

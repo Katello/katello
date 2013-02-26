@@ -25,6 +25,7 @@ class ApplicationController < ActionController::Base
 
   helper "alchemy/translation"
   helper_method :current_organization
+  helper_method :render_correct_nav
   before_filter :set_locale
   before_filter :require_user,:require_org
   before_filter :check_deleted_org
@@ -122,14 +123,34 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # this is intentionally dead code, it just mark some strings for gettext
+  # so generate_label and default_label_assigned can use them
+  def n_gettext_for_generate_label
+    # the same string for repository, product, organization, environment (see BZ 886718)
+    N_("A label was not provided during repository creation; therefore, a label of '%{label}' was " +
+      "automatically assigned. If you would like a different label, please delete the " +
+      "repository and recreate it with the desired label.")
+    N_("A label was not provided during product creation; therefore, a label of '%{label}' was " +
+      "automatically assigned. If you would like a different label, please delete the " +
+      "product and recreate it with the desired label.")
+    N_("A label was not provided during organization creation; therefore, a label of '%{label}' was " +
+      "automatically assigned. If you would like a different label, please delete the " +
+      "organization and recreate it with the desired label.")
+    N_("A label was not provided during environment creation; therefore, a label of '%{label}' was " +
+      "automatically assigned. If you would like a different label, please delete the " +
+      "environment and recreate it with the desired label.")
+  end
+
   # Generate a label using the name provided, returning the label and a string with text that may be
   # sent to the user (e.g. via a notice).
   def generate_label object_name, object_type
     # user didn't provide a label, so generate one using the name
     label = Katello::ModelUtils::labelize(object_name)
-    label_assigned_text = _("A label was not provided during %s creation; therefore, a label of '%s' was " +
-                            "automatically assigned. If you would like a different label, please delete the " +
-                            "%s and recreate it with the desired label.") % [object_type, label, object_type]
+    # if you modify this string you have to modify it in n_gettext_for_generate_label as well
+    label_assigned_text = "A label was not provided during #{object_type} creation; therefore, a label of '%{label}' was " +
+      "automatically assigned. If you would like a different label, please delete the " +
+      "#{object_type} and recreate it with the desired label."
+    label_assigned_text = _(label_assigned_text) % {:label => label}
     return label, label_assigned_text
   end
 
@@ -137,9 +158,11 @@ class ApplicationController < ActionController::Base
   # a label was automatically assigned to the object.
   def default_label_assigned new_object
     object_type = new_object.class.name.downcase
-    _("A label was not provided during %s creation; therefore, a label of '%s' was " +
+    # if you modify this string you have to modify it in n_gettext_for_generate_label as well
+    msg = "A label was not provided during #{object_type} creation; therefore, a label of '%{label}' was " +
       "automatically assigned. If you would like a different label, please delete the " +
-      "%s and recreate it with the desired label.") % [object_type, new_object.label, object_type]
+      "#{object_type} and recreate it with the desired label."
+    return _(msg) % {:label => new_object.label}
   end
 
   # Generate a message that may be sent to the user (e.g. via a notice) to inform them that
@@ -221,7 +244,10 @@ class ApplicationController < ActionController::Base
   # Look for match to list of locales specified in request. If not found, try matching just
   # first two letters. Finally, default to english if no matches at all.
   # eg. [en_US, en] would match en
-  # Expects list of locales to search as an array (use parse_locale for that)
+  #
+  # The method accept parameter = list of locales returned by parse_locale. Since the method is used
+  # outside of the request context, we need to pass this data in as a parameter.
+  #
   def self.extract_locale_from_accept_language_header locales
 
     # Look for full match
@@ -243,6 +269,23 @@ class ApplicationController < ActionController::Base
     current_user.create_or_update_search_history(URI(@_request.env['HTTP_REFERER']).path, params[:search])
   rescue => error
     log_exception(error)
+  end
+
+  def render_correct_nav
+    if self.respond_to?(:menu_definition) && self.menu_definition[params[:action]] == :admin_menu
+      session[:menu_back] = true
+      #the menu definition exists, return true
+      render_admin_menu
+    elsif self.respond_to?(:menu_definition) && self.menu_definition[params[:action]] == :notices_menu
+      session[:menu_back] = true
+      session[:notifications] = true
+      render_notifications_menu
+    else
+      #the menu definition does not exist, return false
+      session[:menu_back] = false
+      session[:notifications] = false
+      render_menu(1)
+    end
   end
 
   private # why bother? methods below are not testable/tested

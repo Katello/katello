@@ -560,6 +560,42 @@ $container_width: ($static_width/2) - 36;
   }
 }
 
+#redhat_provider {
+  .tree_table {
+    label {
+      color: $text_color
+    }
+  }
+  .content_table {
+    .skinny_column {
+      width: 10px;
+    }
+    //uses tree table expander class and styling
+    .expander {
+      margin-left: -19px;
+      padding-left: 19px;
+    }
+    thead {
+      tr {
+        background: lighten($stroke_color,25%);
+      }
+    }
+    tbody {
+      tr {
+        background: $white_color;
+      }
+      table {
+        width: auto;
+        thead {
+          tr {
+            background: lighten($stroke_color,25%);
+          }
+        }
+      }
+    }
+  }
+}
+
 #view_definitions {
   tr.error {
     @include background-image(linear-gradient(white, white, rgb(255,150,150)));
@@ -568,3 +604,4 @@ $container_width: ($static_width/2) - 36;
     }
   }
 }
+
