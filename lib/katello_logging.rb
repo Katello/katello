@@ -43,37 +43,39 @@ module Katello
           Katello::Logging::YARDLoggerDelegator.instance
         end
 
-        # define our logger child for YARD
-        self.class.const_set(:YARDLoggerDelegator, Class.new(::YARD::Logger) do
+        unless defined?(:YARDLoggerDelegator)
+          # define our logger child for YARD
+          self.class.const_set(:YARDLoggerDelegator, Class.new(::YARD::Logger) do
 
-          # @return [::Logging::Logger] for yard
-          def _logging_logger
-            @_logging_logger ||= begin
-              yard_logger_delegator = self
-              ::Logging.logger['yard'].tap do |logger|
-                # redefine method #level= to set also YARD logger level
-                original_method = logger.method :level=
-                logger.singleton_class.send :define_method, :level= do |level|
-                  yard_logger_delegator.instance_variable_set :@level, level
-                  original_method.call level
+            # @return [::Logging::Logger] for yard
+            def _logging_logger
+              @_logging_logger ||= begin
+                yard_logger_delegator = self
+                ::Logging.logger['yard'].tap do |logger|
+                  # redefine method #level= to set also YARD logger level
+                  original_method = logger.method :level=
+                  logger.singleton_class.send :define_method, :level= do |level|
+                    yard_logger_delegator.instance_variable_set :@level, level
+                    original_method.call level
+                  end
+                  logger.level = logger.level
                 end
-                logger.level = logger.level
               end
             end
-          end
 
-          # delegate all messages to a ::Logging::Logger
-          def add(severity, message = nil, progname = nil, &block)
-            clear_line
-            #puts "-- #{severity} #{message || progname}"
-            _logging_logger.add severity, message || progname, &block
-          end
+            # delegate all messages to a ::Logging::Logger
+            def add(severity, message = nil, progname = nil, &block)
+              clear_line
+              #puts "-- #{severity} #{message || progname}"
+              _logging_logger.add severity, message || progname, &block
+            end
 
-          # disable setting level by Yard logger
-          def level=(level)
-            # debug "setting level:#{level} ignored, use Logging.logger['yard'].level= instead"
-          end
-        end)
+            # disable setting level by Yard logger
+            def level=(level)
+              # debug "setting level:#{level} ignored, use Logging.logger['yard'].level= instead"
+            end
+          end)
+        end
       end
     end
 
