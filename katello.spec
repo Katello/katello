@@ -665,11 +665,7 @@ usermod -a -G katello-shared tomcat
 %attr(750, katello, katello) %{_localstatedir}/log/%{name}
 %{datadir}
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production.log
-%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_sql.log
-%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs.log
-%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs_sql.log
-%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_orch.log
-%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs_orch.log
+%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/delayed_production.log
 
 %files glue-elasticsearch
 %{homedir}/app/models/glue/elastic_search
