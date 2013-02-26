@@ -38,9 +38,6 @@ class ContentView < ActiveRecord::Base
   has_many :changesets, :through => :changeset_content_views
   has_many :activation_keys
 
-
-
-
   validates :label, :uniqueness => {:scope => :organization_id},
     :presence => true
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
@@ -138,7 +135,7 @@ class ContentView < ActiveRecord::Base
   def get_repo_clone(env, repo)
     lib_id = repo.library_instance_id || repo.id
     Repository.in_environment(env).where(:library_instance_id => lib_id).
-        joins(:content_view_version => :content_view).where('content_views.id' => repo.content_view.id)
+        joins(:content_view_version).where('content_view_versions.content_view_id' => self.id)
   end
 
   def promote_via_changeset(env, apply_options = {:async => true},
@@ -162,40 +159,11 @@ class ContentView < ActiveRecord::Base
     promote_version.environments << to_env
     promote_version.save!
 
-    # prepare the to_env for the promotion
-    tasks = []
+    repos_to_promote = get_repos_to_promote(from_env, to_env)
     if replacing_version
-      replacing_version.repos(to_env).each do |repo|
-        clone = self.get_repo_clone(from_env, repo).first
-        if clone.nil?
-          # this repo doesn't exist in the from environment, so destroy it
-          repo.destroy
-        else
-          # this repo does exist in the next environment, so clear it and later
-          # we'll regenerate the content... this is more efficient than deleting
-          # the repo and recreating it...
-          tasks << repo.clear_contents
-        end
-      end
-      PulpTaskStatus::wait_for_tasks tasks unless tasks.blank?
+      PulpTaskStatus::wait_for_tasks prepare_repos_for_promotion(replacing_version.repos(to_env), repos_to_promote)
     end
-
-    # promote the repos from from_env to to_env
-    tasks = []
-    promote_version.repos(from_env).each do |repo|
-      clone = self.get_repo_clone(to_env, repo).first
-      if clone.nil?
-        # this repo doesn't currently exist in the next environment, so create it
-        clone = repo.create_clone(to_env, self)
-        tasks << repo.clone_contents(clone)
-      else
-        # this repo already exists in the next environment, so update it
-        clone = Repository.find(clone) # reload readonly obj
-        clone.content_view_version = promote_version
-        clone.save!
-        tasks << repo.clone_contents(clone)
-      end
-    end
+    tasks = promote_repos(promote_version, to_env, repos_to_promote)
 
     if replacing_version
       if replacing_version.environments.length == 1
@@ -282,6 +250,63 @@ class ContentView < ActiveRecord::Base
   end
 
   protected
+
+  def get_repos_to_promote(from_env, to_env)
+    # Retrieve the repos that will end up in the to_env as a result of promoting this view.
+    # The structure will be a hash, where key=repo.library_instance_id and value=repo
+    if self.content_view_definition.try(:composite?)
+      # For a composite view, the repos are based upon the component_content_views
+      # currently in the to_env
+      promoting_repos = Repository.in_environment(to_env).
+          in_content_views(self.content_view_definition.component_content_views).
+          inject({}) do |result, repo|
+        result.update repo.library_instance_id => repo
+      end
+    else
+      # For a non-composite view, the repos are based upon the repos in
+      # the from_env
+      promoting_repos = self.repos(from_env).inject({}) do |result, repo|
+        result.update repo.library_instance_id => repo
+      end
+    end
+    promoting_repos
+  end
+
+  def prepare_repos_for_promotion(repos_to_replace, repos_to_promote)
+    tasks = repos_to_replace.inject([]) do |result, repo|
+      if repos_to_promote.has_key?(repo.library_instance_id)
+        # a version of this repo is being promoted, so clear it and later
+        # we'll regenerate the content... this is more efficient than
+        # destroying the repo and recreating it...
+        result << repo.clear_contents
+      else
+        # a version of this repo is not being promoted, so destroy it
+        repo.destroy
+        result
+      end
+    end
+    tasks
+  end
+
+  def promote_repos(promote_version, to_env, promoting_repos)
+    # promote the repos to the target env
+    tasks = []
+    promoting_repos.each_pair do |library_instance_id, repo|
+      clone = self.get_repo_clone(to_env, repo).first
+      if clone.nil?
+        # this repo doesn't currently exist in the next environment, so create it
+        clone = repo.create_clone(to_env, self)
+        tasks << repo.clone_contents(clone)
+      else
+        # this repo already exists in the next environment, so update it
+        clone = Repository.find(clone) # reload readonly obj
+        clone.content_view_version = promote_version
+        clone.save!
+        tasks << repo.clone_contents(clone)
+      end
+    end
+    tasks
+  end
 
   # Associate an environment with this content view.  This can occur whenever
   # a version of the view is promoted to an environment.  It is necessary for

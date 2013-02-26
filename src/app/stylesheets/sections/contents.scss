@@ -560,7 +560,6 @@ $container_width: ($static_width/2) - 36;
   }
 }
 
-
 #redhat_provider {
   .tree_table {
     label {
@@ -596,3 +595,13 @@ $container_width: ($static_width/2) - 36;
     }
   }
 }
+
+#view_definitions {
+  tr.error {
+    @include background-image(linear-gradient(white, white, rgb(255,150,150)));
+    &:hover {
+      @include background-image(linear-gradient(white, rgb(255,150,150)));
+    }
+  }
+}
+

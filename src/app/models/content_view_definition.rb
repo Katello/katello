@@ -38,6 +38,9 @@ class ContentViewDefinition < ActiveRecord::Base
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
 
+  scope :composite, where(:composite=>true)
+  scope :non_composite, where(:composite=>false)
+
   def publish(name, description, label=nil, options = { })
     options = { :async => true, :notify => false }.merge options
 
@@ -105,12 +108,18 @@ class ContentViewDefinition < ActiveRecord::Base
   # as well as repositories that are explicitly associated with the definition).
   def repos
     repos = []
-    self.products.each do |prod|
-      prod_repos = prod.repos(organization.library).enabled
-      prod_repos.select{|r| r.in_default_view?}.each{|r| repos << r}
+    if self.composite?
+      self.component_content_views.each do |component_view|
+        component_view.repos(organization.library).each{|r| repos << r}
+      end
+    else
+      self.products.each do |prod|
+        prod_repos = prod.repos(organization.library).enabled
+        prod_repos.select{|r| r.in_default_view?}.each{|r| repos << r}
+      end
+      repos.concat(self.repositories)
+      repos.uniq!
     end
-    repos.concat(self.repositories)
-    repos.uniq!
     repos
   end
 
