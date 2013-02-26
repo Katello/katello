@@ -30,11 +30,12 @@ class ContentSearch::ContentViewSearch < ContentSearch::ContainerSearch
         end
       end
 
-      ContentSearch::Row.new(:id        => "view_#{view.id}",
-                             :name      => view.name,
-                             :cells     => cols,
-                             :data_type => "view",
-                             :value     => view.name
+      ContentSearch::Row.new(:id         => "view_#{view.id}",
+                             :name       => view.name,
+                             :cells      => cols,
+                             :data_type  => "view",
+                             :value      => view.name
+                             :comparable => true
                             )
     end
   end

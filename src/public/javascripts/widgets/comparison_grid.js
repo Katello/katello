@@ -452,7 +452,7 @@ KT.comparison_grid.models.rows = function(){
                     parent['child_ids'].push(id);
                 }
             } else {
-                rows[id] = { 'id' : id, 'name' : name, 'cells' : cells, 'comparabale' : comparable, 'data_type' : data_type, 'value' : value };
+                rows[id] = { 'id' : id, 'name' : name, 'cells' : cells, 'comparable' : comparable, 'data_type' : data_type, 'value' : value };
             }
             
             return rows[id];
@@ -637,14 +637,14 @@ KT.comparison_grid.controls = function(grid) {
             var show = function(){
                 var elements = $('.grid_cell').find('input[type="checkbox"]:checked');
                     
-                $('#compare_repos_btn').show();
+                $('#compare_btn').show();
 
                 if( elements.length < 2 ){
-                    $('#compare_repos_btn').addClass('disabled');
+                    $('#compare_btn').addClass('disabled');
                 }
             },
             hide = function(){
-                $('#compare_repos_btn').hide();
+                $('#compare_btn').hide();
             };
             return {
                 show:show,
@@ -758,7 +758,7 @@ KT.comparison_grid.events = function(grid) {
             });
         },
         comparable_cells = function(){
-            $('#compare_repos_btn').live('click', function(){
+            $('#compare_btn').live('click', function(){
                 var elements = $('.grid_cell').find('input[type="checkbox"]:checked'),
                     selected = [];
 
@@ -772,14 +772,14 @@ KT.comparison_grid.events = function(grid) {
                 var elements = $('.grid_cell').find('input[type="checkbox"]:checked');
 
                 if( elements.length < 2 ){
-                    $('#compare_repos_btn').addClass('disabled');
+                    $('#compare_btn').addClass('disabled');
                 } else {
-                    if( $('#compare_repos_btn').hasClass('disabled') ){
-                        $('#compare_repos_btn').removeClass('disabled');
+                    if( $('#compare_btn').hasClass('disabled') ){
+                        $('#compare_btn').removeClass('disabled');
                     };
                 }
             });
-            $('#compare_repos_btn').tipsy({ gravity: 'w' });
+            $('#compare_btn').tipsy({ gravity: 'w' });
         },
         load_row_links = function(){
             $('.load_row_link').live('click', function(event){
