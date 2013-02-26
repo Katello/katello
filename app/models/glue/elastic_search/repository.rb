@@ -45,7 +45,7 @@ module Glue::ElasticSearch::Repository
         create :settings => Package.index_settings, :mappings => Package.index_mapping
       end
       pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
-      pkgs.each_slice(200) do |sublist|
+      pkgs.each_slice(Katello.config.pulp.bulk_load_size) do |sublist|
         Tire.index Package.index do
           import sublist
         end if !sublist.empty?
@@ -111,12 +111,12 @@ module Glue::ElasticSearch::Repository
     end
 
     def errata_count
-      results = Errata.search('', 0, 1, :repoids => [self.pulp_id])
+      results = ::Errata.search('', 0, 1, :repoids => [self.pulp_id])
       results.empty? ? 0 : results.total
     end
 
     def package_count
-      results = Package.search('', 0, 1, :repoids => [self.pulp_id])
+      results = ::Package.search('', 0, 1, :repoids => [self.pulp_id])
       results.empty? ? 0 : results.total
     end
 
