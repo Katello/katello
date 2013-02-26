@@ -1,5 +1,4 @@
 #!/usr/bin/ruby
-# vim: ts=2:sw=2:et:
 #
 # Copyright © 2012 Red Hat, Inc.
 #
@@ -46,7 +45,7 @@ $temp_options = {}
 # file first), as well as values that can be overwritten in user
 # answer file.
 if File.file?(default_path)
-	$default_options, $default_options_order, $default_options_errors, $titles = read_answer_file(default_path)
+  $default_options, $default_options_order, $default_options_errors, $titles = read_answer_file(default_path)
 end
 
 # After having read the default option list, we parse the
@@ -63,46 +62,46 @@ nobars = false
 debug_stdout = false
 katello_configuration_files_only = false
 begin
-	option_parser.banner = "Usage: #{$0} [options]"
+  option_parser.banner = "Usage: #{$0} [options]"
   option_parser.summary_width = 8
   option_parser.summary_indent = ' ' * 2
 
-	$default_options_order.each do |key|
-		option_parser.on('--' + key.gsub(/_/, '-') + '=' + key.upcase, String, word_wrap($titles[key])) do |value|
-			options[key] = value
-		end
-	end
+  $default_options_order.each do |key|
+    option_parser.on('--' + key.gsub(/_/, '-') + '=' + key.upcase, String, word_wrap($titles[key])) do |value|
+      options[key] = value
+    end
+  end
 
-	option_parser.on_tail.on('-b', '--no-bars', 'Do not show progress bars and output puppet log instead') do
-		nobars = true
-	end
-	option_parser.on_tail.on('--katello-configuration-files-only',
+  option_parser.on_tail.on('-b', '--no-bars', 'Do not show progress bars and output puppet log instead') do
+    nobars = true
+  end
+  option_parser.on_tail.on('--katello-configuration-files-only',
                            'Configure only Katello config files. Do NOT use! (used internally by katello-upgrade)') do
     katello_configuration_files_only = true
-	end
-	option_parser.on_tail.on('-d', '--debug', 'Print more debugging information to on the stdout (use with -b)') do
+  end
+  option_parser.on_tail.on('-d', '--debug', 'Print more debugging information to on the stdout (use with -b)') do
     debug_stdout = true
-	end
-	option_parser.on_tail.on('-c', '--only-show-config', 'Print the resulting configuration and exit') do
-		show_resulting_answer_file = true
-	end
-	option_parser.on_tail.on('-h', '--help', 'Show this short summary (more in the man page)') do
-		puts option_parser
-		exit
-	end
-	option_parser.parse!
+  end
+  option_parser.on_tail.on('-c', '--only-show-config', 'Print the resulting configuration and exit') do
+    show_resulting_answer_file = true
+  end
+  option_parser.on_tail.on('-h', '--help', 'Show this short summary (more in the man page)') do
+    puts option_parser
+    exit
+  end
+  option_parser.parse!
 rescue => e
-	$stderr.puts e.message
-	$stderr.puts option_parser
-	exit_with :general
+  $stderr.puts e.message
+  $stderr.puts option_parser
+  exit_with :general
 end
 
 # We only warn about possible errors in the default answer
 # file here, to make it possible to use for example --help,
 # even if there are errors in the default file.
 if $default_options_errors != ''
-	$stderr.puts $default_options_errors
-	exit_with :default_option_error
+  $stderr.puts $default_options_errors
+  exit_with :default_option_error
 end
 
 # If there was an answer file specified, we parse it.
@@ -123,25 +122,25 @@ non_interactive_option = _get_valid_option_value('non_interactive', $default_opt
 ssl_ca_password_file_option = _get_valid_option_value('ssl_ca_password_file', $default_options, $final_options)
 
 mandatory.each do |key, mand|
-	if (not $final_options.has_key?(key) and mandatory[key]) or
-	(not $final_options[key].nil? and not $final_options[key].to_s() =~ Regexp.new(regex[key]))
+  if (not $final_options.has_key?(key) and mandatory[key]) or
+  (not $final_options[key].nil? and not $final_options[key].to_s() =~ Regexp.new(regex[key]))
     $final_options[key] = _request_option_interactively($titles[key], regex[key], _get_valid_option_value(key, $default_options, $final_options), _is_option_true(non_interactive_option))
-		if not $default_options_order.include?(key)
-			$default_options_order.push(key)
-		end
-	end
+    if not $default_options_order.include?(key)
+      $default_options_order.push(key)
+    end
+  end
 end
 
 if $default_options_errors != ''
-	$stderr.puts $default_options_errors
-	exit 6
+  $stderr.puts $default_options_errors
+  exit 6
 end
 
 # We will only keep values that are different from the default ones.
 $final_options.each do |key, value|
-	if $default_options[key] == value
-		$final_options.delete(key)
-	end
+  if $default_options[key] == value
+    $final_options.delete(key)
+  end
 end
 
 # Set the deployment to be the relative url
@@ -160,12 +159,12 @@ ENV['RAILS_RELATIVE_URL_ROOT'] = "/" + url_root
 # handle ca password separately, because we do not want
 # to store it into the katello-configure.conf
 begin
-    File.open(ssl_ca_password_file_option, 'w') do |f|
-        f.write(_get_valid_option_value('ssl_ca_password', $default_options, $final_options))
-    end
+  File.open(ssl_ca_password_file_option, 'w') do |f|
+    f.write(_get_valid_option_value('ssl_ca_password', $default_options, $final_options))
+  end
 rescue
-    $stderr.puts "Failed to write to file [#{ssl_ca_password_file_option}]."
-    exit 8
+  $stderr.puts "Failed to write to file [#{ssl_ca_password_file_option}]."
+  exit 8
 end
 remove_option!($default_options_order, $final_options, 'ssl_ca_password')
 
@@ -188,7 +187,7 @@ Dir.chdir '/root'
 check_hostname
 
 if not `java -version 2>&1`.include? 'OpenJDK'
-	$stderr.puts "Command 'java -version' does not return OpenJDK, only OpenJDK is supported."
+  $stderr.puts "Command 'java -version' does not return OpenJDK, only OpenJDK is supported."
   exit_with :java_error
 end
 # </BEFORE CONFIGURATION CHECKS>
@@ -209,8 +208,8 @@ now = Time.now.strftime("%Y%m%d-%H%M%S")
 log_directory = log_parent_directory + '/katello-configure-' + now
 log_directory_link = log_parent_directory + '/katello-configure'
 if File.symlink?(log_directory_link)
-	begin
-		File.unlink(log_directory_link)
+  begin
+    File.unlink(log_directory_link)
 	rescue
 	end
 end
@@ -247,13 +246,13 @@ commands_by_logfiles = { # numbers are expected lines in those logs, alas curren
 puppet_logfile_filename = log_directory + '/main.log'
 puppet_logfile_aprox_size = 1296
 
-main_puppet puppet_cmd,
+main_puppet(puppet_cmd,
             nobars,
             default_progressbar_title,
             puppet_logfile_filename,
             puppet_logfile_aprox_size,
             debug_stdout,
             commands_by_logfiles,
-            katello_configuration_files_only ? 'include katello::config::files' : 'include katello'
+            katello_configuration_files_only ? 'include katello::config::files' : 'include katello')
 
 exit
