@@ -21,14 +21,12 @@ class ContentView < ActiveRecord::Base
   belongs_to :organization, :inverse_of => :content_views
 
   has_many :content_view_environments, :dependent => :destroy
-  alias :environments :content_view_environments
 
   has_many :content_view_versions, :dependent => :destroy
   alias :versions :content_view_versions
 
-  has_one :environment_default, :class_name => "KTEnvironment",
-      :inverse_of => :default_content_view,
-      :foreign_key => :default_content_view_id
+  belongs_to :environment_default, :class_name => "KTEnvironment", :inverse_of => :default_content_view,
+             :foreign_key => :environment_default_id
 
   has_many :component_content_views
   has_many :composite_content_view_definitions,
@@ -312,13 +310,10 @@ class ContentView < ActiveRecord::Base
   # a version of the view is promoted to an environment.  It is necessary for
   # candlepin to become aware that the view is available for consumers.
   def add_environment(env)
-    unless env.library
-      unless ContentViewEnvironment.where(:cp_id => self.cp_environment_id(env)).first
-        ContentViewEnvironment.create!(:name => env.name,
-                                       :label => self.cp_environment_label(env),
-                                       :content_view => self,
-                                       :cp_id => self.cp_environment_id(env))
-      end
+    unless (env.library && ContentViewEnvironment.where(:cp_id => self.cp_environment_id(env)).first)
+      content_view_environments.build(:name => env.name,
+                                     :label => self.cp_environment_label(env),
+                                     :cp_id => self.cp_environment_id(env))
     end
   end
 
