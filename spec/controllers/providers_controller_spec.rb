@@ -96,29 +96,6 @@ describe ProvidersController do
       post 'cancel_discovery', {:id=>@provider.id}
       response.should be_success
     end
-
-    describe "refresh_products" do
-      context "non redhat provider specified" do
-        let(:provider) { Provider.create!(:provider_type => Provider::CUSTOM, :name => "foo1", :organization => @organization) }
-        it "should not allow refresh for custom providers" do
-          put 'refresh_products', :id => provider.id
-          response.should_not be_success
-        end
-      end
-
-      context "redhat provider" do
-        let(:redhat) { Provider.redhat.first.tap { |rh| rh.should_receive(:refresh_products).once } }
-
-        before do
-          controller.stub(:find_provider) { controller.instance_variable_set "@provider", redhat }
-        end
-
-        it "should succeed" do
-          put 'refresh_products', :id => redhat.id
-          response.should be_success
-        end
-      end
-    end
   end
 
   describe "should be able to create a custom provider", :katello => true do
@@ -182,22 +159,6 @@ describe ProvidersController do
       it_should_behave_like "protected action"
     end
 
-    describe "refresh_provider put" do
-      let(:redhat) { Provider.redhat.first.tap { |rh| rh.stub(:editable? => true) } }
-      let(:action) { :refresh_provider }
-      let(:req) do
-        put 'refresh_products', :id => redhat.id
-      end
-      # for redhat providers, organization privileges are effective
-      let(:authorized_user) do
-        controller.stub(:find_provider) { controller.instance_variable_set "@provider", redhat }
-        user_with_permissions { |u| u.can(:update, :providers, @provider.id, @organization) }
-      end
-      let(:unauthorized_user) do
-        user_without_permissions
-      end
-      it_should_behave_like "protected action"
-    end
   end
 
 
