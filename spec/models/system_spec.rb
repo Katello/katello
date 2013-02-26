@@ -184,9 +184,11 @@ describe System do
 
     it "should fail if the content view is not in the enviornment" do
       content_view = FactoryGirl.build_stubbed(:content_view)
-      @system.stub(:content_view).and_return(content_view)
+      @system.stub(:content_view_id).and_return(content_view.id)
+      ContentView.stub(:find).and_return(content_view)
+      content_view.stub(:in_environment?).and_return(false)
       @system.save.should be_false
-      expect { @system.save! }.to raise_exception(/Content view is not in environment/)
+      expect { @system.save! }.to raise_exception(/Content view.*is not in environment/)
     end
   end
 

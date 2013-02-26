@@ -1,5 +1,5 @@
 #
-# Copyright 2012 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -9,16 +9,16 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+module Navigation
+  module NotificationsMenu
 
-class Foreman::ComputeResource::Ovirt < Foreman::ComputeResource
+    def menu_notifications
+      {:key => :notifications,
+       :name => _("Notifications"),
+        :url => notices_path,
+        :options => {:class=>'notices top_level', "data-menu"=>"notices"}
+      }
+    end
 
-  attributes :user, :password, :uuid
-
-  resource_name :compute_resource
-  resource Resources::Foreman::ComputeResource
-
-  def json_attributes
-    super + not_nil_attrs(:user, :password, :uuid)
   end
-
 end

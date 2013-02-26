@@ -1,5 +1,8 @@
 require 'katello_logger'
 
+# workaround for https://github.com/nex3/sass/issues/69
+require 'sass/plugin'
+
 Src::Application.configure do
   # Settings specified here will take precedence over those in config/environment.rb
 

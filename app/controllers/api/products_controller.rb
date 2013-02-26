@@ -47,6 +47,13 @@ class Api::ProductsController < Api::ApiController
     }
   end
 
+  def_param_group :product do
+    param :product, Hash, :required => true, :action_aware => true do
+      param :gpg_key_name, :identifier, :desc => "identifier of the gpg key"
+      param :description, String, :desc => "Product description"
+    end
+  end
+
   api :GET, "/organizations/:organization_id/products/:id", "Show a product"
   param :organization_id, :identifier, :desc => "organization identifier"
   param :id, :number, :desc => "product numeric identifier"
@@ -57,8 +64,8 @@ class Api::ProductsController < Api::ApiController
   api :PUT, "/organizations/:organization_id/products/:id", "Update a product"
   param :organization_id, :identifier, :desc => "organization identifier"
   param :id, :number, :desc => "product numeric identifier"
+  param_group :product
   param :product, Hash do
-    param :gpg_key_name, :identifier, :desc => "identifier of the gpg key"
     param :recursive, :bool, :desc => "set to true to recursive update gpg key"
   end
   def update

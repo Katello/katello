@@ -304,7 +304,11 @@ Src::Application.routes.draw do
 
   resources :products, :only => [:new, :create, :edit,:update, :destroy] do
     collection do
-       get :auto_complete
+      get :auto_complete
+    end
+    member do
+      put :refresh_content
+      put :disable_content
     end
   end
 
@@ -375,13 +379,16 @@ Src::Application.routes.draw do
       get :schedule
     end
   end
+
   match '/providers/:id' => 'providers#update', :via => :put
   match '/providers/:id' => 'providers#update', :via => :post
 
   match '/repositories/:id/enable_repo' => 'repositories#enable_repo', :via => :put, :as => :enable_repo
 
   resources :repositories, :only => [:new, :create, :edit, :destroy] do
-    get :auto_complete_library, :on => :collection
+    collection do
+      get :auto_complete_library
+    end
 
     resources :distributions, :only => [:show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ } do
       member do
@@ -608,7 +615,12 @@ Src::Application.routes.draw do
         resources :sync, :only => [:index, :create] do
           delete :index, :on => :collection, :action => :cancel
         end
+        resources :repository_sets, :only=>[:index] do
+          post :enable, :on => :member
+          post :disable, :on => :member
+        end
       end
+
 
       resources :system_groups, :except => [:new, :edit] do
         member do

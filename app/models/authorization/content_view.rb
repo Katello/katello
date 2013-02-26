@@ -79,10 +79,6 @@ module Authorization::ContentView
       items(org, [:subscribe])
     end
 
-    def promotable(org)
-      items(org, [:promote])
-    end
-
     def items(org, verbs)
       raise "scope requires an organization" if org.nil?
       resource = :content_views

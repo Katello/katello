@@ -92,8 +92,9 @@ class KTEnvironment < ActiveRecord::Base
   end
 
   def content_views(reload = false)
-    content_view_versions.reload if reload
-    content_view_versions.collect{|vv| vv.content_view}
+    @content_views = nil if reload
+    @content_views ||= ContentView.joins(:content_view_versions => :content_view_version_environments).
+        where("content_view_version_environments.environment_id" => self.id)
   end
 
   def content_view_environment

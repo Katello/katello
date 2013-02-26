@@ -28,7 +28,7 @@ $(document).ready(function() {
 
     $('#content_selector select').chosen();
 
-    Spinner().spin($('.large_spinner').get(0));
+    Spinner({lines: 13, width: 4}).spin($('.large_spinner').get(0));
 });
 
 

@@ -155,7 +155,7 @@ describe Provider do
       Candlepin::ProductContent.new(
         "content" => {
         "name" => name,
-        "id" => name.hash,
+        "id" => name.hash.to_s,
         "type" => "yum",
         "label" => name,
         "vendor" => "redhat",
@@ -175,6 +175,7 @@ describe Provider do
       end
 
       product.productContent = [product_content(product_name)]
+      product.productContent.first.stub(:katello_enabled?).and_return(true)
       product.productContent.each do |product_content|
         releases.each do |release|
           version = Resources::CDN::Utils.parse_version(release)
@@ -225,6 +226,9 @@ describe Provider do
 
       @product_with_change = create_product_with_content("product-with-change", ["1.0"])
       set_upstream_releases(@product_with_change, ["1.0", "1.1"])
+
+      @product_without_change.productContent.each{|pc| pc.product = @product_without_change}
+      @product_with_change.productContent.each{|pc| pc.product = @product_with_change}
 
       @provider.stub_chain(:products, :engineering).and_return([@product_without_change, @product_with_change])
     end
