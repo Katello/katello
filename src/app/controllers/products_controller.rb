@@ -13,8 +13,9 @@
 class ProductsController < ApplicationController
   respond_to :html, :js
 
-  before_filter :find_product, :only => [:edit, :update, :destroy]
-  before_filter :find_provider, :only => [:new, :create, :default_label, :edit, :update, :destroy]
+  before_filter :find_product, :only => [:edit, :update, :destroy, :refresh_content, :disable_content]
+  before_filter :find_provider, :only => [:new, :create, :default_label, :edit, :update, :destroy,
+                                          :refresh_content, :disable_content]
   before_filter :authorize
 
   def rules
@@ -29,7 +30,9 @@ class ProductsController < ApplicationController
       :edit =>read_test,
       :update => edit_test,
       :destroy => edit_test,
-      :auto_complete=>  auto_complete_test
+      :auto_complete=>  auto_complete_test,
+      :refresh_content => edit_test,
+      :disable_content => edit_test,
     }
   end
 
@@ -48,7 +51,7 @@ class ProductsController < ApplicationController
   def create
     product_params = params[:product]
     requested_label = String.new(product_params[:label]) unless product_params[:label].blank?
-    product_params[:label], label_assigned = generate_label(product_params[:name], _('product')) if product_params[:label].blank?
+    product_params[:label], label_assigned = generate_label(product_params[:name], 'product') if product_params[:label].blank?
 
 
     gpg = GpgKey.readable(current_organization).find(product_params[:gpg_key]) if product_params[:gpg_key] and product_params[:gpg_key] != ""
@@ -63,6 +66,18 @@ class ProductsController < ApplicationController
       notify.success label_overridden(product, requested_label)
     end
     render :json=>{:id=>product.id}
+  end
+
+  def refresh_content
+    raise _('Repository sets are enabled by default for custom products.') if @product.custom?
+    pc = @product.refresh_content(params[:content_id])
+    render :partial=>'providers/redhat/repos', :locals=>{:product_content=>pc}
+  end
+
+  def disable_content
+    raise _('Repository sets cannot be disabled for custom products.') if @product.custom?
+    pc = @product.disable_content(params[:content_id])
+    render :json=>pc
   end
 
   def update

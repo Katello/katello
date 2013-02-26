@@ -30,7 +30,7 @@ from katello.client.lib.control import get_katello_mode
 from katello.client.lib.utils.io import convert_to_mime_type, attachment_file_name, save_report
 from katello.client.lib.utils.data import test_record, update_dict_unless_none
 from katello.client.lib.utils.encoding import u_str
-from katello.client.lib.async import SystemAsyncTask
+from katello.client.lib.async import SystemAsyncTask, evaluate_remote_action
 from katello.client.lib.ui import printer
 from katello.client.lib.ui.printer import VerboseStrategy, batch_add_columns
 from katello.client.lib.ui.progress import run_spinner_in_bg, wait_for_async_task
@@ -246,14 +246,8 @@ class InstalledPackages(SystemAction):
             print (_("Performing remote action [ %s ]... ") % uuid)
             task = SystemAsyncTask(task)
             run_spinner_in_bg(wait_for_async_task, [task])
-            if task.succeeded():
-                print _("Remote action finished:")
-                print task.get_result_description()
-                return os.EX_OK
-            else:
-                print _("Remote action failed:")
-                print task.get_result_description()
-                return os.EX_DATAERR
+
+            return evaluate_remote_action(task)
 
         packages = self.api.packages(system_id)
 

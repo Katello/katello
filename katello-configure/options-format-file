@@ -18,3 +18,5 @@ ssl_ca_email				true	\S+@\S+
 ssl_cert_expiration			true	\d+
 # Deployment Type
 deployment      true  ^(headpin|katello|cfse|sam)$
+# Katello user's password
+user_pass         false  ^.{5,}$

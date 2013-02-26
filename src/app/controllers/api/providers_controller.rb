@@ -51,6 +51,14 @@ class Api::ProvidersController < Api::ApiController
     }
   end
 
+  def_param_group :provider do
+    param :provider, Hash, :required => true, :action_aware => true do
+      param :name, String, :desc => "Provider name", :required => true
+      param :description, String, :desc => "Provider description"
+      param :repository_url, String, :desc => "Repository URL"
+    end
+  end
+
   api :GET, "/organizations/:organization_id/providers", "List providers"
   param :organization_id, :identifier, :desc => "Organization identifier", :required => true
   param :name, String, :desc => "Filter providers by name"
@@ -67,11 +75,9 @@ class Api::ProvidersController < Api::ApiController
 
   api :POST, "/providers", "Create a provider"
   param :organization_id, :identifier, :desc => "Organization identifier", :required => true
-  param :provider, Hash, :required => true do
-    param :name, String, :desc => "Provider name", :required => true
-    param :description, String, :desc => "Provider description"
+  param_group :provider
+  param :provider, Hash do
     param :provider_type, ["Red Hat", "Custom"], :required => true
-    param :repository_url, String, :desc => "Repository URL"
   end
   def create
     provider = Provider.create!(params[:provider]) do |p|
@@ -82,12 +88,7 @@ class Api::ProvidersController < Api::ApiController
 
   api :PUT, "/providers/:id", "Update a provider"
   param :id, :number, :desc => "Provider numeric identifier", :required => true
-  param :provider, Hash, :required => true do
-    param :name, String, :desc => "Provider name", :required => true
-    param :description, String, :desc => "Provider description"
-    param :provider_type, ["Red Hat", "Custom"], :required => true
-    param :repository_url, String, :desc => "Repository URL"
-  end
+  param_group :provider
   def update
     @provider.update_attributes!(params[:provider])
     render :json => @provider.to_json and return
@@ -182,10 +183,10 @@ class Api::ProvidersController < Api::ApiController
 
   api :POST, "/providers/:id/product_create", "Create a new product in custom provider"
   param :id, :number, :desc => "Provider numeric identifier", :required => true
+  param_group :product, Api::ProductsController, :as => :create
   param :product, Hash, :required => true do
     param :name, String, :desc => "Product name", :required => true
-    param :description, String, :desc => "Product description"
-    param :gpg_key_name, String, :desc => "GPG key name"
+    param :label, String
   end
   def product_create
     raise HttpErrors::BadRequest, _("It is not allowed to create products in Red Hat provider.") if @provider.redhat_provider?

@@ -15,6 +15,11 @@
 %global datadir %{_sharedstatedir}/%{name}
 %global confdir deploy/common
 
+### TODO temp disabled for F18 ###
+%if 0%{?fedora} == 18
+%global nodoc 1
+%endif
+
 Name:           katello
 Version:        1.3.14
 Release:        1%{?dist}
@@ -80,7 +85,7 @@ Requires:       rubygem(tire) < 0.4
 Requires:       rubygem(ldap_fluff)
 Requires:       rubygem(foreman_api) >= 0.0.7
 Requires:       rubygem(anemone)
-Requires:       rubygem(apipie-rails) >= 0.0.16
+Requires:       rubygem(apipie-rails) >= 0.0.18
 Requires:       lsof
 
 %if 0%{?rhel} == 6
@@ -145,7 +150,7 @@ BuildRequires:       rubygem(sass)
 BuildRequires:       rubygem(tire) >= 0.3.0
 BuildRequires:       rubygem(tire) < 0.4
 BuildRequires:       rubygem(ldap_fluff)
-BuildRequires:       rubygem(apipie-rails) >= 0.0.16
+BuildRequires:       rubygem(apipie-rails) >= 0.0.18
 BuildRequires:       rubygem(maruku)
 BuildRequires:       rubygem(foreman_api)
 
@@ -161,7 +166,7 @@ Requires:       %{name}-configure
 Requires:       %{name}-cli
 Requires:       postgresql-server
 Requires:       postgresql
-Requires:       candlepin-tomcat6
+Requires(post): candlepin-tomcat6
 Requires:       candlepin-selinux
 # the following backend engine deps are required by <katello-configure>
 Requires:       mongodb mongodb-server
@@ -200,7 +205,7 @@ BuildArch:      noarch
 Summary:         Katello connection classes for the Foreman backend
 Requires:        %{name}-common
 # dependencies from bundler.d/foreman.rb
-Requires:       rubygem(foreman_api) >= 0.0.10
+Requires:       rubygem(foreman_api) >= 0.0.18
 
 %description glue-foreman
 Katello connection classes for the Foreman backend
@@ -217,7 +222,8 @@ Katello connection classes for the Candlepin backend
 Summary:        A subscription management only version of Katello
 BuildArch:      noarch
 Requires:       katello-common
-Requires:       katello-glue-candlepin
+Requires:       %{name}-glue-candlepin
+Requires:       %{name}-glue-elasticsearch
 Requires:       katello-selinux
 Requires:       rubygem(bundler_ext)
 BuildRequires:  rubygem(bundler_ext)
@@ -232,7 +238,7 @@ Requires:       katello-configure
 Requires:       katello-cli
 Requires:       postgresql-server
 Requires:       postgresql
-Requires(post):       candlepin-tomcat6
+Requires(post): candlepin-tomcat6
 Requires:       thumbslug
 Requires:       thumbslug-selinux
 
@@ -435,11 +441,7 @@ fi
 a2x -d manpage -f manpage man/katello-service.8.asciidoc
 
 #api docs
-%if 0%{?fastbuild:1}
-    # make empty directories when doing fast build
-    mkdir -p %{buildroot}%{homedir}/public/apipie-cache
-    mkdir -p doc/apidoc
-%else
+%if ! 0%{?nodoc:1}
     echo Generating API docs
     # by default do not stop on missing dep and only require "build" environment
     export BUNDLER_EXT_NOSTRICT=1
@@ -674,6 +676,7 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/models/glue/elastic_search
 
 %files glue-pulp
+%{homedir}/bundler.d/pulp.rb
 %{homedir}/app/models/glue/pulp
 %config(missingok) %{_sysconfdir}/cron.daily/katello-refresh-cdn
 
@@ -707,6 +710,7 @@ usermod -a -G katello-shared tomcat
 %exclude %{homedir}/app/controllers/api/foreman
 %exclude %{homedir}/app/controllers/foreman
 %exclude %{homedir}/app/views/foreman
+%exclude %{homedir}/lib/tasks/test.rake
 %{homedir}/app/stylesheets
 %{homedir}/app/views
 %{homedir}/autotest
@@ -742,12 +746,16 @@ usermod -a -G katello-shared tomcat
 %files headpin-all
 
 %files api-docs
+%if ! 0%{?nodoc:1}
 %doc doc/apidoc*
 %{homedir}/public/apipie-cache
+%endif
 
 %files headpin-api-docs
+%if ! 0%{?nodoc:1}
 %doc doc/headpin-apidoc*
 %{homedir}/public/headpin-apipie-cache
+%endif
 
 %files devel-all
 

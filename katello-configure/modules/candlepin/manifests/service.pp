@@ -12,8 +12,7 @@ class candlepin::service {
       Class["candlepin::config"],
       Class["postgres::service"],
       File[$certs::params::katello_keystore],
-      File["/usr/share/tomcat6/conf/keystore"],
-      File["${certs::params::candlepin_certs_dir}/candlepin-upstream-ca.crt"]
+      File["/usr/share/tomcat6/conf/keystore"]
     ]
   }
 

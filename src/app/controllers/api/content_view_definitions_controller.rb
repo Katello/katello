@@ -48,6 +48,13 @@ class Api::ContentViewDefinitionsController < Api::ApiController
     }
   end
 
+  def_param_group :content_view_definition do
+    param :content_view_definition, Hash, :required => true, :action_aware => true do
+      param :name, String, :desc => "Content view definition name", :required => true
+      param :description, String, :desc => "Definition description"
+    end
+  end
+
   api :GET, "/organizations/:organization_id/content_view_definitions",
     "List content view definitions"
   param :organization_id, :identifier, :desc => "organization identifier"
@@ -64,11 +71,9 @@ class Api::ContentViewDefinitionsController < Api::ApiController
   api :POST, "/content_view_definitions",
     "Create a content view definition"
   param :organization_id, :identifier, :desc => "organization identifier"
+  param_group :content_view_definition
   param :content_view_definition, Hash do
-    param :name, String, :desc => "Content view definition name",
-      :required => true
     param :label, String, :desc => "Content view identifier"
-    param :description, String, :desc => "Definition description"
   end
   def create
     attrs = params[:content_view_definition]
@@ -81,10 +86,7 @@ class Api::ContentViewDefinitionsController < Api::ApiController
   api :PUT, "/organizations/:org/content_view_definitions/:id", "Update a definition"
   param :id, :number, :desc => "Definition identifer", :required => true
   param :org, String, :desc => "Organization name", :required => true
-  param :content_view_definition, Hash do
-    param :name, String, :desc => "Content view definition name"
-    param :description, String, :desc => "Definition description"
-  end
+  param_group :content_view_definition
   def update
     @definition.update_attributes!(params[:content_view_definition])
     render :json => @definition.to_json
