@@ -20,6 +20,12 @@ class Api::Foreman::ArchitecturesController < Api::Foreman::SimpleCrudController
 
   self.foreman_model = ::Foreman::Architecture
 
+  def_param_group :architecture do
+    param :architecture, Hash, :desc => "architecture info", :required => true, :action_aware => true do
+      param :name, String, "architecture name", :required => true
+    end
+  end
+
   api :GET, "/architectures", "Get list of architectures available in Foreman"
   def index
     super
@@ -32,18 +38,14 @@ class Api::Foreman::ArchitecturesController < Api::Foreman::SimpleCrudController
   end
 
   api :POST, "/architecture", "Create new architecture in Foreman"
-  param :architecture, Hash, :desc => "architecture info" do
-    param :name, String, "architecture name"
-  end
+  param_group :architecture
   def create
     super
   end
 
   api :PUT, "/architectures/:id", "Update an architecture record in Foreman"
   param :id, String, "architecture name"
-  param :architecture, Hash, :desc => "architecture info" do
-    param :name, String, "architecture name"
-  end
+  param_group :architecture
   def update
     super
   end

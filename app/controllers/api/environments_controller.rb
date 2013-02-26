@@ -75,10 +75,21 @@ class Api::EnvironmentsController < Api::ApiController
     }
   end
 
+  def_param_group :search_params do
+    param :organization_id, :identifier, :desc => "organization identifier"
+    param :library, :bool, :desc => "set true if you want to see only library environment"
+    param :name, :identifier, :desc => "filter only environments with this identifier"
+  end
+
+  def_param_group :environment do
+    param :environment, Hash, :required => true, :action_aware => true do
+      param :name, :identifier, :desc => "name of the environment (identifier)", :required => true
+      param :description, String
+    end
+  end
+
   api :GET, "/organizations/:organization_id/environments", "List environments in an organization"
-  param :organization_id, :identifier, :desc => "organization identifier"
-  param :library, :bool, :desc => "set true if you want to see only library environment"
-  param :name, :identifier, :desc => "filter only environments with this identifier"
+  param_group :search_params
   def index
     query_params[:organization_id] = @organization.id
     environments = KTEnvironment.where query_params
@@ -103,9 +114,7 @@ class Api::EnvironmentsController < Api::ApiController
   end
 
   api :GET, "/owners/:organization_id/environments", "List environments for RHSM"
-  param :organization_id, :identifier, :desc => "organization identifier"
-  param :library, :bool, :desc => "set true if you want to see only library environment"
-  param :name, :identifier, :desc => "filter only environments with this identifier"
+  param_group :search_params
   def rhsm_index
     if query_params.has_key?(:name)
       # retrieve the requested environment
@@ -131,12 +140,12 @@ class Api::EnvironmentsController < Api::ApiController
 
   api :POST, "/organizations/:organization_id/environments", "Create an environment in an organization"
   param :organization_id, :identifier, :desc => "organization identifier"
-  param :environment, Hash do
-    param :name, :identifier, :desc => "name of the environment (identifier)"
-    param :prior, :identifier, :desc => <<-DESC
-identifier of an environment that is prior the new environment in the chain, it has to be
-either library or an environment at the end of the chain
-    DESC
+  param_group :environment
+  param :environment, Hash, :required => true do
+    param :prior, :identifier, :required => true, :desc => <<-DESC
+        identifier of an environment that is prior the new environment in the chain, it has to be
+        either library or an environment at the end of the chain
+        DESC
   end
   def create
     environment_params = params[:environment]
@@ -150,7 +159,7 @@ either library or an environment at the end of the chain
 
   api :PUT, "/environments/:id", "Update an environment"
   api :PUT, "/organizations/:organization_id/environments/:id", "Update an environment in an organization"
-  see "environments#create"
+  param_group :environment
   def update
     if @environment.library?
       raise HttpErrors::BadRequest, _("Can't update the '%s' environment") % "Library"

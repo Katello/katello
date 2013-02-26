@@ -42,10 +42,14 @@ class Api::OrganizationsController < Api::ApiController
     }
   end
 
+  def_param_group :organization do
+    param :name, String, :desc => "name for the organization", :required => true, :action_aware => true
+    param :description, String
+  end
+
   api :GET, "/organizations", "List organizations"
-  param :name, String, :desc => "name for filtering"
+  param_group :organization
   param :label, String, :desc => "label for filtering"
-  param :description, String, :desc => "description"
   def index
     render :json => (Organization.without_deleting.readable.where query_params).to_json
   end
@@ -57,9 +61,7 @@ class Api::OrganizationsController < Api::ApiController
   end
 
   api :POST, "/organizations", "Create an organization"
-  param :name, String, :desc => "name for the organization"
-  param :label, String, :desc => "ASCII label to identify the organization"
-  param :description, String, :desc => "description"
+  param_group :organization
   def create
     label = labelize_params(params)
     render :json => Organization.create!(:name => params[:name], :description => params[:description], :label => label).to_json
@@ -67,7 +69,7 @@ class Api::OrganizationsController < Api::ApiController
 
   api :PUT, "/organizations/:id", "Update an organization"
   param :organization, Hash do
-    param :description, String, :desc => "description"
+    param_group :organization, Api::OrganizationsController
   end
   def update
     render :json => @organization.update_attributes!(params[:organization]).to_json

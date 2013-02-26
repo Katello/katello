@@ -47,6 +47,14 @@ class Api::ActivationKeysController < Api::ApiController
     }
   end
 
+  def_param_group :activation_key do
+    param :activation_key, Hash, :required => true, :action_aware => true do
+      param :name, :identifier, :required => true, :desc => "activation key identifier (alphanum characters, space, _ and -)"
+      param :description, String, :allow_nil => true
+      param :content_view_id, :identifier, :desc => "content view id"
+    end
+  end
+
   api :GET, "/activation_keys", "List activation keys"
   api :GET, "/environments/:environment_id/activation_keys", "List activation keys"
   api :GET, "/organizations/:organization_id/activation_keys", "List activation keys"
@@ -65,11 +73,7 @@ class Api::ActivationKeysController < Api::ApiController
 
   api :POST, "/activation_keys", "Create an activation key"
   api :POST, "/environments/:environment_id/activation_keys", "Create an activation key"
-  param :activation_key, Hash do
-    param :name, :identifier, :desc => "activation key identifier (alphanum characters, space, _ and -)"
-    param :description, String, :allow_nil => true
-    param :content_view_id, :identifier, :desc => "content view id", :allow_nil => true
-  end
+  param_group :activation_key
   def create
     created = ActivationKey.create!(params[:activation_key]) do |ak|
       ak.environment = @environment
@@ -80,6 +84,10 @@ class Api::ActivationKeysController < Api::ApiController
   end
 
   api :PUT, "/activation_keys/:id", "Update an activation key"
+  param_group :activation_key
+  param :activation_key, Hash do
+    param :environment_id, :identifier, :allow_nil => true
+  end
   def update
     @activation_key.update_attributes!(params[:activation_key])
     render :json => ActivationKey.find(@activation_key.id)

@@ -30,6 +30,13 @@ class Api::Foreman::SmartProxiesController < Api::Foreman::SimpleCrudController
     DOC
   end
 
+  def_param_group :smart_proxy do
+    param :smart_proxy, Hash, :required => true, :action_aware => true do
+      param :name, String, :required => true, :desc => "The smart proxy name"
+      param :url, String, :required => true, :desc => "The smart proxy URL starting with 'http://' or 'https://'"
+    end
+  end
+
   self.foreman_model = ::Foreman::SmartProxy
 
   api :GET, "/smart_proxies/", "List of smart proxies"
@@ -55,19 +62,13 @@ class Api::Foreman::SmartProxiesController < Api::Foreman::SimpleCrudController
     and other pages that refer to domains, and also available as
     an external node parameter
   DOC
-  param :smart_proxy, Hash, :required => true do
-    param :name, String, :required => true, :desc => "The smart proxy name"
-    param :url, String, :required => true, :desc => "The smart proxy URL starting with 'http://' or 'https://'"
-  end
+  param_group :smart_proxy
   def create
     super
   end
 
   api :PUT, "/smart_proxies/:id/", "Update a smart proxy."
-  param :smart_proxy, Hash, :required => true do
-    param :name, String, :required => false, :desc => "The smart proxy name"
-    param :url, String, :required => false, :desc => "The smart proxy URL starting with 'http://' or 'https://'"
-  end
+  param_group :smart_proxy
   def update
     super
   end
