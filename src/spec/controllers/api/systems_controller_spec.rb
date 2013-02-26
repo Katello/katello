@@ -21,7 +21,7 @@ describe Api::SystemsController do
   include SystemHelperMethods
   include AuthorizationHelperMethods
 
-  let(:facts) { {"distribution.name" => "Fedora"} }
+  let(:facts) { {"distribution.name" => "Fedora", "cpu.cpu_socket(s)"=>2} }
   let(:uuid) { '1234' }
   let(:package_profile) {
     {:profile=>
@@ -127,6 +127,7 @@ describe Api::SystemsController do
                                                   :system_groups => [@system_group_1], :user => @user)
         @activation_key_2 = ActivationKey.create!(:environment => @environment_1, :organization => @organization, :name => "activation_key_2",
                                                   :system_groups => [@system_group_2])
+
         @activation_key_1.stub(:subscribe_system).and_return()
         @activation_key_2.stub(:subscribe_system).and_return()
         @activation_key_1.stub(:apply_to_system).and_return()
@@ -137,7 +138,6 @@ describe Api::SystemsController do
           :facts => facts,
           :environment_id => @environment_1.id,
           :cp_type => "system",
-          :sockets => 2,
           :organization_id => @organization.label,
           :activation_keys => "#{@activation_key_1.name},#{@activation_key_2.name}"
         }
@@ -177,11 +177,17 @@ describe Api::SystemsController do
         end
 
         it "should set the system's content view to the key's view" do
+          @activation_key_3 = ActivationKey.create!(:environment => @environment_1, :organization => @organization, :name => "activation_key_3",
+                                                    :system_groups => [@system_group_2])
+          @controller.stub(:find_activation_keys).and_return([@activation_key_3])
+          System.any_instance.stub(:facts).and_return(@system_data[:facts])
+
           content_view = FactoryGirl.build_stubbed(:content_view)
-          @activation_key_2.stub(:content_view_id).and_return(content_view.id)
+          @activation_key_3.stub(:content_view_id).and_return(content_view.id)
           ContentView.stub(:find).and_return(content_view)
           content_view.stub(:in_environment?).and_return(true)
-          @activation_key_2.unstub(:apply_to_system)
+          @system_data[:activation_keys] = [@activation_key_3.name]
+
           post :activate, @system_data
           response.should be_success
           System.last.content_view_id.should eql(content_view.id)
