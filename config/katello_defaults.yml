@@ -270,6 +270,23 @@ development:
       yard:
         level: info
 
+      # To enable external logs tailing add optional 'tail_command:' option to a logger configuration,
+      # standard output of the command is logged. Useful with `tail` command. E.g.
+      #
+      # tail-pulp:
+      #   enabled: true
+      #   tail_command: ssh root@a_host -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no tail -f /var/log/pulp/pulp.log
+      # tail-cp:
+      #   enabled: true
+      #   tail_command: ssh root@a_host -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no tail -f /var/log/tomcat6/catalina.out
+      # tail-kt-client:
+      #   enabled: true
+      #   tail_command: tail -f ~/.katello/client.log
+      # tail-foreman:
+      #   enabled: true
+      #   tail_command: tail -f ~/Workspace/redhat/foreman/log/development.log
+
+
 #
 # Test environment configuration
 #

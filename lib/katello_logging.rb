@@ -43,7 +43,7 @@ module Katello
           Katello::Logging::YARDLoggerDelegator.instance
         end
 
-        unless defined?(:YARDLoggerDelegator)
+        unless self.class.const_defined?(:YARDLoggerDelegator)
           # define our logger child for YARD
           self.class.const_set(:YARDLoggerDelegator, Class.new(::YARD::Logger) do
 
@@ -103,6 +103,7 @@ module Katello
         logger        = ::Logging.logger[logger_name]
         logger.level = logger_config.level if logger_config.has_key?(:level)
         logger.additive = logger_config.enabled if logger_config.has_key?(:enabled)
+        enable_tailing logger, logger_config if logger_config.has_key?(:tail_command)
         logger.trace = configuration.log_trace
       end
     end
@@ -120,6 +121,21 @@ module Katello
       if ::Logging.logger.root.appenders.empty?
         ::Logging.logger.root.appenders = ::Logging.appenders.stdout
         ::Logging.logger.root.warn 'No appender set, logging to STDOUT'
+      end
+    end
+
+    def enable_tailing(logger, logger_config)
+      Thread.new do
+        begin
+          IO.popen(logger_config.tail_command) do |out|
+            at_exit { Process.kill("INT", out.pid) }
+            while (line = out.gets)
+              logger << "[#{logger.name}] #{line.inspect}\n"
+            end
+          end
+        rescue => e
+          Logging.logger['app'].warn "tailing thread failed: #{e.message} (#{e.class})\n#{e.backtrace.join("\n")}"
+        end
       end
     end
 
