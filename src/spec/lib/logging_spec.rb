@@ -129,8 +129,9 @@ describe Katello::Logging do
 
     context "syslog appender is used" do
       before :all do
-        Katello.config.logging.stub(:console_inline => false)
-        Katello.config.logging.loggers.root.stub(:type => 'syslog')
+        testing_config[:logging][:console_inline] = false
+        testing_config[:logging][:loggers][:root][:type] = 'syslog'
+        Katello.stub(:config => testing_config)
         logging.configure(:prefix => 'testing_')
       end
       it "should define one appender" do
@@ -144,7 +145,8 @@ describe Katello::Logging do
 
     context "unsupported logger" do
       before do
-        Katello.config.logging.loggers.root.stub(:type => 'nonsense')
+        testing_config[:logging][:loggers][:root][:type] = 'nonsense'
+        Katello.stub(:config => testing_config)
       end
       it "should raise RuntimeError exception" do
         expect { logging.configure(:prefix => 'testing_') }.to raise_error(RuntimeError)
