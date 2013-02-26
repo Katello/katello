@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130215063241) do
+ActiveRecord::Schema.define(:version => 20130226133232) do
 
   create_table "activation_keys", :force => true do |t|
     t.string   "name"
@@ -217,9 +217,11 @@ ActiveRecord::Schema.define(:version => 20130215063241) do
     t.boolean  "default",                    :default => false, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "environment_default_id"
   end
 
   add_index "content_views", ["content_view_definition_id"], :name => "index_content_views_on_content_view_definition_id"
+  add_index "content_views", ["environment_default_id"], :name => "index_content_views_on_environment_default_id"
   add_index "content_views", ["name", "organization_id"], :name => "index_content_views_on_name_and_organization_id"
   add_index "content_views", ["organization_id", "label"], :name => "index_content_views_on_organization_id_and_label", :unique => true
   add_index "content_views", ["organization_id"], :name => "index_content_views_on_organization_id"
@@ -286,17 +288,15 @@ ActiveRecord::Schema.define(:version => 20130215063241) do
   add_index "environment_system_groups", ["system_group_id"], :name => "index_environment_system_groups_on_system_group_id"
 
   create_table "environments", :force => true do |t|
-    t.string   "name",                                       :null => false
+    t.string   "name",                               :null => false
     t.string   "description"
-    t.boolean  "library",                 :default => false, :null => false
-    t.integer  "organization_id",                            :null => false
+    t.boolean  "library",         :default => false, :null => false
+    t.integer  "organization_id",                    :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "label",                                      :null => false
-    t.integer  "default_content_view_id"
+    t.string   "label",                              :null => false
   end
 
-  add_index "environments", ["default_content_view_id"], :name => "index_environments_on_default_content_view_id"
   add_index "environments", ["label", "organization_id"], :name => "index_environments_on_label_and_organization_id", :unique => true
   add_index "environments", ["name", "organization_id"], :name => "index_environments_on_name_and_organization_id", :unique => true
   add_index "environments", ["organization_id"], :name => "index_environments_on_organization_id"
