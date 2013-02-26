@@ -1,5 +1,8 @@
 ENV["RAILS_ENV"] = "test"
 
+if RUBY_VERSION >= "1.9"
+  require 'simplecov'
+end
 require File.expand_path('../../config/environment', __FILE__)
 require 'minitest/autorun'
 require 'minitest/rails'
