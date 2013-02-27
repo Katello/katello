@@ -191,6 +191,10 @@ module Glue::Candlepin::Product
       self.productContent.find{|pc| pc.content.id == content_id}
     end
 
+    def product_content_by_name(content_name)
+      self.productContent.find{|pc| pc.content.name == content_name}
+    end
+
     def set_content
       self.productContent.each do |pc|
         Rails.logger.debug "Creating content in candlepin: #{pc.content.name}"
