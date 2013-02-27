@@ -44,12 +44,16 @@ module SystemsHelper
              {:prompt => _('Select Architecture'), :id=>"arch_field"}, {:tabindex => 3})
   end
 
-  def content_view_select(org)
-    views = ContentView.readable(org).non_default
+  def content_view_select(org, env)
+    views = ContentView.readable(org).non_default.in_environment(env)
     choices = views.map {|v| [v.name, v.id]}
     select(:system, "content_view_id", choices,
-             {:prompt => _('Select Content View'), :id=>"content_view_field"},
+             {:prompt => no_content_view, :id=>"content_view_field"},
              {:tabindex => 2})
+  end
+
+  def no_content_view
+    _('Select Content View')
   end
 
   def system_content_view_opts
