@@ -348,7 +348,7 @@ class SystemsController < ApplicationController
   end
 
   def custom_info
-    render :partial => "edit_custom_info", :layout => "tupane_layout"
+    render :partial => "edit_custom_info"
   end
 
   def show
