@@ -5,7 +5,7 @@ Src::Application.routes.draw do
 
   namespace :api do
 
-    scope :module => :v1, :constraints => ApiVersionConstraint.new(:version => 1, :default => true) do
+    scope :module => :v1, :constraints => ApiVersionConstraint.new(:version => 1) do
 
       match '/' => 'root#resource_list'
 
