@@ -54,6 +54,11 @@ RSpec.configure do |config|
     Warden.test_reset!
   end
 
+  # log which test is running
+  config.before :each do
+    Rails.logger.info "Running test: #{example.metadata[:example_group][:full_description]} #{example.description}"
+  end
+
   # reset locale to English before each test
   config.before :each do
     I18n.locale = :en
