@@ -67,14 +67,17 @@ class DistributorsController < ApplicationController
   def param_rules
     update_check = lambda do
       if params[:distributor]
-        sys_rules = {:distributor => [:name, :description, :location, :releaseVer, :serviceLevel, :environment_id] }
+        sys_rules = {:distributor => [:name, :description, :location, :releaseVer, :serviceLevel, :environment_id, :content_view_id] }
         check_hash_params(sys_rules, params)
       else
         check_array_params([:id], params)
       end
     end
     {
-      :create => {:arch => [:arch_id],:distributor=>[:sockets, :name, :environment_id, :memory], :distributor_type =>[:virtualized]},
+      :create => {:arch => [:arch_id],
+                  :distributor=>[:name, :environment_id, :content_view_id],
+                  :distributor_type =>[:katello, :headpin]
+                 },
       :update => update_check,
       :download => [:id, :filename]
     }
@@ -101,6 +104,7 @@ class DistributorsController < ApplicationController
     @distributor.name= params["distributor"]["name"]
     @distributor.cp_type = "candlepin"  # The 'candlepin' type is allowed to export a manifest
     @distributor.environment = KTEnvironment.find(params["distributor"]["environment_id"])
+    @distributor.content_view = ContentView.find_by_id(params["system"].try(:[], "content_view_id"))
     #create it in candlepin, parse the JSON and create a new ruby object to pass to the view
     #find the newly created distributor
     if @distributor.save!
