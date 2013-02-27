@@ -1,4 +1,3 @@
-require 'api_constraints'
 
 Src::Application.routes.draw do
 
