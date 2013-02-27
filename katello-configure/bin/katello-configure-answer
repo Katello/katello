@@ -1,5 +1,4 @@
 #!/usr/bin/ruby
-# vim: ts=2:sw=2:et:
 #
 # Copyright © 2012 Red Hat, Inc.
 #
@@ -36,9 +35,9 @@ begin
   Options:
 EOS
 
-	oparser.on('-a', '--answer-file=FILE', 'Load different answer file instead of the default one') do |file|
+  oparser.on('-a', '--answer-file=FILE', 'Load different answer file instead of the default one') do |file|
     answer_file = file
-	end
+  end
   oparser.on( '-v', '--version', 'Display version information' ) do
     # string THE VERSION is replaced build time - do not remove
     puts <<EOS
@@ -50,14 +49,14 @@ Distributed under GNU GPLv2+, see /usr/share/doc/katello-common-*/LICENSE.
 EOS
     exit
   end
-	oparser.on('-h', '--help', 'Show this short summary (more in the man page)') do
-		puts oparser
-		exit
-	end
-	oparser.parse!
+  oparser.on('-h', '--help', 'Show this short summary (more in the man page)') do
+    puts oparser
+    exit
+  end
+  oparser.parse!
 rescue => e
-	$stderr.puts e.message
-	$stderr.puts oparser
+  $stderr.puts e.message
+  $stderr.puts oparser
 	exit_with :general
 end
 value = ARGV[0]
