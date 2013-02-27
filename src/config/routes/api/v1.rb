@@ -1,14 +1,12 @@
+require 'api/constraints/activation_key_constraint'
+require 'api/constraints/api_version_constraint'
+
 Src::Application.routes.draw do
 
   namespace :api do
 
-    scope :module => :v1, :constraints => ApiConstraints.new(:version => 1, :default => true) do
+    scope :module => :v1, :constraints => ApiVersionConstraint.new(:version => 1, :default => true) do
 
-      class RegisterWithActivationKeyContraint
-        def matches?(request)
-          request.params[:activation_keys]
-        end
-      end
       match '/' => 'root#resource_list'
 
       # Headpin does not support system creation
