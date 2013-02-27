@@ -23,10 +23,34 @@ library_view:
   label:          'published_library_view'
   default:        false
 
+candlepin_library_default_cv:
+  name:           Library Default ContentView
+  organization:   candlepin_org
+  label:          candlepin_library_default_cv
+  default:        true
+
+candlepin_dev_default_cv:
+  name:           Dev Default ContentView
+  organization:   candlepin_org
+  label:          candlepin_dev_default_cv
+  default:        true
 
 #view published to library and dev
 library_dev_view:
   name:           Published Library and dev view
   organization:   acme_corporation
-  label:          'published_dev_view'
+  label:          published_dev_view
+  default:        false
+
+# For use with glue/candlepin tests
+candlepin_library_cv:
+  name:           Candlepin Library Content View
+  organization:   candlepin_org
+  label:          candlepin_library_cv
+  default:        false
+
+candlepin_library_dev_cv:
+  name:           Candlepin Library and Dev Content View
+  organization:   candlepin_org
+  label:          candlepin_library_dev_cv
   default:        false

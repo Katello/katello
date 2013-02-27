@@ -22,3 +22,18 @@ staging:
   label:          staging_label
   default_content_view: staging_default
 
+candlepin_library:
+  name:           Library
+  description:    This is the Library
+  library:        true
+  organization:   candlepin_org
+  label:          candlepin_library
+  default_content_view: candlepin_library_default_cv
+
+candlepin_dev:
+  name:           Candlepin Dev
+  description:    Dev environment.
+  organization:   candlepin_org
+  priors:         library
+  label:          candlepin_dev_label
+  default_content_view: candlepin_dev_default_cv

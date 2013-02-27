@@ -103,8 +103,9 @@ def configure_runcible
   end
 end
 
-def disable_glue_layers(services=[], models=[])
+def disable_glue_layers(services=[], models=[], force_reload=false)
   @@model_service_cache ||= {}
+  @@model_service_cache = {} if force_reload
   change = false
 
   Katello.config[:use_cp]            = services.include?('Candlepin') ? false : true

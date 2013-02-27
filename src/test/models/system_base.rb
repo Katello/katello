@@ -13,19 +13,18 @@
 require 'minitest_helper'
 
 
-module SystemTestBase
-  def self.included(base)
-    base.class_eval do
-      set_fixture_class :environments => KTEnvironment
-      use_instantiated_fixtures = false
-      fixtures :all
+class SystemTestBase < MiniTest::Rails::ActiveSupport::TestCase
+  extend ActiveRecord::TestFixtures
 
-      def self.before_suite
-        services  = ['Candlepin', 'Pulp', 'ElasticSearch']
-        models    = ['System', 'SystemGroup']
-        disable_glue_layers(services, models)
-      end
-    end
+  fixtures :all
+
+  def self.before_suite
+    load_fixtures
+    configure_runcible
+
+    services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
+    models    = ['User', 'System', 'SystemGroup', 'KTEnvironment', 'Organization', 'Product']
+    disable_glue_layers(services, models)
   end
 
   def setup
