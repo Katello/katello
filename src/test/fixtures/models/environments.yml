@@ -4,7 +4,6 @@ library:
   library:        true
   organization:   acme_corporation
   label:          library_label
-  default_content_view: library_default
 
 dev:
   name:           Dev
@@ -12,7 +11,6 @@ dev:
   organization:   acme_corporation
   priors:         library
   label:          dev_label
-  default_content_view: dev_default
 
 staging:
   name:           Staging
@@ -20,7 +18,6 @@ staging:
   organization:   acme_corporation
   priors:         library
   label:          staging_label
-  default_content_view: staging_default
 
 candlepin_library:
   name:           Library
@@ -28,7 +25,6 @@ candlepin_library:
   library:        true
   organization:   candlepin_org
   label:          candlepin_library
-  default_content_view: candlepin_library_default_cv
 
 candlepin_dev:
   name:           Candlepin Dev
@@ -36,4 +32,3 @@ candlepin_dev:
   organization:   candlepin_org
   priors:         library
   label:          candlepin_dev_label
-  default_content_view: candlepin_dev_default_cv
