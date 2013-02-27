@@ -167,7 +167,7 @@ class User < ActiveRecord::Base
     notices.each { |notice| notice.user_notices.each(&:read!) }
 
     return notices.map do |notice|
-      { :text => notice.text, :level => notice.level }
+      { :text => notice.text, :level => notice.level, :request_type => notice.request_type }
     end
   end
 
