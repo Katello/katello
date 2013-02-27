@@ -439,7 +439,6 @@ class ApplicationController < ActionController::Base
     # reject any paths that don't have accessible envs
     @paths.reject!{|path|  (path & accessible).empty?}
 
-    @paths = @paths.sort_by{|p| p[1].name}
     @paths = [[org.library]] if @paths.empty?
 
     if @environment and !@environment.library?
@@ -470,7 +469,6 @@ class ApplicationController < ActionController::Base
 
   def environment_paths(library, environment_path_element_generator)
     paths = current_organization.promotion_paths
-    paths = paths.sort_by{|p| p[0].name}
     to_ret = []
     paths.each do |path|
       path = path.collect{ |e| environment_path_element_generator.call(e) }
