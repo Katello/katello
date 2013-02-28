@@ -124,7 +124,7 @@ ssl_ca_password_file_option = _get_valid_option_value('ssl_ca_password_file', $d
 mandatory.each do |key, mand|
   if (not $final_options.has_key?(key) and mandatory[key]) or
   (not $final_options[key].nil? and not $final_options[key].to_s() =~ Regexp.new(regex[key]))
-    $final_options[key] = _request_option_interactively($titles[key], regex[key], _get_valid_option_value(key, $default_options, $final_options), _is_option_true(non_interactive_option))
+    $final_options[key] = _request_option_interactively(key, $titles[key], regex[key], _get_valid_option_value(key, $default_options, $final_options), _is_option_true(non_interactive_option))
     if not $default_options_order.include?(key)
       $default_options_order.push(key)
     end
