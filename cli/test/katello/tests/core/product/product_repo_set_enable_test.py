@@ -23,7 +23,7 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
     ]
 
     allowed_options = [
-        ('--org=ACME', '--name=product_1', '--set_id=10')
+        ('--org=ACME', '--name=product_1', '--set_name=10')
     ]
 
 
@@ -35,7 +35,7 @@ class RepositorySetListTest(CLIActionTestCase):
     OPTIONS = {
         'org': ORG['name'],
         'name': PROD['name'],
-        'set_id': '10'
+        'set_name': '10'
     }
 
     def setUp(self):
