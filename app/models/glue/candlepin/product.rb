@@ -51,7 +51,7 @@ module Glue::Candlepin::Product
     product.orchestration_for = :import_from_cp_ar_setup
     product.save!
     product.productContent_will_change!
-    product.productContent = product.build_productContent(product_content_attrs)
+    product.productContent = product.build_product_content(product_content_attrs)
     product.orchestration_for = :import_from_cp
     product.save!
 
@@ -103,7 +103,7 @@ module Glue::Candlepin::Product
       end
     end
 
-    def build_productContent(attrs)
+    def build_product_content(attrs)
       @productContent = attrs.collect { |pc| ::Candlepin::ProductContent.new pc }
     end
 
