@@ -78,3 +78,5 @@ Webrat.configure do |config|
 end
 
 require 'spec/support/monkey_rspec_trac_creation_line_of_mocks' # has to be loaded after RSpec
+
+include FactoryGirl::Syntax::Methods
