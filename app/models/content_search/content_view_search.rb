@@ -11,15 +11,16 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class ContentSearch::ContentViewSearch < ContentSearch::ContainerSearch
-  attr_accessor :rows, :name, :views
+  attr_accessor :rows, :name, :view_ids
+  element_attributes :rows, :name # we don't want view_ids
 
   def initialize(options)
     super
-    self.rows = build_rows(self.views)
+    self.rows = build_rows
   end
 
-  def build_rows(views)
-    self.views.collect do |view|
+  def build_rows
+    views.collect do |view|
       cols = {}
       view.environments.collect do |env|
         if env_ids.include?(env.id)
@@ -35,6 +36,14 @@ class ContentSearch::ContentViewSearch < ContentSearch::ContainerSearch
                              :data_type => "view",
                              :value     => view.name
                             )
+    end
+  end
+
+  def views
+    @views ||= if self.view_ids
+      views = ContentView.readable(current_organization).non_default.where(:id => view_ids)
+    else
+      views = ContentView.readable(current_organization).non_default
     end
   end
 
