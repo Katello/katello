@@ -14,20 +14,8 @@
 # a container like a product or content view
 
 class ContentSearch::Search
+  include ContentSearch::Element
   attr_accessor :rows, :name
-
-  def initialize(options)
-    options.each do |key, value|
-      send("#{key}=", value)
-    end
-  end
-
-  def as_json(options = {})
-    {
-      :rows => self.rows,
-      :name => self.name
-    }
-  end
 
   def current_organization
     ContentSearch::SearchUtils.current_organization

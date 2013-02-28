@@ -13,6 +13,7 @@
 # a container represents a product or content view
 
 class ContentSearch::ContainerSearch < ContentSearch::Search
+  attr_accessor :rows, :name
 
   def container_hover_html(container, env)
     render_to_string :partial=>'content_search/container_hover',

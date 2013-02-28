@@ -11,24 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class ContentSearch::Row
-  attr_accessor :id, :name, :cells, :data_type, :value, :parent_id, :comparable
-  alias :cols :cells
-  alias :cols= :cells=
-
-  def initialize(options)
-    options.each do |key, value|
-      send("#{key}=", value)
-    end
-  end
-
-  def as_json(options = {})
-    {
-     :id => self.id,
-     :name => self.name,
-     :cols => self.cells,
-     :data_type => self.data_type,
-     :value => self.value
-    }
-  end
-
+  include ContentSearch::Element
+  attr_accessor :id, :name, :cols, :data_type, :value, :parent_id, :comparable
+  alias :cells :cols
+  alias :cells= :cols=
 end
