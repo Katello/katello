@@ -80,7 +80,7 @@ class Organization < ActiveRecord::Base
 
   def promotion_paths
     #I'm sure there's a better way to do this
-    self.environments.joins(:priors).where("prior_id = #{self.library.id}").collect do |env|
+    self.environments.joins(:priors).where("prior_id = #{self.library.id}").order(:name).collect do |env|
       env.path
     end
   end
