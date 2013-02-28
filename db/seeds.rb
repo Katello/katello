@@ -83,4 +83,6 @@ if Provider.count == 0
   })
 end
 
-Repository.ensure_sync_notification
+if Katello.config.use_pulp
+  Repository.ensure_sync_notification
+end
