@@ -19,4 +19,8 @@ class ContentSearch::ContainerSearch < ContentSearch::Search
       :locals=>{:container=>container, :env=>env}
   end
 
+  def env_ids
+    KTEnvironment.content_readable(current_organization).pluck(:id)
+  end
+
 end
