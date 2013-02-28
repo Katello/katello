@@ -56,7 +56,7 @@ class RepositoriesController < ApplicationController
 
   def create
     repo_params = params[:repo]
-    repo_params[:label], label_assigned = generate_label(repo_params[:name], _('repository')) if repo_params[:label].blank?
+    repo_params[:label], label_assigned = generate_label(repo_params[:name], 'repository') if repo_params[:label].blank?
 
     raise HttpErrors::BadRequest, _("Repository can be only created for custom provider.") unless @product.custom?
 
@@ -93,7 +93,8 @@ class RepositoriesController < ApplicationController
   def enable_repo
     @repository.enabled = params[:repo] == "1"
     @repository.save!
-    render :json => @repository.id
+    product_content = @repository.product.product_content_by_id(@repository.content_id)
+    render :json => {:id=>@repository.id, :can_disable_repo_set=>product_content.can_disable?}
   end
 
   def destroy

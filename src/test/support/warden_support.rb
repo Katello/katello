@@ -1,15 +1,26 @@
 module WardenSupport
   DEFAULT_EXPECTED = [:authenticate!]
 
-  def login_user(user)
+  def login_user(user, org=nil)
+
     request.env['warden'] = Class.new do
       define_method(:user) { user }
       define_method(:authenticate) { user }
       define_method(:authenticate!) { user }
-      define_method(:raw_session) { Object.new }
+      define_method(:raw_session) { {} }
       define_method(:logout) { true }
-    end
+    end.new
 
+
+
+    ApplicationController.instance_eval do
+      define_method(:current_organization) do
+        Organization.find(org.id)
+      end
+    end if org
+    #ApplicationHelper.instance_eval do
+    #  define_method(:user){user}
+    #end
     Api::ApiController.instance_eval do
       define_method(:require_user) { {} }
       define_method(:current_user) { user }

@@ -303,7 +303,8 @@ class ActivationKeysController < ApplicationController
       :ajax_load  => true,
       :ajax_scroll => items_activation_keys_path(),
       :enable_create => ActivationKey.manageable?(current_organization),
-      :search_class=>ActivationKey}
+      :search_class=>ActivationKey,
+      :initial_action => :edit}
   end
 
   private

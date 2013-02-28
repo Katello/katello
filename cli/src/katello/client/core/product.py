@@ -360,6 +360,84 @@ class Create(ProductAction):
             self.discoverRepos.create_repositories(orgName, prod["id"], prod["name"], prod["label"], selectedurls)
 
         return os.EX_OK
+# ------------------------------------------------------------------------------
+class ListRepositorySets(SingleProductAction):
+    description = _('List repository sets for a Red Hat product')
+    def setup_parser(self, parser):
+        self.set_product_select_options(parser, False)
+
+    def run(self):
+        orgName     = self.get_option('org')
+        prodName    = self.get_option('name')
+        prodLabel   = self.get_option('label')
+        prodId      = self.get_option('id')
+        prod = get_product(orgName, prodName, prodLabel, prodId)
+        sets = self.api.repository_sets(orgName, prod["id"])
+        sets = sorted(sets, key=lambda k: k['name']) 
+
+        batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, \
+            {'katello_enabled': _("Enabled?")})
+        self.printer.set_header(_("Repository Sets For Product [ %s ]") % (prod['name']))
+
+        self.printer.print_items(sets)
+
+        return os.EX_OK
+        
+class EnableRepositorySet(SingleProductAction):
+    description = _('Enable a repository set for a Red Hat product')
+    def setup_parser(self, parser):
+        self.set_product_select_options(parser, False)
+        parser.add_option('--set_name', dest='set_name',
+                           help=_("name of the repository set to enable"))
+
+    def check_options(self, validator):
+        validator.require(('org', 'set_name'))
+
+    def run(self):
+        orgName     = self.get_option('org')
+        prodName    = self.get_option('name')
+        prodLabel   = self.get_option('label')
+        prodId      = self.get_option('id')
+        prod = get_product(orgName, prodName, prodLabel, prodId)
+        set_name      = self.get_option('set_name')
+      
+        task = AsyncTask(self.api.enable_repository_set(orgName, prod['id'], set_name))
+        task = run_spinner_in_bg(wait_for_async_task, [task],
+                message=_("Enabling Repository Set..."))
+        task = AsyncTask(task)
+        return evaluate_task_status(task,
+            failed = _("Repository enable [ %(set_name)s ] failed.") % 
+                        {'set_name':set_name},
+            ok = _("Repository Set [ %(set_name)s ] enabled.") % {'set_name':set_name}
+        )
+
+class DisableRepositorySet(SingleProductAction):
+    description = _('Disable a repository set for a Red Hat product')
+    def setup_parser(self, parser):
+        self.set_product_select_options(parser, False)
+        parser.add_option('--set_name', dest='set_name',
+                           help=_("name of the repository set to disable"))
+
+    def check_options(self, validator):
+        validator.require(('org', 'set_name'))
+
+    def run(self):
+        orgName     = self.get_option('org')
+        prodName    = self.get_option('name')
+        prodLabel   = self.get_option('label')
+        prodId      = self.get_option('id')
+        prod = get_product(orgName, prodName, prodLabel, prodId)
+        set_name      = self.get_option('set_name')
+
+        task = AsyncTask(self.api.disable_repository_set(orgName, prod['id'], set_name))
+        task = run_spinner_in_bg(wait_for_async_task, [task],
+                message=_("Disabling Repository Set..."))
+        task = AsyncTask(task)
+        return evaluate_task_status(task,
+            failed = _("Repository disable [ %(set_name)s ] failed.") % 
+                        {'set_name':set_name},
+            ok = _("Repository Set [ %(set_name)s ] disabled.") % {'set_name':set_name}
+        )
 
 # ------------------------------------------------------------------------------
 class Update(SingleProductAction):
