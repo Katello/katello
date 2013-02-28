@@ -16,6 +16,7 @@ class ContentSearchController < ApplicationController
 
   before_filter :find_repo, :only => [:repo_packages, :repo_errata]
   before_filter :find_repos, :only => [:repo_compare_packages, :repo_compare_errata]
+  before_filter :setup_utils
 
   def rules
     contents_test = lambda{!KTEnvironment.content_readable(current_organization).empty?}
@@ -67,7 +68,8 @@ class ContentSearchController < ApplicationController
     else
       views = ContentView.readable(current_organization).non_default
     end
-    render :json=>{:rows=> view_rows(views), :name=>_('Content View')}
+    view_search = ContentSearch::ContentViewSearch.new(:name => _("Content View"), :views => views)
+    render :json => view_search
   end
 
   def repos
@@ -272,21 +274,6 @@ class ContentSearchController < ApplicationController
         cols[env.id] = {:hover => container_hover_html(prod, env)} if env_ids.include?(env.id)
       end
       {:id=>"product_#{prod.id}", :name=>prod.name, :cols=>cols, :data_type => "product", :value => prod.name}
-    end
-  end
-
-  def view_rows(views)
-    env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
-    views.collect do |view|
-      cols = {}
-      view.environments.collect do |env|
-        if env_ids.include?(env.id)
-          version = view.version(env).try(:version)
-          display = version ? (_("version %s") % version) : ""
-          cols[env.id] = {:hover => container_hover_html(view, env), :display => display}
-        end
-      end
-      {:id=>"view_#{view.id}", :name=>view.name, :cols=>cols, :data_type => "view", :value => view.name}
     end
   end
 
@@ -524,6 +511,10 @@ class ContentSearchController < ApplicationController
       to_ret << row
     end
     to_ret
+  end
+
+  def setup_utils
+    ContentSearch::SearchUtils.current_organization = current_organization
   end
 
 end
