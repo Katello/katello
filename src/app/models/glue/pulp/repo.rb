@@ -174,18 +174,20 @@ module Glue::Pulp::Repo
       pre_queue.create(:name => "delete pulp repo : #{self.name}",       :priority => 3, :action => [self, :destroy_repo])
     end
 
+    def package_ids
+      Runcible::Extensions::Repository.rpm_ids(self.pulp_id)
+    end
 
     def packages
       if @repo_packages.nil?
         #we fetch ids and then fetch packages by id, because repo packages
         #  does not contain all the info we need (bz 854260)
-        pkg_ids = Runcible::Extensions::Repository.rpm_ids(self.pulp_id)
         tmp_packages = []
-        pkg_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
-          tmp_packages .concat(Runcible::Extensions::Rpm.find_all_by_unit_ids(sub_list))
+        self.package_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
+          tmp_packages.concat(Runcible::Extensions::Rpm.find_all_by_unit_ids(sub_list))
         end
+        self.packages = tmp_packages
       end
-      self.packages = tmp_packages
       @repo_packages
     end
 
@@ -268,10 +270,7 @@ module Glue::Pulp::Repo
     end
 
     def has_package? id
-      self.packages.each {|pkg|
-        return true if pkg.id == id
-      }
-      return false
+      self.package_ids.include?(id)
     end
 
     def find_packages_by_name name
