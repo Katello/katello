@@ -34,7 +34,7 @@ class Api::RepositorySetsController < Api::ApiController
   api :POST, "/product/:product_id/repository_set/:id/enable", "Enable a repository set for a product."
   param :organization_id, :identifier, :required => true, :desc => "id of an organization the repository will be contained in"
   param :product_id, :number, :required => true, :desc => "id of a product the repository will be contained in"
-  param :id, :number, :required => true, :desc => "id of the repository set to enable"
+  param :id, :number, :required => true, :desc => "id or name of the repository set to enable"
   def enable
     raise _('Repository sets are enabled by default for custom products..') if @product.custom?
     render :json=>@product.async(:organization=>@organization).refresh_content(@product_content.content.id)
@@ -66,6 +66,7 @@ class Api::RepositorySetsController < Api::ApiController
 
   def find_product_content
     @product_content = @product.product_content_by_id(params[:id])
+    @product_content ||= @product.product_content_by_name(params[:id])
     raise HttpErrors::NotFound, _("Couldn't find repository set with id.") % params[:id] if @product_content.nil?
   end
 

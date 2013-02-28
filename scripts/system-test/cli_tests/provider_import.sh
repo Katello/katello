@@ -19,6 +19,7 @@ MANIFEST_PATH="$TESTDIR/fake-manifest-syncable.zip"
 MANIFEST_REIMPORT_PATH="$TESTDIR/fake-manifest-syncable-without-nature.zip"
 MANIFEST_REPO_URL="http://inecas.fedorapeople.org/fakerepos/cds/"
 MANIFEST_EPROD="Zoo Enterprise"
+MANIFEST_CONTENT="Zoo Enterprise"
 MANIFEST_PROD="Zoo Enterprise 247"
 MANIFEST_PROD_CP="Zoo Enterprise 24/7"
 MANIFEST_REPO="Zoo Enterprise x86_64 $RELEASEVER"
@@ -33,8 +34,7 @@ test_success "org create for manifest ($MANIFEST_ORG)" org create --name="$MANIF
 test_success "env create for manifest ($MANIFEST_ENV)" environment create --org="$MANIFEST_ORG" --name="$MANIFEST_ENV" --prior Library
 test_success "update provider url" provider update --name "Red Hat" --org "$MANIFEST_ORG" --url "$MANIFEST_REPO_URL"
 test_success "import manifest" provider import_manifest --name "Red Hat" --org "$MANIFEST_ORG" --file "$MANIFEST_PATH" --force
-SET_ID=`$CMD product repository_sets  --org="$MANIFEST_ORG" --name="$MANIFEST_EPROD" | grep False | awk '{print $1}'`
-test_success "enable repo set" product repository_set_enable --name="$MANIFEST_EPROD" --org "$MANIFEST_ORG" --set_id=$SET_ID
+test_success "enable repo set" product repository_set_enable --name="$MANIFEST_EPROD" --org "$MANIFEST_ORG" --set_name="$MANIFEST_CONTENT"
 test_success "products refresh" provider refresh_products --name "Red Hat" --org "$MANIFEST_ORG"
 test_success "repo enable" repo enable --name="$MANIFEST_REPO" --product "$MANIFEST_EPROD" --org "$MANIFEST_ORG"
 test_success "repo synchronize" repo synchronize --name="$MANIFEST_REPO" --product "$MANIFEST_EPROD" --org "$MANIFEST_ORG"
