@@ -43,6 +43,16 @@ class Api::RepositorySetsControllerTest < MiniTest::Rails::ActionController::Tes
     assert_response :success
   end
 
+  test "enabling a reposet by name should call refresh_repositories" do
+     pc = Candlepin::ProductContent.new(:content=>{:id=>'3', :name=>'foo'})
+     Product.any_instance.stubs(:productContent).returns([pc])
+     Product.any_instance.expects(:async).returns(@redhat_product)
+     @redhat_product.expects(:refresh_content).with('3')
+
+     post :enable, {:product_id => @redhat_product.cp_id, :organization_id=>@org.label, :id=>'foo'}
+     assert_response :success
+   end
+
   test "disabling a reposet should call disable_content" do
     pc = Candlepin::ProductContent.new(:content=>{:id=>'3'})
     Product.any_instance.stubs(:productContent).returns([pc])
