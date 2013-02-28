@@ -388,7 +388,7 @@ class EnableRepositorySet(SingleProductAction):
     def setup_parser(self, parser):
         self.set_product_select_options(parser, False)
         parser.add_option('--set_name', dest='set_name',
-                           help=_("id of the repository set to enable"))
+                           help=_("name of the repository set to enable"))
 
     def check_options(self, validator):
         validator.require(('org', 'set_name'))
@@ -412,11 +412,11 @@ class EnableRepositorySet(SingleProductAction):
         )
 
 class DisableRepositorySet(SingleProductAction):
-    description = _('Disable  a repository set for a Red Hat product')
+    description = _('Disable a repository set for a Red Hat product')
     def setup_parser(self, parser):
         self.set_product_select_options(parser, False)
         parser.add_option('--set_name', dest='set_name',
-                           help=_("id of the repository set to disable"))
+                           help=_("name of the repository set to disable"))
 
     def check_options(self, validator):
         validator.require(('org', 'set_name'))
