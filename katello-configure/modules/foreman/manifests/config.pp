@@ -33,13 +33,12 @@ class foreman::config {
     comment => 'Foreman',
     home    => $foreman::app_root,
   }
-  
+
   file {
     "${foreman::log_base}":
       owner   => $foreman::user,
       group   => $foreman::group,
-      mode    => 640,
-      recurse => true;
+      mode    => 750;
 
     # create Rails logs in advance to get correct owners and permissions
     "${foreman::log_base}/production.log":
@@ -89,6 +88,15 @@ class foreman::config {
     creates     => "${foreman::app_root}/config/initializers/local_secret_token.rb",
   }
 
+  $foreman_config_cmd = "/usr/bin/ruby ${foreman::app_root}/script/foreman-config -k oauth_active -v '${foreman::oauth_active}'\
+                              -k foreman_url -v '${fqdn}'\
+                              -k token_duration -v '60'\
+                              -k manage_puppetca -v false\
+                              -k oauth_consumer_key -v '${foreman::oauth_consumer_key}'\
+                              -k oauth_consumer_secret -v '${foreman::oauth_consumer_secret}'\
+                              -k oauth_map_users -v '${foreman::oauth_map_users}'\
+                              -k administrator -v '${foreman::administrator}'"
+
   exec {"foreman_migrate_db":
     cwd         => $foreman::app_root,
     environment => ["RAILS_ENV=${foreman::environment}", "BUNDLER_EXT_NOSTRICT=1"],
@@ -104,14 +112,8 @@ class foreman::config {
   } ~>
 
   exec {"foreman_config":
-   command => "/usr/bin/ruby ${foreman::app_root}/script/foreman-config -k oauth_active -v '${foreman::oauth_active}'\
-                              -k foreman_url -v '${fqdn}'\
-                              -k token_duration -v '60'\
-                              -k manage_puppetca -v false\
-                              -k oauth_consumer_key -v '${foreman::oauth_consumer_key}'\
-                              -k oauth_consumer_secret -v '${foreman::oauth_consumer_secret}'\
-                              -k oauth_map_users -v '${foreman::oauth_map_users}'\
-                              -k administrator -v '${foreman::administrator}'",
+   command => $foreman_config_cmd,
+   unless  => "$foreman_config_cmd --dry-run",
    user    => $foreman::user,
    require => User[$foreman::user],
   }
