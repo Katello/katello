@@ -92,14 +92,14 @@ module Resources
           JSON.parse(super(path(uuid), self.default_headers).body).with_indifferent_access
         end
 
-        def create env_id, key, name, type, facts, installedProducts, autoheal=true, releaseVer=nil, service_level=""
+        def create env_id, key, name, type, facts, installed_products, autoheal=true, release_ver=nil, service_level=""
           url = "/candlepin/environments/#{url_encode(env_id)}/consumers/"
           attrs = {:name => name,
                    :type => type,
                    :facts => facts,
-                   :installedProducts => installedProducts,
+                   :installedProducts => installed_products,
                    :autoheal => autoheal,
-                   :releaseVer => releaseVer,
+                   :releaseVer => release_ver,
                    :serviceLevel => service_level}
           response = self.post(url, attrs.to_json, self.default_headers).body
           JSON.parse(response).with_indifferent_access
@@ -113,11 +113,11 @@ module Resources
           JSON.parse(response).with_indifferent_access
         end
 
-        def update(uuid, facts, guest_ids = nil, installedProducts = nil, autoheal = nil, releaseVer = nil, service_level=nil, environment_id=nil)
+        def update(uuid, facts, guest_ids = nil, installed_products = nil, autoheal = nil, release_ver = nil, service_level=nil, environment_id=nil)
           attrs = {:facts => facts,
                    :guestIds => guest_ids,
-                   :releaseVer => releaseVer,
-                   :installedProducts => installedProducts,
+                   :releaseVer => release_ver,
+                   :installedProducts => installed_products,
                    :autoheal => autoheal,
                    :serviceLevel => service_level,
                    :environment => environment_id.nil? ? nil : {:id => environment_id} }.delete_if {|k,v| v.nil?}
@@ -294,16 +294,16 @@ module Resources
 
         def pools key, filter = {}
           if key
-            jsonStr = self.get(join_path(path(key), 'pools') + hash_to_query(filter), self.default_headers).body
+            json_str = self.get(join_path(path(key), 'pools') + hash_to_query(filter), self.default_headers).body
           else
-            jsonStr = self.get(join_path('candlepin', 'pools') + hash_to_query(filter), self.default_headers).body
+            json_str = self.get(join_path('candlepin', 'pools') + hash_to_query(filter), self.default_headers).body
           end
-          Util::Data::array_with_indifferent_access JSON.parse(jsonStr)
+          Util::Data::array_with_indifferent_access JSON.parse(json_str)
         end
 
         def statistics key
-          jsonStr = self.get(join_path(path(key), 'statistics'), self.default_headers).body
-          Util::Data::array_with_indifferent_access JSON.parse(jsonStr)
+          json_str = self.get(join_path(path(key), 'statistics'), self.default_headers).body
+          Util::Data::array_with_indifferent_access JSON.parse(json_str)
         end
 
         def generate_ueber_cert key
