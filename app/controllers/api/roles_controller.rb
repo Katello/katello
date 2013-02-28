@@ -89,13 +89,13 @@ class Api::RolesController < Api::ApiController
   def available_verbs
     details= {}
 
-    orgId = @organization ? @organization.id : nil
+    org_id = @organization ? @organization.id : nil
 
     ResourceType::TYPES.each do |type, value|
       details[type] = {}
       details[type][:verbs] = Verb.verbs_for(type, false).collect {|name, display_name| VirtualTag.new(name, display_name)}
       details[type][:verbs].sort! {|a,b| a.display_name <=> b.display_name}
-      details[type][:tags] = Tag.tags_for(type, orgId).collect { |t| VirtualTag.new(t.name, t.display_name) }
+      details[type][:tags] = Tag.tags_for(type, org_id).collect { |t| VirtualTag.new(t.name, t.display_name) }
       details[type][:no_tag_verbs] = Verb.no_tag_verbs(type)
       details[type][:global] = value["global"]
       details[type][:name] = value["name"]

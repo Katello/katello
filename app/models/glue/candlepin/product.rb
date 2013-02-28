@@ -42,7 +42,7 @@ module Glue::Candlepin::Product
   end
 
   def self.import_from_cp(attrs=nil, &block)
-    productContent_attrs = attrs.delete(:productContent) || []
+    product_content_attrs = attrs.delete(:productContent) || []
     import_logger        = attrs[:import_logger]
 
     attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Katello::ModelUtils::labelize(attrs['name']))
@@ -51,7 +51,7 @@ module Glue::Candlepin::Product
     product.orchestration_for = :import_from_cp_ar_setup
     product.save!
     product.productContent_will_change!
-    product.productContent = product.build_productContent(productContent_attrs)
+    product.productContent = product.build_productContent(product_content_attrs)
     product.orchestration_for = :import_from_cp
     product.save!
 
