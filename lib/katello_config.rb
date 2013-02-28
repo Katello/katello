@@ -353,7 +353,7 @@ module Katello
         config[:use_cp] = true if config[:use_cp].nil?
         config[:use_pulp] = config.katello? if config[:use_pulp].nil?
         config[:use_foreman] = config.katello? if config[:use_foreman].nil?
-        config[:use_elasticsearch] = config.katello? if config[:use_elasticsearch].nil?
+        config[:use_elasticsearch] = true if config[:use_elasticsearch].nil?
 
         config[:email_reply_address] = if config[:email_reply_address]
                                          config[:email_reply_address]

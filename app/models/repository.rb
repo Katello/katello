@@ -71,6 +71,9 @@ class Repository < ActiveRecord::Base
     joins(:environment_product).where("environment_products.product_id" => product.id)
   end
 
+  def self.in_content_views(views)
+    joins(:content_view_version).where('content_view_versions.content_view_id' => views.map(&:id))
+  end
 
   def in_default_view?
     content_view_version && content_view_version.has_default_content_view?
@@ -171,8 +174,10 @@ class Repository < ActiveRecord::Base
     org, env, content_path = repo.relative_path.split("/",3)
     if for_cp
       "/#{content_path}"
-    elsif content_view.default? || !environment.library
-      # note, if this is a non-library environment, the content view has already been
+    elsif (content_view.default? || !environment.library) &&
+        !content_view.content_view_definition.try(:composite?)
+      # if this repo is in a non-library environment and is not related to a
+      # composite content view definition, the content view has already been
       # added to the path, so we do not need to add it again
       "#{org}/#{environment.label}/#{content_path}"
     else

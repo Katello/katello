@@ -75,6 +75,12 @@ class UserCreateTest < UserTestBase
     assert_includes @user.errors, :password
   end
 
+  def test_create_with_bad_username
+    @user.username = 'bad_<blink>hacker</blink>'
+    assert !@user.save
+    assert_includes @user.errors, :username
+  end
+
   def test_before_create_self_role
     @user.save
 

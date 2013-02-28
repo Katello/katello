@@ -202,20 +202,6 @@ describe Product, :katello => true do
     end
 
     context "when importing product from candlepin" do
-      before do
-        Resources::Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
-        Resources::Candlepin::Product.stub!(:remove_content).and_return({})
-        Resources::Candlepin::Content.stub!(:create).and_return({:id => "123"})
-
-        #@p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
-        #@key = EnvironmentProduct.find_or_create(@organization.library, @p)
-        #@repo = Repository.create!(:pulp_id => '123' , :environment_product => key)
-      end
-
-      it "should preserve repository metadata" do
-        Repository.should_receive(:create!).once.with(hash_including(:name => 'some-name33', :preserve_metadata => true, :content_type => "yum"))
-        Glue::Candlepin::Product.import_from_cp(ProductTestData::PRODUCT_WITH_CP_CONTENT)
-      end
 
       context "marketing product" do
         let(:eng_product_after_import) do
@@ -258,16 +244,19 @@ describe Product, :katello => true do
           end
           env_product = mock_model(EnvironmentProduct, {:id => 1})
           EnvironmentProduct.stub(:find_or_create).and_return(env_product)
+          env_product.stub(:environment).and_return(@organization.library)
 
           @product = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
           @product.orchestration_for = :import_from_cp
+
+          @product.productContent.each{|pc| pc.product = @product} #fake pc can't easily keep track of its product
         end
 
         it "should determine major and minor version of the product" do
           Repository.should_receive(:create!).once.with(hash_including(:major => 6, :minor => '6Server'))
           Repository.should_receive(:create!).once.with(hash_including(:major => 6, :minor => '6.0'))
           Repository.should_receive(:create!).once.with(hash_including(:major => 6, :minor => '6.1'))
-          @product.save!
+          @product.productContent.first.refresh_repositories
         end
       end
 
@@ -285,11 +274,13 @@ describe Product, :katello => true do
 
           env_product = mock_model(EnvironmentProduct, {:id => 1})
           EnvironmentProduct.stub(:find_or_create).and_return(env_product)
-
+          env_product.stub(:environment).and_return(@organization.library)
           p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
           p.stub(:attrs => [{:name => 'arch', :value => 'x86_64,i386'}])
           p.orchestration_for = :import_from_cp
+          p.productContent.each{|pc| pc.product = p} #fake pc can't easily keep track of its product
           p.save!
+          p.productContent.first.refresh_repositories
         end
 
         describe "repository for product content" do
