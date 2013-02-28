@@ -339,13 +339,13 @@ module Glue::Candlepin::Consumer
       "true" == facts["system.entitlements_valid"]
     end
 
-    def checkinTime
+    def checkin_time
       if lastCheckin
         convert_time(lastCheckin)
       end
     end
 
-    def createdTime
+    def created_time
       if created
         convert_time(created)
       end
