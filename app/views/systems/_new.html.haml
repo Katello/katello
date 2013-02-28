@@ -20,10 +20,6 @@
         .grid_8#new_system
           = form.text_field :name, :label => _("Name of Your System:")
 
-          - if Katello.config.katello?
-            = form.field :content_view_id, :label => _("Content View:") do
-              = content_view_select(current_organization)
-
           = form.field :arch, :label => _("Architecture:") do
             = architecture_select
 
@@ -38,7 +34,16 @@
             - if envsys
               = @environment.name
             - else
-              = environment_selector(:path_widget_class => "grid_5", :path_entries_class => "grid_5", :library_clickable => false, :accessible_envs => accessible_envs, :url_products_proc => url_products_proc)
+              = environment_selector(:path_widget_class => "grid_5",
+                  :path_entries_class => "grid_5", :library_clickable => false,
+                  :accessible_envs => accessible_envs,
+                  :url_products_proc => url_products_proc,
+                  :url_content_views_proc => url_content_views_proc)
+
+          - if Katello.config.katello?
+            = form.field :content_view_id, :label => _("Content View:") do
+              = content_view_select(current_organization, @environment)
+
 
           = form.submit _("Save")
 - else
@@ -46,5 +51,12 @@
     #{_("New system")}
     = content_for :content do
       #{_("You need to create an environment for this org before you can create a system.")}
+
+= javascript do
+  :plain
+    localize({
+        "noContentView": '#{no_content_view}',
+        "update_view": '#{escape_javascript(_('Select a View'))}'
+    });
 
 = render :template => "layouts/tupane_layout"

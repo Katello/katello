@@ -17,6 +17,7 @@ class Api::DistributorsController < Api::ApiController
   before_filter :find_optional_organization, :only => [:create, :hypervisors_update, :index, :activate, :report, :tasks]
   before_filter :find_only_environment, :only => [:create]
   before_filter :find_environment, :only => [:create, :index, :report, :tasks]
+  before_filter :find_environment_and_content_view, :only => [:create]
   before_filter :find_distributor, :only => [:destroy, :show, :update,
                                         :subscribe, :unsubscribe, :subscriptions, :pools]
   before_filter :find_task, :only => [:task_show]
@@ -53,26 +54,29 @@ class Api::DistributorsController < Api::ApiController
     }
   end
 
+  def_param_group :distributors do
+    param :name, String, :desc => "Name of the distributor", :required => true, :action_aware => true
+    param :facts, Hash, :desc => "Key-value hash of distributor-specific facts"
+    param :installedProducts, Array, :desc => "List of products installed on the distributor"
+    param :serviceLevel, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT"
+    param :releaseVer, String, :desc => "Release of the os. The $releasever variable in repo url will be replaced with this value"
+    param :location, String, :desc => "Physical of the distributor"
+  end
+
   # this method is called from katello cli client and it does not work with activation keys
   # for activation keys there is method activate (see custom routes)
   api :POST, "/environments/:environment_id/distributors", "Register a distributor in environment"
-  param :facts, Hash, :desc => "Key-value hash of distributor-specific facts"
-  param :installedProducts, Array, :desc => "List of products installed on the distributor"
-  param :name, String, :desc => "Name of the distributor", :required => true
+  param_group :distributors
   param :type, String, :desc => "Type of the distributor, it should always be 'distributor'", :required => true
-  param :serviceLevel, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT"
   def create
-    distributor = Distributor.create!(params.merge({:environment => @environment, :serviceLevel => params[:service_level]}))
+    distributor = Distributor.create!(params.merge({:environment => @environment,
+                                                    :content_view => @content_view,
+                                                    :serviceLevel => params[:service_level]}))
     render :json => distributor.to_json
   end
 
   api :PUT, "/distributors/:id", "Update distributor information"
-  param :facts, Hash, :desc => "Key-value hash of distributor-specific facts"
-  param :installedProducts, Array, :desc => "List of products installed on the distributor"
-  param :name, String, :desc => "Name of the distributor"
-  param :serviceLevel, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT"
-  param :releaseVer, String, :desc => "Release of the os. The $releasever variable in repo url will be replaced with this value"
-  param :location, String, :desc => "Physical of the distributor"
+  param_group :distributors
   def update
     @distributor.update_attributes!(params.slice(:name, :description, :location, :facts, :guestIds, :installedProducts, :releaseVer, :serviceLevel, :environment_id))
     render :json => @distributor.to_json

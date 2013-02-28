@@ -27,6 +27,7 @@ class Distributor < ActiveRecord::Base
 
   has_many :task_statuses, :as => :task_owner, :dependent => :destroy
   has_many :custom_info, :as => :informable, :dependent => :destroy
+  belongs_to :content_view
 
   validates :environment, :presence => true
   validates_with Validators::NonLibraryEnvironmentValidator, :attributes => :environment
@@ -35,6 +36,8 @@ class Distributor < ActiveRecord::Base
   validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_length_of :location, :maximum => 255
+  validate :content_view_in_environment
+
   before_create  :fill_defaults
 
   after_create :init_default_custom_info_keys
@@ -74,6 +77,7 @@ class Distributor < ActiveRecord::Base
   def as_json(options)
     json = super(options)
     json['environment'] = environment.as_json unless environment.nil?
+    json['content_view'] = content_view.as_json if content_view
     json
   end
 
@@ -110,6 +114,12 @@ class Distributor < ActiveRecord::Base
       hash = {}
       self.custom_info.each{ |c| hash[c.keyname] = c.value} if self.custom_info
       hash
+    end
+
+    def content_view_in_environment
+      if content_view.present? && !content_view.environments.include?(environment)
+        errors.add(:base, _("Content view is not in environment '%s'.") % environment.name)
+      end
     end
 
 end

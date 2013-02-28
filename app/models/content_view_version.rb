@@ -99,6 +99,7 @@ class ContentViewVersion < ActiveRecord::Base
         # this repo no longer exists in the definition, so destroy it
         repo.destroy
       end
+      library_version.reload
     end
     PulpTaskStatus::wait_for_tasks async_tasks unless async_tasks.blank?
 
@@ -136,11 +137,11 @@ class ContentViewVersion < ActiveRecord::Base
   private
 
   def add_environment(env)
-    self.content_view.add_environment(env)
+    content_view.add_environment(env)
   end
 
   def remove_environment(env)
-    self.content_view.remove_environment(env)
+    content_view.remove_environment(env)
   end
 
 end
