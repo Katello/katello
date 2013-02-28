@@ -59,7 +59,10 @@ class ContentSearchController < ApplicationController
     elsif params[:mode] == 'unique'
       products = products.select{|p|  !(envs - p.environments ).empty?}
     end
-    render :json=>{:rows=>product_rows(products), :name=>_('Products')}
+
+    product_search = ContentSearch::ProductSearch.new(:name => _('Products'),
+                                                      :products => products)
+    render :json => product_search
   end
 
   def views
@@ -264,17 +267,6 @@ class ContentSearchController < ApplicationController
 
   def repo_hover_html repo
     render_to_string :partial=>'repo_hover', :locals=>{:repo=>repo}
-  end
-
-  def product_rows(products)
-    env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
-    products.collect do |prod|
-      cols = {}
-      prod.environments.collect do |env|
-        cols[env.id] = {:hover => container_hover_html(prod, env)} if env_ids.include?(env.id)
-      end
-      {:id=>"product_#{prod.id}", :name=>prod.name, :cols=>cols, :data_type => "product", :value => prod.name}
-    end
   end
 
   def container_hover_html(container, environment)

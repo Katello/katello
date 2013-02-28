@@ -19,7 +19,6 @@ class ContentSearch::ContentViewSearch < ContentSearch::ContainerSearch
   end
 
   def build_rows(views)
-    env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
     self.views.collect do |view|
       cols = {}
       view.environments.collect do |env|
