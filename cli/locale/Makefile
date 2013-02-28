@@ -1,6 +1,6 @@
 
-SRC_DIR     = ../src/katello
-POFILES = $(shell ls *.po)
+SRC_DIR = ../src/katello
+POFILES = $(shell find . -name '*.po')
 MOFILES = $(patsubst %.po,%.mo,$(POFILES))
 
 .PHONY: POTFILES.in
