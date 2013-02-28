@@ -13,58 +13,56 @@ require 'spec_helper'
 
 require 'webmock'
 include WebMock::API
+require 'helpers/config_helper_spec'
 
 
 describe Ping do
 
-  it "should ping candlepin, elasticsearch, thumbslug, candlepin_oauth, and katello-jobs", :headpin => true do
+  describe "#ping" do
+    before do
+      # candlepin - without oauth
+      stub_request(:get, "#{Katello.config.candlepin.url}/status")
 
-    # candlepin - without oauth
-    stub_request(:get, "#{Katello.config.candlepin.url}/status")
+      # elastic search - without oauth
+      stub_request(:get, "#{Katello.config.elastic_url}/_status")
 
-    # elastic search - without oauth
-    stub_request(:get, "#{Katello.config.elastic_url}/_status")
+      # candlepin - with oauth
+      Resources::Candlepin::CandlepinPing.stub!(:ping).and_return()
 
-    # thumbslug - without authentication
-    stub_request(:get, "#{Katello.config.thumbslug_url}/ping").to_raise(OpenSSL::SSL::SSLError)
+      # katello jobs
+      Ping.should_receive(:system).with("/sbin/service katello-jobs status").and_return(true)
+    end
 
-    # candlepin - with oauth
-    Resources::Candlepin::CandlepinPing.stub!(:ping).and_return()
+    context "headpin mode" do
+      before do
+        stub_headpin_mode
 
-    # katello jobs
-    Ping.should_receive(:system).with("/sbin/service katello-jobs status").and_return(true)
+        # thumbslug - without authentication
+        stub_request(:get, "#{Katello.config.thumbslug_url}/ping").to_raise(OpenSSL::SSL::SSLError)
+      end
 
-    result = Ping.ping()
-    result[:result].should == "ok"
-  end
+      subject { Ping.ping[:result] }
+      it(:headpin => true) { should eql('ok') }
+    end
 
-  it "should ping pulp, candlepin, elasticsearch, pulp_oauth, candlepin_oauth, foreman_oauth, and katello-jobs", :katello => true do
+    context "katello mode" do
+      before do
+        # pulp - without oauth
+        stub_request(:get, "#{Katello.config.pulp.url}/services/status/") # gotta have that trailing slash
 
-    # pulp - without oauth
-    stub_request(:get, "#{Katello.config.pulp.url}/services/status/") # gotta have that trailing slash
+        # pulp - with oauth
+        Runcible::Resources::User.stub!(:retrieve_all).and_return()
 
-    # candlepin - without oauth
-    stub_request(:get, "#{Katello.config.candlepin.url}/status")
+        # foreman - with oauth
+        Resources::ForemanModel.stub!(:header).and_return(true)
+        Resources::Foreman::Home.stub!(:status).and_return()
 
-    # elastic search - without oauth
-    stub_request(:get, "#{Katello.config.elastic_url}/_status")
+        Ping.should_receive(:pulp_without_oauth).and_return(nil)
+      end
 
-    # pulp - with oauth
-    Runcible::Resources::User.stub!(:retrieve_all).and_return()
+      subject { Ping.ping[:result] }
+      it(:katello => true) { should eql('ok') }
+    end
 
-    # candlepin - with oauth
-    Resources::Candlepin::CandlepinPing.stub!(:ping).and_return()
-
-    # foreman - with oauth
-    Resources::ForemanModel.stub!(:header).and_return(true)
-    Resources::Foreman::Home.stub!(:status).and_return()
-
-    # katello jobs
-    Ping.should_receive(:system).with("/sbin/service katello-jobs status").and_return(true)
-
-    Ping.should_receive(:pulp_without_oauth).and_return(nil)
-
-    result = Ping.ping()
-    result[:result].should == "ok"
   end
 end
