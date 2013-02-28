@@ -35,6 +35,7 @@ uniq-po:
 all-mo: $(MOFILES)
 
 clean:
-	rm -f POTFILES.in *.mo
+	rm -f POTFILES.in
+	find . -name "*.mo" -exec rm '{}' ';'
 	rm -rf build
 
