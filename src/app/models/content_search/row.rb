@@ -12,6 +12,8 @@
 
 class ContentSearch::Row
   attr_accessor :id, :name, :cells, :data_type, :value, :parent_id, :comparable
+  alias :cols :cells
+  alias :cols= :cells=
 
   def initialize(options)
     options.each do |key, value|
