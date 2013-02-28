@@ -32,6 +32,7 @@ class ContentViewDefinitionsController < ApplicationController
     index_rule   = lambda { ContentViewDefinition.any_readable?(current_organization) }
     show_rule    = lambda { @view_definition.readable? }
     manage_rule  = lambda { @view_definition.editable? }
+    delete_rule  = lambda { @view_definition.deletable? }
     publish_rule = lambda { @view_definition.publishable? }
     refresh_rule = lambda { @view.content_view_definition.publishable? }
     create_rule  = lambda { ContentViewDefinition.creatable?(current_organization) }
@@ -51,7 +52,7 @@ class ContentViewDefinitionsController < ApplicationController
       :publish_setup => publish_rule,
       :publish => publish_rule,
 
-      :destroy => manage_rule,
+      :destroy => delete_rule,
 
       :views => show_rule,
       :refresh => refresh_rule,
