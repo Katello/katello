@@ -46,32 +46,17 @@ class ContentSearchController < ApplicationController
   end
 
   def products
-    ids = param_product_ids
-    if !ids.empty?
-      products = current_organization.products.readable(current_organization).engineering.where(:id=>ids)
-    else
-      products = current_organization.products.readable(current_organization).engineering
-    end
-
-    envs = process_env_ids
-    if params[:mode] == 'shared'
-      products = products.select{|p|  (envs - p.environments).empty? }
-    elsif params[:mode] == 'unique'
-      products = products.select{|p|  !(envs - p.environments ).empty?}
-    end
-
     product_search = ContentSearch::ProductSearch.new(:name => _('Products'),
-                                                      :products => products)
+                                                      :product_ids => param_product_ids
+                                                     )
     render :json => product_search
   end
 
   def views
-    if !(ids = params[:views][:autocomplete].map{|v| v["id"]} rescue []).empty?
-      views = ContentView.readable(current_organization).non_default.where(:id => ids)
-    else
-      views = ContentView.readable(current_organization).non_default
-    end
-    view_search = ContentSearch::ContentViewSearch.new(:name => _("Content View"), :views => views)
+    ids = params[:views][:autocomplete].map{|v| v["id"]} rescue nil
+    view_search = ContentSearch::ContentViewSearch.new(:name => _("Content View"),
+                                                       :view_ids => ids
+                                                      )
     render :json => view_search
   end
 
@@ -507,6 +492,8 @@ class ContentSearchController < ApplicationController
 
   def setup_utils
     ContentSearch::SearchUtils.current_organization = current_organization
+    ContentSearch::SearchUtils.mode = params[:mode]
+    ContentSearch::SearchUtils.env_ids = params[:environments]
   end
 
 end

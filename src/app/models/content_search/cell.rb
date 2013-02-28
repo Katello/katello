@@ -11,21 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class ContentSearch::Cell
+  include ContentSearch::Element
   attr_accessor :id, :display, :hover, :content
-
-  def initialize(options)
-    options.each do |key, value|
-      send("#{key}=", value)
-    end
-  end
-
-  def as_json(options = {})
-    {
-     :id => self.id,
-     :display => self.display,
-     :hover => self.hover,
-     :content => self.content
-    }
-  end
-
 end
