@@ -93,7 +93,7 @@ sed -e 's/THE_VERSION/%{version}/g' katello-debug-certificates.pod |\
 popd
 
 #check locale file
-for i in po/*.po; do
+for i in locale/*.po; do
     msgfmt -c $i
     FILE=$(mktemp)
     # TODO - enable endwhitespace, endpunc, puncspacing, options filters
@@ -104,7 +104,7 @@ for i in po/*.po; do
 done
 
 # create locale files
-make -C po all-mo
+make -C locale all-mo
 
 %install
 install -d %{buildroot}%{_bindir}/
@@ -136,10 +136,10 @@ install -m 0644 man/headpin.man1 %{buildroot}%{_mandir}/man1/headpin.1
 install -m 0644 man/%{base_name}-debug-certificates.man1 %{buildroot}%{_mandir}/man1/%{base_name}-debug-certificates.1
 
 # install locale files
-for lang in $(ls po/*.po); do
+for lang in $(ls locale/*.po); do
     code=$(basename "$lang" ".po")
     install -d %{buildroot}%{locale_dir}/${code}/LC_MESSAGES/
-    install -pm 0644 po/${code}.mo %{buildroot}%{locale_dir}/${code}/LC_MESSAGES/%{base_name}-cli.mo
+    install -pm 0644 locale/${code}.mo %{buildroot}%{locale_dir}/${code}/LC_MESSAGES/%{base_name}-cli.mo
 done
 %find_lang %{name}
 
@@ -175,7 +175,7 @@ popd
 
 %clean
 # clean locale files
-make -C po clean
+make -C locale clean
 
 %changelog
 * Wed Jan 30 2013 Justin Sherrill <jsherril@redhat.com> 1.3.4-1
