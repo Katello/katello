@@ -10,9 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'util/threadsession'
-require 'util/model_util'
-
 class Api::ApiController < ActionController::Base
   include ActionController::HttpAuthentication::Basic
   include Profiling
@@ -44,7 +41,7 @@ class Api::ApiController < ActionController::Base
   rescue_from Errors::UsageLimitExhaustedException, :with => proc { |e| render_exception_without_logging(HttpErrors::CONFLICT, e) }
 
   # support for session (thread-local) variables must be the last filter in this class
-  include Katello::ThreadSession::Controller
+  include Util::ThreadSession::Controller
   include AuthorizationRules
 
   def set_locale
@@ -275,7 +272,7 @@ class Api::ApiController < ActionController::Base
     label = params[:label]
     if params[:label].blank?
       # Convert name to label
-      label = Katello::ModelUtils::labelize(params[:name])
+      label = Util::Model::labelize(params[:name])
     end
     label
   end

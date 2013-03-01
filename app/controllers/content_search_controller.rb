@@ -9,7 +9,7 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-require 'util/package_util'
+
 class ContentSearchController < ApplicationController
 
   include ContentSearchHelper
@@ -489,7 +489,7 @@ class ContentSearchController < ApplicationController
       end
     end
     repoids = repos.collect{|r| r.pulp_id}
-    Katello::PackageUtils.setup_shared_unique_filter(repoids, search_mode, search)
+    Util::Package.setup_shared_unique_filter(repoids, search_mode, search)
     search.perform.results
   rescue Tire::Search::SearchRequestFailed => e
     Util::Support.array_with_total

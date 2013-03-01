@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'util/model_util'
-
 module Glue::Candlepin::Product
 
   def self.included(base)
@@ -45,7 +43,7 @@ module Glue::Candlepin::Product
     productContent_attrs = attrs.delete(:productContent) || []
     import_logger        = attrs[:import_logger]
 
-    attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Katello::ModelUtils::labelize(attrs['name']))
+    attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Util::Model::labelize(attrs['name']))
 
     product = Product.new(attrs, &block)
     product.orchestration_for = :import_from_cp_ar_setup
@@ -63,7 +61,7 @@ module Glue::Candlepin::Product
   end
 
   def self.import_marketing_from_cp(attrs, engineering_product_ids, &block)
-    attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Katello::ModelUtils::labelize(attrs['name']))
+    attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Util::Model::labelize(attrs['name']))
 
     product = MarketingProduct.new(attrs, &block)
     product.orchestration_for = :import_from_cp_ar_setup

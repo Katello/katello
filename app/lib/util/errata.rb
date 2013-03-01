@@ -12,7 +12,7 @@
 
 # The Errata module contains methods that are common for supporting errata
 # in several controllers (e.g. SystemErrataController and SystemGroupErrataController)
-module Katello
+module Util
   module Errata
     def filter_by_type errata_list, filter_type
       filtered_list = []

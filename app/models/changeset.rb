@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'util/package_util'
-
 class Changeset < ActiveRecord::Base
 
   include AsyncOrchestration
@@ -267,7 +265,7 @@ class Changeset < ActiveRecord::Base
   end
 
   def find_package_data(product, name_or_nvre)
-    package_data = Katello::PackageUtils.parse_nvrea_nvre(name_or_nvre)
+    package_data = Util::Package.parse_nvrea_nvre(name_or_nvre)
 
     if package_data
       packs = product.find_packages_by_nvre(env_to_verify_on_add_content,
@@ -276,7 +274,7 @@ class Changeset < ActiveRecord::Base
     end
 
     if packs.blank? || !package_data
-       packs = Katello::PackageUtils::find_latest_packages(
+       packs = Util::Package::find_latest_packages(
                   product.find_packages_by_name(env_to_verify_on_add_content, name_or_nvre))
     end
 
