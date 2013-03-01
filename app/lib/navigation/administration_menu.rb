@@ -17,6 +17,10 @@ module Navigation
       end
     end
 
+    def admin_main
+      [ menu_administration ]
+    end
+
     def user_navigation
       [
         { :key => :environment,

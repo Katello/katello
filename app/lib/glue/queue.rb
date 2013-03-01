@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'task'
 # represents tasks queue for glue
 module Glue
   class Queue
@@ -28,9 +27,7 @@ module Glue
 
     def create options
       options[:status] ||= default_status
-      item             = Task.new(options)
-      items << item
-      item
+      Task.new(options).tap { |t| items << t }
     end
 
     def delete item

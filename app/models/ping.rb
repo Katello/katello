@@ -12,8 +12,6 @@
 
 #:nocov:
 
-require 'rest_client'
-
 class Ping
   class << self
 
