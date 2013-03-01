@@ -339,13 +339,13 @@ module Glue::Candlepin::Consumer
       "true" == facts["system.entitlements_valid"]
     end
 
-    def checkinTime
+    def checkin_time
       if lastCheckin
         convert_time(lastCheckin)
       end
     end
 
-    def createdTime
+    def created_time
       if created
         convert_time(created)
       end
@@ -391,23 +391,23 @@ module Glue::Candlepin::Consumer
       end
       avail_pools = pools.collect {|pool|
         sockets = ""
-        multiEntitlement = false
-        supportLevel = ""
+        multi_entitlement = false
+        support_level = ""
         pool["productAttributes"].each do |attr|
           if attr["name"] == "sockets"
             sockets = attr["value"]
           elsif attr["name"] == "multi-entitlement"
-            multiEntitlement = true
+            multi_entitlement = true
           elsif attr["name"] == "support_level"
-            supportLevel = attr["value"]
+            support_level = attr["value"]
           end
         end
 
-        providedProducts = []
+        provided_products = []
         pool["providedProducts"].each do |cp_product|
           product = ::Product.where(:cp_id => cp_product["productId"]).first
           if product
-            providedProducts << product
+            provided_products << product
           end
         end
 
@@ -418,9 +418,9 @@ module Glue::Candlepin::Consumer
                        :consumed => pool["consumed"],
                        :quantity => pool["quantity"],
                        :sockets => sockets,
-                       :supportLevel => supportLevel,
-                       :multiEntitlement => multiEntitlement,
-                       :providedProducts => providedProducts)
+                       :supportLevel => support_level,
+                       :multiEntitlement => multi_entitlement,
+                       :providedProducts => provided_products)
       }
       avail_pools.sort! {|a,b| a.poolName <=> b.poolName}
       avail_pools
@@ -441,11 +441,11 @@ module Glue::Candlepin::Consumer
           end
         end
 
-        providedProducts = []
+        provided_products = []
         pool["providedProducts"].each do |cp_product|
           product = ::Product.where(:cp_id => cp_product["productId"]).first
           if product
-            providedProducts << product
+            provided_products << product
           end
         end
 
@@ -469,7 +469,7 @@ module Glue::Candlepin::Consumer
                        :endDate => Date.parse(pool["endDate"]),
                        :startDate => Date.parse(pool["startDate"]),
                        :contractNumber => pool["contractNumber"],
-                       :providedProducts => providedProducts)
+                       :providedProducts => provided_products)
       }
       consumed_entitlements.sort! {|a,b| a.poolName <=> b.poolName}
       consumed_entitlements
