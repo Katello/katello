@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'util/errata'
-
 class SystemErrataController < ApplicationController
 
   before_filter :find_system, :only =>[:install, :index, :items, :status]
@@ -80,7 +78,7 @@ class SystemErrataController < ApplicationController
   private
 
   include SortColumnList
-  include Katello::Errata
+  include Util::Errata
 
   def get_errata start, finish, filter_type="All", errata_state="outstanding"
     types = [Errata::SECURITY, Errata::ENHANCEMENT, Errata::BUGZILLA]

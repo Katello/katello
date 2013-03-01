@@ -25,14 +25,14 @@ module Glue::ElasticSearch::Errata
                             "min_gram"  => 3,
                             "max_gram"  => 40
                         }
-                    }.merge(Katello::Search::custom_filters),
+                    }.merge(Util::Search::custom_filters),
                     "analyzer" => {
                         "title_analyzer" => {
                             "type"      => "custom",
                             "tokenizer" => "keyword",
                             "filter"    => ["standard", "lowercase", "asciifolding", "ngram_filter"]
                         }
-                    }.merge(Katello::Search::custom_analyzers)
+                    }.merge(Util::Search::custom_analyzers)
                 }
             }
         }
@@ -126,7 +126,7 @@ module Glue::ElasticSearch::Errata
         if filters.has_key?(:repoids)
           search_mode = filters[:search_mode] || :all
           repoids = filters[:repoids]
-          Katello::PackageUtils.setup_shared_unique_filter(repoids, search_mode, search)
+          Util::Package.setup_shared_unique_filter(repoids, search_mode, search)
         end
 
         return search.perform.results
