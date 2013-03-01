@@ -141,19 +141,21 @@ describe Api::SyncController, :katello => true do
 
     describe "find_object" do
 
+      subject { controller.send(:find_object) }
+
       it "should find provider if :provider_id is specified" do
         found_provider = {}
         Provider.should_receive(:find).once.with(provider_id).and_return(found_provider)
         controller.stub!(:params).and_return({:provider_id => provider_id })
 
-        controller.find_object.should == found_provider
+        subject.should == found_provider
       end
 
       it "should find product if :product_id is specified" do
         stub_product_with_repo
         controller.stub!(:params).and_return({:organization_id => @organization.label, :product_id => @product.id })
 
-        controller.find_object.should == @product
+        subject.should == @product
       end
 
       it "should find repository if :repository_id is specified" do
@@ -163,11 +165,11 @@ describe Api::SyncController, :katello => true do
         Repository.should_receive(:find).once.with(repository_id).and_return(found_repository)
         controller.stub!(:params).and_return({:repository_id => repository_id })
 
-        controller.find_object.should == found_repository
+        subject.should == found_repository
       end
 
       it "should raise an error if none were specified" do
-        lambda { controller.find_object }.should raise_error(HttpErrors::NotFound)
+        lambda { subject }.should raise_error(HttpErrors::NotFound)
       end
     end
 

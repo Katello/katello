@@ -18,15 +18,15 @@ module SystemsHelper
   end
 
   def get_checkin(system)
-    if system.checkinTime
-      return  format_time(system.checkinTime)
+    if system.checkin_time
+      return  format_time(system.checkin_time)
     end
     _("Never checked in")
   end
 
   def get_registered(system)
-    if system.createdTime
-      return  format_time(system.createdTime)
+    if system.created_time
+      return  format_time(system.created_time)
     end
     _("Unknown registration date")
   end
