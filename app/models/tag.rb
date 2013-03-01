@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'util/model_util'
-
 class Tag
   def self.formatted(resource_type_name, tag_id)
     model_klass = ResourceType::TYPES[resource_type_name][:model]

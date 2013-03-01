@@ -22,14 +22,14 @@ require 'digest/sha2'
 module Password
 
   # Generates a new salt and rehashes the password
-  def Password.update(password)
+  def self.update(password)
     salt = self.salt
     hash = self.hash(password, salt)
     self.store(hash, salt)
   end
 
   # Checks the password against the stored password
-  def Password.check(password, store)
+  def self.check(password, store)
     hash = self.get_hash(store)
     salt = self.get_salt(store)
     if self.hash(password, salt) == hash
@@ -44,9 +44,9 @@ module Password
     length.to_i.times.collect { (i = Kernel.rand(62); i += ((i < 10) ? 48 : ((i < 36) ? 55 : 61 ))).chr }.join
   end
 
-  def Password.encrypt(text, passphrase = nil)
+  def self.encrypt(text, passphrase = nil)
     passphrase = File.open('/etc/katello/secure/passphrase', 'rb') { |f| f.read }.chomp if passphrase.nil?
-    '$1$' + [ Password.aes_encrypt(text, passphrase) ].pack('m0').gsub("\n", '') # for Ruby 1.8
+    '$1$' + [ aes_encrypt(text, passphrase) ].pack('m0').gsub("\n", '') # for Ruby 1.8
   rescue => e
     if defined?(Rails) && Rails.logger
       Rails.logger.warn "Unable to encrypt password: #{e}"
@@ -56,10 +56,10 @@ module Password
     text # return the input if anything goes wrong
   end
 
-  def Password.decrypt(text, passphrase = nil)
+  def self.decrypt(text, passphrase = nil)
     return text unless text.start_with? '$1$' # password is plain
     passphrase = File.open('/etc/katello/secure/passphrase', 'rb') { |f| f.read }.chomp if passphrase.nil?
-    Password.aes_decrypt(text[3..-1].unpack('m0')[0], passphrase)
+    aes_decrypt(text[3..-1].unpack('m0')[0], passphrase)
   rescue => e
     if defined?(Rails) && Rails.logger
       Rails.logger.warn "Unable to decrypt password, returning encrypted version #{e}"
@@ -71,7 +71,7 @@ module Password
 
   protected
 
-  def Password.aes_encrypt(text, passphrase)
+  def self.aes_encrypt(text, passphrase)
     cipher = OpenSSL::Cipher::Cipher.new("aes-256-cbc")
     cipher.encrypt
     cipher.key = Digest::SHA2.hexdigest(passphrase)
@@ -82,7 +82,7 @@ module Password
     encrypted
   end
 
-  def Password.aes_decrypt(text, passphrase)
+  def self.aes_decrypt(text, passphrase)
     cipher = OpenSSL::Cipher::Cipher.new("aes-256-cbc")
     cipher.decrypt
     cipher.key = Digest::SHA2.hexdigest(passphrase)
@@ -97,38 +97,38 @@ module Password
   # of hashin (such as faster passowrd hashing when running tests)
   # should be used with caution (setting to 1 in testing environment
   # is probably the only reasonable usage)
-  def Password.password_rounds=(value)
+  def self.password_rounds=(value)
     @password_rounds = value
   end
 
-  def Password.password_rounds
+  def self.password_rounds
     @password_rounds || 500
   end
 
   # Generates a psuedo-random 64 character string
-  def Password.salt
+  def self.salt
     self.generate_random_string(64)
   end
 
   # Generates a 128 character hash
-  def Password.hash(password, salt)
+  def self.hash(password, salt)
     digest = "#{password}:#{salt}"
     password_rounds.times { digest = Digest::SHA512.hexdigest(digest) }
     digest
   end
 
   # Mixes the hash and salt together for storage
-  def Password.store(hash, salt)
+  def self.store(hash, salt)
     hash + salt
   end
 
   # Gets the hash from a stored password
-  def Password.get_hash(store)
+  def self.get_hash(store)
     store[0..127]
   end
 
   # Gets the salt from a stored password
-  def Password.get_salt(store)
+  def self.get_salt(store)
     store[128..191]
   end
 end

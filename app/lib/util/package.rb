@@ -10,8 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Katello
-  module PackageUtils
+module Util
+  module Package
 
     SUFFIX_RE = /\.(rpm)$/
     ARCH_RE = /\.([^.\-]*)$/

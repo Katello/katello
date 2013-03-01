@@ -25,7 +25,7 @@
 #
 
 
-module Katello
+module Util
   module ThreadSession
 
     # include this in the User model

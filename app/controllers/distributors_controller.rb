@@ -163,7 +163,7 @@ class DistributorsController < ApplicationController
   end
 
   def auto_complete
-    query = Katello::Search::filter_input query
+    query = Util::Search::filter_input query
     query = "name_autocomplete:#{params[:term]}"
     org = current_organization
     env_ids = KTEnvironment.distributors_readable(org).collect{|item| item.id}
