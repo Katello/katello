@@ -63,34 +63,14 @@ Src::Application.routes.draw do
         post :import, :on => :collection
         get :export, :on => :member
         get :validate, :on => :member
-        api_resources :products, :controller => :templates_content do
-          post   :index, :on => :collection, :action => :add_product
-          delete :destroy, :on => :member, :action => :remove_product
-        end
-        api_resources :packages, :controller => :templates_content, :constraints => { :id => /[0-9a-zA-Z\-_.]+/ } do
-          post   :index, :on => :collection, :action => :add_package
-          delete :destroy, :on => :member, :action => :remove_package
-        end
-        api_resources :parameters, :controller => :templates_content do
-          post   :index, :on => :collection, :action => :add_parameter
-          delete :destroy, :on => :member, :action => :remove_parameter
-        end
-        api_resources :package_groups, :controller => :templates_content do
-          post   :index, :on => :collection, :action => :add_package_group
-          delete :destroy, :on => :member, :action => :remove_package_group
-        end
-        api_resources :package_group_categories, :controller => :templates_content do
-          post   :index, :on => :collection, :action => :add_package_group_category
-          delete :destroy, :on => :member, :action => :remove_package_group_category
-        end
-        api_resources :distributions, :controller => :templates_content do
-          post   :index, :on => :collection, :action => :add_distribution
-          delete :destroy, :on => :member, :action => :remove_distribution
-        end
-        api_resources :repositories, :controller => :templates_content do
-          post   :index, :on => :collection, :action => :add_repo
-          delete :destroy, :on => :member, :action => :remove_repo
-        end
+
+        api_attachable_resources :products, :controller => :templates_content
+        api_attachable_resources :packages, :controller => :templates_content, :constraints => { :id => /[0-9a-zA-Z\-_.]+/ }
+        api_attachable_resources :parameters, :controller => :templates_content
+        api_attachable_resources :package_groups, :controller => :templates_content
+        api_attachable_resources :package_group_categories, :controller => :templates_content
+        api_attachable_resources :distributions, :controller => :templates_content
+        api_attachable_resources :repositories, :controller => :templates_content, :resource_name => :repo
       end
 
       api_resources :organizations do
@@ -187,35 +167,14 @@ Src::Application.routes.draw do
         post :promote, :on => :member, :action => :promote
         post :apply, :on => :member, :action => :apply
         get :dependencies, :on => :member, :action => :dependencies
-        api_resources :products, :controller => :changesets_content do
-          post   :index, :on => :collection, :action => :add_product
-          delete :destroy, :on => :member, :action => :remove_product
-        end
-        api_resources :packages, :controller => :changesets_content, :constraints => { :id => /[0-9a-zA-Z\-_.]+/ } do
-          post   :index, :on => :collection, :action => :add_package
-          delete :destroy, :on => :member, :action => :remove_package
-        end
-        api_resources :errata, :controller => :changesets_content do
-          post   :index, :on => :collection, :action => :add_erratum
-          delete :destroy, :on => :member, :action => :remove_erratum
-        end
-        api_resources :repositories , :controller => :changesets_content do
-          post   :index, :on => :collection, :action => :add_repo
-          delete :destroy, :on => :member, :action => :remove_repo
-        end
-        api_resources :distributions, :controller => :changesets_content do
-          post   :index, :on => :collection, :action => :add_distribution
-          delete :destroy, :on => :member, :action => :remove_distribution
-        end
-        api_resources :templates, :controller => :changesets_content do
-          post   :index, :on => :collection, :action => :add_template
-          delete :destroy, :on => :member, :action => :remove_template
-        end
-        api_resources :content_views, :controller => :changesets_content do
-          post   :index, :on => :collection, :action => :add_content_view
-          delete :destroy, :on => :member, :action => :remove_content_view
-        end
 
+        api_attachable_resources :products, :controller => :changesets_content
+        api_attachable_resources :packages, :controller => :changesets_content, :constraints => { :id => /[0-9a-zA-Z\-_.]+/ }
+        api_attachable_resources :errata, :controller => :changesets_content
+        api_attachable_resources :repositories, :controller => :changesets_content, :resource_name => :repo
+        api_attachable_resources :distributions, :controller => :changesets_content
+        api_attachable_resources :templates, :controller => :changesets_content
+        api_attachable_resources :content_views, :controller => :changesets_content
       end
 
       api_resources :ping, :only => [:index]
