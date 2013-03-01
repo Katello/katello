@@ -12,6 +12,10 @@
 module Navigation
   module NotificationsMenu
 
+    def notifications_menu_main
+      [ menu_notifications ]
+    end
+
     def menu_notifications
       {:key => :notifications,
        :name => _("Notifications"),

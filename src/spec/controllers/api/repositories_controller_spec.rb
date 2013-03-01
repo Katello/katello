@@ -11,7 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'spec_helper'
-require 'lib/authorization_rules'
 
 describe Api::RepositoriesController, :katello => true do
   include OrchestrationHelper

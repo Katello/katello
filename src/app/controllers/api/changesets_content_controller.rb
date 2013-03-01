@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'rest_client'
-
 class Api::ChangesetsContentController < Api::ApiController
 
   before_filter :find_product, :only => [:add_product, :remove_product, :add_package, :remove_package, :add_erratum,
