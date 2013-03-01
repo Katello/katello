@@ -41,12 +41,7 @@ describe SystemTemplate, :katello => true do
   describe "update template" do
 
     let(:repo) {Repository.new({
-      :name => 'foo repo',
-      :groupid => [
-       "product:"+@prod1.cp_id.to_s,
-        "env:"+@organization.library.id.to_s,
-        "org:"+@organization.name.to_s
-      ]
+      :name => 'foo repo'
     })}
     let(:pack1) {{
       :name => 'package 1'
