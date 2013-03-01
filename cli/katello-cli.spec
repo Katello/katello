@@ -136,10 +136,10 @@ install -m 0644 man/headpin.man1 %{buildroot}%{_mandir}/man1/headpin.1
 install -m 0644 man/%{base_name}-debug-certificates.man1 %{buildroot}%{_mandir}/man1/%{base_name}-debug-certificates.1
 
 # install locale files
-for lang in $(find . -name "*.po"); do
-    code=$(basename "$lang" ".po")
+for lang in locale/*/%{base_name}-cli.mo; do
+    code=$(basename "$lang" ".mo")
     install -d %{buildroot}%{locale_dir}/${code}/LC_MESSAGES/
-    install -pm 0644 locale/${code}/${code}.mo %{buildroot}%{locale_dir}/${code}/LC_MESSAGES/%{base_name}-cli.mo
+    install -pm 0644 ${lang} %{buildroot}%{locale_dir}/${code}/LC_MESSAGES/%{base_name}-cli.mo
 done
 %find_lang %{name}
 
