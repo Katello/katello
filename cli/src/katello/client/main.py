@@ -52,7 +52,8 @@ from katello.client.core import (
   subnet,
   smart_proxy,
   compute_resource,
-  hardware_model
+  hardware_model,
+  partition_table
 )
 
 def setup_admin(katello_cmd, mode=get_katello_mode()):
@@ -399,3 +400,12 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         hardware_model_cmd.add_command('update', hardware_model.Update())
         hardware_model_cmd.add_command('delete', hardware_model.Delete())
         katello_cmd.add_command('hw_model', hardware_model_cmd)
+
+    if mode == 'katello':
+        partition_table_cmd = partition_table.PartitionTable()
+        partition_table_cmd.add_command('list', partition_table.List())
+        partition_table_cmd.add_command('info', partition_table.Info())
+        partition_table_cmd.add_command('create', partition_table.Create())
+        partition_table_cmd.add_command('update', partition_table.Update())
+        partition_table_cmd.add_command('delete', partition_table.Delete())
+        katello_cmd.add_command('partition_table', partition_table_cmd)

@@ -36,6 +36,7 @@ module Resources
     ConfigTemplate  = ForemanApi::Resources::ConfigTemplate.new options
     ComputeResource = ForemanApi::Resources::ComputeResource.new options
     HardwareModel   = ForemanApi::Resources::Model.new options
+    PartitionTable  = ForemanApi::Resources::Ptable.new options
 
   end
 end

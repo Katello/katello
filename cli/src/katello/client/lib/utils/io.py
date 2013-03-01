@@ -58,3 +58,9 @@ def save_report(report, filename):
     f = open(filename, 'w')
     f.write(report)
     f.close()
+
+
+def read_file(filename):
+    with open(get_abs_path(filename), "r") as f:
+        content = f.read()
+    return content

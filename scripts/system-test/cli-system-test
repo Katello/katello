@@ -376,6 +376,10 @@ function header() {
     print_separator
 }
 
+function foreman_installed() {
+    rpm -q foreman >> /dev/null
+}
+
 [ $NO_BASE -eq 0 ] && . $TEST_DIR/_base_setup.sh
 for t in $required_tests; do
     run_rest_suite $t
