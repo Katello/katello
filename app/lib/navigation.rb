@@ -9,44 +9,16 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-require 'navigation/content_management'
-require 'navigation/administration'
-require 'navigation/organization'
-require 'navigation/dashboard'
-require 'navigation/setup'
-require 'navigation/systems'
-require 'navigation/notifications'
-
 
 module Navigation
   def self.included(base)
-    base.send :include, NotificationsMenu
     base.send :include, AdministrationMenu
     base.send :include, ContentMenu
-    base.send :include, MainMenu
-    base.send :include, OrganizationMenu
     base.send :include, DashboardMenu
-    base.send :include, SystemMenu
+    base.send :include, MainMenu
+    base.send :include, NotificationsMenu
+    base.send :include, OrganizationMenu
     base.send :include, SetupMenu
-  end
-
-  module MainMenu
-   def menu_main
-    menu = [ menu_dashboard, menu_contents, menu_systems ]
-    menu << menu_setup if Katello.config.katello? && Katello.config.use_foreman
-    menu
-   end
-  end
-
-  module AdministrationMenu
-    def admin_main
-      [ menu_administration ]
-    end
-  end
-
-  module NotificationsMenu
-    def notifications_menu_main
-      [ menu_notifications ]
-    end
+    base.send :include, SystemMenu
   end
 end

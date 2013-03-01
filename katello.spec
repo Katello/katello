@@ -595,17 +595,20 @@ usermod -a -G katello-shared tomcat
 %{homedir}/db/seeds.rb
 %{homedir}/integration_spec
 %{homedir}/lib/*.rb
-%dir %{homedir}/lib/glue
-%{homedir}/lib/glue/*.rb
+%exclude %{homedir}/lib/README
+%exclude %{homedir}/app/lib/README
+%{homedir}/app/lib/*.rb
+%dir %{homedir}/app/lib/glue
+%{homedir}/app/lib/glue/*.rb
 %{homedir}/lib/monkeys
-%{homedir}/lib/navigation
-%{homedir}/lib/notifications
-%{homedir}/lib/validators
-%dir %{homedir}/lib/resources
-%{homedir}/lib/resources/cdn.rb
-%{homedir}/lib/resources/abstract_model.rb
-%dir %{homedir}/lib/resources/abstract_model
-%{homedir}/lib/resources/abstract_model/indexed_model.rb
+%{homedir}/app/lib/navigation
+%{homedir}/app/lib/notifications
+%{homedir}/app/lib/validators
+%dir %{homedir}/app/lib/resources
+%{homedir}/app/lib/resources/cdn.rb
+%{homedir}/app/lib/resources/abstract_model.rb
+%dir %{homedir}/app/lib/resources/abstract_model
+%{homedir}/app/lib/resources/abstract_model/indexed_model.rb
 %{homedir}/lib/tasks
 %exclude %{homedir}/lib/tasks/rcov.rake
 %exclude %{homedir}/lib/tasks/yard.rake
@@ -658,7 +661,9 @@ usermod -a -G katello-shared tomcat
 %dir %{homedir}/db
 %{homedir}/db/schema.rb
 %dir %{homedir}/lib
+%dir %{homedir}/app/lib
 %{homedir}/lib/util
+%{homedir}/app/lib/util
 %{homedir}/script/service-wait
 
 %defattr(-, katello, katello)
@@ -683,12 +688,12 @@ usermod -a -G katello-shared tomcat
 %files glue-candlepin
 %{homedir}/app/models/glue/candlepin
 %{homedir}/app/models/glue/provider.rb
-%{homedir}/lib/resources/candlepin.rb
+%{homedir}/app/lib/resources/candlepin.rb
 
 %files glue-foreman
 %{homedir}/bundler.d/foreman.rb
-%{homedir}/lib/resources/foreman.rb
-%{homedir}/lib/resources/foreman_model.rb
+%{homedir}/app/lib/resources/foreman.rb
+%{homedir}/app/lib/resources/foreman_model.rb
 %{homedir}/app/models/foreman
 %{homedir}/app/models/glue/foreman
 %{homedir}/app/controllers/api/foreman
@@ -720,17 +725,19 @@ usermod -a -G katello-shared tomcat
 %{homedir}/db/products.json
 %{homedir}/db/seeds.rb
 %{homedir}/integration_spec
-%{homedir}/lib/*.rb
+%{homedir}/app/lib/*.rb
 %{homedir}/lib/monkeys
-%{homedir}/lib/navigation
-%{homedir}/lib/notifications
-%{homedir}/lib/resources
-%{homedir}/lib/validators
-%exclude %{homedir}/lib/resources/candlepin.rb
-%exclude %{homedir}/lib/resources/foreman_model.rb
+%{homedir}/app/lib/navigation
+%{homedir}/app/lib/notifications
+%{homedir}/app/lib/resources
+%{homedir}/app/lib/validators
+%exclude %{homedir}/app/lib/resources/candlepin.rb
+%exclude %{homedir}/app/lib/resources/foreman_model.rb
 %{homedir}/lib/tasks
 %{homedir}/lib/util
-%{homedir}/lib/glue/queue.rb
+%{homedir}/app/lib/util
+%{homedir}/app/lib/glue/queue.rb
+%{homedir}/app/lib/glue/task.rb
 %{homedir}/locale
 %{homedir}/public
 %exclude %{homedir}/public/apipie-cache

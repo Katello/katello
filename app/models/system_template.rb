@@ -11,8 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'util/package_util'
-require 'active_support/builder' unless defined?(Builder)
-require 'mapping'
+require 'active_support/builder'
 
 class SystemTemplate < ActiveRecord::Base
 
