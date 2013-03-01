@@ -210,21 +210,28 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
   end
 
   def test_sync_finish
-    refute_nil @@fedora_17_x86_64.sync_finish
+    VCR.use_cassette('glue_pulp_repo_sync_status', :match_requests_on => [:path, :params, :method]) do
+      refute_nil @@fedora_17_x86_64.sync_finish
+    end
   end
 
   def test_sync_start
-    refute_nil @@fedora_17_x86_64.sync_start
+    VCR.use_cassette('glue_pulp_repo_sync_status', :match_requests_on => [:path, :params, :method]) do
+      refute_nil @@fedora_17_x86_64.sync_start
+    end
   end
 
   def test_packages
-    refute_empty @@fedora_17_x86_64.packages.select { |package| package.name == 'elephant' }
+    VCR.use_cassette('glue_pulp_repo_units', :match_requests_on => [:body_json, :path, :method]) do
+      refute_empty @@fedora_17_x86_64.packages.select { |package| package.name == 'elephant' }
+    end
   end
 
   def test_has_package?
-    pkg_id = @@fedora_17_x86_64.packages.first.id
-
-    assert @@fedora_17_x86_64.has_package?(pkg_id)
+    VCR.use_cassette('glue_pulp_repo_units_package', :match_requests_on => [:body_json, :path, :method]) do
+      pkg_id = @@fedora_17_x86_64.packages.first.id
+      assert @@fedora_17_x86_64.has_package?(pkg_id)
+    end
   end
 
   def test_errata
