@@ -119,6 +119,12 @@ describe OrganizationsController do
         response.should_not be_success
       end
 
+      it 'should generate an error notice for a bad label' do
+        controller.should notify.exception
+        post 'create', {:organization => { :name => "ACME", :label => "bad\n<label>" }}
+        response.should_not be_success
+      end
+
       it_should_behave_like "bad request"  do
         let(:req) do
           bad_req           = { :organization => { :name    => "multi word organization", :description => "spaced out organization",
