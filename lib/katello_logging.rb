@@ -16,8 +16,8 @@ module Katello
     def initialize
       configure_color_scheme
       FileUtils.mkdir_p root_configuration.path unless File.directory?(root_configuration.path)
-    rescue Errno::EACCES # ignore when we have not sufficient privileges
-      true
+    rescue Errno::EACCES
+      # ignore when we have not sufficient privileges
     end
 
     def configure(options = {})

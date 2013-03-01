@@ -1,5 +1,3 @@
-require 'katello_logging'
-
 # Models have to use logger.info instead of Rails.logger.info in order for the desired log file to be used.
 Delayed::Worker.destroy_failed_jobs = false
 
