@@ -14,14 +14,7 @@ class ContentSearch::SearchUtils
   cattr_accessor :current_organization, :mode, :env_ids
 
   def self.search_mode
-    case mode
-      when "shared"
-        :shared
-      when "unique"
-        :unique
-      else
-        :all
-    end
+    mode.try(:to_sym) || :all
   end
 
   def self.search_env_ids
