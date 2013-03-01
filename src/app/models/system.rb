@@ -110,9 +110,9 @@ class System < ActiveRecord::Base
     # Only available pool's with a product on the system'
     if match_installed
       pools = pools.select do |pool|
-        self.installedProducts.any? do |installedProduct|
-          pool['providedProducts'].any? do |providedProduct|
-            installedProduct['productId'] == providedProduct['productId']
+        self.installedProducts.any? do |installed_product|
+          pool['providedProducts'].any? do |provided_product|
+            installed_product['productId'] == provided_product['productId']
           end
         end
       end
@@ -121,10 +121,10 @@ class System < ActiveRecord::Base
     # None of the available pool's products overlap a consumed pool's products
     if no_overlap
       pools = pools.select do |pool|
-        pool['providedProducts'].all? do |providedProduct|
-          self.consumed_entitlements.all? do |consumedEntitlement|
-            consumedEntitlement.providedProducts.all? do |consumedProduct|
-              consumedProduct.cp_id != providedProduct['productId']
+        pool['providedProducts'].all? do |provided_product|
+          self.consumed_entitlements.all? do |consumed_entitlement|
+            consumed_entitlement.providedProducts.all? do |consumed_product|
+              consumed_product.cp_id != provided_product['productId']
             end
           end
         end
