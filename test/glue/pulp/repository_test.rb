@@ -222,7 +222,7 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
   end
 
   def test_packages
-    VCR.use_cassette('glue_pulp_repo_units', :match_requests_on => [:body_json, :path, :method]) do
+    VCR.use_cassette('glue_pulp_repo_units_package', :match_requests_on => [:body_json, :path, :method]) do
       refute_empty @@fedora_17_x86_64.packages.select { |package| package.name == 'elephant' }
     end
   end
