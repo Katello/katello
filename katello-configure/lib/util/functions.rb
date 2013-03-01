@@ -210,11 +210,11 @@ def _read_password()
   return input
 end
 
-def _request_option_interactively(title, regex, default_value, non_interactive_value)
+def _request_option_interactively(param, title, regex, default_value, non_interactive_value)
   default_value_ok = default_value.to_s() =~ Regexp.new(regex)
   if non_interactive_value
     if default_value.nil? or not default_value_ok
-      $stderr.puts "Option: [#{title}] not correctly specified."
+      $stderr.puts "Option: [#{title} (--#{param.gsub("_", "-")})] not correctly specified."
       exit 7
     else
       return default_value
