@@ -16,6 +16,7 @@ class ContentSearchController < ApplicationController
 
   before_filter :find_repo, :only => [:repo_packages, :repo_errata]
   before_filter :find_repos, :only => [:repo_compare_packages, :repo_compare_errata]
+  before_filter :setup_utils
 
   def rules
     contents_test = lambda{!KTEnvironment.content_readable(current_organization).empty?}
@@ -45,29 +46,18 @@ class ContentSearchController < ApplicationController
   end
 
   def products
-    ids = param_product_ids
-    if !ids.empty?
-      products = current_organization.products.readable(current_organization).engineering.where(:id=>ids)
-    else
-      products = current_organization.products.readable(current_organization).engineering
-    end
-
-    envs = process_env_ids
-    if params[:mode] == 'shared'
-      products = products.select{|p|  (envs - p.environments).empty? }
-    elsif params[:mode] == 'unique'
-      products = products.select{|p|  !(envs - p.environments ).empty?}
-    end
-    render :json=>{:rows=>product_rows(products), :name=>_('Products')}
+    product_search = ContentSearch::ProductSearch.new(:name => _('Products'),
+                                                      :product_ids => param_product_ids
+                                                     )
+    render :json => product_search
   end
 
   def views
-    if !(ids = params[:views][:autocomplete].map{|v| v["id"]} rescue []).empty?
-      views = ContentView.readable(current_organization).non_default.where(:id => ids)
-    else
-      views = ContentView.readable(current_organization).non_default
-    end
-    render :json=>{:rows=> view_rows(views), :name=>_('Content View')}
+    ids = params[:views][:autocomplete].map{|v| v["id"]} rescue nil
+    view_search = ContentSearch::ContentViewSearch.new(:name => _("Content View"),
+                                                       :view_ids => ids
+                                                      )
+    render :json => view_search
   end
 
   def repos
@@ -262,32 +252,6 @@ class ContentSearchController < ApplicationController
 
   def repo_hover_html repo
     render_to_string :partial=>'repo_hover', :locals=>{:repo=>repo}
-  end
-
-  def product_rows(products)
-    env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
-    products.collect do |prod|
-      cols = {}
-      prod.environments.collect do |env|
-        cols[env.id] = {:hover => container_hover_html(prod, env)} if env_ids.include?(env.id)
-      end
-      {:id=>"product_#{prod.id}", :name=>prod.name, :cols=>cols, :data_type => "product", :value => prod.name}
-    end
-  end
-
-  def view_rows(views)
-    env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
-    views.collect do |view|
-      cols = {}
-      view.environments.collect do |env|
-        if env_ids.include?(env.id)
-          version = view.version(env).try(:version)
-          display = version ? (_("version %s") % version) : ""
-          cols[env.id] = {:hover => container_hover_html(view, env), :display => display}
-        end
-      end
-      {:id=>"view_#{view.id}", :name=>view.name, :cols=>cols, :data_type => "view", :value => view.name}
-    end
   end
 
   def container_hover_html(container, environment)
@@ -524,6 +488,12 @@ class ContentSearchController < ApplicationController
       to_ret << row
     end
     to_ret
+  end
+
+  def setup_utils
+    ContentSearch::SearchUtils.current_organization = current_organization
+    ContentSearch::SearchUtils.mode = params[:mode]
+    ContentSearch::SearchUtils.env_ids = params[:environments]
   end
 
 end
