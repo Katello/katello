@@ -90,7 +90,7 @@ class EnvironmentsController < ApplicationController
 
   # PUT /environments/1
   def update
-    priorUpdated = !params[:kt_environment][:prior].nil?
+    prior_updated = !params[:kt_environment][:prior].nil?
 
     unless params[:kt_environment][:description].nil?
       params[:kt_environment][:description] = params[:kt_environment][:description].gsub("\n",'')
@@ -99,7 +99,7 @@ class EnvironmentsController < ApplicationController
     @environment.update_attributes(params[:kt_environment])
     @environment.save!
 
-    if priorUpdated
+    if prior_updated
       result = @environment.prior.nil? ? "Library" : @environment.prior.name
     else
       result = params[:kt_environment].values.first
