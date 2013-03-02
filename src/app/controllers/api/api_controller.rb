@@ -71,7 +71,7 @@ class Api::ApiController < ActionController::Base
   # override warden current_user (returns nil because there is no user in that scope)
   def current_user
     # get the logged user from the correct scope
-    user(:api)
+    user(:api) || user
   end
 
   def add_candlepin_version_header
@@ -144,10 +144,16 @@ class Api::ApiController < ActionController::Base
   end
 
   def require_user
-    params[:auth_username], params[:auth_password] = user_name_and_password(request) unless request.authorization.blank?
-    authenticate! :scope => :api
-    params.delete('auth_username')
-    params.delete('auth_password')
+
+    if !request.authorization && current_user
+      return true
+    else
+      params[:auth_username], params[:auth_password] = user_name_and_password(request) if request.authorization
+      authenticate! :scope => :api
+      params.delete('auth_username')
+      params.delete('auth_password')
+    end
+
   rescue => e
     logger.error "failed to authenticate API request: " << pp_exception(e)
     head :status => HttpErrors::INTERNAL_ERROR and return false
