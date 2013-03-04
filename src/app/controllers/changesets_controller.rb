@@ -176,8 +176,20 @@ class ChangesetsController < ApplicationController
         pid    = item["product_id"]
         case type
           when "content_view"
-            @changeset.add_content_view! ContentView.find(id) if adding
             @changeset.remove_content_view! ContentView.find(id) if !adding
+
+            if adding
+              view, component_views = @changeset.add_content_view!(ContentView.find(id), true)
+
+              unless component_views.blank?
+                notify.message(_("The following content views were automatically added to changeset '%{changeset}'"\
+                                 " for composite view '%{composite_view}': %{component_views}") %
+                               {:changeset => @changeset.name, :composite_view => view.name,
+                                :component_views => component_views.map(&:name).join(', ')},
+                               {:asynchronous => false})
+                send_changeset = true
+              end
+            end
 
           when "template"
             @changeset.add_template! SystemTemplate.find(id) if adding
