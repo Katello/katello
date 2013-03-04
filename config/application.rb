@@ -10,6 +10,7 @@ require "rails/test_unit/railtie"
 path = File.expand_path("../lib", File.dirname(__FILE__))
 $LOAD_PATH << path unless $LOAD_PATH.include? path
 require 'katello_config'
+require 'katello_logging'
 
 
 # If you have a Gemfile, require the gems listed there, including any gems
@@ -122,7 +123,21 @@ module Src
     # profiles will be stored in tmp/profiles/
     config.do_profiles = []
 
-    config.log_level = Katello.config.log_level
+    # logging configuration
+    config.colorize_logging = Katello.config.logging.colorize
+
+    # When running under Rails last caller is "/usr/share/katello/config.ru:1" but when running standalone
+    # last caller is "script/delayed_job:3".
+    if caller.last =~ /script\/delayed_job:\d+$/ ||
+        ((caller[-10..-1] || []).any? {|l| l =~ /\/rake/} && ARGV.include?("jobs:work"))
+      Katello::Logging.new.configure(:prefix => 'delayed_')
+      Delayed::Worker.logger = Logging.logger['app']
+    else
+      Katello::Logging.new.configure
+    end
+
+    config.logger = Logging.logger['app']
+    config.active_record.logger = Logging.logger['sql']
   end
 end
 

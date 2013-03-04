@@ -221,7 +221,7 @@ class Api::ApiController < ActionController::Base
   end
 
   def record_not_found(exception)
-    logger.error(pp_exception(exception), :with_backtrace => false)
+    logger.error(pp_exception(exception))
     logger.debug exception.backtrace.join("\n")
 
     respond_to do |format|
@@ -282,10 +282,8 @@ class Api::ApiController < ActionController::Base
 
   protected
 
-  if Katello.config.debug_rest
-    def process_action(method_name, *args)
-      super(method_name, *args)
-      Rails.logger.debug "With body: #{response.body}\n"
-    end
+  def process_action(method_name, *args)
+    super(method_name, *args)
+    Rails.logger.debug "With body: #{response.body}\n"
   end
 end
