@@ -352,6 +352,14 @@ module Glue::Pulp::Repo
       events << Runcible::Extensions::PackageGroup.copy(self.pulp_id, to_repo.pulp_id)
       events
     end
+    def unassociate_by_filter(content_type, filter_clauses)
+      content_unit = { Runcible::Extensions::Rpm.content_type() => Runcible::Extensions::Rpm,
+        Runcible::Extensions::Errata.content_type() => Runcible::Extensions::Errata,
+        Runcible::Extensions::PackageGroup.content_type() => Runcible::Extensions::PackageGroup,
+        Runcible::Extensions::Distribution.content_type() => Runcible::Extensions::Distribution
+      }
+      content_unit[content_type].unassociate_from_repo(self.pulp_id, :unit => filter_clauses)
+    end
 
     def clear_contents
       Runcible::Extensions::Repository.unassociate_units(self.pulp_id)
