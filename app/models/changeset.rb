@@ -195,14 +195,24 @@ class Changeset < ActiveRecord::Base
      distro
    end
 
-  def add_content_view!(view)
+  def add_content_view!(view, include_components=false)
     unless env_to_verify_on_add_content.content_views.include?(view)
       raise Errors::ChangesetContentException.new("Content view not found within environment you want to promote from.")
     end
 
     self.content_views << view
+
+    if include_components && type == "PromotionChangeset" && view.composite
+      # This is a composite view and the caller would like to also add any component
+      # views that also need to be promoted to the target environment.
+      component_views = view.components_not_in_env(self.environment).
+          promotable(self.environment.organization) - self.content_views
+
+      component_views.each{ |component| self.content_views << component } unless component_views.blank?
+    end
+
     save!
-    view
+    return view, component_views
   end
 
   def remove_content_view!(view)
