@@ -1,0 +1,72 @@
+
+module Api
+  module V2
+    module Rendering
+
+
+      def respond_for_show(options={})
+        respond_with_template_resource(params[:action], controller_name, options)
+      end
+
+      def respond_for_index(options={})
+        try_specific_collection_template(params[:action], options)
+      end
+
+      def respond_for_create(options={})
+        try_specific_resource_template(params[:action], options)
+      end
+
+      def respond_for_update(options={})
+        try_specific_resource_template(params[:action], options)
+      end
+
+      def respond_for_destroy(options={})
+        try_specific_resource_template(params[:action], options)
+      end
+
+      def respond_for_status(options={})
+        respond_with_template_resource("status", "common", options)
+      end
+
+      def respond_with_template(action, resource_name, options={}, &block)
+        yield if block_given?
+        status = options[:status] || 200
+
+        render :template => "/api/v2/%s/%s" % [resource_name, action], :status => status
+      end
+
+      def respond_with_template_resource(action, resource_name, options={})
+        respond_with_template(action, resource_name, options) do
+          @resource = options[:resource] unless options[:resource].nil?
+          @resource = get_resource if @resource.nil?
+        end
+      end
+
+      def respond_with_template_collection(action, resource_name, options={})
+        respond_with_template(action, resource_name, options) do
+          @collection = options[:collection] unless options[:collection].nil?
+          @collection = get_resource_collection if @collection.nil?
+        end
+      end
+
+      def try_specific_resource_template(action, options={})
+        begin
+          respond_with_template_resource(action, controller_name, options)
+        rescue ActionView::MissingTemplate
+          respond_with_template_resource(action, "common", options)
+        end
+      end
+
+      def try_specific_collection_template(action, options={})
+        begin
+          respond_with_template_collection(action, controller_name, options)
+        rescue ActionView::MissingTemplate
+          respond_with_template_collection(action, "common", options)
+        end
+      end
+
+    end
+  end
+end
+
+

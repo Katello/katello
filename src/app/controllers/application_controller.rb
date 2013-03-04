@@ -18,12 +18,12 @@ class ApplicationController < ActionController::Base
   layout :set_layout
   include Notifications::ControllerHelper
   include Profiling
+  include Locale
   clear_helpers
 
   helper UIAlchemy::TranslationHelper
   helper_method :current_organization
   helper_method :render_correct_nav
-  before_filter :set_locale
   before_filter :require_user,:require_org
   before_filter :check_deleted_org
 
@@ -195,16 +195,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def set_locale
-    if current_user && current_user.default_locale
-      I18n.locale = current_user.default_locale
-    else
-      I18n.locale = ApplicationController.extract_locale_from_accept_language_header parse_locale
-    end
-
-    logger.debug "Setting locale: #{I18n.locale}"
-  end
-
   def current_organization
     unless session[:current_organization_id]
       return nil unless session[:current_organization_id]
@@ -265,29 +255,6 @@ class ApplicationController < ActionController::Base
     _("No environments are currently available in this organization.  Please either add some to the organization or select an organization that has an environment to set user default.")
   end
 
-  # Look for match to list of locales specified in request. If not found, try matching just
-  # first two letters. Finally, default to english if no matches at all.
-  # eg. [en_US, en] would match en
-  #
-  # The method accept parameter = list of locales returned by parse_locale. Since the method is used
-  # outside of the request context, we need to pass this data in as a parameter.
-  #
-  def self.extract_locale_from_accept_language_header locales
-
-    # Look for full match
-    locales.each {|locale|
-      return locale if Katello.config.available_locales.include? locale
-    }
-
-    # Look for match to first two letters
-    #
-    locales.each {|locale|
-      return locale[0..1] if Katello.config.available_locales.include? locale[0..1]
-    }
-
-    # Default to 'en'
-    return 'en'
-  end
 
   def retain_search_history
     current_user.create_or_update_search_history(URI(@_request.env['HTTP_REFERER']).path, params[:search])
@@ -372,21 +339,6 @@ class ApplicationController < ActionController::Base
 
   def current_user
     user
-  end
-
-  # adapted from http_accept_lang gem, return list of browser locales
-  def parse_locale
-    locale_lang = (request.env['HTTP_ACCEPT_LANGUAGE'] || '').split(/\s*,\s*/).collect do |l|
-      l += ';q=1.0' unless l =~ /;q=\d+\.\d+$/
-      l.split(';q=')
-    end.sort do |x,y|
-      raise "incorrect locale format" unless x.first =~ /^[a-z\-]+$/i
-      y.last.to_f <=> x.last.to_f
-    end.collect do |l|
-      l.first.downcase.gsub(/-[a-z]+$/i) { |x| x.upcase }
-    end
-  rescue
-    []
   end
 
   # render 403 page
