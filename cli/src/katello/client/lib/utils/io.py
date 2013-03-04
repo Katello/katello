@@ -41,7 +41,7 @@ def convert_to_mime_type(type_in, default=None):
 
 
 def attachment_file_name(headers, default):
-    content_disposition = filter(lambda h: h[0].lower() == 'content-disposition', headers)
+    content_disposition = [h for h in headers if h[0].lower() == 'content-disposition']
 
     if len(content_disposition) > 0:
         filename = content_disposition[0][1].split('filename=')
