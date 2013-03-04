@@ -327,7 +327,7 @@ module ManifestReader
       IO.foreach(filename) do |line|
         begin
           if line !~ /^#.*/ and line =~ /^([^=]*)=(.*?)(\s*#.*)?$/
-            repos[$1.strip].enabled = $2.strip
+            repos[$1.strip].enabled = $2.strip.match(/(true|t|yes|y|1)$/i) if repos[$1.strip]
           end
         rescue Exception => e
           raise RuntimeError, "Error parsing #{$1}: #{e.message}"
