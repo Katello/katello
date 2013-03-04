@@ -50,7 +50,12 @@ class Config(object):
     """
 
     FILE = 'client.conf'
-    PATH = os.path.join('/etc/katello', FILE)
+
+    if os.environ.has_key('KATELLO_CLIENT_CONF_DIR'):
+        PATH = os.environ['KATELLO_CLIENT_CONF_DIR'] 
+    else:
+        PATH = os.path.join('/etc/katello', FILE)
+
     USER_DIR = os.path.join(getpwuid(os.getuid())[5], '.katello')
     USER = os.path.expanduser(os.path.join(USER_DIR, FILE))
     USER_OPTIONS = os.path.expanduser(os.path.join(USER_DIR, 'client-options.conf'))

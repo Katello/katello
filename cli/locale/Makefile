@@ -1,6 +1,6 @@
 
-SRC_DIR     = ../src/katello
-POFILES = $(shell ls *.po)
+SRC_DIR = ../src/katello
+POFILES = $(shell find . -name '*.po')
 MOFILES = $(patsubst %.po,%.mo,$(POFILES))
 
 .PHONY: POTFILES.in
@@ -35,6 +35,7 @@ uniq-po:
 all-mo: $(MOFILES)
 
 clean:
-	rm -f POTFILES.in *.mo
+	rm -f POTFILES.in
+	find . -name "*.mo" -exec rm '{}' ';'
 	rm -rf build
 
