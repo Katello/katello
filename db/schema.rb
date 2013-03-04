@@ -509,9 +509,9 @@ ActiveRecord::Schema.define(:version => 20130226133232) do
     t.string   "content_id",                                    :null => false
     t.string   "arch",                    :default => "noarch", :null => false
     t.string   "label",                                         :null => false
+    t.string   "feed"
     t.integer  "content_view_version_id",                       :null => false
     t.string   "relative_path",                                 :null => false
-    t.string   "feed"
   end
 
   add_index "repositories", ["content_view_version_id"], :name => "index_repositories_on_content_view_version_id"
