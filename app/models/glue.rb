@@ -67,11 +67,11 @@ module Glue
     end
 
     def pre_queue
-      @pre_queue ||= Queue.new
+      @pre_queue ||= Glue::Queue.new
     end
 
     def post_queue
-      @post_queue ||= Queue.new(pre_queue)
+      @post_queue ||= Glue::Queue.new(pre_queue)
     end
 
     public
