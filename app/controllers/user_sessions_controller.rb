@@ -33,7 +33,7 @@ class UserSessionsController < ApplicationController
       login_user
     else
       @disable_password_recovery = Katello.config.warden == 'ldap'
-      set_locale
+      set_locale_from_header
       respond_to do |f|
         f.html { render "new" }
         f.json { render :js => "window.location = '#{user_session_logout_path.to_json}'" }

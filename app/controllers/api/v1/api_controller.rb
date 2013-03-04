@@ -10,16 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class Api::V1::ApiController < ActionController::Base
-  include ActionController::HttpAuthentication::Basic
-  include Profiling
-  include Api::Version1
+class Api::V1::ApiController < Api::ApiController
 
-  respond_to :json
-  before_filter :set_locale
-  before_filter :require_user
-  before_filter :verify_ldap
-  before_filter :add_candlepin_version_header
+  include Api::Version1
 
   rescue_from StandardError, :with => proc { |e| render_exception(HttpErrors::INTERNAL_ERROR, e) } # catch-all
   rescue_from HttpErrors::WrappedError, :with => proc { |e| render_wrapped_exception(e) }
@@ -41,36 +34,6 @@ class Api::V1::ApiController < ActionController::Base
   include Util::ThreadSession::Controller
   include AuthorizationRules
 
-  def set_locale
-    if current_user && current_user.default_locale
-      I18n.locale = current_user.default_locale
-    else
-      I18n.locale = ApplicationController.extract_locale_from_accept_language_header parse_locale
-    end
-
-    logger.debug "Setting locale: #{I18n.locale}"
-  end
-
-  def parse_locale
-    first, second = (request.env['HTTP_ACCEPT_LANGUAGE'] || 'en').split(/[-_]/)
-    first ||= 'en' # in case of invalid input like '-'
-    if second.nil?
-      return [first.downcase]
-    else
-      # HTTP spec defines only dash-based languages, se we need to convert and add a fallback
-      return ["#{first.downcase}-#{second.upcase}", first.downcase]
-    end
-  end
-
-  # override warden current_user (returns nil because there is no user in that scope)
-  def current_user
-    # get the logged user from the correct scope
-    user(:api) || user
-  end
-
-  def add_candlepin_version_header
-    response.headers["X-CANDLEPIN-VERSION"] = "katello/#{Katello.config.katello_version}"
-  end
 
   # remove unwanted parameters 'action' and 'controller' from params list and return it
   # and convert true/false strings to boolean types
@@ -130,28 +93,6 @@ class Api::V1::ApiController < ActionController::Base
     return params[key]
   end
 
-  def verify_ldap
-    if !request.authorization.blank?
-      u = current_user
-      u.verify_ldap_roles if (Katello.config.ldap_roles && u != nil)
-    end
-  end
-
-  def require_user
-    if !request.authorization && current_user
-      return true
-    else
-      params[:auth_username], params[:auth_password] = user_name_and_password(request) if request.authorization
-      authenticate! :scope => :api
-      params.delete('auth_username')
-      params.delete('auth_password')
-    end
-
-  rescue => e
-    logger.error "failed to authenticate API request: " << pp_exception(e)
-    head :status => HttpErrors::INTERNAL_ERROR and return false
-  end
-
   def find_content_view_definition
     cvd_id = params[:content_view_definition_id]
     @definition = ContentViewDefinition.find_by_id(cvd_id)
@@ -185,7 +126,6 @@ class Api::V1::ApiController < ActionController::Base
   end
 
   def format_subsys_exception_hash(exception)
-
     orig_hash = JSON.parse(exception.response).with_indifferent_access rescue {}
 
     orig_hash[:displayMessage] = exception.response.to_s.gsub(/^"|"$/, "") if orig_hash[:displayMessage].nil? && exception.respond_to?(:response)
@@ -263,34 +203,47 @@ class Api::V1::ApiController < ActionController::Base
     message
   end
 
-  def request_from_katello_cli?
-     request.headers['User-Agent'].to_s =~ /^katello-cli/
-  end
-
   # Get the :label value from the params hash if it exists
   # otherwise use the :name value and convert to ASCII
   def labelize_params(params)
-    label = params[:label]
-    if params[:label].blank?
-      # Convert name to label
-      label = Util::Model::labelize(params[:name])
-    end
-    label
+    return params[:label] unless params.try(:[], :label).nil?
+    return Util::Model::labelize(params[:name]) unless params.try(:[], :name).nil?
   end
 
-  protected
+  def respond_for_index(options={})
+    collection = options[:collection] || get_resource_collection
+    status = options[:status] || 200
+    format = options[:format] || :json
 
-  def process_action(method_name, *args)
-    super(method_name, *args)
-    Rails.logger.debug "With body: #{response.body}\n"
+    render format => collection, :status => status
   end
 
-  def split_order(order)
-    if order
-      order.split("|")
-    else
-      [:name_sort, "ASC"]
-    end
+  def respond_for_show(options={})
+    resource = options[:resource] || get_resource
+    status = options[:status] || 200
+    format = options[:format] || :json
+
+    render format => resource, :status => status
+  end
+
+  def respond_for_create(options={})
+    respond_for_show(options)
+  end
+
+  def respond_for_update(options={})
+    respond_for_show(options)
+  end
+
+  def respond_for_destroy(options={})
+    respond_for_status(options)
+  end
+
+  def respond_for_status(options={})
+    message = options[:message] || nil
+    status = options[:status] || 200
+    format = options[:format] || :text
+
+    render format => message, :status => status
   end
 
 end

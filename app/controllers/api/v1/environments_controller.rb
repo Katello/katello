@@ -43,6 +43,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   before_filter :find_organization, :only => [:index, :rhsm_index, :create]
   before_filter :find_environment, :only => [:show, :update, :destroy, :repositories, :releases]
   before_filter :authorize
+
   def rules
     manage_rule = lambda{@organization.environments_manageable?}
     view_rule = lambda{@organization.readable?}
@@ -92,25 +93,24 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   param_group :search_params
   def index
     query_params[:organization_id] = @organization.id
-    environments = KTEnvironment.where query_params
+    @environments = KTEnvironment.where query_params
 
     # The following is a workaround to handle the fact that rhsm currently requests the
     # environment using the 'name' parameter; however, the value is actually the environment label.
-    if environments.empty?
+    if @environments.empty?
       if query_params.has_key?(:name)
         query_params[:label] = query_params[:name]
         query_params.delete(:name)
       end
-      environments = KTEnvironment.where query_params
+      @environments = KTEnvironment.where query_params
     end
 
     unless @organization.readable?
-      environments.delete_if do |env|
+      @environments.delete_if do |env|
         !env.any_operation_readable?
       end
     end
-
-    render :json => (environments).to_json
+    respond
   end
 
   api :GET, "/owners/:organization_id/environments", "List environments for RHSM"
@@ -118,16 +118,15 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   def rhsm_index
     if query_params.has_key?(:name)
       # retrieve the requested environment
-      all_environments = get_content_view_environments(query_params[:name]).
+      @all_environments = get_content_view_environments(query_params[:name]).
                           collect{|env| {:id => env.cp_id, :name => env.label,
                                          :description => env.content_view.description}}
     else
       # retrieve the list of all environments
-      all_environments = get_content_view_environments.collect{|env| {:id => env.cp_id, :name => env.label,
+      @all_environments = get_content_view_environments.collect{|env| {:id => env.cp_id, :name => env.label,
                                                                       :description => env.content_view.description}}
-
     end
-    render :json => all_environments.flatten
+    respond_for_index :collection => @all_environments
   end
 
   api :GET, "/environments/:id", "Show an environment"
@@ -135,7 +134,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   param :id, :identifier, :desc => "environment identifier"
   param :organization_id, :identifier, :desc => "organization identifier"
   def show
-    render :json => @environment
+    respond
   end
 
   api :POST, "/organizations/:organization_id/environments", "Create an environment in an organization"
@@ -150,23 +149,20 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   def create
     environment_params = params[:environment]
     environment_params[:label] = labelize_params(environment_params)
-    environment = KTEnvironment.new(environment_params)
-    @organization.environments << environment
-    raise ActiveRecord::RecordInvalid.new(environment) unless environment.valid?
+    @environment = KTEnvironment.new(environment_params)
+    @organization.environments << @environment
+    raise ActiveRecord::RecordInvalid.new(@environment) unless @environment.valid?
     @organization.save!
-    render :json => environment
+    respond
   end
 
   api :PUT, "/environments/:id", "Update an environment"
   api :PUT, "/organizations/:organization_id/environments/:id", "Update an environment in an organization"
   param_group :environment
   def update
-    if @environment.library?
-      raise HttpErrors::BadRequest, _("Can't update the '%s' environment") % "Library"
-    else
-      @environment.update_attributes!(params[:environment])
-      render :json => @environment
-    end
+    raise HttpErrors::BadRequest, _("Can't update the '%s' environment") % "Library" if @environment.library?
+    @environment.update_attributes!(params[:environment])
+    respond
   end
 
   api :DELETE, "/environments/:id", "Destroy an environment"
@@ -176,7 +172,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   def destroy
     if @environment.confirm_last_env
       @environment.destroy
-      render :text => _("Deleted environment '%s'") % params[:id], :status => 200
+      respond :message => _("Deleted environment '%s'") % params[:id]
     else
       raise HttpErrors::BadRequest,
             _("Environment %s has a successor. Only the last environment on a path can be deleted.") % @environment.name
@@ -188,7 +184,8 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   param :organization_id, :identifier, :desc => "organization identifier"
   param :include_disabled, :bool, :desc => "set to true if you want to see also disabled repositories"
   def repositories
-    render :json => @environment.products.all_readable(@organization).collect { |p| p.repos(@environment, query_params[:include_disabled]) }.flatten
+    @repositories = @environment.products.all_readable(@organization).collect { |p| p.repos(@environment, query_params[:include_disabled]) }.flatten
+    respond_for_index :collection => @repositories
   end
 
   api :GET, "/environments/:id/releases", "List available releases for given environment"

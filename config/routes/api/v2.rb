@@ -10,6 +10,35 @@ Src::Application.routes.draw do
 
   namespace :api do
 
+    # new v2 routes that point to v2
+    scope :module => :v2, :constraints => ApiVersionConstraint.new(:version => 2, :default => true) do
+
+      api_resources :environments, :only => [:show, :update, :destroy] do
+        match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
+        api_resources :systems, :only => [:create, :index] do
+          get :report, :on => :collection
+        end
+        api_resources :products, :only => [:index] do
+          get :repositories, :on => :member
+        end
+        api_resources :activation_keys, :only => [:index, :create]
+        api_resources :templates, :only => [:index]
+
+        member do
+          get :releases
+        end
+      end
+
+      api_resources :organizations do
+        api_resources :environments do
+          get :repositories, :on => :member
+          api_resources :changesets, :only => [:index, :create]
+        end
+      end
+
+    end # module v2
+
+
     # routes that didn't change in v2 and point to v1
     scope :module => :v1, :constraints => ApiVersionConstraint.new(:version => 2, :default => true) do
 
@@ -100,8 +129,8 @@ Src::Application.routes.draw do
         end
 
         api_resources :environments do
-          get :repositories, :on => :member
-          api_resources :changesets, :only => [:index, :create]
+         get :repositories, :on => :member
+         api_resources :changesets, :only => [:index, :create]
         end
         api_resources :sync_plans
         api_resources :tasks, :only => [:index]
@@ -196,22 +225,6 @@ Src::Application.routes.draw do
         end
         collection do
           post :sync_complete
-        end
-      end
-
-      api_resources :environments, :only => [:show, :update, :destroy] do
-        match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
-        api_resources :systems, :only => [:create, :index] do
-          get :report, :on => :collection
-        end
-        api_resources :products, :only => [:index] do
-          get :repositories, :on => :member
-        end
-        api_resources :activation_keys, :only => [:index, :create]
-        api_resources :templates, :only => [:index]
-
-        member do
-          get :releases
         end
       end
 
@@ -316,13 +329,9 @@ Src::Application.routes.draw do
 
       match '*a', :to => 'errors#render_404'
 
-    end # module v2
-
-
-    # new v2 routes that point to v2
-    scope :module => :v2, :constraints => ApiVersionConstraint.new(:version => 2, :default => true) do
-
     end # module v1
+
+
 
   end # '/api' namespace
 
