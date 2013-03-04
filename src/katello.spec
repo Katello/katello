@@ -86,6 +86,7 @@ Requires:       rubygem(ldap_fluff)
 Requires:       rubygem(foreman_api) >= 0.0.7
 Requires:       rubygem(anemone)
 Requires:       rubygem(apipie-rails) >= 0.0.18
+Requires:       rubygem(logging) >= 1.8.0
 Requires:       lsof
 
 %if 0%{?rhel} == 6
@@ -495,7 +496,6 @@ install -Dp -m0644 %{confdir}/service-wait.sysconfig %{buildroot}%{_sysconfdir}/
 install -Dp -m0755 %{confdir}/%{name}.init %{buildroot}%{_initddir}/%{name}
 install -Dp -m0755 %{confdir}/%{name}-jobs.init %{buildroot}%{_initddir}/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
-install -Dp -m0644 %{confdir}/%{name}-jobs.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.httpd.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 install -Dp -m0644 %{confdir}/thin.yml %{buildroot}%{_sysconfdir}/%{name}/
 install -Dp -m0644 %{confdir}/mapping.yml %{buildroot}%{_sysconfdir}/%{name}/
@@ -648,7 +648,6 @@ usermod -a -G katello-shared tomcat
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config %{_sysconfdir}/%{name}/environment.rb
 %config %{_sysconfdir}/logrotate.d/%{name}
-%config %{_sysconfdir}/logrotate.d/%{name}-jobs
 %config %{_sysconfdir}/%{name}/mapping.yml
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/service-wait
@@ -666,11 +665,7 @@ usermod -a -G katello-shared tomcat
 %attr(750, katello, katello) %{_localstatedir}/log/%{name}
 %{datadir}
 %ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production.log
-%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_sql.log
-%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs.log
-%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs_sql.log
-%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_orch.log
-%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/production_delayed_jobs_orch.log
+%ghost %attr(640, katello, katello) %{_localstatedir}/log/%{name}/delayed_production.log
 
 %files glue-elasticsearch
 %{homedir}/app/models/glue/elastic_search
