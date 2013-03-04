@@ -5,7 +5,7 @@ before_install:
     
 install:
   - sudo apt-get install libssl-dev python m2crypto --quiet
-  - sudo pip install mock nose python-dateutil kerberos pep8 pylint simplejson --quiet
+  - sudo pip install -r cli/requirements-dev.pip
 
 script:
   - cd src/
