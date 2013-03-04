@@ -62,8 +62,7 @@ class ContentViewDefinitionsController < ApplicationController
       :update_content => manage_rule,
       :update_component_views => manage_rule,
       :filter => show_rule,
-
-      :default_label => create_rule
+      :default_label => lambda {create_rule.call || manage_rule.call}
     }
   end
 

@@ -687,6 +687,7 @@ Src::Application.routes.draw do
           put :index, :action => :update_content_view_definition_repositories,
             :on => :collection
         end
+        resources :filters, :controller => :filters, :only => [:index, :show, :create, :destroy]
       end
     end
 
@@ -700,6 +701,8 @@ Src::Application.routes.draw do
         post :refresh
       end
     end
+
+
 
     resources :changesets, :only => [:show, :update, :destroy] do
       post :promote, :on => :member, :action => :promote
