@@ -214,11 +214,15 @@ $forty: $static_width - $sixty;
       }
     }
 
-    #dashboard_promotions {
+    #dashboard_promotions, #dashboard_content_views {
       h5 {
         display: inline;
       }
-      .promotion_entry {
+      .icon_wrap {
+        padding-top: 4px;
+        padding-bottom: 0;
+      }
+      .row_item {
         .col_1 {
           white-space: nowrap;
           width: 190px;
@@ -434,7 +438,7 @@ $forty: $static_width - $sixty;
     }
     .clock_icon {
       width: 16px;
-      @include action-icon($gears_icon_black);
+      @include action-icon($clock_icon_black);
       margin-left: 0px;
     }
     .small_widget {

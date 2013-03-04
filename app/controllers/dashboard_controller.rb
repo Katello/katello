@@ -68,6 +68,10 @@ class DashboardController < ApplicationController
                                          :systems_hash => systems_hash, :errata_hash => errata_hash}
   end
 
+  def content_views
+    render :partial=>"content_views", :locals=>{:quantity=>quantity}
+  end
+
   def promotions
     render :partial=>"promotions", :locals=>{:quantity=>quantity}
   end
