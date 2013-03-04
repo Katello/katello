@@ -18,7 +18,7 @@ import os
 
 from katello.client.api.organization import OrganizationAPI
 from katello.client.api.product import ProductAPI
-from katello.client.api.organization_system_info_keys import OrganizationSystemInfoKeysAPI
+from katello.client.api.organization_info_keys import OrganizationInfoKeysAPI
 from katello.client.core.base import BaseAction, Command
 from katello.client.lib.async import AsyncTask, evaluate_task_status
 from katello.client.lib.ui.progress import run_spinner_in_bg, wait_for_async_task
@@ -104,7 +104,7 @@ class Info(OrganizationAction):
 
         org = self.api.organization(name)
 
-        org['system_info_keys'] = "[ %s ]" % ", ".join(org['system_info_keys'])
+        org['system_info_keys'] = "[ %s ]" % ", ".join(org['info_keys']['system'])
 
         self.printer.add_column('id', _("ID"))
         self.printer.add_column('name', _("Name"))
@@ -260,93 +260,104 @@ class ShowSubscriptions(OrganizationAction):
 
 # ------------------------------------------------------------------------------
 
-class AddDefaultSystemInfo(OrganizationAction):
+class AddDefaultInfo(OrganizationAction):
 
-    description = _("add default custom info keynames for systems")
+    description = _("add default custom info")
 
     def __init__(self):
-        super(AddDefaultSystemInfo, self).__init__()
-        self.system_info_keys_api = OrganizationSystemInfoKeysAPI()
+        super(AddDefaultInfo, self).__init__()
+        self.info_keys_api = OrganizationInfoKeysAPI()
 
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name', help=_("organization name eg: foo.example.com (required)"))
+        parser.add_option('--type', dest='type', help=_("'system' (required)"))
         parser.add_option('--keyname', dest='keyname', help=_("name of the default custom info (required)"))
 
     def check_options(self, validator):
-        validator.require(('name', 'keyname'))
+        validator.require(('name', 'keyname', 'type'))
 
     def run(self):
         org_name = self.get_option('name')
         keyname = self.get_option('keyname')
+        informable_type = self.get_option('type').lower()
 
-        response = self.system_info_keys_api.create(org_name, keyname)
+        response = self.info_keys_api.create(org_name, informable_type, keyname)
 
+        output_hash = {'keyname': keyname, 'org_name': org_name, 'katello_obj': informable_type.capitalize()}
         if response:
-            print _("Successfully added default custom info key [ %(keyname)s ] to Org [ %(org_name)s ]") \
-                % {'keyname':keyname, 'org_name':org_name}
+            print _("Successfully added [ %(katello_obj)s ] " \
+                + "default custom info [ %(keyname)s ] to Org [ %(org_name)s ]") \
+                % output_hash
         else:
-            print _("Could not add default custom info key [ %(keyname)s ] to Org [ %(org_name)s ]") \
-                % {'keyname':keyname, 'org_name':org_name}
+            print _("Could not add [ %(katello_obj)s ] " \
+                + "default custom info [ %(keyname)s ] to Org [ %(org_name)s ]") \
+                % output_hash
 
 # ------------------------------------------------------------------------------
 
-class RemoveDefaultSystemInfo(OrganizationAction):
+class RemoveDefaultInfo(OrganizationAction):
 
-    description = _("remove default custom info keynames for systems")
+    description = _("remove default custom info")
 
     def __init__(self):
-        super(RemoveDefaultSystemInfo,  self).__init__()
-        self.system_info_keys_api = OrganizationSystemInfoKeysAPI()
+        super(RemoveDefaultInfo,  self).__init__()
+        self.info_keys_api = OrganizationInfoKeysAPI()
 
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name', help=_("organization name eg: foo.example.com (required)"))
+        parser.add_option('--type', dest='type', help=_("'system' (required)"))
         parser.add_option('--keyname', dest='keyname', help=_("name of the default custom info (required)"))
 
     def check_options(self, validator):
-        validator.require(('name', 'keyname'))
+        validator.require(('name', 'keyname', 'type'))
 
     def run(self):
         org_name = self.get_option('name')
         keyname = self.get_option('keyname')
+        informable_type = self.get_option('type').lower()
 
-        response = self.system_info_keys_api.destroy(org_name, keyname)
+        response = self.info_keys_api.destroy(org_name, informable_type, keyname)
 
+        output_hash = {'keyname': keyname, 'org_name': org_name, 'katello_obj': informable_type.capitalize()}
         if not keyname in response:
-            print _("Successfully removed default custom info key [ %(keyname)s ] for Org [ %(org_name)s ]") \
-                % {'keyname':keyname, 'org_name':org_name}
+            print _("Successfully removed [ %(katello_obj)s ] " \
+                + "default custom info [ %(keyname)s ] for Org [ %(org_name)s ]") \
+                % output_hash
         else:
-            print _("Could not remove default custom info key [ %(keyname)s ] for Org [ %(org_name)s ]") \
-                % {'keyname':keyname, 'org_name':org_name}
+            print _("Could not remove [ %(katello_obj)s ] " \
+                + "default custom info [ %(keyname)s ] for Org [ %(org_name)s ]") \
+                % output_hash
 
 # ------------------------------------------------------------------------------
 
-class ApplyDefaultSystemInfo(OrganizationAction):
+class ApplyDefaultInfo(OrganizationAction):
 
-    description = _("apply default custom info keynames to all existing systems")
+    description = _("apply default custom info keynames to all existing entities")
 
     def __init__(self):
-        super(ApplyDefaultSystemInfo, self).__init__()
-        self.system_info_keys_api = OrganizationSystemInfoKeysAPI()
+        super(ApplyDefaultInfo, self).__init__()
+        self.info_keys_api = OrganizationInfoKeysAPI()
 
     def setup_parser(self, parser):
         parser.add_option("--name", dest='name', help=_("organization name eg: foo.example.com (required)"))
+        parser.add_option("--type", dest='type', help=_("'system' (required)"))
 
     def check_options(self, validator):
-        validator.require('name')
+        validator.require(('name', 'type'))
 
     def run(self):
         org_name = self.get_option('name')
-
-        response = self.system_info_keys_api.apply(org_name)
+        informable_type = self.get_option('type').lower()
+        response = self.info_keys_api.apply(org_name, informable_type)
 
         if response:
-            print _("Successfully applied default custom info keys to \
-                  [ %(sys_count)d ] systems in Org [ %(org_name)s ]") \
-                  % {'sys_count':len(response), 'org_name':org_name}
-        elif  len(response) == 0:
+            print _("Applied [ %(sys_count)d %(katello_obj)s ] default custom info in Org [ %(org_name)s ]") \
+                % {'sys_count': len(response), 'org_name': org_name, 'katello_obj': informable_type.capitalize()}
+        elif len(response) == 0:
             print _("No default custom info keys to apply in Org [ %s ]") % org_name
         else:
-            print _("Could not apply default custom info keys to systems in Org [ %s ]") % org_name
+            print _("Could not apply [ %(katello_obj)s ] default custom info keys to Org [ %(org_name)s ]") \
+                % {'org_name': org_name, 'katello_obj': informable_type.capitalize()}
 
 # organization command ------------------------------------------------------------
 

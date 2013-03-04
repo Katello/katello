@@ -14,7 +14,7 @@ require 'spec_helper.rb'
 include OrchestrationHelper
 include SystemHelperMethods
 
-describe Api::OrganizationSystemInfoKeysController do
+describe Api::OrganizationInfoKeysController do
   include LoginHelperMethods
   include LocaleHelperMethods
   include AuthorizationHelperMethods
@@ -43,24 +43,24 @@ describe Api::OrganizationSystemInfoKeysController do
   describe "add default custom info to an org" do
 
     it "should be successful" do
-      Organization.find(@org.id).system_info_keys.empty?.should == true
-      post :create, :organization_id => @org.label, :keyname => "test_key"
+      Organization.find(@org.id).info_keys["system"].empty?.should == true
+      post :create, :organization_id => @org.label, :keyname => "test_key", :informable_type => "system"
       response.code.should == "200"
-      Organization.find(@org.id).system_info_keys.include?("test_key").should == true
+      Organization.find(@org.id).info_keys["system"].include?("test_key").should == true
     end
 
     it "should fail without keyname" do
-      Organization.find(@org.id).system_info_keys.empty?.should == true
-      post :create, :organization_id => @org.label
+      Organization.find(@org.id).info_keys["system"].empty?.should == true
+      post :create, :organization_id => @org.label, :informable_type => "system"
       response.code.should == "400"
-      Organization.find(@org.id).system_info_keys.empty?.should == true
+      Organization.find(@org.id).info_keys["system"].empty?.should == true
     end
 
     it "should fail with wrong org id" do
-      Organization.find(@org.id).system_info_keys.empty?.should == true
-      post :create, :organization_id => "blahblahblah", :keyname => "test_key"
+      Organization.find(@org.id).info_keys["system"].empty?.should == true
+      post :create, :organization_id => "blahblahblah", :keyname => "test_key", :informable_type => "system"
       response.code.should == "404"
-      Organization.find(@org.id).system_info_keys.empty?.should == true
+      Organization.find(@org.id).info_keys["system"].empty?.should == true
     end
 
   end
@@ -68,22 +68,22 @@ describe Api::OrganizationSystemInfoKeysController do
   describe "remove default custom info to an org" do
 
     before (:each) do
-      @org.system_info_keys << "test_key"
+      @org.info_keys["system"] << "test_key"
       @org.save!
     end
 
     it "should be successful" do
-      Organization.find(@org.id).system_info_keys.size.should == 1
-      post :destroy, :organization_id => @org.label, :keyname => "test_key"
+      Organization.find(@org.id).info_keys["system"].size.should == 1
+      post :destroy, :organization_id => @org.label, :keyname => "test_key", :informable_type => "system"
       response.code.should == "200"
-      Organization.find(@org.id).system_info_keys.empty?.should == true
+      Organization.find(@org.id).info_keys["system"].empty?.should == true
     end
 
     it "should fail with wrong org id" do
-      Organization.find(@org.id).system_info_keys.size.should == 1
-      post :destroy, :organization_id => "bad org label", :keyname => "test_key"
+      Organization.find(@org.id).info_keys["system"].size.should == 1
+      post :destroy, :organization_id => "bad org label", :keyname => "test_key", :informable_type => "system"
       response.code.should == "404"
-      Organization.find(@org.id).system_info_keys.size.should == 1
+      Organization.find(@org.id).info_keys["system"].size.should == 1
     end
 
   end
@@ -100,10 +100,10 @@ describe Api::OrganizationSystemInfoKeysController do
       @org.systems.each do |s|
         s.custom_info.empty?.should == true
       end
-      @org.system_info_keys << "test_key"
+      @org.info_keys["system"] << "test_key"
       @org.save!
 
-      get :apply_to_all_systems, :organization_id => @org.label
+      get :apply_to_all, :organization_id => @org.label, :informable_type => "system"
       response.code.should == "200"
 
       @org.systems.each do |s|

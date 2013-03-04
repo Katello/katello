@@ -17,7 +17,7 @@ class System < ActiveRecord::Base
 
   include Glue::Candlepin::Consumer if Katello.config.use_cp
   include Glue::Pulp::Consumer if Katello.config.use_pulp
-  include Glue if Katello.config.use_cp ||  Katello.config.use_pulp
+  include Glue if Katello.config.use_cp || Katello.config.use_pulp
   include Glue::ElasticSearch::System if Katello.config.use_elasticsearch
   include Authorization::System
   include AsyncOrchestration
@@ -185,7 +185,7 @@ class System < ActiveRecord::Base
   end
 
   def init_default_custom_info_keys
-    self.organization.system_info_keys.each do |k|
+    self.organization.info_keys["system"].each do |k|
       self.custom_info.create!(:keyname => k)
     end
   end
@@ -213,12 +213,12 @@ class System < ActiveRecord::Base
     end
 
     def collect_installed_product_names
-      self.installedProducts ? self.installedProducts.map{ |p| p[:productName] } : []
+      self.installedProducts ? self.installedProducts.map { |p| p[:productName] } : []
     end
 
     def collect_custom_info
       hash = {}
-      self.custom_info.each{ |c| hash[c.keyname] = c.value} if self.custom_info
+      self.custom_info.each { |c| hash[c.keyname] = c.value } if self.custom_info
       hash
     end
 
