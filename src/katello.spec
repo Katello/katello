@@ -40,6 +40,7 @@ Requires:        %{name}-selinux
 Conflicts:       %{name}-headpin
 Requires:        rubygem(bundler_ext)
 BuildRequires:   rubygem(bundler_ext)
+BuildRequires:   rubygem(logging) >= 1.8.0
 BuildRequires:   asciidoc
 BuildRequires:   /usr/bin/getopt
 
