@@ -49,6 +49,7 @@ from katello.client.core import (
   content,
   content_view,
   content_view_definition,
+  filter,
   subnet,
   smart_proxy,
   compute_resource,
@@ -307,6 +308,14 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
                 content_view_definition.AddRemoveContentView(True))
         cvd_cmd.add_command('remove_view',
                 content_view_definition.AddRemoveContentView(False))
+
+        filter_cmd = filter.Filter()
+        filter_cmd.add_command('list', filter.List())
+        filter_cmd.add_command('show', filter.Info())
+        filter_cmd.add_command('create', filter.Create())
+        filter_cmd.add_command('delete', filter.Delete())
+
+        cvd_cmd.add_command("filter", filter_cmd)
         content_cmd.add_command('view', cv_cmd)
         content_cmd.add_command('definition', cvd_cmd)
         katello_cmd.add_command('content', content_cmd)
