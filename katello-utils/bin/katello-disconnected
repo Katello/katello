@@ -13,26 +13,25 @@
 # Manifest representation in Ruby
 #
 
-# things that must exist before we require katello libraries
-CONFIG_DIR = File.expand_path "~/.katello-disconnected"
+#KATELLO_CONFIG_PULP = YAML::load_file("/etc/katello/katello.yml")['common']['pulp'] rescue {}
+#AppConfig = OpenStruct.new(
+  #:pulp => OpenStruct.new(
+    #:url => CONFIG['url'] || KATELLO_CONFIG_PULP['url'] || 'https://localhost/pulp/api',
+    #:oauth_key => CONFIG['oauth_key'] || KATELLO_CONFIG_PULP['oauth_key'] || 'katello',
+    #:oauth_secret => CONFIG['oauth_secret'] || KATELLO_CONFIG_PULP['oauth_secret'] || 'UNSET',
+    #:sync_threads => CONFIG['threads'] || KATELLO_CONFIG_PULP['sync_threads'] || 4
+  #)
+#)
+#module User
+  #def self.pulp_oauth_header
+    #{ 'pulp-user' => CONFIG['user'] || 'admin' }
+  #end
+#end
+
+KATELLO_PREFIX = ENV['KATELLO_PREFIX'] || '/usr/share/katello'
+
 require 'ostruct'
 require 'yaml'
-KATELLO_CONFIG_PULP = YAML::load_file("/etc/katello/katello.yml")['common']['pulp'] rescue {}
-CONFIG = YAML::load_file(CONFIG_DIR + "/config.yml") rescue {}
-AppConfig = OpenStruct.new(
-  :pulp => OpenStruct.new(
-    :url => CONFIG['url'] || KATELLO_CONFIG_PULP['url'] || 'https://localhost/pulp/api',
-    :oauth_key => CONFIG['oauth_key'] || KATELLO_CONFIG_PULP['oauth_key'] || 'katello',
-    :oauth_secret => CONFIG['oauth_secret'] || KATELLO_CONFIG_PULP['oauth_secret'] || 'UNSET',
-    :sync_threads => CONFIG['threads'] || KATELLO_CONFIG_PULP['sync_threads'] || 4
-  )
-)
-module User
-  def self.pulp_oauth_header
-    { 'pulp-user' => CONFIG['user'] || 'admin' }
-  end
-end
-
 require 'singleton'
 require 'optparse'
 require 'rubygems'
@@ -45,21 +44,11 @@ require 'net/https'
 require 'active_support/all'
 require 'oauth'
 require 'rest_client'
-require '/usr/share/katello/lib/util/cdn_var_substitutor.rb'
-require '/usr/share/katello/lib/util/manifest_reader.rb'
-require '/usr/share/katello/lib/resource_permissions.rb'
-require '/usr/share/katello/lib/http_resource.rb'
-require '/usr/share/katello/lib/resources/pulp.rb'
-
-begin
-  require 'newt'
-  NEWT_PRESENT=true
-rescue LoadError
-  NEWT_PRESENT=false
-end
-
-DEFAULT_CDNURL = 'https://cdn.redhat.com'
-DEFAULT_CDNCA='/etc/rhsm/ca/redhat-uep.pem'
+require 'runcible'
+require "#{KATELLO_PREFIX}/lib/util/cdn_var_substitutor.rb"
+require "#{KATELLO_PREFIX}/lib/util/manifest_reader.rb"
+require "#{KATELLO_PREFIX}/lib/resource_permissions.rb"
+require "#{KATELLO_PREFIX}/lib/http_resource.rb"
 
 class SimpleLogger
   include Singleton
@@ -88,6 +77,35 @@ class SimpleLogger
 end
 L = SimpleLogger.instance
 module Rails; def self.logger; L; end; end
+
+CONFIG_DIR = File.expand_path "~/.katello-disconnected"
+CONFIG = YAML::load_file(CONFIG_DIR + "/config.yml") rescue {}
+
+# TODO make this configurable
+RestClient.log = Object.new.tap do |proxy|
+  def proxy.<<(message)
+    L.debug message
+  end
+end
+Runcible::Base.config = {
+  :url      => "https://" + (CONFIG["hostname"] || 'localhost'),
+  :api_path => "/pulp/api/v2/",
+  :user     => (CONFIG["user"] || 'admin'),
+  :logger   => RestClient.log,
+  :oauth    => {
+    :oauth_secret => CONFIG["oauth_key"],
+    :oauth_key    => CONFIG["oauth_secret"] }
+}
+
+begin
+  require 'newt'
+  NEWT_PRESENT=true
+rescue LoadError
+  NEWT_PRESENT=false
+end
+
+DEFAULT_CDNURL = 'https://cdn.redhat.com'
+DEFAULT_CDNCA='/etc/rhsm/ca/redhat-uep.pem'
 
 class CdnResource
   attr_reader :url
@@ -202,8 +220,8 @@ options[:cdn_ca] = DEFAULT_CDNCA
 subcommands = {
   'setup' => OptionParser.new do |opts|
     opts.banner = "Usage: setup [--option VALUE]"
-    opts.on('--url PULP_URL', 'Pulp URL (default "https://localhost/pulp/api")') do |value|
-      CONFIG['url'] = value
+    opts.on('--host PULP_HOSTNAME', 'Pulp host (default "localhost")') do |value|
+      CONFIG['hostname'] = value
       options[:save_config] = true
     end
     opts.on('--oauth-key KEY', 'OAuth key (default "katello")') do |value|
@@ -258,7 +276,7 @@ subcommands = {
     opts.on( '-r', '--repos REPOS', "Repository ids to enable" ) do |value|
       options[:repos] = value
     end
-    opts.on( '-a', '--all', 'Disable all repositories' ) do
+    opts.on( '-a', '--all', 'Enable all repositories' ) do
       options[:all] = true
     end
   end,
@@ -267,7 +285,7 @@ subcommands = {
     opts.on( '-r', '--repos REPOS', "Repository ids to disable" ) do |value|
       options[:repos] = value
     end
-    opts.on( '-a', '--all', 'Enable all repositories' ) do
+    opts.on( '-a', '--all', 'Disable all repositories' ) do
       options[:all] = true
     end
   end,
@@ -407,7 +425,7 @@ end
 
 def newt_select amanifest
   if ! NEWT_PRESENT
-    L.f "Ruby-newt library not available on this system, edit manually repos.conf."
+    L.f "Ruby-newt library not available on this system, use enable/disable\nor edit manually repos.conf."
   end
   Newt::Screen.new
   at_exit do
@@ -460,29 +478,17 @@ def newt_select amanifest
   end
 end
 
-class PulpService
-  def initialize dryrun = false
-    @dryrun = dryrun
-    @resource = Resources::Pulp::Repository
-  end
-
-  def method_missing(sym, *args, &block)
-    if not @dryrun
-      @resource.send sym, *args, &block
-    end
-  end
-end
-# use this to access pulp for reading
-PULP = PulpService.new
-# use this to change data in pulp (respects dry run setting)
-PULPDR = PulpService.new options[:dry_run]
-
 class Pulp
   attr_accessor :amanifest, :manifest
 
-  def initialize amanifest
+  def initialize amanifest, options
     @amanifest = amanifest
     @manifest = amanifest.manifest
+    @options = options
+  end
+
+  def dry_run(&block)
+    block.call unless @options[:dry_run]
   end
 
   def list disabled = false
@@ -494,9 +500,11 @@ class Pulp
   end
 
   def clean
-    PULP.all.each do |repo|
+    Runcible::Resources::Repository.retrieve_all.each do |repo|
       L.v "Removing repo #{repo['id']}"
-      PULPDR.destroy repo['id']
+      dry_run do
+        Runcible::Resources::Repository.delete repo['id']
+      end
     end
   end
 
@@ -504,7 +512,12 @@ class Pulp
     if repoids
       repoids = repoids.split(/,\s*/).collect(&:strip)
     else
-      repoids = manifest.repositories.keys
+      if all
+        repoids = manifest.repositories.keys
+      else
+        L.e "You need to provide some repoids"
+        return
+      end
     end
     repoids.each do |repoid|
       L.v "Setting enabled flag to #{value} for #{repoid}"
@@ -516,7 +529,7 @@ class Pulp
   def configure remove_disabled = false
     arepos = manifest.repositories
     mfrepos = manifest.enabled_repositories
-    purepos = PULP.all.collect { |m| m['id'] }
+    purepos = Runcible::Resources::Repository.retrieve_all.collect { |m| m['id'] }
     repos_to_be_added = mfrepos - purepos
     repos_to_be_removed = purepos - mfrepos
     L.d "Enabled repos: #{mfrepos.inspect}"
@@ -527,25 +540,23 @@ class Pulp
       L.d "To be removed: #{repos_to_be_removed.inspect}"
       repos_to_be_removed.each do |repoid|
         L.v "Removing repo #{repoid}"
-        PULPDR.destroy repoid
+        dry_run do
+          Runcible::Resources::Repository.delete repoid
+        end
       end
     end
     # add new repos
     repos_to_be_added.each do |repoid|
       L.v "Creating repo #{repoid}"
-      repo = arepos[repoid]
-      repo_json = {
-        :id => repoid,
-        :name => repoid,
-        :arch => repo.basearch,
-        :feed => repo.url,
-        :feed_cert_data => {
-          :ca => manifest.read_cdn_ca,
-          :cert => repo.cert,
-          :key => repo.key
-        }
-      }
-      PULPDR.create repo_json
+      dry_run do
+        repo = arepos[repoid]
+        yum_importer = Runcible::Extensions::YumImporter.new
+        yum_importer.feed_url = repo.url
+        yum_importer.ssl_ca_cert = manifest.read_cdn_ca
+        yum_importer.ssl_client_cert = repo.cert
+        yum_importer.ssl_client_key = repo.key
+        Runcible::Extensions::Repository.create_with_importer(repoid, yum_importer)
+      end
     end
   end
 
@@ -553,12 +564,14 @@ class Pulp
     if repoids
       repoids = repoids.split(/,\s*/).collect(&:strip)
     else
-      repoids = PULP.all.collect{|r| r['id']}
+      repoids = Runcible::Resources::Repository.retrieve_all.collect{|r| r['id']}
     end
     repoids.each do |repoid|
       begin
         L.v "Synchronizing repo #{repoid}"
-        PULPDR.sync repoid
+        dry_run do
+          Runcible::Resources::Repository.sync repoid
+        end
       rescue RestClient::ResourceNotFound => e
         L.e "Repo #{repoid} not found, skipping"
       end
@@ -569,12 +582,13 @@ class Pulp
     if delay_time.nil?
       delay_time = 10
     else
-      delay_time = delay_time.to_i
+      delay_time = delay_time.to_i rescue 1
+      delay_time = 1 if delay_time < 1
     end
     if repoids
       repoids = repoids.split(/,\s*/).collect(&:strip)
     else
-      repoids = PULP.all.collect{|r| r['id']}
+      repoids = Runcible::Resources::Repository.retrieve_all.collect{|r| r['id']}
     end
     puts "Watching sync... (this may be safely interrupted with Ctrl+C)"
     finished_repoids = {}
@@ -586,16 +600,13 @@ class Pulp
           begin
             # skip if this repo was already finished
             next if finished_repoids[repoid]
-            status = PULP.sync_status repoid
-            #puts status.inspect
-            state = status[0]['state'] || 'unknown'
-            exception = status[0]['exception'] || ''
+            status = Runcible::Extensions::Repository.sync_status repoid
+            state = status[0]['state'] || 'unknown' rescue 'unknown'
+            exception = status[0]['exception'] || '' rescue ''
             statuses[state] = [] if statuses[state].nil?
             statuses[state] << [repoid, exception] if not repoid.nil?
             # remove finished repos
-            finished_repoids[repoid] = true if state == 'finished'
-            # give the server some time to breathe when user sets low delay
-            sleep 0.1
+            finished_repoids[repoid] = true if state == 'finished' or state == 'unknown'
           rescue RestClient::ResourceNotFound => e
             L.f "Repo #{repoid} not found"
           rescue SignalException => e
@@ -604,7 +615,6 @@ class Pulp
             L.e "Error while getting status for #{repoid}: #{e.message}"
           end
         end
-        #statuses['finished'] << finished_repoids.keys
         statuses.keys.sort.each do |state|
           puts "#{state}:"
           statuses[state].each do |pair|
@@ -620,6 +630,7 @@ class Pulp
         running = false
       end
     end
+    puts "Watching finished"
   end
 
   def export target_basedir = nil, repoids = nil, overwrite = false, onlycreate = false, onlyexport = false
@@ -631,7 +642,7 @@ class Pulp
     if repoids
       repoids = repoids.split(/,\s*/).collect(&:strip)
     else
-      repoids = PULP.all.collect{|r| r['id']}
+      repoids = Runcible::Resources::Repository.retrieve_all.collect{|r| r['id']}
     end
     # create directory structure
     repoids.each do |repoid|
@@ -665,7 +676,9 @@ class Pulp
       begin
         if not onlycreate
           L.v "Exporting repo #{repoid}"
-          PULPDR.export repoid, target_dir, overwrite
+          dry_run do
+            Runcible::Resources::Repository.export_NOT_IMPLEMENTED repoid, target_dir, overwrite
+          end
         end
       rescue RestClient::ResourceNotFound => e
         L.e "Repo #{repoid} not found, skipping"
@@ -685,33 +698,33 @@ elsif command == 'info'
 elsif command == 'select' # not supported yet
   newt_select amanifest.manifest
 elsif command == 'list'
-  pulp = Pulp.new amanifest
+  pulp = Pulp.new amanifest, options
   pulp.list options[:disabled]
 elsif command == 'enable'
-  pulp = Pulp.new amanifest
+  pulp = Pulp.new amanifest, options
   pulp.enable true, options[:repos], options[:all]
 elsif command == 'disable'
-  pulp = Pulp.new amanifest
+  pulp = Pulp.new amanifest, options
   pulp.enable false, options[:repos], options[:all]
 elsif command == 'sync' or command == 'synchronize'
-  pulp = Pulp.new amanifest
+  pulp = Pulp.new amanifest, options
   pulp.synchronize options[:repos]
 elsif command == 'watch'
-  pulp = Pulp.new amanifest
+  pulp = Pulp.new amanifest, options
   pulp.watch options[:delay], options[:repos], options[:once]
 elsif command == 'export'
-  pulp = Pulp.new amanifest
+  pulp = Pulp.new amanifest, options
   pulp.export options[:target], options[:repos], options[:overwrite],
     options[:onlycreate], options[:onlyexport]
 elsif command == 'clean'
-  pulp = Pulp.new amanifest
+  pulp = Pulp.new amanifest, options
   pulp.clean
 elsif command == 'configure' or command == 'config'
-  pulp = Pulp.new amanifest
+  pulp = Pulp.new amanifest, options
   pulp.configure options[:remove]
 elsif command == 'setup'
   File.open(CONFIG_DIR + "/config.yml", "w") do |file|
-    L.d "Saving configuration to " + CONFIG_DIR
+    L.d "Saving configuration to " + CONFIG_DIR + "/config.yml"
     file.write CONFIG.to_yaml
   end if options[:save_config]
 else
