@@ -25,17 +25,22 @@ module Resources
       end
     end
 
-    Architecture    = ForemanApi::Resources::Architecture.new options
-    Bookmark        = ForemanApi::Resources::Bookmark.new options
-    Home            = ForemanApi::Resources::Home.new options
-    OperatingSystem = ForemanApi::Resources::OperatingSystem.new options
-    User            = ForemanApi::Resources::User.new options
-    Domain          = ForemanApi::Resources::Domain.new options
-    SmartProxy      = ForemanApi::Resources::SmartProxy.new options
-    Subnet          = ForemanApi::Resources::Subnet.new options
-    ConfigTemplate  = ForemanApi::Resources::ConfigTemplate.new options
-    ComputeResource = ForemanApi::Resources::ComputeResource.new options
-    HardwareModel   = ForemanApi::Resources::Model.new options
+    def self.timeout_options
+      { :open_timeout => Katello.config.rest_client_timeout,
+        :timeout      => Katello.config.rest_client_timeout }
+    end
+
+    Architecture    = ForemanApi::Resources::Architecture.new options, timeout_options
+    Bookmark        = ForemanApi::Resources::Bookmark.new options, timeout_options
+    Home            = ForemanApi::Resources::Home.new options, timeout_options
+    OperatingSystem = ForemanApi::Resources::OperatingSystem.new options, timeout_options
+    User            = ForemanApi::Resources::User.new options, timeout_options
+    Domain          = ForemanApi::Resources::Domain.new options, timeout_options
+    SmartProxy      = ForemanApi::Resources::SmartProxy.new options, timeout_options
+    Subnet          = ForemanApi::Resources::Subnet.new options, timeout_options
+    ConfigTemplate  = ForemanApi::Resources::ConfigTemplate.new options, timeout_options
+    ComputeResource = ForemanApi::Resources::ComputeResource.new options, timeout_options
+    HardwareModel   = ForemanApi::Resources::Model.new options, timeout_options
 
   end
 end
