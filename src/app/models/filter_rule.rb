@@ -13,7 +13,7 @@
 class FilterRule < ActiveRecord::Base
   belongs_to :filter
 
-  serialize :parameters, HashWithIndifferentAccess	
+  serialize :parameters, HashWithIndifferentAccess
 
   PACKAGE       = Runcible::Extensions::Rpm.content_type()
   PACKAGE_GROUP       = Runcible::Extensions::PackageGroup.content_type()

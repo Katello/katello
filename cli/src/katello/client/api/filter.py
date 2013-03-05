@@ -14,8 +14,6 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
-from katello.client.lib.utils.encoding import u_str
-from katello.client.lib.utils.data import update_dict_unless_none
 
 class FilterAPI(KatelloAPI):
     """

@@ -56,7 +56,7 @@ class List(FilterAction):
 
 
     def check_options(self, validator):
-        validator.require(('org','definition'))
+        validator.require(('org', 'definition'))
 
     def run(self):
         org_label = self.get_option('org')
@@ -83,7 +83,7 @@ class Info(FilterAction):
 
 
     def check_options(self, validator):
-        validator.require(('org','definition', 'filter_name'))
+        validator.require(('org', 'definition', 'filter_name'))
 
     def run(self):
         org_label = self.get_option('org')
@@ -111,7 +111,7 @@ class Create(FilterAction):
         opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
-        validator.require(('org','definition', 'filter_name'))
+        validator.require(('org', 'definition', 'filter_name'))
 
     def run(self):
         org_label = self.get_option('org')
@@ -130,7 +130,7 @@ class Delete(FilterAction):
         opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
-        validator.require(('org','definition', 'filter_name'))
+        validator.require(('org', 'definition', 'filter_name'))
         
     def run(self):
         org_label = self.get_option('org')
