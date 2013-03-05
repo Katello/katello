@@ -49,7 +49,7 @@ class Api::FiltersController < Api::ApiController
   param :filter, String, :desc => "name of the filter", :required => true
   def create
     filter = Filter.create!(:content_view_definition => @definition, :name => params[:filter])
-    render :json => filter.to_json
+    render :json => filter
   end
 
 
