@@ -14,7 +14,7 @@ require 'spec_helper'
 
 describe Katello::Logging do
   let(:testing_config) do
-    Katello::Configuration::Node.new(
+    Configuration::Node.new(
         { :logging => { :colorize       => false,
                         :console_inline => false,
                         :log_trace      => false,
