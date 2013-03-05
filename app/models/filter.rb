@@ -14,9 +14,9 @@ class Filter < ActiveRecord::Base
   belongs_to :content_view_definition
   has_many  :rules, :class_name => "FilterRule", :dependent => :destroy
   has_and_belongs_to_many :repositories, :class_name => "Repository", :uniq => true
-  
+
   validates :name, :presence => true, :allow_blank => false,
-              :length => { :maximum => 255 }, 
+              :length => { :maximum => 255 },
               :uniqueness => {:scope => :content_view_definition_id}
 
   def self.applicable(repo)
