@@ -64,9 +64,9 @@ class List(FilterAction):
         validator.require(('org','definition'))
 
     def run(self):
-        org_name = self.get_option('org')
+        org_label = self.get_option('org')
         definition = self.get_option('definition')
-        defs = self.def_api.filters_by_cvd_and_org(definition, org_name)
+        defs = self.def_api.filters_by_cvd_and_org(definition, org_label)
 
         self.printer.add_column('id', _("ID"))
         self.printer.add_column('name', _("Name"))
@@ -91,10 +91,10 @@ class Info(FilterAction):
         validator.require(('org','definition', 'filter_name'))
 
     def run(self):
-        org_name = self.get_option('org')
+        org_label = self.get_option('org')
         definition = self.get_option('definition')
         filter_name = self.get_option('filter_name')
-        cvd_filter = self.def_api.get_filter_info(filter_name, definition, org_name)
+        cvd_filter = self.def_api.get_filter_info(filter_name, definition, org_label)
         self.printer.add_column('id', _("ID"))
         self.printer.add_column('name', _("Name"))
         self.printer.add_column('content_view_definition_label', _("Content View Definition"))
@@ -120,10 +120,10 @@ class Create(FilterAction):
         validator.require(('org','definition', 'filter_name'))
 
     def run(self):
-        org_id = self.get_option('org')
+        org_label = self.get_option('org')
         filter_name = self.get_option('filter_name')
         definition = self.get_option('definition')
-        self.def_api.create(filter_name, definition, org_id)
+        self.def_api.create(filter_name, definition, org_label)
         print _("Successfully created filter [ %s ]") % filter_name
         return os.EX_OK
 
@@ -139,10 +139,10 @@ class Delete(FilterAction):
         validator.require(('org','definition', 'filter_name'))
         
     def run(self):
-        org_id = self.get_option('org')
+        org_label = self.get_option('org')
         filter_name = self.get_option('filter_name')
         definition = self.get_option('definition')
-        self.def_api.delete(filter_name, definition, org_id)
+        self.def_api.delete(filter_name, definition, org_label)
         print _("Successfully deleted filter [ %s ]") % filter_name
         return os.EX_OK
 
