@@ -1,0 +1,5 @@
+#!/bin/sh
+# Use this script to run the program directly from git
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+KATELLO_PREFIX=$DIR/../../src DISCONNECTED_PREFIX=$DIR/.. $DIR/katello-disconnected $*

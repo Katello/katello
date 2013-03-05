@@ -1,4 +1,3 @@
-#!/usr/bin/ruby
 #
 # Copyright 2012 Red Hat, Inc.
 #
@@ -17,9 +16,73 @@ require 'pp'
 require 'rubygems'
 require 'json'
 
+# This class overrides the one from Katello core and it is responsible for
+# fetching the CDN tree. It is similar to Resources::CDN:CdnResource but
+# it is simplified (it does not load Katello settings and takes only few
+# basic parameters).
+#
+class DisconnectedCdnResource
+  attr_reader :url
 
-module ManifestReader # TODO looks like a dead code
-  module StringToBoll
+  def initialize url, options = {}
+    options.reverse_merge!(:verify_ssl => 9)
+    options.assert_valid_keys(:ssl_client_key, :ssl_client_cert, :ssl_ca_file, :verify_ssl)
+
+    @url = url
+    @uri = URI.parse(@url)
+    if options[:proxy_host]
+      @net = ::Net::HTTP::Proxy(options[:proxy_host], oprions[:proxy_port], oprions[:proxy_user], oprions[:proxy_password]).new(@uri.host, @uri.port)
+    else
+      @net = ::Net::HTTP.new(@uri.host, @uri.port)
+    end
+    @net.use_ssl = @uri.is_a?(URI::HTTPS)
+
+    @net.cert = options[:ssl_client_cert]
+    @net.key = options[:ssl_client_key]
+    @net.ca_file = options[:ssl_ca_file]
+
+    if (options[:verify_ssl] == false) || (options[:verify_ssl] == OpenSSL::SSL::VERIFY_NONE)
+      @net.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    elsif options[:verify_ssl].is_a? Integer
+      @net.verify_mode = options[:verify_ssl]
+      @net.verify_callback = lambda do |preverify_ok, ssl_context|
+        if (!preverify_ok) || ssl_context.error != 0
+          LOG.fatal "SSL verification failed -- preverify: #{preverify_ok}, error: #{ssl_context.error_string} (#{ssl_context.error})"
+        end
+        true
+      end
+    end
+  end
+
+  def get(path, headers={})
+    path = File.join(@uri.request_uri,path)
+    LOG.debug "Fetching info from #{path}"
+    req = Net::HTTP::Get.new(path)
+    begin
+      @net.start do |http|
+        res = http.request(req, nil) { |http_response| http_response.read_body }
+        code = res.code.to_i
+        if code == 200
+          return res.body
+        elsif code == 404
+          LOG.fatal _("Resource %s not found") % File.join(url, path)
+        elsif code == 403
+          LOG.fatal _("Access denied to %s") % File.join(url, path)
+        else
+          LOG.fatal _("Server returned %s error") % code
+        end
+      end
+    rescue EOFError
+      LOG.fatal "Server broke connection"
+    rescue Timeout::Error
+      LOG.fatal "Server connection timeout"
+    end
+  end
+end
+
+module ManifestReader
+
+  module StringToBool
     def to_bool
       return true if self == true || self =~ (/(true|t|yes|y|1)$/i)
       return false if self == false || self.blank? || self =~ (/(false|f|no|n|0)$/i)
@@ -48,16 +111,17 @@ module ManifestReader # TODO looks like a dead code
     def initialize basearch, releasever, enabled, path
       @basearch   = basearch
       @releasever = releasever
-      @enabled    = "#{enabled}".extend(StringToBoll).to_bool
+      @enabled    = "#{enabled}".extend(StringToBool).to_bool
       @path       = path
     end
 
     def enabled= value
-      @enabled = "#{value}".extend(StringToBoll).to_bool
+      @enabled = "#{value}".extend(StringToBool).to_bool
     end
 
+    # Return repoid in Pulp V2 friendly format (only alphanum, underscore or dash)
     def repoid
-      "#{content.label}-#{releasever}-#{basearch}"
+      "#{content.label}-#{releasever}-#{basearch}".gsub(/[^-\w]/,"_")
     end
 
     def repoid_enabled_hash
@@ -282,11 +346,11 @@ module ManifestReader # TODO looks like a dead code
 
         Rails.logger.debug "Processing entitlement #{entitlement.pool_id}"
         cdn_var_substitutor = Util::CdnVarSubstitutor.new(
-            CdnResource.new(
-                cdn_url,
-                :ssl_ca_file     => cdn_ca,
-                :ssl_client_cert => OpenSSL::X509::Certificate.new(entitlement.cert),
-                :ssl_client_key  => OpenSSL::PKey::RSA.new(entitlement.key)))
+          DisconnectedCdnResource.new(
+            cdn_url,
+            :ssl_ca_file => cdn_ca,
+            :ssl_client_cert => OpenSSL::X509::Certificate.new(entitlement.cert),
+            :ssl_client_key => OpenSSL::PKey::RSA.new(entitlement.key)))
 
         entitlement.provided_products.each do |product|
           Rails.logger.debug "Processing product #{product.name}"
