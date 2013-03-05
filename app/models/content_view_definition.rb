@@ -16,7 +16,6 @@ class ContentViewDefinition < ActiveRecord::Base
   include Glue::ElasticSearch::ContentViewDefinition if Katello.config.use_elasticsearch
   include Ext::LabelFromName
   include Authorization::ContentViewDefinition
-
   include AsyncOrchestration
   has_many :content_views, :dependent => :destroy
   has_many :filters, :inverse_of => :content_view_definition
@@ -206,8 +205,8 @@ class ContentViewDefinition < ActiveRecord::Base
   end
 
   protected
-  
-    def generate_unassociate_filter_clauses repo, content_type
+
+    def generate_unassociate_filter_clauses(repo, content_type)
       # find applicable filters
       # split filter rules by content type, since each content type has its own copy call
       # depending on include or exclude filters combine or remove
@@ -248,7 +247,6 @@ class ContentViewDefinition < ActiveRecord::Base
 
       #    If there are include and exclude filters, the exclude filters then the include filters, get processed first,
       #       then the exclude filter excludes content from the set included by the include filters.
-      
 =begin
       package_clauses = []
       if includes_count > 0
@@ -271,7 +269,7 @@ class ContentViewDefinition < ActiveRecord::Base
            #ignore
       end
   end
-  
+
   def views_repos
     # Retrieve a hash where, key=view.id and value=Set(view's repo library instance ids)
     self.component_content_views.inject({}) do |view_repos, view|
