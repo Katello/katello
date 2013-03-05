@@ -10,15 +10,11 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 module Navigation
-  module NotificationsMenu
-
-    def menu_notifications
-      {:key => :notifications,
-       :name => _("Notifications"),
-        :url => notices_path,
-        :options => {:class=>'notices top_level', "data-menu"=>"notices"}
-      }
+  module MainMenu
+    def menu_main
+      menu = [menu_dashboard, menu_contents, menu_systems]
+      menu << menu_setup if Katello.config.katello? && Katello.config.use_foreman
+      menu
     end
-
   end
 end

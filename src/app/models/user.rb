@@ -10,10 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'ldap'
-require 'util/threadsession'
 require 'util/password'
-require 'util/model_util'
 
 class User < ActiveRecord::Base
   include Glue::Pulp::User if Katello.config.use_pulp
@@ -26,7 +23,7 @@ class User < ActiveRecord::Base
   include AsyncOrchestration
   include Authorization::User
   include Authorization::Enforcement
-  include Katello::ThreadSession::UserModel
+  include Util::ThreadSession::UserModel
 
   acts_as_reportable
 
@@ -413,9 +410,9 @@ class User < ActiveRecord::Base
 
   def generate_remote_id
     if self.username.ascii_only?
-      "#{Katello::ModelUtils::labelize(self.username)}-#{SecureRandom.hex(4)}"
+      "#{Util::Model::labelize(self.username)}-#{SecureRandom.hex(4)}"
     else
-      Katello::ModelUtils::uuid
+      Util::Model::uuid
     end
   end
 

@@ -10,8 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Katello
-  module TaskStatusUtil
+module Util
+  module TaskStatus
 
     # The types hash below was introduced to simplify rendering of the status of various tasks/actions.  It was
     # initially introduced to support System Event history and was later refactored, so that it may be used

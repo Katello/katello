@@ -72,7 +72,7 @@ class SystemGroup < ActiveRecord::Base
   belongs_to :organization
 
   before_validation(:on=>:create) do
-    self.pulp_id ||= "#{self.organization.label}-#{Katello::ModelUtils::labelize(self.name)}-#{SecureRandom.hex(4)}"
+    self.pulp_id ||= "#{self.organization.label}-#{Util::Model::labelize(self.name)}-#{SecureRandom.hex(4)}"
   end
 
   default_scope :order => 'name ASC'

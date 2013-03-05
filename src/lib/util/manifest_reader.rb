@@ -17,21 +17,21 @@ require 'pp'
 require 'rubygems'
 require 'json'
 
-class String
-  def to_bool
-    return true if self == true || self =~ (/(true|t|yes|y|1)$/i)
-    return false if self == false || self.blank? || self =~ (/(false|f|no|n|0)$/i)
-    raise ArgumentError.new("invalid value for boolean: \"#{self}\"")
-  end
-end
 
-module ManifestReader
+module ManifestReader # TODO looks like a dead code
+  module StringToBoll
+    def to_bool
+      return true if self == true || self =~ (/(true|t|yes|y|1)$/i)
+      return false if self == false || self.blank? || self =~ (/(false|f|no|n|0)$/i)
+      raise ArgumentError.new("invalid value for boolean: \"#{self}\"")
+    end
+  end
 
   class Consumer
     attr_accessor :uuid
 
     def initialize json_file
-      c = JSON.parse(IO.read json_file)
+      c     = JSON.parse(IO.read json_file)
       @uuid = c['uuid']
     end
 
@@ -46,14 +46,14 @@ module ManifestReader
     attr_accessor :content
 
     def initialize basearch, releasever, enabled, path
-      @basearch = basearch
+      @basearch   = basearch
       @releasever = releasever
-      @enabled = "#{enabled}".to_bool
-      @path = path
+      @enabled    = "#{enabled}".extend(StringToBoll).to_bool
+      @path       = path
     end
 
     def enabled= value
-      @enabled = "#{value}".to_bool
+      @enabled = "#{value}".extend(StringToBoll).to_bool
     end
 
     def repoid
@@ -81,15 +81,15 @@ module ManifestReader
     attr_accessor :product, :id, :name, :type, :url, :label, :gpg_url, :enabled
 
     def initialize product, pc_json
-      @product = product
-      c = pc_json["content"]
-      @id = c["id"]
-      @name = c["name"]
-      @type = c["type"]
-      @url = c["contentUrl"]
-      @label = c["label"]
-      @gpg_url = c["gpgUrl"]
-      @enabled = pc_json["enabled"]
+      @product      = product
+      c             = pc_json["content"]
+      @id           = c["id"]
+      @name         = c["name"]
+      @type         = c["type"]
+      @url          = c["contentUrl"]
+      @label        = c["label"]
+      @gpg_url      = c["gpgUrl"]
+      @enabled      = pc_json["enabled"]
       # empty until populate_repositories is called
       @repositories = {} # repoid -> Repository
     end
@@ -109,7 +109,7 @@ module ManifestReader
 
     # add or replace repository
     def add_repository repo
-      repo.content = self
+      repo.content               = self
       @repositories[repo.repoid] = repo
     end
 
@@ -128,20 +128,20 @@ module ManifestReader
     attr_accessor :entitlements # in which this product belongs
 
     def initialize manifest, json_file
-      @manifest = manifest
-      @entitlements = []
-      p = JSON.parse(IO.read json_file)
+      @manifest          = manifest
+      @entitlements      = []
+      p                  = JSON.parse(IO.read json_file)
       #puts JSON.pretty_generate(p)
-      @id = p["id"]
-      @name = p["name"]
+      @id                = p["id"]
+      @name              = p["name"]
       @multi_entitlement = false
       p['attributes'].each do |a|
         @multi_entitlement = true if a['name'] == 'multi-entitlement' and a['value'].downcase == 'yes'
       end rescue @multi_entitlement = false
-      pc = p["productContent"]
+      pc       = p["productContent"]
       @content = {}
       pc.each do |pc|
-        c = Content.new(self, pc)
+        c              = Content.new(self, pc)
         @content[c.id] = c
       end
     end
@@ -166,21 +166,21 @@ module ManifestReader
     attr_accessor :serial, :key, :cert, :pem_file
 
     def initialize manifest, json_file
-      @manifest = manifest
-      e = JSON.parse(IO.read json_file)
-      p = e["pool"]
-      c = e["certificates"][0]
-      @pool_id = p["id"]
+      @manifest             = manifest
+      e                     = JSON.parse(IO.read json_file)
+      p                     = e["pool"]
+      c                     = e["certificates"][0]
+      @pool_id              = p["id"]
       @primary_product_name = p["productName"]
-      @primary_product_id = p["productId"]
-      @quantity = p["quantity"]
-      @contract_number = p["contractNumber"]
-      @account_number = p["accountNumber"]
-      @end_date = p["endDate"]
+      @primary_product_id   = p["productId"]
+      @quantity             = p["quantity"]
+      @contract_number      = p["contractNumber"]
+      @account_number       = p["accountNumber"]
+      @end_date             = p["endDate"]
       @provided_product_ids = p["providedProducts"].collect { |pp| pp["productId"] }
-      @serial = c["serial"]["serial"]
-      @key = c["key"]
-      @cert = c["cert"]
+      @serial               = c["serial"]["serial"]
+      @key                  = c["key"]
+      @cert                 = c["cert"]
     end
 
     def print_info
@@ -205,8 +205,8 @@ module ManifestReader
     attr_accessor :id, :label
 
     def initialize json_file
-      c = JSON.parse(IO.read json_file)
-      @id = c["id"]
+      c      = JSON.parse(IO.read json_file)
+      @id    = c["id"]
       @label = c["label"]
     end
 
@@ -222,7 +222,7 @@ module ManifestReader
 
     def initialize manifest_file_or_directory, cdn_url = nil, cdn_ca = nil
       @cdn_url = cdn_url
-      @cdn_ca = cdn_ca
+      @cdn_ca  = cdn_ca
       if File.directory? manifest_file_or_directory
         basedir = manifest_file_or_directory
       else
@@ -240,24 +240,24 @@ module ManifestReader
       end
 
       # basic metadata about the export
-      m = JSON.parse(IO.read "#{basedir}/export/meta.json")
-      @version = m['version']
-      @created = m['created']
+      m         = JSON.parse(IO.read "#{basedir}/export/meta.json")
+      @version  = m['version']
+      @created  = m['created']
 
       # create hiearchy - consumer
       @consumer = Consumer.new "#{basedir}/export/consumer.json"
 
-      # products
+                     # products
       @products = {} # indexed by id
       Dir.glob("#{basedir}/export/products/*.json").each do |file|
-        product = Product.new(self, file)
+        product               = Product.new(self, file)
         @products[product.id] = product
       end
 
-      # entitlements
+                         # entitlements
       @entitlements = {} # indexed by pool_id
       Dir.glob("#{basedir}/export/entitlements/*.json").each do |file|
-        entitlement = Entitlement.new(self, file)
+        entitlement                        = Entitlement.new(self, file)
         @entitlements[entitlement.pool_id] = entitlement
       end
 
@@ -269,7 +269,7 @@ module ManifestReader
 
       # cross-reference
       @entitlements.each_value do |e|
-        e.primary_product = @products[e.primary_product_id]
+        e.primary_product   = @products[e.primary_product_id]
         e.provided_products = e.provided_product_ids.collect { |ppi| @products[ppi] }
         e.provided_products.each { |p| p.entitlements << e }
         e.pem_file = "#{basedir}/export/entitlement_certificates/#{e.serial}.pem"
@@ -282,11 +282,11 @@ module ManifestReader
 
         Rails.logger.debug "Processing entitlement #{entitlement.pool_id}"
         cdn_var_substitutor = Util::CdnVarSubstitutor.new(
-          CdnResource.new(
-            cdn_url,
-            :ssl_ca_file => cdn_ca,
-            :ssl_client_cert => OpenSSL::X509::Certificate.new(entitlement.cert),
-            :ssl_client_key => OpenSSL::PKey::RSA.new(entitlement.key)))
+            CdnResource.new(
+                cdn_url,
+                :ssl_ca_file     => cdn_ca,
+                :ssl_client_cert => OpenSSL::X509::Certificate.new(entitlement.cert),
+                :ssl_client_key  => OpenSSL::PKey::RSA.new(entitlement.key)))
 
         entitlement.provided_products.each do |product|
           Rails.logger.debug "Processing product #{product.name}"
@@ -296,7 +296,7 @@ module ManifestReader
 
             cdn_var_substitutor.substitute_vars(content.url).each do |(substitutions, path)|
               arch = substitutions['basearch']
-              ver = substitutions['releasever']
+              ver  = substitutions['releasever']
               repo = Repository.new(arch, ver, content.enabled, path)
               content.add_repository repo
               repo_counter += 1
@@ -315,7 +315,7 @@ module ManifestReader
 
     # load manifest
     def self.load mf_filename, conf_filename = nil
-      mf = File.open(mf_filename, "r") {|file| Marshal::load(file)}
+      mf = File.open(mf_filename, "r") { |file| Marshal::load(file) }
       if conf_filename
         mf.load_repos_setting conf_filename
       end
@@ -337,7 +337,7 @@ module ManifestReader
 
     # save manifest and create repos.conf template (with backup)
     def save mf_filename, conf_filename = nil
-      File.open(mf_filename, "w") {|file| Marshal::dump(self, file)}
+      File.open(mf_filename, "w") { |file| Marshal::dump(self, file) }
       if conf_filename
         save_repo_conf conf_filename, true
       end
@@ -384,7 +384,7 @@ module ManifestReader
 
     # list of enabled repoids
     def enabled_repositories
-      repositories.reject{|k,v| ! v.enabled }.keys.sort
+      repositories.reject { |k, v| !v.enabled }.keys.sort
     end
 
     def read_cdn_ca
@@ -393,7 +393,7 @@ module ManifestReader
 
     def save_repo_conf filename, backup = nil
       if backup and File.exists? filename
-        timestamp = Time.now.strftime("%Y%m%d-%H%M%S")
+        timestamp       = Time.now.strftime("%Y%m%d-%H%M%S")
         backup_filename = filename + "." + timestamp
         FileUtils.mv filename, backup_filename, :force => true
       end

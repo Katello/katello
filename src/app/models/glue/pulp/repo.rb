@@ -283,7 +283,7 @@ module Glue::Pulp::Repo
 
     def find_latest_packages_by_name name
       packages = Runcible::Extensions::Repository.rpms_by_nvre(self.pulp_id, name)
-      Katello::PackageUtils.find_latest_packages(packages)
+      Util::Package.find_latest_packages(packages)
     end
 
     def has_erratum? errata_id

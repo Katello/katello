@@ -13,19 +13,19 @@
 require 'oauth'
 require 'cgi'
 
-class RestClientException < StandardError
-  attr_reader :service_code, :code
-  def initialize params
-    super params[:message]
-    @service_code = params[:service_code]
-    @code = params[:code]
-  end
-end
-
-class NetworkException < StandardError
-end
-
 class HttpResource
+
+  class NetworkException < StandardError
+  end
+
+  class RestClientException < StandardError
+    attr_reader :service_code, :code
+    def initialize params
+      super params[:message]
+      @service_code = params[:service_code]
+      @code = params[:code]
+    end
+  end
 
   class_attribute :consumer_secret, :consumer_key, :ca_cert_file, :prefix, :site, :default_headers, :resource_permissions
 

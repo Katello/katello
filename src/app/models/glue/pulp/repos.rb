@@ -11,7 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'openssl'
-require 'util/model_util'
 
 module Glue::Pulp::Repos
 
@@ -158,7 +157,7 @@ module Glue::Pulp::Repos
         end
       end.flatten(1)
 
-      Katello::PackageUtils.find_latest_packages packs
+      Util::Package.find_latest_packages packs
     end
 
     def has_erratum? env, id

@@ -10,9 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'glue/queue'
-require 'errors'
-
 module Glue
   singleton_class.send :attr_writer, :logger
   def self.logger
@@ -70,11 +67,11 @@ module Glue
     end
 
     def pre_queue
-      @pre_queue ||= Queue.new
+      @pre_queue ||= Glue::Queue.new
     end
 
     def post_queue
-      @post_queue ||= Queue.new(pre_queue)
+      @post_queue ||= Glue::Queue.new(pre_queue)
     end
 
     public

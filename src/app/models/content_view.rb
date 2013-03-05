@@ -10,10 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'util/model_util.rb'
+
 
 class ContentView < ActiveRecord::Base
-  include Katello::LabelFromName
+  include Ext::LabelFromName
   include Authorization::ContentView
   include Glue::ElasticSearch::ContentView if Katello.config.use_elasticsearch
 
