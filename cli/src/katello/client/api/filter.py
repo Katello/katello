@@ -20,20 +20,24 @@ class FilterAPI(KatelloAPI):
     Connection class to access content view filter calls
     """
     def filters_by_cvd_and_org(self, definition, org_id):
-        path = "/api/organizations/%(org_id)s/content_view_definitions/%(definition)s/filters" % locals()
+        path = "/api/organizations/%(org_id)s/content_view_definitions/%(definition)s/filters" % \
+                                            dict(definition = definition, org_id = org_id)
         defs = self.server.GET(path)[1]
         return defs
 
     def get_filter_info(self, filter_name, definition, org_id):
-        path = "/api/organizations/%(org_id)s/content_view_definitions/%(definition)s/filters/%(filter_name)s" % locals()
+        path = "/api/organizations/%(org_id)s/content_view_definitions/%(definition)s/filters/%(filter_name)s" % \
+                                        dict(definition = definition, org_id = org_id, filter_name = filter_name)
         filter_def = self.server.GET(path)[1]
         return filter_def
         
     def create(self, filter_name, definition, org_id):
-        path = "/api/organizations/%(org_id)s/content_view_definitions/%(definition)s/filters" % locals()
+        path = "/api/organizations/%(org_id)s/content_view_definitions/%(definition)s/filters" % \
+                                        dict(definition = definition, org_id = org_id)
         params = {"filter": filter_name}
         return self.server.POST(path, params)[1]
         
     def delete(self, filter_name, definition, org_id):
-        path = "/api/organizations/%(org_id)s/content_view_definitions/%(definition)s/filters/%(filter_name)s" % locals()
+        path = "/api/organizations/%(org_id)s/content_view_definitions/%(definition)s/filters/%(filter_name)s" % \
+                                      dict(definition = definition, org_id = org_id, filter_name = filter_name)
         return self.server.DELETE(path)[1]
