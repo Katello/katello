@@ -59,7 +59,7 @@ class Api::FiltersController < Api::ApiController
   param :content_view_definition_id, String, :desc => "label of the content view definition", :required => true
   param :id, :String, :desc => "name of the filter", :required => true
   def show
-    render :json => @filter.to_json
+    render :json => @filter
   end
 
   api :DELETE, "/organizations/:organization_id/content_view_definitions/:content_view_definition_id/filters/:id",
