@@ -311,7 +311,7 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
 
         filter_cmd = filter.Filter()
         filter_cmd.add_command('list', filter.List())
-        filter_cmd.add_command('show', filter.Info())
+        filter_cmd.add_command('info', filter.Info())
         filter_cmd.add_command('create', filter.Create())
         filter_cmd.add_command('delete', filter.Delete())
 
