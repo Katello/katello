@@ -24,7 +24,7 @@ class SystemTemplatePackage < ActiveRecord::Base
     if self.is_nvr?
       attrs = self.attributes.with_indifferent_access
       attrs[:name] = attrs[:package_name]
-      Katello::PackageUtils.build_nvrea attrs
+      Util::Package.build_nvrea attrs
     else
       self.package_name
     end

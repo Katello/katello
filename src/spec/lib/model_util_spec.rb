@@ -14,20 +14,18 @@
 
 require 'spec_helper'
 
-require 'util/model_util'
-
-describe Katello::ModelUtils do
+describe Util::Model do
 
   it "should work with tag" do
-    Katello::ModelUtils.table_to_class("tag").class_name.should match("Tag")
+    Util::Model.table_to_class("tag").class_name.should match("Tag")
   end
 
   it "should work with system_template" do
-    Katello::ModelUtils.table_to_class("system_template").class_name.should match("SystemTemplate")
+    Util::Model.table_to_class("system_template").class_name.should match("SystemTemplate")
   end
 
   it "should work with kt_environment" do
-    Katello::ModelUtils.table_to_class("kt_environment").class_name.should match("KTEnvironment")
+    Util::Model.table_to_class("kt_environment").class_name.should match("KTEnvironment")
   end
 
   it "should return tags for organization" do
@@ -39,10 +37,10 @@ describe Katello::ModelUtils do
   end
 
   context "labelize tests" do
-    specify {Katello::ModelUtils::labelize("sweet home alabama").should == "sweet_home_alabama"}
-    specify {Katello::ModelUtils::labelize("sweet-home+alabama").should == "sweet-home_alabama"}
-    specify {Katello::ModelUtils::labelize("sweet home 谷歌地球").should_not  =~ /sweet*/}
-    specify {Katello::ModelUtils::labelize("sweet home 谷歌地球").should  =~ /^[a-zA-Z0-9\-_]+$/}
+    specify {Util::Model::labelize("sweet home alabama").should == "sweet_home_alabama"}
+    specify {Util::Model::labelize("sweet-home+alabama").should == "sweet-home_alabama"}
+    specify {Util::Model::labelize("sweet home 谷歌地球").should_not  =~ /sweet*/}
+    specify {Util::Model::labelize("sweet home 谷歌地球").should  =~ /^[a-zA-Z0-9\-_]+$/}
   end
 
   context "setup_label_from_name" do

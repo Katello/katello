@@ -12,8 +12,6 @@
 
 class EnvironmentsController < ApplicationController
   respond_to :html, :js
-  require 'rubygems'
-  require 'active_support/json'
 
   before_filter :find_organization, :only => [:show, :edit, :update, :destroy, :index, :new, :create, :default_label, :system_templates, :products]
   before_filter :authorize

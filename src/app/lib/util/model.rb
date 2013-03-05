@@ -10,24 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Katello
+module Util
 
-  module LabelFromName
-    def self.included(base)
-      base.class_eval do
-        before_validation :setup_label_from_name
-      end
-    end
-
-    def setup_label_from_name
-      unless label.present?
-        self.label = Katello::ModelUtils::labelize(name)
-      end
-    end
-  end
-
-
-  module ModelUtils
+  module Model
 
     # hardcoded model names (uses kp_ prefix)
     @@table_to_model_hash = {

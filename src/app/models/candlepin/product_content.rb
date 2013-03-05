@@ -106,7 +106,7 @@ class Candlepin::ProductContent
                                     :minor => version[:minor],
                                     :relative_path => Glue::Pulp::Repos.repo_path_from_content_path(product.organization.library, path),
                                     :name => repo_name,
-                                    :label => Katello::ModelUtils::labelize(repo_name),
+                                    :label => Util::Model::labelize(repo_name),
                                     :feed => feed_url,
                                     :feed_ca => ca,
                                     :feed_cert => self.product.certificate,

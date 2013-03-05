@@ -12,8 +12,7 @@
 
 class TaskStatus < ActiveRecord::Base
 
-  require 'util/task_status'
-  include Katello::TaskStatusUtil
+  include Util::TaskStatus
 
   serialize :result
   serialize :progress

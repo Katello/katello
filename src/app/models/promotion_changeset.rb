@@ -324,7 +324,7 @@ class PromotionChangeset < Changeset
       all_deps += deps
 
       deps = get_promotable_dependencies_for_packages to_resolve, from_repos, to_repos
-      deps = Katello::PackageUtils::filter_latest_packages_by_name deps
+      deps = Util::Package::filter_latest_packages_by_name deps
 
       to_resolve = deps.map { |d| d['provides'] }.flatten(1).uniq -
           all_deps.map { |d| d['provides'] }.flatten(1) -

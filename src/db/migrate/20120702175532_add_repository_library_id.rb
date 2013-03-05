@@ -1,4 +1,3 @@
-require 'util/model_util'
 
 class AddRepositoryLibraryId < ActiveRecord::Migration
   def self.up
@@ -26,7 +25,7 @@ class AddRepositoryLibraryId < ActiveRecord::Migration
     target = env.organization.target unless env.nil?
     [repo, repo.product.target, env, target].each do |obj|
       obj.class_eval do
-        def label; Katello::ModelUtils::labelize(name) end
+        def label; Util::Model::labelize(name) end
         def label=(*args); nil end
       end
     end

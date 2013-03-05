@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "util/search"
-
 module Ext::IndexedModel
 
   def self.included(base)
@@ -32,8 +30,8 @@ module Ext::IndexedModel
         #Shared analyzers.  If you need a model-specific analyzer for some reason,
         #  we'll need to refactor this to support that.
         settings :analysis => {
-                    :filter => Katello::Search.custom_filters,
-                    :analyzer => Katello::Search.custom_analyzers
+                    :filter => Util::Search.custom_filters,
+                    :analyzer => Util::Search.custom_analyzers
                   }
 
         def self.index_import list
