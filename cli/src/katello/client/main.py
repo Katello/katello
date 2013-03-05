@@ -15,7 +15,6 @@
 #
 
 from katello.client.lib.control import get_katello_mode
-
 from katello.client.core import (
   activation_key,
   environment,
@@ -49,7 +48,7 @@ from katello.client.core import (
   content,
   content_view,
   content_view_definition,
-  filter,
+  filter as content_filter,
   subnet,
   smart_proxy,
   compute_resource,
@@ -309,11 +308,11 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         cvd_cmd.add_command('remove_view',
                 content_view_definition.AddRemoveContentView(False))
 
-        filter_cmd = filter.Filter()
-        filter_cmd.add_command('list', filter.List())
-        filter_cmd.add_command('info', filter.Info())
-        filter_cmd.add_command('create', filter.Create())
-        filter_cmd.add_command('delete', filter.Delete())
+        filter_cmd = content_filter.Filter()
+        filter_cmd.add_command('list', content_filter.List())
+        filter_cmd.add_command('info', content_filter.Info())
+        filter_cmd.add_command('create', content_filter.Create())
+        filter_cmd.add_command('delete', content_filter.Delete())
 
         cvd_cmd.add_command("filter", filter_cmd)
         content_cmd.add_command('view', cv_cmd)
