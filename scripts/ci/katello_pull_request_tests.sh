@@ -25,7 +25,7 @@ psql -c "CREATE USER katello WITH PASSWORD 'katello';" -U postgres
 psql -c "ALTER ROLE katello WITH CREATEDB" -U postgres
 psql -c "CREATE DATABASE katello_test OWNER katello;" -U postgres
 bundle exec rake parallel:create VERBOSE=false
-bundle exec rake parallel:load_schema VERBOSE=false
+bundle exec rake parallel:load_schema VERBOSE=false > /dev/null
 bundle exec rake ptest:spec
 if [ $? -ne 0 ]
 then
