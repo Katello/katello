@@ -59,7 +59,7 @@ module Util
                 :user     => user_id,
                 :oauth    => {:oauth_secret => Katello.config.pulp.oauth_secret,
                               :oauth_key    => Katello.config.pulp.oauth_key },
-                :logging  => {:logger     => Rails.logger,
+                :logging  => {:logger     => ::Logging.logger['pulp_rest'],
                               :exception  => true,
                               :debug      => true }
               }
@@ -97,8 +97,9 @@ module Util
       end
 
       def thread_locals
-        # store request uuid (for Rails 3.2+ we can use Request.uuid)
-        Thread.current[:request_uuid] = request.respond_to?(:uuid) ? request.uuid : SecureRandom.hex(16)
+        # store request uuid (for Rails 3.2+ we can use Request.uuid) and process pid
+        uuid = request.respond_to?(:uuid) ? request.uuid : SecureRandom.hex(16)
+        ::Logging.mdc['uuid'] = Thread.current[:request_uuid] = uuid
 
         # store user
         u = current_user

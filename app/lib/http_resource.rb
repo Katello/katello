@@ -48,9 +48,14 @@ class HttpResource
       ResourcePermissions
     end
 
+    # children must redefine
+    def logger
+      raise NotImplementedError
+    end
+
     def process_response(resp)
-      Rails.logger.debug "Processing response: #{resp.code}"
-      Rails.logger.debug resp.body if Katello.config.debug_rest
+      logger.debug "Processing response: #{resp.code}"
+      logger.debug resp.body
       return resp unless resp.code.to_i >= 400
       parsed = {}
       message = "Rest exception while processing the call"
@@ -61,9 +66,9 @@ class HttpResource
         message = parsed["displayMessage"] if parsed["displayMessage"]
         service_code = parsed["code"] if parsed["code"]
       rescue => error
-        Rails.logger.error "Error parsing the body: " << error.backtrace.join("\n")
+        logger.error "Error parsing the body: " << error.backtrace.join("\n")
         if ["404", "500", "502", "503", "504"].member? resp.code.to_s
-          Rails.logger.error "Remote server status code " << resp.code.to_s
+          logger.error "Remote server status code " << resp.code.to_s
           raise RestClientException,{:message => error.to_s, :service_code => service_code, :code => status_code}, caller
         else
           raise NetworkException, [resp.code.to_s, resp.body].reject{|s| s.nil? or s.empty?}.join(' ')
@@ -73,7 +78,7 @@ class HttpResource
     end
 
     def print_debug_info(a_path, headers={}, payload={})
-      Rails.logger.debug "Headers: #{headers.to_json}"
+      logger.debug "Headers: #{headers.to_json}"
       # calling to_json on file has side-effects breaking manifest import.
       # this fix prevents this problem
       payload_to_print = payload.reduce({}) do |h, (k,v)|
@@ -82,14 +87,14 @@ class HttpResource
                else v
                end
       end
-      Rails.logger.debug "Body: #{payload_to_print.to_json}"
+      logger.debug "Body: #{payload_to_print.to_json}"
     rescue => e
-      Rails.logger.debug "Unable to print debug information"
+      logger.debug "Unable to print debug information"
     end
 
     def get(a_path, headers={})
-      Rails.logger.debug "Resource GET request: #{a_path}"
-      print_debug_info(a_path, headers) if Katello.config.debug_rest
+      logger.debug "Resource GET request: #{a_path}"
+      print_debug_info(a_path, headers)
       a_path = URI.encode(a_path)
       resource_permissions.before_get_callback(a_path, headers)
       client = rest_client(Net::HTTP::Get, :get, a_path)
@@ -101,8 +106,8 @@ class HttpResource
     end
 
     def post(a_path, payload={}, headers={})
-      Rails.logger.debug "Resource POST request: #{a_path}, #{payload}"
-      print_debug_info(a_path, headers, payload) if Katello.config.debug_rest
+      logger.debug "Resource POST request: #{a_path}, #{payload}"
+      print_debug_info(a_path, headers, payload)
       a_path = URI.encode(a_path)
       resource_permissions.before_post_callback(a_path, payload, headers)
       client = rest_client(Net::HTTP::Post, :post, a_path)
@@ -114,8 +119,8 @@ class HttpResource
     end
 
     def put(a_path, payload={}, headers={})
-      Rails.logger.debug "Resource PUT request: #{a_path}, #{payload}"
-      print_debug_info(a_path, headers, payload) if Katello.config.debug_rest
+      logger.debug "Resource PUT request: #{a_path}, #{payload}"
+      print_debug_info(a_path, headers, payload)
       a_path = URI.encode(a_path)
       resource_permissions.before_put_callback(a_path, payload, headers)
       client = rest_client(Net::HTTP::Put, :put, a_path)
@@ -127,8 +132,8 @@ class HttpResource
     end
 
     def delete(a_path=nil, headers={})
-      Rails.logger.debug "Resource DELETE request: #{a_path}"
-      print_debug_info(a_path, headers) if Katello.config.debug_rest
+      logger.debug "Resource DELETE request: #{a_path}"
+      print_debug_info(a_path, headers)
       a_path = URI.encode(a_path)
       resource_permissions.before_delete_callback(a_path, headers)
       client = rest_client(Net::HTTP::Delete, :delete, a_path)
