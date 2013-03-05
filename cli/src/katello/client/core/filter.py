@@ -65,8 +65,6 @@ class List(FilterAction):
 
         self.printer.add_column('id', _("ID"))
         self.printer.add_column('name', _("Name"))
-        # self.printer.add_column('content_type', _("Content Type"))
-        # self.printer.add_column('inclusion', _("Inclusion"))
         self.printer.add_column('content_view_definition_label', _("Content View Definition"))
         self.printer.add_column('organization', _('Org'))
 
