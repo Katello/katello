@@ -19,11 +19,6 @@ import os
 from katello.client.api.filter import FilterAPI
 from katello.client.cli.base import opt_parser_add_org
 from katello.client.core.base import BaseAction, Command
-#from katello.client.api.utils import get_filters, get_cv_definition, \
-#    get_product, get_repo
-#from katello.client.lib.async import AsyncTask, evaluate_task_status
-#from katello.client.lib.ui.progress import run_spinner_in_bg, wait_for_async_task
-
 
 # base filter action ----------------------------------------
 
