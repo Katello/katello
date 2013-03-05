@@ -20,14 +20,11 @@ class Filter < ActiveRecord::Base
               :uniqueness => {:scope => :content_view_definition_id}
 
   def self.applicable(repo)
-    joins("inner join filters_repositories on filters_repositories.filter_id = filters.id").where("filters_repositories.repository_id = ?", repo.id)
+    joins(:repositories).where(:repositories => {:id => repo.id})
   end
 
   def as_json(options = {})
-    options ||= {}
-    ret = super(options)
-    ret["content_view_definition_label"] = content_view_definition.label
-    ret["organization"] = content_view_definition.organization.label
-    ret
+    super(options).update("content_view_definition_label" => content_view_definition.label,
+                          "organization" => content_view_definition.organization.label)
   end
 end
