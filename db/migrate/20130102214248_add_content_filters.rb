@@ -19,7 +19,7 @@ class AddContentFilters < ActiveRecord::Migration
       t.references :filter
       t.references :repository
     end
-    
+
     add_index :filters, :content_view_definition_id
     add_index :filter_rules, :filter_id
     add_index(:filters, [:name, :content_view_definition_id], :unique => true)
@@ -39,7 +39,6 @@ class AddContentFilters < ActiveRecord::Migration
 
     remove_index :filters_repositories, :column => :filter_id
     remove_index :filters_repositories, :column => :repository_id
-  
     remove_index(:filters_repositories, :column =>[:filter_id, :repository_id])
 
     drop_table :filters_repositories
