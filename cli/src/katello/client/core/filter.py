@@ -94,11 +94,10 @@ class Info(FilterAction):
         self.printer.add_column('name', _("Name"))
         self.printer.add_column('content_view_definition_label', _("Content View Definition"))
         self.printer.add_column('organization', _('Org'))
-
-        # self.printer.add_column('content_type', _("Content Type"))
-        # self.printer.add_column('inclusion', _("Inclusion"))
+        # TODO: we want to add details about the
+        # repos associated to this filter
+        # and also a nice listing of rules.
         # self.printer.add_column('repos', _('Repos'))
-        # self.printer.add_column('products', _('Products'))  
         # self.printer.add_column('rules', _('Rules'))  
 
         self.printer.set_header(_("Content View Definition Filter Info"))
