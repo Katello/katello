@@ -217,7 +217,7 @@ class Action(object):
         error_msg = u_str(error_msg)
         error_msg = error_msg if error_msg else _('operation failed')
 
-        _log.error("error: %s" % error_msg)
+        _log.error("error: ", error_msg)
         print >> sys.stderr, error_msg
 
 

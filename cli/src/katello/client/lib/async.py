@@ -71,10 +71,10 @@ class AsyncTask():
         return not self.is_running()
 
     def failed(self):
-        return (len(filter(lambda t: t['state'] in ('error', 'timed out'), self._tasks)) > 0)
+        return len([t for t in self._tasks if t['state'] in ('error', 'timed out')])
 
     def canceled(self):
-        return (len(filter(lambda t: t['state'] in ('cancelled', 'canceled'), self._tasks)) > 0)
+        return len([t for t in self._tasks if t['state'] in ('cancelled', 'canceled')])
 
     def succeeded(self):
         return not (self.failed() or self.canceled())

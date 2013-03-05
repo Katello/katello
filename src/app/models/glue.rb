@@ -13,7 +13,7 @@
 module Glue
   singleton_class.send :attr_writer, :logger
   def self.logger
-    @logger ||= Rails.logger
+    @logger ||= Logging.logger['glue']
   end
 
   def self.included(base)
