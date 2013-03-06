@@ -263,10 +263,6 @@ class ContentSearchController < ApplicationController
     render_to_string :partial=>'repo_hover', :locals=>{:repo=>repo}
   end
 
-  def container_hover_html(container, environment)
-    render_to_string :partial=>'container_hover', :locals=>{:container=>container, :env=>environment}
-  end
-
   def param_product_ids
     ids = params[:products][:autocomplete].collect{|p|p["id"]} if params[:products]
     ids || []
