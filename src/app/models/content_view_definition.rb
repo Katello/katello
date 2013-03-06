@@ -16,10 +16,9 @@ class ContentViewDefinition < ActiveRecord::Base
   include Glue::ElasticSearch::ContentViewDefinition if Katello.config.use_elasticsearch
   include Ext::LabelFromName
   include Authorization::ContentViewDefinition
-
   include AsyncOrchestration
-
   has_many :content_views, :dependent => :destroy
+  has_many :filters, :inverse_of => :content_view_definition
   has_many :components, :class_name => "ComponentContentView"
   has_many :component_content_views, :through => :components,
     :source => :content_view, :class_name => "ContentView"
@@ -28,7 +27,7 @@ class ContentViewDefinition < ActiveRecord::Base
   has_many :products, :through => :content_view_definition_products
   has_many :content_view_definition_repositories
   has_many :repositories, :through => :content_view_definition_repositories
-
+  has_many :filters, :class_name => "Filter", :inverse_of => :content_view_definition
   validates :label, :uniqueness => {:scope => :organization_id},
     :presence => true
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
@@ -72,12 +71,61 @@ class ContentViewDefinition < ActiveRecord::Base
   end
 
   def generate_repos(view, notify = false)
+    # general publish clone algorithm
+    # Copy all rpms over
+    # Copy all errata over
+    # Copy all pkg groups over
+    # Copy all distro over
+    # Start Filtering errata in the copied
+    # Start Filtering package groups in the copied repo
+    # Start Filtering packages in the copied repo
+    # Remove all empty errata
+    # Remove all empty package groups
+    # update search indices for package and errata
+
+
+
     async_tasks = []
+    cloned_repos = []
+
+    # Copy all rpms over
+    # Copy all errata over
+    # Copy all pkg groups over
+    # Copy all distro over
     repos.each do |repo|
       clone = repo.create_clone(self.organization.library, view)
       async_tasks << repo.clone_contents(clone)
+      cloned_repos << clone
     end
     PulpTaskStatus::wait_for_tasks async_tasks.flatten(1)
+
+
+    # Start Filtering errata in the copied
+    # Start Filtering package groups in the copied repo
+    # Start Filtering packages in the copied repo
+    cloned_repos.each do |repo|
+      [FilterRule::ERRATA, FilterRule::PACKAGE_GROUP, FilterRule::PACKAGE].each do |content_type|
+        filter_clauses = generate_unassociate_filter_clauses(repo.library_instance, content_type)
+        if filter_clauses
+          pulp_task = repo.unassociate_by_filter(content_type, filter_clauses)
+          PulpTaskStatus::wait_for_tasks [pulp_task]
+        end
+      end
+    end
+
+    # TODO find a quick way to remove empty errata and package groups
+    # Remove all errata with no packages
+    # Remove all  package groups with no packages
+
+    #TODO
+
+
+    # update search indices for package and errata
+    cloned_repos.each do |repo|
+      repo.index_errata
+      repo.index_packages
+    end
+
 
     if notify
       message = _("Successfully published content view '%{view_name}' from definition '%{definition_name}'.") %
@@ -158,6 +206,70 @@ class ContentViewDefinition < ActiveRecord::Base
 
   protected
 
+    def generate_unassociate_filter_clauses(repo, content_type)
+      # find applicable filters
+      # split filter rules by content type, since each content type has its own copy call
+      # depending on include or exclude filters combine or remove
+      applicable_filters = filters.applicable(repo)
+
+
+      applicable_rules = FilterRule.where(:filter_id => applicable_filters).where(:content_type => content_type)
+      #  do |f|
+      #   f.repositories.include?(repo)
+      # end
+      filter_clauses = {}
+      inclusion_rules = applicable_rules.where(:inclusion => true)
+      exclusion_rules = applicable_rules.where(:inclusion => false)
+
+      includes_count = inclusion_rules.count
+      excludes_count = exclusion_rules.count
+
+      #   If there is no include/exclude filters  -  Everything is included. - so do not delete anything
+      return if includes_count == 0 && excludes_count == 0
+
+
+      clauses = []
+      #  If there are only exclude filters (aka blacklist filters),
+      #  then unassociate them from the repo
+      #
+      if excludes_count > 0
+        excludes = exclusion_rules.collect{|x| {'name' =>{"$regex" => x.parameters[:name]}}}
+        clauses << {'$or' =>excludes}
+      end
+
+
+      #  If there are only include filters (aka whitelist) then only the packages/errata included will get included.
+      #  Everything else is thus excluded.
+      if includes_count > 0
+        includes = inclusion_rules.collect{|x| {'name' =>{"$regex" => x.parameters[:name]}}}
+        clauses << {'$nor' => includes}
+      end
+
+      #    If there are include and exclude filters, the exclude filters then the include filters, get processed first,
+      #       then the exclude filter excludes content from the set included by the include filters.
+=begin
+      package_clauses = []
+      if includes_count > 0
+        includes = applicable_rules.includes.collect{|x| {'name' =>{"$regex" => x.parameters[:name]}}}
+        package_clauses << {'$or' =>includes}
+      end
+
+      if excludes_count > 0
+        excludes = applicable_rules.excludes.collect{|x| {'name' =>{"$regex" => x.parameters[:name]}}}
+        package_clauses << {'$nor' => excludes}
+      end
+
+=end
+      case clauses.size
+        when 1
+           return clauses.first
+         when 2
+           return {'$or' => clauses}
+         else
+           #ignore
+      end
+  end
+
   def views_repos
     # Retrieve a hash where, key=view.id and value=Set(view's repo library instance ids)
     self.component_content_views.inject({}) do |view_repos, view|
@@ -173,5 +285,6 @@ class ContentViewDefinition < ActiveRecord::Base
       errors.add(:base, _("cannot contain products, or repositories if it contains views"))
     end
   end
+
 
 end
