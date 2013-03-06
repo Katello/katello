@@ -141,7 +141,7 @@ sources.each do |source|
     complete_target = File.join(target_dir, File.dirname(source))
     FileUtils.mkdir_p(complete_target)
     puts("#{PAD}copying over #{source}")
-    output= `/bin/cp -r --preserve #{source} #{complete_target}`
+    `/bin/cp -r --preserve #{source} #{complete_target}`
   else
     missing_files << source
     puts "#{PAD}skipping #{source} since it does not exist"
@@ -167,43 +167,45 @@ end
 
 # Remove passwords from config files
 if deployment == 'katello'
-  output = `sed -i -e 's/^\\(default_password:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/pulp.conf')}`
-  output = `sed -i -e 's/^\\(oauth_secret:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/pulp.conf')}`
-  output = `sed -i -e 's/^\\(.*password\\).*$/\\1: **********************/' #{File.join(target_dir, '/etc/foreman/database.yml')}`
+  `sed -i -e 's/^\\(default_password:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/pulp.conf')}`
+  `sed -i -e 's/^\\(oauth_secret:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/pulp.conf')}`
+  `sed -i -e 's/^\\(.*password\\).*$/\\1: **********************/' #{File.join(target_dir, '/etc/foreman/database.yml')}`
 end
-output = `sed -i -e 's/^\\(.*secret\\).*$/\\1 = **********************/' #{File.join(target_dir, '/etc/candlepin/candlepin.conf')}`
-output = `sed -i -e 's/^\\(.*password\\).*$/\\1 = **********************/' #{File.join(target_dir, '/etc/candlepin/candlepin.conf')}`
-output = `sed -i -e 's/^\\(\\s*oauth_secret:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/katello/katello.yml')}`
-output = `sed -i -e 's/^\\(\\s*password:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/katello/katello.yml')}`
-output = `sed -i -e 's/\\(keystorePass=\\)\\(\\S*\\)/\\1 "***************"/' #{File.join(target_dir, '/etc/tomcat6/server.xml')}`
-output = `sed -i -e 's/\\(truststorePass=\\)\\(\\S*\\)/\\1 "***************"/' #{File.join(target_dir, '/etc/tomcat6/server.xml')}`
-output = `find #{target_dir} -name "*katello-configure.conf" -type f -exec sed -i -e 's/\\(\\(password\\|pass\\)\\s[^=]*=\\)\\(.*\\)$/\\1 ***************/' {} \\;`
-output = `find #{File.join(target_dir, '/var/log/katello/katello-configure*')} -name "*.log" -type f -exec sed -i -e 's/echo password/echo *********/' {} \\;`
-output = `find #{File.join(target_dir, '/var/log/katello/katello-configure*')} -name "*.log" -type f -exec sed -i -e "s/\\(password => '\\)[^']*'/\\1*********'/g" {} \\;`
-output = `find #{File.join(target_dir, '/var/log/katello/katello-configure*')} -name "*.log" -type f -exec sed -i -e "s/\\(PASSWORD '\\)[^']*'/\\1*********'/g" {} \\;`
+`sed -i -e 's/^\\(.*secret\\).*$/\\1 = **********************/' #{File.join(target_dir, '/etc/candlepin/candlepin.conf')}`
+`sed -i -e 's/^\\(.*password\\).*$/\\1 = **********************/' #{File.join(target_dir, '/etc/candlepin/candlepin.conf')}`
+`sed -i -e 's/^\\(\\s*oauth_secret:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/katello/katello.yml')}`
+`sed -i -e 's/^\\(\\s*password:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/katello/katello.yml')}`
+`sed -i -e 's/\\(keystorePass=\\)\\(\\S*\\)/\\1 "***************"/' #{File.join(target_dir, '/etc/tomcat6/server.xml')}`
+`sed -i -e 's/\\(truststorePass=\\)\\(\\S*\\)/\\1 "***************"/' #{File.join(target_dir, '/etc/tomcat6/server.xml')}`
+`find #{target_dir} -name "*katello-configure.conf" -type f -exec sed -i -e 's/\\(\\(password\\|pass\\)\\s[^=]*=\\)\\(.*\\)$/\\1 ***************/' {} \\;`
+`find #{File.join(target_dir, '/var/log/katello/katello-configure*')} -name "*.log" -type f -exec sed -i -e 's/echo password/echo *********/' {} \\;`
+`find #{File.join(target_dir, '/var/log/katello/katello-configure*')} -name "*.log" -type f -exec sed -i -e "s/\\(password => '\\)[^']*'/\\1*********'/g" {} \\;`
+`find #{File.join(target_dir, '/var/log/katello/katello-configure*')} -name "*.log" -type f -exec sed -i -e "s/\\(PASSWORD '\\)[^']*'/\\1*********'/g" {} \\;`
 
 # Pick qpidd messages from syslog
 if deployment == 'katello'
   FileUtils.mkdir_p(File.join(target_dir, '/var/log'))
-  output = `cat /var/log/messages|grep qpidd > #{File.join(target_dir, "/var/log/qpidd.log")}`
+  `cat /var/log/messages|grep qpidd > #{File.join(target_dir, "/var/log/qpidd.log")}`
 end
 
 # Create certificates report
-output = `katello-debug-certificates --perms >> #{File.join(target_dir, "certificates")}`
+`katello-debug-certificates --perms >> #{File.join(target_dir, "certificates")}`
 
 # Add list of ssl-build dir
-output = `find /root/ssl-build -ls | sort -k 11 > #{File.join(target_dir, "ssl_build_dir")}`
+`find /root/ssl-build -ls | sort -k 11 > #{File.join(target_dir, "ssl_build_dir")}`
 
 # Below are custom system calls to get more info
-output = `rpm -qa >> #{File.join(target_dir, "packages")}`
+`rpm -qa >> #{File.join(target_dir, "packages")}`
 
+# Also show firewall settings
+`iptables -L > #{File.join(target_dir, "iptables")}`
 
 if (options[:archive])
     # Tar the output and log it
     tarfile = target_dir + ".tar.gz"
     pwd = Dir.pwd()
     Dir.chdir(options[:basedir])
-    output = `tar -czf #{tarfile} #{timename}`
+    `tar -czf #{tarfile} #{timename}`
     Dir.chdir(pwd)
 
     puts "A debug file has been created at #{tarfile}."
