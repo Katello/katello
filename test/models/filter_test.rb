@@ -32,7 +32,7 @@ class FilterTest < MiniTest::Rails::ActiveSupport::TestCase
   def test_create
     assert @filter.save
   end
-  
+
   def test_bad_name
     filter = FactoryGirl.build(:filter, :name => "")
     assert filter.invalid?
