@@ -10,21 +10,20 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class ContentSearch::SearchUtils
-  cattr_accessor :current_organization, :mode, :env_ids, :offset, :current_user
+class ContentSearch::MetadataRow
+  include ContentSearch::Element
+  attr_accessor :unique_id
+  display_attributes :total, :current_count, :page_size, :data, :id, :metadata, :parent_id
 
-  def self.search_mode
-    mode.try(:to_sym) || :all
+  def page_size
+    ContentSearch::SearchUtils.page_size
   end
 
-  def self.search_env_ids
-    @@search_env_ids ||= if self.search_mode != :all
-      KTEnvironment.content_readable(current_organization).where(:id => self.env_ids)
-    end
+  def id
+    @id ||= "repo_metadata_#{unique_id}"
   end
 
-  def self.page_size
-    current_user.page_size
+  def metadata
+    true
   end
-
 end

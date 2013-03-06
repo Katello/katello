@@ -21,7 +21,11 @@ class ContentSearch::RepoRow < ContentSearch::Row
   def build_row
     self.data_type ||= "repo"
     self.cols ||= {}
-    self.id ||= "repo_#{@repo.id}"
+    self.id ||= build_id
     self.name ||= @repo.name
+  end
+
+  def build_id
+    [self.parent_id, "repo", @repo.id].select(&:present?).join("_")
   end
 end
