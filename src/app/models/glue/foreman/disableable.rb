@@ -1,5 +1,5 @@
 #
-# Copyright 2012 Red Hat, Inc.
+# Copyright 2011 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -10,19 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class Foreman::Environment < Resources::ForemanModel
-  include Resources::AbstractModel::IndexedModel
-
-  attributes :id, :name
-  index_options :display_attrs => [:name]
-
-  mapping do
-    indexes :id, :type=>'string', :index => :not_analyzed
-    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
+module Glue::Foreman::Disableable
+  def disable_foreman_orchestration!(value)
+    raise ArgumentError unless [true, false].include? value
+    @foreman_orchestration_disabled = value
   end
 
-
-  def json_default_options
-    { :only => [:id, :name] }
+  def foreman_orchestration_disabled?
+    !!@foreman_orchestration_disabled
   end
 end

@@ -14,21 +14,10 @@ module Glue::Foreman::Environment
 
   def self.included(base)
     base.send :include, InstanceMethods
-    base.send :extend, ClassMethods
+    base.send :extend, ::Glue::Foreman::Disableable
     base.class_eval do
       before_save :save_foreman_environment_orchestration
       before_destroy :destroy_foreman_environment_orchestration
-    end
-  end
-
-  module ClassMethods
-    def disable_foreman_orchestration!(value)
-      raise ArgumentError unless [true, false].include? value
-      @foreman_orchestration_disabled = value
-    end
-
-    def foreman_orchestration_disabled?
-      !!@foreman_orchestration_disabled
     end
   end
 

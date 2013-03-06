@@ -76,8 +76,7 @@ class KTEnvironment < ActiveRecord::Base
   validates_with Validators::PriorValidator
   validates_with Validators::PathDescendentsValidator
 
-  before_create :create_default_content_view
-  after_create :finalize_content_view_creation
+  after_create :create_default_content_view
   before_destroy :confirm_last_env
 
   after_destroy :unset_users_with_default

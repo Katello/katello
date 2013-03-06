@@ -13,25 +13,12 @@
 module Glue::Foreman::User
   def self.included(base)
     base.send :include, InstanceMethods
-    base.send :extend, ClassMethods
+    base.send :extend, Glue::Foreman::Disableable
     base.class_eval do
       before_save :save_foreman_orchestration
       before_destroy :destroy_foreman_orchestration
 
       after_save :foreman_consistency_check
-    end
-  end
-
-  module ClassMethods
-    # @api private
-    def disable_foreman_orchestration!(value)
-      raise ArgumentError unless [true, false].include? value
-      @foreman_orchestration_disabled = value
-    end
-
-    # @api private
-    def foreman_orchestration_disabled?
-      !!@foreman_orchestration_disabled
     end
   end
 
