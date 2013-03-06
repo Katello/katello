@@ -10,40 +10,43 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class ContentSearch::ContentViewSearch < ContentSearch::ContainerSearch
-  attr_accessor :view_ids
+module ContentSearch
 
-  def initialize(options)
-    super
-    self.rows = build_rows
-  end
+  class ContentViewSearch < ContainerSearch
+    attr_accessor :view_ids
 
-  def build_rows
-    views.collect do |view|
-      cols = {}
-      view.environments.collect do |env|
-        if env_ids.include?(env.id)
-          version = view.version(env).try(:version)
-          display = version ? (_("version %s") % version) : ""
-          cols[env.id] = ContentSearch::Cell.new(:hover => container_hover_html(view, env), :display => display)
-        end
-      end
-
-      ContentSearch::Row.new(:id         => "view_#{view.id}",
-                             :name       => view.name,
-                             :cells      => cols,
-                             :data_type  => "view",
-                             :value      => view.name,
-                             :comparable => true
-                            )
+    def initialize(options)
+      super
+      self.rows = build_rows
     end
-  end
 
-  def views
-    @views ||= if self.view_ids
-      views = ContentView.readable(current_organization).non_default.where(:id => view_ids)
-    else
-      views = ContentView.readable(current_organization).non_default
+    def build_rows
+      views.collect do |view|
+        cols = {}
+        view.environments.collect do |env|
+          if env_ids.include?(env.id)
+            version = view.version(env).try(:version)
+            display = version ? (_("version %s") % version) : ""
+            cols[env.id] = Cell.new(:hover => container_hover_html(view, env), :display => display)
+          end
+        end
+
+        Row.new(:id         => "view_#{view.id}",
+                               :name       => view.name,
+                               :cells      => cols,
+                               :data_type  => "view",
+                               :value      => view.name,
+                               :comparable => true
+                              )
+      end
+    end
+
+    def views
+      @views ||= if self.view_ids
+        views = ContentView.readable(current_organization).non_default.where(:id => view_ids)
+      else
+        views = ContentView.readable(current_organization).non_default
+      end
     end
   end
 
