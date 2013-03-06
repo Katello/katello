@@ -1,7 +1,7 @@
 path = File.expand_path('../lib', File.dirname(__FILE__))
 $LOAD_PATH << path unless $LOAD_PATH.include? path
 
-require 'katello_config'
+require 'katello/load_configuration'
 require 'ninesixty'
 
 # Set this to the root of your project when deployed:
