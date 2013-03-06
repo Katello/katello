@@ -11,8 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class ContentSearch::ContentViewSearch < ContentSearch::ContainerSearch
-  attr_accessor :rows, :name, :view_ids
-  element_attributes :rows, :name # we don't want view_ids
+  attr_accessor :view_ids
 
   def initialize(options)
     super
@@ -34,7 +33,7 @@ class ContentSearch::ContentViewSearch < ContentSearch::ContainerSearch
                              :name       => view.name,
                              :cells      => cols,
                              :data_type  => "view",
-                             :value      => view.name
+                             :value      => view.name,
                              :comparable => true
                             )
     end

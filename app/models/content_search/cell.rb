@@ -12,5 +12,5 @@
 
 class ContentSearch::Cell
   include ContentSearch::Element
-  attr_accessor :id, :display, :hover, :content
+  display_attributes :id, :display, :hover, :content
 end

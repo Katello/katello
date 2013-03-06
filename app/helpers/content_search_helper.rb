@@ -41,4 +41,14 @@ module ContentSearchHelper
     return to_ret
   end
 
+  def view_compare_name_display(view, env)
+    version = _("version %s") % view.version(env).version
+    to_ret = {:custom => <<EOS
+<span title=\"#{view.name} #{version}\" class=\"one-line-ellipsis tipsify\">#{view.name}</span><span class=\"one-line-ellipsis\">#{env.name}</span>
+EOS
+      }
+
+    return to_ret
+  end
+
 end
