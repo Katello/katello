@@ -12,3 +12,11 @@ Run unit tests (install python-mock - available in Fedora 17+)
 Compile a test RPM:
 
   tito build --rpm --test --rpmbuild-options=--nodeps
+
+Installing via pip into a virtualenv:
+
+Locally:
+  env SWIG_FEATURES="-cpperraswarn -includeall -D__`uname -m`__ -I/usr/include/openssl" pip install -r requirements.txt
+
+From the virtualenv:
+  env SWIG_FEATURES="-cpperraswarn -includeall -D__`uname -m`__ -I/usr/include/openssl" pip install -r <env-name>/etc/katello-cli/requirements.txt
