@@ -39,6 +39,10 @@ class ContentViewVersion < ActiveRecord::Base
     self.repositories.in_environment(env)
   end
 
+  def products(env)
+    repos(env).map(&:product).uniq(&:id)
+  end
+
   def repos_ordered_by_product(env)
     # The repository model has a default scope that orders repositories by name;
     # however, for content views, it is desirable to order the repositories

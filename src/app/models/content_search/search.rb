@@ -15,7 +15,7 @@
 
 class ContentSearch::Search
   include ContentSearch::Element
-  display_attributes :rows, :name
+  display_attributes :rows, :name, :cols
 
   def current_organization
     ContentSearch::SearchUtils.current_organization
@@ -24,6 +24,18 @@ class ContentSearch::Search
   def render_to_string(*args)
     av = ActionView::Base.new(Rails.application.paths.app.views.first)
     av.render(*args)
+  end
+
+  def offset
+    ContentSearch::SearchUtils.offset
+  end
+
+  def page_size
+    ContentSearch::SearchUtils.page_size
+  end
+
+  def search_mode
+    ContentSearch::SearchUtils.search_mode
   end
 
 end
