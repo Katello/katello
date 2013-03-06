@@ -165,8 +165,8 @@ EOS
       }
     end
 
-    def short_details_erratum_path(errata_id)
-      "/errata/%s/short_details" % errata_id
+    def short_details_erratum_path(*args)
+      ActionController::Base.config.relative_url_root + Rails.application.routes.url_helpers.short_details_erratum_path(*args)
     end
 
     def type
