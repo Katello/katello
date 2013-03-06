@@ -22,8 +22,10 @@ module SystemHelperMethods
     Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
-    Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid})
-    Runcible::Extensions::Consumer.stub!(:update).and_return(true)
+    if Katello.config.katello?
+      Runcible::Extensions::Consumer.stub!(:create).and_return({ :id => uuid })
+      Runcible::Extensions::Consumer.stub!(:update).and_return(true)
+    end
     new_test_org
   end
 
@@ -68,9 +70,11 @@ module SystemHelperMethods
 
 
   def stub_consumer_packages_install(expected_response, refresh_response = nil)
-    refresh_response ||= expected_response
-    Runcible::Extensions::Consumer.stub!(:install_content).and_return(expected_response)
-    Runcible::Resources::Task.stub!(:poll).and_return(refresh_response)
+    if Katello.config.katello?
+      refresh_response ||= expected_response
+      Runcible::Extensions::Consumer.stub!(:install_content).and_return(expected_response)
+      Runcible::Resources::Task.stub!(:poll).and_return(refresh_response)
+    end
   end
 
 end
