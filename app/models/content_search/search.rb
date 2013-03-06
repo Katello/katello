@@ -13,29 +13,33 @@
 # a span represents a collection of rows. usually these rows represent
 # a container like a product or content view
 
-class ContentSearch::Search
-  include ContentSearch::Element
-  display_attributes :rows, :name, :cols
+module ContentSearch
 
-  def current_organization
-    ContentSearch::SearchUtils.current_organization
-  end
+  class Search
+    include Element
+    display_attributes :rows, :name, :cols
 
-  def render_to_string(*args)
-    av = ActionView::Base.new(Rails.application.paths.app.views.first)
-    av.render(*args)
-  end
+    def current_organization
+      SearchUtils.current_organization
+    end
 
-  def offset
-    ContentSearch::SearchUtils.offset
-  end
+    def render_to_string(*args)
+      av = ActionView::Base.new(Rails.application.paths.app.views.first)
+      av.render(*args)
+    end
 
-  def page_size
-    ContentSearch::SearchUtils.page_size
-  end
+    def offset
+      SearchUtils.offset
+    end
 
-  def search_mode
-    ContentSearch::SearchUtils.search_mode
+    def page_size
+      SearchUtils.page_size
+    end
+
+    def search_mode
+      SearchUtils.search_mode
+    end
+
   end
 
 end
