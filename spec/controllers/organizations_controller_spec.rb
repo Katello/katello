@@ -89,14 +89,14 @@ describe OrganizationsController do
         controller.stub!(:current_organization).and_return(@organization)
       end
 
-      it 'should create organization' do
+      it 'should create organization', :katello => true do #TODO headpin
         post 'create', OrgControllerTest::ORGANIZATION
         response.should_not redirect_to(:action => 'new')
         response.should be_success
         assigns[:organization].name.should == OrgControllerTest::ORGANIZATION[:organization][:name]
       end
 
-      it 'should create organization and account for spaces' do
+      it 'should create organization and account for spaces', :katello => true do #TODO headpin
         post 'create', {:organization => {:name => "multi word organization",:label=> "multi-word-organization",
           :description => "spaced out organization"}, :environment => {:name => "first-env", :label => "first-env"}}
         response.should_not redirect_to(:action => 'new')
@@ -166,7 +166,7 @@ describe OrganizationsController do
         new_test_org
       end
 
-      it 'should call katello organization destroy api if there are more than 1 organizations' do
+      it 'should call katello organization destroy api if there are more than 1 organizations', :katello => true do #TODO headpin
         @controller.stub(:current_user).and_return(@user)
         Organization.stub!(:count).and_return(2)
         OrganizationDestroyer.should_receive(:destroy).with(@org, :notify => true).once.and_return(true)
@@ -182,7 +182,7 @@ describe OrganizationsController do
         response.should be_success
       end
 
-      it "should be successful" do
+      it "should be successful", :katello => true do #TODO headpin
         Organization.stub!(:count).and_return(2)
         delete 'destroy', :id => @org.id
         response.should be_success
@@ -214,7 +214,7 @@ describe OrganizationsController do
         response.should_not be_success
       end
 
-      it "should redirect to show view" do
+      it "should redirect to show view", :katello => true do #TODO headpin
         delete 'destroy', :id =>  OrgControllerTest::ORG_ID
         response.should_not be_success
       end
@@ -232,7 +232,7 @@ describe OrganizationsController do
         Organization.stub!(:find_by_label).and_return(@organization)
       end
 
-      it "should call katello org update api" do
+      it "should call katello org update api", :katello => true do #TODO headpin
         @organization.should_receive(:update_attributes!).once
         put 'update', :id => OrgControllerTest::ORG_ID, :organization => OrgControllerTest::ORGANIZATION_UPDATE
         response.should be_success
@@ -243,7 +243,7 @@ describe OrganizationsController do
         put 'update', :id => OrgControllerTest::ORG_ID, :organization => OrgControllerTest::ORGANIZATION_UPDATE
       end
 
-      it "should not redirect from edit view" do
+      it "should not redirect from edit view", :katello => true do #TODO headpin
         put 'update', :id => OrgControllerTest::ORG_ID, :organization => OrgControllerTest::ORGANIZATION_UPDATE
         response.should_not be_redirect
       end
@@ -272,7 +272,7 @@ describe OrganizationsController do
         put 'update', :id => OrgControllerTest::ORG_ID
       end
 
-      it "should not redirect from edit view" do
+      it "should not redirect from edit view", :katello => true do #TODO headpin
         put 'update', :id => OrgControllerTest::ORG_ID
         response.should_not be_redirect
       end

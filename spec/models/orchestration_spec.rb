@@ -13,19 +13,19 @@
 require 'spec_helper'
 require 'errors'
 
-class UserNotice # needed a class with an AR base
-  include Glue
-
-  def process q
-    super(q)
-  end
-
-  def execute opts = {}
-    super(opts)
-  end
-end
-
 describe Glue do
+  class UserNotice < ActiveRecord::Base # needed a class with an AR base
+    include Glue
+
+    def process q
+      super(q)
+    end
+
+    def execute opts = {}
+      super(opts)
+    end
+  end
+
   before { @orchestrated = UserNotice.new }
 
   context "orchestration_for method" do
