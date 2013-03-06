@@ -56,16 +56,28 @@ KT.content_search = function(paths_in){
                          },
                         selector:['repo_packages', 'repo_errata']
         },
-        compare_packages:{id:'compare_packages',
+        repo_compare_packages:{id:'repo_compare_packages',
                            name:i18n.packages,
                            url:KT.routes.repo_compare_packages_content_search_index_path(),
-                           selector:['compare_packages', 'compare_errata'],
+                           selector:['repo_compare_packages', 'repo_compare_errata'],
                            modes: true
         },
-        compare_errata:{id:'compare_errata',
+        repo_compare_errata:{id:'repo_compare_errata',
                        name:i18n.errata,
                        url:KT.routes.repo_compare_errata_content_search_index_path(),
-                       selector:['compare_packages', 'compare_errata'],
+                       selector:['repo_compare_packages', 'repo_compare_errata'],
+                       modes: true
+        },
+        view_compare_packages:{id:'view_compare_packages',
+                           name:i18n.packages,
+                           url:KT.routes.view_compare_packages_content_search_index_path(),
+                           selector:['view_compare_packages', 'view_compare_errata'],
+                           modes: true
+        },
+        view_compare_errata:{id:'view_compare_errata',
+                       name:i18n.errata,
+                       url:KT.routes.view_compare_errata_content_search_index_path(),
+                       selector:['view_compare_packages', 'view_compare_errata'],
                        modes: true
         }
     },
@@ -84,8 +96,10 @@ KT.content_search = function(paths_in){
         packages: {method:"POST", url:KT.routes.packages_items_content_search_index_path(), include_search:true},
         repo_packages:{method:"GET", url:KT.routes.repo_packages_content_search_index_path(), include_search:false},
         repo_errata: {method:"GET", url:KT.routes.repo_errata_content_search_index_path(), include_search:false},
-        compare_packages: {method:"GET", url:KT.routes.repo_compare_packages_content_search_index_path(), include_search:false},
-        compare_errata: {method:"GET", url:KT.routes.repo_compare_errata_content_search_index_path(), include_search:false}
+        repo_compare_packages: {method:"GET", url:KT.routes.repo_compare_packages_content_search_index_path(), include_search:false},
+        repo_compare_errata: {method:"GET", url:KT.routes.repo_compare_errata_content_search_index_path(), include_search:false},
+        view_compare_packages: {method:"GET", url:KT.routes.view_compare_packages_content_search_index_path(), include_search:false},
+        view_compare_errata: {method:"GET", url:KT.routes.view_compare_errata_content_search_index_path(), include_search:false}
     };
 
 
@@ -124,6 +138,7 @@ KT.content_search = function(paths_in){
         bind_load_more_event();
         bind_selectors();
         bind_repo_comparison();
+        bind_view_comparison();
 
         $(document).bind('return_to_results.comparison_grid', remove_subgrid);
 
@@ -243,6 +258,7 @@ KT.content_search = function(paths_in){
         if (cache.get_state(search_params)){
             comparison_grid.import_data(cache.get_state(search_params));
             comparison_grid.set_mode("results", options);
+            comparison_grid.set_default_row_level(1);
             select_envs(get_initial_environments());
         }
         else {
@@ -262,6 +278,7 @@ KT.content_search = function(paths_in){
                     select_envs(get_initial_environments());
                     comparison_grid.set_title(data.name);
                     comparison_grid.set_mode("results", options);
+                    comparison_grid.set_default_row_level(1);
                     draw_grid(data.rows);
                     cache.save_state(comparison_grid, search_params);
                 }
@@ -285,6 +302,11 @@ KT.content_search = function(paths_in){
                 if(subgrid.modes){
                     options.right_selector = true;
                     comparison_grid.set_right_select(search_modes, search_params.subgrid.mode);
+                }
+                if(subgrid.url.indexOf('view') === -1) {
+                    comparison_grid.set_default_row_level(3)
+                } else {
+                    comparison_grid.set_default_row_level(1)
                 }
 
                 var cols = data.cols ? data.cols : subgrid.cols;
@@ -329,7 +351,7 @@ KT.content_search = function(paths_in){
         }, 'json');
     },
     bind_repo_comparison = function(){
-        $(document).bind('compare.comparison_grid', function(event){
+        $(document).bind('compare_repos.comparison_grid', function(event){
             var formatted = [],
                 search = $.bbq.getState('search');
             if(event.selected.length  === 0){
@@ -339,8 +361,25 @@ KT.content_search = function(paths_in){
                 formatted.push({env_id:item.col_id, repo_id:item.row_id.split('_')[1]})
             });
             search.subgrid = {
-                type: 'compare_packages',
+                type: 'repo_compare_packages',
                 repos: formatted
+            };
+            $.bbq.pushState({search:search});
+        });
+    },
+    bind_view_comparison = function(){
+        $(document).bind('compare_views.comparison_grid', function(event){
+            var formatted = [],
+                search = $.bbq.getState('search');
+            if(event.selected.length  === 0){
+                return;
+            }
+            utils.each(event.selected, function(item){
+                formatted.push({env_id:item.col_id, view_id:item.row_id.split('_')[1]})
+            });
+            search.subgrid = {
+                type: 'view_compare_packages',
+                views: formatted
             };
             $.bbq.pushState({search:search});
         });
@@ -393,6 +432,7 @@ KT.content_search = function(paths_in){
     },
     remove_subgrid = function(){
         var search = $.bbq.getState('search');
+        comparison_grid.set_default_row_level(1); // set default row level back to 1
         if(search.subgrid){
             delete search['subgrid'];
             $.bbq.pushState({search:search});

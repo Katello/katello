@@ -21,6 +21,7 @@ KT.comparison_grid = function(){
         num_columns_shown = 0,
         grid_row_headers_el,
         grid_content_el,
+        default_row_level = 0;
         max_visible_columns = 7;
 
     var init = function(){
@@ -28,19 +29,15 @@ KT.comparison_grid = function(){
             grid_row_headers_el = $('#grid_row_headers');
             grid_content_el = $('#grid_content');
             controls = KT.comparison_grid.controls(this);
+            default_row_level = 0;
         },
         add_row = function(id, name, cell_data, parent_id, comparable){
-            var cells = [], row_level,
+            var cells = [],
                 child_list,
                 cell_columns = utils.keys(cell_data),
                 has_children = models.rows.has_children(id),
-                row_element;
- 
-            if( models.mode === "results" ){           
-                row_level = models.rows.get_nested_level(id);
-            } else {
-                row_level = 3;
-            }
+                row_element,
+                row_level = models.rows.get_nested_level(id) - 1 + default_row_level;
 
             utils.each(models.columns, function(col){
                 in_column = utils.include(cell_columns, '' + col['id']) ? true : false;
@@ -332,6 +329,9 @@ KT.comparison_grid = function(){
             }
 
         },
+        set_default_row_level = function(level) {
+            default_row_level = level;
+        },
         set_left_select = function(options, selected){
             controls.left_select.set(options, selected);
         },
@@ -355,6 +355,7 @@ KT.comparison_grid = function(){
         show_columns            : show_columns,
         set_loading             : set_loading,
         set_mode                : set_mode,
+        set_default_row_level   : set_default_row_level,
         set_left_select         : set_left_select,
         set_right_select        : set_right_select,
         set_title               : set_title,
@@ -760,13 +761,15 @@ KT.comparison_grid.events = function(grid) {
         comparable_cells = function(){
             $('#compare_btn').live('click', function(){
                 var elements = $('.grid_cell').find('input[type="checkbox"]:checked'),
-                    selected = [];
+                    selected = [],
+                    type = "";
 
                 KT.utils.each(elements, function(item){
                     selected.push({ col_id : $(item).val(), row_id : $(item).attr('name') });
 
                 });
-                $(document).trigger({ type : 'compare.comparison_grid', selected : selected });
+                type = "compare_" + $("select#content").val() + ".comparison_grid";
+                $(document).trigger({ type : type, selected : selected });
             });
             $('.grid_cell').find('input[type="checkbox"]').live('click', function(){
                 var elements = $('.grid_cell').find('input[type="checkbox"]:checked');
