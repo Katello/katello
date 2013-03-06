@@ -112,8 +112,9 @@ module ContentSearch
         repo_rows += package_rows(packages, repo_row, cols)
 
         # add metadata row for Show More link
-        if packages.length > page_size
-          meta_row =  MetadataRow.new(:total => packages.length,
+        total = view_repos.map(&("#{type}_count".to_sym)).max
+        if total > page_size
+          meta_row =  MetadataRow.new(:total => total,
                                       :current_count => offset + packages.length,
                                       :data => {:repo_id=>library_repo.id},
                                       :unique_id => repo_row.id,

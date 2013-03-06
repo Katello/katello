@@ -32,12 +32,12 @@ module ContentSearch
         end
 
         Row.new(:id         => "view_#{view.id}",
-                               :name       => view.name,
-                               :cells      => cols,
-                               :data_type  => "view",
-                               :value      => view.name,
-                               :comparable => true
-                              )
+                :name       => view.name,
+                :cells      => cols,
+                :data_type  => "view",
+                :value      => view.name,
+                :comparable => true
+               )
       end
     end
 
