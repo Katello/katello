@@ -1,5 +1,5 @@
 #
-# Copyright 2012 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -12,29 +12,28 @@
 
 require 'minitest_helper'
 
-=begin
-class RepositoryElasticSearchTest < MiniTest::Rails::ActiveSupport::TestCase
-  include RepositoryTestBase
+class GlueElasticSearchTest < MiniTest::Rails::ActiveSupport::TestCase
 
-  def test_extended_index_attrs
-    assert @fedora_17.extended_index_attrs.is_a? Hash
+  def setup
+    @FakeClass = Class.new do 
+      include Glue::ElasticSearch::Items
+
+      def self.search
+      end
+    end
+
+    @results = MiniTest::Mock.new
+    @results.expect(:total, 0)
+    @results.expect(:class, 0)
+    @results.expect(:empty?, true)
   end
 
-  def test_update_related_index
-    assert @fedora_17.update_related_index
-  end
+  def test_items
+    @FakeClass.stub(:search, @results) do
+      items = @FakeClass.items("*", 0)
 
-  def test_index_packages
-    assert @fedora_17.index_packages
-  end
-
-  def test_errata_count
-    assert @fedora_17.errata_count
-  end
-
-  def test_package_count
-    assert @fedora_17.package_count
+      assert_empty items
+    end
   end
 
 end
-=end
