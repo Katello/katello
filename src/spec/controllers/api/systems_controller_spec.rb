@@ -59,8 +59,10 @@ describe Api::SystemsController do
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
     Resources::Candlepin::Consumer.stub!(:available_pools).and_return([])
 
-    Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid})
-    Runcible::Extensions::Consumer.stub!(:update).and_return(true)
+    if Katello.config.katello?
+      Runcible::Extensions::Consumer.stub!(:create).and_return({ :id => uuid })
+      Runcible::Extensions::Consumer.stub!(:update).and_return(true)
+    end
 
     @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
     @environment_1 = KTEnvironment.create!(:name=>'test_1', :label=> 'test_1', :prior => @organization.library.id, :organization => @organization)

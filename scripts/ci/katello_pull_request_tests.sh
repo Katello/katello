@@ -20,7 +20,7 @@ then
 fi
 
 echo ""
-echo "********* RSPEC Unit Tests ****************"
+echo "********* Katello RSPEC Unit Tests ****************"
 psql -c "CREATE USER katello WITH PASSWORD 'katello';" -U postgres
 psql -c "ALTER ROLE katello WITH CREATEDB" -U postgres
 psql -c "CREATE DATABASE katello_test OWNER katello;" -U postgres
@@ -40,7 +40,6 @@ then
   exit 1
 fi
 
-
 cd ../cli
 
 echo ""
@@ -53,5 +52,14 @@ echo "********* Running Pylint ************************"
 echo "RUNNING: PYTHONPATH=src/ pylint --rcfile=./etc/spacewalk-pylint.rc --additional-builtins=_ katello"
 PYTHONPATH=src/ pylint --rcfile=./etc/spacewalk-pylint.rc --additional-builtins=_ katello || exit 1
 
-cd ../
+cd ../src
 
+echo ""
+echo "********* Headpin RSPEC Unit Tests ****************"
+sed -i 's/app_mode: katello/app_mode: headpin/' config/katello.yml
+bundle exec rake parallel:prepare VERBOSE=false
+bundle exec rake ptest:spec
+if [ $? -ne 0 ]
+then
+  exit 1
+fi
