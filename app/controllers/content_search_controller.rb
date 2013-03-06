@@ -33,6 +33,8 @@ class ContentSearchController < ApplicationController
         :repo_errata => contents_test,
         :repo_compare_errata =>contents_test,
         :repo_compare_packages =>contents_test,
+        :view_compare_errata =>contents_test,
+        :view_compare_packages =>contents_test,
         :views => contents_test
     }
   end
@@ -78,7 +80,8 @@ class ContentSearchController < ApplicationController
     end
 
     products = repos.collect(&:product).uniq
-    render :json=>{:rows=>(product_rows(products) + repo_rows(repos)), :name=>_('Repositories')}
+    product_search = ContentSearch::ProductSearch.new(:product_ids => products.map(&:id))
+    render :json=>{:rows=>(product_search.rows + repo_rows(repos)), :name=>_('Repositories')}
   end
 
   def packages
@@ -162,7 +165,6 @@ class ContentSearchController < ApplicationController
     render :json => { :rows => rows, :name => @repo.name }
   end
 
-
   def repo_compare_packages
     repo_compare_content true, params[:offset] || 0
   end
@@ -172,6 +174,13 @@ class ContentSearchController < ApplicationController
     repo_compare_content false, params[:offset] || 0
   end
 
+  def view_compare_packages
+    view_compare_content true, params[:offset] || 0
+  end
+
+  def view_compare_errata
+    view_compare_content false, params[:offset] || 0
+  end
 
   private
 
@@ -207,6 +216,111 @@ class ContentSearchController < ApplicationController
     render :json => {:rows=>rows, :cols=>cols, :name=>_("Repository Comparison")}
   end
 
+  def view_compare_content(is_package, offset)
+    offset = params[:offset] || 0
+
+    # build columns and get repos
+    cols = view_compare_columns(params[:views])
+
+    # build rows
+    rows = view_compare_rows(is_package, @repos, cols, offset)
+
+    render :json => {:rows=>rows, :cols=>cols, :name=>_("Content View Comparison")}
+  end
+
+  def view_compare_columns(cv_envs)
+    @repos = []
+
+    cv_envs.inject({}) do |result, (key, item)|
+      view = ContentView.readable(current_organization).find(item[:view_id])
+      env = KTEnvironment.content_readable(current_organization).where(:id => item[:env_id]).first
+      cv_version = view.version(env)
+      @repos += cv_version.repos(env)
+
+      # update columns while we loop through view/env combos
+      column = "#{view.id}_#{env.id}"
+      result[column] = ContentSearch::Column.new(:id => column,
+                                                 :content => view_compare_name_display(view, env)
+                                                )
+      result
+    end
+  end
+
+  def view_compare_rows(is_package, repos, cols = [], offset = 0)
+    type = is_package ? 'package' : 'errata'
+    library_repos = repos.map(&:library_instance).uniq
+    products = library_repos.map(&:product).uniq
+    rows = []
+
+    # build product rows
+    products.each do |product|
+      row = ContentSearch::Row.new(:id => "product_#{product.id}",
+                                   :name => product.name,
+                                   :data_type => "product",
+                                   :cols => {}
+                                  )
+      cols.each do |key, col|
+        row.cols[key] = ContentSearch::Column.new(:display => "ok", :id => key)
+      end
+      rows << row
+    end
+
+    library_repos.each do |library_repo|
+      repo_row = ContentSearch::RepoRow.new(:repo => library_repo,
+                                            :parent_id => "product_#{library_repo.product.id}"
+                                           )
+      view_repos = []
+
+      # build repo rows
+      cols.each do |key, col|
+        view_id = key.split("_").first.to_i
+        repo = repos.detect {|r| r.content_view.id == view_id && r.library_instance_id == library_repo.id}
+        if repo
+          view_repos << repo
+          display = is_package ? repo.package_count : repo.errata_count
+          repo_row.cols[key] = ContentSearch::Column.new(:display => display, :id => key)
+        end
+      end
+      rows << repo_row
+
+      # build package or errata rows
+      if is_package
+        packages = Package.search('', offset, current_user.page_size, view_repos.map(&:pulp_id))
+      else
+        packages = Errata.search('', offset, current_user.page_size, :repoids => view_repos.map(&:id))
+      end
+
+      packages.each do |package|
+        display = is_package ? package_display(package) : errata_display(package)
+        package_row = {:data_type => type,
+                       :id => "repo_#{library_repo.id}_package_#{package.id}",
+                       :name => display,
+                       :parent_id => "repo_#{library_repo.id}",
+                       :value => package.nvrea,
+                       :cols => {}
+                      }
+        cols.each do |key, col|
+          view_id = key.split("_").first.to_i
+          repo = repos.detect {|r| r.content_view.id == view_id && r.library_instance_id == library_repo.id}
+          if repo && repo.packages.map(&:id).include?(package.id)
+            package_row[:cols][key] = {:id => key}
+          end
+        end
+
+        rows << package_row
+      end
+
+      # add metadata row for Show More link
+      count = is_package ? library_repo.package_count : library_repo.errata_count
+      if count - offset > current_user.page_size
+        rows << metadata_row(count, offset + packages.length, {:repo_id=>library_repo.id},
+                             library_repo.id, "repo_#{library_repo.id}")
+      end
+    end
+
+    rows
+  end
+
   #take in a set of repos and sort based on environment
   def sort_repos repos
     env_to_repo = {}
@@ -220,10 +334,6 @@ class ContentSearchController < ApplicationController
     to_ret
   end
 
-
-  def find_environments
-    @envs = KTEnvironment.contents_readable(current_organization).where(:id=>params[:environemnts])
-  end
 
   def find_repos
     @repos = []

@@ -14,16 +14,6 @@
 # a container like a product or content view
 
 class ContentSearch::Span
-  attr_accessor :rows
-
-  def initialize(options)
-    options.each do |key, value|
-      send("#{key}=", value)
-    end
-  end
-
-  def output
-    self.rows
-  end
-
+  include ContentSearch::Element
+  display_attributes :rows
 end

@@ -86,6 +86,8 @@ Src::Application.routes.draw do
         get :repo_errata
         get :repo_compare_packages
         get :repo_compare_errata
+        get :view_compare_packages
+        get :view_compare_errata
       end
   end
 

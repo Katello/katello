@@ -11,8 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class ContentSearch::ProductSearch < ContentSearch::ContainerSearch
-  attr_accessor :rows, :name, :product_ids
-  element_attributes :rows, :name # we don't want product_ids or mode
+  attr_accessor :product_ids
 
   def initialize(options)
     super

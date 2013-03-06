@@ -10,17 +10,18 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-# a container represents a product or content view
+class ContentSearch::RepoRow < ContentSearch::Row
+  attr_accessor :repo
 
-class ContentSearch::ContainerSearch < ContentSearch::Search
-
-  def container_hover_html(container, env)
-    render_to_string :partial=>'content_search/container_hover',
-      :locals=>{:container=>container, :env=>env}
+  def initialize(options)
+    super
+    build_row
   end
 
-  def env_ids
-    KTEnvironment.content_readable(current_organization).pluck(:id)
+  def build_row
+    self.data_type ||= "repo"
+    self.cols ||= {}
+    self.id ||= "repo_#{@repo.id}"
+    self.name ||= @repo.name
   end
-
 end

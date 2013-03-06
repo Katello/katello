@@ -15,7 +15,7 @@
 
 class ContentSearch::Search
   include ContentSearch::Element
-  attr_accessor :rows, :name
+  display_attributes :rows, :name
 
   def current_organization
     ContentSearch::SearchUtils.current_organization
