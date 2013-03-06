@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe "distributions/_filelist.html.haml" do
+describe "distributions/_filelist.html.haml", :katello => true do
   before(:each) do
     view.stub(:render_menu)
     view.stub(:promotion_distribution_navigation).and_return([])

@@ -51,30 +51,30 @@ describe Api::SubscriptionsController do
     let(:unauthorized_user) { user_without_update_permissions }
     it_should_behave_like "protected action"
 
-    it "requires pool and quantity to be specified" do
+    it "requires pool and quantity to be specified", :katello => true do #TODO headpin
       post :create, :system_id => @system.id
       response.code.should == "400"
     end
 
     context "subscribes" do
-      it "to one pool" do
+      it "to one pool", :katello => true do #TODO headpin
         Resources::Candlepin::Consumer.should_receive(:consume_entitlement).once.with(@system.uuid, "poolidXYZ", "1")
         post :create, :system_id => @system.id, :pool => "poolidXYZ", :quantity => '1'
       end
     end
 
     context "unsubscribes" do
-      it "from one pool" do
+      it "from one pool", :katello => true do #TODO headpin
         Resources::Candlepin::Consumer.should_receive(:remove_entitlement).once.with(@system.uuid, "poolidXYZ")
         post :destroy, :system_id => @system.id, :id => "poolidXYZ"
       end
 
-      it "from one pool by serial" do
+      it "from one pool by serial", :katello => true do #TODO headpin
         Resources::Candlepin::Consumer.should_receive(:remove_certificate).once.with(@system.uuid, "serialidXYZ")
         post :destroy_by_serial, :system_id => @system.id, :serial_id => "serialidXYZ"
       end
 
-      it "from all pools" do
+      it "from all pools", :katello => true do #TODO headpin
         Resources::Candlepin::Consumer.should_receive(:remove_entitlements).once.with(@system.uuid)
         post :destroy_all, :system_id => @system.id
       end
@@ -87,12 +87,12 @@ describe Api::SubscriptionsController do
       let(:unauthorized_user) { user_without_read_permissions }
       it_should_behave_like "protected action"
 
-      it "should find System" do
+      it "should find System", :katello => true do #TODO heapdin
         System.should_receive(:first).once.with(hash_including(:conditions => {:uuid => @system.uuid})).and_return(@system)
         get :index, :system_id => @system.uuid
       end
 
-      it "should retrieve Consumer's errata from pulp" do
+      it "should retrieve Consumer's errata from pulp", :katello => true do #TODO headpin
         Resources::Candlepin::Consumer.should_receive(:entitlements).once.with(uuid).and_return([])
         get :index, :system_id => @system.uuid
       end
