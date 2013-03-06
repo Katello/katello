@@ -9,8 +9,8 @@ require "rails/test_unit/railtie"
 
 path = File.expand_path("../lib", File.dirname(__FILE__))
 $LOAD_PATH << path unless $LOAD_PATH.include? path
-require 'katello_config'
-require 'katello_logging'
+require 'katello/load_configuration'
+require 'katello/logging'
 
 
 # If you have a Gemfile, require the gems listed there, including any gems

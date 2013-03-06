@@ -10,17 +10,17 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-path = File.expand_path(File.dirname(__FILE__))
+path = File.expand_path(File.join(File.dirname(__FILE__), '..'))
 $LOAD_PATH << path unless $LOAD_PATH.include? path
+require 'katello/configuration'
 require 'app_config'
-require 'configuration'
 require 'util/password'
 
 module Katello
 
   # @return [Configuration::Loader]
   def self.configuration_loader
-    root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
+    root = File.expand_path(File.join(File.dirname(__FILE__), '..', '..'))
 
     @configuration_loader ||= Configuration::Loader.new(
         :config_file_paths        => %W(#{root}/config/katello.yml /etc/katello/katello.yml),
