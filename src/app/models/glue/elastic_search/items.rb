@@ -14,7 +14,7 @@
 module Glue
   module ElasticSearch
     class Items
-      
+
       attr_accessor :obj_class, :query_string, :results, :total, :filters
 
       def initialize(obj_class)
@@ -34,10 +34,16 @@ module Glue
       # @option       search_options :default_field
       #   The field that should be used by the search engine when a user performs
       #   a search without specifying field.
+      # @option       search_options :page_size
+      #   Specifies the number of results to return
+      # @option       search_options :sort_by
+      #   The model field on which to sort
+      # @option       search_options :sort_order
+      #   The order to sort on, one of DESC or ASC
       # @option       search_options :filter
       #   Filter to apply to search. Array of hashes.  Each key/value within the hash
       #   is OR'd, whereas each HASH itself is AND'd together
-      # @option search_options [true, false] :load_records
+      # @option search_options [true, false] :load_records?
       #   whether or not to load the active record object (defaults to false)
       def retrieve(query_string, start=0, search_options={})
 
@@ -97,7 +103,7 @@ module Glue
       # Loads the ActiveRecord objects from the database that match
       # the results returned by Elasticsearch
       #
-      # @return [Array] a list of ActiveRecord objects 
+      # @return [Array] a list of ActiveRecord objects
       def load_records
         collection = @obj_class.where(:id => @results.collect{|r| r.id})
 

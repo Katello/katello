@@ -182,7 +182,7 @@ DESC
     filters << { :uuid => System.all_by_pool_uuid(params['pool_id']) } if params['pool_id']
 
     options = {
-      :filter         => filters, 
+      :filter         => filters,
       :load_records?  => true
     }
 
@@ -192,7 +192,7 @@ DESC
 
     options[:sort_by]   = params[:sort_by]    if params[:sort_by]
     options[:sort_order]= params[:sort_order] if params[:sort_order]
-    
+
     items = Glue::ElasticSearch::Items.new(System)
     systems = items.retrieve(query_string, params[:offset], options)
 
