@@ -83,15 +83,6 @@ module Glue::Pulp::Repos
       async_tasks
     end
 
-    def delete_from_env from_env
-      @orchestration_for = :delete
-      delete_repos(repos(from_env))
-      if from_env.products.include? self
-        self.environments.delete(from_env)
-      end
-      save!
-    end
-
     def package_groups env, search_args = {}
       groups = []
       self.repos(env).each do |repo|
@@ -348,10 +339,6 @@ module Glue::Pulp::Repos
         async_tasks << repo.promote(from_env, to_env)
       end
       async_tasks.flatten(1)
-    end
-
-    def delete_repos repos
-      repos.each{|repo| repo.destroy}
     end
 
     def check_for_repo_conflicts(repo_name, repo_label)
