@@ -13,7 +13,7 @@
 
 require 'set'
 class DeletionChangeset < Changeset
-  use_index_of Changeset
+  use_index_of Changeset if Katello.config.use_elasticsearch
   def apply(options = { })
     options = { :async => true, :notify => false }.merge options
 
