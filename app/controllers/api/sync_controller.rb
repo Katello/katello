@@ -67,6 +67,8 @@ class Api::SyncController < Api::ApiController
     end
   end
 
+  private
+
   # used in unit tests
   def find_object
     if params.key?(:provider_id)
@@ -83,8 +85,6 @@ class Api::SyncController < Api::ApiController
     end
     @obj
   end
-
-  private
 
   def find_provider
     @provider = Provider.find(params[:provider_id])

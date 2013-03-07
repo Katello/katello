@@ -13,8 +13,6 @@
 
 class SystemGroupPackagesController < ApplicationController
 
-  require 'util/package_util'
-
   helper SystemPackagesHelper
 
   before_filter :find_group
@@ -51,7 +49,7 @@ class SystemGroupPackagesController < ApplicationController
   def add
     if !params[:packages].blank?
       # user entered one or more package names (as comma-separated list) in the content box
-      packages = Katello::PackageUtils.validate_package_list_format(params[:packages])
+      packages = Util::Package.validate_package_list_format(params[:packages])
 
       if packages
         job = @group.install_packages packages
@@ -89,7 +87,7 @@ class SystemGroupPackagesController < ApplicationController
   def remove
     if !params[:packages].blank?
       # user entered one or more package names (as comma-separated list) in the content box
-      packages = Katello::PackageUtils.validate_package_list_format(params[:packages])
+      packages = Util::Package.validate_package_list_format(params[:packages])
 
       if packages
         job = @group.uninstall_packages packages
@@ -126,7 +124,7 @@ class SystemGroupPackagesController < ApplicationController
   def update
     if !params[:packages].blank?
       # user entered one or more package names (as comma-separated list) in the content box
-      packages = Katello::PackageUtils.validate_package_list_format(params[:packages])
+      packages = Util::Package.validate_package_list_format(params[:packages])
 
       if packages
         job = @group.update_packages packages

@@ -29,8 +29,8 @@ module Glue::ElasticSearch::Package
         {
             "index" => {
                 "analysis" => {
-                    "filter" => Katello::Search::custom_filters,
-                    "analyzer" =>Katello::Search::custom_analyzers
+                    "filter" => Util::Search::custom_filters,
+                    "analyzer" =>Util::Search::custom_analyzers
                 }
             }
         }
@@ -59,7 +59,7 @@ module Glue::ElasticSearch::Package
       def self.autocomplete_name query, repoids=nil, page_size=15
         return [] if !Tire.index(self.index).exists?
 
-        query = Katello::Search::filter_input query
+        query = Util::Search::filter_input query
         query = "*" if query == ""
         query = "name_autocomplete:(#{query})"
 
@@ -85,7 +85,7 @@ module Glue::ElasticSearch::Package
       def self.autocomplete_nvrea query, repoids=nil, page_size=15
         return Util::Support.array_with_total if !Tire.index(self.index).exists?
 
-        query = Katello::Search::filter_input query
+        query = Util::Search::filter_input query
         query = "*" if query == ""
         query = "name_autocomplete:(#{query})"
 
@@ -141,7 +141,7 @@ module Glue::ElasticSearch::Package
         end
 
         if repoids
-          Katello::PackageUtils.setup_shared_unique_filter(repoids, search_mode, search)
+          Util::Package.setup_shared_unique_filter(repoids, search_mode, search)
         end
 
         return search.perform.results
@@ -154,7 +154,7 @@ module Glue::ElasticSearch::Package
           pkg = self.find(pkg_id)
           pkg.as_json.merge(pkg.index_options)
         }
-        Tire.index Package.index do
+        Tire.index ::Package.index do
           create :settings => Package.index_settings, :mappings => Package.index_mapping
           import pkgs
         end if !pkgs.empty?

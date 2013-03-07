@@ -134,8 +134,8 @@ module Glue::ElasticSearch::Pool
         {
             "index" => {
                 "analysis" => {
-                    "filter" => Katello::Search::custom_filters,
-                    "analyzer" => Katello::Search::custom_analyzers
+                    "filter" => Util::Search::custom_filters,
+                    "analyzer" => Util::Search::custom_analyzers
                 }
             }
         }

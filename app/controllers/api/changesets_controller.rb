@@ -77,13 +77,13 @@ class Api::ChangesetsController < Api::ApiController
     param :type, ["PROMOTION", "DELETION"], :required => true
   end
   def create
-    csType = params[:changeset][:type]
-    if params[:changeset][:type] == 'PROMOTION'
+    cs_type = params[:changeset][:type]
+    if cs_type == 'PROMOTION'
       @changeset = PromotionChangeset.new(params[:changeset])
-    elsif params[:changeset][:type] == 'DELETION'
+    elsif cs_type == 'DELETION'
       @changeset = DeletionChangeset.new(params[:changeset])
     else
-      raise HttpErrors::UnprocessableEntity, _("Unknown changeset type, must be PROMOTION or DELETION: %s") % csType
+      raise HttpErrors::UnprocessableEntity, _("Unknown changeset type, must be PROMOTION or DELETION: %s") % cs_type
     end
 
     @changeset.environment = @environment

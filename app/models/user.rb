@@ -10,10 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'ldap'
-require 'util/threadsession'
 require 'util/password'
-require 'util/model_util'
 
 class User < ActiveRecord::Base
   include Glue::Pulp::User if Katello.config.use_pulp
@@ -26,7 +23,7 @@ class User < ActiveRecord::Base
   include AsyncOrchestration
   include Authorization::User
   include Authorization::Enforcement
-  include Katello::ThreadSession::UserModel
+  include Util::ThreadSession::UserModel
 
   acts_as_reportable
 
@@ -374,7 +371,6 @@ class User < ActiveRecord::Base
   end
 
   def log_roles verbs, resource_type, tags, org, any_tags = false
-    if Katello.config.allow_roles_logging
       verbs_str = verbs ? verbs.join(',') :"perform any verb"
       tags_str  = "any tags"
       if tags
@@ -382,9 +378,8 @@ class User < ActiveRecord::Base
       end
 
       org_str = org ? "organization #{org.name} (#{org.name})" :" any organization"
-      Rails.logger.debug "Checking if user #{username} is allowed to #{verbs_str} in #{resource_type.inspect} " +
-                             "scoped for #{tags_str} in #{org_str}"
-    end
+      logger.debug "Checking if user #{username} is allowed to #{verbs_str} in #{resource_type.inspect} " +
+                       "scoped for #{tags_str} in #{org_str}"
   end
 
   def create_own_role
@@ -415,10 +410,14 @@ class User < ActiveRecord::Base
 
   def generate_remote_id
     if self.username.ascii_only?
-      "#{Katello::ModelUtils::labelize(self.username)}-#{SecureRandom.hex(4)}"
+      "#{Util::Model::labelize(self.username)}-#{SecureRandom.hex(4)}"
     else
-      Katello::ModelUtils::uuid
+      Util::Model::uuid
     end
+  end
+
+  def logger
+    ::Logging.logger['roles']
   end
 
 end

@@ -593,7 +593,7 @@ describe SystemsController do
 
           it 'should return an error notice, if no packages structure provided' do
             controller.should notify.error
-            @system.should_not_receive(:install_packages)
+            @system1.should_not_receive(:install_packages)
             put :bulk_content_install, :ids => [@system1.id]
             response.should be_success
           end
@@ -623,7 +623,7 @@ describe SystemsController do
 
           it 'should return an error notice, if no groups structure provided' do
             controller.should notify.error
-            @system.should_not_receive(:install_package_groups)
+            @system1.should_not_receive(:install_package_groups)
             put :bulk_content_install, :ids => [@system1.id]
             response.should be_success
           end
@@ -692,7 +692,7 @@ describe SystemsController do
 
           it 'should return an error notice, if no packages structure provided' do
             controller.should notify.error
-            @system.should_not_receive(:uninstall_packages)
+            @system1.should_not_receive(:uninstall_packages)
             put :bulk_content_remove, :ids => [@system1.id]
             response.should be_success
           end
@@ -722,7 +722,7 @@ describe SystemsController do
 
           it 'should return an error notice, if no groups structure provided' do
             controller.should notify.error
-            @system.should_not_receive(:uninstall_packages_groups)
+            @system1.should_not_receive(:uninstall_packages_groups)
             put :bulk_content_remove, :ids => [@system1.id]
             response.should be_success
           end
@@ -752,7 +752,7 @@ describe SystemsController do
 
           it 'should return an error notice, if no errata structure provided' do
             controller.should notify.error
-            @system.should_not_receive(:install_errata)
+            @system1.should_not_receive(:install_errata)
             put :bulk_errata_install, :ids => [@system1.id]
             response.should be_success
           end

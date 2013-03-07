@@ -135,8 +135,8 @@ module DashboardHelper
   end
 
   def get_checkin(system)
-    if system.checkinTime
-      return  format_time system.checkinTime
+    if system.checkin_time
+      return  format_time system.checkin_time
     end
     _("Never checked in.")
   end

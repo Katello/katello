@@ -11,21 +11,20 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'spec_helper'
-require 'util/package_util'
 
-describe Katello::PackageUtils, :katello => true do
+describe Util::Package, :katello => true do
 
   describe "nvrea" do
 
     shared_examples_for "nvrea parsable string" do
       it "can be parsed" do
-        Katello::PackageUtils.parse_nvrea(subject).should == expected
+        Util::Package.parse_nvrea(subject).should == expected
       end
     end
 
     shared_examples_for "nvrea_nvre parsable string" do
       it "can be parsed" do
-        Katello::PackageUtils.parse_nvrea_nvre(subject).should == expected
+        Util::Package.parse_nvrea_nvre(subject).should == expected
       end
     end
 
@@ -33,7 +32,7 @@ describe Katello::PackageUtils, :katello => true do
       subject { "this-is-not-nvrea" }
 
       it "can not be parsed by nvrea" do
-        Katello::PackageUtils.parse_nvrea(subject).should be_nil
+        Util::Package.parse_nvrea(subject).should be_nil
       end
     end
 
@@ -112,11 +111,11 @@ describe Katello::PackageUtils, :katello => true do
 
     shared_examples_for "nvre parsable string" do
       it "can be parsed" do
-        Katello::PackageUtils.parse_nvre(subject).should == expected
+        Util::Package.parse_nvre(subject).should == expected
       end
 
       it "can be build" do
-        Katello::PackageUtils.build_nvrea(expected).should == subject
+        Util::Package.build_nvrea(expected).should == subject
       end
     end
 
