@@ -37,7 +37,7 @@ class Api::FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
                 :id => @filter.name
     assert_response :success
     assert_kind_of Hash, JSON.parse(response.body)
-    assert_equal JSON.parse(response.body)["name"], @filter.name
+    assert_equal @filter.name, JSON.parse(response.body)["name"]
   end
 
   test "should throw an 404 if definition is not found" do
@@ -70,7 +70,7 @@ class Api::FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
                 :filter => name
     assert_response :success
     assert_kind_of Hash, JSON.parse(response.body)
-    assert_equal JSON.parse(response.body)["name"], name
+    assert_equal name, JSON.parse(response.body)["name"]
     refute_nil Filter.find_by_name(name)
   end
 
