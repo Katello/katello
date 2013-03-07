@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -18,7 +18,8 @@ class DeletionChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
   fixtures :all
 
   def self.before_suite
-    models = ["Organization", "KTEnvironment", "ContentViewEnvironment", "Repository"]
+    models = ["Organization", "ContentView", "Product", "ContentViewEnvironment", "KTEnvironment",
+              "ContentViewVersion", "Repository", "Changeset", "DeletionChangeset"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch", "Foreman"], models)
   end
 
@@ -31,10 +32,8 @@ class DeletionChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
     @repo_library         = Repository.find(repositories(:fedora_17_x86_64))
     @library_dev_view     = ContentView.find(content_views(:library_dev_view))
 
-
     @changeset            = DeletionChangeset.create!(:name =>'PrecreatedCS',
                                               :environment_id => @dev.id)
-
     DeletionChangeset.any_instance.stubs(:index_repo_content)
     ContentViewEnvironment.any_instance.stubs(:update_cp_content)
   end
@@ -62,13 +61,14 @@ class DeletionChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
   def test_cs_promote_state
     @changeset.state = Changeset::REVIEW
     @changeset.apply(:async=>false)
-    assert_equal @changeset.state, Changeset::DELETED
+    assert_equal Changeset::DELETED, @changeset.state
   end
 
   def test_product_delete
     @changeset.add_product!(@product)
     @changeset.state = Changeset::REVIEW
     @changeset.apply(:async=>false)
+
     assert_includes Product.find(@product).environments, @library
     refute_includes Product.find(@product).environments, @dev
     assert_empty Repository.where(:id=>@repo_dev.id)
@@ -78,6 +78,7 @@ class DeletionChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
     @changeset.add_repository!(@repo_dev)
     @changeset.state = Changeset::REVIEW
     @changeset.apply(:async=>false)
+
     assert_includes Product.find(@product).environments, @library
     assert_includes Product.find(@product).environments, @dev
     assert_empty Repository.where(:id=>@repo_dev.id)
@@ -89,6 +90,7 @@ class DeletionChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
     @changeset.add_content_view!(@library_dev_view)
     @changeset.state = Changeset::REVIEW
     @changeset.apply(:async=>false)
+
     refute_includes ContentView.find(@library_dev_view).environments, @dev
   end
 
