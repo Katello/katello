@@ -1,6 +1,3 @@
-require 'net/ldap'
-require 'oauth'
-require 'oauth/request_proxy/rack_request'
 
 Rails.configuration.middleware.use RailsWarden::Manager do |config|
   config.failure_app = FailedAuthenticationController

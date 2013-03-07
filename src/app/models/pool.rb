@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'util/search'
-
 class Pool < ActiveRecord::Base
   include Glue::Candlepin::Pool
   include Glue::ElasticSearch::Pool if Katello.config.use_elasticsearch

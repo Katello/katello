@@ -9,7 +9,6 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-require "util/model_util"
 
 class Product < ActiveRecord::Base
 
@@ -21,7 +20,7 @@ class Product < ActiveRecord::Base
   include Authorization::Product
   include AsyncOrchestration
 
-  include Katello::LabelFromName
+  include Ext::LabelFromName
 
   has_many :environment_products, :class_name => "EnvironmentProduct", :dependent => :destroy, :uniq=>true
   has_many :environments, :class_name => "KTEnvironment", :uniq => true , :through => :environment_products  do
@@ -166,7 +165,7 @@ class Product < ActiveRecord::Base
   scope :repositories_cdn_import_failed, where(:cdn_import_success => false)
 
   def assign_unique_label
-    self.label = Katello::ModelUtils::labelize(self.name) if self.label.blank?
+    self.label = Util::Model::labelize(self.name) if self.label.blank?
 
     # if the object label is already being used in this org, append the id to make it unique
     if Product.all_in_org(self.organization).where('products.label = ?', self.label).count > 0

@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'spec_helper'
+require 'util/url_matcher'
 
 describe Util::UrlMatcher do
 

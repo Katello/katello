@@ -34,6 +34,7 @@ Requires:       rubygem(json)
 Requires:       rubygem(activesupport)
 Requires:       rubygem(oauth)
 Requires:       rubygem(rest-client)
+Requires:       rubygem(runcible)
 
 
 BuildArch: noarch

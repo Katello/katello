@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'util/package_util'
-
 class Changeset < ActiveRecord::Base
 
   include AsyncOrchestration
@@ -197,14 +195,24 @@ class Changeset < ActiveRecord::Base
      distro
    end
 
-  def add_content_view!(view)
+  def add_content_view!(view, include_components=false)
     unless env_to_verify_on_add_content.content_views.include?(view)
       raise Errors::ChangesetContentException.new("Content view not found within environment you want to promote from.")
     end
 
     self.content_views << view
+
+    if include_components && type == "PromotionChangeset" && view.composite
+      # This is a composite view and the caller would like to also add any component
+      # views that also need to be promoted to the target environment.
+      component_views = view.components_not_in_env(self.environment).
+          promotable(self.environment.organization) - self.content_views
+
+      component_views.each{ |component| self.content_views << component } unless component_views.blank?
+    end
+
     save!
-    view
+    return view, component_views
   end
 
   def remove_content_view!(view)
@@ -267,7 +275,7 @@ class Changeset < ActiveRecord::Base
   end
 
   def find_package_data(product, name_or_nvre)
-    package_data = Katello::PackageUtils.parse_nvrea_nvre(name_or_nvre)
+    package_data = Util::Package.parse_nvrea_nvre(name_or_nvre)
 
     if package_data
       packs = product.find_packages_by_nvre(env_to_verify_on_add_content,
@@ -276,7 +284,7 @@ class Changeset < ActiveRecord::Base
     end
 
     if packs.blank? || !package_data
-       packs = Katello::PackageUtils::find_latest_packages(
+       packs = Util::Package::find_latest_packages(
                   product.find_packages_by_name(env_to_verify_on_add_content, name_or_nvre))
     end
 

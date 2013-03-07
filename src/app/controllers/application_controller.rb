@@ -10,9 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'util/threadsession'
-require 'util/search'
-require 'util/model_util'
 require 'cgi'
 require 'base64'
 
@@ -100,7 +97,7 @@ class ApplicationController < ActionController::Base
     execute_rescue(exception, lambda{|exception| render_bad_parameters(exception)})
   end
   # support for session (thread-local) variables must be the last filter (except authorize)in this class
-  include Katello::ThreadSession::Controller
+  include Util::ThreadSession::Controller
   include AuthorizationRules
   include Menu
 
@@ -117,7 +114,7 @@ class ApplicationController < ActionController::Base
   # permissions required by that controller.
   def default_label
     if params[:name]
-      render :text => Katello::ModelUtils::labelize(params[:name])
+      render :text => Util::Model::labelize(params[:name])
     else
       render :nothing => true
     end
@@ -145,7 +142,7 @@ class ApplicationController < ActionController::Base
   # sent to the user (e.g. via a notice).
   def generate_label object_name, object_type
     # user didn't provide a label, so generate one using the name
-    label = Katello::ModelUtils::labelize(object_name)
+    label = Util::Model::labelize(object_name)
     # if you modify this string you have to modify it in n_gettext_for_generate_label as well
     label_assigned_text = "A label was not provided during #{object_type} creation; therefore, a label of '%{label}' was " +
       "automatically assigned. If you would like a different label, please delete the " +
@@ -487,7 +484,7 @@ class ApplicationController < ActionController::Base
   def search_validate(obj_class, id, search, default=:name)
     obj_class.index.refresh
     search = '*' if search.nil? || search == ''
-    search = Katello::Search::filter_input search
+    search = Util::Search::filter_input search
     query_options = {}
     query_options[:default_field] = default if default
 
@@ -519,7 +516,7 @@ class ApplicationController < ActionController::Base
     elsif search_options[:simple_query] && !Katello.config.simple_search_tokens.any?{|s| search.downcase.match(s)}
       search = search_options[:simple_query]
     end
-    #search = Katello::Search::filter_input search
+    #search = Util::Search::filter_input search
 
     # set the query default field, if one was provided.
     query_options = {}

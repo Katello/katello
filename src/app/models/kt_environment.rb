@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'util/model_util'
-
 class KTEnvironment < ActiveRecord::Base
 
   include Authorization::Environment
@@ -19,7 +17,7 @@ class KTEnvironment < ActiveRecord::Base
   include Glue if Katello.config.use_cp || Katello.config.use_pulp
 
   set_table_name "environments"
-  include Katello::LabelFromName
+  include Ext::LabelFromName
   include Ext::PermissionTagCleanup
   acts_as_reportable
 
@@ -247,7 +245,7 @@ class KTEnvironment < ActiveRecord::Base
       end
     end.flatten(1)
 
-    Katello::PackageUtils.find_latest_packages packs
+    Util::Package.find_latest_packages packs
   end
 
   def get_distribution id

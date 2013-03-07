@@ -105,7 +105,7 @@ class RepositoriesController < ApplicationController
 
   def auto_complete_library
     # retrieve and return a list (array) of repo names in library that contain the 'term' that was passed in
-    term = Katello::Search::filter_input params[:term]
+    term = Util::Search::filter_input params[:term]
     name = 'name:' + term
     name_query = name + ' OR ' + name + '*'
     ids = Repository.readable(current_organization.library).collect{|r| r.id}

@@ -10,8 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'util/model_util'
-
 module Glue::Candlepin::Product
 
   def self.included(base)
@@ -42,16 +40,16 @@ module Glue::Candlepin::Product
   end
 
   def self.import_from_cp(attrs=nil, &block)
-    productContent_attrs = attrs.delete(:productContent) || []
+    product_content_attrs = attrs.delete(:productContent) || []
     import_logger        = attrs[:import_logger]
 
-    attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Katello::ModelUtils::labelize(attrs['name']))
+    attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Util::Model::labelize(attrs['name']))
 
     product = Product.new(attrs, &block)
     product.orchestration_for = :import_from_cp_ar_setup
     product.save!
     product.productContent_will_change!
-    product.productContent = product.build_productContent(productContent_attrs)
+    product.productContent = product.build_product_content(product_content_attrs)
     product.orchestration_for = :import_from_cp
     product.save!
 
@@ -63,7 +61,7 @@ module Glue::Candlepin::Product
   end
 
   def self.import_marketing_from_cp(attrs, engineering_product_ids, &block)
-    attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Katello::ModelUtils::labelize(attrs['name']))
+    attrs = attrs.merge('name' => validate_name(attrs['name']), 'label' => Util::Model::labelize(attrs['name']))
 
     product = MarketingProduct.new(attrs, &block)
     product.orchestration_for = :import_from_cp_ar_setup
@@ -103,7 +101,7 @@ module Glue::Candlepin::Product
       end
     end
 
-    def build_productContent(attrs)
+    def build_product_content(attrs)
       @productContent = attrs.collect { |pc| ::Candlepin::ProductContent.new pc }
     end
 

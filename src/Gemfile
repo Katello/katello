@@ -50,7 +50,7 @@ if system('rpm -q rubygem-ruport >/dev/null') && ! defined? JRUBY_VERSION
 else
   gem 'ruport', '>=1.7.0', :git => 'git://github.com/ruport/ruport.git'
 end
-#not an actual katello dependency, but 
+#not an actual katello dependency, but
 #Does not pull in  hashery, matches RPM
 gem 'pdf-reader', '<= 1.1.1'
 
@@ -62,6 +62,8 @@ gem "apipie-rails", '>= 0.0.18'
 
 gem 'hooks'
 
+# Better logging (syslog/rolling/trace)
+gem 'logging', '>= 1.8.0'
 
 # Load all sub-gemfiles from bundler.d directory
 Dir[File.expand_path('bundler.d/*.rb', File.dirname(__FILE__))].each do |bundle|
