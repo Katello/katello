@@ -28,8 +28,10 @@ class Filter < ActiveRecord::Base
   end
 
   def as_json(options = {})
-    super(options).update("content_view_definition_label" => content_view_definition.label,
-                          "organization" => content_view_definition.organization.label)
+     super(options).update("content_view_definition_label" => content_view_definition.label,
+                          "organization" => content_view_definition.organization.label,
+                          "products" =>  products.collect(&:name),
+                          "repos" => repositories.collect(&:name))
   end
 
   def validate_filter_products_and_repos(errors, cvd)

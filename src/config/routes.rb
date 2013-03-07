@@ -706,7 +706,20 @@ Src::Application.routes.draw do
           put :index, :action => :update_content_view_definition_repositories,
             :on => :collection
         end
-        resources :filters, :controller => :filters, :only => [:index, :show, :create, :destroy]
+        resources :filters, :controller => :filters, :only => [:index, :show, :create, :destroy] do
+          resources :products, :only => [] do
+            get :index, :action => :list_content_filter_products,
+                :on => :collection
+            put :index, :action => :update_content_filter_products,
+                :on => :collection
+          end
+          resources :repositories, :only => [] do
+            get :index, :action => :list_content_filter_repositories,
+                :on => :collection
+            put :index, :action => :update_content_filter_repositories,
+                :on => :collection
+          end
+        end
       end
     end
 
