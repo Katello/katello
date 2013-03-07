@@ -276,21 +276,21 @@ describe Api::SystemsController do
     end
 
     it "should show all systems in the organization" do
-      System.should_receive(:items).and_return([@system_1, @system_2])
+      Glue::ElasticSearch::Items.any_instance.should_receive(:retrieve).and_return([@system_1, @system_2])
 
       get :index, :organization_id => @organization.label
       response.body.should be_json([@system_1, @system_2].to_json)
     end
 
     it "should show all systems for the owner" do
-      System.should_receive(:items).and_return([@system_1, @system_2])
+      Glue::ElasticSearch::Items.any_instance.should_receive(:retrieve).and_return([@system_1, @system_2])
 
       get :index, :owner => @organization.label
       response.body.should be_json([@system_1, @system_2].to_json)
     end
 
     it "should show only systems in the environment" do
-      System.should_receive(:items).and_return([@system_1])
+      Glue::ElasticSearch::Items.any_instance.should_receive(:retrieve).and_return([@system_1])
 
       get :index, :environment_id => @environment_1.id
       response.body.should == [@system_1].to_json
@@ -304,7 +304,7 @@ describe Api::SystemsController do
         Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid_3})
         @system_3 = System.create!(:name => 'test3', :environment => @environment_2, :cp_type => 'system', :facts => facts)
         System.stub(:all_by_pool_uuid).and_return([@system_1.uuid, @system_3.uuid])
-        System.should_receive(:items).and_return([@system_1, @system_3])
+        Glue::ElasticSearch::Items.any_instance.should_receive(:retrieve).and_return([@system_1, @system_3])
       end
 
       it "should show all systems in the organization that are subscribed to a pool" do
