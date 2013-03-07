@@ -13,7 +13,6 @@
 module ContentSearch
 
   class ContentViewComparison < Search
-    include ContentSearchHelper
     attr_accessor :cv_env_ids, :is_package
 
     def initialize(options)
@@ -30,7 +29,7 @@ module ContentSearch
     end
 
     def build_columns(cv_envs)
-      cv_envs.inject({}) do |result, (key, item)|
+      cv_envs.inject({}) do |result, item|
         view = ContentView.readable(current_organization).find(item[:view_id])
         env = KTEnvironment.content_readable(current_organization).where(:id => item[:env_id]).first
         cv_version = view.version(env)
@@ -54,7 +53,7 @@ module ContentSearch
       content_rows = product_rows(products, cols)
 
       # build repo and package rows
-      content_rows += repo_rows(library_repos, cols)
+      content_rows += build_repo_rows(library_repos, cols)
     end
 
     def product_rows(products, cols = [])
@@ -70,7 +69,7 @@ module ContentSearch
           # find the product in the view and get the # of packages
           env = KTEnvironment.find(env_id)
           version = ContentView.find(view_id).version(env)
-          field = "#{type}_count".to_sym
+          field = "#{package_type}_count".to_sym
           total = version.repos(env).select{|r| r.product == product}.map(&field).inject(:+)
           row.cols[key] = Column.new(:display => total, :id => key) if total && total > 0
         end
@@ -79,7 +78,7 @@ module ContentSearch
       end
     end
 
-    def repo_rows(library_repos, cols = [])
+    def build_repo_rows(library_repos, cols = [])
       repo_rows = []
       meta_rows = []
 
@@ -109,10 +108,10 @@ module ContentSearch
         next if packages.empty? # if we don't have packages/errata, don't show repo
 
         repo_rows << repo_row
-        repo_rows += package_rows(packages, repo_row, cols)
+        repo_rows += build_package_rows(packages, repo_row, cols)
 
         # add metadata row for Show More link
-        total = view_repos.map(&("#{type}_count".to_sym)).max
+        total = view_repos.map(&("#{package_type}_count".to_sym)).max
         if total > page_size
           meta_row =  MetadataRow.new(:total => total,
                                       :current_count => offset + packages.length,
@@ -127,16 +126,9 @@ module ContentSearch
       repo_rows + meta_rows
     end
 
-    def package_rows(packages, repo_row, cols)
+    def build_package_rows(packages, repo_row, cols)
       packages.inject([]) do |package_rows, package|
-        display = is_package ? package_display(package) : errata_display(package)
-        package_row = {:data_type => type,
-                       :id => "#{repo_row.id}_package_#{package.id}",
-                       :name => display,
-                       :parent_id => repo_row.id,
-                       :value => package.nvrea,
-                       :cols => {}
-                      }
+        package_row = PackageRow.new(:package => package, :parent_id => repo_row.id)
         cols.each do |key, col|
           view_id = key.split("_").first.to_i
           repo = repos.detect {|r| r.content_view.id == view_id && r.library_instance_id == repo_row.repo.id}
@@ -165,12 +157,16 @@ EOS
       }
     end
 
-    def short_details_erratum_path(*args)
-      ActionController::Base.config.relative_url_root + Rails.application.routes.url_helpers.short_details_erratum_path(*args)
+    def package_type
+      is_package ? 'package' : 'errata'
     end
 
-    def type
-      is_package ? 'package' : 'errata'
+    def package_rows
+      rows.select{|row| row.data_type == package_type}
+    end
+
+    def metadata_rows
+      rows.select{|row| row.data_type == "metadata"}
     end
   end
 

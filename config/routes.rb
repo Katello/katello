@@ -80,6 +80,7 @@ Src::Application.routes.draw do
         post :packages
         post :packages_items
         post :errata_items
+        get :view_packages
         post :repos
         post :views
         get :repo_packages

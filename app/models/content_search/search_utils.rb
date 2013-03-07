@@ -27,4 +27,7 @@ class ContentSearch::SearchUtils
     current_user.page_size
   end
 
+  def self.offset
+    @@offset.to_i
+  end
 end

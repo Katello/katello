@@ -35,6 +35,10 @@ module ContentSearch::Element
     json
   end
 
+  def [](key)
+    self.send(key.to_sym)
+  end
+
   module ClassMethods
 
     def display_attributes(*attrs)

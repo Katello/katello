@@ -26,4 +26,8 @@ class ContentSearch::MetadataRow
   def metadata
     true
   end
+
+  def data_type
+    "metadata"
+  end
 end
