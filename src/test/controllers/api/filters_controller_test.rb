@@ -44,14 +44,14 @@ class Api::FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
     get :show, :organization_id => @filter.content_view_definition.organization.label,
                 :content_view_definition_id=> @filter.content_view_definition.label + "-Foo-Foo",
                 :id => @filter.name
-    assert_response :missing            
+    assert_response :missing
   end
-  
+
   test "should throw an 404 if filter is not found" do
     get :show, :organization_id => @filter.content_view_definition.organization.label,
                 :content_view_definition_id=> @filter.content_view_definition.label,
                 :id => @filter.name + "-Foo-Foo"
-    assert_response :missing              
+    assert_response :missing
   end
 
 
@@ -69,7 +69,7 @@ class Api::FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
                 :filter => name
     assert_response :success
     assert JSON.parse(response.body).is_a? Hash
-    assert JSON.parse(response.body)["name"] == name    
+    assert JSON.parse(response.body)["name"] == name
   end
 
 end
