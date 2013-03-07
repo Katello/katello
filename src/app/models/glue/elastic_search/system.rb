@@ -16,7 +16,6 @@ module Glue::ElasticSearch::System
   def self.included(base)
     base.class_eval do
       include Ext::IndexedModel
-      include Glue::ElasticSearch::Items
 
       add_system_group_hook     lambda { |system_group| reindex_on_association_change(system_group) }
       remove_system_group_hook  lambda { |system_group| reindex_on_association_change(system_group) }

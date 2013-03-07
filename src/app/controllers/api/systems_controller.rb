@@ -167,10 +167,10 @@ DESC
   param :pool_id, String, :desc => "Filter systems by subscribed pool"
   param :search, String, :desc => "Filter systems by advanced search query"
   def index
-    sort_order  = params[:sort_order] if params[:sort_order]
-    sort_by     = params[:sort_by] if params[:sort_by]
-    search      = params[:name] ? "name:#{params[:name]}" : params[:search]
-    filters     = []
+    sort_order    = params[:sort_order] if params[:sort_order]
+    sort_by       = params[:sort_by] if params[:sort_by]
+    query_string  = params[:name] ? "name:#{params[:name]}" : params[:search]
+    filters       = []
 
     if params[:env_id]
       find_environment
@@ -181,10 +181,20 @@ DESC
 
     filters << { :uuid => System.all_by_pool_uuid(params['pool_id']) } if params['pool_id']
 
-    options = {:default_field => :name, :filter=>filters, 
-              :load_records => true, :page_size => current_user.page_size}
+    options = {
+      :filter         => filters, 
+      :load_records?  => true
+    }
+
+    if params[:paged]
+      options[:page_size] = params[:page_size] || current_user.page_size
+    end
+
+    options[:sort_by]   = params[:sort_by]    if params[:sort_by]
+    options[:sort_order]= params[:sort_order] if params[:sort_order]
     
-    systems = System.items(search, params[:offset], sort_by, sort_order, options)
+    items = Glue::ElasticSearch::Items.new(System)
+    systems = items.retrieve(query_string, params[:offset], options)
 
     render :json => systems.to_json
   end

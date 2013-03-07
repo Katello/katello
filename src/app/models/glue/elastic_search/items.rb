@@ -11,49 +11,63 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 
-module Glue::ElasticSearch::Items
-  extend ActiveSupport::Concern
+module Glue
+  module ElasticSearch
+    class Items
+      
+      attr_accessor :obj_class, :query_string, :results, :total, :filters
 
-  module ClassMethods
-
-    # Retrieves items from the Elasticsearch index
-    #
-    # @param [Hash] search_options
-    #
-    # @option       search_options :default_field
-    #   The field that should be used by the search engine when a user performs
-    #   a search without specifying field.
-    # @option       search_options :filter
-    #   Filter to apply to search. Array of hashes.  Each key/value within the hash
-    #   is OR'd, whereas each HASH itself is AND'd together
-    # @option search_options [true, false] :load_records
-    #   whether or not to load the active record object (defaults to false)
-    def items(query, start, sort_by='DESC', sort_order='ASC', search_options={})
-
-      filters       = search_options[:filter] || []
-      load_records  = search_options[:load_records] || false
-      all_rows      = false
-      page_size     = search_options[:page_size]
-
-      if query.nil? || query == ''
-        all_rows = true
-      elsif search_options[:simple_query] && !Katello.config.simple_search_tokens.any?{|s| search.downcase.match(s)}
-        query = search_options[:simple_query]
+      def initialize(obj_class)
+        @obj_class    = obj_class
+        @query_string = query_string
+        @results      = []
+        @filters      = []
       end
 
-      # set the query default field, if one was provided.
-      query_options = {}
-      query_options[:default_field] = search_options[:default_field] unless search_options[:default_field].blank?
+      # Retrieves items from the Elasticsearch index
+      #
+      # @param [String] query_string
+      #   what the class should be searched by, e.g. name:foo*
+      # @param [Integer] start
+      #   the start position to begin searching from, used for pagination
+      # @param [Hash] search_options optional search parameters, see options
+      # @option       search_options :default_field
+      #   The field that should be used by the search engine when a user performs
+      #   a search without specifying field.
+      # @option       search_options :filter
+      #   Filter to apply to search. Array of hashes.  Each key/value within the hash
+      #   is OR'd, whereas each HASH itself is AND'd together
+      # @option search_options [true, false] :load_records
+      #   whether or not to load the active record object (defaults to false)
+      def retrieve(query_string, start=0, search_options={})
 
-      results = []
-    
-      begin
-        results = self.search :load=>false do
+        @query_string = query_string
+        @filters      = search_options[:filter] || []
+        start         = start || 0
+        all_rows      = false
+        sort_by       = search_options[:sort_by] || 'name'
+        sort_order    = search_options[:sort_order] || 'ASC'
+
+        # set the query default field, if one was provided.
+        query_options = {}
+        query_options[:default_field] = search_options[:default_field] || 'name'
+
+        if @query_string.nil? || @query_string == ''
+          all_rows = true
+        elsif search_options[:simple_query] && !Katello.config.simple_search_tokens.any?{|s| search.downcase.match(s)}
+          @query_string = search_options[:simple_query]
+        end
+
+        total_count = total_items
+        page_size = search_options[:page_size] || total_count
+        filters = @filters
+
+        @results = @obj_class.search :load=>false do
           query do
             if all_rows
               all
             else
-              string query, query_options
+              string query_string, query_options
             end
           end
 
@@ -64,23 +78,48 @@ module Glue::ElasticSearch::Items
             filter  :terms, i
           } if !filters.empty?
 
-          size page_size if page_size > 0
+          size page_size
           from start
         end
 
-        if load_records
-          results = self.where(:id=>results.collect{|r| r.id})
-          #set total since results will be just an array
-          if results.length != results.length
-            Rails.logger.error("Failed to retrieve all #{self} query results " +
-                                   "(#{results.length}/#{results.length} found.)")
-          end
-        else
-          results = results
+        if search_options[:load_records?]
+          @results = load_records
         end
 
-        #get total count
-        total = self.search do
+      rescue Tire::Search::SearchRequestFailed => e
+        Rails.logger.error(e.class)
+
+        @results = []
+      ensure
+        return @results
+      end
+
+      # Loads the ActiveRecord objects from the database that match
+      # the results returned by Elasticsearch
+      #
+      # @return [Array] a list of ActiveRecord objects 
+      def load_records
+        collection = @obj_class.where(:id => @results.collect{|r| r.id})
+
+        #set total since @items will be just an array
+        @total = @results.empty? ? 0 : @results.total
+        if @total != collection.length
+          Rails.logger.error("Failed to retrieve all #{@obj_class} search results " +
+                                 "(#{collection.length}/#{@results.length} found.)")
+        end
+
+        @results = collection
+        return @results
+      end
+
+      # Retrieves the total number of items based on a set of filters
+      #
+      # @return [Integer] the total number of objects that meet the filters
+      def total_items
+        @total = 0
+        filters = @filters
+
+        results = @obj_class.search do
           query do
             all
           end
@@ -90,16 +129,17 @@ module Glue::ElasticSearch::Items
           size 1
           from 0
         end
-        total_count = total.total
+
+        @total = results.total
 
       rescue Tire::Search::SearchRequestFailed => e
         Rails.logger.error(e.class)
-
-        total_count = 0
+      rescue => e
+        puts e
+      ensure
+        return @total
       end
 
-      return results
     end
   end
-
 end
