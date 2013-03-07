@@ -163,6 +163,22 @@ class Api::ApiController < ActionController::Base
     end
   end
 
+  def find_content_view_definition_by_label
+    cvd_id = params[:content_view_definition_id]
+    @definition = ContentViewDefinition.find_by_label(cvd_id)
+    if @definition.nil?
+      raise HttpErrors::NotFound, _("Couildn't find content view with label '%s'") % cvd_id
+    end
+  end
+
+  def find_content_filter_by_name
+    filter_id = params[:filter_id]
+    @filter = Filter.where(:name => filter_id, :content_view_definition_id => @definition).first
+    raise HttpErrors::NotFound, _("Couldn't find filter '%s'") % params[:id] if @filter.nil?
+    @filter
+  end
+
+
   def find_optional_environment
     @environment = KTEnvironment.find_by_id(params[:environment_id]) if params[:environment_id]
   end
