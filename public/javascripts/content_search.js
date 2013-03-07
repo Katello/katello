@@ -98,8 +98,8 @@ KT.content_search = function(paths_in){
         repo_errata: {method:"GET", url:KT.routes.repo_errata_content_search_index_path(), include_search:false},
         repo_compare_packages: {method:"GET", url:KT.routes.repo_compare_packages_content_search_index_path(), include_search:false},
         repo_compare_errata: {method:"GET", url:KT.routes.repo_compare_errata_content_search_index_path(), include_search:false},
-        view_compare_packages: {method:"GET", url:KT.routes.view_compare_packages_content_search_index_path(), include_search:false},
-        view_compare_errata: {method:"GET", url:KT.routes.view_compare_errata_content_search_index_path(), include_search:false}
+        view_compare_packages: {method:"GET", url:KT.routes.view_packages_content_search_index_path(), include_search:false},
+        view_compare_errata: {method:"GET", url:KT.routes.view_packages_content_search_index_path(), include_search:false}
     };
 
 
