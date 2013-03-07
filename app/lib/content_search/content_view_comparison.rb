@@ -64,16 +64,17 @@ module ContentSearch
                       :cols => {}
                      )
 
-        cols.each do |key, col|
+        total = cols.inject(0) do |total, (key, col)|
           view_id, env_id = key.split("_")
           # find the product in the view and get the # of packages
           env = KTEnvironment.find(env_id)
           version = ContentView.find(view_id).version(env)
           field = "#{package_type}_count".to_sym
-          total = version.repos(env).select{|r| r.product == product}.map(&field).inject(:+)
-          row.cols[key] = Column.new(:display => total, :id => key) if total && total > 0
+          count = version.repos(env).select{|r| r.product == product}.map(&field).inject(:+)
+          count ? total + count : total
         end
-        product_rows << row unless row.cols.empty?
+
+        product_rows << row unless total < 1
         product_rows
       end
     end
