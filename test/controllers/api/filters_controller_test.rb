@@ -27,8 +27,8 @@ class Api::FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
     get :index, :organization_id => @filter.content_view_definition.organization.label,
                 :content_view_definition_id=> @filter.content_view_definition.label
     assert_response :success
-    assert JSON.parse(response.body).is_a? Array
-    assert JSON.parse(response.body).size > 0
+    assert_kind_of Array, JSON.parse(response.body)
+    refute_empty JSON.parse(response.body)
   end
 
   test "should return a filter" do
@@ -36,8 +36,8 @@ class Api::FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
                 :content_view_definition_id=> @filter.content_view_definition.label,
                 :id => @filter.name
     assert_response :success
-    assert JSON.parse(response.body).is_a? Hash
-    assert JSON.parse(response.body)["name"] == @filter.name
+    assert_kind_of Hash, JSON.parse(response.body)
+    assert_equal JSON.parse(response.body)["name"], @filter.name
   end
 
   test "should throw an 404 if definition is not found" do
@@ -60,6 +60,7 @@ class Api::FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
                 :content_view_definition_id=> @filter.content_view_definition.label,
                 :id => @filter.name
     assert_response :success
+    assert_nil Filter.find_by_name(@filter.name)
   end
 
   test "should create a filter" do
@@ -68,8 +69,9 @@ class Api::FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
                 :content_view_definition_id=> @filter.content_view_definition.label,
                 :filter => name
     assert_response :success
-    assert JSON.parse(response.body).is_a? Hash
-    assert JSON.parse(response.body)["name"] == name
+    assert_kind_of Hash, JSON.parse(response.body)
+    assert_equal JSON.parse(response.body)["name"], name
+    refute_nil Filter.find_by_name(name)
   end
 
 end
