@@ -20,7 +20,7 @@ class Api::FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
     models = ["Organization", "KTEnvironment", "User","ContentViewEnvironment", "ContentViewDefinition"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
     login_user(User.find(users(:admin)))
-    @filter = FactoryGirl.create(:filter)
+    @filter = filters(:simple_filter)
   end
 
   test "should return a list of filters" do
