@@ -15,24 +15,50 @@ require 'minitest_helper'
 class GlueElasticSearchTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def setup
-    @FakeClass = Class.new do 
-      include Glue::ElasticSearch::Items
-
+    @FakeClass = Class.new do
       def self.search
+      end
+
+      def self.where(*args)
       end
     end
 
     @results = MiniTest::Mock.new
-    @results.expect(:total, 0)
     @results.expect(:class, 0)
     @results.expect(:empty?, true)
+
+    @items = Glue::ElasticSearch::Items.new(@FakeClass)
   end
 
   def test_items
+    @results.expect(:total, 0)
+
     @FakeClass.stub(:search, @results) do
-      items = @FakeClass.items("*", 0)
+      items = @items.retrieve("*")
 
       assert_empty items
+    end
+  end
+
+  def test_load_records
+    @results.expect(:length, 0)
+
+    @FakeClass.stub(:where, @results) do
+      @items.results = []
+      items = @items.load_records
+
+      assert_empty items
+    end
+  end
+
+  def test_total_items
+    filters = []
+    @results.expect(:total, 10)
+
+    @FakeClass.stub(:search, @results) do
+      total = @items.total_items
+
+      assert_equal 10, total
     end
   end
 
