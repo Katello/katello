@@ -50,13 +50,13 @@ module ContentSearch
       meta_rows = []
 
       # build product rows
-      content_rows = product_rows(products, cols)
+      content_rows = build_product_rows(products, cols)
 
       # build repo and package rows
       content_rows += build_repo_rows(library_repos, cols)
     end
 
-    def product_rows(products, cols = [])
+    def build_product_rows(products, cols = [])
       products.inject([]) do |product_rows, product|
         row = Row.new(:id => "product_#{product.id}",
                       :name => product.name,
