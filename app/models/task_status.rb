@@ -12,8 +12,7 @@
 
 class TaskStatus < ActiveRecord::Base
 
-  require 'util/task_status'
-  include Katello::TaskStatusUtil
+  include Util::TaskStatus
 
   serialize :result
   serialize :progress
@@ -61,6 +60,10 @@ class TaskStatus < ActiveRecord::Base
         end
       rescue => e
         Rails.logger.debug "Unable to report status change" # minor error
+      # if logger level is higher than debug logger return false that would cause rollback
+      # since this is log only callback we must be sure to return true
+      ensure
+        return true
       end
     end
   end

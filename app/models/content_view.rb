@@ -10,10 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'util/model_util.rb'
+
 
 class ContentView < ActiveRecord::Base
-  include Katello::LabelFromName
+  include Ext::LabelFromName
   include Authorization::ContentView
   include Glue::ElasticSearch::ContentView if Katello.config.use_elasticsearch
 
@@ -50,6 +50,27 @@ class ContentView < ActiveRecord::Base
   def self.in_environment(env)
     joins(:content_view_versions => :content_view_version_environments).
       where("content_view_version_environments.environment_id = ?", env.id)
+  end
+
+  def self.composite(composite=true)
+    joins(:content_view_definition).where('content_view_definitions.composite = ?', composite)
+  end
+
+  def composite
+    content_view_definition.try(:composite?)
+  end
+
+  def components_not_in_env(env)
+    # If this view was published from a composite definition, return the
+    # list of component content views, if any, that do not exist in the environment
+    # provided.
+    if composite
+      content_view_definition.component_content_views.group("content_views.id").
+          joins(:content_view_versions => :content_view_version_environments).
+          where(["content_view_version_environments.content_view_version_id "\
+                 "NOT IN (SELECT content_view_version_id FROM "\
+                 "content_view_version_environments WHERE environment_id = ?)", env])
+    end
   end
 
   def self.promoted(safe = false)

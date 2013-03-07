@@ -7,12 +7,10 @@ require "action_mailer/railtie"
 require "active_resource/railtie"
 require "rails/test_unit/railtie"
 
-# FIXME will be removed after https://github.com/Pajk/apipie-rails/pull/62
-require 'apipie-rails'
-
 path = File.expand_path("../lib", File.dirname(__FILE__))
 $LOAD_PATH << path unless $LOAD_PATH.include? path
 require 'katello_config'
+require 'katello_logging'
 
 
 # If you have a Gemfile, require the gems listed there, including any gems
@@ -71,7 +69,7 @@ module Src
     # -- all .rb files in that directory are automatically loaded.
 
     # Custom directories with classes and modules you want to be autoloadable.
-    config.autoload_paths += %W(#{Rails.root}/lib)
+    config.autoload_paths += %W(#{Rails.root}/app/lib/)
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -118,14 +116,28 @@ module Src
 
     config.after_initialize do
       require 'monkeys/fix_string_interpolate'
-      require "string"
+      require 'string_to_bool'
     end
 
     # set actions to profile (eg. %w(user_sessions#new))
     # profiles will be stored in tmp/profiles/
     config.do_profiles = []
 
-    config.log_level = Katello.config.log_level
+    # logging configuration
+    config.colorize_logging = Katello.config.logging.colorize
+
+    # When running under Rails last caller is "/usr/share/katello/config.ru:1" but when running standalone
+    # last caller is "script/delayed_job:3".
+    if caller.last =~ /script\/delayed_job:\d+$/ ||
+        ((caller[-10..-1] || []).any? {|l| l =~ /\/rake/} && ARGV.include?("jobs:work"))
+      Katello::Logging.new.configure(:prefix => 'delayed_')
+      Delayed::Worker.logger = Logging.logger['app']
+    else
+      Katello::Logging.new.configure
+    end
+
+    config.logger = Logging.logger['app']
+    config.active_record.logger = Logging.logger['sql']
   end
 end
 

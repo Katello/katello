@@ -10,9 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "util/search"
-require 'util/package_util'
-
 module Glue::Pulp::Package
   def self.included(base)
     base.send :include, InstanceMethods
@@ -44,7 +41,7 @@ module Glue::Pulp::Package
     end
 
     def nvrea
-      Katello::PackageUtils::build_nvrea(self.as_json.with_indifferent_access, false)
+      Util::Package::build_nvrea(self.as_json.with_indifferent_access, false)
     end
   end
 

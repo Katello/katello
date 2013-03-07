@@ -29,6 +29,19 @@ class PromotionChangeset < Changeset
       end
     end
 
+    # if the user is attempting to promote a composite view and one or more of the
+    # component views neither exists in the target environment nor is part
+    # of the changeset, stop the promotion
+    self.content_views.composite.each do |view|
+      components = view.components_not_in_env(self.environment) - self.content_views
+      unless components.blank?
+        raise _("Please add '%{component_content_views}' to the changeset '%{changeset}' "\
+                "if you wish to promote the composite view '%{composite_view}' with it.") %
+                { :component_content_views => components.map(&:name).join(', '),
+                  :changeset => self.name, :composite_view => view.name}
+      end
+    end
+
     validate_content! self.errata
     validate_content! self.packages
     validate_content! self.distributions
@@ -69,7 +82,8 @@ class PromotionChangeset < Changeset
     update_progress! '70'
     to_env.content_view_environment.update_cp_content
     update_progress! '80'
-    PulpTaskStatus::wait_for_tasks promote_views(from_env, to_env)
+    PulpTaskStatus::wait_for_tasks promote_views(from_env, to_env, self.content_views.composite(false))
+    PulpTaskStatus::wait_for_tasks promote_views(from_env, to_env, self.content_views.composite(true))
     update_view_cp_content(to_env)
     update_progress! '85'
     promote_packages from_env, to_env
@@ -133,9 +147,8 @@ class PromotionChangeset < Changeset
     async_tasks.flatten(1)
   end
 
-
-  def promote_views(from_env, to_env)
-    self.content_views.collect do |view|
+  def promote_views(from_env, to_env, views)
+    views.collect do |view|
       view.promote(from_env, to_env)
     end.flatten
   end
@@ -311,7 +324,7 @@ class PromotionChangeset < Changeset
       all_deps += deps
 
       deps = get_promotable_dependencies_for_packages to_resolve, from_repos, to_repos
-      deps = Katello::PackageUtils::filter_latest_packages_by_name deps
+      deps = Util::Package::filter_latest_packages_by_name deps
 
       to_resolve = deps.map { |d| d['provides'] }.flatten(1).uniq -
           all_deps.map { |d| d['provides'] }.flatten(1) -

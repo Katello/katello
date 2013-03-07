@@ -11,9 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'set'
-require 'util/search'
-require 'util/package_util'
-
 
 module Glue::Pulp::Errata
   SECURITY = "security"

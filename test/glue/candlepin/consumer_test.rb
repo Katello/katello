@@ -48,7 +48,7 @@ class GlueCandlepinConsumerTestBase < MiniTest::Rails::ActiveSupport::TestCase
   def self.after_suite
     @@dev_cve.del_environment
     @@org.del_owner
-
+  ensure
     VCR.eject_cassette
   end
 
