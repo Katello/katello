@@ -29,6 +29,7 @@ class ContentSearchController < ApplicationController
         :packages => contents_test,
         :packages_items => contents_test,
         :errata_items => contents_test,
+        :view_packages => contents_test,
         :repo_packages => contents_test,
         :repo_errata => contents_test,
         :repo_compare_errata =>contents_test,
@@ -118,10 +119,25 @@ class ContentSearchController < ApplicationController
   #similar to :packages, but only returns package rows with an offset for a specific repo
   def packages_items
     repo = Repository.libraries_content_readable(current_organization).where(:id=>params[:repo_id]).first
+    offset = params[:offset].try(:to_i) || 0
     pkgs = spanned_repo_content(repo, 'package', process_params(:packages), params[:offset], process_search_mode, process_env_ids) || {:content_rows=>[]}
-    meta = metadata_row(pkgs[:total], params[:offset] + pkgs[:content_rows].length,
+    meta = metadata_row(pkgs[:total], offset + pkgs[:content_rows].length,
                         {:repo_id=>repo.id}, repo.id, "repo_#{repo.id}")
     render :json=>{:rows=>(pkgs[:content_rows] + [meta])}
+  end
+
+  # similar to :package_items but only returns package rows for content view grids
+  def view_packages
+    repo = Repository.libraries_content_readable(current_organization).where(:id=>params[:repo_id]).first
+    offset = params[:offset].try(:to_i) || 0
+
+    cv_env_ids = repo.clones.map do |r|
+      {:view_id => r.content_view.id, :env_id => r.environment}
+    end
+    options = {:is_package => true,
+               :cv_env_ids => cv_env_ids}
+    comparison = ContentSearch::ContentViewComparison.new(options)
+    render :json => {:rows => comparison.package_rows + comparison.metadata_rows}
   end
 
   #similar to :errata, but only returns errata rows with an offset for a specific repo
@@ -176,7 +192,7 @@ class ContentSearchController < ApplicationController
 
   def view_compare_packages
     options = {:is_package => true,
-               :cv_env_ids => params[:views]}
+               :cv_env_ids => params[:views].values}
     render :json => ContentSearch::ContentViewComparison.new(options)
   end
 
