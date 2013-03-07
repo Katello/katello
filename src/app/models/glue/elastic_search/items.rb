@@ -80,9 +80,7 @@ module Glue
           sort {by sort_by, sort_order.to_s.downcase } if sort_by && sort_order
 
           filters = [filters] if !filters.is_a? Array
-          filters.each{|i|
-            filter  :terms, i
-          } if !filters.empty?
+          filters.each{ |i| filter  :terms, i } if !filters.empty?
 
           size page_size
           from start
@@ -129,9 +127,9 @@ module Glue
           query do
             all
           end
-          filters.each{|i|
-            filter  :terms, i
-          } if !filters.empty?
+
+          filters.each{ |i| filter  :terms, i } if !filters.empty?
+
           size 1
           from 0
         end
