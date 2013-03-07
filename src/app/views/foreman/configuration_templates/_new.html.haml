@@ -1,0 +1,25 @@
+
+= content_for :title do
+  #{_("New Configuration Template")}
+
+= content_for :content do
+  .grid_10
+    = kt_form_for ::Foreman::ConfigTemplate.new, :as=>"configuration_template", :url => configuration_templates_path, :html=>{:id=>"new_configuration_template" } do |form|
+
+      = form.text_field :name, :label => _("Name:")
+      = form.check_box :snippet, {:label => _("Snippet:")}, 'true', 'false'
+      %fieldset
+        .grid_2.ra
+          %label #{_("Type")}:
+        .grid_5.la
+          = select_tag 'configuration_template[template_kind][id]', options_from_collection_for_select(::Foreman::TemplateKind.all, "id", "name"), :include_blank => true
+      = form.text_area :template, :label => _(":Template Editor:"), :value=> ""
+      // "Selecting a file will override the editor and load the file instead"
+      = form.file_field :template, :label => _("Template:")
+      = form.text_area :audit_comment, :label => _("Audit Comment:"), :value=> ""
+      = form.field :operatingsystem_ids, :label => _("Operating systems:") do
+        = os_select "configuration_template", "operatingsystem_ids"
+
+      = form.submit _("Save Configuration Template"), :id => :save_configuration_template
+
+= render :template => "layouts/tupane_layout"

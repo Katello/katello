@@ -88,6 +88,10 @@
   bulk_content_remove_systems_path: function(options) {
   return Utils.build_path(1, ["/systems/bulk_content_remove"], arguments)
   },
+// configuration_templates_path => /configuration_templates(.:format)
+  configuration_templates_path: function(options) {
+  return Utils.build_path(1, ["/configuration_templates"], arguments)
+  },
 // items_distributors => /distributors/items(.:format)
   items_distributors_path: function(options) {
   return Utils.build_path(1, ["/distributors/items"], arguments)

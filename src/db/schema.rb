@@ -295,8 +295,10 @@ ActiveRecord::Schema.define(:version => 20130226133232) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "label",                              :null => false
+    t.integer  "foreman_id"
   end
 
+  add_index "environments", ["foreman_id"], :name => "index_environments_on_foreman_id"
   add_index "environments", ["label", "organization_id"], :name => "index_environments_on_label_and_organization_id", :unique => true
   add_index "environments", ["name", "organization_id"], :name => "index_environments_on_name_and_organization_id", :unique => true
   add_index "environments", ["organization_id"], :name => "index_environments_on_organization_id"

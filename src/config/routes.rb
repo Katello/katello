@@ -33,6 +33,12 @@ Src::Application.routes.draw do
           get :items
         end
       end
+
+      resources :configuration_templates do
+        get :items, :on => :collection
+        resources :template_combinations, :only => [:index, :create]
+      end
+      resources :template_combinations, :only => [:destroy]
     end
   end
 
@@ -514,7 +520,11 @@ Src::Application.routes.draw do
     end
   end
 
-  # custom information
+  resources :configuration_templates do
+    get :items, :on => :collection
+  end
+
+# custom information
   match '/custom_info/:informable_type/:informable_id' => 'custom_info#create', :via => :post, :as => :create_custom_info
   match '/custom_info/:informable_type/:informable_id' => 'custom_info#index', :via => :get, :as => :custom_info
   match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#show', :via => :get, :as => :show_custom_info

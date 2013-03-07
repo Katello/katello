@@ -147,7 +147,7 @@ class SimpleCRUDController < ApplicationController
 
   def find_resource
     @resource = resource_model.find params[:id] if params[:id]
-    eval "@"+resource_name.downcase+"=@resource"
+    instance_variable_set("@#{resource_name.downcase}", @resource)
   end
 
 end

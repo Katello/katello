@@ -11,30 +11,18 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Foreman::ConfigTemplate < Resources::ForemanModel
+  include Resources::AbstractModel::IndexedModel
 
-  attributes :name, :template, :snippet, :audit_comment, :kind, :kind_id,
-    :template_kind_id, :template_combinations_attributes, :operatingsystem_ids
+  attributes :id, :name, :template, :snippet, :audit_comment,
+    :template_kind, :template_combinations, :operatingsystems
 
   def json_default_options
-    { :only => [:name, :template, :snippet, :audit_comment, :kind, :kind_id,
-                :template_combinations_attributes, :operatingsystem_ids] }
+    { :only => [:name, :template, :snippet, :audit_comment, :template_kind,
+                :template_combinations, :operatingsystems] }
   end
 
   def json_create_options
-    { :only => [:name, :template, :snippet, :audit_comment],
-      :methods => [:template_kind_id] }
-  end
-
-  def json_update_options
-    json_create_options
-  end
-
-  def template_kind_id
-    @kind_id
-  end
-
-  def template_kind_id=(kind_id)
-    @kind_id = kind_id
+    { :only => [:name, :template, :snippet, :audit_comment, :template_kind, :operatingsystems]}
   end
 
   def self.revision(audit_id)
@@ -44,4 +32,16 @@ class Foreman::ConfigTemplate < Resources::ForemanModel
   def self.build_pxe_default
     resource.build_pxe_default({}, header).first
   end
+
+  def add_template_combination(a_template_combination = {})
+    resource.add_template_combination(a_template_combination.merge(:id => id), Foreman::ConfigTemplate.header)
+  end
+
+  index_options :display_attrs => [:name]
+
+  mapping do
+    indexes :id, :type=>'string', :index => :not_analyzed
+    indexes :name, :type => 'string', :analyzer => :kt_name_analyzer
+  end
+
 end

@@ -14,7 +14,8 @@ class KTEnvironment < ActiveRecord::Base
 
   include Authorization::Environment
   include Glue::ElasticSearch::Environment if Katello.config.use_elasticsearch
-  include Glue if Katello.config.use_cp || Katello.config.use_pulp
+  include Glue::Foreman::Environment if Katello.config.use_foreman
+  include Glue if Katello.config.use_cp || Katello.config.use_pulp || Katello.config.use_foreman
 
   set_table_name "environments"
   include Ext::LabelFromName
@@ -273,6 +274,12 @@ class KTEnvironment < ActiveRecord::Base
     end
   end
 
+
+  #
+  # ContentView 1<-* ContentViewEnvironment
+  # 1^-* ContentViewVersion 1->* Environment
+  #
+  #
   def create_default_content_view
     if self.default_content_view.nil?
       content_view = build_default_content_view(:name=>"Default View for #{self.name}",
@@ -283,5 +290,9 @@ class KTEnvironment < ActiveRecord::Base
 
       content_view_version.save! # saves both content_view and content_view_version
     end
+  end
+
+  def finalize_content_view_creation
+    default_content_view.add_environment(self)
   end
 end

@@ -1,0 +1,8 @@
+= content_for :title do
+  #{@configuration_template.name}
+
+= content_for :remove_item do
+  = link_to _("Remove Configuration Template"), configuration_template_path(@configuration_template), :confirm => _('Are you sure you want to remove this configuration template?'), :method => :delete, :class=>"remove_item", :remote=>true
+
+= content_for :navigation do
+  = render_menu(1..2, configuration_template_navigation)

@@ -13,12 +13,18 @@
 module Navigation
   module SetupMenu
 
+    def self.included(base)
+      base.class_eval do
+        helper_method :configuration_template_navigation
+      end
+    end
+
     def menu_setup
       menu = {:key => :setup,
        :name => _("Setup"),
         :url => :sub_level,
         :options => {:class=>'setup top_level', "data-menu"=>"setup"},
-        :items=> [ menu_smart_proxies, menu_subnets, menu_domains, menu_architectures, menu_hw_models]
+        :items=> [ menu_smart_proxies, menu_subnets, menu_domains, menu_architectures, menu_hw_models, menu_configuration_templates]
         # TODO: final order of the setup menu items
         #   Setup
         #   Locations
@@ -76,5 +82,30 @@ module Navigation
       }
     end
 
+    def menu_configuration_templates
+      {:key => :configuration_templates,
+       :name => _("Configuration Templates"),
+       :url => configuration_templates_path,
+       :if => lambda{true}, #TODO: check permissions
+       :options => {:class=>'setup second_level', "data-menu"=>"configuration_templates"}
+      }
+    end
+
+    def configuration_template_navigation
+      [
+        { :key => :show_configuration_template,
+          :name =>_("Show"),
+          :url => lambda{edit_configuration_template_path(@configuration_template)},
+          :if => lambda{true},
+          :options => {:class=>"panel_link"}
+        },
+        { :key => :configuration_template_associations,
+          :name =>_("Associations"),
+          :url => lambda{configuration_template_template_combinations_path(@configuration_template)},
+          :if => lambda{true},
+          :options => {:class=>"panel_link"}
+        }
+      ]
+    end
   end
 end
