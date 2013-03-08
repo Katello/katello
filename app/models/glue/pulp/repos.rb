@@ -345,12 +345,13 @@ module Glue::Pulp::Repos
       is_dupe =  Repository.joins(:environment_product).where( :name=> repo_name,
               "environment_products.product_id" => self.id, "environment_products.environment_id"=> self.library.id).count > 0
       if is_dupe
-        raise Errors::ConflictException.new(_("There is already a repo with the name [ %{repo} ] for product [ %{product} ]") % {:repo => repo_name, :product => self.label})      end
+        raise Errors::ConflictException.new(_("Label has already been taken"))
+      end
       unless repo_label.blank?
         is_dupe =  Repository.joins(:environment_product).where( :label=> repo_label,
                "environment_products.product_id" => self.id, "environment_products.environment_id"=> self.library.id).count > 0
         if is_dupe
-          raise Errors::ConflictException.new(_("There is already a repo with the label [ %{repo} ] for product [ %{product} ]") % {:repo => repo_label, :product => self.label})
+          raise Errors::ConflictException.new(_("Label has already been taken"))
         end
       end
     end
