@@ -23,10 +23,16 @@ class FilterTest < MiniTest::Rails::ActiveSupport::TestCase
   def setup
     #User.current = User.find(users(:admin))
     @filter = FactoryGirl.build(:filter)
+    @repo = Repository.find(repositories(:fedora_17_x86_64).id)
+    @product = Product.find(products(:fedora).id)
   end
 
   def after_tests
     Filter.delete_all
+    ContentViewDefinition.delete_all
+    Organization.delete_all
+    Product.delete_all
+    Repository.delete_all
   end
 
   def test_create
@@ -52,5 +58,63 @@ class FilterTest < MiniTest::Rails::ActiveSupport::TestCase
     refute f.persisted?
     refute f.save
   end
+
+  def test_add_bad_repo
+    @filter.repositories << @repo
+    assert_raises(ActiveRecord::RecordInvalid) do
+      @filter.save!
+    end
+  end
+
+  def test_add_good_repo
+    cvd =  @filter.content_view_definition
+    cvd.repositories << @repo
+    cvd.save!
+    @filter.repositories << @repo
+    assert @filter.save
+    refute_empty Filter.find(@filter.id).repositories
+  end
+
+  def test_add_bad_product
+    @filter.products << @product
+    assert_raises(ActiveRecord::RecordInvalid) do
+      @filter.save!
+    end
+  end
+
+  def test_add_good_product
+    cvd =  @filter.content_view_definition
+    cvd.products << @product
+    cvd.save!
+    @filter.products << @product
+    assert @filter.save
+    refute_empty Filter.find(@filter.id).products
+  end
+
+  def test_content_definition_delete_repo
+    cvd =  @filter.content_view_definition
+    cvd.repositories << @repo
+    cvd.save!
+    @filter.repositories << @repo
+    @filter.save!
+    cvd = ContentViewDefinition.find(cvd.id)
+    cvd.repositories.delete(@repo)
+    cvd.save!
+    assert_empty cvd.filters.first.repositories
+  end
+
+  def test_content_definition_delete_product
+    cvd =  @filter.content_view_definition
+    cvd.products << @product
+    cvd.save!
+    @filter.products << @product
+    @filter.save!
+    cvd = ContentViewDefinition.find(cvd.id)
+    cvd.products.delete(@product)
+    cvd.save!
+    assert_empty cvd.filters.first.products
+  end
+
+
 
 end
