@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130226133232) do
+ActiveRecord::Schema.define(:version => 20130307213229) do
 
   create_table "activation_keys", :force => true do |t|
     t.string   "name"
@@ -322,6 +321,15 @@ ActiveRecord::Schema.define(:version => 20130226133232) do
 
   add_index "filters", ["content_view_definition_id"], :name => "index_filters_on_content_view_definition_id"
   add_index "filters", ["name", "content_view_definition_id"], :name => "index_filters_on_name_and_content_view_definition_id", :unique => true
+
+  create_table "filters_products", :id => false, :force => true do |t|
+    t.integer "filter_id"
+    t.integer "product_id"
+  end
+
+  add_index "filters_products", ["filter_id", "product_id"], :name => "index_filters_products_on_filter_id_and_product_id", :unique => true
+  add_index "filters_products", ["filter_id"], :name => "index_filters_products_on_filter_id"
+  add_index "filters_products", ["product_id"], :name => "index_filters_products_on_product_id"
 
   create_table "filters_repositories", :id => false, :force => true do |t|
     t.integer "filter_id"
