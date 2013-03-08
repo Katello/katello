@@ -25,7 +25,7 @@ class Permission < ActiveRecord::Base
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
 
-  validates_uniqueness_of :name, :scope => [:organization_id, :role_id], :message => N_("must be unique within an organization scope")
+  validates_uniqueness_of :name, :scope => [:organization_id, :role_id], :message => N_("Label has already been taken")
 
   before_destroy :check_locked
 
