@@ -1,0 +1,38 @@
+= render :partial => "content_view_definitions/tupane_header"
+
+= content_for :content do
+
+  #filters
+
+    - if editable
+      .grid_12
+        %input.button.subpanel_element.fr{:type=>"button", :value=>_("New Filter"),
+                                          "data-url"=>new_content_view_definition_filter_path(view_definition.id)}
+        &nbsp;
+
+    .grid_12
+      = kt_form_for(view_definition, :url => destroy_filters_content_view_definition_filters_path(view_definition.id),
+        :html => {:id => "filters_form"}) do |form|
+
+        %table
+          %thead
+            %tr
+              %th #{_("Name")}
+
+          %tbody
+            %tr#empty_row{:class=>(:hidden if !view_definition.filters.empty?)}
+              %td
+                = _("This definition does not currently have any filters defined.")
+
+            - view_definition.filters.each do |filter|
+              %tr
+                %td
+                  - if editable
+                    = check_box_tag "filters[#{filter.id}]", filter.name, false, {'data-id' => filter.id}
+                  %label{:for=>filter.name}
+                    = filter.name
+
+        - if editable
+          %input.button.fr.disabled{:type=>"button", :id=>"remove_filters", :value=>_("Remove")}
+
+= render :template => "layouts/tupane_layout"
