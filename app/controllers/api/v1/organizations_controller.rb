@@ -51,20 +51,20 @@ class Api::V1::OrganizationsController < Api::V1::ApiController
   param_group :organization
   param :label, String, :desc => "label for filtering"
   def index
-    render :json => (Organization.without_deleting.readable.where query_params).to_json
+    respond :collection => Organization.without_deleting.readable.where(query_params)
   end
 
   # DOC GENERATED AUTOMATICALLY: REMOVE THIS LINE TO PREVENT REGENARATING NEXT TIME
   api :GET, "/organizations/:id", "Show an organization"
   def show
-    render :json => @organization
+    respond
   end
 
   api :POST, "/organizations", "Create an organization"
   param_group :organization
   def create
     label = labelize_params(params)
-    render :json => Organization.create!(:name => params[:name], :description => params[:description], :label => label).to_json
+    respond :resource => Organization.create!(:name => params[:name], :description => params[:description], :label => label)
   end
 
   api :PUT, "/organizations/:id", "Update an organization"
@@ -72,13 +72,14 @@ class Api::V1::OrganizationsController < Api::V1::ApiController
     param_group :organization, Api::V1::OrganizationsController
   end
   def update
-    render :json => @organization.update_attributes!(params[:organization]).to_json
+    @organization.update_attributes!(params[:organization])
+    respond
   end
 
   api :DELETE, "/organizations/:id", "Destroy an organization. Asynchronous operation."
   def destroy
     async_job = OrganizationDestroyer.destroy @organization
-    render :json => async_job, :status => 202
+    respond :resource => async_job, :format => :json, :status => 202
   end
 
 end
