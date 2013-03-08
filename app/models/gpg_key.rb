@@ -26,7 +26,7 @@ class GpgKey < ActiveRecord::Base
   validates :content, :presence => true
   validates_with Validators::ContentValidator, :attributes => :content
   validates_presence_of :organization
-  validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
+  validates_uniqueness_of :name, :scope => :organization_id, :message => N_("Label has already been taken")
 
 
   def as_json(options = {})
