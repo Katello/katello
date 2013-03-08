@@ -22,6 +22,7 @@ KT.panel.set_expand_cb(function() {
     KT.content_view_definition.initialize_views();
     KT.content_view_definition.initialize_composite_content();
     KT.content_view_definition.initialize_create();
+    KT.content_view_definition_filters.initialize();
 });
 
 KT.content_view_definition = (function(){
@@ -71,7 +72,7 @@ KT.content_view_definition = (function(){
 
         initialize_refresh();
         initialize_views_treetable();
-        startUpdater();
+        start_updater();
     },
     initialize_refresh = function() {
         $('.refresh_action').unbind('click');
@@ -89,7 +90,7 @@ KT.content_view_definition = (function(){
                     $('#'+view_id).replaceWith(response);
 
                     initialize_views_treetable();
-                    startUpdater();
+                    start_updater();
                 },
                 error: function() {
                     KT.panel.panelAjax('', $('#content_view_definition_views').data('views_url'), $('#panel'), false);
@@ -287,7 +288,7 @@ KT.content_view_definition = (function(){
             onNodeShow: function(){$.sparkline_display_visible();}
         });
     },
-    startUpdater = function () {
+    start_updater = function () {
         var timeout = 8000,
             pending_tasks = [];
 
@@ -306,10 +307,10 @@ KT.content_view_definition = (function(){
                 global: false,
                 minTimeout: timeout,
                 maxTimeout: timeout
-            }, updateStatus);
+            }, update_status);
         }
     },
-    updateStatus = function(data) {
+    update_status = function(data) {
         // For each action that the user has initiated (e.g. refresh), update the status.
         var task_statuses = data["task_statuses"] || [],
             status_updated = false;
@@ -342,5 +343,74 @@ KT.content_view_definition = (function(){
         initialize_create            : initialize_create,
         initialize_views             : initialize_views,
         set_view_repos               : function(vp) {view_repos = vp;}
+    };
+}());
+
+KT.content_view_definition_filters = (function(){
+    var remove_button,
+
+    initialize = function() {
+        var pane = $("#filters");
+        if (pane.length === 0) {
+            return;
+        }
+        register_remove();
+        initialize_checkboxes();
+    },
+    register_remove = function() {
+        remove_button = $('#remove_filters');
+
+        remove_button.unbind('click');
+        remove_button.click(function(){
+            var btn = $(this);
+            if(btn.hasClass("disabled")){
+                return;
+            }
+            disable_remove_button();
+
+            $("#filters_form").ajaxSubmit({
+                type: "DELETE",
+                url: btn.data("url"),
+                cache: false,
+                success: function(){
+                    // remove the deleted filters from the table and show the 'empty' message
+                    // if all filters have been deleted
+                    $('input[type="checkbox"]:checked').closest('tr').remove();
+                    if ($('input[type="checkbox"]').length === 0) {
+                        $('tr#empty_row').show();
+                    }
+                    disable_remove_button();
+                },
+                error: function(){
+                    enable_remove_button();
+                }
+            });
+        });
+        disable_remove_button();
+    },
+    disable_remove_button = function() {
+        remove_button.attr('disabled', 'disabled');
+        remove_button.addClass('disabled');
+    },
+    enable_remove_button = function() {
+        remove_button.removeAttr('disabled');
+        remove_button.removeClass('disabled');
+    },
+    initialize_checkboxes = function() {
+        var checkboxes = $('input[type="checkbox"]');
+
+        checkboxes.unbind('change');
+        checkboxes.each(function(){
+            $(this).change(function(){
+                if($(this).is(":checked")) {
+                    enable_remove_button();
+                } else if($('input[type="checkbox"]:checked').length === 0) {
+                    disable_remove_button();
+                }
+            });
+        });
+    };
+    return {
+        initialize : initialize
     };
 }());

@@ -44,7 +44,7 @@ module Navigation
         },
         { :key => :view_definition_filter,
           :name =>_("Filter"),
-          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : filter_content_view_definition_path(@view_definition.id),
+          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : content_view_definition_filters_path(@view_definition.id),
           :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record? &&
               !@view_definition.composite},
           :options => {:class=>"panel_link"}
