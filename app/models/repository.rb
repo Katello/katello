@@ -49,6 +49,10 @@ class Repository < ActiveRecord::Base
     self.environment_product.product
   end
 
+  def product_id
+    self.environment_product.product_id
+  end
+
   def environment
     self.environment_product.environment
   end

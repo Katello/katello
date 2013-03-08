@@ -23,7 +23,7 @@ class Filter < ActiveRecord::Base
 
   def self.applicable(repo)
     query = %{filters.id in (select filter_id from  filters_repositories where repository_id = #{repo.id})
-              OR filters.id in (select filter_id from  filters_products where product_id = #{repo.product.id}) }
+              OR filters.id in (select filter_id from  filters_products where product_id = #{repo.product_id}) }
     where(query).uniq
   end
 
