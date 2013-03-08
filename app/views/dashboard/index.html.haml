@@ -1,6 +1,10 @@
+= javascript :scroll_pane, :dashboard
 
-=javascript :scroll_pane, :dashboard
-
+- if current_user.allowed_organizations.length == 0
+  .grid_16.flash_hud
+    %ul.flash_messages.warning
+      %li
+        = _("You do not currently have access to any organizations.  Please contact an administrator to get permission to access an organization.")
 
 .sixty
   - if current_organization && current_organization.readable?
