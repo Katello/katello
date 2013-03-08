@@ -23,16 +23,21 @@ class ContentViewDefinition < ActiveRecord::Base
   has_many :component_content_views, :through => :components,
     :source => :content_view, :class_name => "ContentView"
   belongs_to :organization, :inverse_of => :content_view_definitions
-    has_many :content_view_definition_products
-  has_many :products, :through => :content_view_definition_products
+  has_many :content_view_definition_products
+  has_many :products, {:through      => :content_view_definition_products,
+                       :after_remove => :remove_product
+                      }
   has_many :content_view_definition_repositories
-  has_many :repositories, :through => :content_view_definition_repositories
+  has_many :repositories, {:through      => :content_view_definition_repositories,
+                       :after_remove => :remove_repository
+                      }
   has_many :filters, :class_name => "Filter", :inverse_of => :content_view_definition
   validates :label, :uniqueness => {:scope => :organization_id},
     :presence => true
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
   validates :organization, :presence => true
   validate :validate_content
+  validate :validate_filters
 
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
@@ -286,5 +291,29 @@ class ContentViewDefinition < ActiveRecord::Base
     end
   end
 
+  def validate_filters
+    filters.each do |f|
+      f.validate_filter_products_and_repos(self.errors, self)
+      return unless errors.empty?
+    end
+  end
+
+  def remove_product(product)
+    filters.each do |f|
+      if f.products.include? product
+        f.products.delete(product)
+        f.save!
+      end
+    end
+  end
+
+  def remove_repository(repository)
+    filters.each do |f|
+      if f.repositories.include? repository
+        f.repositories.delete(repository)
+        f.save!
+      end
+    end
+  end
 
 end
