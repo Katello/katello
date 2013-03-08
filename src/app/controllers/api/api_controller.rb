@@ -141,7 +141,6 @@ class Api::ApiController < ActionController::Base
   end
 
   def require_user
-
     if !request.authorization && current_user
       return true
     else
@@ -289,4 +288,13 @@ class Api::ApiController < ActionController::Base
     super(method_name, *args)
     Rails.logger.debug "With body: #{response.body}\n"
   end
+
+  def split_order(order)
+    if order
+      order.split("|")
+    else
+      [:name_sort, "ASC"]
+    end
+  end
+
 end

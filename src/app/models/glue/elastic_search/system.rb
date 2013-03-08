@@ -12,6 +12,7 @@
 
 
 module Glue::ElasticSearch::System
+
   def self.included(base)
     base.class_eval do
       include Ext::IndexedModel
@@ -74,6 +75,7 @@ module Glue::ElasticSearch::System
         indexes :installed_products, :type=>'string', :analyzer=>:kt_name_analyzer
         indexes :memory, :type => 'integer'
         indexes :sockets, :type => 'integer'
+        indexes :uuid, :type => 'string', :analyzer => :kt_name_analyzer
         indexes :facts, :path=>"just_name" do
         end
         indexes :custom_info, :path => "just_name" do
