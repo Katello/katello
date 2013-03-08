@@ -600,8 +600,8 @@ usermod -a -G katello-shared tomcat
 %{homedir}/lib/*.rb
 %{homedir}/lib/katello/
 %exclude %{homedir}/lib/README
-%exclude %{homedir}/app/lib/README
 %{homedir}/app/lib/*.rb
+%exclude %{homedir}/app/lib/README
 %dir %{homedir}/app/lib/glue
 %{homedir}/app/lib/glue/*.rb
 %{homedir}/lib/monkeys
@@ -724,14 +724,20 @@ usermod -a -G katello-shared tomcat
 %{homedir}/db/products.json
 %{homedir}/db/seeds.rb
 %{homedir}/integration_spec
+%{homedir}/lib/*.rb
+%{homedir}/lib/katello/
+%exclude %{homedir}/lib/README
 %{homedir}/app/lib/*.rb
+%exclude %{homedir}/app/lib/README
 %{homedir}/lib/monkeys
 %{homedir}/app/lib/navigation
 %{homedir}/app/lib/notifications
 %{homedir}/app/lib/resources
 %{homedir}/app/lib/validators
 %exclude %{homedir}/app/lib/resources/candlepin.rb
+%exclude %{homedir}/app/lib/resources/abstract_model.rb
 %exclude %{homedir}/app/lib/resources/foreman_model.rb
+%exclude %{homedir}/app/lib/resources/foreman.rb
 %{homedir}/lib/tasks
 %{homedir}/lib/util
 %{homedir}/app/lib/util
