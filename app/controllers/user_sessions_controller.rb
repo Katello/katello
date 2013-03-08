@@ -100,26 +100,16 @@ class UserSessionsController < ApplicationController
       if current_organization.nil?
         if orgs.length == 1
           params[:org_id] = orgs[0].id
-          # notice the user
-          notify.success _("Login Successful")
           set_org
         elsif !user_default_org.nil? && orgs.include?(user_default_org)
           params[:org_id] = user_default_org.id
-          # notice the user
-          notify.success _("Login Successful, logging into '%s' ") % user_default_org.name
           set_org
         elsif orgs.length < 1
-          # notice the user, please choose an org
-          notify.success _("Login Successful, please contact administrator to get permission to access an organization.")
           render :partial =>"/user_sessions/interstitial.js", :locals=> {:num_orgs => orgs.length, :redir_path => dashboard_index_path}
         else
-          # notice the user, please choose an org
-          notify.success _("Login Successful, please choose an Organization")
           render :partial =>"/user_sessions/interstitial.js", :locals=> {:num_orgs => orgs.length, :redir_path => dashboard_index_path}
         end
       else
-        # notice the user, please choose an org
-        notify.success _("Login Successful, please choose an Organization")
         render :partial =>"/user_sessions/interstitial.js", :locals=> {:num_orgs => orgs.length, :redir_path => dashboard_index_path}
       end
     end
