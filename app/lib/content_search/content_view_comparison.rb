@@ -91,7 +91,9 @@ module ContentSearch
 
         cols.each do |key, col|
           view_id = key.split("_").first.to_i
-          repo = repos.detect {|r| r.content_view.id == view_id && r.library_instance_id == library_repo.id}
+          repo = repos.detect do |r|
+            r.content_view.id == view_id && r.library_instance_id == library_repo.id
+          end
           if repo
             view_repos << repo
             display = is_package ? repo.package_count : repo.errata_count
@@ -99,14 +101,28 @@ module ContentSearch
           end
         end
 
+        package_search_mode = search_mode
+        if view_repos.length < cv_env_ids.length
+          # if the number of cv_envs is greater than the repos to compare
+          # it implies that one of the cv_envs does not have this repo
+          # which means that there is nothing shared between them
+          # and all rows are "not shared" or "unique"
+          next if search_mode == :shared
+          package_search_mode = :all
+        end
+
         # build package or errata rows
         if is_package
-          packages = Package.search('', offset, page_size, view_repos.map(&:pulp_id))
+          packages = Package.search('', offset, page_size, view_repos.map(&:pulp_id),
+                                    [:nvrea_sort, "ASC"], package_search_mode)
         else
-          packages = Errata.search('', offset, page_size, :repoids => view_repos.map(&:pulp_id))
+          packages = Errata.search('', offset, page_size,
+                                   :repoids => view_repos.map(&:pulp_id),
+                                   :search_mode => package_search_mode)
         end
 
         next if packages.empty? # if we don't have packages/errata, don't show repo
+
 
         repo_rows << repo_row
         repo_rows += build_package_rows(packages, repo_row, cols)

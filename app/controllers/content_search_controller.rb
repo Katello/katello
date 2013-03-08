@@ -198,7 +198,7 @@ class ContentSearchController < ApplicationController
 
   def view_compare_errata
     options = {:is_package => false,
-               :cv_env_ids => params[:views]}
+               :cv_env_ids => params[:views].values}
     render :json => ContentSearch::ContentViewComparison.new(options)
   end
 
