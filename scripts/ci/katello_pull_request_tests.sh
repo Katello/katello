@@ -56,7 +56,8 @@ cd ../src
 
 echo ""
 echo "********* Headpin RSPEC Unit Tests ****************"
-sed -i 's/app_mode: katello/app_mode: headpin/' config/katello.yml
+echo "common:" > config/katello.yml
+echo "  app_mode: headpin" >> config/katello.yml
 bundle exec rake parallel:prepare VERBOSE=false
 bundle exec rake ptest:spec
 if [ $? -ne 0 ]

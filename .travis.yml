@@ -9,7 +9,7 @@ install:
 
 script:
   - cd src/
-  - cp -f config/katello_defaults.yml config/katello.yml
+  - touch config/katello.yml
   - bundle install --without checking:devboost:profiling:debugging
   - cd ../
   - ./scripts/ci/katello_pull_request_tests.sh
