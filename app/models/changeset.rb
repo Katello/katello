@@ -35,7 +35,7 @@ class Changeset < ActiveRecord::Base
                          :message     => "A changeset must have one of the following states: #{STATES.join(', ')}."
 
   validates :name, :presence => true, :allow_blank => false, :length => { :maximum => 255 }
-  validates_uniqueness_of :name, :scope => :environment_id, :message => N_("Must be unique within an environment")
+  validates_uniqueness_of :name, :scope => :environment_id, :message => N_("Label has already been taken")
   validates :environment, :presence => true
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_with Validators::NotInLibraryValidator
