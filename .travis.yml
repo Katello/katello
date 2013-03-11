@@ -2,14 +2,14 @@ language:
   - ruby
 
 before_install:
-    
+
 install:
   - sudo apt-get install libssl-dev python m2crypto --quiet
   - sudo pip install -r cli/requirements-dev.pip
 
 script:
   - cd src/
-  - cp -f config/katello.template.yml config/katello.yml 
+  - cp -f config/katello_defaults.yml config/katello.yml
   - bundle install --without checking:devboost:profiling:debugging
   - cd ../
   - ./scripts/ci/katello_pull_request_tests.sh

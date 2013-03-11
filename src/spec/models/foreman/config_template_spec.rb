@@ -18,7 +18,7 @@ describe Foreman::ConfigTemplate do
   end
 
   describe '.revision' do
-    it 'calls revision on resource' do
+    it 'calls revision on resource', :katello => true do #TODO headpin
       Foreman::ConfigTemplate.resource.
           should_receive(:revision).
           with({ :version => 'version' }, Foreman::ConfigTemplate.header).
@@ -28,7 +28,7 @@ describe Foreman::ConfigTemplate do
   end
 
   describe '.build_pxe_default' do
-    it 'calls build_pxe_default on resource' do
+    it 'calls build_pxe_default on resource', :katello => true do #TODO headpin
       Foreman::ConfigTemplate.resource.
           should_receive(:build_pxe_default).
           with(any_args).

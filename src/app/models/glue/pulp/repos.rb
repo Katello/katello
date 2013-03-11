@@ -83,15 +83,6 @@ module Glue::Pulp::Repos
       async_tasks
     end
 
-    def delete_from_env from_env
-      @orchestration_for = :delete
-      delete_repos(repos(from_env))
-      if from_env.products.include? self
-        self.environments.delete(from_env)
-      end
-      save!
-    end
-
     def package_groups env, search_args = {}
       groups = []
       self.repos(env).each do |repo|
@@ -350,20 +341,17 @@ module Glue::Pulp::Repos
       async_tasks.flatten(1)
     end
 
-    def delete_repos repos
-      repos.each{|repo| repo.destroy}
-    end
-
     def check_for_repo_conflicts(repo_name, repo_label)
       is_dupe =  Repository.joins(:environment_product).where( :name=> repo_name,
               "environment_products.product_id" => self.id, "environment_products.environment_id"=> self.library.id).count > 0
       if is_dupe
-        raise Errors::ConflictException.new(_("There is already a repo with the name [ %{repo} ] for product [ %{product} ]") % {:repo => repo_name, :product => self.label})      end
+        raise Errors::ConflictException.new(_("Label has already been taken"))
+      end
       unless repo_label.blank?
         is_dupe =  Repository.joins(:environment_product).where( :label=> repo_label,
                "environment_products.product_id" => self.id, "environment_products.environment_id"=> self.library.id).count > 0
         if is_dupe
-          raise Errors::ConflictException.new(_("There is already a repo with the label [ %{repo} ] for product [ %{product} ]") % {:repo => repo_label, :product => self.label})
+          raise Errors::ConflictException.new(_("Label has already been taken"))
         end
       end
     end

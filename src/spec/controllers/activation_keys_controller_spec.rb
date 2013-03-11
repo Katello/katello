@@ -74,7 +74,7 @@ describe ActivationKeysController do
       response.should render_template(:index)
     end
 
-    it "should be successful" do
+    it "should be successful", :katello => true do #TODO headpin
       get :index
       response.should be_success
     end
@@ -94,12 +94,12 @@ describe ActivationKeysController do
     end
 
     describe "with invalid activation key id" do
-      it "should generate an error notice" do
+      it "should generate an error notice", :katello => true do #TODO headpin
         controller.should notify.error
         get :show, :id => 9999
       end
 
-      it "should be unsuccessful" do
+      it "should be unsuccessful", :katello => true do #TODO headpin
         get :show, :id => 9999
         response.should_not be_success
       end
@@ -142,7 +142,7 @@ describe ActivationKeysController do
         get :edit, :id => 9999
       end
 
-      it "should be unsuccessful" do
+      it "should be unsuccessful", :katello => true do #TODO headpin
         get :edit, :id => 9999
         response.should_not be_success
       end
@@ -151,7 +151,7 @@ describe ActivationKeysController do
 
   describe "POST create" do
     describe "with valid params" do
-      it "assigns a newly created activation_key" do
+      it "assigns a newly created activation_key", :katello => true do #TODO headpin
         post :create, @akey_params
         assigns[:activation_key].name.should eq(@akey_params[:activation_key][:name])
         assigns[:activation_key].description.should eq(@akey_params[:activation_key][:description])
@@ -159,7 +159,7 @@ describe ActivationKeysController do
         assigns[:activation_key].system_template_id.should eq(@akey_params[:activation_key][:system_template_id]) unless Katello.config.katello?
       end
 
-      it "renders list item partial for 2 pane" do
+      it "renders list item partial for 2 pane", :katello => true do #TODO headpin
         post :create, @akey_params
         response.should render_template(:partial => "activation_keys/_list_activation_keys")
       end
@@ -169,7 +169,7 @@ describe ActivationKeysController do
         post :create, @akey_params
       end
 
-      it "should be successful" do
+      it "should be successful", :katello => true do #TODO headpin
         post :create, @akey_params
         response.should be_success
       end
@@ -188,7 +188,7 @@ describe ActivationKeysController do
         post :create, AKeyControllerTest::AKEY_INVALID
       end
 
-      it "should be unsuccessful" do
+      it "should be unsuccessful", :katello => true do #TODO headpin
         post :create, AKeyControllerTest::AKEY_INVALID
         response.should_not be_success
       end
@@ -209,22 +209,22 @@ describe ActivationKeysController do
 
     describe "with valid activation key id" do
       describe "with valid params" do
-        it "should update requested field - name" do
+        it "should update requested field - name", :katello => true do #TODO headpin
           put :update, :id => @a_key.id, :activation_key => AKeyControllerTest::AKEY_NAME
           assigns[:activation_key].name.should eq(AKeyControllerTest::AKEY_NAME[:name])
         end
 
-        it "should update requested field - description" do
+        it "should update requested field - description", :katello => true do #TODO headpin
           put :update, :id => @a_key.id, :activation_key => AKeyControllerTest::AKEY_DESCRIPTION
           assigns[:activation_key].description.should eq(AKeyControllerTest::AKEY_DESCRIPTION[:description])
         end
 
-        it "should update requested field - default environment" do
+        it "should update requested field - default environment", :katello => true do #TODO headpin
           put :update, :id => @a_key.id, :activation_key => {:environment_id => @environment_2.id}
           assigns[:activation_key].environment_id.should eq(@environment_2.id)
         end
 
-        it "should update requested field - system template", :notifications => true do
+        it "should update requested field - system template", :notifications => true, :katello => true do #TODO headpin
           put :update, :id => @a_key.id, :activation_key => {:system_template_id => @system_template_2.id}
           assigns[:activation_key].system_template_id.should eq(@system_template_2.id)
         end
@@ -234,12 +234,12 @@ describe ActivationKeysController do
           put :update, :id => @a_key.id, :activation_key => AKeyControllerTest::AKEY_DESCRIPTION
         end
 
-        it "should not redirect from edit view" do
+        it "should not redirect from edit view", :katello => true do #TODO headpin
           put :update, :id => @a_key.id, :activation_key => AKeyControllerTest::AKEY_DESCRIPTION
           response.should_not be_redirect
         end
 
-        it "should be successful" do
+        it "should be successful", :katello => true do #TODO headpin
           put :update, :id => @a_key.id, :activation_key => AKeyControllerTest::AKEY_DESCRIPTION
           response.should be_success
         end
@@ -283,7 +283,7 @@ describe ActivationKeysController do
           put :update, :id => @a_key.id, :activation_key => AKeyControllerTest::AKEY_NAME_INVALID
         end
 
-        it "should be unsuccessful" do
+        it "should be unsuccessful", :katello => true do #TODO headpin
           put :update, :id => @a_key.id, :activation_key => AKeyControllerTest::AKEY_NAME_INVALID
           response.should_not be_success
         end
@@ -296,12 +296,12 @@ describe ActivationKeysController do
         put :update, :id => 9999, :activation_key => AKeyControllerTest::AKEY_DESCRIPTION
       end
 
-      it "should be unsuccessful" do
+      it "should be unsuccessful", :katello => true do #TODO headpin
         put :update, :id => 9999, :activation_key => AKeyControllerTest::AKEY_DESCRIPTION
         response.should_not be_success
       end
 
-      it "should be unsuccessful at adding a subscription" do
+      it "should be unsuccessful at adding a subscription", :katello => true do #TODO headpin
         controller.should notify.error
         put :add_subscriptions, { :id => 999, :subscription_id => { "abc123" => "false"}}
         response.should_not be_success
@@ -322,7 +322,7 @@ describe ActivationKeysController do
       @group = SystemGroup.create!(:name=>"test_group", :organization=>@organization)
     end
 
-    it "retrieves the system groups to display" do
+    it "retrieves the system groups to display", :katello => true do #TODO headpin
       SystemGroup.should_receive(:where).with(:organization_id => @organization)
       get :system_groups, :id => @a_key.id
     end
@@ -368,7 +368,7 @@ describe ActivationKeysController do
       @group = SystemGroup.create!(:name=>"test_group", :organization=>@organization)
     end
 
-    it "should allow system groups to be added to the key" do
+    it "should allow system groups to be added to the key", :katello => true do #TODO headpin
       assert ActivationKey.find(@a_key.id).system_groups.size == 0
       put 'add_system_groups', {:id => @a_key.id, :group_ids=>[@group.id]}
       response.should be_success
@@ -380,7 +380,7 @@ describe ActivationKeysController do
       put 'add_system_groups', {:id => @a_key.id, :group_ids=>[@group.id]}
     end
 
-    it "should be successful" do
+    it "should be successful", :katello => true do #TODO headpin
       put 'add_system_groups', {:id => @a_key.id, :group_ids=>[@group.id]}
       response.should be_success
     end
@@ -394,7 +394,7 @@ describe ActivationKeysController do
       @a_key.save!
     end
 
-    it "should allow system groups to be removed from the key" do
+    it "should allow system groups to be removed from the key", :katello => true do #TODO headpin
       assert ActivationKey.find(@a_key.id).system_groups.size == 1
       put 'remove_system_groups', {:id => @a_key.id, :group_ids=>[@group.id]}
       response.should be_success
@@ -406,7 +406,7 @@ describe ActivationKeysController do
       put 'remove_system_groups', {:id => @a_key.id, :group_ids=>[@group.id]}
     end
 
-    it "should be successful" do
+    it "should be successful", :katello => true do #TODO headpin
       put 'remove_system_groups', {:id => @a_key.id, :group_ids=>[@group.id]}
       response.should be_success
     end
@@ -418,7 +418,7 @@ describe ActivationKeysController do
         controller.stub!(:render).and_return("") #ignore missing list_remove js partial
       end
 
-      it "should delete the key" do
+      it "should delete the key", :katello => true do #TODO headpin
         delete :destroy, :id => @a_key.id
         ActivationKey.exists?(@a_key.id).should be_false
       end
@@ -428,7 +428,7 @@ describe ActivationKeysController do
         delete :destroy, :id => @a_key.id
       end
 
-      it "should be successful" do
+      it "should be successful", :katello => true do #TODO headpin
         delete :destroy, :id => @a_key.id
         response.should be_success
       end
@@ -440,7 +440,7 @@ describe ActivationKeysController do
         delete :destroy, :id => 9999
       end
 
-      it "should be unsuccessful" do
+      it "should be unsuccessful", :katello => true do #TODO headpin
         delete :destroy, :id => 9999
         response.should_not be_success
       end

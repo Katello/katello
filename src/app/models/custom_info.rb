@@ -44,9 +44,9 @@ class CustomInfo < ActiveRecord::Base
     affected = []
 
     list_of_objects.each do |obj|
-      to_apply = custom_info_list.collect {|c| c[:keyname]} - obj.custom_info.collect {|c| c[:keyname]}
+      to_apply = custom_info_list.collect { |c| c[:keyname] } - obj.custom_info.collect { |c| c[:keyname] }
 
-      custom_info_list.select {|c| to_apply.include?(c[:keyname])}.each do |info|
+      custom_info_list.select { |c| to_apply.include?(c[:keyname]) }.each do |info|
         obj.custom_info.create!(info)
         affected << obj
       end
