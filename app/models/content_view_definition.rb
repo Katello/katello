@@ -24,9 +24,7 @@ class ContentViewDefinition < ActiveRecord::Base
     :source => :content_view, :class_name => "ContentView"
   belongs_to :organization, :inverse_of => :content_view_definitions
   has_many :content_view_definition_products
-  has_many :products, {:through      => :content_view_definition_products,
-                       :after_remove => :remove_product
-                      }
+  has_many :products, :through => :content_view_definition_products, :after_remove => :remove_product
   has_many :content_view_definition_repositories
   has_many :repositories, {:through      => :content_view_definition_repositories,
                        :after_remove => :remove_repository
@@ -294,7 +292,7 @@ class ContentViewDefinition < ActiveRecord::Base
   def validate_filters
     filters.each do |f|
       f.validate_filter_products_and_repos(self.errors, self)
-      return unless errors.empty?
+      break if errors.any?
     end
   end
 
