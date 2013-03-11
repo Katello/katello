@@ -39,7 +39,7 @@ module Locale
   # The method accept parameter = list of locales returned by parse_locale. Since the method is used
   # outside of the request context, we need to pass this data in as a parameter.
   def pick_available_locale locales
-    locales = Array.new(locales)
+    locales = Array(locales)
 
     # Look for full match
     locales.each do |locale|
@@ -67,8 +67,6 @@ module Locale
     end.collect do |l|
       l.first.downcase.gsub(/-[a-z]+$/i) { |x| x.upcase }
     end
-  rescue
-    return []
   end
 
 end
