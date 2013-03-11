@@ -36,6 +36,15 @@ Src::Application.routes.draw do
         end
         api_resources :providers, :only => [:index]
         api_resources :products, :only => [:index]
+        api_resources :activation_keys, :only => [:index]
+
+      end
+
+      api_resources :activation_keys, :only => [:destroy, :show, :update] do
+        member do
+          api_attachable_resources :system_groups, :controller => :activation_keys, :resource_name => :system_groups
+          api_attachable_resources :pools, :controller => :activation_keys
+        end
       end
 
       api_resources :providers, :except => [:index] do

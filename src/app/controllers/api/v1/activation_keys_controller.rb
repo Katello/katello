@@ -63,24 +63,24 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
     query_params[:organization_id] = @organization.id unless @organization.nil?
     query_params[:environment_id] = @environment.id unless @environment.nil?
 
-    render :json => ActivationKey.where(query_params)
+    respond :collection => ActivationKey.where(query_params)
   end
 
   api :GET, "/activation_keys/:id", "Show an activation key"
   def show
-    render :json => @activation_key
+    respond
   end
 
   api :POST, "/activation_keys", "Create an activation key"
   api :POST, "/environments/:environment_id/activation_keys", "Create an activation key"
   param_group :activation_key
   def create
-    created = ActivationKey.create!(params[:activation_key]) do |ak|
+    @activation_key = ActivationKey.create!(params[:activation_key]) do |ak|
       ak.environment = @environment
       ak.organization = @environment.organization
       ak.user = current_user
     end
-    render :json => created
+    respond
   end
 
   api :PUT, "/activation_keys/:id", "Update an activation key"
@@ -93,13 +93,13 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
     attrs[:content_view_id] = nil if attrs.try(:[], :content_view_id) == false
     @activation_key.update_attributes!(attrs)
 
-    render :json => ActivationKey.find(@activation_key.id)
+    respond :resource => ActivationKey.find(@activation_key.id)
   end
 
   api :POST, "/activation_keys/:id/pools", "Create an entitlement pool within an activation key"
   def add_pool
     @activation_key.key_pools.create(:pool => @pool) unless @activation_key.pools.include?(@pool)
-    render :json => @activation_key
+    respond_for_create
   end
 
   api :DELETE, "/activation_keys/:id/pools/:poolid", "Delete an entitlement pool within an activation key"
@@ -108,13 +108,7 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
       raise HttpErrors::NotFound, _("Couldn't find pool '%{pool}' in activation_key '%{ak}'") % {:pool => @pool.cp_id, :ak => @activation_key.name}
     end
     @activation_key.pools.delete(@pool)
-    render :json => @activation_key
-  end
-
-  api :DELETE, "/activation_keys/:id", "Destroy an activation key"
-  def destroy
-    @activation_key.destroy
-   render :text => _("Deleted activation key '%s'") % params[:id], :status => 204
+    respond_for_destroy
   end
 
   api :POST, "/organizations/:organization_id/activation_keys/:id/system_groups"
@@ -122,7 +116,7 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
     ids = params[:activation_key][:system_group_ids]
     @activation_key.system_group_ids = (@activation_key.system_group_ids + ids).uniq
     @activation_key.save!
-    render :json => @activation_key.to_json
+    respond_for_create
   end
 
   api :DELETE, "/organizations/:organization_id/activation_keys/:id/system_groups"
@@ -130,7 +124,7 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
     ids = params[:activation_key][:system_group_ids]
     @activation_key.system_group_ids = (@activation_key.system_group_ids - ids).uniq
     @activation_key.save!
-    render :json => @activation_key.to_json
+    respond_for_destroy
   end
 
   private
