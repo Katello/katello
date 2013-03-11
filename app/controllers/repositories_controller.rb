@@ -71,7 +71,7 @@ class RepositoriesController < ApplicationController
 
     render :nothing => true
   rescue Errors::ConflictException, ActiveRecord::RecordInvalid, Glue::Pulp::PulpErrors::ServiceUnavailable => e
-    notify.exception e
+    e.class == Glue::Pulp::PulpErrors::ServiceUnavailable ? notify.exception(e) : notify.error(e.to_s)
     execute_after_filters
     render :nothing => true, :status => :bad_request
   end

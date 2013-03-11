@@ -19,6 +19,10 @@ class GlueCandlepinConsumerTestBase < MiniTest::Rails::ActiveSupport::TestCase
   extend  ActiveRecord::TestFixtures
 
   fixtures :all
+  @@dev = nil
+  @@org = nil
+  @@dev_cv = nil
+  @@dev_cve = nil
 
   def self.before_suite
     load_fixtures
@@ -46,8 +50,8 @@ class GlueCandlepinConsumerTestBase < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def self.after_suite
-    @@dev_cve.del_environment
-    @@org.del_owner
+    @@dev_cve.del_environment unless @@dev_cve.nil?
+    @@org.del_owner unless @@org.nil?
   ensure
     VCR.eject_cassette
   end

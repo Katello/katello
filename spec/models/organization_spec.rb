@@ -64,6 +64,11 @@ describe Organization do
         Organization.create!(:label => @organization.name)
       }.should raise_error(ActiveRecord::RecordInvalid)
     end
+    it "should complain if the label is invalid" do
+      lambda{
+        Organization.create!(:label => "ACME\n<badlabel>", :name => "ACMECorp")
+      }.should raise_error(ActiveRecord::RecordInvalid)
+    end
   end
 
   context "update an organization" do

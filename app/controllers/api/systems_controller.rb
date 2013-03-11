@@ -165,13 +165,36 @@ DESC
   api :GET, "/organizations/:organization_id/systems", "List systems in organization"
   param :name, String, :desc => "Filter systems by name"
   param :pool_id, String, :desc => "Filter systems by subscribed pool"
+  param :search, String, :desc => "Filter systems by advanced search query"
   def index
-    # expected parameters
-    expected_params = params.slice(:name, :uuid)
+    sort_order    = params[:sort_order] if params[:sort_order]
+    sort_by       = params[:sort_by] if params[:sort_by]
+    query_string  = params[:name] ? "name:#{params[:name]}" : params[:search]
+    filters       = []
 
-    systems = (@environment.nil?) ? @organization.systems : @environment.systems
-    systems = systems.all_by_pool(params['pool_id']) if params['pool_id']
-    systems = systems.readable(@organization).where(expected_params)
+    if params[:env_id]
+      find_environment
+      filters << { :environment_id=>[params[:env_id]] }
+    else
+      filters << readable_filters
+    end
+
+    filters << { :uuid => System.all_by_pool_uuid(params['pool_id']) } if params['pool_id']
+
+    options = {
+      :filter         => filters,
+      :load_records?  => true
+    }
+
+    if params[:paged]
+      options[:page_size] = params[:page_size] || current_user.page_size
+    end
+
+    options[:sort_by]   = params[:sort_by]    if params[:sort_by]
+    options[:sort_order]= params[:sort_order] if params[:sort_order]
+
+    items = Glue::ElasticSearch::Items.new(System)
+    systems = items.retrieve(query_string, params[:offset], options)
 
     render :json => systems.to_json
   end
@@ -501,6 +524,10 @@ DESC
     @task = TaskStatus.where(:uuid => params[:id]).first
     raise ActiveRecord::RecordNotFound.new unless @task
     @system = @task.task_owner
+  end
+
+  def readable_filters
+    {:environment_id=>KTEnvironment.systems_readable(@organization).collect{|item| item.id}}
   end
 
 end

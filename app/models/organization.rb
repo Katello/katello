@@ -13,6 +13,8 @@
 
 class Organization < ActiveRecord::Base
 
+  ALLOWED_DEFAULT_INFO_TYPES = %w( system )
+
   include Glue::Candlepin::Owner if Katello.config.use_cp
   include Glue if Katello.config.use_cp
 
@@ -32,8 +34,8 @@ class Organization < ActiveRecord::Base
   has_many :system_groups, :dependent => :destroy, :inverse_of => :organization
   has_many :content_view_definitions
   has_many :content_views
+  serialize :default_info, Hash
 
-  serialize :system_info_keys, Array
   attr_accessor :statistics
 
   # Organizations which are being deleted (or deletion failed) can be filtered out with this scope.
@@ -42,6 +44,7 @@ class Organization < ActiveRecord::Base
 
   before_create :create_library
   before_create :create_redhat_provider
+  before_save :initialize_default_info
 
   validates :name, :uniqueness => true, :presence => true
   validates :label, :uniqueness => { :message => _("already exists (including organizations being deleted)") },
@@ -50,8 +53,6 @@ class Organization < ActiveRecord::Base
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validate :unique_name_and_label
-
-  before_save { |o| o.system_info_keys = Array.new unless o.system_info_keys }
 
   if Katello.config.use_cp
     before_validation :create_label, :on => :create
@@ -109,6 +110,15 @@ class Organization < ActiveRecord::Base
 
   def being_deleted?
     ! self.task_id.nil?
+  end
+
+  def initialize_default_info
+    self.default_info ||= Hash.new
+    ALLOWED_DEFAULT_INFO_TYPES.each do |key|
+      if self.default_info[key].class != Array
+        self.default_info[key] = []
+      end
+    end
   end
 
 end
