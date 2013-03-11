@@ -64,24 +64,25 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
     end
     params[:unprotected] ||= false
     content = @product.add_repo(labelize_params(params), params[:name], params[:url], 'yum', params[:unprotected], gpg)
-    render :json => content
+    respond :resource => content
   end
 
   api :GET, "/repositories/:id", "Show a repository"
   param :id, :identifier, :required => true, :desc => "repository id"
   def show
-    render :json => @repository.to_hash
+    respond
   end
 
   api :PUT, "/repositories/:id", "Update a repository"
   param :id, :identifier, :required => true, :desc => "repository id"
   param :repository, Hash, :required => true do
     param :gpg_key_name, String, :desc => "name of a gpg key that will be assigned to the repository"
+    param :enabled, :bool, :desc => "flag that enables/disables the repository"
   end
   def update
     raise HttpErrors::BadRequest, _("It is not allowed to update a Red Hat repository.") if @repository.redhat?
-    @repository.update_attributes!(params[:repository].slice(:gpg_key_name))
-    render :json => @repository.to_hash
+    @repository.update_attributes!(params[:repository].slice(:gpg_key_name, :enabled))
+    respond
   end
 
   api :DELETE, "/repositories/:id", "Destroy a repository"
@@ -94,12 +95,13 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
     raise HttpErrors::BadRequest, _("Repository cannot be deleted since it has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it.") if @repository.promoted?
 
     @repository.destroy
-    render :text => _("Deleted repository '%s'") % params[:id], :status => 200
+    respond :message => _("Deleted repository '%s'") % params[:id]
   end
 
   api :POST, "/repositories/:id/enable", "Enable or disable a repository"
   param :id, :identifier, :required => true
   param :enable, :bool, :required => true, :desc => "flag that enables/disables the repository"
+  #NOTE: this action will be removed in api v2
   def enable
     raise HttpErrors::NotFound, _("Disable/enable is not supported for custom repositories.") if not @repository.redhat?
 
@@ -140,7 +142,7 @@ EOS
     raise _("Couldn't find repository '%s'") % repo.name if repo.nil?
     Rails.logger.info("Sync_complete called for #{repo.name}, running after_sync.")
     repo.async(:organization=>repo.environment.organization).after_sync(params[:task_id])
-    render :text=>""
+    respond_for_status
   end
 
   api :GET, "/repositories/:id/package_groups", "List all package groups in a repository"
@@ -150,7 +152,7 @@ EOS
     search_attrs = params.slice(:name)
     search_attrs[:id] = params[:group_id] if not params[:group_id].nil?
 
-    render :json => @repository.package_groups_search(search_attrs)
+    respond_for_index :collection => @repository.package_groups_search(search_attrs)
   end
 
   api :GET, "/repositories/:id/package_group_categories", "List all package group categories in a repository"
@@ -160,7 +162,7 @@ EOS
     search_attrs = params.slice(:name)
     search_attrs[:id] = params[:category_id] if not params[:category_id].nil?
 
-    render :json => @repository.package_group_categories(search_attrs)
+    respond_for_index :collection => @repository.package_group_categories(search_attrs)
   end
 
   # returns the content of a repo gpg key, used directly by yum
@@ -185,7 +187,8 @@ EOS
   end
 
   def find_product
-    @product = @organization.products.find_by_cp_id params[:product_id]
+    @product = Product.find_by_cp_id params[:product_id]
     raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:product_id] if @product.nil?
+    @organization ||= @product.organization
   end
 end

@@ -16,6 +16,7 @@ class Api::V1::ProductsController < Api::V1::ApiController
   before_filter :find_environment, :only => [:index, :repositories]
   before_filter :find_content_view, :only => [:repositories]
   before_filter :find_product, :only => [:repositories, :show, :update, :destroy, :set_sync_plan, :remove_sync_plan]
+  before_filter :find_environment, :only => [:index, :repositories]
   before_filter :verify_presence_of_organization_or_environment, :only => [:index]
   before_filter :authorize
 
@@ -135,8 +136,9 @@ class Api::V1::ProductsController < Api::V1::ApiController
   private
 
   def find_product
-    @product = @organization.products.find_by_cp_id(params[:id].to_s)
+    @product = Product.find_by_cp_id(params[:id].to_s)
     raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:id] if @product.nil?
+    @organization ||= @product.organization
   end
 
   def find_environment

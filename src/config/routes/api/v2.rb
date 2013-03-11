@@ -80,10 +80,30 @@ Src::Application.routes.draw do
         end
       end
 
+
       api_resources :roles do
         get :available_verbs, :on => :collection, :action => :available_verbs
         api_resources :permissions, :only => [:index, :show, :create, :destroy]
         api_resources :ldap_groups, :controller => :role_ldap_groups , :only => [:create, :destroy, :index]
+      end
+
+      api_resources :repositories, :only => [:show, :create, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
+        api_resources :sync, :only => [:index, :create] do
+          delete :index, :on => :collection, :action => :cancel
+        end
+        api_resources :packages do
+          get :search, :on => :collection
+        end
+        api_resources :errata, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.:]+/ }
+        api_resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ }
+        member do
+          get :package_groups
+          get :package_group_categories
+          get :gpg_key_content
+        end
+        collection do
+          post :sync_complete
+        end
       end
 
     end # module v2
@@ -233,26 +253,6 @@ Src::Application.routes.draw do
       end
 
       api_resources :ping, :only => [:index]
-
-      api_resources :repositories, :only => [:show, :create, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
-        api_resources :sync, :only => [:index, :create] do
-          delete :index, :on => :collection, :action => :cancel
-        end
-        api_resources :packages do
-          get :search, :on => :collection
-        end
-        api_resources :errata, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.:]+/ }
-        api_resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ }
-        member do
-          get :package_groups
-          get :package_group_categories
-          get :gpg_key_content
-          post :enable
-        end
-        collection do
-          post :sync_complete
-        end
-      end
 
       api_resources :gpg_keys, :only => [:show, :update, :destroy] do
         get :content, :on => :member
