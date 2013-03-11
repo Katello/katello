@@ -1,7 +1,13 @@
 language:
   - ruby
 
-before_install:
+rvm:
+  - "1.8.7"
+  - "1.9.3"
+
+env:
+  - BUNDLE_GEMFILE=Gemfile
+  - BUNDLE_GEMFILE=Gemfile32
 
 install:
   - sudo apt-get install libssl-dev python m2crypto --quiet
@@ -10,14 +16,6 @@ install:
 script:
   - cd src/
   - touch config/katello.yml
-  - bundle install --without checking:devboost:profiling:debugging
+  - bundle install --without checking:devboost:optional:debugging
   - cd ../
   - ./scripts/ci/katello_pull_request_tests.sh
-
-rvm:
- - "1.8.7"
- - "1.9.3"
-
-gemfile:
- - Gemfile
- - Gemfile32
