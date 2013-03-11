@@ -11,7 +11,7 @@ Src::Application.routes.draw do
   namespace :api do
 
     # new v2 routes that point to v2
-    scope :module => :v2, :constraints => ApiVersionConstraint.new(:version => 2, :default => true) do
+    scope :module => :v2, :constraints => ApiVersionConstraint.new(:version => 2) do
 
       api_resources :environments, :only => [:show, :update, :destroy] do
         match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
@@ -84,7 +84,7 @@ Src::Application.routes.draw do
 
 
     # routes that didn't change in v2 and point to v1
-    scope :module => :v1, :constraints => ApiVersionConstraint.new(:version => 2, :default => true) do
+    scope :module => :v1, :constraints => ApiVersionConstraint.new(:version => 2) do
 
       match '/' => 'root#resource_list'
 
