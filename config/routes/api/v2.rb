@@ -80,6 +80,12 @@ Src::Application.routes.draw do
         end
       end
 
+      api_resources :roles do
+        get :available_verbs, :on => :collection, :action => :available_verbs
+        api_resources :permissions, :only => [:index, :show, :create, :destroy]
+        api_resources :ldap_groups, :controller => :role_ldap_groups , :only => [:create, :destroy, :index]
+      end
+
     end # module v2
 
 
@@ -258,12 +264,6 @@ Src::Application.routes.draw do
       end
 
       api_resources :errata, :only => [:index]
-
-      api_resources :roles do
-        get :available_verbs, :on => :collection, :action => :available_verbs
-        api_resources :permissions, :only => [:index, :show, :create, :destroy]
-        api_resources :ldap_groups, :controller => :role_ldap_groups , :only => [:create, :destroy, :index]
-      end
 
       api_resources :tasks, :only => [:show]
 
