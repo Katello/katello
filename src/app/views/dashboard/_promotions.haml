@@ -5,12 +5,11 @@
     %ul
     - for changeset in promotions()
       %li
-        %span.icon_wrap.fl
-          %span.fl{:class=>changeset_class(changeset)}
-            &nbsp;&nbsp;
+        %div.row_item
+          %span.icon_wrap.fl
+            %span.fl{:class=>changeset_class(changeset)}
 
-        %div.promotion_entry
-          .col_1.one-line-ellipsis
+          .col_1.one-line-ellipsis{:title=>changeset.name}
             %h5
               = link_to changeset.name, changeset_path_helper(changeset)
           .col_2

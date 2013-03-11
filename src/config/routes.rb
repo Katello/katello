@@ -194,6 +194,7 @@ Src::Application.routes.draw do
       get :sync
       get :notices
       get :errata
+      get :content_views
       get :promotions
       get :systems
       get :system_groups
