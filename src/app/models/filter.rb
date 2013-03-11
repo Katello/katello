@@ -14,7 +14,7 @@ class Filter < ActiveRecord::Base
   belongs_to :content_view_definition
   has_many  :rules, :class_name => "FilterRule", :dependent => :destroy
   has_and_belongs_to_many :repositories, :class_name => "Repository", :uniq => true
-  has_and_belongs_to_many :products, :class_name => "Product", :uniq => true
+  has_and_belongs_to_many :products, :uniq => true
 
   validate :validate_products_and_repos
   validates :name, :presence => true, :allow_blank => false,
@@ -32,17 +32,31 @@ class Filter < ActiveRecord::Base
                           "organization" => content_view_definition.organization.label)
   end
 
+  # Retrieve a list of repositories associated with the filter.
+  # This includes all repositories (ie. combining those that are part of products associated with the filter
+  # as well as repositories that are explicitly associated with the filter).
+  def repos
+    repos = []
+    repos.concat.products.each do |prod|
+      prod_repos = prod.repos(organization.library).enabled
+      prod_repos.each{|r| repos << r}
+    end
+    repos.concat(self.repositories)
+    repos.uniq!
+    repos
+  end
+
 
   def validate_filter_products_and_repos(errors, cvd)
     prod_diff = self.products - cvd.products
-    repo_diff = self.repositories - cvd.repositories
+    repo_diff = self.repos - cvd.repos
     unless prod_diff.empty?
       errors.add(:base, _("cannot contain filters whose products do not belong this content view definition"))
-      return
+      break
     end
     unless repo_diff.empty?
       errors.add(:base, _("cannot contain filters whose repositories do not belong this content view definition"))
-      return
+      break
     end
   end
 
