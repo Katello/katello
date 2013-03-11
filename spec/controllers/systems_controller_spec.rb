@@ -286,13 +286,13 @@ describe SystemsController do
         @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts => { "test" => "test" }, :serviceLevel => nil)
       end
 
-      it "should update the system name" do
+      it "should update the system name", :katello => true do #TODO headpin
         put :update, { :id => @system.id, :system => { :name => "foo" }}
         response.should be_success
         assigns[:system].name.should == "foo"
       end
 
-      it "should update the system release version" do
+      it "should update the system release version", :katello => true do #TODO headpin
         put :update, { :id => @system.id, :system => { :releaseVer => "6Server" }}
         response.should be_success
         assigns[:system].releaseVer.should == "6Server"
@@ -300,12 +300,12 @@ describe SystemsController do
 
       # The params to #update_subscriptions are entirely wrong here. The only reason the test
       # used to pass was because the error handler was not passing back an error status
-      it "should not update a subscription" do
+      it "should not update a subscription", :katello => true do #TODO headpin
         put :update_subscriptions, { :id => @system.id, :system => { :name=> "foo" }}
         response.should_not be_success
       end
 
-      it "should throw an error with bad parameters" do
+      it "should throw an error with bad parameters", :katello => true do #TODO headpin
         invalid_name = " Foo   "
         put :update, { :id => @system.id, :system => { :name=> invalid_name }}
         response.should_not be_success
@@ -332,7 +332,7 @@ describe SystemsController do
         @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
         System.stub(:find).and_return [@system]
       end
-      it "should delete the system" do
+      it "should delete the system", :katello => true do #TODO headpin
         @system.should_receive(:destroy)
         delete :bulk_destroy, { :ids => [@system.id]}
         response.should be_success
@@ -365,7 +365,7 @@ describe SystemsController do
       end
 
       # GET :index should not render an env_select until the :new is called
-      it "should create a system in env" do
+      it "should create a system in env", :katello => true do #TODO headpin
         get :index
         response.should_not render_template(:partial=>"_env_select")
 
@@ -381,7 +381,7 @@ describe SystemsController do
       end
 
       # GET :index should render an env_select but not on the :new response
-      it "should create a system in env" do
+      it "should create a system in env", :katello => true do #TODO headpin
         get :environments, :env_id=>@env2.id
         response.should render_template(:partial=>"_env_select")
 
@@ -422,7 +422,7 @@ describe SystemsController do
       end
 
       describe "listing/viewing" do
-        it "retrieves the system groups to display" do
+        it "retrieves the system groups to display", :katello => true do #TODO headpin
           SystemGroup.should_receive(:where).with(:organization_id => @organization).and_return([@group1, @group2])
           get :system_groups, :id => @system.id
         end
@@ -439,7 +439,7 @@ describe SystemsController do
       end
 
       describe "add system groups" do
-        it "should add the system to the groups provided" do
+        it "should add the system to the groups provided", :katello => true do #TODO headpin
           assert System.find(@system.id).system_groups.size == 0
           assert SystemGroup.find(@group1.id).systems.size == 0
           assert SystemGroup.find(@group2.id).systems.size == 0
@@ -472,7 +472,7 @@ describe SystemsController do
           @system.save!
         end
 
-        it "should remove the system from the groups provided" do
+        it "should remove the system from the groups provided", :katello => true do #TODO headpin
           assert System.find(@system.id).system_groups.size == 2
           assert SystemGroup.find(@group1.id).systems.size == 1
           assert SystemGroup.find(@group2.id).systems.size == 1
@@ -501,7 +501,7 @@ describe SystemsController do
           @group2 = SystemGroup.create!(:name=>"test_group2", :organization=>@organization)
         end
 
-        it "should add the list of systems to the groups provided" do
+        it "should add the list of systems to the groups provided", :katello => true do #TODO headpin
           assert System.find(@system1.id).system_groups.size == 0
           assert System.find(@system2.id).system_groups.size == 0
           assert SystemGroup.find(@group1.id).systems.size == 0
@@ -543,7 +543,7 @@ describe SystemsController do
           @group2.systems << [@system1, @system2]
         end
 
-        it "should remove the list of systems from the groups provided" do
+        it "should remove the list of systems from the groups provided", :katello => true do #TODO headpin
           assert System.find(@system1.id).system_groups.size == 2
           assert System.find(@system2.id).system_groups.size == 2
           assert SystemGroup.find(@group1.id).systems.size == 2

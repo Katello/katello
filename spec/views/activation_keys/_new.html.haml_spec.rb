@@ -42,7 +42,7 @@ describe "activation_keys/_new.html.haml" do
       view.content_for(:content).should_not be_nil
     end
 
-    it "should include key details" do
+    it "should include key details", :katello => true do #TODO headpin
       view.content_for(:content).should have_selector("input#activation_key_name", :count => 1)
       view.content_for(:content).should have_selector("textarea#activation_key_description", :count => 1)
       view.content_for(:content).should have_selector("input#activation_key_environment_id", :count => 1)

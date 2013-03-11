@@ -12,25 +12,25 @@
 
 require 'spec_helper'
 
-class Notice # needed a class with an AR base
-  include LazyAccessor
-
-  DEFAULT_VALUE = 1
-  ANOTHER_VALUE = 2
-
-  attr_writer :run_b_initializer
-
-  lazy_accessor :a, :initializer => lambda {|s| init_a }
-  lazy_accessor :b, :initializer => lambda {|s| init_b }, :unless => lambda {|s| true }
-  def init_a
-    DEFAULT_VALUE
-  end
-  def init_b
-    DEFAULT_VALUE
-  end
-end
-
 describe LazyAccessor do
+
+  class Notice # needed a class with an AR base
+    include LazyAccessor
+
+    DEFAULT_VALUE = 1
+    ANOTHER_VALUE = 2
+
+    attr_writer :run_b_initializer
+
+    lazy_accessor :a, :initializer => lambda {|s| init_a }
+    lazy_accessor :b, :initializer => lambda {|s| init_b }, :unless => lambda {|s| true }
+    def init_a
+      DEFAULT_VALUE
+    end
+    def init_b
+      DEFAULT_VALUE
+    end
+  end
 
   context "For an existing record" do
     before do

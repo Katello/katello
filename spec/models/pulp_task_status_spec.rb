@@ -11,9 +11,11 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'spec_helper'
+
 include OrchestrationHelper
 include UserHelperMethods
-describe PulpTaskStatus do
+
+describe PulpTaskStatus, :katello => true do
 
   context "proxy TaskStatus for pulp task" do
     let(:pulp_task_without_error) do
@@ -72,7 +74,7 @@ describe PulpTaskStatus do
         end
         @t.save!
 
-        Runcible::Resources::Task.stub(:poll).and_return(updated_pulp_task)
+        Runcible::Resources::Task.stub(:poll).and_return(updated_pulp_task)  if Katello.config.katello?
       end
 
       it "should fetch data from pulp" do

@@ -596,6 +596,7 @@ usermod -a -G katello-shared tomcat
 %{homedir}/db/seeds.rb
 %{homedir}/integration_spec
 %{homedir}/lib/*.rb
+%{homedir}/lib/katello/
 %exclude %{homedir}/lib/README
 %exclude %{homedir}/app/lib/README
 %{homedir}/app/lib/*.rb

@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -422,7 +421,7 @@ ActiveRecord::Schema.define(:version => 20130226133232) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "task_id"
-    t.text     "system_info_keys"
+    t.text     "default_info"
   end
 
   add_index "organizations", ["label"], :name => "index_organizations_on_cp_key", :unique => true

@@ -13,6 +13,7 @@
 
 class ContentViewVersion < ActiveRecord::Base
   include AsyncOrchestration
+  include Authorization::ContentViewVersion
 
   belongs_to :content_view
   has_many :content_view_version_environments
