@@ -24,7 +24,7 @@ class Filter < ActiveRecord::Base
   def self.applicable(repo)
     query = %{filters.id in (select filter_id from  filters_repositories where repository_id = #{repo.id})
               OR filters.id in (select filter_id from  filters_products where product_id = #{repo.product_id}) }
-    where(query).uniq
+    where(query).select("DISTINCT filters.*")
   end
 
   def as_json(options = {})
@@ -37,8 +37,8 @@ class Filter < ActiveRecord::Base
   # as well as repositories that are explicitly associated with the filter).
   def repos
     repos = []
-    repos.concat.products.each do |prod|
-      prod_repos = prod.repos(organization.library).enabled
+    self.products.each do |prod|
+      prod_repos = prod.repos(content_view_definition.organization.library).enabled
       prod_repos.each{|r| repos << r}
     end
     repos.concat(self.repositories)
@@ -52,14 +52,11 @@ class Filter < ActiveRecord::Base
     repo_diff = self.repos - cvd.repos
     unless prod_diff.empty?
       errors.add(:base, _("cannot contain filters whose products do not belong this content view definition"))
-      break
     end
     unless repo_diff.empty?
       errors.add(:base, _("cannot contain filters whose repositories do not belong this content view definition"))
-      break
     end
   end
-
 
   protected
 
