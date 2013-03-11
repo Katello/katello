@@ -61,6 +61,16 @@ Src::Application.routes.draw do
         end
       end
 
+      api_resources :users do
+        get :report, :on => :collection
+        get :sync_ldap_roles, :on => :collection
+        api_resources :roles, :controller => :users, :only =>[] do
+         post   :index, :on => :collection, :action => :add_role
+         delete :destroy, :on => :member, :action => :remove_role
+         get    :index, :on => :collection, :action => :list_roles
+        end
+      end
+
     end # module v2
 
 
@@ -240,15 +250,6 @@ Src::Application.routes.draw do
 
       api_resources :errata, :only => [:index]
 
-      api_resources :users do
-        get :report, :on => :collection
-        get :sync_ldap_roles, :on => :collection
-        api_resources :roles, :controller => :users, :only =>[] do
-         post   :index, :on => :collection, :action => :add_role
-         delete :destroy, :on => :member, :action => :remove_role
-         get    :index, :on => :collection, :action => :list_roles
-        end
-      end
       api_resources :roles do
         get :available_verbs, :on => :collection, :action => :available_verbs
         api_resources :permissions, :only => [:index, :show, :create, :destroy]

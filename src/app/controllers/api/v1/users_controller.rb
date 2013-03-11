@@ -59,12 +59,12 @@ class Api::V1::UsersController < Api::V1::ApiController
   param :disabled, :bool, :desc => "filter by disabled flag"
   param :username, String, :desc => "filter by username"
   def index
-    render :json => (User.readable.where query_params).to_json
+    respond :collection => User.readable.where(query_params)
   end
 
   api :GET, "/users/:id", "Show a user"
   def show
-    render :json => @user
+    respond
   end
 
   api :POST, "/users", "Create an user"
@@ -72,20 +72,20 @@ class Api::V1::UsersController < Api::V1::ApiController
   param_group :user
   def create
     # warning - request already contains "username" and "password" (logged user)
-    user = User.create!(:username => params[:username],
+    @user = User.create!(:username => params[:username],
                         :password => params[:password],
                         :email    => params[:email],
                         :disabled => params[:disabled])
 
-    user.default_environment = KTEnvironment.find(params[:default_environment_id]) if params[:default_environment_id]
+    @user.default_environment = KTEnvironment.find(params[:default_environment_id]) if params[:default_environment_id]
 
     if !params[:default_locale].blank?
         if Katello.config.available_locales.include? params[:default_locale]
-            user.default_locale = params[:default_locale]
-            user.save!
+            @user.default_locale = params[:default_locale]
+            @user.save!
         end
     end
-    render :json => user.to_json
+    respond
   end
 
   api :PUT, "/users/:id", "Update an user"
@@ -101,29 +101,30 @@ class Api::V1::UsersController < Api::V1::ApiController
                                 end
 
     if !params[:default_locale].blank?
-        user.default_locale = params[:default_locale]
-        user.save!
+        @user.default_locale = params[:default_locale]
+        @user.save!
     end
-
-    render :json => @user.to_json
+    respond
   end
 
   api :DELETE, "/users/:id", "Destroy an user"
   def destroy
     @user.destroy
-    render :text => _("Deleted user '%s'") % params[:id], :status => 200
+    render :message => _("Deleted user '%s'") % params[:id]
   end
 
   api :GET, "/users/:user_id/roles", "List roles assigned to a user"
+  #TODO: create rabl
   def list_roles
     @user.set_ldap_roles if Katello.config.ldap_roles
-    render :json => @user.roles.non_self.to_json
+    respond_for_index :collection => @user.roles.non_self
   end
 
   api :GET, "/users/sync_ldap_roles", "Synchronises roles for all users with LDAP groups"
+  #TODO: create rabl
   def sync_ldap_roles
     User.all.each { |user| user.set_ldap_roles }
-    render :text => _("Roles for all users were synchronised with LDAP groups"), :status => 200
+    respond_for_status :message => _("Roles for all users were synchronised with LDAP groups")
   end
 
   api :POST, "/users/:user_id/roles", "Assign a role to a user"
@@ -132,7 +133,7 @@ class Api::V1::UsersController < Api::V1::ApiController
     role = Role.find(params[:role_id])
     @user.roles << role
     @user.save!
-    render :text => _("User '%{username}' assigned to role '%{rolename}'") % {:username => @user.username, :rolename => role.name}, :status => 200
+    respond_for_status :message => _("User '%{username}' assigned to role '%{rolename}'") % {:username => @user.username, :rolename => role.name}
   end
 
   api :DELETE, "/users/:user_id/roles/:id", "Remove user's role"
@@ -140,8 +141,7 @@ class Api::V1::UsersController < Api::V1::ApiController
     role = Role.find(params[:id])
     @user.roles.delete(role)
     @user.save!
-    render :text => _("User '%{username}' unassigned from role '%{rolename}'") % {:username => @user.username, :rolename => role.name}, :status => 200
-
+    respond_for_status :message => _("User '%{username}' unassigned from role '%{rolename}'") % {:username => @user.username, :rolename => role.name}
   end
 
   api :GET, "/users/report", "Reports all users in the system in a format according to 'Accept' headers.
