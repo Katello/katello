@@ -1,3 +1,3 @@
 collection @repositories, :object_root => false
 
-extends "api/v2/repositories/_attributes"
+extends "api/v2/repositories/show"
