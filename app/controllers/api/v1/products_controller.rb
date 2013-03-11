@@ -53,7 +53,7 @@ class Api::V1::ProductsController < Api::V1::ApiController
   param :organization_id, :identifier, :desc => "organization identifier"
   param :id, :number, :desc => "product numeric identifier"
   def show
-    render :json => @product.to_json
+    respond
   end
 
   api :PUT, "/organizations/:organization_id/products/:id", "Update a product"
@@ -69,7 +69,7 @@ class Api::V1::ProductsController < Api::V1::ApiController
     if params[:product][:recursive]
       @product.reset_repo_gpgs!
     end
-    render :json => @product.to_json
+    respond
   end
 
   api :GET, "/environments/:environment_id/products", "List products"
@@ -81,14 +81,13 @@ class Api::V1::ProductsController < Api::V1::ApiController
     query_params.delete(:organization_id)
     query_params.delete(:environment_id)
 
-
     if @environment.nil?
       products = Product.all_readable(@organization)
     else
       products = @environment.products.all_readable(@organization)
     end
 
-    render :json => products.select("products.*, providers.name AS provider_name").joins(:provider).where(query_params).all
+    respond :collection => products.select("products.*, providers.name AS provider_name").joins(:provider).where(query_params).all
   end
 
   api :DELETE, "/organizations/:organization_id/products/:id", "Destroy a product"
@@ -96,7 +95,7 @@ class Api::V1::ProductsController < Api::V1::ApiController
   param :id, :number, :desc => "product numeric identifier"
   def destroy
     @product.destroy
-    render :text => _("Deleted product '%s'") % params[:id], :status => 200
+    respond :message => _("Deleted product '%s'") % params[:id]
   end
 
   api :GET, "/environments/:environment_id/products/:id/repositories"
@@ -109,7 +108,7 @@ class Api::V1::ProductsController < Api::V1::ApiController
   param :name, :identifier, :desc => "repository identifier"
   param :content_view_id, :identifier, :desc => "find repos in content view instead of default content view"
   def repositories
-    render :json => @product.repos(@environment, query_params[:include_disabled], @content_view).
+    respond_for_index :collection => @product.repos(@environment, query_params[:include_disabled], @content_view).
       where(query_params.slice(:name))
   end
 
@@ -120,7 +119,7 @@ class Api::V1::ProductsController < Api::V1::ApiController
   def set_sync_plan
     @product.sync_plan = SyncPlan.find(params[:plan_id])
     @product.save!
-    render :text => _("Synchronization plan assigned."), :status => 200
+    respond_for_status :message => _("Synchronization plan assigned.")
   end
 
   api :DELETE, "/organizations/:organization_id/products/:id/sync_plan", "Delete assignment sync plan and product"
@@ -130,7 +129,7 @@ class Api::V1::ProductsController < Api::V1::ApiController
   def remove_sync_plan
     @product.sync_plan = nil
     @product.save!
-    render :text => _("Synchronization plan removed."), :status => 200
+    respond_for_status :message => _("Synchronization plan assigned.")
   end
 
   private

@@ -35,6 +35,7 @@ Src::Application.routes.draw do
           api_resources :changesets, :only => [:index, :create]
         end
         api_resources :providers, :only => [:index]
+        api_resources :products, :only => [:index]
       end
 
       api_resources :providers, :except => [:index] do
@@ -48,6 +49,15 @@ Src::Application.routes.draw do
           post :product_create
           get :products
           post :discovery
+        end
+      end
+
+      api_resources :products, :only => [:show, :update, :destroy] do
+        get :repositories, :on => :member
+        post :sync_plan, :on => :member, :action => :set_sync_plan
+        delete :sync_plan, :on => :member, :action => :remove_sync_plan
+        api_resources :sync, :only => [:index, :create] do
+          delete :index, :on => :collection, :action => :cancel
         end
       end
 
@@ -103,15 +113,6 @@ Src::Application.routes.draw do
       end
 
       api_resources :organizations do
-        api_resources :products, :only => [:index, :show, :update, :destroy] do
-          get :repositories, :on => :member
-          post :sync_plan, :on => :member, :action => :set_sync_plan
-          delete :sync_plan, :on => :member, :action => :remove_sync_plan
-          get :repositories, :on => :member
-          api_resources :sync, :only => [:index, :create] do
-            delete :index, :on => :collection, :action => :cancel
-          end
-        end
 
         api_resources :system_groups, :except => [:new, :edit] do
           member do
