@@ -64,6 +64,11 @@ module ContentSearch
                       :cols => {}
                      )
 
+        row.cols = cols.inject({}) do |result, (key, val)|
+          result[key] = {:display => " "}
+          result
+        end
+
         total = cols.inject(0) do |total, (key, col)|
           view_id, env_id = key.split("_")
           # find the product in the view and get the # of packages

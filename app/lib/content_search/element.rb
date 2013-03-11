@@ -39,6 +39,10 @@ module ContentSearch::Element
     self.send(key.to_sym)
   end
 
+  def []=(key, val)
+    self.send("#{key.to_sym}=", val)
+  end
+
   module ClassMethods
 
     def display_attributes(*attrs)
