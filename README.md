@@ -57,3 +57,5 @@ Contact & Resources
  * [Devel mailing list](https://www.redhat.com/mailman/listinfo/katello-devel)
  * [Freenode](http://freenode.net/using_the_network.shtml): #katello
  * [Twitter](https://twitter.com/Katello_Project)
+
+x
