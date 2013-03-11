@@ -34,6 +34,21 @@ Src::Application.routes.draw do
           get :repositories, :on => :member
           api_resources :changesets, :only => [:index, :create]
         end
+        api_resources :providers, :only => [:index]
+      end
+
+      api_resources :providers, :except => [:index] do
+        api_resources :sync, :only => [:index, :create] do
+          delete :index, :on => :collection, :action => :cancel
+        end
+        member do
+          post :import_manifest
+          post :delete_manifest
+          post :refresh_products
+          post :product_create
+          get :products
+          post :discovery
+        end
       end
 
     end # module v2
@@ -71,21 +86,6 @@ Src::Application.routes.draw do
           end
         end
         resource :packages, :action => [:create, :update, :destroy], :controller => :system_packages
-      end
-
-      api_resources :providers, :except => [:index] do
-        api_resources :sync, :only => [:index, :create] do
-          delete :index, :on => :collection, :action => :cancel
-        end
-        member do
-          post :import_products
-          post :import_manifest
-          post :delete_manifest
-          post :refresh_products
-          post :product_create
-          get :products
-          post :discovery
-        end
       end
 
       api_resources :templates, :except => [:index] do

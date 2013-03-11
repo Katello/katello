@@ -67,13 +67,13 @@ class Api::V1::ProvidersController < Api::V1::ApiController
   param :name, String, :desc => "Filter providers by name"
   def index
     query_params.delete(:organization_id)
-    render :json => (Provider.readable(@organization).where query_params).to_json
+    respond :collection => Provider.readable(@organization).where(query_params)
   end
 
   api :GET, "/providers/:id", "Show a provider"
   param :id, :number, :desc => "Provider numeric identifier", :required => true
   def show
-    render :json => @provider.to_json
+    respond
   end
 
   api :POST, "/providers", "Create a provider"
@@ -83,10 +83,10 @@ class Api::V1::ProvidersController < Api::V1::ApiController
     param :provider_type, ["Red Hat", "Custom"], :required => true
   end
   def create
-    provider = Provider.create!(params[:provider]) do |p|
+    @provider = Provider.create!(params[:provider]) do |p|
       p.organization = @organization
     end
-    render :json => provider.to_json and return
+    respond
   end
 
   api :PUT, "/providers/:id", "Update a provider"
@@ -94,7 +94,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
   param_group :provider
   def update
     @provider.update_attributes!(params[:provider])
-    render :json => @provider.to_json and return
+    respond
   end
 
   api :DELETE, "/providers/:id", "Destroy a provider"
@@ -107,7 +107,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
 
     @provider.destroy
     if @provider.destroyed?
-      render :text => _("Deleted provider [ %s ]") % @provider.name , :status => 200
+      respond :message => _("Deleted provider [ %s ]") % @provider.name
     else
       # TOOO: should probably be more specific?
       raise HttpErrors::InternalError, _("Error while deleting provider [ %{name} ]: %{error}") % {:name => @provider.name, :error => @provider.errors.full_messages}
@@ -117,7 +117,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
   api :GET, "/providers/:id/products", "List of provider's products"
   param :id, :number, :desc => "Provider numeric identifier", :required => true
   def products
-    render :json => @provider.products.all_readable(@provider.organization).select("products.*, providers.name AS provider_name").joins(:provider).to_json
+    respond_for_index :collection => @provider.products.all_readable(@provider.organization).select("products.*, providers.name AS provider_name").joins(:provider)
   end
 
   api :POST, "/providers/:id/discovery", "Discover repository urls with metadata and find candidate repos. Supports http, https and file based urls. Async task, returns the delayed job."
@@ -127,7 +127,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
     @provider.save
     @provider.discover_repos
     task = @provider.discovery_task
-    render :json => task
+    respond_for_show :resource => task
   end
 
   api :POST, "/providers/:id/import_manifest", "Import manifest for Red Hat provider"
@@ -146,9 +146,9 @@ class Api::V1::ProvidersController < Api::V1::ApiController
       temp_file.close
     end
 
-    @provider.import_manifest(File.expand_path(temp_file.path), :force => params[:force],
-                              :async => true, :notify => false)
-    render :json => @provider.manifest_task, :status => 200
+    @provider.import_manifest File.expand_path(temp_file.path), :force => params[:force],
+                              :async => true, :notify => false
+    respond_for_async :resource => @provider.manifest_task
   end
 
   api :POST, "/providers/:id/refresh_manifest", "Refresh previously imported manifest for Red Hat provider"
@@ -161,7 +161,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
     details = @provider.organization.owner_details
     upstream =  details['upstreamConsumer'].blank? ? {} : details['upstreamConsumer']
     @provider.refresh_manifest(upstream, :async => true, :notify => false)
-    render :json => @provider.manifest_task, :status => 200
+    respond_for_async :resource => @provider.manifest_task
   end
 
   api :POST, "/providers/:id/delete_manifest", "Delete manifest from Red Hat provider"
@@ -172,7 +172,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
     end
 
     @provider.delete_manifest
-    render :text => "Manifest deleted", :status => 200
+    respond_for_status :message => _("Manifest deleted")
   end
 
   api :POST, "/providers/:id/refresh_products", "Refresh products for Red Hat provider"
@@ -181,12 +181,13 @@ class Api::V1::ProvidersController < Api::V1::ApiController
     raise HttpErrors::BadRequest, _("It is not allowed to refresh products for custom provider.") unless @provider.redhat_provider?
 
     @provider.refresh_products
-    render :text => _("Products refreshed from CDN"), :status => 200
+    respond_for_status :message => _("Products refreshed from CDN")
   end
 
   api :POST, "/providers/:id/import_products", "Import products"
   param :id, :number, :desc => "Provider numeric identifier", :required => true
   param :products, Array, :desc => "Array of products to import", :required => true
+  #NOTE: this action will be removed in api v2
   def import_products
     results = params[:products].collect do |p|
       to_create = Product.new(p) do |product|
@@ -195,7 +196,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
       end
       to_create.save!
     end
-    render :json => results.to_json
+    respond_for_index :collection => results
   end
 
   api :POST, "/providers/:id/product_create", "Create a new product in custom provider"
@@ -221,7 +222,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
 
     gpg  = GpgKey.readable(@provider.organization).find_by_name!(product_params[:gpg_key_name]) unless product_params[:gpg_key_name].blank?
     prod = @provider.add_custom_product(labelize_params(product_params), product_params[:name], product_params[:description], product_params[:url], gpg)
-    render :json => prod
+    respond_for_create :resource => prod
   end
 
   private
