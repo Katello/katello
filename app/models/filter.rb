@@ -35,7 +35,7 @@ class Filter < ActiveRecord::Base
   # Retrieve a list of repositories associated with the filter.
   # This includes all repositories (ie. combining those that are part of products associated with the filter
   # as well as repositories that are explicitly associated with the filter).
-  def repos
+  def applicable_repos
     repos = []
     self.products.each do |prod|
       prod_repos = prod.repos(content_view_definition.organization.library).enabled
@@ -49,7 +49,7 @@ class Filter < ActiveRecord::Base
 
   def validate_filter_products_and_repos(errors, cvd)
     prod_diff = self.products - cvd.resulting_products
-    repo_diff = self.repos - cvd.repos
+    repo_diff = self.applicable_repos - cvd.repos
     unless prod_diff.empty?
       errors.add(:base, _("cannot contain filters whose products do not belong this content view definition"))
     end
