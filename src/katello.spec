@@ -365,8 +365,6 @@ BuildArch:       noarch
 Requires:        %{name} = %{version}-%{release}
 Requires:        %{name}-devel = %{version}-%{release}
 # dependencies from bundler.d/test.rb
-Requires:        rubygem(ZenTest) >= 4.4.0
-Requires:        rubygem(autotest-rails) >= 4.1.0
 Requires:        rubygem(rspec-rails) >= 2.0.0
 Requires:        rubygem(webrat) >= 0.7.3
 Requires:        rubygem(nokogiri) >= 0.9.9
