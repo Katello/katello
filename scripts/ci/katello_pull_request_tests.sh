@@ -24,9 +24,15 @@ echo "********* Katello RSPEC Unit Tests ****************"
 psql -c "CREATE USER katello WITH PASSWORD 'katello';" -U postgres
 psql -c "ALTER ROLE katello WITH CREATEDB" -U postgres
 psql -c "CREATE DATABASE katello_test OWNER katello;" -U postgres
-bundle exec rake parallel:create VERBOSE=false
-bundle exec rake parallel:load_schema VERBOSE=false > /dev/null
-bundle exec rake ptest:spec
+
+# once this is fixed, use ptests again http://tinyurl.com/ptestfix
+#bundle exec rake parallel:create VERBOSE=false
+#bundle exec rake parallel:load_schema VERBOSE=false > /dev/null
+#bundle exec rake ptest:spec
+
+RAILS_ENV=test bundle exec rake db:create
+bundle exec rake db:test:load > /dev/null
+bundle exec rake spec
 if [ $? -ne 0 ]
 then
   exit 1
