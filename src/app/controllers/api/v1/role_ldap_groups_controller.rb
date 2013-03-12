@@ -29,7 +29,7 @@ class Api::V1::RoleLdapGroupsController < Api::V1::ApiController
   param :name, String, :desc => "name of the LDAP group"
   def create
     @role.add_ldap_group(params[:name])
-    render :text => _("Added LDAP group '%s'") % params[:name], :status => 200
+    respond_for_status :message => _("Added LDAP group '%s'") % params[:name], :format => :text
   end
 
   api :DELETE, "/roles/:role_id/ldap_groups/:id", "Remove group from the list of LDAP groups associated with the role"
@@ -37,13 +37,13 @@ class Api::V1::RoleLdapGroupsController < Api::V1::ApiController
   param :id, String, :desc => "ldap group (name)"
   def destroy
     @role.remove_ldap_group(params[:id])
-    render :text => _("Removed LDAP group '%s'") % params[:id], :status => 200
+    respond :message => _("Removed LDAP group '%s'") % params[:id], :resource => false
   end
 
   api :GET, "/roles/:role_id/ldap_groups", "List LDAP groups associated with the role"
   param :role_id, :identifier, :desc => "role identifier"
   def index
-    render :json => @role.ldap_group_roles.where(query_params).to_json()
+    respond :collection => @role.ldap_group_roles.where(query_params)
   end
 
   private
