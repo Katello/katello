@@ -48,7 +48,7 @@ class Filter < ActiveRecord::Base
 
 
   def validate_filter_products_and_repos(errors, cvd)
-    prod_diff = self.products - cvd.products
+    prod_diff = self.products - cvd.resulting_products
     repo_diff = self.repos - cvd.repos
     unless prod_diff.empty?
       errors.add(:base, _("cannot contain filters whose products do not belong this content view definition"))
