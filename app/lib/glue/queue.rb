@@ -10,6 +10,11 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+# this forces loading of glue.rb and its methods
+# otherwise we end up with an empty Glue module
+# when caching of classes is Rails is on
+require "glue"
+
 # represents tasks queue for glue
 module Glue
   class Queue
