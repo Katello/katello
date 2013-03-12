@@ -21,7 +21,7 @@ describe Api::SystemsController do
   include SystemHelperMethods
   include AuthorizationHelperMethods
 
-  let(:facts) { {"distribution.name" => "Fedora", "cpu.cpu_socket(s)"=>2} }
+  let(:facts) { {"distribution.name" => "Fedora", "cpu.cpu_socket(s)"=>"2"} }
   let(:uuid) { '1234' }
   let(:package_profile) {
     {:profile=>
@@ -108,7 +108,7 @@ describe Api::SystemsController do
       end
 
       it "requires environment id" do
-        System.should_receive(:create!).with(hash_including(:environment => @environment_1, :cp_type => 'system', :facts => facts, :name => 'test')).once.and_return({})
+        System.should_receive(:create!).with(hash_including('environment' => @environment_1, 'cp_type' => 'system', 'facts' => facts, 'name' => 'test')).once.and_return({})
         post :create, :environment_id => @environment_1.id, :name => 'test', :cp_type => 'system', :facts => facts
       end
 

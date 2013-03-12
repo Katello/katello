@@ -81,7 +81,7 @@ describe Api::ContentViewsController, :katello => true do
       @def = FactoryGirl.build_stubbed(:content_view_definition)
       @view = FactoryGirl.build_stubbed(:content_view, :organization => @org)
       @view.content_view_definition = @def
-      ContentView.stub_chain(:non_default, :find).with(@view.id).and_return(@view)
+      ContentView.stub_chain(:non_default, :find).with(@view.id.to_s).and_return(@view)
     end
 
     it "should call ContentView#refresh" do
