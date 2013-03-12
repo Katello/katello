@@ -24,11 +24,11 @@ class ContentViewDefinition < ActiveRecord::Base
     :source => :content_view, :class_name => "ContentView"
   belongs_to :organization, :inverse_of => :content_view_definitions
   has_many :content_view_definition_products
-  has_many :products, :through => :content_view_definition_products, :after_remove => :remove_product
+  has_many :products, :through => :content_view_definition_products,
+                      :after_remove => :remove_product
   has_many :content_view_definition_repositories
-  has_many :repositories, {:through      => :content_view_definition_repositories,
-                       :after_remove => :remove_repository
-                      }
+  has_many :repositories, :through => :content_view_definition_repositories,
+                          :after_remove => :remove_repository
   has_many :filters, :class_name => "Filter", :inverse_of => :content_view_definition
   validates :label, :uniqueness => {:scope => :organization_id},
     :presence => true
@@ -175,7 +175,7 @@ class ContentViewDefinition < ActiveRecord::Base
   end
 
   def resulting_products
-    self.products + self.repositories.collect{|r| r.product}
+    (self.products + self.repositories.collect{|r| r.product}).uniq
   end
 
   def has_content?
