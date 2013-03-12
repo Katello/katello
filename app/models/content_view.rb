@@ -268,6 +268,17 @@ class ContentView < ActiveRecord::Base
     self.default ? env.id.to_s : [env.id, self.id].join('-')
   end
 
+  # Associate an environment with this content view.  This can occur whenever
+  # a version of the view is promoted to an environment.  It is necessary for
+  # candlepin to become aware that the view is available for consumers.
+  def add_environment(env)
+    unless (env.library && ContentViewEnvironment.where(:cp_id => self.cp_environment_id(env)).first)
+      content_view_environments.build(:name => env.name,
+                                     :label => self.cp_environment_label(env),
+                                     :cp_id => self.cp_environment_id(env))
+    end
+  end
+
   protected
 
   def get_repos_to_promote(from_env, to_env)
@@ -325,17 +336,6 @@ class ContentView < ActiveRecord::Base
       end
     end
     tasks
-  end
-
-  # Associate an environment with this content view.  This can occur whenever
-  # a version of the view is promoted to an environment.  It is necessary for
-  # candlepin to become aware that the view is available for consumers.
-  def add_environment(env)
-    unless (env.library && ContentViewEnvironment.where(:cp_id => self.cp_environment_id(env)).first)
-      content_view_environments.build(:name => env.name,
-                                     :label => self.cp_environment_label(env),
-                                     :cp_id => self.cp_environment_id(env))
-    end
   end
 
   # Unassociate an environment from this content view. This can occur whenever

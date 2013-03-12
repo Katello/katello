@@ -103,7 +103,7 @@ describe Api::ContentViewDefinitionsController, :katello => true do
   describe "destroy" do
     it "should delete the definition after checking it has no promoted views" do
       definition = FactoryGirl.build_stubbed(:content_view_definition)
-      ContentViewDefinition.stub(:find).with(definition.id).and_return(definition)
+      ContentViewDefinition.stub(:find).with(definition.id.to_s).and_return(definition)
       definition.should_receive(:destroy).and_return(true)
       definition.should_receive(:has_promoted_views?).and_return(false)
       delete :destroy, :id => definition.id
