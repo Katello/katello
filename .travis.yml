@@ -2,6 +2,11 @@ language:
   - ruby
 
 before_install:
+  - gem uninstall bundler
+  - rvm rubygems 1.8.25
+  - gem install bundler -v=1.2.5
+  - gem -v
+  - bundle -v
 
 install:
   - sudo apt-get install libssl-dev python m2crypto --quiet
