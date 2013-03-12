@@ -13,6 +13,10 @@
 # this forces loading of glue.rb and its methods
 # otherwise we end up with an empty Glue module
 # when caching of classes is Rails is on
+#
+# PLEASE DO NOT REMOVE WITHOUT TESTING WITH
+# config.cache_classes = true
+#
 require "glue"
 
 # represents tasks queue for glue
