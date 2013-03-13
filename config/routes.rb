@@ -101,7 +101,7 @@ Src::Application.routes.draw do
       post :publish
       get :status
       get :content
-      post :update_content
+      put :update_content
       put :update_component_views
     end
     resources :content_view, :only => [], :controller => :content_view_definitions do
@@ -109,7 +109,7 @@ Src::Application.routes.draw do
         post :refresh
       end
     end
-    resources :filters, :controller => :filters, :only => [:index, :create, :new, :edit] do
+    resources :filters, :controller => :filters, :only => [:index, :create, :new, :edit, :update] do
       collection do
         delete :destroy_filters
       end
