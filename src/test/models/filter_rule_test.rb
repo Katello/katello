@@ -49,18 +49,14 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
 
-  def get_filter_clause inclusion, content_type, parameter
+  def get_filter_clause(inclusion, content_type, parameter)
     @filter_rule.inclusion = inclusion
     @filter_rule.content_type = content_type
     @filter_rule.parameters = HashWithIndifferentAccess.new(parameter)
     @filter_rule.save!
     cvd =  @filter.content_view_definition
     cvd.repositories << @repo
-    cvd.save!
-    @filter = Filter.find(@filter.id)
     @filter.repositories << @repo
-    @filter.save!
-    cvd = ContentViewDefinition.find(cvd.id)
     cvd.send(:generate_unassociate_filter_clauses, @repo, @filter_rule.content_type)
    end
 end
