@@ -14,17 +14,54 @@ class Filter < ActiveRecord::Base
   belongs_to :content_view_definition
   has_many  :rules, :class_name => "FilterRule", :dependent => :destroy
   has_and_belongs_to_many :repositories, :class_name => "Repository", :uniq => true
+  has_and_belongs_to_many :products, :uniq => true
 
+  validate :validate_products_and_repos
   validates :name, :presence => true, :allow_blank => false,
               :length => { :maximum => 255 },
               :uniqueness => {:scope => :content_view_definition_id}
 
   def self.applicable(repo)
-    joins(:repositories).where(:repositories => {:id => repo.id})
+    query = %{filters.id in (select filter_id from  filters_repositories where repository_id = #{repo.id})
+              OR filters.id in (select filter_id from  filters_products where product_id = #{repo.product_id}) }
+    where(query).select("DISTINCT filters.*")
   end
 
   def as_json(options = {})
     super(options).update("content_view_definition_label" => content_view_definition.label,
                           "organization" => content_view_definition.organization.label)
   end
+
+  # Retrieve a list of repositories associated with the filter.
+  # This includes all repositories (ie. combining those that are part of products associated with the filter
+  # as well as repositories that are explicitly associated with the filter).
+  def applicable_repos
+    repos = []
+    self.products.each do |prod|
+      prod_repos = prod.repos(content_view_definition.organization.library).enabled
+      prod_repos.each{|r| repos << r}
+    end
+    repos.concat(self.repositories)
+    repos.uniq!
+    repos
+  end
+
+
+  def validate_filter_products_and_repos(errors, cvd)
+    prod_diff = self.products - cvd.resulting_products
+    repo_diff = self.applicable_repos - cvd.repos
+    unless prod_diff.empty?
+      errors.add(:base, _("cannot contain filters whose products do not belong this content view definition"))
+    end
+    unless repo_diff.empty?
+      errors.add(:base, _("cannot contain filters whose repositories do not belong this content view definition"))
+    end
+  end
+
+  protected
+
+  def validate_products_and_repos
+    validate_filter_products_and_repos(self.errors, self.content_view_definition)
+  end
+
 end

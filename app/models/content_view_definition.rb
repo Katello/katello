@@ -23,16 +23,19 @@ class ContentViewDefinition < ActiveRecord::Base
   has_many :component_content_views, :through => :components,
     :source => :content_view, :class_name => "ContentView"
   belongs_to :organization, :inverse_of => :content_view_definitions
-    has_many :content_view_definition_products
-  has_many :products, :through => :content_view_definition_products
+  has_many :content_view_definition_products
+  has_many :products, :through => :content_view_definition_products,
+                      :after_remove => :remove_product
   has_many :content_view_definition_repositories
-  has_many :repositories, :through => :content_view_definition_repositories
+  has_many :repositories, :through => :content_view_definition_repositories,
+                          :after_remove => :remove_repository
   has_many :filters, :class_name => "Filter", :inverse_of => :content_view_definition
   validates :label, :uniqueness => {:scope => :organization_id},
     :presence => true
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
   validates :organization, :presence => true
   validate :validate_content
+  validate :validate_filters
 
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
@@ -171,6 +174,10 @@ class ContentViewDefinition < ActiveRecord::Base
     repos
   end
 
+  def resulting_products
+    (self.products + self.repositories.collect{|r| r.product}).uniq
+  end
+
   def has_content?
     self.products.any? || self.repositories.any?
   end
@@ -211,7 +218,6 @@ class ContentViewDefinition < ActiveRecord::Base
       # split filter rules by content type, since each content type has its own copy call
       # depending on include or exclude filters combine or remove
       applicable_filters = filters.applicable(repo)
-
 
       applicable_rules = FilterRule.where(:filter_id => applicable_filters).where(:content_type => content_type)
       #  do |f|
@@ -286,5 +292,40 @@ class ContentViewDefinition < ActiveRecord::Base
     end
   end
 
+  def validate_filters
+    filters.each do |f|
+      f.validate_filter_products_and_repos(self.errors, self)
+      break if errors.any?
+    end
+  end
+
+  def remove_product(product)
+    filters.each do |f|
+      modified = false
+      if f.products.include? product
+        f.products.delete(product)
+        modified = true
+      end
+      repos_to_remove = f.repositories.select{|r| r.product == product}
+      f.repositories -= repos_to_remove
+      f.save! if modified || repos_to_remove.size > 0
+    end
+  end
+
+  def remove_repository(repository)
+    filters.each do |f|
+      if f.repositories.include? repository
+        f.repositories.delete(repository)
+        f.save!
+      end
+      # if i am removing the last repository of this product from the definition
+      #     and there is a filter that includes the product,  remove it from the filter
+      if self.repositories.in_product(repository.product).empty? &&
+              f.products.include?(repository.product)
+        f.products.delete(repository.product)
+        f.save!
+      end
+    end
+  end
 
 end
