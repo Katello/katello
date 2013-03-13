@@ -305,9 +305,8 @@ Rake tasks and dependecies for Katello developers
 Summary:         Katello devel support (profiling)
 BuildArch:       noarch
 Requires:        %{name} = %{version}-%{release}
-# dependencies from bundler.d/profiling.rb
+# dependencies from bundler.d/optional.rb
 Requires:        rubygem(ruby-prof)
-Requires:        rubygem(logical-insight)
 Requires:        rubygem(newrelic_rpm)
 
 %description devel-profiling
@@ -779,7 +778,7 @@ usermod -a -G katello-shared tomcat
 %{homedir}/lib/tasks/jsroutes.rake
 
 %files devel-profiling
-%{homedir}/bundler.d/profiling.rb
+%{homedir}/bundler.d/optional.rb
 
 %files devel-test
 %{homedir}/bundler.d/test.rb
