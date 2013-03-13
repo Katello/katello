@@ -1,5 +1,4 @@
 = javascript :tabs
-= stylesheet :tabs
 
 = render :partial => "content_view_definitions/tupane_header"
 
@@ -22,9 +21,16 @@
 
       %div#rules
         = render :partial => "content_view_definitions/filters/list_rules",
-                 :locals => {:editable => editable, :view_definition => view_definition, :filter => filter}
+                 :locals => {:editable => editable,
+                             :view_definition => view_definition,
+                             :filter => filter}
 
       %div#repos
-
+        = render :partial => "common/common_product_repo_selector",
+                 :locals => {:editable => editable,
+                             :record => filter,
+                             :readable_products => nil,
+                             :editable_products => nil,
+                             :save_url => content_view_definition_filter_path(view_definition.id, filter.id)}
 
 = render :template => "layouts/tupane_layout"

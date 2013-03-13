@@ -15,8 +15,8 @@ class FiltersController < ApplicationController
   helper ContentViewDefinitionsHelper
 
   before_filter :require_user
-  before_filter :find_content_view_definition, :only => [:index, :new, :create, :destroy_filters, :edit]
-  before_filter :find_filter, :only => [:edit]
+  before_filter :find_content_view_definition
+  before_filter :find_filter, :only => [:edit, :update]
   before_filter :authorize #after find_content_view_definition, since the definition is required for authorization
 
   respond_to :html
@@ -47,14 +47,13 @@ class FiltersController < ApplicationController
   def param_rules
     {
       :create => {:view_definition => [:name, :label, :description]},
-      :update => {:view_definition => [:name, :description]},
+      :update => [:content_view_definition_id, :id, :products, :repos]
     }
   end
 
   def index
     render :partial => "content_view_definitions/filters/index",
            :locals => {:view_definition => @view_definition, :editable => @view_definition.editable?}
-
   end
 
   def new
@@ -76,6 +75,27 @@ class FiltersController < ApplicationController
     render :partial => "content_view_definitions/filters/edit",
            :locals => {:view_definition => @view_definition, :filter => @filter,
                        :editable => @view_definition.editable?, :name => controller_display_name}
+  end
+
+  def update
+    if params[:products]
+      products_ids = params[:products].empty? ? [] : Product.readable(current_organization).
+          where(:id => params[:products]).pluck(:id)
+
+      @filter.product_ids = products_ids
+    end
+
+    if params[:repos]
+      repo_ids = params[:repos].empty? ? [] : Repository.libraries_content_readable(current_organization).
+          where(:id => params[:repos].values.flatten).pluck(:id)
+
+      @filter.repository_ids = repo_ids
+    end
+
+    @filter.save!
+
+    notify.success _("Successfully updated products and repositories for filter '%s'.") % @filter.name
+    render :nothing => true
   end
 
   def destroy_filters
