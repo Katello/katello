@@ -239,7 +239,11 @@ class ContentViewDefinition < ActiveRecord::Base
       #  then unassociate them from the repo
       #
       if excludes_count > 0
-        excludes = exclusion_rules.collect{|x| {'name' =>{"$regex" => x.parameters[:name]}}}
+        excludes = exclusion_rules.collect do |x|
+          x.parameters[:units].collect do |unit|
+            {'name' =>{"$regex" => unit[:name]}}
+          end
+        end.flatten
         clauses << {'$or' =>excludes}
       end
 
@@ -247,7 +251,11 @@ class ContentViewDefinition < ActiveRecord::Base
       #  If there are only include filters (aka whitelist) then only the packages/errata included will get included.
       #  Everything else is thus excluded.
       if includes_count > 0
-        includes = inclusion_rules.collect{|x| {'name' =>{"$regex" => x.parameters[:name]}}}
+        includes = inclusion_rules.collect do |x|
+          x.parameters[:units].collect do |unit|
+            {'name' =>{"$regex" => unit[:name]}}
+          end
+        end.flatten
         clauses << {'$nor' => includes}
       end
 
