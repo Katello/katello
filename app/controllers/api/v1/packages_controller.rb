@@ -29,7 +29,7 @@ class Api::V1::PackagesController < Api::V1::ApiController
   api :GET, "/repositories/:repository_id/packages", "List packages"
   param :repository_id, :number, :desc => "environment numeric identifier"
   def index
-    render :json => @repo.packages
+    respond :collection => @repo.packages
   end
 
   api :GET, "/repositories/:repository_id/packages/search"
@@ -37,14 +37,14 @@ class Api::V1::PackagesController < Api::V1::ApiController
   param :search, String, :desc => "search expression"
   def search
     packages = Package.search(params[:search], 0, 0, [@repo.pulp_id])
-    render :json => packages.to_a
+    respond_for_index :collection => packages.to_a
   end
 
   api :GET, "/repositories/:repository_id/packages/:id", "Show a package"
   param :repository_id, :number, :desc => "environment numeric identifier"
   param :id, String, :desc => "package id"
   def show
-    render :json => @package
+    respond
   end
 
   private
