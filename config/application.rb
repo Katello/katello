@@ -36,7 +36,7 @@ else
       basic_groups = basic_groups + [:foreman, :pulp]
     end
     if Katello.early_config.profiling
-      basic_groups += [:profiling]
+      basic_groups += [:optional]
     end
     groups = case Rails.env.to_sym
              when :build
