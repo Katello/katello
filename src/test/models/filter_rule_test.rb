@@ -21,7 +21,6 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def setup
-    #User.current = User.find(users(:admin))
     @filter_rule = FactoryGirl.build(:filter_rule)
     @filter = @filter_rule.filter
     @repo = Repository.find(repositories(:fedora_17_x86_64).id)
