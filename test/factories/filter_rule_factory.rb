@@ -3,7 +3,7 @@ FactoryGirl.define do
     association :filter
     trait :package_filter do
       content_type FilterRule::PACKAGE
-      parameters HashWithIndifferentAccess.new({:units =>[{:name =>["g*"]}]})
+      parameters ({:units =>[{:name =>["g*"]}]}).with_indifferent_access
     end
 
     trait :inclusive do
