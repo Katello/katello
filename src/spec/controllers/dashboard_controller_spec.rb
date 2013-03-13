@@ -39,4 +39,17 @@ describe DashboardController do
       response.should render_template(:partial => "_system_groups")
     end
   end
+
+  describe "GET content_views" do
+    it "should be successful" do
+      get 'content_views'
+      response.should be_success
+    end
+
+    it "should render content views partial" do
+      get 'content_views'
+      response.should render_template(:partial => "_content_views")
+    end
+  end
+
 end

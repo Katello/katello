@@ -59,8 +59,10 @@ describe Api::SystemsController do
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
     Resources::Candlepin::Consumer.stub!(:available_pools).and_return([])
 
-    Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid})
-    Runcible::Extensions::Consumer.stub!(:update).and_return(true)
+    if Katello.config.katello?
+      Runcible::Extensions::Consumer.stub!(:create).and_return({ :id => uuid })
+      Runcible::Extensions::Consumer.stub!(:update).and_return(true)
+    end
 
     @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
     @environment_1 = KTEnvironment.create!(:name=>'test_1', :label=> 'test_1', :prior => @organization.library.id, :organization => @organization)
@@ -274,21 +276,25 @@ describe Api::SystemsController do
     end
 
     it "should show all systems in the organization" do
+      Glue::ElasticSearch::Items.any_instance.should_receive(:retrieve).and_return([@system_1, @system_2])
+
       get :index, :organization_id => @organization.label
       response.body.should be_json([@system_1, @system_2].to_json)
     end
 
     it "should show all systems for the owner" do
+      Glue::ElasticSearch::Items.any_instance.should_receive(:retrieve).and_return([@system_1, @system_2])
+
       get :index, :owner => @organization.label
       response.body.should be_json([@system_1, @system_2].to_json)
     end
 
     it "should show only systems in the environment" do
+      Glue::ElasticSearch::Items.any_instance.should_receive(:retrieve).and_return([@system_1])
+
       get :index, :environment_id => @environment_1.id
       response.body.should == [@system_1].to_json
     end
-
-
 
     context "with pool_id" do
 
@@ -297,16 +303,15 @@ describe Api::SystemsController do
       before :each do
         Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid_3})
         @system_3 = System.create!(:name => 'test3', :environment => @environment_2, :cp_type => 'system', :facts => facts)
-
-        Resources::Candlepin::Entitlement.stub(:get).and_return([
-          {"pool" => {"id" => pool_id}, "consumer" => {"uuid" => @system_1.uuid}},
-          {"pool" => {"id" => pool_id}, "consumer" => {"uuid" => @system_3.uuid}}
-        ])
+        System.stub(:all_by_pool_uuid).and_return([@system_1.uuid, @system_3.uuid])
+        Glue::ElasticSearch::Items.any_instance.should_receive(:retrieve).and_return([@system_1, @system_3])
       end
 
       it "should show all systems in the organization that are subscribed to a pool" do
         get :index, :organization_id => @organization.label, :pool_id => pool_id
         returned_uuids = JSON.parse(response.body).map{|sys| sys["uuid"]}
+
+        response.should be_success
         returned_uuids.should include(@system_1.uuid, @system_3.uuid)
       end
 

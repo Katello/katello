@@ -48,7 +48,7 @@ describe KTEnvironment do
       }
       permission_matrix.each_pair do |perm, true_ops|
         true_ops.each do |op|
-          it "user with #{perm} on environments should be allowed to #{op}" do
+          it "user with #{perm} on environments should be allowed to #{op}", :katello => true do #TODO headpin
             User.current = user_with_permissions{|u| u.can(perm, :environments,nil, @organization, :all_tags => true)}
             KTEnvironment.find(@environment.id).send(op).should be_true
           end

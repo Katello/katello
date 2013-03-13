@@ -180,6 +180,19 @@ class Product < ActiveRecord::Base
     ret
   end
 
+  def delete_repos repos
+    repos.each{|repo| repo.destroy}
+  end
+
+  def delete_from_env from_env
+    @orchestration_for = :delete
+    delete_repos(repos(from_env))
+    if from_env.products.include? self
+      self.environments.delete(from_env)
+    end
+    save!
+  end
+
   protected
 
 

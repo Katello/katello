@@ -1,4 +1,4 @@
-from setuptools import setup
+from distutils.core import setup
 import os
 
 packages = [
@@ -12,31 +12,34 @@ packages = [
     "katello.client.lib.utils"
 ]
 
-install_requires = [
+requires = (
     "kerberos",
     "M2Crypto",
     "iniparse",
     "simplejson",
-    "python-dateutil"
-]
+    "dateutil"
+)
 
-data_files = [(os.path.join('share', 'locale', lang, 'LC_MESSAGES'),
-                [os.path.join('locale', lang, lang + '.po')]) 
-                    for lang in os.listdir('locale') if os.path.isdir(lang)]
+def data_files():
+    data_files = [(os.path.join('share', 'locale', lang, 'LC_MESSAGES'),
+                    [os.path.join('locale', lang, 'katello-cli.po')]) 
+                        for lang in os.listdir('locale') if os.path.isdir('locale/' + lang)]
+    data_files.extend([
+        ('etc/katello-cli', ['etc/client.conf']),
+        ('etc/katello-cli', ['requirements.pip'])
+    ])
 
-data_files.extend([
-    ('/etc/katello', ['etc/client.conf'])
-])
+    return data_files
 
 setup(
-    name            = "katello-cli",
-    version         = "1.3",
-    description     = "Command line interface for the Katello System's Management Project.",
-    home_page       = "http://www.katello.org",
-    license         = "GPL",
-    packages        = packages,
-    package_dir     = { "katello" : "src/katello" },
-    scripts         = ['bin/katello'],
-    data_files      = data_files,
-    install_requires= install_requires
+    name        = "katello-cli",
+    version     = "1.3",
+    description = "Command line interface for the Katello System's Management Project.",
+    home_page   = "http://www.katello.org",
+    license     = "GPL",
+    packages    = packages,
+    package_dir = { "katello" : "src/katello" },
+    scripts     = ['bin/katello'],
+    data_files  = data_files(),
+    requires    = requires
 )

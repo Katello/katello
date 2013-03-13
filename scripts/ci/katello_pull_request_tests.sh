@@ -20,13 +20,19 @@ then
 fi
 
 echo ""
-echo "********* RSPEC Unit Tests ****************"
+echo "********* Katello RSPEC Unit Tests ****************"
 psql -c "CREATE USER katello WITH PASSWORD 'katello';" -U postgres
 psql -c "ALTER ROLE katello WITH CREATEDB" -U postgres
 psql -c "CREATE DATABASE katello_test OWNER katello;" -U postgres
-bundle exec rake parallel:create VERBOSE=false
-bundle exec rake parallel:load_schema VERBOSE=false
-bundle exec rake ptest:spec
+
+# reenable when parallel tests are fixed
+#   bundle exec rake parallel:create VERBOSE=false
+#   bundle exec rake parallel:load_schema VERBOSE=false > /dev/null
+#   bundle exec rake ptest:spec
+
+RAILS_ENV=test bundle exec rake db:create
+bundle exec rake db:test:load > /dev/null
+bundle exec rspec ./spec --tag '~headpin'
 if [ $? -ne 0 ]
 then
   exit 1
@@ -40,7 +46,6 @@ then
   exit 1
 fi
 
-
 cd ../cli
 
 echo ""
@@ -53,5 +58,19 @@ echo "********* Running Pylint ************************"
 echo "RUNNING: PYTHONPATH=src/ pylint --rcfile=./etc/spacewalk-pylint.rc --additional-builtins=_ katello"
 PYTHONPATH=src/ pylint --rcfile=./etc/spacewalk-pylint.rc --additional-builtins=_ katello || exit 1
 
-cd ../
+cd ../src
 
+echo ""
+echo "********* Headpin RSPEC Unit Tests ****************"
+echo "common:" > config/katello.yml
+echo "  app_mode: headpin" >> config/katello.yml
+
+# reenable when parallel tests are fixed
+#   bundle exec rake parallel:prepare VERBOSE=false
+#   bundle exec rake ptest:spec
+
+bundle exec rspec ./spec --tag '~katello'
+if [ $? -ne 0 ]
+then
+  exit 1
+fi

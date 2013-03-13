@@ -28,6 +28,48 @@ module DashboardHelper
     end
   end
 
+  def content_view_versions(num=quantity)
+    return ContentViewVersion.readable(current_organization).non_default_view.joins(:task_status).
+        order("task_statuses.updated_at DESC").limit(num)
+  end
+
+  def content_view_name(version)
+    if version.content_view.content_view_definition.readable?
+      link_to(version.content_view.name, content_view_path_helper(version))
+    else
+      version.content_view.name
+    end
+  end
+
+  def content_view_class(version)
+    if version.task_status.finished?
+      "check_icon"
+    elsif version.task_status.pending? && version.task_status.start_time
+      "gears_icon"  #running
+    else
+      "clock_icon" #pending
+    end
+  end
+
+  def content_view_message(version)
+    if version.task_status.error?
+      _("Failed")
+    elsif version.task_status.finished?
+      _("Success")
+    else # pending
+      if version.task_status.task_type == TaskStatus::TYPES[:content_view_refresh][:type].to_s
+        _("Refreshing")
+      else
+        _("Publishing")
+      end
+    end
+  end
+
+  def content_view_path_helper(version)
+    content_view_definitions_path() +
+        "#panel=content_view_definition_#{version.content_view.content_view_definition.id}&panelpage=views"
+  end
+
   def promotions num=quantity
     return  Changeset.joins(:task_status).
         where("changesets.environment_id"=>KTEnvironment.changesets_readable(current_organization)).
@@ -38,7 +80,7 @@ module DashboardHelper
     if cs.state === Changeset::PROMOTED
       "check_icon"
     elsif cs.state === Changeset::PROMOTING && cs.task_status.start_time
-      "gear_icon"  #running
+      "gears_icon"  #running
     else
       "clock_icon" #pending
     end

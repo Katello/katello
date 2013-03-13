@@ -29,7 +29,7 @@ describe NoticesController do
       @notices = Notice.select(:id).where("text like 'bar%'").order("id desc").all.collect{|s| s.id}
     end
 
-    it 'should show all user notices' do
+    it 'should show all user notices', :katello => true do #TODO headpin
       get :show
       response.should be_success
       response.should render_template("show")
@@ -37,13 +37,13 @@ describe NoticesController do
 
     end
 
-    it 'should show all unread notices for a user' do
+    it 'should show all unread notices for a user', :katello => true do #TODO headpin
       @request.env['HTTP_ACCEPT'] = 'application/json'
       get :get_new
       response.should be_success
     end
 
-    it 'should show the details for a specific notice' do
+    it 'should show the details for a specific notice', :katello => true do #TODO headpin
       n = Notice.create!(:text=>"Test notice", :level=>:success,
                     :details=>"Notices success details.",
                     :user_notices=>[UserNotice.new(:user => @user)])
@@ -51,7 +51,7 @@ describe NoticesController do
       response.should be_success
     end
 
-    it 'should throw an exception if the notice has no details' do
+    it 'should throw an exception if the notice has no details', :katello => true do #TODO headpin
       Notice.create!(:text=>"Test notice", :level=>:success,
                     :user_notices=>[UserNotice.new(:user => @user)])
       get :details, :id=>21
@@ -67,7 +67,7 @@ describe NoticesController do
                                     :user_notices => [UserNotice.new(:user => @user, :viewed => true)]) }
     end
 
-    it 'should allow all notices to be destroyed for a single user' do
+    it 'should allow all notices to be destroyed for a single user', :katello => true do #TODO headpin
       UserNotice.count.should == 10
       Notice.count.should == 10
       delete :destroy_all

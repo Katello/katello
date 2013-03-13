@@ -107,7 +107,7 @@ describe EnvironmentsController do
         @new_env = mock(KTEnvironment, EnvControllerTest::EMPTY_ENVIRONMENT)
       end
 
-      it "assigns a new environment as @environment" do
+      it "assigns a new environment as @environment", :katello => true do #TODO headpin
         KTEnvironment.should_receive(:new).and_return(@new_env)
         get :new, :organization_id => @org.label
         assigns(:environment).should_not be_nil
@@ -131,23 +131,23 @@ describe EnvironmentsController do
         end
 
 
-        it "should create new environment" do
+        it "should create new environment", :katello => true do #TODO headpin
           KTEnvironment.should_receive(:new).with({:name => 'production',:label=>"boo",
                 :prior => "#{@org.library}", :description => nil, :organization_id => @org.id}).and_return(@new_env)
           post :create, :organization_id => @org.label, :kt_environment => {:name => 'production', :label=>"boo", :prior => "#{@org.library}"}
         end
 
-        it "should save new environment" do
+        it "should save new environment", :katello => true do #TODO headpin
           @new_env.should_receive(:save!).and_return(true)
           post :create, :organization_id => @org.label, :kt_environment => {:name => 'production', :prior => @org.library}
         end
 
-        it "assigns a newly created environment as @environment" do
+        it "assigns a newly created environment as @environment", :katello => true do #TODO headpin
           post :create, :organization_id => @org.label, :kt_environment => {:name => 'production', :prior => @org.library}
           assigns(:environment).should_not be_nil
         end
 
-        it "redirects to the created environment" do
+        it "redirects to the created environment", :katello => true do #TODO headpin
           post :create, :organization_id => @org.label, :kt_environment => {:name => 'production', :prior => @org.library}
           env = assigns(:environment)
           response.should be_success
@@ -174,7 +174,7 @@ describe EnvironmentsController do
           @env.stub(:save!)
         end
 
-        it "should call katello environment update api" do
+        it "should call katello environment update api", :katello => true do #TODO headpin
           @env.should_receive(:update_attributes).and_return(EnvControllerTest::UPDATED_ENVIRONMENT)
           put 'update', :env_id => @env.id, :org_id => @org.label, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
         end
@@ -184,7 +184,7 @@ describe EnvironmentsController do
           put 'update', :env_id => @env.id, :org_id => @org.label, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
         end
 
-        it "should not redirect from edit view" do
+        it "should not redirect from edit view", :katello => true do #TODO headpin
           put 'update', :env_id => @env.id, :org_id => @org.label, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
           response.should_not be_redirect
         end
@@ -204,7 +204,7 @@ describe EnvironmentsController do
           put 'update', :env_id => @env.id, :org_id => @org.label, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
         end
 
-        it "should not redirect from edit view" do
+        it "should not redirect from edit view", :katello => true do #TODO headpin
           put 'update', :env_id => @env.id, :org_id => @org.label, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
           response.should_not be_redirect
         end
@@ -215,12 +215,12 @@ describe EnvironmentsController do
           @env.stub(:destroy)
         end
 
-      it "destroys the requested environment" do
+      it "destroys the requested environment", :katello => true do #TODO headpin
         @env.should_receive(:destroy)
         delete :destroy, :id => @env.id, :organization_id => @org.label
       end
 
-      it "redirects to the environments list" do
+      it "redirects to the environments list", :katello => true do #TODO headpin
         delete :destroy, :id => @env.id, :organization_id => @org.label
       end
     end
