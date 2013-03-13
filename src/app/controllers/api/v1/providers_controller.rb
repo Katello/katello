@@ -126,7 +126,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
     @provider.save
     @provider.discover_repos
     task = @provider.discovery_task
-    respond_for_show :resource => task
+    respond_for_async :resource => task
   end
 
   api :POST, "/providers/:id/import_manifest", "Import manifest for Red Hat provider"

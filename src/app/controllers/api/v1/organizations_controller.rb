@@ -79,7 +79,7 @@ class Api::V1::OrganizationsController < Api::V1::ApiController
   api :DELETE, "/organizations/:id", "Destroy an organization. Asynchronous operation."
   def destroy
     async_job = OrganizationDestroyer.destroy @organization
-    respond :resource => async_job, :format => :json, :status => 202
+    respond_for_async :resource => async_job
   end
 
 end
