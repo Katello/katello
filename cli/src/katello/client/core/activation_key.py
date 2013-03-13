@@ -255,7 +255,9 @@ class Update(ActivationKeyAction):
 
         if view_label is not None:
             view = get_content_view(orgName, view_label)
-        view_id = view['id'] if view else None
+            view_id = view['id']
+        else:
+            view_id = None
 
         try:
             templateId = self.get_template_id(key['environment_id'], templateName)

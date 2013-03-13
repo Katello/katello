@@ -425,7 +425,7 @@ fi
 %if ! 0%{?fastbuild:1}
     #compile SASS files
     echo Compiling SASS files...
-    cp config/katello.template.yml config/katello.yml
+    touch config/katello.yml
     compass compile
     rm config/katello.yml
 
@@ -449,12 +449,13 @@ a2x -d manpage -f manpage man/katello-service.8.asciidoc
     export BUNDLER_EXT_NOSTRICT=1
     export BUNDLER_EXT_GROUPS="default apipie test"
     export RAILS_ENV=production
-    cp config/katello.template.yml config/katello.yml
+    touch config/katello.yml
     rake apipie:static --trace
     rake apipie:cache --trace
 
     # API doc for Headpin mode
-    sed -i 's/app_mode: katello/app_mode: headpin/g' config/katello.yml
+    echo "common:" > config/katello.yml
+    echo "  app_mode: headpin" >> config/katello.yml
     rake apipie:static OUT=doc/headpin-apidoc --trace
     rake apipie:cache --trace
     rm config/katello.yml
@@ -484,7 +485,8 @@ cp -R .bundle Gemfile.in bundler.d Rakefile app autotest ca config config.ru db 
 rm -f {buildroot}%{homedir}/script/katello-reset-dbs
 
 #copy configs and other var files (will be all overwriten with symlinks)
-install -m 600 config/%{name}.template.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
+touch %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
+chmod 600 %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
 install -m 644 config/environments/production.rb %{buildroot}%{_sysconfdir}/%{name}/environment.rb
 
 #copy cron scripts to be scheduled daily
@@ -596,9 +598,10 @@ usermod -a -G katello-shared tomcat
 %{homedir}/db/seeds.rb
 %{homedir}/integration_spec
 %{homedir}/lib/*.rb
+%{homedir}/lib/katello/
 %exclude %{homedir}/lib/README
-%exclude %{homedir}/app/lib/README
 %{homedir}/app/lib/*.rb
+%exclude %{homedir}/app/lib/README
 %dir %{homedir}/app/lib/glue
 %{homedir}/app/lib/glue/*.rb
 %{homedir}/lib/monkeys
@@ -721,14 +724,20 @@ usermod -a -G katello-shared tomcat
 %{homedir}/db/products.json
 %{homedir}/db/seeds.rb
 %{homedir}/integration_spec
+%{homedir}/lib/*.rb
+%{homedir}/lib/katello/
+%exclude %{homedir}/lib/README
 %{homedir}/app/lib/*.rb
+%exclude %{homedir}/app/lib/README
 %{homedir}/lib/monkeys
 %{homedir}/app/lib/navigation
 %{homedir}/app/lib/notifications
 %{homedir}/app/lib/resources
 %{homedir}/app/lib/validators
 %exclude %{homedir}/app/lib/resources/candlepin.rb
+%exclude %{homedir}/app/lib/resources/abstract_model.rb
 %exclude %{homedir}/app/lib/resources/foreman_model.rb
+%exclude %{homedir}/app/lib/resources/foreman.rb
 %{homedir}/lib/tasks
 %{homedir}/lib/util
 %{homedir}/app/lib/util

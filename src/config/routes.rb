@@ -194,6 +194,7 @@ Src::Application.routes.draw do
       get :sync
       get :notices
       get :errata
+      get :content_views
       get :promotions
       get :systems
       get :system_groups
@@ -667,10 +668,9 @@ Src::Application.routes.draw do
 
       resources :gpg_keys, :only => [:index, :create]
 
-      resources :system_info_keys, :only => [:create, :index], :controller => :organization_system_info_keys do
-        get :apply, :on => :collection, :action => :apply_to_all_systems
-      end
-      match '/system_info_keys/:keyname' => 'organization_system_info_keys#destroy', :via => :delete
+      match '/default_info/:informable_type' => 'organization_default_info#create', :via => :post, :as => :create_default_info
+      match '/default_info/:informable_type/:keyname' => 'organization_default_info#destroy', :via => :delete, :as => :destroy_default_info
+      match '/default_info/:informable_type/apply' => 'organization_default_info#apply_to_all', :via => :post, :as => :apply_default_info
 
       resources :content_views, :only => [:index, :show]
       resources :content_view_definitions do
