@@ -12,7 +12,7 @@
 
 require "spec_helper"
 
-describe Api::V1::TemplatesContentController do
+describe Api::V2::TemplatesContentController do
   describe "routing" do
 
     let(:tpl_content_controller) { "api/v1/templates_content" }

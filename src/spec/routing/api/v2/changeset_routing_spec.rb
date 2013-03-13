@@ -12,7 +12,7 @@
 
 require "spec_helper"
 
-describe Api::V1::ChangesetsController do
+describe Api::V2::ChangesetsController do
   describe "routing" do
 
     let(:cs_controller) { "api/v1/changesets" }
