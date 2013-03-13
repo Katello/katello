@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :filter_rule do
     association :filter
     trait :package_filter do
-      content_type FilterRule::PACKAGE
+      content_type "rpm"
       parameters ({:units =>[{:name =>["g*"]}]}).with_indifferent_access
     end
 
