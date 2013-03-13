@@ -307,7 +307,6 @@ BuildArch:       noarch
 Requires:        %{name} = %{version}-%{release}
 # dependencies from bundler.d/profiling.rb
 Requires:        rubygem(ruby-prof)
-Requires:        rubygem(logical-insight)
 Requires:        rubygem(newrelic_rpm)
 
 %description devel-profiling
