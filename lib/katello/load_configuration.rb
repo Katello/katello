@@ -18,7 +18,7 @@ require 'util/password'
 
 module Katello
 
-  # @return [Configuration::Loader]
+  # @return [Configuration::Loader] configured for Katello
   def self.configuration_loader
     root = File.expand_path(File.join(File.dirname(__FILE__), '..', '..'))
 
@@ -45,7 +45,7 @@ module Katello
               has_keys 'root'
               validate :root do
                 has_keys 'level'
-                if config.type == 'file'
+                if config[:type] == 'file'
                   has_keys *%w(age keep pattern filename)
                   has_keys 'path' unless early?
                 end
@@ -108,17 +108,17 @@ module Katello
         end)
   end
 
-  # @see Configuration::Loader#config
+  # @see Katello::Configuration::Loader#config
   def self.config
     configuration_loader.config
   end
 
-  # @see Configuration::Loader#early_config
+  # @see Katello::Configuration::Loader#early_config
   def self.early_config
     configuration_loader.early_config
   end
 
-# @return [Hash{String => Hash}] database configurations
+  # @return [Hash{String => Hash}] database configurations
   def self.database_configs
     @database_configs ||= begin
       %w(production development test).inject({}) do |hash, environment|
