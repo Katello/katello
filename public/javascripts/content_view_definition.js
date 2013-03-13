@@ -347,28 +347,38 @@ KT.content_view_definition = (function(){
 }());
 
 KT.content_view_definition_filters = (function(){
-    var remove_button,
-
-    initialize = function() {
+    var initialize = function() {
+        initialize_filters();
+        initialize_filter();
+    },
+    initialize_filters = function() {
         var pane = $("#filters");
         if (pane.length === 0) {
             return;
         }
-        register_remove();
-        initialize_checkboxes();
+        register_remove($("#filters_form"));
+        initialize_checkboxes($("#filters_form"));
     },
-    register_remove = function() {
-        remove_button = $('#remove_filters');
-
+    initialize_filter = function() {
+        var pane = $("#filter");
+        if (pane.length === 0) {
+            return;
+        }
+        $("#filter_tabs").tabs();
+        register_remove($("#rules_form"));
+        initialize_checkboxes($("#rules_form"));
+    },
+    register_remove = function(form) {
+        var remove_button = form.find("#remove_button");
         remove_button.unbind('click');
         remove_button.click(function(){
             var btn = $(this);
             if(btn.hasClass("disabled")){
                 return;
             }
-            disable_remove_button();
+            disable_button(remove_button);
 
-            $("#filters_form").ajaxSubmit({
+            form.ajaxSubmit({
                 type: "DELETE",
                 url: btn.data("url"),
                 cache: false,
@@ -379,33 +389,34 @@ KT.content_view_definition_filters = (function(){
                     if ($('input[type="checkbox"]').length === 0) {
                         $('tr#empty_row').show();
                     }
-                    disable_remove_button();
+                    disable_button(remove_button);
                 },
                 error: function(){
-                    enable_remove_button();
+                    enable_button(remove_button);
                 }
             });
         });
-        disable_remove_button();
+        disable_button(remove_button);
     },
-    disable_remove_button = function() {
-        remove_button.attr('disabled', 'disabled');
-        remove_button.addClass('disabled');
+    disable_button = function(button) {
+        button.attr('disabled', 'disabled');
+        button.addClass('disabled');
     },
-    enable_remove_button = function() {
-        remove_button.removeAttr('disabled');
-        remove_button.removeClass('disabled');
+    enable_button = function(button) {
+        button.removeAttr('disabled');
+        button.removeClass('disabled');
     },
-    initialize_checkboxes = function() {
-        var checkboxes = $('input[type="checkbox"]');
+    initialize_checkboxes = function(form) {
+        var checkboxes = $('input[type="checkbox"]'),
+            button = form.find("#remove_button");
 
         checkboxes.unbind('change');
         checkboxes.each(function(){
             $(this).change(function(){
                 if($(this).is(":checked")) {
-                    enable_remove_button();
+                    enable_button(button);
                 } else if($('input[type="checkbox"]:checked').length === 0) {
-                    disable_remove_button();
+                    disable_button(button);
                 }
             });
         });

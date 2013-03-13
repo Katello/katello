@@ -15,7 +15,8 @@ class FiltersController < ApplicationController
   helper ContentViewDefinitionsHelper
 
   before_filter :require_user
-  before_filter :find_content_view_definition, :only => [:index, :new, :create, :destroy_filters]
+  before_filter :find_content_view_definition, :only => [:index, :new, :create, :destroy_filters, :edit]
+  before_filter :find_filter, :only => [:edit]
   before_filter :authorize #after find_content_view_definition, since the definition is required for authorization
 
   respond_to :html
@@ -72,9 +73,9 @@ class FiltersController < ApplicationController
   end
 
   def edit
-    render :partial => "edit", :locals => {:view_definition => @view_definition,
-                                           :editable => @view_definition.editable?,
-                                           :name => controller_display_name}
+    render :partial => "content_view_definitions/filters/edit",
+           :locals => {:view_definition => @view_definition, :filter => @filter,
+                       :editable => @view_definition.editable?, :name => controller_display_name}
   end
 
   def destroy_filters
@@ -92,6 +93,9 @@ class FiltersController < ApplicationController
     @view_definition = ContentViewDefinition.find(params[:content_view_definition_id])
   end
 
+  def find_filter
+    @filter = Filter.find(params[:id])
+  end
   private
 
   def controller_display_name

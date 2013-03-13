@@ -28,11 +28,13 @@
               %tr
                 %td
                   - if editable
-                    = check_box_tag "filters[#{filter.id}]", filter.name, false, {'data-id' => filter.id}
-                  %label{:for=>filter.name}
+                    .panel_link
+                      = check_box_tag "filters[#{filter.id}]", filter.name, false, {'data-id' => filter.id}
+                      = link_to(filter.name, edit_content_view_definition_filter_path(view_definition.id, filter.id))
+                  - else
                     = filter.name
 
         - if editable
-          %input.button.fr.disabled{:type=>"button", :id=>"remove_filters", :value=>_("Remove")}
+          %input.button.fr.disabled{:type=>"button", :id=>"remove_button", :value=>_("Remove")}
 
 = render :template => "layouts/tupane_layout"

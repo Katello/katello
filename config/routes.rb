@@ -109,9 +109,15 @@ Src::Application.routes.draw do
         post :refresh
       end
     end
-    resources :filters, :controller => :filters, :only => [:index, :create, :new] do
+    resources :filters, :controller => :filters, :only => [:index, :create, :new, :edit] do
       collection do
         delete :destroy_filters
+      end
+
+      resources :rules do
+        collection do
+          delete :destroy_rules
+        end
       end
     end
   end
