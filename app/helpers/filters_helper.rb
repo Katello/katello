@@ -12,19 +12,35 @@
 
 module FiltersHelper
 
-  def objectify filter
-    repos = {}
-    filter.repositories.each { |repo|
-      repos[repo.product.id.to_s] = [] unless repos[repo.product.id.to_s]
+  # Objectify the record provided. This will generate a hash containing
+  # the record id, list of products and list of repos. It assumes that the
+  # record has 'products' and 'repositories' relationships.
+  def objectify(record)
+    repos = Hash.new { |h,k| h[k] = [] }
+    record.repositories.each do |repo|
       repos[repo.product.id.to_s] <<  repo.id.to_s
-    }
+    end
 
     {
-        :id => filter.id,
-        :products=>filter.product_ids,  # :id
+        :id => record.id,
+        :products=>record.product_ids,  # :id
         :repos=>repos
     }
   end
 
+  # Retrieve a hash of products that are accessible to the user.
+  # This will be determined from the filter record provided in the options.
+  def get_products(options)
+    if @product_hash.nil?
+      @product_hash = {}
+      options[:record].content_view_definition.resulting_products.sort_by(&:name).each do |prod|
+        @product_hash[prod.id] = {:id => prod.id, :name => prod.name, :editable => true, :repos => []}
+      end
+      options[:record].content_view_definition.repos.sort_by(&:name).each do |repo|
+        @product_hash[repo.product_id][:repos].push({:id => repo.id, :name => repo.name})
+      end
+    end
+    @product_hash
+  end
 
 end
