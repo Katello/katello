@@ -1,0 +1,31 @@
+- if editable
+  .grid_11
+    %input.button.subpanel_element.fr{:type => "button", :value => _("Add New Rule"),
+                                      "data-url" => new_content_view_definition_filter_rule_path(view_definition.id, filter.id)}
+
+.grid_11
+  = kt_form_for(view_definition,
+                :url => destroy_rules_content_view_definition_filter_rules_path(view_definition.id, filter.id),
+                :html => {:id => "rules_form"}) do |form|
+
+    %table
+      %thead
+        %tr
+          %th #{_("Summary")}
+
+      %tbody
+        %tr#empty_row{:class => (:hidden if !filter.rules.empty?)}
+          %td
+            = _("This filter does not currently have any rules defined.")
+
+        - filter.rules.each do |rule|
+          %tr
+            %td
+              - if editable
+                = check_box_tag "filter_rules[#{rule.id}]", FilterRule::CONTENT_OPTIONS.index(rule.content_type),
+                  false, {'data-id' => rule.id}
+              %label{:for=>rule.content_type}
+                = FilterRule::CONTENT_OPTIONS.index(rule.content_type)
+
+    - if editable
+      %input.button.fr.disabled{:type => "button", :id => "remove_button", :value => _("Remove")}
