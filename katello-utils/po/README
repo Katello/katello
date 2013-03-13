@@ -1,0 +1,16 @@
+How to work with locales
+------------------------
+
+1) Extract strings:
+
+bundle exec rake gettext:find
+
+2) Translate strings using Zanata or other tools
+
+3) Generate mo files:
+
+pushd po
+  make
+popd
+
+4) Distribute in /usr/share/katello-disconnected/locale/

@@ -22,9 +22,6 @@ URL:            http://www.katello.org
 Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
 Requires:       coreutils
-BuildRequires:  /usr/bin/pod2man
-BuildRequires:  findutils
-BuildRequires:  ruby
 Requires:       unzip
 Requires:       katello-common
 Requires:       katello
@@ -35,7 +32,12 @@ Requires:       rubygem(activesupport)
 Requires:       rubygem(oauth)
 Requires:       rubygem(rest-client)
 Requires:       rubygem(runcible)
+Requires:       rubygem(fast_gettext)
 
+BuildRequires:  /usr/bin/pod2man
+BuildRequires:  findutils
+BuildRequires:  make
+BuildRequires:  gettext
 
 BuildArch: noarch
 
@@ -50,29 +52,47 @@ cloud lifecycle management application.
 
 
 %build
-%if ! 0%{?fastbuild:1}
-    #check syntax of main configure script and libs
-    ruby -c bin/katello-disconnected
-%endif
+# check syntax of main configure script and libs
+ruby -c bin/katello-disconnected
 
-#build katello-configure man page
+# pack gettext i18n PO files into MO files
+pushd po
+    make
+popd
+
+# build katello-configure man page
 pushd man
     sed -e 's/THE_VERSION/%{version}/g' katello-disconnected.pod |\
-    /usr/bin/pod2man --name=katello -c "Katello Reference" --section=1 --release=%{version} - katello-disconnected.man1
+    /usr/bin/pod2man --name=katello-disconnected -c "Katello Reference" --section=1 --release=%{version} - katello-disconnected.man1
 popd
 
 
 %install
-install -d -m 0755 %{buildroot}%{_sbindir}
-install -m 0755 bin/katello-disconnected %{buildroot}%{_sbindir}
-install -m 0755 bin/katello-cat-manifest %{buildroot}%{_sbindir}
+install -d -m 0755 %{buildroot}%{_bindir}
+install -m 0755 bin/katello-disconnected %{buildroot}%{_bindir}
+install -m 0755 bin/katello-cat-manifest %{buildroot}%{_bindir}
+
+install -d -m 0755 %{buildroot}%{_datadir}/katello-disconnected/lib
+install -m 0644 lib/* %{buildroot}%{_datadir}/katello-disconnected/lib
+
+install -d -m 0755 %{buildroot}%{_datadir}/katello-disconnected/locale
+pushd po
+for MOFILE in $(find . -name "*.mo"); do
+    DIR=$(dirname "$MOFILE")
+    install -d -m 0755 %{buildroot}%{_datadir}/katello-disconnected/locale/$DIR
+    install -m 0644 $DIR/*.mo %{buildroot}%{_datadir}/katello-disconnected/locale/$DIR
+done
+popd
+
 install -d -m 0755 %{buildroot}%{_mandir}/man1
 install -m 0644 man/katello-disconnected.man1 %{buildroot}%{_mandir}/man1/katello-disconnected.1
 
 
 %files
-%{_sbindir}/katello-disconnected
-%{_sbindir}/katello-cat-manifest
+%{_bindir}/katello-disconnected
+%{_bindir}/katello-cat-manifest
+%{_datadir}/katello-disconnected/lib
+%{_datadir}/katello-disconnected/locale
 %{_mandir}/man1/katello-disconnected.1*
 
 
