@@ -67,14 +67,14 @@ class Api::V1::ContentViewsController < Api::V1::ApiController
   param :environment_id, :identifier, :desc => "environment promoting to"
   def promote
     task = @view.promote_via_changeset(@environment)
-    respond_for_create :resource => task, :status => 202
+    respond_for_async :resource => task
   end
 
   api :POST, "/content_views/:id/refresh"
   param :id, :identifer, :desc => "content view id"
   def refresh
     version = @view.refresh_view(:async => true)
-    respond_for_create :resource => version.task_status, :status => 202
+    respond_for_async :resource => version.task_status
   end
 
   api :DELETE, "/content_views/:id"

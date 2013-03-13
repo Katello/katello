@@ -245,4 +245,12 @@ class Api::V1::ApiController < Api::ApiController
     render format => message, :status => status
   end
 
+  def respond_for_async(options={})
+    resource = options[:resource] || get_resource
+    status = options[:status] || 202
+    format = options[:format] || :json
+
+    render format => resource, :status => status
+  end
+
 end
