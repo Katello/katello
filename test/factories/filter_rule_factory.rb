@@ -1,0 +1,19 @@
+FactoryGirl.define do
+  factory :filter_rule do
+    association :filter
+    trait :package_filter do
+      content_type FilterRule::PACKAGE
+      parameters HashWithIndifferentAccess.new({:units =>[{:name =>["g*"]}]})
+    end
+
+    trait :inclusive do
+      inclusion true
+    end
+    trait :exclusive do
+      inclusion false
+    end
+
+    factory :package_filter_rule,  :traits => [:package_filter, :inclusive]
+    factory :package_filter_rule_exclusive,  :traits => [:package_filter, :exclusive]
+  end
+end
