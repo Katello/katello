@@ -13,6 +13,18 @@ Src::Application.routes.draw do
     # new v2 routes that point to v2
     scope :module => :v2, :constraints => ApiVersionConstraint.new(:version => 2) do
 
+      api_resources :organizations do
+        api_resources :environments do
+          get :repositories, :on => :member
+          api_resources :changesets, :only => [:index, :create]
+        end
+        api_resources :providers, :only => [:index]
+        api_resources :products, :only => [:index]
+        api_resources :activation_keys, :only => [:index, :create]
+        api_resources :content_views, :only => [:index, :create]
+        api_resources :content_view_definitions, :only => [:index, :create]
+      end
+
       api_resources :environments, :only => [:show, :update, :destroy] do
         match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
         api_resources :systems, :only => [:create, :index] do
@@ -23,21 +35,11 @@ Src::Application.routes.draw do
         end
         api_resources :activation_keys, :only => [:index, :create]
         api_resources :templates, :only => [:index]
+        api_resources :content_views, :only => [:index]
 
         member do
           get :releases
         end
-      end
-
-      api_resources :organizations do
-        api_resources :environments do
-          get :repositories, :on => :member
-          api_resources :changesets, :only => [:index, :create]
-        end
-        api_resources :providers, :only => [:index]
-        api_resources :products, :only => [:index]
-        api_resources :activation_keys, :only => [:index]
-
       end
 
       api_resources :activation_keys, :only => [:destroy, :show, :update] do
@@ -62,9 +64,9 @@ Src::Application.routes.draw do
       end
 
       api_resources :products, :only => [:show, :update, :destroy] do
-        get :repositories, :on => :member
         post :sync_plan, :on => :member, :action => :set_sync_plan
         delete :sync_plan, :on => :member, :action => :remove_sync_plan
+        api_resources :repositories, :only => [:index, :create]
         api_resources :sync, :only => [:index, :create] do
           delete :index, :on => :collection, :action => :cancel
         end
@@ -80,14 +82,13 @@ Src::Application.routes.draw do
         end
       end
 
-
       api_resources :roles do
         get :available_verbs, :on => :collection, :action => :available_verbs
         api_resources :permissions, :only => [:index, :show, :create, :destroy]
         api_resources :ldap_groups, :controller => :role_ldap_groups , :only => [:create, :destroy, :index]
       end
 
-      api_resources :repositories, :only => [:show, :create, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
+      api_resources :repositories, :only => [:show, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
         api_resources :sync, :only => [:index, :create] do
           delete :index, :on => :collection, :action => :cancel
         end
@@ -103,6 +104,25 @@ Src::Application.routes.draw do
         end
         collection do
           post :sync_complete
+        end
+      end
+
+      api_resources :content_views, :only => [:update, :show] do
+        member do
+          post :promote
+          post :refresh
+        end
+      end
+
+      api_resources :content_view_definitions, :only => [:update, :show, :destroy] do
+        member do
+          post :publish
+          get :products
+          put :products, :action => :update_products
+          get :repositories
+          put :repositories, :action => :update_repositories
+          get :content_views
+          put :content_views, :action => :update_content_views
         end
       end
 
@@ -209,34 +229,8 @@ Src::Application.routes.draw do
         end
         match '/system_info_keys/:keyname' => 'organization_system_info_keys#destroy', :via => :delete
 
-        api_resources :content_views, :only => [:index, :show]
-        api_resources :content_view_definitions do
-          post :publish, :on => :member
-          api_resources :products, :only => [] do
-            get :index, :action => :list_content_view_definition_products,
-              :on => :collection
-            put :index, :action => :update_content_view_definition_products,
-              :on => :collection
-          end
-          api_resources :repositories, :only => [] do
-            get :index, :action => :list_content_view_definition_repositories,
-              :on => :collection
-            put :index, :action => :update_content_view_definition_repositories,
-              :on => :collection
-          end
-        end
       end
 
-      api_resources :content_view_definitions, :only => [:destroy, :content_views] do
-        get :content_views, :on => :member
-        put :content_views, :on => :member, :action => :update_content_views
-      end
-      api_resources :content_views, :only => [:promote, :show] do
-        member do
-          post :promote
-          post :refresh
-        end
-      end
 
       api_resources :changesets, :only => [:show, :update, :destroy] do
         post :promote, :on => :member, :action => :promote

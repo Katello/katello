@@ -15,10 +15,9 @@
 #
 
 class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
-  respond_to :json
+
   before_filter :find_definition, :except => [:index, :create]
-  before_filter :find_organization, :except => [:destroy, :update,
-                                                :content_views, :update_content_views]
+  before_filter :find_organization, :only => [:index, :create]
   before_filter :find_optional_environment, :only => [:index]
   before_filter :authorize
 
@@ -73,9 +72,7 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
   param :id, :identifier, :desc => "content view id"
   def index
     query_params.delete(:organization_id)
-    @definitions = ContentViewDefinition.where(query_params).readable(@organization)
-
-    render :json => @definitions
+    respond :collection => ContentViewDefinition.where(query_params).readable(@organization)
   end
 
   api :POST, "/content_view_definitions",
@@ -91,7 +88,7 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
     definition = ContentViewDefinition.create!(attrs) do |cvd|
       cvd.organization = @organization
     end
-    render :json => definition
+    respond :resource => definition
   end
 
   api :PUT, "/organizations/:org/content_view_definitions/:id", "Update a definition"
@@ -103,13 +100,13 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
   end
   def update
     @definition.update_attributes!(params[:content_view_definition])
-    render :json => @definition
+    respond :resource => @definition
   end
 
   api :GET, "/content_view_definitions/:id", "Show definition info"
   param :id, :number, :desc => "Definition identifier", :required => true
   def show
-    render :json => @definition
+    respond :resource => @definition
   end
 
   api :POST, "/organizations/:org/content_view_definitions/:id/publish",
@@ -120,7 +117,7 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
   def publish
     view = @definition.publish(params[:name], params[:description], params[:label])
     task = view.content_view_versions.first.task_status
-    render :json => task, :status => 202
+    respond_for_create :resource => task, :status => 202
   end
 
   api :DELETE, "/content_view_definitions/:id", "Delete a cv definition"
@@ -131,7 +128,7 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
                                     "definition.") if @definition.has_promoted_views?
 
     @definition.destroy
-    render :json => @definition
+    respond :resource => @definition
   end
 
   api :POST, "/organizations/:org/content_view_definitions/:id/clone", "Clone a definition"
@@ -150,7 +147,7 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
     "List a definition's content views"
   param :id, :identifier, :desc => "Definition identifier", :required => true
   def content_views
-    render :json => @definition.component_content_views
+    respond_for_index :collection => @definition.component_content_views
   end
 
   api :PUT, "/content_view_definitions/:id/content_views",
@@ -167,7 +164,60 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
     @definition.component_content_views += added_content_views
     @definition.save!
 
-    render :json => @definition.component_content_views
+    respond_for_index :collection => @definition.component_content_views
+  end
+
+  api :GET, "/content_view_definitions/%s/repositories",
+    "List all the repositories for a content view definition"
+  param :id, :identifer, :required => true, :desc => "Definition id"
+  def repositories
+    respond_for_index :collection => @definition.repositories
+  end
+
+  api :PUT, "/content_view_definitions/:content_view_definition_id/repositories",
+    "Update repositories for content view definition"
+  param :content_view_definition_id, :identifier, :required => true,
+    :desc => "content view definition identifier"
+  param :repos, Array, :desc => "Updated list of repo ids", :required => true
+  def update_repositories
+    org_id = @definition.organization.id
+    @repos = Repository.where(:id => params[:repos])
+    @repos = @repos.select{ |r| r.organization == @definition.organization }
+    deleted_repositories = @definition.repositories - @repos
+    added_repositories = @repos - @definition.repositories
+
+    @definition.repositories -= deleted_repositories
+    @definition.repositories += added_repositories
+    @definition.save!
+
+    respond_for_index :collection => @definition.repositories
+  end
+
+  api :GET, "/content_view_definitions/:content_view_definition_id/products",
+    "Get products for content view definition"
+  param :content_view_definition_id, :identifier, :required => true,
+    :desc => "content view definition identifier"
+  def products
+    respond_for_index :collection => @definition.products
+  end
+
+  api :PUT, "/content_view_definitions/:content_view_definition_id/products",
+    "Update products for content view definition"
+  param :content_view_definition_id, :identifier, :required => true,
+    :desc => "content view definition identifier"
+  param :products, Array, :desc => "Updated list of products", :required => true
+  def update_products
+    @products = Product.where(:cp_id => params[:products],
+                              "providers.organization_id" =>  @definition.organization.id
+                             ).joins(:provider)
+    deleted_products = @definition.products - @products
+    added_products = @products - @definition.products
+
+    @definition.products -= deleted_products
+    @definition.products += added_products
+    @definition.save!
+
+    respond_for_index :collection => @definition.products
   end
 
   api :GET, "/organizations/:organization_id/content_view_definitions/:id/repositories",

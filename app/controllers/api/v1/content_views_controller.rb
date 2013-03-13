@@ -12,10 +12,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Api::V1::ContentViewsController < Api::V1::ApiController
-  respond_to :json
-  before_filter :find_organization, :except => [:promote, :refresh]
-  before_filter :find_optional_environment, :only => [:index, :show]
+
   before_filter :find_environment, :only => [:promote]
+  before_filter :find_environment_or_organization, :only => [:index]
   before_filter :find_content_view, :only => [:show, :promote, :refresh, :destroy]
   before_filter :authorize
 
@@ -52,7 +51,7 @@ class Api::V1::ContentViewsController < Api::V1::ApiController
     else
       search.readable(@organization)
     end
-    render :json => @content_views
+    respond :collection => @content_views
   end
 
   api :GET, "/organizations/:organization_id/content_views/:id"
@@ -68,14 +67,14 @@ class Api::V1::ContentViewsController < Api::V1::ApiController
   param :environment_id, :identifier, :desc => "environment promoting to"
   def promote
     task = @view.promote_via_changeset(@environment)
-    render :json => task, :status => 202
+    respond_for_create :resource => task, :status => 202
   end
 
   api :POST, "/content_views/:id/refresh"
   param :id, :identifer, :desc => "content view id"
   def refresh
     version = @view.refresh_view(:async => true)
-    render :json => version.task_status, :status => 202
+    respond_for_create :resource => version.task_status, :status => 202
   end
 
   api :DELETE, "/content_views/:id"
@@ -97,7 +96,20 @@ class Api::V1::ContentViewsController < Api::V1::ApiController
   end
 
   def find_environment
-    @environment = KTEnvironment.find(params[:environment_id])
+    @environment = KTEnvironment.find_by_id(params[:environment_id])
+    raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
+    @organization ||= @environment.organization
+  end
+
+  def find_environment_or_organization
+    if params[:environment_id]
+      @environment = KTEnvironment.find_by_id(params[:environment_id])
+      raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
+      @organization ||= @environment.organization
+    else
+      @organization = get_organization params[:organization_id]
+      raise HttpErrors::NotFound, _("Couldn't find organization '%s'") % params[:organization_id] if @organization.nil?
+    end
   end
 
 end
