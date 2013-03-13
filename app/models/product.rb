@@ -33,6 +33,12 @@ class Product < ActiveRecord::Base
       end
       super( items - owner.environment_products.collect{|ep| ep.environment} )
     end
+
+    def default_view
+      select do |env|
+        env.default_content_view.products(env).include?(proxy_owner)
+      end
+    end
   end
 
   has_and_belongs_to_many :changesets

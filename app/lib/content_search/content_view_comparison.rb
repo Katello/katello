@@ -54,15 +54,19 @@ module ContentSearch
 
       # build repo and package rows
       content_rows += build_repo_rows(library_repos, cols)
+
+      # remove the product rows if they have no repos
+      content_rows = content_rows.reject do |r|
+        child_rows = content_rows.select {|cr| cr.parent_id == r.id}
+        r.data_type == "product" && child_rows.empty?
+      end
+
+      content_rows
     end
 
     def build_product_rows(products, cols = [])
       products.inject([]) do |product_rows, product|
-        row = Row.new(:id => "product_#{product.id}",
-                      :name => product.name,
-                      :data_type => "product",
-                      :cols => {}
-                     )
+        row = ProductRow.new(:product => product)
 
         row.cols = cols.inject({}) do |result, (key, val)|
           result[key] = {:display => " "}
