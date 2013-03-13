@@ -45,7 +45,7 @@ module Katello
               has_keys 'root'
               validate :root do
                 has_keys 'level'
-                if config.type == 'file'
+                if config[:type] == 'file'
                   has_keys *%w(age keep pattern filename)
                   has_keys 'path' unless early?
                 end
