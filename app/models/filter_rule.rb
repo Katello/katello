@@ -15,10 +15,11 @@ class FilterRule < ActiveRecord::Base
 
   serialize :parameters, HashWithIndifferentAccess
 
-  PACKAGE       = Runcible::Extensions::Rpm.content_type()
-  PACKAGE_GROUP       = Runcible::Extensions::PackageGroup.content_type()
-  ERRATA   = Runcible::Extensions::Errata.content_type()
-  CONTENT_TYPES  = [PACKAGE, PACKAGE_GROUP, ERRATA]
+  PACKAGE         = Runcible::Extensions::Rpm.content_type()
+  PACKAGE_GROUP   = Runcible::Extensions::PackageGroup.content_type()
+  ERRATA          = Runcible::Extensions::Errata.content_type()
+  CONTENT_TYPES   = [PACKAGE, PACKAGE_GROUP, ERRATA]
+  CONTENT_OPTIONS = {_('Packages') => PACKAGE, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA}
 
   validates_inclusion_of :content_type,
                          :in          => CONTENT_TYPES,
