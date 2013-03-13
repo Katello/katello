@@ -108,7 +108,6 @@ class Api::V1::ApiController < Api::ApiController
     @filter
   end
 
-
   def find_optional_environment
     @environment = KTEnvironment.find_by_id(params[:environment_id]) if params[:environment_id]
   end

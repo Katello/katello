@@ -33,7 +33,7 @@ class Api::V1::ProductsController < Api::V1::ApiController
       :destroy => edit_test,
       :repositories => repo_test,
       :set_sync_plan => edit_test,
-      :remove_sync_plan => edit_test,
+      :remove_sync_plan => edit_test
     }
   end
 
