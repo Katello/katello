@@ -153,7 +153,10 @@ module Resources
         end
 
         def export uuid
-          response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'export'), self.default_headers)
+          # Export is a zip file
+          headers = self.default_headers
+          headers['accept'] = 'application/zip'
+          response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'export'), headers)
           response
         end
 
