@@ -11,6 +11,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+%if "%{?scl}" == "ruby193"
+    %global scl_prefix %{scl}-
+    %global scl_ruby /usr/bin/ruby193-ruby
+%else
+    %global scl_ruby /usr/bin/ruby
+%endif
+
 Name:           katello-utils
 Version:        1.3.1
 Release:        1%{?dist}
@@ -26,18 +33,19 @@ Requires:       unzip
 Requires:       katello-common
 Requires:       katello
 Requires:       katello-glue-pulp
-Requires:       rubygems
-Requires:       rubygem(json)
-Requires:       rubygem(activesupport)
-Requires:       rubygem(oauth)
-Requires:       rubygem(rest-client)
-Requires:       rubygem(runcible)
-Requires:       rubygem(fast_gettext)
+Requires:       %{?scl_prefix}rubygems
+Requires:       %{?scl_prefix}rubygem(json)
+Requires:       %{?scl_prefix}rubygem(activesupport)
+Requires:       %{?scl_prefix}rubygem(oauth)
+Requires:       %{?scl_prefix}rubygem(rest-client)
+Requires:       %{?scl_prefix}rubygem(runcible)
+Requires:       %{?scl_prefix}rubygem(fast_gettext)
 
 BuildRequires:  /usr/bin/pod2man
 BuildRequires:  findutils
 BuildRequires:  make
 BuildRequires:  gettext
+BuildRequires:  %{?scl_prefix}ruby
 
 BuildArch: noarch
 
@@ -52,8 +60,13 @@ cloud lifecycle management application.
 
 
 %build
+# replace shebangs for SCL
+%if "%{scl}"
+    sed -i '1s|/usr/bin/ruby|%{scl_ruby}|' bin/*
+%endif
+
 # check syntax of main configure script and libs
-ruby -c bin/katello-disconnected
+%{scl_ruby} -c bin/katello-disconnected
 
 # pack gettext i18n PO files into MO files
 pushd po
