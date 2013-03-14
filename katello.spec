@@ -607,11 +607,7 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/navigation
 %{homedir}/app/lib/notifications
 %{homedir}/app/lib/validators
-%dir %{homedir}/app/lib/resources
 %{homedir}/app/lib/resources/cdn.rb
-%{homedir}/app/lib/resources/abstract_model.rb
-%dir %{homedir}/app/lib/resources/abstract_model
-%{homedir}/app/lib/resources/abstract_model/indexed_model.rb
 %{homedir}/lib/tasks
 %exclude %{homedir}/lib/tasks/rcov.rake
 %exclude %{homedir}/lib/tasks/yard.rake
@@ -664,6 +660,10 @@ usermod -a -G katello-shared tomcat
 %{homedir}/db/schema.rb
 %dir %{homedir}/lib
 %dir %{homedir}/app/lib
+%dir %{homedir}/app/lib/resources
+%{homedir}/app/lib/resources/abstract_model.rb
+%dir %{homedir}/app/lib/resources/abstract_model
+%{homedir}/app/lib/resources/abstract_model/indexed_model.rb
 %{homedir}/lib/util
 %{homedir}/app/lib/util
 %{homedir}/script/service-wait
@@ -731,7 +731,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/lib/monkeys
 %{homedir}/app/lib/navigation
 %{homedir}/app/lib/notifications
-%{homedir}/app/lib/resources
 %{homedir}/app/lib/validators
 %exclude %{homedir}/app/lib/resources/candlepin.rb
 %exclude %{homedir}/app/lib/resources/abstract_model.rb
