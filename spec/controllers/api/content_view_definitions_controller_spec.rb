@@ -83,9 +83,9 @@ describe Api::ContentViewDefinitionsController, :katello => true do
 
   describe "publish" do
     before do
+      @organization = FactoryGirl.create(:organization)
       Organization.stub(:first).and_return(@organization)
-      @organization.content_view_definitions =
-        FactoryGirl.build_list(:content_view_definition, 2)
+      FactoryGirl.create_list(:content_view_definition, 2, :organization => @organization)
     end
     let(:definition) { @organization.content_view_definitions.last }
 
