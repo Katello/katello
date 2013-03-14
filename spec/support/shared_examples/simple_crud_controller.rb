@@ -1,6 +1,6 @@
 
 def test_response_json(data)
-  response.body.should be_json(data.to_json)
+  response.body.should be_json(data.as_json)
 end
 
 shared_examples_for "simple crud controller" do
