@@ -21,7 +21,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.3.4
+Version:       1.3.5
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 Requires:      %{base_name}-cli-common
@@ -178,6 +178,142 @@ popd
 make -C locale clean
 
 %changelog
+* Thu Mar 14 2013 Miroslav Suchý <msuchy@redhat.com> 1.3.5-1
+- large refactor of organization level default system info keys
+  (komidore64@gmail.com)
+- 917608 - cli - fix activation key update (bbuckingham@redhat.com)
+- 917639 - cli - fix changeset update add_repo command (bbuckingham@redhat.com)
+- fix pylint error (pchalupa@redhat.com)
+- CLI - Adding a requirements file for development dependencies and updating
+  Travis config to use. (ehelms@redhat.com)
+- fix pylint warnings for travis job (pchalupa@redhat.com)
+- CLI - Updates to setup.py to switch to distutils and the inclusion of a
+  requirements.pip file for installing into a virtualenv with pip. Fixes
+  incorrect inclusion of locale files in setup.py. (ehelms@redhat.com)
+- CLI - Updating Spec file for locale changes. (ehelms@redhat.com)
+- CLI - Moves locale files to katello-cli namespace for consistency with other
+  Linux programs.  Updates Transifex config. (ehelms@redhat.com)
+- CLI - Updates the Makefile to properly clean .mo files and removes those
+  added by a previous commit. (ehelms@redhat.com)
+- CLI - Adds a setup.py file for packaging the CLI for registration on the PyPI
+  index. (ehelms@redhat.com)
+- CLI - Adds environment variable for setting client conf location.
+  (ehelms@redhat.com)
+- CLI - Moves each po file into it's own directory to mimic server locale
+  structure and that of the standard deployment for locale files.
+  (ehelms@redhat.com)
+- CLI - Moves po directory to locale for consistency with server and standard
+  python projects. (ehelms@redhat.com)
+- fixing descriptions and spacing (jsherril@redhat.com)
+- allowing the use of repo set name for enable disable (jsherril@redhat.com)
+- fast import - migrating cli methods to use evaluate_task_status
+  (jsherril@redhat.com)
+- attempting to fix odd pylint error (jsherril@redhat.com)
+- fast import - adding repo set disable to cli (jsherril@redhat.com)
+- cli - evaluation of async task status refactored (tstrachota@redhat.com)
+- Content views: worked on some locale strings (daviddavis@redhat.com)
+- if we use $FILE, it is very usefull to set it first (msuchy@redhat.com)
+- Content views: fix column headers in CLI (daviddavis@redhat.com)
+- 869378 - API does not list providedProducts for custom content
+  (lzap+git@redhat.com)
+- fixing pylint error (jsherril@redhat.com)
+- enable pofilter checking on katello-cli (msuchy@redhat.com)
+- cs - (pofilter) variables: Do not translate: %%s, %%s (msuchy@redhat.com)
+- ru - (pofilter) urls: Different URLs (msuchy@redhat.com)
+- check localization files for corectness (msuchy@redhat.com)
+- fix Project-Id-Version for cli/po/ml.po (msuchy@redhat.com)
+- Content views: add more definition opts to CLI (daviddavis@redhat.com)
+- 869581 - Product without repo cannot be promoted (ares@igloonet.cz)
+- adding cli support for repo sets (jsherril@redhat.com)
+- cli completion - fixed import path to 'fix_io_encoding'
+  (tstrachota@redhat.com)
+- 880019 - learn optparser how to handle unicode errors (msuchy@redhat.com)
+- Added a space to make pylint happy (paji@redhat.com)
+- Fixed some broken cli tests (paji@redhat.com)
+- Fixed more merge conflicts (paji@redhat.com)
+- Cli gettext script (jhadvig@redhat.com)
+- fixing usage.py script client.conf reference (jsherril@redhat.com)
+- fix incorrect string (msuchy@redhat.com)
+- spec changes (tstrachota@redhat.com)
+- cli - usage moved (tstrachota@redhat.com)
+- cli - import fix for compute resources (tstrachota@redhat.com)
+- cli - lib.control (tstrachota@redhat.com)
+- cli tests - source path fix (tstrachota@redhat.com)
+- cli - lib.async (tstrachota@redhat.com)
+- cli - lib.ui.progress (tstrachota@redhat.com)
+- cli - lib.util.io (tstrachota@redhat.com)
+- cli - lib.util.data (tstrachota@redhat.com)
+- cli - lib.ui.formatters (tstrachota@redhat.com)
+- cli - printer moved to lib.ui (tstrachota@redhat.com)
+- cli - utilities moved to lib (tstrachota@redhat.com)
+- merge translation from SAM (msuchy@redhat.com)
+- Translations - Download translations from Transifex for katello-cli.
+  (msuchy@redhat.com)
+- Fixed some merge conflicts (paji@redhat.com)
+- hw models - cli refactoring (tstrachota@redhat.com)
+- hw models - cli for update (tstrachota@redhat.com)
+- hw models - cli for deletion (tstrachota@redhat.com)
+- hw models - cli for creation (tstrachota@redhat.com)
+- hw models - cli for info (tstrachota@redhat.com)
+- hw models - fix for api binding comments (tstrachota@redhat.com)
+- hw models - cli for listing (tstrachota@redhat.com)
+- Content views: various fixes to UI and CLI (daviddavis@redhat.com)
+- Fixed a typo in a cli script (paji@redhat.com)
+- Fixed some files missed in previous merges (paji@redhat.com)
+- Content views: fixing cli bug from sending org id (daviddavis@redhat.com)
+- Content views: supporting async publishing (daviddavis@redhat.com)
+- Content views: added opts to the system register test (daviddavis@redhat.com)
+- Content views: some things I found preparing for the demo
+  (daviddavis@redhat.com)
+- Content views: added CLI for systems with content views
+  (daviddavis@redhat.com)
+- Content views: added some activation key tests (daviddavis@redhat.com)
+- Content views: content view can be set on keys in CLI (daviddavis@redhat.com)
+- Removing filters from the content view branch (paji@redhat.com)
+- Content views: handling new refresh code from CLI/API (daviddavis@redhat.com)
+- Content views: api refresh test (daviddavis@redhat.com)
+- Content views: refreshing views from the CLI (daviddavis@redhat.com)
+- Created CLI command to show tasks' statuses (daviddavis@redhat.com)
+- Content views: Added tests for new arguments (daviddavis@redhat.com)
+- Content views: fixed tests and feedback for def args (daviddavis@redhat.com)
+- Content views: converted method to classmethod (daviddavis@redhat.com)
+- Content views: added id and name to cli definition commands
+  (daviddavis@redhat.com)
+- Content views: added id and name to cv arguments (daviddavis@redhat.com)
+- Content views: content view promotion async support (daviddavis@redhat.com)
+- Content views: showing repo info in cli (daviddavis@redhat.com)
+- Content views: changed dictionary key in cli command (daviddavis@redhat.com)
+- Content views: changesets can have views in CLI (daviddavis@redhat.com)
+- Content views: removed unused import (daviddavis@redhat.com)
+- Content views: handling async view promotion (daviddavis@redhat.com)
+- Content views: creating changeset during promotion shortcut
+  (daviddavis@redhat.com)
+- Content views: added cli promote command (daviddavis@redhat.com)
+- Content views: cli info and list work (daviddavis@redhat.com)
+- Content views: removing unused import (daviddavis@redhat.com)
+- Content views: re-enabled info cli commands (daviddavis@redhat.com)
+- Content views: fixed add/remove repo commands (daviddavis@redhat.com)
+- fixing bad merge (jsherril@redhat.com)
+- Content views: fixing pylint warnings (daviddavis@redhat.com)
+- Content views: fixing up cli tests (daviddavis@redhat.com)
+- Content views: created nested resources in cli (daviddavis@redhat.com)
+- content view - allow publishing to views by giving name/lable/description
+  (jsherril@redhat.com)
+- Content views: fixed pylint warnings (daviddavis@redhat.com)
+- Content views: delete cli test (daviddavis@redhat.com)
+- Content views: added CLI tests (daviddavis@redhat.com)
+- Content views: created published/unpublished arguments
+  (daviddavis@redhat.com)
+- Content views: created add_view and remove_view (daviddavis@redhat.com)
+- Content views: added env argument to list (daviddavis@redhat.com)
+- Content views: fixed product :bug: with cp_id (daviddavis@redhat.com)
+- Content views: added repo cli commands (daviddavis@redhat.com)
+- Content views: Added add_product for cli (daviddavis@redhat.com)
+- Content views: fixed update cli command (daviddavis@redhat.com)
+- Content views: added destroy to api controller/cli (daviddavis@redhat.com)
+- Content views: Worked on labels and cli (daviddavis@redhat.com)
+- Content views: initial setup of models (daviddavis@redhat.com)
+
 * Wed Jan 30 2013 Justin Sherrill <jsherril@redhat.com> 1.3.4-1
 - removing pulpv2 prefix from pulpv2 branch (jsherril@redhat.com)
 - 880125 - Errors message when no key can be found (ares@igloonet.cz)
