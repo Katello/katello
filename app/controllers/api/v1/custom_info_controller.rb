@@ -32,27 +32,26 @@ class Api::V1::CustomInfoController < Api::V1::ApiController
   end
 
   def create
-    response = @informable.custom_info.create!(package_args(params))
-    render :json => response.to_json
+    respond :resource => @informable.custom_info.create!(package_args(params))
   end
 
   def index
-    render :json => @informable.custom_info.to_json
+    respond :collection => @informable.custom_info
   end
 
   def show
-    render :json => @single_custom_info.to_json
+    respond :resource => @single_custom_info
   end
 
   def update
     value = params[:value].strip
     @single_custom_info.update_attributes!(:value => value)
-    render :text => @single_custom_info.value
+    respond :resource => @single_custom_info.value
   end
 
   def destroy
     @single_custom_info.destroy
-    render :text => _("Deleted custom info '%s'") % params[:keyname]
+    respond :message => _("Deleted custom info '%s'") % params[:keyname], :resource => @single_custom_info
   end
 
   private
@@ -66,8 +65,7 @@ class Api::V1::CustomInfoController < Api::V1::ApiController
   end
 
   def find_custom_info
-    keyname = params[:keyname].strip
-    @single_custom_info = CustomInfo.find_by_informable_keyname(@informable, keyname)
+    @single_custom_info = CustomInfo.find_by_informable_keyname(@informable,  params[:keyname].strip)
     if @single_custom_info.nil?
       raise HttpErrors::NotFound, _("Couldn't find custom info with keyname '%s'") % params[:keyname]
     end
