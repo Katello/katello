@@ -17,9 +17,11 @@ class ContentSearch::SearchUtils
     mode.try(:to_sym) || :all
   end
 
-  def self.search_env_ids
-    @@search_env_ids ||= if self.search_mode != :all
+  def self.search_envs
+    if self.search_mode != :all
       KTEnvironment.content_readable(current_organization).where(:id => self.env_ids)
+    else
+      KTEnvironment.content_readable(current_organization)
     end
   end
 

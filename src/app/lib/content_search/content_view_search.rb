@@ -21,10 +21,10 @@ module ContentSearch
     end
 
     def build_rows
-      views.collect do |view|
+      filtered_views.collect do |view|
         cols = {}
         view.environments.collect do |env|
-          if env_ids.include?(env.id)
+          if readable_env_ids.include?(env.id)
             version = view.version(env).try(:version)
             display = version ? (_("version %s") % version) : ""
             cols[env.id] = Cell.new(:hover => container_hover_html(view, env), :display => display)
@@ -48,6 +48,25 @@ module ContentSearch
         views = ContentView.readable(current_organization).non_default
       end
     end
+
+    def view_versions
+      @view_versions ||= begin
+        versions = views.map{|v| v.versions.in_environment(search_envs)}.flatten
+        if search_mode == :unique
+          versions = versions.select {|v| !(search_envs - v.environments).empty?}
+        elsif search_mode == :shared
+          versions = versions.select {|v| (search_envs - v.environments).empty?}
+        end
+
+        versions
+      end
+    end
+
+    # views that have been filtered by search_mode
+    def filtered_views
+      @filtered_views ||= views.select {|v| view_versions.map(&:content_view_id).include?(v.id)}
+    end
+
   end
 
 end

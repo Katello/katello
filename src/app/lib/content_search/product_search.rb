@@ -24,7 +24,7 @@ module ContentSearch
       products.collect do |prod|
         cols = {}
         prod.environments.default_view.collect do |env|
-          cols[env.id] = Cell.new(:hover => container_hover_html(prod, env)) if env_ids.include?(env.id)
+          cols[env.id] = Cell.new(:hover => container_hover_html(prod, env)) if readable_env_ids.include?(env.id)
         end
         Row.new(:id => "product_#{prod.id}",
                                :name => prod.name,
@@ -43,7 +43,7 @@ module ContentSearch
           products = current_organization.products.readable(current_organization).engineering
         end
 
-        envs = SearchUtils.search_env_ids
+        envs = SearchUtils.search_envs
         if search_mode == :shared
           products = products.select{|p|  (envs - p.environments.default_view).empty? }
         elsif search_mode == :unique
