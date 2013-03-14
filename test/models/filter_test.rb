@@ -16,7 +16,8 @@ class FilterTest < MiniTest::Rails::ActiveSupport::TestCase
   fixtures :all
 
   def self.before_suite
-    models = ["Organization", "KTEnvironment", "User","ContentViewEnvironment", "ContentViewDefinition"]
+    models = ["Organization", "KTEnvironment", "User","ContentViewEnvironment",
+                                "ContentViewDefinition", "Product", "Repository"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
   end
 
@@ -36,8 +37,8 @@ class FilterTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_create
-    assert @filter.save
-  end
+      assert @filter.save
+    end
 
   def test_bad_name
     filter = FactoryGirl.build(:filter, :name => "")
@@ -91,37 +92,33 @@ class FilterTest < MiniTest::Rails::ActiveSupport::TestCase
     refute_empty Filter.find(@filter.id).products
   end
 
-  # TODO work on these later
-  # seem to work ok with rake minitest:model but not rake:minitest
-  # def test_content_definition_delete_repo
-  #   @filter.save!
-  #   cvd =  @filter.content_view_definition
-  #   cvd.repositories << @repo
-  #   cvd.save!
-  #   @filter = Filter.find(@filter.id)
-  #   @filter.repositories << @repo
-  #   @filter.save!
-  #   cvd = ContentViewDefinition.find(cvd.id)
-  #   cvd.repositories.delete(@repo)
-  #   assert_empty cvd.filters.first.repositories
-  #   cvd.save!
-  #   assert_empty cvd.filters.first.repositories
-  # end
-  #
-  # def test_content_definition_delete_product
-  #   @filter.save!
-  #   cvd =  @filter.content_view_definition
-  #   cvd.products << @product
-  #   cvd.save!
-  #   @filter = Filter.find(@filter.id)
-  #   @filter.products << @product
-  #   @filter.save!
-  #   cvd = ContentViewDefinition.find(cvd.id)
-  #   cvd.products.delete(@product)
-  #   assert_empty cvd.filters.first.products
-  #   cvd.save!
-  # end
+  def test_content_definition_delete_repo
+    @filter.save!
+    cvd =  @filter.content_view_definition
+    cvd.repositories << @repo
+    cvd.save!
+    @filter = Filter.find(@filter.id)
+    @filter.repositories << @repo
+    @filter.save!
+    cvd = ContentViewDefinition.find(cvd.id)
+    cvd.repositories.delete(@repo)
+    assert_empty cvd.filters.first.repositories
+    cvd.save!
+    assert_empty cvd.filters.first.repositories
+  end
 
-
+  def test_content_definition_delete_product
+    @filter.save!
+    cvd =  @filter.content_view_definition
+    cvd.products << @product
+    cvd.save!
+    @filter = Filter.find(@filter.id)
+    @filter.products << @product
+    @filter.save!
+    cvd = ContentViewDefinition.find(cvd.id)
+    cvd.products.delete(@product)
+    assert_empty cvd.filters.first.products
+    cvd.save!
+  end
 
 end
