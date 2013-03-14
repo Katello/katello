@@ -106,7 +106,7 @@ describe Api::ContentViewDefinitionsController, :katello => true do
       ContentViewDefinition.stub(:find).with(definition.id.to_s).and_return(definition)
       definition.should_receive(:destroy).and_return(true)
       definition.should_receive(:has_promoted_views?).and_return(false)
-      delete :destroy, :id => definition.id
+      delete :destroy, :id => definition.id.to_s
       response.should be_success
     end
   end
