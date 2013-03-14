@@ -12,15 +12,29 @@
 
 # a container represents a product or content view
 
-class ContentSearch::ContainerSearch < ContentSearch::Search
+module ContentSearch
+  class ContainerSearch < Search
 
-  def container_hover_html(container, env)
-    render_to_string :partial=>'content_search/container_hover',
-      :locals=>{:container=>container, :env=>env}
+    def container_hover_html(container, env)
+      render_to_string :partial=>'content_search/container_hover',
+        :locals=>{:container=>container, :env=>env}
+    end
+
+    def env_ids
+      SearchUtils.env_ids
+    end
+
+    def readable_env_ids
+      KTEnvironment.content_readable(current_organization).pluck(:id)
+    end
+
+    def search_envs
+      SearchUtils.search_envs
+    end
+
+    def search_mode
+      SearchUtils.search_mode
+    end
+
   end
-
-  def env_ids
-    KTEnvironment.content_readable(current_organization).pluck(:id)
-  end
-
 end
