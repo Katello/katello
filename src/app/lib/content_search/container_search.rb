@@ -10,17 +10,31 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class ContentSearch::SearchUtils
-  cattr_accessor :current_organization, :mode, :env_ids
+# a container represents a product or content view
 
-  def self.search_mode
-    mode.try(:to_sym) || :all
-  end
+module ContentSearch
+  class ContainerSearch < Search
 
-  def self.search_env_ids
-    @@search_env_ids ||= if self.search_mode != :all
-      KTEnvironment.content_readable(current_organization).where(:id => self.env_ids)
+    def container_hover_html(container, env)
+      render_to_string :partial=>'content_search/container_hover',
+        :locals=>{:container=>container, :env=>env}
     end
-  end
 
+    def env_ids
+      SearchUtils.env_ids
+    end
+
+    def readable_env_ids
+      KTEnvironment.content_readable(current_organization).pluck(:id)
+    end
+
+    def search_envs
+      SearchUtils.search_envs
+    end
+
+    def search_mode
+      SearchUtils.search_mode
+    end
+
+  end
 end

@@ -128,6 +128,12 @@ class ContentView < ActiveRecord::Base
     self.versions.in_environment(env).order('content_view_versions.id ASC').last
   end
 
+  def version_environment(env)
+    # TODO: rewrite this into SQL or use content_view_environment when that
+    # points to environment
+    version(env).content_view_version_environments.select {|cvve| cvve.environment_id == env.id}
+  end
+
   def repos(env)
     version = version(env)
     if version

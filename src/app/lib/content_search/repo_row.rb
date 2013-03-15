@@ -10,20 +10,22 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-# a span represents a collection of rows. usually these rows represent
-# a container like a product or content view
+class ContentSearch::RepoRow < ContentSearch::Row
+  attr_accessor :repo
 
-class ContentSearch::Search
-  include ContentSearch::Element
-  attr_accessor :rows, :name
-
-  def current_organization
-    ContentSearch::SearchUtils.current_organization
+  def initialize(options)
+    super
+    build_row
   end
 
-  def render_to_string(*args)
-    av = ActionView::Base.new(Rails.application.paths.app.views.first)
-    av.render(*args)
+  def build_row
+    self.data_type ||= "repo"
+    self.cols ||= {}
+    self.id ||= build_id
+    self.name ||= @repo.name
   end
 
+  def build_id
+    [parent_id, data_type, repo.id].select(&:present?).join("_")
+  end
 end
