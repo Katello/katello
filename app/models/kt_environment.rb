@@ -56,7 +56,7 @@ class KTEnvironment < ActiveRecord::Base
   has_many :content_view_version_environments, :foreign_key=>:environment_id
   has_many :content_view_versions, :through=>:content_view_version_environments, :inverse_of=>:environments
 
-  has_one :default_content_view, :class_name => "ContentView", :foreign_key => :environment_default_id
+  has_one :default_content_view, :class_name => "ContentView", :foreign_key => :environment_default_id, :dependent => :destroy, :validate => true
 
   has_many :users, :foreign_key => :default_environment_id, :inverse_of => :default_environment, :dependent => :nullify
 
@@ -281,7 +281,8 @@ class KTEnvironment < ActiveRecord::Base
       content_view_version = ContentViewVersion.new(:version => 1, :content_view => content_view)
       content_view_version.environments << self
 
-      content_view_version.save! # saves both content_view and content_view_version
+      # content_view is saved with this as well
+      content_view_version.save!
     end
   end
 end
