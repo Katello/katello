@@ -23,6 +23,8 @@ Src::Application.routes.draw do
         api_resources :activation_keys, :only => [:index, :create]
         api_resources :content_views, :only => [:index, :create]
         api_resources :content_view_definitions, :only => [:index, :create]
+        #api_resources :uebercert, :only => [:show]
+        resource :uebercert, :only => [:show]
       end
 
       api_resources :environments, :only => [:show, :update, :destroy] do
@@ -213,7 +215,6 @@ Src::Application.routes.draw do
         end
         api_resources :repositories, :only => [] do
         end
-        resource :uebercert, :only => [:show]
 
         api_resources :gpg_keys, :only => [:index, :create]
 
