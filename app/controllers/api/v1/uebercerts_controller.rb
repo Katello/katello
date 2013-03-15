@@ -24,6 +24,6 @@ class Api::V1::UebercertsController < Api::V1::ApiController
   param :regenerate, :bool, :desc => "When set to 'True' certificate will be re-issued"
   def show
     @organization.generate_debug_cert if (params[:regenerate]||'').downcase == 'true'
-    render :json => @organization.debug_cert
+    respond :resource => @organization.debug_cert
   end
 end
