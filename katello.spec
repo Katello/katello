@@ -38,11 +38,6 @@ Requires:        %{name}-glue-foreman
 Requires:        %{name}-glue-candlepin
 Requires:        %{name}-selinux
 Conflicts:       %{name}-headpin
-Requires:        rubygem(bundler_ext)
-BuildRequires:   rubygem(bundler_ext)
-BuildRequires:   rubygem(logging) >= 1.8.0
-BuildRequires:   asciidoc
-BuildRequires:   /usr/bin/getopt
 
 %description
 Provides a package for managing application life-cycle for Linux systems.
@@ -88,6 +83,7 @@ Requires:       rubygem(foreman_api) >= 0.0.7
 Requires:       rubygem(anemone)
 Requires:       rubygem(apipie-rails) >= 0.0.18
 Requires:       rubygem(logging) >= 1.8.0
+Requires:       rubygem(bundler_ext)
 Requires:       lsof
 
 %if 0%{?rhel} == 6
@@ -108,10 +104,10 @@ Requires:       rubygem(regin)
 #%endif
 # </workaround>
 
-Requires(pre):  shadow-utils
-Requires(preun): chkconfig
-Requires(preun): initscripts
-Requires(post): chkconfig
+Requires(pre):    shadow-utils
+Requires(preun):  chkconfig
+Requires(preun):  initscripts
+Requires(post):   chkconfig
 Requires(postun): initscripts coreutils sed
 
 BuildRequires:  coreutils findutils sed
@@ -123,6 +119,10 @@ BuildRequires:  rubygem(chunky_png)
 BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass)
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
+BuildRequires:  rubygem(bundler_ext)
+BuildRequires:  rubygem(logging) >= 1.8.0
+BuildRequires:  asciidoc
+BuildRequires:  /usr/bin/getopt
 BuildRequires:  java >= 0:1.6.0
 BuildRequires:  rubygem(alchemy) >= 1.0.0
 BuildRequires:  gettext
@@ -171,9 +171,14 @@ Requires:       postgresql
 Requires(post): candlepin-tomcat6
 Requires:       candlepin-selinux
 # the following backend engine deps are required by <katello-configure>
-Requires:       mongodb mongodb-server
-Requires:       qpid-cpp-server qpid-cpp-client qpid-cpp-client-ssl qpid-cpp-server-ssl
-Requires:       foreman foreman-postgresql
+Requires:       mongodb
+Requires:       mongodb-server
+Requires:       qpid-cpp-server
+Requires:       qpid-cpp-client
+Requires:       qpid-cpp-client-ssl
+Requires:       qpid-cpp-server-ssl
+Requires:       foreman
+Requires:       foreman-postgresql
 # </katello-configure>
 
 
