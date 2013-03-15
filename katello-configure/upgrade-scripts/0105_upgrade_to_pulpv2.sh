@@ -17,6 +17,13 @@ pulp-v1-upgrade --backup-v1-db || exit 1
 /usr/bin/pulp-manage-db || exit 1
 
 /usr/sbin/service-wait httpd start
+
+pushd $KATELLO_HOME >/dev/null
 RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX RAILS_ENV=$KATELLO_ENV rake regenerate_repo_metadata
+ret_code=$?
+popd >/dev/null
+
 /usr/sbin/service-wait httpd stop
+
+exit $?
 
