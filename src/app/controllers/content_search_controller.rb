@@ -29,10 +29,13 @@ class ContentSearchController < ApplicationController
         :packages => contents_test,
         :packages_items => contents_test,
         :errata_items => contents_test,
+        :view_packages => contents_test,
         :repo_packages => contents_test,
         :repo_errata => contents_test,
         :repo_compare_errata =>contents_test,
         :repo_compare_packages =>contents_test,
+        :view_compare_errata =>contents_test,
+        :view_compare_packages =>contents_test,
         :views => contents_test
     }
   end
@@ -78,7 +81,8 @@ class ContentSearchController < ApplicationController
     end
 
     products = repos.collect(&:product).uniq
-    render :json=>{:rows=>(product_rows(products) + repo_rows(repos)), :name=>_('Repositories')}
+    product_search = ContentSearch::ProductSearch.new(:product_ids => products.map(&:id))
+    render :json=>{:rows=>(product_search.rows + repo_rows(repos)), :name=>_('Repositories')}
   end
 
   def packages
@@ -115,10 +119,25 @@ class ContentSearchController < ApplicationController
   #similar to :packages, but only returns package rows with an offset for a specific repo
   def packages_items
     repo = Repository.libraries_content_readable(current_organization).where(:id=>params[:repo_id]).first
+    offset = params[:offset].try(:to_i) || 0
     pkgs = spanned_repo_content(repo, 'package', process_params(:packages), params[:offset], process_search_mode, process_env_ids) || {:content_rows=>[]}
-    meta = metadata_row(pkgs[:total], params[:offset] + pkgs[:content_rows].length,
+    meta = metadata_row(pkgs[:total], offset + pkgs[:content_rows].length,
                         {:repo_id=>repo.id}, repo.id, "repo_#{repo.id}")
     render :json=>{:rows=>(pkgs[:content_rows] + [meta])}
+  end
+
+  # similar to :package_items but only returns package rows for content view grids
+  def view_packages
+    repo = Repository.libraries_content_readable(current_organization).where(:id=>params[:repo_id]).first
+    offset = params[:offset].try(:to_i) || 0
+
+    cv_env_ids = repo.clones.map do |r|
+      {:view_id => r.content_view.id, :env_id => r.environment}
+    end
+    options = {:is_package => true,
+               :cv_env_ids => cv_env_ids}
+    comparison = ContentSearch::ContentViewComparison.new(options)
+    render :json => {:rows => comparison.package_rows + comparison.metadata_rows}
   end
 
   #similar to :errata, but only returns errata rows with an offset for a specific repo
@@ -162,7 +181,6 @@ class ContentSearchController < ApplicationController
     render :json => { :rows => rows, :name => @repo.name }
   end
 
-
   def repo_compare_packages
     repo_compare_content true, params[:offset] || 0
   end
@@ -172,6 +190,17 @@ class ContentSearchController < ApplicationController
     repo_compare_content false, params[:offset] || 0
   end
 
+  def view_compare_packages
+    options = {:is_package => true,
+               :cv_env_ids => params[:views].values}
+    render :json => ContentSearch::ContentViewComparison.new(options)
+  end
+
+  def view_compare_errata
+    options = {:is_package => false,
+               :cv_env_ids => params[:views].values}
+    render :json => ContentSearch::ContentViewComparison.new(options)
+  end
 
   private
 
@@ -221,10 +250,6 @@ class ContentSearchController < ApplicationController
   end
 
 
-  def find_environments
-    @envs = KTEnvironment.contents_readable(current_organization).where(:id=>params[:environemnts])
-  end
-
   def find_repos
     @repos = []
     params[:repos].values.each do |item|
@@ -252,10 +277,6 @@ class ContentSearchController < ApplicationController
 
   def repo_hover_html repo
     render_to_string :partial=>'repo_hover', :locals=>{:repo=>repo}
-  end
-
-  def container_hover_html(container, environment)
-    render_to_string :partial=>'container_hover', :locals=>{:container=>container, :env=>environment}
   end
 
   def param_product_ids
@@ -492,8 +513,10 @@ class ContentSearchController < ApplicationController
 
   def setup_utils
     ContentSearch::SearchUtils.current_organization = current_organization
+    ContentSearch::SearchUtils.current_user = current_user
     ContentSearch::SearchUtils.mode = params[:mode]
     ContentSearch::SearchUtils.env_ids = params[:environments]
+    ContentSearch::SearchUtils.offset = params[:offset] || 0
   end
 
 end
