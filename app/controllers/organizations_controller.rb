@@ -14,7 +14,7 @@
 class OrganizationsController < ApplicationController
   include AutoCompleteSearch
   respond_to :html, :js
-  before_filter :find_organization, :only => [:edit, :update, :destroy, :events]
+  before_filter :find_organization, :only => [:show, :edit, :update, :destroy, :events]
   before_filter :find_organization_by_id, :only => [:environments_partial, :download_debug_certificate]
   before_filter :authorize #call authorize after find_organization so we call auth based on the id instead of cp_id
   before_filter :setup_options, :only=>[:index, :items]
@@ -38,6 +38,7 @@ class OrganizationsController < ApplicationController
 
     {:index =>  index_test,
       :items => index_test,
+      :show => index_test,
       :auto_complete_search => index_test,
       :new => create_test,
       :create => create_test,
@@ -54,7 +55,7 @@ class OrganizationsController < ApplicationController
   def param_rules
     {
       :create => {:organization => [:name, :description, :label], :environment => [:name, :description, :label]},
-      :update => {:organization  => [:description]}
+      :update => {:organization  => [:name, :description]}
     }
   end
 
@@ -70,6 +71,10 @@ class OrganizationsController < ApplicationController
     ids = Organization.without_deleting.readable.collect(&:id)
     render_panel_direct(Organization, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
                         {:default_field => :name, :filter=>[{"id"=>ids}]})
+  end
+
+  def show
+    render :partial=>"common/list_update", :locals => {:item => @organization, :accessor => 'label', :columns => ['name']}
   end
 
   def new
@@ -134,12 +139,15 @@ class OrganizationsController < ApplicationController
   end
 
   def update
-    result = ""
-    if params[:organization].try :[], :description
-      result = params[:organization][:description] = params[:organization][:description].gsub("\n",'')
+    result = params[:organization].values.first
+
+    @organization.name = params[:organization][:name] unless params[:organization][:name].nil?
+
+    unless params[:organization][:description].nil?
+      result = @organization.description = params[:organization][:description].gsub("\n",'')
     end
 
-    @organization.update_attributes!(:description => params[:organization][:description])
+    @organization.save!
     notify.success _("Organization '%s' was updated.") % @organization["name"]
 
     if not search_validate(Organization, @organization.id, params[:search])
