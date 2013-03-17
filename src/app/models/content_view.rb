@@ -279,6 +279,16 @@ class ContentView < ActiveRecord::Base
     end
   end
 
+  # Unassociate an environment from this content view. This can occur whenever
+  # a view is deleted from an environment. It is necessary to make candlepin
+  # aware that the view is no longer available for consumers.
+  def remove_environment(env)
+    unless env.library
+      view_env = ContentViewEnvironment.where(:cp_id => self.cp_environment_id(env))
+      view_env.first.destroy unless view_env.blank?
+    end
+  end
+
   protected
 
   def get_repos_to_promote(from_env, to_env)
@@ -336,15 +346,5 @@ class ContentView < ActiveRecord::Base
       end
     end
     tasks
-  end
-
-  # Unassociate an environment from this content view. This can occur whenever
-  # a view is deleted from an environment. It is necessary to make candlepin
-  # aware that the view is no longer available for consumers.
-  def remove_environment(env)
-    unless env.library
-      view_env = ContentViewEnvironment.where(:cp_id => self.cp_environment_id(env))
-      view_env.first.destroy unless view_env.blank?
-    end
   end
 end
