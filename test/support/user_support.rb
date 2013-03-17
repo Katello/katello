@@ -15,8 +15,6 @@ require 'minitest_helper'
 
 module UserSupport
 
-
-
   def self.setup_hidden_user(id)
     VCR.use_cassette('glue_pulp_hidden_user') do
       hidden_user = User.find(id)
