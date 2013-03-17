@@ -12,5 +12,5 @@ group :test do
 
   gem 'mocha', '~> 0.13.1', :require=>false
   # make our specs go faster (also appears in development group)
-  gem "parallel_tests"
+  gem "parallel_tests", "~> 0.10.1"
 end
