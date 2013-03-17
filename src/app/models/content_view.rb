@@ -175,6 +175,7 @@ class ContentView < ActiveRecord::Base
     replacing_version = self.version(to_env)
 
     promote_version = self.version(from_env)
+    promote_version = ContentViewVersion.find(promote_version.id)
     promote_version.environments << to_env
     promote_version.save!
 
@@ -204,6 +205,7 @@ class ContentView < ActiveRecord::Base
     if version.nil?
       raise Errors::ChangesetContentException.new(_("Cannot delete from %s, view does not exist there.") % from_env.name)
     end
+    version = ContentViewVersion.find(version.id)
     version.delete(from_env)
     self.destroy if self.versions.empty?
   end
