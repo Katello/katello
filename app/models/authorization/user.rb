@@ -11,17 +11,10 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 
-
 module Authorization::User
   extend ActiveSupport::Concern
 
   READ_PERM_VERBS = [:read, :update, :create, :delete]
-
-  included do
-    scope :readable, lambda { User.allowed_all_tags?(READ_PERM_VERBS, :users) ?
-        where(:hidden => false) : where("0 = 1") }
-  end
-
 
   module ClassMethods
     def creatable?
@@ -49,8 +42,11 @@ module Authorization::User
     end
   end
 
+  included do
 
-  module InstanceMethods
+    scope :readable, lambda { User.allowed_all_tags?(READ_PERM_VERBS, :users) ?
+        where(:hidden => false) : where("0 = 1") }
+
     def readable?
       User.any_readable? && !hidden
     end

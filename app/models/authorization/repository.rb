@@ -21,7 +21,6 @@ module Authorization::Repository
     }
   end
 
-
   module ClassMethods
     def readable(env)
       prod_ids = ::Product.readable(env.organization).collect{|p| p.id}

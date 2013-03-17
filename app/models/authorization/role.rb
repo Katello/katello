@@ -20,7 +20,6 @@ module Authorization::Role
     scope :readable, lambda {where("0 = 1")  unless User.allowed_all_tags?(READ_PERM_VERBS, :roles)}
   end
 
-
   module ClassMethods
     def creatable?
       User.allowed_to?([:create], :roles, nil)

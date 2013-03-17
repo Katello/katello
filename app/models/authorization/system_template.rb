@@ -14,7 +14,6 @@
 module Authorization::SystemTemplate
   extend ActiveSupport::Concern
 
-
   module ClassMethods
     def any_readable?(org)
       User.allowed_to?([:read_all, :manage_all], :system_templates, nil, org)
@@ -44,8 +43,7 @@ module Authorization::SystemTemplate
     end
   end
 
-
-  module InstanceMethods
+  included do
     def readable?
       self.class.readable?(self.environment.organization)
     end
