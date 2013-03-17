@@ -17,7 +17,7 @@ module Glue::ElasticSearch::ContentView
   module ClassMethods
   end
 
-  module InstanceMethods
+  included do
     def extended_index_attrs
       {
         :name_sort=>name.downcase,
