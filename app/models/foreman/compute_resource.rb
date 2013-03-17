@@ -24,8 +24,9 @@ class Foreman::ComputeResource < Resources::ForemanModel
 
   def json_default_options
     return {
-      :only => json_attributes,
-      :root => :compute_resource
+      :only   => json_attributes,
+      :root   => :compute_resource,
+      :except => [:password]
     }
   end
 
