@@ -29,7 +29,7 @@ class GluePulpRepoTestBase < MiniTest::Rails::ActiveSupport::TestCase
     configure_runcible
 
     services  = ['Candlepin', 'ElasticSearch', 'Foreman']
-    models    = ['KTEnvironment', 'Repository', 'Package', 'ContentView', 
+    models    = ['KTEnvironment', 'Repository', 'Package', 'ContentView',
                  'Organization', 'Product', 'EnvironmentProduct', 'ContentViewEnvironment']
     disable_glue_layers(services, models, true)
 

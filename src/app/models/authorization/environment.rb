@@ -124,7 +124,7 @@ module Authorization::Environment
   end
 
 
-  module InstanceMethods
+  included do
     def viewable_for_promotions?
       return false if !Katello.config.katello?
       User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, self.id, self.organization)

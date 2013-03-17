@@ -20,11 +20,6 @@ module Authorization::Organization
   READ_PERM_VERBS = [:read, :create, :update, :delete]
   SYNC_PERM_VERBS = [:sync]
 
-  included do
-    scope :readable, lambda {authorized_items(READ_PERM_VERBS)}
-  end
-
-
   module ClassMethods
     def creatable?
       User.allowed_to?([:create], :organizations)
@@ -87,7 +82,9 @@ module Authorization::Organization
   end
 
 
-  module InstanceMethods
+  included do
+
+    scope :readable, lambda {authorized_items(READ_PERM_VERBS)}
 
     def editable?
         User.allowed_to?([:update, :create], :organizations, nil, self)
