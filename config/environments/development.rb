@@ -18,6 +18,9 @@ Src::Application.configure do
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
 
+  # Be sure to restart your server when you modify this file.
+  config.session_store :cookie_store, :key => '_katello_session_development'
+
   #support for reloadable Runcible
   #config.autoload_paths += %W(#{Rails.root}/../../runcible/lib)
   #ActiveSupport::Dependencies.explicitly_unloadable_constants << "::Runcible::Resources"

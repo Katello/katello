@@ -11,6 +11,7 @@ path = File.expand_path("../lib", File.dirname(__FILE__))
 $LOAD_PATH << path unless $LOAD_PATH.include? path
 require 'katello/load_configuration'
 require 'katello/logging'
+require 'katello/url_constrained_cookie_store'
 
 
 # If you have a Gemfile, require the gems listed there, including any gems
