@@ -13,6 +13,8 @@
 class Katello::UrlConstrainedCookieStore < ActionDispatch::Session::CookieStore
   DEFAULT_OPTIONS.merge!(:expiration_exceptions => nil)
 
+  # This is almost entirely based on ActionDispatch::Session::AbstractStore#call.
+  # Unfortunately, there isn't a good way not to duplicate all this logic.
   def call(env)
     prepare!(env)
     response = @app.call(env)
