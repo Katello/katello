@@ -49,10 +49,16 @@ class ContentSearchController < ApplicationController
   end
 
   def products
+    view_ids = params[:views][:autocomplete].map{|v| v["id"]} rescue nil
+    view_search = ContentSearch::ContentViewSearch.new(:name => _("Content View"),
+                                                       :view_ids => view_ids
+                                                      )
+
     product_search = ContentSearch::ProductSearch.new(:name => _('Products'),
-                                                      :product_ids => param_product_ids
+                                                      :product_ids => param_product_ids,
+                                                      :view_ids => view_ids
                                                      )
-    render :json => product_search
+    render :json => {:rows=>(view_search.rows + product_search.rows), :name=>_("Products")}
   end
 
   def views
