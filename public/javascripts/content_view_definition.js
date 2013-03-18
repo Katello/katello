@@ -350,6 +350,7 @@ KT.content_view_definition_filters = (function(){
     var initialize = function() {
         initialize_filters();
         initialize_filter();
+        initialize_rule();
     },
     initialize_filters = function() {
         var pane = $("#filters");
@@ -367,6 +368,42 @@ KT.content_view_definition_filters = (function(){
         $("#filter_tabs").tabs();
         register_remove($("#rules_form"));
         initialize_checkboxes($("#rules_form"));
+    },
+    initialize_rule = function() {
+        var pane = $("#rule");
+        if (pane.length === 0) {
+            return;
+        }
+        $('.inclusion').unbind('change');
+        $('.inclusion').change(function(){
+            $('#update_form').ajaxSubmit({
+                type: "PUT",
+                cache: false
+            });
+        });
+
+        $('#add_package').unbind('click');
+        $('#add_package').click(function() {
+            var package_string = $('input#package_input').val();
+            if (package_string.length > 0) {
+                $.ajax({
+                    type: 'PUT',
+                    url: $(this).data('url'),
+                    data: {'package' : package_string},
+                    cache: false,
+                    success: function(html) {
+                        var empty_row = $("tr#empty_row");
+                        empty_row.after(html);
+                        empty_row.hide();
+                        initialize_checkboxes($("#parameters_form"));
+                    },
+                    error: function() {
+                    }
+                });
+            }
+        });
+        register_remove($("#parameters_form"));
+        initialize_checkboxes($("#parameters_form"));
     },
     register_remove = function(form) {
         var remove_button = form.find("#remove_button");

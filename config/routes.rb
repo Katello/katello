@@ -94,6 +94,7 @@ Src::Application.routes.draw do
       get :default_label
       get :items
     end
+
     member do
       post :clone
       get :views
@@ -104,6 +105,7 @@ Src::Application.routes.draw do
       put :update_content
       put :update_component_views
     end
+
     resources :content_view, :only => [], :controller => :content_view_definitions do
       member do
         post :refresh
@@ -117,6 +119,16 @@ Src::Application.routes.draw do
       resources :rules do
         collection do
           delete :destroy_rules
+        end
+
+        member do
+          get :edit_package
+          put :add_package
+          get :edit_package_group
+          put :add_package_group
+          get :edit_errata
+          put :edit_errata
+          delete :destroy_parameters
         end
       end
     end

@@ -119,7 +119,7 @@ class FiltersController < ApplicationController
   private
 
   def controller_display_name
-    return 'filter'
+    return 'filters'
   end
 
 end

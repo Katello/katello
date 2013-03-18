@@ -6,10 +6,11 @@
 
   .grid_12#filter
 
-    .actions.panel_link
-      = link_to(_("◀ Back to Filter List"), content_view_definition_filters_path(view_definition.id))
-    %br
+    .panel_link
+      = link_to(_("◀ Back to Filter List"),
+        content_view_definition_filters_path(view_definition.id))
 
+    %br
     %h4 #{_("Filter: %{name}") % {:name => filter.name}}
 
     #filter_tabs
