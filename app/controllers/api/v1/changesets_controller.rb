@@ -13,7 +13,7 @@
 class Api::V1::ChangesetsController < Api::V1::ApiController
 
   before_filter :find_changeset, :only => [:show, :update, :destroy, :promote, :apply, :dependencies]
-  before_filter :find_environment
+  before_filter :find_environment, :only => [:create, :index]
   before_filter :authorize
 
   def rules
@@ -48,7 +48,7 @@ class Api::V1::ChangesetsController < Api::V1::ApiController
   def index
     changesets = Changeset.select("changesets.*, environments.name AS environment_name").
         joins(:environment).where(params.slice(:name, :environment_id))
-    render :json => changesets
+    respond :collection => changesets
   end
 
   api :GET, "/changesets/:id", "Show a changeset"
@@ -63,29 +63,22 @@ class Api::V1::ChangesetsController < Api::V1::ApiController
     @changeset.attributes = params[:changeset].slice(:name, :description)
     @changeset.save!
 
-    render :json => @changeset
+    respond
   end
 
   api :GET, "/changesets/:id/dependencies", "List the Depenencies for a changeset"
   def dependencies
-    render :json => @changeset.calc_dependencies.to_json
+    #TODO: fix dependency resolution
+    respond_for_index :collection => @changeset.calc_dependencies
   end
 
   api :POST, "/organizations/:organization_id/environments/:environment_id/changesets", "Create a changeset"
   param_group :changeset
   param :changeset, Hash do
-    param :type, ["PROMOTION", "DELETION"], :required => true
+    param :type, Changeset::TYPES, :required => true
   end
   def create
-    cs_type = params[:changeset][:type]
-    if cs_type == 'PROMOTION'
-      @changeset = PromotionChangeset.new(params[:changeset])
-    elsif cs_type == 'DELETION'
-      @changeset = DeletionChangeset.new(params[:changeset])
-    else
-      raise HttpErrors::UnprocessableEntity, _("Unknown changeset type, must be PROMOTION or DELETION: %s") % cs_type
-    end
-
+    @changeset = Changeset.new_changeset(params[:changeset])
     @changeset.environment = @environment
     @changeset.save!
 
@@ -95,23 +88,20 @@ class Api::V1::ChangesetsController < Api::V1::ApiController
   # DEPRICATED - TODO: Note this in the new API doc format
   api :POST, "/changesets/:id/promote", "Promote a changeset into a new envrionment."
   def promote
-    @changeset.state = Changeset::REVIEW
-    @changeset.save!
-    async_job = @changeset.apply :async => true
-    render :json => async_job, :status => 202
+    apply
   end
 
   def apply
     @changeset.state = Changeset::REVIEW
     @changeset.save!
     async_job = @changeset.apply :async => true
-    render :json => async_job, :status => 202
+    respond_for_async :resource => async_job
   end
 
   api :DELETE, "/changesets/:id", "Destroy a changeset"
   def destroy
     @changeset.destroy
-    render :text => _("Deleted changeset '%s'") % params[:id], :status => 200
+    respond :message => _("Deleted changeset '%s'") % params[:id]
   end
 
   private
@@ -124,13 +114,9 @@ class Api::V1::ChangesetsController < Api::V1::ApiController
   end
 
   def find_environment
-    if @changeset
-      @environment = @changeset.environment
-    elsif params[:environment_id]
-      @environment = KTEnvironment.find(params[:environment_id])
-      raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
-      @environment
-    end
+    @environment = KTEnvironment.find(params[:environment_id])
+    raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
+    @environment
   end
 
 end
