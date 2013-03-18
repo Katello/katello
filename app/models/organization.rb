@@ -47,9 +47,9 @@ class Organization < ActiveRecord::Base
   before_save :initialize_default_info
 
   validates :name, :uniqueness => true, :presence => true
+  validates_with Validators::NonHtmlNameValidator, :attributes => :name
   validates :label, :uniqueness => { :message => _("already exists (including organizations being deleted)") },
             :presence => true
-  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validate :unique_name_and_label
