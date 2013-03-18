@@ -26,6 +26,13 @@ module SubscriptionsHelper
     _('System with uuid %s not found') % host_id
   end
 
+  def subscriptions_distributor_link_helper distributor_id
+    distributor = Distributor.first(:conditions => { :id => distributor_id })
+    link_to distributor.name, root_path + "distributors#panel=distributor_#{distributor.id}"
+  rescue
+    _('Distributor with uuid %s not found') % distributor_id
+  end
+
   def subscriptions_activation_key_link_helper key
     link_to key.name, root_path + "activation_keys#panel=activation_key_#{key.id}"
   end

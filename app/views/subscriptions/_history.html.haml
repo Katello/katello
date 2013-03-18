@@ -23,8 +23,8 @@
                 = status["statusMessage"]
               %td
                 = _("%s ago") % time_ago_in_words(status["created"])
-            - if status['webAppPrefix']
-              - status['webAppPrefix'] += '/' if !status['webAppPrefix'].end_with?('/')
+            - if status['webUrl']
+              - status['webUrl'] += '/' if !status['webUrl'].end_with?('/')
               %tr{:class => cycle_class}
                 %td{:colspan => 2}
                   &nbsp; &nbsp; &nbsp;
