@@ -13,6 +13,7 @@
 
 class SystemsController < ApplicationController
   include SystemsHelper
+  include ConsumersControllerLogic
 
   before_filter :find_system, :except =>[:index, :items, :environments, :new, :create, :bulk_destroy,
                                          :bulk_content_install, :bulk_content_update, :bulk_content_remove,
@@ -208,35 +209,11 @@ class SystemsController < ApplicationController
 
   end
 
-  # Note that finding the provider_id is important to allow the subscription to be linked to the url for either the
-  # Red Hat provider or the custom provider page
   def subscriptions
-    # Consumed subscriptions
-    consumed_entitlements = @system.consumed_entitlements.collect do |entitlement|
-      pool = ::Pool.find_pool(entitlement.poolId)
-      product = Product.where(:cp_id => pool.product_id).first
-      entitlement.provider_id = product.try :provider_id
-      entitlement
-    end
-
-    cp_pools = @system.filtered_pools(current_user.subscriptions_match_system_preference,
+    consumed = consumed_subscriptions(@system)
+    available = available_subscriptions(@system.filtered_pools(current_user.subscriptions_match_system_preference,
                                       current_user.subscriptions_match_installed_preference,
-                                      current_user.subscriptions_no_overlap_preference)
-
-    if cp_pools
-      # Pool objects
-      pools = cp_pools.collect{|cp_pool| ::Pool.find_pool(cp_pool['id'], cp_pool)}
-
-      subscriptions = pools.collect do |pool|
-        product = Product.where(:cp_id => pool.product_id).first
-        next if product.nil?
-        pool.provider_id = product.provider_id
-        pool
-      end.compact
-      subscriptions = [] if subscriptions.nil?
-    else
-      subscriptions = []
-    end
+                                      current_user.subscriptions_no_overlap_preference))
 
     # Set up the subscription filters based upon the user prefs
     subscription_filters = "
@@ -248,8 +225,8 @@ class SystemsController < ApplicationController
               current_user.subscriptions_no_overlap_preference ? "selected='selected'" : '', _("No Overlap with Current")]
 
     @organization = current_organization
-    render :partial=>"subscriptions", :locals=>{:system=>@system, :avail_subs => subscriptions,
-                                                :consumed_entitlements => consumed_entitlements,
+    render :partial=>"subscriptions", :locals=>{:system=>@system, :avail_subs => available,
+                                                :consumed_entitlements => consumed,
                                                 :editable=>@system.editable?, :subscription_filters=>subscription_filters}
   end
 

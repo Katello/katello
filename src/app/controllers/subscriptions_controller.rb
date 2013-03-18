@@ -19,7 +19,7 @@ require 'ostruct'
 class SubscriptionsController < ApplicationController
 
   before_filter :find_provider
-  before_filter :find_subscription, :except=>[:index, :items, :new, :upload, :delete_manifest, :history, :history_items]
+  before_filter :find_subscription, :except=>[:index, :items, :new, :upload, :delete_manifest, :history, :history_items, :edit_manifest, :refresh_manifest]
   before_filter :authorize
   before_filter :setup_options, :only=>[:index, :items]
 
@@ -40,7 +40,9 @@ class SubscriptionsController < ApplicationController
       :history_items=> read_provider_test,
       :new => read_provider_test,
       :upload => edit_provider_test,
-      :delete_manifest => edit_provider_test
+      :refresh_manifest => edit_provider_test,
+      :delete_manifest => edit_provider_test,
+      :edit_manifest => read_provider_test
     }
   end
 
@@ -113,24 +115,20 @@ class SubscriptionsController < ApplicationController
     activation_keys = ActivationKey.joins(:pools).where('pools.cp_id'=>@subscription.cp_id).readable(current_organization)
     activation_keys = [] if !activation_keys
 
-    render :partial=>"consumers", :locals=>{:subscription=>@subscription, :systems=>systems, :activation_keys=>activation_keys, :editable => false, :name => controller_display_name}
+    distributors = current_organization.distributors.readable(current_organization)
+    distributors = distributors.all_by_pool(@subscription.cp_id)
+
+    render :partial=>"consumers", :locals=>{:subscription=>@subscription, :systems=>systems, :activation_keys=>activation_keys, :distributors=>distributors, :editable => false, :name => controller_display_name}
   end
 
   def new
-    @details = current_organization.owner_details
-    @details['upstreamUuid'] = nil if @details['upstreamUuid'] == ''
-    begin
-      @statuses = @provider.owner_imports
+    get_manifest_details
+    render :partial=>"new", :locals=>{:provider=>@provider, :statuses=>@statuses, :details=>@details, :upstream=>@upstream, :name => controller_display_name}
+  end
 
-      # The owner details does not currently contain the webAppPrefix, so find it in the import history
-      if @details['upstreamUuid']
-        import_status = @statuses.find {|s| s['webAppPrefix'] && s['upstreamId'] == @details['upstreamUuid']}
-        @details['webAppPrefix'] = import_status['webAppPrefix'] if import_status
-      end
-    rescue => error
-      # quietly ignore
-    end
-    render :partial=>"new", :locals=>{:provider=>@provider, :statuses=>@statuses, :details=>@details, :name => controller_display_name}
+  def edit_manifest
+    get_manifest_details
+    render :partial=>"edit_manifest", :locals=>{:provider=>@provider, :statuses=>@statuses, :details=>@details, :upstream=>@upstream, :name => controller_display_name}
   end
 
   def history
@@ -209,8 +207,26 @@ class SubscriptionsController < ApplicationController
       notify.error _("Subscription manifest must be specified on upload.")
     end
 
-    to_ret = {'state' => 'running'}
-    render :json=>to_ret
+    render :json=>{'state' => 'running'}
+  end
+
+  def refresh_manifest
+    begin
+      get_manifest_details # to set @upstream
+      @provider.refresh_manifest @upstream, :async => true, :notify => true
+    rescue Exception => error
+      if error.respond_to?(:response)
+        display_message = ApplicationController.parse_display_message(error.response)
+      elsif error.message
+        display_message = error.message
+      else
+        display_message = ""
+      end
+
+      notify.exception @provider.refresh_error_message(display_message), error
+    end
+
+    render :json=>{'state' => 'running'}
   end
 
   def section_id
@@ -218,6 +234,20 @@ class SubscriptionsController < ApplicationController
   end
 
   private
+
+  def get_manifest_details
+    @details = current_organization.owner_details
+    @statuses = @provider.owner_imports || []
+    @upstream =  @details['upstreamConsumer'].blank? ? {} : @details['upstreamConsumer']
+
+    # Put some manifest-specific information onto the consumer for use in the view
+    import_status = @statuses.find {|s| s['upstreamId'] == @upstream['uuid']}
+    if !import_status.blank?
+      @upstream['generatedBy'] = import_status['generatedBy']
+      @upstream['generatedDate'] = import_status['generatedDate']
+      @upstream['fileName'] = import_status['fileName']
+    end
+  end
 
   def find_or_create_temp_dir
     dir = "#{Rails.root}/tmp"

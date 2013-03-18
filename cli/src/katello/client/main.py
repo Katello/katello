@@ -51,7 +51,9 @@ from katello.client.core import (
   subnet,
   smart_proxy,
   compute_resource,
-  hardware_model
+  hardware_model,
+  distributor,
+  distributor_custom_info
 )
 
 def setup_admin(katello_cmd, mode=get_katello_mode()):
@@ -215,6 +217,20 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
     system_cmd.add_command('update_custom_info', system_custom_info.UpdateCustomInfo())
     system_cmd.add_command('remove_custom_info', system_custom_info.RemoveCustomInfo())
     katello_cmd.add_command('system', system_cmd)
+
+    distributor_cmd = distributor.Distributor()
+    distributor_cmd.add_command('list', distributor.List())
+    distributor_cmd.add_command('create', distributor.Create())
+    distributor_cmd.add_command('delete', distributor.Delete())
+    distributor_cmd.add_command('subscriptions', distributor.Subscriptions())
+    distributor_cmd.add_command('subscribe', distributor.Subscribe())
+    distributor_cmd.add_command('unsubscribe', distributor.Unsubscribe())
+    distributor_cmd.add_command('info', distributor.Info())
+    distributor_cmd.add_command('update', distributor.Update())
+    distributor_cmd.add_command('add_custom_info', distributor_custom_info.AddCustomInfo())
+    distributor_cmd.add_command('update_custom_info', distributor_custom_info.UpdateCustomInfo())
+    distributor_cmd.add_command('remove_custom_info', distributor_custom_info.RemoveCustomInfo())
+    katello_cmd.add_command('distributor', distributor_cmd)
 
     if mode == 'katello':
         system_group_cmd = system_group.SystemGroup()
