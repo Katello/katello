@@ -14,16 +14,12 @@ Src::Application.routes.draw do
     scope :module => :v2, :constraints => ApiVersionConstraint.new(:version => 2) do
 
       api_resources :organizations do
-        api_resources :environments do
-          get :repositories, :on => :member
-          api_resources :changesets, :only => [:index, :create]
-        end
+        api_resources :environments
         api_resources :providers, :only => [:index]
         api_resources :products, :only => [:index]
         api_resources :activation_keys, :only => [:index, :create]
         api_resources :content_views, :only => [:index, :create]
         api_resources :content_view_definitions, :only => [:index, :create]
-        #api_resources :uebercert, :only => [:show]
         resource :uebercert, :only => [:show]
       end
 
@@ -35,11 +31,14 @@ Src::Application.routes.draw do
         api_resources :products, :only => [:index] do
           get :repositories, :on => :member
         end
+
         api_resources :activation_keys, :only => [:index, :create]
         api_resources :content_views, :only => [:index]
+        api_resources :changesets, :only => [:index, :create]
 
         member do
           get :releases
+          get :repositories
         end
       end
 
@@ -127,6 +126,20 @@ Src::Application.routes.draw do
         end
       end
 
+      api_resources :changesets, :only => [:show, :update, :destroy] do
+        post :apply, :on => :member, :action => :apply
+        #TODO: fix dependency resolution
+        #get :dependencies, :on => :member, :action => :dependencies
+
+        api_attachable_resources :products, :controller => :changesets_content
+        api_attachable_resources :packages, :controller => :changesets_content, :constraints => { :id => /[0-9a-zA-Z\-_.]+/ }
+        api_attachable_resources :errata, :controller => :changesets_content
+        api_attachable_resources :repositories, :controller => :changesets_content, :resource_name => :repo
+        api_attachable_resources :distributions, :controller => :changesets_content
+        api_attachable_resources :templates, :controller => :changesets_content
+        api_attachable_resources :content_views, :controller => :changesets_content
+      end
+
       # api custom information
       match '/custom_info/:informable_type/:informable_id' => 'custom_info#create', :via => :post, :as => :create_custom_info
       match '/custom_info/:informable_type/:informable_id' => 'custom_info#index',  :via => :get,  :as => :custom_info
@@ -189,10 +202,6 @@ Src::Application.routes.draw do
           api_resources :errata, :only => [:index, :create], :controller => :system_group_errata
         end
 
-        api_resources :environments do
-         get :repositories, :on => :member
-         api_resources :changesets, :only => [:index, :create]
-        end
         api_resources :sync_plans
         api_resources :tasks, :only => [:index]
         api_resources :providers, :only => [:index]
@@ -222,21 +231,6 @@ Src::Application.routes.draw do
         match '/default_info/:informable_type/:keyname' => 'organization_default_info#destroy', :via => :delete, :as => :destroy_default_info
         match '/default_info/:informable_type/apply' => 'organization_default_info#apply_to_all', :via => :post, :as => :apply_default_info
 
-      end
-
-
-      api_resources :changesets, :only => [:show, :update, :destroy] do
-        post :promote, :on => :member, :action => :promote
-        post :apply, :on => :member, :action => :apply
-        get :dependencies, :on => :member, :action => :dependencies
-
-        api_attachable_resources :products, :controller => :changesets_content
-        api_attachable_resources :packages, :controller => :changesets_content, :constraints => { :id => /[0-9a-zA-Z\-_.]+/ }
-        api_attachable_resources :errata, :controller => :changesets_content
-        api_attachable_resources :repositories, :controller => :changesets_content, :resource_name => :repo
-        api_attachable_resources :distributions, :controller => :changesets_content
-        api_attachable_resources :templates, :controller => :changesets_content
-        api_attachable_resources :content_views, :controller => :changesets_content
       end
 
       api_resources :ping, :only => [:index]
