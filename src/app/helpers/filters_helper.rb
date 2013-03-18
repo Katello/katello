@@ -43,4 +43,23 @@ module FiltersHelper
     @product_hash
   end
 
+  def filter_rule_url(rule)
+    case rule.content_type
+      when FilterRule::PACKAGE
+        link_to(FilterRule::CONTENT_OPTIONS.index(rule.content_type),
+                edit_package_content_view_definition_filter_rule_path(rule.filter.content_view_definition.id,
+                                                                      rule.filter.id,
+                                                                      rule.id))
+      when FilterRule::PACKAGE_GROUP
+        link_to(FilterRule::CONTENT_OPTIONS.index(rule.content_type),
+                edit_package_group_content_view_definition_filter_rule_path(rule.filter.content_view_definition.id,
+                                                                            rule.filter.id,
+                                                                            rule.id))
+      when FilterRule::ERRATA
+        link_to(FilterRule::CONTENT_OPTIONS.index(rule.content_type),
+                edit_errata_content_view_definition_filter_rule_path(rule.filter.content_view_definition.id,
+                                                                     rule.filter.id,
+                                                                     rule.id))
+    end
+  end
 end
