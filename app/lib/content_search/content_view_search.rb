@@ -43,9 +43,9 @@ module ContentSearch
 
     def views
       @views ||= if self.view_ids
-        views = ContentView.readable(current_organization).non_default.where(:id => view_ids)
+        views = ContentView.readable(current_organization).where(:id => view_ids)
       else
-        views = ContentView.readable(current_organization).non_default
+        views = ContentView.readable(current_organization)
       end
     end
 
