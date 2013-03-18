@@ -124,7 +124,8 @@ Requires(postun): initscripts coreutils sed
 BuildRequires:  coreutils findutils sed
 BuildRequires:  %{?scl_prefix}rubygems
 BuildRequires:  %{?scl_prefix}rubygem-rake
-BuildRequires:  %{?scl_prefix}rubygem(jammit)
+# TODO we will remove jammit soon
+BuildRequires:  rubygem(jammit)
 BuildRequires:  %{?scl_prefix}rubygem(chunky_png)
 BuildRequires:  %{?scl_prefix}rubygem(fssm) >= 0.2.7
 BuildRequires:  %{?scl_prefix}rubygem(compass)
@@ -463,7 +464,9 @@ fi
     #compile SASS files
     echo Compiling SASS files...
     touch config/katello.yml
+%{?scl:scl enable %{scl} "}
     compass compile
+%{?scl:"}
     rm config/katello.yml
 
     #generate Rails JS/CSS/... assets
