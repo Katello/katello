@@ -13,7 +13,7 @@
 module ContentSearch
 
   class ProductSearch < ContainerSearch
-    attr_accessor :product_ids
+    attr_accessor :product_ids, :view_ids
 
     def initialize(options)
       super
@@ -21,18 +21,28 @@ module ContentSearch
     end
 
     def build_rows
-      products.collect do |prod|
-        cols = {}
-        prod.environments.default_view.collect do |env|
-          cols[env.id] = Cell.new(:hover => container_hover_html(prod, env)) if readable_env_ids.include?(env.id)
+      rows = []
+
+      views = ContentView.readable(current_organization)
+      views = views.where(:id=>@view_ids) if @view_ids
+
+      views.each do |view|
+        view.all_version_products.collect do |prod|
+          cols = {}
+          prod.environments.default_view.each do |env|
+            cols[env.id] = Cell.new(:hover => container_hover_html(prod, env)) if readable_env_ids.include?(env.id)
+          end
+          rows << Row.new(:id => "view_#{view.id}_product_#{prod.id}",
+                                 :name => prod.name,
+                                 :cols => cols,
+                                 :data_type => "product",
+                                 :value => prod.name,
+                                 :parent_id=> "view_#{view.id}"
+                                )
         end
-        Row.new(:id => "product_#{prod.id}",
-                               :name => prod.name,
-                               :cols => cols,
-                               :data_type => "product",
-                               :value => prod.name
-                              )
       end
+
+      rows
     end
 
     def products
