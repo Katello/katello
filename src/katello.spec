@@ -411,7 +411,7 @@ testing.
 export RAILS_ENV=build
 
 # when running in SCL we do not distribute any devel packages yet
-%if "%{scl}"
+%if %{?scl:1}%{!?scl:0}
     rm -f bundler.d/checking.rb
     rm -f bundler.d/coverage.rb
     rm -f bundler.d/debugging.rb
@@ -422,7 +422,7 @@ export RAILS_ENV=build
 %endif
 
 #replace shebangs for SCL
-%if "%{scl}"
+%if %{?scl:1}%{!?scl:0}
     sed -ri '1sX(/usr/bin/ruby|/usr/bin/env ruby)X%{scl_ruby}X' script/*
 %endif
 
