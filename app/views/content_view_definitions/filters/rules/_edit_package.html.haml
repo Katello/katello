@@ -1,0 +1,64 @@
+= render :partial => "content_view_definitions/tupane_header"
+
+= content_for :content do
+
+  .grid_12#rule
+
+    .panel_link
+      = link_to(_("◀ Back to Filter List"),
+        content_view_definition_filters_path(view_definition.id), {:class => "separator"})
+      = link_to(_("Filter: %{name}") % {:name => filter.name},
+        edit_content_view_definition_filter_path(view_definition.id, filter.id))
+
+    %br
+
+    .grid_12.simple-box
+      %h4 #{_("Packages")}
+
+      .simple-box-body
+        = kt_form_for(rule,
+          :url => content_view_definition_filter_rule_path(view_definition.id, filter.id, rule.id),
+          :html => {:id => "update_form"}) do form
+
+          = radio_button_tag "filter_rule[inclusion]", true, rule.inclusion ? true : false, {:class => :inclusion, :tabindex => auto_tab_index}
+          = label_tag _('Specify Included Packages')
+          = radio_button_tag "filter_rule[inclusion]", false, rule.inclusion ? false : true, {:class => :inclusion, :tabindex => auto_tab_index}
+          = label_tag _('Specify Excluded Packages')
+
+        = kt_form_for(view_definition,
+          :url => destroy_parameters_content_view_definition_filter_rule_path(view_definition.id, filter.id, rule.id),
+          :html => {:id => "parameters_form"}) do |form|
+
+          %table
+            %thead
+              %tr
+                %th #{_("Name")}
+
+            %tbody
+              %tr
+                %td
+                  - help_text = _("Enter Package Name...")
+                  %input{:type=>'text', :id=>'package_input', :size=>'30', :placeholder => help_text,
+                         :title => help_text, :tabindex => auto_tab_index}
+                  %a#add_package{:style => 'padding-left: 10px;', :tabindex => auto_tab_index,
+                                 'data-url' => add_package_content_view_definition_filter_rule_path(view_definition.id, filter.id, rule.id)} #{_('+ Add')}
+
+              %tr#empty_row{:class=>(:hidden unless rule.parameters[:units].blank?)}
+                %td
+                  = _("This rule does not currently have any parameters defined.")
+
+
+              - if rule.parameters.has_key?(:units)
+                - rule.parameters[:units].each do |unit|
+                  %tr
+                    %td
+                      - if editable
+                        .panel_link
+                          = check_box_tag "units[#{unit[:name]}]", unit[:name], false, {'data-id' => unit[:name]}
+                          %label
+                            = unit[:name]
+
+          - if editable
+            %input.button.fr.disabled{:type=>"button", :id=>"remove_button", :value=>_("Remove")}
+
+= render :template => "layouts/tupane_layout"

@@ -22,9 +22,11 @@
           %tr
             %td
               - if editable
-                = check_box_tag "filter_rules[#{rule.id}]", FilterRule::CONTENT_OPTIONS.index(rule.content_type),
-                  false, {'data-id' => rule.id}
-              %label{:for=>rule.content_type}
+                .panel_link
+                  = check_box_tag "filter_rules[#{rule.id}]", FilterRule::CONTENT_OPTIONS.index(rule.content_type),
+                    false, {'data-id' => rule.id}
+                  = filter_rule_url(rule)
+              - else
                 = FilterRule::CONTENT_OPTIONS.index(rule.content_type)
 
     - if editable
