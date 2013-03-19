@@ -331,23 +331,6 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :system_templates do
-    collection do
-      get :auto_complete_search
-      get :items
-      get :product_packages
-      get :product_comps
-      get :product_repos
-    end
-    member do
-      get :promotion_details
-      get :object
-      get :download
-      get :validate
-      put :update_content
-    end
-  end
-
   resources :providers do
     collection do
       get :auto_complete_search
@@ -407,7 +390,6 @@ Src::Application.routes.draw do
       get :products
       get :packages
       get :errata
-      get :system_templates
       get :repos
       get :distributions
       get :details
@@ -433,7 +415,6 @@ Src::Application.routes.draw do
     resources :environments do
       get :default_label, :on => :collection
       member do
-        get :system_templates
         get :products
         get :content_views
       end
@@ -574,40 +555,6 @@ Src::Application.routes.draw do
       end
     end
 
-    resources :templates, :except => [:index] do
-      post :import, :on => :collection
-      get :export, :on => :member
-      get :validate, :on => :member
-      resources :products, :controller => :templates_content do
-        post   :index, :on => :collection, :action => :add_product
-        delete :destroy, :on => :member, :action => :remove_product
-      end
-      resources :packages, :controller => :templates_content, :constraints => { :id => /[0-9a-zA-Z\-_.]+/ } do
-        post   :index, :on => :collection, :action => :add_package
-        delete :destroy, :on => :member, :action => :remove_package
-      end
-      resources :parameters, :controller => :templates_content do
-        post   :index, :on => :collection, :action => :add_parameter
-        delete :destroy, :on => :member, :action => :remove_parameter
-      end
-      resources :package_groups, :controller => :templates_content do
-        post   :index, :on => :collection, :action => :add_package_group
-        delete :destroy, :on => :member, :action => :remove_package_group
-      end
-      resources :package_group_categories, :controller => :templates_content do
-        post   :index, :on => :collection, :action => :add_package_group_category
-        delete :destroy, :on => :member, :action => :remove_package_group_category
-      end
-      resources :distributions, :controller => :templates_content do
-        post   :index, :on => :collection, :action => :add_distribution
-        delete :destroy, :on => :member, :action => :remove_distribution
-      end
-      resources :repositories, :controller => :templates_content do
-        post   :index, :on => :collection, :action => :add_repo
-        delete :destroy, :on => :member, :action => :remove_repo
-      end
-    end
-
     resources :organizations do
       resources :products, :only => [:index, :show, :update, :destroy] do
         get :repositories, :on => :member
@@ -726,10 +673,6 @@ Src::Application.routes.draw do
         post   :index, :on => :collection, :action => :add_distribution
         delete :destroy, :on => :member, :action => :remove_distribution
       end
-      resources :templates, :controller => :changesets_content do
-        post   :index, :on => :collection, :action => :add_template
-        delete :destroy, :on => :member, :action => :remove_template
-      end
       resources :content_views, :controller => :changesets_content do
         post   :index, :on => :collection, :action => :add_content_view
         delete :destroy, :on => :member, :action => :remove_content_view
@@ -768,7 +711,6 @@ Src::Application.routes.draw do
         get :repositories, :on => :member
       end
       resources :activation_keys, :only => [:index, :create]
-      resources :templates, :only => [:index]
 
       member do
         get :releases

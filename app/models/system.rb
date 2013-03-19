@@ -27,7 +27,6 @@ class System < ActiveRecord::Base
   acts_as_reportable
 
   belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :systems
-  belongs_to :system_template
 
   has_many :task_statuses, :as => :task_owner, :dependent => :destroy
   has_many :system_activation_keys, :dependent => :destroy
@@ -170,7 +169,6 @@ class System < ActiveRecord::Base
     json = super(options)
     json['environment'] = environment.as_json unless environment.nil?
     json['activation_key'] = activation_keys.as_json unless activation_keys.nil?
-    json['template'] = system_template.as_json unless system_template.nil?
 
     json['content_view'] = content_view.as_json if content_view
     json['ipv4_address'] = facts.try(:[], 'network.ipv4_address') if respond_to?(:facts)
