@@ -103,7 +103,9 @@ Requires:       lsof
 Requires:       redhat-logos >= 60.0.14
 %endif
 
-%if 0%{?fedora} && 0%{?fedora} < 17
+# REMOVEME - uncomment following line instead the next for SCL
+#%if 0%{?fedora} && 0%{?fedora} < 17
+%if 0%{?rhel} == 6 || (0%{?fedora} && 0%{?fedora} < 17)
 Requires: %{?scl_prefix}ruby(abi) = 1.8
 %else
 Requires: %{?scl_prefix}ruby(abi) = 1.9.1
