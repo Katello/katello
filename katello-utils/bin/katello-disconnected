@@ -41,7 +41,6 @@ require "#{DISCONNECTED_PREFIX}/lib/simple_logger.rb"
 require "#{DISCONNECTED_PREFIX}/lib/disconnected_pulp.rb"
 
 require "#{KATELLO_PREFIX}/app/lib/util/cdn_var_substitutor.rb"
-require "#{KATELLO_PREFIX}/app/lib/resource_permissions.rb"
 require "#{KATELLO_PREFIX}/app/lib/http_resource.rb"
 
 include FastGettext::Translation
@@ -304,12 +303,8 @@ class ActiveManifest
 
   def import manifest_file, cdnca_file
     # import basic manifest
-    unless File.exist? manifest_file
-      LOG.fatal _("Unable to read file %s") % manifest_file
-    end
-    unless File.exist? cdnca_file
-      LOG.fatal _("Unable to read file %s, specify --cdnca option") % cdnca_file
-    end
+    LOG.fatal _("Please provide a manifest using --manifest option") if manifest_file.nil?
+    LOG.fatal _("Unable to read file %s, specify --cdnca option") % cdnca_file unless File.exist? cdnca_file
     imanifest = ManifestReader::Manifest.new manifest_file, cdn_url, cdn_ca
 
     # populate repositories
