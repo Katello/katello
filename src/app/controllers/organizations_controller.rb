@@ -14,7 +14,7 @@
 class OrganizationsController < ApplicationController
   include AutoCompleteSearch
   respond_to :html, :js
-  before_filter :find_organization, :only => [:show, :edit, :update, :destroy, :events]
+  before_filter :find_organization, :only => [:edit, :update, :destroy, :events]
   before_filter :find_organization_by_id, :only => [:environments_partial, :download_debug_certificate]
   before_filter :authorize #call authorize after find_organization so we call auth based on the id instead of cp_id
   before_filter :setup_options, :only=>[:index, :items]
@@ -74,11 +74,12 @@ class OrganizationsController < ApplicationController
   end
 
   def show
-    render :partial=>"common/list_update", :locals => {:item => @organization, :accessor => 'label', :columns => ['name']}
-  end
-
-  def new
-    render :partial=>"new"
+    if params[:id] == 'new'
+      render :partial=>"new"
+    else
+      find_organization
+      render :partial=>"common/list_update", :locals => {:item => @organization, :accessor => 'label', :columns => ['name']}
+    end
   end
 
   def create
