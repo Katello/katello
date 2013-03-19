@@ -27,7 +27,6 @@ from katello.client.api.environment import EnvironmentAPI
 from katello.client.api.product import ProductAPI
 from katello.client.api.repo import RepoAPI
 from katello.client.api.provider import ProviderAPI
-from katello.client.api.template import TemplateAPI
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.api.user import UserAPI
 from katello.client.api.user_role import UserRoleAPI
@@ -157,17 +156,6 @@ def get_provider(orgName, provName):
         raise ApiDataError(_("Could not find provider [ %(provName)s ] within organization [ %(orgName)s ]") %
             {'provName':provName, 'orgName':orgName})
     return prov
-
-
-def get_template(orgName, envName, tplName):
-    template_api = TemplateAPI()
-
-    env = get_environment(orgName, envName)
-    tpl = template_api.template_by_name(env["id"], tplName)
-    if tpl == None:
-        raise ApiDataError(_("Could not find template [ %(tplName)s ] within environment [ %(env_name)s ]") %
-            {'tplName':tplName, 'env_name':env["name"]})
-    return tpl
 
 
 def get_changeset(orgName, envName, csName):

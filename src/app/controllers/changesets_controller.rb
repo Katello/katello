@@ -191,10 +191,6 @@ class ChangesetsController < ApplicationController
               end
             end
 
-          when "template"
-            @changeset.add_template! SystemTemplate.find(id) if adding
-            @changeset.remove_template! SystemTemplate.find(id) if !adding
-
           when "product"
             @changeset.add_product! Product.find(id) if adding
             @changeset.remove_product! Product.find(id) if !adding
@@ -335,15 +331,11 @@ class ChangesetsController < ApplicationController
   def simplify_changeset cs
 
     to_ret = {:id => cs.id.to_s, :name => cs.name, :type => cs.action_type, :description => cs.description,
-              :timestamp => cs.updated_at.to_i.to_s, :content_views => {}, :system_templates => {}, :products => {},
+              :timestamp => cs.updated_at.to_i.to_s, :content_views => {}, :products => {},
               :is_new => cs.state == Changeset::NEW, :state => cs.state}
 
     cs.content_views.each do |view|
       to_ret[:content_views][view.id] = {:id=> view.id, :name=>view.name}
-    end
-
-    cs.system_templates.each do |temp|
-      to_ret[:system_templates][temp.id] = {:id=> temp.id, :name=>temp.name}
     end
 
     cs.involved_products.each{|product|
@@ -398,8 +390,6 @@ class ChangesetsController < ApplicationController
     case type
       when "content_view"
         item = ContentView.find(id)
-      when "template"
-        item = SystemTemplate.find(id)
       when "product"
         item = Product.find(id)
       when "package"

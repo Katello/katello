@@ -29,8 +29,6 @@ class Api::ChangesetsContentController < Api::ApiController
       :remove_erratum      => manage_perm,
       :add_repo            => manage_perm,
       :remove_repo         => manage_perm,
-      :add_template        => manage_perm,
-      :remove_template     => manage_perm,
       :add_distribution    => manage_perm,
       :remove_distribution => manage_perm,
       :add_content_view    => cv_perm,
@@ -101,22 +99,6 @@ class Api::ChangesetsContentController < Api::ApiController
     render_after_removal @changeset.remove_repository!(repository),
                          :success   => _("Removed repository '%s'") % params[:id],
                          :not_found => _("Repository '%s' not found in the changeset") % params[:id]
-  end
-
-  api :POST, "/changesets/:changeset_id/templates", "Add a template to a changeset"
-  param :template_id, :number, :desc => "The id of the template to add"
-  def add_template
-    template = SystemTemplate.find(params[:template_id])
-    @changeset.add_template!(template)
-    render :text => _("Added template '%s'") % template.name, :status => 200
-  end
-
-  api :DELETE, "/changesets/:changeset_id/templates/:id", "Remove a template from a changeset"
-  def remove_template
-    template = SystemTemplate.find(params[:id])
-    render_after_removal @changeset.remove_template!(template),
-                         :success   => _("Removed template '%s'") % params[:id],
-                         :not_found => _("Template '%s' not found in the changeset") % params[:id]
   end
 
   api :POST, "/changesets/:changeset_id/content_views", "Add a content view to a changeset"
