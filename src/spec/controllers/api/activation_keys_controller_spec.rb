@@ -132,10 +132,10 @@ describe Api::ActivationKeysController do
       @content_view = FactoryGirl.build_stubbed(:content_view)
       @activation_key.content_view = @content_view
       ActivationKey.should_receive(:create!).once.with(
-          hash_including(:content_view_id => @content_view.id)
+          hash_including("content_view_id" => @content_view.id.to_s)
         ).and_return(@activation_key)
 
-      post :create, :environment_id => 123, :activation_key => {:name => 'blah', :content_view_id => @content_view.id}
+      post :create, :environment_id => 123, :activation_key => {:name => 'blah', :content_view_id => @content_view.id.to_s}
     end
 
     it "should return created key" do

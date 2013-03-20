@@ -29,7 +29,11 @@ if File.exist?(File.expand_path('../../Gemfile.in', __FILE__))
   end
 else
   # In Bundler mode we load only specified groups
-  ENV['BUNDLE_GEMFILE'] = File.expand_path('../../Gemfile', __FILE__)
+  if ENV['BUNDLE_GEMFILE']
+    gemfile = ENV['BUNDLE_GEMFILE']
+  else
+    ENV['BUNDLE_GEMFILE'] = File.expand_path('../../Gemfile', __FILE__)
+  end
   if defined?(Bundler)
     basic_groups = [:default]
     if Katello.early_config.katello?

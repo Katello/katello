@@ -11,7 +11,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-%if "%{?scl}" == "ruby193"
+# REMOVEME - commented out until Foreman is SCL ready
+# (search for REMOVEME strings down the file)
+%if "%{?scl}" == "ruby193x"
     %global scl_prefix %{scl}-
     %global scl_ruby /usr/bin/ruby193-ruby
     %global scl_rake scl enable ruby193 rake
@@ -101,7 +103,9 @@ Requires:       lsof
 Requires:       redhat-logos >= 60.0.14
 %endif
 
-%if 0%{?fedora} && 0%{?fedora} < 17
+# REMOVEME - uncomment following line instead the next for SCL
+#%if 0%{?fedora} && 0%{?fedora} < 17
+%if 0%{?rhel} == 6 || (0%{?fedora} && 0%{?fedora} < 17)
 Requires: %{?scl_prefix}ruby(abi) = 1.8
 %else
 Requires: %{?scl_prefix}ruby(abi) = 1.9.1
@@ -124,7 +128,8 @@ Requires(postun): initscripts coreutils sed
 BuildRequires:  coreutils findutils sed
 BuildRequires:  %{?scl_prefix}rubygems
 BuildRequires:  %{?scl_prefix}rubygem-rake
-BuildRequires:  %{?scl_prefix}rubygem(jammit)
+# TODO we will remove jammit soon
+BuildRequires:  rubygem(jammit)
 BuildRequires:  %{?scl_prefix}rubygem(chunky_png)
 BuildRequires:  %{?scl_prefix}rubygem(fssm) >= 0.2.7
 BuildRequires:  %{?scl_prefix}rubygem(compass)
@@ -463,7 +468,10 @@ fi
     #compile SASS files
     echo Compiling SASS files...
     touch config/katello.yml
+# REMOVEME - commented out until Foreman is SCL ready
+#%{?scl:scl enable %{scl} "}
     compass compile
+#%{?scl:"}
     rm config/katello.yml
 
     #generate Rails JS/CSS/... assets
@@ -490,16 +498,18 @@ a2x -d manpage -f manpage man/katello-service.8.asciidoc
     export BUNDLER_EXT_GROUPS="default apipie"
     export RAILS_ENV=production # TODO - this is already defined above!
     touch config/katello.yml
-%{?scl:scl enable %{scl} "}
+# REMOVEME - commented out until Foreman is SCL ready
+#%{?scl:scl enable %{scl} "}
     rake apipie:static apipie:cache --trace
-%{?scl:"}
+#%{?scl:"}
 
     # API doc for Headpin mode
     echo "common:" > config/katello.yml
     echo "  app_mode: headpin" >> config/katello.yml
-%{?scl:scl enable %{scl} "}
+# REMOVEME - commented out until Foreman is SCL ready
+#%{?scl:scl enable %{scl} "}
     rake apipie:static apipie:cache OUT=doc/headpin-apidoc --trace
-%{?scl:"}
+#%{?scl:"}
     rm config/katello.yml
     mv lib/tasks_disabled lib/tasks
 %endif
