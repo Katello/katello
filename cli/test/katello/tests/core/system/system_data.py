@@ -78,7 +78,6 @@ SYSTEMS = [
 
     ],
     "environment_id": 5,
-    "system_template_id": None
   },
   {
     "guests": [
@@ -107,6 +106,5 @@ SYSTEMS = [
 
     ],
     "environment_id": 5,
-    "system_template_id": None
   }
 ]

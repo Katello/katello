@@ -18,31 +18,18 @@ import os
 import sys
 
 from katello.client.api.activation_key import ActivationKeyAPI
-from katello.client.api.template import TemplateAPI
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_environment, get_content_view
 from katello.client.lib.utils.data import test_record
 from katello.client.lib.ui import printer
-from katello.client.cli.base import OptionException, opt_parser_add_org, opt_parser_add_environment
+from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
 
 class ActivationKeyAction(BaseAction):
 
     def __init__(self):
         super(ActivationKeyAction, self).__init__()
         self.api = ActivationKeyAPI()
-
-    @classmethod
-    def get_template_id(cls, environmentId, templateName):
-        if templateName != None:
-            template_api = TemplateAPI()
-            template = template_api.template_by_name(environmentId, templateName)
-            if template == None:
-                raise OptionException()
-            else:
-                return template['id']
-        else:
-            return None
 
 
 class List(ActivationKeyAction):
@@ -86,7 +73,6 @@ class List(ActivationKeyAction):
         self.printer.add_column('description', _("Description"), multiline=True)
         self.printer.add_column('usage', _("Usage"))
         self.printer.add_column('environment_id', _("Environment ID"))
-        self.printer.add_column('system_template_id', _("System Template ID"))
         self.printer.add_column('content_view', _("Content View Label"))
 
         self.printer.set_header(_("Activation Key List"))
@@ -134,7 +120,6 @@ class Info(ActivationKeyAction):
         self.printer.add_column('usage_limit', _("Usage Limit"), \
             value_formatter=lambda x: "unlimited" if x == -1 else x)
         self.printer.add_column('environment_id', _("Environment ID"))
-        self.printer.add_column('system_template_id', _("System Template ID"))
         self.printer.add_column('content_view', _("Content View"), value_formatter=lambda x: "[ %s ]" % x)
         self.printer.add_column('pools', _("Pools"), multiline=True, show_with=printer.VerboseStrategy)
         self.printer.set_header(_("Activation Key Info"))
@@ -153,8 +138,6 @@ class Create(ActivationKeyAction):
         opt_parser_add_environment(parser, required=1)
         parser.add_option('--description', dest='description',
                                help=_("activation key description"))
-        parser.add_option('--template', dest='template',
-                               help=_("template name eg: servers"))
         parser.add_option('--content_view', dest="view",
                           help=_("content view label eg: database"))
         parser.add_option('--limit', dest='usage_limit', type="int",
@@ -168,7 +151,6 @@ class Create(ActivationKeyAction):
         envName = self.get_option('environment')
         keyName = self.get_option('name')
         keyDescription = self.get_option('description')
-        templateName = self.get_option('template')
         usageLimit = self.get_option('usage_limit')
         view_label = self.get_option('view')
 
@@ -181,19 +163,13 @@ class Create(ActivationKeyAction):
 
         environment = get_environment(orgName, envName)
 
-        try:
-            templateId = self.get_template_id(environment['id'], templateName)
-        except OptionException:
-            print >> sys.stderr, _("Couldn't find template [ %s ]") % templateName
-            return os.EX_DATAERR
-
         if view_label is not None:
             view = get_content_view(orgName, view_label)
             view_id = view['id']
         else:
             view_id = None
 
-        key = self.api.create(environment['id'], keyName, keyDescription, usageLimit, templateId, view_id)
+        key = self.api.create(environment['id'], keyName, keyDescription, usageLimit, view_id)
         test_record(key,
             _("Successfully created activation key [ %s ]") % keyName,
             _("Could not create activation key [ %s ]") % keyName
@@ -215,8 +191,6 @@ class Update(ActivationKeyAction):
                               help=_("new activation key name"))
         parser.add_option('--description', dest='description',
                                help=_("new description"))
-        parser.add_option('--template', dest='template',
-                               help=_("new template name eg: servers"))
         parser.add_option('--content_view', dest="view",
                           help=_("content view label eg: database"))
         parser.add_option('--limit', dest='usage_limit',
@@ -236,7 +210,6 @@ class Update(ActivationKeyAction):
         envName = self.get_option('env')
         newKeyName = self.get_option('new_name')
         keyDescription = self.get_option('description')
-        templateName = self.get_option('template')
         usageLimit = self.get_option('usage_limit')
         add_poolids = self.get_option('add_poolid') or []
         remove_poolids = self.get_option('remove_poolid') or []
@@ -259,14 +232,8 @@ class Update(ActivationKeyAction):
         else:
             view_id = None
 
-        try:
-            templateId = self.get_template_id(key['environment_id'], templateName)
-        except OptionException:
-            print >> sys.stderr, _("Couldn't find template [ %s ]") % (templateName)
-            return os.EX_DATAERR
-
         key = self.api.update(orgName, key['id'], environment['id'] if environment != None else None,
-            newKeyName, keyDescription, templateId, usageLimit, view_id)
+            newKeyName, keyDescription, usageLimit, view_id)
 
         for poolid in add_poolids:
             self.api.add_pool(orgName, key['id'], poolid)
