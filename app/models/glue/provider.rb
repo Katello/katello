@@ -419,8 +419,9 @@ module Glue::Provider
                          :organization => self.organization)
         else
           error_texts = [
-              _("Subscription manifest %s for provider '%s' failed") %
-                         [(type == 'import') ? _('import') : _('delete'), self.name],
+              ((type == 'import') ? _("Subscription manifest import for provider '%{name}' failed") % {:name => self.name} :
+                  _("Subscription manifest delete for provider '%{name}' failed") % {:name => self.name}
+              ),
               (_("Reason: %s") % results['displayMessage'] unless results['displayMessage'].blank?)
               ].compact
           error_texts.join('<br />')
