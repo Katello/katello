@@ -44,15 +44,14 @@ class Api::V1::SyncController < Api::V1::ApiController
   api :GET, "/organizations/:organization_id/products/:product_id/sync", "Get status of repo synchronisation for given product"
   api :GET, "/repositories/:repository_id/sync", "Get status of synchronisation for given repository"
   def index
-    render :json => @obj.sync_status
+    respond_for_show :resource => @obj.sync_status
   end
 
   api :POST, "/providers/:provider_id/sync", "Synchronize all provider's repositories"
   api :POST, "organizations/:organization_id/products/:product_id/sync", "Synchronise all repositories for given product"
   api :POST, "/repositories/:repository_id/sync", "Synchronise repository"
   def create
-    to_return = @obj.sync
-    render :json => to_return, :status => 202
+    respond_for_index :collection => @obj.sync, :status => 202
   end
 
   api :DELETE, "/providers/:provider_id/sync", "Cancel running synchronisation for given provider"
@@ -61,9 +60,9 @@ class Api::V1::SyncController < Api::V1::ApiController
   def cancel
     if @obj.sync_state.to_s == PulpSyncStatus::Status::RUNNING.to_s
       @obj.cancel_sync
-      render :text => _("Canceled synchronization of %{name}: %{id}") % {:name => @sync_of, :id => @obj.id}, :status => 200
+      respond_for_destroy :message => _("Synchronization cancelled")
     else
-      render :text => _("No synchronization of the %s is currently running") % @sync_of, :status => 200
+      respond_for_destroy :message => _("No synchronization is currently running")
     end
   end
 
@@ -73,13 +72,10 @@ class Api::V1::SyncController < Api::V1::ApiController
   def find_object
     if params.key?(:provider_id)
       @obj = find_provider
-      @sync_of = 'provider'
     elsif params.key?(:product_id)
       @obj = find_product
-      @sync_of = 'product'
     elsif params.key?(:repository_id)
       @obj = find_repository
-      @sync_of = 'repository'
     else
       raise HttpErrors::NotFound, N_("Couldn't find subject of synchronization") if @obj.nil?
     end
@@ -93,8 +89,7 @@ class Api::V1::SyncController < Api::V1::ApiController
   end
 
   def find_product
-    find_organization
-    @product = @organization.products.find_by_cp_id(params[:product_id])
+    @product = Product.find_by_cp_id(params[:product_id])
     raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:product_id] if @product.nil?
     @product
   end
@@ -106,8 +101,8 @@ class Api::V1::SyncController < Api::V1::ApiController
   end
 
   def ensure_library
-    if @sync_of == 'repository'
-      raise HttpErrors::NotFound, _("You can synchronize repositories only in library environment'") if not @obj.environment.library?
+    unless @repository.nil?
+      raise HttpErrors::NotFound, _("You can synchronize repositories only in library environment'") if not @repository.environment.library?
     end
   end
 
