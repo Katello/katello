@@ -31,7 +31,7 @@ module ContentSearch
               version = view.version(env).try(:version)
               display = version ? (_("version %s") % version) : ""
             end
-            cols[env.id] = Cell.new(:display => display)
+            cols[env.id] = Cell.new(:hover => container_hover_html(view, env), :display => display)
           end
         end
 
@@ -56,9 +56,9 @@ module ContentSearch
     def view_versions
       @view_versions ||= begin
         versions = views.map{|v| v.versions.in_environment(search_envs)}.flatten
-        if search_mode == :unique
+        if @mode == :unique
           versions = versions.select {|v| !(search_envs - v.environments).empty?}
-        elsif search_mode == :shared
+        elsif @mode == :shared
           versions = versions.select {|v| (search_envs - v.environments).empty?}
         end
 
