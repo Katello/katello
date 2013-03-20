@@ -1,12 +1,14 @@
 --- 
+recorded_with: VCR 2.4.0
 http_interactions: 
 - request: 
     method: get
     uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/tasks/?tag=pulp:action:sync
     body: 
-      encoding: US-ASCII
       string: ""
     headers: 
+      Pulp-User: 
+      - admin
       Accept: 
       - application/json
       Accept-Encoding: 
@@ -14,27 +16,21 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="FUz2opQ8IOTgg31KUQfHzNB9SUPTOP8aP9xWyppw", oauth_signature="98BGh2N5jifcXXHdx26FTavNikU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1362103665", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
+      - OAuth oauth_consumer_key="katello", oauth_nonce="0fK8H5VbqCjJ34dy2HsiXMFCYNiC0zYAMQb7Xajpo", oauth_signature="XW%2F7hL4jVBCWY9nXe%2FKtWw1gm78%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363816399", oauth_version="1.0"
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Fri, 01 Mar 2013 02:07:45 GMT
-      Server: 
-      - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "2804"
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Date: 
+      - Wed, 20 Mar 2013 21:53:19 GMT
       Content-Type: 
       - application/json
     body: 
-      encoding: US-ASCII
-      string: "[{\"task_group_id\": \"05f0e704-4f66-47d9-923f-65cd9133df7e\", \"exception\": null, \"traceback\": null, \"task_id\": \"7ac59bea-3f58-48a6-8e55-8c3b8c085a45\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2013-03-01T02:07:25Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"finished\", \"finish_time\": \"2013-03-01T02:07:26Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 11, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 11, \"state\": \"FINISHED\", \"size_left\": 0, \"details\": {\"tree_file\": {\"num_success\": 3, \"size_total\": 0, \"items_left\": 0, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 8, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 8, \"size_left\": 0, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"FINISHED\"}, \"errata\": {\"state\": \"FINISHED\", \"num_errata\": 2}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"05f0e704-4f66-47d9-923f-65cd9133df7e\", \"call_request_id\": \"7ac59bea-3f58-48a6-8e55-8c3b8c085a45\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}, {\"task_group_id\": \"5502202e-9486-4311-8927-424882e617e1\", \"exception\": null, \"traceback\": null, \"task_id\": \"ced2fb99-d5a9-4a17-a808-ff7ccc753b22\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2013-03-01T02:07:32Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"finished\", \"finish_time\": \"2013-03-01T02:07:33Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 11, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 11, \"state\": \"FINISHED\", \"size_left\": 0, \"details\": {\"tree_file\": {\"num_success\": 3, \"size_total\": 0, \"items_left\": 0, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 8, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 8, \"size_left\": 0, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"FINISHED\"}, \"errata\": {\"state\": \"FINISHED\", \"num_errata\": 2}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"5502202e-9486-4311-8927-424882e617e1\", \"call_request_id\": \"ced2fb99-d5a9-4a17-a808-ff7ccc753b22\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}]"
+      string: "[{\"task_group_id\": \"f805435d-bb75-4a24-9a92-14e09c9e12e0\", \"exception\": null, \"traceback\": null, \"task_id\": \"dfbd8b5f-11aa-44bb-96c7-3734673c89dd\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2013-03-20T21:53:03Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"finished\", \"finish_time\": \"2013-03-20T21:53:04Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 11, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 11, \"state\": \"FINISHED\", \"size_left\": 0, \"details\": {\"tree_file\": {\"num_success\": 3, \"size_total\": 0, \"items_left\": 0, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 8, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 8, \"size_left\": 0, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"FINISHED\"}, \"errata\": {\"state\": \"FINISHED\", \"num_errata\": 2}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"f805435d-bb75-4a24-9a92-14e09c9e12e0\", \"call_request_id\": \"dfbd8b5f-11aa-44bb-96c7-3734673c89dd\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}, {\"task_group_id\": \"fb16f492-ac9c-4276-92c6-52d79d16b46b\", \"exception\": null, \"traceback\": null, \"task_id\": \"fac7675c-2065-40e6-8365-801704b7c1c2\", \"call_request_tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"reasons\": [], \"start_time\": \"2013-03-20T21:53:14Z\", \"tags\": [\"pulp:repository:1\", \"pulp:action:sync\"], \"state\": \"finished\", \"finish_time\": \"2013-03-20T21:53:15Z\", \"dependency_failures\": {}, \"schedule_id\": null, \"progress\": {\"yum_importer\": {\"content\": {\"num_success\": 11, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 11, \"state\": \"FINISHED\", \"size_left\": 0, \"details\": {\"tree_file\": {\"num_success\": 3, \"size_total\": 0, \"items_left\": 0, \"items_total\": 3, \"size_left\": 0, \"num_error\": 0}, \"rpm\": {\"num_success\": 8, \"size_total\": 17872, \"items_left\": 0, \"items_total\": 8, \"size_left\": 0, \"num_error\": 0}, \"delta_rpm\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}, \"file\": {\"num_success\": 0, \"size_total\": 0, \"items_left\": 0, \"items_total\": 0, \"size_left\": 0, \"num_error\": 0}}, \"error_details\": [], \"num_error\": 0}, \"comps\": {\"state\": \"FINISHED\"}, \"errata\": {\"state\": \"FINISHED\", \"num_errata\": 2}, \"metadata\": {\"state\": \"FINISHED\"}}}, \"call_request_group_id\": \"fb16f492-ac9c-4276-92c6-52d79d16b46b\", \"call_request_id\": \"fac7675c-2065-40e6-8365-801704b7c1c2\", \"principal_login\": \"admin\", \"response\": \"accepted\", \"result\": null}]"
     http_version: 
-  recorded_at: Fri, 01 Mar 2013 02:07:45 GMT
-recorded_with: VCR 2.4.0
+  recorded_at: Wed, 20 Mar 2013 21:53:19 GMT
