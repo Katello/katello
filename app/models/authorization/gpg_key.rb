@@ -15,7 +15,6 @@
 module Authorization::GpgKey
   extend ActiveSupport::Concern
 
-
   module ClassMethods
     def readable(org)
        if org.readable? || org.gpg_keys_manageable? || ::Provider.any_readable?(org)
@@ -43,7 +42,7 @@ module Authorization::GpgKey
   end
 
 
-  module InstanceMethods
+  included do
     def readable?
        GpgKey.any_readable?(organization)
     end

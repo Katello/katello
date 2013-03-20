@@ -82,8 +82,7 @@ module Authorization::Provider
     end
   end
 
-
-  module InstanceMethods
+  included do
     def readable?
       return organization.readable? if redhat_provider?
       User.allowed_to?(READ_PERM_VERBS, :providers, self.id, self.organization) || (Katello.config.katello? && self.organization.syncable?)
