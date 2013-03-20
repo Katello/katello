@@ -277,7 +277,8 @@ class ContentView < ActiveRecord::Base
     unless (env.library && ContentViewEnvironment.where(:cp_id => self.cp_environment_id(env)).first)
       content_view_environments.build(:name => env.name,
                                      :label => self.cp_environment_label(env),
-                                     :cp_id => self.cp_environment_id(env))
+                                     :cp_id => self.cp_environment_id(env),
+                                     :environment_id=>env.id)
     end
   end
 
@@ -286,10 +287,11 @@ class ContentView < ActiveRecord::Base
   # aware that the view is no longer available for consumers.
   def remove_environment(env)
     unless env.library
-      view_env = ContentViewEnvironment.where(:cp_id => self.cp_environment_id(env))
+      view_env = self.content_view_environments.where(:environment_id=>env.id)
       view_env.first.destroy unless view_env.blank?
     end
   end
+
 
   protected
 
@@ -348,28 +350,6 @@ class ContentView < ActiveRecord::Base
       end
     end
     tasks
-  end
-
-  # Associate an environment with this content view.  This can occur whenever
-  # a version of the view is promoted to an environment.  It is necessary for
-  # candlepin to become aware that the view is available for consumers.
-  def add_environment(env)
-    unless (env.library && ContentViewEnvironment.where(:cp_id => self.cp_environment_id(env)).first)
-      content_view_environments.build(:name => env.name,
-                                     :label => self.cp_environment_label(env),
-                                     :cp_id => self.cp_environment_id(env),
-                                     :environment_id=>env.id)
-    end
-  end
-
-  # Unassociate an environment from this content view. This can occur whenever
-  # a view is deleted from an environment. It is necessary to make candlepin
-  # aware that the view is no longer available for consumers.
-  def remove_environment(env)
-    unless env.library
-      view_env = self.content_view_environments.where(:environment_id=>env.id)
-      view_env.first.destroy unless view_env.blank?
-    end
   end
 
 end
