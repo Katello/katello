@@ -83,9 +83,9 @@ describe Api::ContentViewDefinitionsController, :katello => true do
 
   describe "publish" do
     before do
+      @organization = FactoryGirl.create(:organization)
       Organization.stub(:first).and_return(@organization)
-      @organization.content_view_definitions =
-        FactoryGirl.build_list(:content_view_definition, 2)
+      FactoryGirl.create_list(:content_view_definition, 2, :organization => @organization)
     end
     let(:definition) { @organization.content_view_definitions.last }
 
@@ -103,10 +103,10 @@ describe Api::ContentViewDefinitionsController, :katello => true do
   describe "destroy" do
     it "should delete the definition after checking it has no promoted views" do
       definition = FactoryGirl.build_stubbed(:content_view_definition)
-      ContentViewDefinition.stub(:find).with(definition.id).and_return(definition)
+      ContentViewDefinition.stub(:find).with(definition.id.to_s).and_return(definition)
       definition.should_receive(:destroy).and_return(true)
       definition.should_receive(:has_promoted_views?).and_return(false)
-      delete :destroy, :id => definition.id
+      delete :destroy, :id => definition.id.to_s
       response.should be_success
     end
   end

@@ -425,6 +425,7 @@ Src::Application.routes.draw do
       get :default_label
     end
     member do
+      get :show
       get :environments_partial
       get :events
       get :download_debug_certificate
