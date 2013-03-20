@@ -33,7 +33,6 @@ class Filter < ActiveRecord::Base
   end
 
   def validate_filter_products_and_repos(errors, cvd)
-    debugger
     prod_diff = self.products - cvd.resulting_products
     repo_diff = self.repositories - cvd.repos
     unless prod_diff.empty?
