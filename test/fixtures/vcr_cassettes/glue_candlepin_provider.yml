@@ -5,53 +5,41 @@ http_interactions:
     method: post
     uri: https://localhost:8443/candlepin/owners/
     body: 
-      string: "{\"displayName\":\"Candlepin_Org\",\"key\":\"candlepin_org_label\",\"contentPrefix\":\"/candlepin_org_label/$env\"}"
+      string: "{\"contentPrefix\":\"/candlepin_org_label/$env\",\"displayName\":\"Candlepin_Org\",\"key\":\"candlepin_org_label\"}"
     headers: 
-      Accept: 
-      - "*/*; q=0.5, application/xml"
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="UGpVnuE4qryR05y6vDp53HMqvAK6dMBOUklEYPbyY", oauth_signature="xcDBjnbyFIASedClQb1OeaYQV1U%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1362490743", oauth_version="1.0"
       Content-Length: 
       - "103"
-      Cp-User: 
-      - admin
-      Accept-Encoding: 
-      - gzip, deflate
       Accept-Language: 
       - en
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding: 
+      - gzip, deflate
+      Cp-User: 
+      - admin
       Content-Type: 
       - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="axAIkaPNvFoTvwQDTopZkWJ00sgs8EX9fPM5Tph8Q", oauth_signature="9%2Bw4rroJw%2Fe%2BkqlSGC57rBl5ThQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363816289", oauth_version="1.0"
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 05 Mar 2013 13:39:03 GMT
       X-Candlepin-Version: 
-      - 0.7.26-1
-      Content-Length: 
-      - "379"
+      - 0.7.19-1
       Server: 
       - Apache-Coyote/1.1
+      Date: 
+      - Wed, 20 Mar 2013 21:51:29 GMT
+      Transfer-Encoding: 
+      - chunked
       Content-Type: 
       - application/json
     body: 
-      string: |-
-        {
-          "created" : "2013-03-05T13:39:03.515+0000",
-          "updated" : "2013-03-05T13:39:03.515+0000",
-          "parentOwner" : null,
-          "id" : "ff8080813d373ef7013d3ac6dadb0005",
-          "key" : "candlepin_org_label",
-          "displayName" : "Candlepin_Org",
-          "contentPrefix" : "/candlepin_org_label/$env",
-          "defaultServiceLevel" : null,
-          "upstreamUuid" : null,
-          "href" : "/owners/candlepin_org_label"
-        }
+      string: "{\"created\":\"2013-03-20T21:51:30.025+0000\",\"updated\":\"2013-03-20T21:51:30.025+0000\",\"parentOwner\":null,\"id\":\"ff8080813d846c0e013d89c916e900ed\",\"key\":\"candlepin_org_label\",\"displayName\":\"Candlepin_Org\",\"contentPrefix\":\"/candlepin_org_label/$env\",\"defaultServiceLevel\":null,\"upstreamUuid\":null,\"href\":\"/owners/candlepin_org_label\"}"
     http_version: 
-  recorded_at: Tue, 05 Mar 2013 13:39:03 GMT
+  recorded_at: Wed, 20 Mar 2013 21:51:30 GMT
 - request: 
     method: delete
     uri: https://localhost:8443/candlepin/owners/candlepin_org_label
@@ -60,24 +48,24 @@ http_interactions:
     headers: 
       Accept: 
       - "*/*; q=0.5, application/xml"
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="f8Jek8Sssrb1p4Rji1EhQTm38m33yWJ7PeHvZWkhaqE", oauth_signature="b5cGbNORNvKRAF6qqBpV5EO%2FKtU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1362490743", oauth_version="1.0"
-      Cp-User: 
-      - admin
       Accept-Encoding: 
       - gzip, deflate
+      Cp-User: 
+      - admin
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="yxBuQD9RgVco5WYvBqDuSVZKIgRkoHG9hVrDa8bX4E", oauth_signature="ml%2FVNXxK23oWNT7WJfReUUUsiSk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363816290", oauth_version="1.0"
   response: 
     status: 
       code: 204
       message: No Content
     headers: 
-      Date: 
-      - Tue, 05 Mar 2013 13:39:03 GMT
       X-Candlepin-Version: 
-      - 0.7.26-1
+      - 0.7.19-1
       Server: 
       - Apache-Coyote/1.1
+      Date: 
+      - Wed, 20 Mar 2013 21:51:29 GMT
     body: 
       string: ""
     http_version: 
-  recorded_at: Tue, 05 Mar 2013 13:39:03 GMT
+  recorded_at: Wed, 20 Mar 2013 21:51:30 GMT
