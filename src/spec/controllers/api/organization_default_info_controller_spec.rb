@@ -31,7 +31,7 @@ describe Api::OrganizationDefaultInfoController do
 
     Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
 
-    Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid})
+    Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid}) if Katello.config.app_mode == "katello"
 
     @org = Organization.create!(:name => "test_org", :label => "test_org")
     @env1 = KTEnvironment.create!(:name => "test_env", :label => "test_env", :prior => @org.library.id, :organization => @org)
