@@ -14,19 +14,6 @@ require 'time'
 require 'minitest_helper'
 require File.expand_path('../../../lib/katello/url_constrained_cookie_store', __FILE__)
 
-class RoutedRackApp
-  attr_reader :routes
-
-  def initialize(routes, &blk)
-    @routes = routes
-    @stack = ActionDispatch::MiddlewareStack.new(&blk).build(@routes)
-  end
-
-  def call(env)
-    @stack.call(env)
-  end
-end
-
 class UrlConstrainedCookieStoreTest < ActionController::IntegrationTest
   SessionKey = '_test_session'
   SessionSecret = '16a7078c778fb1e28d062c6d1a26e864'
@@ -34,16 +21,6 @@ class UrlConstrainedCookieStoreTest < ActionController::IntegrationTest
   Verifier = ActiveSupport::MessageVerifier.new(SessionSecret, 'SHA1')
   SignedBar = Verifier.generate(:foo => "bar", :created_at => (Time.now - 2.minute),
       :session_id => ActiveSupport::SecureRandom.hex(16))
-
-  class TestController < ActionController::Base
-    def no_expiration
-      render :text => session[:session_id]
-    end
-
-    def with_expiration
-      render :text => session[:session_id]
-    end
-  end
 
   def test_doesnt_update_expiraton_date_for_excluded_urls
     with_test_route_set(:expire_after => 1.minute, :expiration_exceptions => "/no_expiration") do
@@ -67,6 +44,16 @@ class UrlConstrainedCookieStoreTest < ActionController::IntegrationTest
   def get(path, parameters = nil, env = {})
     env["action_dispatch.secret_token"] ||= SessionSecret
     super
+  end
+
+  class TestController < ActionController::Base
+    def no_expiration
+      render :text => session[:session_id]
+    end
+
+    def with_expiration
+      render :text => session[:session_id]
+    end
   end
 
   def with_test_route_set(options = {})
@@ -96,5 +83,18 @@ class UrlConstrainedCookieStoreTest < ActionController::IntegrationTest
       middleware.use "ActionDispatch::Head"
       yield(middleware) if block_given?
     end
+  end
+end
+
+class RoutedRackApp
+  attr_reader :routes
+
+  def initialize(routes, &blk)
+    @routes = routes
+    @stack = ActionDispatch::MiddlewareStack.new(&blk).build(@routes)
+  end
+
+  def call(env)
+    @stack.call(env)
   end
 end
