@@ -26,6 +26,7 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     @library          = KTEnvironment.find(environments(:library).id)
     @dev              = KTEnvironment.find(environments(:dev).id)
     @acme_corporation = Organization.find(organizations(:acme_corporation).id)
+    @default_view     = ContentView.find(content_views(:acme_default))
     @library_view     = ContentView.find(content_views(:library_view))
     @library_dev_view = ContentView.find(content_views(:library_dev_view))
   end
@@ -96,38 +97,18 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_includes @library.content_views, @library_view
   end
 
-  def test_environment_default_content_view
-    env = @library
-    content_view = FactoryGirl.create(:content_view)
-    env.default_content_view = content_view
-    env.save!
-    content_view = content_view.reload
-    assert_equal content_view.environment_default.id, env.id
-    assert_equal content_view, env.default_content_view
-  end
-
   def test_environment_default_content_view_destroy
     env = @dev
-    content_view = FactoryGirl.create(:content_view, :default => true)
-    env.default_content_view = content_view
-    env.save!
+    content_view = @dev.default_content_view
     env.destroy
-    assert_nil ContentView.find_by_id(content_view.id)
+    refute_nil ContentView.find_by_id(content_view.id)
   end
 
-  def test_environment_default_content_view_invalid
-    new_env_name = "EnvWithInvalidContentView"
-    content_view = FactoryGirl.create(:content_view,
-                                      :organization_id => @dev.organization_id,
-                                      :default => true,
-                                      :name => "Default View for #{new_env_name}")
-    env = KTEnvironment.new(@dev.attributes.merge("name" => new_env_name,
-                                                  "label" => new_env_name,
-                                                  "prior" => @library))
-    exception = assert_raises(ActiveRecord::RecordInvalid) { env.save! }
-    content_view_errors = exception.record.environments.first.
-      default_content_view.errors.full_messages.join(", ")
-    assert_match(/Name has already been taken/, content_view_errors)
+  def test_environment_default_content_view_version_destroy
+    env = @dev
+    version = @dev.default_content_view_version
+    env.destroy
+    assert_nil ContentViewVersion.find_by_id(version.id)
   end
 
   def test_changesets

@@ -15,10 +15,10 @@ class ContentViewEnvironment < ActiveRecord::Base
   include Glue if Katello.config.use_cp
 
   belongs_to :content_view
+  belongs_to :environment, :class_name => "KTEnvironment"
 
   # retrieve the owning environment for this content view environment.
   def owner
-    env_id = self.cp_id.split('-').first
-    KTEnvironment.find(env_id)
+    self.environment
   end
 end
