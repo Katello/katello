@@ -29,8 +29,9 @@ class GluePulpRepoTestBase < MiniTest::Rails::ActiveSupport::TestCase
     configure_runcible
 
     services  = ['Candlepin', 'ElasticSearch', 'Foreman']
-    models    = ['Repository', 'Package']
-    disable_glue_layers(services, models)
+    models    = ['KTEnvironment', 'Repository', 'Package', 'ContentView',
+                 'Organization', 'Product', 'EnvironmentProduct', 'ContentViewEnvironment']
+    disable_glue_layers(services, models, true)
 
     @@admin = User.find(@loaded_fixtures['users']['admin']['id'])
   end

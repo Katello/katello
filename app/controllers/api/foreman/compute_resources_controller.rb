@@ -54,7 +54,7 @@ class Api::Foreman::ComputeResourcesController < Api::Foreman::SimpleCrudControl
   param_group :compute_resource
   def create
     res = ::Foreman::ComputeResource.new_provider(params[:compute_resource])
-    render :json => res.as_json(common_json_options) if res.save!
+    render :json => res.as_json if res.save!
   end
 
   api :PUT, "/compute_resources/:id", "Update an compute resource record in Foreman"
