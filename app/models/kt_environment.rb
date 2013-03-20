@@ -73,7 +73,7 @@ class KTEnvironment < ActiveRecord::Base
   validates_with Validators::PriorValidator
   validates_with Validators::PathDescendentsValidator
 
-  before_create :create_default_content_view_version
+  after_create :create_default_content_view_version
   before_destroy :confirm_last_env
 
   after_destroy :unset_users_with_default
@@ -286,8 +286,11 @@ class KTEnvironment < ActiveRecord::Base
     end
 
     if content_view.version(self).nil?
-      self.content_view_versions << ContentViewVersion.new(:content_view => content_view,
-                                                          :version => 1)
+      version = ContentViewVersion.new(:content_view => content_view,
+                                       :version => 1)
+      version.environments << self
+      version.save!
+      content_view.save! #save content_view, since ContentViewEnvironment was added
     end
   end
 end
