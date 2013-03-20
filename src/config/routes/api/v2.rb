@@ -20,6 +20,7 @@ Src::Application.routes.draw do
         api_resources :activation_keys, :only => [:index, :create]
         api_resources :content_views, :only => [:index, :create]
         api_resources :content_view_definitions, :only => [:index, :create]
+        api_resources :sync_plans, :only => [:index, :create]
         resource :uebercert, :only => [:show]
       end
 
@@ -140,6 +141,8 @@ Src::Application.routes.draw do
         api_attachable_resources :content_views, :controller => :changesets_content
       end
 
+      api_resources :sync_plans, :only => [:show, :update, :destroy]
+
       # api custom information
       match '/custom_info/:informable_type/:informable_id' => 'custom_info#create', :via => :post, :as => :create_custom_info
       match '/custom_info/:informable_type/:informable_id' => 'custom_info#index',  :via => :get,  :as => :custom_info
@@ -202,7 +205,6 @@ Src::Application.routes.draw do
           api_resources :errata, :only => [:index, :create], :controller => :system_group_errata
         end
 
-        api_resources :sync_plans
         api_resources :tasks, :only => [:index]
         api_resources :providers, :only => [:index]
         match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
