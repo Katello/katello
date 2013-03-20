@@ -63,6 +63,17 @@ describe Api::OrganizationDefaultInfoController do
       Organization.find(@org.id).default_info["system"].empty?.should == true
     end
 
+    it "should throw an error when you add default info that is already there" do
+      Organization.find(@org.id).default_info["system"].empty?.should == true
+      post :create, :organization_id => @org.label, :keyname => "test_key", :informable_type => "system"
+      response.code.should == "200"
+      Organization.find(@org.id).default_info["system"].size.should == 1
+
+      post :create, :organization_id => @org.label, :keyname => "test_key", :informable_type => "system"
+      response.code.should == "400"
+      Organization.find(@org.id).default_info["system"].size.should == 1
+    end
+
   end
 
   describe "remove default custom info to an org" do
