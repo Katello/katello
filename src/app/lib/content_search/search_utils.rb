@@ -13,10 +13,6 @@
 class ContentSearch::SearchUtils
   cattr_accessor :current_organization, :mode, :env_ids, :offset, :current_user
 
-  def self.search_mode
-    mode.try(:to_sym) || :all
-  end
-
   def self.search_envs
     if self.search_mode != :all
       KTEnvironment.content_readable(current_organization).where(:id => self.env_ids)
