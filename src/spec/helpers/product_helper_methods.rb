@@ -41,7 +41,7 @@ module ProductHelperMethods
 
     repo = Repository.new(:environment_product => env_product, :name=>"FOOREPO" + suffix,
                           :label=>"FOOREPO" + suffix, :pulp_id=>RepoTestData::REPO_ID,
-                          :content_id=> "1234", :content_view_version=>env.default_view_version,
+                          :content_id=> "1234", :content_view_version=>env.default_content_view_version,
                           :relative_path=>'/foo/', :feed => 'https://localhost.com/foo')
     repo.stub(:create_pulp_repo).and_return([])
     repo.save!

@@ -11,6 +11,17 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+%if "%{?scl}" == "ruby193"
+    %global scl_prefix %{scl}-
+    %global scl_ruby /usr/bin/ruby193-ruby
+    %global scl_rake scl enable ruby193 rake
+    ### TODO temp disabled for SCL
+    %global nodoc 1
+%else
+    %global scl_ruby /usr/bin/ruby
+    %global scl_rake /usr/bin/rake
+%endif
+
 %global homedir %{_datarootdir}/%{name}
 %global datadir %{_sharedstatedir}/%{name}
 %global confdir deploy/common
@@ -38,11 +49,6 @@ Requires:        %{name}-glue-foreman
 Requires:        %{name}-glue-candlepin
 Requires:        %{name}-selinux
 Conflicts:       %{name}-headpin
-Requires:        rubygem(bundler_ext)
-BuildRequires:   rubygem(bundler_ext)
-BuildRequires:   rubygem(logging) >= 1.8.0
-BuildRequires:   asciidoc
-BuildRequires:   /usr/bin/getopt
 
 %description
 Provides a package for managing application life-cycle for Linux systems.
@@ -54,107 +60,111 @@ Requires:       httpd
 Requires:       mod_ssl
 Requires:       openssl
 Requires:       elasticsearch
-Requires:       rubygems
-Requires:       rubygem(rails) >= 3.0.10
-Requires:       rubygem(haml) >= 3.1.2
-Requires:       rubygem(haml-rails)
-Requires:       rubygem(json)
-Requires:       rubygem(rest-client)
-Requires:       rubygem(jammit)
-Requires:       rubygem(rails_warden)
-Requires:       rubygem(net-ldap)
-Requires:       rubygem(compass)
-Requires:       rubygem(compass-960-plugin) >= 0.10.4
-Requires:       rubygem(oauth)
-Requires:       rubygem(i18n_data) >= 0.2.6
-Requires:       rubygem(gettext_i18n_rails)
-Requires:       rubygem(simple-navigation) >= 3.3.4
-Requires:       rubygem(pg)
-Requires:       rubygem(delayed_job) >= 2.1.4
-Requires:       rubygem(acts_as_reportable) >= 1.1.1
-Requires:       rubygem(ruport) >= 1.7.0
-Requires:       rubygem(prawn)
-Requires:       rubygem(daemons) >= 1.1.4
-Requires:       rubygem(uuidtools)
-Requires:       rubygem(hooks)
-Requires:       rubygem(thin)
-Requires:       rubygem(fssm)
-Requires:       rubygem(sass)
-Requires:       rubygem(chunky_png)
-Requires:       rubygem(tire) >= 0.3.0
-Requires:       rubygem(tire) < 0.4
-Requires:       rubygem(ldap_fluff)
-Requires:       rubygem(foreman_api) >= 0.0.7
-Requires:       rubygem(anemone)
-Requires:       rubygem(apipie-rails) >= 0.0.18
-Requires:       rubygem(logging) >= 1.8.0
+Requires:       %{?scl_prefix}rubygems
+Requires:       %{?scl_prefix}rubygem(rails) >= 3.0.10
+Requires:       %{?scl_prefix}rubygem(haml) >= 3.1.2
+Requires:       %{?scl_prefix}rubygem(haml-rails)
+Requires:       %{?scl_prefix}rubygem(json)
+Requires:       %{?scl_prefix}rubygem(rest-client)
+Requires:       %{?scl_prefix}rubygem(jammit)
+Requires:       %{?scl_prefix}rubygem(rails_warden)
+Requires:       %{?scl_prefix}rubygem(net-ldap)
+Requires:       %{?scl_prefix}rubygem(compass)
+Requires:       %{?scl_prefix}rubygem(compass-960-plugin) >= 0.10.4
+Requires:       %{?scl_prefix}rubygem(oauth)
+Requires:       %{?scl_prefix}rubygem(i18n_data) >= 0.2.6
+Requires:       %{?scl_prefix}rubygem(gettext_i18n_rails)
+Requires:       %{?scl_prefix}rubygem(simple-navigation) >= 3.3.4
+Requires:       %{?scl_prefix}rubygem(pg)
+Requires:       %{?scl_prefix}rubygem(delayed_job) >= 2.1.4
+Requires:       %{?scl_prefix}rubygem(acts_as_reportable) >= 1.1.1
+Requires:       %{?scl_prefix}rubygem(ruport) >= 1.7.0
+Requires:       %{?scl_prefix}rubygem(prawn)
+Requires:       %{?scl_prefix}rubygem(daemons) >= 1.1.4
+Requires:       %{?scl_prefix}rubygem(uuidtools)
+Requires:       %{?scl_prefix}rubygem(hooks)
+Requires:       %{?scl_prefix}rubygem(thin)
+Requires:       %{?scl_prefix}rubygem(fssm)
+Requires:       %{?scl_prefix}rubygem(sass)
+Requires:       %{?scl_prefix}rubygem(chunky_png)
+Requires:       %{?scl_prefix}rubygem(tire) >= 0.3.0
+Requires:       %{?scl_prefix}rubygem(tire) < 0.4
+Requires:       %{?scl_prefix}rubygem(ldap_fluff)
+Requires:       %{?scl_prefix}rubygem(foreman_api) >= 0.0.7
+Requires:       %{?scl_prefix}rubygem(anemone)
+Requires:       %{?scl_prefix}rubygem(apipie-rails) >= 0.0.18
+Requires:       %{?scl_prefix}rubygem(logging) >= 1.8.0
+Requires:       %{?scl_prefix}rubygem(bundler_ext)
 Requires:       lsof
 
 %if 0%{?rhel} == 6
 Requires:       redhat-logos >= 60.0.14
 %endif
 
-%if 0%{?rhel} == 6 || 0%{?fedora} < 17
-Requires: ruby(abi) = 1.8
+%if 0%{?fedora} && 0%{?fedora} < 17
+Requires: %{?scl_prefix}ruby(abi) = 1.8
 %else
-Requires: ruby(abi) = 1.9.1
+Requires: %{?scl_prefix}ruby(abi) = 1.9.1
 %endif
-Requires: ruby
+Requires: %{?scl_prefix}ruby
 
 # <workaround> for 714167 - undeclared dependencies (regin & multimap)
 # TODO - uncomment the statement once we push patched actionpack to our EL6 repo
 #%if 0%{?fedora} && 0%{?fedora} <= 15
-Requires:       rubygem(regin)
+Requires:       %{?scl_prefix}rubygem(regin)
 #%endif
 # </workaround>
 
-Requires(pre):  shadow-utils
-Requires(preun): chkconfig
-Requires(preun): initscripts
-Requires(post): chkconfig
+Requires(pre):    shadow-utils
+Requires(preun):  chkconfig
+Requires(preun):  initscripts
+Requires(post):   chkconfig
 Requires(postun): initscripts coreutils sed
 
 BuildRequires:  coreutils findutils sed
-BuildRequires:  rubygems
-BuildRequires:  rubygem-rake
-BuildRequires:  rubygem(gettext)
-BuildRequires:  rubygem(jammit)
-BuildRequires:  rubygem(chunky_png)
-BuildRequires:  rubygem(fssm) >= 0.2.7
-BuildRequires:  rubygem(compass)
-BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
+BuildRequires:  %{?scl_prefix}rubygems
+BuildRequires:  %{?scl_prefix}rubygem-rake
+BuildRequires:  %{?scl_prefix}rubygem(jammit)
+BuildRequires:  %{?scl_prefix}rubygem(chunky_png)
+BuildRequires:  %{?scl_prefix}rubygem(fssm) >= 0.2.7
+BuildRequires:  %{?scl_prefix}rubygem(compass)
+BuildRequires:  %{?scl_prefix}rubygem(compass-960-plugin) >= 0.10.4
+BuildRequires:  %{?scl_prefix}rubygem(bundler_ext)
+BuildRequires:  %{?scl_prefix}rubygem(logging) >= 1.8.0
+BuildRequires:  %{?scl_prefix}rubygem(alchemy) >= 1.0.0
+BuildRequires:  asciidoc
+BuildRequires:  /usr/bin/getopt
 BuildRequires:  java >= 0:1.6.0
-BuildRequires:  rubygem(alchemy) >= 1.0.0
 BuildRequires:  gettext
 BuildRequires:  translate-toolkit
 
 # we require this to be able to build api-docs
-BuildRequires:       rubygem(rails) >= 3.0.10
-BuildRequires:       rubygem(haml) >= 3.1.2
-BuildRequires:       rubygem(haml-rails)
-BuildRequires:       rubygem(json)
-BuildRequires:       rubygem(rest-client)
-BuildRequires:       rubygem(rails_warden)
-BuildRequires:       rubygem(net-ldap)
-BuildRequires:       rubygem(oauth)
-BuildRequires:       rubygem(i18n_data) >= 0.2.6
-BuildRequires:       rubygem(gettext_i18n_rails)
-BuildRequires:       rubygem(simple-navigation) >= 3.3.4
-BuildRequires:       rubygem(pg)
-BuildRequires:       rubygem(delayed_job) >= 2.1.4
-BuildRequires:       rubygem(acts_as_reportable) >= 1.1.1
-BuildRequires:       rubygem(ruport) >= 1.7.0
-BuildRequires:       rubygem(prawn)
-BuildRequires:       rubygem(daemons) >= 1.1.4
-BuildRequires:       rubygem(uuidtools)
-BuildRequires:       rubygem(thin)
-BuildRequires:       rubygem(sass)
-BuildRequires:       rubygem(tire) >= 0.3.0
-BuildRequires:       rubygem(tire) < 0.4
-BuildRequires:       rubygem(ldap_fluff)
-BuildRequires:       rubygem(apipie-rails) >= 0.0.18
-BuildRequires:       rubygem(maruku)
-BuildRequires:       rubygem(foreman_api)
+BuildRequires:       %{?scl_prefix}rubygem(rails) >= 3.0.10
+BuildRequires:       %{?scl_prefix}rubygem(haml) >= 3.1.2
+BuildRequires:       %{?scl_prefix}rubygem(haml-rails)
+BuildRequires:       %{?scl_prefix}rubygem(json)
+BuildRequires:       %{?scl_prefix}rubygem(rest-client)
+BuildRequires:       %{?scl_prefix}rubygem(rails_warden)
+BuildRequires:       %{?scl_prefix}rubygem(net-ldap)
+BuildRequires:       %{?scl_prefix}rubygem(oauth)
+BuildRequires:       %{?scl_prefix}rubygem(i18n_data) >= 0.2.6
+BuildRequires:       %{?scl_prefix}rubygem(gettext_i18n_rails)
+BuildRequires:       %{?scl_prefix}rubygem(simple-navigation) >= 3.3.4
+BuildRequires:       %{?scl_prefix}rubygem(pg)
+BuildRequires:       %{?scl_prefix}rubygem(delayed_job) >= 2.1.4
+BuildRequires:       %{?scl_prefix}rubygem(acts_as_reportable) >= 1.1.1
+BuildRequires:       %{?scl_prefix}rubygem(ruport) >= 1.7.0
+BuildRequires:       %{?scl_prefix}rubygem(prawn)
+BuildRequires:       %{?scl_prefix}rubygem(daemons) >= 1.1.4
+BuildRequires:       %{?scl_prefix}rubygem(uuidtools)
+BuildRequires:       %{?scl_prefix}rubygem(thin)
+BuildRequires:       %{?scl_prefix}rubygem(sass)
+BuildRequires:       %{?scl_prefix}rubygem(tire) >= 0.3.0
+BuildRequires:       %{?scl_prefix}rubygem(tire) < 0.4
+BuildRequires:       %{?scl_prefix}rubygem(ldap_fluff)
+BuildRequires:       %{?scl_prefix}rubygem(apipie-rails) >= 0.0.18
+BuildRequires:       %{?scl_prefix}rubygem(maruku)
+BuildRequires:       %{?scl_prefix}rubygem(foreman_api)
 
 %description common
 Common bits for all Katello instances
@@ -171,9 +181,14 @@ Requires:       postgresql
 Requires(post): candlepin-tomcat6
 Requires:       candlepin-selinux
 # the following backend engine deps are required by <katello-configure>
-Requires:       mongodb mongodb-server
-Requires:       qpid-cpp-server qpid-cpp-client qpid-cpp-client-ssl qpid-cpp-server-ssl
-Requires:       foreman foreman-postgresql
+Requires:       mongodb
+Requires:       mongodb-server
+Requires:       qpid-cpp-server
+Requires:       qpid-cpp-client
+Requires:       qpid-cpp-client-ssl
+Requires:       qpid-cpp-server-ssl
+Requires:       foreman
+Requires:       foreman-postgresql
 # </katello-configure>
 
 
@@ -197,7 +212,7 @@ Requires:        %{name}-common
 Requires:        pulp-server
 Requires:        pulp-rpm-plugins
 Requires:        pulp-selinux
-Requires:        rubygem(runcible) >= 0.3.3
+Requires:        %{?scl_prefix}rubygem(runcible) >= 0.3.3
 
 %description glue-pulp
 Katello connection classes for the Pulp backend
@@ -207,7 +222,7 @@ BuildArch:      noarch
 Summary:         Katello connection classes for the Foreman backend
 Requires:        %{name}-common
 # dependencies from bundler.d/foreman.rb
-Requires:       rubygem(foreman_api) >= 0.0.18
+Requires:        %{?scl_prefix}rubygem(foreman_api) >= 0.0.18
 
 %description glue-foreman
 Katello connection classes for the Foreman backend
@@ -227,8 +242,7 @@ Requires:       katello-common
 Requires:       %{name}-glue-candlepin
 Requires:       %{name}-glue-elasticsearch
 Requires:       katello-selinux
-Requires:       rubygem(bundler_ext)
-BuildRequires:  rubygem(bundler_ext)
+Requires:       %{?scl_prefix}rubygem(bundler_ext)
 
 %description headpin
 A subscription management only version of Katello.
@@ -264,6 +278,9 @@ Requires:        %{name}-common
 
 %description headpin-api-docs
 Documentation files for Headpin API.
+
+# <devel packages are not SCL enabled yet - not avaiable on SCL platforms>
+%if %{?scl:0}%{!?scl:1}
 
 %package devel-all
 Summary:         Katello devel support (all subpackages)
@@ -384,11 +401,30 @@ BuildRequires:        rubygem(rspec-rails)
 Rake tasks and dependecies for Katello developers, which enables
 testing.
 
+# </devel packages are not SCL enabled yet - not avaiable on SCL platforms>
+%endif
+
 %prep
 %setup -q
 
 %build
 export RAILS_ENV=build
+
+# when running in SCL we do not distribute any devel packages yet
+%if %{?scl:1}%{!?scl:0}
+    rm -f bundler.d/checking.rb
+    rm -f bundler.d/coverage.rb
+    rm -f bundler.d/debugging.rb
+    rm -f bundler.d/development.rb
+    rm -f bundler.d/development_boost.rb
+    rm -f bundler.d/optional.rb
+    rm -f bundler.d/test.rb
+%endif
+
+#replace shebangs for SCL
+%if %{?scl:1}%{!?scl:0}
+    sed -ri '1sX(/usr/bin/ruby|/usr/bin/env ruby)X%{scl_ruby}X' script/*
+%endif
 
 #check for malformed gettext strings
 for i in locale/*/app.po; do
@@ -401,10 +437,12 @@ for i in locale/*/app.po; do
     grep msgid $FILE >/dev/null && exit 1
     rm $FILE
 done
-script/check-gettext.rb -m -i
+
+#check for gettext standards (using Ruby 1.8)
+/usr/bin/ruby script/check-gettext.rb -m -i
 
 #copy alchemy
-ALCHEMY_DIR=$(rpm -ql rubygem-alchemy | grep -o '/.*/vendor' | sed 's/vendor$//' | head -n1)
+ALCHEMY_DIR=$(rpm -ql %{?scl_prefix}rubygem-alchemy | grep -o '/.*/vendor' | sed 's/vendor$//' | head -n1)
 cp -R $ALCHEMY_DIR* ./vendor/alchemy
 
 #use Bundler_ext instead of Bundler
@@ -434,8 +472,9 @@ fi
 
     #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
     echo Generating gettext files...
-    LC_ALL=C ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")' 2>&1 \
-      | sed -e '/Warning: obsolete msgid exists./,+1d' | sed -e '/Warning: fuzzy message was ignored./,+1d'
+    # TODO - REMOVING MO GENERATION - we do not use it at all yet
+    #LC_ALL=C ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")' 2>&1 \
+    #  | sed -e '/Warning: obsolete msgid exists./,+1d' | sed -e '/Warning: fuzzy message was ignored./,+1d'
 %endif
 
 #man pages
@@ -443,21 +482,26 @@ a2x -d manpage -f manpage man/katello-service.8.asciidoc
 
 #api docs
 %if ! 0%{?nodoc:1}
-    echo Generating API docs
+    # we need to rename all the extra tasks because we do not have all the dependencies, we
+    # don't need them and there is no way to disable this via a rake option
+    mv lib/tasks lib/tasks_disabled
     # by default do not stop on missing dep and only require "build" environment
     export BUNDLER_EXT_NOSTRICT=1
-    export BUNDLER_EXT_GROUPS="default apipie test"
-    export RAILS_ENV=production
+    export BUNDLER_EXT_GROUPS="default apipie"
+    export RAILS_ENV=production # TODO - this is already defined above!
     touch config/katello.yml
-    rake apipie:static --trace
-    rake apipie:cache --trace
+%{?scl:scl enable %{scl} "}
+    rake apipie:static apipie:cache --trace
+%{?scl:"}
 
     # API doc for Headpin mode
     echo "common:" > config/katello.yml
     echo "  app_mode: headpin" >> config/katello.yml
-    rake apipie:static OUT=doc/headpin-apidoc --trace
-    rake apipie:cache --trace
+%{?scl:scl enable %{scl} "}
+    rake apipie:static apipie:cache OUT=doc/headpin-apidoc --trace
+%{?scl:"}
     rm config/katello.yml
+    mv lib/tasks_disabled lib/tasks
 %endif
 
 %install
@@ -621,18 +665,11 @@ usermod -a -G katello-shared tomcat
 %exclude %{homedir}/lib/tasks/test.rake
 %exclude %{homedir}/script/pulp_integration_tests
 %{homedir}/locale
-%{homedir}/public/*.html
-%{homedir}/public/*.txt
-%{homedir}/public/*.ico
-%{homedir}/public/assets
-%{homedir}/public/fonts
-%{homedir}/public/images
-%{homedir}/public/javascripts
-%{homedir}/public/stylesheets
-%{homedir}/public/stylesheets/*.css
-%attr(600, katello, katello) %{homedir}/public/stylesheets/compiled
-%{homedir}/public/stylesheets/images
+%{homedir}/public
+%dir %attr(775, katello, katello) %{homedir}/public/stylesheets/compiled
+%if ! 0%{?nodoc:1}
 %exclude %{homedir}/public/apipie-cache
+%endif
 %{homedir}/script
 %exclude %{homedir}/script/service-wait
 %{homedir}/spec
@@ -744,7 +781,9 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/glue/task.rb
 %{homedir}/locale
 %{homedir}/public
+%if ! 0%{?nodoc:1}
 %exclude %{homedir}/public/apipie-cache
+%endif
 %{homedir}/script
 %{homedir}/spec
 %{homedir}/tmp
@@ -767,6 +806,9 @@ usermod -a -G katello-shared tomcat
 %doc doc/headpin-apidoc*
 %{homedir}/public/headpin-apipie-cache
 %endif
+
+# <devel packages are not SCL enabled yet - not avaiable on SCL platforms>
+%if %{?scl:0}%{!?scl:1}
 
 %files devel-all
 
@@ -795,6 +837,9 @@ usermod -a -G katello-shared tomcat
 
 %files devel-debugging
 %{homedir}/bundler.d/debugging.rb
+
+# </devel packages are not SCL enabled yet - not avaiable on SCL platforms>
+%endif
 
 %pre common
 # Add the "katello" user and group

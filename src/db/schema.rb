@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130226133232) do
+ActiveRecord::Schema.define(:version => 20130318171849) do
 
   create_table "activation_keys", :force => true do |t|
     t.string   "name"
@@ -185,9 +185,11 @@ ActiveRecord::Schema.define(:version => 20130226133232) do
     t.integer  "content_view_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "environment_id",  :null => false
   end
 
   add_index "content_view_environments", ["content_view_id"], :name => "index_content_view_environments_on_content_view_id"
+  add_index "content_view_environments", ["environment_id"], :name => "index_content_view_environments_on_environment_id"
 
   create_table "content_view_version_environments", :id => false, :force => true do |t|
     t.integer  "content_view_version_id"
@@ -216,11 +218,9 @@ ActiveRecord::Schema.define(:version => 20130226133232) do
     t.boolean  "default",                    :default => false, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "environment_default_id"
   end
 
   add_index "content_views", ["content_view_definition_id"], :name => "index_content_views_on_content_view_definition_id"
-  add_index "content_views", ["environment_default_id"], :name => "index_content_views_on_environment_default_id"
   add_index "content_views", ["name", "organization_id"], :name => "index_content_views_on_name_and_organization_id"
   add_index "content_views", ["organization_id", "label"], :name => "index_content_views_on_organization_id_and_label", :unique => true
   add_index "content_views", ["organization_id"], :name => "index_content_views_on_organization_id"

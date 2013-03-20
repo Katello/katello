@@ -263,7 +263,7 @@ class ContentView < ActiveRecord::Base
 
   def update_cp_content(env)
     # retrieve the environment and then update cp content
-    view_env = ContentViewEnvironment.where(:cp_id => self.cp_environment_id(env)).first
+    view_env = self.content_view_environments.where(:environment=>env).first
     view_env.update_cp_content if view_env
   end
 
@@ -349,7 +349,8 @@ class ContentView < ActiveRecord::Base
     unless (env.library && ContentViewEnvironment.where(:cp_id => self.cp_environment_id(env)).first)
       content_view_environments.build(:name => env.name,
                                      :label => self.cp_environment_label(env),
-                                     :cp_id => self.cp_environment_id(env))
+                                     :cp_id => self.cp_environment_id(env),
+                                     :environment_id=>env.id)
     end
   end
 
@@ -358,7 +359,7 @@ class ContentView < ActiveRecord::Base
   # aware that the view is no longer available for consumers.
   def remove_environment(env)
     unless env.library
-      view_env = ContentViewEnvironment.where(:cp_id => self.cp_environment_id(env))
+      view_env = self.content_view_environments.where(:environment_id=>env.id)
       view_env.first.destroy unless view_env.blank?
     end
   end
