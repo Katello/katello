@@ -44,14 +44,9 @@ $(document).ready(function() {
     //Set the callback on the environment selector
     env_select.click_callback = function(env_id) {
         KT.activation_key.save_selected_environment(env_id);
-        KT.activation_key.get_system_templates();
         KT.activation_key.get_content_views();
         KT.activation_key.get_products();
     };
-
-    $('#activation_key_system_template_id').live('change', function() {
-        KT.activation_key.highlight_system_templates(false);
-    });
 
     $('#activation_key_content_view_id').live('change', function() {
         KT.activation_key.highlight_content_views(false);
@@ -124,7 +119,6 @@ KT.activation_key = (function($) {
     initialize_edit = function() {
         reset_env_select();
         enable_buttons();
-        highlight_system_templates(false);
         highlight_content_views(false);
     },
     reset_env_select = function() {
@@ -141,12 +135,10 @@ KT.activation_key = (function($) {
 
         data.ajaxSubmit({
             success: function(data) {
-                highlight_system_templates(false);
                 highlight_content_views(false);
                 enable_buttons();
                 refresh_list_item(this.url.match(/\d+/)[0]);
             }, error: function(e) {
-                highlight_system_templates(false);
                 highlight_content_views(false);
                 enable_buttons();
         }});
@@ -230,40 +222,6 @@ KT.activation_key = (function($) {
             }
         }
     },
-    get_system_templates = function() {
-        // this function will retrieve the system templates associated with a given environment and
-        // update the page content, as appropriate
-        var url = $('.path_link.active').attr('data-templates_url');
-
-        disable_buttons();
-        $.ajax({
-            type: "GET",
-            url: url,
-            cache: false,
-            success: function(response) {
-                // update the appropriate content on the page
-                var options = '';
-
-                // create an html option list using the response
-                options += '<option value="">' + i18n.noTemplate + '</option>';
-                for (var i = 0; i < response.length; i++) {
-                    options += '<option value="' + response[i].id + '">' + response[i].name + '</option>';
-                }
-
-                // add the options to the system template select... this select exists on an insert form
-                // or as part of the environment edit dialog
-                $("#activation_key_system_template_id").html(options);
-
-                if (response.length > 0) {
-                    highlight_system_templates(true);
-                }
-                enable_buttons();
-            },
-            error: function(data) {
-                enable_buttons();
-            }
-        });
-    },
     get_products = function() {
         // this function will retrieve the products associated with a given environment and
         // update the products box with the results
@@ -335,9 +293,6 @@ KT.activation_key = (function($) {
         $('#cancel_key').removeAttr('disabled');
         $('input[id^=save_key]').removeAttr('disabled');
     },
-    highlight_system_templates = function(add_highlight) {
-        highlight_input("#activation_key_system_template_id", add_highlight);
-    };
     highlight_content_views = function(add_highlight) {
         highlight_input("#activation_key_content_view_id", add_highlight);
     };
@@ -365,13 +320,11 @@ KT.activation_key = (function($) {
         toggle_usage_limit: toggle_usage_limit,
         toggle_family_checkboxes: toggle_family_checkboxes,
         toggle_parent_checkbox: toggle_parent_checkbox,
-        get_system_templates: get_system_templates,
         get_content_views: get_content_views,
         get_products: get_products,
         save_selected_environment: save_selected_environment,
         disable_buttons: disable_buttons,
         enable_buttons: enable_buttons,
-        highlight_system_templates: highlight_system_templates,
         highlight_content_views: highlight_content_views,
         highlight_input: highlight_input,
         refresh_list_item: refresh_list_item

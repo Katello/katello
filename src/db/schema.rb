@@ -10,18 +10,17 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130318171849) do
+ActiveRecord::Schema.define(:version => 20130319162919) do
 
   create_table "activation_keys", :force => true do |t|
     t.string   "name"
     t.string   "description"
-    t.integer  "organization_id",                    :null => false
-    t.integer  "environment_id",                     :null => false
-    t.integer  "system_template_id"
+    t.integer  "organization_id",                 :null => false
+    t.integer  "environment_id",                  :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
-    t.integer  "usage_limit",        :default => -1
+    t.integer  "usage_limit",     :default => -1
     t.integer  "content_view_id"
   end
 
@@ -29,7 +28,6 @@ ActiveRecord::Schema.define(:version => 20130318171849) do
   add_index "activation_keys", ["environment_id"], :name => "index_activation_keys_on_environment_id"
   add_index "activation_keys", ["name", "organization_id"], :name => "index_activation_keys_on_name_and_organization_id", :unique => true
   add_index "activation_keys", ["organization_id"], :name => "index_activation_keys_on_organization_id"
-  add_index "activation_keys", ["system_template_id"], :name => "index_activation_keys_on_system_template_id"
   add_index "activation_keys", ["user_id"], :name => "index_activation_keys_on_user_id"
 
   create_table "changeset_content_views", :force => true do |t|
@@ -129,14 +127,6 @@ ActiveRecord::Schema.define(:version => 20130318171849) do
 
   add_index "changesets_repositories", ["changeset_id"], :name => "index_changesets_repositories_on_changeset_id"
   add_index "changesets_repositories", ["repository_id"], :name => "index_changesets_repositories_on_repository_id"
-
-  create_table "changesets_system_templates", :id => false, :force => true do |t|
-    t.integer "changeset_id",       :null => false
-    t.integer "system_template_id", :null => false
-  end
-
-  add_index "changesets_system_templates", ["changeset_id"], :name => "index_changesets_system_templates_on_changeset_id"
-  add_index "changesets_system_templates", ["system_template_id"], :name => "index_changesets_system_templates_on_system_template_id"
 
   create_table "component_content_views", :force => true do |t|
     t.integer  "content_view_definition_id"
@@ -468,14 +458,6 @@ ActiveRecord::Schema.define(:version => 20130318171849) do
   add_index "products", ["provider_id"], :name => "index_products_on_provider_id"
   add_index "products", ["sync_plan_id"], :name => "index_products_on_sync_plan_id"
 
-  create_table "products_system_templates", :id => false, :force => true do |t|
-    t.integer "system_template_id"
-    t.integer "product_id"
-  end
-
-  add_index "products_system_templates", ["product_id"], :name => "index_products_system_templates_on_product_id"
-  add_index "products_system_templates", ["system_template_id"], :name => "index_products_system_templates_on_system_template_id"
-
   create_table "providers", :force => true do |t|
     t.string   "name"
     t.string   "description"
@@ -614,66 +596,6 @@ ActiveRecord::Schema.define(:version => 20130318171849) do
   add_index "system_system_groups", ["system_group_id"], :name => "index_system_system_groups_on_system_group_id"
   add_index "system_system_groups", ["system_id"], :name => "index_system_system_groups_on_system_id"
 
-  create_table "system_template_distributions", :force => true do |t|
-    t.integer "system_template_id",   :null => false
-    t.string  "distribution_pulp_id", :null => false
-  end
-
-  add_index "system_template_distributions", ["distribution_pulp_id", "system_template_id"], :name => "index_sys_template_distro_on_pulp_id_template_id", :unique => true
-  add_index "system_template_distributions", ["distribution_pulp_id"], :name => "index_system_template_distributions_on_distribution_pulp_id"
-  add_index "system_template_distributions", ["system_template_id"], :name => "index_system_template_distributions_on_system_template_id"
-
-  create_table "system_template_pack_groups", :force => true do |t|
-    t.integer "system_template_id"
-    t.string  "name",               :null => false
-  end
-
-  add_index "system_template_pack_groups", ["name", "system_template_id"], :name => "index_sys_template_packs_on_name_template_id", :unique => true
-  add_index "system_template_pack_groups", ["system_template_id"], :name => "index_system_template_pack_groups_on_system_template_id"
-
-  create_table "system_template_packages", :force => true do |t|
-    t.integer "system_template_id", :null => false
-    t.string  "package_name",       :null => false
-    t.string  "version"
-    t.string  "release"
-    t.string  "epoch"
-    t.string  "arch"
-  end
-
-  add_index "system_template_packages", ["system_template_id", "package_name", "version", "release", "epoch", "arch"], :name => "index_sys_template_packages_on_nvrea_template_id", :unique => true
-  add_index "system_template_packages", ["system_template_id"], :name => "index_system_template_packages_on_system_template_id"
-
-  create_table "system_template_pg_categories", :force => true do |t|
-    t.integer "system_template_id"
-    t.string  "name",               :null => false
-  end
-
-  add_index "system_template_pg_categories", ["name", "system_template_id"], :name => "index_sys_template_pg_categories_on_name_template_id", :unique => true
-  add_index "system_template_pg_categories", ["system_template_id"], :name => "index_system_template_pg_categories_on_system_template_id"
-
-  create_table "system_template_repositories", :force => true do |t|
-    t.integer "system_template_id"
-    t.integer "repository_id"
-  end
-
-  add_index "system_template_repositories", ["repository_id"], :name => "index_system_template_repositories_on_repository_id"
-  add_index "system_template_repositories", ["system_template_id"], :name => "index_system_template_repositories_on_system_template_id"
-
-  create_table "system_templates", :force => true do |t|
-    t.integer  "revision"
-    t.string   "name"
-    t.string   "description"
-    t.string   "parameters_json"
-    t.integer  "parent_id"
-    t.integer  "environment_id",  :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "system_templates", ["environment_id"], :name => "index_system_templates_on_environment_id"
-  add_index "system_templates", ["name", "environment_id"], :name => "index_system_templates_on_name_and_environment_id", :unique => true
-  add_index "system_templates", ["parent_id"], :name => "index_system_templates_on_parent_id"
-
   create_table "systems", :force => true do |t|
     t.string   "uuid"
     t.string   "name"
@@ -682,14 +604,12 @@ ActiveRecord::Schema.define(:version => 20130318171849) do
     t.integer  "environment_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "system_template_id"
-    t.string   "type",               :default => "System"
+    t.string   "type",            :default => "System"
     t.integer  "content_view_id"
   end
 
   add_index "systems", ["content_view_id"], :name => "index_systems_on_content_view_id"
   add_index "systems", ["environment_id"], :name => "index_systems_on_environment_id"
-  add_index "systems", ["system_template_id"], :name => "index_systems_on_system_template_id"
 
   create_table "task_statuses", :force => true do |t|
     t.string   "type"
