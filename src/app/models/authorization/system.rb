@@ -59,7 +59,7 @@ module Authorization::System
     end
   end
 
-  module InstanceMethods
+  included do
     def readable?
       sg_readable = false
       if Katello.config.katello?
