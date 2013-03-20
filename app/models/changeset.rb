@@ -43,7 +43,6 @@ class Changeset < ActiveRecord::Base
   has_and_belongs_to_many :products, :uniq => true
   has_many :packages, :class_name => "ChangesetPackage", :inverse_of => :changeset
   has_many :users, :class_name => "ChangesetUser", :inverse_of => :changeset
-  has_and_belongs_to_many :system_templates, :uniq => true
   has_many :errata, :class_name => "ChangesetErratum", :inverse_of => :changeset
   has_and_belongs_to_many :repos, :class_name => "Repository", :uniq => true
   has_many :distributions, :class_name => "ChangesetDistribution", :inverse_of => :changeset
@@ -132,15 +131,6 @@ class Changeset < ActiveRecord::Base
      product
    end
 
-   def add_template! template
-     env_to_verify_on_add_content.system_templates.include? template or
-         raise Errors::ChangesetContentException.new("Template not found within environment you want to promote from.")
-
-     self.system_templates << template # updates foreign key immediately
-     save!
-     return template
-   end
-
    def add_package! name_or_nvre, product
      env_to_verify_on_add_content.products.include? product or
          raise Errors::ChangesetContentException.new(
@@ -223,12 +213,6 @@ class Changeset < ActiveRecord::Base
 
   def remove_product! product
     deleted = self.products.delete(product)
-    save!
-    return deleted
-  end
-
-  def remove_template! template
-    deleted = self.system_templates.delete(template)
     save!
     return deleted
   end
@@ -330,7 +314,6 @@ class Changeset < ActiveRecord::Base
   end
 
   def uniquify_artifacts
-    system_templates.uniq! unless self.system_templates.nil?
     products.uniq! unless self.products.nil?
     [[:packages, :package_id], [:errata, :errata_id], [:distributions, :distribution_id]].each do |items, item_id|
       unless self.send(items).nil?
