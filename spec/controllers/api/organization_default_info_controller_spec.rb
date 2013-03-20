@@ -74,6 +74,13 @@ describe Api::OrganizationDefaultInfoController do
       Organization.find(@org.id).default_info["system"].size.should == 1
     end
 
+    it "should fail if the type given is not an accepted type" do
+      Organization.find(@org.id).default_info["system"].empty?.should == true
+      post :create, :organization_id => "blahblahblah", :keyname => "test_key", :informable_type => "non-standard-type"
+      response.code.should == "400"
+      Organization.find(@org.id).default_info["system"].empty?.should == true
+    end
+
   end
 
   describe "remove default custom info to an org" do
