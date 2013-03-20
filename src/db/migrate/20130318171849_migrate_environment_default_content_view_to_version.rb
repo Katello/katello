@@ -1,7 +1,6 @@
 class MigrateEnvironmentDefaultContentViewToVersion < ActiveRecord::Migration
   def self.up
-        change_column :content_views, :environment_default_id, :integer, :null=>true
- 
+    change_column :content_views, :environment_default_id, :integer, :null=>true
     Organization.all.each do |org|
       default_view = ContentView.create!(:name=>"Default Organization View",
                       :organization=>org,
@@ -10,7 +9,7 @@ class MigrateEnvironmentDefaultContentViewToVersion < ActiveRecord::Migration
          old_view = ContentView.where(:environment_default_id=>env.id).first
          cve = old_view.content_view_environments.first
          version = old_view.version(env)
-         
+
          version.content_view = default_view
          version.save!
          cve.content_view = default_view
@@ -34,11 +33,10 @@ class MigrateEnvironmentDefaultContentViewToVersion < ActiveRecord::Migration
 
         cve.content_view = cv
         cve.save!
-  
+
         version = org_default_view.version(env)
         version.content_view = cv
         version.save!
-        
       end
       org_default_view.destroy
     end
