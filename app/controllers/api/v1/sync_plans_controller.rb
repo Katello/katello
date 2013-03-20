@@ -21,7 +21,7 @@ class Api::V1::SyncPlansController < Api::V1::ApiController
     param :organization_id, :identifier, :desc => "oranization identifier", :required => true
   end
 
-  before_filter :find_organization
+  before_filter :find_organization, :only => [:create, :index]
   before_filter :find_plan, :only => [:update, :show, :destroy]
   before_filter :authorize
   respond_to :json
@@ -60,13 +60,13 @@ class Api::V1::SyncPlansController < Api::V1::ApiController
   param :interval, ['none', 'hourly', 'daily', 'weekly'], :desc => "filter by interval"
   def index
     query_params.delete :organization_id
-    render :json => @organization.sync_plans.where(query_params).to_json
+    respond :collection => @organization.sync_plans.where(query_params)
   end
 
   api :GET, "/organizations/:organization_id/sync_plans/:id", "Show a sync plan"
   param :id, :number, :desc => "sync plan numeric identifier", :required => true
   def show
-    render :json => @plan.to_json
+    respond :resource => @plan
   end
 
 
@@ -80,7 +80,7 @@ class Api::V1::SyncPlansController < Api::V1::ApiController
     end
 
     params[:sync_plan][:organization] = @organization
-    render :json => SyncPlan.create!(params[:sync_plan]).to_json
+    respond :resource => SyncPlan.create!(params[:sync_plan])
   end
 
   api :PUT, "/organizations/:organization_id/sync_plans/:id", "Update a sync plan"
@@ -96,19 +96,20 @@ class Api::V1::SyncPlansController < Api::V1::ApiController
     @plan.update_attributes!(params[:sync_plan])
     @plan.save!
     @plan.products.each{ |p| p.save! }
-    render :json => @plan
+    respond :resource => @plan
   end
 
   api :DELETE, "/organizations/:organization_id/sync_plans/:id", "Destroy a sync plan"
   param :id, :number, :desc => "sync plan numeric identifier"
   def destroy
     @plan.destroy
-    render :text => _("Deleted sync plan '%s'") % params[:id], :status => 200
+    respond :message => _("Deleted sync plan '%s'") % params[:id], :resource => @plan
   end
 
   def find_plan
-    @plan = @organization.sync_plans.where(:id => params[:id]).first
+    @plan = SyncPlan.find(params[:id])
     raise HttpErrors::NotFound, _("Couldn't find sync plan '%{plan}' in organization '%{org}'") % {:plan => params[:id], :org => params[:organization_id]} if @plan.nil?
+    @organization ||= @plan.organization
     @plan
   end
 
