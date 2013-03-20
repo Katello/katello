@@ -151,10 +151,10 @@ old_fast_gettext = !defined?(FastGettext::Version) ||
     # compare versions x.x.x <= 0.6.7
     (FastGettext::Version.split('.').map(&:to_i) <=> [0, 6, 8]) == -1
 
-FastGettext.add_text_domain('app', {
+FastGettext.add_text_domain('katello', {
   :path => File.expand_path("../../locale", __FILE__),
-  :type => :po,
+  :type => :mo,
   :ignore_fuzzy => true
 }.update(old_fast_gettext ? { :ignore_obsolete => true } : { :report_warning => false }))
 
-FastGettext.default_text_domain = 'app'
+FastGettext.default_text_domain = 'katello'
