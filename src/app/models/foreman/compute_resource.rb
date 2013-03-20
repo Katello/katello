@@ -18,18 +18,15 @@ class Foreman::ComputeResource < Resources::ForemanModel
   validates_presence_of :name, :url
 
   def json_attributes
-    return not_nil_attrs(:name, :url, :description, :provider)
-  end
-
-  def not_nil_attrs(*attr_list)
-    attr_list = attributes.symbolize_keys.keys if attr_list.nil?
-    attr_list.delete_if { |attr| send(attr).nil? }
+    not_nil_attrs = attributes.keys.delete_if { |attr| send(attr).nil? }
+    { :only => not_nil_attrs }
   end
 
   def json_default_options
     return {
-      :only => json_attributes,
-      :root => :compute_resource
+      :only   => json_attributes,
+      :root   => :compute_resource,
+      :except => [:password]
     }
   end
 
