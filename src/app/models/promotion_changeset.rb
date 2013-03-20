@@ -21,8 +21,8 @@ class PromotionChangeset < Changeset
     self.state == Changeset::REVIEW or
         raise _("Cannot promote the changeset '%s' because it is not in the review phase.") % self.name
 
-    # check that solitare repos in the changeset and its templates
-    # will have its associated product in the env as well after promotion
+    # check that solitare repos in the changeset will have its associated
+    # product in the env as well after promotion
     repos_to_be_promoted.each do |repo|
       if not self.environment.products.to_a.include? repo.product and not products_to_be_promoted.include? repo.product
         raise _("Please add '%{product}' product to the changeset '%{changeset}' if you wish to promote repository '%{repo}' with it.") % {:product => repo.product.name, :changeset => self.name, :repo => repo.name}
@@ -75,11 +75,9 @@ class PromotionChangeset < Changeset
     to_env   = self.environment
 
     PulpTaskStatus::wait_for_tasks promote_products(from_env, to_env)
-    update_progress! '30'
-    PulpTaskStatus::wait_for_tasks promote_templates(from_env, to_env)
-    update_progress! '50'
+    update_progress! '40'
     PulpTaskStatus::wait_for_tasks promote_repos(from_env, to_env)
-    update_progress! '70'
+    update_progress! '60'
     to_env.content_view_environment.update_cp_content
     update_progress! '80'
     PulpTaskStatus::wait_for_tasks promote_views(from_env, to_env, self.content_views.composite(false))
@@ -117,14 +115,6 @@ class PromotionChangeset < Changeset
     end
     index_repo_content to_env
     raise e
-  end
-
-
-  def promote_templates from_env, to_env
-    async_tasks = self.system_templates.collect do |tpl|
-      tpl.promote from_env, to_env
-    end
-    async_tasks.flatten(1)
   end
 
 
@@ -254,13 +244,11 @@ class PromotionChangeset < Changeset
 
   def repos_to_be_promoted
     repos = self.repos || []
-    repos += self.system_templates.map { |tpl| tpl.repos_to_be_promoted }.flatten(1)
     return repos.uniq
   end
 
   def products_to_be_promoted
     products = self.products || []
-    products += self.system_templates.map { |tpl| tpl.products_to_be_promoted }.flatten(1)
     return products.uniq
   end
 
@@ -374,13 +362,11 @@ class PromotionChangeset < Changeset
 
   def repos_to_be_promoted
     repos = self.repos || []
-    repos += self.system_templates.map { |tpl| tpl.repos_to_be_promoted }.flatten(1)
     return repos.uniq
   end
 
   def products_to_be_promoted
     products = self.products || []
-    products += self.system_templates.map { |tpl| tpl.products_to_be_promoted }.flatten(1)
     return products.uniq
   end
 end
