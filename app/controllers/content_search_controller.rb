@@ -55,7 +55,8 @@ class ContentSearchController < ApplicationController
 
     product_search = ContentSearch::ProductSearch.new(:name => _('Products'),
                                                       :product_ids => param_product_ids,
-                                                      :view_ids => view_ids
+                                                      :view_ids => view_ids,
+                                                      :mode => @mode
                                                      )
     render :json => {:rows=>(view_search.rows + product_search.rows), :name=>_("Products")}
   end
@@ -538,9 +539,9 @@ class ContentSearchController < ApplicationController
   def setup_utils
     ContentSearch::SearchUtils.current_organization = current_organization
     ContentSearch::SearchUtils.current_user = current_user
-    ContentSearch::SearchUtils.mode = params[:mode]
     ContentSearch::SearchUtils.env_ids = params[:environments]
     ContentSearch::SearchUtils.offset = params[:offset] || 0
+    @mode = params[:mode].try(:to_sym) || :all
   end
 
 end
