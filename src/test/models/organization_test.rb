@@ -1,6 +1,6 @@
 # encoding: utf-8
 #
-# Copyright 2012 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -40,7 +40,7 @@ class OrganizationTestCreate < OrganizationTestBase
     refute_nil org.default_content_view
     refute_nil org.library.default_content_view_version
     refute_empty org.default_content_view.content_view_environments
-    assert_equal org.default_content_view.content_view_environments.first.environment_id, org.library.id
+    assert_equal org.library.id, org.default_content_view.content_view_environments.first.environment_id
   end
 
 end
