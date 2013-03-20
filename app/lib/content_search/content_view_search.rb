@@ -25,9 +25,13 @@ module ContentSearch
         cols = {}
         view.environments.collect do |env|
           if readable_env_ids.include?(env.id)
-            version = view.version(env).try(:version)
-            display = version ? (_("version %s") % version) : ""
-            cols[env.id] = Cell.new(:hover => container_hover_html(view, env), :display => display)
+            if view.default?
+              display = ""
+            else
+              version = view.version(env).try(:version)
+              display = version ? (_("version %s") % version) : ""
+            end
+            cols[env.id] = Cell.new(:display => display)
           end
         end
 
@@ -42,7 +46,7 @@ module ContentSearch
     end
 
     def views
-      @views ||= if self.view_ids
+      @views ||= if !self.view_ids.empty?
         views = ContentView.readable(current_organization).where(:id => view_ids)
       else
         views = ContentView.readable(current_organization)

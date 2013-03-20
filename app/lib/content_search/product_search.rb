@@ -24,7 +24,7 @@ module ContentSearch
       rows = []
 
       views = ContentView.readable(current_organization)
-      views = views.where(:id=>@view_ids) if @view_ids
+      views = views.where(:id=>@view_ids) unless @view_ids.blank?
 
       views.each do |view|
         view.all_version_products.collect do |prod|

@@ -45,7 +45,7 @@ module ContentSearch
     end
 
     def build_rows(is_package, repos, cols = [])
-      library_repos = repos.map(&:library_instance).uniq
+      library_repos = repos.map{|repo| repo.library_instance || repo}.uniq
       products = library_repos.map(&:product).uniq
       meta_rows = []
 

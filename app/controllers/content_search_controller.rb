@@ -49,10 +49,9 @@ class ContentSearchController < ApplicationController
   end
 
   def products
-    view_ids = params[:views][:autocomplete].map{|v| v["id"]} rescue nil
+    view_ids = param_view_ids
     view_search = ContentSearch::ContentViewSearch.new(:name => _("Content View"),
-                                                       :view_ids => view_ids
-                                                      )
+                                                       :view_ids => view_ids)
 
     product_search = ContentSearch::ProductSearch.new(:name => _('Products'),
                                                       :product_ids => param_product_ids,
@@ -62,7 +61,7 @@ class ContentSearchController < ApplicationController
   end
 
   def views
-    ids = params[:views][:autocomplete].map{|v| v["id"]} rescue nil
+    ids = param_view_ids
     view_search = ContentSearch::ContentViewSearch.new(:name => _("Content View"),
                                                        :view_ids => ids
                                                       )
@@ -72,6 +71,7 @@ class ContentSearchController < ApplicationController
   def repos
     repo_ids      = process_params :repos
     product_ids   = param_product_ids
+    view_ids      = param_view_ids
 
     repos = collect_repos(repo_ids, product_ids)
 
@@ -87,8 +87,20 @@ class ContentSearchController < ApplicationController
     end
 
     products = repos.collect(&:product).uniq
-    product_search = ContentSearch::ProductSearch.new(:product_ids => products.map(&:id))
-    render :json=>{:rows=>(product_search.rows + repo_rows(repos)), :name=>_('Repositories')}
+    product_search = ContentSearch::ProductSearch.new(:product_ids => products.map(&:id),
+                                                      :view_ids=>view_ids)
+
+
+    view_search = ContentSearch::ContentViewSearch.new(:name => _("Content View"),
+                                                       :view_ids => view_ids)
+    rows = view_search.rows
+    rows.concat(product_search.rows)
+    view_search.views.each do |view|
+      tmp_rows = repo_rows(view, repos)
+      rows.concat(tmp_rows)
+    end
+
+    render :json=>{:rows=>rows, :name=>_('Repositories')}
   end
 
   def packages
@@ -268,15 +280,16 @@ class ContentSearchController < ApplicationController
     @repo = Repository.readable_in_org(current_organization).find(params[:repo_id])
   end
 
-  def repo_rows repos
+  def repo_rows view, repos
     env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
     repos.collect do |repo|
-        all_repos = repo.environmental_instances.pluck(:pulp_id)
+        repo = Repository.in_content_views([view]).where(:library_instance_id=>repo.id).first
+        all_repos = repo.environmental_instances(true).pluck(:pulp_id)
         cols = {}
         Repository.where(:pulp_id=>all_repos).each do |r|
           cols[r.environment.id] = {:hover => repo_hover_html(r)} if env_ids.include?(r.environment_id)
         end
-        {:id=>"repo_#{repo.id}", :comparable=>true, :parent_id=>"product_#{repo.product.id}",
+        {:id=>"repo_#{repo.id}", :comparable=>true, :parent_id=>"view_#{view.id}_product_#{repo.product.id}",
         :name=>repo.name, :cols=>cols, :data_type => "repo", :value => repo.name}
     end
   end
@@ -287,6 +300,11 @@ class ContentSearchController < ApplicationController
 
   def param_product_ids
     ids = params[:products][:autocomplete].collect{|p|p["id"]} if params[:products]
+    ids || []
+  end
+
+  def param_view_ids
+    ids = params[:views][:autocomplete].collect{|p|p["id"]} if params[:views]
     ids || []
   end
 

@@ -245,6 +245,6 @@ class Repository < ActiveRecord::Base
     end
     search = Repository.where("library_instance_id=%s or repositories.id=%s"  % [repo.id, repo.id] )
 
-    include_content_view ? search : search.in_default_view
+    include_content_view ? search : search.in_content_views([self.content_view])
   end
 end

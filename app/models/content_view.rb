@@ -163,7 +163,7 @@ class ContentView < ActiveRecord::Base
 
   #list all products associated to this view across all versions
   def all_version_products
-    Product.joins(:environment_products=>:repositories).where('repositories.id'=>self.all_version_repos)
+    Product.joins(:environment_products=>:repositories).where('repositories.id'=>self.all_version_repos).uniq
   end
 
   def get_repo_clone(env, repo)
