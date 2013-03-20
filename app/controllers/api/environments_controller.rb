@@ -16,7 +16,7 @@ class Api::EnvironmentsController < Api::ApiController
       # Description
 
       An environment is a basic organization structure that groups systems,
-      products, repositories, templates etc.  Every system belongs to one environment
+      products, repositories, etc.  Every system belongs to one environment
       and it's isolated inside so that it can see only content that is in its
       environment.
 

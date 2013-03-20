@@ -48,20 +48,12 @@
             %label #{_("Environment")}:
           .grid_10.la
             = environment_selector(:path_widget_class=>"grid_7", :path_entries_class=>"grid_7", :library_clickable=>false,
-              :accessible_envs=>accessible_envs, :url_templates_proc=>url_templates_proc, :url_products_proc=>url_products_proc)
+              :accessible_envs=>accessible_envs, :url_products_proc=>url_products_proc)
 
           .clear
             &nbsp;
 
           - if Katello.config.katello?
-            %fieldset.clearfix
-              .grid_2.ra
-                %label #{_("System Template")}:
-              .grid_10.la
-                - if editable
-                  = select_tag 'activation_key[system_template_id]', options_for_select(system_template_labels, selected_template)
-                - else
-                  = @system_template.nil? ? no_template : @system_template[:name]
             %fieldset.clearfix
               .grid_2.ra
                 %label #{_("Content View")}:

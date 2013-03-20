@@ -121,10 +121,8 @@ describe Api::SystemsController do
     context "when activation keys are provided" do
 
       before(:each) do
-        @system_template = SystemTemplate.create!(:name => "system template", :environment => @environment_1)
         @activation_key_1 = ActivationKey.create!(:environment => @environment_1,
                                                   :organization => @organization,
-                                                  :system_template => @system_template,
                                                   :name => "activation_key_1",
                                                   :system_groups => [@system_group_1], :user => @user)
         @activation_key_2 = ActivationKey.create!(:environment => @environment_1, :organization => @organization, :name => "activation_key_2",

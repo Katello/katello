@@ -20,10 +20,6 @@ describe Util::Model do
     Util::Model.table_to_class("tag").class_name.should match("Tag")
   end
 
-  it "should work with system_template" do
-    Util::Model.table_to_class("system_template").class_name.should match("SystemTemplate")
-  end
-
   it "should work with kt_environment" do
     Util::Model.table_to_class("kt_environment").class_name.should match("KTEnvironment")
   end
