@@ -51,4 +51,13 @@ $(document).ready(function() {
       KT.orgswitcher.checkboxChanged($('#default_org'));
   });
 
+  $('#save_name').live('ajax:complete', function(evt, data, status, xhr) {
+    // Refresh the entry in the left list
+    var id = $('.left').find('.active');
+    var url = id.attr('data-ajax_url');
+    KT.panel.list.refresh(id.attr('id'), url);
+
+    // Refresh the name displayed at the top of the right panel
+  });
+
 });
