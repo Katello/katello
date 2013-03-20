@@ -1,24 +1,9 @@
-library_default:
-  name:           Library Default ContentView
+acme_default:
+  name:           ACME Default ContentView
   organization:   acme_corporation
   label:          library_label
   default:        true
-  environment_default: library
 
-
-dev_default:
-  name:           Dev Default ContentView
-  organization:   acme_corporation
-  label:          dev_label
-  default:        true
-  environment_default: dev
-
-staging_default:
-  name:           Staging Default ContentView
-  organization:   acme_corporation
-  label:          staging_label
-  default:        true
-  environment_default: staging
 
 #View published only to library
 library_view:
@@ -27,26 +12,20 @@ library_view:
   label:          'published_library_view'
   default:        false
 
-candlepin_library_default_cv:
-  name:           Library Default ContentView
-  organization:   candlepin_org
-  label:          candlepin_library_default_cv
-  default:        true
-  environment_default: candlepin_library
-
-candlepin_dev_default_cv:
-  name:           Dev Default ContentView
-  organization:   candlepin_org
-  label:          candlepin_dev_default_cv
-  default:        true
-  environment_default: candlepin_dev
-
 #view published to library and dev
 library_dev_view:
   name:           Published Library and dev view
   organization:   acme_corporation
   label:          published_dev_view
   default:        false
+
+
+candlepin_default_cv:
+  name:           candlepin Default ContentView
+  organization:   candlepin_org
+  label:          candlepin_library_default_cv
+  default:        true
+
 
 # For use with glue/candlepin tests
 candlepin_library_cv:
