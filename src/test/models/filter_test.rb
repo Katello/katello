@@ -17,7 +17,7 @@ class FilterTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def self.before_suite
     models = ["Organization", "KTEnvironment", "User","ContentViewEnvironment",
-                                "ContentViewDefinition", "Product", "Repository"]
+              "ContentViewDefinition", "Product", "Repository"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
   end
 
@@ -37,8 +37,8 @@ class FilterTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_create
-      assert @filter.save
-    end
+     assert @filter.save
+  end
 
   def test_bad_name
     filter = FactoryGirl.build(:filter, :name => "")
