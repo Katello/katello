@@ -88,12 +88,13 @@ module Katello
           root[:type] ||= 'file'
 
           config[:katello_version] = begin
-            package = config.katello? ? 'katello-common' : 'katello-headpin'
-            `rpm -q #{package} --queryformat '%{VERSION}-%{RELEASE}' 2>&1`.tap do |version|
-              if $? != 0
-                hash = `git rev-parse --short HEAD 2>/dev/null`
-                version.replace $? == 0 ? "git hash (#{hash.chop})" : "Unknown"
-              end
+            rpm_command_present = system('which rpm &>/dev/null')
+            if rpm_command_present
+              package = config.katello? ? 'katello-common' : 'katello-headpin'
+              `rpm -q #{package} --queryformat '%{VERSION}-%{RELEASE}' 2>&1`
+            else
+              hash = `git rev-parse --short HEAD 2>/dev/null`
+              $? == 0 ? "git hash (#{hash.chop})" : "Unknown"
             end
           end
         end,
