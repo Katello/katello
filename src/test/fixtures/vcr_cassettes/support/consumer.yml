@@ -5,20 +5,20 @@ http_interactions:
     method: post
     uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/consumers/
     body: 
-      string: "{\"display_name\":\"Simple Server\",\"id\":\"010E99C0-3276-11E2-81C1-0800200C9A66\"}"
+      string: "{\"id\":\"010E99C0-3276-11E2-81C1-0800200C9A66\",\"display_name\":\"Simple Server\"}"
     headers: 
-      Pulp-User: 
-      - admin
       Content-Length: 
       - "76"
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
       Content-Type: 
       - application/json
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="KD6P5FLuCWehnZZnHj0YTMlD6futiZ9GLBTrs5hK9k", oauth_signature="bxGFm54BzbNTH76LWMSCKBW5c9U%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363816316", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="SAjXIIL316C85k2nKtj1H9Z9UV15GcaZlZIkIt5Tg4", oauth_signature="%2Fz%2FV37dqK2zrhkYZiwAvgrCxQtM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363829895", oauth_version="1.0"
+      Accept-Encoding: 
+      - gzip, deflate
   response: 
     status: 
       code: 201
@@ -26,48 +26,50 @@ http_interactions:
     headers: 
       Content-Length: 
       - "2191"
-      Server: 
-      - Apache/2.2.22 (Fedora)
+      Content-Type: 
+      - application/json
       Location: 
       - "{'_href': u'/pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/'}"
       Date: 
-      - Wed, 20 Mar 2013 21:51:56 GMT
-      Content-Type: 
-      - application/json
+      - Thu, 21 Mar 2013 01:38:15 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
     body: 
-      string: "{\"display_name\": \"Simple Server\", \"description\": null, \"certificate\": \"-----BEGIN RSA PRIVATE KEY-----\\nMIICXAIBAAKBgQC6uFe9vECA3QChDzpcjJnKM/PZREBSOWFNefMfbzjUHIa/Q1sW\\nxahCcsXxsV7dlzCRQUJmCB5uOgTcHONCJtAsbTOchpMmrnbatSOVKhuoivN9/moe\\ngtBkYO2LbBMbTIXjD6SjI6rq74LS6er8+Za4v4wGZJnr4r9+anWWBY+87QIDAQAB\\nAoGAPgQSKFOJPQOqPNQ49xo/zhf5StVPY7/pIHl7lZo0Tsb2vjnZ3DNkEkXals7p\\nikG4ANai/g5+RPACQzVZCdSoWTewGzM88XYSU5kxhTZhHowIVsjazG0qV5z4faXf\\ns1cdjHaB4IXToGY1orCSJJn/0zTdn9R+Xe5jIiKDfHTRs0UCQQDmiQbXcOv71c/e\\nagdgViCUjED5TM0fAp6C439Ng7Vx7eGLAygLB/2bSxpcLNu+KpnrSnb3T3Ywh7wp\\n1keAh7APAkEAz1hUg0aJ7lF4yReu+opN0JHZr1jWLs/SaZ3c9Ctwc+AL6gGFKsUg\\nC0OlzemJj8REIGv8SN1uVjMYZ8Rgo7/HQwJBAL4zueBQe3LI4nsXscRK6xCEcyr8\\nsZPvPkaxWhvjGfXIlThzPztyuUvB+BqqrBZG4b0eL+81sUazBoziDRY/XQMCQGZN\\n3uUm2MeNy1rtJJjZxKs0S4QJAST3xYn3Kh4PkNybn0VGmr4PpU/pgNWodQdKf5K/\\ntSr+loJRk6kfa89fwKECQDbYOGui0xHA2dZs1RLHxfC6cGOZgggW1NPWS72Hr4x+\\nZADGlDkZBzu3uFpclgGelBfJJ8z1uz30ur1rZRKhRRE=\\n-----END RSA PRIVATE KEY-----\\n-----BEGIN CERTIFICATE-----\\nMIICojCCAYoCAggTMA0GCSqGSIb3DQEBBQUAMIGBMQswCQYDVQQGEwJVUzEXMBUG\\nA1UECBMOTm9ydGggQ2Fyb2xpbmExEDAOBgNVBAcTB1JhbGVpZ2gxEDAOBgNVBAoT\\nB1JlZCBIYXQxETAPBgNVBAsTCENsb3VkIEJVMSIwIAYDVQQDExlkaGNwMjMxLTE2\\nLnJkdS5yZWRoYXQuY29tMB4XDTEzMDMyMDIxNTE1N1oXDTIzMDMxODIxNTE1N1ow\\nLzEtMCsGA1UEAxMkMDEwRTk5QzAtMzI3Ni0xMUUyLTgxQzEtMDgwMDIwMEM5QTY2\\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC6uFe9vECA3QChDzpcjJnKM/PZ\\nREBSOWFNefMfbzjUHIa/Q1sWxahCcsXxsV7dlzCRQUJmCB5uOgTcHONCJtAsbTOc\\nhpMmrnbatSOVKhuoivN9/moegtBkYO2LbBMbTIXjD6SjI6rq74LS6er8+Za4v4wG\\nZJnr4r9+anWWBY+87QIDAQABMA0GCSqGSIb3DQEBBQUAA4IBAQCjlPir0G3xQHmf\\nFh+mrAMObzpZc4MbCO2DU7jla4v2TmmSu3YMpdrOhMRRwsuxtACMjt9DbWzRMqFH\\nr9u4s6ndeag3XF2HYEOghpABlRjXmvQEsvrpP7v5s/hcTLr4mDd2uNo1PJk0lbgU\\nhbY+V8frCQI6b5AzcFrlxD8e6OehS0I4tPU4sGwYjE+SLBKm6/Vy5KuwGtDYGT4D\\npRVlzRa5GY8vJ1klvaib6QqqwTeQvYP2lD6TWE/IbCJGw3L8om15F3RtFpQhtKOZ\\nyQVWcZChAKSoZuICF5EdMT/xGPDRQhFEgnEmh2vsNnXZZob9udehuiyVAgelHov2\\ngBTsevx2\\n-----END CERTIFICATE-----\", \"_ns\": \"consumers\", \"notes\": {}, \"capabilities\": {}, \"_id\": {\"$oid\": \"514a2f7d9c60ed64a30013ce\"}, \"id\": \"010E99C0-3276-11E2-81C1-0800200C9A66\", \"_href\": {\"_href\": \"/pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/\"}}"
+      string: "{\"display_name\": \"Simple Server\", \"description\": null, \"certificate\": \"-----BEGIN RSA PRIVATE KEY-----\\nMIICXAIBAAKBgQCoJajVz7WA5SzWyUKCtthEznZuNKHr7JHuNGKDdE9c7pLggD15\\niCEreztL+V3zK4Q/YC8P4GqGyPwyUOx8zHjdSd9La8wRbeCQX8AXmp+yqexBgvoO\\nIqqeQwriNl1+3v2R/Ts8gZfY9nJCtiVjiAQDpscRSnV33RCGYwTqJ/1wSwIDAQAB\\nAoGAd+zULBrGozXQ8yf8DeqG+RwgD53uVqwVsMUf9g3AhNGLZB9SuRlEPxTXR+qE\\n/WhuHB1ns3UlxRgX93MMGD5lfJZ0ECJCw5bSWqlfyvY/+wRhmIN9HUueM2ff5823\\n+VBglh9rBVFP88pY894oP39HSfvypcnnSjzkAw9jTaBD1XECQQDY0bzOQ5GJuwBn\\n3WyG7WVQ25Qu8RW4SiVV4YYsX6RXTc5npRMUH1bUE6qzzoUQt7hCciE6jpeA9Obb\\nYZmFci9dAkEAxohNMqRB1yq2pcByabjYdWCRm/4DKDrc0C6FP8PIPD+pHrtu8wA6\\n7ByNbsUTmCIPlrGTNEX53r2sU7yzQP4rxwJARNOvn7qLRLF8G3yKqvpJIzXRAGW/\\ng1TmLTD+Kq/ht2UXlIcuW0Dni0MC+TkhvIDVmSIpsjD5nxIfBp0g4t+wcQJABp20\\nNOPUbd82hv+K0Isga4j0UUZ9xHFxul5SgnV7zsYwVJ3abK6tSAELlY1rwb4g1tzE\\nExHh6dJYU9IOBzRxMQJBAMvUTNlTWqJfb8QkFSPCS4vnOFytOWRnoNgp+iKs8rzN\\n99cjBxrW2bU6KhGVeo+G9o1x62J60PSd/muJlvB8uqo=\\n-----END RSA PRIVATE KEY-----\\n-----BEGIN CERTIFICATE-----\\nMIICojCCAYoCAghZMA0GCSqGSIb3DQEBBQUAMIGBMQswCQYDVQQGEwJVUzEXMBUG\\nA1UECBMOTm9ydGggQ2Fyb2xpbmExEDAOBgNVBAcTB1JhbGVpZ2gxEDAOBgNVBAoT\\nB1JlZCBIYXQxETAPBgNVBAsTCENsb3VkIEJVMSIwIAYDVQQDExlkaGNwMjMxLTE2\\nLnJkdS5yZWRoYXQuY29tMB4XDTEzMDMyMTAxMzgxNVoXDTIzMDMxOTAxMzgxNVow\\nLzEtMCsGA1UEAxMkMDEwRTk5QzAtMzI3Ni0xMUUyLTgxQzEtMDgwMDIwMEM5QTY2\\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCoJajVz7WA5SzWyUKCtthEznZu\\nNKHr7JHuNGKDdE9c7pLggD15iCEreztL+V3zK4Q/YC8P4GqGyPwyUOx8zHjdSd9L\\na8wRbeCQX8AXmp+yqexBgvoOIqqeQwriNl1+3v2R/Ts8gZfY9nJCtiVjiAQDpscR\\nSnV33RCGYwTqJ/1wSwIDAQABMA0GCSqGSIb3DQEBBQUAA4IBAQBX0MjhpYG0hHcg\\n9S7KWxH+41yLzYrRJKZAqHK0stI+ZHpjHb5XojwexA1UQZ7opIVKU8f7hrLknKFI\\nAIcj3dKyXLsp2bNauK9coRGWR0bpPJ9CMsEipAcV7DlE0RyYqZFZFg9pbDVeTMgD\\nV4rJirbuG46OFmXhpONHNWJesiBTsC2WDWcRlcQ+UI02RE2dpn+DD+Eepp3oy1yx\\nfLQvRBC/AMWTOer3ga5cAsJbVeKy/StSUCf5P6DpkUGnkm/CHD/z9SHZ4p/srGlx\\nvWrBVym5iYUuoa944h0/phbDYJZiSKmZssrvEjGGH/cSf6X1fWlQ4lq5GA6YhzcC\\nCI19+WTO\\n-----END CERTIFICATE-----\", \"_ns\": \"consumers\", \"notes\": {}, \"capabilities\": {}, \"_id\": {\"$oid\": \"514a64879c60ed64a3003d78\"}, \"id\": \"010E99C0-3276-11E2-81C1-0800200C9A66\", \"_href\": {\"_href\": \"/pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/\"}}"
     http_version: 
-  recorded_at: Wed, 20 Mar 2013 21:51:57 GMT
+  recorded_at: Thu, 21 Mar 2013 01:38:15 GMT
 - request: 
     method: delete
     uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/
     body: 
       string: ""
     headers: 
-      Pulp-User: 
-      - admin
+      Content-Type: 
+      - application/json
       Accept: 
       - application/json
+      Pulp-User: 
+      - admin
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="g5t65luh6gKrBgzqnFdKnx56jEhcmovYRiaiLCQhROc", oauth_signature="1BTu9uoAZUM9X1exHHobGncK7O0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363829920", oauth_version="1.0"
       Accept-Encoding: 
       - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="IXnjt6EQpZ1to7vrXc093eB1LCEb4SubY1hK15sasUw", oauth_signature="YhpOuhJHIL9myZge3XAam8o8xDQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363816343", oauth_version="1.0"
   response: 
     status: 
-      code: 200
-      message: OK
+      code: 404
+      message: Not Found
     headers: 
       Content-Length: 
-      - "4"
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Date: 
-      - Wed, 20 Mar 2013 21:52:23 GMT
+      - "318"
       Content-Type: 
       - application/json
+      Content-Encoding: 
+      - utf-8
+      Date: 
+      - Thu, 21 Mar 2013 01:38:40 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
     body: 
-      string: "null"
+      string: "{\"http_request_method\": \"DELETE\", \"exception\": null, \"error_message\": \"Missing resource(s): consumer=010E99C0-3276-11E2-81C1-0800200C9A66\", \"_href\": \"/pulp/api/v2/consumers/010E99C0-3276-11E2-81C1-0800200C9A66/\", \"http_status\": 404, \"traceback\": null, \"resources\": {\"consumer\": \"010E99C0-3276-11E2-81C1-0800200C9A66\"}}"
     http_version: 
-  recorded_at: Wed, 20 Mar 2013 21:52:23 GMT
+  recorded_at: Thu, 21 Mar 2013 01:38:40 GMT
