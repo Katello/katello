@@ -15,12 +15,6 @@
 module ContentSearch
   class ContainerSearch < Search
 
-
-    def initialize(options)
-      super
-      @mode = options[:mode]
-    end
-
     def container_hover_html(container, env)
       render_to_string :partial=>'content_search/container_hover',
         :locals=>{:container=>container, :env=>env}
@@ -35,8 +29,7 @@ module ContentSearch
     end
 
     def search_envs
-      SearchUtils.search_envs
+      SearchUtils.search_envs(mode)
     end
-
   end
 end
