@@ -22,14 +22,3 @@ Rabl.configure do |config|
   # config.raise_on_missing_attribute = true # Defaults to false
 end
 
-module Rabl
-  class Engine
-
-    def hash_attributes *attrs
-      attrs.each do |a|
-        node(a){|obj| obj[a] }
-      end
-    end
-
-  end
-end
