@@ -3,102 +3,67 @@ recorded_with: VCR 2.4.0
 http_interactions: 
 - request: 
     method: delete
-    uri: https://localhost:8443/candlepin/consumers/8da1c2ca-2035-42d9-bfe4-605d60bd1b2a
+    uri: https://localhost:8443/candlepin/consumers/7a33accd-b03a-416d-a3e1-81dd1402ccf0
     body: 
       string: ""
     headers: 
       Accept: 
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
-      - gzip, deflate
       Cp-User: 
       - admin
-      User-Agent: 
-      - Ruby
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="FgegnJ8O4Lr6rWzVIETP7zofwWbqXAeNm8srZfO5TeI", oauth_signature="21wZaFfgu73iSEpdcZ9l0FMoKtc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1362103580", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="OkdsKnxqbPJSe1x2A7XSRWkcff00j9nCWp5cOkeEQ", oauth_signature="42bABFqNUeCfWYqRjZGPE%2Fj8X9s%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363829720", oauth_version="1.0"
+      Accept-Encoding: 
+      - gzip, deflate
   response: 
     status: 
       code: 410
       message: Gone
     headers: 
-      X-Candlepin-Version: 
-      - 0.7.19-1
+      Content-Type: 
+      - application/json
+      Transfer-Encoding: 
+      - chunked
       Server: 
       - Apache-Coyote/1.1
       Date: 
-      - Fri, 01 Mar 2013 02:06:20 GMT
-      Transfer-Encoding: 
-      - chunked
-      Content-Type: 
-      - application/json
+      - Thu, 21 Mar 2013 01:35:20 GMT
+      X-Candlepin-Version: 
+      - 0.7.19-1
     body: 
-      string: "{\"displayMessage\":\"Consumer 8da1c2ca-2035-42d9-bfe4-605d60bd1b2a has been deleted\",\"deletedId\":\"8da1c2ca-2035-42d9-bfe4-605d60bd1b2a\"}"
+      string: "{\"displayMessage\":\"Consumer 7a33accd-b03a-416d-a3e1-81dd1402ccf0 has been deleted\",\"deletedId\":\"7a33accd-b03a-416d-a3e1-81dd1402ccf0\"}"
     http_version: 
-  recorded_at: Fri, 01 Mar 2013 02:06:20 GMT
+  recorded_at: Thu, 21 Mar 2013 01:35:20 GMT
 - request: 
     method: delete
-    uri: https://localhost:8443/candlepin/consumers/8d766eaf-5991-48af-874f-8e8c19f4c6c8
+    uri: https://localhost:8443/candlepin/consumers/b21b7a04-1679-4192-8f64-c68fdcf0e706
     body: 
       string: ""
     headers: 
       Accept: 
       - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
-      - gzip, deflate
       Cp-User: 
       - admin
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="HzFlVt5RPWDfkq08QaENSqypx6joYAim1ukYCksfE", oauth_signature="FSIyxlp%2BlXSAPGo5Ln05i%2BIlvWQ%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363816133", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="ZR8yQn0KqzZnwfIijkesXf3Ke27ItipYGBAByVeTE", oauth_signature="%2BGkOmaIomHbH%2FUMH3PtErS%2BKoKc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363829865", oauth_version="1.0"
+      Accept-Encoding: 
+      - gzip, deflate
   response: 
     status: 
       code: 410
       message: Gone
     headers: 
-      X-Candlepin-Version: 
-      - 0.7.19-1
-      Server: 
-      - Apache-Coyote/1.1
-      Date: 
-      - Wed, 20 Mar 2013 21:48:53 GMT
-      Transfer-Encoding: 
-      - chunked
       Content-Type: 
       - application/json
-    body: 
-      string: "{\"displayMessage\":\"Consumer 8d766eaf-5991-48af-874f-8e8c19f4c6c8 has been deleted\",\"deletedId\":\"8d766eaf-5991-48af-874f-8e8c19f4c6c8\"}"
-    http_version: 
-  recorded_at: Wed, 20 Mar 2013 21:48:53 GMT
-- request: 
-    method: delete
-    uri: https://localhost:8443/candlepin/consumers/dea2b94c-45ea-439b-b19b-b0b0fca864d4
-    body: 
-      string: ""
-    headers: 
-      Accept: 
-      - "*/*; q=0.5, application/xml"
-      Accept-Encoding: 
-      - gzip, deflate
-      Cp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="wIPfcKTFxzJDsmHSUpvqNM2Wo5jMwNVJ5Yv9vA", oauth_signature="F2zsciLwpIDl8cQythTpnnC5rI0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363816284", oauth_version="1.0"
-  response: 
-    status: 
-      code: 410
-      message: Gone
-    headers: 
-      X-Candlepin-Version: 
-      - 0.7.19-1
-      Server: 
-      - Apache-Coyote/1.1
-      Date: 
-      - Wed, 20 Mar 2013 21:51:24 GMT
       Transfer-Encoding: 
       - chunked
-      Content-Type: 
-      - application/json
+      Date: 
+      - Thu, 21 Mar 2013 01:37:45 GMT
+      Server: 
+      - Apache-Coyote/1.1
+      X-Candlepin-Version: 
+      - 0.7.19-1
     body: 
-      string: "{\"displayMessage\":\"Consumer dea2b94c-45ea-439b-b19b-b0b0fca864d4 has been deleted\",\"deletedId\":\"dea2b94c-45ea-439b-b19b-b0b0fca864d4\"}"
+      string: "{\"displayMessage\":\"Consumer b21b7a04-1679-4192-8f64-c68fdcf0e706 has been deleted\",\"deletedId\":\"b21b7a04-1679-4192-8f64-c68fdcf0e706\"}"
     http_version: 
-  recorded_at: Wed, 20 Mar 2013 21:51:25 GMT
+  recorded_at: Thu, 21 Mar 2013 01:37:45 GMT
