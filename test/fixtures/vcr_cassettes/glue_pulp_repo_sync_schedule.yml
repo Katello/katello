@@ -1,73 +1,81 @@
 --- 
-recorded_with: VCR 2.4.0
 http_interactions: 
 - request: 
     method: get
     uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
     body: 
+      encoding: US-ASCII
       string: ""
     headers: 
-      Content-Type: 
-      - application/json
       Accept: 
       - application/json
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="QjbTjVkm5SgcJGwHDVeFVgE150iJ3ZRrxNbYckEVXuI", oauth_signature="4pOmjR1IpEK5D9qQ4lKlacqO9Rg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363829994", oauth_version="1.0"
       Accept-Encoding: 
       - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="X1kaXB6IqjPNoVZYrlgaPzc0ChkmvQ972uEMxPaadhA", oauth_signature="6II7j00t41ZlVSsqCmGmyDJV5ak%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363884933", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
   response: 
     status: 
       code: 200
       message: OK
     headers: 
+      Date: 
+      - Thu, 21 Mar 2013 16:55:33 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "2"
       Content-Type: 
       - application/json
-      Date: 
-      - Thu, 21 Mar 2013 01:39:54 GMT
-      Server: 
-      - Apache/2.2.22 (Fedora)
     body: 
+      encoding: US-ASCII
       string: "[]"
     http_version: 
-  recorded_at: Thu, 21 Mar 2013 01:39:54 GMT
+  recorded_at: Thu, 21 Mar 2013 16:55:33 GMT
 - request: 
     method: post
     uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
     body: 
-      string: "{\"schedule\":\"2014-03-20T21:39:54-04:00/P1D\"}"
+      encoding: US-ASCII
+      string: "{\"schedule\":\"2014-03-21T12:55:33-04:00/P1D\"}"
     headers: 
-      Content-Length: 
-      - "44"
-      Content-Type: 
-      - application/json
       Accept: 
       - application/json
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="rOfd9NgxBpOYQEQQsKbXxziSTpMETkT6tVcQF4aa2E", oauth_signature="mdOlzEhdOX134FrK7INTGFB451c%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363829994", oauth_version="1.0"
       Accept-Encoding: 
       - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="RhtG382jzs0EqxWxDpd8DChFC6B3omkkmLYqbJ8O8", oauth_signature="GiJX9ha5bhQgNK36Ln5iYxDVQ7s%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363884933", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "44"
+      User-Agent: 
+      - Ruby
   response: 
     status: 
       code: 201
       message: Created
     headers: 
+      Date: 
+      - Thu, 21 Mar 2013 16:55:33 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Location: 
+      - /pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/514b3b859c60ed64a3005334/
       Content-Length: 
       - "393"
       Content-Type: 
       - application/json
-      Location: 
-      - /pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/514a64ea9c60ed64a3004289/
-      Date: 
-      - Thu, 21 Mar 2013 01:39:54 GMT
-      Server: 
-      - Apache/2.2.22 (Fedora)
     body: 
-      string: "{\"next_run\": \"2014-03-21T01:39:54Z\", \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/514a64ea9c60ed64a3004289/\", \"schedule\": \"2014-03-20T21:39:54-04:00/P1D\", \"override_config\": {}, \"remaining_runs\": null, \"first_run\": \"2014-03-21T01:39:54Z\", \"enabled\": true, \"last_run\": null, \"failure_threshold\": null, \"_id\": \"514a64ea9c60ed64a3004289\", \"consecutive_failures\": 0}"
+      encoding: US-ASCII
+      string: "{\"next_run\": \"2014-03-21T16:55:33Z\", \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/514b3b859c60ed64a3005334/\", \"schedule\": \"2014-03-21T12:55:33-04:00/P1D\", \"override_config\": {}, \"remaining_runs\": null, \"first_run\": \"2014-03-21T16:55:33Z\", \"enabled\": true, \"last_run\": null, \"failure_threshold\": null, \"_id\": \"514b3b859c60ed64a3005334\", \"consecutive_failures\": 0}"
     http_version: 
-  recorded_at: Thu, 21 Mar 2013 01:39:54 GMT
+  recorded_at: Thu, 21 Mar 2013 16:55:33 GMT
+recorded_with: VCR 2.4.0

@@ -1,108 +1,120 @@
 --- 
-recorded_with: VCR 2.4.0
 http_interactions: 
 - request: 
     method: post
     uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/users/
     body: 
-      string: "{\"password\":\"ypkVOBCKgDK6eAlL\",\"login\":\"hidden\",\"name\":\"hidden\"}"
+      encoding: US-ASCII
+      string: "{\"login\":\"hidden\",\"name\":\"hidden\",\"password\":\"kTIltGFFY6K9NBiA\"}"
     headers: 
-      Content-Length: 
-      - "64"
-      Content-Type: 
-      - application/json
       Accept: 
       - application/json
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="pHKx1LcDVgMRRpMQie61dmLoqGuWAlPRj0J6ZcfM", oauth_signature="Ei2sqApxoh1mZ1DpWhew6QOD76I%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363829891", oauth_version="1.0"
       Accept-Encoding: 
       - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="CLbaDmzWVPwmFEZylIWJFdMAiHwYEsYl3Ch4eFBC2k", oauth_signature="u0eSyJBZHIYlz1%2F4mdY%2F4EhB34U%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363884859", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "64"
+      User-Agent: 
+      - Ruby
   response: 
     status: 
       code: 201
       message: Created
     headers: 
+      Date: 
+      - Thu, 21 Mar 2013 16:54:19 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
+      Location: 
+      - hidden
       Content-Length: 
       - "184"
       Content-Type: 
       - application/json
-      Location: 
-      - hidden
-      Date: 
-      - Thu, 21 Mar 2013 01:38:11 GMT
-      Server: 
-      - Apache/2.2.22 (Fedora)
     body: 
-      string: "{\"_id\": {\"$oid\": \"514a64839c60ed64a3003d33\"}, \"name\": \"hidden\", \"roles\": [], \"_ns\": \"users\", \"login\": \"hidden\", \"id\": \"514a64839c60ed64a3003d33\", \"_href\": \"/pulp/api/v2/users/hidden/\"}"
+      encoding: US-ASCII
+      string: "{\"_id\": {\"$oid\": \"514b3b3b9c60ed64a3004de0\"}, \"name\": \"hidden\", \"roles\": [], \"_ns\": \"users\", \"login\": \"hidden\", \"id\": \"514b3b3b9c60ed64a3004de0\", \"_href\": \"/pulp/api/v2/users/hidden/\"}"
     http_version: 
-  recorded_at: Thu, 21 Mar 2013 01:38:11 GMT
+  recorded_at: Thu, 21 Mar 2013 16:54:20 GMT
 - request: 
     method: post
     uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/roles/super-users/users/
     body: 
+      encoding: US-ASCII
       string: "{\"login\":\"hidden\"}"
     headers: 
-      Content-Length: 
-      - "18"
-      Content-Type: 
-      - application/json
       Accept: 
       - application/json
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="j9fNLR1ApI6Oelz8g0F3rRtQi63SD932vV3KMT5C4", oauth_signature="NWAS6lMSc%2FKIWoQpM%2BS%2FQULvUug%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363829891", oauth_version="1.0"
       Accept-Encoding: 
       - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="sXfFdIsAuKqpF6HqZ764UzlxX99dFgAgoGmPcjnTweI", oauth_signature="krjgYSNELnVoCo8ZVV8jsmoFwXE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363884860", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "18"
+      User-Agent: 
+      - Ruby
   response: 
     status: 
       code: 200
       message: OK
     headers: 
+      Date: 
+      - Thu, 21 Mar 2013 16:54:20 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "4"
       Content-Type: 
       - application/json
-      Date: 
-      - Thu, 21 Mar 2013 01:38:11 GMT
-      Server: 
-      - Apache/2.2.22 (Fedora)
     body: 
+      encoding: US-ASCII
       string: "null"
     http_version: 
-  recorded_at: Thu, 21 Mar 2013 01:38:11 GMT
+  recorded_at: Thu, 21 Mar 2013 16:54:20 GMT
 - request: 
     method: delete
     uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/users/hidden/
     body: 
+      encoding: US-ASCII
       string: ""
     headers: 
-      Content-Type: 
-      - application/json
       Accept: 
       - application/json
-      Pulp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="w99KeDX25fsFiUg2oViErDDoXbDTXVdzl1nFYBYSyc", oauth_signature="yDyH1KYyWs2r3fnvC9slldA0jcU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363829906", oauth_version="1.0"
       Accept-Encoding: 
       - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="jjBMfMU7YeyyqUZ8e1NYh13LLJjKlHHPwpcqYZWLhAU", oauth_signature="NIjLd24ekjRbLHlSAuHudL2aeLI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363884868", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
   response: 
     status: 
       code: 200
       message: OK
     headers: 
+      Date: 
+      - Thu, 21 Mar 2013 16:54:28 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
       Content-Length: 
       - "4"
       Content-Type: 
       - application/json
-      Date: 
-      - Thu, 21 Mar 2013 01:38:26 GMT
-      Server: 
-      - Apache/2.2.22 (Fedora)
     body: 
+      encoding: US-ASCII
       string: "null"
     http_version: 
-  recorded_at: Thu, 21 Mar 2013 01:38:26 GMT
+  recorded_at: Thu, 21 Mar 2013 16:54:28 GMT
+recorded_with: VCR 2.4.0
