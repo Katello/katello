@@ -126,7 +126,7 @@ describe ActivationKey do
 
   describe "pools in a activation key" do
     before(:each) do
-      Resources::Candlepin::Pool.stub(:find).and_return(true)
+      disable_pools_orchestration
     end
 
     it "should map 2way pool to keys" do
@@ -144,10 +144,11 @@ describe ActivationKey do
     end
 
     it "should include pools details in json output" do
+      Resources::Candlepin::Pool.stub!(:find).and_return({'productName' => 'p123'})
       pool = ::Pool.create!(:cp_id  => 'abc123')
       @akey.pools << pool
       pool.reload
-      @akey.as_json[:pools].should == [ { :cp_id => pool.cp_id } ]
+      @akey.as_json[:pools].first.should include(:cp_id => pool.cp_id, 'productName' => 'p123')
     end
   end
 
