@@ -76,7 +76,7 @@ class Organization < ActiveRecord::Base
   end
 
   def default_content_view
-    ContentView.where(:default=>true).where(:organization_id=>self.id).first
+    ContentView.default.where(:organization_id=>self.id).first
   end
 
   def systems
