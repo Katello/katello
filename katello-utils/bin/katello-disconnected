@@ -53,8 +53,10 @@ else
   locale_path = "#{DISCONNECTED_PREFIX}/locale"
   FastGettext.add_text_domain(APP_NAME, :path => locale_path)
 end
+# we also need katello domain for several translations from the katello lib
+FastGettext.add_text_domain("katello", :path => "#{KATELLO_PREFIX}/locale")
+# configure default domain and locales
 FastGettext.text_domain = APP_NAME
-# TODO - add katello ("app") text domain as well to translate katello/lib strings
 FastGettext.available_locales = ['en'] + Dir.entries(locale_path).reject {|d| d =~ /(^\.|pot$)/ }
 FastGettext.locale = (ENV['LC_ALL'] || ENV['LC_MESSAGES'] || ENV['LANG'] || 'en').sub(/\.\w+$/, "")
 
