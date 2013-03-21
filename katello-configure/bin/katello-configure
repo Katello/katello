@@ -116,7 +116,7 @@ $final_options.delete('answer_file')
 mandatory, regex, __unused_data_order, error, __unused_titles, __usused_docs = read_options_format(options_format_path)
 # require the user's password explicitly when ldap is not used
 auth_method = $final_options['auth_method'] || $default_options['auth_method']
-mandatory['user_pass'] = true if auth_method != 'ldap'
+mandatory['user_pass'] = true if auth_method != 'ldap' && !katello_configuration_files_only
 
 non_interactive_option = _get_valid_option_value('non_interactive', $default_options, $final_options)
 ssl_ca_password_file_option = _get_valid_option_value('ssl_ca_password_file', $default_options, $final_options)
