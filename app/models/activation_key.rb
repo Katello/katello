@@ -18,7 +18,6 @@ class ActivationKey < ActiveRecord::Base
   belongs_to :organization
   belongs_to :environment, :class_name => "KTEnvironment"
   belongs_to :user
-  belongs_to :system_template
   belongs_to :content_view, :inverse_of => :activation_keys
 
   has_many :key_pools
@@ -38,7 +37,6 @@ class ActivationKey < ActiveRecord::Base
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates :environment, :presence => true
   validate :environment_exists
-  validate :system_template_exists
   validate :environment_not_library
   validate :environment_key_conflict
   validates_each :usage_limit do |record, attr, value|
@@ -48,12 +46,6 @@ class ActivationKey < ActiveRecord::Base
     end
   end
   validates_with Validators::ContentViewEnvironmentValidator
-
-  def system_template_exists
-    if system_template && system_template.environment != self.environment
-      errors.add(:system_template, _("name: %s doesn't exist ") % system_template.name)
-    end
-  end
 
   def environment_exists
     if environment.nil?
@@ -85,7 +77,6 @@ class ActivationKey < ActiveRecord::Base
       raise Errors::UsageLimitExhaustedException, _("Usage limit (%{limit}) exhausted for activation key '%{name}'") % {:limit => usage_limit, :name => name}
     end
     system.environment_id = self.environment_id if self.environment_id
-    system.system_template_id = self.system_template_id if self.system_template_id
     system.content_view_id = self.content_view_id if self.content_view_id
     system.system_activation_keys.build(:activation_key => self)
   end

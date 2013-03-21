@@ -24,8 +24,6 @@ describe "activation_keys/_new.html.haml" do
       :description => @key_description
     ).as_new_record)
 
-    @system_template_labels = []
-    @selected_template = "No Template"
     @content_view_labels = []
     @selected_content_view = "No Content View"
     view.stub!(:environment_selector)
