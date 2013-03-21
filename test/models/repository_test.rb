@@ -129,7 +129,7 @@ class RepositoryInstanceTest < RepositoryTestBase
 
     repo_id = Repository.repo_id(@fedora.label, @fedora_17_x86_64.label, @library.label,
                                  @acme_corporation.label, @library.default_content_view.label)
-    assert_equal repo_id, "acme_corporation_label-library_label-library_label-fedora_label-fedora_17_x86_64_label"
+    assert_equal "acme_corporation_label-library_label-org_default_label-fedora_label-fedora_17_x86_64_label", repo_id
   end
 
 end
