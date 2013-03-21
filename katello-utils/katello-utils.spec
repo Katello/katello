@@ -69,9 +69,7 @@ cloud lifecycle management application.
 %{scl_ruby} -c bin/katello-disconnected
 
 # pack gettext i18n PO files into MO files
-pushd po
-    make
-popd
+make -C po check all-mo %{?_smp_mflags}
 
 # build katello-configure man page
 pushd man
@@ -92,8 +90,8 @@ install -d -m 0755 %{buildroot}%{_datadir}/katello-disconnected/locale
 pushd po
 for MOFILE in $(find . -name "*.mo"); do
     DIR=$(dirname "$MOFILE")
-    install -d -m 0755 %{buildroot}%{_datadir}/katello-disconnected/locale/$DIR
-    install -m 0644 $DIR/*.mo %{buildroot}%{_datadir}/katello-disconnected/locale/$DIR
+    install -d -m 0755 %{buildroot}%{_datadir}/katello-disconnected/locale/$DIR/LC_MESSAGES
+    install -m 0644 $DIR/*.mo %{buildroot}%{_datadir}/katello-disconnected/locale/$DIR/LC_MESSAGES
 done
 popd
 
