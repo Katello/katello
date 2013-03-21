@@ -33,16 +33,3 @@ test_success "changeset remove erratum"  changeset update  --org="$TEST_ORG" --e
 test_success "changeset remove repo"     changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_2" --from_product="$FEWUPS_PRODUCT" --remove_repo="$REPO_NAME"
 
 test_success "changeset update" changeset update --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME" --new_name="new_$CS_NAME" --description="updated description"
-
-
-#promote template with product and package
-PROM_TEMPLATE_NAME="promotion_test_tpl_$RAND"
-test_success "template create" template create --name="$PROM_TEMPLATE_NAME" --description="template description" --org="$TEST_ORG"
-test_success "template update add package" template update --name="$PROM_TEMPLATE_NAME" --org="$TEST_ORG" --add_package="cheetah"
-
-test_success "changeset create" changeset create --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_3" --description "a description of changeset"
-test_success "changeset add template" changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_3" --add_template="$PROM_TEMPLATE_NAME"
-
-test_success "changeset promote" changeset promote --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_3"
-
-test_success "changeset remove template" changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_3" --remove_template="$PROM_TEMPLATE_NAME"

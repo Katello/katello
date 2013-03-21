@@ -142,8 +142,7 @@ module ApplicationHelper
     options[:path_entries_class] = "grid_10" if options[:path_entries_class].nil?
 
     # allow user to include additional data attributes (urls) to retrieve other elements from the env, such as
-    # products and system templates
-    options[:url_templates_proc] = nil if options[:url_templates_proc].nil?
+    # products and content views
     options[:url_products_proc] = nil if options[:url_products_proc].nil?
     options[:url_content_views_proc] = nil if options[:url_content_views_proc].nil?
 
@@ -196,13 +195,6 @@ module ApplicationHelper
   def editable_class(editable = false)
     return "editable edit_panel_element multiline" if editable
     "multiline"
-  end
-
-  #returns a proc to generate a url for the env_selector
-  def url_templates_proc
-    lambda{|args|
-      system_templates_organization_environment_path(args[:organization].label, args[:environment].id)
-    }
   end
 
   #returns a proc to generate a url for the env_selector

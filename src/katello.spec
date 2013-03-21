@@ -431,20 +431,12 @@ export RAILS_ENV=build
     sed -ri '1sX(/usr/bin/ruby|/usr/bin/env ruby)X%{scl_ruby}X' script/*
 %endif
 
-#check for malformed gettext strings
-for i in locale/*/app.po; do
-    echo $i
-    msgfmt -c $i
-    FILE=$(mktemp)
-    # TODO - enable endwhitespace, endpunc, puncspacing filters
-    pofilter --nofuzzy -t variables -t blank -t urls -t emails -t long -t newlines \
-        -t options -t printf -t validchars --gnome $i | tee $FILE
-    grep msgid $FILE >/dev/null && exit 1
-    rm $FILE
-done
-
 #check for gettext standards (using Ruby 1.8)
 /usr/bin/ruby script/check-gettext.rb -m -i
+
+#check and generate gettext MO files
+make -C locale check all-mo %{?_smp_mflags}
+# | sed -e '/Warning: obsolete msgid exists./,+1d' | sed -e '/Warning: fuzzy message was ignored./,+1d'
 
 #copy alchemy
 ALCHEMY_DIR=$(rpm -ql %{?scl_prefix}rubygem-alchemy | grep -o '/.*/vendor' | sed 's/vendor$//' | head -n1)
@@ -477,12 +469,6 @@ fi
     #generate Rails JS/CSS/... assets
     echo Generating Rails assets...
     LC_ALL="en_US.UTF-8" jammit --config config/assets.yml -f
-
-    #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
-    echo Generating gettext files...
-    # TODO - REMOVING MO GENERATION - we do not use it at all yet
-    #LC_ALL=C ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")' 2>&1 \
-    #  | sed -e '/Warning: obsolete msgid exists./,+1d' | sed -e '/Warning: fuzzy message was ignored./,+1d'
 %endif
 
 #man pages
@@ -534,8 +520,18 @@ rm -f bundler.d/build.rb
 
 #copy the application to the target directory
 mkdir .bundle
-cp -R .bundle Gemfile.in bundler.d Rakefile app autotest ca config config.ru db integration_spec lib locale public script spec vendor %{buildroot}%{homedir}
+cp -R .bundle Gemfile.in bundler.d Rakefile app autotest ca config config.ru db integration_spec lib public script spec vendor %{buildroot}%{homedir}
 rm -f {buildroot}%{homedir}/script/katello-reset-dbs
+
+#copy MO files
+pushd locale
+for MOFILE in $(find . -name "*.mo"); do
+    DIR=$(dirname "$MOFILE")
+    install -d -m 0755 %{buildroot}%{_datadir}/katello/locale/$DIR
+    install -d -m 0755 %{buildroot}%{_datadir}/katello/locale/$DIR/LC_MESSAGES
+    install -m 0644 $DIR/*.mo %{buildroot}%{_datadir}/katello/locale/$DIR/LC_MESSAGES
+done
+popd
 
 #copy configs and other var files (will be all overwriten with symlinks)
 touch %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
