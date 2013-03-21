@@ -38,15 +38,11 @@ describe "activation_keys/_edit.html.haml" do
     view.stub(:render_menu)
     view.stub(:editable).and_return(true)
 
-    @system_template_labels = []
-    @selected_template = "No Template"
     @content_view_labels = []
     @selected_content_view = "No Content View"
     view.stub!(:environment_selector)
     view.stub!(:activation_keys_navigation).and_return([])
     render :partial => "edit", :locals => {:accessible_envs => [@environment],
-                                           :system_template_labels => @system_template_labels,
-                                           :selected_template => @selected_template,
                                            :content_view_labels => @content_view_labels,
                                            :selected_content_view => @selected_content_view,
                                            :products => @products
@@ -75,8 +71,6 @@ describe "activation_keys/_edit.html.haml" do
     it "renders sub-navigation links" do
       view.should_receive(:render_menu).with(1..2, []).once
       render :partial => "edit", :locals => {:accessible_envs => [@environment],
-                                             :system_template_labels => @system_template_labels,
-                                             :selected_template => @selected_template,
                                              :content_view_labels => @content_view_labels,
                                              :selected_content_view => @selected_content_view,
                                              :products => @products
@@ -97,9 +91,6 @@ describe "activation_keys/_edit.html.haml" do
       view.content_for(:content).should have_selector(".editable[name='activation_key[description]']", :count => 1)
     end
 
-    it "renders the activation key system template" do
-      view.content_for(:content).should have_selector("input#activation_key_environment_id", :count => 1)
-    end
 
     it "renders the activation key content view select", :katello => true do #TODO headpin
       view.content_for(:content).should have_selector("select#activation_key_content_view_id", :count => 1)
@@ -109,7 +100,7 @@ describe "activation_keys/_edit.html.haml" do
       view.content_for(:content).should have_selector("div.productsbox", :count => 1)
     end
 
-    it "renders a save and cancel button for environment and system template editing" do
+    it "renders a save and cancel button for environment" do
       view.content_for(:content).should have_selector("#cancel_key", :count => 1)
       view.content_for(:content).should have_selector("input[type=submit]#save_key", :count => 1)
     end

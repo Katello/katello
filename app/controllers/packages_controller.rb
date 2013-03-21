@@ -12,7 +12,7 @@
 
 class PackagesController < ApplicationController
 
-  before_filter :lookup_package, :except=>[:auto_complete_library, :auto_complete_nvrea_library, :validate_name_library]
+  before_filter :lookup_package
   before_filter :authorize
 
   def rules
@@ -22,17 +22,11 @@ class PackagesController < ApplicationController
           :pulp_id=>@package.repoids).empty?
     }
 
-    search = lambda{
-      SystemTemplate.manageable?(current_organization) || Filter.any_editable?(current_organization)
-    }
     {
       :show => view,
       :filelist => view,
       :changelog => view,
-      :dependencies => view,
-      :auto_complete_library=>search,
-      :auto_complete_nvrea_library=>search,
-      :validate_name_library=>search
+      :dependencies => view
     }
   end
 
@@ -50,32 +44,6 @@ class PackagesController < ApplicationController
 
   def dependencies
     render :partial=>"dependencies"
-  end
-
-  def auto_complete_library
-    begin
-        repos = current_organization.library.repositories.collect{|r| r.pulp_id}
-        packages = Package.autocomplete_name(params[:term], repos)
-    rescue Tire::Search::SearchRequestFailed
-        packages = []
-    end
-    render :json => packages
-  end
-
-  def auto_complete_nvrea_library
-    begin
-        repos = current_organization.library.repositories.collect{|r| r.pulp_id}
-        packages = Package.autocomplete_nvrea(params[:term], repos)
-    rescue Tire::Search::SearchRequestFailed
-        packages = []
-    end
-    render :json => packages.collect{|p| {:label=>p.nvrea, :id=>p.id}}
-  end
-
-
-  def validate_name_library
-    name = params[:term]
-    render :json=>Package.search("name:#{name}", 0, 1).count
   end
 
   private

@@ -53,7 +53,7 @@ class Api::ChangesetsController < Api::ApiController
 
   api :GET, "/changesets/:id", "Show a changeset"
   def show
-    render :json => @changeset.to_json(:include => [:products, :packages, :errata, :repos, :system_templates,
+    render :json => @changeset.to_json(:include => [:products, :packages, :errata, :repos,
                                                     :distributions, :content_views])
   end
 

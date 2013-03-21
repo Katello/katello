@@ -12,7 +12,7 @@
 */
 
 var promotion_page = (function($){
-    var types =             ["errata", "product", "package", "repo", "template", "distribution", "content_view"],
+    var types =             ["errata", "product", "package", "repo", "distribution", "content_view"],
         subtypes =          ["errata", "package", "repo", "distribution"],
         changeset_queue =   [],
         changeset_data =    {},
@@ -68,23 +68,19 @@ var promotion_page = (function($){
                 });
             };
 
-            var template_add = [],
-                template_remove = [],
-                content_view_add = [],
+            var content_view_add = [],
                 content_view_remove = [];
 
             return {
                 content_views_added: content_view_add,
                 content_views_removed: content_view_remove,
-                templates_added: template_add,
-                templates_removed: template_remove,
                 products_added: product_add,
                 products_removed: product_remove,
                 products: products,
                 size : function() {
                     var total = 0;
-                        total += product_add.length + product_remove.length + template_add.length +
-                                 template_remove.length + content_view_add.length + content_view_remove.length;
+                        total += product_add.length + product_remove.length + 
+                            content_view_add.length + content_view_remove.length;
                         $.each(products, function(key, prod) {
                             $.each(subtypes, function(index, type) {
                                 total += prod[type + "_add"].length + prod[type + "_remove"].length;
@@ -97,10 +93,6 @@ var promotion_page = (function($){
                     if (type === 'product') {
                         var prod_array = added ? product_add : product_remove;
                         prod_array.push(name);
-                    }
-                    else if (type === 'template') {
-                         var template_array = added ? template_add : template_remove;
-                         template_array.push(name);
                     }
                     else if (type === 'content_view') {
                         var content_view_array = added ? content_view_add : content_view_remove;
@@ -119,10 +111,7 @@ var promotion_page = (function($){
             var myconflict = conflict(),
             old_products = {}, //save products as hash so we dont have to loop to look them up
             new_products = {},
-            all_products = {},
-            old_templates = {}, //save products as hash so we dont have to loop to look them up
-            new_templates= {},
-            all_templates = {};
+            all_products = {};
 
             $.each(new_changeset.getProducts(), function(index, item) {
                 new_products[item.id] = item;
@@ -169,27 +158,6 @@ var promotion_page = (function($){
                         }
                     });
                 });
-            });
-
-            $.each(new_changeset.getTemplates(), function(index, item) {
-                new_templates[item.id] = item;
-                all_templates[item.id] = item;
-            });
-            $.each(old_changeset.getTemplates(), function(index, item) {
-                old_templates[item.id] = item;
-                all_templates[item.id] = item;
-            });
-
-            $.each(all_templates, function(id, item){
-                var old_t = old_templates[id];
-                var new_t = new_templates[id];
-
-                if (new_t && !old_t) { //template added
-                    myconflict.add_item('template', item.name, true);
-                }
-                else if(old_t && !new_t) { // template removed
-                    myconflict.add_item('template', item.name, false);
-                }
             });
 
             return myconflict;
@@ -306,11 +274,6 @@ var promotion_page = (function($){
                             add_content_view_breadcrumbs(changeset.id, id, display);
                         }
                     }
-                    else if (type === "template") {
-                        if (changeset.getTemplates()[id] === undefined) {
-                            add_template_breadcrumbs(changeset.id, id, display);
-                        }
-                    }
                     else if( changeset.getProducts()[product_id] === undefined ){
                         add_product_breadcrumbs(changeset.id, product_id, product_name);
                     }
@@ -326,10 +289,6 @@ var promotion_page = (function($){
                 if( type !== 'product' ){
                     if (type === "content_view") {
                         delete changeset.getContentViews()[id];
-                        changeset_tree.rerender_content();
-                    }
-                    else if (type === "template") {
-                        delete changeset.getTemplates()[id];
                         changeset_tree.rerender_content();
                     }
                     else {
@@ -445,14 +404,6 @@ var promotion_page = (function($){
                 //push the i18n string to lookup and the count
                 counts.push(["product", prod_count]);
 
-                //count how many system templates are in the changeset
-                var template_count = 0;
-                $.each(current_changeset.getTemplates(), function(key, template){
-                  template_count+=1;
-                });
-                //push the i18n string to lookup and the count
-                counts.push(["system_template", template_count]);
-
                 //count how many content views are in the changeset
                 var content_view_count = 0;
                 $.each(current_changeset.getContentViews(), function(key, content_view){
@@ -542,18 +493,6 @@ var promotion_page = (function($){
                          } else {
                             $(button).html('');
                          }
-                      }
-                    });
-                  });
-
-                 buttons = $('#list').find("a[class~=content_add_remove][data-type=template]");
-                 buttons.html(i18n.add).removeClass('remove_template').addClass("add_template").show(); //reset all to 'add'
-                 buttons.prev('.added').addClass('hidden').removeAttr('original-title');
-                  $.each(current_changeset.getTemplates(), function(index, template) {
-                    $.each(buttons, function(button_index, button){
-                      if( $(button).attr('id') === ('add_remove_template_' + template.id) ){ 
-                        $(button).html(i18n.undo).removeClass('add_template').addClass("remove_template").removeClass("disabled");
-                        $(button).prev('.added').removeClass('hidden').attr('original-title', i18n.added_to_changeset(current_changeset.getName()));
                       }
                     });
                   });
@@ -720,17 +659,6 @@ var promotion_page = (function($){
                 url: 'url'
             };
         },
-        add_template_breadcrumbs = function(changeset_id, id, name){
-          var changesetBC = "changeset_" + changeset_id;
-          var templateBC = 'template-cs_' + changeset_id + '_' + id;
-          current_changeset_breadcrumb[templateBC] = {
-                cache: null,
-                client_render: true,
-                name: name,
-                trail: ['changesets', changesetBC],
-                url: 'url'
-          };
-        },
         add_product_breadcrumbs = function(changeset_id, product_id, product_name){
             var productBC = 'product-cs_' + changeset_id + '_' + product_id;
             var changesetBC = "changeset_" + changeset_id;
@@ -847,7 +775,6 @@ var changeset_obj = function(data_struct) {
         timestamp = data_struct["timestamp"],
         content_views = data_struct.content_views,
         products = data_struct.products,
-        templates = data_struct.system_templates,
         is_new = data_struct.is_new,
         state = data_struct.state,
         type = data_struct.type,  // promotion, deletion...etc
@@ -918,7 +845,6 @@ var changeset_obj = function(data_struct) {
         setDescription: function(newDesc){description = newDesc;},
         getContentViews: function() {return content_views;},
         getProducts: function(){return products;},
-        getTemplates: function() {return templates;},
         is_new : function() {return is_new;},
         state : function() {return state;},
         type : function() {return type;},
@@ -957,11 +883,6 @@ var changeset_obj = function(data_struct) {
                     return true;
                 }
             }
-            if (type === 'template') {
-               if( templates.hasOwnProperty(id) ){
-                    return true;
-                }
-            }
             if( type === 'product'){
                 if( products.hasOwnProperty(id) ){
                     return true;
@@ -982,8 +903,6 @@ var changeset_obj = function(data_struct) {
                 products[id] = {'name': display_name, 'id': id, 'package':[], 'errata':[], 'repo':[], 'distribution':[], 'all': true};
             } else if (type === 'content_view') {
                 content_views[id] = {'name': display_name, 'id': id};
-            } else if (type === 'template') {
-                templates[id] = {'name': display_name, 'id': id};
             } else { 
                 if ( products[product_id] === undefined ) {
                     products[product_id] = {'name': product_name, 'id': product_id, 'package':[], 'errata':[], 'repo':[], 'distribution':[]};
@@ -996,8 +915,6 @@ var changeset_obj = function(data_struct) {
                 delete products[id];
             } else if (type == 'content_view') {
                 delete content_views[id];
-            } else if (type == 'template') {
-                delete templates[id];
             } else if (products[product_id] !== undefined) {
                 $.each(products[product_id][type], function(index,item) {
                     if ((item.id + "") === id) {
@@ -1417,7 +1334,6 @@ var promotionsRenderer = (function(){
             $.each(conflict.products, function(key, product){
                 html += templateLibrary.conflictProduct(key, product);
             });
-            html += templateLibrary.conflictTemplates(conflict.templates_added, conflict.templates_removed);
             return html;
         };
 
@@ -1548,11 +1464,9 @@ var templateLibrary = (function(){
                 all_list = '',
                 partial_list = '',
                 content_views_list = '',
-                system_templates_list = '',
                 product, provider,
                 content_views = changeset.getContentViews(),
-                products = changeset.getProducts(),
-                templates = changeset.getTemplates();
+                products = changeset.getProducts();
 
             if( changeset.productCount() === 0 ){
                 html += '<h5>'+i18n.product_plural+'</h5>';
@@ -1580,13 +1494,6 @@ var templateLibrary = (function(){
                     content_views_list += contentViewItem(changeset_id, key, content_view.name, showButton);
                 }
             }
-
-            for(key in templates) {
-               if(templates.hasOwnProperty(key) ){
-                  template = templates[key];
-                  system_templates_list += templateItem(changeset_id, key, template.name, showButton);
-               }
-            }
             html += ul_end + ul_start;
 
             html += all_list ? ('<h5>'+i18n.full_product+'</h5>' + all_list) : '';
@@ -1596,9 +1503,6 @@ var templateLibrary = (function(){
             html += '<h5>'+i18n.content_view_plural+'</h5>';
             html += content_views_list ? content_views_list : '<div class="empty_list">' + i18n['no_content_views'] + '</div>';
             html += ul_end + ul_start;
-            html += '<h5>'+i18n.system_template_plural+'</h5>';
-            html += system_templates_list ? system_templates_list : '<div class="empty_list">' + i18n['no_system_templates'] + '</div>';
-            html += ul_end;
             return html;
         },
         contentViewItem = function(changeset_id, id, name, showButton){
@@ -1615,33 +1519,6 @@ var templateLibrary = (function(){
                 '<span class="content_view-icon sort_attr" >' + name + '</span>' +
                 '</div></li>';
 
-            return html;
-        },
-        templateItem = function(changeset_id, id, name, showButton){
-            var anchor = "",
-                html = '';
-            if ( showButton ){
-                anchor = '<a class="st_button content_add_remove fr remove_template" data-display_name="' +
-                    name +'" data-id="' + id + '" data-type="template" id="add_remove_template_' + id +
-                    '" data-template_id="' + id +
-                    '">' + i18n.remove + '</a>';
-            }
-            html += '<li class="clear">' + anchor;
-            html += '<div id="simple_link template-cs_' + changeset_id + '_' + id + '">' +
-                    '<span class="template-icon sort_attr" >' + name + '</span>' +
-                    '</div></li>';
-
-            return html;
-        },
-        conflictTemplates = function(added, removed) {
-            if (added.length === 0 && removed.length === 0) {
-                return "";
-            }
-            var html = "<h3>"+ i18n.templates +"</h3>";
-            html +="<div>";
-            html += conflictAccordianListItem(true, added);
-            html += conflictAccordianListItem(false, removed);
-            html += "</div>";
             return html;
         },
         productListItem = function(changeset_id, product_id, name, provider, slide_link, showButton, isFiltered){
@@ -1715,7 +1592,6 @@ var templateLibrary = (function(){
         listItems : listItems,
         productDetailList: productDetailList,
         conflictFullProducts: conflictFullProducts,
-        conflictTemplates: conflictTemplates,
         conflictProduct: conflictProduct,
         dependencyItems: dependencyItems
     };
