@@ -13,7 +13,7 @@
 
 %global base_name katello
 %global katello_requires python-iniparse python-simplejson python-kerberos m2crypto python-dateutil
-%global locale_dir /usr/share/locale/
+%global locale_dir %{_datarootdir}/locale/
 %global homedir %{_datarootdir}/%{base_name}
 
 Name:          %{base_name}-cli
@@ -92,19 +92,8 @@ sed -e 's/THE_VERSION/%{version}/g' katello-debug-certificates.pod |\
 /usr/bin/pod2man --name=katello -c "Katello Reference" --section=1 --release=%{version} - katello-debug-certificates.man1
 popd
 
-#check locale file
-for i in locale/**/*.po; do
-    msgfmt -c $i
-    FILE=$(mktemp)
-    # TODO - enable endwhitespace, endpunc, puncspacing, options filters
-    pofilter --nofuzzy -t variables -t blank -t urls -t emails -t long -t newlines \
-        -t printf -t validchars --gnome $i | tee $FILE
-    grep msgid $FILE >/dev/null && exit 1
-    rm $FILE
-done
-
-# create locale files
-make -C locale all-mo
+#check locale file and create locale files
+make -C locale check all-mo %{?_smp_mflags}
 
 %install
 install -d %{buildroot}%{_bindir}/
@@ -136,11 +125,14 @@ install -m 0644 man/headpin.man1 %{buildroot}%{_mandir}/man1/headpin.1
 install -m 0644 man/%{base_name}-debug-certificates.man1 %{buildroot}%{_mandir}/man1/%{base_name}-debug-certificates.1
 
 # install locale files
-for lang in locale/*/%{base_name}-cli.mo; do
-    code=$(basename "$lang" ".mo")
-    install -d %{buildroot}%{locale_dir}/${code}/LC_MESSAGES/
-    install -pm 0644 ${lang} %{buildroot}%{locale_dir}/${code}/LC_MESSAGES/%{base_name}-cli.mo
+pushd locale
+rm -f messages.mo # created by pofilter check
+for MOFILE in $(find . -name "*.mo"); do
+    DIR=$(dirname "$MOFILE")
+    install -d -m 0755 %{buildroot}%{locale_dir}/$DIR/LC_MESSAGES
+    install -m 0644 $DIR/*.mo %{buildroot}%{locale_dir}/$DIR/LC_MESSAGES
 done
+popd
 %find_lang %{name}
 
 # several scripts are executable
@@ -154,7 +146,7 @@ pushd %{buildroot}%{_bindir}
 ln -svf %{_bindir}/%{base_name} headpin
 popd
 
-%files
+%files -f %{name}.lang
 %attr(755,root,root) %{_bindir}/%{base_name}
 %attr(755,root,root) %{_bindir}/_complete_%{base_name}
 %attr(755,root,root) %{_bindir}/headpin
@@ -172,10 +164,6 @@ popd
 
 %files unit-tests
 %{homedir}/tests
-
-%clean
-# clean locale files
-make -C locale clean
 
 %changelog
 * Thu Mar 14 2013 Miroslav Suchý <msuchy@redhat.com> 1.3.5-1
