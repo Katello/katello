@@ -1,71 +1,79 @@
 --- 
-recorded_with: VCR 2.4.0
 http_interactions: 
 - request: 
     method: post
     uri: https://localhost:8443/candlepin/owners/
     body: 
-      string: "{\"key\":\"candlepin_org_label\",\"contentPrefix\":\"/candlepin_org_label/$env\",\"displayName\":\"Candlepin_Org\"}"
+      encoding: US-ASCII
+      string: "{\"key\":\"candlepin_org_label\",\"displayName\":\"Candlepin_Org\",\"contentPrefix\":\"/candlepin_org_label/$env\"}"
     headers: 
-      Content-Length: 
-      - "103"
-      Content-Type: 
-      - application/json
       Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="4WLNIYyHPYShSbvS7VGbjE32cMZm61YMNdrrhxnI", oauth_signature="UiPzgVv4XF6thYWm96nZ%2Bml12X0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363884841", oauth_version="1.0"
+      Accept-Language: 
+      - en
+      Content-Type: 
       - application/json
       Cp-User: 
       - admin
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="dqqgc1TA3C69zI9um9TeVTGxZ9pQytRtSoKkrcrQunU", oauth_signature="mzCtkLjTZGrpV1Z0pc8rE2VAttY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363829868", oauth_version="1.0"
-      Accept-Encoding: 
-      - gzip, deflate
-      Accept-Language: 
-      - en
+      Content-Length: 
+      - "103"
+      User-Agent: 
+      - Ruby
   response: 
     status: 
       code: 200
       message: OK
     headers: 
+      Server: 
+      - Apache-Coyote/1.1
+      X-Candlepin-Version: 
+      - 0.7.19-1
       Content-Type: 
       - application/json
       Transfer-Encoding: 
       - chunked
       Date: 
-      - Thu, 21 Mar 2013 01:37:48 GMT
-      Server: 
-      - Apache-Coyote/1.1
-      X-Candlepin-Version: 
-      - 0.7.19-1
+      - Thu, 21 Mar 2013 16:54:00 GMT
     body: 
-      string: "{\"created\":\"2013-03-21T01:37:48.988+0000\",\"updated\":\"2013-03-21T01:37:48.988+0000\",\"parentOwner\":null,\"id\":\"ff8080813d846c0e013d8a9849bc017e\",\"key\":\"candlepin_org_label\",\"displayName\":\"Candlepin_Org\",\"contentPrefix\":\"/candlepin_org_label/$env\",\"defaultServiceLevel\":null,\"upstreamUuid\":null,\"href\":\"/owners/candlepin_org_label\"}"
+      encoding: US-ASCII
+      string: "{\"created\":\"2013-03-21T16:54:01.479+0000\",\"updated\":\"2013-03-21T16:54:01.479+0000\",\"parentOwner\":null,\"id\":\"ff8080813d846c0e013d8ddf1a0701bc\",\"key\":\"candlepin_org_label\",\"displayName\":\"Candlepin_Org\",\"contentPrefix\":\"/candlepin_org_label/$env\",\"defaultServiceLevel\":null,\"upstreamUuid\":null,\"href\":\"/owners/candlepin_org_label\"}"
     http_version: 
-  recorded_at: Thu, 21 Mar 2013 01:37:49 GMT
+  recorded_at: Thu, 21 Mar 2013 16:54:01 GMT
 - request: 
     method: delete
     uri: https://localhost:8443/candlepin/owners/candlepin_org_label
     body: 
+      encoding: US-ASCII
       string: ""
     headers: 
       Accept: 
       - "*/*; q=0.5, application/xml"
-      Cp-User: 
-      - admin
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="J328Bw3P4QJiURJeGE7WopX8LCR1t0ByJduk8Gczwfo", oauth_signature="QYOoS14GpwsQwbvAox%2BNK%2Fezcdo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363829869", oauth_version="1.0"
       Accept-Encoding: 
       - gzip, deflate
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="FjMqYL4KYsR5ldZWnOkrSIS8V2oTU68zBpAwYAYnrg", oauth_signature="xOjyw1e%2F8pJbYoyhmvlRHT9e5hc%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363884841", oauth_version="1.0"
+      Cp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
   response: 
     status: 
       code: 204
       message: No Content
     headers: 
-      Date: 
-      - Thu, 21 Mar 2013 01:37:48 GMT
       Server: 
       - Apache-Coyote/1.1
       X-Candlepin-Version: 
       - 0.7.19-1
+      Date: 
+      - Thu, 21 Mar 2013 16:54:00 GMT
     body: 
+      encoding: US-ASCII
       string: ""
     http_version: 
-  recorded_at: Thu, 21 Mar 2013 01:37:49 GMT
+  recorded_at: Thu, 21 Mar 2013 16:54:01 GMT
+recorded_with: VCR 2.4.0
