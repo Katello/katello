@@ -7,16 +7,16 @@ http_interactions:
     body: 
       string: ""
     headers: 
-      Pulp-User: 
-      - admin
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
       Content-Type: 
       - application/json
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="Xz3uSbxl2eERHSGRxppoJf9wdOTxjRI2v4mhUarZ0", oauth_signature="Rd0%2FXXBHFaEZK%2BVIjFXkTky8sHw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363816418", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="QjbTjVkm5SgcJGwHDVeFVgE150iJ3ZRrxNbYckEVXuI", oauth_signature="4pOmjR1IpEK5D9qQ4lKlacqO9Rg%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363829994", oauth_version="1.0"
+      Accept-Encoding: 
+      - gzip, deflate
   response: 
     status: 
       code: 200
@@ -24,34 +24,34 @@ http_interactions:
     headers: 
       Content-Length: 
       - "2"
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Date: 
-      - Wed, 20 Mar 2013 21:53:38 GMT
       Content-Type: 
       - application/json
+      Date: 
+      - Thu, 21 Mar 2013 01:39:54 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
     body: 
       string: "[]"
     http_version: 
-  recorded_at: Wed, 20 Mar 2013 21:53:38 GMT
+  recorded_at: Thu, 21 Mar 2013 01:39:54 GMT
 - request: 
     method: post
     uri: https://dhcp231-16.rdu.redhat.com/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
     body: 
-      string: "{\"schedule\":\"2014-03-20T17:53:38-04:00/P1D\"}"
+      string: "{\"schedule\":\"2014-03-20T21:39:54-04:00/P1D\"}"
     headers: 
-      Pulp-User: 
-      - admin
       Content-Length: 
       - "44"
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
       Content-Type: 
       - application/json
+      Accept: 
+      - application/json
+      Pulp-User: 
+      - admin
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="xid7VAjq9kAUEGXA1Hihy68FYItx4UOQyfccXpB7Yg", oauth_signature="eYh4OErd%2BU6Pl%2FtEaJHJ5Qz4zA4%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363816418", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="rOfd9NgxBpOYQEQQsKbXxziSTpMETkT6tVcQF4aa2E", oauth_signature="mdOlzEhdOX134FrK7INTGFB451c%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1363829994", oauth_version="1.0"
+      Accept-Encoding: 
+      - gzip, deflate
   response: 
     status: 
       code: 201
@@ -59,15 +59,15 @@ http_interactions:
     headers: 
       Content-Length: 
       - "393"
-      Server: 
-      - Apache/2.2.22 (Fedora)
-      Location: 
-      - /pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/514a2fe29c60ed64a30018de/
-      Date: 
-      - Wed, 20 Mar 2013 21:53:38 GMT
       Content-Type: 
       - application/json
+      Location: 
+      - /pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/514a64ea9c60ed64a3004289/
+      Date: 
+      - Thu, 21 Mar 2013 01:39:54 GMT
+      Server: 
+      - Apache/2.2.22 (Fedora)
     body: 
-      string: "{\"next_run\": \"2014-03-20T21:53:38Z\", \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/514a2fe29c60ed64a30018de/\", \"schedule\": \"2014-03-20T17:53:38-04:00/P1D\", \"override_config\": {}, \"remaining_runs\": null, \"first_run\": \"2014-03-20T21:53:38Z\", \"enabled\": true, \"last_run\": null, \"failure_threshold\": null, \"_id\": \"514a2fe29c60ed64a30018de\", \"consecutive_failures\": 0}"
+      string: "{\"next_run\": \"2014-03-21T01:39:54Z\", \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/514a64ea9c60ed64a3004289/\", \"schedule\": \"2014-03-20T21:39:54-04:00/P1D\", \"override_config\": {}, \"remaining_runs\": null, \"first_run\": \"2014-03-21T01:39:54Z\", \"enabled\": true, \"last_run\": null, \"failure_threshold\": null, \"_id\": \"514a64ea9c60ed64a3004289\", \"consecutive_failures\": 0}"
     http_version: 
-  recorded_at: Wed, 20 Mar 2013 21:53:38 GMT
+  recorded_at: Thu, 21 Mar 2013 01:39:54 GMT
