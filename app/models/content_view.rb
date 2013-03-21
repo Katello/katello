@@ -274,7 +274,7 @@ class ContentView < ActiveRecord::Base
   # a version of the view is promoted to an environment.  It is necessary for
   # candlepin to become aware that the view is available for consumers.
   def add_environment(env)
-    unless (env.library && ContentViewEnvironment.where(:cp_id => self.cp_environment_id(env)).first)
+    unless (env.library && self.content_view_environments.where(:environment_id=>env.id).first)
       content_view_environments.build(:name => env.name,
                                      :label => self.cp_environment_label(env),
                                      :cp_id => self.cp_environment_id(env),
