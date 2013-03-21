@@ -34,7 +34,6 @@ Src::Application.routes.draw do
           get :repositories, :on => :member
         end
         api_resources :activation_keys, :only => [:index, :create]
-        api_resources :templates, :only => [:index]
         api_resources :content_views, :only => [:index]
 
         member do
@@ -163,19 +162,6 @@ Src::Application.routes.draw do
         resource :packages, :action => [:create, :update, :destroy], :controller => :system_packages
       end
 
-      api_resources :templates, :except => [:index] do
-        post :import, :on => :collection
-        get :export, :on => :member
-        get :validate, :on => :member
-
-        api_attachable_resources :products, :controller => :templates_content
-        api_attachable_resources :packages, :controller => :templates_content, :constraints => { :id => /[0-9a-zA-Z\-_.]+/ }
-        api_attachable_resources :parameters, :controller => :templates_content
-        api_attachable_resources :package_groups, :controller => :templates_content
-        api_attachable_resources :package_group_categories, :controller => :templates_content
-        api_attachable_resources :distributions, :controller => :templates_content
-        api_attachable_resources :repositories, :controller => :templates_content, :resource_name => :repo
-      end
 
       api_resources :organizations do
 
@@ -224,10 +210,9 @@ Src::Application.routes.draw do
 
         api_resources :gpg_keys, :only => [:index, :create]
 
-        api_resources :system_info_keys, :only => [:create, :index], :controller => :organization_system_info_keys do
-          get :apply, :on => :collection, :action => :apply_to_all_systems
-        end
-        match '/system_info_keys/:keyname' => 'organization_system_info_keys#destroy', :via => :delete
+        match '/default_info/:informable_type' => 'organization_default_info#create', :via => :post, :as => :create_default_info
+        match '/default_info/:informable_type/:keyname' => 'organization_default_info#destroy', :via => :delete, :as => :destroy_default_info
+        match '/default_info/:informable_type/apply' => 'organization_default_info#apply_to_all', :via => :post, :as => :apply_default_info
 
       end
 
