@@ -35,7 +35,7 @@ module Navigation
       {:key => :registered,
        :name => _("Smart Proxies"),
        :url => smart_proxies_path,
-       :if => lambda{true}, #TODO: check permissions
+       :if => lambda{current_user.has_superadmin_role?}, 
        :options => {:class=>'setup second_level', "data-menu"=>"smart_proxies"}
       }
     end
@@ -44,7 +44,7 @@ module Navigation
       {:key => :subnets,
        :name => _("Subnets"),
        :url => subnets_path,
-       :if => lambda{true}, #TODO: check permissions
+       :if => lambda{current_user.has_superadmin_role?}, 
        :options => {:class=>'setup second_level', "data-menu"=>"subnets"}
       }
     end
@@ -53,7 +53,7 @@ module Navigation
       {:key => :domains,
        :name => _("Domains"),
        :url => domains_path,
-       :if => lambda{true}, #TODO: check permissions
+       :if => lambda{current_user.has_superadmin_role?}, 
        :options => {:class=>'setup second_level', "data-menu"=>"domains"}
       }
     end
@@ -62,7 +62,7 @@ module Navigation
       {:key => :architectures,
        :name => _("Architectures"),
        :url => architectures_path,
-       :if => lambda{true}, #TODO: check permissions
+       :if => lambda{current_user.has_superadmin_role?},
        :options => {:class=>'setup second_level', "data-menu"=>"subnets"}
       }
     end
@@ -71,7 +71,7 @@ module Navigation
       {:key => :hw_models,
        :name => _("Hardware Models"),
        :url => hardware_models_path,
-       :if => lambda{true}, #TODO: check permissions
+       :if => lambda{current_user.has_superadmin_role?}, #TODO: check permissions
        :options => {:class=>'setup second_level', "data-menu"=>"hardware_models"}
       }
     end
