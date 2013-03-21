@@ -45,12 +45,12 @@ class Api::V1::PermissionsController < Api::V1::ApiController
   param :all_verbs, :bool, :desc => "filter by all_verbs flag"
   param :all_tags, :bool, :desc => "filter by all_flags flag"
   def index
-    render :json => @role.permissions.where(query_params).to_json()
+    respond :collection => @role.permissions.where(query_params)
   end
 
   api :GET, "/roles/:role_id/permissions/:id", "Show a permission"
   def show
-    render :json => @permission.to_json()
+    respond
   end
 
 
@@ -89,7 +89,7 @@ class Api::V1::PermissionsController < Api::V1::ApiController
   api :DELETE, "/roles/:role_id/permissions/:id", "Destroy a roles permission"
   def destroy
     @permission.destroy
-    render :text => _("Deleted permission '%s'") % params[:id], :status => 200
+    respond :message => _("Deleted permission '%s'") % params[:id]
   end
 
   private
