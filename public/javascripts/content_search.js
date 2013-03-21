@@ -21,8 +21,9 @@ $(document).ready(function() {
                   views:{id:"views_selector", autocomplete:'view_autocomplete_list'},
                   errata:{id:"errata_selector", search:'errata_search'}};
 
-    KT.mapping = {products:['views', 'products'], repos:['products', 'repos'], packages:['products', 'repos', 'packages', 'views'],
-                    errata:['products', 'repos', 'errata', 'views'], views:['views']};
+    KT.mapping = {products:['views', 'products'], repos:['views', 'products', 'repos'],
+                  packages:['products', 'repos', 'packages', 'views'],
+                  errata:['products', 'repos', 'errata', 'views'], views:['views']};
 
     var search = KT.content_search(KT.available_environments);
 

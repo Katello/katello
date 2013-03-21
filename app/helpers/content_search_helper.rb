@@ -14,11 +14,11 @@ module ContentSearchHelper
 
   def content_types
     content_types = [
+      [ _("Content Views"), "views"],
       [ _("Products"), "products"],
       [ _("Repositories"), "repos"],
       [ _("Packages"), "packages"],
-      [ _("Errata"), "errata"],
-      [ _("Content Views"), "views"]
+      [ _("Errata"), "errata"]
     ]
   end
 

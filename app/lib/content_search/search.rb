@@ -28,6 +28,15 @@ module ContentSearch
       av.render(*args)
     end
 
+
+    def mode
+      @mode
+    end
+
+    def mode=(mode)
+      @mode = mode
+    end
+
     def offset
       SearchUtils.offset
     end
@@ -35,11 +44,6 @@ module ContentSearch
     def page_size
       SearchUtils.page_size
     end
-
-    def search_mode
-      SearchUtils.search_mode
-    end
-
   end
 
 end

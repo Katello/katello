@@ -11,10 +11,10 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class ContentSearch::SearchUtils
-  cattr_accessor :current_organization, :mode, :env_ids, :offset, :current_user
+  cattr_accessor :current_organization, :env_ids, :offset, :current_user
 
-  def self.search_envs
-    if self.search_mode != :all
+  def self.search_envs(mode)
+    if mode != :all
       KTEnvironment.content_readable(current_organization).where(:id => self.env_ids)
     else
       KTEnvironment.content_readable(current_organization)

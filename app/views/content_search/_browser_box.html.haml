@@ -9,6 +9,16 @@
         = label_tag :content, _("Content")
         %div.no_border
           = select_tag :content, options_for_select(content_types)
+      %fieldset.primary#views_selector
+        = label_tag :views, _("Content Views")
+        #view_autocomplete_list{'data-url'=>auto_complete_content_views_path}
+          %input.hidden_selection{:type=>:hidden}
+          = text_field_tag :view_auto_complete, "", :class => "auto_complete_input", :placeholder=>_('Auto-complete View')
+          %a.button{ :id => "add_view" }
+            = _("Add")
+          %ul
+            %li.all
+              = _("All Content Views")
       %fieldset.primary#products_selector
         = label_tag :products, _("Products")
         #product_autocomplete_list{'data-url'=>auto_complete_products_path}
@@ -111,16 +121,6 @@
                     = _('Search for kernel in the title:')
                     .example
                       title:*kernel*
-      %fieldset.primary#views_selector
-        = label_tag :views, _("Content Views")
-        #view_autocomplete_list{'data-url'=>auto_complete_content_views_path}
-          %input.hidden_selection{:type=>:hidden}
-          = text_field_tag :view_auto_complete, "", :class => "auto_complete_input", :placeholder=>_('Auto-complete View')
-          %a.button{ :id => "add_view" }
-            = _("Add")
-          %ul
-            %li.all
-              = _("All Content Views")
 
 
 
