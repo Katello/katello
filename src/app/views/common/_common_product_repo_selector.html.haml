@@ -1,0 +1,27 @@
+= render :partial => "common/common_products",
+         :locals => {:record => record,
+                     :readable_products => readable_products || nil,
+                     :editable_products => editable_products || nil}
+
+#package_filter
+  %table
+    %thead
+      %tr
+        %th #{_("Product")}
+
+    -if editable
+      %tr
+        %td
+          %form#add_product_form
+            %div #{'Add Products and Repositories:'}
+            #select_container
+              %select#product_select{:style => 'width:400px;', 'data-placeholder' => _("Choose a product..")}
+              .centered
+                %a#add_product #{_('+ Add')}
+
+    %tr
+      %td.no_padding
+        %table#product_list
+
+  - if editable
+    %input.fr.button#update_products{:type => 'button', :value => _("Save"), 'data-url' => save_url}

@@ -613,14 +613,14 @@ KT.panel = (function ($) {
 
             panels_list.push(new_panel);
         },
-        registerSubPanelSubmit = function(form_id, form_submit_id) {
+        registerSubPanelSubmit = function(form_id, form_submit_id, url_after_submit) {
             form_id.bind('ajax:beforeSend', function(){
                form_submit_id.addClass('disabled');
             }).bind("ajax:complete", function(){
                form_submit_id.removeClass('disabled');
             }).bind("ajax:success", function(){
                 KT.panel.closeSubPanel($('#subpanel'));
-                KT.panel.refreshPanel();
+                KT.panel.refreshPanel(url_after_submit);
             }).bind("ajax:error", function(){
                //validation notice appears
             });
@@ -638,10 +638,17 @@ KT.panel = (function ($) {
             });
             return queryString;
         },
-        refreshPanel = function() {
-          var active = $('#list').find('.active');
-          var full_ajax_url = active.attr("data-ajax_url") + '/' + active.attr("data-ajax_panelpage")
-          KT.panel.panelAjax(active, full_ajax_url, $('#panel'), false);
+        refreshPanel = function(source_url) {
+            // If the user provides a 'source_url' the panel will be refreshed using that url;
+            // otherwise, the source will be derived from the panel object's properties
+            var active = $('#list').find('.active');
+            var full_ajax_url;
+            if (source_url === undefined) {
+                full_ajax_url = active.attr("data-ajax_url") + '/' + active.attr("data-ajax_panelpage")
+            } else {
+                full_ajax_url = source_url;
+            }
+            KT.panel.panelAjax(active, full_ajax_url, $('#panel'), false);
         },
         extract_panelpage = function(url) {
             var a = document.createElement("a");

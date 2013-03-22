@@ -1,7 +1,14 @@
 = javascript do
   :plain
-    KT.products = $.parseJSON('#{escape_javascript(get_products.to_json)}');
-    KT.editable_products = $.parseJSON('#{escape_javascript(get_products.reject{|key,val|!val[:editable]}.to_json)}');
+    KT.products = $.parseJSON('#{escape_javascript(get_products({:record => record,
+                                                                 :readable_products => readable_products,
+                                                                 :editable_products => editable_products}).to_json)}');
+
+    KT.editable_products = $.parseJSON('#{escape_javascript(get_products({:record => record,
+                                                                          :readable_products => readable_products,
+                                                                          :editable_products => editable_products}).
+                                                                        reject{|key,val|!val[:editable]}.to_json)}');
+
     KT.filters.set_current_filter($.parseJSON('#{escape_javascript(objectify(record).to_json)}'));
 
     localize({
