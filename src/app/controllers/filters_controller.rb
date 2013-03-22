@@ -40,7 +40,7 @@ class FiltersController < ApplicationController
       :edit => show_rule,
       :update => manage_rule,
 
-      :destroy_filters => manage_rule,
+      :destroy_filters => manage_rule
     }
   end
 
@@ -116,6 +116,7 @@ class FiltersController < ApplicationController
   def find_filter
     @filter = Filter.find(params[:id])
   end
+
   private
 
   def controller_display_name
