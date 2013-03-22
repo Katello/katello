@@ -44,7 +44,7 @@ Requires:       %{?scl_prefix}rubygem(fast_gettext)
 BuildRequires:  /usr/bin/pod2man
 BuildRequires:  findutils
 BuildRequires:  make
-BuildRequires:  gettext
+BuildRequires:  gettext translate-toolkit
 BuildRequires:  %{?scl_prefix}ruby
 
 BuildArch: noarch
