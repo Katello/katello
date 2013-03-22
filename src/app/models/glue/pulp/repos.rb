@@ -279,7 +279,7 @@ module Glue::Pulp::Repos
           :feed => url,
           :gpg_key => gpg,
           :content_type => repo_type,
-          :content_view_version=>self.organization.library.default_view_version
+          :content_view_version=>self.organization.library.default_content_view_version
       )
     end
 
