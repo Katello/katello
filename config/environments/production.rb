@@ -51,7 +51,7 @@ Src::Application.configure do
   config.active_support.deprecation = :notify
 
   # Be sure to restart your server when you modify this setting.
-  config.session_store :url_constrained_cookie_store,
+  config.session_store ::Katello::UrlConstrainedCookieStore,
     :key => '_katello_session', :expire_after => 1.hour, :expiration_exceptions => "/notices"
 
   # Do not update compass SASS files in production (we precompile them)
