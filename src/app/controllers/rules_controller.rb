@@ -14,14 +14,14 @@ class RulesController < ApplicationController
 
   helper FiltersHelper
   helper ContentViewDefinitionsHelper
+  include RulesHelper
 
   before_filter :require_user
   before_filter :find_content_view_definition
   before_filter :authorize #after find_content_view_definition, since the definition is required for authorization
   before_filter :find_filter
-  before_filter :find_rule, :only => [:update, :edit_package, :add_package,
-                                      :edit_package_group, :add_package_group,
-                                      :edit_errata, :add_errata, :destroy_parameters]
+  before_filter :find_rule, :only => [:edit, :edit_parameter_list, :edit_date_type_parameters,
+                                      :update, :add_parameter, :destroy_parameters]
 
   respond_to :html
 
@@ -36,13 +36,12 @@ class RulesController < ApplicationController
       :new => manage_rule,
       :create => manage_rule,
 
+      :edit => manage_rule,
+      :edit_parameter_list => manage_rule,
+      :edit_date_type_parameters => manage_rule,
       :update => manage_rule,
-      :edit_package => manage_rule,
-      :add_package => manage_rule,
-      :edit_package_group => manage_rule,
-      :add_package_group => manage_rule,
-      :edit_errata => manage_rule,
-      :add_errata => manage_rule,
+
+      :add_parameter => manage_rule,
       :destroy_parameters => manage_rule,
 
       :destroy_rules => manage_rule,
@@ -51,7 +50,8 @@ class RulesController < ApplicationController
 
   def param_rules
     {
-      :create => {:filter_rule => [:content_type]}
+      :create => {:filter_rule => [:content_type]},
+      :update => {:filter_rule => [:inclusion]}
     }
   end
 
@@ -71,6 +71,28 @@ class RulesController < ApplicationController
     render :nothing => true
   end
 
+  def edit
+    render :partial => "content_view_definitions/filters/rules/edit",
+           :locals => {:view_definition => @view_definition, :filter => @filter, :rule => @rule,
+                       :editable => @view_definition.editable?, :name => controller_display_name,
+                       :rule_type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type),
+                       :item_partial => item_partial(@rule)}
+  end
+
+  def edit_parameter_list
+    render :partial => "content_view_definitions/filters/rules/parameter_list",
+           :locals => {:view_definition => @view_definition, :filter => @filter,
+                       :rule => @rule, :rule_type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type),
+                       :editable => @view_definition.editable?, :item_partial => item_partial(@rule)}
+  end
+
+  def edit_date_type_parameters
+    render :partial => "content_view_definitions/filters/rules/edit_errata_parameters",
+           :locals => {:view_definition => @view_definition, :filter => @filter,
+                       :rule => @rule, :rule_type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type),
+                       :editable => @view_definition.editable?}
+  end
+
   def update
     @rule.update_attributes!(params[:filter_rule])
 
@@ -80,44 +102,61 @@ class RulesController < ApplicationController
     render :nothing => true
   end
 
-  def edit_package
-    render :partial => "content_view_definitions/filters/rules/edit_package",
-           :locals => {:view_definition => @view_definition, :filter => @filter, :rule => @rule,
-                       :editable => @view_definition.editable?, :name => controller_display_name}
-  end
+  def add_parameter
+    if params[:parameter]
+      if params[:parameter][:unit]
+        @rule.parameters[:units] ||= []
+        @rule.parameters[:units] << params[:parameter][:unit]
 
-  def add_package
-    @rule.parameters[:units] ||= []
-    @rule.parameters[:units] << {:name => params[:package]}
-    @rule.save!
+        # a parameter may not contain both units and following properties; therefore, remove them
+        [:date_range, :errata_type, :severity].each{ |parameter| @rule.parameters.delete(parameter)}
+        @rule.save!
 
-    notify.success(_("Package rule successfully updated for filter '%{filter}'.") % {:filter => @filter.name})
+        notify.success(_("%{type} rule successfully updated for filter '%{filter}'.") %
+                         {:type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type),
+                          :filter => @filter.name})
 
-    render :partial => 'content_view_definitions/filters/rules/package_item',
-           :locals => {:editable => @view_definition.editable?,
-                       :unit => {:name => params[:package]}}
-  end
+        render :partial => item_partial(@rule),
+               :locals => {:editable => @view_definition.editable?, :unit => params[:parameter][:unit]} and return
 
-  def edit_package_group
-    # TODO
-  end
+      else
+        if params[:parameter][:date_range]
+          @rule.parameters[:date_range] ||= {}
+          if params[:parameter][:date_range][:start]
+            result = params[:parameter][:date_range][:start]
+            @rule.parameters[:date_range][:start] = result
+          elsif params[:parameter][:date_range][:end]
+            result = params[:parameter][:date_range][:end]
+            @rule.parameters[:date_range][:end] = result
+          end
+        elsif params[:parameter][:errata_type]
+          @rule.parameters[:errata_type] ||= []
+          @rule.parameters[:errata_type] = params[:parameter][:errata_type]
+          result = selected_errata_types(@rule)
+        else
+          result = params[:parameter].values.first
+          @rule.parameters.merge!(params[:parameter])
+        end
 
-  def add_package_group
-    # TODO
-  end
+        # a parameter may not contain both units and the parameter provided; therefore, remove the units
+        @rule.parameters.delete(:units)
+        @rule.save!
 
-  def edit_errata
-    # TODO
-  end
+        notify.success(_("%{type} rule successfully updated for filter '%{filter}'.") %
+                           {:type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type),
+                            :filter => @filter.name})
 
-  def add_errata
-    # TODO
+        render :text => escape_html(result) and return
+      end
+    end
+    render :nothing => true
   end
 
   def destroy_parameters
     if params[:units] && @rule.parameters[:units]
+      key_field = @rule.content_type == FilterRule::ERRATA ? 'id' : 'name'
       params[:units].each_pair do |key, value|
-        @rule.parameters[:units].delete({"name" => key})
+        @rule.parameters[:units].delete({key_field => key})
       end
     end
     @rule.save!
@@ -150,6 +189,17 @@ class RulesController < ApplicationController
 
   def find_rule
     @rule = FilterRule.find(params[:id])
+  end
+
+  def item_partial(rule)
+    case @rule.content_type
+       when FilterRule::PACKAGE
+         'content_view_definitions/filters/rules/package_item'
+       when FilterRule::PACKAGE_GROUP
+         'content_view_definitions/filters/rules/package_group_item'
+       when FilterRule::ERRATA
+         'content_view_definitions/filters/rules/errata_item'
+     end
   end
 
   private
