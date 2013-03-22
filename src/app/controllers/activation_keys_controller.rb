@@ -63,12 +63,10 @@ class ActivationKeysController < ApplicationController
   def param_rules
     {
       :create => {:activation_key => [:name, :description, :environment_id,
-                                      :system_template_id, :usage_limit,
-                                      :content_view_id]
+                                      :usage_limit, :content_view_id]
         },
       :update => {:activation_key  => [:name, :description,:environment_id,
-                                       :system_template_id, :usage_limit,
-                                       :content_view_id]
+                                       :usage_limit, :content_view_id]
         },
       :update_system_groups => {:activation_key => [:system_group_ids]}
     }
@@ -185,13 +183,6 @@ class ActivationKeysController < ApplicationController
     setup_environment_selector(current_organization, accessible_envs)
     @environment = first_env_in_path(accessible_envs)
 
-    @system_template_labels = [[no_template, '']]
-    unless @environment.nil?
-      @system_template_labels = [[no_template, '']] + (@environment.system_templates).collect {|p| [ p.name, p.id ]}
-    end
-
-    @selected_template = no_template
-
     @content_view_labels = [[no_content_view, '']]
     @content_view_labels += ContentView.readable(@organization).non_default.
       in_environment(@environment).collect {|cv| [cv.name, cv.id]}
@@ -206,12 +197,6 @@ class ActivationKeysController < ApplicationController
     accessible_envs = current_organization.environments
     setup_environment_selector(current_organization, accessible_envs)
 
-    system_template_labels = [[no_template, '']]
-    unless @environment.nil?
-      system_template_labels = [[no_template, '']] + (@activation_key.environment.system_templates).collect {|p| [ p.name, p.id ]}
-    end
-    selected_template = @activation_key.system_template.nil? ? no_template : @activation_key.system_template.id
-
     content_view_labels = [[no_content_view, '']]
     content_view_labels += ContentView.readable(@organization).non_default.
       in_environment(@activation_key.environment).collect {|cv| [cv.name, cv.id]}
@@ -222,8 +207,6 @@ class ActivationKeysController < ApplicationController
                                            :editable => ActivationKey.manageable?(current_organization),
                                            :name => controller_display_name,
                                            :accessible_envs => accessible_envs,
-                                           :system_template_labels => system_template_labels,
-                                           :selected_template => selected_template,
                                            :content_view_labels => content_view_labels,
                                            :selected_content_view => selected_content_view,
                                            :products => products
@@ -252,19 +235,9 @@ class ActivationKeysController < ApplicationController
       result = params[:activation_key][:description] = params[:activation_key][:description].gsub("\n",'')
     end
 
-    if !params[:activation_key][:system_template_id].nil? and params[:activation_key][:system_template_id].blank?
-      params[:activation_key][:system_template_id] = nil
-    end
-
     @activation_key.update_attributes!(params[:activation_key])
 
     notify.success _("Activation key '%s' was updated.") % @activation_key["name"]
-
-    unless params[:activation_key][:system_template_id].nil? or params[:activation_key][:system_template_id].blank?
-      # template is being updated.. so return template name vs id...
-      system_template = SystemTemplate.find(@activation_key.system_template_id)
-      result = system_template.name
-    end
 
     if not search_validate(ActivationKey, @activation_key.id, params[:search])
       notify.message _("'%s' no longer matches the current search criteria.") % @activation_key["name"]

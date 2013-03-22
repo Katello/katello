@@ -28,5 +28,5 @@
               %tr{:class => cycle_class}
                 %td{:colspan => 2}
                   &nbsp; &nbsp; &nbsp;
-                  = _('Manifest from ') % status['webAppPrefix']
+                  = _('Manifest from %s') % status['upstreamName']
                   = link_to status['webAppPrefix'], "http://#{status['webAppPrefix']}#{status['upstreamId']}", :target => '_blank'

@@ -2,6 +2,7 @@
 SRC_DIR = ../src/katello
 POFILES = $(shell find . -name '*.po')
 MOFILES = $(patsubst %.po,%.mo,$(POFILES))
+POXFILES = $(patsubst %.po,%.pox,$(POFILES))
 
 .PHONY: POTFILES.in
 
@@ -9,11 +10,22 @@ MOFILES = $(patsubst %.po,%.mo,$(POFILES))
 %.mo: %.po
 	msgfmt -o $@ $<
 
+all-mo: $(MOFILES)
+
+# Check for malformed strings
+# TODO - enable endwhitespace, endpunc, puncspacing, options filters
+%.pox: %.po
+	msgfmt -c $<
+	pofilter --nofuzzy -t variables -t blank -t urls -t emails -t long -t newlines \
+		-t printf -t validchars --gnome $< > $@
+	! grep -q msgid $@
+
+check: $(POXFILES)
+
 POTFILES.in:
 	# Generate the POTFILES.in file expected by intltool. It wants one
 	# file per line.
 	find ${SRC_DIR}/ -name "*.py" | sed 's/^..\///g' > POTFILES.in
-
 
 gettext: POTFILES.in
 	# Extract strings from our source files. Any comments on the line above
@@ -31,11 +43,6 @@ uniq-po:
 		msguniq $$f -o $$f ; \
 	done
 
-
-all-mo: $(MOFILES)
-
 clean:
-	rm -f POTFILES.in
-	find . -name "*.mo" -exec rm '{}' ';'
-	rm -rf build
-
+	rm -f POTFILES.in messages.mo
+	find . \( -name "*.mo" -o -name "*.pox" \) -exec rm -f '{}' ';'

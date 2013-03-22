@@ -25,8 +25,8 @@ module Katello
                   :load_yml_post_process
 
       # @param [Hash] options
-      # @option options [Array<String>] :config_file_paths possible configuration file paths
-      # @option options [String] :default_config_file_path path to default configuration values
+      # @option options [Array<String>] :config_file_paths paths to look for configuration files (first one is used)
+      # @option options [String] :default_config_file_path path to file with default configuration values
       # @option options [Proc] :validation validating the configuration
       # @option options [Proc] :config_post_process called on each full configuration after it's constructed
       #   e.g. to add config[:katello?] = lambda { config.app_mode == 'katello' }

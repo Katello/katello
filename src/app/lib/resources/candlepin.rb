@@ -43,11 +43,6 @@ module Resources
 
     end
 
-    class CandlepinResourcePermissions < ::ResourcePermissions::DefaultResourcePermissions
-      # /candlepin by default
-      self.url_prefix = URI.parse(Katello.config.candlepin.url).path
-    end
-
     class CandlepinResource < ::HttpResource
       cfg = Katello.config.candlepin
       url = cfg.url
@@ -56,7 +51,6 @@ module Resources
       self.consumer_secret = cfg.oauth_secret
       self.consumer_key = cfg.oauth_key
       self.ca_cert_file = cfg.ca_cert_file
-      self.resource_permissions = CandlepinResourcePermissions
 
       def self.logger
         ::Logging.logger['cp_rest']
@@ -153,7 +147,10 @@ module Resources
         end
 
         def export uuid
-          response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'export'), self.default_headers)
+          # Export is a zip file
+          headers = self.default_headers
+          headers['accept'] = 'application/zip'
+          response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'export'), headers)
           response
         end
 

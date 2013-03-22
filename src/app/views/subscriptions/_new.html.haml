@@ -29,7 +29,7 @@
           .grid_3.ra.fieldset
             =label :uuid, :uuid, _("Upstream Distributor")
           .grid_9.la.fl
-            = subscriptions_manifest_link_helper({'webAppPrefix'=>@details[:webAppPrefix], 'upstreamId'=>@details['upstreamUuid']}, @details['upstreamUuid'])
+            = subscriptions_manifest_link_helper({'webAppPrefix'=>@details[:webAppPrefix], 'upstreamId'=>@details['upstreamUuid']}, @details['displayName'])
         - if @provider.editable? && Katello.config.headpin?
           - if !@provider.manifest_task || @provider.manifest_task.finished?
             = form_for @provider, :html => {:method => :post, :id => :delete_manifest}, :remote => true, :url => delete_manifest_subscriptions_path do |f|
@@ -104,7 +104,7 @@
                 %tr{:class => cycle_class}
                   %td{:colspan => 2}
                     &nbsp; &nbsp; &nbsp;
-                    = _('Manifest from ') % status['webAppPrefix']
+                    = _('Manifest from %s') % status['upstreamName']
                     = subscriptions_manifest_link_helper status
 
           - if @statuses.length > 3

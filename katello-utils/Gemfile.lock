@@ -1,10 +1,18 @@
 GEM
+  remote: https://rubygems.org/
   specs:
     activesupport (3.0.10)
+    fast_gettext (0.7.0)
+    gettext (2.3.7)
+      levenshtein
+      locale
     i18n (0.5.0)
     json (1.7.6)
+    levenshtein (0.2.2)
+    locale (2.0.8)
     mime-types (1.20.1)
     oauth (0.4.7)
+    rake (10.0.3)
     rest-client (1.6.7)
       mime-types (>= 1.16)
     runcible (0.3.3)
@@ -18,4 +26,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  runcible (~> 0.3.1)
+  fast_gettext
+  gettext
+  rake
+  runcible
