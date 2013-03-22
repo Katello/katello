@@ -32,8 +32,8 @@ class Organization < ActiveRecord::Base
   has_many :permissions, :dependent => :destroy, :inverse_of => :organization
   has_many :sync_plans, :dependent => :destroy, :inverse_of => :organization
   has_many :system_groups, :dependent => :destroy, :inverse_of => :organization
-  has_many :content_view_definitions
-  has_many :content_views
+  has_many :content_view_definitions, :dependent=> :destroy
+  has_many :content_views, :dependent=> :destroy
   serialize :default_info, Hash
 
   attr_accessor :statistics
@@ -73,6 +73,10 @@ class Organization < ActiveRecord::Base
     else
       true
     end
+  end
+
+  def default_content_view
+    ContentView.default.where(:organization_id=>self.id).first
   end
 
   def systems
