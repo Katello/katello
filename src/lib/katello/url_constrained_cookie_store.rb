@@ -35,7 +35,7 @@ class Katello::UrlConstrainedCookieStore < ActionDispatch::Session::CookieStore
       cookie = { :value => value }
       unless options[:expire_after].nil?
         cookie[:value]['created_at'] ||= Time.now
-        if expiration_exceptions(options).any? { |e| Regexp.new(e).match(request.fullpath) }
+        if expiration_exceptions(options).any? { |e| request.fullpath.include?(e) }
           cookie[:expires] = cookie[:value]['created_at'] + options.delete(:expire_after)
         else
           cookie[:value]['created_at'] = Time.now
