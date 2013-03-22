@@ -111,23 +111,20 @@ Src::Application.routes.draw do
         post :refresh
       end
     end
-    resources :filters, :controller => :filters, :only => [:index, :create, :new, :edit, :update] do
+    resources :filters, :controller => :filters, :only => [:index, :new, :create, :edit, :update] do
       collection do
         delete :destroy_filters
       end
 
-      resources :rules do
+      resources :rules, :only => [:new, :create, :edit, :update] do
         collection do
           delete :destroy_rules
         end
 
         member do
-          get :edit_package
-          put :add_package
-          get :edit_package_group
-          put :add_package_group
-          get :edit_errata
-          put :edit_errata
+          get :edit_parameter_list
+          get :edit_date_type_parameters
+          put :add_parameter
           delete :destroy_parameters
         end
       end
