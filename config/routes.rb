@@ -116,7 +116,7 @@ Src::Application.routes.draw do
         delete :destroy_filters
       end
 
-      resources :rules, :only => [:new, :create, :edit, :update] do
+      resources :rules, :controller => :filter_rules, :only => [:new, :create, :edit, :update] do
         collection do
           delete :destroy_rules
         end

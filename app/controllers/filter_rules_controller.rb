@@ -10,11 +10,11 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class RulesController < ApplicationController
+class FilterRulesController < ApplicationController
 
   helper FiltersHelper
   helper ContentViewDefinitionsHelper
-  include RulesHelper
+  include FilterRulesHelper
 
   before_filter :require_user
   before_filter :find_content_view_definition
