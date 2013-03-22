@@ -15,7 +15,7 @@
  * Helper functions that may be included and used from pages using
  * inline editing via jeditable.
  */
-$(document).ready(function() {
+KT.editable = (function(){
     var common_settings = {
             method          :  'PUT',
             cancel          :  i18n.cancel,
@@ -29,216 +29,208 @@ $(document).ready(function() {
                 $("#notification").replaceWith(xhr.responseText);
                 notices.checkNotices();
             }
-        };
-
-    $.editable.addInputType('number', {
-       element  :   function(settings, original){
-            var width = settings.width ? settings.width : '40',
-                input = jQuery('<input type="number" ' +
-                                'min="' + settings.min + '"' +
-                                'max="' + settings.max + '"' + 
-                                'value="' + settings.value + 
-                                '" style="width:' + width + 'px;">');
-            $(this).append(input);
-            if (settings.unlimited !== undefined) {
-              var label = jQuery('&nbsp; <label><input type="checkbox" value=""/>&nbsp; ' + i18n.unlimited + '</label>');
-              $(this).append(label);
-              var unlimited = label.find("input");
-              $(unlimited).bind('click', function(){
-                  if($(unlimited).is(":checked")){
-                      $(input).val('');
-                      $(input).attr("disabled", true);
-                  } else {
-                      $(input).val('');
-                      $(input).removeAttr('disabled');
-                  }
-              });
-            }
-            $(original).css('background-image', 'none');
-            return(input);    
-       },
-
-        content : function(string, settings, original) {
-            var text_input = $('input', this).first();
-            text_input.val(string);
-            if (settings.unlimited != undefined) {
-                var check_input = $('input', this).last();
-                if (string === settings.unlimited || string === i18n.unlimited) {
-                    text_input.val('');
-                    check_input.attr('checked', 'checked');
-                    text_input.attr("disabled", true);
-                } else {
-                    check_input.removeAttr('checked');
-                    text_input.removeAttr('disabled');
-                }
-            }
         },
-
-        submit  : function(settings, original) {
-            if (settings.unlimited != undefined) {
-                var text_input = $('input', this).first();
-                if (text_input.val() === '')
-                    text_input.val(settings.unlimited);
-            }
+        initialize = function() {
+            initialize_panel_element();
+            initialize_ajaxfileupload();
+            initialize_password();
+            initialize_textfield();
+            initialize_textarea();
+            initialize_multiselect();
+            initialize_select();
+            initialize_number();
+            initialize_datepicker();
+            initialize_timepicker();
         },
-    });
-
-    $.editable.addInputType( 'datepicker', {
-        /* create input element */
-        element: function( settings, original ) {
-            var form = $( this ), input = $( '<input data-change="false"/>' );
-            if (settings.width != 'none') { input.width(settings.width); }
-            if (settings.height != 'none') { input.height(settings.height); }
-            input.attr( 'autocomplete','off' );
-            form.append( input );
-            return input;
-        },
-
-        /* attach jquery.ui.datepicker to the input element */
-        plugin: function( settings, original ) {
-            var form = this, input = form.find( "input" );
-            settings.onblur = 'nothing';
-
-            datepicker = {
-                // keep track of date selection state
-                onSelect: function() {
-                    input.attr('data-change', 'true');
-                },
-                // reset form if we lose focus and date was not selected
-                onClose: function() {
-                    if ($(this).attr('data-change') == 'false') {
-                        original.reset( form );
+        initialize_panel_element = function() {
+            $('.edit_panel_element').each(function() {
+                $(this).editable('destroy');
+                var settings = {
+                    type        :  'text',
+                    width       :  270,
+                    name        :  $(this).attr('name'),
+                    onsuccess   :  function(result, status, xhr) {
+                        var id = $('#panel_element_id');
+                        KT.panel.list.refresh(id.attr('value'), id.attr('data-ajax_url'));
                     }
-                }
-            };
-            input.datepicker(datepicker);
-        }
-    });
-
-    $.editable.addInputType( 'timepicker', {
-        /* create input element */
-        element: function( settings, original ) {
-            var form = $( this ), input = $( '<input data-change="false"/>' );
-            if (settings.width != 'none') { input.width(settings.width); }
-            if (settings.height != 'none') { input.height(settings.height); }
-            input.attr( 'autocomplete','off' );
-            form.append( input );
-            return input;
+                };
+                $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
+            });
         },
+        initialize_ajaxfileupload = function() {
+            $('.ajaxfileupload').each(function() {
+                $(this).editable('destroy');
+                $(this).editable($(this).attr('url'), {
+                    type        :  'ajaxupload',
+                    method      :  'PUT',
+                    name        :  $(this).attr('name'),
+                    cancel      :  i18n.cancel,
+                    submit      :  i18n.upload,
+                    indicator   :  i18n.uploading,
+                    tooltip     :  i18n.clickToEdit,
+                    placeholder :  i18n.clickToEdit,
+                    submitdata  :  {authenticity_token: AUTH_TOKEN},
+                    onerror     :  function(settings, original, xhr) {
+                        original.reset();
+                        $("#notification").replaceWith(xhr.responseText);
+                    }
+                });
+            });
+        },
+        initialize_password = function() {
+            $('.edit_password').each(function() {
+                $(this).editable('destroy');
+                var settings = {
+                    type        :  'password',
+                    width       :  270,
+                    name        :  $(this).attr('name')
+                };
+                $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
+            });
+        },
+        initialize_textfield = function() {
+            $('.edit_textfield').each(function() {
+                $(this).editable('destroy');
+                var settings = {
+                    type        :  'text',
+                    width       :  270,
+                    name        :  $(this).attr('name')
+                };
+                $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
+            });
+        },
+        initialize_textarea = function() {
+            $('.edit_textarea').each(function() {
+                $(this).editable('destroy');
+                var settings = {
+                    type            :  'textarea',
+                    name            :  $(this).attr('name'),
+                    rows            :  8,
+                    cols            :  36
+                };
+                $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
+            });
+        },
+        initialize_select = function() {
+            $('.edit_select').each(function(){
+                $(this).editable('destroy');
+                var element = $(this);
+                var settings = {
+                    type            :  'select',
+                    name            :  element.attr('name'),
+                    data   			:  element.data('options'),
+                    onsuccess       :  function(result, status, xhr){
+                        var data = element.data('options');
 
-        plugin: function( settings, original ) {
-            var form = this, input = form.find( "input" );
-            settings.onblur = 'ignore';
-            input.timepickr({convention: 12})
-                .click();
-        }
-    });
-
-    $('.ajaxfileupload').each(function() {
-        $(this).editable($(this).attr('url'), {
-            type        :  'ajaxupload',
-            method      :  'PUT',
-            name        :  $(this).attr('name'),
-            cancel      :  i18n.cancel,
-            submit      :  i18n.upload,
-            indicator   :  i18n.uploading,
-            tooltip     :  i18n.clickToEdit,
-            placeholder :  i18n.clickToEdit,
-            submitdata  :  {authenticity_token: AUTH_TOKEN},
-            onerror     :  function(settings, original, xhr) {
-            original.reset();
-                $("#notification").replaceWith(xhr.responseText);
-            }
-        });
-    });
-
-    $('.edit_panel_element').each(function() {
-        var settings = {
-            type        :  'text',
-            width       :  270,
-            name        :  $(this).attr('name'),
-            onsuccess   :  function(result, status, xhr) {
-                var id = $('#panel_element_id');
-                KT.panel.list.refresh(id.attr('value'), id.attr('data-ajax_url'));
-            }
+                        data["selected"] = result;
+                        element.html(data[result]);
+                    }
+                };
+                $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
+            });
+        },
+        initialize_multiselect = function() {
+            $('.edit_multiselect').each(function() {
+                $(this).editable('destroy');
+                var element = $(this);
+                var settings = {
+                    type            :  'multiselect',
+                    name            :  element.attr('name'),
+                    data   			:  element.data('options')
+                };
+                $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
+            });
+        },
+        initialize_number = function() {
+            $('.edit_number').each(function() {
+                $(this).editable('destroy');
+                var element = $(this);
+                var settings = {
+                    method          :  'POST',
+                    type            :  'number',
+                    value           :  $.trim($(this).html()),
+                    height          :  10,
+                    width           :  35,
+                    onblur          :  'ignore',
+                    name            :  $(this).attr('name'),
+                    min             :  $(this).data('min'),
+                    max             :  $(this).data('max'),
+                    unlimited       :  $(this).data('unlimited'),
+                    image           :  $(this).css('background-image'),
+                    submitdata      :  {authenticity_token: AUTH_TOKEN},
+                    onsuccess       :  function(result, status, xhr){
+                        element.css('background-image', settings.image);
+                        if ($(this).data('unlimited') != undefined) {
+                            if (parseInt(result,10) === $(this).data('unlimited'))
+                                element.html(i18n.unlimited);
+                            else
+                                element.html(result);
+                        } else {
+                            element.html(result);
+                        }
+                    },
+                    onresetcomplete : function(settings, original){
+                        element.css('background-image', settings.image);
+                    }
+                };
+                element.editable(element.attr('data-url'), $.extend(common_settings, settings));
+            });
+        },
+        initialize_datepicker = function() {
+            $('.edit_datepicker').each(function() {
+                $(this).editable('destroy');
+                var settings = {
+                    type        :  'datepicker',
+                    width       :  100,
+                    name        :  $(this).attr('name')
+                };
+                $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
+            });
+        },
+        initialize_timepicker = function() {
+            $('.edit_timepicker').each(function() {
+                $(this).editable('destroy');
+                $(this).editable($(this).attr('data-url'), {
+                    type        :  'timepicker',
+                    width       :  300,
+                    method      :  'PUT',
+                    name        :  $(this).attr('name'),
+                    cancel      :  i18n.cancel,
+                    submit      :  i18n.save,
+                    indicator   :  i18n.saving,
+                    tooltip     :  i18n.clickToEdit,
+                    placeholder :  i18n.clickToEdit,
+                    submitdata  :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
+                    onsuccess   :  function(result, status, xhr) {
+                        var plan_time = $("#plan_time").text();
+                        var current_plan = $("#current_plan").text();
+                        if (plan_time !== current_plan) {
+                            $("#current_plan").text(plan_time);
+                        }
+                        var id = $('#plan_id');
+                        list.refresh(id.attr('value'), id.attr('data-ajax_url'));
+                    },
+                    onerror     :  function(settings, original, xhr) {
+                      original.reset();
+                      $("#notification").replaceWith(xhr.responseText);
+                    }
+                });
+            });
         };
-        $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
-    });
 
-    $('.edit_password').each(function() {
-        var settings = {
-            type        :  'password',
-            width       :  270,
-            name        :  $(this).attr('name')
-        };
-        $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
-    });
+    initialize();
 
-    $('.edit_textfield').each(function() {
-        var settings = {
-            type        :  'text',
-            width       :  270,                  
-            name        :  $(this).attr('name')
-        };
-        $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
-    });
-
-    $('.edit_textarea').each(function() {
-        var settings = { 
-                type            :  'textarea',
-                name            :  $(this).attr('name'),
-                rows            :  8,
-                cols            :  36
-        }; 
-        $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings)); 
-    });
-   
-   	$('.edit_select').each(function(){
-   		var element = $(this);
-   		var settings = { 
-            type            :  'select',
-            name            :  element.attr('name'),
-            data   			:  element.data('options'),
-            onsuccess       :  function(result, status, xhr){
-            	var data = element.data('options');
-            	
-            	data["selected"] = result;
-            	element.html(data[result]);
-            }
-        };
-        $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
-  	});
-    
-    $('.edit_number').each(function() {
-        var element = $(this);
-        var settings = {
-            method          :  'POST',
-            type            :  'number',
-            value           :  $.trim($(this).html()),
-            height          :  10,           
-            width           :  35,       
-            onblur          :  'ignore',
-            name            :  $(this).attr('name'),
-            min             :  $(this).data('min'),
-            max             :  $(this).data('max'),
-            unlimited       :  $(this).data('unlimited'),
-            image           :  $(this).css('background-image'),
-            submitdata      :  {authenticity_token: AUTH_TOKEN},
-            onsuccess       :  function(result, status, xhr){
-                element.css('background-image', settings.image);
-                if ($(this).data('unlimited') != undefined) {
-                    if (parseInt(result,10) === $(this).data('unlimited'))
-                        element.html(i18n.unlimited);
-                    else
-                        element.html(result);
-                } else {
-                    element.html(result);
-                }
-            },
-            onresetcomplete : function(settings, original){
-                element.css('background-image', settings.image);
-            }
-        };
-        element.editable(element.attr('data-url'), $.extend(common_settings, settings));
-    });
-});
+    return {
+        initialize                : initialize,
+        initialize_panel_element  : initialize_panel_element,
+        initialize_ajaxfileupload : initialize_ajaxfileupload,
+        initialize_password       : initialize_password,
+        initialize_textfield      : initialize_textfield,
+        initialize_textarea       : initialize_textarea,
+        initialize_select         : initialize_select,
+        initialize_multiselect    : initialize_multiselect,
+        initialize_number         : initialize_number,
+        initialize_datepicker     : initialize_datepicker,
+        initialize_timepicker     : initialize_timepicker
+    };
+}());
