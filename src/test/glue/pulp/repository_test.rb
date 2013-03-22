@@ -230,7 +230,7 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
 
   def test_has_package?
     VCR.use_cassette('glue_pulp_repo_units_package', :match_requests_on => [:body_json, :path, :method]) do
-      pkg_id = @@fedora_17_x86_64.packages.first.id
+      pkg_id = @@fedora_17_x86_64.packages.sort_by(&:id).first.id
       assert @@fedora_17_x86_64.has_package?(pkg_id)
     end
   end
