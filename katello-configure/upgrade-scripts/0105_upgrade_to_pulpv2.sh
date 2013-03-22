@@ -8,22 +8,7 @@
 #to the most recent version.
 
 if [ -f /etc/sysconfig/katello ]; then . /etc/sysconfig/katello; fi
-KATELLO_HOME=${KATELLO_HOME:-/usr/share/katello}
-KATELLO_ENV=${KATELLO_ENV:-production}
-KATELLO_PREFIX=${KATELLO_PREFIX:-/katello}
-
 
 pulp-v1-upgrade --backup-v1-db || exit 1
 /usr/bin/pulp-manage-db || exit 1
-
-/usr/sbin/service-wait httpd start
-
-pushd $KATELLO_HOME >/dev/null
-RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX RAILS_ENV=$KATELLO_ENV rake regenerate_repo_metadata
-ret_code=$?
-popd >/dev/null
-
-/usr/sbin/service-wait httpd stop
-
-exit $?
 
