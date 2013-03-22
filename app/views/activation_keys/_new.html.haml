@@ -17,13 +17,11 @@
             #{_("No environments are currently available in this organization.  Please add some to be able to create activation keys.")}
           - else
             = environment_selector(:path_widget_class=>"grid_7", :path_entries_class=>"grid_7", :library_clickable=>false,
-              :accessible_envs=>accessible_envs, :url_templates_proc=>url_templates_proc, :url_content_views_proc=>url_content_views_proc)
+              :accessible_envs=>accessible_envs, :url_content_views_proc=>url_content_views_proc)
         .clear
           &nbsp;
 
       - if Katello.config.katello?
-        = form.field :system_template_id, :label => _("System Template"), :wrapper => {:id => 'system_templates'}, :grid => [2,7] do
-          = select_tag 'activation_key[system_template_id]', options_for_select(@system_template_labels, @selected_template), {:size=>1, :tabindex=>form.tabindex}
         = form.field :content_view_id, :label => _("Content View"), :wrapper => {:id => "content_views"}, :grid => [2,7] do
           = select_tag 'activation_key[content_view_id]', options_for_select(@content_view_labels, @selected_content_view),
             :tabindex => auto_tab_index

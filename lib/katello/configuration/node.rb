@@ -15,7 +15,7 @@ module Katello
 
     # Hash like container for configuration
     # @example allows access by method
-    #     Config.new('a' => {:b => 2}).a.b # => 2
+    #     Node.new('a' => {:b => 2}).a.b # => 2
     class Node
       class NoKey < StandardError
         def initialize(message = nil)

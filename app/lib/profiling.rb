@@ -54,6 +54,7 @@ module Profiling
   end
 
   def self.profiling_enabled?
-    Src::Application.config.respond_to?(:do_profiles) && !Src::Application.config.do_profiles.blank?
+    Katello.config.profiling && Src::Application.config.respond_to?(:do_profiles) &&
+      !Src::Application.config.do_profiles.blank?
   end
 end

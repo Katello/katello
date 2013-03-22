@@ -175,6 +175,7 @@ class ContentView < ActiveRecord::Base
     replacing_version = self.version(to_env)
 
     promote_version = self.version(from_env)
+    promote_version = ContentViewVersion.find(promote_version.id)
     promote_version.environments << to_env
     promote_version.save!
 
@@ -204,6 +205,7 @@ class ContentView < ActiveRecord::Base
     if version.nil?
       raise Errors::ChangesetContentException.new(_("Cannot delete from %s, view does not exist there.") % from_env.name)
     end
+    version = ContentViewVersion.find(version.id)
     version.delete(from_env)
     self.destroy if self.versions.empty?
   end
@@ -248,7 +250,7 @@ class ContentView < ActiveRecord::Base
 
   def update_cp_content(env)
     # retrieve the environment and then update cp content
-    view_env = ContentViewEnvironment.where(:cp_id => self.cp_environment_id(env)).first
+    view_env = self.content_view_environments.where(:environment=>env).first
     view_env.update_cp_content if view_env
   end
 
@@ -267,6 +269,29 @@ class ContentView < ActiveRecord::Base
     # by the kt_environment and content_view_environment.
     self.default ? env.id.to_s : [env.id, self.id].join('-')
   end
+
+  # Associate an environment with this content view.  This can occur whenever
+  # a version of the view is promoted to an environment.  It is necessary for
+  # candlepin to become aware that the view is available for consumers.
+  def add_environment(env)
+    unless (env.library && self.content_view_environments.where(:environment_id=>env.id).first)
+      content_view_environments.build(:name => env.name,
+                                     :label => self.cp_environment_label(env),
+                                     :cp_id => self.cp_environment_id(env),
+                                     :environment_id=>env.id)
+    end
+  end
+
+  # Unassociate an environment from this content view. This can occur whenever
+  # a view is deleted from an environment. It is necessary to make candlepin
+  # aware that the view is no longer available for consumers.
+  def remove_environment(env)
+    unless env.library
+      view_env = self.content_view_environments.where(:environment_id=>env.id)
+      view_env.first.destroy unless view_env.blank?
+    end
+  end
+
 
   protected
 
@@ -327,24 +352,4 @@ class ContentView < ActiveRecord::Base
     tasks
   end
 
-  # Associate an environment with this content view.  This can occur whenever
-  # a version of the view is promoted to an environment.  It is necessary for
-  # candlepin to become aware that the view is available for consumers.
-  def add_environment(env)
-    unless (env.library && ContentViewEnvironment.where(:cp_id => self.cp_environment_id(env)).first)
-      content_view_environments.build(:name => env.name,
-                                     :label => self.cp_environment_label(env),
-                                     :cp_id => self.cp_environment_id(env))
-    end
-  end
-
-  # Unassociate an environment from this content view. This can occur whenever
-  # a view is deleted from an environment. It is necessary to make candlepin
-  # aware that the view is no longer available for consumers.
-  def remove_environment(env)
-    unless env.library
-      view_env = ContentViewEnvironment.where(:cp_id => self.cp_environment_id(env))
-      view_env.first.destroy unless view_env.blank?
-    end
-  end
 end

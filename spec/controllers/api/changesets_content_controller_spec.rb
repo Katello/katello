@@ -35,7 +35,6 @@ describe Api::ChangesetsContentController, :katello => true do
   let(:erratum_unit_id) { "asdfasdf" }
 
   let(:repo_id) { '2' }
-  let(:template_id) { '3' }
   let(:distribution_id) { '4' }
 
   before(:each) do
@@ -48,7 +47,6 @@ describe Api::ChangesetsContentController, :katello => true do
     @environment.stub(:prior).and_return(@library)
     @library.stub(:successor).and_return(@environment)
 
-    @template = mock(SystemTemplate, { "name" => "tpl" })
     @product  = mock(Product, { "name" => "prod", 'id' => 0 })
     @repo     = mock(Product, { "name" => "repo" })
 
@@ -187,32 +185,6 @@ describe Api::ChangesetsContentController, :katello => true do
     it "should remove a repo" do
       Repository.should_receive(:find).with(repo_id.to_s).and_return(@repo)
       @cs.should_receive(:remove_repository!).with(@repo).and_return(@repo)
-      req
-      response.should be_success
-    end
-  end
-
-  describe "templates" do
-    let(:action) { :add_template }
-    let(:req) { post :add_template, :changeset_id => changeset_id, :template_id => template_id }
-    it_should_behave_like "protected action"
-
-    it "should add a template" do
-      SystemTemplate.should_receive(:find).with(template_id.to_s).and_return(@template)
-      @cs.should_receive(:add_template!).with(@template).and_return(@template)
-      req
-      response.should be_success
-    end
-  end
-
-  describe "templates" do
-    let(:action) { :remove_template }
-    let(:req) { delete :remove_template, :changeset_id => changeset_id.to_s, :id => template_id }
-    it_should_behave_like "protected action"
-
-    it "should remove a template" do
-      SystemTemplate.should_receive(:find).with(template_id.to_s).and_return(@template)
-      @cs.should_receive(:remove_template!).with(@template).and_return(@template)
       req
       response.should be_success
     end
