@@ -233,13 +233,14 @@ describe OrganizationsController do
 
       before (:each) do
         @organization = new_test_org
+        @organization.stub!(:save!).and_return(true)
         @organization.stub!(:update_attributes!).and_return(OrgControllerTest::ORGANIZATION[:organization])
         @organization.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:organization][:name])
         Organization.stub!(:find_by_label).and_return(@organization)
       end
 
       it "should call katello org update api", :katello => true do #TODO headpin
-        @organization.should_receive(:update_attributes!).once
+        @organization.should_receive(:save!).once
         put 'update', :id => OrgControllerTest::ORG_ID, :organization => OrgControllerTest::ORGANIZATION_UPDATE
         response.should be_success
       end

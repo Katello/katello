@@ -21,7 +21,7 @@ describe Api::SystemsController do
   include SystemHelperMethods
   include AuthorizationHelperMethods
 
-  let(:facts) { {"distribution.name" => "Fedora", "cpu.cpu_socket(s)"=>2} }
+  let(:facts) { {"distribution.name" => "Fedora", "cpu.cpu_socket(s)"=>"2"} }
   let(:uuid) { '1234' }
   let(:package_profile) {
     {:profile=>
@@ -108,7 +108,7 @@ describe Api::SystemsController do
       end
 
       it "requires environment id" do
-        System.should_receive(:create!).with(hash_including(:environment => @environment_1, :cp_type => 'system', :facts => facts, :name => 'test')).once.and_return({})
+        System.should_receive(:create!).with(hash_including('environment' => @environment_1, 'cp_type' => 'system', 'facts' => facts, 'name' => 'test')).once.and_return({})
         post :create, :environment_id => @environment_1.id, :name => 'test', :cp_type => 'system', :facts => facts
       end
 
@@ -121,10 +121,8 @@ describe Api::SystemsController do
     context "when activation keys are provided" do
 
       before(:each) do
-        @system_template = SystemTemplate.create!(:name => "system template", :environment => @environment_1)
         @activation_key_1 = ActivationKey.create!(:environment => @environment_1,
                                                   :organization => @organization,
-                                                  :system_template => @system_template,
                                                   :name => "activation_key_1",
                                                   :system_groups => [@system_group_1], :user => @user)
         @activation_key_2 = ActivationKey.create!(:environment => @environment_1, :organization => @organization, :name => "activation_key_2",

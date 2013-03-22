@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -11,11 +11,15 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Validators
-  class PackageUniquenessValidator < ActiveModel::Validator
-    def validate(record)
-      duplicate_ids = SystemTemplatePackage.where(:system_template_id => record.system_template_id, :package_name => record.package_name, :version => record.version, :release => record.release, :epoch => record.epoch, :arch => record.arch).all.map {|p| p.id}
-      duplicate_ids -= [record.id]
-      record.errors[:base] << _("Package '%s' is already present in the template") % record.nvrea if duplicate_ids.count > 0
+  class NonHtmlNameValidator < ActiveModel::EachValidator
+    def validate_each(record, attribute, value)
+      if value
+        record.errors[attribute] << N_("cannot contain characters >, <, or /") if value =~ %r{<|>|/}
+        NoTrailingSpaceValidator.validate_trailing_space(record, attribute, value)
+        KatelloNameFormatValidator.validate_length(record, attribute, value, 128, 1)
+      else
+        record.errors[attribute] << N_("cannot be blank")
+      end
     end
   end
 end

@@ -13,9 +13,9 @@
 class EnvironmentsController < ApplicationController
   respond_to :html, :js
 
-  before_filter :find_organization, :only => [:show, :edit, :update, :destroy, :index, :new, :create, :default_label, :system_templates, :products]
+  before_filter :find_organization, :only => [:show, :edit, :update, :destroy, :index, :new, :create, :default_label, :products]
   before_filter :authorize
-  before_filter :find_environment, :only => [:show, :edit, :update, :destroy, :system_templates, :products, :content_views]
+  before_filter :find_environment, :only => [:show, :edit, :update, :destroy, :products, :content_views]
 
   def section_id
     'orgs'
@@ -32,7 +32,6 @@ class EnvironmentsController < ApplicationController
       :default_label => manage_rule,
       :update => manage_rule,
       :destroy => manage_rule,
-      :system_templates => view_akey_rule,
       :products => view_akey_rule,
       :content_views => view_akey_rule
     }
@@ -113,11 +112,6 @@ class EnvironmentsController < ApplicationController
     @environment.destroy
     notify.success _("Environment '%s' was deleted.") % @environment.name
     render :partial => "common/post_delete_close_subpanel", :locals => {:path=>edit_organization_path(@organization.label)}
-  end
-
-  # GET /environments/1/system_templates
-  def system_templates
-    render :json => @environment.system_templates
   end
 
   # GET /environments/1/products
