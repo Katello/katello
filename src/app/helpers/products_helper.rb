@@ -44,18 +44,17 @@ module ProductsHelper
   end
 
   # Retrieve a hash of products that are accessible to the user.
-  def get_products
+  # This will be determined from the readable & editable products provided in the options.
+  def get_products(options)
     if @product_hash.nil?
-      products = Product.readable(current_organization).sort_by(&:name)
-      editable_products = Product.editable(current_organization)
       @product_hash = {}
-      products.each do |prod|
+      options[:readable_products].sort_by(&:name).each do |prod|
         repos = []
         prod.repos(current_organization.library).sort{|a,b| a.name <=> b.name}.each{|repo|
           repos << {:name=>repo.name, :id=>repo.id}
         }
         @product_hash[prod.id] = {:name=>prod.name, :repos=>repos, :id=>prod.id,
-                                  :editable=>editable_products.include?(prod)}
+                                  :editable=>options[:editable_products].include?(prod)}
       end
     end
     @product_hash

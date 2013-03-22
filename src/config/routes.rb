@@ -94,6 +94,7 @@ Src::Application.routes.draw do
       get :default_label
       get :items
     end
+
     member do
       post :clone
       get :views
@@ -101,13 +102,31 @@ Src::Application.routes.draw do
       post :publish
       get :status
       get :content
-      post :update_content
+      put :update_content
       put :update_component_views
-      get :filter
     end
+
     resources :content_view, :only => [], :controller => :content_view_definitions do
       member do
         post :refresh
+      end
+    end
+    resources :filters, :controller => :filters, :only => [:index, :new, :create, :edit, :update] do
+      collection do
+        delete :destroy_filters
+      end
+
+      resources :rules, :controller => :filter_rules, :only => [:new, :create, :edit, :update] do
+        collection do
+          delete :destroy_rules
+        end
+
+        member do
+          get :edit_parameter_list
+          get :edit_date_type_parameters
+          put :add_parameter
+          delete :destroy_parameters
+        end
       end
     end
   end

@@ -16,7 +16,7 @@ class ContentViewDefinitionsController < ApplicationController
 
   before_filter :require_user
   before_filter :find_content_view_definition, :only => [:clone, :show, :edit, :update, :destroy, :views, :content,
-                                                         :update_content, :update_component_views, :filter,
+                                                         :update_content, :update_component_views,
                                                          :publish_setup, :publish, :status]
   before_filter :find_content_view, :only => [:refresh]
   before_filter :authorize #after find_content_view_definition, since the definition is required for authorization
@@ -61,7 +61,6 @@ class ContentViewDefinitionsController < ApplicationController
       :content => show_rule,
       :update_content => manage_rule,
       :update_component_views => manage_rule,
-      :filter => show_rule,
       :default_label => lambda {create_rule.call || manage_rule.call}
     }
   end
@@ -290,12 +289,6 @@ class ContentViewDefinitionsController < ApplicationController
 
     notify.success _("Successfully updated content for content view definition '%s'.") % @view_definition.name
     render :nothing => true
-  end
-
-  def filter
-    render :partial => "filter",
-           :locals => {:view_definition => @view_definition, :editable => @view_definition.editable?,
-                       :name => controller_display_name}
   end
 
   protected
