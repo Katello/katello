@@ -382,14 +382,39 @@ KT.content_view_definition_filters = (function(){
             });
         });
 
-        $('#add_package').unbind('click');
-        $('#add_package').click(function() {
-            var package_string = $('input#package_input').val();
-            if (package_string.length > 0) {
+        $('.filter_method').unbind('change');
+        $('.filter_method').change(function() {
+            $.ajax({
+                type: 'GET',
+                url: $(this).data('url'),
+                cache: false,
+                success: function(html) {
+                    $('.rule_parameters').html(html);
+                    initialize_common_rule_params();
+                    initialize_errata_rule_params();
+                }
+            });
+        });
+
+        initialize_common_rule_params();
+        initialize_errata_rule_params();
+    },
+    initialize_common_rule_params = function() {
+        $('#add_rule').unbind('click');
+        $('#add_rule').click(function() {
+            var rule_input = $('input#rule_input').val(),
+                data;
+
+            if ($(this).data('rule_type') === 'erratum') {
+                data = {'parameter[unit][id]': rule_input};
+            } else {  // this is for a package or package group rule
+                data = {'parameter[unit][name]': rule_input};
+            }
+            if (rule_input.length > 0) {
                 $.ajax({
                     type: 'PUT',
                     url: $(this).data('url'),
-                    data: {'package' : package_string},
+                    data: data,
                     cache: false,
                     success: function(html) {
                         var empty_row = $("tr#empty_row");
@@ -404,6 +429,10 @@ KT.content_view_definition_filters = (function(){
         });
         register_remove($("#parameters_form"));
         initialize_checkboxes($("#parameters_form"));
+    },
+    initialize_errata_rule_params = function() {
+        KT.editable.initialize_datepicker();
+        KT.editable.initialize_multiselect();
     },
     register_remove = function(form) {
         var remove_button = form.find("#remove_button");
