@@ -37,3 +37,13 @@ WSGIImportScript /srv/pulp/webservices.wsgi process-group=pulp application-group
     SSLOptions +StdEnvVars +ExportCertData
     SSLVerifyClient optional
 </Files>
+
+<%- if scope.lookupvar('operatingsystem') == 'Fedora' && scope.lookupvar('operatingsystemrelease') == '18' -%>
+<Directory /srv/pulp>
+  Require all granted
+</Directory> 
+
+<VirtualHost *:80>
+  Include /etc/pulp/vhosts80/*.conf
+</VirtualHost>
+<%- end -%>
