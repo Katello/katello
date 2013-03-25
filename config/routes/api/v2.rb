@@ -314,7 +314,7 @@ Src::Application.routes.draw do
 
       # development / debugging support
       if Rails.env == "development"
-        get 'status/memory'
+        match 'status/memory' => 'status#memory', :via=>:get
       end
 
       match '*a', :to => 'errors#render_404'
