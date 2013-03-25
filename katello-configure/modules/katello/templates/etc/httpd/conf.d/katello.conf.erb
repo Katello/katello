@@ -38,6 +38,9 @@ NameVirtualHost *:443
   ExpiresActive On
   <Directory "/usr/share/katello/public/">
     ExpiresDefault "access plus 1 year"
+    <%- if scope.lookupvar('operatingsystem') == 'Fedora' && scope.lookupvar('operatingsystemrelease') == '18' -%>
+    Require all granted
+    <%- end -%>
   </Directory>
 
   ProxyPass /<%= scope.lookupvar("katello::params::deployment_url") %>/assets !
