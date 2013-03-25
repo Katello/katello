@@ -322,7 +322,7 @@ Src::Application.routes.draw do
 
       # development / debugging support
       if Rails.env == "development"
-        get 'status/memory'
+        match 'status/memory' => 'status#memory', :via=>:get
       end
 
       # api custom information
