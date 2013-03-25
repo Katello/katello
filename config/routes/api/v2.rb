@@ -71,6 +71,10 @@ Src::Application.routes.draw do
         api_resources :sync, :only => [:index, :create] do
           delete :index, :on => :collection, :action => :cancel
         end
+        api_resources :repository_sets, :only=>[:index] do
+          put :enable, :on => :member
+          put :disable, :on => :member
+        end
       end
 
       api_resources :users do
