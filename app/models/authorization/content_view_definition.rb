@@ -92,7 +92,7 @@ module Authorization::ContentViewDefinition
       if User.allowed_all_tags?(verbs, resource, org)
         where(:organization_id => org.id)
       else
-        where("content_view_definitions.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
+        where("content_view_definition_bases.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
       end
     end
 
