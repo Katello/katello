@@ -37,7 +37,7 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
 
   api :GET, "/systems/:system_id/subscriptions", "List subscriptions"
   def index
-    render :json => { :entitlements => @system.consumed_entitlements }
+    respond :collection => { :entitlements => @system.consumed_entitlements }
   end
 
   api :POST, "/systems/:system_id/subscriptions", "Create a subscription"
@@ -47,7 +47,7 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
     expected_params = params.with_indifferent_access.slice(:pool, :quantity)
     raise HttpErrors::BadRequest, _("Please provide pool and quantity") if expected_params.count != 2
     @system.subscribe(expected_params[:pool], expected_params[:quantity])
-    render :json => @system.to_json
+    respond :resource => @system
   end
 
   api :DELETE, "/systems/:system_id/subscriptions/:id", "Delete a subscription"
@@ -56,13 +56,13 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
     expected_params = params.with_indifferent_access.slice(:id)
     raise HttpErrors::BadRequest, _("Please provide subscription ID") if expected_params.count != 1
     @system.unsubscribe(expected_params[:id])
-    render :json => @system.to_json
+    respond_for_show :resource => @system
   end
 
   api :DELETE, "/systems/:system_id/subscriptions", "Delete all system subscriptions"
   def destroy_all
     @system.unsubscribe_all
-    render :json => @system.to_json
+    respond_for_show :resource => @system
   end
 
   api :DELETE, "/systems/:system_id/subscriptions/serials/:serial_id", "Delete a subscription by serial id"
@@ -71,7 +71,7 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
     expected_params = params.with_indifferent_access.slice(:serial_id)
     raise HttpErrors::BadRequest, _("Please provide serial ID") if expected_params.count != 1
     @system.unsubscribe_by_serial(expected_params[:serial_id])
-    render :json => @system.to_json
+    respond_for_show :resource => @system
   end
 
   private
