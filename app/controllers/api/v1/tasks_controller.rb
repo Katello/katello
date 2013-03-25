@@ -39,13 +39,14 @@ class Api::V1::TasksController < Api::V1::ApiController
   api :GET, "/organizations/:organization_id/tasks", "List tasks of given organization"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   def index
-    render :json => TaskStatus.where(:organization => @organization).to_json(:except => :id)
+    respond :collection => TaskStatus.where(:organization_id => @organization.id)
   end
 
   api :GET, "/tasks/:id", "Show a task info"
   param :id, :identifier, :desc => "task identifier", :required => true
   def show
-    render :json => @task.refresh.to_json(:except => :id)
+    @task.refresh
+    respond
   end
 
   private
