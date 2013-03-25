@@ -167,6 +167,10 @@ $(document).ready(function() {
             return input;
         },
 
+        content : function(string, settings, original) {
+            $(':input:first', this).val($.trim(string));
+        },
+
         /* attach jquery.ui.datepicker to the input element */
         plugin: function( settings, original ) {
             var form = this, input = form.find( "input" );
