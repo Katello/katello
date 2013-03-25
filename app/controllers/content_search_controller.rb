@@ -105,12 +105,16 @@ class ContentSearchController < ApplicationController
   end
 
   def packages
+    view_ids      = param_view_ids
     repo_ids      = process_params :repos
     product_ids   = param_product_ids
     package_ids   = process_params :packages
 
+
+    views = collect_views(view_ids)
     repos = collect_repos(repo_ids, product_ids)
     product_repo_map = map_repos_to_product(repos)
+    view_product_repo_map = map_products_to_views(views, product_repo_map)
 
     rows = []
     product_repo_map.each do |p_id, product_repo_ids|
@@ -359,6 +363,12 @@ class ContentSearchController < ApplicationController
       filter "and", conditions
       size found.total
     end
+  end
+
+  def collect_views(view_ids)
+    views = ContentView.readable(current_organization)
+    views = views.where(:id=>view_ids) if view_ids.blank?
+    views
   end
 
   def collect_repos(repo_ids, product_ids)
