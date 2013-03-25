@@ -10,7 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 class ContentViewDefinitionRepository < ActiveRecord::Base
-
-  belongs_to :content_view_definition, :inverse_of => :content_view_definition_repositories
+  belongs_to :content_view_definition, :inverse_of => :content_view_definition_repositories,
+    :class_name => "ContentViewDefinitionBase"
   belongs_to :repository, :inverse_of => :content_view_definition_repositories
 end

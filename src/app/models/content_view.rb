@@ -18,6 +18,7 @@ class ContentView < ActiveRecord::Base
   include Glue::ElasticSearch::ContentView if Katello.config.use_elasticsearch
 
   belongs_to :content_view_definition
+  alias :definition :content_view_definition
   belongs_to :organization, :inverse_of => :content_views
 
   has_many :content_view_environments, :dependent => :destroy
@@ -53,7 +54,7 @@ class ContentView < ActiveRecord::Base
   end
 
   def self.composite(composite=true)
-    joins(:content_view_definition).where('content_view_definitions.composite = ?', composite)
+    joins(:content_view_definition).where('content_view_definition_bases.composite = ?', composite)
   end
 
   def composite
