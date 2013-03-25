@@ -10,6 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'securerandom'
 require 'time'
 require 'minitest_helper'
 require File.expand_path('../../../lib/katello/url_constrained_cookie_store', __FILE__)
@@ -20,7 +21,7 @@ class UrlConstrainedCookieStoreTest < ActionController::IntegrationTest
 
   Verifier = ActiveSupport::MessageVerifier.new(SessionSecret, 'SHA1')
   SignedBar = Verifier.generate(:foo => "bar", :created_at => (Time.now - 2.minute),
-      :session_id => ActiveSupport::SecureRandom.hex(16))
+      :session_id => SecureRandom.hex(16))
 
   def test_doesnt_update_expiraton_date_for_excluded_urls
     with_test_route_set(:expire_after => 1.minute, :expiration_exceptions => "/no_expiration") do
