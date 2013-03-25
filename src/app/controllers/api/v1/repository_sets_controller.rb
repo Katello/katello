@@ -13,7 +13,6 @@
 class Api::V1::RepositorySetsController < Api::V1::ApiController
   respond_to :json
 
-  before_filter :find_organization, :only => [:enable, :disable, :index]
   before_filter :find_product, :only => [:enable, :disable, :index]
   before_filter :find_product_content, :only=> [:enable, :disable]
 
@@ -37,7 +36,7 @@ class Api::V1::RepositorySetsController < Api::V1::ApiController
   param :id, :number, :required => true, :desc => "id or name of the repository set to enable"
   def enable
     raise _('Repository sets are enabled by default for custom products..') if @product.custom?
-    render :json=>@product.async(:organization=>@organization).refresh_content(@product_content.content.id)
+    respond_for_async :resource => @product.async(:organization=>@organization).refresh_content(@product_content.content.id)
   end
 
   api :POST, "/product/:product_id/repository_set/:id/disable", "Enable a repository set for a product."
@@ -46,7 +45,7 @@ class Api::V1::RepositorySetsController < Api::V1::ApiController
   param :id, :number, :required => true, :desc => "id of the repository set to disable"
   def disable
     raise _('Repository sets are not applicable for custom products..') if @product.custom?
-    render :json=>@product.async(:organization=>@organization).disable_content(@product_content.content.id)
+    respond_for_async :resource => @product.async(:organization=>@organization).disable_content(@product_content.content.id)
   end
 
   api :GET, "/product/:product_id/repository_set/", "List repository sets for a product."
@@ -55,11 +54,11 @@ class Api::V1::RepositorySetsController < Api::V1::ApiController
   def index
     raise _('Repository sets are not available for custom products.') if @product.custom?
     content = @product.productContent.collect do |pc|
-          content = pc.content.as_json
+          content = pc.content.as_json.symbolize_keys
           content[:katello_enabled] = pc.katello_enabled?
           content
         end
-    render :json=>content
+    respond :collection => content
   end
 
   private
@@ -67,11 +66,12 @@ class Api::V1::RepositorySetsController < Api::V1::ApiController
   def find_product_content
     @product_content = @product.product_content_by_id(params[:id])
     @product_content ||= @product.product_content_by_name(params[:id])
-    raise HttpErrors::NotFound, _("Couldn't find repository set with id.") % params[:id] if @product_content.nil?
+    raise HttpErrors::NotFound, _("Couldn't find repository set with id '%s'.") % params[:id] if @product_content.nil?
   end
 
   def find_product
-    @product = @organization.products.find_by_cp_id(params[:product_id])
+    @product = Product.find_by_cp_id(params[:product_id])
     raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % params[:product_id] if @product.nil?
+    @organization = @product.organization
   end
 end
