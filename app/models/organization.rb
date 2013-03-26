@@ -96,11 +96,11 @@ class Organization < ActiveRecord::Base
   end
 
   def create_library
-    self.library = KTEnvironment.new(:name => "Library",:label => "Library",  :library => true, :organization => self)
+    self.library = KTEnvironment.new(:name => "Library", :label => "Library", :library => true, :organization => self)
   end
 
   def create_redhat_provider
-    self.providers << ::Provider.new(:name => "Red Hat", :provider_type=> ::Provider::REDHAT, :organization => self)
+    self.providers << ::Provider.new(:name => "Red Hat", :provider_type => ::Provider::REDHAT, :organization => self)
   end
 
   # TODO - this code seems to be dead
