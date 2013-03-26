@@ -36,8 +36,8 @@ strong { font-weight: bold; }
 .wrap { overflow: hidden; margin-bottom: 2em; } /* wrapper around floating elements */
 .nomargin { margin: none; }
 .placeholder { margin-bottom: 2em; }
-.disabled { 
-  opacity: 0.4; 
+.disabled {
+  opacity: 0.4;
   cursor: default;
   text-decoration: none;
 
@@ -75,7 +75,7 @@ a {
   cursor: pointer;
   color: $linkfg_color;
   text-decoration: none;
-  
+
   &:hover, &:focus {
     color: lighten($linkfg_color, 10%);
     text-decoration: underline;
@@ -93,7 +93,7 @@ input, textarea {
   background: $input_background_img;
   padding: 4px;
   margin: 0;
-  
+
   &:focus {
     border-width: 2px;
     padding: 3px;
@@ -105,11 +105,11 @@ input, textarea {
   }
   .grid_1 { width: 30px !important; }
   .grid_2 { width: 90px !important; }
-  .grid_2 { 
-    input[type="file"] { width: 90px; } 
+  .grid_2 {
+    input[type="file"] { width: 90px; }
   }
   .grid_3 { width: 150px !important; }
-  .grid_3 { 
+  .grid_3 {
     input[type="search"] { width: 118px; }
   }
   .grid_4 { width: 210px !important; }
@@ -121,7 +121,7 @@ input, textarea {
 input[type="search"] {
   @include border-radius(20px);
   padding: 4px 30px 4px 10px;
-  
+
   &:focus {
     padding: 3px 29px 3px 9px;
   }
@@ -132,7 +132,7 @@ input[type="checkbox"],input[type="radio"] {
   border: none;
   margin: 0;
   padding: 2px;
-  
+
   &:focus {
     border-width: 1px;
     padding: 1px;
@@ -189,7 +189,7 @@ input[type='submit'], button, .button {
   @include border-radius(5px);
   @include text-shadow(0 1px 0 rgba($white_color, 1));
   min-height: 14px;
-  
+
   .nomargin {
     margin: 0;
   }
@@ -353,7 +353,7 @@ table {
 
 .action {
   background: $search_icon_white;
-  
+
   &:hover { background: $search_icon_white; }
   &:active {background: $search_icon_white; }
 }
@@ -366,7 +366,7 @@ table {
     margin: 2px 2px 0px 6px;
     background: url(../../../images/icons/action-icons.png) no-repeat 0 0;
     float: left;
-    
+
     &.edit  { background-position: -16px 0;}
     &.delete  { background-position: -32px 0;}
     &.rename  { background-position: -80px 0;}
@@ -444,7 +444,7 @@ fieldset {
   border:none;
   text-indent:-999px;
   background: $ui_totop_img;
-  
+
   &:active, &:focus {
     outline:none;
   }
@@ -750,7 +750,7 @@ fieldset {
           padding-right: 20px;
         }
         &.desc {
-          background: $order_desc_img;            
+          background: $order_desc_img;
         }
         &.asc {
           background: $order_asc_img;
@@ -831,7 +831,7 @@ fieldset {
   position: fixed;
   max-width:700px;
   z-index: -1;
-  
+
   .tupane_footer {
     margin: 5px 0 0 0;
     overflow: auto;
@@ -876,7 +876,7 @@ fieldset {
     height: auto;
     &>ul {
       min-height: 0px;
-      
+
       li {
           background: none;
           &.selected {
@@ -897,7 +897,7 @@ fieldset {
   }
   .data  {
     font-size: 100%;
-    
+
     .spinner {
       margin-top: 150px;
       height: 250px;
@@ -935,13 +935,13 @@ fieldset {
         color: red;
     }
   }
-  
+
   h2 {
     margin: 0;
     padding: 10px 0 0 20px;
     width: 60%;
   }
-  
+
   #panel_main, #subpanel_main {
     overflow-y: auto;
     overflow-x: hidden;
@@ -956,15 +956,15 @@ fieldset {
     margin-left: 0px;
     margin-right: 0px;
   }
-  .helptip-close { 
-    position: relative; 
+  .helptip-close {
+    position: relative;
     float: left;
-    
+
     .helptip-open-button {
       position: relative;
       top: 0;
       right: 0;
-    } 
+    }
   }
 }
 .subpanel {
@@ -974,7 +974,7 @@ fieldset {
   top: 40px;
   h2 {
     font-size: 100%;
-    margin: 0; 
+    margin: 0;
     padding: 10px 0 0 20px;
   }
   &.closed {
@@ -1008,10 +1008,10 @@ fieldset {
     height: 2.7em;
     &:hover {
       color: $white_color;
-      
+
       .st_button {
         color: $white_color;
-      }    
+      }
     }
     //span { vertical-align: middle; }
   }
@@ -1040,9 +1040,9 @@ fieldset {
     height:74px;
     width: 449px;
     background-color: $white_color;
-    
+
     header { height: 40px;}
-    
+
     #items_count {
       color: $text_color;
     }
@@ -1051,7 +1051,7 @@ fieldset {
 /* begin helptip */
 .helptip-open {
   background-color: $helptip-background_color;
-  display: block; 
+  display: block;
   padding: 12px;
   border: 1px solid $helptip-border_color;
   margin: 10px auto 5px auto;
@@ -1061,11 +1061,11 @@ fieldset {
     position: relative;
     float: right;
     height: 16px;
-    width: 16px; 
+    width: 16px;
     margin: 0px;
     background: $search_icon_white;
     background-position: -32px 0;
-    
+
     &:hover { background-position: -32px -16px; }
   }
 }
@@ -1073,14 +1073,14 @@ fieldset {
   display: block;
   margin: 4px 4px 4px 8px;
   height: 18px;
-    
+
   .helptip-open-button {
     background: $search_icon_white;
-    background-position: -336px 0; 
+    background-position: -336px 0;
     height: 16px;
     width: 16px;
     position: absolute;
-    
+
     &:hover { background-position: -336px -16px; }
     @extend .clearfix
   }
@@ -1093,7 +1093,7 @@ fieldset {
   margin-top:10px;
 }
 
-.ui-resizable-e { background: $grabber_icon; }  
+.ui-resizable-e { background: $grabber_icon; }
 
 .sp {
   width: 90px;
@@ -1103,7 +1103,7 @@ fieldset {
 /*Environment selector stuff*/
 #path-widget {
   margin: 0 auto;
-  
+
   #path-controller {
       border-style: solid;
       border-width: 1px;
@@ -1111,7 +1111,7 @@ fieldset {
       border-color: $path-border_color;
       height: 34px;
 
-      padding: 6px;  
+      padding: 6px;
 
       .path_selector {
           display: inline;
@@ -1134,7 +1134,7 @@ fieldset {
       padding-right: 6px;
       padding-top: 6px;
       padding-bottom: 6px;
-      
+
       &:hover {
         background-color: $lightgrey_color;
         color: $white_color;
@@ -1297,7 +1297,7 @@ footer a {
 }
 .flash_messages {
   background-color: $helptip-background_color;
-  display: block; 
+  display: block;
   padding: 12px;
   border: 1px solid $helptip-border_color;
   margin: 10px auto 5px auto;
