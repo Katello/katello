@@ -47,6 +47,7 @@ KT.editable = (function(){
                 $(this).editable('destroy');
                 var settings = {
                     type        :  'text',
+                    data        :  null,
                     width       :  270,
                     name        :  $(this).attr('name'),
                     onsuccess   :  function(result, status, xhr) {
@@ -62,6 +63,7 @@ KT.editable = (function(){
                 $(this).editable('destroy');
                 $(this).editable($(this).attr('url'), {
                     type        :  'ajaxupload',
+                    data        :  null,
                     method      :  'PUT',
                     name        :  $(this).attr('name'),
                     cancel      :  i18n.cancel,
@@ -82,6 +84,7 @@ KT.editable = (function(){
                 $(this).editable('destroy');
                 var settings = {
                     type        :  'password',
+                    data        :  null,
                     width       :  270,
                     name        :  $(this).attr('name')
                 };
@@ -93,6 +96,7 @@ KT.editable = (function(){
                 $(this).editable('destroy');
                 var settings = {
                     type        :  'text',
+                    data        :  null,
                     width       :  270,
                     name        :  $(this).attr('name')
                 };
@@ -103,10 +107,11 @@ KT.editable = (function(){
             $('.edit_textarea').each(function() {
                 $(this).editable('destroy');
                 var settings = {
-                    type            :  'textarea',
-                    name            :  $(this).attr('name'),
-                    rows            :  8,
-                    cols            :  36
+                    type        :  'textarea',
+                    data        :  null,
+                    name        :  $(this).attr('name'),
+                    rows        :  8,
+                    cols        :  36
                 };
                 $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
             });
@@ -148,6 +153,7 @@ KT.editable = (function(){
                 var settings = {
                     method          :  'POST',
                     type            :  'number',
+                    data            :  null,
                     value           :  $.trim($(this).html()),
                     height          :  10,
                     width           :  35,
@@ -181,6 +187,7 @@ KT.editable = (function(){
                 $(this).editable('destroy');
                 var settings = {
                     type        :  'datepicker',
+                    data        :  null,
                     width       :  100,
                     name        :  $(this).attr('name')
                 };
@@ -192,6 +199,7 @@ KT.editable = (function(){
                 $(this).editable('destroy');
                 $(this).editable($(this).attr('data-url'), {
                     type        :  'timepicker',
+                    data        :  null,
                     width       :  300,
                     method      :  'PUT',
                     name        :  $(this).attr('name'),
