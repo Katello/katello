@@ -58,7 +58,11 @@ Provides a package for managing application life-cycle for Linux systems.
 %package common
 BuildArch:      noarch
 Summary:        Common bits for all Katello instances
+%if 0%{?fedora} == 18
+Requires:       httpd >= 2.4.4
+%else
 Requires:       httpd
+%endif
 Requires:       mod_ssl
 Requires:       openssl
 Requires:       elasticsearch
