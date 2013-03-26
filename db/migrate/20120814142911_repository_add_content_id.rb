@@ -9,7 +9,7 @@ class RepositoryAddContentId < ActiveRecord::Migration
       split_id = group_id.split(':')
       if split_id.length == 2 && split_id[0] == 'content'
         group['repo_ids'].each do |repo_id|
-          repo = Reepository.where(:pulp_id=>repo_id)
+          repo = Repository.where(:pulp_id=>repo_id).first
           repo.content_id = split_id[1]
           repo.save!
         end
