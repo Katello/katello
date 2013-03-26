@@ -212,6 +212,8 @@ describe Api::ActivationKeysController do
       @pool_in_activation_key = ::Pool.create!(:cp_id => "pool-123")
       @pool_not_in_activation_key = ::Pool.create!(:cp_id => "pool-456")
 
+      disable_pools_orchestration
+
       KeyPool.create!(:activation_key_id => @activation_key.id, :pool_id => @pool_in_activation_key.id)
       ActivationKey.stub!(:find).and_return(@activation_key)
       ::Pool.stub(:find_by_organization_and_id).and_return do |org,poolid|
