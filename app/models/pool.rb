@@ -20,7 +20,7 @@ class Pool < ActiveRecord::Base
 
   # ActivationKey includes the Pool's json in its own'
   def as_json(*args)
-    {:cp_id => self.cp_id}
+    self.remote_data.merge(:cp_id => self.cp_id)
   end
 
   # If the pool_json is passed in, then candlepin is not hit again to fetch it. This is for the case where
