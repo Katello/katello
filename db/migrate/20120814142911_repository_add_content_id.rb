@@ -13,7 +13,7 @@ class RepositoryAddContentId < ActiveRecord::Migration
           repo.content_id = split_id[1]
           repo.save!
         end
-        Runcible::Resources::RepositoryGroup.destroy(group_id)
+        Runcible::Resources::RepositoryGroup.delete(group_id)
       end
     end 
     
