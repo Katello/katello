@@ -106,13 +106,44 @@ class ContentViewDefinition < ContentViewDefinitionBase
       end
     end
 
-    # TODO find a quick way to remove empty errata and package groups
-    # Remove all errata with no packages
-    # Remove all  package groups with no packages
+    cloned_repos.each do |repo|
+
+      package_lists = repo.package_lists_for_publish
+      rpm_names = package_lists[:names]
+      filenames = package_lists[:filenames]
+
+      # Remove all errata with no packages
+      errata_to_delete = repo.errata.collect do |erratum|
+        erratum.errata_id if (erratum.package_filenames.to_set - filenames).size == erratum.package_filenames.size
+      end.compact
+
+      #do the errata remove call
+      unless errata_to_delete.empty?
+        repo.unassociate_by_filter(FilterRule::ERRATA, {"id" => {"$in" => errata_to_delete}})
+      end
+
+
+      # Remove all  package groups with no packages
+      package_groups_to_delete = repo.package_groups.collect do |package_group|
+        package_names = []
+        [:default_package_names, :conditional_package_names,
+                    :optional_package_names, :mandatory_package_names].each do |key|
+          values = package_group[key].collect do |v|
+            v.split(",")
+          end.flatten
+          package_names.concat(values)
+        end
+        package_group[:id] if (package_names.to_set - rpm_names).size == package_names.size
+      end.compact
+      unless package_groups_to_delete.empty?
+        repo.unassociate_by_filter(FilterRule::PACKAGE_GROUP, {"id" => {"$in" => package_groups_to_delete}})
+      end
+
+    end
+
+
 
     #TODO
-
-
     # update search indices for package and errata
     cloned_repos.each do |repo|
       repo.index_errata
@@ -203,7 +234,16 @@ class ContentViewDefinition < ContentViewDefinitionBase
 
   protected
 
-    def generate_unassociate_filter_clauses(repo, content_type)
+  #convert date, time from UI to object
+  def convert_date(date)
+    return nil if date.blank?
+    sync_event = date +  ' '  + DateTime.now.zone
+    DateTime.strptime(sync_event, "%m/%d/%Y %:z")
+  rescue ArgumentError
+    raise _("Invalid date or time format")
+  end
+
+  def generate_unassociate_filter_clauses(repo, content_type)
       # find applicable filters
       # split filter rules by content type, since each content type has its own copy call
       # depending on include or exclude filters combine or remove
@@ -230,9 +270,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
       #
       if excludes_count > 0
         excludes = exclusion_rules.collect do |x|
-          x.parameters[:units].collect do |unit|
-            {'name' =>{"$regex" => unit[:name]}}
-          end
+          generate_rule_clauses(x)
         end.flatten
         clauses << {'$or' =>excludes}
       end
@@ -242,9 +280,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
       #  Everything else is thus excluded.
       if includes_count > 0
         includes = inclusion_rules.collect do |x|
-          x.parameters[:units].collect do |unit|
-            {'name' =>{"$regex" => unit[:name]}}
-          end
+          generate_rule_clauses(x)
         end.flatten
         clauses << {'$nor' => includes}
       end
@@ -272,6 +308,52 @@ class ContentViewDefinition < ContentViewDefinitionBase
          else
            #ignore
       end
+  end
+
+  def generate_rule_clauses(rule)
+    case rule.content_type
+      when FilterRule::PACKAGE
+        rule.parameters[:units].collect do |unit|
+          {'name' => {"$regex" => unit[:name]}}
+        end
+      when FilterRule::PACKAGE_GROUP
+        rule.parameters[:units].collect do |unit|
+          {'name' => {"$regex" => unit[:name]}}
+        end
+      when FilterRule::ERRATA
+        rule_clauses = []
+        if rule.parameters.has_key? :units
+          ids = rule.parameters[:units].collect do |unit|
+            unit[:id]
+          end
+          {"id" => {"$in" => ids}}
+        else
+          if rule.parameters.has_key? :date_range
+            date_range = rule.parameters[:date_range]
+            dr = {}
+            dr["$gte"] = convert_date(date_range[:start]).as_json if date_range.has_key? :start
+            dr["$lte"] = convert_date(date_range[:end]).as_json if date_range.has_key? :end
+            rule_clauses << {"issued" => dr}
+          end
+          if rule.parameters.has_key? :errata_type
+            unless rule.parameters[:errata_type].empty?
+              # {"type": {"$in": ["security", "enhancement", "bugfix"]}
+              rule_clauses << {"type" => {"$in" => rule.parameters[:errata_type]}}
+            end
+          end
+
+          case rule_clauses.size
+            when 1
+              return rule_clauses.first
+            when 2
+              return {'$and' => rule_clauses}
+            else
+              #ignore
+          end
+        end
+      else
+        #do nothing
+    end
   end
 
   def views_repos

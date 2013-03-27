@@ -178,6 +178,23 @@ module Glue::Pulp::Repo
       Runcible::Extensions::Repository.rpm_ids(self.pulp_id)
     end
 
+
+    def package_lists_for_publish
+      names = []
+      filenames = []
+
+      rpms = Runcible::Extensions::Repository.unit_search(self.pulp_id,
+                                                   :type_ids=>['rpm'],
+                                                   :fields =>{:unit=>["filename", "name"]})
+
+      rpms.each do |i|
+        filenames << i["metadata"]["filename"]
+        names << i["metadata"]["name"]
+      end
+      {:names=> names.to_set,
+       :filenames => filenames.to_set}
+    end
+
     def packages
       if @repo_packages.nil?
         #we fetch ids and then fetch packages by id, because repo packages
