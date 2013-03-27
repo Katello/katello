@@ -16,7 +16,6 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
 
   before_filter :find_organization
   before_filter :authorize
-  before_filter :check_keyname, :except => :apply_to_all
   before_filter :check_informable_type
 
   def rules
@@ -68,12 +67,6 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
   end
 
   private
-
-  def check_keyname
-    if params[:keyname].nil?
-      raise HttpErrors::BadRequest, _("A keyname must be provided")
-    end
-  end
 
   def check_informable_type
     Organization.check_informable_type!(params[:informable_type],
