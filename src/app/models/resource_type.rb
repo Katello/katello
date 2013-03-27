@@ -103,7 +103,6 @@ class ResourceType < ActiveRecord::Base
   if Katello.config.katello?
     TYPES = {
         :organizations => {:model => Organization, :name => _("Organizations"), :global=>false},
-        :system_templates => {:model=>SystemTemplate, :name=>_("System Templates"), :global=>false},
         :environments => {:model => KTEnvironment, :name => _("Environments"), :global=>false},
         :activation_keys => { :model => ActivationKey, :name => _("Activation Keys"), :global=>false},
         :system_groups => {:model => SystemGroup, :name=>_("System Groups"), :global=>false},

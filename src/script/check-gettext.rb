@@ -48,7 +48,7 @@ Dir.glob(File.join(dir, "**", "*")).each do |file|
   next if File.directory?(file)
   next if File.symlink?(file)
   next if file.include?("/vendor/converge-ui/") # we skip converge-ui for now
-  next if file.end_with?("script/check-gettext.rb") # we don't check this very file
+  next if file.end_with?("check-gettext.rb") # we don't check this very file
   relative_file = file.sub(/^#{Regexp.escape(dir)}/, "")
   file_content = File.read(file)
   begin

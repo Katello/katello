@@ -23,8 +23,19 @@ module Authorization::Product
     scope :all_editable, lambda {|org| ::Provider.editable(org).joins(:provider)}
     scope :editable, lambda {|org| all_editable(org).with_enabled_repos_only(org.library)}
     scope :syncable, lambda {|org| sync_items(org).with_enabled_repos_only(org.library)}
-  end
 
+    def readable?
+      Product.all_readable(self.organization).where(:id => id).count > 0
+    end
+
+    def syncable?
+      Product.syncable(self.organization).where(:id => id).count > 0
+    end
+
+    def editable?
+      Product.all_editable(self.organization).where(:id => id).count > 0
+    end
+  end
 
   module ClassMethods
     def readable(org)
@@ -45,21 +56,6 @@ module Authorization::Product
 
     def sync_items org
       org.syncable? ? (joins(:provider).where('providers.organization_id' => org)) : where("0=1")
-    end
-  end
-
-
-  module InstanceMethods
-    def readable?
-      Product.all_readable(self.organization).where(:id => id).count > 0
-    end
-
-    def syncable?
-      Product.syncable(self.organization).where(:id => id).count > 0
-    end
-
-    def editable?
-      Product.all_editable(self.organization).where(:id => id).count > 0
     end
   end
 

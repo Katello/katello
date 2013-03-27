@@ -53,7 +53,6 @@ class DeletionChangeset < Changeset
     @affected_repos = Set.new
     delete_products(from_env)
     update_progress! '30'
-    delete_templates(from_env)
     update_progress! '50'
     delete_repos from_env
     update_progress! '60'
@@ -93,13 +92,6 @@ class DeletionChangeset < Changeset
     end
     index_repo_content from_env
     raise e
-  end
-
-
-  def delete_templates from_env
-    self.system_templates.each do |tpl|
-       tpl.remove(from_env)
-    end
   end
 
   def delete_products from_env

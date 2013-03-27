@@ -32,8 +32,9 @@ class Organization < ActiveRecord::Base
   has_many :permissions, :dependent => :destroy, :inverse_of => :organization
   has_many :sync_plans, :dependent => :destroy, :inverse_of => :organization
   has_many :system_groups, :dependent => :destroy, :inverse_of => :organization
-  has_many :content_view_definitions
-  has_many :content_views
+  has_many :content_view_definitions, :class_name => "ContentViewDefinitionBase",
+    :dependent=> :destroy
+  has_many :content_views, :dependent=> :destroy
   serialize :default_info, Hash
 
   attr_accessor :statistics
@@ -47,9 +48,9 @@ class Organization < ActiveRecord::Base
   before_save :initialize_default_info
 
   validates :name, :uniqueness => true, :presence => true
+  validates_with Validators::NonHtmlNameValidator, :attributes => :name
   validates :label, :uniqueness => { :message => _("already exists (including organizations being deleted)") },
             :presence => true
-  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validate :unique_name_and_label
@@ -73,6 +74,10 @@ class Organization < ActiveRecord::Base
     else
       true
     end
+  end
+
+  def default_content_view
+    ContentView.default.where(:organization_id=>self.id).first
   end
 
   def systems

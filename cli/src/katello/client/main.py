@@ -36,7 +36,6 @@ from katello.client.core import (
   task,
   sync_plan,
   shell_command,
-  template,
   changeset,
   client,
   gpg_key,
@@ -242,17 +241,6 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         sync_plan_cmd.add_command('update', sync_plan.Update())
         sync_plan_cmd.add_command('delete', sync_plan.Delete())
         katello_cmd.add_command('sync_plan', sync_plan_cmd)
-
-    if mode == 'katello':
-        template_cmd = template.Template()
-        template_cmd.add_command('create', template.Create())
-        template_cmd.add_command('import', template.Import())
-        template_cmd.add_command('export', template.Export())
-        template_cmd.add_command('list', template.List())
-        template_cmd.add_command('info', template.Info())
-        template_cmd.add_command('update', template.Update())
-        template_cmd.add_command('delete', template.Delete())
-        katello_cmd.add_command('template', template_cmd)
 
     katello_cmd.add_command('shell', shell_command.ShellAction(katello_cmd))
 
