@@ -17,6 +17,11 @@
 
 import os
 
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
 from katello.client.lib.ui.formatters import format_sync_errors, format_sync_status
 from katello.client.api.task_status import TaskStatusAPI, SystemTaskStatusAPI
 from katello.client.api.job import SystemGroupJobStatusAPI
@@ -71,7 +76,7 @@ class AsyncTask():
         return not self.is_running()
 
     def failed(self):
-        return len([t for t in self._tasks if t['state'] in ('error', 'timed out')])
+        return len([t for t in self._tasks if t['state'] in ('error', 'timed out', 'failed')])
 
     def canceled(self):
         return len([t for t in self._tasks if t['state'] in ('cancelled', 'canceled')])
@@ -132,6 +137,57 @@ class SystemAsyncTask(AsyncTask):
 
     def status_messages(self):
         return [task["result_description"] for task in self._tasks]
+
+
+class ImportManifestAsyncTask(AsyncTask):
+
+    def display_message(self):
+        """
+        The message coming back with this task can contain stack trace and other unformatted
+        data. The relevant user message is found and displayed.
+        """
+        message = ""
+        for task in self._tasks:
+            # First element is message data, second is stack trace
+            #
+            # Resources::Candlepin::Owner: 409 Conflict {
+            #   "displayMessage" : "Import is the same as existing data",
+            #   "conflicts" : [ "MANIFEST_SAME" ]
+            #   } (POST /candlepin/owners/Engineering/imports)
+            #
+            m = task["result"]["errors"][0]
+            if m.startswith("Resources::Candlepin::Owner"):
+                j = json.loads(m[m.index('{'):m.index('}')+1])
+                message += " " + j['displayMessage']
+            else:
+                message += m
+        return str(message)
+
+    def evaluate_task_status(self, failed="", canceled="", ok=""):
+        """
+        Test task status and print the corresponding message
+
+        :type failed: string
+        :param failed: message that is printed when the task failed
+        :type canceled: string
+        :param canceled:  message that is printed when the task was cancelled
+        :type ok: string
+        :param ok:  message that is printed when the task went ok
+        :return: EX_DATAERR on failure or cancel, otherwise EX_OK
+        """
+
+        if self.failed():
+            print failed + ":" + self.display_message()
+            return os.EX_DATAERR
+        elif self.canceled():
+            print canceled
+            return os.EX_DATAERR
+        else:
+            if "status_messages" in dir(self):
+                print ok + ":" + self.display_message()
+            else:
+                print ok
+            return os.EX_OK
 
 
 def progress(left, total):

@@ -558,7 +558,7 @@ describe System do
       Katello.config.stub!(:katello?).and_return(false)
     end
 
-    it "should be deletable", :katello => true do #TODO headpin
+    pending "should be deletable", :headpin => true do #TODO headpin
       User.current =  user_with_permissions { |u| u.can(:delete_systems, :organizations, nil, @organization) }
       System.readable(@organization).should include(@system)
       System.any_readable?(@organization).should == true
@@ -571,7 +571,7 @@ describe System do
       @system.deletable?.should == true
     end
 
-    it "should be editable", :katello => true do #TODO headpin
+    pending "should be editable", :headpin => true do #TODO headpin
       User.current =  user_with_permissions { |u| u.can(:update_systems, :organizations, nil, @organization) }
       System.readable(@organization).should include(@system)
       System.any_readable?(@organization).should == true
@@ -584,7 +584,7 @@ describe System do
       @system.deletable?.should == false
     end
 
-    it "should be registerable", :katello => true do #TODO headpin
+    pending "should be registerable", :headpin => true do #TODO headpin
       User.current =  user_with_permissions { |u| u.can(:register_systems, :organizations, nil, @organization) }
       System.readable(@organization).should include(@system)
       System.any_readable?(@organization).should == true
