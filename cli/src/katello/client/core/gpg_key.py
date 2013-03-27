@@ -160,7 +160,7 @@ class Update(GpgKeyAction):
                                help=_("GPG key name (required)"))
         opt_parser_add_org(parser, required=1)
         parser.add_option('--new_name', dest='new_name',
-                              help=_("new template name"))
+                              help=_("new key name"))
         parser.add_option('--file', dest='file',
                                help=_("file with public GPG key"))
         parser.add_option('--new_content', dest='new_content', action='store_true',

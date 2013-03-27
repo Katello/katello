@@ -30,15 +30,12 @@ class ActivationKeyAPI(KatelloAPI):
         path = "/api/organizations/%s/activation_keys/%s/" % (orgId, keyId)
         return self.server.GET(path)[1]
 
-    def create(self, envId, name, description, usage_limit=-1, templateId=None, view_id=None):
+    def create(self, envId, name, description, usage_limit=-1, view_id=None):
         keyData = {
             "name": name,
             "description": description,
             "usage_limit": usage_limit
         }
-
-        if templateId != None:
-            keyData["system_template_id"] = templateId
 
         if view_id:
             keyData["content_view_id"] = view_id
@@ -46,12 +43,11 @@ class ActivationKeyAPI(KatelloAPI):
         path = "/api/environments/%s/activation_keys/" % envId
         return self.server.POST(path, {'activation_key': keyData})[1]
 
-    def update(self, orgId, keyId, environmentId, name, description, templateId, usage_limit, view_id):
+    def update(self, orgId, keyId, environmentId, name, description, usage_limit, view_id):
         keyData = {}
         keyData = update_dict_unless_none(keyData, "environment_id", environmentId)
         keyData = update_dict_unless_none(keyData, "name", name)
         keyData = update_dict_unless_none(keyData, "description", description)
-        keyData = update_dict_unless_none(keyData, "system_template_id", templateId)
         keyData = update_dict_unless_none(keyData, "usage_limit", usage_limit)
         keyData = update_dict_unless_none(keyData, "content_view_id", view_id)
 

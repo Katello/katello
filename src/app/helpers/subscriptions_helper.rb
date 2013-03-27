@@ -22,6 +22,8 @@ module SubscriptionsHelper
   def subscriptions_system_link_helper host_id
     system = System.first(:conditions => { :uuid => host_id })
     link_to system.name, root_path + "systems#panel=system_#{system.id}"
+  rescue
+    _('System with uuid %s not found') % host_id
   end
 
   def subscriptions_activation_key_link_helper key

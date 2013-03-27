@@ -27,11 +27,8 @@ describe ActivationKey do
     @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
     @environment_1 = KTEnvironment.create!(:name=>'dev', :label=> 'dev', :prior => @organization.library.id, :organization => @organization)
     @environment_2 = KTEnvironment.create!(:name=>'test', :label=> 'test', :prior => @environment_1.id, :organization => @organization)
-    @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @environment_1) if Katello.config.katello?
-    @system_template_2 = SystemTemplate.create!(:name => 'template2', :environment => @environment_1) if Katello.config.katello?
-    @system_template_env2 = SystemTemplate.create!(:name => 'template3', :environment => @environment_2) if Katello.config.katello?
     @akey = ActivationKey.create!(:name => aname, :description => adesc, :organization => @organization,
-                                  :environment_id => @environment_1.id, :system_template_id => @system_template_1.id) if Katello.config.katello?
+                                  :environment_id => @environment_1.id) if Katello.config.katello?
     @akey = ActivationKey.create!(:name => aname, :description => adesc, :organization => @organization,
                                   :environment_id => @environment_1.id) unless Katello.config.katello?
   end
@@ -75,15 +72,6 @@ describe ActivationKey do
       @akey.errors[:environment].should_not be_empty
     end
 
-    it "should be invalid if system template in another environment", :katello => true do
-      @akey.name = 'invalid key'
-      @akey.organization=@organization
-      @akey.environment = @environment_1
-      @akey.system_template = @system_template_env2
-      @akey.should_not be_valid
-      @akey.errors[:system_template].should_not be_empty
-    end
-
   end
 
   it "should be able to create" do
@@ -113,13 +101,6 @@ describe ActivationKey do
       b = ActivationKey.update(a.id, {:environment => @environment_2})
       b.environment.should == @environment_2
     end
-
-    it "system template", :katello => true do
-      a = ActivationKey.find_by_name(aname)
-      a.should_not be_nil
-      b = ActivationKey.update(a.id, {:system_template_id => @system_template_2.id})
-      b.system_template_id.should == @system_template_2.id
-    end
   end
 
   describe "adding systems groups" do
@@ -145,7 +126,7 @@ describe ActivationKey do
 
   describe "pools in a activation key" do
     before(:each) do
-      Resources::Candlepin::Pool.stub(:find).and_return(true)
+      disable_pools_orchestration
     end
 
     it "should map 2way pool to keys" do
@@ -163,10 +144,11 @@ describe ActivationKey do
     end
 
     it "should include pools details in json output" do
+      Resources::Candlepin::Pool.stub!(:find).and_return({'productName' => 'p123'})
       pool = ::Pool.create!(:cp_id  => 'abc123')
       @akey.pools << pool
       pool.reload
-      @akey.as_json[:pools].should == [ { :cp_id => pool.cp_id } ]
+      @akey.as_json[:pools].first.should include(:cp_id => pool.cp_id, 'productName' => 'p123')
     end
   end
 
@@ -183,11 +165,6 @@ describe ActivationKey do
     it "assignes environment to the system" do
       @akey.apply_to_system(@system)
       @system.environment.should == @akey.environment
-    end
-
-    it "assignes template to the system", :katello => true do
-      @akey.apply_to_system(@system)
-      @system.system_template.should == @akey.system_template
     end
 
     it "creates an association between the activation key and the system" do

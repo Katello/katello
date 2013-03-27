@@ -20,7 +20,6 @@
                 - @path.each_with_index do |env, count|
                   %li
                     %a{"data-env_id"=> env.id, "data-url"=>env_select_url(url_proc, env, @path[count+1], @organization),
-                       "data-templates_url"=>env_select_url(url_templates_proc, env, @path[count+1], @organization),
                        "data-products_url"=>env_select_url(url_products_proc, env, @path[count+1], @organization),
                        "data-content_views_url"=>env_select_url(url_content_views_proc, env, @path[count+1], @organization),
                        :class=>env_select_class(env, @environment, @path, @path, accessible_envs, library_clickable)}
@@ -36,7 +35,6 @@
                   - path.each_with_index do |env, count|
                     %li
                       %a{"data-env_id"=> env.id, "data-url"=>env_select_url(url_proc, env, path[count+1], @organization),
-                         "data-templates_url"=>env_select_url(url_templates_proc, env, @path[count+1], @organization),
                          "data-products_url"=>env_select_url(url_products_proc, env, @path[count+1], @organization),
                          "data-content_views_url"=>env_select_url(url_content_views_proc, env, @path[count+1], @organization),
                          :class=>env_select_class(env, @environment, @path, path, accessible_envs, library_clickable)}

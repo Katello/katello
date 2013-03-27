@@ -30,7 +30,6 @@ class PromotionsController < ApplicationController
     {
       :show => show_test,
       :content_views => content_view_test,
-      :system_templates => lambda{true},
       :packages => prod_test,
       :repos => prod_test,
       :errata => prod_test,
@@ -258,11 +257,6 @@ class PromotionsController < ApplicationController
                                                   :next_env_view_version_ids => next_env_view_version_ids}
   end
 
-  def system_templates
-    # render the list of system_templates
-    render :partial=>"system_templates", :locals => {:system_templates => templates}
-  end
-
   private
 
   def find_environment
@@ -283,10 +277,5 @@ class PromotionsController < ApplicationController
     envs += KTEnvironment.changesets_readable(current_organization).all.map { |env| env.prior if env.prior }.compact
     envs.uniq
   end
-
-  def templates
-    @environment.system_templates || []
-  end
-  helper_method :templates
 
 end

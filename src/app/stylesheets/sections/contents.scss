@@ -43,25 +43,6 @@ $container_width: ($static_width/2) - 36;
     @include action-icon($play_icon_black);
   }
 
-  #edit_template_icon {
-    @include action-icon($edit_icon_black);
-  }
-  #add_template_icon {
-   @include action-icon($circle_x_icon_black);
-  }
-  #remove_template_icon {
-    @include action-icon($circle_x_icon_black);
-  }
-  #save_template_icon {
-    @include action-icon($gears_icon_black);
-  }
-  #download_template_icon {
-    @include action-icon($download_icon_grey);
-    &:hover {
-        @include action-icon($download_icon_black);
-    }
-  }
-
   .warning {
     ul {
       margin-left: 15px;
@@ -286,16 +267,6 @@ $container_width: ($static_width/2) - 36;
   }
 
 
-  #system_templates{
-    .slider {
-      label {
-        font-weight: normal;
-        color: $text_color;
-      }
-    }
-  }
-
-
   .slide_up_container {
     height: 250px;
     overflow: auto;
@@ -324,19 +295,6 @@ $container_width: ($static_width/2) - 36;
     }
   }
 
-  #template_tree {
-    $template-height: 400px;
-    $template-width: 48%;
-    width: $template-width;
-     .slider {
-        overflow: auto;
-        height: $template-height;
-        min-height: $template-height;
-     }
-
-
-  }
-
   .content_input_item {
     &:hover {
       background-color: $white_color;
@@ -361,13 +319,6 @@ $container_width: ($static_width/2) - 36;
     
     .cs_history_entry {
       margin-left: 30px;
-    }
-  }
-
-
-  #system_template_promotion_tabs {
-    .system_templates_tab {
-      height: 200px;
     }
   }
 

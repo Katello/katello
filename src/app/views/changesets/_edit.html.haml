@@ -39,20 +39,11 @@
     #changeset_history_tabs
       .grid_10
         %h2 #{_("Contents:")}
-        -if @changeset.involved_products.empty? && @changeset.content_views.empty? && @changeset.system_templates.empty?
+        -if @changeset.involved_products.empty? && @changeset.content_views.empty?
           .grid_7.prefix_1
             #{_("This changeset contains no content.")}
         -else
           #accordion.grid_8.prefix_1.cs_history_tab
-            - if !@changeset.system_templates.empty?
-              %h3
-                %a{:href=>'#'}= _("System Templates")
-              #system_templates.cs_history_tab
-                %ul
-                -for template in @changeset.system_templates
-                  %li
-                    = template.name
-
             - if !@changeset.products.empty?
               %h3
                 %a{:href=>'#'} #{_("Full Products")}

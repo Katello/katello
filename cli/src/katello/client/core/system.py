@@ -159,9 +159,6 @@ class Info(SystemAction):
         self.printer.add_column('ram', _("RAM (MB)"))
         self.printer.add_column('serviceLevel', _("Service Level"))
         self.printer.add_column('guests', _("Guests"), show_with=printer.VerboseStrategy)
-        if "template" in system:
-            self.printer.add_column('template', _("Template"), \
-                show_with=printer.VerboseStrategy, value=system["template"]["name"])
         self.printer.add_column('custom_info', _("Custom Info"), multiline=True, show_with=printer.VerboseStrategy)
         self.printer.add_column('content_view', _("Content View"))
 
