@@ -21,11 +21,11 @@ class Api::V1::SystemGroupsController < Api::V1::ApiController
 
   def rules
     any_readable = lambda{@organization && SystemGroup.any_readable?(@organization)}
-    read_perm = lambda{@group.readable?}
-    edit_perm = lambda{@group.editable?}
+    read_perm = lambda{@system_group.readable?}
+    edit_perm = lambda{@system_group.editable?}
     create_perm = lambda{SystemGroup.creatable?(@organization)}
-    destroy_perm = lambda{@group.deletable?}
-    destroy_systems_perm = lambda{@group.systems_deletable?}
+    destroy_perm = lambda{@system_group.deletable?}
+    destroy_systems_perm = lambda{@system_group.systems_deletable?}
     { :index           => any_readable,
       :show            => read_perm,
       :systems         => read_perm,
@@ -68,14 +68,14 @@ class Api::V1::SystemGroupsController < Api::V1::ApiController
   param :name, String, :desc => "System group name to filter by"
   def index
     query_params.delete(:organization_id)
-    render :json => SystemGroup.readable(@organization).where(query_params)
+    respond :collection => SystemGroup.readable(@organization).where(query_params)
   end
 
   api :GET, "/organizations/:organization_id/system_groups/:id", "Show a system group"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :id, :identifier, :desc => "Id of the system group", :required => true
   def show
-    render :json => @group.to_json(:methods => :total_systems)
+    respond
   end
 
   api :PUT, "/organizations/:organization_id/system_groups/:id", "Update a system group"
@@ -87,16 +87,16 @@ class Api::V1::SystemGroupsController < Api::V1::ApiController
     if grp_param[:system_ids]
       grp_param[:system_ids] = system_uuids_to_ids(grp_param[:system_ids])
     end
-    @group.attributes = grp_param.slice(:name, :description, :system_ids, :max_systems)
-    @group.save!
-    render :json => @group
+    @system_group.attributes = grp_param.slice(:name, :description, :system_ids, :max_systems)
+    @system_group.save!
+    respond
   end
 
   api :GET, "/organizations/:organization_id/system_groups/:id/systems", "List systems in the group"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :id, :identifier, :desc => "Id of the system group", :required => true
   def systems
-    render :json => @group.systems.collect{|sys| {:id=>sys.uuid, :name=>sys.name}}
+    respond_for_index :collection => @system_group.systems.collect{|sys| {:id=>sys.uuid, :name=>sys.name}}
   end
 
   api :POST, "/organizations/:organization_id/system_groups/:id/add_systems", "Add systems to the group"
@@ -108,9 +108,9 @@ class Api::V1::SystemGroupsController < Api::V1::ApiController
 
   def add_systems
     ids = system_uuids_to_ids(params[:system_group][:system_ids])
-    @systems = System.readable(@group.organization).where(:id=>ids)
-    @group.system_ids = (@group.system_ids + @systems.collect{|s| s.id}).uniq
-    @group.save!
+    @systems = System.readable(@system_group.organization).where(:id=>ids)
+    @system_group.system_ids = (@system_group.system_ids + @systems.collect{|s| s.id}).uniq
+    @system_group.save!
     systems
   end
 
@@ -122,9 +122,9 @@ class Api::V1::SystemGroupsController < Api::V1::ApiController
   end
   def remove_systems
     ids = system_uuids_to_ids(params[:system_group][:system_ids])
-    system_ids = System.readable(@group.organization).where(:id=>ids).collect{|s| s.id}
-    @group.system_ids = (@group.system_ids - system_ids).uniq
-    @group.save!
+    system_ids = System.readable(@system_group.organization).where(:id=>ids).collect{|s| s.id}
+    @system_group.system_ids = (@system_group.system_ids - system_ids).uniq
+    @system_group.save!
     systems
   end
 
@@ -132,8 +132,8 @@ class Api::V1::SystemGroupsController < Api::V1::ApiController
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :id, :identifier, :desc => "Id of the system group", :required => true
   def history
-    jobs = @group.refreshed_jobs
-    render :json => jobs
+    jobs = @system_group.refreshed_jobs
+    respond_for_index :collection => jobs
   end
 
   api :GET ,"/organizations/:organization_id/system_groups/:id/history", "History of a job performed on a system group"
@@ -141,8 +141,8 @@ class Api::V1::SystemGroupsController < Api::V1::ApiController
   param :id, :identifier, :desc => "Id of the system group", :required => true
   param :job_id, :identifier, :desc => "Id of a job for filtering"
   def history_show
-    job = @group.refreshed_jobs.where(:id => params[:job_id]).first
-    render :json => job
+    job = @system_group.refreshed_jobs.where(:id => params[:job_id]).first
+    respond_for_show :resource => job
   end
 
   api :POST, "/organizations/:organization_id/system_groups", "Create a system group"
@@ -153,46 +153,54 @@ class Api::V1::SystemGroupsController < Api::V1::ApiController
     if grp_param[:system_ids]
       grp_param[:system_ids] = system_ids_to_uuids(grp_param[:system_ids])
     end
-    @group = SystemGroup.new(grp_param)
-    @group.organization = @organization
-    @group.save!
-    render :json => @group
+    @system_group = SystemGroup.new(grp_param)
+    @system_group.organization = @organization
+    @system_group.save!
+    respond
   end
 
+  api :POST, "/organizations/:organization_id/system_groups/:id/copy", "Make copy of a system group"
+  param :organization_id, :identifier, :desc => "organization identifier", :required => true
+  param :id, :identifier, :desc => "Id of the system group", :required => true
+  param :system_group, Hash, :required => true, :action_aware => true do
+    param :new_name, String, :required => true, :desc => "System group name"
+    param :description, String
+    param :max_systems, Integer, :desc => "Maximum number of systems in the group"
+  end
   def copy
-    if @organization.id != @group.organization.id
+    if @organization.id != @system_group.organization.id
       raise HttpErrors::BadRequest,
-        _("Can't copy System Groups to a different org: '%{org1}' != '%{org2}'") % {:org1 => @organization.id, :org2 => @group.organization.id}
+        _("Can't copy System Groups to a different org: '%{org1}' != '%{org2}'") % {:org1 => @organization.id, :org2 => @system_group.organization.id}
     end
     grp_param = params[:system_group]
     new_group = SystemGroup.new
     new_group.name = grp_param[:new_name]
-    new_group.organization = @group.organization
+    new_group.organization = @system_group.organization
 
     # Check API params and if not set use the existing group
     if grp_param[:description]
       new_group.description = grp_param[:description]
     else
-      new_group.description = @group.description
+      new_group.description = @system_group.description
     end
     if grp_param[:max_systems]
       new_group.max_systems = grp_param[:max_systems]
     else
-      new_group.max_systems = @group.max_systems
+      new_group.max_systems = @system_group.max_systems
     end
     new_group.save!
 
-    new_group.systems = @group.systems
+    new_group.systems = @system_group.systems
     new_group.save!
-    render :json => new_group
+    respond_for_create :resource => new_group
   end
 
   api :DELETE, "/organizations/:organization_id/system_groups/:id", "Destroy a system group"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :id, :identifier, :desc => "Id of the system group", :required => true
   def destroy
-    @group.destroy
-    render :text => _("Deleted system group '%s'") % params[:id], :status => 200
+    @system_group.destroy
+    respond :message => _("Deleted system group '%s'") % params[:id]
   end
 
   api :DELETE, "/organizations/:organization_id/system_groups/:id/destroy_systems",
@@ -202,14 +210,14 @@ class Api::V1::SystemGroupsController < Api::V1::ApiController
   def destroy_systems
     # this will destroy both the systems contained within the group as well as the group itself
     system_names = []
-    @group.systems.each do |system|
+    @system_group.systems.each do |system|
       system_names.push(system.name)
       system.destroy
     end
-    @group.destroy
+    @system_group.destroy
 
-    result = _("Deleted system group '%{s}' and it's %{n} systems.") % {:s => @group.name, :n =>system_names.length.to_s}
-    render :text => result, :status => 200
+    result = _("Deleted system group '%{s}' and it's %{n} systems.") % {:s => @system_group.name, :n =>system_names.length.to_s}
+    respond_for_destroy :message => result
   end
 
   api :PUT, "/organizations/:organization_id/system_groups/:id/update_systems",
@@ -223,20 +231,20 @@ class Api::V1::SystemGroupsController < Api::V1::ApiController
   def update_systems
     unless params[:system_group].blank?
       ActiveRecord::Base.transaction do
-        @group.systems.each do |system|
+        @system_group.systems.each do |system|
           system.update_attributes!(params[:system_group])
         end
       end
     end
 
-    render :json => @group
+    respond_for_show
   end
 
   private
 
   def find_group
-    @group = SystemGroup.where(:id=>params[:id]).first
-    raise HttpErrors::NotFound, _("Couldn't find system group '%s'") % params[:id] if @group.nil?
+    @system_group = SystemGroup.where(:id=>params[:id]).first
+    raise HttpErrors::NotFound, _("Couldn't find system group '%s'") % params[:id] if @system_group.nil?
   end
 
   def system_uuids_to_ids  ids
