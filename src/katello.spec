@@ -673,6 +673,7 @@ usermod -a -G katello-shared tomcat
 %exclude %{homedir}/lib/tasks/jsroutes.rake
 %exclude %{homedir}/lib/tasks/jshint.rake
 %exclude %{homedir}/lib/tasks/test.rake
+%exclude %{homedir}/lib/tasks/simplecov.rake
 %exclude %{homedir}/script/pulp_integration_tests
 %{homedir}/locale
 %{homedir}/public
@@ -761,6 +762,7 @@ usermod -a -G katello-shared tomcat
 %exclude %{homedir}/app/controllers/foreman
 %exclude %{homedir}/app/views/foreman
 %exclude %{homedir}/lib/tasks/test.rake
+%exclude %{homedir}/lib/tasks/simplecov.rake
 %{homedir}/app/stylesheets
 %{homedir}/app/views
 %{homedir}/autotest
@@ -835,6 +837,7 @@ usermod -a -G katello-shared tomcat
 %files devel-test
 %{homedir}/bundler.d/test.rb
 %{homedir}/lib/tasks/test.rake
+%{homedir}/lib/tasks/simplecov.rake
 %{homedir}/script/pulp_integration_tests
 
 %files devel-checking
