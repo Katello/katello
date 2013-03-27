@@ -16,20 +16,8 @@ class ContentViewDefinition < ContentViewDefinitionBase
   include Ext::LabelFromName
   include Authorization::ContentViewDefinition
   include AsyncOrchestration
-  has_many :content_views, :dependent => :destroy
-  has_many :filters, :inverse_of => :content_view_definition
-  has_many :components, :class_name => "ComponentContentView"
-  has_many :component_content_views, :through => :components,
-    :source => :content_view, :class_name => "ContentView"
-  belongs_to :organization, :inverse_of => :content_view_definitions
-  has_many :content_view_definition_products
-  has_many :products, :through => :content_view_definition_products,
-                      :after_remove => :remove_product
-  has_many :content_view_definition_repositories
-  has_many :repositories, :through => :content_view_definition_repositories,
-                          :after_remove => :remove_repository
-  has_many :filters, :class_name => "Filter", :inverse_of => :content_view_definition
 
+  has_many :content_views, :dependent => :destroy
   has_many :content_view_definition_archives, :foreign_key => :source_id
   alias :archives :content_view_definition_archives
 
