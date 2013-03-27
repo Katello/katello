@@ -191,7 +191,7 @@ describe Provider do
                              :minor => version[:minor],
                              :relative_path=>'/foo',
                              :content_id=>'asdfasdf',
-                             :content_view_version=>ep.environment.default_view_version,
+                             :content_view_version=>ep.environment.default_content_view_version,
                              :feed => 'https://localhost')
           repo.stub(:create_pulp_repo).and_return({})
           repo.save!

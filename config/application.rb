@@ -29,11 +29,18 @@ if File.exist?(File.expand_path('../../Gemfile.in', __FILE__))
   end
 else
   # In Bundler mode we load only specified groups
-  ENV['BUNDLE_GEMFILE'] = File.expand_path('../../Gemfile', __FILE__)
+  if ENV['BUNDLE_GEMFILE']
+    gemfile = ENV['BUNDLE_GEMFILE']
+  else
+    ENV['BUNDLE_GEMFILE'] = File.expand_path('../../Gemfile', __FILE__)
+  end
   if defined?(Bundler)
     basic_groups = [:default]
     if Katello.early_config.katello?
       basic_groups = basic_groups + [:foreman, :pulp]
+    end
+    if Katello.early_config.profiling
+      basic_groups += [:optional]
     end
     groups = case Rails.env.to_sym
              when :build
@@ -148,10 +155,10 @@ old_fast_gettext = !defined?(FastGettext::Version) ||
     # compare versions x.x.x <= 0.6.7
     (FastGettext::Version.split('.').map(&:to_i) <=> [0, 6, 8]) == -1
 
-FastGettext.add_text_domain('app', {
+FastGettext.add_text_domain('katello', {
   :path => File.expand_path("../../locale", __FILE__),
-  :type => :po,
+  :type => :mo,
   :ignore_fuzzy => true
 }.update(old_fast_gettext ? { :ignore_obsolete => true } : { :report_warning => false }))
 
-FastGettext.default_text_domain = 'app'
+FastGettext.default_text_domain = 'katello'

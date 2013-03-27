@@ -118,8 +118,6 @@ class Permission < ActiveRecord::Base
         _("Read Organizations")
       when "Read Environments"
         _("Read Environments")
-      when "Read System_templates"
-        _("Read System Templates")
       when "Read Providers"
         _("Read Providers")
       when "Read Activation_keys"
@@ -141,8 +139,6 @@ class Permission < ActiveRecord::Base
         _("Read Organizations permission")
       when "Read Environments permission"
         _("Read Environments permission")
-      when "Read System_templates permission"
-        _("Read System Templates permission")
       when "Read Providers permission"
         _("Read Providers permission")
       when "Read Activation_keys permission"

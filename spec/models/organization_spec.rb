@@ -125,7 +125,7 @@ describe Organization do
       @organization.environments << @env
       @env.save!
 
-      @organization.destroy
+      @organization.reload.destroy
 
       lambda{Organization.find(org_id)}.should raise_error(ActiveRecord::RecordNotFound)
       #@env.should_receive(:destroy).at_least(:once)
@@ -147,7 +147,7 @@ describe Organization do
       @env2.save!
 
       id1 = @organization.id
-      @organization.destroy
+      @organization.reload.destroy
       lambda{Organization.find(id1)}.should raise_error(ActiveRecord::RecordNotFound)
 
       KTEnvironment.where(:name => env_name).first.should == @env2

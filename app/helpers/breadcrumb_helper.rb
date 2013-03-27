@@ -120,7 +120,6 @@ module ContentBreadcrumbs
    content_crumb_id = "content"
    products_crumb_id = "products"
    content_views_crumb_id = "content_views"
-   templates_crumb_id = "templates"
 
    errata_crumb_id = "errata"
    errata_filters = errata_bc_filters(@environment.name)
@@ -148,9 +147,6 @@ module ContentBreadcrumbs
 
    add_crumb_node!(bc, content_views_crumb_id, content_views_promotion_path(@environment.name), _("Content Views"),
                   [content_crumb_id])
-
-   add_crumb_node!(bc, templates_crumb_id, system_templates_promotion_path(@environment.name),
-                            _("System Templates"), [content_crumb_id])
 
    @products.each do |prod|
      product_id = product_bc_id(prod)
@@ -374,93 +370,5 @@ module RolesBreadcrumbs
 
   def permission_global_bc_id permission
     "permission_global_#{permission.id}"
-  end
-end
-
-
-module TemplateContentBreadcrumb
-
-  def template_content_breadcrumb
-   bc = {}
-
-   products_crumb_id = "products"
-
-   add_crumb_node!(bc, products_crumb_id, "",
-       _("Products"), [], {:cache=>true,
-                       :content=>render(:partial=>"products", :locals=>{:products=>@products})})
-
-   for prod in @products
-     product_id = product_bc_id(prod)
-     #top of this product, only need packages for now
-     add_crumb_node!(bc, product_id, "",
-        prod.name, [products_crumb_id], {:cache=>true, :content=>render(:partial=>"product_detail", :locals=>{:product=>prod})})
-
-     #product.repositories
-     add_crumb_node!(bc, repos_bc_id(prod), product_repos_system_templates_path(:product_id=>prod.id),
-        _("Repositories"), [products_crumb_id, product_id], {:scrollable=>true})
-
-     #product,packages
-     add_crumb_node!(bc, packages_bc_id(prod), product_packages_system_templates_path(:product_id=>prod.id),
-        _("Packages"), [products_crumb_id, product_id], {:scrollable=>true, :searchable=>true})
-
-     #product,comps
-     add_crumb_node!(bc, comps_bc_id(prod), product_comps_system_templates_path(:product_id=>prod.id),
-        _("Package Groups"), [products_crumb_id, product_id], {:scrollable=>true})
-   end
-   bc.to_json
-  end
-
-  def generate_template_breadcrumb
-    bc = {}
-    root_id = "templates"
-
-    add_crumb_node!(bc, root_id, "", _("Templates"), [],
-                    {:client_render => true },
-                    {:templates => template_list})
-
-    @templates.each{|template|
-      template_id = template_bc_id(template)
-      add_crumb_node!(bc, template_id, "", template.name, [root_id], {:client_render => true})
-
-      add_crumb_node!(bc, packages_bc_id(template), "", _("Packages"), [root_id, template_id], {:client_render => true})
-      add_crumb_node!(bc, products_bc_id(template), "", _("Products"), [root_id, template_id], {:client_render => true})
-      add_crumb_node!(bc, repos_bc_id(template), "", _("Repositories"), [root_id, template_id], {:client_render => true})
-      add_crumb_node!(bc, comps_bc_id(template), "", _("Package Groups"), [root_id, template_id], {:client_render => true})
-      add_crumb_node!(bc, distro_bc_id(template), "", _("Selected Distribution"), [root_id, template_id], {:client_render => true})
-    }
-
-    bc.to_json
-  end
-
-  def template_bc_id template
-    "details_#{template.id}"
-  end
-
-  def packages_bc_id template
-    "packages_#{template.id}"
-  end
-
-  def comps_bc_id template
-    "comps_#{template.id}"
-  end
-
-  def repos_bc_id template
-    "repos_#{template.id}"
-  end
-
-  def product_bc_id product
-    "product_#{product.id}"
-  end
-
-  def products_bc_id template
-    "products_#{template.id}"
-  end
-
-  def distro_bc_id template
-    "distribution_#{template.id}"
-  end
-
-  def template_list
-    @templates.collect{|t| {:template_id=>t.id, :template_name=>t.name, :url=>object_system_template_path(t.id)} }
   end
 end
