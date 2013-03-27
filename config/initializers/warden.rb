@@ -1,3 +1,4 @@
+require 'oauth/request_proxy/rack_request'
 
 Rails.configuration.middleware.use RailsWarden::Manager do |config|
   config.failure_app = FailedAuthenticationController
@@ -140,8 +141,9 @@ Warden::Strategies.add(:oauth) do
   def authenticate!
     return fail("no 'katello-user' header") if request.headers['HTTP_KATELLO_USER'].blank?
 
-    consumer_key = OAuth::RequestProxy.proxy(request).oauth_consumer_key
-    signature=OAuth::Signature.build(request) do
+    rack_request = Rack::Request.new(request.env)
+    consumer_key = OAuth::RequestProxy.proxy(rack_request).oauth_consumer_key
+    signature=OAuth::Signature.build(rack_request) do
       [nil, consumer(consumer_key).secret]
     end
 
