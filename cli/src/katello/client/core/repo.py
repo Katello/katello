@@ -314,11 +314,9 @@ class Info(SingleRepoAction):
     def run(self):
         repo = self.get_repo(True)
 
-        repo['url'] = repo['source']['url']
-
         batch_add_columns(self.printer, {'id': _("ID")}, {'name': _("Name")}, \
             {'package_count': _("Package Count")})
-        batch_add_columns(self.printer, {'arch': _("Arch")}, {'url': _("URL")}, \
+        batch_add_columns(self.printer, {'arch': _("Arch")}, {'feed': _("URL")}, \
             show_with=printer.VerboseStrategy)
         self.printer.add_column('last_sync', _("Last Sync"), \
             show_with=printer.VerboseStrategy, formatter=format_sync_time)
