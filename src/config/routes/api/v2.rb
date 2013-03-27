@@ -13,9 +13,24 @@ Src::Application.routes.draw do
     # new v2 routes that point to v2
     scope :module => :v2, :constraints => ApiVersionConstraint.new(:version => 2) do
 
+      # Headpin does not support system creation
+      if Katello.config.katello?
+        onlies = [:show, :destroy, :create, :index, :update]
+      else
+        onlies = [:show, :destroy, :index, :update]
+      end
+
       api_resources :organizations do
         api_resources :environments
         api_resources :providers, :only => [:index]
+        match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
+        api_resources :systems, :only => [:index, :create] do
+          get :report, :on => :collection
+
+          collection do
+            get :tasks
+          end
+        end
         api_resources :products, :only => [:index]
         api_resources :activation_keys, :only => [:index, :create]
         api_resources :content_views, :only => [:index, :create]
@@ -23,6 +38,22 @@ Src::Application.routes.draw do
         api_resources :sync_plans, :only => [:index, :create]
         api_resources :tasks, :only => [:index]
         resource :uebercert, :only => [:show]
+        
+        api_resources :system_groups, :except => [:new, :edit] do
+          member do
+            get :systems
+            get :history
+            match "/history/:job_id" => "system_groups#history_show", :via => :get
+            post :add_systems
+            post :copy
+            post :remove_systems
+            delete :destroy_systems
+          end
+
+          resource :packages, :action => [:create, :update, :destroy], :controller => :system_group_packages
+          api_resources :errata, :only => [:index, :create], :controller => :system_group_errata
+        end
+
       end
 
       api_resources :environments, :only => [:show, :update, :destroy] do
@@ -42,6 +73,28 @@ Src::Application.routes.draw do
           get :releases
           get :repositories
         end
+      end
+      
+      api_resources :systems, :only => onlies do
+        member do
+          get :packages, :action => :package_profile
+          get :errata
+          get :pools
+          get :releases
+          put :enabled_repos
+          post :system_groups, :action => :add_system_groups
+          delete :system_groups, :action => :remove_system_groups
+        end
+        collection do
+          match "/tasks/:id" => "systems#task_show", :via => :get
+        end
+        api_resources :subscriptions, :only => [:create, :index, :destroy] do
+          collection do
+              match '/' => 'subscriptions#destroy_all', :via => :delete
+              match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
+          end
+        end
+        resource :packages, :action => [:create, :update, :destroy], :controller => :system_packages
       end
 
       api_resources :activation_keys, :only => [:destroy, :show, :update] do
@@ -164,62 +217,9 @@ Src::Application.routes.draw do
 
       match '/' => 'root#resource_list'
 
-      # Headpin does not support system creation
-      if Katello.config.katello?
-        onlies = [:show, :destroy, :create, :index, :update]
-      else
-        onlies = [:show, :destroy, :index, :update]
-      end
-
-      api_resources :systems, :only => onlies do
-        member do
-          get :packages, :action => :package_profile
-          get :errata
-          get :pools
-          get :releases
-          put :enabled_repos
-          post :system_groups, :action => :add_system_groups
-          delete :system_groups, :action => :remove_system_groups
-        end
-        collection do
-          match "/tasks/:id" => "systems#task_show", :via => :get
-        end
-        api_resources :subscriptions, :only => [:create, :index, :destroy] do
-          collection do
-              match '/' => 'subscriptions#destroy_all', :via => :delete
-              match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
-          end
-        end
-        resource :packages, :action => [:create, :update, :destroy], :controller => :system_packages
-      end
-
-
       api_resources :organizations do
 
-        api_resources :system_groups, :except => [:new, :edit] do
-          member do
-            get :systems
-            get :history
-            match "/history/:job_id" => "system_groups#history_show", :via => :get
-            post :add_systems
-            post :copy
-            post :remove_systems
-            delete :destroy_systems
-          end
-
-          resource :packages, :action => [:create, :update, :destroy], :controller => :system_group_packages
-          api_resources :errata, :only => [:index, :create], :controller => :system_group_errata
-        end
-
         api_resources :providers, :only => [:index]
-        match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
-        api_resources :systems, :only => [:index, :create] do
-          get :report, :on => :collection
-
-          collection do
-            get :tasks
-          end
-        end
         api_resources :activation_keys, :only => [:index, :create, :destroy, :show, :update] do
           member do
             post :system_groups, :action => :add_system_groups
