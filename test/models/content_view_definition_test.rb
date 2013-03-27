@@ -16,7 +16,7 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
   fixtures :all
 
   def self.before_suite
-    models = ["Organization", "KTEnvironment", "User", "Product", "Repository"]
+    models = ["Organization", "KTEnvironment", "ContentViewEnvironment", "User", "Product", "Repository"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
   end
 
@@ -100,6 +100,10 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     refute_nil content_view
     refute_empty content_view_def.content_views.reload
     assert_includes content_view_def.content_views, content_view
+
+    content_view.versions.each do |v|
+      assert_equal content_view_def.id, v.definition_archive.source_id
+    end
   end
 
   def test_publish_composite
@@ -110,6 +114,15 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     refute_nil content_view
     refute_empty content_view_def.content_views.reload
     assert_includes content_view_def.content_views, content_view
+    content_view.versions.each { |v| refute_nil v.definition_archive }
+  end
+
+  def test_archive
+    content_view_def = FactoryGirl.create(:content_view_definition)
+    assert content_view_def.archive
+    assert_equal 2, ContentViewDefinitionBase.where(:name => content_view_def.name).count
+    assert_equal 2, ContentViewDefinitionBase.where(:label => content_view_def.label).count
+    assert_equal ContentViewDefinitionArchive.find_all_by_label(content_view_def.label), content_view_def.archives
   end
 
 end
