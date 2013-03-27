@@ -219,7 +219,7 @@ module Glue::Provider
       import_logger.add_appenders(output)
 
       options.merge!(:import_logger => import_logger)
-      [Rails.logger, import_logger].each { |l| l.debug "Importing manifest for provider #{name}" }
+      [Rails.logger, import_logger].each { |l| l.debug "Importing manifest for provider #{self.name}" }
 
       begin
         pre_queue.create(:name     => "import manifest #{zip_file_path} for owner: #{self.organization.name}",
@@ -255,24 +255,7 @@ module Glue::Provider
                          :details      => output.read
         end
       rescue => error
-        if error.respond_to?(:response)
-          display_message = error.response # fix add parse displayMessage
-        elsif error.message
-          display_message = error.message
-        else
-          display_message = ""
-        end
-        display_message = ApplicationController.parse_display_message(display_message)
-
-        if options[:notify]
-          Notify.exception import_error_message(display_message), error,
-                           :request_type => 'providers__update_redhat_provider',
-                           :organization => self.organization
-        end
-
-        Rails.logger.error "error uploading subscriptions."
-        Rails.logger.error error
-        Rails.logger.error error.backtrace.join("\n")
+        display_manifest_message('import', error, options)
         raise error
       end
     end
@@ -381,8 +364,12 @@ module Glue::Provider
     end
 
     def queue_delete_manifest options
+      output        = StringIO.new
+      import_logger = Logger.new(output)
+      options.merge!(:import_logger => import_logger)
+      [Rails.logger, import_logger].each { |l| l.debug "Deleting manifest for provider #{self.name}" }
+
       begin
-        Rails.logger.debug "Deleting manifest for provider #{name}"
         pre_queue.create(:name     => "delete manifest for owner: #{self.organization.name}",
                          :priority => 3, :action => [self, :exec_delete_manifest],
                          :action_rollback => [self, :rollback_delete_manifest])
@@ -395,37 +382,55 @@ module Glue::Provider
                          :organization => self.organization
         end
       rescue Exception => error
-        if error.respond_to?(:response)
-          display_message = error.response # fix add parse displayMessage
-        elsif error.message
-          display_message = error.message
-        else
-          display_message = ""
-        end
-        display_message = ApplicationController.parse_display_message(display_message)
-
-        if options[:notify]
-          Notify.exception import_error_message(display_message), error,
-                           :request_type => 'providers__update_redhat_provider',
-                           :organization => self.organization
-        end
-
-        Rails.logger.error "error uploading subscriptions."
-        Rails.logger.error error
-        Rails.logger.error error.backtrace.join("\n")
+        display_manifest_message('delete', error, options)
         raise error
       end
     end
 
-    def delete_error_message display_message
-      error_texts = [
-          _("Subscription manifest delete for provider '%s' failed.") % self.name,
-          (_("Reason: %s") % display_message unless display_message.blank?)
-      ].compact
-      error_texts.join('<br />')
-    end
-
     protected
+
+    # Display appropriate messages when manifest import or delete fails
+    def display_manifest_message(type, error, options)
+
+      # Clean up response from candlepin
+      if error.respond_to?(:response)
+        error_response = error.response # fix add parse displayMessage
+      elsif error.message
+        error_response = "{'displayMessage' => #{error.message}, 'conflicts' => ['UNKNOWN']}"
+      else
+        error_response = "{'displayMessage' => #{_('Manifest import failed')}, 'conflicts' => ['UNKNOWN']}"
+      end
+
+      Rails.logger.error "Error during manifest #{type}: #{error_response}"
+
+      results = JSON.parse(error_response) rescue {'displayMessage' => _('Manifest %s failed') %
+                      (type == 'import') ? _('import') : _('delete'), 'conflicts' => []}
+
+      if options[:notify]
+
+        # For MANIFEST_SAME simply inform that no action was taken
+        if !results['conflicts'].nil? && results['conflicts'].include?('MANIFEST_SAME')
+          error_texts = [
+              _("Subscription manifest import for provider '%s' skipped") % self.name,
+              _("Reason: %s") % _("Manifest subscriptions unchanged from previous")
+              ]
+          error_texts.join('<br />')
+          Notify.message(error_texts, :request_type => 'providers__update_redhat_provider',
+                         :organization => self.organization)
+        else
+          error_texts = [
+              ((type == 'import') ? _("Subscription manifest import for provider '%{name}' failed") % {:name => self.name} :
+                  _("Subscription manifest delete for provider '%{name}' failed") % {:name => self.name}
+              ),
+              (_("Reason: %s") % results['displayMessage'] unless results['displayMessage'].blank?)
+              ].compact
+          error_texts.join('<br />')
+
+          Notify.error(error_texts, :request_type => 'providers__update_redhat_provider',
+                       :organization => self.organization)
+        end
+      end
+    end
 
     # There are two types of products in Candlepin: marketing and engineering.
     # When promoting, we care only about the engineering products. These are

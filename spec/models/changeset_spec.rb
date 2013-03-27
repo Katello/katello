@@ -195,7 +195,7 @@ describe Changeset, :katello => true do
         @repo = Repository.create!(:environment_product => ep, :name => "testrepo",
                                  :label => "testrepo_label", :pulp_id=>"1010",
                                  :content_id=>'123', :relative_path=>"/foo/",
-                                 :content_view_version=>ep.environment.default_view_version,
+                                 :content_view_version=>ep.environment.default_content_view_version,
                                  :feed => 'https://localhost')
 
         @distribution = mock('Distribution', { :id => 'some-distro-id' })
@@ -349,7 +349,7 @@ describe Changeset, :katello => true do
         @err          = mock('Err', { :id => 'errata-unit-id', :errata_id=>'err', :name => 'err' })
         @repo = Repository.new(:environment_product => ep, :name => "repo", :label => "repo_label",
                                    :pulp_id => "1343", :content_id=>'23423', :relative_path=>'/foobar/',
-                                   :content_view_version=>ep.environment.default_view_version,
+                                   :content_view_version=>ep.environment.default_content_view_version,
                                    :feed=>"http://localhost.com/foo/")
         @repo.stub(:create_pulp_repo).and_return([])
         @repo.save!
@@ -422,7 +422,7 @@ describe Changeset, :katello => true do
         ep            = EnvironmentProduct.find_or_create(@organization.library, @prod)
         @repo         = Repository.new(:environment_product => ep, :name => 'repo', :label => 'repo_label',
                                            :pulp_id => "test_pulp_id", :relative_path=>"/foo/", :content_id=>'aasfd',
-                                           :content_view_version=>ep.environment.default_view_version,
+                                           :content_view_version=>ep.environment.default_content_view_version,
                                            :pulp_id => "test_pulp_id", :relative_path=>"/foo/",
                                            :content_id=>'aasfd', :feed=>'https://localhost.com/foo/')
 
@@ -468,7 +468,6 @@ describe Changeset, :katello => true do
         @changeset.stub(:calc_dependencies).and_return([])
         @changeset.stub(:affected_repos).and_return([@repo])
 
-        @tpl1 = SystemTemplate.create!(:name => "template_1", :environment => @organization.library)
 
         Glue::Pulp::Package.stub(:index_packages).and_return(true)
         Glue::Pulp::Errata.stub(:index_errata).and_return(true)
@@ -481,16 +480,6 @@ describe Changeset, :katello => true do
 
       it "should fail if the product is not in the review phase" do
         lambda { @changeset.apply }.should raise_error(RuntimeError, /because it is not in the review phase./)
-      end
-
-      it "should fail if the product for repo from template is not in the env or changeset" do
-        @changeset.state            = Changeset::REVIEW
-        @changeset.repos            = []
-        @changeset.products         = []
-        @tpl1.repositories          = [@repo]
-        @changeset.system_templates = [@tpl1]
-        @environment.stub(:products).and_return([])
-        lambda { @changeset.apply }.should raise_error(RuntimeError, /if you wish to promote repository/)
       end
 
       it "should promote products" do

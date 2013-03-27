@@ -53,7 +53,7 @@ module Authorization::Distributor
     end
   end
 
-  module InstanceMethods
+  included do
     def readable?
       environment.distributors_readable?
     end

@@ -27,7 +27,6 @@ class KTEnvironment < ActiveRecord::Base
     :join_table => "environment_priors", :association_foreign_key => "prior_id", :uniq => true}
   has_and_belongs_to_many :successors, {:class_name => "KTEnvironment", :foreign_key => "prior_id",
     :join_table => "environment_priors", :association_foreign_key => :environment_id, :readonly => true}
-  has_many :system_templates, :dependent => :destroy, :class_name => "SystemTemplate", :foreign_key => :environment_id
 
   has_many :environment_products, :class_name => "EnvironmentProduct", :foreign_key => "environment_id", :dependent => :destroy, :uniq=>true
   has_many :products, :uniq => true, :through => :environment_products  do
@@ -55,8 +54,7 @@ class KTEnvironment < ActiveRecord::Base
 
   has_many :content_view_version_environments, :foreign_key=>:environment_id
   has_many :content_view_versions, :through=>:content_view_version_environments, :inverse_of=>:environments
-
-  has_one :default_content_view, :class_name => "ContentView", :foreign_key => :environment_default_id
+  has_many :content_view_environments, :foreign_key=>:environment_id, :inverse_of=>:environment, :dependent=>:destroy
 
   has_many :users, :foreign_key => :default_environment_id, :inverse_of => :default_environment, :dependent => :nullify
 
@@ -75,8 +73,9 @@ class KTEnvironment < ActiveRecord::Base
   validates_with Validators::PriorValidator
   validates_with Validators::PathDescendentsValidator
 
-  after_create :create_default_content_view
+  after_create :create_default_content_view_version
   before_destroy :confirm_last_env
+  before_destroy :delete_default_view_version
 
   after_destroy :unset_users_with_default
    ERROR_CLASS_NAME = "Environment"
@@ -85,8 +84,12 @@ class KTEnvironment < ActiveRecord::Base
     self.library
   end
 
-  def default_view_version
-    self.default_content_view.version(self)
+  def default_content_view
+    self.default_content_view_version.content_view
+  end
+
+  def default_content_view_version
+    self.organization.default_content_view.version(self)
   end
 
   def content_views(reload = false)
@@ -96,7 +99,7 @@ class KTEnvironment < ActiveRecord::Base
   end
 
   def content_view_environment
-    self.default_content_view.content_view_environments.first
+    self.default_content_view.content_view_environments.where(:environment_id=>self.id).first
   end
 
   def successor
@@ -273,15 +276,26 @@ class KTEnvironment < ActiveRecord::Base
     end
   end
 
-  def create_default_content_view
-    if self.default_content_view.nil?
-      content_view = build_default_content_view(:name=>"Default View for #{self.name}",
-                                       :organization=>self.organization, :default=>true)
-
-      content_view_version = ContentViewVersion.new(:version => 1, :content_view => content_view)
-      content_view_version.environments << self
-
-      content_view_version.save! # saves both content_view and content_view_version
+  def create_default_content_view_version
+    #Sadly this has to be created here, if it is created in the org
+    #  it will not actually exist when we go to create library and so
+    #  we can't look it up via a query (org.default_content_view)
+    content_view = self.organization.default_content_view
+    if content_view.nil?
+      content_view = ContentView.new(:default=>true, :name=>"Default Organization View",
+                                     :organization=>self.organization)
     end
+
+    if content_view.version(self).nil?
+      version = ContentViewVersion.new(:content_view => content_view,
+                                       :version => 1)
+      version.environments << self
+      version.save!
+      content_view.save! #save content_view, since ContentViewEnvironment was added
+    end
+  end
+
+  def delete_default_view_version
+    self.default_content_view_version.destroy
   end
 end

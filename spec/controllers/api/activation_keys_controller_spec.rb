@@ -132,10 +132,10 @@ describe Api::ActivationKeysController do
       @content_view = FactoryGirl.build_stubbed(:content_view)
       @activation_key.content_view = @content_view
       ActivationKey.should_receive(:create!).once.with(
-          hash_including(:content_view_id => @content_view.id)
+          hash_including("content_view_id" => @content_view.id.to_s)
         ).and_return(@activation_key)
 
-      post :create, :environment_id => 123, :activation_key => {:name => 'blah', :content_view_id => @content_view.id}
+      post :create, :environment_id => 123, :activation_key => {:name => 'blah', :content_view_id => @content_view.id.to_s}
     end
 
     it "should return created key" do
@@ -211,6 +211,8 @@ describe Api::ActivationKeysController do
       @activation_key = ActivationKey.create!(:name => 'activation key', :organization => @organization, :environment => @environment)
       @pool_in_activation_key = ::Pool.create!(:cp_id => "pool-123")
       @pool_not_in_activation_key = ::Pool.create!(:cp_id => "pool-456")
+
+      disable_pools_orchestration
 
       KeyPool.create!(:activation_key_id => @activation_key.id, :pool_id => @pool_in_activation_key.id)
       ActivationKey.stub!(:find).and_return(@activation_key)

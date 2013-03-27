@@ -17,7 +17,6 @@ module Authorization::SystemGroup
   READ_PERM_VERBS = [:create, :read, :update, :delete, :read_systems, :update_systems, :delete_systems]
   SYSTEM_READ_PERMS = [:read_systems, :update_systems, :delete_systems]
 
-
   module ClassMethods
     def readable(org)
       items(org, READ_PERM_VERBS)
@@ -86,8 +85,7 @@ module Authorization::SystemGroup
     end
   end
 
-
-  module InstanceMethods
+  included do
     def systems_readable?
       ::User.allowed_to?(SYSTEM_READ_PERMS, :system_groups, self.id, self.organization)
     end
