@@ -394,22 +394,32 @@ class AddRemoveContentView(ContentViewDefinitionAction):
     def setup_parser(self, parser):
         self._add_get_cvd_opts(parser)
         opt_parser_add_org(parser, required=1)
-        parser.add_option('--content_view', dest='view',
-                help=_("content view label (required)"))
+        parser.add_option('--view_label', dest='view_label',
+                help=_("content view label"))
+        parser.add_option('--view_id', dest='view_id',
+                help=_("content view id"))
+        parser.add_option('--view_name', dest='view_name',
+                help=_("content view name"))
 
     def check_options(self, validator):
         self._add_get_cvd_opts_check(validator)
-        validator.require(('org', 'view'))
+        validator.require(('org'))
+        validator.require_at_least_one_of(('view_name', 'view_label',
+                                           'view_id'))
+        validator.mutually_exclude(('view_name', 'view_label', 'view_id'))
 
     def run(self):
         org_name           = self.get_option('org')
         def_label          = self.get_option('label')
         def_name           = self.get_option('name')
         def_id             = self.get_option('id')
-        content_view_label = self.get_option('view')
+        content_view_label = self.get_option('view_label')
+        content_view_name  = self.get_option('view_name')
+        content_view_id    = self.get_option('view_id')
 
         cvd = get_cv_definition(org_name, def_label, def_name, def_id)
-        content_view = get_content_view(org_name, content_view_label)
+        content_view = get_content_view(org_name, content_view_label, content_view_name,
+                                        content_view_id)
 
         content_views = self.def_api.content_views(cvd['id'])
         content_views = [f['id'] for f in content_views]
