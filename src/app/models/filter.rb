@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Filter < ActiveRecord::Base
-  belongs_to :content_view_definition
+  belongs_to :content_view_definition, :class_name => "ContentViewDefinitionBase"
   has_many  :rules, :class_name => "FilterRule", :dependent => :destroy
   has_and_belongs_to_many :repositories, :class_name => "Repository", :uniq => true
   has_and_belongs_to_many :products, :uniq => true
@@ -24,7 +24,7 @@ class Filter < ActiveRecord::Base
   def self.applicable(repo)
     query = %{filters.id in (select filter_id from  filters_repositories where repository_id = #{repo.id})
               OR filters.id in (select filter_id from  filters_products where product_id = #{repo.product_id}) }
-    where(query).select("DISTINCT filters.*")
+    where(query).select("DISTINCT filters.id")
   end
 
   def as_json(options = {})
