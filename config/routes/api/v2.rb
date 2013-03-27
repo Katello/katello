@@ -38,7 +38,7 @@ Src::Application.routes.draw do
         api_resources :sync_plans, :only => [:index, :create]
         api_resources :tasks, :only => [:index]
         resource :uebercert, :only => [:show]
-        
+
         api_resources :system_groups, :except => [:new, :edit] do
           member do
             get :systems
@@ -53,6 +53,10 @@ Src::Application.routes.draw do
           resource :packages, :action => [:create, :update, :destroy], :controller => :system_group_packages
           api_resources :errata, :only => [:index, :create], :controller => :system_group_errata
         end
+
+        match '/default_info/:informable_type' => 'organization_default_info#create', :via => :post, :as => :create_default_info
+        match '/default_info/:informable_type/:keyname' => 'organization_default_info#destroy', :via => :delete, :as => :destroy_default_info
+        match '/default_info/:informable_type/apply' => 'organization_default_info#apply_to_all', :via => :post, :as => :apply_default_info
 
       end
 
@@ -74,7 +78,7 @@ Src::Application.routes.draw do
           get :repositories
         end
       end
-      
+
       api_resources :systems, :only => onlies do
         member do
           get :packages, :action => :package_profile
@@ -233,10 +237,6 @@ Src::Application.routes.draw do
         end
 
         api_resources :gpg_keys, :only => [:index, :create]
-
-        match '/default_info/:informable_type' => 'organization_default_info#create', :via => :post, :as => :create_default_info
-        match '/default_info/:informable_type/:keyname' => 'organization_default_info#destroy', :via => :delete, :as => :destroy_default_info
-        match '/default_info/:informable_type/apply' => 'organization_default_info#apply_to_all', :via => :post, :as => :apply_default_info
 
       end
 
