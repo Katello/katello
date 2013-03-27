@@ -1,5 +1,5 @@
 #
-# Copyright 2012 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -10,10 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require "minitest_helper"
 
-
-module TestHelper
-
-
+class ContentViewDefinitionArchive < ContentViewDefinitionBase
+  belongs_to :source, :class_name => "ContentViewDefinition"
+  has_many :content_view_versions, :inverse_of => :definition_archive
 end
