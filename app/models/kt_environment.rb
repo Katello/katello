@@ -79,21 +79,23 @@ class KTEnvironment < ActiveRecord::Base
   end
 
   def default_content_view
-    self.default_content_view_version.content_view
+    self.default_content_view_version.try(:content_view, nil)
   end
 
   def default_content_view_version
+    return nil unless self.organization.default_content_view
     self.organization.default_content_view.version(self)
+  end
+
+  def content_view_environment
+    return nil unless self.default_content_view
+    self.default_content_view.content_view_environments.where(:environment_id=>self.id).first
   end
 
   def content_views(reload = false)
     @content_views = nil if reload
     @content_views ||= ContentView.joins(:content_view_versions => :content_view_version_environments).
         where("content_view_version_environments.environment_id" => self.id)
-  end
-
-  def content_view_environment
-    self.default_content_view.content_view_environments.where(:environment_id=>self.id).first
   end
 
   def successor

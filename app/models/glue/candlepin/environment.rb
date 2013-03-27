@@ -27,13 +27,13 @@ module Glue::Candlepin::Environment
 
     def set_environment
       Resources::Candlepin::Environment.find(self.cp_id)
-      Rails.logger.info _("Candlepin environment already exists: %s") % self.label
-
+      Rails.logger.info _("Candlepin environment already exists: %s") % self.cp_id
+      true
     rescue RestClient::ResourceNotFound => e
       Rails.logger.info _("Creating environment in candlepin: %s") % self.label
       Resources::Candlepin::Environment.create(self.content_view.organization.label, self.cp_id, self.label,
                                                self.content_view.description)
-
+      true
     rescue => e
       Rails.logger.error _("Failed to create candlepin environment %s") %
                            "#{self.label}: #{e}, #{e.backtrace.join("\n")}"

@@ -7,9 +7,14 @@ class PopulateContentViewEnvironments < ActiveRecord::Migration
     KTEnvironment.all.each do |env|
       unless env.content_view_environment
         # a kt_environment will only have a single version
-        version = env.default_content_view.versions.first
-        version.environments << env
-        version.save!
+        view = ContentView.find(env.default_content_view_id)
+        version = view.versions.first
+
+        ActiveRecord::Base.connection.execute("insert into content_view_version_environments (content_view_version_id, environment_id) values (#{version.id}, #{env.id})")
+        ContentViewEnvironment.create!(:content_view=>view,
+                                     :name => env.name,
+                                     :label => view.cp_environment_label(env),
+                                     :cp_id => view.cp_environment_id(env))        
 
         # perform a save on each of the environment's repos.
         # this will trigger an update to the search index
