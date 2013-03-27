@@ -128,6 +128,7 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     refute_includes content_view.environments, @dev
     content_view.promote(@library, @dev)
     assert_includes content_view.environments, @dev
+    refute_empty ContentViewEnvironment.where(:label => content_view.cp_environment_label(@dev))
   end
 
   def test_delete
