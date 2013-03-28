@@ -11,8 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 
-
-class ContentViewDefinition < ActiveRecord::Base
+class ContentViewDefinition < ContentViewDefinitionBase
   include Glue::ElasticSearch::ContentViewDefinition if Katello.config.use_elasticsearch
   include Ext::LabelFromName
   include Authorization::ContentViewDefinition
@@ -20,19 +19,12 @@ class ContentViewDefinition < ActiveRecord::Base
   include AsyncOrchestration
 
   has_many :content_views, :dependent => :destroy
-  has_many :components, :class_name => "ComponentContentView"
-  has_many :component_content_views, :through => :components,
-    :source => :content_view, :class_name => "ContentView"
-  belongs_to :organization, :inverse_of => :content_view_definitions
-    has_many :content_view_definition_products
-  has_many :products, :through => :content_view_definition_products
-  has_many :content_view_definition_repositories
-  has_many :repositories, :through => :content_view_definition_repositories
+  has_many :content_view_definition_archives, :foreign_key => :source_id
+  alias :archives :content_view_definition_archives
 
   validates :label, :uniqueness => {:scope => :organization_id},
     :presence => true
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
-  validates :organization, :presence => true
   validate :validate_content
 
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
@@ -160,6 +152,21 @@ class ContentViewDefinition < ActiveRecord::Base
     result["products"] = products.map(&:name)
     result["repos"] = repositories.map(&:name)
     result
+  end
+
+  def archive
+    excluded = ["type", "created_at", "updated_at"]
+    cvd_archive = ContentViewDefinitionArchive.new(self.attributes.except(*excluded))
+
+    # TODO: copy filters
+    # cvd_archive.filters               = self.filters.map(&:clone)
+    cvd_archive.repositories            = self.repositories
+    cvd_archive.products                = self.products
+    cvd_archive.component_content_views = self.component_content_views
+    cvd_archive.source_id               = self.id
+    cvd_archive.save!
+
+    cvd_archive
   end
 
   protected
