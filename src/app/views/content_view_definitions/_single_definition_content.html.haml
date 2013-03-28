@@ -1,33 +1,13 @@
 -# Partial for the 'Content' pane of a 'single' content view definitio
 
-= render :partial => "common/common_products", :locals => {:record => view_definition}
-
 = render :partial => "content_view_definitions/tupane_header"
 
 = content_for :content do
-  #package_filter
-    %table
-      %thead
-        %tr
-          %th
-            #{_("Product")}
-      -if editable
-        %tr
-          %td
-            %form{:id=>'add_product_form'}
-              %div
-                #{'Add Products and Repositories:'}
-              #select_container{}
-                %select{:id=>'product_select', :style=>'width:400px;', 'data-placeholder'=>_("Choose a product..")}
-                .centered
-                  %a{:id=>'add_product'}
-                    #{_('+ Add')}
-
-      %tr
-        %td.no_padding
-          %table#product_list
-
-    %input.fr.button{:id=>'update_products', :type=>'button', :value=>_("Save"),
-                     'data-url'=>update_content_content_view_definition_path(view_definition.id) }
+  = render :partial => "common/common_product_repo_selector",
+           :locals => {:editable => editable,
+                       :record => view_definition,
+                       :readable_products => Product.readable(current_organization),
+                       :editable_products => Product.editable(current_organization),
+                       :save_url => update_content_content_view_definition_path(view_definition.id)}
 
 = render :template => "layouts/tupane_layout"

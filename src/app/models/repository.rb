@@ -27,7 +27,6 @@ class Repository < ActiveRecord::Base
   belongs_to :gpg_key, :inverse_of => :repositories
   belongs_to :library_instance, :class_name=>"Repository"
   has_and_belongs_to_many :changesets
-
   has_many :content_view_definition_repositories
   has_many :content_view_definitions, :through => :content_view_definition_repositories
   belongs_to :content_view_version, :inverse_of=>:repositories
@@ -48,6 +47,10 @@ class Repository < ActiveRecord::Base
 
   def product
     self.environment_product.product
+  end
+
+  def product_id
+    self.environment_product.product_id
   end
 
   def environment

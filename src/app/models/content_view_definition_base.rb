@@ -21,6 +21,8 @@ class ContentViewDefinitionBase < ActiveRecord::Base
     :foreign_key => "content_view_definition_id"
   has_many :component_content_views, :through => :components,
     :source => :content_view, :class_name => "ContentView"
+  has_many :filters, :inverse_of => :content_view_definition,
+    :foreign_key => "content_view_definition_id"
 
   validates :organization, :presence => true
 
