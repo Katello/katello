@@ -163,14 +163,6 @@ class Api::ApiController < ActionController::Base
     end
   end
 
-  def find_content_view_definition_by_label
-    cvd_id = params[:content_view_definition_id]
-    @definition = ContentViewDefinition.find_by_label(cvd_id)
-    if @definition.nil?
-      raise HttpErrors::NotFound, _("Couildn't find content view with label '%s'") % cvd_id
-    end
-  end
-
   def find_content_filter_by_name
     filter_id = params[:filter_id]
     @filter = Filter.where(:name => filter_id, :content_view_definition_id => @definition).first

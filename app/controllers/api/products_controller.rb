@@ -13,28 +13,9 @@
 class Api::ProductsController < Api::ApiController
   respond_to :json
   before_filter :find_optional_organization, :only => [:index, :repositories, :show, :update, :destroy, :set_sync_plan, :remove_sync_plan]
-  before_filter :find_organization, :only => [:list_content_view_definition_products,
-                                              :update_content_view_definition_products,
-                                              :list_content_filter_products,
-                                              :update_content_filter_products]
   before_filter :find_environment, :only => [:index, :repositories]
   before_filter :find_product, :only => [:repositories, :show, :update, :destroy, :set_sync_plan, :remove_sync_plan]
   before_filter :verify_presence_of_organization_or_environment, :only => [:index]
-  before_filter :find_content_view_definition, :only => [
-      :list_content_view_definition_products,
-      :update_content_view_definition_products
-    ]
-
-  before_filter :find_content_view_definition_by_label, :only => [
-      :list_content_filter_products,
-      :update_content_filter_products
-  ]
-
-  before_filter :find_content_filter_by_name, :only => [
-      :list_content_filter_products,
-      :update_content_filter_products
-  ]
-
   before_filter :authorize
 
   def rules
@@ -42,9 +23,6 @@ class Api::ProductsController < Api::ApiController
     read_test = lambda { @product.readable? }
     edit_test = lambda { @product.editable? }
     repo_test = lambda { Product.any_readable?(@organization) }
-
-    cvd_read_test = lambda { @definition.readable? }
-    cvd_edit_test = lambda { @definition.editable? }
 
     {
       :index => index_test,
@@ -54,11 +32,6 @@ class Api::ProductsController < Api::ApiController
       :repositories => repo_test,
       :set_sync_plan => edit_test,
       :remove_sync_plan => edit_test,
-      :list_content_view_definition_products => cvd_read_test,
-      :update_content_view_definition_products => cvd_edit_test,
-      :list_content_filter_products => cvd_read_test,
-      :update_content_filter_products => cvd_edit_test
-
     }
   end
 
@@ -156,61 +129,6 @@ class Api::ProductsController < Api::ApiController
     @product.save!
     render :text => _("Synchronization plan removed."), :status => 200
   end
-
-  api :GET, "/content_view_definitions/:content_view_definition_id/products",
-    "Get products for content view definition"
-  param :content_view_definition_id, :identifier, :required => true,
-    :desc => "content view definition identifier"
-  def list_content_view_definition_products
-    render :json => @definition.products.to_json
-  end
-
-  api :PUT, "/content_view_definitions/:content_view_definition_id/products",
-    "Update products for content view definition"
-  param :content_view_definition_id, :identifier, :required => true,
-    :desc => "content view definition identifier"
-  param :products, Array, :desc => "Updated list of products", :required => true
-  def update_content_view_definition_products
-    @products = Product.where(:cp_id => params[:products],
-                              "providers.organization_id" => @organization.id
-                             ).joins(:provider)
-    deleted_products = @definition.products - @products
-    added_products = @products - @definition.products
-
-    @definition.products -= deleted_products
-    @definition.products += added_products
-    @definition.save!
-
-    render :json => @definition.products.to_json
-  end
-
-
-  api :GET, "/content_view_definitions/:content_view_definition_id/filters/:filter_id/products",
-      "List all the products for a content view definition filter"
-  param :id, :identifer, :required => true, :desc => "Definition id"
-  def list_content_filter_products
-    render :json => @filter.products.to_json
-  end
-
-  api :PUT, "/content_view_definitions/:content_view_definition_id/filters/:filter_id/products",
-      "Update products for a content view definition filter"
-  param :content_view_definition_id, :identifier, :required => true,
-        :desc => "content view definition identifier"
-  param :repos, Array, :desc => "Updated list of repo ids", :required => true
-  def update_content_filter_products
-
-    @products = Product.where(:cp_id => params[:products],
-                              "providers.organization_id" => @organization.id).joins(:provider)
-    deleted_products = @filter.products - @products
-    added_products = @products - @filter.products
-    @filter.products -= deleted_products
-    @filter.products += added_products
-    @filter.save!
-
-    render :json => @filter.products.to_json
-  end
-
-
 
   private
 
