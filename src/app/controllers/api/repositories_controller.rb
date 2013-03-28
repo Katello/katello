@@ -15,20 +15,6 @@ class Api::RepositoriesController < Api::ApiController
   before_filter :find_repository, :only => [:show, :update, :destroy, :package_groups, :package_group_categories, :enable, :gpg_key_content]
   before_filter :find_organization, :only => [:create]
   before_filter :find_product, :only => [:create]
-  before_filter :find_content_view_definition, :only => [
-      :list_content_view_definition_repositories,
-      :update_content_view_definition_repositories
-  ]
-
-  before_filter :find_content_view_definition_by_label, :only => [
-      :list_content_filter_repositories,
-      :update_content_filter_repositories
-  ]
-
-  before_filter :find_content_filter_by_name, :only => [
-      :list_content_filter_repositories,
-      :update_content_filter_repositories
-  ]
 
   before_filter :authorize
   skip_filter   :set_locale, :require_user, :thread_locals, :authorize, :only => [:gpg_key_content]
@@ -44,9 +30,6 @@ class Api::RepositoriesController < Api::ApiController
     edit_test = lambda{@repository.product.editable?}
     org_edit = lambda{@organization.editable?}
 
-      cvd_read_test = lambda { @definition.readable? }
-      cvd_edit_test = lambda { @definition.editable? }
-
     {
       :create => edit_product_test,
       :show => read_test,
@@ -54,11 +37,7 @@ class Api::RepositoriesController < Api::ApiController
       :destroy => edit_test,
       :enable => edit_test,
       :package_groups => read_test,
-      :package_group_categories => read_test,
-      :list_content_view_definition_repositories => cvd_read_test,
-      :update_content_view_definition_repositories => cvd_edit_test,
-      :list_content_filter_repositories => cvd_read_test,
-      :update_content_filter_repositories => cvd_edit_test
+      :package_group_categories => read_test
     }
   end
 
@@ -195,60 +174,6 @@ EOS
       head(404)
     end
   end
-
-  api :GET, "/content_view_definitions/%s/repositories",
-    "List all the repositories for a content view definition"
-  param :id, :identifer, :required => true, :desc => "Definition id"
-  def list_content_view_definition_repositories
-    render :json => @definition.repositories.to_json
-  end
-
-  api :PUT, "/content_view_definitions/:content_view_definition_id/repositories",
-    "Update repositories for content view definition"
-  param :content_view_definition_id, :identifier, :required => true,
-    :desc => "content view definition identifier"
-  param :repos, Array, :desc => "Updated list of repo ids", :required => true
-  def update_content_view_definition_repositories
-    org_id = @definition.organization.id
-    @repos = Repository.where(:id => params[:repos])
-    @repos = @repos.select{ |r| r.organization == @definition.organization }
-    deleted_repositories = @definition.repositories - @repos
-    added_repositories = @repos - @definition.repositories
-
-    @definition.repositories -= deleted_repositories
-    @definition.repositories += added_repositories
-    @definition.save!
-
-    render :json => @definition.repositories.to_json
-  end
-
-
-  api :GET, "/content_view_definitions/:content_view_definition_id/filters/:filter_id/repositories",
-      "List all the repositories for a content view definition filter"
-  param :id, :identifer, :required => true, :desc => "Definition id"
-  def list_content_filter_repositories
-
-    render :json => @filter.repositories.to_json
-  end
-
-  api :PUT, "/content_view_definitions/:content_view_definition_id/filters/:filter_id/repositories",
-      "Update repositories for a content view definition filter"
-  param :content_view_definition_id, :identifier, :required => true,
-        :desc => "content view definition identifier"
-  param :repos, Array, :desc => "Updated list of repo ids", :required => true
-  def update_content_filter_repositories
-    org_id = @definition.organization.id
-    @repos = Repository.where(:id => params[:repos])
-    deleted_repositories = @filter.repositories - @repos
-    added_repositories = @repos - @filter.repositories
-
-    @filter.repositories -= deleted_repositories
-    @filter.repositories += added_repositories
-    @filter.save!
-
-    render :json => @filter.repositories.to_json
-  end
-
 
   private
 
