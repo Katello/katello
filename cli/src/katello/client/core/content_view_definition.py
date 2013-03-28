@@ -83,7 +83,7 @@ class Publish(ContentViewDefinitionAction):
     def setup_parser(self, parser):
         opt_parser_add_org(parser)
         self._add_get_cvd_opts(parser)
-        parser.add_option('--view_name', dest='view_name',
+        parser.add_option('--view', dest='view_name',
                           help=_("name to give published view (required)"))
         parser.add_option('--view_label', dest='view_label',
                           help=_("label to give published view"))
