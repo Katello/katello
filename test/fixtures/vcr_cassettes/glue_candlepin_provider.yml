@@ -1,83 +1,79 @@
 --- 
-recorded_with: VCR 2.4.0
 http_interactions: 
 - request: 
     method: post
     uri: https://localhost:8443/candlepin/owners/
     body: 
-      string: "{\"displayName\":\"Candlepin_Org\",\"key\":\"candlepin_org_label\",\"contentPrefix\":\"/candlepin_org_label/$env\"}"
+      encoding: US-ASCII
+      string: "{\"key\":\"candlepin_org_label\",\"displayName\":\"Candlepin_Org\",\"contentPrefix\":\"/candlepin_org_label/$env\"}"
     headers: 
       Accept: 
-      - "*/*; q=0.5, application/xml"
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="UGpVnuE4qryR05y6vDp53HMqvAK6dMBOUklEYPbyY", oauth_signature="xcDBjnbyFIASedClQb1OeaYQV1U%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1362490743", oauth_version="1.0"
-      Content-Length: 
-      - "103"
-      Cp-User: 
-      - admin
+      - application/json
       Accept-Encoding: 
       - gzip, deflate
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="51hPsO16DIdG37z4YCzTXPu50y39Lc6MWKz87kZ4Zg", oauth_signature="nDFT8AtFJ3gANb%2B6vu4zHmGjM6Y%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1364277355", oauth_version="1.0"
       Accept-Language: 
       - en
       Content-Type: 
       - application/json
+      Cp-User: 
+      - admin
+      Content-Length: 
+      - "103"
+      User-Agent: 
+      - Ruby
   response: 
     status: 
       code: 200
       message: OK
     headers: 
-      Date: 
-      - Tue, 05 Mar 2013 13:39:03 GMT
-      X-Candlepin-Version: 
-      - 0.7.26-1
-      Content-Length: 
-      - "379"
       Server: 
       - Apache-Coyote/1.1
+      X-Candlepin-Version: 
+      - 0.7.27-1
       Content-Type: 
       - application/json
+      Transfer-Encoding: 
+      - chunked
+      Date: 
+      - Tue, 26 Mar 2013 05:55:55 GMT
     body: 
-      string: |-
-        {
-          "created" : "2013-03-05T13:39:03.515+0000",
-          "updated" : "2013-03-05T13:39:03.515+0000",
-          "parentOwner" : null,
-          "id" : "ff8080813d373ef7013d3ac6dadb0005",
-          "key" : "candlepin_org_label",
-          "displayName" : "Candlepin_Org",
-          "contentPrefix" : "/candlepin_org_label/$env",
-          "defaultServiceLevel" : null,
-          "upstreamUuid" : null,
-          "href" : "/owners/candlepin_org_label"
-        }
+      encoding: US-ASCII
+      string: "{\"created\":\"2013-03-26T05:55:55.376+0000\",\"updated\":\"2013-03-26T05:55:55.376+0000\",\"parentOwner\":null,\"id\":\"8a8d01313da33842013da54463700032\",\"key\":\"candlepin_org_label\",\"displayName\":\"Candlepin_Org\",\"contentPrefix\":\"/candlepin_org_label/$env\",\"defaultServiceLevel\":null,\"upstreamUuid\":null,\"href\":\"/owners/candlepin_org_label\"}"
     http_version: 
-  recorded_at: Tue, 05 Mar 2013 13:39:03 GMT
+  recorded_at: Tue, 26 Mar 2013 05:55:55 GMT
 - request: 
     method: delete
     uri: https://localhost:8443/candlepin/owners/candlepin_org_label
     body: 
+      encoding: US-ASCII
       string: ""
     headers: 
       Accept: 
       - "*/*; q=0.5, application/xml"
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="f8Jek8Sssrb1p4Rji1EhQTm38m33yWJ7PeHvZWkhaqE", oauth_signature="b5cGbNORNvKRAF6qqBpV5EO%2FKtU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1362490743", oauth_version="1.0"
-      Cp-User: 
-      - admin
       Accept-Encoding: 
       - gzip, deflate
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="NSGQeUC4WrN9FDtO5Hajmc4Hcg4qByFomP4h57iGG9o", oauth_signature="hYnPnH3k6DElEApElR7lF84Ftx0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1364277355", oauth_version="1.0"
+      Cp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
   response: 
     status: 
       code: 204
       message: No Content
     headers: 
-      Date: 
-      - Tue, 05 Mar 2013 13:39:03 GMT
-      X-Candlepin-Version: 
-      - 0.7.26-1
       Server: 
       - Apache-Coyote/1.1
+      X-Candlepin-Version: 
+      - 0.7.27-1
+      Date: 
+      - Tue, 26 Mar 2013 05:55:55 GMT
     body: 
+      encoding: US-ASCII
       string: ""
     http_version: 
-  recorded_at: Tue, 05 Mar 2013 13:39:03 GMT
+  recorded_at: Tue, 26 Mar 2013 05:55:55 GMT
+recorded_with: VCR 2.4.0

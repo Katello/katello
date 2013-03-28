@@ -106,6 +106,10 @@ EOKEY
     end
   end
 
+  def disable_pools_orchestration
+    Resources::Candlepin::Pool.stub!(:find).and_return({})
+  end
+
   def disable_org_orchestration
     Resources::Candlepin::Owner.stub!(:create).and_return({})
     Resources::Candlepin::Owner.stub!(:create_user).and_return(true)

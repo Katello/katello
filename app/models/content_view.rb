@@ -18,6 +18,7 @@ class ContentView < ActiveRecord::Base
   include Glue::ElasticSearch::ContentView if Katello.config.use_elasticsearch
 
   belongs_to :content_view_definition
+  alias :definition :content_view_definition
   belongs_to :organization, :inverse_of => :content_views
 
   has_many :content_view_environments, :dependent => :destroy
@@ -53,7 +54,7 @@ class ContentView < ActiveRecord::Base
   end
 
   def self.composite(composite=true)
-    joins(:content_view_definition).where('content_view_definitions.composite = ?', composite)
+    joins(:content_view_definition).where('content_view_definition_bases.composite = ?', composite)
   end
 
   def composite
@@ -265,7 +266,7 @@ class ContentView < ActiveRecord::Base
 
   def update_cp_content(env)
     # retrieve the environment and then update cp content
-    view_env = self.content_view_environments.where(:environment=>env).first
+    view_env = self.content_view_environments.where(:environment_id=>env.id).first
     view_env.update_cp_content if view_env
   end
 
@@ -289,11 +290,12 @@ class ContentView < ActiveRecord::Base
   # a version of the view is promoted to an environment.  It is necessary for
   # candlepin to become aware that the view is available for consumers.
   def add_environment(env)
-    unless (env.library && ContentViewEnvironment.where(:cp_id => self.cp_environment_id(env)).first)
-      content_view_environments.build(:name => env.name,
+    unless (env.library && self.content_view_environments.where(:environment_id=>env.id).blank?)
+      ContentViewEnvironment.create!(:name => env.name,
                                      :label => self.cp_environment_label(env),
                                      :cp_id => self.cp_environment_id(env),
-                                     :environment_id=>env.id)
+                                     :environment_id => env.id,
+                                     :content_view => self)
     end
   end
 

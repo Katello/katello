@@ -18,7 +18,7 @@ module Glue::Candlepin::Pool
     base.send :extend, ClassMethods
 
     base.class_eval do
-      lazy_accessor :pool_derived, :product_name, :consumed, :quantity, :support_level, :support_type,
+      lazy_accessor :remote_data, :pool_derived, :product_name, :consumed, :quantity, :support_level, :support_type,
         :start_date, :end_date, :attrs, :owner, :product_id, :account_number, :contract_number,
         :source_pool_id, :host_id, :virt_only, :virt_limit, :multi_entitlement, :stacking_id,
         :arch, :sockets, :ram, :description, :product_family, :variant, :provided_products,
@@ -68,6 +68,7 @@ module Glue::Candlepin::Pool
     # if defined +load_remote_data+ will be used by +lazy_accessors+
     # to define instance variables
     def load_remote_data(attrs)
+      @remote_data = attrs
       @product_name = attrs["productName"]
       @start_date = Date.parse(attrs["startDate"]) if attrs["startDate"]
       @end_date = Date.parse(attrs["endDate"]) if attrs["endDate"]
