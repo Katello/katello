@@ -21,10 +21,10 @@ test_success "repo synchronize ($FEWUPS_REPO)" repo synchronize --org="$TEST_ORG
 test_success "content definition add_product ($FEWUPS_PRODUCT to $DEF1)" content definition add_product --org="$TEST_ORG" --name="$DEF1" --product="$FEWUPS_PRODUCT"
 test_success "content definition add_repo ($FEWUPS_REPO to $DEF2)" content definition add_repo --org="$TEST_ORG" --name="$DEF2" --repo="$FEWUPS_REPO" --product="$FEWUPS_PRODUCT"
 
-test_success "content definition publish ($DEF1 to $DEF1_VIEW1)" content definition publish --org="$TEST_ORG" --view_name="$DEF1_VIEW1" --label="$DEF1"
-test_success "content definition publish ($DEF1 to $DEF1_VIEW2)" content definition publish --org="$TEST_ORG" --view_name="$DEF1_VIEW2" --name="$DEF1"
-test_success "content definition publish ($DEF1 to $DEF2_VIEW1)" content definition publish --org="$TEST_ORG" --view_name="$DEF2_VIEW1" --label="$DEF2"
-test_success "content definition publish ($DEF2 to $DEF2_VIEW2)" content definition publish --org="$TEST_ORG" --view_name="$DEF2_VIEW2" --name="$DEF2"
+test_success "content definition publish ($DEF1 to $DEF1_VIEW1)" content definition publish --org="$TEST_ORG" --view="$DEF1_VIEW1" --label="$DEF1"
+test_success "content definition publish ($DEF1 to $DEF1_VIEW2)" content definition publish --org="$TEST_ORG" --view_label="$DEF1_VIEW2" --name="$DEF1"
+test_success "content definition publish ($DEF1 to $DEF2_VIEW1)" content definition publish --org="$TEST_ORG" --view="$DEF2_VIEW1" --label="$DEF2"
+test_success "content definition publish ($DEF2 to $DEF2_VIEW2)" content definition publish --org="$TEST_ORG" --view_label="$DEF2_VIEW2" --name="$DEF2"
 
 test_success "content definition add_content_view ($DEF2_VIEW2 to $DEF3)" content definition add_view --org="$TEST_ORG" --label="$DEF3" --view_label="$DEF2_VIEW2"
 test_success "content definition publish ($DEF3 to $DEF3_VIEW1)" content definition publish --org="$TEST_ORG" --view_name="$DEF3_VIEW1" --name="$DEF3"
