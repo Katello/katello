@@ -1,0 +1,17 @@
+package_filter_rule:
+  parameters:   <%= HashWithIndifferentAccess.new({:units => Array.new([HashWithIndifferentAccess.new({:name => "xterm.*"})])}).to_yaml.inspect %>
+  content_type: 'rpm'
+  filter:       populated_filter
+  inclusion:    true
+
+package_group_filter_rule:
+  parameters:   <%= HashWithIndifferentAccess.new({:units => Array.new([HashWithIndifferentAccess.new({:name => "Basic Client"})])}).to_yaml.inspect %>
+  content_type: 'package_group'
+  filter:       populated_filter
+  inclusion:    true
+
+errata_filter_rule:
+  parameters:   <%= HashWithIndifferentAccess.new({:units => Array.new([HashWithIndifferentAccess.new({:id => "RHSA-2013-1234"})])}).to_yaml.inspect %>
+  content_type: 'erratum'
+  filter:       populated_filter
+  inclusion:    true

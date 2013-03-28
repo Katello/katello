@@ -15,21 +15,24 @@ require "minitest_helper"
 class FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
   fixtures :all
 
+  def self.before_suite
+    models = ["Organization", "KTEnvironment", "User", "Product", "EnvironmentProduct", "Repository",
+              "ContentViewEnvironment", "Filter", "ContentViewDefinitionBase",
+              "ContentViewDefinition", "ContentViewDefinitionRepository",
+              "ContentViewDefinitionProduct"]
+    services = ["Candlepin", "Pulp", "ElasticSearch", "Foreman"]
+    disable_glue_layers(services, models)
+  end
+
   def setup
     @org = organizations(:acme_corporation)
 
-    models = ["Organization", "KTEnvironment", "User", "ContentViewEnvironment", "ContentViewDefinition"]
-    services = ["Candlepin", "Pulp", "ElasticSearch", "Foreman"]
-    disable_glue_layers(services, models)
-
     login_user(User.find(users(:admin)), @org)
 
-    @product = Product.find(products(:fedora).id)
+    @product = Product.find(products(:redhat).id)
     @repo = Repository.find(repositories(:fedora_17_x86_64).id)
 
-    @filter = filters(:simple_filter)
-    @filter.content_view_definition.product_ids = [@product.id]
-    @filter.content_view_definition.save!
+    @filter = filters(:populated_filter)
   end
 
   test "GET index - should be successful" do
@@ -104,15 +107,20 @@ class FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
     @controller.expects(:notify).at_least_once.returns(notify)
 
     put :update, :content_view_definition_id => @filter.content_view_definition.id,
-        :id => @filter.id, :repos => {@product.id => @repo.id}
+        :id => @filter.id, :repos => {@repo.product_id => @repo.id}
 
     assert_response :success
     assert_equal @filter.reload.repositories.first, @repo
   end
 
   test "PUT update - remove repository should be successful" do
-    @filter.repository_ids = [@repo.id]
-    @filter.save!
+    #@filter.repository_ids = [@repo.id]
+    #@filter.save!
+
+    # add repo to the filter
+    put :update, :content_view_definition_id => @filter.content_view_definition.id,
+        :id => @filter.id, :repos => {@repo.product_id => @repo.id}
+    refute_empty @filter.reload.repositories
 
     # success notice created
     notify = Notifications::Notifier.new
@@ -134,12 +142,10 @@ class FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
     notify.expects(:success).at_least_once
     @controller.expects(:notify).at_least_once.returns(notify)
 
-    assert_equal Filter.all.length, 1
-
     delete :destroy_filters, :content_view_definition_id=> @filter.content_view_definition.id,
            :filters => {@filter.id => @filter.id}
 
     assert_response :success
-    assert_empty Filter.all
+    assert_nil Filter.find_by_id(@filter.id)
   end
 end
