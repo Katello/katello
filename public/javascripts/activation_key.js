@@ -227,11 +227,11 @@ KT.activation_key = (function($) {
         // update the products box with the results
         var url = $('.path_link.active').attr('data-products_url');
 
-        if($("#activation_key_content_view_id").val()) {
-            url += ("?content_view_id=" + $("#activation_key_content_view_id").val());
-        }
-
         if (url !== undefined) {
+            if($("#activation_key_content_view_id").val()) {
+                url += ("?content_view_id=" + $("#activation_key_content_view_id").val());
+            }
+
             disable_buttons();
             $.ajax({
                 type: "GET",
