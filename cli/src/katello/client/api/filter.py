@@ -14,6 +14,7 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
+from katello.client.lib.utils.encoding import u_str
 
 class FilterAPI(KatelloAPI):
     """
@@ -21,23 +22,55 @@ class FilterAPI(KatelloAPI):
     """
     def filters_by_cvd_and_org(self, definition, org_id):
         path = "/api/organizations/%(org_id)s/content_view_definitions/%(definition)s/filters" % \
-                                            dict(definition = definition, org_id = org_id)
+                                            dict(definition = u_str(definition), org_id = u_str(org_id))
         defs = self.server.GET(path)[1]
         return defs
 
     def get_filter_info(self, filter_name, definition, org_id):
         path = "/api/organizations/%(org_id)s/content_view_definitions/%(definition)s/filters/%(filter_name)s" % \
-                                        dict(definition = definition, org_id = org_id, filter_name = filter_name)
+                                        dict(definition = u_str(definition), org_id = u_str(org_id), 
+                                                filter_name = u_str(filter_name))
         filter_def = self.server.GET(path)[1]
         return filter_def
-        
+
     def create(self, filter_name, definition, org_id):
         path = "/api/organizations/%(org_id)s/content_view_definitions/%(definition)s/filters" % \
-                                        dict(definition = definition, org_id = org_id)
+                                        dict(definition = u_str(definition), org_id = u_str(org_id))
         params = {"filter": filter_name}
         return self.server.POST(path, params)[1]
-        
+
     def delete(self, filter_name, definition, org_id):
         path = "/api/organizations/%(org_id)s/content_view_definitions/%(definition)s/filters/%(filter_name)s" % \
-                                      dict(definition = definition, org_id = org_id, filter_name = filter_name)
+                                      dict(definition = u_str(definition), org_id = u_str(org_id), 
+                                        filter_name = u_str(filter_name))
         return self.server.DELETE(path)[1]
+
+
+    def products(self, filter_name, definition, org_id):
+        path = "/api/organizations/%(org_id)s/content_view_definitions/" + \
+                                        "%(definition)s/filters/%(filter_name)s/products"
+        path = path % dict(org_id = u_str(org_id), definition = u_str(definition),
+                             filter_name = u_str(filter_name))
+        data = self.server.GET(path)[1]
+        return data
+
+    def update_products(self, filter_name, definition, org_id, products):
+        path = "/api/organizations/%(org_id)s/content_view_definitions/" + \
+                                        "%(definition)s/filters/%(filter_name)s/products"
+        path = path % dict(org_id = u_str(org_id), definition = u_str(definition),
+                         filter_name = u_str(filter_name))
+
+        data = self.server.PUT(path, {"products": products})[1]
+        return data
+
+    def repos(self, filter_name, definition, org_id):
+        path = "/api/organizations/%s/content_view_definitions/%s/filters/%s/repositories"\
+                % (u_str(org_id), u_str(definition), u_str(filter_name))
+        data = self.server.GET(path)[1]
+        return data
+
+    def update_repos(self, filter_name, definition, org_id, repos):
+        path = "/api/organizations/%s/content_view_definitions/%s/filters/%s/repositories" \
+                % (u_str(org_id), u_str(definition), u_str(filter_name))
+        data = self.server.PUT(path, {"repos": repos})[1]
+        return data
