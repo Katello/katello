@@ -1314,3 +1314,12 @@ footer a {
 #maincontent {
   padding-bottom: 51px;
 }
+
+.primary_color {
+    background-color: lighten($kprimary_color, 5%);
+}
+
+.row_fade_in {
+    background-color: rgba(0, 0, 0, 0);
+    @include transition(background-color .75s ease-in-out);
+}

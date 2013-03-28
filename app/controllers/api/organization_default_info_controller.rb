@@ -40,14 +40,22 @@ class Api::OrganizationDefaultInfoController < Api::ApiController
     end
     @organization.default_info[inf_type] << params[:keyname]
     @organization.save!
-    render :json => @organization.default_info[inf_type].to_json
+    render :json => {
+      :keyname => params[:keyname],
+      :informable_type => inf_type,
+      :organization => @organization.attributes
+    }.to_json
   end
 
   def destroy
     inf_type = params[:informable_type]
     @organization.default_info[inf_type].delete(params[:keyname])
     @organization.save!
-    render :json => @organization.default_info[inf_type].to_json
+    render :json => {
+      :keyname => params[:keyname],
+      :informable_type => inf_type,
+      :organization => @organization.attributes
+    }.to_json
   end
 
   def apply_to_all
