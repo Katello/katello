@@ -37,7 +37,11 @@ class Api::ContentViewDefinitionsController < Api::ApiController
       :update => manage_rule,
       :destroy => manage_rule,
       :content_views => show_rule,
-      :update_content_views => manage_rule
+      :update_content_views => manage_rule,
+      :list_products => show_rule,
+      :update_products => manage_rule,
+      :list_repositories => show_rule,
+      :update_repositories => manage_rule
     }
   end
 
@@ -80,7 +84,7 @@ class Api::ContentViewDefinitionsController < Api::ApiController
     definition = ContentViewDefinition.create!(attrs) do |cvd|
       cvd.organization = @organization
     end
-    render :json => definition.to_json
+    render :json => definition
   end
 
   api :PUT, "/organizations/:org/content_view_definitions/:id", "Update a definition"
@@ -89,19 +93,18 @@ class Api::ContentViewDefinitionsController < Api::ApiController
   param_group :content_view_definition
   def update
     @definition.update_attributes!(params[:content_view_definition])
-    render :json => @definition.to_json
+    render :json => @definition
   end
 
   api :GET, "/content_view_definitions/:id", "Show definition info"
   param :id, :number, :desc => "Definition identifier", :required => true
   def show
-    render :json => @definition.to_json
+    render :json => @definition
   end
 
-  api :POST, "/organizations/:name/content_view_definitions/:id/publish",
+  api :POST, "/organizations/:org/content_view_definitions/:id/publish",
     "Publish a content view"
   param :name, String, :desc => "Name for the new content view", :required=>true
-  param :label, String, :desc=>"Label for the new content view", :required=>false
   param :description, String, :desc=>"Description for the new content view", :required=>false
   param :id, :identifier, :desc => "Definition identifier", :required => true
   def publish
@@ -145,10 +148,64 @@ class Api::ContentViewDefinitionsController < Api::ApiController
     render :json => @definition.component_content_views
   end
 
+  api :GET, "/content_view_definitions/:id/repositories",
+    "List all the repositories for a content view definition"
+  param :id, :identifer, :required => true, :desc => "Definition id"
+  def list_repositories
+    render :json => @definition.repositories
+  end
+
+  api :PUT, "/content_view_definitions/:content_view_definition_id/repositories",
+    "Update repositories for content view definition"
+  param :content_view_definition_id, :identifier, :required => true,
+    :desc => "content view definition identifier"
+  param :repos, Array, :desc => "Updated list of repo ids", :required => true
+  def update_repositories
+    org_id = @definition.organization.id
+    @repos = Repository.libraries_content_readable(@organization).
+      where(:id => params[:repos])
+    @repos = @repos.select{ |r| r.organization == @definition.organization }
+    deleted_repositories = @definition.repositories - @repos
+    added_repositories = @repos - @definition.repositories
+
+    @definition.repositories -= deleted_repositories
+    @definition.repositories += added_repositories
+    @definition.save!
+
+    render :json => @definition.repositories
+  end
+
+  api :GET, "/content_view_definitions/:content_view_definition_id/products",
+    "Get products for content view definition"
+  param :content_view_definition_id, :identifier, :required => true,
+    :desc => "content view definition identifier"
+  def list_products
+    render :json => @definition.products
+  end
+
+  api :PUT, "/content_view_definitions/:content_view_definition_id/products",
+    "Update products for content view definition"
+  param :content_view_definition_id, :identifier, :required => true,
+    :desc => "content view definition identifier"
+  param :products, Array, :desc => "Updated list of products", :required => true
+  def update_products
+    @products = Product.readable(@organization).where(:cp_id => params[:products],
+      "providers.organization_id" => @organization.id).joins(:provider)
+    deleted_products = @definition.products - @products
+    added_products = @products - @definition.products
+
+    @definition.products -= deleted_products
+    @definition.products += added_products
+    @definition.save!
+
+    render :json => @definition.products
+  end
+
   private
 
   def find_definition
-    @definition = ContentViewDefinition.find(params[:id])
+    id = params[:id] || params[:content_view_definition_id]
+    @definition = ContentViewDefinition.find(id)
   end
 
 end

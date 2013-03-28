@@ -642,30 +642,30 @@ Src::Application.routes.draw do
       resources :content_views, :only => [:index, :show]
       resources :content_view_definitions do
         post :publish, :on => :member
-        resources :products, :only => [] do
-          get :index, :action => :list_content_view_definition_products,
-            :on => :collection
-          put :index, :action => :update_content_view_definition_products,
-            :on => :collection
+        resources :products, :controller => :content_view_definitions, :only => [] do
+          collection do
+            get :index, :action => :list_products
+            put :index, :action => :update_products
+          end
         end
-        resources :repositories, :only => [] do
-          get :index, :action => :list_content_view_definition_repositories,
-            :on => :collection
-          put :index, :action => :update_content_view_definition_repositories,
-            :on => :collection
+        resources :repositories, :controller => :content_view_definitions, :only => [] do
+          collection do
+            get :index, :action => :list_repositories
+            put :index, :action => :update_repositories
+          end
         end
         resources :filters, :controller => :filters, :only => [:index, :show, :create, :destroy] do
-          resources :products, :only => [] do
-            get :index, :action => :list_content_filter_products,
-                :on => :collection
-            put :index, :action => :update_content_filter_products,
-                :on => :collection
+          resources :products, :controller => :filters, :only => [] do
+            collection do
+              get :index, :action => :list_products
+              put :index, :action => :update_products
+            end
           end
-          resources :repositories, :only => [] do
-            get :index, :action => :list_content_filter_repositories,
-                :on => :collection
-            put :index, :action => :update_content_filter_repositories,
-                :on => :collection
+          resources :repositories, :controller => :filters, :only => [] do
+            collection do
+              get :index, :action => :list_repositories
+              put :index, :action => :update_repositories
+            end
           end
         end
       end
