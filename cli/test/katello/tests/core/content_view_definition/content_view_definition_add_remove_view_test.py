@@ -16,18 +16,19 @@ from katello.client.api.utils import ApiDataError
 class RequiredCLIOptionsTest(object):
 
     disallowed_options = [
-        ('--label=def1', '--content_view=view1'),
-        ('--org=ACME', '--content_view=view1'),
+        ('--label=def1', '--view_id=view1'),
+        ('--org=ACME', '--view_label=view1'),
         ('--org=ACME', '--label=def1')
     ]
 
     allowed_options = [
-        ('--org=ACME', '--label=def1', '--content_view=view1')
+        ('--org=ACME', '--label=def1', '--view_name=view1')
     ]
 
 
 class AddRequiredCLIOptionsTest(RequiredCLIOptionsTest, CLIOptionTestCase):
     action = AddRemoveContentView(True)
+
 
 class RemoveRequiredCLIOptionsTest(RequiredCLIOptionsTest, CLIOptionTestCase):
     action = AddRemoveContentView(False)

@@ -25,8 +25,13 @@ class ContentViewVersion < ActiveRecord::Base
                           }
 
   has_many :repositories, :dependent => :destroy
-
   has_one :task_status, :as => :task_owner, :dependent => :destroy
+  belongs_to :definition_archive, :class_name => "ContentViewDefinitionArchive",
+    :inverse_of => :content_view_versions
+
+  validates :definition_archive_id, :presence => true, :if => :has_definition?
+
+  before_validation :create_archived_definition
 
   scope :default_view, joins(:content_view).where('content_views.default = ?', true)
   scope :non_default_view, joins(:content_view).where('content_views.default = ?', false)
@@ -41,6 +46,14 @@ class ContentViewVersion < ActiveRecord::Base
 
   def products(env)
     repos(env).map(&:product).uniq(&:id)
+  end
+
+  def content_view_definition
+    @definition ||= content_view.definition
+  end
+
+  def has_definition?
+    content_view_definition.present?
   end
 
   def repos_ordered_by_product(env)
@@ -89,8 +102,8 @@ class ContentViewVersion < ActiveRecord::Base
 
   def refresh_repos(library_version)
     # generate a hash of the repos associated with the definition, where key = repo id & value = repo
-    definition_repos_hash = self.content_view.content_view_definition.nil? ? {} :
-        Hash[ self.content_view.content_view_definition.repos.collect{|repo| [repo.id, repo]}]
+    definition_repos_hash = has_definition? ?
+        Hash[ self.content_view.content_view_definition.repos.collect{|repo| [repo.id, repo]}] : {}
 
     async_tasks = []
     # prepare the repos currently in the library for the refresh
@@ -147,6 +160,12 @@ class ContentViewVersion < ActiveRecord::Base
 
   def remove_environment(env)
     content_view.remove_environment(env)
+  end
+
+  def create_archived_definition
+    if has_definition? && self.definition_archive.nil?
+      self.definition_archive = content_view_definition.archive
+    end
   end
 
 end

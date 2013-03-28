@@ -31,7 +31,7 @@ describe Api::OrganizationDefaultInfoController do
 
     Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
 
-    Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid})
+    Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid}) if Katello.config.app_mode == "katello"
 
     @org = Organization.create!(:name => "test_org", :label => "test_org")
     @env1 = KTEnvironment.create!(:name => "test_env", :label => "test_env", :prior => @org.library.id, :organization => @org)
@@ -42,23 +42,41 @@ describe Api::OrganizationDefaultInfoController do
 
   describe "add default custom info to an org" do
 
-    it "should be successful", :katello => true do #TODO headpin
+    it "should be successful" do
       Organization.find(@org.id).default_info["system"].empty?.should == true
       post :create, :organization_id => @org.label, :keyname => "test_key", :informable_type => "system"
       response.code.should == "200"
       Organization.find(@org.id).default_info["system"].include?("test_key").should == true
     end
 
-    it "should fail without keyname", :katello => true do #TODO headpin
+    it "should fail without keyname" do
       Organization.find(@org.id).default_info["system"].empty?.should == true
       post :create, :organization_id => @org.label, :informable_type => "system"
       response.code.should == "400"
       Organization.find(@org.id).default_info["system"].empty?.should == true
     end
 
-    it "should fail with wrong org id", :katello => true do #TODO headpin
+    it "should fail with wrong org id" do
       Organization.find(@org.id).default_info["system"].empty?.should == true
       post :create, :organization_id => "blahblahblah", :keyname => "test_key", :informable_type => "system"
+      response.code.should == "404"
+      Organization.find(@org.id).default_info["system"].empty?.should == true
+    end
+
+    it "should throw an error when you add default info that is already there" do
+      Organization.find(@org.id).default_info["system"].empty?.should == true
+      post :create, :organization_id => @org.label, :keyname => "test_key", :informable_type => "system"
+      response.code.should == "200"
+      Organization.find(@org.id).default_info["system"].size.should == 1
+
+      post :create, :organization_id => @org.label, :keyname => "test_key", :informable_type => "system"
+      response.code.should == "400"
+      Organization.find(@org.id).default_info["system"].size.should == 1
+    end
+
+    it "should fail if the type given is not an accepted type" do
+      Organization.find(@org.id).default_info["system"].empty?.should == true
+      post :create, :organization_id => "blahblahblah", :keyname => "test_key", :informable_type => "nonstandardtype"
       response.code.should == "404"
       Organization.find(@org.id).default_info["system"].empty?.should == true
     end
@@ -72,14 +90,14 @@ describe Api::OrganizationDefaultInfoController do
       @org.save!
     end
 
-    it "should be successful", :katello => true do #TODO headpin
+    it "should be successful" do
       Organization.find(@org.id).default_info["system"].size.should == 1
       post :destroy, :organization_id => @org.label, :keyname => "test_key", :informable_type => "system"
       response.code.should == "200"
       Organization.find(@org.id).default_info["system"].empty?.should == true
     end
 
-    it "should fail with wrong org id", :katello => true do #TODO headpin
+    it "should fail with wrong org id" do
       Organization.find(@org.id).default_info["system"].size.should == 1
       post :destroy, :organization_id => "bad org label", :keyname => "test_key", :informable_type => "system"
       response.code.should == "404"
@@ -96,7 +114,7 @@ describe Api::OrganizationDefaultInfoController do
       end
     end
 
-    it "should be successful", :katello => true do #TODO headpin
+    it "should be successful" do
       @org.systems.each do |s|
         s.custom_info.empty?.should == true
       end

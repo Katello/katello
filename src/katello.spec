@@ -58,7 +58,11 @@ Provides a package for managing application life-cycle for Linux systems.
 %package common
 BuildArch:      noarch
 Summary:        Common bits for all Katello instances
+%if 0%{?fedora} == 18
+Requires:       httpd >= 2.4.4
+%else
 Requires:       httpd
+%endif
 Requires:       mod_ssl
 Requires:       openssl
 Requires:       elasticsearch
@@ -217,7 +221,7 @@ Requires:        %{name}-common
 Requires:        pulp-server
 Requires:        pulp-rpm-plugins
 Requires:        pulp-selinux
-Requires:        %{?scl_prefix}rubygem(runcible) >= 0.3.3
+Requires:        %{?scl_prefix}rubygem(runcible) >= 0.4.1
 
 %description glue-pulp
 Katello connection classes for the Pulp backend
@@ -669,6 +673,7 @@ usermod -a -G katello-shared tomcat
 %exclude %{homedir}/lib/tasks/jsroutes.rake
 %exclude %{homedir}/lib/tasks/jshint.rake
 %exclude %{homedir}/lib/tasks/test.rake
+%exclude %{homedir}/lib/tasks/simplecov.rake
 %exclude %{homedir}/script/pulp_integration_tests
 %{homedir}/locale
 %{homedir}/public
@@ -757,6 +762,7 @@ usermod -a -G katello-shared tomcat
 %exclude %{homedir}/app/controllers/foreman
 %exclude %{homedir}/app/views/foreman
 %exclude %{homedir}/lib/tasks/test.rake
+%exclude %{homedir}/lib/tasks/simplecov.rake
 %{homedir}/app/stylesheets
 %{homedir}/app/views
 %{homedir}/autotest
@@ -831,6 +837,7 @@ usermod -a -G katello-shared tomcat
 %files devel-test
 %{homedir}/bundler.d/test.rb
 %{homedir}/lib/tasks/test.rake
+%{homedir}/lib/tasks/simplecov.rake
 %{homedir}/script/pulp_integration_tests
 
 %files devel-checking

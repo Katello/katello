@@ -1,6 +1,6 @@
 # encoding: utf-8
 #
-# Copyright 2012 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -36,7 +36,7 @@ class KTEnvironmentTestBase < MiniTest::Rails::ActiveSupport::TestCase
 end
 
 
-class KTEnvironmentCreateTest < KTEnvironmentTestBase
+class KTEnvironmentTest < KTEnvironmentTestBase
 
   def test_create_validate_view
     env = KTEnvironment.create(:organization=>@acme_corporation, :name=>"SomeEnv", :prior=>@library)
@@ -45,4 +45,19 @@ class KTEnvironmentCreateTest < KTEnvironmentTestBase
     refute_empty env.default_content_view.content_view_environments.where(:environment_id=>env.id)
   end
 
+  def test_destroy_content_view_environment
+    env = @staging
+    refute_empty env.default_content_view.content_view_environments.where(:environment_id=>env.id)
+    cve = env.default_content_view.content_view_environments.where(:environment_id=>env.id).first
+    cve_cp_id = cve.cp_id
+    env.destroy
+    assert_empty ContentViewEnvironment.where(:cp_id=>cve_cp_id)
+  end
+
+  def test_destroy_default_content_view_version
+    env = @staging
+    default_version = env.default_content_view_version
+    env.destroy
+    assert_empty ContentViewVersion.where(:id=>default_version.id)
+  end
 end
