@@ -45,7 +45,7 @@ class Organization < ActiveRecord::Base
 
   before_create :create_library
   before_create :create_redhat_provider
-  before_save :initialize_default_info
+  before_validation :initialize_default_info
 
   validates :name, :uniqueness => true, :presence => true
   validates_with Validators::NonHtmlNameValidator, :attributes => :name
@@ -54,6 +54,7 @@ class Organization < ActiveRecord::Base
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validate :unique_name_and_label
+  validates_with Validators::DefaultInfoNotBlankValidator, :attributes => :default_info
 
   if Katello.config.use_cp
     before_validation :create_label, :on => :create
