@@ -27,7 +27,7 @@ class HttpResource
     end
   end
 
-  class_attribute :consumer_secret, :consumer_key, :ca_cert_file, :prefix, :site, :default_headers, :resource_permissions
+  class_attribute :consumer_secret, :consumer_key, :ca_cert_file, :prefix, :site, :default_headers
 
   attr_reader :json
 
@@ -44,10 +44,6 @@ class HttpResource
   end
 
   class << self
-    def resource_permissions
-      ResourcePermissions
-    end
-
     # children must redefine
     def logger
       raise NotImplementedError
@@ -96,10 +92,8 @@ class HttpResource
       logger.debug "Resource GET request: #{a_path}"
       print_debug_info(a_path, headers)
       a_path = URI.encode(a_path)
-      resource_permissions.before_get_callback(a_path, headers)
       client = rest_client(Net::HTTP::Get, :get, a_path)
       result = process_response(client.get(headers))
-      resource_permissions.after_get_callback(a_path, headers, result)
       result
     rescue RestClient::Exception => e
       raise_rest_client_exception e, a_path, "GET"
@@ -109,10 +103,8 @@ class HttpResource
       logger.debug "Resource POST request: #{a_path}, #{payload}"
       print_debug_info(a_path, headers, payload)
       a_path = URI.encode(a_path)
-      resource_permissions.before_post_callback(a_path, payload, headers)
       client = rest_client(Net::HTTP::Post, :post, a_path)
       result = process_response(client.post(payload, headers))
-      resource_permissions.after_post_callback(a_path, payload, headers, result)
       result
     rescue RestClient::Exception => e
       raise_rest_client_exception e, a_path, "POST"
@@ -122,10 +114,8 @@ class HttpResource
       logger.debug "Resource PUT request: #{a_path}, #{payload}"
       print_debug_info(a_path, headers, payload)
       a_path = URI.encode(a_path)
-      resource_permissions.before_put_callback(a_path, payload, headers)
       client = rest_client(Net::HTTP::Put, :put, a_path)
       result = process_response(client.put(payload, headers))
-      resource_permissions.after_put_callback(a_path, payload, headers, result)
       result
     rescue RestClient::Exception => e
       raise_rest_client_exception e, a_path, "PUT"
@@ -135,10 +125,8 @@ class HttpResource
       logger.debug "Resource DELETE request: #{a_path}"
       print_debug_info(a_path, headers)
       a_path = URI.encode(a_path)
-      resource_permissions.before_delete_callback(a_path, headers)
       client = rest_client(Net::HTTP::Delete, :delete, a_path)
       result = process_response(client.delete(headers))
-      resource_permissions.after_delete_callback(a_path, headers, result)
       result
     rescue RestClient::Exception => e
       raise_rest_client_exception e, a_path, "DELETE"

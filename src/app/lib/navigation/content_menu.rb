@@ -139,8 +139,8 @@ module Navigation
         :if => lambda{current_organization},
           :items=> Katello.config.katello? ?
             [menu_subscriptions, menu_providers, menu_sync_management, menu_content_search,
-             menu_content_view_definitions, menu_system_templates, menu_changeset_management] :
-            [menu_subscriptions, menu_system_templates]
+             menu_content_view_definitions, menu_changeset_management] :
+            [menu_subscriptions]
       }
     end
 
@@ -221,16 +221,6 @@ module Navigation
         :url => sync_schedules_index_path(),
         :options => {:class=>"third_level", "data-dropdown"=>"sync"}
       }
-    end
-
-    def menu_system_templates
-      {:key => :system_templates,
-       :name =>_("System Templates"),
-        :url => system_templates_path,
-        :if => lambda{Katello.config.katello? && SystemTemplate.any_readable?(current_organization())},
-        :options => {:class=>'content second_level', "data-menu"=>"content"}
-      }
-
     end
 
     def menu_changeset_management

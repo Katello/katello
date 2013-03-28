@@ -11,7 +11,6 @@ ACTIVATION_KEYS = [
     ],
     "id": 1,
     "organization_id": 1,
-    "system_template_id": None,
     "environment_id": 5
   },
   {
@@ -25,7 +24,6 @@ ACTIVATION_KEYS = [
     ],
     "id": 2,
     "organization_id": 1,
-    "system_template_id": None,
     "environment_id": 5
   }
 ]
