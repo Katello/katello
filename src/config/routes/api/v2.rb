@@ -13,6 +13,8 @@ Src::Application.routes.draw do
     # new v2 routes that point to v2
     scope :module => :v2, :constraints => ApiVersionConstraint.new(:version => 2) do
 
+      match '/' => 'root#resource_list'
+      
       # Headpin does not support system creation
       if Katello.config.katello?
         onlies = [:show, :destroy, :create, :index, :update]
@@ -219,8 +221,6 @@ Src::Application.routes.draw do
 
     # routes that didn't change in v2 and point to v1
     scope :module => :v1, :constraints => ApiVersionConstraint.new(:version => 2) do
-
-      match '/' => 'root#resource_list'
 
       api_resources :organizations do
 

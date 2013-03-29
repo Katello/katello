@@ -44,7 +44,7 @@ class Api::V1::RootController < Api::V1::ApiController
     if !Katello.config.katello?
       api_root_routes = api_root_routes.select { |api| !katello_only.include?(api[:href]) }
     end
-    render :json => api_root_routes
+    respond_for_index :collection => api_root_routes
   end
 
 end
