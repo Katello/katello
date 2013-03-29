@@ -21,6 +21,9 @@ class Api::V2::PermissionsController < Api::V1::PermissionsController
      }
   end
 
+  resource_description do
+    api_version "v2"
+  end
 
   api :POST, "/roles/:role_id/permissions", "Create a roles permission"
   param :permission, Hash, :required => true do

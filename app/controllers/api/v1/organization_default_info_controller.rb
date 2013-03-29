@@ -30,6 +30,14 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
     }
   end
 
+  def_param_group :informable_identifier do
+    param :informable_type, String, :desc => "name of the resource", :required => true
+    param :informable_id, :identifier, :desc => "resource identifier", :required => true
+  end
+
+  api :POST, '/organizations/:organization_id/default_info/:informable_type', "Create default info"
+  param_group :informable_identifier
+  param :keyname, String, :required => true
   def create
     inf_type = params[:informable_type]
     if @organization.default_info[inf_type].include?(params[:keyname])
@@ -46,6 +54,9 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
     }.to_json
   end
 
+  api :DELETE, "/organizations/:organization_id/default_info/:informable_type/:informable_id/:keyname", "Delete default info"
+  param_group :informable_identifier
+  param :keyname, String, :desc => "Custom info key", :required => true
   def destroy
     inf_type = params[:informable_type]
     @organization.default_info[inf_type].delete(params[:keyname])
@@ -57,6 +68,8 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
     }.to_json
   end
 
+  api :POST, '/organizations/:organization_id/default_info/:informable_type/apply', "Apply existing default info on all informable resources"
+  param_group :informable_identifier
   def apply_to_all
     to_apply = []
     @organization.default_info[params[:informable_type]].each do |key|

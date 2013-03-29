@@ -15,6 +15,9 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
   resource_description do
     description "Systems subscriptions management."
     param :system_id, :identifier, :desc => "System uuid", :required => true
+
+    api_version 'v1'
+    api_version 'v2'
   end
 
   respond_to :json

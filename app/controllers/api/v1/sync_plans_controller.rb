@@ -19,6 +19,9 @@ class Api::V1::SyncPlansController < Api::V1::ApiController
     DOC
 
     param :organization_id, :identifier, :desc => "oranization identifier", :required => true
+
+    api_version 'v1'
+    api_version 'v2'
   end
 
   before_filter :find_organization, :only => [:create, :index]
@@ -48,7 +51,7 @@ class Api::V1::SyncPlansController < Api::V1::ApiController
   def_param_group :sync_plan do
     param :sync_plan, Hash, :required => true, :action_aware => true do
       param :name, String, :desc => "sync plan name", :required => true
-      param :interval, ['none', 'hourly', 'daily', 'weekly'], :desc => "how often synchronization should run"
+      param :interval, SyncPlan::TYPES, :desc => "how often synchronization should run"
       param :sync_date, String, :desc => "start datetime of synchronization"
       param :description, String, :desc => "sync plan description"
     end
@@ -57,7 +60,7 @@ class Api::V1::SyncPlansController < Api::V1::ApiController
   api :GET, "/organizations/:organization_id/sync_plans", "List sync plans"
   param :name, String, :desc => "filter by name"
   param :sync_date, String, :desc => "filter by sync date"
-  param :interval, ['none', 'hourly', 'daily', 'weekly'], :desc => "filter by interval"
+  param :interval, SyncPlan::TYPES, :desc => "filter by interval"
   def index
     query_params.delete :organization_id
     respond :collection => @organization.sync_plans.where(query_params)

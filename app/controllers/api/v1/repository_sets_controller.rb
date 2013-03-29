@@ -30,7 +30,7 @@ class Api::V1::RepositorySetsController < Api::V1::ApiController
   end
 
 
-  api :POST, "/product/:product_id/repository_set/:id/enable", "Enable a repository set for a product."
+  api :POST, "/product/:product_id/repository_sets/:id/enable", "Enable a repository set for a product."
   param :organization_id, :identifier, :required => true, :desc => "id of an organization the repository will be contained in"
   param :product_id, :number, :required => true, :desc => "id of a product the repository will be contained in"
   param :id, :number, :required => true, :desc => "id or name of the repository set to enable"
@@ -39,7 +39,7 @@ class Api::V1::RepositorySetsController < Api::V1::ApiController
     respond_for_async :resource => @product.async(:organization=>@organization).refresh_content(@product_content.content.id)
   end
 
-  api :POST, "/product/:product_id/repository_set/:id/disable", "Enable a repository set for a product."
+  api :POST, "/product/:product_id/repository_sets/:id/disable", "Enable a repository set for a product."
   param :organization_id, :identifier, :required => true, :desc => "id of an organization the repository will be contained in"
   param :product_id, :number, :required => true, :desc => "id of a product the repository will be contained in"
   param :id, :number, :required => true, :desc => "id of the repository set to disable"
@@ -48,9 +48,8 @@ class Api::V1::RepositorySetsController < Api::V1::ApiController
     respond_for_async :resource => @product.async(:organization=>@organization).disable_content(@product_content.content.id)
   end
 
-  api :GET, "/product/:product_id/repository_set/", "List repository sets for a product."
-  param :organization_id, :identifier, :required => true, :desc => "id of an "
-  param :product_id, :number, :required => true, :desc => "id of a product to list repository sets in"
+  api :GET, "/product/:product_id/repository_sets/", "List repository sets for a product."
+  param :product_id, :number, :required => true, :desc => "id of a product to list repository sets for"
   def index
     raise _('Repository sets are not available for custom products.') if @product.custom?
     content = @product.productContent.collect do |pc|

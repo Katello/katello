@@ -15,6 +15,9 @@ class Api::V2::RepositoriesController < Api::V1::RepositoriesController
 
   include Api::V2::Rendering
 
+  resource_description do
+    api_version "v2"
+  end
 
   def param_rules
     {
@@ -32,11 +35,10 @@ class Api::V2::RepositoriesController < Api::V1::RepositoriesController
     end
   end
 
-  api :POST, "/repositories", "Create a repository"
-  param :organization_id, :identifier, :required => true, :desc => "id of an organization the repository will be contained in"
+  api :POST, "/products/:product_id/repositories", "Create a repository"
   param :product_id, :number, :required => true, :desc => "id of a product the repository will be contained in"
   param_group :repo
-  see "gpg_keys#index"
+  see "v2#gpg_keys#index"
   def create
     raise HttpErrors::BadRequest, _("Repository can be only created for custom provider.") unless @product.custom?
 

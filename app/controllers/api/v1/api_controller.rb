@@ -35,6 +35,12 @@ class Api::V1::ApiController < Api::ApiController
   include AuthorizationRules
 
 
+  resource_description do
+
+    api_version 'v1'
+    api_version 'v2'
+  end
+
   # remove unwanted parameters 'action' and 'controller' from params list and return it
   # and convert true/false strings to boolean types
   # note: you can use expected_params = params.slice('name') instead

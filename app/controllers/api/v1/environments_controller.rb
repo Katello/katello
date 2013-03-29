@@ -37,6 +37,9 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
       starts in this environment. More chains can start from the library environment but
       no further branching of a chain is enabled.
     EOS
+
+    api_version 'v1'
+    api_version 'v2'
   end
 
   respond_to :json

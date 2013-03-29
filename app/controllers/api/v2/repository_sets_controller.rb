@@ -15,9 +15,12 @@ class Api::V2::RepositorySetsController < Api::V1::RepositorySetsController
 
   include Api::V2::Rendering
 
-  api :GET, "/product/:product_id/repository_set/", "List repository sets for a product."
-  param :organization_id, :identifier, :required => true, :desc => "id of an "
-  param :product_id, :number, :required => true, :desc => "id of a product to list repository sets in"
+  resource_description do
+    api_version "v2"
+  end
+
+  api :GET, "/product/:product_id/repository_sets/", "List repository sets for a product."
+  param :product_id, :number, :required => true, :desc => "id of a product to list repository sets for"
   def index
     raise _('Repository sets are not available for custom products.') if @product.custom?
     respond :collection => @product.productContent

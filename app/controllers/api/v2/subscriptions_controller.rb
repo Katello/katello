@@ -15,6 +15,13 @@ class Api::V2::SubscriptionsController < Api::V1::SubscriptionsController
 
   include Api::V2::Rendering
 
+  resource_description do
+    description "Systems subscriptions management."
+    param :system_id, :identifier, :desc => "System uuid", :required => true
+
+    api_version 'v2'
+  end
+
   api :POST, "/systems/:system_id/subscriptions", "Create a subscription"
   param :subscription, Hash, :required => true, :action_aware => true do
     param :pool, String, :desc => "Subscription Pool uuid", :required => true

@@ -15,6 +15,8 @@ class Api::V2::ErrataController < Api::V2::ApiController
   resource_description do
     error :code => 401, :desc => "Unauthorized"
     error :code => 404, :desc => "Not found"
+
+    api_version 'v2'
   end
 
   before_filter :find_environment, :only => [:index]

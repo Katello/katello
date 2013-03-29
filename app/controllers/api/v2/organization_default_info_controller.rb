@@ -15,7 +15,20 @@ class Api::V2::OrganizationDefaultInfoController < Api::V1::OrganizationDefaultI
 
   include Api::V2::Rendering
 
+  resource_description do
+    api_version "v2"
+  end
 
+  def_param_group :informable_identifier do
+    param :informable_type, String, :desc => "name of the resource", :required => true
+    param :informable_id, :identifier, :desc => "resource identifier", :required => true
+  end
+
+  api :POST, '/organizations/:organization_id/default_info/:informable_type', "Create default info"
+  param_group :informable_identifier
+  param :default_info, Hash, :required => true do
+    param :keyname, String, :required => true
+  end
   def create
     inf_type = params[:informable_type]
     key_name = params[:default_info][:keyname]
@@ -24,9 +37,10 @@ class Api::V2::OrganizationDefaultInfoController < Api::V1::OrganizationDefaultI
       @organization.default_info[inf_type] << key_name
     end
     @organization.save!
-    respond :resource => {:keyname => params[:keyname]}
+    respond :resource => {:keyname => key_name}
   end
 
+  # apipie docs are defined in v1 controller - they remain the same
   def destroy
     inf_type = params[:informable_type]
     @organization.default_info[inf_type].delete(params[:keyname])
@@ -34,6 +48,7 @@ class Api::V2::OrganizationDefaultInfoController < Api::V1::OrganizationDefaultI
     respond :resource => false
   end
 
+  # apipie docs are defined in v1 controller - they remain the same
   def apply_to_all
     to_apply = @organization.default_info[params[:informable_type]].collect do |key|
       { :keyname => key }

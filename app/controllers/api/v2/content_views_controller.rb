@@ -15,10 +15,7 @@ class Api::V2::ContentViewsController < Api::V1::ContentViewsController
 
   include Api::V2::Rendering
 
-  api :GET, "/content_views/:id"
-  param :id, :identifier, :desc => "content view id"
-  param :environment_id, :identifier, :desc => "environment id", :required => false
-  #TODO: move the logic from as_json to rabl
+  # apipie docs are defined in v1 controller - they remain the same
   def show
     respond :resource => @view
   end
