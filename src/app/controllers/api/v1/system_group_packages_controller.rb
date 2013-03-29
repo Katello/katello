@@ -44,13 +44,13 @@ class Api::V1::SystemGroupPackagesController < Api::V1::ApiController
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
       job = @group.install_packages(packages)
-      render :json => job, :status => 202
+      respond_for_async :resource => task
     end
 
     if params[:groups]
       groups = extract_group_names(params[:groups])
       job = @group.install_package_groups(groups)
-      render :json => job, :status => 202
+      respond_for_async :resource => task
     end
   end
 
@@ -60,13 +60,13 @@ class Api::V1::SystemGroupPackagesController < Api::V1::ApiController
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
       job = @group.update_packages(packages)
-      render :json => job, :status => 202
+      respond_for_async :resource => task
     end
 
     if params[:groups]
       groups = extract_group_names(params[:groups])
       job = @group.install_package_groups(groups)
-      render :json => job, :status => 202
+      respond_for_async :resource => task
     end
   end
 
@@ -76,13 +76,13 @@ class Api::V1::SystemGroupPackagesController < Api::V1::ApiController
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
       job = @group.uninstall_packages(packages)
-      render :json => job, :status => 202
+      respond_for_async :resource => task
     end
 
     if params[:groups]
       groups = extract_group_names(params[:groups])
       job = @group.uninstall_package_groups(groups)
-      render :json => job, :status => 202
+      respond_for_async :resource => task
     end
   end
 
