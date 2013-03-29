@@ -76,7 +76,7 @@ describe Api::V1::SystemGroupErrataController, :katello => true do
 
   describe "install errata" do
     before do
-      @group.stub(:install_errata)
+      @group.stub(:install_errata).and_return(TaskStatus.new)
     end
 
     let(:action) { :create }
