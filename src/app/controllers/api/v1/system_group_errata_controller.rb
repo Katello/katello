@@ -40,9 +40,10 @@ class Api::V1::SystemGroupErrataController < Api::V1::ApiController
 
   api :GET, "/organizations/:organization_id/system_groups/:system_group_id/errata", "Get list of errata associated with the group"
   param :type, ['bugfix', 'enhancement', 'security'], :desc => "Filter errata by type", :required => false
+  # TODO when errata are enabled there has to be created rabl template for errata
   def index
     errata = get_errata(params[:type])
-    render :json => errata
+    respond :collection => errata
   end
 
   api :POST, "/organizations/:organization_id/system_groups/:system_group_id/errata", "Install errata remotely"
@@ -50,7 +51,7 @@ class Api::V1::SystemGroupErrataController < Api::V1::ApiController
   def create
     if params[:errata_ids]
       job = @group.install_errata(params[:errata_ids])
-      render :json => job, :status => 202
+      respond_for_async :resource => job
     end
   end
 
