@@ -91,20 +91,21 @@ class Api::V1::SystemsController < Api::V1::ApiController
   api :POST, "/environments/:environment_id/systems", "Register a system in environment"
   param_group :system
   def create
-    system = System.create!(params.merge({:environment => @environment,
+    @system = System.create!(params.merge({:environment => @environment,
                                           :content_view => @content_view,
                                           :serviceLevel => params[:service_level]}))
-    render :json => system.to_json
+    respond_for_create
   end
 
   api :POST, "/hypervisors", "Update the hypervisors information for environment"
   desc <<DESC
 Takes a hash representing the mapping: host system having geust systems, e.g.:
 
-    { "host-uuid": ["guest-uuid-1", "guest-uuid-2'] }
+    { "host-uuid": ["guest-uuid-1", "guest-uuid-2"] }
 
 See virt-who tool for more details.
 DESC
+  # TODO refactor render
   def hypervisors_update
     cp_response, hypervisors = System.register_hypervisors(@environment, params.except(:controller, :action))
     render :json => cp_response
@@ -122,22 +123,22 @@ DESC
     activation_keys = find_activation_keys
     ActiveRecord::Base.transaction do
       # create new system entry
-      system = System.new(params.except(:activation_keys))
+      @system = System.new(params.except(:activation_keys))
 
       # register system - we apply ak in reverse order so when they conflict e.g. in environment, the first wins.
-      activation_keys.reverse_each {|ak| ak.apply_to_system(system) }
-      system.save!
+      activation_keys.reverse_each {|ak| ak.apply_to_system(@system) }
+      @system.save!
 
       # subscribe system - if anything goes wrong subscriptions are deleted in Candlepin and exception is rethrown
       activation_keys.each do |ak|
-        ak.subscribe_system(system)
+        ak.subscribe_system(@system)
         ak.system_groups.each do |group|
-          group.system_ids = (group.system_ids + [system.id]).uniq
+          group.system_ids = (group.system_ids + [@system.id]).uniq
           group.save!
         end
       end
 
-      render :json => system.to_json
+      respond_for_create
     end
   end
 
@@ -148,7 +149,7 @@ Schedules the consumer identity certificate regeneration
 DESC
   def regenerate_identity_certificates
     @system.regenerate_identity_certificates
-    render :json => @system.to_json
+    respond_for_create
   end
 
   api :PUT, "/consumers/:id", "Update system information (compatibility)"
@@ -161,7 +162,7 @@ DESC
                                            :facts, :guestIds, :installedProducts,
                                            :releaseVer, :serviceLevel,
                                            :environment_id, :content_view_id))
-    render :json => @system.to_json
+    respond
   end
 
   api :PUT, "/consumers/:id/checkin/", "Update system check-in time (compatibility)"
@@ -206,16 +207,16 @@ DESC
     options[:sort_order]= params[:sort_order] if params[:sort_order]
 
     items = Glue::ElasticSearch::Items.new(System)
-    systems = items.retrieve(query_string, params[:offset], options)
+    @systems = items.retrieve(query_string, params[:offset], options)
 
-    render :json => systems.to_json
+    respond
   end
 
   api :GET, "/consumers/:id", "Show a system (compatibility)"
   api :GET, "/systems/:id", "Show a system"
   param :id, String, :desc => "UUID of the system", :required => true
   def show
-    render :json => @system.to_json
+    respond
   end
 
   api :DELETE, "/consumers/:id", "Unregister a system (compatibility)"
@@ -223,7 +224,7 @@ DESC
   param :id, String, :desc => "UUID of the system", :required => true
   def destroy
     @system.destroy
-    render :text => _("Deleted system '%s'") % params[:id], :status => 204
+    respond :message => _("Deleted system '%s'") % params[:id], :status => 204
   end
 
   api :GET, "/systems/:id/pools", "List pools a system is subscribed to"
@@ -235,7 +236,7 @@ DESC
 
     cp_pools = @system.filtered_pools(match_system, match_installed, no_overlap)
 
-    render :json => { :pools => cp_pools }
+    respond_for_index :collection => { :pools => cp_pools }
   end
 
   api :GET, "/systems/:id/releases", "Show releases available for the system"
@@ -244,20 +245,20 @@ DESC
 A hint for choosing the right value for the releaseVer param
 DESC
   def releases
-    render :json => { :releases => @system.available_releases }
+    respond_for_index :collection => { :releases => @system.available_releases }
   end
 
   api :GET, "/systems/:id/packages", "List packages installed on the system"
   param :id, String, :desc => "UUID of the system", :required => true
   def package_profile
-    render :json => @system.simple_packages.sort {|a,b| a["name"].downcase <=> b["name"].downcase}.to_json
+    respond_for_index :collection => @system.simple_packages.sort {|a,b| a.name.downcase <=> b.name.downcase}
   end
 
   api :GET, "/systems/:id/errata", "List errata available for the system"
   param :id, String, :desc => "UUID of the system", :required => true
   def errata
     raise NotImplementedError
-    render :json => ::Consumer.errata(@system.uuid)
+    respond_for_index :collection => ::Consumer.errata(@system.uuid)
   end
 
   api :PUT, "/consumers/:id/packages", "Update installed packages"
@@ -268,7 +269,7 @@ DESC
       raise HttpErrors::BadRequest, _("No package profile received for %s") % @system.name unless params.has_key?(:_json)
       @system.upload_package_profile(params[:_json])
     end
-    render :json => @system.to_json
+    respond_for_update
   end
 
   api :GET, "/environments/:environment_id/systems/report", "Get system reports for the environment"
@@ -365,14 +366,7 @@ DESC
     TaskStatus.refresh(task_ids)
 
     @tasks = TaskStatus.where(:id => task_ids)
-    render :json => @tasks.to_json
-  end
-
-  api :GET, "/systems/tasks/:id", "Show details of the async task"
-  param :id, String, :desc => "UUID of the task", :required => true
-  def task_show
-    @task.refresh
-    render :json => @task.to_json
+    respond_for_index :collection => @tasks
   end
 
   api :PUT, "/systems/:id/enabled_repos", "Update the information about enabled repositories"
@@ -408,7 +402,7 @@ DESC
       result[:result] = "ok"
     end
 
-    render :json => result.to_json
+    respond_for_show :resource => result
   end
 
   api :POST, "/systems/:id/system_groups", "Add a system to groups"
@@ -419,7 +413,7 @@ DESC
     ids = params[:system][:system_group_ids]
     @system.system_group_ids = (@system.system_group_ids + ids).uniq
     @system.save!
-    render :json => @system.to_json
+    respond_for_create
   end
 
   api :DELETE, "/systems/:id/system_groups", "Remove a system from groups"
@@ -430,7 +424,7 @@ DESC
     ids = params[:system][:system_group_ids].map(&:to_i)
     @system.system_group_ids = (@system.system_group_ids - ids).uniq
     @system.save!
-    render :json => @system.to_json
+    respond_for_show
   end
 
   api :PUT, "/systems/:id/refresh_subscriptions", "Trigger a refresh of subscriptions, auto-attaching if enabled"
@@ -539,14 +533,7 @@ DESC
     activation_keys
   end
 
-  def find_task
-    @task = TaskStatus.where(:uuid => params[:id]).first
-    raise ActiveRecord::RecordNotFound.new unless @task
-    @system = @task.task_owner
-  end
-
   def readable_filters
     {:environment_id=>KTEnvironment.systems_readable(@organization).collect{|item| item.id}}
   end
-
 end

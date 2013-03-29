@@ -28,7 +28,7 @@ Src::Application.routes.draw do
           put :checkin
         end
         collection do
-          match "/tasks/:id" => "systems#task_show", :via => :get
+          match "/tasks/:id" => "tasks#show", :via => :get
         end
         resources :subscriptions, :only => [:create, :index, :destroy] do
           collection do

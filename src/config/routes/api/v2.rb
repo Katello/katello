@@ -91,7 +91,7 @@ Src::Application.routes.draw do
           delete :system_groups, :action => :remove_system_groups
         end
         collection do
-          match "/tasks/:id" => "systems#task_show", :via => :get
+          match "/tasks/:id" => "tasks#show", :via => :get
         end
         api_resources :subscriptions, :only => [:create, :index, :destroy] do
           collection do
