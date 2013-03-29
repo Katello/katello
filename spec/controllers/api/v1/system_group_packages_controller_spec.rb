@@ -37,7 +37,7 @@ describe Api::V1::SystemGroupPackagesController, :katello => true do
 
   describe "install package" do
     before do
-      @group.stub(:install_packages)
+      @group.stub(:install_packages).and_return(TaskStatus.new())
     end
 
     let(:action) { :create }
@@ -59,7 +59,7 @@ describe Api::V1::SystemGroupPackagesController, :katello => true do
 
   describe "install package group" do
     before do
-      @group.stub(:install_package_groups)
+      @group.stub(:install_package_groups).and_return(TaskStatus.new())
     end
 
     subject { post :create, :organization_id => @organization.name, :system_group_id => @group.id, :groups => package_groups }
@@ -74,7 +74,7 @@ describe Api::V1::SystemGroupPackagesController, :katello => true do
 
   describe "remove package" do
     before do
-      @group.stub(:uninstall_packages)
+      @group.stub(:uninstall_packages).and_return(TaskStatus.new())
     end
 
     let(:action) { :destroy }
@@ -94,7 +94,7 @@ describe Api::V1::SystemGroupPackagesController, :katello => true do
 
   describe "remove package group" do
     before do
-      @group.stub(:uninstall_package_groups)
+      @group.stub(:uninstall_package_groups).and_return(TaskStatus.new())
     end
 
     subject { delete :destroy, :organization_id => @organization.name, :system_group_id => @group.id, :groups => package_groups }
@@ -109,7 +109,7 @@ describe Api::V1::SystemGroupPackagesController, :katello => true do
 
   describe "update package" do
     before do
-      @group.stub(:update_packages)
+      @group.stub(:update_packages).and_return(TaskStatus.new())
     end
 
     let(:action) { :create }
@@ -129,7 +129,7 @@ describe Api::V1::SystemGroupPackagesController, :katello => true do
 
   describe "update package groups" do
     before do
-      @group.stub(:install_package_groups)
+      @group.stub(:install_package_groups).and_return(TaskStatus.new())
     end
 
     subject { put :update, :organization_id => @organization.name, :system_group_id => @group.id, :groups => package_groups }
