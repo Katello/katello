@@ -47,13 +47,13 @@ class Api::V1::SystemPackagesController < Api::V1::ApiController
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
       task = @system.install_packages(packages)
-      render :json => task, :status => 202
+      respond_for_async :resource => task
     end
 
     if params[:groups]
       groups = extract_group_names(params[:groups])
       task = @system.install_package_groups(groups)
-      render :json => task, :status => 202
+      respond_for_async :resource => task
     end
   end
 
@@ -64,7 +64,7 @@ class Api::V1::SystemPackagesController < Api::V1::ApiController
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
       task = @system.update_packages(packages)
-      render :json => task, :status => 202
+      respond_for_async :resource => task
     end
   end
 
@@ -75,13 +75,13 @@ class Api::V1::SystemPackagesController < Api::V1::ApiController
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
       task = @system.uninstall_packages(packages)
-      render :json => task, :status => 202
+      respond_for_async :resource => task
     end
 
     if params[:groups]
       groups = extract_group_names(params[:groups])
       task = @system.uninstall_package_groups(groups)
-      render :json => task, :status => 202
+      respond_for_async :resource => task
     end
   end
 
