@@ -15,6 +15,10 @@ class Api::V2::OrganizationsController < Api::V1::OrganizationsController
 
   include Api::V2::Rendering
 
+  resource_description do
+    api_version "v2"
+  end
+
   def_param_group :organization do
     param :organization, Hash, :required => true, :action_aware => true do
       param :name, String, :desc => "name for the organization", :required => true, :action_aware => true

@@ -37,27 +37,28 @@ Src::Application.routes.draw do
         api_resources :content_view_definitions, :only => [:index, :create]
         api_resources :sync_plans, :only => [:index, :create]
         api_resources :tasks, :only => [:index]
+        api_resources :system_groups, :only => [:index, :create]
         resource :uebercert, :only => [:show]
-
-        api_resources :system_groups, :except => [:new, :edit] do
-          member do
-            get :systems
-            get :history
-            match "/history/:job_id" => "system_groups#history_show", :via => :get
-            post :add_systems
-            post :copy
-            post :remove_systems
-            delete :destroy_systems
-          end
-
-          resource :packages, :action => [:create, :update, :destroy], :controller => :system_group_packages
-          api_resources :errata, :only => [:index, :create], :controller => :system_group_errata
-        end
 
         match '/default_info/:informable_type' => 'organization_default_info#create', :via => :post, :as => :create_default_info
         match '/default_info/:informable_type/:keyname' => 'organization_default_info#destroy', :via => :delete, :as => :destroy_default_info
         match '/default_info/:informable_type/apply' => 'organization_default_info#apply_to_all', :via => :post, :as => :apply_default_info
 
+      end
+
+      api_resources :system_groups do
+        member do
+          get :systems
+          get :history
+          match "/history/:job_id" => "system_groups#history_show", :via => :get
+          post :add_systems
+          post :copy
+          post :remove_systems
+          delete :destroy_systems
+        end
+
+        resource :packages, :action => [:create, :update, :destroy], :controller => :system_group_packages
+        api_resources :errata, :only => [:index, :create], :controller => :system_group_errata
       end
 
       api_resources :environments, :only => [:show, :update, :destroy] do
@@ -115,7 +116,7 @@ Src::Application.routes.draw do
         member do
           post :import_manifest
           post :delete_manifest
-          post :refresh_products
+          put :refresh_products
           post :product_create
           get :products
           post :discovery

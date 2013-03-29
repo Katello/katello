@@ -53,7 +53,7 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
   param :product_id, :number, :required => true, :desc => "id of a product the repository will be contained in"
   param :url, :undef, :required => true, :desc => "repository source url"
   param :gpg_key_name, String, :desc => "name of a gpg key that will be assigned to the new repository"
-  see "gpg_keys#index"
+  see "v1#gpg_keys#index"
   def create
     raise HttpErrors::BadRequest, _("Repository can be only created for custom provider.") unless @product.custom?
 
@@ -101,7 +101,7 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
   api :POST, "/repositories/:id/enable", "Enable or disable a repository"
   param :id, :identifier, :required => true
   param :enable, :bool, :required => true, :desc => "flag that enables/disables the repository"
-  #NOTE: this action will be removed in api v2
+  api_version "v1"
   def enable
     raise HttpErrors::NotFound, _("Disable/enable is not supported for custom repositories.") if not @repository.redhat?
 

@@ -15,4 +15,45 @@ class Api::V2::ContentViewDefinitionsController < Api::V1::ContentViewDefinition
 
   include Api::V2::Rendering
 
+  resource_description do
+    api_version "v2"
+  end
+
+  def_param_group :content_view_definition do
+    param :content_view_definition, Hash, :required => true, :action_aware => true do
+      param :name, String, :desc => "Content view definition name", :required => true
+      param :description, String, :desc => "Definition description"
+    end
+  end
+
+  api :POST, "/organizations/:organization_id/content_view_definitions",
+    "Create a content view definition"
+  param :organization_id, :identifier, :desc => "organization identifier"
+  param_group :content_view_definition
+  param :content_view_definition, Hash do
+    param :label, String, :desc => "Content view identifier"
+  end
+  def create
+    super
+  end
+
+  api :PUT, "/content_view_definitions/:id", "Update a definition"
+  param :id, :number, :desc => "Definition identifer", :required => true
+  param :org, String, :desc => "Organization name", :required => true
+  param_group :content_view_definition
+  def update
+    super
+  end
+
+  api :POST, "/content_view_definitions/:id/publish",
+    "Publish a content view"
+  param :name, String, :desc => "Name for the new content view", :required=>true
+  param :label, String, :desc=>"Label for the new content view", :required=>false
+  param :description, String, :desc=>"Description for the new content view", :required=>false
+  param :id, :identifier, :desc => "Definition identifier", :required => true
+  def publish
+    super
+  end
+
+
 end

@@ -49,27 +49,23 @@ class Api::V1::RolesController < Api::V1::ApiController
   end
 
   api :GET, "/roles", "List roles"
-  api :GET, "/users/:user_id/roles", "List roles assigned to a user"
-  param :name, :undef
+  param :name, String
   def index
     respond :collection => (Role.readable.non_self.where query_params)
   end
 
   api :GET, "/roles/:id", "Show a role"
-  api :GET, "/users/:user_id/roles/:id", "Show a role"
   def show
     respond
   end
 
   api :POST, "/roles", "Create a role"
-  api :POST, "/users/:user_id/roles", "Create a role"
   param_group :role
   def create
     respond :resource => Role.create!(params[:role])
   end
 
   api :PUT, "/roles/:id", "Update a role"
-  api :PUT, "/users/:user_id/roles/:id", "Update a role"
   param_group :role
   def update
     @role.update_attributes!(params[:role])
@@ -78,7 +74,6 @@ class Api::V1::RolesController < Api::V1::ApiController
   end
 
   api :DELETE, "/roles/:id", "Destroy a role"
-  api :DELETE, "/users/:user_id/roles/:id", "Destroy a role"
   def destroy
     @role.destroy
     respond :message => _("Deleted role '%s'") % params[:id]
@@ -100,7 +95,7 @@ class Api::V1::RolesController < Api::V1::ApiController
       details[type][:global] = value["global"]
       details[type][:name] = value["name"]
     end
-    
+
     respond_for_show :resource => details
   end
 

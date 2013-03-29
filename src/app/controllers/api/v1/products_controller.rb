@@ -73,8 +73,8 @@ class Api::V1::ProductsController < Api::V1::ApiController
     respond
   end
 
-  api :GET, "/environments/:environment_id/products", "List products"
-  api :GET, "/organizations/:organization_id/products", "List products"
+  api :GET, "/environments/:environment_id/products", "List products in an environment"
+  api :GET, "/organizations/:organization_id/products", "List all products in an organization"
   param :organization_id, :identifier, :desc => "organization identifier"
   param :environment_id, :identifier, :desc => "environment identifier"
   param :name, :identifier, :desc => "product identifier"

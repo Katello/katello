@@ -165,7 +165,7 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
     respond_for_index :collection => @definition.component_content_views
   end
 
-  api :GET, "/content_view_definitions/%s/repositories",
+  api :GET, "/content_view_definitions/:id/repositories",
     "List all the repositories for a content view definition"
   param :id, :identifer, :required => true, :desc => "Definition id"
   def repositories

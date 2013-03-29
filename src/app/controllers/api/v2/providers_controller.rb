@@ -15,6 +15,25 @@ class Api::V2::ProvidersController < Api::V1::ProvidersController
 
   include Api::V2::Rendering
 
+  resource_description do
+    api_version "v2"
+  end
+
+  def_param_group :provider do
+    param :provider, Hash, :required => true, :action_aware => true do
+      param :name, String, :desc => "Provider name", :required => true
+      param :description, String, :desc => "Provider description"
+      param :repository_url, String, :desc => "Repository URL"
+    end
+  end
+
+  api :POST, "/organizations/:organization_id/providers", "Create a provider"
+  param :organization_id, :identifier, :desc => "Organization identifier", :required => true
+  param_group :provider
+  def create
+    super
+  end
+
   api :DELETE, "/providers/:id", "Destroy a provider"
   param :id, :number, :desc => "Provider numeric identifier", :required => true
   def destroy
@@ -25,6 +44,12 @@ class Api::V2::ProvidersController < Api::V1::ProvidersController
 
     @provider.destroy
     respond
+  end
+
+  api :PUT, "/providers/:id/refresh_products", "Refresh products for Red Hat provider"
+  param :id, :number, :desc => "Provider numeric identifier", :required => true
+  def refresh_products
+    super
   end
 
 end

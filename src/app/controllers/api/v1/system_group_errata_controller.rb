@@ -18,6 +18,9 @@ class Api::V1::SystemGroupErrataController < Api::V1::ApiController
 
     param :organization_id, :identifier, :desc => "oranization identifier", :required => true
     param :system_group_id, :identifier, :desc => "system_group identifier", :required => true
+
+    api_version 'v1'
+    api_version 'v2'
   end
 
   respond_to :json

@@ -85,12 +85,14 @@ class Api::V1::ChangesetsController < Api::V1::ApiController
     render :json => @changeset
   end
 
-  # DEPRICATED - TODO: Note this in the new API doc format
+  # DEPRICATED
   api :POST, "/changesets/:id/promote", "Promote a changeset into a new envrionment."
+  api_version "v1"
   def promote
     apply
   end
 
+  api :POST, "/changesets/:id/apply", "Apply a changeset on an envrionment."
   def apply
     @changeset.state = Changeset::REVIEW
     @changeset.save!

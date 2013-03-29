@@ -14,6 +14,9 @@ class Api::V1::ProvidersController < Api::V1::ApiController
 
   resource_description do
     description "Custom Content Repositories and Red Hat repositories management."
+
+    api_version 'v1'
+    api_version 'v2'
   end
 
   before_filter :find_organization, :only => [:index, :create]
@@ -84,6 +87,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
   def create
     @provider = Provider.create!(params[:provider]) do |p|
       p.organization = @organization
+      p.provider_type ||= Provider::CUSTOM
     end
     respond
   end
@@ -173,7 +177,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
   api :POST, "/providers/:id/import_products", "Import products"
   param :id, :number, :desc => "Provider numeric identifier", :required => true
   param :products, Array, :desc => "Array of products to import", :required => true
-  #NOTE: this action will be removed in api v2
+  api_version "v1"
   def import_products
     results = params[:products].collect do |p|
       to_create = Product.new(p) do |product|
@@ -192,6 +196,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
     param :name, String, :desc => "Product name", :required => true
     param :label, String
   end
+  api_version "v1"
   def product_create
     raise HttpErrors::BadRequest, _("It is not allowed to create products in Red Hat provider.") if @provider.redhat_provider?
 

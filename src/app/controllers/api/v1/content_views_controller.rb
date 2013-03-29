@@ -54,15 +54,14 @@ class Api::V1::ContentViewsController < Api::V1::ApiController
     respond :collection => @content_views
   end
 
-  api :GET, "/organizations/:organization_id/content_views/:id"
-  param :organization_id, :identifier, :desc => "organization identifier", :required => true
+  api :GET, "/content_views/:id", "Show a content view"
   param :id, :identifier, :desc => "content view id"
   param :environment_id, :identifier, :desc => "environment id", :required => false
   def show
     render :json => @view.as_json(:environment => @environment)
   end
 
-  api :POST, "/content_views/:id/promote"
+  api :POST, "/content_views/:id/promote", "Promote a content view to next environment"
   param :id, :identifier, :desc => "content view id"
   param :environment_id, :identifier, :desc => "environment promoting to"
   def promote
@@ -70,7 +69,7 @@ class Api::V1::ContentViewsController < Api::V1::ApiController
     respond_for_async :resource => task
   end
 
-  api :POST, "/content_views/:id/refresh"
+  api :POST, "/content_views/:id/refresh", "Refresh a content view"
   param :id, :identifer, :desc => "content view id"
   def refresh
     version = @view.refresh_view(:async => true)

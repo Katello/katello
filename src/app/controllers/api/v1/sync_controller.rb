@@ -22,6 +22,9 @@ class Api::V1::SyncController < Api::V1::ApiController
     param :product_id, :identifier, :desc => "product identifier", :required => true
     param :provider_id, :identifier, :desc => "provider identifier", :required => true
     param :repository_id, :identifier, :desc => "repository identifier", :required => true
+
+    api_version 'v1'
+    api_version 'v2'
   end
 
   before_filter :find_object, :only => [:index, :create, :cancel]
