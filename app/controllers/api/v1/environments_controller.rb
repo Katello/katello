@@ -194,7 +194,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   api :GET, "/environments/:id/releases", "List available releases for given environment"
   param :id, :identifier, :desc => "environment identifier"
   def releases
-    render :json => { :releases => @environment.available_releases }
+    respond_for_index :collection => { :releases => @environment.available_releases }
   end
 
 
