@@ -43,6 +43,16 @@ class Filter < ActiveRecord::Base
     end
   end
 
+  def clone_for_archive
+    filter = Filter.new(:name => self.name)
+    filter.content_view_definition_id = nil
+    filter.rules = self.rules.map(&:dup)
+    filter.products = self.products
+    filter.repositories = self.repositories
+
+    filter
+  end
+
   protected
 
   def validate_products_and_repos

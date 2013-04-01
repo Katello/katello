@@ -92,6 +92,15 @@ class FilterTest < MiniTest::Rails::ActiveSupport::TestCase
     refute_empty Filter.find(@filter.id).products
   end
 
+  def test_archive
+    filter = create(:filter)
+    filter_count = Filter.count
+    archive = filter.content_view_definition.archive
+    refute_empty archive.filters
+    assert_equal filter_count+1, Filter.count
+    refute_equal filter.content_view_definition.filters.map(&:id).sort,
+      archive.filters.map(&:id).sort
+  end
 
   # TODO work to fix these later..
   #def test_content_definition_delete_repo
