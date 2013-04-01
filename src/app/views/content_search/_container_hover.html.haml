@@ -1,6 +1,9 @@
 -# may want to not store this as a partial for performance reasons
 - container ||=  nil
 - env ||= nil
-
-= _("Packages (%s)") % container.total_package_count(env)
-= _("Errata (%s)") % container.total_errata_count(env)
+- if container.is_a? Repository
+  = _("Packages (%s)") % container.package_count
+  = _("Errata (%s)") % container.errata_count
+- else
+  = _("Packages (%s)") % container.total_package_count(env)
+  = _("Errata (%s)") % container.total_errata_count(env)

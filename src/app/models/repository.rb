@@ -237,14 +237,9 @@ class Repository < ActiveRecord::Base
 
   # returns other instances of this repo with the same library
   # equivalent of repo
-  def environmental_instances(include_content_view = false)
-    if self.environment.library?
-      repo = self
-    else
-      repo = self.library_instance
-    end
+  def environmental_instances(view)
+    repo = self.library_instance || self
     search = Repository.where("library_instance_id=%s or repositories.id=%s"  % [repo.id, repo.id] )
-
-    include_content_view ? search : search.in_content_views([self.content_view])
+    search.in_content_views([view])
   end
 end
