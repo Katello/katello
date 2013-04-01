@@ -110,7 +110,7 @@ class FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
         :id => @filter.id, :repos => {@repo.product_id => @repo.id}
 
     assert_response :success
-    assert_equal @filter.reload.repositories.first, @repo
+    assert_equal @filter.reload.repositories.first.id, @repo.id
   end
 
   test "PUT update - remove repository should be successful" do
