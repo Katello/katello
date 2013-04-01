@@ -144,34 +144,6 @@ class ContentViewDefinition < ContentViewDefinitionBase
     raise e
   end
 
-  # Retrieve a list of repositories associated with the definition.
-  # This includes all repositories (ie. combining those that are part of products associated with the definition
-  # as well as repositories that are explicitly associated with the definition).
-  def repos
-    repos = []
-    if self.composite?
-      self.component_content_views.each do |component_view|
-        component_view.repos(organization.library).each{|r| repos << r}
-      end
-    else
-      self.products.each do |prod|
-        prod_repos = prod.repos(organization.library).enabled
-        prod_repos.select{|r| r.in_default_view?}.each{|r| repos << r}
-      end
-      repos.concat(self.repositories)
-      repos.uniq!
-    end
-    repos
-  end
-
-  def resulting_products
-    (self.products + self.repositories.collect{|r| r.product}).uniq
-  end
-
-  def has_content?
-    self.products.any? || self.repositories.any?
-  end
-
   def has_promoted_views?
     !! self.content_views.promoted.first
   end
@@ -205,11 +177,10 @@ class ContentViewDefinition < ContentViewDefinitionBase
     excluded = ["type", "created_at", "updated_at"]
     cvd_archive = ContentViewDefinitionArchive.new(self.attributes.except(*excluded))
 
-    # TODO: copy filters
-    # cvd_archive.filters               = self.filters.map(&:clone)
     cvd_archive.repositories            = self.repositories
     cvd_archive.products                = self.products
     cvd_archive.component_content_views = self.component_content_views
+    cvd_archive.filters                 = self.filters.reload.map(&:clone_for_archive)
     cvd_archive.source_id               = self.id
     cvd_archive.save!
 
