@@ -199,6 +199,11 @@ class Product < ActiveRecord::Base
     save!
   end
 
+  def environments_for_view view
+    versions = view.versions.select{|version| version.products.include?(self)}
+    versions.collect{|v|v.environments}.flatten
+  end
+
   protected
 
 

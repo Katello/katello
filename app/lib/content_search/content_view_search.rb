@@ -13,7 +13,7 @@
 module ContentSearch
 
   class ContentViewSearch < ContainerSearch
-    attr_accessor :view_ids
+    attr_accessor :views
 
     def initialize(options)
       super
@@ -45,14 +45,6 @@ module ContentSearch
       end
     end
 
-    def views
-      @views ||= if !self.view_ids.empty?
-        views = ContentView.readable(current_organization).where(:id => view_ids)
-      else
-        views = ContentView.readable(current_organization)
-      end
-    end
-
     def view_versions
       @view_versions ||= begin
         versions = views.map{|v| v.versions.in_environment(search_envs)}.flatten
@@ -61,14 +53,13 @@ module ContentSearch
         elsif @mode == :shared
           versions = versions.select {|v| (search_envs - v.environments).empty?}
         end
-
         versions
       end
     end
 
     # views that have been filtered by search_mode
     def filtered_views
-      @filtered_views ||= views.select {|v| view_versions.map(&:content_view_id).include?(v.id)}
+      @filtered_views ||= @views.select {|v| view_versions.map(&:content_view_id).include?(v.id)}
     end
 
   end

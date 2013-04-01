@@ -30,7 +30,7 @@ module ContentSearch
 
 
     def mode
-      @mode
+      @mode || :all
     end
 
     def mode=(mode)
