@@ -16,10 +16,12 @@ class FilterRulesControllerTest < MiniTest::Rails::ActionController::TestCase
   fixtures :all
 
   def self.before_suite
-    models = ["Organization", "KTEnvironment", "User", "ContentViewEnvironment", "FilterRule", "Filter",
-              "ContentViewDefinition"]
+    models = ["Organization", "KTEnvironment", "User", "Product", "EnvironmentProduct", "Repository",
+              "ContentViewEnvironment", "ContentViewDefinitionBase",
+              "ContentViewDefinition", "ContentViewDefinitionRepository",
+              "ContentViewDefinitionProduct", "Filter", "FilterRule"]
     services = ["Candlepin", "Pulp", "ElasticSearch", "Foreman"]
-    disable_glue_layers(services, models)
+    disable_glue_layers(services, models, true)
   end
 
   def setup
@@ -218,10 +220,10 @@ class FilterRulesControllerTest < MiniTest::Rails::ActionController::TestCase
                                                            "end" => '01/31/2013'}}
 
     put :add_parameter, :content_view_definition_id => @filter.content_view_definition.id, :filter_id => @filter.id,
-        :id => rule.id, :parameter => {:errata_type => 'security'}
+        :id => rule.id, :parameter => {:errata_type => ['security']}
 
     assert_response :success
-    assert_equal rule.reload.parameters, {"errata_type" => 'security',
+    assert_equal rule.reload.parameters, {"errata_type" => ['security'],
                                           "date_range" => {"start" => '01/01/2013',
                                                            "end" => '01/31/2013'}}
   end

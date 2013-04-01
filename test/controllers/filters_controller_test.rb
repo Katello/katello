@@ -21,7 +21,7 @@ class FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
               "ContentViewDefinition", "ContentViewDefinitionRepository",
               "ContentViewDefinitionProduct"]
     services = ["Candlepin", "Pulp", "ElasticSearch", "Foreman"]
-    disable_glue_layers(services, models)
+    disable_glue_layers(services, models, true)
   end
 
   def setup
@@ -114,9 +114,6 @@ class FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
   end
 
   test "PUT update - remove repository should be successful" do
-    #@filter.repository_ids = [@repo.id]
-    #@filter.save!
-
     # add repo to the filter
     put :update, :content_view_definition_id => @filter.content_view_definition.id,
         :id => @filter.id, :repos => {@repo.product_id => @repo.id}
