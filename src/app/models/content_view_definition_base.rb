@@ -26,6 +26,33 @@ class ContentViewDefinitionBase < ActiveRecord::Base
 
   validates :organization, :presence => true
 
+  def resulting_products
+    (self.products + self.repositories.collect{|r| r.product}).uniq
+  end
+
+  # Retrieve a list of repositories associated with the definition.
+  # This includes all repositories (ie. combining those that are part of products associated with the definition
+  # as well as repositories that are explicitly associated with the definition).
+  def repos
+    repos = []
+    if self.composite?
+      self.component_content_views.each do |component_view|
+        component_view.repos(organization.library).each{|r| repos << r}
+      end
+    else
+      self.products.each do |prod|
+        repos += prod.repos(organization.library).enabled.select(&:in_default_view?)
+      end
+      repos.concat(self.repositories)
+      repos.uniq!
+    end
+    repos
+  end
+
+  def has_content?
+    self.products.any? || self.repositories.any?
+  end
+
   def archive?
     type =~ /Archive/
   end
