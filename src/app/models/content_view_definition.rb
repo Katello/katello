@@ -314,8 +314,26 @@ class ContentViewDefinition < ContentViewDefinitionBase
     case rule.content_type
       when FilterRule::PACKAGE
         rule.parameters[:units].collect do |unit|
-          {'name' => {"$regex" => unit[:name]}}
+          rule_clauses = []
+          rule_clauses << {'name' => {"$regex" => unit[:name]}} if unit.has_key? :name
+          if unit.has_key? :version
+            rule_clauses << {'version' => unit[:version] }
+          else
+            vr = {}
+            vr["$gte"] = unit[:min_version] if unit.has_key? :min_version
+            vr["$lte"] = unit[:max_version] if unit.has_key? :max_version
+            rule_clauses << {'version' => vr } unless vr.empty?
+          end
+          case rule_clauses.size
+            when 1
+              rule_clauses.first
+            when 2
+              {'$and' => rule_clauses}
+            else
+              #ignore
+          end
         end
+
       when FilterRule::PACKAGE_GROUP
         rule.parameters[:units].collect do |unit|
           {'name' => {"$regex" => unit[:name]}}
