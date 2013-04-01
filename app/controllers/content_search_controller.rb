@@ -49,72 +49,60 @@ class ContentSearchController < ApplicationController
   end
 
   def products
-    view_ids = param_view_ids
+    views = process_views(process_params :views)
+    products = process_products(process_params :products)
     view_search = ContentSearch::ContentViewSearch.new(:name => _("Content View"),
-                                                       :view_ids => view_ids)
+                                                       :views => views)
 
     product_search = ContentSearch::ProductSearch.new(:name => _('Products'),
-                                                      :product_ids => param_product_ids,
-                                                      :view_ids => view_ids,
+                                                      :products => products,
+                                                      :views => views,
                                                       :mode => @mode
                                                      )
     render :json => {:rows=>(view_search.rows + product_search.rows), :name=>_("Products")}
   end
 
   def views
-    ids = param_view_ids
+    views = process_views(process_params :views)
     view_search = ContentSearch::ContentViewSearch.new(:name => _("Content View"),
-                                                       :view_ids => ids
-                                                      )
+                                                       :views => views,
+                                                       :mode => @mode)
     render :json => view_search
   end
 
   def repos
-    repo_ids      = process_params :repos
-    product_ids   = param_product_ids
-    view_ids      = param_view_ids
-
-    repos = collect_repos(repo_ids, product_ids)
-
-    envs = process_env_ids
-    mode = process_search_mode
-
-    unless mode == :all
-      repos = repos.select do |repo|
-        repo_envs = repo.environmental_instances.collect(&:environment)
-        cmp = (envs - repo_envs ).empty?
-        mode == :shared ? cmp : !cmp
-      end
-    end
+    repo_ids = process_params(:repos)
+    product_ids = process_params(:products)
+    views = process_views(process_params :views)
+    repos = process_repos(repo_ids, product_ids)
 
     products = repos.collect(&:product).uniq
-    product_search = ContentSearch::ProductSearch.new(:product_ids => products.map(&:id),
-                                                      :view_ids=>view_ids)
-
-
+    product_search = ContentSearch::ProductSearch.new(:products => products,
+                                                      :views=>views)
     view_search = ContentSearch::ContentViewSearch.new(:name => _("Content View"),
-                                                       :view_ids => view_ids)
-    rows = view_search.rows
-    rows.concat(product_search.rows)
+                                                       :views => views)
+    rows = view_search.rows + product_search.rows
     view_search.views.each do |view|
-      tmp_rows = repo_rows(view, repos)
-      rows.concat(tmp_rows)
+      repo_search = ContentSearch::RepoSearch.new(:name=>_('Repositories'), :view=>view, :repos=>repos, :mode=>@mode)
+      rows.concat(repo_search.rows)
     end
 
     render :json=>{:rows=>rows, :name=>_('Repositories')}
   end
 
   def packages
-    view_ids      = param_view_ids
-    repo_ids      = process_params :repos
-    product_ids   = param_product_ids
-    package_ids   = process_params :packages
+    repo_ids = process_params(:repos)
+    product_ids = process_params(:products)
+    views = process_views(process_params :views)
+    repos = process_repos(repo_ids, product_ids)
 
 
-    views = collect_views(view_ids)
-    repos = collect_repos(repo_ids, product_ids)
-    product_repo_map = map_repos_to_product(repos)
+
+    #construct a structure   view => { product => [repos] } for each view
     view_product_repo_map = map_products_to_views(views, product_repo_map)
+
+
+    product_repo_map = map_repos_to_product(repos)
 
     rows = []
     product_repo_map.each do |p_id, product_repo_ids|
@@ -122,6 +110,11 @@ class ContentSearchController < ApplicationController
     end
 
     render :json => {:rows => rows, :name => _('Packages')}
+  end
+
+  def view_product_repo_map(views, product_ids, repo_ids )
+
+
   end
 
   def errata
@@ -277,7 +270,7 @@ class ContentSearchController < ApplicationController
     @repos = []
     params[:repos].values.each do |item|
       library_instance = Repository.readable_in_org(current_organization).find(item[:repo_id])
-      @repos += library_instance.environmental_instances.select{|r| r.environment_id.to_s == item[:env_id]}
+      @repos += library_instance.environmental_instances(current_organization.default_content_view).select{|r| r.environment_id.to_s == item[:env_id]}
     end
   end
 
@@ -286,31 +279,11 @@ class ContentSearchController < ApplicationController
   end
 
   def repo_rows view, repos
-    env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
-    repos.collect do |repo|
-        repo = Repository.in_content_views([view]).where(:library_instance_id=>repo.id).first
-        all_repos = repo.environmental_instances(true).pluck(:pulp_id)
-        cols = {}
-        Repository.where(:pulp_id=>all_repos).each do |r|
-          cols[r.environment.id] = {:hover => repo_hover_html(r)} if env_ids.include?(r.environment_id)
-        end
-        {:id=>"repo_#{repo.id}", :comparable=>true, :parent_id=>"view_#{view.id}_product_#{repo.product.id}",
-        :name=>repo.name, :cols=>cols, :data_type => "repo", :value => repo.name}
-    end
+
   end
 
   def repo_hover_html repo
     render_to_string :partial=>'repo_hover', :locals=>{:repo=>repo}
-  end
-
-  def param_product_ids
-    ids = params[:products][:autocomplete].collect{|p|p["id"]} if params[:products]
-    ids || []
-  end
-
-  def param_view_ids
-    ids = params[:views][:autocomplete].collect{|p|p["id"]} if params[:views]
-    ids || []
   end
 
   def process_search_mode
@@ -369,21 +342,6 @@ class ContentSearchController < ApplicationController
     views = ContentView.readable(current_organization)
     views = views.where(:id=>view_ids) if view_ids.blank?
     views
-  end
-
-  def collect_repos(repo_ids, product_ids)
-    # is this neccessary?
-    unless product_ids.blank?
-      product_ids = Product.readable(current_organization).where(:id => product_ids).pluck(:id)
-    end
-
-    # repos were searched by string
-    unless repo_ids.is_a? Array
-      search_string = repo_ids
-      repo_ids      = Repository.enabled.libraries_content_readable(current_organization).pluck(:id)
-    end
-
-    repo_search(search_string, repo_ids, product_ids)
   end
 
   # Given a repos, and a repo_search, return a
@@ -446,7 +404,7 @@ class ContentSearchController < ApplicationController
   #
   #
   def spanned_repo_content library_repo, content_type, content_search_obj, offset=0, search_mode = :all, environments = []
-    spanning_repos = library_repo.environmental_instances
+    spanning_repos = library_repo.environmental_instances(library_repo.content_view)
     accessible_env_ids = KTEnvironment.content_readable(current_organization).pluck(:id)
 
     unless environments.nil? || environments.empty?
@@ -554,4 +512,34 @@ class ContentSearchController < ApplicationController
     @mode = params[:mode].try(:to_sym) || :all
   end
 
+  def process_views(view_ids)
+    if view_ids.blank?
+      ContentView.readable(current_organization)
+    else
+      ContentView.readable(current_organization).where(:id => view_ids)
+    end
+  end
+
+  def process_products(product_ids)
+    if product_ids.blank?
+      current_organization.products.readable(current_organization).engineering
+    else
+      current_organization.products.readable(current_organization).engineering.where(:id=>product_ids)
+    end
+  end
+
+  def process_repos(repo_ids, product_ids)
+    # is this neccessary?
+    unless product_ids.blank?
+      product_ids = Product.readable(current_organization).where(:id => product_ids).pluck(:id)
+    end
+
+    # repos were searched by string
+    unless repo_ids.is_a? Array
+      search_string = repo_ids
+      repo_ids      = Repository.enabled.libraries_content_readable(current_organization).pluck(:id)
+    end
+
+    repo_search(search_string, repo_ids, product_ids)
+  end
 end

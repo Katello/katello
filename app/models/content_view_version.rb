@@ -44,8 +44,12 @@ class ContentViewVersion < ActiveRecord::Base
     self.repositories.in_environment(env)
   end
 
-  def products(env)
-    repos(env).map(&:product).uniq(&:id)
+  def products(env=nil)
+    if env
+      repos(env).map(&:product).uniq(&:id)
+    else
+      self.repositories.map(&:product).uniq(&:id)
+    end
   end
 
   def content_view_definition

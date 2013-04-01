@@ -13,7 +13,7 @@
 module ContentSearch
 
   class ProductSearch < ContainerSearch
-    attr_accessor :product_ids, :view_ids
+    attr_accessor :products, :views
 
     def initialize(options)
       super
@@ -22,14 +22,10 @@ module ContentSearch
 
     def build_rows
       rows = []
-
-      views = ContentView.readable(current_organization)
-      views = views.where(:id=>@view_ids) unless @view_ids.blank?
-
-      views.each do |view|
-        view.all_version_products.collect do |prod|
+      @views.each do |view|
+        filtered_products(view).each do |prod|
           cols = {}
-          prod.environments.default_view.each do |env|
+          prod.environments_for_view(view).each do |env|
             cols[env.id] = Cell.new(:hover => container_hover_html(prod, env)) if readable_env_ids.include?(env.id)
           end
           rows << Row.new(:id => "view_#{view.id}_product_#{prod.id}",
@@ -45,24 +41,15 @@ module ContentSearch
       rows
     end
 
-    def products
-      @products ||= begin
-        if !product_ids.empty?
-          products = current_organization.products.readable(current_organization).engineering.where(:id=>product_ids)
-        else
-          products = current_organization.products.readable(current_organization).engineering
-        end
-
-        envs = SearchUtils.search_envs
-        if search_mode == :shared
-          products = products.select{|p|  (envs - p.environments.default_view).empty? }
-        elsif search_mode == :unique
-          products = products.select{|p|  !(envs - p.environments.default_view ).empty?}
-        end
-
-        products
+    def filtered_products(view)
+      filtered = products & view.all_version_products
+      envs = SearchUtils.search_envs(mode)
+      if mode == :shared
+        filtered = filtered.select{|p|  (envs - p.environments_for_view(view)).empty? }
+      elsif mode == :unique
+        filtered = filtered.select{|p|  !(envs - p.environments_for_view(view)).empty? }
       end
+      filtered
     end
-
   end
 end
