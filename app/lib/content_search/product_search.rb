@@ -33,7 +33,8 @@ module ContentSearch
                                  :cols => cols,
                                  :data_type => "product",
                                  :value => prod.name,
-                                 :parent_id=> "view_#{view.id}"
+                                 :parent_id=> "view_#{view.id}",
+                                 :object_id=>view.id
                                 )
         end
       end
