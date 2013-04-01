@@ -167,6 +167,11 @@ class ContentView < ActiveRecord::Base
     Product.joins(:environment_products=>:repositories).where('repositories.id'=>self.all_version_repos).uniq
   end
 
+  def all_version_library_instances
+    all_repos = all_version_repos.pluck(:library_instance_id)
+    Repository.where(:id=>all_repos)
+  end
+
   def get_repo_clone(env, repo)
     lib_id = repo.library_instance_id || repo.id
     Repository.in_environment(env).where(:library_instance_id => lib_id).

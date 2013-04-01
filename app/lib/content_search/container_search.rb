@@ -31,5 +31,10 @@ module ContentSearch
     def search_envs
       SearchUtils.search_envs(mode)
     end
+
+    #retrieve the list of rows but as values in a hash, with the object id as key
+    def row_object_hash
+      Hash[self.rows.collect { |r| [r.object_id, r] }]
+    end
   end
 end

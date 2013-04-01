@@ -12,7 +12,7 @@
 
 class ContentSearch::Row
   include ContentSearch::Element
-  display_attributes :id, :name, :cols, :data_type, :value, :parent_id, :comparable
+  display_attributes :id, :name, :cols, :data_type, :value, :parent_id, :comparable, :object_id
   alias :cells :cols
   alias :cells= :cols=
 
