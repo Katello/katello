@@ -11,8 +11,32 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Katello::UrlConstrainedCookieStore < ActionDispatch::Session::CookieStore
+  include Katello::UrlConstrainedCookieStoreV30X if Rails::VERSION::STRING < "3.2" 
+  include Katello::UrlConstrainedCookieStoreV32X if Rails::VERSION::STRING >= "3.2" 
+  
   DEFAULT_OPTIONS.merge!(:expiration_exceptions => nil)
+  
+  def expiration_exceptions(options)
+    exceptions = options.delete(:expiration_exceptions) or []
+    exceptions.instance_of?(Array) ? exceptions : [exceptions]
+  end
 
+  def create_cookie(request, cookie_data)
+    cookie = Hash.new
+    cookie[:value] = cookie_data
+    if options[:expire_after]
+      cookie[:value]['created_at'] ||= Time.now
+      if expiration_exceptions(options).any? { |e| request.fullpath.include?(e) }
+        cookie[:expires] = cookie[:value]['created_at'] + options[:expire_after]
+      else
+        cookie[:value]['created_at'] = Time.now
+        cookie[:expires] = cookie[:value]['created_at'] + options[:expire_after]
+      end
+    end
+  end
+end
+
+module Katello::UrlConstrainedCookieStoreV30X
   # This is almost entirely based on ActionDispatch::Session::AbstractStore#call.
   # Unfortunately, there isn't a good way not to duplicate all this logic.
   def call(env)
@@ -31,26 +55,39 @@ class Katello::UrlConstrainedCookieStore < ActionDispatch::Session::CookieStore
       value = set_session(env, sid, session_data)
       return response unless value
 
-      request = ActionDispatch::Request.new(env)
-      cookie = { :value => value }
-      unless options[:expire_after].nil?
-        cookie[:value]['created_at'] ||= Time.now
-        if expiration_exceptions(options).any? { |e| request.fullpath.include?(e) }
-          cookie[:expires] = cookie[:value]['created_at'] + options.delete(:expire_after)
-        else
-          cookie[:value]['created_at'] = Time.now
-          cookie[:expires] = cookie[:value]['created_at'] + options.delete(:expire_after)
-        end
-      end
-
+      cookie = create_cookie(ActionDispatch::Request.new(env), value)
       set_cookie(request, cookie.merge!(options))
     end
 
     response
   end
-
-  def expiration_exceptions(options)
-    exceptions = options.delete(:expiration_exceptions) or []
-    exceptions.instance_of?(Array) ? exceptions : [exceptions]
-  end
 end
+
+module Katello::UrlConstrainedCookieStoreV32X
+  def commit_session(env, status, headers, body)
+    session = env['rack.session']
+    options = env['rack.session.options']
+
+    if options[:drop] || options[:renew]
+      session_id = destroy_session(env, options[:id] || generate_sid, options)
+      return [status, headers, body] unless session_id
+    end
+
+    return [status, headers, body] unless commit_session?(env, session, options)
+
+    session.send(:load!) unless loaded_session?(session)
+    session = session.to_hash
+    session_id ||= options[:id] || generate_sid
+
+    if not data = set_session(env, session_id, session, options)
+      env["rack.errors"].puts("Warning! #{self.class.name} failed to save session. Content dropped.")
+    elsif options[:defer] and not options[:renew]
+      env["rack.errors"].puts("Defering cookie for #{session_id}") if $VERBOSE
+    else
+      cookie = create_cookie(ActionDispatch::Request.new(env), data)
+      set_cookie(env, headers, cookie.merge!(options))
+    end
+
+    [status, headers, body]
+  end
+end  
