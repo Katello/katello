@@ -101,8 +101,11 @@ class Api::V1::UsersController < Api::V1::ApiController
                                 end
 
     if !params[:default_locale].blank?
-        @user.default_locale = params[:default_locale]
+      #TODO: this should be placed in model validations
+      if Katello.config.available_locales.include? user_params[:default_locale]
+        @user.default_locale = user_params[:default_locale]
         @user.save!
+      end
     end
     respond
   end
@@ -110,7 +113,7 @@ class Api::V1::UsersController < Api::V1::ApiController
   api :DELETE, "/users/:id", "Destroy an user"
   def destroy
     @user.destroy
-    render :message => _("Deleted user '%s'") % params[:id]
+    respond :message => _("Deleted user '%s'") % params[:id]
   end
 
   api :GET, "/users/:user_id/roles", "List roles assigned to a user"
@@ -121,7 +124,6 @@ class Api::V1::UsersController < Api::V1::ApiController
   end
 
   api :GET, "/users/sync_ldap_roles", "Synchronises roles for all users with LDAP groups"
-  #TODO: create rabl
   def sync_ldap_roles
     User.all.each { |user| user.set_ldap_roles }
     respond_for_status :message => _("Roles for all users were synchronised with LDAP groups")
@@ -164,7 +166,7 @@ class Api::V1::UsersController < Api::V1::ApiController
   def list_owners
     orgs = @user.allowed_organizations
     # rhsm expects owner (Candlepin format)
-    render :json => orgs.map { |o| { :key => o.label, :displayName => o.name } }
+    respond_for_index :collection => orgs.map { |o| { :key => o.label, :displayName => o.name } }
   end
 
   private
