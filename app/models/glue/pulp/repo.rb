@@ -261,7 +261,7 @@ module Glue::Pulp::Repo
 
     def package_groups=attrs
       @repo_package_groups = attrs.collect do |group|
-        ::PackageGroup.new(package)
+        ::PackageGroup.new(group)
       end
       @repo_package_groups
     end
