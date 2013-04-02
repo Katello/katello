@@ -19,7 +19,7 @@ class RepositoryAddContentView < ActiveRecord::Migration
      end
     end
 
-    null_repos = Repositories.where(:content_view_version_id=>nil)
+    null_repos = Repository.where(:content_view_version_id=>nil)
     if !null_repos.empty?
       puts "Found null content_view_version repositories"
       puts null_repos.inspect
