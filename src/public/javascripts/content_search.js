@@ -251,8 +251,8 @@ KT.content_search = function(paths_in){
         var options = {};
         close_tipsy();
 
-        options.show_compare_btn = search_pages[search_params.content_type].comparable;
 
+        options.show_compare_btn = search_pages[search_params.content_type].comparable;
 
         search_params = populate_state(search_params);
 
@@ -359,7 +359,8 @@ KT.content_search = function(paths_in){
                 return;
             }
             utils.each(event.selected, function(item){
-                formatted.push({env_id:item.col_id, repo_id:item.row_id.split('_')[1]})
+                var split_ids = item.row_id.split('_')
+                formatted.push({env_id:item.col_id, view_id:split_ids[1], repo_id:split_ids[5]})
             });
             search.subgrid = {
                 type: 'repo_compare_packages',

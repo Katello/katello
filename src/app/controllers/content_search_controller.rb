@@ -66,7 +66,8 @@ class ContentSearchController < ApplicationController
     views = process_views(process_params :views)
     view_search = ContentSearch::ContentViewSearch.new(:name => _("Content View"),
                                                        :views => views,
-                                                       :mode => @mode)
+                                                       :mode => @mode,
+                                                       :comparable => true)
     render :json => view_search
   end
 
@@ -83,7 +84,8 @@ class ContentSearchController < ApplicationController
                                                        :views => views)
     rows = view_search.rows + product_search.rows
     view_search.views.each do |view|
-      repo_search = ContentSearch::RepoSearch.new(:name=>_('Repositories'), :view=>view, :repos=>repos, :mode=>@mode)
+      repo_search = ContentSearch::RepoSearch.new(:name=>_('Repositories'), :view=>view, :repos=>repos,
+                                                  :comparable => true, :mode=>@mode)
       rows.concat(repo_search.rows)
     end
 
@@ -159,10 +161,11 @@ class ContentSearchController < ApplicationController
   #similar to :packages, but only returns package rows with an offset for a specific repo
   def packages_items
     repo = Repository.libraries_content_readable(current_organization).where(:id=>params[:repo_id]).first
+    view = ContentView.readable(current_organization).where(:id=>params[:view_id]).first
     offset = params[:offset].try(:to_i) || 0
-    pkgs = spanned_repo_content(repo, 'package', process_params(:packages), params[:offset], process_search_mode, process_env_ids) || {:content_rows=>[]}
+    pkgs = spanned_repo_content(view, repo, 'package', process_params(:packages), params[:offset], process_search_mode, process_env_ids) || {:content_rows=>[]}
     meta = metadata_row(pkgs[:total], offset + pkgs[:content_rows].length,
-                        {:repo_id=>repo.id}, repo.id, "repo_#{repo.id}")
+                        {:repo_id=>repo.id, :view_id=>view.id}, "#{view.id}_#{repo.id}", ContentSearch::RepoSearch.id(view, repo))
     render :json=>{:rows=>(pkgs[:content_rows] + [meta])}
   end
 
@@ -182,10 +185,11 @@ class ContentSearchController < ApplicationController
 
   #similar to :errata, but only returns errata rows with an offset for a specific repo
   def errata_items
+    view = ContentView.readable(current_organization).where(:id=>params[:view_id]).first
     repo = Repository.libraries_content_readable(current_organization).where(:id=>params[:repo_id]).first
     errata = spanned_repo_content(repo, 'errata', process_params(:errata), params[:offset], process_search_mode, process_env_ids) || {:content_rows=>[]}
-    meta = metadata_row(errata[:total], params[:offset] + errata[:content_rows].length,
-                        {:repo_id=>repo.id}, repo.id, "repo_#{repo.id}")
+    meta = metadata_row(errata[:total], offset + errata[:content_rows].length,
+                         {:repo_id=>repo.id, :view_id=>view.id}, "#{view.id}_#{repo.id}", ContentSearch::RepoSearch.id(view, repo))
     render :json=>{:rows=>(errata[:content_rows] + [meta])}
   end
 
@@ -291,10 +295,12 @@ class ContentSearchController < ApplicationController
 
 
   def find_repos
+
     @repos = []
     params[:repos].values.each do |item|
-      library_instance = Repository.readable_in_org(current_organization).find(item[:repo_id])
-      @repos += library_instance.environmental_instances(current_organization.default_content_view).select{|r| r.environment_id.to_s == item[:env_id]}
+      view = ContentView.readable(current_organization).where(:id=>item[:view_id]).first
+      library_instance = Repository.find(item[:repo_id])
+      @repos += library_instance.environmental_instances(view).select{|r| r.environment_id.to_s == item[:env_id]}
     end
   end
 
@@ -384,7 +390,7 @@ class ContentSearchController < ApplicationController
     to_ret
   end
 
-  def spanned_product_content(view, product, repos, content_type, search_obj)
+  def spanned_product_content(view, product, repos, content_type, search_obj, search_mode = nil, environments = nil)
     rows = []
     content_rows = []
     product_envs = {}
@@ -408,7 +414,7 @@ class ContentSearchController < ApplicationController
         content_rows += repo_span[:content_rows]
         if repo_span[:total] > current_user.page_size
           content_rows <<  metadata_row(repo_span[:total], current_user.page_size,
-                                        {:repo_id=>repo.id}, repo.id, repo_row_hash[repo.id].id)
+                                        {:repo_id=>repo.id, :view_id=>view.id}, "#{view.id}_#{repo.id}", repo_row_hash[repo.id].id)
         end
       end
     end

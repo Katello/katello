@@ -40,7 +40,7 @@ module ContentSearch
                 :cells      => cols,
                 :data_type  => "view",
                 :value      => view.name,
-                :comparable => true,
+                :comparable => self.comparable,
                 :object_id  => view.id
                )
       end
