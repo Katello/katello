@@ -18,7 +18,7 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
     ]
 
     allowed_options = [
-        ('--org=ACME', '--definition=content_def1', '--filter=flt')
+        ('--org=ACME', '--definition=content_def1', '--name=flt')
     ]
 
 
@@ -26,16 +26,17 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
 class FilterDeleteTest(CLIActionTestCase):
     ORG = 'org'
     DEF = { "label": 'content_def',
-             "id": 1
-            }
-    FILTER = 'filter'        
+            "name": 'content_def',
+            "id": 1
+          }
+    FILTER = 'filter'
 
     OPTIONS = {
         'org':ORG,
-        'definition':DEF["label"],
-        'filter_name':FILTER
+        'definition':DEF["name"],
+        'name':FILTER
     }
-    
+
     def setUp(self):
         self.set_action(Delete())
         self.set_module(katello.client.core.filter)
@@ -43,6 +44,7 @@ class FilterDeleteTest(CLIActionTestCase):
         self.mock_options(self.OPTIONS)
 
         self.mock(self.action.def_api, 'delete')
+        self.mock(self.module, 'get_cv_definition', self.DEF)
 
     def tearDown(self):
         self.restore_mocks()
@@ -50,4 +52,4 @@ class FilterDeleteTest(CLIActionTestCase):
     def test_it_uses_content_view_delete_api(self):
         self.run_action()
         self.action.def_api.delete.assert_called_once_with(self.FILTER,
-                self.DEF["label"], self.ORG)
+                self.DEF["id"], self.ORG)

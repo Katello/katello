@@ -15,25 +15,27 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
     disallowed_options = [
     ('--org=ACME' ),
     ('--org=ACME', '--definition=content_def1'),
+    ('--org=ACME', '--definition=content_def1', '--filter=flt'),
     ]
 
     allowed_options = [
-        ('--org=ACME', '--definition=content_def1', '--filter=flt')
+        ('--org=ACME', '--definition=content_def1', '--name=flt')
     ]
 
 
 class FilterInfoTest(CLIActionTestCase):
 
     ORG = 'org'
-    DEF = { "label": 'content_def',
-             "id": 1
-            }
-    FILTER = 'filter'        
+    DEF = {"name": 'content_def',
+           "label": 'content_def',
+           "id": 1
+           }
+    FILTER = 'filter'
 
     OPTIONS = {
         'org':ORG,
-        'definition':DEF["label"],
-        'filter_name':FILTER
+        'definition_id':DEF["id"],
+        'name':FILTER
     }
 
     def setUp(self):
@@ -43,6 +45,7 @@ class FilterInfoTest(CLIActionTestCase):
         self.mock_options(self.OPTIONS)
 
         self.mock(self.action.def_api, 'get_filter_info', self.FILTER)
+        self.mock(self.module, 'get_cv_definition', self.DEF)
 
     def tearDown(self):
         self.restore_mocks()
@@ -50,4 +53,4 @@ class FilterInfoTest(CLIActionTestCase):
     def test_it_uses_content_view_show_api(self):
         self.run_action()
         self.action.def_api.get_filter_info.assert_called_once_with(self.FILTER,
-                self.DEF["label"], self.ORG)
+                self.DEF["id"], self.ORG)

@@ -30,6 +30,10 @@ class Api::FiltersController < Api::ApiController
       :create => definition_editable,
       :show => definition_readable,
       :destroy => definition_editable,
+      :list_products => definition_readable,
+      :update_products => definition_editable,
+      :list_repositories => definition_readable,
+      :update_repositories => definition_editable
     }
   end
 
@@ -72,16 +76,65 @@ class Api::FiltersController < Api::ApiController
     render :json => @filter
   end
 
+  api :GET, "/content_view_definitions/:content_view_definition_id/filters/:filter_id/products",
+      "List all the products for a content view definition filter"
+  param :id, :identifer, :required => true, :desc => "Definition id"
+  def list_products
+    render :json => @filter.products
+  end
+
+  api :PUT, "/content_view_definitions/:content_view_definition_id/filters/:filter_id/products",
+      "Update products for a content view definition filter"
+  param :content_view_definition_id, :identifier, :required => true,
+        :desc => "content view definition identifier"
+  param :repos, Array, :desc => "Updated list of repo ids", :required => true
+  def update_products
+    @products = Product.readable(@organization).where(:cp_id => params[:products],
+                              "providers.organization_id" => @organization.id).joins(:provider)
+    deleted_products = @filter.products - @products
+    added_products = @products - @filter.products
+    @filter.products -= deleted_products
+    @filter.products += added_products
+    @filter.save!
+
+    render :json => @filter.products
+  end
+
+  api :GET, "/content_view_definitions/:content_view_definition_id/filters/:filter_id/repositories",
+      "List all the repositories for a content view definition filter"
+  param :id, :identifer, :required => true, :desc => "Definition id"
+  def list_repositories
+    render :json => @filter.repositories
+  end
+
+  api :PUT, "/content_view_definitions/:content_view_definition_id/filters/:filter_id/repositories",
+      "Update repositories for a content view definition filter"
+  param :content_view_definition_id, :identifier, :required => true,
+        :desc => "content view definition identifier"
+  param :repos, Array, :desc => "Updated list of repo ids", :required => true
+  def update_repositories
+    org_id = @definition.organization.id
+    @repos = Repository.libraries_content_readable(@organization).
+      where(:id => params[:repos])
+    deleted_repositories = @filter.repositories - @repos
+    added_repositories = @repos - @filter.repositories
+
+    @filter.repositories -= deleted_repositories
+    @filter.repositories += added_repositories
+    @filter.save!
+
+    render :json => @filter.repositories
+  end
+
   private
 
   def find_definition
-    @definition = ContentViewDefinition.where(:label => params[:content_view_definition_id], :organization_id => @organization).first
-    raise HttpErrors::NotFound, _("Couldn't find content definition '%s'") % params[:content_view_definition_id] if @definition.nil?
-    @definition
+    @definition = ContentViewDefinition.where(:organization_id => @organization.id).find(params[:content_view_definition_id])
   end
 
   def find_filter
-    @filter = Filter.where(:name => params[:id], :content_view_definition_id => @definition).first
+    id = params[:id] || params[:filter_id]
+    @filter = Filter.where(:name => id, :content_view_definition_id => @definition).first
     raise HttpErrors::NotFound, _("Couldn't find filter '%s'") % params[:id] if @filter.nil?
     @filter
   end
