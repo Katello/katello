@@ -11,7 +11,4 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module ActivationKeysHelper
-  def no_content_view
-    _("No Content View")
-  end
 end

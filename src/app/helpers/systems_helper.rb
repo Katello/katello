@@ -52,10 +52,6 @@ module SystemsHelper
              {:tabindex => 2})
   end
 
-  def no_content_view
-    _('Select Content View')
-  end
-
   def system_content_view_opts
     keys = {}
     ContentView.readable(current_organization).non_default.each do |view|
