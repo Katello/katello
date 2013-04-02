@@ -124,17 +124,11 @@ class ContentViewDefinition < ContentViewDefinitionBase
 
 
       # Remove all  package groups with no packages
-      package_groups_to_delete = repo.package_groups.collect do |package_group|
-        package_names = []
-        [:default_package_names, :conditional_package_names,
-                    :optional_package_names, :mandatory_package_names].each do |key|
-          values = package_group[key].collect do |v|
-            v.split(",")
-          end.flatten
-          package_names.concat(values)
-        end
-        package_group[:id] if (package_names.to_set - rpm_names).size == package_names.size
+      package_groups_to_delete = repo.package_groups.collect do |group|
+        package_names = group.package_names
+        group[:id] if (package_names.to_set - rpm_names).size == package_names.size
       end.compact
+
       unless package_groups_to_delete.empty?
         repo.unassociate_by_filter(FilterRule::PACKAGE_GROUP, {"id" => {"$in" => package_groups_to_delete}})
       end
