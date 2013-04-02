@@ -114,7 +114,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
 
       # Remove all errata with no packages
       errata_to_delete = repo.errata.collect do |erratum|
-        erratum.errata_id if (erratum.package_filenames.to_set - filenames).size == erratum.package_filenames.size
+        erratum.errata_id if filenames.intersection(erratum.package_filenames).empty?
       end.compact
 
       #do the errata remove call
@@ -125,8 +125,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
 
       # Remove all  package groups with no packages
       package_groups_to_delete = repo.package_groups.collect do |group|
-        package_names = group.package_names
-        group[:id] if (package_names.to_set - rpm_names).size == package_names.size
+        group.package_group_id if rpm_names.intersection(group.package_names).empty?
       end.compact
 
       unless package_groups_to_delete.empty?
