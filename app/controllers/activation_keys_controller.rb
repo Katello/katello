@@ -184,8 +184,12 @@ class ActivationKeysController < ApplicationController
     @environment = first_env_in_path(accessible_envs)
 
     @content_view_labels = [[no_content_view, '']]
-    @content_view_labels += ContentView.readable(@organization).non_default.
-      in_environment(@environment).collect {|cv| [cv.name, cv.id]}
+    if @environment
+      @content_view_labels += ContentView.readable(@organization).non_default.
+        in_environment(@environment).collect {|cv| [cv.name, cv.id]}
+    else
+      @content_view_labels = []
+    end
     @selected_content_view = no_content_view
 
     render :partial => "new", :locals => {:activation_key => activation_key,
