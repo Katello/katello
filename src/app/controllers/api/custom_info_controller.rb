@@ -52,7 +52,7 @@ class Api::CustomInfoController < Api::ApiController
   def update
     value = params[:value].strip
     @single_custom_info.update_attributes!(:value => value)
-    render :json => @single_custom_info.to_json
+    render :text => @single_custom_info.value
   end
 
   def destroy
