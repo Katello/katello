@@ -61,7 +61,7 @@ describe Api::V1::PingController do
     it "should reflect the correct information", :headpin => true do
       Katello.config.stub!(:app_name).and_return("Headpin")
       Katello.config.stub!(:katello_version).and_return("12")
-      get :system_status
+      get :server_status
       json(response).should include "release" => "Headpin"
       json(response).should include "version" => "12"
     end
@@ -69,7 +69,7 @@ describe Api::V1::PingController do
     it "should reflect the correct information", :katello => true do
       Katello.config.stub!(:app_name).and_return("Katello")
       Katello.config.stub!(:katello_version).and_return("12")
-      get :system_status
+      get :server_status
       json(response).should include "release" => "Katello"
       json(response).should include "version" => "12"
     end

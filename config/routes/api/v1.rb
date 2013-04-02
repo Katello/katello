@@ -284,7 +284,7 @@ Src::Application.routes.draw do
 
       resources :crls, :only => [:index]
 
-      match "/status"  => "ping#system_status", :via => :get
+      match "/status"  => "ping#server_status", :via => :get
       match "/version"  => "ping#version", :via => :get
       # some paths conflicts with rhsm
       scope 'katello' do

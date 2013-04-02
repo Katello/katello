@@ -209,6 +209,10 @@ Src::Application.routes.draw do
       api_resources :sync_plans, :only => [:show, :update, :destroy]
       api_resources :tasks, :only => [:show]
 
+      api_resources :ping, :only => [:index]
+      match "/version"  => "ping#version", :via => :get
+      match "/status"  => "ping#server_status", :via => :get      
+
       # api custom information
       match '/custom_info/:informable_type/:informable_id' => 'custom_info#create', :via => :post, :as => :create_custom_info
       match '/custom_info/:informable_type/:informable_id' => 'custom_info#index',  :via => :get,  :as => :custom_info
@@ -241,8 +245,7 @@ Src::Application.routes.draw do
 
       end
 
-      api_resources :ping, :only => [:index]
-
+      
       api_resources :gpg_keys, :only => [:show, :update, :destroy] do
         get :content, :on => :member
       end
@@ -256,8 +259,8 @@ Src::Application.routes.draw do
 
       api_resources :crls, :only => [:index]
 
-      match "/status"  => "ping#status", :via => :get
-      match "/version"  => "ping#version", :via => :get
+
+
       # some paths conflicts with rhsm
       scope 'katello' do
 
