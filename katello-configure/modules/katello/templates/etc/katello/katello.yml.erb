@@ -35,7 +35,7 @@ common:
 
   foreman:
     url: <%= scope.lookupvar("katello::params::foreman_url") %>
-    oauth_key: <%= scope.lookupvar("katello::params::oauth_key") %>
+    oauth_key: <%= scope.lookupvar("katello::params::foreman_oauth_key") %>
     oauth_secret: <%= scope.lookupvar("katello::params::oauth_secret") %>
 
   cloud_forms:
