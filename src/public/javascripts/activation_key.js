@@ -297,12 +297,11 @@ KT.activation_key = (function($) {
         highlight_input("#activation_key_content_view_id", add_highlight);
     };
     highlight_input = function(element_id, add_highlight) {
-        var text = element_id.match(/template/) ? "update_template" : "update_view";
         var select_input = $(element_id);
         if (add_highlight) {
             if( !select_input.next('span').hasClass('highlight_input_text')) {
                 select_input.addClass('highlight_input');
-                select_input.after('<span class ="highlight_input_text">' + i18n[text] + '</span>');
+                select_input.after('<span class ="highlight_input_text">' + i18n.select_content_view + '</span>');
             }
         } else {
             select_input.removeClass('highlight_input');
