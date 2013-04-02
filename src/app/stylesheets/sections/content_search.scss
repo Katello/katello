@@ -11,7 +11,7 @@ $browse_box-margin-right: 10px;
 $comparison_grid-width: $static_width - $browse_box-width - $browse_box-margin-left - $browse_box-margin-right - 24;
 $comparison_grid_header_h2-height:  45px;
 $comparison_grid_column_header-height:  35px;
-$comparison_grid_header-height: $comparison_grid_header_h2-height + $comparison_grid_column_header-height;
+$comparison_grid_header-height: $comparison_grid_header_h2-height + $comparison_grid_column_header-height + 20;
 $comparison_grid-height: 350px;
 $comparison_grid_filter-width: 190px - 2px;
 $comparison_grid_column_1-width: 100px - 10px - 1px;
@@ -219,7 +219,7 @@ $grid_cell_hover_link-color:                lighten($primary_color, 40%);
   }
 
   #grid_header {
-    height: $comparison_grid_header-height;
+    min-height: $comparison_grid_header-height;
     border-bottom: 2px solid $widget-border-color;
     position: relative;
 
@@ -263,7 +263,6 @@ $grid_cell_hover_link-color:                lighten($primary_color, 40%);
 
     #column_headers_container {
       width: $comparison_grid-width - $comparison_grid_filter-width - 1px;
-      height: $comparison_grid_column_header-height;
       position: absolute;
       bottom: 0;
       right: 0;
