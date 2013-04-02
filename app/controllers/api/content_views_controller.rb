@@ -53,7 +53,8 @@ class Api::ContentViewsController < Api::ApiController
     render :json => @content_views
   end
 
-  api :GET, "/content_views/:id"
+  api :GET, "/organizations/:organization_id/content_views/:id"
+  param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :id, :identifier, :desc => "content view id"
   param :environment_id, :identifier, :desc => "environment id", :required => false
   def show
