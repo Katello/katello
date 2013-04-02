@@ -38,11 +38,11 @@ KT.custom_info = (function() {
         var value = $("#new_custom_info_value").val();
 
         $.ajax({
-            url: $button.data("url"),
-            type: $button.data("method"),
+            url     : $button.data("url"),
+            type    : $button.data("method"),
             dataType: 'json',
-            data: { "keyname": keyname, "value": value },
-            success: function(data) {
+            data    : { "keyname": keyname, "value": value },
+            success : function(data) {
                 add_custom_info_row(data);
             }
         });
@@ -55,7 +55,7 @@ KT.custom_info = (function() {
 
     function add_custom_info_row(data) {
         var esc_keyname = escape(data["keyname"]);
-        var _keyname = data["keyname"].replace(" ", "_")
+        var _keyname = data["keyname"].replace(" ", "_");
         var value = data["value"];
         var informable_type = data["informable_type"];
         var informable_id = data["informable_id"];
@@ -72,21 +72,21 @@ KT.custom_info = (function() {
         + "<td>"
         + "<input class=\"btn warning remove_custom_info_button\" data-id=\"custom_info_" + _keyname + "\" data-method=\"delete\" data-url=\"" + destroy_path + "\" type=\"submit\" value=\"remove\">"
         + "</td>"
-        + "</tr>"
+        + "</tr>";
         $("#new_custom_info_row").after(new_row);
         $("#new_custom_info_keyname").val("");
         $("#new_custom_info_value").val("");
         var $new_editable = $("tr[data-id='custom_info_" + _keyname + "']").find(".editable");
 
         var common_settings = {
-            method          :  'PUT',
-            cancel          :  i18n.cancel,
-            submit          :  i18n.save,
-            indicator       :  i18n.saving,
-            tooltip         :  i18n.clickToEdit,
-            placeholder     :  i18n.clickToEdit,
-            submitdata      :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
-            onerror         :  function(settings, original, xhr) {
+            method     :  'PUT',
+            cancel     :  i18n.cancel,
+            submit     :  i18n.save,
+            indicator  :  i18n.saving,
+            tooltip    :  i18n.clickToEdit,
+            placeholder:  i18n.clickToEdit,
+            submitdata :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
+            onerror    :  function(settings, original, xhr) {
                 original.reset();
                 $("#notification").replaceWith(xhr.responseText);
                 notices.checkNotices();
@@ -94,11 +94,12 @@ KT.custom_info = (function() {
         };
 
         var settings = {
-            type        :  'text',
-            width       :  270,
-            name        :  $new_editable.attr('name')
+            type :  'text',
+            width:  270,
+            name :  $new_editable.attr('name')
         };
 
         $new_editable.editable($new_editable.attr('data-url'), $.extend(common_settings, settings));
     }
+
 })();
