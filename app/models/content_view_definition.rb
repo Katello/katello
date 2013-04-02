@@ -287,19 +287,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
 
       #    If there are include and exclude filters, the exclude filters then the include filters, get processed first,
       #       then the exclude filter excludes content from the set included by the include filters.
-=begin
-      package_clauses = []
-      if includes_count > 0
-        includes = applicable_rules.includes.collect{|x| {'name' =>{"$regex" => x.parameters[:name]}}}
-        package_clauses << {'$or' =>includes}
-      end
 
-      if excludes_count > 0
-        excludes = applicable_rules.excludes.collect{|x| {'name' =>{"$regex" => x.parameters[:name]}}}
-        package_clauses << {'$nor' => excludes}
-      end
-
-=end
       case clauses.size
         when 1
            return clauses.first
