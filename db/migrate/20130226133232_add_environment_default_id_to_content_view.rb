@@ -1,6 +1,8 @@
 class AddEnvironmentDefaultIdToContentView < ActiveRecord::Migration
   def self.up
     add_column :content_views, :environment_default_id, :integer
+    KTEnvironment.reset_column_information
+    ContentView.reset_column_information
     KTEnvironment.all.each do |env|
       cv = ContentView.find(env.default_content_view_id)
       cv.environment_default_id = env.id
