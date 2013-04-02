@@ -125,12 +125,13 @@ describe Api::ContentViewDefinitionsController, :katello => true do
   end
 
   describe "update_content_views" do
-    let(:definition) { FactoryGirl.create(:content_view_definition) }
-    let(:views) { FactoryGirl.create_list(:content_view, 2) }
-    let(:req) { put :update_content_views, :id => definition.id, :views =>
-      views.map(&:id) }
-    subject { req and definition.component_content_views.reload }
-    its(:length) { should eql(2) }
+    it "should update the definition's components" do
+      definition = FactoryGirl.create(:content_view_definition)
+      views = FactoryGirl.create_list(:content_view, 2)
+      ContentView.stub_chain(:readable, :where).and_return(views)
+      put :update_content_views, :id => definition.id, :views => views.map(&:id)
+      definition.component_content_views.reload.length.should eql(2)
+    end
   end
 
 end
