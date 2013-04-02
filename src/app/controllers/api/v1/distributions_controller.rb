@@ -27,14 +27,14 @@ class Api::V1::DistributionsController < Api::V1::ApiController
 
   api :GET, "/repositories/:repository_id/distributions", "List distributions"
   def index
-    render :json => @repo.distributions
+    respond :collection => @repo.distributions
   end
 
   api :GET, "/repositories/:repository_id/distributions/:id", "Show a distribution"
   param :repository_id, :number, :desc => "repository numeric id"
   def show
     dist = Distribution.find(params[:id])
-    render :json => dist
+    respond :resource => dist
   end
 
   private
