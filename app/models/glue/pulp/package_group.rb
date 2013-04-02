@@ -18,7 +18,7 @@ module Glue::Pulp::PackageGroup
     base.send :include, InstanceMethods
 
     base.class_eval do
-      attr_accessor :name, :default_package_names, :id, :repoid, :conditional_package_names,
+      attr_accessor :name, :package_group_id, :default_package_names, :id, :repoid, :conditional_package_names,
                       :mandatory_package_names, :description, :optional_package_names
     end
 
@@ -27,15 +27,17 @@ module Glue::Pulp::PackageGroup
   module InstanceMethods
 
     def initialize(params = {}, options={})
+      params['package_group_id'] = params['id']
       params['id'] = params.delete('_id')
       params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
 
-      [:default_package_names,:conditional_package_names,:optional_package_names,:mandatory_package_names].each do |attr|
+      [:default_package_names,:conditional_package_names,
+        :optional_package_names,:mandatory_package_names].each do |attr|
         values = send(attr)
         values = values.collect do |v|
           v.split(",")
         end.flatten
-        send(attr + "=", values)
+        send("#{attr}=", values)
       end
 
     end

@@ -48,9 +48,13 @@ class Filter < ActiveRecord::Base
   def clone_for_archive
     filter = Filter.new(:name => self.name)
     filter.content_view_definition_id = nil
-    filter.rules = self.rules.map(&:dup)
     filter.products = self.products
     filter.repositories = self.repositories
+    if Rails.version >= "3.1"
+      filter.rules = self.rules.map(&:dup)
+    else
+      filter.rules = self.rules.map(&:clone)
+    end
 
     filter
   end

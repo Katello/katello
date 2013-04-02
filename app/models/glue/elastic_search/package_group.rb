@@ -38,6 +38,7 @@ module Glue::ElasticSearch::PackageGroup
           :package_group => {
             :properties => {
               :id            => {:type=>'string', :index=>:not_analyzed},
+              :package_group_id => {:type=>'string', :index=>:not_analyzed},
               :name          => { :type=> 'string', :analyzer=>:kt_name_analyzer},
               :name_autocomplete  => { :type=> 'string', :analyzer=>'autcomplete_name_analyzer'},
               :repoid       => { :type=> 'string', :index=>:not_analyzed},
