@@ -114,7 +114,8 @@ class FiltersController < ApplicationController
   end
 
   def find_filter
-    @filter = Filter.find(params[:id])
+    id = params[:id] || params[:filter_id]
+    @filter = Filter.find(id)
   end
 
   private
