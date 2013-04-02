@@ -25,7 +25,7 @@ class Api::FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
 
   test "should return a list of filters" do
     get :index, :organization_id => @filter.content_view_definition.organization.label,
-                :content_view_definition_id=> @filter.content_view_definition.label
+                :content_view_definition_id=> @filter.content_view_definition.id
     assert_response :success
     assert_kind_of Array, JSON.parse(response.body)
     refute_empty JSON.parse(response.body)
@@ -33,7 +33,7 @@ class Api::FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
 
   test "should return a filter" do
     get :show, :organization_id => @filter.content_view_definition.organization.label,
-                :content_view_definition_id=> @filter.content_view_definition.label,
+                :content_view_definition_id=> @filter.content_view_definition.id,
                 :id => @filter.name
     assert_response :success
     assert_kind_of Hash, JSON.parse(response.body)
@@ -42,14 +42,14 @@ class Api::FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
 
   test "should throw an 404 if definition is not found" do
     get :show, :organization_id => @filter.content_view_definition.organization.label,
-                :content_view_definition_id=> @filter.content_view_definition.label + "-Foo-Foo",
+                :content_view_definition_id=> rand(100),
                 :id => @filter.name
     assert_response :missing
   end
 
   test "should throw an 404 if filter is not found" do
     get :show, :organization_id => @filter.content_view_definition.organization.label,
-                :content_view_definition_id=> @filter.content_view_definition.label,
+                :content_view_definition_id=> @filter.content_view_definition.id,
                 :id => @filter.name + "-Foo-Foo"
     assert_response :missing
   end
@@ -57,7 +57,7 @@ class Api::FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
 
   test "should delete a filter" do
     delete :destroy, :organization_id => @filter.content_view_definition.organization.label,
-                :content_view_definition_id=> @filter.content_view_definition.label,
+                :content_view_definition_id=> @filter.content_view_definition.id,
                 :id => @filter.name
     assert_response :success
     assert_nil Filter.find_by_name(@filter.name)
@@ -66,7 +66,7 @@ class Api::FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
   test "should create a filter" do
     name = @filter.name + "Cool"
     post :create, :organization_id => @filter.content_view_definition.organization.label,
-                :content_view_definition_id=> @filter.content_view_definition.label,
+                :content_view_definition_id=> @filter.content_view_definition.id,
                 :filter => name
     assert_response :success
     assert_kind_of Hash, JSON.parse(response.body)

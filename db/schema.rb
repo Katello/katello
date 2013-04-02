@@ -299,8 +299,8 @@ ActiveRecord::Schema.define(:version => 20130321121430) do
     t.string   "content_type",                   :null => false
     t.integer  "filter_id",                      :null => false
     t.boolean  "inclusion",    :default => true
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "filter_rules", ["filter_id"], :name => "index_filter_rules_on_filter_id"
@@ -308,8 +308,8 @@ ActiveRecord::Schema.define(:version => 20130321121430) do
   create_table "filters", :force => true do |t|
     t.integer  "content_view_definition_id"
     t.string   "name",                       :null => false
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "filters", ["content_view_definition_id"], :name => "index_filters_on_content_view_definition_id"
