@@ -26,7 +26,7 @@ module Glue::ElasticSearch::Repository
       end
 
       after_save :update_related_index
-      before_destroy :update_packages_index, :update_errata_index
+      before_destroy :update_packages_index, :update_errata_index, :update_package_group_index
     end
 
     def extended_index_attrs
@@ -110,6 +110,27 @@ module Glue::ElasticSearch::Repository
       Tire.index('katello_errata').refresh
     end
 
+
+    def index_package_groups
+      pgs = self.package_groups.collect{|pg| pg.as_json.merge(pg.index_options)}
+      Tire.index PackageGroup.index do
+        create :settings => PackageGroup.index_settings, :mappings => PackageGroup.index_mapping
+        import pgs
+      end unless pgs.empty?
+    end
+
+    def update_package_group_index
+      # for each of the package_groups in the repo, unassociate the repo from the package_group
+      pgs = self.package_groups.collect{|pg| pg.as_json.merge(pg.index_options)}
+      pulp_id = self.pulp_id
+
+      # now, for any package group that only had this repo asscociated with it, 
+      # remove the package group from the index
+      repoid = "repoid:#{pulp_id}"
+      Tire::Configuration.client.delete "#{Tire::Configuration.url}/katello_package_group/_query?q=#{repoid}"
+      Tire.index('katello_package_group').refresh
+    end
+
     def errata_count
       results = ::Errata.search('', 0, 1, :repoids => [self.pulp_id])
       results.empty? ? 0 : results.total
@@ -123,6 +144,7 @@ module Glue::ElasticSearch::Repository
     def self.index_content
       self.index_packages
       self.index_errata
+      self.index_package_groups
     end
   end
 end

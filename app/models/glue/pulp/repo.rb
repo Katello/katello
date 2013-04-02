@@ -250,10 +250,27 @@ module Glue::Pulp::Repo
       @repo_distributions
     end
 
-    def package_groups search_args = {}
-      groups = Runcible::Extensions::Repository.package_groups(self.pulp_id)
+
+    def package_groups
+      if @repo_package_groups.nil?
+        groups = Runcible::Extensions::Repository.package_groups(self.pulp_id)
+        self.package_groups = groups
+      end
+      @repo_package_groups
+    end
+
+    def package_groups=attrs
+      @repo_package_groups = attrs.collect do |group|
+        ::PackageGroup.new(package)
+      end
+      @repo_package_groups
+    end
+
+    def package_groups_search search_args = {}
+      groups = package_groups
       unless search_args.empty?
-        groups.delete_if do |group_attrs|
+        groups.delete_if do |group|
+          group_attrs = group.as_json
           search_args.any?{ |attr,value| group_attrs[attr] != value }
         end
       end
