@@ -36,7 +36,9 @@ module ContentSearchHelper
   end
 
   def repo_compare_name_display repo
-    to_ret = {:custom => "<span title=\"#{repo.name}\" class=\"one-line-ellipsis tipsify\">#{repo.name}</span><span class=\"one-line-ellipsis\">#{repo.environment.name}</span>" }
+    to_ret = {:custom => "<span title=\"#{repo.environment.name}\" class=\"one-line-ellipsis\">#{repo.environment.name}</span>" +
+        "<span class=\"one-line-ellipsis tipsify\" title=\"#{repo.content_view.name}\">#{repo.content_view.name}</span>"+
+        "<span class=\"one-line-ellipsis tipsify\" title=\"#{repo.name}\">#{repo.name}</span>"}
 
     return to_ret
   end

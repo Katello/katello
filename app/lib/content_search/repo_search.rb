@@ -20,6 +20,10 @@ module ContentSearch
       self.rows = build_rows
     end
 
+    def self.id(view, repo)
+      "view_#{view.id}_product_#{repo.product.id}_repo_#{repo.id}"
+    end
+
     def build_rows
       rows = []
 
@@ -31,19 +35,20 @@ module ContentSearch
           #  view_repo = repo
           #end
           all_repos = repo.environmental_instances(view).pluck(:pulp_id)
+
           cols = {}
           Repository.where(:pulp_id=>all_repos).each do |r|
             cols[r.environment.id] = Cell.new(:hover => container_hover_html(r)) if env_ids.include?(r.environment_id)
           end
 
-          rows << Row.new(:id => "view_#{view.id}_product_#{repo.product.id}_repo_#{repo.id}",
+          rows << Row.new(:id => self.class.id(view, repo),
                   :name       => repo.name,
                   :cells      => cols,
                   :data_type  => "repo",
                   :value      => repo.name,
-                  :parent_id=>"view_#{view.id}_product_#{repo.product.id}",
-                  :comparable => true,
-                  :object_id=>repo.id
+                  :parent_id  => "view_#{view.id}_product_#{repo.product.id}",
+                  :comparable => self.comparable,
+                  :object_id  =>repo.id
                  )
       end
       rows
@@ -52,6 +57,7 @@ module ContentSearch
     def filtered_repos
       filtered = repos
       envs = SearchUtils.search_envs(mode)
+      filtered = filtered.select{|repo| !repo.environmental_instances(view).empty?}
       if mode == :shared
         filtered = filtered.select{|repo| (envs - repo.environmental_instances(view).collect(&:environment)).empty?}
       elsif mode == :unique
