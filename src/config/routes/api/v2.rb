@@ -14,7 +14,7 @@ Src::Application.routes.draw do
     scope :module => :v2, :constraints => ApiVersionConstraint.new(:version => 2) do
 
       match '/' => 'root#resource_list'
-      
+
       # Headpin does not support system creation
       if Katello.config.katello?
         onlies = [:show, :destroy, :create, :index, :update]
@@ -220,6 +220,9 @@ Src::Application.routes.draw do
       match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#update',  :via => :put, :as => :update_custom_info
       match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#destroy', :via => :delete, :as => :destroy_custom_info
 
+      # subscription-manager support
+      match '/users/:username/owners' => 'users#list_owners', :via => :get
+
     end # module v2
 
 
@@ -279,7 +282,6 @@ Src::Application.routes.draw do
       match '/environments/:environment_id/consumers' => 'systems#index', :via => :get
       match '/environments/:environment_id/consumers' => 'systems#create', :via => :post
       match '/consumers/:id' => 'systems#regenerate_identity_certificates', :via => :post
-      match '/users/:username/owners' => 'users#list_owners', :via => :get
       match '/consumers/:id/certificates' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_certificates_path
       match '/consumers/:id/release' => 'candlepin_proxies#get', :via => :get, :as => :proxy_consumer_releases_path
       match '/consumers/:id/certificates/serials' => 'candlepin_proxies#get', :via => :get, :as => :proxy_certificate_serials_path
