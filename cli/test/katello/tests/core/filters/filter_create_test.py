@@ -18,18 +18,21 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
     ]
 
     allowed_options = [
-        ('--org=ACME', '--definition=content_def1', '--filter=flt')
+        ('--org=ACME', '--definition=content_def1', '--name=flt')
     ]
 
 
 class FilterCreateTest(CLIActionTestCase):
     ORG = 'org'
     FILTER = 'MyRHEL'
-    DEFINITION = 'KingKong'
+    DEF = {"label": "KingKong",
+           "name": "KingKong",
+           "id": 3
+           }
     OPTIONS = {
         'org': ORG,
-        'filter_name': FILTER,
-        'definition': DEFINITION
+        'name': FILTER,
+        'definition': DEF["name"]
     }
 
     def setUp(self):
@@ -39,6 +42,7 @@ class FilterCreateTest(CLIActionTestCase):
         self.mock_options(self.OPTIONS)
 
         self.mock(self.action.def_api, 'create', [])
+        self.mock(self.module, 'get_cv_definition', self.DEF)
 
     def tearDown(self):
         self.restore_mocks()
@@ -46,4 +50,4 @@ class FilterCreateTest(CLIActionTestCase):
     def test_it_uses_def_api(self):
         self.run_action()
         self.action.def_api.create.assert_called_once_with(
-            self.FILTER, self.DEFINITION, self.ORG)
+            self.FILTER, self.DEF["id"], self.ORG)
