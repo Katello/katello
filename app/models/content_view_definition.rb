@@ -146,8 +146,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
     #TODO
     # update search indices for package and errata
     cloned_repos.each do |repo|
-      repo.index_errata
-      repo.index_packages
+      repo.index_content
     end
 
 

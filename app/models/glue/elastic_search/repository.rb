@@ -120,5 +120,9 @@ module Glue::ElasticSearch::Repository
       results.empty? ? 0 : results.total
     end
 
+    def self.index_content
+      self.index_packages
+      self.index_errata
+    end
   end
 end
