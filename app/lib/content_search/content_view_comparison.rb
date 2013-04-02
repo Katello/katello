@@ -110,13 +110,13 @@ module ContentSearch
           end
         end
 
-        package_search_mode = search_mode
+        package_search_mode = mode
         if view_repos.length < cv_env_ids.length
           # if the number of cv_envs is greater than the repos to compare
           # it implies that one of the cv_envs does not have this repo
           # which means that there is nothing shared between them
           # and all rows are "not shared" or "unique"
-          next if search_mode == :shared
+          next if mode == :shared
           package_search_mode = :all
         end
 
@@ -158,7 +158,7 @@ module ContentSearch
         cols.each do |key, col|
           view_id = key.split("_").first.to_i
           repo = repos.detect {|r| r.content_view.id == view_id && r.library_instance_id == repo_row.repo.id}
-          if repo && repo.send(is_package ? :packages : :errata).map(&:id).include?(package.id)
+          if package.repoids.include?(repo.pulp_id)# repo && repo.send(is_package ? :packages : :errata).map(&:id).include?(package.id)
             package_row[:cols][key] = {:id => key}
           end
         end
