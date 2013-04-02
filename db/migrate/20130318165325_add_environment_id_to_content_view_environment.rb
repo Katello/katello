@@ -3,6 +3,7 @@ class AddEnvironmentIdToContentViewEnvironment < ActiveRecord::Migration
     #adds environment_id to content_view_environment so we can query
     #  and don't have to split the cp_id to find the environment
     add_column :content_view_environments, :environment_id, :integer, :null=>true
+    ContentViewEnvironment.reset_column_information
     ContentViewEnvironment.all.each do |cve|
       env_id = cve.cp_id.split('-').first
       cve.environment_id = env_id
