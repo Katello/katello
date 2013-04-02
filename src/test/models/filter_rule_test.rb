@@ -66,9 +66,12 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
     end
 
     define_method("test_errata_dates_#{m}") do
-      units = {:date_range => {:start => "01/23/2000", :end => "02/23/2010"}}
-      expected = [{"issued"=>{"$gte"=>"2000-01-23T00:00:00-04:00",
-                              "$lte"=>"2010-02-23T00:00:00-04:00"}}]
+      cvd =  @filter.content_view_definition
+      from = "01/23/2000"
+      to = "02/23/2010"
+      units = {:date_range => {:start =>from , :end => to}}
+      expected = [{"issued"=>{"$gte"=>cvd.send(:convert_date,from),
+                              "$lte"=>cvd.send(:convert_date,to)}}]
       send("exec_test_#{m}", "erratum", units, expected)
     end
 
@@ -80,10 +83,13 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
     end
 
     define_method("test_errata_both_#{m}") do
+      cvd =  @filter.content_view_definition
+      from = "03/22/2000"
+      to = "05/23/2012"
       units = {:errata_type => [:enhancement, :security],
-               :date_range => {:start => "03/27/2000", :end => "05/23/2010"}}
-      expected = [{"$and"=>[{"issued"=>{"$gte"=>"2000-03-27T00:00:00-04:00",
-                    "$lte"=>"2010-05-23T00:00:00-04:00"}},
+               :date_range => {:start => from, :end => to}}
+      expected = [{"$and"=>[{"issued"=>{"$gte"=>cvd.send(:convert_date,from),
+                    "$lte"=>cvd.send(:convert_date,to)}},
                     {"type"=>{"$in"=>[:enhancement, :security]}}]}]
       send("exec_test_#{m}", "erratum", units, expected)
     end
