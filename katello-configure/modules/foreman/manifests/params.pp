@@ -31,6 +31,8 @@ class foreman::params {
   # admin's email format has to be <user>@<some>.<domain>
   $administrator      = "root@localhost.localdomain"
 
+  $katello_url = "https://$fqdn/katello"
+
   # should oauth be used?
   $oauth_active       = false
   $oauth_consumer_key = "key"
