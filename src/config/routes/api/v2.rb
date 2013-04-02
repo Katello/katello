@@ -40,6 +40,7 @@ Src::Application.routes.draw do
         api_resources :sync_plans, :only => [:index, :create]
         api_resources :tasks, :only => [:index]
         api_resources :system_groups, :only => [:index, :create]
+        api_resources :gpg_keys, :only => [:index, :create]
         resource :uebercert, :only => [:show]
 
         match '/default_info/:informable_type' => 'organization_default_info#create', :via => :post, :as => :create_default_info
@@ -206,12 +207,16 @@ Src::Application.routes.draw do
         api_attachable_resources :content_views, :controller => :changesets_content
       end
 
+      api_resources :gpg_keys, :only => [:show, :update, :destroy] do
+        get :content, :on => :member
+      end
+
       api_resources :sync_plans, :only => [:show, :update, :destroy]
       api_resources :tasks, :only => [:show]
 
       api_resources :ping, :only => [:index]
       match "/version"  => "ping#version", :via => :get
-      match "/status"  => "ping#server_status", :via => :get      
+      match "/status"  => "ping#server_status", :via => :get
 
       # api custom information
       match '/custom_info/:informable_type/:informable_id' => 'custom_info#create', :via => :post, :as => :create_custom_info
@@ -244,14 +249,13 @@ Src::Application.routes.draw do
         api_resources :repositories, :only => [] do
         end
 
-        api_resources :gpg_keys, :only => [:index, :create]
-
       end
 
-      
       api_resources :gpg_keys, :only => [:show, :update, :destroy] do
         get :content, :on => :member
       end
+
+      api_resources :ping, :only => [:index]
 
       api_resources :activation_keys do
         post :pools, :action => :add_pool, :on => :member

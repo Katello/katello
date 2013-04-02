@@ -66,21 +66,21 @@ class Api::V1::GpgKeysController < Api::V1::ApiController
   param_group :gpg_key
   def create
     gpg_key = @organization.gpg_keys.create!(params[:gpg_key].slice(:name, :content))
-    render :json => gpg_key
+    respond :resource => gpg_key
   end
 
   api :PUT, "/gpg_keys/:id", "Update a gpg key"
   param_group :gpg_key
   def update
     @gpg_key.update_attributes!(params[:gpg_key].slice(:name, :content))
-    render :json => @gpg_key
+    respond :resource => @gpg_key
   end
 
   api :DELETE, "/gpg_keys/:id", "Destroy a gpg key"
   param :id, :number, :desc => "gpg key numeric identifier"
   def destroy
     @gpg_key.destroy
-    render :text => _("Deleted GPG key '%s'") % params[:id], :status => 204
+    respond :message => _("Deleted GPG key '%s'") % params[:id]
   end
 
   api :GET, "/gpg_keys/:id/content"
