@@ -80,6 +80,7 @@ class ContentViewVersion < ActiveRecord::Base
 
   def refresh_version(library_version, notify = false)
     PulpTaskStatus::wait_for_tasks refresh_repos(library_version)
+    self.content_view.index_repositories(self.content_view.organization.library)
 
     if notify
       message = _("Successfully generated content view '%{view_name}' version %{view_version}.") %

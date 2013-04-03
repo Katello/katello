@@ -26,7 +26,7 @@ module ContentSearch
         filtered_products(view).each do |prod|
           cols = {}
           prod.environments_for_view(view).each do |env|
-            cols[env.id] = Cell.new(:hover => container_hover_html(prod, env)) if readable_env_ids.include?(env.id)
+            cols[env.id] = Cell.new(:hover => container_hover_html(prod, env, view)) if readable_env_ids.include?(env.id)
           end
           rows << Row.new(:id => "view_#{view.id}_product_#{prod.id}",
                                  :name => prod.name,
