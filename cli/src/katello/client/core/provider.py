@@ -21,9 +21,9 @@ from katello.client.api.provider import ProviderAPI
 from katello.client.cli.base import opt_parser_add_org
 from katello.client.server import ServerRequestError
 from katello.client.core.base import BaseAction, Command
-from katello.client.lib.ui.progress import run_async_task_with_status, run_spinner_in_bg
+from katello.client.lib.ui.progress import run_async_task_with_status, run_spinner_in_bg, wait_for_async_task
 from katello.client.lib.control import system_exit
-from katello.client.lib.async import AsyncTask, evaluate_task_status
+from katello.client.lib.async import AsyncTask, ImportManifestAsyncTask, evaluate_task_status
 from katello.client.lib.utils.io import get_abs_path
 from katello.client.lib.utils.data import test_record
 from katello.client.lib.ui.formatters import format_sync_state, format_sync_time
@@ -289,18 +289,14 @@ class ImportManifest(SingleProviderAction):
 
         prov = get_provider(orgName, provName)
 
-        try:
-            response = run_spinner_in_bg(self.api.import_manifest, (prov["id"], f, force),
-                message=_("Importing manifest, please wait... "))
-        except ServerRequestError, re:
-            if re.args[0] == 400 and "displayMessage" in re.args[1] and \
-                re.args[1]["displayMessage"] == "Import is older than existing data":
-                re.args[1]["displayMessage"] = "Import is older than existing data," +\
-                    " please try with --force option to import manifest."
-            raise re, None, sys.exc_info()[2]
-        f.close()
-        print response
-        return os.EX_OK
+        task = ImportManifestAsyncTask(self.api.import_manifest(prov["id"], f, force))
+        run_spinner_in_bg(wait_for_async_task, [task], message=_("Importing manifest, please wait... "))
+
+        return ImportManifestAsyncTask.evaluate_task_status(task,
+            failed =   _("Provider [ %s ] failed to import manifest") % provName,
+            canceled = _("Provider [ %s ] canceled manifest import") % provName,
+            ok =       _("Provider [ %s ] manifest import complete") % provName
+        )
 
 
 # ==============================================================================

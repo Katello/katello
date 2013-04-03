@@ -90,6 +90,7 @@ class foreman::config {
 
   $foreman_config_cmd = "/usr/bin/ruby ${foreman::app_root}/script/foreman-config -k oauth_active -v '${foreman::oauth_active}'\
                               -k foreman_url -v '${fqdn}'\
+                              -k katello_url -v '${foreman::katello_url}'\
                               -k token_duration -v '60'\
                               -k manage_puppetca -v false\
                               -k oauth_consumer_key -v '${foreman::oauth_consumer_key}'\
