@@ -418,7 +418,7 @@ KT.systems_page = (function() {
                     var opt_template = KT.utils.template("<option value='<%= key %>'><%= text %></option>");
 
                     // create an html option list using the response
-                    options += opt_template({key: "", text: i18n.noContentView});
+                    options += opt_template({key: "", text: i18n.no_content_view});
                     $.each(response, function(key, item) {
                         options += opt_template({key: item.id, text: item.name});
                     });
@@ -438,7 +438,7 @@ KT.systems_page = (function() {
             if( !select_input.next('span').hasClass('highlight_input_text')) {
                 select_input.addClass('highlight_input');
                 select_input.after('<span class ="highlight_input_text">' +
-                        i18n["update_view"] + '</span>');
+                        i18n.select_content_view + '</span>');
             }
         } else {
             select_input.removeClass('highlight_input');

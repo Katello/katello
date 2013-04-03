@@ -4,4 +4,8 @@
     %input.system_checkbox{:type=>:checkbox, 'data-id'=>system.system.id ,:disabled=>('disabled' if !@group.editable?)}
     = system.system.name
   %td
+    = system.system.environment.name
+  %td
+    = system.system.content_view.try(:name)
+  %td
     = system.created_at
