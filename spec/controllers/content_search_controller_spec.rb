@@ -52,6 +52,10 @@ describe ContentSearchController, :katello => true do
       @repo_library = new_test_repo(ep_library, "repo", "#{@organization.name}/Library/prod/repo")
       @repo = promote(@repo_library, @env1)
       Repository.stub(:search).and_return([@repo])
+      ContentView.any_instance.stub(:total_package_count).and_return(0)
+      ContentView.any_instance.stub(:total_errata_count).and_return(0)
+      Repository.any_instance.stub(:package_count).and_return(0)
+      Repository.any_instance.stub(:errata_count).and_return(0)
     end
     after do
       reset_search
@@ -93,8 +97,10 @@ describe ContentSearchController, :katello => true do
               end
             end
             setup_search(:filter => @expected_filters[mode], :results => [result1, result2])
-
-            params = {"mode"=>mode.to_s, "repos"=>{"0"=>{"env_id"=>@repo_library.environment.id.to_s, "repo_id"=>@repo_library.id.to_s}, "1"=>{"env_id"=>@repo.environment.id.to_s, "repo_id"=>@repo.id.to_s}}, "type"=> "compare_#{content_type}" }
+            view_id = @organization.default_content_view.id
+            params = {"mode"=>mode.to_s, "type"=>"compare_#{content_type}", "repos"=>{
+                "0"=>{"env_id"=>@repo_library.environment.id.to_s, "repo_id"=>@repo_library.id.to_s, "view_id"=>view_id},
+                "1"=>{"env_id"=>@repo.environment.id.to_s, "repo_id"=>@repo.id.to_s, "view_id"=>view_id}}}
             post "repo_compare_#{content_type}", params
             response.should be_success
             result = JSON.parse(response.body)
