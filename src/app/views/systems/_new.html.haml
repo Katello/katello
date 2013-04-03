@@ -52,11 +52,4 @@
     = content_for :content do
       #{_("You need to create an environment for this org before you can create a system.")}
 
-= javascript do
-  :plain
-    localize({
-        "noContentView": '#{no_content_view}',
-        "update_view": '#{escape_javascript(_('Select a View'))}'
-    });
-
 = render :template => "layouts/tupane_layout"

@@ -48,6 +48,8 @@ Src::Application.routes.draw do
       post :add_systems
       post :remove_systems
       delete :destroy_systems
+      get :edit_systems
+      put :update_systems
     end
     resources :events, :controller => "system_group_events", :only => [:index, :show] do
       collection do
