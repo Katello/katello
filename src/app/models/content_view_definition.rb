@@ -64,20 +64,8 @@ class ContentViewDefinition < ContentViewDefinitionBase
   end
 
   def generate_repos(view, notify = false)
-    # general publish clone algorithm
-    # Copy all rpms over
-    # Copy all errata over
-    # Copy all pkg groups over
-    # Copy all distro over
-    # Start Filtering errata in the copied
-    # Start Filtering package groups in the copied repo
-    # Start Filtering packages in the copied repo
-    # Remove all empty errata
-    # Remove all empty package groups
-    # update search indices for package and errata
-
-
-
+    # for the algorithm look at
+    # https://fedorahosted.org/katello/wiki/ContentViewFilters#ContentViewFilterPublishAlgorithm
     async_tasks = []
     cloned_repos = []
 
@@ -91,7 +79,6 @@ class ContentViewDefinition < ContentViewDefinitionBase
       cloned_repos << clone
     end
     PulpTaskStatus::wait_for_tasks async_tasks.flatten(1)
-
 
     # Start Filtering errata in the copied
     # Start Filtering package groups in the copied repo
@@ -122,7 +109,6 @@ class ContentViewDefinition < ContentViewDefinitionBase
         repo.unassociate_by_filter(FilterRule::ERRATA, {"id" => {"$in" => errata_to_delete}})
       end
 
-
       # Remove all  package groups with no packages
       package_groups_to_delete = repo.package_groups.collect do |group|
         group.package_group_id if rpm_names.intersection(group.package_names).empty?
@@ -134,14 +120,10 @@ class ContentViewDefinition < ContentViewDefinitionBase
 
     end
 
-
-
-    #TODO
     # update search indices for package and errata
     cloned_repos.each do |repo|
       repo.index_content
     end
-
 
     if notify
       message = _("Successfully published content view '%{view_name}' from definition '%{definition_name}'.") %
@@ -150,7 +132,6 @@ class ContentViewDefinition < ContentViewDefinitionBase
       Notify.success(message, :request_type => "content_view_definitions___publish",
                      :organization => self.organization)
     end
-
   rescue => e
     Rails.logger.error(e)
     Rails.logger.error(e.backtrace.join("\n"))
@@ -242,9 +223,6 @@ class ContentViewDefinition < ContentViewDefinitionBase
       applicable_filters = filters.applicable(repo)
 
       applicable_rules = FilterRule.where(:filter_id => applicable_filters).where(:content_type => content_type)
-      #  do |f|
-      #   f.repositories.include?(repo)
-      # end
       filter_clauses = {}
       inclusion_rules = applicable_rules.where(:inclusion => true)
       exclusion_rules = applicable_rules.where(:inclusion => false)
@@ -261,9 +239,9 @@ class ContentViewDefinition < ContentViewDefinitionBase
       #  then unassociate them from the repo
       #
       if excludes_count > 0
-        excludes = exclusion_rules.collect do |x|
-          generate_rule_clauses(x, repo)
-        end.flatten
+        excludes = exclusion_rules.collect do |rule|
+          rule.generate_clauses(repo)
+        end.compact.flatten
         clauses << {'$or' => excludes} unless excludes.empty?
       end
 
@@ -271,9 +249,10 @@ class ContentViewDefinition < ContentViewDefinitionBase
       #  If there are only include filters (aka whitelist) then only the packages/errata included will get included.
       #  Everything else is thus excluded.
       if includes_count > 0
-        includes = inclusion_rules.collect do |x|
-          generate_rule_clauses(x, repo)
-        end.flatten
+        includes = inclusion_rules.collect do |rule|
+          rule.generate_clauses(repo)
+        end.compact.flatten
+
         clauses << {'$nor' => includes}  unless includes.empty?
       end
 
@@ -288,94 +267,6 @@ class ContentViewDefinition < ContentViewDefinitionBase
          else
            #ignore
       end
-  end
-
-  def generate_rule_clauses(rule, repo)
-    case rule.content_type
-      when FilterRule::PACKAGE
-        rule.parameters[:units].collect do |unit|
-          rule_clauses = []
-          if unit[:name] && !unit[:name].blank?
-            results = Package.search(unit[:name], 0, 0, [repo.pulp_id],
-                            [:nvrea_sort, "ASC"], :all, 'name' ).collect(&:filename)
-            unless results.empty?
-              rule_clauses << {'filename' => {"$in" => results}}
-            end
-          end
-
-          if unit.has_key? :version
-            rule_clauses << {'version' => unit[:version] }
-          else
-            vr = {}
-            vr["$gte"] = unit[:min_version] if unit.has_key? :min_version
-            vr["$lte"] = unit[:max_version] if unit.has_key? :max_version
-            rule_clauses << {'version' => vr } unless vr.empty?
-          end
-          case rule_clauses.size
-            when 1
-              rule_clauses.first
-            when 2
-              {'$and' => rule_clauses}
-            else
-              #ignore
-          end
-        end.compact
-
-      when FilterRule::PACKAGE_GROUP
-        ids = rule.parameters[:units].collect do |unit|
-          #{'name' => {"$regex" => unit[:name]}}
-          if unit[:name] && !unit[:name].blank?
-            PackageGroup.search(unit[:name], 0, 0, [repo.pulp_id]).collect(&:package_group_id)
-          end
-        end.compact.flatten
-        {"id" => {"$in" => ids}}
-
-      when FilterRule::ERRATA
-        rule_clauses = []
-        if unit[:name] && !unit[:name].blank?
-
-        end
-        if rule.parameters.has_key? :units
-          # TODO: WIll add this when we have a proper analyzer for
-          # errata_id..
-          # ids = rule.parameters[:units].collect do |unit|
-          #   if unit[:id] && !unit[:id].blank?
-          #     results = Errata.search(unit[:id], 0, 0, [repo.pulp_id], {},
-          #                         [:errata_id_sort, "DESC"],'errata_id').collect(&:errata_id)
-          #   end
-          # end.compact.flatten
-          ids = rule.parameters[:units].collect do |unit|
-            unit[:id]
-          end.compact
-
-          {"id" => {"$in" => ids}}
-        else
-          if rule.parameters.has_key? :date_range
-            date_range = rule.parameters[:date_range]
-            dr = {}
-            dr["$gte"] = convert_date(date_range[:start]).as_json if date_range.has_key? :start
-            dr["$lte"] = convert_date(date_range[:end]).as_json if date_range.has_key? :end
-            rule_clauses << {"issued" => dr}
-          end
-          if rule.parameters.has_key? :errata_type
-            unless rule.parameters[:errata_type].empty?
-              # {"type": {"$in": ["security", "enhancement", "bugfix"]}
-              rule_clauses << {"type" => {"$in" => rule.parameters[:errata_type]}}
-            end
-          end
-
-          case rule_clauses.size
-            when 1
-              return rule_clauses.first
-            when 2
-              return {'$and' => rule_clauses}
-            else
-              #ignore
-          end
-        end
-      else
-        #do nothing
-    end
   end
 
   def views_repos
