@@ -114,4 +114,13 @@ class FilterRule < ActiveRecord::Base
         #do nothing
     end
   end
+
+  #convert date, time from UI to object
+  def convert_date(date)
+    return nil if date.blank?
+    event = date +  ' '  + DateTime.now.zone
+    DateTime.strptime(event, "%m/%d/%Y %:z")
+  rescue ArgumentError
+    raise _("Invalid date or time format")
+  end
 end
