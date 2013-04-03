@@ -48,6 +48,8 @@ Src::Application.routes.draw do
       post :add_systems
       post :remove_systems
       delete :destroy_systems
+      get :edit_systems
+      put :update_systems
     end
     resources :events, :controller => "system_group_events", :only => [:index, :show] do
       collection do
@@ -515,13 +517,6 @@ Src::Application.routes.draw do
       post :email_logins
     end
   end
-
-  # custom information
-  match '/custom_info/:informable_type/:informable_id' => 'custom_info#create', :via => :post, :as => :create_custom_info
-  match '/custom_info/:informable_type/:informable_id' => 'custom_info#index', :via => :get, :as => :custom_info
-  match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#show', :via => :get, :as => :show_custom_info
-  match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#update', :via => :put, :as => :update_custom_info
-  match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#destroy', :via => :delete, :as => :destroy_custom_info
 
   namespace :api do
     class RegisterWithActivationKeyContraint
