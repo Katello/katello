@@ -40,8 +40,8 @@ module Glue::ElasticSearch::PackageGroup
               :id            => {:type=>'string', :index=>:not_analyzed},
               :package_group_id => {:type=>'string', :index=>:not_analyzed},
               :name          => { :type=> 'string', :analyzer=>:kt_name_analyzer},
-              :name_autocomplete  => { :type=> 'string', :analyzer=>'autcomplete_name_analyzer'},
-              :repoid       => { :type=> 'string', :index=>:not_analyzed},
+              :name_sort    => { :type => 'string', :index=> :not_analyzed },
+              :repo_id       => { :type=> 'string', :index=>:not_analyzed},
             }
           }
         }
@@ -51,36 +51,10 @@ module Glue::ElasticSearch::PackageGroup
         "#{Katello.config.elastic_index}_package_group"
       end
 
-      def self.autocomplete_name query, repoid=nil, page_size=15
-        return [] if !Tire.index(self.index).exists?
-
-        query = Util::Search::filter_input query
-        query = "*" if query == ""
-        query = "name_autocomplete:(#{query})"
-
-        search = Tire.search self.index do
-          fields [:name]
-          query do
-            string query
-          end
-
-          if repoid
-            filter :terms, :repoid => repoid
-          end
-        end
-
-        to_ret = []
-        search.results.each{|pkg|
-           to_ret << pkg.name if !to_ret.include?(pkg.name)
-           break if to_ret.size == page_size
-        }
-        return to_ret
-      end
-
       def self.id_search ids
         return Util::Support.array_with_total unless Tire.index(self.index).exists?
         search = Tire.search self.index do
-          fields [:id, :name, :repoid, :type]
+          fields [:id, :name, :repo_id]
           query do
             all
           end
@@ -90,14 +64,12 @@ module Glue::ElasticSearch::PackageGroup
         search.results
       end
 
-      def self.search query, start, page_size, repoid=nil, sort=[:name_sort, "ASC"], search_mode = :all
+      def self.search query, start, page_size, repoid=nil, sort=[:name_sort, "ASC"]
         return Util::Support.array_with_total if !Tire.index(self.index).exists?
 
         all_rows = query.blank? #if blank, get all rows
 
-        search = Tire::Search::Search.new(self.index)
-
-        search.instance_eval do
+        search = Tire.search self.index do
           query do
             if all_rows
               all
@@ -110,14 +82,15 @@ module Glue::ElasticSearch::PackageGroup
            size page_size
            from start
           end
+
+          if repoid
+            filter :term, :repo_id => repoid
+          end
           sort { by sort[0], sort[1] } unless !all_rows
         end
 
-        if repoid
-          Util::Package.setup_shared_unique_filter([repoid], search_mode, search)
-        end
 
-        return search.perform.results
+        return search.results
       rescue Tire::Search::SearchRequestFailed => e
         Util::Support.array_with_total
       end

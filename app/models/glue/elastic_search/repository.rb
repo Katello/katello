@@ -126,7 +126,7 @@ module Glue::ElasticSearch::Repository
 
       # now, for any package group that only had this repo asscociated with it, 
       # remove the package group from the index
-      repoid = "repoid:#{pulp_id}"
+      repoid = "repo_id:#{pulp_id}"
       Tire::Configuration.client.delete "#{Tire::Configuration.url}/katello_package_group/_query?q=#{repoid}"
       Tire.index('katello_package_group').refresh
     end
