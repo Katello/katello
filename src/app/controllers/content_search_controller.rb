@@ -254,9 +254,11 @@ class ContentSearchController < ApplicationController
       repo_map[r.pulp_id] = r
     end
     if is_package
-      packages = Package.search('', params[:offset], current_user.page_size, repo_map.keys, [:nvrea_sort, "ASC"], process_search_mode())
+      packages = Package.search('', params[:offset], current_user.page_size, repo_map.keys, [:nvrea_sort, "ASC"],
+                                process_search_mode())
     else
-      packages = Errata.search('', params[:offset], current_user.page_size, :repoids =>  repo_map.keys, :search_mode => process_search_mode)
+      packages = Errata.search('', params[:offset], current_user.page_size, :repoids =>  repo_map.keys,
+                               :search_mode => process_search_mode)
     end
     rows = packages.collect do |pack|
       cols = {}
@@ -274,8 +276,9 @@ class ContentSearchController < ApplicationController
 
     cols = {}
     sort_repos(@repos).each{|r| cols[r.id] = {:id=>r.id, :content => repo_compare_name_display(r)}}
-    if !packages.empty?
-      rows += [metadata_row(packages.total, offset.to_i + rows.length, {:repos=>params[:repos]}, 'compare')] if packages.total > current_user.page_size
+    if !packages.empty? && packages.total > current_user.page_size
+      rows += [metadata_row(packages.total, offset.to_i + rows.length,
+                            {:mode=>process_search_mode, :repos=>params[:repos]}, 'compare')]
     end
     render :json => {:rows=>rows, :cols=>cols, :name=>_("Repository Comparison")}
   end
@@ -413,8 +416,8 @@ class ContentSearchController < ApplicationController
         end
         content_rows += repo_span[:content_rows]
         if repo_span[:total] > current_user.page_size
-          content_rows <<  metadata_row(repo_span[:total], current_user.page_size,
-                                        {:repo_id=>repo.id, :view_id=>view.id}, "#{view.id}_#{repo.id}", repo_row_hash[repo.id].id)
+          content_rows <<  metadata_row(repo_span[:total], current_user.page_size, {:repo_id=>repo.id, :view_id=>view.id},
+                                        "#{view.id}_#{repo.id}", repo_row_hash[repo.id].id)
         end
       end
     end
