@@ -100,6 +100,10 @@ class katello::params {
 
   # OAUTH settings
   $oauth_key    = "katello"
+  # we set foreman oauth key to foreman, so that katello knows where the call
+  # comes from and can find the rigth secret. This way only one key-secret pair
+  # is needed to be mainained for duplex communication.
+  $foreman_oauth_key    = "foreman"
   $oauth_secret = katello_create_read_password(katello_config_value('oauth_token_file'))
 
   # Subsystems settings
