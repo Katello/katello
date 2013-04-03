@@ -82,6 +82,9 @@ class PromotionChangeset < Changeset
     update_progress! '80'
     PulpTaskStatus::wait_for_tasks promote_views(from_env, to_env, self.content_views.composite(false))
     PulpTaskStatus::wait_for_tasks promote_views(from_env, to_env, self.content_views.composite(true))
+    self.content_views.composite(false).each{|cv| cv.index_repositories(to_env)}
+    self.content_views.composite(true).each{|cv| cv.index_repositories(to_env)}
+
     update_view_cp_content(to_env)
     update_progress! '85'
     promote_packages from_env, to_env
