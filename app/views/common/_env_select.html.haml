@@ -1,10 +1,8 @@
-:javascript
-  $('#path-expanded').click();
 
 - if @environment.nil?
   = no_env_available_msg
 - else
-  #path-widget{:class => path_widget_class}
+  #path-widget.grid_10{:class => path_widget_class}
     #path-container
       #path-controller
         - if @paths.length > 1
