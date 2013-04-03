@@ -66,6 +66,11 @@ Requires:       httpd
 Requires:       mod_ssl
 Requires:       openssl
 Requires:       elasticsearch
+
+# service-wait dependency
+Requires:       wget
+Requires:       curl
+
 Requires:       %{?scl_prefix}rubygems
 Requires:       %{?scl_prefix}rubygem(rails) >= 3.0.10
 Requires:       %{?scl_prefix}rubygem(haml) >= 3.1.2
