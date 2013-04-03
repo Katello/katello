@@ -8,7 +8,7 @@ class MigrateEnvironmentDefaultContentViewToVersion < ActiveRecord::Migration
       (org.environments + [org.library]).each do |env|
          old_view = ContentView.where(:environment_default_id=>env.id).first
          cve = old_view.content_view_environments.first
-         version = old_view.version(env)
+         version = ContentViewVersion.find(old_view.version(env))
 
          version.content_view = default_view
          version.save!
