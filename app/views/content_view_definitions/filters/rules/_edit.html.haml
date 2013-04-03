@@ -18,9 +18,10 @@
 
       .simple-box-body
 
-        = render :partial => "content_view_definitions/filters/rules/inclusion",
-                 :locals => {:view_definition => view_definition, :filter => filter,
-                             :rule => rule, :rule_type => rule_type}
+        #inclusion{'data-initial_value' => included_text(rule)}
+          = _("Specifying %{included} %{rule_type}") % {:included => included_text(rule), :rule_type => rule_type}
+          %a.subpanel_element{"data-url" => edit_inclusion_content_view_definition_filter_rule_path(view_definition, filter, rule)}
+            = _("(Edit)")
 
         - if rule.content_type == FilterRule::ERRATA
           %br

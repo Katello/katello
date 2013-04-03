@@ -20,7 +20,7 @@ class FilterRulesController < ApplicationController
   before_filter :find_content_view_definition
   before_filter :authorize #after find_content_view_definition, since the definition is required for authorization
   before_filter :find_filter
-  before_filter :find_rule, :only => [:edit, :edit_parameter_list, :edit_date_type_parameters,
+  before_filter :find_rule, :only => [:edit, :edit_inclusion, :edit_parameter_list, :edit_date_type_parameters,
                                       :update, :add_parameter, :destroy_parameters]
 
   respond_to :html
@@ -37,6 +37,7 @@ class FilterRulesController < ApplicationController
       :create => manage_rule,
 
       :edit => manage_rule,
+      :edit_inclusion => manage_rule,
       :edit_parameter_list => manage_rule,
       :edit_date_type_parameters => manage_rule,
       :update => manage_rule,
@@ -79,6 +80,13 @@ class FilterRulesController < ApplicationController
                        :item_partial => item_partial(@rule)}
   end
 
+  def edit_inclusion
+    render :partial => "content_view_definitions/filters/rules/inclusion",
+           :locals => {:view_definition => @view_definition, :filter => @filter, :rule => @rule,
+                       :rule_type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type)}
+
+  end
+
   def edit_parameter_list
     render :partial => "content_view_definitions/filters/rules/parameter_list",
            :locals => {:view_definition => @view_definition, :filter => @filter,
@@ -96,10 +104,12 @@ class FilterRulesController < ApplicationController
   def update
     @rule.update_attributes!(params[:filter_rule])
 
+    result = params[:filter_rule][:inclusion] ? included_text(@rule) : params[:filter_rule].values.first
+
     notify.success(_("Rule '%{type}' was successfully updated.") %
                    {:type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type)})
 
-    render :nothing => true
+    render :text => escape_html(result)
   end
 
   def add_parameter
