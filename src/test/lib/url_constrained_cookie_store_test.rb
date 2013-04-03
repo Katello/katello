@@ -35,6 +35,7 @@ class UrlConstrainedCookieStoreTest < ActionController::IntegrationTest
 
   def test_updates_expiraton_date
     with_test_route_set(:expire_after => 1.minute, :expiration_exceptions => "/no_expiration") do
+      cookies[SessionKey] = SignedBar
       get '/with_expiration'
       assert_response :success
       assert /expires=(.+)\;/ =~ headers['Set-Cookie']
