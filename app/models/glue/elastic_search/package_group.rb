@@ -17,7 +17,7 @@ module Glue::ElasticSearch::PackageGroup
 
       def index_options
         {
-          "_typedd" => :package_group,
+          "_type" => :package_group,
           "name_autocomplete" => name
         }
       end
@@ -64,7 +64,7 @@ module Glue::ElasticSearch::PackageGroup
         search.results
       end
 
-      def self.search query, start, page_size, repoid=nil, sort=[:name_sort, "ASC"]
+      def self.search query, start, page_size, repoid=nil, sort=[:name_sort, "ASC"], default_field = 'name'
         return Util::Support.array_with_total if !Tire.index(self.index).exists?
 
         all_rows = query.blank? #if blank, get all rows
@@ -74,7 +74,7 @@ module Glue::ElasticSearch::PackageGroup
             if all_rows
               all
             else
-              string query, {:default_field=>'name'}
+              string query, {:default_field=>default_field}
             end
           end
 
