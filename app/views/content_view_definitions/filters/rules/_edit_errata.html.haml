@@ -13,13 +13,14 @@
                       'data-url' => edit_parameter_list_content_view_definition_filter_rule_path(view_definition.id, filter.id, rule.id)})
   = label_tag(_('Errata ID'))
 
-.rule_parameters
-  - if rule.parameters.include?(:units)
+- if rule.parameters.include?(:units)
+  .rule_parameters
     = render :partial => "content_view_definitions/filters/rules/parameter_list",
              :locals => {:view_definition => view_definition, :filter => filter,
                          :rule => rule, :rule_type => rule_type,
                          :editable => editable, :item_partial => item_partial}
-  - else
+- else
+  .rule_parameters#errata_parameters
     = render :partial => "content_view_definitions/filters/rules/edit_errata_parameters",
              :locals => {:view_definition => view_definition, :filter => filter,
                          :rule => rule, :rule_type => rule_type,

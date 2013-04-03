@@ -400,6 +400,11 @@ KT.content_view_definition_filters = (function(){
         initialize_errata_rule_params();
     },
     initialize_common_rule_params = function() {
+        var pane = $("#parameter_list");
+        if (pane.length === 0) {
+            return;
+        }
+
         $('#add_rule').unbind('click');
         $('#add_rule').click(function() {
             var rule_input = $('input#rule_input').val(),
@@ -431,6 +436,10 @@ KT.content_view_definition_filters = (function(){
         initialize_checkboxes($("#parameters_form"));
     },
     initialize_errata_rule_params = function() {
+        var pane = $("#errata_parameters");
+        if (pane.length === 0) {
+            return;
+        }
         KT.editable.initialize_datepicker();
         KT.editable.initialize_multiselect();
     },
