@@ -262,9 +262,9 @@ class ContentViewDefinition < ContentViewDefinitionBase
       #
       if excludes_count > 0
         excludes = exclusion_rules.collect do |x|
-          generate_rule_clauses(x)
+          generate_rule_clauses(x, repo)
         end.flatten
-        clauses << {'$or' =>excludes}
+        clauses << {'$or' => excludes} unless excludes.empty?
       end
 
 
@@ -272,9 +272,9 @@ class ContentViewDefinition < ContentViewDefinitionBase
       #  Everything else is thus excluded.
       if includes_count > 0
         includes = inclusion_rules.collect do |x|
-          generate_rule_clauses(x)
+          generate_rule_clauses(x, repo)
         end.flatten
-        clauses << {'$nor' => includes}
+        clauses << {'$nor' => includes}  unless includes.empty?
       end
 
       #    If there are include and exclude filters, the exclude filters then the include filters, get processed first,
@@ -290,12 +290,19 @@ class ContentViewDefinition < ContentViewDefinitionBase
       end
   end
 
-  def generate_rule_clauses(rule)
+  def generate_rule_clauses(rule, repo)
     case rule.content_type
       when FilterRule::PACKAGE
         rule.parameters[:units].collect do |unit|
           rule_clauses = []
-          rule_clauses << {'name' => {"$regex" => unit[:name]}} if unit.has_key? :name
+          if unit[:name] && !unit[:name].blank?
+            results = Package.search(unit[:name], 0, 0, [repo.pulp_id],
+                            [:nvrea_sort, "ASC"], :all, 'name' ).collect(&:filename)
+            unless results.empty?
+              rule_clauses << {'filename' => {"$in" => results}}
+            end
+          end
+
           if unit.has_key? :version
             rule_clauses << {'version' => unit[:version] }
           else
@@ -312,18 +319,35 @@ class ContentViewDefinition < ContentViewDefinitionBase
             else
               #ignore
           end
-        end
+        end.compact
 
       when FilterRule::PACKAGE_GROUP
-        rule.parameters[:units].collect do |unit|
-          {'name' => {"$regex" => unit[:name]}}
-        end
+        ids = rule.parameters[:units].collect do |unit|
+          #{'name' => {"$regex" => unit[:name]}}
+          if unit[:name] && !unit[:name].blank?
+            PackageGroup.search(unit[:name], 0, 0, [repo.pulp_id]).collect(&:package_group_id)
+          end
+        end.compact.flatten
+        {"id" => {"$in" => ids}}
+
       when FilterRule::ERRATA
         rule_clauses = []
+        if unit[:name] && !unit[:name].blank?
+
+        end
         if rule.parameters.has_key? :units
+          # TODO: WIll add this when we have a proper analyzer for
+          # errata_id..
+          # ids = rule.parameters[:units].collect do |unit|
+          #   if unit[:id] && !unit[:id].blank?
+          #     results = Errata.search(unit[:id], 0, 0, [repo.pulp_id], {},
+          #                         [:errata_id_sort, "DESC"],'errata_id').collect(&:errata_id)
+          #   end
+          # end.compact.flatten
           ids = rule.parameters[:units].collect do |unit|
             unit[:id]
-          end
+          end.compact
+
           {"id" => {"$in" => ids}}
         else
           if rule.parameters.has_key? :date_range
