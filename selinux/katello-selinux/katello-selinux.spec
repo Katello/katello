@@ -155,27 +155,3 @@ fi
 
 * Thu May 17 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.5-1
 - encryption - plain text passwords encryption
-
-* Mon Mar 26 2012 Martin Bačovský <mbacovsk@redhat.com> 0.2.4-1
-- 805124 - security review of world-readabl fils (mbacovsk@redhat.com)
-- 803761 - adding man page for selinux-enable (lzap+git@redhat.com)
-
-* Mon Mar 12 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.3-1
-- 801752 - Errors installing katello-selinux
-
-* Mon Feb 27 2012 Lukas Zapletal <lzap+git@redhat.com> 0.2.2-1
-- 761314 - Make sure katello-agent communicates with ssl
-
-* Wed Feb 22 2012 Mike McCune <mmccune@redhat.com> 0.2.1-1
-- 790507 - fixing httpds SAM denials of mod_proxy (lzap+git@redhat.com)
-
-* Mon Jan 30 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.4-1
-- selinux - adding requirement for the main package
-- selinux - adding rh header
-
-* Mon Jan 23 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.3-1
-- selinux - adding katello-selinux-enable script
-
-* Mon Jan 23 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.2-1
-- new package built with tito
-
