@@ -378,7 +378,13 @@ KT.content_view_definition_filters = (function(){
         $('.inclusion').change(function(){
             $('#update_form').ajaxSubmit({
                 type: "PUT",
-                cache: false
+                cache: false,
+                success: function(new_value) {
+                    // Update the "Specifying included/excluded" statement on the pane
+                    var element = $('#inclusion');
+                    element.html(element.html().replace(element.data('initial_value'), new_value));
+                    element.data('initial_value', new_value);
+                }
             });
         });
 
