@@ -7,6 +7,7 @@ class foreman (
   $group              = $foreman::params::group,
   $environment        = $foreman::params::environment,
 
+  $katello_url        = $foreman::params::katello_url,
   $oauth_active       = $foreman::params::oauth_active,
   $oauth_consumer_key = $foreman::params::oauth_consumer_key,
   $oauth_consumer_secret = $foreman::params::oauth_consumer_secret,
