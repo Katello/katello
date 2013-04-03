@@ -1,29 +1,30 @@
-= kt_form_for(view_definition,
-  :url => destroy_parameters_content_view_definition_filter_rule_path(view_definition.id, filter.id, rule.id),
-  :html => {:id => "parameters_form"}) do |form|
+#parameter_list
+  = kt_form_for(view_definition,
+    :url => destroy_parameters_content_view_definition_filter_rule_path(view_definition.id, filter.id, rule.id),
+    :html => {:id => "parameters_form"}) do |form|
 
-  %table
-    %thead
-      %tr
-        %th #{_("Name")}
+    %table
+      %thead
+        %tr
+          %th #{_("Name")}
 
-    %tbody
-      %tr
-        %td
-          - help_text = _("Enter %{type} Name...") % {:type => rule_type.singularize}
-          %input{:type=>'text', :id=>'rule_input', :size=>'30', :placeholder => help_text,
-                 :title => help_text, :tabindex => auto_tab_index}
-          %a#add_rule{:style => 'padding-left: 10px;', :tabindex => auto_tab_index,
-                      'data-url' => add_parameter_content_view_definition_filter_rule_path(view_definition.id, filter.id, rule.id),
-                      'data-rule_type' => rule.content_type} #{_('+ Add')}
+      %tbody
+        %tr
+          %td
+            - help_text = _("Enter %{type} Name...") % {:type => rule_type.singularize}
+            %input{:type=>'text', :id=>'rule_input', :size=>'30', :placeholder => help_text,
+                   :title => help_text, :tabindex => auto_tab_index}
+            %a#add_rule{:style => 'padding-left: 10px;', :tabindex => auto_tab_index,
+                        'data-url' => add_parameter_content_view_definition_filter_rule_path(view_definition.id, filter.id, rule.id),
+                        'data-rule_type' => rule.content_type} #{_('+ Add')}
 
-      %tr#empty_row{:class=>(:hidden unless rule.parameters[:units].blank?)}
-        %td
-          = _("This rule does not currently have any parameters defined.")
+        %tr#empty_row{:class=>(:hidden unless rule.parameters[:units].blank?)}
+          %td
+            = _("This rule does not currently have any parameters defined.")
 
-      - if rule.parameters.has_key?(:units)
-        - rule.parameters[:units].each do |unit|
-          = render :partial => item_partial, :locals => {:editable => editable, :unit => unit}
+        - if rule.parameters.has_key?(:units)
+          - rule.parameters[:units].each do |unit|
+            = render :partial => item_partial, :locals => {:editable => editable, :unit => unit}
 
-  - if editable
-    %input.button.fr.disabled{:type=>"button", :id=>"remove_button", :value=>_("Remove")}
+    - if editable
+      %input.button.fr.disabled{:type=>"button", :id=>"remove_button", :value=>_("Remove")}
