@@ -23,7 +23,8 @@
 
       - if Katello.config.katello?
         = form.field :content_view_id, :label => _("Content View"), :wrapper => {:id => "content_views"}, :grid => [2,7] do
-          = select_tag 'activation_key[content_view_id]', options_for_select(@content_view_labels, @selected_content_view),
+          = select_tag 'activation_key[content_view_id]',
+            options_for_select(content_view_select_labels(@organization, @environment), no_content_view),
             :tabindex => auto_tab_index
 
       = form.field :usage_limit, :label => _("Usage Limit"), :grid => [2,7] do

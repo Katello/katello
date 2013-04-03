@@ -21,9 +21,10 @@ $(document).ready(function() {
             KT.menu.hoverMenu(item, { top : '75px' });
         });
 
-        KT.system_groups.init();
+        KT.system_groups.initialize();
         KT.system_groups.new_setup();
         KT.system_groups.details_setup();
+        KT.system_groups.env_content_view_setup();
     });
 });
 
@@ -152,7 +153,7 @@ KT.system_groups = (function(){
             }
         });
     },
-    init = function(){
+    initialize = function(){
         $('.pane_action.remove').bind('click', prompt_to_destroy_group);
     },
     prompt_to_destroy_group = function(e) {
@@ -359,15 +360,44 @@ KT.system_groups = (function(){
       var url = add ? KT.routes.add_systems_system_group_path(grp_id) :
                         KT.routes.remove_systems_system_group_path(grp_id);
       $.post(url, {'system_ids':sys_ids}, cb).error(error_cb);
+    },
+    env_content_view_setup = function(){
+        var pane = $(".env_content_view_selector");
+        if (pane.length === 0){
+            return;
+        }
+
+        KT.env_content_view_selector.initialize(
+            {
+                save_success_cb: updated_env_content_view,
+                override_save: true
+            }
+        );
+
+        $('#update_form').unbind('submit');
+        $('#update_form').submit(function(e) {
+            var form = $(this);
+            e.preventDefault();
+            KT.common.customConfirm({
+                message: i18n.change_systems_confirm,
+                yes_callback: function(){
+                    KT.env_content_view_selector.save(form);
+                }
+            });
+        });
+    },
+    updated_env_content_view = function (){
+        KT.panel.panelAjax('', KT.routes.systems_system_group_path($('#system_group_systems').data('id')) ,$('#panel'));
+        KT.panel.closeSubPanel($('#subpanel'));
     };
 
     return {
-        init: init,
+        initialize: initialize,
         new_setup: new_setup,
         details_setup: details_setup,
         systems_setup: systems_setup,
+        env_content_view_setup: env_content_view_setup,
         add_system : add_system,
         refresh_list_item: refresh_list_item
     }
 })();
-

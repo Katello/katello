@@ -20,7 +20,7 @@ task :api => :environment do
   if ENV['TEXT']
     filename = 'api.txt'
     puts "Generating #{filename}"
-    File.open(File.join(RAILS_ROOT, filename), "w") do |f|
+    File.open(File.join(Rails.root, filename), "w") do |f|
       f.puts "Katello API"
       f.puts "-----------"
       f.puts "generated on #{Time.new()}"
@@ -34,7 +34,7 @@ task :api => :environment do
   elsif ENV['TRAC']
     filename = 'api.trac'
     puts "Generating #{filename}"
-    File.open(File.join(RAILS_ROOT, filename), "w") do |f|
+    File.open(File.join(Rails.root, filename), "w") do |f|
       f.puts "== Katello API =="
       f.puts "generated on #{Time.new()}"
       f.puts("")
@@ -46,7 +46,7 @@ task :api => :environment do
   else
     filename = 'api.html'
     puts "Generating #{filename}"
-    File.open(File.join(RAILS_ROOT, filename), "w") do |f|
+    File.open(File.join(Rails.root, filename), "w") do |f|
       f.puts "<html><head><title>Katello API</title></head><body>"
       f.puts "<h2>Katello API</h2>"      
       f.puts "<h4>generated on #{Time.new()}</h4>"
