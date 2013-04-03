@@ -31,8 +31,13 @@
                   %input#add_system_input_id{:type=>'hidden'}
                   %input{:type=>'text', :id=>'add_system_input', :size=>'30', :placeholder => help_text, :title => help_text, :tabindex => auto_tab_index}
                   %input#add_system.button{:style => 'padding-left: 10px;', :value=>_("Add"), :type=>:button, :tabindex => auto_tab_index}
+
       %table#systems_table.filter_table.list
         %thead.header
+          %tr
+            %td{:colspan => 4}
+              %a.subpanel_element{"data-url" => edit_systems_system_group_path(@group.id)}
+                = _("Edit Details for All Systems")
           %tr
             %th
               = _("Name")
