@@ -21,6 +21,11 @@ module ContentSearch
         :locals=>{:container=>container, :env=>env, :view=>view}
     end
 
+    def repo_hover_html(repo)
+      render_to_string :partial=>'content_search/repo_hover',
+                       :locals=>{:repo=>repo}
+    end
+
     def env_ids
       SearchUtils.env_ids
     end
