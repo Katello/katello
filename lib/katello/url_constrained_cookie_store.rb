@@ -68,11 +68,11 @@ module Katello::UrlConstrainedCookieStoreV32X
 end
 
 class Katello::UrlConstrainedCookieStore < ActionDispatch::Session::CookieStore
-  include Katello::UrlConstrainedCookieStoreV30X if Rails::VERSION::STRING < "3.2" 
-  include Katello::UrlConstrainedCookieStoreV32X if Rails::VERSION::STRING >= "3.2" 
-  
+  include Katello::UrlConstrainedCookieStoreV30X if Rails::VERSION::STRING < "3.2"
+  include Katello::UrlConstrainedCookieStoreV32X if Rails::VERSION::STRING >= "3.2"
+
   DEFAULT_OPTIONS.merge!(:expiration_exceptions => nil)
-  
+
   def expiration_exceptions(options)
     exceptions = options[:expiration_exceptions] or []
     exceptions.instance_of?(Array) ? exceptions : [exceptions]
@@ -90,7 +90,7 @@ class Katello::UrlConstrainedCookieStore < ActionDispatch::Session::CookieStore
         cookie[:expires] = cookie[:value]['created_at'] + options[:expire_after]
       end
     end
-    
+
     cookie
   end
 end
