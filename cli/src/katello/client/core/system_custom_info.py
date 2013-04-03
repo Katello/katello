@@ -99,12 +99,12 @@ class UpdateCustomInfo(BaseSystemCustomInfo):
 
         ident = sys_uuid if sys_uuid else sys_name
 
-        test_record(response,
-            _("Successfully updated Custom Information [ %(keyname)s ] for System [ %(ident)s ]") \
-                % {'keyname':keyname, 'ident':ident},
-            _("Could not update Custom Information [ %(keyname)s ] for System [ %(ident)s ]") \
+        if response:
+            print _("Successfully updated Custom Information [ %(keyname)s ] for System [ %(ident)s ]") \
                 % {'keyname':keyname, 'ident':ident}
-        )
+        else:
+            print _("Could not update Custom Information [ %(keyname)s ] for System [ %(ident)s ]") \
+                % {'keyname':keyname, 'ident':ident}
 
 
 class RemoveCustomInfo(BaseSystemCustomInfo):
