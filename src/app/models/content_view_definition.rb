@@ -207,15 +207,6 @@ class ContentViewDefinition < ContentViewDefinitionBase
 
   protected
 
-  #convert date, time from UI to object
-  def convert_date(date)
-    return nil if date.blank?
-    sync_event = date +  ' '  + DateTime.now.zone
-    DateTime.strptime(sync_event, "%m/%d/%Y %:z")
-  rescue ArgumentError
-    raise _("Invalid date or time format")
-  end
-
   def generate_unassociate_filter_clauses(repo, content_type)
       # find applicable filters
       # split filter rules by content type, since each content type has its own copy call
