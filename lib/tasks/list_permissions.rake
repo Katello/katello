@@ -21,7 +21,7 @@ task :list_permissions => :environment do
       rules = inst.rules || {}
       full_rule = rules[action.to_sym] || ""
       # source_location works only for 1.9+
-      rule = full_rule.to_s.match(/#{RAILS_ROOT}\/.*:\d+/).to_s.sub(/#{RAILS_ROOT}\//, '')
+      rule = full_rule.to_s.match(/#{Rails.root}\/.*:\d+/).to_s.sub(/#{Rails.root}\//, '')
       notes = ""
     rescue Exception => e
       rule = ""
