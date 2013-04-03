@@ -365,7 +365,7 @@ KT.content_view_definition_filters = (function(){
         if (pane.length === 0) {
             return;
         }
-        $("#filter_tabs").tabs();
+        $("#filter_tabs").tabs().show();
         register_remove($("#rules_form"));
         initialize_checkboxes($("#rules_form"));
     },
