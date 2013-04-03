@@ -16,9 +16,9 @@ module ContentSearch
   class ContainerSearch < Search
     attr_accessor :comparable
 
-    def container_hover_html(container, env=nil)
+    def container_hover_html(container, env=nil, view=nil)
       render_to_string :partial=>'content_search/container_hover',
-        :locals=>{:container=>container, :env=>env}
+        :locals=>{:container=>container, :env=>env, :view=>view}
     end
 
     def env_ids

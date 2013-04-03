@@ -314,6 +314,13 @@ class ContentView < ActiveRecord::Base
     end
   end
 
+  def index_repositories(env)
+    self.repos(env).each do |repo|
+      repo.index_packages
+      repo.index_errata
+    end
+  end
+
 
   protected
 
