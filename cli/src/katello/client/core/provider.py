@@ -276,7 +276,6 @@ class ImportManifest(SingleProviderAction):
         validator.require('file')
 
 
-
     def run(self):
         provName = self.get_option('name')
         orgName  = self.get_option('org')
@@ -293,7 +292,7 @@ class ImportManifest(SingleProviderAction):
         task = ImportManifestAsyncTask(self.api.import_manifest(prov["id"], f, force))
         run_spinner_in_bg(wait_for_async_task, [task], message=_("Importing manifest, please wait... "))
 
-        return task.evaluate_task_status(
+        return ImportManifestAsyncTask.evaluate_task_status(task,
             failed =   _("Provider [ %s ] failed to import manifest") % provName,
             canceled = _("Provider [ %s ] canceled manifest import") % provName,
             ok =       _("Provider [ %s ] manifest import complete") % provName
