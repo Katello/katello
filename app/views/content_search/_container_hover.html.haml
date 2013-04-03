@@ -3,10 +3,7 @@
 - env ||= nil
 - view ||= nil
 
-- if container.is_a? Repository
-  = _("Packages (%s)") % container.package_count
-  = _("Errata (%s)") % container.errata_count
-- elsif container.is_a? Product
+- if container.is_a? Product
   = _("Packages (%s)") % container.total_package_count(env, view)
   = _("Errata (%s)") % container.total_errata_count(env, view)
 - else
