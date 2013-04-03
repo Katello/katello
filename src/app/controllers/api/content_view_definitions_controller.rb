@@ -136,8 +136,8 @@ class Api::ContentViewDefinitionsController < Api::ApiController
   param :id, :identifier, :desc => "Definition identifier", :required => true
   param :views, Array, :desc => "Updated list of view ids", :required => true
   def update_content_views
-    org_id = @definition.organization.id
-    @content_views = ContentView.where(:id => params[:views])
+    current_organization = @definition.organization
+    @content_views = ContentView.readable(current_organization).where(:id => params[:views])
     deleted_content_views = @definition.component_content_views - @content_views
     added_content_views = @content_views - @definition.component_content_views
 
@@ -148,20 +148,21 @@ class Api::ContentViewDefinitionsController < Api::ApiController
     render :json => @definition.component_content_views
   end
 
-  api :GET, "/content_view_definitions/:id/repositories",
+  api :GET, "/organizations/:organization_id/content_view_definitions/:id/repositories",
     "List all the repositories for a content view definition"
+  param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :id, :identifer, :required => true, :desc => "Definition id"
   def list_repositories
     render :json => @definition.repositories
   end
 
-  api :PUT, "/content_view_definitions/:content_view_definition_id/repositories",
+  api :PUT, "/organizations/:organization_id/content_view_definitions/:id/repositories",
     "Update repositories for content view definition"
-  param :content_view_definition_id, :identifier, :required => true,
+  param :organization_id, :identifier, :desc => "organization identifier", :required => true
+  param :id, :identifier, :required => true,
     :desc => "content view definition identifier"
   param :repos, Array, :desc => "Updated list of repo ids", :required => true
   def update_repositories
-    org_id = @definition.organization.id
     @repos = Repository.libraries_content_readable(@organization).
       where(:id => params[:repos])
     @repos = @repos.select{ |r| r.organization == @definition.organization }
@@ -175,17 +176,19 @@ class Api::ContentViewDefinitionsController < Api::ApiController
     render :json => @definition.repositories
   end
 
-  api :GET, "/content_view_definitions/:content_view_definition_id/products",
+  api :GET, "/organizations/:organization_id/content_view_definitions/:id/products",
     "Get products for content view definition"
-  param :content_view_definition_id, :identifier, :required => true,
+  param :organization_id, :identifier, :desc => "organization identifier", :required => true
+  param :id, :identifier, :required => true,
     :desc => "content view definition identifier"
   def list_products
     render :json => @definition.products
   end
 
-  api :PUT, "/content_view_definitions/:content_view_definition_id/products",
+  api :PUT, "/organizations/:organization_id/content_view_definitions/:id/products",
     "Update products for content view definition"
-  param :content_view_definition_id, :identifier, :required => true,
+  param :organization_id, :identifier, :desc => "organization identifier", :required => true
+  param :id, :identifier, :required => true,
     :desc => "content view definition identifier"
   param :products, Array, :desc => "Updated list of products", :required => true
   def update_products
