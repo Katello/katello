@@ -328,6 +328,51 @@ describe SystemGroupsController, :katello => true do
       end
     end
 
-  end
+    describe "GET edit_systems" do
+      let(:action) {:edit_systems}
+      let(:req) { get :edit_systems, :id => @group.id}
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:update_systems, :system_groups, @group.id, @org) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
 
+      it "should render edit_systems partial" do
+        get :edit_systems, :id => @group.id
+        response.should be_success
+        response.should render_template(:partial => '_edit_systems')
+      end
+    end
+
+    describe "PUT update_systems" do
+      let(:action) {:update_systems}
+      let(:req) { put :update_systems, :id => @group.id}
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:update_systems, :system_groups, @group.id, @org) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+
+
+      it "should update systems successfully" do
+        Resources::Candlepin::Consumer.stub!(:get).and_return({:uuid => uuid, :owner => {:key => uuid}})
+
+        next_environment = KTEnvironment.create!(:name => "TEST", :label => "TEST", :prior => @environment,
+                                                 :organization => @org)
+        @group.systems = [@system]
+        @group.save
+
+        controller.should notify.success
+        put :update_systems, :id => @group.id, :system_group=>{:environment_id => next_environment.id}
+
+        response.should be_success
+        @system.reload.environment.should == next_environment
+      end
+    end
+
+  end
 end

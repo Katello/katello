@@ -227,11 +227,11 @@ KT.activation_key = (function($) {
         // update the products box with the results
         var url = $('.path_link.active').attr('data-products_url');
 
-        if($("#activation_key_content_view_id").val()) {
-            url += ("?content_view_id=" + $("#activation_key_content_view_id").val());
-        }
-
         if (url !== undefined) {
+            if($("#activation_key_content_view_id").val()) {
+                url += ("?content_view_id=" + $("#activation_key_content_view_id").val());
+            }
+
             disable_buttons();
             $.ajax({
                 type: "GET",
@@ -263,7 +263,7 @@ KT.activation_key = (function($) {
                     var opt_template = KT.utils.template("<option value='<%= key %>'><%= text %></option>");
 
                     // create an html option list using the response
-                    options += opt_template({key: "", text: i18n.noContentView});
+                    options += opt_template({key: "", text: i18n.no_content_view});
                     $.each(response, function(key, item) {
                         options += opt_template({key: item.id, text: item.name});
                     });
@@ -297,12 +297,11 @@ KT.activation_key = (function($) {
         highlight_input("#activation_key_content_view_id", add_highlight);
     };
     highlight_input = function(element_id, add_highlight) {
-        var text = element_id.match(/template/) ? "update_template" : "update_view";
         var select_input = $(element_id);
         if (add_highlight) {
             if( !select_input.next('span').hasClass('highlight_input_text')) {
                 select_input.addClass('highlight_input');
-                select_input.after('<span class ="highlight_input_text">' + i18n[text] + '</span>');
+                select_input.after('<span class ="highlight_input_text">' + i18n.select_content_view + '</span>');
             }
         } else {
             select_input.removeClass('highlight_input');

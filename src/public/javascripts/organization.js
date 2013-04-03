@@ -24,40 +24,40 @@ $(document).ready(function() {
         }
     });
 
-   $('.environment_link').live('click', function() {
-        $(this).siblings().show();
-   });
+    $('.environment_link').live('click', function() {
+         $(this).siblings().show();
+    });
 
-  $('#debug_cert').live('click',function(){
-    $('#show_debug_button').slideToggle();
+    $('#debug_cert').live('click',function(){
+        $('#show_debug_button').slideToggle();
 
-    var arrow = $(this).parent().find('img');
-    if(arrow.attr("src").indexOf("collapsed") === -1){
-      arrow.attr("src", KT.common.rootURL() + "images/embed/icons/expander-collapsed.png");
-    } else {
-      arrow.attr("src", KT.common.rootURL() + "images/embed/icons/expander-expanded.png");
-    }
-    return false;
-  });
+        var arrow = $(this).parent().find('img');
+        if (arrow.attr("src").indexOf("collapsed") === -1) {
+            arrow.attr("src", KT.common.rootURL() + "images/embed/icons/expander-collapsed.png");
+        } else {
+            arrow.attr("src", KT.common.rootURL() + "images/embed/icons/expander-expanded.png");
+        }
+        return false;
+    });
 
-    $('#download_debug_cert_key').live('click', function(e){
+    $('#download_debug_cert_key').live('click', function(e) {
         e.preventDefault();  //stop the browser from following
         url = $("#download_debug_cert_key").data("url");
         window.location.href = url;
         return false;
     });
 
-  $('#label_default_org').live('click', function(e) {
-      KT.orgswitcher.checkboxChanged($('#default_org'));
-  });
+    $('#label_default_org').live('click', function(e) {
+        KT.orgswitcher.checkboxChanged($('#default_org'));
+    });
 
-  $('#save_name').live('ajax:complete', function(evt, data, status, xhr) {
-    // Refresh the entry in the left list
-    var id = $('.left').find('.active');
-    var url = id.attr('data-ajax_url');
-    KT.panel.list.refresh(id.attr('id'), url);
+    $('#save_name').live('ajax:complete', function(evt, data, status, xhr) {
+        // Refresh the entry in the left list
+        var id = $('.left').find('.active');
+        var url = id.attr('data-ajax_url');
+        KT.panel.list.refresh(id.attr('id'), url);
 
-    // Refresh the name displayed at the top of the right panel
-  });
+        // Refresh the name displayed at the top of the right panel
+    });
 
 });

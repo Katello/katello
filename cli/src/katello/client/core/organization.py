@@ -319,7 +319,7 @@ class RemoveDefaultInfo(OrganizationAction):
         response = self.default_info_api.destroy(org_name, informable_type, keyname)
 
         output_hash = {'keyname': keyname, 'org_name': org_name, 'katello_obj': informable_type.capitalize()}
-        if not keyname in response:
+        if response:
             print _("Successfully removed [ %(katello_obj)s ] " \
                 + "default custom info [ %(keyname)s ] for Org [ %(org_name)s ]") \
                 % output_hash
@@ -353,8 +353,6 @@ class ApplyDefaultInfo(OrganizationAction):
         if response:
             print _("Applied [ %(sys_count)d %(katello_obj)s ] default custom info in Org [ %(org_name)s ]") \
                 % {'sys_count': len(response), 'org_name': org_name, 'katello_obj': informable_type.capitalize()}
-        elif len(response) == 0:
-            print _("No default custom info keys to apply in Org [ %s ]") % org_name
         else:
             print _("Could not apply [ %(katello_obj)s ] default custom info keys to Org [ %(org_name)s ]") \
                 % {'org_name': org_name, 'katello_obj': informable_type.capitalize()}
