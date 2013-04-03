@@ -14,7 +14,8 @@ class SystemGroupsController < ApplicationController
 
   before_filter :panel_options, :only=>[:index, :items, :create, :copy]
   before_filter :find_group, :only=>[:edit, :update, :destroy, :destroy_systems, :systems,
-                                     :show, :add_systems, :remove_systems, :copy]
+                                     :show, :add_systems, :remove_systems, :edit_systems,
+                                     :update_systems, :copy]
 
   before_filter :authorize
   def rules
@@ -24,6 +25,7 @@ class SystemGroupsController < ApplicationController
     create_perm = lambda{SystemGroup.creatable?(current_organization)}
     destroy_perm = lambda{@group.deletable?}
     destroy_systems_perm = lambda{@group.systems_deletable?}
+    edit_systems_perm = lambda{@group.systems_editable?}
     {
         :index=>any_readable,
         :items=>any_readable,
@@ -39,6 +41,8 @@ class SystemGroupsController < ApplicationController
         :auto_complete=>any_readable,
         :add_systems=> edit_perm,
         :remove_systems=>edit_perm,
+        :edit_systems=>edit_systems_perm,
+        :update_systems=>edit_systems_perm,
         :validate_name=>any_readable
     }
   end
@@ -48,7 +52,8 @@ class SystemGroupsController < ApplicationController
        :create => {:system_group => [:name, :description, :max_systems]},
        :update => {:system_group => [:name, :description, :max_systems]},
        :add_systems => [:system_ids, :id],
-       :remove_systems => [:system_ids, :id]
+       :remove_systems => [:system_ids, :id],
+       :update_systems => {:system_group => [:environment_id, :content_view_id]}
      }
   end
 
@@ -201,6 +206,29 @@ class SystemGroupsController < ApplicationController
     @group.save!
 
     notify.success _("Successfully removed system[s] from group '%s'.") % @group.name
+
+    render :text=>''
+  end
+
+  def edit_systems
+    accessible_envs  = current_organization.environments
+    setup_environment_selector(current_organization, accessible_envs)
+    @organization = current_organization
+    @environment = first_env_in_path(accessible_envs)
+
+    render :partial => "edit_systems",
+           :locals => {:filter => @group, :accessible_envs => accessible_envs}
+  end
+
+  def update_systems
+    unless params[:system_group].blank?
+      @group.systems.each do|system|
+        system.update_attributes!(params[:system_group])
+      end
+    end
+
+    notify.success _("Successfully updated environment and content view for all systems in group %{group}") %
+                       {:group => @group.name}
 
     render :text=>''
   end
