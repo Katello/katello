@@ -20,7 +20,7 @@
 
         - filter.rules.each do |rule|
           %tr
-            %td
+            %td.one-line-ellipsis
               - if editable
                 .panel_link
                   = check_box_tag "filter_rules[#{rule.id}]", FilterRule::CONTENT_OPTIONS.index(rule.content_type),
