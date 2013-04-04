@@ -43,7 +43,6 @@ class FilterDeleteTest(CLIActionTestCase):
         self.set_module(katello.client.core.filter)
         self.mock_printer()
         self.mock_options(self.OPTIONS)
-
         self.mock(self.action.api, 'delete')
         self.mock(self.module, 'get_cv_definition', self.DEF)
         self.mock(self.module, 'get_filter', self.FILTER)

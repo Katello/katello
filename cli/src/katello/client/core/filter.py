@@ -22,7 +22,7 @@ from katello.client.cli.base import opt_parser_add_org, opt_parser_add_product
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_repo, get_cv_definition, ApiDataError, \
     get_filter
-
+from pprint import pformat
 # base filter action ----------------------------------------
 
 class FilterAction(BaseAction):
@@ -45,8 +45,11 @@ class FilterAction(BaseAction):
         FilterAction._add_cvd_filter_opts(parser)
         parser.add_option('--name', dest='name',
                 help=_("filter name eg: 'package filter acme'"))
+<<<<<<< HEAD
         parser.add_option('--id', dest='id',
                 help=_("filter id eg: 42"))
+=======
+>>>>>>> 90bb129... Implementation for add/remove filter rules via cli
 
     @classmethod
     def _add_filter_opts_check(cls, validator):
@@ -94,6 +97,21 @@ class List(FilterAction):
 
 class Info(FilterAction):
     description = _('list a specific filter')
+
+    @classmethod
+    def rules_formatter(cls, rules):
+        ret = list()
+        for rule in rules:
+            item = list()
+            item.append(_("Id") + ": " + str(rule["id"]))
+            item.append(_("Content") + ": " + rule["content"])
+            item.append(_("Type") + ": " + (rule["inclusion"] and "includes" or "excludes") )
+            item.append(_("Rule") + ": ")
+            item.append(" " + pformat(rule["rule"]))
+            ret.append("\n".join(item))
+            ret.append("\n")
+        return "\n".join(ret)
+
     def setup_parser(self, parser):
         self._add_get_filter_opts(parser)
         opt_parser_add_org(parser, required=1)
@@ -125,7 +143,7 @@ class Info(FilterAction):
         self.printer.add_column('organization', _('Org'))
         self.printer.add_column('products', _("Products"), multiline=True)
         self.printer.add_column('repos', _("Repos"), multiline=True)
-
+        self.printer.add_column('rules', _("Rules"), multiline=True, value_formatter = Info.rules_formatter)
         self.printer.set_header(_("Content View Definition Filter Info"))
         self.printer.print_item(cvd_filter)
         return os.EX_OK
