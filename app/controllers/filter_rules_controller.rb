@@ -62,14 +62,15 @@ class FilterRulesController < ApplicationController
   end
 
   def create
-    FilterRule.create!(params[:filter_rule]) do |rule|
-      rule.filter = @filter
+    rule = FilterRule.create!(params[:filter_rule]) do |r|
+      r.filter = @filter
     end
 
     notify.success(_("'%{type}' rule successfully created for filter '%{filter}'.") %
                    {:type => params[:filter_rule][:content_type], :filter => @filter.name})
 
-    render :nothing => true
+    render :partial => "common/post_action_close_subpanel",
+           :locals => {:path => edit_content_view_definition_filter_rule_path(@view_definition, @filter, rule)}
   end
 
   def edit
