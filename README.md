@@ -13,8 +13,8 @@ provisioning at scale.
 Currently, it is able to handle Fedora and Red Hat Enterprise
 Linux based systems.
 
-How to try it out?
-------------------
+Getting Started
+---------------
 
 The easiest way to get stable version of Katello up and running is following
 [Katello Wiki Installation Instructions](https://fedorahosted.org/katello/wiki/Install).
@@ -26,16 +26,16 @@ instead.
 Found a bug?
 ------------
 
-We're sorry to hear that. But we're also willing to help you. Just
+That's rather unfortunate. But don't worry! We can help. Just
 [file a bug](https://bugzilla.redhat.com/enter_bug.cgi?product=Katello).
 
-Hacking
--------
+Contributing
+------------
 
 See
 [development instructions](https://fedorahosted.org/katello/wiki/AdvancedInstallation#GettingupandRunningGIT).
 
-What's in this repo?:
+What's included in this repository:
 
  * agent - source for katello-agent
  * certs-tools - certificates related tools
@@ -54,6 +54,6 @@ Contact & Resources
 
  * [Wiki](https://fedorahosted.org/katello/wiki)
  * [User mailing list](https://fedorahosted.org/mailman/listinfo/katello)
- * [Devel mailing list](https://www.redhat.com/mailman/listinfo/katello-devel)
- * [Freenode](http://freenode.net/using_the_network.shtml): #katello
+ * [Developer mailing list](https://www.redhat.com/mailman/listinfo/katello-devel)
+ * [IRC Freenode](http://freenode.net/using_the_network.shtml): #katello
  * [Twitter](https://twitter.com/Katello_Project)
