@@ -459,8 +459,10 @@ describe Changeset, :katello => true do
 
         @clone.stub(:index_packages).and_return()
         @clone.stub(:index_errata).and_return()
+        @clone.stub(:index_package_groups).and_return()
         @repo.stub(:index_packages).and_return()
         @repo.stub(:index_errata).and_return()
+        @repo.stub(:index_package_groups).and_return()
 
         @environment.prior.stub(:products).and_return([@prod])
         @environment.prior.products.stub(:find_by_name).and_return(@prod)
@@ -471,6 +473,7 @@ describe Changeset, :katello => true do
 
         Glue::Pulp::Package.stub(:index_packages).and_return(true)
         Glue::Pulp::Errata.stub(:index_errata).and_return(true)
+        Glue::Pulp::PackageGroup.stub(:index_package_groups).and_return(true)
         Glue::Pulp::Repo.stub(:add_repo_packages)
 
         ChangesetDistribution.any_instance.stub(:product).and_return(@prod)
