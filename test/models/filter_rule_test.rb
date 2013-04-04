@@ -149,19 +149,19 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
     end
   end
 
-  def exec_test_includes_and_excludes content_type, units, expected_fragments
+  def exec_test_includes_and_excludes(content_type, units, expected_fragments)
       exec_test_includes(content_type, units, expected_fragments)
       exec_test_excludes(content_type, units, expected_fragments)
 
   end
-  def exec_test_includes content_type, units, expected_fragments
+  def exec_test_includes(content_type, units, expected_fragments)
     actual = get_filter_clause(true, content_type, units)
     expected = {"$nor"=> expected_fragments}
     assert_equal expected, actual
 
   end
 
-  def exec_test_excludes  content_type, units, expected_fragments
+  def exec_test_excludes(content_type, units, expected_fragments)
     actual = get_filter_clause(false, content_type, units)
     expected = {"$or"=> expected_fragments}
     assert_equal expected, actual
