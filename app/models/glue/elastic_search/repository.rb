@@ -124,7 +124,7 @@ module Glue::ElasticSearch::Repository
       pgs = self.package_groups.collect{|pg| pg.as_json.merge(pg.index_options)}
       pulp_id = self.pulp_id
 
-      # now, for any package group that only had this repo asscociated with it, 
+      # now, for any package group that only had this repo asscociated with it,
       # remove the package group from the index
       repoid = "repo_id:#{pulp_id}"
       Tire::Configuration.client.delete "#{Tire::Configuration.url}/katello_package_group/_query?q=#{repoid}"
