@@ -104,7 +104,7 @@ class FilterRulesController < ApplicationController
   def update
     @rule.update_attributes!(params[:filter_rule])
 
-    result = params[:filter_rule][:inclusion] ? included_text(@rule) : params[:filter_rule].values.first
+    result = params[:filter_rule].has_key?(:inclusion) ? included_text(@rule) : params[:filter_rule].values.first
 
     notify.success(_("Rule '%{type}' was successfully updated.") %
                    {:type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type)})
