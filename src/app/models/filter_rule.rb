@@ -85,7 +85,7 @@ class FilterRule < ActiveRecord::Base
             unit[:id]
           end.compact
 
-          {"id" => {"$in" => ids}}
+          {"id" => {"$in" => ids}}  unless ids.empty?
         else
           if parameters.has_key? :date_range
             date_range = parameters[:date_range]
