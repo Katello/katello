@@ -654,6 +654,7 @@ Src::Application.routes.draw do
               put :index, :action => :update_repositories
             end
           end
+          resources :rules, :controller => :filter_rules, :only => [:create, :destroy]
         end
       end
     end
