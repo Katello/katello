@@ -38,7 +38,7 @@ module ContentSearch
 
           cols = {}
           Repository.where(:pulp_id=>all_repos).each do |r|
-            cols[r.environment.id] = Cell.new(:hover => repo_hover_html(r)) if env_ids.include?(r.environment_id)
+            cols[r.environment.id] = Cell.new(:hover => lambda{repo_hover_html(r)}) if env_ids.include?(r.environment_id)
           end
 
           rows << Row.new(:id => self.class.id(view, repo),
