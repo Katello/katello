@@ -178,6 +178,6 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
     cvd =  @filter.content_view_definition
     cvd.repositories << @repo
     @filter.repositories << @repo
-    cvd.send(:generate_unassociate_filter_clauses, @repo, @filter_rule.content_type)
+    cvd.send(:unassociation_clauses, @repo, @filter_rule.content_type)
    end
 end
