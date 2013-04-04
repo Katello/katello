@@ -59,7 +59,7 @@ class FilterRule < ActiveRecord::Base
             else
               #ignore
           end
-        end.compact
+        end.compact if parameters.has_key?(:units)
 
       when FilterRule::PACKAGE_GROUP
         ids = parameters[:units].collect do |unit|
@@ -68,7 +68,7 @@ class FilterRule < ActiveRecord::Base
             PackageGroup.search(unit[:name], 0, 0, [repo.pulp_id]).collect(&:package_group_id)
           end
         end.compact.flatten
-        {"id" => {"$in" => ids}}
+        {"id" => {"$in" => ids}} unless ids.empty?
 
       when FilterRule::ERRATA
         rule_clauses = []
