@@ -56,8 +56,8 @@ module FiltersHelper
 
     elsif rule.content_type == FilterRule::ERRATA
 
-      if rule.parameters.has_key?(:errata_type) || (rule.parameters.has_key?(:date_range) &&
-          (rule.parameters[:date_range].has_key?(:start) || rule.parameters[:date_range].has_key?(:end)))
+      if !rule.parameters[:errata_type].blank? || (!rule.parameters[:date_range].blank? &&
+          (!rule.parameters[:date_range][:start].blank? || !rule.parameters[:date_range][:end].blank?))
         summary = errata_type_date_summary(rule)
       else
         summary = parameter_list_summary(rule, :id)
@@ -71,7 +71,7 @@ module FiltersHelper
   end
 
   def parameter_list_summary(rule, field)
-    if rule.parameters.has_key?(:units)
+    if !rule.parameters[:units].blank?
       parameter_list = rule.parameters[:units].inject([]) do |result, unit|
         result << unit[field]
       end
@@ -91,8 +91,8 @@ module FiltersHelper
     end
 
     date_summary = ""
-    if rule.parameters.has_key?(:date_range)
-      if rule.parameters[:date_range].has_key?(:start) || rule.parameters[:date_range].has_key?(:end)
+    if !rule.parameters[:date_range].blank?
+      if !rule.parameters[:date_range][:start].blank? || !rule.parameters[:date_range][:end].blank?
         start_date = rule.parameters[:date_range][:start]
         end_date = rule.parameters[:date_range][:end]
 
