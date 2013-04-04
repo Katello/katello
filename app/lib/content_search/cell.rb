@@ -13,4 +13,15 @@
 class ContentSearch::Cell
   include ContentSearch::Element
   display_attributes :id, :display, :hover, :content
+
+  def as_json(options)
+    to_ret = {
+        :id => id
+    }
+    to_ret[:display] = content unless content.nil?
+    to_ret[:display] = display unless display.nil?
+    to_ret[:hover] = self.hover.nil? ? '' : self.hover.call
+    to_ret
+  end
+
 end
