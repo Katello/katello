@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130321121430) do
+ActiveRecord::Schema.define(:version => 20130403133149) do
 
   create_table "activation_keys", :force => true do |t|
     t.string   "name"
@@ -219,7 +219,7 @@ ActiveRecord::Schema.define(:version => 20130321121430) do
 
   create_table "custom_info", :force => true do |t|
     t.string   "keyname"
-    t.string   "value"
+    t.string   "value",           :default => ""
     t.integer  "informable_id"
     t.string   "informable_type"
     t.datetime "created_at"
