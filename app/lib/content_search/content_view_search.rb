@@ -31,7 +31,7 @@ module ContentSearch
               version = view.version(env).try(:version)
               display = version ? (_("version %s") % version) : ""
             end
-            cols[env.id] = Cell.new(:hover => container_hover_html(view, env), :display => display)
+            cols[env.id] = Cell.new(:hover => lambda{container_hover_html(view, env)}, :display => display)
           end
         end
 
