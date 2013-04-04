@@ -85,7 +85,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
     # Start Filtering packages in the copied repo
     cloned_repos.each do |repo|
       [FilterRule::ERRATA, FilterRule::PACKAGE_GROUP, FilterRule::PACKAGE].each do |content_type|
-        filter_clauses = generate_unassociate_filter_clauses(repo.library_instance, content_type)
+        filter_clauses = unassociation_clauses(repo.library_instance, content_type)
         if filter_clauses
           pulp_task = repo.unassociate_by_filter(content_type, filter_clauses)
           PulpTaskStatus::wait_for_tasks [pulp_task]
@@ -94,36 +94,11 @@ class ContentViewDefinition < ContentViewDefinitionBase
     end
 
     cloned_repos.each do |repo|
-
-      package_lists = repo.package_lists_for_publish
-      rpm_names = package_lists[:names]
-      filenames = package_lists[:filenames]
-
-      # Remove all errata with no packages
-      errata_to_delete = repo.errata.collect do |erratum|
-        erratum.errata_id if filenames.intersection(erratum.package_filenames).empty?
-      end.compact
-
-      #do the errata remove call
-      unless errata_to_delete.empty?
-        repo.unassociate_by_filter(FilterRule::ERRATA, {"id" => {"$in" => errata_to_delete}})
-      end
-
-      # Remove all  package groups with no packages
-      package_groups_to_delete = repo.package_groups.collect do |group|
-        group.package_group_id if rpm_names.intersection(group.package_names).empty?
-      end.compact
-
-      unless package_groups_to_delete.empty?
-        repo.unassociate_by_filter(FilterRule::PACKAGE_GROUP, {"id" => {"$in" => package_groups_to_delete}})
-      end
-
-    end
-
-    # update search indices for package and errata
-    cloned_repos.each do |repo|
+      repo.purge_empty_groups_errata
+      # update search indices for package and errata
       repo.index_content
     end
+
 
     if notify
       message = _("Successfully published content view '%{view_name}' from definition '%{definition_name}'.") %
@@ -207,57 +182,46 @@ class ContentViewDefinition < ContentViewDefinitionBase
 
   protected
 
-  def generate_unassociate_filter_clauses(repo, content_type)
-      # find applicable filters
-      # split filter rules by content type, since each content type has its own copy call
-      # depending on include or exclude filters combine or remove
-      applicable_filters = filters.applicable(repo)
+  def unassociation_clauses(repo, content_type)
+    # find applicable filters
+    # split filter rules by content type, since each content type has its own copy call
+    # depending on include or exclude filters combine or remove
+    applicable_filters = filters.applicable(repo)
 
-      applicable_rules = FilterRule.where(:filter_id => applicable_filters).where(:content_type => content_type)
-      filter_clauses = {}
-      inclusion_rules = applicable_rules.where(:inclusion => true)
-      exclusion_rules = applicable_rules.where(:inclusion => false)
+    applicable_rules = FilterRule.where(:filter_id => applicable_filters).where(:content_type => content_type)
+    filter_clauses = {}
+    inclusion_rules = applicable_rules.where(:inclusion => true)
+    exclusion_rules = applicable_rules.where(:inclusion => false)
 
-      includes_count = inclusion_rules.count
-      excludes_count = exclusion_rules.count
+    includes_count = inclusion_rules.count
+    excludes_count = exclusion_rules.count
 
-      #   If there is no include/exclude filters  -  Everything is included. - so do not delete anything
-      return if includes_count == 0 && excludes_count == 0
+    #   If there is no include/exclude filters  -  Everything is included. - so do not delete anything
+    return if includes_count == 0 && excludes_count == 0
 
 
-      clauses = []
-      #  If there are only exclude filters (aka blacklist filters),
-      #  then unassociate them from the repo
-      #
-      if excludes_count > 0
-        excludes = exclusion_rules.collect do |rule|
+    clauses = []
+    #  If there are only exclude filters (aka blacklist filters),
+    #  then unassociate them from the repo
+    #  If there are only include filters (aka whitelist) then only the packages/errata included will get included.
+    #    Everything else is thus excluded.
+    #  If there are include and exclude filters, the exclude filters then the include filters, get processed first,
+    #     then the exclude filter excludes content from the set included by the include filters.
+
+    [[inclusion_rules, '$nor'],[exclusion_rules, '$or']].each do |rules, join_clause|
+      if rules.count > 0
+        rule_items = rules.collect do |rule|
           rule.generate_clauses(repo)
         end.compact.flatten
-        clauses << {'$or' => excludes} unless excludes.empty?
+        clauses << {join_clause => rule_items} unless rule_items.empty?
       end
+    end
 
-
-      #  If there are only include filters (aka whitelist) then only the packages/errata included will get included.
-      #  Everything else is thus excluded.
-      if includes_count > 0
-        includes = inclusion_rules.collect do |rule|
-          rule.generate_clauses(repo)
-        end.compact.flatten
-
-        clauses << {'$nor' => includes}  unless includes.empty?
-      end
-
-      #    If there are include and exclude filters, the exclude filters then the include filters, get processed first,
-      #       then the exclude filter excludes content from the set included by the include filters.
-
-      case clauses.size
-        when 1
-           return clauses.first
-         when 2
-           return {'$or' => clauses}
-         else
-           #ignore
-      end
+    if clauses.size > 1
+      return {'$or' => clauses}
+    elsif clauses.size == 1
+      return clauses.first
+    end
   end
 
   def views_repos
