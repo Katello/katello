@@ -94,20 +94,24 @@ class FilterRule < ActiveRecord::Base
             dr["$lte"] = convert_date(date_range[:end]).as_json if date_range.has_key? :end
             rule_clauses << {"issued" => dr}
           end
-          if parameters.has_key? :errata_type
-            unless parameters[:errata_type].empty?
+          if parameters.has_key? :errata_type && !parameters[:errata_type].empty?
               # {"type": {"$in": ["security", "enhancement", "bugfix"]}
-              rule_clauses << {"type" => {"$in" => parameters[:errata_type]}}
-            end
+            rule_clauses << {"type" => {"$in" => parameters[:errata_type]}}
           end
 
+          if parameters.has_key? :severity && !parameters[:severity].empty?
+              # {"severity": {"$in": ["low", "moderate", "important", "critical"]}
+            rule_clauses << {"severity" => {"$in" => parameters[:severity]}}
+          end
+
+
           case rule_clauses.size
+            when 0
+              return
             when 1
               return rule_clauses.first
-            when 2
-              return {'$and' => rule_clauses}
             else
-              #ignore
+              return {'$and' => rule_clauses}
           end
         end
       else
