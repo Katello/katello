@@ -195,6 +195,35 @@ module Glue::Pulp::Repo
        :filenames => filenames.to_set}
     end
 
+    # remove errata and groups from this repo
+    # that have no packages
+    def purge_empty_groups_errata
+      package_lists = package_lists_for_publish
+      rpm_names = package_lists[:names]
+      filenames = package_lists[:filenames]
+
+      # Remove all errata with no packages
+      errata_to_delete = errata.collect do |erratum|
+        erratum.errata_id if filenames.intersection(erratum.package_filenames).empty?
+      end.compact
+
+      #do the errata remove call
+      unless errata_to_delete.empty?
+        unassociate_by_filter(FilterRule::ERRATA, {"id" => {"$in" => errata_to_delete}})
+      end
+
+      # Remove all  package groups with no packages
+      package_groups_to_delete = package_groups.collect do |group|
+        group.package_group_id if rpm_names.intersection(group.package_names).empty?
+      end.compact
+
+      unless package_groups_to_delete.empty?
+        unassociate_by_filter(FilterRule::PACKAGE_GROUP, {"id" => {"$in" => package_groups_to_delete}})
+      end
+    end
+
+
+
     def packages
       if @repo_packages.nil?
         #we fetch ids and then fetch packages by id, because repo packages
@@ -249,7 +278,6 @@ module Glue::Pulp::Repo
       end
       @repo_distributions
     end
-
 
     def package_groups
       if @repo_package_groups.nil?
