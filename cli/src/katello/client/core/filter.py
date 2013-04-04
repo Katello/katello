@@ -216,7 +216,7 @@ class AddRemoveProduct(FilterAction):
                                 definition_name, definition_id)
         cvd_products = cvd_api.products(org_name, cvd["id"])
 
-        product = self.identify_product(cvd_products, product_name, product_label, product_id)
+        product = self.identify_product(cvd, cvd_products, product_name, product_label, product_id)
 
         products = self.def_api.products(filter_name, cvd["id"], org_name)
 
@@ -238,9 +238,8 @@ class AddRemoveProduct(FilterAction):
         self.def_api.update_products(filter_name, cvd, org_name, products)
         print message
 
-    def identify_product(self, cvd_products, product_name, product_label, product_id):
+    def identify_product(self, definition, cvd_products, product_name, product_label, product_id):
         org_name = self.get_option('org')
-        definition = self.get_option('definition')
 
         products = [prod for prod in cvd_products if prod["id"] == product_id \
                              or prod["name"] == product_name or prod["label"] == product_label]
@@ -250,8 +249,8 @@ class AddRemoveProduct(FilterAction):
                                  "recommend using product id.  The product id may be retrieved "\
                                  "using the 'product list' command."))
         elif len(products) == 0:
-            raise ApiDataError(_("Could not find product [ %s ] within organization [ %s ] and  definition [%s] ") %
-                               (product_name, org_name, definition))
+            raise ApiDataError(_("Could not find product [ %s ] within organization [ %s ] and definition [%s] ") %
+                               ((product_name or product_label or product_id), org_name, definition["name"]))
 
         return products[0]
 
