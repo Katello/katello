@@ -1,8 +1,6 @@
 # Be sure to restart your server when you modify this file.
 
-Src::Application.config.session_store :cookie_store, :key => '_src_session'
-
-# Use the database for sessions instead of the cookie-based default,
-# which shouldn't be used to store highly confidential information
-# (create the session table with "rake db:sessions:create")
-# Src::Application.config.session_store :active_record_store
+# This file is not being used to configure Katello session store
+# See environment-specific initialization in
+# config/environments/development.rb and config/environments/production.rb
+# under "config.session_store" key

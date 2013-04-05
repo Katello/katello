@@ -163,7 +163,7 @@ class Info(ContentViewDefinitionAction):
 
 class Create(ContentViewDefinitionAction):
 
-    description = _('create an content view definition')
+    description = _('create a content view definition')
 
     def setup_parser(self, parser):
         parser.add_option('--name', dest='name',
@@ -190,9 +190,7 @@ class Create(ContentViewDefinitionAction):
 
 class Update(ContentViewDefinitionAction):
 
-
-    description =  _('update an content view definition')
-
+    description =  _('update a content view definition')
 
     def setup_parser(self, parser):
         parser.add_option("--description", dest="description",
@@ -215,14 +213,14 @@ class Update(ContentViewDefinitionAction):
         cvd = get_cv_definition(org_name, def_label)
 
         cvd = self.def_api.update(org_name, cvd["id"], name, description)
-        print _("Successfully updated content_view [ %s ]") % cvd['name']
+        print _("Successfully updated definition [ %s ]") % cvd['name']
         return os.EX_OK
 
 
 
 class Delete(ContentViewDefinitionAction):
 
-    description = _('delete an content view definition')
+    description = _('delete a content view definition')
 
     def setup_parser(self, parser):
         opt_parser_add_org(parser, required=1)
@@ -438,6 +436,46 @@ class AddRemoveContentView(ContentViewDefinitionAction):
 
         self.def_api.update_content_views(cvd['id'], content_views)
         print message
+
+
+class Clone(ContentViewDefinitionAction):
+
+    description =  _('clone a content view definition')
+
+    def setup_parser(self, parser):
+        opt_parser_add_org(parser, required=1)
+        parser.add_option('--name', dest='new_name',
+                help=_("content view definition clone name (required)"))
+        parser.add_option('--label', dest='new_label',
+                help=_("content view definition clone label"))
+        parser.add_option("--description", dest="new_description",
+                help=_("content view definition clone description eg: foo's content view"))
+        parser.add_option('--from_label', dest='label',
+                help=_("definition label eg: def1"))
+        parser.add_option('--from_id', dest='id',
+                help=_("definition id eg: 42"))
+        parser.add_option('--from_name', dest='name',
+                help=_("definition name eg: def1"))
+
+    def check_options(self, validator):
+        validator.require(('org', 'new_name'))
+        validator.require_at_least_one_of(('name', 'label', 'id'))
+        validator.mutually_exclude('name', 'label', 'id')
+
+    def run(self):
+        name = self.get_option('name')
+        label = self.get_option('label')
+        def_id = self.get_option('id')
+        new_name = self.get_option('new_name')
+        new_label = self.get_option('new_label')
+        new_description = self.get_option('new_description')
+        org_name = self.get_option('org')
+
+        cvd = get_cv_definition(org_name, label, name, def_id)
+
+        cvd = self.def_api.clone(org_name, cvd["id"], new_name, new_label, new_description)
+        print _("Successfully created cloned definition [ %s ]") % cvd['name']
+        return os.EX_OK
 
 
 # cvd def command ------------------------------------------------------------

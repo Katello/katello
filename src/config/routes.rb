@@ -636,7 +636,10 @@ Src::Application.routes.draw do
 
       resources :content_views, :only => [:index, :show]
       resources :content_view_definitions do
-        post :publish, :on => :member
+        member do
+          post :publish
+          post :clone
+        end
         resources :products, :controller => :content_view_definitions, :only => [] do
           collection do
             get :index, :action => :list_products

@@ -285,6 +285,7 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         cvd_cmd.add_command('delete', content_view_definition.Delete())
         cvd_cmd.add_command('update', content_view_definition.Update())
         cvd_cmd.add_command('publish', content_view_definition.Publish())
+        cvd_cmd.add_command('clone', content_view_definition.Clone())
         cvd_cmd.add_command('add_product',
                 content_view_definition.AddRemoveProduct(True))
         cvd_cmd.add_command('remove_product',

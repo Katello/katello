@@ -644,6 +644,7 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/models/*.rb
 %{homedir}/app/models/authorization/*.rb
 %{homedir}/app/models/candlepin
+%{homedir}/app/models/content_search
 %{homedir}/app/models/ext
 %{homedir}/app/models/roles_permissions
 %{homedir}/app/stylesheets
