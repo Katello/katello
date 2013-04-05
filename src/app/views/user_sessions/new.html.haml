@@ -16,7 +16,7 @@
     = render :partial => "/layouts/org"
 
 = content_for(:content) do
-  = render "layouts/alchemy/layouts/login_layout",
+  = render "alchemy/layouts/login_layout",
       :login_form_path_string => user_session_path,
       :recovery_strings => (_("Forgot %{username} or %{password}?") % { :username => link_to(_("Username"),
         login_path(:card => :username_recovery), :id => "username_link"), :password  => link_to(_("Password"),
