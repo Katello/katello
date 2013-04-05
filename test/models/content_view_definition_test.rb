@@ -125,4 +125,14 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_equal ContentViewDefinitionArchive.find_all_by_label(content_view_def.label), content_view_def.archives
   end
 
+  def test_copy
+    content_view_def = FactoryGirl.create(:content_view_definition)
+    count = ContentViewDefinition.count
+    assert_raises(ActiveRecord::RecordInvalid) do
+      content_view_def.copy
+    end
+    assert content_view_def.copy(:name => "HydrogenSonata")
+    assert_equal count+1, ContentViewDefinition.count
+  end
+
 end
