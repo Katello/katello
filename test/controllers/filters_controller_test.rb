@@ -19,7 +19,8 @@ class FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
     models = ["Organization", "KTEnvironment", "User", "Product", "EnvironmentProduct", "Repository",
               "ContentViewEnvironment", "Filter", "ContentViewDefinitionBase",
               "ContentViewDefinition", "ContentViewDefinitionRepository",
-              "ContentViewDefinitionProduct"]
+              "ContentViewDefinitionProduct", "FilterRule", "PackageRule",
+               "PackageGroupRule", "ErratumRule"]
     services = ["Candlepin", "Pulp", "ElasticSearch", "Foreman"]
     disable_glue_layers(services, models, true)
   end
