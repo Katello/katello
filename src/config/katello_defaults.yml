@@ -22,6 +22,10 @@ common:
   use_elasticsearch: # set to true/false if you want to override default
   app_name: # set a name if you want to override default
 
+  # if true bundler is used to load gems
+  # if not bundler_ext will load the gems
+  use_bundler: true
+
   warden: database
   ldap_roles: false
   rest_client_timeout: 30
