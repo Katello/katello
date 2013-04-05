@@ -14,7 +14,7 @@ class PopulateContentViewEnvironments < ActiveRecord::Migration
         ContentViewEnvironment.create!(:content_view=>view,
                                      :name => env.name,
                                      :label => view.cp_environment_label(env),
-                                     :cp_id => view.cp_environment_id(env))        
+                                     :cp_id => view.cp_environment_id(env))
 
         # perform a save on each of the environment's repos.
         # this will trigger an update to the search index
