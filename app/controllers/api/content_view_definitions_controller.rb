@@ -28,12 +28,16 @@ class Api::ContentViewDefinitionsController < Api::ApiController
     manage_rule  = lambda { @definition.editable? }
     publish_rule = lambda { @definition.publishable? }
     create_rule  = lambda { ContentViewDefinition.creatable?(@organization) }
+    clone_rule   = lambda do
+      ContentViewDefinition.creatable?(@organization) && @definition.readable?
+    end
 
     {
       :index => index_rule,
       :create => create_rule,
       :publish => publish_rule,
       :show => show_rule,
+      :clone => clone_rule,
       :update => manage_rule,
       :destroy => manage_rule,
       :content_views => show_rule,
@@ -119,6 +123,19 @@ class Api::ContentViewDefinitionsController < Api::ApiController
 
     @definition.destroy
     render :json => @definition
+  end
+
+  api :POST, "/organizations/:org/content_view_definitions/:id/clone", "Clone a definition"
+  param :id, :identifier, :desc => "Definition identifer", :required => true
+  param :org, String, :desc => "Organization name", :required => true
+  param_group :content_view_definition do
+    param :name, String, :desc => "New definition name", :required => true
+    param :label, String, :desc => "New definition label", :required => true
+    param :description, String, :desc => "New definition description"
+  end
+  def clone
+    new_def = @definition.copy(params[:content_view_definition])
+    render :json => new_def
   end
 
   api :GET, "/content_view_definitions/:id/content_views",
