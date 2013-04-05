@@ -187,6 +187,20 @@ class ContentViewDefinition < ContentViewDefinitionBase
     cvd_archive
   end
 
+  def copy(new_attrs = {})
+    new_definition = ContentViewDefinition.new
+    new_definition.attributes = new_attrs.slice(:name, :label, :description)
+    new_definition.composite = self.composite
+    new_definition.organization = self.organization
+    new_definition.products = self.products
+    new_definition.repositories = self.repositories
+    new_definition.component_content_views = self.component_content_views
+    # TODO: copy filters
+    new_definition.save!
+
+    new_definition
+  end
+
   protected
 
     def generate_unassociate_filter_clauses(repo, content_type)
