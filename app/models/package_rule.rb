@@ -11,6 +11,10 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class PackageRule < FilterRule
+  def params_format
+    {:units => [[:name, :version, :min_version, :max_version]]}
+  end
+
   def generate_clauses(repo)
     parameters[:units].collect do |unit|
       rule_clauses = []
@@ -40,4 +44,6 @@ class PackageRule < FilterRule
       end
     end.compact if parameters.has_key?(:units)
   end
+
+
 end
