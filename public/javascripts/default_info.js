@@ -15,6 +15,17 @@ var KT = (KT === undefined) ? {} : KT;
 
 KT.default_info = (function() {
 
+    $("#apply_default_info_button").live("click", function(e) {
+        var button = $(this);
+        e.preventDefault();
+        KT.common.customConfirm({
+            message     : i18n.take_a_while_you_sure,
+            yes_callback: function() {
+                apply_default_info(button);
+            }
+        });
+    });
+
     $('#new_default_info_keyname').live('keyup', function(e) {
         check_for_empty($(this));
     });
@@ -29,6 +40,28 @@ KT.default_info = (function() {
         remove_default_info($(this));
     });
 
+    function check_for_apply() {
+        if ($("#default_info_table tr").length > 2) {
+            $("#apply_default_info_button").removeAttr("disabled");
+        } else {
+            $("#apply_default_info_button").attr("disabled", "true");
+        }
+    }
+
+    function apply_default_info($button) {
+        $.ajax({
+            url    : $button.data('url'),
+            type   : $button.data('method'),
+            success: function(data) {
+                message = data.length + " " + i18n.objects_affected_successfully
+                notices.displayNotice("success", window.JSON.stringify({ "notices": [message] }));
+            },
+            error  : function(data) {
+                notices.displayNotice("error", window.JSON.stringify({ "notices": [$.parseJSON(data.responseText)["displayMessage"]] }));
+            }
+        });
+    }
+
     function check_for_empty($textfield) {
         if ($textfield.val().length > 0 ) {
             $('#add_default_info_button').removeAttr("disabled");
@@ -41,11 +74,11 @@ KT.default_info = (function() {
         var keyname = $("#new_default_info_keyname").val();
 
         $.ajax({
-            url: $button.data("url"),
-            type: $button.data("method"),
+            url     : $button.data("url"),
+            type    : $button.data("method"),
             dataType: 'json',
-            data: { "keyname" : keyname },
-            success: function(data) {
+            data    : { "keyname" : keyname },
+            success : function(data) {
                 add_default_info_row(data)
             }
         });
@@ -53,8 +86,8 @@ KT.default_info = (function() {
 
     function remove_default_info($button) {
         $.ajax({
-            url: $button.data("url"),
-            type: $button.data("method"),
+            url    : $button.data("url"),
+            type   : $button.data("method"),
             success: function(data) {
                 remove_default_info_row($button.data("id"));
             }
@@ -63,6 +96,7 @@ KT.default_info = (function() {
 
     function remove_default_info_row(data_id) {
         $("tr[data-id='" + data_id + "']").remove();
+        check_for_apply();
     }
 
     function add_default_info_row(data) {
@@ -87,6 +121,7 @@ KT.default_info = (function() {
         setTimeout(function() {$("tr[data-id='default_info_" + _keyname + "']").addClass("row_fade_in"); }, 1); // hax
         $("#new_default_info_keyname").val("");
         check_for_empty($("#new_default_info_keyname"));
+        check_for_apply();
     }
 
 })();
