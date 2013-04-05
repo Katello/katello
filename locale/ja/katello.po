@@ -1,29 +1,53 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # Miroslav Suchy <msuchy@redhat.com>, 2012-2013.
 # Tomoyuki KATO <tomo@dream.daynight.jp>, 2012-2013.
 msgid ""
 msgstr ""
-"Project-Id-Version: Katello\n"
+"Project-Id-Version: version 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-14 17:43-0500\n"
+"POT-Creation-Date: 2013-04-05 15:32-0400\n"
 "PO-Revision-Date: 2013-03-02 00:00+0000\n"
 "Last-Translator: Tomoyuki KATO <tomo@dream.daynight.jp>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#, fuzzy
+msgid " Changesets"
+msgstr "変更セット"
+
+#, fuzzy
+msgid " Content"
+msgstr "コンテンツ"
+
+#, fuzzy
+msgid " Red Hat Repositories"
+msgstr "Red Hat リポジトリ"
 
 msgid " created successfully."
 msgstr "正常に作成されました。"
 
 msgid " environment cannot be set to an environment already on its path"
 msgstr " 環境はそのパスにある環境に設定できません"
+
+#, fuzzy
+msgid " items selected."
+msgstr "パッケージフィルター '%s' を削除しました。"
+
+#, fuzzy
+msgid "%X repositories successfully created."
+msgstr "正常に作成されました。"
+
+#, fuzzy
+msgid "%d products may have missing repositories"
+msgstr "製品とリポジトリ"
 
 msgid "%s (%s other errata) install canceled"
 msgstr "%s (%s の他のエラータ) のインストールが取り消されました"
@@ -108,6 +132,10 @@ msgstr "%s (%s の他のパッケージ) の更新がタイムアウトになり
 
 msgid "%s (%s other packages) updated"
 msgstr "%s (%s の他のパッケージ) が更新されました"
+
+#, fuzzy
+msgid "%s Distributors Removed Successfully"
+msgstr "%s システムの削除に成功しました。"
 
 msgid "%s Removed Successfully"
 msgstr "%s 削除に成功しました。"
@@ -211,6 +239,16 @@ msgstr "%s パッケージが更新されました"
 msgid "%s updated successfully."
 msgstr "%s が正常に更新されました。"
 
+#, fuzzy
+msgid "%{app_name} Version: %{version}"
+msgstr "%{newline}原因: %{reason}"
+
+msgid "%{consumed} of %{total}"
+msgstr ""
+
+msgid "%{definition_type}: %{definition_name}"
+msgstr ""
+
 msgid "%{errata} (%{rest} other errata)"
 msgstr "%{errata} (%{rest} の他のエラータ)"
 
@@ -223,11 +261,20 @@ msgstr "%{name} (登録済み: %{time})"
 msgid "%{newline}Reason: %{reason}"
 msgstr "%{newline}原因: %{reason}"
 
+msgid "%{object} Default Info"
+msgstr ""
+
 msgid "%{package} (%{rest} other packages)"
 msgstr "%{package} (%{rest} の他のパッケージ)"
 
 msgid "%{repo} (Product: %{product})"
 msgstr "%{repo} (製品: %{product})"
+
+msgid "%{start_date} / %{end_date}"
+msgstr ""
+
+msgid "&laquo; Back"
+msgstr ""
 
 msgid "'%s' created successfully."
 msgstr "'%s' が正常に作成されました。"
@@ -241,8 +288,40 @@ msgstr "'%s' は現在の検索基準には一致しなくなりました。"
 msgid "'%s' was deleted."
 msgstr "'%s' が削除されました。"
 
+msgid "(%X of %Y repositories selected)"
+msgstr ""
+
+msgid "(%{n} Types)"
+msgstr ""
+
+msgid "(Entire product selected)"
+msgstr ""
+
+msgid "(Load %X More)"
+msgstr ""
+
+msgid "(Loaded %X of %Y Total)"
+msgstr ""
+
+msgid "(Undo)"
+msgstr ""
+
+#, fuzzy
+msgid "(no repositories available)"
+msgstr "不明なリポジトリラベル: %s"
+
+msgid "+ Add"
+msgstr ""
+
+msgid "+ All"
+msgstr ""
+
 msgid "+ Import Manifest"
 msgstr "+ マニフェストのインポート"
+
+#, fuzzy
+msgid "+ New %s"
+msgstr "+ 新規のユーザー"
 
 msgid "+ New Architecture"
 msgstr ""
@@ -250,17 +329,22 @@ msgstr ""
 msgid "+ New Changeset"
 msgstr "+ 新規の変更セット"
 
+#, fuzzy
+msgid "+ New Distributor"
+msgstr "ディストリビューション"
+
 msgid "+ New Domain"
 msgstr ""
-
-msgid "+ New Filter"
-msgstr "+ 新規のフィルター"
 
 msgid "+ New GPG Key"
 msgstr "+ 新規の GPG キー"
 
 msgid "+ New Key"
 msgstr "+ 新規のキー"
+
+#, fuzzy
+msgid "+ New Model"
+msgstr "+ 新規のロール"
 
 msgid "+ New Organization"
 msgstr "+ 新規の組織"
@@ -274,35 +358,93 @@ msgstr "+ 新規のプロバイダー"
 msgid "+ New Role"
 msgstr "+ 新規のロール"
 
+msgid "+ New Smart Proxy"
+msgstr ""
+
 msgid "+ New Subnet"
 msgstr ""
 
 msgid "+ New System"
 msgstr "+ 新規のシステム"
 
-msgid "+ New Template"
-msgstr "+ 新規のテンプレート"
-
 msgid "+ New User"
 msgstr "+ 新規のユーザー"
+
+#, fuzzy
+msgid "+ New View Definition"
+msgstr "+ 新規の組織"
+
+msgid "+ Yes"
+msgstr ""
+
+msgid ", RAM: %s"
+msgstr ""
+
+#, fuzzy
+msgid "- Remove"
+msgstr "パッケージの削除"
+
+msgid "400 - Invalid Parameters"
+msgstr ""
+
+msgid "403 - Permission denied"
+msgstr ""
+
+msgid "404 - That page doesn't exist or is missing!"
+msgstr ""
+
+msgid "500 Internal Server Error"
+msgstr ""
 
 msgid ": '%s' is a built-in environment"
 msgstr ": '%s' は組み込み環境です"
 
+msgid "<< Previous"
+msgstr ""
+
 msgid "A keyname must be provided"
 msgstr "キー名を指定してください"
 
-msgid ""
-"A label was not provided during %s creation; therefore, a label of '%s' was "
-"automatically assigned. If you would like a different label, please delete "
-"the %s and recreate it with the desired label."
+#, fuzzy
+msgid "A label was not provided during environment creation; therefore, a label of '%{label}' was automatically assigned. If you would like a different label, please delete the environment and recreate it with the desired label."
 msgstr "%s の作成時にラベルが指定されていなかったため、'%s' のラベルは自動的に割り当てられました。別のラベルにしたい場合は、%s を削除してから再度ラベルを作成してください。"
+
+#, fuzzy
+msgid "A label was not provided during organization creation; therefore, a label of '%{label}' was automatically assigned. If you would like a different label, please delete the organization and recreate it with the desired label."
+msgstr "%s の作成時にラベルが指定されていなかったため、'%s' のラベルは自動的に割り当てられました。別のラベルにしたい場合は、%s を削除してから再度ラベルを作成してください。"
+
+#, fuzzy
+msgid "A label was not provided during product creation; therefore, a label of '%{label}' was automatically assigned. If you would like a different label, please delete the product and recreate it with the desired label."
+msgstr "%s の作成時にラベルが指定されていなかったため、'%s' のラベルは自動的に割り当てられました。別のラベルにしたい場合は、%s を削除してから再度ラベルを作成してください。"
+
+#, fuzzy
+msgid "A label was not provided during repository creation; therefore, a label of '%{label}' was automatically assigned. If you would like a different label, please delete the repository and recreate it with the desired label."
+msgstr "%s の作成時にラベルが指定されていなかったため、'%s' のラベルは自動的に割り当てられました。別のラベルにしたい場合は、%s を削除してから再度ラベルを作成してください。"
+
+msgid "A request has been received by Katello server '%{url}' to retrieve the logins for email '%{email}'. The following is a list of those logins:"
+msgstr ""
+
+msgid "A request has been received to reset the Katello password for user '%s'.  In order to reset this password, click the URL below."
+msgstr ""
 
 msgid "About"
 msgstr "情報"
 
+msgid "Account Number"
+msgstr ""
+
+#, fuzzy
+msgid "Activation Key"
+msgstr "アクティベーションキー"
+
 msgid "Activation Keys"
 msgstr "アクティベーションキー"
+
+msgid "Activation Keys provide a set of characteristics that may be applied to a system during system registration.  This includes things such as, default environment to assign to the system, subscriptions to allocate to the system, system template to apply to the system...etc."
+msgstr ""
+
+msgid "Activation Keys provide a set of characteristics that may be applied to a system during system registration.  This includes things such as, default environment to assign to the system, subscriptions to allocate to the system...etc."
+msgstr ""
 
 msgid "Activation key '%s' was created."
 msgstr "アクティベーションキー '%s' が作成されました。"
@@ -313,8 +455,81 @@ msgstr "アクティベーションキー '%s' が削除されました。"
 msgid "Activation key '%s' was updated."
 msgstr "アクティベーションキー '%s' は更新されました。"
 
+msgid "Add"
+msgstr ""
+
+msgid "Add All"
+msgstr ""
+
+#, fuzzy
+msgid "Add Global Permission"
+msgstr "グローバルパーミッション"
+
+#, fuzzy
+msgid "Add New Environment"
+msgstr "環境"
+
+#, fuzzy
+msgid "Add Package Canceled"
+msgstr "パッケージの削除が取り消されました"
+
+#, fuzzy
+msgid "Add Package Complete"
+msgstr "パッケージの削除が完了"
+
+#, fuzzy
+msgid "Add Package Error"
+msgstr "パッケージグループを追加しています..."
+
+#, fuzzy
+msgid "Add Package Group Canceled"
+msgstr "パッケージグループの削除が取り消されました"
+
+#, fuzzy
+msgid "Add Package Group Complete"
+msgstr "パッケージグループの削除が完了"
+
+#, fuzzy
+msgid "Add Package Group Error"
+msgstr "パッケージグループを追加しています..."
+
+#, fuzzy
+msgid "Add Package Group Timeout"
+msgstr "パッケージグループの削除がタイムアウトになりました"
+
+#, fuzzy
+msgid "Add Package Timeout"
+msgstr "パッケージグループを追加しています..."
+
+#, fuzzy
+msgid "Add Permission"
+msgstr "パーミッション"
+
+#, fuzzy
+msgid "Add Permission to"
+msgstr "パーミッション"
+
+#, fuzzy
+msgid "Add Product"
+msgstr "製品"
+
+#, fuzzy
+msgid "Add Repository"
+msgstr "リポジトリ"
+
+#, fuzzy
+msgid "Add Subscriptions â¸"
+msgstr "サブスクリプション"
+
+msgid "Added"
+msgstr ""
+
 msgid "Added LDAP group '%s'"
 msgstr "LDAP グループ '%s' を追加しました"
+
+#, fuzzy
+msgid "Added content view '%s'"
+msgstr "テンプレート '%s' を追加しました"
 
 msgid "Added distribution '%s'"
 msgstr "ディストリビューション '%s' を追加しました"
@@ -325,25 +540,27 @@ msgstr "エラータ '%s' を追加しました"
 msgid "Added package '%s'"
 msgstr "パッケージ '%s' を追加しました"
 
-msgid "Added package group '%s'"
-msgstr "パッケージグループ '%s' を追加しました"
-
-msgid "Added package group category '%s'"
-msgstr "パッケージグループカテゴリ '%s' を追加しました"
-
 msgid "Added product '%s'"
 msgstr "製品 '%s' を追加しました"
 
 msgid "Added repository '%s'"
 msgstr "リポジトリ '%s' を追加しました"
 
-msgid "Added template '%s'"
-msgstr "テンプレート '%s' を追加しました"
+#, fuzzy
+msgid "Added to changeset '%X'"
+msgstr "変更セット '%s' を削除しました"
+
+msgid "Added:"
+msgstr ""
 
 msgid "Adding Package Group..."
 msgstr "パッケージグループを追加しています..."
 
 msgid "Adding Package..."
+msgstr "パッケージを追加しています..."
+
+#, fuzzy
+msgid "Adding..."
 msgstr "パッケージを追加しています..."
 
 msgid "Administer"
@@ -355,14 +572,15 @@ msgstr "アクティベーションキーの管理"
 msgid "Administer Changesets in Environment"
 msgstr "環境内の変更セットを管理"
 
+#, fuzzy
+msgid "Administer Content View Definitions"
+msgstr "環境内の変更セットを管理"
+
 msgid "Administer GPG Keys"
 msgstr "GPG キーの管理"
 
 msgid "Administer Organization"
 msgstr "組織の管理"
-
-msgid "Administer Package Filters"
-msgstr "パッケージフィルターの管理"
 
 msgid "Administer Providers"
 msgstr "プロバイダーの管理"
@@ -373,17 +591,43 @@ msgstr "ロールの管理"
 msgid "Administer System Groups"
 msgstr "システムグループの管理"
 
-msgid "Administer System Templates"
-msgstr "システムテンプレートの管理"
-
 msgid "Administer Users"
 msgstr "ユーザーの管理"
+
+#, fuzzy
+msgid "Administration"
+msgstr "管理者"
 
 msgid "Administrator"
 msgstr "管理者"
 
+msgid "Advisory"
+msgstr ""
+
+msgid "Alert"
+msgstr ""
+
 msgid "All"
 msgstr "すべて"
+
+msgid "All Content Views"
+msgstr ""
+
+#, fuzzy
+msgid "All Errata"
+msgstr "エラータ"
+
+#, fuzzy
+msgid "All Products"
+msgstr "製品"
+
+#, fuzzy
+msgid "All Repos"
+msgstr "リポジトリ"
+
+#, fuzzy
+msgid "All Repositories"
+msgstr "リポジトリ"
 
 msgid "All Systems for owner %s in candlepin"
 msgstr "caldlepin 内の 所有者が %s のすべてのシステム"
@@ -397,28 +641,169 @@ msgstr "caldlepin 内の所有者が %s のすべてのプロバイダー"
 msgid "All repository GPG keys for Product '%s' were updated."
 msgstr "製品 '%s' に対するすべてのリポジトリーGPG キーが更新されました。"
 
+msgid "Amount of RAM (MB):"
+msgstr ""
+
+msgid "An environment does not exist.  If you would like to manage changesets and content, please create a new environment."
+msgstr ""
+
+msgid "An error has occurred when communicating with the server, please refresh the page to retrieve the current changeset."
+msgstr ""
+
 msgid "Application"
 msgstr "アプリケーション"
 
+msgid "Applied"
+msgstr ""
+
+#, fuzzy
+msgid "Apply Deletion Changeset"
+msgstr "+ 新規の変更セット"
+
+#, fuzzy
+msgid "Apply Failed"
+msgstr "失敗"
+
+#, fuzzy
+msgid "Apply Promotion Changeset"
+msgstr "プロモーションの変更セット '%s' が作成されました。"
+
+#, fuzzy
+msgid "Apply Selected Plan to Selected Products"
+msgstr "選択した製品に適用するプランを選択"
+
+msgid "Applying..."
+msgstr ""
+
+msgid "Arch"
+msgstr ""
+
 msgid "Architecture"
+msgstr "アーキテクチャー"
+
+#, fuzzy
+msgid "Architecture:"
 msgstr "アーキテクチャー"
 
 msgid "Architectures"
 msgstr "アーキテクチャー"
 
+msgid "Are you sure you want to %X the %Y entered on the %Z selected system(s)?"
+msgstr ""
+
+msgid "Are you sure you want to add the %X selected system(s) to the system group(s) entered?"
+msgstr ""
+
+msgid "Are you sure you want to change all systems in the group?"
+msgstr ""
+
+msgid "Are you sure you want to delete the %X selected distributor(s)?"
+msgstr ""
+
+msgid "Are you sure you want to delete the %X selected system(s)?"
+msgstr ""
+
+msgid "Are you sure you want to delete the system group?"
+msgstr ""
+
+msgid "Are you sure you want to delete this GPG Key?"
+msgstr ""
+
+msgid "Are you sure you want to delete this provider?"
+msgstr ""
+
+msgid "Are you sure you want to install the errata entered on the %X selected system(s)?"
+msgstr ""
+
+msgid "Are you sure you want to remove the %X selected system(s) from the system group(s) entered?"
+msgstr ""
+
+msgid "Are you sure you want to remove this architecture?"
+msgstr ""
+
+msgid "Are you sure you want to remove this deletion changeset?"
+msgstr ""
+
+msgid "Are you sure you want to remove this distributor?"
+msgstr ""
+
+msgid "Are you sure you want to remove this domain?"
+msgstr ""
+
+msgid "Are you sure you want to remove this hardware model?"
+msgstr ""
+
+msgid "Are you sure you want to remove this organization?"
+msgstr ""
+
+msgid "Are you sure you want to remove this product?"
+msgstr ""
+
+msgid "Are you sure you want to remove this promotion changeset?"
+msgstr ""
+
+msgid "Are you sure you want to remove this repository?"
+msgstr ""
+
+msgid "Are you sure you want to remove this role?"
+msgstr ""
+
+msgid "Are you sure you want to remove this smart proxy?"
+msgstr ""
+
+msgid "Are you sure you want to remove this subnet?"
+msgstr ""
+
+msgid "Are you sure you want to remove this system?"
+msgstr ""
+
+msgid "Are you sure you want to remove this user?"
+msgstr ""
+
+msgid "Are you sure?"
+msgstr ""
+
+msgid "Are you sure? If any users have this environment set as their default, it will unset it."
+msgstr ""
+
+msgid "Associated Bugs"
+msgstr ""
+
 msgid "At least one activation key must be provided"
 msgstr "1 つ以上のアクティベーションキーが必要です。"
 
-msgid ""
-"At least one environment is required to create or register systems in your "
-"current organization."
+#, fuzzy
+msgid "At least one environment is required to create or register distributors in your current organization."
 msgstr "現在の組織内にシステムを作成したり、登録を行ったりする場合は環境が少なくともひとつ必要になります。"
+
+msgid "At least one environment is required to create or register systems in your current organization."
+msgstr "現在の組織内にシステムを作成したり、登録を行ったりする場合は環境が少なくともひとつ必要になります。"
+
+#, fuzzy
+msgid "At least one erratum ID must be provided."
+msgstr "1 つ以上のアクティベーションキーが必要です。"
+
+#, fuzzy
+msgid "At least one name must be provided."
+msgstr "1 つ以上のアクティベーションキーが必要です。"
 
 msgid "At least one organization must exist."
 msgstr "1 つ以上の組織が存在する必要があります。"
 
-msgid "At least repository must be present to export a TDL"
-msgstr "TDL のエクスポートにはリポジトリが必要になります。"
+#, fuzzy
+msgid "At least one package group name must be provided."
+msgstr "1 つ以上のアクティベーションキーが必要です。"
+
+#, fuzzy
+msgid "At least one system group must be selected."
+msgstr "1 つ以上のシステムグループを指定する必要があります。"
+
+msgid "Attach"
+msgstr ""
+
+#, fuzzy
+msgid "Attach to Key"
+msgstr "アクティベーションキー"
 
 msgid "Attached Subscriptions"
 msgstr "割り当て済みサブスクリプション"
@@ -441,8 +826,51 @@ msgstr "自動割り当てオン、サービスレベル設定なし"
 msgid "Auto-attach On, Service Level %s"
 msgstr "自動割り当てオン、サービスレベル %s"
 
+msgid "Auto-complete Product"
+msgstr ""
+
+msgid "Auto-complete View"
+msgstr ""
+
+#, fuzzy
+msgid "Auto-complete repository"
+msgstr "リポジトリ '%s' を削除しました"
+
+#, fuzzy
+msgid "Available Errata"
+msgstr "利用可能なサブスクリプション"
+
 msgid "Available Subscriptions"
 msgstr "利用可能なサブスクリプション"
+
+msgid "Back"
+msgstr ""
+
+msgid "Back to Results"
+msgstr ""
+
+msgid "Before removing this definition, all promoted content views must first be deleted from their respective environments using a deletion changeset."
+msgstr ""
+
+msgid "Before removing this provider, all promoted repositories must first be deleted from their respective environments using a deletion changeset: "
+msgstr ""
+
+msgid "Before removing this repository from the product, it must first be deleted from the following environments using a deletion changeset: "
+msgstr ""
+
+msgid "Beta"
+msgstr ""
+
+#, fuzzy
+msgid "Browser Default Locale"
+msgstr "ブラウザーロケールを使用"
+
+#, fuzzy
+msgid "Bug Fix"
+msgstr "タイプ: バグ修正"
+
+msgid "Build Host"
+msgstr ""
 
 msgid "By Environments"
 msgstr "環境別"
@@ -462,14 +890,33 @@ msgstr "システムグループを別の組織にコピーできません: '%{o
 msgid "Can't update the '%s' environment"
 msgstr "'%s' 環境を更新できません"
 
+#, fuzzy
+msgid "Cancel"
+msgstr "取り消されました"
+
+msgid "Cancel Changeset Review"
+msgstr ""
+
+#, fuzzy
+msgid "Cancel Review"
+msgstr "取り消されました"
+
 msgid "Canceled synchronization of %{name}: %{id}"
 msgstr "%{name} の同期が取り消されました: %{id}"
 
 msgid "Canceled."
 msgstr "取り消されました"
 
+#, fuzzy
+msgid "Cancelled"
+msgstr "取り消されました"
+
 msgid "Candlepin Event"
 msgstr "Candlepin イベント"
+
+#, fuzzy
+msgid "Candlepin environment already exists: %s"
+msgstr "candlepin 内の環境を削除中: %s"
 
 msgid "Cannot add/remove or change permissions related to a locked role."
 msgstr "ロックされたロールに関連するパーミッションの追加/変更はできません。"
@@ -477,39 +924,38 @@ msgstr "ロックされたロールに関連するパーミッションの追加
 msgid "Cannot change the name or description of a locked role."
 msgstr "ロックされたロールの名前または詳細の変更はできません。"
 
+msgid "Cannot clone repository from %{from_env} to %{to_env}.  They are not sequential."
+msgstr ""
+
 msgid "Cannot create activation keys in the '%s' environment"
 msgstr "'%s' 環境ではアクティベーションキーを作成できません"
 
 msgid "Cannot delete currently logged user"
 msgstr "現在ログインしているユーザーは削除できません。"
 
-msgid ""
-"Cannot delete the changeset '%s' because it is not in the review phase."
+msgid "Cannot delete from %s, view does not exist there."
+msgstr ""
+
+msgid "Cannot delete the changeset '%s' because it is not in the review phase."
 msgstr "変更セット '%s' は確認フェーズに含まれていないため削除できません。"
 
-msgid ""
-"Cannot dissociate user '%{username}' from '%{role}' role. Need at least one "
-"user in the '%{role}' role."
-msgstr "ユーザー '%{username}' から '%{role}' ロールの関連付けを解除できません。'%{role}' ロールには少なくともユーザーがひとり必要です。"
-
-msgid ""
-"Cannot dissociate user '%{user}' from '%{role}' role. Need at least one user"
-" in the '%{role}' role."
-msgstr "ユーザー '%{user}' から '%{role}' ロールの関連付けを解除できません。'%{role}' ロールには少なくともユーザーがひとり必要です。"
-
-msgid "Cannot export templates for the '%s' environment."
-msgstr "'%s' 環境のテンプレートをエクスポートできません"
-
-msgid "Cannot modify a template that is another environment"
+#, fuzzy
+msgid "Cannot delete view while it exits in environments"
 msgstr "別の環境にあるテンプレートは変更できません。"
 
-msgid ""
-"Cannot promote the changeset '%s' because it is not in the review phase."
+msgid "Cannot discover repos for the Red Hat Provider"
+msgstr ""
+
+msgid "Cannot dissociate user '%{username}' from '%{role}' role. Need at least one user in the '%{role}' role."
+msgstr "ユーザー '%{username}' から '%{role}' ロールの関連付けを解除できません。'%{role}' ロールには少なくともユーザーがひとり必要です。"
+
+msgid "Cannot dissociate user '%{user}' from '%{role}' role. Need at least one user in the '%{role}' role."
+msgstr "ユーザー '%{user}' から '%{role}' ロールの関連付けを解除できません。'%{role}' ロールには少なくともユーザーがひとり必要です。"
+
+msgid "Cannot promote the changeset '%s' because it is not in the review phase."
 msgstr "変更セット '%s' は確認フェーズに含まれていないためプロモートできません。"
 
-msgid ""
-"Cannot promote the changeset '%{changeset}' while another colliding "
-"changeset (%{another_changeset}) is being promoted."
+msgid "Cannot promote the changeset '%{changeset}' while another colliding changeset (%{another_changeset}) is being promoted."
 msgstr ""
 
 msgid "Cannot register a system to the '%s' environment"
@@ -524,11 +970,20 @@ msgstr "all_verbs が選択されていると、動作を指定できません�
 msgid "Cannot specify all_types without all_tags and all_verbs"
 msgstr "all_tags と all_verbs なしでは all_types を指定できません。"
 
-msgid "Cannot validate templates for the '%s' environment."
-msgstr "'%s' 環境のテンプレートを検証できません。"
+#, fuzzy
+msgid "Change Password:"
+msgstr "変更セット"
+
+#, fuzzy
+msgid "Changeset Details"
+msgstr "変更セット"
 
 msgid "Changeset Management"
 msgstr "変更セットの管理"
+
+#, fuzzy
+msgid "Changeset is empty."
+msgstr "変更セットの履歴"
 
 msgid "Changesets"
 msgstr "変更セット"
@@ -536,8 +991,33 @@ msgstr "変更セット"
 msgid "Changesets History"
 msgstr "変更セットの履歴"
 
+msgid "Changesets allow you to either promote content to or delete content from an environment.<br/><br/> For a promotion, you may promote content from one environment to the next along a promotion path.  Once you have created a promotion changeset, clicking \"Add\" next to one or more products will add them to the changeset.  If products already exist in the next environment, you may promote other types of content.  Once you have created a changeset, click the \"Review\" button to place the changeset in a locked state for review and when ready click the \"Promote\" button to apply it to the next environment.<br/><br/>For a deletion, you may remove content from the current environment. Once you have created a deletion changeset, clicking \"Add\" next to content will add that content to the changeset.  Once you have created a changeset, click the \"Review\" button to place the changeset in a locked state for review and when ready click the \"Delete\" button to apply it to the current environment.  Note: deletion of content from %s is not allowed using a deletion changeset.<br/><br/>"
+msgstr ""
+
+#, fuzzy
+msgid "Checked In"
+msgstr "これまでチェックインしたことはありません"
+
 msgid "Choose %s..."
 msgstr ""
+
+#, fuzzy
+msgid "Choose Environment:"
+msgstr "環境"
+
+msgid "Choose Existing Views"
+msgstr ""
+
+#, fuzzy
+msgid "Choose New System Registration Defaults:"
+msgstr "このユーザーには設定されているシステム登録のデフォルトがありません。"
+
+msgid "Choose a product.."
+msgstr ""
+
+#, fuzzy
+msgid "Choose an Organization"
+msgstr "組織の読み込み"
 
 msgid "Choose domains..."
 msgstr ""
@@ -545,29 +1025,179 @@ msgstr ""
 msgid "Choose operating systems..."
 msgstr ""
 
+#, fuzzy
+msgid "Clear"
+msgstr "クリアされました"
+
+msgid "Clear Disabled Helptips:"
+msgstr ""
+
+#, fuzzy
+msgid "Clear the Search"
+msgstr "コンテンツ検索"
+
 msgid "Cleared"
 msgstr "クリアされました"
+
+msgid "Click Add or Remove next to a user name to apply or remove them from role."
+msgstr ""
+
+msgid "Click Add permission from the bar below to add a permission."
+msgstr ""
+
+msgid "Click edit permission from the bar below to edit the current permission."
+msgstr ""
 
 msgid "Click on 'Add Environment' to create the first environment"
 msgstr "環境の初回作成時には、「環境を追加」をクリックします。"
 
+msgid "Click to edit"
+msgstr ""
+
+msgid "Clone"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+#, fuzzy
+msgid "Close Add Permission"
+msgstr "グローバルパーミッション"
+
+#, fuzzy
+msgid "Close Changeset Details"
+msgstr "変更セット"
+
+#, fuzzy
+msgid "Close Details"
+msgstr "詳細"
+
+#, fuzzy
+msgid "Close Edit Permission"
+msgstr "グローバルパーミッション"
+
+msgid "Close Role Details"
+msgstr ""
+
+msgid "Collapse"
+msgstr ""
+
+msgid "Collapse All"
+msgstr ""
+
+#, fuzzy
+msgid "Compare Repositories"
+msgstr "リポジトリ"
+
+msgid "Component"
+msgstr ""
+
+msgid "Composite View Definition"
+msgstr ""
+
+msgid "Composite?"
+msgstr ""
+
+msgid "Confirm:"
+msgstr ""
+
+#, fuzzy
+msgid "Confirmation"
+msgstr "組織"
+
+msgid "Consumed"
+msgstr ""
+
+msgid "Consumed: %{consumed} of %{total}"
+msgstr ""
+
+msgid "Consumed: Unlimited"
+msgstr ""
+
 msgid "Content"
 msgstr "コンテンツ"
+
+msgid "Content Download URL: "
+msgstr ""
 
 msgid "Content Search"
 msgstr "コンテンツ検索"
 
+#, fuzzy
+msgid "Content View"
+msgstr "コンテンツ"
+
+msgid "Content View %{view} is already in environment %{env}"
+msgstr ""
+
+msgid "Content View Definitions"
+msgstr ""
+
+msgid "Content View Defintions"
+msgstr ""
+
+#, fuzzy
+msgid "Content View:"
+msgstr "コンテンツ"
+
+#, fuzzy
+msgid "Content Views"
+msgstr "コンテンツ"
+
+msgid "Content Views Overview"
+msgstr ""
+
+msgid "Content view '%{view}' is not in environment '%{env}'"
+msgstr ""
+
+#, fuzzy
+msgid "Content view definition '%s' was created."
+msgstr "プロバイダー '%s' が作成されました。"
+
+#, fuzzy
+msgid "Content view definition '%s' was deleted."
+msgstr "プロバイダー '%s' が削除されました。"
+
+#, fuzzy
+msgid "Content view definition '%s' was updated."
+msgstr "プロバイダー '%s' が更新されました。"
+
+msgid "Content view definition '%{new_definition_name}' created successfully as a clone of '%{definition_name}'."
+msgstr ""
+
+#, fuzzy
+msgid "Content view is not in environment '%s'."
+msgstr "環境 '%s' が見つかりませんでした。"
+
+#, fuzzy
+msgid "Contents:"
+msgstr "コンテンツ"
+
+#, fuzzy
+msgid "Continue"
+msgstr "コンテンツ"
+
+#, fuzzy
+msgid "Contract"
+msgstr "コンテンツ"
+
+msgid "Contract Number"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+#, fuzzy
+msgid "Couildn't find content view with id '%s'"
+msgstr "ID が '%s' の製品は見つかりませんでした"
+
 msgid "Could not delete organization '%s'."
 msgstr "組織 '%s' を削除できませんでした。"
 
-msgid ""
-"Could not modify environments.  One or more associated activation keys (%s) "
-"would become invalid."
+msgid "Could not modify environments.  One or more associated activation keys (%s) would become invalid."
 msgstr "環境の変更を行えませんでした。関連しているアクティベーションキー (%s) のひとつまたは複数が無効になっています。"
 
-msgid ""
-"Could not modify environments. System group membership does not match new "
-"environment association."
+msgid "Could not modify environments. System group membership does not match new environment association."
 msgstr "環境の変更を行えませんでした。システムグループのメンバーシップが新しい環境関連に一致しません。"
 
 msgid "Couldn't find GPG key '%s'"
@@ -579,17 +1209,20 @@ msgstr "アクティベーションキー '%s' が見つかりませんでした
 msgid "Couldn't find changeset '%s'"
 msgstr "変更セット '%s' が見つかりませんでした"
 
-msgid "Couldn't find custom info"
+#, fuzzy
+msgid "Couldn't find content view '%s'"
+msgstr "プロバイダー '%s' が見つかりませんでした"
+
+#, fuzzy
+msgid "Couldn't find custom info with keyname '%s'"
 msgstr "カスタム情報が見つかりませんでした"
+
+#, fuzzy
+msgid "Couldn't find distributor '%s'"
+msgstr "リポジトリ '%s' が見つかりませんでした"
 
 msgid "Couldn't find environment '%s'"
 msgstr "環境 '%s' が見つかりませんでした。"
-
-msgid "Couldn't find filter '%s'"
-msgstr "フィルター '%s' が見つかりませんでした"
-
-msgid "Couldn't find one of the filters in '%s'"
-msgstr ""
 
 msgid "Couldn't find organization '%s'"
 msgstr "組織 '%s' が見つかりませんでした"
@@ -612,6 +1245,10 @@ msgstr "プロバイダー '%s' が見つかりませんでした"
 msgid "Couldn't find repository '%s'"
 msgstr "リポジトリ '%s' が見つかりませんでした"
 
+#, fuzzy
+msgid "Couldn't find repository set with id."
+msgstr "リポジトリ '%s' が見つかりませんでした"
+
 msgid "Couldn't find subject of synchronization"
 msgstr "同期の件名が見つかりませんでした"
 
@@ -624,20 +1261,75 @@ msgstr "システム '%s' が見つかりませんでした"
 msgid "Couldn't find system group '%s'"
 msgstr "システムグループ '%s' が見つかりませんでした"
 
-msgid "Couldn't find template '%s'"
-msgstr "テンプレート '%s' が見つかりませんでした"
-
 msgid "Couldn't find user '%s'"
 msgstr "ユーザー '%s' が見つかりませんでした"
 
 msgid "Couldn't find user role '%s'"
 msgstr "ユーザーロール '%s' が見つかりませんでした"
 
-msgid "Creating an environment in candlepin: %s"
-msgstr "candlepin 内に環境を作成中です: %s"
+msgid "Create"
+msgstr ""
+
+msgid "Create Application Life Cycle Management Environment"
+msgstr ""
+
+#, fuzzy
+msgid "Create Product"
+msgstr "製品"
+
+#, fuzzy
+msgid "Create Repositories"
+msgstr "Red Hat リポジトリ"
+
+msgid "Create Repositories Under A Product"
+msgstr ""
+
+#, fuzzy
+msgid "Create Repository"
+msgstr "リポジトリ"
+
+msgid "Create Within Product"
+msgstr ""
+
+#, fuzzy
+msgid "Create repositories within:"
+msgstr "Red Hat リポジトリ"
+
+msgid "Created (UTC)"
+msgstr ""
+
+#, fuzzy
+msgid "Created / Last Checked In"
+msgstr "登録済み /最終チェックイン"
+
+msgid "Created previously"
+msgstr ""
 
 msgid "Creating an owner in candlepin: %s"
 msgstr "candlepin 内に所有者を作成中です: %s"
+
+#, fuzzy
+msgid "Creating environment in candlepin: %s"
+msgstr "candlepin 内に環境を作成中です: %s"
+
+msgid "Creating..."
+msgstr ""
+
+#, fuzzy
+msgid "Critical"
+msgstr "重要度: クリティカル"
+
+#, fuzzy
+msgid "Current Organization"
+msgstr "組織を選択"
+
+#, fuzzy
+msgid "Current Subscriptions"
+msgstr "サブスクリプション"
+
+#, fuzzy
+msgid "Current System Registration Defaults"
+msgstr "このユーザーには設定されているシステム登録のデフォルトがありません。"
 
 msgid "Current organization is being deleted, switch to a different one."
 msgstr ""
@@ -645,14 +1337,29 @@ msgstr ""
 msgid "Custom Content Repositories"
 msgstr "カスタムのコンテンツリポジトリ"
 
+msgid "Custom Information"
+msgstr ""
+
+msgid "DETAILS"
+msgstr ""
+
 msgid "Daily at %{time} from %{date} %{zone}"
 msgstr "%{date} %{zone} から毎日 %{time}"
 
 msgid "Dashboard"
 msgstr "ダッシュボード"
 
+msgid "Date"
+msgstr ""
+
 msgid "Date format is incorrect."
 msgstr "日付の形式が正しくありません。"
+
+msgid "Debug Certificate"
+msgstr ""
+
+msgid "Debug RPMs"
+msgstr ""
 
 msgid "Default Organization no longer selected."
 msgstr "デフォルト組織の選択がなくなりました。"
@@ -660,14 +1367,39 @@ msgstr "デフォルト組織の選択がなくなりました。"
 msgid "Default Organization: '%s' saved."
 msgstr "デフォルト組織: '%s' が保存されました。"
 
+#, fuzzy
+msgid "Definition"
+msgstr "ディストリビューション"
+
+#, fuzzy
+msgid "Definition cannot be deleted since one of its views has already been promoted. Using a changeset, please delete the views from existing environments before deleting the definition."
+msgstr "リポジトリはすでにプロモートされているため削除できません。変更セットを使用して、まず既存の環境からリポジトリを削除してからリポジトリの削除を行ってください。"
+
+#, fuzzy
+msgid "Delete"
+msgstr "ロールを削除"
+
+#, fuzzy
+msgid "Delete All"
+msgstr "ロールを削除"
+
+#, fuzzy
+msgid "Delete Content View Definitions"
+msgstr "環境からコンテンツを削除"
+
 msgid "Delete Content from Environment"
 msgstr "環境からコンテンツを削除"
 
+#, fuzzy
+msgid "Delete Distributors"
+msgstr "選択済みのディストリビューション"
+
+#, fuzzy
+msgid "Delete Manifest"
+msgstr "ロールを削除"
+
 msgid "Delete Organization"
 msgstr "組織を削除"
-
-msgid "Delete Package Filters"
-msgstr "パッケージフィルターを削除"
 
 msgid "Delete Providers"
 msgstr "プロバイダーを削除"
@@ -687,6 +1419,10 @@ msgstr "システムグループ内のシステムを削除"
 msgid "Delete Users"
 msgstr "ユーザーを削除"
 
+#, fuzzy
+msgid "Delete in progress (%s)"
+msgstr "ロール '%s' を削除しました"
+
 msgid "Deleted GPG key '%s'"
 msgstr "GPG キー '%s' を削除しました"
 
@@ -702,11 +1438,12 @@ msgstr "変更セット '%s' を削除しました"
 msgid "Deleted custom info '%s'"
 msgstr "カスタム情報 '%s' を削除しました"
 
+#, fuzzy
+msgid "Deleted distributor '%s'"
+msgstr "ディストリビューション '%s' が削除されました"
+
 msgid "Deleted environment '%s'"
 msgstr "環境 '%s' を削除しました"
-
-msgid "Deleted filter '%s'"
-msgstr "フィルター '%s' を削除しました"
 
 msgid "Deleted permission '%s'"
 msgstr "パーミッション '%s' を削除しました"
@@ -735,11 +1472,11 @@ msgstr "システムグループ '%s' を削除しました"
 msgid "Deleted system group '%{s}' and it's %{n} systems."
 msgstr "システムグループ '%{s}' とそのグループ内の %{n} システムを削除しました。"
 
-msgid "Deleted system template '%s'"
-msgstr "システムテンプレート '%s' を削除しました"
-
 msgid "Deleted user '%s'"
 msgstr "ユーザー '%s' を削除しました"
+
+msgid "Deleting a manifest will permanently remove all current subscriptions. All systems consuming these subscriptions have them removed. Do you wish to proceed with removing this manifest?"
+msgstr ""
 
 msgid "Deleting environment in candlepin: %s"
 msgstr "candlepin 内の環境を削除中: %s"
@@ -747,11 +1484,42 @@ msgstr "candlepin 内の環境を削除中: %s"
 msgid "Deleting owner in candlepin: %s"
 msgstr "candlepin 内の所有者を削除中: %s"
 
+#, fuzzy
+msgid "Deletion from %s"
+msgstr "ロール '%s' を削除しました"
+
 msgid "Dependencies"
 msgstr "依存関係"
 
+#, fuzzy
+msgid "Dependency of "
+msgstr "依存関係"
+
+#, fuzzy
+msgid "Description"
+msgstr "サブスクリプション"
+
+#, fuzzy
+msgid "Description:"
+msgstr "サブスクリプション"
+
+msgid "Deselect all"
+msgstr ""
+
 msgid "Details"
 msgstr "詳細"
+
+msgid "Details for the currently selected permission."
+msgstr ""
+
+msgid "Dhcp:"
+msgstr ""
+
+msgid "Difference"
+msgstr ""
+
+msgid "Difference:"
+msgstr ""
 
 msgid "Directory"
 msgstr "ディレクトリ"
@@ -762,32 +1530,152 @@ msgstr "カスタムリポジトリでは、無効/有効はサポートされ�
 msgid "Disabled help tips have been re-enabled."
 msgstr "無効のヒントが再度有効になりました。"
 
+msgid "Discover"
+msgstr ""
+
+msgid "Discovered URLS:"
+msgstr ""
+
+msgid "Discovery URL not set."
+msgstr ""
+
+msgid "Display"
+msgstr ""
+
+#, fuzzy
+msgid "Distribution"
+msgstr "ディストリビューション"
+
 msgid "Distribution '%s' does not belong to the specified product!"
 msgstr "ディストリビューション '%s' は指定された製品には属していません!"
 
 msgid "Distribution '%s' not found in the changeset"
 msgstr "ディストリビューション '%s' が変更セット内で見つかりません"
 
-msgid "Distribution '%s' not found in this template."
-msgstr "ディストリビューション '%s' がこのテンプレート内で見つかりません。"
-
 msgid "Distribution '%s' not found within the repository"
 msgstr "ディストリビューション '%s' がリポジトリ内で見つかりません"
 
-msgid "Distribution '%s' was not found in Pulp."
-msgstr "ディストリビューション '%s' が Pulp 内で見つかりませんでした。"
-
-msgid "Distribution '%{id}' not found in the '%{name}' environment"
-msgstr "ディストリビューション '%{id}' が '%{name}' 環境内で見つかりません"
-
 msgid "Distributions"
 msgstr "ディストリビューション"
+
+#, fuzzy
+msgid "Distributor"
+msgstr "ディストリビューション"
+
+#, fuzzy
+msgid "Distributor '%s' was created."
+msgstr "パーミッション '%s' が作成されました。"
+
+#, fuzzy
+msgid "Distributor '%s' was updated."
+msgstr "製品 '%s' が更新されました。"
+
+#, fuzzy
+msgid "Distributor Events"
+msgstr "ディストリビューション"
+
+#, fuzzy
+msgid "Distributor Info"
+msgstr "ディストリビューション"
+
+#, fuzzy
+msgid "Distributor Name:"
+msgstr "ディストリビューション"
+
+#, fuzzy
+msgid "Distributor Properties"
+msgstr "ディストリビューション"
+
+#, fuzzy
+msgid "Distributor subscriptions updated."
+msgstr "システムのサブスクリプションが更新されました。"
+
+#, fuzzy
+msgid "Distributors"
+msgstr "ディストリビューション"
+
+msgid "Dns:"
+msgstr ""
+
+#, fuzzy
+msgid "Do you also want to delete the systems in the system group?"
+msgstr "システムグループ内のシステムを削除"
+
+msgid "Do you want to set this GPG Key as the key for all repositories within this product?"
+msgstr ""
 
 msgid "Domain"
 msgstr "ドメイン"
 
 msgid "Domains"
 msgstr "ドメイン"
+
+#, fuzzy
+msgid "Domains:"
+msgstr "ドメイン"
+
+msgid "Done"
+msgstr ""
+
+msgid "Download"
+msgstr ""
+
+msgid "Download Manifest"
+msgstr ""
+
+#, fuzzy
+msgid "Duration"
+msgstr "組織"
+
+msgid "ERRATA"
+msgstr ""
+
+msgid "ERROR: This content view has one or more repositories in common with the following views: %X.<br/>Please unselect views that should no longer be included in this definition."
+msgstr ""
+
+msgid "Edit Activation Key enables you to modify the selected activation key.  This key may be used during system registration.  For example, <br/><br/>subscription-manager register --org %s --activationkey %s"
+msgstr ""
+
+#, fuzzy
+msgid "Edit Changeset Details"
+msgstr "変更セット"
+
+#, fuzzy
+msgid "Edit Details"
+msgstr "詳細"
+
+msgid "Edit Details for All Systems"
+msgstr ""
+
+#, fuzzy
+msgid "Edit Environment"
+msgstr "環境"
+
+msgid "Edit GPG Key enables you to modify the selected GPG Key.  A new key can be copied and pasted in directly."
+msgstr ""
+
+#, fuzzy
+msgid "Edit Permission"
+msgstr "パーミッション"
+
+#, fuzzy
+msgid "Edit Permission in"
+msgstr "パーミッション"
+
+#, fuzzy
+msgid "Edit Product"
+msgstr "製品"
+
+#, fuzzy
+msgid "Edit Role"
+msgstr "ロールを変更"
+
+msgid "Edit Role Details"
+msgstr ""
+
+#, fuzzy
+msgid "Edit Systems' Environment and Content View"
+msgstr "環境コンテンツの読み込み"
 
 msgid "Either organization ID or environment ID needs to be specified"
 msgstr "組織 ID または環境 ID を指定する必要があります"
@@ -798,48 +1686,77 @@ msgstr "パッケージまたはグループを指定する必要があります
 msgid "Either packages or groups must be provided"
 msgstr "パッケージまたはグループのどちらかを指定する必要があります"
 
+msgid "Email Address:"
+msgstr ""
+
 msgid "Email sent to '%s' with password reset instructions."
 msgstr "パスワードをリセットする手順が記載されたメールが '%s' に送信されました。"
 
 msgid "Email sent to '%s' with valid login user names."
 msgstr "有効なログインユーザー名が記載されたメールが '%s' に送信されました。"
 
-msgid ""
-"Empty request received to install Packages or Package Groups for System "
-"'%s'."
+msgid "Empty request received to install Packages or Package Groups for System '%s'."
 msgstr "システム '%s' 用のパッケージ群またはパッケージグループ群をインストールするための空の要求を受信しました。"
 
-msgid ""
-"Empty request received to install Packages or Package Groups for System "
-"Group '%s'."
+msgid "Empty request received to install Packages or Package Groups for System Group '%s'."
 msgstr "システムグループ '%s' 用のパッケージ群またはパッケージグループ群をインストールするための空の要求を受信しました。"
 
-msgid ""
-"Empty request received to uninstall Packages or Package Groups for System "
-"'%s'."
+msgid "Empty request received to uninstall Packages or Package Groups for System '%s'."
 msgstr "システム「%s」用のパッケージ群またはパッケージグループ群をアンインストールするための空要求を受信しました。"
 
-msgid ""
-"Empty request received to uninstall Packages or Package Groups for System "
-"Group '%s'."
+msgid "Empty request received to uninstall Packages or Package Groups for System Group '%s'."
 msgstr "システムグループ '%s' 用のパッケージ群またはパッケージグループ群をアンインストールするための空の要求を受信しました。"
 
-msgid ""
-"Empty request received to update Packages or Package Groups for System Group"
-" '%s'."
+msgid "Empty request received to update Packages or Package Groups for System Group '%s'."
 msgstr "システムグループ '%s' 用のパッケージ群またはパッケージグループ群を更新するための空の要求を受信しました。"
+
+#, fuzzy
+msgid "Enable Red Hat Repositories"
+msgstr "Red Hat リポジトリ"
+
+msgid "Enabled"
+msgstr ""
+
+msgid "Enabled by Default: "
+msgstr ""
+
+msgid "Enabled?"
+msgstr ""
+
+msgid "End"
+msgstr ""
+
+msgid "End Date"
+msgstr ""
+
+#, fuzzy
+msgid "Enhancement"
+msgstr "タイプ: 拡張機能"
+
+#, fuzzy
+msgid "Enter Errata..."
+msgstr "エラータをインストールしています..."
+
+#, fuzzy
+msgid "Enter Package or Group Name(s)..."
+msgstr "パッケージグループを追加しています..."
+
+msgid "Enter Selected Content..."
+msgstr ""
+
+msgid "Enter system name..."
+msgstr ""
+
+msgid "Env: "
+msgstr ""
 
 msgid "Environment"
 msgstr "環境"
 
-msgid ""
-"Environment %s has a successor.  Only the last environment on a path can be "
-"deleted"
+msgid "Environment %s has a successor.  Only the last environment on a path can be deleted"
 msgstr "環境 %s より後に別の環境があります。 一つのパス上で削除できるのは最後の環境のみです。"
 
-msgid ""
-"Environment %s has a successor. Only the last environment on a path can be "
-"deleted."
+msgid "Environment %s has a successor. Only the last environment on a path can be deleted."
 msgstr "環境 %s より後に別の環境があります。一つのパス上で削除できるのは最後の環境のみです。"
 
 msgid "Environment '%s' was created."
@@ -851,13 +1768,37 @@ msgstr "環境 '%s' を削除されました。"
 msgid "Environment '%s' was updated."
 msgstr "環境 '%s' を更新されました。"
 
+#, fuzzy
+msgid "Environment Promotion Paths"
+msgstr "環境コンテンツの読み込み"
+
 msgid "Environment cannot be in its own promotion path"
 msgstr "環境はそれ自身のプロモーションパスに存在することはできません。"
+
+#, fuzzy
+msgid "Environment(s): %E"
+msgstr "環境"
+
+#, fuzzy
+msgid "Environment(s): %{environments}"
+msgstr "環境コンテンツの読み込み"
+
+#, fuzzy
+msgid "Environment:"
+msgstr "環境"
 
 msgid "Environments"
 msgstr "環境"
 
 msgid "Errata"
+msgstr "エラータ"
+
+#, fuzzy
+msgid "Errata (%s)"
+msgstr "エラータ"
+
+#, fuzzy
+msgid "Errata (0)"
 msgstr "エラータ"
 
 msgid "Errata Install"
@@ -868,6 +1809,10 @@ msgstr "%s によりエラータのインストールがスケジュールされ
 
 msgid "Errata scheduled for install."
 msgstr "エラータのインストールがスケジュールされました。"
+
+#, fuzzy
+msgid "Erratum"
+msgstr "エラータ"
 
 msgid "Erratum '%s' doesn't belong to the specified product!"
 msgstr "エラータ '%s' は指定された製品に属していません!"
@@ -893,11 +1838,27 @@ msgstr "エラータのインストールがタイムアウトになりました
 msgid "Erratum with id '%s' not found"
 msgstr "ID が '%s' のエラータが見つかりません"
 
+msgid "Error"
+msgstr ""
+
+msgid "Error generating version"
+msgstr ""
+
+#, fuzzy
+msgid "Error on Install"
+msgstr "エラータのインストール"
+
 msgid "Error syncing!"
 msgstr "同期でエラーが発生しました!"
 
 msgid "Error while deleting provider [ %{name} ]: %{error}"
 msgstr "プロバイダー [ %{name} ] 削除中のエラー: %{error}"
+
+msgid "Error:"
+msgstr ""
+
+msgid "Event"
+msgstr ""
 
 msgid "Events History"
 msgstr "イベント履歴"
@@ -905,17 +1866,47 @@ msgstr "イベント履歴"
 msgid "Every %{day} at %{time} from %{date} %{zone}"
 msgstr "%{date} %{zone} から毎 %{day} に %{time}"
 
-msgid "Exactly one distribution must be present to export a TDL"
-msgstr "TDL をエクスポートするには、ディストリビューションが 1 つ存在する必要があります。"
+msgid "Example Searches:"
+msgstr ""
+
+#, fuzzy
+msgid "Existing Product:"
+msgstr "同期の製品"
+
+msgid "Expand"
+msgstr ""
+
+msgid "Expand All"
+msgstr ""
+
+msgid "Expand each Red Hat Product below to examine the different repository sets available.  When enabling a repository set, the different repositories within are discoverd and may be enabled individually."
+msgstr ""
+
+msgid "Expanded"
+msgstr ""
 
 msgid "Expected attribute is missing:"
 msgstr "予期される属性がありません:"
+
+msgid "Expires: %s"
+msgstr ""
+
+msgid "FAIL"
+msgstr ""
+
+#, fuzzy
+msgid "Fact"
+msgstr "情報"
 
 msgid "Facts"
 msgstr "情報"
 
 msgid "Failed"
 msgstr "失敗"
+
+#, fuzzy
+msgid "Failed for distributor(s):"
+msgstr "次のシステムに対して失敗しました:"
 
 msgid "Failed for system(s):"
 msgstr "次のシステムに対して失敗しました:"
@@ -929,8 +1920,7 @@ msgstr "candlepin の環境 %s の作成に失敗しました。"
 msgid "Failed to create candlepin owner %s"
 msgstr "candlepin の所有者 %s の作成に失敗しました。"
 
-msgid ""
-"Failed to delete all environments for owner %{org} in candlepin: %{message}"
+msgid "Failed to delete all environments for owner %{org} in candlepin: %{message}"
 msgstr "candlepin 内の所有者 %{org} の全環境の削除に失敗しました: %{message}"
 
 msgid "Failed to delete all providers for owner %s in candlepin"
@@ -951,8 +1941,31 @@ msgstr "変更セット「%s」の削除に失敗しました。詳細につい�
 msgid "Failed to delete organization '%s'. Check notices for more details. "
 msgstr "組織 '%s' の削除の削除に失敗しました。通知の詳細を確認してください。"
 
+msgid "Failed to generate a new version of content view '%{view_name}'."
+msgstr ""
+
+msgid "Failed to generate content view '%{view_name}' version %{view_version}."
+msgstr ""
+
+msgid "Failed to generate version %{view_version} of content view '%{view_name}'."
+msgstr ""
+
 msgid "Failed to promote changeset '%s'. Check notices for more details"
 msgstr "更新セット '%s' のプロモートに失敗しました。通知の詳細を確認してください。"
+
+msgid "Failed to publish content view '%{view_name}' from definition '%{definition_name}'."
+msgstr ""
+
+msgid "Features:"
+msgstr ""
+
+#, fuzzy
+msgid "File"
+msgstr "ファイル一覧"
+
+#, fuzzy
+msgid "File Name"
+msgstr "プラン名"
 
 msgid "Filelist"
 msgstr "ファイル一覧"
@@ -960,22 +1973,44 @@ msgstr "ファイル一覧"
 msgid "Filter"
 msgstr "フィルター"
 
-msgid "Filter %s created successfully."
-msgstr "フィルター %s が正常に作成されました。"
+msgid "Filter on Loaded Events..."
+msgstr ""
 
-msgid "Filtered Packages"
-msgstr "フィルターされるパッケージ"
+#, fuzzy
+msgid "Filter on all packages..."
+msgstr "パッケージをインストールしています..."
+
+msgid "Filter on loaded Events..."
+msgstr ""
+
+#, fuzzy
+msgid "Filter paths..."
+msgstr "フィルター"
+
+#, fuzzy
+msgid "Filter..."
+msgstr "フィルター"
 
 msgid "Filters"
 msgstr "フィルター"
 
-msgid ""
-"Filters assigned to repository or product of erratum '%s' block it from "
-"promotion!"
-msgstr "エラータ「%s」の製品またはリポジトリに割り当てられているフィルターによってプロモージョンの実行がブロックされています。"
+msgid "Forgot %{username} or %{password}?"
+msgstr ""
 
-msgid "Filters can be stored only in the '%s' repositories."
-msgstr "フィルターを格納できるのは '%s' リポジトリのみです。"
+msgid "From IP:"
+msgstr ""
+
+#, fuzzy
+msgid "Full Access"
+msgstr "成功"
+
+#, fuzzy
+msgid "Full Name:"
+msgstr "プラン名"
+
+#, fuzzy
+msgid "Full Products"
+msgstr "製品"
 
 msgid "GPG Key"
 msgstr "GPG キー"
@@ -989,19 +2024,86 @@ msgstr "GPG キー '%s' を削除しました。"
 msgid "GPG Key '%s' was updated."
 msgstr "GPG キー '%s' を更新しました。"
 
+#, fuzzy
+msgid "GPG Key URL: "
+msgstr "GPG キー"
+
+msgid "GPG Key assigned at the Product Level for"
+msgstr ""
+
+msgid "GPG Key assigned at the Repository Level for"
+msgstr ""
+
 msgid "GPG Keys"
 msgstr "GPG キー"
+
+msgid "GPG Keys are not required.  This field may be left blank."
+msgstr ""
+
+msgid "GPG Keys may be stored by uploading a key directly or copying and pasting the key in upon creation. By visiting the Providers page and selecting either a product or repository, a GPG key that has been created here can be associated with the given entity."
+msgstr ""
+
+msgid "Gateway:"
+msgstr ""
+
+msgid "Generate and Download"
+msgstr ""
+
+msgid "Generating and downloading the debug certificate allows a user to view the repositories in any environment from a browser."
+msgstr ""
+
+msgid "Generating version: %{view_version}"
+msgstr ""
 
 msgid "Global Permissions"
 msgstr "グローバルパーミッション"
 
+msgid "Global permissions allow you to create permissions that span all organizations, or choose a specific organization to apply permissions."
+msgstr ""
+
+msgid "Global permissions are permissions that span all organizations; however, organization permissions apply only to the organization they are associated with."
+msgstr ""
+
+msgid "Go"
+msgstr ""
+
+msgid "Good"
+msgstr ""
+
+#, fuzzy
+msgid "Group"
+msgstr "LDAP グループ"
+
 msgid "Guest"
 msgstr "ゲスト"
+
+#, fuzzy
+msgid "Guests"
+msgstr "ゲスト"
+
+msgid "HW Models"
+msgstr ""
+
+msgid "Hardware Model"
+msgstr ""
+
+msgid "Hardware Models"
+msgstr ""
+
+msgid "Hardware model:"
+msgstr ""
 
 msgid "History"
 msgstr "履歴"
 
 msgid "Host"
+msgstr "ホスト"
+
+msgid "Host & Guest Info"
+msgstr ""
+
+#, fuzzy
+msgid "Hostname"
 msgstr "ホスト"
 
 msgid "Hourly from %{date} - %{time} %{zone}"
@@ -1022,8 +2124,26 @@ msgstr "ハイパーバイザーにパッケージはありません。"
 msgid "Hypervisors do not have software products"
 msgstr "ハイパーバイザーにソフトウェア製品はありません。"
 
+msgid "ID"
+msgstr ""
+
+msgid "ID / Link"
+msgstr ""
+
 msgid "ID: %s doesn't exist "
 msgstr "ID: %s が存在しません"
+
+msgid "ISOs"
+msgstr ""
+
+msgid "If you continue having trouble, please contact an Administrator."
+msgstr ""
+
+msgid "If you did not request this password to be reset, just ignore this email and the password will continue to stay the same."
+msgstr ""
+
+msgid "If you have a subscription manifest you may upload it below. This manifest may be obtained by visiting the Red Hat Customer Portal or by contacting your support representative."
+msgstr ""
 
 msgid "Import"
 msgstr "インポート"
@@ -1031,40 +2151,74 @@ msgstr "インポート"
 msgid "Import History"
 msgstr "インポートの履歴"
 
+#, fuzzy
+msgid "Import Time"
+msgstr "インポート"
+
+msgid "Import in progress (%M)"
+msgstr ""
+
+msgid "Import in progress (%s)"
+msgstr ""
+
+msgid "Info"
+msgstr ""
+
+msgid "Info:"
+msgstr ""
+
+msgid "Initial Application Life Cycle Management Environment"
+msgstr ""
+
+#, fuzzy
+msgid "Initial Creation Params"
+msgstr "初期の登録パラメーター"
+
 msgid "Initial Registration Params"
 msgstr "初期の登録パラメーター"
 
-msgid ""
-"Install of Errata '%{errata}' scheduled for System Group '%{group}' failed."
-"  Reason: %{message}"
+msgid "Inline Help Enabled:"
+msgstr ""
+
+#, fuzzy
+msgid "Install"
+msgstr "エラータのインストール"
+
+#, fuzzy
+msgid "Install Finished"
+msgstr "エラータのインストールが失敗しました"
+
+msgid "Install of Errata '%{errata}' scheduled for System Group '%{group}' failed.  Reason: %{message}"
 msgstr "システムグループ '%{group}' に対してスケジュールされたエラータ '%{errata}' のインストールに失敗しました。原因: %{message}"
 
 msgid "Install of Errata '%{errata}' scheduled for System Group '%{group}'."
 msgstr "システムグループ '%{group}' に対してエラータ '%{errata}' のインストールがスケジュールされました。"
 
-msgid ""
-"Install of Package Groups '%{groups}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
+msgid "Install of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
 msgstr "システムグループ '%{name}' に対してスケジュールされたパッケージグループ '%{groups}' のインストールが失敗しました。原因: %{message}"
 
-msgid ""
-"Install of Package Groups '%{groups}' scheduled for System Group '%{name}'."
+msgid "Install of Package Groups '%{groups}' scheduled for System Group '%{name}'."
 msgstr "システムグループ '%{name}' に対してパッケージグループ '%{groups}' のインストールがスケジュールされました。"
 
 msgid "Install of Package Groups '%{g}' scheduled for System '%{s}'."
 msgstr "パッケージグループ '%{g}' のインストールがシステム '%{s}' に対してスケジュールされました。"
 
-msgid ""
-"Install of Packages '%{packages}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
+msgid "Install of Packages '%{packages}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
 msgstr "システムグループ '%{name}' に対してスケジュールされたパッケージ '%{packages}' のインストールに失敗しました。原因: %{message}"
 
-msgid ""
-"Install of Packages '%{packages}' scheduled for System Group '%{name}'."
+msgid "Install of Packages '%{packages}' scheduled for System Group '%{name}'."
 msgstr "システムグループ '%{name}' に対してパッケージ '%{packages}' のインストールがスケジュールされました。"
 
 msgid "Install of Packages '%{p}' scheduled for System '%{s}'."
 msgstr "パッケージ '%{p}' のインストールがシステム '%{s}' に対してスケジュールされました。"
+
+#, fuzzy
+msgid "Installed Packages"
+msgstr "パッケージのインストール中..."
+
+#, fuzzy
+msgid "Installing"
+msgstr "エラータのインストール中..."
 
 msgid "Installing Erratum..."
 msgstr "エラータのインストール中..."
@@ -1075,8 +2229,29 @@ msgstr "パッケージグループのインストール中..."
 msgid "Installing Package..."
 msgstr "パッケージのインストール中..."
 
+#, fuzzy
+msgid "Insufficient Subscriptions"
+msgstr "Red Hat サブスクリプション"
+
+msgid "Insufficient Subscriptions are Attached to This System"
+msgstr ""
+
+#, fuzzy
+msgid "Interfaces"
+msgstr "間隔"
+
+msgid "Intersection"
+msgstr ""
+
+msgid "Intersection:"
+msgstr ""
+
 msgid "Interval"
 msgstr "間隔"
+
+#, fuzzy
+msgid "Invalid Subscriptions"
+msgstr "利用可能なサブスクリプション"
 
 msgid "Invalid date or time format"
 msgstr "無効な日付または時間形式です"
@@ -1084,23 +2259,27 @@ msgstr "無効な日付または時間形式です"
 msgid "Invalid organization"
 msgstr "無効な組織です"
 
-msgid ""
-"Invalid parameters sent in the request for this operation. Please contact a "
-"system administrator."
+msgid "Invalid parameters sent in the request for this operation. Please contact a system administrator."
 msgstr "無効なパラメータがこの動作の要求に送信されました。 システム管理者に連絡してください。"
 
-msgid ""
-"Invalid resource type '%{resource_type}'. Resource Types can be one of "
-"'%{possible_types}'"
+#, fuzzy
+msgid "Invalid parameters sent. You may have mistyped the address. If you continue having trouble with this, please contact an Administrator."
+msgstr "無効なパラメータがこの動作の要求に送信されました。 システム管理者に連絡してください。"
+
+msgid "Invalid resource type '%{resource_type}'. Resource Types can be one of '%{possible_types}'"
 msgstr "無効なリソースタイプ '%{resource_type}'。リソースタイプは '%{possible_types}' のうちいずれかです。"
 
 msgid "Invalid state"
 msgstr "無効な状態"
 
-msgid ""
-"Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be "
-"one of %{possible_verbs}"
+msgid "Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be one of %{possible_verbs}"
 msgstr "無効な動作 '%{verb}'。リソースタイプ '%{resource_type}' の動作は、%{possible_verbs} のうちいずれかです。"
+
+msgid "Issued"
+msgstr ""
+
+msgid "Issued: "
+msgstr ""
 
 msgid "It is not allowed to create products in Red Hat provider."
 msgstr "Red Hat プロバイダーで製品を作成することはできません。"
@@ -1123,6 +2302,10 @@ msgstr "Red Hat リポジトリを更新することはできません。"
 msgid "Katello Logins"
 msgstr "Katello ログイン"
 
+#, fuzzy
+msgid "Katello Logo"
+msgstr "Katello ログイン"
+
 msgid "Katello User '%s' Password Reset"
 msgstr "Katello ユーザー '%s' パスワードのリセット"
 
@@ -1141,22 +2324,70 @@ msgstr "LDAP グループ"
 msgid "LDAP group '%{group}' associated to role '%{role}' was not found."
 msgstr "ロール '%{role}' に関連付けされている LDAP グループ '%{group}' が見つかりませんでした。"
 
+msgid "Label"
+msgstr ""
+
+#, fuzzy
+msgid "Label has already been taken"
+msgstr "検証が失敗しました: ラベルはすでに使用されています"
+
+msgid "Last Booted"
+msgstr ""
+
+#, fuzzy
+msgid "Last Checked In"
+msgstr "登録済み /最終チェックイン"
+
+msgid "Last Checked in Date"
+msgstr ""
+
+msgid "Latest Notifications"
+msgstr ""
+
+msgid "Level"
+msgstr ""
+
+msgid "License"
+msgstr ""
+
+msgid "Limit"
+msgstr ""
+
+msgid "Limits"
+msgstr ""
+
 msgid "List"
 msgstr "一覧"
 
-msgid "Login Successful"
-msgstr "ログインが成功しました"
+#, fuzzy
+msgid "List Actions"
+msgstr "ディストリビューション"
 
-msgid "Login Successful, logging into '%s' "
-msgstr "ログインに成功しました、「%s」にログインしています"
+msgid "Load %{n} More"
+msgstr ""
 
-msgid "Login Successful, please choose an Organization"
-msgstr "ログインに成功しました、組織を選択してください"
+#, fuzzy
+msgid "Loading Changeset"
+msgstr "変更セット"
 
-msgid ""
-"Login Successful, please contact administrator to get permission to access "
-"an organization."
-msgstr "ログインに成功しました、管理者に連絡して組織にアクセスできるパーミッションを取得してください。"
+#, fuzzy
+msgid "Loading Permissions"
+msgstr "グローバルパーミッション"
+
+#, fuzzy
+msgid "Loading Role"
+msgstr "ロールを変更"
+
+#, fuzzy
+msgid "Loading dependencies."
+msgstr "依存関係"
+
+#, fuzzy
+msgid "Location"
+msgstr "アプリケーション"
+
+msgid "Log Out"
+msgstr ""
 
 msgid "Logout Successful"
 msgstr "ログアウトが成功しました"
@@ -1164,8 +2395,36 @@ msgstr "ログアウトが成功しました"
 msgid "Make this my default organization."
 msgstr "この組織を自分のデフォルトの組織にします。"
 
+#, fuzzy
+msgid "Make this your default organization."
+msgstr "この組織を自分のデフォルトの組織にします。"
+
+#, fuzzy
+msgid "Manage Environments"
+msgstr "環境の読み込み"
+
 msgid "Manage Organizations"
 msgstr "組織の管理"
+
+#, fuzzy
+msgid "Manage Packages"
+msgstr "パッケージ"
+
+msgid "Manifest %s failed"
+msgstr ""
+
+msgid "Manifest File"
+msgstr ""
+
+#, fuzzy
+msgid "Manifest History"
+msgstr "変更セットの履歴"
+
+msgid "Manifest from %s"
+msgstr ""
+
+msgid "Manifest subscriptions unchanged from previous"
+msgstr ""
 
 msgid "Match Installed Software"
 msgstr "インストール済みソフトウェアにマッチさせる"
@@ -1173,11 +2432,25 @@ msgstr "インストール済みソフトウェアにマッチさせる"
 msgid "Match System"
 msgstr "システムに一致"
 
+msgid "Message"
+msgstr ""
+
+msgid "Missing"
+msgstr ""
+
+msgid "Modify Content View Defintions"
+msgstr ""
+
+#, fuzzy
+msgid "Modify Distributors"
+msgstr "ディストリビューション"
+
+#, fuzzy
+msgid "Modify Distributors in Environment"
+msgstr "環境内のシステムを変更"
+
 msgid "Modify Organization and Administer Environments"
 msgstr "組織の変更と環境の管理"
-
-msgid "Modify Package Filters"
-msgstr "パッケージフィルターを変更"
 
 msgid "Modify Providers and Administer Products"
 msgstr "プロバイダーの変更と製品の管理"
@@ -1200,20 +2473,45 @@ msgstr "システムグループ内のシステムを変更"
 msgid "Modify Users"
 msgstr "ユーザーを変更"
 
-msgid "Must be unique within an environment"
-msgstr "環境内で一意でなければなりません"
+msgid "More >>"
+msgstr ""
+
+#, fuzzy
+msgid "More details"
+msgstr "詳細については %s"
+
+msgid "More..."
+msgstr ""
+
+msgid "Multi-entitlement"
+msgstr ""
 
 msgid "Name"
 msgstr "名前"
 
-msgid "Name cannot be blank."
+#, fuzzy
+msgid "Name can not be blank."
 msgstr "名前は空白にしないでください。"
 
-msgid "Name must be unique within one organization"
-msgstr "名前は 1 組織内で一意である必要があります"
+#, fuzzy
+msgid "Name of Your System:"
+msgstr "次のシステムに対して失敗しました:"
+
+#, fuzzy
+msgid "Name:"
+msgstr "名前"
 
 msgid "Names and labels must be unique across all organizations"
 msgstr "名前とラベルは全組織で一意である必要があります"
+
+msgid "Netmask:"
+msgstr ""
+
+msgid "Network:"
+msgstr ""
+
+msgid "Networking"
+msgstr ""
 
 msgid "Never checked in"
 msgstr "これまでチェックインしたことはありません"
@@ -1221,32 +2519,161 @@ msgstr "これまでチェックインしたことはありません"
 msgid "Never checked in."
 msgstr "これまでチェックインしたことはありません。"
 
-msgid "New templates can be created only in the '%s' environment"
-msgstr "新しいテンプレートを作成できるのは '%s' 環境内のみです"
+#, fuzzy
+msgid "New Activation Key"
+msgstr "アクティベーションキー"
 
-msgid "New templates can be imported only into the '%s' environment"
-msgstr "新しいテンプレートをインポートできるのは '%s' 環境内のみです"
+#, fuzzy
+msgid "New Architecture"
+msgstr "アーキテクチャー"
+
+#, fuzzy
+msgid "New Changeset"
+msgstr "+ 新規の変更セット"
+
+#, fuzzy
+msgid "New Domain"
+msgstr "ドメイン"
+
+#, fuzzy
+msgid "New GPG Key"
+msgstr "+ 新規の GPG キー"
+
+msgid "New Hardware Model"
+msgstr ""
+
+#, fuzzy
+msgid "New Organization"
+msgstr "+ 新規の組織"
+
+msgid "New Product Label"
+msgstr ""
+
+#, fuzzy
+msgid "New Product Name"
+msgstr "+ 新規のプロバイダー"
+
+#, fuzzy
+msgid "New Product:"
+msgstr "製品"
+
+#, fuzzy
+msgid "New Provider"
+msgstr "+ 新規のプロバイダー"
+
+#, fuzzy
+msgid "New Role"
+msgstr "+ 新規のロール"
+
+msgid "New Smart Proxy"
+msgstr ""
+
+#, fuzzy
+msgid "New Subnet"
+msgstr "サブネット"
+
+#, fuzzy
+msgid "New Sync Plan"
+msgstr "同期のプラン"
+
+#, fuzzy
+msgid "New System Group"
+msgstr "システムグループ"
+
+#, fuzzy
+msgid "New User"
+msgstr "+ 新規のユーザー"
+
+msgid "New View Definition"
+msgstr ""
+
+#, fuzzy
+msgid "New distributor"
+msgstr "ディストリビューション"
+
+#, fuzzy
+msgid "New system"
+msgstr "+ 新規のシステム"
+
+msgid "Next >>"
+msgstr ""
+
+#, fuzzy
+msgid "No"
+msgstr "なし"
+
+#, fuzzy
+msgid "No Content View"
+msgstr "コンテンツ"
+
+#, fuzzy
+msgid "No Content Views"
+msgstr "コンテンツ"
 
 msgid "No Overlap with Current"
 msgstr "現在のサブスクリプションとの重複はありません"
 
+msgid "No Red Hat products currently exist, please import a manifest <a href='%s'>here</a> to receive Red Hat content."
+msgstr ""
+
 msgid "No Service Level Preference"
 msgstr "サービスレベルは設定されていません"
 
-msgid "No Template"
-msgstr "テンプレートがありません"
+msgid "No alternate release version choices are available. These choices are based upon the Red Hat manifest imported and the content available in the CDN."
+msgstr ""
+
+#, fuzzy
+msgid "No changesets found."
+msgstr "見つかりません"
+
+#, fuzzy
+msgid "No content views exist in the changeset."
+msgstr "製品 %s が変更セット内で見つかりません。"
+
+msgid "No content views found."
+msgstr ""
+
+msgid "No default environment. Select an organization to choose from available environments."
+msgstr ""
+
+#, fuzzy
+msgid "No distributions available."
+msgstr "ディストリビューション"
+
+#, fuzzy
+msgid "No distributions exist in this changeset."
+msgstr "ディストリビューション '%s' が変更セット内で見つかりません"
 
 msgid "No domains found."
 msgstr ""
 
-msgid ""
-"No environments are currently available in this organization.  Please either"
-" add some to the organization or select an organization that has an "
-"environment to set user default."
+#, fuzzy
+msgid "No environments are available in this organization. Please add some environments to be able register systems to this organization."
 msgstr "この組織で現在利用できる環境がありません。 組織に利用できる環境を追加するか、 デフォルトでユーザーに設定できる環境を持っている別の組織を選択してください。"
+
+#, fuzzy
+msgid "No environments are currently available in this organization.  Please add some to be able to create activation keys."
+msgstr "この組織で現在利用できる環境がありません。 組織に利用できる環境を追加するか、 デフォルトでユーザーに設定できる環境を持っている別の組織を選択してください。"
+
+msgid "No environments are currently available in this organization.  Please either add some to the organization or select an organization that has an environment to set user default."
+msgstr "この組織で現在利用できる環境がありません。 組織に利用できる環境を追加するか、 デフォルトでユーザーに設定できる環境を持っている別の組織を選択してください。"
+
+#, fuzzy
+msgid "No environments are currently available in this organization. Saving will set user to no system registration default environment."
+msgstr "この組織で現在利用できる環境がありません。 組織に利用できる環境を追加するか、 デフォルトでユーザーに設定できる環境を持っている別の組織を選択してください。"
+
+msgid "No errata available."
+msgstr ""
+
+#, fuzzy
+msgid "No errata exist in this changeset."
+msgstr "エラータ '%s' が変更セット内で見つかりません"
 
 msgid "No errors"
 msgstr "エラーはありません"
+
+msgid "No event history found for %s"
+msgstr ""
 
 msgid "No events matching your search criteria."
 msgstr "検索条件に一致するイベントはありません。"
@@ -1260,11 +2687,48 @@ msgstr ""
 msgid "No package profile received for %s"
 msgstr " %s のパッケージプロファイルを受け取っていません"
 
+#, fuzzy
+msgid "No packages are currently filtered."
+msgstr "%s パッケージの削除に失敗しました"
+
+#, fuzzy
+msgid "No packages available"
+msgstr "削除済みのパッケージはありません"
+
+#, fuzzy
+msgid "No packages exist in this changeset."
+msgstr "パッケージ '%s' が変更セット内で見つかりません"
+
 msgid "No packages removed"
 msgstr "削除済みのパッケージはありません"
 
 msgid "No packages updated"
 msgstr "更新済みのパッケージはありません"
+
+#, fuzzy
+msgid "No products"
+msgstr "製品"
+
+msgid "No products are available containing this content type."
+msgstr ""
+
+#, fuzzy
+msgid "No products exist in this changeset."
+msgstr "製品 %s が変更セット内で見つかりません。"
+
+msgid "No products or repositories are currently associated."
+msgstr ""
+
+msgid "No recently synced products."
+msgstr ""
+
+#, fuzzy
+msgid "No repositories available"
+msgstr "不明なリポジトリラベル: %s"
+
+#, fuzzy
+msgid "No repositories exist in this changeset."
+msgstr "リポジトリ '%s' が変更セット内で見つかりません"
 
 msgid "No smart proxy with %s feature found."
 msgstr ""
@@ -1272,31 +2736,87 @@ msgstr ""
 msgid "No synchronization of the %s is currently running"
 msgstr "現在 %s の同期は実行していません"
 
+#, fuzzy
+msgid "No system groups found."
+msgstr "システムグループ情報"
+
+msgid "No system registration default environment. Select an organization to choose from available environments."
+msgstr ""
+
 msgid "No system registration default set for this user."
 msgstr "このユーザーには設定されているシステム登録のデフォルトがありません。"
+
+msgid "No systems currently exist in this system group."
+msgstr ""
+
+#, fuzzy
+msgid "No systems found."
+msgstr "見つかりません"
+
+#, fuzzy
+msgid "No, only delete the system group."
+msgstr "システムグループを少なくともひとつ選択してください。"
 
 msgid "None"
 msgstr "なし"
 
-msgid ""
-"Not enough subscriptions in pools (%{size}), required: %{required}, "
-"available: %{available}"
-msgstr "プールに十分なサブスクリプションがありません (%{size})。必要: %{required}、利用可能: %{available}"
+#, fuzzy
+msgid "None defined for this Organization."
+msgstr "組織の管理"
+
+#, fuzzy
+msgid "None."
+msgstr "なし"
+
+msgid "Not Applied"
+msgstr ""
+
+msgid "Not enough pools: %{not_allocated} sockets out of %{allocate} not covered"
+msgstr ""
 
 msgid "Not found"
 msgstr "見つかりません"
 
-msgid "Number of attached subscriptions exceeded quantity for %s"
-msgstr "割り当て済みサブスクリプション数が %s の数量を超過しました"
+msgid "Note: This will be set as your initial default environment."
+msgstr ""
+
+msgid "Notifications"
+msgstr ""
+
+msgid "Number of Sockets or LPARs:"
+msgstr ""
 
 msgid "Number of sockets must be higher than 0 for system %s"
 msgstr "システム %s に対するソケット数は 0 より大きくなければなりません。"
 
+msgid "OK"
+msgstr ""
+
+msgid "OS"
+msgstr ""
+
+msgid "OS: "
+msgstr ""
+
 msgid "Off"
 msgstr "オフ"
 
+msgid "Ok"
+msgstr ""
+
 msgid "On"
 msgstr "オン"
+
+msgid "On Products & Repositories you can add your own Products and Repositories to your Provider.  This allows you to synchronize content from any remote repository to this server.  Simply add a Product and then setup one or more repositories to add to this Provider.  This feature is only available for Custom Providers."
+msgstr ""
+
+#, fuzzy
+msgid "On:"
+msgstr "オン"
+
+#, fuzzy
+msgid "One of parameters [%s] required but not specified."
+msgstr "organization_id が必要ですが指定されていません。"
 
 msgid "One or more errata must be provided"
 msgstr "1 つ以上のエラータを指定する必要があります。"
@@ -1304,8 +2824,26 @@ msgstr "1 つ以上のエラータを指定する必要があります。"
 msgid "One or more errors found in Package names '%s'."
 msgstr "パッケージ名「%s」に 1 つ以上のエラーが見つかりました。"
 
+#, fuzzy
+msgid "One or more of the groups provided has an action pending."
+msgstr "1 つ以上のシステムグループを指定する必要があります。"
+
+msgid "One or more of the packages provided has an action pending."
+msgstr ""
+
+#, fuzzy
+msgid "One or more package names are invalid."
+msgstr "1 つ以上のエラータを指定する必要があります。"
+
+msgid "One or more repositories are still enabled for this content set."
+msgstr ""
+
 msgid "One or more system groups must be provided."
 msgstr "1 つ以上のシステムグループを指定する必要があります。"
+
+#, fuzzy
+msgid "One repository successfully created."
+msgstr "リポジトリ '%s' が作成されました。"
 
 msgid "Only %s favorites may be created."
 msgstr "作成できるお気に入りは %s つのみです。"
@@ -1313,23 +2851,34 @@ msgstr "作成できるお気に入りは %s つのみです。"
 msgid "Only one Red Hat provider permitted for an Organization"
 msgstr "1 組織に対し 1 Red Hat プロバイダーのみが許可されます"
 
+msgid "Only show syncing."
+msgstr ""
+
 msgid "Open Source Subscription Management"
 msgstr "オープンソースサブスクリプション管理"
 
 msgid "Open Source Systems Management"
 msgstr "オープンソースシステム管理"
 
+#, fuzzy
+msgid "Operating systems:"
+msgstr "システムの読み込み"
+
 msgid "Organization"
 msgstr "組織"
 
-msgid ""
-"Organization %s has more than one environment. Please specify target "
-"environment for system registration."
+#, fuzzy
+msgid "Organization %s has more than one environment. Please specify target environment for distributor registration."
 msgstr "組織 %s には複数の環境があります。システム登録用にする環境を指定してください。"
 
-msgid ""
-"Organization %{org} has the '%{env}' environment only. Please create an "
-"environment for system registration."
+msgid "Organization %s has more than one environment. Please specify target environment for system registration."
+msgstr "組織 %s には複数の環境があります。システム登録用にする環境を指定してください。"
+
+#, fuzzy
+msgid "Organization %{org} has the '%{env}' environment only. Please create an environment for distributor registration."
+msgstr "組織 %s には複数の環境があります。システム登録用にする環境を指定してください。"
+
+msgid "Organization %{org} has the '%{env}' environment only. Please create an environment for system registration."
 msgstr ""
 
 msgid "Organization '%s' has been scheduled for background deletion."
@@ -1341,17 +2890,34 @@ msgstr "組織 '%s' を作成しました。"
 msgid "Organization '%s' was updated."
 msgstr "組織 '%s' を更新しました。"
 
+msgid "Organization [ %{org} ] already contains default info [ %{info} ] for [ %{object} ]"
+msgstr ""
+
 msgid "Organization cannot be blank."
 msgstr "組織は空白にしないでください。"
+
+#, fuzzy
+msgid "Organization:"
+msgstr "組織"
 
 msgid "Organizations"
 msgstr "組織"
 
+msgid "Organizations allow content and systems to be separated by logical divisions.  To edit the environments within an organization, click on that organization and then click on the desired environment."
+msgstr ""
+
+msgid "Other"
+msgstr ""
+
+msgid "Own Role must be included in roles '%s'"
+msgstr ""
+
+#, fuzzy
+msgid "Package"
+msgstr "パッケージ"
+
 msgid "Package '%s' doesn't belong to the specified product!"
 msgstr "パッケージ '%s' は指定された製品に属していません。"
-
-msgid "Package '%s' is already present in the template"
-msgstr "パッケージ '%s' はテンプレートにすでに含まれております。"
 
 msgid "Package '%s' not found in the changeset"
 msgstr "パッケージ '%s' が変更セット内で見つかりません"
@@ -1362,17 +2928,13 @@ msgstr "パッケージ '%s' がリポジトリ内で見つかりません"
 msgid "Package '%s' was not found in the source environment."
 msgstr "パッケージ '%s' がソース環境内で見つかりませんでした。"
 
-msgid "Package '%{package}' not found in the %{env} environment"
-msgstr "パッケージ '%{package}' が %{env} 環境内で見つかりません"
+#, fuzzy
+msgid "Package Dependencies"
+msgstr "依存関係"
 
-msgid "Package Filter %s deleted."
-msgstr "パッケージフィルター '%s' を削除しました。"
-
-msgid "Package Filter '%s' has been updated."
-msgstr "パッケージフィルター '%s' を更新しました。"
-
-msgid "Package Filters"
-msgstr "パッケージフィルター"
+#, fuzzy
+msgid "Package Group"
+msgstr "パッケージグループ"
 
 msgid "Package Group Install"
 msgstr "パッケージグループのインストール"
@@ -1455,6 +3017,10 @@ msgstr "パッケージの削除がタイムアウトになりました"
 msgid "Package Remove scheduled by %s"
 msgstr "%s によりパッケージの削除がスケジュールされました"
 
+#, fuzzy
+msgid "Package Size"
+msgstr "パッケージフィルター"
+
 msgid "Package Update"
 msgstr "パッケージの更新"
 
@@ -1472,18 +3038,6 @@ msgstr "パッケージの更新がタイムアウトになりました"
 
 msgid "Package Update scheduled by %s"
 msgstr "%s によりパッケージの更新がスケジュールされました"
-
-msgid "Package group '%s' not found in this template."
-msgstr "パッケージグループ '%s' がこのテンプレート内で見つかりません。"
-
-msgid "Package group '%{group}' not found in the %{environment} environment"
-msgstr "パッケージグループ '%{group}' が %{environment} 環境内で見つかりません"
-
-msgid "Package group category '%s' not found in this template."
-msgstr "パッケージグループカテゴリ '%s' がこのテンプレート内で見つかりません。"
-
-msgid "Package group category '%{group}' not found in the %{env} environment"
-msgstr "パッケージグループのカテゴリ '%{group}' が %{env} 環境内で見つかりません。"
 
 msgid "Package group update canceled"
 msgstr ""
@@ -1503,14 +3057,37 @@ msgstr "ID が '%s' パッケージが見つかりません"
 msgid "Packages"
 msgstr "パッケージ"
 
+#, fuzzy
+msgid "Packages (%s)"
+msgstr "パッケージ"
+
+#, fuzzy
+msgid "Packages (0)"
+msgstr "パッケージ"
+
 msgid "Packages must be provided"
 msgstr "パッケージを指定してください"
 
-msgid "Parameter '%s' not found in the template."
-msgstr "パラメーター '%s' がテンプレート内で見つかりません。"
+#, fuzzy
+msgid "Packages:"
+msgstr "パッケージ"
 
-msgid "Parameter '%{name}': '%{value}' was set"
-msgstr "パラメーター '%{name}': '%{value}' は設定されていませんでした"
+msgid "Parameter"
+msgstr ""
+
+#, fuzzy
+msgid "Parameters"
+msgstr "パッケージフィルター"
+
+#, fuzzy
+msgid "Partial Products"
+msgstr "製品"
+
+msgid "Password"
+msgstr ""
+
+msgid "Password Strength"
+msgstr ""
 
 msgid "Password has been reset for user '%s'."
 msgstr "ユーザー '%s' のパスワードがリセットされました。"
@@ -1518,8 +3095,19 @@ msgstr "ユーザー '%s' のパスワードがリセットされました。"
 msgid "Password reset token has expired for user '%s'."
 msgstr "ユーザー '%s' のパスワードリセットトークンの有効期限が切れました。"
 
+msgid "Password:"
+msgstr ""
+
+#, fuzzy
+msgid "Paste GPG Key"
+msgstr "GPG キー"
+
 msgid "Pending"
 msgstr "保留中"
+
+#, fuzzy
+msgid "Permission"
+msgstr "パーミッション"
 
 msgid "Permission '%s' was created."
 msgstr "パーミッション '%s' が作成されました。"
@@ -1530,16 +3118,29 @@ msgstr "パーミッション '%s' が削除されました。"
 msgid "Permission '%s' was updated."
 msgstr "パーミッション '%s' が更新されました。"
 
-msgid ""
-"Permission Denied. User '%{user}' does not have permissions to access "
-"organization '%{org}'."
+msgid "Permission Denied. User '%{user}' does not have permissions to access organization '%{org}'."
 msgstr "パーミッションが拒否されました。ユーザー '%{user}' には組織 '%{org}' にアクセスするパーミッションがありません。"
+
+#, fuzzy
+msgid "Permission For:"
+msgstr "パーミッション"
 
 msgid "Permissions"
 msgstr "パーミッション"
 
+#, fuzzy
+msgid "Permissions for this role."
+msgstr "パーミッション '%s' が削除されました。"
+
 msgid "Physical"
 msgstr "物理"
+
+msgid "Physical or Virtual"
+msgstr ""
+
+#, fuzzy
+msgid "Place Changeset in Review State"
+msgstr "環境内の変更セットの読み込み"
 
 msgid "Plan"
 msgstr "プラン"
@@ -1547,16 +3148,15 @@ msgstr "プラン"
 msgid "Plan Name"
 msgstr "プラン名"
 
-msgid ""
-"Please add '%{product}' product to the changeset '%{changeset}' if you wish "
-"to promote repository '%{repo}' with it."
+#, fuzzy
+msgid "Please add '%{component_content_views}' to the changeset '%{changeset}' if you wish to promote the composite view '%{composite_view}' with it."
+msgstr "'%{product}' 製品を含むリポジトリ '%{repo}' をプロモートする場合は、その製品を変更セット '%{changeset}' に追加してください。"
+
+msgid "Please add '%{product}' product to the changeset '%{changeset}' if you wish to promote repository '%{repo}' with it."
 msgstr "'%{product}' 製品を含むリポジトリ '%{repo}' をプロモートする場合は、その製品を変更セット '%{changeset}' に追加してください。"
 
 msgid "Please create at least one environment."
 msgstr "少なくとも環境をひとつ作成してください。"
-
-msgid "Please provide pool ID"
-msgstr "プール ID を入力してください"
 
 msgid "Please provide pool and quantity"
 msgstr "プールと数量を入力してください"
@@ -1567,11 +3167,41 @@ msgstr "シリアル ID を入力してください"
 msgid "Please provide subscription ID"
 msgstr "サブスクリプション ID を指定してください"
 
+msgid "Please request the required privileges from an administrator."
+msgstr ""
+
+#, fuzzy
+msgid "Please select Package(s) or Package Group(s)."
+msgstr "システムグループを少なくともひとつ選択してください。"
+
+msgid "Please select Permissions to view and add permissions for this role or Users to see current users with this role."
+msgstr ""
+
+msgid "Please select Permissions to view permissions for this role or Users to see current users with this role."
+msgstr ""
+
 msgid "Please select at least one system group."
 msgstr "システムグループを少なくともひとつ選択してください。"
 
 msgid "Pool %s has no product associated"
 msgstr "プール %s に関連付けられている製品はありません。"
+
+msgid "Preferred Locale"
+msgstr ""
+
+msgid "Primary DNS:"
+msgstr ""
+
+#, fuzzy
+msgid "Prior Environment"
+msgstr "環境"
+
+msgid "Processing changeset modifications, please wait."
+msgstr ""
+
+#, fuzzy
+msgid "Product"
+msgstr "製品"
 
 msgid "Product %s not found in the changeset."
 msgstr "製品 %s が変更セット内で見つかりません。"
@@ -1579,17 +3209,26 @@ msgstr "製品 %s が変更セット内で見つかりません。"
 msgid "Product '%s' created."
 msgstr "製品 '%s' が作成されました。"
 
-msgid "Product '%s' is already present in the template."
-msgstr "製品 '%s' はすでにテンプレート内にあります。"
-
-msgid "Product '%s' not found in this environment."
-msgstr "製品 '%s' がこの環境内で見つかりません。"
-
 msgid "Product '%s' removed."
 msgstr "製品 '%s' が削除されました。"
 
 msgid "Product '%s' was updated."
 msgstr "製品 '%s' が更新されました。"
+
+#, fuzzy
+msgid "Product Name: "
+msgstr "製品"
+
+msgid "Product Selection"
+msgstr ""
+
+#, fuzzy
+msgid "Product(s) in this environment/content view"
+msgstr "製品 '%s' がこの環境内で見つかりません。"
+
+#, fuzzy
+msgid "Product: "
+msgstr "製品"
 
 msgid "Products"
 msgstr "製品"
@@ -1603,8 +3242,30 @@ msgstr "製品とリポジトリ"
 msgid "Products refreshed from CDN"
 msgstr "CDN で製品がリフレッシュされました"
 
+msgid "Progress:"
+msgstr ""
+
+#, fuzzy
+msgid "Promote"
+msgstr "プロモートしています"
+
+#, fuzzy
+msgid "Promote Content Views"
+msgstr "コンテンツを環境にプロモート"
+
 msgid "Promote Content to Environment"
 msgstr "コンテンツを環境にプロモート"
+
+#, fuzzy
+msgid "Promote to "
+msgstr "プロモートしています"
+
+#, fuzzy
+msgid "Promoted"
+msgstr "プロモートしています"
+
+msgid "Promoted By:"
+msgstr ""
 
 msgid "Promoting"
 msgstr "プロモートしています"
@@ -1614,6 +3275,24 @@ msgstr "プロモーションの変更セット '%s' が作成されました。
 
 msgid "Promotion Changeset '%s' was deleted."
 msgstr "プロモーションの変更セット '%s' が削除されました。"
+
+#, fuzzy
+msgid "Promotion Date:"
+msgstr "プロモートしています"
+
+#, fuzzy
+msgid "Promotion to %s"
+msgstr "プロモートしています"
+
+msgid "Promotions Overview"
+msgstr ""
+
+msgid "Provided Product Details"
+msgstr ""
+
+#, fuzzy
+msgid "Provided Products"
+msgstr "プロバイダー"
 
 msgid "Provider"
 msgstr "プロバイダー"
@@ -1627,20 +3306,61 @@ msgstr "プロバイダー '%s' が削除されました。"
 msgid "Provider '%s' was updated."
 msgstr "プロバイダー '%s' が更新されました。"
 
-msgid ""
-"Provider cannot be deleted since one of its products or repositories has "
-"already been promoted. Using a changeset, please delete the repository from "
-"existing environments before deleting it."
+msgid "Provider cannot be deleted since one of its products or repositories has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it."
 msgstr "プロバイダーの削除はできません。このプロバイダーの製品またはリポジトリがすでにプロモートされています。まず、変更セットを使って既存の環境からリポジトリを削除してからプロバイダーの削除を行ってください。"
+
+#, fuzzy
+msgid "Provider: "
+msgstr "プロバイダー"
 
 msgid "Providers"
 msgstr "プロバイダー"
 
-msgid "Pulp identifier must be unique."
-msgstr "Pulp 識別子は固有でなければなりません。"
+msgid "Providers provide many types of content such as packages, errata, kickstart trees, and installation disc images.  A provider may be delivering all of your paid content or it could simply be a local yum repository providing a few yum repos."
+msgstr ""
+
+#, fuzzy
+msgid "Provides"
+msgstr "プロバイダー"
+
+msgid "Publish"
+msgstr ""
+
+msgid "Publish Content View Definitions"
+msgstr ""
+
+msgid "Publish View Definition"
+msgstr ""
+
+msgid "Publish new content view from this view definition"
+msgstr ""
+
+msgid "Published"
+msgstr ""
+
+msgid "Publishing"
+msgstr ""
+
+msgid "Publishing..."
+msgstr ""
+
+msgid "Pulp not running"
+msgstr ""
+
+msgid "Pulp service unavailable during creating repository '%s', please try again later."
+msgstr ""
+
+msgid "Quantity"
+msgstr ""
 
 msgid "Queued."
 msgstr "キューに登録されました。"
+
+msgid "RAM (MB)"
+msgstr ""
+
+msgid "RPMs"
+msgstr ""
 
 msgid "Read Activation Keys"
 msgstr "アクティベーションキーの読み込み"
@@ -1650,6 +3370,21 @@ msgstr "アクティベーションキーのパーミッションを読み込み
 
 msgid "Read Changesets in Environment"
 msgstr "環境内の変更セットの読み込み"
+
+msgid "Read Content View Definitions"
+msgstr ""
+
+#, fuzzy
+msgid "Read Content Views"
+msgstr "環境の読み込み"
+
+#, fuzzy
+msgid "Read Distributors"
+msgstr "ディストリビューション"
+
+#, fuzzy
+msgid "Read Distributors in Environment"
+msgstr "環境内のシステムを読み込み"
 
 msgid "Read Environment Contents"
 msgstr "環境コンテンツの読み込み"
@@ -1663,12 +3398,6 @@ msgstr "環境パーミッションの読み込み"
 msgid "Read Everything"
 msgstr "すべて読み込む"
 
-msgid "Read Filters"
-msgstr "フィルターの読み込み"
-
-msgid "Read Filters permission"
-msgstr "フィルターのパーミッションを読み込み"
-
 msgid "Read Organization"
 msgstr "組織の読み込み"
 
@@ -1677,9 +3406,6 @@ msgstr "組織の読み込み"
 
 msgid "Read Organizations permission"
 msgstr "組織のパーミッションを読み込み"
-
-msgid "Read Package Filters"
-msgstr "パッケージフィルターの読み込み"
 
 msgid "Read Providers"
 msgstr "プロバイダーの読み込み"
@@ -1695,12 +3421,6 @@ msgstr "ロールのパーミッションを読み込み"
 
 msgid "Read System Group"
 msgstr "システムグループの読み込み"
-
-msgid "Read System Templates"
-msgstr "システムテンプレートの読み込み"
-
-msgid "Read System Templates permission"
-msgstr "システムテンプレートのパーミッションを読み込み"
 
 msgid "Read Systems"
 msgstr "システムの読み込み"
@@ -1723,6 +3443,10 @@ msgstr "ロールのみを読み込みます。"
 msgid "Reason: %s"
 msgstr "原因: %s"
 
+#, fuzzy
+msgid "Red Hat Provider Details"
+msgstr "プロバイダーの読み込み"
+
 msgid "Red Hat Repositories"
 msgstr "Red Hat リポジトリ"
 
@@ -1732,20 +3456,184 @@ msgstr "Red Hat サブスクリプション"
 msgid "Red Hat provider can not be deleted"
 msgstr "Red Hat プロバイダーは削除できません"
 
+msgid "References:"
+msgstr ""
+
+msgid "Refresh"
+msgstr ""
+
+msgid "Refresh Results"
+msgstr ""
+
+#, fuzzy
+msgid "Refresh repositories"
+msgstr "リポジトリ"
+
+msgid "Refreshing"
+msgstr ""
+
+#, fuzzy
+msgid "Register Distributors"
+msgstr "選択済みのディストリビューション"
+
+#, fuzzy
+msgid "Register Distributors in Environment"
+msgstr "環境内のシステムを登録"
+
 msgid "Register Systems"
 msgstr "システムの登録"
 
 msgid "Register Systems in Environment"
 msgstr "環境内のシステムを登録"
 
+#, fuzzy
+msgid "Registered"
+msgstr "システムの登録"
+
 msgid "Registered / Last Checked In"
 msgstr "登録済み /最終チェックイン"
+
+msgid "Release"
+msgstr ""
+
+#, fuzzy
+msgid "Release Version"
+msgstr "ロールのパーミッションを読み込み"
+
+#, fuzzy
+msgid "Remove"
+msgstr "パッケージの削除"
+
+#, fuzzy
+msgid "Remove Activation Key"
+msgstr "アクティベーションキーの読み込み"
+
+msgid "Remove All"
+msgstr ""
+
+#, fuzzy
+msgid "Remove Architecture"
+msgstr "アーキテクチャーの選択"
+
+#, fuzzy
+msgid "Remove Changeset"
+msgstr "+ 新規の変更セット"
+
+#, fuzzy
+msgid "Remove Distributor"
+msgstr "ディストリビューション '%s' が削除されました"
+
+#, fuzzy
+msgid "Remove Distributor(s)"
+msgstr "ディストリビューション '%s' が削除されました"
+
+#, fuzzy
+msgid "Remove Distributors in Environment"
+msgstr "環境のシステムを削除"
+
+#, fuzzy
+msgid "Remove Domain"
+msgstr "ドメイン"
+
+#, fuzzy
+msgid "Remove Environment"
+msgstr "環境の読み込み"
+
+#, fuzzy
+msgid "Remove GPG Key"
+msgstr "+ 新規の GPG キー"
+
+msgid "Remove Model"
+msgstr ""
+
+#, fuzzy
+msgid "Remove Organization"
+msgstr "組織の読み込み"
+
+#, fuzzy
+msgid "Remove Package Canceled"
+msgstr "パッケージの削除が取り消されました"
+
+#, fuzzy
+msgid "Remove Package Complete"
+msgstr "パッケージの削除が完了"
+
+#, fuzzy
+msgid "Remove Package Error"
+msgstr "パッケージグループを削除しています..."
+
+#, fuzzy
+msgid "Remove Package Group Canceled"
+msgstr "パッケージグループの削除が取り消されました"
+
+#, fuzzy
+msgid "Remove Package Group Complete"
+msgstr "パッケージグループの削除が完了"
+
+#, fuzzy
+msgid "Remove Package Group Error"
+msgstr "パッケージグループを削除しています..."
+
+#, fuzzy
+msgid "Remove Package Group Timeout"
+msgstr "パッケージグループを削除しています..."
+
+#, fuzzy
+msgid "Remove Package Timeout"
+msgstr "パッケージグループを削除しています..."
+
+#, fuzzy
+msgid "Remove Product"
+msgstr "製品 '%s' が削除されました"
+
+#, fuzzy
+msgid "Remove Provider"
+msgstr "プロバイダーの読み込み"
+
+#, fuzzy
+msgid "Remove Repository"
+msgstr "リポジトリ '%s' が削除されました"
+
+#, fuzzy
+msgid "Remove Role"
+msgstr "ロールの読み込み"
+
+#, fuzzy
+msgid "Remove Selected"
+msgstr "テンプレート '%s' が削除されました"
+
+msgid "Remove Smart Proxy"
+msgstr ""
+
+#, fuzzy
+msgid "Remove Subnet"
+msgstr "サブネット"
+
+#, fuzzy
+msgid "Remove Sync Plan"
+msgstr "同期のプラン"
+
+#, fuzzy
+msgid "Remove System"
+msgstr "システムの読み込み"
+
+#, fuzzy
+msgid "Remove System(s)"
+msgstr "システムの読み込み"
 
 msgid "Remove Systems in Environment"
 msgstr "環境のシステムを削除"
 
+#, fuzzy
+msgid "Remove User"
+msgstr "ユーザーの読み込み"
+
 msgid "Removed LDAP group '%s'"
 msgstr "LDAP グループ '%s' が削除されました"
+
+#, fuzzy
+msgid "Removed content view '%s'"
+msgstr "テンプレート '%s' が削除されました"
 
 msgid "Removed distribution '%s'"
 msgstr "ディストリビューション '%s' が削除されました"
@@ -1756,23 +3644,14 @@ msgstr "エラータ '%s' が削除されました"
 msgid "Removed package '%s'"
 msgstr "パッケージ '%s' が削除されました"
 
-msgid "Removed package group '%s'"
-msgstr "パッケージグループ '%s' が削除されました"
-
-msgid "Removed package group category '%s'"
-msgstr "パッケージグループカテゴリ '%s' が削除されました"
-
-msgid "Removed parameter '%s'"
-msgstr "パラメーター '%s' が削除されました"
-
 msgid "Removed product '%s'"
 msgstr "製品 '%s' が削除されました"
 
 msgid "Removed repository '%s'"
 msgstr "リポジトリ '%s' が削除されました"
 
-msgid "Removed template '%s'"
-msgstr "テンプレート '%s' が削除されました"
+msgid "Removed:"
+msgstr ""
 
 msgid "Removing Package Group..."
 msgstr "パッケージグループを削除しています..."
@@ -1780,11 +3659,16 @@ msgstr "パッケージグループを削除しています..."
 msgid "Removing Package..."
 msgstr "パッケージを削除しています..."
 
-msgid "Rendering 400:"
-msgstr "レンダリング 400:"
+#, fuzzy
+msgid "Removing..."
+msgstr "パッケージを削除しています..."
 
 msgid "Rendering 404:"
 msgstr "レンダリング 404:"
+
+#, fuzzy
+msgid "Rendering 422:"
+msgstr "レンダリング 400:"
 
 msgid "Rendering 500:"
 msgstr "レンダリング 500:"
@@ -1792,14 +3676,29 @@ msgstr "レンダリング 500:"
 msgid "Repo ID or environment must be provided"
 msgstr "リポジトリ ID または環境を指定してください"
 
+msgid "Repo Type: "
+msgstr ""
+
 msgid "Repos"
 msgstr "リポジトリ"
+
+#, fuzzy
+msgid "Repos discovery failed."
+msgstr "リポジトリ '%s' が有効になりました。"
 
 msgid "Repositories"
 msgstr "リポジトリ"
 
 msgid "Repositories can be deleted only in the '%s' environment."
 msgstr "リポジトリは '%s' 環境でのみ削除できます。"
+
+#, fuzzy
+msgid "Repository"
+msgstr "リポジトリ"
+
+#, fuzzy
+msgid "Repository '%X'"
+msgstr "リポジトリ '%s' が削除されました"
 
 msgid "Repository '%s' created."
 msgstr "リポジトリ '%s' が作成されました。"
@@ -1813,17 +3712,8 @@ msgstr "リポジトリ '%s' が有効になりました。"
 msgid "Repository '%s' finished syncing successfully."
 msgstr "リポジトリ '%s' の同期が正常に終了しました。"
 
-msgid "Repository '%s' is already present in the template."
-msgstr "リポジトリ '%s' はすでにテンプレート内にあります。"
-
 msgid "Repository '%s' not found in the changeset"
 msgstr "リポジトリ '%s' が変更セット内で見つかりません"
-
-msgid "Repository '%s' not found in this environment."
-msgstr "リポジトリ '%s' がこの環境内で見つかりません。"
-
-msgid "Repository '%s' not found in this template."
-msgstr "リポジトリ '%s' がこのテンプレート内で見つかりません。"
 
 msgid "Repository '%s' removed."
 msgstr "リポジトリ '%s' が削除されました。"
@@ -1834,38 +3724,101 @@ msgstr "リポジトリ '%s' が更新されました。"
 msgid "Repository Comparison"
 msgstr "リポジトリの比較"
 
+#, fuzzy
+msgid "Repository Details"
+msgstr "リポジトリ"
+
+#, fuzzy
+msgid "Repository Discovery"
+msgstr "リポジトリ"
+
+msgid "Repository Discovery already in progress"
+msgstr ""
+
+#, fuzzy
+msgid "Repository Label"
+msgstr "リポジトリ"
+
+#, fuzzy
+msgid "Repository Name"
+msgstr "リポジトリ"
+
+#, fuzzy
+msgid "Repository Set"
+msgstr "リポジトリ"
+
+#, fuzzy
+msgid "Repository Url"
+msgstr "リポジトリ"
+
 msgid "Repository can be only created for custom provider."
 msgstr ""
 
-msgid ""
-"Repository cannot be deleted since it has already been promoted. Using a "
-"changeset, please delete the repository from existing environments before "
-"deleting it."
+msgid "Repository cannot be deleted since it has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it."
 msgstr "リポジトリはすでにプロモートされているため削除できません。変更セットを使用して、まず既存の環境からリポジトリを削除してからリポジトリの削除を行ってください。"
 
 msgid "Repository cannot be disabled since it has already been promoted."
 msgstr "リポジトリはすでにプロモート済みのため無効にできません。"
 
-msgid ""
-"Repository of the distribution '%s' has not been promoted into the target "
-"environment!"
+msgid "Repository has already been cloned to %{cv_name} in environment %{to_env}"
+msgstr ""
+
+#, fuzzy
+msgid "Repository has already been promoted to %{to_env}"
+msgstr "リポジトリはすでにプロモート済みのため無効にできません。"
+
+msgid "Repository of the distribution '%s' has not been promoted into the target environment!"
 msgstr "ディストリビューション '%s' のリポジトリは目的の環境にプロモートされていません!"
 
-msgid ""
-"Repository of the erratum '%s' has not been promoted into the target "
-"environment!"
+msgid "Repository of the erratum '%s' has not been promoted into the target environment!"
 msgstr "エラータ '%s' のリポジトリは目的の環境にプロモートされていません!"
 
-msgid ""
-"Repository of the package '%s' has not been promoted into the target "
-"environment!"
+msgid "Repository of the package '%s' has not been promoted into the target environment!"
 msgstr "パッケージ '%s' のリポジトリは目的の環境にプロモートされていません!"
+
+msgid "Repository sets are enabled by default for custom products."
+msgstr ""
+
+msgid "Repository sets are enabled by default for custom products.."
+msgstr ""
+
+msgid "Repository sets are not applicable for custom products.."
+msgstr ""
+
+msgid "Repository sets are not available for custom products."
+msgstr ""
+
+#, fuzzy
+msgid "Repository sets cannot be disabled for custom products."
+msgstr "リポジトリはすでにプロモート済みのため無効にできません。"
+
+#, fuzzy
+msgid "Request"
+msgstr "ゲスト"
 
 msgid "Request received has either an invalid or expired token. Token: '%s'"
 msgstr "受信した要求に無効なまたは期限切れのトークンが含まれています。トークン: '%s'"
 
+msgid "Required Host"
+msgstr ""
+
+msgid "Requires"
+msgstr ""
+
 msgid "Resource not found on the server"
 msgstr "サーバーにリソースが見つかりませんでした"
+
+msgid "Result"
+msgstr ""
+
+msgid "Results"
+msgstr ""
+
+msgid "Retry"
+msgstr ""
+
+msgid "Review"
+msgstr ""
 
 msgid "Role"
 msgstr "ロール"
@@ -1879,6 +3832,10 @@ msgstr "ロール '%s' が削除されました。"
 msgid "Role '%s' was updated."
 msgstr "ロール '%s' が更新されました。"
 
+#, fuzzy
+msgid "Role Details"
+msgstr "詳細"
+
 msgid "Roles"
 msgstr "ロール"
 
@@ -1888,11 +3845,141 @@ msgstr "すべてのユーザーのロールと LDAP グループとの同期が
 msgid "Route does not exist:"
 msgstr "ロートが存在していません:"
 
+#, fuzzy
+msgid "Running"
+msgstr "実行中です"
+
 msgid "Running."
 msgstr "実行中です"
 
+msgid "SLA"
+msgstr ""
+
+msgid "SLA: %s"
+msgstr ""
+
+msgid "SYSTEMS"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+#, fuzzy
+msgid "Save Architecture"
+msgstr "アーキテクチャーの選択"
+
+#, fuzzy
+msgid "Save Changeset"
+msgstr "+ 新規の変更セット"
+
+#, fuzzy
+msgid "Save Domain"
+msgstr "ドメイン"
+
+msgid "Save Model"
+msgstr ""
+
+#, fuzzy
+msgid "Save Roles"
+msgstr "ロールの読み込み"
+
+msgid "Save Smart Proxy"
+msgstr ""
+
+#, fuzzy
+msgid "Save Subnet"
+msgstr "サブネット"
+
+#, fuzzy
+msgid "Save User"
+msgstr "+ 新規のユーザー"
+
+msgid "Save as Favorite"
+msgstr ""
+
+msgid "Saving..."
+msgstr ""
+
+msgid "Scope"
+msgstr ""
+
+#, fuzzy
+msgid "Search"
+msgstr "コンテンツ検索"
+
+#, fuzzy
+msgid "Search Errata"
+msgstr "エラータ"
+
+msgid "Search for all packages with a specific requires:"
+msgstr ""
+
+msgid "Search for kernel in the title:"
+msgstr ""
+
+msgid "Search is not available for the current content"
+msgstr ""
+
+#, fuzzy
+msgid "Search packages"
+msgstr "すべてのパッケージ"
+
+#, fuzzy
+msgid "Search repositories"
+msgstr "Red Hat リポジトリ"
+
+msgid "Search..."
+msgstr ""
+
+msgid "Searching by exact name:"
+msgstr ""
+
+msgid "Searching by name and arch:"
+msgstr ""
+
+msgid "Searching by severity (critical, important, moderate, low allowed):"
+msgstr ""
+
+msgid "Searching by type (bugfix, security, enhancement allowed):"
+msgstr ""
+
+msgid "Searching for a specific arch:"
+msgstr ""
+
+msgid "Searching for a specific minor version:"
+msgstr ""
+
+msgid "Searching for all repositories containing the word \"Server\""
+msgstr ""
+
+msgid "Searching for an exact errata:"
+msgstr ""
+
+msgid "Searching for an exact package:"
+msgstr ""
+
+msgid "Searching starting with kernel:"
+msgstr ""
+
+msgid "Secondary DNS:"
+msgstr ""
+
+#, fuzzy
+msgid "Security"
+msgstr "タイプ: セキュリティ"
+
+msgid "Select All"
+msgstr ""
+
 msgid "Select Architecture"
 msgstr "アーキテクチャーの選択"
+
+msgid "Select Auto-attach Level..."
+msgstr ""
+
+#, fuzzy
+msgid "Select None"
+msgstr "組織を選択"
 
 msgid "Select Organization"
 msgstr "組織を選択"
@@ -1903,14 +3990,42 @@ msgstr "選択した製品に適用するプランを選択"
 msgid "Select Products to schedule"
 msgstr "スケジュールする製品を選択"
 
-msgid "Selected Distribution"
-msgstr "選択済みのディストリビューション"
+#, fuzzy
+msgid "Select Repositories: "
+msgstr "Red Hat リポジトリ"
+
+#, fuzzy
+msgid "Select System Groups."
+msgstr "システムグループを削除"
+
+msgid "Select a View"
+msgstr ""
+
+msgid "Select a set of repositories that you wish to compare the contents of by clicking the checkboxes inside the cells."
+msgstr ""
+
+msgid "Select all"
+msgstr ""
+
+#, fuzzy
+msgid "Select an Organization:"
+msgstr "組織を選択"
+
+msgid "Selected URLs"
+msgstr ""
 
 msgid "Service Level %s"
 msgstr "サービスレベル %s"
 
+msgid "Setting the release version limits content to this version only, preventing newer packages from being available for installation."
+msgstr ""
+
 msgid "Setup"
 msgstr ""
+
+#, fuzzy
+msgid "Severity"
+msgstr "重要度: 低"
 
 msgid "Severity: Critical"
 msgstr "重要度: クリティカル"
@@ -1924,11 +4039,70 @@ msgstr "重要度: 低"
 msgid "Severity: Moderate"
 msgstr "重要度: 中"
 
+#, fuzzy
+msgid "Shared"
+msgstr "クリアされました"
+
+msgid "Show"
+msgstr ""
+
+msgid "Show %P more"
+msgstr ""
+
+msgid "Show all results regardless of which columns they exist in."
+msgstr ""
+
+msgid "Show only results that do not exist in all selected columns."
+msgstr ""
+
+msgid "Show only results that exist in all selected columns."
+msgstr ""
+
+msgid "Signature"
+msgstr ""
+
+#, fuzzy
+msgid "Size (Packages)"
+msgstr "パッケージ"
+
+msgid "Smart Proxies"
+msgstr ""
+
+msgid "Smart Proxy"
+msgstr ""
+
+msgid "Sockets"
+msgstr ""
+
+msgid "Sockets: %s"
+msgstr ""
+
 msgid "Software"
 msgstr "ソフトウェア"
 
+msgid "Some changeset modifications have not finished processing, are you sure you want to leave the page?  By leaving you may lose some modifications."
+msgstr ""
+
+msgid "Sorry about that! It seems something went wrong.  If you continue having trouble with this, please contact an Administrator."
+msgstr ""
+
+msgid "Source RPMs"
+msgstr ""
+
+msgid "Stacking ID"
+msgstr ""
+
+msgid "Start"
+msgstr ""
+
+msgid "Start Date"
+msgstr ""
+
 msgid "Start Date and Time can't be blank"
 msgstr "開始日時は空白にしないでください"
+
+msgid "Start Time"
+msgstr ""
 
 msgid "Started content deletion from %{env} environment using '%{changeset}'"
 msgstr "'%{changeset}' を使用して %{env} 環境からコンテンツの削除を開始しました"
@@ -1936,17 +4110,64 @@ msgstr "'%{changeset}' を使用して %{env} 環境からコンテンツの削�
 msgid "Started content promotion to %{env} environment using '%{changeset}'"
 msgstr "'%{changeset}' を使用して %{env} 環境へのコンテンツのプロモートを開始しました"
 
+msgid "Started generating version %{view_version} of content view '%{view_name}'."
+msgstr ""
+
+msgid "Started publish of content view '%{view_name}' from definition '%{definition_name}'."
+msgstr ""
+
+msgid "Starts / Ends"
+msgstr ""
+
+#, fuzzy
+msgid "Status"
+msgstr "同期の状態"
+
+msgid "Strong"
+msgstr ""
+
 msgid "Subnet"
 msgstr "サブネット"
 
 msgid "Subnets"
 msgstr "サブネット"
 
-msgid "Subscription manifest delete for provider '%s' failed."
+msgid "Subscribe Systems To Content Views"
+msgstr ""
+
+#, fuzzy
+msgid "Subscription"
+msgstr "サブスクリプション"
+
+#, fuzzy
+msgid "Subscription Filter Options"
+msgstr "サブスクリプション"
+
+#, fuzzy
+msgid "Subscription Info"
+msgstr "サブスクリプション"
+
+msgid "Subscription Manager Applications"
+msgstr ""
+
+#, fuzzy
+msgid "Subscription Manifest"
+msgstr "サブスクリプション"
+
+#, fuzzy
+msgid "Subscription manifest delete for provider '%{name}' failed"
 msgstr "プロバイダー '%s' のサブスクリプションマニフェストの削除に失敗しました。"
 
 msgid "Subscription manifest deleted successfully for provider '%s'."
 msgstr "プロバイダー '%s' のサブスクリプションマニフェストが正常に削除されました。"
+
+#, fuzzy
+msgid "Subscription manifest import for provider '%s' skipped"
+msgstr "プロバイダー '%s' のサブスクリプションマニフェストのアップロードに失敗しました。"
+
+#, fuzzy
+msgid "Subscription manifest import for provider '%{name}' failed"
+msgstr "プロバイダー '%s' のサブスクリプションマニフェストのアップロードに失敗しました。"
 
 msgid "Subscription manifest must be specified on upload."
 msgstr "サブスクリプションマニフェストはアップロード時に指定する必要があります。"
@@ -1957,13 +4178,21 @@ msgstr "プロバイダー '%s' のサブスクリプションマニフェスト
 msgid "Subscription manifest uploaded successfully for provider '%s'."
 msgstr "プロバイダー '%s' のサブスクリプションマニフェストが正常にアップロードされました。"
 
-msgid ""
-"Subscription manifest uploaded successfully for provider '%s'. Please enable"
-" the repositories you want to sync by selecting 'Enable Repositories' and "
-"selecting individual repositories to be enabled."
+msgid "Subscription manifest uploaded successfully for provider '%s'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled."
 msgstr "プロバイダー '%s' のサブスクリプションマニフェストが正常にアップロードされました。同期するリポジトリを有効するには、「リポジトリを有効する」を選択し有効にする各リポジトリを選択します。"
 
 msgid "Subscriptions"
+msgstr "サブスクリプション"
+
+#, fuzzy
+msgid "Subscriptions are Current"
+msgstr "サブスクリプション"
+
+msgid "Subscriptions are Current Until %s"
+msgstr ""
+
+#, fuzzy
+msgid "Subscriptions are not Current"
 msgstr "サブスクリプション"
 
 msgid "Subscriptions successfully added to Activation Key '%s'."
@@ -1975,6 +4204,10 @@ msgstr "サブスクリプションがアクティベーションキー '%s' か
 msgid "Success"
 msgstr "成功"
 
+#, fuzzy
+msgid "Successful for distributor(s): "
+msgstr "次のシステムに対して成功しました: "
+
 msgid "Successful for system(s): "
 msgstr "次のシステムに対して成功しました: "
 
@@ -1984,8 +4217,14 @@ msgstr "システムがグループ '%s' に正常に追加されました。"
 msgid "Successfully deleted changeset '%s'."
 msgstr "変更セット '%s' が正常に削除されました。"
 
+msgid "Successfully generated content view '%{view_name}' version %{view_version}."
+msgstr ""
+
 msgid "Successfully promoted changeset '%s'."
 msgstr "変更セット '%s' が正常にプロモートされました。"
+
+msgid "Successfully published content view '%{view_name}' from definition '%{definition_name}'."
+msgstr ""
 
 msgid "Successfully removed organization '%s'."
 msgstr "組織 '%s' が正常に削除されました。"
@@ -1993,8 +4232,18 @@ msgstr "組織 '%s' が正常に削除されました。"
 msgid "Successfully removed system[s] from group '%s'."
 msgstr "グループ '%s' からシステムが正常に削除されました。"
 
-msgid "Successfully updated '%s' package filter."
-msgstr "'%s' パッケージフィルターが正常に更新されました。"
+#, fuzzy
+msgid "Successfully updated content for content view definition '%s'."
+msgstr "組織 '%s' が正常に削除されました。"
+
+msgid "Successfully updated environment and content view for all systems in group %{group}"
+msgstr ""
+
+msgid "Summary"
+msgstr ""
+
+msgid "Summary:"
+msgstr ""
 
 msgid "Super Admin"
 msgstr "スーパーアドミニストレーター"
@@ -2005,8 +4254,29 @@ msgstr "スーパーアドミニストレーターのパーミッション"
 msgid "Super administrator with all access."
 msgstr "すべてのアクセスを有するスーパーアドミニストレーターです。"
 
+#, fuzzy
+msgid "Support"
+msgstr "インポート"
+
+msgid "Support Level"
+msgstr ""
+
+msgid "Support Type"
+msgstr ""
+
+#, fuzzy
+msgid "Sync Canceled"
+msgstr "取り消されました"
+
+#, fuzzy
+msgid "Sync Cancelled"
+msgstr "取り消されました"
+
 msgid "Sync Management"
 msgstr "同期の管理"
+
+msgid "Sync Overview"
+msgstr ""
 
 msgid "Sync Plan '%s' was created."
 msgstr "同期プラン '%s' が作成されました。"
@@ -2032,6 +4302,10 @@ msgstr "同期の状態"
 msgid "Sync complete."
 msgstr "同期が完了しました。"
 
+#, fuzzy
+msgid "Sync plan"
+msgstr "同期のプラン"
+
 msgid "Sync plan '%s' was deleted."
 msgstr "同期プラン「%s」が削除されました。"
 
@@ -2044,6 +4318,10 @@ msgstr "同期のプランが割り当てられました。"
 msgid "Synchronization plan removed."
 msgstr "同期のプランが削除されました。"
 
+#, fuzzy
+msgid "Synchronize Now"
+msgstr "同期"
+
 msgid "System"
 msgstr "システム"
 
@@ -2052,6 +4330,18 @@ msgstr "システム「%s」が作成されました。"
 
 msgid "System '%s' was updated."
 msgstr "システム「%s」が更新されました。"
+
+#, fuzzy
+msgid "System Current Subscription(s)"
+msgstr "Red Hat サブスクリプション"
+
+#, fuzzy
+msgid "System Default"
+msgstr "システムテンプレート"
+
+#, fuzzy
+msgid "System Events"
+msgstr "システム"
 
 msgid "System Group"
 msgstr "システムグループ"
@@ -2065,13 +4355,18 @@ msgstr "システムグループ %s が削除されました。"
 msgid "System Group %s has been updated."
 msgstr "システムグループ %s が更新されました。"
 
-msgid ""
-"System Group %{new_group} created successfully as a copy of system group "
-"%{group}."
+msgid "System Group %{new_group} created successfully as a copy of system group %{group}."
 msgstr "システムグループ %{new_group} がシステムグループ %{group} のコピーとして正常に作成されました。"
 
 msgid "System Group Info"
 msgstr "システムグループ情報"
+
+#, fuzzy
+msgid "System Group Overview"
+msgstr "システムグループ"
+
+msgid "System Group does not exist.  Would you like to create it?"
+msgstr ""
 
 msgid "System Group maximum number of systems exceeded for group(s): %s"
 msgstr "グループに対してシステムグループのシステム数が最大値を越えました: %s"
@@ -2082,13 +4377,48 @@ msgstr "グループに対してシステムグループメンバーシップの
 msgid "System Groups"
 msgstr "システムグループ"
 
+msgid "System Groups allow you to create groups consisting of multiple systems and then use those groups to manage the systems.  This includes performing actions such as package and package group  installations, updates and removals as well as errata installations."
+msgstr ""
+
 msgid "System Info"
 msgstr "システム情報"
 
-msgid "System Template '%s' was created."
-msgstr "システムテンプレート '%s' が作成されました。"
+#, fuzzy
+msgid "System Information"
+msgstr "システム情報"
+
+#, fuzzy
+msgid "System Limit"
+msgstr "システム"
+
+msgid "System Notifications"
+msgstr ""
+
+#, fuzzy
+msgid "System Properties"
+msgstr "システムグループ"
+
+#, fuzzy
+msgid "System Registration Defaults"
+msgstr "このユーザーには設定されているシステム登録のデフォルトがありません。"
+
+#, fuzzy
+msgid "System Status"
+msgstr "同期の状態"
+
+#, fuzzy
+msgid "System Subscription Status"
+msgstr "システムのサブスクリプションが更新されました。"
 
 msgid "System Templates"
+msgstr "システムテンプレート"
+
+#, fuzzy
+msgid "System Type"
+msgstr "システムテンプレート"
+
+#, fuzzy
+msgid "System Type:"
 msgstr "システムテンプレート"
 
 msgid "System group is empty."
@@ -2096,6 +4426,10 @@ msgstr "システムグループが空です。"
 
 msgid "System subscriptions updated."
 msgstr "システムのサブスクリプションが更新されました。"
+
+#, fuzzy
+msgid "System with uuid %s not found"
+msgstr "ID が '%s' のエラータが見つかりません"
 
 msgid "System's environment not compatible with the group '%s'."
 msgstr "システムの環境はグループ '%s' との互換性がありません。"
@@ -2112,8 +4446,7 @@ msgstr "システムのバルク動作: システムグループに追加する:
 msgid "Systems Bulk Action: No errata IDs have been provided."
 msgstr "システムのバルク動作: エラータ ID が指定されていません。"
 
-msgid ""
-"Systems Bulk Action: No package or package group names have been provided."
+msgid "Systems Bulk Action: No package or package group names have been provided."
 msgstr "システムのバルク動作: パッケージ名またはパッケージグループ名が指定されていません。"
 
 msgid "Systems Bulk Action: Remove from system group(s): %s"
@@ -2146,86 +4479,105 @@ msgstr "システムのバルク動作: パッケージの更新をスケジュ�
 msgid "Systems [%s] not found."
 msgstr "システム [%s] が見つかりません。"
 
-msgid "Template"
-msgstr "テンプレート"
+msgid "TITLE"
+msgstr ""
 
-msgid "Template %s has been updated successfully"
-msgstr "テンプレート '%s' が正しく更新されました"
+msgid "TYPE"
+msgstr ""
 
-msgid "Template %s updated successfully."
-msgstr "テンプレート '%s' が正しく更新されました"
-
-msgid ""
-"Template '%s' has been updated successfully, however you have removed either"
-" a product or repository that contained the selected distribution for this "
-"template.  Please select another distribution to ensure a working system "
-"template."
-msgstr "テンプレート '%s' は正しく更新されましたが、このテンプレート用に選択されたディストリビューションを含む製品またはリポジトリのいずれかが削除されました。システムテンプレートが正しく動作するように別のディストリビューションを選択してください。"
-
-msgid "Template '%s' not found in the changeset"
-msgstr "テンプレート '%s' が変更セット内で見つかりません"
-
-msgid "Template '%s' was deleted."
-msgstr "テンプレート '%s' が削除されました。"
-
-msgid "Template can have parent templates only from the same environment"
-msgstr "テンプレートには同じ環境の親テンプレートのみ含めることが可能です。"
-
-msgid "Template cannot be exported"
-msgstr "テンプレートはエクスポートできません"
-
-msgid "Template imported"
-msgstr "テンプレートがインポートされました"
-
-msgid "Templates"
-msgstr "テンプレート"
-
-msgid "Templates can be updated only in the '%s' environment"
-msgstr "テンプレートは '%s' 環境でのみ更新できます"
+msgid "Tftp:"
+msgstr ""
 
 msgid "The '%s' environment cannot contain a changeset!"
 msgstr "'%s' 環境には変更セットを含めることができません!"
 
-msgid ""
-"The current organization cannot be deleted. Please switch to a different "
-"organization before deleting."
+msgid "The amount of RAM memory, in megabytes (MB), which this system has"
+msgstr ""
+
+msgid "The class of CPU supplied in this machine. This is primarily used by Sparc Solaris builds and can be left blank for other architectures."
+msgstr ""
+
+msgid "The class of the machine reported by the Open Boot Prom. This is primarily used by Sparc Solaris builds and can be left blank for other architectures."
+msgstr ""
+
+msgid "The current organization cannot be deleted. Please switch to a different organization before deleting."
 msgstr "現在の組織を削除できません。別の組織に切り替えてから削除してください。"
 
-msgid "The environment still has content that belongs to product '%s'."
-msgstr "この環境には製品 '%s' に属するコンテンツがまだ残っています。"
+msgid "The definition consists of component content views that share the same repository; therefore, it cannot be published.  Please visit the Content pane to resolve this issue."
+msgstr ""
 
-msgid ""
-"The label requested is already used by another %s; therefore, a unique label"
-" was assigned.  If you would like a different label, please delete the %s "
-"and recreate it with a unique label.  Requested label: %s, Assigned label: "
-"%s"
+msgid "The definition consists of component content views that share the same repository; therefore, views cannot be refreshed.  Please visit the Content pane to resolve this issue."
+msgstr ""
+
+msgid "The following content views were automatically added to changeset '%{changeset}' for composite view '%{composite_view}': %{component_views}"
+msgstr ""
+
+msgid "The following repositories are currently syncing.  It is recommended that you wait for them to complete before continuing the promotion."
+msgstr ""
+
+msgid "The following repositories encountered an error on their last sync.  It is highly recommended to fix these errors and resync before promoting.  Ignoring these may result in a broken repository in the %s environment."
+msgstr ""
+
+msgid "The label requested is already used by another %s; therefore, a unique label was assigned.  If you would like a different label, please delete the %s and recreate it with a unique label.  Requested label: %s, Assigned label: %s"
 msgstr "要求されたラベルはすでに %s により使用されているため、別の一意のレベルが割り当てられました。異なるラベルにしたい場合は、%s を削除して、一意のラベルで再度作成してください。要求されたラベル: %s、割り当てられたラベル: %s"
 
-msgid ""
-"The selected system groups (%s) are not compatible with the selected "
-"environment."
+#, fuzzy
+msgid "The number of CPU Sockets or LPARs which this system uses"
+msgstr "システム %s に対するソケット数は 0 より大きくなければなりません。"
+
+msgid "The password should not contain the username."
+msgstr ""
+
+msgid "The passwords do not match"
+msgstr ""
+
+#, fuzzy
+msgid "The selected environment is not the last environment in its promotion path.  Only the last environment can be deleted."
+msgstr "環境 %s より後に別の環境があります。 一つのパス上で削除できるのは最後の環境のみです。"
+
+msgid "The selected system groups (%s) are not compatible with the selected environment."
 msgstr "選択したシステムグループ (%s) には、選択されている環境との互換性がありません。"
 
-msgid ""
-"The system registration default you supplied was the same as the old system "
-"registration default."
+msgid "The system registration default you supplied was the same as the old system registration default."
 msgstr "指定したシステムの登録先デフォルト設定は古い登録先デフォルト設定と同じでした。"
 
-msgid "The template has children templates."
-msgstr "テンプレートには、子のテンプレートが含まれています。"
+msgid "There are %d products having repositories that could not be created."
+msgstr ""
 
-msgid ""
-"There is already a repo with the label [ %{repo} ] for product [ %{product} "
-"]"
-msgstr "製品 [ %{product} ] には [ %{repo} ] というラベルのリポジトリがすでに存在します"
+msgid "There are currently no Global permissions for this role.  Please click Add Permission in the action bar below to add a Global permission.  A Global permission is one that cuts across all organizations."
+msgstr ""
 
-msgid ""
-"There is already a repo with the name [ %{repo} ] for product [ %{product} ]"
-msgstr "製品 [ %{product} ] には [ %{repo} ] という名前のリポジトリがすでに存在します。"
+msgid "There are currently no permissions for this organization.  Please click Add Permission in the action bar below to add a permission to this organization."
+msgstr ""
 
-msgid ""
-"There is already an active sync process for the '%s' repository. Please try "
-"again later"
+msgid "There are currently no subscriptions attached to the distributor"
+msgstr ""
+
+msgid "There are currently no subscriptions attached to the system"
+msgstr ""
+
+msgid "There are no errata that need to be applied to registered systems."
+msgstr ""
+
+msgid "There are no events to display."
+msgstr ""
+
+msgid "There are no more subscriptions available."
+msgstr ""
+
+msgid "There are no packages to display."
+msgstr ""
+
+msgid "There are no products or repositories enabled. Try enabling via %{custom} or %{redhat}."
+msgstr ""
+
+msgid "There are no products to display."
+msgstr ""
+
+msgid "There are no tags for the resource type you have chosen."
+msgstr ""
+
+msgid "There is already an active sync process for the '%s' repository. Please try again later"
 msgstr "'%s' リポジトリにはすでにアクティブな同期プロセスがあります。後ほど再度お試しください。"
 
 msgid "There must be at least one plan selected"
@@ -2234,16 +4586,94 @@ msgstr "1 つ以上のプランを選択する必要があります"
 msgid "There must be at least one product selected"
 msgstr "1 つ以上の製品を選択する必要があります"
 
-msgid ""
-"There were errors syncing repository '%s'. See notices page for more "
-"details."
+msgid "There was an error retrieving that row:"
+msgstr ""
+
+msgid "There were errors syncing repository '%s'. See notices page for more details."
 msgstr "リポジトリ '%s' の同期中にエラーが発生しました。詳細については通知ページを参照してください。"
+
+msgid "This GPG Key is not currently assigned to any products or repositories."
+msgstr ""
 
 msgid "This action doesn't support pacakge groups"
 msgstr "このアクションはパッケージグループに対応していません。"
 
+msgid "This activation key is not currently associated with a System Group."
+msgstr ""
+
+msgid "This activation key is not currently associated with a System."
+msgstr ""
+
+msgid "This changeset contains no content."
+msgstr ""
+
+msgid "This changeset is currently being applied."
+msgstr ""
+
+msgid "This content view has one or more repositories in common with a view that is currently selected."
+msgstr ""
+
+msgid "This feed has already been found in one or more existing repositories:"
+msgstr ""
+
 msgid "This is your default organization."
 msgstr "これがデフォルトの組織になります。"
+
+#, fuzzy
+msgid "This system is not currently associated with a System Group."
+msgstr "システムグループに関連付けるシステム数より少なくすることはできません。"
+
+msgid "This table allows you to initiate package or package group installs and removals.  Simply select either Packages or Package groups, enter a comma-separated list of names in the box provided and click either +Add or -Remove."
+msgstr ""
+
+msgid "This table allows you to initiate package or package group installs, updates and removals.  Simply select either Packages or Package groups, enter a comma-separated list of names in the box provided and click either Install, Update or Remove.  Note: for any given package or package group, there may only be 1 action in progress at a time."
+msgstr ""
+
+msgid "This table allows you to initiate package updates or removals as well as update all packages.  In order to update or remove packages, simply select the packages you are interested in and click Update or Remove.  In order to update all packages, click Update All when no packages are selected."
+msgstr ""
+
+msgid "This table shows you the status of any pending package or package group actions on the system group."
+msgstr ""
+
+msgid "This will completely remove those systems."
+msgstr ""
+
+msgid "This will override any GPG keys already associated with a repository within this product"
+msgstr ""
+
+msgid "Time"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Title: "
+msgstr ""
+
+msgid "To IP:"
+msgstr ""
+
+msgid "To submit a new bug please visit %s."
+msgstr ""
+
+msgid "To view the details of an item on the left, simply click on a single row.<br/><br/>To select multiple rows, hold the Control Key and click multiple rows.<br/><br/>If you don't need this help anymore, please click the close button in the top right of this box."
+msgstr ""
+
+msgid "Total"
+msgstr ""
+
+#, fuzzy
+msgid "Total Systems"
+msgstr "システムの読み込み"
+
+msgid "Type"
+msgstr ""
+
+msgid "Type must be one of the following [ %{list} ]"
+msgstr ""
+
+msgid "Type:"
+msgstr ""
 
 msgid "Type: Bug Fix"
 msgstr "タイプ: バグ修正"
@@ -2254,6 +4684,15 @@ msgstr "タイプ: 拡張機能"
 msgid "Type: Security"
 msgstr "タイプ: セキュリティ"
 
+msgid "URL"
+msgstr ""
+
+msgid "URL:"
+msgstr ""
+
+msgid "UUID"
+msgstr ""
+
 msgid "Unable to determine quantity for pool %s"
 msgstr "プール %s の数量を決定できません"
 
@@ -2263,44 +4702,50 @@ msgstr "パッケージ %s が見つかりません"
 msgid "Unable to parse repositories: %s"
 msgstr "リポジトリの解析ができません: %s"
 
-msgid ""
-"Unable to retrieve release versions from Repository URL %{url}. Error "
-"message: %{error}"
+msgid "Unable to retrieve release versions from Repository URL %{url}. Error message: %{error}"
 msgstr "リポジトリ URL %{url} からリリースバージョンを取得できません。エラーメッセージ: %{error}"
 
 msgid "Unable to retrieve subscription history for provider '%{name}'."
 msgstr "プロバイダー '%{name}' のサブスクリプション履歴を取得できません。"
 
-msgid ""
-"Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}'"
-" failed.  Reason: %{message}"
+msgid "Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
 msgstr "システムグループ '%{name}' に対してスケジュールされたパッケージグループ '%{groups}' のアンインストールが失敗しました。原因: %{message}"
 
-msgid ""
-"Uninstall of Package Groups '%{groups}' scheduled for System Group "
-"'%{name}'."
+msgid "Uninstall of Package Groups '%{groups}' scheduled for System Group '%{name}'."
 msgstr "システムグループ '%{name}' に対してパッケージグループ '%{groups}' のアンインストールがスケジュールされました。"
 
 msgid "Uninstall of Package Groups '%{p}' scheduled for System '%{s}'."
 msgstr "パッケージグループ '%{p}' のアンインストールがシステム '%{s}' に対してスケジュールされました。"
 
-msgid ""
-"Uninstall of Packages '%{packages}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
+msgid "Uninstall of Packages '%{packages}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
 msgstr "システムグループ '%{name}' に対してスケジュールされたパッケージ '%{packages}' のアンインストールが失敗しました。原因: %{message}"
 
-msgid ""
-"Uninstall of Packages '%{packages}' scheduled for System Group '%{name}'."
+msgid "Uninstall of Packages '%{packages}' scheduled for System Group '%{name}'."
 msgstr "システムグループ '%{name}' に対してパッケージ '%{packages}' のアンインストールがスケジュールされました。"
 
 msgid "Uninstall of Packages '%{p}' scheduled for System '%{s}'."
 msgstr "パッケージ '%{p}' のアンインストールがシステム '%{s}' に対してスケジュールされました。"
 
+msgid "Union"
+msgstr ""
+
+msgid "Union:"
+msgstr ""
+
+msgid "Unique"
+msgstr ""
+
 msgid "Units"
 msgstr "ユニット"
 
+msgid "Unknown"
+msgstr ""
+
 msgid "Unknown changeset type, must be PROMOTION or DELETION: %s"
 msgstr "変更セットのタイプが不明です、プロモーション用または削除用にしてください: %s"
+
+msgid "Unknown provider type. Choose one of: %s"
+msgstr ""
 
 msgid "Unknown registration date"
 msgstr "不明な登録日"
@@ -2308,18 +4753,45 @@ msgstr "不明な登録日"
 msgid "Unknown repository label: %s"
 msgstr "不明なリポジトリラベル: %s"
 
-msgid ""
-"Update of Package Groups '%{groups}' scheduled for System Group '%{name}' "
-"failed.  Reason: %{message}"
+msgid "Unlimited"
+msgstr ""
+
+msgid "Unsupported URL protocol %s."
+msgstr ""
+
+msgid "Up to date"
+msgstr ""
+
+#, fuzzy
+msgid "Update"
+msgstr "パッケージの更新"
+
+msgid "Update All"
+msgstr ""
+
+#, fuzzy
+msgid "Update Package Canceled"
+msgstr "パッケージの更新が取り消されました"
+
+#, fuzzy
+msgid "Update Package Complete"
+msgstr "パッケージの更新が完了"
+
+#, fuzzy
+msgid "Update Package Error"
+msgstr "パッケージを更新しています..."
+
+#, fuzzy
+msgid "Update Package Timeout"
+msgstr "パッケージグループを更新しています..."
+
+msgid "Update of Package Groups '%{groups}' scheduled for System Group '%{name}' failed.  Reason: %{message}"
 msgstr "システムグループ '%{name}' に対してスケジュールされたパッケージグループ '%{groups}' の更新が失敗しました。原因: %{message}"
 
-msgid ""
-"Update of Package Groups '%{groups}' scheduled for System Group '%{name}'."
+msgid "Update of Package Groups '%{groups}' scheduled for System Group '%{name}'."
 msgstr "システムグループ '%{name}' に対してパッケージグループ '%{groups}' の更新がスケジュールされました。"
 
-msgid ""
-"Update of Packages '%{packages}' scheduled for System Group '%{group}' "
-"failed.  Reason: %{message}"
+msgid "Update of Packages '%{packages}' scheduled for System Group '%{group}' failed.  Reason: %{message}"
 msgstr "システムグループ '%{group}' に対してスケジュールされたパッケージ '%{packages}' の更新が失敗しました。原因: %{message}"
 
 msgid "Update of Packages '%{packages}' scheduled for System Group '%{name}'."
@@ -2331,11 +4803,35 @@ msgstr "パッケージ '%{p}' の更新がシステム '%{s}' に対してス�
 msgid "Update of all packages scheduled for System '%s'."
 msgstr "すべてのパッケージの更新がシステム '%s' に対してスケジュールされました。"
 
+msgid "Updated"
+msgstr ""
+
+#, fuzzy
+msgid "Updates"
+msgstr "テンプレート"
+
 msgid "Updating Package..."
 msgstr "パッケージを更新しています..."
 
 msgid "Updating package group..."
 msgstr "パッケージグループを更新しています..."
+
+msgid "Upload"
+msgstr ""
+
+#, fuzzy
+msgid "Upload New Manifest"
+msgstr "+ マニフェストのインポート"
+
+msgid "Uploading"
+msgstr ""
+
+#, fuzzy
+msgid "Upstream Distributor"
+msgstr "選択済みのディストリビューション"
+
+msgid "Usage Limit"
+msgstr ""
 
 msgid "Usage limit (%{limit}) exhausted for activation key '%{name}'"
 msgstr "アクティベーションキー '%{name}' の使用限度 (%{limit}) を使い切りました"
@@ -2355,11 +4851,20 @@ msgstr "ユーザー '%{username}' がロール '%{rolename}' に割り当てら
 msgid "User '%{username}' unassigned from role '%{rolename}'"
 msgstr "ロール '%{rolename}' からユーザー '%{username}' の割り当てが解除されました"
 
+msgid "User Notifications"
+msgstr ""
+
 msgid "User System Registration Environment updated successfully."
 msgstr "ユーザーのシステム登録の環境が正しく更新されました。"
 
+msgid "User assignments for this role"
+msgstr ""
+
 msgid "User does not belong to an organization."
 msgstr "ユーザーは組織に属していません。"
+
+msgid "User notifications lists all notifications generated by a user as well as global notifications that are sent to all users."
+msgstr ""
 
 msgid "User updated successfully."
 msgstr "ユーザーが正常に更新されました。"
@@ -2367,59 +4872,173 @@ msgstr "ユーザーが正常に更新されました。"
 msgid "Username"
 msgstr "ユーザー名"
 
+#, fuzzy
+msgid "Username:"
+msgstr "ユーザー名"
+
 msgid "Users"
 msgstr "ユーザー"
+
+msgid "VLAN:"
+msgstr ""
+
+msgid "Validation Failed:"
+msgstr ""
 
 msgid "Validation failed: Label has already been taken"
 msgstr "検証が失敗しました: ラベルはすでに使用されています"
 
+msgid "Value"
+msgstr ""
+
+msgid "Vendor class:"
+msgstr ""
+
+msgid "Verb(s):"
+msgstr ""
+
+msgid "Verbs"
+msgstr ""
+
 msgid "Version"
 msgstr "バージョン"
+
+msgid "Very Weak"
+msgstr ""
+
+msgid "View"
+msgstr ""
+
+msgid "View %{view} has not been promoted to %{env}"
+msgstr ""
+
+msgid "View Definition"
+msgstr ""
+
+msgid "View: "
+msgstr ""
+
+msgid "Viewing %C of %T"
+msgstr ""
+
+msgid "Viewing %X of %Y results"
+msgstr ""
+
+msgid "Viewing %X of %Y results (%Z Total)"
+msgstr ""
+
+msgid "Viewing %{current} of %{results} results (%{items} Total %{name})"
+msgstr ""
+
+msgid "Viewing %{n} of %{t} results (%{t} Total Errata)"
+msgstr ""
+
+msgid "Views"
+msgstr ""
+
+msgid "Virt Guest From"
+msgstr ""
 
 msgid "Virtual"
 msgstr "仮想"
 
+#, fuzzy
+msgid "Virtual Guest"
+msgstr "仮想"
+
+#, fuzzy
+msgid "Virtual Only"
+msgstr "仮想"
+
+msgid "Waiting"
+msgstr ""
+
+msgid "Warning"
+msgstr ""
+
+msgid "Weak"
+msgstr ""
+
 msgid "Welcome Back"
 msgstr "おかえりなさい"
 
-msgid ""
-"Wrong/Invalid parameters sent for %{controller}/%{action}.\\n Wrong "
-"Parameters: \\n%{params}\\n Parameters Received:\\n %{all_params} "
+msgid "Wrong/Invalid parameters sent for %{controller}/%{action}.\\n Wrong Parameters: \\n%{params}\\n Parameters Received:\\n %{all_params} "
 msgstr "%{controller}/%{action} の不適切/無効なパラメーターが送信されました。\\n 不適切なパラメーター: \\n%{params}\\n 受け取ったパラメーター:\\n %{all_params} "
+
+msgid "Yes"
+msgstr ""
+
+msgid "You are not authorised to perform this action."
+msgstr ""
+
+msgid "You can run %s action to fix this. Note that it can take some time to complete."
+msgstr ""
 
 msgid "You can synchronize repositories only in library environment'"
 msgstr "ライブラリ環境にあるリポジトリのみを同期できます。"
 
-msgid ""
-"You cannot have more than %{max_systems} system(s) associated with system "
-"group '%{group}'."
+msgid "You cannot have more than %{max_systems} system(s) associated with system group '%{group}'."
 msgstr "%{max_systems} 以上のシステムをシステムグループ '%{group}' に関連付けることはできません。"
 
-msgid ""
-"You do not have valid credentials to access this system. Please contact your"
-" administrator."
+#, fuzzy
+msgid "You do not currently have access to any organizations.  Please contact an administrator to get permission to access an organization."
+msgstr "ログインに成功しました、管理者に連絡して組織にアクセスできるパーミッションを取得してください。"
+
+msgid "You do not have access to access contents in %s"
+msgstr ""
+
+#, fuzzy
+msgid "You do not have permissions to view changesets for %s. Please contact your administrator to gain access."
 msgstr "このシステムにアクセスする有効な資格情報がありません。管理者に連絡してください。"
 
-msgid ""
-"You have entered an incorrect username/password combination, or your account"
-" may currently be disabled. Please try again or contact your administrator."
+msgid "You do not have valid credentials to access this system. Please contact your administrator."
+msgstr "このシステムにアクセスする有効な資格情報がありません。管理者に連絡してください。"
+
+msgid "You have entered an incorrect username/password combination, or your account may currently be disabled. Please try again or contact your administrator."
 msgstr "入力したユーザー名とパスワードの組み合わせが誤っているか、 現在ユーザーのアカウントが無効になっている可能性があります。 もう一度やり直すか、 管理者に連絡してください。"
 
-msgid ""
-"You have not set a default organization and environment on the user %s."
+msgid "You have no assigned roles."
+msgstr ""
+
+msgid "You have not set a default organization and environment on the user %s."
 msgstr "ユーザー %s にデフォルトの組織および環境を設定していません。"
+
+msgid "You have selected all resource types; this will grant full access to the organization. Press the Cancel button to select an individual resource type."
+msgstr ""
+
+msgid "You may have mistyped the address or the page may have moved."
+msgstr ""
+
+msgid "You might want to log out and log back in again to clear your cookies."
+msgstr ""
 
 msgid "You must be logged in to access that page."
 msgstr "そのページにアクセスするにはログインする必要があります。"
 
-msgid ""
-"Your current organization is no longer valid. It is possible that either the"
-" organization has been deleted or your permissions revoked, please log back "
-"in to continue."
+msgid "You must select an organization above before you can add a permission."
+msgstr ""
+
+msgid "You must select and view a permission before you can edit it."
+msgstr ""
+
+#, fuzzy
+msgid "You must select at least one verb."
+msgstr "システムグループを少なくともひとつ選択してください。"
+
+msgid "You need to create an environment for this org before you can create a distributor."
+msgstr ""
+
+msgid "You need to create an environment for this org before you can create a system."
+msgstr ""
+
+msgid "Your current organization is no longer valid. It is possible that either the organization has been deleted or your permissions revoked, please log back in to continue."
 msgstr "現在の組織は無効になりました。 組織が削除されたかユーザーのパーミッションが取り消された可能性があります。 ログインし直してから続行してください。"
 
 msgid "Your default environment has been removed. Please choose another one."
 msgstr "デフォルトの環境が削除されています。別のデフォルト環境を選択してください。"
+
+msgid "Your update has applied successfully, but during that time another user has also made an update."
+msgstr ""
 
 msgid "all packages"
 msgstr "すべてのパッケージ"
@@ -2439,10 +5058,20 @@ msgstr "空白にしないでください"
 msgid "cannot be a binary file."
 msgstr "バイナリーファイルは指定できません"
 
-msgid "cannot contain characters other than ASCII values"
+#, fuzzy
+msgid "cannot be blank"
+msgstr "空白にしないでください"
+
+#, fuzzy
+msgid "cannot contain blank keynames"
+msgstr "%s 文字以上を含めることはできません"
+
+#, fuzzy
+msgid "cannot contain characters >, <, or /"
 msgstr "ASCII 値以外の文字を含めることはできません"
 
-msgid "cannot contain characters other than alpha numerals, space,'_', '-'."
+#, fuzzy
+msgid "cannot contain characters other than alpha numerals, space, '_', '-'"
 msgstr "英数字、空白、アンダースコア (_)、ハイフン (-) 以外の文字を含めることはできません。"
 
 msgid "cannot contain characters other than ascii alpha numerals, '_', '-'. "
@@ -2451,11 +5080,24 @@ msgstr "ASCII 英数字、アンダースコア (_)、ハイフン (-) 以外の
 msgid "cannot contain more than %s characters"
 msgstr "%s 文字以上を含めることはできません"
 
+msgid "cannot contain products, or repositories if it contains views"
+msgstr ""
+
+#, fuzzy
+msgid "content view '%s' not found in the changeset"
+msgstr "テンプレート '%s' が変更セット内で見つかりません"
+
+msgid "currently editing this changeset"
+msgstr ""
+
 msgid "daily"
 msgstr "毎日"
 
-msgid "environment"
-msgstr "環境"
+msgid "delete"
+msgstr ""
+
+msgid "displayed"
+msgstr ""
 
 msgid "environment can only have one child"
 msgstr "環境が所有できる子は 1 つのみです"
@@ -2465,6 +5107,10 @@ msgstr "必須の環境"
 
 msgid "hourly"
 msgstr "毎時"
+
+#, fuzzy
+msgid "import"
+msgstr "インポート"
 
 msgid "installing errata..."
 msgstr "エラータをインストールしています..."
@@ -2484,17 +5130,16 @@ msgstr "パッケージをインストールしています..."
 msgid "installing packages..."
 msgstr "パッケージをインストールしています..."
 
-msgid "is already in the template"
-msgstr "はすでにテンプレートにあります"
-
 msgid "is invalid"
 msgstr "は無効です"
 
 msgid "katello-jobs service not running"
 msgstr "katello-jobs サービスは実行していません"
 
-msgid ""
-"may not be less than the number of systems associated with the system group."
+msgid "link"
+msgstr ""
+
+msgid "may not be less than the number of systems associated with the system group."
 msgstr "システムグループに関連付けるシステム数より少なくすることはできません。"
 
 msgid "may not be set to 0."
@@ -2512,12 +5157,6 @@ msgstr "現在の使用量 (%s) より高い数値にするか無制限にしな
 msgid "must be one of %s"
 msgstr "%s のうちのひとつにしてください"
 
-msgid "must be unique within an organization scope"
-msgstr "組織スコープ内で一意である必要があります。"
-
-msgid "must be unique within one environment"
-msgstr "1 環境で一意である必要があります"
-
 msgid "must be unique within one organization"
 msgstr "1 組織で一意である必要があります"
 
@@ -2530,6 +5169,9 @@ msgstr "'%s' を含むようにしてください"
 msgid "must contain at least %s character"
 msgstr "少なくとも %s 文字以上にしてください"
 
+msgid "must include a keyname and value"
+msgstr ""
+
 msgid "must not contain leading or trailing white spaces."
 msgstr "先頭または末尾に空白を含むことはできません。"
 
@@ -2539,20 +5181,23 @@ msgstr "名前: %s は存在しません"
 msgid "none"
 msgstr "なし"
 
+msgid "of Unlimited"
+msgstr ""
+
 msgid "of environment must be unique within one organization"
 msgstr "環境名は 1 組織内で一意である必要があります"
 
-msgid "organization"
-msgstr "組織"
-
-msgid "organization_id required but not specified."
-msgstr "organization_id が必要ですが指定されていません。"
+msgid "or"
+msgstr ""
 
 msgid "plan"
 msgstr "プラン"
 
 msgid "product"
 msgstr "製品"
+
+msgid "promote_confirm"
+msgstr ""
 
 msgid "removing package group..."
 msgstr "パッケージグループを削除しています..."
@@ -2566,11 +5211,12 @@ msgstr "パッケージを削除しています..."
 msgid "removing packages..."
 msgstr "パッケージを削除しています..."
 
-msgid "repository"
+#, fuzzy
+msgid "repository refresh"
 msgstr "リポジトリ"
 
-msgid "template"
-msgstr "テンプレート"
+msgid "results."
+msgstr ""
 
 msgid "the %s Bugzilla"
 msgstr "%s Bugzilla"
@@ -2578,8 +5224,7 @@ msgstr "%s Bugzilla"
 msgid "the CloudForms Documentation"
 msgstr "CloudForms ドキュメンテーション"
 
-msgid ""
-"the following attributes can not be updated for the Red Hat provider: [ %s ]"
+msgid "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr "Red Hat プロバイダーに対し、次の属性は更新できません: [ %s ]"
 
 msgid "updating package group..."
@@ -2594,5 +5239,237 @@ msgstr "パッケージを更新しています..."
 msgid "updating packages..."
 msgstr "パッケージを更新しています..."
 
+#, fuzzy
+msgid "version %s"
+msgstr "バージョン"
+
 msgid "weekly"
 msgstr "毎週"
+
+#~ msgid "+ New Filter"
+#~ msgstr "+ 新規のフィルター"
+
+#~ msgid "+ New Template"
+#~ msgstr "+ 新規のテンプレート"
+
+#~ msgid "Added package group '%s'"
+#~ msgstr "パッケージグループ '%s' を追加しました"
+
+#~ msgid "Added package group category '%s'"
+#~ msgstr "パッケージグループカテゴリ '%s' を追加しました"
+
+#~ msgid "Administer Package Filters"
+#~ msgstr "パッケージフィルターの管理"
+
+#~ msgid "Administer System Templates"
+#~ msgstr "システムテンプレートの管理"
+
+#~ msgid "At least repository must be present to export a TDL"
+#~ msgstr "TDL のエクスポートにはリポジトリが必要になります。"
+
+#~ msgid "Cannot export templates for the '%s' environment."
+#~ msgstr "'%s' 環境のテンプレートをエクスポートできません"
+
+#~ msgid "Cannot validate templates for the '%s' environment."
+#~ msgstr "'%s' 環境のテンプレートを検証できません。"
+
+#~ msgid "Couldn't find filter '%s'"
+#~ msgstr "フィルター '%s' が見つかりませんでした"
+
+#~ msgid "Couldn't find template '%s'"
+#~ msgstr "テンプレート '%s' が見つかりませんでした"
+
+#~ msgid "Delete Package Filters"
+#~ msgstr "パッケージフィルターを削除"
+
+#~ msgid "Deleted filter '%s'"
+#~ msgstr "フィルター '%s' を削除しました"
+
+#~ msgid "Deleted system template '%s'"
+#~ msgstr "システムテンプレート '%s' を削除しました"
+
+#~ msgid "Distribution '%s' not found in this template."
+#~ msgstr "ディストリビューション '%s' がこのテンプレート内で見つかりません。"
+
+#~ msgid "Distribution '%s' was not found in Pulp."
+#~ msgstr "ディストリビューション '%s' が Pulp 内で見つかりませんでした。"
+
+#~ msgid "Distribution '%{id}' not found in the '%{name}' environment"
+#~ msgstr "ディストリビューション '%{id}' が '%{name}' 環境内で見つかりません"
+
+#~ msgid "Exactly one distribution must be present to export a TDL"
+#~ msgstr "TDL をエクスポートするには、ディストリビューションが 1 つ存在する必要があります。"
+
+#~ msgid "Filter %s created successfully."
+#~ msgstr "フィルター %s が正常に作成されました。"
+
+#~ msgid "Filtered Packages"
+#~ msgstr "フィルターされるパッケージ"
+
+#~ msgid "Filters assigned to repository or product of erratum '%s' block it from promotion!"
+#~ msgstr "エラータ「%s」の製品またはリポジトリに割り当てられているフィルターによってプロモージョンの実行がブロックされています。"
+
+#~ msgid "Filters can be stored only in the '%s' repositories."
+#~ msgstr "フィルターを格納できるのは '%s' リポジトリのみです。"
+
+#~ msgid "Login Successful"
+#~ msgstr "ログインが成功しました"
+
+#~ msgid "Login Successful, logging into '%s' "
+#~ msgstr "ログインに成功しました、「%s」にログインしています"
+
+#~ msgid "Login Successful, please choose an Organization"
+#~ msgstr "ログインに成功しました、組織を選択してください"
+
+#~ msgid "Modify Package Filters"
+#~ msgstr "パッケージフィルターを変更"
+
+#~ msgid "Must be unique within an environment"
+#~ msgstr "環境内で一意でなければなりません"
+
+#~ msgid "Name must be unique within one organization"
+#~ msgstr "名前は 1 組織内で一意である必要があります"
+
+#~ msgid "New templates can be created only in the '%s' environment"
+#~ msgstr "新しいテンプレートを作成できるのは '%s' 環境内のみです"
+
+#~ msgid "New templates can be imported only into the '%s' environment"
+#~ msgstr "新しいテンプレートをインポートできるのは '%s' 環境内のみです"
+
+#~ msgid "No Template"
+#~ msgstr "テンプレートがありません"
+
+#~ msgid "Not enough subscriptions in pools (%{size}), required: %{required}, available: %{available}"
+#~ msgstr "プールに十分なサブスクリプションがありません (%{size})。必要: %{required}、利用可能: %{available}"
+
+#~ msgid "Number of attached subscriptions exceeded quantity for %s"
+#~ msgstr "割り当て済みサブスクリプション数が %s の数量を超過しました"
+
+#~ msgid "Package '%s' is already present in the template"
+#~ msgstr "パッケージ '%s' はテンプレートにすでに含まれております。"
+
+#~ msgid "Package '%{package}' not found in the %{env} environment"
+#~ msgstr "パッケージ '%{package}' が %{env} 環境内で見つかりません"
+
+#~ msgid "Package Filter '%s' has been updated."
+#~ msgstr "パッケージフィルター '%s' を更新しました。"
+
+#~ msgid "Package group '%s' not found in this template."
+#~ msgstr "パッケージグループ '%s' がこのテンプレート内で見つかりません。"
+
+#~ msgid "Package group '%{group}' not found in the %{environment} environment"
+#~ msgstr "パッケージグループ '%{group}' が %{environment} 環境内で見つかりません"
+
+#~ msgid "Package group category '%s' not found in this template."
+#~ msgstr "パッケージグループカテゴリ '%s' がこのテンプレート内で見つかりません。"
+
+#~ msgid "Package group category '%{group}' not found in the %{env} environment"
+#~ msgstr "パッケージグループのカテゴリ '%{group}' が %{env} 環境内で見つかりません。"
+
+#~ msgid "Parameter '%s' not found in the template."
+#~ msgstr "パラメーター '%s' がテンプレート内で見つかりません。"
+
+#~ msgid "Parameter '%{name}': '%{value}' was set"
+#~ msgstr "パラメーター '%{name}': '%{value}' は設定されていませんでした"
+
+#~ msgid "Please provide pool ID"
+#~ msgstr "プール ID を入力してください"
+
+#~ msgid "Product '%s' is already present in the template."
+#~ msgstr "製品 '%s' はすでにテンプレート内にあります。"
+
+#~ msgid "Pulp identifier must be unique."
+#~ msgstr "Pulp 識別子は固有でなければなりません。"
+
+#~ msgid "Read Filters"
+#~ msgstr "フィルターの読み込み"
+
+#~ msgid "Read Filters permission"
+#~ msgstr "フィルターのパーミッションを読み込み"
+
+#~ msgid "Read Package Filters"
+#~ msgstr "パッケージフィルターの読み込み"
+
+#~ msgid "Read System Templates"
+#~ msgstr "システムテンプレートの読み込み"
+
+#~ msgid "Read System Templates permission"
+#~ msgstr "システムテンプレートのパーミッションを読み込み"
+
+#~ msgid "Removed package group '%s'"
+#~ msgstr "パッケージグループ '%s' が削除されました"
+
+#~ msgid "Removed package group category '%s'"
+#~ msgstr "パッケージグループカテゴリ '%s' が削除されました"
+
+#~ msgid "Removed parameter '%s'"
+#~ msgstr "パラメーター '%s' が削除されました"
+
+#~ msgid "Repository '%s' is already present in the template."
+#~ msgstr "リポジトリ '%s' はすでにテンプレート内にあります。"
+
+#~ msgid "Repository '%s' not found in this environment."
+#~ msgstr "リポジトリ '%s' がこの環境内で見つかりません。"
+
+#~ msgid "Repository '%s' not found in this template."
+#~ msgstr "リポジトリ '%s' がこのテンプレート内で見つかりません。"
+
+#~ msgid "Successfully updated '%s' package filter."
+#~ msgstr "'%s' パッケージフィルターが正常に更新されました。"
+
+#~ msgid "System Template '%s' was created."
+#~ msgstr "システムテンプレート '%s' が作成されました。"
+
+#~ msgid "Template"
+#~ msgstr "テンプレート"
+
+#~ msgid "Template %s has been updated successfully"
+#~ msgstr "テンプレート '%s' が正しく更新されました"
+
+#~ msgid "Template %s updated successfully."
+#~ msgstr "テンプレート '%s' が正しく更新されました"
+
+#~ msgid "Template '%s' has been updated successfully, however you have removed either a product or repository that contained the selected distribution for this template.  Please select another distribution to ensure a working system template."
+#~ msgstr "テンプレート '%s' は正しく更新されましたが、このテンプレート用に選択されたディストリビューションを含む製品またはリポジトリのいずれかが削除されました。システムテンプレートが正しく動作するように別のディストリビューションを選択してください。"
+
+#~ msgid "Template '%s' was deleted."
+#~ msgstr "テンプレート '%s' が削除されました。"
+
+#~ msgid "Template can have parent templates only from the same environment"
+#~ msgstr "テンプレートには同じ環境の親テンプレートのみ含めることが可能です。"
+
+#~ msgid "Template cannot be exported"
+#~ msgstr "テンプレートはエクスポートできません"
+
+#~ msgid "Template imported"
+#~ msgstr "テンプレートがインポートされました"
+
+#~ msgid "Templates can be updated only in the '%s' environment"
+#~ msgstr "テンプレートは '%s' 環境でのみ更新できます"
+
+#~ msgid "The environment still has content that belongs to product '%s'."
+#~ msgstr "この環境には製品 '%s' に属するコンテンツがまだ残っています。"
+
+#~ msgid "The template has children templates."
+#~ msgstr "テンプレートには、子のテンプレートが含まれています。"
+
+#~ msgid "There is already a repo with the label [ %{repo} ] for product [ %{product} ]"
+#~ msgstr "製品 [ %{product} ] には [ %{repo} ] というラベルのリポジトリがすでに存在します"
+
+#~ msgid "There is already a repo with the name [ %{repo} ] for product [ %{product} ]"
+#~ msgstr "製品 [ %{product} ] には [ %{repo} ] という名前のリポジトリがすでに存在します。"
+
+#~ msgid "environment"
+#~ msgstr "環境"
+
+#~ msgid "is already in the template"
+#~ msgstr "はすでにテンプレートにあります"
+
+#~ msgid "must be unique within an organization scope"
+#~ msgstr "組織スコープ内で一意である必要があります。"
+
+#~ msgid "must be unique within one environment"
+#~ msgstr "1 環境で一意である必要があります"
+
+#~ msgid "template"
+#~ msgstr "テンプレート"
