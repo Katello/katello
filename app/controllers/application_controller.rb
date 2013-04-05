@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
   include Profiling
   clear_helpers
 
-  helper "alchemy/translation"
+  helper UIAlchemy::TranslationHelper
   helper_method :current_organization
   helper_method :render_correct_nav
   before_filter :set_locale
