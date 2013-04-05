@@ -21,6 +21,14 @@ class FilterRule < ActiveRecord::Base
   CONTENT_TYPES   = [PACKAGE, PACKAGE_GROUP, ERRATA]
   CONTENT_OPTIONS = {_('Packages') => PACKAGE, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA}
 
+
+  validates_with Validators::SerializedParamsValidator, :attributes => :parameters
+
+  def params_format
+    {}
+  end
+
+
   # validates_inclusion_of :content_type,
   #                        :in          => CONTENT_TYPES,
   #                        :allow_blank => false,
@@ -29,8 +37,6 @@ class FilterRule < ActiveRecord::Base
     write_attribute(:parameters, HashWithIndifferentAccess.new) unless read_attribute(:parameters)
     read_attribute(:parameters)
   end
-
-
 
   def content_type
     { PackageRule => PACKAGE,

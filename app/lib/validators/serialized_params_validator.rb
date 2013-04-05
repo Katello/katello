@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Red Hat, Inc.
+# Copyright 2011 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -10,19 +10,16 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class PackageGroupRule < FilterRule
-  def params_format
-    {:units => [[:name]]}
-  end
-
-
-  def generate_clauses(repo)
-    ids = parameters[:units].collect do |unit|
-      #{'name' => {"$regex" => unit[:name]}}
-      if unit[:name] && !unit[:name].blank?
-        PackageGroup.search(unit[:name], 0, 0, [repo.pulp_id]).collect(&:package_group_id)
+module Validators
+  class SerializedParamsValidator < ActiveModel::EachValidator
+    def validate_each(record, attribute, value)
+      if value
+        diff = Util::Support.diff_hash_params(record.params_format, value)
+        unless diff.empty?
+          msg = _("The parameters are in an invalid format. Please check the following attribute '%s'") % diff.inspect
+          record.errors.add(attribute, msg)
+        end
       end
-    end.compact.flatten
-    {"id" => {"$in" => ids}} unless ids.empty?
+    end
   end
 end
