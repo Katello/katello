@@ -44,6 +44,8 @@ class FilterRulesControllerTest < MiniTest::Rails::ActionController::TestCase
     notify.expects(:success).at_least_once
     @controller.expects(:notify).at_least_once.returns(notify)
 
+    @controller.expects(:render).at_least_once
+
     assert_empty @filter.rules
 
     post :create, :content_view_definition_id=> @filter.content_view_definition.id, :filter_id => @filter.id,
@@ -62,6 +64,8 @@ class FilterRulesControllerTest < MiniTest::Rails::ActionController::TestCase
     notify.expects(:success).at_least_once
     @controller.expects(:notify).at_least_once.returns(notify)
 
+    @controller.expects(:render).at_least_once
+
     assert_empty @filter.rules
 
     post :create, :content_view_definition_id=> @filter.content_view_definition.id, :filter_id => @filter.id,
@@ -79,6 +83,8 @@ class FilterRulesControllerTest < MiniTest::Rails::ActionController::TestCase
     notify = Notifications::Notifier.new
     notify.expects(:success).at_least_once
     @controller.expects(:notify).at_least_once.returns(notify)
+
+    @controller.expects(:render).at_least_once
 
     assert_empty @filter.rules
 
