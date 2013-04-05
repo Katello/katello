@@ -15,7 +15,13 @@ var KT = (KT === undefined) ? {} : KT;
 
 KT.custom_info = (function() {
 
-    $("#new_custom_info_keyname").live("keyup", function() {
+    $(".custom_info_txt").live("keydown", function(e) {
+        if (e.keyCode == 13) { // if you press enter
+            $("#create_custom_info_button").trigger("click");
+        }
+    });
+
+    $("#new_custom_info_keyname").live("keyup", function(e) {
         check_for_empty($(this));
     });
 
@@ -67,6 +73,8 @@ KT.custom_info = (function() {
                 notices.displayNotice("error", window.JSON.stringify({ "notices": [$.parseJSON(data.responseText)["displayMessage"]] }));
             }
         });
+
+        $("#new_custom_info_keyname").focus();
     }
 
     function remove_custom_info_row(data_id) {
