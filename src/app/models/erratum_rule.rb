@@ -11,6 +11,11 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class ErratumRule < FilterRule
+  def params_format
+    {:units => [[:id]], :date_range => [:start, :end], :errata_type => {}, :severity => {}}
+  end
+
+
   def generate_clauses(repo)
     rule_clauses = []
     if parameters.has_key? :units
