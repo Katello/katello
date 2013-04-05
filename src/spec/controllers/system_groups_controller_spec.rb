@@ -367,7 +367,7 @@ describe SystemGroupsController, :katello => true do
         @group.save
 
         controller.should notify.success
-        put :update_systems, :id => @group.id, :system_group=>{:environment_id => next_environment.id}
+        put :update_systems, :id => @group.id, :update_fields=>{:environment_id => next_environment.id}
 
         response.should be_success
         @system.reload.environment.should == next_environment
