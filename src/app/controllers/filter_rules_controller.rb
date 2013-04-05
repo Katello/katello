@@ -62,10 +62,8 @@ class FilterRulesController < ApplicationController
   end
 
   def create
-    rule = FilterRule.create!(params[:filter_rule]) do |r|
-      r.filter = @filter
-    end
-
+    content_type = params[:filter_rule].delete(:content_type)
+    FilterRule.create_for(content_type, params[:filter_rule].merge(:filter => @filter))
     notify.success(_("'%{type}' rule successfully created for filter '%{filter}'.") %
                    {:type => params[:filter_rule][:content_type], :filter => @filter.name})
 
