@@ -106,7 +106,7 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_errata_dates
-    fr = FilterRule.new
+    fr = ErratumRule.new
     from = "01/23/2000"
     to = "02/23/2010"
     units = {:date_range => {:start =>from , :end => to}}

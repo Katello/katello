@@ -188,7 +188,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
     # depending on include or exclude filters combine or remove
     applicable_filters = filters.applicable(repo)
 
-    applicable_rules = FilterRule.where(:filter_id => applicable_filters).where(:content_type => content_type)
+    applicable_rules = FilterRule.class_for(content_type).where(:filter_id => applicable_filters)
     filter_clauses = {}
     inclusion_rules = applicable_rules.where(:inclusion => true)
     exclusion_rules = applicable_rules.where(:inclusion => false)

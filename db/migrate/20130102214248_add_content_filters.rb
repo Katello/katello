@@ -9,7 +9,6 @@ class AddContentFilters < ActiveRecord::Migration
     create_table :filter_rules do |t|
       t.string :type
       t.text :parameters
-      t.string :content_type, :null => false
       t.references :filter, :null => false
       t.boolean :inclusion, :default=> true
       t.timestamps
