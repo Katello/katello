@@ -16,5 +16,5 @@ RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX RAILS_ENV=$KATELLO_ENV rake regenerate_r
 ret_code=$?
 popd >/dev/null
 
-exit $?
+exit $ret_code
 
