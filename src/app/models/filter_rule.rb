@@ -14,14 +14,14 @@ class FilterRule < ActiveRecord::Base
   belongs_to :filter
 
   serialize :parameters, HashWithIndifferentAccess
+  if Katello.config.katello?
+    PACKAGE         = Runcible::Extensions::Rpm.content_type()
+    PACKAGE_GROUP   = Runcible::Extensions::PackageGroup.content_type()
+    ERRATA          = Runcible::Extensions::Errata.content_type()
+    CONTENT_TYPES   = [PACKAGE, PACKAGE_GROUP, ERRATA]
+    CONTENT_OPTIONS = {_('Packages') => PACKAGE, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA}
 
-  PACKAGE         = Runcible::Extensions::Rpm.content_type()
-  PACKAGE_GROUP   = Runcible::Extensions::PackageGroup.content_type()
-  ERRATA          = Runcible::Extensions::Errata.content_type()
-  CONTENT_TYPES   = [PACKAGE, PACKAGE_GROUP, ERRATA]
-  CONTENT_OPTIONS = {_('Packages') => PACKAGE, _('Package Groups') => PACKAGE_GROUP, _('Errata') => ERRATA}
-
-
+  end
   validates_with Validators::SerializedParamsValidator, :attributes => :parameters
 
   def params_format
