@@ -75,6 +75,16 @@ class ContentViewDefinitionAPI(KatelloAPI):
             data["description"] = description
         return self.server.POST(path, data)[1]
 
+    def clone(self, org, cvd_id, name, label=None, description=None):
+        cvd = dict(id=cvd_id)
+        cvd = update_dict_unless_none(cvd, "name", name)
+        cvd = update_dict_unless_none(cvd, "label", label)
+        cvd = update_dict_unless_none(cvd, "description", description)
+
+        path = "/api/organizations/%s/content_view_definitions/%s/clone" % \
+            (org, cvd_id)
+        return self.server.POST(path, dict(content_view_definition=cvd))[1]
+
     def products(self, org, cvd_id):
         path = "/api/organizations/%s/content_view_definitions/%s/products" % \
                 (u_str(org), u_str(cvd_id))
