@@ -8,9 +8,9 @@
       %tbody
         %tr#new_custom_info_row
           %td
-            %input#new_custom_info_keyname{"placeholder" => "keyname"}
+            %input.custom_info_txt#new_custom_info_keyname{"placeholder" => "keyname"}
           %td
-            %input#new_custom_info_value{"placeholder" => "value"}
+            %input.custom_info_txt#new_custom_info_value{"placeholder" => "value"}
           %td
             %input.btn.primary#create_custom_info_button{"value" => "add", "type" => "submit", "data-url" => api_create_custom_info_path(informable_type, informable_id), "data-method" => "post", :disabled => true}
         - informable.custom_info.sort.each do |info|
