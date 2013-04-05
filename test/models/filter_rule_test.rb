@@ -131,7 +131,7 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
 
 
   def test_errata_both
-    fr = FilterRule.new
+    fr = ErratumRule.new
     from = "03/22/2000"
     to = "05/23/2012"
     units = {:errata_type => [:enhancement, :security],
@@ -169,10 +169,14 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def get_filter_clause(inclusion, content_type, parameter)
-    @filter_rule = FactoryGirl.build(:filter_rule)
+    content_rule_hash = { FilterRule::PACKAGE => :package_filter_rule,
+                      FilterRule::PACKAGE_GROUP => :package_group_filter_rule,
+                    FilterRule::ERRATA => :erratum_filter_rule}
+
+    fr_build = content_rule_hash[content_type] || :filter_rule
+    @filter_rule = FactoryGirl.build(fr_build)
     @filter = @filter_rule.filter
     @filter_rule.inclusion = inclusion
-    @filter_rule.content_type = content_type
     @filter_rule.parameters = HashWithIndifferentAccess.new(parameter)
     @filter_rule.save!
     cvd =  @filter.content_view_definition
