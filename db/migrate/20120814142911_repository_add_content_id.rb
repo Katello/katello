@@ -15,8 +15,8 @@ class RepositoryAddContentId < ActiveRecord::Migration
         end
         Runcible::Resources::RepositoryGroup.delete(group_id)
       end
-    end 
-    
+    end
+
     found = Repository.where(:content_id=>nil).pluck(:name)
     puts "Found repos with nil content_id: #{found.join(', ')}\n" if !found.empty?
     change_column :repositories, :content_id, :string, :null=>false

@@ -2,7 +2,7 @@ class RepositoryAddContentView < ActiveRecord::Migration
   def self.up
     add_column :repositories, :content_view_version_id, :integer, :null=>true
     add_index :repositories, :content_view_version_id
-    
+
     KTEnvironment.reset_column_information
     Repository.reset_column_information
 
