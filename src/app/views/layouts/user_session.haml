@@ -1,9 +1,9 @@
 = content_for(:stylesheets_block) do
-  = stylesheet_link_tag :loginpage
+  = stylesheet_link_tag "sections/loginpage"
 
 = content_for(:javascripts_block) do
-  = include_javascripts :common
-  = include_javascripts :alchemy
+  = javascript_include_tag :common
+  = javascript_include_tag :alchemy
 
 = content_for(:login_logo) do
   = image_tag("embed/logo.png", :alt => _('Katello Logo'))
@@ -16,7 +16,7 @@
 = content_for(:head) do
   = csrf_meta_tag
   / [if lt IE 9]
-    = include_javascripts  :html5
+    = javascript_include_tag  :html5
   / [if IE]
     = stylesheet_link_tag :ie
 
