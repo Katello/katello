@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-TAGS="katello-nightly-rhel6 katello-nightly-fedora17 katello-nightly-fedora18"
+TAGS="katello-nightly-rhel6 katello-nightly-fedora18"
 FEDORA_UPLOAD=1
 
 pushd . >/dev/null
