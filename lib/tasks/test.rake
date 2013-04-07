@@ -25,7 +25,8 @@ namespace "ptest" do
 
 end
 
-if ENV['RAILS_ENV'] != 'production'
+=begin
+if Rails.env != 'production'
   namespace :minitest do
     Rake::Task["minitest"].clear
     Rake::Task["minitest:models"].clear
@@ -107,6 +108,6 @@ if ENV['RAILS_ENV'] != 'production'
       end
 
     end
-
   end
 end
+=end
