@@ -11,9 +11,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-# REMOVEME - commented out until Foreman is SCL ready
-# (search for REMOVEME strings down the file)
-%if "%{?scl}" == "ruby193x"
+%if "%{?scl}" == "ruby193"
     %global scl_prefix %{scl}-
     %global scl_ruby /usr/bin/ruby193-ruby
     %global scl_rake scl enable ruby193 rake
@@ -112,9 +110,7 @@ Requires:       lsof
 Requires:       redhat-logos >= 60.0.14
 %endif
 
-# REMOVEME - uncomment following line instead the next for SCL
-#%if 0%{?fedora} && 0%{?fedora} < 17
-%if 0%{?rhel} == 6 || (0%{?fedora} && 0%{?fedora} < 17)
+%if 0%{?fedora} && 0%{?fedora} < 17
 Requires: %{?scl_prefix}ruby(abi) = 1.8
 %else
 Requires: %{?scl_prefix}ruby(abi) = 1.9.1
@@ -470,10 +466,9 @@ fi
     #compile SASS files
     echo Compiling SASS files...
     touch config/katello.yml
-# REMOVEME - commented out until Foreman is SCL ready
-#%{?scl:scl enable %{scl} "}
+%{?scl:scl enable %{scl} "}
     compass compile
-#%{?scl:"}
+%{?scl:"}
     rm config/katello.yml
 
     #generate Rails JS/CSS/... assets
@@ -494,18 +489,16 @@ a2x -d manpage -f manpage man/katello-service.8.asciidoc
     export BUNDLER_EXT_GROUPS="default apipie"
     export RAILS_ENV=production # TODO - this is already defined above!
     touch config/katello.yml
-# REMOVEME - commented out until Foreman is SCL ready
-#%{?scl:scl enable %{scl} "}
+%{?scl:scl enable %{scl} "}
     rake apipie:static apipie:cache --trace
-#%{?scl:"}
+%{?scl:"}
 
     # API doc for Headpin mode
     echo "common:" > config/katello.yml
     echo "  app_mode: headpin" >> config/katello.yml
-# REMOVEME - commented out until Foreman is SCL ready
-#%{?scl:scl enable %{scl} "}
+%{?scl:scl enable %{scl} "}
     rake apipie:static apipie:cache OUT=doc/headpin-apidoc --trace
-#%{?scl:"}
+%{?scl:"}
     rm config/katello.yml
     mv lib/tasks_disabled lib/tasks
 %endif
