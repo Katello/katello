@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -17,8 +18,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
     t.string   "description"
     t.integer  "organization_id",                 :null => false
     t.integer  "environment_id",                  :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
     t.integer  "user_id"
     t.integer  "usage_limit",     :default => -1
     t.integer  "content_view_id"
@@ -33,8 +34,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
   create_table "changeset_content_views", :force => true do |t|
     t.integer  "changeset_id"
     t.integer  "content_view_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   create_table "changeset_dependencies", :force => true do |t|
@@ -89,8 +90,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
   create_table "changeset_users", :force => true do |t|
     t.integer  "changeset_id"
     t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   add_index "changeset_users", ["changeset_id"], :name => "index_changeset_users_on_changeset_id"
@@ -99,8 +100,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
   create_table "changesets", :force => true do |t|
     t.integer  "environment_id"
     t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                       :null => false
+    t.datetime "updated_at",                                       :null => false
     t.datetime "promotion_date"
     t.string   "state",          :default => "new",                :null => false
     t.integer  "task_status_id"
@@ -131,8 +132,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
   create_table "component_content_views", :force => true do |t|
     t.integer  "content_view_definition_id"
     t.integer  "content_view_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
   end
 
   add_index "component_content_views", ["content_view_definition_id", "content_view_id"], :name => "component_content_views_index"
@@ -142,8 +143,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
     t.string   "label",                              :null => false
     t.text     "description"
     t.integer  "organization_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
     t.boolean  "composite",       :default => false, :null => false
     t.string   "type"
     t.integer  "source_id"
@@ -154,8 +155,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
   create_table "content_view_definition_products", :force => true do |t|
     t.integer  "content_view_definition_id"
     t.integer  "product_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
   end
 
   add_index "content_view_definition_products", ["content_view_definition_id", "product_id"], :name => "content_view_def_product_index"
@@ -163,8 +164,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
   create_table "content_view_definition_repositories", :force => true do |t|
     t.integer  "content_view_definition_id"
     t.integer  "repository_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
   end
 
   add_index "content_view_definition_repositories", ["content_view_definition_id", "repository_id"], :name => "cvd_repo_index"
@@ -174,8 +175,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
     t.string   "label",           :null => false
     t.string   "cp_id"
     t.integer  "content_view_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.integer  "environment_id",  :null => false
   end
 
@@ -185,8 +186,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
   create_table "content_view_version_environments", :id => false, :force => true do |t|
     t.integer  "content_view_version_id"
     t.integer  "environment_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
   end
 
   add_index "content_view_version_environments", ["content_view_version_id", "environment_id"], :name => "cvv_env_index"
@@ -194,8 +195,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
   create_table "content_view_versions", :force => true do |t|
     t.integer  "content_view_id"
     t.integer  "version",               :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
     t.integer  "definition_archive_id"
   end
 
@@ -208,8 +209,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
     t.integer  "content_view_definition_id"
     t.integer  "organization_id"
     t.boolean  "default",                    :default => false, :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
   end
 
   add_index "content_views", ["content_view_definition_id"], :name => "index_content_views_on_content_view_definition_id"
@@ -222,8 +223,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
     t.string   "value",           :default => ""
     t.integer  "informable_id"
     t.string   "informable_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
   end
 
   add_index "custom_info", ["informable_type", "informable_id", "keyname"], :name => "index_custom_info_on_type_id_keyname"
@@ -237,8 +238,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
     t.datetime "locked_at"
     t.datetime "failed_at"
     t.string   "locked_by"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
 
   add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
@@ -249,8 +250,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
     t.string   "description"
     t.string   "location"
     t.integer  "environment_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
   add_index "distributors", ["environment_id"], :name => "index_distributors_on_environment_id"
@@ -283,8 +284,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
     t.string   "description"
     t.boolean  "library",         :default => false, :null => false
     t.integer  "organization_id",                    :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
     t.string   "label",                              :null => false
   end
 
@@ -296,8 +297,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
     t.string   "name",            :null => false
     t.integer  "organization_id", :null => false
     t.text     "content",         :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   add_index "gpg_keys", ["organization_id", "name"], :name => "index_gpg_keys_on_organization_id_and_name", :unique => true
@@ -305,8 +306,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
   create_table "help_tips", :force => true do |t|
     t.string   "key"
     t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "help_tips", ["user_id"], :name => "index_help_tips_on_user_id"
@@ -347,8 +348,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
   create_table "ldap_group_roles", :force => true do |t|
     t.string   "ldap_group"
     t.integer  "role_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "ldap_group_roles", ["ldap_group", "role_id"], :name => "index_ldap_group_roles_on_ldap_group_and_role_id", :unique => true
@@ -367,8 +368,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
     t.text     "details"
     t.boolean  "global",                          :default => false, :null => false
     t.string   "level",                                              :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                         :null => false
+    t.datetime "updated_at",                                         :null => false
     t.string   "request_type"
     t.integer  "organization_id"
   end
@@ -379,8 +380,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
     t.string   "name"
     t.string   "description"
     t.string   "label"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.integer  "task_id"
     t.text     "default_info"
   end
@@ -400,8 +401,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
   create_table "permission_tags", :force => true do |t|
     t.integer  "permission_id"
     t.integer  "tag_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   add_index "permission_tags", ["permission_id"], :name => "index_permission_tags_on_permission_id"
@@ -413,8 +414,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
     t.integer  "organization_id"
     t.boolean  "all_tags",         :default => false
     t.boolean  "all_verbs",        :default => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
     t.string   "name",             :default => ""
     t.string   "description",      :default => ""
   end
@@ -434,8 +435,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
 
   create_table "pools", :force => true do |t|
     t.string   "cp_id",      :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "pools", ["cp_id"], :name => "index_pools_on_cp_id"
@@ -446,8 +447,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
     t.string   "cp_id"
     t.integer  "multiplier"
     t.integer  "provider_id",                               :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
     t.integer  "gpg_key_id"
     t.string   "type",               :default => "Product", :null => false
     t.integer  "sync_plan_id"
@@ -466,8 +467,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
     t.string   "repository_url"
     t.string   "provider_type"
     t.integer  "organization_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
     t.integer  "task_status_id"
     t.string   "discovery_url"
     t.text     "discovered_repos"
@@ -483,8 +484,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
     t.string   "pulp_id",                                       :null => false
     t.boolean  "enabled",                 :default => true
     t.integer  "environment_product_id",                        :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
     t.integer  "major"
     t.string   "minor"
     t.integer  "gpg_key_id"
@@ -508,14 +509,14 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
 
   create_table "resource_types", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "roles", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
     t.string   "description", :limit => 250
     t.boolean  "locked",                     :default => false
     t.string   "type"
@@ -537,8 +538,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
     t.string   "params"
     t.string   "path"
     t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "search_favorites", ["user_id"], :name => "index_search_favorites_on_user_id"
@@ -547,8 +548,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
     t.string   "params"
     t.string   "path"
     t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "search_histories", ["user_id"], :name => "index_search_histories_on_user_id"
@@ -559,8 +560,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
     t.datetime "sync_date"
     t.string   "interval"
     t.integer  "organization_id", :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   add_index "sync_plans", ["name", "organization_id"], :name => "index_sync_plans_on_name_and_organization_id", :unique => true
@@ -580,8 +581,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
     t.string   "description"
     t.integer  "max_systems",     :default => -1, :null => false
     t.integer  "organization_id",                 :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
   end
 
   add_index "system_groups", ["name", "organization_id"], :name => "index_system_groups_on_name_and_organization_id", :unique => true
@@ -591,8 +592,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
   create_table "system_system_groups", :force => true do |t|
     t.integer  "system_id"
     t.integer  "system_group_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   add_index "system_system_groups", ["system_group_id"], :name => "index_system_system_groups_on_system_group_id"
@@ -604,8 +605,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
     t.string   "description"
     t.string   "location"
     t.integer  "environment_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
     t.string   "type",            :default => "System"
     t.integer  "content_view_id"
   end
@@ -622,8 +623,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
     t.text     "progress"
     t.datetime "start_time"
     t.datetime "finish_time"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
     t.text     "parameters"
     t.string   "task_type"
     t.integer  "user_id",         :default => 0, :null => false
@@ -650,8 +651,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
     t.string   "password"
     t.boolean  "helptips_enabled",       :default => true
     t.boolean  "hidden",                 :default => false, :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
     t.integer  "page_size",              :default => 25,    :null => false
     t.boolean  "disabled",               :default => false
     t.string   "email"
@@ -668,8 +669,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
 
   create_table "verbs", :force => true do |t|
     t.string   "verb"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
 end
