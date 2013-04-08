@@ -64,20 +64,8 @@ class ContentViewDefinition < ContentViewDefinitionBase
   end
 
   def generate_repos(view, notify = false)
-    # general publish clone algorithm
-    # Copy all rpms over
-    # Copy all errata over
-    # Copy all pkg groups over
-    # Copy all distro over
-    # Start Filtering errata in the copied
-    # Start Filtering package groups in the copied repo
-    # Start Filtering packages in the copied repo
-    # Remove all empty errata
-    # Remove all empty package groups
-    # update search indices for package and errata
-
-
-
+    # for the algorithm look at
+    # https://fedorahosted.org/katello/wiki/ContentViewFilters#ContentViewFilterPublishAlgorithm
     async_tasks = []
     cloned_repos = []
 
@@ -92,13 +80,12 @@ class ContentViewDefinition < ContentViewDefinitionBase
     end
     PulpTaskStatus::wait_for_tasks async_tasks.flatten(1)
 
-
     # Start Filtering errata in the copied
     # Start Filtering package groups in the copied repo
     # Start Filtering packages in the copied repo
     cloned_repos.each do |repo|
       [FilterRule::ERRATA, FilterRule::PACKAGE_GROUP, FilterRule::PACKAGE].each do |content_type|
-        filter_clauses = generate_unassociate_filter_clauses(repo.library_instance, content_type)
+        filter_clauses = unassociation_clauses(repo.library_instance, content_type)
         if filter_clauses
           pulp_task = repo.unassociate_by_filter(content_type, filter_clauses)
           PulpTaskStatus::wait_for_tasks [pulp_task]
@@ -106,17 +93,10 @@ class ContentViewDefinition < ContentViewDefinitionBase
       end
     end
 
-    # TODO find a quick way to remove empty errata and package groups
-    # Remove all errata with no packages
-    # Remove all  package groups with no packages
-
-    #TODO
-
-
-    # update search indices for package and errata
     cloned_repos.each do |repo|
-      repo.index_errata
-      repo.index_packages
+      repo.purge_empty_groups_errata
+      # update search indices for package and errata
+      repo.index_content
     end
 
 
@@ -127,7 +107,6 @@ class ContentViewDefinition < ContentViewDefinitionBase
       Notify.success(message, :request_type => "content_view_definitions___publish",
                      :organization => self.organization)
     end
-
   rescue => e
     Rails.logger.error(e)
     Rails.logger.error(e.backtrace.join("\n"))
@@ -203,75 +182,42 @@ class ContentViewDefinition < ContentViewDefinitionBase
 
   protected
 
-    def generate_unassociate_filter_clauses(repo, content_type)
-      # find applicable filters
-      # split filter rules by content type, since each content type has its own copy call
-      # depending on include or exclude filters combine or remove
-      applicable_filters = filters.applicable(repo)
+  def unassociation_clauses(repo, content_type)
+    # find applicable filters
+    # split filter rules by content type, since each content type has its own copy call
+    # depending on include or exclude filters combine or remove
+    applicable_filters = filters.applicable(repo)
 
-      applicable_rules = FilterRule.where(:filter_id => applicable_filters).where(:content_type => content_type)
-      #  do |f|
-      #   f.repositories.include?(repo)
-      # end
-      filter_clauses = {}
-      inclusion_rules = applicable_rules.where(:inclusion => true)
-      exclusion_rules = applicable_rules.where(:inclusion => false)
+    applicable_rules = FilterRule.class_for(content_type).where(:filter_id => applicable_filters)
+    inclusion_rules = applicable_rules.where(:inclusion => true)
+    exclusion_rules = applicable_rules.where(:inclusion => false)
 
-      includes_count = inclusion_rules.count
-      excludes_count = exclusion_rules.count
-
-      #   If there is no include/exclude filters  -  Everything is included. - so do not delete anything
-      return if includes_count == 0 && excludes_count == 0
+    #   If there is no include/exclude filters  -  Everything is included. - so do not delete anything
+    return if inclusion_rules.count == 0 && exclusion_rules.count == 0
 
 
-      clauses = []
-      #  If there are only exclude filters (aka blacklist filters),
-      #  then unassociate them from the repo
-      #
-      if excludes_count > 0
-        excludes = exclusion_rules.collect do |x|
-          x.parameters[:units].collect do |unit|
-            {'name' =>{"$regex" => unit[:name]}}
-          end
-        end.flatten
-        clauses << {'$or' =>excludes}
+    clauses = []
+    #  If there are only exclude filters (aka blacklist filters),
+    #  then unassociate them from the repo
+    #  If there are only include filters (aka whitelist) then only the packages/errata included will get included.
+    #    Everything else is thus excluded.
+    #  If there are include and exclude filters, the exclude filters then the include filters, get processed first,
+    #     then the exclude filter excludes content from the set included by the include filters.
+
+    [[inclusion_rules, '$nor'],[exclusion_rules, '$or']].each do |rules, join_clause|
+      if rules.count > 0
+        rule_items = rules.collect do |rule|
+          rule.generate_clauses(repo)
+        end.compact.flatten
+        clauses << {join_clause => rule_items} unless rule_items.empty?
       end
+    end
 
-
-      #  If there are only include filters (aka whitelist) then only the packages/errata included will get included.
-      #  Everything else is thus excluded.
-      if includes_count > 0
-        includes = inclusion_rules.collect do |x|
-          x.parameters[:units].collect do |unit|
-            {'name' =>{"$regex" => unit[:name]}}
-          end
-        end.flatten
-        clauses << {'$nor' => includes}
-      end
-
-      #    If there are include and exclude filters, the exclude filters then the include filters, get processed first,
-      #       then the exclude filter excludes content from the set included by the include filters.
-=begin
-      package_clauses = []
-      if includes_count > 0
-        includes = applicable_rules.includes.collect{|x| {'name' =>{"$regex" => x.parameters[:name]}}}
-        package_clauses << {'$or' =>includes}
-      end
-
-      if excludes_count > 0
-        excludes = applicable_rules.excludes.collect{|x| {'name' =>{"$regex" => x.parameters[:name]}}}
-        package_clauses << {'$nor' => excludes}
-      end
-
-=end
-      case clauses.size
-        when 1
-           return clauses.first
-         when 2
-           return {'$or' => clauses}
-         else
-           #ignore
-      end
+    if clauses.size > 1
+      return {'$or' => clauses}
+    elsif clauses.size == 1
+      return clauses.first
+    end
   end
 
   def views_repos

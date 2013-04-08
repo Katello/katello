@@ -295,9 +295,8 @@ ActiveRecord::Schema.define(:version => 20130403133149) do
   create_table "filter_rules", :force => true do |t|
     t.string   "type"
     t.text     "parameters"
-    t.string   "content_type",                   :null => false
-    t.integer  "filter_id",                      :null => false
-    t.boolean  "inclusion",    :default => true
+    t.integer  "filter_id",                    :null => false
+    t.boolean  "inclusion",  :default => true
     t.datetime "created_at"
     t.datetime "updated_at"
   end
