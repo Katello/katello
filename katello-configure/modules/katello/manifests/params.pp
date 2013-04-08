@@ -1,4 +1,11 @@
 class katello::params {
+
+  if $operatingsystem == "RedHat" {
+    $scl_prefix = 'ruby193-'
+  } else {
+    $scl_prefix = ''
+  }
+
   # First User and Org settings
   $user_name = katello_config_value('user_name')
   $user_pass = katello_config_value('user_pass')
