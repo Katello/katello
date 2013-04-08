@@ -76,6 +76,7 @@ Requires:       %{?scl_prefix}rubygem(haml-rails)
 Requires:       %{?scl_prefix}rubygem(json)
 Requires:       %{?scl_prefix}rubygem(rest-client)
 Requires:       %{?scl_prefix}rubygem(jammit)
+Requires:       %{?scl_prefix}rubygem(therubyracer) # required by jammit
 Requires:       %{?scl_prefix}rubygem(rails_warden)
 Requires:       %{?scl_prefix}rubygem(net-ldap)
 Requires:       %{?scl_prefix}rubygem(compass)
