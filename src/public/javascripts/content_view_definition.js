@@ -365,7 +365,7 @@ KT.content_view_definition_filters = (function(){
         if (pane.length === 0) {
             return;
         }
-        $("#filter_tabs").tabs();
+        $("#filter_tabs").tabs().show();
         register_remove($("#rules_form"));
         initialize_checkboxes($("#rules_form"));
     },
@@ -378,7 +378,13 @@ KT.content_view_definition_filters = (function(){
         $('.inclusion').change(function(){
             $('#update_form').ajaxSubmit({
                 type: "PUT",
-                cache: false
+                cache: false,
+                success: function(new_value) {
+                    // Update the "Specifying included/excluded" statement on the pane
+                    var element = $('#inclusion');
+                    element.html(element.html().replace(element.data('initial_value'), new_value));
+                    element.data('initial_value', new_value);
+                }
             });
         });
 
@@ -400,6 +406,11 @@ KT.content_view_definition_filters = (function(){
         initialize_errata_rule_params();
     },
     initialize_common_rule_params = function() {
+        var pane = $("#parameter_list");
+        if (pane.length === 0) {
+            return;
+        }
+
         $('#add_rule').unbind('click');
         $('#add_rule').click(function() {
             var rule_input = $('input#rule_input').val(),
@@ -431,6 +442,10 @@ KT.content_view_definition_filters = (function(){
         initialize_checkboxes($("#parameters_form"));
     },
     initialize_errata_rule_params = function() {
+        var pane = $("#errata_parameters");
+        if (pane.length === 0) {
+            return;
+        }
         KT.editable.initialize_datepicker();
         KT.editable.initialize_multiselect();
     },
