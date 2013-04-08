@@ -85,7 +85,6 @@ class FilterRulesController < ApplicationController
     render :partial => "content_view_definitions/filters/rules/inclusion",
            :locals => {:view_definition => @view_definition, :filter => @filter, :rule => @rule,
                        :rule_type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type)}
-
   end
 
   def edit_parameter_list
