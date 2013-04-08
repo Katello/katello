@@ -158,7 +158,7 @@ class Api::V1::ChangesetsContentController < Api::V1::ApiController
     elsif params[:id]
       product_id = params[:id]
     end
-    @product = Product.find_by_cp_id(product_id) unless product_id.nil?
+    @product = Product.find_by_cp_id(product_id.to_s) unless product_id.nil?
     raise HttpErrors::NotFound, _("Couldn't find product with id '%s'") % product_id if @product.nil?
   end
 end

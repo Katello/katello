@@ -16,19 +16,24 @@ child :repos => :repositories do
 end
 
 child :errata => :errata do
-  attributes :product_id, :display_name, :errata_id, :changeset_id, :id
+  attributes :display_name, :errata_id, :changeset_id, :id
+  node :product_id do |err|
+    err.product.cp_id
+  end
 end
 
 child :packages => :packages do
   attributes :id, :nvrea, :product_id, :package_id, :display_name
+  node :product_id do |pkg|
+    pkg.product.cp_id
+  end
 end
 
 child :distributions => :distributions do
-  attributes :id, :family, :variant, :version, :arch
-end
-
-child :system_templates => :system_templates do
-  attributes :id, :name
+  attributes :id
+  node :product_id do |err|
+    err.product.cp_id
+  end
 end
 
 child :content_views => :content_views do

@@ -129,7 +129,8 @@ Src::Application.routes.draw do
       api_resources :products, :only => [:show, :update, :destroy] do
         post :sync_plan, :on => :member, :action => :set_sync_plan
         delete :sync_plan, :on => :member, :action => :remove_sync_plan
-        api_resources :repositories, :only => [:index, :create]
+        api_resources :repositories, :only => [:create]
+        get :repositories, :on => :member
         api_resources :sync, :only => [:index, :create] do
           delete :index, :on => :collection, :action => :cancel
         end

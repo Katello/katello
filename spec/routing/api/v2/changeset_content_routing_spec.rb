@@ -32,9 +32,6 @@ describe Api::V2::ChangesetsContentController do
     it {{ :post =>   "/api/changesets/1/distributions" }.should   route_to(:controller => cs_content_controller, :action => "add_distribution", :changeset_id => "1")}
     it {{ :delete => "/api/changesets/1/distributions/2" }.should route_to(:controller => cs_content_controller, :action => "remove_distribution", :changeset_id => "1", :id => "2")}
 
-    it {{ :post =>   "/api/changesets/1/templates" }.should   route_to(:controller => cs_content_controller, :action => "add_template", :changeset_id => "1")}
-    it {{ :delete => "/api/changesets/1/templates/2" }.should route_to(:controller => cs_content_controller, :action => "remove_template", :changeset_id => "1", :id => "2")}
-
     it {{ :post =>   "/api/changesets/1/content_views" }.should   route_to(:controller => cs_content_controller, :action => "add_content_view", :changeset_id => "1")}
     it {{ :delete => "/api/changesets/1/content_views/2" }.should route_to(:controller => cs_content_controller, :action => "remove_content_view", :changeset_id => "1", :id => "2")}
 
