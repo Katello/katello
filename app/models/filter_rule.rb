@@ -28,11 +28,6 @@ class FilterRule < ActiveRecord::Base
     {}
   end
 
-
-  # validates_inclusion_of :content_type,
-  #                        :in          => CONTENT_TYPES,
-  #                        :allow_blank => false,
-  #                        :message     => "A filter rule must have one of the following types: #{CONTENT_TYPES.join(', ')}."
   def parameters
     write_attribute(:parameters, HashWithIndifferentAccess.new) unless read_attribute(:parameters)
     read_attribute(:parameters)
