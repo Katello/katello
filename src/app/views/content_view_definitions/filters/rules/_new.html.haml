@@ -1,5 +1,3 @@
-= javascript :subpanel_new
-
 = content_for :title do
   #{_("New Rule")}
 
@@ -7,13 +5,11 @@
 
   #rule_create
 
-    = kt_form_for([view_definition, FilterRule.new], :remote => true, :html => {:id => "new_subpanel"}) do |form|
+    = kt_form_for([view_definition, FilterRule.new], :remote => true, :html => {:id => "filter_rule_form"}) do |form|
 
       = form.select :content_type, options_for_select(FilterRule::CONTENT_OPTIONS.sort.reverse, FilterRule::PACKAGE), {},
         {:label => _("Filter on"), :size=>1, :tabindex => form.tabindex}
 
-      = form.submit _("Create"), :disable_with => _("Creating..."),
-        :class => 'create_button subpanel_create',
-        'data-url_after_submit' => edit_content_view_definition_filter_path(view_definition.id, filter.id)
+      = form.submit _("Create"), :disable_with => _("Creating..."), :class => 'create_button'
 
 = render :template => "layouts/tupane_layout"

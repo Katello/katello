@@ -20,7 +20,7 @@ class FilterRulesController < ApplicationController
   before_filter :find_content_view_definition
   before_filter :authorize #after find_content_view_definition, since the definition is required for authorization
   before_filter :find_filter
-  before_filter :find_rule, :only => [:edit, :edit_parameter_list, :edit_date_type_parameters,
+  before_filter :find_rule, :only => [:edit, :edit_inclusion, :edit_parameter_list, :edit_date_type_parameters,
                                       :update, :add_parameter, :destroy_parameters]
 
   respond_to :html
@@ -37,6 +37,7 @@ class FilterRulesController < ApplicationController
       :create => manage_rule,
 
       :edit => manage_rule,
+      :edit_inclusion => manage_rule,
       :edit_parameter_list => manage_rule,
       :edit_date_type_parameters => manage_rule,
       :update => manage_rule,
@@ -61,14 +62,15 @@ class FilterRulesController < ApplicationController
   end
 
   def create
-    FilterRule.create!(params[:filter_rule]) do |rule|
-      rule.filter = @filter
+    rule = FilterRule.create!(params[:filter_rule]) do |r|
+      r.filter = @filter
     end
 
     notify.success(_("'%{type}' rule successfully created for filter '%{filter}'.") %
                    {:type => params[:filter_rule][:content_type], :filter => @filter.name})
 
-    render :nothing => true
+    render :partial => "common/post_action_close_subpanel",
+           :locals => {:path => edit_content_view_definition_filter_rule_path(@view_definition, @filter, rule)}
   end
 
   def edit
@@ -77,6 +79,12 @@ class FilterRulesController < ApplicationController
                        :editable => @view_definition.editable?, :name => controller_display_name,
                        :rule_type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type),
                        :item_partial => item_partial(@rule)}
+  end
+
+  def edit_inclusion
+    render :partial => "content_view_definitions/filters/rules/inclusion",
+           :locals => {:view_definition => @view_definition, :filter => @filter, :rule => @rule,
+                       :rule_type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type)}
   end
 
   def edit_parameter_list
@@ -96,10 +104,12 @@ class FilterRulesController < ApplicationController
   def update
     @rule.update_attributes!(params[:filter_rule])
 
+    result = params[:filter_rule].has_key?(:inclusion) ? included_text(@rule) : params[:filter_rule].values.first
+
     notify.success(_("Rule '%{type}' was successfully updated.") %
                    {:type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type)})
 
-    render :nothing => true
+    render :text => escape_html(result)
   end
 
   def add_parameter
