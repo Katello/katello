@@ -197,7 +197,7 @@ Requires:       qpid-cpp-client-ssl
 Requires:       qpid-cpp-server-ssl
 Requires:       foreman
 Requires:       foreman-postgresql
-Requires:       rubygem(foreman-katello-engine)
+Requires:       %{?scl_prefix}rubygem(foreman-katello-engine)
 # </katello-configure>
 
 
