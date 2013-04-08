@@ -52,10 +52,12 @@ module FiltersHelper
 
   def rule_summary(rule)
     if rule.content_type == FilterRule::PACKAGE || rule.content_type == FilterRule::PACKAGE_GROUP
+      # Create a package or package group list summary
       summary = parameter_list_summary(rule, :name)
 
     elsif rule.content_type == FilterRule::ERRATA
-
+      # If this rule has either errata type or date range parameters,
+      # create a date summary; otherwise, create an errata list summary
       if !rule.parameters[:errata_type].blank? || (!rule.parameters[:date_range].blank? &&
           (!rule.parameters[:date_range][:start].blank? || !rule.parameters[:date_range][:end].blank?))
         summary = errata_type_date_summary(rule)
@@ -71,11 +73,7 @@ module FiltersHelper
   end
 
   def parameter_list_summary(rule, field)
-    if !rule.parameters[:units].blank?
-      parameter_list = rule.parameters[:units].inject([]) do |result, unit|
-        result << unit[field]
-      end
-    end
+    parameter_list = rule.parameters[:units].collect{|p| p[field]} unless rule.parameters[:units].blank?
 
     parameter_list = parameter_list.blank? ? _('No details specified') : parameter_list.join(', ')
 

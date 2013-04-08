@@ -21,6 +21,6 @@ module FilterRulesHelper
   end
 
   def included_text(rule)
-    rule.inclusion? ? _("Included") : _("Excluded")
+    rule.inclusion? ? _("Include") : _("Exclude")
   end
 end
