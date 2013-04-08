@@ -178,6 +178,52 @@ module Glue::Pulp::Repo
       Runcible::Extensions::Repository.rpm_ids(self.pulp_id)
     end
 
+
+    def package_lists_for_publish
+      names = []
+      filenames = []
+
+      rpms = Runcible::Extensions::Repository.unit_search(self.pulp_id,
+                                                   :type_ids=>['rpm'],
+                                                   :fields =>{:unit=>["filename", "name"]})
+
+      rpms.each do |i|
+        filenames << i["metadata"]["filename"]
+        names << i["metadata"]["name"]
+      end
+      {:names=> names.to_set,
+       :filenames => filenames.to_set}
+    end
+
+    # remove errata and groups from this repo
+    # that have no packages
+    def purge_empty_groups_errata
+      package_lists = package_lists_for_publish
+      rpm_names = package_lists[:names]
+      filenames = package_lists[:filenames]
+
+      # Remove all errata with no packages
+      errata_to_delete = errata.collect do |erratum|
+        erratum.errata_id if filenames.intersection(erratum.package_filenames).empty?
+      end.compact
+
+      #do the errata remove call
+      unless errata_to_delete.empty?
+        unassociate_by_filter(FilterRule::ERRATA, {"id" => {"$in" => errata_to_delete}})
+      end
+
+      # Remove all  package groups with no packages
+      package_groups_to_delete = package_groups.collect do |group|
+        group.package_group_id if rpm_names.intersection(group.package_names).empty?
+      end.compact
+
+      unless package_groups_to_delete.empty?
+        unassociate_by_filter(FilterRule::PACKAGE_GROUP, {"id" => {"$in" => package_groups_to_delete}})
+      end
+    end
+
+
+
     def packages
       if @repo_packages.nil?
         #we fetch ids and then fetch packages by id, because repo packages
@@ -233,10 +279,26 @@ module Glue::Pulp::Repo
       @repo_distributions
     end
 
-    def package_groups search_args = {}
-      groups = Runcible::Extensions::Repository.package_groups(self.pulp_id)
+    def package_groups
+      if @repo_package_groups.nil?
+        groups = Runcible::Extensions::Repository.package_groups(self.pulp_id)
+        self.package_groups = groups
+      end
+      @repo_package_groups
+    end
+
+    def package_groups=attrs
+      @repo_package_groups = attrs.collect do |group|
+        ::PackageGroup.new(group)
+      end
+      @repo_package_groups
+    end
+
+    def package_groups_search search_args = {}
+      groups = package_groups
       unless search_args.empty?
-        groups.delete_if do |group_attrs|
+        groups.delete_if do |group|
+          group_attrs = group.as_json
           search_args.any?{ |attr,value| group_attrs[attr] != value }
         end
       end

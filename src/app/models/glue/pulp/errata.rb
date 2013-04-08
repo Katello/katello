@@ -53,6 +53,14 @@ module Glue::Pulp::Errata
       params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
     end
 
+    def package_filenames
+      self.pkglist.collect do |pkgs|
+        pkgs['packages'].collect do |pk|
+          pk["filename"]
+        end
+      end.flatten
+    end
+
     def included_packages
       packages = []
 

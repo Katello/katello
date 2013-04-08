@@ -122,7 +122,7 @@ class FilterRulesControllerTest < MiniTest::Rails::ActionController::TestCase
     @filter = filters(:populated_filter)
 
     get :edit_parameter_list, :content_view_definition_id => @filter.content_view_definition.id,
-        :filter_id => @filter.id, :id => @filter.rules.where(:content_type => 'rpm').first.id
+        :filter_id => @filter.id, :id => PackageRule.where(:filter_id => @filter.id).first.id
 
     assert_response :success
     assert_template :partial => 'content_view_definitions/filters/rules/_parameter_list'
@@ -132,7 +132,7 @@ class FilterRulesControllerTest < MiniTest::Rails::ActionController::TestCase
     @filter = filters(:populated_filter)
 
     get :edit_date_type_parameters, :content_view_definition_id => @filter.content_view_definition.id,
-        :filter_id => @filter.id, :id => @filter.rules.where(:content_type => 'erratum').first.id
+        :filter_id => @filter.id, :id => ErratumRule.where(:filter_id => @filter.id).first.id
 
     assert_response :success
     assert_template :partial => 'content_view_definitions/filters/rules/_edit_errata_parameters'
@@ -140,7 +140,7 @@ class FilterRulesControllerTest < MiniTest::Rails::ActionController::TestCase
 
   test "PUT update - inclusion=false should be successful" do
     @filter = filters(:populated_filter)
-    rule = @filter.rules.where(:content_type => 'erratum').first
+    rule = ErratumRule.where(:filter_id => @filter.id).first
 
     assert_equal rule.inclusion, true
 
@@ -158,7 +158,7 @@ class FilterRulesControllerTest < MiniTest::Rails::ActionController::TestCase
 
   test "PUT add_parameter - for package rule should be successful" do
     @filter = filters(:populated_filter)
-    rule = @filter.rules.where(:content_type => 'rpm').first
+    rule = PackageRule.where(:filter_id => @filter.id).first
 
     # success notice created
     notify = Notifications::Notifier.new
@@ -175,7 +175,7 @@ class FilterRulesControllerTest < MiniTest::Rails::ActionController::TestCase
 
   test "PUT add_parameter - for package group rule should be successful" do
     @filter = filters(:populated_filter)
-    rule = @filter.rules.where(:content_type => 'package_group').first
+    rule = PackageGroupRule.where(:filter_id => @filter.id).first
 
     # success notice created
     notify = Notifications::Notifier.new
@@ -192,7 +192,7 @@ class FilterRulesControllerTest < MiniTest::Rails::ActionController::TestCase
 
   test "PUT add_parameter - for errata parameter rule should be successful" do
     @filter = filters(:populated_filter)
-    rule = @filter.rules.where(:content_type => 'erratum').first
+    rule = ErratumRule.where(:filter_id => @filter.id).first
     rule.parameters = HashWithIndifferentAccess.new({:errata_type => 'security',
                                                      :date_range => {:start => '01/01/2013', :end => '01/31/2013'}})
     rule.save!
@@ -215,7 +215,7 @@ class FilterRulesControllerTest < MiniTest::Rails::ActionController::TestCase
     # however, for this test, we'll convert it to one that contains a date
     # range and type, by adding each individually.
     @filter = filters(:populated_filter)
-    rule = @filter.rules.where(:content_type => 'erratum').first
+    rule = ErratumRule.where(:filter_id => @filter.id).first
 
     # success notice created
     notify = Notifications::Notifier.new
@@ -246,7 +246,7 @@ class FilterRulesControllerTest < MiniTest::Rails::ActionController::TestCase
 
   test "DELETE destroy_parameters - should be successful" do
     @filter = filters(:populated_filter)
-    rule = @filter.rules.where(:content_type => 'erratum').first
+    rule = ErratumRule.where(:filter_id => @filter.id).first
 
     # success notice created
     notify = Notifications::Notifier.new

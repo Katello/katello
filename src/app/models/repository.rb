@@ -160,8 +160,7 @@ class Repository < ActiveRecord::Base
 
   def after_sync pulp_task_id
     #self.handle_sync_complete_task(pulp_task_id)
-    self.index_packages
-    self.index_errata
+    self.index_content
   end
 
   def as_json(*args)

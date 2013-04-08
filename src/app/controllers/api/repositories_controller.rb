@@ -149,7 +149,7 @@ EOS
     search_attrs = params.slice(:name)
     search_attrs[:id] = params[:group_id] if not params[:group_id].nil?
 
-    render :json => @repository.package_groups(search_attrs)
+    render :json => @repository.package_groups_search(search_attrs)
   end
 
   api :GET, "/repositories/:id/package_group_categories", "List all package group categories in a repository"

@@ -46,7 +46,9 @@ module Glue::ElasticSearch::Errata
               :id_sort      => { :type => 'string', :index => :not_analyzed},
               :errata_id_sort => { :type => 'string', :index => :not_analyzed},
               :id_title     => { :type => 'string', :analyzer =>:title_analyzer},
-              :id           => { :type => 'string', :analyzer =>:snowball},
+              :id           => { :type => 'string', :index =>:not_analyzed},
+              :errata_id    => { :type => 'string', :analyzer =>:snowball},
+              :errata_id_exact => { :type => 'string', :index =>:not_analyzed},
               :product_ids  => { :type => 'integer', :analyzer =>:kt_name_analyzer},
               :severity     => { :type => 'string', :analyzer =>:kt_name_analyzer},
               :type         => { :type => 'string', :analyzer =>:kt_name_analyzer},
@@ -63,6 +65,7 @@ module Glue::ElasticSearch::Errata
       def index_options
         {
           "_type" => :errata,
+          :errata_id_exact => self.errata_id,
           :errata_id_sort => self.errata_id,
           :id_title => self.errata_id + ' : ' + self.title,
           :product_ids=>self.product_ids,
@@ -96,7 +99,8 @@ module Glue::ElasticSearch::Errata
         end
       end
 
-      def self.search query, start, page_size, filters={}, sort=[:errata_id_sort, "DESC"]
+      def self.search query, start, page_size, filters={}, sort=[:errata_id_sort, "DESC"],
+                                                        default_field = 'id_title'
         return [] if !Tire.index(self.index).exists?
         all_rows = query.blank?
         search = Tire::Search::Search.new(self.index)
@@ -105,7 +109,7 @@ module Glue::ElasticSearch::Errata
             if all_rows
               all
             else
-              string query, {:default_field=>'id_title'}
+              string query, {:default_field=>default_field}
             end
           end
 

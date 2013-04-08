@@ -278,7 +278,7 @@ class GluePulpRepoRequiresSyncTest < GluePulpRepoTestBase
     VCR.use_cassette('glue_pulp_repo_units', :match_requests_on => [:body_json, :path, :method]) do
       package_groups = @@fedora_17_x86_64.package_groups
 
-      refute_empty package_groups.select { |group| group['name'] == 'mammal' }
+      refute_empty package_groups.select { |group| group.name == 'mammal' }
     end
   end
 
