@@ -16,7 +16,7 @@ class KTEnvironment < ActiveRecord::Base
   include Glue::ElasticSearch::Environment if Katello.config.use_elasticsearch
   include Glue if Katello.config.use_cp || Katello.config.use_pulp
 
-  set_table_name "environments"
+  self.table_name = "environments"
   include Ext::LabelFromName
   include Ext::PermissionTagCleanup
   acts_as_reportable
