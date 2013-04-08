@@ -347,6 +347,18 @@ describe SystemGroupsController, :katello => true do
     end
 
     describe "PUT update_systems" do
+      before(:each) do
+        Resources::Candlepin::Consumer.stub!(:get).and_return({:uuid => uuid, :owner => {:key => uuid}})
+
+        @next_environment = KTEnvironment.create!(:name => "TEST", :label => "TEST", :prior => @environment,
+                                                 :organization => @org)
+
+        @system2 = System.create!(:name=>"bar2", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
+
+        @group.systems = [@system, @system2]
+        @group.save
+      end
+
       let(:action) {:update_systems}
       let(:req) { put :update_systems, :id => @group.id}
       let(:authorized_user) do
@@ -358,19 +370,25 @@ describe SystemGroupsController, :katello => true do
       it_should_behave_like "protected action"
 
 
-      it "should update systems successfully" do
-        Resources::Candlepin::Consumer.stub!(:get).and_return({:uuid => uuid, :owner => {:key => uuid}})
-
-        next_environment = KTEnvironment.create!(:name => "TEST", :label => "TEST", :prior => @environment,
-                                                 :organization => @org)
-        @group.systems = [@system]
-        @group.save
-
+      it "should update all systems successfully" do
         controller.should notify.success
-        put :update_systems, :id => @group.id, :system_group=>{:environment_id => next_environment.id}
+
+        put :update_systems, :id => @group.id, :update_fields => {:environment_id => @next_environment.id}
 
         response.should be_success
-        @system.reload.environment.should == next_environment
+        @system.reload.environment.should == @next_environment
+        @system2.reload.environment.should == @next_environment
+      end
+
+      it "should update only specified systems successfully" do
+        controller.should notify.success
+
+        put :update_systems, :id => @group.id, :systems => {@system.id.to_s => @system.id.to_s},
+            :update_fields => {:environment_id => @next_environment.id}
+
+        response.should be_success
+        @system.reload.environment.should == @next_environment
+        @system2.reload.environment.should == @environment
       end
     end
 
