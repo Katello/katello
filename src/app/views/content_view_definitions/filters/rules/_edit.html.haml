@@ -19,7 +19,7 @@
       .simple-box-body
 
         #inclusion{'data-initial_value' => included_text(rule)}
-          = _("Specifying %{included} %{rule_type}") % {:included => included_text(rule), :rule_type => rule_type}
+          = _("Specifying %{rule_type} to %{include}") % {:include => included_text(rule), :rule_type => rule_type}
           %a.subpanel_element{"data-url" => edit_inclusion_content_view_definition_filter_rule_path(view_definition, filter, rule)}
             = _("(Edit)")
 

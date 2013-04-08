@@ -108,6 +108,16 @@ class FilterRulesControllerTest < MiniTest::Rails::ActionController::TestCase
     assert_template :partial => 'content_view_definitions/filters/rules/_edit'
   end
 
+  test "GET edit_inclusion - should be successful" do
+    @filter = filters(:populated_filter)
+
+    get :edit_inclusion, :content_view_definition_id => @filter.content_view_definition.id,
+        :filter_id => @filter.id, :id => @filter.rules.first.id
+
+    assert_response :success
+    assert_template :partial => 'content_view_definitions/filters/rules/_inclusion'
+  end
+
   test "GET edit_parameter_list - should be successful" do
     @filter = filters(:populated_filter)
 

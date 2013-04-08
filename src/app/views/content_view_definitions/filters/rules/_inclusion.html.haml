@@ -11,10 +11,10 @@
 
     = radio_button_tag("filter_rule[inclusion]", true, rule.inclusion ? true : false,
                        {:class => :inclusion, :tabindex => auto_tab_index})
-    = label_tag(_('Specify Included %{type}') % {:type => rule_type})
+    = label_tag(_('Specify %{type} to include') % {:type => rule_type.downcase})
 
     = radio_button_tag("filter_rule[inclusion]", false, rule.inclusion ? false : true,
                        {:class => :inclusion, :tabindex => auto_tab_index})
-    = label_tag(_('Specify Excluded %{type}') % {:type => rule_type})
+    = label_tag(_('Specify %{type} to exclude') % {:type => rule_type.downcase})
 
 = render :template => "layouts/tupane_layout"
