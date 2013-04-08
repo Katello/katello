@@ -1,5 +1,5 @@
 #
-# Copyright 2012 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -32,12 +32,7 @@ class Api::CustomInfoController < Api::ApiController
   end
 
   def create
-    if params[:keyname].nil? || params[:value].nil?
-      raise HttpErrors::BadRequest, _("must include a keyname and value")
-    end
-    keyname = params[:keyname].strip
-    value = params[:value].strip
-    response = @informable.custom_info.create!(:keyname => keyname, :value => value)
+    response = @informable.custom_info.create!(package_args(params))
     render :json => response.to_json
   end
 
@@ -57,10 +52,14 @@ class Api::CustomInfoController < Api::ApiController
 
   def destroy
     @single_custom_info.destroy
-    render :text => _("Deleted custom info '%s'") % params[:keyname], :status => 204
+    render :text => _("Deleted custom info '%s'") % params[:keyname]
   end
 
   private
+
+  def package_args(args)
+    return args.slice(:keyname, :value).delete_if { |k, v| v.nil? }.inject({}) { |h, (k, v)| h[k] = v.strip; h }
+  end
 
   def find_informable
     @informable = CustomInfo.find_informable(params[:informable_type], params[:informable_id])
