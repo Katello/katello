@@ -51,13 +51,8 @@ module Glue::Candlepin::Consumer
   module InstanceMethods
 
     def initialize(attrs=nil, options={})
-      # TODO RAILS32 Clean up supers
       if attrs.nil?
-        if Rails::VERSION::STRING.start_with?('3.2')
-          super
-        else
-          super(attrs)
-        end
+        super
       elsif
         type_key = attrs.has_key?('type') ? 'type' : :type
         #rename "type" to "cp_type" (activerecord and candlepin variable name conflict)
@@ -66,16 +61,13 @@ module Glue::Candlepin::Consumer
         end
 
         attrs_used_by_model = attrs.reject do |k, v|
-          !attributes_from_column_definition.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
+          !self.class.column_defaults.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
         end
         if attrs_used_by_model["environment"].is_a? Hash
           attrs_used_by_model.delete("environment")
         end
-        if Rails::VERSION::STRING.start_with?('3.2')
-          super(attrs_used_by_model, options)
-        else
-          super(attrs_used_by_model)
-        end
+
+        super(attrs_used_by_model, options)
       end
     end
 
@@ -204,7 +196,7 @@ module Glue::Candlepin::Consumer
     end
 
     def reject_db_columns(cp_json)
-      cp_json.reject {|k,v| attributes_from_column_definition.keys.member?(k.to_s) }
+      cp_json.reject {|k,v| self.class.column_defaults.keys.member?(k.to_s) }
     end
 
     def save_candlepin_orchestration
