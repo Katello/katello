@@ -189,15 +189,11 @@ class ContentViewDefinition < ContentViewDefinitionBase
     applicable_filters = filters.applicable(repo)
 
     applicable_rules = FilterRule.class_for(content_type).where(:filter_id => applicable_filters)
-    filter_clauses = {}
     inclusion_rules = applicable_rules.where(:inclusion => true)
     exclusion_rules = applicable_rules.where(:inclusion => false)
 
-    includes_count = inclusion_rules.count
-    excludes_count = exclusion_rules.count
-
     #   If there is no include/exclude filters  -  Everything is included. - so do not delete anything
-    return if includes_count == 0 && excludes_count == 0
+    return if inclusion_rules.count == 0 && exclusion_rules.count == 0
 
 
     clauses = []

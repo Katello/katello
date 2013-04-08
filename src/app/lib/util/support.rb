@@ -33,6 +33,9 @@ module Util
       params
     end
 
+    # Helper method to just convert
+    # a collection of objects to their
+    # string representation (mostly to be used internally)
     def self.stringify(col)
       col.collect{|c| c.to_s}
     end
@@ -44,9 +47,7 @@ module Util
       end
 
       rule = rule.with_indifferent_access
-
-      rule_keys = rule.keys
-      diff_data = rule_keys.collect do |k|
+      diff_data = rule.keys.collect do |k|
         if params[k]
           p = params[k]
           r = rule[k]
