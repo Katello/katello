@@ -77,6 +77,19 @@ describe FilterRulesController, :katello => true do
       it_should_behave_like "protected action"
     end
 
+    describe "GET edit_inclusion" do
+      let(:action) { :edit_inclusion }
+      let(:req) { get :edit_inclusion, :content_view_definition_id => @definition.id,
+                      :filter_id => @filter.id, :id => @filter_rule.id }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+    end
+
     describe "GET edit_parameter_list" do
       let(:action) { :edit_parameter_list }
       let(:req) { get :edit_parameter_list, :content_view_definition_id => @definition.id, :filter_id => @filter.id,
