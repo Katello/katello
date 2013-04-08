@@ -13,14 +13,20 @@ require 'katello/load_configuration'
 require 'katello/logging'
 require 'katello/url_constrained_cookie_store'
 
+gemfile = if ENV['BUNDLE_GEMFILE']
+            ENV['BUNDLE_GEMFILE']
+          else
+            ENV['BUNDLE_GEMFILE'] = File.expand_path('../../Gemfile', __FILE__)
+          end
 
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
-if File.exist?(File.expand_path('../../Gemfile.in', __FILE__))
+unless Katello.early_config.use_bundler
+
   # In bundler_ext mode we always load all groups except the testing group
   # which can cause problems mocking objects for production or development envs.
   require 'bundler_ext'
-  BundlerExt.system_require(File.expand_path('../../Gemfile.in', __FILE__), :all)
+  BundlerExt.system_require(gemfile, :all)
 
   # Webmock rubygem have very strong default setting - it blocks all HTTP connections
   # after it is required. Therefore we want to turn off this behavior for all environments
@@ -30,19 +36,10 @@ if File.exist?(File.expand_path('../../Gemfile.in', __FILE__))
   end
 else
   # In Bundler mode we load only specified groups
-  if ENV['BUNDLE_GEMFILE']
-    gemfile = ENV['BUNDLE_GEMFILE']
-  else
-    ENV['BUNDLE_GEMFILE'] = File.expand_path('../../Gemfile', __FILE__)
-  end
   if defined?(Bundler)
-    basic_groups = [:default]
-    if Katello.early_config.katello?
-      basic_groups = basic_groups + [:foreman, :pulp]
-    end
-    if Katello.early_config.profiling
-      basic_groups += [:optional]
-    end
+    basic_groups = [:production]
+    basic_groups += [:foreman, :pulp] if Katello.early_config.katello?
+    basic_groups += [:optional] if Katello.early_config.profiling
     groups = case Rails.env.to_sym
              when :build
                basic_groups + [:development, :build]

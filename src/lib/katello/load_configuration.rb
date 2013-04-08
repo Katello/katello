@@ -33,7 +33,7 @@ module Katello
                     search use_foreman password_reset_expiration redhat_repository_url port
                     elastic_url rest_client_timeout elastic_index
                     katello_version pulp email_reply_address
-                    embed_yard_documentation logging)
+                    embed_yard_documentation logging use_bundler)
 
           has_values :app_mode, %w(katello headpin)
           has_values :url_prefix, %w(/headpin /sam /cfse /katello)
@@ -58,7 +58,7 @@ module Katello
           end
 
           are_booleans :use_cp, :use_foreman, :use_pulp, :use_elasticsearch, :use_ssl, :ldap_roles,
-                       :profiling
+                       :profiling, :use_bundler
 
           if !early? && environment != :build
             validate :database do
