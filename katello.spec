@@ -362,11 +362,7 @@ Summary:         Katello devel support (test coverage utils)
 BuildArch:       noarch
 Requires:        %{name} = %{version}-%{release}
 # dependencies from bundler.d/coverage.rb
-%if 0%{?fedora} > 16
 Requires:        rubygem(simplecov)
-%else
-Requires:        rubygem(rcov) >= 0.9.9
-%endif
 
 %description devel-coverage
 Rake tasks and dependecies for Katello developers, which enables
@@ -668,7 +664,6 @@ usermod -a -G katello-shared tomcat
 %dir %{homedir}/app/lib/resources/abstract_model
 %{homedir}/app/lib/resources/abstract_model/indexed_model.rb
 %{homedir}/lib/tasks
-%exclude %{homedir}/lib/tasks/rcov.rake
 %exclude %{homedir}/lib/tasks/yard.rake
 %exclude %{homedir}/lib/tasks/hudson.rake
 %exclude %{homedir}/lib/tasks/jsroutes.rake
@@ -847,7 +842,6 @@ usermod -a -G katello-shared tomcat
 
 %files devel-coverage
 %{homedir}/bundler.d/coverage.rb
-%{homedir}/lib/tasks/rcov.rake
 
 %files devel-debugging
 %{homedir}/bundler.d/debugging.rb
