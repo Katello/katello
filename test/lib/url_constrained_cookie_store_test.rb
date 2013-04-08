@@ -19,7 +19,7 @@ class UrlConstrainedCookieStoreTest < ActionController::IntegrationTest
   SessionKey = '_test_session'
   SessionSecret = '16a7078c778fb1e28d062c6d1a26e864'
 
-  Verifier = ActiveSupport::MessageVerifier.new(SessionSecret, 'SHA1')
+  Verifier = ActiveSupport::MessageVerifier.new(SessionSecret, :digest => 'SHA1')
   SignedBar = Verifier.generate(:foo => "bar", :created_at => (Time.now - 2.minute),
       :session_id => SecureRandom.hex(16))
 
