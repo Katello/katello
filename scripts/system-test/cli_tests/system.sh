@@ -60,3 +60,7 @@ test_success "limited ak create" activation_key create --name="$ACTIVATION_KEY_N
 test_success "system register with limited ak" system register --name="$SYSTEM_NAME_ADMIN" --org="$TEST_ORG" --activationkey="$ACTIVATION_KEY_NAME_3"
 test_failure "system register with limited ak" system register --name="$SYSTEM_NAME_ADMIN_2" --org="$TEST_ORG" --activationkey="$ACTIVATION_KEY_NAME_3"
 test_success "system unregister" system unregister --name="$SYSTEM_NAME_ADMIN" --org="$TEST_ORG"
+test_success "system add custom_info" system custom_info add --org="$TEST_ORG" --name="$SYSTEM_NAME_ADMIN" --keyname="asset_tag" --value="1234"
+test_success "system add_custom_info without a value" system custom_info add --org="$TEST_ORG" --name="$SYSTEM_NAME_ADMIN" --keyname="hello world"
+test_success "system update custom_info" system custom_info update --org="$TEST_ORG" --name="$SYSTEM_NAME_ADMIN" --keyname="hello world" --value="hello system-tests"
+test_success "system remove custom_info" system custom_info remove --org="$TEST_ORG" --name="$SYSTEM_NAME_ADMIN" --keyname="hello world"
