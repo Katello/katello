@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Katello Organization actions
-# Copyright (c) 2012 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public License,
 # version 2 (GPLv2). There is NO WARRANTY for this software, express or
