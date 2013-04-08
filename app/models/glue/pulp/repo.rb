@@ -90,7 +90,7 @@ module Glue::Pulp::Repo
         #end
 
         attrs_used_by_model = attrs.reject do |k, v|
-          !attributes_from_column_definition.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
+          !self.class.column_defaults.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
         end
         if Rails::VERSION::STRING.start_with?('3.2')
           super(attrs_used_by_model, options)
