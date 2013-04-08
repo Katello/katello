@@ -93,10 +93,7 @@ class SyncPlansController < ApplicationController
   #convert date, time from UI to object
   def convert_date_time(date, time)
     return nil if date.blank? || time.blank?
-    sync_event = date + ' ' + time + ' '  + DateTime.now.zone
-    DateTime.strptime(sync_event, "%m/%d/%Y %I:%M %P %:z")
-  rescue ArgumentError
-    raise _("Invalid date or time format")
+    parse_calendar_date(date, time)
   end
 
   def destroy
