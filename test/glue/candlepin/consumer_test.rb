@@ -25,11 +25,7 @@ class GlueCandlepinConsumerTestBase < MiniTest::Rails::ActiveSupport::TestCase
   @@dev_cve = nil
 
   def self.before_suite
-    load_fixtures
-    # TODO: RAILS32 remove top reference to load_fixtures
-    if @loaded_fixtures.nil?
-      @loaded_fixtures = load_fixtures
-    end
+    @loaded_fixtures = load_fixtures
 
     services  = ['Pulp', 'ElasticSearch', 'Foreman']
     models    = ['System', 'User', 'KTEnvironment', 'Organization', 'Product', 'ContentView', 'ContentViewDefinition', 'ContentViewEnvironment', 'ContentViewVersion']
