@@ -19,4 +19,8 @@ module FilterRulesHelper
     # get a comma-separated list of the errata types currently selected
     rule.parameters[:errata_type].map{|type| errata_types[type]}.join(', ') if rule.parameters[:errata_type]
   end
+
+  def included_text(rule)
+    rule.inclusion? ? _("Include") : _("Exclude")
+  end
 end
