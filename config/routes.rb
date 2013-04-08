@@ -124,6 +124,7 @@ Src::Application.routes.draw do
         end
 
         member do
+          get :edit_inclusion
           get :edit_parameter_list
           get :edit_date_type_parameters
           put :add_parameter
