@@ -70,7 +70,7 @@ Requires:       wget
 Requires:       curl
 
 Requires:       %{?scl_prefix}rubygems
-Requires:       %{?scl_prefix}rubygem(rails) >= 3.0.10
+Requires:       %{?scl_prefix}rubygem(rails) >= 3.2.8
 Requires:       %{?scl_prefix}rubygem(haml) >= 3.1.2
 Requires:       %{?scl_prefix}rubygem(haml-rails)
 Requires:       %{?scl_prefix}rubygem(json)
