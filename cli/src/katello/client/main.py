@@ -233,6 +233,7 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         system_group_cmd.add_command('delete', system_group.Delete())
         system_group_cmd.add_command('packages', system_group.Packages())
         system_group_cmd.add_command('errata', system_group.Errata())
+        system_group_cmd.add_command('update_systems', system_group.UpdateSystems())
         katello_cmd.add_command('system_group', system_group_cmd)
 
     if mode == 'katello':
