@@ -1,5 +1,5 @@
 #
-# Copyright 2012 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -68,7 +68,7 @@ describe Api::CustomInfoController do
     it "should require key + value pairs" do
       System.find(@system.id).custom_info.empty?.should == true
       post :create, :informable_id => @system.id, :informable_type => "system"
-      response.status.should == HttpErrors::BAD_REQUEST
+      response.code.should == "422"
       System.find(@system.id).custom_info.empty?.should == true
     end
   end
@@ -186,7 +186,7 @@ describe Api::CustomInfoController do
       @system.custom_info.size.should == 5
       @system.custom_info.where(:keyname => "test_key1").size.should == 1
       delete :destroy, :informable_id => @system.id, :informable_type => "system", :keyname => "test_key1"
-      response.code.should == "204"
+      response.code.should == "200"
       @system.custom_info.where(:keyname => "test_key1").size.should == 0
       @system.custom_info.size.should == 4
     end
