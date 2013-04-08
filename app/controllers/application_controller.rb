@@ -233,6 +233,25 @@ class ApplicationController < ActionController::Base
     ""
   end
 
+
+  #convert date, time from UI to object
+  helper_method :parse_calendar_date
+  def parse_calendar_date(date_str, time_str = "")
+    return nil if date_str.blank?
+
+    event = date_str
+    unless time_str.blank?
+      event = event + ' ' + time_str
+    else
+      event = event + ' ' + "12:00 am"
+    end
+    event = event + ' '  + DateTime.now.zone
+    DateTime.strptime(event, "%m/%d/%Y %I:%M %P %:z")
+  rescue ArgumentError
+    raise _("Invalid date or time format")
+  end
+
+
   helper_method :no_env_available_msg
   def no_env_available_msg
     _("No environments are currently available in this organization.  Please either add some to the organization or select an organization that has an environment to set user default.")

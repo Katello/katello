@@ -11,6 +11,14 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class ErratumRule < FilterRule
+
+  ERRATA_TYPES = {'bugfix' => _('Bug Fix'),
+                    'enhancement' => _('Enhancement'),
+                    'security' => ('Security')}.with_indifferent_access
+
+
+  validates_with Validators::ErratumRuleParamsValidator, :attributes => :parameters
+
   def params_format
     {:units => [[:id]], :date_range => [:start, :end], :errata_type => {}, :severity => {}}
   end
@@ -35,8 +43,8 @@ class ErratumRule < FilterRule
       if parameters.has_key? :date_range
         date_range = parameters[:date_range]
         dr = {}
-        dr["$gte"] = convert_date(date_range[:start]).as_json if date_range.has_key? :start
-        dr["$lte"] = convert_date(date_range[:end]).as_json if date_range.has_key? :end
+        dr["$gte"] = date_range[:start].as_json if date_range.has_key? :start
+        dr["$lte"] = date_range[:end].as_json if date_range.has_key? :end
         rule_clauses << {"issued" => dr}
       end
       if parameters.has_key?(:errata_type) && !parameters[:errata_type].empty?
@@ -58,14 +66,5 @@ class ErratumRule < FilterRule
           return {'$and' => rule_clauses}
       end
     end
-  end
-
-  #convert date, time from UI to object
-  def convert_date(date)
-    return nil if date.blank?
-    event = date +  ' '  + DateTime.now.zone
-    DateTime.strptime(event, "%m/%d/%Y %:z")
-  rescue ArgumentError
-    raise _("Invalid date or time format")
   end
 end
