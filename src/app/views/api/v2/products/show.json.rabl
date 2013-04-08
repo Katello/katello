@@ -1,9 +1,11 @@
 object @product
 
-extends 'api/v2/common/identifier'
+attributes :cp_id => :id
+attributes :name, :label, :description
+
 extends 'api/v2/common/org_reference'
 
-attributes :multiplier, :attributes, :marketing_product, :provider_id
+attributes :multiplier, :marketing_product, :provider_id
 attributes :sync_plan_id, :sync_plan_name
 attributes :gpg_key_id, :gpg_key_name
 

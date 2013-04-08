@@ -5,32 +5,32 @@ module Api
 
 
       def respond_for_show(options={})
-        respond_with_template_resource(params[:action], controller_name, options)
+        respond_with_template_resource(options[:template] || params[:action], controller_name, options)
       end
 
       def respond_for_index(options={})
-        try_specific_collection_template(params[:action], params[:action], options)
+        try_specific_collection_template(options[:template] || params[:action], params[:action], options)
       end
 
       def respond_for_create(options={})
-        try_specific_resource_template(params[:action], params[:action], options)
+        try_specific_resource_template(options[:template] || params[:action], params[:action], options)
       end
 
       def respond_for_update(options={})
-        try_specific_resource_template(params[:action], params[:action], options)
+        try_specific_resource_template(options[:template] || params[:action], params[:action], options)
       end
 
       def respond_for_destroy(options={})
-        try_specific_resource_template(params[:action], params[:action], options)
+        try_specific_resource_template(options[:template] || params[:action], params[:action], options)
       end
 
       def respond_for_status(options={})
-        try_specific_resource_template(params[:action], "status", options)
+        try_specific_resource_template(options[:template] || params[:action], "status", options)
       end
 
       def respond_for_async(options={})
         options[:status] ||= 202
-        try_specific_resource_template(params[:action], "async", options)
+        try_specific_resource_template(options[:template] || params[:action], "async", options)
       end
 
       def respond_with_template(action, resource_name, options={}, &block)
