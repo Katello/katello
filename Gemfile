@@ -8,7 +8,7 @@ require 'katello/load_configuration'
 # With a pull request, send also link to our (or Fedora) koji with RPMs.
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.10'
+gem 'rails', '~> 3.2.8'
 gem 'json'
 gem 'rest-client', :require => 'rest_client'
 gem 'jammit', '>= 0.5.4'
@@ -36,7 +36,8 @@ gem 'uuidtools'
 # Stuff for view/display/frontend
 gem 'haml', '~> 3.1.2'
 gem 'haml-rails', "= 0.3.4"
-gem 'compass', '>= 0.11.5', '< 0.12'
+gem 'compass-rails'
+gem 'compass'
 gem 'compass-960-plugin', '>= 0.10.4', :require => 'ninesixty'
 gem 'simple-navigation', '>= 3.3.4'
 
@@ -58,7 +59,7 @@ gem 'prawn'
 gem 'acts_as_reportable', '>=1.1.1', :require => 'ruport/acts_as_reportable'
 
 # Documentation
-gem "apipie-rails", '>= 0.0.18'
+gem "apipie-rails", '>= 0.0.13'
 
 gem 'hooks'
 

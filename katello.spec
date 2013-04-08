@@ -70,7 +70,7 @@ Requires:       wget
 Requires:       curl
 
 Requires:       %{?scl_prefix}rubygems
-Requires:       %{?scl_prefix}rubygem(rails) >= 3.0.10
+Requires:       %{?scl_prefix}rubygem(rails) >= 3.2.8
 Requires:       %{?scl_prefix}rubygem(haml) >= 3.1.2
 Requires:       %{?scl_prefix}rubygem(haml-rails)
 Requires:       %{?scl_prefix}rubygem(json)
@@ -112,11 +112,7 @@ Requires:       lsof
 Requires:       redhat-logos >= 60.0.14
 %endif
 
-%if 0%{?fedora} && 0%{?fedora} < 17
-Requires: %{?scl_prefix}ruby(abi) = 1.8
-%else
 Requires: %{?scl_prefix}ruby(abi) = 1.9.1
-%endif
 Requires: %{?scl_prefix}ruby
 
 # <workaround> for 714167 - undeclared dependencies (regin & multimap)
@@ -374,11 +370,7 @@ Summary:         Katello devel support (debugging)
 BuildArch:       noarch
 Requires:        %{name} = %{version}-%{release}
 # dependencies from bundler.d/debugging.rb
-%if 0%{?fedora} > 16
 Requires:        rubygem(ruby-debug19)
-%else
-Requires:        rubygem(ruby-debug)
-%endif
 
 %description devel-debugging
 Rake tasks and dependecies for Katello developers, which enables
@@ -447,13 +439,7 @@ ALCHEMY_DIR=$(rpm -ql %{?scl_prefix}rubygem-alchemy | grep -o '/.*/vendor' | sed
 cp -R $ALCHEMY_DIR* ./vendor/alchemy
 
 #use Bundler_ext instead of Bundler
-%if 0%{?fedora} > 17
-  mv Gemfile32 Gemfile.in
-  rm Gemfile
-%else
-  mv Gemfile Gemfile.in
-  rm Gemfile32
-%endif
+mv Gemfile Gemfile.in
 
 #pull in branding if present
 if [ -d branding ] ; then
