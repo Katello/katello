@@ -11,9 +11,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-# REMOVEME - commented out until Foreman is SCL ready
-# (search for REMOVEME strings down the file)
-%if "%{?scl}" == "ruby193x"
+%if "%{?scl}" == "ruby193"
     %global scl_prefix %{scl}-
     %global scl_ruby /usr/bin/ruby193-ruby
     %global scl_rake scl enable ruby193 rake
@@ -78,6 +76,8 @@ Requires:       %{?scl_prefix}rubygem(haml-rails)
 Requires:       %{?scl_prefix}rubygem(json)
 Requires:       %{?scl_prefix}rubygem(rest-client)
 Requires:       %{?scl_prefix}rubygem(jammit)
+# required by jammit
+Requires:       %{?scl_prefix}rubygem(therubyracer)
 Requires:       %{?scl_prefix}rubygem(rails_warden)
 Requires:       %{?scl_prefix}rubygem(net-ldap)
 Requires:       %{?scl_prefix}rubygem(compass)
@@ -112,9 +112,7 @@ Requires:       lsof
 Requires:       redhat-logos >= 60.0.14
 %endif
 
-# REMOVEME - uncomment following line instead the next for SCL
-#%if 0%{?fedora} && 0%{?fedora} < 17
-%if 0%{?rhel} == 6 || (0%{?fedora} && 0%{?fedora} < 17)
+%if 0%{?fedora} && 0%{?fedora} < 17
 Requires: %{?scl_prefix}ruby(abi) = 1.8
 %else
 Requires: %{?scl_prefix}ruby(abi) = 1.9.1
@@ -365,11 +363,7 @@ Summary:         Katello devel support (test coverage utils)
 BuildArch:       noarch
 Requires:        %{name} = %{version}-%{release}
 # dependencies from bundler.d/coverage.rb
-%if 0%{?fedora} > 16
 Requires:        rubygem(simplecov)
-%else
-Requires:        rubygem(rcov) >= 0.9.9
-%endif
 
 %description devel-coverage
 Rake tasks and dependecies for Katello developers, which enables
@@ -470,10 +464,9 @@ fi
     #compile SASS files
     echo Compiling SASS files...
     touch config/katello.yml
-# REMOVEME - commented out until Foreman is SCL ready
-#%{?scl:scl enable %{scl} "}
+%{?scl:scl enable %{scl} "}
     compass compile
-#%{?scl:"}
+%{?scl:"}
     rm config/katello.yml
 
     #generate Rails JS/CSS/... assets
@@ -494,18 +487,16 @@ a2x -d manpage -f manpage man/katello-service.8.asciidoc
     export BUNDLER_EXT_GROUPS="default apipie"
     export RAILS_ENV=production # TODO - this is already defined above!
     touch config/katello.yml
-# REMOVEME - commented out until Foreman is SCL ready
-#%{?scl:scl enable %{scl} "}
+%{?scl:scl enable %{scl} "}
     rake apipie:static apipie:cache --trace
-#%{?scl:"}
+%{?scl:"}
 
     # API doc for Headpin mode
     echo "common:" > config/katello.yml
     echo "  app_mode: headpin" >> config/katello.yml
-# REMOVEME - commented out until Foreman is SCL ready
-#%{?scl:scl enable %{scl} "}
+%{?scl:scl enable %{scl} "}
     rake apipie:static apipie:cache OUT=doc/headpin-apidoc --trace
-#%{?scl:"}
+%{?scl:"}
     rm config/katello.yml
     mv lib/tasks_disabled lib/tasks
 %endif
@@ -674,7 +665,6 @@ usermod -a -G katello-shared tomcat
 %dir %{homedir}/app/lib/resources/abstract_model
 %{homedir}/app/lib/resources/abstract_model/indexed_model.rb
 %{homedir}/lib/tasks
-%exclude %{homedir}/lib/tasks/rcov.rake
 %exclude %{homedir}/lib/tasks/yard.rake
 %exclude %{homedir}/lib/tasks/hudson.rake
 %exclude %{homedir}/lib/tasks/jsroutes.rake
@@ -853,7 +843,6 @@ usermod -a -G katello-shared tomcat
 
 %files devel-coverage
 %{homedir}/bundler.d/coverage.rb
-%{homedir}/lib/tasks/rcov.rake
 
 %files devel-debugging
 %{homedir}/bundler.d/debugging.rb
