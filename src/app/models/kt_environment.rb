@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -16,7 +16,7 @@ class KTEnvironment < ActiveRecord::Base
   include Glue::ElasticSearch::Environment if Katello.config.use_elasticsearch
   include Glue if Katello.config.use_cp || Katello.config.use_pulp
 
-  set_table_name "environments"
+  self.table_name = "environments"
   include Ext::LabelFromName
   include Ext::PermissionTagCleanup
   acts_as_reportable

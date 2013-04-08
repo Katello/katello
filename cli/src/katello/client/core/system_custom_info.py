@@ -1,6 +1,6 @@
 #
 # Katello System actions
-# Copyright (c) 2012 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public License,
 # version 2 (GPLv2). There is NO WARRANTY for this software, express or
@@ -42,11 +42,11 @@ class AddCustomInfo(BaseSystemCustomInfo):
 
     def setup_parser(self, parser):
         super(AddCustomInfo, self).setup_parser(parser)
-        parser.add_option('--value', dest='value', help=_("the custom info (required)"))
+        parser.add_option('--value', dest='value', help=_("the custom info"))
 
     def check_options(self, validator):
         super(AddCustomInfo, self).check_options(validator)
-        validator.require(('org', 'keyname', 'value'))
+        validator.require(('org', 'keyname'))
 
     def run(self):
         org_name = self.get_option('org')
@@ -74,7 +74,6 @@ class AddCustomInfo(BaseSystemCustomInfo):
 
 class UpdateCustomInfo(BaseSystemCustomInfo):
     description = _("update custom info for a system")
-
     def setup_parser(self, parser):
         super(UpdateCustomInfo, self).setup_parser(parser)
         parser.add_option('--value', dest='value', help=_("replacement value"))
@@ -99,7 +98,7 @@ class UpdateCustomInfo(BaseSystemCustomInfo):
 
         ident = sys_uuid if sys_uuid else sys_name
 
-        if response:
+        if response is not None:
             print _("Successfully updated Custom Information [ %(keyname)s ] for System [ %(ident)s ]") \
                 % {'keyname':keyname, 'ident':ident}
         else:
@@ -128,7 +127,7 @@ class RemoveCustomInfo(BaseSystemCustomInfo):
 
         ident = sys_uuid if sys_uuid else sys_name
 
-        if len(response) == 0:
+        if response is not None:
             print _("Successfully removed Custom Information from System [ %s ]") % ident
         else:
             print _("Could not remove Custom Information from System [ %s ]") % ident
