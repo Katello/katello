@@ -40,6 +40,22 @@ module Util
       col.collect{|c| c.to_s}
     end
 
+
+    # Given a rules hash in the format
+    # {<attrib_name>: {<attrib_name> => ...}}
+    # the method will match the params attributes to provided
+    # rule and return a diff.
+    # Here are some of the examples
+    # rule -> {:units => [[:name, :version, :min_version, :max_version]]}
+    # will match -> {:units => [{:name = > "boo", :version => "2.0"},
+    #                 {:name = > "Foo", :min_version => "2.0"}]}
+    # rule ->     {:units => [[:id]], :date_range => [:start, :end],
+    #                :errata_type => {}, :severity => {}}
+    # will match -> {:units => [{:id => 100}],
+    #        :date_range => {:start => "05/14/2011"}}
+    # Note of caution this merely shows differences in the structure
+    # of params vs rules. It doesnt validate anything.
+    # Look at SerializedParamsValidator method for its uses.
     def self.diff_hash_params(rule, params)
       params = params.with_indifferent_access
       if Array === rule
