@@ -14,13 +14,34 @@ class ErratumRule < FilterRule
 
   ERRATA_TYPES = {'bugfix' => _('Bug Fix'),
                     'enhancement' => _('Enhancement'),
-                    'security' => ('Security')}.with_indifferent_access
+                    'security' => _('Security')}.with_indifferent_access
 
 
   validates_with Validators::ErratumRuleParamsValidator, :attributes => :parameters
 
   def params_format
     {:units => [[:id]], :date_range => [:start, :end], :errata_type => {}, :severity => {}}
+  end
+
+  [:start, :end].each do |date_type|
+    define_method("#{date_type}_date") do
+      dt = parameters[:date_range].try(:[], date_type)
+      Time.at(dt) if dt
+    end
+
+    define_method("#{date_type}_date=") do |date|
+      parameters[:date_range] = {} unless parameters.has_key?(:date_range)
+      parameters[:date_range][date_type] = date.to_i
+    end
+  end
+
+  def errata_types= etypes
+    parameters[:errata_type] = {} unless parameters.has_key?(:errata_type)
+    parameters[:errata_type] = etypes
+  end
+
+  def errata_types
+    parameters[:errata_type]
   end
 
   def generate_clauses(repo)
@@ -41,15 +62,14 @@ class ErratumRule < FilterRule
       {"id" => {"$in" => ids}}  unless ids.empty?
     else
       if parameters.has_key? :date_range
-        date_range = parameters[:date_range]
         dr = {}
-        dr["$gte"] = date_range[:start].as_json if date_range.has_key? :start
-        dr["$lte"] = date_range[:end].as_json if date_range.has_key? :end
+        dr["$gte"] = start_date.as_json if start_date
+        dr["$lte"] = end_date.as_json if end_date
         rule_clauses << {"issued" => dr}
       end
-      if parameters.has_key?(:errata_type) && !parameters[:errata_type].empty?
+      if errata_types
           # {"type": {"$in": ["security", "enhancement", "bugfix"]}
-        rule_clauses << {"type" => {"$in" => parameters[:errata_type]}}
+        rule_clauses << {"type" => {"$in" => errata_types}}
       end
 
       if parameters.has_key?(:severity) && !parameters[:severity].empty?
