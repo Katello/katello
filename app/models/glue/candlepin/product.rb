@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -89,16 +89,11 @@ module Glue::Candlepin::Product
 
         # ugh. hack-ish. otherwise we have to modify code every time things change on cp side
         attribs = attribs.reject do |k, v|
-          !attributes_from_column_definition.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
+          !self.class.column_defaults.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
         end
       end
 
-      # TODO RAILS32 Clean up supers
-      if Rails::VERSION::STRING.start_with?('3.2')
-        super
-      else
-        super(attribs)
-      end
+      super
     end
 
     def build_product_content(attrs)
