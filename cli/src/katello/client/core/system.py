@@ -907,3 +907,6 @@ class RemoveSystemGroups(SystemAction):
 
 class System(Command):
     description = _('system specific actions in the katello server')
+
+class CustomInfo(Command):
+    description = _("make changes to custom info")
