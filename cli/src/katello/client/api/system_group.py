@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2012 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public License,
 # version 2 (GPLv2). There is NO WARRANTY for this software, express or
@@ -145,3 +145,10 @@ class SystemGroupAPI(KatelloAPI):
     def install_errata(self, org_id, system_group_id, errata):
         path = "/api/organizations/%s/system_groups/%s/errata" % (org_id, system_group_id)
         return self.server.POST(path, {"errata_ids": errata})[1]
+
+    def update_systems(self, org_id, system_group_id, env_id, view_id):
+        path = "/api/organizations/%s/system_groups/%s/update_systems" % (org_id, system_group_id)
+        system_group = dict()
+        update_dict_unless_none(system_group, "environment_id", env_id)
+        update_dict_unless_none(system_group, "content_view_id", view_id)
+        return self.server.PUT(path, {"system_group": system_group})[1]

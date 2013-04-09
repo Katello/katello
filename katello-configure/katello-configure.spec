@@ -1,6 +1,6 @@
 # vim: sw=4:ts=4:et
 #
-# Copyright 2012 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -36,6 +36,7 @@ Requires:       rubygem(rake)
 Requires:       rubygem(ruby-progressbar)
 BuildRequires:  /usr/bin/pod2man /usr/bin/erb
 BuildRequires:  findutils puppet >= 2.6.6
+BuildRequires:  sed
 
 BuildArch: noarch
 
@@ -67,6 +68,11 @@ katello-upgrade which handles upgrades between versions.
 # README is development (git) only
 rm -f upgrade-scripts/README
 
+#replace shebangs for SCL
+%if %{?scl:1}%{!?scl:0}
+    sed -ri '1,$s|/usr/bin/rake|/usr/bin/ruby193-rake|' upgrade-scripts/*
+%endif
+
 #build katello-configure man page
 THE_VERSION=%version perl -000 -ne 'if ($X) { s/^THE_VERSION/$ENV{THE_VERSION}/; s/\s+CLI_OPTIONS/$C/; s/^CLI_OPTIONS_LONG/$X/; print; next } ($t, $l, $v, $d) = /^#\s*(.+?\n)(.+\n)?(\S+)\s*=\s*(.*?)\n+$/s; $l =~ s/^#\s*//gm; $l = $t if not $l; ($o = $v) =~ s/_/-/g; $x .= qq/=item --$o=<\U$v\E>\n\n$l\nThe default value is "$d".\n\n/; $C .= "\n        [ --$o=<\U$v\E> ]"; $X = $x if eof' default-answer-file man/katello-configure.pod \
 	| /usr/bin/pod2man --name=%{name} -c "Katello Reference" --section=1 --release=%{version} - man/katello-configure.man1
@@ -81,7 +87,6 @@ sed -i "s/THE_VERSION/%version/g" man/katello-passwd.pod bin/katello-passwd
 #build katello-configure-answer man page
 sed -i "s/THE_VERSION/%version/g" man/katello-configure-answer.pod bin/katello-configure-answer
 /usr/bin/pod2man --name=%{name} -c "Katello Reference" --section=1 --release=%{version} man/katello-configure-answer.pod man/katello-configure-answer.man1
-
 
 %install
 #prepare dir structure

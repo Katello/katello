@@ -1,7 +1,7 @@
 #!/usr/bin/python
 #
 # Katello Shell
-# Copyright (c) 2012 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 # This software is licensed to you under the GNU General Public License,
 # version 2 (GPLv2). There is NO WARRANTY for this software, express or
 # implied, including the implied warranties of MERCHANTABILITY or FITNESS
@@ -211,9 +211,11 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         system_cmd.add_command('packages', system.InstalledPackages())
         system_cmd.add_command('add_to_groups', system.AddSystemGroups())
         system_cmd.add_command('remove_from_groups', system.RemoveSystemGroups())
-    system_cmd.add_command('add_custom_info', system_custom_info.AddCustomInfo())
-    system_cmd.add_command('update_custom_info', system_custom_info.UpdateCustomInfo())
-    system_cmd.add_command('remove_custom_info', system_custom_info.RemoveCustomInfo())
+    custom_info_cmd = system.CustomInfo()
+    custom_info_cmd.add_command('add', system_custom_info.AddSystemCustomInfo())
+    custom_info_cmd.add_command('update', system_custom_info.UpdateSystemCustomInfo())
+    custom_info_cmd.add_command('remove', system_custom_info.RemoveSystemCustomInfo())
+    system_cmd.add_command('custom_info', custom_info_cmd)
     katello_cmd.add_command('system', system_cmd)
 
     if mode == 'katello':
@@ -231,6 +233,7 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         system_group_cmd.add_command('delete', system_group.Delete())
         system_group_cmd.add_command('packages', system_group.Packages())
         system_group_cmd.add_command('errata', system_group.Errata())
+        system_group_cmd.add_command('update_systems', system_group.UpdateSystems())
         katello_cmd.add_command('system_group', system_group_cmd)
 
     if mode == 'katello':
@@ -285,6 +288,7 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         cvd_cmd.add_command('delete', content_view_definition.Delete())
         cvd_cmd.add_command('update', content_view_definition.Update())
         cvd_cmd.add_command('publish', content_view_definition.Publish())
+        cvd_cmd.add_command('clone', content_view_definition.Clone())
         cvd_cmd.add_command('add_product',
                 content_view_definition.AddRemoveProduct(True))
         cvd_cmd.add_command('remove_product',

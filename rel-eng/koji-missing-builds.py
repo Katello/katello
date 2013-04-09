@@ -33,9 +33,6 @@ if len(args) > 1:
     sys.exit(1)
 
 distmap = {'rhel6':'.el6',
-           'rhel5':'.el5',
-           'fedora16':'.fc16',
-           'fedora17':'.fc17',
            'fedora18':'.fc18',
           }
 

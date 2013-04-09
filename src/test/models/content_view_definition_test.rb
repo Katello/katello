@@ -1,5 +1,5 @@
 #
-# Copyright 2012 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -123,6 +123,16 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_equal 2, ContentViewDefinitionBase.where(:name => content_view_def.name).count
     assert_equal 2, ContentViewDefinitionBase.where(:label => content_view_def.label).count
     assert_equal ContentViewDefinitionArchive.find_all_by_label(content_view_def.label), content_view_def.archives
+  end
+
+  def test_copy
+    content_view_def = FactoryGirl.create(:content_view_definition)
+    count = ContentViewDefinition.count
+    assert_raises(ActiveRecord::RecordInvalid) do
+      content_view_def.copy
+    end
+    assert content_view_def.copy(:name => "HydrogenSonata")
+    assert_equal count+1, ContentViewDefinition.count
   end
 
 end
