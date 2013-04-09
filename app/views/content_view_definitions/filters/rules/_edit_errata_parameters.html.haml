@@ -6,15 +6,15 @@
   .grid_4.la#from_date{'name' => 'parameter[date_range][start]',
                        :class=>("editable edit_datepicker" if editable),
                        'data-url' => url_for(:action => 'add_parameter')}
-    - if rule.parameters.include?(:date_range) && rule.parameters[:date_range].include?(:start)
-      = to_calendar_date(rule.parameters[:date_range][:start])
+    - if rule.start_date
+      = to_calendar_date(rule.start_date)
 
   %label.grid_1.fl #{_('To')}:
   .grid_4.la#to_date{'name' => 'parameter[date_range][end]',
                      :class=>("editable edit_datepicker" if editable),
                      'data-url' => url_for(:action => 'add_parameter')}
-    - if rule.parameters.include?(:date_range) && rule.parameters[:date_range].include?(:end)
-      = to_calendar_date(rule.parameters[:date_range][:end])
+    - if rule.end_date
+      = to_calendar_date(rule.end_date)
 
 %h5 #{_('Type')}
 %fieldset
