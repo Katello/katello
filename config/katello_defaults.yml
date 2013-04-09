@@ -83,6 +83,12 @@ common:
   notification:
     polling_seconds: 120
 
+  # authentication
+  sso:
+    enable: true
+    provider_url: https://localhost/signo
+    logout_path: /logout
+
   # Setup your UI search configuration.
   search:
     # specifies the number of search history elementsthat will be retained for users

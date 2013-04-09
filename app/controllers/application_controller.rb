@@ -357,7 +357,6 @@ class ApplicationController < ActionController::Base
       #save original uri and redirect to login page
       session[:original_uri] = request.fullpath
       execute_after_filters
-      redirect_to new_user_session_url and return false
     end
   end
 

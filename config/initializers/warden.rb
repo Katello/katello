@@ -1,5 +1,8 @@
 require 'oauth/request_proxy/rack_request'
 
+require 'rack/openid'
+Rails.configuration.middleware.use Rack::OpenID
+
 Rails.configuration.middleware.use RailsWarden::Manager do |config|
   config.failure_app = FailedAuthenticationController
   config.default_scope = :user
@@ -7,7 +10,7 @@ Rails.configuration.middleware.use RailsWarden::Manager do |config|
   # all UI requests are handled in the default scope
   config.scope_defaults(
     :user,
-    :strategies   => [:sso, Katello.config.warden.to_sym],
+    :strategies => [:openid, Katello.config.warden.to_sym],
     :store        => true,
     :action       => 'unauthenticated_ui'
   )
@@ -15,9 +18,17 @@ Rails.configuration.middleware.use RailsWarden::Manager do |config|
   # API requests are handled in the :api scope
   config.scope_defaults(
     :api,
-    :strategies   => [:oauth, :sso, :certificate, Katello.config.warden.to_sym, :no_credentials],
+    :strategies   => [:oauth, :certificate, Katello.config.warden.to_sym, :no_credentials],
     :store        => false,
     :action       => 'unauthenticated_api'
+  )
+
+  # request from SSO application to authenticate user
+  config.scope_defaults(
+      :sso,
+      :strategies => [Katello.config.warden.to_sym],
+      :store      => false,
+      :action     => 'unauthenticated_sso'
   )
 end
 
@@ -39,6 +50,39 @@ Warden::Manager.after_authentication do |user,auth,opts|
   Rails.logger.debug "User #{user} authenticated: #{auth.winning_strategy.message}"
 end
 
+# authenticate against OpenID
+Warden::Strategies.add(:openid) do
+  def valid?
+    Katello.config.sso.enable
+  end
+
+  def authenticate!
+    if (response = env[Rack::OpenID::RESPONSE])
+      # we have response from OpenID provider so we try to login user
+      case response.status
+        when :success
+          if (user = User.find_by_username(response.identity_url.split('/').last))
+            success!(user)
+          else
+            fail!('User not found')
+            throw(:warden, :openid => { :response => response })
+          end
+        else
+          fail!(response.respond_to?(:message) ? response.message : "OpenID authentication failed: #{response.status}")
+      end
+    elsif (username = cookies[:username])
+      # we already have cookie
+      identifier = "#{Katello.config.sso.provider_url}/user/#{username}"
+      custom!([401,
+               { 'WWW-Authenticate' => Rack::OpenID.build_header({:identifier => identifier}) },
+               ''])
+    else
+      # we have no cookie yet so we plain redirect to OpenID provider to login
+      redirect!("#{Katello.config.sso.provider_url}?return_url=#{request.url}")
+    end
+  end
+end
+
 # authenticate against database
 Warden::Strategies.add(:database) do
 
@@ -49,14 +93,14 @@ Warden::Strategies.add(:database) do
 
   def authenticate!
     if params[:auth_username] && params[:auth_password]
-      # API simple auth
-      Rails.logger.debug("Warden is authenticating #{params[:auth_username]} against database")
-      u = User.authenticate!(params[:auth_username], params[:auth_password])
+      username, password = params[:auth_username], params[:auth_password] # API simple auth
     elsif params[:username] && params[:password]
-      # UI form
-      Rails.logger.debug("Warden is authenticating #{params[:username]} against database")
-      u = User.authenticate!(params[:username], params[:password])
+      username, password = params[:username], params[:password] # UI form
     end
+
+    Rails.logger.debug("Warden is authenticating #{params[:auth_username]} against database")
+    u = User.authenticate!(username, password)
+
     u ? success!(u, "database") : fail!("Username or password do not match database - could not log in")
   end
 end
@@ -71,14 +115,14 @@ Warden::Strategies.add(:ldap) do
 
   def authenticate!
     if params[:auth_username] && params[:auth_password]
-      # API simple auth
-      Rails.logger.debug("Warden is authenticating #{params[:auth_username]} against ldap")
-      u = User.authenticate_using_ldap!(params[:auth_username], params[:auth_password])
+      username, password = params[:auth_username], params[:auth_password] # API simple auth
     elsif params[:username] && params[:password]
-      # UI form
-      Rails.logger.debug("Warden is authenticating #{params[:username]} against ldap")
-      u = User.authenticate_using_ldap!(params[:username], params[:password])
+      username, password = params[:username], params[:password] # UI form
     end
+
+    Rails.logger.debug("Warden is authenticating #{params[:username]} against ldap")
+    u = User.authenticate_using_ldap!(username, password)
+
     u ? success!(u, "LDAP") : fail!("Could not log in using LDAP")
   end
 end
@@ -116,20 +160,6 @@ Warden::Strategies.add(:certificate) do
 
   def drop_cn_prefix_from_subject(subject_string)
     subject_string.sub(/\/CN=/i, '')
-  end
-end
-
-Warden::Strategies.add(:sso) do
-  def valid?
-    true
-  end
-
-  def authenticate!
-    return fail('No X-Forwarded-User header, skipping sso authentication') if request.env['HTTP_X_FORWARDED_USER'].blank?
-
-    user_id = request.env['HTTP_X_FORWARDED_USER'].split("@").first
-    u = User.where(:username => user_id).first
-    u ? success!(u, "single sign-on") : fail!("Username is not correct - could not log in")
   end
 end
 
