@@ -24,59 +24,7 @@ NameVirtualHost *:443
   Timeout 5400
   ProxyTimeout 5400
 
-  <Proxy balancer://thinservers>
-  <%- scope.lookupvar("katello::params::process_count").to_i.times do |i| -%>
-    <%= "BalancerMember http://127.0.0.1:#{scope.lookupvar('katello::params::thin_start_port').to_i + i}/#{scope.lookupvar('katello::params::deployment_url')}" %>
-  <%- end -%>
-  </Proxy>
-
-  Alias /<%= scope.lookupvar("katello::params::deployment_url") %>/assets "/usr/share/katello/public/assets"
-  Alias /<%= scope.lookupvar("katello::params::deployment_url") %>/images "/usr/share/katello/public/images"
-  Alias /<%= scope.lookupvar("katello::params::deployment_url") %>/fonts "/usr/share/katello/public/fonts"
-  Alias /<%= scope.lookupvar("katello::params::deployment_url") %>/javascripts "/usr/share/katello/public/javascripts"
-
-  ExpiresActive On
-  <Directory "/usr/share/katello/public/">
-    ExpiresDefault "access plus 1 year"
-    <%- if scope.lookupvar('operatingsystem') == 'Fedora' && scope.lookupvar('operatingsystemrelease') == '18' -%>
-    Require all granted
-    <%- end -%>
-  </Directory>
-
-  ProxyPass /<%= scope.lookupvar("katello::params::deployment_url") %>/assets !
-  ProxyPass /<%= scope.lookupvar("katello::params::deployment_url") %>/images !
-  ProxyPass /<%= scope.lookupvar("katello::params::deployment_url") %>/fonts !
-  ProxyPass /<%= scope.lookupvar("katello::params::deployment_url") %>/javascripts !
-  ProxyPass /<%= scope.lookupvar("katello::params::deployment_url") %> balancer://thinservers
-
-  ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment_url") %> balancer://thinservers
-  ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment_url") %>/assets !
-  ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment_url") %>/images !
-  ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment_url") %>/fonts !
-  ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment_url") %>/javascripts !
-
-  <Location /<%= scope.lookupvar("katello::params::deployment_url") %>/api>
-    # client certs support (old rhsm clients)
-    RequestHeader set SSL_CLIENT_CERT "%{SSL_CLIENT_CERT}s"
-    SSLVerifyClient optional
-    SSLRenegBufferSize 16777216 
-    SSLVerifyDepth 2
-
-    # report to CLI and RHSM nicely when Katello is down
-    ErrorDocument 500 '{"displayMessage": "Internal error, contact administrator", "errors": ["Internal error, contact administrator"], "status": "500" }'
-    ErrorDocument 503 '{"displayMessage": "Service unavailable or restarting, try later", "errors": ["Service unavailable or restarting, try later"], "status": "503" }'
-  </Location>
-
-  <Location /subscription>
-    # client certs support
-    RequestHeader set SSL_CLIENT_CERT "%{SSL_CLIENT_CERT}s"
-    SSLVerifyClient optional
-    SSLRenegBufferSize 16777216
-    SSLVerifyDepth 2
-
-    ProxyPass balancer://thinservers/api
-    ProxyPassReverse balancer://thinservers/api
-  </Location>
+  Include conf.d/katello.d/*.conf
 </VirtualHost>
 
 NameVirtualHost *:80

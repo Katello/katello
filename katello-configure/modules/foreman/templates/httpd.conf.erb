@@ -1,7 +1,3 @@
-ProxyPreserveHost Off
-Timeout 5400
-ProxyTimeout 5400
-
 <Proxy balancer://foremanthinservers>
   <%- scope.lookupvar("foreman::thin_process_count").to_i.times do |i| -%>
     <%= "BalancerMember http://127.0.0.1:#{scope.lookupvar('foreman::thin_start_port').to_i + i}/#{scope.lookupvar('foreman::deployment_url')}" %>

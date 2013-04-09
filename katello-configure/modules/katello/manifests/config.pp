@@ -16,6 +16,7 @@ class katello::config {
   File["${katello::params::config_dir}/katello.yml"] ~> Exec["reload-apache2"]
   File["/etc/sysconfig/katello"] ~> Exec["reload-apache2"]
   File["/etc/httpd/conf.d/katello.conf"] ~> Exec["reload-apache2"]
+  File["/etc/httpd/conf.d/katello.d/katello.conf"] ~> Exec["reload-apache2"]
 
   exec {"httpd-restart":
     command => "/bin/sleep 5; /sbin/service httpd restart; /bin/sleep 10",

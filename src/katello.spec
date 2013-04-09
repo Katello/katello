@@ -527,6 +527,10 @@ install -m 644 config/environments/production.rb %{buildroot}%{_sysconfdir}/%{na
 install -d -m0755 %{buildroot}%{_sysconfdir}/cron.daily
 install -m 755 script/katello-refresh-cdn %{buildroot}%{_sysconfdir}/cron.daily/katello-refresh-cdn
 
+#create apache config templates
+mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.d
+echo "# this file will be overwritten by running katello-configure" > %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.d/%{name}.conf
+
 #copy init scripts and sysconfigs
 install -Dp -m0644 %{confdir}/%{name}.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 install -Dp -m0644 %{confdir}/service-wait.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/service-wait
@@ -679,6 +683,8 @@ usermod -a -G katello-shared tomcat
 %config(noreplace) %attr(600, katello, katello) %{_sysconfdir}/%{name}/%{name}.yml
 %config(noreplace) %{_sysconfdir}/%{name}/thin.yml
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
+%dir %{_sysconfdir}/httpd/conf.d/katello.d
+%config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.d/%{name}.conf
 %config %{_sysconfdir}/%{name}/environment.rb
 %config %{_sysconfdir}/logrotate.d/%{name}
 %config %{_sysconfdir}/%{name}/mapping.yml

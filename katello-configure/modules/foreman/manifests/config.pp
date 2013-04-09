@@ -72,6 +72,9 @@ class foreman::config {
       mode    => "644";
 
     "/etc/httpd/conf.d/foreman.conf":
+      ensure    => absent;
+
+    "/etc/httpd/conf.d/katello.d/foreman.conf":
       content => template("foreman/httpd.conf.erb"),
       owner   => $foreman::user,
       group   => $foreman::user,
