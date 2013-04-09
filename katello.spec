@@ -75,12 +75,12 @@ Requires:       %{?scl_prefix}rubygem(haml) >= 3.1.2
 Requires:       %{?scl_prefix}rubygem(haml-rails)
 Requires:       %{?scl_prefix}rubygem(json)
 Requires:       %{?scl_prefix}rubygem(rest-client)
-Requires:       %{?scl_prefix}rubygem(jammit)
-# required by jammit
 Requires:       %{?scl_prefix}rubygem(therubyracer)
 Requires:       %{?scl_prefix}rubygem(rails_warden)
 Requires:       %{?scl_prefix}rubygem(net-ldap)
 Requires:       %{?scl_prefix}rubygem(compass)
+Requires:       %{?scl_prefix}rubygem(compass-rails)
+Requires:       %{?scl_prefix}rubygem(sass-rails)
 Requires:       %{?scl_prefix}rubygem(compass-960-plugin) >= 0.10.4
 Requires:       %{?scl_prefix}rubygem(oauth)
 Requires:       %{?scl_prefix}rubygem(i18n_data) >= 0.2.6
@@ -98,6 +98,7 @@ Requires:       %{?scl_prefix}rubygem(hooks)
 Requires:       %{?scl_prefix}rubygem(thin)
 Requires:       %{?scl_prefix}rubygem(fssm)
 Requires:       %{?scl_prefix}rubygem(sass)
+Requires:       %{?scl_prefix}rubygem(ui_alchemy-rails) >= 1.0.0
 Requires:       %{?scl_prefix}rubygem(chunky_png)
 Requires:       %{?scl_prefix}rubygem(tire) >= 0.3.0
 Requires:       %{?scl_prefix}rubygem(tire) < 0.4
@@ -132,15 +133,15 @@ Requires(postun): initscripts coreutils sed
 BuildRequires:  coreutils findutils sed
 BuildRequires:  %{?scl_prefix}rubygems
 BuildRequires:  %{?scl_prefix}rubygem-rake
-# TODO we will remove jammit soon
-BuildRequires:  rubygem(jammit)
 BuildRequires:  %{?scl_prefix}rubygem(chunky_png)
 BuildRequires:  %{?scl_prefix}rubygem(fssm) >= 0.2.7
 BuildRequires:  %{?scl_prefix}rubygem(compass)
+BuildRequires:  %{?scl_prefix}rubygem(compass-rails)
+BuildRequires:  %{?scl_prefix}rubygem(sass-rails)
 BuildRequires:  %{?scl_prefix}rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  %{?scl_prefix}rubygem(bundler_ext)
 BuildRequires:  %{?scl_prefix}rubygem(logging) >= 1.8.0
-BuildRequires:  %{?scl_prefix}rubygem(alchemy) >= 1.0.0
+BuildRequires:  %{?scl_prefix}rubygem(ui_alchemy-rails) >= 1.0.0
 BuildRequires:  asciidoc
 BuildRequires:  /usr/bin/getopt
 BuildRequires:  java >= 0:1.6.0
@@ -434,10 +435,6 @@ export RAILS_ENV=build
 make -C locale check all-mo %{?_smp_mflags}
 # | sed -e '/Warning: obsolete msgid exists./,+1d' | sed -e '/Warning: fuzzy message was ignored./,+1d'
 
-#copy alchemy
-ALCHEMY_DIR=$(rpm -ql %{?scl_prefix}rubygem-alchemy | grep -o '/.*/vendor' | sed 's/vendor$//' | head -n1)
-cp -R $ALCHEMY_DIR* ./vendor/alchemy
-
 #use Bundler_ext instead of Bundler
 mv Gemfile Gemfile.in
 
@@ -450,14 +447,13 @@ fi
     #compile SASS files
     echo Compiling SASS files...
     touch config/katello.yml
-%{?scl:scl enable %{scl} "}
-    compass compile
-%{?scl:"}
     rm config/katello.yml
 
     #generate Rails JS/CSS/... assets
     echo Generating Rails assets...
-    LC_ALL="en_US.UTF-8" jammit --config config/assets.yml -f
+%{?scl:scl enable %{scl} "}
+    LC_ALL="en_US.UTF-8" rake assets:precompile
+%{?scl:"}
 %endif
 
 #man pages
