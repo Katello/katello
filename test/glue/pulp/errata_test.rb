@@ -21,12 +21,7 @@ class GluePulpErrataTestBase < MiniTest::Rails::ActiveSupport::TestCase
   fixtures :all
 
   def self.before_suite
-    load_fixtures
-
-    # TODO: RAILS32 remove top reference to load_fixtures
-    if @loaded_fixtures.nil?
-      @loaded_fixtures = load_fixtures
-    end
+    @loaded_fixtures = load_fixtures
     configure_runcible
 
     services  = ['Candlepin', 'ElasticSearch', 'Foreman']
