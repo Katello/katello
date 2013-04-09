@@ -29,7 +29,8 @@ else
   gem 'pg'
 end
 
-gem 'delayed_job', '~> 2.1.4'
+gem 'delayed_job', '~> 3.0.2'
+gem 'delayed_job_active_record'
 gem 'daemons', '>= 1.1.4'
 gem 'uuidtools'
 
