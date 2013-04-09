@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -25,13 +25,7 @@ class Product < ActiveRecord::Base
   has_many :environment_products, :class_name => "EnvironmentProduct", :dependent => :destroy, :uniq=>true
   has_many :environments, :class_name => "KTEnvironment", :uniq => true , :through => :environment_products  do
     def <<(*items)
-      # TODO:  RAILS32 Convert this to @association.owner
-      if @association.nil?
-        owner = @owner
-      else
-        owner = @association.owner
-      end
-      super( items - owner.environment_products.collect{|ep| ep.environment} )
+      super( items - @association.owner.environment_products.collect{|ep| ep.environment} )
     end
   end
 
@@ -77,16 +71,11 @@ class Product < ActiveRecord::Base
 
       # ugh. hack-ish. otherwise we have to modify code every time things change on cp side
       attrs = attrs.reject do |k, v|
-        !attributes_from_column_definition.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
+        !self.class.column_defaults.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
       end
     end
 
-    # TODO RAILS32 Clean up supers
-    if Rails::VERSION::STRING.start_with?('3.2')
-      super
-    else
-      super(attrs)
-    end
+    super
   end
 
   def repos(env, include_disabled = false)

@@ -1,6 +1,6 @@
 # vim: sw=4:ts=4:et
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -11,9 +11,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-# REMOVEME - commented out until Foreman is SCL ready
-# (search for REMOVEME strings down the file)
-%if "%{?scl}" == "ruby193x"
+%if "%{?scl}" == "ruby193"
     %global scl_prefix %{scl}-
     %global scl_ruby /usr/bin/ruby193-ruby
     %global scl_rake scl enable ruby193 rake
@@ -72,12 +70,14 @@ Requires:       wget
 Requires:       curl
 
 Requires:       %{?scl_prefix}rubygems
-Requires:       %{?scl_prefix}rubygem(rails) >= 3.0.10
+Requires:       %{?scl_prefix}rubygem(rails) >= 3.2.8
 Requires:       %{?scl_prefix}rubygem(haml) >= 3.1.2
 Requires:       %{?scl_prefix}rubygem(haml-rails)
 Requires:       %{?scl_prefix}rubygem(json)
 Requires:       %{?scl_prefix}rubygem(rest-client)
 Requires:       %{?scl_prefix}rubygem(jammit)
+# required by jammit
+Requires:       %{?scl_prefix}rubygem(therubyracer)
 Requires:       %{?scl_prefix}rubygem(rails_warden)
 Requires:       %{?scl_prefix}rubygem(net-ldap)
 Requires:       %{?scl_prefix}rubygem(compass)
@@ -87,7 +87,8 @@ Requires:       %{?scl_prefix}rubygem(i18n_data) >= 0.2.6
 Requires:       %{?scl_prefix}rubygem(gettext_i18n_rails)
 Requires:       %{?scl_prefix}rubygem(simple-navigation) >= 3.3.4
 Requires:       %{?scl_prefix}rubygem(pg)
-Requires:       %{?scl_prefix}rubygem(delayed_job) >= 2.1.4
+Requires:       %{?scl_prefix}rubygem(delayed_job) >= 3.0.2
+Requires:       %{?scl_prefix}rubygem(delayed_job_active_record)
 Requires:       %{?scl_prefix}rubygem(acts_as_reportable) >= 1.1.1
 Requires:       %{?scl_prefix}rubygem(ruport) >= 1.7.0
 Requires:       %{?scl_prefix}rubygem(prawn)
@@ -112,13 +113,7 @@ Requires:       lsof
 Requires:       redhat-logos >= 60.0.14
 %endif
 
-# REMOVEME - uncomment following line instead the next for SCL
-#%if 0%{?fedora} && 0%{?fedora} < 17
-%if 0%{?rhel} == 6 || (0%{?fedora} && 0%{?fedora} < 17)
-Requires: %{?scl_prefix}ruby(abi) = 1.8
-%else
 Requires: %{?scl_prefix}ruby(abi) = 1.9.1
-%endif
 Requires: %{?scl_prefix}ruby
 
 # <workaround> for 714167 - undeclared dependencies (regin & multimap)
@@ -165,7 +160,6 @@ BuildRequires:       %{?scl_prefix}rubygem(i18n_data) >= 0.2.6
 BuildRequires:       %{?scl_prefix}rubygem(gettext_i18n_rails)
 BuildRequires:       %{?scl_prefix}rubygem(simple-navigation) >= 3.3.4
 BuildRequires:       %{?scl_prefix}rubygem(pg)
-BuildRequires:       %{?scl_prefix}rubygem(delayed_job) >= 2.1.4
 BuildRequires:       %{?scl_prefix}rubygem(acts_as_reportable) >= 1.1.1
 BuildRequires:       %{?scl_prefix}rubygem(ruport) >= 1.7.0
 BuildRequires:       %{?scl_prefix}rubygem(prawn)
@@ -203,7 +197,7 @@ Requires:       qpid-cpp-client-ssl
 Requires:       qpid-cpp-server-ssl
 Requires:       foreman
 Requires:       foreman-postgresql
-Requires:       rubygem(foreman-katello-engine)
+Requires:       %{?scl_prefix}rubygem(foreman-katello-engine)
 # </katello-configure>
 
 
@@ -365,11 +359,7 @@ Summary:         Katello devel support (test coverage utils)
 BuildArch:       noarch
 Requires:        %{name} = %{version}-%{release}
 # dependencies from bundler.d/coverage.rb
-%if 0%{?fedora} > 16
 Requires:        rubygem(simplecov)
-%else
-Requires:        rubygem(rcov) >= 0.9.9
-%endif
 
 %description devel-coverage
 Rake tasks and dependecies for Katello developers, which enables
@@ -380,11 +370,7 @@ Summary:         Katello devel support (debugging)
 BuildArch:       noarch
 Requires:        %{name} = %{version}-%{release}
 # dependencies from bundler.d/debugging.rb
-%if 0%{?fedora} > 16
 Requires:        rubygem(ruby-debug19)
-%else
-Requires:        rubygem(ruby-debug)
-%endif
 
 %description devel-debugging
 Rake tasks and dependecies for Katello developers, which enables
@@ -453,13 +439,7 @@ ALCHEMY_DIR=$(rpm -ql %{?scl_prefix}rubygem-alchemy | grep -o '/.*/vendor' | sed
 cp -R $ALCHEMY_DIR* ./vendor/alchemy
 
 #use Bundler_ext instead of Bundler
-%if 0%{?fedora} > 17
-  mv Gemfile32 Gemfile.in
-  rm Gemfile
-%else
-  mv Gemfile Gemfile.in
-  rm Gemfile32
-%endif
+mv Gemfile Gemfile.in
 
 #pull in branding if present
 if [ -d branding ] ; then
@@ -470,10 +450,9 @@ fi
     #compile SASS files
     echo Compiling SASS files...
     touch config/katello.yml
-# REMOVEME - commented out until Foreman is SCL ready
-#%{?scl:scl enable %{scl} "}
+%{?scl:scl enable %{scl} "}
     compass compile
-#%{?scl:"}
+%{?scl:"}
     rm config/katello.yml
 
     #generate Rails JS/CSS/... assets
@@ -494,18 +473,16 @@ a2x -d manpage -f manpage man/katello-service.8.asciidoc
     export BUNDLER_EXT_GROUPS="default apipie"
     export RAILS_ENV=production # TODO - this is already defined above!
     touch config/katello.yml
-# REMOVEME - commented out until Foreman is SCL ready
-#%{?scl:scl enable %{scl} "}
+%{?scl:scl enable %{scl} "}
     rake apipie:static apipie:cache --trace
-#%{?scl:"}
+%{?scl:"}
 
     # API doc for Headpin mode
     echo "common:" > config/katello.yml
     echo "  app_mode: headpin" >> config/katello.yml
-# REMOVEME - commented out until Foreman is SCL ready
-#%{?scl:scl enable %{scl} "}
+%{?scl:scl enable %{scl} "}
     rake apipie:static apipie:cache OUT=doc/headpin-apidoc --trace
-#%{?scl:"}
+%{?scl:"}
     rm config/katello.yml
     mv lib/tasks_disabled lib/tasks
 %endif
@@ -668,13 +645,8 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/navigation
 %{homedir}/app/lib/notifications
 %{homedir}/app/lib/validators
-%dir %{homedir}/app/lib/resources
 %{homedir}/app/lib/resources/cdn.rb
-%{homedir}/app/lib/resources/abstract_model.rb
-%dir %{homedir}/app/lib/resources/abstract_model
-%{homedir}/app/lib/resources/abstract_model/indexed_model.rb
 %{homedir}/lib/tasks
-%exclude %{homedir}/lib/tasks/rcov.rake
 %exclude %{homedir}/lib/tasks/yard.rake
 %exclude %{homedir}/lib/tasks/hudson.rake
 %exclude %{homedir}/lib/tasks/jsroutes.rake
@@ -719,6 +691,10 @@ usermod -a -G katello-shared tomcat
 %{homedir}/db/schema.rb
 %dir %{homedir}/lib
 %dir %{homedir}/app/lib
+%dir %{homedir}/app/lib/resources
+%{homedir}/app/lib/resources/abstract_model.rb
+%dir %{homedir}/app/lib/resources/abstract_model
+%{homedir}/app/lib/resources/abstract_model/indexed_model.rb
 %{homedir}/lib/util
 %{homedir}/app/lib/util
 %{homedir}/script/service-wait
@@ -787,7 +763,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/lib/monkeys
 %{homedir}/app/lib/navigation
 %{homedir}/app/lib/notifications
-%{homedir}/app/lib/resources
 %{homedir}/app/lib/validators
 %exclude %{homedir}/app/lib/resources/candlepin.rb
 %exclude %{homedir}/app/lib/resources/abstract_model.rb
@@ -853,7 +828,6 @@ usermod -a -G katello-shared tomcat
 
 %files devel-coverage
 %{homedir}/bundler.d/coverage.rb
-%{homedir}/lib/tasks/rcov.rake
 
 %files devel-debugging
 %{homedir}/bundler.d/debugging.rb

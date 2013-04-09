@@ -111,16 +111,8 @@ class ContentViewDefinitionsController < ApplicationController
   end
 
   def clone
-    new_definition = ContentViewDefinition.new
-    new_definition.name = params[:name]
-    new_definition.description = params[:description]
-    new_definition.composite = @view_definition.composite
-    new_definition.organization = @view_definition.organization
-    new_definition.products = @view_definition.products
-    new_definition.repositories = @view_definition.repositories
-    new_definition.component_content_views = @view_definition.component_content_views
-    new_definition.save!
-
+    new_definition = @view_definition.copy(:name => params[:name],
+                                           :description => params[:description])
     notify.success(_("Content view definition '%{new_definition_name}' created successfully as a clone of '%{definition_name}'.") %
                        {:new_definition_name => new_definition.name, :definition_name => @view_definition.name})
 
