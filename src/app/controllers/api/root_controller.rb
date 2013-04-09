@@ -17,15 +17,11 @@ class Api::RootController < Api::ApiController
 
   def resource_list
     all_routes = Rails.application.routes.routes
+    all_routes = all_routes.collect { |r| r.path.spec.to_s }
 
-    if all_routes.class.name == 'Journey::Routes'
-      all_routes = all_routes.collect { |r| r.path.spec.to_s }
-      api_root_routes = all_routes.select {|path|
-        path =~ %r{^/api/[^/]+/:id\(\.:format\)$}
-      }.collect {|path| path[0..-(":id(.:format)".length+1)]}.uniq
-    else
-      api_root_routes = all_routes.select {|r| r.path =~ %r{^/api/[^/]+/:id\(\.:format\)$} }.collect {|r| r.path[0..-(":id(.:format)".length+1)]}.uniq
-    end
+    api_root_routes = all_routes.select do |path|
+      path =~ %r{^/api/[^/]+/:id\(\.:format\)$}
+    end.collect {|path| path[0..-(":id(.:format)".length+1)]}.uniq
 
     api_root_routes.collect! {|r| {:rel => r["/api/".size..-2], :href => r} }
 
