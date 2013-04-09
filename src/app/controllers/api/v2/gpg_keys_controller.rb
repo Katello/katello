@@ -15,9 +15,7 @@ class Api::V2::GpgKeysController < Api::V1::GpgKeysController
 
   include Api::V2::Rendering
 
-  api :GET, "/organizations/:organization_id/gpg_keys", "List gpg keys"
-  param :organization_id, :identifier, :desc => "organization identifier"
-  param :name, :identifier, :desc => "identifier of the gpg key"
+  # apipie docs are defined in v1 controller - they remain the same
   def index
     respond :collection => @organization.gpg_keys.where(params.slice(:name))
   end
