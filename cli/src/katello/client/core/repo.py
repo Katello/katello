@@ -117,6 +117,8 @@ class Create(RepoAction):
         parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES,
             help=_("url path to the repository (required)"))
         opt_parser_add_product(parser, required=1)
+        parser.add_option('--unprotected', dest='unprotected', action='store_true', default=False,
+            help=_("Publish the repo using http (in addition to https)."))
         parser.add_option('--gpgkey', dest='gpgkey',
             help=_("GPG key to be assigned to the repository; by default, the product's GPG key will be used."))
         parser.add_option('--nogpgkey', action='store_true',
@@ -137,9 +139,9 @@ class Create(RepoAction):
         orgName  = self.get_option('org')
         gpgkey   = self.get_option('gpgkey')
         nogpgkey   = self.get_option('nogpgkey')
-
+        unprotected = self.get_option('unprotected')
         product = get_product(orgName, prodName, prodLabel, prodId)
-        self.api.create(orgName, product["id"], name, label, url, gpgkey, nogpgkey)
+        self.api.create(orgName, product["id"], name, label, url, unprotected, gpgkey, nogpgkey)
         print _("Successfully created repository [ %s ]") % name
 
         return os.EX_OK

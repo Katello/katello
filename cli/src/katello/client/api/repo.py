@@ -21,13 +21,14 @@ class RepoAPI(KatelloAPI):
     """
     Connection class to access repositories
     """
-    def create(self, orgName, prod_id, name, label, url, gpgkey, nogpgkey):
+    def create(self, orgName, prod_id, name, label, url, unprotected, gpgkey, nogpgkey):
         repodata = {
                     "organization_id": orgName,
                     "product_id": prod_id,
                     "name": name,
                     "label": label,
-                    "url": url}
+                    "url": url,
+                    "unprotected":unprotected}
         update_dict_unless_none(repodata, "gpg_key_name", gpgkey)
         if nogpgkey:
             repodata["gpg_key_name"] = ""
