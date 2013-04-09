@@ -16,17 +16,17 @@ module Validators
       if value
         if value.has_key?(:date_range)
           date_range = value[:date_range]
-          start_date = date_range[:start]
-          end_date = date_range[:end]
+          start_date_int = date_range[:start]
+          end_date_int = date_range[:end]
 
-          if start_date && !(start_date.is_a?(DateTime) || start_date.is_a?(Time))
+          if start_date_int && !(start_date_int.is_a?(Fixnum))
             record.errors.add(attribute, _("The erratum rule start date is in an invalid format or type."))
           end
-          if end_date && !(end_date.is_a?(DateTime) || end_date.is_a?(Time))
+          if end_date_int && !(end_date_int.is_a?(Fixnum))
             record.errors.add(attribute, _("The erratum rule end date is in an invalid format or type."))
           end
 
-          if start_date && end_date && !(start_date <= end_date)
+          if start_date_int && end_date_int && !(start_date_int <= end_date_int)
             record.errors.add(attribute, _("Invalid date range. The erratum rule start date must come before the end date"))
           end
         end
@@ -37,8 +37,9 @@ module Validators
             invalid_types = errata_type.collect(&:to_s) - ErratumRule::ERRATA_TYPES.keys
             unless invalid_types.empty?
               record.errors.add(attribute,
-                   _("Invalid erratum types %s provided. Erratum type can be any of %s") % invalid_types.inspect,
-                                                                                ErratumRule::ERRATA_TYPES.keys.inspect)
+                   _("Invalid erratum types %{invalid_types} provided. Erratum type can be any of %{valid_types}") %
+                                    { :invalid_types => invalid_types.join(","),
+                                      :valid_types => ErratumRule::ERRATA_TYPES.keys.join(",")})
              end
           else
             record.errors.add(attribute, _("The erratum type must be an array. Invalid value provided"))

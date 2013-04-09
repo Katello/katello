@@ -90,16 +90,17 @@ module FiltersHelper
 
     date_summary = ""
     if !rule.parameters[:date_range].blank?
-      if !rule.parameters[:date_range][:start].blank? || !rule.parameters[:date_range][:end].blank?
-        start_date = rule.parameters[:date_range][:start]
-        end_date = rule.parameters[:date_range][:end]
+      if rule.start_date || rule.end_date
+        start_date = rule.start_date.to_date
+        end_date = rule.end_date.to_date
 
         if start_date.blank?
           date_summary = _("Before %{end_date}") % {:end_date => end_date}
         elsif end_date.blank?
-          date_summary = _("After %{start_date}") % {:start_date => start_date}
+          date_summary = _("After %{start_date}") % {:start_date =>start_date}
         else
-          date_summary = _("%{start_date} - %{end_date}") % {:start_date => start_date, :end_date => end_date}
+          date_summary = _("%{start_date} - %{end_date}") % {:start_date => start_date,
+                                                            :end_date => end_date}
         end
       end
       date_summary = _("Any date") if date_summary.blank?
