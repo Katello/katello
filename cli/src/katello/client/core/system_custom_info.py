@@ -1,6 +1,6 @@
 #
 # Katello System actions
-# Copyright (c) 2012 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public License,
 # version 2 (GPLv2). There is NO WARRANTY for this software, express or
@@ -20,11 +20,11 @@ from katello.client.api.utils import get_system
 from katello.client.lib.utils.data import test_record
 from katello.client.core.system import SystemAction
 
-class BaseSystemCustomInfo(SystemAction):
+class SystemCustomInfo(SystemAction):
     """ Base class for all *CustomInfo classes related to Systems with common code """
 
     def setup_parser(self, parser):
-        super(BaseSystemCustomInfo, self).setup_parser(parser)
+        super(SystemCustomInfo, self).setup_parser(parser)
         parser.add_option('--name', dest='name', help=_("System name (required)"))
         parser.add_option('--uuid', dest='uuid', help=constants.OPT_HELP_SYSTEM_UUID)
         parser.add_option('--keyname', dest='keyname', help=_("name to identify the custom info (required)"))
@@ -37,15 +37,15 @@ class BaseSystemCustomInfo(SystemAction):
         validator.require('keyname')
 
 
-class AddCustomInfo(BaseSystemCustomInfo):
+class AddSystemCustomInfo(SystemCustomInfo):
     description = _('add custom infomation to a system')
 
     def setup_parser(self, parser):
-        super(AddCustomInfo, self).setup_parser(parser)
+        super(AddSystemCustomInfo, self).setup_parser(parser)
         parser.add_option('--value', dest='value', help=_("the custom info"))
 
     def check_options(self, validator):
-        super(AddCustomInfo, self).check_options(validator)
+        super(AddSystemCustomInfo, self).check_options(validator)
         validator.require(('org', 'keyname'))
 
     def run(self):
@@ -72,10 +72,10 @@ class AddCustomInfo(BaseSystemCustomInfo):
         )
 
 
-class UpdateCustomInfo(BaseSystemCustomInfo):
+class UpdateSystemCustomInfo(SystemCustomInfo):
     description = _("update custom info for a system")
     def setup_parser(self, parser):
-        super(UpdateCustomInfo, self).setup_parser(parser)
+        super(UpdateSystemCustomInfo, self).setup_parser(parser)
         parser.add_option('--value', dest='value', help=_("replacement value"))
 
     def check_options(self, validator):
@@ -106,11 +106,11 @@ class UpdateCustomInfo(BaseSystemCustomInfo):
                 % {'keyname':keyname, 'ident':ident}
 
 
-class RemoveCustomInfo(BaseSystemCustomInfo):
+class RemoveSystemCustomInfo(SystemCustomInfo):
     description = _("remove custom info from a system")
 
     def setup_parser(self, parser):
-        super(RemoveCustomInfo, self).setup_parser(parser)
+        super(RemoveSystemCustomInfo, self).setup_parser(parser)
 
     def run(self):
         org_name = self.get_option('org')

@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -85,7 +85,7 @@ class ApplicationController < ActionController::Base
     execute_rescue(exception, lambda{|exception| render_404})
   end
 
-  rescue_from ActionController::UnknownAction do |exception|
+  rescue_from AbstractController::ActionNotFound do |exception|
     execute_rescue(exception, lambda{|exception| render_404})
   end
 

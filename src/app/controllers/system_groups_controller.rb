@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -223,14 +223,24 @@ class SystemGroupsController < ApplicationController
   end
 
   def update_systems
-    unless params[:system_group].blank?
-      @group.systems.each do|system|
-        system.update_attributes!(params[:system_group])
+    if params[:systems].blank?
+      systems = @group.systems
+      notice_text = _("Successfully updated environment and content view for all %{count} systems in group %{group}") %
+          {:group => @group.name, :count => systems.length.to_s}
+
+    else
+      systems = @group.systems.where(:id => params[:systems].keys)
+      notice_text = _("Successfully updated environment and content view for %{count} selected systems in group %{group}") %
+          {:group => @group.name, :count => systems.length.to_s}
+    end
+
+    unless params[:update_fields].blank?
+      systems.each do|system|
+        system.update_attributes!(params[:update_fields])
       end
     end
 
-    notify.success _("Successfully updated environment and content view for all systems in group %{group}") %
-                       {:group => @group.name}
+    notify.success notice_text, :details => systems.map(&:name).join("\n")
 
     render :text => ''
   end

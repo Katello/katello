@@ -1,7 +1,7 @@
 #!/usr/bin/ruby
 # vim: ts=2:sw=2:et:
 #
-# Copyright © 2012 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public License,
 # version 2 (GPLv2). There is NO WARRANTY for this software, express or
@@ -370,11 +370,9 @@ def main_puppet(puppet_cmd, nobars, default_progressbar_title, puppet_logfile_fi
             elsif line =~ /err:/
               puts "\n  Failed, please check [#{processing_logfile}]\n  Report errors using # katello-debug tool."
               processing_logfile = nil
-              seen_err = true
             end
           elsif line =~ /err:/
             print line
-            seen_err = true
           end
           if line =~ /debug: Executing \'(.+)/
             line_rest = $1
@@ -385,6 +383,10 @@ def main_puppet(puppet_cmd, nobars, default_progressbar_title, puppet_logfile_fi
               end
             end
           end
+        end
+
+        if line =~ /err:/
+          seen_err = true
         end
       end
       if not nobars

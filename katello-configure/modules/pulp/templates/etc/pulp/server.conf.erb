@@ -233,7 +233,7 @@ consumer_cert_expiration: 3650
 # debugging_mode: (boolean) toggles Pulp's debugging capabilities
 
 [server]
-server_name: <%= has_variable?("fqdn") ? fqdn : hostname %>
+server_name: <%= (has_variable?("fqdn") ? fqdn : hostname).downcase %>
 relative_url: /pulp/repos
 key_url: /pulp/gpg
 ks_url: /pulp/ks
