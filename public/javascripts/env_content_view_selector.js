@@ -16,13 +16,15 @@ KT.env_content_view_selector = (function(){
     initialize = function(params) {
         /**
          * params:
-         *   override_save        // (default: true) if false, perform save on form submit
-         *   override_cancel      // (default: true) if false, perform cancel when cancel button clicked
-         *   cv_change_cb()       // callback function to perform custom logic after user selects content view
-         *   save_success_cb()    // callback function to perform custom logic after a successful save
-         *   save_error_cb()      // callback function to perform custom logic after an unsuccessful save
-         *   cancel_success_cb()  // callback function to perform custom logic after a successful cancel
-         *   cancel_success_cb()  // callback function to perform custom logic after an unsuccessful cancel
+         *   override_save              // (default: false) if false, perform save on form submit
+         *   override_cancel            // (default: false) if false, perform cancel when cancel button clicked
+         *   cv_change_cb()             // callback function to perform custom logic after user selects content view
+         *   before_serialize_cb($form) // callback function to perform custom logic on the form before
+         *                              // it is serialized and submitted
+         *   save_success_cb()          // callback function to perform custom logic after a successful save
+         *   save_error_cb()            // callback function to perform custom logic after an unsuccessful save
+         *   cancel_success_cb()        // callback function to perform custom logic after a successful cancel
+         *   cancel_success_cb()        // callback function to perform custom logic after an unsuccessful cancel
          */
         var pane = $(".env_content_view_selector");
         if (pane.length === 0){
@@ -76,13 +78,20 @@ KT.env_content_view_selector = (function(){
         disable_buttons();
 
         data.ajaxSubmit({
+            beforeSerialize: function($form, options) {
+                if (settings.before_serialize_cb) {
+                    settings.before_serialize_cb($form);
+                }
+                return true;
+            },
             success: function(data) {
                 highlight_content_views(false);
                 enable_buttons();
                 if (settings.save_success_cb) {
                     settings.save_success_cb();
                 }
-            }, error: function(e) {
+            },
+            error: function(e) {
                 highlight_content_views(false);
                 enable_buttons();
                 if (settings.save_error_cb) {

@@ -23,9 +23,6 @@ group :development do
   gem 'sexp_processor'
 
   gem 'minitest-rails'
-  if RUBY_VERSION == "1.8.7"
-    gem 'minitest_tu_shim', :require => false
-  end
 
   gem 'factory_girl_rails', "~> 1.4.0"
 end

@@ -1,4 +1,4 @@
-# Copyright 2012 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -18,12 +18,7 @@ class UserTestBase < MiniTest::Rails::ActiveSupport::TestCase
   fixtures :all
 
   def self.before_suite
-    load_fixtures
-
-    # TODO: RAILS32 remove top reference to load_fixtures
-    if @loaded_fixtures.nil?
-      @loaded_fixtures = load_fixtures
-    end
+    @loaded_fixtures = load_fixtures
     configure_runcible
 
     services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
