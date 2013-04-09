@@ -160,7 +160,7 @@ Src::Application.routes.draw do
         api_resources :sync, :only => [:index, :create] do
           delete :index, :on => :collection, :action => :cancel
         end
-        api_resources :packages do
+        api_resources :packages, :only => [:index, :show] do
           get :search, :on => :collection
         end
         api_resources :errata, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.:]+/ }
@@ -235,39 +235,7 @@ Src::Application.routes.draw do
     # routes that didn't change in v2 and point to v1
     scope :module => :v1, :constraints => ApiVersionConstraint.new(:version => 2) do
 
-      api_resources :organizations do
-
-        api_resources :providers, :only => [:index]
-        api_resources :activation_keys, :only => [:index, :create, :destroy, :show, :update] do
-          member do
-            post :system_groups, :action => :add_system_groups
-            delete :system_groups, :action => :remove_system_groups
-
-            post :pools, :action => :add_pool
-            delete "pools/:poolid", :action => :remove_pool
-          end
-        end
-        api_resources :repositories, :only => [] do
-        end
-
-      end
-
-      api_resources :gpg_keys, :only => [:show, :update, :destroy] do
-        get :content, :on => :member
-      end
-
-      api_resources :ping, :only => [:index]
-
-      api_resources :activation_keys do
-        post :pools, :action => :add_pool, :on => :member
-        delete "pools/:poolid", :action => :remove_pool, :on => :member
-      end
-
-      api_resources :errata, :only => [:index]
-
       api_resources :crls, :only => [:index]
-
-
 
       # some paths conflicts with rhsm
       scope 'katello' do
@@ -303,26 +271,6 @@ Src::Application.routes.draw do
       match '/consumers/:id/profile/' => 'systems#upload_package_profile', :via => :put
       match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
 
-        # foreman proxy --------------
-      if Katello.config.use_foreman
-        scope :module => 'foreman' do
-          api_resources :architectures, :except => [:new, :edit]
-          api_resources :compute_resources, :except => [:new, :edit]
-          api_resources :subnets, :except => [:new, :edit]
-          api_resources :smart_proxies, :except => [:new, :edit]
-          api_resources :hardware_models, :except => [:new, :edit]
-          constraints(:id => /[^\/]+/) do
-            api_resources :domains, :except => [:new, :edit]
-          end
-          api_resources :config_templates, :except => [:new, :edit] do
-            collection do
-              get :revision
-              get :build_pxe_default
-            end
-          end
-        end
-      end
-
       # development / debugging support
       if Rails.env == "development"
         match 'status/memory' => 'status#memory', :via=>:get
@@ -331,7 +279,6 @@ Src::Application.routes.draw do
       match '*a', :to => 'errors#render_404'
 
     end # module v1
-
 
 
   end # '/api' namespace

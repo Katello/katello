@@ -14,6 +14,10 @@ class Api::V2::RoleLdapGroupsController < Api::V1::RoleLdapGroupsController
 
   include Api::V2::Rendering
 
+  resource_description do
+    api_version "v2"
+  end
+
   api :POST, "/roles/:role_id/ldap_groups", "Add group to list of LDAP groups associated with the role"
   param :ldap_group, Hash, :required => true, :action_aware => true do
     param :name, String, :desc => "name of the LDAP group", :required => true
