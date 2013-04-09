@@ -1,5 +1,5 @@
 #
-# Copyright 2012 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -14,7 +14,7 @@ class Pool < ActiveRecord::Base
   include Glue::Candlepin::Pool
   include Glue::ElasticSearch::Pool if Katello.config.use_elasticsearch
 
-  set_table_name "pools"
+  self.table_name = "pools"
   has_many :key_pools, :foreign_key => "pool_id", :dependent => :destroy
   has_many :activation_keys, :through => :key_pools
 

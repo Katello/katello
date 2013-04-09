@@ -122,7 +122,6 @@ module Src
         :protocol => Katello.config.use_ssl ? 'https' : 'http' }
 
     config.after_initialize do
-      require 'monkeys/fix_string_interpolate'
       require 'string_to_bool'
     end
 
