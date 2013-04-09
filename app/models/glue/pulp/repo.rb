@@ -133,7 +133,7 @@ module Glue::Pulp::Repo
     end
 
     def generate_distributor
-      Runcible::Extensions::YumDistributor.new(self.relative_path, true, true,
+      Runcible::Extensions::YumDistributor.new(self.relative_path, (self.unprotected || false), true,
         {:protected=>true, :id=>self.pulp_id,
             :auto_publish=>!self.environment.library?})
     end
