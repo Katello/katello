@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -14,12 +14,10 @@ $:.unshift(__FILE__, ".") #add  current path to the classpath
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
-if RUBY_VERSION >= "1.9"
-  require 'simplecov'
-end
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'webrat'
+require 'simplecov'
 require 'helpers/login_helper_methods'
 require 'helpers/authorization_helper_methods'
 require 'helpers/locale_helper_methods'

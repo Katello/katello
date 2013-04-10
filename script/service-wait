@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -49,6 +49,19 @@ FOREMAN_TEST_URL=${FOREMAN_TEST_URL:-http://localhost:5500/foreman/api}
 # for some services we add few extra seconds after start
 ADDITIONAL_SLEEP=5
 
+wait_for_url() {
+    # we use wget first because it's able to retry from connrefused situation
+    /usr/bin/wget --timeout=1 --tries=$WAIT_MAX --retry-connrefused -qO-\
+                  --no-check-certificate $1 > /dev/null
+    # then we double check with curl that the service is really
+    # available. wget is not able to retry from 'Unable to establish
+    # SSL connection.' error, which happens for example with tomcat6
+    /usr/bin/curl -ks --retry $WAIT_MAX --retry-delay 1 $1 > /dev/null
+    if ! [ $? = '0' ]; then
+        RETVAL=5
+    fi
+}
+
 # before start or restart
 before_start() {
   test 1 -eq 1 # noop
@@ -59,16 +72,13 @@ after_start() {
   case "$SERVICE" in
     tomcat6|tomcat7)
       # RHBZ 789288 - wait until data port is avaiable
-      /usr/bin/wget --timeout=1 --tries=$WAIT_MAX --retry-connrefused -qO- --no-check-certificate $TOMCAT_TEST_URL >/dev/null
-      sleep $ADDITIONAL_SLEEP
+      wait_for_url $TOMCAT_TEST_URL
       ;;
     elasticsearch)
-      /usr/bin/wget --timeout=1 --tries=$WAIT_MAX --retry-connrefused -qO- --no-check-certificate $ELASTICSEARCH_TEST_URL >/dev/null
-      sleep $ADDITIONAL_SLEEP
+      wait_for_url $ELASTICSEARCH_TEST_URL
       ;;
     foreman)
-      /usr/bin/wget --timeout=1 --tries=$WAIT_MAX --retry-connrefused -qO- --no-check-certificate $FOREMAN_TEST_URL >/dev/null
-      sleep $ADDITIONAL_SLEEP
+      wait_for_url $FOREMAN_TEST_URL
       ;;
     mongod)
       # RHBZ 824405 - wait until service is avaiable

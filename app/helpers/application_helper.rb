@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -278,4 +278,24 @@ module ApplicationHelper
     options[:builder] = KatelloFormBuilder
     form_for(object, options, &block)
   end
+
+  def no_content_view
+    _("No Content View")
+  end
+
+  def content_view_select_labels(organization, environment)
+    labels = [[no_content_view, '']]
+    if environment
+      labels += ContentView.readable(organization).non_default.
+          in_environment(environment).collect {|cv| [cv.name, cv.id]}
+    else
+      labels = []
+    end
+    labels
+  end
+
+  def selected_content_view(content_view)
+    content_view.nil? ? no_content_view : content_view.id
+  end
+
 end

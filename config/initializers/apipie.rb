@@ -2,7 +2,7 @@
 Apipie.configure do |config|
   config.app_name = Katello.config.app_name
   config.app_info = "The sysadmin's fortress."
-  config.copyright = "Copyright © 2012 Red Hat, Inc."
+  config.copyright = "Copyright 2013 Red Hat, Inc."
   config.api_base_url = "/api"
   config.api_controllers_matcher = "#{Rails.root}/app/controllers/api/**/*.rb"
   config.ignored_by_recorder = %w[Api::PulpProxiesController Api::CandlepinProxiesController Api::RootController, Api::RepositoriesController#sync_complete]

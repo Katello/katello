@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -48,7 +48,7 @@ module Navigation
       menu = {:key => :admin,
        :name => _("Administer"),
         :url => :sub_level,
-        :items=> [ menu_orgs, (menu_sync_tasks if Katello.config.katello?), menu_users, menu_roles ],
+        :items=> [ menu_orgs, menu_sync_tasks, menu_users, menu_roles ],
         :options => {:class=>'operations header-widget fl menu_parent', "data-menu"=>"operations"},
         :if => :sub_level
       }
@@ -88,7 +88,7 @@ module Navigation
       {:key => :sync_tasks,
        :name => _("Synchronization"),
        :url => sync_management_manage_path,
-       :if => lambda {User.current.has_superadmin_role?},
+       :if => lambda {User.current.has_superadmin_role? && Katello.config.katello?},
        :options => {:class=>'operations section_level', "data-menu"=>"operations"}
       }
     end

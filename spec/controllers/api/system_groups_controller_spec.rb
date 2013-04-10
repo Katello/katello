@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -316,7 +316,32 @@ describe Api::SystemGroupsController, :katello => true do
        end
      end
 
+     describe "PUT update_systems" do
+       let(:action) {:update_systems}
+       let(:content_view) { create(:content_view, :organization => @org) }
+       let(:attrs) do
+         {"content_view_id" => content_view.id.to_s, "environment_id" => @environment.id.to_s}
+       end
+       let(:req) do
+         put action, id: @group.id, organization_id: @org.label, system_group: attrs
+       end
+       let(:authorized_user) do
+         user_with_permissions { |u| u.can(:update, :system_groups, @group.id, @org) }
+       end
+       let(:unauthorized_user) do
+         user_without_permissions
+       end
+       it_should_behave_like "protected action"
 
+       it "should complete successfully" do
+         SystemGroup.stub_chain(:where, :first).and_return(@group)
+         @group.stub(:systems).and_return([@system])
+         @system.should_receive(:update_attributes!).with(attrs).and_return(true)
+
+         put action, id: @group.id, organization_id: @org.label, system_group: attrs
+         response.should be_success
+       end
+     end
    end
 
 
