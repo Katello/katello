@@ -21,6 +21,7 @@ from katello.client.api.filter import FilterAPI
 from katello.client.cli.base import opt_parser_add_org, opt_parser_add_product
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_repo, get_cv_definition, ApiDataError
+
 # base filter action ----------------------------------------
 
 class FilterAction(BaseAction):
@@ -173,8 +174,6 @@ class Delete(FilterAction):
         print _("Successfully deleted filter [ %s ]") % filter_name
         return os.EX_OK
 
-
-
 class AddRemoveProduct(FilterAction):
     addition = True
 
@@ -184,7 +183,6 @@ class AddRemoveProduct(FilterAction):
             return _('add a product to a filter')
         else:
             return _('remove a product from a filter')
-
 
     def __init__(self, addition):
         super(AddRemoveProduct, self).__init__()

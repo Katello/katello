@@ -21,8 +21,6 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
         ('--org=ACME', '--definition=content_def1', '--name=flt')
     ]
 
-
-
 class FilterDeleteTest(CLIActionTestCase):
     ORG = 'org'
     DEF = { "label": 'content_def',
