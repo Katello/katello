@@ -51,8 +51,8 @@ class GluePulpConsumerGroupTestCreate < GluePulpConsumerGroupTestBase
   def teardown
     ConsumerSupport.destroy_consumer(@simple_server.id)
     @simple_group.del_pulp_consumer_group
-  rescue => e
-    puts e
+  rescue RestClient::ResourceNotFound => e
+    #ignore if not found
   end
 
   def test_set_pulp_consumer_group
