@@ -84,6 +84,7 @@ NameVirtualHost *:80
   RewriteEngine On
   RewriteCond %{HTTPS} off
   RewriteRule /<%= scope.lookupvar("katello::params::deployment_url") %>(.*)$ https://%{HTTP_HOST}%{REQUEST_URI}
-
+  <%- if scope.lookupvar("katello::params::deployment") == 'katello' -%>
   Include /etc/pulp/vhosts80/*.conf
+  <%- end -%>
 </VirtualHost>
