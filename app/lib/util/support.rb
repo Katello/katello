@@ -40,7 +40,6 @@ module Util
       col.collect{|c| c.to_s}
     end
 
-
     # Given a rules hash in the format
     # {<attrib_name>: {<attrib_name> => ...}}
     # the method will match the params attributes to provided
@@ -58,22 +57,18 @@ module Util
     # Look at SerializedParamsValidator method for its uses.
     def self.diff_hash_params(rule, params)
       params = params.with_indifferent_access
-      if Array === rule
+      if rule.is_a?(Array)
         return stringify(params.keys) - stringify(rule)
       end
 
       rule = rule.with_indifferent_access
       diff_data = rule.keys.collect do |k|
         if params[k]
-          p = params[k]
-          r = rule[k]
-          if (Array === p) && (Array === r.first)
-            p = params[k].first
-            r = r.first
-            diffs = params[k].collect {|pk| diff_hash_params(r, pk)}.flatten
+          if (params[k].is_a?(Array)) && (rule[k].first.is_a?(Array))
+            diffs = params[k].collect {|pk| diff_hash_params(rule[k].first, pk)}.flatten
             diffs
-          elsif Hash === p
-            keys = stringify(p.keys) - stringify(r)
+          elsif params[k].is_a?(Hash)
+            keys = stringify(params[k].keys) - stringify(rule[k])
             if keys.empty?
               nil
             else
@@ -86,8 +81,6 @@ module Util
       return diff_data unless diff_data.nil? || diff_data.empty?
       stringify(params.keys) - stringify(rule.keys)
     end
-
-
 
     # We need this so that we can return
     # empty search results on an invalid query
