@@ -15,7 +15,6 @@ class ErratumRule < FilterRule
     {:units => [[:id]], :date_range => [:start, :end], :errata_type => {}, :severity => {}}
   end
 
-
   def generate_clauses(repo)
     rule_clauses = []
     if parameters.has_key? :units

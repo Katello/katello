@@ -110,13 +110,12 @@ module Glue::ElasticSearch::Repository
       Tire.index('katello_errata').refresh
     end
 
-
     def index_package_groups
-      pgs = self.package_groups.collect{|pg| pg.as_json.merge(pg.index_options)}
+      package_groups_map = self.package_groups.collect{|pg| pg.as_json.merge(pg.index_options)}
       Tire.index PackageGroup.index do
         create :settings => PackageGroup.index_settings, :mappings => PackageGroup.index_mapping
-        import pgs
-      end unless pgs.empty?
+        import package_groups_map
+      end unless package_groups_map.empty?
     end
 
     def update_package_group_index
