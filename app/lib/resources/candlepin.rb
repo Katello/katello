@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -353,6 +353,10 @@ module Resources
           JSON.parse(self.get(path(id), self.default_headers).body).with_indifferent_access
         end
 
+        def all
+          JSON.parse(self.get(path(), self.default_headers).body).collect{|a| a.with_indifferent_access}
+        end
+
 
         def create owner_id, id, name, description
           attrs = {:id => id, :name => name, :description => description}
@@ -365,7 +369,7 @@ module Resources
           self.delete(path(id), User.cp_oauth_header).code.to_i
         end
 
-        def path(id)
+        def path(id='')
           "/candlepin/environments/#{id}"
         end
 

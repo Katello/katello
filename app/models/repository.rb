@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -45,6 +45,9 @@ class Repository < ActiveRecord::Base
 
   default_scope :order => 'repositories.name ASC'
   scope :enabled, where(:enabled => true)
+
+  scope :in_default_view, joins(:content_view_version => :content_view).
+    where("content_views.default" => true)
 
   def product
     self.environment_product.product
@@ -223,7 +226,8 @@ class Repository < ActiveRecord::Base
                            :minor=>self.minor,
                            :enabled=>self.enabled,
                            :content_id=>self.content_id,
-                           :content_view_version=>view_version
+                           :content_view_version=>view_version,
+                           :unprotected=>self.unprotected
                            )
     clone.pulp_id = clone.clone_id(to_env, content_view)
     clone.relative_path = Repository.clone_repo_path(self, to_env, content_view)
@@ -234,12 +238,9 @@ class Repository < ActiveRecord::Base
 
   # returns other instances of this repo with the same library
   # equivalent of repo
-  def environmental_instances
-    if self.environment.library?
-      repo = self
-    else
-      repo = self.library_instance
-    end
-    Repository.where("library_instance_id=%s or repositories.id=%s"  % [repo.id, repo.id] )
+  def environmental_instances(view)
+    repo = self.library_instance || self
+    search = Repository.where("library_instance_id=%s or repositories.id=%s"  % [repo.id, repo.id] )
+    search.in_content_views([view])
   end
 end

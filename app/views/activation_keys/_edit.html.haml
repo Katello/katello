@@ -47,7 +47,7 @@
           .grid_2.ra
             %label #{_("Environment")}:
           .grid_10.la
-            = environment_selector(:path_widget_class=>"grid_7", :path_entries_class=>"grid_7", :library_clickable=>false,
+            = environment_selector(:path_widget_class=>"grid_10", :path_entries_class=>"grid_10", :library_clickable=>false,
               :accessible_envs=>accessible_envs, :url_products_proc=>url_products_proc)
 
           .clear
@@ -59,7 +59,9 @@
                 %label #{_("Content View")}:
               .grid_10.la
                 - if editable
-                  = select_tag 'activation_key[content_view_id]', options_for_select(content_view_labels, selected_content_view)
+                  = select_tag 'activation_key[content_view_id]',
+                    options_for_select(content_view_select_labels(@organization, @activation_key.environment),
+                    selected_content_view(@activation_key.content_view))
                 - else
                   = @content_view.nil? ? no_content_view : @content_view.name
 

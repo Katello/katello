@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -50,10 +50,6 @@ module SystemsHelper
     select(:system, "content_view_id", choices,
              {:prompt => no_content_view, :id=>"content_view_field"},
              {:tabindex => 2})
-  end
-
-  def no_content_view
-    _('Select Content View')
   end
 
   def system_content_view_opts

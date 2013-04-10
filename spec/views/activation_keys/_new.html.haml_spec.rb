@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -13,6 +13,7 @@
 require 'spec_helper'
 
 describe "activation_keys/_new.html.haml" do
+
   before(:each) do
     @environment = assign(:environment, stub_model(KTEnvironment,
       :name => "dev").as_new_record)
@@ -27,6 +28,7 @@ describe "activation_keys/_new.html.haml" do
     @content_view_labels = []
     @selected_content_view = "No Content View"
     view.stub!(:environment_selector)
+    view.stub!(:content_view_select_labels).and_return([])
 
     render :partial => "new", :locals => {:accessible_envs => [@environment]}
   end

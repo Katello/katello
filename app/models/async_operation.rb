@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -60,14 +60,6 @@ AsyncOperation = Struct.new(:status_id, :username, :object, :method_name, :args)
     end
   ensure
     Thread.current['current_delayed_job_task'] = nil
-  end
-
-  def method_missing(symbol, *args)
-    object.send(symbol, *args)
-  end
-
-  def respond_to?(symbol, include_private=false)
-    super || object.respond_to?(symbol, include_private)
   end
 
   # limit to one failure

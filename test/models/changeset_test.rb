@@ -1,5 +1,5 @@
 #
-# Copyright 2012 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -44,6 +44,7 @@ class ChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_content_view_changeset_promotion
+    Repository.any_instance.stubs(:clone_contents).returns([])
     view = @library_view
     after_dev    = FactoryGirl.create(:environment, :prior=>@dev)
     changeset    = FactoryGirl.create(:promotion_changeset,
