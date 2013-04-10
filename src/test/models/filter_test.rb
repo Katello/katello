@@ -55,9 +55,9 @@ class FilterTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_raises(ActiveRecord::RecordInvalid) do
       Filter.create!(attrs)
     end
-    f = Filter.create(attrs)
-    refute f.persisted?
-    refute f.save
+    filter_item = Filter.create(attrs)
+    refute filter_item.persisted?
+    refute filter_item.save
   end
 
   def test_add_bad_repo

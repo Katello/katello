@@ -39,11 +39,9 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
     search_results1 = array_to_struct([{:filename => "100"},
                                       {:filename => "102"}])
     expected_ids1 = search_results1.collect(&:filename)
-
     search_results2 = array_to_struct([{:filename => "103"},
                                       {:filename => "104"}])
     expected_ids2 = search_results2.collect(&:filename)
-
     units = {:units => [{:name => "foo*"}, {:name => "goo*"}]}
     expected = [{"filename"=>{"$in"=>expected_ids1}}, {"filename"=>{"$in"=>expected_ids2}}]
 
@@ -54,23 +52,18 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
     exec_test_excludes("rpm", units, expected)
   end
 
-
   def test_package_versions
     search_results1 = array_to_struct([{:filename => "100"},
                                       {:filename => "102"}])
     expected_ids1 = search_results1.collect(&:filename)
-
     search_results2 = array_to_struct([{:filename => "103"},
                                       {:filename => "104"}])
     expected_ids2 = search_results2.collect(&:filename)
-
-
     units = {:units => [{:name => "foo*", :version => "5.0"},
                         {:name => "goo*", :min_version => "0.5", :max_version => "0.7" }]}
     expected = [{"$and" => [{"filename"=>{"$in"=> expected_ids1}}, {"version" => "5.0"}]},
                 {"$and" => [{"filename"=>{"$in"=> expected_ids2}}, {"version" => {"$gte" => "0.5", "$lte" => "0.7"}}]}
                ]
-
     Package.expects(:search).twice.returns(search_results1, search_results2)
     exec_test_includes("rpm", units, expected)
 
@@ -78,16 +71,13 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
     exec_test_excludes("rpm", units, expected)
   end
 
-
   def test_package_group_names
     search_results1 = array_to_struct([{:package_group_id => "100"},
                                       {:package_group_id => "102"}])
     expected_ids1 = search_results1.collect(&:package_group_id)
-
     search_results2 = array_to_struct([{:package_group_id => "103"},
                                       {:package_group_id => "104"}])
     expected_ids2 = search_results2.collect(&:package_group_id)
-
     units = {:units => [{:name => "foo*"}, {:name => "goo*"}]}
     expected = [{"id"=>{"$in"=>expected_ids1 + expected_ids2}}]
 
@@ -97,7 +87,6 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
     PackageGroup.expects(:search).twice.returns(search_results1, search_results2)
     exec_test_excludes("package_group", units, expected)
   end
-
 
   def test_errata_ids
     units = {:units => [{:id => "Foo1"}, {:id => "Foo2"} ]}
@@ -121,14 +110,11 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
     exec_test_includes_and_excludes("erratum", units, expected)
   end
 
-
   def test_errata_severity
     units = {:severity => [:low, :critical]}
     expected = [{"severity"=>{"$in"=>[:low, :critical]}}]
     exec_test_includes_and_excludes("erratum", units, expected)
   end
-
-
 
   def test_errata_both
     fr = ErratumRule.new
@@ -142,7 +128,6 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
     exec_test_includes_and_excludes("erratum", units, expected)
   end
 
-
   def array_to_struct(items)
     items.collect do |item|
       OpenStruct.new(item)
@@ -152,20 +137,18 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
   def exec_test_includes_and_excludes(content_type, units, expected_fragments)
       exec_test_includes(content_type, units, expected_fragments)
       exec_test_excludes(content_type, units, expected_fragments)
-
   end
+
   def exec_test_includes(content_type, units, expected_fragments)
     actual = get_filter_clause(true, content_type, units)
     expected = {"$nor"=> expected_fragments}
     assert_equal expected, actual
-
   end
 
   def exec_test_excludes(content_type, units, expected_fragments)
     actual = get_filter_clause(false, content_type, units)
     expected = {"$or"=> expected_fragments}
     assert_equal expected, actual
-
   end
 
   def get_filter_clause(inclusion, content_type, parameter)
