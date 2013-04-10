@@ -18,6 +18,7 @@ import os
 
 from katello.client.api.task_status import TaskStatusAPI
 from katello.client.core.base import BaseAction, Command
+from katello.client.api.utils import ApiDataError
 
 # base task action ----------------------------------------------------------------
 
@@ -35,15 +36,17 @@ class Status(TaskAction):
 
     def setup_parser(self, parser):
         parser.add_option("--uuid", dest='uuid',
-                help=_("task uuid eg: c9668eda-096b-445d-b96d (required)"))
+                          help=_("task uuid eg: c9668eda-096b-445d-b96d (required)"))
 
     def check_options(self, validator):
         validator.require(('uuid'))
 
     def run(self):
-        uuid  = self.get_option('uuid')
+        uuid = self.get_option('uuid')
 
         task = self.api.status(uuid)
+        if task is None:
+            raise ApiDataError(_("Could not find task [ %s ].") % uuid)
 
         self.printer.add_column('uuid', _("UUID"))
         self.printer.add_column('state', _("State"))
