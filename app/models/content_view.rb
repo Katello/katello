@@ -169,7 +169,7 @@ class ContentView < ActiveRecord::Base
 
   #get the library instances of all repos within this view
   def all_version_library_instances
-    all_repos = all_version_repos.where(:library_instance_id=>nil).pluck(:id) + all_version_repos.pluck(:library_instance_id)
+    all_repos = all_version_repos.where(:library_instance_id=>nil).pluck('repositories.id') + all_version_repos.pluck(:library_instance_id)
     Repository.where(:id=>all_repos)
   end
 
