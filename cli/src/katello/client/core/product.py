@@ -323,7 +323,8 @@ class Create(ProductAction):
         parser.add_option("--gpgkey", dest="gpgkey",
             help=_("assign a gpg key; this key will be used for every new repository unless gpgkey or nogpgkey"\
                 " is specified for the repo"))
-
+        parser.add_option('--unprotected', dest='unprotected', action='store_true', default=False,
+            help=_("Publish the created repositories using http (in addition to https)."))
 
     def check_options(self, validator):
         validator.require(('org', 'prov', 'name'))
@@ -338,13 +339,14 @@ class Create(ProductAction):
         assumeyes   = self.get_option('assumeyes')
         nodiscovery = self.get_option('nodiscovery')
         gpgkey      = self.get_option('gpgkey')
+        unprotected = self.get_option('unprotected')
 
         return self.create_product_with_repos(provName, orgName, name, label,
-                                              description, url, assumeyes, nodiscovery, gpgkey)
+                                              description, url, assumeyes, nodiscovery, gpgkey, unprotected)
 
 
     def create_product_with_repos(self, provName, orgName, name, label, description,
-                                  url, assumeyes, nodiscovery, gpgkey):
+                                  url, assumeyes, nodiscovery, gpgkey, unprotected):
         prov = get_provider(orgName, provName)
 
         prod = self.api.create(prov["id"], name, label, description, gpgkey)
@@ -357,7 +359,8 @@ class Create(ProductAction):
             repourls = self.discoverRepos.discover_repositories(prov['id'], url)
             self.printer.set_header(_("Repository Urls discovered @ [%s]" % url))
             selectedurls = self.discoverRepos.select_repositories(repourls, assumeyes)
-            self.discoverRepos.create_repositories(orgName, prod["id"], prod["name"], prod["label"], selectedurls)
+            self.discoverRepos.create_repositories(orgName, prod["id"], prod["name"], prod["label"], 
+                    selectedurls, unprotected)
 
         return os.EX_OK
 # ------------------------------------------------------------------------------
