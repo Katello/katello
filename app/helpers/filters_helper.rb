@@ -97,7 +97,7 @@ module FiltersHelper
         if start_date.blank?
           date_summary = _("Before %{end_date}") % {:end_date => end_date}
         elsif end_date.blank?
-          date_summary = _("After %{start_date}") % {:start_date =>start_date}
+          date_summary = _("After %{start_date}") % {:start_date => start_date}
         else
           date_summary = _("%{start_date} - %{end_date}") % {:start_date => start_date,
                                                             :end_date => end_date}
