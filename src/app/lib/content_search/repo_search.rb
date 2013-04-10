@@ -29,11 +29,6 @@ module ContentSearch
 
       env_ids = SearchUtils.search_envs(mode).collect{|e| e.id}
       filtered_repos.each do |repo|
-          #if view != view.organization.default_content_view
-          #  view_repo = Repository.in_content_views([view]).where(:library_instance_id=>repo.id).first
-          #else
-          #  view_repo = repo
-          #end
           all_repos = repo.environmental_instances(view).pluck(:pulp_id)
 
           cols = {}
