@@ -65,11 +65,17 @@ class ContentViewDefinition < ContentViewDefinitionBase
 
   def generate_repos(view, notify = false)
     async_tasks = []
+    clones = []
     repos.each do |repo|
       clone = repo.create_clone(self.organization.library, view)
       async_tasks << repo.clone_contents(clone)
+      clones << clone
     end
     PulpTaskStatus::wait_for_tasks async_tasks.flatten(1)
+    clones.each do |clone|
+      clone.index_packages
+      clone.index_errata
+    end
 
     if notify
       message = _("Successfully published content view '%{view_name}' from definition '%{definition_name}'.") %

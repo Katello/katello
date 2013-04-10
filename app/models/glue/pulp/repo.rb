@@ -370,17 +370,17 @@ module Glue::Pulp::Repo
     end
 
     def add_packages pkg_id_list
-      previous = self.environmental_instances.in_environment(self.environment.prior).first
+      previous = self.environmental_instances(self.content_view).in_environment(self.environment.prior).first
       Runcible::Extensions::Rpm.copy(previous.pulp_id, self.pulp_id, {:ids=>pkg_id_list})
     end
 
     def add_errata errata_unit_id_list
-      previous = self.environmental_instances.in_environment(self.environment.prior).first
+      previous = self.environmental_instances(self.content_view).in_environment(self.environment.prior).first
       Runcible::Extensions::Errata.copy(previous.pulp_id, self.pulp_id, {:ids=>errata_unit_id_list})
     end
 
     def add_distribution distribution_id
-      previous = self.environmental_instances.in_environment(self.environment.prior).first
+      previous = self.environmental_instances(self.content_view).in_environment(self.environment.prior).first
       Runcible::Extensions::Distribution.copy(previous.pulp_id, self.pulp_id, {:ids=>[distribution_id]})
     end
 

@@ -42,14 +42,14 @@ module Glue::ElasticSearch::Product
       self.provider.update_index if self.provider.respond_to? :update_index
   end
 
-  def total_package_count env
-    repoids = self.repos(env).collect{|r| r.pulp_id}
-    result = ::Package.search('*', 0, 1, repoids)
+  def total_package_count env, view
+    repo_ids = view.repos(env).in_product(self).collect{|r| r.pulp_id}
+    result = ::Package.search('*', 0, 1, repo_ids)
     result.length > 0 ? result.total : 0
   end
 
-  def total_errata_count env
-    repo_ids = self.repos(env).collect{|r| r.pulp_id}
+  def total_errata_count env, view
+    repo_ids = view.repos(env).in_product(self).collect{|r| r.pulp_id}
     results = ::Errata.search('', 0, 1, :repoids => repo_ids)
     results.empty? ? 0 : results.total
   end

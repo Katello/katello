@@ -83,7 +83,7 @@ class PromotionsController < ApplicationController
     search = params[:search]
     offset = params[:offset] || 0
     @packages = Package.search(search, params[:offset], current_user.page_size, repo_ids)
-    total_count = Product.find(product_id).total_package_count(@environment)
+    total_count = Product.find(product_id).total_package_count(@environment, @organization.default_content_view)
 
     render :text=>"" and return if @packages.empty?
 
