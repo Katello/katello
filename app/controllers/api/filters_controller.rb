@@ -61,7 +61,7 @@ class Api::FiltersController < Api::ApiController
       "Show filter info"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
-  param :id, :String, :desc => "name of the filter", :required => true
+  param :id, String, :desc => "name of the filter", :required => true
   def show
     render :json => @filter
   end
@@ -70,7 +70,7 @@ class Api::FiltersController < Api::ApiController
    "Delete a filter"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
-  param :id, :String, :desc => "name of the filter", :required => true
+  param :id, String, :desc => "name of the filter", :required => true
   def destroy
     @filter.destroy
     render :json => @filter
@@ -80,7 +80,7 @@ class Api::FiltersController < Api::ApiController
       "List all the products for a content view definition filter"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
-  param :id, :String, :desc => "name of the filter", :required => true
+  param :id, String, :desc => "name of the filter", :required => true
   def list_products
     render :json => @filter.products
   end
@@ -90,7 +90,7 @@ class Api::FiltersController < Api::ApiController
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :content_view_definition_id, :identifier, :required => true,
         :desc => "content view definition identifier"
-  param :id, :String, :desc => "name of the filter", :required => true
+  param :id, String, :desc => "name of the filter", :required => true
   param :repos, Array, :desc => "Updated list of repo ids", :required => true
   def update_products
     @products = Product.readable(@organization).where(:cp_id => params[:products],
@@ -108,7 +108,7 @@ class Api::FiltersController < Api::ApiController
       "List all the repositories for a content view definition filter"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
-  param :id, :String, :desc => "name of the filter", :required => true
+  param :id, String, :desc => "name of the filter", :required => true
   def list_repositories
     render :json => @filter.repositories
   end
@@ -117,7 +117,7 @@ class Api::FiltersController < Api::ApiController
       "Update repositories for a content view definition filter"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
-  param :id, :String, :desc => "name of the filter", :required => true
+  param :id, String, :desc => "name of the filter", :required => true
   param :repos, Array, :desc => "Updated list of repo ids", :required => true
   def update_repositories
     org_id = @definition.organization.id
