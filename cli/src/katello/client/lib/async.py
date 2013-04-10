@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Katello User actions
-# Copyright (c) 2012 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public License,
 # version 2 (GPLv2). There is NO WARRANTY for this software, express or
@@ -16,6 +16,12 @@
 #
 
 import os
+import re
+
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 from katello.client.lib.ui.formatters import format_sync_errors, format_sync_status
 from katello.client.api.task_status import TaskStatusAPI, SystemTaskStatusAPI
@@ -71,7 +77,7 @@ class AsyncTask():
         return not self.is_running()
 
     def failed(self):
-        return len([t for t in self._tasks if t['state'] in ('error', 'timed out')])
+        return len([t for t in self._tasks if t['state'] in ('error', 'timed out', 'failed')])
 
     def canceled(self):
         return len([t for t in self._tasks if t['state'] in ('cancelled', 'canceled')])
@@ -132,6 +138,50 @@ class SystemAsyncTask(AsyncTask):
 
     def status_messages(self):
         return [task["result_description"] for task in self._tasks]
+
+
+class ImportManifestAsyncTask(AsyncTask):
+
+    @classmethod
+    def __format_display_message(cls, task):
+        """
+        The message coming back with this task can contain stack trace and other unformatted
+        data. The relevant user message is found and displayed.
+        """
+        message = ""
+        for error in task.errors():
+            # First element is message data, second is stack trace
+            full_error_msg = error[0]
+
+            # Resources::Candlepin::Owner: 409 Conflict {
+            #   "displayMessage" : "Import is the same as existing data",
+            #   "conflicts" : [ "MANIFEST_SAME" ]
+            #   } (POST /candlepin/owners/Engineering/imports)
+
+            m = re.match(".*Resources::Candlepin::Owner[^{]*(?P<json>{.*})[^}]*", full_error_msg, re.DOTALL)
+            if m is not None:
+                message += " " + json.loads(m.group("json"))['displayMessage']
+            else:
+                message += " " + full_error_msg
+            return str(message)
+
+    @classmethod
+    def evaluate_task_status(cls, task, failed="", canceled="", ok=""):
+        """
+        Test task status and print the corresponding message
+
+        :type failed: string
+        :param failed: message that is printed when the task failed
+        :type canceled: string
+        :param canceled:  message that is printed when the task was cancelled
+        :type ok: string
+        :param ok:  message that is printed when the task went ok
+        :return: EX_DATAERR on failure or cancel, otherwise EX_OK
+        """
+        evaluate_task_status(task, failed, canceled, ok,
+            error_formatter=cls.__format_display_message,
+            status_formatter=cls.__format_display_message
+        )
 
 
 def progress(left, total):
@@ -196,7 +246,7 @@ class SystemGroupAsyncJob(AsyncJob):
 
 
 
-def evaluate_task_status(task, failed="", canceled="", ok=""):
+def evaluate_task_status(task, failed="", canceled="", ok="", error_formatter=None, status_formatter=None):
     """
     Test task status and print the corresponding message
 
@@ -207,18 +257,25 @@ def evaluate_task_status(task, failed="", canceled="", ok=""):
     :param canceled:  message that is printed when the task was cancelled
     :type ok: string
     :param ok:  message that is printed when the task went ok
+    :type error_formatter: function
+    :param error_formatter: formatter function used in case of task failure, default is format_sync_errors
+    :type status_formatter: function
+    :param status_formatter: formatter function used when the task succeeds, default is format_sync_status
     :return: EX_DATAERR on failure or cancel, otherwise EX_OK
     """
 
+    error_formatter = error_formatter or format_sync_errors
+    status_formatter = status_formatter or format_sync_status
+
     if task.failed():
-        print failed + ":" + format_sync_errors(task)
+        print failed + ":" + error_formatter(task)
         return os.EX_DATAERR
     elif task.canceled():
         print canceled
         return os.EX_DATAERR
     else:
         if "status_messages" in dir(task):
-            print ok + ":" + format_sync_status(task)
+            print ok + ":" + status_formatter(task)
         else:
             print ok
         return os.EX_OK

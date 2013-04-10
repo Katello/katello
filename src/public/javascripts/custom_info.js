@@ -15,13 +15,34 @@ var KT = (KT === undefined) ? {} : KT;
 
 KT.custom_info = (function() {
 
-    $(".remove_custom_info_button").live('click', function() {
+    $(".custom_info_txt").live("keydown", function(e) {
+        if (e.keyCode == 13) { // if you press enter
+            $("#create_custom_info_button").trigger("click");
+        }
+    });
+
+    $("#new_custom_info_keyname").live("keyup", function(e) {
+        check_for_empty($(this));
+    });
+
+    $(".remove_custom_info_button").live('click', function(e) {
+        e.preventDefault();
         remove_custom_info($(this));
     });
 
-    $("#create_custom_info_button").live('click', function() {
+    $("#create_custom_info_button").live('click', function(e) {
+        e.preventDefault();
         create_custom_info($(this));
     });
+
+    function check_for_empty($textfield) {
+        $button = $("#create_custom_info_button");
+        if ($textfield.val().length > 0 ) {
+            $button.removeAttr("disabled");
+        } else {
+            $button.attr("disabled", "true");
+        }
+    }
 
     function remove_custom_info($button) {
         $.ajax({
@@ -29,6 +50,9 @@ KT.custom_info = (function() {
             type   : $button.data("method"),
             success: function() {
                 remove_custom_info_row($button.data("id"));
+            },
+            error  : function(data) {
+                notices.displayNotice("error", window.JSON.stringify({ "notices": [$.parseJSON(data.responseText)["displayMessage"]] }));
             }
         });
     }
@@ -44,9 +68,13 @@ KT.custom_info = (function() {
             data    : { "keyname": keyname, "value": value },
             success : function(data) {
                 add_custom_info_row(data);
+            },
+            error   : function(data) {
+                notices.displayNotice("error", window.JSON.stringify({ "notices": [$.parseJSON(data.responseText)["displayMessage"]] }));
             }
         });
-        $button.attr("disable", "false");
+
+        $("#new_custom_info_keyname").focus();
     }
 
     function remove_custom_info_row(data_id) {
@@ -59,25 +87,28 @@ KT.custom_info = (function() {
         var value = data["value"];
         var informable_type = data["informable_type"];
         var informable_id = data["informable_id"];
-        var update_path = KT.routes.update_custom_info_path(informable_type, informable_id, esc_keyname);
-        var destroy_path = KT.routes.destroy_custom_info_path(informable_type, informable_id, esc_keyname);
+        var update_path = KT.routes.api_update_custom_info_path(informable_type, informable_id, esc_keyname);
+        var destroy_path = KT.routes.api_destroy_custom_info_path(informable_type, informable_id, esc_keyname);
 
-        var new_row = "<tr class=\"custom_info_row\" data-id=\"custom_info_" + _keyname + "\">"
+        var new_row = "<tr class=\"primary_color\" data-id=\"custom_info_" + _keyname + "\">"
         + "<td class=\"ra\">"
         + "<label for=\"custom_info_" + _keyname + "\">" + data["keyname"] + "</label>"
         + "</td>"
         + "<td>"
-        + "<div class=\"editable edit_textfield\" data-url=\"" + update_path + "\" name=\"custom_info[" + data["keyname"] + "]\" style title=\"Click to edit\">" + value + "</div>"
+        + "<div class=\"editable edit_textfield\" data-method=\"put\" data-url=\"" + update_path + "\" name=\"value\" style title=\"Click to edit\">" + value + "</div>"
         + "</td>"
         + "<td>"
         + "<input class=\"btn warning remove_custom_info_button\" data-id=\"custom_info_" + _keyname + "\" data-method=\"delete\" data-url=\"" + destroy_path + "\" type=\"submit\" value=\"remove\">"
         + "</td>"
         + "</tr>";
+
         $("#new_custom_info_row").after(new_row);
+        setTimeout(function() { $("tr[data-id='custom_info_" + _keyname + "']").addClass("row_fade_in"); }, 1);
         $("#new_custom_info_keyname").val("");
         $("#new_custom_info_value").val("");
-        var $new_editable = $("tr[data-id='custom_info_" + _keyname + "']").find(".editable");
+        check_for_empty($("#new_custom_info_keyname"));
 
+        var $new_editable = $("tr[data-id='custom_info_" + _keyname + "']").find(".editable");
         var common_settings = {
             method     :  'PUT',
             cancel     :  i18n.cancel,
@@ -92,13 +123,11 @@ KT.custom_info = (function() {
                 notices.checkNotices();
             }
         };
-
         var settings = {
             type :  'text',
             width:  270,
             name :  $new_editable.attr('name')
         };
-
         $new_editable.editable($new_editable.attr('data-url'), $.extend(common_settings, settings));
     }
 

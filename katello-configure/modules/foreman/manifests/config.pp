@@ -10,7 +10,7 @@ class foreman::config {
   # database eventually slowing it down.
   cron{'clear_session_table':
     environment => ["RAILS_ENV=${foreman::environment}", "BUNDLER_EXT_NOSTRICT=1"],
-    command => "(cd ${foreman::app_root} && rake db:sessions:clear)",
+    command => "(cd ${foreman::app_root} && /usr/bin/${katello::params::scl_prefix}rake  db:sessions:clear)",
     minute  => '15',
     hour    => '23',
   }
@@ -83,13 +83,14 @@ class foreman::config {
   exec {"generate_token":
     cwd         => $foreman::app_root,
     environment => ["RAILS_ENV=${foreman::environment}", "BUNDLER_EXT_NOSTRICT=1"],
-    command     => "rake security:generate_token",
+    command     => "/usr/bin/${katello::params::scl_prefix}rake security:generate_token",
     path        => "/bin:/usr/bin",
     creates     => "${foreman::app_root}/config/initializers/local_secret_token.rb",
   }
 
-  $foreman_config_cmd = "/usr/bin/ruby ${foreman::app_root}/script/foreman-config -k oauth_active -v '${foreman::oauth_active}'\
+  $foreman_config_cmd = "/usr/bin/${katello::params::scl_prefix}ruby ${foreman::app_root}/script/foreman-config -k oauth_active -v '${foreman::oauth_active}'\
                               -k foreman_url -v '${fqdn}'\
+                              -k katello_url -v '${foreman::katello_url}'\
                               -k token_duration -v '60'\
                               -k manage_puppetca -v false\
                               -k oauth_consumer_key -v '${foreman::oauth_consumer_key}'\
@@ -100,7 +101,7 @@ class foreman::config {
   exec {"foreman_migrate_db":
     cwd         => $foreman::app_root,
     environment => ["RAILS_ENV=${foreman::environment}", "BUNDLER_EXT_NOSTRICT=1"],
-    command     => "rake db:migrate --trace --verbose > ${foreman::configure_log_base}/foreman-db-migrate.log 2>&1 && touch /var/lib/katello/foreman_db_migrate_done",
+    command     => "/usr/bin/${katello::params::scl_prefix}rake db:migrate --trace --verbose > ${foreman::configure_log_base}/foreman-db-migrate.log 2>&1 && touch /var/lib/katello/foreman_db_migrate_done",
     path        => "/sbin:/usr/sbin:/bin:/usr/bin",
     creates     => "/var/lib/katello/foreman_db_migrate_done",
     require     => [ Postgres::Createdb[$foreman::db_name],
@@ -112,6 +113,7 @@ class foreman::config {
   } ~>
 
   exec {"foreman_config":
+   cwd     => $foreman::app_root,
    command => $foreman_config_cmd,
    unless  => "$foreman_config_cmd --dry-run",
    user    => $foreman::user,

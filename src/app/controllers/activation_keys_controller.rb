@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -183,15 +183,6 @@ class ActivationKeysController < ApplicationController
     setup_environment_selector(current_organization, accessible_envs)
     @environment = first_env_in_path(accessible_envs)
 
-    @content_view_labels = [[no_content_view, '']]
-    if @environment
-      @content_view_labels += ContentView.readable(@organization).non_default.
-        in_environment(@environment).collect {|cv| [cv.name, cv.id]}
-    else
-      @content_view_labels = []
-    end
-    @selected_content_view = no_content_view
-
     render :partial => "new", :locals => {:activation_key => activation_key,
                                           :accessible_envs => accessible_envs}
   end
@@ -201,18 +192,12 @@ class ActivationKeysController < ApplicationController
     accessible_envs = current_organization.environments
     setup_environment_selector(current_organization, accessible_envs)
 
-    content_view_labels = [[no_content_view, '']]
-    content_view_labels += ContentView.readable(@organization).non_default.
-      in_environment(@activation_key.environment).collect {|cv| [cv.name, cv.id]}
-    selected_content_view = @activation_key.content_view.nil? ? no_content_view : @activation_key.content_view_id
     products = @activation_key.content_view ? @activation_key.content_view.products(@environment) : @environment.products
 
     render :partial => "edit", :locals => {:activation_key => @activation_key,
                                            :editable => ActivationKey.manageable?(current_organization),
                                            :name => controller_display_name,
                                            :accessible_envs => accessible_envs,
-                                           :content_view_labels => content_view_labels,
-                                           :selected_content_view => selected_content_view,
                                            :products => products
                                           }
   end

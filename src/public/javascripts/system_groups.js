@@ -1,5 +1,5 @@
 /**
- Copyright 2011 Red Hat, Inc.
+ Copyright 2013 Red Hat, Inc.
 
  This software is licensed to you under the GNU General Public
  License as published by the Free Software Foundation; either version
@@ -21,9 +21,11 @@ $(document).ready(function() {
             KT.menu.hoverMenu(item, { top : '75px' });
         });
 
-        KT.system_groups.init();
+        KT.system_groups.initialize();
         KT.system_groups.new_setup();
         KT.system_groups.details_setup();
+        KT.system_groups.env_content_view_setup();
+        KT.system_groups.selected_systems_setup();
     });
 });
 
@@ -93,6 +95,7 @@ KT.system_groups = (function(){
     var current_system_input,
         current_max_systems,
         systems_deletable = false,
+        selected_systems,
     refresh_list_item = function(){
         var id = $('#system_group_id');
         list.refresh(id.val(), id.data('ajax_url'))
@@ -152,7 +155,7 @@ KT.system_groups = (function(){
             }
         });
     },
-    init = function(){
+    initialize = function(){
         $('.pane_action.remove').bind('click', prompt_to_destroy_group);
     },
     prompt_to_destroy_group = function(e) {
@@ -291,6 +294,32 @@ KT.system_groups = (function(){
             selected_input_id: 'add_system_input_id',
             add_cb:       add_system
         });
+
+        $("input.system_checkbox").unbind("change");
+        $("input.system_checkbox").change(function() {
+            var checked_systems = $("input.system_checkbox:checked");
+            if (checked_systems.length === 0) {
+                $("a.edit_systems").html(i18n.edit_all_systems);
+            }
+            else if (checked_systems.length > 0) {
+                $("a.edit_systems").html(i18n.edit_selected_systems);
+           }
+        });
+    },
+    selected_systems_setup = function() {
+        // This function will recheck any system checkboxes that were selected
+        // before the systems pane was reloaded.  This is to handle the case
+        // where user selects a group of systems, edits them and immediately
+        // is returned to the systems list.
+        var pane = $("#system_group_systems");
+        if (pane.length === 0){
+            return;
+        }
+        KT.utils.each(selected_systems, function(system) {
+            var system_id = $(system).data('id');
+            checkbox = $("input.system_checkbox[data-id=" + system_id + "]").prop('checked', true);
+        });
+        selected_systems = undefined;
     },
     add_system = function(string, item_id, cb){
         var grp_id = $("#system_group_systems").data('id'),
@@ -359,15 +388,56 @@ KT.system_groups = (function(){
       var url = add ? KT.routes.add_systems_system_group_path(grp_id) :
                         KT.routes.remove_systems_system_group_path(grp_id);
       $.post(url, {'system_ids':sys_ids}, cb).error(error_cb);
+    },
+    env_content_view_setup = function(){
+        var pane = $(".env_content_view_selector");
+        if (pane.length === 0){
+            return;
+        }
+
+        KT.env_content_view_selector.initialize(
+            {
+                before_serialize_cb: add_selected_systems,
+                save_success_cb: updated_env_content_view,
+                override_save: true
+            }
+        );
+
+        $('#update_form').unbind('submit');
+        $('#update_form').submit(function(e) {
+            var form = $(this);
+            e.preventDefault();
+            KT.common.customConfirm({
+                message: i18n.change_systems_confirm,
+                yes_callback: function(){
+                    KT.env_content_view_selector.save(form);
+                }
+            });
+        });
+    },
+    add_selected_systems = function(form) {
+        // This will add the systems that are currently selected to the form provided.
+        var selected_systems = $("input.system_checkbox:checked").clone().removeClass('system_checkbox').addClass('hidden');
+        form.find('#content_view_id').after(selected_systems);
+        return true;
+    },
+    updated_env_content_view = function (){
+        // save the systems currently selected.  we'll use these to
+        // reselect the systems after the pane reloads
+        selected_systems = $("input.system_checkbox:checked");
+
+        KT.panel.panelAjax('', KT.routes.systems_system_group_path($('#system_group_systems').data('id')) ,$('#panel'), true);
+        KT.panel.closeSubPanel($('#subpanel'));
     };
 
     return {
-        init: init,
+        initialize: initialize,
         new_setup: new_setup,
         details_setup: details_setup,
         systems_setup: systems_setup,
+        selected_systems_setup: selected_systems_setup,
+        env_content_view_setup: env_content_view_setup,
         add_system : add_system,
         refresh_list_item: refresh_list_item
     }
 })();
-

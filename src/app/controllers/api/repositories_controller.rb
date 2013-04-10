@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -71,7 +71,8 @@ class Api::RepositoriesController < Api::ApiController
     elsif params[:gpg_key_name].nil?
       gpg = @product.gpg_key
     end
-    content = @product.add_repo(labelize_params(params), params[:name], params[:url], 'yum', gpg)
+    params[:unprotected] ||= false
+    content = @product.add_repo(labelize_params(params), params[:name], params[:url], 'yum', params[:unprotected], gpg)
     render :json => content
   end
 

@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -28,8 +28,10 @@ module Util
       return nil
     end
 
-    def self.labelize name
-      name.ascii_only? ? name.gsub(/[^a-z0-9\-_]/i,"_") : uuid
+    def self.labelize(name)
+      if name
+        name.ascii_only? ? name.gsub(/[^a-z0-9\-_]/i,"_") : uuid
+      end
     end
 
     def self.uuid

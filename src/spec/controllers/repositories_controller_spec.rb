@@ -1,5 +1,5 @@
 #
-# Copyright 2012 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -120,6 +120,7 @@ describe RepositoriesController, :katello => true do
                         :repo => {:name => @repo_name,
                               :label => @repo_name,
                               :feed => "http://foo.com",
+                              :unprotected => false,
                               :gpg_key =>@gpg.id.to_s}}
       end
       specify  do
@@ -128,6 +129,7 @@ describe RepositoriesController, :katello => true do
       subject {Repository.find_by_name(@repo_name)}
       it{should_not be_nil}
       its(:gpg_key){should == @gpg}
+      its(:unprotected){should == false}
     end
 
     context "Test update gpg" do

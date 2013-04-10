@@ -65,11 +65,17 @@ class ContentViewDefinition < ContentViewDefinitionBase
 
   def generate_repos(view, notify = false)
     async_tasks = []
+    clones = []
     repos.each do |repo|
       clone = repo.create_clone(self.organization.library, view)
       async_tasks << repo.clone_contents(clone)
+      clones << clone
     end
     PulpTaskStatus::wait_for_tasks async_tasks.flatten(1)
+    clones.each do |clone|
+      clone.index_packages
+      clone.index_errata
+    end
 
     if notify
       message = _("Successfully published content view '%{view_name}' from definition '%{definition_name}'.") %
@@ -161,6 +167,20 @@ class ContentViewDefinition < ContentViewDefinitionBase
     cvd_archive.save!
 
     cvd_archive
+  end
+
+  def copy(new_attrs = {})
+    new_definition = ContentViewDefinition.new
+    new_definition.attributes = new_attrs.slice(:name, :label, :description)
+    new_definition.composite = self.composite
+    new_definition.organization = self.organization
+    new_definition.products = self.products
+    new_definition.repositories = self.repositories
+    new_definition.component_content_views = self.component_content_views
+    # TODO: copy filters
+    new_definition.save!
+
+    new_definition
   end
 
   protected

@@ -48,6 +48,8 @@ Src::Application.routes.draw do
       post :add_systems
       post :remove_systems
       delete :destroy_systems
+      get :edit_systems
+      put :update_systems
     end
     resources :events, :controller => "system_group_events", :only => [:index, :show] do
       collection do
@@ -80,12 +82,15 @@ Src::Application.routes.draw do
         post :packages
         post :packages_items
         post :errata_items
+        get :view_packages
         post :repos
         post :views
         get :repo_packages
         get :repo_errata
         get :repo_compare_packages
         get :repo_compare_errata
+        get :view_compare_packages
+        get :view_compare_errata
       end
   end
 
@@ -497,13 +502,6 @@ Src::Application.routes.draw do
     end
   end
 
-  # custom information
-  match '/custom_info/:informable_type/:informable_id' => 'custom_info#create', :via => :post, :as => :create_custom_info
-  match '/custom_info/:informable_type/:informable_id' => 'custom_info#index', :via => :get, :as => :custom_info
-  match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#show', :via => :get, :as => :show_custom_info
-  match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#update', :via => :put, :as => :update_custom_info
-  match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#destroy', :via => :delete, :as => :destroy_custom_info
-
   namespace :api do
     class RegisterWithActivationKeyContraint
       def matches?(request)
@@ -580,6 +578,7 @@ Src::Application.routes.draw do
           post :copy
           post :remove_systems
           delete :destroy_systems
+          put :update_systems
         end
 
         resource :packages, :action => [:create, :update, :destroy], :controller => :system_group_packages
@@ -622,7 +621,10 @@ Src::Application.routes.draw do
 
       resources :content_views, :only => [:index, :show]
       resources :content_view_definitions do
-        post :publish, :on => :member
+        member do
+          post :publish
+          post :clone
+        end
         resources :products, :only => [] do
           get :index, :action => :list_content_view_definition_products,
             :on => :collection

@@ -1,5 +1,5 @@
 #
-# Copyright 2011 Red Hat, Inc.
+# Copyright 2013 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -328,6 +328,69 @@ describe SystemGroupsController, :katello => true do
       end
     end
 
-  end
+    describe "GET edit_systems" do
+      let(:action) {:edit_systems}
+      let(:req) { get :edit_systems, :id => @group.id}
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:update_systems, :system_groups, @group.id, @org) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
 
+      it "should render edit_systems partial" do
+        get :edit_systems, :id => @group.id
+        response.should be_success
+        response.should render_template(:partial => '_edit_systems')
+      end
+    end
+
+    describe "PUT update_systems" do
+      before(:each) do
+        Resources::Candlepin::Consumer.stub!(:get).and_return({:uuid => uuid, :owner => {:key => uuid}})
+
+        @next_environment = KTEnvironment.create!(:name => "TEST", :label => "TEST", :prior => @environment,
+                                                 :organization => @org)
+
+        @system2 = System.create!(:name=>"bar2", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
+
+        @group.systems = [@system, @system2]
+        @group.save
+      end
+
+      let(:action) {:update_systems}
+      let(:req) { put :update_systems, :id => @group.id}
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:update_systems, :system_groups, @group.id, @org) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+
+
+      it "should update all systems successfully" do
+        controller.should notify.success
+
+        put :update_systems, :id => @group.id, :update_fields => {:environment_id => @next_environment.id}
+
+        response.should be_success
+        @system.reload.environment.should == @next_environment
+        @system2.reload.environment.should == @next_environment
+      end
+
+      it "should update only specified systems successfully" do
+        controller.should notify.success
+
+        put :update_systems, :id => @group.id, :systems => {@system.id.to_s => @system.id.to_s},
+            :update_fields => {:environment_id => @next_environment.id}
+
+        response.should be_success
+        @system.reload.environment.should == @next_environment
+        @system2.reload.environment.should == @environment
+      end
+    end
+
+  end
 end

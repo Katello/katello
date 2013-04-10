@@ -11,6 +11,7 @@ path = File.expand_path("../lib", File.dirname(__FILE__))
 $LOAD_PATH << path unless $LOAD_PATH.include? path
 require 'katello/load_configuration'
 require 'katello/logging'
+require 'katello/url_constrained_cookie_store'
 
 
 # If you have a Gemfile, require the gems listed there, including any gems
@@ -122,7 +123,6 @@ module Src
         :protocol => Katello.config.use_ssl ? 'https' : 'http' }
 
     config.after_initialize do
-      require 'monkeys/fix_string_interpolate'
       require 'string_to_bool'
     end
 
