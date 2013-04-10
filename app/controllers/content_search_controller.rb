@@ -49,8 +49,8 @@ class ContentSearchController < ApplicationController
   end
 
   def products
-    views = process_views(process_params :views)
-    products = process_products(process_params :products)
+    views = process_views(process_params(:views))
+    products = process_products(process_params(:products))
     view_search = ContentSearch::ContentViewSearch.new(:name => _("Content View"),
                                                        :views => views)
 
@@ -74,7 +74,7 @@ class ContentSearchController < ApplicationController
   def repos
     repo_ids = process_params(:repos)
     product_ids = process_params(:products)
-    views = process_views(process_params :views)
+    views = process_views(process_params(:views))
     repos = process_repos(repo_ids, product_ids)
 
     products = repos.collect(&:product).uniq
@@ -96,7 +96,7 @@ class ContentSearchController < ApplicationController
     repo_ids = process_params(:repos)
     product_ids = process_params(:products)
     package_ids = process_params(:packages)
-    views = process_views(process_params :views)
+    views = process_views(process_params(:views))
     repos = process_repos(repo_ids, product_ids)
     package_ids   = process_params(:packages)
 
@@ -107,10 +107,10 @@ class ContentSearchController < ApplicationController
 
     rows = []
     view_product_repo_map.each do |view, product_repo_map|
-      prod_rows = []
-      product_repo_map.each do |product, repos|
-        prod_rows.concat(spanned_product_content(view, product, repos, 'package', package_ids))
-      end
+      prod_rows = product_repo_map.collect do |product, repos|
+        spanned_product_content(view, product, repos, 'package', package_ids)
+      end.flatten
+
       if !prod_rows.empty?
         rows << view_hash[view.id]
         rows.concat(prod_rows)
@@ -135,7 +135,7 @@ class ContentSearchController < ApplicationController
     repo_ids = process_params(:repos)
     product_ids = process_params(:products)
     package_ids = process_params(:packages)
-    views = process_views(process_params :views)
+    views = process_views(process_params(:views))
     repos = process_repos(repo_ids, product_ids)
     errata_ids   = process_params(:errata)
 

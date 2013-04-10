@@ -24,7 +24,7 @@ module ContentSearch
     end
 
     def render_to_string(*args)
-      av = ActionView::Base.new(Rails.application.paths.app.views.first)
+      av =  ActionView::Base.new(ActionController::Base.view_paths, {})
       av.render(*args)
     end
 
