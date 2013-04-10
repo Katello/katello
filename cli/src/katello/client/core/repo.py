@@ -161,6 +161,8 @@ class Discovery(RepoAction):  # pylint: disable=R0904
         parser.add_option('--label', dest='label',
                                help=_("repo label, ASCII identifier to add to " +
                                 "all discovered repositories.  (will be generated if not specified)"))
+        parser.add_option('--unprotected', dest='unprotected', action='store_true', default=False,
+            help=_("Publish the created repositories using http (in addition to https)."))
         parser.add_option("--url", dest="url", type="url", schemes=ALLOWED_REPO_URL_SCHEMES,
             help=_("root url to perform discovery of repositories eg: http://katello.org/repos/ (required)"))
         parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
@@ -182,6 +184,7 @@ class Discovery(RepoAction):  # pylint: disable=R0904
         prodLabel = self.get_option('product_label')
         prodId   = self.get_option('product_id')
         orgName  = self.get_option('org')
+        unprotected = self.get_option('unprotected')
 
         prov_id = get_provider(orgName, providerName)['id']
         repourls = self.discover_repositories(prov_id, url)
@@ -189,7 +192,7 @@ class Discovery(RepoAction):  # pylint: disable=R0904
         selectedurls = self.select_repositories(repourls, assumeyes)
 
         product = get_product(orgName, prodName, prodLabel, prodId)
-        self.create_repositories(orgName, product["id"], name, label, selectedurls)
+        self.create_repositories(orgName, product["id"], name, label, selectedurls, unprotected)
 
         return os.EX_OK
 
@@ -247,14 +250,14 @@ class Discovery(RepoAction):  # pylint: disable=R0904
 
         return selection
 
-    def create_repositories(self, orgName, productid, name, label, selectedurls):
+    def create_repositories(self, orgName, productid, name, label, selectedurls, unprotected):
         for repourl in selectedurls:
             parsedUrl = urlparse.urlparse(repourl)
             repoName = self.repository_name(name, parsedUrl.path) # pylint: disable=E1101
             repoLabel = None
             if label:
                 repoLabel = self.repository_name(label, parsedUrl.path) # pylint: disable=E1101
-            self.api.create(orgName, productid, repoName, repoLabel, repourl, None, None)
+            self.api.create(orgName, productid, repoName, repoLabel, repourl, unprotected, None, None)
             print _("Successfully created repository [ %s ]") % repoName
 
     @classmethod
