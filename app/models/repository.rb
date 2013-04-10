@@ -226,7 +226,8 @@ class Repository < ActiveRecord::Base
                            :minor=>self.minor,
                            :enabled=>self.enabled,
                            :content_id=>self.content_id,
-                           :content_view_version=>view_version
+                           :content_view_version=>view_version,
+                           :unprotected=>self.unprotected
                            )
     clone.pulp_id = clone.clone_id(to_env, content_view)
     clone.relative_path = Repository.clone_repo_path(self, to_env, content_view)
