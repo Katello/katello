@@ -187,6 +187,7 @@ class ContentView < ActiveRecord::Base
     tasks = promote_repos(promote_version, to_env, repos_to_promote)
 
     if replacing_version
+      replacing_version = ContentViewVersion.find(replacing_version.id) if replacing_version.readonly?
       if replacing_version.environments.length == 1
         replacing_version.destroy
       else
