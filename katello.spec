@@ -137,6 +137,8 @@ BuildRequires:  %{?scl_prefix}rubygem(chunky_png)
 BuildRequires:  %{?scl_prefix}rubygem(fssm) >= 0.2.7
 BuildRequires:  %{?scl_prefix}rubygem(compass)
 BuildRequires:  %{?scl_prefix}rubygem(compass-rails)
+BuildRequires:  %{?scl_prefix}rubygem(therubyracer)
+BuildRequires:  %{?scl_prefix}rubygem(uglifier)
 BuildRequires:  %{?scl_prefix}rubygem(sass-rails)
 BuildRequires:  %{?scl_prefix}rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  %{?scl_prefix}rubygem(bundler_ext)
@@ -445,15 +447,14 @@ fi
 
 %if ! 0%{?fastbuild:1}
     #compile SASS files
-    echo Compiling SASS files...
+    echo Compiling Assets...
+    mv lib/tasks lib/tasks_disabled
+    export BUNDLER_EXT_NOSTRICT=1
+    export BUNDLER_EXT_GROUPS="default assets"
     touch config/katello.yml
+    %{scl_rake} assets:precompile:all --trace
     rm config/katello.yml
-
-    #generate Rails JS/CSS/... assets
-    echo Generating Rails assets...
-%{?scl:scl enable %{scl} "}
-    LC_ALL="en_US.UTF-8" rake assets:precompile
-%{?scl:"}
+    mv lib/tasks_disabled lib/tasks
 %endif
 
 #man pages
@@ -561,7 +562,6 @@ sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{bui
 
 #remove files which are not needed in the homedir
 rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
-rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
 
 #branding
@@ -620,7 +620,14 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/models/content_search
 %{homedir}/app/models/ext
 %{homedir}/app/models/roles_permissions
-%{homedir}/app/stylesheets
+%{homedir}/app/assets/
+%{homedir}/app/assets/stylesheets
+%{homedir}/app/assets/javascripts
+%{homedir}/app/assets/images
+%{homedir}/vendor
+%{homedir}/vendor/assets
+%{homedir}/vendor/assets/stylesheets
+%{homedir}/vendor/assets/images
 %{homedir}/app/views
 %exclude %{homedir}/app/views/foreman
 %{homedir}/autotest
@@ -652,7 +659,6 @@ usermod -a -G katello-shared tomcat
 %exclude %{homedir}/script/pulp_integration_tests
 %{homedir}/locale
 %{homedir}/public
-%dir %attr(775, katello, katello) %{homedir}/public/stylesheets/compiled
 %if ! 0%{?nodoc:1}
 %exclude %{homedir}/public/apipie-cache
 %endif
@@ -660,7 +666,6 @@ usermod -a -G katello-shared tomcat
 %exclude %{homedir}/script/service-wait
 %{homedir}/spec
 %{homedir}/tmp
-%{homedir}/vendor
 %dir %{homedir}/.bundle
 %{homedir}/config.ru
 %{homedir}/Gemfile.in
@@ -742,7 +747,14 @@ usermod -a -G katello-shared tomcat
 %exclude %{homedir}/app/views/foreman
 %exclude %{homedir}/lib/tasks/test.rake
 %exclude %{homedir}/lib/tasks/simplecov.rake
-%{homedir}/app/stylesheets
+%{homedir}/app/assets/
+%{homedir}/app/assets/stylesheets
+%{homedir}/app/assets/javascripts
+%{homedir}/app/assets/images
+%{homedir}/vendor
+%{homedir}/vendor/assets
+%{homedir}/vendor/assets/stylesheets
+%{homedir}/vendor/assets/images
 %{homedir}/app/views
 %{homedir}/autotest
 %{homedir}/ca
@@ -804,6 +816,7 @@ usermod -a -G katello-shared tomcat
 
 %files devel
 %{homedir}/bundler.d/development.rb
+%{homedir}/bundler.d/assets.rb
 %{homedir}/bundler.d/development_boost.rb
 %{homedir}/lib/tasks/yard.rake
 %{homedir}/lib/tasks/hudson.rake
