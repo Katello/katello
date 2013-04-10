@@ -16,7 +16,9 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
   fixtures :all
 
   def self.before_suite
-    models = ["Organization", "KTEnvironment", "User", "ContentViewEnvironment", "Repository", "System"]
+    models = ["Organization", "KTEnvironment", "User", "ContentViewEnvironment","ContentViewDefinitionBase",
+              "ContentViewDefinition", "Repository", "ContentView", "EnvironmentProduct", "ContentViewVersion",
+              "ComponentContentView", "System"]
     services = ["Candlepin", "Pulp", "ElasticSearch"]
     disable_glue_layers(services, models)
   end
@@ -124,6 +126,7 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_promote
+    Repository.any_instance.stubs(:clone_contents).returns([])
     content_view = @library_view
     refute_includes content_view.environments, @dev
     content_view.promote(@library, @dev)
@@ -160,5 +163,13 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     refute_nil content_view_version
     assert content_view.destroy
     assert_nil ContentViewVersion.find_by_id(content_view_version.id)
+  end
+
+  def test_all_version_library_instances_empty
+    assert_empty @library_dev_view.all_version_library_instances
+  end
+
+  def test_all_version_library_instances_empty
+    refute_empty @library_view.all_version_library_instances
   end
 end
