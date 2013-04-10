@@ -15,6 +15,11 @@ class PackageRule < FilterRule
     {:units => [[:name, :version, :min_version, :max_version]]}
   end
 
+  # input -> {:units => [{:name => "pulp-admin-*", :version =>"2.0.8"},
+  #             {:name => "pulp-rpm-*", :min_version =>"2.0.3", :max_version =>"2.0.9"}]}
+  # output ->  [{"$and" => [{"filename"=>{"$in"=> ["pulp-admin-client"]}}, {"version" => "2.0.8"}]},
+  #              {"$and" => [{"filename"=>{"$in"=> ["pulp-rpm-plugins", "pulp-rpm-admin"]}},
+  #                         {"version" => {"$gte" => "2.0.3", "$lte" => "2.0.9"}}]}]
   def generate_clauses(repo)
     parameters[:units].collect do |unit|
       rule_clauses = []
@@ -29,10 +34,10 @@ class PackageRule < FilterRule
       if unit.has_key? :version
         rule_clauses << {'version' => unit[:version] }
       else
-        vr = {}
-        vr["$gte"] = unit[:min_version] if unit.has_key? :min_version
-        vr["$lte"] = unit[:max_version] if unit.has_key? :max_version
-        rule_clauses << {'version' => vr } unless vr.empty?
+        version_clause = {}
+        version_clause["$gte"] = unit[:min_version] if unit.has_key? :min_version
+        version_clause["$lte"] = unit[:max_version] if unit.has_key? :max_version
+        rule_clauses << {'version' => version_clause } unless version_clause.empty?
       end
       case rule_clauses.size
         when 1
@@ -44,6 +49,4 @@ class PackageRule < FilterRule
       end
     end.compact if parameters.has_key?(:units)
   end
-
-
 end
