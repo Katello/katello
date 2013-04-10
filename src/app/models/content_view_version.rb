@@ -37,7 +37,7 @@ class ContentViewVersion < ActiveRecord::Base
   scope :non_default_view, joins(:content_view).where('content_views.default = ?', false)
 
   def has_default_content_view?
-    ContentViewVersion.default_view.pluck(:id).include?(self.id)
+    ContentViewVersion.default_view.pluck("content_view_versions.id").include?(self.id)
   end
 
   def repos(env)
