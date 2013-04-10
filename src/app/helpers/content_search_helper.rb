@@ -14,11 +14,11 @@ module ContentSearchHelper
 
   def content_types
     content_types = [
+      [ _("Content Views"), "views"],
       [ _("Products"), "products"],
       [ _("Repositories"), "repos"],
       [ _("Packages"), "packages"],
-      [ _("Errata"), "errata"],
-      [ _("Content Views"), "views"]
+      [ _("Errata"), "errata"]
     ]
   end
 
@@ -36,7 +36,19 @@ module ContentSearchHelper
   end
 
   def repo_compare_name_display repo
-    to_ret = {:custom => "<span title=\"#{repo.name}\" class=\"one-line-ellipsis tipsify\">#{repo.name}</span><span class=\"one-line-ellipsis\">#{repo.environment.name}</span>" }
+    to_ret = {:custom => "<span title=\"#{repo.environment.name}\" class=\"one-line-ellipsis\">#{repo.environment.name}</span>" +
+        "<span class=\"one-line-ellipsis tipsify\" title=\"#{repo.content_view.name}\">#{repo.content_view.name}</span>"+
+        "<span class=\"one-line-ellipsis tipsify\" title=\"#{repo.name}\">#{repo.name}</span>"}
+
+    return to_ret
+  end
+
+  def view_compare_name_display(view, env)
+    version = _("version %s") % view.version(env).version
+    to_ret = {:custom => <<EOS
+<span title=\"#{view.name} #{version}\" class=\"one-line-ellipsis tipsify\">#{view.name}</span><span class=\"one-line-ellipsis\">#{env.name}</span>
+EOS
+      }
 
     return to_ret
   end
