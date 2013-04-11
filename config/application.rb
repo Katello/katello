@@ -149,7 +149,7 @@ module Src
     config.assets.version = '1.0'
     config.assets.initialize_on_precompile = false
 
-    config.assets.precompile << Proc.new { |path|
+    config.assets.precompile << Proc.new do |path|
       if path =~ /\.(css|js)\z/
         full_path = Rails.application.assets.resolve(path).to_path
         app_assets_path = Rails.root.join('app', 'assets').to_path
@@ -163,7 +163,7 @@ module Src
       else
         false
       end
-    }
+    end
 
   end
 end
