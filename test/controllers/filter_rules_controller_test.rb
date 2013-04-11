@@ -244,6 +244,38 @@ class FilterRulesControllerTest < MiniTest::Rails::ActionController::TestCase
                                                            "end" => '01/31/2013'}}
   end
 
+  test "PUT update_parameter - for package rule version should be successful" do
+    @filter = filters(:populated_filter)
+    rule = PackageRule.where(:filter_id => @filter.id).first
+
+    # success notice created
+    notify = Notifications::Notifier.new
+    notify.expects(:success).at_least_once
+    @controller.expects(:notify).at_least_once.returns(notify)
+
+    put :update_parameter, :content_view_definition_id => @filter.content_view_definition.id, :filter_id => @filter.id,
+        :id => rule.id, :parameter => {:unit => {:name => 'xterm.*', :version => '6.0'}}
+
+    assert_response :success
+    assert_includes rule.reload.parameters[:units], {"name" => "xterm.*", "version" => "6.0"}
+  end
+
+  test "PUT update_parameter - for package rule min_version and max_version should be successful" do
+    @filter = filters(:populated_filter)
+    rule = PackageRule.where(:filter_id => @filter.id).first
+
+    # success notice created
+    notify = Notifications::Notifier.new
+    notify.expects(:success).at_least_once
+    @controller.expects(:notify).at_least_once.returns(notify)
+
+    put :update_parameter, :content_view_definition_id => @filter.content_view_definition.id, :filter_id => @filter.id,
+        :id => rule.id, :parameter => {:unit => {:name => 'xterm.*', :min_version => '7.0', :max_version => '10.0'}}
+
+    assert_response :success
+    assert_includes rule.reload.parameters[:units], {"name" => "xterm.*", "min_version" => "7.0", "max_version" => "10.0"}
+  end
+
   test "DELETE destroy_parameters - should be successful" do
     @filter = filters(:populated_filter)
     rule = ErratumRule.where(:filter_id => @filter.id).first
@@ -256,7 +288,7 @@ class FilterRulesControllerTest < MiniTest::Rails::ActionController::TestCase
     assert_equal rule.parameters[:units].length, 1
 
     delete :destroy_parameters, :content_view_definition_id => @filter.content_view_definition.id,
-           :filter_id => @filter.id, :id => rule.id, :units => {rule.parameters[:units].first[:id] => ""}
+           :filter_id => @filter.id, :id => rule.id, :units => [rule.parameters[:units].first[:id]]
 
     assert_response :success
     assert_empty rule.reload.parameters[:units]
