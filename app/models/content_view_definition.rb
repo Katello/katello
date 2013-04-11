@@ -90,9 +90,6 @@ class ContentViewDefinition < ContentViewDefinitionBase
     end
     PulpTaskStatus::wait_for_tasks async_tasks.flatten(1)
 
-    # Start Filtering errata in the copied repo
-    # Start Filtering package groups in the copied repo
-    # Start Filtering packages in the copied repo
     unassociate_contents(cloned_repos)
 
     if notify
