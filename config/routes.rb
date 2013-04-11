@@ -99,6 +99,7 @@ Src::Application.routes.draw do
       get :default_label
       get :items
     end
+
     member do
       post :clone
       get :views
@@ -106,13 +107,32 @@ Src::Application.routes.draw do
       post :publish
       get :status
       get :content
-      post :update_content
+      put :update_content
       put :update_component_views
-      get :filter
     end
+
     resources :content_view, :only => [], :controller => :content_view_definitions do
       member do
         post :refresh
+      end
+    end
+    resources :filters, :controller => :filters, :only => [:index, :new, :create, :edit, :update] do
+      collection do
+        delete :destroy_filters
+      end
+
+      resources :rules, :controller => :filter_rules, :only => [:new, :create, :edit, :update] do
+        collection do
+          delete :destroy_rules
+        end
+
+        member do
+          get :edit_inclusion
+          get :edit_parameter_list
+          get :edit_date_type_parameters
+          put :add_parameter
+          delete :destroy_parameters
+        end
       end
     end
   end
@@ -640,17 +660,31 @@ Src::Application.routes.draw do
           post :publish
           post :clone
         end
-        resources :products, :only => [] do
-          get :index, :action => :list_content_view_definition_products,
-            :on => :collection
-          put :index, :action => :update_content_view_definition_products,
-            :on => :collection
+        resources :products, :controller => :content_view_definitions, :only => [] do
+          collection do
+            get :index, :action => :list_products
+            put :index, :action => :update_products
+          end
         end
-        resources :repositories, :only => [] do
-          get :index, :action => :list_content_view_definition_repositories,
-            :on => :collection
-          put :index, :action => :update_content_view_definition_repositories,
-            :on => :collection
+        resources :repositories, :controller => :content_view_definitions, :only => [] do
+          collection do
+            get :index, :action => :list_repositories
+            put :index, :action => :update_repositories
+          end
+        end
+        resources :filters, :controller => :filters, :only => [:index, :show, :create, :destroy] do
+          resources :products, :controller => :filters, :only => [] do
+            collection do
+              get :index, :action => :list_products
+              put :index, :action => :update_products
+            end
+          end
+          resources :repositories, :controller => :filters, :only => [] do
+            collection do
+              get :index, :action => :list_repositories
+              put :index, :action => :update_repositories
+            end
+          end
         end
       end
     end
@@ -665,6 +699,8 @@ Src::Application.routes.draw do
         post :refresh
       end
     end
+
+
 
     resources :changesets, :only => [:show, :update, :destroy] do
       post :promote, :on => :member, :action => :promote

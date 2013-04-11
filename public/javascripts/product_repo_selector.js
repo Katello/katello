@@ -389,8 +389,8 @@ KT.filters = (function(){
         disable_package_inputs();
 
         $.ajax({
-            type: "POST",
-            url: input.attr("data-url"),
+            type: "PUT",
+            url: input.data("url"),
             data: {packages:[name]},
             cache: false,
             success: function(data) {
@@ -433,8 +433,8 @@ KT.filters = (function(){
         disable_package_inputs();
 
         $.ajax({
-            type: "POST",
-            url: btn.attr("data-url"),
+            type: "PUT",
+            url: btn.data("url"),
             data: {packages:pkgs},
             cache: false,
             success: function(data) {
@@ -468,7 +468,7 @@ KT.filters = (function(){
     update_product_repos = function() {
         var repos = [];
         $.ajax({
-            type: "POST",
+            type: "PUT",
             contentType: "application/json",
             url: $("#update_products").data("url"),
             data: JSON.stringify({products:current_filter.products, repos:current_filter.repos}),

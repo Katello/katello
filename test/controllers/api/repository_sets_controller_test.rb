@@ -21,7 +21,7 @@ class Api::RepositorySetsControllerTest < MiniTest::Rails::ActionController::Tes
     @environment = environments(:library)
     @redhat_product = products(:redhat)
     @custom_product = products(:fedora)
-    login_user(users(:admin))
+    login_user(User.find(users(:admin)))
     models = ["Organization", "KTEnvironment", "Changeset"]
     services = ["Pulp", "ElasticSearch"]
     disable_glue_layers(services, models)
