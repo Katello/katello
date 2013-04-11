@@ -18,40 +18,38 @@
 require 'rspec/rails/version'
 
 version = begin
-  RSpec::Version::STRING =~ /^2\.(\d+)\.\d+$/
-  (5..10).include? $1.to_i
+  const  = if defined? RSpec::Version::STRING
+             RSpec::Version::STRING
+           else
+             RSpec::Core::Version::STRING
+           end
+  version = const.split('.').map &:to_i
+  version[0] == 2 && (5..13).include?(version[1])
 rescue
   false
 end
 
 unless version # change if it works for other versions
-  warn "monkey eats only a banana! (this monkey needs rspec 2.(5-10))\n#{__FILE__}:#{__LINE__}"
+  warn "monkey eats only a banana! (this monkey needs rspec 2.(5-13))\n#{__FILE__}:#{__LINE__}"
 else
   module RSpec::Mocks
     module TestDouble
-      def initialize(name=nil, stubs_and_options={ })
+      def initialize(name=nil, stubs_and_options={})
         __initialize_as_test_double(name, stubs_and_options)
         @__created_on_line = caller.find { |line| line =~ %r(/spec/) }
       end
     end
 
     class ErrorGenerator
+      alias_method :intro_without_crated_on, :intro
+
+      private
+
       def intro
-        intro = if @name
-                  "#{@declared_as} #{@name.inspect}"
-                elsif TestDouble === @target
-                  @declared_as
-                elsif Class === @target
-                  "<#{@target.inspect} (class)>"
-                elsif @target
-                  @target
-                else
-                  "nil"
-                end
         if created_on_line = @target.instance_eval { @__created_on_line }
-          "#{intro} created on: \n#{created_on_line}"
+          "#{intro_without_crated_on} created on: \n#{created_on_line}"
         else
-          intro
+          intro_without_crated_on
         end
       end
     end
