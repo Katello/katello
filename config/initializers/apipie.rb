@@ -32,11 +32,7 @@ Apipie.configure do |config|
                         Api::TasksController
                         Api::TemplatesController
                         Api::TemplatesContentController
-                        Api::Foreman::ArchitecturesController
-                        Api::Foreman::ConfigTemplates
-                        Api::Foreman::DomainsController
-                        Api::Foreman::SimpleCrudController
-                        Api::Foreman::SubnetsController]
+                        ]
 
     config.cache_dir = File.join(Rails.root, "public/headpin-apipie-cache")
   end

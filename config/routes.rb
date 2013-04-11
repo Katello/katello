@@ -2,40 +2,6 @@ Src::Application.routes.draw do
 
   apipie
 
-  if Katello.config.use_foreman
-    scope :module => 'foreman' do
-      resources :subnets do
-        collection do
-          get :items
-        end
-      end
-
-      resources :domains do
-        collection do
-          get :items
-        end
-      end
-
-      resources :hardware_models do
-        collection do
-          get :items
-        end
-      end
-
-      resources :architectures do
-        collection do
-          get :items
-        end
-      end
-
-      resources :smart_proxies do
-        collection do
-          get :items
-        end
-      end
-    end
-  end
-
   resources :system_groups do
     collection do
       get :items
@@ -838,26 +804,6 @@ Src::Application.routes.draw do
     match '/subscriptions' => 'candlepin_proxies#post', :via => :post, :as => :proxy_subscriptions_post_path
     match '/consumers/:id/profile/' => 'systems#upload_package_profile', :via => :put
     match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
-
-      # foreman proxy --------------
-    if Katello.config.use_foreman
-      scope :module => 'foreman' do
-        resources :architectures, :except => [:new, :edit]
-        resources :compute_resources, :except => [:new, :edit]
-        resources :subnets, :except => [:new, :edit]
-        resources :smart_proxies, :except => [:new, :edit]
-        resources :hardware_models, :except => [:new, :edit]
-        constraints(:id => /[^\/]+/) do
-          resources :domains, :except => [:new, :edit]
-        end
-        resources :config_templates, :except => [:new, :edit] do
-          collection do
-            get :revision
-            get :build_pxe_default
-          end
-        end
-      end
-    end
 
     # development / debugging support
     if Rails.env == "development"
