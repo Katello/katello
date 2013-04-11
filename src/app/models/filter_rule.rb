@@ -48,7 +48,8 @@ class FilterRule < ActiveRecord::Base
     when ERRATA
       ErratumRule
     else
-      raise _("Invalid content type (%s) provided. Content types can be one of %s, %s, %s") % ([content_type] + CONTENT_TYPES)
+      params = {:content_type => content_type, :content_types => CONTENT_TYPES.join(",")}
+      raise (_("Invalid content type (%{content_type}) provided. Content types can be one of %{content_types}") % params)
     end
   end
 
