@@ -22,8 +22,8 @@ class Ping
                 "thumbslug",
                 "qpid",
                 "ldap_fluff",
-                "elasticsearch",
-                "foreman"]
+                "elasticsearch"
+                ]
 
     #
     # Calls "status" services in all backend engines.
@@ -39,7 +39,6 @@ class Ping
           :pulp_auth => {},
           :candlepin_auth => {},
           :katello_jobs => {},
-          :foreman_auth => {}
         }}
       else
         result = { :result => OK_RETURN_CODE, :status => {
@@ -93,13 +92,6 @@ class Ping
       # candlepin - ping with oauth
       exception_watch(result[:status][:candlepin_auth]) do
         Resources::Candlepin::CandlepinPing.ping
-      end
-
-      # foreman - ping with oauth
-      if Katello.config.katello?
-        exception_watch(result[:status][:foreman_auth]) do
-          Resources::Foreman::Home.status({}, Resources::ForemanModel.header)
-        end
       end
 
       # katello jobs - TODO we should not spawn processes
