@@ -14,11 +14,18 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
+from katello.client.server import ServerRequestError
+
 
 class TaskStatusAPI(KatelloAPI):
     def status(self, taskUuid):
         path = "/api/tasks/%s" % str(taskUuid)
-        return self.server.GET(path)[1]
+        try:
+            task = self.server.GET(path)[1]
+        except ServerRequestError:
+            task = None
+        return task
+
 
 class SystemTaskStatusAPI(KatelloAPI):
     def status(self, taskUuid):
