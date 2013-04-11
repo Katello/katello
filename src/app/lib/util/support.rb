@@ -33,6 +33,55 @@ module Util
       params
     end
 
+    # Helper method to just convert
+    # a collection of objects to their
+    # string representation (mostly to be used internally)
+    def self.stringify(col)
+      col.collect{|c| c.to_s}
+    end
+
+    # Given a rules hash in the format
+    # {<attrib_name>: {<attrib_name> => ...}}
+    # the method will match the params attributes to provided
+    # rule and return a diff.
+    # Here are some of the examples
+    # rule -> {:units => [[:name, :version, :min_version, :max_version]]}
+    # will match -> {:units => [{:name = > "boo", :version => "2.0"},
+    #                 {:name = > "Foo", :min_version => "2.0"}]}
+    # rule ->     {:units => [[:id]], :date_range => [:start, :end],
+    #                :errata_type => {}, :severity => {}}
+    # will match -> {:units => [{:id => 100}],
+    #        :date_range => {:start => "05/14/2011"}}
+    # Note of caution this merely shows differences in the structure
+    # of params vs rules. It doesnt validate anything.
+    # Look at SerializedParamsValidator method for its uses.
+    def self.diff_hash_params(rule, params)
+      params = params.with_indifferent_access
+      if rule.is_a?(Array)
+        return stringify(params.keys) - stringify(rule)
+      end
+
+      rule = rule.with_indifferent_access
+      diff_data = rule.keys.collect do |k|
+        if params[k]
+          if (params[k].is_a?(Array)) && (rule[k].first.is_a?(Array))
+            diffs = params[k].collect {|pk| diff_hash_params(rule[k].first, pk)}.flatten
+            diffs
+          elsif params[k].is_a?(Hash)
+            keys = stringify(params[k].keys) - stringify(rule[k])
+            if keys.empty?
+              nil
+            else
+              {k => keys}
+            end
+          end
+        end
+      end.compact.flatten
+
+      return diff_data unless diff_data.nil? || diff_data.empty?
+      stringify(params.keys) - stringify(rule.keys)
+    end
+
     # We need this so that we can return
     # empty search results on an invalid query
     # Basically this is a empty array with a total
