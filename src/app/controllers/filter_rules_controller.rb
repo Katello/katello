@@ -21,7 +21,7 @@ class FilterRulesController < ApplicationController
   before_filter :authorize #after find_content_view_definition, since the definition is required for authorization
   before_filter :find_filter
   before_filter :find_rule, :only => [:edit, :edit_inclusion, :edit_parameter_list, :edit_date_type_parameters,
-                                      :update, :add_parameter, :destroy_parameters]
+                                      :update, :add_parameter, :update_parameter, :destroy_parameters]
 
   respond_to :html
 
@@ -43,6 +43,7 @@ class FilterRulesController < ApplicationController
       :update => manage_rule,
 
       :add_parameter => manage_rule,
+      :update_parameter => manage_rule,
       :destroy_parameters => manage_rule,
 
       :destroy_rules => manage_rule,
@@ -125,7 +126,8 @@ class FilterRulesController < ApplicationController
                           :filter => @filter.name})
 
         render :partial => item_partial(@rule),
-               :locals => {:editable => @view_definition.editable?, :unit => params[:parameter][:unit]} and return
+               :locals => {:editable => @view_definition.editable?, :rule => @rule,
+                           :unit => params[:parameter][:unit]} and return
 
       else
         if params[:parameter][:date_range]
@@ -160,18 +162,37 @@ class FilterRulesController < ApplicationController
     render :nothing => true
   end
 
+  def update_parameter
+
+    unless params[:parameter].blank? || params[:parameter][:unit].blank?
+      parameter_name = params[:parameter][:unit][:name]
+
+      # replace the current parameters (e.g. version, min_version, max_version), with
+      # the new parameters received
+      @rule.parameters[:units].detect{|unit| unit[:name] == parameter_name}.try(:replace, params[:parameter][:unit])
+      @rule.save!
+
+      notify.success(_("Parameter %{parameter} successfully updated for filter %{filter} of type %{type}.") %
+                      {:parameter => parameter_name,
+                       :filter => @filter.name,
+                       :type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type)})
+    end
+
+    render :nothing => true
+  end
+
   def destroy_parameters
     if params[:units] && @rule.parameters[:units]
       key_field = @rule.content_type == FilterRule::ERRATA ? 'id' : 'name'
-      params[:units].each_pair do |key, value|
-        @rule.parameters[:units].delete({key_field => key})
+      params[:units].each do |id|
+        @rule.parameters[:units].delete_if{|parameter| parameter[key_field] == id}
       end
     end
     @rule.save!
 
     notify.success(_("Rule parameters successfully deleted for rule type '%{type}'. Parameters deleted: %{parameters}.") %
-                   {:type => FilterRule::CONTENT_OPTIONS.key(@rule.content_type),
-                    :parameters => params[:units].keys.join(', ')})
+                   {:type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type),
+                    :parameters => params[:units].join(', ')})
 
     render :nothing => true
   end
