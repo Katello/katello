@@ -20,7 +20,7 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
               "ContentViewDefinition", "Repository", "ContentView", "EnvironmentProduct", "ContentViewVersion",
               "ComponentContentView", "System"]
     services = ["Candlepin", "Pulp", "ElasticSearch"]
-    disable_glue_layers(services, models)
+    disable_glue_layers(services, models, true)
   end
 
   def setup

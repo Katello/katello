@@ -244,34 +244,6 @@ class ContentViewDefinition < ContentViewDefinitionBase
     end
   end
 
-  def remove_product(product)
-    filters.each do |filter_item|
-      modified = false
-      if filter_item.products.include? product
-        filter_item.products.delete(product)
-        modified = true
-      end
-      repos_to_remove = filter_item.repositories.select{|r| r.product == product}
-      filter_item.repositories -= repos_to_remove
-      filter_item.save! if modified || repos_to_remove.size > 0
-    end
-  end
-
-  def remove_repository(repository)
-    filters.each do |filter_item|
-      if filter_item.repositories.include? repository
-        filter_item.repositories.delete(repository)
-        filter_item.save!
-      end
-      # if i am removing the last repository of this product from the definition
-      #     and there is a filter that includes the product,  remove it from the filter
-      if self.repositories.in_product(repository.product).empty? &&
-              filter_item.products.include?(repository.product)
-        filter_item.products.delete(repository.product)
-        filter_item.save!
-      end
-    end
-  end
 
   def generate_clauses(repo, rules, inclusion = true)
     join_clause = "$nor"
