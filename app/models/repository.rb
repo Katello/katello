@@ -42,7 +42,7 @@ class Repository < ActiveRecord::Base
   belongs_to :gpg_key, :inverse_of => :repositories
   belongs_to :library_instance, :class_name=>"Repository"
 
-  default_scope :order => 'repositories.name ASC'
+  default_scope order('repositories.name ASC')
   scope :enabled, where(:enabled => true)
 
   scope :in_default_view, joins(:content_view_version => :content_view).
