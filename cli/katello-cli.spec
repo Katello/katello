@@ -26,6 +26,7 @@ Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 Requires:      %{base_name}-cli-common
 BuildArch:     noarch
+BuildRequires: pylint
 BuildRequires: translate-toolkit
 Obsoletes:     katello-cli-headpin < 1.0.1-1
 Provides:      katello-cli-headpin = 1.0.1-1
