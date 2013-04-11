@@ -21,26 +21,30 @@
           = label :red_hat_provider, :url, _("Repository Url")
         .grid_9.la.fl#repo_url{'name' => 'provider[repository_url]',:class=>("editable edit_textfield" if @provider.editable?),  'data-url' => provider_path(@provider.id)} #{@provider[:repository_url]}
     .clear
-    - if @details['upstreamUuid']
+    - if @upstream['uuid']
       .full
         %h5 #{_("Subscription Manifest")}
       .full
         %fieldset
           .grid_3.ra.fieldset
-            =label :uuid, :uuid, _("Upstream Distributor")
+            =label :uuid, :uuid, _("Upstream Subscription Management Application")
           .grid_9.la.fl
-            = subscriptions_manifest_link_helper({'webAppPrefix'=>@details[:webAppPrefix], 'upstreamId'=>@details['upstreamUuid']}, @details['displayName'])
-        - if @provider.editable? && Katello.config.headpin?
+            = subscriptions_manifest_link_helper({'webAppPrefix'=>@upstream[:webUrl], 'upstreamId'=>@upstream['uuid']}, @upstream['name'])
+        %fieldset
+        - if @provider.editable?
           - if !@provider.manifest_task || @provider.manifest_task.finished?
-            = form_for @provider, :html => {:method => :post, :id => :delete_manifest}, :remote => true, :url => delete_manifest_subscriptions_path do |f|
-              %fieldset
-                .grid_3.ra.fieldset
-                  &nbsp;
-                .grid_6.la#delete_button
+            .grid_3.ra.fieldset
+              &nbsp;
+            = form_for @provider, :html => {:method => :post, :id => :refresh_manifest}, :remote => true, :url => refresh_manifest_subscriptions_path do |f|
+              .grid_2.la#refresh_button
+                = f.submit _("Refresh Manifest"), :id => :refresh_form_button
+            - if Katello.config.headpin?
+              = form_for @provider, :html => {:method => :post, :id => :delete_manifest}, :remote => true, :url => delete_manifest_subscriptions_path do |f|
+                .grid_4.la#delete_button
                   = f.submit _("Delete Manifest"), :id => :delete_form_button, :confirm => _("Deleting a manifest " + |
-                        "will permanently remove all current subscriptions. All systems consuming these subscriptions " + |
-                        "have them removed. Do you wish to proceed with removing this manifest?") |
-          - elsif @provider.manifest_task && !@provider.manifest_task.finished? && @provider.manifest_task.task_type == "delete manifest"
+                          "will permanently remove all current subscriptions. All systems consuming these subscriptions " + |
+                          "have them removed. Do you wish to proceed with removing this manifest?") |
+          - elsif @provider.manifest_task && !@provider.manifest_task.finished? && (@provider.manifest_task.task_type == "delete manifest" || @provider.manifest_task.task_type == "refresh manifest")
             .grid_10
               %fieldset
                 .grid_3.ra.fieldset
@@ -50,7 +54,10 @@
                     %div.manifest_progress{:provider_id=>@provider.id}
                       = image_tag("embed/icons/spinner.gif", {:class=>"fl"})
                       .fl.manifest_progress_message
-                        = _("Delete in progress (%s)") % @provider.manifest_task.state
+                        - if @provider.manifest_task.task_type == "delete manifest"
+                          = _("Delete in progress (%s)") % @provider.manifest_task.state
+                        - else
+                          = _("Refresh in progress (%s)") % @provider.manifest_task.state
     .clear
     - if @provider.editable?
       - if @provider.manifest_task && !@provider.manifest_task.finished?
@@ -100,7 +107,7 @@
                   = status["statusMessage"]
                 %td
                   = _("%s ago") % time_ago_in_words(status["created"])
-              - if status['webAppPrefix']
+              - if status['webUrl']
                 %tr{:class => cycle_class}
                   %td{:colspan => 2}
                     &nbsp; &nbsp; &nbsp;

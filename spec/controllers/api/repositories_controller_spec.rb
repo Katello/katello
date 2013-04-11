@@ -208,7 +208,7 @@ describe Api::RepositoriesController, :katello => true do
 
         context "we dont provide gpg_key_name key" do
           it "should use the product's key" do
-            @product.should_receive(:add_repo).with do |label ,name, url, type, gpg|
+            @product.should_receive(:add_repo).with do |label ,name, url, type, unprotected, gpg|
               gpg == product_gpg
             end.and_return({})
             post 'create', :name => 'repo_1', :label => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
@@ -217,7 +217,7 @@ describe Api::RepositoriesController, :katello => true do
 
         context "we provide another gpg_key_name key" do
           it "should use provided key" do
-            @product.should_receive(:add_repo).with do |label, name, url, type, gpg|
+            @product.should_receive(:add_repo).with do |label, name, url, type, unprotected, gpg|
               gpg == repo_gpg
             end.and_return({})
             post 'create', :name => 'repo_1', :label => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label, :gpg_key_name => repo_gpg.name
@@ -226,10 +226,28 @@ describe Api::RepositoriesController, :katello => true do
 
         context "we provide empty gpg_key_name key" do
           it "should use no gpg key" do
-            @product.should_receive(:add_repo).with do |label, name, url, type, gpg|
+            @product.should_receive(:add_repo).with do |label, name, url, type, unprotected, gpg|
               gpg == nil
             end.and_return({})
             post 'create', :name => 'repo_1', :label => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label, :gpg_key_name => ""
+          end
+        end
+
+        context "should be protected by default" do
+          it "should use no gpg key" do
+            @product.should_receive(:add_repo).with do |label, name, url, type, unprotected, gpg|
+              unprotected == false
+            end.and_return({})
+            post 'create', :name => 'repo_1', :label => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label, :gpg_key_name => ""
+          end
+        end
+
+        context "should be able to be unprotected" do
+          it "should use no gpg key" do
+            @product.should_receive(:add_repo).with do |label, name, url, type, unprotected, gpg|
+              unprotected == true
+            end.and_return({})
+            post 'create', :name => 'repo_1', :label => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label, :gpg_key_name => "", :unprotected=>true
           end
         end
 
@@ -362,7 +380,7 @@ describe Api::RepositoriesController, :katello => true do
       before do
           @repo = Repository.new(:pulp_id=>"123", :id=>"123")
           Repository.stub(:find).and_return(@repo)
-          Runcible::Extensions::Repository.stub(:package_groups)
+          Runcible::Extensions::Repository.stub(:package_groups).and_return([])
       end
       it "should call Pulp layer" do
         Runcible::Extensions::Repository.should_receive(:package_groups).with("123")

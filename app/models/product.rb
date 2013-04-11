@@ -27,6 +27,12 @@ class Product < ActiveRecord::Base
     def <<(*items)
       super( items - @association.owner.environment_products.collect{|ep| ep.environment} )
     end
+
+    def default_view
+      select do |env|
+        env.default_content_view.products(env).include?(proxy_owner)
+      end
+    end
   end
 
   has_and_belongs_to_many :changesets
@@ -180,6 +186,11 @@ class Product < ActiveRecord::Base
       self.environments.delete(from_env)
     end
     save!
+  end
+
+  def environments_for_view view
+    versions = view.versions.select{|version| version.products.include?(self)}
+    versions.collect{|v|v.environments}.flatten
   end
 
   protected
