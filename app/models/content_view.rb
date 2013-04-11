@@ -129,6 +129,12 @@ class ContentView < ActiveRecord::Base
     self.versions.in_environment(env).order('content_view_versions.id ASC').last
   end
 
+  def version_environment(env)
+    # TODO: rewrite this into SQL or use content_view_environment when that
+    # points to environment
+    version(env).content_view_version_environments.select {|cvve| cvve.environment_id == env.id}
+  end
+
   def repos(env)
     version = version(env)
     if version
@@ -136,6 +142,10 @@ class ContentView < ActiveRecord::Base
     else
       []
     end
+  end
+
+  def all_version_repos
+    Repository.joins(:content_view_version).where("content_view_versions.content_view_id" => self.id)
   end
 
   def repos_in_product(env, product)
@@ -150,6 +160,17 @@ class ContentView < ActiveRecord::Base
   def products(env)
     repos = repos(env)
     Product.joins(:environment_products => :repositories).where(:repositories => {:id => repos.map(&:id)}).uniq
+  end
+
+  #list all products associated to this view across all versions
+  def all_version_products
+    Product.joins(:environment_products=>:repositories).where('repositories.id'=>self.all_version_repos).uniq
+  end
+
+  #get the library instances of all repos within this view
+  def all_version_library_instances
+    all_repos = all_version_repos.where(:library_instance_id=>nil).pluck('repositories.id') + all_version_repos.pluck(:library_instance_id)
+    Repository.where(:id=>all_repos)
   end
 
   def get_repo_clone(env, repo)
@@ -187,6 +208,7 @@ class ContentView < ActiveRecord::Base
     tasks = promote_repos(promote_version, to_env, repos_to_promote)
 
     if replacing_version
+      replacing_version = ContentViewVersion.find(replacing_version.id) if replacing_version.readonly?
       if replacing_version.environments.length == 1
         replacing_version.destroy
       else
@@ -291,6 +313,13 @@ class ContentView < ActiveRecord::Base
     unless env.library
       view_env = self.content_view_environments.where(:environment_id=>env.id)
       view_env.first.destroy unless view_env.blank?
+    end
+  end
+
+  def index_repositories(env)
+    self.repos(env).each do |repo|
+      repo.index_packages
+      repo.index_errata
     end
   end
 

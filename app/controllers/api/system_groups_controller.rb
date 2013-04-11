@@ -14,7 +14,8 @@
 class Api::SystemGroupsController < Api::ApiController
 
   before_filter :find_group, :only => [:copy, :show, :update, :destroy, :destroy_systems,
-                                       :add_systems, :remove_systems, :systems, :history, :history_show]
+                                       :add_systems, :remove_systems, :systems, :history,
+                                       :history_show, :update_systems]
   before_filter :find_organization, :only => [:index, :create, :copy]
   before_filter :authorize
 
@@ -25,18 +26,19 @@ class Api::SystemGroupsController < Api::ApiController
     create_perm = lambda{SystemGroup.creatable?(@organization)}
     destroy_perm = lambda{@group.deletable?}
     destroy_systems_perm = lambda{@group.systems_deletable?}
-    { :index        => any_readable,
-      :show         => read_perm,
-      :systems      => read_perm,
-      :create       => create_perm,
-      :copy         => create_perm,
-      :update       => edit_perm,
-      :destroy      => destroy_perm,
+    { :index           => any_readable,
+      :show            => read_perm,
+      :systems         => read_perm,
+      :create          => create_perm,
+      :copy            => create_perm,
+      :update          => edit_perm,
+      :destroy         => destroy_perm,
       :destroy_systems => destroy_systems_perm,
-      :add_systems  => edit_perm,
-      :remove_systems => edit_perm,
-      :history      => read_perm,
-      :history_show => read_perm
+      :add_systems     => edit_perm,
+      :remove_systems  => edit_perm,
+      :history         => read_perm,
+      :history_show    => read_perm,
+      :update_systems  => edit_perm
     }
   end
 
@@ -46,7 +48,8 @@ class Api::SystemGroupsController < Api::ApiController
       :copy => {:system_group=>[:new_name, :description, :max_systems]},
       :update =>  {:system_group=>[:name, :description, :system_ids, :max_systems]},
       :add_systems => {:system_group=>[:system_ids]},
-      :remove_systems => {:system_group=>[:system_ids]}
+      :remove_systems => {:system_group=>[:system_ids]},
+      :update_systems => {:system_group => [:environment_id, :content_view_id]}
     }
   end
 
@@ -192,6 +195,10 @@ class Api::SystemGroupsController < Api::ApiController
     render :text => _("Deleted system group '%s'") % params[:id], :status => 200
   end
 
+  api :DELETE, "/organizations/:organization_id/system_groups/:id/destroy_systems",
+    "Destroy a system group and its systems"
+  param :organization_id, :identifier, :desc => "organization identifier", :required => true
+  param :id, :identifier, :desc => "Id of the system group", :required => true
   def destroy_systems
     # this will destroy both the systems contained within the group as well as the group itself
     system_names = []
@@ -203,6 +210,26 @@ class Api::SystemGroupsController < Api::ApiController
 
     result = _("Deleted system group '%{s}' and it's %{n} systems.") % {:s => @group.name, :n =>system_names.length.to_s}
     render :text => result, :status => 200
+  end
+
+  api :PUT, "/organizations/:organization_id/system_groups/:id/update_systems",
+    "Update systems within a system group"
+  param :organization_id, :identifier, :desc => "organization identifier", :required => true
+  param :id, :identifier, :desc => "Id of the system group", :required => true
+  param :system_group, Hash do
+    param :content_view_id, :identifier, "id of the content view to set systems to"
+    param :environment_id, :identifier, "id of the enviornment to set systems to"
+  end
+  def update_systems
+    unless params[:system_group].blank?
+      ActiveRecord::Base.transaction do
+        @group.systems.each do |system|
+          system.update_attributes!(params[:system_group])
+        end
+      end
+    end
+
+    render :json => @group
   end
 
   private

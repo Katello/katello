@@ -22,11 +22,16 @@
               - cycle_class = cycle("", "alt")
               %tr{:id => "#{entitlement.entitlementId}", :class => cycle_class}
                 %td{:style => "padding-top:9px;"}
-                %td{:style => "padding-top:9px;", :colspan => '6'}
+                %td{:style => "padding-top:9px;", :colspan => '5'}
                   - if editable
                     %span.fl= check_box_tag "subscription[#{entitlement.entitlementId}]", value="#{entitlement.entitlementId}", false
                   &nbsp;
                   = subscriptions_pool_link_helper(entitlement.poolName, entitlement.poolId, entitlement.provider_id, current_organization)
+                %td{:style => "padding-top:9px;"}
+                  - if entitlement.provider_id == current_organization.redhat_provider.id
+                    #{_('Red Hat Product')}
+                  - else
+                    #{_('Custom Content Repository Product')}
               %tr{:id => "#{entitlement.entitlementId}-row2", :class => cycle_class}
                 %td{:style => "padding-top:9px;"}
                 %td{:style => "padding-top:9px;"}
@@ -90,18 +95,26 @@
                 - cycle_class = cycle("", "alt")
                 %tr{:id => "#{sub.cp_id}", :class => cycle_class}
                   %td{:style => "padding-top:9px;"}
-                  %td{:style => "padding-top:9px;", :colspan => '6'}
+                  %td{:style => "padding-top:9px;", :colspan => '5'}
                     - if editable
                       %span.fl= check_box_tag "subscription[#{sub.cp_id}]", false
                     &nbsp;
                     = subscriptions_pool_link_helper(sub.product_name, sub.cp_id, sub.provider_id, current_organization)
+                  %td{:style => "padding-top:9px;"}
+                    - if sub.provider_id == current_organization.redhat_provider.id
+                      #{_('Red Hat Product')}
+                    - else
+                      #{_('Custom Content Repository Product')}
                 %tr{:id => "#{sub.cp_id}-row2", :class => cycle_class}
                   %td{:style => "padding-top:9px;"}
                   %td{:style => "padding-top:9px;"}
-                  %td{:style => "padding-top:9px;"} #{sub.support_level}
                   %td{:style => "padding-top:9px;"}
-                    = _("Sockets: %s") % sub.sockets
-                    = _(", RAM: %s") % sub.ram if sub.ram != 0
+                    - if sub.provider_id == current_organization.redhat_provider.id
+                      #{sub.support_level}
+                  %td{:style => "padding-top:9px;"}
+                    - if sub.provider_id == current_organization.redhat_provider.id
+                      = _("Sockets: %s") % sub.sockets
+                      = _(", RAM: %s") % sub.ram if sub.ram != 0
                   %td
                     - if sub.quantity < 0
                       = text_field_tag "spinner[#{sub.cp_id}]", nil, :min => 0, :max => 99999, :step=>1, :value=>0, :class=>"ui-spinner"
@@ -111,8 +124,16 @@
                       = text_field_tag "spinner[#{sub.cp_id}]", nil, :min => 0, :max => (sub.quantity-sub.consumed), :step=>1, :value=>0, :class=>"ui-spinner"
                       %span{:style => "padding-top:9px;"}
                         = "of #{sub.quantity - sub.consumed}"
-                  %td{:style => "padding-top:9px;"} #{format_time sub.start_date}
-                  %td{:style => "padding-top:9px;"} #{format_time sub.end_date}
+                  %td{:style => "padding-top:9px;"}
+                    - if sub.provider_id == current_organization.redhat_provider.id
+                      = format_time(sub.start_date)
+                    - else
+                      %input#start_date{:type=>'text', :class=>'datepicker', :value=>format_time(sub.start_date), 'data-minDate'=>format_time(sub.start_date), 'data-maxDate'=>format_time(sub.end_date)}
+                  %td{:style => "padding-top:9px;"}
+                    - if sub.provider_id == current_organization.redhat_provider.id
+                      = format_time(sub.end_date)
+                    - else
+                      %input#end_date{:type=>'text', :class=>'datepicker', :value=>format_time(sub.end_date), 'data-minDate'=>format_time(sub.start_date), 'data-maxDate'=>format_time(sub.end_date)}
                 - sub.provided_products.each do |product|
                   %tr{:class => "child-of-#{sub.cp_id} " + cycle_class}
                     %td{:colspan=>7}
