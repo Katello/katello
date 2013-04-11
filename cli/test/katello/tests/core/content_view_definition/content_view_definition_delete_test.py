@@ -26,6 +26,7 @@ class ContentViewDeleteTest(CLIActionTestCase):
 
     ORG = 'org'
     VIEW = { "label": 'content_view',
+             "name": "content_view",
              "id": 1
             }
 

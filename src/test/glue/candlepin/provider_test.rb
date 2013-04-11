@@ -21,11 +21,7 @@ class GlueCandlepinProviderTestBase < MiniTest::Rails::ActiveSupport::TestCase
   fixtures :all
 
   def self.before_suite
-    load_fixtures
-    # TODO: RAILS32 remove top reference to load_fixtures
-    if @loaded_fixtures.nil?
-      @loaded_fixtures = load_fixtures
-    end
+    @loaded_fixtures = load_fixtures
 
     services  = ['Pulp', 'ElasticSearch', 'Foreman']
     models    = ['User', 'KTEnvironment', 'Organization', 'Product']

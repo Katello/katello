@@ -15,9 +15,6 @@ module ContentSearch::Element
   def self.included(base)
     base.class_eval do
       extend ClassMethods
-      class << self
-        alias_method_chain :attr_accessor, :saved_attributes
-      end
     end
   end
 
@@ -25,35 +22,36 @@ module ContentSearch::Element
     attrs.each {|key, val| self.send("#{key}=", val)}
   end
 
-  def attributes
-    self.class.get_element_attributes || self.class.attributes
+  def display_attributes
+    self.class.get_display_attributes
   end
 
   def as_json(options = {})
     json = {}
-    attributes.each do |attr|
+    raise "Display attributes not defined for #{self.class.name}" if display_attributes.nil? || display_attributes.empty?
+    display_attributes.each do |attr|
       json[attr] = self.send(attr) if self.send(attr)
     end
     json
   end
 
+  def [](key)
+    self.send(key.to_sym)
+  end
+
+  def []=(key, val)
+    self.send("#{key.to_sym}=", val)
+  end
+
   module ClassMethods
 
-    def attr_accessor_with_saved_attributes(*names)
-      @attributes = names
-      attr_accessor_without_saved_attributes(*names)
+    def display_attributes(*attrs)
+      @display_attributes = attrs
+      attr_accessor *attrs
     end
 
-    def attributes
-      @element_attributes || @attributes
-    end
-
-    def element_attributes(*attrs)
-      @element_attributes = attrs
-    end
-
-    def get_element_attributes
-      @element_attributes
+    def get_display_attributes
+      @display_attributes || self.superclass.get_display_attributes
     end
 
   end

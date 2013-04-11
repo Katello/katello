@@ -268,7 +268,7 @@ module Glue::Pulp::Repos
       url
     end
 
-    def add_repo(label, name, url, repo_type, gpg = nil)
+    def add_repo(label, name, url, repo_type, unprotected=false, gpg = nil)
       check_for_repo_conflicts(name, label)
       key = EnvironmentProduct.find_or_create(self.organization.library, self)
       repo = Repository.create!(:environment_product => key, :pulp_id => repo_id(label),
@@ -278,6 +278,7 @@ module Glue::Pulp::Repos
           :label => label,
           :feed => url,
           :gpg_key => gpg,
+          :unprotected => unprotected,
           :content_type => repo_type,
           :content_view_version=>self.organization.library.default_content_view_version
       )

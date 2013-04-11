@@ -37,11 +37,19 @@ class ContentViewVersion < ActiveRecord::Base
   scope :non_default_view, joins(:content_view).where('content_views.default = ?', false)
 
   def has_default_content_view?
-    ContentViewVersion.default_view.pluck(:id).include?(self.id)
+    ContentViewVersion.default_view.pluck("content_view_versions.id").include?(self.id)
   end
 
   def repos(env)
     self.repositories.in_environment(env)
+  end
+
+  def products(env=nil)
+    if env
+      repos(env).map(&:product).uniq(&:id)
+    else
+      self.repositories.map(&:product).uniq(&:id)
+    end
   end
 
   def content_view_definition
@@ -72,6 +80,7 @@ class ContentViewVersion < ActiveRecord::Base
 
   def refresh_version(library_version, notify = false)
     PulpTaskStatus::wait_for_tasks refresh_repos(library_version)
+    self.content_view.index_repositories(self.content_view.organization.library)
 
     if notify
       message = _("Successfully generated content view '%{view_name}' version %{view_version}.") %

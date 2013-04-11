@@ -239,7 +239,7 @@ class Delete(ContentViewDefinitionAction):
         cvd = get_cv_definition(org_name, def_label, def_name, def_id)
 
         self.def_api.delete(cvd["id"])
-        print _("Successfully deleted definition [ %s ]") % def_label
+        print _("Successfully deleted definition [ %s ]") % cvd["name"]
         return os.EX_OK
 
 

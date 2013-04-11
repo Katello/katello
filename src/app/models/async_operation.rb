@@ -62,14 +62,6 @@ AsyncOperation = Struct.new(:status_id, :username, :object, :method_name, :args)
     Thread.current['current_delayed_job_task'] = nil
   end
 
-  def method_missing(symbol, *args)
-    object.send(symbol, *args)
-  end
-
-  def respond_to?(symbol, include_private=false)
-    super || object.respond_to?(symbol, include_private)
-  end
-
   # limit to one failure
   def max_attempts
     1

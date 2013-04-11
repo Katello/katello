@@ -42,7 +42,7 @@ module ConsumerSupport
       @consumer.del_pulp_consumer
     end
   rescue RestClient::ResourceNotFound => e
-    puts e
+    #ignore if not found
   end
 
 end

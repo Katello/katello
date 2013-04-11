@@ -34,6 +34,7 @@ from katello.client.api.sync_plan import SyncPlanAPI
 from katello.client.api.permission import PermissionAPI
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.system import SystemAPI
+from katello.client.api.distributor import DistributorAPI
 from katello.client.api.content_view import ContentViewAPI
 from katello.client.api.content_view_definition import ContentViewDefinitionAPI
 
@@ -241,3 +242,36 @@ def get_system(org_name, sys_name, env_name=None, sys_uuid=None):
                 "you have to specify the environment") % {'sys_name':sys_name, 'org_name':org_name})
 
     return system_api.system(systems[0]['uuid'])
+
+def get_distributor(org_name, dist_name, env_name=None, dist_uuid=None):
+    distributor_api = DistributorAPI()
+    if dist_uuid:
+        distributors = distributor_api.distributors_by_org(org_name, {'uuid': dist_uuid})
+        if distributors is None:
+            raise ApiDataError(_("Could not find Distributor [ %(dist_name)s ] in Org [ %(org_name)s ]") \
+                % {'dist_name':dist_name, 'org_name':org_name})
+        elif len(distributors) != 1:
+            raise ApiDataError(_("Found ambiguous Distributors [ %(dist_uuid)s ] in Org [ %(org_name)s ]") \
+                % {'dist_uuid':dist_uuid, 'org_name':org_name})
+    elif env_name is None:
+        distributors = distributor_api.distributors_by_org(org_name, {'name': dist_name})
+        if distributors is None or len(distributors) == 0:
+            raise ApiDataError(_("Could not find Distributor [ %(dist_name)s ] in Org [ %(org_name)s ]") \
+                % {'dist_name':dist_name, 'org_name':org_name})
+        elif len(distributors) != 1:
+            raise ApiDataError( _("Found ambiguous Distributors [ %(dist_name)s ] " \
+                "in Environment [ %(env_name)s ] in Org [ %(org_name)s ], "\
+                "use --uuid to specify the distributor") % {'dist_name':dist_name, 'env_name':env_name,
+                                                            'org_name':org_name})
+    else:
+        environment = get_environment(org_name, env_name)
+        distributors = distributor_api.distributors_by_env(environment["id"], {'name': dist_name})
+        if distributors is None:
+            raise ApiDataError(_("Could not find Distributor [ %(dist_name)s ] " \
+                "in Environment [ %(env_name)s ] in Org [ %(org_name)s ]") \
+                % {'dist_name':dist_name, 'env_name':env_name, 'org_name':org_name})
+        elif len(distributors) != 1:
+            raise ApiDataError(_("Found ambiguous Distributors [ %(dist_name)s ] in Org [ %(org_name)s ], "\
+                "you have to specify the environment") % {'dist_name':dist_name, 'org_name':org_name})
+
+    return distributor_api.distributor(distributors[0]['uuid'])

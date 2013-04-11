@@ -112,8 +112,8 @@ class RepositoryInstanceTest < RepositoryTestBase
   end
 
   def test_environmental_instances
-    assert_includes @fedora_17_x86_64.environmental_instances, @fedora_17_x86_64
-    assert_includes @fedora_17_x86_64.environmental_instances, @fedora_17_x86_64_dev
+    assert_includes @fedora_17_x86_64.environmental_instances(@acme_corporation.default_content_view), @fedora_17_x86_64
+    assert_includes @fedora_17_x86_64.environmental_instances(@acme_corporation.default_content_view), @fedora_17_x86_64_dev
   end
 
   def test_create_clone

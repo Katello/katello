@@ -126,6 +126,8 @@ module Glue::ElasticSearch::Package
         search = Tire::Search::Search.new(self.index)
 
         search.instance_eval do
+          fields [:id, :name, :nvrea, :repoids, :description]
+
           query do
             if all_rows
               all
