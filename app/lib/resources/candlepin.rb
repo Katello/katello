@@ -12,6 +12,8 @@
 
 module Resources
 
+  require 'rest_client'
+
   module Candlepin
 
     class Proxy
@@ -78,12 +80,6 @@ module Resources
 
     class Consumer < CandlepinResource
       class << self
-        def export
-          response = Candlepin::CandlepinResource.get(join_path(path(), 'export'), {:accept => '*/*'})
-          filename = response.headers[:content_disposition] == nil ? "tmp_#{rand}.zip" : response.headers[:content_disposition].split("filename=")[1]
-          File.open(filename, 'w') { |f| f.write(response) }
-        end
-
         def path(id=nil)
           "/candlepin/consumers/#{id}"
         end
@@ -216,6 +212,24 @@ module Resources
           end
         end
       end
+    end
+
+    class UpstreamConsumer < ::HttpResource
+
+      def self.export(url, client_cert, client_key, ca_file)
+
+        resource = RestClient::Resource.new(url,
+                                            :ssl_client_cert => OpenSSL::X509::Certificate.new(client_cert),
+                                            :ssl_client_key => OpenSSL::PKey::RSA.new(client_key),
+                                            :ssl_ca_file => ca_file,
+                                            :verify_ssl => ca_file ? OpenSSL::SSL::VERIFY_PEER : OpenSSL::SSL::VERIFY_NONE
+        )
+
+        return resource.get
+      rescue Exception => e
+        raise e
+      end
+
     end
 
     class OwnerInfo < CandlepinResource

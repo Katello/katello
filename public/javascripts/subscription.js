@@ -92,6 +92,29 @@ $(document).ready(function() {
         });
     });
 
+    $('#refresh_form_button').live('click', function(e) {
+        var ajax_handler;
+        var active;
+
+        // disable submit to avoid duplicate clicks
+        $('#refresh_form_button').val(i18n.refreshing).attr("disabled", true);
+        $('#upload_manifest').attr("disabled", true);
+
+        ajax_handler = function(data) {
+            // Refresh the "new" panel
+            active = $('#new');
+            KT.panel.panelAjax(active, active.attr("data-ajax_url"), $('#panel'), false);
+
+            // Initialize the polling for "upload in progress"
+            KT.subscription.startUpdater();
+        };
+        e.preventDefault();
+        $('#refresh_manifest').ajaxSubmit({
+            success: ajax_handler,
+            error: ajax_handler
+        });
+    });
+
     var delete_manifest_callback = function(evt, data, status, xhr){
         var active = $('#new');
         notices.checkNotices();

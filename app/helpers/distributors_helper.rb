@@ -43,4 +43,8 @@ module DistributorsHelper
     distributor.environment.name
   end
 
+  def distributor_labelize name
+    name.ascii_only? ? name.gsub(/[^a-z0-9\-_]/i,"_") : 'manifest'
+  end
+
 end

@@ -13,6 +13,7 @@
 
 class DistributorsController < ApplicationController
   include DistributorsHelper
+  include ConsumersControllerLogic
 
   before_filter :find_distributor, :except =>[:index, :items, :environments, :new, :create, :bulk_destroy,
                                          :auto_complete]
@@ -192,37 +193,13 @@ class DistributorsController < ApplicationController
 
   end
 
-  # Note that finding the provider_id is important to allow the subscription to be linked to the url for either the
-  # Red Hat provider or the custom provider page
   def subscriptions
-    # Consumed subscriptions
-    consumed_entitlements = @distributor.consumed_entitlements.collect do |entitlement|
-      pool = ::Pool.find_pool(entitlement.poolId)
-      product = Product.where(:cp_id => pool.product_id).first
-      entitlement.provider_id = product.try :provider_id
-      entitlement
-    end
-
-    cp_pools = @distributor.filtered_pools
-
-    if cp_pools
-      # Pool objects
-      pools = cp_pools.collect{|cp_pool| ::Pool.find_pool(cp_pool['id'], cp_pool)}
-
-      subscriptions = pools.collect do |pool|
-        product = Product.where(:cp_id => pool.product_id).first
-        next if product.nil?
-        pool.provider_id = product.provider_id
-        pool
-      end.compact
-      subscriptions = [] if subscriptions.nil?
-    else
-      subscriptions = []
-    end
+    consumed = consumed_subscriptions(@distributor)
+    available = available_subscriptions(@distributor.filtered_pools)
 
     @organization = current_organization
-    render :partial=>"subscriptions", :locals=>{:distributor=>@distributor, :avail_subs => subscriptions,
-                                                :consumed_entitlements => consumed_entitlements,
+    render :partial=>"subscriptions", :locals=>{:distributor=>@distributor, :avail_subs => available,
+                                                :consumed_entitlements => consumed,
                                                 :editable=>@distributor.editable?}
   end
 
@@ -402,13 +379,13 @@ class DistributorsController < ApplicationController
 
   def setup_options
     @panel_options = {
-      :title => _('Distributors'),
+      :title => _('Subscription Management Applications'),
       :col => ["name_sort", "lastCheckin"],
       :titles => [_("Name"), _("Created / Last Checked In")],
       :custom_rows => true,
       :enable_create => Katello.config.katello? && Distributor.registerable?(@environment, current_organization),
       :create => _("Distributor"),
-      :create_label => _('+ New Distributor'),
+      :create_label => _('+ New SMA'),
       :enable_sort => true,
       :name => controller_display_name,
       :list_partial => 'distributors/list_distributors',
