@@ -45,7 +45,7 @@ Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}
 Requires:        %{name}-common
 Requires:        %{name}-glue-elasticsearch
 Requires:        %{name}-glue-pulp
-Requires:        %{name}-glue-foreman
+Obsoletes:       %{name}-glue-foreman
 Requires:        %{name}-glue-candlepin
 Requires:        %{name}-selinux
 Conflicts:       %{name}-headpin
@@ -104,7 +104,6 @@ Requires:       %{?scl_prefix}rubygem(chunky_png)
 Requires:       %{?scl_prefix}rubygem(tire) >= 0.3.0
 Requires:       %{?scl_prefix}rubygem(tire) < 0.4
 Requires:       %{?scl_prefix}rubygem(ldap_fluff)
-Requires:       %{?scl_prefix}rubygem(foreman_api) >= 0.0.7
 Requires:       %{?scl_prefix}rubygem(anemone)
 Requires:       %{?scl_prefix}rubygem(apipie-rails) >= 0.0.18
 Requires:       %{?scl_prefix}rubygem(logging) >= 1.8.0
@@ -176,11 +175,9 @@ BuildRequires:       %{?scl_prefix}rubygem(tire) < 0.4
 BuildRequires:       %{?scl_prefix}rubygem(ldap_fluff)
 BuildRequires:       %{?scl_prefix}rubygem(apipie-rails) >= 0.0.18
 BuildRequires:       %{?scl_prefix}rubygem(maruku)
-BuildRequires:       %{?scl_prefix}rubygem(foreman_api)
 
 %description common
 Common bits for all Katello instances
-
 
 %package all
 BuildArch:      noarch
@@ -199,9 +196,6 @@ Requires:       qpid-cpp-server
 Requires:       qpid-cpp-client
 Requires:       qpid-cpp-client-ssl
 Requires:       qpid-cpp-server-ssl
-Requires:       foreman
-Requires:       foreman-postgresql
-Requires:       %{?scl_prefix}rubygem(foreman-katello-engine)
 # </katello-configure>
 
 
@@ -229,16 +223,6 @@ Requires:        %{?scl_prefix}rubygem(runcible) >= 0.4.1
 
 %description glue-pulp
 Katello connection classes for the Pulp backend
-
-%package glue-foreman
-BuildArch:      noarch
-Summary:         Katello connection classes for the Foreman backend
-Requires:        %{name}-common
-# dependencies from bundler.d/foreman.rb
-Requires:        %{?scl_prefix}rubygem(foreman_api) >= 0.0.18
-
-%description glue-foreman
-Katello connection classes for the Foreman backend
 
 %package glue-candlepin
 BuildArch:      noarch
@@ -610,8 +594,6 @@ usermod -a -G katello-shared tomcat
 %ghost %attr(600, katello, katello) %{_sysconfdir}/%{name}/secret_token
 %dir %{homedir}/app
 %{homedir}/app/controllers
-%exclude %{homedir}/app/controllers/api/foreman
-%exclude %{homedir}/app/controllers/foreman
 %{homedir}/app/helpers
 %{homedir}/app/mailers
 %dir %{homedir}/app/models
@@ -629,7 +611,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/vendor/assets/stylesheets
 %{homedir}/vendor/assets/images
 %{homedir}/app/views
-%exclude %{homedir}/app/views/foreman
 %{homedir}/autotest
 %{homedir}/ca
 %{homedir}/config
@@ -694,9 +675,6 @@ usermod -a -G katello-shared tomcat
 %dir %{homedir}/lib
 %dir %{homedir}/app/lib
 %dir %{homedir}/app/lib/resources
-%{homedir}/app/lib/resources/abstract_model.rb
-%dir %{homedir}/app/lib/resources/abstract_model
-%{homedir}/app/lib/resources/abstract_model/indexed_model.rb
 %{homedir}/lib/util
 %{homedir}/app/lib/util
 %{homedir}/script/service-wait
@@ -721,16 +699,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/models/glue/provider.rb
 %{homedir}/app/lib/resources/candlepin.rb
 
-%files glue-foreman
-%{homedir}/bundler.d/foreman.rb
-%{homedir}/app/lib/resources/foreman.rb
-%{homedir}/app/lib/resources/foreman_model.rb
-%{homedir}/app/models/foreman
-%{homedir}/app/models/glue/foreman
-%{homedir}/app/controllers/api/foreman
-%{homedir}/app/controllers/foreman
-%{homedir}/app/views/foreman
-
 %files all
 
 %files headpin
@@ -742,10 +710,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/mailers
 %{homedir}/app/models
 %exclude %{homedir}/app/models/glue/*
-%exclude %{homedir}/app/models/foreman
-%exclude %{homedir}/app/controllers/api/foreman
-%exclude %{homedir}/app/controllers/foreman
-%exclude %{homedir}/app/views/foreman
 %exclude %{homedir}/lib/tasks/test.rake
 %exclude %{homedir}/lib/tasks/simplecov.rake
 %{homedir}/app/assets/
@@ -774,9 +738,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/notifications
 %{homedir}/app/lib/validators
 %exclude %{homedir}/app/lib/resources/candlepin.rb
-%exclude %{homedir}/app/lib/resources/abstract_model.rb
-%exclude %{homedir}/app/lib/resources/foreman_model.rb
-%exclude %{homedir}/app/lib/resources/foreman.rb
 %{homedir}/lib/tasks
 %{homedir}/lib/util
 %{homedir}/app/lib/util
