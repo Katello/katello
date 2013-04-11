@@ -16,10 +16,11 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
   fixtures :all
 
   def self.before_suite
-    models = ["Organization", "KTEnvironment", "User","ContentViewEnvironment", "ContentViewDefinition", "Filter"]
-    disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
+    models = ["Organization", "KTEnvironment", "User","ContentViewEnvironment", "ContentViewDefinitionBase",
+              "ContentViewDefinition", "Filter", "FilterRule", "ContentView",
+              "PackageRule", "PackageGroupRule", "ErratumRule"]
+    disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models, true)
   end
-
   def setup
     @repo = Repository.find(repositories(:fedora_17_x86_64).id)
     @product = Product.find(products(:fedora).id)
@@ -29,6 +30,7 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
     FilterRule.delete_all
     Filter.delete_all
     ContentViewDefinition.delete_all
+    ContentViewDefinitionBase.delete_all
     Organization.delete_all
     Product.delete_all
     Repository.delete_all
@@ -157,6 +159,7 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
                     FilterRule::ERRATA => :erratum_filter_rule}
 
     fr_build = content_rule_hash[content_type] || :filter_rule
+    #FactoryGirl.build(:filter)
     @filter_rule = FactoryGirl.build(fr_build)
     @filter = @filter_rule.filter
     @filter_rule.inclusion = inclusion
