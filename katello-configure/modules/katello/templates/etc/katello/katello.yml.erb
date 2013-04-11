@@ -20,6 +20,7 @@ common:
   host: <%= has_variable?("fqdn") ? fqdn : hostname %>
   port:
   use_ssl: true
+  use_foreman: <%= scope.lookupvar("katello::params::use_foreman") %>
 
   post_sync_url: http://localhost:5000/<%= scope.lookupvar("katello::params::deployment_url") %>/api/repositories/sync_complete
 
