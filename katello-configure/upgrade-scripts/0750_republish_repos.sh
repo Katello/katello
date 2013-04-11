@@ -12,7 +12,7 @@ KATELLO_ENV=${KATELLO_ENV:-production}
 KATELLO_PREFIX=${KATELLO_PREFIX:-/katello}
 
 pushd $KATELLO_HOME >/dev/null
-RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX RAILS_ENV=$KATELLO_ENV rake regenerate_repo_metadata
+RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX RAILS_ENV=$KATELLO_ENV /usr/bin/rake regenerate_repo_metadata
 ret_code=$?
 popd >/dev/null
 
