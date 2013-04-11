@@ -22,6 +22,7 @@ KT.panel.set_expand_cb(function() {
     KT.content_view_definition.initialize_views();
     KT.content_view_definition.initialize_composite_content();
     KT.content_view_definition.initialize_create();
+    KT.content_view_definition_filters.initialize();
 });
 
 KT.content_view_definition = (function(){
@@ -71,7 +72,7 @@ KT.content_view_definition = (function(){
 
         initialize_refresh();
         initialize_views_treetable();
-        startUpdater();
+        start_updater();
     },
     initialize_refresh = function() {
         $('.refresh_action').unbind('click');
@@ -89,7 +90,7 @@ KT.content_view_definition = (function(){
                     $('#'+view_id).replaceWith(response);
 
                     initialize_views_treetable();
-                    startUpdater();
+                    start_updater();
                 },
                 error: function() {
                     KT.panel.panelAjax('', $('#content_view_definition_views').data('views_url'), $('#panel'), false);
@@ -287,7 +288,7 @@ KT.content_view_definition = (function(){
             onNodeShow: function(){$.sparkline_display_visible();}
         });
     },
-    startUpdater = function () {
+    start_updater = function () {
         var timeout = 8000,
             pending_tasks = [];
 
@@ -306,10 +307,10 @@ KT.content_view_definition = (function(){
                 global: false,
                 minTimeout: timeout,
                 maxTimeout: timeout
-            }, updateStatus);
+            }, update_status);
         }
     },
-    updateStatus = function(data) {
+    update_status = function(data) {
         // For each action that the user has initiated (e.g. refresh), update the status.
         var task_statuses = data["task_statuses"] || [],
             status_updated = false;
@@ -342,5 +343,166 @@ KT.content_view_definition = (function(){
         initialize_create            : initialize_create,
         initialize_views             : initialize_views,
         set_view_repos               : function(vp) {view_repos = vp;}
+    };
+}());
+
+KT.content_view_definition_filters = (function(){
+    var initialize = function() {
+        initialize_filters();
+        initialize_filter();
+        initialize_rule();
+    },
+    initialize_filters = function() {
+        var pane = $("#filters");
+        if (pane.length === 0) {
+            return;
+        }
+        register_remove($("#filters_form"));
+        initialize_checkboxes($("#filters_form"));
+    },
+    initialize_filter = function() {
+        var pane = $("#filter");
+        if (pane.length === 0) {
+            return;
+        }
+        $("#filter_tabs").tabs().show();
+        register_remove($("#rules_form"));
+        initialize_checkboxes($("#rules_form"));
+    },
+    initialize_rule = function() {
+        var pane = $("#rule");
+        if (pane.length === 0) {
+            return;
+        }
+        $('.inclusion').unbind('change');
+        $('.inclusion').change(function(){
+            $('#update_form').ajaxSubmit({
+                type: "PUT",
+                cache: false,
+                success: function(new_value) {
+                    // Update the "Specifying included/excluded" statement on the pane
+                    var element = $('#inclusion');
+                    element.html(element.html().replace(element.data('initial_value'), new_value));
+                    element.data('initial_value', new_value);
+                }
+            });
+        });
+
+        $('.filter_method').unbind('change');
+        $('.filter_method').change(function() {
+            $.ajax({
+                type: 'GET',
+                url: $(this).data('url'),
+                cache: false,
+                success: function(html) {
+                    $('.rule_parameters').html(html);
+                    initialize_common_rule_params();
+                    initialize_errata_rule_params();
+                }
+            });
+        });
+
+        initialize_common_rule_params();
+        initialize_errata_rule_params();
+    },
+    initialize_common_rule_params = function() {
+        var pane = $("#parameter_list");
+        if (pane.length === 0) {
+            return;
+        }
+
+        $('#add_rule').unbind('click');
+        $('#add_rule').click(function() {
+            var rule_input = $('input#rule_input').val(),
+                data;
+
+            if ($(this).data('rule_type') === 'erratum') {
+                data = {'parameter[unit][id]': rule_input};
+            } else {  // this is for a package or package group rule
+                data = {'parameter[unit][name]': rule_input};
+            }
+            if (rule_input.length > 0) {
+                $.ajax({
+                    type: 'PUT',
+                    url: $(this).data('url'),
+                    data: data,
+                    cache: false,
+                    success: function(html) {
+                        var empty_row = $("tr#empty_row");
+                        empty_row.after(html);
+                        empty_row.hide();
+                        initialize_checkboxes($("#parameters_form"));
+                    },
+                    error: function() {
+                    }
+                });
+            }
+        });
+        register_remove($("#parameters_form"));
+        initialize_checkboxes($("#parameters_form"));
+    },
+    initialize_errata_rule_params = function() {
+        var pane = $("#errata_parameters");
+        if (pane.length === 0) {
+            return;
+        }
+        KT.editable.initialize_datepicker();
+        KT.editable.initialize_multiselect();
+    },
+    register_remove = function(form) {
+        var remove_button = form.find("#remove_button");
+        remove_button.unbind('click');
+        remove_button.click(function(){
+            var btn = $(this);
+            if(btn.hasClass("disabled")){
+                return;
+            }
+            disable_button(remove_button);
+
+            form.ajaxSubmit({
+                type: "DELETE",
+                url: btn.data("url"),
+                cache: false,
+                success: function(){
+                    // remove the deleted filters from the table and show the 'empty' message
+                    // if all filters have been deleted
+                    $('input[type="checkbox"]:checked').closest('tr').remove();
+                    if ($('input[type="checkbox"]').length === 0) {
+                        $('tr#empty_row').show();
+                    }
+                    disable_button(remove_button);
+                },
+                error: function(){
+                    enable_button(remove_button);
+                }
+            });
+        });
+        disable_button(remove_button);
+    },
+    disable_button = function(button) {
+        button.attr('disabled', 'disabled');
+        button.addClass('disabled');
+    },
+    enable_button = function(button) {
+        button.removeAttr('disabled');
+        button.removeClass('disabled');
+    },
+    initialize_checkboxes = function(form) {
+        var checkboxes = $('input[type="checkbox"]'),
+            button = form.find("#remove_button");
+
+        checkboxes.unbind('change');
+        checkboxes.each(function(){
+            $(this).change(function(){
+                if($(this).is(":checked")) {
+                    enable_button(button);
+                } else if($('input[type="checkbox"]:checked').length === 0) {
+                    disable_button(button);
+                }
+            });
+        });
+    };
+    return {
+        initialize : initialize
     };
 }());

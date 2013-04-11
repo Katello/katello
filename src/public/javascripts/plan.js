@@ -14,57 +14,6 @@
 KT.panel.list.registerPage('sync_plans', { create : 'new_sync_plan' });
 
 $(document).ready(function() {
-  $.editable.addInputType( 'datepicker', {
-
-    /* create input element */
-    element: function( settings, original ) {
-      var form = $( this ), input = $( '<input data-change="false"/>' );
-      if (settings.width != 'none') { input.width(settings.width); }
-      if (settings.height != 'none') { input.height(settings.height); }
-      input.attr( 'autocomplete','off' );
-      form.append( input );
-      return input;
-    },
-
-    /* attach jquery.ui.datepicker to the input element */
-    plugin: function( settings, original ) {
-      var form = this, input = form.find( "input" );
-      settings.onblur = 'nothing';
-
-      datepicker = {
-        // keep track of date selection state
-        onSelect: function() {
-          input.attr('data-change', 'true'); 
-        },
-        // reset form if we lose focus and date was not selected
-        onClose: function() {
-          if ($(this).attr('data-change') == 'false') {
-            original.reset( form );
-          } 
-        }
-      };
-      input.datepicker(datepicker);
-    }
-  });
-
-  $.editable.addInputType( 'timepicker', {
-    /* create input element */
-    element: function( settings, original ) {
-      var form = $( this ), input = $( '<input data-change="false"/>' );
-      if (settings.width != 'none') { input.width(settings.width); }
-      if (settings.height != 'none') { input.height(settings.height); }
-      input.attr( 'autocomplete','off' );
-      form.append( input );
-      return input;
-    },
-
-    plugin: function( settings, original ) {
-      var form = this, input = form.find( "input" );
-      settings.onblur = 'ignore';
-      input.timepickr({convention: 12})
-      .click();
-    }
-  });
   //set the date picker and time picker to only initialize on callback of the panel expansion
   KT.panel.set_expand_cb(function(){
       $("#datepicker").datepicker({

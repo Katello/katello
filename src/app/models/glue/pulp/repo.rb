@@ -178,6 +178,33 @@ module Glue::Pulp::Repo
       Runcible::Extensions::Repository.rpm_ids(self.pulp_id)
     end
 
+    # remove errata and groups from this repo
+    # that have no packages
+    def purge_empty_groups_errata
+      package_lists = package_lists_for_publish
+      rpm_names = package_lists[:names]
+      filenames = package_lists[:filenames]
+
+      # Remove all errata with no packages
+      errata_to_delete = errata.collect do |erratum|
+        erratum.errata_id if filenames.intersection(erratum.package_filenames).empty?
+      end.compact
+
+      #do the errata remove call
+      unless errata_to_delete.empty?
+        unassociate_by_filter(FilterRule::ERRATA, {"id" => {"$in" => errata_to_delete}})
+      end
+
+      # Remove all  package groups with no packages
+      package_groups_to_delete = package_groups.collect do |group|
+        group.package_group_id if rpm_names.intersection(group.package_names).empty?
+      end.compact
+
+      unless package_groups_to_delete.empty?
+        unassociate_by_filter(FilterRule::PACKAGE_GROUP, {"id" => {"$in" => package_groups_to_delete}})
+      end
+    end
+
     def packages
       if @repo_packages.nil?
         #we fetch ids and then fetch packages by id, because repo packages
@@ -233,17 +260,33 @@ module Glue::Pulp::Repo
       @repo_distributions
     end
 
-    def package_groups search_args = {}
-      groups = Runcible::Extensions::Repository.package_groups(self.pulp_id)
+    def package_groups
+      if @repo_package_groups.nil?
+        groups = Runcible::Extensions::Repository.package_groups(self.pulp_id)
+        self.package_groups = groups
+      end
+      @repo_package_groups
+    end
+
+    def package_groups=attrs
+      @repo_package_groups = attrs.collect do |group|
+        ::PackageGroup.new(group)
+      end
+      @repo_package_groups
+    end
+
+    def package_groups_search(search_args = {})
+      groups = package_groups
       unless search_args.empty?
-        groups.delete_if do |group_attrs|
+        groups.delete_if do |group|
+          group_attrs = group.as_json
           search_args.any?{ |attr,value| group_attrs[attr] != value }
         end
       end
       groups
     end
 
-    def package_group_categories search_args = {}
+    def package_group_categories(search_args = {})
       categories = Runcible::Extensions::Repository.package_categories(self.pulp_id)
       unless search_args.empty?
         categories.delete_if do |category_attrs|
@@ -351,6 +394,15 @@ module Glue::Pulp::Repo
       events << Runcible::Extensions::Distribution.copy(self.pulp_id, to_repo.pulp_id)
       events << Runcible::Extensions::PackageGroup.copy(self.pulp_id, to_repo.pulp_id)
       events
+    end
+    def unassociate_by_filter(content_type, filter_clauses)
+      content_unit = {
+        Runcible::Extensions::Rpm.content_type() => Runcible::Extensions::Rpm,
+        Runcible::Extensions::Errata.content_type() => Runcible::Extensions::Errata,
+        Runcible::Extensions::PackageGroup.content_type() => Runcible::Extensions::PackageGroup,
+        Runcible::Extensions::Distribution.content_type() => Runcible::Extensions::Distribution
+      }
+      content_unit[content_type].unassociate_from_repo(self.pulp_id, :unit => filter_clauses)
     end
 
     def clear_contents
@@ -486,6 +538,27 @@ module Glue::Pulp::Repo
         return PulpSyncStatus.pulp_task(history.first.with_indifferent_access)
       end
     end
+
+    # A helper method used by purge_empty_groups_errata
+    # to obtain a list of package filenames and names
+    # so that it could mix/match empty package groups
+    # and errata and purge them.
+    def package_lists_for_publish
+      names = []
+      filenames = []
+
+      rpms = Runcible::Extensions::Repository.unit_search(self.pulp_id,
+                                                   :type_ids=>['rpm'],
+                                                   :fields =>{:unit=>["filename", "name"]})
+
+      rpms.each do |rpm|
+        filenames << rpm["metadata"]["filename"]
+        names << rpm["metadata"]["name"]
+      end
+      {:names=> names.to_set,
+       :filenames => filenames.to_set}
+    end
+
 
   end
 

@@ -380,7 +380,7 @@ describe Api::RepositoriesController, :katello => true do
       before do
           @repo = Repository.new(:pulp_id=>"123", :id=>"123")
           Repository.stub(:find).and_return(@repo)
-          Runcible::Extensions::Repository.stub(:package_groups)
+          Runcible::Extensions::Repository.stub(:package_groups).and_return([])
       end
       it "should call Pulp layer" do
         Runcible::Extensions::Repository.should_receive(:package_groups).with("123")
