@@ -23,12 +23,7 @@ class GluePulpConsumerGroupTestBase < MiniTest::Rails::ActiveSupport::TestCase
   fixtures :all
 
   def self.before_suite
-    load_fixtures
-
-    # TODO: RAILS32 remove top reference to load_fixtures
-    if @loaded_fixtures.nil?
-      @loaded_fixtures = load_fixtures
-    end
+    @loaded_fixtures = load_fixtures
     configure_runcible
 
     services  = ['Candlepin', 'ElasticSearch', 'Foreman']
@@ -56,8 +51,8 @@ class GluePulpConsumerGroupTestCreate < GluePulpConsumerGroupTestBase
   def teardown
     ConsumerSupport.destroy_consumer(@simple_server.id)
     @simple_group.del_pulp_consumer_group
-  rescue => e
-    puts e
+  rescue RestClient::ResourceNotFound => e
+    #ignore if not found
   end
 
   def test_set_pulp_consumer_group

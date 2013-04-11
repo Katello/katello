@@ -10,17 +10,18 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class ContentSearch::SearchUtils
-  cattr_accessor :current_organization, :mode, :env_ids
+class ContentSearch::Cell
+  include ContentSearch::Element
+  display_attributes :id, :display, :hover, :content
 
-  def self.search_mode
-    mode.try(:to_sym) || :all
-  end
-
-  def self.search_env_ids
-    @@search_env_ids ||= if self.search_mode != :all
-      KTEnvironment.content_readable(current_organization).where(:id => self.env_ids)
-    end
+  def as_json(options=nil)
+    to_ret = {
+        :id => id
+    }
+    to_ret[:display] = content unless content.nil?
+    to_ret[:display] = display unless display.nil?
+    to_ret[:hover] = self.hover.nil? ? '' : self.hover.call
+    to_ret
   end
 
 end

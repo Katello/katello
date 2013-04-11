@@ -36,6 +36,8 @@ module Glue::Pulp::Package
   module InstanceMethods
 
     def initialize(params = {})
+      params.delete(:changelog) #ignore changelog for now
+      params.delete(:repodata)
       params[:repoids] =  params.delete(:repository_memberships) if params.has_key?(:repository_memberships)
       params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
     end

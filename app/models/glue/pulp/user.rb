@@ -25,19 +25,14 @@ module Glue::Pulp::User
   module InstanceMethods
 
     def initialize(attrs = nil, options={})
-      # TODO RAILS32 Clean up supers
       attrs = prune_pulp_only_attributes(attrs)
-      if Rails::VERSION::STRING.start_with?('3.2')
-        super
-      else
-        super(attrs)
-      end
+      super
     end
 
     def prune_pulp_only_attributes(attrs)
       unless attrs.nil?
         attrs = attrs.reject do |k, v|
-          !attributes_from_column_definition.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
+          !self.class.column_defaults.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
         end
       end
 
