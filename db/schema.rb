@@ -294,6 +294,45 @@ ActiveRecord::Schema.define(:version => 20130409185838) do
   add_index "environments", ["name", "organization_id"], :name => "index_environments_on_name_and_organization_id", :unique => true
   add_index "environments", ["organization_id"], :name => "index_environments_on_organization_id"
 
+  create_table "filter_rules", :force => true do |t|
+    t.string   "type"
+    t.text     "parameters"
+    t.integer  "filter_id",                    :null => false
+    t.boolean  "inclusion",  :default => true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "filter_rules", ["filter_id"], :name => "index_filter_rules_on_filter_id"
+
+  create_table "filters", :force => true do |t|
+    t.integer  "content_view_definition_id"
+    t.string   "name",                       :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "filters", ["content_view_definition_id"], :name => "index_filters_on_content_view_definition_id"
+  add_index "filters", ["name", "content_view_definition_id"], :name => "index_filters_on_name_and_content_view_definition_id", :unique => true
+
+  create_table "filters_products", :id => false, :force => true do |t|
+    t.integer "filter_id"
+    t.integer "product_id"
+  end
+
+  add_index "filters_products", ["filter_id", "product_id"], :name => "index_filters_products_on_filter_id_and_product_id", :unique => true
+  add_index "filters_products", ["filter_id"], :name => "index_filters_products_on_filter_id"
+  add_index "filters_products", ["product_id"], :name => "index_filters_products_on_product_id"
+
+  create_table "filters_repositories", :id => false, :force => true do |t|
+    t.integer "filter_id"
+    t.integer "repository_id"
+  end
+
+  add_index "filters_repositories", ["filter_id", "repository_id"], :name => "index_filters_repositories_on_filter_id_and_repository_id", :unique => true
+  add_index "filters_repositories", ["filter_id"], :name => "index_filters_repositories_on_filter_id"
+  add_index "filters_repositories", ["repository_id"], :name => "index_filters_repositories_on_repository_id"
+
   create_table "gpg_keys", :force => true do |t|
     t.string   "name",            :null => false
     t.integer  "organization_id", :null => false

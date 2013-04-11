@@ -9,4 +9,5 @@ ActiveSupport::Inflector.inflections do |inflect|
 #   inflect.uncountable %w( fish sheep )
 
     inflect.irregular 'custom_info', 'custom_info'
+    inflect.singular 'bases', 'base'
 end
