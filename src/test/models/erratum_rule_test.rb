@@ -16,9 +16,8 @@ class ErratumRuleTest < MiniTest::Rails::ActiveSupport::TestCase
   fixtures :all
 
   def self.before_suite
-    models = ["Organization", "KTEnvironment", "User","ContentViewEnvironment", "ContentViewDefinitionBase",
-              "ContentViewDefinition", "Filter", "FilterRule", "ContentView",
-              "PackageRule", "PackageGroupRule", "ErratumRule"]
+    models = ["Organization", "KTEnvironment", "User", "ContentViewDefinitionBase",
+              "ContentViewDefinition", "Filter", "FilterRule", "ErratumRule"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
   end
   def setup
@@ -51,12 +50,19 @@ class ErratumRuleTest < MiniTest::Rails::ActiveSupport::TestCase
     # errata types
     assert_bad_params(:errata_type => ['buggy'])
     assert_bad_params(:errata_type => ['bugfix', 'secure'])
+    #id based params
+    assert_bad_params(:units => {:id_val => '100'})
   end
 
   def test_good_params
     assert_good_params(:date_range => {:start => @start_date.to_i})
     assert_good_params(:date_range => {:start => @start_date.to_i, :end => @end_date.to_i})
     assert_good_params(:errata_type => ['bugfix', 'security', 'enhancement'])
+    assert_good_params(:units => [{:id => "foo"}, {:id => "bar"}])
+    assert_good_params(:severity => ["low"])
+    assert_good_params({:date_range => {:start => @start_date.to_i, :end => @end_date.to_i},
+                        :errata_type => ['bugfix', 'security', 'enhancement'],
+                        :severity => ["low"]})
   end
 
   def test_date_params
