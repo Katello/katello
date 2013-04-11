@@ -1,7 +1,10 @@
 - cssclass = "" if cssclass.nil?
 
 %tr.view{:id => "view_#{view.id}", :class => cssclass}
-  %td{:colspan => 4} #{view.name}
+  %td{:colspan => 4}
+    = link_to(view.name, content_view_search_link(view),
+              :title => _("Browse the content view details using Content Search"))
+
   - view.versions.each do |version|
     - if version.environments.length > 0
       = render :partial => 'content_view_definitions/views/version',
