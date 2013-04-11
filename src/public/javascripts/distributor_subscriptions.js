@@ -31,4 +31,11 @@ $(document).ready(function() {
     onNodeShow: function(){$.sparkline_display_visible()}
   });
 
+  (function() {
+      $('.datepicker').datepicker();
+      $('.datepicker').datepicker('option', 'dateFormat', 'yy-mm-dd');
+      //$('.datepicker').datepicker('option', 'minDate', '2012-01-01');
+      $('#start_date').datepicker('option', 'minDate', '2013-01-01');
+  })();
+
 });
