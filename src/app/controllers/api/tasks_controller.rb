@@ -51,7 +51,7 @@ class Api::TasksController < Api::ApiController
   private
 
   def find_task
-    @task = TaskStatus.find_by_uuid(params[:id])
+    @task = TaskStatus.find_by_uuid!(params[:id])
     @organization = @task.organization
   end
 end

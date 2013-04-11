@@ -44,6 +44,7 @@ class ChangesetTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_content_view_changeset_promotion
+    Repository.any_instance.stubs(:clone_contents).returns([])
     view = @library_view
     after_dev    = FactoryGirl.create(:environment, :prior=>@dev)
     changeset    = FactoryGirl.create(:promotion_changeset,

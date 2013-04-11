@@ -15,10 +15,12 @@
 import os
 import sys
 
-from katello.client.cli.base import opt_parser_add_org
+from katello.client.cli.base import opt_parser_add_org, \
+    opt_parser_add_environment
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.system_group import SystemGroupAPI
-from katello.client.api.utils import get_system_group
+from katello.client.api.utils import get_system_group, get_environment, \
+    get_content_view
 from katello.client.lib.utils.data import test_record
 from katello.client.lib.async import SystemGroupAsyncJob, evaluate_remote_action
 from katello.client.lib.ui.progress import run_spinner_in_bg, wait_for_async_task
@@ -505,3 +507,59 @@ class Errata(SystemGroupAction):
             return evaluate_remote_action(job)
 
         return os.EX_OK
+
+
+class UpdateSystems(SystemGroupAction):
+
+    description = _('update systems in a system group')
+
+    def setup_parser(self, parser):
+        opt_parser_add_org(parser, required=1)
+        opt_parser_add_environment(parser, required=1)
+        parser.add_option('--name', dest='name',
+                          help=_("system group name (required)"))
+        parser.add_option('--view', dest='view_name',
+                          help=_("content view name eg: foo"))
+        parser.add_option('--view_label', dest='view_label',
+                          help=('content view label eg: foo'))
+        parser.add_option('--view_id', dest='view_id',
+                          help=('content view id eg: 2'))
+
+    def check_options(self, validator):
+        validator.require(('name', 'org'))
+        validator.mutually_exclude('view_name', 'view_label', 'view_id')
+        validator.require_at_least_one_of(('environment', 'view_name',
+                                           'view_label', 'view_id'))
+
+    def run(self):
+        org_name = self.get_option('org')
+        group_name = self.get_option('name')
+        env_name = self.get_option('environment')
+        view_label = self.get_option('view_label')
+        view_id = self.get_option('view_id')
+        view_name = self.get_option('view_name')
+
+        system_group = get_system_group(org_name, group_name)
+        system_group_id = system_group['id']
+
+        if env_name:
+            environment = get_environment(org_name, env_name)
+            env_id = environment["id"]
+        else:
+            env_id = None
+
+        if view_name or view_id or view_label:
+            view = get_content_view(org_name, view_label, view_name, view_id)
+            view_id = view["id"]
+        else:
+            view_id = None
+
+        group = self.api.update_systems(org_name, system_group_id, env_id,
+                                        view_id)
+
+        if group:
+            print (_("Successfully updated systems in group [ %s ]" % group["name"]))
+            return os.EX_OK
+        else:
+            return os.EX_DATAERR
+

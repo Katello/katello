@@ -21,7 +21,8 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
         ('--org=ACME', '--name=repo1', '--url=http://localhost', '--product=product1', '--provider=foo'),
         ('--org=ACME', '--name=repo1', '--url=https://localhost', '--product=product1', '--provider=foo'),
         ('--org=ACME', '--name=repo1', '--url=ftp://localhost', '--product=product1', '--provider=foo'),
-        ('--org=ACME', '--name=repo1', '--url=file:///a/b/c/', '--product=product1', '--provider=foo')
+        ('--org=ACME', '--name=repo1', '--url=file:///a/b/c/', '--product=product1', '--provider=foo'),
+        ('--org=ACME', '--name=repo1', '--url=file:///a/b/c/', '--product=product1', '--provider=foo', '--unprotected'),
     ]
 
 
@@ -119,12 +120,12 @@ class CreateRepositoryTest(unittest.TestCase):
         self.create_action.api.create = Mock()
 
     def test_create_repo_in_pulp(self):
-        self.create_action.create_repositories(self.ORGANIZATION, self.PRODUCT_ID, self.NAME, self.LABEL, [self.URL])
+        self.create_action.create_repositories(self.ORGANIZATION, self.PRODUCT_ID, self.NAME, self.LABEL, [self.URL], False)
         parsedUrl = urlparse.urlparse(self.URL)
-        self.create_action.api.create.assert_called_once_with(self.ORGANIZATION, self.PRODUCT_ID, self.create_action.repository_name(self.NAME, parsedUrl.path), self.create_action.repository_name(self.LABEL, parsedUrl.path), self.URL, None, None)
+        self.create_action.api.create.assert_called_once_with(self.ORGANIZATION, self.PRODUCT_ID, self.create_action.repository_name(self.NAME, parsedUrl.path), self.create_action.repository_name(self.LABEL, parsedUrl.path), self.URL, False, None, None)
 
     def test_creates_repos_in_pulp_for_all_urls(self):
-        self.create_action.create_repositories(self.ORGANIZATION, self.PRODUCT_ID, self.NAME, self.LABEL, [self.URL, self.URL2])
+        self.create_action.create_repositories(self.ORGANIZATION, self.PRODUCT_ID, self.NAME, self.LABEL, [self.URL, self.URL2], False)
         self.create_action.api.create.assert_called_twice
 
 

@@ -10,17 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class ContentSearch::SearchUtils
-  cattr_accessor :current_organization, :mode, :env_ids
 
-  def self.search_mode
-    mode.try(:to_sym) || :all
-  end
-
-  def self.search_env_ids
-    @@search_env_ids ||= if self.search_mode != :all
-      KTEnvironment.content_readable(current_organization).where(:id => self.env_ids)
-    end
-  end
-
+class PackageGroup
+  include Glue::Pulp::PackageGroup if Katello.config.use_pulp
+  include Glue::ElasticSearch::PackageGroup if Katello.config.use_elasticsearch
 end

@@ -43,8 +43,8 @@ module Navigation
           :options => {:class=>"panel_link"}
         },
         { :key => :view_definition_filter,
-          :name =>_("Filter"),
-          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : filter_content_view_definition_path(@view_definition.id),
+          :name =>_("Filters"),
+          :url => (@view_definition.nil? || @view_definition.new_record?) ? "" : content_view_definition_filters_path(@view_definition.id),
           :if => lambda{!@view_definition.nil? && @view_definition.readable? && !@view_definition.new_record? &&
               !@view_definition.composite},
           :options => {:class=>"panel_link"}
@@ -104,7 +104,7 @@ module Navigation
 
     def menu_distributors_list
       {:key => :distributors_list,
-       :name =>_("Subscription Manager Applications"),
+       :name =>_("Subscription Management Applications"),
        :url => distributors_path,
        :if => lambda{current_organization && current_organization.readable?},
        :options => {:class=>'content third_level', "data-menu"=>"subscriptions", "data-dropdown"=>"subscriptions"}
@@ -428,6 +428,12 @@ module Navigation
 
     def new_subscription_navigation
       [
+        { :key => :manifest_details,
+          :name =>_("Details"),
+          :url => edit_manifest_subscriptions_path,
+          :if => lambda{current_organization && current_organization.readable?},
+          :options => {:class=>"panel_link"},
+        },
         { :key => :upload,
           :name =>_("Import"),
           :url => new_subscription_path,

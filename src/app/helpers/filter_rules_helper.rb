@@ -10,9 +10,17 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class ContentSearch::Row
-  include ContentSearch::Element
-  attr_accessor :id, :name, :cols, :data_type, :value, :parent_id, :comparable
-  alias :cells :cols
-  alias :cells= :cols=
+module FilterRulesHelper
+  def errata_types
+    {'bugfix' => _('Bug Fix'), 'enhancement' => _('Enhancement'), 'security' => ('Security')}
+  end
+
+  def selected_errata_types(rule)
+    # get a comma-separated list of the errata types currently selected
+    rule.parameters[:errata_type].map{|type| errata_types[type]}.join(', ') if rule.parameters[:errata_type]
+  end
+
+  def included_text(rule)
+    rule.inclusion? ? _("Include") : _("Exclude")
+  end
 end

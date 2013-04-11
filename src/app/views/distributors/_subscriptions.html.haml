@@ -9,7 +9,7 @@
     .grid_8
       = kt_form_for(@distributor, :as => "distributor", :url => download_distributor_path(@distributor)) do |form|
         %fieldset
-          = form.text_field :download_filename, :label => _("File Name"), :value => "#{@distributor.name}.zip", :placeholder => 'manifest.zip'
+          = form.text_field :download_filename, :label => _("File Name"), :value => "#{distributor_labelize(@distributor.name)}.zip", :placeholder => 'manifest.zip'
           .grid_4.ra
             -#= form.submit _("Download Manifest")
             #download_manifest.button{:'data-url'=>download_distributor_path(@distributor)}

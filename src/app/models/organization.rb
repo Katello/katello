@@ -32,8 +32,7 @@ class Organization < ActiveRecord::Base
   has_many :permissions, :dependent => :destroy, :inverse_of => :organization
   has_many :sync_plans, :dependent => :destroy, :inverse_of => :organization
   has_many :system_groups, :dependent => :destroy, :inverse_of => :organization
-  has_many :content_view_definitions, :class_name => "ContentViewDefinitionBase",
-    :dependent=> :destroy
+  has_many :content_view_definitions, :class_name => "ContentViewDefinitionBase", :dependent=> :destroy
   has_many :content_views, :dependent=> :destroy
   serialize :default_info, Hash
 
@@ -66,11 +65,11 @@ class Organization < ActiveRecord::Base
 
   # Ensure that the name and label namespaces do not overlap
   def unique_name_and_label
-    if new_record? and Organization.where("name = ? OR label = ?", label, name).any?
+    if new_record? && Organization.where("name = ? OR label = ?", label, name).any?
       errors.add(:organization, _("Names and labels must be unique across all organizations"))
-    elsif label_changed? and Organization.where("id != ? AND name = ?", id, label).any?
+    elsif label_changed? && Organization.where("id != ? AND name = ?", id, label).any?
       errors.add(:label, _("Names and labels must be unique across all organizations"))
-    elsif name_changed? and Organization.where("id != ? AND label = ?", id, name).any?
+    elsif name_changed? && Organization.where("id != ? AND label = ?", id, name).any?
       errors.add(:name, _("Names and labels must be unique across all organizations"))
     else
       true
@@ -83,6 +82,10 @@ class Organization < ActiveRecord::Base
 
   def systems
     System.where(:environment_id => environments)
+  end
+
+  def distributors
+    Distributor.where(:environment_id => environments)
   end
 
   def promotion_paths
