@@ -213,15 +213,8 @@ class Api::ApiController < ActionController::Base
       raise ArgumentError.new("Expected ForemanModel::Invalid or ActiveRecord::RecordInvalid exception.")
     end
 
-    # TODO RAILS32 Clean up if-else
-    if errors.respond_to?(:messages)
-      errors.messages.each_pair do |c,e|
-        logger.error "#{c}: #{e}"
-      end
-    else
-      errors.each_pair do |c,e|
-        logger.error "#{c}: #{e}"
-      end
+    errors.messages.each_pair do |c,e|
+      logger.error "#{c}: #{e}"
     end
 
     respond_to do |format|

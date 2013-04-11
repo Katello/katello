@@ -64,8 +64,18 @@ class ContentViewDefinition < ContentViewDefinitionBase
   end
 
   def generate_repos(view, notify = false)
-    # for the algorithm look at
-    # https://fedorahosted.org/katello/wiki/ContentViewFilters#ContentViewFilterPublishAlgorithm
+    # Publish algorithm
+    #
+    # Copy all rpms over
+    # Copy all errata over
+    # Copy all pkg groups over
+    # Copy all distro over
+    # Start Filtering errata in the copied
+    # Start Filtering package groups in the copied repo
+    # Start Filtering packages in the copied repo
+    # Remove all empty errata
+    # Remove all empty package groups
+    # Publish metadata
     async_tasks = []
     cloned_repos = []
 
@@ -80,7 +90,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
     end
     PulpTaskStatus::wait_for_tasks async_tasks.flatten(1)
 
-    # Start Filtering errata in the copied
+    # Start Filtering errata in the copied repo
     # Start Filtering package groups in the copied repo
     # Start Filtering packages in the copied repo
     cloned_repos.each do |repo|
@@ -196,23 +206,14 @@ class ContentViewDefinition < ContentViewDefinitionBase
     return if inclusion_rules.count == 0 && exclusion_rules.count == 0
 
 
-    clauses = []
     #  If there are only exclude filters (aka blacklist filters),
     #  then unassociate them from the repo
     #  If there are only include filters (aka whitelist) then only the packages/errata included will get included.
     #    Everything else is thus excluded.
     #  If there are include and exclude filters, the exclude filters then the include filters, get processed first,
     #     then the exclude filter excludes content from the set included by the include filters.
-
-    [[inclusion_rules, '$nor'],[exclusion_rules, '$or']].each do |rules, join_clause|
-      if rules.count > 0
-        rule_items = rules.collect do |rule|
-          rule.generate_clauses(repo)
-        end.compact.flatten
-        clauses << {join_clause => rule_items} unless rule_items.empty?
-      end
-    end
-
+    clauses = [generate_clauses(repo, inclusion_rules, true)] + [generate_clauses(repo, exclusion_rules, false)]
+    clauses = clauses.compact
     if clauses.size > 1
       return {'$or' => clauses}
     elsif clauses.size == 1
@@ -243,32 +244,16 @@ class ContentViewDefinition < ContentViewDefinitionBase
     end
   end
 
-  def remove_product(product)
-    filters.each do |f|
-      modified = false
-      if f.products.include? product
-        f.products.delete(product)
-        modified = true
-      end
-      repos_to_remove = f.repositories.select{|r| r.product == product}
-      f.repositories -= repos_to_remove
-      f.save! if modified || repos_to_remove.size > 0
-    end
-  end
 
-  def remove_repository(repository)
-    filters.each do |f|
-      if f.repositories.include? repository
-        f.repositories.delete(repository)
-        f.save!
-      end
-      # if i am removing the last repository of this product from the definition
-      #     and there is a filter that includes the product,  remove it from the filter
-      if self.repositories.in_product(repository.product).empty? &&
-              f.products.include?(repository.product)
-        f.products.delete(repository.product)
-        f.save!
-      end
+  def generate_clauses(repo, rules, inclusion = true)
+    join_clause = "$nor"
+    join_clause = "$or" unless inclusion
+
+    if rules.count > 0
+      rule_items = rules.collect do |rule|
+        rule.generate_clauses(repo)
+      end.compact.flatten
+      {join_clause => rule_items} unless rule_items.empty?
     end
   end
 

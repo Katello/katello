@@ -90,7 +90,7 @@ module Glue::Pulp::Repo
         #end
 
         attrs_used_by_model = attrs.reject do |k, v|
-          !attributes_from_column_definition.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
+          !self.class.column_defaults.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
         end
         if Rails::VERSION::STRING.start_with?('3.2')
           super(attrs_used_by_model, options)
@@ -133,7 +133,7 @@ module Glue::Pulp::Repo
     end
 
     def generate_distributor
-      Runcible::Extensions::YumDistributor.new(self.relative_path, false, true,
+      Runcible::Extensions::YumDistributor.new(self.relative_path, (self.unprotected || false), true,
         {:protected=>true, :id=>self.pulp_id,
             :auto_publish=>!self.environment.library?})
     end
@@ -178,23 +178,6 @@ module Glue::Pulp::Repo
       Runcible::Extensions::Repository.rpm_ids(self.pulp_id)
     end
 
-
-    def package_lists_for_publish
-      names = []
-      filenames = []
-
-      rpms = Runcible::Extensions::Repository.unit_search(self.pulp_id,
-                                                   :type_ids=>['rpm'],
-                                                   :fields =>{:unit=>["filename", "name"]})
-
-      rpms.each do |i|
-        filenames << i["metadata"]["filename"]
-        names << i["metadata"]["name"]
-      end
-      {:names=> names.to_set,
-       :filenames => filenames.to_set}
-    end
-
     # remove errata and groups from this repo
     # that have no packages
     def purge_empty_groups_errata
@@ -221,8 +204,6 @@ module Glue::Pulp::Repo
         unassociate_by_filter(FilterRule::PACKAGE_GROUP, {"id" => {"$in" => package_groups_to_delete}})
       end
     end
-
-
 
     def packages
       if @repo_packages.nil?
@@ -294,7 +275,7 @@ module Glue::Pulp::Repo
       @repo_package_groups
     end
 
-    def package_groups_search search_args = {}
+    def package_groups_search(search_args = {})
       groups = package_groups
       unless search_args.empty?
         groups.delete_if do |group|
@@ -305,7 +286,7 @@ module Glue::Pulp::Repo
       groups
     end
 
-    def package_group_categories search_args = {}
+    def package_group_categories(search_args = {})
       categories = Runcible::Extensions::Repository.package_categories(self.pulp_id)
       unless search_args.empty?
         categories.delete_if do |category_attrs|
@@ -415,7 +396,8 @@ module Glue::Pulp::Repo
       events
     end
     def unassociate_by_filter(content_type, filter_clauses)
-      content_unit = { Runcible::Extensions::Rpm.content_type() => Runcible::Extensions::Rpm,
+      content_unit = {
+        Runcible::Extensions::Rpm.content_type() => Runcible::Extensions::Rpm,
         Runcible::Extensions::Errata.content_type() => Runcible::Extensions::Errata,
         Runcible::Extensions::PackageGroup.content_type() => Runcible::Extensions::PackageGroup,
         Runcible::Extensions::Distribution.content_type() => Runcible::Extensions::Distribution
@@ -440,17 +422,17 @@ module Glue::Pulp::Repo
     end
 
     def add_packages pkg_id_list
-      previous = self.environmental_instances.in_environment(self.environment.prior).first
+      previous = self.environmental_instances(self.content_view).in_environment(self.environment.prior).first
       Runcible::Extensions::Rpm.copy(previous.pulp_id, self.pulp_id, {:ids=>pkg_id_list})
     end
 
     def add_errata errata_unit_id_list
-      previous = self.environmental_instances.in_environment(self.environment.prior).first
+      previous = self.environmental_instances(self.content_view).in_environment(self.environment.prior).first
       Runcible::Extensions::Errata.copy(previous.pulp_id, self.pulp_id, {:ids=>errata_unit_id_list})
     end
 
     def add_distribution distribution_id
-      previous = self.environmental_instances.in_environment(self.environment.prior).first
+      previous = self.environmental_instances(self.content_view).in_environment(self.environment.prior).first
       Runcible::Extensions::Distribution.copy(previous.pulp_id, self.pulp_id, {:ids=>[distribution_id]})
     end
 
@@ -556,6 +538,27 @@ module Glue::Pulp::Repo
         return PulpSyncStatus.pulp_task(history.first.with_indifferent_access)
       end
     end
+
+    # A helper method used by purge_empty_groups_errata
+    # to obtain a list of package filenames and names
+    # so that it could mix/match empty package groups
+    # and errata and purge them.
+    def package_lists_for_publish
+      names = []
+      filenames = []
+
+      rpms = Runcible::Extensions::Repository.unit_search(self.pulp_id,
+                                                   :type_ids=>['rpm'],
+                                                   :fields =>{:unit=>["filename", "name"]})
+
+      rpms.each do |rpm|
+        filenames << rpm["metadata"]["filename"]
+        names << rpm["metadata"]["name"]
+      end
+      {:names=> names.to_set,
+       :filenames => filenames.to_set}
+    end
+
 
   end
 

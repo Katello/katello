@@ -75,27 +75,27 @@ class FilterRulesController < ApplicationController
     render :partial => "content_view_definitions/filters/rules/edit",
            :locals => {:view_definition => @view_definition, :filter => @filter, :rule => @rule,
                        :editable => @view_definition.editable?, :name => controller_display_name,
-                       :rule_type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type),
+                       :rule_type => FilterRule::CONTENT_OPTIONS.key(@rule.content_type),
                        :item_partial => item_partial(@rule)}
   end
 
   def edit_inclusion
     render :partial => "content_view_definitions/filters/rules/inclusion",
            :locals => {:view_definition => @view_definition, :filter => @filter, :rule => @rule,
-                       :rule_type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type)}
+                       :rule_type => FilterRule::CONTENT_OPTIONS.key(@rule.content_type)}
   end
 
   def edit_parameter_list
     render :partial => "content_view_definitions/filters/rules/parameter_list",
            :locals => {:view_definition => @view_definition, :filter => @filter,
-                       :rule => @rule, :rule_type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type),
+                       :rule => @rule, :rule_type => FilterRule::CONTENT_OPTIONS.key(@rule.content_type),
                        :editable => @view_definition.editable?, :item_partial => item_partial(@rule)}
   end
 
   def edit_date_type_parameters
     render :partial => "content_view_definitions/filters/rules/edit_errata_parameters",
            :locals => {:view_definition => @view_definition, :filter => @filter,
-                       :rule => @rule, :rule_type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type),
+                       :rule => @rule, :rule_type => FilterRule::CONTENT_OPTIONS.key(@rule.content_type),
                        :editable => @view_definition.editable?}
   end
 
@@ -105,7 +105,7 @@ class FilterRulesController < ApplicationController
     result = params[:filter_rule].has_key?(:inclusion) ? included_text(@rule) : params[:filter_rule].values.first
 
     notify.success(_("Rule '%{type}' was successfully updated.") %
-                   {:type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type)})
+                   {:type => FilterRule::CONTENT_OPTIONS.key(@rule.content_type)})
 
     render :text => escape_html(result)
   end
@@ -121,7 +121,7 @@ class FilterRulesController < ApplicationController
         @rule.save!
 
         notify.success(_("%{type} rule successfully updated for filter '%{filter}'.") %
-                         {:type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type),
+                         {:type => FilterRule::CONTENT_OPTIONS.key(@rule.content_type),
                           :filter => @filter.name})
 
         render :partial => item_partial(@rule),
@@ -132,26 +132,25 @@ class FilterRulesController < ApplicationController
           @rule.parameters[:date_range] ||= {}
           if params[:parameter][:date_range][:start]
             result = params[:parameter][:date_range][:start]
-            @rule.parameters[:date_range][:start] = result
+            @rule.start_date = parse_calendar_date(result)
           elsif params[:parameter][:date_range][:end]
             result = params[:parameter][:date_range][:end]
-            @rule.parameters[:date_range][:end] = result
+            @rule.end_date = parse_calendar_date(result)
           end
         elsif params[:parameter][:errata_type]
           @rule.parameters[:errata_type] ||= []
-          @rule.parameters[:errata_type] = params[:parameter][:errata_type]
+          @rule.errata_types = params[:parameter][:errata_type]
           result = selected_errata_types(@rule)
         else
           result = params[:parameter].values.first
           @rule.parameters.merge!(params[:parameter])
         end
-
         # a parameter may not contain both units and the parameter provided; therefore, remove the units
         @rule.parameters.delete(:units)
         @rule.save!
 
         notify.success(_("%{type} rule successfully updated for filter '%{filter}'.") %
-                           {:type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type),
+                           {:type => FilterRule::CONTENT_OPTIONS.key(@rule.content_type),
                             :filter => @filter.name})
 
         render :text => escape_html(result) and return
@@ -170,7 +169,7 @@ class FilterRulesController < ApplicationController
     @rule.save!
 
     notify.success(_("Rule parameters successfully deleted for rule type '%{type}'. Parameters deleted: %{parameters}.") %
-                   {:type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type),
+                   {:type => FilterRule::CONTENT_OPTIONS.key(@rule.content_type),
                     :parameters => params[:units].keys.join(', ')})
 
     render :nothing => true

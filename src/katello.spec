@@ -87,7 +87,8 @@ Requires:       %{?scl_prefix}rubygem(i18n_data) >= 0.2.6
 Requires:       %{?scl_prefix}rubygem(gettext_i18n_rails)
 Requires:       %{?scl_prefix}rubygem(simple-navigation) >= 3.3.4
 Requires:       %{?scl_prefix}rubygem(pg)
-Requires:       %{?scl_prefix}rubygem(delayed_job) >= 2.1.4
+Requires:       %{?scl_prefix}rubygem(delayed_job) >= 3.0.2
+Requires:       %{?scl_prefix}rubygem(delayed_job_active_record)
 Requires:       %{?scl_prefix}rubygem(acts_as_reportable) >= 1.1.1
 Requires:       %{?scl_prefix}rubygem(ruport) >= 1.7.0
 Requires:       %{?scl_prefix}rubygem(prawn)
@@ -159,7 +160,6 @@ BuildRequires:       %{?scl_prefix}rubygem(i18n_data) >= 0.2.6
 BuildRequires:       %{?scl_prefix}rubygem(gettext_i18n_rails)
 BuildRequires:       %{?scl_prefix}rubygem(simple-navigation) >= 3.3.4
 BuildRequires:       %{?scl_prefix}rubygem(pg)
-BuildRequires:       %{?scl_prefix}rubygem(delayed_job) >= 2.1.4
 BuildRequires:       %{?scl_prefix}rubygem(acts_as_reportable) >= 1.1.1
 BuildRequires:       %{?scl_prefix}rubygem(ruport) >= 1.7.0
 BuildRequires:       %{?scl_prefix}rubygem(prawn)
@@ -197,7 +197,7 @@ Requires:       qpid-cpp-client-ssl
 Requires:       qpid-cpp-server-ssl
 Requires:       foreman
 Requires:       foreman-postgresql
-Requires:       rubygem(foreman-katello-engine)
+Requires:       %{?scl_prefix}rubygem(foreman-katello-engine)
 # </katello-configure>
 
 
@@ -621,7 +621,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/models/*.rb
 %{homedir}/app/models/authorization/*.rb
 %{homedir}/app/models/candlepin
-%{homedir}/app/models/content_search
 %{homedir}/app/models/ext
 %{homedir}/app/models/roles_permissions
 %{homedir}/app/stylesheets
@@ -645,11 +644,8 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/navigation
 %{homedir}/app/lib/notifications
 %{homedir}/app/lib/validators
-%dir %{homedir}/app/lib/resources
 %{homedir}/app/lib/resources/cdn.rb
-%{homedir}/app/lib/resources/abstract_model.rb
-%dir %{homedir}/app/lib/resources/abstract_model
-%{homedir}/app/lib/resources/abstract_model/indexed_model.rb
+%{homedir}/app/lib/content_search
 %{homedir}/lib/tasks
 %exclude %{homedir}/lib/tasks/yard.rake
 %exclude %{homedir}/lib/tasks/hudson.rake
@@ -695,6 +691,10 @@ usermod -a -G katello-shared tomcat
 %{homedir}/db/schema.rb
 %dir %{homedir}/lib
 %dir %{homedir}/app/lib
+%dir %{homedir}/app/lib/resources
+%{homedir}/app/lib/resources/abstract_model.rb
+%dir %{homedir}/app/lib/resources/abstract_model
+%{homedir}/app/lib/resources/abstract_model/indexed_model.rb
 %{homedir}/lib/util
 %{homedir}/app/lib/util
 %{homedir}/script/service-wait
@@ -763,7 +763,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/lib/monkeys
 %{homedir}/app/lib/navigation
 %{homedir}/app/lib/notifications
-%{homedir}/app/lib/resources
 %{homedir}/app/lib/validators
 %exclude %{homedir}/app/lib/resources/candlepin.rb
 %exclude %{homedir}/app/lib/resources/abstract_model.rb
