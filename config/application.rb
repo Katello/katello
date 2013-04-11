@@ -39,7 +39,7 @@ else
   if defined?(Bundler)
     basic_groups = [:default]
     if Katello.early_config.katello?
-      basic_groups = basic_groups + [:foreman, :pulp]
+      basic_groups = basic_groups + [:pulp]
     end
     if Katello.early_config.profiling
       basic_groups += [:optional]
