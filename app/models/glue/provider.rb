@@ -52,6 +52,21 @@ module Glue::Provider
       return ret
     end
 
+    def refresh_manifest(upstream, options = {})
+      options = { :async => false, :notify => false }.merge options
+      options.assert_valid_keys(:async, :notify)
+
+      self.task_status
+
+      ret = if options[:async]
+              self.task_status = async(:organization => self.organization, :task_type => "refresh manifest").queue_refresh_manifest upstream, options
+              self.save!
+            else
+              queue_refresh_manifest upstream, options
+            end
+      return ret
+    end
+
     def sync
       Rails.logger.debug "Syncing provider #{name}"
       self.products.collect do |p|
@@ -184,6 +199,32 @@ module Glue::Provider
       Resources::Candlepin::Owner.import self.organization.label, zip_file_path, options
     end
 
+    def owner_upstream_export upstream, zip_file_path, options
+
+      if !upstream['idCert'] || !upstream['idCert']['cert'] || !upstream['idCert']['key']
+        Rails.logger.error "Upstream identity certificate not available"
+        raise _("Upstream identity certificate not available")
+      end
+
+      # Default to Red Hat
+      url = upstream['apiUrl'] || 'https://subscription.rhn.stage.redhat.com/subscription/consumers/'
+
+      # TODO: wait until ca_path is supported
+      #       https://github.com/L2G/rest-client-fork/pull/8
+      #ca_file = '/etc/candlepin/certs/upstream/subscription.rhn.stage.redhat.com.crt'
+      ca_file = nil
+
+      data = Resources::Candlepin::UpstreamConsumer.export("#{url}#{upstream['uuid']}/export", upstream['idCert']['cert'],
+                                                           upstream['idCert']['key'], ca_file)
+
+      File.open(zip_file_path, 'w') do |f|
+        f.binmode
+        f.write data
+      end
+
+      return true
+    end
+
     def del_owner_import
       # This method will delete a manifest that has been imported.  Since it is not possible
       # to delete the changes associated with a specific manifest, we only support deleting
@@ -260,13 +301,67 @@ module Glue::Provider
       end
     end
 
+    def queue_refresh_manifest(upstream, options)
+      output = Logging.appenders.string_io.new('manifest_refresh_appender')
+      refresh_logger = Logging.logger['manifest_refresh_logger']
+      refresh_logger.additive = false
+      refresh_logger.add_appenders(output)
+
+      zip_file_path = "/tmp/#{rand}.zip"
+
+      options.merge!(:refresh_logger => refresh_logger)
+      [Rails.logger, refresh_logger].each { |l| l.debug "Refreshing manifest for provider #{self.name}" }
+
+      begin
+        pre_queue.create(:name     => "export upstream manifest for owner: #{self.organization.name}",
+                         :priority => 3, :action => [self, :owner_upstream_export, upstream, zip_file_path, options],
+                         :action_rollback => nil)
+        pre_queue.create(:name     => "import manifest #{zip_file_path} for owner: #{self.organization.name}",
+                         :priority => 5, :action => [self, :owner_import, zip_file_path, options],
+                         :action_rollback => [self, :del_owner_import])
+        pre_queue.create(:name     => "import of products in manifest #{zip_file_path}",
+                         :priority => 7, :action => [self, :import_products_from_cp, options],
+                         :action_rollback => nil)
+        self.save!
+
+        if options[:notify]
+          message = if Katello.config.katello?
+                      _("Subscription manifest uploaded successfully for provider '%s'. " +
+                            "Please enable the repositories you want to sync by selecting 'Enable Repositories' and " +
+                            "selecting individual repositories to be enabled.")
+                    else
+                      _("Subscription manifest uploaded successfully for provider '%s'.")
+                    end
+          values = [self.name]
+          if self.failed_products.present?
+            message << _("There are %d products having repositories that could not be created.")
+            builder = Object.new.extend(ActionView::Helpers::UrlHelper, ActionView::Helpers::TagHelper)
+            path    = Katello.config.url_prefix + '/' + Rails.application.routes.url_helpers.refresh_products_providers_path(:id => self)
+            link    = builder.link_to(_('repository refresh'),
+                                      path,
+                                      :method => :put,
+                                      :remote => true)
+            message << _("You can run %s action to fix this. Note that it can take some time to complete." % link)
+            values.push self.failed_products.size
+          end
+          Notify.success message % values,
+                         :request_type => 'providers__update_redhat_provider',
+                         :organization => self.organization,
+                         :details      => output.read
+        end
+      rescue Exception => error
+        display_manifest_message('refresh', error, options)
+        raise error
+      end
+    end
+
     def import_products_from_cp(options={ })
 
       import_logger = options[:import_logger]
       product_in_katello_ids = self.organization.providers.redhat.first.products.pluck("cp_id")
       products_in_candlepin_ids = []
 
-      marketing_to_enginnering_product_ids_mapping.each do |marketing_product_id, engineering_product_ids|
+      marketing_to_engineering_product_ids_mapping.each do |marketing_product_id, engineering_product_ids|
         engineering_product_ids = engineering_product_ids.uniq
         products_in_candlepin_ids << marketing_product_id
         products_in_candlepin_ids.concat(engineering_product_ids)
@@ -323,6 +418,14 @@ module Glue::Provider
     def import_error_message display_message
       error_texts = [
           _("Subscription manifest upload for provider '%s' failed.") % self.name,
+          (_("Reason: %s") % display_message unless display_message.blank?)
+      ].compact
+      error_texts.join('<br />')
+    end
+
+    def refresh_error_message display_message
+      error_texts = [
+          _("Subscription manifest refresh for provider '%s' failed.") % self.name,
           (_("Reason: %s") % display_message unless display_message.blank?)
       ].compact
       error_texts.join('<br />')
@@ -393,18 +496,20 @@ module Glue::Provider
     def display_manifest_message(type, error, options)
 
       # Clean up response from candlepin
-      if error.respond_to?(:response)
-        error_response = error.response # fix add parse displayMessage
-      elsif error.message
-        error_response = "{'displayMessage' => #{error.message}, 'conflicts' => ['UNKNOWN']}"
-      else
-        error_response = "{'displayMessage' => #{_('Manifest import failed')}, 'conflicts' => ['UNKNOWN']}"
+      types = {'import' => _('import'), 'delete' => _('delete'), 'refresh' => _('refresh')}  # For i18n
+      begin
+        if error.respond_to?(:response)
+          results = JSON.parse(error.response)
+        elsif error.message
+          results = {'displayMessage' => error.message, 'conflicts' => ['UNKNOWN']}
+        else
+          results = {'displayMessage' => _('Manifest %s failed') % types[type], 'conflicts' => ['UNKNOWN']}
+        end
+      rescue
+        results = {'displayMessage' => _('Manifest %s failed') % types[type], 'conflicts' => []}
       end
 
-      Rails.logger.error "Error during manifest #{type}: #{error_response}"
-
-      results = JSON.parse(error_response) rescue {'displayMessage' => _('Manifest %s failed') %
-                      (type == 'import') ? _('import') : _('delete'), 'conflicts' => []}
+      Rails.logger.error "Error during manifest #{type}: #{results}"
 
       if options[:notify]
 
@@ -418,12 +523,10 @@ module Glue::Provider
           Notify.message(error_texts, :request_type => 'providers__update_redhat_provider',
                          :organization => self.organization)
         else
-          error_texts = [
-              ((type == 'import') ? _("Subscription manifest import for provider '%{name}' failed") % {:name => self.name} :
-                  _("Subscription manifest delete for provider '%{name}' failed") % {:name => self.name}
-              ),
-              (_("Reason: %s") % results['displayMessage'] unless results['displayMessage'].blank?)
-              ].compact
+          error_texts = []
+
+          error_texts << _("Subscription manifest %{action} for provider '%{name}' failed") % {:action => types[type], :name => self.name}
+          error_texts << (_("Reason: %s") % results['displayMessage']) unless results['displayMessage'].blank?
           error_texts.join('<br />')
 
           Notify.error(error_texts, :request_type => 'providers__update_redhat_provider',
@@ -436,9 +539,9 @@ module Glue::Provider
     # When promoting, we care only about the engineering products. These are
     # the products that content/repos are assigned to. The marketing product is
     # that one that subscriptions are assigned to. Between marketing and
-    # enginering products is M:N relation (see MarketingEngineeringProduct
+    # engineering products is M:N relation (see MarketingEngineeringProduct
     # model)
-    def marketing_to_enginnering_product_ids_mapping
+    def marketing_to_engineering_product_ids_mapping
       mapping = {}
       pools = Resources::Candlepin::Owner.pools self.organization.label
       pools.each do |pool|

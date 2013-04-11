@@ -33,10 +33,12 @@ class Distributor < ActiveRecord::Base
   validates_with Validators::NonLibraryEnvironmentValidator, :attributes => :environment
   # multiple distributors with a single name are supported
   validates :name, :presence => true
+  #validates_uniqueness_of :name, :scope => {:environment => :organization_id}
+  validates_with Validators::UniqueFieldInOrg, :attributes => :name
   validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
   validates_length_of :location, :maximum => 255
-  validate :content_view_in_environment
+  validates_with Validators::ContentViewEnvironmentValidator
 
   before_create  :fill_defaults
 
@@ -114,12 +116,6 @@ class Distributor < ActiveRecord::Base
       hash = {}
       self.custom_info.each{ |c| hash[c.keyname] = c.value} if self.custom_info
       hash
-    end
-
-    def content_view_in_environment
-      if content_view.present? && !content_view.environments.include?(environment)
-        errors.add(:base, _("Content view is not in environment '%s'.") % environment.name)
-      end
     end
 
 end
