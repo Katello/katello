@@ -17,7 +17,6 @@ class Api::DistributorsController < Api::ApiController
   before_filter :find_optional_organization, :only => [:create, :hypervisors_update, :index, :activate, :report, :tasks]
   before_filter :find_only_environment, :only => [:create]
   before_filter :find_environment, :only => [:create, :index, :report, :tasks]
-  before_filter :find_environment_and_content_view, :only => [:create]
   before_filter :find_distributor, :only => [:destroy, :show, :update,
                                         :subscribe, :unsubscribe, :subscriptions, :pools]
   before_filter :find_task, :only => [:task_show]
@@ -69,6 +68,8 @@ class Api::DistributorsController < Api::ApiController
   param_group :distributors
   param :type, String, :desc => "Type of the distributor, it should always be 'distributor'", :required => true
   def create
+    params[:facts] ||= {'sockets'=>0}  # facts not used for distributors
+    params[:cp_type] = "candlepin"  # The 'candlepin' type is allowed to export a manifest
     distributor = Distributor.create!(params.merge({:environment => @environment,
                                                     :content_view => @content_view,
                                                     :serviceLevel => params[:service_level]}))

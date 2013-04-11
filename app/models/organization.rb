@@ -85,6 +85,10 @@ class Organization < ActiveRecord::Base
     System.where(:environment_id => environments)
   end
 
+  def distributors
+    Distributor.where(:environment_id => environments)
+  end
+
   def promotion_paths
     #I'm sure there's a better way to do this
     self.environments.joins(:priors).where("prior_id = #{self.library.id}").order(:name).collect do |env|
