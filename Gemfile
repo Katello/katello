@@ -29,7 +29,7 @@ else
 end
 
 gem 'delayed_job', '~> 3.0.2'
-gem 'delayed_job_active_record'
+gem 'delayed_job_active_record', '~> 0.3.3'
 gem 'daemons', '>= 1.1.4'
 gem 'uuidtools'
 

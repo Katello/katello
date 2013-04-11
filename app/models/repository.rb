@@ -27,7 +27,6 @@ class Repository < ActiveRecord::Base
   belongs_to :gpg_key, :inverse_of => :repositories
   belongs_to :library_instance, :class_name=>"Repository"
   has_and_belongs_to_many :changesets
-
   has_many :content_view_definition_repositories
   has_many :content_view_definitions, :through => :content_view_definition_repositories
   belongs_to :content_view_version, :inverse_of=>:repositories
@@ -43,11 +42,18 @@ class Repository < ActiveRecord::Base
   belongs_to :gpg_key, :inverse_of => :repositories
   belongs_to :library_instance, :class_name=>"Repository"
 
-  default_scope :order => 'repositories.name ASC'
+  default_scope order('repositories.name ASC')
   scope :enabled, where(:enabled => true)
+
+  scope :in_default_view, joins(:content_view_version => :content_view).
+    where("content_views.default" => true)
 
   def product
     self.environment_product.product
+  end
+
+  def product_id
+    self.environment_product.product_id
   end
 
   def environment
@@ -157,8 +163,7 @@ class Repository < ActiveRecord::Base
 
   def after_sync pulp_task_id
     #self.handle_sync_complete_task(pulp_task_id)
-    self.index_packages
-    self.index_errata
+    self.index_content
   end
 
   def as_json(*args)
@@ -223,7 +228,8 @@ class Repository < ActiveRecord::Base
                            :minor=>self.minor,
                            :enabled=>self.enabled,
                            :content_id=>self.content_id,
-                           :content_view_version=>view_version
+                           :content_view_version=>view_version,
+                           :unprotected=>self.unprotected
                            )
     clone.pulp_id = clone.clone_id(to_env, content_view)
     clone.relative_path = Repository.clone_repo_path(self, to_env, content_view)
@@ -234,12 +240,9 @@ class Repository < ActiveRecord::Base
 
   # returns other instances of this repo with the same library
   # equivalent of repo
-  def environmental_instances
-    if self.environment.library?
-      repo = self
-    else
-      repo = self.library_instance
-    end
-    Repository.where("library_instance_id=%s or repositories.id=%s"  % [repo.id, repo.id] )
+  def environmental_instances(view)
+    repo = self.library_instance || self
+    search = Repository.where("library_instance_id=%s or repositories.id=%s"  % [repo.id, repo.id] )
+    search.in_content_views([view])
   end
 end

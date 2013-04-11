@@ -33,6 +33,13 @@
 
     %fieldset.clearfix
       .grid_2.ra
+        = label :repo, :unprotected, _("Publish via http")
+      .grid_5.la
+        = check_box :repo, :unprotected, :id=>"unprotected", :tabindex => auto_tab_index, :checked=>false
+
+
+    %fieldset.clearfix
+      .grid_2.ra
         = label :repo, :gpg_key, _("GPG Key")
       .grid_5.la
         - if gpg_keys.length != 0
