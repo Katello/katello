@@ -345,6 +345,7 @@ class Create(ProductAction):
                                               description, url, assumeyes, nodiscovery, gpgkey, unprotected)
 
 
+    # pylint: disable=W0613
     def create_product_with_repos(self, provName, orgName, name, label, description,
                                   url, assumeyes, nodiscovery, gpgkey, unprotected):
         prov = get_provider(orgName, provName)
