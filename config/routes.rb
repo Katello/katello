@@ -520,6 +520,8 @@ Src::Application.routes.draw do
         put :enabled_repos
         post :system_groups, :action => :add_system_groups
         delete :system_groups, :action => :remove_system_groups
+        post :refresh_subscriptions
+        put :checkin
       end
       collection do
         match "/tasks/:id" => "systems#task_show", :via => :get
@@ -536,6 +538,7 @@ Src::Application.routes.draw do
     resources :distributors, :only => [:show, :destroy, :create, :index, :update] do
       member do
         get :pools
+        get :export
       end
       resources :subscriptions, :only => [:create, :index, :destroy] do
         collection do
@@ -812,6 +815,7 @@ Src::Application.routes.draw do
     match '/subscriptions' => 'candlepin_proxies#post', :via => :post, :as => :proxy_subscriptions_post_path
     match '/consumers/:id/profile/' => 'systems#upload_package_profile', :via => :put
     match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
+    match '/consumers/:id/checkin/' => 'systems#checkin', :via => :put
 
     # development / debugging support
     if Rails.env == "development"
