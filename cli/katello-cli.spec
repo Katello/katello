@@ -26,7 +26,7 @@ Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 Requires:      %{base_name}-cli-common
 BuildArch:     noarch
-BuildRequires: spacewalk-pylint
+BuildRequires: pylint
 BuildRequires: translate-toolkit
 Obsoletes:     katello-cli-headpin < 1.0.1-1
 Provides:      katello-cli-headpin = 1.0.1-1
@@ -72,7 +72,7 @@ https://fedorahosted.org/katello/wiki/TestingHowto
 
 %build
 %if ! 0%{?fastbuild:1}
-    PYTHONPATH=src/ pylint --rcfile=/etc/spacewalk-pylint.rc --additional-builtins=_ katello
+    PYTHONPATH=src/ pylint --rcfile=./etc/spacewalk-pylint.rc --additional-builtins=_ katello
 %endif
 
 # check for malformed gettext strings

@@ -70,6 +70,7 @@ class List(ContentViewDefinitionAction):
         self.printer.add_column('label', _("Label"))
         self.printer.add_column('description', _("Description"), multiline=True)
         self.printer.add_column('organization', _('Org'))
+        self.printer.add_column('composite', _('Composite'))
 
         self.printer.set_header(_("Content View Definition List"))
         self.printer.print_items(defs)
@@ -149,6 +150,7 @@ class Info(ContentViewDefinitionAction):
         self.printer.add_column('id', _("ID"))
         self.printer.add_column('name', _("Name"))
         self.printer.add_column('label', _("Label"))
+        self.printer.add_column('composite', _("Composite"))
         self.printer.add_column('description', _("Description"), multiline=True)
         self.printer.add_column('organization', _('Org'))
         self.printer.add_column('content_views', _('Published Views'), multiline=True)
@@ -173,6 +175,8 @@ class Create(ContentViewDefinitionAction):
                 help=_("definition description"))
         parser.add_option('--label', dest='label',
                 help=_("definition label"))
+        parser.add_option('--composite', dest='composite', action="store_true",
+                default=False, help=_("make definition a composite of other views"))
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
@@ -182,8 +186,9 @@ class Create(ContentViewDefinitionAction):
         name        = self.get_option('name')
         description = self.get_option('description')
         label       = self.get_option('label')
+        composite   = self.get_option("composite")
 
-        self.def_api.create(org_id, name, label, description)
+        self.def_api.create(org_id, name, label, description, composite)
         print _("Successfully created content view definition [ %s ]") % name
         return os.EX_OK
 

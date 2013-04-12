@@ -53,10 +53,6 @@ describe Ping do
         # pulp - with oauth
         Runcible::Resources::User.stub!(:retrieve_all).and_return()
 
-        # foreman - with oauth
-        Resources::ForemanModel.stub!(:header).and_return(true)
-        Resources::Foreman::Home.stub!(:status).and_return()
-
         Ping.should_receive(:pulp_without_oauth).and_return(nil)
       end
 

@@ -295,8 +295,7 @@ class Changeset < ActiveRecord::Base
     # been promoted to the next environment
     self.products.each do |product|
       product.repos(to_env).each do |repo|
-        repo.index_packages
-        repo.index_errata
+        repo.index_content
       end
     end
 
@@ -307,8 +306,7 @@ class Changeset < ActiveRecord::Base
     self.repos.each do |repo|
       if repo.is_cloned_in? to_env
         clone = repo.get_clone(to_env)
-        clone.index_packages
-        clone.index_errata
+        clone.index_content
       end
     end
   end
