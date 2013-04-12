@@ -45,7 +45,8 @@ Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}
 Requires:        %{name}-common
 Requires:        %{name}-glue-elasticsearch
 Requires:        %{name}-glue-pulp
-Obsoletes:       %{name}-glue-foreman
+Obsoletes:       %{name}-glue-foreman < 1.3.15
+Provides:        %{name}-glue-foreman = 1.3.15
 Requires:        %{name}-glue-candlepin
 Requires:        %{name}-selinux
 Conflicts:       %{name}-headpin
