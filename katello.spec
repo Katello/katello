@@ -32,7 +32,7 @@
 %endif
 
 Name:           katello
-Version:        1.3.17
+Version:        1.4.0
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
