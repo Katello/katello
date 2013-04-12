@@ -17,7 +17,6 @@ pushd $KATELLO_HOME >/dev/null
 sed -i 's/common:/common:\
   use_elasticsearch: false/' /etc/katello/katello.yml
 RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX RAILS_ENV=$KATELLO_ENV /usr/bin/rake db:migrate --trace 2>&1
-RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX RAILS_ENV=$KATELLO_ENV /usr/bin/rake reindex --trace 2>&1
 sed -i 's/use_elasticsearch: false//' /etc/katello/katello.yml
 
 ret_code=$?
