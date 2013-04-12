@@ -14,7 +14,7 @@ gem 'rest-client', :require => 'rest_client'
 gem 'rails_warden', '>= 0.5.2'
 gem 'net-ldap'
 gem 'oauth'
-gem 'ldap_fluff'
+gem 'ldap_fluff', '>= 0.1.7'
 
 if defined? JRUBY_VERSION
   gem 'jruby-openssl'
