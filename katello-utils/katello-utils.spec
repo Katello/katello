@@ -19,7 +19,7 @@
 %endif
 
 Name:           katello-utils
-Version:        1.4.0
+Version:        1.4.1
 Release:        1%{?dist}
 Summary:        Additional tools for Katello
 
@@ -108,6 +108,9 @@ install -m 0644 man/katello-disconnected.man1 %{buildroot}%{_mandir}/man1/katell
 
 
 %changelog
+* Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.4.1-1
+- version bump to 1.4 (jsherril@redhat.com)
+
 * Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.3.2-1
 - i18n - fixing missing build require (lzap+git@redhat.com)
 - i18n - enabling katello domain and improving check (lzap+git@redhat.com)
