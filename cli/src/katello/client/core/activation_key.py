@@ -23,7 +23,8 @@ from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_environment, get_content_view
 from katello.client.lib.utils.data import test_record
 from katello.client.lib.ui import printer
-from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
+from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment, \
+    opt_parser_add_content_view
 
 class ActivationKeyAction(BaseAction):
 
@@ -138,12 +139,7 @@ class Create(ActivationKeyAction):
         opt_parser_add_environment(parser, required=1)
         parser.add_option('--description', dest='description',
                                help=_("activation key description"))
-        parser.add_option('--content_view', dest="view_name",
-                          help=_("content view label eg: database"))
-        parser.add_option('--content_view_label', dest="view_label",
-                          help=_("content view label eg: database"))
-        parser.add_option('--content_view_id', dest="view_id",
-                          help=_("content view label eg: 42"))
+        opt_parser_add_content_view(parser)
         parser.add_option('--limit', dest='usage_limit', type="int",
                                help=_("usage limit (unlimited by default)"))
 
@@ -199,12 +195,7 @@ class Update(ActivationKeyAction):
                               help=_("new activation key name"))
         parser.add_option('--description', dest='description',
                                help=_("new description"))
-        parser.add_option('--content_view', dest="view_name",
-                          help=_("content view name eg: database"))
-        parser.add_option('--content_view_label', dest="view_label",
-                          help=_("content view label eg: database"))
-        parser.add_option('--content_view_id', dest="view_id",
-                          help=_("content view id eg: 42"))
+        opt_parser_add_content_view(parser)
         parser.add_option('--remove_content_view', dest="remove_view", action="store_true",
                           help=_("content view label eg: database"))
         parser.add_option('--limit', dest='usage_limit',
