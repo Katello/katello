@@ -23,4 +23,53 @@ module FilterRulesHelper
   def included_text(rule)
     rule.inclusion? ? _("Include") : _("Exclude")
   end
+
+  def version_options
+    {
+        _('All Versions') => 'all_versions',
+        _('Only Version') => 'version',
+        _('Newer Than') => 'min_version',
+        _('Older Than') => 'max_version',
+        _('Range') => 'version_range'
+    }
+  end
+
+  def version_selector_readonly(rule, unit)
+    version_selected = version_selected(unit)
+    value1, value2 = version_values(unit)
+
+    version_options.key(version_selected) +
+        (value1.blank? ? '' : ' ' + value1.to_s) +
+        (value2.blank? ? '' : ' - ' + value2.to_s)
+  end
+
+  def version_selected(unit)
+    if !unit[:version].blank?
+      'version'
+    elsif !unit[:min_version].blank? && !unit[:max_version].blank?
+      'version_range'
+    elsif !unit[:max_version].blank?
+      'max_version'
+    elsif !unit[:min_version].blank?
+      'min_version'
+    else
+      'all_versions'
+    end
+  end
+
+  def version_values(unit)
+    if !unit[:version].blank?
+      value1 = unit[:version]
+    elsif !unit[:min_version].blank? && !unit[:max_version].blank?
+      value1 = unit[:min_version]
+      value2 = unit[:max_version]
+    elsif !unit[:max_version].blank?
+      value1 = unit[:max_version]
+    elsif !unit[:min_version].blank?
+      value1 = unit[:min_version]
+    end
+
+    return value1, value2
+  end
+
 end
