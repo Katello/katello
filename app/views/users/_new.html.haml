@@ -35,7 +35,7 @@
       .promotion_paths
         = hidden_field_tag 'user[environment_id]', @environment.id unless @environment.nil?
         = form.field :environment, :label => _("Environment:") do
-          = image_tag( "embed/icons/spinner.gif", :id=>"org_spinner", :class=>"hidden fl")
+          = image_tag( "icons/spinner.gif", :id=>"org_spinner", :class=>"hidden fl")
           - if @environment.nil?
             #env_box
               -if @organization.nil?

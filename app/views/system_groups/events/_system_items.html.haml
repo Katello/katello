@@ -5,7 +5,7 @@
 - unless t.system.nil?
   %td.event_name{"data-pending-task-id" => (t.id if t.pending?)}
     - if t.pending?
-      = image_tag("embed/icons/spinner.gif")
+      = image_tag("icons/spinner.gif")
       = t.system.name
 
     - else
@@ -18,7 +18,7 @@
 
   %td.event_date
     - if t.pending?
-      = image_tag("embed/icons/spinner.gif")
+      = image_tag("icons/spinner.gif")
       = t.message
     - else
       = t.finish_time

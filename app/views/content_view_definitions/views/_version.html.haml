@@ -13,7 +13,7 @@
         #{_("Error generating version")}
       - else
         - if task.pending?
-          = image_tag("embed/icons/spinner.gif")
+          = image_tag("icons/spinner.gif")
           #{_("Generating version: %{view_version}") % {:view_version => version.version}}
         - elsif task.error?
           #{_("Error generating version")}

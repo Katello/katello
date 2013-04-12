@@ -52,7 +52,7 @@
       %tbody
         -#= render :partial => "system_groups/errata/items", :locals => { :errata => errata, :editable => editable }
     #list-spinner
-      = image_tag("embed/icons/spinner.gif", :class=>"ajax_scroll")
+      = image_tag("icons/spinner.gif", :class=>"ajax_scroll")
 
 = content_for :footer do
   %a#load_more_errata{"data-scroll_url"=>url_for(system_group_errata_path(@group.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl", "style" => "display:none"} #{_("Load %{n} More") % {:n => offset}}
