@@ -420,6 +420,7 @@ Src::Application.routes.draw do
     end
   end
   match '/organizations/:id/edit' => 'organizations#update', :via => :put
+  match '/organizations/:id/default_info/:informable_type' => 'organizations#default_info', :via => :get, :as => :organization_default_info
 
   resources :changesets, :only => [:update, :index, :show, :create, :new, :edit, :destroy] do
     member do
