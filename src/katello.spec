@@ -151,6 +151,10 @@ BuildRequires:  java >= 0:1.6.0
 BuildRequires:  gettext
 BuildRequires:  translate-toolkit
 
+%if "%{?scl}" == "ruby193"
+BuildRequires: ruby193-build
+%endif
+
 # we require this to be able to build api-docs
 BuildRequires:       %{?scl_prefix}rubygem(rails) >= 3.0.10
 BuildRequires:       %{?scl_prefix}rubygem(haml) >= 3.1.2
@@ -409,6 +413,7 @@ export RAILS_ENV=build
     rm -f bundler.d/development_boost.rb
     rm -f bundler.d/optional.rb
     rm -f bundler.d/test.rb
+    rm -rf bundler.d/assets.rb
 %endif
 
 #replace shebangs for SCL
@@ -438,7 +443,9 @@ fi
     export BUNDLER_EXT_NOSTRICT=1
     export BUNDLER_EXT_GROUPS="default assets"
     touch config/katello.yml
-    %{scl_rake} assets:precompile:all --trace
+%{?scl:scl enable %{scl} "}
+    rake  assets:precompile:all --trace
+%{?scl:"}
     rm config/katello.yml
     mv lib/tasks_disabled lib/tasks
 %endif
@@ -549,6 +556,11 @@ sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{bui
 #remove files which are not needed in the homedir
 rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
+
+
+%if %{?scl:0}%{!?scl:1}
+rm  %{buildroot}%{homedir}/bundler.d/assets.rb
+%endif 
 
 #branding
 if [ -d branding ] ; then

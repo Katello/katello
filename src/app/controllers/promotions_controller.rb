@@ -251,7 +251,8 @@ class PromotionsController < ApplicationController
     # render the list of content views
     view_versions = @environment.content_view_versions.non_default_view || []
     next_env_view_version_ids = @next_environment.nil? ? [].to_set :
-                                @next_environment.content_view_versions.non_default_view.pluck(:id).to_set
+                                @next_environment.content_view_versions.non_default_view.
+                                pluck("content_view_versions.id").to_set
 
     render :partial=>"content_views", :locals => {:environment => @environment, :content_view_versions => view_versions,
                                                   :next_env_view_version_ids => next_env_view_version_ids}
