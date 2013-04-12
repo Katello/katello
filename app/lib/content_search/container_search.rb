@@ -31,7 +31,7 @@ module ContentSearch
     end
 
     def readable_env_ids
-      KTEnvironment.content_readable(current_organization).pluck(:id)
+      KTEnvironment.content_readable(current_organization).pluck("environments.id")
     end
 
     def search_envs
