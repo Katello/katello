@@ -29,7 +29,6 @@ describe Api::ContentViewDefinitionsController, :katello => true do
 
   describe "index" do
     before do
-      Organization.stub(:first).and_return(@organization)
       @defs = FactoryGirl.create_list(:content_view_definition, 3,
                                       :organization => @organization)
     end
@@ -84,7 +83,6 @@ describe Api::ContentViewDefinitionsController, :katello => true do
   describe "publish" do
     before do
       @organization = FactoryGirl.create(:organization)
-      Organization.stub(:first).and_return(@organization)
       FactoryGirl.create_list(:content_view_definition, 2, :organization => @organization)
     end
     let(:definition) { @organization.content_view_definitions.last }
@@ -97,6 +95,17 @@ describe Api::ContentViewDefinitionsController, :katello => true do
         :organization_id => @organization.id, :name => "TestView"
       req.should be_success
       ContentView.count.should eql(cv_count + 1)
+    end
+  end
+
+  describe "create" do
+    it "should create a composite definition if composite is supplied" do
+      Organization.stub_chain(:without_deleting,
+                              :having_name_or_label,:first).and_return(@organization)
+      post :create, content_view_definition: {name: "Test", composite: 1},
+        organization_id: @organization.id
+      response.should be_success
+      ContentViewDefinition.last.should be_composite
     end
   end
 
