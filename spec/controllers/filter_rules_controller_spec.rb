@@ -142,6 +142,19 @@ describe FilterRulesController, :katello => true do
       it_should_behave_like "protected action"
     end
 
+    describe "PUT update_parameter" do
+      let(:action) { :update_parameter }
+      let(:req) { put :update_parameter, :content_view_definition_id => @definition.id, :filter_id => @filter.id,
+                      :id => @filter_rule.id}
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:update, :content_view_definitions, @definition.id, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+    end
+
     describe "DELETE destroy_parameters" do
       let(:action) { :destroy_parameters }
       let(:req) { delete :destroy_parameters, :content_view_definition_id => @definition.id, :filter_id => @filter.id,
