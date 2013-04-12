@@ -15,6 +15,12 @@ var KT = (KT === undefined) ? {} : KT;
 
 KT.default_info = (function() {
 
+    $("#new_default_info_keyname").live("keydown", function(e) {
+        if (e.keyCode == 13) { // if you press enter
+            $("#add_default_info_button").trigger("click");
+        }
+    });
+
     $("#apply_default_info_button").live("click", function(e) {
         var button = $(this);
         e.preventDefault();

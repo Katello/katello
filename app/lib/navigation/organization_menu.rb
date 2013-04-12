@@ -46,6 +46,12 @@ module Navigation
           :if => lambda{@organization},
           :options => {:class=>"panel_link"}
         },
+        { :key => :organization_default_info,
+          :name => _("System Default Info"),
+          :url => organization_default_info_path(@organization.label, "system"),
+          :if => lambda{@organization && @organization.editable?},
+          :options => {:class=>"panel_link"}
+        },
         { :key => :organization_history,
           :name =>_("History"),
           :url => lambda{events_organization_path(@organization.label)},
