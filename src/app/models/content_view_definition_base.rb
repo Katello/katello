@@ -57,6 +57,9 @@ class ContentViewDefinitionBase < ActiveRecord::Base
     type =~ /Archive/
   end
 
+  def has_component_views?
+    component_content_views.any?
+  end
 
   protected
 
