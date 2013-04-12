@@ -3,7 +3,7 @@ task :reindex=>["environment", "clear_search_indices"]  do
 
   ignore_list = ["CpConsumerUser", "PulpSyncStatus", "PulpTaskStatus", "Hypervisor", "Pool"]
 
-  Dir.glob(Rails.root + '/app/models/*.rb').each { |file| require file }
+  Dir.glob(Rails.root.to_s + '/app/models/*.rb').each { |file| require file }
   models = ActiveRecord::Base.subclasses.sort{|a,b| a.name <=> b.name}
   models.each{|mod|
     if !ignore_list.include?(mod.name) && mod.respond_to?(:index)
