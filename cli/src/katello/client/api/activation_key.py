@@ -36,9 +36,7 @@ class ActivationKeyAPI(KatelloAPI):
             "description": description,
             "usage_limit": usage_limit
         }
-
-        if view_id:
-            keyData["content_view_id"] = view_id
+        update_dict_unless_none(keyData, "content_view_id", view_id)
 
         path = "/api/environments/%s/activation_keys/" % envId
         return self.server.POST(path, {'activation_key': keyData})[1]

@@ -89,7 +89,10 @@ class Api::ActivationKeysController < Api::ApiController
     param :environment_id, :identifier, :allow_nil => true
   end
   def update
-    @activation_key.update_attributes!(params[:activation_key])
+    attrs = params[:activation_key].clone
+    attrs[:content_view_id] = nil if attrs.try(:[], :content_view_id) == false
+    @activation_key.update_attributes!(attrs)
+
     render :json => ActivationKey.find(@activation_key.id)
   end
 
