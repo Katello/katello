@@ -444,7 +444,8 @@ fi
     export BUNDLER_EXT_GROUPS="default assets"
     touch config/katello.yml
 %{?scl:scl enable %{scl} "}
-    rake  assets:precompile:all --trace
+    rake  assets:precompile:primary --trace RAILS_ENV=production
+    rake  assets:precompile:nondigest --trace
 %{?scl:"}
     rm config/katello.yml
     mv lib/tasks_disabled lib/tasks
