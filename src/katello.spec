@@ -88,7 +88,8 @@ Requires:       %{?scl_prefix}rubygem(gettext_i18n_rails)
 Requires:       %{?scl_prefix}rubygem(simple-navigation) >= 3.3.4
 Requires:       %{?scl_prefix}rubygem(pg)
 Requires:       %{?scl_prefix}rubygem(delayed_job) >= 3.0.2
-Requires:       %{?scl_prefix}rubygem(delayed_job_active_record)
+Requires:       %{?scl_prefix}rubygem(delayed_job_active_record) >= 0.3.3
+Requires:       %{?scl_prefix}rubygem(delayed_job_active_record) < 0.4.0
 Requires:       %{?scl_prefix}rubygem(acts_as_reportable) >= 1.1.1
 Requires:       %{?scl_prefix}rubygem(ruport) >= 1.7.0
 Requires:       %{?scl_prefix}rubygem(prawn)
