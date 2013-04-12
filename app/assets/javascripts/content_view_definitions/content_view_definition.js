@@ -523,7 +523,7 @@ KT.content_view_definition_filters = (function(){
                 });
             }
         });
-        register_remove($("#parameters_form"));
+        register_remove_filter_rule_param($("#parameters_form"));
         initialize_checkboxes($("#parameters_form"));
     },
     initialize_errata_rule_params = function() {
@@ -535,6 +535,36 @@ KT.content_view_definition_filters = (function(){
         KT.editable.initialize_multiselect();
     },
     register_remove = function(form) {
+        var remove_button = form.find("#remove_button");
+        remove_button.unbind('click');
+        remove_button.click(function(){
+            var btn = $(this);
+            if(btn.hasClass("disabled")){
+                return;
+            }
+            disable(remove_button);
+
+            form.ajaxSubmit({
+                type: "DELETE",
+                url: btn.data("url"),
+                cache: false,
+                success: function(){
+                    // remove the deleted filters from the table and show the 'empty' message
+                    // if all filters have been deleted
+                    $('input[type="checkbox"]:checked').closest('tr').remove();
+                    if ($('input[type="checkbox"]').length === 0) {
+                        $('tr#empty_row').show();
+                    }
+                    disable(remove_button);
+                },
+                error: function(){
+                    enable(remove_button);
+                }
+            });
+        });
+        disable(remove_button);
+    },
+    register_remove_filter_rule_param = function(form) {
         var remove_button = form.find("#remove_button");
         remove_button.unbind('click').click(function(){
             var btn = $(this), parameters = [];
@@ -553,8 +583,8 @@ KT.content_view_definition_filters = (function(){
                 cache: false,
                 data: {'units': parameters},
                 success: function(){
-                    // remove the deleted filters from the table and show the 'empty' message
-                    // if all filters have been deleted
+                    // remove the deleted parameters from the table and show the 'empty' message
+                    // if all have been deleted
                     $('input[type="checkbox"]:checked').closest('tr').remove();
                     if ($('input[type="checkbox"]').length === 0) {
                         $('tr#empty_row').show();
