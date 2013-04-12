@@ -51,7 +51,7 @@ class Api::ContentViewDefinitionsController < Api::ApiController
 
   def param_rules
     {
-      :create => { :content_view_definition => [:name, :description, :label] },
+      :create => { :content_view_definition => [:name, :description, :label, :composite] },
       :update => { :content_view_definition => [:name, :description] }
     }
   end
@@ -82,6 +82,7 @@ class Api::ContentViewDefinitionsController < Api::ApiController
   param_group :content_view_definition
   param :content_view_definition, Hash do
     param :label, String, :desc => "Content view identifier"
+    param :composite, :boolean, :desc => "True for composite definition"
   end
   def create
     attrs = params[:content_view_definition]
