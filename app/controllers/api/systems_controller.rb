@@ -90,7 +90,6 @@ class Api::SystemsController < Api::ApiController
   param_group :system
   def create
     system = System.create!(params.merge({:environment => @environment,
-                                          :content_view => @content_view,
                                           :serviceLevel => params[:service_level]}))
     render :json => system.to_json
   end
@@ -153,10 +152,12 @@ DESC
   api :PUT, "/systems/:id", "Update system information"
   param_group :system
   def update
-    @system.update_attributes!(params.slice(:name, :description, :location,
-                                            :facts, :guestIds, :installedProducts,
-                                            :releaseVer, :serviceLevel,
-                                            :environment_id, :content_view_id))
+    attrs = params.clone
+    attrs[:content_view_id] = nil if attrs[:content_view_id] == false
+    @system.update_attributes!(attrs.slice(:name, :description, :location,
+                                           :facts, :guestIds, :installedProducts,
+                                           :releaseVer, :serviceLevel,
+                                           :environment_id, :content_view_id))
     render :json => @system.to_json
   end
 

@@ -416,6 +416,14 @@ describe Api::SystemsController do
       response.should be_success
     end
 
+    it "should change the content view" do
+      view = build_stubbed(:content_view)
+      ContentView.stub(:find).and_return(view)
+      view.stub(:in_environment?).and_return(true)
+      put :update, id: uuid, content_view_id: view.id
+      @sys.reload.content_view_id.should eql(view.id)
+    end
+
     it "should update installed products" do
       @sys.facts = {}
       @sys.stub(:guest => 'false', :guests => [])
