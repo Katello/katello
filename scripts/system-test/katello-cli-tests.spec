@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.3.5
+Version:       1.3.6
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
@@ -51,6 +51,18 @@ cp -Rp cli_tests/ cli-system-test helpers *zip RPM-GPG-KEY* $RPM_BUILD_ROOT%{hom
 
 
 %changelog
+* Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.3.6-1
+- Remove Foreman specific code - system tests (inecas@redhat.com)
+- cli custom_info restructure (komidore64@gmail.com)
+- Content views: added some system tests (daviddavis@redhat.com)
+- Removing system template code (daviddavis@redhat.com)
+- large refactor of organization level default system info keys
+  (komidore64@gmail.com)
+- allowing the use of repo set name for enable disable (jsherril@redhat.com)
+- adding repo set enabling for system tests (jsherril@redhat.com)
+- comp resources - fixed system tests (tstrachota@redhat.com)
+- hw models - system tests (tstrachota@redhat.com)
+
 * Wed Jan 30 2013 Justin Sherrill <jsherril@redhat.com> 1.3.5-1
 - removing pulpv2 prefix from pulpv2 branch (jsherril@redhat.com)
 - comp. res. - system tests (tstrachota@redhat.com)
