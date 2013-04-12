@@ -17,7 +17,7 @@
 %endif
 
 Name:           katello-configure
-Version:        1.3.6
+Version:        1.3.7
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -141,6 +141,50 @@ chmod +x -R %{buildroot}%{homedir}/upgrade-scripts/*
 %{homedir}/puppet/modules/foreman
 
 %changelog
+* Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.3.7-1
+- Remove Foreman specific code - update scripts (inecas@redhat.com)
+- Make installation of Foreman optional (inecas@redhat.com)
+- katello-configure - fix headpin mode (inecas@redhat.com)
+- run rake tasks from upgrade script in SC environment (msuchy@redhat.com)
+- katello-configure - fix running foreman-config for scl (inecas@redhat.com)
+- katello-configure - scl prefix for working with software collections
+  (inecas@redhat.com)
+- use pulp settings for default virtualhost (jsherril@redhat.com)
+- 948754 - downcase the value for pulp url (inecas@redhat.com)
+- katello-configure - install and set up foreman-katello-engine
+  (inecas@redhat.com)
+- Use service-wait for elasticsearch in katello-configure (inecas@redhat.com)
+- remove old changelog entries (msuchy@redhat.com)
+- Katello Configure - Updates Pulp and Katello Apache configuration templates
+  to include Fedora 18 configuration. (ehelms@redhat.com)
+- 889488 - foreman reconfigure speedup (inecas@redhat.com)
+- katello-configure - Include param name into wrong param error message
+  (inecas@redhat.com)
+- Use spaces instead of tabs in katello-configure scripts (inecas@redhat.com)
+- Katello-Configure - Changes the SSLRenegBufferSize for the Pulp Apache
+  configuration to 1MB to reflect the change that Pulp made as part of bug
+  908082. (ehelms@redhat.com)
+- 912442 - correcting failed installer for candlepin-ca cert
+  (lzap+git@redhat.com)
+- 912442-candlepin-cert - do not overwrite candlepin-upstream-ca.crt
+  (thomasmckay@redhat.com)
+- Fixed issue with connecting to pulp db (mbacovsk@redhat.com)
+- rename katello-defaults.yml to katello_defaults.yml (pchalupa@redhat.com)
+- Added support for old versions of rhsm (mbacovsk@redhat.com)
+- 866493 - frequent SSL renegotiations and log level (lzap+git@redhat.com)
+- 883037 - require explicit user password in katello-configure
+  (tstrachota@redhat.com)
+- add default values to configuration (pchalupa@redhat.com)
+- one last try at fixing CI build (jsherril@redhat.com)
+  (jsherril@redhat.com)
+- changing mongo status to check port access (jsherril@redhat.com)
+- removing copyright notice from template (jsherril@redhat.com)
+- add embed_yard_documentation option to katello-configure tamplate
+  (pchalupa@redhat.com)
+- Added support for systems with older version of rhsm (mbacovsk@redhat.com)
+- configure subscription manager using the config command instead of sed
+  (mbacovsk@redhat.com)
+
 * Wed Jan 30 2013 Justin Sherrill <jsherril@redhat.com> 1.3.6-1
 - removing pulpv2 prefix from pulpv2 branch (jsherril@redhat.com)
 
