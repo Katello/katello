@@ -379,13 +379,13 @@ class DistributorsController < ApplicationController
 
   def setup_options
     @panel_options = {
-      :title => _('Subscription Management Applications'),
+      :title => _('Distributors'),
       :col => ["name_sort", "lastCheckin"],
       :titles => [_("Name"), _("Created / Last Checked In")],
       :custom_rows => true,
-      :enable_create => Katello.config.katello? && Distributor.registerable?(@environment, current_organization),
+      :enable_create => Distributor.registerable?(@environment, current_organization),
       :create => _("Distributor"),
-      :create_label => _('+ New SMA'),
+      :create_label => _('+ New Distributor'),
       :enable_sort => true,
       :name => controller_display_name,
       :list_partial => 'distributors/list_distributors',
