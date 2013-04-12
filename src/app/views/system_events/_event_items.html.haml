@@ -4,7 +4,7 @@
 
 %td.event_name{"data-pending-task-id" => (t.id if t.pending?)}
   - if t.pending?
-    = image_tag("embed/icons/spinner.gif")
+    = image_tag("icons/spinner.gif")
   - else
     %span.icon_wrap.fl.status_icons
       %span.fl{:class=>(t.overall_status=="error" ? "error_icon" : "check_icon")}
@@ -18,7 +18,7 @@
 
 %td.event_date
   - if t.pending?
-    = image_tag("embed/icons/spinner.gif")
+    = image_tag("icons/spinner.gif")
     = t.message
   - else
     = format_time(t.finish_time)
