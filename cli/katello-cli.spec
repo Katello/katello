@@ -21,7 +21,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.3.5
+Version:       1.3.6
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 Requires:      %{base_name}-cli-common
@@ -166,6 +166,52 @@ popd
 %{homedir}/tests
 
 %changelog
+* Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.3.6-1
+- 947859 - Created a way to remove views from keys (daviddavis@redhat.com)
+- Remove Foreman specific code - cli (inecas@redhat.com)
+- 947869 - Allowing users to create composite definitions from CLI
+  (daviddavis@redhat.com)
+- Rails32 - Fixing copyright years. (ehelms@redhat.com)
+- requiring pylint (jsherril@redhat.com)
+- removing requirement for spacewalk-pylint (jsherril@redhat.com)
+- using our own pylint config, not in /etc (jsherril@redhat.com)
+- 929106 - Displaying user friendly task not found error
+  (daviddavis@redhat.com)
+- waive pylint warning (msuchy@redhat.com)
+- 924253 - Fixed definition delete message in CLI (daviddavis@redhat.com)
+- fix pylint and add --unprotected to more commands (jsherril@redhat.com)
+- manifest-refresh - changes related to refreshing manifest manifest-refresh -
+  updates to distributors manifest-refresh - pylint cleaning
+  (thomasmckay@redhat.com)
+- Addressed some whitespace issues as suggested in PR 1882 (paji@redhat.com)
+- adding ability to enable http publishing on a per-repo basis
+  (jsherril@redhat.com)
+- System groups: allow users to update systems via CLI (daviddavis@redhat.com)
+- cli custom_info restructure (komidore64@gmail.com)
+- Translations - Download translations from Transifex for katello-cli.
+  (jsherril@redhat.com)
+- Content Views: allow definitions to be cloned from CLI
+  (daviddavis@redhat.com)
+- cli now correctly allows you to add custom_info without including a value
+  (komidore64@gmail.com)
+- Content views: fix filter add_product error (daviddavis@redhat.com)
+- cli - fix in import manifest async task (tstrachota@redhat.com)
+- custom_info in the UI is now using the API (komidore64@gmail.com)
+- Content view: Addressed feedback for filters (daviddavis@redhat.com)
+- default info in the UI for systems (komidore64@gmail.com)
+- manifest-async - switch to async job on server for CLI/api manifest import
+  (thomasmckay@redhat.com)
+- Added code to associate product/repos to a filter (paji@redhat.com)
+- 918452 - Fixed an issue where cli repo info call was not working
+  (paji@redhat.com)
+- remove old changelog entries (msuchy@redhat.com)
+- Content views: added some system tests (daviddavis@redhat.com)
+- i18n - fixing regression in gettext packaging for cli (lzap+git@redhat.com)
+- Removing system template code (daviddavis@redhat.com)
+- renamed filter to content_filter when the file gets imported to help with
+  pylint (paji@redhat.com)
+- Intial commit of filters functionality (paji@redhat.com)
+
 * Thu Mar 14 2013 Miroslav Suchý <msuchy@redhat.com> 1.3.5-1
 - large refactor of organization level default system info keys
   (komidore64@gmail.com)
