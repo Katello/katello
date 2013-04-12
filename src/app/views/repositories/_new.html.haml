@@ -23,7 +23,7 @@
         = label :repo, :label, _("Label")
       .grid_5.la
         = text_field :repo, :label, :class=>:label_input, :tabindex => auto_tab_index, 'data-url' => default_label_provider_product_repositories_path(@provider.id, @product.id)
-        = image_tag "embed/icons/spinner.gif", :class => 'label_spinner hidden'
+        = image_tag "icons/spinner.gif", :class => 'label_spinner hidden'
 
     %fieldset.clearfix
       .grid_2.ra
