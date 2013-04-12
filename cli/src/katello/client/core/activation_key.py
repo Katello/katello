@@ -66,14 +66,14 @@ class List(ActivationKeyAction):
                 k['usage'] = str(k['usage_count']) + '/' + str(k['usage_limit'])
             if k['content_view_id']:
                 view = get_content_view(orgName, view_id=k['content_view_id'])
-                k['content_view'] = view["label"]
+                k['content_view'] = view["name"]
 
         self.printer.add_column('id', _("ID"))
         self.printer.add_column('name', _("Name"))
         self.printer.add_column('description', _("Description"), multiline=True)
         self.printer.add_column('usage', _("Usage"))
         self.printer.add_column('environment_id', _("Environment ID"))
-        self.printer.add_column('content_view', _("Content View Label"))
+        self.printer.add_column('content_view', _("Content View"))
 
         self.printer.set_header(_("Activation Key List"))
         self.printer.print_items(keys)
@@ -138,13 +138,18 @@ class Create(ActivationKeyAction):
         opt_parser_add_environment(parser, required=1)
         parser.add_option('--description', dest='description',
                                help=_("activation key description"))
-        parser.add_option('--content_view', dest="view",
+        parser.add_option('--content_view', dest="view_name",
                           help=_("content view label eg: database"))
+        parser.add_option('--content_view_label', dest="view_label",
+                          help=_("content view label eg: database"))
+        parser.add_option('--content_view_id', dest="view_id",
+                          help=_("content view label eg: 42"))
         parser.add_option('--limit', dest='usage_limit', type="int",
                                help=_("usage limit (unlimited by default)"))
 
     def check_options(self, validator):
         validator.require(('name', 'org', 'environment'))
+        validator.mutually_exclude(('view_name', 'view_label', 'view_id'))
 
     def run(self):
         orgName = self.get_option('org')
@@ -152,7 +157,9 @@ class Create(ActivationKeyAction):
         keyName = self.get_option('name')
         keyDescription = self.get_option('description')
         usageLimit = self.get_option('usage_limit')
-        view_label = self.get_option('view')
+        view_label = self.get_option("view_label")
+        view_name = self.get_option("view_name")
+        view_id = self.get_option("view_id")
 
         if usageLimit is None:
             usageLimit = -1
@@ -163,11 +170,12 @@ class Create(ActivationKeyAction):
 
         environment = get_environment(orgName, envName)
 
-        if view_label is not None:
-            view = get_content_view(orgName, view_label)
+        if view_name or view_label or view_id:
+            view = get_content_view(orgName, view_label, view_name, view_id)
             view_id = view['id']
         else:
             view_id = None
+
 
         key = self.api.create(environment['id'], keyName, keyDescription, usageLimit, view_id)
         test_record(key,
@@ -191,7 +199,13 @@ class Update(ActivationKeyAction):
                               help=_("new activation key name"))
         parser.add_option('--description', dest='description',
                                help=_("new description"))
-        parser.add_option('--content_view', dest="view",
+        parser.add_option('--content_view', dest="view_name",
+                          help=_("content view name eg: database"))
+        parser.add_option('--content_view_label', dest="view_label",
+                          help=_("content view label eg: database"))
+        parser.add_option('--content_view_id', dest="view_id",
+                          help=_("content view id eg: 42"))
+        parser.add_option('--remove_content_view', dest="remove_view", action="store_true",
                           help=_("content view label eg: database"))
         parser.add_option('--limit', dest='usage_limit',
                                help=_("usage limit (set -1 for no limit)"))
@@ -203,6 +217,7 @@ class Update(ActivationKeyAction):
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
+        validator.mutually_exclude(('view_name', 'view_label', 'view_id', 'remove_view'))
 
     def run(self):
         orgName = self.get_option('org')
@@ -213,7 +228,10 @@ class Update(ActivationKeyAction):
         usageLimit = self.get_option('usage_limit')
         add_poolids = self.get_option('add_poolid') or []
         remove_poolids = self.get_option('remove_poolid') or []
-        view_label = self.get_option("view")
+        view_label = self.get_option("view_label")
+        view_name = self.get_option("view_name")
+        view_id = self.get_option("view_id")
+        remove_view = self.get_option("remove_view")
 
         if envName != None:
             environment = get_environment(orgName, envName)
@@ -226,8 +244,10 @@ class Update(ActivationKeyAction):
             return os.EX_DATAERR
         key = keys[0]
 
-        if view_label is not None:
-            view = get_content_view(orgName, view_label)
+        if remove_view:
+            view_id = False
+        elif view_name or view_label or view_id:
+            view = get_content_view(orgName, view_label, view_name, view_id)
             view_id = view['id']
         else:
             view_id = None

@@ -33,7 +33,7 @@ class ActivationKeyCreateTest(CLIActionTestCase):
         'name': KEY['name'],
         'org': "ACME",
         'env': "Dev",
-        'view': VIEW['label']
+        'view_name': VIEW['name']
     }
 
     def setUp(self):
@@ -47,4 +47,6 @@ class ActivationKeyCreateTest(CLIActionTestCase):
 
     def test_it_calls_get_content_view(self):
         self.run_action(os.EX_OK)
-        self.module.get_content_view.assert_called_once_with(self.OPTIONS['org'], self.VIEW['label'])
+        self.module.get_content_view. \
+            assert_called_once_with(self.OPTIONS['org'], None,
+                                    self.VIEW['name'], None)
