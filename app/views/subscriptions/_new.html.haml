@@ -52,7 +52,7 @@
                 .grid_6.la
                   .fl
                     %div.manifest_progress{:provider_id=>@provider.id}
-                      = image_tag("embed/icons/spinner.gif", {:class=>"fl"})
+                      = image_tag("icons/spinner.gif", {:class=>"fl"})
                       .fl.manifest_progress_message
                         - if @provider.manifest_task.task_type == "delete manifest"
                           = _("Delete in progress (%s)") % @provider.manifest_task.state
@@ -71,7 +71,7 @@
               .grid_8.la
                 .fl
                   %div.manifest_progress{:provider_id=>@provider.id}
-                    = image_tag("embed/icons/spinner.gif", {:class=>"fl"})
+                    = image_tag("icons/spinner.gif", {:class=>"fl"})
                     .fl.manifest_progress_message
                       = _("Import in progress (%s)") % @provider.manifest_task.state
       - else
