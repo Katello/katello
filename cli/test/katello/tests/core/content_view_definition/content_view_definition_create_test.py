@@ -19,7 +19,9 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
     ]
 
     allowed_options = [
-        ('--org=ACME_Corporation', '--name=MyRHEL')
+        ('--org=ACME_Corporation', '--name=MyRHEL'),
+        ('--org=ACME_Corporation', '--name=MyRHEL', '--composite'),
+        ('--org=ACME_Corporation', '--name=MyRHEL', '--label=MyRHEL', '--composite')
     ]
 
 class ContentViewAddTest(CLIActionTestCase):
@@ -49,4 +51,4 @@ class ContentViewAddTest(CLIActionTestCase):
     def test_it_uses_def_api(self):
         self.run_action()
         self.action.def_api.create.assert_called_once_with(
-            self.ORG, self.NAME, self.LABEL, self.DESCRIPTION)
+            self.ORG, self.NAME, self.LABEL, self.DESCRIPTION, None)

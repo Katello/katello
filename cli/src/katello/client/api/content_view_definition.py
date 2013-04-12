@@ -42,9 +42,11 @@ class ContentViewDefinitionAPI(KatelloAPI):
         cvd = self.server.GET(path)
         return cvd
 
-    def create(self, org_id, name, label, description):
+    def create(self, org_id, name, label, description, composite=False):
         cvd = {"label": label, "name": name}
         cvd = update_dict_unless_none(cvd, "description", description)
+        if composite and composite != False:
+            cvd["composite"] = True
 
         path = "/api/organizations/%s/content_view_definitions/" % org_id
         params = {"content_view_definition": cvd}

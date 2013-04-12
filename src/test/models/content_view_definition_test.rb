@@ -94,6 +94,11 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     assert @content_view_def.save
   end
 
+  def test_adding_views_to_non_composite
+    @content_view_def.component_content_views << FactoryGirl.create(:content_view)
+    refute @content_view_def.save
+  end
+
   def test_publish
     content_view_def = FactoryGirl.create(:content_view_definition)
     content_view = content_view_def.publish('test_name', 'test_description', 'test_label')
