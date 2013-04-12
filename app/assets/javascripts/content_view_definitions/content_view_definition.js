@@ -283,7 +283,7 @@ KT.content_view_definition = (function(){
         $("#content_views").treeTable({
             expandable: true,
             initialState: "expanded",
-            clickableNodeNames: true,
+            clickableNodeNames: false,
             onNodeShow: function(){$.sparkline_display_visible();}
         });
     },
