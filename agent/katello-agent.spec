@@ -1,5 +1,5 @@
 Name: katello-agent
-Version: 1.4.0
+Version: 1.4.1
 Release: 1%{?dist}
 Summary: The Katello Agent
 Group:   Development/Languages
@@ -48,6 +48,9 @@ LC_ALL=C service goferd status | grep 'is running' && service goferd restart
 %doc LICENSE
 
 %changelog
+* Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.4.1-1
+- version bump to 1.4 (jsherril@redhat.com)
+
 * Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.3.2-1
 - remove old changelog entries (msuchy@redhat.com)
 - 872528 - restart gofer after katello-agent upgrade (msuchy@redhat.com)
