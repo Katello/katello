@@ -17,7 +17,7 @@
 %endif
 
 Name:           katello-configure
-Version:        1.4.0
+Version:        1.4.1
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -141,6 +141,9 @@ chmod +x -R %{buildroot}%{homedir}/upgrade-scripts/*
 %{homedir}/puppet/modules/foreman
 
 %changelog
+* Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.4.1-1
+- version bump to 1.4 (jsherril@redhat.com)
+
 * Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.3.7-1
 - Remove Foreman specific code - update scripts (inecas@redhat.com)
 - Make installation of Foreman optional (inecas@redhat.com)
