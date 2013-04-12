@@ -14,7 +14,7 @@
 class OrganizationsController < ApplicationController
   include AutoCompleteSearch
   respond_to :html, :js
-  before_filter :find_organization, :only => [:edit, :update, :destroy, :events]
+  before_filter :find_organization, :only => [:edit, :update, :destroy, :events, :default_info]
   before_filter :find_organization_by_id, :only => [:environments_partial, :download_debug_certificate]
   before_filter :authorize #call authorize after find_organization so we call auth based on the id instead of cp_id
   before_filter :setup_options, :only=>[:index, :items]
@@ -48,7 +48,8 @@ class OrganizationsController < ApplicationController
       :destroy => delete_test,
       :environments_partial => environments_partial_test,
       :events => read_test,
-      :download_debug_certificate => edit_test
+      :download_debug_certificate => edit_test,
+      :default_info => read_test
     }
   end
 
@@ -209,6 +210,10 @@ class OrganizationsController < ApplicationController
     send_data data,
       :filename => "#{@organization.name}-key-cert.pem",
       :type => "application/text"
+  end
+
+  def default_info
+    render :partial => "default_info", :locals => { :org => @organization, :informable_type => params[:informable_type] }
   end
 
   protected
