@@ -35,7 +35,7 @@ describe Api::TasksController do
     @task.stub(:refresh).and_return({})
     @task.stub(:user).and_return({})
     TaskStatus.stub(:where).and_return(@task)
-    TaskStatus.stub!(:find_by_uuid).and_return(@task)
+    TaskStatus.stub!(:find_by_uuid!).and_return(@task)
   end
 
   context "get a listing of tasks" do
@@ -67,7 +67,7 @@ describe Api::TasksController do
     it_should_behave_like "protected action"
 
     it "should retrieve task specified by uuid" do
-      TaskStatus.should_receive(:find_by_uuid).once.with('1').and_return(@t)
+      TaskStatus.should_receive(:find_by_uuid!).once.with('1').and_return(@t)
       req
     end
 

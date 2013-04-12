@@ -1,0 +1,37 @@
+= javascript :tabs
+
+= render :partial => "content_view_definitions/tupane_header"
+
+= content_for :content do
+
+  .grid_12#filter
+
+    .panel_link
+      = link_to(_("◀ Back to Filter List"),
+        content_view_definition_filters_path(view_definition.id))
+
+    %br
+    %h4 #{_("Filter: %{name}") % {:name => filter.name}}
+
+    #filter_tabs.hidden
+      %ul
+        %li
+          %a{:href=>"##rules"} #{_("Rules")}
+        %li
+          %a{:href=>"##repos"} #{_("Repositories")}
+
+      %div#rules
+        = render :partial => "content_view_definitions/filters/list_rules",
+                 :locals => {:editable => editable,
+                             :view_definition => view_definition,
+                             :filter => filter}
+
+      %div#repos
+        = render :partial => "common/common_product_repo_selector",
+                 :locals => {:editable => editable,
+                             :record => filter,
+                             :readable_products => nil,
+                             :editable_products => nil,
+                             :save_url => content_view_definition_filter_path(view_definition.id, filter.id)}
+
+= render :template => "layouts/tupane_layout"

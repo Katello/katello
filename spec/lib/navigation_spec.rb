@@ -28,7 +28,6 @@ describe Navigation do
   before do
     AppConfig = double() unless defined?(AppConfig)
     AppConfig.stub!(:katello?) { true }
-    AppConfig.stub!(:use_foreman) { true }
 
     @navigation_class = Class.new do
 

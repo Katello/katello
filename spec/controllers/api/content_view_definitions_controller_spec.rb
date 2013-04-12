@@ -29,7 +29,6 @@ describe Api::ContentViewDefinitionsController, :katello => true do
 
   describe "index" do
     before do
-      Organization.stub(:first).and_return(@organization)
       @defs = FactoryGirl.create_list(:content_view_definition, 3,
                                       :organization => @organization)
     end
@@ -84,7 +83,6 @@ describe Api::ContentViewDefinitionsController, :katello => true do
   describe "publish" do
     before do
       @organization = FactoryGirl.create(:organization)
-      Organization.stub(:first).and_return(@organization)
       FactoryGirl.create_list(:content_view_definition, 2, :organization => @organization)
     end
     let(:definition) { @organization.content_view_definitions.last }
@@ -97,6 +95,17 @@ describe Api::ContentViewDefinitionsController, :katello => true do
         :organization_id => @organization.id, :name => "TestView"
       req.should be_success
       ContentView.count.should eql(cv_count + 1)
+    end
+  end
+
+  describe "create" do
+    it "should create a composite definition if composite is supplied" do
+      Organization.stub_chain(:without_deleting,
+                              :having_name_or_label,:first).and_return(@organization)
+      post :create, content_view_definition: {name: "Test", composite: 1},
+        organization_id: @organization.id
+      response.should be_success
+      ContentViewDefinition.last.should be_composite
     end
   end
 
@@ -125,12 +134,13 @@ describe Api::ContentViewDefinitionsController, :katello => true do
   end
 
   describe "update_content_views" do
-    let(:definition) { FactoryGirl.create(:content_view_definition) }
-    let(:views) { FactoryGirl.create_list(:content_view, 2) }
-    let(:req) { put :update_content_views, :id => definition.id, :views =>
-      views.map(&:id) }
-    subject { req and definition.component_content_views.reload }
-    its(:length) { should eql(2) }
+    it "should update the definition's components" do
+      definition = FactoryGirl.create(:content_view_definition)
+      views = FactoryGirl.create_list(:content_view, 2)
+      ContentView.stub_chain(:readable, :where).and_return(views)
+      put :update_content_views, :id => definition.id, :views => views.map(&:id)
+      definition.component_content_views.reload.length.should eql(2)
+    end
   end
 
 end

@@ -75,7 +75,7 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     @content_view_def.save!
     @content_view_def.repositories << @repo
     @content_view_def = @content_view_def.reload
-    assert_equal @repo.content_view_definitions.first, @content_view_def
+    assert_includes @repo.content_view_definitions, @content_view_def
     assert_includes @content_view_def.repositories.map(&:id), @repo.id
   end
 
@@ -92,6 +92,11 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     @content_view_def.composite = true
     @content_view_def.component_content_views << FactoryGirl.create(:content_view)
     assert @content_view_def.save
+  end
+
+  def test_adding_views_to_non_composite
+    @content_view_def.component_content_views << FactoryGirl.create(:content_view)
+    refute @content_view_def.save
   end
 
   def test_publish
