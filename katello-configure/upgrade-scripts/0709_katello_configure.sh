@@ -9,4 +9,5 @@
 #which are distributed as part of katello-configure package. Make sure you
 #have backup of all configuration files if you made any changes in it.
 
-katello-configure -b --answer-file=/etc/katello/katello-configure.conf 
+katello-configure -b --answer-file=/etc/katello/katello-configure.conf &> /dev/null
+exit 0 
