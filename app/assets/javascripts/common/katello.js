@@ -402,7 +402,7 @@ KT.common = (function() {
         	}
         },
         spinner_path : function() {
-          return KT.common.rootURL() + "images/embed/icons/spinner.gif";
+          return KT.common.rootURL() + "assets/icons/spinner.gif";
         },
         jscroll_init: function(element) {
             element.jScrollPane({ hideFocus: true });

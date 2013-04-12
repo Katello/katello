@@ -13,7 +13,7 @@
           %td.package_name
             #{pkg_name}
           %td.package_action_status
-            = image_tag("embed/icons/spinner.gif")
+            = image_tag("icons/spinner.gif")
             = get_status_string(t.task_type)
 
 - unless group_tasks.nil?
@@ -28,7 +28,7 @@
           %td.package_name
             #{group_name}
           %td.package_action_status
-            = image_tag("embed/icons/spinner.gif")
+            = image_tag("icons/spinner.gif")
             = get_status_string(t.task_type)
 
 -packages.each_with_index do |p,index|
