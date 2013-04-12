@@ -19,7 +19,7 @@
 %endif
 
 Name:           katello-utils
-Version:        1.3.1
+Version:        1.3.2
 Release:        1%{?dist}
 Summary:        Additional tools for Katello
 
@@ -108,6 +108,14 @@ install -m 0644 man/katello-disconnected.man1 %{buildroot}%{_mandir}/man1/katell
 
 
 %changelog
+* Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.3.2-1
+- i18n - fixing missing build require (lzap+git@redhat.com)
+- i18n - enabling katello domain and improving check (lzap+git@redhat.com)
+- removing resource_permissions require and minor fix (lzap+git@redhat.com)
+- disconnected - adding support for ruby scl (lzap+git@redhat.com)
+- disconnected - adding i18n and refactoring (lzap+git@redhat.com)
+- diconnected - pulp v2 initial support (lzap+git@redhat.com)
+
 * Tue Jan 08 2013 Lukas Zapletal <lzap+git@redhat.com> 1.3.1-1
 - use dependecies according the code in ./bin/katello-disconnected
 - Bumping package versions for 1.3.
