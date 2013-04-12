@@ -19,7 +19,7 @@
 %define modulename katello
 
 Name:           %{modulename}-selinux
-Version:        1.3.1
+Version:        1.3.2
 Release:        1%{?dist}
 Summary:        SELinux policy module supporting Katello
 
@@ -126,6 +126,10 @@ fi
 %attr(0750,root,katello-shared) %{_sysconfdir}/katello/secure
 
 %changelog
+* Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.3.2-1
+- copyright update (jsherril@redhat.com)
+- remove old changelog entries (msuchy@redhat.com)
+
 * Tue Jan 08 2013 Lukas Zapletal <lzap+git@redhat.com> 1.3.1-1
 - 879094 - a few updates to katello & katello-selinux spec based on comments
 - 879094 - CVE-2012-5561 - fix permissions on /etc/katello/secure
