@@ -12,15 +12,19 @@
 require 'logging'
 
 module Katello
-  class Logging
-    def initialize
-      configure_color_scheme
-      FileUtils.mkdir_p root_configuration.path unless File.directory?(root_configuration.path)
-    rescue Errno::EACCES
-      # ignore when we have not sufficient privileges
-    end
+  class LoggingImpl
+    private_class_method :new
 
     def configure(options = {})
+      raise 'logging can be configured only once' if @configured
+      @configured = true
+
+      configure_color_scheme
+      begin
+        FileUtils.mkdir_p root_configuration.path unless File.directory?(root_configuration.path)
+      rescue Errno::EACCES
+        # ignore when we have not sufficient privileges
+      end
       configure_root_logger(options)
       integrate_yard_logger!
       configure_children_loggers
@@ -226,4 +230,6 @@ module Katello
       end
     end
   end
+
+  Logging = LoggingImpl.send :new
 end
