@@ -12,7 +12,7 @@
 
 module FilterRulesHelper
   def errata_types
-    {'bugfix' => _('Bug Fix'), 'enhancement' => _('Enhancement'), 'security' => ('Security')}
+    ErratumRule::ERRATA_TYPES
   end
 
   def selected_errata_types(rule)
