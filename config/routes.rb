@@ -2,40 +2,6 @@ Src::Application.routes.draw do
 
   apipie
 
-  if Katello.config.use_foreman
-    scope :module => 'foreman' do
-      resources :subnets do
-        collection do
-          get :items
-        end
-      end
-
-      resources :domains do
-        collection do
-          get :items
-        end
-      end
-
-      resources :hardware_models do
-        collection do
-          get :items
-        end
-      end
-
-      resources :architectures do
-        collection do
-          get :items
-        end
-      end
-
-      resources :smart_proxies do
-        collection do
-          get :items
-        end
-      end
-    end
-  end
-
   resources :system_groups do
     collection do
       get :items
@@ -99,6 +65,7 @@ Src::Application.routes.draw do
       get :default_label
       get :items
     end
+
     member do
       post :clone
       get :views
@@ -106,13 +73,32 @@ Src::Application.routes.draw do
       post :publish
       get :status
       get :content
-      post :update_content
+      put :update_content
       put :update_component_views
-      get :filter
     end
+
     resources :content_view, :only => [], :controller => :content_view_definitions do
       member do
         post :refresh
+      end
+    end
+    resources :filters, :controller => :filters, :only => [:index, :new, :create, :edit, :update] do
+      collection do
+        delete :destroy_filters
+      end
+
+      resources :rules, :controller => :filter_rules, :only => [:new, :create, :edit, :update] do
+        collection do
+          delete :destroy_rules
+        end
+
+        member do
+          get :edit_inclusion
+          get :edit_parameter_list
+          get :edit_date_type_parameters
+          put :add_parameter
+          delete :destroy_parameters
+        end
       end
     end
   end
@@ -640,17 +626,31 @@ Src::Application.routes.draw do
           post :publish
           post :clone
         end
-        resources :products, :only => [] do
-          get :index, :action => :list_content_view_definition_products,
-            :on => :collection
-          put :index, :action => :update_content_view_definition_products,
-            :on => :collection
+        resources :products, :controller => :content_view_definitions, :only => [] do
+          collection do
+            get :index, :action => :list_products
+            put :index, :action => :update_products
+          end
         end
-        resources :repositories, :only => [] do
-          get :index, :action => :list_content_view_definition_repositories,
-            :on => :collection
-          put :index, :action => :update_content_view_definition_repositories,
-            :on => :collection
+        resources :repositories, :controller => :content_view_definitions, :only => [] do
+          collection do
+            get :index, :action => :list_repositories
+            put :index, :action => :update_repositories
+          end
+        end
+        resources :filters, :controller => :filters, :only => [:index, :show, :create, :destroy] do
+          resources :products, :controller => :filters, :only => [] do
+            collection do
+              get :index, :action => :list_products
+              put :index, :action => :update_products
+            end
+          end
+          resources :repositories, :controller => :filters, :only => [] do
+            collection do
+              get :index, :action => :list_repositories
+              put :index, :action => :update_repositories
+            end
+          end
         end
       end
     end
@@ -665,6 +665,8 @@ Src::Application.routes.draw do
         post :refresh
       end
     end
+
+
 
     resources :changesets, :only => [:show, :update, :destroy] do
       post :promote, :on => :member, :action => :promote
@@ -802,26 +804,6 @@ Src::Application.routes.draw do
     match '/subscriptions' => 'candlepin_proxies#post', :via => :post, :as => :proxy_subscriptions_post_path
     match '/consumers/:id/profile/' => 'systems#upload_package_profile', :via => :put
     match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
-
-      # foreman proxy --------------
-    if Katello.config.use_foreman
-      scope :module => 'foreman' do
-        resources :architectures, :except => [:new, :edit]
-        resources :compute_resources, :except => [:new, :edit]
-        resources :subnets, :except => [:new, :edit]
-        resources :smart_proxies, :except => [:new, :edit]
-        resources :hardware_models, :except => [:new, :edit]
-        constraints(:id => /[^\/]+/) do
-          resources :domains, :except => [:new, :edit]
-        end
-        resources :config_templates, :except => [:new, :edit] do
-          collection do
-            get :revision
-            get :build_pxe_default
-          end
-        end
-      end
-    end
 
     # development / debugging support
     if Rails.env == "development"

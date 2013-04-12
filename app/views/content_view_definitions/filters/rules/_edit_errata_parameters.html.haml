@@ -1,0 +1,24 @@
+%br
+%h5{:id => 'errata_parameters'} #{_('Date')}
+
+%fieldset
+  %label.grid_1.fl #{_('From')}:
+  .grid_4.la#from_date{'name' => 'parameter[date_range][start]',
+                       :class=>("editable edit_datepicker" if editable),
+                       'data-url' => url_for(:action => 'add_parameter')}
+    - if rule.parameters.include?(:date_range) && rule.parameters[:date_range].include?(:start)
+      = rule.parameters[:date_range][:start]
+
+  %label.grid_1.fl #{_('To')}:
+  .grid_4.la#to_date{'name' => 'parameter[date_range][end]',
+                     :class=>("editable edit_datepicker" if editable),
+                     'data-url' => url_for(:action => 'add_parameter')}
+    - if rule.parameters.include?(:date_range) && rule.parameters[:date_range].include?(:end)
+      = rule.parameters[:date_range][:end]
+
+%h5 #{_('Type')}
+%fieldset
+  .grid_5.la{'name' => 'parameter[errata_type]', :class => ("editable edit_multiselect" if editable),
+             'data-url' => url_for(:action => 'add_parameter'),
+             'data-options' => errata_types.to_json}
+    = selected_errata_types(rule)

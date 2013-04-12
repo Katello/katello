@@ -6,6 +6,7 @@ require "action_controller/railtie"
 require "action_mailer/railtie"
 require "active_resource/railtie"
 require "rails/test_unit/railtie"
+require "sprockets/railtie"
 
 path = File.expand_path("../lib", File.dirname(__FILE__))
 $LOAD_PATH << path unless $LOAD_PATH.include? path
@@ -38,18 +39,18 @@ else
   if defined?(Bundler)
     basic_groups = [:default]
     if Katello.early_config.katello?
-      basic_groups = basic_groups + [:foreman, :pulp]
+      basic_groups = basic_groups + [:pulp]
     end
     if Katello.early_config.profiling
       basic_groups += [:optional]
     end
     groups = case Rails.env.to_sym
              when :build
-               basic_groups + [:development, :build]
+               basic_groups + [:development, :build, :assets]
              when :production
                basic_groups
              when :development
-               basic_groups + [:development, :debugging, :build, :development_boost]
+               basic_groups + [:development, :debugging, :build, :development_boost, :assets]
              when :test
                basic_groups + [:development, :test, (:debugging if ENV['TRAVIS'] != 'true')] # TODOp add to config
              else
@@ -69,7 +70,7 @@ module Src
       end
     end
 
-    # set the relative url for rails and jammit
+    # set the relative url for rails
     ActionController::Base.config.relative_url_root = Katello.config.url_prefix
 
     # Settings in config/environments/* take precedence over those specified here.
@@ -96,8 +97,6 @@ module Src
 
     # JavaScript files you want as :defaults (application.js is always included).
     # config.action_view.javascript_expansions[:defaults] = %w(jquery rails)
-    config.action_view.javascript_expansions[:defaults] =
-        ['jquery-1.4.2', 'jquery.ui-1.8.1/jquery-ui-1.8.1.custom.min', 'jquery-ujs/rails']
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
@@ -145,6 +144,27 @@ module Src
 
     config.logger = Logging.logger['app']
     config.active_record.logger = Logging.logger['sql']
+
+    config.assets.enabled = true
+    config.assets.version = '1.0'
+    config.assets.initialize_on_precompile = false
+
+    config.assets.precompile << Proc.new do |path|
+      if path =~ /\.(css|js)\z/
+        full_path = Rails.application.assets.resolve(path).to_path
+        app_assets_path = Rails.root.join('app', 'assets').to_path
+        if full_path.starts_with? app_assets_path
+          puts "including asset: " + full_path
+          true
+        else
+          puts "excluding asset: " + full_path
+          false
+        end
+      else
+        false
+      end
+    end
+
   end
 end
 

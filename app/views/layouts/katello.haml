@@ -4,16 +4,16 @@
   = default_title
 
 = content_for(:stylesheets_block) do
-  = include_stylesheets :common
-  = include_stylesheets controller.section_id
+  = stylesheet_link_tag "katello"
+  = stylesheet_link_tag "#{controller.section_id}"
   = yield :stylesheets
 
 = content_for(:head) do
   = csrf_meta_tag
   / [if lt IE 9]
-    = include_javascripts  :html5
+    = javascript_include_tag  :html5
   / [if IE]
-    = include_stylesheets :ie, :embed_assets => false
+    = stylesheet_link_tag :ie
 
 = content_for(:content) do
   - if not current_user
@@ -29,7 +29,7 @@
   = render :partial => "common/footer"
 
 = content_for(:javascripts_block) do
-  = include_javascripts :common
+  = javascript_include_tag :common
   %script{ :type => "text/javascript" }
     -if protect_against_forgery?
       :plain
@@ -44,4 +44,4 @@
 
 = render :partial => 'common/header'
 
-= render :file => 'layouts/alchemy/layouts/shell_layout'
+= render :file => 'alchemy/layouts/shell_layout'

@@ -45,7 +45,8 @@ Source0:        https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}
 Requires:        %{name}-common
 Requires:        %{name}-glue-elasticsearch
 Requires:        %{name}-glue-pulp
-Requires:        %{name}-glue-foreman
+Obsoletes:       %{name}-glue-foreman < 1.3.15
+Provides:        %{name}-glue-foreman = 1.3.15
 Requires:        %{name}-glue-candlepin
 Requires:        %{name}-selinux
 Conflicts:       %{name}-headpin
@@ -75,12 +76,12 @@ Requires:       %{?scl_prefix}rubygem(haml) >= 3.1.2
 Requires:       %{?scl_prefix}rubygem(haml-rails)
 Requires:       %{?scl_prefix}rubygem(json)
 Requires:       %{?scl_prefix}rubygem(rest-client)
-Requires:       %{?scl_prefix}rubygem(jammit)
-# required by jammit
 Requires:       %{?scl_prefix}rubygem(therubyracer)
 Requires:       %{?scl_prefix}rubygem(rails_warden)
 Requires:       %{?scl_prefix}rubygem(net-ldap)
 Requires:       %{?scl_prefix}rubygem(compass)
+Requires:       %{?scl_prefix}rubygem(compass-rails)
+Requires:       %{?scl_prefix}rubygem(sass-rails)
 Requires:       %{?scl_prefix}rubygem(compass-960-plugin) >= 0.10.4
 Requires:       %{?scl_prefix}rubygem(oauth)
 Requires:       %{?scl_prefix}rubygem(i18n_data) >= 0.2.6
@@ -88,7 +89,8 @@ Requires:       %{?scl_prefix}rubygem(gettext_i18n_rails)
 Requires:       %{?scl_prefix}rubygem(simple-navigation) >= 3.3.4
 Requires:       %{?scl_prefix}rubygem(pg)
 Requires:       %{?scl_prefix}rubygem(delayed_job) >= 3.0.2
-Requires:       %{?scl_prefix}rubygem(delayed_job_active_record)
+Requires:       %{?scl_prefix}rubygem(delayed_job_active_record) >= 0.3.3
+Requires:       %{?scl_prefix}rubygem(delayed_job_active_record) < 0.4.0
 Requires:       %{?scl_prefix}rubygem(acts_as_reportable) >= 1.1.1
 Requires:       %{?scl_prefix}rubygem(ruport) >= 1.7.0
 Requires:       %{?scl_prefix}rubygem(prawn)
@@ -98,11 +100,11 @@ Requires:       %{?scl_prefix}rubygem(hooks)
 Requires:       %{?scl_prefix}rubygem(thin)
 Requires:       %{?scl_prefix}rubygem(fssm)
 Requires:       %{?scl_prefix}rubygem(sass)
+Requires:       %{?scl_prefix}rubygem(ui_alchemy-rails) >= 1.0.0
 Requires:       %{?scl_prefix}rubygem(chunky_png)
 Requires:       %{?scl_prefix}rubygem(tire) >= 0.3.0
 Requires:       %{?scl_prefix}rubygem(tire) < 0.4
 Requires:       %{?scl_prefix}rubygem(ldap_fluff)
-Requires:       %{?scl_prefix}rubygem(foreman_api) >= 0.0.7
 Requires:       %{?scl_prefix}rubygem(anemone)
 Requires:       %{?scl_prefix}rubygem(apipie-rails) >= 0.0.18
 Requires:       %{?scl_prefix}rubygem(logging) >= 1.8.0
@@ -132,15 +134,17 @@ Requires(postun): initscripts coreutils sed
 BuildRequires:  coreutils findutils sed
 BuildRequires:  %{?scl_prefix}rubygems
 BuildRequires:  %{?scl_prefix}rubygem-rake
-# TODO we will remove jammit soon
-BuildRequires:  rubygem(jammit)
 BuildRequires:  %{?scl_prefix}rubygem(chunky_png)
 BuildRequires:  %{?scl_prefix}rubygem(fssm) >= 0.2.7
 BuildRequires:  %{?scl_prefix}rubygem(compass)
+BuildRequires:  %{?scl_prefix}rubygem(compass-rails)
+BuildRequires:  %{?scl_prefix}rubygem(therubyracer)
+BuildRequires:  %{?scl_prefix}rubygem(uglifier)
+BuildRequires:  %{?scl_prefix}rubygem(sass-rails)
 BuildRequires:  %{?scl_prefix}rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  %{?scl_prefix}rubygem(bundler_ext)
 BuildRequires:  %{?scl_prefix}rubygem(logging) >= 1.8.0
-BuildRequires:  %{?scl_prefix}rubygem(alchemy) >= 1.0.0
+BuildRequires:  %{?scl_prefix}rubygem(ui_alchemy-rails) >= 1.0.0
 BuildRequires:  asciidoc
 BuildRequires:  /usr/bin/getopt
 BuildRequires:  java >= 0:1.6.0
@@ -172,11 +176,9 @@ BuildRequires:       %{?scl_prefix}rubygem(tire) < 0.4
 BuildRequires:       %{?scl_prefix}rubygem(ldap_fluff)
 BuildRequires:       %{?scl_prefix}rubygem(apipie-rails) >= 0.0.18
 BuildRequires:       %{?scl_prefix}rubygem(maruku)
-BuildRequires:       %{?scl_prefix}rubygem(foreman_api)
 
 %description common
 Common bits for all Katello instances
-
 
 %package all
 BuildArch:      noarch
@@ -195,9 +197,6 @@ Requires:       qpid-cpp-server
 Requires:       qpid-cpp-client
 Requires:       qpid-cpp-client-ssl
 Requires:       qpid-cpp-server-ssl
-Requires:       foreman
-Requires:       foreman-postgresql
-Requires:       %{?scl_prefix}rubygem(foreman-katello-engine)
 # </katello-configure>
 
 
@@ -225,16 +224,6 @@ Requires:        %{?scl_prefix}rubygem(runcible) >= 0.4.1
 
 %description glue-pulp
 Katello connection classes for the Pulp backend
-
-%package glue-foreman
-BuildArch:      noarch
-Summary:         Katello connection classes for the Foreman backend
-Requires:        %{name}-common
-# dependencies from bundler.d/foreman.rb
-Requires:        %{?scl_prefix}rubygem(foreman_api) >= 0.0.18
-
-%description glue-foreman
-Katello connection classes for the Foreman backend
 
 %package glue-candlepin
 BuildArch:      noarch
@@ -434,10 +423,6 @@ export RAILS_ENV=build
 make -C locale check all-mo %{?_smp_mflags}
 # | sed -e '/Warning: obsolete msgid exists./,+1d' | sed -e '/Warning: fuzzy message was ignored./,+1d'
 
-#copy alchemy
-ALCHEMY_DIR=$(rpm -ql %{?scl_prefix}rubygem-alchemy | grep -o '/.*/vendor' | sed 's/vendor$//' | head -n1)
-cp -R $ALCHEMY_DIR* ./vendor/alchemy
-
 #use Bundler_ext instead of Bundler
 mv Gemfile Gemfile.in
 
@@ -448,16 +433,14 @@ fi
 
 %if ! 0%{?fastbuild:1}
     #compile SASS files
-    echo Compiling SASS files...
+    echo Compiling Assets...
+    mv lib/tasks lib/tasks_disabled
+    export BUNDLER_EXT_NOSTRICT=1
+    export BUNDLER_EXT_GROUPS="default assets"
     touch config/katello.yml
-%{?scl:scl enable %{scl} "}
-    compass compile
-%{?scl:"}
+    %{scl_rake} assets:precompile:all --trace
     rm config/katello.yml
-
-    #generate Rails JS/CSS/... assets
-    echo Generating Rails assets...
-    LC_ALL="en_US.UTF-8" jammit --config config/assets.yml -f
+    mv lib/tasks_disabled lib/tasks
 %endif
 
 #man pages
@@ -565,7 +548,6 @@ sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{bui
 
 #remove files which are not needed in the homedir
 rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
-rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
 
 #branding
@@ -613,8 +595,6 @@ usermod -a -G katello-shared tomcat
 %ghost %attr(600, katello, katello) %{_sysconfdir}/%{name}/secret_token
 %dir %{homedir}/app
 %{homedir}/app/controllers
-%exclude %{homedir}/app/controllers/api/foreman
-%exclude %{homedir}/app/controllers/foreman
 %{homedir}/app/helpers
 %{homedir}/app/mailers
 %dir %{homedir}/app/models
@@ -623,9 +603,15 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/models/candlepin
 %{homedir}/app/models/ext
 %{homedir}/app/models/roles_permissions
-%{homedir}/app/stylesheets
+%{homedir}/app/assets/
+%{homedir}/app/assets/stylesheets
+%{homedir}/app/assets/javascripts
+%{homedir}/app/assets/images
+%{homedir}/vendor
+%{homedir}/vendor/assets
+%{homedir}/vendor/assets/stylesheets
+%{homedir}/vendor/assets/images
 %{homedir}/app/views
-%exclude %{homedir}/app/views/foreman
 %{homedir}/autotest
 %{homedir}/ca
 %{homedir}/config
@@ -656,7 +642,6 @@ usermod -a -G katello-shared tomcat
 %exclude %{homedir}/script/pulp_integration_tests
 %{homedir}/locale
 %{homedir}/public
-%dir %attr(775, katello, katello) %{homedir}/public/stylesheets/compiled
 %if ! 0%{?nodoc:1}
 %exclude %{homedir}/public/apipie-cache
 %endif
@@ -664,7 +649,6 @@ usermod -a -G katello-shared tomcat
 %exclude %{homedir}/script/service-wait
 %{homedir}/spec
 %{homedir}/tmp
-%{homedir}/vendor
 %dir %{homedir}/.bundle
 %{homedir}/config.ru
 %{homedir}/Gemfile.in
@@ -692,9 +676,6 @@ usermod -a -G katello-shared tomcat
 %dir %{homedir}/lib
 %dir %{homedir}/app/lib
 %dir %{homedir}/app/lib/resources
-%{homedir}/app/lib/resources/abstract_model.rb
-%dir %{homedir}/app/lib/resources/abstract_model
-%{homedir}/app/lib/resources/abstract_model/indexed_model.rb
 %{homedir}/lib/util
 %{homedir}/app/lib/util
 %{homedir}/script/service-wait
@@ -719,16 +700,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/models/glue/provider.rb
 %{homedir}/app/lib/resources/candlepin.rb
 
-%files glue-foreman
-%{homedir}/bundler.d/foreman.rb
-%{homedir}/app/lib/resources/foreman.rb
-%{homedir}/app/lib/resources/foreman_model.rb
-%{homedir}/app/models/foreman
-%{homedir}/app/models/glue/foreman
-%{homedir}/app/controllers/api/foreman
-%{homedir}/app/controllers/foreman
-%{homedir}/app/views/foreman
-
 %files all
 
 %files headpin
@@ -740,13 +711,16 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/mailers
 %{homedir}/app/models
 %exclude %{homedir}/app/models/glue/*
-%exclude %{homedir}/app/models/foreman
-%exclude %{homedir}/app/controllers/api/foreman
-%exclude %{homedir}/app/controllers/foreman
-%exclude %{homedir}/app/views/foreman
 %exclude %{homedir}/lib/tasks/test.rake
 %exclude %{homedir}/lib/tasks/simplecov.rake
-%{homedir}/app/stylesheets
+%{homedir}/app/assets/
+%{homedir}/app/assets/stylesheets
+%{homedir}/app/assets/javascripts
+%{homedir}/app/assets/images
+%{homedir}/vendor
+%{homedir}/vendor/assets
+%{homedir}/vendor/assets/stylesheets
+%{homedir}/vendor/assets/images
 %{homedir}/app/views
 %{homedir}/autotest
 %{homedir}/ca
@@ -765,9 +739,6 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/notifications
 %{homedir}/app/lib/validators
 %exclude %{homedir}/app/lib/resources/candlepin.rb
-%exclude %{homedir}/app/lib/resources/abstract_model.rb
-%exclude %{homedir}/app/lib/resources/foreman_model.rb
-%exclude %{homedir}/app/lib/resources/foreman.rb
 %{homedir}/lib/tasks
 %{homedir}/lib/util
 %{homedir}/app/lib/util
@@ -808,6 +779,7 @@ usermod -a -G katello-shared tomcat
 
 %files devel
 %{homedir}/bundler.d/development.rb
+%{homedir}/bundler.d/assets.rb
 %{homedir}/bundler.d/development_boost.rb
 %{homedir}/lib/tasks/yard.rake
 %{homedir}/lib/tasks/hudson.rake

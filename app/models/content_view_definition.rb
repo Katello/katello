@@ -15,7 +15,6 @@ class ContentViewDefinition < ContentViewDefinitionBase
   include Glue::ElasticSearch::ContentViewDefinition if Katello.config.use_elasticsearch
   include Ext::LabelFromName
   include Authorization::ContentViewDefinition
-
   include AsyncOrchestration
 
   has_many :content_views, :dependent => :destroy
@@ -26,6 +25,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
     :presence => true
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
   validate :validate_content
+  validate :validate_filters
 
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
@@ -64,18 +64,51 @@ class ContentViewDefinition < ContentViewDefinitionBase
   end
 
   def generate_repos(view, notify = false)
+    # Publish algorithm
+    #
+    # Copy all rpms over
+    # Copy all errata over
+    # Copy all pkg groups over
+    # Copy all distro over
+    # Start Filtering errata in the copied
+    # Start Filtering package groups in the copied repo
+    # Start Filtering packages in the copied repo
+    # Remove all empty errata
+    # Remove all empty package groups
+    # Publish metadata
     async_tasks = []
-    clones = []
+    cloned_repos = []
+
+    # Copy all rpms over
+    # Copy all errata over
+    # Copy all pkg groups over
+    # Copy all distro over
     repos.each do |repo|
       clone = repo.create_clone(self.organization.library, view)
       async_tasks << repo.clone_contents(clone)
-      clones << clone
+      cloned_repos << clone
     end
     PulpTaskStatus::wait_for_tasks async_tasks.flatten(1)
-    clones.each do |clone|
-      clone.index_packages
-      clone.index_errata
+
+    # Start Filtering errata in the copied repo
+    # Start Filtering package groups in the copied repo
+    # Start Filtering packages in the copied repo
+    cloned_repos.each do |repo|
+      [FilterRule::ERRATA, FilterRule::PACKAGE_GROUP, FilterRule::PACKAGE].each do |content_type|
+        filter_clauses = unassociation_clauses(repo.library_instance, content_type)
+        if filter_clauses
+          pulp_task = repo.unassociate_by_filter(content_type, filter_clauses)
+          PulpTaskStatus::wait_for_tasks [pulp_task]
+        end
+      end
     end
+
+    cloned_repos.each do |repo|
+      repo.purge_empty_groups_errata
+      # update search indices for package and errata
+      repo.index_content
+    end
+
 
     if notify
       message = _("Successfully published content view '%{view_name}' from definition '%{definition_name}'.") %
@@ -84,7 +117,6 @@ class ContentViewDefinition < ContentViewDefinitionBase
       Notify.success(message, :request_type => "content_view_definitions___publish",
                      :organization => self.organization)
     end
-
   rescue => e
     Rails.logger.error(e)
     Rails.logger.error(e.backtrace.join("\n"))
@@ -99,30 +131,6 @@ class ContentViewDefinition < ContentViewDefinitionBase
     end
 
     raise e
-  end
-
-  # Retrieve a list of repositories associated with the definition.
-  # This includes all repositories (ie. combining those that are part of products associated with the definition
-  # as well as repositories that are explicitly associated with the definition).
-  def repos
-    repos = []
-    if self.composite?
-      self.component_content_views.each do |component_view|
-        component_view.repos(organization.library).each{|r| repos << r}
-      end
-    else
-      self.products.each do |prod|
-        prod_repos = prod.repos(organization.library).enabled
-        prod_repos.select{|r| r.in_default_view?}.each{|r| repos << r}
-      end
-      repos.concat(self.repositories)
-      repos.uniq!
-    end
-    repos
-  end
-
-  def has_content?
-    self.products.any? || self.repositories.any?
   end
 
   def has_promoted_views?
@@ -158,11 +166,10 @@ class ContentViewDefinition < ContentViewDefinitionBase
     excluded = ["type", "created_at", "updated_at"]
     cvd_archive = ContentViewDefinitionArchive.new(self.attributes.except(*excluded))
 
-    # TODO: copy filters
-    # cvd_archive.filters               = self.filters.map(&:clone)
     cvd_archive.repositories            = self.repositories
     cvd_archive.products                = self.products
     cvd_archive.component_content_views = self.component_content_views
+    cvd_archive.filters                 = self.filters.reload.map(&:clone_for_archive)
     cvd_archive.source_id               = self.id
     cvd_archive.save!
 
@@ -185,6 +192,35 @@ class ContentViewDefinition < ContentViewDefinitionBase
 
   protected
 
+  def unassociation_clauses(repo, content_type)
+    # find applicable filters
+    # split filter rules by content type, since each content type has its own copy call
+    # depending on include or exclude filters combine or remove
+    applicable_filters = filters.applicable(repo)
+
+    applicable_rules = FilterRule.class_for(content_type).where(:filter_id => applicable_filters)
+    inclusion_rules = applicable_rules.where(:inclusion => true)
+    exclusion_rules = applicable_rules.where(:inclusion => false)
+
+    #   If there is no include/exclude filters  -  Everything is included. - so do not delete anything
+    return if inclusion_rules.count == 0 && exclusion_rules.count == 0
+
+
+    #  If there are only exclude filters (aka blacklist filters),
+    #  then unassociate them from the repo
+    #  If there are only include filters (aka whitelist) then only the packages/errata included will get included.
+    #    Everything else is thus excluded.
+    #  If there are include and exclude filters, the exclude filters then the include filters, get processed first,
+    #     then the exclude filter excludes content from the set included by the include filters.
+    clauses = [generate_clauses(repo, inclusion_rules, true)] + [generate_clauses(repo, exclusion_rules, false)]
+    clauses = clauses.compact
+    if clauses.size > 1
+      return {'$or' => clauses}
+    elsif clauses.size == 1
+      return clauses.first
+    end
+  end
+
   def views_repos
     # Retrieve a hash where, key=view.id and value=Set(view's repo library instance ids)
     self.component_content_views.inject({}) do |view_repos, view|
@@ -197,7 +233,29 @@ class ContentViewDefinition < ContentViewDefinitionBase
 
   def validate_content
     if has_content? && self.composite?
-      errors.add(:base, _("cannot contain products, or repositories if it contains views"))
+      errors.add(:base, _("cannot contain products, or repositories if composite definition"))
+    elsif has_component_views? && !self.composite?
+      errors.add(:base, _("cannot contain views if not composite definition"))
+    end
+  end
+
+  def validate_filters
+    filters.each do |f|
+      f.validate_filter_products_and_repos(self.errors, self)
+      break if errors.any?
+    end
+  end
+
+
+  def generate_clauses(repo, rules, inclusion = true)
+    join_clause = "$nor"
+    join_clause = "$or" unless inclusion
+
+    if rules.count > 0
+      rule_items = rules.collect do |rule|
+        rule.generate_clauses(repo)
+      end.compact.flatten
+      {join_clause => rule_items} unless rule_items.empty?
     end
   end
 
