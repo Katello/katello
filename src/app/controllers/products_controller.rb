@@ -61,9 +61,9 @@ class ProductsController < ApplicationController
     notify.success _("Product '%s' created.") % product_params[:name]
 
     if requested_label.blank?
-      notify.success default_label_assigned(product)
+      notify.message default_label_assigned(product)
     elsif requested_label != product.label
-      notify.success label_overridden(product, requested_label)
+      notify.message label_overridden(product, requested_label)
     end
     render :json=>{:id=>product.id}
   end
