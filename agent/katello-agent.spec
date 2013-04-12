@@ -1,5 +1,5 @@
 Name: katello-agent
-Version: 1.3.1
+Version: 1.3.2
 Release: 1%{?dist}
 Summary: The Katello Agent
 Group:   Development/Languages
@@ -48,6 +48,10 @@ LC_ALL=C service goferd status | grep 'is running' && service goferd restart
 %doc LICENSE
 
 %changelog
+* Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.3.2-1
+- remove old changelog entries (msuchy@redhat.com)
+- 872528 - restart gofer after katello-agent upgrade (msuchy@redhat.com)
+
 * Mon Jan 07 2013 Justin Sherrill <jsherril@redhat.com> 1.3.1-1
 - Refit agent for pulp v2. (jortel@redhat.com)
 
