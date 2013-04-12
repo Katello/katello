@@ -135,20 +135,19 @@ class FilterRulesController < ApplicationController
           @rule.parameters[:date_range] ||= {}
           if params[:parameter][:date_range][:start]
             result = params[:parameter][:date_range][:start]
-            @rule.parameters[:date_range][:start] = result
+            @rule.start_date = parse_calendar_date(result)
           elsif params[:parameter][:date_range][:end]
             result = params[:parameter][:date_range][:end]
-            @rule.parameters[:date_range][:end] = result
+            @rule.end_date = parse_calendar_date(result)
           end
         elsif params[:parameter][:errata_type]
           @rule.parameters[:errata_type] ||= []
-          @rule.parameters[:errata_type] = params[:parameter][:errata_type]
+          @rule.errata_types = params[:parameter][:errata_type]
           result = selected_errata_types(@rule)
         else
           result = params[:parameter].values.first
           @rule.parameters.merge!(params[:parameter])
         end
-
         # a parameter may not contain both units and the parameter provided; therefore, remove the units
         @rule.parameters.delete(:units)
         @rule.save!
