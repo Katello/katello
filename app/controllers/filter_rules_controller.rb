@@ -127,7 +127,8 @@ class FilterRulesController < ApplicationController
 
         render :partial => item_partial(@rule),
                :locals => {:editable => @view_definition.editable?, :rule => @rule,
-                           :unit => params[:parameter][:unit]} and return
+                           :unit => params[:parameter][:unit]}
+        return
 
       else
         if params[:parameter][:date_range]
