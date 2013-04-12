@@ -19,6 +19,21 @@ module ContentViewDefinitionsHelper
     _("Environment(s): %{environments}") % {:environments => view_version.environments.collect{|e| e.name}.join(', ')}
   end
 
+  def content_view_search_link(view)
+    # Build a link to the content search page to allow the user
+    # to view details on all versions of the content view across
+    # all environments.  This will allow the user to more easily
+    # view the differences between environments/versions.
+    content_search_index_path + search_string(view)
+  end
+
+  def search_string(view)
+    views = {:autocomplete => {0 => {:id => view.id, :name => view.name}}}
+    repos = {:search => ""}
+    env_ids = view.environments.map(&:id)
+    "#" + {:search => {:views => views, :repos => repos, :content_type => "repos"}, :envs => env_ids}.to_param
+  end
+
   def publish_button(definition)
     if definition.has_repo_conflicts?
       content_tag(:td,
