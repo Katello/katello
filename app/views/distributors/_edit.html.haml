@@ -2,7 +2,7 @@
   :plain
     KT.available_environments = $.parseJSON('#{escape_javascript(environments.to_json)}');
 
-= javascript :edit_helpers
+= javascript 'widgets/jquery.jeditable.helpers'
 = render :partial => "distributor_tupane_header_nav"
 
 = content_for :content do
