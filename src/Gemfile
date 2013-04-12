@@ -11,7 +11,6 @@ source 'http://rubygems.org'
 gem 'rails', '~> 3.2.8'
 gem 'json'
 gem 'rest-client', :require => 'rest_client'
-gem 'jammit', '>= 0.5.4'
 gem 'rails_warden', '>= 0.5.2'
 gem 'net-ldap'
 gem 'oauth'
@@ -37,10 +36,12 @@ gem 'uuidtools'
 # Stuff for view/display/frontend
 gem 'haml', '~> 3.1.2'
 gem 'haml-rails', "= 0.3.4"
+gem 'sass-rails'
 gem 'compass-rails'
 gem 'compass'
 gem 'compass-960-plugin', '>= 0.10.4', :require => 'ninesixty'
 gem 'simple-navigation', '>= 3.3.4'
+gem 'ui_alchemy-rails', '1.0.4'
 
 # Stuff for i18n
 gem 'gettext_i18n_rails'
