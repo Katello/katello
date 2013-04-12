@@ -32,7 +32,7 @@
 %endif
 
 Name:           katello
-Version:        1.3.15
+Version:        1.3.16
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -833,6 +833,13 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.3.16-1
+- content views - minor chgs to views for asset pipeline
+  (bbuckingham@redhat.com)
+- content view - fix issue w/ deleting filters and filter rules
+  (bbuckingham@redhat.com)
+- 947859 - Created a way to remove views from keys (daviddavis@redhat.com)
+
 * Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.3.15-1
 - Merge pull request #1934 from witlessbird/puppet-seeding
   (witlessbird@gmail.com)
