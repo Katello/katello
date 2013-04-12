@@ -127,6 +127,7 @@ class ContentViewVersion < ActiveRecord::Base
     PulpTaskStatus::wait_for_tasks async_tasks unless async_tasks.blank?
 
     async_tasks = []
+    repos_to_filter = []
     definition_repos_hash.each do |repo_id, repo|
       # the repos from the definition are based upon initial synced repos, we need to
       # determine if each of those repos has been cloned in the view...
@@ -135,14 +136,20 @@ class ContentViewVersion < ActiveRecord::Base
         # this repo doesn't currently exist in the library
         clone = repo.create_clone(self.content_view.organization.library, self.content_view)
         async_tasks << repo.clone_contents(clone)
+        repos_to_filter << clone
       else
         # this repo already exists in the library, so update it
         library_clone = Repository.find(library_clone) # reload readonly obj
         library_clone.content_view_version = self
         library_clone.save!
         async_tasks << repo.clone_contents(library_clone)
+        repos_to_filter << library_clone
       end
     end
+    if has_definition?
+      self.content_view.content_view_definition.unassociate_contents(repos_to_filter)
+    end
+
     library_version.destroy if library_version.environments.length == 0
     async_tasks.flatten(1)
   end

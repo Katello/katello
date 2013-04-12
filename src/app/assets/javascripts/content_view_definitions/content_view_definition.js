@@ -75,8 +75,7 @@ KT.content_view_definition = (function(){
         start_updater();
     },
     initialize_refresh = function() {
-        $('.refresh_action').unbind('click');
-        $('.refresh_action').bind('click', function(event) {
+        $('.refresh_action').unbind('click').bind('click', function(event) {
             event.preventDefault();
             $.ajax({
                 type: 'POST',
@@ -284,7 +283,7 @@ KT.content_view_definition = (function(){
         $("#content_views").treeTable({
             expandable: true,
             initialState: "expanded",
-            clickableNodeNames: true,
+            clickableNodeNames: false,
             onNodeShow: function(){$.sparkline_display_visible();}
         });
     },
@@ -374,8 +373,7 @@ KT.content_view_definition_filters = (function(){
         if (pane.length === 0) {
             return;
         }
-        $('.inclusion').unbind('change');
-        $('.inclusion').change(function(){
+        $('.inclusion').unbind('change').change(function(){
             $('#update_form').ajaxSubmit({
                 type: "PUT",
                 cache: false,
@@ -388,8 +386,7 @@ KT.content_view_definition_filters = (function(){
             });
         });
 
-        $('.filter_method').unbind('change');
-        $('.filter_method').change(function() {
+        $('.filter_method').unbind('change').change(function() {
             $.ajax({
                 type: 'GET',
                 url: $(this).data('url'),
@@ -402,8 +399,94 @@ KT.content_view_definition_filters = (function(){
             });
         });
 
+        initialize_version_save($('.save_version'));
+        initialize_version_select($('.version_type'));
+        initialize_version_input($('.input.input'));
+
         initialize_common_rule_params();
         initialize_errata_rule_params();
+    },
+    initialize_version_save = function(version_save_button) {
+        version_save_button.unbind('click').click(function(e) {
+            // user clicked save to commit some changes to a pkg filter rule
+            e.preventDefault();
+            var parameter_name,
+                version_selector = $(this).parent('.version_selector'),
+                version,
+                min_version,
+                max_version,
+                range_inputs;
+
+            parameter_name = $(this).closest('tr').find('td.parameter_name').find('.parameter_checkbox').data('id');
+
+            type = version_selector.find('.version_type').val();
+            if (type === 'version') {
+                version = version_selector.find('input.version').val();
+            } else if (type === 'min_version') {
+                min_version = version_selector.find('input.version').val();
+            } else if (type === 'max_version') {
+                max_version = version_selector.find('input.version').val();
+            } else if (type === 'version_range') {
+                range_inputs = version_selector.find('input.range');
+                min_version = range_inputs.first().val();
+                max_version = range_inputs.last().val();
+            }
+
+            disable_version_selector(version_selector);
+
+            $.ajax({
+                type: 'PUT',
+                url: $(this).attr('href'),
+                data:
+                { 'parameter':
+                    { 'unit' :
+                        { 'name' : $(this).closest('tr').find('td.parameter_name').find('.parameter_checkbox').data('id'),
+                          'version' : version,
+                          'min_version' : min_version,
+                          'max_version' : max_version
+                        }
+                    }
+                },
+                cache: false,
+                success: function(html) {
+                    version_selector.find('.save_version').hide();
+                    if (type === 'all_versions') {
+                        version_selector.find('input.input').val('');
+                    } else if (type === 'version_range') {
+                        version_selector.find('input.version').val('');
+                    } else {
+                        version_selector.find('input.range').val('');
+                    }
+                    enable_version_selector(version_selector);
+                },
+                error: function() {
+                    enable_version_selector(version_selector);
+                }
+            });
+        });
+    },
+    initialize_version_select = function(version_select) {
+        version_select.unbind('change').change(function() {
+            // user changed the version type (e.g. all, older than..) on a pkg filter rule
+            var version_selector = $(this).parent('.version_selector');
+
+            if ($(this).val() === 'all_versions') {
+                version_selector.find('.input').hide();
+            } else if ($(this).val() === 'version_range') {
+                version_selector.find('.version').hide();
+                version_selector.find('.range').show();
+            } else {
+                version_selector.find('.range').hide();
+                version_selector.find('.version').show();
+            }
+            version_selector.find('.save_version').show();
+        });
+    },
+    initialize_version_input = function(version_input) {
+        version_input.unbind('keypress').keypress(function() {
+            var version_selector = $(this).parent('.version_selector');
+            version_selector.find('.save_version').show();
+        });
     },
     initialize_common_rule_params = function() {
         var pane = $("#parameter_list");
@@ -411,8 +494,7 @@ KT.content_view_definition_filters = (function(){
             return;
         }
 
-        $('#add_rule').unbind('click');
-        $('#add_rule').click(function() {
+        $('#add_rule').unbind('click').click(function() {
             var rule_input = $('input#rule_input').val(),
                 data;
 
@@ -432,8 +514,11 @@ KT.content_view_definition_filters = (function(){
                         empty_row.after(html);
                         empty_row.hide();
                         initialize_checkboxes($("#parameters_form"));
-                    },
-                    error: function() {
+
+                        var new_parameter = $('.parameter_checkbox[data-id=' + rule_input + ']').closest('tr');
+                        initialize_version_save(new_parameter.find('.save_version'));
+                        initialize_version_select(new_parameter.find('.version_type'));
+                        initialize_version_input(new_parameter.find('.input.input'));
                     }
                 });
             }
@@ -451,18 +536,22 @@ KT.content_view_definition_filters = (function(){
     },
     register_remove = function(form) {
         var remove_button = form.find("#remove_button");
-        remove_button.unbind('click');
-        remove_button.click(function(){
-            var btn = $(this);
+        remove_button.unbind('click').click(function(){
+            var btn = $(this), parameters = [];
             if(btn.hasClass("disabled")){
                 return;
             }
-            disable_button(remove_button);
+            disable(remove_button);
 
-            form.ajaxSubmit({
+            $('input.parameter_checkbox:checked').each(function() {
+                parameters.push($(this).val());
+            });
+
+            $.ajax({
                 type: "DELETE",
                 url: btn.data("url"),
                 cache: false,
+                data: {'units': parameters},
                 success: function(){
                     // remove the deleted filters from the table and show the 'empty' message
                     // if all filters have been deleted
@@ -470,20 +559,30 @@ KT.content_view_definition_filters = (function(){
                     if ($('input[type="checkbox"]').length === 0) {
                         $('tr#empty_row').show();
                     }
-                    disable_button(remove_button);
+                    disable(remove_button);
                 },
                 error: function(){
-                    enable_button(remove_button);
+                    enable(remove_button);
                 }
             });
         });
-        disable_button(remove_button);
+        disable(remove_button);
     },
-    disable_button = function(button) {
+    disable_version_selector = function(selector) {
+        disable(selector.find('select.version_type'));
+        disable(selector.find('input.input'));
+        disable(selector.find('a.save_version'))
+    },
+    enable_version_selector = function(selector) {
+        enable(selector.find('select.version_type'));
+        enable(selector.find('input.input'));
+        enable(selector.find('a.save_version'))
+    },
+    disable = function(button) {
         button.attr('disabled', 'disabled');
         button.addClass('disabled');
     },
-    enable_button = function(button) {
+    enable = function(button) {
         button.removeAttr('disabled');
         button.removeClass('disabled');
     },
@@ -491,13 +590,12 @@ KT.content_view_definition_filters = (function(){
         var checkboxes = $('input[type="checkbox"]'),
             button = form.find("#remove_button");
 
-        checkboxes.unbind('change');
-        checkboxes.each(function(){
+        checkboxes.unbind('change').each(function(){
             $(this).change(function(){
                 if($(this).is(":checked")) {
-                    enable_button(button);
+                    enable(button);
                 } else if($('input[type="checkbox"]:checked').length === 0) {
-                    disable_button(button);
+                    disable(button);
                 }
             });
         });
