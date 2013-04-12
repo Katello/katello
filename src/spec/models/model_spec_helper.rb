@@ -138,7 +138,6 @@ EOKEY
       Runcible::Resources::Role.stub!(:remove).and_return(true)
     end
 
-    User.disable_foreman_orchestration! !options[:keep_foreman] if Katello.config.use_foreman
   end
 
 

@@ -26,7 +26,6 @@ describe Api::PingController do
         :pulp_auth => {:result => "ok", :duration_ms => "10"},
         :candlepin_auth => {:result => "ok", :duration_ms => "10"},
         :katello_jobs => {:result => "ok", :duration_ms => "10"},
-        :foreman_auth => {:result => "ok", :duration_ms => "10"}
       }
     }
   }

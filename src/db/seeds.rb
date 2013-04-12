@@ -37,14 +37,7 @@ unless user_admin
       :email    => first_user_email,
       :remote_id => first_user_name)
   User.current = user_admin
-  if Katello.config.use_foreman
-    foreman_admin_user = ::Foreman::User.all(:search => 'login=admin').first or
-        raise 'could not find foreman-admin-user'
-    user_admin.foreman_id = foreman_admin_user.id
-    user_admin.disable_foreman_orchestration { |admin| admin.save! }
-  else
-    user_admin.save!
-  end
+  user_admin.save!
 end
 raise "Unable to create admin user: #{format_errors user_admin}" if user_admin.nil? or user_admin.errors.size > 0
 

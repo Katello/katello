@@ -73,7 +73,7 @@ class Notifications::Notifier
     note      = args.pop
 
     case exception
-    when ActiveRecord::RecordInvalid, Resources::AbstractModel::Invalid
+    when ActiveRecord::RecordInvalid
       invalid_record(exception.record, { :persist => true }.merge(options))
     else
       options = { :level   => :error,

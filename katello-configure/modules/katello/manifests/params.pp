@@ -64,13 +64,11 @@ class katello::params {
   $ssl_certificate_key_file = "/etc/candlepin/certs/candlepin-ca.key"
   $ssl_certificate_ca_file  = $ssl_certificate_file
 
-  # Foreman settings
-  case $deployment {
-    'katello': {
+  # Foreman settings (only if the foreman pieces are installed)
+  if defined(foreman) {
       $use_foreman = true
-    } default : {
+  } else {
       $use_foreman = false
-    }
   }
   $install_foreman = false
   $foreman_start_port         = "5500"

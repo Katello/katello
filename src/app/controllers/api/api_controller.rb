@@ -26,10 +26,6 @@ class Api::ApiController < ActionController::Base
   rescue_from RestClient::ExceptionWithResponse, :with => :exception_with_response
   rescue_from ActiveRecord::RecordInvalid, :with => :process_invalid
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
-  if Katello.config.use_foreman
-    rescue_from Resources::ForemanModel::Invalid, :with => :process_invalid
-    rescue_from Resources::ForemanModel::NotFound, :with => :record_not_found
-  end
   rescue_from Errors::NotFound, :with => proc { |e| render_exception(HttpErrors::NOT_FOUND, e) }
 
   rescue_from(Errors::SecurityViolation, :with => proc do |e|
@@ -205,12 +201,10 @@ class Api::ApiController < ActionController::Base
     logger.error exception.class
     logger.debug exception.backtrace.join("\n")
     errors = case exception
-    when Katello.config.use_foreman && Resources::ForemanModel::Invalid
-      exception.resource.errors
     when ActiveRecord::RecordInvalid
       exception.record.errors
     else
-      raise ArgumentError.new("Expected ForemanModel::Invalid or ActiveRecord::RecordInvalid exception.")
+      raise ArgumentError.new("ActiveRecord::RecordInvalid exception.")
     end
 
     errors.messages.each_pair do |c,e|

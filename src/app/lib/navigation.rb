@@ -18,7 +18,6 @@ module Navigation
     base.send :include, MainMenu
     base.send :include, NotificationsMenu
     base.send :include, OrganizationMenu
-    base.send :include, SetupMenu
     base.send :include, SystemMenu
   end
 end
