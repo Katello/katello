@@ -32,7 +32,7 @@
 %endif
 
 Name:           katello
-Version:        1.4.0
+Version:        1.4.1
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -834,6 +834,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.4.1-1
+- version bump to 1.4 (jsherril@redhat.com)
+
 * Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.3.17-1
 - Spec - Updating spec to set RAILS_ENV=production on asset compile.
   (ehelms@redhat.com)
