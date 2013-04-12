@@ -29,4 +29,14 @@ class Ldap
     ldap.is_in_groups?(uid, grouplist)
   end
 
+  def self.valid_user?(uid)
+    ldap = LdapFluff.new
+    ldap.valid_user?(uid)
+  end
+
+  def self.valid_group?(gid)
+    ldap = LdapFluff.new
+    ldap.valid_group?(gid)
+  end
+
 end
