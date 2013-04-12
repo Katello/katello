@@ -28,12 +28,10 @@ module ContentViewDefinitionsHelper
   end
 
   def search_string(view)
-    search = "#search[views][autocomplete][0][id]=" + view.id.to_s
-    search += "&search[views][autocomplete][0][name]=" + view.name.gsub(' ', '+')
-    search += "&search[repos][search]="
-    search += "&search[content_type]=repos"
-    search += view.environments.inject("") {|all_envs, env| all_envs << "&envs[]=" + env.id.to_s}
-    search
+    views = {:autocomplete => {0 => {:id => view.id, :name => view.name}}}
+    repos = {:search => ""}
+    env_ids = view.environments.map(&:id)
+    "#" + {:search => {:views => views, :repos => repos, :content_type => "repos"}, :envs => env_ids}.to_param
   end
 
   def publish_button(definition)
