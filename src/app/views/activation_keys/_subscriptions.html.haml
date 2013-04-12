@@ -19,7 +19,7 @@
           %tr{:class => 'parent ' + cssclass, 'data-family_begin' => product_family_name}
             %td{:colspan => "4"}
               %a.clickable.product_family
-                = image_tag('embed/icons/expander-collapsed.png', :alt => _('Expand'))
+                = image_tag('icons/expander-collapsed.png', :alt => _('Expand'))
 
               = check_box_tag "family[#{product_family_name}]", false, false, :class => :family_checkbox
               %strong #{product_family_name} #{_("(%{n} Types)") % {:n =>num_subscriptions_per_family}}
