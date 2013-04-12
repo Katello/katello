@@ -26,5 +26,10 @@ Src::Application.configure do
   #ActiveSupport::Dependencies.explicitly_unloadable_constants << "::Runcible::Resources"
   #ActiveSupport::Dependencies.explicitly_unloadable_constants << "::Runcible::Extensions"
 
+  #Developemtn asset pipeline settings
+  config.assets.compile   = true
+  config.assets.compress  = false
+  config.assets.debug     = true
+
   Bundler.require(:debugging, Rails.env)
 end
