@@ -255,7 +255,7 @@ class ContentViewDefinitionsController < ApplicationController
 
     if params[:repos]
       repo_ids = params[:repos].empty? ? [] : Repository.libraries_content_readable(current_organization).
-          where(:id => params[:repos].values.flatten).pluck(:id)
+          where(:id => params[:repos].values.flatten).pluck("repositories.id")
 
       @view_definition.repository_ids = repo_ids
     end
