@@ -97,6 +97,7 @@ Src::Application.routes.draw do
           get :edit_parameter_list
           get :edit_date_type_parameters
           put :add_parameter
+          put :update_parameter
           delete :destroy_parameters
         end
       end

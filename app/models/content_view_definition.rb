@@ -90,25 +90,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
     end
     PulpTaskStatus::wait_for_tasks async_tasks.flatten(1)
 
-    # Start Filtering errata in the copied repo
-    # Start Filtering package groups in the copied repo
-    # Start Filtering packages in the copied repo
-    cloned_repos.each do |repo|
-      [FilterRule::ERRATA, FilterRule::PACKAGE_GROUP, FilterRule::PACKAGE].each do |content_type|
-        filter_clauses = unassociation_clauses(repo.library_instance, content_type)
-        if filter_clauses
-          pulp_task = repo.unassociate_by_filter(content_type, filter_clauses)
-          PulpTaskStatus::wait_for_tasks [pulp_task]
-        end
-      end
-    end
-
-    cloned_repos.each do |repo|
-      repo.purge_empty_groups_errata
-      # update search indices for package and errata
-      repo.index_content
-    end
-
+    unassociate_contents(cloned_repos)
 
     if notify
       message = _("Successfully published content view '%{view_name}' from definition '%{definition_name}'.") %
@@ -131,6 +113,30 @@ class ContentViewDefinition < ContentViewDefinitionBase
     end
 
     raise e
+  end
+
+  # Runs through the filtering process
+  # and unassociates contents dictated
+  # by the filters and filter rules
+  def unassociate_contents(repos)
+    # Start Filtering errata in the copied repo
+    # Start Filtering package groups in the copied repo
+    # Start Filtering packages in the copied repo
+    repos.each do |repo|
+      [FilterRule::ERRATA, FilterRule::PACKAGE_GROUP, FilterRule::PACKAGE].each do |content_type|
+        filter_clauses = unassociation_clauses(repo.library_instance, content_type)
+        if filter_clauses
+          pulp_task = repo.unassociate_by_filter(content_type, filter_clauses)
+          PulpTaskStatus::wait_for_tasks [pulp_task]
+        end
+      end
+    end
+
+    repos.each do |repo|
+      repo.purge_empty_groups_errata
+      # update search indices for package and errata
+      repo.index_content
+    end
   end
 
   def has_promoted_views?
