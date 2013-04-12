@@ -8,11 +8,11 @@ require 'util/password'
 require 'util/puppet'
 
 # variables which are taken from Puppet
-first_user_name = Util::Puppet.config_value("user_name") || 'admin'
-first_user_password = Util::Puppet.config_value("user_pass") || 'admin'
-first_user_email= Util::Puppet.config_value("user_email") || 'root@localhost'
-first_org_name = Util::Puppet.config_value("org_name") || 'ACME_Corporation'
-first_org_label = Util::Puppet.config_value("org_label") || 'ACME_Corporation'
+first_user_name = (un = Util::Puppet.config_value("user_name")).blank? ? 'admin' : un
+first_user_password = (pw = Util::Puppet.config_value("user_pass")).blank? ? 'admin' : pw
+first_user_email= (em = Util::Puppet.config_value("user_email")).blank? ? 'root@localhost' : em
+first_org_name = (org = Util::Puppet.config_value("org_name")).blank? ? 'ACME_Corporation' : org
+first_org_label = (lbl = Util::Puppet.config_value("org_label")).blank? ? 'ACME_Corporation' : lbl
 
 def format_errors model=nil
   return '(nil found)' if model.nil?
