@@ -40,7 +40,6 @@ class katello::config {
                 'katello' => [
                   Class["candlepin::service"], 
                   Class["pulp::service"], 
-                  Class["foreman::service"], 
                   File["${katello::params::log_base}"], 
                   File["${katello::params::log_base}/production.log"], 
                   File["${katello::params::log_base}/production_sql.log"], 
@@ -97,7 +96,7 @@ class katello::config {
     creates => "/var/lib/katello/db_seed_done",
     before  => Class["katello::service"],
     require => $katello::params::deployment ? {
-                'katello' => [ Exec["katello_migrate_db"], Class["candlepin::service"], Class["pulp::service"], Class["foreman::service"], File["${katello::params::log_base}"] ],
+                'katello' => [ Exec["katello_migrate_db"], Class["candlepin::service"], Class["pulp::service"], File["${katello::params::log_base}"] ],
                 'headpin' => [ Exec["katello_migrate_db"], Class["candlepin::service"], Class["thumbslug::service"], File["${katello::params::log_base}"] ],
                 default => [],
     },
@@ -122,4 +121,9 @@ class katello::config {
     default : {}
   }
   
+  if $katello::params::use_foreman {
+    Class["foreman::service"] -> Exec["katello_db_printenv"]
+    Class["foreman::service"] -> Exec["katello_seed_db"]
+    Class["foreman"] -> Class["katello::config"]
+  }
 }

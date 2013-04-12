@@ -14,9 +14,8 @@ require 'util/password'
 
 class User < ActiveRecord::Base
   include Glue::Pulp::User if Katello.config.use_pulp
-  include Glue::Foreman::User if Katello.config.use_foreman
   include Glue::ElasticSearch::User if Katello.config.use_elasticsearch
-  include Glue if Katello.config.use_cp || Katello.config.use_foreman || Katello.config.use_pulp
+  include Glue if Katello.config.use_cp || Katello.config.use_pulp
   include AsyncOrchestration
   include Ext::IndexedModel
 

@@ -12,6 +12,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 %global homedir %{_datarootdir}/katello/install
+%if "%{?scl}" == "ruby193"
+    %global scl_prefix %{scl}-
+%endif
 
 Name:           katello-configure
 Version:        1.3.6
@@ -43,6 +46,17 @@ BuildArch: noarch
 %description
 Provides katello-configure script which configures Katello installation and
 katello-upgrade which handles upgrades between versions.
+
+%package foreman
+BuildArch:      noarch
+Summary:        install and configure Foreman on the same machine
+Requires:       foreman
+Requires:       foreman-postgresql
+Requires:       %{?scl_prefix}rubygem(foreman-katello-engine)
+
+%description foreman
+Install and configure Foreman on the same machine. With this subpackage installed,
+running katello-configure will configure the Foreman as well.
 
 %prep
 %setup -q
@@ -121,7 +135,10 @@ chmod +x -R %{buildroot}%{homedir}/upgrade-scripts/*
 %{_mandir}/man1/katello-upgrade.1*
 %{_mandir}/man1/katello-passwd.1*
 %{_mandir}/man1/katello-configure-answer.1*
+%exclude %{homedir}/puppet/modules/foreman
 
+%files foreman
+%{homedir}/puppet/modules/foreman
 
 %changelog
 * Wed Jan 30 2013 Justin Sherrill <jsherril@redhat.com> 1.3.6-1

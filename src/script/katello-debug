@@ -31,6 +31,8 @@ end
 
 optparse.parse!
 
+use_foreman = system('rpm -q foreman &>/dev/null')
+
 # Check that we are running as root
 if Process.uid != 0
   puts("#{NAME} must be run as root")
@@ -119,7 +121,7 @@ sources += KATELLO_HEADPIN
 sources += ELASTIC_SEARCH
 sources += CANDLEPIN
 sources += PULP if deployment == 'katello'
-sources += FOREMAN if deployment == 'katello'
+sources += FOREMAN if use_foreman
 sources += THUMBSLUG if deployment == 'headpin'
 
 
@@ -169,7 +171,9 @@ end
 if deployment == 'katello'
   `sed -i -e 's/^\\(default_password:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/pulp.conf')}`
   `sed -i -e 's/^\\(oauth_secret:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/pulp.conf')}`
+  if use_foreman
   `sed -i -e 's/^\\(.*password\\).*$/\\1: **********************/' #{File.join(target_dir, '/etc/foreman/database.yml')}`
+  end
 end
 `sed -i -e 's/^\\(.*secret\\).*$/\\1 = **********************/' #{File.join(target_dir, '/etc/candlepin/candlepin.conf')}`
 `sed -i -e 's/^\\(.*password\\).*$/\\1 = **********************/' #{File.join(target_dir, '/etc/candlepin/candlepin.conf')}`
