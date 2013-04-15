@@ -25,6 +25,7 @@ namespace "ptest" do
 
 end
 
+=begin
 if defined?(MiniTest)
   namespace :minitest do
     Rake::Task["minitest"].clear
@@ -108,3 +109,4 @@ if defined?(MiniTest)
     end
   end
 end
+=end
