@@ -77,11 +77,12 @@ Src::Application.routes.draw do
       put :update_component_views
     end
 
-    resources :content_view, :only => [], :controller => :content_view_definitions do
+    resources :content_views, :only => [] do
       member do
         post :refresh
       end
     end
+
     resources :filters, :controller => :filters, :only => [:index, :new, :create, :edit, :update] do
       collection do
         delete :destroy_filters

@@ -11,13 +11,47 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class ContentViewsController < ApplicationController
-  before_filter :authorize
+
+  helper ContentViewDefinitionsHelper
+
+  before_filter :find_content_view_definition, :except => [:auto_complete]
+  before_filter :find_content_view, :only => [:refresh]
+  before_filter :authorize #after find_content_view_definition, since the definition is required for authorization
 
   def rules
-    auto_complete_test = lambda { ContentView.any_readable?(current_organization) }
+    manage_view_rule = lambda { @view.content_view_definition.publishable? }
+    auto_complete_rule = lambda { ContentView.any_readable?(current_organization) }
     {
-      :auto_complete => auto_complete_test
+      :destroy => manage_view_rule,
+      :refresh => manage_view_rule,
+      :auto_complete => auto_complete_rule
     }
+  end
+
+  def refresh
+    initial_version = @view.version(current_organization.library).try(:version)
+
+    new_version = @view.refresh_view({:notify => true})
+
+    notify.success(_("Started generating version %{view_version} of content view '%{view_name}'.") %
+                       {:view_name => @view.name, :view_version => new_version.version})
+
+    render :partial => 'content_view_definitions/views/view',
+           :locals => { :view_definition => @view.content_view_definition, :view => @view,
+                        :task => new_version.task_status }
+  rescue => e
+    current_version = @view.version(current_organization.library).try(:version)
+
+    if (current_version == initial_version)
+      notify.exception(_("Failed to generate a new version of content view '%{view_name}'.") %
+                           {:view_name => @view.name}, e)
+    else
+      notify.exception(_("Failed to generate version %{view_version} of content view '%{view_name}'.") %
+                           {:view_name => @view.name, :view_version => current_version}, e)
+    end
+
+    log_exception(e)
+    render :text => e.to_s, :status => 500
   end
 
   def auto_complete
@@ -32,5 +66,15 @@ class ContentViewsController < ApplicationController
     render :json=>content_views.collect{|s| {:label=>s.name, :value=>s.name, :id=>s.id}}
   rescue Tire::Search::SearchRequestFailed => e
     render :json=>Support.array_with_total
+  end
+
+  protected
+
+  def find_content_view_definition
+    @view_definition = ContentViewDefinition.find(params[:content_view_definition_id])
+  end
+
+  def find_content_view
+    @view = ContentView.find(params[:id])
   end
 end
