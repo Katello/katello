@@ -1,0 +1,63 @@
+@import "katello_colors";
+@import "alchemy-tables/tables";
+
+.container_16 {
+  float: none;
+}
+
+.table .active-column {
+  background: rgb(216, 216, 216) !important
+}
+
+th {
+  cursor: pointer !important;
+  font-weight: bold;
+}
+
+tr:hover td,
+tr.focus td{
+  background-color: $listhover_color;
+  color:#FFF;
+}
+
+td, th {
+  border-left: 1px solid #CCC;
+  border-right: 1px solid #CCC;
+}
+
+th {
+  border-top: 1px solid #CCC !important;
+  border-bottom: 2px solid #CCC !important;
+}
+
+.table tr.active {
+  background-color: $listhover_color !important;
+  color:#FFF;
+}
+
+input {
+  background: white !important;
+}
+
+th:hover {
+  background: white;
+}
+
+.spinner {
+  display: inline-block;
+  margin: 0 4px;
+}
+
+.table-mask {
+  opacity: 0.4;
+}
+
+.table-toolbar {
+  background: rgb(238, 238, 238);
+  overflow: auto;
+  padding: 10px 12px 4px 12px;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 1px solid #CCC;
+  border-radius: 5px 5px 0 0;
+}
