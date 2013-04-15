@@ -63,7 +63,7 @@ $(document).ready(function() {
     // These run after the subscribe/unsubscribe forms have been submitted to update
     // the left hand list entry (which reflects the subscribed status of the distributor).
     $('#unsubscribe').live('ajax:complete', function(evt, data, status, xhr){
-        var id = $('.left').find('.active');
+        var id = $('.left_panel').find('.active');
         var url = id.attr('data-ajax_url');
         KT.panel.list.refresh(id.attr('id'), url);
         $(this).find('input[type="submit"]').removeAttr('disabled');
@@ -72,7 +72,7 @@ $(document).ready(function() {
     });
 
     $('#subscribe').live('ajax:complete', function(evt, data, status, xhr){
-        var id = $('.left').find('.active');
+        var id = $('.left_panel').find('.active');
         var url = id.attr('data-ajax_url');
         KT.panel.list.refresh(id.attr('id'), url);
         $(this).find('input[type="submit"]').removeAttr('disabled');
@@ -231,7 +231,7 @@ KT.subs = (function() {
     downloadSetup = function() {
         $('#download_manifest').live('click', function(e) {
             e.preventDefault();  //stop the browser from following
-            var id = $('.left').find('.active');
+            var id = $('.left_panel').find('.active');
             id = id.attr('id').substring("distributor_".length);
             var filename = $('#distributor_download_filename').val();
             var download_url = KT.routes.download_distributor_path(id) + "?filename=" + filename;

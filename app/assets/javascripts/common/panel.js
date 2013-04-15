@@ -24,15 +24,15 @@ var thisPanel = null,
 var last_ajax_panelpage;
 
 $(document).ready(function () {
-    page_width = $('#maincontent .maincontent').width();
-    left = $('.left');
-    right = $('.right');
+    page_width = $('.center').width();
+    left = $('.left_panel');
+    right = $('.right_panel');
     left.resize(function () {
         var apanel = $('.panel');
         panelLeft = left.width();
         $('.block').not('#new').width(panelLeft - 17);
         apanel.width((page_width - 21) - panelLeft);
-        right.width((page_width - 75) - panelLeft);
+        right.width((page_width - 50) - panelLeft);
         if (apanel.hasClass('opened')) {
             apanel.css({
                 "left": (panelLeft)
@@ -193,13 +193,6 @@ $(document).ready(function () {
             }
         });
         return false;
-    });
-    $('.left').resizable({
-        maxWidth: 550,
-        minWidth: 350,
-        grid: 25,
-        handles: 'e',
-        autoHide: true
     });
 
     //register a common select none action
@@ -391,7 +384,7 @@ KT.panel = (function ($) {
             return paneljQ;
         },
         adjustHeight = function (paneljQ, isSubpanel) {
-            var leftPanel = $('.left'),
+            var leftPanel = $('.left_panel'),
                 tupane_panel = $('#panel'),
                 header_spacing = tupane_panel.find('.head').height(),
                 subnav_spacing = tupane_panel.find('nav').height() + 10,
@@ -519,13 +512,13 @@ KT.panel = (function ($) {
                 isFixed = jQPanel.css('position') === 'fixed',
                 container = $('#container'),
                 bodyY = parseInt(container.position().top, 10),
-                left_panel = container.find('.left'),
+                left_panel = container.find('.left_panel'),
                 left_bottom_pos = left_panel.offset().top + left_panel.height(),
                 top;
 
             top_position = left_panel.offset().top;
-            offset = offset ? offset : 10;
-            offset += $('#maincontent .maincontent').offset().left;
+            offset = offset ? offset : 0;
+            offset += $('.center').offset().left;
             offset -= scrollX;
 
             if (jQPanel.length > 0) {
@@ -558,8 +551,8 @@ KT.panel = (function ($) {
         handleScrollResize = function (jQPanel, offset) {
             var scrollX = KT.common.scrollLeft();
 
-            offset = offset ? offset : 10;
-            offset += $('#maincontent .maincontent').offset().left;
+            offset = offset ? offset : 0;
+            offset += $('.center').offset().left;
             offset -= scrollX;
 
             if (jQPanel.length > 0) {
@@ -578,7 +571,7 @@ KT.panel = (function ($) {
                 if (promise) {
                     closePanel();
                     promise.done(function(){
-                        $('.left').resize();
+                        $('.left_panel').resize();
                         select_item(refresh);
                     });
                 }
