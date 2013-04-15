@@ -41,7 +41,7 @@ gem 'compass-rails'
 gem 'compass'
 gem 'compass-960-plugin', '>= 0.10.4', :require => 'ninesixty'
 gem 'simple-navigation', '>= 3.3.4'
-gem 'ui_alchemy-rails', '1.0.4'
+gem 'ui_alchemy-rails', '1.0.7'
 
 # Stuff for i18n
 gem 'gettext_i18n_rails'

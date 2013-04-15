@@ -6,34 +6,35 @@
       %li
         = _("You do not currently have access to any organizations.  Please contact an administrator to get permission to access an organization.")
 
-.sixty
-  - if current_organization && current_organization.readable?
-    = dashboard_entry(_("System Subscription Status"), "subscriptions", false)
-  -# if Katello.config.katello? && current_organization && Repository.any_readable_in_org?(current_organization, true)
-    = dashboard_ajax_entry(_("Available Errata"), "errata", errata_dashboard_index_path(), "big_widget", true)
-  -#= dashboard_ajax_entry(_("System Overview"), "systems", systems_dashboard_index_path(), "big_widget", true)
-  - if Katello.config.katello? && current_organization && SystemGroup.any_readable?(current_organization)
-    = dashboard_ajax_entry(_("System Group Overview"), "system_groups", system_groups_dashboard_index_path(), "big_widget", true)
+.center
+  .sixty
+    - if current_organization && current_organization.readable?
+      = dashboard_entry(_("System Subscription Status"), "subscriptions", false)
+    -# if Katello.config.katello? && current_organization && Repository.any_readable_in_org?(current_organization, true)
+      = dashboard_ajax_entry(_("Available Errata"), "errata", errata_dashboard_index_path(), "big_widget", true)
+    -#= dashboard_ajax_entry(_("System Overview"), "systems", systems_dashboard_index_path(), "big_widget", true)
+    - if Katello.config.katello? && current_organization && SystemGroup.any_readable?(current_organization)
+      = dashboard_ajax_entry(_("System Group Overview"), "system_groups", system_groups_dashboard_index_path(), "big_widget", true)
 
-.forty
-  - widget_class = Katello.config.katello? ? "small_widget" : "small_widget_headpin"
-  = dashboard_ajax_entry(_("Latest Notifications"), "notices", notices_dashboard_index_path(), widget_class, true)
-  - if Katello.config.katello? && current_organization
-    - if ContentView.any_readable?(current_organization)
-      = dashboard_ajax_entry(_("Content Views Overview"), "content_views", content_views_dashboard_index_path(), "small_widget", true)
-    - if KTEnvironment.any_viewable_for_promotions?(current_organization)
-      = dashboard_ajax_entry(_("Promotions Overview"), "promotions", promotions_dashboard_index_path(), "small_widget", true)
-    - if current_organization.syncable?
-      = dashboard_ajax_entry(_("Sync Overview"), "sync", sync_dashboard_index_path(), "small_widget", true)
+  .forty
+    - widget_class = Katello.config.katello? ? "small_widget" : "small_widget_headpin"
+    = dashboard_ajax_entry(_("Latest Notifications"), "notices", notices_dashboard_index_path(), widget_class, true)
+    - if Katello.config.katello? && current_organization
+      - if ContentView.any_readable?(current_organization)
+        = dashboard_ajax_entry(_("Content Views Overview"), "content_views", content_views_dashboard_index_path(), "small_widget", true)
+      - if KTEnvironment.any_viewable_for_promotions?(current_organization)
+        = dashboard_ajax_entry(_("Promotions Overview"), "promotions", promotions_dashboard_index_path(), "small_widget", true)
+      - if current_organization.syncable?
+        = dashboard_ajax_entry(_("Sync Overview"), "sync", sync_dashboard_index_path(), "small_widget", true)
 
-.dashboard_popout.hidden
-  .popout_row.popout
-    %label.popout #{_("Display")}
-    %select.num_of_results.popout
-      - ['5', '15', '30'].each do |i|
-        %option.popout{:value => i} #{i} results
-  -#.popout_row.popout
-  -#  %label.popout Over
-  -#  %select.num_of_hours.popout
-  -#    - [60.minutes, 24.hours, 48.hours, 168.hours].each do |i|
-  -#      %option.popout{:value => i} #{distance_of_time_in_words(i)}
+  .dashboard_popout.hidden
+    .popout_row.popout
+      %label.popout #{_("Display")}
+      %select.num_of_results.popout
+        - ['5', '15', '30'].each do |i|
+          %option.popout{:value => i} #{i} results
+    -#.popout_row.popout
+    -#  %label.popout Over
+    -#  %select.num_of_hours.popout
+    -#    - [60.minutes, 24.hours, 48.hours, 168.hours].each do |i|
+    -#      %option.popout{:value => i} #{distance_of_time_in_words(i)}
