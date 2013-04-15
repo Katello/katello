@@ -32,6 +32,7 @@ class katello {
   }
   include candlepin
   include elasticsearch
+  include signo
   include katello::config
   include katello::service
   if $katello::params::use_foreman {

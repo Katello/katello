@@ -51,6 +51,12 @@ common:
     password: <%= scope.lookupvar("katello::params::proxy_pass") unless scope.lookupvar("katello::params::proxy_pass") == "NONE" %>
 <%- end -%>
 
+  # authentication
+  sso:
+    enable: true
+    provider_url: https://<%= scope.lookupvar('fqdn') -%>/signo
+    logout_path: /logout
+
   database:
     username:
     password:
