@@ -9,10 +9,5 @@
 #  objects cannot be serialized or deserialized
 #  so loading these objects fail.
 
-ENV["RAILS_ENV"] = 'production'
-require "/usr/share/katello/config/boot"
-require "/usr/share/katello/config/application"
-Rails.application.require_environment!
-
 
 TaskStatus.delete_all
