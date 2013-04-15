@@ -164,7 +164,7 @@ def execute_command command
     true
   else
     if File.extname(command) == '.runner'
-      command = "scl enable ruby193 'rails runner -e production #{command}'"
+      command = "#{KATELLO_DIR}/scripts/rails  runner -e production #{command}"
     end
     Dir.chdir(KATELLO_DIR)
     IO.popen("#{command} 2>&1") do |io|
