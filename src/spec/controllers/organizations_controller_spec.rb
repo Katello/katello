@@ -297,4 +297,21 @@ describe OrganizationsController do
     end
 
   end
+
+  describe "default_info" do
+    before(:each) do
+      @organization = new_test_org
+      Organization.stub!(:find_by_label).and_return(@organization)
+    end
+    it "should render template" do
+      get :default_info, :id => @organization.id.to_s, :informable_type => "system"
+      response.should be_success
+      response.should render_template("default_info")
+    end
+
+    it "should error on incorrect informable type" do
+      get :default_info, :id => @organization.id.to_s, :informable_type => "skee boop bidoop"
+      response.should_not be_success
+    end
+  end
 end
