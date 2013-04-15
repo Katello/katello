@@ -97,12 +97,11 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_errata_dates
-    fr = ErratumRule.new
-    from = "01/23/2000"
-    to = "02/23/2010"
-    units = {:date_range => {:start =>from , :end => to}}
-    expected = [{"issued"=>{"$gte"=>fr.send(:convert_date,from),
-                            "$lte"=>fr.send(:convert_date,to)}}]
+    from = DateTime.now
+    to = DateTime.now
+    units = {:date_range => {:start =>from.to_i , :end => to.to_i}}
+    expected = [{"issued"=>{"$gte"=>from.as_json,
+                            "$lte"=>to.as_json}}]
     exec_test_includes_and_excludes("erratum", units, expected)
   end
 
@@ -119,13 +118,12 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_errata_both
-    fr = ErratumRule.new
-    from = "03/22/2000"
-    to = "05/23/2012"
+    from = DateTime.now
+    to = DateTime.now
     units = {:errata_type => [:enhancement, :security],
-             :date_range => {:start => from, :end => to}}
-    expected = [{"$and"=>[{"issued"=>{"$gte"=>fr.send(:convert_date,from),
-                  "$lte"=>fr.send(:convert_date,to)}},
+             :date_range => {:start => from.to_i, :end => to.to_i}}
+    expected = [{"$and"=>[{"issued"=>{"$gte"=>from.as_json,
+                  "$lte"=>to.as_json}},
                   {"type"=>{"$in"=>[:enhancement, :security]}}]}]
     exec_test_includes_and_excludes("erratum", units, expected)
   end
