@@ -98,7 +98,7 @@ KT.custom_info = (function() {
         + "<div class=\"editable edit_textfield\" data-method=\"put\" data-url=\"" + update_path + "\" name=\"value\" style title=\"Click to edit\">" + value + "</div>"
         + "</td>"
         + "<td>"
-        + "<input class=\"btn warning remove_custom_info_button\" data-id=\"custom_info_" + _keyname + "\" data-method=\"delete\" data-url=\"" + destroy_path + "\" type=\"submit\" value=\"remove\">"
+        + "<input class=\"btn warning remove_custom_info_button\" data-id=\"custom_info_" + _keyname + "\" data-method=\"delete\" data-url=\"" + destroy_path + "\" type=\"submit\" value=\"" + i18n.remove + "\">"
         + "</td>"
         + "</tr>";
 

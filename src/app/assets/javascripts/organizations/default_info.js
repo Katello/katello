@@ -119,7 +119,7 @@ KT.default_info = (function() {
             + "<label for=\"default_info_" + _keyname + "\">" + keyname + "</label>"
             + "</td>"
             + "<td>"
-            + "<input class=\"btn warning remove_default_info_button\" data-id=\"default_info_" + _keyname + "\" data-method=\"delete\" data-url=\"" + destroy_path + "\" type=\"submit\" value=\"remove\">"
+            + "<input class=\"btn warning remove_default_info_button\" data-id=\"default_info_" + _keyname + "\" data-method=\"delete\" data-url=\"" + destroy_path + "\" type=\"submit\" value=\"" + i18n.remove + "\">"
             + "</td>"
             + "</tr>";
 
