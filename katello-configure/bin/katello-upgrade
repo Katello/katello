@@ -161,6 +161,9 @@ def execute_command command
   if opt(:dry_run)
     true
   else
+    if File.extname(command) == '.runner'
+      command = "scl enable ruby193 'rails runner -e production #{command}'"
+    end
     IO.popen("#{command} 2>&1") do |io|
       while (line = io.gets)
         log line
