@@ -206,8 +206,16 @@ Schedules the consumer identity certificate regeneration
     options[:sort_by] = params[:sort_by] if params[:sort_by]
     options[:sort_order]= params[:sort_order] if params[:sort_order]
 
-    items    = Glue::ElasticSearch::Items.new(System)
-    @systems = items.retrieve(query_string, params[:offset], options)
+    items = Glue::ElasticSearch::Items.new(System)
+    systems, total_count = items.retrieve(query_string, params[:offset], options)
+
+    if params[:paged]
+      systems = {
+        :systems  => systems,
+        :subtotal => total_count,
+        :total    => items.total_items
+      }
+    end
 
     respond
   end
