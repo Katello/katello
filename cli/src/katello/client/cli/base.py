@@ -68,8 +68,20 @@ def opt_parser_add_environment(parser, required=None, default=''):
     if default:
         default = _(" (default: %s)") % default
     parser.add_option('--environment', dest='environment',
-                      help=_('environment name e.g.: production%(required)s%(default)s') 
+                      help=_('environment name e.g.: production%(required)s%(default)s')
                         % {'required':required, 'default':default})
+
+def opt_parser_add_content_view(parser, required=None, name='content_view'):
+    """
+    Add content view options (name, label, id) to command
+    """
+    require = _(" (view name, label, or id required)") if required else ""
+    parser.add_option("--"+name, dest="view_name",
+                      help=_("content view name eg: database%s" % require))
+    parser.add_option("--"+name+"_label", dest="view_label",
+                      help=_("content view label eg: database%s" % require))
+    parser.add_option("--"+name+"_id", dest="view_id",
+                      help=_("content view id eg: 6%s" % require))
 
 class OptionException(Exception):
     """
