@@ -10,7 +10,7 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-//= require "alchemy/jquery/jquery-1.6.2"
+//= require "jquery-1.7.2"
 //= require "alchemy/underscore-1.3.1"
 //= require "alchemy/jquery-ui-1.8.11.custom/js/jquery-ui-1.8.11.custom.min"
 //= require "alchemy/jquery/plugins/jquery.hoverIntent"
@@ -31,3 +31,8 @@
 //= require "alchemy/jquery/plugins/jquery.ajaxfileupload"
 //= require "alchemy/jquery/plugins/jquery.fancyqueries"
 //= require "alchemy/jquery/plugins/jquery.ba-resize"
+//= require "ui_alchemy/angular/angular"
+//= require "ui_alchemy/angular-sanitize/angular-sanitize"
+//= require "ui_alchemy/alchemy/alchemy"
+//= require "ui_alchemy/alchemy-tables/alchemy-tables"
+//= require "ui_alchemy/alchemy-header/alchemy-header"

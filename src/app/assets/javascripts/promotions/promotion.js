@@ -1719,7 +1719,7 @@ var changesetStatusActions = (function($){
 
 //doc ready
 $(document).ready(function() {
-    $('.left').resizable('destroy');
+    $('.left_panel').resizable('destroy');
     
     promotion_page.start_timer();
 
