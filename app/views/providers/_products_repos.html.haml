@@ -21,7 +21,7 @@
       %input{ :type => "hidden", :id=> "provider_id", :name => "provider_id", :value => @provider.id }
 
       -if editable
-        .button.subpanel_element{"data-url"=>new_provider_product_path(@provider.id)}
+        .button.subpanel_element.fl{"data-url"=>new_provider_product_path(@provider.id)}
           = _("Add Product")
         
       -@products.each do |product|
