@@ -20,7 +20,7 @@
       %tbody#event_items
         = render :partial => 'system_groups/events/items', :locals => {:group => group, :include_tr => true}, :collection=> jobs, :as=>:job
     #list-spinner
-      = image_tag("embed/icons/spinner.gif", :class=>"ajax_scroll")
+      = image_tag("icons/spinner.gif", :class=>"ajax_scroll")
   - else
     %p #{_("There are no events to display.")}
 

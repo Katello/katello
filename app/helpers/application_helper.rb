@@ -298,4 +298,7 @@ module ApplicationHelper
     content_view.nil? ? no_content_view : content_view.id
   end
 
+  def to_calendar_date(date)
+    date.strftime('%m/%d/%Y')
+  end
 end
