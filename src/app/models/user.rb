@@ -223,6 +223,15 @@ class User < ActiveRecord::Base
     self.preferences[:user][:locale] = locale
   end
 
+  def experimental_ui
+    self.preferences[:user][:experimental_ui] rescue nil
+  end
+
+  def experimental_ui=(use_experimental_ui)
+    self.preferences[:user] = { } unless self.preferences.has_key? :user
+    self.preferences[:user][:experimental_ui] = use_experimental_ui.to_bool
+  end
+
   def default_org
     org_id = self.preferences[:user][:default_org] rescue nil
     if org_id && !org_id.nil? && org_id != "nil"

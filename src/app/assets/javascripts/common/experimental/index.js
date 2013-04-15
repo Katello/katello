@@ -1,5 +1,4 @@
-/**
- Copyright 2013 Red Hat, Inc.
+/* Copyright 2012 Red Hat, Inc.
 
  This software is licensed to you under the GNU General Public
  License as published by the Free Software Foundation; either version
@@ -10,7 +9,5 @@
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
-$primary_color: rgb(0, 112, 143);
-$static_width: 1152px;
-$logo_img:     url("logo.png") no-repeat 0 0;
-$spritePath:   url("alchemy/icons/action-icons.png");
+
+//= require "common/experimental/katello_experimental"

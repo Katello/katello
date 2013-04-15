@@ -74,7 +74,7 @@ class UsersController < ApplicationController
 
   def param_rules
     { :create       => { :user => [:password, :username, :env_id, :email] },
-      :update       => { :user => [:password, :env_id, :email, :helptips_enabled] },
+      :update       => { :user => [:password, :env_id, :email, :helptips_enabled, :experimental_ui] },
       :update_roles => { :user => [:role_ids] }
     }
   end
