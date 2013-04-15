@@ -52,7 +52,7 @@ class RepoAPI(KatelloAPI):
         result_list = self.server.GET(path, data)[1]
         return result_list
 
-    def repos_by_env_product(self, envId, productId, name=None, includeDisabled=False):
+    def repos_by_env_product(self, envId, productId, name=None, includeDisabled=False, viewId=None):
         path = "/api/environments/%s/products/%s/repositories" % (envId, productId)
 
         search_params = {
@@ -60,6 +60,7 @@ class RepoAPI(KatelloAPI):
         }
         if name != None:
             search_params['name'] = name
+        update_dict_unless_none(search_params, "content_view_id", viewId)
 
         result_list = self.server.GET(path, search_params)[1]
         return result_list
