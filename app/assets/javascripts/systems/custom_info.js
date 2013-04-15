@@ -16,7 +16,7 @@ var KT = (KT === undefined) ? {} : KT;
 KT.custom_info = (function() {
 
     $(".custom_info_txt").live("keydown", function(e) {
-        if (e.keyCode == 13) { // if you press enter
+        if (e.keyCode === 13) { // if you press enter
             $("#create_custom_info_button").trigger("click");
         }
     });
