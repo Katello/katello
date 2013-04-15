@@ -144,6 +144,7 @@ module Glue::ElasticSearch::Repository
       self.index_packages
       self.index_errata
       self.index_package_groups
+      true
     end
   end
 end
