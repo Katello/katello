@@ -32,7 +32,7 @@
 %endif
 
 Name:           katello
-Version:        1.3.14
+Version:        1.4.1
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -444,7 +444,8 @@ fi
     export BUNDLER_EXT_GROUPS="default assets"
     touch config/katello.yml
 %{?scl:scl enable %{scl} "}
-    rake  assets:precompile:all --trace
+    rake  assets:precompile:primary --trace RAILS_ENV=production
+    rake  assets:precompile:nondigest --trace
 %{?scl:"}
     rm config/katello.yml
     mv lib/tasks_disabled lib/tasks
@@ -556,11 +557,6 @@ sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{bui
 #remove files which are not needed in the homedir
 rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
-
-
-%if %{?scl:0}%{!?scl:1}
-rm  %{buildroot}%{homedir}/bundler.d/assets.rb
-%endif 
 
 #branding
 if [ -d branding ] ; then
@@ -838,6 +834,1567 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.4.1-1
+- version bump to 1.4 (jsherril@redhat.com)
+
+* Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.3.17-1
+- Spec - Updating spec to set RAILS_ENV=production on asset compile.
+  (ehelms@redhat.com)
+- fixing env selector positioning on a few pages (jsherril@redhat.com)
+- changesets - fix to include alchemy sortElement (bbuckingham@redhat.com)
+
+* Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.3.16-1
+- content views - minor chgs to views for asset pipeline
+  (bbuckingham@redhat.com)
+- content view - fix issue w/ deleting filters and filter rules
+  (bbuckingham@redhat.com)
+- 947859 - Created a way to remove views from keys (daviddavis@redhat.com)
+
+* Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.3.15-1
+- Merge pull request #1934 from witlessbird/puppet-seeding
+  (witlessbird@gmail.com)
+- Merge pull request #1941 from ehelms/asset-pipeline-fixes
+  (ericdhelms@gmail.com)
+- Merge pull request #1922 from parthaa/date-work (parthaa@gmail.com)
+- Merge pull request #1939 from jlsherrill/build_fix (jlsherrill@gmail.com)
+- Fixing build for RHEL 6 (jsherril@redhat.com)
+- Merge pull request #1904 from daviddavis/pluck_tables (daviddavis@redhat.com)
+- Merge pull request #1918 from bbuckingham/content_views-linking
+  (bbuckingham@redhat.com)
+- Merge pull request #1936 from bbuckingham/fork-content-filters
+  (bbuckingham@redhat.com)
+- content views - update crosslinking to use hash vs string
+  (bbuckingham@redhat.com)
+- content views - a crosslinking from view to content search
+  (bbuckingham@redhat.com)
+- Asset Pipeline - Fixes for bad paths to some image and icon assets.
+  (ehelms@redhat.com)
+- filter rules - minor change from PR review (bbuckingham@redhat.com)
+- content view - ui - allow user to specify version info for pkg filter rule
+  (bbuckingham@redhat.com)
+- Removed some unnecessary comments (paji@redhat.com)
+- Code to get cvd refresh working with filters (paji@redhat.com)
+- Follow Fedora guidelines when obsoleting subpackage (inecas@redhat.com)
+- Remove Foreman specific code - cli (inecas@redhat.com)
+- Remove Foreman specific code - rails (inecas@redhat.com)
+- Merge pull request #1913 from thomasmckay/delayedjob-spec
+  (thomasmckay@redhat.com)
+- Merge pull request #1917 from daviddavis/temp_1365706716
+  (daviddavis@redhat.com)
+- Merge pull request #1907 from ehelms/asset-pipeline (ericdhelms@gmail.com)
+- 947869 - Allowing users to create composite definitions from CLI
+  (daviddavis@redhat.com)
+- fixed an issue with seeds.rb when it wasn't assigning default values
+  (dmitri@appliedlogic.ca)
+- Rails32 - Fixing copyright years. (ehelms@redhat.com)
+- Fixed a malformed url to keep jenkins happy (paji@redhat.com)
+- Added more test cases (paji@redhat.com)
+- Added tests for the validator (paji@redhat.com)
+- Fixed a bunch of unit tests (paji@redhat.com)
+- Added a space as requested in the PR (paji@redhat.com)
+- Added code to deal with time zone issues (paji@redhat.com)
+- Made the errata rule use real dates instead of string (paji@redhat.com)
+- Merge pull request #1882 from parthaa/filters-to-master (parthaa@gmail.com)
+- Modified a couple of pluck calls to fix a unit test (paji@redhat.com)
+- Merge branch 'master' into filters-to-master (paji@redhat.com)
+- Fixed some unit tests (paji@redhat.com)
+- Changed Hash#index to Hash#key to remove some warnings (paji@redhat.com)
+- replacing 'and' with '&&' (komidore64@gmail.com)
+- Merge branch 'master' of github.com:Katello/katello into asset-pipeline
+  (ehelms@redhat.com)
+- Merge pull request #1906 from daviddavis/temp_1365624433
+  (daviddavis@redhat.com)
+- Merge branch 'master' into filters-to-master (paji@redhat.com)
+- Rails32 - Setting Alchemy Gem version and addressing Ruby code styling
+  comments. (ehelms@redhat.com)
+- delayedjob-spec - set version for gem delayed_job_active_record delayedjob-
+  spec - corrected syntax (thomasmckay@redhat.com)
+- Merge pull request #1894 from thomasmckay/manifest-refresh
+  (thomasmckay@redhat.com)
+- 929106 - Displaying user friendly task not found error
+  (daviddavis@redhat.com)
+- Adding in table names to pluck to be safe (daviddavis@redhat.com)
+- Merge pull request #1911 from daviddavis/temp_1365675606
+  (daviddavis@redhat.com)
+- Merge pull request #1901 from jlsherrill/logging (jlsherrill@gmail.com)
+- Fixing package of content_search classes (daviddavis@redhat.com)
+- Removed some white spacing issues (paji@redhat.com)
+- Made some changes as suggested in PR 1882 (paji@redhat.com)
+- Merge pull request #1903 from jlsherrill/test_fix (jlsherrill@gmail.com)
+- fixing trailing whitespace (jsherril@redhat.com)
+- fixing intermittent test failures (jsherril@redhat.com)
+- Merge pull request #1902 from thomasmckay/delayedjob-gemfile
+  (thomasmckay@redhat.com)
+- delayedjob-gemfile - lock to lower version of delayed_job_active_record
+  (thomasmckay@redhat.com)
+- Merge pull request #1851 from jlsherrill/issue_1850 (jlsherrill@gmail.com)
+- default logging changes (jsherril@redhat.com)
+- Merge pull request #1898 from daviddavis/fix_pluck (daviddavis@redhat.com)
+- spec fixes (jsherril@redhat.com)
+- Merge pull request #1840 from jlsherrill/content_search
+  (jlsherrill@gmail.com)
+- Fixing pluck call (daviddavis@redhat.com)
+- pull request fixes (jsherril@redhat.com)
+- Merge pull request #1893 from daviddavis/fix_cv_readonly_error
+  (daviddavis@redhat.com)
+- Rails32 - Adds missing declarations to new javascript assets.
+  (ehelms@redhat.com)
+- Rails32 - Updating spec to move assets:precompile to be after touching the
+  config file. (ehelms@redhat.com)
+- manifest-refresh - changes related to refreshing manifest manifest-refresh -
+  updates to distributors manifest-refresh - pylint cleaning
+  (thomasmckay@redhat.com)
+- Addressed some of the issues suggested in PR 1882 (paji@redhat.com)
+- Removing backport of pluck (daviddavis@redhat.com)
+- adding ability to enable http publishing on a per-repo basis
+  (jsherril@redhat.com)
+- Content Views: fixing promote readonly error (daviddavis@redhat.com)
+- Merge branch 'master' of https://github.com/Katello/katello into issue_1850
+  (jsherril@redhat.com)
+- Rails32 - Changing URL of images in stylesheets and moving section
+  stylesheets out of sections/ directory to make references to image urls more
+  uniform.  Includes spec updates for packages required to perform assets
+  pipeline. (ehelms@redhat.com)
+- System groups: allow users to update systems via CLI (daviddavis@redhat.com)
+- Merge pull request #1889 from ehelms/delayed_jobs_fix (ericdhelms@gmail.com)
+- Fixing delayed_job breakages due to upgrade (daviddavis@redhat.com)
+- Merge pull request #1749 from iNecas/headpin-abstract-model
+  (inecas@redhat.com)
+- Merge pull request #1883 from ehelms/removing-todos (ericdhelms@gmail.com)
+- delayed jobs use active_record as backend (msuchy@redhat.com)
+- Merge branch 'master' of github.com:Katello/katello into asset-pipeline
+  (ehelms@redhat.com)
+- Delayed Jobs - Fixes an issue with the update to delayed jobs 3.0 where
+  to_yaml was being called on the target of AsyncOperation and not the
+  AsyncOperation itself. (ehelms@redhat.com)
+- Comps - Adding delayed_job_active_record needed to properly hook up the
+  active_record backend to delayed_job > 3.0. (ehelms@redhat.com)
+- Fixed a typo (paji@redhat.com)
+- fixing rubygem(foreman-katello-engine) requires (jsherril@redhat.com)
+- Removed an unnecessary requires (paji@redhat.com)
+- Updated copyright notice (paji@redhat.com)
+- Added some documentation for the diff_hash_params method (paji@redhat.com)
+- Made some fixes as suggested in the PR (paji@redhat.com)
+- Corrected a typo from rebase time (paji@redhat.com)
+- Reverted back an old commit since use_pulp is always false in tests
+  (paji@redhat.com)
+- Changed katello to use_pulp since runcible only makes sense if you are using
+  pulp (paji@redhat.com)
+- Fixed a test to make travis happy (paji@redhat.com)
+- Temporary fix to make travis point real errors (paji@redhat.com)
+- Added some validation for parameters in the various models (paji@redhat.com)
+- Fixed another unit test (paji@redhat.com)
+- Added some unit test fixes to work with the new model (paji@redhat.com)
+- Broke up gigantic filter rules class into 3 smaller more manageable classes
+  (paji@redhat.com)
+- Fixed some unit tests (paji@redhat.com)
+- Refactored some code for better organization (paji@redhat.com)
+- Removed trailing space (paji@redhat.com)
+- Fixed some parens issues (paji@redhat.com)
+- Fixed a couple of unit tests to aid with the publish process
+  (paji@redhat.com)
+- Made the publish handle empty errata ids in rules (paji@redhat.com)
+- Made the publish handle empty package rules (paji@redhat.com)
+- Added severity params to errata (paji@redhat.com)
+- Forgot to move a method used by generate_clause method (paji@redhat.com)
+- Made some mods as suggested in PR 1826 (paji@redhat.com)
+- Changed the cvd to use elastics search format for package and package group
+  filters (paji@redhat.com)
+- Added a default search field param to enable one to choose diff defaults
+  (paji@redhat.com)
+- Made some modifications for PackageGroupSearch (paji@redhat.com)
+- Added code to intergrate the package group to the cvd publish
+  (paji@redhat.com)
+- Added infrastructure for package groups index and search (paji@redhat.com)
+- Moved the index_package and errata calls to a single method (paji@redhat.com)
+- Removed unused comments (paji@redhat.com)
+- Fixed a couple of unit tests to make travis happy (paji@redhat.com)
+- Added tests for the errata and package_group publishes (paji@redhat.com)
+- Added version compare facility for package rules (paji@redhat.com)
+- Code to incorporate filters while publishing CVD (paji@redhat.com)
+- Merge pull request #1868 from bbuckingham/fork-system_groups
+  (bbuckingham@redhat.com)
+- Merge branch 'master' into master-to-filters (paji@redhat.com)
+- Merge pull request #1872 from daviddavis/rails32_deprecations
+  (daviddavis@redhat.com)
+- Merge pull request #1847 from bbuckingham/fork-content-filters
+  (bbuckingham@redhat.com)
+- remove empty line to make someone happy... (bbuckingham@redhat.com)
+- Fixing Rails 3.2 deprecations (daviddavis@redhat.com)
+- Rails32 - Cleaning up TODOs from the 3.0-3.2 bridge. (ehelms@redhat.com)
+- Merge pull request #1862 from jlsherrill/copyright (jlsherrill@gmail.com)
+- Merge pull request #1871 from xsuchy/pull-req-Gemfile32 (miroslav@suchy.cz)
+- Merge pull request #1866 from komidore64/more_custom_info
+  (komidore64@gmail.com)
+- content views - minor updates based on PR 1847 comments
+  (bbuckingham@redhat.com)
+- merge conflict (jsherril@redhat.com)
+- lower rails requirement and use ~> operator (msuchy@redhat.com)
+- mv Gemfile32 Gemfile; rm Gemfile; And remove conditions for Fedora 16 and 17
+  (msuchy@redhat.com)
+- comment could not be on line with requires (msuchy@redhat.com)
+- Merge pull request #1854 from daviddavis/rm_18_code (miroslav@suchy.cz)
+- Fix dependency on a JavaScript engine (inecas@redhat.com)
+- Rails32 - Updating to fence off minitest task in production.
+  (ehelms@redhat.com)
+- Rails32 - Fixing a few asset url paths. (ehelms@redhat.com)
+- Merge pull request #1863 from jlsherrill/translations (miroslav@suchy.cz)
+- Merge pull request #1855 from lzap/turn-on-scl (miroslav@suchy.cz)
+- Rails32 - Removing compass compile from Travis. (ehelms@redhat.com)
+- Rails32 - Committing some fixes for missing assets and bad paths.
+  (ehelms@redhat.com)
+- Rails32 - Removes Alchemy as a submodule. (ehelms@redhat.com)
+- Rails32 - Moves javascript to asset pipeline, adjusts views to account for
+  new manifest files. (ehelms@redhat.com)
+- system groups - add test for handling edit on selected systems
+  (bbuckingham@redhat.com)
+- Rails32 - Converting views over to use the Alchemy engine views.
+  (ehelms@redhat.com)
+- system groups - allow user to change env/view for selected systems
+  (bbuckingham@redhat.com)
+- Rails32 - removing public/stylesheets (ehelms@redhat.com)
+- Rails32 - Moves images and stylesheets to the assets pipeline.
+  (ehelms@redhat.com)
+- apply_to_all for default_info (komidore64@gmail.com)
+- Merge pull request #1846 from komidore64/default_info (komidore64@gmail.com)
+- Translations - Update .po and .pot files for katello. (jsherril@redhat.com)
+- Translations - Download translations from Transifex for katello.
+  (jsherril@redhat.com)
+- copyright update (jsherril@redhat.com)
+- happy tests (komidore64@gmail.com)
+- content views - fix tests failing after adding a render of js partial
+  (bbuckingham@redhat.com)
+- Merge remote-tracking branch 'upstream/master' into content-filters
+  (daviddavis@redhat.com)
+- Merge pull request #1843 from daviddavis/cv_cli_copy (daviddavis@redhat.com)
+- Content Views: allow definitions to be cloned from CLI
+  (daviddavis@redhat.com)
+- Removing Ruby 1.8 specific code (daviddavis@redhat.com)
+- enabling SCL for katello (lzap+git@redhat.com)
+- content views - after filter rule created, open the rule for edit
+  (bbuckingham@redhat.com)
+- fixes #1850 - auto-publish to http and https (jsherril@redhat.com)
+- using lambda to render content search hover, so extra cells arent rendered
+  (jsherril@redhat.com)
+- trimming fields requested in package search for speed (jsherril@redhat.com)
+- jeditable datepicker - allow the user to clear the date
+  (bbuckingham@redhat.com)
+- content views - changing from has_key to blank on several hash checks
+  (bbuckingham@redhat.com)
+- content_views - test fix (bbuckingham@redhat.com)
+- content views - minor change to address a jeditable initialize issue
+  (bbuckingham@redhat.com)
+- press enter when either custom_info field is in focus to submit the creation.
+  (komidore64@gmail.com)
+- cli now correctly allows you to add custom_info without including a value
+  (komidore64@gmail.com)
+- content views - add 'summary' info to filter rule list
+  (bbuckingham@redhat.com)
+- fixing unpromoted library repos not showing up in
+  content_view#all_version_library_instances (jsherril@redhat.com)
+- minitest fix (jsherril@redhat.com)
+- Merge pull request #1842 from jlsherrill/jserror (jlsherrill@gmail.com)
+- Merge pull request #1838 from witlessbird/fix-readonlyrecord-exception
+  (witlessbird@gmail.com)
+- Merge pull request #1731 from witlessbird/session-timeout
+  (witlessbird@gmail.com)
+- content views - update the include/exlude to be similar to new mockups
+  (bbuckingham@redhat.com)
+- #1798 - fixing javascript error on promotions page (jsherril@redhat.com)
+- removed trailing spaces (dmitri@appliedlogic.ca)
+- content views - minimize js initialization and fix for jeditable js error
+  (bbuckingham@redhat.com)
+- content views - ui - hide the filter tabs until they are initialized
+  (bbuckingham@redhat.com)
+- merge conflict fix (jsherril@redhat.com)
+- Merge remote-tracking branch 'upstream/master' into fork-content-
+  filters_merge (bbuckingham@redhat.com)
+- Merge pull request #1831 from jlsherrill/content_search_spec
+  (jlsherrill@gmail.com)
+- removing uneeded dir entry from spec (jsherril@redhat.com)
+- adding back correct repo hover links (jsherril@redhat.com)
+- Merge pull request #1837 from bbuckingham/fork-content_view_groups
+  (bbuckingham@redhat.com)
+- spec fixes (jsherril@redhat.com)
+- lots of small content search/content view fixes (jsherril@redhat.com)
+- index content view repositories after promotion (jsherril@redhat.com)
+- adding candlepin environment.all for easier debugging (jsherril@redhat.com)
+- system groups - address style comments from pull request 1837 review
+  (bbuckingham@redhat.com)
+- fixed a ActiveRecord::ReadOnlyRecord error occuring during the migration when
+  rails 3.2 is used and there's existing data in the db.
+  (dmitri@appliedlogic.ca)
+- fixed test/lib/url_constrained_cookie_store_test.rb that was failing on rails
+  3.2 (dmitri@appliedlogic.ca)
+- Merge pull request #1834 from komidore64/default_info (komidore64@gmail.com)
+- system groups - ui - allow user to change env/view for systems in a group
+  (bbuckingham@redhat.com)
+- activation keys - test fix (bbuckingham@redhat.com)
+- ctivation keys / systems - mv i18n.update_view to _common_i18n partial
+  (bbuckingham@redhat.com)
+- activation keys / systems - minor refactor to allow for reuse on system
+  groups (bbuckingham@redhat.com)
+- system groups - update system's list to include env and view
+  (bbuckingham@redhat.com)
+- Merge pull request #1836 from iNecas/bz/903388 (inecas@redhat.com)
+- 903388 - fix service-wait script (inecas@redhat.com)
+- Merge pull request #1833 from komidore64/headpin-menu-fix
+  (komidore64@gmail.com)
+- session timeout is now working under Rails 3.0.x (dmitri@appliedlogic.ca)
+- updated to work with Rails > 3.2 (dmitri@appliedlogic.ca)
+- fixed failing test (dmitri@appliedlogic.ca)
+- fixes based on comments in the PR (dmitri@appliedlogic.ca)
+- moved tests to a more visible spot in the test suite (dmitri@appliedlogic.ca)
+- removed a trailing space (dmitri@appliedlogic.ca)
+- added comment in session_store initializer pointing to environment-specific
+  initializers instead. (dmitri@appliedlogic.ca)
+- added a comment re: Katello::UrlConstrainedCookieStore#call origins
+  (dmitri@appliedlogic.ca)
+- support for selective (based on url accessed) expiration of cookies
+  (dmitri@appliedlogic.ca)
+- set a 1 hour expiration on the http session (dmitri@redhat.com)
+- Merge pull request #1810 from xsuchy/pull-req-old-changelog
+  (miroslav@suchy.cz)
+- custom_info in the UI is now using the API (komidore64@gmail.com)
+- fixing content view comparison and making it faster (jsherril@redhat.com)
+- synchronization page was not correctly fenced in headpin mode
+  (komidore64@gmail.com)
+- Content views: fixing api doc and perms in several places
+  (daviddavis@redhat.com)
+- making header height allow 3 lines instead of 2 for view-repo comparison
+  (jsherril@redhat.com)
+- adding content search models to spec file (jsherril@redhat.com)
+- Merge pull request #1820 from daviddavis/filters-cli (daviddavis@redhat.com)
+- Merge pull request #1824 from thomasmckay/manifest-async
+  (thomasmckay@redhat.com)
+- Content view: Addressed feedback for filters (daviddavis@redhat.com)
+- Merge pull request #1828 from iNecas/katello-configure-foreman-engine
+  (inecas@redhat.com)
+- Merge pull request #1814 from bbuckingham/fork-content-filters
+  (bbuckingham@redhat.com)
+- a few fixes for content search (jsherril@redhat.com)
+- Merge pull request #1823 from komidore64/default_info (komidore64@gmail.com)
+- katello-configure - install and set up foreman-katello-engine
+  (inecas@redhat.com)
+- content search - fixing packages & errata search for content views
+  (jsherril@redhat.com)
+- Content views: backing up filters with definition archives
+  (daviddavis@redhat.com)
+- content views - fix test failing in rails32 (bbuckingham@redhat.com)
+- Merge pull request #1822 from daviddavis/1819 (daviddavis@redhat.com)
+- default info in the UI for systems (komidore64@gmail.com)
+- fixing CV, product, & repo intersection and difference searches
+  (jsherril@redhat.com)
+- content views - ui - address test failures during rails32 and ruby193
+  (bbuckingham@redhat.com)
+- manifest-async - db:migrate (thomasmckay@redhat.com)
+- manifest-async - switch to async job on server for CLI/api manifest import
+  (thomasmckay@redhat.com)
+- adding blankness validation for organization default info
+  (komidore64@gmail.com)
+- adding api routes to routes.js (komidore64@gmail.com)
+- fixing some funky indentation, formatting, and whitespace
+  (komidore64@gmail.com)
+- content views - ui tests - chgs to address issues when running all
+  (bbuckingham@redhat.com)
+- Fixed bad check for undefined in javascript. Fixes #1819
+  (daviddavis@redhat.com)
+- conflict fix (jsherril@redhat.com)
+- content views - ui - add permission tests for filters and filter rules
+  controllers (bbuckingham@redhat.com)
+- content views - ui - adding tests for filters and filter rules controllers
+  (bbuckingham@redhat.com)
+- Fixing places that call RAILS_ROOT (daviddavis@redhat.com)
+- Added code to associate product/repos to a filter (paji@redhat.com)
+- Merged content_view_definition_base with filters (daviddavis@redhat.com)
+- Merge pull request #1811 from bbuckingham/fork-content_views_bugs
+  (bbuckingham@redhat.com)
+- content views - fix a test and update a test (bbuckingham@redhat.com)
+- Merge remote-tracking branch 'upstream/master' into content-filters
+  (daviddavis@redhat.com)
+- Merge pull request #1808 from daviddavis/rm_test_helper
+  (daviddavis@redhat.com)
+- Merge pull request #1801 from daviddavis/cv_copy (daviddavis@redhat.com)
+- content views - fix couple of bugs affecting publish/refresh/promote/consume
+  (bbuckingham@redhat.com)
+- remove old changelog entries (msuchy@redhat.com)
+- Spec - Removing the simplecov development task from the production RPM.
+  (ehelms@redhat.com)
+- Remove unused file (daviddavis@redhat.com)
+- Merge pull request #1805 from ehelms/spec-update (ericdhelms@gmail.com)
+- Spec - Adding requires on Apache 2.4.4 on Fedora 18. (ehelms@redhat.com)
+- Content views: archiving content defintions (daviddavis@redhat.com)
+- Merge pull request #1784 from iNecas/foreman-katello-plugin-support
+  (inecas@redhat.com)
+- Merge pull request #1780 from komidore64/default_info_dupe
+  (thomasmckay@redhat.com)
+- cassette update (jsherril@redhat.com)
+- bumping runcible requirement (jsherril@redhat.com)
+- asdf (jsherril@redhat.com)
+- jeditable - update to trim datepicker content and reset data on options
+  (bbuckingham@redhat.com)
+- content views - addressing PR 1794 comments (bbuckingham@redhat.com)
+- content views - filters - ui - changes for filter rules (pkg, pkg group and
+  errata) (bbuckingham@redhat.com)
+- jeditable - minor refactoring and addition of multiselect type
+  (bbuckingham@redhat.com)
+- jeditable - move date/time picker to helper (bbuckingham@redhat.com)
+- content views - update ui-tabs-panel to handle overflow
+  (bbuckingham@redhat.com)
+- content_views - filters - ui - add support for package rule and misc chgs
+  (bbuckingham@redhat.com)
+- content views - filters - ui - add ability to associate prod/repos w/ filter
+  (bbuckingham@redhat.com)
+- content views - filters - ui - add ability to create/view/delete rules
+  (bbuckingham@redhat.com)
+- content views - filters - ui - add ability to create/view/delete filters
+  (bbuckingham@redhat.com)
+- panel - allow user to specify url after subpanel submit
+  (bbuckingham@redhat.com)
+- Fixing output from rpm ruport check (daviddavis@redhat.com)
+- removing file not meant to have been checked in (jsherril@redhat.com)
+- Merge pull request #1773 from jlsherrill/default_view_change
+  (jlsherrill@gmail.com)
+- conflict fix (jsherril@redhat.com)
+- product and repo search now all include views (jsherril@redhat.com)
+- test fixes (jsherril@redhat.com)
+- fixture update... yet... again (jsherril@redhat.com)
+- adding addition ktenvironment tests (jsherril@redhat.com)
+- Commented out tests that would be worked on later (paji@redhat.com)
+- Merge pull request #1778 from lzap/i18n-cleanup (lzap@redhat.com)
+- Include candlepin info about pools in activation keys details
+  (inecas@redhat.com)
+- i18n - modifying SPEC file to genreate MO files (lzap+git@redhat.com)
+- Make oauth working (inecas@redhat.com)
+- Merge pull request #1774 from daviddavis/norpm (daviddavis@redhat.com)
+- Merge pull request #1775 from daviddavis/rm_system_templates
+  (daviddavis@redhat.com)
+- Merge pull request #1766 from lzap/resource-perm-removal (lzap@redhat.com)
+- vcr update... again (jsherril@redhat.com)
+- test fix (jsherril@redhat.com)
+- merge conflict fix (jsherril@redhat.com)
+- test fixes (jsherril@redhat.com)
+- fixing mode (jsherril@redhat.com)
+- Fixed based on suggestions from PR 1751 (paji@redhat.com)
+- Content views: fixed double included (daviddavis@redhat.com)
+- Silencing 'rpm not found' errors (daviddavis@redhat.com)
+- super happy tests (komidore64@gmail.com)
+- Updated apipie examples (daviddavis@redhat.com)
+- adding oddly missing migration (jsherril@redhat.com)
+- fixing space issues (jsherril@redhat.com)
+- content search - adding views to repo search (jsherril@redhat.com)
+- 923112 - Katello Nightly : Add,Apply.Remove default custom info keynames for
+  subscriptions that are set at the organization level failed via Cli
+- Removing system template code (daviddavis@redhat.com)
+- making tests happy (komidore64@gmail.com)
+- Merge branch 'default_view_change' of github.com:jlsherrill/katello into
+  content_search (jsherril@redhat.com)
+- fixing methods that were moved (jsherril@redhat.com)
+- merge conflict fix (jsherril@redhat.com)
+- Merge branch 'default_view_change' of github.com:jlsherrill/katello into
+  content_search (jsherril@redhat.com)
+- test fixes (jsherril@redhat.com)
+- 896147 - Notify user of keyname presence when adding default_system_info to
+  an org (komidore64@gmail.com)
+- i18n - enabling mo for katello fast_gettext (lzap+git@redhat.com)
+- Merge pull request #1771 from ehelms/rails32-fixes (ericdhelms@gmail.com)
+- i18n - adding locale/Makefile for MO generation (lzap+git@redhat.com)
+- renaming gettext app domain from app to katello (lzap+git@redhat.com)
+- content views - migrating default content view structure
+  (jsherril@redhat.com)
+- fixes #1761 (komidore64@gmail.com)
+- one more fix to temp disable SCL (lzap+git@redhat.com)
+- removing dead code - ResourcePermissions (lzap+git@redhat.com)
+- disabling scl for rhel6 temporary (lzap+git@redhat.com)
+- Merge pull request #1742 from iNecas/nowrap-nav (inecas@redhat.com)
+- Merge pull request #1762 from thomasmckay/busted-new-org
+  (thomasmckay@redhat.com)
+- Merge pull request #1763 from lzap/scl-katello (lzap@redhat.com)
+- busted-new-org - accidental removal of opening new org panel
+  (thomasmckay@redhat.com)
+- spec - enabling scl for rhel6 - fixing F18 (lzap@redhat.com)
+- Merge pull request #1755 from thomasmckay/relax-org-name
+  (thomasmckay@redhat.com)
+- relax-org-name - only block <, >, and / in org names (thomasmckay@redhat.com)
+- content views - initial work to show CVs on product search
+  (jsherril@redhat.com)
+- Merge pull request #1760 from lzap/scl-katello (miroslav@suchy.cz)
+- Merge pull request #1759 from daviddavis/font404 (daviddavis@redhat.com)
+- spec - enabling scl for rhel6 - fixing F18 (lzap@redhat.com)
+- 915289 - Fixing missing fonts (daviddavis@redhat.com)
+- spec - enabling scl for rhel6 (lzap+git@redhat.com)
+- spec - sorting, cleaning and indenting (lzap+git@redhat.com)
+- Do not use two %%s in translation string (msuchy@redhat.com)
+- Rails32 - Adding password except to json output of compute resource.
+  (ehelms@redhat.com)
+- Rails32 - Adding two calls to retrieve a content view version to prevent an
+  ActiveRecord:ReadOnly error from being thrown. (ehelms@redhat.com)
+- Rails32 - Updates use of ActiveSupport::Concern to remove deprecation
+  warnings around use of InstanceMethods. (ehelms@redhat.com)
+- Rails32 - Fixes glue layer tests that needed to reload EnvironmentProducts.
+  (ehelms@redhat.com)
+- Rails32 - Adds conditionals to use a set BUNDLE_GEMFILE environment variable
+  or punt back to the basic Gemfile.  This is needed for testing both stacks on
+  Travis and in the future any separate Gemfiles. (ehelms@redhat.com)
+- Merge branch 'master', remote-tracking branch 'katello' into rails32-fixes
+  (ehelms@redhat.com)
+- Rails32 - Attempting to fix json error output. (ehelms@redhat.com)
+- Merge pull request #1753 from ehelms/minor-ui-fixes (ericdhelms@gmail.com)
+- Content Search: filtering views by search mode (daviddavis@redhat.com)
+- Content Search: fixes to existing code (daviddavis@redhat.com)
+- Content Search: showing cv filter for package search (daviddavis@redhat.com)
+- Content Search: tweaked product row in cv comparison (daviddavis@redhat.com)
+- Content search: fixed search modes for cv comparison (daviddavis@redhat.com)
+- Content Search: not displaying total packages per product on cv comparison
+  (daviddavis@redhat.com)
+- Content Search: moving files to app/lib (daviddavis@redhat.com)
+- Content search: Fixing product_repos method name (daviddavis@redhat.com)
+- Content search: added pagination to content view comparison
+  (daviddavis@redhat.com)
+- Content search: fixed link and removed duplicate code (daviddavis@redhat.com)
+- Content Search: Fixed metadata row in view comparison (daviddavis@redhat.com)
+- Content Search: refactored code by creating module namespaces
+  (daviddavis@redhat.com)
+- Content Search: Refactored content view comparison (daviddavis@redhat.com)
+- Content Search: created a content view comparison (daviddavis@redhat.com)
+- Worked on content view search (daviddavis@redhat.com)
+- Merge pull request #1743 from iNecas/default-content-view-dependent-destroy
+  (inecas@redhat.com)
+- Removed an unused method and fixed a validation issue with filters
+  (paji@redhat.com)
+- Fixed a couple of previously commented tests (paji@redhat.com)
+- Rails32 - Changes simple_crud_controller tests to turn data into json using
+  as_json similar to the controllers themselves. (ehelms@redhat.com)
+- Rails32 - Switching to be_json matcher for some tests. (ehelms@redhat.com)
+- Merge pull request #1704 from thomasmckay/906859-import-messages
+  (thomasmckay@redhat.com)
+- Rails32 - Adding check for secure token and Rails 32. (ehelms@redhat.com)
+- Move abstract model to katello-common package (inecas@redhat.com)
+- Destroy default content view on cascade when deleting environment
+  (inecas@redhat.com)
+- merging all .gitignores into one (lzap+git@redhat.com)
+- Small test fix with the hope that it'll make travis happy (paji@redhat.com)
+- Made some modifications on the unit test as suggested in PR 1746
+  (paji@redhat.com)
+- Removing commented code (paji@redhat.com)
+- Added tests to check the new age params (paji@redhat.com)
+- Merge pull request #1744 from daviddavis/removing_more_gems
+  (daviddavis@redhat.com)
+- Changed filter rule parameter conventions (paji@redhat.com)
+- Created optional gem group for profiling gems (daviddavis@redhat.com)
+- Merge branch 'master' into master-to-content (paji@redhat.com)
+- Merge branch 'content-filters' into master-to-content (paji@redhat.com)
+- Created a newrelic option in the configuration (daviddavis@redhat.com)
+- Merge pull request #1717 from pitr-ch/bug/#1711 (kontakt@pitr.ch)
+- Merge pull request #1724 from komidore64/dumb-warning (komidore64@gmail.com)
+- getting rid of that pesky deprecated message (komidore64@gmail.com)
+- Removing logical-insight (daviddavis@redhat.com)
+- Removed comment about webrat (daviddavis@redhat.com)
+- fix headpin build #1711 (pchalupa@redhat.com)
+- Merge pull request #1729 from pitr-ch/story/sso (daviddavis@redhat.com)
+- disconnected - adding i18n and refactoring (lzap+git@redhat.com)
+- fix travis tests (pchalupa@redhat.com)
+- Never warp navigation items (inecas@redhat.com)
+- Commented out a couple of tests who would be acted upon later
+  (paji@redhat.com)
+- Renamed the repos method to applicable_repos based on suggestions in PR 1725
+  (paji@redhat.com)
+- Added code address remove/validation logic as recommended in pr 1725
+  (paji@redhat.com)
+- Rails32 - Fixing some unit tests that broke under Rails32.
+  (ehelms@redhat.com)
+- added a warning to comments around 'require 'glue'' in lib/glue/queue.rb
+  (dmitri@appliedlogic.ca)
+- force loading of glue module before defining of any other modules in Glue
+  namespace (dmitri@appliedlogic.ca)
+- Rails32 - Updating Travis to actually run against the 3.2 gemfile and adding
+  missing logging gem. (ehelms@redhat.com)
+- LookNFeel - Minor style updates to the shell. (ehelms@redhat.com)
+- Merge branch 'master' into master-to-content (paji@redhat.com)
+- Fixed some typos in my previous (paji@redhat.com)
+- Made a couple changes related to the comments in PR 1725 (paji@redhat.com)
+- Merge pull request #1716 from komidore64/custom-info (komidore64@gmail.com)
+- remove katello.template.yml (pchalupa@redhat.com)
+- Merge pull request #1697 from bbuckingham/fork-content_views_dashboard
+  (bbuckingham@redhat.com)
+- Merge pull request #1710 from lzap/debug-iptableas (lzap@redhat.com)
+- Merge pull request #1722 from daviddavis/1721 (daviddavis@redhat.com)
+- Minor tweak to repository object to just return product_id (paji@redhat.com)
+- Added unit tests to check for the association (paji@redhat.com)
+- Merge pull request #1723 from ehelms/issue-1658 (ericdhelms@gmail.com)
+- Added filter association to products (paji@redhat.com)
+- Fixes #1658 - Removes all user notifications regarding login due to
+  redundancy and adds a helptip style message on the dashboard for users
+  without access to any organizations to let them know what their next steps
+  are. (ehelms@redhat.com)
+- Merge pull request #1719 from omaciel/standardlabelnotif
+  (omaciel@ogmaciel.com)
+- Showing invalid label as error not exception. Fixes #1721
+  (daviddavis@redhat.com)
+- Merge pull request #1688 from daviddavis/flv (daviddavis@redhat.com)
+- Standardizing notification message for re-using Labels. Fixes #1718
+  (ogmaciel@gnome.org)
+- large refactor of organization level default system info keys
+  (komidore64@gmail.com)
+- Merge pull request #1715 from ehelms/system-index-elasticsearch
+  (ericdhelms@gmail.com)
+- API - Updating API sytems controller spec tests. (ehelms@redhat.com)
+- Merge pull request #1681 from jlsherrill/delete_changeset_test
+  (jlsherrill@gmail.com)
+- fixing unit tests (jsherril@redhat.com)
+- Switch assert equals ordering as suggested int he PR comments
+  (paji@redhat.com)
+- Aligned the values in the yml to match other ymls (paji@redhat.com)
+- Fixed the repository sets controller test (paji@redhat.com)
+- Moved the base tests to fixtures instead of FactoryGirl as recommended
+  (paji@redhat.com)
+- API - Updating documentation and cleaning whitesapce. (ehelms@redhat.com)
+- API - Moves the Elasticsearch items query to be a class and changes Systems
+  index API to it's use.  Adds a paged and page_size option for the UI to use
+  and maintain the current standard of returning all results for API calls.
+  (ehelms@redhat.com)
+- Merge branch 'master', remote-tracking branch 'origin' into
+  delete_changeset_test (jsherril@redhat.com)
+- Made the asserts clearer based on the suggestions provided inPR 1713
+  (paji@redhat.com)
+- removed white spaces (paji@redhat.com)
+- Added tests related to filter_controller
+- API - Moving Systems index API controller to using Elasticsearch.
+  (ehelms@redhat.com)
+- Removing a trailing white space (paji@redhat.com)
+- Addded minitests  for filter model (paji@redhat.com)
+- Merge pull request #1709 from thomasmckay/headpin-travis
+  (thomasmckay@redhat.com)
+- adding headpin tests to travis (komidore64@gmail.com)
+- Updated copyright years (paji@redhat.com)
+- Merge pull request #1689 from ehelms/api-session-auth (ericdhelms@gmail.com)
+- Merge pull request #1703 from pitr-ch/story/sso (kontakt@pitr.ch)
+- adding iptables -L output to the katello-debug (lzap+git@redhat.com)
+- move Configuration to Katello namespace (pchalupa@redhat.com)
+- separate reusable parts of katello configuration (pchalupa@redhat.com)
+- Removed trailing spaces (paji@redhat.com)
+- Removed some trailing spaces in both py and rb files (paji@redhat.com)
+- removed unnecessary to_json calls as suggested in PR 1708 (paji@redhat.com)
+- Filter model tweaks based on PR suggestions (paji@redhat.com)
+- Label validator unit tests (daviddavis@redhat.com)
+- Merge pull request #1701 from lzap/system-name-length-917033
+  (lzap@redhat.com)
+- Intial commit of filters functionality (paji@redhat.com)
+- Fixing schema.rb (daviddavis@redhat.com)
+- 906859-import-messages - cleaned up error messages for both import and delete
+  manifest (thomasmckay@redhat.com)
+- Setup simplecov in katello (daviddavis@redhat.com)
+- 917033 - setting maximum length for system name to 250 (lzap+git@redhat.com)
+- Merge branch 'master' into tdd/lib_reorganization (pchalupa@redhat.com)
+- content views - haml for dashboard portlet (bbuckingham@redhat.com)
+- content views - add a portlet to the dashboard for content views
+  (bbuckingham@redhat.com)
+- content views - support retrieving 'readable' versions
+  (bbuckingham@redhat.com)
+- Fixing undefined method index errors (daviddavis@redhat.com)
+- Merge pull request #1685 from lzap/dis2 (lzap@redhat.com)
+- Merge pull request #1693 from ares/feature/logging (ares@igloonet.cz)
+- Add logging as build dependency (mhulan@redhat.com)
+- Merge pull request #1653 from ares/feature/logging (ares@igloonet.cz)
+- Authentication - Enables session based authentication to the API controllers.
+  (ehelms@redhat.com)
+- Merge pull request #1686 from pitr-ch/tdd/foreman-timeouts (kontakt@pitr.ch)
+- packaging fix (pchalupa@redhat.com)
+- Merge branch 'master' into tdd/lib_reorganization (pchalupa@redhat.com)
+- Merge pull request #1659 from bbuckingham/fork_composite_views
+  (bbuckingham@redhat.com)
+- Merge pull request #1680 from bbuckingham/fork_content_view_tests
+  (bbuckingham@redhat.com)
+- Merge pull request #1678 from daviddavis/cs_refactor (daviddavis@redhat.com)
+- Fixed label validator (daviddavis@redhat.com)
+- Merge pull request #1674 from ares/tdd/remove_spec_warnings
+  (ares@igloonet.cz)
+- Merge pull request #1675 from ares/tdd/ping_test_fix (ares@igloonet.cz)
+- Merge branch 'master' into tdd/lib_reorganization (pchalupa@redhat.com)
+- Moved shared content view and product code out (daviddavis@redhat.com)
+- fix missing timeout option passing to foreman_api (pchalupa@redhat.com)
+- lib/util cleanup (pchalupa@redhat.com)
+- Merge pull request #1669 from pitr-ch/tdd/remove_old_fixme (kontakt@pitr.ch)
+- Organize lib files (pchalupa@redhat.com)
+- Merge pull request #1673 from ares/tdd/system_templates_specs
+  (ares@igloonet.cz)
+- diconnected - pulp v2 initial support (lzap+git@redhat.com)
+- Removed unnecessary require (mhulan@redhat.com)
+- log each test's name (pchalupa@redhat.com)
+- add support for tailing external log files (pchalupa@redhat.com)
+- Better stubbing to fix specs (ares@igloonet.cz)
+- Fix for TaskStatus callback (ares@igloonet.cz)
+- New log files structure (ares@igloonet.cz)
+- Be more tolerant about log path (ares@igloonet.cz)
+- Changes of default values (ares@igloonet.cz)
+- Fix for Ruby 1.8 (ares@igloonet.cz)
+- Add logging dependency (ares@igloonet.cz)
+- simplify #configure_children_loggers method (pchalupa@redhat.com)
+- add YARD log support (pchalupa@redhat.com)
+- pull out configuration post_process down same as validation definition
+  (pchalupa@redhat.com)
+- do not align logger names (pchalupa@redhat.com)
+- Changed default settings (ares@igloonet.cz)
+- Fix specs with new logging gem (ares@igloonet.cz)
+- Logging configuration validation (ares@igloonet.cz)
+- Move logging configuration to defaults (ares@igloonet.cz)
+- Configuration cleanup (ares@igloonet.cz)
+- Multiline log messages indentation (ares@igloonet.cz)
+- use same format for stdout appender as for development.log
+  (pchalupa@redhat.com)
+- add missing log_trace option in common.logging (pchalupa@redhat.com)
+- Test coverage for logging (ares@igloonet.cz)
+- Inline console logging support (ares@igloonet.cz)
+- Support for custom log file path (ares@igloonet.cz)
+- Remove logrotate configuration not needed anymore (ares@igloonet.cz)
+- Support for log trace (ares@igloonet.cz)
+- Syslog support (ares@igloonet.cz)
+- New logging configuration (ares@igloonet.cz)
+- Use logging gem for all logs (ares@igloonet.cz)
+- Merge pull request #1670 from iNecas/refactor (inecas@redhat.com)
+- Merge pull request #1657 from jlsherrill/pulp_perf (jlsherrill@gmail.com)
+- fixture update (jsherril@redhat.com)
+- test fix (jsherril@redhat.com)
+- vcr cassette update (jsherril@redhat.com)
+- test fix (jsherril@redhat.com)
+- content views - add some spec tests for content view & definition controllers
+  (bbuckingham@redhat.com)
+- content views - fix the permission checked when destroying a definition
+  (bbuckingham@redhat.com)
+- adding deletion changeset tests (jsherril@redhat.com)
+- Merge pull request #1677 from thomasmckay/db-seeds-headpin-fence
+  (thomasmckay@redhat.com)
+- Refactored product content search (daviddavis@redhat.com)
+- Started refactoring content search with content view search
+  (daviddavis@redhat.com)
+- db-seeds-headpin-fence - fence pulp call (thomasmckay@redhat.com)
+- Merge pull request #1676 from bbuckingham/fix_routes (bbuckingham@redhat.com)
+- Merge branch 'master' of https://github.com/Katello/katello into pulp_perf
+  (jsherril@redhat.com)
+- minitest test fix (jsherril@redhat.com)
+- routes.js - regenerating (bbuckingham@redhat.com)
+- Fix ping spec (mhulan@redhat.com)
+- Remove expectations on nil warnings (mhulan@redhat.com)
+- Refactored system template specs (mhulan@redhat.com)
+- Merge pull request #1666 from jlsherrill/set_id_to_set_name
+  (jlsherrill@gmail.com)
+- Use snake_case instead of camelCase for method names (inecas@redhat.com)
+- Local variables snake_case instead of CamelCase (inecas@redhat.com)
+- Non action method in controller should be private (inecas@redhat.com)
+- Merge pull request #1665 from bbuckingham/sort_promotion_paths
+  (bbuckingham@redhat.com)
+- remove old FIXME (pchalupa@redhat.com)
+- Fixes #1656 - Sets a minimum width on the body to reflect that hard width set
+  on the content section. (ehelms@redhat.com)
+- content views - fix changeset.add_content_view test (bbuckingham@redhat.com)
+- Merge pull request #1652 from witlessbird/default_view_creation
+  (witlessbird@gmail.com)
+- allowing the use of repo set name for enable disable (jsherril@redhat.com)
+- content view - refactor add_content_view logic in controller to model
+  (bbuckingham@redhat.com)
+- Merge pull request #1660 from daviddavis/act_key_create_fix
+  (daviddavis@redhat.com)
+- env paths - sort paths by env name (bbuckingham@redhat.com)
+- updated test fixtures after merge (dmitri@redhat.com)
+- Merge pull request #1663 from bbuckingham/fixes_1661 (bbuckingham@redhat.com)
+- updated db/schema.rb; removed default_content_view_id column from
+  environments table (dmitri@redhat.com)
+- reduced the number of saves during default_content_view creation.
+  KTEnvironment is now being saved only once. (dmitri@redhat.com)
+- Merge pull request #1621 from daviddavis/cv_system_pgs
+  (daviddavis@redhat.com)
+- Merge pull request #1647 from thomasmckay/distributors-minitest
+  (thomasmckay@redhat.com)
+- distributors-minitest - systems and distributors testing
+  (thomasmckay@redhat.com)
+- Fixes #1661 - add request_type to notices retrieved using client polling
+  (bbuckingham@redhat.com)
+- custominfo-tupane-fix - fixed tupane layout for custominfo
+  (thomasmckay@redhat.com)
+- Setting initial_action to fix create (daviddavis@redhat.com)
+- content views - ui - composite view promotion - help users with component
+  views (bbuckingham@redhat.com)
+- Merge pull request #1654 from jlsherrill/bz909472 (jlsherrill@gmail.com)
+- using bulk_load_size config option for determining bulk loads
+  (jsherril@redhat.com)
+- Merge pull request #1651 from jlsherrill/fast_import (mmccune@gmail.com)
+- Merge remote-tracking branch 'upstream/master' into fork_composite_views
+  (bbuckingham@redhat.com)
+- 909472 - not allowing <, >, & /  in usernames (jsherril@redhat.com)
+- fixing string detected as improperly formatted (jsherril@redhat.com)
+- Merge pull request #1627 from jlsherrill/fast_import (jlsherrill@gmail.com)
+- Merge pull request #1648 from daviddavis/rs (miroslav@suchy.cz)
+- Merge pull request #1644 from iNecas/apipie-dry (inecas@redhat.com)
+- test fixes (jsherril@redhat.com)
+- fast import - removing product.import_logger (jsherril@redhat.com)
+- Checking db/schema.rb into version control (daviddavis@redhat.com)
+- spect test fix (jsherril@redhat.com)
+- Merge pull request #1640 from tstrachota/comp_res_fix (tstrachota@redhat.com)
+- Merge pull request #1645 from daviddavis/ff (daviddavis@redhat.com)
+- Fixing fencing issues in headpin (daviddavis@redhat.com)
+- DRY common apipie param descriptions into param groups (inecas@redhat.com)
+- content views - address PR 1641 comments (bbuckingham@redhat.com)
+- Merge pull request #1594 from xsuchy/pull-req-bz886718 (miroslav@suchy.cz)
+- Fixed typo in activation_key comment (daviddavis@redhat.com)
+- Merge pull request #1633 from iNecas/912698 (inecas@redhat.com)
+- fast import - isloating logic to find content on a product
+  (jsherril@redhat.com)
+- addressing pull request comment (jsherril@redhat.com)
+- content views - tests - few minor changes for composite definitions
+  (bbuckingham@redhat.com)
+- content views - promote - minor change to handle when there is no definition
+  (bbuckingham@redhat.com)
+- content views - fix a few broken tests (bbuckingham@redhat.com)
+- Merge branch 'master' of https://github.com/Katello/katello into fast_import2
+  (jsherril@redhat.com)
+- 912698 - ak subscribe:  take the number of sockets in pool into account
+  (inecas@redhat.com)
+- content views - fix few bugs in view publish/refresh/promote
+  (bbuckingham@redhat.com)
+- comp resources - fixed system tests (tstrachota@redhat.com)
+- Merge pull request #1638 from bbuckingham/fork_content_views_fix_query-2
+  (bbuckingham@redhat.com)
+- pulp peformance enhancements (jsherril@redhat.com)
+- content views - fix query that failed on older postresql
+  (bbuckingham@redhat.com)
+- Merge pull request #1634 from lzap/i18n-merge-fix (bbuckingham@redhat.com)
+- Merge pull request #1626 from daviddavis/cv_content_search
+  (daviddavis@redhat.com)
+- Merge pull request #1624 from daviddavis/1620 (daviddavis@redhat.com)
+- Content views: worked on content view search (daviddavis@redhat.com)
+- test fix (jsherril@redhat.com)
+- test fix (jsherril@redhat.com)
+- i18n - fixing merge issue introduced by 2cee9ef0d7ee53 (lzap+git@redhat.com)
+- spec fix (jsherril@redhat.com)
+- moving Product#repos from pulp glue to normal model, as nothing is pulp
+  related (jsherril@redhat.com)
+- Merge pull request #1610 from daviddavis/1592 (daviddavis@redhat.com)
+- Merge pull request #1632 from witlessbird/environment_factory
+  (witlessbird@gmail.com)
+- Merge pull request #1631 from witlessbird/content_view_orchestration
+  (witlessbird@gmail.com)
+- a smal refactoring to generate more complete environment+dependencies tree
+  (dmitri@redhat.com)
+- a fix in content_view_environemnt: the order of callbacks is important
+  (dmitri@redhat.com)
+- Loading pulp gem group (jomara@redhat.com)
+- content views - ui - composite definitions - help user resolve content
+  conflicts (bbuckingham@redhat.com)
+- whitespace fix (jsherril@redhat.com)
+- Resolving headpin installation issues (jomara@redhat.com)
+- spec fixes (jsherril@redhat.com)
+- fast import - removing refresh_products from ui provider
+  (jsherril@redhat.com)
+- fast import - adding tool tip and better messaging if no manifest was
+  imported (jsherril@redhat.com)
+- spec test fix (jsherril@redhat.com)
+- fast import - adding tests for repository set manipulation
+  (jsherril@redhat.com)
+- Content views: fixing content_view_definition api controller test
+  (daviddavis@redhat.com)
+- content views - initial support to promote composite views
+  (bbuckingham@redhat.com)
+- Merge pull request #1614 from ehelms/menu-updates (ericdhelms@gmail.com)
+- Content views: updating list on system new page (daviddavis@redhat.com)
+- Merge pull request #1611 from daviddavis/test_fix (daviddavis@redhat.com)
+- Fixing #1620 by defining url_content_views_proc (daviddavis@redhat.com)
+- fast import - adding spec tests and api for disable (jsherril@redhat.com)
+- Merge pull request #1600 from xsuchy/pull-req-tomcat (miroslav@suchy.cz)
+- merge conflict (jsherril@redhat.com)
+- content views - do not list composite definitions in content list
+  (bbuckingham@redhat.com)
+- content views - extend the definition.repos to support composite definitions
+  (bbuckingham@redhat.com)
+- Content views: fixing breaking test (daviddavis@redhat.com)
+- f18 - skip api pie for fedora 18 (lzap+git@redhat.com)
+- Content views: addressing feedback from #1592 (daviddavis@redhat.com)
+- f18 - making apipie happy during build phase (lzap+git@redhat.com)
+- Merge pull request #1605 from lzap/jruby-fix (lzap@redhat.com)
+- Merge pull request #1535 from iNecas/log-not-found-message
+  (inecas@redhat.com)
+- Merge pull request #1568 from pitr-ch/bug/781206-missing-notifications
+  (kontakt@pitr.ch)
+- Merge pull request #1580 from pitr-ch/story/configuration (kontakt@pitr.ch)
+- Merge pull request #1604 from lzap/f18-build (lzap@redhat.com)
+- rails32 - not need version constraints anymore on compass
+  (lzap+git@redhat.com)
+- Merge pull request #1609 from bbuckingham/fork_content_view_migrations
+  (daviddavis@redhat.com)
+- content views - remove trailing whitespace on comment...
+  (bbuckingham@redhat.com)
+- content views - migration - associate env with version
+  (bbuckingham@redhat.com)
+- content views - fix migration that maps repos to view versions
+  (bbuckingham@redhat.com)
+- new ui for repo(set) enabling (jsherril@redhat.com)
+- Merge pull request #1607 from daviddavis/fix_jenkins_cv
+  (daviddavis@redhat.com)
+- Merge pull request #1603 from ehelms/compass-rails-32 (ericdhelms@gmail.com)
+- Rewriting test to hopefully fix jenkins error (daviddavis@redhat.com)
+- Merge pull request #1592 from Katello/content_views (bbuckingham@redhat.com)
+- jruby - rpm installation is not supported on jruby yet (lzap+git@redhat.com)
+- Merge pull request #1601 from xsuchy/pull-req-tu_shim2 (lzap@redhat.com)
+- Content views: changed how exception was being raised (daviddavis@redhat.com)
+- Content views: fixing minitest test (daviddavis@redhat.com)
+- Merge pull request #1602 from xsuchy/pull-req-Gemfile56
+  (bbuckingham@redhat.com)
+- Merge pull request #1554 from thomasmckay/distributors
+  (thomasmckay@redhat.com)
+- s/Gemfile.32/Gemfile32/ (msuchy@redhat.com)
+- initial repo set UI work (jsherril@redhat.com)
+- distributors - updated tupane changes from master (thomasmckay@redhat.com)
+- do not require minitest_tu_shim (msuchy@redhat.com)
+- distributors - clean up based upon pull-request feedback (code format, etc.)
+  (thomasmckay@redhat.com)
+- distributors - 'rake jsroutes' after rebase from master
+  (thomasmckay@redhat.com)
+- distributors - UI (thomasmckay@redhat.com)
+- rename katello-defaults.yml to katello_defaults.yml (pchalupa@redhat.com)
+- changing secrets 'shhhh' to 'katello' (pchalupa@redhat.com)
+- we need tomcat in %%post section (msuchy@redhat.com)
+- use Gemfile.32 for Fedora 18+ (msuchy@redhat.com)
+- Merge pull request #1565 from jlsherrill/bz910094 (jlsherrill@gmail.com)
+- Merge remote-tracking branch 'upstream/master' into content_views
+  (bbuckingham@redhat.com)
+- Merge remote-tracking branch 'upstream/master' into content_views
+  (bbuckingham@redhat.com)
+- Content views: fixed call to ChangesetContentException
+  (daviddavis@redhat.com)
+- Content views: removing 1.9 method sort_by! (daviddavis@redhat.com)
+- Content views: fixing indentation in api cvd controller
+  (daviddavis@redhat.com)
+- Content views: updating copyright years (daviddavis@redhat.com)
+- Content views: addressing feedback from PR #1592 (daviddavis@redhat.com)
+- Merge branch 'master' of https://github.com/Katello/katello into fast_import
+  (jsherril@redhat.com)
+- Merge pull request #1591 from komidore64/custom-info (komidore64@gmail.com)
+- fixing le test (komidore64@gmail.com)
+- Merge branch 'master' of https://github.com/Katello/katello into fast_import
+  (jsherril@redhat.com)
+- 886718 - allow better translation of one string (msuchy@redhat.com)
+- Merge pull request #1555 from ehelms/rails32-30-bridge (ericdhelms@gmail.com)
+- Menu - Fixes issue where menu updates did not correctly update API
+  controller. (ehelms@redhat.com)
+- Conflicts:      src/app/controllers/roles_controller.rb (jrist@redhat.com)
+- content views - Rails32 - move tupane_layout declarations to views
+  (bbuckingham@redhat.com)
+- Merge remote-tracking branch 'upstream/master' into content_views
+  (bbuckingham@redhat.com)
+- Rails32 - Adds compass-rails for Compass 0.12 on Fedora 18 and updates
+  configuration file for compass for both version of compass 0.11.5 and 0.12.
+  (ehelms@redhat.com)
+- Merge pull request #1528 from xsuchy/pull-req-msg (miroslav@suchy.cz)
+- Merge pull request #1575 from jlsherrill/bz868917 (jlsherrill@gmail.com)
+- Refactoring edit action in activation_keys controller (daviddavis@redhat.com)
+- Rails32 - Setting haml declaration in 32 Gemfile to be consistent with
+  regular Gemfile.  Re-factoring accessible_environments for readability.
+  (ehelms@redhat.com)
+- Rails32 - Fixing accessible_environments to properly generate an array when
+  making the list unique. (ehelms@redhat.com)
+- Rails32 - Removing clone and adding dup on self. (ehelms@redhat.com)
+- Rails32 - Small test fix following a rebase. (ehelms@redhat.com)
+- Rails32 - Whitespace cleanup. (ehelms@redhat.com)
+- Rails32 - Adds a slew of updates required to get spec tests passing.
+  (ehelms@redhat.com)
+- Rails32 - Adds a separate gemfile to specify Rails3.2 for Travis testing.
+  (ehelms@redhat.com)
+- Rails32 - Updates tests that rely on loading fixtures in before and after
+  suites to load them properly in both 3.2 and 3.0 (ehelms@redhat.com)
+- Rails32 - ActiveRecord models now take two arguments on intialize. This
+  updates each model that overrides initialize and calls superto conditionally
+  call super with 1 or 2 arguments depending on the Rails version.
+  (ehelms@redhat.com)
+- Rails32 - Adding missing options parameter to initialize method.
+  (ehelms@redhat.com)
+- Rails32 - Explicitly casting sync_date to a time object since in 3.2 all
+  parameters are treated as strings and not cast. (ehelms@redhat.com)
+- Rails32 - Adds conditional to grab appropriate association owner since they
+  diverge between 3.2 and 3.0. (ehelms@redhat.com)
+- Rails32 - Adds needed options parameter for initialize methods.
+  (ehelms@redhat.com)
+- Rails32 - Putting submodule back to original hash. (ehelms@redhat.com)
+- Rails32 - Adding bridge file to contain functionality not present in 3.2 but
+  needed by 3.0 to allow temporary running on both stacks. (ehelms@redhat.com)
+- Rails32 - Updating location of json custom matcher for spec testing.
+  (ehelms@redhat.com)
+- Removes completely deprecated and unused debug_rjs option.
+  (ehelms@redhat.com)
+- Removes validation covered by added indexes that further breaks in Rails 3.2
+  (ehelms@redhat.com)
+- Spec test fixes to allow passing in Rails 3.2 (ehelms@redhat.com)
+- Fixes matching on array's that can result in occassional random order.
+  (ehelms@redhat.com)
+- Removes validation that is enforced by the database after index changes. This
+  is also to prevent errors in Rails 3.2. (ehelms@redhat.com)
+- Moves all tupane_layout declarations to the views.  Note that this is also
+  required to have tupane views rendering properly in Rails 3.2.
+  (ehelms@redhat.com)
+- Changes class_inheritable_attribute to class_attribute since the former is
+  deprecated in 3.1+. (ehelms@redhat.com)
+- fixing some indentation to look nicer (jsherril@redhat.com)
+- Added in some missing licenses (daviddavis@redhat.com)
+- cleaning up create method, thanks to @daviddavis 's suggestion!
+  (komidore64@gmail.com)
+- Merge pull request #1572 from jlsherrill/bz852849 (jlsherrill@gmail.com)
+- Merge pull request #1578 from jlsherrill/bz909961 (jlsherrill@gmail.com)
+- Merge pull request #1587 from daviddavis/cv_fencing (daviddavis@redhat.com)
+- little bit of code clean-up for custom info (komidore64@gmail.com)
+- content views - 1 more test fix (bbuckingham@redhat.com)
+- Content views: added more fencing to UI (daviddavis@redhat.com)
+- adding custom info into system's UI page (komidore64@gmail.com)
+- content views - update tests for composite definitions
+  (bbuckingham@redhat.com)
+- Merge pull request #1570 from ehelms/bug-814167 (ericdhelms@gmail.com)
+- Merge pull request #1574 from ehelms/bug-864189 (ericdhelms@gmail.com)
+- Merge pull request #1577 from ehelms/bug-904194 (ericdhelms@gmail.com)
+- Merge pull request #1576 from ehelms/bug-867300 (ericdhelms@gmail.com)
+- content views - address comments on PR 1549 (bbuckingham@redhat.com)
+- content views - composite - disable publish/refresh on invalid definition
+  (bbuckingham@redhat.com)
+- Merge pull request #1581 from xsuchy/pull-req-factory_girl_rails
+  (miroslav@suchy.cz)
+- Merge pull request #1566 from daviddavis/ufg (miroslav@suchy.cz)
+- Merge remote-tracking branch 'upstream/master' into fork_content_views_merge
+  (bbuckingham@redhat.com)
+- Merge pull request #1582 from ehelms/gemfile-update (bbuckingham@redhat.com)
+- enable more checks (msuchy@redhat.com)
+- ko - (pofilter) newlines: Different line endings (msuchy@redhat.com)
+- mr - (pofilter) newlines: Different line endings (msuchy@redhat.com)
+- or - (pofilter) newlines: Different line endings (msuchy@redhat.com)
+- ta - (pofilter) newlines: Different line endings (msuchy@redhat.com)
+- te - (pofilter) long: The translation is much longer than the original
+  (msuchy@redhat.com)
+- de - (pofilter) variables: Added variables: %%s (msuchy@redhat.com)
+- es - (pofilter) variables: Do not translate: %%s (msuchy@redhat.com)
+- hi - (pofilter) variables: Do not translate: %%s (msuchy@redhat.com)
+- kn - (pofilter) variables: Do not translate: %%s (msuchy@redhat.com)
+- ko - (pofilter) variables: Do not translate: %%s (msuchy@redhat.com)
+- pa - (pofilter) variables: Do not translate: %%s (msuchy@redhat.com)
+- ta - (pofilter) variables: Do not translate: %%s (msuchy@redhat.com)
+- pofilter always return 0, fail if there is some error output
+  (msuchy@redhat.com)
+- Merge pull request #1436 from thomasmckay/901714-subfilters
+  (thomasmckay@redhat.com)
+- Gemfile - Setting haml version to be more restrictive due to new release of
+  haml gem on Rubygems. (ehelms@redhat.com)
+- zh_CN - (pofilter) variables: Added variables: %%s (msuchy@redhat.com)
+- check po files for errors using pofilter (msuchy@redhat.com)
+- check localization files for corectness (msuchy@redhat.com)
+- Set factory_girl_rails to 1.4.0 per repos (daviddavis@redhat.com)
+- Merge pull request #1548 from daviddavis/cv_act_key_field
+  (daviddavis@redhat.com)
+- Merge pull request #1579 from ares/feature/better_locale_parsing
+  (ares@igloonet.cz)
+- add factory_girl_rails to requirements of katello-devel (msuchy@redhat.com)
+- Merge branch 'master' into story/configuration (pchalupa@redhat.com)
+- documentation update (pchalupa@redhat.com)
+- leave app_mode option in katello.yml (pchalupa@redhat.com)
+- Merge pull request #1559 from ares/bug/883003-system_groups_validation
+  (ares@igloonet.cz)
+- Small fix for invalid locale input (ares@igloonet.cz)
+- Changeset - Missing render tupane_layout call in view. (ehelms@redhat.com)
+- 909961 - fixing cs errata add/remove from ui (jsherril@redhat.com)
+- Merge pull request #1558 from bbuckingham/fork_content_views_jslint
+  (daviddavis@redhat.com)
+- 904194 - Changes to reference products by label instead of name since
+  multiple products with the same name can exist and cause issues when
+  attempting to promote a system template. (ehelms@redhat.com)
+- 867300 - Moves the activation key attach button to the top left corner of the
+  available subscriptions table on the activation key edit. (ehelms@redhat.com)
+- 868917 - fixing terminology of comparison on content search
+  (jsherril@redhat.com)
+- fixing model scoping (jsherril@redhat.com)
+- 864189 - Fixes issue where hovering over a top level tab and then moving to
+  another top level tab would result in a flash of the menu and an improper
+  display of the menu. (ehelms@redhat.com)
+- 867304 - sorting first environment in paths for env selector
+  (jsherril@redhat.com)
+- Content views: updating content views and products on activation key page
+  (daviddavis@redhat.com)
+- 852849 - fixing redirect of expired sessoin (jsherril@redhat.com)
+- 814167 - Changes the rendering location of the remove button on system
+  templates sliding tree to be centered with text. (ehelms@redhat.com)
+- Merge pull request #1564 from ehelms/bug-770690 (ericdhelms@gmail.com)
+- 910094 - fixing creation of repos with internationalized names
+  (jsherril@redhat.com)
+- 770690 - Adds helptip to debug certificate download to explain what the debug
+  certificate is used for. (ehelms@redhat.com)
+- fixing route (jsherril@redhat.com)
+- Pulp agent changed recently the format of the remote action report
+  (inecas@redhat.com)
+- add missing notification when repo discovery fails (pchalupa@redhat.com)
+- replace Notify with #notify in controller (pchalupa@redhat.com)
+- Condition cleanup (ares@igloonet.cz)
+- 883003 - SystemGroup validation (ares@igloonet.cz)
+- Merge pull request #1552 from
+  ares/bug/844389-repository_deletion_and_creation (ares@igloonet.cz)
+- allowing repo set enabling to be async (jsherril@redhat.com)
+- 901714-subfilters - disabling busted spec, moving to minitest
+  (thomasmckay@redhat.com)
+- content views - address jslint warnings (bbuckingham@redhat.com)
+- content views - rename nav Views to Content View Definitions
+  (bbuckingham@redhat.com)
+- content views - update nav to ensure unique ids (bbuckingham@redhat.com)
+- Whitespace - Fixing whitespace. (ehelms@redhat.com)
+- content views : fix nav to use Katello.config vs AppConfig
+  (bbuckingham@redhat.com)
+- spec fixes (jsherril@redhat.com)
+- Merge pull request #1485 from ehelms/test-updates (ericdhelms@gmail.com)
+- 901714-subfilters - subscription filters 901714 & 901715 fixed
+  (thomasmckay@redhat.com)
+- adding api for repository set enabling & listing (jsherril@redhat.com)
+- adding content set disabling to model layer (jsherril@redhat.com)
+- 844389 - Revert of content deletion checking removal (ares@igloonet.cz)
+- Fixing errors on content_views (daviddavis@redhat.com)
+- initial model changes to support faster imports (jsherril@redhat.com)
+- Merge branch 'master' into story/configuration (pchalupa@redhat.com)
+- add default values to configuration (pchalupa@redhat.com)
+- Merge pull request #1544 from ares/bug/851331-provider_organization_id_format
+  (ares@igloonet.cz)
+- Merge pull request #1537 from
+  ares/bug/844389-repository_deletion_and_creation (ares@igloonet.cz)
+- 851331 - Add organization label attribute (ares@igloonet.cz)
+- 844389 - unsuccessful repo deletion rollbacking (ares@igloonet.cz)
+- 841013 - Allow same name distributions in changeset (ares@igloonet.cz)
+- Merge pull request #1513 from daviddavis/cv_unique (daviddavis@redhat.com)
+- content views - only associate cp_environment with content_view_environment
+  (bbuckingham@redhat.com)
+- content views - simplify environments for rhsm (bbuckingham@redhat.com)
+- content view - fix content_view_version_environment to properly access view
+  name (bbuckingham@redhat.com)
+- content views - fix few tests broken when adding content view env
+  (bbuckingham@redhat.com)
+- content views - handle case where system create contains numeric id for env
+  (bbuckingham@redhat.com)
+- content views - consumer - see views as envs and allow registration to view
+  (bbuckingham@redhat.com)
+- content views - adding initial support for cv environments w/ candlepin
+  support (bbuckingham@redhat.com)
+- content views - fix product repo selector behavior for deleting a repo
+  (bbuckingham@redhat.com)
+- Merge remote-tracking branch 'upstream/master' into fork_content_views
+  (bbuckingham@redhat.com)
+- Merge pull request #1532 from lzap/test-script (lzap@redhat.com)
+- Merge pull request #1503 from lzap/jruby (lzap@redhat.com)
+- Merge pull request #1545 from jlsherrill/minitest-fix (jlsherrill@gmail.com)
+- switching to <= for minitest (jsherril@redhat.com)
+- forcing a lower version of minitest (jsherril@redhat.com)
+- Merge pull request #1534 from daviddavis/es_move (daviddavis@redhat.com)
+- spec fix (jsherril@redhat.com)
+- fixing a couple issues with errata and packages (jsherril@redhat.com)
+- Merge remote-tracking branch 'upstream/master' into fork_content_views_merge
+  (bbuckingham@redhat.com)
+- Log exception message for RecordNotFound exception (inecas@redhat.com)
+- Merge pull request #1530 from pitr-ch/quick-fix/remove-bundler-patch
+  (kontakt@pitr.ch)
+- Moving elastisearch methods to module (daviddavis@redhat.com)
+- Merge branch 'master' into story/configuration (pchalupa@redhat.com)
+- Merge pull request #1229 from iNecas/apipie-headpin (inecas@redhat.com)
+- Reduced API documentation for Headpin mode (inecas@redhat.com)
+- Merge pull request #1511 from witlessbird/param_rules_error
+  (witlessbird@gmail.com)
+- Merge pull request #1430 from pitr-ch/story/yard (kontakt@pitr.ch)
+- 908012 - fixing katello-check for pulp v1 (lzap+git@redhat.com)
+- move exception_paranoia option form application.rb to katello.yml
+  (pchalupa@redhat.com)
+- Merge pull request #1522 from xsuchy/pull-req-sam-trans (miroslav@suchy.cz)
+- remove bundler patch preferring rpms over gems (pchalupa@redhat.com)
+- Merge branch 'master' into story/yard (pchalupa@redhat.com)
+- Fixed more merge conflicts (paji@redhat.com)
+- Fixed some merge conflicts Conflicts:   src/public/javascripts/routes.js
+  (paji@redhat.com)
+- bumping runcible requirement (jsherril@redhat.com)
+- Content views: added view search to content search (daviddavis@redhat.com)
+- Merge pull request #1520 from tstrachota/log_msg_fix (lzap@redhat.com)
+- fix for typos in auth log messages (tstrachota@redhat.com)
+- merge translation from SAM (msuchy@redhat.com)
+- Translations - Download translations from Transifex for katello.
+  (msuchy@redhat.com)
+- build fix: replaced string evaluation with substitution in
+  OwnRolePresenceValidator error message (dmitri@redhat.com)
+- Merge pull request #1481 from witlessbird/default_environment
+  (witlessbird@gmail.com)
+- moved OwnRolePresenceValidator into a dedicated class and into lib/validators
+  (dmitri@redhat.com)
+- fixing jenkins runcible module issue (jsherril@redhat.com)
+- Content views: making names unique (daviddavis@redhat.com)
+- Fixed some merge conflicts (paji@redhat.com)
+- Merge pull request #1510 from ehelms/runcible-logging (jlsherrill@gmail.com)
+- Runcible - Updates logging configuration for Runcible so that all requests to
+  Pulp will be logged at debug log level and if the log level is set to error,
+  only exceptions thrown by Pulp will be logged. (ehelms@redhat.com)
+- refactoring of handling of http errors (dmitri@redhat.com)
+- replaced a 400 error with 422 (unprocessable entity) on param_rule check
+  failure (dmitri@redhat.com)
+- Removed the github reference in gemfile since ruby-gems is open
+  (paji@redhat.com)
+- Revert "Removed the github reference in gemfile since ruby-gems is open"
+  (paji@redhat.com)
+- Removed the github reference in gemfile since ruby-gems is open
+  (paji@redhat.com)
+- Changed the gemfile + spec to use new runcible (paji@redhat.com)
+- Fixed an unintended insert (paji@redhat.com)
+- Fixed a typo (paji@redhat.com)
+- Updated katello code base to work with Runcible 0.3.2 (paji@redhat.com)
+- Updated gemfile to use runcible 0.3.2 (paji@redhat.com)
+- Merge pull request #1453 from jhadvig/system_group_errata
+  (j.hadvig@gmail.com)
+- Merge pull request #1507 from jlsherrill/runcible-version
+  (jlsherrill@gmail.com)
+- requiring specific runcible version (jsherril@redhat.com)
+- renamed User#find_by_default_environment to User#with_default_environment
+  (dmitri@redhat.com)
+- removed strayed logging in users_controller (dmitri@redhat.com)
+- refactoring of default system registration permission and user own role code
+  in User model (dmitri@redhat.com)
+- Merge pull request #1495 from iNecas/pulp-ping-fix (inecas@redhat.com)
+- kt form builder - support for label help icon (tstrachota@redhat.com)
+- hw models - ui pages (tstrachota@redhat.com)
+- hw models - model and api (tstrachota@redhat.com)
+- foreman model - support for different resource name in foreman
+  (tstrachota@redhat.com)
+- abstract model - parse attributes properly on create (tstrachota@redhat.com)
+- Using OPTIONS method on Pulp API to find out it's running (inecas@redhat.com)
+- jruby - get jdbc running with bundler_ext (lzap+git@redhat.com)
+- jruby - checking devel gems disabled for jruby (lzap+git@redhat.com)
+- jruby - enabling threadsafe and fixing manifest upload (lzap+git@redhat.com)
+- Content views: various fixes to UI and CLI (daviddavis@redhat.com)
+- Merge pull request #1499 from jlsherrill/1.9fix (jlsherrill@gmail.com)
+- Merge pull request #1498 from thomasmckay/jsroutes-update
+  (thomasmckay@redhat.com)
+- fixing ruby 1.9 error (jsherril@redhat.com)
+- updated routes.js, fixed typo array_with_total (thomasmckay@redhat.com)
+- Merge pull request #1480 from ehelms/pulpv2 (ericdhelms@gmail.com)
+- Merge branch 'master' into v2-cv (paji@redhat.com)
+- Merge branch 'content_views' into v2-cv (paji@redhat.com)
+- Fixed a small error in default content view publish (paji@redhat.com)
+- Revert "Fixed a small error in default content view publish"
+  (paji@redhat.com)
+- White-spaces fixes in Gemfiles (inecas@redhat.com)
+- Merge pull request #1492 from jlsherrill/redhat-promotion-fix
+  (jlsherrill@gmail.com)
+- create a distributor for disabled repos (jsherril@redhat.com)
+- Merge pull request #1469 from daviddavis/jsroutefix (daviddavis@redhat.com)
+- Minitest - Adds flag to allow running Pulp glue tests against live Pulp
+  without recording new cassettes.  This can be useful to test your Pulp setup
+  and functionality without accidentally generating a set of new cassettes.
+  (ehelms@redhat.com)
+- Fixed a small error in default content view publish (paji@redhat.com)
+- Merge branch 'master' into v2-cv (paji@redhat.com)
+- Merge pull request #1479 from ares/bug/790064-manifest_import_error_handling
+  (ares@igloonet.cz)
+- fix YARD Documentation link (pchalupa@redhat.com)
+- Content views: fixed a couple UI content view bugs
+- Merge branch 'master' into story/yard (pchalupa@redhat.com)
+- document workaround if running yard in reload mode fails
+  (pchalupa@redhat.com)
+- Fix setting environment without usage RAILS_ENV (inecas@redhat.com)
+- Merge branch 'master' into v2-cv (paji@redhat.com)
+- Fix to get Promotions controller test to work (paji@redhat.com)
+- Fixed an accidental typo in the cv spec file (paji@redhat.com)
+- Fixed some files missed in previous merges (paji@redhat.com)
+- Fixed some unit tests (paji@redhat.com)
+- PulpV2 - Clean-up of authorization modules to use ActiveSupport::Concern for
+  clarity and consistency. (ehelms@redhat.com)
+- 790064 - Fix for manifest import in headpin mode (ares@igloonet.cz)
+- Removed trailing whitespaces (paji@redhat.com)
+- Merge branch 'pulpv2' into v2-cv (paji@redhat.com)
+- Fixed more conflicts (paji@redhat.com)
+- Missed commits (paji@redhat.com)
+- Fixed some merge conflicts (paji@redhat.com)
+- Merge pull request #1470 from daviddavis/cv_fixjsroutes
+  (daviddavis@redhat.com)
+- Merge pull request #1420 from bbuckingham/fork_content_views_composite
+  (bbuckingham@redhat.com)
+- Regenerating content view js routes (daviddavis@redhat.com)
+- Locking down js-routes to 0.6.x due to code breakages (daviddavis@redhat.com)
+- Locking down js-routes to 0.6.x due to code breakages (daviddavis@redhat.com)
+- content views - update to handle deletion of repo from a definition
+  (bbuckingham@redhat.com)
+- Merge pull request #1422 from daviddavis/cv_sys_search
+  (daviddavis@redhat.com)
+- Merge pull request #1413 from daviddavis/cv_key_ui (daviddavis@redhat.com)
+- remove dependencies on yard-activerecord and railroady (pchalupa@redhat.com)
+- Merge branch 'master' into story/yard (pchalupa@redhat.com)
+- 858877 Allow selection of all listem items when applying packages to a system
+  group (j.hadvig@gmail.com)
+- remove svg files from git repository (pchalupa@redhat.com)
+- add missing type notation in @option tags (pchalupa@redhat.com)
+- update yard documentation guide (pchalupa@redhat.com)
+- add how to document guide (pchalupa@redhat.com)
+- Content views: added content_view to system search (daviddavis@redhat.com)
+- content views - resolve issues with promotion, publish..etc
+  (bbuckingham@redhat.com)
+- Merge pull request #1402 from bbuckingham/fork_content_views_composite
+  (bbuckingham@redhat.com)
+- Content views: showing content view in left pane of key layout
+  (daviddavis@redhat.com)
+- Content views: worked on activation two pane (daviddavis@redhat.com)
+- Content views: UI for edit/update activation key content views
+  (daviddavis@redhat.com)
+- fix katello.spec (pchalupa@redhat.com)
+- fix some documentation formatting errors (pchalupa@redhat.com)
+- set Markdown as default markup (pchalupa@redhat.com)
+- make inline code block noticeable (pchalupa@redhat.com)
+- add model and controller graphs (pchalupa@redhat.com)
+- fix yard doc reloading, render only one documentation (:single_library
+  option) (pchalupa@redhat.com)
+- Content views: create/edit content views for systems (daviddavis@redhat.com)
+- Merge pull request #1394 from daviddavis/cv_gitignore (daviddavis@redhat.com)
+- content views - ui - component views may not have same repo
+  (bbuckingham@redhat.com)
+- content views - ui - create/update composite view definition
+  (bbuckingham@redhat.com)
+- make yardoc server embedding configurable (pchalupa@redhat.com)
+- Merge branch 'pulpv2' into another-v2-to-cv (paji@redhat.com)
+- Pulling in the gitignore from master (daviddavis@redhat.com)
+- Merge pull request #1388 from parthaa/v2-to-cv (parthaa@gmail.com)
+- Regenerated VCR files. (paji@redhat.com)
+- update readme (pchalupa@redhat.com)
+- add yard-activerecord plugin (pchalupa@redhat.com)
+- embed YARD documentation server into Katello server in development
+  (pchalupa@redhat.com)
+- Merge pull request #1386 from daviddavis/param_rules (daviddavis@redhat.com)
+- Merge pull request #1380 from daviddavis/cv_publish_async
+  (daviddavis@redhat.com)
+- add foreman integration documentation (pchalupa@redhat.com)
+- Merging branch pulpv2 to content_views (paji@redhat.com)
+- Content views: locking down params in api controllers (daviddavis@redhat.com)
+- Content views: supporting async publishing (daviddavis@redhat.com)
+- Content views: added in_environment scope to ContentView
+  (daviddavis@redhat.com)
+- Content views: some things I found preparing for the demo
+  (daviddavis@redhat.com)
+- Content views: added CLI for systems with content views
+  (daviddavis@redhat.com)
+- Content views: added some system/key functionality (daviddavis@redhat.com)
+- Merge pull request #1368 from bbuckingham/fork_content_views_deletion
+  (bbuckingham@redhat.com)
+- content views - fix on test for definition deletion (bbuckingham@redhat.com)
+- content_views - update has_promoted_views to perform single query
+  (bbuckingham@redhat.com)
+- content views - api - do not allow deletion of definition w/ promoted views
+  (bbuckingham@redhat.com)
+- content views - ui - do not allow deletion of definition w/ promoted views
+  (bbuckingham@redhat.com)
+- content views - fix permission on default_label action
+  (bbuckingham@redhat.com)
+- Content views: content view can be set on keys in CLI (daviddavis@redhat.com)
+- Fixing bundle install for content_views branch (daviddavis@redhat.com)
+- content views - simply the retrieval of library version
+  (bbuckingham@redhat.com)
+- content_views - remove unused publishing methods from content_view.rb
+  (bbuckingham@redhat.com)
+- content views - updates to support retry on refresh/publish failure
+  (bbuckingham@redhat.com)
+- content views - if task is nil, publish failed (bbuckingham@redhat.com)
+- content views - update sortElement asset to pull from alchemy vs converge-ui
+  (bbuckingham@redhat.com)
+- content views - adding the 'filters' placeholder back in to routes/controller
+  (bbuckingham@redhat.com)
+- content views - adding in some spec tests for definition cloning
+  (bbuckingham@redhat.com)
+- content views - fix permission on ContentViewDefinition.creatable?
+  (bbuckingham@redhat.com)
+- content views - update ui controller to use correct rules for actions
+  (bbuckingham@redhat.com)
+- content views - ui - add support for cloning an existing definition
+  (bbuckingham@redhat.com)
+- content views - copy form - give name input focus (bbuckingham@redhat.com)
+- content views - add notices for the start/end of publish/refresh
+  (bbuckingham@redhat.com)
+- content view - handle case where task is nil (bbuckingham@redhat.com)
+- Merge pull request #1321 from parthaa/merge-to-cv (daviddavis@redhat.com)
+- Couple of fixes to make travis happy (paji@redhat.com)
+- Regenerated the vcr files to make travis happy (paji@redhat.com)
+- Fixed a test to make travis happy (paji@redhat.com)
+- Removing filters from the content view branch (paji@redhat.com)
+- content views - fix test failure after async publish chgs
+  (bbuckingham@redhat.com)
+- Merge branch 'pulpv2' into merge-to-cv (paji@redhat.com)
+- content view - refactor out retrieving the task_status associated w/ publish
+  (bbuckingham@redhat.com)
+- content views - support publish as 'async' in UI (includes backend chgs)
+  (bbuckingham@redhat.com)
+- content views - UI - views, handle case where there is no task
+  (bbuckingham@redhat.com)
+- Merge pull request #1317 from daviddavis/cv_cli_ref (daviddavis@redhat.com)
+- Content views: fixed broken refresh tests (daviddavis@redhat.com)
+- Content views: handling new refresh code from CLI/API (daviddavis@redhat.com)
+- Merge pull request #1269 from daviddavis/cv_test_fixed
+  (daviddavis@redhat.com)
+- Merge pull request #1263 from bbuckingham/fork_content_views
+  (daviddavis@redhat.com)
+- Content views: fixing tests due to == returning false (daviddavis@redhat.com)
+- Content views: api refresh test (daviddavis@redhat.com)
+- Content views: refreshing views from the CLI (daviddavis@redhat.com)
+- Content views: temporarily fix breaking tests (daviddavis@redhat.com)
+- Merge pull request #1262 from daviddavis/cv_act_key (daviddavis@redhat.com)
+- content views - shorten length of couple of lines (bbuckingham@redhat.com)
+- content views - support refresh as 'async' in UI (includes backend chgs)
+  (bbuckingham@redhat.com)
+- Merge pull request #1251 from daviddavis/cv_tests (daviddavis@redhat.com)
+- Content views: activation key without cv test (daviddavis@redhat.com)
+- Content views: added activation key and validation (daviddavis@redhat.com)
+- content views - update views treetable to reinitialize on content change
+  (bbuckingham@redhat.com)
+- content views - address 2 minor comments from PR review
+  (bbuckingham@redhat.com)
+- content views - ui - refresh - update views pane after refresh
+  (bbuckingham@redhat.com)
+- content views - initial ui changes to support view refresh
+  (bbuckingham@redhat.com)
+- content views - initial model changes to support view refresh
+  (bbuckingham@redhat.com)
+- content views - updates to views pane to better support multiple versions
+  (bbuckingham@redhat.com)
+- Content views: Added tests for new arguments (daviddavis@redhat.com)
+- Merge pull request #1241 from daviddavis/cvd_args (daviddavis@redhat.com)
+- Content views: fixed tests and feedback for def args (daviddavis@redhat.com)
+- Merge pull request #1225 from daviddavis/cv_args (daviddavis@redhat.com)
+- Merge pull request #1214 from daviddavis/cv_demotion (daviddavis@redhat.com)
+- Content views: added id and name to cli definition commands
+  (daviddavis@redhat.com)
+- Content views: removing old test (daviddavis@redhat.com)
+- Content views: added id and name to cv arguments (daviddavis@redhat.com)
+- Merge pull request #1211 from daviddavis/cv_env (daviddavis@redhat.com)
+- Merge pull request #1203 from bbuckingham/fork_content_views
+  (daviddavis@redhat.com)
+- content views - fix for specs failing in ruby 1.9.3 (bbuckingham@redhat.com)
+- Content views: worked on changeset deletion of views (daviddavis@redhat.com)
+- Content views: showing repo info in cli (daviddavis@redhat.com)
+- content views - spec fixes based on changes to support default content views
+  (bbuckingham@redhat.com)
+- Content views: changesets can have views in CLI (daviddavis@redhat.com)
+- content views - update product.repos to handle default content view
+  (bbuckingham@redhat.com)
+- Content views: remove checking for promotion (daviddavis@redhat.com)
+- Content views: tweaks and fixes for promotion (daviddavis@redhat.com)
+- Content views: renamed content views controller test (daviddavis@redhat.com)
+- content views - update changesets content tree to retrieve repos from default
+  view (bbuckingham@redhat.com)
+- content views - add content view to changeset history
+  (bbuckingham@redhat.com)
+- Merge pull request #1175 from bbuckingham/fork_content_views
+  (bbuckingham@redhat.com)
+- Merge pull request #1174 from daviddavis/cv_promote (daviddavis@redhat.com)
+- Content views: removed promotion code out of api controller
+  (daviddavis@redhat.com)
+- Content views: reworking generate_repos (daviddavis@redhat.com)
+- Content views: updated content view api tests (daviddavis@redhat.com)
+- Content views: handling async view promotion (daviddavis@redhat.com)
+- Content views: creating changeset during promotion shortcut
+  (daviddavis@redhat.com)
+- content views - on changesets page, allow user to see view details
+  (bbuckingham@redhat.com)
+- Merge pull request #1172 from bbuckingham/fork_content_views
+  (parthaa@gmail.com)
+- Content views: versions are dependent destroy (daviddavis@redhat.com)
+- Content views: added cli promote command (daviddavis@redhat.com)
+- Content views: added promote action to cv api (daviddavis@redhat.com)
+- Added some support code for minitest controller specs (daviddavis@redhat.com)
+- content views - update UI to allow for changesets containing content views
+  (bbuckingham@redhat.com)
+- content views - add scopes to content_view_version (bbuckingham@redhat.com)
+- content view - update changeset to allow deleting content view
+  (bbuckingham@redhat.com)
+- Content views: fixed bug with content view repos getting published
+  (daviddavis@redhat.com)
+- content views - ui - initial code for the view definition -> Views pane
+  (bbuckingham@redhat.com)
+- Merge pull request #1143 from bbuckingham/fork_content_views-2
+  (bbuckingham@redhat.com)
+- Merge pull request #1130 from daviddavis/cv_random_fixes
+  (daviddavis@redhat.com)
+- content views - minor cleanup (bbuckingham@redhat.com)
+- Merge pull request #1144 from daviddavis/cv_act_key (daviddavis@redhat.com)
+- Content views: fixed bug in definition api controller (daviddavis@redhat.com)
+- content views - ui - initial code for the view definition -> content pane
+  (bbuckingham@redhat.com)
+- content views - ui - add the skeleton to support views, content, filter panes
+  (bbuckingham@redhat.com)
+- Content views: couple of small fixes (daviddavis@redhat.com)
+- Content views: cli info and list work (daviddavis@redhat.com)
+- Content views: re-enabled info cli commands (daviddavis@redhat.com)
+- Content views: fixing api controller specs (daviddavis@redhat.com)
+- Content views: worked on api controllers and perms (daviddavis@redhat.com)
+- Fixed js routes (daviddavis@redhat.com)
+- Merge remote-tracking branch 'upstream/pulpv2' into content_views
+  (daviddavis@redhat.com)
+- merge conflict (jsherril@redhat.com)
+- content views - update routes.js (bbuckingham@redhat.com)
+- minitest fix (jsherril@redhat.com)
+- spect fix (jsherril@redhat.com)
+- spec fixes (jsherril@redhat.com)
+- spec fixes (jsherril@redhat.com)
+- spec fixes (jsherril@redhat.com)
+- spec fixes (jsherril@redhat.com)
+- addressing PR comments (jsherril@redhat.com)
+- spec fixes (jsherril@redhat.com)
+- one last clone_id fix (jsherril@redhat.com)
+- cassette updates (jsherril@redhat.com)
+- fixing some more spects (jsherril@redhat.com)
+- spec fixes (jsherril@redhat.com)
+- merge conflict (jsherril@redhat.com)
+- content views - migrating to using CV version (jsherril@redhat.com)
+- Merge pull request #1080 from daviddavis/cv_test_fixes (jlsherrill@gmail.com)
+- Content views: fixing auth test (daviddavis@redhat.com)
+- Content views: remove ruby-debug (daviddavis@redhat.com)
+- Content views: fixed authorization bug (daviddavis@redhat.com)
+- Content views: fixed content view def test (daviddavis@redhat.com)
+- Merge remote-tracking branch 'upstream/pulpv2' into content_views
+  (daviddavis@redhat.com)
+- Merge pull request #1073 from bbuckingham/fork_content_views
+  (bbuckingham@redhat.com)
+- content views - shorting nav label to use Views (bbuckingham@redhat.com)
+- Merge pull request #1060 from bbuckingham/fork_content_views
+  (bbuckingham@redhat.com)
+- content view - allow publishing to views by giving name/lable/description
+  (jsherril@redhat.com)
+- removing relative path function that is no longer needed
+  (jsherril@redhat.com)
+- content views - ui - initial CRUD support for name/label/description
+  (bbuckingham@redhat.com)
+- Content views: content view permissions and tests (daviddavis@redhat.com)
+- Merge branch 'content_views' of https://github.com/Katello/katello into
+  content_views (jsherril@redhat.com)
+- content view - lots of changes to support repos (jsherril@redhat.com)
+- Content views: fixed definition auth bugs (daviddavis@redhat.com)
+- Content views: created publish permission (daviddavis@redhat.com)
+- content views - making view deletion support repos (jsherril@redhat.com)
+- content views - allow publication of content views definitions with repos
+  (jsherril@redhat.com)
+- Content views: definitions habtm repos (daviddavis@redhat.com)
+- Merge branch 'pulpv2' into content_views (daviddavis@redhat.com)
+- Content views: fixing route (daviddavis@redhat.com)
+- Content views: Fixed bad merge in organization (daviddavis@redhat.com)
+- content views - adding support for view deletion (jsherril@redhat.com)
+- content views - adding content view promotion
+- Fixed all the minitest tests (daviddavis@redhat.com)
+- Pulp v2 - Fixing bad require in test (daviddavis@redhat.com)
+- Content views: created auth for definitions (daviddavis@redhat.com)
+- Content views: validation for composite content defs (daviddavis@redhat.com)
+- Content views: added api specs (daviddavis@redhat.com)
+- Content views: created add_view and remove_view (daviddavis@redhat.com)
+- Content views: added env argument to list (daviddavis@redhat.com)
+- Content views: removed erroneous api actions (daviddavis@redhat.com)
+- Merged together duplicate factories (daviddavis@redhat.com)
+- Content views: changesets check for invalid views (daviddavis@redhat.com)
+- Content views: views can be added to changesets (daviddavis@redhat.com)
+- Content views: created changeset association (daviddavis@redhat.com)
+- Content views: fixed product :bug: with cp_id (daviddavis@redhat.com)
+- Content views: added repo cli commands (daviddavis@redhat.com)
+- Content views: Added repository association to def (daviddavis@redhat.com)
+- Content views: Refactored composite/component (daviddavis@redhat.com)
+- Content views: Added add_product for cli (daviddavis@redhat.com)
+- Content views: fixed update cli command (daviddavis@redhat.com)
+- Content views: added destroy to api controller/cli (daviddavis@redhat.com)
+- Content views: fixed view -> product relationship (daviddavis@redhat.com)
+- Content views: Worked on labels and cli (daviddavis@redhat.com)
+- Content views: setup associations (daviddavis@redhat.com)
+- Content views: initial setup of models (daviddavis@redhat.com)
+- Pulpv2 - Switching FG to version from Fedora repos (daviddavis@redhat.com)
+
 * Wed Jan 30 2013 Justin Sherrill <jsherril@redhat.com> 1.3.14-1
 - bumping required runcible version (jsherril@redhat.com)
 - require pulp-selinux (jsherril@redhat.com)
