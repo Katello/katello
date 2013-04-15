@@ -206,7 +206,15 @@ DESC
     options[:sort_order]= params[:sort_order] if params[:sort_order]
 
     items = Glue::ElasticSearch::Items.new(System)
-    systems = items.retrieve(query_string, params[:offset], options)
+    systems, total_count = items.retrieve(query_string, params[:offset], options)
+
+    if params[:paged]
+      systems = {
+        :systems  => systems,
+        :subtotal => total_count,
+        :total    => items.total_items
+      }
+    end
 
     render :json => systems.to_json
   end
