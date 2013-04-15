@@ -53,6 +53,7 @@ module Glue
         all_rows      = false
         sort_by       = search_options[:sort_by] || 'name'
         sort_order    = search_options[:sort_order] || 'ASC'
+        total_count   = 0
 
         # set the query default field, if one was provided.
         query_options = {}
@@ -86,6 +87,8 @@ module Glue
           from start
         end
 
+        total_count = @results.total
+
         if search_options[:load_records?]
           @results = load_records
         end
@@ -95,7 +98,7 @@ module Glue
 
         @results = []
       ensure
-        return @results
+        return @results, total_count
       end
 
       # Loads the ActiveRecord objects from the database that match
