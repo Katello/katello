@@ -32,11 +32,12 @@ class OrganizationsController < ApplicationController
         User.creatable?
       else
         params[:user_id] &&
-            ((current_user.id.to_s ==  params[:user_id].to_s) || current_user.editable?)
+            ((current_user.id.to_s == params[:user_id].to_s) || current_user.editable?)
       end
     end
 
-    {:index =>  index_test,
+    {
+      :index => index_test,
       :items => index_test,
       :show => index_test,
       :auto_complete_search => index_test,
@@ -213,7 +214,9 @@ class OrganizationsController < ApplicationController
   end
 
   def default_info
-    render :partial => "default_info", :locals => { :org => @organization, :informable_type => params[:informable_type] }
+    Organization.check_informable_type!(params[:informable_type])
+    render :partial => "default_info",
+      :locals => { :org => @organization, :informable_type => params[:informable_type] }
   end
 
   protected
