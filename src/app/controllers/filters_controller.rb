@@ -61,14 +61,15 @@ class FiltersController < ApplicationController
   end
 
   def create
-    Filter.create!(params[:filter]) do |filter|
+    filter = Filter.create!(params[:filter]) do |filter|
       filter.content_view_definition = @view_definition
     end
 
     notify.success(_("Filter '%{filter}' successfully created for content view definition '%{definition}'.") %
                     {:filter => params[:filter][:name], :definition => @view_definition.name})
 
-    render :nothing => true
+    render :partial => "common/post_action_close_subpanel",
+           :locals => {:path => edit_content_view_definition_filter_path(@view_definition, filter)}
   end
 
   def edit
