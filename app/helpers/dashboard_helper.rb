@@ -17,6 +17,7 @@ module DashboardHelper
   end
 
   def dashboard_ajax_entry name, identifier, url, class_wrapper, dropbutton, quantity=5
+    url = Katello.config[:url_prefix] + url if !url.match(Katello.config[:url_prefix])
     render :partial=>"ajax_entry", :locals=>{:name=>name, :url=>url, :class_wrap=>class_wrapper, :identifier=>identifier, :dropbutton=>dropbutton, :quantity=>quantity}
   end
 
@@ -180,4 +181,35 @@ module DashboardHelper
     end
     _("Never checked in.")
   end
+
+  def dashboard_layout
+    @layout ||= Dashboard::Layout.new(current_organization, current_user)
+  end
+
+  def render_dashboard
+    output = ""
+    dashboard_layout.columns.each do |col|
+      output += content_tag "div", class: "column" do
+        render_column(col)
+      end
+    end
+    output.html_safe
+  end
+
+  def render_column(column)
+    output = ""
+    column.each do |widget|
+      if widget.content_path
+        output += dashboard_ajax_entry(widget.title, widget.name, widget.content_path, "widget", true)
+      else
+        output += dashboard_entry(widget.title, widget.name, false)
+      end
+    end
+    output.html_safe
+  end
+
+  def widget_drag_and_drop_text
+    _("Click on the widget title text to drag and drop.")
+  end
+
 end
