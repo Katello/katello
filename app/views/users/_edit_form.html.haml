@@ -32,6 +32,15 @@
         - else
           = @user.helptips_enabled ? _("Yes") : _("No")
 
+    %fieldset
+      .grid_3.ra
+        = label :user, :experimental_ui, _("Experimental UI:")
+      .grid_5.la
+        - if editable
+          = check_box("user", "experimental_ui", :id=>"experimental_ui", 'data-url'=>user_path(@user.id), :checked=>@user.experimental_ui ? "checked": "")
+        - else
+          = @user.experimental_ui ? _("Yes") : _("No")
+
     - if editable
       %fieldset.fl.clear
         .grid_3.ra

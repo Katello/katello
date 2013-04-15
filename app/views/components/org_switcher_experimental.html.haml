@@ -1,0 +1,19 @@
+#switcherContainer.clickable.menu-container
+  - if current_organization && !current_organization.name.nil?
+    %a.menu-item#switcherButton{:href => "#", :title=>"#{current_organization.name}"}
+      = current_organization.name
+      %i.down_arrow_icon-grey
+  - else
+    %a.menu-item#switcherButton{:href => "#", :title=>""}
+      = _("Select an Organization:")
+      %i.down_arrow_icon-grey
+  #switcherBox
+    #switcherForm.org
+      #orgbox{"data-url"=>allowed_orgs_user_session_path}
+        /Orgs pulled from above data-url dynamically each click.
+        .spinner
+      - if current_organization && !current_organization.name.nil? && Organization.any_readable?
+        %a#manage_orgs{:href=>organizations_path()}
+          .gears_icon
+          %span{:class=>"fl clearfix"}
+            #{_("Manage Organizations")}
