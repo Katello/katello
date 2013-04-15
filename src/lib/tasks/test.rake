@@ -45,12 +45,6 @@ if defined?(MiniTest)
     MINITEST_TASKS  = %w(models helpers controllers glue lib)
     GLUE_LAYERS     = %w(pulp candlepin elasticsearch)
 
-    desc 'Runs all minitest tests'
-    MiniTest::Rails::Tasks::SubTestTask.new(:minitest) do |t|
-      t.libs.push 'test'
-      t.pattern = "test/#{task}/**/*_test.rb"
-    end
-
     Rake::Task["db:test:prepare"].clear
 
     MINITEST_TASKS.each do |task|
@@ -107,4 +101,11 @@ if defined?(MiniTest)
       end
     end
   end
+
+  desc 'Runs all minitest tests'
+  MiniTest::Rails::Tasks::SubTestTask.new(:minitest) do |t|
+    t.libs.push 'test'
+    t.pattern = "test/#{task}/**/*_test.rb"
+  end
+
 end
