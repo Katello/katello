@@ -147,6 +147,12 @@ class SystemsController < ApplicationController
 
   def index
     @system_groups = SystemGroup.where(:organization_id => current_organization).order(:name)
+
+    if current_user.experimental_ui
+      render :index_nutupane
+    else
+      render :index
+    end
   end
 
   def environments
