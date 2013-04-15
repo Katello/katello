@@ -311,8 +311,12 @@ class ContentView < ActiveRecord::Base
   # aware that the view is no longer available for consumers.
   def remove_environment(env)
     unless env.library
-      view_env = self.content_view_environments.where(:environment_id=>env.id)
-      view_env.first.destroy unless view_env.blank?
+      # Do not remove the content view environment, if there is still a view
+      # version in the environment.
+      if self.versions.in_environment(env).blank?
+        view_env = self.content_view_environments.where(:environment_id=>env.id)
+        view_env.first.destroy unless view_env.blank?
+      end
     end
   end
 
