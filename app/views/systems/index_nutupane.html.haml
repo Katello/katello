@@ -1,0 +1,8 @@
+= javascript 'systems/systems.controller', 'widgets/nutupane'
+= stylesheet 'widgets/nutupane'
+
+%div{ 'ng-controller' => 'SystemsController' }
+  %h1
+    = _("Systems")
+  %div{ 'alch-table-toolbar' => 'table' }
+  %table.table.stable.stripe-row{ 'alch-table' => 'table', 'row-select' => 'true', 'ng-class' => '{ "table-mask" : table.working }' }
