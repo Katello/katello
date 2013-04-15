@@ -1,5 +1,3 @@
-= javascript 'widgets/subpanel_new'
-
 = content_for :title do
   #{_("New Filter")}
 
@@ -7,12 +5,10 @@
 
   #filter_create
 
-    = kt_form_for([view_definition, Filter.new], :remote => true, :html => {:id => "new_subpanel"}) do |form|
+    = kt_form_for([view_definition, Filter.new], :remote => true, :html => {:id => "filter_form"}) do |form|
 
       = form.text_field :name, :label => _("Name"), :class => :name_input
 
-      = form.submit _("Create"), :disable_with => _("Creating..."),
-        :class => 'create_button subpanel_create',
-        'data-url_after_submit' => content_view_definition_filters_path(view_definition.id)
+      = form.submit _("Create"), :disable_with => _("Creating..."), :class => 'create_button'
 
 = render :template => "layouts/tupane_layout"
