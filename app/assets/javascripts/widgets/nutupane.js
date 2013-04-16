@@ -21,7 +21,8 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
                 'search':           $location.search().search,
                 'sort_by':          options.sort.by, 
                 'sort_order':       options.sort.order, 
-                'paged':            true
+                'paged':            true,
+                'offset':           options.offset
             }
         })
         .then(function(response){
