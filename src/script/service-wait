@@ -45,6 +45,7 @@ MONGO_PORT=${MONGO_PORT:-27017}
 POSTGRES_PORT=${POSTGRES_PORT:-5432}
 POSTGRES_DATA=${POSTGRES_DATA:-/var/lib/pgsql/data}
 FOREMAN_TEST_URL=${FOREMAN_TEST_URL:-http://localhost:5500/foreman/api}
+KATELLO_TEST_URL=${KATELLO_TEST_URL:-http://localhost:5000/katello/api}
 
 # for some services we add few extra seconds after start
 ADDITIONAL_SLEEP=5
@@ -79,6 +80,9 @@ after_start() {
       ;;
     foreman)
       wait_for_url $FOREMAN_TEST_URL
+      ;;
+    katello)
+      wait_for_url $KATELLO_TEST_URL
       ;;
     mongod)
       # RHBZ 824405 - wait until service is avaiable
