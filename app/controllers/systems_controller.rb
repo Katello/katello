@@ -337,7 +337,25 @@ class SystemsController < ApplicationController
 
   def show
     system = System.find(params[:id])
-    render :partial=>"systems/list_system_show", :locals=>{:item=>system, :accessor=>"id", :columns=> COLUMNS.keys, :noblock => 1}
+    
+    if current_user.experimental_ui
+      begin
+        releases = @system.available_releases
+      rescue => e
+        releases_error = e.to_s
+        Rails.logger.error e.to_s
+      end
+      releases ||= []
+      releases_error ||= nil
+
+      # Stuff into var for use in spec tests
+      @locals_hash = { :system => @system, :editable => @system.editable?,
+                      :releases => releases, :releases_error => releases_error, :name => controller_display_name,
+                      :environments => environment_paths(library_path_element, environment_path_element("systems_readable?"))}
+      render :show_nutupane, :locals => @locals_hash
+    else
+      render :partial=>"systems/list_system_show", :locals=>{:item=>system, :accessor=>"id", :columns=> COLUMNS.keys, :noblock => 1}
+    end
   end
 
   def section_id
