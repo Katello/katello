@@ -154,3 +154,7 @@ angular.module('Katello').controller('SystemsController', ['$scope', 'SystemTabl
     fetch();
 
 }]);
+
+angular.module('Katello').controller('SystemController', ['$scope', function($scope){
+
+}]);
