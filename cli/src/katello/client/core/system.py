@@ -22,7 +22,8 @@ from katello.client.api.task_status import SystemTaskStatusAPI
 from katello.client.api.system_group import SystemGroupAPI
 from katello.client.api.custom_info import CustomInfoAPI
 from katello.client.api.utils import get_environment, get_system, get_content_view
-from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment
+from katello.client.cli.base import opt_parser_add_org, opt_parser_add_environment, \
+    opt_parser_add_content_view
 from katello.client.core.base import BaseAction, Command
 from katello.client.server import ServerRequestError
 
@@ -424,12 +425,12 @@ class Register(SystemAction):
         parser.add_option('--release', dest='release', help=_("values of $releasever for the system"))
         parser.add_option('--fact', dest='fact', action='append', nargs=2, metavar="KEY VALUE",
                                help=_("system facts"))
-        parser.add_option('--content_view', dest="content_view",
-                          help=_("content view label (eg. database)"))
+        opt_parser_add_content_view(parser)
 
     def check_options(self, validator):
         validator.require(('name', 'org'))
         validator.require_at_most_one_of(('activationkey', 'environment'))
+        validator.mutually_exclude(('view_name', 'view_label', 'view_id'))
 
     def run(self):
         name = self.get_option('name')
@@ -439,15 +440,16 @@ class Register(SystemAction):
         release = self.get_option('release')
         sla = self.get_option('sla')
         facts = dict(self.get_option('fact') or {})
-        view_label = self.get_option("content_view")
+        view_name = self.get_option("view_name")
+        view_label = self.get_option("view_label")
+        view_id = self.get_option("view_id")
 
         environment_id = None
         if environment_name is not None:
             environment_id = get_environment(org, environment_name)['id']
 
-        view_id = None
-        if view_label is not None:
-            view = get_content_view(org, view_label)
+        if view_label or view_name:
+            view = get_content_view(org, view_label, view_name)
             view_id = view["id"]
 
         system = self.api.register(name, org, environment_id, activation_keys,
@@ -720,14 +722,16 @@ class Update(SystemAction):
                        help=_("value of $releasever for the system"))
         parser.add_option('--servicelevel', dest='sla',
                        help=_("service level agreement"))
-        parser.add_option('--content_view', dest='view',
-                          help=_("content view label (eg. database)"))
+        opt_parser_add_content_view(parser)
+        parser.add_option('--remove_content_view', dest='remove_view',
+                          action="store_true", help=_("unset system's content view"))
 
     def check_options(self, validator):
         validator.require('org')
         validator.require_at_least_one_of(('name', 'uuid'))
         validator.mutually_exclude('name', 'uuid')
         validator.mutually_exclude('environment', 'uuid')
+        validator.mutually_exclude(('view_name', 'view_label', 'view_id', 'remove_view'))
 
     def run(self):
         org_name = self.get_option('org')
@@ -740,7 +744,10 @@ class Update(SystemAction):
         new_release = self.get_option('release')
         new_sla = self.get_option('sla')
         sys_uuid = self.get_option('uuid')
-        view_label = self.get_option('view')
+        view_name = self.get_option("view_name")
+        view_label = self.get_option("view_label")
+        view_id = self.get_option("view_id")
+        remove_view = self.get_option("remove_view")
 
         system = get_system(org_name, sys_name, env_name, sys_uuid)
         new_environment = get_environment(org_name, new_environment_name)
@@ -760,8 +767,11 @@ class Update(SystemAction):
             new_environment = get_environment(org_name, new_environment_name)
             updates['environment_id'] = new_environment['id']
 
-        if view_label is not None:
-            updates["content_view_id"] = get_content_view(org_name, view_label)["id"]
+        if remove_view:
+            updates["content_view_id"] = False
+        elif view_label or view_name or view_id:
+            updates["content_view_id"] = get_content_view(org_name, view_label,
+                                                          view_name, view_id)["id"]
 
         response = self.api.update(system['uuid'], updates)
 

@@ -30,14 +30,23 @@ class ErratumRule < FilterRule
     end
 
     define_method("#{date_type}_date=") do |date|
-      parameters[:date_range] = {} unless parameters.has_key?(:date_range)
-      parameters[:date_range][date_type] = date.to_i
+      parameters[:date_range] ||= {}
+      if date
+        parameters[:date_range][date_type] = date.to_i
+      else
+        parameters[:date_range].delete(date_type)
+        parameters.delete(:date_range) if parameters[:date_range].empty?
+      end
     end
   end
 
   def errata_types= etypes
-    parameters[:errata_type] = {} unless parameters.has_key?(:errata_type)
-    parameters[:errata_type] = etypes
+    unless etypes.blank?
+      parameters[:errata_type] ||= {}
+      parameters[:errata_type] = etypes
+    else
+      parameters.delete(:errata_type)
+    end
   end
 
   def errata_types

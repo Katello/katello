@@ -14,7 +14,7 @@ DEF3_VIEW1="${DEF3}_view1_$RAND"
 
 test_success "content definition create ($DEF1)" content definition create --org="$TEST_ORG" --name="$DEF1"
 test_success "content definition create ($DEF2)" content definition create --org="$TEST_ORG" --name="$DEF2"
-test_success "content definition create ($DEF3)" content definition create --org="$TEST_ORG" --name="$DEF3"
+test_success "content definition create ($DEF3)" content definition create --org="$TEST_ORG" --name="$DEF3" --composite
 
 test_success "repo synchronize ($FEWUPS_REPO)" repo synchronize --org="$TEST_ORG" --name="$FEWUPS_REPO" --product_label="$FEWUPS_PRODUCT"
 

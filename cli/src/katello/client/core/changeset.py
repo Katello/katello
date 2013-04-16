@@ -106,7 +106,7 @@ class Info(ChangesetAction):
         cset["products"] = self.format_item_list("name", cset["products"])
         cset["packages"] = self.format_item_list("display_name", cset["packages"])
         cset["repositories"] = self.format_item_list("name", cset["repos"])
-        cset["content_views"] = self.format_item_list("label", cset["content_views"])
+        cset["content_views"] = self.format_item_list("name", cset["content_views"])
         cset["distributions"] = self.format_item_list("distribution_id", cset["distributions"])
         if displayDeps:
             cset["dependencies"] = self.get_dependencies(cset["id"])
@@ -191,7 +191,10 @@ class UpdateContent(ChangesetAction):
                 items[action + "_product"] + items[action + "_product_label"] +
                 items[action + "_product_id"])]
 
-            patch['content_views'] = [itemBuilder.content_view(i) for i in items[action + "_content_view"]]
+            patch['content_views'] = [itemBuilder.content_view(i) for i in (
+                items[action + "_content_view"] + items[action + "_content_view_label"] +
+                items[action + "_content_view_id"])]
+
             patch['distributions'] = [itemBuilder.distro(i) for i in items[action + "_distribution"]]
             return patch
 
@@ -237,7 +240,7 @@ class UpdateContent(ChangesetAction):
             return repo['id']
 
         def content_view_id(self, options):
-            view = get_content_view(self.org_name, options['label'])
+            view = get_content_view(self.org_name, **options)
             return view['id']
 
     class AddPatchItemBuilder(PatchItemBuilder):
@@ -314,7 +317,7 @@ class UpdateContent(ChangesetAction):
 
     productDependentContent = ['package', 'erratum', 'repo', 'distribution']
     productIndependentContent = ['product', 'product_label', 'product_id',
-            'content_view']
+            'content_view', 'content_view_label', 'content_view_id']
 
     description = _('updates content of a changeset')
 
@@ -352,7 +355,11 @@ class UpdateContent(ChangesetAction):
         elif option.dest == 'add_product_id' or option.dest == 'remove_product_id':
             self.items[option.dest].append({"product_id": u_str(value)})
         elif option.dest == "add_content_view" or option.dest == "remove_content_view":
-            self.items[option.dest].append({"label": u_str(value)})
+            self.items[option.dest].append({"view_name": u_str(value)})
+        elif option.dest == "add_content_view_label" or option.dest == "remove_content_view_label":
+            self.items[option.dest].append({"view_label": u_str(value)})
+        elif option.dest == "add_content_view_id" or option.dest == "remove_content_view_id":
+            self.items[option.dest].append({"view_id": u_str(value)})
         else:
             self.items[option.dest].append({"name": u_str(value)})
 
@@ -391,10 +398,23 @@ class UpdateContent(ChangesetAction):
 
         parser.add_option('--add_content_view', dest='add_content_view', type="string",
                                action="callback", callback=self._store_item,
+                               help=_("name of a content view to be added to the changeset"))
+        parser.add_option('--add_content_view_label', dest='add_content_view_label', type="string",
+                               action="callback", callback=self._store_item,
                                help=_("label of a content view to be added to the changeset"))
+        parser.add_option('--add_content_view_id', dest='add_content_view_id', type="string",
+                               action="callback", callback=self._store_item,
+                               help=_("label of a content view to be added to the changeset"))
+
         parser.add_option('--remove_content_view', dest='remove_content_view', type="string",
                                action="callback", callback=self._store_item,
+                               help=_("name of a content view to be removed from the changeset"))
+        parser.add_option('--remove_content_view_label', dest='remove_content_view_label', type="string",
+                               action="callback", callback=self._store_item,
                                help=_("label of a content view to be removed from the changeset"))
+        parser.add_option('--remove_content_view_id', dest='remove_content_view_id', type="string",
+                               action="callback", callback=self._store_item,
+                               help=_("id of a content view to be removed from the changeset"))
 
         parser.add_option('--from_product', dest='from_product',
                                action="callback", callback=self._store_from_product, type="string",
@@ -426,6 +446,10 @@ class UpdateContent(ChangesetAction):
         validator.mutually_exclude('add_product', 'add_product_label', 'add_product_id')
         validator.mutually_exclude('remove_product', 'remove_product_label', 'remove_product_id')
         validator.mutually_exclude('from_product', 'from_product_label', 'from_product_id')
+        validator.mutually_exclude('add_content_view', 'add_content_view_label',
+                                   'add_content_view_id')
+        validator.mutually_exclude('remove_content_view', 'remove_content_view_label',
+                                   'remove_content_view_id')
 
     def run(self):
         #reset stored patch items (neccessary for shell mode)
