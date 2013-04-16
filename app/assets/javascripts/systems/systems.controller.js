@@ -14,11 +14,12 @@
 angular.module('Katello').factory('SystemTable', ['Nutupane', function(Nutupane){
     var SystemTable = {};
 
-    SystemTable.get = function(sort, callback){
+    SystemTable.get = function(sort, offset, callback){
         Nutupane.get({
             url:        '/katello/api/systems/',
             sort:       sort,
             callback:   callback,
+            offset:     offset,
             transform:  SystemTable.transform
         });
     };
@@ -85,17 +86,23 @@ angular.module('Katello').controller('SystemsController', ['$scope', 'SystemTabl
     var fetch = function(callback){
         $scope.table.working = true;
 
-        SystemTable.get(sort, function(data){
-            $scope.table.data.rows  = data.data.rows;
-            $scope.table.total      = data.total;
-            $scope.table.start      = data.data.rows.length;
-            $scope.table.offset     = data.subtotal;
+        SystemTable.get(sort, $scope.table.start, function(data){
+
+            if( !$scope.table.loading_more ){
+                $scope.table.start      = data.data.rows.length;
+                $scope.table.data.rows  = data.data.rows;
+                $scope.table.total      = data.total;
+                $scope.table.offset     = data.subtotal;
+            } else {
+                $scope.table.start += data.data.rows.length;
+                $scope.table.data.rows = $scope.table.data.rows.concat(data.data.rows);
+            }
 
             if ( callback ){ 
                 callback();
             }
 
-            $scope.table.working    = false;
+            $scope.table.working = false;
         });
     };
 
@@ -130,6 +137,18 @@ angular.module('Katello').controller('SystemsController', ['$scope', 'SystemTabl
         $location.search('search', search_term);
 
         fetch();
+    };
+
+    $scope.table.next_page = function(){
+        if ($scope.table.loading_more || $scope.table.start === $scope.table.offset) { 
+            return;
+        }
+
+        $scope.table.loading_more = true;
+
+        fetch(function(){
+            $scope.table.loading_more = false;
+        });
     };
 
     fetch();
