@@ -3,6 +3,7 @@ class pulp::install {
 
   $os = $operatingsystem ? {
     "RedHat" => "RHEL",
+    "CentOS" => "RHEL",
     default  => "Fedora"
   }
 
