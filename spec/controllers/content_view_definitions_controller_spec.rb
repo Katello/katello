@@ -353,7 +353,10 @@ describe ContentViewDefinitionsController, :katello => true do
       let(:action) {:clone}
       let(:req) {post :clone, :id => @definition.id}
       let(:authorized_user) do
-        user_with_permissions { |u| u.can(:create, :content_view_definitions, @definition.id, @organization) }
+        user_with_permissions do |u|
+          u.can(:read, :content_view_definitions, @definition.id, @organization)
+          u.can(:create, :content_view_definitions, nil, @organization)
+        end
       end
       let(:unauthorized_user) do
         user_without_permissions

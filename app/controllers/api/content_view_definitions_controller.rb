@@ -31,6 +31,7 @@ class Api::ContentViewDefinitionsController < Api::ApiController
     clone_rule   = lambda do
       ContentViewDefinition.creatable?(@organization) && @definition.readable?
     end
+    delete_rule = lambda { @definition.deletable? }
 
     {
       :index => index_rule,
@@ -39,7 +40,7 @@ class Api::ContentViewDefinitionsController < Api::ApiController
       :show => show_rule,
       :clone => clone_rule,
       :update => manage_rule,
-      :destroy => manage_rule,
+      :destroy => delete_rule,
       :content_views => show_rule,
       :update_content_views => manage_rule,
       :list_products => show_rule,
