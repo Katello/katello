@@ -11,8 +11,6 @@ class RemoveFilters < ActiveRecord::Migration
 
       drop_table "filters_repositories"
 
-      drop_table "filter_packages"
-
       remove_index :filters, :column=>:pulp_id
       remove_index :filters, :column=>:organization_id
       remove_index(:filters, :column => [:name, :organization_id])
