@@ -14,8 +14,16 @@ require 'spec_helper'
 
 describe Katello::LoggingImpl do
 
-  pending 'fix logging tests not to mess with Logging gem configuration' # TODO
-  # test will reconfigure current settings
+  it {
+    pending <<-TXT # TODO
+      tests commented out not to mess up logging in test environment
+
+      I was trying to remove a deprecation warning. Working on it I've noticed that those tests were messing
+      with the Logging setting which lead to logging not working at all. I was trying to find a solution but it took
+      too much time. The logging gem is not written flexible enough, it has single global state :( and there is no way
+      around it without some serious stubbing.
+    TXT
+  }
 
   #let(:testing_config) do
   #  Katello::Configuration::Node.new(
@@ -132,20 +140,19 @@ describe Katello::LoggingImpl do
   #  end
   #
   #  context "syslog appender is used" do
-  #    before do
-  #      testing_config[:logging][:console_inline]        = false
+  #    before :all do
+  #      testing_config[:logging][:console_inline] = false
   #      testing_config[:logging][:loggers][:root][:type] = 'syslog'
   #      Katello.stub(:config => testing_config)
   #      logging.configure(:prefix => 'testing_')
   #    end
+  #    it "should define one appender" do
+  #      Logging.logger.root.appenders.size.should eql(1)
+  #    end
   #
   #    subject { Logging.logger.root.appenders.first }
-  #
-  #    it do
-  #      Logging.logger.root.appenders.size.should eql(1), 'should define one appender'
-  #      should be_kind_of(Logging::Appenders::Syslog)
-  #      subject.name.should eql('testing_joined')
-  #    end
+  #    it { should be_kind_of(Logging::Appenders::Syslog) }
+  #    its(:name) { should eql('testing_joined') }
   #  end
   #
   #  context "unsupported logger" do
@@ -229,12 +236,13 @@ describe Katello::LoggingImpl do
   #  end
   #end
   #
-  #after(:all) do
-  #  Logging.reset
-  #  Katello::Logging.instance_variable_set :@configured, false
-  #  Katello::Logging.configure
-  #  Rails.logger              = Logging.logger['app']
-  #  ActiveRecord::Base.logger = Logging.logger['sql']
-  #end
+  ## TODO this reset does not work, there may be a way how to fix it
+  ##after(:all) do
+  ##  Logging.reset
+  ##  Katello::Logging.instance_variable_set :@configured, false
+  ##  Katello::Logging.configure
+  ##  Rails.logger              = Logging.logger['app']
+  ##  ActiveRecord::Base.logger = Logging.logger['sql']
+  ##end
 
 end
