@@ -31,6 +31,7 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
         ('--repo_id=repo-123', ),
         ('--org=org-123', ),
         ('--org=org-123', '--environment=env-123', '--product=product-123'),
+        ('--org=org-123', '--environment=env-123', '--product=product-123', '--content_view=c1'),
         ('--type=enhancements', '--org=org-123'),
         ('--severity=critical', '--org=org-123'),
     ]
@@ -42,11 +43,19 @@ class ErrataListTest(CLIActionTestCase):
     ENV = ENVS[0]
     PRODUCT = PRODUCTS[0]
     REPO = REPOS[0]
+    VIEW = 'view1'
 
     OPTIONS_BY_PRODUCT_AND_REPO = {
         'org': ORG['name'],
         'product': PRODUCT['name'],
         'repo': REPO['name']
+    }
+
+    OPTIONS_BY_PRODUCT_REPO_CV = {
+        'org': ORG['name'],
+        'product': PRODUCT['name'],
+        'repo': REPO['name'],
+        'view_name': VIEW
     }
 
     OPTIONS_BY_TYPE = {
@@ -105,6 +114,14 @@ class ErrataListTest(CLIActionTestCase):
         self.module.get_environment.assert_called_once_with(self.OPTIONS_BY_ORG_AND_PRODUCT['org'], None)
         self.module.get_product.assert_called_once_with(self.OPTIONS_BY_ORG_AND_PRODUCT['org'], self.OPTIONS_BY_ORG_AND_PRODUCT['product'], None, None)
         self.action.api.errata_filter.assert_called_once_with(repo_id=None, type_in=None, environment_id=self.ENV['id'], prod_id=self.PRODUCT['id'], severity=None)
+
+    def test_it_searches_for_content_view_id_when_content_view_specified(self):
+        self.mock_options(self.OPTIONS_BY_PRODUCT_REPO_CV)
+        self.run_action()
+        self.module.get_repo.assert_called_once_with(self.ORG['name'], self.REPO['name'],
+                                                     self.PRODUCT['name'], None, None,
+                                                     None, False, self.VIEW,
+                                                     None, None)
 
     def test_it_supports_filtering_by_type(self):
         self.mock_options(self.OPTIONS_BY_TYPE)

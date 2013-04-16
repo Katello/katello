@@ -84,11 +84,12 @@ class Product < ActiveRecord::Base
     super
   end
 
-  def repos(env, include_disabled = false)
+  def repos(env, include_disabled = false, content_view=nil)
     # cache repos so we can cache lazy_accessors
     @repo_cache ||= {}
 
-    @repo_cache[env.id] ||= env.default_content_view.repos_in_product(env, self)
+    content_view ||= env.default_content_view
+    @repo_cache[env.id] ||= content_view.repos_in_product(env, self)
 
     if @repo_cache[env.id].blank? || include_disabled
       @repo_cache[env.id]
