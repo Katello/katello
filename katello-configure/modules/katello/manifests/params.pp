@@ -1,6 +1,6 @@
 class katello::params {
 
-  if $operatingsystem == "RedHat" {
+  if ($operatingsystem == "RedHat" or "CentOS"){
     $scl_prefix = 'ruby193-'
   } else {
     $scl_prefix = ''
