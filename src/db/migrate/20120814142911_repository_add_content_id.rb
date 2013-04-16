@@ -1,6 +1,5 @@
 class RepositoryAddContentId < ActiveRecord::Migration
   class Repository < ActiveRecord::Base
-    
     include Glue::Candlepin::Content if (Katello.config.use_cp and Katello.config.use_pulp)
     include Glue::Pulp::Repo if Katello.config.use_pulp
     include Glue::ElasticSearch::Repository if Katello.config.use_elasticsearch
