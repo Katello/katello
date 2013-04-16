@@ -15,6 +15,12 @@ var KT = (KT === undefined) ? {} : KT;
 
 KT.default_info = (function() {
 
+    $("#new_default_info_keyname").live("keydown", function(e) {
+        if (e.keyCode === 13) { // if you press enter
+            $("#add_default_info_button").trigger("click");
+        }
+    });
+
     $("#apply_default_info_button").live("click", function(e) {
         var button = $(this);
         e.preventDefault();
@@ -113,7 +119,7 @@ KT.default_info = (function() {
             + "<label for=\"default_info_" + _keyname + "\">" + keyname + "</label>"
             + "</td>"
             + "<td>"
-            + "<input class=\"btn warning remove_default_info_button\" data-id=\"default_info_" + _keyname + "\" data-method=\"delete\" data-url=\"" + destroy_path + "\" type=\"submit\" value=\"remove\">"
+            + "<input class=\"btn warning remove_default_info_button\" data-id=\"default_info_" + _keyname + "\" data-method=\"delete\" data-url=\"" + destroy_path + "\" type=\"submit\" value=\"" + i18n.remove + "\">"
             + "</td>"
             + "</tr>";
 
