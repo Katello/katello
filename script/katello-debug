@@ -83,7 +83,7 @@ ELASTIC_SEARCH = [
 ]
 
 PULP = [
-"/etc/pulp/pulp.conf",
+"/etc/pulp/server.conf",
 "/var/log/pulp",
 "/etc/httpd/conf.d/pulp.conf",
 "/etc/qpidd.conf"
@@ -169,8 +169,8 @@ end
 
 # Remove passwords from config files
 if deployment == 'katello'
-  `sed -i -e 's/^\\(default_password:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/pulp.conf')}`
-  `sed -i -e 's/^\\(oauth_secret:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/pulp.conf')}`
+  `sed -i -e 's/^\\(default_password:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/server.conf')}`
+  `sed -i -e 's/^\\(oauth_secret:\\)\\(.*\\)$/\\1 **********************/' #{File.join(target_dir, '/etc/pulp/server.conf')}`
   if use_foreman
   `sed -i -e 's/^\\(.*password\\).*$/\\1: **********************/' #{File.join(target_dir, '/etc/foreman/database.yml')}`
   end
