@@ -161,8 +161,8 @@ common:
     adapter: postgresql
     host: localhost
     encoding: UTF8
-    username: katello
-    password: katello
+    username: katellouser
+    password: katellouser
 
   # when adding a new logger don't forget to add it in here even if it's disabled by default
   # otherwise log trace feature won't work for such logger
@@ -262,7 +262,7 @@ development:
   foreman:
     random_password: false
   database:
-    database: katello
+    database: katelloschema
     min_messages: WARNING
   logging:
     colorize: true
