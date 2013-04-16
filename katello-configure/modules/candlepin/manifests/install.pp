@@ -1,6 +1,7 @@
 class candlepin::install {
   $os = $operatingsystem ? {
     "RedHat" => "RHEL",
+    "CentOS" => "RHEL",
     default  => "Fedora"
   }
 
