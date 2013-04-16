@@ -14,6 +14,7 @@ class Api::ProductsController < Api::ApiController
   respond_to :json
   before_filter :find_optional_organization, :only => [:index, :repositories, :show, :update, :destroy, :set_sync_plan, :remove_sync_plan]
   before_filter :find_environment, :only => [:index, :repositories]
+  before_filter :find_content_view, :only => [:repositories]
   before_filter :find_product, :only => [:repositories, :show, :update, :destroy, :set_sync_plan, :remove_sync_plan]
   before_filter :verify_presence_of_organization_or_environment, :only => [:index]
   before_filter :authorize
@@ -106,8 +107,10 @@ class Api::ProductsController < Api::ApiController
   param :id, :number, :desc => "product numeric identifier"
   param :include_disabled, :bool, :desc => "set to True if you want to list disabled repositories"
   param :name, :identifier, :desc => "repository identifier"
+  param :content_view_id, :identifier, :desc => "find repos in content view instead of default content view"
   def repositories
-    render :json => @product.repos(@environment, query_params[:include_disabled]).where(query_params.slice(:name))
+    render :json => @product.repos(@environment, query_params[:include_disabled], @content_view).
+      where(query_params.slice(:name))
   end
 
   api :POST, "/organizations/:organization_id/products/:id/sync_plan", "Assign sync plan to product"
@@ -146,6 +149,10 @@ class Api::ProductsController < Api::ApiController
       raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
     end
     @organization ||= @environment.organization if @environment
+  end
+
+  def find_content_view
+    ContentViewDefinition.readable(@organization).find(params[:content_view_id]) if params[:content_view_id]
   end
 
   def verify_presence_of_organization_or_environment
