@@ -14,7 +14,7 @@
 KT.panel.list.registerPage('content_view_definitions', { create : 'new_content_view_definition' });
 
 KT.panel.set_expand_cb(function() {
-    $('a.remove.disabled').tipsy({ fade:true, gravity:'s', delayIn:500, html:true, className:'content-tipsy',
+    $('a.remove.disabled').tipsy({ fade:true, gravity:'s', delayIn:500, html:true, className:'content_definition-tipsy',
         title:function() { return $('.hidden-text.hidden').html();} });
 
     KT.object.label.initialize();
@@ -66,36 +66,15 @@ KT.content_view_definition = (function(){
         if (pane.length === 0) {
             return;
         }
+
         $('.repo_conflict').tipsy({fade : true, gravity : 'e', live : true, delayIn : 500,
                                    hoverable : true, delayOut : 50 });
         $('.repo_conflict').click(function(e) {e.preventDefault();});
 
-        initialize_refresh();
+        enable_remove_view();
+        enable_refresh();
         initialize_views_treetable();
         start_updater();
-    },
-    initialize_refresh = function() {
-        $('.refresh_action').unbind('click').bind('click', function(event) {
-            event.preventDefault();
-            $.ajax({
-                type: 'POST',
-                url: $(this).data('url'),
-                cache: false,
-                success: function(response) {
-                    // the response contains the html for the view and all versions
-                    var view_id = $(response).first('tr').attr('id');
-
-                    $('.child-of-'+view_id).remove();
-                    $('#'+view_id).replaceWith(response);
-
-                    initialize_views_treetable();
-                    start_updater();
-                },
-                error: function() {
-                    KT.panel.panelAjax('', $('#content_view_definition_views').data('views_url'), $('#panel'), false);
-                }
-            });
-        });
     },
     initialize_view_checkboxes = function() {
         $('.view_checkbox').tipsy({fade : true, gravity : 'e', live : true, delayIn : 500,
@@ -329,12 +308,132 @@ KT.content_view_definition = (function(){
 
         if (status_updated === true) {
             initialize_views_treetable();
-            initialize_refresh();
         }
 
         if($('.view_version[data-pending_task_id]').length === 0) {
             status_updater.stop();
+            enable_refresh();
+            enable_remove_view();
         }
+    },
+    disable = function(element) {
+        element.attr('disabled', 'disabled');
+        element.addClass('disabled');
+    },
+    enable = function(element) {
+        element.removeAttr('disabled');
+        element.removeClass('disabled');
+    },
+    disable_remove_view = function(view_id) {
+        var view = $('tr#' + view_id),
+            remove_link = view.find('a.remove_view');
+
+        remove_link.unbind('click').click(function(event){event.preventDefault();});
+        disable(remove_link);
+    },
+    enable_remove_view = function(view_id) {
+        // This will enable the 'remove' for views that do not have a pending task
+        // (e.g. publish, refresh).  If the user provides a view_id, only that view
+        // will be evaluated; otherwise, if view_id is undefined, all views will be
+        // evaluated.
+        var views;
+        if (view_id === undefined) {
+            views = $('tr.view');
+        } else {
+            views = $('tr#' + view_id);
+        }
+
+        views.each(function() {
+            // only enable remove, if the view does not have a task pending
+            var view = $(this),
+                task_pending = $('tr.child-of-' + view.attr('id')).data('pending_task_id');
+
+            if (task_pending === undefined) {
+                var remove_links = view.find('a.remove_view');
+
+                remove_links.unbind('click').click(function(event){
+                    event.preventDefault();
+                    var remove_link = $(this),
+                        view = remove_link.closest('tr');
+
+                    KT.common.customConfirm({
+                        message: i18n.confirm_request,
+                        yes_callback: function(){
+
+                            var view_id = view.attr('id'),
+                                view_versions = $('tr.child-of-' + view_id);
+
+                            // disable links associated with the view
+                            disable_remove_view(view_id);
+                            disable_refresh(view_id);
+
+                            $.ajax({
+                                type: "DELETE",
+                                url: remove_link.data("url"),
+                                cache: false,
+                                success: function(){
+                                    // on success, remove all rows associated w/ the view from the pane
+                                    view_versions.remove();
+                                    view.remove();
+                                },
+                                error: function(){
+                                    // enable links associated with the view
+                                    enable_remove_view(view_id);
+                                    enable_refresh(view_id);
+                                }
+                            });
+                        }
+                    });
+                    return false;
+                });
+                enable(remove_links);
+            }
+        });
+    },
+    disable_refresh = function(view_id) {
+        var view_versions = $('tr.child-of-' + view_id),
+            refresh_links = view_versions.find('a.refresh_action');
+
+        refresh_links.unbind('click').click(function(event){event.preventDefault();});
+        disable(refresh_links);
+    },
+    enable_refresh = function(view_id) {
+        // If the user provides a view_id, enable the refresh for only that view; however,
+        // if view_id is undefined, enable the refresh for all views.
+        var refresh_links;
+        if (view_id === undefined) {
+            refresh_links = $('a.refresh_action');
+        } else {
+            refresh_links = $('tr.child-of-' + view_id).find('a.refresh_action');
+        }
+
+        refresh_links.unbind('click').bind('click', function(event) {
+            event.preventDefault();
+            var view_id = $(this).closest('tr.view_version').prev('tr.view').attr('id');
+            disable_remove_view(view_id);
+
+            $.ajax({
+                type: 'POST',
+                url: $(this).data('url'),
+                cache: false,
+                success: function(response) {
+                    // the response contains the html for the view and all versions
+                    var view_id = $(response).first('tr').attr('id');
+
+                    $('.child-of-'+view_id).remove();
+                    $('#'+view_id).replaceWith(response);
+
+                    initialize_views_treetable();
+                    disable_remove_view(view_id);
+                    start_updater();
+                },
+                error: function() {
+                    KT.panel.panelAjax('', $('#content_view_definition_views').data('views_url'), $('#panel'), false);
+                }
+            });
+        });
+
+        enable(refresh_links);
     };
     return {
         initialize                   : initialize,
