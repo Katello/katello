@@ -77,7 +77,7 @@ Src::Application.routes.draw do
       put :update_component_views
     end
 
-    resources :content_views, :only => [] do
+    resources :content_views, :only => [:destroy] do
       member do
         post :refresh
       end
