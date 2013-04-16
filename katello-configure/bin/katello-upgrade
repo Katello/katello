@@ -16,6 +16,7 @@
 #   KATELLO_UPGRADE_HISTORY=/dev/null KATELLO_UPGRADE_DIR=upgrade-scripts \
 #   bin/katello-upgrade --trace --norootcheck --deployment katello -n -y
 
+KATELLO_DIR = ENV['KATELLO_DIR'] || '/usr/share/katello/'
 PREFIX = ENV['KATELLO_UPGRADE_PREFIX'] || '/usr/share/katello/install/puppet'
 KATELLO_UPGRADE_DIR = ENV['KATELLO_UPGRADE_DIR'] || '/usr/share/katello/install/upgrade-scripts'
 KATELLO_UPGRADE_HISTORY = ENV['KATELLO_UPGRADE_HISTORY'] || '/var/lib/katello/upgrade-history'
@@ -158,15 +159,22 @@ def ask_yes_no_skip? message = "Do you want to proceed with this step?"
 end
 
 def execute_command command
+  cwd = Dir.pwd
   if opt(:dry_run)
     true
   else
+    if File.extname(command) == '.runner'
+      command = "#{KATELLO_DIR}/script/rails  runner -e production #{command}"
+    end
+    Dir.chdir(KATELLO_DIR)
     IO.popen("#{command} 2>&1") do |io|
       while (line = io.gets)
         log line
       end
     end
-    $?.success?
+    return_code = $?
+    Dir.chdir(cwd)
+    return_code.success?
   end
 rescue => e
   exit_with :general_error, "Error during execution of: #{command}", e
