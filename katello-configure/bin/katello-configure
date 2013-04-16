@@ -116,7 +116,10 @@ $final_options.delete('answer_file')
 mandatory, regex, __unused_data_order, error, __unused_titles, __usused_docs = read_options_format(options_format_path)
 # require the user's password explicitly when ldap is not used
 auth_method = $final_options['auth_method'] || $default_options['auth_method']
-mandatory['user_pass'] = true if auth_method != 'ldap'
+if !$final_options['reset-data'] && !File.exists?('/var/lib/katello/db_seed_done') && auth_method != 'ldap'
+  mandatory['user_pass'] = true
+end
+
 
 non_interactive_option = _get_valid_option_value('non_interactive', $default_options, $final_options)
 ssl_ca_password_file_option = _get_valid_option_value('ssl_ca_password_file', $default_options, $final_options)
@@ -170,6 +173,7 @@ remove_option!($default_options_order, $final_options, 'ssl_ca_password')
 
 # reset options are too dangerous - not storing them in the result answer file
 # and moving them to the temporary file which is merged and then deleted
+remove_option!($default_options_order, $final_options, 'user_pass', $temp_options)
 remove_option!($default_options_order, $final_options, 'reset_data', $temp_options)
 remove_option!($default_options_order, $final_options, 'reset_cache', $temp_options)
 
