@@ -9,7 +9,7 @@
 .sixty
   - if current_organization && current_organization.readable?
     = dashboard_entry(_("System Subscription Status"), "subscriptions", false)
-  - if Katello.config.katello? && current_organization && Repository.any_readable_in_org?(current_organization, true)
+  -# if Katello.config.katello? && current_organization && Repository.any_readable_in_org?(current_organization, true)
     = dashboard_ajax_entry(_("Available Errata"), "errata", errata_dashboard_index_path(), "big_widget", true)
   -#= dashboard_ajax_entry(_("System Overview"), "systems", systems_dashboard_index_path(), "big_widget", true)
   - if Katello.config.katello? && current_organization && SystemGroup.any_readable?(current_organization)
