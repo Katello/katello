@@ -17,7 +17,7 @@
 %endif
 
 Name:           katello-configure
-Version:        1.3.9
+Version:        1.3.10
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -141,6 +141,9 @@ chmod +x -R %{buildroot}%{homedir}/upgrade-scripts/*
 %{homedir}/puppet/modules/foreman
 
 %changelog
+* Wed Apr 17 2013 Justin Sherrill <jsherril@redhat.com> 1.3.10-1
+- rebuild with scl enabled buildroot
+
 * Tue Apr 16 2013 Justin Sherrill <jsherril@redhat.com> 1.3.9-1
 - rebuilding with scl
 
