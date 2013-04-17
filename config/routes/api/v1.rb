@@ -15,58 +15,6 @@ Src::Application.routes.draw do
       else
         onlies = [:show, :destroy, :index, :update]
       end
-      resources :systems, :only => onlies do
-        member do
-          get :packages, :action => :package_profile
-          get :errata
-          get :pools
-          get :releases
-          put :enabled_repos
-          post :system_groups, :action => :add_system_groups
-          delete :system_groups, :action => :remove_system_groups
-          post :refresh_subscriptions
-          put :checkin
-        end
-        collection do
-          match "/tasks/:id" => "tasks#show", :via => :get
-        end
-        resources :subscriptions, :only => [:create, :index, :destroy] do
-          collection do
-              match '/' => 'subscriptions#destroy_all', :via => :delete
-              match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
-          end
-        end
-        resource :packages, :action => [:create, :update, :destroy], :controller => :system_packages
-      end
-
-      resources :distributors, :only => [:show, :destroy, :create, :index, :update] do
-        member do
-          get :pools
-          get :export
-        end
-        resources :subscriptions, :only => [:create, :index, :destroy] do
-          collection do
-              match '/' => 'subscriptions#destroy_all', :via => :delete
-              match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
-          end
-        end
-      end
-
-      resources :providers, :except => [:index] do
-        resources :sync, :only => [:index, :create] do
-          delete :index, :on => :collection, :action => :cancel
-        end
-        member do
-          post :import_products
-          post :import_manifest
-          post :delete_manifest
-          post :refresh_manifest
-          post :refresh_products
-          post :product_create
-          get :products
-          post :discovery
-        end
-      end
 
       resources :organizations do
         resources :products, :only => [:index, :show, :update, :destroy] do
@@ -171,6 +119,60 @@ Src::Application.routes.draw do
           end
         end
       end
+
+      resources :systems, :only => onlies do
+        member do
+          get :packages, :action => :package_profile
+          get :errata
+          get :pools
+          get :releases
+          put :enabled_repos
+          post :system_groups, :action => :add_system_groups
+          delete :system_groups, :action => :remove_system_groups
+          post :refresh_subscriptions
+          put :checkin
+        end
+        collection do
+          match "/tasks/:id" => "tasks#show", :via => :get
+        end
+        resources :subscriptions, :only => [:create, :index, :destroy] do
+          collection do
+              match '/' => 'subscriptions#destroy_all', :via => :delete
+              match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
+          end
+        end
+        resource :packages, :action => [:create, :update, :destroy], :controller => :system_packages
+      end
+
+      resources :distributors, :only => [:show, :destroy, :create, :index, :update] do
+        member do
+          get :pools
+          get :export
+        end
+        resources :subscriptions, :only => [:create, :index, :destroy] do
+          collection do
+              match '/' => 'subscriptions#destroy_all', :via => :delete
+              match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
+          end
+        end
+      end
+
+      resources :providers, :except => [:index] do
+        resources :sync, :only => [:index, :create] do
+          delete :index, :on => :collection, :action => :cancel
+        end
+        member do
+          post :import_products
+          post :import_manifest
+          post :delete_manifest
+          post :refresh_manifest
+          post :refresh_products
+          post :product_create
+          get :products
+          post :discovery
+        end
+      end
+
 
       resources :content_view_definitions, :only => [:destroy, :content_views] do
         get :content_views, :on => :member
