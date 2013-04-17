@@ -55,33 +55,39 @@ class Api::V1::DistributorsController < Api::V1::ApiController
   end
 
   def_param_group :distributors do
-    param :name, String, :desc => "Name of the distributor", :required => true, :action_aware => true
-    param :facts, Hash, :desc => "Key-value hash of distributor-specific facts"
-    param :installedProducts, Array, :desc => "List of products installed on the distributor"
-    param :serviceLevel, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT"
-    param :releaseVer, String, :desc => "Release of the os. The $releasever variable in repo url will be replaced with this value"
-    param :location, String, :desc => "Physical of the distributor"
+    param :distributor, Hash, :required => true, :action_aware => true do  
+      param :name, String, :desc => "Name of the distributor", :required => true, :action_aware => true
+      param :facts, Hash, :desc => "Key-value hash of distributor-specific facts"
+      param :installedProducts, Array, :desc => "List of products installed on the distributor"
+      param :serviceLevel, String, :allow_nil => true, :desc => "A service level for auto-healing process, e.g. SELF-SUPPORT"
+      param :releaseVer, String, :desc => "Release of the os. The $releasever variable in repo url will be replaced with this value"
+      param :location, String, :desc => "Physical of the distributor"
+    end
   end
 
   # this method is called from katello cli client and it does not work with activation keys
   # for activation keys there is method activate (see custom routes)
   api :POST, "/environments/:environment_id/distributors", "Register a distributor in environment"
   param_group :distributors
-  param :type, String, :desc => "Type of the distributor, it should always be 'distributor'", :required => true
+  param :distributor, Hash, :required => true, :action_aware => true do  
+    param :type, String, :desc => "Type of the distributor, it should always be 'distributor'", :required => true
+  end
   def create
-    params[:facts] ||= {'sockets'=>0}  # facts not used for distributors
-    params[:cp_type] = "candlepin"  # The 'candlepin' type is allowed to export a manifest
-    distributor = Distributor.create!(params.merge({:environment => @environment,
+    distributor_params = params[:distributor]
+    distributor_params[:facts] ||= {'sockets'=>0}  # facts not used for distributors
+    distributor_params[:cp_type] = "candlepin"  # The 'candlepin' type is allowed to export a manifest
+    @distributor = Distributor.create!(distributor_params.merge({:environment => @environment,
                                                     :content_view => @content_view,
-                                                    :serviceLevel => params[:service_level]}))
-    render :json => distributor.to_json
+                                                    :serviceLevel => distributor_params[:service_level]}))
+    respond
   end
 
   api :PUT, "/distributors/:id", "Update distributor information"
   param_group :distributors
   def update
-    @distributor.update_attributes!(params.slice(:name, :description, :location, :facts, :guestIds, :installedProducts, :releaseVer, :serviceLevel, :environment_id))
-    render :json => @distributor.to_json
+    distributor_params = params[:distributor]
+    @distributor.update_attributes!(distributor_params.slice(:name, :description, :location, :facts, :guestIds, :installedProducts, :releaseVer, :serviceLevel, :environment_id))
+    respond
   end
 
   api :GET, "/environments/:environment_id/distributors", "List distributors in environment"
@@ -92,17 +98,17 @@ class Api::V1::DistributorsController < Api::V1::ApiController
     # expected parameters
     expected_params = params.slice(:name, :uuid)
 
-    distributors = (@environment.nil?) ? @organization.distributors : @environment.distributors
-    distributors = distributors.all_by_pool(params['pool_id']) if params['pool_id']
-    distributors = distributors.readable(@organization).where(expected_params)
+    @distributors = (@environment.nil?) ? @organization.distributors : @environment.distributors
+    @distributors = @distributors.all_by_pool(params['pool_id']) if params['pool_id']
+    @distributors = @distributors.readable(@organization).where(expected_params)
 
-    render :json => distributors.to_json
+    respond
   end
 
   api :GET, "/distributors/:id", "Show a distributor"
   param :id, String, :desc => "UUID of the distributor", :required => true
   def show
-    render :json => @distributor.to_json
+    respond
   end
 
   api :GET, "/distributors/:id/export", "Export distributor's manifest"
@@ -121,7 +127,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
   param :id, String, :desc => "UUID of the distributor", :required => true
   def destroy
     @distributor.destroy
-    render :text => _("Deleted distributor '%s'") % params[:id], :status => 204
+    respond :message => _("Deleted distributor '%s'") % params[:id]
   end
 
   api :GET, "/distributors/:id/pools", "List pools a distributor is subscribed to"
@@ -133,7 +139,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
 
     cp_pools = @distributor.filtered_pools(match_distributor, match_installed, no_overlap)
 
-    render :json => { :pools => cp_pools }
+    respond_for_index :collection => { :pools => cp_pools }
   end
 
   api :GET, "/environments/:environment_id/distributors/report", "Get distributor reports for the environment"
@@ -230,14 +236,14 @@ class Api::V1::DistributorsController < Api::V1::ApiController
     TaskStatus.refresh(task_ids)
 
     @tasks = TaskStatus.where(:id => task_ids)
-    render :json => @tasks.to_json
+    respond_for_index :collection => @tasks
   end
 
   api :GET, "/distributors/tasks/:id", "Show details of the async task"
   param :id, String, :desc => "UUID of the task", :required => true
   def task_show
     @task.refresh
-    render :json => @task.to_json
+    respond_for_show :resource => @task
   end
 
   protected

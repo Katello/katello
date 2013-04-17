@@ -27,8 +27,10 @@ class DistributorAPI(KatelloAPI):
         else:
             path = "/api/organizations/%s/distributors" % org
         distdata = {
-            "name": name,
-            "cp_type": cp_type
+            "distributor": {
+                "name": name,
+                "cp_type": cp_type
+            }
         }
 
         return self.server.POST(path, distdata)[1]
@@ -78,6 +80,7 @@ class DistributorAPI(KatelloAPI):
 
     def update(self, distributor_id, params = None):
         path = "/api/distributors/%s" % distributor_id
+        params = { "distributor": params}
         return self.server.PUT(path, params)[1]
 
     def distributor_by_name(self, orgName, distName):
