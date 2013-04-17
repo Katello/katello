@@ -28,6 +28,8 @@ module Errors
 
   class ConflictException < StandardError; end
 
+  class ContentViewRepositoryOverlap < StandardError; end
+
   class SystemGroupEmptyException < StandardError
     def message
       _("System group is empty.")
