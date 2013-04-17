@@ -44,7 +44,7 @@ module Katello
       if defined?(::YARD)
         # redefine by YARD globally defined method #log to point to our logger
         Object.send :define_method, :log do
-          Katello::Logging::YARDLoggerDelegator.instance
+          Katello::LoggingImpl::YARDLoggerDelegator.instance
         end
 
         unless self.class.const_defined?(:YARDLoggerDelegator)
