@@ -21,7 +21,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.3.6
+Version:       1.3.7
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 Requires:      %{base_name}-cli-common
@@ -166,6 +166,9 @@ popd
 %{homedir}/tests
 
 %changelog
+* Tue Apr 16 2013 Justin Sherrill <jsherril@redhat.com> 1.3.7-1
+- Worked on the content view options for system and changeset
+
 * Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.3.6-1
 - 947859 - Created a way to remove views from keys (daviddavis@redhat.com)
 - Remove Foreman specific code - cli (inecas@redhat.com)
