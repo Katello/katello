@@ -90,6 +90,7 @@ class Api::SystemsController < Api::ApiController
   param_group :system
   def create
     system = System.create!(params.merge({:environment => @environment,
+                                          :content_view => @content_view,
                                           :serviceLevel => params[:service_level]}))
     render :json => system.to_json
   end
