@@ -133,21 +133,35 @@ def get_cv_definition(org_name, def_label=None, def_name=None, def_id=None):
     return cvds[0]
 
 
-def get_repo(orgName, repoName, prodName=None, prodLabel=None, prodId=None, envName=None, includeDisabled=False):
+def get_repo(orgName, repoName, prodName=None, prodLabel=None, prodId=None, envName=None, includeDisabled=False,
+             viewName=None, viewLabel=None, viewId=None):
     repo_api = RepoAPI()
 
     env  = get_environment(orgName, envName)
     prod = get_product(orgName, prodName, prodLabel, prodId)
 
-    repos = repo_api.repos_by_env_product(env["id"], prod["id"], repoName, includeDisabled)
+    view = None
+    viewId = None
+    if viewName or viewLabel or viewId:
+        view = get_content_view(orgName, viewLabel, viewName, viewId)
+        viewId = view["id"]
+
+    repos = repo_api.repos_by_env_product(env["id"], prod["id"], repoName, includeDisabled, viewId)
     if len(repos) > 0:
         #repo by id call provides more information
         return repo_api.repo(repos[0]["id"])
 
-    raise ApiDataError(_("Could not find repository [ %(repoName)s ] within organization [ %(orgName)s ], " \
-        "product [ %(prodName)s ] and environment [ %(env_name)s ]") %
-        {'repoName':repoName, 'orgName':orgName, 'prodName':prod["name"], 'env_name':env["name"]})
+    if view:
+        error = _("Could not find repository [ %(repoName)s ] within organization [ %(orgName)s ], " \
+            "product [ %(prodName)s ], content view [ %(viewName)s ], and environment "\
+            "[ %(env_name)s ]") % {'repoName':repoName, 'orgName':orgName, 'prodName':prod["name"],
+                                   'viewName':view["name"], 'env_name':env["name"]}
+    else:
+        error = _("Could not find repository [ %(repoName)s ] within organization [ %(orgName)s ], " \
+            "product [ %(prodName)s ] and environment [ %(env_name)s ]") % \
+            {'repoName':repoName, 'orgName':orgName, 'prodName':prod["name"], 'env_name':env["name"]}
 
+    raise ApiDataError(error)
 
 def get_provider(orgName, provName):
     provider_api = ProviderAPI()
