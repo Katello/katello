@@ -118,6 +118,21 @@ describe Api::SystemsController do
       end
     end
 
+    context "with environment_id containing environment-content_view" do
+      it "assigns the system to the environment and view" do
+        view = ContentView.create(:name => 'test view', :label => 'test_view', :organization => @organization)
+        environment_id = @environment_1.id.to_s + '-' + view.id.to_s
+
+        System.should_receive(:create!).with(hash_including(:environment => @environment_1,
+                                                            :content_view => view,
+                                                            :cp_type => 'system', :facts => facts,
+                                                            :name => 'test')).once.and_return({})
+
+        post :create, :organization_id => @organization.name, :environment_id => environment_id,
+             :name => 'test', :cp_type => 'system', :facts => facts
+      end
+    end
+
     context "when activation keys are provided" do
 
       before(:each) do
