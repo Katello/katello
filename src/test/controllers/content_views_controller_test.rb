@@ -20,10 +20,11 @@ class ContentViewsControllerTest < MiniTest::Rails::ActionController::TestCase
               "ContentViewEnvironment", "Filter", "ContentViewDefinitionBase",
               "ContentViewDefinition", "ContentViewDefinitionRepository",
               "ContentViewDefinitionProduct", "FilterRule", "PackageRule",
-              "PackageGroupRule", "ErratumRule"]
+              "PackageGroupRule", "ErratumRule", "ContentView", "ContentViewVersion",
+              "ContentViewVersionEnvironment"]
 
     services = ["Candlepin", "Pulp", "ElasticSearch"]
-    disable_glue_layers(services, models)
+    disable_glue_layers(services, models, true)
   end
 
   def setup
