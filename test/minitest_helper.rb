@@ -194,3 +194,10 @@ class CustomMiniTestRunner
 end
 
 MiniTest::Unit.runner = CustomMiniTestRunner::Unit.new
+
+begin # load reporters for RubyMine if available
+  require 'minitest/reporters'
+  MiniTest::Reporters.use!
+rescue LoadError
+  # ignored
+end if ENV['RUBYMINE']
