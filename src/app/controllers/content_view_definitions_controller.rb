@@ -36,6 +36,9 @@ class ContentViewDefinitionsController < ApplicationController
     publish_rule = lambda { @view_definition.publishable? }
     refresh_rule = lambda { @view.content_view_definition.publishable? }
     create_rule  = lambda { ContentViewDefinition.creatable?(current_organization) }
+    clone_rule   = lambda do
+      ContentViewDefinition.creatable?(current_organization) && @view_definition.readable?
+    end
 
     {
       :index => index_rule,
@@ -44,7 +47,7 @@ class ContentViewDefinitionsController < ApplicationController
 
       :new => create_rule,
       :create => create_rule,
-      :clone => create_rule,
+      :clone => clone_rule,
 
       :edit => show_rule,
       :update => manage_rule,
