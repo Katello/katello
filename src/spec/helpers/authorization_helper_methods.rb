@@ -21,6 +21,7 @@ module AuthorizationHelperMethods
     base.class_eval do
       before(:all) do
         Katello.config[:ldap_roles] = false
+        Katello.config[:validate_ldap] = false
         types_backup = ResourceType::TYPES.clone
       end
 
