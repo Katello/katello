@@ -32,7 +32,7 @@
 %endif
 
 Name:           katello
-Version:        1.3.18
+Version:        1.3.19
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -834,6 +834,16 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Apr 17 2013 Justin Sherrill <jsherril@redhat.com> 1.3.19-1
+- issue 1998 - add a test to check setting of env + content view
+  (bbuckingham@redhat.com)
+- issue 1998 - client cannot register to a content view
+  (bbuckingham@redhat.com)
+- 950539 - Adding content view option to package/errata list
+- asset-pipeline - fix for multiselect on various pages
+  (bbuckingham@redhat.com)
+- 927598 - Remove system template section of promotion page
+
 * Tue Apr 16 2013 Justin Sherrill <jsherril@redhat.com> 1.3.18-1
 - temporarily disabling errata dashboard widget (jsherril@redhat.com)
 - issue 1955 - ui - open filter after create (bbuckingham@redhat.com)
