@@ -23,7 +23,10 @@ Src::Application.routes.draw do
       end
 
       api_resources :organizations do
+        api_resources :products, :only => [:index]
         api_resources :environments
+        api_resources :sync_plans, :only => [:index, :create]
+        api_resources :tasks, :only => [:index]
         api_resources :providers, :only => [:index]
         match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
         api_resources :systems, :only => [:index, :create] do
@@ -33,20 +36,19 @@ Src::Application.routes.draw do
             get :tasks
           end
         end
-        api_resources :products, :only => [:index]
+        api_resources :distributors, :only => [:index, :create]    
+        resource :uebercert, :only => [:show]
+     
         api_resources :activation_keys, :only => [:index, :create]
-        api_resources :content_views, :only => [:index, :create]
-        api_resources :content_view_definitions, :only => [:index, :create]
-        api_resources :sync_plans, :only => [:index, :create]
-        api_resources :tasks, :only => [:index]
         api_resources :system_groups, :only => [:index, :create]
         api_resources :gpg_keys, :only => [:index, :create]
-        resource :uebercert, :only => [:show]
 
         match '/default_info/:informable_type' => 'organization_default_info#create', :via => :post, :as => :create_default_info
         match '/default_info/:informable_type/:keyname' => 'organization_default_info#destroy', :via => :delete, :as => :destroy_default_info
         match '/default_info/:informable_type/apply' => 'organization_default_info#apply_to_all', :via => :post, :as => :apply_default_info
 
+        api_resources :content_views, :only => [:index, :create]
+        api_resources :content_view_definitions, :only => [:index, :create]
       end
 
       api_resources :system_groups do
@@ -62,25 +64,6 @@ Src::Application.routes.draw do
 
         resource :packages, :action => [:create, :update, :destroy], :controller => :system_group_packages
         api_resources :errata, :only => [:index, :create], :controller => :system_group_errata
-      end
-
-      api_resources :environments, :only => [:show, :update, :destroy] do
-        match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
-        api_resources :systems, :only => [:create, :index] do
-          get :report, :on => :collection
-        end
-        api_resources :products, :only => [:index] do
-          get :repositories, :on => :member
-        end
-
-        api_resources :activation_keys, :only => [:index, :create]
-        api_resources :content_views, :only => [:index]
-        api_resources :changesets, :only => [:index, :create]
-
-        member do
-          get :releases
-          get :repositories
-        end
       end
 
       api_resources :systems, :only => onlies do
@@ -105,10 +88,15 @@ Src::Application.routes.draw do
         resource :packages, :action => [:create, :update, :destroy], :controller => :system_packages
       end
 
-      api_resources :activation_keys, :only => [:destroy, :show, :update] do
+      api_resources :distributors, :only => [:show, :destroy, :create, :index, :update] do
         member do
-          api_attachable_resources :system_groups, :controller => :activation_keys, :resource_name => :system_groups
-          api_attachable_resources :pools, :controller => :activation_keys
+          get :pools
+        end
+        api_resources :subscriptions, :only => [:create, :index, :destroy] do
+          collection do
+              match '/' => 'subscriptions#destroy_all', :via => :delete
+              match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
+          end
         end
       end
 
@@ -123,6 +111,91 @@ Src::Application.routes.draw do
           post :product_create
           get :products
           post :discovery
+        end
+      end
+
+      api_resources :content_view_definitions, :only => [:update, :show, :destroy] do
+        member do
+          post :publish
+          get :products
+          put :products, :action => :update_products
+          get :repositories
+          put :repositories, :action => :update_repositories
+          get :content_views
+          put :content_views, :action => :update_content_views
+        end
+      end
+
+      api_resources :content_views, :only => [:update, :show] do
+        member do
+          post :promote
+          post :refresh
+        end
+      end
+      
+      api_resources :changesets, :only => [:show, :update, :destroy] do
+        post :apply, :on => :member, :action => :apply
+        #TODO: fix dependency resolution
+        #get :dependencies, :on => :member, :action => :dependencies
+
+        api_attachable_resources :products, :controller => :changesets_content
+        api_attachable_resources :packages, :controller => :changesets_content, :constraints => { :id => /[0-9a-zA-Z\-_.]+/ }
+        api_attachable_resources :errata, :controller => :changesets_content
+        api_attachable_resources :repositories, :controller => :changesets_content, :resource_name => :repo
+        api_attachable_resources :distributions, :controller => :changesets_content
+        api_attachable_resources :templates, :controller => :changesets_content
+        api_attachable_resources :content_views, :controller => :changesets_content
+      end
+
+      api_resources :ping, :only => [:index]
+      
+      api_resources :repositories, :only => [:show, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
+        api_resources :sync, :only => [:index, :create] do
+          delete :index, :on => :collection, :action => :cancel
+        end
+        api_resources :packages, :only => [:index, :show] do
+          get :search, :on => :collection
+        end
+        api_resources :errata, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.:]+/ }
+        api_resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ }
+        member do
+          get :package_groups
+          get :package_group_categories
+          get :gpg_key_content
+        end
+        collection do
+          post :sync_complete
+        end
+      end
+
+      api_resources :environments, :only => [:show, :update, :destroy] do
+        match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
+        api_resources :systems, :only => [:create, :index] do
+          get :report, :on => :collection
+        end
+        api_resources :distributors, :only => [:create, :index] 
+        api_resources :products, :only => [:index] do
+          get :repositories, :on => :member
+        end
+
+        api_resources :activation_keys, :only => [:index, :create]
+        api_resources :content_views, :only => [:index]
+        api_resources :changesets, :only => [:index, :create]
+
+        member do
+          get :releases
+          get :repositories
+        end
+      end
+
+      api_resources :gpg_keys, :only => [:show, :update, :destroy] do
+        get :content, :on => :member
+      end
+
+      api_resources :activation_keys, :only => [:destroy, :show, :update] do
+        member do
+          api_attachable_resources :system_groups, :controller => :activation_keys, :resource_name => :system_groups
+          api_attachable_resources :pools, :controller => :activation_keys
         end
       end
 
@@ -156,66 +229,9 @@ Src::Application.routes.draw do
         api_resources :ldap_groups, :controller => :role_ldap_groups , :only => [:create, :destroy, :index]
       end
 
-      api_resources :repositories, :only => [:show, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
-        api_resources :sync, :only => [:index, :create] do
-          delete :index, :on => :collection, :action => :cancel
-        end
-        api_resources :packages, :only => [:index, :show] do
-          get :search, :on => :collection
-        end
-        api_resources :errata, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.:]+/ }
-        api_resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ }
-        member do
-          get :package_groups
-          get :package_group_categories
-          get :gpg_key_content
-        end
-        collection do
-          post :sync_complete
-        end
-      end
-
-      api_resources :content_views, :only => [:update, :show] do
-        member do
-          post :promote
-          post :refresh
-        end
-      end
-
-      api_resources :content_view_definitions, :only => [:update, :show, :destroy] do
-        member do
-          post :publish
-          get :products
-          put :products, :action => :update_products
-          get :repositories
-          put :repositories, :action => :update_repositories
-          get :content_views
-          put :content_views, :action => :update_content_views
-        end
-      end
-
-      api_resources :changesets, :only => [:show, :update, :destroy] do
-        post :apply, :on => :member, :action => :apply
-        #TODO: fix dependency resolution
-        #get :dependencies, :on => :member, :action => :dependencies
-
-        api_attachable_resources :products, :controller => :changesets_content
-        api_attachable_resources :packages, :controller => :changesets_content, :constraints => { :id => /[0-9a-zA-Z\-_.]+/ }
-        api_attachable_resources :errata, :controller => :changesets_content
-        api_attachable_resources :repositories, :controller => :changesets_content, :resource_name => :repo
-        api_attachable_resources :distributions, :controller => :changesets_content
-        api_attachable_resources :templates, :controller => :changesets_content
-        api_attachable_resources :content_views, :controller => :changesets_content
-      end
-
-      api_resources :gpg_keys, :only => [:show, :update, :destroy] do
-        get :content, :on => :member
-      end
-
       api_resources :sync_plans, :only => [:show, :update, :destroy]
       api_resources :tasks, :only => [:show]
 
-      api_resources :ping, :only => [:index]
       match "/version"  => "ping#version", :via => :get
       match "/status"  => "ping#server_status", :via => :get
 
