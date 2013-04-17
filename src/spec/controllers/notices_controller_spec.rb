@@ -68,12 +68,12 @@ describe NoticesController do
     end
 
     it 'should allow all notices to be destroyed for a single user', :katello => true do #TODO headpin
-      UserNotice.count.should == 10
-      Notice.count.should == 10
-      delete :destroy_all
+      -> { delete :destroy_all }.should change { UserNotice.count }.by -10
       response.should be_success
-      Notice.count.should == 0
-      UserNotice.count.should == 0
+    end
+    it 'should allow all notices to be destroyed for a single user', :katello => true do #TODO headpin
+      -> { delete :destroy_all }.should change { Notice.count }.by -10
+      response.should be_success
     end
   end
 
