@@ -117,8 +117,8 @@ class Publish(ContentViewDefinitionAction):
                               message=_("Publishing content view, please wait..."))
 
             return evaluate_task_status(task,
-                ok =     _("Content view [ %s ] published successfully.") % name,
-                failed = _("Content view [ %s ] failed to be promoted") % name
+                ok =     _("Content view [ %s ] published successfully.") % view_name,
+                failed = _("Content view [ %s ] failed to be promoted") % view_name
             )
 
         else:
