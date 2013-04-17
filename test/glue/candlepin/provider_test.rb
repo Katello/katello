@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'minitest_helper'
-require 'mocha'
+require 'mocha/setup'
 require './test/support/user_support'
 
 
