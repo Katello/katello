@@ -321,6 +321,7 @@ class UserLdapTest < UserTestBase
   def self.before_suite
     super
     Katello.config[:warden] = 'ldap'
+    Katello.config[:validate_ldap] = false
     @@user = User.create_ldap_user!('testuser')
   end
 
