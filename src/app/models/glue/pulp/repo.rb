@@ -52,7 +52,7 @@ module Glue::Pulp::Repo
 
         #delete any similar tasks with the wrong url (in case it changed)
         notifs.select{|n| n['event_types'] == [type] && n['notifier_config']['url'] != url}.each do |e|
-          resource.destroy(e['id'])
+          resource.delete(e['id'])
         end
 
         #only create a notifier if one doesn't exist with the correct url
