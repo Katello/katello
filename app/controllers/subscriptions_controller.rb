@@ -162,7 +162,7 @@ class SubscriptionsController < ApplicationController
   def delete_manifest
     begin
       @provider.delete_manifest :async => true, :notify => true
-    rescue Exception => error
+    rescue => error
       if error.respond_to?(:response)
         display_message = ApplicationController.parse_display_message(error.response)
       elsif error.message
@@ -214,7 +214,7 @@ class SubscriptionsController < ApplicationController
     begin
       get_manifest_details # to set @upstream
       @provider.refresh_manifest @upstream, :async => true, :notify => true
-    rescue Exception => error
+    rescue => error
       if error.respond_to?(:response)
         display_message = ApplicationController.parse_display_message(error.response)
       elsif error.message
