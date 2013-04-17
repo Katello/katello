@@ -17,7 +17,7 @@
 %endif
 
 Name:           katello-configure
-Version:        1.3.8
+Version:        1.3.9
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -141,6 +141,9 @@ chmod +x -R %{buildroot}%{homedir}/upgrade-scripts/*
 %{homedir}/puppet/modules/foreman
 
 %changelog
+* Tue Apr 16 2013 Justin Sherrill <jsherril@redhat.com> 1.3.9-1
+- rebuilding with scl
+
 * Tue Apr 16 2013 Justin Sherrill <jsherril@redhat.com> 1.3.8-1
 - Merge pull request #1988 from mccun934/KATELLO-1.3 (mmccune@gmail.com)
 - treat CentOS like RHEL, otherwise the install fails
