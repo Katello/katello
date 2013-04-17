@@ -9,30 +9,52 @@
  NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-**/
+ **/
 
 'use strict';
 
-Katello.controller('MenuController', ['$scope', '$sanitize', function($scope, $sanitize){
+Katello.controller('MenuController', ['$scope', '$location', function($scope, $location){
 
     $scope.menu = KT.main_menu;
     $scope.user_menu = KT.user_menu;
     $scope.admin_menu = KT.admin_menu;
     $scope.notices = KT.notices;
 
-    if( $('body').attr('id') === 'systems' ){
-        $scope.menu.active_item = KT.main_menu['items'][2];
-        $scope.menu.active_item.active = true;
-    } else if( $('body').attr('id') === 'contents' || $('body').attr('id') === 'subscriptions' ){
-        $scope.menu.active_item = KT.main_menu['items'][1];
-        $scope.menu.active_item.active = true;
-    } else if( $('body').attr('id') === 'operations' ){
-        $scope.admin_menu.active_item = KT.admin_menu['items'][0];
-        $scope.admin_menu.active_item.active = true;
-    } else {
-        $scope.menu.active_item = KT.main_menu['items'][0];
-        $scope.menu.active_item.active = true;
+    /**
+     * Set the active menu item.
+     * @param menuItem the menuItem to make active.
+     */
+    function setActiveMenuItem (menuItem) {
+        if (menuItem) {
+            $scope.menu.active_item = menuItem;
+            $scope.menu.active_item.active = true;
+        }
     }
-        
 
+	/**
+     * Get the active menu item based on the $location service.
+     * @param menuItems
+     * @returns the active menu item.
+     */
+    function getActiveMenuItem (menuItems) {
+        var activeMenuItem;
+        for (var i = 0; i < menuItems.length; i++) {
+            var menuItem = menuItems[i];
+            if ($location.absUrl().indexOf(menuItem.url) >= 0) {
+                activeMenuItem = menuItem;
+            } else if (menuItem.hasOwnProperty('items')) {
+                // If the active page is a child of a top level menu item
+                // then set the top level menu item as active.
+                if (getActiveMenuItem(menuItem.items)) {
+                    activeMenuItem = menuItem;
+                }
+            }
+        }
+        return activeMenuItem;
+    }
+
+    // Combine all menu items and figure out which one ought to be active.
+    var allMenus = $scope.menu.items.concat($scope.user_menu.items).
+        concat($scope.admin_menu.items).concat($scope.notices);
+    setActiveMenuItem(getActiveMenuItem(allMenus));
 }]);
