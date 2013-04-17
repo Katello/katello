@@ -17,7 +17,7 @@
 %endif
 
 Name:           katello-configure
-Version:        1.3.7
+Version:        1.3.8
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -141,6 +141,32 @@ chmod +x -R %{buildroot}%{homedir}/upgrade-scripts/*
 %{homedir}/puppet/modules/foreman
 
 %changelog
+* Tue Apr 16 2013 Justin Sherrill <jsherril@redhat.com> 1.3.8-1
+- Merge pull request #1988 from mccun934/KATELLO-1.3 (mmccune@gmail.com)
+- treat CentOS like RHEL, otherwise the install fails
+- 1861 - don't use waitretry as it backs off and causes multi-minute waits
+  (mmccune@redhat.com)
+- fixing path to rails script
+- using our rails script for upgrade runners
+- moving to /usr/share/katello/ before each upgrade script
+- reordering upgrade scritps and converting ruby scripts to runner
+- adding support for runner scripts for katello upgrade
+- deleting all existing task statuses as part of 1.3 upgrade
+- conflict fix (jsherril@redhat.com)
+- adding full path to rake file
+- addressing pr comments
+- do not require user pass if db:seed isnt needed
+- adding additional katello-configure run, pre-db migrate
+- upgrade fixes
+- moving republish to after dbmigrate
+- merge conflict (jsherril@redhat.com)
+- upgrades - moving republishing of repos until after config update
+- remaing upgrade script for better descirption
+- fixes for 1.3 upgrade (jsherril@redhat.com)
+- fixing being in the wrong directory during pulp upgrade
+- fixing pulpv2 upgrade script
+- initial pulpv2 upgrade steps
+
 * Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.3.7-1
 - Remove Foreman specific code - update scripts (inecas@redhat.com)
 - Make installation of Foreman optional (inecas@redhat.com)
