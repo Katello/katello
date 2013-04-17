@@ -106,7 +106,15 @@ class SystemsController < ApplicationController
     # Environments page is displayed.
     envsys = !params[:env_id].nil?
 
-    render :partial=>"new", :locals=>{:system=>@system, :accessible_envs => accessible_envs, :envsys => envsys}
+    if current_user.experimental_ui
+      if request.xhr?
+        render :new_nutupane, :layout => false, :locals=>{:system=>@system, :accessible_envs => accessible_envs, :envsys => envsys}
+      else
+        render :new_nutupane, :locals=>{:system=>@system, :accessible_envs => accessible_envs, :envsys => envsys}
+      end
+    else
+      render :partial=>"new", :locals=>{:system=>@system, :accessible_envs => accessible_envs, :envsys => envsys}
+    end
   end
 
   def create
@@ -352,7 +360,12 @@ class SystemsController < ApplicationController
       @locals_hash = { :system => @system, :editable => @system.editable?,
                       :releases => releases, :releases_error => releases_error, :name => controller_display_name,
                       :environments => environment_paths(library_path_element, environment_path_element("systems_readable?"))}
-      render :show_nutupane, :locals => @locals_hash
+
+      if request.xhr?
+        render :show_nutupane, :layout => false, :locals => @locals_hash
+      else
+        render :show_nutupane, :locals => @locals_hash
+      end
     else
       render :partial=>"systems/list_system_show", :locals=>{:item=>system, :accessor=>"id", :columns=> COLUMNS.keys, :noblock => 1}
     end
