@@ -21,9 +21,9 @@ fi
 
 echo ""
 echo "********* Katello RSPEC Unit Tests ****************"
-psql -c "CREATE USER katello WITH PASSWORD 'katello';" -U postgres
-psql -c "ALTER ROLE katello WITH CREATEDB" -U postgres
-psql -c "CREATE DATABASE katello_test OWNER katello;" -U postgres
+psql -c "CREATE USER katellouser WITH PASSWORD 'katellopw';" -U postgres
+psql -c "ALTER ROLE katellouser WITH CREATEDB" -U postgres
+psql -c "CREATE DATABASE katelloschema OWNER katellouser;" -U postgres
 
 # reenable when parallel tests are fixed
 #   bundle exec rake parallel:create VERBOSE=false
