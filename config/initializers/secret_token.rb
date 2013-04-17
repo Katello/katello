@@ -5,7 +5,7 @@ begin
   token = IO.read('/etc/katello/secret_token')
   raise RuntimeError, 'Size is too small' if token.length < 9
   Src::Application.config.secret_token = token.chomp
-rescue Exception => e
+rescue => e
   # If anything is wrong make sure the token is random. This is safe even when
   # Katello is not configured correctly for any reason (but session is lost
   # after each restart).

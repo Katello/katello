@@ -28,4 +28,18 @@ class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
     check_code_lines { |line| line.empty? || line !~ /\s+\s$/ }
   end
 
+  it 'does not use rescue Exception => e' do # ok
+    check_code_lines(<<-DOC) { |line| (line !~ /rescue +Exception/) ? true : line =~ /#\s?ok/ }
+always rescue specific exception or at least `rescue => e` which equals to `rescue StandardError => e`
+see http://stackoverflow.com/questions/10048173/why-is-it-bad-style-to-rescue-exception-e-in-ruby
+    DOC
+  end
+
+  # TODO enable
+  #it 'does not use general rescue => e' do
+  #  check_code_lines do |line|
+  #    (line !~ /rescue +Exception/) ? true : line =~ /#\s?ok/
+  #  end
+  #end
+
 end

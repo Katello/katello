@@ -52,7 +52,7 @@ module RepositorySupport
       @task = @repo.sync
       TaskSupport.wait_on_tasks(@task)
     end
-  rescue Exception => e
+  rescue => e
   end
 
   def self.destroy_repo(id=@repo_id)
