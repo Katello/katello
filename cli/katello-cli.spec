@@ -21,7 +21,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.3.7
+Version:       1.3.8
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 Requires:      %{base_name}-cli-common
@@ -166,6 +166,9 @@ popd
 %{homedir}/tests
 
 %changelog
+* Wed Apr 17 2013 Justin Sherrill <jsherril@redhat.com> 1.3.8-1
+- 950539 - Adding content view option to package/errata list
+
 * Tue Apr 16 2013 Justin Sherrill <jsherril@redhat.com> 1.3.7-1
 - Worked on the content view options for system and changeset
 
