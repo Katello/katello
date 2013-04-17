@@ -32,7 +32,7 @@
 %endif
 
 Name:           katello
-Version:        1.3.17
+Version:        1.3.18
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -834,6 +834,28 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Apr 16 2013 Justin Sherrill <jsherril@redhat.com> 1.3.18-1
+- temporarily disabling errata dashboard widget (jsherril@redhat.com)
+- issue 1955 - ui - open filter after create (bbuckingham@redhat.com)
+- Asset Pipeline - Fixing mis-included asset edit_helpers.
+- issue 1935 - fix promotion failure after view refresh
+  (bbuckingham@redhat.com)
+- #1963 - return true for index_content so job doesnt fail
+- providers - ui - fix alignment of Add Product button (bbuckingham@redhat.com)
+- product - ui - change label assignment notice to be message
+  (bbuckingham@redhat.com)
+- Worked on the content view options for system and changeset
+- Updating issues that came out of errata dates being real dates instead of
+  strings
+- Asset Pipeline - Fixing issue with loading the treeTable jquery plugin since
+  we don't precompile anything from an engine directly.
+- Asset Pipeline - Fixing issue with missing gpp_keys JS manifest, bad
+  reference to stylesheet inclusion syntax on systems group page and missing
+  timpickr CSS.
+- update katello-debug to the pulp-v2 configuration file location
+- more upgrade fixes
+- initial pulpv2 upgrade steps
+
 * Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.3.17-1
 - Spec - Updating spec to set RAILS_ENV=production on asset compile.
   (ehelms@redhat.com)
