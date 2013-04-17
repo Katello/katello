@@ -111,6 +111,8 @@ class User < ActiveRecord::Base
     return nil unless u
     # check if not disabled
     return nil if u.disabled
+    # check if we have password (can be set to nil for users from LDAP when you switch to DB)
+    return nil if u.password.nil?
     # check if hash is valid
     return nil unless Password.check(password, u.password)
     u

@@ -53,7 +53,8 @@ end
 # authenticate against OpenID
 Warden::Strategies.add(:openid) do
   def valid?
-    Katello.config.sso.enable
+    # if user supplied username and password we don't want to make OpenID auth request
+    Katello.config.sso.enable && (params[:username] || params[:password]).blank?
   end
 
   def authenticate!
@@ -64,11 +65,12 @@ Warden::Strategies.add(:openid) do
           if (user = User.find_by_username(response.identity_url.split('/').last))
             success!(user)
           else
-            fail!('User not found')
-            throw(:warden, :openid => { :response => response })
+            fail('User not found')
+            throw(:warden, :openid => { :response => response }) unless params[:sso_tried].present?
           end
         else
-          fail!(response.respond_to?(:message) ? response.message : "OpenID authentication failed: #{response.status}")
+          fail(response.respond_to?(:message) ? response.message : "OpenID authentication failed: #{response.status}")
+          throw(:warden, :openid => { :response => response }) unless params[:sso_tried].present?
       end
     elsif (username = cookies[:username])
       # we already have cookie
