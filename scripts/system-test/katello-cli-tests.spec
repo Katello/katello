@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.3.6
+Version:       1.3.7
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 
@@ -51,6 +51,9 @@ cp -Rp cli_tests/ cli-system-test helpers *zip RPM-GPG-KEY* $RPM_BUILD_ROOT%{hom
 
 
 %changelog
+* Tue Apr 16 2013 Justin Sherrill <jsherril@redhat.com> 1.3.7-1
+- Fixing composite content view smoke test
+
 * Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.3.6-1
 - Remove Foreman specific code - system tests (inecas@redhat.com)
 - cli custom_info restructure (komidore64@gmail.com)
