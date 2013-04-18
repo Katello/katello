@@ -65,12 +65,6 @@
           .button.subpanel_element{"data-url"=>new_organization_environment_path(@organization.label)}
             = _("Add New Environment")
 
-        .clear
-          &nbsp;
-
-        .grid_7
-          = render :partial => "default_info", :locals => { :org => @organization, :informable_type => "system" }
-
         - if editable
           = render :partial=>"download_debug_certificate"
 
