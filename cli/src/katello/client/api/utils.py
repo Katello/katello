@@ -37,6 +37,7 @@ from katello.client.api.system import SystemAPI
 from katello.client.api.distributor import DistributorAPI
 from katello.client.api.content_view import ContentViewAPI
 from katello.client.api.content_view_definition import ContentViewDefinitionAPI
+from katello.client.api.filter import FilterAPI
 
 
 class ApiDataError(Exception):
@@ -131,6 +132,19 @@ def get_cv_definition(org_name, def_label=None, def_name=None, def_id=None):
                 ({"a": (def_label or def_id or def_name), "b": org_name}))
 
     return cvds[0]
+
+
+def get_filter(org_name, def_id, filter_name):
+    filter_api = FilterAPI()
+    filters = filter_api.filters_by_cvd_and_org(def_id, org_name)
+
+    filters = [f for f in filters if f["name"] == filter_name]
+
+    if len(filters) < 1:
+        raise ApiDataError(_("Could not find filter [ %s ].") % filter_name)
+    else:
+        # there can only be one filter matching name in a def
+        return filters[0]
 
 
 def get_repo(orgName, repoName, prodName=None, prodLabel=None, prodId=None, envName=None, includeDisabled=False,
