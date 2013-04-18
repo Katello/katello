@@ -432,11 +432,11 @@ class AddRemoveContentView(ContentViewDefinitionAction):
         if self.addition:
             content_views.append(content_view["id"])
             message = _("Added content view [ %(view)s ] to definition [ %(def)s ]" % \
-                        ({"def": content_view["name"], "view": cvd["label"]}))
+                        ({"def": cvd["name"], "view": content_view["name"]}))
         else:
             content_views.remove(content_view["id"])
             message = _("Removed content view [ %(view)s ] to content view [ %(def)s ]" % \
-                        ({"def": content_view["name"], "view": cvd["label"]}))
+                        ({"def": cvd["name"], "view": content_view["name"]}))
 
         self.api.update_content_views(cvd['id'], content_views)
         print message

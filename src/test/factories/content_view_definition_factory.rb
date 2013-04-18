@@ -4,5 +4,9 @@ FactoryGirl.define do
     sequence(:label) {|n| "Database_definition#{n}" }
     description "Database content view definition"
     organization
+
+    trait :composite do
+      composite true
+    end
   end
 end
