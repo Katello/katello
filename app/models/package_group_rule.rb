@@ -11,18 +11,18 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class PackageGroupRule < FilterRule
+  validates_with Validators::PackageGroupRuleParamsValidator, :attributes => :parameters
   def params_format
     {:units => [[:name]]}
   end
 
-
   def generate_clauses(repo)
     ids = parameters[:units].collect do |unit|
       #{'name' => {"$regex" => unit[:name]}}
-      if unit[:name] && !unit[:name].blank?
+      unless unit[:name].blank?
         PackageGroup.search(unit[:name], 0, 0, [repo.pulp_id]).collect(&:package_group_id)
       end
     end.compact.flatten
-    {"id" => {"$in" => ids}} unless ids.empty?
+    {"id" => {"$in" => ids}}
   end
 end
