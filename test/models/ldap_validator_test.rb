@@ -32,9 +32,9 @@ class LdapValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def setup
-    Katello.config[:warden] = 'ldap'
-    Katello.config[:validate_ldap] = 'true'
-    Katello.config[:katello?] = 'false'
+    options = { :warden => "ldap", :validate_ldap => true, :katello? => false }
+    my_config = Katello::Configuration::Node.new(Katello.config.to_hash.update options)
+    Katello.stubs(:config).returns(my_config)
     @acme_corporation   = Organization.find(organizations(:acme_corporation).id)
     @dev                = KTEnvironment.find(environments(:dev).id)
     @user = build(:user, :batman)
@@ -65,13 +65,17 @@ class LdapValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_ldap_validation_disabled
-    Katello.config[:validate_ldap] = false
+    options = {:warden => "ldap", :validate_ldap => false, :katello? => false }
+    my_config = Katello::Configuration::Node.new(Katello.config.to_hash.update options)
+    Katello.stubs(:config).returns(my_config)
     LdapFluff.any_instance.stubs(:valid_user?).returns(false)
     assert @user.save
   end
 
   def test_ldap_disabled
-    Katello.config[:warden] = 'database'
+    options = {:warden => "database", :validate_ldap => false, :katello? => false }
+    my_config = Katello::Configuration::Node.new(Katello.config.to_hash.update options)
+    Katello.stubs(:config).returns(my_config)
     LdapFluff.any_instance.stubs(:valid_user?).returns(false)
     assert @user.save
   end

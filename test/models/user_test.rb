@@ -320,8 +320,9 @@ class UserLdapTest < UserTestBase
 
   def self.before_suite
     super
-    Katello.config[:warden] = 'ldap'
-    Katello.config[:validate_ldap] = false
+    options = { :warden => "ldap", :validate_ldap => false }
+    my_config = Katello::Configuration::Node.new(Katello.config.to_hash.update options)
+    Katello.stubs(:config).returns(my_config)
     @@user = User.create_ldap_user!('testuser')
   end
 
@@ -348,11 +349,10 @@ class UserLdapTest < UserTestBase
   end
 
   def test_create_ldap_user!
-    old_warden = Katello.config.warden
-    Katello.config[:warden] = 'ldap'
-      assert_instance_of User, User.create_ldap_user!('alice')
-  ensure
-    Katello.config[:warden] = old_warden
+    options = { :warden => "ldap" }
+    my_config = Katello::Configuration::Node.new(Katello.config.to_hash.update options)
+    Katello.stubs(:config).returns(my_config)
+    assert_instance_of User, User.create_ldap_user!('alice')
   end
 
   def test_clear_existing_ldap_roles
