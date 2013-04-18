@@ -10,7 +10,7 @@ Rails.configuration.middleware.use RailsWarden::Manager do |config|
   # all UI requests are handled in the default scope
   config.scope_defaults(
     :user,
-    :strategies => [:openid, Katello.config.warden.to_sym],
+    :strategies   => [:openid, Katello.config.warden.to_sym],
     :store        => true,
     :action       => 'unauthenticated_ui'
   )
@@ -101,9 +101,9 @@ Warden::Strategies.add(:database) do
     end
 
     Rails.logger.debug("Warden is authenticating #{params[:auth_username]} against database")
-    u = User.authenticate!(username, password)
+    user = User.authenticate!(username, password)
 
-    u ? success!(u, "database") : fail!("Username or password do not match database - could not log in")
+    user ? success!(user, "database") : fail!("Username or password do not match database - could not log in")
   end
 end
 
@@ -123,9 +123,9 @@ Warden::Strategies.add(:ldap) do
     end
 
     Rails.logger.debug("Warden is authenticating #{params[:username]} against ldap")
-    u = User.authenticate_using_ldap!(username, password)
+    user = User.authenticate_using_ldap!(username, password)
 
-    u ? success!(u, "LDAP") : fail!("Could not log in using LDAP")
+    user ? success!(user, "LDAP") : fail!("Could not log in using LDAP")
   end
 end
 
