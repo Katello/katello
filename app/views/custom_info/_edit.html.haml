@@ -8,17 +8,17 @@
       %tbody
         %tr#new_custom_info_row
           %td
-            %input.custom_info_txt#new_custom_info_keyname{"placeholder" => "keyname"}
+            %input.custom_info_txt#new_custom_info_keyname{:placeholder => _("Keyname")}
           %td
-            %input.custom_info_txt#new_custom_info_value{"placeholder" => "value"}
+            %input.custom_info_txt#new_custom_info_value{:placeholder => _("Value")}
           %td
-            %input.btn.primary#create_custom_info_button{"value" => "add", "type" => "submit", "data-url" => api_create_custom_info_path(informable_type, informable_id), "data-method" => "post", :disabled => true}
+            %input.btn.primary#create_custom_info_button{:value => _("Add"), :type => "submit", "data-url" => api_create_custom_info_path(informable_type, informable_id), "data-method" => "post", :disabled => true}
         - informable.custom_info.sort.each do |info|
           - space_safe_keyname = info.keyname.gsub(" ", "_")
           %tr{"data-id" => "custom_info_#{space_safe_keyname}"}
             %td.ra
               = label :custom_info, space_safe_keyname.to_sym, info.keyname
             %td
-              %div{"name" => "custom_info_#{space_safe_keyname}", "class" => ("editable edit_textfield" if informable.editable?), "data-method" => "put", "data-url" => api_update_custom_info_path(informable_type, informable_id, info.keyname)} #{info.value}
+              %div{:name => "value", :class => ("editable edit_textfield" if informable.editable?), "data-method" => "put", "data-url" => api_update_custom_info_path(informable_type, informable_id, info.keyname)} #{info.value}
             %td
-              %input.btn.warning.remove_custom_info_button{"value" => "remove", "type" => "submit", "data-url" => api_destroy_custom_info_path(informable_type, informable_id, info.keyname), "data-method" => "delete", "data-id" => "custom_info_#{space_safe_keyname}"}
+              %input.btn.warning.remove_custom_info_button{:value => _("Remove"), :type => "submit", "data-url" => api_destroy_custom_info_path(informable_type, informable_id, info.keyname), "data-method" => "delete", "data-id" => "custom_info_#{space_safe_keyname}"}
