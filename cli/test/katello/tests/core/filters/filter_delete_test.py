@@ -27,12 +27,14 @@ class FilterDeleteTest(CLIActionTestCase):
             "name": 'content_def',
             "id": 1
           }
-    FILTER = 'filter'
+    FILTER = {'name': 'filter',
+              'id': 5
+              }
 
     OPTIONS = {
         'org':ORG,
         'definition':DEF["name"],
-        'name':FILTER
+        'name':FILTER["name"]
     }
 
     def setUp(self):
@@ -43,11 +45,12 @@ class FilterDeleteTest(CLIActionTestCase):
 
         self.mock(self.action.api, 'delete')
         self.mock(self.module, 'get_cv_definition', self.DEF)
+        self.mock(self.module, 'get_filter', self.FILTER)
 
     def tearDown(self):
         self.restore_mocks()
 
     def test_it_uses_content_view_delete_api(self):
         self.run_action()
-        self.action.api.delete.assert_called_once_with(self.FILTER,
+        self.action.api.delete.assert_called_once_with(self.FILTER["id"],
                 self.DEF["id"], self.ORG)
