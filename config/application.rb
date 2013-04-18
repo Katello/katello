@@ -52,7 +52,8 @@ else
              when :development
                basic_groups + [:development, :debugging, :build, :development_boost, :assets]
              when :test
-               basic_groups + [:development, :test, (:debugging if ENV['TRAVIS'] != 'true')] # TODOp add to config
+               # TODO replace ENV['TRAVIS'] with configuration
+               basic_groups + [:development, :test, (:debugging if ENV['TRAVIS'] != 'true')]
              else
                raise "unknown environment #{Rails.env.to_sym}"
              end.compact
