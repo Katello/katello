@@ -20,7 +20,8 @@ from katello.client.api.content_view_definition import ContentViewDefinitionAPI
 from katello.client.api.filter import FilterAPI
 from katello.client.cli.base import opt_parser_add_org, opt_parser_add_product
 from katello.client.core.base import BaseAction, Command
-from katello.client.api.utils import get_repo, get_cv_definition, ApiDataError
+from katello.client.api.utils import get_repo, get_cv_definition, ApiDataError, \
+    get_filter
 
 # base filter action ----------------------------------------
 
@@ -29,7 +30,6 @@ class FilterAction(BaseAction):
     def __init__(self):
         super(FilterAction, self).__init__()
         self.api = FilterAPI()
-        self.def_api = FilterAPI()
 
     @classmethod
     def _add_cvd_filter_opts(cls, parser):
@@ -77,7 +77,7 @@ class List(FilterAction):
 
         definition = get_cv_definition(org_name, definition_label,
                                        definition_name, definition_id)
-        defs = self.def_api.filters_by_cvd_and_org(definition["id"], org_name)
+        defs = self.api.filters_by_cvd_and_org(definition["id"], org_name)
 
         self.printer.add_column('id', _("ID"))
         self.printer.add_column('name', _("Name"))
@@ -109,7 +109,9 @@ class Info(FilterAction):
         definition = get_cv_definition(org_name, definition_label,
                                        definition_name, definition_id)
 
-        cvd_filter = self.def_api.get_filter_info(filter_name,
+        cvd_filter = get_filter(org_name, definition["id"], filter_name)
+
+        cvd_filter = self.api.get_filter_info(cvd_filter["id"],
                                                   definition["id"],
                                                   org_name)
 
@@ -144,7 +146,7 @@ class Create(FilterAction):
         definition = get_cv_definition(org_name, definition_label,
                                        definition_name, definition_id)
 
-        self.def_api.create(filter_name, definition["id"], org_name)
+        self.api.create(filter_name, definition["id"], org_name)
         print _("Successfully created filter [ %s ]") % filter_name
         return os.EX_OK
 
@@ -169,7 +171,8 @@ class Delete(FilterAction):
 
         definition = get_cv_definition(org_name, definition_label,
                                        definition_name, definition_id)
-        self.def_api.delete(filter_name, definition["id"], org_name)
+        cvd_filter = get_filter(org_name, definition["id"], filter_name)
+        self.api.delete(cvd_filter["id"], definition["id"], org_name)
 
         print _("Successfully deleted filter [ %s ]") % filter_name
         return os.EX_OK
@@ -216,27 +219,28 @@ class AddRemoveProduct(FilterAction):
 
         product = self.identify_product(cvd, cvd_products, product_name, product_label, product_id)
 
-        products = self.def_api.products(filter_name, cvd["id"], org_name)
+        cvd_filter = get_filter(org_name, cvd["id"], filter_name)
+        products = self.api.products(cvd_filter["id"], cvd["id"], org_name)
 
         products = [f['id'] for f in products]
 
-        self.update_products(org_name, cvd["id"], filter_name, products, product)
+        self.update_products(org_name, cvd["id"], cvd_filter, products, product)
         return os.EX_OK
 
-    def update_products(self, org_name, cvd, filter_name, products, product):
+    def update_products(self, org_name, cvd, cvd_filter, products, product):
         if self.addition:
             products.append(product['id'])
             message = _("Added product [ %(prod)s ] to filter [ %(filter)s ]" % \
-                        ({"prod": product['label'], "filter": filter_name}))
+                        ({"prod": product['label'], "filter": cvd_filter["name"]}))
         else:
             products.remove(product['id'])
             message = _("Removed product [ %(prod)s ] from filter [ %(filter)s ]" %
-                        ({"prod": product['label'], "filter": filter_name}))
+                        ({"prod": product['label'], "filter": cvd_filter["name"]}))
 
-        self.def_api.update_products(filter_name, cvd, org_name, products)
+        self.api.update_products(cvd_filter["id"], cvd, org_name, products)
         print message
 
-    def identify_product(self, definition, cvd_products, product_name, product_label, product_id):
+    def identify_product(self, cvd, cvd_products, product_name, product_label, product_id):
         org_name = self.get_option('org')
 
         products = [prod for prod in cvd_products if prod["id"] == product_id \
@@ -248,7 +252,7 @@ class AddRemoveProduct(FilterAction):
                                  "using the 'product list' command."))
         elif len(products) == 0:
             raise ApiDataError(_("Could not find product [ %s ] within organization [ %s ] and definition [%s] ") %
-                               ((product_name or product_label or product_id), org_name, definition["name"]))
+                               ((product_name or product_label or product_id), org_name, cvd["name"]))
 
         return products[0]
 
@@ -301,25 +305,27 @@ class AddRemoveRepo(FilterAction):
         definition = get_cv_definition(org_name, definition_label,
                                        definition_name, definition_id)
 
+        cvd_filter = get_filter(org_name, definition["id"], filter_name)
+
         repo = get_repo(org_name, repo_name, product, product_label, product_id)
-        repos = self.def_api.repos(filter_name, definition["id"], org_name)
+        repos = self.api.repos(cvd_filter["id"], definition["id"], org_name)
         repos = [f['id'] for f in repos]
 
-        self.update_repos(org_name, definition["id"], filter_name, repos, repo)
+        self.update_repos(org_name, definition["id"], cvd_filter, repos, repo)
 
         return os.EX_OK
 
-    def update_repos(self, org_name, cvd, filter_name, repos, repo):
+    def update_repos(self, org_name, cvd_id, cvd_filter, repos, repo):
         if self.addition:
             repos.append(repo["id"])
             message = _("Added repository [ %s ] to filter [ %s ]" % \
-                        (repo["name"], filter_name))
+                        (repo["name"], cvd_filter["name"]))
         else:
             repos.remove(repo["id"])
             message = _("Removed repository [ %s ] from filter [ %s ]" % \
-                        (repo["name"], filter_name))
+                        (repo["name"], cvd_filter["name"]))
 
-        self.def_api.update_repos(filter_name, cvd, org_name, repos)
+        self.api.update_repos(cvd_filter["id"], cvd_id, org_name, repos)
         print message
 
 class Filter(Command):
