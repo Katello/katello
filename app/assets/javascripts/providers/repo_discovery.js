@@ -285,8 +285,9 @@ KT.repo_discovery.new_page = (function(){
             var name = repo_div.find('.name_input').val(),
                 label = repo_div.find('.label_input').val(),
                 url = repo_div.find('input[type=hidden]').val(),
-                id = '#' + repo_div.attr('id');
-            repos.push({name:name, label:label, feed:url, id:id})
+                id = '#' + repo_div.attr('id'),
+                unprotected = $('#unprotected').find('input[type=checkbox]:checked').val() === '1';
+            repos.push({name:name, label:label, feed:url, id:id, unprotected:unprotected})
         });
         $(window).trigger('repo.create', [create_url, repos]);
     },
