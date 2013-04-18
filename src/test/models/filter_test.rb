@@ -33,14 +33,6 @@ class FilterTest < MiniTest::Rails::ActiveSupport::TestCase
     @product = Product.find(products(:fedora).id)
   end
 
-  def after_tests
-    Filter.delete_all
-    ContentViewDefinition.delete_all
-    Organization.delete_all
-    Product.delete_all
-    Repository.delete_all
-  end
-
   def test_create
      assert @filter.save
   end
