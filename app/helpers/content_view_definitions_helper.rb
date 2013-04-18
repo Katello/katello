@@ -34,6 +34,11 @@ module ContentViewDefinitionsHelper
     "#" + {:search => {:views => views, :repos => repos, :content_type => "repos"}, :envs => env_ids}.to_param
   end
 
+  def unable_to_remove_view
+    _("Before removing this view, all promoted versions must first be deleted from their "\
+      "respective environments using a deletion changeset.")
+  end
+
   def publish_button(definition)
     if definition.has_repo_conflicts?
       content_tag(:td,
@@ -65,7 +70,8 @@ module ContentViewDefinitionsHelper
       if version.environments.include?(version.content_view.organization.library)
         unless task && task.pending?
           content_tag(:a, task.nil? || task.error? ? _('Retry') : _('Refresh'),
-                      {:type => 'button', :href => '#', :class => 'refresh_action',
+                      {:type => 'button', :href => '#', :class => 'refresh_action tipsify',
+                       'original-title' => _('Refresh'),
                        'data-url' => refresh_content_view_definition_content_view_path(
                            version.content_view.content_view_definition.id, version.content_view.id)})
         end
