@@ -20,7 +20,14 @@ describe "routing to login" do
     )
   end
 
-  it "routes /logout to user_sessions#destroy" do
+  it "routes /logout to user_sessions#destroy on a get to logout" do
+    {  :get => "/logout"}.should route_to(
+       :controller => "user_sessions",
+       :action => "destroy"
+    )
+  end
+
+  it "routes /logout to user_sessions#destroy on a post to logout" do
     { :post => "/logout" }.should route_to(
       :controller => "user_sessions",
       :action => "destroy"
