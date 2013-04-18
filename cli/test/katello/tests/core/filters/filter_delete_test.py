@@ -41,7 +41,7 @@ class FilterDeleteTest(CLIActionTestCase):
         self.mock_printer()
         self.mock_options(self.OPTIONS)
 
-        self.mock(self.action.def_api, 'delete')
+        self.mock(self.action.api, 'delete')
         self.mock(self.module, 'get_cv_definition', self.DEF)
 
     def tearDown(self):
@@ -49,5 +49,5 @@ class FilterDeleteTest(CLIActionTestCase):
 
     def test_it_uses_content_view_delete_api(self):
         self.run_action()
-        self.action.def_api.delete.assert_called_once_with(self.FILTER,
+        self.action.api.delete.assert_called_once_with(self.FILTER,
                 self.DEF["id"], self.ORG)

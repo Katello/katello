@@ -38,12 +38,12 @@ class FilterListTest(CLIActionTestCase):
         self.mock_options(self.OPTIONS)
 
         self.mock(self.module, 'get_cv_definition', self.DEF)
-        self.mock(self.action.def_api, 'filters_by_cvd_and_org', [])
+        self.mock(self.action.api, 'filters_by_cvd_and_org', [])
 
     def tearDown(self):
         self.restore_mocks()
 
     def test_it_uses_lists_api(self):
         self.run_action()
-        self.action.def_api.filters_by_cvd_and_org.\
+        self.action.api.filters_by_cvd_and_org.\
                 assert_called_once_with(self.DEF["id"], self.ORG)
