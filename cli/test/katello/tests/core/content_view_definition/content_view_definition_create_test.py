@@ -43,12 +43,12 @@ class ContentViewAddTest(CLIActionTestCase):
         self.mock_printer()
         self.mock_options(self.OPTIONS)
 
-        self.mock(self.action.def_api, 'create', [])
+        self.mock(self.action.api, 'create', [])
 
     def tearDown(self):
         self.restore_mocks()
 
-    def test_it_uses_def_api(self):
+    def test_it_uses_api(self):
         self.run_action()
-        self.action.def_api.create.assert_called_once_with(
+        self.action.api.create.assert_called_once_with(
             self.ORG, self.NAME, self.LABEL, self.DESCRIPTION, None)
