@@ -130,4 +130,15 @@ class Organization < ActiveRecord::Base
     end
   end
 
+  def self.check_informable_type!(informable_type, options = {})
+    defaults = { :message => _("Informable Type must be one of the following [ %{list} ]") %
+      { :list => ALLOWED_DEFAULT_INFO_TYPES.join(", ") }
+    }
+    options = defaults.merge(options)
+
+    unless ALLOWED_DEFAULT_INFO_TYPES.include?(informable_type)
+      raise HttpErrors::BadRequest, options[:message]
+    end
+  end
+
 end
