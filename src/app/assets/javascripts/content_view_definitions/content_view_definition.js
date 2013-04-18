@@ -317,15 +317,13 @@ KT.content_view_definition = (function(){
         }
     },
     disable = function(element) {
-        element.attr('disabled', 'disabled');
-        element.addClass('disabled');
+        element.attr('disabled', 'disabled').addClass('disabled');
     },
     enable = function(element) {
-        element.removeAttr('disabled');
-        element.removeClass('disabled');
+        element.removeAttr('disabled').removeClass('disabled');
     },
     disable_remove_view = function(view_id) {
-        var view = $('tr#' + view_id),
+        var view = $('#' + view_id),
             remove_link = view.find('a.remove_view');
 
         remove_link.unbind('click').click(function(event){event.preventDefault();});
@@ -340,7 +338,7 @@ KT.content_view_definition = (function(){
         if (view_id === undefined) {
             views = $('tr.view');
         } else {
-            views = $('tr#' + view_id);
+            views = $('#' + view_id);
         }
 
         views.each(function() {
@@ -708,12 +706,10 @@ KT.content_view_definition_filters = (function(){
         enable(selector.find('a.save_version'))
     },
     disable = function(button) {
-        button.attr('disabled', 'disabled');
-        button.addClass('disabled');
+        button.attr('disabled', 'disabled').addClass('disabled');
     },
     enable = function(button) {
-        button.removeAttr('disabled');
-        button.removeClass('disabled');
+        button.removeAttr('disabled').removeClass('disabled');
     },
     initialize_checkboxes = function(form) {
         var checkboxes = $('input[type="checkbox"]'),
