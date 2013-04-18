@@ -14,12 +14,14 @@ require_relative 'minitest_helper'
 
 class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
 
-  def check_code_lines(message = nil, &condition)
+  # @param [Array<Regexp>] ignored_files
+  def check_code_lines(message = nil, ignored_files = [], &condition)
     lines = Dir.glob("#{Rails.root}/**/*.rb").inject([]) do |lines, file_path|
-      lines += IO.foreach(file_path).each_with_index.map do |line, line_number|
+      next lines if ignored_files.any? { |m| file_path =~ m }
+
+      lines + IO.foreach(file_path).each_with_index.map do |line, line_number|
         "#{file_path}:#{line_number + 1}" unless condition.call line
       end.compact
-      lines
     end
     assert lines.empty?, "#{message + "\n" if message}check lines:\n" + lines.map { |l| '    - ' + l }.join("\n")
   end
@@ -33,6 +35,18 @@ class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
 always rescue specific exception or at least `rescue => e` which equals to `rescue StandardError => e`
 see http://stackoverflow.com/questions/10048173/why-is-it-bad-style-to-rescue-exception-e-in-ruby
     DOC
+  end
+
+  it 'does not use ENV variables' do
+    doc = <<-DOC
+Katello.config or Katello.early_config should be always used instead of ENV variables, Katello.config is
+the single entry point to configuration. ENV variables are processed there.
+    DOC
+    check_code_lines doc, [%r'config/(application|boot)\.rb',
+                           %r'test/minitest_helper.rb', # TODO clean up minitest_helper
+                           %r'lib/util/puppet\.rb'] do |line|
+      (line !~ /ENV\[[^\]]+\]/) ? true : line =~ /#\s?ok/
+    end
   end
 
   # TODO enable
