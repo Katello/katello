@@ -144,6 +144,10 @@ class ContentView < ActiveRecord::Base
     end
   end
 
+  def library_repo_ids
+    repos(self.organization.library).map { |r| r.library_instance_id }
+  end
+
   def all_version_repos
     Repository.joins(:content_view_version).where("content_view_versions.content_view_id" => self.id)
   end
