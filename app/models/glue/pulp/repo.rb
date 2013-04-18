@@ -406,6 +406,7 @@ module Glue::Pulp::Repo
     end
 
     def clear_contents
+      self.clear_content_indices if Katello.config.use_elasticsearch
       Runcible::Extensions::Repository.unassociate_units(self.pulp_id)
     end
 
