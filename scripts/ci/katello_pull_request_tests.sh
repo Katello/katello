@@ -60,6 +60,9 @@ echo "  app_mode: headpin" >> config/katello.yml
 #   bundle exec rake parallel:prepare VERBOSE=false
 #   bundle exec rake ptest:spec
 
+RAILS_ENV=test bundle exec rake db:drop
+RAILS_ENV=test bundle exec rake db:create
+bundle exec rake db:test:load > /dev/null
 bundle exec rspec ./spec --tag '~katello'
 if [ $? -ne 0 ]
 then
