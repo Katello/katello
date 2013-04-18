@@ -140,4 +140,16 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     assert_equal count+1, ContentViewDefinition.count
   end
 
+  def test_validate_component_views
+    content_view_def = FactoryGirl.create(:content_view_definition, :composite)
+    ContentView.any_instance.stubs(:library_repo_ids).returns([1])
+    content_views = FactoryGirl.create_list(:content_view, 2)
+
+    content_view_def.component_content_views << content_views.first
+    assert_raises(Errors::ContentViewRepositoryOverlap) do
+      content_view_def.component_content_views << content_views.last
+    end
+    assert_equal 1, content_view_def.component_content_views.reload.length
+  end
+
 end
