@@ -120,7 +120,6 @@ class Api::FiltersController < Api::ApiController
   param :id, String, :desc => "name of the filter", :required => true
   param :repos, Array, :desc => "Updated list of repo ids", :required => true
   def update_repositories
-    org_id = @definition.organization.id
     @repos = Repository.libraries_content_readable(@organization).
       where(:id => params[:repos])
     deleted_repositories = @filter.repositories - @repos
@@ -141,8 +140,6 @@ class Api::FiltersController < Api::ApiController
 
   def find_filter
     id = params[:id] || params[:filter_id]
-    @filter = Filter.where(:name => id, :content_view_definition_id => @definition).first
-    raise HttpErrors::NotFound, _("Couldn't find filter '%s'") % params[:id] if @filter.nil?
-    @filter
+    @filter = Filter.where(:content_view_definition_id => @definition).find(id)
   end
 end
