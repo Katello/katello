@@ -18,7 +18,6 @@ class ContentViewDefinitionsController < ApplicationController
   before_filter :find_content_view_definition, :only => [:clone, :show, :edit, :update, :destroy, :views, :content,
                                                          :update_content, :update_component_views,
                                                          :publish_setup, :publish, :status]
-  before_filter :find_content_view, :only => [:refresh]
   before_filter :authorize #after find_content_view_definition, since the definition is required for authorization
   before_filter :panel_options, :only => [:index, :items]
 
@@ -34,7 +33,6 @@ class ContentViewDefinitionsController < ApplicationController
     manage_rule  = lambda { @view_definition.editable? }
     delete_rule  = lambda { @view_definition.deletable? }
     publish_rule = lambda { @view_definition.publishable? }
-    refresh_rule = lambda { @view.content_view_definition.publishable? }
     create_rule  = lambda { ContentViewDefinition.creatable?(current_organization) }
     clone_rule   = lambda do
       ContentViewDefinition.creatable?(current_organization) && @view_definition.readable?
@@ -58,7 +56,6 @@ class ContentViewDefinitionsController < ApplicationController
       :destroy => delete_rule,
 
       :views => show_rule,
-      :refresh => refresh_rule,
       :status => publish_rule,
 
       :content => show_rule,
@@ -184,32 +181,6 @@ class ContentViewDefinitionsController < ApplicationController
                        :name => controller_display_name}
   end
 
-  def refresh
-    initial_version = @view.version(current_organization.library).try(:version)
-
-    new_version = @view.refresh_view({:notify => true})
-
-    notify.success(_("Started generating version %{view_version} of content view '%{view_name}'.") %
-                       {:view_name => @view.name, :view_version => new_version.version})
-
-    render :partial => 'content_view_definitions/views/view',
-           :locals => { :view_definition => @view.content_view_definition, :view => @view,
-                        :task => new_version.task_status }
-  rescue => e
-    current_version = @view.version(current_organization.library).try(:version)
-
-    if (current_version == initial_version)
-      notify.exception(_("Failed to generate a new version of content view '%{view_name}'.") %
-                           {:view_name => @view.name}, e)
-    else
-      notify.exception(_("Failed to generate version %{view_version} of content view '%{view_name}'.") %
-                           {:view_name => @view.name, :view_version => current_version}, e)
-    end
-
-    log_exception(e)
-    render :text => e.to_s, :status => 500
-  end
-
   def status
     # retrieve the status for publish & refresh tasks initiated by the client
     statuses = {:task_statuses => []}
@@ -290,10 +261,6 @@ class ContentViewDefinitionsController < ApplicationController
 
   def find_content_view_definition
     @view_definition = ContentViewDefinition.find(params[:id])
-  end
-
-  def find_content_view
-    @view = ContentView.find(params[:id])
   end
 
   def panel_options
