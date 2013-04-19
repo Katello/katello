@@ -14,5 +14,9 @@
     .nav.right
       %ul.menu-container.menu-item-notices
         %li.menu-item{ "ng-mouseenter" => "handle_hover(notices, true)", "ng-mouseleave" => "handle_hover(notices, false)" }
-          %a.menu-item-link{ :href => "{{ notices.url }}", "ng-class" => "{ 'active-item' : notices.active }", "ng-bind-html-unsafe" => "notices.display" }
+          %a.menu-item-link{ :href => "{{ notices.url }}", "ng-class" => "{ 'active-item' : notices.active }"}
+            %span#unread_notices{"ng-cloak" => true}
+              %i.validation_icon-white.icon
+              %span#unread_notices_count
+                {{notices.count}}
     .nav.admin_menu{ "alch-menu" => "admin_menu" }
