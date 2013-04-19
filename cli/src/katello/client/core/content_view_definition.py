@@ -17,7 +17,7 @@
 import os
 
 from katello.client.api.content_view_definition import ContentViewDefinitionAPI
-from katello.client.cli.base import opt_parser_add_org
+from katello.client.cli.base import opt_parser_add_org, opt_parser_add_content_view
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_content_view, get_cv_definition, \
     get_product, get_repo
@@ -396,12 +396,7 @@ class AddRemoveContentView(ContentViewDefinitionAction):
     def setup_parser(self, parser):
         self._add_get_cvd_opts(parser)
         opt_parser_add_org(parser, required=1)
-        parser.add_option('--view_label', dest='view_label',
-                help=_("content view label"))
-        parser.add_option('--view_id', dest='view_id',
-                help=_("content view id"))
-        parser.add_option('--view_name', dest='view_name',
-                help=_("content view name"))
+        opt_parser_add_content_view(parser, required=1)
 
     def check_options(self, validator):
         self._add_get_cvd_opts_check(validator)

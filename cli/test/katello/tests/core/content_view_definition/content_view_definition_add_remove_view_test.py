@@ -16,13 +16,13 @@ from katello.client.api.utils import ApiDataError
 class RequiredCLIOptionsTest(object):
 
     disallowed_options = [
-        ('--label=def1', '--view_id=view1'),
-        ('--org=ACME', '--view_label=view1'),
-        ('--org=ACME', '--label=def1')
+        ('--label=def1', '--content_view_id=view1'),
+        ('--org=ACME', '--content_view_label=view1'),
+        ('--org=ACME', '--view_label=def1')
     ]
 
     allowed_options = [
-        ('--org=ACME', '--label=def1', '--view_name=view1')
+        ('--org=ACME', '--label=def1', '--content_view=view1')
     ]
 
 
@@ -44,7 +44,7 @@ class ContentDefinitionAddRemoveViewTest(object):
     OPTIONS = {
         'org': ORG['name'],
         'label': DEF['label'],
-        'view': VIEW['label']
+        'view_label': VIEW['label']
     }
 
     addition = True
