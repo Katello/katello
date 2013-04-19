@@ -26,7 +26,7 @@ $(document).ready(function(){
             notices.checkNotices();
         }
     };
-    
+
     $('.gpg_ajaxfileupload').editable($(this).attr('url'), {
         type        :  'ajaxupload',
         method      :  'PUT',
@@ -37,33 +37,33 @@ $(document).ready(function(){
         tooltip     :  i18n.clickToEdit,
         placeholder :  i18n.clickToEdit,
         submitdata  :  {authenticity_token: AUTH_TOKEN},
-        onsuccess	:  function(result, status, xhr){
-        	
+        onsuccess    :  function(result, status, xhr){
+
         },
         onerror     :  function(settings, original, xhr) {
-        	original.reset();
+            original.reset();
             $("#notification").replaceWith(xhr.responseText);
         }
     });
-    
-	$('.edit_textarea').each(function() {
-        var settings = { 
+
+    $('.edit_textarea').each(function() {
+        var settings = {
                 type            :  'textarea',
                 name            :  $(this).attr('name'),
-                height			:  '300',
-                width			:  $(this).width() - 20
-        }; 
-        $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings)); 
+                height            :  '300',
+                width            :  $(this).width() - 20
+        };
+        $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
     });
-    
+
     $('.edit_panel_element').each(function() {
         var settings = {
             type        :  'text',
             width       :  270,
-            height		:  20,
+            height        :  20,
             name        :  $(this).attr('name'),
             onsuccess   :  function(result, status, xhr) {
-                var id = $('#panel_element_id');	
+                var id = $('#panel_element_id');
                 KT.panel.list.refresh(id.attr('value'), id.attr('data-ajax_url'));
             }
         };

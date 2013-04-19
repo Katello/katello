@@ -28,12 +28,12 @@ KT.auto_complete_box = function(params) {
         add_cb: function(item, item_id, cb){cb();}
     };
     $.extend( settings, params );
-    
+
     var add_item_from_input = function(e) {
         var item = get_input().attr("value"),
             item_id = get_selected_input().val();
 
-        
+
         e.preventDefault();
         if (item.length === 0 || item === settings.default_text){
                 return;
