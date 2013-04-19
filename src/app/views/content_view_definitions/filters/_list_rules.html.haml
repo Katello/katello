@@ -23,11 +23,11 @@
             %td.one-line-ellipsis
               - if editable
                 .panel_link
-                  = check_box_tag "filter_rules[#{rule.id}]", FilterRule::CONTENT_OPTIONS.index(rule.content_type),
+                  = check_box_tag "filter_rules[#{rule.id}]", FilterRule::CONTENT_OPTIONS.key(rule.content_type),
                     false, {'data-id' => rule.id}
                   = filter_rule_url(rule)
               - else
-                = FilterRule::CONTENT_OPTIONS.index(rule.content_type)
+                = FilterRule::CONTENT_OPTIONS.key(rule.content_type)
 
     - if editable
       %input.button.fr.disabled{:type => "button", :id => "remove_button", :value => _("Remove")}
