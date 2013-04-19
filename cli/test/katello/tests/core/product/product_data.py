@@ -5,6 +5,7 @@ PRODUCTS = [
   {
     "last_sync": None,
     "name": "prod_a1",
+    "label": "prod_a1",
     "created_at": "2011-08-25T11:50:59Z",
     "productContent": [
       {
@@ -45,6 +46,7 @@ PRODUCTS = [
   {
     "last_sync": None,
     "name": "prod_a2",
+    "label": "prod_a2",
     "created_at": "2011-08-25T11:51:06Z",
     "productContent": [
       {
