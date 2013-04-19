@@ -10,12 +10,14 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'iconv'
+
 
 module Validators
   class ContentValidator < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
       begin
-        value.encode("UTF8", "UTF8")
+        Iconv.iconv("UTF8", "UTF8", value)
       rescue
         record.errors[attribute] << (options[:message] || _("cannot be a binary file."))
       end
