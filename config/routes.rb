@@ -636,6 +636,7 @@ Src::Application.routes.draw do
           collection do
             get :index, :action => :list_products
             put :index, :action => :update_products
+            get :all, :action => :list_all_products
           end
         end
         resources :repositories, :controller => :content_view_definitions, :only => [] do

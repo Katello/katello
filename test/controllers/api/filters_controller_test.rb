@@ -17,18 +17,28 @@ class Api::FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
   fixtures :all
 
   def setup
-    models = ["Organization", "KTEnvironment", "User","ContentViewEnvironment", "ContentViewDefinition"]
+    models = ["Organization", "KTEnvironment", "User","ContentViewEnvironment",
+             "ContentViewDefinition", "Product", "EnvironmentProduct", "Repository"]
     disable_glue_layers(["Candlepin", "Pulp", "ElasticSearch"], models)
     login_user(User.find(users(:admin)))
     @filter = filters(:simple_filter)
+    Product.any_instance.stubs(:productContent).returns([])
+    Product.any_instance.stubs(:multiplier).returns(1)
+    Product.any_instance.stubs(:attrs).returns({})
+    Product.any_instance.stubs(:sync_state).returns(nil)
+    Product.any_instance.stubs(:last_sync).returns(nil)
+    Product.any_instance.stubs(:sync_plan).returns(nil)
+
   end
 
   test "should return a list of filters" do
     get :index, :organization_id => @filter.content_view_definition.organization.label,
                 :content_view_definition_id=> @filter.content_view_definition.id
     assert_response :success
-    assert_kind_of Array, JSON.parse(response.body)
-    refute_empty JSON.parse(response.body)
+
+    body = JSON.parse(response.body)
+    assert_kind_of Array, body
+    refute_empty body
   end
 
   test "should return a filter" do
@@ -36,8 +46,10 @@ class Api::FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
                 :content_view_definition_id=> @filter.content_view_definition.id,
                 :id => @filter.id
     assert_response :success
-    assert_kind_of Hash, JSON.parse(response.body)
-    assert_equal @filter.name, JSON.parse(response.body)["name"]
+
+    body = JSON.parse(response.body)
+    assert_kind_of Hash, body
+    assert_equal @filter.name, body["name"]
   end
 
   test "should throw an 404 if definition is not found" do
@@ -72,6 +84,64 @@ class Api::FiltersControllerTest < MiniTest::Rails::ActionController::TestCase
     assert_kind_of Hash, JSON.parse(response.body)
     assert_equal name, JSON.parse(response.body)["name"]
     refute_nil Filter.find_by_name(name)
+  end
+
+  test "should show products in the filter" do
+    populated_filter = filters(:populated_filter)
+    cvd = populated_filter.content_view_definition
+    product = cvd.products.first
+    populated_filter.products << product
+    populated_filter.save!
+    get :list_products, :organization_id => populated_filter.content_view_definition.organization.label,
+                        :content_view_definition_id=> populated_filter.content_view_definition.id,
+                        :filter_id => populated_filter.id
+    assert_response :success
+
+    body = JSON.parse(response.body)
+    assert_kind_of Array, body
+    assert_includes((body.collect{|item| item['id']}), product.cp_id )
+  end
+
+  test "should add product to the filter" do
+    populated_filter = filters(:populated_filter)
+    cvd = populated_filter.content_view_definition
+    product_id = cvd.products.first.cp_id
+    refute_includes(populated_filter.products, product_id)
+    post :update_products, :organization_id => populated_filter.content_view_definition.organization.label,
+                    :content_view_definition_id=> populated_filter.content_view_definition.id,
+                    :filter_id => populated_filter.id, :products => [product_id]
+    assert_response :success
+    assert_kind_of Array, JSON.parse(response.body)
+    assert_includes(Filter.find(populated_filter.id).products.pluck(:cp_id), product_id)
+  end
+
+  test "should show repos in the filter" do
+    populated_filter = filters(:populated_filter)
+    cvd = populated_filter.content_view_definition
+    repo = cvd.repositories.first
+    populated_filter.repositories << repo
+    populated_filter.save!
+    get :list_repositories, :organization_id => populated_filter.content_view_definition.organization.label,
+        :content_view_definition_id=> populated_filter.content_view_definition.id,
+        :filter_id => populated_filter.id
+    assert_response :success
+
+    body = JSON.parse(response.body)
+    assert_kind_of Array, body
+    assert_includes((body.collect{|item| item['label']}), repo.label)
+  end
+
+  test "should add repos to the filter" do
+    populated_filter = filters(:populated_filter)
+    cvd = populated_filter.content_view_definition
+    repo_id = cvd.repositories.first.id
+    refute_includes(populated_filter.repositories, repo_id)
+    post :update_repositories, :organization_id => populated_filter.content_view_definition.organization.label,
+         :content_view_definition_id=> populated_filter.content_view_definition.id,
+         :filter_id => populated_filter.id, :repos => [repo_id]
+    assert_response :success
+    assert_kind_of Array, JSON.parse(response.body)
+    assert_includes(Filter.find(populated_filter.id).repositories.collect(&:id), repo_id)
   end
 
 end
