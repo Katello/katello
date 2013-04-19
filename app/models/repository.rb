@@ -29,6 +29,7 @@ class Repository < ActiveRecord::Base
   has_and_belongs_to_many :changesets
   has_many :content_view_definition_repositories
   has_many :content_view_definitions, :through => :content_view_definition_repositories
+  has_and_belongs_to_many :filters
   belongs_to :content_view_version, :inverse_of=>:repositories
 
   validates :environment_product, :presence => true
@@ -44,9 +45,12 @@ class Repository < ActiveRecord::Base
 
   default_scope order('repositories.name ASC')
   scope :enabled, where(:enabled => true)
-
   scope :in_default_view, joins(:content_view_version => :content_view).
     where("content_views.default" => true)
+
+  def self.ids_only
+    with_exclusive_scope{pluck(:id)}
+  end
 
   def product
     self.environment_product.product
