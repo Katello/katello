@@ -2,7 +2,8 @@
   :plain
     KT.available_environments = $.parseJSON('#{escape_javascript(environments.to_json)}');
     localize({
-        "systemReleaseVerDefault": '#{escape_javascript(_("System Default"))}'
+        "systemReleaseVerDefault": '#{escape_javascript(_("System Default"))}',
+        "contentViewReset": 'The selected content view was unset. Please choose another one.'
     });
 
 = javascript 'widgets/jquery.jeditable.helpers', 'systems/system_edit'

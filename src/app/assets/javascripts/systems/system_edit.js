@@ -11,6 +11,20 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
+update_content_views = function(env_id) {
+    // update content view options
+    $.ajax({  url: KT.routes.content_views_environment_path(env_id),
+              type: "GET",
+              success: (function(data) {
+                  options = {'': ''};
+                  $.each(data, function(key, value) {
+                       options[value.id] = value.name;
+                  });
+                  $("#system_content_view").data("options", options);
+              })
+            });
+}
+
 $(document).ready(function() {
 
     var common_settings = {
@@ -81,6 +95,9 @@ $(document).ready(function() {
             data: {'system[environment_id]': selected_env_ids[0]['id'], authenticity_token: AUTH_TOKEN}
         });
 
+        // disable the field temporarily
+        $("#system_content_view").hide();
+
         request.done(function(msg) {
             selector_element.find('span:first').text(selected_env_ids[0]['name']);
 
@@ -92,6 +109,13 @@ $(document).ready(function() {
 
             path_select.clear_selected();
             notices.checkNotices();
+
+            update_content_views(selected_env_ids[0]['id']);
+            $("#system_content_view").show();
+            if($("#system_content_view").text() != i18n.clickToEdit) {
+                alert(i18n.contentViewReset);
+                $("#system_content_view").text(i18n.clickToEdit);
+            }
         });
 
         request.fail(function(jqXHR, textStatus) {
@@ -100,6 +124,9 @@ $(document).ready(function() {
 
             path_select.clear_selected();
             notices.checkNotices();
+            $("#system_content_view").show();
         });
     });
 });
+
+
