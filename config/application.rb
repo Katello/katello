@@ -71,7 +71,7 @@ module Src
     end
 
     # set the relative url for rails
-    ActionController::Base.config.relative_url_root = Katello.config.url_prefix
+    config.relative_url_root = Katello.config.url_prefix
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
