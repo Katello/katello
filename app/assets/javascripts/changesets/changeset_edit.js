@@ -19,7 +19,7 @@ $(document).ready(function() {
     $("#changeset_history_tabs .clickable").click(function(){
 
         $(this).parents(".content_group").children(".cs_content").slideToggle();
-    
+
         var arrow = $(this).parent().find('img');
         if(arrow.attr("src").indexOf("collapsed") === -1){
           arrow.attr("src", "icons/expander-collapsed.png");
@@ -31,7 +31,7 @@ $(document).ready(function() {
     $('.edit_textfield').each(function() {
         $(this).editable($(this).attr('data-url'), {
             type        :  'text',
-            width       :  270,                  
+            width       :  270,
             method      :  'PUT',
             name        :  $(this).attr('name'),
             cancel      :  i18n.cancel,
@@ -44,7 +44,7 @@ $(document).ready(function() {
                var parsed = $.parseJSON(data);
                $(this).html(parsed.name);
                changeset_page.signal_rename($(this).attr("data-id"));
-			   notices.checkNotices();
+               notices.checkNotices();
             },
             onerror     :  function(settings, original, xhr) {
                              original.reset();

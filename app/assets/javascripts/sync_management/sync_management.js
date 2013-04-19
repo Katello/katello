@@ -32,7 +32,7 @@ $(document).ready(function() {
     $('#select_none').click(KT.content.select_none);
     $('#collapse_all').click(KT.content.collapse_all);
     $('#expand_all').click(KT.content.expand_all);
-    
+
     KT.content.showAll();
 
     $("#products_table").delegate(".cancel_sync", "click", function(){
@@ -52,10 +52,10 @@ $(document).ready(function() {
        KT.content_actions.addSyncing(ids);
 
     })
-    .bind("ajax:beforeSend", 
-      function(evt, data, status, xhr) { 
+    .bind("ajax:beforeSend",
+      function(evt, data, status, xhr) {
         if ($("input[name='repoids[]']:checked").length === 0) {
-          return false; 
+          return false;
         }
     });
 
@@ -72,7 +72,7 @@ $(document).ready(function() {
         $("#sync_toggle_cont").find("img").remove();
     });
 
-  
+
 });
 
 KT.content_actions = (function(){
@@ -159,7 +159,7 @@ KT.content_actions = (function(){
                 updater.stop();
             }
         );
-            
+
     };
 
     return {
@@ -167,7 +167,7 @@ KT.content_actions = (function(){
         addSyncing: addSyncing,
         startUpdater: startUpdater,
         getSyncing: function(){return syncing}
-        
+
     };
 })();
 
@@ -201,7 +201,7 @@ KT.content = (function(){
         update_item = function(element, starttime, duration, progress, display_size, packages, size) {
             var pg = element.find(".progress"),
                 value = pg.find(".ui-progressbar-value");
-            
+
             fadeUpdate(element.find(".start_time"), starttime);
             // clear duration during active sync
             fadeUpdate(element.find(".duration"), '');
@@ -215,7 +215,7 @@ KT.content = (function(){
             var product_element = $("#product-" + prod_id),
                 element = product_element.find(".result"),
                 oldpg = element.find('.progress');
-            
+
             if( size ){
                 size = KT.utils.reduce($('table').find("[data-product_id=" + prod_id + "]").find('.size'), function(memo, num){ return $(num).data('size') + memo;}, 0);
                 fadeUpdate(product_element.find('.size'), KT.common.to_human_readable_bytes(size));
@@ -248,7 +248,7 @@ KT.content = (function(){
         },
         select_repo = function(){
             $("input[name='repoids[]']:checked").length > 0 ?
-                $("#sync_button").removeClass("disabled") : 
+                $("#sync_button").removeClass("disabled") :
                 $("#sync_button").addClass("disabled");
         },
         reset_products = function(status_set){
@@ -306,7 +306,7 @@ KT.content = (function(){
             $(this).collapse();
           });
         };
-    
+
     return {
         updateProduct: updateProduct,
         updateRepo: updateRepo,

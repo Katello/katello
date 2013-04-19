@@ -52,14 +52,14 @@ $(document).ready(function() {
 var provider = (function() {
     return {
         toggleFields : function() {
-          	var val = $('#provider_provider_type option:selected').val();
-          	var fields = "#repository_url_field"; 
-          	if (val == "Custom") {
-          		$(fields).attr("disabled", true);			
-          	}
-          	else {
-          		$(fields).removeAttr("disabled");
-          	}
+              var val = $('#provider_provider_type option:selected').val();
+              var fields = "#repository_url_field";
+              if (val == "Custom") {
+                  $(fields).attr("disabled", true);
+              }
+              else {
+                  $(fields).removeAttr("disabled");
+              }
         }
     }
 })();

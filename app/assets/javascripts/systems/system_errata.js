@@ -60,16 +60,16 @@ KT.system.errata = function() {
             show_spinner(true);
             fetch_errata({ data : { clear_items : false }});
         },
-    	register_events = function(){
-    		$('#display_errata_type').bind('change', { clear_items : true }, fetch_errata);
-    		$('#select_all_errata').bind('change', select_all_errata);
-    		$('#errata_state_radio_applied').bind('change', fetch_errata);
-    		$('#errata_state_radio_outstanding').bind('change', fetch_errata);
+        register_events = function(){
+            $('#display_errata_type').bind('change', { clear_items : true }, fetch_errata);
+            $('#select_all_errata').bind('change', select_all_errata);
+            $('#errata_state_radio_applied').bind('change', fetch_errata);
+            $('#errata_state_radio_outstanding').bind('change', fetch_errata);
         $('#run_errata_button').bind('click', add_errata);
         $('#select_all_button').bind('click', select_all);
         $('#deselect_all_button').bind('click', deselect_all);
-    		load_more.bind('click', { clear_items : false }, fetch_errata);
-    	},
+            load_more.bind('click', { clear_items : false }, fetch_errata);
+        },
         init_status_check = function(){
             var timeout = 8000;
 
@@ -82,43 +82,43 @@ KT.system.errata = function() {
                 maxTimeout: timeout
             }, update_function);
         },
-    	fetch_errata = function(event){
-    		var type = get_current_filter(),
-    			state = get_current_state(),
-    		    offset,
+        fetch_errata = function(event){
+            var type = get_current_filter(),
+                state = get_current_state(),
+                offset,
                 clear_items = event.data ? event.data.clear_items : false;
-    		
+
             if( clear_items ){
-        		insert_data({ "html" : "", "results_count" : 0, "total_count" : 0, "current_count" : 0}, false);
-    		    show_spinner(true);
+                insert_data({ "html" : "", "results_count" : 0, "total_count" : 0, "current_count" : 0}, false);
+                show_spinner(true);
             }
-			
-    		offset = clear_items ? 0 : $('#loaded_summary').data('current_count');
+
+            offset = clear_items ? 0 : $('#loaded_summary').data('current_count');
 
             $.ajax({
-    			method	: 'get',
-    			url		: items_url,
-    			data	: { filter_type : type, offset : offset, errata_state : state }
-    		}).success(function(data){
-    			insert_data(data, !clear_items);
-    			show_spinner(false);
-    		});
-    	},
-    	get_current_filter = function(){
-    		return $('#display_errata_type').val();
-    	},
-    	get_current_state = function(){
-    		return $('input[@name=errata_state_radio]:checked').val();
-    	},
-    	select_all_errata = function(){
-    		var checkboxes = table_body.find(':checkbox');
-    		
-    		if( $('#select_all_errata').attr('checked') ){
-    			checkboxes.attr('checked', true);	
-    		} else {
-    			checkboxes.attr('checked', false);
-    		}
-    	},
+                method    : 'get',
+                url        : items_url,
+                data    : { filter_type : type, offset : offset, errata_state : state }
+            }).success(function(data){
+                insert_data(data, !clear_items);
+                show_spinner(false);
+            });
+        },
+        get_current_filter = function(){
+            return $('#display_errata_type').val();
+        },
+        get_current_state = function(){
+            return $('input[@name=errata_state_radio]:checked').val();
+        },
+        select_all_errata = function(){
+            var checkboxes = table_body.find(':checkbox');
+
+            if( $('#select_all_errata').attr('checked') ){
+                checkboxes.attr('checked', true);
+            } else {
+                checkboxes.attr('checked', false);
+            }
+        },
         select_all = function(){
             var checkboxes = table_body.find(':checkbox');
             checkboxes.attr('checked', true);
@@ -224,44 +224,44 @@ KT.system.errata = function() {
                 actions_updater.stop();
             }
         },
-    	insert_data = function(data, append){
+        insert_data = function(data, append){
             var html = data["html"];
 
             if(data.total_count > 0){
                 $('#run_errata_button').removeClass("disabled");
             }
-    		if( append ){
-    			table_body.append(html);
-    		} else {
-    			table_body.html(html);
-    		}
-    		update_counts(data);
-    	},
-    	update_counts = function(data){
-    		var current_count = data["current_count"],
-    			total_count = data["total_count"],
+            if( append ){
+                table_body.append(html);
+            } else {
+                table_body.html(html);
+            }
+            update_counts(data);
+        },
+        update_counts = function(data){
+            var current_count = data["current_count"],
+                total_count = data["total_count"],
                 results_count = data["results_count"];
-    		
-    		$('#loaded_summary').data('current_count', current_count),
-    		$('#loaded_summary').html(i18n.x_of_y_total(current_count, results_count, total_count));
-    		
-    		if( current_count === results_count ){
-    			load_more.hide();
-    		} else {
-    			load_more.show();
-    		}
-    	},
-    	show_spinner = function(show){
-    		if( show ){
-    			$('#list-spinner').show();
-    		} else {
-				$('#list-spinner').hide();
-			}	
-    	},
+
+            $('#loaded_summary').data('current_count', current_count),
+            $('#loaded_summary').html(i18n.x_of_y_total(current_count, results_count, total_count));
+
+            if( current_count === results_count ){
+                load_more.hide();
+            } else {
+                load_more.show();
+            }
+        },
+        show_spinner = function(show){
+            if( show ){
+                $('#list-spinner').show();
+            } else {
+                $('#list-spinner').hide();
+            }
+        },
         set_status = function(errata_ids, status, url){
             var rows = get_rows(errata_ids),
                 errata_row, i, length;
-            
+
             length = rows.length;
 
             for( i = 0; i < length; i += 1){
@@ -289,7 +289,7 @@ KT.system.errata = function() {
             }
         },
         get_rows = function(errata_ids){
-            var i = 0, 
+            var i = 0,
                 length = errata_ids.length,
                 rows = [];
 
@@ -299,11 +299,11 @@ KT.system.errata = function() {
 
             return rows;
         };
-	    
+
     return {
-        init	: init
+        init    : init
     };
-    
+
 }();
 
 // Call this init() from a location where the 'editable' flag can be set

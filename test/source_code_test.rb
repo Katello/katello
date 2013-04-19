@@ -10,50 +10,81 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+# encoding: UTF-8
+
 require_relative 'minitest_helper'
 
 class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
 
-  # @param [Array<Regexp>] ignored_files
-  def check_code_lines(message = nil, ignored_files = [], &condition)
-    lines = Dir.glob("#{Rails.root}/**/*.rb").inject([]) do |lines, file_path|
-      next lines if ignored_files.any? { |m| file_path =~ m }
+  class SourceCode
+    include MiniTest::Assertions
+    attr_reader :files
 
-      lines + IO.foreach(file_path).each_with_index.map do |line, line_number|
-        "#{file_path}:#{line_number + 1}" unless condition.call line
-      end.compact
+    # @param [Array<Regexp>] ignores
+    def initialize(pattern, *ignores)
+      @pattern = pattern || raise
+      @files   = Dir.glob("#{Rails.root}/#{pattern}").select { |path| ignores.all? { |i| path !~ i } }
     end
-    assert lines.empty?, "#{message + "\n" if message}check lines:\n" + lines.map { |l| '    - ' + l }.join("\n")
+
+    def each_file(&it)
+      return to_enum :each_file unless it
+      files.each { |file_path| it[File.read(file_path), file_path] }
+    end
+
+    def each_line(&it)
+      return to_enum :each_line unless it
+      each_file do |content, file_path|
+        content.each_line.each_with_index { |line, line_number| it[line, line_number+1, file_path] }
+      end
+    end
+
+    def check_lines(message = nil, &condition)
+      bad_lines = each_line.
+          map { |line, line_number, file_path| [file_path, line_number] unless condition.call line }.
+          compact
+
+      assert bad_lines.empty?,
+             "#{message + "\n" if message}check lines:\n" +
+                 bad_lines.map { |line, line_number| '    - %s:%d' % [line, line_number] }.join("\n")
+    end
   end
 
   it 'does not have trailing whitespaces' do
-    check_code_lines { |line| line.empty? || line !~ /\s+\s$/ }
+    SourceCode.
+        new('**/*.{rb,js,scss,haml}').
+        check_lines { |line| line !~ / +$/ }
+  end
+
+  it 'does use soft-tabs' do
+    SourceCode.
+        new('**/*.{rb,js,scss,haml}',
+            %r'public/assets/.*\.js'). # tab is ok in minified files, its shorter than space
+        check_lines { |line| line !~ /\t/ }
   end
 
   it 'does not use rescue Exception => e' do # ok
-    check_code_lines(<<-DOC) { |line| (line !~ /rescue +Exception/) ? true : line =~ /#\s?ok/ }
+    SourceCode.
+        new('**/*.rb').
+        check_lines(<<-DOC) { |line| (line !~ /rescue +Exception/) ? true : line =~ /#\s?ok/ }
 always rescue specific exception or at least `rescue => e` which equals to `rescue StandardError => e`
 see http://stackoverflow.com/questions/10048173/why-is-it-bad-style-to-rescue-exception-e-in-ruby
     DOC
   end
 
   it 'does not use ENV variables' do
-    doc = <<-DOC
+    SourceCode.
+        new('**/*.rb',
+            %r'config/(application|boot)\.rb',
+            %r'test/minitest_helper\.rb', # TODO clean up minitest_helper
+            %r'lib/util/puppet\.rb').
+        check_lines(<<-DOC) { |line| (line !~ /ENV\[[^\]]+\]/) ? true : line =~ /#\s?ok/ }
 Katello.config or Katello.early_config should be always used instead of ENV variables, Katello.config is
 the single entry point to configuration. ENV variables are processed there.
     DOC
-    check_code_lines doc, [%r'config/(application|boot)\.rb',
-                           %r'test/minitest_helper.rb', # TODO clean up minitest_helper
-                           %r'lib/util/puppet\.rb'] do |line|
-      (line !~ /ENV\[[^\]]+\]/) ? true : line =~ /#\s?ok/
-    end
   end
 
-  # TODO enable
-  #it 'does not use general rescue => e' do
-  #  check_code_lines do |line|
-  #    (line !~ /rescue +Exception/) ? true : line =~ /#\s?ok/
-  #  end
-  #end
+  it 'does not use general rescue => e' do
+    skip 'to be enabled'
+  end
 
 end

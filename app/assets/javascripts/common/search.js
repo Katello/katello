@@ -111,10 +111,10 @@ KT.search = function(form_id, list_id, list_module, params, extra_params){
         form.delegate('#search_favorite_destroy', "click", favorite.destroy);
         form.delegate('#search_clear', "click", favorite.clear);
         form.delegate('.search_query', 'click', function(){
-    		input.val($(this).html());
-    		form.find('button').click();
-    		form.find('.qdropdown').hide();
-    	});
+            input.val($(this).html());
+            form.find('button').click();
+            form.find('.qdropdown').hide();
+        });
 
         reset_current_search();
 
@@ -293,17 +293,17 @@ KT.search = function(form_id, list_id, list_module, params, extra_params){
             });
         }
     },
-	enableAutoComplete = function(params){
+    enableAutoComplete = function(params){
         var url = params['url'],
             data = params['data'],
-		    request_issued = false,
+            request_issued = false,
             getAutoCompleteData;
 
             if(url) {
                 getAutoCompleteData = function(request, response){
                     if( !request_issued ){
                         request_issued = true;
-                        $.getJSON(url, { search	: request.term },
+                        $.getJSON(url, { search    : request.term },
                             function(json){
                                 request_issued = false;
                                 response(json);
@@ -319,11 +319,11 @@ KT.search = function(form_id, list_id, list_module, params, extra_params){
             }
         autocomplete_override();
         input.catcomplete({
-            source	: getAutoCompleteData,
+            source    : getAutoCompleteData,
             minLength: 0,
-            delay	: 200,
-            search	: function(event, ui) { $(".auto_complete_clear").hide(); },
-            open	: function(event, ui) { $(".auto_complete_clear").show(); }
+            delay    : 200,
+            search    : function(event, ui) { $(".auto_complete_clear").hide(); },
+            open    : function(event, ui) { $(".auto_complete_clear").show(); }
         });
 
         input.focus(function( event ) {
@@ -331,7 +331,7 @@ KT.search = function(form_id, list_id, list_module, params, extra_params){
                 $( this ).catcomplete( "search" );
             }
         });
-	},
+    },
     autocomplete_override = function(){
         $.widget( "custom.catcomplete", $.ui.autocomplete, {
             _renderMenu: function( ul, items ) {
@@ -361,13 +361,13 @@ KT.search = function(form_id, list_id, list_module, params, extra_params){
 
     init();
 
-	return {
-		enableAutoComplete	: enableAutoComplete,
+    return {
+        enableAutoComplete    : enableAutoComplete,
         search_event : search_event,
         extend_event : extend_event,
         search_bbq   : search_bbq,
         set_url      : set_url,
         refresh_search : refresh_search
-	};
+    };
 
 };

@@ -131,17 +131,17 @@ KT.tipsy.templates = (function(){
             packages_list = [],
             generate_packages = function(){
                 var packages = element.data('packages')[0]["packages"],
-                    i = 0, 
+                    i = 0,
                     length = packages.length,
                     html = "";
-                
+
                 for(i; i < length; i += 1){
                     html += "<li>" + packages[i]["filename"] + '</li>';
                 }
 
                 return html;
-            }; 
-       
+            };
+
         packages_list = generate_packages();
 
         html += '<div class="item-container"><label class="fl ra">ID:</label>' + '<p>' + element.data('id') + '</p></div>';
@@ -149,7 +149,7 @@ KT.tipsy.templates = (function(){
         html += '<div class="item-container"><label class="fl ra">Issued:</label>' + '<p>' + element.data('issued') + '</p></div>';
         html += '<div class="item-container"><label class="fl ra">Reference:</label>' + '<p><a target="new" href="' +  element.data('reference_url') + '">' + element.data('reference_url') + '</a></p></div>';
         html += '<div class="item-container"><label class="fl ra">Description:</label>' + '<p><br/><pre>' + element.data('description') + '</pre></p></div>';
-        html += '<div class="item-container"><label class="fl" style="text-align:left;">Packages:</label>' + '<ul style="margin:0 0 0 4px;" class="la"><br/>' + packages_list + '</ul></div>';            
+        html += '<div class="item-container"><label class="fl" style="text-align:left;">Packages:</label>' + '<ul style="margin:0 0 0 4px;" class="la"><br/>' + packages_list + '</ul></div>';
         html += '</div>';
 
         return html;
