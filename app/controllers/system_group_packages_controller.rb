@@ -166,7 +166,7 @@ class SystemGroupPackagesController < ApplicationController
     response = []
     jobs = @group.refreshed_jobs.where('jobs.id' => params[:id])
     jobs.each do |job|
-      status_html = render_to_string(:template => 'system_groups/packages/_status.html', :layout => false,
+      status_html = render_to_string(:template => 'system_groups/packages/_status', :layout => false,
                                      :locals => {:group_id => @group.id, :id => job.id, :state => job.state,
                                                  :status_message => job.status_message})
 
