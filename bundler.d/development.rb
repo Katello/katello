@@ -14,7 +14,7 @@ group :development do
   # gem 'railroady'
 
   # generates routes in javascript
-  gem "js-routes", '~> 0.6.2', :require => 'js_routes'
+  gem "js-routes", '~> 0.9.0', :require => 'js_routes'
 
   # for generating i18n files
   gem 'gettext', '>= 1.9.3', :require => false
