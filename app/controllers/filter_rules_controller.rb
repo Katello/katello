@@ -191,7 +191,7 @@ class FilterRulesController < ApplicationController
     @rule.save!
 
     notify.success(_("Rule parameters successfully deleted for rule type '%{type}'. Parameters deleted: %{parameters}.") %
-                   {:type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type),
+                   {:type => FilterRule::CONTENT_OPTIONS.key(@rule.content_type),
                     :parameters => params[:units].join(', ')})
 
     render :nothing => true

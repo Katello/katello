@@ -96,4 +96,15 @@ class ErratumRule < FilterRule
       end
     end
   end
+
+  def as_json(options = {})
+    params = Util::Support.deep_copy(parameters).with_indifferent_access
+    from_date = start_date
+    to_date = end_date
+    params[:date_range][:start]  = from_date if from_date
+    params[:date_range][:end] = to_date if to_date
+    json_val = super(options).update("rule" => params)
+    json_val.delete("parameters")
+    json_val
+  end
 end
