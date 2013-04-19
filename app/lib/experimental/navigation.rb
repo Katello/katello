@@ -12,31 +12,30 @@
 
 module Experimental
   module Navigation
-    class Menu
-      include AdministrationMenu
-      include ContentMenu
-      include DashboardMenu
-      include SystemMenu
-
-      def initialize(current_organization)
-        @current_organization = current_organization
-      end
+    class Navigation
 
       def generate(menus)
         return prune_menu(menus)
       end
 
-      def generate_main_menu
-        return generate([menu_dashboard, menu_content, menu_systems])
+      def generate_main_menu(organization)
+        generate([
+          Experimental::Navigation::Items::Dashboard.new,
+          Experimental::Navigation::Menus::Content.new(organization),
+          Experimental::Navigation::Menus::Systems.new(organization)
+        ])
       end
 
       def generate_admin_menu
-        return generate([menu_administration])
+        generate([
+          Experimental::Navigation::Menus::Administer.new
+        ])
       end
 
-      def default_url_options
-        { :script_name => ActionController::Base.config.relative_url_root
-        }.merge(Rails.application.routes.default_url_options)
+      def generate_user_menu(user)
+        generate([
+          Experimental::Navigation::Menus::User.new(user)
+        ])
       end
 
       def prune_menu(menu_items)
@@ -45,33 +44,21 @@ module Experimental
         #1. :if block wont pass (Permission issues  -> eg: user has no org access)   OR
         #2. No accessible children (-> eg: none of the second level items under org work out for the user)
         menu_items.delete_if do |menu|
-          # check the :if block
-          if_proc =  menu.delete(:if)
-          if (!if_proc) || if_proc == :sub_level || if_proc.call
+          if menu.accessible?
              # :if block worked out.
              # Checking the children
-             if menu[:items]
-               menu[:items] = menu[:items].call if Proc === menu[:items]
+             if defined? menu.items 
                # prune the sub menus
-               prune_menu(menu[:items]) if menu[:items]
-
-               # now that they have been pruned, set the default url.
-               # pick that from the first accessible child
-               if (!menu[:url] || menu[:url] == :sub_level) && !menu[:items].empty?
-                 menu[:url] = menu[:items][0][:url]
-               end
-
-               menu[:url] =  menu[:url].call if Proc===menu[:url]
+               prune_menu(menu.items) if menu.items
 
                #we want this item to be pruned
                # if there are no accessible children
 
-               menu[:items].empty?
+               menu.items.empty?
              else
                # this is a leaf node
                # and its condition has already been evaluated to true
                # so keep it
-               menu[:url] =  menu[:url].call if Proc===menu[:url]
                false
              end
           else

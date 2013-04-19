@@ -13,27 +13,24 @@
 
 require 'minitest_helper'
 
-class NavigationTest < MiniTest::Rails::ActiveSupport::TestCase
-  fixtures :organizations, :users
+class NavigationItemTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def setup
-    @acme_corporation = Organization.find(organizations(:acme_corporation).id)
-    @admin            = User.find(users(:admin))
-    User.current      = @admin
-    Katello.config[:url_prefix] = '/katello'
+    @item = Experimental::Navigation::Item.new('test_item', 'Test Item', true, '/katello/test/item')
   end
 
   def test_new
-    navigation = Experimental::Navigation::Navigation.new
-
-    refute_nil navigation
+    refute_nil @item
   end
 
-  def test_generate_main_menu
-    navigation = Experimental::Navigation::Navigation.new
-    menu = navigation.generate_main_menu(@acme_corporation)
+  def test_to_json
+    item_hash = {
+      :key    => 'test_item',
+      :display=> 'Test Item',
+      :url    => '/katello/test/item'
+    }
 
-    assert_kind_of Array, menu
+    assert_equal item_hash.to_json, @item.to_json
   end
 
 end

@@ -14,40 +14,31 @@
 module NavigationHelper
 
   def generate_menu
-    navigation = Experimental::Navigation::Menu.new(current_organization)
-    main_menu_items = navigation.generate_main_menu
-    admin_items = navigation.generate_admin_menu
+    navigation = Experimental::Navigation::Navigation.new
+
+    main_menu   = navigation.generate_main_menu(current_organization)
+    admin_menu  = navigation.generate_admin_menu
+    user_menu   = navigation.generate_user_menu(current_user)
 
     menu = {
       :location => 'left',
-      :items => main_menu_items
+      :items => main_menu
     }
 
     admin_menu = {
       :location => 'right',
-      :items    => admin_items
+      :items    => admin_menu
     }
 
     user_menu = {
       :location => 'right',
-      :items => [{
-        :display=> current_user.username,
-        :type   => 'dropdown',
-        :items  => [
-          {
-            :display=> _("My Account"),
-            :url    => "#{users_path(current_user)}#panel=user_#{current_user.id}"
-          },{
-            :display=> _("Sign Out"),
-            :url    => logout_path
-        }]
-      }]
+      :items    => user_menu
     }
 
     javascript do
       ("KT.main_menu = " + menu.to_json + ";").html_safe +
-      ("KT.user_menu = " + user_menu.to_json + ";").html_safe +
       ("KT.admin_menu = " + admin_menu.to_json + ";").html_safe +
+      ("KT.user_menu = " + user_menu.to_json + ";").html_safe +
       ("KT.notices = " + add_notices.to_json + ";").html_safe
     end
   end
