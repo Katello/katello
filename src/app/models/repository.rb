@@ -111,7 +111,7 @@ class Repository < ActiveRecord::Base
       host = Katello.config.host
       port = Katello.config.port
       host += ":" + port.to_s unless port.blank? || port.to_s == "443"
-      gpg_key_content_api_repository_url(self, :host => host + ENV['RAILS_RELATIVE_URL_ROOT'].to_s, :protocol => 'https')
+      gpg_key_content_api_repository_url(self, :host => host + Katello.config.url_prefix, :protocol => 'https')
     end
   end
 
