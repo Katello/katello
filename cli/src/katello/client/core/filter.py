@@ -226,17 +226,13 @@ class AddRemoveProduct(FilterAction):
         definition_label = self.get_option('definition_label')
         definition_name = self.get_option('definition_name')
         definition_id = self.get_option('definition_id')
-
-        cvd_api = ContentViewDefinitionAPI()
         cvd = get_cv_definition(org_name, definition_label,
                                 definition_name, definition_id)
-        cvd_products = cvd_api.products(org_name, cvd["id"])
 
-        product = self.identify_product(cvd, cvd_products, product_name, product_label, product_id)
+        product = self.identify_product(cvd, product_name, product_label, product_id)
 
         cvd_filter = get_filter(org_name, cvd["id"], filter_name)
         products = self.api.products(cvd_filter["id"], cvd["id"], org_name)
-
         products = [f['id'] for f in products]
 
         self.update_products(org_name, cvd["id"], cvd_filter, products, product)
@@ -255,8 +251,10 @@ class AddRemoveProduct(FilterAction):
         self.api.update_products(cvd_filter["id"], cvd, org_name, products)
         print message
 
-    def identify_product(self, cvd, cvd_products, product_name, product_label, product_id):
+    def identify_product(self, cvd, product_name, product_label, product_id):
         org_name = self.get_option('org')
+        cvd_api = ContentViewDefinitionAPI()
+        cvd_products = cvd_api.all_products(org_name, cvd["id"])
 
         products = [prod for prod in cvd_products if prod["id"] == product_id \
                              or prod["name"] == product_name or prod["label"] == product_label]
