@@ -15,8 +15,9 @@
   = hidden_field_tag 'get_notices_url', nil, 'data-url' => notices_get_new_path
   = link_to _("Log Out"), logout_path, :method=>"POST", :class => "header-widget"
   - if current_user
-    = link_to Notice.for_user(current_user).for_org(current_organization).count,
-              notices_path, :id => "unread_notices", :title => _("System Notifications"), :class => "header-widget"
+    %span#unread_notices.header-widget
+      = link_to Notice.for_user(current_user).for_org(current_organization).count,
+                notices_path, :id => "unread_notices_count", :title => _("System Notifications")
     = link_to current_user.username, "#{users_path(:id => current_user, :only => true)}#panel=user_#{current_user.id}", :class => "header-widget", :id=>"user_id", "data-user_id"=>current_user.id
 = content_for(:extra_header) do
   - if (Organization.any_readable? && session[:menu_back]) or session[:notifications]
