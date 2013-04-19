@@ -28,8 +28,7 @@ class UserTestBase < MiniTest::Rails::ActiveSupport::TestCase
 
   def setup
     options = { :warden => "database" }
-    my_config = Katello::Configuration::Node.new(Katello.config.to_hash.update options)
-    Katello.stubs(:config).returns(my_config)
+    override_config(options)
 
     @no_perms_user      = User.find(users(:no_perms_user))
     @admin              = User.find(users(:admin))
