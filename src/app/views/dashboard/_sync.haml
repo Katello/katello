@@ -1,7 +1,7 @@
 #dashboard_sync.small_widget.scroll-pane{"data-quantity"=>quantity}
   - if (products = products_synced()).empty?
     #{_("No recently synced products.")}
-  - else 
+  - else
     %ul
     - for product in products
       %li

@@ -17,7 +17,7 @@ var notices = (function() {
           if (pollingTimeOut === undefined) {
             pollingTimeOut = 45000;
           }
-          
+
           notices.checkTimeout = pollingTimeOut;
           //start continual checking for new notifications
           notices.start();
@@ -28,14 +28,14 @@ var notices = (function() {
         displayNotice: function(level, notice, requestType) {
             var noticesParsed = $.parseJSON(notice),
                 options = {
-                    type: level, 
+                    type: level,
                     slideSpeed: 200,
                     alwaysClosable: true
                 },
                 generate_list = function(notices){
                     var notices_list = '<ul class='+requestType+'>',
                         i, length = notices.length;
-                    
+
                     for( i=0; i < length; i += 1) {
                         notices_list += '<li>' + notices[i] + '</li>';
                     }
@@ -61,7 +61,7 @@ var notices = (function() {
                 options["fadeSpeed"] = 600;
             } else if( level === "message" ) {
                 options["sticky"] = true;
-                options["fadeSpeed"] = 600;        	
+                options["fadeSpeed"] = 600;
             } else {
                 options["sticky"] = false;
                 options["fadeSpeed"] = 600;
@@ -76,8 +76,8 @@ var notices = (function() {
                 options["fadeSpeed"] = 600;
                 $.jnotify(validation_html, options);
                 $('.jnotify-message ul').css({'list-style': 'disc',
-                              'margin-left': '30px'});    
-            } 
+                              'margin-left': '30px'});
+            }
             if( noticesParsed['notices'] && noticesParsed['notices'].length !== 0 ){
                 $.jnotify(generate_list(noticesParsed['notices']), options);
             }

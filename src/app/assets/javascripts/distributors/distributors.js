@@ -36,8 +36,8 @@ KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distributio
         };
 
         $.extend(options, { 'extra_params' :
-            [ { hash_id 	: 'env_id',
-                init_func 	: function(){
+            [ { hash_id     : 'env_id',
+                init_func     : function(){
                     var state = $.bbq.getState('env_id');
 
                     if( state ){

@@ -14,13 +14,13 @@
     %input#panel_element_id{:name => @provider.id, :type => "hidden", :value => "#{name}_#{@provider.id}", "data-ajax_url"=>url_for(:action=> 'update')}
     .full#provider
       = form_for(@provider, :html => {:multipart => true, :method => :put, :id => 'provider_edit', :remote => true}, :url => provider_path(@provider)) do |f|
-  
+
         %fieldset.fl.clear
           .grid_2.ra
             %label #{_("Name")}:
           .grid_9.la#provider_name{:title=>@provider[:name], 'name' => 'provider[name]', 'data-url' => provider_path(@provider.id),
                                   :class=>editable_class(editable)} #{@provider[:name]}
-  
+
         %fieldset.fl.clear
           .grid_2.ra
             %label #{_("Description")}:

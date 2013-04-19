@@ -21,7 +21,7 @@ KT.env_select_scroll = function(options) {
                 anchors = trail.find("a, label"),
                 my_min_size_selected = min_size_selected;
             anchors.unbind("mouseout").unbind("mouseover").width('auto');
-            
+
             anchors.each(function() {
                 combined_width += $(this).width() + anchor_padding;
             });
@@ -66,7 +66,7 @@ KT.env_select_scroll = function(options) {
 
                 //reset the width to contracted state
                 $(this).width(my_min_size);
-                
+
                 var total_time = (total_width - min_size)/px_per_sec,  //total time of animation
                     num_iterations = total_time*1000/freq,  //number of 'frames'
                     chunk_size = (total_width - min_size)/num_iterations; //how many pixels to move each frame
@@ -128,6 +128,6 @@ KT.env_select_scroll = function(options) {
             });
         });
     };
-    
+
     return {bind:bind};
 };
