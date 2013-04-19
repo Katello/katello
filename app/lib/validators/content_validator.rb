@@ -10,12 +10,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+
 module Validators
   class ContentValidator < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
       begin
-        # TODO: this is going to be deprecated. Switch to String#encode
-        Iconv.conv("UTF8", "UTF8", value)
+        value.encode("UTF8", "UTF8")
       rescue
         record.errors[attribute] << (options[:message] || _("cannot be a binary file."))
       end
