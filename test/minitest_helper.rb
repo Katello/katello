@@ -22,6 +22,10 @@ class MiniTest::Rails::ActiveSupport::TestCase
     }.merge(Rails.application.routes.default_url_options)
   end
 
+  def override_config(options)
+    config = Katello::Configuration::Node.new(Katello.config.to_hash.update options)
+    Katello.stubs(:config).returns(config)
+  end
 end
 
 class MiniTest::Rails::Spec

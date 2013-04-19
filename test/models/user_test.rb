@@ -321,8 +321,8 @@ class UserLdapTest < UserTestBase
   def self.before_suite
     super
     options = { :warden => "ldap", :validate_ldap => false }
-    my_config = Katello::Configuration::Node.new(Katello.config.to_hash.update options)
-    Katello.stubs(:config).returns(my_config)
+    config = Katello::Configuration::Node.new(Katello.config.to_hash.update options)
+    Katello.stubs(:config).returns(config)
     @@user = User.create_ldap_user!('testuser')
   end
 
@@ -350,8 +350,7 @@ class UserLdapTest < UserTestBase
 
   def test_create_ldap_user!
     options = { :warden => "ldap" }
-    my_config = Katello::Configuration::Node.new(Katello.config.to_hash.update options)
-    Katello.stubs(:config).returns(my_config)
+    override_config(options)
     assert_instance_of User, User.create_ldap_user!('alice')
   end
 
