@@ -48,8 +48,8 @@ class FilterRule < ActiveRecord::Base
     when ERRATA
       ErratumRule
     else
-      params = {:content_type => content_type, :content_types => CONTENT_TYPES.join(",")}
-      raise (_("Invalid content type (%{content_type}) provided. Content types can be one of %{content_types}") % params)
+      params = {:content_type => content_type, :content_types => CONTENT_TYPES.join(", ")}
+      raise (_("Invalid content type '%{content_type}' provided. Content types can be one of %{content_types}") % params)
     end
   end
 
@@ -58,4 +58,14 @@ class FilterRule < ActiveRecord::Base
     clazz = class_for(content_type)
     clazz.create!(options)
   end
+
+  def as_json(options = {})
+     json_val = super(options).update("id" => id,
+                          "content" => content_type,
+                          "type" =>  inclusion ? _("includes"): _("excludes"),
+                          "rule" => parameters)
+    json_val.delete("parameters")
+    json_val
+  end
+
 end
