@@ -200,7 +200,7 @@
 
     = render :partial=>"common/tupane"
 
-    #content_tree.left.sliding_tree
+    #content_tree.left_panel.sliding_tree
       - if show_new_button?(manage_promotion_changesets, manage_deletion_changesets)
         - next_env = @next_environment.nil? ? "" : "&next_env_id=" + @next_environment.id.to_s
         - base_ajax_url = "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@environment.id}"+"#{next_env}"
