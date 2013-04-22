@@ -45,10 +45,13 @@ class FilterAction(BaseAction):
         FilterAction._add_cvd_filter_opts(parser)
         parser.add_option('--name', dest='name',
                 help=_("filter name eg: 'package filter acme'"))
+        parser.add_option('--id', dest='id',
+                help=_("filter id eg: 42"))
 
     @classmethod
     def _add_filter_opts_check(cls, validator):
-        validator.require('name')
+        validator.require_at_least_one_of(('name', 'id'))
+        validator.mutually_exclude('name', 'id')
 
     @classmethod
     def _add_cvd_opts_check(cls, validator):
@@ -111,12 +114,14 @@ class Info(FilterAction):
         opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
-        validator.require(('org', 'name'))
+        validator.require(('org'))
+        self._add_filter_opts_check(validator)
         self._add_cvd_opts_check(validator)
 
     def run(self):
         org_name = self.get_option('org')
         filter_name = self.get_option('name')
+        filter_id = self.get_option('id')
         definition_label = self.get_option('definition_label')
         definition_name = self.get_option('definition_name')
         definition_id = self.get_option('definition_id')
@@ -124,11 +129,10 @@ class Info(FilterAction):
         definition = get_cv_definition(org_name, definition_label,
                                        definition_name, definition_id)
 
-        cvd_filter = get_filter(org_name, definition["id"], filter_name)
+        # this'll check that filter_id exists and if not, display a user-friendly message
+        filter_id = get_filter(org_name, definition["id"], filter_name, filter_id)["id"]
 
-        cvd_filter = self.api.get_filter_info(cvd_filter["id"],
-                                                  definition["id"],
-                                                  org_name)
+        cvd_filter = self.api.get_filter_info(filter_id, definition["id"], org_name)
 
         self.printer.add_column('id', _("ID"))
         self.printer.add_column('name', _("Name"))
@@ -174,19 +178,21 @@ class Delete(FilterAction):
         opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
-        validator.require(('org', 'name'))
+        validator.require(('org'))
+        self._add_filter_opts_check(validator)
         self._add_cvd_opts_check(validator)
 
     def run(self):
         org_name = self.get_option('org')
         filter_name = self.get_option('name')
+        filter_id = self.get_option('id')
         definition_label = self.get_option('definition_label')
         definition_name = self.get_option('definition_name')
         definition_id = self.get_option('definition_id')
 
         definition = get_cv_definition(org_name, definition_label,
                                        definition_name, definition_id)
-        cvd_filter = get_filter(org_name, definition["id"], filter_name)
+        cvd_filter = get_filter(org_name, definition["id"], filter_name, filter_id)
         self.api.delete(cvd_filter["id"], definition["id"], org_name)
 
         print _("Successfully deleted filter [ %s ]") % filter_name
@@ -212,7 +218,8 @@ class AddRemoveProduct(FilterAction):
         self._add_get_filter_opts(parser)
 
     def check_options(self, validator):
-        validator.require(('org', 'name'))
+        validator.require(('org'))
+        self._add_filter_opts_check(validator)
         validator.require_at_least_one_of(('product', 'product_label', 'product_id'))
         validator.mutually_exclude('product', 'product_label', 'product_id')
         self._add_cvd_opts_check(validator)
@@ -220,6 +227,7 @@ class AddRemoveProduct(FilterAction):
     def run(self):
         org_name = self.get_option('org')
         filter_name = self.get_option('name')
+        filter_id = self.get_option('id')
         product_name = self.get_option('product')
         product_id = self.get_option('product_id')
         product_label = self.get_option('product_label')
@@ -234,7 +242,7 @@ class AddRemoveProduct(FilterAction):
 
         product = self.identify_product(cvd, cvd_products, product_name, product_label, product_id)
 
-        cvd_filter = get_filter(org_name, cvd["id"], filter_name)
+        cvd_filter = get_filter(org_name, cvd["id"], filter_name, filter_id)
         products = self.api.products(cvd_filter["id"], cvd["id"], org_name)
 
         products = [f['id'] for f in products]
@@ -301,7 +309,8 @@ class AddRemoveRepo(FilterAction):
         self._add_get_filter_opts(parser)
 
     def check_options(self, validator):
-        validator.require(('repo', 'org', 'name'))
+        validator.require(('org', 'repo'))
+        self._add_filter_opts_check(validator)
         validator.require_at_least_one_of(('product', 'product_label', 'product_id'))
         validator.mutually_exclude('product', 'product_label', 'product_id')
         self._add_cvd_opts_check(validator)
@@ -309,6 +318,7 @@ class AddRemoveRepo(FilterAction):
     def run(self):
         org_name = self.get_option('org')
         filter_name = self.get_option('name')
+        filter_id = self.get_option('id')
         repo_name = self.get_option('repo')
         product = self.get_option('product')
         product_label = self.get_option('product_label')
@@ -320,7 +330,7 @@ class AddRemoveRepo(FilterAction):
         definition = get_cv_definition(org_name, definition_label,
                                        definition_name, definition_id)
 
-        cvd_filter = get_filter(org_name, definition["id"], filter_name)
+        cvd_filter = get_filter(org_name, definition["id"], filter_name, filter_id)
 
         repo = get_repo(org_name, repo_name, product, product_label, product_id)
         repos = self.api.repos(cvd_filter["id"], definition["id"], org_name)
@@ -370,12 +380,14 @@ class AddRule(FilterAction):
         self._add_get_filter_opts(parser)
 
     def check_options(self, validator):
-        validator.require(('rule', 'org', 'name', 'content'))
+        validator.require(('rule', 'org', 'content'))
+        self._add_filter_opts_check(validator)
         self._add_cvd_opts_check(validator)
 
     def run(self):
         org_name = self.get_option('org')
         filter_name = self.get_option('name')
+        filter_id = self.get_option('id')
         rule = self.get_option('rule')
         definition_label = self.get_option('definition_label')
         definition_name = self.get_option('definition_name')
@@ -384,7 +396,7 @@ class AddRule(FilterAction):
         inclusion = ("includes" == self.get_option('inclusion'))
         definition = get_cv_definition(org_name, definition_label,
                                        definition_name, definition_id)
-        cvd_filter = get_filter(org_name, definition["id"], filter_name)
+        cvd_filter = get_filter(org_name, definition["id"], filter_name, filter_id)
 
         self.api.create_rule(cvd_filter["id"], definition["id"], org_name, rule, content, inclusion)
         return os.EX_OK
@@ -450,12 +462,14 @@ class RemoveRule(FilterAction):
         self._add_get_filter_opts(parser)
 
     def check_options(self, validator):
-        validator.require(('rule', 'org', 'name'))
+        validator.require(('rule', 'org'))
+        self._add_filter_opts_check(validator)
         self._add_cvd_opts_check(validator)
 
     def run(self):
         org_name = self.get_option('org')
         filter_name = self.get_option('name')
+        filter_id = self.get_option('id')
         rule = self.get_option('rule')
         definition_label = self.get_option('definition_label')
         definition_name = self.get_option('definition_name')
@@ -463,7 +477,7 @@ class RemoveRule(FilterAction):
 
         definition = get_cv_definition(org_name, definition_label,
                                        definition_name, definition_id)
-        cvd_filter = get_filter(org_name, definition["id"], filter_name)
+        cvd_filter = get_filter(org_name, definition["id"], filter_name, filter_id)
         self.api.remove_rule(cvd_filter["id"], definition["id"], org_name, rule)
 
         return os.EX_OK

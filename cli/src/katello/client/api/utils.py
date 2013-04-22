@@ -134,14 +134,17 @@ def get_cv_definition(org_name, def_label=None, def_name=None, def_id=None):
     return cvds[0]
 
 
-def get_filter(org_name, def_id, filter_name):
+def get_filter(org_name, def_id, filter_name=None, filter_id=None):
     filter_api = FilterAPI()
     filters = filter_api.filters_by_cvd_and_org(def_id, org_name)
 
-    filters = [f for f in filters if f["name"] == filter_name]
+    if filter_name:
+        filters = [f for f in filters if f["name"] == filter_name]
+    if filter_id:
+        filters = [f for f in filters if f["id"] == filter_id]
 
     if len(filters) < 1:
-        raise ApiDataError(_("Could not find filter [ %s ].") % filter_name)
+        raise ApiDataError(_("Could not find filter [ %s ].") % (filter_name or filter_id))
     else:
         # there can only be one filter matching name in a def
         return filters[0]
