@@ -20,6 +20,8 @@ class Api::ContentViewsControllerTest < MiniTest::Rails::ActionController::TestC
     @content_view = content_views(:library_dev_view)
     @environment = environments(:staging)
     @dev = environments(:dev)
+    @organization = organizations(:acme_corporation)
+
     login_user(users(:admin))
     models = ["Organization", "KTEnvironment", "Changeset"]
     services = ["Candlepin", "Pulp", "ElasticSearch"]
@@ -49,6 +51,14 @@ class Api::ContentViewsControllerTest < MiniTest::Rails::ActionController::TestC
     changeset_count = Changeset.count
     post :promote, :id => @content_view.id, :environment_id => @environment.id
     assert_equal (changeset_count + 1), Changeset.count
+  end
+
+  test "should not delete promoted view" do
+    definition = Class.new { define_method(:publishable?) { true } }.new
+    ContentView.any_instance.stubs(:content_view_definition).returns(definition)
+    delete :destroy, organization_id: @organization.name, id: @content_view.id
+    assert response.body =~ /\AError while deleting.*promoted.*\z/
+    assert ContentView.exists?(@content_view.id)
   end
 
 end
