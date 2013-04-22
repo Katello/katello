@@ -116,7 +116,7 @@ class ActivationKeysController < ApplicationController
       end
     end
     notify.success _("Subscriptions successfully added to Activation Key '%s'.") % @activation_key.name
-    render :partial => "available_subscriptions_update.js"
+    render :js => "available_subscriptions_update"
   end
 
   def remove_subscriptions
@@ -134,7 +134,7 @@ class ActivationKeysController < ApplicationController
       end
     end
     notify.success _("Subscriptions successfully removed from Activation Key '%s'.") % @activation_key.name
-    render :partial => "applied_subscriptions_update.js"
+    render :js => "applied_subscriptions_update"
   end
 
   def system_groups

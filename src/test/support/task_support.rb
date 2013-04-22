@@ -29,7 +29,6 @@ module TaskSupport
       end
     end
   rescue Exception => e
-    puts e
   end
 
   def self.sleep_if_needed

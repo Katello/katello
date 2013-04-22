@@ -241,7 +241,7 @@ describe ActivationKeysController do
           put :add_subscriptions, { :id => @a_key.id, :subscription_id => {"abc123" => "false"} }
           response.should be_success
           @a_key.pools.where(:cp_id => "abc123").should_not be_empty
-          response.should render_template(:partial => "_available_subscriptions_update")
+          response.should render_template(:js => "_available_subscriptions_update")
         end
 
         it "should successfully remove a subscription from the activation key" do
@@ -249,7 +249,7 @@ describe ActivationKeysController do
           put :remove_subscriptions, { :id => @a_key.id, :subscription_id => {"Test Subscription" => "false"}}
           response.should be_success
           KeyPool.where(:activation_key_id => @a_key.id, :pool_id => @subscription.id).count.should == 0
-          response.should render_template(:partial => "_applied_subscriptions_update")
+          response.should render_template(:js => "_applied_subscriptions_update")
         end
 
         it "should successfully add an already created subscription to an activation key" do
@@ -258,7 +258,7 @@ describe ActivationKeysController do
           put :add_subscriptions, { :id => @a_key.id, :subscription_id => {"One Time Subscription" => "false"}}
           response.should be_success
           KeyPool.where(:activation_key_id => @a_key.id, :pool_id => subscription.id).should_not be_empty
-          response.should render_template(:partial => "_available_subscriptions_update")
+          response.should render_template(:js => "_available_subscriptions_update")
         end
 
       end
