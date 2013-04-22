@@ -36,9 +36,9 @@ Src::Application.routes.draw do
             get :tasks
           end
         end
-        api_resources :distributors, :only => [:index, :create]    
+        api_resources :distributors, :only => [:index, :create]
         resource :uebercert, :only => [:show]
-     
+
         api_resources :activation_keys, :only => [:index, :create]
         api_resources :system_groups, :only => [:index, :create]
         api_resources :gpg_keys, :only => [:index, :create]
@@ -132,7 +132,7 @@ Src::Application.routes.draw do
           post :refresh
         end
       end
-      
+
       api_resources :changesets, :only => [:show, :update, :destroy] do
         post :apply, :on => :member, :action => :apply
         #TODO: fix dependency resolution
@@ -148,7 +148,7 @@ Src::Application.routes.draw do
       end
 
       api_resources :ping, :only => [:index]
-      
+
       api_resources :repositories, :only => [:show, :update, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
         api_resources :sync, :only => [:index, :create] do
           delete :index, :on => :collection, :action => :cancel
@@ -173,7 +173,7 @@ Src::Application.routes.draw do
         api_resources :systems, :only => [:create, :index] do
           get :report, :on => :collection
         end
-        api_resources :distributors, :only => [:create, :index] 
+        api_resources :distributors, :only => [:create, :index]
         api_resources :products, :only => [:index] do
           get :repositories, :on => :member
         end

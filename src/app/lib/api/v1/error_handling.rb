@@ -88,7 +88,7 @@ module Api
 
 	  def rescue_from_record_invalid(exception)
 	    logger.error exception.class
-	    
+
 	    errors = case exception
 	    when ActiveRecord::RecordInvalid
 	      exception.record.errors
@@ -111,8 +111,8 @@ module Api
 
 	  def respond_for_exception(exception, options={})
 	    options = options.reverse_merge(
-	      :with_logging => true, 
-	      :status       => exception.respond_to?('status_code') ? exception.status_code : :internal_server_error, 
+	      :with_logging => true,
+	      :status       => exception.respond_to?('status_code') ? exception.status_code : :internal_server_error,
 	      :text         => exception.message,
 	      :display_message => exception.message,
 	      :errors       => [exception.message])

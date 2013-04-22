@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Api::V2::RootController < Api::V1::RootController
-	
+
   include Api::V2::Rendering
 
 end
