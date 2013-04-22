@@ -16,6 +16,12 @@ class MiniTest::Rails::ActiveSupport::TestCase
   self.pre_loaded_fixtures = true
   self.fixture_path = File.expand_path('../fixtures/models', __FILE__)
   self.set_fixture_class :environments => KTEnvironment
+
+  def default_url_options
+    { :script_name => ActionController::Base.config.relative_url_root
+    }.merge(Rails.application.routes.default_url_options)
+  end
+
 end
 
 class MiniTest::Rails::Spec
