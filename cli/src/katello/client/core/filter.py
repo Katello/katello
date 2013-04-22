@@ -44,11 +44,14 @@ class FilterAction(BaseAction):
     def _add_get_filter_opts(cls, parser):
         FilterAction._add_cvd_filter_opts(parser)
         parser.add_option('--name', dest='name',
-                help=_("filter id eg: 'filter_foo'"))
+                help=_("filter name eg: 'package filter acme'"))
+        parser.add_option('--id', dest='id',
+                help=_("filter id eg: 42"))
 
     @classmethod
     def _add_filter_opts_check(cls, validator):
-        validator.require('name')
+        validator.require_at_least_one_of(('name', 'id'))
+        validator.mutually_exclude('name', 'id')
 
     @classmethod
     def _add_cvd_opts_check(cls, validator):
@@ -96,12 +99,14 @@ class Info(FilterAction):
         opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
-        validator.require(('org', 'name'))
+        validator.require(('org'))
+        self._add_filter_opts_check(validator)
         self._add_cvd_opts_check(validator)
 
     def run(self):
         org_name = self.get_option('org')
         filter_name = self.get_option('name')
+        filter_id = self.get_option('id')
         definition_label = self.get_option('definition_label')
         definition_name = self.get_option('definition_name')
         definition_id = self.get_option('definition_id')
@@ -109,11 +114,10 @@ class Info(FilterAction):
         definition = get_cv_definition(org_name, definition_label,
                                        definition_name, definition_id)
 
-        cvd_filter = get_filter(org_name, definition["id"], filter_name)
+        # this'll check that filter_id exists and if not, display a user-friendly message
+        filter_id = get_filter(org_name, definition["id"], filter_name, filter_id)["id"]
 
-        cvd_filter = self.api.get_filter_info(cvd_filter["id"],
-                                                  definition["id"],
-                                                  org_name)
+        cvd_filter = self.api.get_filter_info(filter_id, definition["id"], org_name)
 
         self.printer.add_column('id', _("ID"))
         self.printer.add_column('name', _("Name"))
@@ -159,19 +163,21 @@ class Delete(FilterAction):
         opt_parser_add_org(parser, required=1)
 
     def check_options(self, validator):
-        validator.require(('org', 'name'))
+        validator.require(('org'))
+        self._add_filter_opts_check(validator)
         self._add_cvd_opts_check(validator)
 
     def run(self):
         org_name = self.get_option('org')
         filter_name = self.get_option('name')
+        filter_id = self.get_option('id')
         definition_label = self.get_option('definition_label')
         definition_name = self.get_option('definition_name')
         definition_id = self.get_option('definition_id')
 
         definition = get_cv_definition(org_name, definition_label,
                                        definition_name, definition_id)
-        cvd_filter = get_filter(org_name, definition["id"], filter_name)
+        cvd_filter = get_filter(org_name, definition["id"], filter_name, filter_id)
         self.api.delete(cvd_filter["id"], definition["id"], org_name)
 
         print _("Successfully deleted filter [ %s ]") % filter_name
@@ -197,7 +203,8 @@ class AddRemoveProduct(FilterAction):
         self._add_get_filter_opts(parser)
 
     def check_options(self, validator):
-        validator.require(('org', 'name'))
+        validator.require(('org'))
+        self._add_filter_opts_check(validator)
         validator.require_at_least_one_of(('product', 'product_label', 'product_id'))
         validator.mutually_exclude('product', 'product_label', 'product_id')
         self._add_cvd_opts_check(validator)
@@ -205,6 +212,7 @@ class AddRemoveProduct(FilterAction):
     def run(self):
         org_name = self.get_option('org')
         filter_name = self.get_option('name')
+        filter_id = self.get_option('id')
         product_name = self.get_option('product')
         product_id = self.get_option('product_id')
         product_label = self.get_option('product_label')
@@ -219,7 +227,7 @@ class AddRemoveProduct(FilterAction):
 
         product = self.identify_product(cvd, cvd_products, product_name, product_label, product_id)
 
-        cvd_filter = get_filter(org_name, cvd["id"], filter_name)
+        cvd_filter = get_filter(org_name, cvd["id"], filter_name, filter_id)
         products = self.api.products(cvd_filter["id"], cvd["id"], org_name)
 
         products = [f['id'] for f in products]
@@ -286,7 +294,8 @@ class AddRemoveRepo(FilterAction):
         self._add_get_filter_opts(parser)
 
     def check_options(self, validator):
-        validator.require(('repo', 'org', 'name'))
+        validator.require(('org', 'repo'))
+        self._add_filter_opts_check(validator)
         validator.require_at_least_one_of(('product', 'product_label', 'product_id'))
         validator.mutually_exclude('product', 'product_label', 'product_id')
         self._add_cvd_opts_check(validator)
@@ -294,6 +303,7 @@ class AddRemoveRepo(FilterAction):
     def run(self):
         org_name = self.get_option('org')
         filter_name = self.get_option('name')
+        filter_id = self.get_option('id')
         repo_name = self.get_option('repo')
         product = self.get_option('product')
         product_label = self.get_option('product_label')
@@ -305,7 +315,7 @@ class AddRemoveRepo(FilterAction):
         definition = get_cv_definition(org_name, definition_label,
                                        definition_name, definition_id)
 
-        cvd_filter = get_filter(org_name, definition["id"], filter_name)
+        cvd_filter = get_filter(org_name, definition["id"], filter_name, filter_id)
 
         repo = get_repo(org_name, repo_name, product, product_label, product_id)
         repos = self.api.repos(cvd_filter["id"], definition["id"], org_name)
@@ -328,6 +338,138 @@ class AddRemoveRepo(FilterAction):
         self.api.update_repos(cvd_filter["id"], cvd_id, org_name, repos)
         print message
 
+<<<<<<< HEAD
+=======
+class AddRule(FilterAction):
+    content_types = ["rpm", "package_group", "erratum"]
+    inclusion_types = ["includes", "excludes"]
+    default_inclusion_type = "includes"
+    @property
+    def description(self):
+        return _('add a rule to a filter')
+
+    def __init__(self):
+        super(AddRule, self).__init__()
+
+    def setup_parser(self, parser):
+        opt_parser_add_org(parser, required=1)
+        parser.add_option('--rule', dest='rule',
+                          help=_("a specification of the rule in json format (required)"))
+        parser.add_option('--content', dest='content', type="choice",
+                        choices = self.content_types,
+            help=_("content type of the rule (choices: [%s], default: none)") %\
+                                                        ", ".join(self.content_types))
+        parser.add_option('--type', dest='inclusion', default = self.default_inclusion_type,
+            help=_("inclusion type of the rule (choices: [%s], default: %s)") %\
+                            (", ".join(self.inclusion_types), self.default_inclusion_type))
+        parser.disable_epilog_formatter = True
+        parser.epilog = AddRule._epilog()
+        self._add_get_filter_opts(parser)
+
+    def check_options(self, validator):
+        validator.require(('rule', 'org', 'content'))
+        self._add_filter_opts_check(validator)
+        self._add_cvd_opts_check(validator)
+
+    def run(self):
+        org_name = self.get_option('org')
+        filter_name = self.get_option('name')
+        filter_id = self.get_option('id')
+        rule = self.get_option('rule')
+        definition_label = self.get_option('definition_label')
+        definition_name = self.get_option('definition_name')
+        definition_id = self.get_option('definition_id')
+        content = self.get_option('content')
+        inclusion = ("includes" == self.get_option('inclusion'))
+        definition = get_cv_definition(org_name, definition_label,
+                                       definition_name, definition_id)
+        cvd_filter = get_filter(org_name, definition["id"], filter_name, filter_id)
+
+        self.api.create_rule(cvd_filter["id"], definition["id"], org_name, rule, content, inclusion)
+        return os.EX_OK
+
+    @classmethod
+    def _epilog(cls):
+        epilog = list()
+        epilog.append(_("Rule specification for content types."))
+        epilog.append(_("Package") + ": (rpm)")
+        epilog.append(_("Specification"))
+        epilog.append("""{"units":<["name", "version", "min_version", "max_version"]*>}""")
+        example = {"units":[{"name": "pulp-client", "version": "2.0.7"}, \
+                        {"name": "pulp-adm*", "min_version": "2.0.4", "max_version": "2.0.8"}]}
+        epilog.append(_("Examples"))
+        epilog.append(pformat(example))
+        epilog.append("")
+        epilog.append(_("Package Group") + ": (package_group)")
+        epilog.append(_("Specification"))
+        epilog.append("""{"units":<["name"]*>}""")
+
+        epilog.append(_("Examples"))
+        example = {"units":[{"name": "group1"}, {"name": "group-foo*"}]}
+        epilog.append(pformat(example))
+        epilog.append("")
+
+        epilog.append(_("Errata") + ": (erratum)")
+        epilog.append(_("Specification"))
+        epilog.append("""{"units":<["id"]*>} |""" + \
+                        """ {"date_range": {"start": "YYYY-MM-DD", "end": "YYYY-MM-DD"}} |""" + \
+                        """ {"errata_type" : [< "enhancement", "security", "bugfix">*]}""")
+        epilog.append(_("Examples"))
+        epilog.append(_("By Id"))
+        example = {"units":[{"id": "RHEA1022:21"}, {"id": "RHEA1022:22"}]}
+        epilog.append(pformat(example))
+
+        epilog.append(_("By Date Range"))
+        example_date = {"date_range":[{"start": "2013-04-15"}, {"end": "2015-04-15"}]}
+        epilog.append(pformat(example_date))
+        epilog.append(_("By Errata Type"))
+        example = {"errata_type":["security", "bugfix"]}
+        epilog.append(pformat(example))
+        epilog.append(_("By Date Range and Errata Type"))
+        example.update(example_date)
+        epilog.append(pformat(example))
+        epilog.append("")
+
+        return "\n".join(epilog)
+
+
+class RemoveRule(FilterAction):
+
+    @property
+    def description(self):
+        return _('remove a rule from a filter')
+
+    def __init__(self):
+        super(RemoveRule, self).__init__()
+
+    def setup_parser(self, parser):
+        opt_parser_add_org(parser, required=1)
+        parser.add_option('--rule_id', dest='rule',
+                          help=_("id of the rule (required)"))
+        self._add_get_filter_opts(parser)
+
+    def check_options(self, validator):
+        validator.require(('rule', 'org'))
+        self._add_filter_opts_check(validator)
+        self._add_cvd_opts_check(validator)
+
+    def run(self):
+        org_name = self.get_option('org')
+        filter_name = self.get_option('name')
+        filter_id = self.get_option('id')
+        rule = self.get_option('rule')
+        definition_label = self.get_option('definition_label')
+        definition_name = self.get_option('definition_name')
+        definition_id = self.get_option('definition_id')
+
+        definition = get_cv_definition(org_name, definition_label,
+                                       definition_name, definition_id)
+        cvd_filter = get_filter(org_name, definition["id"], filter_name, filter_id)
+        self.api.remove_rule(cvd_filter["id"], definition["id"], org_name, rule)
+
+        return os.EX_OK
+
+>>>>>>> b0ef11a... Adding filter id option to CLI
 class Filter(Command):
 
     description = _('content view definition filters actions for the katello server')

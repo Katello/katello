@@ -19,7 +19,8 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
     ]
 
     allowed_options = [
-        ('--org=ACME', '--definition=content_def1', '--name=flt')
+        ('--org=ACME', '--definition=content_def1', '--name=flt'),
+        ('--org=ACME', '--definition=content_def1', '--id=flt')
     ]
 
 
