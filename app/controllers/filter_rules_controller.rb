@@ -175,7 +175,7 @@ class FilterRulesController < ApplicationController
       notify.success(_("Parameter %{parameter} successfully updated for filter %{filter} of type %{type}.") %
                       {:parameter => parameter_name,
                        :filter => @filter.name,
-                       :type => FilterRule::CONTENT_OPTIONS.index(@rule.content_type)})
+                       :type => FilterRule::CONTENT_OPTIONS.key(@rule.content_type)})
     end
 
     render :nothing => true

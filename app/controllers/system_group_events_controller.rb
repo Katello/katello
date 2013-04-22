@@ -52,7 +52,7 @@ class SystemGroupEventsController < ApplicationController
       statuses[:jobs] << {
         :id => status.id,
         :pending? => status.pending?,
-        :status_html => render_to_string(:template => 'system_groups/events/_items.html', :layout => false,
+        :status_html => render_to_string(:template => 'system_groups/events/_items', :layout => false,
                                          :locals => {:include_tr => false, :group => @group, :job => status})
       }
     end
@@ -61,7 +61,7 @@ class SystemGroupEventsController < ApplicationController
       statuses[:tasks] << {
         :id => status.id,
         :pending? => status.pending?,
-        :status_html => render_to_string(:template => 'system_groups/events/_system_items.html', :layout => false,
+        :status_html => render_to_string(:template => 'system_groups/events/_system_items', :layout => false,
                                          :locals => {:include_tr => false, :t => status})
       }
     end
