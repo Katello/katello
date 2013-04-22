@@ -55,7 +55,7 @@ class SystemEventsController < ApplicationController
       statuses[:tasks] << {
         :id => status.id,
         :pending? => status.pending?,
-        :status_html => render_to_string(:template => 'system_events/_event_items.html', :layout => false,
+        :status_html => render_to_string(:template => 'system_events/_event_items', :layout => false,
                                          :locals => {:include_tr => false, :system => @system, :t => status})
       }
     end

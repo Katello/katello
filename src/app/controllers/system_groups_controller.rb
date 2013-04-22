@@ -155,7 +155,7 @@ class SystemGroupsController < ApplicationController
     notify.success _("Deleted System Group %{group} and it's %{count} systems.") % {:group => @group.name, :count => system_names.length.to_s},
                    :details => system_names.join("\n")
 
-    render :partial => "common/list_remove.js", :locals => {:id => params[:id], :name => controller_display_name}
+    render :js => "common/list_remove", :locals => {:id => params[:id], :name => controller_display_name}
   end
 
   def items

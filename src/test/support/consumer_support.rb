@@ -32,7 +32,6 @@ module ConsumerSupport
       @consumer.set_pulp_consumer
     end
   rescue => e
-    puts e
   ensure
     return @consumer
   end
