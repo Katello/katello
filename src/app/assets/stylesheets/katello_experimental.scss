@@ -1,0 +1,106 @@
+@import "katello";
+@import "alchemy/components/normalize";
+@import "widgets/org_switcher_experimental";
+
+$logo_img: url("katello-logo.png");
+
+.container_16 {
+  width: $static_width - 20;
+  float: left;
+  .grid_16 {
+    width: $static_width - 20;
+  }
+}
+
+.flash_hud {
+  margin: 5px 0;
+
+  ul li a {
+    color: $kselected_color;
+  }
+}
+.flash_messages {
+  background-color: $helptip-background_color;
+  display: block; 
+  padding: 12px;
+  border: 1px solid $helptip-border_color;
+  margin: 10px auto 5px auto;
+  @extend .clearfix;
+}
+
+
+.maincontent {
+  box-shadow: none !important;
+  background: white;
+  //width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+  margin-top: 40px;
+}
+
+.center {
+  width: $static_width;
+  margin: 0 auto;
+  position: relative;
+}
+
+.logo {
+  background: $logo_img;
+  text-indent: -5555px;
+  width: 100px;
+  height: 15px;
+  display: block;
+  margin-top: 5px;
+}
+
+.subnav-header {
+  height: 30px;
+  z-index: 100;
+
+  background-color: rgb(194, 223, 255);
+  border-bottom: 1px solid #CCC;
+
+  nav { height: inherit; }
+
+  .menu-item {
+    a, a:visited, a:hover { color: black; }
+  }
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+fieldset {
+  border: none;
+}
+
+article {
+  min-height: 710px;
+}
+
+body > footer {
+  margin-top: 0;
+  height: 20%;
+}
+
+.maincontent {
+  margin-top: 0;
+  padding-top: 40px;
+  border-bottom: none;
+}
+
+body {
+  background-color: white;
+}
+
+#experimental_indicator {
+  position: absolute;
+  color: rgb(255, 196, 90);
+  top: 3px;
+  left: 132px;
+  font-family: Overpass;
+}

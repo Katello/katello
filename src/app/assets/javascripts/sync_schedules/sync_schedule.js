@@ -24,5 +24,5 @@ $(document).ready(function() {
       $('#data').val(JSON.stringify(one_panel.selectedItems));
       $('#sync_schedule_form').submit();
   });
-  $('.left').resizable('destroy');
+  $('.left_panel').resizable('destroy');
 });

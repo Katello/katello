@@ -53,7 +53,7 @@ $(document).ready(function() {
 
     $('#save_name').live('ajax:complete', function(evt, data, status, xhr) {
         // Refresh the entry in the left list
-        var id = $('.left').find('.active');
+        var id = $('.left_panel').find('.active');
         var url = id.attr('data-ajax_url');
         KT.panel.list.refresh(id.attr('id'), url);
 
