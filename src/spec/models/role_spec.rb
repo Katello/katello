@@ -68,8 +68,14 @@ describe Role do
  end
 
  context "read ldap roles" do
-   before { Katello.config[:ldap_roles] = true }
-   after { Katello.config[:ldap_roles] = false }
+   before do
+     Katello.config[:ldap_roles] = true
+     Katello.config[:validate_ldap] = false
+   end
+   after do
+     Katello.config[:ldap_roles] = false
+     Katello.config[:validate_ldap] = false
+   end
    let(:organization) {Organization.create!(:name=>"test_org", :label =>"my_key")}
    let(:role) { Role.make_readonly_role("name", organization)}
    let(:ldap_role) { Role.make_readonly_role("ldap_role", organization)}

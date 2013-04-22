@@ -27,7 +27,9 @@ class UserTestBase < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def setup
-    Katello.config[:warden] = 'database'
+    options = { :warden => "database" }
+    override_config(options)
+
     @no_perms_user      = User.find(users(:no_perms_user))
     @admin              = User.find(users(:admin))
     @disabled_user      = User.find(users(:disabled_user))

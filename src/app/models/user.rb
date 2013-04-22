@@ -43,6 +43,7 @@ class User < ActiveRecord::Base
   validates :username, :uniqueness => true, :presence => true
   validates_with Validators::UsernameValidator, :attributes => :username
   validates_with Validators::NoTrailingSpaceValidator, :attributes => :username
+  validates_with Validators::LdapUsernameValidator, :attributes => :username
 
   validates :email, :presence => true, :if => :not_ldap_mode?
   validates :default_locale, :inclusion => {:in => Katello.config.available_locales, :allow_nil => true, :message => _("must be one of %s") % Katello.config.available_locales.join(', ')}
@@ -92,6 +93,10 @@ class User < ActiveRecord::Base
 
   def not_ldap_mode?
     return Katello.config.warden != 'ldap'
+  end
+
+  def ldap_mode?
+    !not_ldap_mode?
   end
 
   def own_role
