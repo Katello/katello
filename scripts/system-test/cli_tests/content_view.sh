@@ -26,8 +26,8 @@ test_success "content definition publish ($DEF1 to $DEF1_VIEW2)" content definit
 test_success "content definition publish ($DEF1 to $DEF2_VIEW1)" content definition publish --org="$TEST_ORG" --view_name="$DEF2_VIEW1" --label="$DEF2"
 test_success "content definition publish ($DEF2 to $DEF2_VIEW2)" content definition publish --org="$TEST_ORG" --view_name="$DEF2_VIEW2" --name="$DEF2"
 
-test_success "content definition add_content_view ($DEF2_VIEW2 to $DEF3)" content definition add_view --org="$TEST_ORG" --label="$DEF3" --view_label="$DEF2_VIEW2"
-test_failure "content definition add_content_view ($DEF2_VIEW1 to $DEF3)" content definition add_view --org="$TEST_ORG" --label="$DEF3" --view_label="$DEF2_VIEW1"
+test_success "content definition add_content_view ($DEF2_VIEW2 to $DEF3)" content definition add_view --org="$TEST_ORG" --label="$DEF3" --content_view_label="$DEF2_VIEW2"
+test_failure "content definition add_content_view ($DEF2_VIEW1 to $DEF3)" content definition add_view --org="$TEST_ORG" --label="$DEF3" --content_view_label="$DEF2_VIEW1"
 test_success "content definition publish ($DEF3 to $DEF3_VIEW1)" content definition publish --org="$TEST_ORG" --view_name="$DEF3_VIEW1" --name="$DEF3"
 
 test_success "content view promote ($DEF1_VIEW1 to $TEST_ENV)" content view promote --org="$TEST_ORG" --name="$DEF1_VIEW1" --env="$TEST_ENV"
