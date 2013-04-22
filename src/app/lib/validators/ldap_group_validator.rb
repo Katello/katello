@@ -10,33 +10,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'ldap_fluff'
-
-class Ldap
-
-  def self.valid_ldap_authentication?(uid, password)
-    ldap = LdapFluff.new
-    ldap.authenticate? uid, password
+module Validators
+  class LdapGroupValidator < ActiveModel::EachValidator
+    def validate_each(record, attribute, value)
+      if value && Katello.config.validate_ldap
+        record.errors[attribute] << N_("does not exist in your current LDAP system. Please choose a different group, or contact your LDAP administrator to have this group created") if !Ldap.valid_group?(value)
+      end
+    end
   end
-
-  def self.ldap_groups(uid)
-    ldap = LdapFluff.new
-    ldap.group_list(uid)
-  end
-
-  def self.is_in_groups(uid, grouplist)
-    ldap = LdapFluff.new
-    ldap.is_in_groups?(uid, grouplist)
-  end
-
-  def self.valid_user?(uid)
-    ldap = LdapFluff.new
-    ldap.valid_user?(uid)
-  end
-
-  def self.valid_group?(gid)
-    ldap = LdapFluff.new
-    ldap.valid_group?(gid)
-  end
-
 end

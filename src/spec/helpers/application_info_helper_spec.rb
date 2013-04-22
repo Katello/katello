@@ -28,6 +28,7 @@ describe ApplicationInfoHelper do
       disable_env_orchestration
       disable_user_orchestration
       Katello.config[:warden] = 'ldap'
+      Katello.config[:validate_ldap] = false
       User.stub!(:cp_oauth_header).and_return("abc123")
       @org = Organization.create!(:name => "Haskell_Curry_Inc",
                                   :label => "haskell_curry_inc"

@@ -12,5 +12,8 @@
 
 class LdapGroupRole < ActiveRecord::Base
   validates_uniqueness_of :ldap_group, :scope => :role_id
+  validates_with Validators::LdapGroupValidator, :attributes => :ldap_group
   belongs_to :role
+
+
 end
