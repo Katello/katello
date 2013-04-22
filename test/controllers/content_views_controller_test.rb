@@ -39,15 +39,17 @@ class ContentViewsControllerTest < MiniTest::Rails::ActionController::TestCase
   end
 
   test "DELETE destroy should be successful" do
+    content_view = content_views(:library_view)
+
     # success notice created
     notify = Notifications::Notifier.new
     notify.expects(:success).at_least_once
     @controller.expects(:notify).at_least_once.returns(notify)
 
-    delete :destroy, :content_view_definition_id => @content_view_definition.id, :id => @content_view.id
+    delete :destroy, :content_view_definition_id => @content_view_definition.id, :id => content_view.id
 
     assert_response :success
-    assert_nil ContentView.find_by_id(@content_view.id)
+    assert_nil ContentView.find_by_id(content_view.id)
   end
 
   test "POST refresh should be successful" do
