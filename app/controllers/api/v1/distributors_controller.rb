@@ -55,7 +55,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
   end
 
   def_param_group :distributors do
-    param :distributor, Hash, :required => true, :action_aware => true do  
+    param :distributor, Hash, :required => true, :action_aware => true do
       param :name, String, :desc => "Name of the distributor", :required => true, :action_aware => true
       param :facts, Hash, :desc => "Key-value hash of distributor-specific facts"
       param :installedProducts, Array, :desc => "List of products installed on the distributor"
@@ -69,7 +69,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
   # for activation keys there is method activate (see custom routes)
   api :POST, "/environments/:environment_id/distributors", "Register a distributor in environment"
   param_group :distributors
-  param :distributor, Hash, :required => true, :action_aware => true do  
+  param :distributor, Hash, :required => true, :action_aware => true do
     param :type, String, :desc => "Type of the distributor, it should always be 'distributor'", :required => true
   end
   def create
