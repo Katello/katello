@@ -79,7 +79,7 @@ module FiltersHelper
 
     _("%{include} %{rule_type}: %{parameter_list}") %
         {:include => rule_inclusion(rule),
-         :rule_type => FilterRule::CONTENT_OPTIONS.index(rule.content_type),
+         :rule_type => FilterRule::CONTENT_OPTIONS.key(rule.content_type),
          :parameter_list => parameter_list}
   end
 
@@ -108,7 +108,7 @@ module FiltersHelper
 
     _("%{include} %{rule_type}: %{errata_types}: %{date_summary}") %
         {:include => rule_inclusion(rule),
-         :rule_type => FilterRule::CONTENT_OPTIONS.index(rule.content_type),
+         :rule_type => FilterRule::CONTENT_OPTIONS.key(rule.content_type),
          :errata_types => errata_types,
          :date_summary => date_summary}
   end
