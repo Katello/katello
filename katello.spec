@@ -32,7 +32,7 @@
 %endif
 
 Name:           katello
-Version:        1.3.19
+Version:        1.3.20
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -834,6 +834,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Apr 22 2013 Justin Sherrill <jsherril@redhat.com> 1.3.20-1
+- 1956 - adding unprotected checkbox to auto-discovery
+
 * Wed Apr 17 2013 Justin Sherrill <jsherril@redhat.com> 1.3.19-1
 - issue 1998 - add a test to check setting of env + content view
   (bbuckingham@redhat.com)
