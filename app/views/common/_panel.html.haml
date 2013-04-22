@@ -12,65 +12,66 @@
           $.bbq.pushState(#{initial_state.to_json});
       });
 
-#container
-  .right
-    .helptip_area
-      = help_tip_button('panel-help')
-      = help_tip((_("To view the details of an item on the left, simply click on a single row." + |
-                "<br/><br/>To select multiple rows, hold the Control Key and click multiple rows." + |
-                "<br/><br/>If you don't need this help anymore, please click the close button in the top right " + |
-                "of this box.")).html_safe, 'panel-help') |
-    .fl.clear
-      -if actions
-        = render :partial=>actions
-      -else
-        .panel_action{'data-id'=>"select_none"}
-          #select-result
-          %a#select-none #{_("Select None")}
-  = render :partial=>"common/tupane"
+.center
+  #container.container_16
+    .right_panel
+      .helptip_area
+        = help_tip_button('panel-help')
+        = help_tip((_("To view the details of an item on the left, simply click on a single row." + |
+                  "<br/><br/>To select multiple rows, hold the Control Key and click multiple rows." + |
+                  "<br/><br/>If you don't need this help anymore, please click the close button in the top right " + |
+                  "of this box.")).html_safe, 'panel-help') |
+      .fl.clear
+        -if actions
+          = render :partial=>actions
+        -else
+          .panel_action{'data-id'=>"select_none"}
+            #select-result
+            %a#select-none #{_("Select None")}
+    = render :partial=>"common/tupane"
 
-  %div.left{:class => left_panel_width ? left_panel_width : 'column_panel_' + columns.length.to_s }
-    #list-title
-      %header
-        %h2.fl.one-line-ellipsis{:title => title} #{title}
-        - if enable_create
-          %a.fr#new{:href => "#", :class => (disable_create ? "disabled tipsify-west" : "block"), "data-ajax_url" => url_for(:action=> 'new'), :title => (disable_create if disable_create) }
-            - if !create_label.nil?
-              = create_label
-            -else
-              #{_('+ New %s') % create}
-            .arrow-right
-      %div.fl.clear#items_count
-        -# For translation purposes the string "Viewing 2 of 2 results (2 Total Users)" must be presented as a unit.
-        -# The javascript, though, needs the spans to update the values. Solution is this raw html.
-        = raw _("Viewing %{current} of %{results} results (%{items} Total %{name})") % {:current => '<span id="current_items_count">0</span>', :results => '<span id="total_results_count">0</span>', :items => '<span id="total_items_count">0</span>', :name => title}
-
-      - if url.nil?
-        %form#search_form.search{"data-url" => search_index_path()}
-          = text_field_tag(:search, params[:search], {:type => "text", :placeholder => _("Search..."), :class => "auto_complete_input ui-autocomplete-input"})
-          %button.action{:form => "search_form", :id => "search_button"} #{_("Search")}
-      - else
-        %form#search_form.search{"data-url" => url_for(url)}
-          = text_field_tag(:search, params[:search], {:type => "text", :placeholder => _("Search..."), :class => "auto_complete_input ui-autocomplete-input"})
-          %button.action{:form => "search_form", :id => "search_button"} #{_("Search")}
-
-    #list.list.clear.expand_list{:class=>("ajaxScroll" if ajax_scroll), "data-scroll_url"=>ajax_scroll, "data-page_size"=>current_user.page_size}
-      %header
-        .block_head.clear
-          - columns.each_index do |index|
-            %div{:class => 'column_' + columns.length.to_s}
-              -if enable_sort
-                = sort(columns[index], :as => titles[index])
+    %div.left_panel{:class => left_panel_width ? left_panel_width : 'column_panel_' + columns.length.to_s }
+      #list-title
+        %header
+          %h2.fl.one-line-ellipsis{:title => title} #{title}
+          - if enable_create
+            %a.fr#new{:href => "#", :class => (disable_create ? "disabled tipsify-west" : "block"), "data-ajax_url" => url_for(:action=> 'new'), :title => (disable_create if disable_create) }
+              - if !create_label.nil?
+                = create_label
               -else
-                = titles[index]
-      - if ajax_load
-        .spinner
-        %section.hidden
-      - elsif custom_rows
-        %section
-          = render_rows(:collection=>collection, :columns=>columns, :accessor=>accessor, :name=>name)
-      - else
-        %section
-          = render :partial=>"common/list_item", :collection=>collection, :as=>:item, :locals=>{:accessor=>accessor, :columns=>columns, :name=>name, :initial_action=>initial_action}
+                #{_('+ New %s') % create}
+              .arrow-right
+        %div.fl.clear#items_count
+          -# For translation purposes the string "Viewing 2 of 2 results (2 Total Users)" must be presented as a unit.
+          -# The javascript, though, needs the spans to update the values. Solution is this raw html.
+          = raw _("Viewing %{current} of %{results} results (%{items} Total %{name})") % {:current => '<span id="current_items_count">0</span>', :results => '<span id="total_results_count">0</span>', :items => '<span id="total_items_count">0</span>', :name => title}
 
-    %br.clear
+        - if url.nil?
+          %form#search_form.search{"data-url" => search_index_path()}
+            = text_field_tag(:search, params[:search], {:type => "text", :placeholder => _("Search..."), :class => "auto_complete_input ui-autocomplete-input"})
+            %button.action{:form => "search_form", :id => "search_button"} #{_("Search")}
+        - else
+          %form#search_form.search{"data-url" => url_for(url)}
+            = text_field_tag(:search, params[:search], {:type => "text", :placeholder => _("Search..."), :class => "auto_complete_input ui-autocomplete-input"})
+            %button.action{:form => "search_form", :id => "search_button"} #{_("Search")}
+
+      #list.list.clear.expand_list{:class=>("ajaxScroll" if ajax_scroll), "data-scroll_url"=>ajax_scroll, "data-page_size"=>current_user.page_size}
+        %header
+          .block_head.clear
+            - columns.each_index do |index|
+              %div{:class => 'column_' + columns.length.to_s}
+                -if enable_sort
+                  = sort(columns[index], :as => titles[index])
+                -else
+                  = titles[index]
+        - if ajax_load
+          .spinner
+          %section.hidden
+        - elsif custom_rows
+          %section
+            = render_rows(:collection=>collection, :columns=>columns, :accessor=>accessor, :name=>name)
+        - else
+          %section
+            = render :partial=>"common/list_item", :collection=>collection, :as=>:item, :locals=>{:accessor=>accessor, :columns=>columns, :name=>name, :initial_action=>initial_action}
+
+      %br.clear
