@@ -56,7 +56,7 @@ KT.auto_complete_box = function(params) {
 
         input.removeClass("input_error");
         add_btn.addClass("working");
-        add_btn.html("<img  src='icons/spinner.gif'>");
+        add_btn.html("<img  src='assets/icons/spinner.gif'>");
         input.attr("disabled", "disabled");
         input.autocomplete('disable');
         input.autocomplete('close');
