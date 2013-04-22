@@ -20,10 +20,7 @@ class LdapValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
   fixtures :all
 
   def self.before_suite
-    # TODO: RAILS32 remove top reference to load_fixtures
-    if @loaded_fixtures.nil?
-      @loaded_fixtures = load_fixtures
-    end
+    @loaded_fixtures = load_fixtures
     configure_runcible
 
     services  = ['Candlepin', 'Pulp', 'ElasticSearch', 'Foreman']
@@ -37,13 +34,6 @@ class LdapValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
     @acme_corporation   = Organization.find(organizations(:acme_corporation).id)
     @dev                = KTEnvironment.find(environments(:dev).id)
     @user = build(:user, :batman)
-  end
-
-  def build_role
-    @role = Role.new
-    @role.name = "Role"
-    @role.description = "Description"
-    @role.save
   end
 
   def test_valid_login
@@ -78,19 +68,19 @@ class LdapValidatorTest < MiniTest::Rails::ActiveSupport::TestCase
   end
 
   def test_ldap_group
-    build_role
+    role = Role.find(roles(:basic_role).id)
     LdapFluff.any_instance.stubs(:valid_group?).returns(true)
     lgr = LdapGroupRole.new
-    lgr.role = @role
+    lgr.role = role
     lgr.ldap_group = "superheros"
     assert lgr.save
   end
 
   def test_ldap_group_invalid
-    build_role
+    role = Role.find(roles(:basic_role).id)
     LdapFluff.any_instance.stubs(:valid_group?).returns(false)
     lgr = LdapGroupRole.new
-    lgr.role = @role
+    lgr.role = role
     lgr.ldap_group = "superheros"
     assert !lgr.save
     assert_includes lgr.errors, :ldap_group
