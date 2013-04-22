@@ -1197,7 +1197,7 @@ var rolesRenderer = (function($){
             }
         },
         setTreeHeight = function(){
-            var height = $('.left').height(),
+            var height = $('.left_panel').height(),
                 panel_main = $('#panel_main');
 
             panel_main.find('.sliding_list').css({ 'height' : height - 60 });
@@ -1216,7 +1216,7 @@ var rolesRenderer = (function($){
             panel.find('.slide_up_container').width(width);
         },
         init = function(){
-            var left_panel = $('.left');
+            var left_panel = $('.left_panel');
 
             left_panel.resize(function(){
                 setSizing();
@@ -1371,7 +1371,7 @@ $(document).ready(function() {
 
     pageActions.registerEvents();
 
-    $('.left').resizable('destroy');
+    $('.left_panel').resizable('destroy');
 
     var find_text = function(){
       var title = $(this).attr('original-title');

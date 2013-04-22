@@ -102,6 +102,7 @@ $(document).ready(function() {
 
         //from user.js
         $('#helptips_enabled').bind('change', KT.user_page.checkboxChanged);
+        $('#experimental_ui').bind('change', KT.user_page.checkboxChanged);
     })
 
 });
