@@ -103,8 +103,6 @@ the single entry point to configuration. ENV variables are processed there.
 
   describe 'gettext' do
     it 'does not use interpolation or multiple anonymous placeholders' do
-      skip 'waiting for strings in src/app/lib/util/task_status.rb to be fixed'
-
       doc = <<-DOC
 
 Interpolation example:

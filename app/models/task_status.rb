@@ -197,17 +197,17 @@ class TaskStatus < ActiveRecord::Base
           return ""
         end
         msg = details[:event_messages][self.overall_status]
-        return n_(msg[1], msg[2], p.length) % [p.first, p.length - 1]
+        return n_(msg[1], msg[2], p.length) % { package: p.first, rest: p.length - 1 }
       when :candlepin_event
         return self.result
       when :package_group
         p = self.parameters[:groups]
         msg = details[:event_messages][self.overall_status]
-        return n_(msg[1], msg[2], p.length) % [p.first, p.length - 1]
+        return n_(msg[1], msg[2], p.length) % { package: p.first, rest: p.length - 1 }
       when :errata
         p = self.parameters[:errata_ids]
         msg = details[:event_messages][self.overall_status]
-        return n_(msg[1], msg[2], p.length) % [p.first, p.length - 1]
+        return n_(msg[1], msg[2], p.length) % { package: p.first, rest: p.length - 1 }
     end
   end
 
