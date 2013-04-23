@@ -223,7 +223,7 @@ DESC
   api :GET, "/systems/:id", "Show a system"
   param :id, String, :desc => "UUID of the system", :required => true
   def show
-    render :json => @system.to_json
+    render :json => @system.as_json({ :expanded => params[:expanded] })
   end
 
   api :DELETE, "/consumers/:id", "Unregister a system (compatibility)"
