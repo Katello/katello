@@ -91,7 +91,7 @@ class Api::FiltersController < Api::ApiController
   param :content_view_definition_id, :identifier, :required => true,
         :desc => "content view definition identifier"
   param :id, String, :desc => "name of the filter", :required => true
-  param :repos, Array, :desc => "Updated list of repo ids", :required => true
+  param :products, Array, :desc => "Updated list of product ids", :required => true
   def update_products
     @products = Product.readable(@organization).where(:cp_id => params[:products],
                               "providers.organization_id" => @organization.id).joins(:provider)
