@@ -210,8 +210,14 @@ module Glue::Pulp::Repo
         #we fetch ids and then fetch packages by id, because repo packages
         #  does not contain all the info we need (bz 854260)
         tmp_packages = []
+        package_fields = ['name', 'version', 'release', 'arch', 'suffix', 'epoch',
+                          'download_url', 'checksum', 'checksumtype', 'license', 'group',
+                          'children', 'vendor', 'filename', 'relativepath', 'requires',
+                          'provides', 'description', 'size', 'buildhost',
+                          '_id', '_content_type_id', '_href', '_storage_path', '_type']
+
         self.package_ids.each_slice(Katello.config.pulp.bulk_load_size) do |sub_list|
-          tmp_packages.concat(Runcible::Extensions::Rpm.find_all_by_unit_ids(sub_list))
+          tmp_packages.concat(Runcible::Extensions::Rpm.find_all_by_unit_ids(sub_list, package_fields))
         end
         self.packages = tmp_packages
       end
@@ -389,12 +395,23 @@ module Glue::Pulp::Repo
 
     def clone_contents to_repo
       events = []
-      events << Runcible::Extensions::Rpm.copy(self.pulp_id, to_repo.pulp_id)
-      events << Runcible::Extensions::Errata.copy(self.pulp_id, to_repo.pulp_id)
+      # In order to reduce the memory usage of pulp during the copy process,
+      # include the fields that will uniquely identify the rpm. If no fields
+      # are listed, pulp will retrieve every field it knows about for the rpm
+      # (e.g. changelog, filelist...etc).
+      events << Runcible::Extensions::Rpm.copy(self.pulp_id, to_repo.pulp_id,
+                                               { :fields => ['name', 'epoch', 'version', 'release', 'arch',
+                                                             'checksumtype', 'checksum'] })
+
       events << Runcible::Extensions::Distribution.copy(self.pulp_id, to_repo.pulp_id)
-      events << Runcible::Extensions::PackageGroup.copy(self.pulp_id, to_repo.pulp_id)
+
+      # Since the rpms will be copied above, during the copy of errata and package groups,
+      # include the copy_children flag to request that pulp skip copying them again.
+      events << Runcible::Extensions::Errata.copy(self.pulp_id, to_repo.pulp_id, { :copy_children => false })
+      events << Runcible::Extensions::PackageGroup.copy(self.pulp_id, to_repo.pulp_id, { :copy_children => false })
       events
     end
+
     def unassociate_by_filter(content_type, filter_clauses)
       content_unit = {
         Runcible::Extensions::Rpm.content_type() => Runcible::Extensions::Rpm,
