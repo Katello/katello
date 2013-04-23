@@ -31,7 +31,7 @@ Katello.controller('MenuController', ['$scope', '$location', function($scope, $l
         }
     }
 
-	/**
+    /**
      * Get the active menu item based on the $location service.
      * @param menuItems
      * @returns the active menu item.
