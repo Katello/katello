@@ -57,7 +57,7 @@ class OrganizationsController < ApplicationController
   def param_rules
     {
       :create => {:organization => [:name, :description, :label], :environment => [:name, :description, :label]},
-      :update => {:organization  => [:name, :description]}
+      :update => {:organization  => [:name, :description, :service_level]}
     }
   end
 
@@ -148,6 +148,10 @@ class OrganizationsController < ApplicationController
 
     unless params[:organization][:description].nil?
       result = @organization.description = params[:organization][:description].gsub("\n",'')
+    end
+
+    unless params[:organization][:service_level].nil?
+      result = @organization.service_level = params[:organization][:service_level]
     end
 
     @organization.save!
