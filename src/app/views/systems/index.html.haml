@@ -22,7 +22,7 @@
         $(document).ready(function() {
             env_select.envsys = false
         });
-  .grid_16
+  .grid_16.center
     = environment_selector(:library_clickable=>false, :accessible_envs=>accessible_envs,  :url_proc => lambda {|a| environments_systems_path(:env_id =>a[:environment].id )})
 -else
   = javascript do

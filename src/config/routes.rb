@@ -77,11 +77,12 @@ Src::Application.routes.draw do
       put :update_component_views
     end
 
-    resources :content_view, :only => [], :controller => :content_view_definitions do
+    resources :content_views, :only => [:destroy] do
       member do
         post :refresh
       end
     end
+
     resources :filters, :controller => :filters, :only => [:index, :new, :create, :edit, :update] do
       collection do
         delete :destroy_filters
@@ -436,7 +437,11 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :environments
+  resources :environments do
+    member do
+      get :content_views
+    end
+  end
 
   match '/roles/show_permission' => 'roles#show_permission', :via=>:get
   resources :roles do
@@ -481,7 +486,7 @@ Src::Application.routes.draw do
   root :to => "user_sessions#new"
 
   match '/login' => 'user_sessions#new', :as=>'login'
-  match '/logout' => 'user_sessions#destroy', :via=>:post
+  match '/logout' => 'user_sessions#destroy'
   match '/user_session/logout' => 'user_sessions#destroy'
   match '/user_session' => 'user_sessions#show', :via=>:get, :as=>'show_user_session'
 
@@ -621,7 +626,7 @@ Src::Application.routes.draw do
       match '/default_info/:informable_type/:keyname' => 'organization_default_info#destroy', :via => :delete, :as => :destroy_default_info
       match '/default_info/:informable_type/apply' => 'organization_default_info#apply_to_all', :via => :post, :as => :apply_default_info
 
-      resources :content_views, :only => [:index, :show]
+      resources :content_views, :only => [:index, :show, :destroy]
       resources :content_view_definitions do
         member do
           post :publish
@@ -652,6 +657,7 @@ Src::Application.routes.draw do
               put :index, :action => :update_repositories
             end
           end
+          resources :rules, :controller => :filter_rules, :only => [:create, :destroy]
         end
       end
     end

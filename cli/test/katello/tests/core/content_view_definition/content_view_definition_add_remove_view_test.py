@@ -16,13 +16,13 @@ from katello.client.api.utils import ApiDataError
 class RequiredCLIOptionsTest(object):
 
     disallowed_options = [
-        ('--label=def1', '--view_id=view1'),
-        ('--org=ACME', '--view_label=view1'),
-        ('--org=ACME', '--label=def1')
+        ('--label=def1', '--content_view_id=view1'),
+        ('--org=ACME', '--content_view_label=view1'),
+        ('--org=ACME', '--view_label=def1')
     ]
 
     allowed_options = [
-        ('--org=ACME', '--label=def1', '--view_name=view1')
+        ('--org=ACME', '--label=def1', '--content_view=view1')
     ]
 
 
@@ -44,7 +44,7 @@ class ContentDefinitionAddRemoveViewTest(object):
     OPTIONS = {
         'org': ORG['name'],
         'label': DEF['label'],
-        'view': VIEW['label']
+        'view_label': VIEW['label']
     }
 
     addition = True
@@ -58,8 +58,8 @@ class ContentDefinitionAddRemoveViewTest(object):
 
         self.mock(self.module, 'get_cv_definition', self.DEF)
         self.mock(self.module, 'get_content_view', self.VIEW)
-        self.mock(self.action.def_api, 'content_views', self.VIEWS)
-        self.mock(self.action.def_api, 'update_content_views')
+        self.mock(self.action.api, 'content_views', self.VIEWS)
+        self.mock(self.action.api, 'update_content_views')
 
     def test_it_returns_with_error_if_no_def_was_found(self):
         self.mock(self.module, 'get_cv_definition').side_effect = ApiDataError()
@@ -71,7 +71,7 @@ class ContentDefinitionAddRemoveViewTest(object):
 
     def test_it_retrieves_all_definition_views(self):
         self.run_action()
-        self.action.def_api.content_views.assert_called_once_with(self.DEF['id'])
+        self.action.api.content_views.assert_called_once_with(self.DEF['id'])
 
 
 class ContentDefinitionAddViewTest(ContentDefinitionAddRemoveViewTest, CLIActionTestCase):
@@ -80,7 +80,7 @@ class ContentDefinitionAddViewTest(ContentDefinitionAddRemoveViewTest, CLIAction
     def test_it_calls_update_api(self):
         views = [v['id'] for v in self.VIEWS + [self.VIEW]]
         self.run_action()
-        self.action.def_api.update_content_views.assert_called_once_with(self.DEF['id'], views)
+        self.action.api.update_content_views.assert_called_once_with(self.DEF['id'], views)
 
 
 class ContentDefinitionRemoveViewTest(ContentDefinitionAddRemoveViewTest, CLIActionTestCase):
@@ -89,4 +89,4 @@ class ContentDefinitionRemoveViewTest(ContentDefinitionAddRemoveViewTest, CLIAct
     def test_it_calls_update_api(self):
         views = [v['id'] for v in self.VIEWS if v['name'] != self.VIEW['name']]
         self.run_action()
-        self.action.def_api.update_content_views.assert_called_once_with(self.DEF['id'], views)
+        self.action.api.update_content_views.assert_called_once_with(self.DEF['id'], views)

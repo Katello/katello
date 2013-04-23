@@ -29,6 +29,10 @@ class User < ActiveRecord::Base
   scope :hidden, where(:hidden => true)
   scope :visible, where(:hidden => false)
 
+  # RAILS3458: THIS CHECK MUST BE THE FIRST before_destroy AND
+  # PROCEED DEPENDENT ASSOCIATIONS tinyurl.com/rails3458
+  before_destroy :not_last_super_user?, :destroy_own_role
+
   has_many :roles_users
   has_many :roles, :through => :roles_users, :before_remove => :super_admin_check, :uniq => true, :extend => RolesPermissions::UserOwnRole
   validates_with Validators::OwnRolePresenceValidator, :attributes => :roles
@@ -60,8 +64,6 @@ class User < ActiveRecord::Base
   after_validation :setup_remote_id
   before_save   :hash_password, :setup_preferences
   after_save :create_or_update_default_system_registration_permission
-  # THIS CHECK MUST BE THE FIRST before_destroy
-  before_destroy :is_last_super_user?, :destroy_own_role
 
   # hash the password before creating or updateing the record
   def hash_password
@@ -74,7 +76,7 @@ class User < ActiveRecord::Base
     self.preferences = HashWithIndifferentAccess.new unless self.preferences
   end
 
-  def is_last_super_user?
+  def not_last_super_user?
     if !User.current.nil?
       if self.id == User.current.id
         self.errors.add(:base, _("Cannot delete currently logged user"))
@@ -219,6 +221,15 @@ class User < ActiveRecord::Base
   def default_locale=(locale)
     self.preferences[:user] = { } unless self.preferences.has_key? :user
     self.preferences[:user][:locale] = locale
+  end
+
+  def experimental_ui
+    self.preferences[:user][:experimental_ui] rescue nil
+  end
+
+  def experimental_ui=(use_experimental_ui)
+    self.preferences[:user] = { } unless self.preferences.has_key? :user
+    self.preferences[:user][:experimental_ui] = use_experimental_ui.to_bool
   end
 
   def default_org
