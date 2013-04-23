@@ -99,6 +99,12 @@ class ContentViewDefinitionAPI(KatelloAPI):
         data = self.server.PUT(path, {"products": products})[1]
         return data
 
+    def all_products(self, org, cvd_id):
+        path = "/api/organizations/%s/content_view_definitions/%s/products/all" % \
+                (u_str(org), u_str(cvd_id))
+        data = self.server.GET(path)[1]
+        return data
+
     def repos(self, org, cvd_id):
         path = "/api/organizations/%s/content_view_definitions/%s/repositories"\
                 % (u_str(org), u_str(cvd_id))
