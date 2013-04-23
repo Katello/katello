@@ -77,6 +77,7 @@ Requires:       %{?scl_prefix}rubygem(haml-rails)
 Requires:       %{?scl_prefix}rubygem(json)
 Requires:       %{?scl_prefix}rubygem(rest-client)
 Requires:       %{?scl_prefix}rubygem(therubyracer)
+Requires:       %{?scl_prefix}v8
 Requires:       %{?scl_prefix}rubygem(rails_warden)
 Requires:       %{?scl_prefix}rubygem(net-ldap)
 Requires:       %{?scl_prefix}rubygem(compass)
@@ -197,6 +198,7 @@ Requires:       candlepin-selinux
 # the following backend engine deps are required by <katello-configure>
 Requires:       mongodb
 Requires:       mongodb-server
+Requires:       v8
 Requires:       qpid-cpp-server
 Requires:       qpid-cpp-client
 Requires:       qpid-cpp-client-ssl
