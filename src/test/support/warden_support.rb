@@ -1,7 +1,22 @@
+#
+# Copyright 2013 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+
+
 module WardenSupport
   DEFAULT_EXPECTED = [:authenticate!]
 
-  def login_user(user, org=nil)
+  def login_user(user=nil, org=nil)
+    user ||= User.find(users(:no_perms_user)) # TODO: rescue/handle factories not loaded
+    yield ::AuthorizationSupportMethods::UserPermissionsGenerator.new(user) if block_given?
 
     request.env['warden'] = Class.new do
       define_method(:user) { user }
@@ -10,8 +25,6 @@ module WardenSupport
       define_method(:raw_session) { {} }
       define_method(:logout) { true }
     end.new
-
-
 
     ApplicationController.instance_eval do
       define_method(:current_organization) do
@@ -42,5 +55,9 @@ module WardenSupport
     end
 
     warden.verify
+  end
+
+  def disable_user_orchestraction
+    disable_glue_layers(["Pulp"], ["User"])
   end
 end
