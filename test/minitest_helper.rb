@@ -5,6 +5,7 @@ require 'minitest/autorun'
 require 'minitest/rails'
 require 'simplecov'
 require 'json'
+require 'support/auth_support'
 require 'support/warden_support'
 require 'mocha/setup'
 
