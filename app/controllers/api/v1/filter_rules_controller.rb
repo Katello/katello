@@ -14,7 +14,8 @@
 # in this software or its documentation.
 #
 
-class Api::FilterRulesController < Api::ApiController
+class Api::V1::FilterRulesController < Api::V1::ApiController
+
   respond_to :json
   before_filter :find_organization
   before_filter :find_definition
@@ -40,16 +41,8 @@ class Api::FilterRulesController < Api::ApiController
   param :content, String, :desc => "content type of the rule", :required => true
   param :inclusion, String, :desc => "true if its an includes rule, false otherwise. Defauls to true", :required => false
   def create
-    rule = JSON.parse(params[:rule]).with_indifferent_access
-    inclusion = params[:inclusion].to_s.to_bool
-    content_type = params[:content]
-    if rule.has_key?(:date_range)
-      date_range = rule[:date_range]
-      date_range[:start]= date_range[:start].to_time.to_i  if date_range.has_key?(:start)
-      date_range[:end] = date_range[:end].to_time.to_i  if date_range.has_key?(:end)
-    end
-    fr = FilterRule.create_for(content_type, :filter => @filter , :inclusion => inclusion, :parameters => rule)
-    render :json => fr
+    @filter_rule = create_rule!(params)
+    respond :resource => @filter_rule
   end
 
   api :DELETE,
@@ -61,10 +54,22 @@ class Api::FilterRulesController < Api::ApiController
   param :id, :String, :desc => "Id of the filter rule", :required => true
   def destroy
     @filter_rule.destroy
-    render :json => @filter_rule
+    respond :resource => @filter_rule
   end
 
   private
+
+  def create_rule!(rule_params)
+    rule = JSON.parse(rule_params[:rule]).with_indifferent_access
+    inclusion = rule_params[:inclusion].to_s.to_bool
+    content_type = rule_params[:content]
+    if rule.has_key?(:date_range)
+      date_range = rule[:date_range]
+      date_range[:start] = date_range[:start].to_time.to_i  if date_range.has_key?(:start)
+      date_range[:end] = date_range[:end].to_time.to_i  if date_range.has_key?(:end)
+    end
+    FilterRule.create_for(content_type, :filter => @filter , :inclusion => inclusion, :parameters => rule)
+  end
 
   def find_definition
     @definition = ContentViewDefinition.where(:organization_id => @organization.id).find(params[:content_view_definition_id])
