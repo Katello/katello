@@ -14,7 +14,7 @@
 require "minitest_helper"
 require './test/support/content_view_definition_support'
 
-describe Api::FiltersController do
+describe Api::V1::FiltersController do
   fixtures :all
   before :suite do
     models = ["User", "Role", "UserOwnRole", "Permission", "Organization", "KTEnvironment",

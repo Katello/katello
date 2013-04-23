@@ -14,7 +14,7 @@
 # in this software or its documentation.
 #
 
-class Api::FiltersController < Api::ApiController
+class Api::V1::FiltersController < Api::V1::ApiController
   respond_to :json
   before_filter :find_organization
   before_filter :find_definition
@@ -43,7 +43,7 @@ class Api::FiltersController < Api::ApiController
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
   def index
     query_params.delete(:organization_id)
-    render :json => @definition.filters
+    respond :collection => @definition.filters
   end
 
   api :POST, "/organizations/:organization_id/content_view_definitions/:content_view_definition_id/filters",
@@ -53,9 +53,8 @@ class Api::FiltersController < Api::ApiController
   param :filter, String, :desc => "name of the filter", :required => true
   def create
     filter = Filter.create!(:content_view_definition => @definition, :name => params[:filter])
-    render :json => filter
+    respond :resource => filter
   end
-
 
   api :GET,  "/organizations/:organization_id/content_view_definitions/:content_view_definition_id/filters/:id",
       "Show filter info"
@@ -63,7 +62,7 @@ class Api::FiltersController < Api::ApiController
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
   param :id, String, :desc => "name of the filter", :required => true
   def show
-    render :json => @filter
+    respond :resource => @filter
   end
 
   api :DELETE, "/organizations/:organization_id/content_view_definitions/:content_view_definition_id/filters/:id",
@@ -73,7 +72,7 @@ class Api::FiltersController < Api::ApiController
   param :id, String, :desc => "name of the filter", :required => true
   def destroy
     @filter.destroy
-    render :json => @filter
+    respond :resource => @filter
   end
 
   api :GET, "/organizations/:organization_id/content_view_definitions/:content_view_definition_id/filters/:id/products",
@@ -82,7 +81,7 @@ class Api::FiltersController < Api::ApiController
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
   param :id, String, :desc => "name of the filter", :required => true
   def list_products
-    render :json => @filter.products
+    respond_for_index :collection => @filter.products
   end
 
   api :PUT, "/organizations/:organization_id/content_view_definitions/:content_view_definition_id/filters/:id/products",
@@ -93,15 +92,8 @@ class Api::FiltersController < Api::ApiController
   param :id, String, :desc => "name of the filter", :required => true
   param :products, Array, :desc => "Updated list of product ids", :required => true
   def update_products
-    @products = Product.readable(@organization).where(:cp_id => params[:products],
-                              "providers.organization_id" => @organization.id).joins(:provider)
-    deleted_products = @filter.products - @products
-    added_products = @products - @filter.products
-    @filter.products -= deleted_products
-    @filter.products += added_products
-    @filter.save!
-
-    render :json => @filter.products
+    _update_products! params
+    respond_for_update :resource => @filter.products
   end
 
   api :GET, "/organizations/:organization_id/content_view_definitions/:content_view_definition_id/filters/:id/repositories",
@@ -110,7 +102,7 @@ class Api::FiltersController < Api::ApiController
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
   param :id, String, :desc => "name of the filter", :required => true
   def list_repositories
-    render :json => @filter.repositories
+    respond_for_index :collection => @filter.repositories
   end
 
   api :PUT, "/organizations/:organization_id/content_view_definitions/:content_view_definition_id/filters/:id/repositories",
@@ -120,16 +112,8 @@ class Api::FiltersController < Api::ApiController
   param :id, String, :desc => "name of the filter", :required => true
   param :repos, Array, :desc => "Updated list of repo ids", :required => true
   def update_repositories
-    @repos = Repository.libraries_content_readable(@organization).
-      where(:id => params[:repos])
-    deleted_repositories = @filter.repositories - @repos
-    added_repositories = @repos - @filter.repositories
-
-    @filter.repositories -= deleted_repositories
-    @filter.repositories += added_repositories
-    @filter.save!
-
-    render :json => @filter.repositories
+    _update_repositories! params
+    respond_for_index :collection => @filter.repositories
   end
 
   private
@@ -138,8 +122,29 @@ class Api::FiltersController < Api::ApiController
     @definition = ContentViewDefinition.where(:organization_id => @organization.id).find(params[:content_view_definition_id])
   end
 
+  def _update_repositories!(params)
+    @repos = Repository.libraries_content_readable(@organization).
+      where(:id => params[:repos])
+    deleted_repositories = @filter.repositories - @repos
+    added_repositories = @repos - @filter.repositories
+
+    @filter.repositories -= deleted_repositories
+    @filter.repositories += added_repositories
+    @filter.save!
+  end
+
   def find_filter
     id = params[:id] || params[:filter_id]
     @filter = Filter.where(:content_view_definition_id => @definition).find(id)
+  end
+
+  def _update_products!(params)
+    @products = Product.readable(@organization).where(:cp_id => params[:products],
+                              "providers.organization_id" => @organization.id).joins(:provider)
+    deleted_products = @filter.products - @products
+    added_products = @products - @filter.products
+    @filter.products -= deleted_products
+    @filter.products += added_products
+    @filter.save!
   end
 end
