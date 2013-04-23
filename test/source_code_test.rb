@@ -60,7 +60,7 @@ class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
     it 'does use soft-tabs' do
       SourceCode.
           new('**/*.{rb,js,scss,haml}',
-              %r'public/assets/.*\.js').# tab is ok in minified files, its shorter than space
+              %r'(public|vendor)/assets/.*\.js').# tab is ok in minified files, its shorter than space
           check_lines { |line| line !~ /\t/ }
     end
   end
