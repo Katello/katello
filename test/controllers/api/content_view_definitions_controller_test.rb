@@ -13,7 +13,7 @@
 
 require "minitest_helper"
 
-describe Api::ContentViewDefinitionsController do
+describe Api::V1::ContentViewDefinitionsController do
   fixtures :all
 
   before do

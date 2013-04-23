@@ -173,11 +173,11 @@ Src::Application.routes.draw do
         end
       end
 
-
       resources :content_view_definitions, :only => [:destroy, :content_views] do
         get :content_views, :on => :member
         put :content_views, :on => :member, :action => :update_content_views
       end
+
       resources :content_views, :only => [:promote, :show] do
         member do
           post :promote
@@ -276,6 +276,7 @@ Src::Application.routes.draw do
          get    :index, :on => :collection, :action => :list_roles
         end
       end
+
       resources :roles do
         get :available_verbs, :on => :collection, :action => :available_verbs
         resources :permissions, :only => [:index, :show, :create, :destroy]
