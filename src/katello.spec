@@ -224,7 +224,7 @@ Requires:        %{name}-common
 Requires:        pulp-server
 Requires:        pulp-rpm-plugins
 Requires:        pulp-selinux
-Requires:        %{?scl_prefix}rubygem(runcible) >= 0.4.1
+Requires:        %{?scl_prefix}rubygem(runcible) >= 0.4.3
 
 %description glue-pulp
 Katello connection classes for the Pulp backend
