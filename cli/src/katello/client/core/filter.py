@@ -338,8 +338,6 @@ class AddRemoveRepo(FilterAction):
         self.api.update_repos(cvd_filter["id"], cvd_id, org_name, repos)
         print message
 
-<<<<<<< HEAD
-=======
 class AddRule(FilterAction):
     content_types = ["rpm", "package_group", "erratum"]
     inclusion_types = ["includes", "excludes"]
@@ -469,7 +467,6 @@ class RemoveRule(FilterAction):
 
         return os.EX_OK
 
->>>>>>> b0ef11a... Adding filter id option to CLI
 class Filter(Command):
 
     description = _('content view definition filters actions for the katello server')
