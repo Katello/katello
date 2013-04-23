@@ -13,7 +13,7 @@
 
 'use strict';
 
-Katello.controller('MenuController', ['$scope', '$location', function($scope, $location){
+Katello.controller('MenuController', ['$scope', '$location', '$document', function($scope, $location, $document){
 
     $scope.menu = KT.main_menu;
     $scope.user_menu = KT.user_menu;
@@ -52,6 +52,16 @@ Katello.controller('MenuController', ['$scope', '$location', function($scope, $l
         }
         return activeMenuItem;
     }
+
+    // Hide the org switcher menu if the user clicks outside of it
+    var orgSwitcherMenuLink = angular.element('#orgSwitcherNav a.organization-name');
+    $document.bind('click', function (event) {
+        var target = angular.element(event.target);
+        if (target[0] !== orgSwitcherMenuLink[0]) {
+            $scope.showMenu = false;
+            $scope.$apply();
+        }
+    });
 
     // Combine all menu items and figure out which one ought to be active.
     var allMenus = $scope.menu.items.concat($scope.user_menu.items).

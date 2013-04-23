@@ -1,19 +1,26 @@
-#switcherContainer.clickable.menu-container
-  - if current_organization && !current_organization.name.nil?
-    %a.menu-item#switcherButton{:href => "#", :title=>"#{current_organization.name}"}
-      = current_organization.name
-      %i.down_arrow_icon-grey
-  - else
-    %a.menu-item#switcherButton{:href => "#", :title=>""}
-      = _("Select an Organization:")
-      %i.down_arrow_icon-grey
-  #switcherBox
-    #switcherForm.org
-      #orgbox{"data-url"=>allowed_orgs_user_session_path}
-        /Orgs pulled from above data-url dynamically each click.
-        .spinner
-      - if current_organization && !current_organization.name.nil? && Organization.any_readable?
-        %a#manage_orgs{:href=>organizations_path()}
-          .gears_icon
-          %span{:class=>"fl clearfix"}
-            #{_("Manage Organizations")}
+%nav#orgSwitcherNav.nav.left
+  %ul#organizationSwitcher.menu-container{"ng-click" => "showMenu=!showMenu", "ng-cloak" => ''}
+    %li.menu-item{"ng-mouseleave" => "handle_hover(notices, false)"}
+      - if current_organization && !current_organization.name.nil?
+        %a.menu-item-link.organization-name.clickable{:href => "#", :title=>"#{current_organization.name}"}
+          = current_organization.name
+          %i.down_arrow_icon-grey
+      - elsif user.allowed_organizations.length == 0
+        %a.menu-item-link.organization-name
+          = _("No Organization")
+      - else
+        %a.menu-item-link.organization-name.clickable{:href => "#", :title=>""}
+          = _("Select an Organization")
+          %i.down_arrow_icon-grey
+      %ul.dropdown{"ng-show" => "showMenu", "ng-class" => "{'dropdown-active': true}"}
+        %li
+          %ul
+            - for org in user.allowed_organizations
+              %li.menu-item
+                = render :partial=>"common/fav", :locals => {:org=>org, :current_user=>current_user}
+                = link_to org.name, set_org_user_session_path(:org_id=>org.id), :method=>"POST", :class=>"selected", :title=>_("Current Organization")
+            - if current_organization && !current_organization.name.nil? && Organization.any_readable?
+              %li.menu-item
+                %a#manage_orgs.menu-item{:href=>organizations_path()}
+                  %span{:class=>"fl clearfix"}
+                    #{_("Manage Organizations")}
