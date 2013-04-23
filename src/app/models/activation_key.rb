@@ -159,6 +159,7 @@ class ActivationKey < ActiveRecord::Base
       pool.as_json
     end
     ret[:usage_count] = usage_count
+    ret[:editable] = ActivationKey.readable?(organization)
     ret
   end
 
