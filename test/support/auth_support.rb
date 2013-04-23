@@ -18,7 +18,7 @@ module AuthorizationSupportMethods
     AuthorizationSupportMethods.allow(*args)
   end
 
-  def self.allow role, verbs, resource_type, tags=[], org = nil, options = {}
+  def self.allow(role, verbs, resource_type, tags=[], org = nil, options = {})
     tags ||= []
     role = Role.find_or_create_by_name(role) if String === role
     name = "role-#{role.id}-perm-#{rand 10**6}"
@@ -49,6 +49,19 @@ module AuthorizationSupportMethods
                                               :organization => org, :tag_values => tags))
     role.save!
   end
-end
 
+  class UserPermissionsGenerator
+    def initialize(user)
+      @user = user
+    end
+
+    def can(verb, resource_type, tags = nil, org = nil, options = {} )
+      AuthorizationSupportMethods.allow(@user.own_role, verb, resource_type, tags, org, options)
+    end
+
+    def method_missing(method, *args, &block)
+      @user.send(method, *args, &block)
+    end
+  end
+end
 
