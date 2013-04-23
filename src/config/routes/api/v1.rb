@@ -100,10 +100,6 @@ Src::Application.routes.draw do
               put :index, :action => :update_repositories
             end
           end
-          get :products, :action => :list_products
-          put :products, :action => :update_products
-          get :repositories, :action => :list_repositories
-          put :repositories, :action => :update_repositories
           resources :filters, :controller => :filters, :only => [:index, :show, :create, :destroy] do
             resources :products, :controller => :filters, :only => [] do
               collection do

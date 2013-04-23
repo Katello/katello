@@ -119,26 +119,35 @@ Src::Application.routes.draw do
           post :publish
           post :clone
         end
-        get :products, :action => :list_products
-        put :products, :action => :update_products
-        get :repositories, :action => :list_repositories
-        put :repositories, :action => :update_repositories
+        resources :products, :controller => :content_view_definitions, :only => [] do
+          collection do
+            get :index, :action => :list_products
+            put :index, :action => :update_products
+            get :all, :action => :list_all_products
+          end
+        end
+        resources :repositories, :controller => :content_view_definitions, :only => [] do
+          collection do
+            get :index, :action => :list_repositories
+            put :index, :action => :update_repositories
+          end
+        end
         get :content_views
         put :content_views, :action => :update_content_views
-        api_resources :filters, :controller => :filters, :only => [:index, :show, :create, :destroy] do
-          api_resources :products, :controller => :filters, :only => [] do
+        resources :filters, :controller => :filters, :only => [:index, :show, :create, :destroy] do
+          resources :products, :controller => :filters, :only => [] do
             collection do
               get :index, :action => :list_products
               put :index, :action => :update_products
             end
           end
-          api_resources :repositories, :controller => :filters, :only => [] do
+          resources :repositories, :controller => :filters, :only => [] do
             collection do
               get :index, :action => :list_repositories
               put :index, :action => :update_repositories
             end
           end
-          api_resources :rules, :controller => :filter_rules, :only => [:create, :destroy]
+          resources :rules, :controller => :filter_rules, :only => [:create, :destroy]
         end
       end
 

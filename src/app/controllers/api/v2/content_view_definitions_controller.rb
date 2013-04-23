@@ -62,11 +62,10 @@ class Api::V2::ContentViewDefinitionsController < Api::V1::ContentViewDefinition
   param_group :content_view_definition
   param :content_view_definition, Hash do
     param :label, String, :desc => "Content view identifier"
+  end
   def clone
     super
   end
-
-
 
   api :PUT, "/content_view_definitions/:content_view_definition_id/content_views",
     "Update a definition's content views"
@@ -111,6 +110,15 @@ class Api::V2::ContentViewDefinitionsController < Api::V1::ContentViewDefinition
   def update_products
     _update_products! params
     respond_for_update :resource => @definition
+  end
+
+  api :GET, "/content_view_definitions/:content_view_definition_id/products/all",
+      "Get a list of products belonging to the content view definition, even if one its repositories have been" +
+          " associated to this definition. Mainly used by filter api  "
+  param :content_view_definition_id, :identifier, :required => true,
+        :desc => "content view definition identifier"
+  def list_all_products
+    super
   end
 
   private

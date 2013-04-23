@@ -197,6 +197,16 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
     respond_for_index :collection => @definition.products
   end
 
+  api :GET, "/organizations/:organization_id/content_view_definitions/:id/products/all",
+      "Get a list of products belonging to the content view definition, even if one its repositories have been" +
+          " associated to this definition. Mainly used by filter api  "
+  param :organization_id, :identifier, :desc => "organization identifier", :required => true
+  param :id, :identifier, :required => true,
+        :desc => "content view definition identifier"
+  def list_all_products
+    respond_for_index :collection => @definition.resulting_products
+  end
+
   private
 
   def _update_products!(params)
@@ -220,18 +230,6 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
     @definition.component_content_views += added_content_views
     @definition.save!
   end
-
-  api :GET, "/organizations/:organization_id/content_view_definitions/:id/products/all",
-      "Get a list of products belonging to the content view definition, even if one its repositories have been" +
-          " associated to this definition. Mainly used by filter api  "
-  param :organization_id, :identifier, :desc => "organization identifier", :required => true
-  param :id, :identifier, :required => true,
-        :desc => "content view definition identifier"
-  def list_all_products
-    respond_for_index :collection => @definition.resulting_products
-  end
-
-  private
 
   def _update_repositories!(params)
     @repos = Repository.libraries_content_readable(@organization).
