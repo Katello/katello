@@ -134,6 +134,15 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     refute_empty ContentViewEnvironment.where(:label => content_view.cp_environment_label(@dev))
   end
 
+  def test_destroy
+    count = ContentView.count
+    refute @library_dev_view.destroy
+    assert ContentView.exists?(@library_dev_view.id)
+    assert_equal count, ContentView.count
+    assert @library_view.destroy
+    assert_equal count-1, ContentView.count
+  end
+
   def test_delete
     view = @library_dev_view
     view.delete(@dev)
