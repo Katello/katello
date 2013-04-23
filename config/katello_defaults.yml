@@ -29,6 +29,9 @@ common:
 
   url_prefix: "/katello"
 
+  # detect system locale or fallback to English
+  system_lang: <%= ENV['LC_ALL'] || ENV['LC_MESSAGES'] || ENV['LANG'] || 'en' %>
+
   # The host (i.e. fully qualified domain name) of the server.
   # This host is used by ActionMailer when generating urls sent in
   # emails from the server. For example, the host would be the fqdn portion

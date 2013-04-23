@@ -81,7 +81,7 @@ $(document).ready(function() {
              });
          }
      });
-    
+
     KT.system_groups_pane.register_events();
 });
 

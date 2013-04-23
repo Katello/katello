@@ -11,21 +11,21 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-KT.panel.list.registerPage('changesets', 
-							{ 'extra_params' : 
-								[ { hash_id 	: 'env_id', 
-									init_func 	: function(){
-										var state = $.bbq.getState('env_id'); 
-										
-										if( state ){ 
-											env_select.set_selected(state); 
-										} else {
-											$.bbq.pushState({ env_id : env_select.get_selected_env() });
-										}
-									}
-								  } 
-								] 
-							});
+KT.panel.list.registerPage('changesets',
+                            { 'extra_params' :
+                                [ { hash_id     : 'env_id',
+                                    init_func     : function(){
+                                        var state = $.bbq.getState('env_id');
+
+                                        if( state ){
+                                            env_select.set_selected(state);
+                                        } else {
+                                            $.bbq.pushState({ env_id : env_select.get_selected_env() });
+                                        }
+                                    }
+                                  }
+                                ]
+                            });
 
 
 $(document).ready(function() {
@@ -35,7 +35,7 @@ $(document).ready(function() {
         $.bbq.pushState({env_id : env_id});
         $('#search_form').trigger('submit');
     };
-    
+
 });
 
 
