@@ -12,7 +12,15 @@
 
 # encoding: UTF-8
 
-require_relative 'minitest_helper'
+begin
+  require_relative 'minitest_helper'
+rescue
+  # if we are in build environment of RPM we have only the bare minimum
+  warn 'loading minimal test environment'
+  require 'minitest/autorun'
+  require 'rails'
+  require 'minitest/rails'
+end
 
 class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
 
@@ -23,7 +31,8 @@ class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
     # @param [Array<Regexp>] ignores
     def initialize(pattern, *ignores)
       @pattern = pattern || raise
-      @files   = Dir.glob("#{Rails.root}/#{pattern}").select { |path| ignores.all? { |i| path !~ i } }
+      root     = File.expand_path File.join(File.dirname(__FILE__), '..')
+      @files   = Dir.glob("#{root}/#{pattern}").select { |path| ignores.all? { |i| path !~ i } }
     end
 
     def each_file(&it)
@@ -94,8 +103,6 @@ the single entry point to configuration. ENV variables are processed there.
 
   describe 'gettext' do
     it 'does not use interpolation or multiple anonymous placeholders' do
-      skip 'waiting for strings in src/app/lib/util/task_status.rb to be fixed'
-
       doc = <<-DOC
 
 Interpolation example:
