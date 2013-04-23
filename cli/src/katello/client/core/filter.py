@@ -365,7 +365,7 @@ class AddRule(FilterAction):
         parser.add_option('--type', dest='inclusion', default = self.default_inclusion_type,
             help=_("inclusion type of the rule (choices: [%s], default: %s)") %\
                             (", ".join(self.inclusion_types), self.default_inclusion_type))
-        parser.disable_epilog_formatter = True
+        parser.enable_epilog_formatter(False)
         parser.epilog = AddRule._epilog()
         self._add_get_filter_opts(parser)
 
