@@ -2,15 +2,6 @@
 
 cd src/
 echo ""
-echo "********* Ruby Lint Test  ***************"
-echo "RUNNING: ./script/ruby-linter"
-./script/ruby-linter
-if [ $? -ne 0 ]
-then
-  exit 1
-fi
-
-echo ""
 echo "********* Katello RSPEC Unit Tests ****************"
 psql -c "CREATE USER katellouser WITH PASSWORD 'katellopw';" -U postgres
 psql -c "ALTER ROLE katellouser WITH CREATEDB" -U postgres

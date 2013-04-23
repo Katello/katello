@@ -33,6 +33,6 @@ Katello.controller('MenuController', ['$scope', '$sanitize', function($scope, $s
         $scope.menu.active_item = KT.main_menu['items'][0];
         $scope.menu.active_item.active = true;
     }
-        
+
 
 }]);

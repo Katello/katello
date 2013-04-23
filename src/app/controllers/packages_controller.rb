@@ -30,17 +30,17 @@ class PackagesController < ApplicationController
     }
   end
 
-	def show
-		render :partial=>"show"
-	end
+  def show
+    render :partial=>"show"
+  end
 
-	def filelist
+  def filelist
     render :partial=>"filelist"
-	end
+  end
 
-	def changelog
+  def changelog
     render :partial=>"changelog"
-	end
+  end
 
   def dependencies
     render :partial=>"dependencies"

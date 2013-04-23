@@ -16,8 +16,8 @@
  */
 
 $(document).ready(function() {
-	var list = KT.panel.list;
-	
+    var list = KT.panel.list;
+
     $('.edit_datepicker').each(function() {
         $(this).editable($(this).attr('data-url'), {
             type        :  'datepicker',

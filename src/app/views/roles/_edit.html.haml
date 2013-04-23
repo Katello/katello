@@ -33,7 +33,7 @@
         .fieldset
           .grid_2.ra
             %label #{_("Name:")}
-          - if Role.editable?  
+          - if Role.editable?
             .grid_7.la.multiline.editable.edit_name_text{'name' => 'role[name]'} #{@role.i18n_name}
           - else
             .grid_7.la.multiline #{@role.i18n_name}

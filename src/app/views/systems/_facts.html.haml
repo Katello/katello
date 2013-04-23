@@ -4,7 +4,7 @@
   });
 
 = render :partial => "system_tupane_header_nav"
-  
+
 = content_for :content do
   #facts
     %table#factsTable.scroll-panel
@@ -20,7 +20,7 @@
             - group = new_group
             %tr{:id => group}
               %td= new_group
-              %td 
+              %td
               %td
           %tr{:class => "child-of-#{group}", :id => fact}
             %td
