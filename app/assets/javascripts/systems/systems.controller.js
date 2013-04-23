@@ -11,20 +11,21 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-angular.module('Katello').factory('SystemTable', ['Nutupane', function(Nutupane){
+angular.module('Katello').factory('SystemTable', ['Nutupane', '$sanitize', '$compile', function(Nutupane, $sanitize, $compile){
     var SystemTable = {};
 
-    SystemTable.get = function(sort, offset, callback){
+    SystemTable.get = function(sort, offset, scope, callback){
         Nutupane.get({
             url:        '/katello/api/systems/',
             sort:       sort,
             callback:   callback,
             offset:     offset,
-            transform:  SystemTable.transform
+            transform:  SystemTable.transform,
+            scope:      scope
         });
     };
 
-    SystemTable.transform = function(data){
+    SystemTable.transform = function(data, $scope){
         var table_data = {};
 
         table_data.rows = [];
@@ -34,7 +35,7 @@ angular.module('Katello').factory('SystemTable', ['Nutupane', function(Nutupane)
                     'row_id' : system.id,
                     'show'  : true,
                     'cells': [{ 
-                        display: system.name,
+                        display: $compile('<a ng-click="select_item(\'' + system.uuid + '\')">' + system.name + '</a>')($scope),
                         column_id: 'name'
                     },{ 
                         display: system.environment.name,
@@ -58,13 +59,14 @@ angular.module('Katello').factory('SystemTable', ['Nutupane', function(Nutupane)
 
 }]);
 
-angular.module('Katello').controller('SystemsController', ['$scope', 'SystemTable', '$location', function($scope, SystemTable, $location){
+angular.module('Katello').controller('SystemsController', ['$scope', 'SystemTable', '$location', '$http', 'current_organization', function($scope, SystemTable, $location, $http, current_organization){
     var sort = { by: 'name', order: 'ASC' };
 
     $scope.table        = {};
     $scope.table.data   = {};
     $scope.table.start  = 0;
     $scope.table.offset = 0;
+    $scope.table.visible = true;
     $scope.table.total  = 0;
     $scope.table.model  = 'Systems';
     $scope.table.search_string = $location.search().search;
@@ -86,7 +88,8 @@ angular.module('Katello').controller('SystemsController', ['$scope', 'SystemTabl
     var fetch = function(callback){
         $scope.table.working = true;
 
-        SystemTable.get(sort, $scope.table.start, function(data){
+        SystemTable.get(sort, $scope.table.start, $scope, function(data){
+
 
             if( !$scope.table.loading_more ){
                 $scope.table.start      = data.data.rows.length;
@@ -151,6 +154,24 @@ angular.module('Katello').controller('SystemsController', ['$scope', 'SystemTabl
         });
     };
 
+    $scope.select_item = function(id){
+        $location.search('item', id);
+
+        $http.get('/katello/api/systems/' + id, {
+            params : {
+                expanded : true
+            }
+        })
+        .then(function(response){
+            $scope.table.visible = false;
+            $scope.system = response.data;
+        });
+    };
+
+    if( $location.search().item ){
+        $scope.select_item($location.search().item);
+    }
+    
     fetch();
 
 }]);
@@ -158,3 +179,11 @@ angular.module('Katello').controller('SystemsController', ['$scope', 'SystemTabl
 angular.module('Katello').controller('SystemController', ['$scope', function($scope){
 
 }]);
+
+angular.module('Katello').directive('itemLink', function(){
+    return {
+        template: "<div>TEST</div>",
+        replace: true,
+        restirct: 'A'
+    }
+});
