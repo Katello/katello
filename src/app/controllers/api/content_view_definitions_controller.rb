@@ -44,6 +44,7 @@ class Api::ContentViewDefinitionsController < Api::ApiController
       :content_views => show_rule,
       :update_content_views => manage_rule,
       :list_products => show_rule,
+      :list_all_products => show_rule,
       :update_products => manage_rule,
       :list_repositories => show_rule,
       :update_repositories => manage_rule
@@ -221,6 +222,16 @@ class Api::ContentViewDefinitionsController < Api::ApiController
     @definition.save!
 
     render :json => @definition.products
+  end
+
+  api :GET, "/organizations/:organization_id/content_view_definitions/:id/products/all",
+      "Get a list of products belonging to the content view definition, even if one its repositories have been" +
+          " associated to this definition. Mainly used by filter api  "
+  param :organization_id, :identifier, :desc => "organization identifier", :required => true
+  param :id, :identifier, :required => true,
+        :desc => "content view definition identifier"
+  def list_all_products
+    render :json => @definition.resulting_products
   end
 
   private
