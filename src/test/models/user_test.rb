@@ -418,4 +418,18 @@ class UserDefaultEnvTest < UserTestBase
     assert_nil    @user.default_environment
   end
 
+  def test_before_destroy
+    # RAILS3458: Check that before_destroy callback is executed first http://tinyurl.com/rails3458
+    User.stubs(:current).returns(@user)
+    SearchFavorite.create!(:params => "abc",
+                           :path => "/garlic_naan",
+                           :user_id => @user.id
+                          )
+    @user.search_favorites.reload
+    refute_empty @user.search_favorites
+    refute @user.destroy
+
+    refute_empty @user.search_favorites
+  end
+
 end
