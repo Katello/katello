@@ -21,7 +21,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.3.8
+Version:       1.3.9
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 Requires:      %{base_name}-cli-common
@@ -166,6 +166,23 @@ popd
 %{homedir}/tests
 
 %changelog
+* Tue Apr 23 2013 Justin Sherrill <jsherril@redhat.com> 1.3.9-1
+- fixing missed conflict (jsherril@redhat.com)
+- Implementation for add/remove filter rules via cli (paji@redhat.com)
+- Allowing content views to be deleted from CLI
+- 951538 - Fixing CLI publish message
+- 952249 - Validating overlapping content in component views
+  (daviddavis@redhat.com)
+- fixing missed conflict (jsherril@redhat.com)
+- Making jenkins pylint happy (paji@redhat.com)
+- Adding filter id option to CLI (daviddavis@redhat.com)
+- Reusing option parser content view function for add_view
+  (daviddavis@redhat.com)
+- Updating tests for filter id changes
+- Removing duplicate apis from content view definition CLI
+- Querying filters with filter_id rather than filter_name
+  (daviddavis@redhat.com)
+
 * Wed Apr 17 2013 Justin Sherrill <jsherril@redhat.com> 1.3.8-1
 - 950539 - Adding content view option to package/errata list
 
