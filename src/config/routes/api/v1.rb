@@ -100,6 +100,10 @@ Src::Application.routes.draw do
               put :index, :action => :update_repositories
             end
           end
+          get :products, :action => :list_products
+          put :products, :action => :update_products
+          get :repositories, :action => :list_repositories
+          put :repositories, :action => :update_repositories
           resources :filters, :controller => :filters, :only => [:index, :show, :create, :destroy] do
             resources :products, :controller => :filters, :only => [] do
               collection do
@@ -174,6 +178,7 @@ Src::Application.routes.draw do
         get :content_views, :on => :member
         put :content_views, :on => :member, :action => :update_content_views
       end
+
       resources :content_views, :only => [:promote, :show] do
         member do
           post :promote
@@ -270,6 +275,7 @@ Src::Application.routes.draw do
          get    :index, :on => :collection, :action => :list_roles
         end
       end
+
       resources :roles do
         get :available_verbs, :on => :collection, :action => :available_verbs
         resources :permissions, :only => [:index, :show, :create, :destroy]

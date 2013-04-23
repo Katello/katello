@@ -1,3 +1,3 @@
-collection @repositories
+object @resource
 
-extends "api/v2/repositories/show"
+extends "api/v2/content_view_definitions/show"
