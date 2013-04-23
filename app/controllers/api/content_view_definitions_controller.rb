@@ -97,6 +97,9 @@ class Api::ContentViewDefinitionsController < Api::ApiController
   param :id, :number, :desc => "Definition identifer", :required => true
   param :org, String, :desc => "Organization name", :required => true
   param_group :content_view_definition
+  param :content_view_definition, Hash do
+    param :name, :required => false
+  end
   def update
     @definition.update_attributes!(params[:content_view_definition])
     render :json => @definition
@@ -134,7 +137,6 @@ class Api::ContentViewDefinitionsController < Api::ApiController
   param :id, :identifier, :desc => "Definition identifer", :required => true
   param :org, String, :desc => "Organization name", :required => true
   param_group :content_view_definition do
-    param :name, String, :desc => "New definition name", :required => true
     param :label, String, :desc => "New definition label", :required => true
     param :description, String, :desc => "New definition description"
   end
