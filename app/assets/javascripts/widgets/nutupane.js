@@ -26,7 +26,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
             }
         })
         .then(function(response){
-            options.callback(options.transform(response.data));
+            options.callback(options.transform(response.data, options.scope));
         });
     };
 

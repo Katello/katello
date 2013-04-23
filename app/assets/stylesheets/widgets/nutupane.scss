@@ -1,3 +1,4 @@
+@import "compass";
 @import "katello_colors";
 @import "alchemy-tables/tables";
 
@@ -30,9 +31,14 @@ th {
   border-bottom: 2px solid #CCC !important;
 }
 
-.table tr.active {
+.table tr.active, .table tbody tr:hover {
   background-color: $listhover_color !important;
   color:#FFF;
+
+  a {
+    color: #FFF;
+    text-decoration: underline;
+  }
 }
 
 input {
@@ -60,4 +66,24 @@ th:hover {
   box-sizing: border-box;
   border: 1px solid #CCC;
   border-radius: 5px 5px 0 0;
+}
+
+.nutupane-details {
+  width: 0;
+  left: 100%;
+  display: none;
+  position: absolute;
+  background: white;
+  top: 200px;
+
+  header {
+    background: #FAFAFA;
+  }
+}
+
+.nutupane-details-open {
+  @include transition(background-color 1.25s ease-in-out);
+  width: 80%;
+  left: 200px;
+  display: block;
 }
