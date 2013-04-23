@@ -22,24 +22,41 @@ class Api::ContentViewsControllerTest < MiniTest::Rails::ActionController::TestC
     @dev = environments(:dev)
     @organization = organizations(:acme_corporation)
 
-    login_user(users(:admin))
     models = ["Organization", "KTEnvironment", "Changeset"]
     services = ["Candlepin", "Pulp", "ElasticSearch"]
     disable_glue_layers(services, models)
   end
 
+  test "should return a 403 if the user does not have permissions" do
+    login_user do |u|
+      u.can(:read, :content_views)
+    end
+    post :promote, :id => @content_view.id,
+      :environment_id => @environment.id
+    assert_equal 403, response.status
+  end
+
   test "should throw an error if environment_id is nil" do
+    login_user do |u|
+      u.can(:promote, :content_views)
+    end
     post :promote, :id => @content_view.id
     assert_response :missing
   end
 
   test "should throw an error if id is nil" do
+    login_user do |u|
+      u.can(:promote, :content_views)
+    end
     assert_raises(ActionController::RoutingError) do
       post :promote, :environment_id => @environment.id
     end
   end
 
   test "should assign a content view" do
+    login_user do |u|
+      u.can(:promote, :content_views)
+    end
     post :promote, :id => @content_view.id, :environment_id => @environment.id
     assert_response :success
     content_view = assigns(:view)
@@ -48,12 +65,15 @@ class Api::ContentViewsControllerTest < MiniTest::Rails::ActionController::TestC
   end
 
   test "should create a new changeset" do
+    login_user(users(:admin))
     changeset_count = Changeset.count
     post :promote, :id => @content_view.id, :environment_id => @environment.id
+    assert_response :success
     assert_equal (changeset_count + 1), Changeset.count
   end
 
   test "should not delete promoted view" do
+    login_user(users(:admin))
     definition = Class.new { define_method(:publishable?) { true } }.new
     ContentView.any_instance.stubs(:content_view_definition).returns(definition)
     delete :destroy, organization_id: @organization.name, id: @content_view.id
