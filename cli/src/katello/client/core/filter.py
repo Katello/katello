@@ -45,11 +45,8 @@ class FilterAction(BaseAction):
         FilterAction._add_cvd_filter_opts(parser)
         parser.add_option('--name', dest='name',
                 help=_("filter name eg: 'package filter acme'"))
-<<<<<<< HEAD
         parser.add_option('--id', dest='id',
                 help=_("filter id eg: 42"))
-=======
->>>>>>> 90bb129... Implementation for add/remove filter rules via cli
 
     @classmethod
     def _add_filter_opts_check(cls, validator):
