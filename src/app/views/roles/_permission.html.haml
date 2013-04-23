@@ -13,8 +13,8 @@
           = f.label :type, _("Type")
         .grid_6.la.fielditem
           = res.select :name, resource_types.collect {|name, details| [details[:name], name]}, {}, :data_type => "types"
-      
-      
+
+
 
       .grid_1.fielditem.ra
         = f.label :scope, _("Scope")
@@ -24,8 +24,8 @@
       .grid_6.prefix_1.fielditem
         = f.radio_button("all_tags", "false", :style=>"vertical-align: top;",:data_type => "tags")
         = f.select :tag_values, get_scopes(f).collect {|t| [t.display_name, t.name]}, {}, {:multiple=>true, :data_type => "tags"}
-      
-      
+
+
       .grid_1.ra.fielditem
         = f.label :verbs, _("Verbs")
       .grid_6.la.fielditem

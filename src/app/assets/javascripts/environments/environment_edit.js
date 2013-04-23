@@ -17,7 +17,7 @@ $(document).ready(function() {
 
         $(this).editable(button.attr('data-url'), {
             type        :  'text',
-            width       :  270,                  
+            width       :  270,
             method      :  'PUT',
             name        :  $(this).attr('name'),
             cancel      :  i18n.cancel,
@@ -27,7 +27,7 @@ $(document).ready(function() {
             placeholder :  i18n.clickToEdit,
             submitdata  :  {authenticity_token: AUTH_TOKEN},
             onsuccess   :  function() {
-              KT.panel.panelAjax('', button.attr("data-forward") ,$('#panel')); 
+              KT.panel.panelAjax('', button.attr("data-forward") ,$('#panel'));
             },
             onerror     :  function(settings, original, xhr) {
               original.reset();
@@ -51,7 +51,7 @@ $(document).ready(function() {
             style       :  "inherit",
             data        :  document.environment_edit.elements['prior_envs'].value,
             onsuccess   :  function() {
-                KT.panel.panelAjax('', button.attr("data-forward") ,$('#panel')); 
+                KT.panel.panelAjax('', button.attr("data-forward") ,$('#panel'));
             },
             onerror     :  function(settings, original, xhr) {
                 original.reset();

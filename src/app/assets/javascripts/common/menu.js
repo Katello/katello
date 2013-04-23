@@ -74,7 +74,7 @@ KT.menu = (function(){
         var enter = function(){topLevelTab.trigger("mouseenter");};
         var leave = function(){topLevelTab.delay("800").trigger("mouseout")};
         currentSubnav.hover(function(){enter()},function(){leave()});
-        
+
         topLevelTab.bind("open", function(){
             //make the tab "highlight" on hover
             $(this).addClass('selected');
@@ -106,7 +106,7 @@ KT.menu = (function(){
       }
       var ul = li.find('ul');
       var options = options || {};
-        
+
       if( options.top ){
         ul.css('top', options.top);
       }

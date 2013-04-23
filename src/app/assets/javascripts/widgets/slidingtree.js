@@ -27,10 +27,10 @@
 
 KT.sliding_tree = KT.sliding_tree || {};
 var sliding_tree = function(tree_id, options) {
-    var container 	= $('#' + tree_id),
-        list 		= container.find(".sliding_container .sliding_list"),
-        breadcrumb 	= container.find(".tree_breadcrumb"),
-        sliders 	= container.find('.sliders'),
+    var container     = $('#' + tree_id),
+        list         = container.find(".sliding_container .sliding_list"),
+        breadcrumb     = container.find(".tree_breadcrumb"),
+        sliders     = container.find('.sliders'),
         current_crumb,
         search;
 
@@ -368,10 +368,10 @@ var sliding_tree = function(tree_id, options) {
         setup_filter();
     }
 
-	if( settings.enable_float ){
-		container.css('position', 'absolute');
-		sliders.css('height', sliders.css('minHeight'));
-	}
+    if( settings.enable_float ){
+        container.css('position', 'absolute');
+        sliders.css('height', sliders.css('minHeight'));
+    }
 
 
     $(window).unbind('hashchange.' + tree_id).bind( 'hashchange.' + tree_id, hash_change);
@@ -393,20 +393,20 @@ var sliding_tree = function(tree_id, options) {
     });
 
     return {
-    	get_current_crumb	: function(){
-    		return current_crumb;
-    	},
+        get_current_crumb    : function(){
+            return current_crumb;
+        },
         get_breadcrumbs     : function(){
             return settings.breadcrumb;
         },
         get_tree_id         : function(){
             return tree_id;
         },
-        render_content		: render_content,
-        rerender_content	: function() {
+        render_content        : render_content,
+        rerender_content    : function() {
                 render($.bbq.getState(settings.bbq_tag), list.children('.has_content'));
             },
-        rerender_breadcrumb	: function() {
+        rerender_breadcrumb    : function() {
             reset_breadcrumb($.bbq.getState(settings.bbq_tag));
         },
         reset_tree         : reset_tree,
@@ -487,7 +487,7 @@ sliding_tree.search = function(){
             $(document).bind(search_obj.search_event(), function(e, promise){
                 if (promise){
                     promise.done(function(){
-                        tabchange_cb(sliding_tree.get_current_crumb());      
+                        tabchange_cb(sliding_tree.get_current_crumb());
                     });
                 }
                 else {
@@ -562,8 +562,8 @@ sliding_tree.search = function(){
 };
 
 sliding_tree.ActionBar = function(toggle_list){
-    var open_panel 	= undefined,
-    	toggle_list	= toggle_list || {},
+    var open_panel     = undefined,
+        toggle_list    = toggle_list || {},
 
         toggle = function(id, options){
             var options = options || {};
@@ -571,13 +571,13 @@ sliding_tree.ActionBar = function(toggle_list){
             options.animate_time = 500;
 
             if( open_panel !== id && open_panel !== undefined ){
-            	options.opening = false;
+                options.opening = false;
                 toggle_list[open_panel].setup_fn(options);
 
                 $("#" + toggle_list[open_panel].container).slideToggle(options.animate_time, function(){
-		            open_panel = id;
-		            options.opening = true;
-		            handle_toggle(options, id);
+                    open_panel = id;
+                    options.opening = true;
+                    handle_toggle(options, id);
                 });
             } else if( open_panel !== undefined ){
                 open_panel = undefined;
@@ -590,7 +590,7 @@ sliding_tree.ActionBar = function(toggle_list){
             }
         },
         handle_toggle = function(options, id){
-        	var slide_window = $('#' + toggle_list[id].container);
+            var slide_window = $('#' + toggle_list[id].container);
 
             options = toggle_list[id].setup_fn(options);
             slide_window.slideToggle(options.animate_time, options.after_function);
@@ -611,19 +611,19 @@ sliding_tree.ActionBar = function(toggle_list){
             register_toggle(id, properties);
         },
         register_toggle = function(id, properties){
-    	   $('#' + properties.button).unbind('click').click(function() {
+           $('#' + properties.button).unbind('click').click(function() {
                 if ($(this).hasClass('disabled')){
                     return false;
                 }
                 toggle(id, properties.options);
             });
-    	   $('#' + properties.button).unbind('keypress').keypress(function(event) {
-    	   		event.preventDefault();
+           $('#' + properties.button).unbind('keypress').keypress(function(event) {
+                   event.preventDefault();
                 if ($(this).hasClass('disabled')){
                     return false;
                 }
                 if( event.which === 13 ){
-                	toggle(id, properties.options);
+                    toggle(id, properties.options);
                 }
             });
         };

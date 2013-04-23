@@ -349,7 +349,7 @@ module Glue::Provider
                          :organization => self.organization,
                          :details      => output.read
         end
-      rescue Exception => error
+      rescue => error
         display_manifest_message('refresh', error, options)
         raise error
       end
@@ -484,7 +484,7 @@ module Glue::Provider
                          :request_type => 'providers__update_redhat_provider',
                          :organization => self.organization
         end
-      rescue Exception => error
+      rescue => error
         display_manifest_message('delete', error, options)
         raise error
       end

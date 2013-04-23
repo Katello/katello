@@ -41,20 +41,20 @@ KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distributio
         };
 
         $.extend(options, { 'extra_params' :
-					[ { hash_id 	: 'env_id',
-						init_func 	: function(){
-							var state = $.bbq.getState('env_id');
+                    [ { hash_id     : 'env_id',
+                        init_func     : function(){
+                            var state = $.bbq.getState('env_id');
 
-							if( state ){
-								env_select.set_selected(state);
-							} else {
-								$.bbq.pushState({ env_id : env_select.get_selected_env() });
-							}
-						}
-					}
-				]});
-  	}
-  	KT.panel.list.registerPage('systems', options);
+                            if( state ){
+                                env_select.set_selected(state);
+                            } else {
+                                $.bbq.pushState({ env_id : env_select.get_selected_env() });
+                            }
+                        }
+                    }
+                ]});
+      }
+      KT.panel.list.registerPage('systems', options);
 }());
 
 $(document).ready(function() {

@@ -458,10 +458,10 @@ Src::Application.routes.draw do
     end
     resources :ldap_groups, :only => [] do
       member do
-		delete "destroy" => "roles#destroy_ldap_group", :as => "destroy"
+        delete "destroy" => "roles#destroy_ldap_group", :as => "destroy"
       end
       collection do
-		post "create" => "roles#create_ldap_group", :as => "create"
+        post "create" => "roles#create_ldap_group", :as => "create"
       end
     end
   end

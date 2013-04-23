@@ -29,9 +29,9 @@ KT.utils = _.noConflict();
 var i18n = {};
 
 function localize(data) {
-	for (var key in data) {
-		i18n[key] =  data[key];
-	}
+    for (var key in data) {
+        i18n[key] =  data[key];
+    }
 }
 
 function update_status() {
@@ -395,11 +395,11 @@ KT.common = (function() {
         getSearchParams : function(val) {
             var search_string = $.bbq.getState('list_search');
 
-        	if( search_string ){
-        		return { 'search' : search_string };
-        	} else {
-        		return false;
-        	}
+            if( search_string ){
+                return { 'search' : search_string };
+            } else {
+                return false;
+            }
         },
         spinner_path : function() {
           return KT.common.rootURL() + "assets/icons/spinner.gif";
