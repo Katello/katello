@@ -290,6 +290,7 @@ def setup_admin(katello_cmd, mode=get_katello_mode()):
         cv_cmd.add_command('info', content_view.Info())
         cv_cmd.add_command('promote', content_view.Promote())
         cv_cmd.add_command('refresh', content_view.Refresh())
+        cv_cmd.add_command('delete', content_view.Delete())
         cvd_cmd = content_view_definition.ContentViewDefinition()
         cvd_cmd.add_command('list', content_view_definition.List())
         cvd_cmd.add_command('info', content_view_definition.Info())
