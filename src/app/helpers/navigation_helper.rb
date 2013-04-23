@@ -53,14 +53,10 @@ module NavigationHelper
   end
 
   def add_notices
-    display = '<span>'
-    display += '<i class="validation_icon-white icon"></i>'
-    display += Notice.for_user(current_user).for_org(current_organization).count.to_s
-    display += '</span>'
-
     return {
-      :display=> display,
-      :url    => notices_path
+      :count          => Notice.for_user(current_user).for_org(current_organization).count.to_s,
+      :url            => notices_path,
+      :new_notices_url   => notices_get_new_path
     }
   end
 
