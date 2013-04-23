@@ -146,6 +146,8 @@ BuildRequires:  %{?scl_prefix}rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  %{?scl_prefix}rubygem(bundler_ext)
 BuildRequires:  %{?scl_prefix}rubygem(logging) >= 1.8.0
 BuildRequires:  %{?scl_prefix}rubygem(ui_alchemy-rails) >= 1.0.0
+BuildRequires:  %{?scl_prefix}rubygem(minitest)
+BuildRequires:  %{?scl_prefix}rubygem(minitest-rails)
 BuildRequires:  asciidoc
 BuildRequires:  /usr/bin/getopt
 BuildRequires:  java >= 0:1.6.0
@@ -423,8 +425,12 @@ export RAILS_ENV=build
     sed -ri '1sX(/usr/bin/ruby|/usr/bin/env ruby)X%{scl_ruby}X' script/*
 %endif
 
-#check for gettext standards (using Ruby 1.8)
-/usr/bin/ruby script/check-gettext.rb -m -i
+#run source code tests
+%{?scl:scl enable %scl "}
+    touch config/katello.yml
+    ruby -Itest test/source_code_test.rb
+%{?scl:"}
+
 
 #check and generate gettext MO files
 make -C locale check all-mo %{?_smp_mflags}
@@ -444,7 +450,6 @@ fi
     mv lib/tasks lib/tasks_disabled
     export BUNDLER_EXT_NOSTRICT=1
     export BUNDLER_EXT_GROUPS="default assets"
-    touch config/katello.yml
 %{?scl:scl enable %{scl} "}
     rake  assets:precompile:primary --trace RAILS_ENV=production
     rake  assets:precompile:nondigest --trace
