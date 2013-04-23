@@ -4,13 +4,11 @@ language:
 rvm:
   - "1.9.3"
 
-install:
-  - sudo apt-get install libssl-dev python m2crypto --quiet
-  - sudo pip install -r cli/requirements-dev.pip
-
 script:
-  - cd src/
-  - touch config/katello.yml
-  - bundle install --without checking:devboost:optional:debugging
-  - cd ../
-  - ./scripts/ci/katello_pull_request_tests.sh
+  - "./scripts/ci/katello_pr_$JOB.sh"
+
+env:
+  - JOB=rspec
+  - JOB=minitest
+  - JOB=headpin_rspec
+  - JOB=cli
