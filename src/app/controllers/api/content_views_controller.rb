@@ -16,20 +16,22 @@ class Api::ContentViewsController < Api::ApiController
   before_filter :find_organization, :except => [:promote, :refresh]
   before_filter :find_optional_environment, :only => [:index, :show]
   before_filter :find_environment, :only => [:promote]
-  before_filter :find_content_view, :only => [:show, :promote, :refresh]
+  before_filter :find_content_view, :only => [:show, :promote, :refresh, :destroy]
   before_filter :authorize
 
   def rules
     index_test   = lambda { ContentView.any_readable?(@organization) }
     show_test    = lambda { @view.readable? }
     promote_test = lambda { @view.promotable? }
-    refresh_test  = lambda { @view.content_view_definition.publishable? }
+    refresh_test = lambda { @view.content_view_definition.publishable? }
+    delete_test  = lambda { @view.content_view_definition.publishable? }
 
     {
       :index   => index_test,
       :show    => show_test,
       :promote => promote_test,
-      :refresh => refresh_test
+      :refresh => refresh_test,
+      :destroy => delete_test
     }
   end
 
@@ -74,6 +76,18 @@ class Api::ContentViewsController < Api::ApiController
   def refresh
     version = @view.refresh_view(:async => true)
     render :json => version.task_status, :status => 202
+  end
+
+  api :DELETE, "/content_views/:id"
+  param :id, :identifer, :desc => "content view id"
+  def destroy
+    @view.destroy
+    if @view.destroyed?
+      render :text => _("Deleted content view [ %s ]") % @view.name , :status => 200
+    else
+      raise HttpErrors::InternalError, _("Error while deleting content view [ %{name} ]: %{error}") %
+        {:name => @view.name, :error => @view.errors.full_messages}
+    end
   end
 
   private

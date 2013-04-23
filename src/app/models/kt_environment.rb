@@ -21,6 +21,10 @@ class KTEnvironment < ActiveRecord::Base
   include Ext::PermissionTagCleanup
   acts_as_reportable
 
+  # RAILS3458: before_destroys before associations. see http://tinyurl.com/rails3458
+  before_destroy :confirm_last_env
+  before_destroy :delete_default_view_version
+
   belongs_to :organization, :inverse_of => :environments
   has_many :activation_keys, :dependent => :destroy, :foreign_key => :environment_id
   has_and_belongs_to_many :priors, {:class_name => "KTEnvironment", :foreign_key => :environment_id,
@@ -68,8 +72,6 @@ class KTEnvironment < ActiveRecord::Base
   validates_with Validators::PathDescendentsValidator
 
   after_create :create_default_content_view_version
-  before_destroy :confirm_last_env
-  before_destroy :delete_default_view_version
 
   after_destroy :unset_users_with_default
    ERROR_CLASS_NAME = "Environment"

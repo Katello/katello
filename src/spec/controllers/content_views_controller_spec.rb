@@ -22,10 +22,18 @@ describe ContentViewsController do
     set_default_locale
     login_user
     @organization = new_test_org
-    @content_view = FactoryGirl.create(:content_view)
+
+    @definition = ContentViewDefinition.create!(:name => 'test def', :label => 'test_def',
+                                                :description => 'test description',
+                                                :organization => @organization)
+
+    @view = ContentView.create!(:name => 'test view', :label => 'test_view',
+                                :organization => @organization,
+                                :content_view_definition => @definition)
   end
 
-  describe "rules" do
+  describe "GET auto_complete rules" do
+
     let(:action) { :auto_complete }
     let(:req) { get :auto_complete, :term => "a" }
     let(:authorized_user) do
@@ -47,4 +55,29 @@ describe ContentViewsController do
       response.should be_success
     end
   end
+
+  describe "POST refresh" do
+    let(:action) { :refresh }
+    let(:req) { post :refresh, :content_view_definition_id => @definition.id, :id => @view.id }
+    let(:authorized_user) do
+      user_with_permissions { |u| u.can(:publish, :content_view_definitions, @definition.id, @organization) }
+    end
+    let(:unauthorized_user) do
+      user_without_permissions
+    end
+    it_should_behave_like "protected action"
+  end
+
+  describe "DELETE destroy" do
+    let(:action) { :destroy }
+    let(:req) { delete :destroy, :content_view_definition_id => @definition.id, :id => @view.id }
+    let(:authorized_user) do
+      user_with_permissions { |u| u.can(:publish, :content_view_definitions, @definition.id, @organization) }
+    end
+    let(:unauthorized_user) do
+      user_without_permissions
+    end
+    it_should_behave_like "protected action"
+  end
+
 end

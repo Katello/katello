@@ -17,6 +17,8 @@ class ContentView < ActiveRecord::Base
   include Authorization::ContentView
   include Glue::ElasticSearch::ContentView if Katello.config.use_elasticsearch
 
+  before_destroy :confirm_not_promoted # RAILS3458: this needs to come before associations
+
   belongs_to :content_view_definition
   alias :definition :content_view_definition
   belongs_to :organization, :inverse_of => :content_views
@@ -44,6 +46,7 @@ class ContentView < ActiveRecord::Base
 
   validates_with Validators::KatelloNameFormatValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
+
 
   scope :default, where(:default=>true)
   scope :non_default, where(:default=>false)
@@ -100,7 +103,7 @@ class ContentView < ActiveRecord::Base
     result = self.attributes
     result['organization'] = self.organization.try(:name)
     result['definition']   = self.content_view_definition.try(:name)
-    result['environments'] = environments.map{|e| e.try(:name)}.join(", ")
+    result['environments'] = environments.map{|e| e.try(:name)}
     result['versions'] = versions.map(&:version)
     result['versions_details'] = versions.map do |v|
       {
@@ -142,6 +145,10 @@ class ContentView < ActiveRecord::Base
     else
       []
     end
+  end
+
+  def library_repo_ids
+    repos(self.organization.library).map { |r| r.library_instance_id }
   end
 
   def all_version_repos
@@ -385,6 +392,14 @@ class ContentView < ActiveRecord::Base
       end
     end
     tasks
+  end
+
+  def confirm_not_promoted
+    if promoted?
+      errors.add(:base, _("cannot be deleted if it has been promoted."))
+      return false
+    end
+    return true
   end
 
 end

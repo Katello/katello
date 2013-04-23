@@ -33,12 +33,12 @@ class ContentViewListTest(CLIActionTestCase):
 
         self.mock_options(self.OPTIONS)
 
-        self.mock(self.action.def_api, 'content_view_definitions_by_org', [])
+        self.mock(self.action.api, 'content_view_definitions_by_org', [])
 
     def tearDown(self):
         self.restore_mocks()
 
     def test_it_uses_lists_api(self):
         self.run_action()
-        self.action.def_api.content_view_definitions_by_org.\
+        self.action.api.content_view_definitions_by_org.\
                 assert_called_once_with(self.ORG)
