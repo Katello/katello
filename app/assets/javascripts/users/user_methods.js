@@ -55,7 +55,7 @@ KT.user_page = function() {
             complete: function(e) {
                 notices.checkNotices();
             }
-        });        
+        });
         return false;
     },
     verifyPassword = function() {

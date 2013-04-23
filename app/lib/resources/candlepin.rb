@@ -226,7 +226,7 @@ module Resources
         )
 
         return resource.get
-      rescue Exception => e
+      rescue => e
         raise e
       end
 

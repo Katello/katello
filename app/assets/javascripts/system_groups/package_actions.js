@@ -245,15 +245,15 @@ KT.package_actions = (function() {
         return validation_error;
     },
     show_validation_error = function(show, validation_error){
-    	var input = content_form.find('#content_input');
-    	if( show ){
-    		input.addClass('validation_error_input');
-    		error_message.html(validation_error);
-    		error_message.show();
-    	} else {
-    		input.removeClass('validation_error_input');
-    		error_message.hide();
-    	}
+        var input = content_form.find('#content_input');
+        if( show ){
+            input.addClass('validation_error_input');
+            error_message.html(validation_error);
+            error_message.show();
+        } else {
+            input.removeClass('validation_error_input');
+            error_message.hide();
+        }
     },
     startUpdater = function () {
         if (!actions_updater_running) {
