@@ -32,7 +32,7 @@
 %endif
 
 Name:           katello
-Version:        1.3.20
+Version:        1.3.21
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -835,6 +835,34 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Apr 23 2013 Justin Sherrill <jsherril@redhat.com> 1.3.21-1
+- Implementation for add/remove filter rules via cli (paji@redhat.com)
+- Allowing content views to be deleted from CLI
+- content views - minor PR feedback on #1990
+- content views - fix test that failed when running entire suite
+- content views - ui - add the ability to delete a content view
+  (bbuckingham@redhat.com)
+- content views - refactor 'refresh' to content views controller
+  (bbuckingham@redhat.com)
+- Making notification count update when a notice is generated.
+- Allowing any HTTP verb to access logout.
+- Setting the active menu tab based on location. (walden@redhat.com)
+- Experimental Menu - Updating copyright and test files.
+- Experimental Menu - Adding missing folder to the spec.
+- Menu - Adds support for Experimental UI section which includes the new
+  navigation structure in it's current state. (ehelms@redhat.com)
+- 952249 - Validating overlapping content in component views
+  (daviddavis@redhat.com)
+- Moving before_destroy callbacks because of rails/rails#3458
+- 953983 - Fixing path to spinner.gif
+- Worked on limiting content views on system edit page
+- Updated js-routes to work with Rails 3.2
+- Made repo clear contents also clear the search indices (paji@redhat.com)
+-  953655-Added a search field needed by the content filter 'publish' call
+- Querying filters with filter_id rather than filter_name
+  (daviddavis@redhat.com)
+- fixing re-creation of sync even notifier (jsherril@redhat.com)
+
 * Mon Apr 22 2013 Justin Sherrill <jsherril@redhat.com> 1.3.20-1
 - 1956 - adding unprotected checkbox to auto-discovery
 
