@@ -17,6 +17,11 @@ $(document).ready(function() {
 
     var env_scroll = KT.env_select_scroll({});
     KT.panel.set_expand_cb(function() {
+        var children = $('#panel .menu_parent');
+        $.each(children, function(i, item) {
+            KT.menu.hoverMenu(item, { top : '75px' });
+        });
+
         env_scroll.bind(undefined);
         KT.object.label.initialize();
         if ($('#organization_edit').length > 0) {

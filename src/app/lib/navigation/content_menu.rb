@@ -481,6 +481,18 @@ module Navigation
           :url => lambda{distributor_events_path(@distributor.id)},
           :if => lambda{@distributor},
           :options => {:class=>"third_level panel_link"},
+        },
+        { :key => :custom_info,
+          :name => _("Custom Information"),
+          :url => lambda{custom_info_system_path(@distributor.id)},
+          :if => lambda{@system},
+          :options => {:class => "third_level panel_link"}
+        },
+        { :key => :custom_info,
+          :name => _("Custom Information"),
+          :url => lambda{custom_info_distributor_path(@distributor.id)},
+          :if => lambda{@distributor},
+          :options => {:class => "third_level panel_link"}
         }
       ]
     end
