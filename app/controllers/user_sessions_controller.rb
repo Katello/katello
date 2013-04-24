@@ -26,7 +26,7 @@ class UserSessionsController < ApplicationController
   end
 
   def new
-    # in case we have SSO enabled and we dion't try it yet, we try to login user
+    # in case we have SSO enabled and we don't try it yet, we try to login user
     if Katello.config.sso.enable && params[:sso_tried].blank?
       login_user
     else

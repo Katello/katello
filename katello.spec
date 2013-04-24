@@ -497,6 +497,10 @@ install -d -m0755 %{buildroot}%{datadir}/tmp
 install -d -m0755 %{buildroot}%{datadir}/tmp/pids
 install -d -m0755 %{buildroot}%{datadir}/config
 install -d -m0755 %{buildroot}%{_sysconfdir}/%{name}
+install -d -m0755 %{buildroot}%{datadir}/openid-store
+install -d -m0755 %{buildroot}%{datadir}/openid-store/associations
+install -d -m0755 %{buildroot}%{datadir}/openid-store/nonces
+install -d -m0755 %{buildroot}%{datadir}/openid-store/temp
 
 install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
 mkdir -p %{buildroot}/%{_mandir}/man8
@@ -553,6 +557,7 @@ install -p -m0644 etc/service-list %{buildroot}%{_sysconfdir}/%{name}/
 
 #create symlinks for some db/ files
 ln -svf %{datadir}/schema.rb %{buildroot}%{homedir}/db/schema.rb
+ln -svf %{datadir}/openid-store %{buildroot}%{homedir}/db/openid-store
 
 #create symlinks for data
 ln -sv %{_localstatedir}/log/%{name} %{buildroot}%{homedir}/log
@@ -640,6 +645,10 @@ usermod -a -G katello-shared tomcat
 %{homedir}/config
 %{homedir}/db/migrate/
 %{homedir}/db/products.json
+%{homedir}/db/openid-store/
+%attr(755, katello, katello) %{datadir}/openid-store/associations
+%attr(755, katello, katello) %{datadir}/openid-store/nonces
+%attr(755, katello, katello) %{datadir}/openid-store/temp
 %{homedir}/db/seeds.rb
 %{homedir}/integration_spec
 %{homedir}/lib/*.rb
