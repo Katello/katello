@@ -96,10 +96,16 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
     respond :resource => ActivationKey.find(@activation_key.id)
   end
 
+  api :DELETE, "/activation_keys/:id", "Destroy an activation key"
+  def destroy
+    @activation_key.destroy
+   respond :message => _("Deleted activation key '%s'") % params[:id], :status => 204
+  end
+
   api :POST, "/activation_keys/:id/pools", "Create an entitlement pool within an activation key"
   def add_pool
     @activation_key.key_pools.create(:pool => @pool) unless @activation_key.pools.include?(@pool)
-    respond_for_create
+    respond_for_show
   end
 
   api :DELETE, "/activation_keys/:id/pools/:poolid", "Delete an entitlement pool within an activation key"
@@ -108,7 +114,7 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
       raise HttpErrors::NotFound, _("Couldn't find pool '%{pool}' in activation_key '%{ak}'") % {:pool => @pool.cp_id, :ak => @activation_key.name}
     end
     @activation_key.pools.delete(@pool)
-    respond_for_destroy
+    respond_for_show
   end
 
   api :POST, "/organizations/:organization_id/activation_keys/:id/system_groups"
@@ -116,7 +122,7 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
     ids = params[:activation_key][:system_group_ids]
     @activation_key.system_group_ids = (@activation_key.system_group_ids + ids).uniq
     @activation_key.save!
-    respond_for_create
+    respond_for_show
   end
 
   api :DELETE, "/organizations/:organization_id/activation_keys/:id/system_groups"
@@ -124,7 +130,7 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
     ids = params[:activation_key][:system_group_ids]
     @activation_key.system_group_ids = (@activation_key.system_group_ids - ids).uniq
     @activation_key.save!
-    respond_for_destroy
+    respond_for_show
   end
 
   private
