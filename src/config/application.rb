@@ -61,6 +61,13 @@ else
   end
 end
 
+# TODO to be removed after config path is made configurable in LdapFluff
+unless File.exist? LdapFluff::CONFIG
+  ldap_fluff_config_path = File.join Gem.loaded_specs['ldap_fluff'].full_gem_path, 'etc', 'ldap_fluff.yml'
+  raise 'missing LdapFluff config file' unless File.exist? ldap_fluff_config_path
+  LdapFluff::CONFIG = ldap_fluff_config_path
+end
+
 module Src
   class Application < Rails::Application
 
