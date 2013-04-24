@@ -52,7 +52,7 @@ describe Api::V1::OrganizationDefaultInfoController do
     it "should fail without keyname" do
       Organization.find(@org.id).default_info["system"].empty?.should == true
       post :create, :organization_id => @org.label, :informable_type => "system"
-      response.code.should == "400"
+      response.code.should == "422"
       Organization.find(@org.id).default_info["system"].empty?.should == true
     end
 
