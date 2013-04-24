@@ -129,8 +129,11 @@ module Src
             Katello.config.url_prefix].compact.join,
         :protocol => Katello.config.use_ssl ? 'https' : 'http' }
 
-    config.after_initialize do
+    config.after_initialize do |app|
       require 'string_to_bool'
+      #default all non-matched route to our special 404 page
+      # cannot be added to routes.rb due to conflicting with engines
+      app.routes.append{match '*a', :to => 'errors#routing'}
     end
 
     # set actions to profile (eg. %w(user_sessions#new))
