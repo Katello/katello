@@ -73,7 +73,7 @@ class Api::V1::ContentViewsController < Api::V1::ApiController
   param :id, :identifer, :desc => "content view id"
   def refresh
     version = @view.refresh_view(:async => true)
-    respond_for_async :resource => version.task_status
+    respond_for_async :resource => version.task_status, :status => 202
   end
 
   api :DELETE, "/content_views/:id"
