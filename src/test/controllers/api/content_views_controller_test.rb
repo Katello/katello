@@ -18,6 +18,8 @@ class Api::ContentViewsControllerTest < MiniTest::Rails::ActionController::TestC
 
   def setup
     @content_view = content_views(:library_dev_view)
+    @definition = ContentViewDefinition.find(content_view_definition_bases(:simple_cvd))
+    @content_view.update_attribute(:content_view_definition_id, @definition.id)
     @environment = environments(:staging)
     @dev = environments(:dev)
     @organization = organizations(:acme_corporation)
@@ -27,13 +29,58 @@ class Api::ContentViewsControllerTest < MiniTest::Rails::ActionController::TestC
     disable_glue_layers(services, models)
   end
 
-  test "should return a 403 if the user does not have permissions" do
-    login_user do |u|
-      u.can(:read, :content_views)
+  describe "permissions" do
+    test "promote" do
+      refute_authorized(permission: lambda {|user| user.can(:read, :content_views) },
+                        action: :promote,
+                        request: -> { post :promote, id: @content_view.id,
+                                      environment_id: @environment.id}
+                       )
     end
-    post :promote, :id => @content_view.id,
-      :environment_id => @environment.id
-    assert_equal 403, response.status
+
+    test "index" do
+      action = :index
+      request = -> { get action, :organization_id => @organization.name }
+      assert_authorized(permission: lambda {|user| user.can(:read, :content_views) },
+                        action: action,
+                        request: request
+                       )
+
+      # check that manage actions also work
+      assert_authorized(permission: lambda {|user| user.can(:promote, :content_views) },
+                        action: action,
+                        request: request
+                       )
+    end
+
+    test "show" do
+      action = :show
+      request = -> { get action, :organization_id => @organization.name, :id => @content_view.id }
+      assert_authorized(permission: lambda {|user| user.can(:read, :content_views) },
+                        action: action,
+                        request: request
+                       )
+
+      # check that manage actions also work
+      assert_authorized(permission: lambda {|user| user.can(:promote, :content_views) },
+                        action: action,
+                        request: request
+                       )
+
+    end
+
+    test "refresh" do
+      action = :refresh
+      request = -> { post action, :id => @content_view.id }
+      assert_authorized(permission: lambda {|user| user.can(:publish, :content_view_definitions) },
+                        action: action,
+                        request: request
+                       )
+      refute_authorized(permission: lambda {|user| user.can(:read, :content_view_definitions) },
+                        action: action,
+                        request: request
+                       )
+    end
   end
 
   test "should throw an error if environment_id is nil" do
