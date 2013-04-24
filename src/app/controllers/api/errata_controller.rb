@@ -75,7 +75,7 @@ class Api::ErrataController < Api::ApiController
   end
 
   def find_erratum
-    @erratum = Errata.find(params[:id])
+    @erratum = Errata.find_by_errata_id(params[:id])
     raise HttpErrors::NotFound, _("Erratum with id '%s' not found") % params[:id] if @erratum.nil?
     # and check ownership of it
     raise HttpErrors::NotFound, _("Erratum '%s' not found within the repository") % params[:id] unless @erratum.repoids.include? @repo.pulp_id
