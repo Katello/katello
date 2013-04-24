@@ -18,7 +18,7 @@ class Api::DistributorsController < Api::ApiController
   before_filter :find_only_environment, :only => [:create]
   before_filter :find_environment, :only => [:create, :index, :report, :tasks]
   before_filter :find_distributor, :only => [:destroy, :show, :update,
-                                        :subscribe, :unsubscribe, :subscriptions, :pools]
+                                        :subscribe, :unsubscribe, :subscriptions, :pools, :export]
   before_filter :find_task, :only => [:task_show]
   before_filter :authorize, :except => :activate
 
@@ -49,7 +49,8 @@ class Api::DistributorsController < Api::ApiController
       :pools => read_distributor,
       :activate => register_distributor,
       :tasks => index_distributors,
-      :task_show => read_distributor
+      :task_show => read_distributor,
+      :export => read_distributor
     }
   end
 
@@ -102,6 +103,18 @@ class Api::DistributorsController < Api::ApiController
   param :id, String, :desc => "UUID of the distributor", :required => true
   def show
     render :json => @distributor.to_json
+  end
+
+  api :GET, "/distributors/:id/export", "Export distributor's manifest"
+  param :id, String, :desc => "UUID of the distributor", :required => true
+  def export
+    filename = params[:filename]
+    filename = 'manifest.zip' if filename.nil? || filename == ''
+
+    data = @distributor.export
+    send_data data,
+              :filename => filename,
+              :type => 'application/xml'
   end
 
   api :DELETE, "/distributors/:id", "Unregister a distributor"
