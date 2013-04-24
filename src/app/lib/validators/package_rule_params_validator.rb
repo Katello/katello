@@ -13,8 +13,6 @@
 module Validators
   class PackageRuleParamsValidator < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
-      ver_msg = _("Invalid rule combination specified, '%s' and '%s' or '%s' cannot be specified in the same tuple") %
-                                                                              ["version", "min_version", "max_version"]
       if value
         unless value[:units].blank?
           unless value[:units].is_a?(Array)
@@ -26,6 +24,9 @@ module Validators
                 break
               end
               if unit.has_key?(:version) && (unit.has_key?(:min_version) || unit.has_key?(:max_version))
+                ver_msg = _("Invalid rule combination specified, 'version'" +
+                                  " and 'min_version' or 'max_version' cannot be specified in the same tuple")
+
                 record.errors.add(attribute, ver_msg)
               end
 
