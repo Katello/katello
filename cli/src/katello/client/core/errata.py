@@ -67,6 +67,9 @@ class List(ErrataAction):
             validator.require_at_least_one_of(('product', 'product_label', 'product_id'))
             validator.mutually_exclude('product', 'product_label', 'product_id')
             validator.mutually_exclude('view_name', 'view_label', 'view_id')
+        if validator.exists('view_name') or validator.exists('view_label') or validator.exists('view_id'):
+            # TODO: support the case where no repo info is supplied.
+            validator.require_at_least_one_of('repo', 'repo_id')
 
     def run(self):
         repo_id   = self.get_option('repo_id')
