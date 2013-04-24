@@ -251,7 +251,7 @@ DESC
   api :GET, "/systems/:id/packages", "List packages installed on the system"
   param :id, String, :desc => "UUID of the system", :required => true
   def package_profile
-    respond_for_index :collection => @system.simple_packages.sort {|a,b| a.name.downcase <=> b.name.downcase}
+    respond_for_index :collection => @system.simple_packages.sort {|a,b| a["name"].downcase <=> b["name"].downcase}
   end
 
   api :GET, "/systems/:id/errata", "List errata available for the system"
