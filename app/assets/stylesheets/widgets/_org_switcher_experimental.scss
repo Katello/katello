@@ -12,10 +12,14 @@
     font-size: 1.25em;
   }
 
-  #manage_orgs {
+  #manage_orgs a {
     font-size: 0.8em;
     color: $link-border_color;
     font-weight: bold;
+  }
+
+  #manage_orgs a span:hover {
+    text-decoration: underline;
   }
 
   .default_org {
@@ -25,8 +29,15 @@
   #organizationSwitcher {
     .menu-item-link.clickable {
       cursor: pointer;
-      padding-left: 0;
     }
+    .menu-item-link:hover {
+      display: none;
+    }
+    #manage_orgs:hover
+    {
+      background: transparent;
+    }
+
     .dropdown {
       .menu-item {
         width: 100%;
