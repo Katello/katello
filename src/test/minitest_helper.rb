@@ -7,6 +7,7 @@ require 'simplecov'
 require 'json'
 require 'support/auth_support'
 require 'support/warden_support'
+require 'support/controller_support'
 require 'mocha/setup'
 
 class MiniTest::Rails::ActiveSupport::TestCase
@@ -46,6 +47,7 @@ end
 class Minitest::Rails::ActionController::TestCase
   include Warden::Test::Helpers
   include WardenSupport
+  include ControllerSupport
 end
 
 def configure_vcr

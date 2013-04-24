@@ -19,6 +19,18 @@ no_perms_user:
   email:        alfred@wayne.ent.com
   preferences:  <%= HashWithIndifferentAccess.new({}).to_yaml.inspect %>
 
+authorized:
+  username:     batman
+  password:     <%= Password.update('Alfred') %>
+  email:        batman@wayne.ent.com
+  preferences:  <%= HashWithIndifferentAccess.new({}).to_yaml.inspect %>
+
+unauthorized:
+  username:     penguin
+  password:     <%= Password.update('Alfred') %>
+  email:        penguin@gothamzoo.gov
+  preferences:  <%= HashWithIndifferentAccess.new({}).to_yaml.inspect %>
+
 disabled_user:
   username:     disabled_user
   password:     disabled_user_password
