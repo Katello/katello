@@ -27,9 +27,9 @@ class Api::V2::FilterRulesController < Api::V1::FilterRulesController
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
   param :filter_id, String, :desc => "name of the filter", :required => true
   param :rule, Hash, :required => true, :action_aware => true do
-	param :rule, String, :required => true, :desc => "A specification of the rule in json format (required)."
-	param :content, String, :desc => "content type of the rule", :required => true
-	param :inclusion, String, :desc => "true if its an includes rule, false otherwise. Defauls to true", :required => false
+  param :rule, String, :required => true, :desc => "A specification of the rule in json format (required)."
+  param :content, String, :desc => "content type of the rule", :required => true
+  param :inclusion, String, :desc => "true if its an includes rule, false otherwise. Defauls to true", :required => false
   end
   def create
     @filter_rule = create_rule!(params[:rule])
@@ -43,7 +43,7 @@ class Api::V2::FilterRulesController < Api::V1::FilterRulesController
   param :filter_id, String, :desc => "name of the filter", :required => true
   param :id, :String, :desc => "Id of the filter rule", :required => true
   def destroy
-  	super
+    super
   end
 
   def find_definition
