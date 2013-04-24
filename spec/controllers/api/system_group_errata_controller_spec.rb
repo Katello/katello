@@ -49,12 +49,14 @@ describe Api::SystemGroupErrataController, :katello => true do
 
       to_ret = []
       5.times{ |num|
-        errata = {}
-        errata["id"] = "RHSA-2011-01-#{num}"
-        errata["type"] = types[rand(3)]
-        errata["release"] = "Red Hat Enterprise Linux 6.0"
+        errata           = OpenStruct.new
+        errata.id        = "8a604f44-6877-4c81-b6f9-#{num}"
+        errata.errata_id = "RHSA-2011-01-#{num}"
+        errata.type      = types[rand(3)]
+        errata.release   = "Red Hat Enterprise Linux 6.0"
         to_ret << errata
       }
+      System.any_instance.stub(:errata).and_return(to_ret)
     end
 
     let(:action) { :index }
@@ -65,9 +67,9 @@ describe Api::SystemGroupErrataController, :katello => true do
 
     it_should_behave_like "protected action"
 
-    pending { should be_successful }
+    it { should be_successful }
 
-    pending "should retrieve errata from pulp" do
+    it "should retrieve errata from pulp" do
       subject
     end
   end

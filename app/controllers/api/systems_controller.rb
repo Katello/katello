@@ -246,8 +246,7 @@ DESC
   api :GET, "/systems/:id/errata", "List errata available for the system"
   param :id, String, :desc => "UUID of the system", :required => true
   def errata
-    raise NotImplementedError
-    render :json => ::Consumer.errata(@system.uuid)
+    render :json => @system.errata
   end
 
   api :PUT, "/consumers/:id/packages", "Update installed packages"

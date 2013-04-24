@@ -38,7 +38,7 @@ describe Api::ErrataController, :katello => true do
     KTEnvironment.stub(:find).and_return(@organization.library)
     @erratum = {}
     @erratum.stub(:repoids).and_return([ @repo.pulp_id ])
-    ::Errata.stub(:find => @erratum)
+    ::Errata.stub(:find_by_errata_id => @erratum)
     ::Errata.stub(:filter => @erratum)
 
     @request.env["HTTP_ACCEPT"] = "application/json"
@@ -118,7 +118,7 @@ describe Api::ErrataController, :katello => true do
 
     describe "show an erratum" do
       it "should call pulp find errata api" do
-        ::Errata.should_receive(:find).once.with('1')
+        ::Errata.should_receive(:find_by_errata_id).once.with('1')
         get 'show', :id => '1', :repository_id => 1
       end
     end
