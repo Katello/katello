@@ -50,7 +50,7 @@ describe Api::V1::TasksController do
     it_should_behave_like "protected action"
 
     it "should retrieve all async tasks in the organization" do
-      TaskStatus.should_receive(:where).once.with(:organization => @organization).and_return([])
+      TaskStatus.should_receive(:where).once.with(:organization_id => @organization.id).and_return([])
       req
     end
   end
