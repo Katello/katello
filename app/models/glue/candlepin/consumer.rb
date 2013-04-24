@@ -118,6 +118,22 @@ module Glue::Candlepin::Consumer
       raise e
     end
 
+    def checkin(checkin_time)
+      Rails.logger.debug "Updating consumer check-in time: #{name}"
+      Resources::Candlepin::Consumer.checkin(self.uuid, checkin_time)
+    rescue => e
+      Rails.logger.error "Failed to update consumer check-in time in candlepin for #{name}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
+    def refresh_subscriptions
+      Rails.logger.debug "Refreshing consumer subscriptions in candlepin: #{name}"
+      Resources::Candlepin::Consumer.refresh_entitlements(self.uuid)
+    rescue => e
+      Rails.logger.error "Failed to refresh consumer subscriptions in candlepin for #{name}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
     def del_candlepin_consumer
       Rails.logger.debug "Deleting consumer in candlepin: #{name}"
       Resources::Candlepin::Consumer.destroy(self.uuid)
@@ -187,7 +203,7 @@ module Glue::Candlepin::Consumer
     end
 
     def to_json
-      super(:methods => [:href, :facts, :idCert, :owner, :autoheal, :release, :releaseVer])
+      super(:methods => [:href, :facts, :idCert, :owner, :autoheal, :release, :releaseVer, :checkin_time, :installedProducts])
     end
 
     def convert_from_cp_fields(cp_json)
