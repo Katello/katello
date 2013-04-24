@@ -37,6 +37,10 @@ class DistributorAPI(KatelloAPI):
         path = "/api/distributors/" + u_str(distributor_uuid)
         return self.server.DELETE(path)[1]
 
+    def export_manifest(self, distributor_uuid):
+        path = "/api/distributors/%s/export" % distributor_uuid
+        return self.server.GET(path)[1]
+
     def subscribe(self, distributor_id, pool, quantity):
         path = "/api/distributors/%s/subscriptions" % distributor_id
         data = {
