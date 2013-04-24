@@ -73,7 +73,8 @@ class Api::V1::ContentViewDefinitionsController < Api::V1::ApiController
   param :id, :identifier, :desc => "content view id"
   def index
     query_params.delete(:organization_id)
-    respond :collection => ContentViewDefinition.where(query_params).readable(@organization)
+    @definitions = ContentViewDefinition.where(query_params).readable(@organization)
+    respond :collection => @definitions
   end
 
   api :POST, "/content_view_definitions",
