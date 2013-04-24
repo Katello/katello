@@ -18,3 +18,4 @@
 //= require "alchemy/jquery/plugins/jquery.treeTable"
 //= require "widgets/auto_complete"
 //= require "distributors/distributors"
+//= require "systems/custom_info"
