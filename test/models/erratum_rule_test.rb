@@ -28,15 +28,6 @@ class ErratumRuleTest < MiniTest::Rails::ActiveSupport::TestCase
     @end_date = DateTime.strptime("01/31/2013" + zone, format)
   end
 
-  def after_tests
-    FilterRule.delete_all
-    Filter.delete_all
-    ContentViewDefinition.delete_all
-    ContentViewDefinitionBase.delete_all
-    Organization.delete_all
-    Package.delete_all
-  end
-
   def test_create
     assert @filter_rule.save
   end
