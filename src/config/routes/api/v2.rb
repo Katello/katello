@@ -60,6 +60,7 @@ Src::Application.routes.draw do
           post :copy
           post :remove_systems
           delete :destroy_systems
+          put :update_systems
         end
 
         resource :packages, :action => [:create, :update, :destroy], :controller => :system_group_packages

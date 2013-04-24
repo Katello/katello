@@ -80,7 +80,7 @@ describe Api::V1::SystemGroupsController, :katello => true do
        it "should return successfully" do
          get :show, :id=>@group.id, :organization_id=>@org.label
          response.should be_success
-         assigns(:group).id.should == @group.id
+         assigns(:system_group).id.should == @group.id
        end
      end
 
@@ -99,7 +99,7 @@ describe Api::V1::SystemGroupsController, :katello => true do
        it "should return successfully" do
          get :history, :id=>@group.id, :organization_id=>@org.label
          response.should be_success
-         assigns(:group).id.should == @group.id
+         assigns(:system_group).id.should == @group.id
        end
      end
 

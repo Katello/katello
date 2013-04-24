@@ -101,7 +101,14 @@ class Api::V2::SystemGroupsController < Api::V1::SystemGroupsController
     super
   end
 
-
-
+  api :PUT, "/system_groups/:id/update_systems", "Update systems within a system group"
+  param :id, :identifier, :desc => "Id of the system group", :required => true
+  param :system_group, Hash do
+    param :content_view_id, :identifier, "id of the content view to set systems to"
+    param :environment_id, :identifier, "id of the enviornment to set systems to"
+  end
+  def update_systems
+    super
+  end
 
 end

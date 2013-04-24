@@ -231,13 +231,13 @@ class Api::V1::SystemGroupsController < Api::V1::ApiController
   def update_systems
     unless params[:system_group].blank?
       ActiveRecord::Base.transaction do
-        @group.systems.each do |system|
+        @system_group.systems.each do |system|
           system.update_attributes!(params[:system_group])
         end
       end
     end
 
-    render :json => @group
+    respond_for_update :resource => @system_group
   end
 
   private
