@@ -1,7 +1,9 @@
 require 'oauth/request_proxy/rack_request'
 
+require 'openid/store/filesystem'
 require 'rack/openid'
-Rails.configuration.middleware.use Rack::OpenID
+openid_store_path = Pathname.new(Rails.root).join('db').join('openid-store')
+Rails.configuration.middleware.use Rack::OpenID, OpenID::Store::Filesystem.new(openid_store_path)
 
 Rails.configuration.middleware.use RailsWarden::Manager do |config|
   config.failure_app = FailedAuthenticationController
