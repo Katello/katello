@@ -34,7 +34,7 @@ shared_examples_for "protected action" do
       before_success if defined?(before_success)
 
       if controller.kind_of? Api::V1::ApiController
-        controller.should_not_receive(:render_exception_without_logging).with { |status, e| status.should == 403 }
+        controller.should_not_receive(:respond_for_exception).with { |e, options| options.try(:[], :status).should == :forbidden }
       else
         controller.should_not_receive(:render_403)
       end
@@ -62,7 +62,7 @@ shared_examples_for "protected action" do
       login_user_by_described_class(unauthorized_user) if defined?  unauthorized_user
       before_failure if defined?(before_failure)
       if @controller.kind_of? Api::V1::ApiController
-        @controller.should_receive(:render_exception_without_logging).with { |status, e| status.should == 403 }
+        @controller.should_receive(:respond_for_exception).with { |e, options| options.try(:[], :status).should == :forbidden }
       else
         @controller.should_receive(:render_403)
       end
