@@ -29,43 +29,35 @@ class DashboardController < ApplicationController
   end
 
   def errata
-    # retrieve the list of repos that are readable by the user, but since a system cannot be registered to Library,
+    # retrieve the list of repos that are readable by the user,
+    # but since a system cannot be registered to Library,
     # skip repos in Library
     repos = Repository.readable_in_org(current_organization, true)
 
     systems_hash = {}
-    errata_hash = {}
-
     unless repos.empty?
       errata_by_consumer = Errata.errata_by_consumer(repos)
 
       # grab the N (i.e. quantity) errata that have the most systems associated with them
-      n_errata = errata_by_consumer.sort_by{|a,b| b.length}.reverse[0..quantity-1]
+      n_errata = errata_by_consumer.sort_by{ |hash| hash[:summary][:applicable_consumers].length }.
+          reverse[0..quantity - 1]
 
       system_uuids = Set.new
-      errata_ids = Set.new
-      n_errata.each do |e|
-        errata_ids.add(e[0])
-        e[1].each do |s|
-          system_uuids.add(s)
-        end
+      n_errata.each do |erratum|
+        erratum[:summary][:applicable_consumers].each{ |uuid| system_uuids.add(uuid) }
       end
 
       unless system_uuids.empty?
         # retrieve the systems (id, name and env)
         systems = System.readable(current_organization).where(:uuid => system_uuids.to_a)
-        systems.each{|system| systems_hash[system.uuid] = system}
-
-        # retrieve the errata (type/product)
-        errata_ids.each do |errata_id|
-          e = Errata.find(errata_id)
-          errata_hash[e.id] = e
-        end
+        systems.each{ |system| systems_hash[system.uuid] = system }
       end
     end
 
-    render :partial=>"errata", :locals=>{:quantity=> quantity, :repos => repos, :n_errata => n_errata,
-                                         :systems_hash => systems_hash, :errata_hash => errata_hash}
+    render :partial => "errata", :locals => { :quantity => quantity,
+                                              :repos => repos,
+                                              :n_errata => n_errata,
+                                              :systems_hash => systems_hash }
   end
 
   def content_views
