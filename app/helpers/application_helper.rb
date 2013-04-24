@@ -302,4 +302,15 @@ module ApplicationHelper
   def to_calendar_date(date)
     date.strftime('%m/%d/%Y')
   end
+
+  def errata_string(type)
+    case type
+      when  Errata::SECURITY
+        _('Security')
+      when  Errata::ENHANCEMENT
+        _('Enhancement')
+      when  Errata::BUGZILLA
+        _('Bug Fix')
+    end
+  end
 end
