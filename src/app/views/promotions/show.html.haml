@@ -100,141 +100,142 @@
 //Div for dep. content
 #dialog_content{:style => "word-wrap: break-word;", :title=>"#{_('Package Dependencies')}"}
 
-= help_tip_button
-.grid_16
-  = help_tip((_('Changesets allow you to either promote content to or delete content from ' + |
-                'an environment.<br/><br/> ' + |
-                'For a promotion, you may promote content from one environment to the ' + |
-                'next along a promotion path.  Once you have created a promotion ' + |
-                'changeset, clicking "Add" next to one or more products will add them to ' + |
-                'the changeset.  If products already exist in the next environment, ' + |
-                'you may promote other types of content.  Once you have created a ' + |
-                'changeset, click the "Review" button to place the changeset in a ' + |
-                'locked state for review and when ready click the "Promote" button to ' + |
-                'apply it to the next environment.<br/><br/>' + |
-                'For a deletion, you may remove content from the current environment. ' + |
-                'Once you have created a deletion changeset, clicking "Add" next to ' + |
-                'content will add that content to the changeset.  Once you have created ' + |
-                'a changeset, click the "Review" button to place the changeset in a ' + |
-                'locked state for review and when ready click the "Delete" button to ' + |
-                'apply it to the current environment.  Note: deletion of content from ' + |
-                '%s is not allowed using a deletion changeset.<br/><br/>') % "Library").html_safe) |
+.center
+  = help_tip_button
+  .grid_16
+    = help_tip((_('Changesets allow you to either promote content to or delete content from ' + |
+                  'an environment.<br/><br/> ' + |
+                  'For a promotion, you may promote content from one environment to the ' + |
+                  'next along a promotion path.  Once you have created a promotion ' + |
+                  'changeset, clicking "Add" next to one or more products will add them to ' + |
+                  'the changeset.  If products already exist in the next environment, ' + |
+                  'you may promote other types of content.  Once you have created a ' + |
+                  'changeset, click the "Review" button to place the changeset in a ' + |
+                  'locked state for review and when ready click the "Promote" button to ' + |
+                  'apply it to the next environment.<br/><br/>' + |
+                  'For a deletion, you may remove content from the current environment. ' + |
+                  'Once you have created a deletion changeset, clicking "Add" next to ' + |
+                  'content will add that content to the changeset.  Once you have created ' + |
+                  'a changeset, click the "Review" button to place the changeset in a ' + |
+                  'locked state for review and when ready click the "Delete" button to ' + |
+                  'apply it to the current environment.  Note: deletion of content from ' + |
+                  '%s is not allowed using a deletion changeset.<br/><br/>') % "Library").html_safe) |
 
-.grid_16
-  = environment_selector(:url_proc=>breadcrumb_url_proc,  :accessible_envs=>accessible_envs)
+  .grid_16
+    = environment_selector(:url_proc=>breadcrumb_url_proc,  :accessible_envs=>accessible_envs)
 
-.grid_16
-  #container.promotions
-    .right_tree.sliding_tree
-      #changeset_tree
-        - if read_promotion_changesets or read_deletion_changesets
-          %h2 #{_(" Changesets")}
-          .sliding_tree_categories.clickable
-            .sliding_tree_category{:class => ("selected" unless !@next_environment), 'data-cs_type' => ('promotion' if @next_environment)}
-              - if @next_environment
-                #{_("Promotion to %s") % @next_environment.name}
-            .sliding_tree_category{:class => ("selected" unless @next_environment), 'data-cs_type' => ('deletion' if @environment and !@environment.library?)}
-              - if @environment and !@environment.library?
-                #{_("Deletion from %s") % @environment.name}
-          .breadcrumb_filter.fl.clear.clickable
-            %form#filter_form.filter.clear
-              %input{ :name => "filter", :type => "input", :placeholder => _("Filter..."), :id=>"filter_input"}
-              %button.action #{_("Filter")}
-              %br.clear
-            .filter_button.fr.clickable{ :title => "#{_('Filter')}" }
-              #{_('Filter')}
-            .tree_breadcrumb
-          .sliding_container
-            #cslist.list.sliding_list{"data-page_size"=>current_user.page_size}
-              #tree_loading.slider.tree_loading
-                .text
-                  = _("Loading Changeset")
-                  .spinner
-              .slider_one.has_content.slider.will_have_content
-              .slider_two.no_content.slider
-          #changeset_edit.slide_up_container
-            %h2
-              &nbsp; #{_("Changeset Details")}
-            .fieldset
-              .grid_2.ra
-                %label #{_("Name:")}
-              .grid_4.la.clear.editable.edit_name_text{'name' => 'name'}
-              .grid_2.ra
-                %label #{_("Description:")}
-              .grid_4.la.clear.editable.edit_description{'name' => 'description'}
-              .grid_2.ra
-                %label #{_("Type:")}
-              .grid_4.la.clear.edit_type{:style => "padding-top:2px;padding-left:2px;"}
+  .grid_16
+    #container.promotions
+      .right_tree.sliding_tree
+        #changeset_tree
+          - if read_promotion_changesets or read_deletion_changesets
+            %h2 #{_(" Changesets")}
+            .sliding_tree_categories.clickable
+              .sliding_tree_category{:class => ("selected" unless !@next_environment), 'data-cs_type' => ('promotion' if @next_environment)}
+                - if @next_environment
+                  #{_("Promotion to %s") % @next_environment.name}
+              .sliding_tree_category{:class => ("selected" unless @next_environment), 'data-cs_type' => ('deletion' if @environment and !@environment.library?)}
+                - if @environment and !@environment.library?
+                  #{_("Deletion from %s") % @environment.name}
+            .breadcrumb_filter.fl.clear.clickable
+              %form#filter_form.filter.clear
+                %input{ :name => "filter", :type => "input", :placeholder => _("Filter..."), :id=>"filter_input"}
+                %button.action #{_("Filter")}
+                %br.clear
+              .filter_button.fr.clickable{ :title => "#{_('Filter')}" }
+                #{_('Filter')}
+              .tree_breadcrumb
+            .sliding_container
+              #cslist.list.sliding_list{"data-page_size"=>current_user.page_size}
+                #tree_loading.slider.tree_loading
+                  .text
+                    = _("Loading Changeset")
+                    .spinner
+                .slider_one.has_content.slider.will_have_content
+                .slider_two.no_content.slider
+            #changeset_edit.slide_up_container
+              %h2
+                &nbsp; #{_("Changeset Details")}
+              .fieldset
+                .grid_2.ra
+                  %label #{_("Name:")}
+                .grid_4.la.clear.editable.edit_name_text{'name' => 'name'}
+                .grid_2.ra
+                  %label #{_("Description:")}
+                .grid_4.la.clear.editable.edit_description{'name' => 'description'}
+                .grid_2.ra
+                  %label #{_("Type:")}
+                .grid_4.la.clear.edit_type{:style => "padding-top:2px;padding-left:2px;"}
 
-          #changeset_status
-          - if manage_promotion_changesets or manage_deletion_changesets or apply_promotion_changesets or apply_deletion_changesets
-            #sliding_tree_actionbar.clickable
-              #delete_changeset.cs_action.tipsify{"data-url"=>changesets_path, "data-confirm-text"=>_('Are you sure you want to remove this promotion changeset?'), 'original-title' => _("Remove Changeset")}
-                %span#delete_changeset_icon.sprite
-                  SPRITE
-                %span.text
-                  = _("Remove")
-              #edit_changeset.cs_action.tipsify{'original-title' => _("Edit Changeset Details")}
-                %span#edit_changeset_icon.sprite
-                  SPRITE
-                %span.text
-                  = _('Edit Details')
-              #review_changeset.cs_action.tipsify{'original-title' => _("Place Changeset in Review State")}
-                %span#review_changeset_icon.sprite
-                  SPRITE
-                %span.text
-                  = _('Review')
-              #promote_changeset.cs_action.tipsify{'original-title' => _("Apply Promotion Changeset")}
-                %span#promote_changeset_icon.sprite
-                %span.text
-                  = _('Promote')
-          #changeset_users
-        - elsif @next_environment
-          %h2 #{_("Changesets")}
-          = _("You do not have permissions to view changesets for %s. Please contact your administrator to gain access.") % @next_environment.name
-        - else
-          %h2 #{_("Changesets")}
-          = _("An environment does not exist.  If you would like to manage changesets and content, please create a new environment.")
-
-
-
-    = render :partial=>"common/tupane"
-
-    #content_tree.left_panel.sliding_tree
-      - if show_new_button?(manage_promotion_changesets, manage_deletion_changesets)
-        - next_env = @next_environment.nil? ? "" : "&next_env_id=" + @next_environment.id.to_s
-        - base_ajax_url = "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@environment.id}"+"#{next_env}"
-        %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => base_ajax_url, "base-ajax_url" => base_ajax_url}
-          #{_('+ New Changeset')}
-          .arrow-right
-      %h2 #{@environment.name + _(" Content")}
-      .breadcrumb_search.clear.clickable
-        .search_button.clickable.fr{ :disabled => "disabled", :title => "#{_('Search')}" }
-          #{_('Search')}
-        .search_box
-          %span.search_status
-            %span.current_items_count
-              0
-            #{_('displayed')} of
-            %span.total_results_count
-              0
-            #{_('results.')}
-          %form#search_form.search{"data-url" => search_index_path()}
-            = text_field_tag(:search, params[:search], {:type => "text", :placeholder => "Search...", :class => "auto_complete_input ui-autocomplete-input"})
-            %button.action{:form => "search_form", :id => "search_button"} #{_("Search")}
-        .tree_breadcrumb
-      .sliding_container
-        #list.list.sliding_list{"data-page_size"=>current_user.page_size}
-          .slider_one.has_content.slider
-            .spinner
-          .slider_two.no_content.slider
-            .spinner
+            #changeset_status
+            - if manage_promotion_changesets or manage_deletion_changesets or apply_promotion_changesets or apply_deletion_changesets
+              #sliding_tree_actionbar.clickable
+                #delete_changeset.cs_action.tipsify{"data-url"=>changesets_path, "data-confirm-text"=>_('Are you sure you want to remove this promotion changeset?'), 'original-title' => _("Remove Changeset")}
+                  %span#delete_changeset_icon.sprite
+                    SPRITE
+                  %span.text
+                    = _("Remove")
+                #edit_changeset.cs_action.tipsify{'original-title' => _("Edit Changeset Details")}
+                  %span#edit_changeset_icon.sprite
+                    SPRITE
+                  %span.text
+                    = _('Edit Details')
+                #review_changeset.cs_action.tipsify{'original-title' => _("Place Changeset in Review State")}
+                  %span#review_changeset_icon.sprite
+                    SPRITE
+                  %span.text
+                    = _('Review')
+                #promote_changeset.cs_action.tipsify{'original-title' => _("Apply Promotion Changeset")}
+                  %span#promote_changeset_icon.sprite
+                  %span.text
+                    = _('Promote')
+            #changeset_users
+          - elsif @next_environment
+            %h2 #{_("Changesets")}
+            = _("You do not have permissions to view changesets for %s. Please contact your administrator to gain access.") % @next_environment.name
+          - else
+            %h2 #{_("Changesets")}
+            = _("An environment does not exist.  If you would like to manage changesets and content, please create a new environment.")
 
 
-#conflict-dialog{:style=>"display: none"}
-  %div
-    = _("Your update has applied successfully, but during that time another user has also made an update.")
-    %a#conflict-details #{_("More details")}
-    %input#conflict_close.button.fr{:type => "button", :value=>"#{('Close')}"}
-  .clear
-  #conflict-accordion{:style=>"display: none"}
+
+      = render :partial=>"common/tupane"
+
+      #content_tree.left_panel.sliding_tree
+        - if show_new_button?(manage_promotion_changesets, manage_deletion_changesets)
+          - next_env = @next_environment.nil? ? "" : "&next_env_id=" + @next_environment.id.to_s
+          - base_ajax_url = "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@environment.id}"+"#{next_env}"
+          %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => base_ajax_url, "base-ajax_url" => base_ajax_url}
+            #{_('+ New Changeset')}
+            .arrow-right
+        %h2 #{@environment.name + _(" Content")}
+        .breadcrumb_search.clear.clickable
+          .search_button.clickable.fr{ :disabled => "disabled", :title => "#{_('Search')}" }
+            #{_('Search')}
+          .search_box
+            %span.search_status
+              %span.current_items_count
+                0
+              #{_('displayed')} of
+              %span.total_results_count
+                0
+              #{_('results.')}
+            %form#search_form.search{"data-url" => search_index_path()}
+              = text_field_tag(:search, params[:search], {:type => "text", :placeholder => "Search...", :class => "auto_complete_input ui-autocomplete-input"})
+              %button.action{:form => "search_form", :id => "search_button"} #{_("Search")}
+          .tree_breadcrumb
+        .sliding_container
+          #list.list.sliding_list{"data-page_size"=>current_user.page_size}
+            .slider_one.has_content.slider
+              .spinner
+            .slider_two.no_content.slider
+              .spinner
+
+
+  #conflict-dialog{:style=>"display: none"}
+    %div
+      = _("Your update has applied successfully, but during that time another user has also made an update.")
+      %a#conflict-details #{_("More details")}
+      %input#conflict_close.button.fr{:type => "button", :value=>"#{('Close')}"}
+    .clear
+    #conflict-accordion{:style=>"display: none"}
