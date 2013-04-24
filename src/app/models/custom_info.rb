@@ -23,6 +23,7 @@ class CustomInfo < ActiveRecord::Base
   validates :informable_id, :presence => true
   validates :informable_type, :presence => true
 
+  before_validation :strip_attributes
   after_save :reindex_informable
   after_destroy :reindex_informable
 
@@ -32,8 +33,9 @@ class CustomInfo < ActiveRecord::Base
 
   # find the Katello object by type and ID (i.e. "system", 32)
   def self.find_informable(informable_type, informable_id)
-    klass = informable_type.classify.constantize
-    informable = klass.find(informable_id)
+    class_name = informable_type.classify
+    informable = class_name.constantize.find(informable_id)
+    raise _("Resource %s does not support custom information") % class_name unless informable.respond_to? :custom_info
     return informable
   end
 
@@ -65,6 +67,13 @@ class CustomInfo < ActiveRecord::Base
 
   def <=>(obj)
     return self.keyname <=> obj.keyname
+  end
+
+  private
+
+  def strip_attributes
+    self.keyname.try(:strip!)
+    self.value.try(:strip!)
   end
 
 end

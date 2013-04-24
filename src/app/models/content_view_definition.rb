@@ -158,6 +158,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
     false
   end
 
+  #NOTE: this function will most likely become obsolete once we drop api v1
   def as_json(options = {})
     result = self.attributes
     result["organization"] = self.organization.try(:name)

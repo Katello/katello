@@ -17,7 +17,8 @@ module Glue::Pulp::Package
     base.class_eval do
 
       attr_accessor :_id, :download_url, :checksum, :license, :group, :filename, :requires,  :provides, :description,
-                    :size, :buildhost, :repoids, :name, :arch
+                    :size, :buildhost, :repoids, :name, :arch, :version, :_content_type_id, :epoch, :vendor, :relativepath,
+                    :children, :release, :checksumtype
 
       alias_method 'id=', '_id='
       alias_method 'id', '_id'
