@@ -87,7 +87,7 @@ describe Api::V1::ContentViewsController, :katello => true do
     it "should call ContentView#refresh" do
       version = mock_model(ContentViewVersion)
       @view.should_receive(:refresh_view).and_return(version)
-      version.should_receive(:task_status)
+      version.should_receive(:task_status).and_return(TaskStatus.new)
       @def.should_receive(:publishable?).and_return(true)
       post "refresh", :id => @view.id.to_s
       response.status.should eql(202)
