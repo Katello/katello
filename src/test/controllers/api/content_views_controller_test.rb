@@ -65,7 +65,7 @@ class Api::ContentViewsControllerTest < MiniTest::Rails::ActionController::TestC
   end
 
   test "should create a new changeset" do
-    login_user(users(:admin))
+    login_user(User.find(users(:admin).id))
     changeset_count = Changeset.count
     post :promote, :id => @content_view.id, :environment_id => @environment.id
     assert_response :success
@@ -73,7 +73,7 @@ class Api::ContentViewsControllerTest < MiniTest::Rails::ActionController::TestC
   end
 
   test "should not delete promoted view" do
-    login_user(users(:admin))
+    login_user(User.find(users(:admin).id))
     definition = Class.new { define_method(:publishable?) { true } }.new
     ContentView.any_instance.stubs(:content_view_definition).returns(definition)
     delete :destroy, organization_id: @organization.name, id: @content_view.id

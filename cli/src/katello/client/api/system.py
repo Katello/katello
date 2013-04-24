@@ -13,6 +13,8 @@
 # granted to use or replicate Red Hat trademarks that are incorporated
 # in this software or its documentation.
 
+import datetime
+
 from katello.client.api.base import KatelloAPI
 from katello.client.lib.utils.encoding import u_str
 from katello.client.lib.utils.data import update_dict_unless_none
@@ -50,6 +52,16 @@ class SystemAPI(KatelloAPI):
         path = "/api/systems/" + u_str(system_uuid)
         return self.server.DELETE(path)[1]
 
+    # checkin_time - datetime or None (default)
+    def checkin(self, system_uuid, checkin_time=None):
+        path = "/api/systems/%s/checkin" % u_str(system_uuid)
+        if not checkin_time:
+            checkin_time = datetime.datetime.now()
+        params = {
+            "date": checkin_time.isoformat()
+        }
+        return self.server.PUT(path, params)[1]
+
     def subscribe(self, system_id, pool, quantity):
         path = "/api/systems/%s/subscriptions" % system_id
         data = {
@@ -61,6 +73,10 @@ class SystemAPI(KatelloAPI):
     def subscriptions(self, system_id):
         path = "/api/systems/%s/subscriptions" % system_id
         return self.server.GET(path)[1]
+
+    def refresh_subscriptions(self, system_id):
+        path = "/api/systems/%s/refresh_subscriptions" % system_id
+        return self.server.POST(path, {})[1]
 
     def available_pools(self, system_id, match_system=False, match_installed=False, no_overlap=False):
         params = {}
