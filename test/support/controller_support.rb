@@ -13,21 +13,28 @@
 
 module ControllerSupport
   def check_permission(params)
-    user = params[:user] || no_permission_user
+    permissions = params[:permission].is_a?(Array) ? params[:permission] : [params[:permission]]
 
-    params[:permission].call(::AuthorizationSupportMethods::UserPermissionsGenerator.new(user))
+    permissions.each do |permission|
+      # TODO: allow user to be passed in via params and clear permissions between iterations
+      user = no_permission_user
 
-    action = params[:action]
-    req = params[:request]
-    @controller.define_singleton_method(action) {render :nothing => true}
+      if permission
+        permission.call(::AuthorizationSupportMethods::UserPermissionsGenerator.new(user))
+      end
 
-    login_user(user)
-    req.call
+      action = params[:action]
+      req = params[:request]
+      @controller.define_singleton_method(action) {render :nothing => true}
 
-    if params[:authorized]
-      assert_response :success
-    else
-      assert_equal 403, response.status
+      login_user(user)
+      req.call
+
+      if params[:authorized]
+        assert_response :success
+      else
+        assert_equal 403, response.status
+      end
     end
   end
 
