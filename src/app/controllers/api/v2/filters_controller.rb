@@ -21,14 +21,14 @@ class Api::V2::FiltersController < Api::V1::FiltersController
     "List filters"
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
   def index
-  	super
+    super
   end
 
   api :POST, "/content_view_definitions/:content_view_definition_id/filters",
     "Create a filter for a content view definition"
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
   param :filter, Hash, :required => true, :action_aware => true do
-	param :name, String, :desc => "name of the filter", :required => true
+  param :name, String, :desc => "name of the filter", :required => true
   end
   def create
     filter = Filter.create!(:content_view_definition => @definition, :name => params[:filter][:name])
@@ -40,7 +40,7 @@ class Api::V2::FiltersController < Api::V1::FiltersController
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
   param :id, String, :desc => "name of the filter", :required => true
   def show
-  	super
+    super
   end
 
   api :DELETE, "/content_view_definitions/:content_view_definition_id/filters/:id",
@@ -48,7 +48,7 @@ class Api::V2::FiltersController < Api::V1::FiltersController
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
   param :id, String, :desc => "name of the filter", :required => true
   def destroy
-  	super
+    super
   end
 
   api :GET, "/content_view_definitions/:content_view_definition_id/filters/:id/products",
@@ -56,7 +56,7 @@ class Api::V2::FiltersController < Api::V1::FiltersController
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
   param :id, String, :desc => "name of the filter", :required => true
   def list_products
-  	super
+    super
   end
 
   api :PUT, "/content_view_definitions/:content_view_definition_id/filters/:id/products",
@@ -75,7 +75,7 @@ class Api::V2::FiltersController < Api::V1::FiltersController
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
   param :id, String, :desc => "name of the filter", :required => true
   def list_repositories
-  	super
+    super
   end
 
   api :PUT, "/content_view_definitions/:content_view_definition_id/filters/:id/repositories",
