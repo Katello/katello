@@ -22,7 +22,7 @@ class Api::SystemsController < Api::ApiController
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
                                         :upload_package_profile, :errata, :package_profile, :subscribe,
                                         :unsubscribe, :subscriptions, :pools, :enabled_repos, :releases,
-                                        :add_system_groups, :remove_system_groups]
+                                        :add_system_groups, :remove_system_groups, :refresh_subscriptions, :checkin]
   before_filter :find_task, :only => [:task_show]
   before_filter :authorize, :except => :activate
 
@@ -68,7 +68,9 @@ class Api::SystemsController < Api::ApiController
       :task_show => read_system,
       :enabled_repos => consumer_only,
       :add_system_groups => edit_system,
-      :remove_system_groups => edit_system
+      :remove_system_groups => edit_system,
+      :refresh_subscriptions => edit_system,
+      :checkin => edit_system
     }
   end
 
@@ -159,6 +161,14 @@ DESC
                                            :facts, :guestIds, :installedProducts,
                                            :releaseVer, :serviceLevel,
                                            :environment_id, :content_view_id))
+    render :json => @system.to_json
+  end
+
+  api :PUT, "/consumers/:id/checkin/", "Update system check-in time (compatibility)"
+  api :PUT, "/systems/:id/checkin", "Update system check-in time"
+  param :date, String, :desc => "check-in time"
+  def checkin
+    @system.checkin(params[:date])
     render :json => @system.to_json
   end
 
@@ -420,6 +430,13 @@ DESC
     ids = params[:system][:system_group_ids].map(&:to_i)
     @system.system_group_ids = (@system.system_group_ids - ids).uniq
     @system.save!
+    render :json => @system.to_json
+  end
+
+  api :PUT, "/systems/:id/refresh_subscriptions", "Trigger a refresh of subscriptions, auto-attaching if enabled"
+  param :id, String, :desc => "UUID of the system", :required => true
+  def refresh_subscriptions
+    @system.refresh_subscriptions
     render :json => @system.to_json
   end
 

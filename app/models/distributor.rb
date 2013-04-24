@@ -33,7 +33,7 @@ class Distributor < ActiveRecord::Base
   validates_with Validators::NonLibraryEnvironmentValidator, :attributes => :environment
   # multiple distributors with a single name are supported
   validates :name, :presence => true
-  #validates_uniqueness_of :name, :scope => {:environment => :organization_id}
+  validates_length_of :name, :maximum => 250
   validates_with Validators::UniqueFieldInOrg, :attributes => :name
   validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description

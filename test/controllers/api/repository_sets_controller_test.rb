@@ -17,14 +17,14 @@ class Api::RepositorySetsControllerTest < MiniTest::Rails::ActionController::Tes
   fixtures :all
 
   def setup
+    models = ["Organization", "KTEnvironment", "Changeset", "Product"]
+    services = ["Pulp", "ElasticSearch"]
+    disable_glue_layers(services, models)
     @org = organizations(:acme_corporation)
     @environment = environments(:library)
     @redhat_product = products(:redhat)
     @custom_product = products(:fedora)
     login_user(User.find(users(:admin)))
-    models = ["Organization", "KTEnvironment", "Changeset"]
-    services = ["Pulp", "ElasticSearch"]
-    disable_glue_layers(services, models)
   end
 
   test "listing repo sets should be successful" do

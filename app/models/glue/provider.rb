@@ -53,7 +53,7 @@ module Glue::Provider
     end
 
     def refresh_manifest(upstream, options = {})
-      options = { :async => false, :notify => false }.merge options
+      options = { :async => true, :notify => false }.merge options
       options.assert_valid_keys(:async, :notify)
 
       self.task_status
