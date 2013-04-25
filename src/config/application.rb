@@ -62,11 +62,16 @@ else
 end
 
 # TODO to be removed after config path is made configurable in LdapFluff
-unless File.exist? LdapFluff::CONFIG
-  ldap_fluff_config_path = File.join Gem.loaded_specs['ldap_fluff'].full_gem_path, 'etc', 'ldap_fluff.yml'
-  raise 'missing LdapFluff config file' unless File.exist? ldap_fluff_config_path
-  LdapFluff::CONFIG = ldap_fluff_config_path
-end
+candidates       = [
+    # production environment
+    LdapFluff::CONFIG,
+    # rpm build environment
+    '/opt/rh/ruby193/root' + LdapFluff::CONFIG,
+    # on travis and in development environment
+    File.join(Gem.loaded_specs['ldap_fluff'].full_gem_path, 'etc', 'ldap_fluff.yml')]
+config_file_path = candidates.find { |path| File.exist? path }
+raise "missing LdapFluff config file, candidates: #{candidates.join(' ')}" if config_file_path.nil?
+LdapFluff::CONFIG = config_file_path unless LdapFluff::CONFIG == config_file_path
 
 module Src
   class Application < Rails::Application
