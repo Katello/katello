@@ -120,7 +120,7 @@ module Experimental
           options[wrapper][:class] = (options[wrapper][:class] || '').split
         end
       end
-      
+
       options[:label_wrapper][:class] |= ['label']
       options[:input_wrapper][:class] |= ['input']
       options[:tabindex] ||= tabindex
@@ -146,12 +146,12 @@ module Experimental
       tag_options.merge!({:class => options[:input_wrapper][:class]})
 
       if options[:help]
-        content_tag(:div, tag_options ) do 
+        content_tag(:div, tag_options ) do
           yield +
           content_tag(:i, '', :class => 'details-icon', 'data-help' => options[:help])
         end
       elsif options[:note]
-        content_tag(:div, tag_options ) do 
+        content_tag(:div, tag_options ) do
           yield +
           content_tag(:span, options[:note], :class => 'note')
         end

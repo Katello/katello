@@ -56,7 +56,7 @@
         .label
           = label :system, :name, _("Name")
         .input
-          %span.value{'name' => 'system[name]', :class=>("editable edit_panel_element" if editable), 'data-url'=>system_path(system.id)} 
+          %span.value{'name' => 'system[name]', :class=>("editable edit_panel_element" if editable), 'data-url'=>system_path(system.id)}
             = system[:name]
       .control-group
         .label
@@ -169,7 +169,7 @@
                         = link_to key.name, activation_keys_path(:anchor => "panel=activation_key_#{key.id}")
                       - else
                         = key[:name]
-      
+
       %h5 #{_("Host & Guest Info")}
       .control-group
         .label
