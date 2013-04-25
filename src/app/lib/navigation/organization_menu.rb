@@ -46,17 +46,35 @@ module Navigation
           :if => lambda{@organization},
           :options => {:class=>"panel_link"}
         },
-        { :key => :organization_default_info,
-          :name => _("System Default Info"),
-          :url => lambda{organization_default_info_path(@organization.label, "system")},
-          :if => lambda{@organization && @organization.editable?},
-          :options => {:class=>"panel_link"}
+        {:key => :organization_default_info,
+         :name => _("Default Custom Info"),
+         :url => lambda{organization_default_info_path(@organization.label, "system")},
+         :if => lambda{@organization},
+         :options => {:class=>"panel_link menu_parent"},
+         :items => default_info_subnav
         },
         { :key => :organization_history,
           :name =>_("History"),
           :url => lambda{events_organization_path(@organization.label)},
           :if => lambda{@organization},
           :options => {:class=>"panel_link"}
+        }
+      ]
+    end
+
+    def default_info_subnav
+      [
+        { :key => :org_system_default_info,
+          :name => _("System Default Info"),
+          :url => lambda{organization_default_info_path(@organization.label, "system")},
+          :if => lambda{@organization},
+          :options => {:class=>"third_level panel_link"}
+        },
+        { :key => :org_distributor_default_info,
+          :name => _("Distributor Default Info"),
+          :url => lambda{organization_default_info_path(@organization.label, "distributor")},
+          :if => lambda{@organization},
+          :options => {:class=>"third_level panel_link"}
         }
       ]
     end
