@@ -60,8 +60,8 @@ class List(ErrataAction):
                       help=_("filter errata by severity"))
 
     def check_options(self, validator):
-        if not validator.exists('repo_id'):
-            validator.require('org')
+        validator.require_at_least_one_of(('repo', 'repo_id'))
+        validator.mutually_exclude('repo', 'repo_id')
         if validator.exists('repo'):
             validator.require('org')
             validator.require_at_least_one_of(('product', 'product_label', 'product_id'))
