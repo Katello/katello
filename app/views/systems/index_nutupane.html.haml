@@ -6,7 +6,7 @@
     = _("Systems")
   %div{ 'alch-table-toolbar' => 'table' }
   %table#nutupane-table.table.stable.stripe-row{ 'alch-table' => 'table', 'row-select' => 'true', 'ng-class' => '{ "table-mask" : table.working }' }
-      
+
   %div.nutupane-details{ 'nutupane-details'=>'table.visible', 'ng-class' => '{ "nutupane-details-open" : !table.visible }' }
     %header
       %h2.left
@@ -40,7 +40,7 @@
 
         %h5 #{_("System Properties")}
         %div(alch-input){ 'label'=>_('Name') }
-          %span{ 'inline-edit-text'=>'system.name' } 
+          %span{ 'inline-edit-text'=>'system.name' }
         %div(alch-input){ 'label'=>_("Description") }
           %span{ 'inline-edit-textarea'=>'system.description' }
         %div(alch-input){ 'label'=>_("OS") }
@@ -87,7 +87,7 @@
               %span #{system_environment_name system}
         - if Katello.config.katello?
           %div(alch-input){ 'label'=>_("Content View") }
-            %span{ 'inline-edit-select'=>'system.content_view_id', 
+            %span{ 'inline-edit-select'=>'system.content_view_id',
                    'inline-edit-select-options'=>'system.available_content_views' }
 
         %h5 #{_("System Events")}
@@ -102,7 +102,7 @@
             %ul
               %li{ 'ng-repeat'=>'key in system.activation_key' }
                 {{ key.name }}
-        
+
         %h5 #{_("Host & Guest Info")}
         %div(alch-input){ 'label'=>_("System Type") }
           .value
