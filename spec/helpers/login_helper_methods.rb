@@ -56,6 +56,8 @@ module LoginHelperMethods
     request.env['warden'] = mock(Warden, :user => @mock_user, :authenticate => @mock_user, :authenticate! => @mock_user)
     controller.stub!(:require_user).and_return({})
     controller.stub!(:current_user).and_return(@mock_user)
+    User.stub(:current).and_return(@mock_user)
+    return @mock_user
   end
 
   def mock_auth(object)

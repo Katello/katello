@@ -180,10 +180,9 @@ class System < ActiveRecord::Base
         json['guests'] = self.guests.map(&:attributes)
       end
     end
-  
-    json['editable'] = editable?
 
     if options[:expanded]
+      json['editable'] = editable?
       json['type'] = if guest == 'true'
                         _("Guest")
                       else
