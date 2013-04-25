@@ -11,8 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Permission < ActiveRecord::Base
+  include Glue::ElasticSearch::Permission if Katello.config.use_elasticsearch
   before_destroy :check_locked # RAILS3458: must be before dependent associations http://tinyurl.com/rails3458
-
   belongs_to :resource_type
   belongs_to :organization
   belongs_to :role, :inverse_of => :permissions
@@ -21,7 +21,7 @@ class Permission < ActiveRecord::Base
 
   before_save :cleanup_tags_verbs
   before_save :check_global
-  after_save :update_related_index
+
 
   validates :name, :presence => true
   validates_with Validators::NonHtmlNameValidator, :attributes => :name
@@ -164,11 +164,6 @@ class Permission < ActiveRecord::Base
     end
   end
 
-  def update_related_index
-    if self.name_changed?
-      self.role.update_index
-    end
-  end
 
 
   def check_locked

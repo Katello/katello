@@ -29,7 +29,7 @@ if defined?(MiniTest)
   namespace :minitest do
     Rake::Task["minitest"].clear
     Rake::Task["minitest:models"].clear
-
+    Rake::Task["minitest:controllers"].clear
     if ENV['method']
       if not ENV['method'].starts_with?('test_')
         ENV['method'] = "test_#{ENV['method']}"
