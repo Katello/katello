@@ -52,13 +52,18 @@ module SystemsHelper
              {:tabindex => 2})
   end
 
-  def system_content_view_opts
+  def system_content_view_opts(system)
     keys = {}
-    ContentView.readable(current_organization).non_default.each do |view|
+    if system.environment
+      content_views = system.environment.content_views.readable(current_organization)
+    else
+      content_views = ContentView.readable(current_organization)
+    end
+    content_views.non_default.each do |view|
       keys[view.id] = view.name
     end
     keys[""] = ""
-    keys["selected"] = @system.content_view_id || ""
+    keys["selected"] = system.content_view_id || ""
 
     keys.to_json
   end
