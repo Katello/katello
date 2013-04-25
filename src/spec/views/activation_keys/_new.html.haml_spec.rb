@@ -29,6 +29,7 @@ describe "activation_keys/_new.html.haml" do
     @selected_content_view = "No Content View"
     view.stub!(:environment_selector)
     view.stub!(:content_view_select_labels).and_return([])
+    view.stub!(:current_user).and_return(FactoryGirl.build(:user))
 
     render :partial => "new", :locals => {:accessible_envs => [@environment]}
   end
