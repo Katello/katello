@@ -4,7 +4,7 @@ angular.module('Katello').directive('inlineEdit', function() {
         templateUrl: 'inline-edit.html',
         controller: ['$scope', function($scope) {
             var previousValue;
-          
+
             $scope.edit = function() {
                 $scope.editMode = true;
                 previousValue = $scope.model;
@@ -24,7 +24,7 @@ angular.module('Katello').directive('inlineEdit', function() {
 
 angular.module('Katello').directive('inlineEditText', function() {
     return {
-        template: '<input type="text" on-enter="save()" ng-model="model" ng-show="editMode">' + 
+        template: '<input type="text" on-enter="save()" ng-model="model" ng-show="editMode">' +
                   '<span inline-edit></span>',
         scope: {
             model: '=inlineEditText',
@@ -36,7 +36,7 @@ angular.module('Katello').directive('inlineEditText', function() {
 
 angular.module('Katello').directive('inlineEditTextarea', function() {
     return {
-        template: '<textarea on-enter="save()" rows=8 cols=40 ng-model="model" ng-show="editMode"></textarea>' + 
+        template: '<textarea on-enter="save()" rows=8 cols=40 ng-model="model" ng-show="editMode"></textarea>' +
                   '<span inline-edit></span>',
         scope: {
             model: '=inlineEditTextarea',
@@ -48,8 +48,8 @@ angular.module('Katello').directive('inlineEditTextarea', function() {
 
 angular.module('Katello').directive('inlineEditSelect', function() {
     return {
-        template: '<select on-enter="save()" ng-model="model" ng-show="editMode" ng-options="option.name for option in options">' + 
-                  '</select>' + 
+        template: '<select on-enter="save()" ng-model="model" ng-show="editMode" ng-options="option.name for option in options">' +
+                  '</select>' +
                   '<span inline-edit></span>',
         scope: {
             model: '=inlineEditSelect',
