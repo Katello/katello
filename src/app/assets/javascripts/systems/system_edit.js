@@ -21,6 +21,7 @@ update_content_views = function(env_id) {
                        options[value.id] = value.name;
                   });
                   $("#system_content_view").data("options", options);
+                  $("#system_content_view").show();
               })
             });
 }
@@ -111,7 +112,6 @@ $(document).ready(function() {
             notices.checkNotices();
 
             update_content_views(selected_env_ids[0]['id']);
-            $("#system_content_view").show();
             if($("#system_content_view").text() != i18n.clickToEdit) {
                 alert(i18n.contentViewReset);
                 $("#system_content_view").text(i18n.clickToEdit);
