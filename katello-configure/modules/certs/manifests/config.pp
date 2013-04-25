@@ -118,11 +118,19 @@ class certs::config {
     require   => [Exec["generate-candlepin-certificate"], File["${ssl_build_path}/rhsm-katello-reconfigure"], File["${katello::params::configure_log_base}"]]
   }
 
+  exec { "create-candlepin-consumer-certificate-link":
+    cwd     => "${katello_www_pub_dir}",
+    command => "ln -sf ${candlepin_consumer_name}-1.0-1.noarch.rpm ${candlepin_cert_name}-consumer-latest.noarch.rpm",
+    path    => "/usr/bin:/bin",
+    creates => "${katello_www_pub_dir}/${candlepin_cert_name}-consumer-latest.noarch.rpm",
+    require => Exec["generate-candlepin-certificate"]
+  }
+
   exec { "deploy-candlepin-certificate":
     command => "rpm -qp /root/ssl-build/$(grep $candlepin_cert_name.*noarch.rpm /root/ssl-build/latest.txt) | xargs rpm -q; if [ $? -ne 0 ]; then rpm -Uvh --force /root/ssl-build/$(grep noarch.rpm /root/ssl-build/latest.txt); fi",
     path => "/bin:/usr/bin",
     creates => "$candlepin_pub_cert",
-    require => Exec["generate-candlepin-certificate"],
+    require => Exec["create-candlepin-consumer-certificate-link"],
     before => Class["apache2::service"]
   }
 
