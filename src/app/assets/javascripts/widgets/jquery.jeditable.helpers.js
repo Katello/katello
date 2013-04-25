@@ -136,7 +136,7 @@ KT.editable = (function(){
                 var settings = {
                     type            :  'select',
                     name            :  element.attr('name'),
-                    data               :  element.data('options'),
+                    data            :  jQuery.proxy(function() { return $(this).data("options"); }, this),
                     onsuccess       :  function(result, status, xhr){
                         var data = element.data('options');
 
@@ -154,7 +154,7 @@ KT.editable = (function(){
                 var settings = {
                     type            :  'multiselect',
                     name            :  element.attr('name'),
-                    data               :  element.data('options')
+                    data            :  jQuery.proxy(function() { return $(this).data("options"); }, this)
                 };
                 $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
             });
