@@ -12,9 +12,9 @@
 
 # encoding: UTF-8
 
-begin
+unless ENV['RAILS_ENV'] == 'build' # ok
   require_relative 'minitest_helper'
-rescue
+else
   # if we are in build environment of RPM we have only the bare minimum
   warn 'loading minimal test environment'
   require 'minitest/autorun'
