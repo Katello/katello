@@ -1,0 +1,10 @@
+= javascript 'widgets/jquery.jeditable.helpers'
+
+= render :partial => "distributors/distributor_tupane_header_nav"
+
+= render :partial => "custom_info/edit",
+         :locals => { :informable => @distributor,
+                      :informable_type => "distributor",
+                      :informable_id => @distributor.id }
+
+= render :template => "layouts/tupane_layout"

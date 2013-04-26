@@ -61,14 +61,15 @@ class DistributorsController < ApplicationController
       :facts => read_distributor,
       :auto_complete => any_readable,
       :destroy=> delete_distributors,
-      :bulk_destroy => bulk_delete_distributors
+      :bulk_destroy => bulk_delete_distributors,
+      :custom_info => read_distributor
     }
   end
 
   def param_rules
     update_check = lambda do
       if params[:distributor]
-        sys_rules = {:distributor => [:name, :description, :location, :releaseVer, :serviceLevel, :environment_id, :content_view_id] }
+        sys_rules = {:distributor => [:name, :description, :environment_id, :content_view_id] }
         check_hash_params(sys_rules, params)
       else
         check_array_params([:id], params)
@@ -256,25 +257,7 @@ class DistributorsController < ApplicationController
   end
 
   def update
-    # The 'autoheal' flag is not an ActiveRecord attribute so update it explicitly if present
-    # The 'serviceLevel' comes in as a string 0/1 + level (eg. 0STANDARD = auto off, STANDARD))
-    if params[:distributor] && params[:distributor][:serviceLevel]
-      val = params[:distributor][:serviceLevel]
-      if val == '0'
-        params[:distributor][:serviceLevel] = ''
-        @distributor.autoheal = false
-      elsif val == '1'
-        params[:distributor][:serviceLevel] = ''
-        @distributor.autoheal = true
-      else
-        if val.start_with? '1'
-          @distributor.autoheal = true
-        else
-          @distributor.autoheal = false
-        end
-        params[:distributor][:serviceLevel] = val[1..-1]
-      end
-    end
+    params[:system][:content_view_id] = nil if params[:system].has_key? :environment_id
 
     @distributor.update_attributes!(params[:distributor])
     notify.success _("Distributor '%s' was updated.") % @distributor["name"]
@@ -286,12 +269,7 @@ class DistributorsController < ApplicationController
 
     respond_to do |format|
       format.html {
-        # Use the distributors_helper method when returning service level so the UI reflects proper text
-        if params[:distributor] && params[:distributor][:serviceLevel]
-          render :text=>distributor_servicelevel(@distributor)
-        else
-          render :text=>(params[:distributor] ? params[:distributor].first[1] : "")
-        end
+        render :text=>(params[:distributor] ? params[:distributor].first[1] : "")
       }
       format.js
     end
@@ -300,6 +278,10 @@ class DistributorsController < ApplicationController
   def show
     distributor = Distributor.find(params[:id])
     render :partial=>"distributors/list_distributor_show", :locals=>{:item=>distributor, :accessor=>"id", :columns=> COLUMNS.keys, :noblock => 1}
+  end
+
+  def custom_info
+    render :partial => "edit_custom_info"
   end
 
   def section_id
