@@ -197,26 +197,29 @@ class Update(ContentViewDefinitionAction):
     description =  _('update a content view definition')
 
     def setup_parser(self, parser):
+        self._add_get_cvd_opts(parser)
         parser.add_option("--description", dest="description",
-                help=_("content view description eg: foo's content view"))
+                          help=_("content view description eg: foo's content view"))
         opt_parser_add_org(parser, required=1)
-        parser.add_option('--label', dest='label',
-                help=_("content view definition label (required)"))
-        parser.add_option('--name', dest='name', help=_("content view name"))
+        parser.add_option('--new_name', dest='new_name', help=_("content view name"))
 
 
     def check_options(self, validator):
-        validator.require(('org', 'label'))
+        validator.require(('org'))
+        self._add_get_cvd_opts_check(validator)
+        validator.require_at_least_one_of(('new_name', 'description'))
 
     def run(self):
-        name         = self.get_option('name')
+        new_name     = self.get_option('new_name')
         description  = self.get_option('description')
         org_name     = self.get_option('org')
-        def_label    = self.get_option('view')
+        def_label    = self.get_option('label')
+        def_name     = self.get_option('name')
+        def_id       = self.get_option('id')
 
-        cvd = get_cv_definition(org_name, def_label)
+        cvd = get_cv_definition(org_name, def_label, def_name, def_id)
 
-        cvd = self.api.update(org_name, cvd["id"], name, description)
+        cvd = self.api.update(org_name, cvd["id"], new_name, description)
         print _("Successfully updated definition [ %s ]") % cvd['name']
         return os.EX_OK
 

@@ -54,7 +54,7 @@ class ContentViewDefinitionAPI(KatelloAPI):
 
 
     def update(self, org, cvd_id, name, description):
-        cvd = {"id": cvd_id}
+        cvd = dict()
         cvd = update_dict_unless_none(cvd, "name", name)
         cvd = update_dict_unless_none(cvd, "description", description)
 
