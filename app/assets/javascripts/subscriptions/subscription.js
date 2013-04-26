@@ -13,10 +13,10 @@
 */
 
 KT.subscription = (function() {
-    var manifest_updater
+    var manifest_updater;
 
     // Data that is unchanged from previous will come in as ""
-    updateStatus = function(data) {
+    var updateStatus = function(data) {
         if (data !== "" && $('.manifest_progress_message')) {
             $(".manifest_progress_message").html(i18n.import_in_progress(data["state"]));
         }
