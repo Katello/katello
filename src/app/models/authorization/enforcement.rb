@@ -61,7 +61,7 @@ module Authorization::Enforcement
   def allowed_all_tags?(verbs, resource_type, org = nil)
     ResourceType.check resource_type, verbs
     verbs = [] if verbs.nil?
-    verbs = [verbs] unless verbs.is_a? Array
+    verbs = verbs.is_a?(Array) ? verbs.clone : [verbs]
     org = Organization.find(org) if Numeric === org
 
     log_roles(verbs, resource_type, nil, org)
@@ -120,13 +120,13 @@ module Authorization::Enforcement
   # This method is called by every protected controller.
   def allowed_to?(verbs, resource_type, tags = nil, org = nil, any_tags = false)
     tags = [] if tags.nil?
-    tags = [tags] unless tags.is_a? Array
+    tags = tags.is_a?(Array) ? tags.clone : [tags]
     if tags.detect { |tag| !(Numeric === tag ||(String === tag && /^\d+$/=== tag.to_s)) }
       raise ArgumentError, "Tags need to be integers - #{tags} are not."
     end
     ResourceType.check resource_type, verbs
     verbs = [] if verbs.nil?
-    verbs = [verbs] unless verbs.is_a? Array
+    verbs = verbs.is_a?(Array) ? verbs.clone : [verbs]
     log_roles(verbs, resource_type, tags, org, any_tags)
 
     return true if allowed_all_tags?(verbs, resource_type, org)
@@ -154,7 +154,7 @@ module Authorization::Enforcement
   def allowed_tags_query(verbs, resource_type, org = nil, allowed_to_check = true)
     ResourceType.check resource_type, verbs
     verbs = [] if verbs.nil?
-    verbs = [verbs] unless verbs.is_a? Array
+    verbs = verbs.is_a?(Array) ? verbs.clone : [verbs]
     log_roles(verbs, resource_type, nil, org)
     org = Organization.find(org) if Numeric === org
     org_permissions = org_permissions_query(org, resource_type == :organizations)
