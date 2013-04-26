@@ -523,7 +523,7 @@ describe Api::SystemsController do
 
   end
 
-  describe "list errata" do
+  describe "list errata", :katello => true do
     before(:each) do
       @system = System.create(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
       System.stub!(:first).and_return(@system)
