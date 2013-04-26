@@ -32,7 +32,7 @@
 %endif
 
 Name:           katello
-Version:        1.3.21
+Version:        1.3.22
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -835,6 +835,18 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Apr 26 2013 Justin Sherrill <jsherril@redhat.com> 1.3.22-1
+- Added validators for package and package group rules (paji@redhat.com)
+- Fixes #2077 - Since the JSRoutes paths mimic the rails path API in order to
+  put a hash parameter, the anchor option needs to be used.
+- runcible - updating spec and bundler.d to use runcible 0.4.3
+- pulp - updates to address issues in copy/associate of large repos
+  (bbuckingham@redhat.com)
+- Promotions - Fixing issue with promotions being uncentered and the New
+  Changeset button not working.
+- Fixed filters cli to now associate partial products from cvd
+  (paji@redhat.com)
+
 * Tue Apr 23 2013 Justin Sherrill <jsherril@redhat.com> 1.3.21-1
 - Implementation for add/remove filter rules via cli (paji@redhat.com)
 - Allowing content views to be deleted from CLI
