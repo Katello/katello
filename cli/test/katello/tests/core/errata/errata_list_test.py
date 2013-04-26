@@ -22,6 +22,7 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
     disallowed_options = [
         ('--repo=repo-123', '--product=product-123'),
         ('--repo=repo-123', '--org=org-123'),
+        ('--repo=repo-123', '--repo_id=123'),
         ('--product=product-123', ),
         (),
     ]
@@ -29,11 +30,10 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
     allowed_options = [
         ('--repo=repo-123', '--product=product-123', '--org=org-123'),
         ('--repo_id=repo-123', ),
-        ('--org=org-123', ),
-        ('--org=org-123', '--environment=env-123', '--product=product-123'),
-        ('--org=org-123', '--environment=env-123', '--product=product-123', '--content_view=c1'),
-        ('--type=enhancements', '--org=org-123'),
-        ('--severity=critical', '--org=org-123'),
+        ('--org=org-123', '--environment=env-123', '--product=product-123', '--repo=repo-123'),
+        ('--org=org-123', '--environment=env-123', '--product=product-123', '--repo=repo-123', '--content_view=c1'),
+        ('--type=enhancements', '--repo_id=repo-123'),
+        ('--severity=critical', '--repo_id=repo-123'),
     ]
 
 

@@ -11,6 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class PackageRule < FilterRule
+  validates_with Validators::PackageRuleParamsValidator, :attributes => :parameters
+
   def params_format
     {:units => [[:name, :version, :min_version, :max_version]]}
   end
@@ -23,30 +25,33 @@ class PackageRule < FilterRule
   def generate_clauses(repo)
     parameters[:units].collect do |unit|
       rule_clauses = []
-      if unit[:name] && !unit[:name].blank?
+      unless unit[:name].blank?
         results = Package.search(unit[:name], 0, 0, [repo.pulp_id],
-                        [:nvrea_sort, "ASC"], :all, 'name' ).collect(&:filename)
+                        [:nvrea_sort, "ASC"], :all, 'name' ).collect(&:filename).compact
+        rule_clauses << {'filename' => {"$in" => results}}
         unless results.empty?
-          rule_clauses << {'filename' => {"$in" => results}}
+          # now add version info
+          rule_clauses << generate_version_clause(unit)
+        end
+        rule_clauses.compact!
+        if rule_clauses.size == 1
+          rule_clauses.first
+        else
+          {'$and' => rule_clauses}
         end
       end
+    end.compact
+  end
 
-      if unit.has_key? :version
-        rule_clauses << {'version' => unit[:version] }
-      else
-        version_clause = {}
-        version_clause["$gte"] = unit[:min_version] if unit.has_key? :min_version
-        version_clause["$lte"] = unit[:max_version] if unit.has_key? :max_version
-        rule_clauses << {'version' => version_clause } unless version_clause.empty?
-      end
-      case rule_clauses.size
-        when 1
-          rule_clauses.first
-        when 2
-          {'$and' => rule_clauses}
-        else
-          #ignore
-      end
-    end.compact if parameters.has_key?(:units)
+  protected
+  def generate_version_clause(unit)
+    if unit.has_key?(:version)
+      {'version' => unit[:version] }
+    else
+      version_clause = {}
+      version_clause["$gte"] = unit[:min_version] if unit.has_key? :min_version
+      version_clause["$lte"] = unit[:max_version] if unit.has_key? :max_version
+      {'version' => version_clause} unless version_clause.empty?
+    end
   end
 end
