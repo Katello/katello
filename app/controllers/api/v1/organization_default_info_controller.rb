@@ -17,6 +17,7 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
   before_filter :find_organization
   before_filter :authorize
   before_filter :check_informable_type
+  before_filter :check_apply_default_info, :only => :apply_to_all
 
   def rules
     read_org = lambda { @organization.readable? }
@@ -71,21 +72,46 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
   api :POST, '/organizations/:organization_id/default_info/:informable_type/apply', "Apply existing default info on all informable resources"
   param_group :informable_identifier
   def apply_to_all
+    params[:async] = true if params[:async].nil?
+
     to_apply = []
     @organization.default_info[params[:informable_type]].each do |key|
       to_apply << { :keyname => key }
     end
-    systems = CustomInfo.apply_to_set(@organization.systems, to_apply)
-    render :json => systems.collect { |sys| sys[:name] }.to_json
+
+    # retval will either be the Task, or an array of system names, based on whether the call is asynchronous or not
+    retval = @organization.apply_default_info(params[:informable_type], to_apply, :async => params[:async])
+
+    response = {:systems => [], :task => nil}
+    if params[:async] == false
+      response[:systems] = retval
+    else
+      response[:task] = retval
+    end
+    render :json => response.to_json
+  end
+
+  def apply_to_all_status
+    render :json => TaskStatus.find(@organization.apply_info_task_id).to_json
   end
 
   private
 
   def check_informable_type
-    Organization.check_informable_type!(params[:informable_type],
-                                        :message => _("Type must be one of the following [ %{list} ]") %
-                                            { :list => Organization::ALLOWED_DEFAULT_INFO_TYPES.join(", ") }
+    Organization.check_informable_type!(
+      params[:informable_type],
+      :message => _("Type must be one of the following [ %{list} ]") %
+        { :list => Organization::ALLOWED_DEFAULT_INFO_TYPES.join(", ") },
+      :error => HttpErrors::BadRequest
     )
+  end
+
+  def check_apply_default_info
+    if @organization.applying_default_info?
+      raise HttpErrors::BadRequest,
+        _("Organization [ %{org} ] is currently applying default custom info. Please try again later.") %
+          {:org => @organization.name}
+    end
   end
 
 end

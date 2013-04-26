@@ -28,8 +28,8 @@ class OrganizationDestroyer
   def setup(organization)
     raise NotImplementedError unless options[:async]
 
-    task                 = self.async(:organization => organization).run
-    organization.task_id = task.id
+    task = self.async(:organization => organization).run
+    organization.deletion_task_id = task.id
     organization.save!
     return task
   end

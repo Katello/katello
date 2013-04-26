@@ -18,12 +18,15 @@ class Organization < ActiveRecord::Base
   include Glue::Candlepin::Owner if Katello.config.use_cp
   include Glue if Katello.config.use_cp
 
+  include AsyncOrchestration
   include Ext::PermissionTagCleanup
 
   include Authorization::Organization
   include Glue::ElasticSearch::Organization if Katello.config.use_elasticsearch
 
   include Ext::LabelFromName
+
+  belongs_to :task_status
 
   has_many :activation_keys, :dependent => :destroy
   has_many :providers, :dependent => :destroy
@@ -41,7 +44,7 @@ class Organization < ActiveRecord::Base
   attr_accessor :statistics
 
   # Organizations which are being deleted (or deletion failed) can be filtered out with this scope.
-  scope :without_deleting, where(:task_id => nil)
+  scope :without_deleting, where(:deletion_task_id => nil)
   scope :having_name_or_label, lambda { |name_or_label| { :conditions => ["name = :id or label = :id", {:id=>name_or_label}] } }
 
   before_create :create_library
@@ -113,7 +116,11 @@ class Organization < ActiveRecord::Base
   end
 
   def being_deleted?
-    ! self.task_id.nil?
+    ! self.deletion_task_id.nil?
+  end
+
+  def applying_default_info?
+    ! self.apply_info_task_id.nil?
   end
 
   def initialize_default_info
@@ -126,14 +133,38 @@ class Organization < ActiveRecord::Base
   end
 
   def self.check_informable_type!(informable_type, options = {})
-    defaults = { :message => _("Informable Type must be one of the following [ %{list} ]") %
-      { :list => ALLOWED_DEFAULT_INFO_TYPES.join(", ") }
+    defaults = {
+      :message => _("Informable Type must be one of the following [ %{list} ]") %
+        { :list => ALLOWED_DEFAULT_INFO_TYPES.join(", ") },
+      :error => RuntimeError
     }
     options = defaults.merge(options)
 
     unless ALLOWED_DEFAULT_INFO_TYPES.include?(informable_type)
-      raise HttpErrors::BadRequest, options[:message]
+      raise options[:error], options[:message]
     end
+  end
+
+  def apply_default_info(informable_type, custom_info, options = {})
+    options = {:async => true}.merge(options)
+    Organization.check_informable_type!(informable_type)
+    objects = self.send(informable_type.pluralize)
+    ids_and_types = objects.inject([]) do |collection, obj|
+      collection << { :informable_type => obj.class.name, :informable_id => obj.id }
+    end
+
+    if options[:async]
+      task = self.async(:organization => self, :task_type => "apply default info").run_apply_info(ids_and_types, custom_info)
+      self.apply_info_task_id = task.id
+      self.save!
+      return task
+    else
+      return CustomInfo.apply_to_set(ids_and_types, custom_info)
+    end
+  end
+
+  def run_apply_info(ids_and_types, custom_info)
+    CustomInfo.apply_to_set(ids_and_types, custom_info)
   end
 
 end
