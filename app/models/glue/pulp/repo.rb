@@ -130,15 +130,12 @@ module Glue::Pulp::Repo
                         :ssl_client_key=>self.feed_key,
                         :feed_url=>self.feed)
         when 'file'
-          {
-              :ssl_ca_cert    =>self.feed_ca,
-              :ssl_client_cert=>self.feed_cert,
-              :ssl_client_key =>self.feed_key,
-              :feed_url       =>self.feed,
-              :id             => 'iso_importer'
-          }
+          Runcible::Extensions::IsoImporter.new(:ssl_ca_cert=>self.feed_ca,
+                        :ssl_client_cert=>self.feed_cert,
+                        :ssl_client_key=>self.feed_key,
+                        :feed_url=>self.feed)
         else
-          raise _("Unexpected repo type %s") % type
+          raise _("Unexpected repo type %s") % self.content.type
       end
 
     end
@@ -150,19 +147,9 @@ module Glue::Pulp::Repo
                   {:protected=>true, :id=>self.pulp_id,
                       :auto_publish=>!self.environment.library?})
         when 'file'
-          {
-              :type_id => 'iso_distributor',
-              :auto_publish => true,
-              :id => SecureRandom.hex(10),
-              :config => {
-                :protected => false,
-                :relative_url => self.relative_path,
-                :serve_http => true,
-                :serve_https => true
-              }
-          }.with_indifferent_access
+          Runcible::Extensions::IsoDistributor.new(true, true)
         else
-          raise _("Unexpected repo type %s") % type
+          raise _("Unexpected repo type %s") % self.content.type
       end
 
     end

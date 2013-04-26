@@ -26,6 +26,7 @@ describe Changeset, :katello => true do
       @environment  = KTEnvironment.create!(:name=>'julia', :label=> 'julia', :prior => @organization.library,
                                             :organization => @organization)
       @changeset    = PromotionChangeset.create!(:environment => @environment, :name => "foo-changeset")
+      Repository.any_instance.stub(:content).and_return(Candlepin::Content.new(:type=>'yum'))
     end
 
 
