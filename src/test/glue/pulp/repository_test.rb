@@ -53,6 +53,7 @@ class GluePulpRepoTestBase < MiniTest::Rails::ActiveSupport::TestCase
 
   def setup
     VCR.insert_cassette('glue_pulp_repo', :match_requests_on => [:path, :params, :method])
+    Repository.any_instance.stubs(:content).returns(Candlepin::Content.new(:type=>'yum'))
   end
 
   def teardown
@@ -362,7 +363,7 @@ class GluePulpRepoRequiresEmptyPromoteTest < GluePulpRepoTestBase
   def self.after_suite
     VCR.use_cassette('glue_pulp_repo_helper') do
       @@cloned_repo.destroy if @@cloned_repo
-      @@fedora_17_x86_64.destroy_repo
+      @@fedora_17_x86_64.destroy_repo if @@fedora_17_x86_64
     end
   end
 
