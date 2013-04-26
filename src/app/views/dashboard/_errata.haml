@@ -21,7 +21,7 @@
               %div.errata_item
                 .col_1
                   %div{:class => 'tipsify ' + errata_type_class(erratum),
-                       'original-title' => errata_string(erratum[:type])}
+                       'original-title' => errata_human_type(erratum[:type])}
                 .col_2.one-line-ellipsis
                   %div.collapsed
                   %span

@@ -12,6 +12,8 @@
 
 class DashboardController < ApplicationController
 
+  helper ErrataHelper
+
   skip_before_filter :authorize,:require_org
 
   before_filter :update_preferences_quantity , :except => [:index, :section_id]
