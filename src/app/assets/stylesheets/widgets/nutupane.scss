@@ -10,6 +10,19 @@
   background: rgb(216, 216, 216) !important
 }
 
+table.details-visible {
+  display: inline-block;
+  height: 903px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  width: 20%;
+  vertical-align: top;
+
+  thead, tbody, tr, td {
+    width: 20%;
+  }
+}
+
 th {
   cursor: pointer !important;
   font-weight: bold;
@@ -62,19 +75,16 @@ th:hover {
   background: rgb(238, 238, 238);
   overflow: auto;
   padding: 10px 12px 4px 12px;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+  @include box-sizing(border-box);
   border: 1px solid #CCC;
   border-radius: 5px 5px 0 0;
 }
 
 .nutupane-details {
-  width: 0;
-  left: 100%;
   display: none;
-  position: absolute;
   background: white;
-  top: 200px;
+  border: 1px solid #CCC;
+  border-radius: 5px 5px 0 0;
 
   header {
     height: 50px;
@@ -85,10 +95,9 @@ th:hover {
 
 .nutupane-details-open {
   @include transition(background-color 1.25s ease-in-out);
-  width: 80%;
-  left: 200px;
-  display: block;
-  border: 2px solid #CCC;
+  display: inline;
+  float: right;
+  width: 79.5%;
 }
 
 input, textarea {

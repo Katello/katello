@@ -5,14 +5,13 @@
   %h1
     = _("Systems")
   %div{ 'alch-table-toolbar' => 'table' }
-  %table#nutupane-table.table.stable.stripe-row{ 'alch-table' => 'table', 'row-select' => 'true', 'ng-class' => '{ "table-mask" : table.working }' }
-
-  %div.nutupane-details{ 'nutupane-details'=>'table.visible', 'ng-class' => '{ "nutupane-details-open" : !table.visible }' }
+  %table#nutupane-table.table.stable.stripe-row{ 'alch-table' => 'table', 'row-select' => 'true', 'ng-class' => '{ "table-mask" : table.working, "details-visible": !table.visible}' }
+  %span.nutupane-details{ 'nutupane-details'=>'table.visible', 'ng-class' => '{ "nutupane-details-open" : !table.visible }' }
     %header
       %h2.left
         {{ system.name }}
-      %div.right
-        %a{ 'ng-click' => 'table.visible = true' }
+      %div.fr
+        %a{ 'ng-click' => 'close_item()' }
           = "Close"
     %section{ "style" => "clear:both;" }
       %nav{ 'alch-menu' => "systems_menu" }
