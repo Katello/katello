@@ -525,7 +525,7 @@ describe Api::SystemsController do
 
   describe "list errata" do
     before(:each) do
-      @system = System.new(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
+      @system = System.create(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
       System.stub!(:first).and_return(@system)
     end
 
@@ -535,12 +535,13 @@ describe Api::SystemsController do
     let(:unauthorized_user) { user_without_read_permissions }
     it_should_behave_like "protected action"
 
-    pending "should find System" do
+    it "should find System" do
       System.should_receive(:first).once.with(hash_including(:conditions => {:uuid => @system.uuid})).and_return(@system)
       get :errata, :id => @system.uuid
     end
 
-    pending "should retrieve Consumer's errata from pulp" do
+    it "should retrieve Consumer's errata from pulp" do
+      Runcible::Extensions::Consumer.should_receive(:applicable_errata).with(@system.uuid)
       get :errata, :id => @system.uuid
     end
   end
