@@ -14,7 +14,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="Sirc2pxWHOC7M0cuwPhUPXgpHQBx1533IAMnzsrA", oauth_signature="qhqeDM7UPdssxbSPXp0jfgPwDeA%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1366749214", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="tDZZ89PR3yCyeBUOgWcCMWYPReD8wrMI9E6UiG7VPNA", oauth_signature="zxTLN%2FP9cwtJi417codfZS2QYIM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1366999845", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -25,7 +25,7 @@ http_interactions:
       message: OK
     headers: 
       Date: 
-      - Tue, 23 Apr 2013 20:33:34 GMT
+      - Fri, 26 Apr 2013 18:10:45 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Content-Length: 
@@ -36,13 +36,13 @@ http_interactions:
       encoding: US-ASCII
       string: "[]"
     http_version: 
-  recorded_at: Tue, 23 Apr 2013 20:33:34 GMT
+  recorded_at: Fri, 26 Apr 2013 18:10:45 GMT
 - request: 
     method: post
     uri: https://localhost/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/
     body: 
       encoding: US-ASCII
-      string: "{\"schedule\":\"2014-04-23T16:33:34-04:00/P1D\"}"
+      string: "{\"schedule\":\"2014-04-26T14:10:45-04:00/P1D\"}"
     headers: 
       Accept: 
       - application/json
@@ -51,7 +51,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="HM2t4hBBOEldtjSnBYpRUrRIezmnOONe1cjAHooGCE", oauth_signature="HmzDjng6wh3bN71IXXupmt9zTUo%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1366749214", oauth_version="1.0"
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="7Bx64rjoATWvh5NwDufmenJJm9MHMPGzXYGizOZHus", oauth_signature="TAIr1z3cVndTp2UjphcFQzHOhTY%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1366999845", oauth_version="1.0"
       Pulp-User: 
       - admin
       Content-Length: 
@@ -64,18 +64,18 @@ http_interactions:
       message: Created
     headers: 
       Date: 
-      - Tue, 23 Apr 2013 20:33:34 GMT
+      - Fri, 26 Apr 2013 18:10:45 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Location: 
-      - /pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/5176f01e3cbbb54640006aa2/
+      - /pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/517ac3253cbbb519a4003aa5/
       Content-Length: 
       - "393"
       Content-Type: 
       - application/json
     body: 
       encoding: US-ASCII
-      string: "{\"next_run\": \"2014-04-23T20:33:34Z\", \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/5176f01e3cbbb54640006aa2/\", \"schedule\": \"2014-04-23T16:33:34-04:00/P1D\", \"override_config\": {}, \"remaining_runs\": null, \"first_run\": \"2014-04-23T20:33:34Z\", \"enabled\": true, \"last_run\": null, \"failure_threshold\": null, \"_id\": \"5176f01e3cbbb54640006aa2\", \"consecutive_failures\": 0}"
+      string: "{\"next_run\": \"2014-04-26T18:10:45Z\", \"_href\": \"/pulp/api/v2/repositories/1/importers/yum_importer/schedules/sync/517ac3253cbbb519a4003aa5/\", \"schedule\": \"2014-04-26T14:10:45-04:00/P1D\", \"override_config\": {}, \"remaining_runs\": null, \"first_run\": \"2014-04-26T18:10:45Z\", \"enabled\": true, \"last_run\": null, \"failure_threshold\": null, \"_id\": \"517ac3253cbbb519a4003aa5\", \"consecutive_failures\": 0}"
     http_version: 
-  recorded_at: Tue, 23 Apr 2013 20:33:34 GMT
+  recorded_at: Fri, 26 Apr 2013 18:10:46 GMT
 recorded_with: VCR 2.4.0
