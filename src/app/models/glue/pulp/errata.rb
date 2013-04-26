@@ -26,8 +26,8 @@ module Glue::Pulp::Errata
                     :reboot_suggested, :references, :pkglist, :severity, :repoids
 
       def self.errata_by_consumer(repos)
-        raise NotImplementedError
-        #TODO: Needs corresponding Runcible call once fixed in Pulp
+        errata = Runcible::Extensions::Consumer.applicable_errata([], repos.map(&:pulp_id), false)
+        errata[:erratum] || []
       end
 
       def self.find(id)

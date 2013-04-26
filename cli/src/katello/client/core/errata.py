@@ -81,7 +81,7 @@ class List(ErrataAction):
         viewLabel = self.get_option('view_label')
         viewId = self.get_option('view_id')
 
-        self.printer.add_column('id', _("ID"))
+        self.printer.add_column('errata_id', _("ID"))
         self.printer.add_column('title', _("Title"))
         self.printer.add_column('type', _("Type"))
 
@@ -125,7 +125,7 @@ class SystemErrata(ErrataAction):
         system = get_system(org_name, sys_name)
         errata = systemApi.errata(system["uuid"])
 
-        batch_add_columns(self.printer, {'id': _("ID")}, {'title': _("Title")}, {'type': _("Type")})
+        batch_add_columns(self.printer, {'errata_id': _("ID")}, {'title': _("Title")}, {'type': _("Type")})
         self.printer.set_header(_("Errata for system %(sys_name)s in organization %(org_name)s")
             % {'sys_name':sys_name, 'org_name':org_name})
         self.printer.print_items(errata)
@@ -155,7 +155,7 @@ class SystemGroupErrata(ErrataAction):
 
         errata = systemGroupApi.errata(org_name, system_group_id, type_in=type_in)
 
-        batch_add_columns(self.printer, {'id': _("ID")}, {'title': _("Title")}, {'type': _("Type")})
+        batch_add_columns(self.printer, {'errata_id': _("ID")}, {'title': _("Title")}, {'type': _("Type")})
         self.printer.add_column('systems', _('# Systems'), formatter=len)
         self.printer.add_column('systems', _("Systems"), multiline=True, show_with=printer.VerboseStrategy)
 
@@ -208,7 +208,7 @@ class Info(ErrataAction):
                          for pkg in pack['pkglist']
                          for pinfo in pkg['packages']]
 
-        batch_add_columns(self.printer, {'id': _("ID")}, {'title': _("Title")})
+        batch_add_columns(self.printer, {'errata_id': _("ID")}, {'title': _("Title")})
         self.printer.add_column('description', _("Description"), multiline=True)
         batch_add_columns(self.printer, {'type': _("Type")}, {'issued': _("Issued")}, \
             {'updated': _("Updated")}, {'version': _("Version")}, {'release': _("Release")}, \
