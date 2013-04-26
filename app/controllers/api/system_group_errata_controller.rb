@@ -93,7 +93,7 @@ class Api::SystemGroupErrataController < Api::ApiController
     errata_list = filter_by_type(errata_list, filter_type)
 
     errata_list = errata_list.sort { |a,b|
-      a["id"].downcase <=> b["id"].downcase
+      a[:id].downcase <=> b[:id].downcase
     }
 
     return errata_list
