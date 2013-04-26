@@ -21,7 +21,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       1.3.9
+Version:       1.3.10
 Release:       1%{?dist}
 Source0:       https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 Requires:      %{base_name}-cli-common
@@ -166,6 +166,12 @@ popd
 %{homedir}/tests
 
 %changelog
+* Fri Apr 26 2013 Justin Sherrill <jsherril@redhat.com> 1.3.10-1
+- Errata list should require either repo_id or repo info
+  (daviddavis@redhat.com)
+- Fixed filters cli to now associate partial products from cvd
+  (paji@redhat.com)
+
 * Tue Apr 23 2013 Justin Sherrill <jsherril@redhat.com> 1.3.9-1
 - fixing missed conflict (jsherril@redhat.com)
 - Implementation for add/remove filter rules via cli (paji@redhat.com)
