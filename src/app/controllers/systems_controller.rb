@@ -345,7 +345,7 @@ class SystemsController < ApplicationController
 
   def show
     system = System.find(params[:id])
-    
+
     if current_user.experimental_ui
       begin
         releases = @system.available_releases
