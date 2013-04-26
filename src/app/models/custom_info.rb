@@ -24,7 +24,6 @@ class CustomInfo < ActiveRecord::Base
   validates :informable_type, :presence => true
 
   after_save :reindex_informable
-  after_destroy :reindex_informable
 
   def self.find_by_informable_keyname(informable, keyname)
     return informable.custom_info.find_by_keyname(keyname)
