@@ -26,17 +26,6 @@ class FilterRuleTest < MiniTest::Rails::ActiveSupport::TestCase
     @product = Product.find(products(:fedora).id)
   end
 
-  def after_tests
-    FilterRule.delete_all
-    Filter.delete_all
-    ContentViewDefinition.delete_all
-    ContentViewDefinitionBase.delete_all
-    Organization.delete_all
-    Product.delete_all
-    Repository.delete_all
-    Package.delete_all
-  end
-
   def test_package_names
     search_results1 = array_to_struct([{:filename => "100"},
                                       {:filename => "102"}])

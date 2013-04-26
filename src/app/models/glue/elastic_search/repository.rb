@@ -26,7 +26,7 @@ module Glue::ElasticSearch::Repository
       end
 
       after_save :update_related_index
-      before_destroy :update_packages_index, :update_errata_index, :update_package_group_index
+      before_destroy :clear_content_indices
     end
 
     def extended_index_attrs
@@ -144,6 +144,14 @@ module Glue::ElasticSearch::Repository
       self.index_packages
       self.index_errata
       self.index_package_groups
+      true
     end
+
+    def clear_content_indices
+      update_packages_index
+      update_errata_index
+      update_package_group_index
+    end
+
   end
 end

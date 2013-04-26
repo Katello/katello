@@ -41,20 +41,20 @@ KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distributio
         };
 
         $.extend(options, { 'extra_params' :
-					[ { hash_id 	: 'env_id',
-						init_func 	: function(){
-							var state = $.bbq.getState('env_id');
+                    [ { hash_id     : 'env_id',
+                        init_func     : function(){
+                            var state = $.bbq.getState('env_id');
 
-							if( state ){
-								env_select.set_selected(state);
-							} else {
-								$.bbq.pushState({ env_id : env_select.get_selected_env() });
-							}
-						}
-					}
-				]});
-  	}
-  	KT.panel.list.registerPage('systems', options);
+                            if( state ){
+                                env_select.set_selected(state);
+                            } else {
+                                $.bbq.pushState({ env_id : env_select.get_selected_env() });
+                            }
+                        }
+                    }
+                ]});
+      }
+      KT.panel.list.registerPage('systems', options);
 }());
 
 $(document).ready(function() {
@@ -70,7 +70,7 @@ $(document).ready(function() {
     // These run after the subscribe/unsubscribe forms have been submitted to update
     // the left hand list entry (which reflects the subscribed status of the system).
     $('#unsubscribe').live('ajax:complete', function(evt, data, status, xhr){
-        var id = $('.left').find('.active');
+        var id = $('.left_panel').find('.active');
         var url = id.attr('data-ajax_url');
         KT.panel.list.refresh(id.attr('id'), url);
         $(this).find('input[type="submit"]').removeAttr('disabled');
@@ -79,7 +79,7 @@ $(document).ready(function() {
     });
 
     $('#subscribe').live('ajax:complete', function(evt, data, status, xhr){
-        var id = $('.left').find('.active');
+        var id = $('.left_panel').find('.active');
         var url = id.attr('data-ajax_url');
         KT.panel.list.refresh(id.attr('id'), url);
         $(this).find('input[type="submit"]').removeAttr('disabled');

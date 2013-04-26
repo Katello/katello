@@ -52,13 +52,26 @@ else
              when :development
                basic_groups + [:development, :debugging, :build, :development_boost, :assets]
              when :test
-               basic_groups + [:development, :test, (:debugging if ENV['TRAVIS'] != 'true')] # TODOp add to config
+               # TODO replace ENV['TRAVIS'] with configuration
+               basic_groups + [:development, :test, (:debugging if ENV['TRAVIS'] != 'true')]
              else
                raise "unknown environment #{Rails.env.to_sym}"
              end.compact
     Bundler.require *groups
   end
 end
+
+# TODO to be removed after config path is made configurable in LdapFluff
+candidates       = [
+    # production environment
+    LdapFluff::CONFIG,
+    # rpm build environment
+    '/opt/rh/ruby193/root' + LdapFluff::CONFIG,
+    # on travis and in development environment
+    File.join(Gem.loaded_specs['ldap_fluff'].full_gem_path, 'etc', 'ldap_fluff.yml')]
+config_file_path = candidates.find { |path| File.exist? path }
+raise "missing LdapFluff config file, candidates: #{candidates.join(' ')}" if config_file_path.nil?
+LdapFluff::CONFIG = config_file_path unless LdapFluff::CONFIG == config_file_path
 
 module Src
   class Application < Rails::Application
@@ -71,7 +84,7 @@ module Src
     end
 
     # set the relative url for rails
-    ActionController::Base.config.relative_url_root = Katello.config.url_prefix
+    config.relative_url_root = Katello.config.url_prefix
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -121,8 +134,11 @@ module Src
             Katello.config.url_prefix].compact.join,
         :protocol => Katello.config.use_ssl ? 'https' : 'http' }
 
-    config.after_initialize do
+    config.after_initialize do |app|
       require 'string_to_bool'
+      #default all non-matched route to our special 404 page
+      # cannot be added to routes.rb due to conflicting with engines
+      app.routes.append{match '*a', :to => 'errors#routing'}
     end
 
     # set actions to profile (eg. %w(user_sessions#new))
@@ -136,10 +152,10 @@ module Src
     # last caller is "script/delayed_job:3".
     if caller.last =~ /script\/delayed_job:\d+$/ ||
         ((caller[-10..-1] || []).any? {|l| l =~ /\/rake/} && ARGV.include?("jobs:work"))
-      Katello::Logging.new.configure(:prefix => 'delayed_')
+      Katello::Logging.configure(:prefix => 'delayed_')
       Delayed::Worker.logger = Logging.logger['app']
     else
-      Katello::Logging.new.configure
+      Katello::Logging.configure
     end
 
     config.logger = Logging.logger['app']

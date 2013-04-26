@@ -24,9 +24,13 @@ common:
 
   warden: database
   ldap_roles: false
+  validate_ldap: false
   rest_client_timeout: 30
 
   url_prefix: "/katello"
+
+  # detect system locale or fallback to English
+  system_lang: <%= ENV['LC_ALL'] || ENV['LC_MESSAGES'] || ENV['LANG'] || 'en' %>
 
   # The host (i.e. fully qualified domain name) of the server.
   # This host is used by ActionMailer when generating urls sent in
@@ -161,8 +165,8 @@ common:
     adapter: postgresql
     host: localhost
     encoding: UTF8
-    username: katello
-    password: katello
+    username: katellouser
+    password: katellouser
 
   # when adding a new logger don't forget to add it in here even if it's disabled by default
   # otherwise log trace feature won't work for such logger
@@ -262,7 +266,7 @@ development:
   foreman:
     random_password: false
   database:
-    database: katello
+    database: katelloschema
     min_messages: WARNING
   logging:
     colorize: true

@@ -43,7 +43,6 @@ module RepositorySupport
       @repo.create_pulp_repo
     end
   rescue => e
-    puts e
   ensure
     return @repo
   end
@@ -53,8 +52,7 @@ module RepositorySupport
       @task = @repo.sync
       TaskSupport.wait_on_tasks(@task)
     end
-  rescue Exception => e
-    puts e
+  rescue => e
   end
 
   def self.destroy_repo(id=@repo_id)
@@ -62,7 +60,6 @@ module RepositorySupport
       @repo.destroy_repo
     end
   rescue => e
-    puts e
   end
 
 end

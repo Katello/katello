@@ -17,7 +17,7 @@ var notices = (function() {
           if (pollingTimeOut === undefined) {
             pollingTimeOut = 45000;
           }
-          
+
           notices.checkTimeout = pollingTimeOut;
           //start continual checking for new notifications
           notices.start();
@@ -28,14 +28,14 @@ var notices = (function() {
         displayNotice: function(level, notice, requestType) {
             var noticesParsed = $.parseJSON(notice),
                 options = {
-                    type: level, 
+                    type: level,
                     slideSpeed: 200,
                     alwaysClosable: true
                 },
                 generate_list = function(notices){
                     var notices_list = '<ul class='+requestType+'>',
                         i, length = notices.length;
-                    
+
                     for( i=0; i < length; i += 1) {
                         notices_list += '<li>' + notices[i] + '</li>';
                     }
@@ -61,7 +61,7 @@ var notices = (function() {
                 options["fadeSpeed"] = 600;
             } else if( level === "message" ) {
                 options["sticky"] = true;
-                options["fadeSpeed"] = 600;        	
+                options["fadeSpeed"] = 600;
             } else {
                 options["sticky"] = false;
                 options["fadeSpeed"] = 600;
@@ -76,8 +76,8 @@ var notices = (function() {
                 options["fadeSpeed"] = 600;
                 $.jnotify(validation_html, options);
                 $('.jnotify-message ul').css({'list-style': 'disc',
-                              'margin-left': '30px'});    
-            } 
+                              'margin-left': '30px'});
+            }
             if( noticesParsed['notices'] && noticesParsed['notices'].length !== 0 ){
                 $.jnotify(generate_list(noticesParsed['notices']), options);
             }
@@ -96,13 +96,15 @@ var notices = (function() {
         },
         addNotices: function(data) {
             var unread_notices = $("#unread_notices");
+            var unread_notices_count = $("#unread_notices_count");
             if (!data || data.unread_count.length === 0) {
                 return true;
             }
             unread_notices.data('last', parseInt(unread_notices.text(), 10));
             //if coming from the server may have new count
             if (data.unread_count > 0 && data.unread_count > unread_notices.data('last')) {
-                unread_notices.text(data.unread_count).effect("bounce", "fast");
+                unread_notices_count.text(data.unread_count);
+                unread_notices.effect("bounce", "fast");
                 unread_notices.data('last', data.unread_count);
             }
 
@@ -113,7 +115,7 @@ var notices = (function() {
             return true;
         },
         checkNotices : function() {
-            var url = $('#get_notices_url').attr('data-url');
+            var url = KT.routes.notices_get_new_path()
 
             //Make sure when we load the page we get notifs
             $.ajax({
@@ -137,7 +139,7 @@ var notices = (function() {
             }
         },
         start: function () {
-            var url = $('#get_notices_url').attr('data-url');
+            var url = KT.routes.notices_get_new_path()
 
             // do not wait for PeriodUpdater, check new notices immediately
             $.ajax({

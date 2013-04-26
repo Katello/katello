@@ -14,7 +14,7 @@
 class OrganizationsController < ApplicationController
   include AutoCompleteSearch
   respond_to :html, :js
-  before_filter :find_organization, :only => [:edit, :update, :destroy, :events]
+  before_filter :find_organization, :only => [:edit, :update, :destroy, :events, :default_info]
   before_filter :find_organization_by_id, :only => [:environments_partial, :download_debug_certificate]
   before_filter :authorize #call authorize after find_organization so we call auth based on the id instead of cp_id
   before_filter :setup_options, :only=>[:index, :items]
@@ -32,11 +32,12 @@ class OrganizationsController < ApplicationController
         User.creatable?
       else
         params[:user_id] &&
-            ((current_user.id.to_s ==  params[:user_id].to_s) || current_user.editable?)
+            ((current_user.id.to_s == params[:user_id].to_s) || current_user.editable?)
       end
     end
 
-    {:index =>  index_test,
+    {
+      :index => index_test,
       :items => index_test,
       :show => index_test,
       :auto_complete_search => index_test,
@@ -48,7 +49,8 @@ class OrganizationsController < ApplicationController
       :destroy => delete_test,
       :environments_partial => environments_partial_test,
       :events => read_test,
-      :download_debug_certificate => edit_test
+      :download_debug_certificate => edit_test,
+      :default_info => read_test
     }
   end
 
@@ -60,7 +62,7 @@ class OrganizationsController < ApplicationController
   end
 
   def section_id
-    'orgs'
+    'operations'
   end
 
   def menu_definition
@@ -209,6 +211,12 @@ class OrganizationsController < ApplicationController
     send_data data,
       :filename => "#{@organization.name}-key-cert.pem",
       :type => "application/text"
+  end
+
+  def default_info
+    Organization.check_informable_type!(params[:informable_type])
+    render :partial => "default_info",
+      :locals => { :org => @organization, :informable_type => params[:informable_type] }
   end
 
   protected

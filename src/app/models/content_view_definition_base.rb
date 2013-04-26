@@ -20,7 +20,7 @@ class ContentViewDefinitionBase < ActiveRecord::Base
   has_many :components, :class_name => "ComponentContentView",
     :foreign_key => "content_view_definition_id"
   has_many :component_content_views, :through => :components,
-    :source => :content_view, :class_name => "ContentView"
+    :source => :content_view, :class_name => "ContentView", before_add: :validate_component_views
   has_many :filters, :inverse_of => :content_view_definition,
     :foreign_key => "content_view_definition_id"
 
@@ -78,7 +78,9 @@ class ContentViewDefinitionBase < ActiveRecord::Base
 
   def remove_repository(repository)
     filters.each do |filter_item|
-      if filter_item.repositories.unscoped.include?(repository)
+      repo_exists = Repository.unscoped.joins(:filters).where(
+                      :filters => {:id => filter_item.id}, :id => repository.id).count
+      if repo_exists
         filter_item.repositories.delete(repository)
         filter_item.save!
       end
@@ -91,4 +93,14 @@ class ContentViewDefinitionBase < ActiveRecord::Base
       end
     end
   end
+
+  def validate_component_views(view)
+    if type == "ContentViewDefinition"
+      library_repo_ids = component_content_views.map(&:library_repo_ids).flatten + view.library_repo_ids
+      if library_repo_ids.length != library_repo_ids.uniq.length
+        raise Errors::ContentViewRepositoryOverlap.new(_("Definition cannot contain views with the same repositories."))
+      end
+    end
+  end
+
 end

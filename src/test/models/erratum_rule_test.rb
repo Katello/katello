@@ -28,15 +28,6 @@ class ErratumRuleTest < MiniTest::Rails::ActiveSupport::TestCase
     @end_date = DateTime.strptime("01/31/2013" + zone, format)
   end
 
-  def after_tests
-    FilterRule.delete_all
-    Filter.delete_all
-    ContentViewDefinition.delete_all
-    ContentViewDefinitionBase.delete_all
-    Organization.delete_all
-    Package.delete_all
-  end
-
   def test_create
     assert @filter_rule.save
   end
@@ -83,6 +74,45 @@ class ErratumRuleTest < MiniTest::Rails::ActiveSupport::TestCase
     expected = {:errata_type => errata_types}.with_indifferent_access
     assert_equal(expected, @filter_rule.parameters)
     assert_equal(errata_types, @filter_rule.errata_types)
+  end
+
+  def test_updates
+    assert_param_updates("end_date", @end_date) do |rule|
+      assert_nil(rule[:date_range])
+    end
+
+    @filter_rule.start_date = @start_date
+    assert_param_updates("end_date", @end_date) do |rule|
+      assert_nil(rule[:date_range][:end])
+    end
+
+    assert_param_updates("start_date", @start_date)  do |rule|
+      assert_nil(rule[:date_range])
+    end
+
+    @filter_rule.end_date = @end_date
+    assert_param_updates("start_date", @start_date) do |rule|
+      assert_nil(rule[:date_range][:start])
+    end
+
+    assert_param_updates("errata_types", ['bugfix', 'security', 'enhancement']) do |rule|
+      assert_nil(rule[:errata_type])
+    end
+  end
+
+  def assert_param_updates(message, initial_value)
+    @filter_rule.send("#{message}=", initial_value)
+    @filter_rule.save!
+    @filter_rule = ErratumRule.find(@filter_rule.id)
+    assert_equal(initial_value, @filter_rule.send("#{message}"))
+    # check for nil update
+    @filter_rule.send("#{message}=", nil)
+    assert @filter_rule.save
+    @filter_rule = ErratumRule.find(@filter_rule.id)
+    assert_nil(@filter_rule.send("#{message}"))
+    yield @filter_rule.parameters
+    @filter_rule.parameters = {}.with_indifferent_access
+    @filter_rule.save!
   end
 
   def assert_bad_params(params)

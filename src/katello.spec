@@ -77,6 +77,7 @@ Requires:       %{?scl_prefix}rubygem(haml-rails)
 Requires:       %{?scl_prefix}rubygem(json)
 Requires:       %{?scl_prefix}rubygem(rest-client)
 Requires:       %{?scl_prefix}rubygem(therubyracer)
+Requires:       %{?scl_prefix}v8
 Requires:       %{?scl_prefix}rubygem(rails_warden)
 Requires:       %{?scl_prefix}rubygem(net-ldap)
 Requires:       %{?scl_prefix}rubygem(compass)
@@ -108,7 +109,7 @@ Requires:       %{?scl_prefix}rubygem(ldap_fluff)
 Requires:       %{?scl_prefix}rubygem(anemone)
 Requires:       %{?scl_prefix}rubygem(apipie-rails) >= 0.0.18
 Requires:       %{?scl_prefix}rubygem(logging) >= 1.8.0
-Requires:       %{?scl_prefix}rubygem(bundler_ext)
+Requires:       %{?scl_prefix}rubygem(bundler_ext) >= 0.3
 Requires:       lsof
 
 %if 0%{?rhel} == 6
@@ -145,6 +146,8 @@ BuildRequires:  %{?scl_prefix}rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  %{?scl_prefix}rubygem(bundler_ext)
 BuildRequires:  %{?scl_prefix}rubygem(logging) >= 1.8.0
 BuildRequires:  %{?scl_prefix}rubygem(ui_alchemy-rails) >= 1.0.0
+BuildRequires:  %{?scl_prefix}rubygem(minitest)
+BuildRequires:  %{?scl_prefix}rubygem(minitest-rails)
 BuildRequires:  asciidoc
 BuildRequires:  /usr/bin/getopt
 BuildRequires:  java >= 0:1.6.0
@@ -197,6 +200,7 @@ Requires:       candlepin-selinux
 # the following backend engine deps are required by <katello-configure>
 Requires:       mongodb
 Requires:       mongodb-server
+Requires:       v8
 Requires:       qpid-cpp-server
 Requires:       qpid-cpp-client
 Requires:       qpid-cpp-client-ssl
@@ -224,7 +228,7 @@ Requires:        %{name}-common
 Requires:        pulp-server
 Requires:        pulp-rpm-plugins
 Requires:        pulp-selinux
-Requires:        %{?scl_prefix}rubygem(runcible) >= 0.4.1
+Requires:        %{?scl_prefix}rubygem(runcible) >= 0.4.3
 
 %description glue-pulp
 Katello connection classes for the Pulp backend
@@ -421,8 +425,12 @@ export RAILS_ENV=build
     sed -ri '1sX(/usr/bin/ruby|/usr/bin/env ruby)X%{scl_ruby}X' script/*
 %endif
 
-#check for gettext standards (using Ruby 1.8)
-/usr/bin/ruby script/check-gettext.rb -m -i
+#run source code tests
+%{?scl:scl enable %scl "}
+    touch config/katello.yml
+    ruby -Itest test/source_code_test.rb
+%{?scl:"}
+
 
 #check and generate gettext MO files
 make -C locale check all-mo %{?_smp_mflags}
@@ -442,7 +450,6 @@ fi
     mv lib/tasks lib/tasks_disabled
     export BUNDLER_EXT_NOSTRICT=1
     export BUNDLER_EXT_GROUPS="default assets"
-    touch config/katello.yml
 %{?scl:scl enable %{scl} "}
     rake  assets:precompile:primary --trace RAILS_ENV=production
     rake  assets:precompile:nondigest --trace
@@ -640,6 +647,7 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/validators
 %{homedir}/app/lib/resources/cdn.rb
 %{homedir}/app/lib/content_search
+%{homedir}/app/lib/experimental
 %{homedir}/lib/tasks
 %exclude %{homedir}/lib/tasks/yard.rake
 %exclude %{homedir}/lib/tasks/hudson.rake

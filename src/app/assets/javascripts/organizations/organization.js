@@ -17,6 +17,11 @@ $(document).ready(function() {
 
     var env_scroll = KT.env_select_scroll({});
     KT.panel.set_expand_cb(function() {
+        var children = $('#panel .menu_parent');
+        $.each(children, function(i, item) {
+            KT.menu.hoverMenu(item, { top : '75px' });
+        });
+
         env_scroll.bind(undefined);
         KT.object.label.initialize();
         if ($('#organization_edit').length > 0) {
@@ -53,7 +58,7 @@ $(document).ready(function() {
 
     $('#save_name').live('ajax:complete', function(evt, data, status, xhr) {
         // Refresh the entry in the left list
-        var id = $('.left').find('.active');
+        var id = $('.left_panel').find('.active');
         var url = id.attr('data-ajax_url');
         KT.panel.list.refresh(id.attr('id'), url);
 

@@ -130,6 +130,12 @@ module Resources
           self.delete(path(uuid), User.cp_oauth_header).code.to_i
         end
 
+        def checkin(uuid, checkin_date)
+          checkin_date ||= DateTime.now
+          uri = "%s?checkin_date=%s" % [join_path(path(uuid), 'checkin'), checkin_date]
+          self.put(uri, {}.to_json, self.default_headers).body
+        end
+
         def available_pools(uuid, listall=false)
           url = Pool.path() + "?consumer=#{uuid}&listall=#{listall}"
           response = Candlepin::CandlepinResource.get(url,self.default_headers).body
@@ -153,6 +159,10 @@ module Resources
         def entitlements uuid
           response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'entitlements'), self.default_headers).body
           Util::Data::array_with_indifferent_access JSON.parse(response)
+        end
+
+        def refresh_entitlements uuid
+          self.post(join_path(path(uuid), 'entitlements'), "", self.default_headers).body
         end
 
         def consume_entitlement uuid, pool, quantity = nil
@@ -226,7 +236,7 @@ module Resources
         )
 
         return resource.get
-      rescue Exception => e
+      rescue => e
         raise e
       end
 

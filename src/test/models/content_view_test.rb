@@ -120,7 +120,7 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     environment = FactoryGirl.build_stubbed(:environment)
     changeset = FactoryGirl.create(:changeset, :environment => environment)
     content_view.changesets << changeset
-    assert_includes changeset.content_views, content_view
+    assert_includes changeset.content_views.map(&:id), content_view.id
     assert_equal content_view.changeset_content_views,
       changeset.changeset_content_views
   end
@@ -132,6 +132,15 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
     content_view.promote(@library, @dev)
     assert_includes content_view.environments, @dev
     refute_empty ContentViewEnvironment.where(:label => content_view.cp_environment_label(@dev))
+  end
+
+  def test_destroy
+    count = ContentView.count
+    refute @library_dev_view.destroy
+    assert ContentView.exists?(@library_dev_view.id)
+    assert_equal count, ContentView.count
+    assert @library_view.destroy
+    assert_equal count-1, ContentView.count
   end
 
   def test_delete

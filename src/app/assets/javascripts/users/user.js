@@ -12,8 +12,8 @@
  */
 
 KT.panel.list.registerPage(
-    'users', 
-    { create            : 'new_user', 
+    'users',
+    { create            : 'new_user',
     validation          : KT.user_page.verifyPassword,
     extra_create_data   : function(){
         var env_id = $(".path_link.active").attr('data-env_id');
@@ -102,6 +102,7 @@ $(document).ready(function() {
 
         //from user.js
         $('#helptips_enabled').bind('change', KT.user_page.checkboxChanged);
+        $('#experimental_ui').bind('change', KT.user_page.checkboxChanged);
     })
 
 });

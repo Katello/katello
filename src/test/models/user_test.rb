@@ -320,7 +320,9 @@ class UserLdapTest < UserTestBase
 
   def self.before_suite
     super
-    Katello.config[:warden] = 'ldap'
+    options = { :warden => "ldap", :validate_ldap => false }
+    config = Katello::Configuration::Node.new(Katello.config.to_hash.update options)
+    Katello.stubs(:config).returns(config)
     @@user = User.create_ldap_user!('testuser')
   end
 
@@ -347,11 +349,9 @@ class UserLdapTest < UserTestBase
   end
 
   def test_create_ldap_user!
-    old_warden = Katello.config.warden
-    Katello.config[:warden] = 'ldap'
-      assert_instance_of User, User.create_ldap_user!('alice')
-  ensure
-    Katello.config[:warden] = old_warden
+    options = { :warden => "ldap" }
+    override_config(options)
+    assert_instance_of User, User.create_ldap_user!('alice')
   end
 
   def test_clear_existing_ldap_roles
@@ -416,6 +416,20 @@ class UserDefaultEnvTest < UserTestBase
 
     assert_empty  User.with_default_environment(@env.id)
     assert_nil    @user.default_environment
+  end
+
+  def test_before_destroy
+    # RAILS3458: Check that before_destroy callback is executed first http://tinyurl.com/rails3458
+    User.stubs(:current).returns(@user)
+    SearchFavorite.create!(:params => "abc",
+                           :path => "/garlic_naan",
+                           :user_id => @user.id
+                          )
+    @user.search_favorites.reload
+    refute_empty @user.search_favorites
+    refute @user.destroy
+
+    refute_empty @user.search_favorites
   end
 
 end

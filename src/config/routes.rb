@@ -77,11 +77,12 @@ Src::Application.routes.draw do
       put :update_component_views
     end
 
-    resources :content_view, :only => [], :controller => :content_view_definitions do
+    resources :content_views, :only => [:destroy] do
       member do
         post :refresh
       end
     end
+
     resources :filters, :controller => :filters, :only => [:index, :new, :create, :edit, :update] do
       collection do
         delete :destroy_filters
@@ -287,6 +288,7 @@ Src::Application.routes.draw do
       get :products
       get :more_products
       get :download
+      get :custom_info
     end
     collection do
       get :auto_complete
@@ -420,6 +422,7 @@ Src::Application.routes.draw do
     end
   end
   match '/organizations/:id/edit' => 'organizations#update', :via => :put
+  match '/organizations/:id/default_info/:informable_type' => 'organizations#default_info', :via => :get, :as => :organization_default_info
 
   resources :changesets, :only => [:update, :index, :show, :create, :new, :edit, :destroy] do
     member do
@@ -436,7 +439,11 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :environments
+  resources :environments do
+    member do
+      get :content_views
+    end
+  end
 
   match '/roles/show_permission' => 'roles#show_permission', :via=>:get
   resources :roles do
@@ -452,10 +459,10 @@ Src::Application.routes.draw do
     end
     resources :ldap_groups, :only => [] do
       member do
-		delete "destroy" => "roles#destroy_ldap_group", :as => "destroy"
+        delete "destroy" => "roles#destroy_ldap_group", :as => "destroy"
       end
       collection do
-		post "create" => "roles#create_ldap_group", :as => "create"
+        post "create" => "roles#create_ldap_group", :as => "create"
       end
     end
   end
@@ -481,7 +488,7 @@ Src::Application.routes.draw do
   root :to => "user_sessions#new"
 
   match '/login' => 'user_sessions#new', :as=>'login'
-  match '/logout' => 'user_sessions#destroy', :via=>:post
+  match '/logout' => 'user_sessions#destroy'
   match '/user_session/logout' => 'user_sessions#destroy'
   match '/user_session' => 'user_sessions#show', :via=>:get, :as=>'show_user_session'
 
@@ -514,6 +521,8 @@ Src::Application.routes.draw do
         put :enabled_repos
         post :system_groups, :action => :add_system_groups
         delete :system_groups, :action => :remove_system_groups
+        post :refresh_subscriptions
+        put :checkin
       end
       collection do
         match "/tasks/:id" => "systems#task_show", :via => :get
@@ -530,6 +539,7 @@ Src::Application.routes.draw do
     resources :distributors, :only => [:show, :destroy, :create, :index, :update] do
       member do
         get :pools
+        get :export
       end
       resources :subscriptions, :only => [:create, :index, :destroy] do
         collection do
@@ -621,7 +631,7 @@ Src::Application.routes.draw do
       match '/default_info/:informable_type/:keyname' => 'organization_default_info#destroy', :via => :delete, :as => :destroy_default_info
       match '/default_info/:informable_type/apply' => 'organization_default_info#apply_to_all', :via => :post, :as => :apply_default_info
 
-      resources :content_views, :only => [:index, :show]
+      resources :content_views, :only => [:index, :show, :destroy]
       resources :content_view_definitions do
         member do
           post :publish
@@ -631,6 +641,7 @@ Src::Application.routes.draw do
           collection do
             get :index, :action => :list_products
             put :index, :action => :update_products
+            get :all, :action => :list_all_products
           end
         end
         resources :repositories, :controller => :content_view_definitions, :only => [] do
@@ -652,6 +663,7 @@ Src::Application.routes.draw do
               put :index, :action => :update_repositories
             end
           end
+          resources :rules, :controller => :filter_rules, :only => [:create, :destroy]
         end
       end
     end
@@ -805,6 +817,7 @@ Src::Application.routes.draw do
     match '/subscriptions' => 'candlepin_proxies#post', :via => :post, :as => :proxy_subscriptions_post_path
     match '/consumers/:id/profile/' => 'systems#upload_package_profile', :via => :put
     match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
+    match '/consumers/:id/checkin/' => 'systems#checkin', :via => :put
 
     # development / debugging support
     if Rails.env == "development"
@@ -823,8 +836,4 @@ Src::Application.routes.draw do
   end
 
   match 'about', :to => "application_info#about", :as => "about"
-
-  #Last route in routes.rb - throws routing error for everything not handled
-  match '*a', :to => 'errors#routing'
-
 end

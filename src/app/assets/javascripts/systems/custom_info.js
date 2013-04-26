@@ -16,7 +16,7 @@ var KT = (KT === undefined) ? {} : KT;
 KT.custom_info = (function() {
 
     $(".custom_info_txt").live("keydown", function(e) {
-        if (e.keyCode == 13) { // if you press enter
+        if (e.keyCode === 13) { // if you press enter
             $("#create_custom_info_button").trigger("click");
         }
     });
@@ -90,15 +90,15 @@ KT.custom_info = (function() {
         var update_path = KT.routes.api_update_custom_info_path(informable_type, informable_id, esc_keyname);
         var destroy_path = KT.routes.api_destroy_custom_info_path(informable_type, informable_id, esc_keyname);
 
-        var new_row = "<tr class=\"primary_color\" data-id=\"custom_info_" + _keyname + "\">"
+        var new_row = "<tr class=\"primary_color custom_info_row\" data-id=\"custom_info_" + _keyname + "\">"
         + "<td class=\"ra\">"
         + "<label for=\"custom_info_" + _keyname + "\">" + data["keyname"] + "</label>"
         + "</td>"
         + "<td>"
-        + "<div class=\"editable edit_textfield\" data-method=\"put\" data-url=\"" + update_path + "\" name=\"value\" style title=\"Click to edit\">" + value + "</div>"
+        + "<div class=\"editable edit_textfield_custom_info\" data-method=\"put\" data-url=\"" + update_path + "\" name=\"value\" style title=\"Click to edit\">" + value + "</div>"
         + "</td>"
         + "<td>"
-        + "<input class=\"btn warning remove_custom_info_button\" data-id=\"custom_info_" + _keyname + "\" data-method=\"delete\" data-url=\"" + destroy_path + "\" type=\"submit\" value=\"remove\">"
+        + "<input class=\"btn warning remove_custom_info_button\" data-id=\"custom_info_" + _keyname + "\" data-method=\"delete\" data-url=\"" + destroy_path + "\" type=\"submit\" value=\"" + i18n.remove + "\">"
         + "</td>"
         + "</tr>";
 
@@ -108,27 +108,7 @@ KT.custom_info = (function() {
         $("#new_custom_info_value").val("");
         check_for_empty($("#new_custom_info_keyname"));
 
-        var $new_editable = $("tr[data-id='custom_info_" + _keyname + "']").find(".editable");
-        var common_settings = {
-            method     :  'PUT',
-            cancel     :  i18n.cancel,
-            submit     :  i18n.save,
-            indicator  :  i18n.saving,
-            tooltip    :  i18n.clickToEdit,
-            placeholder:  i18n.clickToEdit,
-            submitdata :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
-            onerror    :  function(settings, original, xhr) {
-                original.reset();
-                $("#notification").replaceWith(xhr.responseText);
-                notices.checkNotices();
-            }
-        };
-        var settings = {
-            type :  'text',
-            width:  270,
-            name :  $new_editable.attr('name')
-        };
-        $new_editable.editable($new_editable.attr('data-url'), $.extend(common_settings, settings));
+        KT.editable.initialize_textfield_custom_info();
     }
 
 })();

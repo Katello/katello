@@ -76,10 +76,10 @@ class Api::OrganizationDefaultInfoController < Api::ApiController
   end
 
   def check_informable_type
-    unless Organization::ALLOWED_DEFAULT_INFO_TYPES.include?(params[:informable_type])
-      raise HttpErrors::BadRequest, _("Type must be one of the following [ %{list} ]") %
-        { :list => Organization::ALLOWED_DEFAULT_INFO_TYPES.join(", ") }
-    end
+    Organization.check_informable_type!(params[:informable_type],
+      :message => _("Type must be one of the following [ %{list} ]") %
+      { :list => Organization::ALLOWED_DEFAULT_INFO_TYPES.join(", ") }
+    )
   end
 
 end

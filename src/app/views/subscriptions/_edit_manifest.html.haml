@@ -1,4 +1,4 @@
-= javascript :edit_helpers
+= javascript 'widgets/jquery.jeditable.helpers'
 
 = content_for :title do
   #{_("Subscription Manifest")}
@@ -17,12 +17,6 @@
             = subscriptions_manifest_link_helper({'webAppPrefix'=>@upstream['webUrl'], 'upstreamId'=>@upstream['uuid']}, @upstream['name'])
         - else
           #{_('No subscription manifest imported')}
-      %fieldset
-        .grid_3.ra.fieldset
-          %label #{_("Imported File Name")}
-        - if @upstream['fileName']
-          .grid_8.la.fl
-            #{@upstream['fileName']}
       %fieldset
         .grid_3.ra.fieldset
           %label #{_("Upstream Type")}

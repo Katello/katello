@@ -68,7 +68,17 @@ class OptionParser(_OptionParser):
         _("show program's version number and exit")
 
     displayed_help = False
+    _enable_epilog_formatter = True
+    def epilog_formatter_enabled(self):
+        return self._enable_epilog_formatter
 
+    def enable_epilog_formatter(self, value):
+        self._enable_epilog_formatter = value
+
+    def format_epilog(self, formatter):
+        if not self.epilog_formatter_enabled():
+            return self.epilog
+        return _OptionParser.format_epilog(self, formatter)
 
     def _process_args(self, largs, rargs, values):
         try:

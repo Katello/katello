@@ -5,7 +5,9 @@ require 'minitest/autorun'
 require 'minitest/rails'
 require 'simplecov'
 require 'json'
+require 'support/auth_support'
 require 'support/warden_support'
+require 'support/controller_support'
 require 'mocha/setup'
 
 class MiniTest::Rails::ActiveSupport::TestCase
@@ -16,6 +18,16 @@ class MiniTest::Rails::ActiveSupport::TestCase
   self.pre_loaded_fixtures = true
   self.fixture_path = File.expand_path('../fixtures/models', __FILE__)
   self.set_fixture_class :environments => KTEnvironment
+
+  def default_url_options
+    { :script_name => ActionController::Base.config.relative_url_root
+    }.merge(Rails.application.routes.default_url_options)
+  end
+
+  def override_config(options)
+    config = Katello::Configuration::Node.new(Katello.config.to_hash.update options)
+    Katello.stubs(:config).returns(config)
+  end
 end
 
 class MiniTest::Rails::Spec
@@ -35,6 +47,7 @@ end
 class Minitest::Rails::ActionController::TestCase
   include Warden::Test::Helpers
   include WardenSupport
+  include ControllerSupport
 end
 
 def configure_vcr
@@ -184,3 +197,10 @@ class CustomMiniTestRunner
 end
 
 MiniTest::Unit.runner = CustomMiniTestRunner::Unit.new
+
+begin # load reporters for RubyMine if available
+  require 'minitest/reporters'
+  MiniTest::Reporters.use!
+rescue LoadError
+  # ignored
+end if ENV['RUBYMINE']

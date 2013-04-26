@@ -37,6 +37,7 @@ from katello.client.api.system import SystemAPI
 from katello.client.api.distributor import DistributorAPI
 from katello.client.api.content_view import ContentViewAPI
 from katello.client.api.content_view_definition import ContentViewDefinitionAPI
+from katello.client.api.filter import FilterAPI
 
 
 class ApiDataError(Exception):
@@ -133,21 +134,51 @@ def get_cv_definition(org_name, def_label=None, def_name=None, def_id=None):
     return cvds[0]
 
 
-def get_repo(orgName, repoName, prodName=None, prodLabel=None, prodId=None, envName=None, includeDisabled=False):
+def get_filter(org_name, def_id, filter_name=None, filter_id=None):
+    filter_api = FilterAPI()
+    filters = filter_api.filters_by_cvd_and_org(def_id, org_name)
+
+    if filter_name:
+        filters = [f for f in filters if f["name"] == filter_name]
+    if filter_id:
+        filters = [f for f in filters if f["id"] == filter_id]
+
+    if len(filters) < 1:
+        raise ApiDataError(_("Could not find filter [ %s ].") % (filter_name or filter_id))
+    else:
+        # there can only be one filter matching name in a def
+        return filters[0]
+
+
+def get_repo(orgName, repoName, prodName=None, prodLabel=None, prodId=None, envName=None, includeDisabled=False,
+             viewName=None, viewLabel=None, viewId=None):
     repo_api = RepoAPI()
 
     env  = get_environment(orgName, envName)
     prod = get_product(orgName, prodName, prodLabel, prodId)
 
-    repos = repo_api.repos_by_env_product(env["id"], prod["id"], repoName, includeDisabled)
+    view = None
+    viewId = None
+    if viewName or viewLabel or viewId:
+        view = get_content_view(orgName, viewLabel, viewName, viewId)
+        viewId = view["id"]
+
+    repos = repo_api.repos_by_env_product(env["id"], prod["id"], repoName, includeDisabled, viewId)
     if len(repos) > 0:
         #repo by id call provides more information
         return repo_api.repo(repos[0]["id"])
 
-    raise ApiDataError(_("Could not find repository [ %(repoName)s ] within organization [ %(orgName)s ], " \
-        "product [ %(prodName)s ] and environment [ %(env_name)s ]") %
-        {'repoName':repoName, 'orgName':orgName, 'prodName':prod["name"], 'env_name':env["name"]})
+    if view:
+        error = _("Could not find repository [ %(repoName)s ] within organization [ %(orgName)s ], " \
+            "product [ %(prodName)s ], content view [ %(viewName)s ], and environment "\
+            "[ %(env_name)s ]") % {'repoName':repoName, 'orgName':orgName, 'prodName':prod["name"],
+                                   'viewName':view["name"], 'env_name':env["name"]}
+    else:
+        error = _("Could not find repository [ %(repoName)s ] within organization [ %(orgName)s ], " \
+            "product [ %(prodName)s ] and environment [ %(env_name)s ]") % \
+            {'repoName':repoName, 'orgName':orgName, 'prodName':prod["name"], 'env_name':env["name"]}
 
+    raise ApiDataError(error)
 
 def get_provider(orgName, provName):
     provider_api = ProviderAPI()

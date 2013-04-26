@@ -62,8 +62,8 @@ class ContentDefinitionAddRemoveRepoTest(object):
 
         self.mock(self.module, 'get_cv_definition', self.DEF)
         self.mock(self.module, 'get_repo', self.REPO)
-        self.mock(self.action.def_api, 'repos', self.REPOS)
-        self.mock(self.action.def_api, 'update_repos')
+        self.mock(self.action.api, 'repos', self.REPOS)
+        self.mock(self.action.api, 'update_repos')
 
     def test_it_returns_with_error_if_no_def_was_found(self):
         self.mock(self.module, 'get_cv_definition').side_effect = ApiDataError()
@@ -75,7 +75,7 @@ class ContentDefinitionAddRemoveRepoTest(object):
 
     def test_it_retrieves_all_definition_repos(self):
         self.run_action()
-        self.action.def_api.repos.assert_called_once_with(self.DEF['id'])
+        self.action.api.repos.assert_called_once_with(self.DEF['id'])
         self.action.get_repo.assert_called_once_with(self.ORG['name'],
                 self.REPO['name'], prodLabel=self.PRODUCT['label'])
 
@@ -86,7 +86,7 @@ class ContentDefinitionAddRepoTest(ContentDefinitionAddRemoveViewTest, CLIAction
     def test_it_calls_update_api(self):
         repos = [r['id'] for r in self.REPOS + [self.REPO]]
         self.run_action()
-        self.action.def_api.update_repos.assert_called_once_with(self.DEF['id'],
+        self.action.api.update_repos.assert_called_once_with(self.DEF['id'],
                 repos)
 
 
@@ -96,5 +96,5 @@ class ContentDefinitionRemoveViewTest(ContentDefinitionAddRemoveViewTest, CLIAct
     def test_it_calls_update_api(self):
         repos = [r['id'] for r in self.REPOS if r['name'] != self.REPO['name']]
         self.run_action()
-        self.action.def_api.update_repos.assert_called_once_with(self.DEF['id'],
+        self.action.api.update_repos.assert_called_once_with(self.DEF['id'],
                 repos)

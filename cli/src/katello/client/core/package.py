@@ -17,7 +17,8 @@
 import os
 
 from katello.client.api.package import PackageAPI
-from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org, opt_parser_add_environment
+from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org, \
+        opt_parser_add_environment, opt_parser_add_content_view
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_repo
 from katello.client.lib.ui import printer
@@ -98,12 +99,14 @@ class List(PackageAction):
         opt_parser_add_org(parser, required=1)
         opt_parser_add_environment(parser, default=_("Library"))
         opt_parser_add_product(parser)
+        opt_parser_add_content_view(parser)
 
     def check_options(self, validator):
         if not validator.exists('repo_id'):
             validator.require(('repo', 'org'))
             validator.require_at_least_one_of(('product', 'product_label', 'product_id'))
             validator.mutually_exclude('product', 'product_label', 'product_id')
+            validator.mutually_exclude('view_name', 'view_label', 'view_id')
 
     def run(self):
         repoId = self.get_repo_id()
@@ -125,9 +128,13 @@ class List(PackageAction):
         prodName = self.get_option('product')
         prodLabel = self.get_option('product_label')
         prodId   = self.get_option('product_id')
+        viewName = self.get_option('view_name')
+        viewLabel = self.get_option('view_label')
+        viewId = self.get_option('view_id')
 
         if not repoId:
-            repo = get_repo(orgName, repoName, prodName, prodLabel, prodId, envName)
+            repo = get_repo(orgName, repoName, prodName, prodLabel, prodId, envName, False,
+                            viewName, viewLabel, viewId)
             if repo != None:
                 repoId = repo["id"]
 

@@ -19,7 +19,8 @@ import os
 from katello.client.api.errata import ErrataAPI
 from katello.client.api.system import SystemAPI
 from katello.client.api.system_group import SystemGroupAPI
-from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org, opt_parser_add_environment
+from katello.client.cli.base import opt_parser_add_product, opt_parser_add_org, \
+        opt_parser_add_environment, opt_parser_add_content_view
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_repo, get_environment, get_product, \
     get_system_group, get_system
@@ -51,6 +52,7 @@ class List(ErrataAction):
         opt_parser_add_org(parser, required=1)
         opt_parser_add_environment(parser, default=_("Library"))
         opt_parser_add_product(parser)
+        opt_parser_add_content_view(parser)
 
         parser.add_option('--type', dest='type',
                       help=_("filter errata by type eg: enhancements"))
@@ -58,12 +60,13 @@ class List(ErrataAction):
                       help=_("filter errata by severity"))
 
     def check_options(self, validator):
-        if not validator.exists('repo_id'):
-            validator.require('org')
+        validator.require_at_least_one_of(('repo', 'repo_id'))
+        validator.mutually_exclude('repo', 'repo_id')
         if validator.exists('repo'):
             validator.require('org')
             validator.require_at_least_one_of(('product', 'product_label', 'product_id'))
             validator.mutually_exclude('product', 'product_label', 'product_id')
+            validator.mutually_exclude('view_name', 'view_label', 'view_id')
 
     def run(self):
         repo_id   = self.get_option('repo_id')
@@ -74,6 +77,9 @@ class List(ErrataAction):
         prod_name = self.get_option('product')
         prod_label = self.get_option('product_label')
         prod_id = self.get_option('product_id')
+        viewName = self.get_option('view_name')
+        viewLabel = self.get_option('view_label')
+        viewId = self.get_option('view_id')
 
         self.printer.add_column('id', _("ID"))
         self.printer.add_column('title', _("Title"))
@@ -81,7 +87,8 @@ class List(ErrataAction):
 
         if not repo_id:
             if repo_name:
-                repo = get_repo(org_name, repo_name, prod_name, prod_label, prod_id, env_name)
+                repo = get_repo(org_name, repo_name, prod_name, prod_label, prod_id, env_name, False,
+                                viewName, viewLabel, viewId)
                 repo_id = repo["id"]
             else:
                 env = get_environment(org_name, env_name)
@@ -119,7 +126,7 @@ class SystemErrata(ErrataAction):
         errata = systemApi.errata(system["uuid"])
 
         batch_add_columns(self.printer, {'id': _("ID")}, {'title': _("Title")}, {'type': _("Type")})
-        self.printer.set_header(_("Errata for system %(sys_name)s in organization %(org_name)s") 
+        self.printer.set_header(_("Errata for system %(sys_name)s in organization %(org_name)s")
             % {'sys_name':sys_name, 'org_name':org_name})
         self.printer.print_items(errata)
 
@@ -152,7 +159,7 @@ class SystemGroupErrata(ErrataAction):
         self.printer.add_column('systems', _('# Systems'), formatter=len)
         self.printer.add_column('systems', _("Systems"), multiline=True, show_with=printer.VerboseStrategy)
 
-        self.printer.set_header(_("Errata for system group %(org_name)s in organization %(org_name)s") 
+        self.printer.set_header(_("Errata for system group %(org_name)s in organization %(org_name)s")
             % {'group_name':group_name, 'org_name':org_name})
         self.printer.print_items(errata)
 

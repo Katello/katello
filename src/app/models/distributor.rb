@@ -33,7 +33,7 @@ class Distributor < ActiveRecord::Base
   validates_with Validators::NonLibraryEnvironmentValidator, :attributes => :environment
   # multiple distributors with a single name are supported
   validates :name, :presence => true
-  #validates_uniqueness_of :name, :scope => {:environment => :organization_id}
+  validates_length_of :name, :maximum => 250
   validates_with Validators::UniqueFieldInOrg, :attributes => :name
   validates_with Validators::NoTrailingSpaceValidator, :attributes => :name
   validates_with Validators::KatelloDescriptionFormatValidator, :attributes => :description
@@ -42,7 +42,7 @@ class Distributor < ActiveRecord::Base
 
   before_create  :fill_defaults
 
-  after_create :init_default_custom_info_keys
+  after_create :init_default_custom_info
 
   scope :by_env, lambda { |env| where('environment_id = ?', env) unless env.nil?}
   scope :completer_scope, lambda { |options| readable(options[:organization_id])}
@@ -83,11 +83,10 @@ class Distributor < ActiveRecord::Base
     json
   end
 
-  def init_default_custom_info_keys
-    # TODO: Add this back when org-level default keys
-    #self.organization.distributor_info_keys.each do |k|
-    #  self.custom_info.create!(:keyname => k)
-    #end
+  def init_default_custom_info
+    self.organization.default_info["distributor"].each do |k|
+      self.custom_info.create!(:keyname => k)
+    end
   end
 
   def tasks
@@ -114,7 +113,7 @@ class Distributor < ActiveRecord::Base
 
     def collect_custom_info
       hash = {}
-      self.custom_info.each{ |c| hash[c.keyname] = c.value} if self.custom_info
+      self.custom_info.each { |c| hash[c.keyname] = c.value } if self.custom_info
       hash
     end
 

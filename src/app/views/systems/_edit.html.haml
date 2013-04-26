@@ -2,7 +2,8 @@
   :plain
     KT.available_environments = $.parseJSON('#{escape_javascript(environments.to_json)}');
     localize({
-        "systemReleaseVerDefault": '#{escape_javascript(_("System Default"))}'
+        "systemReleaseVerDefault": '#{escape_javascript(_("System Default"))}',
+        "contentViewReset": 'The selected content view was unset. Please choose another one.'
     });
 
 = javascript 'widgets/jquery.jeditable.helpers', 'systems/system_edit'
@@ -104,7 +105,7 @@
         %fieldset
           .grid_2.ra.fieldset
             = label :content_view, :content_view, _("Content View")
-          .grid_5.la#system_content_view{'name' => 'system[content_view_id]', :class=>("editable edit_select" if editable), 'data-url'=>system_path(system.id), 'data-options' => system_content_view_opts} #{system.content_view}
+          .grid_5.la#system_content_view{'name' => 'system[content_view_id]', :class=>("editable edit_select" if editable), 'data-url'=>system_path(system.id), 'data-options' => system_content_view_opts(system)} #{system.content_view}
 
     .clear
     .grid_8

@@ -35,6 +35,7 @@ KT.editable = (function(){
             initialize_ajaxfileupload();
             initialize_password();
             initialize_textfield();
+            initialize_textfield_custom_info();
             initialize_textarea();
             initialize_multiselect();
             initialize_select();
@@ -103,6 +104,18 @@ KT.editable = (function(){
                 $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
             });
         },
+        initialize_textfield_custom_info = function() {
+            $('.edit_textfield_custom_info').each(function() {
+                $(this).editable('destroy');
+                var settings = {
+                    type        :  'text',
+                    data        :  null,
+                    width       :  158,
+                    name        :  $(this).attr('name')
+                };
+                $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
+            });
+        },
         initialize_textarea = function() {
             $('.edit_textarea').each(function() {
                 $(this).editable('destroy');
@@ -123,7 +136,7 @@ KT.editable = (function(){
                 var settings = {
                     type            :  'select',
                     name            :  element.attr('name'),
-                    data   			:  element.data('options'),
+                    data            :  jQuery.proxy(function() { return $(this).data("options"); }, this),
                     onsuccess       :  function(result, status, xhr){
                         var data = element.data('options');
 
@@ -141,7 +154,7 @@ KT.editable = (function(){
                 var settings = {
                     type            :  'multiselect',
                     name            :  element.attr('name'),
-                    data   			:  element.data('options')
+                    data            :  jQuery.proxy(function() { return $(this).data("options"); }, this)
                 };
                 $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
             });
@@ -229,16 +242,17 @@ KT.editable = (function(){
     initialize();
 
     return {
-        initialize                : initialize,
-        initialize_panel_element  : initialize_panel_element,
-        initialize_ajaxfileupload : initialize_ajaxfileupload,
-        initialize_password       : initialize_password,
-        initialize_textfield      : initialize_textfield,
-        initialize_textarea       : initialize_textarea,
-        initialize_select         : initialize_select,
-        initialize_multiselect    : initialize_multiselect,
-        initialize_number         : initialize_number,
-        initialize_datepicker     : initialize_datepicker,
-        initialize_timepicker     : initialize_timepicker
+        initialize                       : initialize,
+        initialize_panel_element         : initialize_panel_element,
+        initialize_ajaxfileupload        : initialize_ajaxfileupload,
+        initialize_password              : initialize_password,
+        initialize_textfield             : initialize_textfield,
+        initialize_textfield_custom_info : initialize_textfield_custom_info,
+        initialize_textarea              : initialize_textarea,
+        initialize_select                : initialize_select,
+        initialize_multiselect           : initialize_multiselect,
+        initialize_number                : initialize_number,
+        initialize_datepicker            : initialize_datepicker,
+        initialize_timepicker            : initialize_timepicker
     };
 }());

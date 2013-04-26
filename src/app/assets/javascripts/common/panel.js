@@ -24,15 +24,15 @@ var thisPanel = null,
 var last_ajax_panelpage;
 
 $(document).ready(function () {
-    page_width = $('#maincontent .maincontent').width();
-    left = $('.left');
-    right = $('.right');
+    page_width = $('.center').width();
+    left = $('.left_panel');
+    right = $('.right_panel');
     left.resize(function () {
         var apanel = $('.panel');
         panelLeft = left.width();
         $('.block').not('#new').width(panelLeft - 17);
         apanel.width((page_width - 21) - panelLeft);
-        right.width((page_width - 75) - panelLeft);
+        right.width((page_width - 50) - panelLeft);
         if (apanel.hasClass('opened')) {
             apanel.css({
                 "left": (panelLeft)
@@ -186,20 +186,13 @@ $(document).ready(function () {
                 }
 
                 KT.panel.copy.initialize();
-                
+
                 for( cb in callbacks ){
                     callbacks[cb]();
                 }
             }
         });
         return false;
-    });
-    $('.left').resizable({
-        maxWidth: 550,
-        minWidth: 350,
-        grid: 25,
-        handles: 'e',
-        autoHide: true
     });
 
     //register a common select none action
@@ -372,7 +365,7 @@ KT.panel = (function ($) {
                     KT.panel.copy.initialize();
 
                     for( callback in expand_cb ){
-                    	expand_cb[callback](name);
+                        expand_cb[callback](name);
                     }
                     // Add a handler for ellipsis
                     $(".one-line-ellipsis").ellipsis(true);
@@ -391,14 +384,14 @@ KT.panel = (function ($) {
             return paneljQ;
         },
         adjustHeight = function (paneljQ, isSubpanel) {
-            var leftPanel = $('.left'),
+            var leftPanel = $('.left_panel'),
                 tupane_panel = $('#panel'),
                 header_spacing = tupane_panel.find('.head').height(),
                 subnav_spacing = tupane_panel.find('nav').height() + 10,
                 tupane_header = $('.tupane_header').height() || 0,
                 tupane_footer = $('.tupane_footer').height() || 0,
                 window_height = $(window).height(),
-                container_offset = $('#container').offset().top,                
+                container_offset = $('#container').offset().top,
                 height,
                 default_height = 565,
                 default_spacing = header_spacing + subnav_spacing + tupane_header + tupane_footer + 30;
@@ -519,13 +512,13 @@ KT.panel = (function ($) {
                 isFixed = jQPanel.css('position') === 'fixed',
                 container = $('#container'),
                 bodyY = parseInt(container.position().top, 10),
-                left_panel = container.find('.left'),
+                left_panel = container.find('.left_panel'),
                 left_bottom_pos = left_panel.offset().top + left_panel.height(),
                 top;
 
             top_position = left_panel.offset().top;
-            offset = offset ? offset : 10;
-            offset += $('#maincontent .maincontent').offset().left;
+            offset = offset ? offset : 0;
+            offset += $('.center').offset().left;
             offset -= scrollX;
 
             if (jQPanel.length > 0) {
@@ -558,8 +551,8 @@ KT.panel = (function ($) {
         handleScrollResize = function (jQPanel, offset) {
             var scrollX = KT.common.scrollLeft();
 
-            offset = offset ? offset : 10;
-            offset += $('#maincontent .maincontent').offset().left;
+            offset = offset ? offset : 0;
+            offset += $('.center').offset().left;
             offset -= scrollX;
 
             if (jQPanel.length > 0) {
@@ -578,7 +571,7 @@ KT.panel = (function ($) {
                 if (promise) {
                     closePanel();
                     promise.done(function(){
-                        $('.left').resize();
+                        $('.left_panel').resize();
                         select_item(refresh);
                     });
                 }
@@ -868,7 +861,7 @@ KT.panel.list = (function () {
         results_items_count = 0,
         search,
         list_section = $('#list section'),
-        
+
         update_counts = function (current, total, results, clear) {
             if (clear) {
                 current_items_count = current;
@@ -960,7 +953,7 @@ KT.panel.list = (function () {
         },
         registerPage = function (resource_type, options) {
             options = options || {};
-            
+
             search = KT.search("search_form", "list", this,
                 {url: $("#list").attr("data-scroll_url")}, options['extra_params']);
 
@@ -985,13 +978,13 @@ KT.panel.list = (function () {
                 }
                 $(window).trigger('hashchange', [true]);
             });
-            
+
             if (options['create']) {
                 $('#' + options['create']).live('submit', function (e) {
                     var button = $(this).find('input[type|="submit"]'),
                         data = KT.common.getSearchParams() || {},
                         validation = options['validation'] || function(){ return true; };
-                                           
+
                     e.preventDefault();
 
                     if( options['extra_create_data'] ){
@@ -1000,7 +993,7 @@ KT.panel.list = (function () {
 
                     if( validation() ){
                         button.attr("disabled", "disabled");
-                        
+
                         $(this).ajaxSubmit({
                             url: KT.routes[resource_type + '_path'](),
                             data: data,
@@ -1015,7 +1008,7 @@ KT.panel.list = (function () {
             }
         },
         createSuccess = function(data){
-        	var id;
+            var id;
 
             if (data['no_match']) {
                 KT.panel.closePanel($('#panel'));
@@ -1043,12 +1036,12 @@ KT.panel.list = (function () {
             }
         };
     return {
-        extended_event	: function () { if(search){search.extend_event()} },
-        registerPage	: registerPage,
-        createSuccess	: createSuccess,
-        remove			: remove,
-        refresh			: refresh,
-        append		    : append,
+        extended_event    : function () { if(search){search.extend_event()} },
+        registerPage    : registerPage,
+        createSuccess    : createSuccess,
+        remove            : remove,
+        refresh            : refresh,
+        append            : append,
         replace_list    : replace_list,
         update_counts   : update_counts,
         full_spinner    : full_spinner,

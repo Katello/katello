@@ -79,7 +79,7 @@ module FiltersHelper
 
     _("%{include} %{rule_type}: %{parameter_list}") %
         {:include => rule_inclusion(rule),
-         :rule_type => FilterRule::CONTENT_OPTIONS.index(rule.content_type),
+         :rule_type => FilterRule::CONTENT_OPTIONS.key(rule.content_type),
          :parameter_list => parameter_list}
   end
 
@@ -91,8 +91,8 @@ module FiltersHelper
     date_summary = ""
     if !rule.parameters[:date_range].blank?
       if rule.start_date || rule.end_date
-        start_date = rule.start_date.to_date
-        end_date = rule.end_date.to_date
+        start_date = rule.start_date.to_date  if rule.start_date
+        end_date = rule.end_date.to_date if rule.end_date
 
         if start_date.blank?
           date_summary = _("Before %{end_date}") % {:end_date => end_date}
@@ -108,7 +108,7 @@ module FiltersHelper
 
     _("%{include} %{rule_type}: %{errata_types}: %{date_summary}") %
         {:include => rule_inclusion(rule),
-         :rule_type => FilterRule::CONTENT_OPTIONS.index(rule.content_type),
+         :rule_type => FilterRule::CONTENT_OPTIONS.key(rule.content_type),
          :errata_types => errata_types,
          :date_summary => date_summary}
   end

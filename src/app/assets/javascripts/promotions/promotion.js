@@ -22,7 +22,7 @@ var promotion_page = (function($){
         current_product,
         changeset_tree,
         content_tree,
-        
+
         start_timer = function() {
             interval_id = setInterval(push_changeset, 1000);
         },
@@ -79,7 +79,7 @@ var promotion_page = (function($){
                 products: products,
                 size : function() {
                     var total = 0;
-                        total += product_add.length + product_remove.length + 
+                        total += product_add.length + product_remove.length +
                             content_view_add.length + content_view_remove.length;
                         $.each(products, function(key, prod) {
                             $.each(subtypes, function(index, type) {
@@ -180,7 +180,7 @@ var promotion_page = (function($){
             accord.hide();
         },
         push_changeset = function() {
-    
+
             if(changeset_queue.length > 0 &&  current_changeset) {
                 stop_timer();
                 var data = [];
@@ -234,12 +234,12 @@ var promotion_page = (function($){
                 //Remove the close button
                 open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); }
             });
-    
+
         },
         modify_changeset = function(id, display, type, product_id) {
             var i = 0,
                 length;
-            
+
             if( KT.utils.isArray(product_id) ){
                 length = product_id.length;
 
@@ -301,7 +301,7 @@ var promotion_page = (function($){
                       }
                     }
                 } else {
-                    changeset_tree.rerender_content();       
+                    changeset_tree.rerender_content();
                 }
             }
             sort_changeset();
@@ -428,7 +428,7 @@ var promotion_page = (function($){
                     }
                     else if (item[1] > 1) {
                          strings.push(item[1] + " " + i18n[item[0] + "_plural"]);
-                    }                   
+                    }
                 });
 
                 if(strings.length === 0) {
@@ -486,7 +486,7 @@ var promotion_page = (function($){
                   buttons.prev('.added').addClass('hidden').removeAttr('original-title');
                   $.each(current_changeset.getProducts(), function(index, product) {
                     $.each(buttons, function(button_index, button){
-                      if( $(button).attr('id') === ('add_remove_product_' + product.id) ){ 
+                      if( $(button).attr('id') === ('add_remove_product_' + product.id) ){
                          if( product.all === true){
                             $(button).html(i18n.undo).removeClass('add_product').addClass("remove_product").removeClass("disabled");
                             $(button).prev('.added').removeClass('hidden').attr('original-title', i18n.added_to_changeset(current_changeset.getName()));
@@ -536,7 +536,7 @@ var promotion_page = (function($){
             } else {
                 disable_all(types);
             }
-    
+
             //Reset the review/promote(or delete)/cancel button
 
             var cancel_btn = $("#review_cancel");
@@ -564,7 +564,7 @@ var promotion_page = (function($){
 
                 if (current_changeset.is_new() || current_changeset.state() === "failed") {
                     cancel_btn.hide();
-                    
+
                     $("#changeset_tree .tree_breadcrumb").removeClass("locked_breadcrumb");
                     $(".breadcrumb_filter").removeClass("locked_breadcrumb_filter");
                     $("#cslist").removeClass("locked");
@@ -630,19 +630,19 @@ var promotion_page = (function($){
             }
 
             draw_status();
-        }, 
+        },
         disable_all = function(types){
             var all_types = types || subtypes;
             $.each(all_types, function(index, type){
                 var buttons = $("a[class~=content_add_remove][data-type=" + type + "]");
                 buttons.hide().html(i18n.add);
                 buttons.prev('.added').addClass('hidden').removeAttr('original-title');
-            });        
+            });
         },
         checkUsersInResponse = function(users) {
           if (users.length > 0) {
             var msg = users.join(", ") + ' ' + i18n.viewing;
-            $('#changeset_users').html(msg).fadeIn(); 
+            $('#changeset_users').html(msg).fadeIn();
           }
           else {
             $('#changeset_users').fadeOut("slow", function() { $(this).html(""); });
@@ -704,7 +704,7 @@ var promotion_page = (function($){
            }
            $.each(current_changeset.getProducts(), function(product_id, product) {
                var hash = "deps-cs_" + current_changeset.id + "_" + product_id;
-               
+
                if (current_changeset_breadcrumb[hash] === undefined) {
                 var productBC = 'product-cs_' + current_changeset.id + '_' + product_id;
                 var changesetBC = "changeset_" + current_changeset.id;
@@ -717,7 +717,7 @@ var promotion_page = (function($){
                 };
                }
            });
-           return true; 
+           return true;
             //current_changeset_breadcrumb
         },
         remove_dependencies = function() {
@@ -820,7 +820,7 @@ var changeset_obj = function(data_struct) {
         },
         productCount = function(){
             var count = 0;
-            
+
             for( var item in products ){
                 if( products.hasOwnProperty(item) ){
                     count += 1;
@@ -873,7 +873,7 @@ var changeset_obj = function(data_struct) {
                     }
                 }
             }
-   
+
             return collection;
         },
         has_item: function(type, id, product_id) {
@@ -903,12 +903,12 @@ var changeset_obj = function(data_struct) {
                 products[id] = {'name': display_name, 'id': id, 'package':[], 'errata':[], 'repo':[], 'distribution':[], 'all': true};
             } else if (type === 'content_view') {
                 content_views[id] = {'name': display_name, 'id': id};
-            } else { 
+            } else {
                 if ( products[product_id] === undefined ) {
                     products[product_id] = {'name': product_name, 'id': product_id, 'package':[], 'errata':[], 'repo':[], 'distribution':[]};
                 }
                 products[product_id][type].push({name:display_name, id:id});
-            } 
+            }
         },
         remove_item:function(type, id, product_id) {
             if( type === 'product' ){
@@ -920,7 +920,7 @@ var changeset_obj = function(data_struct) {
                     if ((item.id + "") === id) {
                         products[product_id][type].splice(index,1);
                         return false;//Exit out of the loop
-                    }  
+                    }
                 });
             }
         },
@@ -1044,7 +1044,7 @@ var registerEvents = function(){
         });
         return true;
     });
-    
+
     $("#delete_changeset").click(function() {
         var button = $(this);
         if (button.hasClass('disabled')){
@@ -1083,7 +1083,7 @@ var registerEvents = function(){
                     button.removeClass("disabled");
                     promotion_page.reset_page();
                     promotion_page.get_changeset_tree().rerender_content();
-                });                
+                });
             };
             if (!promotion_page.are_updates_complete()) {
                 promotion_page.wait(promotion_page.are_updates_complete, review_func);
@@ -1176,12 +1176,12 @@ var changesetEdit = (function(){
         edit_window.slideToggle(animate_time, after_function);
     },
     setup_edit = function() {
-        
+
         var changeset = promotion_page.get_changeset(),
         url = KT.common.rootURL() + "changesets/" + changeset.id,
         name_box = $('.edit_name_text'),
         description = $('.edit_description');
-        
+
         name_box.each(function() {
             $(this).editable('destroy');
             $(this).editable( url, {
@@ -1275,7 +1275,7 @@ var promotionsRenderer = (function(){
                 if (page === "changeset" && cs !== undefined && changeset_id !==  cs.id) {
                    promotion_page.set_changeset(undefined);
                 }
-                
+
                 if (promotion_page.get_changeset() === undefined) {
                     promotion_page.fetch_changeset(changeset_id, function() {
                         render_cb(getContent(page, changeset_id, product_id));
@@ -1300,7 +1300,7 @@ var promotionsRenderer = (function(){
              //   key = hash.split("_")[0],
             var    changeset = promotion_page.get_changeset(),
                 inReviewPhase = (!changeset.is_new() && (changeset.state() !== "failed"));
-            
+
             if (key === 'package-cs'){
                 return templateLibrary.listItems(changeset.getProducts(), "package", product_id, !inReviewPhase);
             }
@@ -1322,7 +1322,7 @@ var promotionsRenderer = (function(){
                 var types = promotion_page.subtypes.slice(0); //copy the array
                 if (!promotion_page.get_changeset().is_new()) {
                     types.push("deps");
-                } 
+                }
                 return templateLibrary.productDetailList(changeset.getProducts()[product_id], types, changeset_id);
             }
             else if (key === 'changeset'){
@@ -1440,7 +1440,7 @@ var templateLibrary = (function(){
             return html;
         },
         listItem = function(id, name, type, product_id, showButton, isFiltered) {
-            var anchor = "", 
+            var anchor = "",
                 filter_repo_class = "";
             if ( showButton && permissions.manage_changesets){
                 anchor = '<a ' + 'class="fr content_add_remove remove_' + type + ' + st_button"' + 'data-display_name="' + name +
@@ -1584,7 +1584,7 @@ var templateLibrary = (function(){
             html += '</ul></div>';
             return html;
         };
-        
+
     return {
         contentProductsList: contentProductsList,
         changesetsList: changesetsList,
@@ -1625,7 +1625,7 @@ var changesetStatusActions = (function($){
             set_margins();
         },
         setProgress = function(id, progress){
-            var changeset = $('#' + id);  
+            var changeset = $('#' + id);
             //changeset.find(".progressbar").progressbar({value: progress});
             //changeset.find('.changeset_status label').text(progress + '%');
         },
@@ -1706,7 +1706,7 @@ var changesetStatusActions = (function($){
                 }
             });
         };
-        
+
     return {
         initProgressBar     : initProgressBar,
         setProgress         : setProgress,
@@ -1719,12 +1719,12 @@ var changesetStatusActions = (function($){
 
 //doc ready
 $(document).ready(function() {
-    $('.left').resizable('destroy');
-    
+    $('.left_panel').resizable('destroy');
+
     promotion_page.start_timer();
 
     $(".content_add_remove").live('click', function() {
-    
+
        if( !$(this).hasClass('disabled') ){
           var environment_id = $(this).attr('data-environment_id');
           var id = $(this).attr('data-id');
@@ -1734,7 +1734,7 @@ $(document).ready(function() {
           promotion_page.modify_changeset(id, display, type, prod_id);
        }
     });
-    
+
     $('#changeset_users').hide();
 
     //initiate the left tree
@@ -1776,7 +1776,7 @@ $(document).ready(function() {
                                         base_icon       :  'home_img',
                                         render_cb       :  promotionsRenderer.render,
                                         enable_filter   :  true,
-                                        enable_float	:  true,
+                                        enable_float    :  true,
                                         tab_change_cb   :  function(hash_id) {
                                           promotion_page.init_changeset_list();
                                         }
@@ -1810,18 +1810,18 @@ $(document).ready(function() {
     $(document).ajaxComplete(function(event, xhr, options){
         var userHeader = xhr.getResponseHeader('X-ChangesetUsers');
         if(userHeader !== null && userHeader !== undefined) {
-          var userj = $.parseJSON(userHeader); 
+          var userj = $.parseJSON(userHeader);
           promotion_page.checkUsersInResponse(userj);
         }
     });
 
-   	KT.panel.registerPanel($('#changeset_tree'), $('#content_tree').width() + 50);
-   	
-   	var tupane = $('#panel');
-   	$(document).bind('hash_change.slidingtree', function(){
-   		if( tupane.hasClass('opened') ){
-   			KT.panel.closePanel(tupane);
-   		}
-   	});
+       KT.panel.registerPanel($('#changeset_tree'), $('#content_tree').width() + 50);
+
+       var tupane = $('#panel');
+       $(document).bind('hash_change.slidingtree', function(){
+           if( tupane.hasClass('opened') ){
+               KT.panel.closePanel(tupane);
+           }
+       });
 
 });

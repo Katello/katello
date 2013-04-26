@@ -63,6 +63,8 @@ class RepositoriesController < ApplicationController
     gpg = GpgKey.readable(current_organization).find(repo_params[:gpg_key]) if repo_params[:gpg_key] and repo_params[:gpg_key] != ""
     # Bundle these into one call, perhaps move to Provider
     # Also fix the hard coded yum
+
+    repo_params[:unprotected] ||= false
     @product.add_repo(repo_params[:label],repo_params[:name], repo_params[:feed], 'yum', repo_params[:unprotected], gpg)
     @product.save!
 

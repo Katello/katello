@@ -221,7 +221,7 @@ describe Api::ProductsController, :katello => true do
     it "should retrieve all repositories for the product" do
       @product.stub!(:readable?).and_return(true)
       Product.stub!(:all_readable).and_return(@products)
-      @product.should_receive(:repos).once.with(@environment, nil).and_return({})
+      @product.should_receive(:repos).once.with(@environment, nil, nil).and_return({})
       get 'repositories', :organization_id => @organization.label, :environment_id => @environment.id, :id => @product.id
     end
 

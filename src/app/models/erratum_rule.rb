@@ -30,14 +30,23 @@ class ErratumRule < FilterRule
     end
 
     define_method("#{date_type}_date=") do |date|
-      parameters[:date_range] = {} unless parameters.has_key?(:date_range)
-      parameters[:date_range][date_type] = date.to_i
+      parameters[:date_range] ||= {}
+      if date
+        parameters[:date_range][date_type] = date.to_i
+      else
+        parameters[:date_range].delete(date_type)
+        parameters.delete(:date_range) if parameters[:date_range].empty?
+      end
     end
   end
 
   def errata_types= etypes
-    parameters[:errata_type] = {} unless parameters.has_key?(:errata_type)
-    parameters[:errata_type] = etypes
+    unless etypes.blank?
+      parameters[:errata_type] ||= {}
+      parameters[:errata_type] = etypes
+    else
+      parameters.delete(:errata_type)
+    end
   end
 
   def errata_types
@@ -86,5 +95,16 @@ class ErratumRule < FilterRule
           return {'$and' => rule_clauses}
       end
     end
+  end
+
+  def as_json(options = {})
+    params = Util::Support.deep_copy(parameters).with_indifferent_access
+    from_date = start_date
+    to_date = end_date
+    params[:date_range][:start]  = from_date if from_date
+    params[:date_range][:end] = to_date if to_date
+    json_val = super(options).update("rule" => params)
+    json_val.delete("parameters")
+    json_val
   end
 end

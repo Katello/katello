@@ -17,7 +17,7 @@
 import os
 
 from katello.client.api.content_view_definition import ContentViewDefinitionAPI
-from katello.client.cli.base import opt_parser_add_org
+from katello.client.cli.base import opt_parser_add_org, opt_parser_add_content_view
 from katello.client.core.base import BaseAction, Command
 from katello.client.api.utils import get_content_view, get_cv_definition, \
     get_product, get_repo
@@ -32,7 +32,6 @@ class ContentViewDefinitionAction(BaseAction):
     def __init__(self):
         super(ContentViewDefinitionAction, self).__init__()
         self.api = ContentViewDefinitionAPI()
-        self.def_api = ContentViewDefinitionAPI()
 
     @classmethod
     def _add_get_cvd_opts(cls, parser):
@@ -63,7 +62,7 @@ class List(ContentViewDefinitionAction):
 
     def run(self):
         org_name = self.get_option('org')
-        defs = self.def_api.content_view_definitions_by_org(org_name)
+        defs = self.api.content_view_definitions_by_org(org_name)
 
         self.printer.add_column('id', _("ID"))
         self.printer.add_column('name', _("Name"))
@@ -109,7 +108,7 @@ class Publish(ContentViewDefinitionAction):
         cvd         = get_cv_definition(org_name, label, name, def_id)
 
 
-        task = self.def_api.publish(org_name, cvd["id"], view_name, view_label, description)
+        task = self.api.publish(org_name, cvd["id"], view_name, view_label, description)
 
         if not async:
             task = AsyncTask(task)
@@ -117,8 +116,8 @@ class Publish(ContentViewDefinitionAction):
                               message=_("Publishing content view, please wait..."))
 
             return evaluate_task_status(task,
-                ok =     _("Content view [ %s ] published successfully.") % name,
-                failed = _("Content view [ %s ] failed to be promoted") % name
+                ok =     _("Content view [ %s ] published successfully.") % view_name,
+                failed = _("Content view [ %s ] failed to be promoted") % view_name
             )
 
         else:
@@ -188,7 +187,7 @@ class Create(ContentViewDefinitionAction):
         label       = self.get_option('label')
         composite   = self.get_option("composite")
 
-        self.def_api.create(org_id, name, label, description, composite)
+        self.api.create(org_id, name, label, description, composite)
         print _("Successfully created content view definition [ %s ]") % name
         return os.EX_OK
 
@@ -217,7 +216,7 @@ class Update(ContentViewDefinitionAction):
 
         cvd = get_cv_definition(org_name, def_label)
 
-        cvd = self.def_api.update(org_name, cvd["id"], name, description)
+        cvd = self.api.update(org_name, cvd["id"], name, description)
         print _("Successfully updated definition [ %s ]") % cvd['name']
         return os.EX_OK
 
@@ -243,7 +242,7 @@ class Delete(ContentViewDefinitionAction):
 
         cvd = get_cv_definition(org_name, def_label, def_name, def_id)
 
-        self.def_api.delete(cvd["id"])
+        self.api.delete(cvd["id"])
         print _("Successfully deleted definition [ %s ]") % cvd["name"]
         return os.EX_OK
 
@@ -293,7 +292,7 @@ class AddRemoveProduct(ContentViewDefinitionAction):
         view    = get_cv_definition(org_name, def_label, def_name, def_id)
         product = get_product(org_name, product_name, product_label, product_id)
 
-        products = self.def_api.products(org_name, view['id'])
+        products = self.api.products(org_name, view['id'])
         products = [f['id'] for f in products]
         self.update_products(org_name, view, products, product)
         return os.EX_OK
@@ -308,7 +307,7 @@ class AddRemoveProduct(ContentViewDefinitionAction):
             message = _("Removed product [ %(prod)s ] to definition [ %(def)s ]" % \
                         ({"prod": product['label'], "def": cvd["label"]}))
 
-        self.def_api.update_products(org_name, cvd['id'], products)
+        self.api.update_products(org_name, cvd['id'], products)
         print message
 
 
@@ -358,7 +357,7 @@ class AddRemoveRepo(ContentViewDefinitionAction):
         view = get_cv_definition(org_name, def_label, def_name, def_id)
         repo = get_repo(org_name, repo_name, product, product_label, product_id)
 
-        repos = self.def_api.repos(org_name, view['id'])
+        repos = self.api.repos(org_name, view['id'])
         repos = [f['id'] for f in repos]
         self.update_repos(org_name, view, repos, repo)
         return os.EX_OK
@@ -373,7 +372,7 @@ class AddRemoveRepo(ContentViewDefinitionAction):
             message = _("Removed repository [ %(repo)s ] to definition [ %(def)s ]" % \
                         ({"repo": repo["name"], "def": cvd["label"]}))
 
-        self.def_api.update_repos(org_name, cvd['id'], repos)
+        self.api.update_repos(org_name, cvd['id'], repos)
         print message
 
 
@@ -397,12 +396,7 @@ class AddRemoveContentView(ContentViewDefinitionAction):
     def setup_parser(self, parser):
         self._add_get_cvd_opts(parser)
         opt_parser_add_org(parser, required=1)
-        parser.add_option('--view_label', dest='view_label',
-                help=_("content view label"))
-        parser.add_option('--view_id', dest='view_id',
-                help=_("content view id"))
-        parser.add_option('--view_name', dest='view_name',
-                help=_("content view name"))
+        opt_parser_add_content_view(parser, required=1)
 
     def check_options(self, validator):
         self._add_get_cvd_opts_check(validator)
@@ -424,7 +418,7 @@ class AddRemoveContentView(ContentViewDefinitionAction):
         content_view = get_content_view(org_name, content_view_label, content_view_name,
                                         content_view_id)
 
-        content_views = self.def_api.content_views(cvd['id'])
+        content_views = self.api.content_views(cvd['id'])
         content_views = [f['id'] for f in content_views]
         self.update_content_views(cvd, content_views, content_view)
         return os.EX_OK
@@ -433,13 +427,13 @@ class AddRemoveContentView(ContentViewDefinitionAction):
         if self.addition:
             content_views.append(content_view["id"])
             message = _("Added content view [ %(view)s ] to definition [ %(def)s ]" % \
-                        ({"def": content_view["name"], "view": cvd["label"]}))
+                        ({"def": cvd["name"], "view": content_view["name"]}))
         else:
             content_views.remove(content_view["id"])
             message = _("Removed content view [ %(view)s ] to content view [ %(def)s ]" % \
-                        ({"def": content_view["name"], "view": cvd["label"]}))
+                        ({"def": cvd["name"], "view": content_view["name"]}))
 
-        self.def_api.update_content_views(cvd['id'], content_views)
+        self.api.update_content_views(cvd['id'], content_views)
         print message
 
 
@@ -478,7 +472,7 @@ class Clone(ContentViewDefinitionAction):
 
         cvd = get_cv_definition(org_name, label, name, def_id)
 
-        cvd = self.def_api.clone(org_name, cvd["id"], new_name, new_label, new_description)
+        cvd = self.api.clone(org_name, cvd["id"], new_name, new_label, new_description)
         print _("Successfully created cloned definition [ %s ]") % cvd['name']
         return os.EX_OK
 

@@ -28,7 +28,7 @@ KT.packages_filtertable = (function() {
                 theTable.find('tbody tr:lt('+count+')').show();
                 coloring();
                 footer("visible");
-            } else {                  
+            } else {
                 $.uiTableFilter(theTable, this.value);
                 coloring();
                 footer("hidden");
