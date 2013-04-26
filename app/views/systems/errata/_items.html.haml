@@ -1,8 +1,8 @@
 -errata.each do |e|
-  %tr{ :id => "errata_#{e.id}" }
+  %tr{ :id => "errata_#{e.errata_id}" }
     - if editable
       %td
-        = check_box_tag "errata_checkbox", e.id
+        = check_box_tag "errata_checkbox", e.errata_id
     %td
       %div{:class=>errata_type_class(e)}
     %td.one-line-ellipsis
