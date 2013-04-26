@@ -2,6 +2,84 @@
 http_interactions: 
 - request: 
     method: delete
+    uri: https://localhost/pulp/api/v2/users/batman/
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="ecFst5AGCcXG7u5UmqLfMlaVC2CMz9crsJHbDeLss", oauth_signature="Y5yoQ2oQ9VAF96f%2F0DsVQtCF2vk%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1366999855", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 200
+      message: OK
+    headers: 
+      Date: 
+      - Fri, 26 Apr 2013 18:10:55 GMT
+      Server: 
+      - Apache/2.2.15 (Red Hat)
+      Content-Length: 
+      - "4"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "null"
+    http_version: 
+  recorded_at: Fri, 26 Apr 2013 18:10:55 GMT
+- request: 
+    method: post
+    uri: https://localhost/pulp/api/v2/users/
+    body: 
+      encoding: US-ASCII
+      string: "{\"login\":\"batman\",\"name\":\"batman\",\"password\":\"Z4KEiAUSYim6EPd7\"}"
+    headers: 
+      Accept: 
+      - application/json
+      Accept-Encoding: 
+      - gzip, deflate
+      Content-Type: 
+      - application/json
+      Authorization: 
+      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="bBnj42zOCNP0Zyi7V3rTAoQdS9u3c54UBF1rT9VDWg", oauth_signature="PDvMgrh9Qca74s5Wm4Jyd06kqHE%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1366999856", oauth_version="1.0"
+      Pulp-User: 
+      - admin
+      Content-Length: 
+      - "64"
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 201
+      message: Created
+    headers: 
+      Date: 
+      - Fri, 26 Apr 2013 18:10:56 GMT
+      Server: 
+      - Apache/2.2.15 (Red Hat)
+      Location: 
+      - batman
+      Content-Length: 
+      - "184"
+      Content-Type: 
+      - application/json
+    body: 
+      encoding: US-ASCII
+      string: "{\"_id\": {\"$oid\": \"517ac3303cbbb519a4003b9f\"}, \"name\": \"batman\", \"roles\": [], \"_ns\": \"users\", \"login\": \"batman\", \"id\": \"517ac3303cbbb519a4003b9f\", \"_href\": \"/pulp/api/v2/users/batman/\"}"
+    http_version: 
+  recorded_at: Fri, 26 Apr 2013 18:10:56 GMT
+- request: 
+    method: delete
     uri: https://localhost/pulp/api/v2/users/
     body: 
       encoding: US-ASCII
@@ -14,7 +92,7 @@ http_interactions:
       Content-Type: 
       - application/json
       Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="53fZ75c9cJcPYAPC5JgP7BQ9Htu5D9NAr5cuD3M", oauth_signature="jhHN4Gt%2BidNp86yjFrsIPGXAuPM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1366749219", oauth_version="1.0"
+      - OAuth oauth_consumer_key="katello", oauth_nonce="mm4iNVp0q2NYQXGYNJvsy6RQWeeaEVlI501UPa6bo", oauth_signature="QWqwfKPboI9y4TGlEitJSyUBP%2BM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1366999856", oauth_version="1.0"
       Pulp-User: 
       - admin
       User-Agent: 
@@ -25,7 +103,7 @@ http_interactions:
       message: Method Not Allowed
     headers: 
       Date: 
-      - Tue, 23 Apr 2013 20:33:39 GMT
+      - Fri, 26 Apr 2013 18:10:56 GMT
       Server: 
       - Apache/2.2.15 (Red Hat)
       Allow: 
@@ -44,83 +122,5 @@ http_interactions:
         H4sIAAAAAAAAA/PLz0sFAPGvot8EAAAA
 
     http_version: 
-  recorded_at: Tue, 23 Apr 2013 20:33:39 GMT
-- request: 
-    method: post
-    uri: https://localhost/pulp/api/v2/users/
-    body: 
-      encoding: US-ASCII
-      string: "{\"login\":\"batman\",\"name\":\"batman\",\"password\":\"AbVfkNjJUv9AXt8A\"}"
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_body_hash="2jmj7l5rSw0yVb%2FvlWAYkK%2FYBwk%3D", oauth_consumer_key="katello", oauth_nonce="IVLMzSQbI57gJ1cvKc5HQiWuNZQlgbaLAMw9uOXa3w", oauth_signature="oV%2F1g%2BLYvsTqCttm%2BkjGoVQxoOI%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1366749220", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      Content-Length: 
-      - "64"
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 201
-      message: Created
-    headers: 
-      Date: 
-      - Tue, 23 Apr 2013 20:33:40 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Location: 
-      - batman
-      Content-Length: 
-      - "184"
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      string: "{\"_id\": {\"$oid\": \"5176f0253cbbb54640006b56\"}, \"name\": \"batman\", \"roles\": [], \"_ns\": \"users\", \"login\": \"batman\", \"id\": \"5176f0253cbbb54640006b56\", \"_href\": \"/pulp/api/v2/users/batman/\"}"
-    http_version: 
-  recorded_at: Tue, 23 Apr 2013 20:33:41 GMT
-- request: 
-    method: delete
-    uri: https://localhost/pulp/api/v2/users/batman/
-    body: 
-      encoding: US-ASCII
-      string: ""
-    headers: 
-      Accept: 
-      - application/json
-      Accept-Encoding: 
-      - gzip, deflate
-      Content-Type: 
-      - application/json
-      Authorization: 
-      - OAuth oauth_consumer_key="katello", oauth_nonce="F85DM8nJO5PgvRUhKq5tgYSUaztvcxWd95BdNq8p0RM", oauth_signature="Z1KZXG9K73faMgMPiSOXqP1N7UU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1366749221", oauth_version="1.0"
-      Pulp-User: 
-      - admin
-      User-Agent: 
-      - Ruby
-  response: 
-    status: 
-      code: 200
-      message: OK
-    headers: 
-      Date: 
-      - Tue, 23 Apr 2013 20:33:41 GMT
-      Server: 
-      - Apache/2.2.15 (Red Hat)
-      Content-Length: 
-      - "4"
-      Content-Type: 
-      - application/json
-    body: 
-      encoding: US-ASCII
-      string: "null"
-    http_version: 
-  recorded_at: Tue, 23 Apr 2013 20:33:41 GMT
+  recorded_at: Fri, 26 Apr 2013 18:10:56 GMT
 recorded_with: VCR 2.4.0
