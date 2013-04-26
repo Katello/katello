@@ -12,7 +12,7 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
 
     action = Create()
 
-    disallowed_optinos = [
+    disallowed_options = [
         ('--name=MyRHEL', ),
         ('--org=ACME_Corporation', ),
         ('--org=ACME_Corporation', '--label=Test', )
@@ -24,7 +24,8 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
         ('--org=ACME_Corporation', '--name=MyRHEL', '--label=MyRHEL', '--composite')
     ]
 
-class ContentViewAddTest(CLIActionTestCase):
+
+class ContentViewDefinitionCreateTest(CLIActionTestCase):
     ORG = 'org'
     NAME = 'MyRHEL'
     LABEL = ''
