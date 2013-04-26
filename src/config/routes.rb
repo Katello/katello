@@ -288,6 +288,7 @@ Src::Application.routes.draw do
       get :products
       get :more_products
       get :download
+      get :custom_info
     end
     collection do
       get :auto_complete

@@ -13,7 +13,7 @@
 
 class Organization < ActiveRecord::Base
 
-  ALLOWED_DEFAULT_INFO_TYPES = %w( system )
+  ALLOWED_DEFAULT_INFO_TYPES = %w( system distributor )
 
   include Glue::Candlepin::Owner if Katello.config.use_cp
   include Glue if Katello.config.use_cp
@@ -44,7 +44,7 @@ class Organization < ActiveRecord::Base
 
   before_create :create_library
   before_create :create_redhat_provider
-  before_validation :initialize_default_info
+  after_initialize :initialize_default_info
 
   validates :name, :uniqueness => true, :presence => true
   validates_with Validators::NonHtmlNameValidator, :attributes => :name
