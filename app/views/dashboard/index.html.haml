@@ -10,11 +10,19 @@
   .sixty
     - if current_organization && current_organization.readable?
       = dashboard_entry(_("System Subscription Status"), "subscriptions", false)
-    - if Katello.config.katello? && current_organization && Repository.any_readable_in_org?(current_organization, true)
-      = dashboard_ajax_entry(_("Available Errata"), "errata", errata_dashboard_index_path(), "big_widget", true)
+    -#TODO: CONSUMER_ERRATA: the following should be uncommented once pulp changes are in
+    -#place to be better support this with large repos and consumers.  Currently, it
+    -#will generate RequestTimeout
+    -#- if Katello.config.katello? && current_organization && Repository.any_readable_in_org?(current_organization, true)
+    -#  = dashboard_ajax_entry(_("Available Errata"), "errata", errata_dashboard_index_path(), "big_widget", true)
+
     -#= dashboard_ajax_entry(_("System Overview"), "systems", systems_dashboard_index_path(), "big_widget", true)
-    - if Katello.config.katello? && current_organization && SystemGroup.any_readable?(current_organization)
-      = dashboard_ajax_entry(_("System Group Overview"), "system_groups", system_groups_dashboard_index_path(), "big_widget", true)
+
+    -#TODO: CONSUMER_ERRATA: the following should be uncommented once pulp changes are in
+    -#place to be better support this with large repos and consumers.  Currently, it
+    -#will generate RequestTimeout
+    -#- if Katello.config.katello? && current_organization && SystemGroup.any_readable?(current_organization)
+    -#  = dashboard_ajax_entry(_("System Group Overview"), "system_groups", system_groups_dashboard_index_path(), "big_widget", true)
 
   .forty
     - widget_class = Katello.config.katello? ? "small_widget" : "small_widget_headpin"

@@ -50,13 +50,14 @@ describe SystemErrataController, :katello => true do
 
           to_ret = []
           40.times{ |num|
-            errata = {}
-            errata["id"] = "RHSA-2011-01-#{num}"
-            errata["type"] = types[rand(3)]
-            errata["release"] = "Red Hat Enterprise Linux 6.0"
+            errata           = OpenStruct.new
+            errata.id        = "8a604f44-6877-4c81-b6f9-#{num}"
+            errata.errata_id = "RHSA-2011-01-#{num}"
+            errata.type      = types[rand(3)]
+            errata.release   = "Red Hat Enterprise Linux 6.0"
             to_ret << errata
           }
-
+          System.any_instance.stub(:errata).and_return(to_ret)
         end
 
         describe 'on initial load' do
@@ -72,31 +73,31 @@ describe SystemErrataController, :katello => true do
         end
 
         describe 'with an offset' do
-          pending "should be successful" do
+          it "should be successful" do
             get :items, :system_id => @system.id, :offset => 25
             response.should be_success
           end
 
-          pending "should render errata items" do
+          it "should render errata items" do
             get :items, :system_id => @system.id, :offset => 25
             response.should render_template("items")
           end
         end
 
         describe 'with a filter type' do
-          pending "should be successful" do
+          it "should be successful" do
             get :items, :system_id => @system.id, :offset => 5, :filter_type => 'BugFix'
             response.should be_success
           end
 
-          pending "should render errata items" do
+          it "should render errata items" do
             get :items, :system_id => @system.id, :offset => 5, :filter_type => 'BugFix'
             response.should render_template("items")
           end
         end
 
         describe 'with a bad filter type' do
-          pending "should be unsuccessful" do
+          it "should be unsuccessful" do
             get :items, :system_id => @system.id, :offset => 5, :filter_type => 'Fake Type'
             response.should_not be_success
           end
