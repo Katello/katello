@@ -162,6 +162,7 @@ EOKEY
       Runcible::Extensions::Repository.stub(:distributions).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_DISTRIBUTIONS)
       Runcible::Extensions::Repository.stub(:find).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PROPERTIES)
       Runcible::Extensions::Repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
+      Repository.any_instance.stubs(:content).returns(Candlepin::Content.new(:type=>'yum'))
     end
 
     Resources::Candlepin::Content.stub!(:create).and_return({ :id => '123' })
