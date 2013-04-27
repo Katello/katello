@@ -141,7 +141,7 @@ module DashboardHelper
   end
 
   def errata_type_class errata
-    case errata.type
+    case errata[:type]
       when  Errata::SECURITY
         return "security_icon"
       when  Errata::ENHANCEMENT
@@ -156,24 +156,22 @@ module DashboardHelper
 
     # the list will be determined by evaluating the repoids in the errata against the products
     # associated with the list of repos provided
-    products = ""
-    errata.repoids.each do |repoid|
-      repos.each do |repo|
-        if repo.pulp_id == repoid
-          if products.length == 0
-            products = repo.environment_product.product.name
-          else
-            products += ", " + repo.environment_product.product.name
+    products = []
+    unless errata[:repoids].blank?
+      errata[:repoids].each do |repoid|
+        repos.each do |repo|
+          if repo.pulp_id == repoid
+            products << repo.environment_product.product.name
+            break
           end
-          break
         end
       end
     end
-    products
+    products.empty? ? "" : products.join(', ')
   end
 
   def system_path_helper system
-    systems_path + "#panel=system_" + system.id.to_s
+    systems_path + "#panel=system_" + system.id.to_s + '&panelpage=errata'
   end
 
   def get_checkin(system)
