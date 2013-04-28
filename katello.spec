@@ -422,7 +422,7 @@ export RAILS_ENV=build
 
 #replace shebangs for SCL
 %if %{?scl:1}%{!?scl:0}
-    sed -ri '1sX(/usr/bin/ruby|/usr/bin/env ruby)X%{scl_ruby}X' script/*
+    find script/ -type f | xargs sed -ri '1sX(/usr/bin/ruby|/usr/bin/env ruby)X%{scl_ruby}X'
 %endif
 
 #run source code tests
