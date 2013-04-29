@@ -26,10 +26,10 @@ describe Api::ContentViewDefinitionsController do
     without_deleting = stub(having_name_or_label: organization_relation)
     Organization.stubs(:without_deleting).returns(without_deleting)
 
-    @read_permission = authorize(:read, :content_view_definitions)
-    @create_permission = authorize(:create, :content_view_definitions)
-    @delete_permission = authorize(:delete, :content_view_definitions)
-    @publish_permission = authorize(:publish, :content_view_definitions)
+    @read_permission = UserPermission.new(:read, :content_view_definitions)
+    @create_permission = UserPermission.new(:create, :content_view_definitions)
+    @delete_permission = UserPermission.new(:delete, :content_view_definitions)
+    @publish_permission = UserPermission.new(:publish, :content_view_definitions)
     @no_permission = NO_PERMISSION
   end
 
