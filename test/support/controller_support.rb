@@ -62,3 +62,18 @@ module ControllerSupport
     end
   end
 end
+
+UserPermissionContainer = Struct.new(:verbs, :resource_type, :tags, :org, :options) do
+  def call(generator)
+    tags ||= []
+    options ||= {}
+    generator.can(verbs, resource_type, tags, org, options)
+  end
+end
+
+def authorize(*args)
+  UserPermissionContainer.new(*args)
+end
+
+# create a constant for a lack of permissions
+NO_PERMISSION = lambda {|user| }
