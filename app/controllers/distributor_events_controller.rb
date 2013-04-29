@@ -25,7 +25,7 @@ class DistributorEventsController < ApplicationController
       :index => read_distributor,
       :items => read_distributor,
       :show => read_distributor,
-      :status => read_distributor,
+      :distributor_status => read_distributor,
       :more_events => read_distributor
     }
   end
@@ -49,7 +49,7 @@ class DistributorEventsController < ApplicationController
   end
 
   # retrieve the status for the actions initiated by the client
-  def status
+  def distributor_status
     statuses = {:tasks => []}
     @distributor.tasks.where(:id => params[:task_id]).collect do |status|
       statuses[:tasks] << {

@@ -19,7 +19,7 @@ Src::Application.routes.draw do
     end
     resources :events, :controller => "system_group_events", :only => [:index, :show] do
       collection do
-        get :status
+        get :status, action: :event_status
         get :more_items
         get :items
       end
@@ -29,14 +29,14 @@ Src::Application.routes.draw do
         put :add
         put :remove
         put :update
-        get :status
+        get :status, action: :package_status
       end
     end
     resources :errata, :controller => "system_group_errata", :only => [:index] do
       collection do
         get :items
         post :install
-        get :status
+        get :status, action: :errata_status
       end
     end
   end
@@ -71,7 +71,7 @@ Src::Application.routes.draw do
       get :views
       get :publish_setup
       post :publish
-      get :status
+      get :status, action: :definition_status
       get :content
       put :update_content
       put :update_component_views
@@ -200,7 +200,7 @@ Src::Application.routes.draw do
   resources :systems do
     resources :events, :only => [:index, :show], :controller => "system_events" do
       collection do
-        get :status
+        get :status, action: :event_status
         get :more_events
         get :items
       end
@@ -212,14 +212,14 @@ Src::Application.routes.draw do
         post :update
         get :packages
         get :more_packages
-        get :status
+        get :status, action: :package_status
       end
     end
     resources :errata, :controller => "system_errata", :only => [:index, :update] do
       collection do
         get :items
         post :install
-        get :status
+        get :status, action: :errata_status
       end
     end
 
@@ -275,7 +275,7 @@ Src::Application.routes.draw do
   resources :distributors do
     resources :events, :only => [:index, :show], :controller => "distributor_events" do
       collection do
-        get :status
+        get :status, action: :distributor_status
         get :more_events
         get :items
       end
@@ -429,7 +429,7 @@ Src::Application.routes.draw do
       put :name
       get :dependencies
       post :apply
-      get :status
+      get :status, action: :changeset_status
       get :object
     end
     collection do
@@ -780,7 +780,7 @@ Src::Application.routes.draw do
 
     resources :crls, :only => [:index]
 
-    match "/status"  => "ping#status", :via => :get
+    match "/status"  => "ping#system_status", :via => :get
     match "/version"  => "ping#version", :via => :get
     # some paths conflicts with rhsm
     scope 'katello' do

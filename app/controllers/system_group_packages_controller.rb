@@ -31,7 +31,7 @@ class SystemGroupPackagesController < ApplicationController
       :add => edit_group,
       :remove => edit_group,
       :update => edit_group,
-      :status => edit_group
+      :package_status => edit_group
     }
   end
 
@@ -161,7 +161,7 @@ class SystemGroupPackagesController < ApplicationController
     render :text => '' and return
   end
 
-  def status
+  def package_status
     # retrieve the status for the actions initiated by the client
     response = []
     jobs = @group.refreshed_jobs.where('jobs.id' => params[:id])

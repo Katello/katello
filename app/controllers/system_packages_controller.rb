@@ -29,7 +29,7 @@ class SystemPackagesController < ApplicationController
       :add => edit_system,
       :remove => edit_system,
       :update => edit_system,
-      :status => edit_system
+      :package_status => edit_system
     }
   end
 
@@ -164,7 +164,7 @@ class SystemPackagesController < ApplicationController
                                                 :editable => @system.editable?}
   end
 
-  def status
+  def package_status
     # retrieve the status for the package actions initiated by the client
     statuses = @system.tasks.where(:id => params[:id],
                                    :task_type => [:package_install, :package_update, :package_remove,

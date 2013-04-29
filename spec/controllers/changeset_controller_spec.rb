@@ -86,7 +86,7 @@ describe ChangesetsController, :katello => true do
 
       @changeset.task_status = TaskStatus.create!(:organization_id =>@org.id, :uuid=>"FOO", :progress=>"0", :user=> new_user)
       @changeset.save!
-      get :status, :id=>@changeset.id
+      get :changeset_status, :id=>@changeset.id
       response.should be_success
       response.should contain('changeset_' + @changeset.id.to_s)
     end
