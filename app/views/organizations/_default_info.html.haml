@@ -28,5 +28,8 @@
                 = label :default_info, info.to_sym, info
               %td
                 %input.btn.warning.remove_default_info_button{ :value => _("Remove"), :type => "submit", "data-url" => api_organization_destroy_default_info_path(org.name, informable_type, info), "data-method" => "delete", "data-id" => "default_info_#{space_safe_info}" }
+          %tr
+            %td.fullwidth{ :colspan => 2 }
+              %input.btn.fullwidth#apply_default_info_button{ :value => _("Apply default info to all systems"), :type => "button", "data-url" => api_organization_apply_default_info_path(org.name, informable_type), "data-method" => "post", :disabled => org.default_info[informable_type].empty? }
 
 = render :template => "layouts/tupane_layout"
