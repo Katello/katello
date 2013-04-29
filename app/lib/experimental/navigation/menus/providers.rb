@@ -26,6 +26,7 @@ module Experimental
             Experimental::Navigation::Items::Providers.new(organization),
             Experimental::Navigation::Items::GpgKeys.new(organization)
           ]
+          super
         end
 
       end

@@ -28,6 +28,7 @@ module Experimental
             Experimental::Navigation::Items::ContentSearch.new(organization),
             Experimental::Navigation::Menus::ChangesetManagement.new(organization)
           ]
+          super
         end
 
       end

@@ -26,6 +26,7 @@ module Experimental
             Experimental::Navigation::Items::ActivationKeys.new(organization),
             Experimental::Navigation::Items::ImportHistory.new(organization)
           ]
+          super
         end
 
       end

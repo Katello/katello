@@ -19,7 +19,7 @@ module Experimental
         def initialize(organization)
           @key           = :changesets
           @display       = _("Changesets")
-          @authorization = lambda{ KTEnvironment.any_viewable_for_promotions?(organization) }
+          @authorization = lambda{ organization && KTEnvironment.any_viewable_for_promotions?(organization) }
           @url           = promotions_path
         end
 

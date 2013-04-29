@@ -19,7 +19,7 @@ module Experimental
         def initialize(organization)
           @key           = :content_search
           @display       =  _("Content Search")
-          @authorization = lambda{ !KTEnvironment.content_readable(organization).empty? }
+          @authorization = lambda{ organization && !KTEnvironment.content_readable(organization).empty? }
           @url           = content_search_index_path
         end
 

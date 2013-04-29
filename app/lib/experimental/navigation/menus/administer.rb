@@ -27,6 +27,7 @@ module Experimental
             Experimental::Navigation::Items::Synchronization.new,
             Experimental::Navigation::Items::About.new
           ]
+          super
         end
 
       end

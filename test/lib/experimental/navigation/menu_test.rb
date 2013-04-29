@@ -15,23 +15,44 @@ require 'minitest_helper'
 
 class NavigationMenuTest < MiniTest::Rails::ActiveSupport::TestCase
 
+    class TestMenu < Experimental::Navigation::Menu
+      def initialize
+        @key           = 'test_menu'
+        @display       = 'Test Menu'
+        authorization  = true
+        @type          = 'dropdown'
+        @items         = [
+          Experimental::Navigation::Item.new('test_item', 'Test Item', true, 'fake_url'),
+          Experimental::Navigation::Item.new('test_item_fails', 'Test Item Fails Authorization', false, 'fake_url')
+        ]
+        super
+      end
+    end
+
   def setup
-    @menu = Experimental::Navigation::Menu.new('test_item', 'Test Item', true, 'dropdown', [{}])
+    @menu = TestMenu.new
   end
 
   def test_new
     refute_nil @menu
   end
 
-  def test_to_json
+  def test_as_json
     menu_hash = {
-      :key    => 'test_item',
-      :display=> 'Test Item',
+      :key    => 'test_menu',
+      :display=> 'Test Menu',
       :type   => 'dropdown',
-      :items  => [{}]
+      :items  => [Experimental::Navigation::Item.new('test_item', 'Test Item', true, 'fake_url')]
     }
 
     assert_equal menu_hash.to_json, @menu.to_json
+  end
+
+  def test_prune
+    items = @menu.prune
+    
+    assert_equal 1, items.length
+    assert_equal 'test_item', items.first.key
   end
 
 end

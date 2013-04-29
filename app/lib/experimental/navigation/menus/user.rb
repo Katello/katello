@@ -25,6 +25,7 @@ module Experimental
             Experimental::Navigation::Items::UserAccount.new(user),
             Experimental::Navigation::Items::Logout.new
           ]
+          super
         end
 
       end

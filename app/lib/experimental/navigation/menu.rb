@@ -15,23 +15,15 @@ module Experimental
   module Navigation
     class Menu
 
-      attr_reader :key, :display, :type, :items
+      attr_accessor :key, :display, :type, :items
 
       # Initalizer for the Navigation Menu object
-      #
-      # @param key           [String]  unique token representing this menu
-      # @param display       [String]  the text that will be displayed when this menu is rendered
-      # @param authorization [Boolean] boolean that determines if this menu should be pruned
-      # @param type          [String]  the type of navigation menu, e.g. 'dropdown' or 'flyout'
-      # @param items         [Array]   the navigation items to anchor to this menu
-      def initialize(key, display, authorization, type, items)
-        @key            = key
-        @display        = display
-        @type           = type
-        @items          = items
-        authorization   = authorization
+      def initialize(*args)
+        generate
       end
       
+      # Returns whether this item is accessible based on authorization rules
+      #   Expects either a Proc or a boolean
       def accessible?
         if @authorization.is_a? Proc
           @authorization.call
@@ -40,6 +32,7 @@ module Experimental
         end
       end
 
+      # Dynamically sets the authorization rule
       def authorization=(authorization)
         @authorization = authorization
       end
@@ -47,7 +40,7 @@ module Experimental
       # Defines the JSON structure for navigation menus
       #
       # @return [String] the JSON representation of a navigation menu
-      def to_json
+      def as_json(*args)
         item = {
           :key    => @key,
           :display=> @display,
@@ -55,7 +48,28 @@ module Experimental
           :items  => @items
         }
 
-        return item.to_json
+        return item
+      end
+
+      # Generates the menu structure
+      def generate
+        prune
+      end
+
+      # Recursively prunes the menu items by checking if they are accessible
+      def prune
+        @items.delete_if do |item|
+          if item.accessible?
+            if item.is_a? Experimental::Navigation::Menu
+              item.prune
+              item.items.empty?
+            else
+              false
+            end
+          else
+            true
+          end
+        end
       end
 
     end

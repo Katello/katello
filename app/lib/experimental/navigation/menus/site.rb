@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Red Hat, Inc.
+# Copyright 2011 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
 # License as published by the Free Software Foundation; either version
@@ -10,20 +10,17 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+
 module Experimental
   module Navigation
     module Menus
-      class Systems < Experimental::Navigation::Menu
+      class Site < Experimental::Navigation::Menu
 
-        def initialize(organization)
-          @key           = :systems
-          @display       = _("Systems")
-          @type          = 'dropdown'
+        def initialize
+          @key           = :site
           @authorization = true
           @items         = [
-            Experimental::Navigation::Items::Systems.new(organization),
-            Experimental::Navigation::Items::SystemsByEnvironment.new(organization),
-            Experimental::Navigation::Items::SystemGroups.new(organization)
+            Experimental::Navigation::Menus::Administer.new
           ]
           super
         end

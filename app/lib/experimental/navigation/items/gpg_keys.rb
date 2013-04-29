@@ -19,7 +19,7 @@ module Experimental
         def initialize(organization)
           @key           = :gpg_keys,
           @display       = _("GPG Keys"),
-          @authorization = lambda{ GpgKey.any_readable?(organization) }
+          @authorization = lambda{ organization && GpgKey.any_readable?(organization) }
           @url           = gpg_keys_path
         end
 

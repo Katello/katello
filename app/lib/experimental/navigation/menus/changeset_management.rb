@@ -19,12 +19,13 @@ module Experimental
         def initialize(organization)
           @key           = :changeset_management
           @display       = _("Changeset Management")
-          @authorization = lambda{ KTEnvironment.any_viewable_for_promotions?(organization) }
+          @authorization = lambda{ organization && KTEnvironment.any_viewable_for_promotions?(organization) }
           @type          = 'flyout'
           @items         = [
             Experimental::Navigation::Items::Changesets.new(organization),
             Experimental::Navigation::Items::ChangesetHistory.new(organization)
           ]
+          super
         end
 
       end

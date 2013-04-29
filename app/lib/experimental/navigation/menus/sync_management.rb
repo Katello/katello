@@ -18,13 +18,14 @@ module Experimental
         def initialize(organization)
           @key           = :sync_management
           @display       = _("Sync Management")
-          @authorization = lambda{ organization.syncable? || Provider.any_readable?(organization) }
+          @authorization = lambda{ organization && (organization.syncable? || Provider.any_readable?(organization)) }
           @type          = 'flyout'
           @items         = [
             Experimental::Navigation::Items::SyncStatus.new,
             Experimental::Navigation::Items::SyncPlans.new,
             Experimental::Navigation::Items::SyncSchedule.new
           ]
+          super
         end
 
       end

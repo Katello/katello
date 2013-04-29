@@ -15,10 +15,10 @@
 
 Katello.controller('MenuController', ['$scope', '$location', '$document', function($scope, $location, $document){
 
-    $scope.menu = KT.main_menu;
-    $scope.user_menu = KT.user_menu;
+    $scope.menu       = KT.main_menu;
+    $scope.user_menu  = KT.user_menu;
     $scope.admin_menu = KT.admin_menu;
-    $scope.notices = KT.notices;
+    $scope.notices    = KT.notices;
 
     /**
      * Set the active menu item.

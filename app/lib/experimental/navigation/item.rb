@@ -28,9 +28,11 @@ module Experimental
         @key            = key
         @display        = display
         @url            = url
-        authorization   = authorization
+        @authorization  = authorization
       end
       
+      # Returns whether this item is accessible based on authorization rules
+      #   Expects either a Proc or a boolean
       def accessible?
         if @authorization.is_a? Proc
           @authorization.call
@@ -39,6 +41,7 @@ module Experimental
         end
       end
 
+      # Dynamically sets the authorization rule
       def authorization=(authorization)
         @authorization = authorization
       end
@@ -46,14 +49,14 @@ module Experimental
       # Defines the JSON structure for navigation menu items
       #
       # @return [String] the JSON representation of the navigation item
-      def to_json
+      def as_json(*args)
         item = {
           :key    => @key,
           :display=> @display,
           :url    => @url
         }
 
-        return item.to_json
+        return item
       end
 
     end
