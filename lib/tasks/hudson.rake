@@ -3,7 +3,7 @@
 begin
   require 'ci/reporter/rake/rspec'
   namespace :hudson do
-    task :spec => ["rake:configuration", "hudson:setup:rspec", 'ptest:spec']
+    task :spec => ["rake:configuration", "hudson:setup:rspec", 'spec']
 
     namespace :setup do
       task :pre_ci do
