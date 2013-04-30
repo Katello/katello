@@ -12,7 +12,6 @@
 
 require 'minitest_helper'
 
-
 module UserSupport
 
   def self.setup_hidden_user(id)
@@ -21,6 +20,7 @@ module UserSupport
       hidden_user.set_pulp_user
       hidden_user.set_super_user_role
     end
+
   end
 
   def self.delete_hidden_user(id)

@@ -82,6 +82,8 @@ module Src
         Katello.database_configs
       end
     end
+    # Setup additional routes by loading all routes file from routes directory
+    config.paths["config/routes"] += Dir[Rails.root.join("config/routes/**/*.rb")]
 
     # set the relative url for rails
     config.relative_url_root = Katello.config.url_prefix

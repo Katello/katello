@@ -10,6 +10,7 @@ source 'http://rubygems.org'
 
 gem 'rails', '~> 3.2.8'
 gem 'json'
+gem 'rabl'
 gem 'rest-client', :require => 'rest_client'
 gem 'rails_warden', '>= 0.5.2'
 gem 'net-ldap'

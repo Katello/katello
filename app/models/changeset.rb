@@ -69,6 +69,26 @@ class Changeset < ActiveRecord::Base
   }
 
   before_save :uniquify_artifacts
+
+
+  def self.new_changeset(args)
+    return self.changeset_class(args).new(args)
+  end
+
+  def self.changeset_class(args)
+    raise "Must provide a changeset type." unless type = args.try(:[], :type)
+    type.downcase!
+
+    if type == PROMOTION
+      return PromotionChangeset
+    elsif type == DELETION
+      return DeletionChangeset
+    else
+      raise _("Unknown changeset type. Choose one of: %s") % TYPES.join(", ")
+    end
+  end
+
+
   def key_for item
     "changeset_#{id}_#{item}"
   end
