@@ -19,7 +19,7 @@ class Api::ProvidersController < Api::ApiController
   before_filter :find_organization, :only => [:index, :create]
   before_filter :find_provider, :only => [:show, :update, :destroy, :products, :import_products, :discovery,
                                           :refresh_products, :import_manifest, :delete_manifest, :product_create,
-                                          :import_manifest_progress]
+                                          :import_manifest_progress, :refresh_manifest]
   before_filter :authorize
 
   def rules
@@ -39,10 +39,11 @@ class Api::ProvidersController < Api::ApiController
       :products => read_test,
       :import_manifest => edit_test,
       :import_manifest_progress => read_test,
+      :refresh_manifest => edit_test,
       :delete_manifest => edit_test,
       :import_products => edit_test,
       :refresh_products => edit_test,
-      :product_create => edit_test,
+      :product_create => edit_test
     }
   end
 
@@ -145,8 +146,21 @@ class Api::ProvidersController < Api::ApiController
       temp_file.close
     end
 
-    @provider.import_manifest File.expand_path(temp_file.path), :force => params[:force],
-                              :async => true, :notify => false
+    @provider.import_manifest(File.expand_path(temp_file.path), :force => params[:force],
+                              :async => true, :notify => false)
+    render :json => @provider.manifest_task, :status => 200
+  end
+
+  api :POST, "/providers/:id/refresh_manifest", "Refresh previously imported manifest for Red Hat provider"
+  param :id, :number, :desc => "Provider numeric identifier", :required => true
+  def refresh_manifest
+    if @provider.yum_repo?
+      raise HttpErrors::BadRequest, _("It is not allowed to import manifest for a custom provider.")
+    end
+
+    details = @provider.organization.owner_details
+    upstream =  details['upstreamConsumer'].blank? ? {} : details['upstreamConsumer']
+    @provider.refresh_manifest(upstream, :async => true, :notify => false)
     render :json => @provider.manifest_task, :status => 200
   end
 
