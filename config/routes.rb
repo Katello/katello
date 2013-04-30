@@ -557,6 +557,7 @@ Src::Application.routes.draw do
         post :import_products
         post :import_manifest
         post :delete_manifest
+        post :refresh_manifest
         post :refresh_products
         post :product_create
         get :products
