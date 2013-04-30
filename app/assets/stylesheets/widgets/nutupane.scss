@@ -10,17 +10,13 @@
   background: rgb(216, 216, 216) !important
 }
 
+tbody {
+  width: 100%;
+}
+
 table.details-visible {
   display: inline-block;
-  height: 903px;
-  overflow-x: hidden;
-  overflow-y: scroll;
   width: 20%;
-  vertical-align: top;
-
-  thead, tbody, tr, td {
-    width: 20%;
-  }
 }
 
 th {
@@ -32,6 +28,13 @@ tr:hover td,
 tr.focus td{
   background-color: $listhover_color;
   color:#FFF;
+}
+
+th.row-select,
+td.row-select
+{
+  width: 1%;
+  max-width: 1%;
 }
 
 td, th {
@@ -85,6 +88,8 @@ th:hover {
   background: white;
   border: 1px solid #CCC;
   border-radius: 5px 5px 0 0;
+  overflow-y: auto;
+  @include box-sizing(border-box);
 
   header {
     height: 50px;
@@ -98,6 +103,13 @@ th:hover {
   display: inline;
   float: right;
   width: 79.5%;
+}
+
+.nutupane-details-open.scrolling{
+  margin-left: 8px;
+  position: fixed;
+  width: 78%;
+  top: 5%;
 }
 
 input, textarea {
