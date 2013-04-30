@@ -42,14 +42,12 @@ module Experimental
       #
       # @return [String] the JSON representation of a navigation menu
       def as_json(*args)
-        item = {
+        {
           :key    => @key,
           :display=> @display,
           :type   => @type,
           :items  => @items
         }
-
-        return item
       end
 
       # Generates the menu structure
@@ -59,18 +57,17 @@ module Experimental
 
       def process_additions(*args)
         additions = Experimental::Navigation::Additions.list
-        additions.each do |addition|
 
+        additions.each do |addition|
           index =  @items.index{|item| item.key.to_sym == addition[:key].to_sym}
           if index && addition[:type] == :delete
             @items.delete_at(index)
           elsif index
-            index += 1 if (addition[:type] == :after)
+            index += 1 if addition[:type] == :after
             node = addition[:node].new(*args)
             @items.insert(index, node)
           end
         end
-
       end
 
       # Recursively prunes the menu items by checking if they are accessible

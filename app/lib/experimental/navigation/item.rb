@@ -50,13 +50,11 @@ module Experimental
       #
       # @return [String] the JSON representation of the navigation item
       def as_json(*args)
-        item = {
+        {
           :key    => @key,
           :display=> @display,
           :url    => @url
         }
-
-        return item
       end
 
     end

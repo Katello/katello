@@ -17,8 +17,8 @@ module Experimental
       class GpgKeys < Experimental::Navigation::Item
 
         def initialize(organization)
-          @key           = :gpg_keys,
-          @display       = _("GPG Keys"),
+          @key           = :gpg_keys
+          @display       = _("GPG Keys")
           @authorization = lambda{ organization && GpgKey.any_readable?(organization) }
           @url           = gpg_keys_path
         end
