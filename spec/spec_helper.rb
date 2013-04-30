@@ -51,6 +51,14 @@ RSpec.configure do |config|
   config.include Warden::Test::Helpers
   config.include CustomMatchers
 
+  config.before(:suite) do
+    DeferredGarbageCollection.start
+  end
+
+  config.after(:each) do
+    DeferredGarbageCollection.reconsider
+  end
+
   config.after :all do
     Warden.test_reset!
   end
