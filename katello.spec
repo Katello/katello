@@ -110,6 +110,7 @@ Requires:       %{?scl_prefix}rubygem(anemone)
 Requires:       %{?scl_prefix}rubygem(apipie-rails) >= 0.0.18
 Requires:       %{?scl_prefix}rubygem(logging) >= 1.8.0
 Requires:       %{?scl_prefix}rubygem(bundler_ext) >= 0.3
+Requires:       %{?scl_prefix}rubygem(rabl)
 Requires:       lsof
 
 %if 0%{?rhel} == 6
@@ -148,6 +149,8 @@ BuildRequires:  %{?scl_prefix}rubygem(logging) >= 1.8.0
 BuildRequires:  %{?scl_prefix}rubygem(ui_alchemy-rails) >= 1.0.0
 BuildRequires:  %{?scl_prefix}rubygem(minitest)
 BuildRequires:  %{?scl_prefix}rubygem(minitest-rails)
+BuildRequires:  %{?scl_prefix}rubygem(rabl)
+BuildRequires:  %{?scl_prefix}rubygem(hooks)
 BuildRequires:  asciidoc
 BuildRequires:  /usr/bin/getopt
 BuildRequires:  java >= 0:1.6.0
@@ -645,6 +648,11 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/navigation
 %{homedir}/app/lib/notifications
 %{homedir}/app/lib/validators
+%{homedir}/app/lib/api
+%{homedir}/app/lib/api/constraints
+%{homedir}/app/lib/api/v1
+%{homedir}/app/lib/api/v2
+%dir %{homedir}/app/lib/resources
 %{homedir}/app/lib/resources/cdn.rb
 %{homedir}/app/lib/content_search
 %{homedir}/app/lib/experimental
@@ -754,6 +762,10 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/navigation
 %{homedir}/app/lib/notifications
 %{homedir}/app/lib/validators
+%{homedir}/app/lib/api
+%{homedir}/app/lib/api/constraints
+%{homedir}/app/lib/api/v1
+%{homedir}/app/lib/api/v2
 %exclude %{homedir}/app/lib/resources/candlepin.rb
 %{homedir}/lib/tasks
 %{homedir}/lib/util
