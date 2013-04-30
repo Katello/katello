@@ -25,6 +25,10 @@ KT.widget = {};
 
 KT.utils = _.noConflict();
 
+// Must be at the top to prevent AngularJS unnecessary digest operations
+// And to handle the hashPrefix that AngularJS adds that confuses BBQ
+$.bbq.pushState('!', '');
+
 //i18n global variable
 var i18n = {};
 
