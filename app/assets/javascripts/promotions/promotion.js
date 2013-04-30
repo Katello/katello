@@ -1686,7 +1686,7 @@ var changesetStatusActions = (function($){
                       failed(changeset_id);
                       updater.stop();
                   }
-                } else if ((data.progress === 100) || (data.state === 'promoted') || (data.state === 'deleted')){
+                } else if ((data.state === 'promoted') || (data.state === 'deleted')){
                     delete promotion_page.get_current_changeset_breadcrumb()['changeset_' + id];
 
                     // if the user deleted one or more products with the changeset, remove those products
