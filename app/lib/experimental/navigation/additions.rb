@@ -12,14 +12,35 @@
 
 module Experimental
   module Navigation
-    module Items
-      class Dashboard < Experimental::Navigation::Item
+    class Additions
 
-        def initialize
-          @key           = :dashboard
-          @display       = _("Dashboard")
-          @authorization = true
-          @url           = dashboard_index_path
+      @additions = []
+      class << self
+
+        def list
+          @additions
+        end
+
+        def insert_after(key, node)
+          new_addition(:after, key, node)
+        end
+
+        def insert_before(key, node)
+          new_addition(:before, key, node)
+        end
+
+        def delete(key)
+          new_addition(:delete, key, nil)
+        end
+
+        def clear
+          @additions = []
+        end
+
+        private
+
+        def new_addition(type, key, node)
+          @additions << {:type=>type, :key=>key, :node=>node}
         end
 
       end

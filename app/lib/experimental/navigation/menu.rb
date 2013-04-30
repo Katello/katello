@@ -19,6 +19,7 @@ module Experimental
 
       # Initalizer for the Navigation Menu object
       def initialize(*args)
+        process_additions(*args)
         generate
       end
       
@@ -54,6 +55,22 @@ module Experimental
       # Generates the menu structure
       def generate
         prune
+      end
+
+      def process_additions(*args)
+        additions = Experimental::Navigation::Additions.list
+        additions.each do |addition|
+
+          index =  @items.index{|item| item.key.to_sym == addition[:key].to_sym}
+          if index && addition[:type] == :delete
+            @items.delete_at(index)
+          elsif index
+            index += 1 if (addition[:type] == :after)
+            node = addition[:node].new(*args)
+            @items.insert(index, node)
+          end
+        end
+
       end
 
       # Recursively prunes the menu items by checking if they are accessible
