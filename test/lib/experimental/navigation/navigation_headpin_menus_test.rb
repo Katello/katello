@@ -47,7 +47,7 @@ class NavigationMenusTest < MiniTest::Rails::ActiveSupport::TestCase
     menu = Experimental::Navigation::Menus::Content.new(@acme_corporation)
 
     assert_equal  _('Content'), menu.display
-    assert_equal  6, menu.items.length
+    assert_equal  2, menu.items.length
     assert_equal  'dropdown', menu.type
     assert        menu.accessible?
   end
@@ -56,7 +56,7 @@ class NavigationMenusTest < MiniTest::Rails::ActiveSupport::TestCase
     @systems_menu = Experimental::Navigation::Menus::Systems.new(@acme_corporation)
 
     assert_equal  _('Systems'), @systems_menu.display
-    assert_equal  3, @systems_menu.items.length
+    assert_equal  2, @systems_menu.items.length
     assert_equal  'dropdown', @systems_menu.type
     assert        @systems_menu.accessible?
   end
@@ -65,7 +65,7 @@ class NavigationMenusTest < MiniTest::Rails::ActiveSupport::TestCase
     menu = Experimental::Navigation::Menus::Administer.new
 
     assert_equal  _('Administer'), menu.display
-    assert_equal  5, menu.items.length
+    assert_equal  4, menu.items.length
     assert_equal  'dropdown', menu.type
     assert        menu.accessible?
   end
@@ -83,25 +83,7 @@ class NavigationMenusTest < MiniTest::Rails::ActiveSupport::TestCase
     menu = Experimental::Navigation::Menus::Providers.new(@acme_corporation)
 
     assert_equal  _('Repositories'), menu.display
-    assert_equal  3, menu.items.length
-    assert_equal  'flyout', menu.type
-    assert        menu.accessible?
-  end
-
-  def test_sync_management_menu
-    menu = Experimental::Navigation::Menus::SyncManagement.new(@acme_corporation)
-
-    assert_equal  _('Sync Management'), menu.display
-    assert_equal  3, menu.items.length
-    assert_equal  'flyout', menu.type
-    assert        menu.accessible?
-  end
-
-  def test_changeset_management_menu
-    menu = Experimental::Navigation::Menus::ChangesetManagement.new(@acme_corporation)
-
-    assert_equal  _('Changeset Management'), menu.display
-    assert_equal  2, menu.items.length
+    assert_equal  1, menu.items.length
     assert_equal  'flyout', menu.type
     assert        menu.accessible?
   end

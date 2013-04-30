@@ -14,8 +14,14 @@
 module NavigationHelper
 
   def generate_menu
-    main_menu   = Experimental::Navigation::Menus::Main.new(current_organization)
-    site_menu   = Experimental::Navigation::Menus::Site.new
+    if !Katello.config.katello?
+      main_menu   = Experimental::Navigation::Menus::Headpin::Main.new(current_organization)
+      site_menu   = Experimental::Navigation::Menus::Headpin::Site.new
+    else
+      main_menu   = Experimental::Navigation::Menus::Main.new(current_organization)
+      site_menu   = Experimental::Navigation::Menus::Site.new
+    end
+
     user_menu   = Experimental::Navigation::Menus::User.new(current_user)
 
     menu = {
