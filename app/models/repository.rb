@@ -242,6 +242,7 @@ class Repository < ActiveRecord::Base
                            :enabled=>self.enabled,
                            :content_id=>self.content_id,
                            :content_view_version=>view_version,
+                           :content_type=>self.content_type,
                            :unprotected=>self.unprotected
                            )
     clone.pulp_id = clone.clone_id(to_env, content_view)
