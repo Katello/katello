@@ -55,7 +55,7 @@ class NavigationMenuTest < MiniTest::Rails::ActiveSupport::TestCase
 
   def test_prune
     items = @menu.prune
-    
+
     assert_equal 1, items.length
     assert_equal 'test_item', items.first.key
   end

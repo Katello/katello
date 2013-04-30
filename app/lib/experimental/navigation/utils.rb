@@ -14,9 +14,9 @@
 module Experimental
   module Navigation
     module Utils
-      
+
       include Rails.application.routes.url_helpers
-      
+
       def default_url_options
         { :script_name => ActionController::Base.config.relative_url_root
         }.merge(Rails.application.routes.default_url_options)

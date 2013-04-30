@@ -22,7 +22,7 @@ module Experimental
         process_additions(*args)
         generate
       end
-      
+
       # Returns whether this item is accessible based on authorization rules
       #   Expects either a Proc or a boolean
       def accessible?

@@ -15,7 +15,7 @@ module Experimental
   module Navigation
     class Item
       include Experimental::Navigation::Utils
-      
+
       attr_reader :key, :display, :authorization, :url
 
       # Initalizer for the Navigation Item object
@@ -30,7 +30,7 @@ module Experimental
         @url            = url
         @authorization  = authorization
       end
-      
+
       # Returns whether this item is accessible based on authorization rules
       #   Expects either a Proc or a boolean
       def accessible?
