@@ -282,9 +282,9 @@ module Resources
             JSON.parse(owner_json).with_indifferent_access
         end
 
-        def update key, organization
-          owner = find key
-          owner['displayName'] = organization.name
+        def update(key, attrs)
+          owner = find(key)
+          owner.merge!(attrs)
           self.put(path(key), JSON.generate(owner), self.default_headers).body
         end
 
