@@ -13,7 +13,7 @@
 class Api::PingController < Api::ApiController
 
   skip_before_filter :authorize # ok - anyone authenticated can ask for status
-  skip_before_filter :require_user, :only => [:status]
+  skip_before_filter :require_user, :only => [:system_status]
 
   api :GET, "/ping", "Shows status of system and it's subcomponents"
   description "This service is only available for authenticated users"
@@ -21,9 +21,9 @@ class Api::PingController < Api::ApiController
     render :json => Ping.ping().to_json and return
   end
 
-  api :GET, "/status", "Shows version information"
+  api :GET, "/system_status", "Shows version information"
   description "This service is also available for unauthenticated users"
-  def status
+  def system_status
     render :json => {:release => Katello.config.app_name,
         :version => Katello.config.katello_version,
         :standalone => true,

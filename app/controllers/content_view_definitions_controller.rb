@@ -17,7 +17,7 @@ class ContentViewDefinitionsController < ApplicationController
   before_filter :require_user
   before_filter :find_content_view_definition, :only => [:clone, :show, :edit, :update, :destroy, :views, :content,
                                                          :update_content, :update_component_views,
-                                                         :publish_setup, :publish, :status]
+                                                         :publish_setup, :publish, :definition_status]
   before_filter :authorize #after find_content_view_definition, since the definition is required for authorization
   before_filter :panel_options, :only => [:index, :items]
 
@@ -56,7 +56,7 @@ class ContentViewDefinitionsController < ApplicationController
       :destroy => delete_rule,
 
       :views => show_rule,
-      :status => publish_rule,
+      :definition_status => publish_rule,
 
       :content => show_rule,
       :update_content => manage_rule,
@@ -181,7 +181,7 @@ class ContentViewDefinitionsController < ApplicationController
                        :name => controller_display_name}
   end
 
-  def status
+  def definition_status
     # retrieve the status for publish & refresh tasks initiated by the client
     statuses = {:task_statuses => []}
 
