@@ -181,4 +181,12 @@ class ContentViewTest < MiniTest::Rails::ActiveSupport::TestCase
   def test_all_version_library_instances_empty
     refute_empty @library_view.all_version_library_instances
   end
+
+  def test_components_not_in_env
+    composite_view = content_views(:composite_view)
+
+    assert_equal 2, composite_view.components_not_in_env(@dev).length
+    assert_equal composite_view.content_view_definition.component_content_views,
+      composite_view.components_not_in_env(@dev)
+  end
 end
