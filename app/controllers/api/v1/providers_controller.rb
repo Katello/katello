@@ -140,7 +140,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
   param :force, :bool, :desc => "Force import"
   def import_manifest
     if @provider.yum_repo?
-      raise HttpErrors::BadRequest, _("It is not allowed to import manifest for a custom provider.")
+      raise HttpErrors::BadRequest, _("Manifests cannot be imported for a custom provider.")
     end
 
     begin
@@ -159,7 +159,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
   param :id, :number, :desc => "Provider numeric identifier", :required => true
   def refresh_manifest
     if @provider.yum_repo?
-      raise HttpErrors::BadRequest, _("It is not allowed to import manifest for a custom provider.")
+      raise HttpErrors::BadRequest, _("Manifests cannot be imported for a custom provider.")
     end
 
     details = @provider.organization.owner_details
@@ -172,7 +172,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
   param :id, :number, :desc => "Provider numeric identifier", :required => true
   def delete_manifest
     if @provider.yum_repo?
-      raise HttpErrors::BadRequest, _("It is not allowed to delete manifest for a custom provider.")
+      raise HttpErrors::BadRequest, _("Manifests cannot be deleted for a custom provider.")
     end
 
     @provider.delete_manifest
@@ -182,7 +182,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
   api :POST, "/providers/:id/refresh_products", "Refresh products for Red Hat provider"
   param :id, :number, :desc => "Provider numeric identifier", :required => true
   def refresh_products
-    raise HttpErrors::BadRequest, _("It is not allowed to refresh products for custom provider.") unless @provider.redhat_provider?
+    raise HttpErrors::BadRequest, _("Products cannot be refreshed for custom provider.") unless @provider.redhat_provider?
 
     @provider.refresh_products
     respond_for_status :message => _("Products refreshed from CDN")
@@ -212,7 +212,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
   end
   api_version "v1"
   def product_create
-    raise HttpErrors::BadRequest, _("It is not allowed to create products in Red Hat provider.") if @provider.redhat_provider?
+    raise HttpErrors::BadRequest, _("Products cannot be created for the Red Hat provider.") if @provider.redhat_provider?
 
     product_params = params[:product]
 

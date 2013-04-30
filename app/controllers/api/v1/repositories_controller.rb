@@ -80,7 +80,7 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
     param :enabled, :bool, :desc => "flag that enables/disables the repository"
   end
   def update
-    raise HttpErrors::BadRequest, _("It is not allowed to update a Red Hat repository.") if @repository.redhat?
+    raise HttpErrors::BadRequest, _("A Red Hat repository cannot be updated.") if @repository.redhat?
     @repository.update_attributes!(params[:repository].slice(:gpg_key_name, :enabled))
     respond
   end

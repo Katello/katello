@@ -65,7 +65,7 @@ class Api::V1::ProductsController < Api::V1::ApiController
     param :recursive, :bool, :desc => "set to true to recursive update gpg key"
   end
   def update
-    raise HttpErrors::BadRequest, _("It is not allowed to update a Red Hat product.") if @product.redhat?
+    raise HttpErrors::BadRequest, _("Red Hat products cannot be updated.") if @product.redhat?
     @product.update_attributes!(params[:product].slice(:description, :gpg_key_name))
     if params[:product][:recursive]
       @product.reset_repo_gpgs!
