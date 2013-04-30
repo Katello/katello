@@ -47,7 +47,7 @@ class Repository < ActiveRecord::Base
   validates_inclusion_of :content_type,
       :in => TYPES,
       :allow_blank => false,
-      :message => "Please select content type from one of the following: #{TYPES.join(', ')}."
+      :message => (_("Please select content type from one of the following: %s") % TYPES.join(', '))
 
   belongs_to :gpg_key, :inverse_of => :repositories
   belongs_to :library_instance, :class_name=>"Repository"
