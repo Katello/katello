@@ -1,4 +1,4 @@
-= javascript 'systems/systems.controller', 'widgets/nutupane', 'components/inline_edit.directive', 'components/input.directive'
+= javascript 'systems/systems.controller', 'widgets/nutupane', 'components/scrollWithPage.directive.js', 'components/inline_edit.directive', 'components/input.directive'
 = stylesheet 'widgets/nutupane'
 
 %div{ 'ng-controller' => 'SystemsController' }
@@ -6,7 +6,7 @@
     = _("Systems")
   %div{ 'alch-table-toolbar' => 'table' }
   %table#nutupane-table.table.stable.stripe-row{ 'alch-table' => 'table', 'row-select' => 'true', 'ng-class' => '{ "table-mask" : table.working, "details-visible": !table.visible}' }
-  %span.nutupane-details{ 'nutupane-details'=>'table.visible', 'ng-class' => '{ "nutupane-details-open" : !table.visible }' }
+  %span.nutupane-details{ 'scroll-with-page' => true, 'ng-class' => '{ "nutupane-details-open" : !table.visible }' }
     %header
       %h2.left
         {{ system.name }}
