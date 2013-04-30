@@ -112,6 +112,14 @@ module Glue::Candlepin::Owner
       Resources::Candlepin::Owner.find self.label
     end
 
+    def service_level
+      self.owner_details['defaultServiceLevel']
+    end
+
+    def service_level=(level)
+      Resources::Candlepin::Owner.update(self.label, {:defaultServiceLevel=>level})
+    end
+
     def pools consumer_uuid = nil
       if consumer_uuid
         pools = Resources::Candlepin::Owner.pools self.label, { :consumer => consumer_uuid }
