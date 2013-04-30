@@ -349,7 +349,7 @@ KT.content_search = function(paths_in){
             var search = $.bbq.getState('search');
             search.subgrid = $(this).data();
             $.bbq.pushState({search:search});
-        }, 'json');
+        });
     },
     bind_repo_comparison = function(){
         $(document).bind('compare_repos.comparison_grid', function(event){
