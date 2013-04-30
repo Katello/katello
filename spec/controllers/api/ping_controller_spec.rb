@@ -56,12 +56,12 @@ describe Api::PingController do
     JSON.parse(response.body)
   end
 
-  context "status" do
+  context "system_status" do
 
     it "should reflect the correct information", :headpin => true do
       Katello.config.stub!(:app_name).and_return("Headpin")
       Katello.config.stub!(:katello_version).and_return("12")
-      get :status
+      get :system_status
       json(response).should include "release" => "Headpin"
       json(response).should include "version" => "12"
     end
@@ -69,7 +69,7 @@ describe Api::PingController do
     it "should reflect the correct information", :katello => true do
       Katello.config.stub!(:app_name).and_return("Katello")
       Katello.config.stub!(:katello_version).and_return("12")
-      get :status
+      get :system_status
       json(response).should include "release" => "Katello"
       json(response).should include "version" => "12"
     end

@@ -79,7 +79,7 @@ describe SystemGroupEventsController do
         end
       end
 
-      describe 'status' do
+      describe 'event_status' do
         before (:each) do
           @job.stub!(:pending?).and_return(true)
         end
@@ -87,7 +87,7 @@ describe SystemGroupEventsController do
         it "should return a job" do
           @group.stub_chain(:refreshed_jobs, :where).and_return([@job])
 
-          get :status, :system_group_id => @group.id, :job_id => @job.id
+          get :event_status, :system_group_id => @group.id, :job_id => @job.id
           response.should be_success
           JSON.parse(response.body)["jobs"].first["id"].should == @job.id
         end
@@ -97,7 +97,7 @@ describe SystemGroupEventsController do
           job1.stub!(:pending?).and_return(true)
           @group.stub_chain(:refreshed_jobs, :where).and_return([@job, job1])
 
-          get :status, :system_group_id => @group.id, :job_id => [@job.id, job1.id]
+          get :event_status, :system_group_id => @group.id, :job_id => [@job.id, job1.id]
           response.should be_success
           JSON.parse(response.body)["jobs"].collect{|item| item['id']}.sort.should == [@job.id, job1.id].sort
         end
@@ -106,7 +106,7 @@ describe SystemGroupEventsController do
           @job.stub!(:pending?).and_return(true)
           @group.stub_chain(:refreshed_jobs, :where).and_return([@job])
 
-          get :status, :system_group_id => @group.id, :job_id => [@job.id]
+          get :event_status, :system_group_id => @group.id, :job_id => [@job.id]
           response.should be_success
         end
 

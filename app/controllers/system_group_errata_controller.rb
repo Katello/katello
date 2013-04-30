@@ -14,7 +14,7 @@ class SystemGroupErrataController < ApplicationController
 
   helper SystemErrataHelper
 
-  before_filter :find_group, :only =>[:install, :index, :items, :status]
+  before_filter :find_group, :only =>[:install, :index, :items, :errata_status]
   before_filter :authorize
 
   def section_id
@@ -28,7 +28,7 @@ class SystemGroupErrataController < ApplicationController
       :index => read_group,
       :items => read_group,
       :install => edit_group,
-      :status => edit_group
+      :errata_status => edit_group
     }
   end
 
@@ -68,7 +68,7 @@ class SystemGroupErrataController < ApplicationController
     render :text => '' and return
   end
 
-  def status
+  def errata_status
     if params[:id]
       jobs = @group.refreshed_jobs.joins(:task_statuses).where(
           'jobs.id' => params[:id], 'task_statuses.task_type' => [:errata_install])

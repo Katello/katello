@@ -25,7 +25,7 @@ class SystemEventsController < ApplicationController
       :index => read_system,
       :items => read_system,
       :show => read_system,
-      :status => read_system,
+      :event_status => read_system,
       :more_events => read_system
     }
   end
@@ -49,7 +49,7 @@ class SystemEventsController < ApplicationController
   end
 
   # retrieve the status for the actions initiated by the client
-  def status
+  def event_status
     statuses = {:tasks => []}
     @system.tasks.where(:id => params[:task_id]).collect do |status|
       statuses[:tasks] << {

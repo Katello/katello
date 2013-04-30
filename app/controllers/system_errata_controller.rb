@@ -12,7 +12,7 @@
 
 class SystemErrataController < ApplicationController
 
-  before_filter :find_system, :only =>[:install, :index, :items, :status]
+  before_filter :find_system, :only =>[:install, :index, :items, :errata_status]
   before_filter :authorize
 
   def section_id
@@ -27,7 +27,7 @@ class SystemErrataController < ApplicationController
       :index => read_system,
       :items => read_system,
       :install => edit_system,
-      :status => edit_system
+      :errata_status => edit_system
     }
   end
 
@@ -65,7 +65,7 @@ class SystemErrataController < ApplicationController
     render :text => task.id
   end
 
-  def status
+  def errata_status
     if params[:id]
       statuses = @system.tasks.where('task_statuses.id' => params[:id], :task_type => [:errata_install])
     else
