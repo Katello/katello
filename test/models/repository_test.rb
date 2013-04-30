@@ -31,6 +31,13 @@ class RepositoryCreateTest < RepositoryTestBase
     refute_empty  Repository.where(:id=>@repo.id)
   end
 
+  def test_create_with_no_type
+    @repo.content_type = ''
+    assert_raises ActiveRecord::RecordInvalid do
+      @repo.save!
+    end
+  end
+
 end
 
 

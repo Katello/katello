@@ -194,7 +194,6 @@ describe Provider do
                              :content_view_version=>ep.environment.default_content_view_version,
                              :feed => 'https://localhost')
           repo.stub(:create_pulp_repo).and_return({})
-          repo.stub(:content).and_return(product.productContent.first)
           repo.save!
 
         end
@@ -232,7 +231,6 @@ describe Provider do
       @product_with_change.productContent.each{|pc| pc.product = @product_with_change}
 
       @provider.stub_chain(:products, :engineering).and_return([@product_without_change, @product_with_change])
-      Repository.any_instance.stub(:content).and_return(@product_with_change.productContent.first.content)
     end
 
     after do
