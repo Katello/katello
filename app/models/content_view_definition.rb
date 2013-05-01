@@ -27,7 +27,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
   validate :validate_content
   validate :validate_filters
 
-  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+  validates_with Validators::NonHtmlNameValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
 
   scope :composite, where(:composite=>true)
