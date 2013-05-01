@@ -391,10 +391,14 @@ KT.panel = (function ($) {
                 tupane_header = $('.tupane_header').height() || 0,
                 tupane_footer = $('.tupane_footer').height() || 0,
                 window_height = $(window).height(),
-                container_offset = $('#container').offset().top,
+                container = $('#container'),
                 height,
                 default_height = 565,
                 default_spacing = header_spacing + subnav_spacing + tupane_header + tupane_footer + 30;
+            
+            if (container.length > 0) {    
+                container_offset = $('#container').offset().top;
+            }
 
             if (window_height <= (height + 80) && leftPanel.height() > 550) {
                 height = window_height - container_offset - default_spacing;
@@ -925,30 +929,33 @@ KT.panel.list = (function () {
         },
         refresh = function (id, url, success_cb) {
             var jQid = $('#' + id);
-            $.ajax({
-                cache: 'false',
-                type: 'GET',
-                url: url,
-                dataType: 'html',
-                success: function (data) {
-                    notices.checkNotices();
-                    jQid.html(data);
-                    // Obtain the value from column_1 and place it in pane_heading. This is
-                    // to accommodate changes to an item's name, for example, and have it
-                    // dynamically update in both left list and the right title.
-                    //
-                    // Unless an explicit #heading_title element exists, use the first div
-                    // (which was the previous default behavior).
-                    var heading_title = jQid.find('#heading_title');
-                    if (heading_title.length == 0) {
-                        heading_title = jQid.children('div:first');
+
+            if ( $('#list').length > 0 ){
+                $.ajax({
+                    cache: 'false',
+                    type: 'GET',
+                    url: url,
+                    dataType: 'html',
+                    success: function (data) {
+                        notices.checkNotices();
+                        jQid.html(data);
+                        // Obtain the value from column_1 and place it in pane_heading. This is
+                        // to accommodate changes to an item's name, for example, and have it
+                        // dynamically update in both left list and the right title.
+                        //
+                        // Unless an explicit #heading_title element exists, use the first div
+                        // (which was the previous default behavior).
+                        var heading_title = jQid.find('#heading_title');
+                        if (heading_title.length == 0) {
+                            heading_title = jQid.children('div:first');
+                        }
+                        $('.pane_heading').html(heading_title.html());
+                        if (success_cb) {
+                            success_cb();
+                        }
                     }
-                    $('.pane_heading').html(heading_title.html());
-                    if (success_cb) {
-                        success_cb();
-                    }
-                }
-            });
+                });
+            }
             return false;
         },
         registerPage = function (resource_type, options) {

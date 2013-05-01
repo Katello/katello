@@ -110,3 +110,27 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
 
     return Nutupane;
 }]);
+
+angular.module('Katello').directive('nutupaneDetails', [function(){
+    return {
+        replace: false,
+        scope: {
+            'model': '='
+        },
+        link: function(scope, elem, attrs) {
+            scope.$watch('model.active_item', function(item){
+                elem.html(item);
+            });
+
+            elem.find('.close').live('click', function() {
+                scope.$apply(function() {
+                    scope.model.close_item();
+                });
+            });
+
+            elem.find('.panel_link').live('click', function() {
+                scope.model.select_item(angular.element(this).find('a').attr('href'));
+            });
+        }
+    };
+}]);
