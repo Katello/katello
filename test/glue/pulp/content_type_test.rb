@@ -10,9 +10,18 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'minitest_helper'
 
-class PackageGroup
-  include Glue::Pulp::PackageGroup if Katello.config.use_pulp
-  include Glue::ElasticSearch::PackageGroup if Katello.config.use_elasticsearch
-  CONTENT_TYPE = "package_group"
+class ContentTypeTest < MiniTest::Rails::ActiveSupport::TestCase
+   def assert_package_type
+     assert_equal(Package::CONTENT_TYPE, Runcible::Extensions::Rpm.content_type())
+   end
+
+   def assert_package_group_type
+     assert_equal(PackageGroup::CONTENT_TYPE, Runcible::Extensions::PackageGroup.content_type())
+   end
+
+   def assert_erratum_type
+     assert_equal(Errata::CONTENT_TYPE, Runcible::Extensions::Errata.content_type())
+   end
 end
