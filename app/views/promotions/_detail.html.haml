@@ -1,33 +1,9 @@
 - if read_contents
-  - if (!defined? product) || product.nil?
-    %ul
-      %li.slide_link
-        .simple_link.link_details{:id=>"products"}
-          #{_("Products")}
-      %li.slide_link
-        .simple_link.link_details{:id=>"content_views"}
-          #{_("Content Views")}
-      %li.slide_link
-        .simple_link.link_details{:id=>"errata"}
-          #{_("Errata")}
+  %ul
+    %li.slide_link
+      .simple_link.link_details{:id=>"content_views"}
+        #{_("Content Views")}
 
-  - else
-    %ul
-      %li.slide_link
-        .simple_link.link_details{:id=>packages_bc_id(product)}
-          #{_("Packages")}
-
-      %li.slide_link
-        .simple_link.link_details{:id=>errata_bc_id(product)}
-          #{_("Errata")}
-
-      %li.slide_link
-        .simple_link.link_details{:id=>repo_bc_id(product)}
-          #{_("Repositories")}
-
-      %li.slide_link
-        .simple_link.link_details{:id=>distribution_bc_id(product)}
-          #{_("Distributions")}
 - else
   .empty_list
     #{_("You do not have access to access contents in %s") % environment_name}

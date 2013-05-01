@@ -65,70 +65,6 @@ describe PromotionsController, :katello => true do
 
   end
 
-
-  describe "Requesting items of a product", :katello => true do
-
-    before (:each) do
-      @org = new_test_org
-      controller.stub(:current_organization).and_return(@org)
-      @env = @org.library
-      @product = new_test_product(@org, @env)
-      @product.stub(:packages).and_return([])
-      Product.stub(:find).and_return(@product)
-    end
-
-    it "should be successful when requesting packages" do
-      results = [OpenStruct.new(:id => 1)]
-      results.stub(:total).and_return(1)
-      Package.stub(:search).and_return(results)
-      get 'packages', :id=>@env.name, :product_id => @product.id
-      response.should be_success
-      assigns(:environment).should == @env
-      assigns(:packages).size.should == 1
-    end
-
-    it "should be successful when requesting errata" do
-      results = [OpenStruct.new(:id => 1)]
-      results.stub(:total).and_return(1)
-      Errata.stub(:search).and_return(results)
-      get 'errata', :id=>@env.name, :product_id => @product.id
-      response.should be_success
-      assigns(:environment).should == @env
-      assigns(:errata).size.should == 1
-    end
-
-    it "should be successful when requesting repos" do
-      controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
-        filter =  search_options[:filter]
-        found_product_id = false
-        found_enabled = false
-        found_environment_id = false
-        filter.each{|f|
-          found_product_id = true if f.keys.include?(:product_id)
-          found_enabled = true if f.keys.include?(:enabled)
-          found_environment_id = true if f.keys.include?(:environment_id)
-        }
-
-        found_product_id.should == true
-        found_enabled.should == true
-        found_environment_id.should == true
-        controller.stub(:render)
-      }
-      get 'repos', :id=>@env.name, :product_id => @product.id
-      response.should be_success
-      assigns(:environment).should == @env
-    end
-
-    it "should be successful when requesting distributions" do
-      get 'distributions', :id=>@env.name, :product_id => @product.id
-      response.should be_success
-      assigns(:environment).should == @env
-      assigns(:distributions).size.should == 1
-    end
-  end
-
-
-
 describe "rules" do
     before (:each) do
       @organization = new_test_org
@@ -148,7 +84,6 @@ describe "rules" do
         user_without_permissions
       end
       let(:on_success) do
-        assigns(:products).should be_empty
         assigns(:environment).should == @env2
         assigns(:next_environment).should == @env3
       end
@@ -165,7 +100,6 @@ describe "rules" do
         user_without_permissions
       end
       let(:on_success) do
-        assigns(:products).should be_empty
         assigns(:environment).should == @env2
         assigns(:next_environment).should == @env3
       end
