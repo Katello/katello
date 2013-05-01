@@ -10,19 +10,20 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+
 module Experimental
   module Navigation
-    module DashboardMenu
-      include Rails.application.routes.url_helpers
+    module Items
+      class SyncPlans < Experimental::Navigation::Item
 
-      def menu_dashboard
-        {
-          :key     => :dashboard,
-          :display => _("Dashboard"),
-          :url     => dashboard_index_path
-        }
+        def initialize
+          @key           = :sync_plans
+          @display       = _("Sync Plans")
+          @authorization = true
+          @url           = sync_plans_path
+        end
+
       end
-
     end
   end
 end
