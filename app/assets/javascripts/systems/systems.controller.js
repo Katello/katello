@@ -51,7 +51,7 @@ angular.module('Katello').controller('SystemsController',
                         'row_id' : system.id,
                         'show'  : true,
                         'cells': [{
-                            display: $compile('<a ng-click="select_item(\'' + system.uuid + '\')">' + system.name + '</a>')($scope),
+                            display: $compile('<a ng-click="table.select_item(\'' + KT.routes.edit_system_path(system.id) + '\')">' + system.name + '</a>')($scope),
                             column_id: 'name'
                         },{
                             display: system.description,
@@ -85,28 +85,30 @@ angular.module('Katello').controller('SystemsController',
         $scope.table.transform      = transform;
         $scope.table.model          = 'Systems';
         $scope.table.data.columns   = columns;
+        $scope.table.active_item    = {};
 
         var allColumns = $scope.table.data.columns.slice(0);
         var nameColumn = $scope.table.data.columns.slice(0).splice(0, 1);
 
 
-        $scope.select_item = function(id){
-            $location.search('item', id);
+        $scope.table.select_item = function(url){
+            $location.search('item', url);
+            url = url ? url : '/katello/systems/' + id + '/edit';
 
-            $http.get('/katello/api/systems/' + id, {
+            $http.get(url, {
                 params : {
                     expanded : true
                 }
             })
             .then(function(response){
                 $scope.table.visible = false;
-                $scope.system = response.data;
                 // Remove all columns except name and replace them with the details pane
                 $scope.table.data.columns = nameColumn;
+                $scope.table.active_item = response.data;
             });
         };
 
-        $scope.close_item = function () {
+        $scope.table.close_item = function () {
             $location.search("");
             $scope.table.visible = true;
             // Restore the former columns
@@ -114,7 +116,7 @@ angular.module('Katello').controller('SystemsController',
         };
 
         if( $location.search().item ){
-            $scope.select_item($location.search().item);
+            $scope.table.select_item($location.search().item);
         }
 
         Nutupane.get();
