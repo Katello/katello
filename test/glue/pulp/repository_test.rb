@@ -362,7 +362,7 @@ class GluePulpRepoRequiresEmptyPromoteTest < GluePulpRepoTestBase
   def self.after_suite
     VCR.use_cassette('glue_pulp_repo_helper') do
       @@cloned_repo.destroy if @@cloned_repo
-      @@fedora_17_x86_64.destroy_repo
+      @@fedora_17_x86_64.destroy_repo if @@fedora_17_x86_64
     end
   end
 

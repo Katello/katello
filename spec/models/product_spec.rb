@@ -180,9 +180,9 @@ describe Product, :katello => true do
     describe "add repo" do
       before(:each) do
         Resources::Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
-        Resources::Candlepin::Content.stub!(:create).and_return({:id => "123"})
-        Resources::Candlepin::Content.stub!(:update).and_return({:id => "123"})
-        Resources::Candlepin::Content.stub!(:get).and_return({:id => "123"})
+        Resources::Candlepin::Content.stub!(:create).and_return({:id => "123", :type=>'yum'})
+        Resources::Candlepin::Content.stub!(:update).and_return({:id => "123", :type=>'yum'})
+        Resources::Candlepin::Content.stub!(:get).and_return({:id => "123", :type=>'yum'})
 
         @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
       end
