@@ -13,8 +13,8 @@
 
 
 angular.module('Katello').controller('SystemsController',
-    ['$scope', 'Nutupane', '$location', '$http', '$compile',
-    function($scope, Nutupane, $location, $http, $compile) {
+    ['$scope', 'Nutupane', '$location', 'System', '$compile',
+    function($scope, Nutupane, $location, System, $compile) {
 
         var columns = [{
             id: 'name',
@@ -81,7 +81,7 @@ angular.module('Katello').controller('SystemsController',
         };
 
         $scope.table                = Nutupane.table;
-        $scope.table.url            = '/katello/api/systems/';
+        $scope.table.url            = KT.routes.api_systems_path();
         $scope.table.transform      = transform;
         $scope.table.model          = 'Systems';
         $scope.table.data.columns   = columns;
@@ -89,18 +89,11 @@ angular.module('Katello').controller('SystemsController',
         var allColumns = $scope.table.data.columns.slice(0);
         var nameColumn = $scope.table.data.columns.slice(0).splice(0, 1);
 
-
         $scope.select_item = function(id){
             $location.search('item', id);
-
-            $http.get('/katello/api/systems/' + id, {
-                params : {
-                    expanded : true
-                }
-            })
-            .then(function(response){
+            System.get({systemId: id, expanded : true}, function (system) {
                 $scope.table.visible = false;
-                $scope.system = response.data;
+                $scope.system = system;
                 // Remove all columns except name and replace them with the details pane
                 $scope.table.data.columns = nameColumn;
             });
