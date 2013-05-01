@@ -62,14 +62,14 @@ class SourceCodeTest < MiniTest::Rails::ActiveSupport::TestCase
   describe 'formatting' do
     it 'does not have trailing whitespaces' do
       SourceCode.
-          new('**/*.{rb,js,scss,haml}').
+          new('**/*.{rb,js,scss,haml}', %r'coverage').
           check_lines { |line| line !~ / +$/ }
     end
 
     it 'does use soft-tabs' do
       SourceCode.
           new('**/*.{rb,js,scss,haml}',
-              %r'(public|vendor)/assets/.*\.js').# tab is ok in minified files, its shorter than space
+              %r'(coverage|(public|vendor)/assets/.*\.js)').# tab is ok in minified files, its shorter than space
           check_lines { |line| line !~ /\t/ }
     end
   end
