@@ -25,7 +25,7 @@ Src::Application.routes.draw do
           resources :sync, :only => [:index, :create] do
             delete :index, :on => :collection, :action => :cancel
           end
-          resources :repository_sets, :only=>[:index] do
+          resources :repository_sets, :only => [:index] do
             post :enable, :on => :member
             post :disable, :on => :member
           end
@@ -137,8 +137,8 @@ Src::Application.routes.draw do
         end
         resources :subscriptions, :only => [:create, :index, :destroy] do
           collection do
-              match '/' => 'subscriptions#destroy_all', :via => :delete
-              match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
+            match '/' => 'subscriptions#destroy_all', :via => :delete
+            match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
           end
         end
         resource :packages, :action => [:create, :update, :destroy], :controller => :system_packages
@@ -151,8 +151,8 @@ Src::Application.routes.draw do
         end
         resources :subscriptions, :only => [:create, :index, :destroy] do
           collection do
-              match '/' => 'subscriptions#destroy_all', :via => :delete
-              match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
+            match '/' => 'subscriptions#destroy_all', :via => :delete
+            match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
           end
         end
       end
@@ -186,33 +186,32 @@ Src::Application.routes.draw do
       end
 
 
-
       resources :changesets, :only => [:show, :update, :destroy] do
         post :promote, :on => :member, :action => :promote
         post :apply, :on => :member, :action => :apply
         get :dependencies, :on => :member, :action => :dependencies
         resources :products, :controller => :changesets_content do
-          post   :index, :on => :collection, :action => :add_product
+          post :index, :on => :collection, :action => :add_product
           delete :destroy, :on => :member, :action => :remove_product
         end
         resources :packages, :controller => :changesets_content, :constraints => { :id => /[0-9a-zA-Z\-_.]+/ } do
-          post   :index, :on => :collection, :action => :add_package
+          post :index, :on => :collection, :action => :add_package
           delete :destroy, :on => :member, :action => :remove_package
         end
         resources :errata, :controller => :changesets_content do
-          post   :index, :on => :collection, :action => :add_erratum
+          post :index, :on => :collection, :action => :add_erratum
           delete :destroy, :on => :member, :action => :remove_erratum
         end
-        resources :repositories , :controller => :changesets_content do
-          post   :index, :on => :collection, :action => :add_repo
+        resources :repositories, :controller => :changesets_content do
+          post :index, :on => :collection, :action => :add_repo
           delete :destroy, :on => :member, :action => :remove_repo
         end
         resources :distributions, :controller => :changesets_content do
-          post   :index, :on => :collection, :action => :add_distribution
+          post :index, :on => :collection, :action => :add_distribution
           delete :destroy, :on => :member, :action => :remove_distribution
         end
         resources :content_views, :controller => :changesets_content do
-          post   :index, :on => :collection, :action => :add_content_view
+          post :index, :on => :collection, :action => :add_content_view
           delete :destroy, :on => :member, :action => :remove_content_view
         end
 
@@ -270,25 +269,25 @@ Src::Application.routes.draw do
       resources :users do
         get :report, :on => :collection
         get :sync_ldap_roles, :on => :collection
-        resources :roles, :controller => :users, :only =>[] do
-         post   :index, :on => :collection, :action => :add_role
-         delete :destroy, :on => :member, :action => :remove_role
-         get    :index, :on => :collection, :action => :list_roles
+        resources :roles, :controller => :users, :only => [] do
+          post :index, :on => :collection, :action => :add_role
+          delete :destroy, :on => :member, :action => :remove_role
+          get :index, :on => :collection, :action => :list_roles
         end
       end
 
       resources :roles do
         get :available_verbs, :on => :collection, :action => :available_verbs
         resources :permissions, :only => [:index, :show, :create, :destroy]
-        resources :ldap_groups, :controller => :role_ldap_groups , :only => [:create, :destroy, :index]
+        resources :ldap_groups, :controller => :role_ldap_groups, :only => [:create, :destroy, :index]
       end
 
       resources :tasks, :only => [:show]
 
       resources :crls, :only => [:index]
 
-      match "/status"  => "ping#server_status", :via => :get
-      match "/version"  => "ping#version", :via => :get
+      match "/status" => "ping#server_status", :via => :get
+      match "/version" => "ping#version", :via => :get
       # some paths conflicts with rhsm
       scope 'katello' do
 
@@ -328,7 +327,7 @@ Src::Application.routes.draw do
 
       # development / debugging support
       if Rails.env == "development"
-        match 'status/memory' => 'status#memory', :via=>:get
+        match 'status/memory' => 'status#memory', :via => :get
       end
 
       # api custom information

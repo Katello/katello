@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 Apipie.configure do |config|
-  config.app_name = Katello.config.app_name
-  config.app_info = "The sysadmin's fortress."
-  config.copyright = "Copyright 2013 Red Hat, Inc."
-  config.api_base_url = "/api"
+  config.app_name                = Katello.config.app_name
+  config.app_info                = "The sysadmin's fortress."
+  config.copyright               = "Copyright 2013 Red Hat, Inc."
+  config.api_base_url            = "/api"
   config.api_controllers_matcher = "#{Rails.root}/app/controllers/api/**/*.rb"
-  config.ignored_by_recorder = %w[Api::V1::PulpProxiesController Api::V1::CandlepinProxiesController Api::V1::RootController, Api::V1::RepositoriesController#sync_complete]
-  config.doc_base_url = "/apidoc"
-  config.use_cache = Rails.env.production?
-  config.validate = false
+  config.ignored_by_recorder     = %w[Api::V1::PulpProxiesController Api::V1::CandlepinProxiesController Api::V1::RootController, Api::V1::RepositoriesController#sync_complete]
+  config.doc_base_url            = "/apidoc"
+  config.use_cache               = Rails.env.production?
+  config.validate                = false
 
   unless config.use_cache?
     require 'maruku'

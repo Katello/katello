@@ -28,12 +28,12 @@ describe Api::V1::ActivationKeysController do
     disable_consumer_group_orchestration
 
     @organization = Organization.create! do |o|
-      o.id = '1234'
-      o.name = "org-1234"
+      o.id    = '1234'
+      o.name  = "org-1234"
       o.label = "org-1234"
     end
 
-    @environment = KTEnvironment.new(:organization => @organization)
+    @environment    = KTEnvironment.new(:organization => @organization)
     @activation_key = ActivationKey.new(:name => 'activation key')
   end
 
@@ -41,7 +41,7 @@ describe Api::V1::ActivationKeysController do
     before { ActivationKey.should_receive(:find).once.with('123').and_return(@activation_key) }
 
     specify { get :show, :id => '123' }
-    specify { put :update, :id => '123', :activation_key => {:description => "genius"} }
+    specify { put :update, :id => '123', :activation_key => { :description => "genius" } }
     specify { delete :destroy, :id => '123' }
   end
 
@@ -58,7 +58,7 @@ describe Api::V1::ActivationKeysController do
     end
 
     specify { get :index, :environment_id => '123' }
-    specify { post :create, :environment_id => '123', :activation_key=> {:description => "gah"} }
+    specify { post :create, :environment_id => '123', :activation_key => { :description => "gah" } }
   end
 
   it "before_filter :find_environment should return 404 if environment wasn't found" do
@@ -74,8 +74,8 @@ describe Api::V1::ActivationKeysController do
       ActivationKey.stub!(:where).and_return([@activation_key])
     end
 
-    let(:action) {:index }
-    let(:req) { get :index, :organization_id => 'org-1234'  }
+    let(:action) { :index }
+    let(:req) { get :index, :organization_id => 'org-1234' }
     let(:authorized_user) { user_with_read_permissions }
     let(:unauthorized_user) { user_without_read_permissions }
     it_should_behave_like "protected action"
@@ -99,8 +99,8 @@ describe Api::V1::ActivationKeysController do
   context "show an activation key" do
     before { ActivationKey.stub!(:find).and_return(@activation_key) }
 
-    let(:action) {:show }
-    let(:req) { get :show, :id => '123'  }
+    let(:action) { :show }
+    let(:req) { get :show, :id => '123' }
     let(:authorized_user) { user_with_read_permissions }
     let(:unauthorized_user) { user_without_read_permissions }
     it_should_behave_like "protected action"
@@ -117,52 +117,52 @@ describe Api::V1::ActivationKeysController do
       ActivationKey.stub!(:find).and_return(@activation_key)
     end
 
-    let(:action) {:create }
-    let(:req) { post :create, :environment_id => 123, :activation_key => {:name => 'blah'} }
+    let(:action) { :create }
+    let(:req) { post :create, :environment_id => 123, :activation_key => { :name => 'blah' } }
     let(:authorized_user) { user_with_manage_permissions }
     let(:unauthorized_user) { user_without_manage_permissions }
     it_should_behave_like "protected action"
 
     it "should create an activation key" do
       ActivationKey.should_receive(:create!).once.with(hash_including(:name => 'blah')).and_return(@activation_key)
-      post :create, :environment_id => 123, :activation_key => {:name => 'blah'}
+      post :create, :environment_id => 123, :activation_key => { :name => 'blah' }
     end
 
     it "should create a key with a content view" do
-      @content_view = FactoryGirl.build_stubbed(:content_view)
+      @content_view                = FactoryGirl.build_stubbed(:content_view)
       @activation_key.content_view = @content_view
       ActivationKey.should_receive(:create!).once.with(
           hash_including("content_view_id" => @content_view.id.to_s)
-        ).and_return(@activation_key)
+      ).and_return(@activation_key)
 
-      post :create, :environment_id => 123, :activation_key => {:name => 'blah', :content_view_id => @content_view.id.to_s}
+      post :create, :environment_id => 123, :activation_key => { :name => 'blah', :content_view_id => @content_view.id.to_s }
     end
 
     it "should return created key" do
       ActivationKey.stub!(:create!).and_return(@activation_key)
-      post :create, :environment_id => 123, :activation_key=> {:name=>"egypt", :description => "gah"}
+      post :create, :environment_id => 123, :activation_key => { :name => "egypt", :description => "gah" }
 
       response.body.should == @activation_key.to_json
     end
 
-    it_should_behave_like "bad request"  do
+    it_should_behave_like "bad request" do
       let(:req) do
-        bad_req = {:environment_id => 123,
-                   :activation_key =>
-                      {:bad_foo => "mwahahaha",
-                       :name => "Gpg Key",
-                       :description => "This is the key string" }
+        bad_req = { :environment_id => 123,
+                    :activation_key =>
+                        { :bad_foo     => "mwahahaha",
+                          :name        => "Gpg Key",
+                          :description => "This is the key string" }
         }.with_indifferent_access
         post :create, bad_req
       end
     end
 
-    it_should_behave_like "bad request"  do
+    it_should_behave_like "bad request" do
       let(:req) do
-        bad_req = {:environment_id => 1,
-                   :activation_key =>
-                      {:name => "Gpg Key",
-                       :usage_limit => "-666" }
+        bad_req = { :environment_id => 1,
+                    :activation_key =>
+                        { :name        => "Gpg Key",
+                          :usage_limit => "-666" }
         }.with_indifferent_access
         post :create, bad_req
       end
@@ -175,29 +175,29 @@ describe Api::V1::ActivationKeysController do
       @activation_key.stub!(:update_attributes!).and_return(@activation_key)
     end
 
-    let(:action) {:update }
-    let(:req) { put :update, :id => 123, :activation_key => {:name => 'blah'} }
+    let(:action) { :update }
+    let(:req) { put :update, :id => 123, :activation_key => { :name => 'blah' } }
     let(:authorized_user) { user_with_manage_permissions }
     let(:unauthorized_user) { user_without_manage_permissions }
     it_should_behave_like "protected action"
 
     it "should update activation key" do
       @activation_key.should_receive(:update_attributes!).once.with(hash_including(:name => 'blah')).and_return(@activation_key)
-      put :update, :id => 123, :activation_key => {:name => 'blah'}
+      put :update, :id => 123, :activation_key => { :name => 'blah' }
     end
 
     it "should return updated key" do
-      put :update, :id => 123, :activation_key => {:name => 'blah'}
+      put :update, :id => 123, :activation_key => { :name => 'blah' }
       response.body.should == @activation_key.to_json
     end
 
-    it_should_behave_like "bad request"  do
+    it_should_behave_like "bad request" do
       let(:req) do
-        bad_req = {:id => 123,
-                   :activation_key =>
-                      {:bad_foo => "mwahahaha",
-                       :name => "Gpg Key",
-                       :description => "This is the key string" }
+        bad_req = { :id             => 123,
+                    :activation_key =>
+                        { :bad_foo     => "mwahahaha",
+                          :name        => "Gpg Key",
+                          :description => "This is the key string" }
         }.with_indifferent_access
         put :update, bad_req
       end
@@ -207,27 +207,30 @@ describe Api::V1::ActivationKeysController do
   context "pools in an activation key" do
 
     before(:each) do
-      @environment = KTEnvironment.create!(:organization => @organization, :name => "Dev", :label=>"Dev", :prior => @organization.library)
-      @activation_key = ActivationKey.create!(:name => 'activation key', :organization => @organization, :environment => @environment)
-      @pool_in_activation_key = ::Pool.create!(:cp_id => "pool-123")
+      @environment                = KTEnvironment.create!(:organization => @organization, :name => "Dev", :label => "Dev", :prior => @organization.library)
+      @activation_key             = ActivationKey.create!(:name => 'activation key', :organization => @organization, :environment => @environment)
+      @pool_in_activation_key     = ::Pool.create!(:cp_id => "pool-123")
       @pool_not_in_activation_key = ::Pool.create!(:cp_id => "pool-456")
 
       disable_pools_orchestration
 
       KeyPool.create!(:activation_key_id => @activation_key.id, :pool_id => @pool_in_activation_key.id)
       ActivationKey.stub!(:find).and_return(@activation_key)
-      ::Pool.stub(:find_by_organization_and_id).and_return do |org,poolid|
-       case poolid
-       when "pool-123" then @pool_in_activation_key
-       when "pool-456" then @pool_not_in_activation_key
-       else raise "Not found"
-       end
+      ::Pool.stub(:find_by_organization_and_id).and_return do |org, poolid|
+        case poolid
+        when "pool-123"
+          @pool_in_activation_key
+        when "pool-456"
+          @pool_not_in_activation_key
+        else
+          raise "Not found"
+        end
       end
     end
 
     describe "adding a pool" do
 
-      let(:action) {:add_pool }
+      let(:action) { :add_pool }
       let(:req) { post :add_pool, :id => 123, :poolid => @pool_not_in_activation_key.cp_id }
       let(:authorized_user) { user_with_manage_permissions }
       let(:unauthorized_user) { user_without_manage_permissions }
@@ -256,7 +259,7 @@ describe Api::V1::ActivationKeysController do
 
     describe "removing a pool" do
 
-      let(:action) {:remove_pool }
+      let(:action) { :remove_pool }
       let(:req) { delete :remove_pool, :id => 123, :poolid => @pool_in_activation_key.cp_id }
       let(:authorized_user) { user_with_manage_permissions }
       let(:unauthorized_user) { user_without_manage_permissions }
@@ -287,7 +290,7 @@ describe Api::V1::ActivationKeysController do
       @activation_key.stub!(:destroy)
     end
 
-    let(:action) {:destroy }
+    let(:action) { :destroy }
     let(:req) { delete :destroy, :id => 123 }
     let(:authorized_user) { user_with_manage_permissions }
     let(:unauthorized_user) { user_without_manage_permissions }
@@ -306,9 +309,9 @@ describe Api::V1::ActivationKeysController do
 
   describe "add system groups to an activation key" do
     before(:each) do
-      @environment = KTEnvironment.create!(:name=>'test_1', :label=> 'test_1', :prior => @organization.library.id, :organization => @organization)
+      @environment    = KTEnvironment.create!(:name => 'test_1', :label => 'test_1', :prior => @organization.library.id, :organization => @organization)
       @activation_key = ActivationKey.create!(:name => 'activation key', :environment => @environment, :organization => @organization)
-      @system_group_1 = SystemGroup.create!(:name => 'System Group 1', :organization_id => @organization.id )
+      @system_group_1 = SystemGroup.create!(:name => 'System Group 1', :organization_id => @organization.id)
       @system_group_2 = SystemGroup.create!(:name => 'System Group 2', :description => "fake description", :organization => @organization)
     end
 
@@ -336,9 +339,9 @@ describe Api::V1::ActivationKeysController do
 
   describe "remove system groups from an activation key" do
     before(:each) do
-      @environment = KTEnvironment.create!(:name=>'test_1', :label=> 'test_1', :prior => @organization.library.id, :organization => @organization)
+      @environment    = KTEnvironment.create!(:name => 'test_1', :label => 'test_1', :prior => @organization.library.id, :organization => @organization)
       @activation_key = ActivationKey.create!(:name => 'activation key', :environment => @environment, :organization => @organization)
-      @system_group_1 = SystemGroup.create!(:name => 'System Group 1', :organization_id => @organization.id )
+      @system_group_1 = SystemGroup.create!(:name => 'System Group 1', :organization_id => @organization.id)
       @system_group_2 = SystemGroup.create!(:name => 'System Group 2', :description => "fake description", :organization => @organization)
       @activation_key.system_group_ids << [@system_group_1.id, @system_group_2.id]
       @activation_key.save!

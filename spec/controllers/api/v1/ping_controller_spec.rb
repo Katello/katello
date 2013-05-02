@@ -18,28 +18,28 @@ describe Api::V1::PingController do
 
   let(:katello_ping_ok) {
     {
-      :result => "ok",
-      :status => {
-        :pulp => {:result => "ok", :duration_ms => "10"},
-        :candlepin => {:result => "ok", :duration_ms => "10"},
-        :elasticsearch => {:result => "ok", :duration_ms => "10"},
-        :pulp_auth => {:result => "ok", :duration_ms => "10"},
-        :candlepin_auth => {:result => "ok", :duration_ms => "10"},
-        :katello_jobs => {:result => "ok", :duration_ms => "10"},
-      }
+        :result => "ok",
+        :status => {
+            :pulp           => { :result => "ok", :duration_ms => "10" },
+            :candlepin      => { :result => "ok", :duration_ms => "10" },
+            :elasticsearch  => { :result => "ok", :duration_ms => "10" },
+            :pulp_auth      => { :result => "ok", :duration_ms => "10" },
+            :candlepin_auth => { :result => "ok", :duration_ms => "10" },
+            :katello_jobs   => { :result => "ok", :duration_ms => "10" },
+        }
     }
   }
 
   let(:headpin_ping_ok) {
     {
-      :result => "ok",
-      :status => {
-        :candlepin => {:result => "ok", :duration_ms => "10"},
-        :elasticsearch => {:result => "ok", :duration_ms => "10"},
-        :candlepin_auth => {:result => "ok", :duration_ms => "10"},
-        :katello_jobs => {:result => "ok", :duration_ms => "10"},
-        :thumbslug => {:result => "ok", :duration_ms => "10"}
-      }
+        :result => "ok",
+        :status => {
+            :candlepin      => { :result => "ok", :duration_ms => "10" },
+            :elasticsearch  => { :result => "ok", :duration_ms => "10" },
+            :candlepin_auth => { :result => "ok", :duration_ms => "10" },
+            :katello_jobs   => { :result => "ok", :duration_ms => "10" },
+            :thumbslug      => { :result => "ok", :duration_ms => "10" }
+        }
     }
   }
 

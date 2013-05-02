@@ -1,4 +1,3 @@
-
 ## Copyright 2013 Red Hat, Inc.
 ##
 ## This software is licensed to you under the GNU General Public
@@ -16,7 +15,7 @@ describe Api::V1::GpgKeysController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
 
-  let(:authorized_user)   { user_with_permissions { |u| u.can(:gpg, :organizations, nil, @organization)} }
+  let(:authorized_user) { user_with_permissions { |u| u.can(:gpg, :organizations, nil, @organization) } }
   let(:unauthorized_user) { user_without_permissions }
 
   before(:each) do
@@ -25,7 +24,7 @@ describe Api::V1::GpgKeysController, :katello => true do
     disable_org_orchestration
 
     @organization = new_test_org
-    @gpg_key = GpgKey.create!( :name => "Another Test Key", :content => "This is the key data string", :organization => @organization )
+    @gpg_key      = GpgKey.create!(:name => "Another Test Key", :content => "This is the key data string", :organization => @organization)
   end
 
   describe "GET content" do
@@ -46,7 +45,7 @@ describe Api::V1::GpgKeysController, :katello => true do
   end
 
   describe "list gpg keys" do
-    let(:req_params) { {:organization_id => @organization.name, :name => @gpg_key.name}.with_indifferent_access }
+    let(:req_params) { { :organization_id => @organization.name, :name => @gpg_key.name }.with_indifferent_access }
     let(:req) { get :index, req_params }
     let(:action) { :index }
     it_should_behave_like "protected action"
@@ -58,7 +57,7 @@ describe Api::V1::GpgKeysController, :katello => true do
   end
 
   describe "show gpg key" do
-    let(:req_params) { {:id => @gpg_key.id }.with_indifferent_access }
+    let(:req_params) { { :id => @gpg_key.id }.with_indifferent_access }
     let(:req) { get :show, req_params }
     let(:action) { :show }
     it_should_behave_like "protected action"
@@ -77,9 +76,9 @@ describe Api::V1::GpgKeysController, :katello => true do
   describe "create gpg key" do
     describe "good request" do
       let(:req) { post :create, req_params }
-      let(:action) {:create}
+      let(:action) { :create }
       let(:req_params) do
-        {:organization_id => @organization.name, :gpg_key => {:name => "Gpg Key", :content => "This is the key string" }}.with_indifferent_access
+        { :organization_id => @organization.name, :gpg_key => { :name => "Gpg Key", :content => "This is the key string" } }.with_indifferent_access
       end
       it_should_behave_like "protected action"
 
@@ -89,13 +88,13 @@ describe Api::V1::GpgKeysController, :katello => true do
       end
     end
 
-    it_should_behave_like "bad request"  do
+    it_should_behave_like "bad request" do
       let(:req) do
-        bad_req = {:organization_id => @organization.name,
-                   :gpg_key =>
-                      {:bad_foo => "mwahahaha",
-                       :name => "Gpg Key",
-                       :content => "This is the key string" }
+        bad_req = { :organization_id => @organization.name,
+                    :gpg_key         =>
+                        { :bad_foo => "mwahahaha",
+                          :name    => "Gpg Key",
+                          :content => "This is the key string" }
         }.with_indifferent_access
         post :create, bad_req
       end
@@ -103,7 +102,7 @@ describe Api::V1::GpgKeysController, :katello => true do
   end
 
   describe "update gpg key" do
-    let(:req_params) { {:id => @gpg_key.id.to_s, :gpg_key => {:name => "Gpg Key", :content => "This is the key string" }}.with_indifferent_access }
+    let(:req_params) { { :id => @gpg_key.id.to_s, :gpg_key => { :name => "Gpg Key", :content => "This is the key string" } }.with_indifferent_access }
     let(:req) { put :update, req_params }
     let(:action) { :update }
     it_should_behave_like "protected action"
@@ -116,7 +115,7 @@ describe Api::V1::GpgKeysController, :katello => true do
   end
 
   describe "destroy gpg key" do
-    let(:req_params) { {:id => @gpg_key.id }.with_indifferent_access }
+    let(:req_params) { { :id => @gpg_key.id }.with_indifferent_access }
     let(:req) { delete :destroy, req_params }
     let(:action) { :destroy }
     it_should_behave_like "protected action"

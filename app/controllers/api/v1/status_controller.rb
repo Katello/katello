@@ -22,7 +22,7 @@ class Api::V1::StatusController < Api::V1::ApiController
       ObjectSpace.each_object do |o|
         objs[o.class] += 1
       end
-      output = objs.sort_by{ |c,n| n }.last(30)
+      output = objs.sort_by { |c, n| n }.last(30)
       render :text => PP.pp(output, "")
     end
   end

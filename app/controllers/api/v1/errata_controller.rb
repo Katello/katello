@@ -26,11 +26,11 @@ class Api::V1::ErrataController < Api::V1::ApiController
   before_filter :authorize
 
   def rules
-    env_readable = lambda{ @environment.contents_readable? }
-    readable = lambda{ @repo.environment.contents_readable? and @repo.product.readable? }
+    env_readable = lambda { @environment.contents_readable? }
+    readable     = lambda { @repo.environment.contents_readable? and @repo.product.readable? }
     {
-      :index => env_readable,
-      :show => readable,
+        :index => env_readable,
+        :show  => readable,
     }
   end
 

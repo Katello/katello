@@ -17,33 +17,33 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
   before_filter :find_product, :only => [:create]
 
   before_filter :authorize
-  skip_filter   :set_locale, :require_user, :thread_locals, :authorize, :only => [:gpg_key_content]
+  skip_filter :set_locale, :require_user, :thread_locals, :authorize, :only => [:gpg_key_content]
 
-  skip_before_filter :authorize, :only=>[:sync_complete]
-  skip_before_filter :require_org, :only=>[:sync_complete]
+  skip_before_filter :authorize, :only => [:sync_complete]
+  skip_before_filter :require_org, :only => [:sync_complete]
   skip_before_filter :require_user, :only => [:sync_complete]
 
 
   def rules
-    edit_product_test = lambda{@product.editable?}
-    read_test = lambda{@repository.product.readable?}
-    edit_test = lambda{@repository.product.editable?}
-    org_edit = lambda{@organization.editable?}
+    edit_product_test = lambda { @product.editable? }
+    read_test         = lambda { @repository.product.readable? }
+    edit_test         = lambda { @repository.product.editable? }
+    org_edit          = lambda { @organization.editable? }
 
     {
-      :create => edit_product_test,
-      :show => read_test,
-      :update => edit_test,
-      :destroy => edit_test,
-      :enable => edit_test,
-      :package_groups => read_test,
-      :package_group_categories => read_test
+        :create                   => edit_product_test,
+        :show                     => read_test,
+        :update                   => edit_test,
+        :destroy                  => edit_test,
+        :enable                   => edit_test,
+        :package_groups           => read_test,
+        :package_group_categories => read_test
     }
   end
 
   def param_rules
     {
-      :update => {:repository  => [:gpg_key_name]}
+        :update => { :repository => [:gpg_key_name] }
     }
   end
 
@@ -63,7 +63,7 @@ class Api::V1::RepositoriesController < Api::V1::ApiController
       gpg = @product.gpg_key
     end
     params[:unprotected] ||= false
-    content = @product.add_repo(labelize_params(params), params[:name], params[:url], 'yum', params[:unprotected], gpg)
+    content              = @product.add_repo(labelize_params(params), params[:name], params[:url], 'yum', params[:unprotected], gpg)
     respond :resource => content
   end
 
@@ -125,23 +125,23 @@ HTTP_X_FORWARDED_FOR header should be set with original IP.
 Pulp blocks during the execution of this call, so *DO NOT* try to
 talk back to pulp within it.  Save that for the delayed job.
 Pulp doesn't send correct headers."
-EOS
+  EOS
   def sync_complete
     remote_ip = request.remote_ip
     forwarded = request.env["HTTP_X_FORWARDED_FOR"]
 
-    if forwarded && ! ['127.0.0.1', '::1'].include?(forwarded)
+    if forwarded && !['127.0.0.1', '::1'].include?(forwarded)
       Rails.logger.error("Attempt to access sync_complete from forwarded address #{forwarded}")
-      raise  Errors::SecurityViolation
+      raise Errors::SecurityViolation
     end
 
     User.current = User.hidden.first
 
     repo_id = params['payload']['repo_id']
-    repo = Repository.where(:pulp_id =>repo_id).first
+    repo    = Repository.where(:pulp_id => repo_id).first
     raise _("Couldn't find repository '%s'") % repo.name if repo.nil?
     Rails.logger.info("Sync_complete called for #{repo.name}, running after_sync.")
-    repo.async(:organization=>repo.environment.organization).after_sync(params[:task_id])
+    repo.async(:organization => repo.environment.organization).after_sync(params[:task_id])
     respond_for_status
   end
 

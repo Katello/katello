@@ -18,7 +18,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
   before_filter :find_only_environment, :only => [:create]
   before_filter :find_environment, :only => [:create, :index, :report, :tasks]
   before_filter :find_distributor, :only => [:destroy, :show, :update,
-                                        :subscribe, :unsubscribe, :subscriptions, :pools, :export]
+                                             :subscribe, :unsubscribe, :subscriptions, :pools, :export]
   before_filter :find_task, :only => [:task_show]
   before_filter :authorize, :except => :activate
 
@@ -29,28 +29,28 @@ class Api::V1::DistributorsController < Api::V1::ApiController
   end
 
   def rules
-    index_distributors = lambda { Distributor.any_readable?(@organization) }
+    index_distributors   = lambda { Distributor.any_readable?(@organization) }
     register_distributor = lambda { Distributor.registerable?(@environment, @organization) }
-    edit_distributor = lambda { @distributor.editable? or User.consumer? }
-    read_distributor = lambda { @distributor.readable? or User.consumer? }
-    delete_distributor = lambda { @distributor.deletable? or User.consumer? }
+    edit_distributor     = lambda { @distributor.editable? or User.consumer? }
+    read_distributor     = lambda { @distributor.readable? or User.consumer? }
+    delete_distributor   = lambda { @distributor.deletable? or User.consumer? }
 
     {
-      :new => register_distributor,
-      :create => register_distributor,
-      :update => edit_distributor,
-      :index => index_distributors,
-      :show => read_distributor,
-      :destroy => delete_distributor,
-      :report => index_distributors,
-      :subscribe => edit_distributor,
-      :unsubscribe => edit_distributor,
-      :subscriptions => read_distributor,
-      :pools => read_distributor,
-      :activate => register_distributor,
-      :tasks => index_distributors,
-      :task_show => read_distributor,
-      :export => read_distributor
+        :new           => register_distributor,
+        :create        => register_distributor,
+        :update        => edit_distributor,
+        :index         => index_distributors,
+        :show          => read_distributor,
+        :destroy       => delete_distributor,
+        :report        => index_distributors,
+        :subscribe     => edit_distributor,
+        :unsubscribe   => edit_distributor,
+        :subscriptions => read_distributor,
+        :pools         => read_distributor,
+        :activate      => register_distributor,
+        :tasks         => index_distributors,
+        :task_show     => read_distributor,
+        :export        => read_distributor
     }
   end
 
@@ -73,12 +73,12 @@ class Api::V1::DistributorsController < Api::V1::ApiController
     param :type, String, :desc => "Type of the distributor, it should always be 'distributor'", :required => true
   end
   def create
-    distributor_params = params[:distributor]
-    distributor_params[:facts] ||= {'sockets'=>0}  # facts not used for distributors
-    distributor_params[:cp_type] = "candlepin"  # The 'candlepin' type is allowed to export a manifest
-    @distributor = Distributor.create!(distributor_params.merge({:environment => @environment,
-                                                    :content_view => @content_view,
-                                                    :serviceLevel => distributor_params[:service_level]}))
+    distributor_params           = params[:distributor]
+    distributor_params[:facts]   ||= { 'sockets' => 0 } # facts not used for distributors
+    distributor_params[:cp_type] = "candlepin"          # The 'candlepin' type is allowed to export a manifest
+    @distributor                 = Distributor.create!(distributor_params.merge({ :environment  => @environment,
+                                                                                  :content_view => @content_view,
+                                                                                  :serviceLevel => distributor_params[:service_level] }))
     respond
   end
 
@@ -120,7 +120,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
     data = @distributor.export
     send_data data,
               :filename => filename,
-              :type => 'application/xml'
+              :type     => 'application/xml'
   end
 
   api :DELETE, "/distributors/:id", "Unregister a distributor"
@@ -134,8 +134,8 @@ class Api::V1::DistributorsController < Api::V1::ApiController
   param :id, String, :desc => "UUID of the distributor", :required => true
   def pools
     match_distributor = params.has_key?(:match_distributor) ? params[:match_distributor].to_bool : false
-    match_installed = params.has_key?(:match_installed) ? params[:match_installed].to_bool : false
-    no_overlap = params.has_key?(:no_overlap) ? params[:no_overlap].to_bool : false
+    match_installed   = params.has_key?(:match_installed) ? params[:match_installed].to_bool : false
+    no_overlap        = params.has_key?(:no_overlap) ? params[:no_overlap].to_bool : false
 
     cp_pools = @distributor.filtered_pools(match_distributor, match_installed, no_overlap)
 
@@ -149,54 +149,54 @@ class Api::V1::DistributorsController < Api::V1::ApiController
 
     data = data.flatten.map do |r|
       r.reportable_data(
-        :only => [:uuid, :name, :location, :created_at, :updated_at],
-        :methods => [:environment, :organization, :compliance_color, :compliant_until, :custom_info]
+          :only    => [:uuid, :name, :location, :created_at, :updated_at],
+          :methods => [:environment, :organization, :compliance_color, :compliant_until, :custom_info]
       )
     end.flatten!
 
     distributor_report = Ruport::Data::Table.new(
-      :data => data,
-      :column_names => ["name",
-                        "uuid",
-                        "location",
-                        "organization",
-                        "environment",
-                        "created_at",
-                        "updated_at",
-                        "compliance_color",
-                        "compliant_until",
-                        "custom_info"
-                       ],
-      :record_class => Ruport::Data::Record,
-      :transforms => lambda {|r|
-        r.organization = r.organization.name
-        r.environment = r.environment.name
-        r.created_at = r.created_at.to_s
-        r.updated_at = r.updated_at.to_s
-        r.compliant_until = r.compliant_until.to_s
-        r.custom_info = r.custom_info.collect { |info| info.to_s }.join(", ")
-      }
+        :data         => data,
+        :column_names => ["name",
+                          "uuid",
+                          "location",
+                          "organization",
+                          "environment",
+                          "created_at",
+                          "updated_at",
+                          "compliance_color",
+                          "compliant_until",
+                          "custom_info"
+        ],
+        :record_class => Ruport::Data::Record,
+        :transforms   => lambda { |r|
+          r.organization    = r.organization.name
+          r.environment     = r.environment.name
+          r.created_at      = r.created_at.to_s
+          r.updated_at      = r.updated_at.to_s
+          r.compliant_until = r.compliant_until.to_s
+          r.custom_info     = r.custom_info.collect { |info| info.to_s }.join(", ")
+        }
     )
 
-    pdf_options = { :pdf_format => {
-                      :page_layout => :portrait,
-                      :page_size => "LETTER",
-                      :left_margin => 5
-                      },
+    pdf_options = { :pdf_format   => {
+        :page_layout => :portrait,
+        :page_size   => "LETTER",
+        :left_margin => 5
+    },
                     :table_format => {
-                      :width => 585,
-                      :cell_style => { :size => 8},
-                      :row_colors => ["FFFFFF","F0F0F0"],
-                      :column_widths => {
-                        0 => 100,
-                        1 => 100,
-                        2 => 50,
-                        3 => 40,
-                        4 => 75,
-                        5 => 60,
-                        6 => 60}
-                      }
-                  }
+                        :width         => 585,
+                        :cell_style    => { :size => 8 },
+                        :row_colors    => ["FFFFFF", "F0F0F0"],
+                        :column_widths => {
+                            0 => 100,
+                            1 => 100,
+                            2 => 50,
+                            3 => 40,
+                            4 => 75,
+                            5 => 60,
+                            6 => 60 }
+                    }
+    }
 
     distributor_report.rename_column("created_at", "created")
     distributor_report.rename_column("updated_at", "updated")
@@ -210,9 +210,9 @@ class Api::V1::DistributorsController < Api::V1::ApiController
       format.csv { render :text => distributor_report.as(:csv) }
       format.pdf do
         send_data(
-          distributor_report.as(:prawn_pdf, pdf_options),
-          :filename => "%s_distributors_report.pdf" % (Katello.config.katello? ? "katello" : "headpin"),
-          :type => "application/pdf"
+            distributor_report.as(:prawn_pdf, pdf_options),
+            :filename => "%s_distributors_report.pdf" % (Katello.config.katello? ? "katello" : "headpin"),
+            :type     => "application/pdf"
         )
       end
     end
@@ -250,7 +250,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
 
   def find_only_environment
     if !@environment && @organization && !params.has_key?(:environment_id)
-      raise HttpErrors::BadRequest, _("Organization %{org} has the '%{env}' environment only. Please create an environment for distributor registration.") % {:org => @organization.name, :env => "Library"} if @organization.environments.empty?
+      raise HttpErrors::BadRequest, _("Organization %{org} has the '%{env}' environment only. Please create an environment for distributor registration.") % { :org => @organization.name, :env => "Library" } if @organization.environments.empty?
 
       # Some subscription-managers will call /users/$user/owners to retrieve the orgs that a user belongs to.
       # Then, If there is just one org, that will be passed to the POST /api/consumers as the owner. To handle
@@ -307,7 +307,7 @@ class Api::V1::DistributorsController < Api::V1::ApiController
 
   def find_activation_keys
     if ak_names = params[:activation_keys]
-      ak_names = ak_names.split(",")
+      ak_names        = ak_names.split(",")
       activation_keys = ak_names.map do |ak_name|
         activation_key = @organization.activation_keys.find_by_name(ak_name)
         raise HttpErrors::NotFound, _("Couldn't find activation key '%s'") % ak_name unless activation_key

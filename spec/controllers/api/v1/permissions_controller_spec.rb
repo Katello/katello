@@ -30,8 +30,8 @@ describe Api::V1::PermissionsController do
 
   before (:each) do
     disable_org_orchestration
-    @org = Organization.create!(:name=>'test_org', :label=> 'test_org')
-    @role = Role.new(:name => "test_role", :description=> "role description")
+    @org  = Organization.create!(:name => 'test_org', :label => 'test_org')
+    @role = Role.new(:name => "test_role", :description => "role description")
     @perm = Permission.new(:name => "permission_x", :description => "permission description", :role => @role)
     Role.stub(:find).with(role_id).and_return(@role)
     Permission.stub(:find).with(perm_id).and_return(@perm)
@@ -75,8 +75,8 @@ describe Api::V1::PermissionsController do
     let(:all_tags_perm_name) { 'all_tags_permission' }
     let(:perm_desc) { 'permission_y description' }
     let(:resource_type) { 'environments' }
-    let(:perm_params) { {:organization_id=>@org.label, :name => perm_name, :description => perm_desc, 'type' => resource_type, 'verbs' => [], 'tags' => [], :role_id => role_id} }
-    let(:all_tags_perm_params) { {:organization_id=>@org.label, :name => all_tags_perm_name , :description => perm_desc, 'type' => resource_type, 'all_tags' => "True", 'tags' => [], :role_id => role_id} }
+    let(:perm_params) { { :organization_id => @org.label, :name => perm_name, :description => perm_desc, 'type' => resource_type, 'verbs' => [], 'tags' => [], :role_id => role_id } }
+    let(:all_tags_perm_params) { { :organization_id => @org.label, :name => all_tags_perm_name, :description => perm_desc, 'type' => resource_type, 'all_tags' => "True", 'tags' => [], :role_id => role_id } }
     let(:action) { :create }
     let(:req) { post :create, perm_params }
     let(:all_tags_req) { post :create, all_tags_perm_params }
@@ -91,19 +91,19 @@ describe Api::V1::PermissionsController do
     end
 
     it 'should create a permission' do
-        @resource_type = ResourceType.new(:name => resource_type)
-        ResourceType.should_receive(:find_or_create_by_name).with(resource_type).and_return(@resource_type)
+      @resource_type = ResourceType.new(:name => resource_type)
+      ResourceType.should_receive(:find_or_create_by_name).with(resource_type).and_return(@resource_type)
 
-        expected_params = {
-            :name => perm_name,
-            :description => perm_desc,
-            :role => @role,
-            :resource_type => @resource_type,
-            :organization=>@org
-        }
+      expected_params = {
+          :name          => perm_name,
+          :description   => perm_desc,
+          :role          => @role,
+          :resource_type => @resource_type,
+          :organization  => @org
+      }
 
-        Permission.should_receive(:create!).with(hash_including(expected_params))
-        req
+      Permission.should_receive(:create!).with(hash_including(expected_params))
+      req
     end
 
     it 'should create a permission for all tags' do
@@ -111,12 +111,12 @@ describe Api::V1::PermissionsController do
       ResourceType.should_receive(:find_or_create_by_name).with(resource_type).and_return(@resource_type)
 
       expected_params = {
-          :name => all_tags_perm_name,
-          :description => perm_desc,
-          :role => @role,
+          :name          => all_tags_perm_name,
+          :description   => perm_desc,
+          :role          => @role,
           :resource_type => @resource_type,
-          :organization=>@org,
-          :all_tags => true
+          :organization  => @org,
+          :all_tags      => true
       }
 
       Permission.should_receive(:create!).with(hash_including(expected_params))
@@ -124,9 +124,9 @@ describe Api::V1::PermissionsController do
     end
 
     describe "with invalid params" do
-      it_should_behave_like "bad request"  do
+      it_should_behave_like "bad request" do
         let(:req) do
-          bad_req = perm_params
+          bad_req               = perm_params
           perm_params[:bad_foo] = "bad"
           post :create, bad_req
         end

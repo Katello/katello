@@ -17,11 +17,11 @@ describe Api::V2::ChangesetsController do
 
     let(:cs_controller) { "api/v1/changesets" }
 
-    it {{ :get => "/api/changesets/1" }.should route_to(:controller => cs_controller, :action => "show", :id => "1")}
-    it {{ :put => "/api/changesets/1" }.should route_to(:controller => cs_controller, :action => "update", :id => "1")}
-    it {{ :delete => "/api/changesets/1" }.should route_to(:controller => cs_controller, :action => "destroy", :id => "1")}
-    it {{ :post => "/api/changesets/1/apply" }.should route_to(:controller => cs_controller, :action => "apply", :id => "1")}
-    it {{ :get => "/api/changesets/1/dependencies" }.should route_to(:controller => cs_controller, :action => "dependencies", :id => "1")}
+    it { { :get => "/api/changesets/1" }.should route_to(:controller => cs_controller, :action => "show", :id => "1") }
+    it { { :put => "/api/changesets/1" }.should route_to(:controller => cs_controller, :action => "update", :id => "1") }
+    it { { :delete => "/api/changesets/1" }.should route_to(:controller => cs_controller, :action => "destroy", :id => "1") }
+    it { { :post => "/api/changesets/1/apply" }.should route_to(:controller => cs_controller, :action => "apply", :id => "1") }
+    it { { :get => "/api/changesets/1/dependencies" }.should route_to(:controller => cs_controller, :action => "dependencies", :id => "1") }
 
   end
 end

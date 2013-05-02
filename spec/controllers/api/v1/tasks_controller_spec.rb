@@ -26,7 +26,7 @@ describe Api::V1::TasksController do
 
     @organization = new_test_org
     @controller.stub!(:get_organization).and_return(@organization)
-    @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
+    @provider = Provider.create!(:provider_type => Provider::CUSTOM, :name => "foo1", :organization => @organization)
     Provider.stub!(:find).and_return(@provider)
 
     @task = mock(TaskStatus)
@@ -39,7 +39,7 @@ describe Api::V1::TasksController do
   end
 
   context "get a listing of tasks" do
-    let(:action) {:index}
+    let(:action) { :index }
     let(:req) { get :index, :organization_id => @organization.id }
     let(:authorized_user) do
       user_with_permissions { |u| u.can(:read, :providers, @provider.id, @organization) }
@@ -56,7 +56,7 @@ describe Api::V1::TasksController do
   end
 
   context "get a specific task" do
-    let(:action) {:show}
+    let(:action) { :show }
     let(:req) { get :show, :id => '1' }
     let(:authorized_user) do
       user_with_permissions { |u| u.can(:read, :providers, @provider.id, @organization) }

@@ -21,7 +21,7 @@ class Api::V1::ChangesetsController < Api::V1::ApiController
     manage_perm  = lambda { @environment.changesets_manageable? }
     promote_perm = lambda { @changeset.promotion? && @environment.changesets_promotable? }
 
-    apply_perm = lambda{ (@changeset.promotion? && @environment.changesets_promotable?) || (@changeset.deletion? && @environment.changesets_deletable?)}
+    apply_perm = lambda { (@changeset.promotion? && @environment.changesets_promotable?) || (@changeset.deletion? && @environment.changesets_deletable?) }
 
     { :index        => read_perm,
       :show         => read_perm,
@@ -78,7 +78,7 @@ class Api::V1::ChangesetsController < Api::V1::ApiController
     param :type, Changeset::TYPES, :required => true
   end
   def create
-    @changeset = Changeset.new_changeset(params[:changeset])
+    @changeset             = Changeset.new_changeset(params[:changeset])
     @changeset.environment = @environment
     @changeset.save!
 

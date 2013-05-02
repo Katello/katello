@@ -18,11 +18,11 @@ class Api::V1::PackagesController < Api::V1::ApiController
   before_filter :authorize
 
   def rules
-    readable = lambda{ @repo.environment.contents_readable? and @repo.product.readable? }
+    readable = lambda { @repo.environment.contents_readable? and @repo.product.readable? }
     {
-      :index => readable,
-      :search => readable,
-      :show => readable,
+        :index  => readable,
+        :search => readable,
+        :show   => readable,
     }
   end
 
@@ -59,7 +59,7 @@ class Api::V1::PackagesController < Api::V1::ApiController
     @package = Package.find(params[:id])
     raise HttpErrors::NotFound, _("Package with id '%s' not found") % params[:id] if @package.nil?
     # and check ownership of it
-    raise HttpErrors::NotFound, _("Package '%s' not found within the repository") % params[:id]  unless @package.repoids.include? @repo.pulp_id
+    raise HttpErrors::NotFound, _("Package '%s' not found within the repository") % params[:id] unless @package.repoids.include? @repo.pulp_id
     @package
   end
 end

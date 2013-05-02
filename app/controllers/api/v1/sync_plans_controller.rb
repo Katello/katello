@@ -30,21 +30,21 @@ class Api::V1::SyncPlansController < Api::V1::ApiController
   respond_to :json
 
   def rules
-    access_test = lambda{Provider.any_readable?(@organization)}
+    access_test = lambda { Provider.any_readable?(@organization) }
 
     {
-      :index => access_test,
-      :show => access_test,
-      :create => access_test,
-      :update => access_test,
-      :destroy => access_test
+        :index   => access_test,
+        :show    => access_test,
+        :create  => access_test,
+        :update  => access_test,
+        :destroy => access_test
     }
   end
 
   def param_rules
     {
-      :create => {:sync_plan  => [:name, :description, :sync_date, :interval]},
-      :update =>  {:sync_plan  => [:name, :description, :sync_date, :interval]}
+        :create => { :sync_plan => [:name, :description, :sync_date, :interval] },
+        :update => { :sync_plan => [:name, :description, :sync_date, :interval] }
     }
   end
 
@@ -93,12 +93,12 @@ class Api::V1::SyncPlansController < Api::V1::ApiController
     sync_date = params[:sync_plan][:sync_date].to_time
 
     if not sync_date.nil? and not sync_date.kind_of? Time
-        raise _("Date format is incorrect.")
+      raise _("Date format is incorrect.")
     end
 
     @plan.update_attributes!(params[:sync_plan])
     @plan.save!
-    @plan.products.each{ |p| p.save! }
+    @plan.products.each { |p| p.save! }
     respond :resource => @plan
   end
 
@@ -111,7 +111,7 @@ class Api::V1::SyncPlansController < Api::V1::ApiController
 
   def find_plan
     @plan = SyncPlan.find(params[:id])
-    raise HttpErrors::NotFound, _("Couldn't find sync plan '%{plan}' in organization '%{org}'") % {:plan => params[:id], :org => params[:organization_id]} if @plan.nil?
+    raise HttpErrors::NotFound, _("Couldn't find sync plan '%{plan}' in organization '%{org}'") % { :plan => params[:id], :org => params[:organization_id] } if @plan.nil?
     @organization ||= @plan.organization
     @plan
   end

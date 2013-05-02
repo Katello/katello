@@ -31,8 +31,8 @@ class Api::V1::ProxiesController < Api::V1::ApiController
           consumer_gone, consumer_live = false
           begin
             Resources::Candlepin::Consumer.get params[:id] # check with candlepin if system is Gone, raises RestClient::Gone
-            # a 200 means the system exists. the deletion record wont exist, but its
-            # not a permissions error
+                                                           # a 200 means the system exists. the deletion record wont exist, but its
+                                                           # not a permissions error
             consumer_live = true
           rescue RestClient::Gone
             # the correct response is a 410, since the system has been deleted
@@ -52,8 +52,8 @@ class Api::V1::ProxiesController < Api::V1::ApiController
         find_optional_organization
         (User.consumer? or @organization.readable?)
       when :api_proxy_consumer_certificates_path, :api_proxy_consumer_releases_path, :api_proxy_certificate_serials_path,
-           :api_proxy_consumer_entitlements_path, :api_proxy_consumer_entitlements_post_path, :api_proxy_consumer_entitlements_delete_path,
-           :api_proxy_consumer_dryrun_path, :api_proxy_consumer_owners_path
+          :api_proxy_consumer_entitlements_path, :api_proxy_consumer_entitlements_post_path, :api_proxy_consumer_entitlements_delete_path,
+          :api_proxy_consumer_dryrun_path, :api_proxy_consumer_owners_path
         User.consumer? and current_user.uuid == params[:id]
       when :api_proxy_consumer_certificates_delete_path
         User.consumer? and current_user.uuid == params[:consumer_id]
@@ -70,17 +70,17 @@ class Api::V1::ProxiesController < Api::V1::ApiController
       end
     }
     {
-      :get    => proxy_test,
-      :post   => proxy_test,
-      :put    => proxy_test,
-      :delete => proxy_test
+        :get    => proxy_test,
+        :post   => proxy_test,
+        :put    => proxy_test,
+        :delete => proxy_test
     }
   end
 
   rescue_from RestClient::Exception do |e|
     Rails.logger.error pp_exception(e)
     if request_from_katello_cli?
-      render :json => {:errors => [e.http_body]}, :status => e.http_code
+      render :json => { :errors => [e.http_body] }, :status => e.http_code
     else
       render :text => e.http_body, :status => e.http_code
     end

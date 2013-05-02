@@ -21,7 +21,7 @@ describe Api::V1::ContentViewsController, :katello => true do
     disable_product_orchestration
     disable_user_orchestration
 
-    @org = FactoryGirl.create(:organization)
+    @org                        = FactoryGirl.create(:organization)
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
   end
@@ -40,23 +40,23 @@ describe Api::V1::ContentViewsController, :katello => true do
       it { should be_success }
 
       specify { subject and assigns[:content_views].map(&:id).should
-        eql(org_view_ids) }
+      eql(org_view_ids) }
     end
 
     context "with environment filter param" do
       it "should return only the environment's views" do
-        env = @org.environments.first || KTEnvironment.create!(:name => "Test",
-                                                               :library => false,
-                                                               :priors => [@org.library],
-                                                               :organization_id => @org.id
-                                                              )
+        env          = @org.environments.first || KTEnvironment.create!(:name            => "Test",
+                                                                        :library         => false,
+                                                                        :priors          => [@org.library],
+                                                                        :organization_id => @org.id
+        )
         view_version = ContentViewVersion.new(:version => 1, :content_view => @content_views.last)
         view_version.environments << env
         view_version.save!
 
         get "index", :organization_id => @org.name, :environment_id => env.id
         response.should be_success
-        ids = env.content_views(true).select{|cv| !cv.default}.map(&:id)
+        ids = env.content_views(true).select { |cv| !cv.default }.map(&:id)
         assigns[:content_views].map(&:id).should eql(ids)
       end
     end
@@ -65,7 +65,7 @@ describe Api::V1::ContentViewsController, :katello => true do
 
       context "with filter param #{param}" do
         let(:view) { @content_views.sample }
-        let(:req)  { get 'index', :organization_id => @org.name, param => view.send(param) }
+        let(:req) { get 'index', :organization_id => @org.name, param => view.send(param) }
 
         subject { req }
 
@@ -78,8 +78,8 @@ describe Api::V1::ContentViewsController, :katello => true do
 
   describe "refresh" do
     before do
-      @def = FactoryGirl.build_stubbed(:content_view_definition)
-      @view = FactoryGirl.build_stubbed(:content_view, :organization => @org)
+      @def                          = FactoryGirl.build_stubbed(:content_view_definition)
+      @view                         = FactoryGirl.build_stubbed(:content_view, :organization => @org)
       @view.content_view_definition = @def
       ContentView.stub_chain(:non_default, :find).with(@view.id.to_s).and_return(@view)
     end

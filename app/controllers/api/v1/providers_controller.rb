@@ -26,34 +26,34 @@ class Api::V1::ProvidersController < Api::V1::ApiController
   before_filter :authorize
 
   def rules
-    index_test = lambda{Provider.any_readable?(@organization)}
-    create_test = lambda{Provider.creatable?(@organization)}
-    read_test = lambda{@provider.readable?}
-    edit_test = lambda{@provider.editable?}
-    delete_test = lambda{@provider.deletable?}
+    index_test  = lambda { Provider.any_readable?(@organization) }
+    create_test = lambda { Provider.creatable?(@organization) }
+    read_test   = lambda { @provider.readable? }
+    edit_test   = lambda { @provider.editable? }
+    delete_test = lambda { @provider.deletable? }
     {
-      :index => index_test,
-      :show => index_test,
+        :index                    => index_test,
+        :show                     => index_test,
 
-      :create => create_test,
-      :update => edit_test,
-      :destroy => delete_test,
-      :discovery => edit_test,
-      :products => read_test,
-      :import_manifest => edit_test,
-      :import_manifest_progress => read_test,
-      :refresh_manifest => edit_test,
-      :delete_manifest => edit_test,
-      :import_products => edit_test,
-      :refresh_products => edit_test,
-      :product_create => edit_test
+        :create                   => create_test,
+        :update                   => edit_test,
+        :destroy                  => delete_test,
+        :discovery                => edit_test,
+        :products                 => read_test,
+        :import_manifest          => edit_test,
+        :import_manifest_progress => read_test,
+        :refresh_manifest         => edit_test,
+        :delete_manifest          => edit_test,
+        :import_products          => edit_test,
+        :refresh_products         => edit_test,
+        :product_create           => edit_test
     }
   end
 
   def param_rules
     {
-      :create => {:provider  => [:name, :description, :provider_type, :repository_url]},
-      :update => {:provider  => [:name, :description, :repository_url]}
+        :create => { :provider => [:name, :description, :provider_type, :repository_url] },
+        :update => { :provider => [:name, :description, :repository_url] }
     }
   end
 
@@ -87,7 +87,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
   end
   def create
     @provider = Provider.create!(params[:provider]) do |p|
-      p.organization = @organization
+      p.organization  = @organization
       p.provider_type ||= Provider::CUSTOM
     end
     respond
@@ -107,14 +107,14 @@ class Api::V1::ProvidersController < Api::V1::ApiController
     #
     # TODO: these should really be done as validations, but the orchestration engine currently converts them into OrchestrationExceptions
     #
-    raise HttpErrors::BadRequest, _("Provider cannot be deleted since one of its products or repositories has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it.") if @provider.repositories.any? {|r| r.promoted? }
+    raise HttpErrors::BadRequest, _("Provider cannot be deleted since one of its products or repositories has already been promoted. Using a changeset, please delete the repository from existing environments before deleting it.") if @provider.repositories.any? { |r| r.promoted? }
 
     @provider.destroy
     if @provider.destroyed?
       respond :message => _("Deleted provider [ %s ]") % @provider.name
     else
       # TOOO: should probably be more specific?
-      raise HttpErrors::InternalError, _("Error while deleting provider [ %{name} ]: %{error}") % {:name => @provider.name, :error => @provider.errors.full_messages}
+      raise HttpErrors::InternalError, _("Error while deleting provider [ %{name} ]: %{error}") % { :name => @provider.name, :error => @provider.errors.full_messages }
     end
   end
 
@@ -151,7 +151,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
     end
 
     @provider.import_manifest File.expand_path(temp_file.path), :force => params[:force],
-                              :async => true, :notify => false
+                              :async                                   => true, :notify => false
     respond_for_async :resource => @provider.manifest_task
   end
 
@@ -162,8 +162,8 @@ class Api::V1::ProvidersController < Api::V1::ApiController
       raise HttpErrors::BadRequest, _("Manifests cannot be imported for a custom provider.")
     end
 
-    details = @provider.organization.owner_details
-    upstream =  details['upstreamConsumer'].blank? ? {} : details['upstreamConsumer']
+    details  = @provider.organization.owner_details
+    upstream = details['upstreamConsumer'].blank? ? {} : details['upstreamConsumer']
     @provider.refresh_manifest(upstream, :async => true, :notify => false)
     respond_for_async :resource => @provider.manifest_task
   end
@@ -195,7 +195,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
   def import_products
     results = params[:products].collect do |p|
       to_create = Product.new(p) do |product|
-        product.provider = @provider
+        product.provider     = @provider
         product.organization = @provider.organization
       end
       to_create.save!
@@ -221,11 +221,11 @@ class Api::V1::ProvidersController < Api::V1::ApiController
     # it as an immediate error; however, in the UI we'll override the label value (since the one provided
     # in the ui could be the result of an initial query to retrieve a default label)
     if !product_params[:label].blank? &&
-       (Product.all_in_org(@provider.organization).where('products.label = ?', product_params[:label]).count > 0)
+        (Product.all_in_org(@provider.organization).where('products.label = ?', product_params[:label]).count > 0)
       raise HttpErrors::BadRequest, _("Validation failed: Label has already been taken")
     end
 
-    gpg  = GpgKey.readable(@provider.organization).find_by_name!(product_params[:gpg_key_name]) unless product_params[:gpg_key_name].blank?
+    gpg = GpgKey.readable(@provider.organization).find_by_name!(product_params[:gpg_key_name]) unless product_params[:gpg_key_name].blank?
     prod = @provider.add_custom_product(labelize_params(product_params), product_params[:name], product_params[:description], product_params[:url], gpg)
     respond_for_create :resource => prod
   end
@@ -233,7 +233,7 @@ class Api::V1::ProvidersController < Api::V1::ApiController
   private
 
   def find_provider
-    @provider = Provider.find(params[:id])
+    @provider     = Provider.find(params[:id])
     @organization ||= @provider.organization
     raise HttpErrors::NotFound, _("Couldn't find provider '%s'") % params[:id] if @provider.nil?
   end

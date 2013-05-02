@@ -32,9 +32,9 @@ class Api::V1::SystemGroupPackagesController < Api::V1::ApiController
     edit_systems = lambda { @group.systems_editable? }
 
     {
-      :create => edit_systems,
-      :update => edit_systems,
-      :destroy => edit_systems,
+        :create  => edit_systems,
+        :update  => edit_systems,
+        :destroy => edit_systems,
     }
   end
 
@@ -43,13 +43,13 @@ class Api::V1::SystemGroupPackagesController < Api::V1::ApiController
   def create
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
-      task = @group.install_packages(packages)
+      task     = @group.install_packages(packages)
       respond_for_async :resource => task
     end
 
     if params[:groups]
       groups = extract_group_names(params[:groups])
-      task = @group.install_package_groups(groups)
+      task   = @group.install_package_groups(groups)
       respond_for_async :resource => task
     end
   end
@@ -59,13 +59,13 @@ class Api::V1::SystemGroupPackagesController < Api::V1::ApiController
   def update
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
-      task = @group.update_packages(packages)
+      task     = @group.update_packages(packages)
       respond_for_async :resource => task
     end
 
     if params[:groups]
       groups = extract_group_names(params[:groups])
-      task = @group.install_package_groups(groups)
+      task   = @group.install_package_groups(groups)
       respond_for_async :resource => task
     end
   end
@@ -75,13 +75,13 @@ class Api::V1::SystemGroupPackagesController < Api::V1::ApiController
   def destroy
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
-      task = @group.uninstall_packages(packages)
+      task     = @group.uninstall_packages(packages)
       respond_for_async :resource => task
     end
 
     if params[:groups]
       groups = extract_group_names(params[:groups])
-      task = @group.uninstall_package_groups(groups)
+      task   = @group.uninstall_package_groups(groups)
       respond_for_async :resource => task
     end
   end
@@ -116,7 +116,7 @@ class Api::V1::SystemGroupPackagesController < Api::V1::ApiController
 
   def extract_group_names(groups)
     groups.map do |group|
-      group.gsub(/^@/,"")
+      group.gsub(/^@/, "")
     end
   end
 end

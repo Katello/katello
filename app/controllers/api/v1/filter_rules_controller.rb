@@ -26,14 +26,14 @@ class Api::V1::FilterRulesController < Api::V1::ApiController
   def rules
     definition_editable = lambda { @definition && @definition.editable? }
     {
-      :create => definition_editable,
-      :destroy => definition_editable,
+        :create  => definition_editable,
+        :destroy => definition_editable,
     }
   end
 
   api :POST,
-    "/organizations/:organization_id/content_view_definitions/:content_view_definition_id/filters/:filter_id/rules",
-    "Create a filter rule for a content filter"
+      "/organizations/:organization_id/content_view_definitions/:content_view_definition_id/filters/:filter_id/rules",
+      "Create a filter rule for a content filter"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
   param :filter_id, String, :desc => "name of the filter", :required => true
@@ -46,8 +46,8 @@ class Api::V1::FilterRulesController < Api::V1::ApiController
   end
 
   api :DELETE,
-    "/organizations/:organization_id/content_view_definitions/:content_view_definition_id/filters/:filter_id/rules/:id",
-    "Delete a filter rule"
+      "/organizations/:organization_id/content_view_definitions/:content_view_definition_id/filters/:filter_id/rules/:id",
+      "Delete a filter rule"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
   param :filter_id, String, :desc => "name of the filter", :required => true
@@ -60,15 +60,15 @@ class Api::V1::FilterRulesController < Api::V1::ApiController
   private
 
   def create_rule!(rule_params)
-    rule = JSON.parse(rule_params[:rule]).with_indifferent_access
-    inclusion = rule_params[:inclusion].to_s.to_bool
+    rule         = JSON.parse(rule_params[:rule]).with_indifferent_access
+    inclusion    = rule_params[:inclusion].to_s.to_bool
     content_type = rule_params[:content]
     if rule.has_key?(:date_range)
       date_range = rule[:date_range]
-      date_range[:start] = date_range[:start].to_time.to_i  if date_range.has_key?(:start)
-      date_range[:end] = date_range[:end].to_time.to_i  if date_range.has_key?(:end)
+      date_range[:start] = date_range[:start].to_time.to_i if date_range.has_key?(:start)
+      date_range[:end] = date_range[:end].to_time.to_i if date_range.has_key?(:end)
     end
-    FilterRule.create_for(content_type, :filter => @filter , :inclusion => inclusion, :parameters => rule)
+    FilterRule.create_for(content_type, :filter => @filter, :inclusion => inclusion, :parameters => rule)
   end
 
   def find_definition
@@ -76,14 +76,14 @@ class Api::V1::FilterRulesController < Api::V1::ApiController
   end
 
   def find_filter
-    id = params[:filter_id]
+    id      = params[:filter_id]
     @filter = Filter.where(:id => id, :content_view_definition_id => @definition).first
     raise HttpErrors::NotFound, _("Couldn't find filter '%s'") % params[:id] if @filter.nil?
     @filter
   end
 
   def find_filter_rule
-    id = params[:id]
+    id           = params[:id]
     @filter_rule = FilterRule.where(:filter_id => @filter.id, :id => id).first
     raise HttpErrors::NotFound, _("Couldn't find filter rule '%s'") % params[:id] if @filter_rule.nil?
     @filter_rule

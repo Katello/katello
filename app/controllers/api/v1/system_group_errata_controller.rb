@@ -33,8 +33,8 @@ class Api::V1::SystemGroupErrataController < Api::V1::ApiController
     edit_systems = lambda { @group.systems_editable? }
     read_systems = lambda { @group.systems_readable? }
     {
-      :create => edit_systems,
-      :index => read_systems
+        :create => edit_systems,
+        :index  => read_systems
     }
   end
 
@@ -85,7 +85,7 @@ class Api::V1::SystemGroupErrataController < Api::V1::ApiController
           errata_hash[erratum.id][:systems].push(system.name)
         else
           # convert the erratum to a hash, add a systems array to the hash and add this system to it
-          erratum_hash = erratum.as_json
+          erratum_hash           = erratum.as_json
           erratum_hash[:systems] ||= []
           erratum_hash[:systems] << system.name
 
@@ -96,7 +96,7 @@ class Api::V1::SystemGroupErrataController < Api::V1::ApiController
     errata_list = errata_hash.values
     errata_list = filter_by_type(errata_list, filter_type)
 
-    errata_list = errata_list.sort { |a,b|
+    errata_list = errata_list.sort { |a, b|
       a[:id].downcase <=> b[:id].downcase
     }
 

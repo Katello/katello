@@ -27,14 +27,14 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
 
   def rules
     list_subscriptions = lambda { @system.readable? }
-    subscribe = lambda { @system.editable? }
+    subscribe          = lambda { @system.editable? }
 
     {
-      :create => subscribe,
-      :index => list_subscriptions,
-      :destroy => subscribe,
-      :destroy_all => subscribe,
-      :destroy_by_serial => subscribe
+        :create            => subscribe,
+        :index             => list_subscriptions,
+        :destroy           => subscribe,
+        :destroy_all       => subscribe,
+        :destroy_by_serial => subscribe
     }
   end
 
@@ -80,7 +80,7 @@ class Api::V1::SubscriptionsController < Api::V1::ApiController
   private
 
   def find_system
-    @system = System.first(:conditions => {:uuid => params[:system_id]})
+    @system = System.first(:conditions => { :uuid => params[:system_id] })
     raise HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:system_id] if @system.nil?
     @system
   end

@@ -38,17 +38,17 @@ describe Api::V1::ChangesetsContentController, :katello => true do
   let(:distribution_id) { '4' }
 
   before(:each) do
-    @library    = KTEnvironment.new(:name=>'Library', :label=> 'Library', :library => true)
+    @library    = KTEnvironment.new(:name => 'Library', :label => 'Library', :library => true)
     @library.id = 2
     @library.stub(:library?).and_return(true)
-    @environment    = KTEnvironment.new(:name=>'environment', :label=> 'environment', :library => false)
+    @environment    = KTEnvironment.new(:name => 'environment', :label => 'environment', :library => false)
     @environment.id = 1
     @environment.stub(:library?).and_return(false)
     @environment.stub(:prior).and_return(@library)
     @library.stub(:successor).and_return(@environment)
 
-    @product  = mock(Product, { "name" => "prod", 'id' => 0 })
-    @repo     = mock(Product, { "name" => "repo" })
+    @product = mock(Product, { "name" => "prod", 'id' => 0 })
+    @repo    = mock(Product, { "name" => "repo" })
 
     @cs = PromotionChangeset.new(:name => "changeset", :environment => @environment, :id => changeset_id)
     Changeset.stub(:find_by_id).and_return(@cs)
@@ -131,7 +131,7 @@ describe Api::V1::ChangesetsContentController, :katello => true do
   describe "erratum" do
     before(:each) do
       Product.should_receive(:find_by_cp_id).with(product_cp_id).and_return(@product)
-      @errata = Errata.new({:id=>erratum_unit_id, :errata_id=>erratum_id})
+      @errata = Errata.new({ :id => erratum_unit_id, :errata_id => erratum_id })
       Errata.stub(:find_by_errata_id).and_return(@errata)
     end
 
@@ -149,7 +149,7 @@ describe Api::V1::ChangesetsContentController, :katello => true do
   describe "erratum" do
     before(:each) do
       Product.should_receive(:find_by_cp_id).with(product_cp_id).and_return(@product)
-      @errata = Errata.new({:id=>erratum_unit_id, :errata_id=>erratum_id})
+      @errata = Errata.new({ :id => erratum_unit_id, :errata_id => erratum_id })
       Errata.stub(:find_by_errata_id).and_return(@errata)
     end
 

@@ -27,16 +27,16 @@ class Api::V1::UsersController < Api::V1::ApiController
     user_helptip     = lambda { true }                        #everyone can enable disable a helptip
     list_owners_test = lambda { @user.id == User.current.id } #user can see only his/her owners
 
-    { :index       => index_test,
-      :show        => read_test,
-      :create      => create_test,
-      :update      => edit_test,
-      :destroy     => delete_test,
-      :list_owners => list_owners_test,
-      :add_role    => edit_test,
-      :remove_role => edit_test,
-      :list_roles  => edit_test,
-      :report      => index_test,
+    { :index           => index_test,
+      :show            => read_test,
+      :create          => create_test,
+      :update          => edit_test,
+      :destroy         => delete_test,
+      :list_owners     => list_owners_test,
+      :add_role        => edit_test,
+      :remove_role     => edit_test,
+      :list_roles      => edit_test,
+      :report          => index_test,
       :sync_ldap_roles => create_test # expensive operation, set high perms to avoid DOS
     }
   end
@@ -73,17 +73,17 @@ class Api::V1::UsersController < Api::V1::ApiController
   def create
     # warning - request already contains "username" and "password" (logged user)
     @user = User.create!(:username => params[:username],
-                        :password => params[:password],
-                        :email    => params[:email],
-                        :disabled => params[:disabled])
+                         :password => params[:password],
+                         :email    => params[:email],
+                         :disabled => params[:disabled])
 
     @user.default_environment = KTEnvironment.find(params[:default_environment_id]) if params[:default_environment_id]
 
     if !params[:default_locale].blank?
-        if Katello.config.available_locales.include? params[:default_locale]
-            @user.default_locale = params[:default_locale]
-            @user.save!
-        end
+      if Katello.config.available_locales.include? params[:default_locale]
+        @user.default_locale = params[:default_locale]
+        @user.save!
+      end
     end
     respond
   end
@@ -135,7 +135,7 @@ class Api::V1::UsersController < Api::V1::ApiController
     role = Role.find(params[:role_id])
     @user.roles << role
     @user.save!
-    respond_for_status :message => _("User '%{username}' assigned to role '%{rolename}'") % {:username => @user.username, :rolename => role.name}
+    respond_for_status :message => _("User '%{username}' assigned to role '%{rolename}'") % { :username => @user.username, :rolename => role.name }
   end
 
   api :DELETE, "/users/:user_id/roles/:id", "Remove user's role"
@@ -143,7 +143,7 @@ class Api::V1::UsersController < Api::V1::ApiController
     role = Role.find(params[:id])
     @user.roles.delete(role)
     @user.save!
-    respond_for_status :message => _("User '%{username}' unassigned from role '%{rolename}'") % {:username => @user.username, :rolename => role.name}
+    respond_for_status :message => _("User '%{username}' unassigned from role '%{rolename}'") % { :username => @user.username, :rolename => role.name }
   end
 
   api :GET, "/users/report", "Reports all users in the system in a format according to 'Accept' headers.

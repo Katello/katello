@@ -35,7 +35,7 @@ class Api::V1::ApiController < Api::ApiController
     @query_params.delete('controller')
     @query_params.delete('action')
 
-    @query_params.each_pair do |k,v|
+    @query_params.each_pair do |k, v|
 
       if v.is_a?(String)
         if v.downcase == 'true'
@@ -54,7 +54,7 @@ class Api::V1::ApiController < Api::ApiController
   def find_organization
     @organization = find_optional_organization
     raise HttpErrors::NotFound, _("One of parameters [%s] required but not specified.") %
-      organization_id_keys.join(", ") if @organization.nil?
+        organization_id_keys.join(", ") if @organization.nil?
     @organization
   end
 
@@ -79,12 +79,12 @@ class Api::V1::ApiController < Api::ApiController
   end
 
   def organization_id
-    key = organization_id_keys.find {|k| not params[k].nil? }
+    key = organization_id_keys.find { |k| not params[k].nil? }
     return params[key]
   end
 
   def find_content_view_definition
-    cvd_id = params[:content_view_definition_id]
+    cvd_id      = params[:content_view_definition_id]
     @definition = ContentViewDefinition.find_by_id(cvd_id)
     if @definition.nil?
       raise HttpErrors::NotFound, _("Couildn't find content view with id '%s'") % cvd_id
@@ -93,7 +93,7 @@ class Api::V1::ApiController < Api::ApiController
 
   def find_content_filter_by_name
     filter_id = params[:filter_id]
-    @filter = Filter.where(:name => filter_id, :content_view_definition_id => @definition).first
+    @filter   = Filter.where(:name => filter_id, :content_view_definition_id => @definition).first
     raise HttpErrors::NotFound, _("Couldn't find filter '%s'") % params[:id] if @filter.nil?
     @filter
   end
@@ -114,16 +114,16 @@ class Api::V1::ApiController < Api::ApiController
 
   def respond_for_index(options={})
     collection = options[:collection] || get_resource_collection
-    status = options[:status] || :ok
-    format = options[:format] || :json
+    status     = options[:status] || :ok
+    format     = options[:format] || :json
 
     render format => collection, :status => status
   end
 
   def respond_for_show(options={})
     resource = options[:resource] || get_resource
-    status = options[:status] || :ok
-    format = options[:format] || :json
+    status   = options[:status] || :ok
+    format   = options[:format] || :json
 
     render format => resource, :status => status
   end
@@ -142,16 +142,16 @@ class Api::V1::ApiController < Api::ApiController
 
   def respond_for_status(options={})
     message = options[:message] || nil
-    status = options[:status] || :ok
-    format = options[:format] || :text
+    status  = options[:status] || :ok
+    format  = options[:format] || :text
 
     render format => message, :status => status
   end
 
   def respond_for_async(options={})
     resource = options[:resource] || get_resource
-    status = options[:status] || :ok
-    format = options[:format] || :json
+    status   = options[:status] || :ok
+    format   = options[:format] || :json
 
     render format => resource, :status => status
   end

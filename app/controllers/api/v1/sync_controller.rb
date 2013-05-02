@@ -34,16 +34,16 @@ class Api::V1::SyncController < Api::V1::ApiController
   before_filter :authorize
 
   def rules
-    list_test = lambda{ Provider.any_readable?(@obj.organization) }
+    list_test = lambda { Provider.any_readable?(@obj.organization) }
     sync_test = lambda { @obj.organization.syncable? }
 
-    { :index => list_test,
+    { :index  => list_test,
       :create => sync_test,
       :cancel => sync_test
     }
   end
 
-  api :GET, "/providers/:provider_id/sync",  "Get status of repo synchronisation for given provider"
+  api :GET, "/providers/:provider_id/sync", "Get status of repo synchronisation for given provider"
   api :GET, "/organizations/:organization_id/products/:product_id/sync", "Get status of repo synchronisation for given product"
   api :GET, "/repositories/:repository_id/sync", "Get status of synchronisation for given repository"
   def index

@@ -22,25 +22,25 @@ describe Api::V1::SyncPlansController do
     disable_org_orchestration
 
     @organization = Organization.create! do |o|
-      o.name = "org-1234"
+      o.name  = "org-1234"
       o.label = "org-1234"
     end
   end
   describe "create" do
-      let(:request_params) {
-                {:organization_id => @organization.label,
-                   :sync_plan =>
-                      {:name => "Foo",
-                       :description => "This is the key string",
-                      :sync_date => Time.now,
-                      :interval => "daily"
-                      }
-              }.with_indifferent_access
-      }
+    let(:request_params) {
+      { :organization_id => @organization.label,
+        :sync_plan       =>
+            { :name        => "Foo",
+              :description => "This is the key string",
+              :sync_date   => Time.now,
+              :interval    => "daily"
+            }
+      }.with_indifferent_access
+    }
 
-    it_should_behave_like "bad request"  do
+    it_should_behave_like "bad request" do
       let(:req) do
-        bad_req = request_params
+        bad_req                       = request_params
         bad_req[:sync_plan][:bad_foo] = "mwahaha"
         post :create, bad_req
       end
@@ -55,22 +55,22 @@ describe Api::V1::SyncPlansController do
   end
 
   describe "update" do
-    let(:sync_plan) {SyncPlan.create!(:name => "foo", :sync_date=> Time.now, :description => "foo",
-                                        :interval => "daily", :organization => @organization)}
+    let(:sync_plan) { SyncPlan.create!(:name     => "foo", :sync_date => Time.now, :description => "foo",
+                                       :interval => "daily", :organization => @organization) }
     let(:request_params) {
-                { :id => sync_plan.id,
-                  :organization_id => @organization.label,
-                   :sync_plan =>
-                      {:name => sync_plan.name + "--Altered",
-                       :description =>  "#{sync_plan.description} --Altered",
-                      :sync_date => Time.now
-                      }
-              }.with_indifferent_access
-      }
+      { :id              => sync_plan.id,
+        :organization_id => @organization.label,
+        :sync_plan       =>
+            { :name        => sync_plan.name + "--Altered",
+              :description => "#{sync_plan.description} --Altered",
+              :sync_date   => Time.now
+            }
+      }.with_indifferent_access
+    }
 
-    it_should_behave_like "bad request"  do
+    it_should_behave_like "bad request" do
       let(:req) do
-        bad_req = request_params
+        bad_req                       = request_params
         bad_req[:sync_plan][:bad_foo] = "mwahaha"
         put :update, bad_req
       end

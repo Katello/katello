@@ -1,4 +1,3 @@
-
 #
 # Copyright 2013 Red Hat, Inc.
 #
@@ -33,7 +32,7 @@ describe Api::V1::SystemPackagesController do
     set_default_locale
     disable_org_orchestration
     User.current = @user
-    Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Resources::Candlepin::Consumer.stub!(:create).and_return({ :uuid => uuid, :owner => { :key => uuid } })
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
     if Katello.config.katello?
@@ -41,9 +40,9 @@ describe Api::V1::SystemPackagesController do
       Runcible::Extensions::Consumer.stub!(:update).and_return(true)
     end
 
-    @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
-    @environment_1 = KTEnvironment.create!(:name=>'test_1', :label=> 'test_1', :prior => @organization.library.id, :organization => @organization)
-    @system = System.create!(:environment => @environment_1, :uuid => "1234", :name => "system.example.com", :cp_type => 'system', :facts => {:foo => :bar})
+    @organization  = Organization.create!(:name => 'test_org', :label => 'test_org')
+    @environment_1 = KTEnvironment.create!(:name => 'test_1', :label => 'test_1', :prior => @organization.library.id, :organization => @organization)
+    @system        = System.create!(:environment => @environment_1, :uuid => "1234", :name => "system.example.com", :cp_type => 'system', :facts => { :foo => :bar })
     System.stub(:first => @system)
   end
 
@@ -153,13 +152,13 @@ describe Api::V1::SystemPackagesController do
   end
 
 
-  def stub_task_status(task_type, parameters, status = "running", result = {:errors => []})
-      return TaskStatus.create(:organization_id => @organization.id,
-                        :task_type => task_type,
-                        :parameters => parameters,
-                        :result => result,
-                        :state => status,
-                        :uuid => "1234")
+  def stub_task_status(task_type, parameters, status = "running", result = { :errors => [] })
+    return TaskStatus.create(:organization_id => @organization.id,
+                             :task_type       => task_type,
+                             :parameters      => parameters,
+                             :result          => result,
+                             :state           => status,
+                             :uuid            => "1234")
   end
 
 end
