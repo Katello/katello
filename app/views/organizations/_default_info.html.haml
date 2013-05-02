@@ -1,6 +1,11 @@
-
--# org and informable_type from locals
+-# org, informable_type, task_state, and task_uuid from locals
 = javascript 'widgets/jquery.jeditable.helpers'
+
+= javascript do
+  :plain
+    localize({
+       "default_info_apply_error": '#{escape_javascript(_("An error has occurred while applying default info. Please contact your administrator"))}'
+    });
 
 = content_for :title do
   = @organization.name
@@ -14,22 +19,22 @@
       %h5
         = _('%s Default Custom Info') % informable_type.capitalize
     .grid_4
-      %table#default_info_table
+      #apply_default_info_button_container
+        %input.btn.fullwidth#apply_default_info_button{ :value => _("Apply default info to all %s") % informable_type.pluralize, :type => "button", "data-url" => api_organization_apply_default_info_path(org.label, informable_type), "data-method" => "post", :disabled => org.default_info[informable_type].empty?, "data-taskstate" => task_state, "data-taskuuid" => task_uuid }
+      %table#default_info_table.default_info
         %tbody
           %tr#new_default_info_row
             %td
               %input#new_default_info_keyname{ :placeholder => _("Keyname"), :required => true }
             %td
-              %input.btn.primary#add_default_info_button{ :value => _("Add"), :type => "submit", "data-url" => api_organization_create_default_info_path(org.name, informable_type), "data-method" => "post", :disabled => true }
+              %input.btn.primary#add_default_info_button{ :value => _("Add"), :type => "submit", "data-url" => api_organization_create_default_info_path(org.label, informable_type), "data-method" => "post", :disabled => true }
           - org.default_info[informable_type].sort.each do |info|
             - space_safe_info = info.gsub(" ", "_")
             %tr{"data-id" => "default_info_#{space_safe_info}" }
               %td.ra
                 = label :default_info, info.to_sym, info
               %td
-                %input.btn.warning.remove_default_info_button{ :value => _("Remove"), :type => "submit", "data-url" => api_organization_destroy_default_info_path(org.name, informable_type, info), "data-method" => "delete", "data-id" => "default_info_#{space_safe_info}" }
-          %tr
-            %td.fullwidth{ :colspan => 2 }
-              %input.btn.fullwidth#apply_default_info_button{ :value => _("Apply default info to all systems"), :type => "button", "data-url" => api_organization_apply_default_info_path(org.name, informable_type), "data-method" => "post", :disabled => org.default_info[informable_type].empty? }
+                %input.btn.warning.remove_default_info_button{ :value => _("Remove"), :type => "submit", "data-url" => api_organization_destroy_default_info_path(org.label, informable_type, info), "data-method" => "delete", "data-id" => "default_info_#{space_safe_info}" }
+
 
 = render :template => "layouts/tupane_layout"

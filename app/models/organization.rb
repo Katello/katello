@@ -120,7 +120,8 @@ class Organization < ActiveRecord::Base
   end
 
   def applying_default_info?
-    ! self.apply_info_task_id.nil?
+    return false if self.apply_info_task_id.nil?
+    ! TaskStatus.find_by_id(self.apply_info_task_id).finished?
   end
 
   def initialize_default_info

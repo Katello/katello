@@ -92,7 +92,7 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
   end
 
   def apply_to_all_status
-    render :json => TaskStatus.find(@organization.apply_info_task_id).to_json
+    render :json => TaskStatus.find_by_id(@organization.apply_info_task_id).to_json
   end
 
   private
