@@ -16,6 +16,14 @@ class KTEnvironment < ActiveRecord::Base
   include Glue::ElasticSearch::Environment if Katello.config.use_elasticsearch
   include Glue if Katello.config.use_cp || Katello.config.use_pulp
 
+  include Glue::Event
+  def create_event
+    Katello::Actions::EnvCreate
+  end
+  def destroy_event
+    Katello::Actions::EnvDestroy
+  end
+
   self.table_name = "environments"
   include Ext::LabelFromName
   include Ext::PermissionTagCleanup
@@ -74,6 +82,7 @@ class KTEnvironment < ActiveRecord::Base
   after_create :create_default_content_view_version
 
   after_destroy :unset_users_with_default
+
    ERROR_CLASS_NAME = "Environment"
 
   def library?

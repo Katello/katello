@@ -16,6 +16,15 @@ class User < ActiveRecord::Base
   include Glue::Pulp::User if Katello.config.use_pulp
   include Glue::ElasticSearch::User if Katello.config.use_elasticsearch
   include Glue if Katello.config.use_cp || Katello.config.use_pulp
+
+  include Glue::Event
+  def create_event
+    Headpin::Actions::UserCreate
+  end
+  def destroy_event
+    Headpin::Actions::UserDestroy
+  end
+
   include AsyncOrchestration
   include Ext::IndexedModel
 
