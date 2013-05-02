@@ -9,12 +9,8 @@
  NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-*/
+ **/
 
-
-var Katello = angular.module('Katello', ['alchemy', 'alch-templates', 'ngSanitize', 'ngResource', 'infinite-scroll']);
-
-Katello.config(['$httpProvider', function($httpProvider){
-    $httpProvider.defaults.headers.common['X-CSRF-TOKEN'] = $('meta[name=csrf-token]').attr('content');
+angular.module('Katello').factory('System', ['$resource', function ($resource) {
+    return $resource(KT.routes.api_systems_path() + '/:systemId', {systemId: '@systemId'});
 }]);
-
