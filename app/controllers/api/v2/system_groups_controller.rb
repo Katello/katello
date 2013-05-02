@@ -65,13 +65,13 @@ class Api::V2::SystemGroupsController < Api::V1::SystemGroupsController
     super
   end
 
-  api :GET ,"/system_groups/:id/history", "History of jobs performed on a system group"
+  api :GET, "/system_groups/:id/history", "History of jobs performed on a system group"
   param :id, :identifier, :desc => "Id of the system group", :required => true
   def history
     super
   end
 
-  api :GET ,"/system_groups/:id/history", "History of a job performed on a system group"
+  api :GET, "/system_groups/:id/history", "History of a job performed on a system group"
   param :id, :identifier, :desc => "Id of the system group", :required => true
   param :job_id, :identifier, :desc => "Id of a job for filtering"
   def history_show
@@ -100,8 +100,6 @@ class Api::V2::SystemGroupsController < Api::V1::SystemGroupsController
   def destroy_systems
     super
   end
-
-
 
 
 end

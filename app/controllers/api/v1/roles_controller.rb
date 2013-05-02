@@ -18,27 +18,27 @@ class Api::V1::RolesController < Api::V1::ApiController
   respond_to :json
 
   def rules
-    index_test = lambda{Role.any_readable?}
-    create_test = lambda{Role.creatable?}
-    read_test = lambda{Role.any_readable?}
-    edit_test = lambda{Role.editable?}
-    delete_test = lambda{Role.deletable?}
+    index_test  = lambda { Role.any_readable? }
+    create_test = lambda { Role.creatable? }
+    read_test   = lambda { Role.any_readable? }
+    edit_test   = lambda { Role.editable? }
+    delete_test = lambda { Role.deletable? }
 
-     {
-       :index => index_test,
-       :show => read_test,
-       :create => create_test,
-       :update => edit_test,
-       :destroy => delete_test,
-       :available_verbs => read_test
-     }
+    {
+        :index           => index_test,
+        :show            => read_test,
+        :create          => create_test,
+        :update          => edit_test,
+        :destroy         => delete_test,
+        :available_verbs => read_test
+    }
   end
 
   def param_rules
-     {
-       :create => {:role => [:name, :description]},
-       :update => {:role => [:name, :description]},
-     }
+    {
+        :create => { :role => [:name, :description] },
+        :update => { :role => [:name, :description] },
+    }
   end
 
   def_param_group :role do
@@ -87,13 +87,13 @@ class Api::V1::RolesController < Api::V1::ApiController
     org_id = @organization ? @organization.id : nil
 
     ResourceType::TYPES.each do |type, value|
-      details[type] = {}
-      details[type][:verbs] = Verb.verbs_for(type, false).collect {|name, display_name| VirtualTag.new(name, display_name)}
-      details[type][:verbs].sort! {|a,b| a.display_name <=> b.display_name}
-      details[type][:tags] = Tag.tags_for(type, org_id).collect { |t| VirtualTag.new(t.name, t.display_name) }
+      details[type]         = {}
+      details[type][:verbs] = Verb.verbs_for(type, false).collect { |name, display_name| VirtualTag.new(name, display_name) }
+      details[type][:verbs].sort! { |a, b| a.display_name <=> b.display_name }
+      details[type][:tags]         = Tag.tags_for(type, org_id).collect { |t| VirtualTag.new(t.name, t.display_name) }
       details[type][:no_tag_verbs] = Verb.no_tag_verbs(type)
-      details[type][:global] = value["global"]
-      details[type][:name] = value["name"]
+      details[type][:global]       = value["global"]
+      details[type][:name]         = value["name"]
     end
 
     respond_for_show :resource => details

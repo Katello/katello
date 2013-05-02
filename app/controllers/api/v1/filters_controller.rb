@@ -26,19 +26,19 @@ class Api::V1::FiltersController < Api::V1::ApiController
     definition_editable = lambda { @definition && @definition.editable? }
 
     {
-      :index => definition_readable,
-      :create => definition_editable,
-      :show => definition_readable,
-      :destroy => definition_editable,
-      :list_products => definition_readable,
-      :update_products => definition_editable,
-      :list_repositories => definition_readable,
-      :update_repositories => definition_editable
+        :index               => definition_readable,
+        :create              => definition_editable,
+        :show                => definition_readable,
+        :destroy             => definition_editable,
+        :list_products       => definition_readable,
+        :update_products     => definition_editable,
+        :list_repositories   => definition_readable,
+        :update_repositories => definition_editable
     }
   end
 
   api :GET, "/organizations/:organization_id/content_view_definitions/:content_view_definition_id/filters",
-    "List filters"
+      "List filters"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
   def index
@@ -47,7 +47,7 @@ class Api::V1::FiltersController < Api::V1::ApiController
   end
 
   api :POST, "/organizations/:organization_id/content_view_definitions/:content_view_definition_id/filters",
-    "Create a filter for a content view definition"
+      "Create a filter for a content view definition"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
   param :filter, String, :desc => "name of the filter", :required => true
@@ -56,7 +56,7 @@ class Api::V1::FiltersController < Api::V1::ApiController
     respond :resource => filter
   end
 
-  api :GET,  "/organizations/:organization_id/content_view_definitions/:content_view_definition_id/filters/:id",
+  api :GET, "/organizations/:organization_id/content_view_definitions/:content_view_definition_id/filters/:id",
       "Show filter info"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
@@ -66,7 +66,7 @@ class Api::V1::FiltersController < Api::V1::ApiController
   end
 
   api :DELETE, "/organizations/:organization_id/content_view_definitions/:content_view_definition_id/filters/:id",
-   "Delete a filter"
+      "Delete a filter"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
   param :id, String, :desc => "name of the filter", :required => true
@@ -88,7 +88,7 @@ class Api::V1::FiltersController < Api::V1::ApiController
       "Update products for a content view definition filter"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :content_view_definition_id, :identifier, :required => true,
-        :desc => "content view definition identifier"
+        :desc                                               => "content view definition identifier"
   param :id, String, :desc => "name of the filter", :required => true
   param :products, Array, :desc => "Updated list of product ids", :required => true
   def update_products
@@ -123,10 +123,10 @@ class Api::V1::FiltersController < Api::V1::ApiController
   end
 
   def _update_repositories!(params)
-    @repos = Repository.libraries_content_readable(@organization).
-      where(:id => params[:repos])
+    @repos               = Repository.libraries_content_readable(@organization).
+        where(:id => params[:repos])
     deleted_repositories = @filter.repositories - @repos
-    added_repositories = @repos - @filter.repositories
+    added_repositories   = @repos - @filter.repositories
 
     @filter.repositories -= deleted_repositories
     @filter.repositories += added_repositories
@@ -134,15 +134,15 @@ class Api::V1::FiltersController < Api::V1::ApiController
   end
 
   def find_filter
-    id = params[:id] || params[:filter_id]
+    id      = params[:id] || params[:filter_id]
     @filter = Filter.where(:content_view_definition_id => @definition).find(id)
   end
 
   def _update_products!(params)
-    @products = Product.readable(@organization).where(:cp_id => params[:products],
-                              "providers.organization_id" => @organization.id).joins(:provider)
+    @products        = Product.readable(@organization).where(:cp_id                      => params[:products],
+                                                             "providers.organization_id" => @organization.id).joins(:provider)
     deleted_products = @filter.products - @products
-    added_products = @products - @filter.products
+    added_products   = @products - @filter.products
     @filter.products -= deleted_products
     @filter.products += added_products
     @filter.save!

@@ -16,6 +16,6 @@ class Api::V1::ErrorsController < Api::V1::ApiController
   skip_before_filter :authorize
 
   def render_404
-    render :json => {:displayMessage => _("Resource not found on the server"), :errors => [_("Not found")] }, :status => 404
+    render :json => { :displayMessage => _("Resource not found on the server"), :errors => [_("Not found")] }, :status => 404
   end
 end

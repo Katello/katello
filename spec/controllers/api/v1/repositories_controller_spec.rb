@@ -37,9 +37,9 @@ describe Api::V1::RepositoriesController, :katello => true do
 
       @organization = new_test_org
       @controller.stub!(:get_organization).and_return(@organization)
-      @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
+      @provider = Provider.create!(:provider_type => Provider::CUSTOM, :name => "foo1", :organization => @organization)
       Provider.stub!(:find).and_return(@provider)
-      @product = Product.new({:name=>"prod", :label=> "prod"})
+      @product = Product.new({ :name => "prod", :label => "prod" })
 
       @product.provider = @provider
       @product.environments << @organization.library
@@ -47,7 +47,7 @@ describe Api::V1::RepositoriesController, :katello => true do
       @product.save!
       Product.stub!(:find).and_return(@product)
       Product.stub!(:find_by_cp_id).and_return(@product)
-      ep = EnvironmentProduct.find_or_create(@organization.library, @product)
+      ep          = EnvironmentProduct.find_or_create(@organization.library, @product)
       @repository = new_test_repo(ep, "repo_1", "#{@organization.name}/Library/prod/repo")
       Repository.stub(:find).and_return(@repository)
       PulpSyncStatus.stub(:using_pulp_task).and_return(task_stub)
@@ -56,7 +56,7 @@ describe Api::V1::RepositoriesController, :katello => true do
     end
 
     describe "for create" do
-      let(:action) {:create}
+      let(:action) { :create }
       let(:req) do
         post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
       end
@@ -70,7 +70,7 @@ describe Api::V1::RepositoriesController, :katello => true do
     end
 
     describe "for show" do
-      let(:action) {:show}
+      let(:action) { :show }
       let(:req) { get :show, :id => 1 }
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:read, :providers, @provider.id, @organization) }
@@ -82,7 +82,7 @@ describe Api::V1::RepositoriesController, :katello => true do
     end
 
     describe "for destroy" do
-      let(:action) {:destroy}
+      let(:action) { :destroy }
       let(:req) { get :destroy, :id => 1 }
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:update, :providers, @provider.id, @organization) }
@@ -94,8 +94,8 @@ describe Api::V1::RepositoriesController, :katello => true do
     end
 
     describe "for update" do
-      let(:action) {:update}
-      let(:req) { put :update, :id => 1, :repository =>{:gpg_key_name => "test" }}
+      let(:action) { :update }
+      let(:req) { put :update, :id => 1, :repository => { :gpg_key_name => "test" } }
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:update, :providers, @provider.id, @organization) }
       end
@@ -106,7 +106,7 @@ describe Api::V1::RepositoriesController, :katello => true do
     end
 
     describe "for enable" do
-      let(:action) {:enable}
+      let(:action) { :enable }
       let(:req) { get :enable, :id => 1, :enable => 1 }
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:update, :providers, @provider.id, @organization) }
@@ -118,7 +118,7 @@ describe Api::V1::RepositoriesController, :katello => true do
     end
 
     describe "for package_groups" do
-      let(:action) {:package_groups}
+      let(:action) { :package_groups }
       let(:req) { get :package_groups, :id => 1 }
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:read, :providers, @provider.id, @organization) }
@@ -130,7 +130,7 @@ describe Api::V1::RepositoriesController, :katello => true do
     end
 
     describe "for package_group_categories" do
-      let(:action) {:package_group_categories}
+      let(:action) { :package_group_categories }
       let(:req) { get :package_group_categories, :id => 1 }
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:read, :providers, @provider.id, @organization) }
@@ -147,9 +147,9 @@ describe Api::V1::RepositoriesController, :katello => true do
       disable_org_orchestration
       disable_product_orchestration
 
-      @organization = Organization.create!(:name=>ProductTestData::ORG_ID, :label=> ProductTestData::ORG_ID, :label => 'admin-org-37070')
-      @provider     = @organization.redhat_provider
-      @product = Product.new({:name=>"product for repo test", :label=> "product_for_repo_test"})
+      @organization     = Organization.create!(:name => ProductTestData::ORG_ID, :label => ProductTestData::ORG_ID, :label => 'admin-org-37070')
+      @provider         = @organization.redhat_provider
+      @product          = Product.new({ :name => "product for repo test", :label => "product_for_repo_test" })
       @product.provider = @provider
       @product.environments << @organization.library
       @product.stub(:arch).and_return('noarch')
@@ -208,7 +208,7 @@ describe Api::V1::RepositoriesController, :katello => true do
 
         context "we dont provide gpg_key_name key" do
           it "should use the product's key" do
-            @product.should_receive(:add_repo).with do |label ,name, url, type, unprotected, gpg|
+            @product.should_receive(:add_repo).with do |label, name, url, type, unprotected, gpg|
               gpg == product_gpg
             end.and_return({})
             post 'create', :name => 'repo_1', :label => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label
@@ -247,7 +247,7 @@ describe Api::V1::RepositoriesController, :katello => true do
             @product.should_receive(:add_repo).with do |label, name, url, type, unprotected, gpg|
               unprotected == true
             end.and_return({})
-            post 'create', :name => 'repo_1', :label => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label, :gpg_key_name => "", :unprotected=>true
+            post 'create', :name => 'repo_1', :label => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1', :organization_id => @organization.label, :gpg_key_name => "", :unprotected => true
           end
         end
 
@@ -267,12 +267,12 @@ describe Api::V1::RepositoriesController, :katello => true do
 
       context "Bad request" do
         before { @repo.stub(:redhat? => false) }
-        it_should_behave_like "bad request"  do
+        it_should_behave_like "bad request" do
           let(:req) do
-            bad_req = {:id => 123,
-                       :repository =>
-                          {:bad_foo => "mwahahaha",
-                           :gpg_key_name => "Gpg Key"}
+            bad_req = { :id         => 123,
+                        :repository =>
+                            { :bad_foo      => "mwahahaha",
+                              :gpg_key_name => "Gpg Key" }
             }.with_indifferent_access
             put :update, bad_req
           end
@@ -281,13 +281,13 @@ describe Api::V1::RepositoriesController, :katello => true do
 
       context "Custom repo" do
         before do
-              Repository.should_receive(:find).with("1").and_return(@repo)
-          @repo.stub :redhat? => false, :to_hash => { }
+          Repository.should_receive(:find).with("1").and_return(@repo)
+          @repo.stub :redhat? => false, :to_hash => {}
         end
 
         it 'should update values thet migth change' do
           @repo.should_receive(:update_attributes!).with("gpg_key_name" => "gpg_key")
-          put :update, {:id => '1', :repository => {:gpg_key_name => "gpg_key"}}
+          put :update, { :id => '1', :repository => { :gpg_key_name => "gpg_key" } }
         end
       end
 
@@ -296,7 +296,7 @@ describe Api::V1::RepositoriesController, :katello => true do
         before { @repo.stub(:redhat? => true) }
 
         it "should fail with bad request" do
-          put :update, {:id => '1', :repository => {:gpg_key_name => "gpg_key", :name => "another name"}}
+          put :update, { :id => '1', :repository => { :gpg_key_name => "gpg_key", :name => "another name" } }
           response.status.should == HttpErrors::UNPROCESSABLE_ENTITY
         end
 
@@ -337,15 +337,15 @@ describe Api::V1::RepositoriesController, :katello => true do
 
     describe "trigger sync complete" do
       before do
-        @repo = Repository.new(:pulp_id=>"123", :id=>"123")
-        @repo.stub(:environment).and_return(KTEnvironment.new(:name=>"FOO"))
+        @repo = Repository.new(:pulp_id => "123", :id => "123")
+        @repo.stub(:environment).and_return(KTEnvironment.new(:name => "FOO"))
         Repository.stub(:where).and_return([@repo])
         @fake_async = OpenStruct.new
       end
       it "should call async task correctly with no forwarded header" do
         @repo.should_receive(:async).and_return(@fake_async)
         @fake_async.should_receive(:after_sync)
-        params = {:task_id=>"123", :payload => {:repo_id=>"123"}}
+        params = { :task_id => "123", :payload => { :repo_id => "123" } }
         post :sync_complete, params
         response.should be_success
       end
@@ -354,7 +354,7 @@ describe Api::V1::RepositoriesController, :katello => true do
         request.env["HTTP_X_FORWARDED_FOR"] = '127.0.0.1'
         @repo.should_receive(:async).and_return(@fake_async)
         @fake_async.should_receive(:after_sync)
-        params = {:task_id=>"123", :payload => {:repo_id=>"123"}}
+        params = { :task_id => "123", :payload => { :repo_id => "123" } }
         post :sync_complete, params
         response.should be_success
       end
@@ -363,7 +363,7 @@ describe Api::V1::RepositoriesController, :katello => true do
         request.env["HTTP_X_FORWARDED_FOR"] = '::1'
         @repo.should_receive(:async).and_return(@fake_async)
         @fake_async.should_receive(:after_sync)
-        params = {:task_id=>"123", :payload => {:repo_id=>"123"}}
+        params = { :task_id => "123", :payload => { :repo_id => "123" } }
         post :sync_complete, params
         response.should be_success
       end
@@ -378,9 +378,9 @@ describe Api::V1::RepositoriesController, :katello => true do
     describe "get list of repository package groups" do
       subject { get :package_groups, :id => "123" }
       before do
-          @repo = Repository.new(:pulp_id=>"123", :id=>"123")
-          Repository.stub(:find).and_return(@repo)
-          Runcible::Extensions::Repository.stub(:package_groups).and_return([])
+        @repo = Repository.new(:pulp_id => "123", :id => "123")
+        Repository.stub(:find).and_return(@repo)
+        Runcible::Extensions::Repository.stub(:package_groups).and_return([])
       end
       it "should call Pulp layer" do
         Runcible::Extensions::Repository.should_receive(:package_groups).with("123")
@@ -393,9 +393,9 @@ describe Api::V1::RepositoriesController, :katello => true do
       subject { get :package_group_categories, :id => "123" }
 
       before do
-          @repo = Repository.new(:pulp_id=>"123", :id=>"123")
-          Repository.stub(:find).and_return(@repo)
-          Runcible::Extensions::Repository.stub(:package_categories).and_return([])
+        @repo = Repository.new(:pulp_id => "123", :id => "123")
+        Repository.stub(:find).and_return(@repo)
+        Runcible::Extensions::Repository.stub(:package_categories).and_return([])
       end
       it "should call Pulp layer" do
         Runcible::Extensions::Repository.should_receive(:package_categories).with("123")

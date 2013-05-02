@@ -29,9 +29,9 @@ class Api::V1::SystemPackagesController < Api::V1::ApiController
     edit_system = lambda { @system.editable? or User.consumer? }
 
     {
-      :create => edit_system,
-      :update => edit_system,
-      :destroy => edit_system,
+        :create  => edit_system,
+        :update  => edit_system,
+        :destroy => edit_system,
     }
   end
 
@@ -46,13 +46,13 @@ class Api::V1::SystemPackagesController < Api::V1::ApiController
   def create
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
-      task = @system.install_packages(packages)
+      task     = @system.install_packages(packages)
       respond_for_async :resource => task
     end
 
     if params[:groups]
       groups = extract_group_names(params[:groups])
-      task = @system.install_package_groups(groups)
+      task   = @system.install_package_groups(groups)
       respond_for_async :resource => task
     end
   end
@@ -63,7 +63,7 @@ class Api::V1::SystemPackagesController < Api::V1::ApiController
   def update
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
-      task = @system.update_packages(packages)
+      task     = @system.update_packages(packages)
       respond_for_async :resource => task
     end
   end
@@ -74,13 +74,13 @@ class Api::V1::SystemPackagesController < Api::V1::ApiController
   def destroy
     if params[:packages]
       packages = validate_package_list_format(params[:packages])
-      task = @system.uninstall_packages(packages)
+      task     = @system.uninstall_packages(packages)
       respond_for_async :resource => task
     end
 
     if params[:groups]
       groups = extract_group_names(params[:groups])
-      task = @system.uninstall_package_groups(groups)
+      task   = @system.uninstall_package_groups(groups)
       respond_for_async :resource => task
     end
   end
@@ -88,7 +88,7 @@ class Api::V1::SystemPackagesController < Api::V1::ApiController
   protected
 
   def find_system
-    @system = System.first(:conditions => {:uuid => params[:system_id]})
+    @system = System.first(:conditions => { :uuid => params[:system_id] })
     raise HttpErrors::NotFound, _("Couldn't find system '%s'") % params[:system_id] if @system.nil?
     @system
   end
@@ -125,7 +125,7 @@ class Api::V1::SystemPackagesController < Api::V1::ApiController
 
   def extract_group_names(groups)
     groups.map do |group|
-      group.gsub(/^@/,"")
+      group.gsub(/^@/, "")
     end
   end
 end

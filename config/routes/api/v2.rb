@@ -81,8 +81,8 @@ Src::Application.routes.draw do
         end
         api_resources :subscriptions, :only => [:create, :index, :destroy] do
           collection do
-              match '/' => 'subscriptions#destroy_all', :via => :delete
-              match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
+            match '/' => 'subscriptions#destroy_all', :via => :delete
+            match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
           end
         end
         resource :packages, :action => [:create, :update, :destroy], :controller => :system_packages
@@ -94,8 +94,8 @@ Src::Application.routes.draw do
         end
         api_resources :subscriptions, :only => [:create, :index, :destroy] do
           collection do
-              match '/' => 'subscriptions#destroy_all', :via => :delete
-              match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
+            match '/' => 'subscriptions#destroy_all', :via => :delete
+            match '/serials/:serial_id' => 'subscriptions#destroy_by_serial', :via => :delete
           end
         end
       end
@@ -232,7 +232,7 @@ Src::Application.routes.draw do
         api_resources :sync, :only => [:index, :create] do
           delete :index, :on => :collection, :action => :cancel
         end
-        api_resources :repository_sets, :only=>[:index] do
+        api_resources :repository_sets, :only => [:index] do
           put :enable, :on => :member
           put :disable, :on => :member
         end
@@ -241,30 +241,30 @@ Src::Application.routes.draw do
       api_resources :users do
         get :report, :on => :collection
         get :sync_ldap_roles, :on => :collection
-        api_resources :roles, :controller => :users, :only =>[] do
-         post   :index, :on => :collection, :action => :add_role
-         delete :destroy, :on => :member, :action => :remove_role
-         get    :index, :on => :collection, :action => :list_roles
+        api_resources :roles, :controller => :users, :only => [] do
+          post :index, :on => :collection, :action => :add_role
+          delete :destroy, :on => :member, :action => :remove_role
+          get :index, :on => :collection, :action => :list_roles
         end
       end
 
       api_resources :roles do
         get :available_verbs, :on => :collection, :action => :available_verbs
         api_resources :permissions, :only => [:index, :show, :create, :destroy]
-        api_resources :ldap_groups, :controller => :role_ldap_groups , :only => [:create, :destroy, :index]
+        api_resources :ldap_groups, :controller => :role_ldap_groups, :only => [:create, :destroy, :index]
       end
 
       api_resources :sync_plans, :only => [:show, :update, :destroy]
       api_resources :tasks, :only => [:show]
 
-      match "/version"  => "ping#version", :via => :get
-      match "/status"  => "ping#server_status", :via => :get
+      match "/version" => "ping#version", :via => :get
+      match "/status" => "ping#server_status", :via => :get
 
       # api custom information
       match '/custom_info/:informable_type/:informable_id' => 'custom_info#create', :via => :post, :as => :create_custom_info
-      match '/custom_info/:informable_type/:informable_id' => 'custom_info#index',  :via => :get,  :as => :custom_info
-      match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#show',    :via => :get, :as => :show_custom_info
-      match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#update',  :via => :put, :as => :update_custom_info
+      match '/custom_info/:informable_type/:informable_id' => 'custom_info#index', :via => :get, :as => :custom_info
+      match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#show', :via => :get, :as => :show_custom_info
+      match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#update', :via => :put, :as => :update_custom_info
       match '/custom_info/:informable_type/:informable_id/:keyname' => 'custom_info#destroy', :via => :delete, :as => :destroy_custom_info
 
       # subscription-manager support
@@ -314,7 +314,7 @@ Src::Application.routes.draw do
 
       # development / debugging support
       if Rails.env == "development"
-        match 'status/memory' => 'status#memory', :via=>:get
+        match 'status/memory' => 'status#memory', :via => :get
       end
 
       match '*a', :to => 'errors#render_404'

@@ -1,4 +1,3 @@
-
 #
 # Copyright 2013 Red Hat, Inc.
 #
@@ -34,10 +33,10 @@ describe Api::V1::SystemGroupErrataController, :katello => true do
     disable_consumer_group_orchestration
     setup_system_creation
 
-    @environment = KTEnvironment.create!(:name=>"DEV", :label=> "DEV", :prior=>@organization.library, :organization=>@organization)
-    @system = System.create!(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
+    @environment = KTEnvironment.create!(:name => "DEV", :label => "DEV", :prior => @organization.library, :organization => @organization)
+    @system      = System.create!(:name => "verbose", :environment => @environment, :cp_type => "system", :facts => { "Test1" => 1, "verbose_facts" => "Test facts" })
 
-    @group = SystemGroup.new(:name=>"test_group", :organization=>@organization, :max_systems => 5)
+    @group = SystemGroup.new(:name => "test_group", :organization => @organization, :max_systems => 5)
     @group.save!
     @group.systems << @system
     SystemGroup.stub!(:find).and_return(@group)
@@ -48,7 +47,7 @@ describe Api::V1::SystemGroupErrataController, :katello => true do
       types = [Glue::Pulp::Errata::SECURITY, Glue::Pulp::Errata::ENHANCEMENT, Glue::Pulp::Errata::BUGZILLA]
 
       to_ret = []
-      5.times{ |num|
+      5.times { |num|
         errata           = OpenStruct.new
         errata.id        = "8a604f44-6877-4c81-b6f9-#{num}"
         errata.errata_id = "RHSA-2011-01-#{num}"

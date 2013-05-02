@@ -17,8 +17,8 @@ describe Api::V1::EnvironmentsController do
   include AuthorizationHelperMethods
 
   before(:each) do
-    @org         = Organization.new(:label=>"1")
-    @environment = KTEnvironment.new
+    @org                      = Organization.new(:label => "1")
+    @environment              = KTEnvironment.new
     @environment.organization = @org
     @controller.stub!(:get_organization).and_return(@org)
 
@@ -50,17 +50,17 @@ describe Api::V1::EnvironmentsController do
     end
 
     it 'should call katello create environment api' do
-      post 'create', :organization_id => "1", :environment => {:name => "production", :description =>"a"}
+      post 'create', :organization_id => "1", :environment => { :name => "production", :description => "a" }
     end
   end
   describe "bad create request" do
-    it_should_behave_like "bad request"  do
+    it_should_behave_like "bad request" do
       let(:req) do
-        bad_req = {:organization_id => 1,
-                   :environment =>
-                      {:bad_foo => "mwahahaha",
-                       :name => "production",
-                       :description => "This is the key string" }
+        bad_req = { :organization_id => 1,
+                    :environment     =>
+                        { :bad_foo     => "mwahahaha",
+                          :name        => "production",
+                          :description => "This is the key string" }
         }.with_indifferent_access
         post :create, bad_req
       end
@@ -68,8 +68,8 @@ describe Api::V1::EnvironmentsController do
   end
 
   describe "search a list of environments" do
-    let(:action) {:index}
-    let(:req) { get 'index', {:organization_id => "1", :name=>"foo"} }
+    let(:action) { :index }
+    let(:req) { get 'index', { :organization_id => "1", :name => "foo" } }
 
     it 'should call katello environment find api' do
       KTEnvironment.should_receive(:where).once
@@ -84,7 +84,7 @@ describe Api::V1::EnvironmentsController do
       KTEnvironment.stub(:find => @environment)
     end
 
-    let(:action) {:show }
+    let(:action) { :show }
     let(:req) { get 'show', :id => 1, :organization_id => "1" }
     let(:authorized_user) { user_with_read_permissions }
     let(:unauthorized_user) { user_without_read_permissions }
@@ -101,7 +101,7 @@ describe Api::V1::EnvironmentsController do
       KTEnvironment.should_receive(:find).once().and_return(@environment)
     end
 
-    let(:action) {:destroy }
+    let(:action) { :destroy }
     let(:req) { delete 'destroy', :id => 1, :organization_id => "1" }
     let(:authorized_user) { user_with_manage_permissions }
     let(:unauthorized_user) { user_without_manage_permissions }
@@ -109,20 +109,20 @@ describe Api::V1::EnvironmentsController do
 
 
     it 'should call katello environment find api' do
-        @environment.should_receive(:destroy).once
-        req
+      @environment.should_receive(:destroy).once
+      req
     end
   end
 
   describe "bad update request" do
-    it_should_behave_like "bad request"  do
+    it_should_behave_like "bad request" do
       let(:req) do
-        bad_req = {:organization_id => 1,
-                    :id => 1000,
-                   :environment =>
-                      {:bad_foo => "mwahahaha",
-                       :name => "production",
-                       :description => "This is the key string" }
+        bad_req = { :organization_id => 1,
+                    :id              => 1000,
+                    :environment     =>
+                        { :bad_foo     => "mwahahaha",
+                          :name        => "production",
+                          :description => "This is the key string" }
         }.with_indifferent_access
         put :update, bad_req
       end
@@ -137,7 +137,7 @@ describe Api::V1::EnvironmentsController do
     end
 
     let(:action) { :update }
-    let(:req) { put 'update', :id => 'to_update', :organization_id => "1", :environment=> {"name"=>@environment.name} }
+    let(:req) { put 'update', :id => 'to_update', :organization_id => "1", :environment => { "name" => @environment.name } }
     let(:authorized_user) { user_with_manage_permissions }
     let(:unauthorized_user) { user_without_manage_permissions }
     it_should_behave_like "protected action"
@@ -154,7 +154,7 @@ describe Api::V1::EnvironmentsController do
       KTEnvironment.stub(:find => @environment)
     end
 
-    let(:action) { :releases}
+    let(:action) { :releases }
     let(:req) { get :releases, :id => "123" }
     let(:authorized_user) { user_with_read_permissions }
     let(:unauthorized_user) { user_without_read_permissions }

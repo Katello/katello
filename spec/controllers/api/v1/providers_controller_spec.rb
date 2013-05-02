@@ -29,13 +29,13 @@ describe Api::V1::ProvidersController, :katello => true do
     disable_product_orchestration
     disable_user_orchestration
     @organization = new_test_org
-    @provider = Provider.create!(:name => provider_name, :provider_type => Provider::CUSTOM,
-                                 :organization => @organization)
+    @provider     = Provider.create!(:name         => provider_name, :provider_type => Provider::CUSTOM,
+                                     :organization => @organization)
     Provider.stub(:find).with(@provider.id.to_s.to_s).and_return(@provider)
     Provider.stub(:find_by_name).with(@provider.name).and_return(@provider)
     @provider.organization = @organization
 
-    @request.env["HTTP_ACCEPT"] = "application/json"
+    @request.env["HTTP_ACCEPT"]  = "application/json"
     @request.env["organization"] = @organization.name
 
     login_user_api
@@ -43,18 +43,18 @@ describe Api::V1::ProvidersController, :katello => true do
 
   let(:to_create) do
     {
-      :name => provider_name,
-      :description => "a description",
-      :repository_url => "https://some.url",
-      :provider_type => Provider::CUSTOM,
+        :name           => provider_name,
+        :description    => "a description",
+        :repository_url => "https://some.url",
+        :provider_type  => Provider::CUSTOM,
     }
   end
 
   let(:product_to_create) do
     {
-      :name => "product_name",
-      :description => "a description",
-      :url => "http://some.url",
+        :name        => "product_name",
+        :description => "a description",
+        :url         => "http://some.url",
     }
   end
 
@@ -85,13 +85,13 @@ describe Api::V1::ProvidersController, :katello => true do
       Provider.should_receive(:create!).and_return(Provider.new)
       req
     end
-    it_should_behave_like "bad request"  do
+    it_should_behave_like "bad request" do
       let(:req) do
-        bad_req = {:organization_id => @organization.label,
-                   :provider =>
-                      {:bad_foo => "mwahahaha",
-                       :name => "Provider Key",
-                       :description => "This is the key string" }
+        bad_req = { :organization_id => @organization.label,
+                    :provider        =>
+                        { :bad_foo     => "mwahahaha",
+                          :name        => "Provider Key",
+                          :description => "This is the key string" }
         }.with_indifferent_access
         post :create, bad_req
       end
@@ -101,7 +101,7 @@ describe Api::V1::ProvidersController, :katello => true do
   describe "update a provider" do
 
     let(:action) { :update }
-    let(:req) { put 'update', { :id => @provider.id.to_s, :provider => { :name => another_provider_name }} }
+    let(:req) { put 'update', { :id => @provider.id.to_s, :provider => { :name => another_provider_name } } }
     let(:authorized_user) { user_with_write_permissions }
     let(:unauthorized_user) { user_without_write_permissions }
     it_should_behave_like "protected action"
@@ -112,13 +112,13 @@ describe Api::V1::ProvidersController, :katello => true do
 
       req
     end
-    it_should_behave_like "bad request"  do
+    it_should_behave_like "bad request" do
       let(:req) do
-        bad_req = {:id => 123,
-                   :provider =>
-                      {:bad_foo => "mwahahaha",
-                       :name => "prov Key",
-                       :description => "This is the key string" }
+        bad_req = { :id       => 123,
+                    :provider =>
+                        { :bad_foo     => "mwahahaha",
+                          :name        => "prov Key",
+                          :description => "This is the key string" }
         }.with_indifferent_access
         put :update, bad_req
       end
@@ -148,7 +148,7 @@ describe Api::V1::ProvidersController, :katello => true do
     let(:unauthorized_user) { user_without_write_permissions }
     it_should_behave_like "protected action"
 
-   it "should remove the specified provider" do
+    it "should remove the specified provider" do
       Provider.should_receive(:find).with(@provider.id.to_s.to_s).and_return(@provider)
       @provider.should_receive(:destroy).once
       req
@@ -158,7 +158,7 @@ describe Api::V1::ProvidersController, :katello => true do
   describe "product create" do
 
     let(:action) { :product_create }
-    let(:req) { post 'product_create', { :id => @provider.id.to_s , :product => product_to_create } }
+    let(:req) { post 'product_create', { :id => @provider.id.to_s, :product => product_to_create } }
     let(:authorized_user) { user_with_write_permissions }
     let(:unauthorized_user) { user_without_write_permissions }
     it_should_behave_like "protected action"
@@ -181,7 +181,7 @@ describe Api::V1::ProvidersController, :katello => true do
 
     before(:each) do
       test_document = "#{Rails.root}/spec/assets/gpg_test_key"
-      @temp_file = Rack::Test::UploadedFile.new(test_document, "text/plain")
+      @temp_file    = Rack::Test::UploadedFile.new(test_document, "text/plain")
     end
 
     it "should call Provider#import_manifest" do
@@ -194,10 +194,10 @@ describe Api::V1::ProvidersController, :katello => true do
   end
 
   describe "repo discovery" do
-    let(:action) {:discovery}
-    let(:req) {post :discovery, {:id=>@provider.id.to_s, :url=>'http://testurl.com/path/'}}
-    let(:authorized_user) { user_with_write_permissions}
-    let(:unauthorized_user) { user_without_write_permissions}
+    let(:action) { :discovery }
+    let(:req) { post :discovery, { :id => @provider.id.to_s, :url => 'http://testurl.com/path/' } }
+    let(:authorized_user) { user_with_write_permissions }
+    let(:unauthorized_user) { user_without_write_permissions }
     it_should_behave_like "protected action"
 
     it "should call into Repo discovery" do
@@ -210,7 +210,7 @@ describe Api::V1::ProvidersController, :katello => true do
   describe "refresh products" do
 
     let(:action) { :refresh_products }
-    let(:req) { post :refresh_products, { :id => @provider.id.to_s }}
+    let(:req) { post :refresh_products, { :id => @provider.id.to_s } }
     let(:authorized_user) { user_with_write_permissions }
     let(:unauthorized_user) { user_without_write_permissions }
     it_should_behave_like "protected action"
@@ -223,13 +223,13 @@ describe Api::V1::ProvidersController, :katello => true do
 
       it "should refresh all the engineering products of the provider" do
         @redhat_provider.should_receive(:refresh_products).once
-        post :refresh_products, { :id => @organization.redhat_provider.id.to_s  }
+        post :refresh_products, { :id => @organization.redhat_provider.id.to_s }
         response.should be_success
       end
 
       it "should fail for no-red-hat provider" do
         @organization.redhat_provider.should_not_receive(:refresh_products)
-        post :refresh_products, { :id => @provider.id.to_s  }
+        post :refresh_products, { :id => @provider.id.to_s }
         response.should_not be_success
       end
     end

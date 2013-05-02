@@ -26,18 +26,18 @@ class Api::V1::ContentViewsController < Api::V1::ApiController
     delete_test  = lambda { @view.content_view_definition.publishable? }
 
     {
-      :index   => index_test,
-      :show    => show_test,
-      :promote => promote_test,
-      :refresh => refresh_test,
-      :destroy => delete_test
+        :index   => index_test,
+        :show    => show_test,
+        :promote => promote_test,
+        :refresh => refresh_test,
+        :destroy => delete_test
     }
   end
 
   api :GET, "/organizations/:organization_id/content_views", "List content views"
   param :organization_id, :identifier, :desc => "organization identifier"
   param :environment_id, :identifier, :desc => "environment identifier",
-    :required => false
+        :required                           => false
   param :label, String, :desc => "content view label", :required => false
   param :name, String, :desc => "content view name", :required => false
   param :id, :identifier, :desc => "content view id", :required => false
@@ -45,12 +45,12 @@ class Api::V1::ContentViewsController < Api::V1::ApiController
     query_params.delete(:environment_id)
     query_params.delete(:organization_id)
 
-    search = ContentView.non_default.where(query_params)
+    search         = ContentView.non_default.where(query_params)
     @content_views = if @environment
-      search.readable(@organization).in_environment(@environment)
-    else
-      search.readable(@organization)
-    end
+                       search.readable(@organization).in_environment(@environment)
+                     else
+                       search.readable(@organization)
+                     end
     respond :collection => @content_views
   end
 
@@ -81,10 +81,10 @@ class Api::V1::ContentViewsController < Api::V1::ApiController
   def destroy
     @view.destroy
     if @view.destroyed?
-      render :text => _("Deleted content view [ %s ]") % @view.name , :status => 200
+      render :text => _("Deleted content view [ %s ]") % @view.name, :status => 200
     else
       raise HttpErrors::InternalError, _("Error while deleting content view [ %{name} ]: %{error}") %
-        {:name => @view.name, :error => @view.errors.full_messages}
+          { :name => @view.name, :error => @view.errors.full_messages }
     end
   end
 

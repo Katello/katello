@@ -18,10 +18,10 @@ describe Api::V1::RootController do
   before (:each) do
     login_user
     @request.env["HTTP_ACCEPT"] = "application/json"
-    @packages = { "rel" => "packages", "href" => "/api/packages/"}
-    @systems  = { "rel" => "systems", "href" => "/api/systems/"}
-    @tasks    = { "rel" => "tasks", "href" => "/api/tasks/"}
-    @gpg_keys = { "rel" => "gpg_keys", "href" => "/api/gpg_keys/"}
+    @packages                   = { "rel" => "packages", "href" => "/api/packages/" }
+    @systems                    = { "rel" => "systems", "href" => "/api/systems/" }
+    @tasks                      = { "rel" => "tasks", "href" => "/api/tasks/" }
+    @gpg_keys                   = { "rel" => "gpg_keys", "href" => "/api/gpg_keys/" }
   end
 
   def resource_list

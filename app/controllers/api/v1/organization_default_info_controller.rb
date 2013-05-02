@@ -23,10 +23,10 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
     edit_org = lambda { @organization.editable? }
 
     {
-      :index =>  read_org,
-      :create => edit_org,
-      :destroy => edit_org,
-      :apply_to_all => edit_org
+        :index        => read_org,
+        :create       => edit_org,
+        :destroy      => edit_org,
+        :apply_to_all => edit_org
     }
   end
 
@@ -42,15 +42,15 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
     inf_type = params[:informable_type]
     if @organization.default_info[inf_type].include?(params[:keyname])
       raise HttpErrors::BadRequest,
-        _("Organization [ %{org} ] already contains default info [ %{info} ] for [ %{object} ]") %
-        { :org => @organization.name, :info => params[:keyname], :object => inf_type.capitalize.pluralize }
+            _("Organization [ %{org} ] already contains default info [ %{info} ] for [ %{object} ]") %
+                { :org => @organization.name, :info => params[:keyname], :object => inf_type.capitalize.pluralize }
     end
     @organization.default_info[inf_type] << params[:keyname]
     @organization.save!
     render :json => {
-      :keyname => params[:keyname],
-      :informable_type => inf_type,
-      :organization => @organization.attributes
+        :keyname         => params[:keyname],
+        :informable_type => inf_type,
+        :organization    => @organization.attributes
     }.to_json
   end
 
@@ -62,9 +62,9 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
     @organization.default_info[inf_type].delete(params[:keyname])
     @organization.save!
     render :json => {
-      :keyname => params[:keyname],
-      :informable_type => inf_type,
-      :organization => @organization.attributes
+        :keyname         => params[:keyname],
+        :informable_type => inf_type,
+        :organization    => @organization.attributes
     }.to_json
   end
 
@@ -83,8 +83,8 @@ class Api::V1::OrganizationDefaultInfoController < Api::V1::ApiController
 
   def check_informable_type
     Organization.check_informable_type!(params[:informable_type],
-      :message => _("Type must be one of the following [ %{list} ]") %
-      { :list => Organization::ALLOWED_DEFAULT_INFO_TYPES.join(", ") }
+                                        :message => _("Type must be one of the following [ %{list} ]") %
+                                            { :list => Organization::ALLOWED_DEFAULT_INFO_TYPES.join(", ") }
     )
   end
 

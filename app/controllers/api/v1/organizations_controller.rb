@@ -22,23 +22,23 @@ class Api::V1::OrganizationsController < Api::V1::ApiController
   end
 
   def rules
-    index_test = lambda{Organization.any_readable?}
-    create_test = lambda{Organization.creatable?}
-    read_test = lambda{@organization.readable?}
-    edit_test = lambda{@organization.editable?}
-    delete_test = lambda{@organization.deletable?}
+    index_test  = lambda { Organization.any_readable? }
+    create_test = lambda { Organization.creatable? }
+    read_test   = lambda { @organization.readable? }
+    edit_test   = lambda { @organization.editable? }
+    delete_test = lambda { @organization.deletable? }
 
-    {:index =>  index_test,
-      :show => read_test,
-      :create => create_test,
-      :update => edit_test,
+    { :index   => index_test,
+      :show    => read_test,
+      :create  => create_test,
+      :update  => edit_test,
       :destroy => delete_test,
     }
   end
   def param_rules
     {
-      :create => [:name, :label, :description],
-      :update => {:organization  => [:name, :description]}
+        :create => [:name, :label, :description],
+        :update => { :organization => [:name, :description] }
     }
   end
 

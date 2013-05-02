@@ -20,7 +20,7 @@ class Api::V1::ChangesetsContentController < Api::V1::ApiController
 
   def rules
     manage_perm = lambda { @changeset.environment.changesets_manageable? }
-    cv_perm = lambda { @changeset.environment.changesets_manageable? && @view.promotable? }
+    cv_perm     = lambda { @changeset.environment.changesets_manageable? && @view.promotable? }
     { :add_product         => manage_perm,
       :remove_product      => manage_perm,
       :add_package         => manage_perm,
@@ -138,12 +138,12 @@ class Api::V1::ChangesetsContentController < Api::V1::ApiController
   end
 
   def find_content_view!
-    id = params[:action] == "add_content_view" ? params[:content_view_id] : params[:id]
+    id    = params[:action] == "add_content_view" ? params[:content_view_id] : params[:id]
     @view = ContentView.find_by_id(id)
     raise HttpErrors::NotFound, _("Couldn't find content view '%s'") % id if @view.nil?
   end
 
-  def render_after_removal(removed_objects, options = { })
+  def render_after_removal(removed_objects, options = {})
     render(unless removed_objects.blank?
              { :text => (options[:success] or raise ArgumentError), :status => 200 }
            else

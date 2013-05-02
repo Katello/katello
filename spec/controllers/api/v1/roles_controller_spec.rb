@@ -30,7 +30,7 @@ describe Api::V1::RolesController do
   let(:role_id) { '123' }
 
   before (:each) do
-    @role= Role.new(:name => "test_role", :description=> "role description")
+    @role= Role.new(:name => "test_role", :description => "role description")
     Role.stub(:find).with(role_id.to_s).and_return(@role)
 
     login_user_api
@@ -65,7 +65,7 @@ describe Api::V1::RolesController do
   end
 
   describe "create role" do
-    let(:role_params) { {'name' => 'role_1'} }
+    let(:role_params) { { 'name' => 'role_1' } }
     let(:action) { :create }
     let(:req) { post :create, :role => role_params }
     let(:authorized_user) { user_with_create_permissions }
@@ -73,13 +73,13 @@ describe Api::V1::RolesController do
     it_should_behave_like "protected action"
 
     it 'should create a role' do
-        Role.should_receive(:create!).with(role_params)
-        req
+      Role.should_receive(:create!).with(role_params)
+      req
     end
     describe "with invalid params" do
-      it_should_behave_like "bad request"  do
+      it_should_behave_like "bad request" do
         let(:req) do
-          bad_req = {:role => {:bad_foo => "mwahaha"}.merge(role_params)}
+          bad_req = { :role => { :bad_foo => "mwahaha" }.merge(role_params) }
           post :create, bad_req
         end
       end
@@ -87,7 +87,7 @@ describe Api::V1::RolesController do
   end
 
   describe "update role" do
-    let(:role_params) { {'name' => 'role_1'} }
+    let(:role_params) { { 'name' => 'role_1' } }
     let(:action) { :update }
     let(:req) { put :update, :id => role_id, :role => role_params }
     let(:authorized_user) { user_with_update_permissions }
@@ -114,9 +114,9 @@ describe Api::V1::RolesController do
       req
     end
     describe "with invalid params" do
-      it_should_behave_like "bad request"  do
+      it_should_behave_like "bad request" do
         let(:req) do
-          bad_req = {:id => role_id, :role => {:bad_foo => "mwahaha"}.merge(role_params)}
+          bad_req = { :id => role_id, :role => { :bad_foo => "mwahaha" }.merge(role_params) }
           put :update, bad_req
         end
       end

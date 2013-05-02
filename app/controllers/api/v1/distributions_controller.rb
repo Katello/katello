@@ -18,10 +18,10 @@ class Api::V1::DistributionsController < Api::V1::ApiController
   before_filter :authorize
 
   def rules
-    readable = lambda{ @repo.environment.contents_readable? and @repo.product.readable? }
+    readable = lambda { @repo.environment.contents_readable? and @repo.product.readable? }
     {
-      :index => readable,
-      :show => readable,
+        :index => readable,
+        :show  => readable,
     }
   end
 
@@ -46,7 +46,7 @@ class Api::V1::DistributionsController < Api::V1::ApiController
   end
 
   def check_distribution
-    raise HttpErrors::NotFound, _("Distribution '%s' not found within the repository") % params[:id]  unless @repo.has_distribution? params[:id]
+    raise HttpErrors::NotFound, _("Distribution '%s' not found within the repository") % params[:id] unless @repo.has_distribution? params[:id]
   end
 
 end

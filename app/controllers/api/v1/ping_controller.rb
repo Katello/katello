@@ -25,17 +25,17 @@ class Api::V1::PingController < Api::V1::ApiController
   description "This service is also available for unauthenticated users"
   def server_status
 
-    status = {:release => Katello.config.app_name,
-        :version => Katello.config.katello_version,
-        :standalone => true,
-        :timeUTC => Time.now().getutc(),
-        :result => true}
+    status = { :release    => Katello.config.app_name,
+               :version    => Katello.config.katello_version,
+               :standalone => true,
+               :timeUTC    => Time.now().getutc(),
+               :result     => true }
     respond_for_show :resource => status
   end
 
   api :GET, "/version", "Shows name and version information"
   description "This service is only available for authenticated users"
   def version
-    respond_for_show :resource => {:name => Katello.config.app_name, :version => Katello.config.katello_version}
+    respond_for_show :resource => { :name => Katello.config.app_name, :version => Katello.config.katello_version }
   end
 end

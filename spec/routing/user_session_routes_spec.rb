@@ -15,22 +15,22 @@ require "spec_helper"
 describe "routing to login" do
   it "routes /login to user_sessions#new" do
     { :get => "/login" }.should route_to(
-      :controller => "user_sessions",
-      :action => "new"
-    )
+                                    :controller => "user_sessions",
+                                    :action     => "new"
+                                )
   end
 
   it "routes /logout to user_sessions#destroy on a get to logout" do
-    {  :get => "/logout"}.should route_to(
-       :controller => "user_sessions",
-       :action => "destroy"
-    )
+    { :get => "/logout" }.should route_to(
+                                     :controller => "user_sessions",
+                                     :action     => "destroy"
+                                 )
   end
 
   it "routes /logout to user_sessions#destroy on a post to logout" do
     { :post => "/logout" }.should route_to(
-      :controller => "user_sessions",
-      :action => "destroy"
-    )
+                                      :controller => "user_sessions",
+                                      :action     => "destroy"
+                                  )
   end
 end

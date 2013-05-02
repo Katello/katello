@@ -26,11 +26,11 @@ class Api::V2::ErrataController < Api::V2::ApiController
   before_filter :authorize
 
   def rules
-    env_readable = lambda{ @environment.contents_readable? }
-    readable = lambda{ @repo.environment.contents_readable? and @repo.product.readable? }
+    env_readable = lambda { @environment.contents_readable? }
+    readable     = lambda { @repo.environment.contents_readable? and @repo.product.readable? }
     {
-      :index => env_readable,
-      :show => readable,
+        :index => env_readable,
+        :show  => readable,
     }
   end
 
@@ -38,8 +38,8 @@ class Api::V2::ErrataController < Api::V2::ApiController
   api :GET, "/repositories/:repository_id/errata", "List errata"
   api :GET, "/environments/:environment_id/errata", "List errata"
   param :environment_id, :number, :desc => "The environment containing the errata."
-  param :product_id,    :number,  :desc => "The product which contains errata."
-  param :repository_id, :number,  :desc => "The repository which contains errata."
+  param :product_id, :number, :desc => "The product which contains errata."
+  param :repository_id, :number, :desc => "The repository which contains errata."
   param :severity, String, :desc => "Severity of errata. Usually one of: Critical, Important, Moderate, Low. Case insensitive."
   param :type, String, :desc => "Type of errata. Usually one of: security, bugfix, enhancement. Case insensitive."
   def index

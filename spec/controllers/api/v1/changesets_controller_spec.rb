@@ -17,16 +17,16 @@ describe Api::V1::ChangesetsController, :katello => true do
   include AuthorizationHelperMethods
   include OrchestrationHelper
 
-  CSET_ID = '1'
+  CSET_ID   = '1'
   CSET_NAME = "changeset_x"
 
   let(:uuid) { '1234' }
 
   before(:each) do
     disable_org_orchestration
-    @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
-    @environment = KTEnvironment.create!(:name=>'test_1', :label=> 'test_1', :prior => @organization.library.id, :organization => @organization)
-    @environment_2 = KTEnvironment.create!(:name=>'test_2', :label=> 'test_2', :prior => @environment, :organization => @organization)
+    @organization  = Organization.create!(:name => 'test_org', :label => 'test_org')
+    @environment   = KTEnvironment.create!(:name => 'test_1', :label => 'test_1', :prior => @organization.library.id, :organization => @organization)
+    @environment_2 = KTEnvironment.create!(:name => 'test_2', :label => 'test_2', :prior => @environment, :organization => @organization)
     KTEnvironment.stub(:find).and_return(@environment)
 
     @changeset = mock(PromotionChangeset)
@@ -47,36 +47,36 @@ describe Api::V1::ChangesetsController, :katello => true do
 
   let(:to_create) do
     {
-      :name => CSET_NAME
+        :name => CSET_NAME
     }
   end
 
   let(:user_with_read_permissions) do
-    user_with_permissions { |u| u.can(:read_changesets,:environments, @environment.id, @organization) }
+    user_with_permissions { |u| u.can(:read_changesets, :environments, @environment.id, @organization) }
   end
   let(:user_without_read_permissions) do
-    user_with_permissions { |u| u.can(:read_changesets,:environments, @environment_2.id, @organization) }
+    user_with_permissions { |u| u.can(:read_changesets, :environments, @environment_2.id, @organization) }
   end
   let(:user_with_manage_permissions) do
-    user_with_permissions { |u| u.can([:manage_changesets],:environments, @environment.id, @organization) }
+    user_with_permissions { |u| u.can([:manage_changesets], :environments, @environment.id, @organization) }
   end
   let(:user_without_manage_permissions) do
-    user_with_permissions { |u| u.can(:read_changesets,:environments, @environment.id, @organization) }
+    user_with_permissions { |u| u.can(:read_changesets, :environments, @environment.id, @organization) }
   end
   let(:user_with_promote_permissions) do
-    user_with_permissions { |u| u.can([:promote_changesets],:environments, @environment.id, @organization) }
+    user_with_permissions { |u| u.can([:promote_changesets], :environments, @environment.id, @organization) }
   end
   let(:user_without_apply_permissions) do
     user_without_permissions
     # user_with_permissions { |u| u.can([:manage_changesets],:environments, @environment.id, @organization) }
   end
   let(:user_with_delete_permissions) do
-    user_with_permissions { |u| u.can([:delete_changesets],:environments, @environment.id, @organization) }
+    user_with_permissions { |u| u.can([:delete_changesets], :environments, @environment.id, @organization) }
   end
 
   describe "index" do
 
-    let(:action) {:index }
+    let(:action) { :index }
     let(:req) { get :index, :organization_id => "1", :environment_id => 1 }
     let(:authorized_user) { user_with_read_permissions }
     let(:unauthorized_user) { user_without_read_permissions }
@@ -91,7 +91,7 @@ describe Api::V1::ChangesetsController, :katello => true do
 
   describe "show" do
 
-    let(:action) {:show }
+    let(:action) { :show }
     let(:req) { get :show, :id => CSET_ID, :organization_id => "1", :environment_id => 1 }
     let(:authorized_user) { user_with_read_permissions }
     let(:unauthorized_user) { user_without_read_permissions }
@@ -106,8 +106,8 @@ describe Api::V1::ChangesetsController, :katello => true do
 
   describe "create" do
 
-    let(:action) {:create }
-    let(:req) { post :create, :changeset => {'name' => 'XXX', :type => "PROMOTION"}, :organization_id => "1", :environment_id => 1 }
+    let(:action) { :create }
+    let(:req) { post :create, :changeset => { 'name' => 'XXX', :type => "PROMOTION" }, :organization_id => "1", :environment_id => 1 }
     let(:authorized_user) { user_with_manage_permissions }
     let(:unauthorized_user) { user_without_manage_permissions }
     it_should_behave_like "protected action"
@@ -122,8 +122,8 @@ describe Api::V1::ChangesetsController, :katello => true do
 
   describe "destroy" do
 
-    let(:action) {:destroy }
-    let(:req) { delete :destroy, :id => CSET_ID, :organization_id => "1", :environment_id => 1}
+    let(:action) { :destroy }
+    let(:req) { delete :destroy, :id => CSET_ID, :organization_id => "1", :environment_id => 1 }
     let(:authorized_user) { user_with_manage_permissions }
     let(:unauthorized_user) { user_without_manage_permissions }
     it_should_behave_like "protected action"
@@ -137,7 +137,7 @@ describe Api::V1::ChangesetsController, :katello => true do
   end
 
   describe "promote" do
-    let(:action) {:apply }
+    let(:action) { :apply }
     let(:req) { post :apply, :id => CSET_ID, :organization_id => "1", :environment_id => 1 }
     let(:authorized_user) { user_with_promote_permissions }
     let(:unauthorized_user) { user_without_apply_permissions }
@@ -155,7 +155,7 @@ describe Api::V1::ChangesetsController, :katello => true do
       @changeset.stub(:promotion?).and_return(false)
       @changeset.stub(:deletion?).and_return(true)
     end
-    let(:action) {:apply }
+    let(:action) { :apply }
     let(:req) { post :apply, :id => CSET_ID, :organization_id => "1", :environment_id => 1 }
     let(:authorized_user) { user_with_delete_permissions }
     let(:unauthorized_user) { user_without_apply_permissions }

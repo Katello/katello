@@ -48,34 +48,34 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   before_filter :authorize
 
   def rules
-    manage_rule = lambda{@organization.environments_manageable?}
-    view_rule = lambda{@organization.readable?}
+    manage_rule = lambda { @organization.environments_manageable? }
+    view_rule   = lambda { @organization.readable? }
 
-    index_rule = lambda {true}
+    index_rule = lambda { true }
     # Note: index_rule is always true.
     # Instead we are simply going to filter out the inaccessible environments
     # from the environment list we return. Look at the index method to
     # figure out how that rule is applied.
 
     {
-      :index => index_rule,
-      :rhsm_index => index_rule,
-      :show => view_rule,
-      :create => manage_rule,
-      :update => manage_rule,
-      :destroy => manage_rule,
-      :repositories => view_rule,
-      :releases => view_rule
+        :index        => index_rule,
+        :rhsm_index   => index_rule,
+        :show         => view_rule,
+        :create       => manage_rule,
+        :update       => manage_rule,
+        :destroy      => manage_rule,
+        :repositories => view_rule,
+        :releases     => view_rule
     }
   end
 
 
   def param_rules
     {
-      :create => {:environment =>  ["name", "label", "description", "prior" ]},
-      :update => {:environment =>  ["name", "description", "prior" ]},
-      :index => [:name, :library, :id, :organization_id],
-      :rhsm_index => [:name, :library, :id, :organization_id]
+        :create     => { :environment => ["name", "label", "description", "prior"] },
+        :update     => { :environment => ["name", "description", "prior"] },
+        :index      => [:name, :library, :id, :organization_id],
+        :rhsm_index => [:name, :library, :id, :organization_id]
     }
   end
 
@@ -96,7 +96,7 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
   param_group :search_params
   def index
     query_params[:organization_id] = @organization.id
-    @environments = KTEnvironment.where query_params
+    @environments                  = KTEnvironment.where query_params
 
     # The following is a workaround to handle the fact that rhsm currently requests the
     # environment using the 'name' parameter; however, the value is actually the environment label.
@@ -122,12 +122,12 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
     if query_params.has_key?(:name)
       # retrieve the requested environment
       @all_environments = get_content_view_environments(query_params[:name]).
-                          collect{|env| {:id => env.cp_id, :name => env.label,
-                                         :description => env.content_view.description}}
+          collect { |env| { :id          => env.cp_id, :name => env.label,
+                            :description => env.content_view.description } }
     else
       # retrieve the list of all environments
-      @all_environments = get_content_view_environments.collect{|env| {:id => env.cp_id, :name => env.label,
-                                                                      :description => env.content_view.description}}
+      @all_environments = get_content_view_environments.collect { |env| { :id          => env.cp_id, :name => env.label,
+                                                                          :description => env.content_view.description } }
     end
     respond_for_index :collection => @all_environments
   end
@@ -147,12 +147,12 @@ class Api::V1::EnvironmentsController < Api::V1::ApiController
     param :prior, :identifier, :required => true, :desc => <<-DESC
         identifier of an environment that is prior the new environment in the chain, it has to be
         either library or an environment at the end of the chain
-        DESC
+    DESC
   end
   def create
-    environment_params = params[:environment]
+    environment_params         = params[:environment]
     environment_params[:label] = labelize_params(environment_params)
-    @environment = KTEnvironment.new(environment_params)
+    @environment               = KTEnvironment.new(environment_params)
     @organization.environments << @environment
     raise ActiveRecord::RecordInvalid.new(@environment) unless @environment.valid?
     @organization.save!

@@ -37,7 +37,7 @@ class Api::V2::OrganizationDefaultInfoController < Api::V1::OrganizationDefaultI
       @organization.default_info[inf_type] << key_name
     end
     @organization.save!
-    respond :resource => {:keyname => key_name}
+    respond :resource => { :keyname => key_name }
   end
 
   # apipie docs are defined in v1 controller - they remain the same
@@ -53,7 +53,7 @@ class Api::V2::OrganizationDefaultInfoController < Api::V1::OrganizationDefaultI
     to_apply = @organization.default_info[params[:informable_type]].collect do |key|
       { :keyname => key }
     end
-    systems = CustomInfo.apply_to_set(@organization.systems, to_apply)
+    systems  = CustomInfo.apply_to_set(@organization.systems, to_apply)
     respond_for_index :collection => systems
   end
 

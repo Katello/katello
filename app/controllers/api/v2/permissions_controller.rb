@@ -16,9 +16,9 @@ class Api::V2::PermissionsController < Api::V1::PermissionsController
   include Api::V2::Rendering
 
   def param_rules
-     {
-       :create => {:permission => [:name, :description, :role_id, :organization_id, :verbs, :tags, :type, :all_tags ]}
-     }
+    {
+        :create => { :permission => [:name, :description, :role_id, :organization_id, :verbs, :tags, :type, :all_tags] }
+    }
   end
 
   resource_description do
@@ -38,16 +38,16 @@ class Api::V2::PermissionsController < Api::V1::PermissionsController
   def create
     perm_attrs = params[:permission]
     perm_attrs.merge! ({
-      :role => @role,
-      :organization => @organization,
-      :all_tags => (params[:all_tags].to_bool if params[:all_tags]),
-      :verb_values => perm_attrs[:verbs] || [],
-      :tag_values => perm_attrs[:tags] || [],
-      :resource_type => ResourceType.find_or_create_by_name(perm_attrs[:type])
+        :role          => @role,
+        :organization  => @organization,
+        :all_tags      => (params[:all_tags].to_bool if params[:all_tags]),
+        :verb_values   => perm_attrs[:verbs] || [],
+        :tag_values    => perm_attrs[:tags] || [],
+        :resource_type => ResourceType.find_or_create_by_name(perm_attrs[:type])
     })
 
     if perm_attrs[:type] == "all"
-      perm_attrs[:all_tags] = true
+      perm_attrs[:all_tags]  = true
       perm_attrs[:all_verbs] = true
     end
 

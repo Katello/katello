@@ -23,10 +23,10 @@ class Api::V1::CustomInfoController < Api::V1::ApiController
     view_custom_info = lambda { @informable.readable? }
 
     {
-        :index => view_custom_info,
-        :show => view_custom_info,
-        :create => edit_custom_info,
-        :update => edit_custom_info,
+        :index   => view_custom_info,
+        :show    => view_custom_info,
+        :create  => edit_custom_info,
+        :update  => edit_custom_info,
         :destroy => edit_custom_info
     }
   end
@@ -86,7 +86,7 @@ class Api::V1::CustomInfoController < Api::V1::ApiController
   end
 
   def find_custom_info
-    @single_custom_info = CustomInfo.find_by_informable_keyname(@informable,  params[:keyname].strip)
+    @single_custom_info = CustomInfo.find_by_informable_keyname(@informable, params[:keyname].strip)
     if @single_custom_info.nil?
       raise HttpErrors::NotFound, _("Couldn't find custom info with keyname '%s'") % params[:keyname]
     end

@@ -23,27 +23,27 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
   before_filter :authorize
 
   def rules
-    read_test = lambda{ActivationKey.readable?(@organization) ||
-                        (ActivationKey.readable?(@environment.organization) unless @environment.nil?)}
-    manage_test = lambda{ActivationKey.manageable?(@organization) ||
-                         (ActivationKey.manageable?(@environment.organization) unless @environment.nil?)}
+    read_test   = lambda { ActivationKey.readable?(@organization) ||
+        (ActivationKey.readable?(@environment.organization) unless @environment.nil?) }
+    manage_test = lambda { ActivationKey.manageable?(@organization) ||
+        (ActivationKey.manageable?(@environment.organization) unless @environment.nil?) }
     {
-      :index => read_test,
-      :show => read_test,
-      :create => manage_test,
-      :update => manage_test,
-      :add_pool => manage_test,
-      :remove_pool => manage_test,
-      :destroy => manage_test,
-      :add_system_groups => manage_test,
-      :remove_system_groups => manage_test
+        :index                => read_test,
+        :show                 => read_test,
+        :create               => manage_test,
+        :update               => manage_test,
+        :add_pool             => manage_test,
+        :remove_pool          => manage_test,
+        :destroy              => manage_test,
+        :add_system_groups    => manage_test,
+        :remove_system_groups => manage_test
     }
   end
 
   def param_rules
     {
-      :create => {:activation_key => [:name, :description, :usage_limit, :content_view_id]},
-      :update => {:activation_key  => [:name, :description, :environment_id, :usage_limit, :content_view_id]}
+        :create => { :activation_key => [:name, :description, :usage_limit, :content_view_id] },
+        :update => { :activation_key => [:name, :description, :environment_id, :usage_limit, :content_view_id] }
     }
   end
 
@@ -76,9 +76,9 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
   param_group :activation_key
   def create
     @activation_key = ActivationKey.create!(params[:activation_key]) do |ak|
-      ak.environment = @environment
+      ak.environment  = @environment
       ak.organization = @environment.organization
-      ak.user = current_user
+      ak.user         = current_user
     end
     respond
   end
@@ -99,7 +99,7 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
   api :DELETE, "/activation_keys/:id", "Destroy an activation key"
   def destroy
     @activation_key.destroy
-   respond :message => _("Deleted activation key '%s'") % params[:id], :status => 204
+    respond :message => _("Deleted activation key '%s'") % params[:id], :status => 204
   end
 
   api :POST, "/activation_keys/:id/pools", "Create an entitlement pool within an activation key"
@@ -111,7 +111,7 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
   api :DELETE, "/activation_keys/:id/pools/:poolid", "Delete an entitlement pool within an activation key"
   def remove_pool
     unless @activation_key.pools.include?(@pool)
-      raise HttpErrors::NotFound, _("Couldn't find pool '%{pool}' in activation_key '%{ak}'") % {:pool => @pool.cp_id, :ak => @activation_key.name}
+      raise HttpErrors::NotFound, _("Couldn't find pool '%{pool}' in activation_key '%{ak}'") % { :pool => @pool.cp_id, :ak => @activation_key.name }
     end
     @activation_key.pools.delete(@pool)
     respond_for_show
@@ -119,7 +119,7 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
 
   api :POST, "/organizations/:organization_id/activation_keys/:id/system_groups"
   def add_system_groups
-    ids = params[:activation_key][:system_group_ids]
+    ids                              = params[:activation_key][:system_group_ids]
     @activation_key.system_group_ids = (@activation_key.system_group_ids + ids).uniq
     @activation_key.save!
     respond_for_show
@@ -127,7 +127,7 @@ class Api::V1::ActivationKeysController < Api::V1::ApiController
 
   api :DELETE, "/organizations/:organization_id/activation_keys/:id/system_groups"
   def remove_system_groups
-    ids = params[:activation_key][:system_group_ids]
+    ids                              = params[:activation_key][:system_group_ids]
     @activation_key.system_group_ids = (@activation_key.system_group_ids - ids).uniq
     @activation_key.save!
     respond_for_show

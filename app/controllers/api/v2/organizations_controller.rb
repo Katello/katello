@@ -28,8 +28,8 @@ class Api::V2::OrganizationsController < Api::V1::OrganizationsController
 
   def param_rules
     {
-      :create => {:organization  => [:name, :description, :label]},
-      :update => {:organization  => [:name, :description]}
+        :create => { :organization => [:name, :description, :label] },
+        :update => { :organization => [:name, :description] }
     }
   end
 

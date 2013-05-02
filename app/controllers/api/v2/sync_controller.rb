@@ -19,7 +19,7 @@ class Api::V2::SyncController < Api::V1::SyncController
     api_version "v2"
   end
 
-  api :GET, "/providers/:provider_id/sync",  "Get status of repo synchronisation for given provider"
+  api :GET, "/providers/:provider_id/sync", "Get status of repo synchronisation for given provider"
   api :GET, "/products/:product_id/sync", "Get status of repo synchronisation for given product"
   api :GET, "/repositories/:repository_id/sync", "Get status of synchronisation for given repository"
   def index

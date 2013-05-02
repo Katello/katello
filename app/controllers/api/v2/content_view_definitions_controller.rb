@@ -29,7 +29,7 @@ class Api::V2::ContentViewDefinitionsController < Api::V1::ContentViewDefinition
   end
 
   api :POST, "/organizations/:organization_id/content_view_definitions",
-    "Create a content view definition"
+      "Create a content view definition"
   param :organization_id, :identifier, :desc => "organization identifier"
   param_group :content_view_definition
   param :content_view_definition, Hash do
@@ -48,10 +48,10 @@ class Api::V2::ContentViewDefinitionsController < Api::V1::ContentViewDefinition
   end
 
   api :POST, "/content_view_definitions/:id/publish",
-    "Publish a content view"
-  param :name, String, :desc => "Name for the new content view", :required=>true
-  param :label, String, :desc=>"Label for the new content view", :required=>false
-  param :description, String, :desc=>"Description for the new content view", :required=>false
+      "Publish a content view"
+  param :name, String, :desc => "Name for the new content view", :required => true
+  param :label, String, :desc => "Label for the new content view", :required => false
+  param :description, String, :desc => "Description for the new content view", :required => false
   param :id, :identifier, :desc => "Definition identifier", :required => true
   def publish
     super
@@ -68,7 +68,7 @@ class Api::V2::ContentViewDefinitionsController < Api::V1::ContentViewDefinition
   end
 
   api :PUT, "/content_view_definitions/:content_view_definition_id/content_views",
-    "Update a definition's content views"
+      "Update a definition's content views"
   param :content_view_definition_id, :identifier, :desc => "Definition identifier", :required => true
   param :views, Array, :desc => "Updated list of view ids", :required => true
   def update_content_views
@@ -77,16 +77,16 @@ class Api::V2::ContentViewDefinitionsController < Api::V1::ContentViewDefinition
   end
 
   api :GET, "/content_view_definitions/:content_view_definition_id/repositories",
-    "List all the repositories for a content view definition"
+      "List all the repositories for a content view definition"
   param :content_view_definition_id, :identifer, :required => true, :desc => "Definition id"
   def list_repositories
     super
   end
 
   api :PUT, "/content_view_definitions/:content_view_definition_id/repositories",
-    "Update repositories for content view definition"
+      "Update repositories for content view definition"
   param :content_view_definition_id, :identifier, :required => true,
-    :desc => "content view definition identifier"
+        :desc                                               => "content view definition identifier"
   param :repos, Array, :desc => "Updated list of repo ids", :required => true
   def update_repositories
     _update_repositories! params
@@ -94,18 +94,18 @@ class Api::V2::ContentViewDefinitionsController < Api::V1::ContentViewDefinition
   end
 
   api :GET, "/content_view_definitions/:content_view_definition_id/products",
-    "Get products for content view definition"
+      "Get products for content view definition"
   param :organization_id, :identifier, :desc => "organization identifier", :required => true
   param :content_view_definition_id, :identifier, :required => true,
-    :desc => "content view definition identifier"
+        :desc                                               => "content view definition identifier"
   def list_products
     super
   end
 
   api :PUT, "/content_view_definitions/:content_view_definition_id/products",
-    "Update products for content view definition"
+      "Update products for content view definition"
   param :content_view_definition_id, :identifier, :required => true,
-    :desc => "content view definition identifier"
+        :desc                                               => "content view definition identifier"
   param :products, Array, :desc => "Updated list of products", :required => true
   def update_products
     _update_products! params
@@ -116,7 +116,7 @@ class Api::V2::ContentViewDefinitionsController < Api::V1::ContentViewDefinition
       "Get a list of products belonging to the content view definition, even if one its repositories have been" +
           " associated to this definition. Mainly used by filter api  "
   param :content_view_definition_id, :identifier, :required => true,
-        :desc => "content view definition identifier"
+        :desc                                               => "content view definition identifier"
   def list_all_products
     super
   end
@@ -124,8 +124,8 @@ class Api::V2::ContentViewDefinitionsController < Api::V1::ContentViewDefinition
   private
 
   def find_definition
-    id = params[:id] || params[:content_view_definition_id]
-    @definition = ContentViewDefinition.find(id)
+    id            = params[:id] || params[:content_view_definition_id]
+    @definition   = ContentViewDefinition.find(id)
     @organization ||= @definition.organization
   end
 
