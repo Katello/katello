@@ -395,8 +395,8 @@ KT.panel = (function ($) {
                 height,
                 default_height = 565,
                 default_spacing = header_spacing + subnav_spacing + tupane_header + tupane_footer + 30;
-            
-            if (container.length > 0) {    
+
+            if (container.length > 0) {
                 container_offset = $('#container').offset().top;
             }
 

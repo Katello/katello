@@ -25,7 +25,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
             sort : sort
         };
 
-    Nutupane.get = function(callback){
+    Nutupane.get = function(callback) {
         Nutupane.table.working = true;
 
         return $http.get(Nutupane.table.url, {
@@ -52,7 +52,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
                 table.data.rows = table.data.rows.concat(data.rows);
             }
 
-            if ( callback ){
+            if (callback) {
                 callback();
             }
 
@@ -60,8 +60,8 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
         });
     };
 
-    Nutupane.table.search = function(search_term){
-        $location.search('search', search_term);
+    Nutupane.table.search = function(searchTerm){
+        $location.search('search', searchTerm);
         Nutupane.table.offset = 0;
 
         Nutupane.get();
@@ -81,16 +81,16 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
         });
     };
 
-    Nutupane.table.sort = function(column){
-        if (column.id === sort.by){
+    Nutupane.table.sort = function(column) {
+        if (column.id === sort.by) {
             sort.order = (sort.order === 'ASC') ? 'DESC' : 'ASC';
         } else {
             sort.order = 'ASC';
             sort.by = column.id;
         }
 
-        angular.forEach(Nutupane.table.data.columns, function(column){
-            if( column.active ){
+        angular.forEach(Nutupane.table.data.columns, function(column) {
+            if (column.active) {
                 column.active = false;
             }
         });
@@ -99,7 +99,7 @@ angular.module('Katello').factory('Nutupane', ['$location', '$http', 'current_or
 
         Nutupane.get(function(){
             angular.forEach(Nutupane.table.data.columns, function(column){
-                if( column.active ){
+                if (column.active) {
                     column.active = false;
                 }
             });
@@ -118,8 +118,21 @@ angular.module('Katello').directive('nutupaneDetails', [function(){
             'model': '='
         },
         link: function(scope, elem, attrs) {
-            scope.$watch('model.active_item', function(item){
+            scope.$watch('model.active_item.html', function(item){
                 elem.html(item);
+
+                var children = angular.element(elem).find('.menu_parent');
+                angular.forEach(children, function(item, index) {
+                    KT.menu.hoverMenu(item, { top : '75px' });
+                });
+
+                elem.find('.panel_link > a').die().live('click', function() {
+                    var element = this;
+
+                    scope.$apply(function() {
+                        scope.model.select_item(angular.element(element).attr('href'));
+                    });
+                });
             });
 
             elem.find('.close').live('click', function() {
@@ -128,9 +141,6 @@ angular.module('Katello').directive('nutupaneDetails', [function(){
                 });
             });
 
-            elem.find('.panel_link').live('click', function() {
-                scope.model.select_item(angular.element(this).find('a').attr('href'));
-            });
         }
     };
 }]);
