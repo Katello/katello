@@ -5,6 +5,7 @@
 @import "alchemy/composites/content_elements";
 @import "alchemy/components/helpers";
 @import 'alchemy-buttons/buttons';
+@import "alchemy/components/normalize";
 
 @import "katello_base";
 
@@ -35,8 +36,35 @@
 
 @import "custom_info";
 
+$logo_img: url("katello-logo.png");
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+fieldset {
+  border: none;
+}
+
+article {
+  min-height: 710px;
+}
+
+body > footer {
+  margin-top: 0;
+  height: 20%;
+}
+
+.maincontent {
+  margin-top: 0;
+  padding-top: 40px;
+  border-bottom: none;
+}
+
 body {
-  min-width: $static_width;
+  background-color: white;
 }
 
 pre  { text-indent: 18px; }
@@ -864,6 +892,21 @@ fieldset {
     overflow: auto;
   }
 }
+
+.subnav-header {
+  height: 30px;
+  z-index: 100;
+
+  background-color: rgb(194, 223, 255);
+  border-bottom: 1px solid #CCC;
+
+  nav { height: inherit; }
+
+  .menu-item {
+    a, a:visited, a:hover { color: black; }
+  }
+}
+
 .panel {
   background-color:$panel_color;
   width:490px;
@@ -1315,6 +1358,10 @@ footer a {
 
 .flash_hud {
   margin: 5px 0;
+
+  ul li a {
+    color: $kselected_color;
+  }
 }
 .flash_messages {
   background-color: $helptip-background_color;
@@ -1323,6 +1370,31 @@ footer a {
   border: 1px solid $helptip-border_color;
   margin: 10px auto 5px auto;
   @extend .clearfix;
+}
+
+.maincontent {
+  box-shadow: none !important;
+  background: white;
+  //width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+  margin-top: 40px;
+}
+
+.center {
+  width: $static_width;
+  margin: 0 auto;
+  position: relative;
+}
+
+.logo {
+  background: $logo_img;
+  text-indent: -5555px;
+  width: 100px;
+  height: 15px;
+  display: block;
+  margin-top: 5px;
 }
 
 .simple-box {
@@ -1341,17 +1413,6 @@ footer a {
   }
 }
 
-.maincontent {
-  border-left: 1px solid rgba(0, 0, 0, 0.3);
-  border-right: 1px solid rgba(0, 0, 0, 0.3);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-  box-shadow: none !important;
-}
-
-#maincontent {
-  padding-bottom: 51px;
-}
-
 .primary_color {
     background-color: lighten($kprimary_color, 5%);
 }
@@ -1367,4 +1428,8 @@ footer a {
 
 .btn.processing {
     background: url("icons/spinner.gif") no-repeat 50% 50%, linear-gradient(#ffffff, #e5e5e4);
+}
+
+#experimental_indicator {
+  display: none;
 }
