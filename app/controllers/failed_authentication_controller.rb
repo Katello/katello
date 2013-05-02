@@ -23,7 +23,7 @@ class FailedAuthenticationController < ActionController::Base
 
     if request.env['HTTP_X_FORWARDED_USER'].blank?
       flash[:error] = {"notices" => [_("You have entered an incorrect username/password combination, or your account may currently be disabled. Please try again or contact your administrator.")]}.to_json
-      redirect_to new_user_session_url
+      redirect_to new_user_session_url(:sso_tried => true)
     else
       flash[:error] = {"notices" => [_("You do not have valid credentials to access this system. Please contact your administrator.")]}.to_json
       redirect_to show_user_session_url

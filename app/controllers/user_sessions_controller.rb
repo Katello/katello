@@ -26,10 +26,8 @@ class UserSessionsController < ApplicationController
   end
 
   def new
-    if !request.env['HTTP_X_FORWARDED_USER'].blank?
-      # if we received the X-Forwarded-User, the user must have logged in via SSO; therefore,
-      # attempt to authenticate and log the user in now versus requiring them to enter
-      # credentials
+    # in case we have SSO enabled and we don't try it yet, we try to login user
+    if Katello.config.sso.enable && params[:sso_tried].blank?
       login_user
     else
       @disable_password_recovery = Katello.config.warden == 'ldap'
@@ -47,10 +45,12 @@ class UserSessionsController < ApplicationController
   end
 
   def destroy
-    logout
-    self.current_organization = nil
-    notify.success _("Logout Successful"), :persist => false
-    redirect_to root_url
+    unless params[:final].present?
+      logout
+      self.current_organization = nil
+      notify.success _("Logout Successful"), :persist => false
+      redirect_to final_logout_path
+    end
   end
 
   def allowed_orgs
@@ -69,10 +69,16 @@ class UserSessionsController < ApplicationController
     end
     if self.current_organization == org
       respond_to do |format|
-        format.html {redirect_to dashboard_index_path}
+        format.html { redirect_to dashboard_index_path }
         format.js { render :js => "CUI.Login.Actions.redirecter('#{dashboard_index_url}')" }
       end
     end
+  end
+
+  def authenticate
+    authenticate! :scope => :sso
+    # if authentication passed we render 200 status code
+    render :text => '', :status => :ok
   end
 
   private
@@ -104,14 +110,22 @@ class UserSessionsController < ApplicationController
         elsif !user_default_org.nil? && orgs.include?(user_default_org)
           params[:org_id] = user_default_org.id
           set_org
-        elsif orgs.length < 1
-          render :partial =>"/user_sessions/interstitial.js", :locals=> {:num_orgs => orgs.length, :redir_path => dashboard_index_path}
+        elsif (num = orgs.length) < 1
+          redirect_to_dashboard(num)
         else
-          render :partial =>"/user_sessions/interstitial.js", :locals=> {:num_orgs => orgs.length, :redir_path => dashboard_index_path}
+          redirect_to_dashboard(num)
         end
       else
-        render :partial =>"/user_sessions/interstitial.js", :locals=> {:num_orgs => orgs.length, :redir_path => dashboard_index_path}
+        redirect_to_dashboard(num)
       end
+    end
+  end
+
+  def redirect_to_dashboard(num)
+    if request.xhr?
+      render :partial => "/user_sessions/interstitial.js", :locals => { :num_orgs => num, :redir_path => dashboard_index_path }
+    else
+      redirect_to dashboard_index_path
     end
   end
 
@@ -123,5 +137,14 @@ class UserSessionsController < ApplicationController
   def default_notify_options
     { :organization => nil }
   end
+
+  def final_logout_path
+    if Katello.config.sso.enable
+      Katello.config.sso.provider_url + Katello.config.sso.logout_path + "?return_url=#{URI.escape(logout_url(:final =>1))}"
+    else
+      root_path
+    end
+  end
+
 
 end
