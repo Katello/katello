@@ -13,37 +13,37 @@
 
 class Api::V1::GpgKeysController < Api::V1::ApiController
 
-  skip_filter   :set_locale, :require_user, :thread_locals, :authorize, :only => [:content]
+  skip_filter :set_locale, :require_user, :thread_locals, :authorize, :only => [:content]
 
   before_filter :find_gpg_key, :only => [:content, :show, :update, :destroy]
   before_filter :find_organization, :only => [:index, :create]
   before_filter :authorize, :except => [:content]
 
   def rules
-    read_test = lambda{@gpg_key.readable?}
-    manage_test = lambda{@gpg_key.manageable?}
-    create_test = lambda{GpgKey.createable?(@organization)}
-    index_test = lambda{GpgKey.any_readable?(@organization)}
+    read_test   = lambda { @gpg_key.readable? }
+    manage_test = lambda { @gpg_key.manageable? }
+    create_test = lambda { GpgKey.createable?(@organization) }
+    index_test  = lambda { GpgKey.any_readable?(@organization) }
     {
-      :index => index_test,
-      :show => read_test,
-      :create => create_test,
-      :update => manage_test,
-      :destroy => manage_test
+        :index   => index_test,
+        :show    => read_test,
+        :create  => create_test,
+        :update  => manage_test,
+        :destroy => manage_test
     }
   end
 
   def param_rules
     {
-        :create => {:gpg_key => [:name, :content]},
-        :update => {:gpg_key => [:name, :content]}
+        :create => { :gpg_key => [:name, :content] },
+        :update => { :gpg_key => [:name, :content] }
     }
   end
 
   def_param_group :gpg_key do
     param :gpg_key, Hash, :required => true, :action_aware => true do
       param :name, :identifier, :required => true, :desc => "identifier of the gpg key"
-      param :content, String, :required => true,  :desc => "public key block in DER encoding"
+      param :content, String, :required => true, :desc => "public key block in DER encoding"
     end
   end
 
@@ -90,7 +90,7 @@ Returns the content of a repo gpg key, used directly by yum
 We've amended REST best practices (e.g. not using the show action) as we don't want to
 authenticate, authorize etc, trying to distinquse between a yum request and normal api request
 might not always be 100% bullet proof, and its more important that yum can fetch the key.
-EOS
+  EOS
   def content
     @gpg_key.content.present? ? render(:text => @gpg_key.content, :layout => false) : head(404)
   end

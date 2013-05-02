@@ -21,21 +21,21 @@ describe Api::V1::SystemsController do
   include SystemHelperMethods
   include AuthorizationHelperMethods
 
-  let(:facts) { {"distribution.name" => "Fedora", "cpu.cpu_socket(s)"=>"2"} }
+  let(:facts) { { "distribution.name" => "Fedora", "cpu.cpu_socket(s)" => "2" } }
   let(:uuid) { '1234' }
   let(:package_profile) {
-    {:profile=>
-    [{"epoch" => 0, "name" => "im-chooser", "arch" => "x86_64", "version" => "1.4.0", "vendor" => "Fedora Project", "release" => "1.fc14"},
-     {"epoch" => 0, "name" => "maven-enforcer-api", "arch" => "noarch", "version" => "1.0", "vendor" => "Fedora Project", "release" => "0.1.b2.fc14"},
-     {"epoch" => 0, "name" => "ppp", "arch" => "x86_64", "version" => "2.4.5", "vendor" => "Fedora Project", "release" => "12.fc14"},
-     {"epoch" => 0, "name" => "pulseaudio-module-bluetooth", "arch" => "x86_64", "version" => "0.9.21", "vendor" => "Fedora Project", "release" => "7.fc14"},
-     {"epoch" => 0, "name" => "dbus-cxx-glibmm", "arch" => "x86_64", "version" => "0.7.0", "vendor" => "Fedora Project", "release" => "2.fc14.1"},
-     {"epoch" => 0, "name" => "twolame-libs", "arch" => "x86_64", "version" => "0.3.12", "vendor" => "RPM Fusion", "release" => "4.fc11"},
-     {"epoch" => 0, "name" => "gtk-vnc", "arch" => "x86_64", "version" => "0.4.2", "vendor" => "Fedora Project", "release" => "4.fc14"}]
+    { :profile =>
+          [{ "epoch" => 0, "name" => "im-chooser", "arch" => "x86_64", "version" => "1.4.0", "vendor" => "Fedora Project", "release" => "1.fc14" },
+           { "epoch" => 0, "name" => "maven-enforcer-api", "arch" => "noarch", "version" => "1.0", "vendor" => "Fedora Project", "release" => "0.1.b2.fc14" },
+           { "epoch" => 0, "name" => "ppp", "arch" => "x86_64", "version" => "2.4.5", "vendor" => "Fedora Project", "release" => "12.fc14" },
+           { "epoch" => 0, "name" => "pulseaudio-module-bluetooth", "arch" => "x86_64", "version" => "0.9.21", "vendor" => "Fedora Project", "release" => "7.fc14" },
+           { "epoch" => 0, "name" => "dbus-cxx-glibmm", "arch" => "x86_64", "version" => "0.7.0", "vendor" => "Fedora Project", "release" => "2.fc14.1" },
+           { "epoch" => 0, "name" => "twolame-libs", "arch" => "x86_64", "version" => "0.3.12", "vendor" => "RPM Fusion", "release" => "4.fc11" },
+           { "epoch" => 0, "name" => "gtk-vnc", "arch" => "x86_64", "version" => "0.4.2", "vendor" => "Fedora Project", "release" => "4.fc14" }]
     }.with_indifferent_access
   }
-  let(:installed_products) { [{"productId"=>"69", "productName"=>"Red Hat Enterprise Linux Server"}] }
-  let(:sorted) { package_profile[:profile].sort {|a,b| a["name"].downcase <=> b["name"].downcase} }
+  let(:installed_products) { [{ "productId" => "69", "productName" => "Red Hat Enterprise Linux Server" }] }
+  let(:sorted) { package_profile[:profile].sort { |a, b| a["name"].downcase <=> b["name"].downcase } }
 
   let(:user_with_read_permissions) { user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) } }
   let(:user_without_read_permissions) { user_without_permissions }
@@ -55,7 +55,7 @@ describe Api::V1::SystemsController do
     disable_consumer_group_orchestration
     disable_system_orchestration
 
-    Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Resources::Candlepin::Consumer.stub!(:create).and_return({ :uuid => uuid, :owner => { :key => uuid } })
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
     Resources::Candlepin::Consumer.stub!(:available_pools).and_return([])
 
@@ -64,10 +64,10 @@ describe Api::V1::SystemsController do
       Runcible::Extensions::Consumer.stub!(:update).and_return(true)
     end
 
-    @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
-    @environment_1 = KTEnvironment.create!(:name=>'test_1', :label=> 'test_1', :prior => @organization.library.id, :organization => @organization)
+    @organization  = Organization.create!(:name => 'test_org', :label => 'test_org')
+    @environment_1 = KTEnvironment.create!(:name => 'test_1', :label => 'test_1', :prior => @organization.library.id, :organization => @organization)
 
-    @system_group_1 = SystemGroup.create!(:name => 'System Group 1', :organization_id => @organization.id )
+    @system_group_1 = SystemGroup.create!(:name => 'System Group 1', :organization_id => @organization.id)
     @system_group_2 = SystemGroup.create!(:name => 'System Group 2', :description => "fake description", :organization => @organization)
   end
 
@@ -85,8 +85,8 @@ describe Api::V1::SystemsController do
     end
 
     it "sets insatalled products to the consumer" do
-        System.should_receive(:create!).with(hash_including(:environment => @environment_1, :cp_type => 'system', :installedProducts => installed_products, :name => 'test')).once.and_return({})
-        post :create, :organization_id => @organization.name, :name => 'test', :cp_type => 'system', :installedProducts => installed_products
+      System.should_receive(:create!).with(hash_including(:environment => @environment_1, :cp_type => 'system', :installedProducts => installed_products, :name => 'test')).once.and_return({})
+      post :create, :organization_id => @organization.name, :name => 'test', :cp_type => 'system', :installedProducts => installed_products
     end
 
     context "in organization with one environment" do
@@ -103,7 +103,7 @@ describe Api::V1::SystemsController do
 
     context "in organization with multiple environments" do
       before(:each) do
-        @environment_2 = KTEnvironment.new(:name=>'test_2', :label=> 'test_2', :prior => @environment_1, :organization => @organization)
+        @environment_2 = KTEnvironment.new(:name => 'test_2', :label => 'test_2', :prior => @environment_1, :organization => @organization)
         @environment_2.save!
       end
 
@@ -120,27 +120,27 @@ describe Api::V1::SystemsController do
 
     context "with environment_id containing environment-content_view" do
       it "assigns the system to the environment and view" do
-        view = ContentView.create(:name => 'test view', :label => 'test_view', :organization => @organization)
+        view           = ContentView.create(:name => 'test view', :label => 'test_view', :organization => @organization)
         environment_id = @environment_1.id.to_s + '-' + view.id.to_s
 
-        System.should_receive(:create!).with(hash_including(:environment => @environment_1,
+        System.should_receive(:create!).with(hash_including(:environment  => @environment_1,
                                                             :content_view => view,
-                                                            :cp_type => 'system', :facts => facts,
-                                                            :name => 'test')).once.and_return({})
+                                                            :cp_type      => 'system', :facts => facts,
+                                                            :name         => 'test')).once.and_return({})
 
         post :create, :organization_id => @organization.name, :environment_id => environment_id,
-             :name => 'test', :cp_type => 'system', :facts => facts
+             :name                     => 'test', :cp_type => 'system', :facts => facts
       end
     end
 
     context "when activation keys are provided" do
 
       before(:each) do
-        @activation_key_1 = ActivationKey.create!(:environment => @environment_1,
-                                                  :organization => @organization,
-                                                  :name => "activation_key_1",
+        @activation_key_1 = ActivationKey.create!(:environment   => @environment_1,
+                                                  :organization  => @organization,
+                                                  :name          => "activation_key_1",
                                                   :system_groups => [@system_group_1], :user => @user)
-        @activation_key_2 = ActivationKey.create!(:environment => @environment_1, :organization => @organization, :name => "activation_key_2",
+        @activation_key_2 = ActivationKey.create!(:environment   => @environment_1, :organization => @organization, :name => "activation_key_2",
                                                   :system_groups => [@system_group_2])
 
         @activation_key_1.stub(:subscribe_system).and_return()
@@ -149,19 +149,19 @@ describe Api::V1::SystemsController do
         @activation_key_2.stub(:apply_to_system).and_return()
 
         @system_data = {
-          :name => "Test System 1",
-          :facts => facts,
-          :environment_id => @environment_1.id,
-          :cp_type => "system",
-          :organization_id => @organization.label,
-          :activation_keys => "#{@activation_key_1.name},#{@activation_key_2.name}"
+            :name            => "Test System 1",
+            :facts           => facts,
+            :environment_id  => @environment_1.id,
+            :cp_type         => "system",
+            :organization_id => @organization.label,
+            :activation_keys => "#{@activation_key_1.name},#{@activation_key_2.name}"
         }
       end
 
       context "and they are correct" do
 
         before(:each) do
-          @controller.stub(:find_activation_keys).and_return([@activation_key_1,@activation_key_2])
+          @controller.stub(:find_activation_keys).and_return([@activation_key_1, @activation_key_2])
         end
 
         it "uses user credentials of the hidden user" do
@@ -192,7 +192,7 @@ describe Api::V1::SystemsController do
         end
 
         it "should set the system's content view to the key's view" do
-          @activation_key_3 = ActivationKey.create!(:environment => @environment_1, :organization => @organization, :name => "activation_key_3",
+          @activation_key_3 = ActivationKey.create!(:environment   => @environment_1, :organization => @organization, :name => "activation_key_3",
                                                     :system_groups => [@system_group_2])
           @controller.stub(:find_activation_keys).and_return([@activation_key_3])
           System.any_instance.stub(:facts).and_return(@system_data[:facts])
@@ -239,7 +239,7 @@ describe Api::V1::SystemsController do
       User.stub(:consumer? => true)
     end
 
-    let(:virt_who_params) { {"env"=>@environment_1.name, "host2"=>["GUEST3", "GUEST4"], "owner"=>@organization.name} }
+    let(:virt_who_params) { { "env" => @environment_1.name, "host2" => ["GUEST3", "GUEST4"], "owner" => @organization.name } }
 
     it "requires either environment_id, owner, or organization_id to be specified" do
       post :create
@@ -252,7 +252,7 @@ describe Api::V1::SystemsController do
     end
 
     it "sends back candlepin response" do
-      cp_response = {"created" => SystemTestData.new_hypervisor}
+      cp_response = { "created" => SystemTestData.new_hypervisor }
       System.stub(:register_hypervisors => [cp_response, []])
       post :hypervisors_update, virt_who_params
       JSON.parse(response.body).should == cp_response
@@ -262,12 +262,12 @@ describe Api::V1::SystemsController do
 
   describe "list systems" do
 
-    let(:uuid_1) {"abc"}
-    let(:uuid_2) {"def"}
-    let(:uuid_3) {"ghi"}
+    let(:uuid_1) { "abc" }
+    let(:uuid_2) { "def" }
+    let(:uuid_3) { "ghi" }
 
     before(:each) do
-      @environment_2 = KTEnvironment.new(:name=>'test_2', :label=> 'test_2', :prior => @environment_1, :organization => @organization)
+      @environment_2 = KTEnvironment.new(:name => 'test_2', :label => 'test_2', :prior => @environment_1, :organization => @organization)
       @environment_2.save!
 
       @system_1 = create_system(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid_1)
@@ -311,10 +311,10 @@ describe Api::V1::SystemsController do
 
     context "with pool_id" do
 
-      let(:pool_id) {"POOL_ID_123456"}
+      let(:pool_id) { "POOL_ID_123456" }
 
       before :each do
-        Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid_3})
+        Resources::Candlepin::Consumer.stub!(:create).and_return({ :uuid => uuid_3 })
         @system_3 = System.create!(:name => 'test3', :environment => @environment_2, :cp_type => 'system', :facts => facts)
         System.stub(:all_by_pool_uuid).and_return([@system_1.uuid, @system_3.uuid])
         Glue::ElasticSearch::Items.any_instance.should_receive(:retrieve).and_return([@system_1, @system_3])
@@ -322,7 +322,7 @@ describe Api::V1::SystemsController do
 
       it "should show all systems in the organization that are subscribed to a pool" do
         get :index, :organization_id => @organization.label, :pool_id => pool_id
-        returned_uuids = JSON.parse(response.body).map{|sys| sys["uuid"]}
+        returned_uuids = JSON.parse(response.body).map { |sys| sys["uuid"] }
 
         response.should be_success
         returned_uuids.should include(@system_1.uuid, @system_3.uuid)
@@ -330,7 +330,7 @@ describe Api::V1::SystemsController do
 
       it "should show only systems in the environment that are subscribed to a pool" do
         get :index, :environment_id => @environment_2.id, :pool_id => pool_id
-        returned_uuids = JSON.parse(response.body).map{|sys| sys["uuid"]}
+        returned_uuids = JSON.parse(response.body).map { |sys| sys["uuid"] }
 
         returned_uuids.should include(@system_3.uuid)
       end
@@ -398,9 +398,9 @@ describe Api::V1::SystemsController do
 
   describe "update a system" do
     before(:each) do
-      @sys = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid, :description => "fake description")
-      @environment_2 = KTEnvironment.create!(:name=>'test_2', :label=> 'test_2', :prior => @organization.library.id, :organization => @organization)
-      Resources::Candlepin::Consumer.stub!(:get).and_return({:uuid => uuid})
+      @sys           = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid, :description => "fake description")
+      @environment_2 = KTEnvironment.create!(:name => 'test_2', :label => 'test_2', :prior => @organization.library.id, :organization => @organization)
+      Resources::Candlepin::Consumer.stub!(:get).and_return({ :uuid => uuid })
       System.stub!(:first).and_return(@sys)
     end
 
@@ -411,21 +411,21 @@ describe Api::V1::SystemsController do
     it_should_behave_like "protected action"
 
     it "should change the name" do
-      Runcible::Extensions::Consumer.should_receive(:update).once.with(uuid, {:display_name => "foo_name"}).and_return(true) if Katello.config.katello?
+      Runcible::Extensions::Consumer.should_receive(:update).once.with(uuid, { :display_name => "foo_name" }).and_return(true) if Katello.config.katello?
       put :update, :id => uuid, :name => "foo_name"
       response.body.should == @sys.to_json
       response.should be_success
     end
 
     it "should change the description" do
-      Runcible::Extensions::Consumer.should_receive(:update).once.with(uuid, {:display_name => "test"}).and_return(true) if Katello.config.katello?
+      Runcible::Extensions::Consumer.should_receive(:update).once.with(uuid, { :display_name => "test" }).and_return(true) if Katello.config.katello?
       put :update, :id => uuid, :description => "redkin is awesome."
       response.body.should == @sys.to_json
       response.should be_success
     end
 
     it "should change the location" do
-      Runcible::Extensions::Consumer.should_receive(:update).once.with(uuid, {:display_name => "test"}).and_return(true) if Katello.config.katello?
+      Runcible::Extensions::Consumer.should_receive(:update).once.with(uuid, { :display_name => "test" }).and_return(true) if Katello.config.katello?
       put :update, :id => uuid, :location => "never-neverland"
       response.body.should == @sys.to_json
       response.should be_success
@@ -480,7 +480,7 @@ describe Api::V1::SystemsController do
   describe "add system groups to a system" do
     before(:each) do
       @system = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid, :description => "fake description")
-      Resources::Candlepin::Consumer.stub!(:get).and_return({:uuid => uuid})
+      Resources::Candlepin::Consumer.stub!(:get).and_return({ :uuid => uuid })
       System.stub!(:first).and_return(@system)
     end
 
@@ -503,8 +503,8 @@ describe Api::V1::SystemsController do
   describe "remove system groups to a system" do
     before(:each) do
       @system = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts,
-                              :uuid => uuid, :description => "fake description", :system_group_ids => [@system_group_1.id, @system_group_2.id])
-      Resources::Candlepin::Consumer.stub!(:get).and_return({:uuid => uuid})
+                               :uuid => uuid, :description => "fake description", :system_group_ids => [@system_group_1.id, @system_group_2.id])
+      Resources::Candlepin::Consumer.stub!(:get).and_return({ :uuid => uuid })
       System.stub!(:first).and_return(@system)
     end
 
@@ -536,7 +536,7 @@ describe Api::V1::SystemsController do
     it_should_behave_like "protected action"
 
     it "should find System" do
-      System.should_receive(:first).once.with(hash_including(:conditions => {:uuid => @system.uuid})).and_return(@system)
+      System.should_receive(:first).once.with(hash_including(:conditions => { :uuid => @system.uuid })).and_return(@system)
       get :errata, :id => @system.uuid
     end
 
@@ -552,14 +552,14 @@ describe Api::V1::SystemsController do
       System.stub!(:first).and_return(@system)
     end
 
-    let(:action) { :pools}
+    let(:action) { :pools }
     let(:req) { get :pools, :id => @system.uuid }
     let(:authorized_user) { user_with_read_permissions }
     let(:unauthorized_user) { user_without_read_permissions }
     it_should_behave_like "protected action"
 
     it "should find System" do
-      System.should_receive(:first).once.with(hash_including(:conditions => {:uuid => @system.uuid})).and_return(@system)
+      System.should_receive(:first).once.with(hash_including(:conditions => { :uuid => @system.uuid })).and_return(@system)
       get :pools, :id => @system.uuid
     end
 
@@ -588,7 +588,7 @@ describe Api::V1::SystemsController do
       System.stub!(:first).and_return(@system)
     end
 
-    let(:action) { :releases}
+    let(:action) { :releases }
     let(:req) { get :releases, :id => @system.uuid }
     let(:authorized_user) { user_with_read_permissions }
     let(:unauthorized_user) { user_without_read_permissions }
@@ -601,37 +601,37 @@ describe Api::V1::SystemsController do
     end
   end
 
-  describe "update enabled_repos" , :katello => true do
+  describe "update enabled_repos", :katello => true do
     before do
       User.stub(:consumer? => true)
       @system = System.create(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
       System.stub!(:first).and_return(@system)
-      Repository.stub!(:find_by_cp_label).with('a').and_return(OpenStruct.new({:pulp_id => 'a'}))
-      Repository.stub!(:find_by_cp_label).with('b').and_return(OpenStruct.new({:pulp_id => 'b'}))
+      Repository.stub!(:find_by_cp_label).with('a').and_return(OpenStruct.new({ :pulp_id => 'a' }))
+      Repository.stub!(:find_by_cp_label).with('b').and_return(OpenStruct.new({ :pulp_id => 'b' }))
     end
     let(:enabled_repos) {
       {
-        "repos" => [
-          {
-            "repositoryid" => "a",
-          },
-          {
-            "repositoryid" => "b",
-          },
-        ]
+          "repos" => [
+              {
+                  "repositoryid" => "a",
+              },
+              {
+                  "repositoryid" => "b",
+              },
+          ]
       }
     }
     let(:enabled_repos_empty) { { "repos" => [] } }
 
     it "should not bind any" do
-      Runcible::Extensions::Consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{'repo_id' => 'a'}, {'repo_id' => 'b'}])
+      Runcible::Extensions::Consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{ 'repo_id' => 'a' }, { 'repo_id' => 'b' }])
 
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
       response.status.should == 200
     end
 
     it "should bind one" do
-      Runcible::Extensions::Consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{'repo_id' => 'a'}])
+      Runcible::Extensions::Consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{ 'repo_id' => 'a' }])
       Runcible::Extensions::Consumer.should_receive(:bind_all).with(@system.uuid, 'b').once.and_return([])
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
       response.status.should == 200
@@ -646,7 +646,7 @@ describe Api::V1::SystemsController do
     end
 
     it "should bind one and unbind one" do
-      Runcible::Extensions::Consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{'repo_id' => 'b'}, {'repo_id' => 'c'}])
+      Runcible::Extensions::Consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{ 'repo_id' => 'b' }, { 'repo_id' => 'c' }])
       Runcible::Extensions::Consumer.should_receive(:bind_all).with(@system.uuid, 'a').once.once.and_return([])
       Runcible::Extensions::Consumer.should_receive(:unbind_all).with(@system.uuid, 'c').once.and_return([])
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos
@@ -654,7 +654,7 @@ describe Api::V1::SystemsController do
     end
 
     it "should unbind two" do
-      Runcible::Extensions::Consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{'repo_id' => 'a'}, {'repo_id' => 'b'}])
+      Runcible::Extensions::Consumer.should_receive(:retrieve_bindings).with(@system.uuid).once.and_return([{ 'repo_id' => 'a' }, { 'repo_id' => 'b' }])
       Runcible::Extensions::Consumer.should_receive(:unbind_all).with(@system.uuid, 'a').once.once.and_return([])
       Runcible::Extensions::Consumer.should_receive(:unbind_all).with(@system.uuid, 'b').once.once.and_return([])
       put :enabled_repos, :id => @system.uuid, :enabled_repos => enabled_repos_empty

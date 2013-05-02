@@ -12,7 +12,7 @@
 
 class Api::V1::TasksController < Api::V1::ApiController
   respond_to :json
-  before_filter :find_organization, :only=>[:index]
+  before_filter :find_organization, :only => [:index]
   before_filter :find_task, :only => [:show]
 
   before_filter :authorize
@@ -20,8 +20,8 @@ class Api::V1::TasksController < Api::V1::ApiController
   def rules
     # tasks are used in: synchronization, promotion, packages updating, organizatino deletion
     test = lambda do
-        # at the end of organization deletion, there is no organization, so we
-        # check if the user has the rights to see the task.
+      # at the end of organization deletion, there is no organization, so we
+      # check if the user has the rights to see the task.
       if @task && User.current == @task.user
         true
       elsif @organization
@@ -31,8 +31,8 @@ class Api::V1::TasksController < Api::V1::ApiController
       end
     end
     {
-      :index => test,
-      :show => test,
+        :index => test,
+        :show  => test,
     }
   end
 
@@ -52,7 +52,7 @@ class Api::V1::TasksController < Api::V1::ApiController
   private
 
   def find_task
-    @task = TaskStatus.find_by_uuid!(params[:id])
+    @task         = TaskStatus.find_by_uuid!(params[:id])
     @organization = @task.organization
   end
 end

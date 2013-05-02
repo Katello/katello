@@ -1,4 +1,3 @@
-
 #
 # Copyright 2013 Red Hat, Inc.
 #
@@ -31,7 +30,7 @@ describe Api::V1::SystemGroupPackagesController, :katello => true do
     new_test_org
 
     disable_consumer_group_orchestration
-    @group = SystemGroup.create!(:name=>"test_group", :organization=>@organization, :max_systems => 5)
+    @group = SystemGroup.create!(:name => "test_group", :organization => @organization, :max_systems => 5)
     SystemGroup.stub!(:find).and_return(@group)
   end
 

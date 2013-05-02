@@ -29,7 +29,6 @@ describe Api::V1::OrganizationsController do
   let(:user_without_destroy_permissions) { user_with_permissions { |u| u.can([:update], :organizations) } }
 
 
-
   before(:each) do
     @org = new_test_org
     @controller.stub(:get_organization => @org)
@@ -40,7 +39,7 @@ describe Api::V1::OrganizationsController do
 
   describe "create" do
 
-    let(:action) {:create}
+    let(:action) { :create }
     let(:authorized_user) { user_with_create_permissions }
     let(:unauthorized_user) { user_without_create_permissions }
 
@@ -61,7 +60,7 @@ describe Api::V1::OrganizationsController do
       it_should_behave_like "protected action"
 
       it 'should call katello create organization api' do
-        Organization.should_receive(:create!).once.with(:name => 'test org with spaces', :description => 'description',
+        Organization.should_receive(:create!).once.with(:name  => 'test org with spaces', :description => 'description',
                                                         :label => 'test_org_with_spaces').and_return(@org)
         req
       end
@@ -73,7 +72,7 @@ describe Api::V1::OrganizationsController do
       it_should_behave_like "protected action"
 
       it 'should call katello create organization api' do
-        Organization.should_receive(:create!).once.with(:name => 'test org', :description => 'description',
+        Organization.should_receive(:create!).once.with(:name  => 'test org', :description => 'description',
                                                         :label => 'some_other_label').and_return(@org)
         req
       end
@@ -82,7 +81,7 @@ describe Api::V1::OrganizationsController do
 
   describe "listing" do
 
-    let(:action) {:index}
+    let(:action) { :index }
     let(:req) { get 'index' }
     let(:authorized_user) { user_with_index_permissions }
     let(:unauthorized_user) { user_without_index_permissions }
@@ -98,7 +97,7 @@ describe Api::V1::OrganizationsController do
 
   describe "show" do
 
-    let(:action) {:show }
+    let(:action) { :show }
     let(:req) { get 'show', :id => "spec" }
     let(:authorized_user) { user_with_read_permissions }
     let(:unauthorized_user) { user_without_read_permissions }
@@ -112,7 +111,7 @@ describe Api::V1::OrganizationsController do
 
   describe "delete" do
 
-    let(:action) {:destroy }
+    let(:action) { :destroy }
     let(:req) { delete 'destroy', :id => "spec" }
     let(:authorized_user) { user_with_destroy_permissions }
     let(:unauthorized_user) { user_without_destroy_permissions }
@@ -123,7 +122,7 @@ describe Api::V1::OrganizationsController do
       req
     end
 
-   it 'should call organization destroyer' do
+    it 'should call organization destroyer' do
       OrganizationDestroyer.should_receive(:destroy).with(@org).once
       req
     end
@@ -131,8 +130,8 @@ describe Api::V1::OrganizationsController do
 
   describe "update" do
 
-    let(:action) {:update }
-    let(:req) { put 'update', :id => "spec", :organization => {:description => "bah"} }
+    let(:action) { :update }
+    let(:req) { put 'update', :id => "spec", :organization => { :description => "bah" } }
     let(:authorized_user) { user_with_update_permissions }
     let(:unauthorized_user) { user_without_update_permissions }
     it_should_behave_like "protected action"
@@ -147,13 +146,13 @@ describe Api::V1::OrganizationsController do
       req
     end
 
-    it_should_behave_like "bad request"  do
+    it_should_behave_like "bad request" do
       let(:req) do
-        bad_req = {:id => 123,
-                   :organization =>
-                      {:bad_foo => "mwahahaha",
-                       :name => "Gpg Key",
-                       :description => "This is the key string" }
+        bad_req = { :id           => 123,
+                    :organization =>
+                        { :bad_foo     => "mwahahaha",
+                          :name        => "Gpg Key",
+                          :description => "This is the key string" }
         }.with_indifferent_access
         put :update, bad_req
       end

@@ -19,7 +19,7 @@ describe Api::V1::PackagesController, :katello => true do
   include RepositoryHelperMethods
   include LocaleHelperMethods
 
-  let(:repo_id) {'f8ab5088-688e-4ce4-ade3-700aa4cbb070'}
+  let(:repo_id) { 'f8ab5088-688e-4ce4-ade3-700aa4cbb070' }
 
   before(:each) do
     disable_org_orchestration
@@ -28,10 +28,10 @@ describe Api::V1::PackagesController, :katello => true do
     disable_repo_orchestration
 
     @organization = new_test_org
-    @env = @organization.library
-    @product = new_test_product(@organization, @env)
-    ep_library = EnvironmentProduct.find_or_create(@organization.library, @product)
-    @repo = new_test_repo(ep_library, "repo", "#{@organization.name}/Library/prod/repo")
+    @env          = @organization.library
+    @product      = new_test_product(@organization, @env)
+    ep_library    = EnvironmentProduct.find_or_create(@organization.library, @product)
+    @repo         = new_test_repo(ep_library, "repo", "#{@organization.name}/Library/prod/repo")
 
     @product.stub(:repos).and_return([@repository])
     @repo.stub(:has_distribution?).and_return(true)
@@ -39,7 +39,7 @@ describe Api::V1::PackagesController, :katello => true do
     Repository.stub(:find).and_return(@repo)
 
     @repo.stub(:packages).and_return([])
-    package = { 'repository_memberships' => [ repo_id ] }.with_indifferent_access
+    package = { 'repository_memberships' => [repo_id] }.with_indifferent_access
     Runcible::Extensions::Rpm.stub(:find_by_unit_id).and_return(package)
 
     @request.env["HTTP_ACCEPT"] = "application/json"
@@ -95,7 +95,7 @@ describe Api::V1::PackagesController, :katello => true do
 
     describe "show a package" do
       it "should call pulp find package api" do
-         Runcible::Extensions::Rpm.should_receive(:find_by_unit_id).once.with('1')
+        Runcible::Extensions::Rpm.should_receive(:find_by_unit_id).once.with('1')
         get 'show', :id => '1', :repository_id => repo_id
       end
     end

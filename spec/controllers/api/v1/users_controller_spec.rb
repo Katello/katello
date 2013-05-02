@@ -32,7 +32,7 @@ describe Api::V1::UsersController do
     let(:user_without_destroy_permissions) { user_with_permissions { |u| u.can(:update, :users) } }
 
     before (:each) do
-      @user = User.new(:username => "test_user",:password => "123")
+      @user = User.new(:username => "test_user", :password => "123")
       User.stub(:find).with("123").and_return(@user)
     end
 
@@ -54,7 +54,7 @@ describe Api::V1::UsersController do
 
     describe "create user" do
       let(:action) { :create }
-      let(:req) { post :create, {:username => "eric", :password => "redhat", :email => "foo@redhat.com"} }
+      let(:req) { post :create, { :username => "eric", :password => "redhat", :email => "foo@redhat.com" } }
       let(:authorized_user) { user_with_create_permissions }
       let(:unauthorized_user) { user_without_create_permissions }
       it_should_behave_like "protected action"
@@ -62,7 +62,7 @@ describe Api::V1::UsersController do
 
     describe "update user" do
       let(:action) { :update }
-      let(:req) { put :update, {:id => "123", :user => {:disabled => false}} }
+      let(:req) { put :update, { :id => "123", :user => { :disabled => false } } }
       let(:authorized_user) { user_with_update_permissions }
       let(:unauthorized_user) { user_without_update_permissions }
       it_should_behave_like "protected action"
@@ -82,17 +82,17 @@ describe Api::V1::UsersController do
       login_user_api
       @request.env["HTTP_ACCEPT"] = "application/json"
     end
-      let(:request_params) do
-                {:username => "arnold",
-                  :password => "terminator",
-                  :email=> "arnold@redhat.com",
-                  :disabled => true
-              }.with_indifferent_access
-      end
+    let(:request_params) do
+      { :username => "arnold",
+        :password => "terminator",
+        :email    => "arnold@redhat.com",
+        :disabled => true
+      }.with_indifferent_access
+    end
 
-    it_should_behave_like "bad request"  do
+    it_should_behave_like "bad request" do
       let(:req) do
-        bad_req = request_params
+        bad_req           = request_params
         bad_req[:bad_foo] = "mwahaha"
         post :create, bad_req
       end
@@ -113,20 +113,20 @@ describe Api::V1::UsersController do
       @request.env["HTTP_ACCEPT"] = "application/json"
     end
 
-    let(:user) {User.create!(:username => "foo", :password=> "redhat123",
-                             :email => "jomara@redhat.com",:disabled =>false)}
+    let(:user) { User.create!(:username => "foo", :password => "redhat123",
+                              :email    => "jomara@redhat.com", :disabled => false) }
     let(:request_params) {
-                { :id => user.id,
-                   :user =>
-                      {:password => "--Altered",
-                      :disabled => true
-                      }
-              }.with_indifferent_access
-      }
+      { :id   => user.id,
+        :user =>
+            { :password => "--Altered",
+              :disabled => true
+            }
+      }.with_indifferent_access
+    }
 
-    it_should_behave_like "bad request"  do
+    it_should_behave_like "bad request" do
       let(:req) do
-        bad_req = request_params
+        bad_req                  = request_params
         bad_req[:user][:bad_foo] = "mwahaha"
         put :update, bad_req
       end

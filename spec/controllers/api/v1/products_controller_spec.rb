@@ -32,21 +32,21 @@ describe Api::V1::ProductsController, :katello => true do
 
     @organization = new_test_org
 
-    @environment = KTEnvironment.create!(:name=>"foo123", :label=> "foo123", :organization => @organization, :prior =>@organization.library)
-    @provider = Provider.create!(:name => "provider", :provider_type => Provider::CUSTOM,
-                                 :organization => @organization, :repository_url => "https://something.url/stuff")
-    @product = Product.new({:name=>"prod", :label=> "prod"})
+    @environment = KTEnvironment.create!(:name => "foo123", :label => "foo123", :organization => @organization, :prior => @organization.library)
+    @provider    = Provider.create!(:name         => "provider", :provider_type => Provider::CUSTOM,
+                                    :organization => @organization, :repository_url => "https://something.url/stuff")
+    @product     = Product.new({ :name => "prod", :label => "prod" })
 
     @product.provider = @provider
     @product.environments << @organization.library
     @product.stub(:arch).and_return('noarch')
     @product.save!
-    ep_library = EnvironmentProduct.find_or_create(@organization.library, @product)
+    ep_library    = EnvironmentProduct.find_or_create(@organization.library, @product)
     @repo_library = new_test_repo(ep_library, "repo", "#{@organization.name}/Library/prod/repo")
 
     @repo = promote(@repo_library, @environment)
 
-    @products = [@product]
+    @products     = [@product]
     @repositories = [@repo]
 
     @product = @products[0]
@@ -88,7 +88,7 @@ describe Api::V1::ProductsController, :katello => true do
     end
 
     let(:action) { :update }
-    let(:req) { put 'update', :id => @product.cp_id, :organization_id => @organization.label, :product => {:gpg_key_name => gpg_key.name, :description => "another description" } }
+    let(:req) { put 'update', :id => @product.cp_id, :organization_id => @organization.label, :product => { :gpg_key_name => gpg_key.name, :description => "another description" } }
     let(:authorized_user) { user_with_update_permissions }
     let(:unauthorized_user) { user_without_update_permissions }
 
@@ -96,11 +96,11 @@ describe Api::V1::ProductsController, :katello => true do
 
     it_should_behave_like "bad request" do
       let(:req) do
-        bad_req = {:id => @product.cp_id,
-                   :organization_id => @organization.label,
-                   :product => {:bad_param => "100",
-                                :gpg_key_name => gpg_key.name,
-                                :description => "another description" }
+        bad_req = { :id              => @product.cp_id,
+                    :organization_id => @organization.label,
+                    :product         => { :bad_param    => "100",
+                                          :gpg_key_name => gpg_key.name,
+                                          :description  => "another description" }
         }.with_indifferent_access
         put :update, bad_req
       end
@@ -118,7 +118,7 @@ describe Api::V1::ProductsController, :katello => true do
 
       it "should reset repos' GPGs, if updating recursive" do
         @product.should_receive(:reset_repo_gpgs!)
-        put 'update', :id => @product.cp_id, :organization_id => @organization.label, :product => {:gpg_key_name => gpg_key.name, :description => "another description", :recursive => true }
+        put 'update', :id => @product.cp_id, :organization_id => @organization.label, :product => { :gpg_key_name => gpg_key.name, :description => "another description", :recursive => true }
       end
     end
 
@@ -145,9 +145,9 @@ describe Api::V1::ProductsController, :katello => true do
     it_should_behave_like "protected action"
 
     before do
-      @dumb_prod = {:id => @product.id}
+      @dumb_prod = { :id => @product.id }
       Product.stub!(:all_readable).and_return(@products)
-      @products.stub_chain(:select, :joins,:where,:all).and_return(@dumb_prod)
+      @products.stub_chain(:select, :joins, :where, :all).and_return(@dumb_prod)
     end
 
     it "should find organization" do
@@ -173,9 +173,9 @@ describe Api::V1::ProductsController, :katello => true do
 
   context "show all @products in library" do
     before do
-      @dumb_prod = {:id => @product.id}
+      @dumb_prod = { :id => @product.id }
       Product.stub!(:all_readable).and_return(@products)
-      @products.stub_chain(:select, :joins,:where,:all).and_return(@dumb_prod)
+      @products.stub_chain(:select, :joins, :where, :all).and_return(@dumb_prod)
     end
 
     it "should find organization" do

@@ -19,7 +19,7 @@ describe Api::V1::CustomInfoController do
   include LocaleHelperMethods
   include AuthorizationHelperMethods
 
-  let(:facts) { {"distribution.name" => "Fedora"} }
+  let(:facts) { { "distribution.name" => "Fedora" } }
   let(:uuid) { '1234' }
 
   before (:each) do
@@ -29,11 +29,11 @@ describe Api::V1::CustomInfoController do
     disable_consumer_group_orchestration
     disable_system_orchestration
 
-    Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Resources::Candlepin::Consumer.stub!(:create).and_return({ :uuid => uuid, :owner => { :key => uuid } })
 
-    Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid})  if Katello.config.katello?
+    Runcible::Extensions::Consumer.stub!(:create).and_return({ :id => uuid }) if Katello.config.katello?
 
-    @org = Organization.create!(:name => "test_org", :label => "test_org")
+    @org  = Organization.create!(:name => "test_org", :label => "test_org")
     @env1 = KTEnvironment.create!(:name => "test_env", :label => "test_env", :prior => @org.library.id, :organization => @org)
 
     @system = System.create!(:name => "test_sys", :cp_type => "system", :environment => @env1, :facts => facts)

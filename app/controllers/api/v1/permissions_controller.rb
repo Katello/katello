@@ -19,23 +19,23 @@ class Api::V1::PermissionsController < Api::V1::ApiController
   respond_to :json
 
   def rules
-    index_test = lambda{Role.any_readable?}
-    create_test = lambda{Role.creatable?}
-    read_test = lambda{Role.any_readable?}
-    delete_test = lambda{Role.deletable?}
+    index_test  = lambda { Role.any_readable? }
+    create_test = lambda { Role.creatable? }
+    read_test   = lambda { Role.any_readable? }
+    delete_test = lambda { Role.deletable? }
 
-     {
-       :index => index_test,
-       :show => read_test,
-       :create => create_test,
-       :destroy => delete_test,
-       :available_verbs => read_test
-     }
+    {
+        :index           => index_test,
+        :show            => read_test,
+        :create          => create_test,
+        :destroy         => delete_test,
+        :available_verbs => read_test
+    }
   end
   def param_rules
-     {
-       :create => [:name, :description, :role_id, :organization_id, :verbs, :tags, :type, :all_tags ]
-     }
+    {
+        :create => [:name, :description, :role_id, :organization_id, :verbs, :tags, :type, :all_tags]
+    }
   end
 
 
@@ -64,18 +64,18 @@ class Api::V1::PermissionsController < Api::V1::ApiController
   param :all_tags, :bool, :desc => "True if the permission should use all tags"
   def create
     new_params = {
-      :name => params[:name],
-      :description => params[:description],
-      :role => @role,
-      :organization => @organization,
-      :all_tags => (params[:all_tags].to_bool if params[:all_tags])
+        :name         => params[:name],
+        :description  => params[:description],
+        :role         => @role,
+        :organization => @organization,
+        :all_tags     => (params[:all_tags].to_bool if params[:all_tags])
     }
 
     new_params[:verb_values] = params[:verbs] || []
-    new_params[:tag_values] = params[:tags] || []
+    new_params[:tag_values]  = params[:tags] || []
 
     if params[:type] == "all"
-      new_params[:all_tags] = true
+      new_params[:all_tags]  = true
       new_params[:all_verbs] = true
     end
 

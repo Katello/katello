@@ -16,12 +16,12 @@ class Api::V1::RoleLdapGroupsController < Api::V1::ApiController
   before_filter :authorize
 
   def rules
-    index_test = lambda{Role.any_readable?}
-    edit_test = lambda{Role.editable?}
+    index_test = lambda { Role.any_readable? }
+    edit_test  = lambda { Role.editable? }
     {
-      :index => index_test,
-      :create => edit_test,
-      :destroy => edit_test,
+        :index   => index_test,
+        :create  => edit_test,
+        :destroy => edit_test,
     }
   end
 

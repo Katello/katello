@@ -21,9 +21,9 @@ class Api::V1::RootController < Api::V1::ApiController
 
     api_root_routes = all_routes.select do |path|
       path =~ %r{^/api/[^/]+/:id\(\.:format\)$}
-    end.collect {|path| path[0..-(":id(.:format)".length+1)]}.uniq
+    end.collect { |path| path[0..-(":id(.:format)".length+1)] }.uniq
 
-    api_root_routes.collect! {|r| {:rel => r["/api/".size..-2], :href => r} }
+    api_root_routes.collect! { |r| { :rel => r["/api/".size..-2], :href => r } }
 
     # provide some fake paths that does not exist (but rhsm is checking it's existance)
     api_root_routes << { :href => '/api/packages/', :rel => 'packages' }
@@ -38,7 +38,7 @@ class Api::V1::RootController < Api::V1::ApiController
                     "/api/disributions/",
                     "/api/tasks/",
                     "/api/gpg_keys/"
-                    ]
+    ]
 
     # filter out katello-only apis from headpin resource list
     if !Katello.config.katello?

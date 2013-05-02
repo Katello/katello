@@ -1,4 +1,3 @@
-
 module Api
   module V2
     module Rendering

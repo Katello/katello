@@ -26,10 +26,10 @@ describe Api::V1::ErrataController, :katello => true do
     disable_repo_orchestration
 
     @organization = new_test_org
-    @env = @organization.library
-    @product = new_test_product(@organization, @env)
-    ep_library = EnvironmentProduct.find_or_create(@organization.library, @product)
-    @repo = new_test_repo(ep_library, "repo", "#{@organization.name}/Library/prod/repo")
+    @env          = @organization.library
+    @product      = new_test_product(@organization, @env)
+    ep_library    = EnvironmentProduct.find_or_create(@organization.library, @product)
+    @repo         = new_test_repo(ep_library, "repo", "#{@organization.name}/Library/prod/repo")
 
     @product.stub(:repos).and_return([@repository])
     @repo.stub(:has_distribution?).and_return(true)
@@ -37,7 +37,7 @@ describe Api::V1::ErrataController, :katello => true do
 
     KTEnvironment.stub(:find).and_return(@organization.library)
     @erratum = {}
-    @erratum.stub(:repoids).and_return([ @repo.pulp_id ])
+    @erratum.stub(:repoids).and_return([@repo.pulp_id])
     ::Errata.stub(:find_by_errata_id => @erratum)
     ::Errata.stub(:filter => @erratum)
 

@@ -57,7 +57,7 @@ class Api::ApiController < ActionController::Base
   end
 
   def request_from_katello_cli?
-     request.headers['User-Agent'].to_s =~ /^katello-cli/
+    request.headers['User-Agent'].to_s =~ /^katello-cli/
   end
 
   def process_action(method_name, *args)

@@ -18,25 +18,25 @@ class Api::V2::FiltersController < Api::V1::FiltersController
   include Api::V2::Rendering
 
   api :GET, "/content_view_definitions/:content_view_definition_id/filters",
-    "List filters"
+      "List filters"
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
   def index
     super
   end
 
   api :POST, "/content_view_definitions/:content_view_definition_id/filters",
-    "Create a filter for a content view definition"
+      "Create a filter for a content view definition"
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
   param :filter, Hash, :required => true, :action_aware => true do
-  param :name, String, :desc => "name of the filter", :required => true
+    param :name, String, :desc => "name of the filter", :required => true
   end
   def create
     filter = Filter.create!(:content_view_definition => @definition, :name => params[:filter][:name])
     respond :resource => filter
   end
 
-  api :GET,  "/content_view_definitions/:content_view_definition_id/filters/:id",
-    "Show filter info"
+  api :GET, "/content_view_definitions/:content_view_definition_id/filters/:id",
+      "Show filter info"
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
   param :id, String, :desc => "name of the filter", :required => true
   def show
@@ -44,7 +44,7 @@ class Api::V2::FiltersController < Api::V1::FiltersController
   end
 
   api :DELETE, "/content_view_definitions/:content_view_definition_id/filters/:id",
-    "Delete a filter"
+      "Delete a filter"
   param :content_view_definition_id, String, :desc => "id of the content view definition", :required => true
   param :id, String, :desc => "name of the filter", :required => true
   def destroy
@@ -62,7 +62,7 @@ class Api::V2::FiltersController < Api::V1::FiltersController
   api :PUT, "/content_view_definitions/:content_view_definition_id/filters/:id/products",
       "Update products for a content view definition filter"
   param :content_view_definition_id, :identifier, :required => true,
-        :desc => "content view definition identifier"
+        :desc                                               => "content view definition identifier"
   param :id, String, :desc => "name of the filter", :required => true
   param :products, Array, :desc => "Updated list of product ids", :required => true
   def update_products
@@ -91,7 +91,7 @@ class Api::V2::FiltersController < Api::V1::FiltersController
   private
 
   def find_definition
-    @definition = ContentViewDefinition.find(params[:content_view_definition_id])
+    @definition   = ContentViewDefinition.find(params[:content_view_definition_id])
     @organization ||= @definition.organization
   end
 

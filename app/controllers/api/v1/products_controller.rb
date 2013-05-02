@@ -22,24 +22,24 @@ class Api::V1::ProductsController < Api::V1::ApiController
 
   def rules
     index_test = lambda { Product.any_readable?(@organization) }
-    read_test = lambda { @product.readable? }
-    edit_test = lambda { @product.editable? }
-    repo_test = lambda { Product.any_readable?(@organization) }
+    read_test  = lambda { @product.readable? }
+    edit_test  = lambda { @product.editable? }
+    repo_test  = lambda { Product.any_readable?(@organization) }
 
     {
-      :index => index_test,
-      :show => read_test,
-      :update => edit_test,
-      :destroy => edit_test,
-      :repositories => repo_test,
-      :set_sync_plan => edit_test,
-      :remove_sync_plan => edit_test
+        :index            => index_test,
+        :show             => read_test,
+        :update           => edit_test,
+        :destroy          => edit_test,
+        :repositories     => repo_test,
+        :set_sync_plan    => edit_test,
+        :remove_sync_plan => edit_test
     }
   end
 
   def param_rules
     {
-        :update => {:product => [:description, :gpg_key_name, :recursive]}
+        :update => { :product => [:description, :gpg_key_name, :recursive] }
     }
   end
 
@@ -110,7 +110,7 @@ class Api::V1::ProductsController < Api::V1::ApiController
   param :content_view_id, :identifier, :desc => "find repos in content view instead of default content view"
   def repositories
     respond_for_index :collection => @product.repos(@environment, query_params[:include_disabled], @content_view).
-      where(query_params.slice(:name))
+        where(query_params.slice(:name))
   end
 
   api :POST, "/organizations/:organization_id/products/:id/sync_plan", "Assign sync plan to product"

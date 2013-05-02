@@ -19,7 +19,7 @@ describe Api::V1::SubscriptionsController do
   include SystemHelperMethods
   include AuthorizationHelperMethods
 
-  let(:facts) { {"distribution.name" => "Fedora"} }
+  let(:facts) { { "distribution.name" => "Fedora" } }
   let(:uuid) { '1234' }
 
   let(:user_with_read_permissions) { user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) } }
@@ -32,15 +32,15 @@ describe Api::V1::SubscriptionsController do
     set_default_locale
     disable_org_orchestration
 
-    Resources::Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Resources::Candlepin::Consumer.stub!(:create).and_return({ :uuid => uuid, :owner => { :key => uuid } })
     Resources::Candlepin::Consumer.stub!(:update).and_return(true)
 
-    Runcible::Extensions::Consumer.stub!(:create).and_return({:id => uuid})
+    Runcible::Extensions::Consumer.stub!(:create).and_return({ :id => uuid })
     Runcible::Extensions::Consumer.stub!(:update).and_return(true)
 
-    @organization = Organization.create!(:name=>'test_org', :label=> 'test_org')
-    @environment_1 = KTEnvironment.create!(:name=>'test_1', :label=> 'test_1', :prior => @organization.library.id, :organization => @organization)
-    @system = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
+    @organization  = Organization.create!(:name => 'test_org', :label => 'test_org')
+    @environment_1 = KTEnvironment.create!(:name => 'test_1', :label => 'test_1', :prior => @organization.library.id, :organization => @organization)
+    @system        = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
     System.stub!(:first).and_return(@system)
   end
 
@@ -81,14 +81,14 @@ describe Api::V1::SubscriptionsController do
     end
 
     describe "list subscriptions" do
-      let(:action) { :index}
+      let(:action) { :index }
       let(:req) { get :index, :system_id => @system.id }
       let(:authorized_user) { user_with_read_permissions }
       let(:unauthorized_user) { user_without_read_permissions }
       it_should_behave_like "protected action"
 
       it "should find System", :katello => true do #TODO heapdin
-        System.should_receive(:first).once.with(hash_including(:conditions => {:uuid => @system.uuid})).and_return(@system)
+        System.should_receive(:first).once.with(hash_including(:conditions => { :uuid => @system.uuid })).and_return(@system)
         get :index, :system_id => @system.uuid
       end
 

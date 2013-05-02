@@ -14,18 +14,18 @@ class Api::V1::RepositorySetsController < Api::V1::ApiController
   respond_to :json
 
   before_filter :find_product, :only => [:enable, :disable, :index]
-  before_filter :find_product_content, :only=> [:enable, :disable]
+  before_filter :find_product_content, :only => [:enable, :disable]
 
   before_filter :authorize
 
 
   def rules
-    edit_product_test = lambda{@product.editable?}
-    read_test = lambda{@product.readable?}
+    edit_product_test = lambda { @product.editable? }
+    read_test         = lambda { @product.readable? }
     {
-      :enable => edit_product_test,
-      :disable => edit_product_test,
-      :index => read_test,
+        :enable  => edit_product_test,
+        :disable => edit_product_test,
+        :index   => read_test,
     }
   end
 
@@ -36,7 +36,7 @@ class Api::V1::RepositorySetsController < Api::V1::ApiController
   param :id, :number, :required => true, :desc => "id or name of the repository set to enable"
   def enable
     raise _('Repository sets are enabled by default for custom products..') if @product.custom?
-    respond_for_async :resource => @product.async(:organization=>@organization).refresh_content(@product_content.content.id)
+    respond_for_async :resource => @product.async(:organization => @organization).refresh_content(@product_content.content.id)
   end
 
   api :POST, "/product/:product_id/repository_sets/:id/disable", "Enable a repository set for a product."
@@ -45,7 +45,7 @@ class Api::V1::RepositorySetsController < Api::V1::ApiController
   param :id, :number, :required => true, :desc => "id of the repository set to disable"
   def disable
     raise _('Repository sets are not applicable for custom products..') if @product.custom?
-    respond_for_async :resource => @product.async(:organization=>@organization).disable_content(@product_content.content.id)
+    respond_for_async :resource => @product.async(:organization => @organization).disable_content(@product_content.content.id)
   end
 
   api :GET, "/product/:product_id/repository_sets/", "List repository sets for a product."
@@ -53,10 +53,10 @@ class Api::V1::RepositorySetsController < Api::V1::ApiController
   def index
     raise _('Repository sets are not available for custom products.') if @product.custom?
     content = @product.productContent.collect do |pc|
-          content = pc.content.as_json.symbolize_keys
-          content[:katello_enabled] = pc.katello_enabled?
-          content
-        end
+      content                   = pc.content.as_json.symbolize_keys
+      content[:katello_enabled] = pc.katello_enabled?
+      content
+    end
     respond :collection => content
   end
 

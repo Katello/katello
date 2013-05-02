@@ -21,8 +21,8 @@ class Api::V2::RepositoriesController < Api::V1::RepositoriesController
 
   def param_rules
     {
-      :create => {:repository  => [:name, :url, :gpg_key_name]},
-      :update => {:repository  => [:gpg_key_name]}
+        :create => { :repository => [:name, :url, :gpg_key_name] },
+        :update => { :repository => [:gpg_key_name] }
     }
   end
 

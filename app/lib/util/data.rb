@@ -20,7 +20,7 @@ module Util
     def self.ostructize(obj, options={})
 
       options[:prefix_keys] ||= []
-      options[:prefix] ||= '_'
+      options[:prefix]      ||= '_'
 
       if obj.is_a? Hash
 
@@ -34,7 +34,7 @@ module Util
           end
 
           raise RuntimeError.new("Error occured while converting Hash to OpenStruct. "+
-                "Key '%s' conflicts with method OpenStruct#%s." % [new_key, new_key]) if Object.respond_to? new_key
+                                     "Key '%s' conflicts with method OpenStruct#%s." % [new_key, new_key]) if Object.respond_to? new_key
 
           ostructized_hash[new_key] = ostructize(value, options)
         end
