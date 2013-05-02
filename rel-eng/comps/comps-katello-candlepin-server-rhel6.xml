@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE comps PUBLIC "-//Red Hat, Inc.//DTD Comps info//EN" "comps.dtd">
+
+<comps>
+<!--  <meta> -->
+<!-- Meta information will go here eventually -->
+<!--  </meta> -->
+  <group>
+    <id>katello-candlepin-server</id>
+    <name>Candlepin for Katello Server</name>
+    <description>Candlepin Server Packages</description>
+    <uservisible>true</uservisible>
+    <packagelist>
+       <packagereq type="default">akuma</packagereq>
+       <packagereq type="default">candlepin</packagereq>
+       <packagereq type="default">candlepin-devel</packagereq>
+       <packagereq type="default">candlepin-jboss</packagereq>
+       <packagereq type="default">candlepin-selinux</packagereq>
+       <packagereq type="default">candlepin-tomcat6</packagereq>
+       <packagereq type="default">netty</packagereq>
+       <packagereq type="default">oauth</packagereq>
+       <packagereq type="default">thumbslug</packagereq>
+       <packagereq type="default">thumbslug-selinux</packagereq>
+    </packagelist>
+  </group>
+  <group>
+    <id>Katello-candlepin-server-debuginfo</id>
+    <name>Candlepin for Katello Server Debuginfo</name>
+    <description>Candlepin Server Debuginfo Packages</description>
+    <uservisible>true</uservisible>
+    <packagelist>
+       <packagereq type="optional">akuma-debuginfo</packagereq>
+    </packagelist>
+  </group>
+</comps>
