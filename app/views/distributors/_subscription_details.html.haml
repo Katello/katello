@@ -1,0 +1,23 @@
+%li
+  %hr{:width=>"75%"}
+%li
+  = _('GPG Key URL: ')
+  - product_content.content.gpgUrl.split(',').each do |link|
+    - if link == 'http://'
+      = _("None")
+    - else
+      %a{:href => "#{link}"}
+        = link
+%li
+  -# TODO: This content url needs to get the source prefix (http:...) from somewhere
+  - link = product_content.content.contentUrl
+  = _('Content Download URL: ')
+  -# %a{:href => "#{link}"}
+  -#  = link
+  = link
+%li
+  = _('Repo Type: ')
+  = product_content.content.type
+%li
+  = _('Enabled by Default: ')
+  = product_content.enabled

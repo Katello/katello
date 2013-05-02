@@ -1,0 +1,34 @@
+library:
+  name:           Library
+  description:    This is the Library
+  library:        true
+  organization:   acme_corporation
+  label:          library_label
+
+dev:
+  name:           Dev
+  description:    Dev environment.
+  organization:   acme_corporation
+  priors:         library
+  label:          dev_label
+
+staging:
+  name:           Staging
+  description:    Staging environment.
+  organization:   acme_corporation
+  priors:         library
+  label:          staging_label
+
+candlepin_library:
+  name:           Library
+  description:    This is the Library
+  library:        true
+  organization:   candlepin_org
+  label:          candlepin_library
+
+candlepin_dev:
+  name:           Candlepin Dev
+  description:    Dev environment.
+  organization:   candlepin_org
+  priors:         library
+  label:          candlepin_dev_label

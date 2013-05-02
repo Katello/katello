@@ -1,0 +1,61 @@
+@import "katello_base";
+
+
+#orgs {
+  #events {
+    table {
+      .column_1 {
+        width: 75px;
+      }
+    }
+  }
+  #show_debug_button {
+    display: none;
+  }
+  #container {
+    .left_panel {
+      #new {
+        width: 10em !important;
+      }
+    }
+    #panel-frame {
+      .tupane_footer {
+        background-color: $g1;
+        text-align: right;
+        @include unselectable();
+        label {
+          color: $g7;
+          padding: 8px;
+          line-height: 16px;
+        }
+        input[type="checkbox"]{
+          float: right;
+          margin-top: 2px;
+          display: none;
+        }
+        .fav_spinner {
+          float: right;
+        }
+        .favorite {
+          float: right;
+          text-align: left;
+          text-transform: capitalize;
+          text-indent: -9999px;
+          &:hover {
+            background-position: -624px -16px;
+            @include opacity(.75);
+          }
+          &.selected {
+            background-position: -624px -16px;
+            @include opacity(1);
+          }
+        }
+        .default_org:checked + .label_default_org {
+          .favorite {
+            background-position: -624px -16px;
+          }
+        }
+      }
+    }
+  }
+}

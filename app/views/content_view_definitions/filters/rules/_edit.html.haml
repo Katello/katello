@@ -1,0 +1,39 @@
+= render :partial => "content_view_definitions/tupane_header"
+
+= content_for :content do
+
+  .grid_12#rule
+
+    .panel_link
+      = link_to(_("◀ Back to Filter List"),
+        content_view_definition_filters_path(view_definition.id), {:class => "separator"})
+      = link_to(_("Filter: %{name}") % {:name => filter.name},
+        edit_content_view_definition_filter_path(view_definition.id, filter.id))
+
+    %br
+
+    .grid_12.simple-box
+
+      %h4 #{rule_type}
+
+      .simple-box-body
+
+        #inclusion{'data-initial_value' => included_text(rule)}
+          = _("Specifying %{rule_type} to %{include}") % {:include => included_text(rule), :rule_type => rule_type}
+          %a.subpanel_element{"data-url" => edit_inclusion_content_view_definition_filter_rule_path(view_definition, filter, rule)}
+            = _("(Edit)")
+
+        - if rule.content_type == FilterRule::ERRATA
+          %br
+          = render :partial => "content_view_definitions/filters/rules/edit_errata",
+                   :locals => {:view_definition => view_definition, :filter => filter,
+                               :rule => rule, :rule_type => rule_type,
+                               :editable => editable, :item_partial => item_partial}
+
+        - else
+          = render :partial => "content_view_definitions/filters/rules/parameter_list",
+                   :locals => {:view_definition => view_definition, :filter => filter,
+                               :rule => rule, :rule_type => rule_type,
+                               :editable => editable, :item_partial => item_partial}
+
+= render :template => "layouts/tupane_layout"

@@ -1,0 +1,101 @@
+#!/usr/bin/ruby
+# vim: ft=ruby:ts=2:sw=2:et
+
+puts '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$$7......~$$$$:......:$$$$:......$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$$$.    .=$$$7:     .:$$$$,      $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$$$.    .=$$$7:     .:$$$$,      $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$$$.     ........................$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$$$.        .....................$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$$$+.           . .    . .    ..=$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$$$$I        . .... . .. .. . ..7$$$$$$$$$$$$$$$$$$$$$$$+....$$$$'
+puts '$$$$$$$$$$$$$$$$$.                       ..$$$$$$$$$$$$$$$$$$$$$$$7$,   .$$$$'
+puts '$$$$$$$$$$$$$$$$$7,                      .7$$$$$$$$$$$$$$?~.=I$$$$$$$=,=7$$$$'
+puts '$$$$$$$$$$$$$$$$$$$..                   .?$$$$$$$$$$$$?..I$$$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$$$$$$7 .                   ..$$$$$$$$$$..=$$$$$$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$$$$$$.                      .$$$$$$$7..~$$$$$$$$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$$$$$$.                      .$$$$$$:..$$$$$$$$$$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$$$$$~.     .....$$$..........~$$$7..+$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$$$$$ .         .$$$.        ..$$$...$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$$$$$.  . .     .$$$.        ..I7  ,$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$$$$7        . ..$$$. .  .. . ..7:..,$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$$$$.            ....          .$$$+..=$$$$$$$$$$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$$$$.                          .I$$$$I..+$$$$$$$$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$$$:                           .:$$$$$$7..7$$$$$$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$$$.                        .    $$$$$$$$7..$$$$$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$$I.                             ?$$$$$$$$$$,,$$$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$7,.                             .$$$$$$$$$$$7,:$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$$..                            ..7$$$$$$$$$$$$$~,$$$$$$$$$$$$$$$'
+puts '$$7$$$$$$$$$$$                               .,$$$$$$$$$$$$$$$,I$$$$$$$$$$$$$'
+puts '$$$$7$$$$$$$$: . .. . .                       .$$$$$$$$$$$$$$$$$:$$$$$$$$$$$$'
+puts '$$$$$$7:$$$$$.           ...,+7$$$$$$$$$$$$I,..$$$$$$$$$$$$$$$$$$$7$$$$$$$$$$'
+puts '$$$$$$$$$77$?~::::+I$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+puts '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+puts '                                                   Katello integrity checker'
+puts '                                                   (takes a while to finish)'
+
+Dir.chdir "/usr/share/katello"
+ENV["RAILS_ENV"] = 'production'
+require "/usr/share/katello/config/boot"
+require "/usr/share/katello/config/application"
+Rails.application.require_environment!
+
+# TYPE => DESCRIPTION (HOW TO FIX IT)
+ERROR_TYPES = {}
+ERROR_TYPES[:ERRREPOKAPU] = <<EOS
+Repository was found in Katello, but not in Pulp. To fix this you need to add
+the repository to Pulp using pulp-admin cli tool.
+EOS
+ERROR_TYPES[:ERRREPOPUKA] = <<EOS
+Repository was found in Pulp, but not in Katello.
+EOS
+ERROR_TYPES[:TEMPLATE] = <<EOS
+Use this as a template for your description. Please keep paragraph width max. 79
+characters. Inform user how to fix error.
+EOS
+
+$errors = {}
+def err(type, msg)
+  $stderr.puts "#{type.to_s}: #{msg}"
+  $errors[type] += 1 rescue $errors[type] = 1
+end
+
+# use admin user to get oauth header
+User.current = User.find(1)
+
+# <CHECKS>
+
+if defined? Resources::Pulp::Repository
+  # Pulp version 1.x checks
+
+  puts "Checking repos from Katello against Pulp..."
+  Repository.all.each do |repo|
+    if Resources::Pulp::Repository.find(repo.pulp_id).nil?
+      err :ERRREPOKAPU, "repo #{repo.id} (#{repo.pulp_id}) not found in Pulp"
+    end
+  end
+
+  puts "Checking repos from Pulp against Katello..."
+  Resources::Pulp::Repository.all.each do |repo_json|
+    id = repo_json["id"]
+    if Repository.where(:pulp_id => id).count != 1
+      err :ERRREPOPUKA, "repo '#{id}' not found in Katello"
+    end
+  end
+else
+  # Pulp version 2.x checks
+
+  # TODO
+end
+
+# </CHECKS>
+
+# print final result
+puts "\nErrors found: #{$errors.values.sum}"
+$errors.each_pair do |type, count|
+  puts "#{type.to_s} (#{count}):\n#{ERROR_TYPES[type]}"
+end
+
+# EOF

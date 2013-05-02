@@ -1,0 +1,59 @@
+#dashboard_errata.big_widget{"data-quantity"=>quantity, "data-id"=>"errata"}
+  - if systems_hash.empty?
+    %p #{_("There are no errata that need to be applied to registered systems.")}
+  - else
+    .list
+      .block_head.clear
+        .column_head.col_1
+          #{_("Type")}
+        .column_head.col_2
+          #{_("Errata")}
+        .column_head.col_3
+          #{_('Product')}
+        .column_head.col_4
+          #{_('Info')}
+      .scroll-pane
+        -for item in n_errata
+          - erratum = item[:details]
+          - systems = item[:summary][:applicable_consumers]
+          - if !systems.empty?
+            .errata
+              %div.errata_item
+                .col_1
+                  %div{:class => 'tipsify ' + errata_type_class(erratum),
+                       'original-title' => errata_human_type(erratum[:type])}
+                .col_2.one-line-ellipsis
+                  %div.collapsed
+                  %span
+                    #{erratum[:id]} (#{systems.length} #{_('Systems')})
+                .col_3.one-line-ellipsis
+                  #{errata_product_names(erratum, repos)}
+                .col_4
+                  %span.tipsy-icon.info.errata-info{ "data-title" => erratum[:title],
+                                                     "data-issued" => erratum[:issued],
+                                                     "data-description" => erratum[:description],
+                                                     "data-id" => erratum[:id],
+                                                     "data-packages" => erratum[:pkglist].to_json,
+                                                     "data-reference_url" => (erratum[:references][0] ? erratum[:references][0][:href] : '') }
+
+              %div.system_list
+                .subheader
+                  .col_1
+                    &nbsp;
+                  .subcol_2
+                    #{_('System')}
+                  .subcol_3
+                    #{_('Environment')}
+                  .subcol_4
+                    #{_('Content View')}
+                - for s in systems
+                  - system = systems_hash[s]
+                  .system
+                    .col_1
+                      &nbsp;
+                    .subcol_2.one-line-ellipsis
+                      = link_to system.name, system_path_helper(system)
+                    .subcol_3.one-line-ellipsis
+                      #{system.environment.name}
+                    .subcol_4.one-line-ellipsis
+                      #{system.content_view.try(:name)}

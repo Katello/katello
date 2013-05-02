@@ -1,0 +1,85 @@
+= content_for :title do
+  = @errata.id
+
+= content_for :navigation do
+  = render_menu(1..2, promotion_errata_navigation)
+
+= content_for :content do
+  .clear
+
+  %fieldset
+    .grid_2.ra
+      %label #{_("Advisory")}:
+    .grid_5.la
+      = @errata.errata_id
+
+  %fieldset
+    .grid_2.ra
+      %label #{_("Title")}:
+    .grid_5.la
+      = @errata.title
+
+  %fieldset
+    .grid_2.ra
+      %label #{_("Type")}:
+    .grid_5.la
+      = @errata.type
+
+  %fieldset
+    .grid_2.ra
+      %label #{_("Issued")}:
+    .grid_5.la
+      = @errata.issued
+
+  %fieldset
+    .grid_2.ra
+      %label #{_("Updated")}:
+    .grid_5.la
+      = @errata.updated
+
+  /%fieldset
+  /  .grid_2.ra
+  /    %label #{_("Affected Products")}:
+  /  .grid_5.la
+  /    Red Hat Enterprise Linux 5
+  /    %br
+  /    Red Hat Super Product
+
+  %fieldset
+    .grid_2.ra
+      %label #{_("Associated Bugs")}:
+    .grid_8
+      - if @errata.references.length > 0
+        %table
+          %thead
+            %th
+              #{_("Type")}
+            %th
+              #{_("ID / Link")}
+            %th
+              #{_("Title")}
+          %tbody
+            - @errata.references.each do |reference|
+              - if reference[:type] != "self"
+                %tr
+                  %td
+                    = reference[:type]
+                  %td
+                    - if reference[:href]
+                      %a{:href => reference[:href]}
+                        = reference[:id].nil? ? _("link") : reference[:id]
+                    - else
+                      = reference[:id].nil? ? _("none") : reference[:id]
+                  %td
+                    = reference[:title].nil? ? _('none') : reference[:title]
+      - else
+        #{_("None.")}
+
+  %fieldset
+    .grid_2.suffix_5.la
+      %label #{_("Description")}:
+    .grid_8
+      %pre
+        = @errata.description
+
+= render :template => "layouts/tupane_layout"

@@ -1,0 +1,29 @@
+= javascript 'widgets/jquery.jeditable.helpers'
+
+= content_for :title do
+  = @organization.name
+
+= content_for :navigation do
+  = render_menu(1..2, organization_navigation)
+
+= content_for :content do
+  #events
+    %table.scroll-panel
+      %thead
+        %th.column_1
+          = _("Time")
+        %th
+          = _("Message")
+      %tbody
+        - if !entries.nil? && entries.length > 0
+          - entries.each do |entry|
+            %tr{:class => cycle(nil, 'alt')}
+              %td.column_1
+                = format_time(entry['timestamp'])
+              %td
+                = entry['message']
+        - else
+          %tr
+            %td{:colspan=>"3"} #{_("No event history found for %s") % [@organization.name]}
+
+= render :template => "layouts/tupane_layout"

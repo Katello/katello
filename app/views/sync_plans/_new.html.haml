@@ -1,0 +1,9 @@
+= content_for :title do
+  #{_("New Sync Plan")}
+
+= content_for :content do
+  .grid_8#plan
+    = kt_form_for @plan, :html => {:id => 'new_sync_plan'} do |form|
+      = render :partial => 'form', :locals => { :form => form }
+
+= render :template => "layouts/tupane_layout"

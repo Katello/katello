@@ -1,0 +1,36 @@
+= javascript :system_events
+
+= render :partial => "systems/system_tupane_header_nav"
+
+= content_for :content do
+  - if total_events_length > 0
+    .grid_8
+      %form#event_filter_form.clear
+        %input{ :name => "event_search", :type => "search",
+            :placeholder => _('Filter on loaded Events...'), :id=>"event_search_filter",
+             'data-search_url' => items_system_events_path(@system.id) }
+        %button.filter_button#event_filter_button #{('Filter')}
+        %br.clear
+
+      %table.filter_table.events.ajaxScroll{'data-url' => status_system_events_path(system.id), 'data-total_events' => total_events_length}
+        %thead
+          %th
+            %a#event_sort{"data-sort"=>"asc", :class=>"ascending"}
+              #{_("Event")}
+          %th
+            #{_("Date")}
+        %tbody#event_items
+          = render :partial => 'event_items', :locals => {:system => system, :include_tr => true}, :collection=> tasks, :as=>:t
+      #list-spinner
+        = image_tag("icons/spinner.gif", :class=>"ajax_scroll")
+  - else
+    %p #{_("There are no events to display.")}
+
+= content_for :footer do
+  .grid_8
+    - if current_user.page_size < total_events_length
+      %a#more{:style => "padding-left: 20px;", "data-scroll_url"=>url_for(more_events_system_events_path(@system.id)), "data-page_size"=>current_user.page_size, :class=>"fl"}
+    - if total_events_length > 0
+      %span{:id => 'loaded_summary', :style => "padding-left: 20px;"}
+
+= render :template => "layouts/tupane_layout"

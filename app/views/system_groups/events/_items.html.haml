@@ -1,0 +1,32 @@
+- if include_tr
+  - shading = cycle("", "alt")
+  <tr class = "#{shading} tasks">
+
+- job_details = job.as_json
+- job_messages = job.messages
+- job_pending = job_details[:state] == :running
+
+%td.event_name{"data-pending-job-id" => (job.id if job_pending)}
+  - if job_pending
+    = image_tag("icons/spinner.gif")
+  - else
+    %span.icon_wrap.fl.status_icons
+      %span.fl{:class=>(job_details[:state] == :error ? "error_icon" : "check_icon")}
+        &nbsp;&nbsp;
+  %a.event_status.subpanel_element{"data-url"=>system_group_event_path(group.id, job.id)}
+    - if job_pending
+      = job_messages[:pending_action_message]
+    - else
+      = job_messages[:requested_action_message]
+%td.event_date
+  - if job_pending
+    = image_tag("icons/spinner.gif")
+    = job_messages[:requested_action_message]
+  - else
+    = format_time(job_details[:finish_time])
+
+- if include_tr
+  </tr>
+
+
+

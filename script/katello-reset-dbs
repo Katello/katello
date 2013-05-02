@@ -1,0 +1,169 @@
+#!/bin/bash
+
+SRV="sudo /sbin/service"
+
+KATELLO_PREFIX=${KATELLO_PREFIX:-/katello}
+
+if [ -f /etc/sysconfig/katello ]; then
+  # load configuration values
+  . /etc/sysconfig/katello
+fi
+
+# default configuration values (should be the same as in our sysv init script)
+KATELLO_HOME=${KATELLO_HOME:-/usr/share/katello}
+KATELLO_ENV=${KATELLO_ENV:-production}
+DEPLOYMENT="katello"
+
+function usage {
+  echo "Reset your Katello databases.  Wipes all Katello, Pulp and Candlepin"
+  echo "Usage: `basename $0` [-f|--force] [-h|--help] "
+  echo "       <env: development, production> <katello-rakefile-dir>"
+  echo "example:"
+  echo "$ `basename $0` development /home/youruser/dev/katello/src"
+  exit 1
+}
+# Stolen from:
+# http://stackoverflow.com/questions/402377/using-getopts-in-bash-shell-script-to-get-long-and-short-command-line-options
+USAGE=0
+FORCE=0
+while true; do
+  case "$1" in
+    -h | --help ) USAGE=1; shift ;;
+    -f | --force ) FORCE=1; shift ;;
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
+
+if [ "$USAGE" = "1" ]; 
+  then
+    usage
+fi
+
+# If we are using arguments
+if ([ $# -gt 0 ])
+then
+  KATELLO_ENV=$1
+  KATELLO_HOME=$2
+  echo "Resetting [$KATELLO_ENV] environment found @: [$KATELLO_HOME]"
+else
+  KATELLO_ENV=${KATELLO_ENV:-production}
+  KATELLO_HOME=${KATELLO_HOME:-/usr/share/katello}
+  echo "Defaulting [$KATELLO_ENV] environment found @: [$KATELLO_HOME]"
+fi
+
+if [ $KATELLO_PREFIX = "/headpin" -o $KATELLO_PREFIX = "/sam" ] ; then
+    DEPLOYMENT="sam"
+fi
+
+echo -e "\n"
+echo '***********************************************************'
+echo "THIS SCRIPT WILL ERASE KATELLO / CANDLEPIN / PULP DATABASES"
+echo '***********************************************************'
+echo -e "\n"
+echo "All data from all systems will be erased completely!"
+echo -e "\n"
+echo "This script only works with PostgreSQL database."
+echo -e "\n"
+echo "It is strongly recommended to back up databases:"
+if [ $DEPLOYMENT = "katello" ] ; then
+    echo " # mongodump --db pulp_database --out - > pulp_database.json"
+fi
+echo " # pg_dump -c candlepin > candlepin_db.sql"
+echo " # pg_dump -c katello > katello_db.sql"
+echo -e "\n"
+
+
+if [ ! "$FORCE" = "1" ]; then
+  read -p "Are you sure you want reset your [$KATELLO_ENV] environment? (yes/no)? "
+  [ "$REPLY" != "yes" ] && exit 1
+fi
+
+if [ ! -f "$KATELLO_HOME/Rakefile" ]; then
+  echo "** ERROR **"
+  echo "Katello Rakefile not not found in $KATELLO_HOME" 1>&2
+  exit 1
+fi
+
+echo "Erasing all data..."
+
+function stop_if_running {
+  $SRV "$1" status >/dev/null && $SRV "$1" stop
+}
+
+function start_unless_running {
+  $SRV "$1" status >/dev/null || $SRV "$1" start
+}
+
+# Only stop the services if we are in production mode
+if [ $KATELLO_ENV = "production" ]
+then
+    echo "Stopping Katello instance"
+    stop_if_running katello
+
+    echo "Stopping Katello jobs instance"
+    stop_if_running katello-jobs
+fi
+
+if [ $DEPLOYMENT = "katello" ] ; then
+    echo "Stopping Pulp instance"
+    stop_if_running mongod
+    stop_if_running qpidd
+    stop_if_running httpd
+fi
+
+echo "Stopping Candlepin instance"
+stop_if_running tomcat6
+
+if [ $DEPLOYMENT = "katello" ] ; then
+    echo "Dropping Pulp database"
+    # mongo sometimes hang in F14/F15 (workaround 725601)
+    #echo 'db.dropDatabase();' | mongo pulp_database
+    $SRV mongod status >/dev/null && $SRV mongod stop
+    sudo rm -rf /var/lib/mongodb/pulp_database*
+    $SRV mongod start
+
+    echo "Initializing Pulp database"
+    sleep 10s # let mongo initialize
+    sudo /usr/bin/pulp-manage-db
+fi
+
+echo "Initializing Candlepin database"
+sudo /usr/share/candlepin/cpdb --drop --create
+sudo /usr/share/candlepin/cpsetup -s -k `sudo cat /etc/katello/keystore_password-file`
+
+
+# cpsetup alters tomcat configuration, use the original
+sudo cp /etc/tomcat6/server.xml.original /etc/tomcat6/server.xml
+
+if [ $DEPLOYMENT = "katello" ] ; then
+    echo "Starting Pulp instance"
+    $SRV qpidd start
+    $SRV mongod start
+    $SRV httpd start
+fi
+
+echo "Starting Candlepin instance"
+$SRV tomcat6 restart
+
+echo "Initializing Katello database"
+# cannot use initdb for this (BZ 745542)
+pushd $KATELLO_HOME >/dev/null
+
+RAKE_TASKS=( 'clear_search_indices' 'db:migrate:reset' 'seed_with_logging' )
+for i in ${RAKE_TASKS[@]};  do 
+  RAILS_ENV=$KATELLO_ENV RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX rake $i --trace  2>&1
+done
+popd >/dev/null
+
+# Only stop the services if we are in production mode
+if [ $KATELLO_ENV = "production" ]
+then
+    echo "Starting Katello instance"
+    $SRV katello start
+
+    echo "Starting Katello jobs instance"
+    $SRV katello-jobs start
+fi
+
+echo "DONE. CHECK ALL THE MESSAGES ABOVE!"

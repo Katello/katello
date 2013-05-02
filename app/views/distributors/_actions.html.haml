@@ -1,0 +1,23 @@
+= javascript do
+  :plain
+    localize({
+      "confirm_distributor_remove_action" : function(x){ return '#{escape_javascript(_("Are you sure you want to delete the %X selected distributor(s)?"))}'.replace("%X", x); },
+      });
+
+%h4
+  #{_('List Actions')}:
+
+.panel_action{:class=>"disabled", 'data-id'=>"remove_distributors", 'data-url'=>bulk_destroy_distributors_path(), 'data-method'=>"DELETE"}
+  .delete_icon.fl
+  %a.request_action
+    #{_("Remove Distributor(s)")}
+  .options
+    %div.confirmation_text
+    .actions
+      %input.cancel.button{:type=>"button", :value=>_('No')}
+      %input.trigger.button{:type=>"button", :value=>_('Yes') }
+    %br.clearfloat
+
+.panel_action{'data-id'=>"select_none"}
+  #select-result
+  %a#select-none #{_("Select None")}

@@ -1,0 +1,23 @@
+- cssclass = "" if cssclass.nil?
+
+%tr.view{:id => "view_#{view.id}", :class => cssclass}
+  %td{:colspan => 4}
+    = link_to(view.name, content_view_search_link(view),
+              'original-title' => _("Browse the content view details using Content Search"),
+              :class => 'tipsify separator')
+
+    - if view_definition.publishable?
+      - if view.promoted?
+        %a.disabled.tipsify{'original-title' => unable_to_remove_view} #{_('Remove')}
+      - else
+        %a.remove_view.disabled.tipsify{'original-title' => _('Remove'),
+          'data-url' => content_view_definition_content_view_path(view_definition.id, view.id)} #{_('Remove')}
+
+        -#= link_to(_("Remove"), '#',
+        -#  'data-url' => content_view_definition_content_view_path(view_definition.id, view.id),
+        -#  :class => "remove_view tipsify", 'original-title' => _('Remove'))
+
+  - view.versions.each do |version|
+    - if version.environments.length > 0
+      = render :partial => 'content_view_definitions/views/version',
+        :locals => {:version => version, :task => version.task_status}

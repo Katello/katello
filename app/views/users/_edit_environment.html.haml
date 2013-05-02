@@ -1,0 +1,64 @@
+= javascript do
+  :plain
+    localize({
+      "noDefaultEnv": '#{escape_javascript(_("No default environment. Select an organization to choose from available environments."))}'
+    });
+    env_select.original_env_id = '#{@old_env ? @old_env.id : ''}';
+    env_select.ajax_params = {};
+    env_select.ajax_params["user_id"] = '#{@user.id}';
+
+= content_for :title do
+  #{@user.username}
+
+= content_for :remove_item do
+  -if @user.deletable?
+    = link_to _("Remove User"), { :controller => "users", :action => "destroy" }, :confirm => _('Are you sure you want to remove this user?'), :method => :delete, :class=>"remove_item", :remote=>true
+
+= content_for :navigation do
+  = render_menu(1..2, user_navigation)
+
+= content_for :content do
+  %fieldset.fl.clear
+    %h5
+      #{_("Current System Registration Defaults")}
+    .grid_2.ra
+      = label :user, :org, _("Organization:")
+    .grid_7.la#org_name
+      = @old_env ? @old_env.organization.name : _("No system registration default set for this user.")
+    .grid_2.ra.clear
+      = label :user, :env, _("Environment:")
+    .grid_7.la#env_name
+      = @old_env ? @old_env.name : _("No system registration default set for this user.")
+  - if editable
+    %fieldset.fl.clear
+      %h5
+        #{_("Choose New System Registration Defaults:")}
+    %fieldset.fl.clear
+      .grid_2.ra
+        = label :user, :org, _("Organization:")
+      .grid_7.la
+        = organization_select (@organization ? @organization.id : nil)
+    %fieldset.fl.clear
+    .promotion_paths
+      = hidden_field_tag 'user[environment_id]', @environment.id unless @environment.nil?
+      .grid_2.ra
+        %label #{_("Environment")}:
+      .grid_7.la
+        = image_tag( "icons/spinner.gif", :id=>"org_spinner", :class=>"hidden fl")
+        - if @environment.nil?
+          #env_box
+            -if @organization.nil?
+              #{_("No system registration default environment. Select an organization to choose from available environments.")}
+            -else
+              #{_("No environments are currently available in this organization. Saving will set user to no system registration default environment.")}
+        - else
+          #env_box
+            = environment_selector(:path_widget_class=>"grid_10", :path_entries_class=>"grid_10", :library_clickable=>false,
+              :accessible_envs=>accessible_envs)
+      .clear
+        &nbsp;
+      .grid_5.la.prefix_2
+        #update_user.verify_password.disabled.button{'data-url'=>update_environment_user_path(@user.id)}
+          #{_("Save")}
+
+= render :template => "layouts/tupane_layout"

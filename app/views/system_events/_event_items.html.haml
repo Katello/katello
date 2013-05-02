@@ -1,0 +1,29 @@
+- if include_tr
+  - cssclass = cycle("alt", "")
+  <tr class = "#{cssclass} tasks">
+
+%td.event_name{"data-pending-task-id" => (t.id if t.pending?)}
+  - if t.pending?
+    = image_tag("icons/spinner.gif")
+  - else
+    %span.icon_wrap.fl.status_icons
+      %span.fl{:class=>(t.overall_status=="error" ? "error_icon" : "check_icon")}
+        &nbsp;&nbsp;
+
+  %a.event_status.subpanel_element{"data-url"=>system_event_path(system.id, t.id)}
+    - if t.pending?
+      = t.pending_message
+    - else
+      = t.message
+
+%td.event_date
+  - if t.pending?
+    = image_tag("icons/spinner.gif")
+    = t.message
+  - else
+    = format_time(t.finish_time)
+
+- if include_tr
+  </tr>
+
+

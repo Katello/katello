@@ -1,0 +1,22 @@
+#dashboard_promotions.small_widget.scroll-pane{"data-quantity"=>quantity}
+  - if (changets = promotions()).empty?
+    #{_("No changesets found.")}
+  -else
+    %ul
+    - for changeset in promotions()
+      %li
+        %div.row_item
+          %span.icon_wrap.fl
+            %span.fl{:class=>changeset_class(changeset)}
+
+          .col_1.one-line-ellipsis{:title=>changeset.name}
+            %h5
+              = link_to changeset.name, changeset_path_helper(changeset)
+          .col_2
+            #{changeset_message(changeset)}
+          .col_1
+            #{changeset.environment.name}
+          .col_2
+            #{format_time changeset.promotion_date}
+
+

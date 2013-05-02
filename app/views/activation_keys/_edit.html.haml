@@ -1,0 +1,83 @@
+= javascript 'widgets/jquery.jeditable.helpers', 'activation_keys/activation_key_edit'
+
+= javascript do
+  :plain
+    localize({
+      "edit_environment": '#{escape_javascript(_('Edit Environment'))}'
+    });
+
+= content_for :title do
+  #{@activation_key.name}
+
+= content_for :remove_item do
+  - if editable
+    = link_to _("Remove Activation Key"), activation_key_path(@activation_key.id), :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
+
+= content_for :navigation do
+  = render_menu(1..2, activation_keys_navigation)
+
+= content_for :content do
+  = help_tip_button('activation_keys_edit-help')
+
+  %input#panel_element_id{:name => @activation_key.id, :type => "hidden", :value => "#{name}_#{@activation_key.id}", "data-ajax_url"=>activation_key_path(@activation_key.id)}
+
+  #activation_key
+    = hidden_field_tag 'environment_id', @activation_key.environment_id
+    .full
+      = help_tip((_("Edit Activation Key enables you to modify the selected activation key.  This key may " + |
+                 "be used during system registration.  For example, <br/><br/>" + |
+                 "subscription-manager register --org %s " + |
+                 "--activationkey %s") % [h(@activation_key.organization.label), h(@activation_key.name)]).html_safe, 'activation_keys_edit-help') |
+
+    .full
+      = form_tag activation_key_path(@activation_key), :method => :put, :remote => true do
+        %fieldset.clearfix
+          .grid_2.ra
+            %label #{_("Name")}:
+          .grid_10.la#activation_key_name{'name' => 'activation_key[name]', :class => ("editable edit_panel_element" if editable), 'data-url' => activation_key_path(@activation_key.id)} #{@activation_key[:name]}
+
+        %fieldset.clearfix
+          .grid_2.ra
+            %label #{_("Description")}:
+          .grid_10.la#activation_key_description{:style => "word-wrap: break-word;", 'name' => 'activation_key[description]', :class => ("editable edit_textarea" if editable), 'data-url' => activation_key_path(@activation_key.id)}<> #{@activation_key[:description]}
+
+      = form_tag activation_key_path(@activation_key), :method => :put, :id => "save_key" do
+        .promotion_paths#env_edit
+          = hidden_field_tag 'activation_key[environment_id]', @activation_key.environment_id
+          .grid_2.ra
+            %label #{_("Environment")}:
+          .grid_10.la
+            = environment_selector(:path_widget_class=>"grid_10", :path_entries_class=>"grid_10", :library_clickable=>false,
+              :accessible_envs=>accessible_envs, :url_products_proc=>url_products_proc)
+
+          .clear
+            &nbsp;
+
+          - if Katello.config.katello?
+            %fieldset.clearfix
+              .grid_2.ra
+                %label #{_("Content View")}:
+              .grid_10.la
+                - if editable
+                  = select_tag 'activation_key[content_view_id]',
+                    options_for_select(content_view_select_labels(@organization, @activation_key.environment),
+                    selected_content_view(@activation_key.content_view))
+                - else
+                  = @content_view.nil? ? no_content_view : @content_view.name
+
+            .prefix_2.la#products_in_env
+              %label #{_("Product(s) in this environment/content view")}:
+              .grid_10.productsbox
+                = render "environments/products", :products => products
+
+        %fieldset.clearfix
+          .grid_2.ra
+            %label #{_("Usage Limit")}:
+          .grid_10.la#activation_key_usage_limit{'name' => 'activation_key[usage_limit]', :class => ("editable edit_number" if editable), 'data-unlimited' => -1, 'data-min' => 1, 'data-url' => activation_key_path(@activation_key.id)} #{@activation_key[:usage_limit] == -1 ? _('Unlimited') : @activation_key[:usage_limit]}
+
+        .prefix_2.grid_10.ra
+          #cancel_key.button{'data-url' => edit_activation_key_path(@activation_key)}
+            #{_("Cancel")}
+          %input#save_key.button{:type => "submit", :value => "#{_("Save")}"}
+
+= render :template => "layouts/tupane_layout"

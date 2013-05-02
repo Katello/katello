@@ -1,0 +1,10 @@
+= content_for :title do
+  #{@distributor.name}
+
+= content_for :remove_item do
+  -if @distributor.deletable?
+    = link_to _("Remove Distributor"), { :controller => "distributors", :action => "destroy", :id => @distributor.id }, :confirm => _('Are you sure you want to remove this distributor?'), :method => :delete, :class=>"remove_item", :remote=>true
+
+
+= content_for :navigation do
+  = render_menu(1..2, distributors_navigation)

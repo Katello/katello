@@ -1,0 +1,2 @@
+.block.tall{:id=>"#{name}_#{item.cp_id}", "data-ajax_url" => "#{url_for(:controller=>controller.controller_name)}/#{item.cp_id}", "data-ajax_panelpage" => 'edit'}
+  = render :partial=>"subscriptions/list_subscription_show", :locals=>{:item => item}

@@ -1,0 +1,16 @@
+%table.repo_table{:style=>'display: none;'}
+  %thead
+    %th.skinny_column
+      = _('Enabled?')
+    %th
+      = _('Repository')
+  %tbody
+    - for repo in product_content.repositories
+      %tr.repo{:id=>"repo_#{repo.id}"}
+        %td
+          %label
+            =image_tag( "icons/spinner.gif", :class=>"hidden fl", :id=>"spinner_#{repo.id}", :style=>"margin-right:1px;")
+            %input.repo_enable{:id=>"input_repo_#{repo.id}", :type=>:checkbox, :value=>repo.id, "data-url" => enable_repo_path(repo.id),
+                  :disabled =>(repo.promoted? || !@provider.editable?), :checked=>(:checked if repo.enabled?)}
+        %td
+          #{repo.name}

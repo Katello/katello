@@ -1,0 +1,63 @@
+= javascript do
+  :plain
+    KT.available_environments = $.parseJSON('#{escape_javascript(environments.to_json)}');
+    localize({
+        "contentViewReset": 'The selected content view was unset. Please choose another one.'
+    });
+
+= javascript 'widgets/jquery.jeditable.helpers', 'distributors/distributor_edit'
+= render :partial => "distributor_tupane_header_nav"
+
+= content_for :content do
+  #distributor
+    %input#panel_element_id{:name => @distributor.id, :type => "hidden", :value => "#{name}_#{distributor.id.to_s}", "data-ajax_url"=>url_for(:action=> 'update')}
+    .grid_8
+      %h5 #{_("Distributor Info")}
+    .grid_8#distributor_info
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :id, :id, _("ID")
+        .grid_5.la #{distributor.id}
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :uuid, :uuid, _("UUID")
+        .grid_5.la #{distributor.uuid}
+    .clear
+    .grid_8
+      %h5 #{_("Distributor Properties")}
+    .grid_8#distributor_properties
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :distributor, :name, _("Name")
+        .grid_5.la#distributor_name{'name' => 'distributor[name]', :class=>("editable edit_panel_element" if editable), 'data-url'=>distributor_path(distributor.id)} #{distributor[:name]}
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :distributor, :description, _("Description")
+        .grid_5.la#distributor_description{'name' => 'distributor[description]', :class=>("editable edit_textarea" if editable), 'data-url'=>distributor_path(distributor.id)} #{distributor[:description]}
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :arch, :arch, _("Environment")
+        .grid_5.la#environment_path_selector{'name'=> 'distributor[environment_id]', :class=>("editable" if editable), 'data-url'=>distributor_path(distributor.id)}
+          %span #{distributor_environment_name distributor}
+      - if Katello.config.katello?
+        %fieldset
+          .grid_2.ra.fieldset
+            = label :content_view, :content_view, _("Content View")
+          .grid_5.la#distributor_content_view{'name' => 'distributor[content_view_id]', :class=>("editable edit_select" if editable), 'data-url'=>distributor_path(distributor.id), 'data-options' => distributor_content_view_opts} #{distributor.content_view}
+
+    .clear
+    .grid_8
+      %h5 #{_("Distributor Events")}
+    .grid_8#distributor_events
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :checked_in, :checked_in, _("Checked In")
+        .grid_5.la
+          = get_checkin(distributor)
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :registered_date, :registered_date, _("Registered")
+        .grid_5.la
+          = convert_time(distributor.created)
+
+= render :template => "layouts/tupane_layout"

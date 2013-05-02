@@ -1,0 +1,21 @@
+= javascript 'widgets/filtertable'
+
+= content_for :title do
+  #{@distribution.id}
+
+= content_for :navigation do
+  = render_menu(1..2, promotion_distribution_navigation)
+
+= content_for :content do
+  = render :partial => "common/filter_table"
+
+  %table.filter_table
+    %thead
+      %th #{_("File")}
+    %tbody
+      -@distribution.files.each do |file|
+        %tr
+          %td{:class=>'distribution'}
+            #{file}
+
+= render :template => "layouts/tupane_layout"

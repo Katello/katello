@@ -1,0 +1,226 @@
+#!/bin/sh
+#
+# Copyright 2013 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public License,
+# version 2 (GPLv2). There is NO WARRANTY for this software, express or
+# implied, including the implied warranties of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. You should have received a copy of GPLv2
+# along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+#
+# Red Hat trademarks are not licensed under GPLv2. No permission is
+# granted to use or replicate Red Hat trademarks that are incorporated
+# in this software or its documentation.
+#
+# vim: sw=2:ts=2:et
+
+if [ $EUID -ne 0 ]; then
+  echo -e "This script must be run as root!\n"
+  exit 1
+fi
+
+if [ -x /etc/init.d/tomcat6 -o -x /lib/systemd/system/tomcat6.service ]; then
+  TOMCAT="tomcat6"
+fi
+
+if [ -x /etc/init.d/foreman -o -x /lib/systemd/system/foreman.service ]; then
+  FOREMAN="foreman"
+fi
+
+SERVICES="$TOMCAT httpd mongod qpidd thumbslug elasticsearch $FOREMAN katello katello-jobs"
+if [ -f /etc/katello/service-list ] ; then
+  . /etc/katello/service-list
+fi
+
+. /etc/init.d/functions
+
+SERVICE_CMD="/usr/sbin/service-wait"
+
+forward_services() {
+  ACTION="$1"
+  # when set to true return sum of failed services instead the last status
+  SUM="${2:-false}"
+
+  RET=0
+  E_STAT=0
+  for service in $SERVICES; do
+    if [ -e /etc/init.d/$service -o -e /lib/systemd/system/$service.service ]; then
+      $SERVICE_CMD $service $ACTION
+      E_STAT=$?
+    fi
+    if [ $E_STAT -ne 0 ]; then
+      if [ "$SUM" == "false" ]; then
+        RET=$E_STAT
+      else
+        RET=$(($RET+1))
+      fi
+    fi
+  done
+  return $RET
+}
+
+reverse_services() {
+  ACTION="$1"
+
+  RET=0
+  E_STAT=0
+  for service in $(echo $SERVICES | tac -s" "); do
+    if [ -e /etc/init.d/$service -o -e /lib/systemd/system/$service.service ]; then
+      $SERVICE_CMD $service $ACTION
+      E_STAT=$?
+    fi
+    if [ $E_STAT -ne 0 ]; then
+      RET=$E_STAT
+    fi
+  done
+  return $RET
+}
+
+chkconfig() {
+  RET=0
+  E_STAT=0
+  for service in $SERVICES; do
+    if [ -e /etc/init.d/$service -o -e /lib/systemd/system/$service.service ]; then
+      /sbin/chkconfig $service "$@"
+      E_STAT=$?
+    fi
+    if [ $E_STAT -ne 0 ]; then
+      RET=$E_STAT
+    fi
+  done
+  return $RET
+}
+
+turn_on() {
+  echo "Enabling Katello services..."
+  chkconfig on "$@"
+  echo "Done"
+  return 0
+}
+
+turn_off() {
+  echo "Disabling Katello services..."
+  chkconfig off "$@"
+  echo "Done"
+  return 0
+}
+
+list() {
+  echo "Listing Katello services..."
+  chkconfig --list
+  echo "Done"
+  return 0
+}
+
+start() {
+  echo "Starting Katello services..."
+  forward_services start
+  echo "Done."
+  return 0
+}
+
+stop() {
+  echo "Shutting down Katello services..."
+  reverse_services stop
+  echo "Done."
+  return 0
+}
+
+status() {
+  forward_services status
+  return $?
+}
+
+allstopped() {
+  forward_services status "true"
+  RUNNING=$?
+  SERVICES_ARRAY=($SERVICES)
+  SERVICES_COUNT=${#SERVICES_ARRAY[@]}
+  return $((SERVICES_COUNT - RUNNING))
+}
+
+ensure_httpd_down() {
+  COUNT=0
+  LIMIT=10
+
+  while [ "$(pidof httpd | wc -w)" -gt 0 ] && [ "$COUNT" -lt "$LIMIT" ]
+  do
+    sleep 1
+    ((COUNT++))
+  done
+
+  if [ "$COUNT" -eq "$LIMIT" ]; then
+    killall -9 httpd
+    sleep 4
+  fi
+
+  return 0
+}
+
+OPTS=$(getopt --longoptions=exclude:,level:,no-wait-for-tomcat -n ${0##*/} -- e:l:T "$@")
+
+if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
+
+eval set -- "$OPTS"
+
+while true ; do
+  case "$1" in
+    -e|--exclude)
+      EXCLUDE=$2
+      shift
+      # the space in "$SERVICE " is intentional, don't remove it
+      SERVICES=$(while read -d " " service ; do echo ${service/$EXCLUDE}; done <<<"$SERVICES ")
+      ;;
+    -l|--level)
+      LEVEL="--level $2"
+      shift
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      echo "Internal error [$1]!" >&2
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  enable)
+    turn_on $LEVEL
+    ;;
+  disable)
+    turn_off $LEVEL
+    ;;
+  list)
+    list
+    ;;
+  status)
+    status
+    ;;
+  allstopped)
+    allstopped
+    ;;
+  restart|reload)
+    stop
+    sleep 4
+
+    ensure_httpd_down
+
+    start
+    ;;
+  *)
+    echo "Usage: $(basename $0) {start|stop|status|allstopped|reload|restart|enable|disable}"
+    exit 1
+    ;;
+esac
+exit $?

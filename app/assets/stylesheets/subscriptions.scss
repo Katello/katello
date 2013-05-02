@@ -1,0 +1,30 @@
+@import "katello_base";
+
+
+#subscriptions {
+  .tall {
+    @extend .block;
+    height: 40px;
+
+    li {
+      padding: 0;
+      height: 1.2em;
+    }
+  }
+  .status_icon {
+    height: 15px;
+    width: 15px;
+    background: $status_icons_green_small;
+    float: left;
+    margin: 1px 1px;
+    &.green {
+     background: $status_icons_green_small;
+    }
+    &.yellow {
+     background: $status_icons_yellow_small;
+    }
+    &.red {
+     background: $status_icons_red_small;
+    }
+  }
+}

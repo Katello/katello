@@ -1,0 +1,51 @@
+#!/usr/bin/env ruby
+# This command will automatically be run when you run "rails" with Rails 3 gems installed from the root of your application.
+
+require 'rubygems'
+require 'rails/commands/server'
+require 'rails/all'
+require 'rack'
+require 'webrick'
+require 'webrick/https'
+require 'yaml'
+
+# load Katello configuration
+path = File.expand_path('../../lib', __FILE__)
+$LOAD_PATH << path unless $LOAD_PATH.include? path
+require 'katello/load_configuration'
+
+#
+# this is to enable ssl and ssl cert-based client authentication
+#  use common -> use_ssl in /etc/satellite/satellite.yml to enable ssl
+#  if you are running candlepin on a separate host:
+#    make sure to copy candlepin certificates from /etc/candlepin/certs into the same local directory
+#
+
+if Katello.early_config.use_ssl
+  module Rails
+      class Server < ::Rack::Server
+          def default_options
+              super.merge({
+                  :Port => 3000,
+                  :environment => (Rails.env || "development").dup,
+                  :daemonize => false,
+                  :debugger => false,
+                  :pid => File.expand_path("tmp/pids/server.pid"),
+                  :config => File.expand_path("config.ru"),
+                  :SSLEnable => true,
+                  :SSLVerifyClient => ::OpenSSL::SSL::VERIFY_PEER,
+                  :SSLVerifyDepth  => 2,
+                  :SSLCACertificateFile => "/etc/candlepin/certs/candlepin-ca.crt",
+                  :SSLPrivateKey => OpenSSL::PKey::RSA.new(File.open("/etc/candlepin/certs/candlepin-ca.key").read),
+                  :SSLCertificate => OpenSSL::X509::Certificate.new(File.open("/etc/candlepin/certs/candlepin-ca.crt").read),
+                  :SSLCertName => [["CN", WEBrick::Utils::getservername]]
+              })
+          end
+      end
+  end
+end
+
+APP_PATH = File.expand_path('../../config/application',  __FILE__)
+require File.expand_path('../../config/boot',  __FILE__)
+require 'rails/commands'
+

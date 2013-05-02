@@ -1,0 +1,8 @@
+.grid_16#main
+  = two_panel(@users, @panel_options)
+
+= javascript :users, 'widgets/jquery.jeditable.helpers'
+
+= javascript do
+  :plain
+    var current_username = '#{_(user.username)}';

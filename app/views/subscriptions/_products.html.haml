@@ -1,0 +1,53 @@
+-#= javascript :edit_helpers
+= javascript_include_tag 'widgets/treetable'
+= render :partial=>"subscriptions_tupane_header_nav"
+
+= content_for :content do
+  .grid_10
+    .tree
+      %table#products_table
+        %thead
+          %th #{_("Provided Product Details")}
+        %tbody
+          - @subscription.provided_products.each do |product|
+            - product = subscriptions_product_helper product['productId']
+            - cycle_class = cycle("", "alt")
+            %tr{:id => "#{product.cp_id}", :class => cycle_class}
+              %td
+                #{product.name}
+            - product.productContent.each do |productContent|
+              - cycle2_class = cycle("", "alt")
+              %tr{:class => "child-of-#{product.cp_id} " + cycle2_class}
+                %td
+                  %ul
+                    %li
+                      %hr{:width=>"75%"}
+                    %li
+                      = _('Content Download URL: ')
+                      = productContent['content']['contentUrl']
+                    %li
+                      = _('GPG Key URL: ')
+                      - productContent['content']['gpgUrl'].split(',').each do |link|
+                        - if link == 'http://'
+                          = _("None")
+                        - else
+                          = link
+                    %li
+                      = _('Repo Type: ')
+                      = productContent['content']['type']
+                    %li
+                      = _('Enabled by Default: ')
+                      = productContent['enabled']
+
+= javascript do
+  :plain
+    $(document).ready(function() {
+      $("#products_table").treeTable({
+        expandable: true,
+        initialState: "collapsed",
+        clickableNodeNames: true,
+        onNodeShow: function(){$.sparkline_display_visible()}
+      });
+    });
+
+= render :template => "layouts/tupane_layout"

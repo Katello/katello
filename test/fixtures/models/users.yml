@@ -1,0 +1,28 @@
+admin:
+  username:     admin
+  password:     nimda
+  email:        admin@wayne.ent.com
+  remote_id:    admin
+  preferences:  <%= HashWithIndifferentAccess.new({}).to_yaml.inspect %>
+
+hidden:
+  username:     hidden
+  password:     nimda
+  email:        hidden@wayne.ent.com
+  remote_id:    hidden
+  hidden:       true
+  preferences:  <%= HashWithIndifferentAccess.new({}).to_yaml.inspect %>
+
+no_perms_user:
+  username:     Alfred
+  password:     <%= Password.update('Alfred') %>
+  email:        alfred@wayne.ent.com
+  preferences:  <%= HashWithIndifferentAccess.new({}).to_yaml.inspect %>
+
+disabled_user:
+  username:     disabled_user
+  password:     disabled_user_password
+  email:        disabled@user.com
+  disabled:     true
+  remote_id:    disabled
+  preferences:  <%= HashWithIndifferentAccess.new({}).to_yaml.inspect %>

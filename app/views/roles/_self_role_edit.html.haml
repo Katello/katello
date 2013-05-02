@@ -1,0 +1,37 @@
+= content_for :title do
+  #{@user.username}
+
+= content_for :remove_item do
+  -if @user.deletable?
+    = link_to _("Remove User"), { :controller => "users", :action => "destroy", :id => @user.id }, :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
+
+= content_for :navigation do
+  = render_menu(1..2, user_navigation)
+
+= content_for :content do
+  .grid_10#role
+    %h5.grid_10 #{_("Roles")}
+    - if editable
+      = form_tag update_roles_user_path(@user), :method => "put", :id => "update_roles" do
+        .grid_10
+          = select_tag "user[role_ids]", options_from_collection_for_select(Role.non_self_roles, :id, :i18n_name, @user.defined_role_ids), :multiple => true, :class => 'multiselect', :style=>"width:400px; height:200px"
+        .grid_2
+          = button_to _("Save Roles"), update_roles_user_path(@user), :method => :put, :id => :save_roles
+    -else
+      -if @user.defined_roles.length > 0
+        - for role in @user.defined_roles
+          - cycle_class = cycle("", "role-alt")
+          .grid_3.ra{:class => cycle_class}
+            %strong
+              = role.i18n_name
+          .grid_6.la
+            = role.i18n_description
+      -else
+        .grid_3.ra
+          = _("You have no assigned roles.")
+
+    -# no self roles for now
+    -#%h5.grid_10 #{_("Permissions")}
+    -#= render :partial => 'permissions', :locals => {:role => role}
+
+= render :template => "layouts/tupane_layout"

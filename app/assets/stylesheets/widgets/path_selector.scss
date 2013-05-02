@@ -1,0 +1,169 @@
+@import "katello_base";
+
+//temporarily putting this here to speed development
+//TODO Move to env_select.scss
+
+$widget-border-color: #D7D7D7;
+$widget-background-color: #F9F8F8;
+
+
+.grid_16 > #path-widget {
+    margin-left: 25%
+}
+
+.path_button {
+  position: relative;
+}
+
+//If the selector is not inline, we add a background color
+.hover_selector {
+  background: $white_color;
+  border-color: $widget-border-color;
+  border-width: 1px;
+  border-style: solid;
+  position: absolute;
+}
+
+.path_selector {
+  width: 400px;
+  z-index: 100;
+  top: 100%;
+  line-height: 22px;
+  @include border-radius(0 0 8px 8px);
+  @include box-shadow(0px 6px 10px $kprimary_hover_color);
+
+  form { padding: 15px; }
+  footer {
+    border-top: none !important;
+    padding: 10px 0 0 20px;
+    height: 35px !important;
+    border-radius: inherit;
+
+    a {
+      span { margin-left: 5px; }
+    }
+  }
+
+  .button {
+    float: right;
+  }
+
+  ul {
+    list-style: none;
+    overflow: hidden;
+    max-height: 40px;
+    position: relative;
+    margin-bottom: 5px;
+    display: inline-block;
+    border: 1px solid $widget-border-color;
+    @include border-radius(3px);
+    @include box-shadow(0px 0px 15px $widget-border-color);
+  }
+
+  li {
+      float: left;
+      margin-left: 0;
+      white-space: nowrap;
+
+
+      &:first-child {
+        @include crumb-nohover;
+        label {
+          padding-left: 6px;
+          @include border-left-radius(3px);
+        }
+      }
+      &:nth-child(n) {
+        @include crumb-nohover;
+      }
+      &:last-child {
+        @include crumb-nohover;
+        label {
+          overflow: hidden;
+          padding-right: 10px;
+          @include border-right-radius(3px);
+          &:before {
+            content: None;
+          }
+
+          &:hover {
+            color: $white_color;
+            background: $listhover_color !important;
+          }
+          &:after {
+            border: 0;
+            border-left: 0px solid $breadcrumbbg_color;
+            &:hover { border-left-color: $listhover_color !important; }
+          }
+        }
+      }
+  }
+  label {
+    color: $black_color;
+    text-decoration: none;
+    padding: 6px 0 6px 20px;
+    position: relative;
+    background: $breadcrumbbg_color;                    //fallback color
+    display: block;
+    font-weight: normal;
+    font-family: $screenfont;
+    font-size: 10px;
+
+    .checkbox_holder {
+      float: left;
+      margin-right: 3px;
+      padding-top: 4px;
+      display: inline-block;
+
+      input {
+        float: left;
+      }
+    }
+    div {
+      overflow: hidden;
+    }
+
+
+    &:hover {
+      background: $listhover_color !important;
+      color: $white_color;
+      &:after { border-left-color: $listhover_color !important; }
+    }
+    &.active {
+      background: $kselected_color;
+      color: white;
+      @include text-shadow(1px 1px #000);
+      &:after { border-left-color: $kselected_color };
+      &:hover:after { border-left-color: $listhover_color !important; }
+    }
+    &:after {
+      content: " ";
+      display: block;
+      width: 0;
+      height: 0;
+      border-top: 30px solid transparent;            //Go big on the size, and let overflow hide
+      border-bottom: 30px solid transparent;
+      border-left: 15px solid $breadcrumbbg_color;
+      position: absolute;
+      top: 50%;
+      margin-top: -30px;
+      left: 100%;
+      z-index: 102;
+    }
+    &:before {
+      content: " ";
+      display: block;
+      width: 0;
+      height: 0;
+      border-top: 30px solid transparent;            //Go big on the size, and let overflow hide
+      border-bottom: 30px solid transparent;
+      border-left: 15px solid $widget-border-color;
+      position: absolute;
+      top: 50%;
+      margin-top: -30px;
+      margin-left: 1px;
+      left: 100%;
+      z-index: 101;
+    }
+ }
+}

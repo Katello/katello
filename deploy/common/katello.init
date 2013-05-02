@@ -1,0 +1,182 @@
+#!/bin/bash
+#
+# Init script for katello
+#
+# chkconfig: - 86 14
+# description: Init script for katello
+
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+if [ -f /etc/sysconfig/katello ]; then
+    . /etc/sysconfig/katello
+fi
+
+prog=katello
+THIN=/usr/share/katello/script/thin
+RETVAL=0
+KATELLO_PREFIX=${KATELLO_PREFIX:-/katello}
+KATELLO_PORT=${KATELLO_PORT:-3000}
+KATELLO_USER=${KATELLO_USER:-katello}
+KATELLO_GROUP=${KATELLO_GROUP:-katello}
+KATELLO_HOME=${KATELLO_HOME:-/usr/share/katello}
+KATELLO_DATA_DIR=${KATELLO_DATA_DIR:-/var/lib/katello}
+KATELLO_ENV=${KATELLO_ENV:-production}
+KATELLO_PIDS=${KATELLO_PIDS:-${KATELLO_HOME}/tmp/pids/thin.*.pid}
+export KATELLO_LOGGING=${KATELLO_LOGGING:-warn}
+export KATELLO_LOGGING_SQL=${KATELLO_LOGGING_SQL:-warn}
+export RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX
+export RAILS_ENV=$KATELLO_ENV
+THIN_SERVERS=$( awk '/^servers:/ {print $2}' < /etc/katello/thin.yml )
+THIN_PORT=$( awk '/^port:/ {print $2}' < /etc/katello/thin.yml )
+PID_DIR=$( dirname $( echo $KATELLO_PIDS | awk '{print $1}' ) )
+export BUNDLER_EXT_GROUPS
+export BUNDLER_EXT_NOSTRICT
+export BUNDLER_EXT_HOME=$KATELLO_HOME
+
+check_privilege() {
+    runuser -s /bin/sh ${KATELLO_USER} -c "echo x > /dev/null" 2> /dev/null || RETVAL=4
+    if [ 0$RETVAL -eq 4 ]; then
+        echo "User had insufficient privilege";
+        exit $RETVAL
+    fi
+}
+
+status() {
+    for KATELLO_PID in $KATELLO_PIDS
+    do
+        if [ -f ${KATELLO_PID} ]; then
+            pid=`cat ${KATELLO_PID}`
+            #check if proces with pid from the file is running
+            if `ps -p $pid > /dev/null`; then
+                echo "$prog ($pid) is running."
+                RETVAL=0
+            else
+                echo "$prog ($pid) is not running."
+                RETVAL=1
+            fi
+        else
+            echo "$prog is not running."
+            RETVAL=3
+        fi
+    done
+
+    return $RETVAL
+}
+
+status_q() {
+    status &> /dev/null
+    return $?
+}
+
+start() {
+    check_privilege
+
+    [ ! -f $KATELLO_DATA_DIR/db_seed_done ] && echo "Please run katello-configure first" && echo_failure && return 1
+
+    echo -n $"Starting $prog: "
+    if status_q; then
+        echo -n $"$prog is already running."
+        RETVAL=0
+        echo_success
+    else
+        cd ${KATELLO_HOME} #rails expects you to run from the root of the app
+        export HOME=
+        RETVAL=0
+        for P in $( seq $THIN_PORT $(( $THIN_PORT + $THIN_SERVERS - 1)) ); do
+            /usr/sbin/lsof -tPni TCP:$P -sTCP:LISTEN > /dev/null && \
+            echo "Something is blocking port $P. THIN could not start." && \
+            RETVAL=1;
+        done
+        if [ 0$RETVAL -eq 0 ]; then
+            $THIN start --user ${KATELLO_USER} \
+                --environment $KATELLO_ENV \
+                --group ${KATELLO_GROUP} \
+                --config /etc/katello/thin.yml \
+                --rackup "${KATELLO_HOME}/config.ru" >/dev/null
+            RETVAL=$?
+        fi
+        if [ 0$RETVAL -eq 0 ]; then
+            echo_success
+        else
+            echo_failure
+        fi
+    fi
+
+    echo
+    return $RETVAL
+}
+
+stop() {
+    echo -n $"Stopping $prog: "
+    $THIN --config /etc/katello/thin.yml stop >/dev/null
+    for P in $( seq $THIN_PORT $(( $THIN_PORT + $THIN_SERVERS - 1)) ); do
+        if [ -f $PID_DIR/thin.$P.pid ]; then
+            killproc -p $PID_DIR/thin.$P.pid
+        fi
+    done
+    echo
+}
+
+restart() {
+    stop
+    start
+}
+
+condstop() {
+    if status_q; then
+        stop
+    else
+        RETVAL=0
+    fi
+}
+
+condrestart() {
+    if status_q; then
+        restart
+    else
+        RETVAL=0
+    fi
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        restart
+        ;;
+    condrestart|try-restart)
+        condrestart
+        ;;
+    condstop)
+        condstop
+        ;;
+    status)
+        status
+        ;;
+    depcheck)
+        # check if required dependencies from Gemfile are installed
+        TMPDIR=$(mktemp -d)
+        pushd $KATELLO_HOME >/dev/null
+          cp -R .bundle/ $TMPDIR
+          cp Gemfile* $TMPDIR
+        popd >/dev/null
+        pushd $TMPDIR >/dev/null
+          bundle install --without 'test development' --local
+        popd >/dev/null
+        rm -rf $TMPDIR
+        ;;
+    *)
+        echo "Usage: {start|stop|restart|condrestart|status|initdb}"
+        exit 1
+        ;;
+esac
+
+exit $RETVAL
+
+# vim:set sw=4 ts=4 et:

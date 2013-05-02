@@ -1,0 +1,32 @@
+= javascript 'widgets/jquery.jeditable.helpers'
+
+= content_for :title do
+  #{@provider.name}
+
+= render :partial => 'remove_item', :locals => { :repositories_cloned_in_envrs => repositories_cloned_in_envrs }
+
+= content_for :navigation do
+  = render_menu(1..2, custom_provider_navigation)
+
+
+= content_for :content do
+  #providers
+    %input#panel_element_id{:name => @provider.id, :type => "hidden", :value => "#{name}_#{@provider.id}", "data-ajax_url"=>url_for(:action=> 'update')}
+    .full#provider
+      = form_for(@provider, :html => {:multipart => true, :method => :put, :id => 'provider_edit', :remote => true}, :url => provider_path(@provider)) do |f|
+
+        %fieldset.fl.clear
+          .grid_2.ra
+            %label #{_("Name")}:
+          .grid_9.la#provider_name{:title=>@provider[:name], 'name' => 'provider[name]', 'data-url' => provider_path(@provider.id),
+                                  :class=>editable_class(editable)} #{@provider[:name]}
+
+        %fieldset.fl.clear
+          .grid_2.ra
+            %label #{_("Description")}:
+          .grid_9.la{'name' => 'provider[description]', 'data-url' => provider_path(@provider.id), :class=>editable_class(editable)}<> #{@provider.description}
+
+
+%input#provider_id{:name => @provider.id, :type => "hidden", :value => @provider.id, "data-ajax_url"=>url_for(:action=> 'update')}
+
+= render :template => "layouts/tupane_layout"

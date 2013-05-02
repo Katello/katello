@@ -1,0 +1,39 @@
+= javascript_include_tag "widgets/treetable", 'widgets/filtertable'
+
+- content_view = @view_version.content_view
+
+= content_for :title do
+  #{content_view.name}
+
+= content_for :navigation do
+  = render_menu(1..2, promotion_content_view_navigation)
+
+= content_for :content do
+  .grid_8
+    .fr
+      = render :partial => "common/filter_table"
+
+  .grid_8
+    %table#content_view_content.filter_table
+      %thead
+        %tr
+          %th #{_("Products & Repositories")}
+      %tbody
+        - current_product = nil
+        - cssclass = ""
+        - if view_repos.length > 0
+          - view_repos.each do |repo|
+            - if current_product.blank? || current_product != repo.product
+              - current_product = repo.product
+              - cssclass = cycle("", "alt")
+              %tr{:id => "product_#{current_product.id}", :class => 'parent ' + cssclass}
+                %td
+                  %label #{_("Product")}:
+                  #{current_product.name}
+
+            %tr{:class => "child-of-product_#{current_product.id} " + cssclass}
+              %td
+                %label #{_("Repository")}:
+                #{repo.name}
+
+= render :template => "layouts/tupane_layout"

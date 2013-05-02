@@ -1,0 +1,6 @@
+.block.tall{:id => "#{name}_#{item.send(accessor)}", "data-ajax_url" => url_for(:action=> 'edit', :id => item.send(accessor))}
+  %div{:class => "column_1"}
+    -if item.locked
+      %span{:class => "lock_icon fl"}
+    %span
+      = item.i18n_name

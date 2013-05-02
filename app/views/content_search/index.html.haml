@@ -1,0 +1,31 @@
+= javascript :content_search
+= stylesheet :content_search, 'widgets/path_selector'
+
+= javascript do
+  :plain
+    KT.available_environments = $.parseJSON('#{escape_javascript(environments.to_json)}');
+    KT.permissions = { "current_organization" : { "editable" : #{current_organization.editable?}, "id" : "#{current_organization.name}" }}
+    localize({
+      description:'#{escape_javascript(_("Description"))}',
+      severity:   '#{escape_javascript(_("Severity"))}',
+      title:      '#{escape_javascript(_("Title"))}',
+      type:       '#{escape_javascript(_("Type"))}',
+      issued:     '#{escape_javascript(_("Issued"))}',
+      show_more:  '#{escape_javascript(_("Show %P more"))}',
+      counts:     '#{escape_javascript(_("Viewing %C of %T"))}',
+      packages:   '#{escape_javascript(_("Packages"))}',
+      errata:     '#{escape_javascript(_("Errata"))}',
+      intersection:'#{escape_javascript(_("Intersection"))}',
+      union:      '#{escape_javascript(_("Union"))}',
+      difference: '#{escape_javascript(_("Difference"))}',
+      search:     '#{escape_javascript(_("Search"))}',
+      refresh_results: '#{escape_javascript(_("Refresh Results"))}',
+      unique:     '#{escape_javascript(_("Unique"))}',
+      shared:     '#{escape_javascript(_("Shared"))}',
+      manage_environments: '#{escape_javascript(_("Manage Environments"))}'
+    })
+
+.center
+  = render :partial => "browser_box"
+
+  = render :partial => "grid"

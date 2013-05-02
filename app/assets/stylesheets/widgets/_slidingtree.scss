@@ -1,0 +1,347 @@
+@import "katello_base";
+
+$container_width: ($static_width/2) - 36;
+.sliding_tree {
+
+  .tree_breadcrumb {
+    font-weight: 600;
+    font-size: 110%;
+    background-color: $tree-container_color;
+    word-wrap: break-word;
+    border: 1px solid $tree-border_color;
+    border-bottom: none;
+    padding: 10px 5px;
+    overflow: auto;
+
+    .currentCrumb{ color: $tree-current-breadcrumb_color; max-width: 350px; }
+    .crumb { color: $tree-breadcrumb_color; }
+    .slide_link { color: $tree-breadcrumb_color; min-width: 10%;}
+    span { display: inline-block; max-width: 120px; white-space: nowrap; overflow: hidden; }
+
+    .home_img {
+      width: 16px;
+      height: 16px;
+      margin: 0 2px;
+      background: $home_icon_black;
+      text-indent: -4000em;
+      position: relative;
+    }
+    .home_img_inactive {
+      @extend .home_img;
+      background: $home_icon_green;
+    }
+    .locked_icon {
+      width: 16px;
+      height: 16px;
+      margin: 2px;
+      background: $locked_icon;
+      text-indent: -4000em;
+      position: relative;
+    }
+  }
+  .slide_up_container {
+    width: $container_width;
+    position: absolute;
+    display: none;
+    float: left;
+    bottom: 31px;
+    left: 0px;
+    z-index: 10;
+    margin-left: 1px;
+    height: 250px;
+    background-color:$panel_color;
+    border-top: 1px solid #B5B5B5;
+    padding-top: 5px;
+    @include box-shadow(0px -5px 15px rgba(0,0,0, .1));
+  }
+  .sliding_tree_categories {
+    width: 100%;
+
+    font-size: 100%;
+    margin: 0 0 0 0;
+    display: block;
+    width: $container_width;
+    height: 42px;
+    font-weight: 200;
+    background-color: $white_color;
+    word-wrap: break-word;
+    border: 1px solid $tree-border_color;
+    border-bottom: none;
+
+    .sliding_tree_category {
+      float: left;
+      width: ($container_width/2) - 10;
+      height: 24px;
+      padding-top: 9px;
+      padding: 9px 0 0 9px;
+      word-wrap: break-word;
+      border-left: 1px solid $tree-border_color;
+      border-bottom: 1px solid $tree-border_color;
+      background-color: $tree-container_color;
+      &:first-child {
+        margin-right: 1px;
+        border-left: 0 none;
+        .selected {
+          border-right: 1px solid $tree-border_color;
+          border-left: 0 none;
+        }
+      }
+    }
+    .selected {
+      background-color: $white_color;
+      border-left: 1px solid $tree-border_color;
+      border-bottom: 0 none;
+      font-weight: bold;
+    }
+  }
+  .breadcrumb_filter {
+    font-size: 100%;
+    margin: 0 0 0 0;
+    display: block;
+    width: $container_width;
+    font-weight: 200;
+    color: $white_color;
+    background-color: $tree-container_color;
+    word-wrap: break-word;
+    border: 1px solid $tree-border_color;
+    border-bottom: none;
+
+    #filter_form {
+        display: none;
+        margin-right: 4px;
+        float: left;
+    }
+    .filter {
+        position: relative;
+        clear: both;
+        display: inline-block;
+        margin: 5px auto;
+
+        input[type="input"] {
+          float: left;
+          border: 3px solid $tree-search-border_color;
+          background: $white_color;
+          padding-right: 0px;
+          width: 380px;
+          margin-left: 4px;
+        }
+        button {
+          position: absolute;
+          background: $search_icon_black;
+          top: 15px;
+          right: 10px;
+        }
+    }
+    .filter_button {
+        margin-top: 12px;
+        background: $search_icon_black;
+        margin-right: 10px;
+    }
+  }
+  .tree_breadcrumb {
+      display: inline-block;
+      outline: 0 none;
+      width: 90%;
+      border: none;
+      padding: 10px 5px 6px 5px;
+  }
+  .breadcrumb_search {
+    font-size: 100%;
+    margin: 0 0 0 0;
+    display: block;
+    width: $container_width;
+    font-weight: 200;
+    color: $white_color;
+    background-color: $tree-container_color;
+    word-wrap: break-word;
+    border: 1px solid $tree-border_color;
+    border-bottom: none;
+
+    .search_box {
+      display: none;
+
+      .search_status {
+        float: left;
+        color: $black_color;
+        margin-top: 10px;
+        margin-left: 10px;
+      }
+
+      #search_form {
+        margin-right: 4px;
+        margin-left: 4px;
+        float: right;
+        clear: none !important;
+      }
+      .search {
+        position: relative;
+        display: inline-block;
+        margin: 5px auto;
+
+        input[type="text"] {
+          width: 360px;
+        }
+      }
+    }
+    .search_button {
+        margin-top: 12px;
+        background: $search_icon_black;
+        margin-right: 10px;
+    }
+  }
+
+  .sliding_container {
+    overflow: hidden;
+    position: relative;
+    width: $container_width;
+    border: 1px solid $tree-border_color;
+
+    .sliding_list {
+      width: $container_width * 2;
+      position: relative;
+      top: 0;
+      left: 0;
+      border: none;
+
+      .slider {
+        width: $container_width;
+        min-height: 450px;
+        float: left;
+
+        h5 {
+          border-bottom: solid 2px $tree-header-border_color;
+          font-size: 120%;
+          width: 90%;
+          margin-top: 10px;
+          margin-left: 10px;
+        }
+
+        .empty_list { padding: 0px 0 0 25px; }
+        .simple_link{
+          margin: 6px 0;
+        }
+        .link_details {
+          background: $dotdotdot_icon;
+          padding-right: 25px;
+        }
+        .no_slide {
+          //padding-left: 5px;
+          cursor: default;
+        }
+        .no_hover {
+          &:hover {
+            border-color: $white_color;
+            background: none;
+          }
+        }
+        .block {
+          cursor: pointer;
+          font-size: 100%;
+        }
+        .active {
+          background-color: $tree-item-background-hover_color;
+          border-top-color: $tree-item-border-hover_color;
+          border-bottom-color: $tree-item-border-hover_color;
+          color: $tree-item-hover_color;
+
+          a {
+            color: $tree-breadcrumb_color;
+            background: inherit;
+          }
+        }
+
+        li{
+          height: 34px;
+          border-top: 2px solid $white_color;
+          border-bottom: 2px solid $white_color;
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+
+        li:hover {
+          background-color: $tree-item-background-hover_color;
+          border-top-color: $tree-item-border-hover_color;
+          border-bottom-color: $tree-item-border-hover_color;
+          color: $tree-item-hover_color;
+
+          a {
+            color: $tree-breadcrumb_color;
+          }
+        }
+      }
+    }
+  }
+  .tree_loading {
+    position: absolute;
+    opacity: .8;
+    background-color: white;
+    z-index: -1;
+    width: $container_width - 10;
+    height: 415px;
+    .text {
+        //vertically center
+        height: 10em;
+        margin-top:-5em;
+        top: 50%;
+        width: 50%;
+        text-align: center;
+       // display:inline;
+        position:relative;
+        margin-left:auto;
+        margin-right:auto;
+    }
+  }
+  #sliding_tree_actionbar {
+    background-color: #F2F2F2;
+    width: 100%;
+
+    .cs_action {
+        float: left;
+        outline: 0 none;
+        margin-right: -1px;
+        //width: 24.7%; // ~1/4 of the right panel width
+        width: $container_width/4 - 1; // ~1/4 of the right panel width
+        height: 20px;
+        padding-top: 9px;
+        font-size: 90%;
+        word-wrap: break-word;
+        border-bottom: 1px solid $tree-border_color;
+        border-right: 1px solid $tree-border_color;
+        border-left: 1px solid $tree-border_color;
+
+        background-color: $tree-container_color;
+
+        .text {
+            margin-left: 26px;
+
+        }
+        &:hover {
+            background-color: $tree-actionbar_color; //same as li under #contents
+        }
+    }
+    .highlighted {
+         background-color: $tree-actionbar_color; //same as hover
+    }
+  }
+  .sprite {
+    height: 16px;
+    width: 16px;
+    position: absolute;
+    margin-top: 2px;
+
+  }
+}
+.right_tree {
+  .filter_button {
+    left: 0;
+  }
+  .sliding_container{
+    max-height: 420px;
+  }
+}
+#roles_tree {
+  .filter_button {
+    left: 0 !important;
+    top: 0 !important;
+  }
+}

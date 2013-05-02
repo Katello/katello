@@ -1,0 +1,35 @@
+- job_details = job.as_json
+- job_messages = job.messages
+
+= content_for :title do
+  = job_messages[:task_type]
+
+= content_for :subcontent do
+  %h4
+    = format_time(job_details[:finish_time])
+
+  %fieldset
+    .grid_7
+      %h5 #{_("Summary")}
+    .grid_7.multiline
+      = job_messages[:summary_message]
+
+  %fieldset
+    .grid_7
+      %h5 #{_("Request")}
+    .grid_7.la
+      = job_messages[:requested_action_message]
+
+  %fieldset
+    .grid_7
+      %h5 #{_("Parameters")}
+    .grid_7.la
+      = job_messages[:parameters_message]
+
+  %fieldset
+    .grid_7
+      %h5 #{_("Result")}
+    .grid_7.multiline
+      = render :partial => 'system_groups/events/systems', :locals => {:tasks => job.task_statuses}
+
+= render :template => "layouts/tupane_layout"

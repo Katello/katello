@@ -1,0 +1,77 @@
+--- 
+http_interactions: 
+- request: 
+    method: delete
+    uri: https://localhost:8443/candlepin/consumers/f1cf9968-45ba-4430-ac74-72ab9b789198
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="tK5eOZP9rAuyDKpEbd8mB3bBiG2Mpjuas6BtHyCwI", oauth_signature="sZj6ELoDeNs3pMIy9yUT2a07Hkw%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1367009784", oauth_version="1.0"
+      Cp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 410
+      message: Gone
+    headers: 
+      Server: 
+      - Apache-Coyote/1.1
+      X-Candlepin-Version: 
+      - 0.8.3-1
+      Content-Type: 
+      - application/json
+      Transfer-Encoding: 
+      - chunked
+      Date: 
+      - Fri, 26 Apr 2013 20:56:24 GMT
+    body: 
+      encoding: US-ASCII
+      string: "{\"displayMessage\":\"Consumer f1cf9968-45ba-4430-ac74-72ab9b789198 has been deleted\",\"deletedId\":\"f1cf9968-45ba-4430-ac74-72ab9b789198\"}"
+    http_version: 
+  recorded_at: Fri, 26 Apr 2013 20:56:24 GMT
+- request: 
+    method: delete
+    uri: https://localhost:8443/candlepin/consumers/68d923f2-633c-47eb-a518-e2a7f8d1da90
+    body: 
+      encoding: US-ASCII
+      string: ""
+    headers: 
+      Accept: 
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding: 
+      - gzip, deflate
+      Authorization: 
+      - OAuth oauth_consumer_key="katello", oauth_nonce="wjLzK0b9MAZa8cImOnaWX39L2eGNoe8dT7ZkIray94", oauth_signature="EU7QAapkkW223ec6BAV3yKdHP84%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1367009932", oauth_version="1.0"
+      Cp-User: 
+      - admin
+      User-Agent: 
+      - Ruby
+  response: 
+    status: 
+      code: 410
+      message: Gone
+    headers: 
+      Server: 
+      - Apache-Coyote/1.1
+      X-Candlepin-Version: 
+      - 0.8.3-1
+      Content-Type: 
+      - application/json
+      Transfer-Encoding: 
+      - chunked
+      Date: 
+      - Fri, 26 Apr 2013 20:58:51 GMT
+    body: 
+      encoding: US-ASCII
+      string: "{\"displayMessage\":\"Consumer 68d923f2-633c-47eb-a518-e2a7f8d1da90 has been deleted\",\"deletedId\":\"68d923f2-633c-47eb-a518-e2a7f8d1da90\"}"
+    http_version: 
+  recorded_at: Fri, 26 Apr 2013 20:58:52 GMT
+recorded_with: VCR 2.4.0

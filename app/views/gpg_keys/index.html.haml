@@ -1,0 +1,10 @@
+.grid_16
+  = help_tip_button
+  = help_tip(_("GPG Keys may be stored by uploading a key directly or copying and pasting the key in upon creation. " + |
+               "By visiting the Providers page and selecting either a product or repository, a GPG key that has been " + |
+               "created here can be associated with the given entity.")) |
+
+.grid_16#main
+  = two_panel(@gpg_keys, @panel_options)
+
+= javascript :gpg_keys

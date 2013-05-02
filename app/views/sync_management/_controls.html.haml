@@ -1,0 +1,14 @@
+.grid_12#list_actions
+  - if @products.length > 0
+    .table-action.fl
+      %a#collapse_all.fl= _("Collapse All")
+    .table-action.fl
+      %a#expand_all.fl= _("Expand All")
+    - if syncable?
+      .table-action.fl
+        %a#select_none.fl= _("Select None")
+      .table-action.fl
+        %a#select_all.fl= _("Select All")
+  #sync_toggle_cont.fl.table-action
+    %input#sync_toggle{:type=>'checkbox'}
+    %label{:for=>"sync_toggle"}= _('Only show syncing.')

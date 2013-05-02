@@ -1,0 +1,5 @@
+- collection.each do |activation_key|
+  .block.tall.activation_key{:id => "activation_key_#{activation_key.id}",
+      "data-ajax_url" => "activation_keys/#{activation_key.id}",
+      "data-ajax_panelpage" => @panel_options[:initial_action]}
+    = render activation_key

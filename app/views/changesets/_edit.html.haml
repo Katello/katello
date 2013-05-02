@@ -1,0 +1,79 @@
+//Edit/view page as seen on the 2 pane changeset history list
+= javascript 'changesets/changeset_edit'
+
+= content_for :title do
+  = _("Details")
+
+= content_for :content do
+  .grid_10
+    %input#changeset{:type => "hidden", 'data-ajax_url'=>changeset_path(@changeset.id)}
+
+    .fieldset
+      .grid_3.ra
+        %label #{_("Name:")}
+      .grid_5.la{:name=>"name", :class=>("editable edit_textfield" if editable),
+          "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.name}
+    .fieldset
+      .grid_3.ra
+        %label #{_("Description:")}
+      .grid_5.la{:name=>"description", :class=>("editable edit_description" if editable),
+          "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)}<
+        = @changeset.description.blank? ? _("None") : @changeset.description
+    .fieldset
+      .grid_3.ra
+        %label #{_("Type:")}
+      .grid_5.la
+        = @changeset.action_type
+    .fieldset
+      .grid_3.ra
+        %label #{_("Promoted By:")}
+      .grid_5.la
+        #{@changeset.task_status_id.nil? ? _("Unknown") : @changeset.task_status.user.username }
+    .fieldset
+      .grid_3.ra
+        %label #{_("Promotion Date:")}
+      .grid_5.la
+        = format_time(@changeset.promotion_date, :format=>:long)
+
+
+    #changeset_history_tabs
+      .grid_10
+        %h2 #{_("Contents:")}
+        -if @changeset.involved_products.empty? && @changeset.content_views.empty?
+          .grid_7.prefix_1
+            #{_("This changeset contains no content.")}
+        -else
+          #accordion.grid_8.prefix_1.cs_history_tab
+            - if !@changeset.products.empty?
+              %h3
+                %a{:href=>'#'} #{_("Full Products")}
+              #full_products.cs_history_tab
+                %ul
+                  -for prod in @changeset.products
+                    %li #{prod.name}
+            - for prod in @changeset.partial_products
+              %h3
+                %a{:href=>'#'} #{_(prod.name)}
+              .cs_history_tab
+                = render :partial=>"content_type",
+                    :locals=>{:items=>@changeset.packages.where(:product_id=>prod.id).collect{|i| i.display_name},
+                    :type_string=>_("Packages")}
+                = render :partial=>"content_type",
+                    :locals=>{:items=>@changeset.errata.where(:product_id=>prod.id).collect{|i| i.display_name},
+                    :type_string=>_("Errata")}
+                = render :partial=>"content_type",
+                    :locals=>{:items=>@changeset.repos.in_product(prod).all.collect{|i| i.name},
+                    :type_string=>_("Repositories")}
+                = render :partial=>"content_type",
+                    :locals=>{:items=>@changeset.distributions.where(:product_id=>prod.id).collect{|i| i.display_name},
+                    :type_string=>_("Distributions")}
+
+            - if !@changeset.content_views.empty?
+              %h3
+                %a{:href=>'#'} #{_("Content Views")}
+              #content_views.cs_history_tab
+                %ul
+                  -for view in @changeset.content_views
+                    %li #{view.name}
+
+= render :template => "layouts/tupane_layout"

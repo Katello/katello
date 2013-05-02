@@ -1,0 +1,66 @@
+= javascript :system_events
+
+= javascript do
+  = render :partial => 'common/package_actions_i18n'
+
+= javascript do
+  -if editable
+    :plain
+      $(document).ready(function() {
+        KT.package_actions.init(true, 'system_group');
+      });
+  -else
+    :plain
+      $(document).ready(function() {
+        KT.package_actions.init(false, 'system_group');
+      });
+
+= render :partial => "system_groups/tupane_header"
+
+= content_for :content do
+  %input.events{:type => "hidden", 'data-url' => status_system_group_events_path(@group.id)}
+
+  #packages_container{ "data-parent_id" => @group.id }
+    = form_tag system_group_packages_path(@group.id), :id => "system_content_action_form", :method => "post", :remote => true do
+      %table
+        %thead
+          %th
+            %span.fr.details-icon.system_content_action{"data-help" => _('This table allows you to initiate package or package group installs, updates and removals.  Simply select either Packages or Package groups, enter a comma-separated list of names in the box provided and click either Install, Update or Remove.  Note: for any given package or package group, there may only be 1 action in progress at a time.')}
+            #{_("Manage Packages")}
+
+        %tbody
+          -if editable
+            %tr
+              %td
+                %div#content_type
+                = radio_button_tag :perform_action, :packages, true, :tabindex => auto_tab_index
+                = label_tag _('Packages')
+                = radio_button_tag :perform_action, :package_groups, false, :tabindex => auto_tab_index
+                = label_tag _('Package Groups')
+
+            %tr#error_message_container
+              %td
+                %div#error_message.validation_error_text
+
+            %tr.no_sort.not_filtered
+              %td
+                %div#content_form
+                  - help_text = _("Enter Selected Content...")
+                  %input{:type=>'text', :id=>'content_input', :size=>'30', :placeholder => help_text, :title => help_text, :tabindex => auto_tab_index}
+                  %input#add_content.button{:type=>'button', :value=>_('Install'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>add_system_group_packages_path(), :tabindex => auto_tab_index}
+                  %input#update_content.button{:type=>'button', :value=>_('Update'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>system_group_packages_path(), :tabindex => auto_tab_index}
+                  %input#remove_content.button{:type=>'button', :value=>_('Remove'), :disabled => 'disabled', 'data-method'=>"POST", 'data-url'=>remove_system_group_packages_path(), :tabindex => auto_tab_index}
+    .clear
+      &nbsp;
+
+    = form_tag system_group_packages_path(@group.id), :id => "packages_form", :method => "post", :remote => true do
+      %table.packages.ajaxScroll{'data-system_id' => @group.id}
+        %thead
+          %th{:colspan => 2}
+            %span.fr.details-icon.system_content_action{"data-help" => _('This table shows you the status of any pending package or package group actions on the system group.')}
+            %a
+              #{_("Name")}
+        %tbody
+          = render :partial => 'system_groups/packages/items', :locals => {:editable => editable, :include_tr_shading => true, :group_id => @group.id}, :collection => jobs, :as => :job
+
+= render :template => "layouts/tupane_layout"

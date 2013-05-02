@@ -1,0 +1,131 @@
+= javascript "widgets/jquery.jeditable.helpers"
+
+= content_for :title do
+  #{_("Subscription Manifest")}
+
+= render :partial=>"subscriptions_tupane_header_new_nav"
+
+= content_for :content do
+  #subscription
+    .full
+      = help_tip_button('subscriptions-help')
+      = help_tip(_("If you have a subscription manifest you may upload it below. " + |
+                 "This manifest may be obtained by visiting the Red Hat Customer Portal or by contacting your support representative."), 'subscriptions-help') |
+
+    .full
+      %h5 #{_("Red Hat Provider Details")}
+    .full
+      %input#panel_element_id{:name => @provider.id, :type => "hidden", :value => "#{@provider.name}_#{@provider.id}"}
+      %fieldset
+        .grid_3.ra.fieldset
+          = label :red_hat_provider, :url, _("Repository Url")
+        .grid_9.la.fl#repo_url{'name' => 'provider[repository_url]',:class=>("editable edit_textfield" if @provider.editable?),  'data-url' => provider_path(@provider.id)} #{@provider[:repository_url]}
+    .clear
+    - if @upstream['uuid']
+      .full
+        %h5 #{_("Subscription Manifest")}
+      .full
+        %fieldset
+          .grid_3.ra.fieldset
+            =label :uuid, :uuid, _("Upstream Subscription Management Application")
+          .grid_9.la.fl
+            = subscriptions_manifest_link_helper({'webAppPrefix'=>@upstream[:webUrl], 'upstreamId'=>@upstream['uuid']}, @upstream['name'])
+        %fieldset
+        - if @provider.editable?
+          - if !@provider.manifest_task || @provider.manifest_task.finished?
+            .grid_3.ra.fieldset
+              &nbsp;
+            = form_for @provider, :html => {:method => :post, :id => :refresh_manifest}, :remote => true, :url => refresh_manifest_subscriptions_path do |f|
+              .grid_2.la#refresh_button
+                = f.submit _("Refresh Manifest"), :id => :refresh_form_button
+            - if Katello.config.headpin?
+              = form_for @provider, :html => {:method => :post, :id => :delete_manifest}, :remote => true, :url => delete_manifest_subscriptions_path do |f|
+                .grid_4.la#delete_button
+                  = f.submit _("Delete Manifest"), :id => :delete_form_button, :confirm => _("Deleting a manifest " + |
+                          "will permanently remove all current subscriptions. All systems consuming these subscriptions " + |
+                          "have them removed. Do you wish to proceed with removing this manifest?") |
+          - elsif @provider.manifest_task && !@provider.manifest_task.finished? && (@provider.manifest_task.task_type == "delete manifest" || @provider.manifest_task.task_type == "refresh manifest")
+            .grid_10
+              %fieldset
+                .grid_3.ra.fieldset
+                  &nbsp;
+                .grid_6.la
+                  .fl
+                    %div.manifest_progress{:provider_id=>@provider.id}
+                      = image_tag("icons/spinner.gif", {:class=>"fl"})
+                      .fl.manifest_progress_message
+                        - if @provider.manifest_task.task_type == "delete manifest"
+                          = _("Delete in progress (%s)") % @provider.manifest_task.state
+                        - else
+                          = _("Refresh in progress (%s)") % @provider.manifest_task.state
+    .clear
+    - if @provider.editable?
+      - if @provider.manifest_task && !@provider.manifest_task.finished?
+        - if @provider.manifest_task.task_type == "import manifest"
+          .grid_10
+            %h5 #{_("Upload New Manifest")}
+          .full
+            %fieldset
+              .grid_3.ra.fieldset
+                =label :upload, :upload, _("Manifest File")
+              .grid_8.la
+                .fl
+                  %div.manifest_progress{:provider_id=>@provider.id}
+                    = image_tag("icons/spinner.gif", {:class=>"fl"})
+                    .fl.manifest_progress_message
+                      = _("Import in progress (%s)") % @provider.manifest_task.state
+      - else
+        .full
+          %h5 #{_("Upload New Manifest")}
+          = form_for @provider, :html => {:multipart => true, :method => :post, :id => :upload_manifest}, :remote => true, :url => upload_subscriptions_path do |f|
+            .full
+              %fieldset
+                .grid_3.ra.fieldset
+                  =label :upload, :upload, _("Manifest File")
+                .grid_6.la
+                  = f.file_field :contents
+              %fieldset
+                .grid_3.ra.fieldset
+                  &nbsp;
+                .grid_6.la#upload_button
+                  = f.submit _("Upload"), :id => :upload_form_button
+
+    .full
+      %h5 #{_("Manifest History")}
+      %table
+        %thead
+          %th #{_("Message")}
+          %th #{_("Time")}
+        - if @statuses
+          %tbody
+            - @statuses[0..2].each do |status|
+              - cycle_class = cycle(nil, 'alt')
+              %tr{:class => cycle_class}
+                %td{:style => "width: 400px;"}
+                  %span.icon_wrap.fl
+                    %span.fl{:class => (status["status"] == "FAILURE" ? "shield_icon-black" : "check_icon-black")}
+                  = status["statusMessage"]
+                %td
+                  = _("%s ago") % time_ago_in_words(status["created"])
+              - if status['webUrl']
+                %tr{:class => cycle_class}
+                  %td{:colspan => 2}
+                    &nbsp; &nbsp; &nbsp;
+                    = _('Manifest from %s') % status['upstreamName']
+                    = subscriptions_manifest_link_helper status
+
+          - if @statuses.length > 3
+            %tr{:class => cycle(nil, 'alt')}
+              %td.panel_link{:style => "width: 100%;"}
+                = link_to(_("More..."), subscriptions_path + "/history_items")
+              %td
+                &nbsp;
+
+- if @provider.task_status
+  = javascript do
+    :plain
+      $(document).ready(function() {
+        KT.subscription.startUpdater();
+      });
+
+= render :template => "layouts/tupane_layout"

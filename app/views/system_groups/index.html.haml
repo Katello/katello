@@ -1,0 +1,24 @@
+= stylesheet :systems
+
+= javascript do
+  :plain
+    localize({
+      "delete_system_group_confirm": '#{escape_javascript(_('Are you sure you want to delete the system group?'))}',
+      "delete_systems_confirm": '#{escape_javascript(_('Do you also want to delete the systems in the system group?'))}',
+      "delete_systems_warning": '#{escape_javascript(_('This will completely remove those systems.'))}',
+      "delete_system_group_continue": '#{escape_javascript(_('No, only delete the system group.'))}',
+      "change_systems_confirm": '#{escape_javascript(_('Are you sure you want to change all systems in the group?'))}',
+      "edit_all_systems": '#{escape_javascript(_('Edit Details for All Systems'))}',
+      "edit_selected_systems": '#{escape_javascript(_('Edit Details for Selected Systems'))}'
+    });
+
+.grid_16
+  = help_tip_button
+  = help_tip(_("System Groups allow you to create groups consisting of multiple systems and then use those groups " + |
+               "to manage the systems.  This includes performing actions such as package and package group  " + |
+               "installations, updates and removals as well as errata installations.")) |
+
+.grid_16#main
+  = two_panel(@groups, @panel_options)
+
+= javascript :system_groups, 'content_view_definitions/env_content_view_selector'

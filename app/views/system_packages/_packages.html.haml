@@ -1,0 +1,132 @@
+-# This view contains several lines that are commented (i.e. -#) out on purpose... They may be uncommented when package
+-# updates are supported.
+
+= javascript do
+  :plain
+    localize({
+      "adding_package"            : '#{adding_package}',
+      "adding_package_success"    : '#{escape_javascript(_('Add Package Complete'))}',
+      "adding_package_failed"     : '#{escape_javascript(_('Add Package Error'))}',
+      "adding_package_canceled"   : '#{escape_javascript(_('Add Package Canceled'))}',
+      "adding_package_timeout"    : '#{escape_javascript(_('Add Package Timeout'))}',
+
+      "updating_package"          : '#{updating_package}',
+      "updating_package_success"  : '#{escape_javascript(_('Update Package Complete'))}',
+      "updating_package_failed"   : '#{escape_javascript(_('Update Package Error'))}',
+      "updating_package_canceled" : '#{escape_javascript(_('Update Package Canceled'))}',
+      "updating_package_timeout"  : '#{escape_javascript(_('Update Package Timeout'))}',
+
+      "removing_package"          : '#{removing_package}',
+      "removing_package_success"  : '#{escape_javascript(_('Remove Package Complete'))}',
+      "removing_package_failed"   : '#{escape_javascript(_('Remove Package Error'))}',
+      "removing_package_canceled" : '#{escape_javascript(_('Remove Package Canceled'))}',
+      "removing_package_timeout"  : '#{escape_javascript(_('Remove Package Timeout'))}',
+
+      "adding_group"              : '#{adding_package_group}',
+      "adding_group_success"      : '#{escape_javascript(_('Add Package Group Complete'))}',
+      "adding_group_failed"       : '#{escape_javascript(_('Add Package Group Error'))}',
+      "adding_group_canceled"     : '#{escape_javascript(_('Add Package Group Canceled'))}',
+      "adding_group_timeout"      : '#{escape_javascript(_('Add Package Group Timeout'))}',
+
+      "removing_group"            : '#{removing_package_group}',
+      "removing_group_success"    : '#{escape_javascript(_('Remove Package Group Complete'))}',
+      "removing_group_failed"     : '#{escape_javascript(_('Remove Package Group Error'))}',
+      "removing_group_canceled"   : '#{escape_javascript(_('Remove Package Group Canceled'))}',
+      "removing_group_timeout"    : '#{escape_javascript(_('Remove Package Group Timeout'))}',
+
+      "validation_error_name_format" : '#{escape_javascript(_('One or more package names are invalid.'))}',
+      "validation_error_package_pending" : '#{escape_javascript(_('One or more of the packages provided has an action pending.'))}',
+      "validation_error_group_pending" : '#{escape_javascript(_('One or more of the groups provided has an action pending.'))}',
+
+      "x_of_y_packages" : function(x,y){ return '#{escape_javascript(_("(Loaded %X of %Y Total)"))}'.replace("%X", x).replace("%Y", y); }
+      });
+
+= javascript :system_packages
+
+= render :partial => "systems/system_tupane_header_nav"
+
+= content_for :content do
+
+  -#.grid_8.summary
+    -#.summary_top
+      -#.packages_icon
+      -#.fl
+        -#= image_tag("boxshadow.png")
+      -#.summary_text.fl #{_("All Packages are up-to-date.")}
+
+  - if packages.length > 0
+
+    .grid_8
+      = form_tag system_system_packages_path(@system.id), :id => "system_content_action_form", :method => "post", :remote => true do
+        %table
+          %thead
+            %th
+              %span.fr.details-icon.system_content_action{"data-help" => _('This table allows you to initiate package or package group installs and removals.  Simply select either Packages or Package groups, enter a comma-separated list of names in the box provided and click either +Add or -Remove.')}
+              #{_("Manage Packages")}
+
+          %tbody
+            -if editable
+              %tr
+                %td
+                  %div#content_type
+                  = radio_button_tag :perform_action, :packages, true, :tabindex => auto_tab_index
+                  = label_tag _('Packages')
+                  = radio_button_tag :perform_action, :package_groups, false, :tabindex => auto_tab_index
+                  = label_tag _('Package Groups')
+
+              %tr#error_message_container
+                %td
+                  %div#error_message.validation_error_text
+
+              %tr.no_sort.not_filtered
+                %td
+                  %div#content_form
+                    - help_text = _("Enter Selected Content...")
+                    %input{:type=>'text', :id=>'content_input', :size=>'30', :placeholder => help_text, :title => help_text, :tabindex => auto_tab_index}
+                    %a#add_content.disabled{:style => 'padding-left: 10px;', :tabindex => auto_tab_index} #{_('+ Add')}
+                    %a#remove_content.disabled{:style => 'padding-left: 10px;', :tabindex => auto_tab_index} #{_('- Remove')}
+
+    .clear
+      &nbsp;
+
+    .grid_8
+      = render :partial => "common/filter_table", :locals => {:filter_placeholder => _('Filter on all packages...')}
+      = form_tag system_system_packages_path(@system.id), :id => "packages_form", :method => "post", :remote => true do
+        %table.filter_table.packages.ajaxScroll{'data-system_id' => @system.id, 'data-total_packages' => total_packages}
+          %thead
+            %th{:colspan => 3}
+              %span.fr.details-icon.system_content_action{"data-help" => _('This table allows you to initiate package updates or removals as well as update all packages.  In order to update or remove packages, simply select the packages you are interested in and click Update or Remove.  In order to update all packages, click Update All when no packages are selected.')}
+              %a#package_sort{"data-sort"=>"asc", :class=>"ascending"}
+                #{_("Name")}
+            -#%th
+              -##{_("Date Added")}
+          %tbody
+            = render :partial => 'package_items', :locals => {:editable => editable,
+                                                              :package_tasks => package_tasks,
+                                                              :group_tasks => group_tasks,
+                                                              :packages => packages,
+                                                              :offset => offset}
+
+      #list-spinner
+        = image_tag("icons/spinner.gif", :class=>"ajax_scroll")
+
+  - else
+    %p #{_("There are no packages to display.")}
+
+= content_for :footer do
+  - if packages.length > 0
+    .grid_8
+      %a#more{:style => "padding-left: 20px;",
+          "data-scroll_url"=>url_for(more_packages_system_system_packages_path(@system.id)),
+          "data-page_size"=>current_user.page_size, "data-offset"=>offset,
+          :class=>"fl", :tabindex => auto_tab_index} #{_("Load %{n} More") % {:n => offset}}
+      %span{:id => 'loaded_summary', :style => "padding-left: 20px;"}
+        -##{"%{n} Loaded of %{t} Total" % {:n => offset, :t => total_packages}}
+
+      - if editable
+        .prefix_2.grid_6.ra
+          = submit_tag _("Update All"), :class => 'button', :id => 'update_all_packages', 'data-url' => system_system_packages_path(@system.id), :tabindex => auto_tab_index
+          = submit_tag _("Update"), :class => 'button', :id => 'update_packages', 'data-url' => system_system_packages_path(@system.id), :tabindex => auto_tab_index
+          = submit_tag _('Remove'), :class => 'button', :id => 'remove_packages', 'data-url' => remove_system_system_packages_path(@system.id), :tabindex => auto_tab_index
+
+= render :template => "layouts/tupane_layout"

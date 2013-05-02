@@ -1,0 +1,11 @@
+#!/bin/env bash
+# script for refreshing the newest content from CDN. It doesn't synchronize the
+# repositories but lets Katello know there is new content available.
+
+# running the script from rails root
+RAILS_DIR=/usr/share/katello
+pushd $RAILS_DIR &> /dev/null
+
+rake katello:refresh_cdn RAILS_ENV=production >/dev/null
+
+popd &> /dev/null

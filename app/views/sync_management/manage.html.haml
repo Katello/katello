@@ -1,0 +1,25 @@
+= javascript :sync_management
+
+= javascript do
+  :plain
+    localize({
+      "cancel": '#{escape_javascript(_('Cancel'))}',
+      "cancelled": '#{escape_javascript(_("Sync Cancelled"))}',
+      "error": '#{escape_javascript(_('Error'))}',
+      "complete": '#{escape_javascript(_('Sync complete.'))}'
+    });
+
+    KT.repo_status = $.parseJSON('#{escape_javascript(@repo_status.to_json)}');
+    KT.permissions = { "syncable" : #{syncable?} };
+
+.grid_4
+  %h2= _("Sync Status")
+
+= render 'controls'
+
+#main.grid_16
+  = render 'products'
+
+  %h2.clear= _("Sync Plans")
+
+  = render 'sync_plans'

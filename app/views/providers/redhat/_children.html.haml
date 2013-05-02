@@ -1,0 +1,22 @@
+- if child[:type] == "product"
+  %tr.product{:id=>child[:id]}
+    -#%td{:class=>'product', 'data-id'=>prod.id}
+    %td
+      -#= check_box_tag "product[#{pid}]", '', '', :disabled=>!@sproducts.include?(prod)
+      #{child[:name]}
+      = _('(no repositories available)') if child[:item][:children].empty?
+- elsif child[:type] == "repository"
+  - repo = child[:item]
+  %tr{:class=>child[:class], :id=>child[:id], "data-product_id="=>repo.product.id, "data-id"=>repo.id}
+    %td
+      =image_tag( "icons/spinner.gif", :class=>"hidden fl", :id=>"spinner_#{repo.id}", :style=>"margin-right:1px;")
+      =check_box_tag "repo", repo.id, repo.enabled?,{:id=>"input_repo_#{repo.id}",
+            "data-url" => enable_repo_path(repo.id),
+            :disabled =>(repo.promoted? || !can_enable_repo?),
+            :class=>'fl'}
+      %label.fl{:for=>"input_repo_#{repo.id}"}
+        #{repo.name}
+- else
+  %tr{:id=>child[:id], :class=>child[:class]}
+    %td
+      #{child[:name]}

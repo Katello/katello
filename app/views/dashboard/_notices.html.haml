@@ -1,0 +1,11 @@
+#dashboard_notifications.small_widget.scroll-pane{"data-quantity"=>quantity}
+  %ul
+    - for note in user_notices(quantity)
+      %li
+        %span.icon_wrap.fl
+          %span.fl{:class=>(note[:level]=="error" ? "error_icon" : "check_icon")}
+            &nbsp;&nbsp;
+        %span
+          %h5
+            #{format_time note[:date]}
+          #{note[:text]}  #{link_to(_("More >>"), notices_path)}

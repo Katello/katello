@@ -1,0 +1,20 @@
+-#
+  Copyright 2013 Red Hat, Inc.
+
+  This software is licensed to you under the GNU General Public
+  License as published by the Free Software Foundation; either version
+  2 of the License (GPLv2) or (at your option) any later version.
+  There is NO WARRANTY for this software, express or implied,
+  including the implied warranties of MERCHANTABILITY,
+  NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+  have received a copy of GPLv2 along with this software; if not, see
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+
+= check_box_tag "org_#{org.id}", org.id, current_user.default_org == org, {:class=>"default_org", "data-url"=>setup_default_org_user_path(current_user.id)}
+
+- if current_user.default_org == org
+  %span.favorite.favorites_icon-black.sprite.tipsify{:title=>_("This is your default organization."), :id=>"favorite_#{org.id}"}
+- else
+  %span.favorite.favorites_icon-grey.sprite.tipsify{:title=>_("Make this your default organization."), :id=>"favorite_#{org.id}"}
+
+= image_tag( "icons/spinner.gif", :class=>"hidden fl fav_spinner")

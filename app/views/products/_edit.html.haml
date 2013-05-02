@@ -1,0 +1,38 @@
+= javascript 'widgets/jquery.jeditable.helpers', 'products/product_edit'
+
+= content_for :title do
+  = _("Provider: ") + @provider.name
+
+= content_for :remove_item do
+  - if editable
+    = link_to _("Remove Product"), {:controller=>"products", :action=>"destroy"}, :confirm => _('Are you sure you want to remove this product?'), :method => :delete, :class=>"remove_item", :remote=>true
+
+= content_for :subcontent do
+  %h3
+    = _("Edit Product")
+
+  %fieldset
+    .grid_2.ra
+      %label #{_("Name")}:
+    .grid_5.la.multiline#product_name #{@product.name}
+
+  %fieldset
+    .grid_2.ra
+      %label #{_("Label")}:
+    .grid_5.la.multiline#product_label #{@product.label}
+
+  %fieldset
+    .grid_2.ra
+      %label #{_("Description")}:
+    .grid_5.la.multiline{'name' => 'product[description]', :class=>("editable edit_textarea" if editable), 'data-url' => provider_product_path(@provider.id)}<> #{@product.description}
+
+  %fieldset
+    .grid_2.ra
+      %label #{_("GPG Key")}:
+    - if gpg_keys.length != 0
+      .grid_5.la{'name' => 'product[gpg_key]', 'class' => ("editable edit_select_product_gpg" if editable), 'data-url' => provider_product_path(@provider.id), 'data-options' => gpg_keys_edit } #{@product.gpg_key.name if @product.gpg_key}
+    - else
+      .grid_5.la
+        #{_("None defined for this Organization.")}
+
+= render :template => "layouts/tupane_layout"

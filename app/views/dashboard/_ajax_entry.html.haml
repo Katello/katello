@@ -1,0 +1,11 @@
+.dash
+  .dashhead.ajax_widget
+    %h2.fl  #{name}
+    - if dropbutton
+      .dropbutton.button.clickable.fr
+        %span
+  .fl.clear.portal
+    %div{:class=>class_wrap}
+      .loading{"data-url"=>url, "data-id"=>identifier}
+      .spinner
+  %br.clearfloat

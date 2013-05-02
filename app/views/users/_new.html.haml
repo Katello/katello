@@ -1,0 +1,51 @@
+= javascript do
+  :plain
+    localize({
+      "noDefaultEnv": '#{escape_javascript(_("No default environment. Select an organization to choose from available environments."))}',
+      "password_match": '#{escape_javascript(_('The passwords do not match'))}',
+    });
+    env_select.original_env_id = '';
+    env_select.ajax_params={};
+    env_select.ajax_params["new"]=true;
+
+= content_for :title do
+  #{_("New User")}
+
+= content_for :navigation do
+  / pretty
+
+= content_for :content do
+  .grid_10
+    = kt_form_for User.new, :id => "new_user" do |form|
+
+      = form.text_field :username, :label => _("Username:")
+
+      - if !@ldap
+        = form.text_field :email, :label => _("Email Address:"), :type => :email
+        = form.text_field :password, :label => _("Password:"), :type => :password, :id => :password_field
+        = form.text_field :password, :label => _("Confirm:"), :type => :password, :id => :confirm_field
+        .grid_7.la.prefix_2
+          #password_conflict
+
+      %h5
+        #{_("System Registration Defaults")}
+      = form.field :org, :label => _("Organization:") do
+        = organization_select
+
+      .promotion_paths
+        = hidden_field_tag 'user[environment_id]', @environment.id unless @environment.nil?
+        = form.field :environment, :label => _("Environment:") do
+          = image_tag( "icons/spinner.gif", :id=>"org_spinner", :class=>"hidden fl")
+          - if @environment.nil?
+            #env_box
+              -if @organization.nil?
+                #{_("No default environment. Select an organization to choose from available environments.")}
+              -else
+                = no_env_available_msg
+          - else
+            #env_box
+              = render "environments", :accessible_envs => accessible_envs
+
+      = form.submit _("Save User"), :id => :save_user
+
+= render :template => "layouts/tupane_layout"

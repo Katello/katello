@@ -1,0 +1,23 @@
+- if include_tr_shading
+  - shading = cycle("", "alt")
+- else
+  - shading = ""
+
+- state = job.state
+- status_message = job.status_message
+
+- job.task_statuses.each do |task|
+
+  - unless task.parameters[:packages].blank?
+    - task.parameters[:packages].each do |name|
+      %tr.package{:class => "#{shading}"}
+        %td{'data-name' => "#{name}"}
+          #{name}
+        = render :partial => 'system_groups/packages/status', :locals => {:group_id => group_id, :id => job.id, :state => state, :status_message => status_message}
+
+  - unless task.parameters[:groups].blank?
+    - task.parameters[:groups].each do |name|
+      %tr.group{:class => "#{shading}"}
+        %td{'data-name' => "#{name}"}
+          #{name}
+        = render :partial => 'system_groups/packages/status', :locals => {:group_id => group_id, :id => job.id, :state => state, :status_message => status_message}

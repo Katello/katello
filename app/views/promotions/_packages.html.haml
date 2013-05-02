@@ -1,0 +1,5 @@
+%ul.expand_list
+  -if collection.empty?
+    #{_("No packages available")}
+  -else
+    = render :partial=>"package_items", :locals=>{:collection=>collection}

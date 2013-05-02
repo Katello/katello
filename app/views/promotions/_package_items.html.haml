@@ -1,0 +1,15 @@
+- collection.each do |pack|
+  %li.no_slide.block{:id => pack.id, "data-ajax_url" => package_path(pack.id)}
+    .fr
+      %span.added.tipsify.hidden #{_("Added")}
+      %a{:class => "fr content_add_remove remove_package st_button hidden", "data-display_name"=> pack.nvrea,
+         "data-id" => pack.id, "data-type" => "package", "data-product_id"=> [@product.id].to_json,
+         "data-promotable" => "#{@promotable_packages.include?(pack.id)}", :id => "add_remove_package_#{pack.id}"}
+
+    - if !@promotable_packages.include?(pack.id) and !@not_promotable.include?(pack.id)
+      .fr.promoted
+        = _("Promoted")
+
+    .simple_link
+      %span
+        = pack.nvrea

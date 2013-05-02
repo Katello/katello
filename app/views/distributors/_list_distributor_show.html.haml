@@ -1,0 +1,18 @@
+%div{:id => "distributor_#{item.id}"}
+  %div{:class => 'column_2'}
+    %ul
+      %li
+        %div.one-line-ellipsis#heading_title
+          %span#name
+            = item.send('name')
+      %li.one-line-ellipsis
+        = _('Env: ')
+        %span#environment
+          = distributor_environment_name item
+  %div{:class => 'column_2'}
+    %ul
+      %li
+        = get_registered(item)
+      %li
+        = get_checkin(item)
+.arrow-right

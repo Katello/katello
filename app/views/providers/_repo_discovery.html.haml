@@ -1,0 +1,57 @@
+= javascript do
+  :plain
+    KT.initial_repo_discovery = $.parseJSON('#{escape_javascript({:urls=>discovered, :running=>running}.to_json)}');
+     localize({
+          "existing_repos_found": '#{escape_javascript(_('This feed has already been found in one or more existing repositories:'))}',
+          "discovery_success_one": '#{escape_javascript(_('One repository successfully created.'))}',
+          "discovery_success_multi":  function(x){ return "#{escape_javascript(_('%X repositories successfully created.'))}".replace("%X", x);},
+     });
+
+
+
+= content_for :title do
+  #{@provider.name}
+
+
+= render :partial => 'remove_item', :locals => { :repositories_cloned_in_envrs => repositories_cloned_in_envrs }
+
+
+= content_for :navigation do
+  = render_menu(1..2, custom_provider_navigation)
+
+= content_for :content do
+  .grid_10
+    %form#repo_discovery_form{:data=>{:url=>discover_provider_path(@provider.id)}}
+      .grid_1.ra
+        = _("URL:")
+      .grid_6.la
+        %input{:type=>:text, :name=>'discover_url', :size=>40, :value=>(@provider.discovery_url || '')}
+      .grid_1.la
+        %input{:type=>:submit, :value=>_("Discover")}
+      .grid_2.la{:style=>'display: none;'}
+        %input#cancel_discover.button{:type=>:button, :name=>:cancel, :value=>_('Cancel'),
+                              :data=>{:url=>cancel_discovery_provider_path(@provider.id)}}
+        = image_tag("icons/spinner.gif")
+
+  %br
+  .grid_10
+    %table#discovered_repos{:data=>{:url=>discovered_repos_provider_path(@provider.id)}}
+      %thead
+        %tr.underline
+          %td
+            .grid_6
+              %input#url_filter{:type=>'search', :name=>'search', :placeholder=>_('Filter paths...')}
+          %td
+            .grid_3
+              %button.button#new_repos{:data=>{:url=>new_discovered_repos_provider_path(@provider.id)}}
+                = _("Create Within Product")
+        %tr
+          %th
+            = _("Discovered URLS:")
+          %th
+            = _("Created previously")
+      %tbody
+        %td
+        %td
+
+= render :template => "layouts/tupane_layout"

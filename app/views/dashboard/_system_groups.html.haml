@@ -1,0 +1,32 @@
+#dashboard_system_groups.big_widget{"data-quantity"=>quantity}
+  - current = 0
+  - critical, warning, ok = SystemGroup.lists_by_updates_needed(current_organization)
+  - if critical.empty? and warning.empty? and ok.empty?
+    =_("No system groups found." )
+
+  - else
+    .list
+      .block_head.clear
+        .column_head.col_1
+          #{_("Updates")}
+        .column_head.col_2
+          #{_("Name")}
+        .column_head.col_3
+          #{_('Systems')}
+
+      .scroll-pane
+        - for group in critical
+          - current += 1
+          - break if current > quantity
+          = render :partial => "system_group_item", :locals => {:group => group, :updates => :critical}
+
+        - for group in warning
+          - current += 1
+          - break if current > quantity
+          = render :partial => "system_group_item", :locals => {:group => group, :updates => :warning}
+
+        - for group in ok
+          - current += 1
+          - break if current > quantity
+          = render :partial => "system_group_item", :locals => {:group => group, :updates => :ok}
+

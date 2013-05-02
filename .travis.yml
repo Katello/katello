@@ -4,11 +4,16 @@ language:
 rvm:
   - "1.9.3"
 
+before_install:
+  - touch config/katello.yml
+
+install:
+  - bundle install --without checking:devboost:optional:debugging --quiet
+
 script:
-  - "./scripts/ci/katello_pr_$JOB.sh"
+  - "./script/ci/katello_pr_$JOB.sh"
 
 env:
-  - JOB=rspec
   - JOB=minitest
+  - JOB=rspec
   - JOB=headpin_rspec
-  - JOB=cli

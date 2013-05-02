@@ -20,7 +20,7 @@ done \
     | perl -lane '$X{$F[0]} .= " $F[1]"; END { for (sort keys %X) { print "$_$X{$_}" } }' \
     | while read package_dir tags ; do
       LOCAL_FEDORA_UPLOAD=$FEDORA_UPLOAD
-      pushd $package_dir >/dev/null
+      pushd ./$package_dir >/dev/null
       srpm_name=$(basename  $(tito build --srpm |tail -n 1 | awk '{print $2}') | sed 's/\.[^.]*\.src\.rpm$//')
       srpm_test_name=$(basename  $(tito build --srpm --test |tail -n 1 | awk '{print $2}') | sed 's/\.[^.]*\.src\.rpm$//')
       first_tag=$(echo $tags |awk '{print $1}')
@@ -45,7 +45,7 @@ done \
 echo 'Building packages from HEAD, which are not tagged ...'
 for package in $( rel-eng/git-untagged-commits.pl  |grep HEAD | perl -pe 's/([-a-z]+)-.*/$1/' ); do
   echo "Checking package $package"
-  pushd $(awk '{print $2}' < rel-eng/packages/$package) >/dev/null
+  pushd ./$(awk '{print $2}' < rel-eng/packages/$package) >/dev/null
   if git log --pretty=oneline --abbrev-commit . |head -n 1 |grep 'Automatic commit of package' ; then
      srpm_name=$(basename  $(tito build --srpm |tail -n 1 | awk '{print $2}') | sed 's/\.[^.]*\.src\.rpm$//')
      for tag in $TAGS; do

@@ -1,0 +1,39 @@
+- if content_for?(:content) or content_for?(:subcontent)
+
+  - if content_for?(:title)
+    .head
+      - title_text = yield :title
+      %h2.pane_heading.one-line-ellipsis{:title => title_text}
+        = yield :title
+      = yield :remove_item
+
+  %nav.subnav.clear
+    - if content_for?(:navigation)
+      = yield :navigation
+
+  - if content_for?(:header)
+    .tupane_header
+      = yield :header
+
+  - if content_for?(:content)
+    %a.close{:href => "#", "data-close"=>"panel"} #{_("Close")}
+    #panel_main.scroll-pane
+      = yield :content
+
+  - if content_for?(:subcontent)
+    %a.close{:href => "#", "data-close"=>"subpanel"} #{_("Close")}
+    #subpanel_main.scroll-pane
+      = yield :subcontent
+
+- if content_for?(:footer)
+  .tupane_footer
+    = yield :footer
+
+- if content_for?(:custom)
+  = yield :custom
+
+- if content_for?(:inline_javascript)
+  %script{ :type => "text/javascript" }
+    = yield :inline_javascript
+= yield :javascripts
+= yield :stylesheets

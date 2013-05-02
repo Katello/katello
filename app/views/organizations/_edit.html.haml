@@ -1,0 +1,86 @@
+= javascript do
+  :plain
+    localize({
+        "orgSelectAutoheal": '#{escape_javascript(_("No Service Level Preference"))}'
+    });
+= javascript 'widgets/jquery.jeditable.helpers', 'organizations/organization_edit'
+
+= content_for :title do
+  #{@organization.name}
+
+- if @organization.deletable?
+  = content_for :remove_item do
+    - if current_organization != @organization
+      = link_to _("Remove Organization"), {:controller=>"organizations", :action=>"destroy"}, :confirm => _('Are you sure you want to remove this organization?'), :method => :delete, :class=>"remove_item", :remote=>true
+    - else
+      %span{ :class => "remove_item disabled tipsify", :title => _("The current organization cannot be deleted. Please switch to a different organization before deleting.") }
+        = _("Remove Organization")
+
+= content_for :navigation do
+  = render_menu(1..2, organization_navigation)
+
+= content_for :content do
+  #organizations
+    %input#panel_element_id{:name => @organization.id, :type => "hidden", :value => "#{name}_#{@organization.label}", "data-ajax_url"=>url_for(:action => 'update')}
+    .full#organization
+      = form_for(@organization, :html => {:multipart => true, :method => :put, :id => 'organization_edit', :remote => true}, :url => organization_path(@organization.id)) do |f|
+
+        %fieldset.fl.clear
+          .grid_3.ra
+            %label #{_("Name")}:
+          .grid_8.la#organization_name{:title=>@organization[:name], 'name' => 'organization[name]', 'data-url' => organization_path(@organization.label),
+                                       :class=>editable_class(editable)} #{@organization[:name]}
+
+        %fieldset
+          .grid_3.ra
+            %label #{_("Label")}:
+          .grid_8.la.multiline #{@organization.label}
+
+        %fieldset.clearfix
+          .grid_3.ra
+            %label #{_("Description")}:
+          .grid_8.la{:style => "word-wrap: break-word;", 'name' => 'organization[description]', :class=>("editable edit_textarea" if editable), 'data-url'=>edit_organization_path(@organization.label)} #{@organization[:description]}
+
+        %fieldset
+          .grid_3.ra
+            %label #{_("Default System SLA")}:
+          .grid_8.la
+            .org_servicelevel{'name' => 'organization[service_level]', 'class' => ("editable edit_select_org_servicelevel grid_8" if editable), 'data-url' => edit_organization_path(@organization.label), 'data-options' => organization_servicelevel_edit(@organization)}
+              = organization_servicelevel(@organization)
+
+        .grid_7
+          %h5 #{_("Environment Promotion Paths")}:
+
+        - unless @organization.environments.empty?
+          %ul#promotion_paths
+          - @organization.promotion_paths.each do |path|
+            .clear
+              &nbsp;
+            .jbreadcrumb.grid_9
+              %ul
+                %li
+                  =link_to 'Library', "#", :class => "crumb-nohover"
+                - for env in path
+                  %li
+                    %a.subpanel_element{"data-url"=>edit_organization_environment_path(@organization.label, env.id)}
+                      %div
+                        #{env.name}
+
+        - else
+          .grid_7
+            #{_("No environments are available in this organization. Please add some environments to be able register systems to this organization.")}:
+
+        .clear
+          &nbsp;
+
+        - if editable
+          .button.subpanel_element{"data-url"=>new_organization_environment_path(@organization.label)}
+            = _("Add New Environment")
+
+        - if editable
+          = render :partial=>"download_debug_certificate"
+
+= content_for :footer do
+  = render :partial => "organizations/footer"
+
+= render :template => "layouts/tupane_layout"

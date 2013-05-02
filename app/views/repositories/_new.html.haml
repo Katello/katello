@@ -1,0 +1,55 @@
+= javascript 'widgets/subpanel_new'
+
+= content_for :title do
+  = _("Product: ") + @product.name
+
+= content_for :navigation do
+  / pretty
+
+= content_for :subcontent do
+  %h3
+    = _("Create Repository")
+  .clear
+    &nbsp;
+  = form_tag provider_product_repositories_path(@provider.id, @product.id), :id => "new_subpanel", :method => "post", :remote => true do
+    %fieldset.clearfix
+      .grid_2.ra
+        = label :repo, :name, _("Name")
+      .grid_5.la
+        = text_field :repo, :name, :class=>:name_input, :tabindex => auto_tab_index
+
+    %fieldset.clearfix
+      .grid_2.ra
+        = label :repo, :label, _("Label")
+      .grid_5.la
+        = text_field :repo, :label, :class=>:label_input, :tabindex => auto_tab_index, 'data-url' => default_label_provider_product_repositories_path(@provider.id, @product.id)
+        = image_tag "icons/spinner.gif", :class => 'label_spinner hidden'
+
+    %fieldset.clearfix
+      .grid_2.ra
+        = label :repo, :feed, _("URL")
+      .grid_5.la
+        = text_field :repo, :feed, :id=>"repo_url_field", :tabindex => auto_tab_index
+
+    %fieldset.clearfix
+      .grid_2.ra
+        = label :repo, :unprotected, _("Publish via http")
+      .grid_5.la
+        = check_box :repo, :unprotected, :id=>"unprotected", :tabindex => auto_tab_index, :checked=>false
+
+
+    %fieldset.clearfix
+      .grid_2.ra
+        = label :repo, :gpg_key, _("GPG Key")
+      .grid_5.la
+        - if gpg_keys.length != 0
+          = select_tag 'repo[gpg_key]', options_from_collection_for_select(gpg_keys, "id", "name", :selected => (@product.gpg_key.id if @product.gpg_key )), :include_blank => true, :tabindex => auto_tab_index
+          - help_message = _("GPG Keys are not required.  This field may be left blank.")
+          %span.tipsify.details_icon-grey{:title => help_message}
+        - else
+          #{_("None defined for this Organization.")}
+
+    .grid_5.prefix_2
+      = submit_tag _("Create"), :class => 'fr subpanel_create create_button', :tabindex => auto_tab_index, :disable_with => _("Creating...")
+
+= render :template => "layouts/tupane_layout"

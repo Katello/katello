@@ -1,0 +1,145 @@
+= javascript_include_tag "widgets/treetable"
+
+%div
+  %h5
+    = form_tag system_path(@system), :id=>"autoheal_form", :method=>"put", :remote=>true do
+      #{_("System Current Subscription(s)")}
+  = form_tag update_subscriptions_system_path, :id=>"unsubscribe", :method=>"post", :remote=>true do
+    = hidden_field_tag "subscribe_action", "unsubscribe"
+    .tree
+      %table#unsubscribeTable
+        %thead
+          %tr
+            %th
+            %th #{_("Subscription")}
+            %th #{_("SLA")}
+            %th #{_("Contract")}
+            %th #{_("Quantity")}
+            %th #{_("Start")}
+            %th #{_("End")}
+        %tbody
+          - if consumed_entitlements.length > 0
+            - for entitlement in consumed_entitlements
+              - cycle_class = cycle("", "alt")
+              %tr{:id => "#{entitlement.entitlementId}", :class => cycle_class}
+                %td{:style => "padding-top:9px;"}
+                %td{:style => "padding-top:9px;", :colspan => '5'}
+                  - if editable
+                    %span.fl= check_box_tag "subscription[#{entitlement.entitlementId}]", value="#{entitlement.entitlementId}", false
+                  &nbsp;
+                  = subscriptions_pool_link_helper(entitlement.poolName, entitlement.poolId, entitlement.provider_id, current_organization)
+                %td{:style => "padding-top:9px;"}
+                  - if entitlement.provider_id == current_organization.redhat_provider.id
+                    #{_('Red Hat Product')}
+                  - else
+                    #{_('Custom Content Repository Product')}
+              %tr{:id => "#{entitlement.entitlementId}-row2", :class => cycle_class}
+                %td{:style => "padding-top:9px;"}
+                %td{:style => "padding-top:9px;"}
+                %td{:style => "padding-top:9px;"} #{entitlement.sla}
+                %td{:style => "padding-top:9px;"} #{entitlement.contractNumber}
+                %td{:style => "padding-top:9px;"}
+                  = entitlement.quantity < 0 ? 1 : entitlement.quantity
+                %td{:style => "padding-top:9px;"} #{format_time entitlement.startDate}
+                %td{:style => "padding-top:9px;"} #{format_time entitlement.endDate}
+              - entitlement.providedProducts.each do |product|
+                %tr{:class => "child-of-#{entitlement.entitlementId} " + cycle_class}
+                  %td{:colspan=>7}
+                    %ul
+                      %li
+                        = _("Product Name: ")
+                        = product.name
+          - else
+            %tr
+              %td{:colspan=>7} #{_("There are currently no subscriptions attached to the system")}
+      - if editable && consumed_entitlements.length > 0
+        .actions
+          %a{:class=>'dialogbutton button disabled', :id=>"fake_unsub_submit"} #{_('Remove')}
+          = submit_tag _('Remove'), :class => 'update_subscriptions submit dialogbutton', :id=>"unsub_submit"
+%br
+%div
+  %h5
+    #{_("Available Subscriptions")}
+  = form_tag update_preference_user_path(current_user), :id=>"matchsystem_form", :method=>"put", :remote=>false do
+    = select_tag 'subscription_filters', subscription_filters.html_safe, :prompt => _("Filters"), :multiple => true, "data-placeholder" => _("Subscription Filter Options"), :disabled => true
+  = form_tag update_subscriptions_system_path, :id=>"subscribe", :method=>"post", :remote=>true do
+    = hidden_field_tag "subscribe_action", "subscribe"
+    %div.hidden#available_spinner
+      %table
+        %thead
+          %tr
+            %th
+            %th #{_("Subscription")}
+            %th #{_("SLA")}
+            %th #{_("Limits")}
+            %th #{_("Quantity")}
+            %th #{_("Start")}
+            %th #{_("End")}
+        %tbody
+          %tr
+            %td{:colspan=>7}
+              .spinner{:style=>"margin-top:20px;"}
+    %div#available_section
+      .tree
+        %table#subscribeTable
+          %thead
+            %tr
+              %th
+              %th #{_("Subscription")}
+              %th #{_("SLA")}
+              %th #{_("Limits")}
+              %th #{_("Quantity")}
+              %th #{_("Start")}
+              %th #{_("End")}
+          %tbody
+            - if avail_subs.length > 0
+              - reset_cycle()  # Always start table with a light colored line
+              - for sub in avail_subs
+                - cycle_class = cycle("", "alt")
+                %tr{:id => "#{sub.cp_id}", :class => cycle_class}
+                  %td{:style => "padding-top:9px;"}
+                  %td{:style => "padding-top:9px;", :colspan => '5'}
+                    - if editable
+                      %span.fl= check_box_tag "subscription[#{sub.cp_id}]", false
+                    &nbsp;
+                    = subscriptions_pool_link_helper(sub.product_name, sub.cp_id, sub.provider_id, current_organization)
+                  %td{:style => "padding-top:9px;"}
+                    - if sub.provider_id == current_organization.redhat_provider.id
+                      #{_('Red Hat Product')}
+                    - else
+                      #{_('Custom Content Repository Product')}
+                %tr{:id => "#{sub.cp_id}-row2", :class => cycle_class}
+                  %td{:style => "padding-top:9px;"}
+                  %td{:style => "padding-top:9px;"}
+                  %td{:style => "padding-top:9px;"} #{sub.support_level}
+                  %td{:style => "padding-top:9px;"}
+                    = _("Sockets: %s") % sub.sockets
+                    = _(", RAM: %s") % sub.ram if sub.ram != 0
+                  - if sub.multi_entitlement
+                    %td
+                      = text_field_tag "spinner[#{sub.cp_id}]", nil, :min => 0, :max => (sub.quantity-sub.consumed), :step=>1, :value=>0, :class=>"ui-spinner"
+                      %span{:style => "padding-top:9px;"}
+                        = "of #{sub.quantity - sub.consumed}"
+                  - else
+                    %td{:style => "padding-top:9px;"}
+                      - if sub.quantity < 0
+                        = _("Unlimited")
+                      -else
+                        %div{:id=>"spinner_label_#{sub.cp_id}", :class=>"ui-nonspinner-label"} 0 of #{sub.quantity - sub.consumed}
+                      = hidden_field_tag "spinner[#{sub.cp_id}]", 0, :class => "ui-nonspinner"
+                  %td{:style => "padding-top:9px;"} #{format_time sub.start_date}
+                  %td{:style => "padding-top:9px;"} #{format_time sub.end_date}
+                - sub.provided_products.each do |product|
+                  %tr{:class => "child-of-#{sub.cp_id} " + cycle_class}
+                    %td{:colspan=>7}
+                      %ul
+                        %li
+                          = _("Product Name: ")
+                          = product['productName']
+            - else
+              %tr
+                %td{:colspan=>7} #{_("There are no more subscriptions available.")}
+        - if editable && avail_subs.length > 0
+          .actions
+            = submit_tag _('Attach'), :class => 'submit dialogbutton', :id=>"sub_submit"
+            %a{:class=>'dialogbutton button disabled', :id=>"fake_sub_submit"} #{_('Attach')}

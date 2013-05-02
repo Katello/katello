@@ -1,0 +1,18 @@
+-# repo,  parent_set
+%tr{:class=>parent_set_class(parent_set) + " #{cycle_class}", :id=>repo_id(repo), "data-product_id"=>repo.product.id, "data-id"=>repo.id}
+  %td.one-line-ellipsis
+    -if syncable?
+      =check_box_tag "repoids[]", repo.id, false, :id=>"input_repo_#{repo.id}", :class=>"fl"
+    %label.fl{:for=>"input_repo_#{repo.id}"}
+      #{repo.name}
+  %td.start_time
+    #{@repo_status[repo.id][:start_time]}
+  %td.duration
+    #{@repo_status[repo.id][:duration]}
+  %td.size{ "data-size" => @repo_status[repo.id][:size] }
+    #{@repo_status[repo.id][:display_size]}
+    (#{@repo_status[repo.id][:packages]})
+  %td.result
+    #{@repo_status[repo.id][:state]}
+  - if @show_org
+    %td

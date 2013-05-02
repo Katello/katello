@@ -1,0 +1,15 @@
+- content_for :scripts do
+  :javascript
+    function async_get() {
+      $.ajax({
+        url: "/examples",
+        dataType:"html",
+        success: function(msg){
+          alert(msg);
+        }
+      })
+    }
+
+- content_for :title, "Welcome Page"
+
+= button_to_function "click me", "javascript:async_get()"

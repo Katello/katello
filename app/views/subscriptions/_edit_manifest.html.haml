@@ -1,0 +1,45 @@
+= javascript 'widgets/jquery.jeditable.helpers'
+
+= content_for :title do
+  #{_("Subscription Manifest")}
+
+= render :partial=>"subscriptions_tupane_header_new_nav"
+
+= content_for :content do
+  #manifest
+    %input#panel_element_id{:name=>@provider.id, :type=>"hidden", :value=>"#{@provider.name}_#{@provider.id.to_s}", "data-ajax_url"=>url_for(:action=>"refresh_manifest")}
+    .grid_12#manifest_info
+      %fieldset
+        .grid_3.ra.fieldset
+          %label #{_("Upstream Subscription Management Application")}
+        - if @upstream['uuid']
+          .grid_8.la.fl
+            = subscriptions_manifest_link_helper({'webAppPrefix'=>@upstream['webUrl'], 'upstreamId'=>@upstream['uuid']}, @upstream['name'])
+        - else
+          #{_('No subscription manifest imported')}
+      %fieldset
+        .grid_3.ra.fieldset
+          %label #{_("Upstream Type")}
+        - if @upstream['type']
+          .grid_8.la.fl
+            #{@upstream['type']['label']}
+      %fieldset
+        .grid_3.ra.fieldset
+          %label #{_("Upstream User")}
+        - if @upstream['generatedBy']
+          .grid_8.la.fl
+            #{@upstream['generatedBy']}
+      %fieldset
+        .grid_3.ra.fieldset
+          %label #{_("Generated On")}
+        - if @upstream['generatedDate']
+          .grid_8.la.fl
+            = format_time(Time.parse(@upstream['generatedDate']))
+      %fieldset
+        .grid_3.ra.fieldset
+          %label #{_("Last Updated")}
+        - if @upstream['updated']
+          .grid_8.la.fl
+            = format_time(Time.parse(@upstream['updated']))
+
+= render :template => "layouts/tupane_layout"

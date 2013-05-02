@@ -1,0 +1,10 @@
+= javascript 'widgets/jquery.jeditable.helpers', 'systems/system_edit'
+
+= render :partial => "systems/system_tupane_header_nav"
+
+= render :partial => "custom_info/edit",
+         :locals => { :informable => @system,
+                      :informable_type => "system",
+                      :informable_id => @system.id }
+
+= render :template => "layouts/tupane_layout"

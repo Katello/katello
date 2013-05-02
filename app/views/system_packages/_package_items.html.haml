@@ -1,0 +1,43 @@
+-# This view contains several lines that are commented (i.e. -#) out on purpose... They may be uncommented when package
+-# updates are supported.
+
+- unless package_tasks.nil?
+  - package_tasks.each do |t|
+
+    -# the task's 'parameters' may have a list of names... so process them individually...
+    - unless t.parameters.nil? or t.parameters[:packages].nil?
+      - t.parameters[:packages].each do |pkg_name|
+
+        %tr{:class => row_shading + ' content_package', 'data-pending-action-id' => t.id}
+          %td
+          %td.package_name
+            #{pkg_name}
+          %td.package_action_status
+            = image_tag("icons/spinner.gif")
+            = get_status_string(t.task_type)
+
+- unless group_tasks.nil?
+  - group_tasks.each do |t|
+
+    -# the task's 'parameters' may have a list of names... so process them individually...
+    - unless t.parameters.nil? or t.parameters[:groups].nil?
+      - t.parameters[:groups].each do |group_name|
+
+        %tr{:class => row_shading + ' content_group', 'data-pending-action-id' => t.id}
+          %td
+          %td.package_name
+            #{group_name}
+          %td.package_action_status
+            = image_tag("icons/spinner.gif")
+            = get_status_string(t.task_type)
+
+-packages.each_with_index do |p,index|
+
+  %tr{:class => 'package', :style => "#{index < offset ? ' ' : 'display:none;' }" }
+    - if editable
+      %td.package_select
+        = check_box_tag "package[#{p.name}]", "0", false, {:tabindex => auto_tab_index}
+    -#%td.package_status.packages_icon
+    %td.package_name
+      #{p.nvrea}
+    %td.package_action_status

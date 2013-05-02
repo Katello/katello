@@ -1,0 +1,87 @@
+@import "compass/reset";
+@import "overrides";
+
+$login_background_top_color: lighten($primary_color, 10%) !default;
+$login_background_bottom-color: darken($primary_color, 10%) !default;
+
+$switcherformwidth: 300px;
+
+@import "alchemy/composites/login";
+@import "widgets/org_switcher";
+@import "widgets/search";
+@import "widgets/scrollpane";
+@import "katello_base";
+
+//interstitial container
+#interstitial {
+  left: 360px;
+  padding-top: 6em;
+}
+
+//org switcher modifications
+#switcherContainer {
+  #switcherBox {
+    margin-left: 0px;
+    top: 23px;
+    position: relative;
+    left: 0;
+  }
+  #switcherForm {
+    height: 120px;
+    #orgfilter_input {
+      font-size: 115%;
+      height: auto;
+    }
+  }
+  #orgbox {
+    margin-top: 32px;
+    height: 88px;
+  }
+  #manage_orgs {
+    display: none;
+  }
+  .filter {
+    position: absolute;
+  }
+  //orgbox spinner
+  .spinner {
+    margin: 0 auto;
+    height: 16px;
+    width: 16px;
+    display: block;
+    position: relative;
+    z-index: 1000;
+    background: $spinner_img;
+    left: 0;
+    margin-top: 5px;
+  }
+}
+
+//card/form spinner
+.spinner {
+  margin: 0 auto;
+  margin-top: 10%;
+  height: 16px;
+  width: 16px;
+  display: block;
+  position: relative;
+  z-index: 1000;
+  background: $spinner_img;
+}
+
+.fl {
+  float: left;
+}
+
+//* ugly IE8 specific hacks for the border to look decent/*/
+@media \0screen {
+  .container {
+    padding: 0 !important;
+  }
+//org switcher modifications for IE8 org switcher
+  #switcherContainer {
+    #switcherBox {
+      top: 0;
+    }
+  }
+}

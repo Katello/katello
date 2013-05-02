@@ -1,0 +1,12 @@
+= content_for :title do
+  #{_("New Role")}
+
+= content_for :content do
+  .grid_10
+    = kt_form_for Role.new, :html => {:id => "new_role"} do |form|
+
+      = form.text_field :name, :label => _("Name")
+      = form.text_area :description, :label => _("Description"), :size => "40x5"
+      = form.submit _("Save"), :id => :role_save
+
+= render :template => "layouts/tupane_layout"

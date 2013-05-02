@@ -1,0 +1,14 @@
+= content_for :title do
+  #{@user.username}
+
+= content_for :remove_item do
+  -if @user.deletable?
+    = link_to _("Remove User"), { :controller => "users", :action => "destroy" }, :confirm => _('Are you sure you want to remove this user?'), :method => :delete, :class=>"remove_item", :remote=>true
+
+= content_for :navigation do
+  = render_menu(1..2, user_navigation)
+
+= content_for :content do
+  = render :partial => "edit_form", :locals=>{:editable=>editable, :accessible_envs => accessible_envs, :ldap => ldap}
+
+= render :template => "layouts/tupane_layout"

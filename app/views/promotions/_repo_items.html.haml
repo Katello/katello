@@ -1,0 +1,18 @@
+- collection.each do |repo|
+  %li.no_slide.block
+    - promoted = !(@next_env_repos & repo.clone_ids).empty?
+    - promotable = !promoted and (@next_environment and @next_environment.products.member?(@product))
+
+    .fr
+      %span.added.tipsify.hidden #{_("Added")}
+      %a{:class => "fr content_add_remove remove_repo st_button hidden","data-display_name"=> repo.name, "data-id" => repo.id,
+         "data-type" => "repo", "data-product_id" => [@product.id].to_json, "data-promotable" => "#{promotable}",
+         :id => "add_remove_repo_#{repo.id}"}
+
+    - if promoted
+      .fr.promoted
+        = _("Promoted")
+
+    .simple_link
+      %span
+        = repo.name

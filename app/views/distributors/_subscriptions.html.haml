@@ -1,0 +1,22 @@
+= javascript 'widgets/jquery.jeditable.helpers', 'distributors/distributor_subscriptions'
+
+= render :partial => "distributor_tupane_header_nav"
+
+= content_for :content do
+  .full
+    %h5 #{_("Download Manifest")}
+  .full
+    .grid_8
+      = kt_form_for(@distributor, :as => "distributor", :url => download_distributor_path(@distributor)) do |form|
+        %fieldset
+          = form.text_field :download_filename, :label => _("File Name"), :value => "#{distributor_labelize(@distributor.name)}.zip", :placeholder => 'manifest.zip'
+          .grid_4.ra
+            -#= form.submit _("Download Manifest")
+            #download_manifest.button{:'data-url'=>download_distributor_path(@distributor)}
+              #{_("Download")}
+  .clear
+  #subs_data
+    = render :partial=>"subs", :locals=>{:distributor=>@distributor, :avail_subs => avail_subs, :consumed_entitlements => consumed_entitlements, :editable=>editable}
+  %br.clear
+
+= render :template => "layouts/tupane_layout"

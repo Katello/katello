@@ -1,59 +1,36 @@
-Katello [![Build Status](https://travis-ci.org/Katello/katello.png?branch=master)](https://travis-ci.org/Katello/katello)
-=======
+# Katello Rails app developer documentation
 
-About
------
+## What can be found here?
 
-[Katello](http://www.katello.org) is a systems life cycle management
-tool. It allows you to manage hundreds and thousands machines with one
-click. Katello can pull content from remote repositories into isolated
-environments, make subscriptions management easier and provide
-provisioning at scale.
+YARD documentation is intended for developers. This documentation contains:
 
-Currently, it is able to handle Fedora and Red Hat Enterprise
-Linux based systems.
+-   code documentation
+-   high level guides to architectures and implementation details
 
-Getting Started
----------------
+User documentation can be found on [wiki](https://fedorahosted.org/katello/).
 
-The easiest way to get stable version of Katello up and running is following
-[Katello Wiki Installation Instructions](https://fedorahosted.org/katello/wiki/Install).
+*Note: older developer guides can be found on wiki, they have not been migrated.*
 
-If you like living on the edge, go for
-[nightly builds](https://fedorahosted.org/katello/wiki/InstallTesting)
-instead.
+### Guides
 
-Found a bug?
-------------
+-   {file:doc/YARDDocumentation.md}
+-   {file:doc/ForemanIntegration.md}
+-   {file:doc/Graphs.md}
+-   Original Rails generated README {file:doc/RailsReadme}, we may do certain things differently
 
-That's rather unfortunate. But don't worry! We can help. Just
-[file a bug](https://bugzilla.redhat.com/enter_bug.cgi?product=Katello).
+    -   we use `doc` directory for storing markdown guides instead of a generated documentation
 
-Contributing
-------------
+### Source
 
-See
-[development instructions](https://fedorahosted.org/katello/wiki/AdvancedInstallation#GettingupandRunningGIT).
+-   {Katello::Configuration}
+-   {Notifications}
 
-What's included in this repository:
+## How to YARD
 
- * agent - source for katello-agent
- * certs-tools - certificates related tools
- * cli - source for katello-cli
- * doc - documentation files
- * katello-configure - source for automated installation tool
- * katello-utils - katello-disconnected scripts and other tools
- * rel-eng - release engineering related stuff
- * repos - yum repos information
- * scripts - various development scripts
- * selinux - SELinux support
- * src - actual Rails app of Katello
+-   to see YARD documentation start Katello server and click on the link in the UI footer or go directly to
+    {http://path.to.katello/a_prefix/yard/docs/katello/frames}
 
-Contact & Resources
--------------------
+    -   if it fails run `bundle exec yard doc --no-cache` first
 
- * [Wiki](https://fedorahosted.org/katello/wiki)
- * [User mailing list](https://fedorahosted.org/mailman/listinfo/katello)
- * [Developer mailing list](https://www.redhat.com/mailman/listinfo/katello-devel)
- * [IRC Freenode](http://freenode.net/using_the_network.shtml): #katello
- * [Twitter](https://twitter.com/Katello_Project)
+-   see {file:doc/YARDDocumentation.md}
+

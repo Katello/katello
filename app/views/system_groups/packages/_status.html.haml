@@ -1,0 +1,5 @@
+%td.fr.status{'data-pending-action-id' => (id if state == :running)}
+  - if state == :running
+    = image_tag("icons/spinner.gif")
+  %a.event_status.subpanel_element{"data-url"=>system_group_event_path(group_id, id)}
+    = status_message
