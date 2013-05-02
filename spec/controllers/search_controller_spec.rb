@@ -74,12 +74,11 @@ describe SearchController do
     end
 
     it "generates an error notification, if exception raised" do
-      # stub query used to retrieve favorites to be rendered
-      controller.stub_chain(:current_user, :search_favorites, :where).and_return([])
-      # force an exception when creating the favorite
-      controller.stub(:current_user).stub(:search_favorites).stub(:create!).with({}).and_raise(StandardError)
+      mock = mock("search", :where => [])
+      mock.stub(:create!).with({:path=>"/resource", :params=>"provider.name => theBest"}).and_raise(StandardError)
+      controller.stub_chain(:current_user, :search_favorites).and_return(mock)
 
-      controller.should notify.warning
+      controller.should notify.exception
       post :create_favorite, {:favorite => @favoriteText}
     end
 
