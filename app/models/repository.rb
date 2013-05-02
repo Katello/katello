@@ -23,6 +23,10 @@ class Repository < ActiveRecord::Base
   include Ext::LabelFromName
   include Rails.application.routes.url_helpers
 
+  YUM_TYPE = 'yum'
+  FILE_TYPE = 'file'
+  TYPES = [YUM_TYPE, FILE_TYPE]
+
   belongs_to :environment_product, :inverse_of => :repositories
   belongs_to :gpg_key, :inverse_of => :repositories
   belongs_to :library_instance, :class_name=>"Repository"
@@ -39,6 +43,11 @@ class Repository < ActiveRecord::Base
   validates :label, :presence => true
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
   validates_with Validators::RepoDisablementValidator, :attributes => :enabled, :on => :update
+
+  validates_inclusion_of :content_type,
+      :in => TYPES,
+      :allow_blank => false,
+      :message => (_("Please select content type from one of the following: %s") % TYPES.join(', '))
 
   belongs_to :gpg_key, :inverse_of => :repositories
   belongs_to :library_instance, :class_name=>"Repository"
@@ -233,6 +242,7 @@ class Repository < ActiveRecord::Base
                            :enabled=>self.enabled,
                            :content_id=>self.content_id,
                            :content_view_version=>view_version,
+                           :content_type=>self.content_type,
                            :unprotected=>self.unprotected
                            )
     clone.pulp_id = clone.clone_id(to_env, content_view)

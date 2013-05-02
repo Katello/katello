@@ -73,18 +73,19 @@ module Glue::ElasticSearch::Errata
       end
 
       def self.filter(filter)
-        filter_for_repo = filter.slice(:repoid, :environment_id, :product_id)
+        filter_for_repo = filter.slice(:repository_id, :repoid, :environment_id, :product_id)
         filter_for_errata = filter.except(*filter_for_repo.keys)
 
         repos = repos_for_filter(filter_for_repo)
-        filter_for_errata[:repo_ids] = repos.collect{|r| r.pulp_id} if !repos.empty?
+        filter_for_errata[:repoids] = repos.collect{|r| r.pulp_id} if !repos.empty?
 
         first = self.search('', 0, 1, filter_for_errata)
         self.search('', 0, first.total, filter_for_errata).collect{|e| Errata.new(e.as_json)}
       end
 
       def self.repos_for_filter(filter)
-        if repoid = filter[:repoid]
+        repoid = filter[:repoid] || filter[:repository_id]
+        if repoid
           return [Repository.find(repoid)]
         elsif environment_id = filter[:environment_id]
           env = KTEnvironment.find(environment_id)

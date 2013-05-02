@@ -207,4 +207,35 @@ describe UsersController do
       it_should_behave_like "protected action"
     end
   end
+
+  describe "edit environment" do
+    before do
+      @organization = new_test_org
+      @testuser = create(:user)
+    end
+
+    describe "GET edit_environment" do
+      let(:action) {:items}
+      let(:req) { get :edit_environment }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read, :users, nil, nil) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      let(:on_success) do
+        assigns(:items).should include @testuser
+      end
+
+      it "should assign environment if user to default environment" do
+        env = create(:environment, :prior => @organization.library)
+        User.stub(:find).and_return(@testuser)
+        @testuser.stub(:has_default_environment?).and_return(true)
+        @testuser.should_receive(:default_environment).and_return(env)
+
+        get :edit_environment, :id => @testuser
+        response.should be_success
+      end
+    end
+  end
 end

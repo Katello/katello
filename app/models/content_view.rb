@@ -44,7 +44,7 @@ class ContentView < ActiveRecord::Base
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
   validates :organization_id, :presence => true
 
-  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+  validates_with Validators::NonHtmlNameValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
 
 
@@ -69,9 +69,9 @@ class ContentView < ActiveRecord::Base
     # list of component content views, if any, that do not exist in the environment
     # provided.
     if composite
-      content_view_definition.component_content_views.group("content_views.id").
-          joins(:content_view_versions => :content_view_version_environments).
-          where(["content_view_version_environments.content_view_version_id "\
+      content_view_definition.component_content_views.select("distinct content_views.*").
+              joins(:content_view_versions => :content_view_version_environments).
+              where(["content_view_version_environments.content_view_version_id "\
                  "NOT IN (SELECT content_view_version_id FROM "\
                  "content_view_version_environments WHERE environment_id = ?)", env])
     end
@@ -99,6 +99,7 @@ class ContentView < ActiveRecord::Base
     self.environments.length > 1 ? true : false
   end
 
+  #NOTE: this function will most likely become obsolete once we drop api v1
   def as_json(options = {})
     result = self.attributes
     result['organization'] = self.organization.try(:name)

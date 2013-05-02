@@ -12,11 +12,12 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require "minitest_helper"
+require './test/support/content_view_definition_support'
 
-class Api::FilterRulesControllerTest < MiniTest::Rails::ActionController::TestCase
+describe Api::V1::FilterRulesController do
   fixtures :all
 
-  def setup
+  before do
     models = ["Organization", "KTEnvironment", "User", "Filter",
                 "FilterRule", "ErratumRule", "PackageRule", "PackageGroupRule",
                 "ContentViewEnvironment", "ContentViewDefinition"]
@@ -25,15 +26,69 @@ class Api::FilterRulesControllerTest < MiniTest::Rails::ActionController::TestCa
     @filter = filters(:simple_filter)
   end
 
+  describe "delete"  do
+    before do
+      @filter = filters(:populated_filter)
+      @cvd = @filter.content_view_definition
+      @organization = @cvd.organization
+      @rule_id =  @filter.rules.first.id
+      @req = lambda do
+        delete :destroy, :organization_id => @organization.label,
+               :content_view_definition_id=> @cvd.id,
+               :filter_id => @filter.id.to_s, :id => @rule_id
+      end
+    end
+    it "permission" do
+      perms = ContentViewDefinitionSupport.generate_permissions(@cvd, @organization)
+      action = :destroy
+      assert_authorized(
+                :permission => perms.editable,
+                :action => action,
+                :request => @req
+      )
 
-  test "should delete a filter_rule" do
-    populated_filter = filters(:populated_filter)
-    rule_id =  populated_filter.rules.first.id
-    delete :destroy, :organization_id => populated_filter.content_view_definition.organization.label,
-                :content_view_definition_id=> populated_filter.content_view_definition.id,
-                :filter_id => populated_filter.id.to_s, :id => rule_id
-    assert_response :success
-    assert_empty FilterRule.where(:id => rule_id)
+      refute_authorized(
+          :permission => perms.read_only,
+          :action => action,
+          :request => @req,
+          :include_no_permissions => true
+      )
+
+    end
+
+    it "should delete a filter_rule" do
+      @req.call
+      assert_response :success
+      assert_empty FilterRule.where(:id => @rule_id)
+    end
+
+  end
+
+  it "create permission" do
+    @filter = filters(:populated_filter)
+    @cvd = @filter.content_view_definition
+    @organization = @cvd.organization
+    perms = ContentViewDefinitionSupport.generate_permissions(@cvd, @organization)
+    @req = lambda do
+      post :create, :organization_id => @organization.label,
+           :content_view_definition_id=> @cvd.id,
+           :filter_id => @filter.id.to_s, :content => "rpm", :inclusion => "no",
+           :rule => ""
+    end
+
+    action = :create
+    assert_authorized(
+        :permission => perms.editable,
+        :action => action,
+        :request => @req
+    )
+
+    refute_authorized(
+        :permission => perms.read_only,
+        :action => action,
+        :request => @req,
+        :include_no_permissions => true
+    )
   end
 
   [
@@ -43,7 +98,7 @@ class Api::FilterRulesControllerTest < MiniTest::Rails::ActionController::TestCa
       [FilterRule::ERRATA, {:errata_type => ["bugfix", "enhancement", "security"]}]
   ].each do |content, rule|
     [true, false].each do |inclusion|
-      test "should create a filter #{content} rule for inclusion = #{inclusion}" do
+      it "should create a filter #{content} rule for inclusion = #{inclusion}" do
         rule = rule.with_indifferent_access
         post :create, :organization_id => @filter.content_view_definition.organization.label,
              :content_view_definition_id=> @filter.content_view_definition.id,
@@ -61,7 +116,7 @@ class Api::FilterRulesControllerTest < MiniTest::Rails::ActionController::TestCa
     end
   end
 
-  test "should create an errata rule based on date" do
+  it "should create an errata rule based on date" do
     content = FilterRule::ERRATA
     inclusion = true
     rule = {:date_range => {:start => "2013-04-15T15:44:48-04:00",

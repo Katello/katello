@@ -31,6 +31,13 @@ class RepositoryCreateTest < RepositoryTestBase
     refute_empty  Repository.where(:id=>@repo.id)
   end
 
+  def test_create_with_no_type
+    @repo.content_type = ''
+    assert_raises ActiveRecord::RecordInvalid do
+      @repo.save!
+    end
+  end
+
 end
 
 
@@ -120,6 +127,14 @@ class RepositoryInstanceTest < RepositoryTestBase
     clone = @fedora_17_x86_64.create_clone(@staging)
     assert clone.id
     assert Repository.in_environment(@staging).where(:library_instance_id=>@fedora_17_x86_64.id).count > 0
+  end
+
+  def test_create_clone_preserve_type
+    @fedora_17_x86_64.content_type = 'file'
+    @fedora_17_x86_64.save!
+    clone = @fedora_17_x86_64.create_clone(@staging)
+    assert clone.id
+    assert_equal @fedora_17_x86_64.content_type, clone.content_type
   end
 
   def test_repo_id

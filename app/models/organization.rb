@@ -13,7 +13,7 @@
 
 class Organization < ActiveRecord::Base
 
-  ALLOWED_DEFAULT_INFO_TYPES = %w( system )
+  ALLOWED_DEFAULT_INFO_TYPES = %w( system distributor )
 
   include Glue::Candlepin::Owner if Katello.config.use_cp
   include Glue if Katello.config.use_cp
@@ -22,6 +22,8 @@ class Organization < ActiveRecord::Base
 
   include Authorization::Organization
   include Glue::ElasticSearch::Organization if Katello.config.use_elasticsearch
+
+  include Ext::LabelFromName
 
   has_many :activation_keys, :dependent => :destroy
   has_many :providers, :dependent => :destroy
@@ -44,7 +46,7 @@ class Organization < ActiveRecord::Base
 
   before_create :create_library
   before_create :create_redhat_provider
-  before_validation :initialize_default_info
+  after_initialize :initialize_default_info
 
   validates :name, :uniqueness => true, :presence => true
   validates_with Validators::NonHtmlNameValidator, :attributes => :name
@@ -55,13 +57,6 @@ class Organization < ActiveRecord::Base
   validate :unique_name_and_label
   validates_with Validators::DefaultInfoNotBlankValidator, :attributes => :default_info
 
-  if Katello.config.use_cp
-    before_validation :create_label, :on => :create
-
-    def create_label
-      self.label = self.name.tr(' ', '_') if self.label.blank? && self.name.present?
-    end
-  end
 
   # Ensure that the name and label namespaces do not overlap
   def unique_name_and_label

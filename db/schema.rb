@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130409185838) do
+ActiveRecord::Schema.define(:version => 20130430162020) do
 
   create_table "activation_keys", :force => true do |t|
     t.string   "name"
@@ -251,10 +251,12 @@ ActiveRecord::Schema.define(:version => 20130409185838) do
     t.string   "description"
     t.string   "location"
     t.integer  "environment_id"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.integer  "content_view_id"
   end
 
+  add_index "distributors", ["content_view_id"], :name => "index_distributors_on_content_view_id"
   add_index "distributors", ["environment_id"], :name => "index_distributors_on_environment_id"
 
   create_table "environment_priors", :id => false, :force => true do |t|
@@ -538,6 +540,7 @@ ActiveRecord::Schema.define(:version => 20130409185838) do
     t.string   "relative_path",                                 :null => false
     t.string   "feed"
     t.boolean  "unprotected",             :default => false,    :null => false
+    t.string   "content_type",            :default => "yum",    :null => false
   end
 
   add_index "repositories", ["content_view_version_id"], :name => "index_repositories_on_content_view_version_id"

@@ -203,7 +203,6 @@ class UsersController < ApplicationController
 
   def edit_environment
     if @user.has_default_environment?
-      @old_perm     = @user.default_systems_reg_permission
       @environment  = @user.default_environment
       @old_env      = @environment
       @organization = Organization.find(@environment.attributes['organization_id'])

@@ -13,7 +13,6 @@
 require 'minitest_helper'
 require './test/support/repository_support'
 
-
 class GluePulpErrataTestBase < MiniTest::Rails::ActiveSupport::TestCase
   extend  ActiveRecord::TestFixtures
   include RepositorySupport
@@ -53,10 +52,10 @@ class GluePulpErrataTest < GluePulpErrataTestBase
   end
 
   def test_errata_by_consumer
-    skip "Re-enable once the Runcible call is created"
-    errata = Errata.errata_by_consumer([RepositorySupport.repo_id])
+    Runcible::Extensions::Consumer.expects(:applicable_errata).
+        with([], [RepositorySupport.repo.pulp_id], false).returns({})
 
-    refute_empty errata
+    Errata.errata_by_consumer([RepositorySupport.repo])
   end
 
   def test_included_packages

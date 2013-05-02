@@ -13,7 +13,7 @@
 
 require "minitest_helper"
 
-class Api::RepositorySetsControllerTest < MiniTest::Rails::ActionController::TestCase
+class Api::V1::RepositorySetsControllerTest < MiniTest::Rails::ActionController::TestCase
   fixtures :all
 
   def setup
@@ -37,7 +37,7 @@ class Api::RepositorySetsControllerTest < MiniTest::Rails::ActionController::Tes
     pc = Candlepin::ProductContent.new(:content=>{:id=>'3'})
     Product.any_instance.stubs(:productContent).returns([pc])
     Product.any_instance.expects(:async).returns(@redhat_product)
-    @redhat_product.expects(:refresh_content).with('3')
+    @redhat_product.expects(:refresh_content).with('3').returns(TaskStatus.new)
 
     post :enable, {:product_id => @redhat_product.cp_id, :organization_id=>@org.label, :id=>'3'}
     assert_response :success
@@ -47,7 +47,7 @@ class Api::RepositorySetsControllerTest < MiniTest::Rails::ActionController::Tes
      pc = Candlepin::ProductContent.new(:content=>{:id=>'3', :name=>'foo'})
      Product.any_instance.stubs(:productContent).returns([pc])
      Product.any_instance.expects(:async).returns(@redhat_product)
-     @redhat_product.expects(:refresh_content).with('3')
+     @redhat_product.expects(:refresh_content).with('3').returns(TaskStatus.new)
 
      post :enable, {:product_id => @redhat_product.cp_id, :organization_id=>@org.label, :id=>'foo'}
      assert_response :success
@@ -57,7 +57,7 @@ class Api::RepositorySetsControllerTest < MiniTest::Rails::ActionController::Tes
     pc = Candlepin::ProductContent.new(:content=>{:id=>'3'})
     Product.any_instance.stubs(:productContent).returns([pc])
     Product.any_instance.expects(:async).returns(@redhat_product)
-    @redhat_product.expects(:disable_content).with('3')
+    @redhat_product.expects(:disable_content).with('3').returns(TaskStatus.new)
 
     post :disable, {:product_id => @redhat_product.cp_id, :organization_id=>@org.label, :id=>'3'}
     assert_response :success

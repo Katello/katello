@@ -20,7 +20,7 @@
                 = render :partial=>"common/fav", :locals => {:org=>org, :current_user=>current_user}
                 = link_to org.name, set_org_user_session_path(:org_id=>org.id), :method=>"POST", :class=>"selected", :title=>_("Current Organization")
             - if current_organization && !current_organization.name.nil? && Organization.any_readable?
-              %li.menu-item
-                %a#manage_orgs.menu-item{:href=>organizations_path()}
+              %li#manage_orgs.menu-item
+                %a.menu-item{:href=>organizations_path()}
                   %span{:class=>"fl clearfix"}
                     #{_("Manage Organizations")}

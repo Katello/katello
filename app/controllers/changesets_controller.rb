@@ -42,7 +42,7 @@ class ChangesetsController < ApplicationController
       :object => read_perm,
       :auto_complete_search => read_perm,
       :apply => apply_perm,
-      :status => read_perm
+      :changeset_status => read_perm
     }
   end
 
@@ -271,7 +271,7 @@ class ChangesetsController < ApplicationController
     render :text=>e.to_s, :status=>500
   end
 
-  def status
+  def changeset_status
     progress = @changeset.task_status.progress
     state = @changeset.state
     to_ret = {'id' => 'changeset_' + @changeset.id.to_s, 'state' => state, 'progress' => progress.to_i,

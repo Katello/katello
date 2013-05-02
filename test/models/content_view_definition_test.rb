@@ -1,3 +1,4 @@
+# encoding: UTF-8
 #
 # Copyright 2013 Red Hat, Inc.
 #
@@ -43,6 +44,11 @@ class ContentViewDefinitionTest < MiniTest::Rails::ActiveSupport::TestCase
     content_view_def = FactoryGirl.build(:content_view_definition, :name => "")
     assert content_view_def.invalid?
     assert content_view_def.errors.has_key?(:name)
+  end
+
+  def test_utf8_name
+    content_view_def = FactoryGirl.build(:content_view_definition, :name => "올드보이")
+    assert content_view_def.valid?
   end
 
   def test_duplicate_name

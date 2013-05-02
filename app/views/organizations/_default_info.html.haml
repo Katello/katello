@@ -1,3 +1,4 @@
+
 -# org and informable_type from locals
 = javascript 'widgets/jquery.jeditable.helpers'
 
@@ -10,7 +11,8 @@
 = content_for :content do
   #default_info
     .clear
-      &nbsp;
+      %h5
+        = _('%s Default Custom Info') % informable_type.capitalize
     .grid_4
       %table#default_info_table
         %tbody

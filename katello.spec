@@ -32,7 +32,7 @@
 %endif
 
 Name:           katello
-Version:        1.4.1
+Version:        1.4.2
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -112,6 +112,7 @@ Requires:       %{?scl_prefix}rubygem(logging) >= 1.8.0
 Requires:       %{?scl_prefix}rubygem(bundler_ext) >= 0.3
 Requires:       %{?scl_prefix}rubygem(rack-openid) >= 1.3.1
 Requires:       %{?scl_prefix}rubygem(ruby-openid) >= 2.2.3
+Requires:       %{?scl_prefix}rubygem(rabl)
 Requires:       signo >= 0.0.5
 Requires:       signo-katello >= 0.0.5
 Requires:       lsof
@@ -152,6 +153,8 @@ BuildRequires:  %{?scl_prefix}rubygem(logging) >= 1.8.0
 BuildRequires:  %{?scl_prefix}rubygem(ui_alchemy-rails) >= 1.0.0
 BuildRequires:  %{?scl_prefix}rubygem(minitest)
 BuildRequires:  %{?scl_prefix}rubygem(minitest-rails)
+BuildRequires:  %{?scl_prefix}rubygem(rabl)
+BuildRequires:  %{?scl_prefix}rubygem(hooks)
 BuildRequires:  asciidoc
 BuildRequires:  /usr/bin/getopt
 BuildRequires:  java >= 0:1.6.0
@@ -426,7 +429,7 @@ export RAILS_ENV=build
 
 #replace shebangs for SCL
 %if %{?scl:1}%{!?scl:0}
-    sed -ri '1sX(/usr/bin/ruby|/usr/bin/env ruby)X%{scl_ruby}X' script/*
+    find script/ -type f | xargs sed -ri '1sX(/usr/bin/ruby|/usr/bin/env ruby)X%{scl_ruby}X'
 %endif
 
 #run source code tests
@@ -662,6 +665,11 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/navigation
 %{homedir}/app/lib/notifications
 %{homedir}/app/lib/validators
+%{homedir}/app/lib/api
+%{homedir}/app/lib/api/constraints
+%{homedir}/app/lib/api/v1
+%{homedir}/app/lib/api/v2
+%dir %{homedir}/app/lib/resources
 %{homedir}/app/lib/resources/cdn.rb
 %{homedir}/app/lib/content_search
 %{homedir}/app/lib/experimental
@@ -773,6 +781,10 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/navigation
 %{homedir}/app/lib/notifications
 %{homedir}/app/lib/validators
+%{homedir}/app/lib/api
+%{homedir}/app/lib/api/constraints
+%{homedir}/app/lib/api/v1
+%{homedir}/app/lib/api/v2
 %exclude %{homedir}/app/lib/resources/candlepin.rb
 %{homedir}/lib/tasks
 %{homedir}/lib/util
@@ -861,6 +873,10 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Sat Apr 27 2013 Eric D Helms <ehelms@redhat.com> 1.4.2-1
+- Updating Travis configs. (ehelms@redhat.com)
+- Add 'rel-eng/' from commit '540c534bc7d509665d44b86529659766fa7ef087'
+  (ehelms@redhat.com)
 * Fri Apr 12 2013 Justin Sherrill <jsherril@redhat.com> 1.4.1-1
 - version bump to 1.4 (jsherril@redhat.com)
 

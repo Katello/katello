@@ -14,41 +14,36 @@
 module NavigationHelper
 
   def generate_menu
-    navigation = Experimental::Navigation::Menu.new(current_organization)
-    main_menu_items = navigation.generate_main_menu
-    admin_items = navigation.generate_admin_menu
+    if !Katello.config.katello?
+      main_menu   = Experimental::Navigation::Menus::Headpin::Main.new(current_organization)
+      site_menu   = Experimental::Navigation::Menus::Headpin::Site.new
+    else
+      main_menu   = Experimental::Navigation::Menus::Main.new(current_organization)
+      site_menu   = Experimental::Navigation::Menus::Site.new
+    end
+
+    user_menu   = Experimental::Navigation::Menus::User.new(current_user)
 
     menu = {
       :location => 'left',
-      :items => main_menu_items
+      :items => main_menu.items
     }
 
-    admin_menu = {
+    site_menu = {
       :location => 'right',
-      :items    => admin_items
+      :items    => site_menu.items
     }
 
     user_menu = {
       :location => 'right',
-      :items => [{
-        :display=> current_user.username,
-        :type   => 'dropdown',
-        :items  => [
-          {
-            :display=> _("My Account"),
-            :url    => "#{users_path(current_user)}#panel=user_#{current_user.id}"
-          },{
-            :display=> _("Sign Out"),
-            :url    => logout_path
-        }]
-      }]
+      :items    => [user_menu]
     }
 
     javascript do
-      ("KT.main_menu = " + menu.to_json + ";").html_safe +
-      ("KT.user_menu = " + user_menu.to_json + ";").html_safe +
-      ("KT.admin_menu = " + admin_menu.to_json + ";").html_safe +
-      ("KT.notices = " + add_notices.to_json + ";").html_safe
+      ("KT.main_menu = " + menu.to_json + ";\n").html_safe +
+      ("KT.admin_menu = " + site_menu.to_json + ";\n").html_safe +
+      ("KT.user_menu = " + user_menu.to_json + ";\n").html_safe +
+      ("KT.notices = " + add_notices.to_json + ";\n").html_safe
     end
   end
 

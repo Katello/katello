@@ -312,6 +312,7 @@ development:
 # The following configuration values override ones from the common section
 #
 test:
+  rspec_gc_defer_time: <%= (ENV['DEFER_GC'] || 10).to_f %>
   database:
     database: katello-test<%= ENV['TEST_ENV_NUMBER'] %>
     min_messages: WARNING
