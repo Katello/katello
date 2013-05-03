@@ -27,7 +27,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
   validate :validate_content
   validate :validate_filters
 
-  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+  validates_with Validators::NonHtmlNameValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
 
   scope :composite, where(:composite=>true)
@@ -158,6 +158,7 @@ class ContentViewDefinition < ContentViewDefinitionBase
     false
   end
 
+  #NOTE: this function will most likely become obsolete once we drop api v1
   def as_json(options = {})
     result = self.attributes
     result["organization"] = self.organization.try(:name)

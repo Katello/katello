@@ -119,7 +119,7 @@ class Provider < ActiveRecord::Base
   # refreshes products' repositories from CDS. If new versions are released on
   # the CDN, this method will provide loading this new versions.
   def refresh_products
-    raise _("It is not allowed to refresh products for custom provider.") unless self.redhat_provider?
+    raise _("Products cannot be refreshed for custom provider.") unless self.redhat_provider?
     self.products.engineering.each do |product|
       product.productContent.each do |pc|
         product.refresh_content(pc.content.id) if pc.katello_enabled? #only refresh PCs that are already enabled

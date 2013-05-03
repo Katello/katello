@@ -77,11 +77,7 @@ module Glue::Pulp::Repo
 
     def initialize(attrs=nil, options={})
       if attrs.nil?
-        if Rails::VERSION::STRING.start_with?('3.2')
-          super
-        else
-          super(attrs)
-        end
+        super
       elsif
         type_key = attrs.has_key?('type') ? 'type' : :type
         #rename "type" to "cp_type" (activerecord and candlepin variable name conflict)
@@ -92,11 +88,7 @@ module Glue::Pulp::Repo
         attrs_used_by_model = attrs.reject do |k, v|
           !self.class.column_defaults.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
         end
-        if Rails::VERSION::STRING.start_with?('3.2')
-          super(attrs_used_by_model, options)
-        else
-          super(attrs_used_by_model)
-        end
+        super(attrs_used_by_model, options)
       end
     end
 
@@ -112,10 +104,7 @@ module Glue::Pulp::Repo
     def create_pulp_repo
       #if we are in library, no need for an distributor, but need to sync
       if self.environment.library?
-        importer = Runcible::Extensions::YumImporter.new(:ssl_ca_cert=>self.feed_ca,
-              :ssl_client_cert=>self.feed_cert,
-              :ssl_client_key=>self.feed_key,
-              :feed_url=>self.feed)
+        importer = generate_importer
       else
         #if not in library, no need for sync info, but we need a distributor
         importer = Runcible::Extensions::YumImporter.new
@@ -132,10 +121,37 @@ module Glue::Pulp::Repo
       raise PulpErrors::ServiceUnavailable.new(message, e)
     end
 
+
+    def generate_importer
+      case self.content_type
+        when Repository::YUM_TYPE
+          Runcible::Extensions::YumImporter.new(:ssl_ca_cert=>self.feed_ca,
+                        :ssl_client_cert=>self.feed_cert,
+                        :ssl_client_key=>self.feed_key,
+                        :feed_url=>self.feed)
+        when Repository::FILE_TYPE
+          Runcible::Extensions::IsoImporter.new(:ssl_ca_cert=>self.feed_ca,
+                        :ssl_client_cert=>self.feed_cert,
+                        :ssl_client_key=>self.feed_key,
+                        :feed_url=>self.feed)
+        else
+          raise _("Unexpected repo type %s") % self.content_type
+      end
+
+    end
+
     def generate_distributor
-      Runcible::Extensions::YumDistributor.new(self.relative_path, (self.unprotected || false), true,
-        {:protected=>true, :id=>self.pulp_id,
-            :auto_publish=>!self.environment.library?})
+      case self.content_type
+        when Repository::YUM_TYPE
+          Runcible::Extensions::YumDistributor.new(self.relative_path, (self.unprotected || false), true,
+                  {:protected=>true, :id=>self.pulp_id,
+                      :auto_publish=>!self.environment.library?})
+        when Repository::FILE_TYPE
+          Runcible::Extensions::IsoDistributor.new(true, true)
+        else
+          raise _("Unexpected repo type %s") % self.content_type
+      end
+
     end
 
     def promote from_env, to_env

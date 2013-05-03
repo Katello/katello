@@ -23,6 +23,8 @@ class Organization < ActiveRecord::Base
   include Authorization::Organization
   include Glue::ElasticSearch::Organization if Katello.config.use_elasticsearch
 
+  include Ext::LabelFromName
+
   has_many :activation_keys, :dependent => :destroy
   has_many :providers, :dependent => :destroy
   has_many :products, :through => :providers
@@ -55,13 +57,6 @@ class Organization < ActiveRecord::Base
   validate :unique_name_and_label
   validates_with Validators::DefaultInfoNotBlankValidator, :attributes => :default_info
 
-  if Katello.config.use_cp
-    before_validation :create_label, :on => :create
-
-    def create_label
-      self.label = self.name.tr(' ', '_') if self.label.blank? && self.name.present?
-    end
-  end
 
   # Ensure that the name and label namespaces do not overlap
   def unique_name_and_label
