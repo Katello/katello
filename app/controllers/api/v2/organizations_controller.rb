@@ -27,10 +27,8 @@ class Api::V2::OrganizationsController < Api::V1::OrganizationsController
   end
 
   def param_rules
-    {
-        :create => { :organization => [:name, :description, :label] },
-        :update => { :organization => [:name, :description] }
-    }
+    rules = super
+    rules[:create] = {:organization  => [:name, :description, :label]}
   end
 
   api :POST, "/organizations", "Create an organization"

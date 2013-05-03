@@ -37,8 +37,8 @@ class Api::V1::OrganizationsController < Api::V1::ApiController
   end
   def param_rules
     {
-        :create => [:name, :label, :description],
-        :update => { :organization => [:name, :description] }
+      :create => [:name, :label, :description],
+      :update => {:organization  => [:name, :description, :service_level]}
     }
   end
 
@@ -70,6 +70,7 @@ class Api::V1::OrganizationsController < Api::V1::ApiController
   api :PUT, "/organizations/:id", "Update an organization"
   param :organization, Hash do
     param_group :organization, Api::V1::OrganizationsController
+    param :service_level, String, :desc => "default service level (SLA)"
   end
   def update
     @organization.update_attributes!(params[:organization])
