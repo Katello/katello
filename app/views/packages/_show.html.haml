@@ -37,11 +37,9 @@
     .grid_2.ra
       %label #{_("Signature")}:
     .grid_4.la
-      - @package.checksum.each_pair do |type, sum|
-        = type + ":"
-        = "&nbsp".html_safe + sum.slice(0,15)
+      = "#{@package.checksumtype} : #{@package.checksum}"
 
-  %fieldset
+  -# %fieldset
     .grid_2.ra
       %label #{_("Package Size")}:
     .grid_4.la
@@ -71,7 +69,7 @@
     .grid_4.la
       = @package.license
 
-  %fieldset
+  -# %fieldset
     .grid_2.ra
       %label #{_("Package Group")}:
     .grid_4.la

@@ -14,7 +14,7 @@
 require "minitest_helper"
 require './test/support/content_view_definition_support'
 
-describe Api::FilterRulesController do
+describe Api::V1::FilterRulesController do
   fixtures :all
 
   before do

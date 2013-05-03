@@ -244,5 +244,4 @@ describe Katello::LoggingImpl do
   ##  Rails.logger              = Logging.logger['app']
   ##  ActiveRecord::Base.logger = Logging.logger['sql']
   ##end
-
 end

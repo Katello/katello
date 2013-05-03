@@ -15,8 +15,16 @@ module WardenSupport
   DEFAULT_EXPECTED = [:authenticate!]
 
   def login_user(user=nil, org=nil)
-    user ||= User.find(users(:no_perms_user)) # TODO: rescue/handle factories not loaded
+    if user.is_a?(UserPermission) || user.is_a?(UserPermissionSet)
+      permissions = user
+      user = nil
+    end
+    user ||= default_user
     yield ::AuthorizationSupportMethods::UserPermissionsGenerator.new(user) if block_given?
+
+    if permissions
+      permissions.call(::AuthorizationSupportMethods::UserPermissionsGenerator.new(user))
+    end
 
     request.env['warden'] = Class.new do
       define_method(:user) { user }
@@ -48,8 +56,8 @@ module WardenSupport
     warden.expect(:raw_session, Object.new) if expected_methods.include?(:raw_session)
     warden.expect(:logout, true) if expected_methods.include?(:logout)
 
-    Api::ApiController.stub(:require_user, {}) do
-      Api::ApiController.stub(:current_user, user) do
+    Api::V1::ApiController.stub(:require_user, {}) do
+      Api::V1::ApiController.stub(:current_user, user) do
         yield
       end
     end
@@ -59,5 +67,12 @@ module WardenSupport
 
   def disable_user_orchestraction
     disable_glue_layers(["Pulp"], ["User"])
+  end
+
+  def default_user
+    User.find(users(:no_perms_user))
+  rescue
+    # fixtures not loaded
+    FactoryGirl.create(:user)
   end
 end

@@ -112,7 +112,7 @@ KT.redhat_provider_page = (function($) {
         }
     },
     disable_repo_set = function(url, content_id){
-        var row = $('#rpms_repo_set_' + content_id);
+        var row = $('#repo_set_' + content_id);
         hide_repos(content_id);
         row.find('.repo_set_enable').hide();
         row.find('.repo_set_spinner').show();
@@ -139,7 +139,7 @@ KT.redhat_provider_page = (function($) {
         });
     },
     refresh_repo_set = function(url, content_id, is_refresh){
-        var row = $('#rpms_repo_set_' + content_id);
+        var row = $('#repo_set_' + content_id);
         hide_repos(content_id);
         row.addClass("disable");
         row.find('.repo_set_enable').hide();
@@ -179,13 +179,13 @@ KT.redhat_provider_page = (function($) {
         $.sparkline_display_visible();
     },
     hide_repos = function(content_id){
-        var row = $('#rpms_repo_set_' + content_id);
+        var row = $('#repo_set_' + content_id);
         if(row.hasClass('expanded')){
             row.find('.expander_area').click();
         }
     },
     show_repos = function(content_id){
-        var row = $('#rpms_repo_set_' + content_id);
+        var row = $('#repo_set_' + content_id);
         if(row.hasClass('collapsed')){
             row.find('.expander_area').click();
         }

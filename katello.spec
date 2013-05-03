@@ -110,6 +110,11 @@ Requires:       %{?scl_prefix}rubygem(anemone)
 Requires:       %{?scl_prefix}rubygem(apipie-rails) >= 0.0.18
 Requires:       %{?scl_prefix}rubygem(logging) >= 1.8.0
 Requires:       %{?scl_prefix}rubygem(bundler_ext) >= 0.3
+Requires:       %{?scl_prefix}rubygem(rack-openid) >= 1.3.1
+Requires:       %{?scl_prefix}rubygem(ruby-openid) >= 2.2.3
+Requires:       %{?scl_prefix}rubygem(rabl)
+Requires:       signo >= 0.0.5
+Requires:       signo-katello >= 0.0.5
 Requires:       lsof
 
 %if 0%{?rhel} == 6
@@ -148,6 +153,8 @@ BuildRequires:  %{?scl_prefix}rubygem(logging) >= 1.8.0
 BuildRequires:  %{?scl_prefix}rubygem(ui_alchemy-rails) >= 1.0.0
 BuildRequires:  %{?scl_prefix}rubygem(minitest)
 BuildRequires:  %{?scl_prefix}rubygem(minitest-rails)
+BuildRequires:  %{?scl_prefix}rubygem(rabl)
+BuildRequires:  %{?scl_prefix}rubygem(hooks)
 BuildRequires:  asciidoc
 BuildRequires:  /usr/bin/getopt
 BuildRequires:  java >= 0:1.6.0
@@ -493,6 +500,10 @@ install -d -m0755 %{buildroot}%{datadir}/tmp
 install -d -m0755 %{buildroot}%{datadir}/tmp/pids
 install -d -m0755 %{buildroot}%{datadir}/config
 install -d -m0755 %{buildroot}%{_sysconfdir}/%{name}
+install -d -m0755 %{buildroot}%{datadir}/openid-store
+install -d -m0755 %{buildroot}%{datadir}/openid-store/associations
+install -d -m0755 %{buildroot}%{datadir}/openid-store/nonces
+install -d -m0755 %{buildroot}%{datadir}/openid-store/temp
 
 install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
 mkdir -p %{buildroot}/%{_mandir}/man8
@@ -527,6 +538,10 @@ install -m 644 config/environments/production.rb %{buildroot}%{_sysconfdir}/%{na
 install -d -m0755 %{buildroot}%{_sysconfdir}/cron.daily
 install -m 755 script/katello-refresh-cdn %{buildroot}%{_sysconfdir}/cron.daily/katello-refresh-cdn
 
+#create apache config templates
+mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.d
+echo "# this file will be overwritten by running katello-configure" > %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.d/%{name}.conf
+
 #copy init scripts and sysconfigs
 install -Dp -m0644 %{confdir}/%{name}.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 install -Dp -m0644 %{confdir}/service-wait.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/service-wait
@@ -545,6 +560,7 @@ install -p -m0644 etc/service-list %{buildroot}%{_sysconfdir}/%{name}/
 
 #create symlinks for some db/ files
 ln -svf %{datadir}/schema.rb %{buildroot}%{homedir}/db/schema.rb
+ln -svf %{datadir}/openid-store %{buildroot}%{homedir}/db/openid-store
 
 #create symlinks for data
 ln -sv %{_localstatedir}/log/%{name} %{buildroot}%{homedir}/log
@@ -632,6 +648,10 @@ usermod -a -G katello-shared tomcat
 %{homedir}/config
 %{homedir}/db/migrate/
 %{homedir}/db/products.json
+%{homedir}/db/openid-store/
+%attr(755, katello, katello) %{datadir}/openid-store/associations
+%attr(755, katello, katello) %{datadir}/openid-store/nonces
+%attr(755, katello, katello) %{datadir}/openid-store/temp
 %{homedir}/db/seeds.rb
 %{homedir}/integration_spec
 %{homedir}/lib/*.rb
@@ -645,6 +665,11 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/navigation
 %{homedir}/app/lib/notifications
 %{homedir}/app/lib/validators
+%{homedir}/app/lib/api
+%{homedir}/app/lib/api/constraints
+%{homedir}/app/lib/api/v1
+%{homedir}/app/lib/api/v2
+%dir %{homedir}/app/lib/resources
 %{homedir}/app/lib/resources/cdn.rb
 %{homedir}/app/lib/content_search
 %{homedir}/app/lib/experimental
@@ -679,6 +704,8 @@ usermod -a -G katello-shared tomcat
 %config(noreplace) %attr(600, katello, katello) %{_sysconfdir}/%{name}/%{name}.yml
 %config(noreplace) %{_sysconfdir}/%{name}/thin.yml
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
+%dir %{_sysconfdir}/httpd/conf.d/katello.d
+%config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.d/%{name}.conf
 %config %{_sysconfdir}/%{name}/environment.rb
 %config %{_sysconfdir}/logrotate.d/%{name}
 %config %{_sysconfdir}/%{name}/mapping.yml
@@ -754,6 +781,10 @@ usermod -a -G katello-shared tomcat
 %{homedir}/app/lib/navigation
 %{homedir}/app/lib/notifications
 %{homedir}/app/lib/validators
+%{homedir}/app/lib/api
+%{homedir}/app/lib/api/constraints
+%{homedir}/app/lib/api/v1
+%{homedir}/app/lib/api/v2
 %exclude %{homedir}/app/lib/resources/candlepin.rb
 %{homedir}/lib/tasks
 %{homedir}/lib/util

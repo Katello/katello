@@ -44,7 +44,7 @@ class ContentView < ActiveRecord::Base
   validates :name, :presence => true, :uniqueness => {:scope => :organization_id}
   validates :organization_id, :presence => true
 
-  validates_with Validators::KatelloNameFormatValidator, :attributes => :name
+  validates_with Validators::NonHtmlNameValidator, :attributes => :name
   validates_with Validators::KatelloLabelFormatValidator, :attributes => :label
 
 
@@ -99,6 +99,7 @@ class ContentView < ActiveRecord::Base
     self.environments.length > 1 ? true : false
   end
 
+  #NOTE: this function will most likely become obsolete once we drop api v1
   def as_json(options = {})
     result = self.attributes
     result['organization'] = self.organization.try(:name)

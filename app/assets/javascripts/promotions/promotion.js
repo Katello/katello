@@ -1107,7 +1107,7 @@ var changesetStatusActions = (function($){
                       failed(changeset_id);
                       updater.stop();
                   }
-                } else if ((data.progress === 100) || (data.state === 'promoted') || (data.state === 'deleted')){
+                } else if ((data.state === 'promoted') || (data.state === 'deleted')){
                     delete promotion_page.get_current_changeset_breadcrumb()['changeset_' + id];
 
                     // TODO: update logic to remove content view from the list. This will be done in separate commit.
